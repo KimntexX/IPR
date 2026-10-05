@@ -1,0 +1,440 @@
+\input{preamble}
+\setcounter{tocdepth}{1}
+\hypersetup{pdftitle={Cours 10 -- Filtre de Haar et ondelettes},
+pdfauthor={Projet IPR -- Scholar}}
+\title{Cours 10 -- Filtre de Haar et ondelettes\\
+De la somme et de la différence à l'estimation du bruit photographique}
+\begin{document}
+\coursmeta{5 octobre 2026}{Cours théorique, explicatif et applicatif ; exemples,
+exercices corrigés et liens avec le moteur actuel de \IPR{}.}
+
+\section{Objectifs et parcours de lecture}
+Ce cours part d'une paire de nombres, construit une transformation réversible,
+puis l'étend à une image. L'objectif final est de comprendre pourquoi
+\texttt{(p00-p01-p10+p11)*0.5} et \texttt{0.67448975} apparaissent dans
+le moteur, et ce qu'ils permettent réellement de mesurer.
+Les prérequis sont les sommes, les matrices élémentaires, la moyenne et la variance.
+Lire d'abord les exemples ; les démonstrations peuvent être reprises ensuite.
+
+\resultat{Haar n'est ni une IA ni, à lui seul, un débruiteur.
+C'est un changement de représentation : il sépare des informations de
+fond et des variations locales. Un traitement des coefficients est nécessaire
+pour modifier effectivement le signal.}
+
+\section{Intuition : conserver le fond, isoler la variation}
+Deux pixels voisins $u=10$ et $v=14$ contiennent une luminosité moyenne
+de 12 et une différence de 4. En conservant ces deux informations, on peut
+retrouver les deux pixels. Leur moyenne seule perdrait de l'information.
+Pour comparer des énergies et des variances sans correction supplémentaire,
+Haar emploie une normalisation orthonormale :
+\begin{equation}\label{eq:pair}
+a=\frac{u+v}{\sqrt{2}},\qquad d=\frac{u-v}{\sqrt{2}}.
+\end{equation}
+$a$ est l'\emph{approximation} et $d$ le \emph{détail}. Le signe de $d$
+indique quel pixel est le plus grand, dans la convention choisie ici.
+$a$ n'est pas la moyenne arithmétique : cette dernière vaut $a/\sqrt{2}$.
+Pour notre paire : $a=12\sqrt{2}$, $d=-2\sqrt{2}$.
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.2cm,box/.style={draw=iprblue,rounded corners,
+align=center,minimum height=1cm}]
+\node[box] (pair) {Deux pixels\\$(u,v)$};
+\node[box,right=of pair] (haar) {Somme et différence\\normalisées};
+\node[box,above right=0.15cm and 1cm of haar] (approx) {Approximation $a$\\fond local};
+\node[box,below right=0.15cm and 1cm of haar] (detail) {Détail $d$\\variation locale};
+\draw[-{Latex}] (pair)--(haar);
+\draw[-{Latex}] (haar)--(approx);
+\draw[-{Latex}] (haar)--(detail);
+\end{tikzpicture}
+\end{center}
+
+\section{Construction mathématique en une dimension}
+\subsection{Filtres passe-bas et passe-haut}
+Dans notre convention de produit scalaire sur une paire, les filtres sont
+\begin{equation}
+\ell=\frac{1}{\sqrt{2}}(1,1),\qquad
+h=\frac{1}{\sqrt{2}}(1,-1).
+\end{equation}
+Le premier additionne et privilégie les variations lentes ; le second
+soustrait et annule une constante. Appliquer ces filtres puis garder un
+coefficient par paire correspond à un filtrage suivi d'une décimation par deux.
+Une bibliothèque utilisant une convolution peut inverser le filtre ou changer
+le signe des détails ; l'inverse doit suivre la même convention.
+
+Pour un signal $x[n]$ de longueur paire :
+\begin{equation}
+a[k]=\frac{x[2k]+x[2k+1]}{\sqrt{2}},\qquad
+d[k]=\frac{x[2k]-x[2k+1]}{\sqrt{2}}.
+\end{equation}
+Chaque sortie a deux fois moins d'échantillons, mais les deux sorties réunies
+conservent le nombre initial de valeurs. Il n'y a pas de compression sans
+une étape supplémentaire de quantification ou de suppression de coefficients.
+
+\subsection{Orthogonalité, inverse et énergie}
+Écrivons $\binom{a}{d}=Q\binom{u}{v}$, avec
+\begin{equation}
+Q=\frac{1}{\sqrt{2}}\begin{pmatrix}1&1\\1&-1\end{pmatrix}.
+\end{equation}
+Les lignes ont une norme unité et un produit scalaire nul.
+Ainsi $Q^{\mathsf T}Q=I$ et l'inverse est
+\begin{equation}
+u=\frac{a+d}{\sqrt{2}},\qquad v=\frac{a-d}{\sqrt{2}}.
+\end{equation}
+En développant les carrés, on obtient $a^2+d^2=u^2+v^2$.
+Cette conservation concerne l'énergie quadratique, pas l'énergie physique
+des photons. La lecture de Haar comme une base orthogonale est également
+présentée par Strang~\cite{strangHaar}. Les calculs et exemples de ce cours
+sont des développements pédagogiques propres au projet.
+
+\subsection{Lecture fréquentielle}
+Avant décimation, les réponses sont
+\begin{equation}
+L(\omega)=\frac{1+e^{-i\omega}}{\sqrt{2}},\quad
+H(\omega)=\frac{1-e^{-i\omega}}{\sqrt{2}}.
+\end{equation}
+Leurs modules valent respectivement
+$\sqrt{2}|\cos(\omega/2)|$ et $\sqrt{2}|\sin(\omega/2)|$.
+Le passe-haut est nul à fréquence zéro ; le passe-bas est nul à $\pi$.
+Ces filtres très courts n'ont pas la séparation fréquentielle d'un filtre
+idéal. La reconstruction exacte provient de la banque complète, pas d'un
+passe-bas parfait ni de la conservation d'une seule branche.
+
+\section{Pourquoi parler d'ondelette et de plusieurs échelles ?}
+Une ondelette est localisée : elle regarde une zone limitée du signal.
+Pour Haar, la fonction d'échelle $\phi$ vaut 1 sur $[0,1)$ et 0 ailleurs.
+L'ondelette mère est
+\begin{equation}
+\psi(t)=\begin{cases}
+1,&0\le t<1/2,\\-1,&1/2\le t<1,\\0,&\text{ailleurs}.
+\end{cases}
+\end{equation}
+Elle a une intégrale nulle : une constante ne produit aucun détail.
+Les fonctions $\psi_{j,k}(t)=2^{j/2}\psi(2^j t-k)$ changent d'échelle et
+de position. La transformée discrète implémente cette idée avec les paires.
+On redécompose l'approximation, pas nécessairement toutes les branches.
+
+\subsection{Exemple complet sur quatre valeurs}
+Pour $x=(4,6,10,12)$ :
+\begin{align}
+a_1&=(5\sqrt{2},11\sqrt{2}),&d_1&=(-\sqrt{2},-\sqrt{2}),\\
+a_2&=16,&d_2&=-6.
+\end{align}
+La représentation finale est $(a_2,d_2,d_1)$ : quatre valeurs au total.
+En remontant l'inverse à deux niveaux, on retrouve exactement $x$ en
+arithmétique exacte. Vérification énergétique :
+\begin{equation}
+4^2+6^2+10^2+12^2=296=16^2+(-6)^2+2+2.
+\end{equation}
+Pour une longueur $N=2^J$, la somme du travail sur les niveaux est
+$N+N/2+N/4+\cdots<2N$ : complexité linéaire pour cette construction.
+Les dimensions non dyadiques nécessitent une politique de bord ou un
+nombre de niveaux limité ; ce n'est pas une raison de redimensionner la photo.
+
+\section{Extension à une image : quatre informations par bloc}
+Prenons $P=\begin{pmatrix}p_{00}&p_{01}\\p_{10}&p_{11}\end{pmatrix}$,
+où le premier indice désigne la ligne et le second la colonne.
+Appliquer Haar sur les lignes puis sur les colonnes donne :
+\begin{align}
+A&=\frac{p_{00}+p_{01}+p_{10}+p_{11}}{2},\\
+D_x&=\frac{p_{00}-p_{01}+p_{10}-p_{11}}{2},\\
+D_y&=\frac{p_{00}+p_{01}-p_{10}-p_{11}}{2},\\
+D_{xy}=HH&=\frac{p_{00}-p_{01}-p_{10}+p_{11}}{2}.\label{eq:hh}
+\end{align}
+$A$ est deux fois la moyenne des quatre pixels ; $D_x$ mesure les différences
+gauche/droite, $D_y$ les différences haut/bas, $HH$ une différence croisée.
+La notion de détail \emph{diagonal} ne signifie pas détection de tous les
+contours diagonaux, ni exclusion des autres structures.
+
+Les noyaux correspondants rendent les signes explicites :
+\begin{equation}
+\frac12\begin{pmatrix}+1&+1\\+1&+1\end{pmatrix},\quad
+\frac12\begin{pmatrix}+1&-1\\+1&-1\end{pmatrix},\quad
+\frac12\begin{pmatrix}+1&+1\\-1&-1\end{pmatrix},\quad
+\frac12\begin{pmatrix}+1&-1\\-1&+1\end{pmatrix}.
+\end{equation}
+Les noms LH/HL et horizontal/vertical dépendent des conventions d'axes.
+La documentation PyWavelets précise les siennes et fournit
+\texttt{dwt2}, \texttt{idwt2} et la décomposition multi-niveaux~\cite{pywtHaar}.
+Pour relire le code, préférer les équations aux seuls noms de sous-bandes.
+
+\subsection{Forme matricielle et reconstruction}
+Pour $p=(p_{00},p_{01},p_{10},p_{11})^{\mathsf T}$ :
+\begin{equation}
+\begin{pmatrix}A\\D_x\\D_y\\HH\end{pmatrix}
+=T p,\qquad
+T=\frac12\begin{pmatrix}
+1&1&1&1\\1&-1&1&-1\\1&1&-1&-1\\1&-1&-1&1
+\end{pmatrix}.
+\end{equation}
+$T^{\mathsf T}T=I$ ; on reconstruit par $p=T^{\mathsf T}(A,D_x,D_y,HH)^{\mathsf T}$.
+Par exemple $p_{00}=(A+D_x+D_y+HH)/2$.
+En 2D, chaque sous-bande a un quart des pixels d'entrée : les quatre
+sous-bandes réunies conservent la taille totale. Plusieurs niveaux
+redécomposent la sous-bande d'approximation.
+
+\subsection{Exemple numérique vérifiable}
+Pour $P=\begin{pmatrix}10&12\\14&18\end{pmatrix}$,
+$(A,D_x,D_y,HH)=(27,-3,-5,1)$.
+Le premier pixel reconstruit est $(27-3-5+1)/2=10$.
+L'énergie vaut $764$ aussi bien dans les pixels que dans les coefficients :
+$10^2+12^2+14^2+18^2=27^2+(-3)^2+(-5)^2+1^2$.
+
+\section{Du traitement du signal à la physique du bruit}
+\subsection{Pourquoi HH annule certains fonds}
+Une plage constante donne $HH=0$. Pour un plan affine
+$p(x,y)=c+\alpha x+\beta y$, la même annulation se produit :
+les différences croisées retirent le fond et les deux pentes.
+Cela favorise l'analyse du bruit sur des aplats ou des dégradés réguliers.
+Ce n'est pas une annulation de toute image lisse : courbures mixtes,
+textures et frontières peuvent rester dans HH.
+
+\subsection{Démonstration du facteur 1/2}
+Supposons quatre bruits indépendants, centrés, de même variance $\sigma^2$.
+Le bruit du coefficient HH est leur combinaison de poids
+$w=(1,-1,-1,1)/2$. Sa variance vaut
+\begin{equation}
+\operatorname{Var}(HH)=\sum_i w_i^2\sigma^2
+=4\times\frac14\sigma^2=\sigma^2.
+\end{equation}
+Le facteur 1/2 maintient donc l'échelle du bruit. Avec 1/4, la variance
+serait $\sigma^2/4$ et l'écart-type serait divisé par deux ; une correction
+supplémentaire serait nécessaire pour estimer le bruit d'entrée.
+
+\subsection{Quand le modèle simple cesse d'être exact}
+Si les variances diffèrent, mais que les pixels restent indépendants :
+\begin{equation}
+\operatorname{Var}(HH)=\frac14\sum_{i=1}^4\sigma_i^2.
+\end{equation}
+Avec une covariance $\Sigma$ quelconque :
+\begin{equation}
+\operatorname{Var}(HH)=w^{\mathsf T}\Sigma w.
+\end{equation}
+Un bruit identique ajouté aux quatre pixels s'annule complètement :
+HH peut être nul alors que chaque pixel est bruité.
+Le filtre mesure donc une composante spatiale du bruit, pas tout le bruit.
+
+Le bruit photonique dépend du signal : le nombre de photons suit un modèle
+de Poisson idéal, dont moyenne et variance sont égales. Un modèle simple
+après conversion peut s'écrire $\operatorname{Var}(n\mid s)\simeq\alpha s+\beta$.
+Les paramètres dépendent du capteur et de la chaîne de lecture. Dématriçage,
+corrections optiques et filtrage introduisent ensuite des corrélations.
+Un unique MAD global sur une image développée ne retrouve pas à lui seul
+ces paramètres physiques. Haar ne dépend pas directement de l'ISO.
+
+\section{MAD : passer des coefficients à un estimateur robuste}
+Pour des coefficients $z_i=HH_i$, définir
+\begin{equation}
+m=\operatorname{median}(z_i),\qquad
+\operatorname{MAD}=\operatorname{median}(|z_i-m|).
+\end{equation}
+La médiane est moins sensible aux valeurs isolées extrêmes que la moyenne ;
+elle n'est pas immunisée contre une texture couvrant une grande partie des blocs.
+Le MAD n'est ni la moyenne des distances ni le MAD des intensités brutes.
+SciPy documente cette statistique et sa normalisation gaussienne~\cite{scipyMad}.
+
+Pour $Z\sim\mathcal N(0,1)$ et $q>0$ :
+\begin{equation}
+\Pr(|Z|\le q)=2\Phi(q)-1.
+\end{equation}
+La médiane de $|Z|$ impose $2\Phi(q)-1=1/2$, donc
+$q=\Phi^{-1}(3/4)\simeq0{,}67448975$.
+D'où l'estimateur, cohérent dans ce modèle à grand échantillon :
+\begin{equation}\label{eq:mad}
+\widehat\sigma=\frac{\operatorname{MAD}}{0{,}67448975}.
+\end{equation}
+La constante est statistique, pas une calibration esthétique.
+Un petit échantillon peut donner une estimation imprécise ; hors modèle
+gaussien indépendant, le résultat reste surtout un proxy de dispersion.
+
+\subsection{Exemple et interprétation d'un ratio}
+Pour $z=(-2,-1,0,1,2)$, $m=0$, les distances sont $(2,1,0,1,2)$,
+le MAD vaut 1 et $\widehat\sigma\simeq1{,}4826$.
+Si le proxy passe de $0{,}010$ à $0{,}006$, le ratio vaut 0,6.
+Sous un modèle inchangé, cela correspond à 40\,\% de baisse d'écart-type
+et 64\,\% de baisse de variance, puisque $0{,}6^2=0{,}36$.
+Ce n'est pas une mesure de 40\,\% de pixels nettoyés ni une preuve de qualité.
+
+\section{Estimer n'est pas débruiter : le seuillage}
+Une transformée suivie de son inverse, sans modification, restitue le signal.
+Un débruiteur à ondelettes transforme, réduit des détails puis reconstruit.
+Le seuillage doux est
+\begin{equation}
+S_\lambda(d)=\operatorname{sgn}(d)\max(|d|-\lambda,0).
+\end{equation}
+Par exemple $S_2(-5)=-3$ et $S_2(1)=0$.
+Le seuillage dur conserve $d$ si $|d|>\lambda$ et donne zéro sinon.
+Il est discontinu au seuil ; le seuillage doux est continu mais réduit
+aussi l'amplitude des coefficients conservés.
+
+Les travaux de Donoho étudient cette famille dans un modèle gaussien
+et sous des hypothèses précises~\cite{donohoSoft}. Pour une transformée
+orthonormale de vecteur discret, un seuil universel classique est
+$\lambda=\widehat\sigma\sqrt{2\log M}$, avec $M$ le nombre de coefficients
+de bruit considérés. La normalisation de la base doit rester cohérente.
+Ce seuil peut trop lisser une photographie : ce n'est pas le seuil de \IPR{}.
+Avec $\widehat\sigma=0{,}01$ et $M=65536$, il vaut environ $0{,}0471$.
+
+\section{Application exacte au projet IPR}
+\subsection{Moteur : \texttt{estimateDenoiseSigma}}
+Dans \texttt{src/core/DetailProcessing.cpp}, le moteur :
+\begin{enumerate}
+\item construit les plans Y Rec.709 linéaire, $Co=R-B$ et $Cg=G-(R+B)/2$ ;
+\item prélève des blocs \emph{adjacents} $2\times2$, avec un pas dans la grille
+de blocs pour viser un budget de l'ordre de 16384 échantillons ;
+\item exclut les blocs exactement constants, pour éviter qu'une bordure noire
+impose un MAD nul au reste de l'image ;
+\item calcule HH, sa médiane, le MAD centré et la division par 0,67448975.
+\end{enumerate}
+Les dimensions impaires laissent la dernière ligne/colonne hors de cette
+estimation. Un plan trop petit ou sans bloc retenu donne une estimation nulle.
+Le budget 16384 est un compromis de coût, pas une constante physique.
+Exclure les blocs constants conditionne aussi la population mesurée :
+ce choix ne garantit pas un estimateur sans biais du bruit de toute l'image.
+La médiane C++ utilise le rang supérieur lorsque l'effectif est pair ;
+NumPy utilise la moyenne des deux rangs centraux. Les estimations peuvent
+donc différer légèrement, même avant les autres différences de sélection.
+
+\subsection{Analyse des TIFF : \texttt{noise\_sigma}}
+Dans \texttt{tests/analyse\_noise.py}, les régions contiguës de 256 pixels
+sont lues en 16 bits, décodées sRGB vers le linéaire, puis analysées.
+Le script utilise tous les blocs complets de la région, y compris les blocs
+constants. Il applique le même HH et le MAD centré, mais n'est pas une copie
+bit-exacte de l'estimateur C++ global. Il faut distinguer le diagnostic sur
+une région exportée du paramètre estimé avant les étapes finales du pipeline.
+
+\subsection{Ce que le moteur ne fait pas}
+Le débruitage courant n'effectue \emph{pas} une décomposition/reconstruction
+Haar complète. Haar fournit le niveau estimé du bruit ; le lissage réel
+travaille sur deux résidus gaussiens, avec guide de structure et seuillage.
+Le seuil fin est $\lambda=\widehat\sigma m s$, avec $s$ le curseur divisé
+par 100, $m=2{,}55$ pour Y ou $3{,}15$ pour la couleur.
+Ces multiplicateurs sont empiriques. Ils ne doivent pas être confondus avec
+les constantes normalisées 1/2 ou 0,67448975.
+Les corrections de moyenne, de gamut et le mélange progressif sont des
+étapes supplémentaires, pas des propriétés automatiques de Haar.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule Constante & Nature & Rôle \\ \midrule
+$1/2$ & Normalisation & Norme unité du noyau HH \\
+$0{,}67448975$ & Statistique & Quantile normal pour calibrer le MAD \\
+16384 & Calcul & Budget approximatif d'échantillonnage \\
+$10^{-7}$ & Numérique & Estimation trop petite : débruitage ignoré \\
+2,55 / 3,15 & Empirique & Intensité maximale du seuil fin \\
+\bottomrule
+\end{tabular}
+\end{center}
+Le seuil numérique $10^{-7}$ est dans les unités du plan flottant concerné ;
+ce n'est pas un niveau de bruit universel du capteur.
+
+\section{Limites à reconnaître dans les photographies}
+\begin{longtable}{p{0.25\linewidth}p{0.65\linewidth}}
+\toprule Situation & Conséquence \\ \midrule
+Aplat idéal + bruit blanc & Le MAD HH peut bien estimer l'écart-type.\\
+Cheveux, pelage, feuillage & De vraies variations entrent dans les coefficients ; risque de sur-estimation.\\
+Bruit spatialement corrélé & La variance HH n'est plus nécessairement celle des pixels.\\
+Grandes taches colorées & HH peut peu réagir ; une petite statistique n'implique pas absence de bruit couleur.\\
+Quantification ou zones noires & Beaucoup de coefficients identiques peuvent donner un MAD nul ou des plateaux.\\
+Pas régulier de prélèvement & Certaines structures périodiques peuvent être sur- ou sous-représentées.\\
+Décalage d'un pixel & La grille des paires change ; transformée décimée non invariante par translation.\\
+Dimensions impaires & L'estimation locale actuelle omet un bord ; une transformée complète nécessite une règle explicite.\\
+\bottomrule
+\end{longtable}
+
+Une frontière verticale idéale peut produire $D_x\ne0$ mais $HH=0$.
+Inversement un damier peut produire de forts HH sans bruit aléatoire.
+Si tous les HH du damier sont égaux, le MAD \emph{centré} vaut pourtant zéro.
+Le MAD décrit la dispersion des coefficients, pas leur amplitude maximale.
+
+Haar est court, peu coûteux et facilement explicable ; ses fonctions en
+marches peuvent donner des artefacts en blocs si on les utilise pour un
+débruitage complet agressif. Des filtres plus longs ou une transformation
+non décimée peuvent être envisagés, au prix d'autres compromis. Les valeurs
+de cette section sont des conséquences des équations, pas un classement
+expérimental d'algorithmes pour le corpus IPR.
+
+\section{Travaux pratiques reproductibles}
+Le fichier \texttt{references/haar-exemples.py} accompagne ce cours.
+Il ne lit ni ne modifie aucune photographie et demande seulement NumPy :
+\begin{verbatim}
+python docs/scholar/references/haar-exemples.py
+\end{verbatim}
+Il vérifie les exemples numériques, l'inverse et l'énergie, puis génère
+un aplat gaussien déterministe pour comparer $\sigma$ connu au MAD HH.
+Il montre aussi qu'un bruit commun aux quatre pixels peut disparaître de HH.
+Les tirages synthétiques ne sont pas une validation de qualité photographique.
+Convertir toujours les entiers TIFF en flottants \emph{avant} soustraction :
+en entier non signé, un résultat négatif peut déborder.
+
+L'extrait de principe, pour un plan flottant de dimensions paires, est :
+\begin{verbatim}
+hh = (p[::2, ::2] - p[::2, 1::2]
+      - p[1::2, ::2] + p[1::2, 1::2]) / 2
+center = np.median(hh)
+sigma = np.median(np.abs(hh - center)) / 0.67448975
+\end{verbatim}
+Le script accompagnant ajoute les validations d'entrée et les assertions ;
+ce fragment seul n'est pas une API de production.
+
+\section{Exercices corrigés}
+\subsection*{1. Une paire constante}
+Calculer Haar pour $(7,7)$ puis reconstruire.
+\paragraph{Correction.} $a=7\sqrt{2}$, $d=0$ ; l'inverse redonne $(7,7)$.
+Un détail nul ne signifie pas un signal nul.
+
+\subsection*{2. Un bord vertical sans bruit}
+Pour $P=\begin{pmatrix}0&20\\0&20\end{pmatrix}$, calculer les quatre coefficients.
+\paragraph{Correction.} $(A,D_x,D_y,HH)=(20,-20,0,0)$.
+La frontière est présente malgré un coefficient diagonal nul.
+
+\subsection*{3. Pourquoi ne pas diviser HH par quatre ?}
+Quelle serait la variance sur un bruit indépendant de variance $\sigma^2$ ?
+\paragraph{Correction.} Les quatre poids seraient $\pm1/4$ ; la somme
+de leurs carrés vaut $1/4$. L'écart-type estimé serait donc divisé par deux
+si l'on gardait la calibration MAD actuelle sans correction.
+
+\subsection*{4. MAD et valeur extrême}
+Calculer le MAD de $(-1,0,0,1,100)$.
+\paragraph{Correction.} Médiane 0 ; distances $(1,0,0,1,100)$ ; MAD 1.
+La valeur 100 influence peu cette statistique, sans prouver que le signal
+est gaussien ni que la valeur extrême est un pixel chaud.
+
+\subsection*{5. Lecture critique d'un rapport}
+Un proxy passe de 0,02 à 0,01 après filtrage. Peut-on conclure que
+la moitié des détails ont été conservés et que le rendu est deux fois meilleur ?
+\paragraph{Correction.} Non. Le ratio d'écart-type proxy est 0,5 ;
+le ratio de variance associé serait 0,25 sous les mêmes hypothèses.
+Il faut contrôler luminosité, textures, couleur et contours séparément.
+
+\section{Glossaire et ressources du projet}
+\begin{description}
+\item[Filtre] Combinaison pondérée de valeurs voisines.
+\item[Ondelette] Fonction localisée, déplacée et changée d'échelle pour analyser un signal.
+\item[Approximation] Composante passe-bas ; pas nécessairement une moyenne non normalisée.
+\item[Détail] Composante de variation, pouvant contenir structure et bruit.
+\item[Décimation] Conservation d'un échantillon sur un nombre fixé après filtrage.
+\item[Orthogonalité] Produit scalaire nul entre deux directions de représentation.
+\item[Orthonormalité] Orthogonalité et norme unité ; conservation de l'énergie quadratique.
+\item[HH] Détail obtenu par le filtre passe-haut dans les deux directions.
+\item[MAD] Médiane des distances absolues à la médiane.
+\item[Proxy] Indicateur indirect, dont les hypothèses et limites doivent rester explicites.
+\end{description}
+Ce cours complète \path{cours-08-bruit-grain-signal.tex}.
+Les ressources, depuis la racine du dépôt, sont :
+\begin{itemize}
+\item contrat : \path{docs/architecture/denoising-sharpening.md} ;
+\item moteur : \path{src/core/DetailProcessing.cpp} ;
+\item analyseur : \path{tests/analyse_noise.py} ;
+\item campagne : \path{docs/validation/analyses/analyse-bruit-v2-2026-10-05.md}.
+\end{itemize}
+Le cours explique des modèles ; les preuves de validation restent dans
+les rapports et données brutes, et le moteur n'est pas modifié par ce document.
+
+\resultat{Dans IPR, Haar révèle des variations fines et le MAD en estime
+la dispersion. Leurs constantes normalisées ont une justification mathématique,
+mais l'efficacité du débruitage photographique dépend aussi du modèle de bruit,
+de la sélection spatiale, des seuils, des textures et de la reconstruction.}
+
+\bibliographystyle{plain}
+\begingroup\raggedright\bibliography{references-haar}\endgroup
+\end{document}

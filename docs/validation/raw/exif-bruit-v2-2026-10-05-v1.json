@@ -1,0 +1,51 @@
+{
+  "6V1A9950": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "ISO": 100,
+    "exposure_seconds": 0.0005,
+    "aperture": 2.8
+  },
+  "6V1A0106": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "ISO": 100,
+    "exposure_seconds": 0.000625,
+    "aperture": 5.6
+  },
+  "6V1A1020": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "ISO": 3200,
+    "exposure_seconds": 0.0004,
+    "aperture": 5.6
+  },
+  "6V1A9734": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "ISO": 8000,
+    "exposure_seconds": 0.00025,
+    "aperture": 2.8
+  },
+  "6V1A9421": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "ISO": 3200,
+    "exposure_seconds": 0.001,
+    "aperture": 2.8
+  },
+  "6V1A9377": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "ISO": 1250,
+    "exposure_seconds": 0.00125,
+    "aperture": 2.8
+  },
+  "6V1A8988": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "ISO": 400,
+    "exposure_seconds": 0.005,
+    "aperture": 4.5
+  }
+}

@@ -1,0 +1,92 @@
+\chapter{Architecture et flux de données}
+\label{chap:architecture}
+
+\section{Vue d'ensemble}
+
+L'interface QML constitue la couche de présentation. Elle délègue l'ouverture, les réglages, la navigation et l'export à \texttt{ImageEditor}, objet C++ exposé à QML. Le moteur orchestre le cache, le décodage, les profils et le pipeline colorimétrique. Les résultats sont mis à disposition de QML par un fournisseur d'images et par un fournisseur de vignettes.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=9mm and 13mm]
+  \node[component] (qml) {QML\\Main, Settings, ruban de vignettes};
+  \node[component, right=of qml] (editor) {\texttt{ImageEditor}\\orchestration et état};
+  \node[service, right=of editor] (pipeline) {Décodage RAW / profils\\\texttt{ColorPipeline}\\rendu};
+  \node[service, below=of pipeline] (cache) {\texttt{DecodedImageCache}\\LRU borné};
+  \node[storage, below=of editor] (sidecar) {Source +\\sidecar \texttt{.ipr}};
+  \node[component, below=of qml] (providers) {\texttt{ImageProvider}\\\texttt{ThumbnailProvider}};
+  \draw[flow] (qml) -- node[above, font=\scriptsize]{signaux / propriétés} (editor);
+  \draw[flow] (editor) -- node[above, font=\scriptsize]{demande de rendu} (pipeline);
+  \draw[flow] (editor) -- (sidecar);
+  \draw[flow] (editor) -- (cache);
+  \draw[flow] (pipeline) -- (cache);
+  \draw[flow] (editor) -- (providers);
+  \draw[flow] (providers) -- (qml);
+\end{tikzpicture}
+\caption{Architecture logique de \IPR{}.}
+\end{figure}
+
+\section{Préférences globales de présentation}
+
+Le service C++ \texttt{UiPreferences}, exposé à QML séparément de
+\texttt{ImageEditor}, conserve l'état de l'interface dans le fichier utilisateur
+\texttt{ipr-ui.ini}. Le chemin est résolu par
+\texttt{QStandardPaths}, via \texttt{AppConfigLocation}, pas par le dossier des photos.
+Le schéma 2 est validé au chargement ; l'ancienne sélection magenta (indice 6)
+est migrée vers 7 depuis le schéma 1. Un fichier de version plus récente reste
+inchangé et en lecture seule. Les écritures sont regroupées pendant 400~ms et
+synchronisées à la fermeture par \texttt{QSettings::IniFormat}, avec
+synchronisation atomique requise~\cite{qtQSettings,qtQStandardPaths}.
+La géométrie normale est conservée indépendamment de l'état maximisé ou plein
+écran ; la fenêtre est replacée sur un écran disponible au redémarrage.
+Le contrat complet est décrit dans \texttt{docs/architecture/ui-preferences.md}.
+
+\section{Image de travail et ordonnancement}
+
+L'image de travail est une représentation RGBA à virgule flottante, \texttt{WorkingImage}. Elle évite les erreurs d'arrondi prématurées et autorise des valeurs supérieures à~1 avant le codage de sortie. Le moteur applique les corrections dans un ordre explicite :
+
+\begin{enumerate}
+  \item décodage et normalisation de l'image source ;
+  \item exposition, contraste et réglages de tonalité ;
+  \item température, teinte et corrections de chrominance ;
+  \item mélangeur de couleur, color grading, texture, clarté, voile et grain ;
+  \item courbes de tonalité et courbes de canaux ;
+  \item conversion vers le format et l'espace de sortie.
+\end{enumerate}
+
+Cet ordre importe : une correction de balance des blancs agit sur des données plus proches du capteur, tandis que les courbes servent de finition. Les rendus sont déclenchés avec une temporisation courte lors d'une manipulation continue afin de regrouper les événements d'un curseur.
+
+\section{Zoom et comparaison origine/actuel}
+
+Le composant \texttt{ImageViewport.qml} affiche le proxy de travail avec un
+zoom et un déplacement communs aux deux rendus. Le bouton Avant/après,
+également accessible par Ctrl Maj C, sépare l'origine à gauche du rendu
+actuel à droite. Une frontière mobile définit deux clips complémentaires,
+sans double composition alpha. Le zoom à 100\,\% porte sur les pixels du
+proxy (plus grand côté limité à 2048 pixels), pas sur le RAW pleine résolution.
+
+La référence est la source déjà décodée, profilée et développée par IPR,
+encodée en sRGB 8 bits sans les réglages de l'éditeur ou du sidecar. Elle
+n'est pas le JPEG intégré au RAW. Sa conversion est calculée en tâche de
+fond au premier rendu accepté, puis réutilisée pendant les réglages.
+\texttt{ImageProvider} publie la paire sous verrou avant notification QML ;
+\texttt{originalImageSource} conserve une URL stable, contrairement à
+\texttt{imageSource}, révisée à chaque rendu. Au changement de source,
+les deux références sont effacées. Un redécodage de balance des blancs
+automatique renouvelle aussi cette origine.
+
+Le stockage CPU supplémentaire du provider est au maximum un aperçu de
+16~Mio de pixels, hors ressources Qt Quick ; aucun RAW supplémentaire n'est
+décodé pour activer la comparaison. Le zoom, le mode et la séparation ne
+sont persistés ni dans l'INI ni dans le sidecar. L'histogramme et l'export
+restent ceux du rendu actuel. Le contrat détaillé est dans
+\texttt{docs/specifications/zoom-image.md}.
+
+\section{Cache et durée de vie mémoire}
+
+\texttt{DecodedImageCache} conserve les images décodées récentes selon une politique \emph{Least Recently Used} (LRU). L'accès à une image la rend la plus récente ; lorsqu'une insertion dépasse la capacité, l'entrée la moins récemment utilisée est libérée. Ce mécanisme sépare le coût de décodage du coût de rendu et évite que l'exploration d'un grand dossier n'accapare indéfiniment la mémoire.
+
+Les vignettes suivent une politique distincte : la vue charge les éléments visibles et un voisinage de préchargement, actuellement estimé à quatre images avant et après la zone visible. Les éléments trop éloignés sont évincés. Ce nombre reste un paramètre de performance à mesurer sur les corpus cibles.
+
+\section{Profils appareil et objectif}
+
+Les profils DCP (rendu couleur de boîtier) et LCP (corrections d'objectif) sont recherchés dans une bibliothèque locale indexée. Cette stratégie accélère la résolution des profils et évite une exploration répétée de l'arborescence d'installation. Les fichiers de profils doivent provenir d'une source dont la licence autorise explicitement leur redistribution ; l'index local ne constitue pas une autorisation de copier les profils d'un produit tiers.

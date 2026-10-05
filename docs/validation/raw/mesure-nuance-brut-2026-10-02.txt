@@ -1,0 +1,7 @@
+TINT
+  LR: 8 scenes
+    bare: RGB=0.4821,1.2068,0.4352; Y=0.9910; delta_log_RB_over_G=-1.7258; clip=3.708%
+    suffix_2: RGB=1.6464,0.6755,2.2067; Y=0.9916; delta_log_RB_over_G=1.5266; clip=16.382%
+  IPR: 8 scenes
+    bare: RGB=0.8094,1.9198,0.7739; Y=1.6003; delta_log_RB_over_G=-1.0285; clip=4.250%
+    suffix_2: RGB=1.3913,0.5062,1.3813; Y=0.7553; delta_log_RB_over_G=1.0572; clip=4.000%

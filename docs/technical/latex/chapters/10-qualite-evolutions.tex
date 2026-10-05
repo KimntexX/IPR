@@ -1,0 +1,23 @@
+\chapter{Qualité, validation et évolutions}
+\label{chap:qualite}
+
+\section{État de validation}
+
+Les ajustements fondamentaux ont été comparés à des exports de référence sur un corpus TIFF en sRGB : exposition, noirs, ombres, blancs, hautes lumières, contraste et température. Les mesures utilisent notamment les différences par pixel (MAE) et des inspections de superposition lorsque les dimensions et l'encodage le permettent. Cette méthode distingue un décalage spatial d'une différence de rendu.
+
+Les fonctions plus récentes -- mélangeur de couleur, color grading, sidecars et application par lot -- ont des tests de compilation et d'export, mais demandent encore une validation manuelle complète dans l'interface. Les contrôles à vérifier sont la synchronisation champ/curseur, la réinitialisation au changement d'image, la restauration de sidecar et la portée exacte de l'application en lot.
+
+\section{Éléments à compléter avant une distribution}
+
+\begin{itemize}
+  \item Établir des jeux de tests reproductibles pour chaque réglage et enregistrer les métriques dans un format structuré.
+  \item Mesurer la durée d'ouverture sur des RAW représentatifs, le pic mémoire et l'efficacité réelle du cache LRU et du préchargement de vignettes.
+  \item Formaliser la compatibilité des profils DCP/LCP : origine, licence, version et droit de redistribution de chaque fichier.
+  \item Définir un schéma de versionnement/migration du sidecar \texttt{.ipr}, ainsi qu'une stratégie de sauvegarde et de résolution de conflit.
+  \item Ajouter un test de non-régression pour le rendu des profils, le rendu en lot et les métadonnées.
+  \item Documenter le format d'export final (profondeur, profil ICC incorporé, métadonnées EXIF/XMP) et ses conditions d'utilisation.
+\end{itemize}
+
+\section{Gouvernance documentaire proposée}
+
+Les rapports expérimentaux sont répartis entre \texttt{docs/validation} (protocole, analyse et mesures) et \texttt{docs/reports} (journal de séance). La présente arborescence est la documentation normative compilable. Toute fonctionnalité terminée doit mettre à jour son chapitre, ses diagrammes concernés, les références bibliographiques, la matrice de validation et un scénario de test. Les décisions d'architecture transverses doivent être ajoutées à une courte ADR (\emph{Architecture Decision Record}) afin de ne pas dépendre exclusivement des rapports de session.

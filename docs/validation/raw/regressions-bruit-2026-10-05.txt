@@ -1,0 +1,31 @@
+Consolidation du 5 octobre 2026 — tests synthétiques, pas des exports photographiques.
+Source : tests/detail_processing_test.cpp ; images 256x256, graine 812.
+Moteur SHA-256 : a3af2978884728da45edf2903f35959ba926bfbab7f629b9728a4d85bf0f0b23
+Test SHA-256 : eb820dc191d4f27373b2feb4c232218dd1ac234c0e9d13b39d5add095c715108
+Copie de la sortie detailProcessingTests de CTest Windows Release ; contrôle WSL également exécuté.
+
+gray noise=0.0001 amount=1 sigma_ratio=0.999836
+gray noise=0.0001 amount=5 sigma_ratio=0.992809
+gray noise=0.0001 amount=10 sigma_ratio=0.971318
+gray noise=0.0001 amount=25 sigma_ratio=0.83146
+gray noise=0.0001 amount=50 sigma_ratio=0.523419
+gray noise=0.0001 amount=75 sigma_ratio=0.252618
+gray noise=0.0001 amount=100 sigma_ratio=0.00907773
+gray noise=0.005 amount=1 sigma_ratio=0.999804
+gray noise=0.005 amount=5 sigma_ratio=0.992714
+gray noise=0.005 amount=10 sigma_ratio=0.971257
+gray noise=0.005 amount=25 sigma_ratio=0.831461
+gray noise=0.005 amount=50 sigma_ratio=0.523404
+gray noise=0.005 amount=75 sigma_ratio=0.252621
+gray noise=0.005 amount=100 sigma_ratio=0.00908287
+chroma sigma_ratio=0.00912359
+dark luma=100 color=0 relative_mean_drift=-2.70381e-09
+dark luma=0 color=100 relative_mean_drift=-3.93184e-11
+dark luma=100 color=100 relative_mean_drift=-2.66819e-09
+strong_edge_contrast_ratio=0.993351
+isoluminant_color_edge_ratio=0.986932
+
+La réduction du MAD haute fréquence ne mesure pas une fidélité de reconstruction.
+La conservation de la moyenne globale ne garantit pas celle de chaque région locale.
+Les dimensions et la luminance mesurée diffèrent de la sonde historique YCoCg 512x512 :
+pas de comparaison numérique stricte entre les deux sorties.

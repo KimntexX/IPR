@@ -1,0 +1,30 @@
+\input{preamble}
+\title{Cours 6 -- Correction de voile : diffusion atmosphérique et Dark Channel Prior}
+\begin{document}
+\coursmeta{3 octobre 2026}{Modèle physique simplifié et estimation statistique employés par le réglage Voile.}
+
+\section{Modèle physique}
+Dans un milieu diffusant, la lumière observée est la combinaison de la radiance de scène atténuée et de la lumière voilante de l'atmosphère :
+\begin{equation}
+I(x)=J(x)t(x)+A(1-t(x)).
+\end{equation}
+$I$ est le pixel observé, $J$ la scène recherchée, $A$ l'éclairement atmosphérique et $t\in[0,1]$ la transmission. Si $t$ est faible, les contrastes diminuent et les couleurs convergent vers $A$.
+
+Le \emph{Dark Channel Prior} (DCP) constate que, hors ciel, une petite fenêtre de scène naturelle contient souvent au moins un canal sombre. Le canal noir est $D(x)=\min_{y\in\Omega(x)}\min_c I_c(y)$. Une érosion morphologique approxime cette recherche locale~\cite{he2009,he2011}.
+
+\section{Application dans \IPR{}}
+Le moteur calcule le minimum RGB, l'érode avec un noyau carré impair, estime $A$ au percentile $99$ de sous-échantillons lumineux, puis forme une transmission
+\begin{equation}
+t=\operatorname{clamp}(1-0{,}85\,a\,D/A,\;0{,}12,\;2).
+\end{equation}
+L'inversion est $J=(I-A)/t+A$. Un réglage négatif ajoute du voile; un réglage positif en retire. Les canaux finaux sont bornés à zéro, la compression de gamut étant reportée à l'export.
+
+\section{Exemple}
+Dans un paysage brumeux, les zones éloignées ont un minimum RGB élevé et une transmission faible : le rendu augmente leur contraste. Dans une scène de studio blanche, l'hypothèse DCP est faible; le même réglage peut créer une couleur artificielle. C'est pourquoi ce contrôle reste global et modéré.
+
+\section{Pourquoi les constantes sont bornées}
+Le maximum de 8192 échantillons borne le coût de l'estimation de percentile. Le noyau est limité à 15 pixels afin de ne pas transformer le voile en correction globale de grande échelle. Le plancher $t=0{,}12$ évite la division explosive qui amplifie bruit et artefacts. Le facteur $0{,}85$ est le compromis DCP classique entre correction et préservation d'une petite quantité de voile naturel.
+
+\resultat{Le voile n'est pas une simple hausse de contraste : c'est l'inversion régularisée d'un modèle de diffusion, fiable surtout lorsque son hypothèse de scène est satisfaite.}
+\bibliographystyle{plain}\bibliography{references}
+\end{document}

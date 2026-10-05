@@ -1,0 +1,87 @@
+% Documentation technique IPR -- compiler avec latexmk ou pdflatex/bibtex.
+\documentclass[11pt,a4paper,oneside]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.35cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc,backgrounds}
+
+\hypersetup{
+  pageanchor=false,
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  citecolor=blue!55!black,
+  urlcolor=blue!55!black,
+  pdftitle={Documentation technique -- IPR},
+  pdfauthor={Projet IPR}
+}
+
+\definecolor{iprblue}{HTML}{1F4E79}
+\definecolor{iprgreen}{HTML}{2D6A4F}
+\definecolor{iprgray}{HTML}{5B6573}
+\tikzset{
+  component/.style={draw=iprblue, rounded corners=2pt, fill=blue!4, align=center, minimum height=8mm, text width=33mm},
+  service/.style={draw=iprgreen!80!black, rounded corners=2pt, fill=green!5, align=center, minimum height=8mm, text width=34mm},
+  storage/.style={draw=iprgray, cylinder, shape border rotate=90, aspect=0.28, fill=gray!8, align=center, minimum height=8mm, text width=29mm},
+  actor/.style={draw=iprblue, rounded corners=9pt, fill=blue!6, align=center, minimum width=27mm, minimum height=8mm},
+  flow/.style={-{Stealth[length=2.2mm]}, thick, iprgray},
+  message/.style={-{Stealth[length=1.8mm]}, thin, iprblue}
+}
+
+\newcommand{\IPR}{\textsc{ipr}}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2.7cm}
+{\Huge\bfseries Documentation technique\par}
+\vspace{0.35cm}
+{\LARGE \IPR{} -- Image Processing and Rendering\par}
+\vspace{1.2cm}
+{\large Architecture, pipeline de développement RAW, interface et persistance\par}
+\vfill
+\begin{tabular}{rl}
+Version & 0.1 -- état du projet au 3 octobre 2026\\
+Statut & Document vivant -- sources LaTeX versionnées\\
+Périmètre & Application bureau Windows 10/11, Qt 6, C++ et QML
+\end{tabular}
+\vfill
+{\small Les chapitres non démarrés sont présents comme jalons volontairement vides.}
+\end{titlepage}
+
+\pagenumbering{roman}
+\hypersetup{pageanchor=true}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\input{chapters/01-projet}
+\input{chapters/02-architecture}
+\input{chapters/03-parcours-utilisateur}
+\input{chapters/04-diagrammes-classes}
+\input{chapters/05-sequences}
+\input{chapters/06-reglages-existants}
+\input{chapters/07-recadrage-geometrie}
+\input{chapters/08-masques-retouche}
+\input{chapters/09-ia}
+\input{chapters/10-qualite-evolutions}
+\input{chapters/11-glossaire}
+
+\clearpage
+\addcontentsline{toc}{chapter}{Bibliographie}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

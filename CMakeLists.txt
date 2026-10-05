@@ -1,0 +1,234 @@
+cmake_minimum_required(VERSION 3.21)
+
+project(IPR VERSION 0.2)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+option(IPR_ENABLE_LIBRAW "Enable CR2/CR3/DNG decoding through LibRaw" ON)
+option(IPR_BUILD_RAW_BENCHMARK "Build the command-line RAW loading benchmark" OFF)
+
+find_package(Qt6 6.4 REQUIRED COMPONENTS Core Gui Quick Concurrent)
+find_package(TIFF REQUIRED)
+find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
+qt_standard_project_setup()
+
+set(IPR_SOURCE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(IPR_INCLUDE_DIRECTORIES
+    "${IPR_SOURCE_ROOT}/app"
+    "${IPR_SOURCE_ROOT}/cache"
+    "${IPR_SOURCE_ROOT}/core"
+    "${IPR_SOURCE_ROOT}/editor"
+    "${IPR_SOURCE_ROOT}/profiles"
+    "${IPR_SOURCE_ROOT}/providers"
+    "${IPR_SOURCE_ROOT}/raw"
+)
+
+set(IPR_ENGINE_SOURCES
+    src/app/UiPreferences.h
+    src/app/UiPreferences.cpp
+    src/cache/DecodedImageCache.h
+    src/cache/DecodedImageCache.cpp
+    src/core/ColorPipeline.h
+    src/core/ColorPipeline.cpp
+    src/core/ColorMixer.h
+    src/core/ColorMixer.cpp
+    src/core/DetailProcessing.h
+    src/core/DetailProcessing.cpp
+    src/editor/imageeditor.h
+    src/editor/imageeditor.cpp
+    src/profiles/CameraProfileEngine.h
+    src/profiles/CameraProfileEngine.cpp
+    src/providers/imageprovider.h
+    src/providers/imageprovider.cpp
+    src/providers/ThumbnailProvider.h
+    src/providers/ThumbnailProvider.cpp
+    src/raw/RawBlackLevelEstimator.h
+    src/raw/RawBlackLevelEstimator.cpp
+    src/raw/RawDecoder.h
+    src/raw/RawDecoder.cpp
+)
+
+set(IPR_QML_FILES
+    src/qml/Main.qml
+    src/qml/ImageViewport.qml
+    src/qml/HistogramModule.qml
+    src/qml/Setting.qml
+    src/qml/SettingsSection.qml
+    src/qml/AdjustmentControl.qml
+    src/qml/CurveChannelButton.qml
+    src/qml/ToneCurveModule.qml
+    src/qml/ColorMixerModule.qml
+    src/qml/ColorGradingModule.qml
+    src/qml/ImageInfoPanel.qml
+    src/qml/ThumbnailRibbon.qml
+)
+
+# The module keeps its public QML type names and qrc URLs stable while the
+# sources live under src/qml.
+foreach(qml_file IN LISTS IPR_QML_FILES)
+    get_filename_component(qml_alias "${qml_file}" NAME)
+    set_source_files_properties("${qml_file}" PROPERTIES QT_RESOURCE_ALIAS "${qml_alias}")
+endforeach()
+
+add_library(iprEngine STATIC ${IPR_ENGINE_SOURCES})
+qt_add_resources(iprEngine ipr_ui_defaults
+    PREFIX "/"
+    FILES config/ipr-ui.ini
+)
+target_include_directories(iprEngine PUBLIC ${IPR_INCLUDE_DIRECTORIES})
+target_link_libraries(iprEngine
+    PUBLIC
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Quick
+        Qt6::Concurrent
+        TIFF::TIFF
+        ${OpenCV_LIBS}
+)
+
+if(IPR_ENABLE_LIBRAW)
+    find_path(LIBRAW_INCLUDE_DIR
+        NAMES libraw/libraw.h libraw.h
+    )
+    find_library(LIBRAW_LIBRARY
+        NAMES raw libraw
+    )
+
+    if(LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY)
+        target_include_directories(iprEngine PUBLIC ${LIBRAW_INCLUDE_DIR})
+        target_link_libraries(iprEngine PUBLIC ${LIBRAW_LIBRARY})
+        target_compile_definitions(iprEngine PUBLIC IPR_WITH_LIBRAW=1)
+        message(STATUS "LibRaw enabled: CR2/CR3/DNG import is available")
+    else()
+        message(WARNING
+            "LibRaw was not found: JPG/PNG/TIFF work, but CR2/CR3/DNG import is disabled. "
+            "Install LibRaw and configure CMake again, or use -DIPR_ENABLE_LIBRAW=OFF.")
+    endif()
+endif()
+
+qt_add_executable(appIPR
+    src/app/main.cpp
+)
+
+qt_add_qml_module(appIPR
+    URI IPR
+    VERSION 1.0
+    QML_FILES ${IPR_QML_FILES}
+)
+
+target_link_libraries(appIPR PRIVATE iprEngine)
+
+set_target_properties(appIPR PROPERTIES
+    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ipr
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE
+)
+
+include(GNUInstallDirs)
+install(TARGETS appIPR
+    BUNDLE DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+if(IPR_BUILD_RAW_BENCHMARK AND IPR_ENABLE_LIBRAW AND
+   LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY)
+    add_executable(rawLoadBenchmark tests/raw_load_benchmark.cpp)
+    target_link_libraries(rawLoadBenchmark PRIVATE iprEngine)
+endif()
+
+include(CTest)
+if(BUILD_TESTING)
+    function(ipr_add_test target source)
+        add_executable(${target} ${source})
+        target_link_libraries(${target} PRIVATE iprEngine)
+        add_test(NAME ${target} COMMAND ${target})
+    endfunction()
+
+    ipr_add_test(colorPipelineTests tests/color_pipeline_test.cpp)
+    ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
+    ipr_add_test(imageExportTests tests/image_export_test.cpp)
+    ipr_add_test(colorMixerMathTests tests/color_mixer_math_test.cpp)
+    add_executable(colorMixerNeutralProbe tests/color_mixer_neutral_probe.cpp)
+    target_link_libraries(colorMixerNeutralProbe PRIVATE iprEngine)
+    add_test(NAME colorMixerNeutralTests COMMAND colorMixerNeutralProbe)
+    ipr_add_test(colorMixerQmlTests tests/color_mixer_qml_test.cpp)
+    target_compile_definitions(colorMixerQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(colorMixerQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(settingsQmlTests tests/settings_qml_test.cpp)
+    target_compile_definitions(settingsQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(settingsQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(imageViewportQmlTests tests/image_viewport_qml_test.cpp)
+    target_compile_definitions(imageViewportQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(imageViewportQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic"
+        LABELS "unit;viewport;qml")
+    ipr_add_test(uiPreferencesTests tests/ui_preferences_test.cpp)
+    ipr_add_test(uiPreferencesQmlTests tests/ui_preferences_qml_test.cpp)
+    qt_add_resources(uiPreferencesQmlTests ipr_ui_test_qml
+        PREFIX "/IPR"
+        FILES ${IPR_QML_FILES}
+    )
+    target_compile_definitions(uiPreferencesQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(uiPreferencesTests uiPreferencesQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(rawDecoderTests tests/raw_decoder_test.cpp)
+    ipr_add_test(rawBlackLevelEstimatorTests tests/raw_black_level_estimator_test.cpp)
+    ipr_add_test(cameraProfileEngineTests tests/camera_profile_engine_test.cpp)
+    set_tests_properties(colorPipelineTests PROPERTIES LABELS "unit;pipeline")
+    set_tests_properties(detailProcessingTests PROPERTIES LABELS "unit;pipeline;detail;noise")
+    set_tests_properties(imageExportTests PROPERTIES LABELS "unit;export;pipeline")
+    set_tests_properties(colorMixerMathTests colorMixerNeutralTests colorMixerQmlTests
+        PROPERTIES LABELS "unit;color-mixer")
+    set_tests_properties(settingsQmlTests PROPERTIES LABELS "unit;settings;qml")
+    set_tests_properties(uiPreferencesTests uiPreferencesQmlTests
+        PROPERTIES LABELS "unit;preferences;qml")
+    set_tests_properties(rawDecoderTests rawBlackLevelEstimatorTests
+        PROPERTIES LABELS "unit;raw")
+    set_tests_properties(cameraProfileEngineTests PROPERTIES LABELS "unit;profiles")
+endif()
+
+if(BUILD_TESTING AND UNIX AND IPR_ENABLE_LIBRAW AND
+   LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY)
+    add_executable(rawProfileIntegrationProbe tests/raw_profile_integration_probe.cpp)
+    target_link_libraries(rawProfileIntegrationProbe PRIVATE iprEngine)
+
+    add_executable(whiteBalanceEstimationTest tests/white_balance_estimation_test.cpp)
+    target_link_libraries(whiteBalanceEstimationTest PRIVATE iprEngine)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/image/6V1A9933.CR3")
+        add_test(
+            NAME whiteBalanceEstimationTest
+            COMMAND whiteBalanceEstimationTest
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/image/6V1A9933.CR3"
+        )
+    endif()
+
+    add_executable(rawBlackLevelCorpusProbe tests/raw_black_level_corpus_probe.cpp)
+    target_link_libraries(rawBlackLevelCorpusProbe PRIVATE iprEngine)
+
+    add_executable(tonalReferenceComparisonProbe
+        tests/tonal_reference_comparison_probe.cpp
+    )
+    target_link_libraries(tonalReferenceComparisonProbe PRIVATE iprEngine)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/image/6V1A9933.CR3" AND
+       EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/image/6V1A9933.jpg")
+        add_test(
+            NAME tonalReferenceComparisonProbe
+            COMMAND tonalReferenceComparisonProbe
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/image/6V1A9933.CR3"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/image/6V1A9933.jpg"
+                "${CMAKE_CURRENT_BINARY_DIR}/6V1A9933-auto-wb.jpg"
+                "${CMAKE_CURRENT_BINARY_DIR}/6V1A9933-camera-wb.jpg"
+        )
+        set_tests_properties(tonalReferenceComparisonProbe PROPERTIES TIMEOUT 180)
+    endif()
+endif()

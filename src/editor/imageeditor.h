@@ -1,0 +1,317 @@
+#ifndef IMAGEEDITOR_H
+#define IMAGEEDITOR_H
+
+#include "ColorPipeline.h"
+#include "ColorMixer.h"
+#include "DecodedImageCache.h"
+#include "RawDecoder.h"
+
+#include <QAbstractListModel>
+#include <QFutureWatcher>
+#include <QHash>
+#include <QImage>
+#include <QTimer>
+#include <QUrl>
+#include <QVariantList>
+#include <QVariantMap>
+#include <QVector>
+#include <QSet>
+#include <QStringList>
+
+#include <array>
+
+class ImageProvider;
+class ThumbnailProvider;
+
+class ImageListModel final : public QAbstractListModel
+{
+    Q_OBJECT
+
+public:
+    enum Role
+    {
+        FileNameRole = Qt::UserRole + 1,
+        FileUrlRole
+    };
+    Q_ENUM(Role)
+
+    explicit ImageListModel(QObject *parent = nullptr);
+
+    int rowCount(const QModelIndex &parent = {}) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QHash<int, QByteArray> roleNames() const override;
+
+    void setFolder(const QUrl &folder);
+    int count() const;
+    QStringList localFiles(int first, int last) const;
+
+private:
+    struct Entry
+    {
+        QString fileName;
+        QUrl fileUrl;
+    };
+    QList<Entry> m_entries;
+};
+
+class ImageEditor final : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QAbstractItemModel *imageModel READ imageModel CONSTANT)
+    Q_PROPERTY(QUrl folder READ folder NOTIFY folderChanged)
+    Q_PROPERTY(QString imageSource READ imageSource NOTIFY previewChanged)
+    Q_PROPERTY(QString originalImageSource READ originalImageSource NOTIFY previewChanged)
+    Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
+    Q_PROPERTY(bool hasImage READ hasImage NOTIFY hasImageChanged)
+    Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
+    Q_PROPERTY(QString imageInfo READ imageInfo NOTIFY imageInfoChanged)
+    Q_PROPERTY(QVariantMap imageDetails READ imageDetails NOTIFY imageInfoChanged)
+    Q_PROPERTY(int imageRating READ imageRating NOTIFY imageInfoChanged)
+    Q_PROPERTY(QString imageColorLabel READ imageColorLabel NOTIFY imageInfoChanged)
+    Q_PROPERTY(bool imageFlagged READ imageFlagged NOTIFY imageInfoChanged)
+    Q_PROPERTY(QVariantList histogram READ histogram NOTIFY histogramChanged)
+    Q_PROPERTY(qulonglong decodedImageCacheBudgetBytes
+               READ decodedImageCacheBudgetBytes
+               WRITE setDecodedImageCacheBudgetBytes
+               NOTIFY decodedImageCacheChanged)
+    Q_PROPERTY(qulonglong decodedImageCacheSizeBytes
+               READ decodedImageCacheSizeBytes NOTIFY decodedImageCacheChanged)
+    Q_PROPERTY(int decodedImageCacheEntryCount
+               READ decodedImageCacheEntryCount NOTIFY decodedImageCacheChanged)
+    Q_PROPERTY(int selectedImageCount READ selectedImageCount NOTIFY selectionChanged)
+    Q_PROPERTY(QStringList selectedImageUrls READ selectedImageUrls NOTIFY selectionChanged)
+
+public:
+    enum ToneCurveChannel
+    {
+        LuminanceCurve,
+        RedCurve,
+        GreenCurve,
+        BlueCurve
+    };
+    Q_ENUM(ToneCurveChannel)
+
+    explicit ImageEditor(ImageProvider *provider,
+                         ThumbnailProvider *thumbnailProvider = nullptr,
+                         QObject *parent = nullptr);
+
+    QAbstractItemModel *imageModel();
+    QUrl folder() const;
+    QString imageSource() const;
+    QString originalImageSource() const;
+    QString statusMessage() const;
+    bool hasImage() const;
+    bool busy() const;
+    QString imageInfo() const;
+    QVariantMap imageDetails() const;
+    int imageRating() const;
+    QString imageColorLabel() const;
+    bool imageFlagged() const;
+    QVariantList histogram() const;
+    qulonglong decodedImageCacheBudgetBytes() const;
+    qulonglong decodedImageCacheSizeBytes() const;
+    int decodedImageCacheEntryCount() const;
+    int selectedImageCount() const;
+    QStringList selectedImageUrls() const;
+    Q_INVOKABLE QUrl defaultExportFile(const QString &format,
+                                     const QUrl &previousTarget = QUrl()) const;
+    Q_INVOKABLE QVariantList toneCurve(int channel) const;
+    Q_INVOKABLE QString thumbnailSource(const QUrl &fileUrl) const;
+
+    Q_INVOKABLE void openFolder(const QUrl &folder);
+    Q_INVOKABLE void openImage(const QUrl &fileUrl);
+    Q_INVOKABLE void loadImage(const QUrl &fileUrl);
+    Q_INVOKABLE void setThumbnailWindow(int firstVisible, int lastVisible,
+                                        int prefetchCount);
+    Q_INVOKABLE void setImageSelected(const QUrl &fileUrl, bool selected);
+    Q_INVOKABLE void clearImageSelection();
+    Q_INVOKABLE void applyAdjustmentsToSelection();
+    Q_INVOKABLE int colorMixerValue(int band, int component) const;
+    Q_INVOKABLE int colorGradingValue(int zone, int component) const;
+    Q_INVOKABLE double adjustmentValue(const QString &name) const;
+    Q_INVOKABLE void setImageRating(int rating);
+    Q_INVOKABLE void setImageColorLabel(const QString &colorLabel);
+    Q_INVOKABLE void setImageFlagged(bool flagged);
+    Q_INVOKABLE void setDecodedImageCacheBudgetBytes(qulonglong budgetBytes);
+    Q_INVOKABLE void setBrightness(float value);
+    Q_INVOKABLE void setContrast(int value);
+    Q_INVOKABLE void setBlur(int value);
+    Q_INVOKABLE void setShadows(int value);
+    Q_INVOKABLE void setBlacks(int value);
+    Q_INVOKABLE void setHighlights(int value);
+    Q_INVOKABLE void setWhites(int value);
+    Q_INVOKABLE void setTemperature(int value);
+    Q_INVOKABLE void setTint(int value);
+    Q_INVOKABLE void setVibrance(int value);
+    Q_INVOKABLE void setSaturation(int value);
+    Q_INVOKABLE void setTexture(int value);
+    Q_INVOKABLE void setClarity(int value);
+    Q_INVOKABLE void setDehaze(int value);
+    Q_INVOKABLE void setGrain(int value);
+    Q_INVOKABLE void setDenoiseLuminance(int value);
+    Q_INVOKABLE void setDenoiseChrominance(int value);
+    Q_INVOKABLE void setSharpeningAmount(int value);
+    Q_INVOKABLE void setSharpeningRadius(float value);
+    Q_INVOKABLE void setSharpeningMasking(int value);
+    Q_INVOKABLE void setColorMixer(int band, int hue, int saturation,
+                                   int luminance);
+    Q_INVOKABLE void setColorGrading(int zone, int hue, int saturation);
+    Q_INVOKABLE void setAutomaticWhiteBalance(bool enabled);
+    Q_INVOKABLE void setGrayscale(bool enabled);
+    Q_INVOKABLE void setToneCurve(int channel, const QVariantList &points);
+    Q_INVOKABLE void resetToneCurve(int channel);
+    Q_INVOKABLE void resetToneCurves();
+    Q_INVOKABLE void resetAdjustments();
+    Q_INVOKABLE void exportImage(const QUrl &target, const QString &format,
+                                 int quality);
+
+signals:
+    void folderChanged();
+    void previewChanged();
+    void statusMessageChanged();
+    void hasImageChanged();
+    void busyChanged();
+    void imageInfoChanged();
+    void histogramChanged();
+    void decodedImageCacheChanged();
+    void selectionChanged();
+    void toneCurveChanged(int channel);
+    void toneCurvesReset();
+    void adjustmentsReset(int temperatureKelvin, int tint);
+
+private:
+    struct ToneCurvePoint
+    {
+        float x = 0.0f;
+        float y = 0.0f;
+    };
+
+    struct Settings
+    {
+        float brightness = 0; // gestion de l'exposition
+        int contrast = 0;   // gestion du contraste
+        int blur = 0;
+        bool grayscale = false;
+        int shadows = 0;    // gestion des ombres
+        int blacks = 0;     // gestion des noirs
+        int highlights = 0; // gestion des hautes lumières
+        int whites = 0;     // gestion des blancs
+        int temperature = 6500; // température cible en kelvins
+        int tint = 0;       // nuance relative de -150 (vert) à +150 (magenta)
+        int vibrance = 0;   // priorité aux couleurs peu saturées
+        int saturation = 0; // intensité uniforme de la chrominance
+        int texture = 0;    // micro-contraste local
+        int clarity = 0;    // contraste local à plus grande échelle
+        int dehaze = 0;     // récupération ou ajout de voile
+        int grain = 0;      // grain monochrome déterministe
+        int denoiseLuminance = 0;
+        int denoiseChrominance = 0;
+        int sharpeningAmount = 0;
+        float sharpeningRadius = 1.0f;
+        int sharpeningMasking = 0;
+        // Red, orange, yellow, green, cyan, blue, violet, magenta (sidecar v4).
+        std::array<int, ColorMixer::BandCount> mixerHue{};
+        std::array<int, ColorMixer::BandCount> mixerSaturation{};
+        std::array<int, ColorMixer::BandCount> mixerLuminance{};
+        std::array<int, 3> gradingHue{};
+        std::array<int, 3> gradingSaturation{};
+        bool automaticWhiteBalance = false;
+        std::array<QVector<ToneCurvePoint>, 4> toneCurves;
+    };
+
+    struct RenderResult
+    {
+        QImage preview;
+        QImage originalPreview;
+        QVariantList histogram;
+    };
+
+    struct ExportResult
+    {
+        bool success = false;
+        QString message;
+    };
+
+    struct LoadResult
+    {
+        ColorPipeline::WorkingImage image;
+        ColorPipeline::WorkingImage editProxy;
+        RawDecoder::SourceMetadata metadata;
+        QString error;
+    };
+
+    struct UserImageMetadata
+    {
+        int rating = 0;
+        QString colorLabel;
+        bool flagged = false;
+        bool ratingSet = false;
+        bool colorLabelSet = false;
+    };
+
+    static ColorPipeline::WorkingImage renderWorkingImage(
+        const ColorPipeline::WorkingImage &source, const Settings &settings);
+    static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
+                                      const Settings &settings,
+                                      bool includeOriginal);
+    static ExportResult writeImage(const ColorPipeline::WorkingImage &source,
+                                   const Settings &settings,
+                                   const QString &target, const QString &format,
+                                   int quality);
+    static LoadResult loadFromDisk(const QString &fileName,
+                                   const QString &extension,
+                                   bool automaticWhiteBalance);
+    static ColorPipeline::WorkingImage buildEditProxy(
+        const ColorPipeline::WorkingImage &source);
+    static QString cacheKeyForFile(const QString &fileName,
+                                   bool automaticWhiteBalance);
+    static QString sidecarPathForFile(const QString &fileName);
+    static bool readSidecar(const QString &fileName, Settings *settings,
+                            UserImageMetadata *metadata);
+    static bool writeSidecar(const QString &fileName, const Settings &settings,
+                             const UserImageMetadata &metadata);
+    void beginLoad(const QString &fileName, const QString &extension,
+                   bool automaticWhiteBalance, bool freshOpen);
+    void applyLoadedImage(LoadResult loaded);
+    void releaseCurrentImage();
+    void scheduleRender();
+    void scheduleSidecarSave();
+    void saveCurrentSidecar();
+    void startRender();
+    void setBusy(bool busy);
+    void refreshBusyState();
+    void setStatusMessage(const QString &message);
+    QString currentFileKey() const;
+
+    ImageProvider *m_provider;
+    ThumbnailProvider *m_thumbnailProvider;
+    ImageListModel m_imageModel;
+    QUrl m_folder;
+    QUrl m_currentFile;
+    ColorPipeline::WorkingImage m_original;
+    ColorPipeline::WorkingImage m_editProxy;
+    RawDecoder::SourceMetadata m_sourceMetadata;
+    QHash<QString, UserImageMetadata> m_userImageMetadata;
+    QSet<QString> m_selectedImageKeys;
+    DecodedImageCache m_decodedImageCache;
+    QString m_currentCacheKey;
+    Settings m_settings;
+    QString m_imageSource;
+    QString m_originalImageSource;
+    QString m_statusMessage = tr("Choisissez un dossier contenant des images.");
+    QTimer m_renderDebounce;
+    QTimer m_sidecarDebounce;
+    QFutureWatcher<RenderResult> m_renderWatcher;
+    QFutureWatcher<ExportResult> m_exportWatcher;
+    QFutureWatcher<LoadResult> m_loadWatcher;
+    quint64 m_requestedRevision = 0;
+    quint64 m_activeRevision = 0;
+    quint64 m_requestedLoadRevision = 0;
+    quint64 m_activeLoadRevision = 0;
+    bool m_pendingLoadIsFreshOpen = true;
+    bool m_renderPending = false;
+    bool m_busy = false;
+    QVariantList m_histogram;
+};
+
+#endif // IMAGEEDITOR_H

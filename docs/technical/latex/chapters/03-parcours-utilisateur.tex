@@ -1,0 +1,42 @@
+\chapter{Diagramme utilisateur et parcours}
+\label{chap:utilisateur}
+
+\section{Cas d'utilisation}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=8mm and 17mm]
+  \node[actor] (user) {Photographe};
+  \node[component, right=of user] (open) {Ouvrir un dossier\\ou une image};
+  \node[component, below=of open] (browse) {Parcourir et choisir\\une vignette};
+  \node[component, below=of browse] (adjust) {Régler l'image\\et les courbes};
+  \node[component, below=of adjust] (meta) {Noter, libeller\\et marquer};
+  \node[component, right=of adjust] (batch) {Sélectionner et\\appliquer en lot};
+  \node[component, below=of batch] (export) {Exporter le rendu};
+  \draw[flow] (user) -- (open);
+  \draw[flow] (user) -- (browse);
+  \draw[flow] (user) -- (adjust);
+  \draw[flow] (user) -- (meta);
+  \draw[flow] (user) -- (batch);
+  \draw[flow] (user) -- (export);
+  \draw[flow] (open) -- (browse);
+  \draw[flow] (browse) -- (adjust);
+  \draw[flow] (adjust) -- (batch);
+  \draw[flow] (adjust) -- (export);
+\end{tikzpicture}
+\caption{Actions principales du photographe.}
+\end{figure}
+
+\section{Parcours nominal}
+
+\begin{enumerate}
+  \item L'utilisateur choisit \emph{Ouvrir}. Il peut sélectionner directement une image ; \IPR{} ouvre alors le dossier qui la contient et active l'image choisie.
+  \item Le ruban inférieur affiche les vignettes. Une image sélectionnée devient l'image de travail ; le panneau d'information expose ses propriétés.
+  \item Les commandes de réglage modifient l'état de \texttt{ImageEditor}. Le champ numérique et le curseur représentent la même valeur et doivent rester synchronisés.
+  \item Après l'arrêt de l'interaction, le rendu est mis à jour puis les réglages sont écrits dans le sidecar. Un changement d'image restaure ses propres réglages ou les valeurs neutres en l'absence de sidecar.
+  \item L'utilisateur peut cocher plusieurs vignettes et appliquer les réglages de l'image active à la sélection. Chaque image reçoit alors son sidecar propre.
+\end{enumerate}
+
+\section{Exigences d'ergonomie}
+
+Le panneau des réglages est fixé au bord droit et ne doit pas masquer l'image. Les barres de défilement et curseurs sont volontairement discrets, mais les champs numériques restent éditables afin de permettre une saisie précise. Les contrôles réinitialisent exclusivement leur réglage cible.

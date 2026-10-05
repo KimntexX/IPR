@@ -1,0 +1,7 @@
+TEMPERATURE
+  LR: 8 scènes
+    bare: RGB=0.4323,1.1213,4.5353; Y=1.1027; delta_log_R_B=-7.0436; clip=19.172%
+    suffix_2: RGB=1.9388,1.0194,0.4219; Y=1.2082; delta_log_R_B=2.3377; clip=4.725%
+  IPR: 8 scènes
+    bare: RGB=0.6114,1.0147,5.1551; Y=1.1773; delta_log_R_B=-3.7297; clip=18.375%
+    suffix_2: RGB=1.5224,0.9858,0.3165; Y=1.0528; delta_log_R_B=2.0035; clip=1.389%

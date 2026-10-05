@@ -1,0 +1,26 @@
+\input{preamble}
+\title{Cours 5 -- Texture, clarté et filtrage gaussien multi-échelle}
+\begin{document}
+\coursmeta{3 octobre 2026}{Approche de traitement du signal utilisée pour Texture, Clarté et Flou.}
+
+\section{Théorie}
+Un flou gaussien est la convolution d'une image $Y$ avec $G_\sigma$. Sa réponse passe-bas isole les structures dont l'échelle est plus grande que $\sigma$. Le résidu $D_\sigma=Y-G_\sigma(Y)$ est un détail local. Une accentuation contrôlée s'écrit
+\begin{equation}
+Y'=\max(0,Y+aD_\sigma w(Y)).
+\end{equation}
+Cette famille d'opérations est voisine de l'\emph{unsharp masking}; le choix de $\sigma$ définit ce que l'on appelle ``détail''~\cite{gonzalezWoods,opencvGaussian}.
+
+\section{Application dans \IPR{}}
+Texture appelle un flou à $\sigma=1{,}2$ pixels : les fibres, petits contours et micro-variations sont ciblés. Clarté utilise $\sigma=8$ pixels : les volumes et transitions moyennes sont concernés. Pour clarté, un produit de deux \texttt{smoothstep} réduit l'effet sous $Y\approx0{,}16$ et au-dessus de $Y\approx0{,}72$ : cela protège ombres profondes et hautes lumières, zones où le contraste local forme facilement des halos.
+
+Le curseur Flou est volontairement différent : il applique le gaussien directement au RGB avec $\sigma=\texttt{blur}/2$. L'alpha est préservé, car le flouter fabriquerait des bords transparents artificiels.
+
+\section{Exemple}
+Sur un portrait, Texture $+20$ révèle les détails d'un vêtement; Clarté $+20$ rend aussi plus présents les contours du visage et l'arrière-plan. Une clarté trop élevée augmente le bruit et les halos; le masque d'extrêmes limite ce défaut mais ne le supprime pas.
+
+\section{Choix des valeurs}
+Les sigmas ne découlent pas d'une loi universelle : ce sont des tailles d'échelle choisies pour séparer visuellement micro-texture et contraste de volume à la résolution d'aperçu. Ils doivent évoluer avec une éventuelle normalisation par taille d'image ou ratio d'affichage. La validation doit inclure bruit, peau, feuillage et ciel.
+
+\resultat{Texture et clarté sont le même opérateur de détail à deux échelles; leur différence est une question de fréquence spatiale, pas de nature physique.}
+\bibliographystyle{plain}\bibliography{references}
+\end{document}

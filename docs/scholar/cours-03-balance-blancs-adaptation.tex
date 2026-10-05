@@ -1,0 +1,30 @@
+\input{preamble}
+\title{Cours 3 -- Température, teinte et adaptation chromatique}
+\begin{document}
+\coursmeta{3 octobre 2026}{Approche physique et colorimétrique de la balance des blancs dans \IPR{}.}
+
+\section{Théorie physique}
+Un corps noir chauffé émet un spectre dont la chromaticité décrit le locus de Planck. La température de couleur corrélée (CCT) associe une chromaticité proche de ce locus à une température en kelvins. \IPR{} emploie l'approximation rationnelle de Krystek sur $[2000,50000]$~K~\cite{krystek1985}. À partir de $(x,y)$, le blanc normalisé en XYZ est
+\begin{equation}
+\mathbf{w}_{XYZ}=\left(\frac{x}{y},1,\frac{1-x-y}{y}\right)^T.
+\end{equation}
+
+L'adaptation de von Kries suppose que l'œil compense l'illuminant par des gains dans un espace de réponses de cônes. La transformée de Bradford est le choix classique des profils ICC~\cite{lam1985,icc2022}. Si $B$ est sa matrice, le rendu de référence vers la cible est
+\begin{equation}
+M=M_{XYZ\to RGB}B^{-1}\operatorname{diag}(\mathbf{l}_r/\mathbf{l}_c)B M_{RGB\to XYZ}.
+\end{equation}
+
+\section{Application dans \IPR{}}
+La référence est la balance de prise de vue : pour un RAW, elle est estimée avec \texttt{cam\_mul} et l'inverse de \texttt{cam\_xyz}; un JPEG/TIFF utilise ses métadonnées si disponibles; $6500$~K n'est qu'un repli. La matrice $M$ est préparée une fois et appliquée à chaque pixel. Le canal LMS moyen reste à gain~1 afin de séparer conceptuellement température (axe rouge--bleu) et nuance (axe vert--magenta).
+
+La nuance $t\in[-150,150]$ produit des gains exponentiels, puis une normalisation de luminance Rec.~709. Cette normalisation empêche un déplacement vert/magenta de se comporter comme une correction d'exposition.
+
+\section{Exemple}
+Une photo réglée à 5200~K est ouverte : cette valeur devient le zéro du curseur. Régler 2600~K demande une cible plus froide; $M$ renforce le bleu et réduit le rouge. À 5200~K avec nuance zéro, le code court-circuite le calcul afin que l'image reste bit à bit identique.
+
+\section{Calibration empirique}
+Bradford donne la direction colorimétrique, mais \IPR{} ajoute sous la température de référence une compensation progressive en log-kelvins. À 2000~K, son diagonal $(0{,}35,1{,}19,0{,}84)$ provient d'un corpus de huit scènes comparé à Lightroom. Ce n'est ni une norme ni une loi physique : il doit être revalidé si le dématriçage, le profil DCP ou le gamut mapping changent.
+
+\resultat{La matrice Bradford est le modèle; les gains froids complémentaires sont une calibration de produit, explicitement révisable.}
+\bibliographystyle{plain}\bibliography{references}
+\end{document}

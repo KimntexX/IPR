@@ -1,0 +1,53 @@
+\chapter{Diagrammes de classes}
+\label{chap:classes}
+
+\section{Classes de rendu et d'accès aux images}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=7mm and 9mm, every node/.style={font=\small}]
+  \node[component, text width=40mm] (editor) {\textbf{ImageEditor}\\+ openImage()\\+ setAdjustment()\\+ applyAdjustmentsToSelection()\\- Settings\\- UserImageMetadata};
+  \node[service, right=of editor, text width=40mm] (pipeline) {\textbf{ColorPipeline}\\+ applyTemperatureTint()\\+ applyVibrance()\\+ applyDehaze()\\+ applyColorMixer()};
+  \node[service, below=of editor, text width=40mm] (cache) {\textbf{DecodedImageCache}\\+ get() / put()\\+ eviction LRU\\- clés récentes};
+  \node[component, below=of pipeline, text width=40mm] (working) {\textbf{WorkingImage}\\+ width, height\\+ pixels RGBA flottants};
+  \node[component, left=of cache, text width=40mm] (provider) {\textbf{ImageProvider}\\\textbf{ThumbnailProvider}\\+ requestImage()};
+  \draw[flow] (editor) -- node[above, font=\scriptsize]{compose} (pipeline);
+  \draw[flow] (pipeline) -- node[right, font=\scriptsize]{transforme} (working);
+  \draw[flow] (editor) -- node[left, font=\scriptsize]{consulte} (cache);
+  \draw[flow] (cache) -- node[below, font=\scriptsize]{retient} (working);
+  \draw[flow] (editor) -- (provider);
+\end{tikzpicture}
+\caption{Noyau de rendu et fournisseurs Qt Quick.}
+\end{figure}
+
+\section{Classes de réglage et persistance}
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[node distance=8mm and 12mm, every node/.style={font=\small}]
+  \node[component, text width=43mm] (settings) {\textbf{Settings}\\tonalité, WB, couleur\\détail, courbes, mixer\\color grading};
+  \node[component, right=of settings, text width=43mm] (metadata) {\textbf{UserImageMetadata}\\rating\\colorLabel\\flagged};
+  \coordinate (persistenceCenter) at ($(settings)!0.5!(metadata)$);
+  \node[storage, below=of persistenceCenter, text width=43mm] (ipr) {\textbf{sidecar .ipr}\\signature IPR1\\version + empreinte source};
+  \node[component, left=of settings, text width=36mm] (qml) {\textbf{Setting.qml}\\contrôles QML};
+  \node[component, right=of metadata, text width=36mm] (ribbon) {\textbf{ThumbnailRibbon.qml}\\sélection multiple};
+  \draw[flow] (qml) -- node[above, font=\scriptsize]{lit / modifie} (settings);
+  \draw[flow] (settings) -- (ipr);
+  \draw[flow] (metadata) -- (ipr);
+  \draw[flow] (ribbon) -- node[above, font=\scriptsize]{cibles} (metadata);
+\end{tikzpicture}
+}
+\caption{État éditable, annotations et persistance non destructive.}
+\end{figure}
+
+\section{Responsabilités}
+
+Le fournisseur principal \texttt{ImageProvider} expose le rendu courant et
+la référence neutre via \texttt{requestImage()}, \texttt{image()} et
+\texttt{originalImage()}. \texttt{setImages()} publie la paire sous verrou.
+\texttt{ImageEditor::originalImageSource} signale sa disponibilité à QML.
+Le composant \texttt{ImageViewport.qml} porte uniquement l'état de navigation
+et de comparaison ; il ne modifie pas \texttt{Settings}.
+
+\texttt{ImageEditor} possède l'état de l'image active et effectue les transitions entre l'interface et le moteur. \texttt{ColorPipeline} ne porte pas l'état de l'interface : il transforme une image en fonction d'un jeu de paramètres. \texttt{DecodedImageCache} ne connaît ni les widgets ni les réglages. Cette séparation permet de tester le pipeline indépendamment de QML et de faire évoluer le stockage sans propager son format au rendu.

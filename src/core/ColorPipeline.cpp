@@ -1,0 +1,389 @@
+#include "ColorPipeline.h"
+
+#include <algorithm>
+#include <cmath>
+#include <cstring>
+#include <utility>
+
+namespace ColorPipeline {
+
+namespace {
+
+bool convertSourceToLinearSrgb(QImage &image, QString *error)
+{
+    if (image.isNull()) {
+        if (error)
+            *error = QStringLiteral("L'image source est vide.");
+        return false;
+    }
+
+    if (!image.colorSpace().isValid())
+        image.setColorSpace(QColorSpace(QColorSpace::SRgb));
+
+    QImage highPrecision = image.convertToFormat(QImage::Format_RGBA64);
+    if (highPrecision.isNull()) {
+        if (error)
+            *error = QStringLiteral("Impossible de convertir l'image en RGBA 16 bits.");
+        return false;
+    }
+
+    const QColorSpace linearSrgb(QColorSpace::SRgbLinear);
+    QImage converted = highPrecision.convertedToColorSpace(linearSrgb);
+    if (converted.isNull()) {
+        if (error)
+            *error = QStringLiteral("Impossible de convertir l'image vers sRGB linéaire.");
+        return false;
+    }
+
+    converted.setColorSpace(linearSrgb);
+    image = std::move(converted);
+    return true;
+}
+
+cv::Vec3f mapRgbToSrgbGamut(const cv::Vec3f &source)
+{
+    cv::Vec3f rgb{
+        std::max(0.0f, source[0]),
+        std::max(0.0f, source[1]),
+        std::max(0.0f, source[2]),
+    };
+    float luminance = 0.2126f * rgb[0] + 0.7152f * rgb[1] +
+                      0.0722f * rgb[2];
+    if (luminance > 1.0f) {
+        rgb *= 1.0f / luminance;
+        luminance = 1.0f;
+    }
+
+    const cv::Vec3f neutral{luminance, luminance, luminance};
+    const cv::Vec3f chroma = rgb - neutral;
+    float chromaScale = 1.0f;
+    for (int channel = 0; channel < 3; ++channel) {
+        if (chroma[channel] > 0.0f) {
+            chromaScale = std::min(
+                chromaScale, (1.0f - luminance) / chroma[channel]);
+        } else if (chroma[channel] < 0.0f) {
+            chromaScale = std::min(
+                chromaScale, luminance / -chroma[channel]);
+        }
+    }
+    return neutral + chroma * std::clamp(chromaScale, 0.0f, 1.0f);
+}
+
+QImage toLinearRgba64(const cv::Mat &linearRgba)
+{
+    cv::Mat rgba16(linearRgba.rows, linearRgba.cols, CV_16UC4);
+    for (int y = 0; y < linearRgba.rows; ++y) {
+        const cv::Vec4f *source = linearRgba.ptr<cv::Vec4f>(y);
+        cv::Vec<quint16, 4> *destination = rgba16.ptr<cv::Vec<quint16, 4>>(y);
+        for (int x = 0; x < linearRgba.cols; ++x) {
+            for (int channel = 0; channel < 3; ++channel) {
+                destination[x][channel] = static_cast<quint16>(std::lround(
+                    std::clamp(source[x][channel], 0.0f, 1.0f) * 65535.0f));
+            }
+            destination[x][3] = static_cast<quint16>(std::lround(
+                std::clamp(source[x][3], 0.0f, 1.0f) * 65535.0f));
+        }
+    }
+
+    QImage image(rgba16.cols, rgba16.rows, QImage::Format_RGBA64);
+    for (int y = 0; y < rgba16.rows; ++y)
+        std::memcpy(image.scanLine(y), rgba16.ptr(y), rgba16.cols * 8);
+    image.setColorSpace(QColorSpace(QColorSpace::SRgbLinear));
+    return image;
+}
+
+}
+
+WorkingImage fromSourceImage(const QImage &source, QString *error)
+{
+    WorkingImage result;
+    const bool hasEmbeddedProfile = source.colorSpace().isValid();
+    QString sourceProfile = hasEmbeddedProfile
+                                ? source.colorSpace().description()
+                                : QStringLiteral("sRGB supposé (profil ICC absent ou invalide)");
+    if (sourceProfile.isEmpty())
+        sourceProfile = QStringLiteral("Profil ICC embarqué");
+
+    QImage linear = source;
+    if (!convertSourceToLinearSrgb(linear, error))
+        return result;
+
+    cv::Mat rgba16(linear.height(), linear.width(), CV_16UC4,
+                   const_cast<uchar *>(linear.constBits()), linear.bytesPerLine());
+    rgba16.convertTo(result.linearRgba, CV_32FC4, 1.0 / 65535.0);
+    result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+    result.sourceProfile = sourceProfile;
+    return result;
+}
+
+WorkingImage fromLinearRgb16(const quint16 *data, int width, int height,
+                             QString *error)
+{
+    WorkingImage result;
+    if (!data || width <= 0 || height <= 0) {
+        if (error)
+            *error = QStringLiteral("Les données RAW 16 bits sont invalides.");
+        return result;
+    }
+
+    cv::Mat rgb16(height, width, CV_16UC3, const_cast<quint16 *>(data));
+    cv::Mat rgbFloat;
+    rgb16.convertTo(rgbFloat, CV_32FC3, 1.0 / 65535.0);
+    std::vector<cv::Mat> channels;
+    cv::split(rgbFloat, channels);
+    channels.push_back(cv::Mat(height, width, CV_32FC1, cv::Scalar(1.0f)));
+    cv::merge(channels, result.linearRgba);
+    result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+    result.sourceProfile = QStringLiteral("LibRaw — RGB linéaire");
+    return result;
+}
+
+WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
+{
+    if (source.isNull() || source.linearRgba.type() != CV_32FC4 ||
+        !cv::checkRange(source.linearRgba, true)) {
+        if (error)
+            *error = QStringLiteral(
+                "La compression de gamut attend une image RGBA linéaire finie.");
+        return {};
+    }
+
+    WorkingImage result = source;
+    result.linearRgba = source.linearRgba.clone();
+    for (int y = 0; y < result.linearRgba.rows; ++y) {
+        cv::Vec4f *row = result.linearRgba.ptr<cv::Vec4f>(y);
+        for (int x = 0; x < result.linearRgba.cols; ++x) {
+            const cv::Vec3f rgb = mapRgbToSrgbGamut(
+                {row[x][0], row[x][1], row[x][2]});
+            row[x][0] = rgb[0];
+            row[x][1] = rgb[1];
+            row[x][2] = rgb[2];
+        }
+    }
+    return result;
+}
+
+namespace {
+
+// Correlated color temperature (CCT) of a light source is converted to its
+// Planckian-locus chromaticity using Krystek's rational approximation (valid
+// over the whole 2000-50000 K slider range used here), the same curve the
+// DNG specification uses to define "Temperature" independently of any
+// specific camera. See docs/imageeditor-render-working-image.md §4 for the
+// rationale behind this model.
+cv::Point2d planckianLocusChromaticity(double kelvinTemperature)
+{
+    const double t = kelvinTemperature;
+    const double t2 = t * t;
+    const double u = (0.860117757 + 1.54118254e-4 * t + 1.28641212e-7 * t2) /
+                      (1.0 + 8.42420235e-4 * t + 7.08145163e-7 * t2);
+    const double v = (0.317398726 + 4.22806245e-5 * t + 4.20481691e-8 * t2) /
+                      (1.0 - 2.89741816e-5 * t + 1.61456053e-7 * t2);
+    const double denominator = 2.0 * u - 8.0 * v + 4.0;
+    return {3.0 * u / denominator, 2.0 * v / denominator};
+}
+
+// LMS (long/medium/short cone) response of the Planckian white point for a
+// given temperature, via the Bradford chromatic adaptation basis. Comparing
+// this response between two temperatures yields the per-cone gain a von
+// Kries adaptation transform must apply to make a pixel neutral at the
+// reference temperature appear as if it were neutral at the target
+// temperature instead — which is exactly what the "Temperature" slider asks
+// for.
+cv::Vec3d planckianLocusLms(double kelvinTemperature)
+{
+    const cv::Point2d xy = planckianLocusChromaticity(kelvinTemperature);
+    const cv::Vec3d xyz(xy.x / xy.y, 1.0, (1.0 - xy.x - xy.y) / xy.y);
+    // Bradford cone-response matrix (XYZ -> LMS).
+    const cv::Matx33d bradford(
+        0.8951, 0.2664, -0.1614,
+        -0.7502, 1.7135, 0.0367,
+        0.0389, -0.0685, 1.0296);
+    return bradford * xyz;
+}
+
+// Builds the 3x3 linear-sRGB matrix that performs a von Kries chromatic
+// adaptation from referenceTemperature to temperature: it pre-converts RGB
+// to XYZ then to LMS, applies the per-cone gain derived from the Planckian
+// locus, then converts back to XYZ and RGB. Combining every step into one
+// matrix keeps the per-pixel cost identical to the previous diagonal gain
+// (a single 3x3 multiply-add), while being colorimetrically correct instead
+// of an arbitrary, overly flat log(Kelvin) gain curve.  The cold branch also
+// receives a corpus-calibrated diagonal compensation.  Bradford gives the
+// physical direction, while that compensation corrects the under-attenuated
+// red response measured against the Lightroom TIFF reference at 2000 K.
+cv::Matx33d temperatureAdaptationMatrix(int temperature, double referenceTemperature)
+{
+    const cv::Matx33d rgbToXyz(
+        0.4124564, 0.3575761, 0.1804375,
+        0.2126729, 0.7151522, 0.0721750,
+        0.0193339, 0.1191920, 0.9503041);
+    const cv::Matx33d xyzToRgb = rgbToXyz.inv();
+    const cv::Matx33d bradford(
+        0.8951, 0.2664, -0.1614,
+        -0.7502, 1.7135, 0.0367,
+        0.0389, -0.0685, 1.0296);
+    const cv::Matx33d bradfordInv = bradford.inv();
+
+    const cv::Vec3d referenceLms = planckianLocusLms(referenceTemperature);
+    const cv::Vec3d targetLms = planckianLocusLms(static_cast<double>(temperature));
+    // The green/M channel is left untouched (gain = 1): luminance and the
+    // green/magenta balance stay governed solely by the Tint control, so the
+    // Temperature slider only redistributes energy between red and blue.
+    const cv::Vec3d gain(referenceLms[0] / targetLms[0], 1.0,
+                         referenceLms[2] / targetLms[2]);
+    const cv::Matx33d gainMatrix(
+        gain[0], 0.0, 0.0,
+        0.0, gain[1], 0.0,
+        0.0, 0.0, gain[2]);
+    const cv::Matx33d bradfordAdaptation =
+        xyzToRgb * bradfordInv * gainMatrix * bradford * rgbToXyz;
+
+    // The Lightroom/IPR eight-scene corpus showed that the uncorrected cold
+    // endpoint retained too much red (0.526 after v2 vs. 0.432) and slightly
+    // too much blue (4.691 vs. 4.535).  Blend the empirical endpoint
+    // progressively in
+    // log-Kelvin space below the source reference only; warm temperatures keep
+    // the pure Bradford result already validated by the corpus.
+    if (static_cast<double>(temperature) >= referenceTemperature ||
+        referenceTemperature <= 2000.0)
+        return bradfordAdaptation;
+
+    const double coldRange = std::log(referenceTemperature / 2000.0);
+    const double coldStrength = std::clamp(
+        std::log(referenceTemperature / static_cast<double>(temperature)) / coldRange,
+        0.0, 1.0);
+    const cv::Matx33d coldCalibration(
+        1.0 - 0.65 * coldStrength, 0.0, 0.0,
+        0.0, 1.0 + 0.19 * coldStrength, 0.0,
+        0.0, 0.0, 1.0 - 0.16 * coldStrength);
+    return coldCalibration * bradfordAdaptation;
+}
+
+}
+
+bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
+                          double referenceTemperature, int tint,
+                          QString *error)
+{
+    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) {
+        if (error)
+            *error = QStringLiteral("La balance température/nuance attend une image RGB flottante.");
+        return false;
+    }
+    if (temperature < 2000 || temperature > 50000 || tint < -150 || tint > 150 ||
+        !std::isfinite(referenceTemperature) ||
+        referenceTemperature < 2000.0 || referenceTemperature > 50000.0) {
+        if (error)
+            *error = QStringLiteral("La température et sa référence doivent être comprises entre 2000 et 50000 K, et la nuance entre -150 et 150.");
+        return false;
+    }
+
+    const float tintAmount = static_cast<float>(tint) / 150.0f;
+    const float rawGreenGain = std::pow(2.0f, -tintAmount);
+    const float rawMagentaGain = std::pow(2.0f, 0.5f * tintAmount);
+    // A green/magenta diagonal must not behave like an exposure adjustment.
+    // Normalize its gain on a neutral linear-sRGB color using Rec. 709
+    // luminance coefficients.  This keeps the chromatic axis intact while
+    // preserving the luminance of neutral tones for both tint directions.
+    const float tintLuminanceGain = 0.2848f * rawMagentaGain +
+                                    0.7152f * rawGreenGain;
+    const float greenGain = rawGreenGain / tintLuminanceGain;
+    const float magentaGain = rawMagentaGain / tintLuminanceGain;
+
+    // Fast, exact no-op path: when the slider sits exactly on the detected
+    // reference and tint is neutral, skip the matrix math entirely so the
+    // pixels are left bit-identical (matrix round-trips through an inverse
+    // can otherwise introduce negligible but non-zero floating-point noise).
+    if (tint == 0 &&
+        std::abs(static_cast<double>(temperature) - referenceTemperature) < 1e-6)
+        return true;
+
+    const cv::Matx33d adaptation =
+        temperatureAdaptationMatrix(temperature, referenceTemperature);
+    const cv::Matx33f adaptationF(
+        static_cast<float>(adaptation(0, 0)), static_cast<float>(adaptation(0, 1)),
+        static_cast<float>(adaptation(0, 2)),
+        static_cast<float>(adaptation(1, 0)), static_cast<float>(adaptation(1, 1)),
+        static_cast<float>(adaptation(1, 2)),
+        static_cast<float>(adaptation(2, 0)), static_cast<float>(adaptation(2, 1)),
+        static_cast<float>(adaptation(2, 2)));
+
+    for (int y = 0; y < linearRgb.rows; ++y) {
+        cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
+        for (int x = 0; x < linearRgb.cols; ++x) {
+            const cv::Vec3f adapted = adaptationF * row[x];
+            row[x][0] = adapted[0] * magentaGain;
+            row[x][1] = adapted[1] * greenGain;
+            row[x][2] = adapted[2] * magentaGain;
+        }
+    }
+    return true;
+}
+
+QImage toSrgb(const WorkingImage &source, OutputFormat outputFormat, QString *error)
+{
+    if (source.isNull()) {
+        if (error)
+            *error = QStringLiteral("L'image de travail est vide.");
+        return {};
+    }
+
+    const QColorSpace linearSrgb(QColorSpace::SRgbLinear);
+    if (source.linearRgba.type() != CV_32FC4) {
+        if (error)
+            *error = QStringLiteral("L'image de travail doit être en RGBA flottant 32 bits.");
+        return {};
+    }
+    if (source.colorSpace != linearSrgb) {
+        if (error)
+            *error = QStringLiteral("L'image de travail n'est pas en sRGB linéaire.");
+        return {};
+    }
+    if (!cv::checkRange(source.linearRgba, true)) {
+        if (error)
+            *error = QStringLiteral("L'image de travail contient des valeurs non finies.");
+        return {};
+    }
+
+    const WorkingImage gamutMapped = mapToSrgbGamut(source, error);
+    if (gamutMapped.isNull())
+        return {};
+
+    QImage encoded = toLinearRgba64(gamutMapped.linearRgba);
+    if (encoded.isNull()) {
+        if (error)
+            *error = QStringLiteral("Impossible de quantifier l'image de travail.");
+        return {};
+    }
+
+    encoded = encoded.convertedToColorSpace(QColorSpace(QColorSpace::SRgb));
+    if (encoded.isNull()) {
+        if (error)
+            *error = QStringLiteral("Impossible d'encoder l'image vers sRGB.");
+        return {};
+    }
+
+    switch (outputFormat) {
+    case OutputFormat::Preview8Bit:
+        encoded = encoded.convertToFormat(QImage::Format_RGBA8888);
+        break;
+    case OutputFormat::Jpeg8Bit:
+        encoded = encoded.convertToFormat(QImage::Format_RGB888);
+        break;
+    case OutputFormat::HighBitDepth:
+        encoded = encoded.convertToFormat(QImage::Format_RGBA64);
+        break;
+    }
+
+    if (encoded.isNull()) {
+        if (error)
+            *error = QStringLiteral("Impossible de convertir l'image sRGB au format demandé.");
+        return {};
+    }
+
+    encoded.setColorSpace(QColorSpace(QColorSpace::SRgb));
+    return encoded;
+}
+
+}

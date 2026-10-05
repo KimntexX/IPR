@@ -1,0 +1,87 @@
+"""Selection rules only; no compiler, personal preferences or photo corpus required."""
+import importlib.util
+import json
+from pathlib import Path
+import tempfile
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+spec = importlib.util.spec_from_file_location("build_windows", ROOT / "scripts/build_windows.py")
+build = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(build)
+RULES = json.loads((ROOT / "scripts/test-rules.json").read_text(encoding="utf-8"))
+
+
+class SelectionTests(unittest.TestCase):
+    def test_viewport_is_targeted_and_main_includes_zoom_regressions(self):
+        plan = build.select_tests(["src/qml/ImageViewport.qml"], RULES)
+        self.assertFalse(plan["full"])
+        self.assertEqual(set(plan["tests"]), {"imageViewportQmlTests", "uiPreferencesQmlTests"})
+        main = build.select_tests(["src/qml/Main.qml"], RULES)
+        self.assertIn("imageViewportQmlTests", main["tests"])
+        isolated = build.select_tests(["tests/image_viewport_qml_test.cpp"], RULES)
+        self.assertEqual(isolated["tests"], ["imageViewportQmlTests"])
+
+    def test_detail_processing_selects_native_regressions_and_noise_analysis(self):
+        plan = build.select_tests(["src/core/DetailProcessing.cpp"], RULES)
+        self.assertFalse(plan["full"])
+        self.assertEqual(set(plan["tests"]), {"detailProcessingTests", "colorPipelineTests", "imageExportTests"})
+        self.assertEqual(plan["python"], ["noise_analysis"])
+        isolated = build.select_tests(["tests/detail_processing_test.cpp"], RULES)
+        self.assertEqual(isolated["tests"], ["detailProcessingTests"])
+
+    def test_noise_analysis_and_shared_reader_dependencies(self):
+        plan = build.select_tests(["tests/analyse_noise.py"], RULES)
+        self.assertFalse(plan["full"])
+        self.assertEqual(plan["tests"], [])
+        self.assertEqual(plan["python"], ["noise_analysis"])
+        shared = build.select_tests(["tests/analyse_color_mixer.py"], RULES)
+        self.assertEqual(set(shared["python"]), {"color_mixer_analysis", "noise_analysis"})
+
+    def test_documentation_and_no_changes_skip_tests(self):
+        self.assertEqual(build.select_tests([], RULES)["tests"], [])
+        self.assertEqual(build.select_tests(["docs/example.md"], RULES)["tests"], [])
+
+    def test_preferences_are_targeted(self):
+        plan = build.select_tests(["src/app/UiPreferences.cpp"], RULES)
+        self.assertFalse(plan["full"])
+        self.assertEqual(set(plan["tests"]), {"uiPreferencesTests", "uiPreferencesQmlTests", "settingsQmlTests"})
+
+    def test_test_file_and_mixer_mapping(self):
+        self.assertEqual(build.select_tests(["tests/image_export_test.cpp"], RULES)["tests"], ["imageExportTests"])
+        plan = build.select_tests(["src/core/ColorMixer.cpp"], RULES)
+        self.assertFalse(plan["full"])
+        self.assertIn("colorMixerNeutralProbe", plan["targets"])
+        self.assertIn("color_mixer_analysis", plan["python"])
+
+    def test_full_guards(self):
+        for paths in (["CMakeLists.txt"], ["src/editor/imageeditor.h"], ["src/new_component.cpp"],
+                      ["scripts/test-rules.json"], [".github/workflows/ci.yml"]):
+            self.assertTrue(build.select_tests(paths, RULES)["full"])
+        self.assertTrue(build.select_tests([], RULES, force_full=True)["full"])
+        self.assertTrue(build.select_tests([], RULES, bootstrap=True)["full"])
+        self.assertTrue(build.select_tests([f"src/new{i}.cpp" for i in range(20)], RULES)["full"])
+
+    def test_slashes_and_deleted_path(self):
+        plan = build.select_tests([r"src\raw\RawDecoder.cpp"], RULES)
+        self.assertFalse(plan["full"])
+        self.assertIn("rawDecoderTests", plan["tests"])
+
+    def test_hashes_ignore_photos_and_detect_untracked_code(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "src").mkdir()
+            (root / "tests/image").mkdir(parents=True)
+            source = root / "src/example.cpp"
+            source.write_text("before", encoding="utf-8")
+            (root / "tests/image/private.cpp").write_text("ignored", encoding="utf-8")
+            before = build.source_hashes(root)
+            self.assertEqual(set(before), {"src/example.cpp"})
+            source.write_text("after", encoding="utf-8")
+            self.assertNotEqual(before, build.source_hashes(root))
+            source.unlink()
+            self.assertEqual(build.source_hashes(root), {})
+
+
+if __name__ == "__main__":
+    unittest.main()

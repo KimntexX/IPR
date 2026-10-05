@@ -1,0 +1,39 @@
+\chapter{Présentation du projet}
+\label{chap:projet}
+
+\section{Objectif}
+
+\IPR{} est un logiciel de développement photographique non destructif. Il ouvre un dossier ou une image, décode les fichiers RAW et les formats image pris en charge, affiche une image de travail et permet de construire un rendu exportable au moyen de réglages photographiques. L'application vise une exécution locale sous Windows~10 et Windows~11, avec une interface Qt Quick/QML et un moteur C++.
+
+Le principe directeur est de préserver le fichier source : les pixels du fichier original ne sont jamais réécrits. Les réglages, les courbes et les métadonnées d'annotation sont mémorisés dans un fichier compagnon \texttt{.ipr}. Le rendu est recalculé à partir de l'image décodée et des paramètres courants.
+
+\section{Périmètre fonctionnel actuel}
+
+\begin{longtable}{p{0.30\linewidth}p{0.62\linewidth}}
+\toprule
+Fonction & État et responsabilité \\
+\midrule
+Ouverture & Sélection d'un dossier ou d'une image ; l'ouverture d'une image bascule sur son dossier parent. \\
+Navigation & Ruban horizontal de vignettes, chargement différé et préchargement d'un voisinage d'images. \\
+Développement & Exposition, tons, balance des blancs, couleur globale, détail local, voile, grain, courbes, mélangeur de couleur et color grading. \\
+Métadonnées utilisateur & Note, libellé couleur et drapeau associés à l'image. \\
+Persistance & Sidecar \texttt{.ipr} atomique ; restauration automatique lorsque le fichier source est inchangé. \\
+Lot & Multi-sélection et application des réglages de l'image courante aux images sélectionnées. \\
+Profils & Recherche locale de profils DCP/LCP recensés par \texttt{profiles/index.json}. \\
+Export & Image de rendu exportable et tests automatisés d'export. \\
+\bottomrule
+\end{longtable}
+
+\section{Contraintes et principes d'architecture}
+
+\begin{itemize}
+  \item \textbf{Réactivité :} le décodage coûteux ne doit pas bloquer l'interface ; les chargements sont asynchrones et les rendus intermédiaires sont différés.
+  \item \textbf{Mémoire bornée :} le cache d'images décodées suit une politique LRU afin de limiter la mémoire consommée lors d'une navigation longue.
+  \item \textbf{Fidélité :} les opérations photométriques sont effectuées dans une image de travail flottante linéaire lorsque le pipeline le permet.
+  \item \textbf{Portabilité :} la cible distribuée est Windows, tandis que le projet peut être construit et testé dans un environnement WSL de développement.
+  \item \textbf{Traçabilité :} les rapports de validation et les mesures sont organisés dans \texttt{docs/validation}, tandis que les journaux datés résident dans \texttt{docs/reports}. Le point d'entrée documentaire est \texttt{docs/INDEX.md}.
+\end{itemize}
+
+\section{Délimitation}
+
+Le recadrage, la géométrie, les masques de retouche et les fonctions assistées par IA disposent déjà de chapitres réservés dans ce document, mais ne sont pas encore implémentés dans le périmètre décrit ici. Leur absence de contenu est volontaire afin d'éviter de documenter une conception non validée comme une fonctionnalité existante.

@@ -1,0 +1,29 @@
+\input{preamble}
+\title{Cours 1 -- Espace linéaire, luminance et gamut mapping}
+\begin{document}
+\coursmeta{3 octobre 2026}{Modèle utilisé avant, pendant et après tout calcul de rendu dans \IPR{}.}
+
+\section{Problème traité}
+Un fichier image n'est pas seulement une grille de triplets RGB : les valeurs peuvent être codées dans un espace colorimétrique non linéaire, avec ou sans profil ICC. Additionner ou filtrer directement ces valeurs encodées produit des résultats physiquement faux. \IPR{} convertit donc les entrées vers sRGB linéaire, travaille en flottants et n'encode en sRGB qu'à la sortie.
+
+\section{Théorie}
+La lumière est additive : doubler le nombre de photons double l'énergie. Une composante linéaire $r$ est donc proportionnelle à l'énergie, contrairement à une composante sRGB encodée qui privilégie la perception et l'efficacité de quantification. La luminance relative sRGB/Rec.~709 est
+\begin{equation}
+Y=0{,}2126r+0{,}7152g+0{,}0722b.
+\end{equation}
+Les coefficients sont normalisés et reflètent la plus grande sensibilité visuelle au vert~\cite{srgb,icc2022}. La conversion linéaire RGB--XYZ est une matrice $3\times3$ ; elle autorise ensuite les changements de primaires ou d'illuminant.
+
+Un rendu peut quitter le cube sRGB. \IPR{} compresse alors la chromaticité autour du neutre de même luminance. Soit $\mathbf{c}=\mathbf{rgb}-Y(1,1,1)^T$. Le plus grand $s\in[0,1]$ tel que $Y\mathbf{1}+s\mathbf{c}\in[0,1]^3$ conserve la luminance et réduit uniquement l'excès de saturation.
+
+\section{Application dans \IPR{}}
+Les images standards sont d'abord converties par Qt en \texttt{Format\_RGBA64}, puis vers \texttt{SRgbLinear}; les valeurs sont normalisées par $65535$ dans un tampon \texttt{CV\_32FC4}. Les RAW 16~bits passent directement vers le même espace de travail. À l'export, la compression de gamut précède l'encodage sRGB et la quantification 8 ou 16~bits.
+
+\section{Exemple}
+Pour $\mathbf{p}=(0{,}50,0{,}25,0{,}10)$, $Y\simeq0{,}292$. Une exposition $+1$~EV doit donner environ $(1{,}00,0{,}50,0{,}20)$ en linéaire. Si l'on doublait les composantes sRGB encodées, le résultat ne correspondrait pas à un doublement d'énergie et les tons moyens seraient artificiellement trop lumineux.
+
+\section{Limites et expérimentation}
+La compression actuelle est une projection simple, pas un gamut mapping perceptuel CAM16. Elle est robuste et préserve $Y$, mais peut désaturer fortement une couleur HDR. Une évolution devra comparer cette stratégie à une compression dans OKLab ou JzAzBz sur un corpus à couleurs saturées.
+
+\resultat{Les filtres, gains et flous doivent agir en linéaire ; l'espace sRGB est une destination d'affichage ou d'export, non un espace de calcul.}
+\bibliographystyle{plain}\bibliography{references}
+\end{document}

@@ -1,0 +1,10 @@
+**/build/
+*.synctex
+*.synctex(busy)
+scholar/*.aux
+scholar/*.bbl
+scholar/*.blg
+scholar/*.log
+scholar/*.out
+scholar/*.toc
+scholar/*.synctex.gz

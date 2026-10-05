@@ -1,0 +1,1115 @@
+{
+  "reference": {
+    "path": "tests/image/base/neutre/6V1A0327.tif",
+    "bytes": 193801096,
+    "size": [
+      4640,
+      6960
+    ],
+    "bits": [
+      16,
+      16,
+      16
+    ],
+    "samples": 3,
+    "orientation": 1,
+    "compression": 1,
+    "photometric": 2,
+    "icc": "sRGB IEC61966-2.1",
+    "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+    "active_mixer": {},
+    "settings": {
+      "RawFileName": "6V1A0327.CR3",
+      "Version": "18.7",
+      "ProcessVersion": "15.4",
+      "WhiteBalance": "As Shot",
+      "Temperature": "5200",
+      "Tint": "+5",
+      "Exposure2012": "0.00",
+      "Contrast2012": "0",
+      "Highlights2012": "0",
+      "Shadows2012": "0",
+      "Whites2012": "0",
+      "Blacks2012": "0",
+      "Texture": "0",
+      "Clarity2012": "0",
+      "Dehaze": "0",
+      "Vibrance": "0",
+      "Saturation": "0",
+      "ParametricShadows": "0",
+      "ParametricDarks": "0",
+      "ParametricLights": "0",
+      "ParametricHighlights": "0",
+      "ParametricShadowSplit": "25",
+      "ParametricMidtoneSplit": "50",
+      "ParametricHighlightSplit": "75",
+      "Sharpness": "40",
+      "SharpenRadius": "+1.0",
+      "SharpenDetail": "25",
+      "SharpenEdgeMasking": "0",
+      "LuminanceSmoothing": "0",
+      "ColorNoiseReduction": "25",
+      "ColorNoiseReductionDetail": "50",
+      "ColorNoiseReductionSmoothness": "50",
+      "HueAdjustmentRed": "0",
+      "HueAdjustmentOrange": "0",
+      "HueAdjustmentYellow": "0",
+      "HueAdjustmentGreen": "0",
+      "HueAdjustmentAqua": "0",
+      "HueAdjustmentBlue": "0",
+      "HueAdjustmentPurple": "0",
+      "HueAdjustmentMagenta": "0",
+      "SaturationAdjustmentRed": "0",
+      "SaturationAdjustmentOrange": "0",
+      "SaturationAdjustmentYellow": "0",
+      "SaturationAdjustmentGreen": "0",
+      "SaturationAdjustmentAqua": "0",
+      "SaturationAdjustmentBlue": "0",
+      "SaturationAdjustmentPurple": "0",
+      "SaturationAdjustmentMagenta": "0",
+      "LuminanceAdjustmentRed": "0",
+      "LuminanceAdjustmentOrange": "0",
+      "LuminanceAdjustmentYellow": "0",
+      "LuminanceAdjustmentGreen": "0",
+      "LuminanceAdjustmentAqua": "0",
+      "LuminanceAdjustmentBlue": "0",
+      "LuminanceAdjustmentPurple": "0",
+      "LuminanceAdjustmentMagenta": "0",
+      "SplitToningShadowHue": "0",
+      "SplitToningShadowSaturation": "0",
+      "SplitToningHighlightHue": "0",
+      "SplitToningHighlightSaturation": "0",
+      "SplitToningBalance": "0",
+      "ColorGradeMidtoneHue": "0",
+      "ColorGradeMidtoneSat": "0",
+      "ColorGradeShadowLum": "0",
+      "ColorGradeMidtoneLum": "0",
+      "ColorGradeHighlightLum": "0",
+      "ColorGradeBlending": "50",
+      "ColorGradeGlobalHue": "0",
+      "ColorGradeGlobalSat": "0",
+      "ColorGradeGlobalLum": "0",
+      "AutoLateralCA": "1",
+      "LensProfileEnable": "1",
+      "LensManualDistortionAmount": "0",
+      "VignetteAmount": "0",
+      "DefringePurpleAmount": "0",
+      "DefringePurpleHueLo": "30",
+      "DefringePurpleHueHi": "70",
+      "DefringeGreenAmount": "0",
+      "DefringeGreenHueLo": "40",
+      "DefringeGreenHueHi": "60",
+      "PerspectiveUpright": "0",
+      "PerspectiveVertical": "0",
+      "PerspectiveHorizontal": "0",
+      "PerspectiveRotate": "0.0",
+      "PerspectiveAspect": "0",
+      "PerspectiveScale": "100",
+      "PerspectiveX": "0.00",
+      "PerspectiveY": "0.00",
+      "GrainAmount": "0",
+      "Glow": "0",
+      "PostCropVignetteAmount": "0",
+      "ShadowTint": "0",
+      "RedHue": "0",
+      "RedSaturation": "0",
+      "GreenHue": "0",
+      "GreenSaturation": "0",
+      "BlueHue": "0",
+      "BlueSaturation": "0",
+      "HDREditMode": "0",
+      "OverrideLookVignette": "False",
+      "ToneCurveName2012": "Linear",
+      "CameraProfile": "Adobe Standard",
+      "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+      "LensProfileSetup": "LensDefaults",
+      "LensProfileName": "Camera Settings",
+      "LensProfileDigest": "5D7F245E84E41C16B3DB534A9049ADA4",
+      "LensProfileIsEmbedded": "True",
+      "LensProfileDistortionScale": "100",
+      "LensProfileVignettingScale": "100",
+      "HasSettings": "True",
+      "CropTop": "0",
+      "CropLeft": "0",
+      "CropBottom": "1",
+      "CropRight": "1",
+      "CropAngle": "0",
+      "CropConstrainToWarp": "0",
+      "CropConstrainToUnitSquare": "1",
+      "HasCrop": "False",
+      "AlreadyApplied": "True",
+      "Name": "Adobe Color",
+      "Amount": "1",
+      "UUID": "B952C231111CD8E0ECCF14B86BAA7077",
+      "SupportsAmount": "false",
+      "SupportsMonochrome": "false",
+      "SupportsOutputReferred": "false",
+      "ConvertToGrayscale": "False",
+      "LookTable": "E1095149FDB39D7A057BAB208837E2E1"
+    }
+  },
+  "bands": {
+    "green": {
+      "entries": [
+        {
+          "engine": "LR",
+          "number": 1,
+          "path": "tests/image/base/color-mixer/green/6V1A0327.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 2,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-2.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 3,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-3.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 4,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-4.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 5,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-5.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 6,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-6.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 7,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-7.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 8,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-8.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 9,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-9.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 10,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-10.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 11,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-11.tif",
+          "missing": true
+        },
+        {
+          "engine": "LR",
+          "number": 12,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-12.tif",
+          "missing": true
+        },
+        {
+          "engine": "IPR",
+          "number": 1,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 2,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-2.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 3,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-3.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 4,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-4.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 5,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-5.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 6,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-6.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 7,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-7.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 8,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-8.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 9,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-9.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 10,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-10.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 11,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-11.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        },
+        {
+          "engine": "IPR",
+          "number": 12,
+          "path": "tests/image/base/color-mixer/green/6V1A0327-IPR-12.tiff",
+          "bytes": 258263634,
+          "size": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "samples": 4,
+          "orientation": 1,
+          "compression": 1,
+          "photometric": 2,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "active_mixer": {},
+          "settings": {}
+        }
+      ],
+      "unexpected": []
+    }
+  },
+  "validation_mode": "intermediate",
+  "ipr_mixer_version": "eight",
+  "mapping_overrides": [],
+  "audit": [
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-2.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-3.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-4.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-5.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-6.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-7.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-8.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-9.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-10.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-11.tif"
+    },
+    {
+      "type": "missing_variant",
+      "path": "tests/image/base/color-mixer/green/6V1A0327-12.tif"
+    }
+  ],
+  "ipr_reference": {
+    "path": "tests/image/base/neutre/6V1A0327-IPR.tiff",
+    "bytes": 258263634,
+    "size": [
+      4639,
+      6959
+    ],
+    "bits": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "samples": 4,
+    "orientation": 1,
+    "compression": 1,
+    "photometric": 2,
+    "icc": "sRGB",
+    "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+    "active_mixer": {},
+    "settings": {}
+  },
+  "measurement": {
+    "utc": "2026-10-04T19:24:51.719422+00:00",
+    "step": 5,
+    "sample_size": [
+      1392,
+      928
+    ],
+    "sample_pixels": 1291776,
+    "geometry_anchor": "tests/image/base/neutre/6V1A0327-IPR.tiff",
+    "analysis_version": 4,
+    "validation_mode": "intermediate",
+    "command_values": [
+      -50,
+      -25,
+      25,
+      50
+    ],
+    "ipr_mixer_version": "eight",
+    "crop_candidates": [
+      {
+        "top": 1,
+        "left": 0,
+        "edge_mae": 0.3870834410190582
+      },
+      {
+        "top": 0,
+        "left": 0,
+        "edge_mae": 0.38733533024787903
+      },
+      {
+        "top": 1,
+        "left": 1,
+        "edge_mae": 0.38761353492736816
+      },
+      {
+        "top": 0,
+        "left": 1,
+        "edge_mae": 0.38762906193733215
+      }
+    ],
+    "chosen_crop": {
+      "top": 1,
+      "left": 0,
+      "edge_mae": 0.3870834410190582
+    },
+    "ipr_neutral_available": true,
+    "ipr_neutral_explicitly_excluded": false,
+    "precision": "native unsigned 16-bit/8-bit RGB -> float32; no 8-bit conversion or resizing",
+    "limitations": [
+      "One photographic scene, not a calibrated chart",
+      "Crop selected by sampled luminance-edge discrepancy, not full registration",
+      "IPR input mask cannot be recovered exactly from output sRGB TIFFs",
+      "Delta E is CIE76, D65; it is not CIEDE2000"
+    ],
+    "neutral_comparison": {
+      "MAE_linear": 0.07337391376495361,
+      "DeltaE76_mean": 15.643060684204102,
+      "LR_mean_Y": 0.12044518440961838,
+      "IPR_mean_Y": 0.04704505577683449
+    }
+  },
+  "results": {
+    "green": {
+      "core_pixels": 134,
+      "core_percent": 0.010373315497423702,
+      "outside_pixels": 905709,
+      "variants": [
+        {
+          "engine": "IPR",
+          "number": 1,
+          "file_mtime_ns": 1791132174010176700,
+          "component": "hue",
+          "value": -50,
+          "core_mean_Y": 0.10867466032505035,
+          "core_mean_saturation": 0.43666377663612366,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": -1.9302968978881836,
+          "core_saturation_delta": 0.000261176930507645,
+          "core_Y_ratio": 1.0000384433998872,
+          "outside_MAE_linear": 6.142808160802815e-06
+        },
+        {
+          "engine": "IPR",
+          "number": 2,
+          "file_mtime_ns": 1791132198586717100,
+          "component": "hue",
+          "value": -25,
+          "core_mean_Y": 0.10868073999881744,
+          "core_mean_saturation": 0.43643510341644287,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": -0.9170191884040833,
+          "core_saturation_delta": 3.2493706385139376e-05,
+          "core_Y_ratio": 1.0000943729799614,
+          "outside_MAE_linear": 3.0758578759559896e-06
+        },
+        {
+          "engine": "IPR",
+          "number": 3,
+          "file_mtime_ns": 1791132205834012400,
+          "component": "hue",
+          "value": 25,
+          "core_mean_Y": 0.10867750644683838,
+          "core_mean_saturation": 0.43605655431747437,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": 0.9272516965866089,
+          "core_saturation_delta": -0.00034604055690579116,
+          "core_Y_ratio": 1.000064639924512,
+          "outside_MAE_linear": 3.0850214898237027e-06
+        },
+        {
+          "engine": "IPR",
+          "number": 4,
+          "file_mtime_ns": 1791132219755918700,
+          "component": "hue",
+          "value": 50,
+          "core_mean_Y": 0.10867428034543991,
+          "core_mean_saturation": 0.43598613142967224,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": 1.8376924991607666,
+          "core_saturation_delta": -0.00041648323531262577,
+          "core_Y_ratio": 1.0000349068690628,
+          "outside_MAE_linear": 6.1853229453845415e-06
+        },
+        {
+          "engine": "IPR",
+          "number": 5,
+          "file_mtime_ns": 1791132228227134500,
+          "component": "saturation",
+          "value": -50,
+          "core_mean_Y": 0.10868232697248459,
+          "core_mean_saturation": 0.3876882493495941,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": 0.03128575533628464,
+          "core_saturation_delta": -0.048714373260736465,
+          "core_Y_ratio": 1.0001089775424399,
+          "outside_MAE_linear": 2.184563891205471e-05
+        },
+        {
+          "engine": "IPR",
+          "number": 6,
+          "file_mtime_ns": 1791132236117085300,
+          "component": "saturation",
+          "value": -25,
+          "core_mean_Y": 0.10867300629615784,
+          "core_mean_saturation": 0.411886066198349,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": -0.028921782970428467,
+          "core_saturation_delta": -0.024516543373465538,
+          "core_Y_ratio": 1.000023183924293,
+          "outside_MAE_linear": 1.0974707947752904e-05
+        },
+        {
+          "engine": "IPR",
+          "number": 7,
+          "file_mtime_ns": 1791132243381766000,
+          "component": "saturation",
+          "value": 25,
+          "core_mean_Y": 0.10867960005998611,
+          "core_mean_saturation": 0.4596371352672577,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": -0.02308392897248268,
+          "core_saturation_delta": 0.023234562948346138,
+          "core_Y_ratio": 1.0000838943701114,
+          "outside_MAE_linear": 1.1098412869614549e-05
+        },
+        {
+          "engine": "IPR",
+          "number": 8,
+          "file_mtime_ns": 1791132254382980200,
+          "component": "saturation",
+          "value": 50,
+          "core_mean_Y": 0.10868000984191895,
+          "core_mean_saturation": 0.4840523898601532,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": -0.040716368705034256,
+          "core_saturation_delta": 0.047649845480918884,
+          "core_Y_ratio": 1.0000876273748704,
+          "outside_MAE_linear": 2.230248719570227e-05
+        },
+        {
+          "engine": "IPR",
+          "number": 9,
+          "file_mtime_ns": 1791132274912703400,
+          "component": "luminance",
+          "value": -50,
+          "core_mean_Y": 0.1044909879565239,
+          "core_mean_saturation": 0.43607309460639954,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": 0.06183385103940964,
+          "core_saturation_delta": -0.00032950169406831264,
+          "core_Y_ratio": 0.9615397033544846,
+          "outside_MAE_linear": 3.21086154144723e-05
+        },
+        {
+          "engine": "IPR",
+          "number": 10,
+          "file_mtime_ns": 1791132293033576100,
+          "component": "luminance",
+          "value": -25,
+          "core_mean_Y": 0.10655084252357483,
+          "core_mean_saturation": 0.4356028437614441,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": -0.03272008150815964,
+          "core_saturation_delta": -0.000799747125711292,
+          "core_Y_ratio": 0.9804947881686802,
+          "outside_MAE_linear": 1.626470111659728e-05
+        },
+        {
+          "engine": "IPR",
+          "number": 11,
+          "file_mtime_ns": 1791132301169039700,
+          "component": "luminance",
+          "value": 25,
+          "core_mean_Y": 0.11084206402301788,
+          "core_mean_saturation": 0.43572747707366943,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": -0.02726859413087368,
+          "core_saturation_delta": -0.0006751316250301898,
+          "core_Y_ratio": 1.0199831674231021,
+          "outside_MAE_linear": 1.6693469660822302e-05
+        },
+        {
+          "engine": "IPR",
+          "number": 12,
+          "file_mtime_ns": 1791132317315458800,
+          "component": "luminance",
+          "value": 50,
+          "core_mean_Y": 0.113065704703331,
+          "core_mean_saturation": 0.43632233142852783,
+          "clipped_channel_percent": 0.0,
+          "black_pixel_percent": 0.0,
+          "nonopaque_alpha_percent": 0.0,
+          "core_hue_delta": -0.05711432918906212,
+          "core_saturation_delta": -8.026087743928656e-05,
+          "core_Y_ratio": 1.0404454037902835,
+          "outside_MAE_linear": 3.3833461202448234e-05
+        }
+      ],
+      "pairs": {
+        "hue": {
+          "IPR": {
+            "usable": true,
+            "core_hue_plus_minus": 3.76798939704895,
+            "hue_positive_fraction": 0.7985074626865671,
+            "core_saturation_plus_minus": -0.0006776601658202708,
+            "core_Y_plus_minus": -3.8852485317875107e-07,
+            "saturation_positive_fraction": 0.09701492537313433,
+            "Y_positive_fraction": 0.0,
+            "outside_pair_MAE_linear": 1.2326515388849657e-05,
+            "endpoints_identical_on_sample": false
+          }
+        },
+        "saturation": {
+          "IPR": {
+            "usable": true,
+            "core_hue_plus_minus": -0.07200144231319427,
+            "hue_positive_fraction": 0.09701492537313433,
+            "core_saturation_plus_minus": 0.09636422246694565,
+            "core_Y_plus_minus": -2.311902335350169e-06,
+            "saturation_positive_fraction": 0.8134328358208955,
+            "Y_positive_fraction": 0.0,
+            "outside_pair_MAE_linear": 4.414812065078877e-05,
+            "endpoints_identical_on_sample": false
+          }
+        },
+        "luminance": {
+          "IPR": {
+            "usable": true,
+            "core_hue_plus_minus": -0.11894749850034714,
+            "hue_positive_fraction": 0.17164179104477612,
+            "core_saturation_plus_minus": 0.00024924083845689893,
+            "core_Y_plus_minus": 0.008574724197387695,
+            "saturation_positive_fraction": 0.1417910447761194,
+            "Y_positive_fraction": 0.7611940298507462,
+            "outside_pair_MAE_linear": 6.594207661692053e-05,
+            "endpoints_identical_on_sample": false
+          }
+        }
+      },
+      "analysis_center_degrees": 120.0,
+      "missing_files": [
+        "tests/image/base/color-mixer/green/6V1A0327.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-2.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-3.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-4.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-5.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-6.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-7.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-8.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-9.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-10.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-11.tif",
+        "tests/image/base/color-mixer/green/6V1A0327-12.tif"
+      ],
+      "comparison_kind": "same nominal band (IPR naming assumed from operator)",
+      "progression": {
+        "hue": {
+          "LR": {
+            "metric": "core_hue_delta",
+            "points": [],
+            "steps": [],
+            "usable": false,
+            "tolerance": 0.05,
+            "monotonic_mean": null,
+            "strictly_increasing_mean": null
+          },
+          "IPR": {
+            "metric": "core_hue_delta",
+            "points": [
+              {
+                "value": -50,
+                "response": -1.9302968978881836,
+                "usable": true
+              },
+              {
+                "value": -25,
+                "response": -0.9170191884040833,
+                "usable": true
+              },
+              {
+                "value": 0,
+                "response": 0.0,
+                "usable": true
+              },
+              {
+                "value": 25,
+                "response": 0.9272516965866089,
+                "usable": true
+              },
+              {
+                "value": 50,
+                "response": 1.8376924991607666,
+                "usable": true
+              }
+            ],
+            "steps": [
+              {
+                "from": -50,
+                "to": -25,
+                "delta": 1.0132777094841003
+              },
+              {
+                "from": -25,
+                "to": 0,
+                "delta": 0.9170191884040833
+              },
+              {
+                "from": 0,
+                "to": 25,
+                "delta": 0.9272516965866089
+              },
+              {
+                "from": 25,
+                "to": 50,
+                "delta": 0.9104408025741577
+              }
+            ],
+            "usable": true,
+            "tolerance": 0.05,
+            "monotonic_mean": true,
+            "strictly_increasing_mean": true
+          }
+        },
+        "saturation": {
+          "LR": {
+            "metric": "core_saturation_delta",
+            "points": [],
+            "steps": [],
+            "usable": false,
+            "tolerance": 0.0001,
+            "monotonic_mean": null,
+            "strictly_increasing_mean": null
+          },
+          "IPR": {
+            "metric": "core_saturation_delta",
+            "points": [
+              {
+                "value": -50,
+                "response": -0.048714373260736465,
+                "usable": true
+              },
+              {
+                "value": -25,
+                "response": -0.024516543373465538,
+                "usable": true
+              },
+              {
+                "value": 0,
+                "response": 0.0,
+                "usable": true
+              },
+              {
+                "value": 25,
+                "response": 0.023234562948346138,
+                "usable": true
+              },
+              {
+                "value": 50,
+                "response": 0.047649845480918884,
+                "usable": true
+              }
+            ],
+            "steps": [
+              {
+                "from": -50,
+                "to": -25,
+                "delta": 0.024197829887270927
+              },
+              {
+                "from": -25,
+                "to": 0,
+                "delta": 0.024516543373465538
+              },
+              {
+                "from": 0,
+                "to": 25,
+                "delta": 0.023234562948346138
+              },
+              {
+                "from": 25,
+                "to": 50,
+                "delta": 0.024415282532572746
+              }
+            ],
+            "usable": true,
+            "tolerance": 0.0001,
+            "monotonic_mean": true,
+            "strictly_increasing_mean": true
+          }
+        },
+        "luminance": {
+          "LR": {
+            "metric": "core_Y_ratio",
+            "points": [],
+            "steps": [],
+            "usable": false,
+            "tolerance": 0.0001,
+            "monotonic_mean": null,
+            "strictly_increasing_mean": null
+          },
+          "IPR": {
+            "metric": "core_Y_ratio",
+            "points": [
+              {
+                "value": -50,
+                "response": 0.9615397033544846,
+                "usable": true
+              },
+              {
+                "value": -25,
+                "response": 0.9804947881686802,
+                "usable": true
+              },
+              {
+                "value": 0,
+                "response": 1.0,
+                "usable": true
+              },
+              {
+                "value": 25,
+                "response": 1.0199831674231021,
+                "usable": true
+              },
+              {
+                "value": 50,
+                "response": 1.0404454037902835,
+                "usable": true
+              }
+            ],
+            "steps": [
+              {
+                "from": -50,
+                "to": -25,
+                "delta": 0.01895508481419561
+              },
+              {
+                "from": -25,
+                "to": 0,
+                "delta": 0.019505211831319813
+              },
+              {
+                "from": 0,
+                "to": 25,
+                "delta": 0.019983167423102133
+              },
+              {
+                "from": 25,
+                "to": 50,
+                "delta": 0.020462236367181363
+              }
+            ],
+            "usable": true,
+            "tolerance": 0.0001,
+            "monotonic_mean": true,
+            "strictly_increasing_mean": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+Diagnostic synthétique CPU, moteur inchangé, OpenCV WSL.
+Source : sonde-bruit-2026-10-04.cpp ; graine RNG 812 ; plans 512x512.
+Reproduction depuis la racine sous Bash :
+c++ -std=c++17 -O2 -I src/core docs/validation/raw/sonde-bruit-2026-10-04.cpp -o build-wsl-libraw/noise_diagnostic_probe $(pkg-config --cflags --libs opencv4)
+build-wsl-libraw/noise_diagnostic_probe
+
+gray_low_noise original_mean=0.0499997 HH_sigma=9.99547e-05 estimated_sigma=0.00025 edge_protection_half_fraction=0.0267105 edge_protection_full_fraction=0.000293732
+  luminance=1 sigma_ratio=0.152839 mean_ratio=0.999999 pre_RGB_clamp_mean_ratio=0.999999
+  luminance=5 sigma_ratio=0.0314684 mean_ratio=0.999999 pre_RGB_clamp_mean_ratio=0.999999
+  luminance=10 sigma_ratio=0.0145048 mean_ratio=0.999999 pre_RGB_clamp_mean_ratio=0.999999
+  luminance=25 sigma_ratio=0.00964222 mean_ratio=1 pre_RGB_clamp_mean_ratio=1
+  luminance=50 sigma_ratio=0.00908965 mean_ratio=1 pre_RGB_clamp_mean_ratio=1
+  luminance=75 sigma_ratio=0.00906203 mean_ratio=1 pre_RGB_clamp_mean_ratio=1
+  luminance=100 sigma_ratio=0.0090344 mean_ratio=1 pre_RGB_clamp_mean_ratio=1
+gray_noisy original_mean=0.0499849 HH_sigma=0.00499757 estimated_sigma=0.00387941 edge_protection_half_fraction=0.702457 edge_protection_full_fraction=0.439354
+  luminance=1 sigma_ratio=0.860716 mean_ratio=1.00001 pre_RGB_clamp_mean_ratio=1.00001
+  luminance=5 sigma_ratio=0.830712 mean_ratio=1.00001 pre_RGB_clamp_mean_ratio=1.00001
+  luminance=10 sigma_ratio=0.794608 mean_ratio=1.00001 pre_RGB_clamp_mean_ratio=1.00001
+  luminance=25 sigma_ratio=0.694761 mean_ratio=1.00001 pre_RGB_clamp_mean_ratio=1.00001
+  luminance=50 sigma_ratio=0.563858 mean_ratio=0.999999 pre_RGB_clamp_mean_ratio=0.999999
+  luminance=75 sigma_ratio=0.465873 mean_ratio=1 pre_RGB_clamp_mean_ratio=1
+  luminance=100 sigma_ratio=0.391434 mean_ratio=1 pre_RGB_clamp_mean_ratio=1
+dark_colored_noise original_mean=0.00567337 HH_sigma=0.0030683 estimated_sigma=0.00250844 edge_protection_half_fraction=0.673012 edge_protection_full_fraction=0.397255
+  luminance=1 sigma_ratio=0.850153 mean_ratio=1.00762 pre_RGB_clamp_mean_ratio=1.00483
+  luminance=5 sigma_ratio=0.816936 mean_ratio=1.00918 pre_RGB_clamp_mean_ratio=1.00576
+  luminance=10 sigma_ratio=0.77825 mean_ratio=1.01097 pre_RGB_clamp_mean_ratio=1.00682
+  luminance=25 sigma_ratio=0.673111 mean_ratio=1.015 pre_RGB_clamp_mean_ratio=1.00886
+  luminance=50 sigma_ratio=0.540739 mean_ratio=1.0179 pre_RGB_clamp_mean_ratio=1.0092
+  luminance=75 sigma_ratio=0.442691 mean_ratio=1.01846 pre_RGB_clamp_mean_ratio=1.00798
+  luminance=100 sigma_ratio=0.370378 mean_ratio=1.01888 pre_RGB_clamp_mean_ratio=1.00709

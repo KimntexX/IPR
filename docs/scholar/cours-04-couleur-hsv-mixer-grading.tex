@@ -1,0 +1,41 @@
+\input{preamble}
+\title{Cours 4 -- Saturation, vibrance, mélangeur HSL et color grading}
+\begin{document}
+\coursmeta{4 octobre 2026}{Approches de manipulation chromatique globales et par bandes ; modèle huit bandes corrigé.}
+
+\section{Saturation et vibrance}
+Dans \IPR{}, la saturation agit autour du neutre de même luminance :
+\begin{equation}
+\mathbf{p}'=Y\mathbf{1}+g_s(\mathbf{p}-Y\mathbf{1}),\qquad g_s=1+S/100.
+\end{equation}
+La chroma relative $c=(\max-\min)/\max$ permet à la vibrance de protéger les couleurs déjà vives : $g_v=1+(V/100)(1-c)$. Le gain total est $g_sg_v$. Ce n'est pas un modèle perceptuel complet, mais il est stable, peu coûteux et facilement testable.
+
+\section{Mélangeur de couleur}
+Le module \texttt{ColorMixer} convertit temporairement un pixel RGB linéaire en HSV, représentation courante des manipulations créatives de couleur~\cite{gonzalezWoods}. Les huit centres sont $0,30,60,120,180,240,270,300$ degrés : rouge, orange, jaune, vert, cyan, bleu, violet, magenta. Pour un centre $h_i$, la pondération circulaire est
+\begin{equation}
+w_i(h)=\max\left(0,1-\frac{|\delta(h,h_i)|}{a_i(h)}\right).
+\end{equation}
+La largeur $a_i$ est la distance au centre voisin du côté de la distance circulaire signée $\delta$. Entre deux centres, les poids des deux bandes se complètent à un. Ils sont calculés sur la teinte source, non sur une teinte déjà modifiée.
+
+\subsection{Neutres, commandes combinées et luminance}
+Un gris n'a pas de teinte définie : la convention HSV $H=0$ ne doit pas en faire un rouge. Pour $t=\operatorname{clamp}(S/0{,}05,0,1)$, la protection $q=t^2(3-2t)$ rend la réponse nulle sur les achromatiques et progressive jusqu'à 5\% de chroma relative. Les commandes pondérées sont $A_H=\sum_i qw_iH_i/100$, $A_S=\sum_i qw_iS_i/100$ et $A_L=\sum_i qw_iL_i/100$.
+\begin{align}
+ H'&=H+18^\circ A_H,\\
+ S'&=\operatorname{clamp}(S(1+A_S),0,1),\\
+ \mathbf{p}'&=\operatorname{HSVtoRGB}(H',S',V)\,
+ \frac{Y(\mathbf{p})}{Y(\operatorname{HSVtoRGB}(H',S',V))}\,2^{0{,}5A_L}.
+\end{align}
+La normalisation préserve $Y$ lors d'une édition de teinte/saturation seule. Le gain de luminance est borné entre $1/\sqrt{2}$ et $\sqrt{2}$, soit $\pm0{,}5$ EV. Il n'existe plus de poussée additive de $V$ vers 1 : un pixel sombre n'est pas artificiellement remonté au blanc. Les valeurs 5\% et $0{,}5$ EV sont des choix initiaux à calibrer photographiquement. La conservation de $Y$ précède le gamut mapping de sortie ; elle n'est pas garantie après compression/écrêtage. Les pixels à canal négatif restent inchangés dans ce module.
+
+\section{Color grading}
+Trois poids de luminance lissés identifient ombres, tons moyens et hautes lumières. Une couleur HSV choisie est centrée sur son propre gris ($\mathbf{c}-Y_c\mathbf{1}$), puis ajoutée au pixel avec un gain de saturation et le poids tonal. Centrer la couleur évite de modifier la luminance moyenne aussi fortement qu'un ajout RGB direct.
+
+\section{Exemple}
+Au centre du bleu, avec $S=0{,}4$, le curseur de saturation $-30$ donne $S'=0{,}28$ ; la normalisation maintient $Y$. À mi-chemin entre bleu et violet, deux commandes $+50$ donnent un gain de saturation $1{,}5$, pas le produit $1{,}25^2$. Au centre du vert, une luminance $+100$ sur $Y=0{,}01$ donne $Y'=0{,}014142$, pas une interpolation vers le blanc. Un gris $Y=0{,}2$ reste à $0{,}2$ quelle que soit la bande. Le fondu de la bande bleue rejoint cyan et violet, pas directement magenta.
+
+\section{Limites}
+HSV n'est pas perceptuellement uniforme : un même déplacement de teinte n'a pas la même perception partout. Les paramètres $0{,}18$, $0{,}05$, $0{,}5$ et $0{,}0035$ (grading) sont des échelles/protections empiriques. Une future version peut employer OKLCh avec une migration de rendu explicite. Le sidecar v4 conserve les valeurs v1/v2/v3 et leur identité de couleur, pas leur rendu exact : l'ancienne dernière bande est magenta (indice 7), le nouveau violet (6) commence à zéro. Les anciens TIFF restent une campagne historique, non une validation du moteur corrigé.
+
+\resultat{Le mixer est une édition sélective par teinte; le grading est une coloration graduée par luminance. Les deux sont créatifs, non des corrections colorimétriques de référence.}
+\bibliographystyle{plain}\bibliography{references}
+\end{document}

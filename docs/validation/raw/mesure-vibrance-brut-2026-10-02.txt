@@ -1,0 +1,7 @@
+VIBRANCE
+  LR: 8 scenes
+    bare: delta_chroma=-0.3669; low_chroma=-0.1418; high_chroma=-0.4954; relative_low=-0.9478; relative_high=-0.7397; Y=0.8202; clip=1.284%
+    suffix_2: delta_chroma=0.2245; low_chroma=0.1611; high_chroma=0.2378; relative_low=1.0813; relative_high=0.3954; Y=0.9603; clip=4.934%
+  IPR: 8 scenes
+    bare: delta_chroma=-0.1718; low_chroma=-0.1187; high_chroma=-0.1726; relative_low=-0.7318; relative_high=-0.2843; Y=1.0004; clip=1.002%
+    suffix_2: delta_chroma=0.1420; low_chroma=0.1076; high_chroma=0.1383; relative_low=0.6834; relative_high=0.2266; Y=0.9993; clip=2.405%

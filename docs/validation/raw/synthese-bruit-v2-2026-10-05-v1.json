@@ -1,0 +1,1367 @@
+{
+  "source_sha256": {
+    "mesure-bruit-v2-initial-2026-10-05-v1.json": "09c12d04f172681bec19454261badd58c35d2872f819d0a84c913288ea470f68",
+    "mesure-bruit-v2-etendu-2026-10-05-v1.json": "f38d38ace8c14371c3d83558d7f1e5a9f85cbeaa7f1a6d0a9a0aeb91791a54b1",
+    "mesure-bruit-2026-10-04-v4.json": "7c71aa781c586c9298e74260a3786d27d65c9d37ce79b073b9302322afa1f7eb"
+  },
+  "counts": {
+    "scenes": 12,
+    "neutrals": 24,
+    "standard_variants": 136,
+    "extra_variants": 9,
+    "missing_LR_variants": 56,
+    "other_audit_issues": 0
+  },
+  "series": {
+    "6V1A0043/IPR-luminance": {
+      "values": [
+        1,
+        5,
+        10,
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        1.0,
+        1.0,
+        0.9999991640012239,
+        0.8761722076724707,
+        0.8737695698659068,
+        0.8695577160608714,
+        0.7024553348805957
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.0002055179010973518,
+        0.00012146395089729367,
+        -0.0007124868919627936,
+        0.005430219389812585,
+        -0.019733908787245014,
+        -0.026770629588801498,
+        -0.048125546330712865
+      ],
+      "detail_edge_gradient_ratios": [
+        1.0,
+        0.9999983940539878,
+        0.9999941945269312,
+        0.9999634413832779,
+        0.9998549574917418,
+        0.9996935277836845,
+        0.9994492302901297
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.069845622137088,
+      "max_local_mean_Y_drift_percent": 0.042764977281928296,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.7460265273633842,
+        "flat_sigma_YCoCg_ratio": 0.995190913347348,
+        "flat_sigma_chroma_ratio": 0.9990291403917777,
+        "flat_mean_Y_ratio": 1.0001934757821622,
+        "detail_edge_gradient_ratio": 0.9981296238471932,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 2.4596229195594788e-06
+      }
+    },
+    "6V1A0043/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        1.0,
+        0.9961451115189883,
+        0.7220711939456441,
+        0.44766701749430926
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.0002350473600865044,
+        0.004573356276127427,
+        0.005032577554109352,
+        0.008827270552558275
+      ],
+      "detail_edge_gradient_ratios": [
+        1.0000020293699614,
+        1.0000027505635987,
+        0.9999970581572486,
+        1.0000035161516772
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.00673400938586699,
+      "max_local_mean_Y_drift_percent": 0.03095628343909862,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.8713655415302479,
+        "flat_sigma_YCoCg_ratio": 0.9999981044199241,
+        "flat_sigma_chroma_ratio": 0.44680207215679346,
+        "flat_mean_Y_ratio": 1.0000764223738066,
+        "detail_edge_gradient_ratio": 0.9999720980853766,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 1.718848943710327e-05
+      }
+    },
+    "6V1A0043/LR-luminance": {
+      "values": [
+        25.0,
+        50.0,
+        75.0,
+        100.0
+      ],
+      "sigma_ratios": [
+        0.6233218556326948,
+        0.5349093884440309,
+        0.4732128002606112,
+        0.4613527574947962
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.22035664958908185,
+        -0.20594744962532108,
+        -0.24419011449405836,
+        -0.252174327518051
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9925226322858225,
+        0.9899202651712639,
+        0.9872088279982165,
+        0.984439983125438
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.7565221365704811,
+      "max_local_mean_Y_drift_percent": -0.03646419247511634,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.4613527574947962,
+        "flat_sigma_YCoCg_ratio": 0.5750457077594172,
+        "flat_sigma_chroma_ratio": 0.9892566100401028,
+        "flat_mean_Y_ratio": 0.9974782567248195,
+        "detail_edge_gradient_ratio": 0.984439983125438,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 8.11256468296051e-05
+      }
+    },
+    "6V1A0043/LR-couleur": {
+      "values": [
+        25.0,
+        50.0,
+        75.0,
+        100.0
+      ],
+      "sigma_ratios": [
+        0.452069427466505,
+        0.45384955764201196,
+        0.45859841892252384,
+        0.4572450042546751
+      ],
+      "standard_strictly_decreasing": false,
+      "mean_Y_drift_percent": [
+        -1.9108336292982364,
+        -1.9073236967872331,
+        -1.9048964389987155,
+        -1.9029300676523309
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9995021709914358,
+        0.9993894582371321,
+        0.9991682234929853,
+        0.9989730182973902
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -2.6121142264468378,
+      "max_local_mean_Y_drift_percent": 0.02290203680426206,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.9819085453506149,
+        "flat_sigma_YCoCg_ratio": 1.063612842262509,
+        "flat_sigma_chroma_ratio": 0.4572450042546751,
+        "flat_mean_Y_ratio": 0.9809706993234767,
+        "detail_edge_gradient_ratio": 0.9989730182973902,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.0002780510112643242
+      }
+    },
+    "6V1A0112/IPR-luminance": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9576558186397607,
+        0.8421211825332301,
+        0.6634561974859097,
+        0.44521829358854803
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.10550361578649525,
+        -0.2193119380696551,
+        -0.2547176504212656,
+        -0.28871837676470724
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9809080465047071,
+        0.9247716273459107,
+        0.8401634612799749,
+        0.7333665109914373
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.4784973994904296,
+      "max_local_mean_Y_drift_percent": 0.4132993350910441,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.8303665751764031,
+        "flat_sigma_YCoCg_ratio": 0.8135701946886364,
+        "flat_sigma_chroma_ratio": 0.9932522950619965,
+        "flat_mean_Y_ratio": 1.026743841934298,
+        "detail_edge_gradient_ratio": 0.8327196359697288,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.00010666344314813614
+      }
+    },
+    "6V1A0112/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9708811789808569,
+        0.8841340242030458,
+        0.7793795205385816,
+        0.6608431842023696
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.01005197687236059,
+        -0.009772480667180616,
+        -0.005785980290262671,
+        0.0031503396693111085
+      ],
+      "detail_edge_gradient_ratios": [
+        1.000195048004687,
+        1.0001854153740373,
+        1.000018324877259,
+        0.9999044057935735
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.04526515930296515,
+      "max_local_mean_Y_drift_percent": 0.0054365818496382445,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 1.0040512659063365,
+        "flat_sigma_YCoCg_ratio": 0.987422270860733,
+        "flat_sigma_chroma_ratio": 0.6599039405238363,
+        "flat_mean_Y_ratio": 1.0037904808388407,
+        "detail_edge_gradient_ratio": 0.9751165447650758,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.0004484541714191437
+      }
+    },
+    "6V1A0112/LR-luminance": {
+      "values": [
+        25.0,
+        50.0,
+        75.0,
+        100.0
+      ],
+      "sigma_ratios": [
+        0.5049500131369047,
+        0.3739807234802466,
+        0.25655921536865367,
+        0.21537601974246812
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -39.40460909815447,
+        -50.01920813458022,
+        -58.126501177352864,
+        -61.36818451168066
+      ],
+      "detail_edge_gradient_ratios": [
+        0.6240762456490391,
+        0.49163059202323467,
+        0.35993024869013146,
+        0.2507645678117607
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -62.0631300750611,
+      "max_local_mean_Y_drift_percent": -11.816954222020538,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.21537601974246812,
+        "flat_sigma_YCoCg_ratio": 0.22831859276685085,
+        "flat_sigma_chroma_ratio": 0.3877321207440382,
+        "flat_mean_Y_ratio": 0.38631815488319343,
+        "detail_edge_gradient_ratio": 0.2507645678117607,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.0083436518907547
+      }
+    },
+    "6V1A0112/LR-couleur": {
+      "values": [
+        25.0,
+        50.0,
+        75.0,
+        100.0
+      ],
+      "sigma_ratios": [
+        0.04344399290226521,
+        0.04315985366372217,
+        0.04272088358891604,
+        0.04255737022152756
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -40.72391070219924,
+        -40.6129484205333,
+        -40.60190295731936,
+        -40.599362814033
+      ],
+      "detail_edge_gradient_ratios": [
+        0.6072930823871905,
+        0.6065988957264571,
+        0.6064697620783409,
+        0.6064129080370706
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -42.353904768937966,
+      "max_local_mean_Y_drift_percent": -17.90843669219788,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.5663012319931979,
+        "flat_sigma_YCoCg_ratio": 0.41619929544228174,
+        "flat_sigma_chroma_ratio": 0.04255737022152756,
+        "flat_mean_Y_ratio": 0.59400637185967,
+        "detail_edge_gradient_ratio": 0.6064129080370706,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.01932600326836109
+      }
+    },
+    "6V1A0327/IPR-luminance": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9549696265468937,
+        0.8447973244763728,
+        0.6668216567447911,
+        0.4992517525062914
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.0019468258274368822,
+        -0.0067476782303899085,
+        -0.012867271650307543,
+        -0.020319152765402304
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9997800311473461,
+        0.999065998304171,
+        0.9979088695551338,
+        0.9962936018408269
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.07636830048277643,
+      "max_local_mean_Y_drift_percent": 0.039355563427778684,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.8083404696117582,
+        "flat_sigma_YCoCg_ratio": 0.8361913604536813,
+        "flat_sigma_chroma_ratio": 0.999989516041061,
+        "flat_mean_Y_ratio": 1.0000244913841498,
+        "detail_edge_gradient_ratio": 0.9953148930502476,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 6.556510925292969e-07
+      }
+    },
+    "6V1A0327/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9977542372323193,
+        0.992555893065225,
+        0.9818753820960425,
+        0.7162481886204082
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -5.306991188724908e-05,
+        -2.6217777182591107e-05,
+        2.575602486842854e-06,
+        8.309383416893468e-05
+      ],
+      "detail_edge_gradient_ratios": [
+        1.0000002778610877,
+        1.0000004218740457,
+        0.9999984834197471,
+        0.9999935872370128
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.0086011322459556,
+      "max_local_mean_Y_drift_percent": 0.018088979156449803,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 1.0160462922736282,
+        "flat_sigma_YCoCg_ratio": 0.9997781142789846,
+        "flat_sigma_chroma_ratio": 0.6771282749239367,
+        "flat_mean_Y_ratio": 1.0000019978176904,
+        "detail_edge_gradient_ratio": 0.9989687097936973,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 3.733299672603607e-05
+      }
+    },
+    "6V1A0327/LR-luminance": {
+      "values": [
+        25.0,
+        50.0,
+        75.0,
+        100.0
+      ],
+      "sigma_ratios": [
+        0.5844345912774729,
+        0.4523017266821491,
+        0.33295584552516966,
+        0.23844891875128338
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.02589594793744876,
+        -0.02330525141075457,
+        -0.030102960302258452,
+        -0.030515418598753286
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9735011789407412,
+        0.9641940851320263,
+        0.9545745581228402,
+        0.9447135673807616
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -1.4887049251690931,
+      "max_local_mean_Y_drift_percent": -0.0036143637707763965,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.23844891875128338,
+        "flat_sigma_YCoCg_ratio": 0.2223969270471683,
+        "flat_sigma_chroma_ratio": 0.9840138099370097,
+        "flat_mean_Y_ratio": 0.9996948458140125,
+        "detail_edge_gradient_ratio": 0.9447135673807616,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.00023787468671798706
+      }
+    },
+    "6V1A0327/LR-couleur": {
+      "values": [
+        25.0,
+        50.0,
+        75.0,
+        100.0
+      ],
+      "sigma_ratios": [
+        0.336845061279272,
+        0.3337600076587237,
+        0.3315282940231885,
+        0.33077783296641816
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.008602458827700055,
+        -0.007573574011920936,
+        -0.006264407063705235,
+        -0.005481869665102668
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9931747553383556,
+        0.9928122133601205,
+        0.9922922155378145,
+        0.9917177563184439
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.5143853198361636,
+      "max_local_mean_Y_drift_percent": 0.03536166662463369,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.9211828140855434,
+        "flat_sigma_YCoCg_ratio": 1.0463527387027796,
+        "flat_sigma_chroma_ratio": 0.33077783296641816,
+        "flat_mean_Y_ratio": 0.999945181303349,
+        "detail_edge_gradient_ratio": 0.9917177563184439,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.0006771385669708252
+      }
+    },
+    "6V1A0624/IPR-luminance": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.959530389060733,
+        0.8611626775838559,
+        0.7151883149484142,
+        0.5661425606390912
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.001410053536399225,
+        -0.004154217068941257,
+        -0.008243931894780232,
+        -0.013144614208293603
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9991663722548887,
+        0.9967107299774303,
+        0.9926367104032219,
+        0.9869677491106792
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.01640000311221579,
+      "max_local_mean_Y_drift_percent": 0.6076536206237382,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.8324232395142698,
+        "flat_sigma_YCoCg_ratio": 0.8414973943762072,
+        "flat_sigma_chroma_ratio": 1.0003196897737996,
+        "flat_mean_Y_ratio": 1.0000356080711001,
+        "detail_edge_gradient_ratio": 0.9865883847706789,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 1.2442469596862793e-06
+      }
+    },
+    "6V1A0624/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9982267849963748,
+        0.9912211697996627,
+        0.8295378202382715,
+        0.8059617439071083
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -8.658015659968044e-06,
+        0.00010288816063575013,
+        0.0001223009955086951,
+        0.0001420506734906013
+      ],
+      "detail_edge_gradient_ratios": [
+        1.0000043267813485,
+        1.0000051695304881,
+        0.9999997377202261,
+        0.9999819114239255
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.006514693281101103,
+      "max_local_mean_Y_drift_percent": 0.00482369568324259,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 1.0003310994389008,
+        "flat_sigma_YCoCg_ratio": 0.9999940069789106,
+        "flat_sigma_chroma_ratio": 0.8015003482489804,
+        "flat_mean_Y_ratio": 0.9999990020574157,
+        "detail_edge_gradient_ratio": 1.0001846419471554,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 5.767284892499447e-05
+      }
+    },
+    "6V1A0624/LR-luminance": {
+      "values": [
+        25.0,
+        50.0,
+        75.0,
+        100.0
+      ],
+      "sigma_ratios": [
+        0.5320171578041464,
+        0.3824545332434036,
+        0.24874105615457429,
+        0.16673315649199022
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.0786485034087292,
+        -0.10203794687486667,
+        -0.1400714990411167,
+        -0.17668606327969627
+      ],
+      "detail_edge_gradient_ratios": [
+        0.959960949983246,
+        0.9463038489424829,
+        0.9323981973780986,
+        0.9184244377080459
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -4.30610287102583,
+      "max_local_mean_Y_drift_percent": -0.03949010873806058,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.16673315649199022,
+        "flat_sigma_YCoCg_ratio": 0.1312528382807949,
+        "flat_sigma_chroma_ratio": 0.9764744728631363,
+        "flat_mean_Y_ratio": 0.998233139367203,
+        "detail_edge_gradient_ratio": 0.9184244377080459,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.00010236026719212532
+      }
+    },
+    "6V1A0624/LR-couleur": {
+      "values": [
+        25.0,
+        50.0,
+        75.0,
+        100.0
+      ],
+      "sigma_ratios": [
+        0.17193247113065474,
+        0.17039440827127306,
+        0.17060230275218158,
+        0.1693227393470207
+      ],
+      "standard_strictly_decreasing": false,
+      "mean_Y_drift_percent": [
+        -0.2104949585880922,
+        -0.20571592930946903,
+        -0.20183077340250044,
+        -0.1988984666473792
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9987492901211421,
+        0.9983091095189192,
+        0.9988047275512992,
+        0.9995978379983486
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.40802670959393383,
+      "max_local_mean_Y_drift_percent": 0.7817584095565433,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.9795856576195243,
+        "flat_sigma_YCoCg_ratio": 0.9624461351465035,
+        "flat_sigma_chroma_ratio": 0.1693227393470207,
+        "flat_mean_Y_ratio": 0.9980110153335262,
+        "detail_edge_gradient_ratio": 0.9995978379983486,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.0017273703124374151
+      }
+    },
+    "6V1A9890/IPR-luminance": {
+      "values": [
+        1,
+        5,
+        10,
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        1.0,
+        0.9999126945510517,
+        0.9969624471172117,
+        0.9783340166277541,
+        0.9176962013928622,
+        0.8244086382407664,
+        0.7362728492023558
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -9.293839686730365e-06,
+        -0.0006141861179420616,
+        -0.002126375712396822,
+        -0.010237032352611308,
+        -0.0193317144212668,
+        -0.018415483590006332,
+        -0.012859450195035205
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9999601568371124,
+        0.9989323315297107,
+        0.9957271923234605,
+        0.9730167532910433,
+        0.904348669173698,
+        0.8146246217878004,
+        0.7183193347008363
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.02434899369136989,
+      "max_local_mean_Y_drift_percent": 0.602723851345921,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.866858318660688,
+        "flat_sigma_YCoCg_ratio": 0.8660498853230543,
+        "flat_sigma_chroma_ratio": 1.0000641602917915,
+        "flat_mean_Y_ratio": 1.0002765244211853,
+        "detail_edge_gradient_ratio": 0.8675355020022602,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 3.309757448732853e-05
+      }
+    },
+    "6V1A9890/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9880992716692867,
+        0.9525735004964964,
+        0.8949013730134965,
+        0.8351347800917944
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -1.6986215634062773e-05,
+        1.7062457358107963e-05,
+        5.6608192400275925e-05,
+        -7.55513373862371e-05
+      ],
+      "detail_edge_gradient_ratios": [
+        1.0000254599406868,
+        0.9999988396149648,
+        0.9999959511997654,
+        0.9999728380011135
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.024485415949715428,
+      "max_local_mean_Y_drift_percent": 0.019657052035015887,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.9946776333815341,
+        "flat_sigma_YCoCg_ratio": 1.0008308117256912,
+        "flat_sigma_chroma_ratio": 0.8058764843557022,
+        "flat_mean_Y_ratio": 1.0001091374077387,
+        "detail_edge_gradient_ratio": 0.9756304600481842,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.00019413046538829803
+      }
+    },
+    "6V1A9890/LR-luminance": {
+      "values": [
+        25.0,
+        50.0,
+        75.0,
+        100.0
+      ],
+      "sigma_ratios": [
+        0.559609497404939,
+        0.4134738237878883,
+        0.2822020796461824,
+        0.19145439935871889
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        0.04079960536857996,
+        0.04316922866824946,
+        0.029867773277647558,
+        0.009993422762244464
+      ],
+      "detail_edge_gradient_ratios": [
+        0.7027068482228633,
+        0.5858509937395034,
+        0.4676291093745075,
+        0.3619625692525904
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -30.195047364795723,
+      "max_local_mean_Y_drift_percent": 0.14913614736140612,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.19145439935871889,
+        "flat_sigma_YCoCg_ratio": 0.10338412291447036,
+        "flat_sigma_chroma_ratio": 0.9661222961876234,
+        "flat_mean_Y_ratio": 1.0000999342276224,
+        "detail_edge_gradient_ratio": 0.3619625692525904,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.0033899247646331787
+      }
+    },
+    "6V1A9890/LR-couleur": {
+      "values": [
+        25.0,
+        50.0,
+        75.0,
+        100.0
+      ],
+      "sigma_ratios": [
+        0.18340649850531185,
+        0.1836816347978204,
+        0.18344057707150804,
+        0.1834153741565565
+      ],
+      "standard_strictly_decreasing": false,
+      "mean_Y_drift_percent": [
+        -0.6252201505072552,
+        -0.6382008809387552,
+        -0.6512845548374835,
+        -0.6611349453028881
+      ],
+      "detail_edge_gradient_ratios": [
+        0.805467260708228,
+        0.7808481094112101,
+        0.7775351177202414,
+        0.7761491209860307
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -24.85657457070538,
+      "max_local_mean_Y_drift_percent": -0.5144724666314104,
+      "before_after_same_neutral_sha256": true,
+      "before_after_same_ROIs": true,
+      "before_100": {
+        "flat_regions": 6,
+        "detail_regions": 4,
+        "flat_sigma_Y_ratio": 0.9267512480836204,
+        "flat_sigma_YCoCg_ratio": 1.022308414210491,
+        "flat_sigma_chroma_ratio": 0.1834153741565565,
+        "flat_mean_Y_ratio": 0.9933886505469711,
+        "detail_edge_gradient_ratio": 0.7761491209860307,
+        "all_regions_identical": false,
+        "max_abs_chroma_mean_drift": 0.008293161168694496
+      }
+    },
+    "6V1A9950/IPR-luminance": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9853981582581659,
+        0.9389005016239016,
+        0.8868731812504007,
+        0.8381586528785767
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.0006001577317782392,
+        -0.002178721364032299,
+        -0.004467524987394889,
+        -0.0070890524984768
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9994024515064277,
+        0.9976777003468752,
+        0.9948218343901236,
+        0.9908575470211601
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.011003106862428336,
+      "max_local_mean_Y_drift_percent": 0.2907530276281767
+    },
+    "6V1A9950/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.997874881207867,
+        0.9921930374342949,
+        0.9083142487165804,
+        0.8511944510759527
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -1.8383490341111752e-05,
+        -7.685316738559322e-06,
+        3.217417605672068e-05,
+        -4.113652194437378e-05
+      ],
+      "detail_edge_gradient_ratios": [
+        1.0000032786012525,
+        0.9999933868862858,
+        0.9999868858408973,
+        0.9999734511823295
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.00266108971493928,
+      "max_local_mean_Y_drift_percent": 0.0015456708734040703
+    },
+    "6V1A0106/IPR-luminance": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9343419974085734,
+        0.7482421601821581,
+        0.507886729360611,
+        0.26780536915417985
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.0015570525456864992,
+        -0.0057022237562431854,
+        -0.01079195978699321,
+        -0.0167905009004099
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9992329832955227,
+        0.9969109893508667,
+        0.9931200174691894,
+        0.9878953396646641
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.021197634007985577,
+      "max_local_mean_Y_drift_percent": 0.2724929195606407
+    },
+    "6V1A0106/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9783017566643524,
+        0.8755051582783657,
+        0.782561272362693,
+        0.7229827254783058
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -3.94109266332876e-05,
+        0.00024257245643255487,
+        0.00023067745584803845,
+        9.631807773580192e-05
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9999960400301346,
+        1.0000134426258314,
+        0.9999988708054963,
+        0.9999874608910286
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.0019715786259144608,
+      "max_local_mean_Y_drift_percent": 0.0010896712997920943
+    },
+    "6V1A1020/IPR-luminance": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9592045025069358,
+        0.8477550059207917,
+        0.715900977653257,
+        0.5935284746111379
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.0029925522125884285,
+        -0.011018790047878646,
+        -0.022524310584615126,
+        -0.03616703079174499
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9975721705132441,
+        0.9903824396331988,
+        0.9789098288756914,
+        0.9633418562600924
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.12245019277076219,
+      "max_local_mean_Y_drift_percent": 0.828594003431915
+    },
+    "6V1A1020/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9789032716639123,
+        0.921495914353908,
+        0.8443108569274111,
+        0.7724865241560797
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.0001072917714672883,
+        -0.00013806350346312612,
+        -9.780716399010458e-05,
+        8.56342579957925e-05
+      ],
+      "detail_edge_gradient_ratios": [
+        0.99998880151006,
+        0.9999926778036702,
+        0.9999850157345724,
+        0.9999977868282953
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.004307508287315631,
+      "max_local_mean_Y_drift_percent": 0.0021811904699076123
+    },
+    "6V1A9734/IPR-luminance": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9804080350904478,
+        0.9209151661078993,
+        0.8354634580634944,
+        0.747482092423644
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.004957263452687322,
+        -0.011554991633699885,
+        -0.016996931865609355,
+        -0.02169045012284654
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9962064659483744,
+        0.9853119161812203,
+        0.9690971947782642,
+        0.949196299458654
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.02976432602435075,
+      "max_local_mean_Y_drift_percent": 0.11757820727029689
+    },
+    "6V1A9734/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9751968378090861,
+        0.9412274048149083,
+        0.8987335864586337,
+        0.8356841135086017
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        3.5536131814950522e-06,
+        -0.00011478411248155851,
+        0.00010078453356321404,
+        -0.00011600266789368874
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9999636719751951,
+        0.999955026406798,
+        0.9999349102702593,
+        0.9999812488583548
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.01266015490917205,
+      "max_local_mean_Y_drift_percent": 0.000957326976980255
+    },
+    "6V1A9421/IPR-luminance": {
+      "values": [
+        1,
+        5,
+        10,
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9999471907923998,
+        0.9988270019738367,
+        0.9950196893011936,
+        0.9713984016909335,
+        0.9011398056238092,
+        0.7985722736117343,
+        0.7109819446278354
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        2.769780005351663e-06,
+        -7.434563769059821e-05,
+        -0.0003043327648111216,
+        -0.0007611118576722475,
+        -0.001907717076776727,
+        -0.0031453990079644,
+        -0.004003736453328521
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9999982089622536,
+        0.9999702451627892,
+        0.9998805028714521,
+        0.9992740653862897,
+        0.997091214330215,
+        0.9935363588599835,
+        0.9886563490124548
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.022246077234489015,
+      "max_local_mean_Y_drift_percent": 0.11220410847037066
+    },
+    "6V1A9421/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9955345412264653,
+        0.9452865354055245,
+        0.8628883396340086,
+        0.7930087674910213
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -9.403237537508602e-05,
+        -0.00017358889307095282,
+        -5.1311807158782585e-05,
+        1.3055245950965855e-05
+      ],
+      "detail_edge_gradient_ratios": [
+        1.0000081728861092,
+        0.9999957029338213,
+        1.000003944327927,
+        0.9999979269959443
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.0005813014645195125,
+      "max_local_mean_Y_drift_percent": 0.0012175990746987608
+    },
+    "6V1A9377/IPR-luminance": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9358020665965117,
+        0.770545492480069,
+        0.5908999428163841,
+        0.4819976343726019
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.021722575581639703,
+        -0.05305030088023077,
+        -0.10882754699547137,
+        -0.119095876785269
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9994070833165303,
+        0.9977112465415088,
+        0.9949107860238972,
+        0.9909858564464167
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.3549946076533028,
+      "max_local_mean_Y_drift_percent": 0.0829096001069729
+    },
+    "6V1A9377/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.997381053674161,
+        0.9303360818485955,
+        0.8167313461818371,
+        0.7879569852611308
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.028102037104349442,
+        -0.03307129535157216,
+        -0.028481641939404057,
+        -0.018944365861151002
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9999947326030418,
+        0.9999916329023101,
+        1.0000100695603034,
+        1.000010289624298
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.12239269155664978,
+      "max_local_mean_Y_drift_percent": 0.0020965165966835286
+    },
+    "6V1A8988/IPR-luminance": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9313915982428307,
+        0.7451517504349393,
+        0.494018246938829,
+        0.2378981698647122
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -0.0005638263965268564,
+        -0.0025005142477940723,
+        -0.0034262152321939965,
+        -0.005959265140220715
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9990906449547066,
+        0.9965059873665814,
+        0.992303642892422,
+        0.98681601439247
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.06400332544063136,
+      "max_local_mean_Y_drift_percent": 0.11049216889758018
+    },
+    "6V1A8988/IPR-couleur": {
+      "values": [
+        25,
+        50,
+        75,
+        100
+      ],
+      "sigma_ratios": [
+        0.9968693774903835,
+        0.9442836825748959,
+        0.7629637404693207,
+        0.7057807146969214
+      ],
+      "standard_strictly_decreasing": true,
+      "mean_Y_drift_percent": [
+        -3.1072762962658373e-05,
+        0.00012032762772840044,
+        -3.255310065952699e-05,
+        -0.0001465053532156979
+      ],
+      "detail_edge_gradient_ratios": [
+        0.9999935356696135,
+        0.9999666619426821,
+        0.9999757966049485,
+        0.9999731327146553
+      ],
+      "all_states_protocol_valid": true,
+      "all_states_differ_from_neutral_on_ROIs": true,
+      "min_local_mean_Y_drift_percent": -0.0014628000409633302,
+      "max_local_mean_Y_drift_percent": 0.0021429850611376366
+    }
+  }
+}

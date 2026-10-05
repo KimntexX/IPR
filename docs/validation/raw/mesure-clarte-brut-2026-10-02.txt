@@ -1,0 +1,7 @@
+CLARITY
+  LR: 8 scenes
+    bare: local_contrast_ratio=0.5397; gradient_ratio=0.4999; Y=0.9233; mean_chroma_delta=0.0075; clip=0.727%
+    suffix_2: local_contrast_ratio=2.4545; gradient_ratio=2.4724; Y=1.3999; mean_chroma_delta=0.0274; clip=0.731%
+  IPR: 8 scenes
+    bare: local_contrast_ratio=0.7732; gradient_ratio=0.7302; Y=0.9898; mean_chroma_delta=0.0026; clip=0.326%
+    suffix_2: local_contrast_ratio=1.2768; gradient_ratio=1.3316; Y=1.0102; mean_chroma_delta=0.0026; clip=0.322%

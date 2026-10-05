@@ -1,0 +1,285 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+ColumnLayout {
+    id: module
+
+    required property var editor
+    property bool showTitle: true
+    required property int activeCurve
+    required property var curvePoints
+    required property var curveName
+    required property var curveColor
+    required property var evaluateCurve
+    property color textColor: "#edf2f8"
+    property color secondaryTextColor: "#d7dfeb"
+    signal curvePointsEdited(var points)
+    signal commitRequested()
+    signal activeCurveRequested(int channel)
+
+    Layout.fillWidth: true
+    Layout.minimumWidth: 0
+    spacing: 12
+
+    function requestPaint() {
+        toneCanvas.requestPaint()
+    }
+
+    onVisibleChanged: if (visible) requestPaint()
+
+    Label {
+        visible: module.showTitle
+        text: qsTr("Courbe de tonalité")
+        color: module.secondaryTextColor
+        font.bold: true
+    }
+
+    Rectangle {
+        Layout.fillWidth: true
+        Layout.preferredHeight: 196
+        color: "#171b21"
+        border.color: "#3d4654"
+        radius: 4
+
+        Canvas {
+            id: toneCanvas
+            anchors.fill: parent
+            anchors.margins: 10
+            antialiasing: true
+
+            property real leftMargin: 8
+            property real rightMargin: 8
+            property real topMargin: 8
+            property real bottomMargin: 8
+
+            function curveX(point) {
+                return leftMargin + point.x * (width - leftMargin - rightMargin)
+            }
+
+            function curveY(point) {
+                return height - bottomMargin -
+                       point.y * (height - topMargin - bottomMargin)
+            }
+
+            function normalizedX(position) {
+                return Math.max(0, Math.min(1,
+                    (position - leftMargin) / (width - leftMargin - rightMargin)))
+            }
+
+            function normalizedY(position) {
+                return Math.max(0, Math.min(1,
+                    (height - bottomMargin - position) /
+                    (height - topMargin - bottomMargin)))
+            }
+
+            onPaint: {
+                const context = getContext("2d")
+                context.reset()
+                context.fillStyle = "#171b21"
+                context.fillRect(0, 0, width, height)
+
+                const graphWidth = width - leftMargin - rightMargin
+                const graphHeight = height - topMargin - bottomMargin
+                context.strokeStyle = "#303946"
+                context.lineWidth = 1
+                for (let step = 0; step <= 4; ++step) {
+                    const horizontal = topMargin + step * graphHeight / 4
+                    const vertical = leftMargin + step * graphWidth / 4
+                    context.beginPath()
+                    context.moveTo(leftMargin, horizontal)
+                    context.lineTo(width - rightMargin, horizontal)
+                    context.moveTo(vertical, topMargin)
+                    context.lineTo(vertical, height - bottomMargin)
+                    context.stroke()
+                }
+
+                const points = module.curvePoints
+                if (points.length < 2)
+                    return
+                context.strokeStyle = module.curveColor(module.activeCurve)
+                context.lineWidth = 2
+                context.beginPath()
+                const sampleCount = 128
+                for (let index = 0; index <= sampleCount; ++index) {
+                    const sample = index / sampleCount
+                    const x = leftMargin + sample * graphWidth
+                    const y = curveY({
+                        "x": sample,
+                        "y": module.evaluateCurve(points, sample)
+                    })
+                    if (index === 0)
+                        context.moveTo(x, y)
+                    else
+                        context.lineTo(x, y)
+                }
+                context.stroke()
+                for (let index = 0; index < points.length; ++index) {
+                    const x = curveX(points[index])
+                    const y = curveY(points[index])
+                    context.fillStyle = index === 0 || index === points.length - 1
+                                      ? "#d7dfeb" : module.curveColor(module.activeCurve)
+                    context.beginPath()
+                    context.arc(x, y, 5, 0, 2 * Math.PI)
+                    context.fill()
+                }
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            enabled: module.editor.hasImage
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            property int draggedIndex: -1
+
+            function nearestPoint(mouse) {
+                let nearest = -1
+                let distance = 11
+                for (let index = 0; index < module.curvePoints.length; ++index) {
+                    const point = module.curvePoints[index]
+                    const dx = toneCanvas.curveX(point) - mouse.x
+                    const dy = toneCanvas.curveY(point) - mouse.y
+                    const candidate = Math.sqrt(dx * dx + dy * dy)
+                    if (candidate < distance) {
+                        distance = candidate
+                        nearest = index
+                    }
+                }
+                return nearest
+            }
+
+            function updateDraggedPoint(mouse) {
+                if (draggedIndex <= 0 ||
+                    draggedIndex >= module.curvePoints.length - 1)
+                    return
+                const points = module.curvePoints.slice()
+                const previous = points[draggedIndex - 1]
+                const next = points[draggedIndex + 1]
+                points[draggedIndex] = {
+                    "x": Math.max(previous.x + 0.001,
+                                  Math.min(next.x - 0.001,
+                                           toneCanvas.normalizedX(mouse.x))),
+                    "y": toneCanvas.normalizedY(mouse.y)
+                }
+                module.curvePointsEdited(points)
+                toneCanvas.requestPaint()
+            }
+
+            onPressed: function(mouse) {
+                const nearest = nearestPoint(mouse)
+                if (mouse.button === Qt.RightButton) {
+                    if (nearest > 0 && nearest < module.curvePoints.length - 1) {
+                        const points = module.curvePoints.slice()
+                        points.splice(nearest, 1)
+                        module.curvePointsEdited(points)
+                        module.commitRequested()
+                    }
+                    return
+                }
+                draggedIndex = nearest
+            }
+
+            onPositionChanged: function(mouse) {
+                if (pressedButtons & Qt.LeftButton)
+                    updateDraggedPoint(mouse)
+            }
+
+            onReleased: {
+                if (draggedIndex >= 0) {
+                    module.commitRequested()
+                    draggedIndex = -1
+                }
+            }
+
+            onDoubleClicked: function(mouse) {
+                if (mouse.button !== Qt.LeftButton)
+                    return
+                const points = module.curvePoints.slice()
+                points.push({
+                    "x": toneCanvas.normalizedX(mouse.x),
+                    "y": toneCanvas.normalizedY(mouse.y)
+                })
+                points.sort(function(left, right) { return left.x - right.x })
+                module.curvePointsEdited(points)
+                module.commitRequested()
+            }
+        }
+    }
+
+    Label {
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+        color: "#aeb8c8"
+        wrapMode: Text.WordWrap
+        font.pixelSize: 12
+        text: qsTr("Double-cliquez pour ajouter une poignée, faites-la glisser pour modifier la courbe et utilisez le clic droit pour supprimer une poignée.")
+    }
+
+    RowLayout {
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+        CurveChannelButton {
+            channel: 0
+            activeCurve: module.activeCurve
+            curveName: module.curveName
+            curveColor: module.curveColor
+            onChannelRequested: function(requestedChannel) {
+                module.activeCurveRequested(requestedChannel)
+            }
+        }
+        CurveChannelButton {
+            channel: 1
+            activeCurve: module.activeCurve
+            curveName: module.curveName
+            curveColor: module.curveColor
+            onChannelRequested: function(requestedChannel) {
+                module.activeCurveRequested(requestedChannel)
+            }
+        }
+        CurveChannelButton {
+            channel: 2
+            activeCurve: module.activeCurve
+            curveName: module.curveName
+            curveColor: module.curveColor
+            onChannelRequested: function(requestedChannel) {
+                module.activeCurveRequested(requestedChannel)
+            }
+        }
+        CurveChannelButton {
+            channel: 3
+            activeCurve: module.activeCurve
+            curveName: module.curveName
+            curveColor: module.curveColor
+            onChannelRequested: function(requestedChannel) {
+                module.activeCurveRequested(requestedChannel)
+            }
+        }
+        Item { Layout.fillWidth: true }
+        Label {
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
+            elide: Text.ElideRight
+            color: module.curveColor(module.activeCurve)
+            text: module.curveName(module.activeCurve)
+        }
+    }
+
+    ColumnLayout {
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+        Button {
+            text: qsTr("Réinitialiser cette courbe")
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
+            enabled: module.editor.hasImage
+            onClicked: module.editor.resetToneCurve(module.activeCurve)
+        }
+        Button {
+            text: qsTr("Réinitialiser les 4 courbes")
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
+            enabled: module.editor.hasImage
+            onClicked: module.editor.resetToneCurves()
+        }
+    }
+}

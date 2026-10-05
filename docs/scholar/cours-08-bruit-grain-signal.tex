@@ -1,0 +1,63 @@
+\input{preamble}
+\title{Cours 8 -- Signal, bruit et grain déterministe}
+\begin{document}
+\coursmeta{5 octobre 2026}{Synthèse de grain et débruitage CPU intégré à \IPR{} ; validation photographique du correctif à refaire.}
+
+\section{Théorie du bruit photographique}
+Le bruit photonique suit approximativement une loi de Poisson : pour $N$ photons, l'écart-type est $\sqrt{N}$ et le rapport signal/bruit vaut $\sqrt{N}$. S'ajoutent le bruit de lecture, le bruit thermique et les erreurs de quantification. Le grain argentique et le bruit numérique ne sont donc pas identiques : le premier a une structure spatiale et chromatique dépendante de l'émulsion, le second dépend du capteur et du dématriçage~\cite{gonzalezWoods}.
+
+\section{Application dans \IPR{}}
+Le réglage Grain ne simule pas un capteur. Il synthétise une perturbation monochrome reproductible : une fonction de hachage des coordonnées $(x,y)$ donne un bruit uniforme $n\in[-1,1]$. La luminance devient
+\begin{equation}
+Y'=\max(0,Y+n\,0{,}06\,g\,w_s(Y)),
+\end{equation}
+où $g\in[0,1]$ est le curseur et $w_s(Y)=0{,}45+0{,}55(1-\operatorname{clamp}(Y,0,1))$. Les ombres reçoivent donc davantage de grain.
+
+\section{Pourquoi un hash déterministe}
+L'aperçu peut être recalculé plusieurs fois par seconde. Un générateur aléatoire non déterministe ferait scintiller le grain et rendrait impossible une comparaison rigoureuse aperçu/export. Les constantes entières de mélange servent à répartir les bits; elles n'ont pas de signification photographique. La valeur $0{,}06$ est un plafond esthétique empirique : elle empêche le réglage maximal de masquer la scène.
+
+\section{Exemple}
+À $Y=0{,}10$ et Grain 50, l'amplitude maximale est environ $0{,}06\times0{,}5\times0{,}945\simeq0{,}028$. À $Y=0{,}90$, elle descend vers $0{,}016$. Le grain est ainsi plus lisible dans un mur sombre que dans un ciel clair.
+
+\section{Évolution possible}
+Un grain plus crédible demande une corrélation spatiale, une taille dépendante de la résolution et éventuellement une composante chromatique. La réduction de bruit est une tâche différente : un module CPU est désormais intégré, mais sa qualité photographique ne se déduit pas de la seule baisse d'une statistique de bruit.
+
+\section{Débruitage : estimateur et seuillage}
+Les plans employés sont Y Rec.709 linéaire, $Co=R-B$ et $Cg=G-(R+B)/2$.
+Le coefficient diagonal Haar
+\begin{equation}
+h=\frac{p_{00}-p_{01}-p_{10}+p_{11}}{2}
+\end{equation}
+a une norme quadratique unité : pour quatre bruits gaussiens indépendants
+de variance $\sigma^2$, sa variance reste $\sigma^2$. L'estimateur
+$\widehat\sigma=\operatorname{median}(|h-\operatorname{median}(h)|)/0{,}67448975$
+utilise la médiane de la valeur absolue d'une normale centrée réduite.
+Après dématriçage, le bruit est corrélé : l'interprétation physique exacte
+n'est plus garantie. L'implémentation échantillonne des blocs adjacents et
+ignore les blocs parfaitement constants, sans prétendre détecter les pixels chauds.
+
+Deux flous successifs séparent les résidus fin et moyen. Le seuillage doux
+$S_\lambda(r)=\operatorname{sgn}(r)\max(|r|-\lambda,0)$ est piloté par
+$\lambda=\widehat\sigma ms$, où $s$ est la valeur divisée par 100 et
+$m$ vaut 2,55 en luminance, 3,15 en chrominance. Le seuil moyen vaut
+0,52 fois le seuil fin. Les seuils vont à zéro à l'activation ; le mélange
+final avec l'original, de poids $s$, garde les états intermédiaires utiles.
+
+\section{Structure, luminosité et exemple}
+Le guide de contours est lissé avant son Sobel, pour éviter que le bruit
+soit protégé comme une texture. Les changements signés sont rééquilibrés
+pour conserver la moyenne ; le gamut négatif est comprimé vers un gris
+de même luminance, pas coupé indépendamment par canal. Le plancher
+historique 0,00025 reste uniquement dans la netteté, pas dans le débruitage.
+
+Sur un aplat synthétique de signal 0,05 et bruit gaussien monochrome
+$\sigma=0{,}005$, le proxy Haar restant est environ 0,831, 0,523, 0,253
+et 0,009 fois celui du neutre pour les réglages 25/50/75/100. Cet exemple
+ne contient pas de texture à préserver : une baisse aussi forte ne valide
+ni un portrait ni un feuillage. Une moyenne globale stable ne garantit pas
+la stabilité des régions sombres. Les nouvelles photographies doivent
+valider précisément ces limites.
+
+\resultat{Le grain actuel est un effet créatif reproductible, pas un modèle de bruit de capteur ni un algorithme de débruitage.}
+\bibliographystyle{plain}\bibliography{references}
+\end{document}

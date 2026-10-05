@@ -1,0 +1,153 @@
+\chapter{Réglages déjà intégrés}
+\label{chap:reglages-existants}
+
+\section{Convention de calcul}
+
+Le pipeline manipule un pixel $\mathbf{p}=(r,g,b)^T$ en valeurs flottantes. Les calculs photométriques doivent être réalisés sur des composantes linéaires ; le codage sRGB ou le format d'export est appliqué à la fin. La luminance relative utilisée pour les normalisations est :
+\begin{equation}
+  Y = 0{,}2126r + 0{,}7152g + 0{,}0722b.
+\end{equation}
+
+La formule est celle de Rec.~709/sRGB. Conserver une précision flottante avant l'encodage réduit les pertes de détails dans les hautes lumières et évite les saturations intermédiaires inutiles.
+
+\section{Tonalité globale}
+
+\subsection{Exposition, contraste et tons}
+
+L'exposition en valeurs IL (EV) est un gain multiplicatif :
+\begin{equation}
+  \mathbf{p}' = 2^{E}\mathbf{p},
+\end{equation}
+où $E$ est le réglage d'exposition. Une variation de $+1$~EV double donc l'énergie des composantes linéaires.
+
+Le contraste et les réglages \emph{hautes lumières}, \emph{ombres}, \emph{blancs} et \emph{noirs} sont pilotés par des fonctions de pondération de luminance. De façon générique, une correction locale de tonalité prend la forme :
+\begin{equation}
+  Y' = Y + a\,w(Y),
+\end{equation}
+où $a$ est l'intensité demandée et $w$ une fenêtre douce concentrée sur la plage ciblée. Les composantes sont ensuite remises à l'échelle avec conservation de chromaticité. Cette approche évite qu'un réglage d'ombres affecte autant les hautes lumières.
+
+Les tests de validation réalisés sur le corpus de référence ont validé le curseur EV ainsi que les ajustements d'ombres, de noirs, de blancs et de hautes lumières. La matrice, les analyses et les fichiers de mesure sont organisés dans \texttt{docs/validation}; les preuves historiques restent consultables durant la migration documentaire.
+
+\subsection{Courbes}
+
+Les courbes disponibles sont une courbe de luminance et des courbes Rouge, Vert et Bleu. Entre les points de contrôle $(x_i,y_i)$, l'implémentation s'appuie sur une interpolation polynomiale de Lagrange :
+\begin{equation}
+  P(x)=\sum_{i=0}^{n} y_i\prod_{j\ne i}\frac{x-x_j}{x_i-x_j}.
+\end{equation}
+
+Les courbes de canal permettent une teinte créative, tandis que la courbe de luminance règle le contraste tonal. Les valeurs HDR sont prolongées en linéaire au-delà de l'intervalle de contrôle afin de ne pas introduire de coupure brutale.
+
+\section{Balance des blancs et teinte}
+
+La température est calculée à partir du lieu planckien corrélé selon l'algorithme de Krystek~\cite{krystek1985}. Les gains de chromaticité sont appliqués au moyen d'une adaptation chromatique de Bradford~\cite{lam1985}, formulée matriciellement :
+\begin{equation}
+ \mathbf{RGB}' = M_{XYZ\rightarrow RGB}\,B^{-1}\,D\,B\,M_{RGB\rightarrow XYZ}\,\mathbf{RGB},
+\end{equation}
+où $B$ est la matrice de Bradford et $D$ une matrice diagonale de rapports entre blanc de référence et blanc cible dans l'espace LMS.
+
+La teinte compense l'axe vert--magenta. Les gains colorés sont normalisés pour conserver autant que possible la luminance :
+\begin{equation}
+  n=0{,}2126r_g+0{,}7152g_g+0{,}0722b_g, \qquad \mathbf{p}'=\frac{\mathbf{g}\odot\mathbf{p}}{n}.
+\end{equation}
+La validation de température est consignée dans le protocole et les analyses du 2 octobre 2026.
+
+\section{Couleur globale, mélangeur et color grading}
+
+\subsection{Vibrance et saturation}
+
+La saturation ajuste uniformément l'amplitude chromatique. La vibrance protège davantage les couleurs déjà saturées. Si $c=(\max(r,g,b)-\min(r,g,b))/\max(r,g,b)$ est la chroma relative, une approximation du gain de vibrance est :
+\begin{equation}
+  g_v = 1+\frac{V}{100}(1-c).
+\end{equation}
+Les couleurs peu saturées reçoivent donc l'essentiel de l'effet. Les contrôles de vibrance et saturation ont fait l'objet des vérifications de base précédant les travaux de mixer et grading.
+
+\subsection{Mélangeur de couleur}
+
+Le module C++ \texttt{ColorMixer} agit dans une représentation HSV du RGB linéaire sur huit bandes : rouge, orange, jaune, vert, cyan, bleu, violet et magenta. Les centres sont $0,30,60,120,180,240,270,300$ degrés. Pour une teinte d'origine $h$, l'influence d'une bande centrée en $h_i$ est triangulaire :
+\begin{equation}
+  w_i(h)=\max\left(0,1-\frac{|\delta_i(h)|}{a_i(h)}\right),
+\end{equation}
+où $\delta_i(h)$ est la distance circulaire signée dans $[-180^\circ,180^\circ]$ et $a_i(h)$ la distance du centre au centre voisin du côté considéré. Les poids sont calculés sur la teinte source et multipliés par $q=t^2(3-2t)$, avec $t=\operatorname{clamp}(S/0{,}05,0,1)$, pour protéger les achromatiques. Les commandes pondérées sont additionnées avant application, sans gains multipliés aux chevauchements.
+\begin{align}
+ H'&=H+18^\circ\sum_i qw_iH_i/100,\\
+ S'&=\operatorname{clamp}\left(S\left[1+\sum_i qw_iS_i/100\right],0,1\right),\\
+ Y'&=Y\,2^{0{,}5\sum_i qw_iL_i/100}.
+\end{align}
+La reconversion HSV est normalisée à la luminance source avant le gain sélectif. Les bornes $\pm100$ garantissent un gain entre $1/\sqrt{2}$ et $\sqrt{2}$. Le seuil de chroma $0{,}05$ et la borne $0{,}5$ EV sont des choix initiaux empiriques, pas une calibration Lightroom validée. Les gris sont inchangés exactement et les canaux négatifs ne sont pas écrêtés dans ce module. Le gamut mapping de sortie peut modifier $Y$. Le mélangeur et le grading restent indépendants de la saturation et de la vibrance globales ; un mélangeur à zéro ne change pas le rendu de base.
+
+\subsection{Color grading}
+
+Trois zones indépendantes sont disponibles : ombres, tons moyens et hautes lumières. Elles reçoivent une couleur définie par teinte et saturation. Une fonction lisse de $Y$ distribue l'influence de chaque zone ; la correction chromatique est ajoutée avec une intensité proportionnelle à la saturation, puis bornée au moment de l'export. Cette solution est volontairement légère et non destructive ; une future validation visuelle doit préciser ses limites en saturation forte.
+
+\section{Détail local, voile et grain}
+
+\subsection{Texture et clarté}
+
+Texture et clarté reposent sur la composante de détail d'une décomposition par flou gaussien :
+\begin{equation}
+  D_\sigma = Y-G_\sigma(Y), \qquad Y'=Y+aD_\sigma w(Y),
+\end{equation}
+où $G_\sigma$ est un flou gaussien. Texture utilise une échelle courte ($\sigma\approx1{,}2$), clarté une échelle plus large ($\sigma\approx8$). Les poids de protection limitent l'accentuation dans les extrêmes et les zones très peu chromatiques. La primitive de flou est cohérente avec celle documentée par OpenCV~\cite{opencvGaussian}.
+
+\subsection{Correction de voile}
+
+Le modèle physique simplifié de Koschmieder relie l'observation $I$, la radiance de scène $J$, la lumière atmosphérique $A$ et la transmission $t$ :
+\begin{equation}
+  I(x)=J(x)t(x)+A(1-t(x)).
+\end{equation}
+L'estimation par \emph{dark channel prior} utilise localement $\min_c I_c$ puis reconstruit $J$ après estimation et bornage de $t$~\cite{he2009,he2011}. L'implémentation applique cette logique comme une correction graduelle afin d'éviter les halos.
+
+\subsection{Réduction de bruit et netteté CPU}
+
+\paragraph{Consolidation du 5 octobre 2026.}
+
+Le débruitage précède les effets locaux et la netteté. Il sépare le RGB
+linéaire en $Y=0{,}2126R+0{,}7152G+0{,}0722B$, $Co=R-B$ et
+$Cg=G-(R+B)/2$. Les plans ont une estimation de bruit distincte par le MAD
+du détail diagonal Haar $(p_{00}-p_{01}-p_{10}+p_{11})/2$, normalisé par
+$0{,}67448975$. Les blocs exactement constants ne participent pas à cette
+estimation ; celle-ci reste un proxy après dématriçage, pas un modèle capteur.
+
+Pour $s=\operatorname{clamp}(v,0,100)/100$, les résidus de deux flous
+successifs ($\sigma=0{,}8$ puis $1{,}8$ pixels) subissent un seuil
+$\lambda_f=\widehat\sigma ms$, avec $m=2{,}55$ pour Y et $3{,}15$ pour
+Co/Cg ; $\lambda_m=0{,}52\lambda_f$. Un guide préfiltré et un Sobel
+normalisé protègent les bords, y compris les frontières chromatiques
+isoluminantes. Le résultat est mélangé à l'original avec le poids $s$.
+Les changements positifs et négatifs sont équilibrés pour conserver la
+moyenne sans ajouter un offset aux noirs. Ces coefficients sont empiriques.
+
+La reconstruction s'écrit $RGB=Y+d$, où la luminance de $d$ est nulle.
+Si un canal devient négatif, réduire $d$ vers le gris de même Y, sans
+clamp supérieur HDR. Le réglage couleur seul préserve ainsi la luminance
+linéaire par pixel à la précision flottante. À bruit 0/0, le chemin est
+court-circuité exactement. La conservation de moyenne globale n'interdit
+pas une dérive locale ; une recette photographique reste nécessaire.
+
+La netteté CPU est un masque flou sur Y, avec seuil relatif au bruit et
+limitation locale des dépassements. Son estimateur historique et sa
+calibration ne changent pas dans cette correction. Le test natif
+\texttt{detailProcessingTests} couvre les régressions synthétiques, pas une
+parité Lightroom ni une fidélité garantie de toutes les textures.
+
+\subsection{Grain}
+
+Le grain est un bruit pseudo-aléatoire déterministe, dépendant de la position du pixel et de l'intensité du réglage. Sa déterminisation assure qu'un même export produit le même résultat et évite le scintillement entre deux rendus successifs.
+
+\section{Persistance et réglage par lot}
+
+L'état de présentation ne fait pas partie du sidecar photographique.
+Le fichier global \texttt{ipr-ui.ini} mémorise les sections ouvertes, les
+sélections de canal/bande/zone, les couleurs principales, la visibilité et les
+dimensions des panneaux ainsi que le format et la qualité d'export. La
+restauration est protégée contre les écritures de valeurs par défaut QML au
+démarrage ; elle ne modifie pas les réglages de développement.
+Les clés réservées au recadrage, aux masques, à l'IA et au GPU sont inactives.
+Le menu Affichage donne accès à la visibilité des panneaux et au chemin de
+l'INI, qui se personnalise application fermée.
+
+Le sidecar utilise une signature \texttt{IPR1}, un numéro de version, la taille et la date de modification du fichier source. Il stocke les réglages, les courbes et les métadonnées utilisateur via \texttt{QDataStream}~\cite{qtQDataStream}. L'écriture différée de 450~ms passe par \texttt{QSaveFile}, qui écrit temporairement puis valide le fichier de façon atomique~\cite{qtQSaveFile}. Une empreinte source non concordante invalide le sidecar plutôt que d'appliquer potentiellement des réglages à un autre fichier.
+
+Le format courant v4 stocke huit triplets de mélangeur. Les versions v1/v2/v3 sont lues en conservant leurs couleurs : l'ancien dernier triplet devient magenta à l'indice 7 ; violet, nouvel indice 6, commence à zéro, ainsi qu'orange pour v1/v2. Les valeurs sont conservées mais le nouveau modèle change le rendu des anciens réglages non nuls. Les anciens exécutables ne lisent pas v4. L'INI schéma 2 migre de même la sélection d'interface magenta 6 vers 7, sans modifier les réglages photo.
+
+L'application par lot copie seulement les réglages de développement de l'image active vers les images cochées. Les annotations locales de destination sont préservées lorsqu'elles existent. Ce choix évite qu'une correction photographique n'écrase involontairement un classement déjà établi.

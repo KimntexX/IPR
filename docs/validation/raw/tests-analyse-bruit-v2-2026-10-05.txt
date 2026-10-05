@@ -1,0 +1,31 @@
+Campagne bruit v2 — tests des outils d'analyse, 5 octobre 2026
+Environnement : Python 3 sous Linux/WSL, lancement depuis la racine du dépôt.
+Ce relevé synthétise les commandes réellement exécutées, pas un build Windows.
+
+python3 -m unittest discover -s tests -p test_analyse_noise.py
+Ran 17 tests in 0.423s
+OK
+
+python3 -m unittest discover -s tests -p test_analyse_color_mixer.py
+Ran 13 tests in 0.277s
+OK
+
+python3 -m unittest discover -s tests -p test_build_windows.py
+Ran 8 tests in 0.005s
+OK
+
+Total : 38 tests Python réussis.
+Deux cas bruit supplémentaires : association d'un état explicite à 5 ;
+rejet d'un état supplémentaire dupliquant un niveau standard à 25.
+
+bash -n docs/validation/raw/analyse-bruit-v2-2026-10-05.sh
+Code de retour 0.
+
+python3 -m py_compile tests/analyse_noise.py tests/test_analyse_noise.py \
+  docs/validation/raw/consolider-bruit-v2-2026-10-05.py \
+  docs/validation/raw/extraits-bruit-v2-2026-10-05.py
+Code de retour 0.
+
+Aucune modification du moteur, aucun nouveau test CTest ou build d'application
+effectué dans cette passe d'analyse. Le checkpoint Windows précédent n'est
+pas présenté comme actualisé pour les nouveaux outils d'analyse.

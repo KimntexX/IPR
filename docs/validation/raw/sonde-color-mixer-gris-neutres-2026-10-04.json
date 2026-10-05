@@ -1,0 +1,90 @@
+{
+    "baseline_gray_u8": [
+        0,
+        64,
+        128,
+        192,
+        255
+    ],
+    "input_gray_u8": [
+        0,
+        64,
+        128,
+        192,
+        255
+    ],
+    "results": [
+        {
+            "band": 0,
+            "gray_u8": [
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "luminance": -100,
+            "neutrals_preserved": false
+        },
+        {
+            "band": 0,
+            "gray_u8": [
+                255,
+                255,
+                255,
+                255,
+                255
+            ],
+            "luminance": 100,
+            "neutrals_preserved": false
+        },
+        {
+            "band": 2,
+            "gray_u8": [
+                0,
+                64,
+                128,
+                192,
+                255
+            ],
+            "luminance": -100,
+            "neutrals_preserved": true
+        },
+        {
+            "band": 2,
+            "gray_u8": [
+                0,
+                64,
+                128,
+                192,
+                255
+            ],
+            "luminance": 100,
+            "neutrals_preserved": true
+        },
+        {
+            "band": 3,
+            "gray_u8": [
+                0,
+                64,
+                128,
+                192,
+                255
+            ],
+            "luminance": -100,
+            "neutrals_preserved": true
+        },
+        {
+            "band": 3,
+            "gray_u8": [
+                0,
+                64,
+                128,
+                192,
+                255
+            ],
+            "luminance": 100,
+            "neutrals_preserved": true
+        }
+    ]
+}

@@ -1,0 +1,7 @@
+SATURATION
+  LR: 8 scenes
+    bare: delta_chroma=-0.4552; relative_low=-0.8750; relative_high=-0.8750; Y=0.9984; clip=1.109%
+    suffix_2: delta_chroma=0.1939; relative_low=0.9114; relative_high=0.3613; Y=0.9974; clip=7.199%
+  IPR: 8 scenes
+    bare: delta_chroma=-0.4299; relative_low=-1.0000; relative_high=-1.0000; Y=1.0007; clip=0.999%
+    suffix_2: delta_chroma=0.2382; relative_low=0.8993; relative_high=0.4570; Y=1.0017; clip=3.460%

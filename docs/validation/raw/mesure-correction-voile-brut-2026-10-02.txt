@@ -1,0 +1,7 @@
+DEHAZE
+  LR: 8 scenes
+    bare: p05=13.8407; p50=2.8517; p95=1.4146; contrast=1.2136; delta_chroma=-0.2362; clip=5.741%
+    suffix_2: p05=0.2531; p50=0.6072; p95=0.8509; contrast=0.8671; delta_chroma=0.2220; clip=1.987%
+  IPR: 8 scenes
+    bare: p05=1.2955; p50=1.2788; p95=1.1513; contrast=1.1398; delta_chroma=-0.0852; clip=1.864%
+    suffix_2: p05=0.6619; p50=0.6511; p95=0.7756; contrast=0.7829; delta_chroma=0.1826; clip=1.925%

@@ -1,0 +1,25 @@
+\input{preamble}
+\title{Cours 7 -- Courbes de tonalité et interpolation barycentrique}
+\begin{document}
+\coursmeta{3 octobre 2026}{Modèle mathématique de la courbe de luminance et des courbes RGB de \IPR{}.}
+
+\section{Théorie}
+Une courbe associe des points de contrôle $(x_i,y_i)$. \IPR{} calcule l'interpolant de Lagrange sous forme barycentrique :
+\begin{equation}
+P(x)=\frac{\sum_i \frac{w_i}{x-x_i}y_i}{\sum_i\frac{w_i}{x-x_i}},\qquad
+w_i=\prod_{j\ne i}(x_i-x_j)^{-1}.
+\end{equation}
+Si $x=x_i$, l'algorithme renvoie exactement $y_i$ plutôt que de diviser par une distance nulle. Cette écriture est plus stable et moins coûteuse à évaluer qu'une expansion naïve du polynôme~\cite{berrutTrefethen}.
+
+\section{Application dans \IPR{}}
+La courbe de luminance modifie d'abord $Y$ puis conserve autant que possible les rapports RGB par remise à l'échelle. Les courbes Rouge, Vert et Bleu agissent ensuite canal par canal. Pour les valeurs supérieures à 1, le dernier segment est prolongé par la dérivée de l'interpolant : le pipeline HDR ne coupe donc pas brutalement les hautes lumières avant l'export.
+
+\section{Exemple}
+Avec les points $(0,0)$, $(0{,}25,0{,}18)$, $(0{,}75,0{,}85)$ et $(1,1)$, les ombres sont abaissées et les hautes lumières ouvertes : la courbe augmente le contraste global. Une courbe bleue légèrement relevée dans les ombres et abaissée dans les hautes lumières produit un rendu froid dans les noirs et chaud dans les blancs.
+
+\section{Limites}
+Un polynôme global peut osciller lorsque l'on ajoute beaucoup de points, phénomène de Runge. L'interface limite les courbes à 64 points, ce qui est une barrière de sécurité de sérialisation, pas une garantie de qualité. À terme, une spline monotone (PCHIP) serait plus prévisible pour une courbe photographique; son adoption exige une migration de rendu des sidecars.
+
+\resultat{Une courbe est une fonction; son interpolation est un choix de modèle. Le comportement entre les points doit être aussi documenté que les points eux-mêmes.}
+\bibliographystyle{plain}\bibliography{references}
+\end{document}
