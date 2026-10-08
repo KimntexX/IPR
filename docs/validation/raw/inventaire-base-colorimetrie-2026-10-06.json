@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-06",
+  "purpose": "Reconnaissance en lecture seule pour proposer le protocole, pas une validation colorimétrique",
+  "root": "tests/image/base",
+  "metadata_source": "TIFF Lightroom dans neutre ; aucun nouvel audit EXIF des RAW",
+  "readers": ["tests/analyse_color_mixer.py::metadata", "tests/analyse_color_mixer.py::native_pixels", "Pillow::getexif().get_ifd(34665) pour ISO"],
+  "visual_source": "Planche de reconnaissance issue des TIFF LR, échantillonnée en 8 bits ; non utilisée pour mesurer les couleurs",
+  "all_inspected": {
+    "raw_exists": true,
+    "icc": "sRGB IEC61966-2.1",
+    "CameraProfile": "Adobe Standard",
+    "Exposure2012": "0.00",
+    "Contrast2012": "0",
+    "Temperature": "5200",
+    "Tint": "+5",
+    "LensProfileEnable": "1",
+    "LuminanceSmoothing": "0"
+  },
+  "default_fields_for_rows": {"Sharpness": "0", "ColorNoiseReduction": "0", "WhiteBalance": "As Shot"},
+  "rows": [
+    {"id": "6V1A0037", "tiff": "neutre/6V1A0037.tif", "iso": 100, "Sharpness": "40", "ColorNoiseReduction": "25", "subject": "Végétation verte", "priority": "A"},
+    {"id": "6V1A0043", "tiff": "neutre/6V1A0043.tif", "iso": 100, "WhiteBalance": "Custom", "subject": "Fleur violette/magenta, feuillage", "priority": "A"},
+    {"id": "6V1A0327", "tiff": "neutre/6V1A0327.tif", "iso": 100, "subject": "Crashpads colorés, roche, grimpeur", "priority": "A"},
+    {"id": "6V1A0624", "tiff": "neutre/6V1A0624.tif", "iso": 400, "subject": "Textile sombre, roche et lichen", "priority": "complement"},
+    {"id": "6V1A0007", "tiff": "neutre/6V1A0007-3.tif", "iso": 100, "Sharpness": "40", "ColorNoiseReduction": "25", "subject": "Voilier, ciel gris et eau", "priority": "A"},
+    {"id": "6V1A0767", "tiff": "neutre/6V1A0767-3.tif", "iso": 2500, "Sharpness": "40", "ColorNoiseReduction": "25", "subject": "Mur et prises d'escalade sous lumière chaude", "priority": "complement"},
+    {"id": "6V1A9119", "tiff": "neutre/6V1A9119-3.tif", "iso": 100, "Sharpness": "40", "ColorNoiseReduction": "25", "subject": "Grimpeurs et roche en extérieur", "priority": "complement"},
+    {"id": "6V1A9734", "tiff": "neutre/6V1A9734.tif", "iso": 8000, "WhiteBalance": "Custom", "subject": "Grimpeuse, prises et fenêtres", "priority": "stress"},
+    {"id": "6V1A9950", "tiff": "neutre/6V1A9950.tif", "iso": 100, "subject": "Ciel bleu, végétation, ombres", "priority": "A"},
+    {"id": "6V1A9421", "tiff": "neutre/6V1A9421.tif", "iso": 3200, "subject": "Prises multicolores et grimpeurs sur mur jaune", "priority": "A/C"},
+    {"id": "6V1A9377", "tiff": "neutre/6V1A9377.tif", "iso": 1250, "subject": "Prises sous dévers jaune, zones sombres", "priority": "complement"},
+    {"id": "6V1A8988", "tiff": "neutre/6V1A8988.tif", "iso": 400, "subject": "Intérieur sombre et fenêtre", "priority": "stress"},
+    {"id": "6V1A9944", "tiff": "neutre/6V1A9944-3.tif", "iso": 100, "Sharpness": "40", "ColorNoiseReduction": "25", "subject": "Portraits à contre-jour", "priority": "stress"},
+    {"id": "6V1A9947", "tiff": "neutre/6V1A9947-3.tif", "iso": 100, "Sharpness": "40", "ColorNoiseReduction": "25", "subject": "Portraits à contre-jour", "priority": "stress"},
+    {"id": "6V1A0106", "tiff": "neutre/6V1A0106.tif", "iso": 100, "subject": "Ciel bleu, pont et eau", "priority": "complement"}
+  ],
+  "claims_not_established": ["Neutralité de tous les autres réglages", "Identité du DCP effectivement sélectionné par IPR", "Référence physique des couleurs", "Identité des marques de chaque prise photographiée", "Fidélité ou parité Lightroom"]
+}

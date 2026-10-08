@@ -1,0 +1,267 @@
+\part{Autopsie de formats représentatifs}
+\section{Un format simple pour commencer : PPM}
+Le format PPM binaire de Netpbm, variante P6, décrit une largeur,
+une hauteur, une valeur maximale puis des composantes RGB~\cite{netpbm}.
+Pour une image originale de deux pixels, rouge puis vert :
+\begin{verbatim}
+P6
+2 1
+255
+[FF 00 00] [00 FF 00]
+\end{verbatim}
+Les crochets sont une annotation, pas des caractères à écrire.
+L'en-tête est du texte, la charge utile est binaire. Une lecture
+par lignes de texte appliquée aux pixels est donc incorrecte.
+Avec ces seuls pixels, il n'existe ni miniature ni masque ni
+profil ICC embarqué. Il faut connaître les conventions de
+couleur et les limites de l'outil ; un tableau RGB brut est
+beaucoup moins auto-descriptif qu'un format photographique riche.
+La spécification PPM nominale décrit des composantes non linéaires
+selon BT.709, pas des intensités linéaires. Des variantes rencontrées
+en pratique utilisent pourtant sRGB ou du RGB linéaire : il ne faut
+pas déduire une colorimétrie certaine de la seule extension
+\texttt{.ppm}. Nos deux pixels extrêmes ne permettent pas de
+distinguer ces fonctions de transfert.
+
+Cet exemple permet d'isoler la différence entre matrice et
+fichier : le tableau fait six octets, le fichier en fait
+davantage à cause de son en-tête. Le script compagnon produit
+ce fichier sans utiliser de bibliothèque d'image.
+
+\section{TIFF : un graphe de répertoires et de données}
+\subsection{Le contrat structurel}
+TIFF classique commence par un ordre des octets, l'identifiant
+42 et l'offset du premier IFD. Un IFD contient un nombre
+d'entrées, des entrées de 12 octets et l'offset de l'IFD suivant.
+Chaque entrée décrit un tag, un type, un nombre de valeurs et
+une valeur courte ou un offset. Dimensions, profondeur,
+compression, organisation et emplacement des bandes sont
+des tags, pas un bloc universel de pixels placé à une adresse
+constante~\cite{tiff}.
+
+\subsection{En-tête original commenté octet par octet}
+Un petit TIFF little-endian peut commencer ainsi :
+\begin{verbatim}
+Offset  Octets                  Interpretation
+0       49 49                   "II", little-endian
+2       2A 00                   entier 16 bits : 42
+4       08 00 00 00             premier IFD a l'offset 8
+8       09 00                   neuf entrees dans cet exemple
+10      00 01 04 00 01 00 ...   debut du tag ImageWidth
+\end{verbatim}
+\texttt{00 01} vaut ici \texttt{0x0100}=256 : c'est
+l'identifiant du tag ImageWidth, pas la largeur. Le type
+\texttt{04 00} correspond à LONG ; le nombre de valeurs est
+ensuite un entier sur quatre octets. Dans l'exemple du TP,
+la valeur finale de cette entrée sera la largeur 2.
+
+Le nombre 42 ne représente donc ni une taille de fichier ni
+un nombre de pixels. Une entrée « largeur = 2 » doit être
+distinguée du tag qui indique où chercher les pixels.
+
+\subsection{Exemple de tags utiles}
+\begin{longtable}{p{4.3cm}p{2cm}p{8.2cm}}
+\toprule Nom & Identifiant & Rôle conceptuel \\ \midrule
+ImageWidth / ImageLength & 256 / 257 & Dimensions de l'image concernée par cet IFD. \\
+BitsPerSample & 258 & Profondeur par composante ; peut être une liste. \\
+Compression & 259 & Méthode de reconstruction de la charge utile. \\
+Photometric\-Interpretation & 262 & Sens des composantes : gris, RGB, palette, etc. \\
+StripOffsets / StripByteCounts & 273 / 279 & Débuts et tailles des bandes. \\
+Orientation & 274 & Transformation d'affichage. \\
+SamplesPerPixel & 277 & Nombre de composantes à chaque position. \\
+RowsPerStrip & 278 & Découpage vertical en bandes. \\
+PlanarConfiguration & 284 & Composantes entrelacées ou séparées. \\
+SampleFormat & 339 & Interprétation numérique : entier, flottant, etc. \\
+\bottomrule
+\end{longtable}
+Le tableau sert de carte de lecture, pas de liste suffisante
+pour rendre tout TIFF valide. Les valeurs par défaut, les
+contraintes par mode et les extensions doivent être vérifiées
+dans les documents normatifs.
+
+\subsection{Bandes, tuiles, pages et sous-images}
+Une image en bandes peut se lire par portions horizontales.
+Une image en tuiles permet un accès spatial par blocs, utile
+pour les très grandes images. Plusieurs IFD peuvent décrire
+des pages ou des résolutions ; des SubIFD peuvent pointer vers
+des images associées. L'ordre physique dans le fichier ne
+définit pas forcément l'ordre logique des images.
+
+Une compression sans perte conserve les échantillons stockés,
+mais un TIFF peut aussi contenir une charge utile avec pertes.
+Un TIFF flottant peut porter une image linéaire HDR ; un TIFF
+entier 16 bits sRGB peut être une image SDR déjà rendue. Il
+faut lire les tags et le profil au lieu de conclure à partir
+de l'extension.
+
+\subsection{BigTIFF et limite des offsets}
+TIFF classique utilise de nombreux champs 32 bits, ce qui
+limite l'adressage. BigTIFF introduit un en-tête et des
+structures avec offsets plus larges~\cite{bigtiff}. Ce n'est
+pas « un TIFF classique avec un plus gros fichier » : un
+lecteur doit reconnaître la variante avant de lire ses IFD.
+Un dépassement de capacité peut sinon produire des offsets
+tronqués et un export apparemment réussi, mais inutilisable.
+
+\section{PNG : chunks, prédiction et DEFLATE}
+\subsection{Structure normative résumée}
+PNG utilise une signature de huit octets puis des chunks.
+Chaque chunk comporte longueur big-endian, type, données et
+CRC sur type plus données. IHDR décrit notamment dimensions,
+profondeur et type de couleur ; IDAT porte le flux zlib ; IEND
+termine le fichier. Les IDAT concaténés forment un flux unique,
+leurs frontières ne sont pas des frontières de lignes ou de
+blocs DEFLATE. Les lignes décompressées portent un octet de
+filtre à inverser. PNG prend en charge plusieurs types de
+couleur et des profondeurs autorisées selon le type~\cite{png}.
+
+\subsection{Un en-tête de deux pixels fabriqué pour le TP}
+La signature en hexadécimal est :
+\begin{verbatim}
+89 50 4E 47 0D 0A 1A 0A
+\end{verbatim}
+Pour notre exemple RGB 8 bits de largeur 2 et hauteur 1,
+les treize octets de données IHDR sont :
+\begin{verbatim}
+00 00 00 02   00 00 00 01   08 02 00 00 00
+\end{verbatim}
+La longueur du chunk vaut 13 ; son coût total est
+$4+4+13+4=25$ octets. L'image de six octets utiles prend
+donc nécessairement davantage de place que six octets dans
+ce format. Le script calcule le CRC plutôt que d'en recopier
+une constante opaque.
+
+\subsection{Comprendre les filtres sans confondre octets et pixels}
+Appelons $x$ l'octet courant, $a$ l'octet correspondant à gauche,
+$b$ celui au-dessus et $c$ celui en haut à gauche. Un filtre
+stocke $(x-P)\bmod256$ et le décodeur récupère
+$(r+P)\bmod256$. Le voisin gauche est éloigné d'un pixel
+complet en octets : pour RGB 8 bits, il est à trois octets,
+pas forcément à l'octet précédent.
+
+Exemple original : sur une ligne monochrome $(10,12,15)$,
+la prédiction par le voisin gauche donne $(10,2,3)$.
+Le premier voisin absent vaut zéro dans ce modèle. Une
+prévision par la ligne précédente est efficace sur des
+zones verticalement régulières. Une prédiction combinant
+gauche, dessus et diagonale peut mieux suivre les gradients.
+Le filtre ne supprime pas les différences : il les réexprime.
+
+Les cinq types usuels sont None, Sub, Up, Average et Paeth.
+Le TP implémente leur inversion sur des octets et vérifie
+leur réversibilité sur des données synthétiques. Il ne
+prend volontairement pas en charge toute la norme.
+
+\subsection{Sans perte ne signifie pas identique en octets}
+Deux encodeurs peuvent choisir des filtres, niveaux de
+compression et découpages de chunks différents. Les fichiers
+auront des SHA-256 distincts tout en redonnant le même RGB.
+Une suppression du profil ou une conversion de couleur avant
+l'encodage peut modifier le rendu, même si le codec PNG reste
+sans perte sur les pixels qu'il a reçus.
+
+\section{JPEG : marqueurs et flux de coefficients}
+\subsection{Fichier et procédé de compression}
+JPEG est une famille de procédés, pas exclusivement la variante
+baseline avec pertes la plus courante. Les fichiers usuels
+associent ces procédés à des conventions comme JFIF ou Exif.
+On rencontre notamment SOI, DQT, SOF, DHT, SOS et EOI pour
+l'entrée, les tables, les caractéristiques, les scans et la fin.
+Les modes progressifs transmettent les coefficients en
+plusieurs scans ; des procédés prédictifs sans perte existent
+aussi dans T.81~\cite{jpeg}.
+
+\subsection{Schéma de lecture d'un JPEG usuel}
+\begin{verbatim}
+SOI
+  APP... : description JFIF, Exif, ICC, XMP selon conventions
+  DQT    : tables de quantification
+  SOF... : dimensions, composantes, facteurs d'echantillonnage
+  DHT    : tables Huffman si ce mode les utilise
+  SOS    : description du scan
+  ...    : donnees entropiques du scan
+  ...    : scans ou segments supplementaires selon le mode
+EOI
+\end{verbatim}
+Ce schéma ne fixe pas un ordre unique pour tous les modes.
+Dans les données entropiques, des conventions d'échappement
+et de redémarrage évitent de prendre des octets de données
+pour des marqueurs. Chercher simplement \texttt{FF D9}
+dans n'importe quelle sous-structure n'est pas un parseur.
+
+Une miniature JPEG peut elle-même être contenue dans un
+JPEG ou un RAW plus grand. Il faut distinguer le flux principal
+de l'aperçu. Un logiciel peut réussir à afficher l'aperçu
+tout en échouant à décoder la charge utile principale.
+
+\section{DNG : TIFF plus une description du négatif numérique}
+DNG étend TIFF avec des informations de calibration et de
+développement : CFA, zones actives, niveaux, matrices et
+autres tags de pipeline. La spécification distingue notamment
+des données mosaïquées et des données linéaires déjà
+dématricées ; plusieurs compressions sont possibles selon
+les versions et modes. Les tags d'un profil DCP décrivent
+une transformation ou un rendu, pas les pixels de la
+photographie~\cite{dng}.
+
+Un DNG valide doit être cohérent comme conteneur \emph{et}
+comme négatif numérique. Écrire trois canaux RGB dans un TIFF
+puis ajouter une extension DNG ne recrée pas la mosaïque
+originale ni toutes ses possibilités de développement.
+Un DNG linéaire peut être légitime, mais il doit déclarer
+correctement sa nature et ses calibrations. Si des effets
+sont déjà incorporés aux pixels, il ne faut pas décrire
+ces pixels comme s'ils étaient encore les mesures brutes.
+
+\section{HEIF, HEIC, AVIF et conteneurs à boîtes}
+HEIF organise des éléments d'image et leurs relations dans
+une structure fondée sur ISO BMFF. HEIC est couramment
+associé à des images codées en HEVC ; AVIF associe une image
+AV1 à une organisation HEIF. La spécification AVIF décrit
+notamment propriétés de couleur et relations d'éléments~\cite{avif}.
+
+Une boîte peut commencer par une taille et un type de quatre
+caractères, puis contenir des sous-boîtes ou une charge utile.
+Des associations peuvent relier une image à une miniature,
+un alpha ou d'autres données. Un parser doit savoir quelle
+structure est un conteneur avant de descendre récursivement :
+tous les octets d'une boîte ne sont pas d'autres boîtes.
+
+L'existence de modes HDR, alpha ou haute précision ne signifie
+pas que tout lecteur les gère. Vérifier les propriétés exactes
+du fichier et la compatibilité de la chaîne de décodage.
+Un codec moderne n'est pas automatiquement un espace couleur.
+
+\section{OpenEXR et images de calcul scientifique ou de rendu}
+OpenEXR permet des canaux nommés, notamment HALF, FLOAT et
+UINT, des fenêtres de données, tuiles et parties multiples.
+Certaines compressions sont sans perte, d'autres avec
+pertes. Des données profondes peuvent contenir plusieurs
+échantillons par position ; les composantes couleur sont
+habituellement linéaires et prémultipliées dans les usages
+de compositing~\cite{openexr}.
+
+Un canal Z peut représenter la profondeur et non une couleur.
+Une composante supérieure à 1 peut porter une énergie
+relative élevée sans être « invalide ». Elle ne devient
+blanche sur un écran qu'après choix d'un rendu. L'architecture
+d'un fichier image dépasse ainsi largement le triplet RGB.
+
+\section{Panorama et choix selon l'usage}
+\begin{longtable}{p{2.1cm}p{4.1cm}p{4.4cm}p{3.9cm}}
+\toprule Famille & Atout fréquent & Attention & Usage typique \\ \midrule
+JPEG usuel & Taille modeste, diffusion & Pertes et chroma possibles & Livraison de photos SDR. \\
+PNG & Réversibilité des échantillons & Coût sur photographies bruitées & Graphiques, captures, alpha. \\
+TIFF & Souplesse et haute précision & Variantes nombreuses & Échange et comparaison contrôlée. \\
+RAW constructeur & Mesures et calibration & Support dépendant du modèle/mode & Développement photographique. \\
+DNG & Description documentée du négatif & Cohérence et version à respecter & Échange/archivage RAW ou linéaire. \\
+AVIF/HEIF & Codage moderne, éléments associés & Compatibilité variable & Diffusion et usages HDR compatibles. \\
+OpenEXR & Flottants et canaux génériques & Pas un rendu photo universel & VFX, intermédiaires, calcul HDR. \\
+\bottomrule
+\end{longtable}
+Il existe aussi BMP, GIF, WebP, JPEG~2000, JPEG~XL, PSD et
+des formats médicaux ou géographiques. Leurs objectifs
+diffèrent : animation, couches, séries, coordonnées,
+profondeur ou accès aléatoire. Les principes étudiés ici
+restent utiles pour les aborder sans supposer qu'ils suivent
+tous le modèle JPEG ou TIFF.

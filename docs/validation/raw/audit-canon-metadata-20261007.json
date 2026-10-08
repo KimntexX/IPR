@@ -1,0 +1,402 @@
+{
+  "schema": 1,
+  "script_sha256": "e3919748205b50a7da4e787c6d082e4bdc03647cb17337f1531874054fb024c9",
+  "images": [
+    {
+      "raw": "tests/image/base/6V1A0007.CR3",
+      "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "a8b46dfaeba7fdc82b245b265cad750e026ce3eacffb7bde8a2238d8d4f32f27",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              2040,
+              1024,
+              1024,
+              1680,
+              5600
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              29,
+              63,
+              102,
+              141,
+              159,
+              177
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests/image/base/6V1A0037.CR3",
+      "raw_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "91c6787abc716da16fbc925e9e63f70a06f89103d53a3cc4e1ece09c32fdbdfc",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1960,
+              1024,
+              1024,
+              1836,
+              5004
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              45,
+              96,
+              130,
+              155,
+              167,
+              177
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests/image/base/6V1A0043.CR3",
+      "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "8288d29c6856787b8635ff6f328a17f422c5dd21200c5ad76ec73da35e375ae3",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1774,
+              1024,
+              1024,
+              1982,
+              4413
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              41,
+              81,
+              116,
+              147,
+              162,
+              177
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests/image/base/6V1A0327.CR3",
+      "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "2383ff188edea635dcb49c897355b08fe9b94ea3f735f0978ad00faa5fe1d113",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1853,
+              1024,
+              1024,
+              1830,
+              4797
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              46,
+              92,
+              126,
+              154,
+              169,
+              181
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests/image/base/6V1A9421.CR3",
+      "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "03f0032eecad046638880cd01a5ab83eec62ad988b8fd3075cd2333bce1eea6b",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1657,
+              1024,
+              1024,
+              2212,
+              3935
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              2048,
+              2048,
+              2048,
+              2048
+            ],
+            "0x27c": [
+              0,
+              36,
+              72,
+              105,
+              136,
+              151,
+              166
+            ],
+            "0x290": [
+              2048,
+              2048,
+              2048,
+              2048,
+              13535,
+              14351,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests/image/base/6V1A9950.CR3",
+      "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "0a99dc8020d994c24f4dbd9ad33d18511f5da04ffc2438afa2c8cccd833ed58e",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              2068,
+              1024,
+              1024,
+              1616,
+              5907
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              46,
+              98,
+              134,
+              159,
+              170,
+              182
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    }
+  ]
+}

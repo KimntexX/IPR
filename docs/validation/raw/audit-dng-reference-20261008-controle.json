@@ -1,0 +1,870 @@
+{
+  "schema": 1,
+  "diagnostic_only": true,
+  "analyser_sha256": "bb8252d84a376a3f8e1c13eaca05bca754279b25e9e9235d6cc51ef7a6d0d394",
+  "converter_path": "/mnt/c/Program Files/Adobe/Adobe DNG Converter/Adobe DNG Converter.exe",
+  "converter_sha256": "9a1b851707b13181c41f18eb50b7c9b0a211f1fa2a3896571bd14bb10598a13b",
+  "conversion_options": [
+    "-c",
+    "-p0",
+    "-d",
+    "build-canon-dng-reference-20261008"
+  ],
+  "limitations": "Adobe converter interpretation, not a physical sensor calibration. Root plus direct SubIFDs; LUT contents not exported. DNG is not a Lightroom TIFF.",
+  "scenes": [
+    {
+      "path": "build-canon-dng-reference-20261008/6V1A0007.dng",
+      "sha256": "9f2f1ac3242bfee30cdc1b070eea67f95635610c207d2c2ed38855c856416f10",
+      "ifd0": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "software": "Adobe DNG Converter 18.6 (Windows)",
+        "unique_camera_model": "Canon EOS R6 Mark III",
+        "camera_calibration_1": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "camera_calibration_2": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "analog_balance": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "as_shot_neutral": [
+          0.52838,
+          1.0,
+          0.590883
+        ],
+        "baseline_exposure": 0.26,
+        "baseline_noise": 0.8,
+        "profile_name": "Camera Neutral",
+        "forward_matrix_1": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "forward_matrix_2": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "baseline_exposure_offset": -0.5,
+        "default_black_render": 1,
+        "width": 256,
+        "height": 171,
+        "photometric": 2,
+        "black_level": null,
+        "white_level": null,
+        "active_area": null
+      },
+      "sub_ifds": [
+        {
+          "width": 7144,
+          "height": 4760,
+          "photometric": 32803,
+          "black_level": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "white_level": 13995,
+          "active_area": [
+            98,
+            162,
+            4760,
+            7144
+          ]
+        }
+      ],
+      "embedded_profile_checks": {
+        "50964": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50965": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50981": {
+          "count": 3,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413",
+          "dcp_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413"
+        },
+        "50982": {
+          "count": 69120,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28",
+          "dcp_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28"
+        },
+        "51108": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+          "dcp_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712"
+        },
+        "50940": {
+          "count": 256,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99",
+          "dcp_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99"
+        },
+        "51109": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8",
+          "dcp_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8"
+        }
+      },
+      "scene": "6V1A0007",
+      "raw_path": "tests/image/base/6V1A0007.CR3",
+      "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc"
+    },
+    {
+      "path": "build-canon-dng-reference-20261008/6V1A0037.dng",
+      "sha256": "97210764b140bc56964fb6773af95ea63f7fa720da5c9de926b85b3108b2b2fe",
+      "ifd0": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "software": "Adobe DNG Converter 18.6 (Windows)",
+        "unique_camera_model": "Canon EOS R6 Mark III",
+        "camera_calibration_1": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "camera_calibration_2": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "analog_balance": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "as_shot_neutral": [
+          0.52838,
+          1.0,
+          0.590883
+        ],
+        "baseline_exposure": 0.26,
+        "baseline_noise": 0.8,
+        "profile_name": "Camera Neutral",
+        "forward_matrix_1": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "forward_matrix_2": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "baseline_exposure_offset": -0.5,
+        "default_black_render": 1,
+        "width": 256,
+        "height": 171,
+        "photometric": 2,
+        "black_level": null,
+        "white_level": null,
+        "active_area": null
+      },
+      "sub_ifds": [
+        {
+          "width": 7144,
+          "height": 4760,
+          "photometric": 32803,
+          "black_level": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "white_level": 13995,
+          "active_area": [
+            98,
+            162,
+            4760,
+            7144
+          ]
+        }
+      ],
+      "embedded_profile_checks": {
+        "50964": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50965": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50981": {
+          "count": 3,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413",
+          "dcp_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413"
+        },
+        "50982": {
+          "count": 69120,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28",
+          "dcp_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28"
+        },
+        "51108": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+          "dcp_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712"
+        },
+        "50940": {
+          "count": 256,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99",
+          "dcp_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99"
+        },
+        "51109": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8",
+          "dcp_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8"
+        }
+      },
+      "scene": "6V1A0037",
+      "raw_path": "tests/image/base/6V1A0037.CR3",
+      "raw_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f"
+    },
+    {
+      "path": "build-canon-dng-reference-20261008/6V1A0043.dng",
+      "sha256": "33e01cd0619ce4a274dffe3c9e742a1d96f7e331d0baaccb6bbdc318e5f3806f",
+      "ifd0": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "software": "Adobe DNG Converter 18.6 (Windows)",
+        "unique_camera_model": "Canon EOS R6 Mark III",
+        "camera_calibration_1": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "camera_calibration_2": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "analog_balance": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "as_shot_neutral": [
+          0.52838,
+          1.0,
+          0.590883
+        ],
+        "baseline_exposure": 0.26,
+        "baseline_noise": 0.8,
+        "profile_name": "Camera Neutral",
+        "forward_matrix_1": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "forward_matrix_2": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "baseline_exposure_offset": -0.5,
+        "default_black_render": 1,
+        "width": 256,
+        "height": 171,
+        "photometric": 2,
+        "black_level": null,
+        "white_level": null,
+        "active_area": null
+      },
+      "sub_ifds": [
+        {
+          "width": 7144,
+          "height": 4760,
+          "photometric": 32803,
+          "black_level": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "white_level": 13995,
+          "active_area": [
+            98,
+            162,
+            4760,
+            7144
+          ]
+        }
+      ],
+      "embedded_profile_checks": {
+        "50964": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50965": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50981": {
+          "count": 3,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413",
+          "dcp_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413"
+        },
+        "50982": {
+          "count": 69120,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28",
+          "dcp_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28"
+        },
+        "51108": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+          "dcp_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712"
+        },
+        "50940": {
+          "count": 256,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99",
+          "dcp_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99"
+        },
+        "51109": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8",
+          "dcp_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8"
+        }
+      },
+      "scene": "6V1A0043",
+      "raw_path": "tests/image/base/6V1A0043.CR3",
+      "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe"
+    },
+    {
+      "path": "build-canon-dng-reference-20261008/6V1A0327.dng",
+      "sha256": "d1880c00ad26b9471f830558074206f681bf2f44220c1f6c2baf6e4e83b72fc0",
+      "ifd0": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "software": "Adobe DNG Converter 18.6 (Windows)",
+        "unique_camera_model": "Canon EOS R6 Mark III",
+        "camera_calibration_1": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "camera_calibration_2": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "analog_balance": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "as_shot_neutral": [
+          0.52838,
+          1.0,
+          0.590883
+        ],
+        "baseline_exposure": 0.26,
+        "baseline_noise": 0.8,
+        "profile_name": "Camera Neutral",
+        "forward_matrix_1": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "forward_matrix_2": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "baseline_exposure_offset": -0.5,
+        "default_black_render": 1,
+        "width": 256,
+        "height": 171,
+        "photometric": 2,
+        "black_level": null,
+        "white_level": null,
+        "active_area": null
+      },
+      "sub_ifds": [
+        {
+          "width": 7144,
+          "height": 4760,
+          "photometric": 32803,
+          "black_level": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "white_level": 13995,
+          "active_area": [
+            98,
+            162,
+            4760,
+            7144
+          ]
+        }
+      ],
+      "embedded_profile_checks": {
+        "50964": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50965": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50981": {
+          "count": 3,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413",
+          "dcp_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413"
+        },
+        "50982": {
+          "count": 69120,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28",
+          "dcp_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28"
+        },
+        "51108": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+          "dcp_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712"
+        },
+        "50940": {
+          "count": 256,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99",
+          "dcp_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99"
+        },
+        "51109": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8",
+          "dcp_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8"
+        }
+      },
+      "scene": "6V1A0327",
+      "raw_path": "tests/image/base/6V1A0327.CR3",
+      "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed"
+    },
+    {
+      "path": "build-canon-dng-reference-20261008/6V1A9421.dng",
+      "sha256": "31b2d766348e12386e72eb4703e7a4e4a9a133e1adcc48a11133d97877d81224",
+      "ifd0": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "software": "Adobe DNG Converter 18.6 (Windows)",
+        "unique_camera_model": "Canon EOS R6 Mark III",
+        "camera_calibration_1": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "camera_calibration_2": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "analog_balance": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "as_shot_neutral": [
+          0.52838,
+          1.0,
+          0.590883
+        ],
+        "baseline_exposure": 0.28,
+        "baseline_noise": 0.8,
+        "profile_name": "Camera Neutral",
+        "forward_matrix_1": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "forward_matrix_2": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "baseline_exposure_offset": -0.5,
+        "default_black_render": 1,
+        "width": 256,
+        "height": 171,
+        "photometric": 2,
+        "black_level": null,
+        "white_level": null,
+        "active_area": null
+      },
+      "sub_ifds": [
+        {
+          "width": 7144,
+          "height": 4760,
+          "photometric": 32803,
+          "black_level": [
+            2048.0,
+            2048.0,
+            2048.0,
+            2048.0
+          ],
+          "white_level": 14351,
+          "active_area": [
+            98,
+            162,
+            4760,
+            7144
+          ]
+        }
+      ],
+      "embedded_profile_checks": {
+        "50964": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50965": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50981": {
+          "count": 3,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413",
+          "dcp_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413"
+        },
+        "50982": {
+          "count": 69120,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28",
+          "dcp_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28"
+        },
+        "51108": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+          "dcp_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712"
+        },
+        "50940": {
+          "count": 256,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99",
+          "dcp_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99"
+        },
+        "51109": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8",
+          "dcp_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8"
+        }
+      },
+      "scene": "6V1A9421",
+      "raw_path": "tests/image/base/6V1A9421.CR3",
+      "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d"
+    },
+    {
+      "path": "build-canon-dng-reference-20261008/6V1A9950.dng",
+      "sha256": "0866b66ad65da0941d4d5278f8f01de621837749f92d820e81234cce65a7dcb8",
+      "ifd0": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "software": "Adobe DNG Converter 18.6 (Windows)",
+        "unique_camera_model": "Canon EOS R6 Mark III",
+        "camera_calibration_1": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "camera_calibration_2": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0017
+        ],
+        "analog_balance": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "as_shot_neutral": [
+          0.52838,
+          1.0,
+          0.590883
+        ],
+        "baseline_exposure": 0.26,
+        "baseline_noise": 0.8,
+        "profile_name": "Camera Neutral",
+        "forward_matrix_1": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "forward_matrix_2": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "baseline_exposure_offset": -0.5,
+        "default_black_render": 1,
+        "width": 256,
+        "height": 171,
+        "photometric": 2,
+        "black_level": null,
+        "white_level": null,
+        "active_area": null
+      },
+      "sub_ifds": [
+        {
+          "width": 7144,
+          "height": 4760,
+          "photometric": 32803,
+          "black_level": [
+            512.0,
+            512.0,
+            512.0,
+            512.0
+          ],
+          "white_level": 13995,
+          "active_area": [
+            98,
+            162,
+            4760,
+            7144
+          ]
+        }
+      ],
+      "embedded_profile_checks": {
+        "50964": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50965": {
+          "count": 9,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6",
+          "dcp_numeric_sha256": "f337025e63ed9cae9d83d9e86422250a412d84ccb553d992d14d94857a9114b6"
+        },
+        "50981": {
+          "count": 3,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413",
+          "dcp_numeric_sha256": "4ccc0f2a569a356fc295a6cc743a01b2611533cf68dc04f71bee6f0abf97c413"
+        },
+        "50982": {
+          "count": 69120,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28",
+          "dcp_numeric_sha256": "8423280b73d25c3aa0376215e02c140c995155a181d385f2153de799243cca28"
+        },
+        "51108": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+          "dcp_numeric_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712"
+        },
+        "50940": {
+          "count": 256,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99",
+          "dcp_numeric_sha256": "2b24091dc9d04852b4c3fb438a5cd872d371c9cdd1523d2215e1ce43930a0d99"
+        },
+        "51109": {
+          "count": 1,
+          "equal_numeric_values": true,
+          "dng_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8",
+          "dcp_numeric_sha256": "e1c54f41b449d2997ce426b22b0e24103c258a4e35632dcce8da80d964140bd8"
+        }
+      },
+      "scene": "6V1A9950",
+      "raw_path": "tests/image/base/6V1A9950.CR3",
+      "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01"
+    }
+  ],
+  "profile_path": "/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+  "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701"
+}

@@ -1,0 +1,4334 @@
+{
+  "schema": 1,
+  "diagnostic_only": true,
+  "sdk_source": "https://android.googlesource.com/platform/external/dng_sdk/+/de700ad461e35af50b28b861943a0b0753b10929/source/dng_render.cpp",
+  "limitations": "Restricted independent reproduction, not SDK/Lightroom execution. No sensor baseline exposure, Stage3Gain or black ramp inferred from the profile. Linear interpolation held fixed. No fitting. Signed gamut is only an ablation.",
+  "analyser_sha256": "7fb37db019f454521b3905972fb33d56a47acd10a8adc555b4c3607ed61f3ae0",
+  "dependencies_sha256": {
+    "investigate_dcp_curve": "b809d9ddc7296affb33a55e4746037671ae399a2767e9f19dbdc0a777cad3b1f",
+    "investigate_tonal_base": "ef5b325e680844ab1312b0eb5b88b0d21a13b04b1d172b75a8d5914a962167db",
+    "analyse_canon_white_levels": "97028dc49a6907276c1f4d0e2c39cd16cdd11aad212e5a1a090d7ea3b443d078",
+    "analyse_base_colorimetrique_v2": "04cdf72ebfbb039c01e4c201eac26799ef1b06be3a97f7eedbb15f18b0577c6f",
+    "analyse_color_mixer": "789b9e8f9ef702b4c65edf7538911a4efe40deec66c286eed375d5b6979b6d23"
+  },
+  "inputs_sha256": {
+    "docs/validation/raw/mesure-profils-as-shot-20261007.json": "3a086a988ab0275b6aa74ec9b71fb53d402556339d383578e65a096e3920194e",
+    "/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+    "build-canon-blancs-ab-20261007/manifest.json": "16e717fd856cfb09b2a124bd2c632d9f17632bf470fa156f346b8b402cf547a4",
+    "build-canon-profils-tonal-20261007/manifest.json": "2dd36d228143144460ae351b80e351793e7d4aa48840e1e487ed2a6b4a5e08c7",
+    "build-canon-courbes-20261008/grids/manifest.json": "53681ef80a472bbf4b01be67e54228545f0684d427d84d0e6c28e7453a3aca95"
+  },
+  "profile_has_hue_sat_map": false,
+  "offset_ev": -0.5,
+  "scenes": [
+    {
+      "scene": "6V1A0007",
+      "available": true,
+      "samples": 504600,
+      "lr_sha256": "6c156e965070407b6e92c8ed0a0042620fb25fedece72f00574357b9ebd44052",
+      "camera_sha256": "fa3248d57734d25352cd6d9f3a83a4bf26cfbbaac208882aa7b3031a808b2937",
+      "witness_pre_curve_max_abs": 2.3295478795981595e-07,
+      "witness_max_code_error": 1.0000000000072724,
+      "witness_mean_code_error": 0.0039139912802219675,
+      "production_linear_negative_fraction": 0.00014070550931430837,
+      "variants": {
+        "production": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.922154182181412,
+            "delta_e00_median": 5.35614181893394,
+            "delta_e00_p95": 7.745627663209471,
+            "delta_e76_mean": 7.056719174947334,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.910570073300034,
+              -0.23649926730593784,
+              0.32138864477309126
+            ],
+            "rgb_mae_normalized": 0.0683989850079253,
+            "ipr_lab_mean": [
+              50.337590117868444,
+              -0.7200422716296261,
+              -10.174876224525015
+            ],
+            "lr_lab_mean": [
+              57.24816019116658,
+              -0.9565415389355513,
+              -9.853487579752073
+            ],
+            "ipr_y_mean": 0.2250758718464376,
+            "lr_y_mean": 0.2934264973848201,
+            "delta_chroma_mean": -0.29380481481092763,
+            "hue_abs_circular_mean_degrees": 3.0367706812022432,
+            "hue_usable_fraction": 0.9574791914387634,
+            "lr_neutral_fraction": 0.024161712247324614,
+            "ab_distance_on_lr_neutral_mean": 1.281119268859098,
+            "ipr_any_channel_low_fraction": 0.00014070550931430837,
+            "lr_any_channel_low_fraction": 7.927070947284978e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 8263,
+              "delta_e00_mean": 3.2274410260474884,
+              "delta_e00_median": 3.367170096957727,
+              "delta_e00_p95": 4.332966632011109,
+              "delta_e76_mean": 4.846092191205062,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.915016177587392,
+                0.09016752640055735,
+                -1.8699193805432877
+              ],
+              "rgb_mae_normalized": 0.033507359988140445,
+              "ipr_lab_mean": [
+                5.8745842980420715,
+                0.6513561677464988,
+                -5.940343230150549
+              ],
+              "lr_lab_mean": [
+                9.789600475629468,
+                0.7415236941470544,
+                -7.810262610693883
+              ],
+              "ipr_y_mean": 0.00652064573644698,
+              "lr_y_mean": 0.011536095602711537,
+              "delta_chroma_mean": 2.152686277539834,
+              "hue_abs_circular_mean_degrees": 4.0377364909916755,
+              "hue_usable_fraction": 0.4479002783492678,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.00024204284158296018,
+              "lr_any_channel_low_fraction": 0.00024204284158296018,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 4.832450536185182,
+              "delta_e00_median": 4.830351245423151,
+              "delta_e00_p95": 5.054291180717965,
+              "delta_e76_mean": 6.64970789281943,
+              "delta_lab_mean_lr_minus_ipr": [
+                6.492787248802771,
+                -0.24190137935293438,
+                1.3448229624799997
+              ],
+              "rgb_mae_normalized": 0.0678282366758766,
+              "ipr_lab_mean": [
+                72.68807543156836,
+                0.0871457154986968,
+                -8.9115813046995
+              ],
+              "lr_lab_mean": [
+                79.18086268037091,
+                -0.15475566385423759,
+                -7.566758342219602
+              ],
+              "ipr_y_mean": 0.4470683276976226,
+              "lr_y_mean": 0.5525745650513731,
+              "delta_chroma_mean": -1.3542685533113017,
+              "hue_abs_circular_mean_degrees": 2.2863754290113603,
+              "hue_usable_fraction": 0.9757431629013079,
+              "lr_neutral_fraction": 0.024177566389219182,
+              "ab_distance_on_lr_neutral_mean": 0.8813061066773433,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "production_order_reconstructed": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.922152738985348,
+            "delta_e00_median": 5.3561205658400155,
+            "delta_e00_p95": 7.745627663209471,
+            "delta_e76_mean": 7.056717411955954,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.910568319880444,
+              -0.23649897114098709,
+              0.32138847524363195
+            ],
+            "rgb_mae_normalized": 0.06839896846673431,
+            "ipr_lab_mean": [
+              50.33759187128796,
+              -0.7200425677945772,
+              -10.174876054995556
+            ],
+            "lr_lab_mean": [
+              57.24816019116658,
+              -0.9565415389355513,
+              -9.853487579752073
+            ],
+            "ipr_y_mean": 0.22507588752071855,
+            "lr_y_mean": 0.2934264973848201,
+            "delta_chroma_mean": -0.29380465316686466,
+            "hue_abs_circular_mean_degrees": 3.0367685697824993,
+            "hue_usable_fraction": 0.9574791914387634,
+            "lr_neutral_fraction": 0.024161712247324614,
+            "ab_distance_on_lr_neutral_mean": 1.2811179406553492,
+            "ipr_any_channel_low_fraction": 0.00014070550931430837,
+            "lr_any_channel_low_fraction": 7.927070947284978e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 8263,
+              "delta_e00_mean": 3.227439089295111,
+              "delta_e00_median": 3.367170096957727,
+              "delta_e00_p95": 4.332966632011109,
+              "delta_e76_mean": 4.846089776808549,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.915013449671419,
+                0.0901704421060833,
+                -1.8699220859630394
+              ],
+              "rgb_mae_normalized": 0.03350734336812386,
+              "ipr_lab_mean": [
+                5.874587025958046,
+                0.6513532520409724,
+                -5.940340524730795
+              ],
+              "lr_lab_mean": [
+                9.789600475629468,
+                0.7415236941470544,
+                -7.810262610693883
+              ],
+              "ipr_y_mean": 0.006520648982735455,
+              "lr_y_mean": 0.011536095602711537,
+              "delta_chroma_mean": 2.1526883510843606,
+              "hue_abs_circular_mean_degrees": 4.037694489764297,
+              "hue_usable_fraction": 0.4479002783492678,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.00024204284158296018,
+              "lr_any_channel_low_fraction": 0.00024204284158296018,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 4.832448631204989,
+              "delta_e00_median": 4.830351245423151,
+              "delta_e00_p95": 5.054291180717965,
+              "delta_e76_mean": 6.649705585426103,
+              "delta_lab_mean_lr_minus_ipr": [
+                6.492785404672149,
+                -0.2419013008628773,
+                1.3448213539063
+              ],
+              "rgb_mae_normalized": 0.06782821893517207,
+              "ipr_lab_mean": [
+                72.68807727569903,
+                0.08714563700863973,
+                -8.911579696125806
+              ],
+              "lr_lab_mean": [
+                79.18086268037091,
+                -0.15475566385423759,
+                -7.566758342219602
+              ],
+              "ipr_y_mean": 0.4470683557490453,
+              "lr_y_mean": 0.5525745650513731,
+              "delta_chroma_mean": -1.354266813631885,
+              "hue_abs_circular_mean_degrees": 2.2863766374840124,
+              "hue_usable_fraction": 0.9757431629013079,
+              "lr_neutral_fraction": 0.024177566389219182,
+              "ab_distance_on_lr_neutral_mean": 0.8812912753986984,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "offset_after_look_scalar": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.980977845313257,
+            "delta_e00_median": 5.461518451098141,
+            "delta_e00_p95": 7.889934776322756,
+            "delta_e76_mean": 7.137833723218725,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.997973129448097,
+              0.051626727305131626,
+              0.3806912896952933
+            ],
+            "rgb_mae_normalized": 0.06994277618822071,
+            "ipr_lab_mean": [
+              50.25018706171832,
+              -1.0081682662406943,
+              -10.234178869447458
+            ],
+            "lr_lab_mean": [
+              57.24816019116658,
+              -0.9565415389355513,
+              -9.853487579752073
+            ],
+            "ipr_y_mean": 0.22483200968583147,
+            "lr_y_mean": 0.2934264973848201,
+            "delta_chroma_mean": -0.42939676251818076,
+            "hue_abs_circular_mean_degrees": 2.908411115154672,
+            "hue_usable_fraction": 0.9596591359492668,
+            "lr_neutral_fraction": 0.024161712247324614,
+            "ab_distance_on_lr_neutral_mean": 1.3445141761612995,
+            "ipr_any_channel_low_fraction": 0.0006202933016250495,
+            "lr_any_channel_low_fraction": 7.927070947284978e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 8263,
+              "delta_e00_mean": 3.1412202889477556,
+              "delta_e00_median": 3.2716506650235777,
+              "delta_e00_p95": 4.237438391690213,
+              "delta_e76_mean": 4.707769838050291,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.9385394549189066,
+                0.04858051685891233,
+                -1.5803263808758832
+              ],
+              "rgb_mae_normalized": 0.03372222787148897,
+              "ipr_lab_mean": [
+                5.851061020710581,
+                0.6929431772881458,
+                -6.229936229817982
+              ],
+              "lr_lab_mean": [
+                9.789600475629468,
+                0.7415236941470544,
+                -7.810262610693883
+              ],
+              "ipr_y_mean": 0.006493825959505089,
+              "lr_y_mean": 0.011536095602711537,
+              "delta_chroma_mean": 1.839784911998934,
+              "hue_abs_circular_mean_degrees": 3.9861903227016,
+              "hue_usable_fraction": 0.46532736294324095,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0012102142079148009,
+              "lr_any_channel_low_fraction": 0.00024204284158296018,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 4.697459064847849,
+              "delta_e00_median": 4.695790029429908,
+              "delta_e00_p95": 4.893866322669131,
+              "delta_e76_mean": 6.476482077564411,
+              "delta_lab_mean_lr_minus_ipr": [
+                6.442735692085293,
+                -0.10154979699381764,
+                0.531079687169622
+              ],
+              "rgb_mae_normalized": 0.06850402889888198,
+              "ipr_lab_mean": [
+                72.73812698828492,
+                -0.05320586686042077,
+                -8.09783802938915
+              ],
+              "lr_lab_mean": [
+                79.18086268037091,
+                -0.15475566385423759,
+                -7.566758342219602
+              ],
+              "ipr_y_mean": 0.44782262347823976,
+              "lr_y_mean": 0.5525745650513731,
+              "delta_chroma_mean": -0.5372988449658995,
+              "hue_abs_circular_mean_degrees": 1.814163407709548,
+              "hue_usable_fraction": 0.9757431629013079,
+              "lr_neutral_fraction": 0.024177566389219182,
+              "ab_distance_on_lr_neutral_mean": 0.6541258932664867,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "offset_after_look_shoulder": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.981745355102455,
+            "delta_e00_median": 5.461503054590194,
+            "delta_e00_p95": 7.8899674547294065,
+            "delta_e76_mean": 7.138843301263615,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.997681188784474,
+              0.04876094244016575,
+              0.3954995324722145
+            ],
+            "rgb_mae_normalized": 0.06991702997059185,
+            "ipr_lab_mean": [
+              50.250479002381695,
+              -1.0053024813757307,
+              -10.248987112224322
+            ],
+            "lr_lab_mean": [
+              57.24816019116658,
+              -0.9565415389355513,
+              -9.853487579752073
+            ],
+            "ipr_y_mean": 0.2248366870840021,
+            "lr_y_mean": 0.2934264973848201,
+            "delta_chroma_mean": -0.44410857945326426,
+            "hue_abs_circular_mean_degrees": 2.9088399153820816,
+            "hue_usable_fraction": 0.9596591359492668,
+            "lr_neutral_fraction": 0.024161712247324614,
+            "ab_distance_on_lr_neutral_mean": 1.3558120566114815,
+            "ipr_any_channel_low_fraction": 0.0006202933016250495,
+            "lr_any_channel_low_fraction": 7.927070947284978e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 8263,
+              "delta_e00_mean": 3.1412202889477556,
+              "delta_e00_median": 3.2716506650235777,
+              "delta_e00_p95": 4.237438391690213,
+              "delta_e76_mean": 4.707769838050291,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.9385394549189066,
+                0.04858051685891233,
+                -1.5803263808758832
+              ],
+              "rgb_mae_normalized": 0.03372222787148897,
+              "ipr_lab_mean": [
+                5.851061020710581,
+                0.6929431772881458,
+                -6.229936229817982
+              ],
+              "lr_lab_mean": [
+                9.789600475629468,
+                0.7415236941470544,
+                -7.810262610693883
+              ],
+              "ipr_y_mean": 0.006493825959505089,
+              "lr_y_mean": 0.011536095602711537,
+              "delta_chroma_mean": 1.839784911998934,
+              "hue_abs_circular_mean_degrees": 3.9861903227016,
+              "hue_usable_fraction": 0.46532736294324095,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0012102142079148009,
+              "lr_any_channel_low_fraction": 0.00024204284158296018,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 4.709779030394258,
+              "delta_e00_median": 4.707947838809203,
+              "delta_e00_p95": 4.907980788386862,
+              "delta_e76_mean": 6.4918241572491695,
+              "delta_lab_mean_lr_minus_ipr": [
+                6.438063091745822,
+                -0.13758518260465796,
+                0.7199856013066608
+              ],
+              "rgb_mae_normalized": 0.0681639597526716,
+              "ipr_lab_mean": [
+                72.74279958862509,
+                -0.017170481249580302,
+                -8.286743943526197
+              ],
+              "lr_lab_mean": [
+                79.18086268037091,
+                -0.15475566385423759,
+                -7.566758342219602
+              ],
+              "ipr_y_mean": 0.44789926061574986,
+              "lr_y_mean": 0.5525745650513731,
+              "delta_chroma_mean": -0.7256958931524676,
+              "hue_abs_circular_mean_degrees": 1.8483065832123322,
+              "hue_usable_fraction": 0.9757431629013079,
+              "lr_neutral_fraction": 0.024177566389219182,
+              "ab_distance_on_lr_neutral_mean": 0.8796664474897748,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "offset_after_look_shoulder_hue_stable": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.983399608604407,
+            "delta_e00_median": 5.501079052606583,
+            "delta_e00_p95": 7.871324744409367,
+            "delta_e76_mean": 7.14556223624918,
+            "delta_lab_mean_lr_minus_ipr": [
+              7.012223991329864,
+              -0.007235685648284852,
+              0.42118634652264314
+            ],
+            "rgb_mae_normalized": 0.06994503124344706,
+            "ipr_lab_mean": [
+              50.23593619983702,
+              -0.9493058532872807,
+              -10.274673926274623
+            ],
+            "lr_lab_mean": [
+              57.24816019116658,
+              -0.9565415389355513,
+              -9.853487579752073
+            ],
+            "ipr_y_mean": 0.22454925919267352,
+            "lr_y_mean": 0.2934264973848201,
+            "delta_chroma_mean": -0.46252495472333804,
+            "hue_abs_circular_mean_degrees": 2.5457854409690612,
+            "hue_usable_fraction": 0.9596036464526357,
+            "lr_neutral_fraction": 0.024161712247324614,
+            "ab_distance_on_lr_neutral_mean": 1.3541497477251867,
+            "ipr_any_channel_low_fraction": 0.0007411811335711455,
+            "lr_any_channel_low_fraction": 7.927070947284978e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 8263,
+              "delta_e00_mean": 3.097483078704278,
+              "delta_e00_median": 3.2384646303355247,
+              "delta_e00_p95": 4.123314085885071,
+              "delta_e76_mean": 4.6826547400423895,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.8925954243471677,
+                0.17895702710466832,
+                -1.6588914386669145
+              ],
+              "rgb_mae_normalized": 0.033603511708553926,
+              "ipr_lab_mean": [
+                5.897005051282328,
+                0.5625666670423867,
+                -6.151371172026966
+              ],
+              "lr_lab_mean": [
+                9.789600475629468,
+                0.7415236941470544,
+                -7.810262610693883
+              ],
+              "ipr_y_mean": 0.00654605355881652,
+              "lr_y_mean": 0.011536095602711537,
+              "delta_chroma_mean": 1.881830279065063,
+              "hue_abs_circular_mean_degrees": 3.3558269285283746,
+              "hue_usable_fraction": 0.4635120416313688,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0015732784702892411,
+              "lr_any_channel_low_fraction": 0.00024204284158296018,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 4.7251718580422315,
+              "delta_e00_median": 4.723040641259185,
+              "delta_e00_p95": 4.918426600909371,
+              "delta_e76_mean": 6.511083197231873,
+              "delta_lab_mean_lr_minus_ipr": [
+                6.453571377238485,
+                -0.19306698433752567,
+                0.7471181698487174
+              ],
+              "rgb_mae_normalized": 0.0681885931241283,
+              "ipr_lab_mean": [
+                72.72729130313235,
+                0.0383113204832876,
+                -8.313876512068296
+              ],
+              "lr_lab_mean": [
+                79.18086268037091,
+                -0.15475566385423759,
+                -7.566758342219602
+              ],
+              "ipr_y_mean": 0.44766317133511835,
+              "lr_y_mean": 0.5525745650513731,
+              "delta_chroma_mean": -0.7513034945839449,
+              "hue_abs_circular_mean_degrees": 1.9561241360130026,
+              "hue_usable_fraction": 0.9757431629013079,
+              "lr_neutral_fraction": 0.024177566389219182,
+              "ab_distance_on_lr_neutral_mean": 0.8869309174554526,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "zero_offset_ablation": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.1619097796655895,
+            "delta_e00_median": 1.997278713570096,
+            "delta_e00_p95": 3.3283565928490697,
+            "delta_e76_mean": 2.5447269057453865,
+            "delta_lab_mean_lr_minus_ipr": [
+              -2.3011098738677083,
+              0.09548394309521106,
+              0.12591913037364175
+            ],
+            "rgb_mae_normalized": 0.02328004884499798,
+            "ipr_lab_mean": [
+              59.54927006503317,
+              -1.0520254820307533,
+              -9.97940671012548
+            ],
+            "lr_lab_mean": [
+              57.24816019116658,
+              -0.9565415389355513,
+              -9.853487579752073
+            ],
+            "ipr_y_mean": 0.319000947349933,
+            "lr_y_mean": 0.2934264973848201,
+            "delta_chroma_mean": -0.2103494808107313,
+            "hue_abs_circular_mean_degrees": 3.062599352508376,
+            "hue_usable_fraction": 0.964090368608799,
+            "lr_neutral_fraction": 0.024161712247324614,
+            "ab_distance_on_lr_neutral_mean": 1.2758957644792437,
+            "ipr_any_channel_low_fraction": 0.00018826793499801824,
+            "lr_any_channel_low_fraction": 7.927070947284978e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 8263,
+              "delta_e00_mean": 1.5582690327447737,
+              "delta_e00_median": 1.4427155437143873,
+              "delta_e00_p95": 2.7971679265249323,
+              "delta_e76_mean": 2.149271595923262,
+              "delta_lab_mean_lr_minus_ipr": [
+                -1.4841895072651936,
+                -0.3050817463375718,
+                0.9392620440355688
+              ],
+              "rgb_mae_normalized": 0.013344986304075275,
+              "ipr_lab_mean": [
+                11.27378998289469,
+                1.046605440484623,
+                -8.749524654729429
+              ],
+              "lr_lab_mean": [
+                9.789600475629468,
+                0.7415236941470544,
+                -7.810262610693883
+              ],
+              "ipr_y_mean": 0.01381648983428007,
+              "lr_y_mean": 0.011536095602711537,
+              "delta_chroma_mean": -1.0328380792229657,
+              "hue_abs_circular_mean_degrees": 3.8955145600371233,
+              "hue_usable_fraction": 0.6218080600266247,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0007261285247488806,
+              "lr_any_channel_low_fraction": 0.00024204284158296018,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 1.4904920055155615,
+              "delta_e00_median": 1.4718089603527655,
+              "delta_e00_p95": 1.6926562269299914,
+              "delta_e76_mean": 2.092639931209736,
+              "delta_lab_mean_lr_minus_ipr": [
+                -2.0576882835011108,
+                -0.014131522472928707,
+                -0.14081776200054288
+              ],
+              "rgb_mae_normalized": 0.022248035350531065,
+              "ipr_lab_mean": [
+                81.23855096387211,
+                -0.14062414138130885,
+                -7.425940580219043
+              ],
+              "lr_lab_mean": [
+                79.18086268037091,
+                -0.15475566385423759,
+                -7.566758342219602
+              ],
+              "ipr_y_mean": 0.5891807157039872,
+              "lr_y_mean": 0.5525745650513731,
+              "delta_chroma_mean": 0.13319977227018107,
+              "hue_abs_circular_mean_degrees": 1.837393914021845,
+              "hue_usable_fraction": 0.9753468093539437,
+              "lr_neutral_fraction": 0.024177566389219182,
+              "ab_distance_on_lr_neutral_mean": 0.35275828913433804,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "production_hard_clip_gamut": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.922154182743166,
+            "delta_e00_median": 5.35614181893394,
+            "delta_e00_p95": 7.745627663209471,
+            "delta_e76_mean": 7.056719175758711,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.9105700736292235,
+              -0.23649926550532469,
+              0.32138864530334715
+            ],
+            "rgb_mae_normalized": 0.06839898501800525,
+            "ipr_lab_mean": [
+              50.33759011753925,
+              -0.7200422734302393,
+              -10.174876225055272
+            ],
+            "lr_lab_mean": [
+              57.24816019116658,
+              -0.9565415389355513,
+              -9.853487579752073
+            ],
+            "ipr_y_mean": 0.22507587184359648,
+            "lr_y_mean": 0.2934264973848201,
+            "delta_chroma_mean": -0.2938048164670121,
+            "hue_abs_circular_mean_degrees": 3.0367706837281307,
+            "hue_usable_fraction": 0.9574791914387634,
+            "lr_neutral_fraction": 0.024161712247324614,
+            "ab_distance_on_lr_neutral_mean": 1.281119268859098,
+            "ipr_any_channel_low_fraction": 0.00014070550931430837,
+            "lr_any_channel_low_fraction": 7.927070947284978e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 8263,
+              "delta_e00_mean": 3.2274410260474884,
+              "delta_e00_median": 3.367170096957727,
+              "delta_e00_p95": 4.332966632011109,
+              "delta_e76_mean": 4.846092191205062,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.915016177587392,
+                0.09016752640055735,
+                -1.8699193805432877
+              ],
+              "rgb_mae_normalized": 0.033507359988140445,
+              "ipr_lab_mean": [
+                5.8745842980420715,
+                0.6513561677464988,
+                -5.940343230150549
+              ],
+              "lr_lab_mean": [
+                9.789600475629468,
+                0.7415236941470544,
+                -7.810262610693883
+              ],
+              "ipr_y_mean": 0.00652064573644698,
+              "lr_y_mean": 0.011536095602711537,
+              "delta_chroma_mean": 2.152686277539834,
+              "hue_abs_circular_mean_degrees": 4.0377364909916755,
+              "hue_usable_fraction": 0.4479002783492678,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.00024204284158296018,
+              "lr_any_channel_low_fraction": 0.00024204284158296018,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 4.832450536185182,
+              "delta_e00_median": 4.830351245423151,
+              "delta_e00_p95": 5.054291180717965,
+              "delta_e76_mean": 6.64970789281943,
+              "delta_lab_mean_lr_minus_ipr": [
+                6.492787248802771,
+                -0.24190137935293438,
+                1.3448229624799997
+              ],
+              "rgb_mae_normalized": 0.0678282366758766,
+              "ipr_lab_mean": [
+                72.68807543156836,
+                0.0871457154986968,
+                -8.9115813046995
+              ],
+              "lr_lab_mean": [
+                79.18086268037091,
+                -0.15475566385423759,
+                -7.566758342219602
+              ],
+              "ipr_y_mean": 0.4470683276976226,
+              "lr_y_mean": 0.5525745650513731,
+              "delta_chroma_mean": -1.3542685533113017,
+              "hue_abs_circular_mean_degrees": 2.2863754290113603,
+              "hue_usable_fraction": 0.9757431629013079,
+              "lr_neutral_fraction": 0.024177566389219182,
+              "ab_distance_on_lr_neutral_mean": 0.8813061066773433,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "production_signed_gamut": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.9221641057814,
+            "delta_e00_median": 5.3561802231202265,
+            "delta_e00_p95": 7.745627663209471,
+            "delta_e76_mean": 7.0567321090174335,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.910587984242994,
+              -0.2364377856129172,
+              0.321304992227364
+            ],
+            "rgb_mae_normalized": 0.068399253245362,
+            "ipr_lab_mean": [
+              50.3375722069255,
+              -0.7201037533226466,
+              -10.174792571979285
+            ],
+            "lr_lab_mean": [
+              57.24816019116658,
+              -0.9565415389355513,
+              -9.853487579752073
+            ],
+            "ipr_y_mean": 0.22507577975352036,
+            "lr_y_mean": 0.2934264973848201,
+            "delta_chroma_mean": -0.2937273685750733,
+            "hue_abs_circular_mean_degrees": 3.0366965795107697,
+            "hue_usable_fraction": 0.9574791914387634,
+            "lr_neutral_fraction": 0.024161712247324614,
+            "ab_distance_on_lr_neutral_mean": 1.281119268859098,
+            "ipr_any_channel_low_fraction": 0.00014070550931430837,
+            "lr_any_channel_low_fraction": 7.927070947284978e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 8263,
+              "delta_e00_mean": 3.227430399805414,
+              "delta_e00_median": 3.367170096957727,
+              "delta_e00_p95": 4.332966632011109,
+              "delta_e76_mean": 4.8459739318116855,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.9150384757261474,
+                0.09028872898053995,
+                -1.8700505823785605
+              ],
+              "rgb_mae_normalized": 0.033507657917326704,
+              "ipr_lab_mean": [
+                5.874561999903318,
+                0.6512349651665162,
+                -5.940212028315275
+              ],
+              "lr_lab_mean": [
+                9.789600475629468,
+                0.7415236941470544,
+                -7.810262610693883
+              ],
+              "ipr_y_mean": 0.0065206197320839855,
+              "lr_y_mean": 0.011536095602711537,
+              "delta_chroma_mean": 2.152882055189239,
+              "hue_abs_circular_mean_degrees": 4.037622480371697,
+              "hue_usable_fraction": 0.4479002783492678,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.00024204284158296018,
+              "lr_any_channel_low_fraction": 0.00024204284158296018,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 4.832450536185182,
+              "delta_e00_median": 4.830351245423151,
+              "delta_e00_p95": 5.054291180717965,
+              "delta_e76_mean": 6.64970789281943,
+              "delta_lab_mean_lr_minus_ipr": [
+                6.492787248802771,
+                -0.24190137935293438,
+                1.3448229624799997
+              ],
+              "rgb_mae_normalized": 0.0678282366758766,
+              "ipr_lab_mean": [
+                72.68807543156836,
+                0.0871457154986968,
+                -8.9115813046995
+              ],
+              "lr_lab_mean": [
+                79.18086268037091,
+                -0.15475566385423759,
+                -7.566758342219602
+              ],
+              "ipr_y_mean": 0.4470683276976226,
+              "lr_y_mean": 0.5525745650513731,
+              "delta_chroma_mean": -1.3542685533113017,
+              "hue_abs_circular_mean_degrees": 2.2863754290113603,
+              "hue_usable_fraction": 0.9757431629013079,
+              "lr_neutral_fraction": 0.024177566389219182,
+              "ab_distance_on_lr_neutral_mean": 0.8813061066773433,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "scene": "6V1A0037",
+      "available": false
+    },
+    {
+      "scene": "6V1A0043",
+      "available": true,
+      "samples": 504600,
+      "lr_sha256": "3ac72d4e7a686991887c1967666330ddd4d4df5ac51bf497a69bc0e8a065d92f",
+      "camera_sha256": "61551bf3217a2c8024101fa14d7b2f3b85359694cbdc8407f87e624379067bb7",
+      "witness_pre_curve_max_abs": 3.3660270049029606e-07,
+      "witness_max_code_error": 1.000000000000906,
+      "witness_mean_code_error": 0.0006883339939225798,
+      "production_linear_negative_fraction": 0.02105033690051526,
+      "variants": {
+        "production": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.427605546210495,
+            "delta_e00_median": 0.6292010079330397,
+            "delta_e00_p95": 8.528289004391969,
+            "delta_e76_mean": 3.2651013645370583,
+            "delta_lab_mean_lr_minus_ipr": [
+              2.199634019900219,
+              -0.007421270230555582,
+              1.461434510343538
+            ],
+            "rgb_mae_normalized": 0.01854274131362438,
+            "ipr_lab_mean": [
+              5.172500492081175,
+              -1.0793975060296603,
+              2.9692678749055523
+            ],
+            "lr_lab_mean": [
+              7.372134511981245,
+              -1.0868187762602612,
+              4.430702385249379
+            ],
+            "ipr_y_mean": 0.012540530649107798,
+            "lr_y_mean": 0.02034275267636602,
+            "delta_chroma_mean": 1.9788700271008908,
+            "hue_abs_circular_mean_degrees": 5.670258762178765,
+            "hue_usable_fraction": 0.2181529924692826,
+            "lr_neutral_fraction": 0.002592152199762188,
+            "ab_distance_on_lr_neutral_mean": 1.0216831295420108,
+            "ipr_any_channel_low_fraction": 0.021171224732461354,
+            "lr_any_channel_low_fraction": 0.0375743162901308,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 5.945303210463734e-06
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 426844,
+              "delta_e00_mean": 1.4229763955374488,
+              "delta_e00_median": 0.5420402127178688,
+              "delta_e00_p95": 6.145689763201632,
+              "delta_e76_mean": 1.7354988747455062,
+              "delta_lab_mean_lr_minus_ipr": [
+                0.9510748426452261,
+                -0.05412635180832864,
+                0.7981683690091961
+              ],
+              "rgb_mae_normalized": 0.008809320525142019,
+              "ipr_lab_mean": [
+                1.2155134085833563,
+                -0.21960343387734246,
+                0.858782335254138
+              ],
+              "lr_lab_mean": [
+                2.1665882512285126,
+                -0.2737297856856674,
+                1.656950704263386
+              ],
+              "ipr_y_mean": 0.0013456643750313097,
+              "lr_y_mean": 0.0024537241041756534,
+              "delta_chroma_mean": 1.3924044266246778,
+              "hue_abs_circular_mean_degrees": 5.889652257328539,
+              "hue_usable_fraction": 0.08098274779544752,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0007262606479182089,
+              "lr_any_channel_low_fraction": 2.5770539119678383e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 9.362982243298072,
+              "delta_e00_median": 9.771394224172926,
+              "delta_e00_p95": 11.261049564502608,
+              "delta_e76_mean": 12.210826464249358,
+              "delta_lab_mean_lr_minus_ipr": [
+                9.978046084241893,
+                -0.5709677519721981,
+                5.1455264883494864
+              ],
+              "rgb_mae_normalized": 0.08505481983543421,
+              "ipr_lab_mean": [
+                44.771872825894164,
+                -4.481370084697317,
+                18.40051815650406
+              ],
+              "lr_lab_mean": [
+                54.74991891013564,
+                -5.052337836669485,
+                23.546044644853588
+              ],
+              "ipr_y_mean": 0.16782370500310612,
+              "lr_y_mean": 0.25076625525608354,
+              "delta_chroma_mean": 3.8527645240661794,
+              "hue_abs_circular_mean_degrees": 3.7321452735329106,
+              "hue_usable_fraction": 0.950376535869996,
+              "lr_neutral_fraction": 0.03745541022592152,
+              "ab_distance_on_lr_neutral_mean": 0.9942604757073573,
+              "ipr_any_channel_low_fraction": 0.21981767736821245,
+              "lr_any_channel_low_fraction": 0.35180340864050735,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.00011890606420927467
+            }
+          }
+        },
+        "production_order_reconstructed": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.4276051555113254,
+            "delta_e00_median": 0.6292010079330397,
+            "delta_e00_p95": 8.528281866773073,
+            "delta_e76_mean": 3.2651008006976707,
+            "delta_lab_mean_lr_minus_ipr": [
+              2.1996336371917677,
+              -0.007421277104463866,
+              1.4614342997505092
+            ],
+            "rgb_mae_normalized": 0.018542738350120328,
+            "ipr_lab_mean": [
+              5.172500874789628,
+              -1.079397499155752,
+              2.9692680854985847
+            ],
+            "lr_lab_mean": [
+              7.372134511981245,
+              -1.0868187762602612,
+              4.430702385249379
+            ],
+            "ipr_y_mean": 0.0125405317935563,
+            "lr_y_mean": 0.02034275267636602,
+            "delta_chroma_mean": 1.9788695148064797,
+            "hue_abs_circular_mean_degrees": 5.670258155330126,
+            "hue_usable_fraction": 0.2181529924692826,
+            "lr_neutral_fraction": 0.002592152199762188,
+            "ab_distance_on_lr_neutral_mean": 1.0216782845319077,
+            "ipr_any_channel_low_fraction": 0.021171224732461354,
+            "lr_any_channel_low_fraction": 0.0375743162901308,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 5.945303210463734e-06
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 426844,
+              "delta_e00_mean": 1.422976184758215,
+              "delta_e00_median": 0.5420402127178688,
+              "delta_e00_p95": 6.145689763201632,
+              "delta_e76_mean": 1.7354986251199045,
+              "delta_lab_mean_lr_minus_ipr": [
+                0.9510747150504106,
+                -0.054126329695999384,
+                0.798168238472828
+              ],
+              "rgb_mae_normalized": 0.00880931932161004,
+              "ipr_lab_mean": [
+                1.2155135361781726,
+                -0.2196034559896719,
+                0.8587824657905067
+              ],
+              "lr_lab_mean": [
+                2.1665882512285126,
+                -0.2737297856856674,
+                1.656950704263386
+              ],
+              "ipr_y_mean": 0.0013456645163882103,
+              "lr_y_mean": 0.0024537241041756534,
+              "delta_chroma_mean": 1.3924042019501548,
+              "hue_abs_circular_mean_degrees": 5.889652146289087,
+              "hue_usable_fraction": 0.08098274779544752,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0007262606479182089,
+              "lr_any_channel_low_fraction": 2.5770539119678383e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 9.362980716549867,
+              "delta_e00_median": 9.771394224172926,
+              "delta_e00_p95": 11.261049564502608,
+              "delta_e76_mean": 12.210824046973475,
+              "delta_lab_mean_lr_minus_ipr": [
+                9.978043977816677,
+                -0.5709661263298664,
+                5.145525780406661
+              ],
+              "rgb_mae_normalized": 0.08505480794109821,
+              "ipr_lab_mean": [
+                44.77187493231938,
+                -4.481371710339651,
+                18.400518864446866
+              ],
+              "lr_lab_mean": [
+                54.74991891013564,
+                -5.052337836669485,
+                23.546044644853588
+              ],
+              "ipr_y_mean": 0.16782371647819597,
+              "lr_y_mean": 0.25076625525608354,
+              "delta_chroma_mean": 3.852762051384874,
+              "hue_abs_circular_mean_degrees": 3.732146201609267,
+              "hue_usable_fraction": 0.950376535869996,
+              "lr_neutral_fraction": 0.03745541022592152,
+              "ab_distance_on_lr_neutral_mean": 0.9942564021039392,
+              "ipr_any_channel_low_fraction": 0.21981767736821245,
+              "lr_any_channel_low_fraction": 0.35180340864050735,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.00011890606420927467
+            }
+          }
+        },
+        "offset_after_look_scalar": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.39210474956876,
+            "delta_e00_median": 0.6162118849480742,
+            "delta_e00_p95": 8.299743504523866,
+            "delta_e76_mean": 3.1710889919105454,
+            "delta_lab_mean_lr_minus_ipr": [
+              2.1949387940495355,
+              -0.014796945609857674,
+              1.3954072407161693
+            ],
+            "rgb_mae_normalized": 0.018683017225730198,
+            "ipr_lab_mean": [
+              5.17719571793193,
+              -1.0720218306503275,
+              3.0352951445328578
+            ],
+            "lr_lab_mean": [
+              7.372134511981245,
+              -1.0868187762602612,
+              4.430702385249379
+            ],
+            "ipr_y_mean": 0.012552835986298298,
+            "lr_y_mean": 0.02034275267636602,
+            "delta_chroma_mean": 1.8025783358449428,
+            "hue_abs_circular_mean_degrees": 5.453883300685568,
+            "hue_usable_fraction": 0.2187594133967499,
+            "lr_neutral_fraction": 0.002592152199762188,
+            "ab_distance_on_lr_neutral_mean": 0.996438305170703,
+            "ipr_any_channel_low_fraction": 0.04870590566785573,
+            "lr_any_channel_low_fraction": 0.0375743162901308,
+            "ipr_any_channel_high_fraction": 1.9817677368212447e-06,
+            "lr_any_channel_high_fraction": 5.945303210463734e-06
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 426844,
+              "delta_e00_mean": 1.414617145898453,
+              "delta_e00_median": 0.5318584097433916,
+              "delta_e00_p95": 6.125307644455743,
+              "delta_e76_mean": 1.7274600834365677,
+              "delta_lab_mean_lr_minus_ipr": [
+                0.9463051963453742,
+                -0.046607855716588105,
+                0.8056758042051387
+              ],
+              "rgb_mae_normalized": 0.008778323761608952,
+              "ipr_lab_mean": [
+                1.220283054883273,
+                -0.22712192996908018,
+                0.8512749000581457
+              ],
+              "lr_lab_mean": [
+                2.1665882512285126,
+                -0.2737297856856674,
+                1.656950704263386
+              ],
+              "ipr_y_mean": 0.0013509417441873262,
+              "lr_y_mean": 0.0024537241041756534,
+              "delta_chroma_mean": 1.3793405909640792,
+              "hue_abs_circular_mean_degrees": 6.357917758038695,
+              "hue_usable_fraction": 0.08132479313285415,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0007332889767690304,
+              "lr_any_channel_low_fraction": 2.5770539119678383e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 9.074074512682913,
+              "delta_e00_median": 9.651493012973127,
+              "delta_e00_p95": 10.337324310226245,
+              "delta_e76_mean": 11.496913127057644,
+              "delta_lab_mean_lr_minus_ipr": [
+                9.85343403394799,
+                -0.7179449130825322,
+                4.498097358848563
+              ],
+              "rgb_mae_normalized": 0.08431194013020246,
+              "ipr_lab_mean": [
+                44.89648487618834,
+                -4.334392923586946,
+                19.047947286005105
+              ],
+              "lr_lab_mean": [
+                54.74991891013564,
+                -5.052337836669485,
+                23.546044644853588
+              ],
+              "ipr_y_mean": 0.1684628435987712,
+              "lr_y_mean": 0.25076625525608354,
+              "delta_chroma_mean": 2.998325939732532,
+              "hue_abs_circular_mean_degrees": 2.996778573265194,
+              "hue_usable_fraction": 0.950653983353151,
+              "lr_neutral_fraction": 0.03745541022592152,
+              "ab_distance_on_lr_neutral_mean": 0.9582153578281493,
+              "ipr_any_channel_low_fraction": 0.45410225921521996,
+              "lr_any_channel_low_fraction": 0.35180340864050735,
+              "ipr_any_channel_high_fraction": 3.963535473642489e-05,
+              "lr_any_channel_high_fraction": 0.00011890606420927467
+            }
+          }
+        },
+        "offset_after_look_shoulder": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.392299636833952,
+            "delta_e00_median": 0.6162100099665617,
+            "delta_e00_p95": 8.299863616903504,
+            "delta_e76_mean": 3.1713211717669627,
+            "delta_lab_mean_lr_minus_ipr": [
+              2.19333881531781,
+              -0.01771104218727173,
+              1.3975848313429216
+            ],
+            "rgb_mae_normalized": 0.018657887457264436,
+            "ipr_lab_mean": [
+              5.178795696663632,
+              -1.0691077340729103,
+              3.033117553906108
+            ],
+            "lr_lab_mean": [
+              7.372134511981245,
+              -1.0868187762602612,
+              4.430702385249379
+            ],
+            "ipr_y_mean": 0.012584497984873686,
+            "lr_y_mean": 0.02034275267636602,
+            "delta_chroma_mean": 1.7987509597458378,
+            "hue_abs_circular_mean_degrees": 5.452821119710333,
+            "hue_usable_fraction": 0.21876337693222353,
+            "lr_neutral_fraction": 0.002592152199762188,
+            "ab_distance_on_lr_neutral_mean": 1.0344029143736593,
+            "ipr_any_channel_low_fraction": 0.04870590566785573,
+            "lr_any_channel_low_fraction": 0.0375743162901308,
+            "ipr_any_channel_high_fraction": 1.9817677368212444e-05,
+            "lr_any_channel_high_fraction": 5.945303210463734e-06
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 426844,
+              "delta_e00_mean": 1.414617145898453,
+              "delta_e00_median": 0.5318584097433916,
+              "delta_e00_p95": 6.125307644455743,
+              "delta_e76_mean": 1.7274600834365677,
+              "delta_lab_mean_lr_minus_ipr": [
+                0.9463051963453742,
+                -0.046607855716588105,
+                0.8056758042051387
+              ],
+              "rgb_mae_normalized": 0.008778323761608952,
+              "ipr_lab_mean": [
+                1.220283054883273,
+                -0.22712192996908018,
+                0.8512749000581457
+              ],
+              "lr_lab_mean": [
+                2.1665882512285126,
+                -0.2737297856856674,
+                1.656950704263386
+              ],
+              "ipr_y_mean": 0.0013509417441873262,
+              "lr_y_mean": 0.0024537241041756534,
+              "delta_chroma_mean": 1.3793405909640792,
+              "hue_abs_circular_mean_degrees": 6.357917758038695,
+              "hue_usable_fraction": 0.08132479313285415,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0007332889767690304,
+              "lr_any_channel_low_fraction": 2.5770539119678383e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 9.077972257986763,
+              "delta_e00_median": 9.651493012973127,
+              "delta_e00_p95": 10.337324310226245,
+              "delta_e76_mean": 11.501556724185999,
+              "delta_lab_mean_lr_minus_ipr": [
+                9.821434459313597,
+                -0.776226844630822,
+                4.541649171383564
+              ],
+              "rgb_mae_normalized": 0.0838093447608872,
+              "ipr_lab_mean": [
+                44.92848445082268,
+                -4.276110992038661,
+                19.00439547347013
+              ],
+              "lr_lab_mean": [
+                54.74991891013564,
+                -5.052337836669485,
+                23.546044644853588
+              ],
+              "ipr_y_mean": 0.16909608357027894,
+              "lr_y_mean": 0.25076625525608354,
+              "delta_chroma_mean": 2.9217784177504362,
+              "hue_abs_circular_mean_degrees": 2.9920952938205176,
+              "hue_usable_fraction": 0.9507332540626239,
+              "lr_neutral_fraction": 0.03745541022592152,
+              "ab_distance_on_lr_neutral_mean": 1.010763197867797,
+              "ipr_any_channel_low_fraction": 0.45410225921521996,
+              "lr_any_channel_low_fraction": 0.35180340864050735,
+              "ipr_any_channel_high_fraction": 0.00039635354736424893,
+              "lr_any_channel_high_fraction": 0.00011890606420927467
+            }
+          }
+        },
+        "offset_after_look_shoulder_hue_stable": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.3877723397183988,
+            "delta_e00_median": 0.629236534855137,
+            "delta_e00_p95": 8.125482522944695,
+            "delta_e76_mean": 3.1832313319877366,
+            "delta_lab_mean_lr_minus_ipr": [
+              2.1542816009610233,
+              -0.37468005528132364,
+              1.3475064196520217
+            ],
+            "rgb_mae_normalized": 0.0175019472590425,
+            "ipr_lab_mean": [
+              5.217852911020708,
+              -0.7121387209789019,
+              3.0831959655969667
+            ],
+            "lr_lab_mean": [
+              7.372134511981245,
+              -1.0868187762602612,
+              4.430702385249379
+            ],
+            "ipr_y_mean": 0.012683175200951916,
+            "lr_y_mean": 0.02034275267636602,
+            "delta_chroma_mean": 1.9948212199582744,
+            "hue_abs_circular_mean_degrees": 2.206730779167715,
+            "hue_usable_fraction": 0.21621482362267141,
+            "lr_neutral_fraction": 0.002592152199762188,
+            "ab_distance_on_lr_neutral_mean": 1.0310748349573848,
+            "ipr_any_channel_low_fraction": 0.04887633769322235,
+            "lr_any_channel_low_fraction": 0.0375743162901308,
+            "ipr_any_channel_high_fraction": 1.5854141894569958e-05,
+            "lr_any_channel_high_fraction": 5.945303210463734e-06
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 426844,
+              "delta_e00_mean": 1.4532014280277128,
+              "delta_e00_median": 0.542004111162099,
+              "delta_e00_p95": 6.340396919880561,
+              "delta_e76_mean": 1.7504105850594252,
+              "delta_lab_mean_lr_minus_ipr": [
+                0.9329729346800028,
+                -0.11287357862477689,
+                0.7871838204832193
+              ],
+              "rgb_mae_normalized": 0.00845502439997716,
+              "ipr_lab_mean": [
+                1.233615316548557,
+                -0.16085620706089734,
+                0.869766883780171
+              ],
+              "lr_lab_mean": [
+                2.1665882512285126,
+                -0.2737297856856674,
+                1.656950704263386
+              ],
+              "ipr_y_mean": 0.0013657198811403792,
+              "lr_y_mean": 0.0024537241041756534,
+              "delta_chroma_mean": 1.431647912929846,
+              "hue_abs_circular_mean_degrees": 2.669856952821195,
+              "hue_usable_fraction": 0.07831198283213539,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0005435240977968532,
+              "lr_any_channel_low_fraction": 2.5770539119678383e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 8.894637526769554,
+              "delta_e00_median": 9.397997215879709,
+              "delta_e00_p95": 10.061623004138655,
+              "delta_e76_mean": 11.473996223521365,
+              "delta_lab_mean_lr_minus_ipr": [
+                9.681055439909024,
+                -2.447113575918963,
+                4.29642165887377
+              ],
+              "rgb_mae_normalized": 0.07931426975686758,
+              "ipr_lab_mean": [
+                45.068863470226646,
+                -2.6052242607505236,
+                19.2496229859798
+              ],
+              "lr_lab_mean": [
+                54.74991891013564,
+                -5.052337836669485,
+                23.546044644853588
+              ],
+              "ipr_y_mean": 0.1698250755265242,
+              "lr_y_mean": 0.25076625525608354,
+              "delta_chroma_mean": 3.6638978052500395,
+              "hue_abs_circular_mean_degrees": 1.2568231495020987,
+              "hue_usable_fraction": 0.9506936187078875,
+              "lr_neutral_fraction": 0.03745541022592152,
+              "ab_distance_on_lr_neutral_mean": 1.0092019386705569,
+              "ipr_any_channel_low_fraction": 0.45449861276258424,
+              "lr_any_channel_low_fraction": 0.35180340864050735,
+              "ipr_any_channel_high_fraction": 0.0003170828378913991,
+              "lr_any_channel_high_fraction": 0.00011890606420927467
+            }
+          }
+        },
+        "zero_offset_ablation": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 0.45732702927700064,
+            "delta_e00_median": 0.1171408690725497,
+            "delta_e00_p95": 2.23101701155197,
+            "delta_e76_mean": 0.6188309608395578,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.019213728300080512,
+              0.37759289878505287,
+              0.08884163775044639
+            ],
+            "rgb_mae_normalized": 0.0023970445780460603,
+            "ipr_lab_mean": [
+              7.352920783681332,
+              -1.4644116750453449,
+              4.34186074749873
+            ],
+            "lr_lab_mean": [
+              7.372134511981245,
+              -1.0868187762602612,
+              4.430702385249379
+            ],
+            "ipr_y_mean": 0.02030617887208968,
+            "lr_y_mean": 0.02034275267636602,
+            "delta_chroma_mean": -0.26482739580439285,
+            "hue_abs_circular_mean_degrees": 3.852109760542022,
+            "hue_usable_fraction": 0.29143083630598493,
+            "lr_neutral_fraction": 0.002592152199762188,
+            "ab_distance_on_lr_neutral_mean": 0.8500342563603546,
+            "ipr_any_channel_low_fraction": 0.03631985731272295,
+            "lr_any_channel_low_fraction": 0.0375743162901308,
+            "ipr_any_channel_high_fraction": 1.9817677368212444e-05,
+            "lr_any_channel_high_fraction": 5.945303210463734e-06
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 426844,
+              "delta_e00_mean": 0.30167457156912125,
+              "delta_e00_median": 0.09109095592992454,
+              "delta_e00_p95": 1.606168254022624,
+              "delta_e76_mean": 0.31584346067129204,
+              "delta_lab_mean_lr_minus_ipr": [
+                0.011367057455114514,
+                0.15876683714848525,
+                0.041488417457154946
+              ],
+              "rgb_mae_normalized": 0.0013630041840365019,
+              "ipr_lab_mean": [
+                2.1552211937734524,
+                -0.43249662283416607,
+                1.6154622868061705
+              ],
+              "lr_lab_mean": [
+                2.1665882512285126,
+                -0.2737297856856674,
+                1.656950704263386
+              ],
+              "ipr_y_mean": 0.002439700975848293,
+              "lr_y_mean": 0.0024537241041756534,
+              "delta_chroma_mean": -0.154963969902011,
+              "hue_abs_circular_mean_degrees": 4.58787140241335,
+              "hue_usable_fraction": 0.16663230594784043,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0013658385733429544,
+              "lr_any_channel_low_fraction": 2.5770539119678383e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 1.1076049907059013,
+              "delta_e00_median": 0.854748886139638,
+              "delta_e00_p95": 2.6198241797376665,
+              "delta_e76_mean": 2.066060120913126,
+              "delta_lab_mean_lr_minus_ipr": [
+                0.016879546669412295,
+                1.2392881821135948,
+                0.43476839277856805
+              ],
+              "rgb_mae_normalized": 0.007431352721766291,
+              "ipr_lab_mean": [
+                54.73303936346607,
+                -6.2916260187830355,
+                23.111276252075044
+              ],
+              "lr_lab_mean": [
+                54.74991891013564,
+                -5.052337836669485,
+                23.546044644853588
+              ],
+              "ipr_y_mean": 0.250852352503259,
+              "lr_y_mean": 0.25076625525608354,
+              "delta_chroma_mean": -0.6859739686454873,
+              "hue_abs_circular_mean_degrees": 2.330212924595391,
+              "hue_usable_fraction": 0.9509314308363059,
+              "lr_neutral_fraction": 0.03745541022592152,
+              "ab_distance_on_lr_neutral_mean": 0.771862289487464,
+              "ipr_any_channel_low_fraction": 0.34898929845422116,
+              "lr_any_channel_low_fraction": 0.35180340864050735,
+              "ipr_any_channel_high_fraction": 0.00039635354736424893,
+              "lr_any_channel_high_fraction": 0.00011890606420927467
+            }
+          }
+        },
+        "production_hard_clip_gamut": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.4276055502279483,
+            "delta_e00_median": 0.6292010079330397,
+            "delta_e00_p95": 8.528289004391969,
+            "delta_e76_mean": 3.2651013647152394,
+            "delta_lab_mean_lr_minus_ipr": [
+              2.199634023535011,
+              -0.007421263089272468,
+              1.4614345062566778
+            ],
+            "rgb_mae_normalized": 0.01854274129346449,
+            "ipr_lab_mean": [
+              5.172500488446388,
+              -1.0793975131709435,
+              2.9692678789924125
+            ],
+            "lr_lab_mean": [
+              7.372134511981245,
+              -1.0868187762602612,
+              4.430702385249379
+            ],
+            "ipr_y_mean": 0.012540530642267754,
+            "lr_y_mean": 0.02034275267636602,
+            "delta_chroma_mean": 1.9788700289578394,
+            "hue_abs_circular_mean_degrees": 5.670258674666827,
+            "hue_usable_fraction": 0.2181529924692826,
+            "lr_neutral_fraction": 0.002592152199762188,
+            "ab_distance_on_lr_neutral_mean": 1.0216831295420108,
+            "ipr_any_channel_low_fraction": 0.021171224732461354,
+            "lr_any_channel_low_fraction": 0.0375743162901308,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 5.945303210463734e-06
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 426844,
+              "delta_e00_mean": 1.4229764026208764,
+              "delta_e00_median": 0.5420402127178688,
+              "delta_e00_p95": 6.145689763201632,
+              "delta_e76_mean": 1.7354988810801246,
+              "delta_lab_mean_lr_minus_ipr": [
+                0.9510748438206986,
+                -0.05412634699526211,
+                0.7981683746016625
+              ],
+              "rgb_mae_normalized": 0.008809320537058176,
+              "ipr_lab_mean": [
+                1.2155134074078835,
+                -0.21960343869040905,
+                0.8587823296616717
+              ],
+              "lr_lab_mean": [
+                2.1665882512285126,
+                -0.2737297856856674,
+                1.656950704263386
+              ],
+              "ipr_y_mean": 0.001345664373729995,
+              "lr_y_mean": 0.0024537241041756534,
+              "delta_chroma_mean": 1.392404432456138,
+              "hue_abs_circular_mean_degrees": 5.889652375971313,
+              "hue_usable_fraction": 0.08098274779544752,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0007262606479182089,
+              "lr_any_channel_low_fraction": 2.5770539119678383e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 9.36298223800187,
+              "delta_e00_median": 9.771394224172926,
+              "delta_e00_p95": 11.261049564502608,
+              "delta_e76_mean": 12.210826415815843,
+              "delta_lab_mean_lr_minus_ipr": [
+                9.978046084657406,
+                -0.570967746170476,
+                5.145526414238048
+              ],
+              "rgb_mae_normalized": 0.08505481902903854,
+              "ipr_lab_mean": [
+                44.771872825478646,
+                -4.48137009049904,
+                18.400518230615493
+              ],
+              "lr_lab_mean": [
+                54.74991891013564,
+                -5.052337836669485,
+                23.546044644853588
+              ],
+              "ipr_y_mean": 0.1678237050019308,
+              "lr_y_mean": 0.25076625525608354,
+              "delta_chroma_mean": 3.8527644574171274,
+              "hue_abs_circular_mean_degrees": 3.7321452430359385,
+              "hue_usable_fraction": 0.950376535869996,
+              "lr_neutral_fraction": 0.03745541022592152,
+              "ab_distance_on_lr_neutral_mean": 0.9942604757073573,
+              "ipr_any_channel_low_fraction": 0.21981767736821245,
+              "lr_any_channel_low_fraction": 0.35180340864050735,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.00011890606420927467
+            }
+          }
+        },
+        "production_signed_gamut": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.4275966072199506,
+            "delta_e00_median": 0.6292010079330397,
+            "delta_e00_p95": 8.527556761528663,
+            "delta_e76_mean": 3.265408490114953,
+            "delta_lab_mean_lr_minus_ipr": [
+              2.1999056742369785,
+              -0.010582628173384994,
+              1.4615609111736074
+            ],
+            "rgb_mae_normalized": 0.018535281438083282,
+            "ipr_lab_mean": [
+              5.172228837744423,
+              -1.0762361480868317,
+              2.9691414740754967
+            ],
+            "lr_lab_mean": [
+              7.372134511981245,
+              -1.0868187762602612,
+              4.430702385249379
+            ],
+            "ipr_y_mean": 0.012539494403410956,
+            "lr_y_mean": 0.02034275267636602,
+            "delta_chroma_mean": 1.9812913007830089,
+            "hue_abs_circular_mean_degrees": 5.657306115711442,
+            "hue_usable_fraction": 0.2181529924692826,
+            "lr_neutral_fraction": 0.002592152199762188,
+            "ab_distance_on_lr_neutral_mean": 1.0216831295420108,
+            "ipr_any_channel_low_fraction": 0.021171224732461354,
+            "lr_any_channel_low_fraction": 0.0375743162901308,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 5.945303210463734e-06
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 426844,
+              "delta_e00_mean": 1.4230665819092743,
+              "delta_e00_median": 0.5420402127178688,
+              "delta_e00_p95": 6.145955203682451,
+              "delta_e76_mean": 1.735678696586233,
+              "delta_lab_mean_lr_minus_ipr": [
+                0.9511106045678773,
+                -0.05397917377045351,
+                0.7981480033772332
+              ],
+              "rgb_mae_normalized": 0.008809594620613015,
+              "ipr_lab_mean": [
+                1.215477646660705,
+                -0.21975061191521714,
+                0.8588027008860999
+              ],
+              "lr_lab_mean": [
+                2.1665882512285126,
+                -0.2737297856856674,
+                1.656950704263386
+              ],
+              "ipr_y_mean": 0.0013456238026683216,
+              "lr_y_mean": 0.0024537241041756534,
+              "delta_chroma_mean": 1.3926202879746672,
+              "hue_abs_circular_mean_degrees": 5.892187561940985,
+              "hue_usable_fraction": 0.08098274779544752,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0007262606479182089,
+              "lr_any_channel_low_fraction": 2.5770539119678383e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 9.362082363158923,
+              "delta_e00_median": 9.771945500174377,
+              "delta_e00_p95": 11.25666542150645,
+              "delta_e76_mean": 12.211855224609714,
+              "delta_lab_mean_lr_minus_ipr": [
+                9.980562452413798,
+                -0.6114004435894975,
+                5.145392941680041
+              ],
+              "rgb_mae_normalized": 0.08497104681738667,
+              "ipr_lab_mean": [
+                44.7693564577223,
+                -4.440937393080005,
+                18.400651703173523
+              ],
+              "lr_lab_mean": [
+                54.74991891013564,
+                -5.052337836669485,
+                23.546044644853588
+              ],
+              "ipr_y_mean": 0.16780959835530898,
+              "lr_y_mean": 0.25076625525608354,
+              "delta_chroma_mean": 3.8761973152981732,
+              "hue_abs_circular_mean_degrees": 3.6948964504287334,
+              "hue_usable_fraction": 0.950376535869996,
+              "lr_neutral_fraction": 0.03745541022592152,
+              "ab_distance_on_lr_neutral_mean": 0.9942604757073573,
+              "ipr_any_channel_low_fraction": 0.21981767736821245,
+              "lr_any_channel_low_fraction": 0.35180340864050735,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.00011890606420927467
+            }
+          }
+        }
+      }
+    },
+    {
+      "scene": "6V1A0327",
+      "available": true,
+      "samples": 504600,
+      "lr_sha256": "2bb91d9152e6af57d1725cd4a97b95dbb43584069799a4316edeba973ee50f5a",
+      "camera_sha256": "55a1b8cc3f509ff2fe506da8cb2fc786d409530330bd08411f97a0b09bf127fc",
+      "witness_pre_curve_max_abs": 1.414054097009787e-07,
+      "witness_max_code_error": 1.0000000000018154,
+      "witness_mean_code_error": 0.0022889417360285416,
+      "production_linear_negative_fraction": 0.0003111375346809354,
+      "variants": {
+        "production": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.797103447404965,
+            "delta_e00_median": 6.36872265048736,
+            "delta_e00_p95": 9.6708599640254,
+            "delta_e76_mean": 7.561677057608629,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.67760380986115,
+              -0.056918485233921685,
+              1.835147608476754
+            ],
+            "rgb_mae_normalized": 0.058395403351196945,
+            "ipr_lab_mean": [
+              20.625690500242424,
+              2.672395639027722,
+              5.630946965744871
+            ],
+            "lr_lab_mean": [
+              27.30329431010449,
+              2.6154771537939285,
+              7.466094574221492
+            ],
+            "ipr_y_mean": 0.05877808611272545,
+            "lr_y_mean": 0.09130683489786477,
+            "delta_chroma_mean": 2.1585528065721147,
+            "hue_abs_circular_mean_degrees": 7.0042460412441585,
+            "hue_usable_fraction": 0.6986880697582243,
+            "lr_neutral_fraction": 0.03384066587395957,
+            "ab_distance_on_lr_neutral_mean": 1.0056268205980787,
+            "ipr_any_channel_low_fraction": 0.00031311930241775663,
+            "lr_any_channel_low_fraction": 0.008850574712643678,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 175824,
+              "delta_e00_mean": 2.9107823551665706,
+              "delta_e00_median": 2.6474467439391347,
+              "delta_e00_p95": 6.832893055943314,
+              "delta_e76_mean": 4.077573114152772,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.9416381818287665,
+                0.5663874547468185,
+                2.4499108061880928
+              ],
+              "rgb_mae_normalized": 0.024223874998270372,
+              "ipr_lab_mean": [
+                3.105545447560806,
+                2.194213765178734,
+                2.1824673680957822
+              ],
+              "lr_lab_mean": [
+                6.0471836293894805,
+                2.760601219925502,
+                4.632378174284048
+              ],
+              "ipr_y_mean": 0.003438301279923347,
+              "lr_y_mean": 0.007081888940388152,
+              "delta_chroma_mean": 2.3599537019102024,
+              "hue_abs_circular_mean_degrees": 15.674448710845331,
+              "hue_usable_fraction": 0.2874920374920375,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 9.1000091000091e-05,
+              "lr_any_channel_low_fraction": 3.412503412503413e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.686893014955356,
+              "delta_e00_median": 6.660441722079948,
+              "delta_e00_p95": 7.106395826069898,
+              "delta_e76_mean": 8.533888722390085,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.299710027159136,
+                -0.3084316029849363,
+                0.11640343266972228
+              ],
+              "rgb_mae_normalized": 0.08517104665005955,
+              "ipr_lab_mean": [
+                63.332382794853196,
+                -13.581364759632127,
+                27.36790764988367
+              ],
+              "lr_lab_mean": [
+                71.63209282201264,
+                -13.889796362616966,
+                27.48431108255331
+              ],
+              "ipr_y_mean": 0.3200768942219778,
+              "lr_y_mean": 0.4313165764909011,
+              "delta_chroma_mean": 0.2148859669412951,
+              "hue_abs_circular_mean_degrees": 1.0038350937443883,
+              "hue_usable_fraction": 0.9917954815695601,
+              "lr_neutral_fraction": 0.007808164883075704,
+              "ab_distance_on_lr_neutral_mean": 0.6167385562188894,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "production_order_reconstructed": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.797102573964575,
+            "delta_e00_median": 6.368705653055496,
+            "delta_e00_p95": 9.6708599640254,
+            "delta_e76_mean": 7.561675874170837,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.677602735767613,
+              -0.05691908671115465,
+              1.8351474319425662
+            ],
+            "rgb_mae_normalized": 0.058395392898293194,
+            "ipr_lab_mean": [
+              20.625691574335967,
+              2.6723962405049435,
+              5.6309471422790365
+            ],
+            "lr_lab_mean": [
+              27.30329431010449,
+              2.6154771537939285,
+              7.466094574221492
+            ],
+            "ipr_y_mean": 0.05877809016581482,
+            "lr_y_mean": 0.09130683489786477,
+            "delta_chroma_mean": 2.15855209663881,
+            "hue_abs_circular_mean_degrees": 7.004246241618758,
+            "hue_usable_fraction": 0.6986880697582243,
+            "lr_neutral_fraction": 0.03384066587395957,
+            "ab_distance_on_lr_neutral_mean": 1.0056245026989248,
+            "ipr_any_channel_low_fraction": 0.00031311930241775663,
+            "lr_any_channel_low_fraction": 0.008850574712643678,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 175824,
+              "delta_e00_mean": 2.9107820592608324,
+              "delta_e00_median": 2.6474467439391347,
+              "delta_e00_p95": 6.832893055943314,
+              "delta_e76_mean": 4.077572643623309,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.9416378934341485,
+                0.5663871040381286,
+                2.4499104671502914
+              ],
+              "rgb_mae_normalized": 0.02422387213433984,
+              "ipr_lab_mean": [
+                3.105545735955414,
+                2.194214115887423,
+                2.182467707133584
+              ],
+              "lr_lab_mean": [
+                6.0471836293894805,
+                2.760601219925502,
+                4.632378174284048
+              ],
+              "ipr_y_mean": 0.003438301600248124,
+              "lr_y_mean": 0.007081888940388152,
+              "delta_chroma_mean": 2.359953118424585,
+              "hue_abs_circular_mean_degrees": 15.674451063681799,
+              "hue_usable_fraction": 0.2874920374920375,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 9.1000091000091e-05,
+              "lr_any_channel_low_fraction": 3.412503412503413e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.686892413429004,
+              "delta_e00_median": 6.660441722079948,
+              "delta_e00_p95": 7.106395826069898,
+              "delta_e76_mean": 8.533888279698811,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.29970919740421,
+                -0.30843383905495164,
+                0.11640328391927952
+              ],
+              "rgb_mae_normalized": 0.08517103455412463,
+              "ipr_lab_mean": [
+                63.33238362460816,
+                -13.581362523562106,
+                27.367907798634114
+              ],
+              "lr_lab_mean": [
+                71.63209282201264,
+                -13.889796362616966,
+                27.48431108255331
+              ],
+              "ipr_y_mean": 0.32007690392150234,
+              "lr_y_mean": 0.4313165764909011,
+              "delta_chroma_mean": 0.21488662833527752,
+              "hue_abs_circular_mean_degrees": 1.0038369278006876,
+              "hue_usable_fraction": 0.9917954815695601,
+              "lr_neutral_fraction": 0.007808164883075704,
+              "ab_distance_on_lr_neutral_mean": 0.616739193813652,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "offset_after_look_scalar": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.735383950287129,
+            "delta_e00_median": 6.414043774706516,
+            "delta_e00_p95": 9.315291915537276,
+            "delta_e76_mean": 7.487025581427285,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.712711226479214,
+              0.012335905578882006,
+              1.5096279162188242
+            ],
+            "rgb_mae_normalized": 0.05960149727715966,
+            "ipr_lab_mean": [
+              20.59058308362437,
+              2.6031412482149396,
+              5.956466658002646
+            ],
+            "lr_lab_mean": [
+              27.30329431010449,
+              2.6154771537939285,
+              7.466094574221492
+            ],
+            "ipr_y_mean": 0.058771731749194464,
+            "lr_y_mean": 0.09130683489786477,
+            "delta_chroma_mean": 1.6869711573227841,
+            "hue_abs_circular_mean_degrees": 6.339734174369497,
+            "hue_usable_fraction": 0.7019104240982956,
+            "lr_neutral_fraction": 0.03384066587395957,
+            "ab_distance_on_lr_neutral_mean": 1.0510019045206083,
+            "ipr_any_channel_low_fraction": 0.04013476020610385,
+            "lr_any_channel_low_fraction": 0.008850574712643678,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 175824,
+              "delta_e00_mean": 2.8901364922188786,
+              "delta_e00_median": 2.616166112246484,
+              "delta_e00_p95": 6.758327755554471,
+              "delta_e76_mean": 4.0826020718928895,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.952741097355913,
+                0.5952315297011784,
+                2.4650216451769364
+              ],
+              "rgb_mae_normalized": 0.02429576217151559,
+              "ipr_lab_mean": [
+                3.0944425320337143,
+                2.1653696902243884,
+                2.167356529106873
+              ],
+              "lr_lab_mean": [
+                6.0471836293894805,
+                2.760601219925502,
+                4.632378174284048
+              ],
+              "ipr_y_mean": 0.0034259652169530705,
+              "lr_y_mean": 0.007081888940388152,
+              "delta_chroma_mean": 2.389823790262115,
+              "hue_abs_circular_mean_degrees": 15.14074136086853,
+              "hue_usable_fraction": 0.28983528983528983,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 7.962507962507963e-05,
+              "lr_any_channel_low_fraction": 3.412503412503413e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.735982894751107,
+              "delta_e00_median": 6.700633821857316,
+              "delta_e00_p95": 7.208464980802031,
+              "delta_e76_mean": 8.683453372638066,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.29716065165493,
+                -0.42673191464174004,
+                -1.3810067794322591
+              ],
+              "rgb_mae_normalized": 0.08761468778330635,
+              "ipr_lab_mean": [
+                63.33493217035735,
+                -13.463064447975258,
+                28.865317861985428
+              ],
+              "lr_lab_mean": [
+                71.63209282201264,
+                -13.889796362616966,
+                27.48431108255331
+              ],
+              "ipr_y_mean": 0.32009152992164164,
+              "lr_y_mean": 0.4313165764909011,
+              "delta_chroma_mean": -1.095604454397702,
+              "hue_abs_circular_mean_degrees": 1.951326347465749,
+              "hue_usable_fraction": 0.9917162108600872,
+              "lr_neutral_fraction": 0.007808164883075704,
+              "ab_distance_on_lr_neutral_mean": 0.6215720424248298,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "offset_after_look_shoulder": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.735379045206012,
+            "delta_e00_median": 6.414043774706516,
+            "delta_e00_p95": 9.315262200200149,
+            "delta_e76_mean": 7.48702003149846,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.712705312826966,
+              0.012338841761321764,
+              1.5096208440883554
+            ],
+            "rgb_mae_normalized": 0.05960149753923824,
+            "ipr_lab_mean": [
+              20.590588997276623,
+              2.6031383120325002,
+              5.956473730133115
+            ],
+            "lr_lab_mean": [
+              27.30329431010449,
+              2.6154771537939285,
+              7.466094574221492
+            ],
+            "ipr_y_mean": 0.05877187059481176,
+            "lr_y_mean": 0.09130683489786477,
+            "delta_chroma_mean": 1.6869762158735038,
+            "hue_abs_circular_mean_degrees": 6.33929924806846,
+            "hue_usable_fraction": 0.7019084423305588,
+            "lr_neutral_fraction": 0.03384066587395957,
+            "ab_distance_on_lr_neutral_mean": 1.0510030790631004,
+            "ipr_any_channel_low_fraction": 0.04013476020610385,
+            "lr_any_channel_low_fraction": 0.008850574712643678,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 175824,
+              "delta_e00_mean": 2.8901364922188786,
+              "delta_e00_median": 2.616166112246484,
+              "delta_e00_p95": 6.758327755554471,
+              "delta_e76_mean": 4.0826020718928895,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.952741097355913,
+                0.5952315297011784,
+                2.4650216451769364
+              ],
+              "rgb_mae_normalized": 0.02429576217151559,
+              "ipr_lab_mean": [
+                3.0944425320337143,
+                2.1653696902243884,
+                2.167356529106873
+              ],
+              "lr_lab_mean": [
+                6.0471836293894805,
+                2.760601219925502,
+                4.632378174284048
+              ],
+              "ipr_y_mean": 0.0034259652169530705,
+              "lr_y_mean": 0.007081888940388152,
+              "delta_chroma_mean": 2.389823790262115,
+              "hue_abs_circular_mean_degrees": 15.14074136086853,
+              "hue_usable_fraction": 0.28983528983528983,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 7.962507962507963e-05,
+              "lr_any_channel_low_fraction": 3.412503412503413e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.735884793128781,
+              "delta_e00_median": 6.700633821857316,
+              "delta_e00_p95": 7.208464980802031,
+              "delta_e76_mean": 8.68334237406157,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.297042378609916,
+                -0.42667319099294465,
+                -1.3811482220416316
+              ],
+              "rgb_mae_normalized": 0.08761469302487813,
+              "ipr_lab_mean": [
+                63.335050443402366,
+                -13.463123171624053,
+                28.8654593045948
+              ],
+              "lr_lab_mean": [
+                71.63209282201264,
+                -13.889796362616966,
+                27.48431108255331
+              ],
+              "ipr_y_mean": 0.3200943068339875,
+              "lr_y_mean": 0.4313165764909011,
+              "delta_chroma_mean": -1.0955032833833085,
+              "hue_abs_circular_mean_degrees": 1.9449941368379404,
+              "hue_usable_fraction": 0.9916765755053508,
+              "lr_neutral_fraction": 0.007808164883075704,
+              "ab_distance_on_lr_neutral_mean": 0.6216738520065479,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "offset_after_look_shoulder_hue_stable": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.549684770098863,
+            "delta_e00_median": 6.11576927307739,
+            "delta_e00_p95": 9.207174236562746,
+            "delta_e76_mean": 7.275068266372898,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.535932789486175,
+              0.6532245579769834,
+              1.1980643736916872
+            ],
+            "rgb_mae_normalized": 0.05915303156939221,
+            "ipr_lab_mean": [
+              20.767361520618294,
+              1.9622525958167878,
+              6.2680302005300526
+            ],
+            "lr_lab_mean": [
+              27.30329431010449,
+              2.6154771537939285,
+              7.466094574221492
+            ],
+            "ipr_y_mean": 0.05919630268546115,
+            "lr_y_mean": 0.09130683489786477,
+            "delta_chroma_mean": 1.8474063424992595,
+            "hue_abs_circular_mean_degrees": 2.8744305623286186,
+            "hue_usable_fraction": 0.6977843836702339,
+            "lr_neutral_fraction": 0.03384066587395957,
+            "ab_distance_on_lr_neutral_mean": 1.0471151200820685,
+            "ipr_any_channel_low_fraction": 0.046292112564407455,
+            "lr_any_channel_low_fraction": 0.008850574712643678,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 175824,
+              "delta_e00_mean": 2.8065223443061935,
+              "delta_e00_median": 2.6396534473705326,
+              "delta_e00_p95": 6.146163914152736,
+              "delta_e76_mean": 3.957470646494671,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.824938060104868,
+                1.0510447372697065,
+                2.2410790015297053
+              ],
+              "rgb_mae_normalized": 0.023864855964115896,
+              "ipr_lab_mean": [
+                3.2222455692847123,
+                1.7095564826558578,
+                2.3912991727541724
+              ],
+              "lr_lab_mean": [
+                6.0471836293894805,
+                2.760601219925502,
+                4.632378174284048
+              ],
+              "ipr_y_mean": 0.003567800482991943,
+              "lr_y_mean": 0.007081888940388152,
+              "delta_chroma_mean": 2.550222274932673,
+              "hue_abs_circular_mean_degrees": 6.126744894557866,
+              "hue_usable_fraction": 0.27785740285740285,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 8.531258531258532e-05,
+              "lr_any_channel_low_fraction": 3.412503412503413e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.775064154624617,
+              "delta_e00_median": 6.736936225548213,
+              "delta_e00_p95": 7.219412392963807,
+              "delta_e76_mean": 8.736182108555303,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.376816643407476,
+                0.339790515213772,
+                -1.2464441937807005
+              ],
+              "rgb_mae_normalized": 0.08957486548589579,
+              "ipr_lab_mean": [
+                63.25527617860485,
+                -14.229586877830618,
+                28.73075527633393
+              ],
+              "lr_lab_mean": [
+                71.63209282201264,
+                -13.889796362616966,
+                27.48431108255331
+              ],
+              "ipr_y_mean": 0.31912828029301177,
+              "lr_y_mean": 0.4313165764909011,
+              "delta_chroma_mean": -1.3042422285002508,
+              "hue_abs_circular_mean_degrees": 1.0499323241607816,
+              "hue_usable_fraction": 0.9916369401506143,
+              "lr_neutral_fraction": 0.007808164883075704,
+              "ab_distance_on_lr_neutral_mean": 0.6192237375017822,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "zero_offset_ablation": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 1.2840829064524615,
+            "delta_e00_median": 1.0563673974267886,
+            "delta_e00_p95": 3.26602103089695,
+            "delta_e76_mean": 1.4834608354010956,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.20779800008685612,
+              -0.5864606836684212,
+              0.3279296844281207
+            ],
+            "rgb_mae_normalized": 0.005922310128421232,
+            "ipr_lab_mean": [
+              27.511092310191415,
+              3.201937837462305,
+              7.1381648897934005
+            ],
+            "lr_lab_mean": [
+              27.30329431010449,
+              2.6154771537939285,
+              7.466094574221492
+            ],
+            "ipr_y_mean": 0.09306357963283532,
+            "lr_y_mean": 0.09130683489786477,
+            "delta_chroma_mean": -0.12829266666602307,
+            "hue_abs_circular_mean_degrees": 4.490779301218325,
+            "hue_usable_fraction": 0.7562901307966706,
+            "lr_neutral_fraction": 0.03384066587395957,
+            "ab_distance_on_lr_neutral_mean": 0.968336219056555,
+            "ipr_any_channel_low_fraction": 0.016870788743559254,
+            "lr_any_channel_low_fraction": 0.008850574712643678,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 175824,
+              "delta_e00_mean": 1.054449458638209,
+              "delta_e00_median": 0.6202751314615456,
+              "delta_e00_p95": 3.331490149473209,
+              "delta_e76_mean": 1.0020568071938785,
+              "delta_lab_mean_lr_minus_ipr": [
+                0.034233084213931196,
+                -0.7345442326511177,
+                0.28053368703704956
+              ],
+              "rgb_mae_normalized": 0.003151113108896481,
+              "ipr_lab_mean": [
+                6.012950545175601,
+                3.495145452576715,
+                4.351844487246837
+              ],
+              "lr_lab_mean": [
+                6.0471836293894805,
+                2.760601219925502,
+                4.632378174284048
+              ],
+              "ipr_y_mean": 0.00703696461322874,
+              "lr_y_mean": 0.007081888940388152,
+              "delta_chroma_mean": -0.28549452506003964,
+              "hue_abs_circular_mean_degrees": 7.590571294588698,
+              "hue_usable_fraction": 0.42742173992173993,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.00010237510237510238,
+              "lr_any_channel_low_fraction": 3.412503412503413e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 1.250730821629404,
+              "delta_e00_median": 1.0745375273248332,
+              "delta_e00_p95": 2.5795285684877225,
+              "delta_e76_mean": 2.3044562706199505,
+              "delta_lab_mean_lr_minus_ipr": [
+                -0.5084481420794733,
+                -1.4272823046591292,
+                0.6706030641778181
+              ],
+              "rgb_mae_normalized": 0.010518588312062987,
+              "ipr_lab_mean": [
+                72.14054096409167,
+                -12.462514057957906,
+                26.81370801837554
+              ],
+              "lr_lab_mean": [
+                71.63209282201264,
+                -13.889796362616966,
+                27.48431108255331
+              ],
+              "ipr_y_mean": 0.43887613640407563,
+              "lr_y_mean": 0.4313165764909011,
+              "delta_chroma_mean": 1.2062937425165023,
+              "hue_abs_circular_mean_degrees": 2.021068911406254,
+              "hue_usable_fraction": 0.991319857312723,
+              "lr_neutral_fraction": 0.007808164883075704,
+              "ab_distance_on_lr_neutral_mean": 0.5818939197572395,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "production_hard_clip_gamut": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.7971034412872955,
+            "delta_e00_median": 6.36872265048736,
+            "delta_e00_p95": 9.6708599640254,
+            "delta_e76_mean": 7.561677051679853,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.67760380990524,
+              -0.0569185030358798,
+              1.835147618299245
+            ],
+            "rgb_mae_normalized": 0.05839540338143678,
+            "ipr_lab_mean": [
+              20.625690500198335,
+              2.67239565682968,
+              5.630946955922378
+            ],
+            "lr_lab_mean": [
+              27.30329431010449,
+              2.6154771537939285,
+              7.466094574221492
+            ],
+            "ipr_y_mean": 0.05877808611718745,
+            "lr_y_mean": 0.09130683489786477,
+            "delta_chroma_mean": 2.1585528076609757,
+            "hue_abs_circular_mean_degrees": 7.0042460174834265,
+            "hue_usable_fraction": 0.6986880697582243,
+            "lr_neutral_fraction": 0.03384066587395957,
+            "ab_distance_on_lr_neutral_mean": 1.0056268205980787,
+            "ipr_any_channel_low_fraction": 0.00031311930241775663,
+            "lr_any_channel_low_fraction": 0.008850574712643678,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 175824,
+              "delta_e00_mean": 2.9107823374358386,
+              "delta_e00_median": 2.6474467439391347,
+              "delta_e00_p95": 6.832893055943314,
+              "delta_e76_mean": 4.077573095661517,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.941638183142551,
+                0.5663874631449201,
+                2.449910781061977
+              ],
+              "rgb_mae_normalized": 0.024223875085056145,
+              "ipr_lab_mean": [
+                3.1055454462470204,
+                2.1942137567806324,
+                2.1824673932218976
+              ],
+              "lr_lab_mean": [
+                6.0471836293894805,
+                2.760601219925502,
+                4.632378174284048
+              ],
+              "ipr_y_mean": 0.003438301278468913,
+              "lr_y_mean": 0.007081888940388152,
+              "delta_chroma_mean": 2.3599536960326937,
+              "hue_abs_circular_mean_degrees": 15.674448285482203,
+              "hue_usable_fraction": 0.2874920374920375,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 9.1000091000091e-05,
+              "lr_any_channel_low_fraction": 3.412503412503413e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.686893024425653,
+              "delta_e00_median": 6.660441722079948,
+              "delta_e00_p95": 7.106395826069898,
+              "delta_e76_mean": 8.53388875279941,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.29971003159386,
+                -0.3084315672487294,
+                0.11640327640301946
+              ],
+              "rgb_mae_normalized": 0.08517104705325737,
+              "ipr_lab_mean": [
+                63.33238279041848,
+                -13.581364795368335,
+                27.367907806150363
+              ],
+              "lr_lab_mean": [
+                71.63209282201264,
+                -13.889796362616966,
+                27.48431108255331
+              ],
+              "ipr_y_mean": 0.32007689416970053,
+              "lr_y_mean": 0.4313165764909011,
+              "delta_chroma_mean": 0.2148858091922726,
+              "hue_abs_circular_mean_degrees": 1.0038351379659771,
+              "hue_usable_fraction": 0.9917954815695601,
+              "lr_neutral_fraction": 0.007808164883075704,
+              "ab_distance_on_lr_neutral_mean": 0.6167385562188894,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "production_signed_gamut": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.797132240271795,
+            "delta_e00_median": 6.368738647474806,
+            "delta_e00_p95": 9.6708599640254,
+            "delta_e76_mean": 7.56172518888311,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.6776297064730485,
+              -0.05686945145878916,
+              1.8351685865414042
+            ],
+            "rgb_mae_normalized": 0.058395533936894305,
+            "ipr_lab_mean": [
+              20.62566460363054,
+              2.6723466052525864,
+              5.630925987680217
+            ],
+            "lr_lab_mean": [
+              27.30329431010449,
+              2.6154771537939285,
+              7.466094574221492
+            ],
+            "ipr_y_mean": 0.05877801033927485,
+            "lr_y_mean": 0.09130683489786477,
+            "delta_chroma_mean": 2.1586300850223803,
+            "hue_abs_circular_mean_degrees": 7.004229743302071,
+            "hue_usable_fraction": 0.6986880697582243,
+            "lr_neutral_fraction": 0.03384066587395957,
+            "ab_distance_on_lr_neutral_mean": 1.0056268205980787,
+            "ipr_any_channel_low_fraction": 0.00031311930241775663,
+            "lr_any_channel_low_fraction": 0.008850574712643678,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 175824,
+              "delta_e00_mean": 2.9108044877144748,
+              "delta_e00_median": 2.6474467439391347,
+              "delta_e00_p95": 6.832893055943314,
+              "delta_e76_mean": 4.077609485711048,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.9416468476058077,
+                0.5664152664622972,
+                2.449938327695031
+              ],
+              "rgb_mae_normalized": 0.02422389519042708,
+              "ipr_lab_mean": [
+                3.1055367817837647,
+                2.194185953463256,
+                2.1824398465888426
+              ],
+              "lr_lab_mean": [
+                6.0471836293894805,
+                2.760601219925502,
+                4.632378174284048
+              ],
+              "ipr_y_mean": 0.003438291686418893,
+              "lr_y_mean": 0.007081888940388152,
+              "delta_chroma_mean": 2.35998859052876,
+              "hue_abs_circular_mean_degrees": 15.674623391527462,
+              "hue_usable_fraction": 0.2874920374920375,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 9.1000091000091e-05,
+              "lr_any_channel_low_fraction": 3.412503412503413e-05,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.686893024425653,
+              "delta_e00_median": 6.660441722079948,
+              "delta_e00_p95": 7.106395826069898,
+              "delta_e76_mean": 8.53388875279941,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.29971003159386,
+                -0.3084315672487294,
+                0.11640327640301946
+              ],
+              "rgb_mae_normalized": 0.08517104705325737,
+              "ipr_lab_mean": [
+                63.33238279041848,
+                -13.581364795368335,
+                27.367907806150363
+              ],
+              "lr_lab_mean": [
+                71.63209282201264,
+                -13.889796362616966,
+                27.48431108255331
+              ],
+              "ipr_y_mean": 0.32007689416970053,
+              "lr_y_mean": 0.4313165764909011,
+              "delta_chroma_mean": 0.2148858091922726,
+              "hue_abs_circular_mean_degrees": 1.0038351379659771,
+              "hue_usable_fraction": 0.9917954815695601,
+              "lr_neutral_fraction": 0.007808164883075704,
+              "ab_distance_on_lr_neutral_mean": 0.6167385562188894,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "scene": "6V1A9421",
+      "available": true,
+      "samples": 504600,
+      "lr_sha256": "fe3d5358492369b8c27b1fadf026e398ad774e8c379cd59945346fa511d467ed",
+      "camera_sha256": "556614667d06ba2b150ca5956da466e7fe4cf6fea7f4c51a59b3fe79814f0870",
+      "witness_pre_curve_max_abs": 4.521642474331067e-07,
+      "witness_max_code_error": 1.0000000000036344,
+      "witness_mean_code_error": 0.003519619500594537,
+      "production_linear_negative_fraction": 0.09836305984938565,
+      "variants": {
+        "production": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.367052025858813,
+            "delta_e00_median": 8.388593451227813,
+            "delta_e00_p95": 12.650165902715905,
+            "delta_e76_mean": 11.292024378608978,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.596114775054755,
+              -1.1932365428340037,
+              4.556133251354381
+            ],
+            "rgb_mae_normalized": 0.07401161266199645,
+            "ipr_lab_mean": [
+              36.66948880935942,
+              3.6318709937080347,
+              26.95747370274855
+            ],
+            "lr_lab_mean": [
+              45.265603584412794,
+              2.4386344508737787,
+              31.513606954103494
+            ],
+            "ipr_y_mean": 0.14268992927617272,
+            "lr_y_mean": 0.20924865041838683,
+            "delta_chroma_mean": 4.078535624026497,
+            "hue_abs_circular_mean_degrees": 8.572045542372312,
+            "hue_usable_fraction": 0.8880737217598097,
+            "lr_neutral_fraction": 0.015959175584621482,
+            "ab_distance_on_lr_neutral_mean": 2.525556315009668,
+            "ipr_any_channel_low_fraction": 0.09856123662306777,
+            "lr_any_channel_low_fraction": 0.07491478398731669,
+            "ipr_any_channel_high_fraction": 1.5854141894569958e-05,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 63582,
+              "delta_e00_mean": 3.7142619824446013,
+              "delta_e00_median": 3.4048479853274642,
+              "delta_e00_p95": 8.658054025505212,
+              "delta_e76_mean": 4.7451472383897615,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.053091171604632,
+                0.2156116070183869,
+                2.0713879054818656
+              ],
+              "rgb_mae_normalized": 0.026070483211343674,
+              "ipr_lab_mean": [
+                3.2943153588262737,
+                0.8806021421136053,
+                1.5654598770176535
+              ],
+              "lr_lab_mean": [
+                6.347406530430996,
+                1.096213749131991,
+                3.636847782499569
+              ],
+              "ipr_y_mean": 0.003651340283315747,
+              "lr_y_mean": 0.007379879396908214,
+              "delta_chroma_mean": 2.417509648780971,
+              "hue_abs_circular_mean_degrees": 18.051291066825506,
+              "hue_usable_fraction": 0.3024440879494196,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.04859865999811267,
+              "lr_any_channel_low_fraction": 0.015476078135321317,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.530751387790932,
+              "delta_e00_median": 6.619779519482131,
+              "delta_e00_p95": 7.967518741647383,
+              "delta_e76_mean": 10.757898078131744,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.266104474176856,
+                -2.975954648719924,
+                3.8226894022900244
+              ],
+              "rgb_mae_normalized": 0.07938747778216156,
+              "ipr_lab_mean": [
+                73.30527512381836,
+                -2.1662479278235716,
+                50.76242674076635
+              ],
+              "lr_lab_mean": [
+                81.57137959799532,
+                -5.142202576543506,
+                54.58511614305582
+              ],
+              "ipr_y_mean": 0.4605456628849099,
+              "lr_y_mean": 0.598304650702298,
+              "delta_chroma_mean": 3.6578365191025255,
+              "hue_abs_circular_mean_degrees": 3.0653414262821026,
+              "hue_usable_fraction": 0.8070550931430837,
+              "lr_neutral_fraction": 0.14910820451843043,
+              "ab_distance_on_lr_neutral_mean": 1.8064837532036782,
+              "ipr_any_channel_low_fraction": 0.2875544986127626,
+              "lr_any_channel_low_fraction": 0.22401902497027348,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0003170828378913991
+            }
+          }
+        },
+        "production_order_reconstructed": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.367050747187413,
+            "delta_e00_median": 8.388593451227813,
+            "delta_e00_p95": 12.650165902715905,
+            "delta_e76_mean": 11.292022535150453,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.596113150069655,
+              -1.193236333786046,
+              4.556132359480946
+            ],
+            "rgb_mae_normalized": 0.07401159996126479,
+            "ipr_lab_mean": [
+              36.66949043434453,
+              3.6318707846600846,
+              26.957474594622035
+            ],
+            "lr_lab_mean": [
+              45.265603584412794,
+              2.4386344508737787,
+              31.513606954103494
+            ],
+            "ipr_y_mean": 0.14268993876673436,
+            "lr_y_mean": 0.20924865041838683,
+            "delta_chroma_mean": 4.078534766105232,
+            "hue_abs_circular_mean_degrees": 8.572044796446555,
+            "hue_usable_fraction": 0.8880737217598097,
+            "lr_neutral_fraction": 0.015959175584621482,
+            "ab_distance_on_lr_neutral_mean": 2.525556015774723,
+            "ipr_any_channel_low_fraction": 0.09856123662306777,
+            "lr_any_channel_low_fraction": 0.07491478398731669,
+            "ipr_any_channel_high_fraction": 1.5854141894569958e-05,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 63582,
+              "delta_e00_mean": 3.7142616737062752,
+              "delta_e00_median": 3.4048479853274642,
+              "delta_e00_p95": 8.658054025505212,
+              "delta_e76_mean": 4.745146651900438,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.053090722386816,
+                0.21561134860921205,
+                2.071387638680896
+              ],
+              "rgb_mae_normalized": 0.026070478891529983,
+              "ipr_lab_mean": [
+                3.2943158080440886,
+                0.8806024005227795,
+                1.5654601438186224
+              ],
+              "lr_lab_mean": [
+                6.347406530430996,
+                1.096213749131991,
+                3.636847782499569
+              ],
+              "ipr_y_mean": 0.0036513407712305984,
+              "lr_y_mean": 0.007379879396908214,
+              "delta_chroma_mean": 2.417509340392349,
+              "hue_abs_circular_mean_degrees": 18.05128591221307,
+              "hue_usable_fraction": 0.3024440879494196,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.04859865999811267,
+              "lr_any_channel_low_fraction": 0.015476078135321317,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.5307483700860365,
+              "delta_e00_median": 6.619779519482131,
+              "delta_e00_p95": 7.967518741647383,
+              "delta_e76_mean": 10.7578929289946,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.266101708308888,
+                -2.9759497476858914,
+                3.8226872965334713
+              ],
+              "rgb_mae_normalized": 0.07938746306544074,
+              "ipr_lab_mean": [
+                73.30527788968628,
+                -2.166252828857604,
+                50.76242884652288
+              ],
+              "lr_lab_mean": [
+                81.57137959799532,
+                -5.142202576543506,
+                54.58511614305582
+              ],
+              "ipr_y_mean": 0.46054570283085844,
+              "lr_y_mean": 0.598304650702298,
+              "delta_chroma_mean": 3.6578351284586827,
+              "hue_abs_circular_mean_degrees": 3.0653367457522114,
+              "hue_usable_fraction": 0.8070550931430837,
+              "lr_neutral_fraction": 0.14910820451843043,
+              "ab_distance_on_lr_neutral_mean": 1.8064814929547428,
+              "ipr_any_channel_low_fraction": 0.2875544986127626,
+              "lr_any_channel_low_fraction": 0.22401902497027348,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0003170828378913991
+            }
+          }
+        },
+        "offset_after_look_scalar": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 7.985613567444458,
+            "delta_e00_median": 7.935310409918628,
+            "delta_e00_p95": 11.896949319642356,
+            "delta_e76_mean": 10.466744349189554,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.440580676624784,
+              -0.28051001417578764,
+              3.1371943379124994
+            ],
+            "rgb_mae_normalized": 0.07658432121085791,
+            "ipr_lab_mean": [
+              36.825022907789766,
+              2.7191444650495873,
+              28.37641261619015
+            ],
+            "lr_lab_mean": [
+              45.265603584412794,
+              2.4386344508737787,
+              31.513606954103494
+            ],
+            "ipr_y_mean": 0.14421086132693686,
+            "lr_y_mean": 0.20924865041838683,
+            "delta_chroma_mean": 2.680727509003461,
+            "hue_abs_circular_mean_degrees": 7.48132668855811,
+            "hue_usable_fraction": 0.8892548553309552,
+            "lr_neutral_fraction": 0.015959175584621482,
+            "ab_distance_on_lr_neutral_mean": 2.4873659780863413,
+            "ipr_any_channel_low_fraction": 0.21315497423701943,
+            "lr_any_channel_low_fraction": 0.07491478398731669,
+            "ipr_any_channel_high_fraction": 3.3690051525961155e-05,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 63582,
+              "delta_e00_mean": 3.7185779274320288,
+              "delta_e00_median": 3.398658697930661,
+              "delta_e00_p95": 8.681686259357946,
+              "delta_e76_mean": 4.746944773111516,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.0523717340130587,
+                0.23984283428212472,
+                2.0952470893400617
+              ],
+              "rgb_mae_normalized": 0.02606578957377463,
+              "ipr_lab_mean": [
+                3.2950347964179194,
+                0.8563709148498662,
+                1.5416006931594448
+              ],
+              "lr_lab_mean": [
+                6.347406530430996,
+                1.096213749131991,
+                3.636847782499569
+              ],
+              "ipr_y_mean": 0.0036524353314047564,
+              "lr_y_mean": 0.007379879396908214,
+              "delta_chroma_mean": 2.384205789184259,
+              "hue_abs_circular_mean_degrees": 18.262163901547712,
+              "hue_usable_fraction": 0.3060300084929697,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.04839419961624359,
+              "lr_any_channel_low_fraction": 0.015476078135321317,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.124727341479556,
+              "delta_e00_median": 6.206053027515406,
+              "delta_e00_p95": 7.064480847903674,
+              "delta_e76_mean": 9.705151099316005,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.17144762105032,
+                -0.7101321071548126,
+                2.7923635361660106
+              ],
+              "rgb_mae_normalized": 0.08411782799384998,
+              "ipr_lab_mean": [
+                73.39993197694446,
+                -4.432070469388716,
+                51.79275260688968
+              ],
+              "lr_lab_mean": [
+                81.57137959799532,
+                -5.142202576543506,
+                54.58511614305582
+              ],
+              "ipr_y_mean": 0.46185806251942263,
+              "lr_y_mean": 0.598304650702298,
+              "delta_chroma_mean": 2.516762557486308,
+              "hue_abs_circular_mean_degrees": 1.2642588950026172,
+              "hue_usable_fraction": 0.8066983749504558,
+              "lr_neutral_fraction": 0.14910820451843043,
+              "ab_distance_on_lr_neutral_mean": 1.5669729597905253,
+              "ipr_any_channel_low_fraction": 0.46119698771304,
+              "lr_any_channel_low_fraction": 0.22401902497027348,
+              "ipr_any_channel_high_fraction": 0.0006738010305192231,
+              "lr_any_channel_high_fraction": 0.0003170828378913991
+            }
+          }
+        },
+        "offset_after_look_shoulder": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 7.983084128992557,
+            "delta_e00_median": 7.935298820904077,
+            "delta_e00_p95": 11.896937140324004,
+            "delta_e76_mean": 10.46336295784157,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.435044049692438,
+              -0.2798626461216838,
+              3.135460391674551
+            ],
+            "rgb_mae_normalized": 0.07653360116152426,
+            "ipr_lab_mean": [
+              36.830559534722205,
+              2.7184970969954763,
+              28.378146562428135
+            ],
+            "lr_lab_mean": [
+              45.265603584412794,
+              2.4386344508737787,
+              31.513606954103494
+            ],
+            "ipr_y_mean": 0.1443242143480504,
+            "lr_y_mean": 0.20924865041838683,
+            "delta_chroma_mean": 2.6765424706529113,
+            "hue_abs_circular_mean_degrees": 7.480807280884403,
+            "hue_usable_fraction": 0.8892588188664289,
+            "lr_neutral_fraction": 0.015959175584621482,
+            "ab_distance_on_lr_neutral_mean": 2.552446546559715,
+            "ipr_any_channel_low_fraction": 0.2131906460562822,
+            "lr_any_channel_low_fraction": 0.07491478398731669,
+            "ipr_any_channel_high_fraction": 0.000283392786365438,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 63582,
+              "delta_e00_mean": 3.7185779274320288,
+              "delta_e00_median": 3.398658697930661,
+              "delta_e00_p95": 8.681686259357946,
+              "delta_e76_mean": 4.746944773111516,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.0523717340130587,
+                0.23984283428212472,
+                2.0952470893400617
+              ],
+              "rgb_mae_normalized": 0.02606578957377463,
+              "ipr_lab_mean": [
+                3.2950347964179194,
+                0.8563709148498662,
+                1.5416006931594448
+              ],
+              "lr_lab_mean": [
+                6.347406530430996,
+                1.096213749131991,
+                3.636847782499569
+              ],
+              "ipr_y_mean": 0.0036524353314047564,
+              "lr_y_mean": 0.007379879396908214,
+              "delta_chroma_mean": 2.384205789184259,
+              "hue_abs_circular_mean_degrees": 18.262163901547712,
+              "hue_usable_fraction": 0.3060300084929697,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.04839419961624359,
+              "lr_any_channel_low_fraction": 0.015476078135321317,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.074907355885116,
+              "delta_e00_median": 6.205206012914953,
+              "delta_e00_p95": 7.068117804228711,
+              "delta_e76_mean": 9.638303801280138,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.061010505302034,
+                -0.6952103819004226,
+                2.758158388755401
+              ],
+              "rgb_mae_normalized": 0.08310716162708187,
+              "ipr_lab_mean": [
+                73.51036909269313,
+                -4.446992194643106,
+                51.82695775430082
+              ],
+              "lr_lab_mean": [
+                81.57137959799532,
+                -5.142202576543506,
+                54.58511614305582
+              ],
+              "ipr_y_mean": 0.46412113142902733,
+              "lr_y_mean": 0.598304650702298,
+              "delta_chroma_mean": 2.434310863553632,
+              "hue_abs_circular_mean_degrees": 1.2551207953541172,
+              "hue_usable_fraction": 0.8067776456599287,
+              "lr_neutral_fraction": 0.14910820451843043,
+              "ab_distance_on_lr_neutral_mean": 1.7062847347309553,
+              "ipr_any_channel_low_fraction": 0.4619104240982957,
+              "lr_any_channel_low_fraction": 0.22401902497027348,
+              "ipr_any_channel_high_fraction": 0.0056678557273087595,
+              "lr_any_channel_high_fraction": 0.0003170828378913991
+            }
+          }
+        },
+        "offset_after_look_shoulder_hue_stable": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 7.673460993631733,
+            "delta_e00_median": 7.612608653342043,
+            "delta_e00_p95": 11.093721026626678,
+            "delta_e76_mean": 10.115631102603944,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.263931056047229,
+              0.29481285071163793,
+              2.8392498784832685
+            ],
+            "rgb_mae_normalized": 0.07569487215922308,
+            "ipr_lab_mean": [
+              37.00167252836458,
+              2.1438216001622363,
+              28.674357075619653
+            ],
+            "lr_lab_mean": [
+              45.265603584412794,
+              2.4386344508737787,
+              31.513606954103494
+            ],
+            "ipr_y_mean": 0.14444161886340756,
+            "lr_y_mean": 0.20924865041838683,
+            "delta_chroma_mean": 2.821861931286371,
+            "hue_abs_circular_mean_degrees": 6.159404612270205,
+            "hue_usable_fraction": 0.8882699167657551,
+            "lr_neutral_fraction": 0.015959175584621482,
+            "ab_distance_on_lr_neutral_mean": 2.541906202539521,
+            "ipr_any_channel_low_fraction": 0.2216052318668252,
+            "lr_any_channel_low_fraction": 0.07491478398731669,
+            "ipr_any_channel_high_fraction": 0.0003071739992072929,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 63582,
+              "delta_e00_mean": 3.5944810848890705,
+              "delta_e00_median": 3.3631327033559595,
+              "delta_e00_p95": 8.182992897371067,
+              "delta_e76_mean": 4.64580849551953,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.9590397064498353,
+                0.4804761698931282,
+                1.9365083067360847
+              ],
+              "rgb_mae_normalized": 0.02545997354189311,
+              "ipr_lab_mean": [
+                3.388366823981149,
+                0.6157375792388642,
+                1.7003394757634536
+              ],
+              "lr_lab_mean": [
+                6.347406530430996,
+                1.096213749131991,
+                3.636847782499569
+              ],
+              "ipr_y_mean": 0.0037563471925071536,
+              "lr_y_mean": 0.007379879396908214,
+              "delta_chroma_mean": 2.572928893547048,
+              "hue_abs_circular_mean_degrees": 14.21920776271933,
+              "hue_usable_fraction": 0.2981661476518512,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.035025636186342045,
+              "lr_any_channel_low_fraction": 0.015476078135321317,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.2071910954137435,
+              "delta_e00_median": 6.331036281947961,
+              "delta_e00_p95": 7.382987719107178,
+              "delta_e76_mean": 9.844182940212066,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.20356906085517,
+                -0.9775582209778868,
+                2.9493498163411913
+              ],
+              "rgb_mae_normalized": 0.08360910603349973,
+              "ipr_lab_mean": [
+                73.3678105371402,
+                -4.16464435556565,
+                51.63576632671485
+              ],
+              "lr_lab_mean": [
+                81.57137959799532,
+                -5.142202576543506,
+                54.58511614305582
+              ],
+              "ipr_y_mean": 0.4619579993088483,
+              "lr_y_mean": 0.598304650702298,
+              "delta_chroma_mean": 2.6017023391445266,
+              "hue_abs_circular_mean_degrees": 1.5563500430579453,
+              "hue_usable_fraction": 0.8067776456599287,
+              "lr_neutral_fraction": 0.14910820451843043,
+              "ab_distance_on_lr_neutral_mean": 1.6962718870955722,
+              "ipr_any_channel_low_fraction": 0.45449861276258424,
+              "lr_any_channel_low_fraction": 0.22401902497027348,
+              "ipr_any_channel_high_fraction": 0.006143479984145858,
+              "lr_any_channel_high_fraction": 0.0003170828378913991
+            }
+          }
+        },
+        "zero_offset_ablation": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 3.116338497589463,
+            "delta_e00_median": 2.4306935776227303,
+            "delta_e00_p95": 8.193323638954558,
+            "delta_e76_mean": 4.546998700762635,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.00770112459570755,
+              -0.161686907229565,
+              0.7896189354423603
+            ],
+            "rgb_mae_normalized": 0.018222163244459553,
+            "ipr_lab_mean": [
+              45.25790245981764,
+              2.600321358103359,
+              30.723988018659014
+            ],
+            "lr_lab_mean": [
+              45.265603584412794,
+              2.4386344508737787,
+              31.513606954103494
+            ],
+            "ipr_y_mean": 0.2100961815421489,
+            "lr_y_mean": 0.20924865041838683,
+            "delta_chroma_mean": 0.019626037510979952,
+            "hue_abs_circular_mean_degrees": 7.00767582247297,
+            "hue_usable_fraction": 0.9095937376139517,
+            "lr_neutral_fraction": 0.015959175584621482,
+            "ab_distance_on_lr_neutral_mean": 2.348056517941463,
+            "ipr_any_channel_low_fraction": 0.09648830757035276,
+            "lr_any_channel_low_fraction": 0.07491478398731669,
+            "ipr_any_channel_high_fraction": 0.001004756242568371,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 63582,
+              "delta_e00_mean": 3.148128233744039,
+              "delta_e00_median": 2.306738311082138,
+              "delta_e00_p95": 8.850921761183802,
+              "delta_e76_mean": 3.149413486882516,
+              "delta_lab_mean_lr_minus_ipr": [
+                -0.044628586491136595,
+                -0.2314343756328803,
+                0.2811869742257871
+              ],
+              "rgb_mae_normalized": 0.011509486169672886,
+              "ipr_lab_mean": [
+                6.392035116922067,
+                1.3276481247648773,
+                3.3556608082737394
+              ],
+              "lr_lab_mean": [
+                6.347406530430996,
+                1.096213749131991,
+                3.636847782499569
+              ],
+              "ipr_y_mean": 0.007478635542851698,
+              "lr_y_mean": 0.007379879396908214,
+              "delta_chroma_mean": -1.1016974906833767,
+              "hue_abs_circular_mean_degrees": 16.058090853428546,
+              "hue_usable_fraction": 0.45696895347739924,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0627221540687616,
+              "lr_any_channel_low_fraction": 0.015476078135321317,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 1.4288268410745253,
+              "delta_e00_median": 1.1490971071217864,
+              "delta_e00_p95": 3.346832928790239,
+              "delta_e76_mean": 3.7570707385546247,
+              "delta_lab_mean_lr_minus_ipr": [
+                -0.09594721663061424,
+                -0.3131300591437365,
+                1.9922923829146708
+              ],
+              "rgb_mae_normalized": 0.020229147407040293,
+              "ipr_lab_mean": [
+                81.66732681462587,
+                -4.829072517399763,
+                52.59282376014143
+              ],
+              "lr_lab_mean": [
+                81.57137959799532,
+                -5.142202576543506,
+                54.58511614305582
+              ],
+              "ipr_y_mean": 0.6001879308357791,
+              "lr_y_mean": 0.598304650702298,
+              "delta_chroma_mean": 1.8584391000789025,
+              "hue_abs_circular_mean_degrees": 1.1621164504034824,
+              "hue_usable_fraction": 0.8061831153388823,
+              "lr_neutral_fraction": 0.14910820451843043,
+              "ab_distance_on_lr_neutral_mean": 1.3468243119098555,
+              "ipr_any_channel_low_fraction": 0.170709472849782,
+              "lr_any_channel_low_fraction": 0.22401902497027348,
+              "ipr_any_channel_high_fraction": 0.014942528735632184,
+              "lr_any_channel_high_fraction": 0.0003170828378913991
+            }
+          }
+        },
+        "production_hard_clip_gamut": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.367058352465978,
+            "delta_e00_median": 8.388593451227813,
+            "delta_e00_p95": 12.650165902715905,
+            "delta_e76_mean": 11.292057449572408,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.59611858951539,
+              -1.1932401805922592,
+              4.55609102495057
+            ],
+            "rgb_mae_normalized": 0.07401178193452565,
+            "ipr_lab_mean": [
+              36.66948499489877,
+              3.6318746314662897,
+              26.957515929152365
+            ],
+            "lr_lab_mean": [
+              45.265603584412794,
+              2.4386344508737787,
+              31.513606954103494
+            ],
+            "ipr_y_mean": 0.142689875769567,
+            "lr_y_mean": 0.20924865041838683,
+            "delta_chroma_mean": 4.0784978628975335,
+            "hue_abs_circular_mean_degrees": 8.572047382296452,
+            "hue_usable_fraction": 0.8880737217598097,
+            "lr_neutral_fraction": 0.015959175584621482,
+            "ab_distance_on_lr_neutral_mean": 2.525556315009668,
+            "ipr_any_channel_low_fraction": 0.09856123662306777,
+            "lr_any_channel_low_fraction": 0.07491478398731669,
+            "ipr_any_channel_high_fraction": 1.5854141894569958e-05,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 63582,
+              "delta_e00_mean": 3.7142619824446013,
+              "delta_e00_median": 3.4048479853274642,
+              "delta_e00_p95": 8.658054025505212,
+              "delta_e76_mean": 4.7451472383897615,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.053091171604632,
+                0.2156116070183869,
+                2.0713879054818656
+              ],
+              "rgb_mae_normalized": 0.026070483211343674,
+              "ipr_lab_mean": [
+                3.2943153588262737,
+                0.8806021421136053,
+                1.5654598770176535
+              ],
+              "lr_lab_mean": [
+                6.347406530430996,
+                1.096213749131991,
+                3.636847782499569
+              ],
+              "ipr_y_mean": 0.003651340283315747,
+              "lr_y_mean": 0.007379879396908214,
+              "delta_chroma_mean": 2.417509648780971,
+              "hue_abs_circular_mean_degrees": 18.051291066825506,
+              "hue_usable_fraction": 0.3024440879494196,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.04859865999811267,
+              "lr_any_channel_low_fraction": 0.015476078135321317,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.530751402104687,
+              "delta_e00_median": 6.619779519482131,
+              "delta_e00_p95": 7.967518741647383,
+              "delta_e76_mean": 10.757898152042971,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.266104471073398,
+                -2.97595466821078,
+                3.822689551666259
+              ],
+              "rgb_mae_normalized": 0.07938747596777132,
+              "ipr_lab_mean": [
+                73.30527512692181,
+                -2.1662479083327164,
+                50.7624265913901
+              ],
+              "lr_lab_mean": [
+                81.57137959799532,
+                -5.142202576543506,
+                54.58511614305582
+              ],
+              "ipr_y_mean": 0.46054566292993954,
+              "lr_y_mean": 0.598304650702298,
+              "delta_chroma_mean": 3.6578366694226023,
+              "hue_abs_circular_mean_degrees": 3.0653415042596848,
+              "hue_usable_fraction": 0.8070550931430837,
+              "lr_neutral_fraction": 0.14910820451843043,
+              "ab_distance_on_lr_neutral_mean": 1.8064837532036782,
+              "ipr_any_channel_low_fraction": 0.2875544986127626,
+              "lr_any_channel_low_fraction": 0.22401902497027348,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0003170828378913991
+            }
+          }
+        },
+        "production_signed_gamut": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.392256049698254,
+            "delta_e00_median": 8.4342826277873,
+            "delta_e00_p95": 12.650706241099371,
+            "delta_e76_mean": 11.34849263625532,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.609749010376557,
+              -1.1744174305902044,
+              4.620752834172195
+            ],
+            "rgb_mae_normalized": 0.07416463377848487,
+            "ipr_lab_mean": [
+              36.655854574037654,
+              3.613051881464258,
+              26.892854119930686
+            ],
+            "lr_lab_mean": [
+              45.265603584412794,
+              2.4386344508737787,
+              31.513606954103494
+            ],
+            "ipr_y_mean": 0.14263373949246608,
+            "lr_y_mean": 0.20924865041838683,
+            "delta_chroma_mean": 4.128174520761806,
+            "hue_abs_circular_mean_degrees": 8.624023906992841,
+            "hue_usable_fraction": 0.8880657946888625,
+            "lr_neutral_fraction": 0.015959175584621482,
+            "ab_distance_on_lr_neutral_mean": 2.525556315009668,
+            "ipr_any_channel_low_fraction": 0.09856123662306777,
+            "lr_any_channel_low_fraction": 0.07491478398731669,
+            "ipr_any_channel_high_fraction": 1.5854141894569958e-05,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 63582,
+              "delta_e00_mean": 3.7327886830124863,
+              "delta_e00_median": 3.4129129080095444,
+              "delta_e00_p95": 8.822967913729673,
+              "delta_e76_mean": 4.777249115238498,
+              "delta_lab_mean_lr_minus_ipr": [
+                3.061144373953582,
+                0.22147047435774406,
+                2.098516958960332
+              ],
+              "rgb_mae_normalized": 0.026120702005467344,
+              "ipr_lab_mean": [
+                3.2862621564773136,
+                0.8747432747742471,
+                1.5383308235391977
+              ],
+              "lr_lab_mean": [
+                6.347406530430996,
+                1.096213749131991,
+                3.636847782499569
+              ],
+              "ipr_y_mean": 0.003642290314149509,
+              "lr_y_mean": 0.007379879396908214,
+              "delta_chroma_mean": 2.447743119145916,
+              "hue_abs_circular_mean_degrees": 18.224191384394945,
+              "hue_usable_fraction": 0.3023811770626907,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.04859865999811267,
+              "lr_any_channel_low_fraction": 0.015476078135321317,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.527226911072339,
+              "delta_e00_median": 6.620326150461876,
+              "delta_e00_p95": 7.947338843925818,
+              "delta_e76_mean": 10.750896548309917,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.275730410895207,
+                -2.92467937383759,
+                3.834412971271914
+              ],
+              "rgb_mae_normalized": 0.07952773216350321,
+              "ipr_lab_mean": [
+                73.29564918710007,
+                -2.217523202705918,
+                50.750703171784316
+              ],
+              "lr_lab_mean": [
+                81.57137959799532,
+                -5.142202576543506,
+                54.58511614305582
+              ],
+              "ipr_y_mean": 0.4604061445363167,
+              "lr_y_mean": 0.598304650702298,
+              "delta_chroma_mean": 3.667239740723624,
+              "hue_abs_circular_mean_degrees": 3.0161271559377134,
+              "hue_usable_fraction": 0.8070550931430837,
+              "lr_neutral_fraction": 0.14910820451843043,
+              "ab_distance_on_lr_neutral_mean": 1.8064837532036782,
+              "ipr_any_channel_low_fraction": 0.2875544986127626,
+              "lr_any_channel_low_fraction": 0.22401902497027348,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0003170828378913991
+            }
+          }
+        }
+      }
+    },
+    {
+      "scene": "6V1A9950",
+      "available": true,
+      "samples": 504600,
+      "lr_sha256": "5c72536d95449d7996176b0c5b9ed0574045e1bb99e2f49b998003b53efb4435",
+      "camera_sha256": "e00a6f0b6f951684483a7780c02545d96f31b7cbff1555abaa82042fb93cd2ea",
+      "witness_pre_curve_max_abs": 2.430382239348994e-07,
+      "witness_max_code_error": 1.0000000000036344,
+      "witness_mean_code_error": 0.0022175980975029735,
+      "production_linear_negative_fraction": 0.0008283789139912802,
+      "variants": {
+        "production": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.8968824305128695,
+            "delta_e00_median": 5.479532769954615,
+            "delta_e00_p95": 9.546470471570906,
+            "delta_e76_mean": 6.2461199019822935,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.419114536553914,
+              -0.7554278232979211,
+              1.840911539572425
+            ],
+            "rgb_mae_normalized": 0.04951606084630238,
+            "ipr_lab_mean": [
+              20.394644424053805,
+              -0.7079537131327339,
+              -4.022100177268652
+            ],
+            "lr_lab_mean": [
+              25.813758960606982,
+              -1.4633815364306781,
+              -2.181188637696857
+            ],
+            "ipr_y_mean": 0.07817277470958384,
+            "lr_y_mean": 0.11334763619483465,
+            "delta_chroma_mean": 1.6309741729638216,
+            "hue_abs_circular_mean_degrees": 3.541033002601541,
+            "hue_usable_fraction": 0.5400812524772096,
+            "lr_neutral_fraction": 0.005628220372572335,
+            "ab_distance_on_lr_neutral_mean": 1.4568537520323452,
+            "ipr_any_channel_low_fraction": 0.0017399920729290527,
+            "lr_any_channel_low_fraction": 0.0008680142687277051,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 278615,
+              "delta_e00_mean": 2.8114706725783125,
+              "delta_e00_median": 2.7447078670143115,
+              "delta_e00_p95": 5.940742073819173,
+              "delta_e76_mean": 3.793469844343116,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.6522189774688116,
+                -0.9425610551789411,
+                2.202485946359963
+              ],
+              "rgb_mae_normalized": 0.02172901789091222,
+              "ipr_lab_mean": [
+                2.7845358726509573,
+                -1.1389488878893523,
+                1.9030960262455625
+              ],
+              "lr_lab_mean": [
+                5.436754850119811,
+                -2.081509943068319,
+                4.105581972605321
+              ],
+              "ipr_y_mean": 0.00308279071895551,
+              "lr_y_mean": 0.006252450145346632,
+              "delta_chroma_mean": 2.590609562817807,
+              "hue_abs_circular_mean_degrees": 6.480114575161262,
+              "hue_usable_fraction": 0.1870107496007035,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.00279956211977101,
+              "lr_any_channel_low_fraction": 0.0011126464834987349,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.571067203369211,
+              "delta_e00_median": 6.569910587392545,
+              "delta_e00_p95": 6.802936362691037,
+              "delta_e76_mean": 8.713848844089085,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.53572606736307,
+                -0.21157976083245408,
+                1.6481506353684514
+              ],
+              "rgb_mae_normalized": 0.08899750776364983,
+              "ipr_lab_mean": [
+                67.53140711483644,
+                -0.03828131983749695,
+                -13.540868236890384
+              ],
+              "lr_lab_mean": [
+                76.06713318220001,
+                -0.2498610806699475,
+                -11.892717601521978
+              ],
+              "ipr_y_mean": 0.3736226430698947,
+              "lr_y_mean": 0.500204596803177,
+              "delta_chroma_mean": -1.6609785357186044,
+              "hue_abs_circular_mean_degrees": 1.4505255000672603,
+              "hue_usable_fraction": 0.9965120887831946,
+              "lr_neutral_fraction": 0.0034879112168053903,
+              "ab_distance_on_lr_neutral_mean": 0.8322806031406226,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "production_order_reconstructed": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.8968816004298645,
+            "delta_e00_median": 5.479539512068513,
+            "delta_e00_p95": 9.546470471570906,
+            "delta_e76_mean": 6.246118832964014,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.419113567751746,
+              -0.7554276643681685,
+              1.8409111742089106
+            ],
+            "rgb_mae_normalized": 0.04951605210698941,
+            "ipr_lab_mean": [
+              20.394645392855878,
+              -0.707953872062487,
+              -4.022099811905149
+            ],
+            "lr_lab_mean": [
+              25.813758960606982,
+              -1.4633815364306781,
+              -2.181188637696857
+            ],
+            "ipr_y_mean": 0.07817278079323682,
+            "lr_y_mean": 0.11334763619483465,
+            "delta_chroma_mean": 1.6309738167579213,
+            "hue_abs_circular_mean_degrees": 3.5410351486322535,
+            "hue_usable_fraction": 0.5400812524772096,
+            "lr_neutral_fraction": 0.005628220372572335,
+            "ab_distance_on_lr_neutral_mean": 1.4568473985618997,
+            "ipr_any_channel_low_fraction": 0.0017399920729290527,
+            "lr_any_channel_low_fraction": 0.0008680142687277051,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 278615,
+              "delta_e00_mean": 2.811470196283627,
+              "delta_e00_median": 2.7447078670143115,
+              "delta_e00_p95": 5.940742073819173,
+              "delta_e76_mean": 3.7934692432381616,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.6522186073770735,
+                -0.942560976264413,
+                2.2024856537777113
+              ],
+              "rgb_mae_normalized": 0.021729014495332807,
+              "ipr_lab_mean": [
+                2.7845362427426954,
+                -1.1389489668038812,
+                1.9030963188278167
+              ],
+              "lr_lab_mean": [
+                5.436754850119811,
+                -2.081509943068319,
+                4.105581972605321
+              ],
+              "ipr_y_mean": 0.0030827911307892224,
+              "lr_y_mean": 0.006252450145346632,
+              "delta_chroma_mean": 2.590609061539031,
+              "hue_abs_circular_mean_degrees": 6.480113591896271,
+              "hue_usable_fraction": 0.1870107496007035,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.00279956211977101,
+              "lr_any_channel_low_fraction": 0.0011126464834987349,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.571065770626098,
+              "delta_e00_median": 6.569910587392545,
+              "delta_e00_p95": 6.802936362691037,
+              "delta_e76_mean": 8.713847000134278,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.535724374430124,
+                -0.2115803286378064,
+                1.6481500157058446
+              ],
+              "rgb_mae_normalized": 0.08899748921654962,
+              "ipr_lab_mean": [
+                67.53140880776938,
+                -0.03828075203214371,
+                -13.540867617227777
+              ],
+              "lr_lab_mean": [
+                76.06713318220001,
+                -0.2498610806699475,
+                -11.892717601521978
+              ],
+              "ipr_y_mean": 0.37362266578126674,
+              "lr_y_mean": 0.500204596803177,
+              "delta_chroma_mean": -1.6609778605172405,
+              "hue_abs_circular_mean_degrees": 1.450530619993654,
+              "hue_usable_fraction": 0.9965120887831946,
+              "lr_neutral_fraction": 0.0034879112168053903,
+              "ab_distance_on_lr_neutral_mean": 0.8322889329985412,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "offset_after_look_scalar": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.905467974878211,
+            "delta_e00_median": 5.453754965227903,
+            "delta_e00_p95": 9.66330881122269,
+            "delta_e76_mean": 6.240721519027776,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.460472544147044,
+              -0.5121715350021584,
+              1.8285101469704297
+            ],
+            "rgb_mae_normalized": 0.05079350740210236,
+            "ipr_lab_mean": [
+              20.353286416460385,
+              -0.9512100014284778,
+              -4.009698784666899
+            ],
+            "lr_lab_mean": [
+              25.813758960606982,
+              -1.4633815364306781,
+              -2.181188637696857
+            ],
+            "ipr_y_mean": 0.07800900206306627,
+            "lr_y_mean": 0.11334763619483465,
+            "delta_chroma_mean": 1.5019826946029653,
+            "hue_abs_circular_mean_degrees": 3.5176152174857522,
+            "hue_usable_fraction": 0.5409334126040428,
+            "lr_neutral_fraction": 0.005628220372572335,
+            "ab_distance_on_lr_neutral_mean": 1.49587228372559,
+            "ipr_any_channel_low_fraction": 0.001985731272294887,
+            "lr_any_channel_low_fraction": 0.0008680142687277051,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 278615,
+              "delta_e00_mean": 2.797946027356135,
+              "delta_e00_median": 2.7393799220265,
+              "delta_e00_p95": 5.886640660902807,
+              "delta_e76_mean": 3.7801837131547122,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.648553325265439,
+                -0.9219195009138518,
+                2.2077900478998362
+              ],
+              "rgb_mae_normalized": 0.021728480859946976,
+              "ipr_lab_mean": [
+                2.788201524854356,
+                -1.1595904421544265,
+                1.897791924705707
+              ],
+              "lr_lab_mean": [
+                5.436754850119811,
+                -2.081509943068319,
+                4.105581972605321
+              ],
+              "ipr_y_mean": 0.0030868532957065314,
+              "lr_y_mean": 0.006252450145346632,
+              "delta_chroma_mean": 2.568006208532281,
+              "hue_abs_circular_mean_degrees": 6.817706255135067,
+              "hue_usable_fraction": 0.18773935358828492,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0028031513019758448,
+              "lr_any_channel_low_fraction": 0.0011126464834987349,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.506618346794823,
+              "delta_e00_median": 6.513161284453192,
+              "delta_e00_p95": 6.722251274976586,
+              "delta_e76_mean": 8.583963286640232,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.543651037533296,
+                0.04223016451591886,
+                0.6783876721651508
+              ],
+              "rgb_mae_normalized": 0.09054378293489981,
+              "ipr_lab_mean": [
+                67.5234821446665,
+                -0.29209124518586677,
+                -12.571105273687156
+              ],
+              "lr_lab_mean": [
+                76.06713318220001,
+                -0.2498610806699475,
+                -11.892717601521978
+              ],
+              "ipr_y_mean": 0.3735125900251548,
+              "lr_y_mean": 0.500204596803177,
+              "delta_chroma_mean": -0.7056051332319583,
+              "hue_abs_circular_mean_degrees": 1.2415225571886925,
+              "hue_usable_fraction": 0.9965120887831946,
+              "lr_neutral_fraction": 0.0034879112168053903,
+              "ab_distance_on_lr_neutral_mean": 0.7111783086180292,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "offset_after_look_shoulder": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.905471497220092,
+            "delta_e00_median": 5.453754965227903,
+            "delta_e00_p95": 9.66330881122269,
+            "delta_e76_mean": 6.240828334252891,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.460443181280723,
+              -0.5127108667054839,
+              1.8309137828354891
+            ],
+            "rgb_mae_normalized": 0.050790120762084626,
+            "ipr_lab_mean": [
+              20.35331577932668,
+              -0.9506706697251569,
+              -4.012102420531994
+            ],
+            "lr_lab_mean": [
+              25.813758960606982,
+              -1.4633815364306781,
+              -2.181188637696857
+            ],
+            "ipr_y_mean": 0.07800938622996781,
+            "lr_y_mean": 0.11334763619483465,
+            "delta_chroma_mean": 1.4997039151996547,
+            "hue_abs_circular_mean_degrees": 3.5137772214227088,
+            "hue_usable_fraction": 0.5409334126040428,
+            "lr_neutral_fraction": 0.005628220372572335,
+            "ab_distance_on_lr_neutral_mean": 1.496909853577702,
+            "ipr_any_channel_low_fraction": 0.001985731272294887,
+            "lr_any_channel_low_fraction": 0.0008680142687277051,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 278615,
+              "delta_e00_mean": 2.797946027356135,
+              "delta_e00_median": 2.7393799220265,
+              "delta_e00_p95": 5.886640660902807,
+              "delta_e76_mean": 3.7801837131547122,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.648553325265439,
+                -0.9219195009138518,
+                2.2077900478998362
+              ],
+              "rgb_mae_normalized": 0.021728480859946976,
+              "ipr_lab_mean": [
+                2.788201524854356,
+                -1.1595904421544265,
+                1.897791924705707
+              ],
+              "lr_lab_mean": [
+                5.436754850119811,
+                -2.081509943068319,
+                4.105581972605321
+              ],
+              "ipr_y_mean": 0.0030868532957065314,
+              "lr_y_mean": 0.006252450145346632,
+              "delta_chroma_mean": 2.568006208532281,
+              "hue_abs_circular_mean_degrees": 6.817706255135067,
+              "hue_usable_fraction": 0.18773935358828492,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0028031513019758448,
+              "lr_any_channel_low_fraction": 0.0011126464834987349,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.507382859408587,
+              "delta_e00_median": 6.513499982689403,
+              "delta_e00_p95": 6.7224624088894895,
+              "delta_e76_mean": 8.58596776164328,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.543310941696108,
+                0.0361109462368265,
+                0.7071988955249456
+              ],
+              "rgb_mae_normalized": 0.09049991178535467,
+              "ipr_lab_mean": [
+                67.52382224050334,
+                -0.2859720269067739,
+                -12.599916497046916
+              ],
+              "lr_lab_mean": [
+                76.06713318220001,
+                -0.2498610806699475,
+                -11.892717601521978
+              ],
+              "ipr_y_mean": 0.3735172352438049,
+              "lr_y_mean": 0.500204596803177,
+              "delta_chroma_mean": -0.7336048604442614,
+              "hue_abs_circular_mean_degrees": 1.2245221175156704,
+              "hue_usable_fraction": 0.9965120887831946,
+              "lr_neutral_fraction": 0.0034879112168053903,
+              "ab_distance_on_lr_neutral_mean": 0.74466351748163,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "offset_after_look_shoulder_hue_stable": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.944048291783208,
+            "delta_e00_median": 5.485411671299875,
+            "delta_e00_p95": 9.723692225699583,
+            "delta_e76_mean": 6.27115137975871,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.474210317755776,
+              -0.7321606399545816,
+              1.8557020287863712
+            ],
+            "rgb_mae_normalized": 0.05041689413828275,
+            "ipr_lab_mean": [
+              20.339548642852854,
+              -0.7312208964760895,
+              -4.03689066648278
+            ],
+            "lr_lab_mean": [
+              25.813758960606982,
+              -1.4633815364306781,
+              -2.181188637696857
+            ],
+            "ipr_y_mean": 0.07765987013245734,
+            "lr_y_mean": 0.11334763619483465,
+            "delta_chroma_mean": 1.5019694717988852,
+            "hue_abs_circular_mean_degrees": 2.2363139655769397,
+            "hue_usable_fraction": 0.5364665081252478,
+            "lr_neutral_fraction": 0.005628220372572335,
+            "ab_distance_on_lr_neutral_mean": 1.487579350368735,
+            "ipr_any_channel_low_fraction": 0.001888624653190646,
+            "lr_any_channel_low_fraction": 0.0008680142687277051,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 278615,
+              "delta_e00_mean": 2.840784082486699,
+              "delta_e00_median": 2.7596981749457323,
+              "delta_e00_p95": 6.078156392612924,
+              "delta_e76_mean": 3.7884533842264663,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.6253387940164603,
+                -1.0231205776722554,
+                2.1679479678196425
+              ],
+              "rgb_mae_normalized": 0.02127488577990824,
+              "ipr_lab_mean": [
+                2.8114160561032437,
+                -1.0583893653960457,
+                1.9376340047859268
+              ],
+              "lr_lab_mean": [
+                5.436754850119811,
+                -2.081509943068319,
+                4.105581972605321
+              ],
+              "ipr_y_mean": 0.0031125886324881212,
+              "lr_y_mean": 0.006252450145346632,
+              "delta_chroma_mean": 2.6249251919602563,
+              "hue_abs_circular_mean_degrees": 3.953370625914159,
+              "hue_usable_fraction": 0.17967087199181667,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0026954758358308057,
+              "lr_any_channel_low_fraction": 0.0011126464834987349,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.536595153090899,
+              "delta_e00_median": 6.539955007106557,
+              "delta_e00_p95": 6.7459455696559125,
+              "delta_e76_mean": 8.627507795114305,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.582737169666625,
+                -0.10519629505012042,
+                0.7761112219898617
+              ],
+              "rgb_mae_normalized": 0.09054363697728515,
+              "ipr_lab_mean": [
+                67.48439601253297,
+                -0.14466478561982657,
+                -12.668828823511843
+              ],
+              "lr_lab_mean": [
+                76.06713318220001,
+                -0.2498610806699475,
+                -11.892717601521978
+              ],
+              "ipr_y_mean": 0.37299097329311076,
+              "lr_y_mean": 0.500204596803177,
+              "delta_chroma_mean": -0.7839648280604902,
+              "hue_abs_circular_mean_degrees": 1.1013902736235566,
+              "hue_usable_fraction": 0.9965120887831946,
+              "lr_neutral_fraction": 0.0034879112168053903,
+              "ab_distance_on_lr_neutral_mean": 0.7510303256758865,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "zero_offset_ablation": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 0.7406640674271642,
+            "delta_e00_median": 0.5436044767137537,
+            "delta_e00_p95": 2.001314610049804,
+            "delta_e76_mean": 0.7964872663571793,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.07731558657030936,
+              0.24861860302568495,
+              0.0990064007773637
+            ],
+            "rgb_mae_normalized": 0.0031822908396386173,
+            "ipr_lab_mean": [
+              25.891074547176935,
+              -1.7120001394563418,
+              -2.2801950384739227
+            ],
+            "lr_lab_mean": [
+              25.813758960606982,
+              -1.4633815364306781,
+              -2.181188637696857
+            ],
+            "ipr_y_mean": 0.11422092487507994,
+            "lr_y_mean": 0.11334763619483465,
+            "delta_chroma_mean": -0.10627392214286212,
+            "hue_abs_circular_mean_degrees": 3.1012813483942643,
+            "hue_usable_fraction": 0.6822889417360285,
+            "lr_neutral_fraction": 0.005628220372572335,
+            "ab_distance_on_lr_neutral_mean": 1.4553209353596175,
+            "ipr_any_channel_low_fraction": 0.0017360285374554102,
+            "lr_any_channel_low_fraction": 0.0008680142687277051,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 278615,
+              "delta_e00_mean": 0.6078829304687101,
+              "delta_e00_median": 0.4012195420638266,
+              "delta_e00_p95": 1.7986903614055147,
+              "delta_e76_mean": 0.5790743465275511,
+              "delta_lab_mean_lr_minus_ipr": [
+                -0.004490562307633447,
+                0.2063658866410032,
+                0.07476590972510076
+              ],
+              "rgb_mae_normalized": 0.0024263698692570893,
+              "ipr_lab_mean": [
+                5.441245412427385,
+                -2.2878758297093196,
+                4.03081606288047
+              ],
+              "lr_lab_mean": [
+                5.436754850119811,
+                -2.081509943068319,
+                4.105581972605321
+              ],
+              "ipr_y_mean": 0.006261257147725006,
+              "lr_y_mean": 0.006252450145346632,
+              "delta_chroma_mean": -0.15350290375585585,
+              "hue_abs_circular_mean_degrees": 4.195582623012993,
+              "hue_usable_fraction": 0.4413043088132369,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.0026595840137824595,
+              "lr_any_channel_low_fraction": 0.0011126464834987349,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 0.4759118752363334,
+              "delta_e00_median": 0.37711360767741015,
+              "delta_e00_p95": 1.1841619360882207,
+              "delta_e76_mean": 0.45802076779346074,
+              "delta_lab_mean_lr_minus_ipr": [
+                -0.15068912846986127,
+                0.1982276176037146,
+                0.0614525137955216
+              ],
+              "rgb_mae_normalized": 0.0021400922353341156,
+              "ipr_lab_mean": [
+                76.2178223106697,
+                -0.44808869827366504,
+                -11.954170115317417
+              ],
+              "lr_lab_mean": [
+                76.06713318220001,
+                -0.2498610806699475,
+                -11.892717601521978
+              ],
+              "ipr_y_mean": 0.5026537128663559,
+              "lr_y_mean": 0.500204596803177,
+              "delta_chroma_mean": -0.09911901138710952,
+              "hue_abs_circular_mean_degrees": 1.5829600674090782,
+              "hue_usable_fraction": 0.9965120887831946,
+              "lr_neutral_fraction": 0.0034879112168053903,
+              "ab_distance_on_lr_neutral_mean": 0.5901139004539172,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "production_hard_clip_gamut": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.896882433335666,
+            "delta_e00_median": 5.479532769954615,
+            "delta_e00_p95": 9.546470471570906,
+            "delta_e76_mean": 6.246119906727436,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.419114535703116,
+              -0.7554278282545185,
+              1.840911553146165
+            ],
+            "rgb_mae_normalized": 0.049516060816062545,
+            "ipr_lab_mean": [
+              20.394644424904598,
+              -0.7079537081761368,
+              -4.022100190842392
+            ],
+            "lr_lab_mean": [
+              25.813758960606982,
+              -1.4633815364306781,
+              -2.181188637696857
+            ],
+            "ipr_y_mean": 0.07817277471063058,
+            "lr_y_mean": 0.11334763619483465,
+            "delta_chroma_mean": 1.6309741779442977,
+            "hue_abs_circular_mean_degrees": 3.541032994736616,
+            "hue_usable_fraction": 0.5400812524772096,
+            "lr_neutral_fraction": 0.005628220372572335,
+            "ab_distance_on_lr_neutral_mean": 1.4568537520323452,
+            "ipr_any_channel_low_fraction": 0.0017399920729290527,
+            "lr_any_channel_low_fraction": 0.0008680142687277051,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 278615,
+              "delta_e00_mean": 2.8114706750366723,
+              "delta_e00_median": 2.7447078670143115,
+              "delta_e00_p95": 5.940742073819173,
+              "delta_e76_mean": 3.793469847263568,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.6522189771893925,
+                -0.9425610571424331,
+                2.202485951703842
+              ],
+              "rgb_mae_normalized": 0.021729017872656416,
+              "ipr_lab_mean": [
+                2.7845358729303755,
+                -1.1389488859258605,
+                1.9030960209016836
+              ],
+              "lr_lab_mean": [
+                5.436754850119811,
+                -2.081509943068319,
+                4.105581972605321
+              ],
+              "ipr_y_mean": 0.003082790719264842,
+              "lr_y_mean": 0.006252450145346632,
+              "delta_chroma_mean": 2.590609568452087,
+              "hue_abs_circular_mean_degrees": 6.480114516965809,
+              "hue_usable_fraction": 0.1870107496007035,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.00279956211977101,
+              "lr_any_channel_low_fraction": 0.0011126464834987349,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.571067203369211,
+              "delta_e00_median": 6.569910587392545,
+              "delta_e00_p95": 6.802936362691037,
+              "delta_e76_mean": 8.713848844089085,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.53572606736307,
+                -0.21157976083245408,
+                1.6481506353684514
+              ],
+              "rgb_mae_normalized": 0.08899750776364983,
+              "ipr_lab_mean": [
+                67.53140711483644,
+                -0.03828131983749695,
+                -13.540868236890384
+              ],
+              "lr_lab_mean": [
+                76.06713318220001,
+                -0.2498610806699475,
+                -11.892717601521978
+              ],
+              "ipr_y_mean": 0.3736226430698947,
+              "lr_y_mean": 0.500204596803177,
+              "delta_chroma_mean": -1.6609785357186044,
+              "hue_abs_circular_mean_degrees": 1.4505255000672603,
+              "hue_usable_fraction": 0.9965120887831946,
+              "lr_neutral_fraction": 0.0034879112168053903,
+              "ab_distance_on_lr_neutral_mean": 0.8322806031406226,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        },
+        "production_signed_gamut": {
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.8971304619157205,
+            "delta_e00_median": 5.4795427535526215,
+            "delta_e00_p95": 9.546669006332493,
+            "delta_e76_mean": 6.246598971635059,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.419229191190841,
+              -0.7552264803763205,
+              1.8412358143156113
+            ],
+            "rgb_mae_normalized": 0.04951718248218725,
+            "ipr_lab_mean": [
+              20.394529769416803,
+              -0.7081550560543339,
+              -4.022424452011833
+            ],
+            "lr_lab_mean": [
+              25.813758960606982,
+              -1.4633815364306781,
+              -2.181188637696857
+            ],
+            "ipr_y_mean": 0.07817258860999544,
+            "lr_y_mean": 0.11334763619483465,
+            "delta_chroma_mean": 1.6313641024433194,
+            "hue_abs_circular_mean_degrees": 3.5420123551041898,
+            "hue_usable_fraction": 0.5400812524772096,
+            "lr_neutral_fraction": 0.005628220372572335,
+            "ab_distance_on_lr_neutral_mean": 1.4568537520323452,
+            "ipr_any_channel_low_fraction": 0.0017399920729290527,
+            "lr_any_channel_low_fraction": 0.0008680142687277051,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "regions": {
+            "lr_dark_y_le_002": {
+              "samples": 278615,
+              "delta_e00_mean": 2.811581525396124,
+              "delta_e00_median": 2.7447354274137736,
+              "delta_e00_p95": 5.940774055918503,
+              "delta_e76_mean": 3.7937102745233444,
+              "delta_lab_mean_lr_minus_ipr": [
+                2.652253402623132,
+                -0.9423967468936136,
+                2.2024264124350066
+              ],
+              "rgb_mae_normalized": 0.02172941878835236,
+              "ipr_lab_mean": [
+                2.784501447496653,
+                -1.1391131961746774,
+                1.90315556017052
+              ],
+              "lr_lab_mean": [
+                5.436754850119811,
+                -2.081509943068319,
+                4.105581972605321
+              ],
+              "ipr_y_mean": 0.003082752594967524,
+              "lr_y_mean": 0.006252450145346632,
+              "delta_chroma_mean": 2.5908657642958515,
+              "hue_abs_circular_mean_degrees": 6.48143063162096,
+              "hue_usable_fraction": 0.1870107496007035,
+              "lr_neutral_fraction": 0.0,
+              "ab_distance_on_lr_neutral_mean": null,
+              "ipr_any_channel_low_fraction": 0.00279956211977101,
+              "lr_any_channel_low_fraction": 0.0011126464834987349,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            },
+            "lr_highlight_top5": {
+              "samples": 25230,
+              "delta_e00_mean": 6.571067203369211,
+              "delta_e00_median": 6.569910587392545,
+              "delta_e00_p95": 6.802936362691037,
+              "delta_e76_mean": 8.713848844089085,
+              "delta_lab_mean_lr_minus_ipr": [
+                8.53572606736307,
+                -0.21157976083245408,
+                1.6481506353684514
+              ],
+              "rgb_mae_normalized": 0.08899750776364983,
+              "ipr_lab_mean": [
+                67.53140711483644,
+                -0.03828131983749695,
+                -13.540868236890384
+              ],
+              "lr_lab_mean": [
+                76.06713318220001,
+                -0.2498610806699475,
+                -11.892717601521978
+              ],
+              "ipr_y_mean": 0.3736226430698947,
+              "lr_y_mean": 0.500204596803177,
+              "delta_chroma_mean": -1.6609785357186044,
+              "hue_abs_circular_mean_degrees": 1.4505255000672603,
+              "hue_usable_fraction": 0.9965120887831946,
+              "lr_neutral_fraction": 0.0034879112168053903,
+              "ab_distance_on_lr_neutral_mean": 0.8322806031406226,
+              "ipr_any_channel_low_fraction": 0.0,
+              "lr_any_channel_low_fraction": 0.0,
+              "ipr_any_channel_high_fraction": 0.0,
+              "lr_any_channel_high_fraction": 0.0
+            }
+          }
+        }
+      }
+    }
+  ]
+}

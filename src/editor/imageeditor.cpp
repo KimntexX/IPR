@@ -2,10 +2,13 @@
 
 #include "DetailProcessing.h"
 #include "RawDecoder.h"
+#include "RawNormalization.h"
+#include "CameraProfileEngine.h"
 #include "imageprovider.h"
 #include "ThumbnailProvider.h"
 
 #include <QDir>
+#include <QCoreApplication>
 #include <QDataStream>
 #include <QLocale>
 #include <QFile>
@@ -658,6 +661,91 @@ QStringList ImageEditor::selectedImageUrls() const
     return urls;
 }
 
+QVariantList ImageEditor::cameraProfiles() const
+{
+    QVariantList result{QVariantMap{{"name", tr("Automatique (catalogue)")}, {"path", QString()}}};
+    for (const auto &path : m_sourceMetadata.availableDcpProfiles)
+        result.append(QVariantMap{{"name", QFileInfo(path).completeBaseName()}, {"path", path}});
+    return result;
+}
+
+QString ImageEditor::rawNormalizationManifest() const
+{
+    if (!m_normalizationManifest.isEmpty())
+        return m_normalizationManifest;
+    const QString configured = qEnvironmentVariable("IPR_RAW_NORMALIZATION_MANIFEST");
+    const QStringList candidates{configured,
+        QDir(QCoreApplication::applicationDirPath()).filePath("config/raw-normalization.json"),
+        QDir::current().filePath("build-canon-normalization-20261008/normalization.json"),
+        QDir(QCoreApplication::applicationDirPath()).filePath("../../build-canon-normalization-20261008/normalization.json")};
+    for (const auto &path : candidates) {
+        if (!path.isEmpty() && QFileInfo(path).isFile())
+            return QFileInfo(path).absoluteFilePath();
+    }
+    return {};
+}
+
+QString ImageEditor::rawDevelopmentStatus() const
+{
+    if (!hasImage())
+        return tr("Ouvrez un RAW pour choisir son profil.");
+    const QString profile = m_sourceMetadata.dcpProfile.isEmpty()
+        ? tr("aucun DCP (image non RAW ou matrice LibRaw)") : m_sourceMetadata.dcpProfile;
+    const QString prefix = tr("Profil utilisé : %1\n").arg(profile);
+    if (!m_rawNormalizationEnabled)
+        return prefix + tr("Normalisation désactivée.");
+    if (rawNormalizationManifest().isEmpty())
+        return prefix + tr("Non appliquée : choisissez un manifeste de calibration.");
+    if (m_sourceMetadata.rawNormalizationApplied)
+        return prefix + tr("Normalisation appliquée — blanc %1, base %2 EV.\n%3")
+            .arg(m_sourceMetadata.normalizationWhiteLevel)
+            .arg(m_sourceMetadata.normalizationBaselineExposureEv, 0, 'f', 2)
+            .arg(m_sourceMetadata.normalizationProvenance);
+    if (m_settings.automaticWhiteBalance)
+        return prefix + tr("Non appliquée : désactivez la balance des blancs automatique.");
+    return prefix + tr("Normalisation non appliquée. %1").arg(m_sourceMetadata.normalizationReason);
+}
+
+void ImageEditor::reloadRawDevelopment()
+{
+    emit rawDevelopmentChanged();
+    if (!m_currentFile.isLocalFile() || m_original.isNull())
+        return;
+    const auto path = m_currentFile.toLocalFile();
+    if (RawDecoder::supportedExtensions().contains(QFileInfo(path).suffix().toLower()))
+        beginLoad(path, QFileInfo(path).suffix().toLower(), m_settings.automaticWhiteBalance, false);
+}
+
+void ImageEditor::setCameraProfile(const QString &path)
+{
+    if (busy() || path == m_cameraProfile ||
+        (!path.isEmpty() && !m_sourceMetadata.availableDcpProfiles.contains(path)))
+        return;
+    m_cameraProfile = path;
+    reloadRawDevelopment();
+}
+
+void ImageEditor::setRawNormalizationEnabled(bool enabled)
+{
+    if (busy() || enabled == m_rawNormalizationEnabled)
+        return;
+    m_rawNormalizationEnabled = enabled;
+    reloadRawDevelopment();
+}
+
+void ImageEditor::setRawNormalizationManifest(const QUrl &file)
+{
+    if (busy() || !file.isLocalFile())
+        return;
+    const QFileInfo info(file.toLocalFile());
+    if (!info.isFile() || info.size() > 1024 * 1024) {
+        setStatusMessage(tr("Manifeste invalide ou supérieur à 1 Mio."));
+        return;
+    }
+    m_normalizationManifest = info.absoluteFilePath();
+    reloadRawDevelopment();
+}
+
 QUrl ImageEditor::defaultExportFile(const QString &format, const QUrl &previousTarget) const
 {
     if (!m_currentFile.isLocalFile())
@@ -1175,6 +1263,8 @@ void ImageEditor::setAutomaticWhiteBalance(bool enabled)
     if (m_settings.automaticWhiteBalance == enabled)
         return;
     m_settings.automaticWhiteBalance = enabled;
+    emit rawDevelopmentChanged();
+    emit adjustmentsReset(m_settings.temperature, m_settings.tint);
     scheduleSidecarSave();
 
     if (m_original.isNull() || !m_currentFile.isLocalFile())
@@ -1193,12 +1283,18 @@ void ImageEditor::resetAdjustments()
 {
     if (m_original.isNull())
         return;
+    const bool reloadWhiteBalance = m_settings.automaticWhiteBalance;
     m_settings = {};
     m_settings.temperature = static_cast<int>(std::lround(
-        m_original.referenceWhiteBalanceKelvin.value_or(6500.0)));
+        m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
     emit toneCurvesReset();
     emit adjustmentsReset(m_settings.temperature, m_settings.tint);
-    scheduleRender();
+    emit rawDevelopmentChanged();
+    if (reloadWhiteBalance && m_currentFile.isLocalFile() &&
+        RawDecoder::supportedExtensions().contains(QFileInfo(m_currentFile.toLocalFile()).suffix().toLower()))
+        reloadRawDevelopment();
+    else
+        scheduleRender();
 }
 
 void ImageEditor::exportImage(const QUrl &target, const QString &format, int quality)
@@ -1235,7 +1331,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         return {};
 
     const int referenceTemperature = static_cast<int>(std::lround(
-        source.referenceWhiteBalanceKelvin.value_or(6500.0)));
+        source.referenceWhiteBalanceKelvin.value_or(5200.0)));
     const bool hasToneCurves = std::any_of(
         settings.toneCurves.cbegin(), settings.toneCurves.cend(),
         [](const QVector<ToneCurvePoint> &curve) { return !curve.isEmpty(); });
@@ -1344,7 +1440,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     if ((settings.temperature != referenceTemperature || settings.tint != 0) &&
         !ColorPipeline::applyTemperatureTint(
             adjusted, settings.temperature,
-            source.referenceWhiteBalanceKelvin.value_or(6500.0),
+            source.referenceWhiteBalanceKelvin.value_or(5200.0),
             settings.tint, &colorError)) {
         qWarning() << "Échec de la balance température/nuance :" << colorError;
         return {};
@@ -1912,12 +2008,15 @@ ImageEditor::ExportResult ImageEditor::writeImage(
 
 ImageEditor::LoadResult ImageEditor::loadFromDisk(const QString &fileName,
                                                   const QString &extension,
-                                                  bool automaticWhiteBalance)
+                                                  bool automaticWhiteBalance,
+                                                  const RawDecoder::Options &rawOptions)
 {
     LoadResult result;
     if (RawDecoder::supportedExtensions().contains(extension)) {
+        auto options = rawOptions;
+        options.automaticWhiteBalance = automaticWhiteBalance;
         result.image = RawDecoder::decode(
-            fileName, RawDecoder::Options{automaticWhiteBalance},
+            fileName, options,
             &result.metadata, &result.error);
     } else {
         QImageReader reader(fileName);
@@ -2006,7 +2105,8 @@ ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
 }
 
 QString ImageEditor::cacheKeyForFile(const QString &fileName,
-                                     bool automaticWhiteBalance)
+                                     bool automaticWhiteBalance,
+                                     const QString &profile, const QString &manifest)
 {
     const QFileInfo fileInfo(fileName);
     if (!fileInfo.exists() || !fileInfo.isFile())
@@ -2015,11 +2115,14 @@ QString ImageEditor::cacheKeyForFile(const QString &fileName,
     const QString canonicalPath = fileInfo.canonicalFilePath();
     const QString path = canonicalPath.isEmpty() ? fileInfo.absoluteFilePath()
                                                   : canonicalPath;
-    return QStringLiteral("%1\x1f%2\x1f%3\x1f%4")
+    const QFileInfo profileInfo(profile);
+    return QStringLiteral("%1\x1f%2\x1f%3\x1f%4\x1f%5\x1f%6\x1f%7\x1f%8")
         .arg(path)
         .arg(fileInfo.size())
         .arg(fileInfo.lastModified().toMSecsSinceEpoch())
-        .arg(automaticWhiteBalance ? 1 : 0);
+        .arg(automaticWhiteBalance ? 1 : 0)
+        .arg(RawNormalization::cacheToken(manifest))
+        .arg(profile).arg(profileInfo.size()).arg(profileInfo.lastModified().toMSecsSinceEpoch());
 }
 
 QString ImageEditor::sidecarPathForFile(const QString &fileName)
@@ -2178,7 +2281,8 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
     m_provider->setUrl(m_currentFile);
     m_pendingLoadIsFreshOpen = freshOpen;
     m_currentCacheKey = RawDecoder::supportedExtensions().contains(extension)
-        ? cacheKeyForFile(fileName, automaticWhiteBalance) : QString{};
+        ? cacheKeyForFile(fileName, automaticWhiteBalance, m_cameraProfile,
+            m_rawNormalizationEnabled ? rawNormalizationManifest() : QString()) : QString{};
 
     setStatusMessage(tr("Ouverture de %1...").arg(QFileInfo(fileName).fileName()));
     ++m_requestedLoadRevision;
@@ -2199,9 +2303,14 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
     }
 
     setBusy(true);
+    RawDecoder::Options options;
+    options.dcpProfileOverride = m_cameraProfile;
+    options.normalizationManifest = m_rawNormalizationEnabled ? rawNormalizationManifest() : QString();
+    options.useNormalizationEnvironment = false;
+    options.listDcpProfiles = true;
     m_loadWatcher.setFuture(QtConcurrent::run(
-        [fileName, extension, automaticWhiteBalance] {
-            return loadFromDisk(fileName, extension, automaticWhiteBalance);
+        [fileName, extension, automaticWhiteBalance, options] {
+            return loadFromDisk(fileName, extension, automaticWhiteBalance, options);
         }));
 }
 
@@ -2217,6 +2326,8 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
     }
 
     m_sourceMetadata = std::move(loaded.metadata);
+    if (!m_sourceMetadata.availableDcpProfiles.contains(m_cameraProfile))
+        m_cameraProfile.clear();
     m_original = std::move(loaded.image);
     m_editProxy = std::move(loaded.editProxy);
     emit imageInfoChanged();
@@ -2225,7 +2336,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         emit histogramChanged();
         m_settings = {};
         m_settings.temperature = static_cast<int>(std::lround(
-            m_original.referenceWhiteBalanceKelvin.value_or(6500.0)));
+            m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
         UserImageMetadata metadata;
         Settings persisted;
         if (readSidecar(m_currentFile.toLocalFile(), &persisted, &metadata)) {
@@ -2235,6 +2346,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
     }
     emit hasImageChanged();
+    emit rawDevelopmentChanged();
     setStatusMessage(tr("Image ouverte : %1")
                          .arg(QFileInfo(m_currentFile.toLocalFile()).fileName()));
     scheduleRender();
@@ -2256,6 +2368,7 @@ void ImageEditor::releaseCurrentImage()
     m_original = {};
     m_editProxy = {};
     m_sourceMetadata = {};
+    emit rawDevelopmentChanged();
     m_currentCacheKey.clear();
     m_imageSource.clear();
     m_originalImageSource.clear();

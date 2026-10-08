@@ -48,6 +48,8 @@ set(IPR_ENGINE_SOURCES
     src/raw/RawBlackLevelEstimator.cpp
     src/raw/RawDecoder.h
     src/raw/RawDecoder.cpp
+    src/raw/RawNormalization.h
+    src/raw/RawNormalization.cpp
 )
 
 set(IPR_QML_FILES
@@ -55,6 +57,7 @@ set(IPR_QML_FILES
     src/qml/ImageViewport.qml
     src/qml/HistogramModule.qml
     src/qml/Setting.qml
+    src/qml/RawDevelopmentModule.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
     src/qml/CurveChannelButton.qml
@@ -120,6 +123,11 @@ qt_add_qml_module(appIPR
 
 target_link_libraries(appIPR PRIVATE iprEngine)
 
+# Console tool, intentionally independent of the QML application/sidecar lifecycle.
+add_executable(iprGenerateTests src/tools/generate_test_images.cpp)
+target_link_libraries(iprGenerateTests PRIVATE iprEngine)
+target_compile_definitions(iprGenerateTests PRIVATE IPR_PROJECT_VERSION="${PROJECT_VERSION}")
+
 set_target_properties(appIPR PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ipr
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -129,7 +137,7 @@ set_target_properties(appIPR PROPERTIES
 )
 
 include(GNUInstallDirs)
-install(TARGETS appIPR
+install(TARGETS appIPR iprGenerateTests
     BUNDLE DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
@@ -141,6 +149,13 @@ if(IPR_BUILD_RAW_BENCHMARK AND IPR_ENABLE_LIBRAW AND
 endif()
 
 include(CTest)
+if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY)
+    # Manual corpus diagnostic, never part of the default build or CTest.
+    add_executable(tonalBaseProbe EXCLUDE_FROM_ALL tests/tonal_base_probe.cpp)
+    target_link_libraries(tonalBaseProbe PRIVATE iprEngine)
+    add_executable(rawNormalizationCorpusProbe EXCLUDE_FROM_ALL tests/raw_normalization_corpus_probe.cpp)
+    target_link_libraries(rawNormalizationCorpusProbe PRIVATE iprEngine)
+endif()
 if(BUILD_TESTING)
     function(ipr_add_test target source)
         add_executable(${target} ${source})
@@ -151,6 +166,13 @@ if(BUILD_TESTING)
     ipr_add_test(colorPipelineTests tests/color_pipeline_test.cpp)
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
+    add_executable(testImageGeneratorTests tests/test_image_generator_test.cpp)
+    target_link_libraries(testImageGeneratorTests PRIVATE iprEngine)
+    add_dependencies(testImageGeneratorTests iprGenerateTests)
+    add_test(NAME testImageGeneratorTests
+        COMMAND testImageGeneratorTests $<TARGET_FILE:iprGenerateTests>)
+    set_tests_properties(testImageGeneratorTests PROPERTIES
+        LABELS "unit;export;generator" TIMEOUT 120)
     ipr_add_test(colorMixerMathTests tests/color_mixer_math_test.cpp)
     add_executable(colorMixerNeutralProbe tests/color_mixer_neutral_probe.cpp)
     target_link_libraries(colorMixerNeutralProbe PRIVATE iprEngine)
@@ -182,6 +204,9 @@ if(BUILD_TESTING)
     set_tests_properties(uiPreferencesTests uiPreferencesQmlTests PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(rawDecoderTests tests/raw_decoder_test.cpp)
+    ipr_add_test(rawNormalizationTests tests/raw_normalization_test.cpp)
+    ipr_add_test(editorRawDevelopmentTests tests/editor_raw_development_test.cpp)
+    set_tests_properties(editorRawDevelopmentTests PROPERTIES LABELS "unit;raw;settings" TIMEOUT 60)
     ipr_add_test(rawBlackLevelEstimatorTests tests/raw_black_level_estimator_test.cpp)
     ipr_add_test(cameraProfileEngineTests tests/camera_profile_engine_test.cpp)
     set_tests_properties(colorPipelineTests PROPERTIES LABELS "unit;pipeline")
@@ -192,7 +217,7 @@ if(BUILD_TESTING)
     set_tests_properties(settingsQmlTests PROPERTIES LABELS "unit;settings;qml")
     set_tests_properties(uiPreferencesTests uiPreferencesQmlTests
         PROPERTIES LABELS "unit;preferences;qml")
-    set_tests_properties(rawDecoderTests rawBlackLevelEstimatorTests
+    set_tests_properties(rawDecoderTests rawBlackLevelEstimatorTests rawNormalizationTests
         PROPERTIES LABELS "unit;raw")
     set_tests_properties(cameraProfileEngineTests PROPERTIES LABELS "unit;profiles")
 endif()

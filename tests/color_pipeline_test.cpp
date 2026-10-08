@@ -31,6 +31,30 @@ int main(int argc, char **argv)
     srgb.setColorSpace(QColorSpace(QColorSpace::SRgb));
 
     QString error;
+    ColorPipeline::WorkingImage ramp;
+    ramp.linearRgba = cv::Mat(1, 65536, CV_32FC4);
+    for (int code = 0; code <= 65535; ++code) {
+        const float value = float(code) / 65535.f;
+        ramp.linearRgba.at<cv::Vec4f>(0, code) = {value, value, value, .37f};
+    }
+    ramp.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+    const QImage encodedRamp = ColorPipeline::toSrgb(ramp, ColorPipeline::OutputFormat::HighBitDepth, &error);
+    if (!check(!encodedRamp.isNull(), "full-range sRGB ramp should encode")) return 1;
+    const auto *codes = reinterpret_cast<const QRgba64 *>(encodedRamp.constScanLine(0));
+    for (int code = 0; code <= 65535; ++code) {
+        const double value = double(float(code) / 65535.f);
+        const double encoded = value <= .0031308 ? value * 12.92
+            : 1.055 * std::pow(value, 1. / 2.4) - .055;
+        const int expected = int(std::lround(encoded * 65535.));
+        if (!check(std::abs(int(codes[code].red()) - expected) <= 1 &&
+                   codes[code].red() == codes[code].green() && codes[code].red() == codes[code].blue() &&
+                   std::abs(int(codes[code].alpha()) - int(std::lround(.37f * 65535.f))) <= 1,
+                   "analytic transfer must preserve ramp accuracy and straight alpha")) return 1;
+        if (code && !check(codes[code].red() >= codes[code-1].red(), "ramp should be monotonic")) return 1;
+    }
+    if (!check(codes[1].red() == 13 && codes[15].red() == 194 &&
+               codes[0].red() == 0 && codes[65535].red() == 65535,
+               "low linear codes must survive; endpoints must remain exact")) return 1;
     const ColorPipeline::WorkingImage linear =
         ColorPipeline::fromSourceImage(srgb, &error);
     if (!check(!linear.isNull(), "sRGB input should convert to working space"))

@@ -69,16 +69,21 @@ cv::Vec3f mapRgbToSrgbGamut(const cv::Vec3f &source)
     return neutral + chroma * std::clamp(chromaScale, 0.0f, 1.0f);
 }
 
-QImage toLinearRgba64(const cv::Mat &linearRgba)
+QImage toEncodedSrgbRgba64(const cv::Mat &linearRgba)
 {
+    // Encode before quantization. Qt's integer color-space LUT loses low
+    // linear16 codes; this buffer is already in sRGB primaries, so only
+    // the analytic sRGB transfer is needed. Alpha is straight and linear.
     cv::Mat rgba16(linearRgba.rows, linearRgba.cols, CV_16UC4);
     for (int y = 0; y < linearRgba.rows; ++y) {
         const cv::Vec4f *source = linearRgba.ptr<cv::Vec4f>(y);
         cv::Vec<quint16, 4> *destination = rgba16.ptr<cv::Vec<quint16, 4>>(y);
         for (int x = 0; x < linearRgba.cols; ++x) {
             for (int channel = 0; channel < 3; ++channel) {
-                destination[x][channel] = static_cast<quint16>(std::lround(
-                    std::clamp(source[x][channel], 0.0f, 1.0f) * 65535.0f));
+                const double linear = std::clamp(double(source[x][channel]), 0.0, 1.0);
+                const double encoded = linear <= 0.0031308
+                    ? 12.92 * linear : 1.055 * std::pow(linear, 1.0 / 2.4) - 0.055;
+                destination[x][channel] = static_cast<quint16>(std::lround(encoded * 65535.0));
             }
             destination[x][3] = static_cast<quint16>(std::lround(
                 std::clamp(source[x][3], 0.0f, 1.0f) * 65535.0f));
@@ -88,7 +93,7 @@ QImage toLinearRgba64(const cv::Mat &linearRgba)
     QImage image(rgba16.cols, rgba16.rows, QImage::Format_RGBA64);
     for (int y = 0; y < rgba16.rows; ++y)
         std::memcpy(image.scanLine(y), rgba16.ptr(y), rgba16.cols * 8);
-    image.setColorSpace(QColorSpace(QColorSpace::SRgbLinear));
+    image.setColorSpace(QColorSpace(QColorSpace::SRgb));
     return image;
 }
 
@@ -350,17 +355,10 @@ QImage toSrgb(const WorkingImage &source, OutputFormat outputFormat, QString *er
     if (gamutMapped.isNull())
         return {};
 
-    QImage encoded = toLinearRgba64(gamutMapped.linearRgba);
+    QImage encoded = toEncodedSrgbRgba64(gamutMapped.linearRgba);
     if (encoded.isNull()) {
         if (error)
             *error = QStringLiteral("Impossible de quantifier l'image de travail.");
-        return {};
-    }
-
-    encoded = encoded.convertedToColorSpace(QColorSpace(QColorSpace::SRgb));
-    if (encoded.isNull()) {
-        if (error)
-            *error = QStringLiteral("Impossible d'encoder l'image vers sRGB.");
         return {};
     }
 

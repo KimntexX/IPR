@@ -1,0 +1,144 @@
+{
+    "libraw_version":  "0.22.2-Release",
+    "manifest_sha256":  "c75d5c3ce4de3d0496968af94fd5fc7195da11ec0ee9dda5d52b29bd8c654c36",
+    "images":  [
+                   {
+                       "raw":  "tests/image/base/6V1A0007.CR3",
+                       "raw_sha256":  "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+                       "before_black":  [
+                                            0,
+                                            29,
+                                            102,
+                                            63
+                                        ],
+                       "after_black":  [
+                                           512,
+                                           512,
+                                           512,
+                                           512
+                                       ],
+                       "wb_gains":  [
+                                        1938,
+                                        1024,
+                                        1733,
+                                        1024
+                                    ],
+                       "black_estimated":  true
+                   },
+                   {
+                       "raw":  "tests/image/base/6V1A0037.CR3",
+                       "raw_sha256":  "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+                       "before_black":  [
+                                            0,
+                                            45,
+                                            130,
+                                            96
+                                        ],
+                       "after_black":  [
+                                           512,
+                                           512,
+                                           512,
+                                           512
+                                       ],
+                       "wb_gains":  [
+                                        1938,
+                                        1024,
+                                        1733,
+                                        1024
+                                    ],
+                       "black_estimated":  true
+                   },
+                   {
+                       "raw":  "tests/image/base/6V1A0043.CR3",
+                       "raw_sha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                       "before_black":  [
+                                            0,
+                                            41,
+                                            116,
+                                            81
+                                        ],
+                       "after_black":  [
+                                           512,
+                                           512,
+                                           512,
+                                           512
+                                       ],
+                       "wb_gains":  [
+                                        1938,
+                                        1024,
+                                        1733,
+                                        1024
+                                    ],
+                       "black_estimated":  true
+                   },
+                   {
+                       "raw":  "tests/image/base/6V1A0327.CR3",
+                       "raw_sha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                       "before_black":  [
+                                            0,
+                                            46,
+                                            126,
+                                            92
+                                        ],
+                       "after_black":  [
+                                           512,
+                                           512,
+                                           512,
+                                           512
+                                       ],
+                       "wb_gains":  [
+                                        1938,
+                                        1024,
+                                        1733,
+                                        1024
+                                    ],
+                       "black_estimated":  true
+                   },
+                   {
+                       "raw":  "tests/image/base/6V1A9421.CR3",
+                       "raw_sha256":  "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+                       "before_black":  [
+                                            0,
+                                            36,
+                                            105,
+                                            72
+                                        ],
+                       "after_black":  [
+                                           2048,
+                                           2048,
+                                           2048,
+                                           2048
+                                       ],
+                       "wb_gains":  [
+                                        1938,
+                                        1024,
+                                        1733,
+                                        1024
+                                    ],
+                       "black_estimated":  true
+                   },
+                   {
+                       "raw":  "tests/image/base/6V1A9950.CR3",
+                       "raw_sha256":  "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+                       "before_black":  [
+                                            0,
+                                            46,
+                                            134,
+                                            98
+                                        ],
+                       "after_black":  [
+                                           512,
+                                           512,
+                                           512,
+                                           512
+                                       ],
+                       "wb_gains":  [
+                                        1938,
+                                        1024,
+                                        1733,
+                                        1024
+                                    ],
+                       "black_estimated":  true
+                   }
+               ]
+}

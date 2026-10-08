@@ -1,0 +1,255 @@
+\part{De la scène à une grille de nombres}
+
+\section{Une image n'est pas seulement un tableau RGB}
+\subsection{Quatre niveaux de description}
+Une photographie existe successivement comme phénomène lumineux,
+mesure électronique, représentation numérique et rendu perceptuel.
+Le mot « image » désigne souvent l'un de ces niveaux sans le préciser.
+
+\begin{longtable}{p{3cm}p{5.1cm}p{6.5cm}}
+\toprule Niveau & Question & Exemple \\ \midrule
+Scène physique & Quelle lumière atteint le capteur ? & Un spectre lumineux,
+une durée d'exposition et une distribution spatiale. \\
+Signal mesuré & Que mesure chaque photosite ? & Une charge électrique,
+puis un code numérique filtré par une mosaïque colorée. \\
+Image interprétée & Que signifient les composantes ? & RGB linéaire de
+caméra, XYZ, sRGB encodé, profondeur, alpha. \\
+Fichier & Comment les valeurs sont-elles stockées ? & TIFF avec offsets,
+JPEG avec coefficients, PNG avec blocs compressés. \\
+Affichage & Quelle lumière l'écran émet-il ? & Conversion vers le profil
+écran, fonction de transfert et limites de luminance. \\ \bottomrule
+\end{longtable}
+
+Le même tableau $(128,64,32)$ peut désigner une couleur sRGB, des codes
+RGB d'un autre espace ou trois mesures sans signification colorimétrique.
+Le même fichier peut contenir plusieurs tableaux : miniature, aperçu,
+mosaïque RAW, masque, carte de profondeur ou image HDR auxiliaire.
+
+\resultat{L'architecture complète est : des valeurs, une géométrie,
+une signification physique ou colorimétrique, une organisation binaire
+et des règles d'interprétation. Il manque de l'information si l'un de
+ces éléments est absent.}
+
+\subsection{Image matricielle et image vectorielle}
+Une image matricielle est définie sur une grille. Une image vectorielle
+décrit des objets : chemins, courbes, texte, surfaces. Un SVG peut dire
+« tracer un cercle » ; un PNG doit fournir ou reconstruire les valeurs
+de ses pixels. La rasterisation transforme le premier en grille à une
+résolution choisie. Un PDF peut mêler texte, vecteurs et photographies.
+L'agrandissement d'un vecteur recalcule sa couverture ; l'agrandissement
+d'une photo interpole des mesures existantes. Une IA peut inventer une
+estimation plausible de détails, pas retrouver systématiquement ceux
+qui n'ont jamais été mesurés.
+
+\section{Physique de la formation de l'image}
+\subsection{Photons, optique et temps d'exposition}
+La lumière peut être décrite par un champ électromagnétique ou par des
+photons. L'énergie d'un photon de longueur d'onde $\lambda$ est
+\begin{equation}
+E_\gamma=\frac{hc}{\lambda},
+\end{equation}
+où $h$ est la constante de Planck et $c$ la vitesse de la lumière.
+À environ $550$ nm, cette énergie vaut $3{,}61\times10^{-19}$ joule.
+Un pixel ne stocke pourtant pas une liste de photons : le capteur
+intègre leur effet pendant l'exposition.
+
+Un modèle simplifié du nombre moyen d'électrons du photosite $i$ est
+\begin{equation}
+\mu_i=t\int_{A_i}\int E(x,y,\lambda)\,
+\eta_i(\lambda)\,\frac{\lambda}{hc}\,d\lambda\,dA.
+\end{equation}
+$E$ est ici une irradiance spectrale sur le capteur, $A_i$ l'aire du
+photosite, $t$ la durée et $\eta_i$ l'efficacité de conversion. Les filtres
+colorés et la transmission optique peuvent être inclus dans $E$ ou
+dans une réponse effective $\eta_i$. Ce modèle explique trois faits :
+une exposition plus longue augmente le signal, les filtres changent
+la réponse spectrale et les photosites ne mesurent pas tous la même
+bande de lumière.
+
+Pour une surface diffuse, un modèle de scène souvent utile est
+$E(\lambda)\propto S(\lambda)\rho(\lambda)$ : spectre de l'éclairage
+fois réflectance. Il n'est pas complet pour les surfaces spéculaires,
+translucides ou fluorescentes. Une couleur de peinture publiée sur un
+site marchand ne donne ni son spectre de réflectance ni l'éclairage réel.
+
+\subsection{Flou optique et fonction d'étalement}
+Même avant la conversion numérique, un point de la scène devient une
+tache. Dans un modèle local linéaire invariant, l'image idéale $f$ est
+convoluée par une fonction $h$, dite PSF :
+\begin{equation}
+g(x,y)=(h*f)(x,y)=\iint h(u,v)f(x-u,y-v)\,du\,dv.
+\end{equation}
+Défocalisation, diffraction et mouvement participent au flou. Dans
+le domaine fréquentiel, la convolution devient un produit ; la MTF
+décrit la transmission des contrastes suivant la fréquence. Si une
+fréquence est supprimée et noyée dans le bruit, une accentuation ne
+la recrée pas avec certitude. Elle augmente surtout le contraste de
+ce qui subsiste.
+
+\subsection{Exposition et ISO : deux actions différentes}
+À scène et géométrie constantes, doubler $t$ double approximativement
+les photons collectés tant qu'il n'y a pas saturation. Une variation
+de $e$ EV représente un facteur $2^e$. Pour un objectif idéal et un
+champ donné, l'éclairement varie approximativement comme $1/N^2$, où
+$N$ est le nombre d'ouverture. Passer de $f/4$ à $f/2{,}8$ représente
+environ un doublement de l'éclairement.
+
+L'ISO règle une chaîne de gain et de présentation de la sensibilité,
+selon l'appareil ; ce n'est pas une commande qui multiplie les photons.
+Le gain peut être analogique, numérique ou associé à des modes de
+lecture différents. « ISO plus élevé » ne signifie donc pas
+automatiquement « moins de photons » : ce sont les choix d'exposition
+associés qui le déterminent. Pour comparer le bruit, documenter le
+temps, l'ouverture, l'éclairage, l'ISO et le mode RAW.
+
+\section{Capteur, bruit et conversion analogique-numérique}
+\subsection{Modèle simplifié d'un code RAW}
+Un modèle pédagogique est
+\begin{equation}
+D_i=\operatorname{clip}\!\left(
+\operatorname{round}(B_i+K_i(N_i+n_{r,i})),0,2^b-1\right),
+\end{equation}
+avec $B_i$ un offset noir en codes, $K_i$ un gain en codes par électron,
+$N_i$ les électrons photo-générés, $n_{r,i}$ un bruit de lecture et $b$
+la profondeur de conversion. Des traitements internes et des
+non-linéarités peuvent compléter ce modèle. La norme de mesure
+EMVA~1288 distingue notamment caractérisation linéaire et générale
+des capteurs~\cite{emva}. Ce cours utilise le modèle simple pour
+raisonner ; il ne certifie aucun boîtier.
+
+\subsection{Bruit de photons et bruit de lecture}
+Pour un comptage de photons de type Poisson,
+\begin{equation}
+N\sim\mathcal P(\mu),\qquad \mathbb E[N]=\mu,
+\qquad \operatorname{Var}(N)=\mu.
+\end{equation}
+L'écart-type vaut $\sqrt\mu$ : recevoir davantage de lumière augmente
+le bruit absolu, mais améliore le rapport signal/bruit relatif.
+Si le bruit de lecture indépendant a une variance $\sigma_r^2$,
+\begin{equation}
+\operatorname{SNR}\simeq\frac{\mu}{\sqrt{\mu+\sigma_r^2}}.
+\end{equation}
+Avec $\mu=100$ électrons et $\sigma_r=3$, on obtient environ $9{,}58$.
+Avec $\mu=400$, on obtient $19{,}78$. Multiplier ensuite le fichier
+sombre par quatre amplifie aussi son bruit et ne procure pas les
+400 électrons d'une vraie exposition plus longue.
+
+Le bruit thermique dépend du temps et de la température ; les
+inhomogénéités de gain ou d'offset produisent du bruit spatial fixe.
+Un pixel chaud, une ligne de lecture et un bruit aléatoire ne se
+traitent pas forcément avec le même algorithme.
+
+\subsection{Niveau noir, niveau blanc et saturation}
+Le code zéro n'est pas nécessairement le noir du capteur. Un offset
+permet notamment de représenter les fluctuations autour du noir
+sans les couper trop tôt. Pour une normalisation simple :
+\begin{equation}\label{eq:normalisation}
+u=\frac{D-B}{W-B},\qquad W>B.
+\end{equation}
+Si $D=6144$, $B=2048$ et $W=16383$, alors $u\approx0{,}28574$.
+Changer arbitrairement $W$ modifie l'échelle de tous les pixels.
+Changer $B$ affecte proportionnellement davantage les ombres.
+
+Le blanc opérationnel peut être inférieur au maximum théorique
+$2^b-1$. Il dépend parfois du canal, de l'ISO ou du mode. Les marges
+optical-black sont des zones masquées destinées à mesurer le noir,
+mais toutes les bordures du tableau ne sont pas nécessairement masquées.
+Une zone active prise pour du noir produit une correction erronée.
+
+Au-dessus de la capacité de saturation, plusieurs éclairements
+distincts donnent le même code. Aucune transformation réversible
+du fichier ne peut les distinguer. Une reconstruction de hautes
+lumières peut exploiter des canaux non saturés ou une hypothèse de
+couleur ; elle n'est pas une récupération certaine de la mesure perdue.
+
+\section{Échantillonnage spatial et résolution}
+\subsection{Du champ continu à la grille}
+Une image monochrome discrète est une fonction
+$I:\{0,\ldots,W-1\}\times\{0,\ldots,H-1\}\to\mathbb R$.
+Le pixel représente une mesure spatialement intégrée, pas un point
+mathématique infiniment petit. Une grille $6000\times4000$ contient
+24 millions de positions. Cela ne garantit ni 24 millions de détails
+indépendants ni une résolution optique correspondante.
+
+Une fréquence spatiale trop élevée peut se replier en fréquence
+plus basse : c'est l'aliasing. En une dimension, une sinusoïde à
+$0{,}7$ cycle par échantillon peut être confondue, sur la grille,
+avec une fréquence de $0{,}3$. La limite de Nyquist est $0{,}5$ cycle
+par échantillon pour un signal correctement limité en fréquence.
+En photographie, les structures fines, tissus et grilles peuvent
+produire du moiré ; le CFA ajoute sa propre structure d'échantillonnage.
+
+\subsection{Redimensionner n'est pas seulement sélectionner des pixels}
+Réduire une image par deux doit généralement être précédé d'un
+passe-bas. Conserver un pixel sur deux sans filtrer peut transformer
+une texture fine en motif faux. Agrandir reconstruit une fonction
+interpolée : plus proche voisin, bilinéaire, bicubique ou autre.
+Le choix change netteté, halos et aliasing ; il n'ajoute pas de
+mesures physiques nouvelles.
+
+Un filtre bilinéaire en deux dimensions combine quatre voisins :
+\begin{equation}
+I(x,y)=(1-a)(1-b)I_{00}+a(1-b)I_{10}
++(1-a)bI_{01}+abI_{11},
+\end{equation}
+où $a,b\in[0,1]$ sont les fractions de position. Si les valeurs sont
+des couleurs encodées non linéaires, cette moyenne n'est pas la
+même que la moyenne des lumières ; nous y reviendrons.
+
+\subsection{DPI, PPI, dimensions et taille physique}
+Une largeur de 6000 pixels imprimée à 300 pixels par pouce donne
+$6000/300=20$ pouces, soit $50{,}8$ cm. Changer seulement la métadonnée
+de résolution à 150 PPI ne crée aucun pixel : la dimension physique
+demandée devient 101,6 cm. Le DPI d'une imprimante décrit ses points
+matériels et n'est pas nécessairement égal au nombre de pixels d'image.
+
+\section{Mosaïque colorée, canaux et profondeur}
+\subsection{Photosite, CFA et pixel RGB}
+Dans un capteur Bayer courant, chaque photosite mesure une réponse
+spectrale principalement rouge, verte ou bleue. Une cellule RGGB est
+\[
+\begin{matrix}R&G\\G&B\end{matrix}.
+\]
+Ce sont des filtres larges et chevauchants, pas des monochromateurs
+parfaits. Les deux verts occupent des positions différentes ; on
+peut devoir préserver quatre classes RGGB dans la calibration.
+Le dématriçage estime les composantes absentes à chaque position.
+Le RAW mosaïqué de 24 millions de photosites contient ainsi environ
+24 millions de mesures, et non 72 millions de mesures RGB indépendantes.
+
+Des capteurs monochromes, des CFA différents, des capteurs à couches
+et des modes multivues existent. Il ne faut jamais déduire le motif
+de la seule extension du fichier. Le décalage du recadrage peut aussi
+changer la phase du motif : enlever une colonne fait commencer une
+ligne RG par GR.
+
+\subsection{Profondeur par échantillon et profondeur par pixel}
+Un entier non signé sur $b$ bits possède $2^b$ codes, de 0 à $2^b-1$.
+Une image RGB 8 bits par composante utilise 24 bits par pixel avant
+compression ; RGBA utilise 32 bits. Un RAW 14 bits mosaïqué n'est
+donc pas « moins riche » qu'un JPEG 24 bits au sens où ces nombres
+seraient directement comparables : ils décrivent des objets différents.
+
+Une quantification uniforme normalisée est
+\begin{equation}
+Q_b(x)=\frac{\operatorname{round}((2^b-1)x)}{2^b-1},\quad x\in[0,1].
+\end{equation}
+Le pas est $\Delta=1/(2^b-1)$ et l'erreur d'arrondi est bornée par
+$\Delta/2$. Sous des hypothèses statistiques supplémentaires,
+sa variance est approximativement $\Delta^2/12$ ; cette erreur n'est
+pas systématiquement un bruit aléatoire indépendant. Sur un dégradé
+très lisse, elle peut produire des bandes. Le dithering ajoute un
+signal contrôlé avant quantification pour réduire ces structures,
+au prix d'un bruit visible ou mesurable.
+
+\subsection{Profondeur nominale, utile et stockage}
+Un signal 12 bits peut être rangé dans un entier 16 bits. Il faut
+savoir s'il occupe les bits faibles, les bits forts ou une
+représentation compactée. La profondeur de stockage ne démontre
+pas le nombre de bits utiles du capteur. De même, convertir un
+JPEG 8 bits en TIFF 16 bits ne recrée pas les valeurs intermédiaires
+perdues : cela donne surtout davantage de marge pour les calculs suivants.
+
+\resultat{Résolution spatiale, nombre de composantes, précision numérique,
+dynamique physique, gamut et compression sont des dimensions distinctes
+de la qualité. Aucun nombre unique ne les résume.}

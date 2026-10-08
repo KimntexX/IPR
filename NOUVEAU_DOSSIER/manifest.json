@@ -1,0 +1,1303 @@
+{
+    "images": [
+        {
+            "directory": "6V1A0007/profile-0/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A0007.CR3",
+            "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+            "source_camera_sha256": "9e245d7ed8bac3afb0657c3b3e75d44279268af7cc354b73cda4814e06fd6aaf",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-linear.f32",
+                    "mean_rgb": [
+                        0.10492507329840822,
+                        0.12914646937265742,
+                        0.15881384625628844
+                    ],
+                    "rows": 870,
+                    "sha256": "6e88e0971d6d745009514bee432692b2c0d1d65b55171d65ea404427163553dd"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-encoded.f32",
+                    "mean_rgb": [
+                        0.34099995329934185,
+                        0.37703567887174677,
+                        0.41472648513380456
+                    ],
+                    "rows": 870,
+                    "sha256": "af5d8e01ec5b2dcf33ca4245964e0480ff4c78898b15f7eb5c7034cbb9aa6258"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0007/profile-0/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A0007.CR3",
+            "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+            "source_camera_sha256": "fa3248d57734d25352cd6d9f3a83a4bf26cfbbaac208882aa7b3031a808b2937",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-linear.f32",
+                    "mean_rgb": [
+                        0.10459353639854271,
+                        0.12850009356261322,
+                        0.15794389412571813
+                    ],
+                    "rows": 870,
+                    "sha256": "6fb902e11ec921da4c6b3d21865671b59ffb1e9b1b85f9e410635172c88c4f05"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-encoded.f32",
+                    "mean_rgb": [
+                        0.34045222312483675,
+                        0.3761862128770649,
+                        0.4137881525768336
+                    ],
+                    "rows": 870,
+                    "sha256": "c450967810655afd0aa4051d18a1e7bc21df7f30f9a0b9d55a917bcfa46d757b"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0007/profile-1/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A0007.CR3",
+            "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+            "source_camera_sha256": "9e245d7ed8bac3afb0657c3b3e75d44279268af7cc354b73cda4814e06fd6aaf",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-linear.f32",
+                    "mean_rgb": [
+                        0.1880354441620502,
+                        0.2302327122837156,
+                        0.29605978483116663
+                    ],
+                    "rows": 870,
+                    "sha256": "d131dda79d479a715ca38b0953bba66d7408e24bc3ec3a586e12bf6d6ce608f3"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-encoded.f32",
+                    "mean_rgb": [
+                        0.4330221219598384,
+                        0.48112176941653473,
+                        0.5440678544784149
+                    ],
+                    "rows": 870,
+                    "sha256": "cc5c08bae7a1360e1b617b6e3039120ed49b73f3e2c4ef0b431262442a23b880"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0007/profile-1/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A0007.CR3",
+            "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+            "source_camera_sha256": "fa3248d57734d25352cd6d9f3a83a4bf26cfbbaac208882aa7b3031a808b2937",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-linear.f32",
+                    "mean_rgb": [
+                        0.1874460994434323,
+                        0.22924102633673643,
+                        0.29468437055579894
+                    ],
+                    "rows": 870,
+                    "sha256": "4fcf5a6dd8221f518bfa4108bd65127c77e509c6d1feace50ae065708948457a"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-encoded.f32",
+                    "mean_rgb": [
+                        0.4321432063120452,
+                        0.48004111021472157,
+                        0.5428853694409161
+                    ],
+                    "rows": 870,
+                    "sha256": "699521e0f8ef27e07314293996c5742a98758f676215aff79c266126e2d2347b"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0007/profile-2/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A0007.CR3",
+            "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+            "source_camera_sha256": "9e245d7ed8bac3afb0657c3b3e75d44279268af7cc354b73cda4814e06fd6aaf",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-linear.f32",
+                    "mean_rgb": [
+                        0.2019975557049712,
+                        0.2525233750814237,
+                        0.3229952961956396
+                    ],
+                    "rows": 870,
+                    "sha256": "a6e18357b398a879a9c002bddee7d1c714d4f8c55cafbf9caf2423d327e0ea07"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-encoded.f32",
+                    "mean_rgb": [
+                        0.4408000722498597,
+                        0.49785349984664556,
+                        0.5643235135864831
+                    ],
+                    "rows": 870,
+                    "sha256": "56866143cacd6def1fa71a03bf5a4ce4d2bb82f9796f2d3808175e99a24c5e2e"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0007/profile-2/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A0007.CR3",
+            "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+            "source_camera_sha256": "fa3248d57734d25352cd6d9f3a83a4bf26cfbbaac208882aa7b3031a808b2937",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-linear.f32",
+                    "mean_rgb": [
+                        0.20136632852260325,
+                        0.2513988947172026,
+                        0.3215383345270116
+                    ],
+                    "rows": 870,
+                    "sha256": "076078986a797fa57ea7e3c9b1e005947759da5159fbb3582d576fd896cc6806"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0007-encoded.f32",
+                    "mean_rgb": [
+                        0.43982237948746067,
+                        0.4967208471272774,
+                        0.5631229633432021
+                    ],
+                    "rows": 870,
+                    "sha256": "c2e12061afdc902f945c68d54d155c35238c681d55d4611540ff733d50ac2dad"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0037/profile-0/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A0037.CR3",
+            "raw_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+            "source_camera_sha256": "4fdd3e708609d76843a1d1264dffc96febdabfd80855e7d40e85baed68a495ca",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-linear.f32",
+                    "mean_rgb": [
+                        0.030038243684522882,
+                        0.03831506157028856,
+                        0.02579788268078691
+                    ],
+                    "rows": 580,
+                    "sha256": "707fe8214db208fec008ea44a8b79fa62b3061c5c5a8aaf93c6efa874a7aa175"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-encoded.f32",
+                    "mean_rgb": [
+                        0.1430528066467464,
+                        0.16938390663097508,
+                        0.12117146268892331
+                    ],
+                    "rows": 580,
+                    "sha256": "7d87a5c7b199aad038076b60ed8c932b67793e1a20b0cef45522f8e160354987"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0037/profile-0/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A0037.CR3",
+            "raw_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+            "source_camera_sha256": "bf155a9b882f50336d6a52ee913e15c6c1cbced960d179f3ff9fc480d719b822",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-linear.f32",
+                    "mean_rgb": [
+                        0.023427345243921146,
+                        0.030835230365686247,
+                        0.022264040493961457
+                    ],
+                    "rows": 580,
+                    "sha256": "3b51fd913cfa7c3ddd76ee946f0aa34efa02bfdd9a931fa2eea3d8dbd0238ded"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-encoded.f32",
+                    "mean_rgb": [
+                        0.12084500780830346,
+                        0.14502254838249146,
+                        0.10302169502604447
+                    ],
+                    "rows": 580,
+                    "sha256": "250659f42a315654eebc95320200d9eee6b544f56f29c34f2ef5e18afa1b58a9"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0037/profile-1/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A0037.CR3",
+            "raw_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+            "source_camera_sha256": "4fdd3e708609d76843a1d1264dffc96febdabfd80855e7d40e85baed68a495ca",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-linear.f32",
+                    "mean_rgb": [
+                        0.033234682067074445,
+                        0.04313057938809448,
+                        0.02506201671860786
+                    ],
+                    "rows": 580,
+                    "sha256": "d7d1de2efb5276f0bd027fd457aba30be77e19f1c192c7ac72b171f5dfe52cb3"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-encoded.f32",
+                    "mean_rgb": [
+                        0.09841757113787022,
+                        0.13411755237930367,
+                        0.08336980884755935
+                    ],
+                    "rows": 580,
+                    "sha256": "29b546cf02929c38cb8bbc05576827812dc032dc3c2d56882ede79ebda2f8b33"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0037/profile-1/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A0037.CR3",
+            "raw_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+            "source_camera_sha256": "bf155a9b882f50336d6a52ee913e15c6c1cbced960d179f3ff9fc480d719b822",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-linear.f32",
+                    "mean_rgb": [
+                        0.02603858387083438,
+                        0.03390116483452563,
+                        0.02124729870568017
+                    ],
+                    "rows": 580,
+                    "sha256": "a7e9ee222d899ed42cbf2931ff44ff9f9d0a3f16b39dd5a031995a4fabee1562"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-encoded.f32",
+                    "mean_rgb": [
+                        0.0781566839090213,
+                        0.10620588442431167,
+                        0.06732689761707661
+                    ],
+                    "rows": 580,
+                    "sha256": "6eb6b8e4b42b8d7d5e76ac488fab67ef5fd1842b55c01fe07991f87b9a561459"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0037/profile-2/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A0037.CR3",
+            "raw_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+            "source_camera_sha256": "4fdd3e708609d76843a1d1264dffc96febdabfd80855e7d40e85baed68a495ca",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-linear.f32",
+                    "mean_rgb": [
+                        0.03511538149771727,
+                        0.04561933407873287,
+                        0.026285217020789054
+                    ],
+                    "rows": 580,
+                    "sha256": "d790f795730b1f7b8f853d35add960984ad836b480ab84468afaa03321d3fe78"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-encoded.f32",
+                    "mean_rgb": [
+                        0.09404374970139276,
+                        0.13537986818758938,
+                        0.08417929809041028
+                    ],
+                    "rows": 580,
+                    "sha256": "9d228fd76521a8cf86c43e0c062393c4b144ffa13774d6fa210eafa8fa1e9086"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0037/profile-2/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A0037.CR3",
+            "raw_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+            "source_camera_sha256": "bf155a9b882f50336d6a52ee913e15c6c1cbced960d179f3ff9fc480d719b822",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-linear.f32",
+                    "mean_rgb": [
+                        0.027475676934331467,
+                        0.03582944185694266,
+                        0.022323695536893753
+                    ],
+                    "rows": 580,
+                    "sha256": "fc4da0df840ce79c1f7992ebe008a4313c3d7303dad567de3dec5eff9b9737dc"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0037-encoded.f32",
+                    "mean_rgb": [
+                        0.07476462339489645,
+                        0.10714756094848893,
+                        0.06804956131261024
+                    ],
+                    "rows": 580,
+                    "sha256": "e719d4172c66453127e03ccab36a134616fbc7b76a5f24df6a8a701b03077a96"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0043/profile-0/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A0043.CR3",
+            "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+            "source_camera_sha256": "ae421ac005d90fdf8ecfe3369d436bbfaea02301c95ceea7db3035094235fc84",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-linear.f32",
+                    "mean_rgb": [
+                        0.015695947637959246,
+                        0.013726892876420283,
+                        0.008715145963482121
+                    ],
+                    "rows": 580,
+                    "sha256": "f856fc89e8d8732c2dc9674b5711633c6035de4afacf356a16b4457ad8c2ab86"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-encoded.f32",
+                    "mean_rgb": [
+                        0.09371759774502415,
+                        0.09242680328585523,
+                        0.05141748352486464
+                    ],
+                    "rows": 580,
+                    "sha256": "3c925f3dabc78b0a813a91f02baff9a52f1be37e5eb288bc0a582914178ede82"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0043/profile-0/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A0043.CR3",
+            "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+            "source_camera_sha256": "61551bf3217a2c8024101fa14d7b2f3b85359694cbdc8407f87e624379067bb7",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-linear.f32",
+                    "mean_rgb": [
+                        0.01572184652935637,
+                        0.013895452860181135,
+                        0.008699856907247911
+                    ],
+                    "rows": 580,
+                    "sha256": "342a7591a8feed7fc989be0dc47ae17b5deb892dff338c075ac2df6f16552011"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-encoded.f32",
+                    "mean_rgb": [
+                        0.09414848365530899,
+                        0.09341564810927894,
+                        0.05172597338317811
+                    ],
+                    "rows": 580,
+                    "sha256": "48f25bc49022b7d52ce2b3293e1c25bc0d4baf628599efe66c28877fa875060a"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0043/profile-1/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A0043.CR3",
+            "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+            "source_camera_sha256": "ae421ac005d90fdf8ecfe3369d436bbfaea02301c95ceea7db3035094235fc84",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-linear.f32",
+                    "mean_rgb": [
+                        0.01427353522384489,
+                        0.012312275851486157,
+                        0.0095136643745446
+                    ],
+                    "rows": 580,
+                    "sha256": "ae06a0bd688b78cfda309dc0d66582b0647eb4b5a0219f7225b987a105acf2a0"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-encoded.f32",
+                    "mean_rgb": [
+                        0.05023469022228372,
+                        0.05250657438248318,
+                        0.03024772247427503
+                    ],
+                    "rows": 580,
+                    "sha256": "53ffd14bb20f4cb36c76d803849f6d442fc018f895a29190c4c350088e260ba9"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0043/profile-1/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A0043.CR3",
+            "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+            "source_camera_sha256": "61551bf3217a2c8024101fa14d7b2f3b85359694cbdc8407f87e624379067bb7",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-linear.f32",
+                    "mean_rgb": [
+                        0.014147003882110851,
+                        0.012376363411208933,
+                        0.009419149908899372
+                    ],
+                    "rows": 580,
+                    "sha256": "bead534ae5c3663d91d5c5a427f2be0b2bde74c5288a66a8b41079da2497411d"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-encoded.f32",
+                    "mean_rgb": [
+                        0.05048077816037276,
+                        0.0535174919936454,
+                        0.030392688108699766
+                    ],
+                    "rows": 580,
+                    "sha256": "6384a28f63c92490ba55d7b257156f143d890de81157e7f935cfa94a51ddc280"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0043/profile-2/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A0043.CR3",
+            "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+            "source_camera_sha256": "ae421ac005d90fdf8ecfe3369d436bbfaea02301c95ceea7db3035094235fc84",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-linear.f32",
+                    "mean_rgb": [
+                        0.0155467245229084,
+                        0.012498344026054977,
+                        0.009459217655646944
+                    ],
+                    "rows": 580,
+                    "sha256": "4300db371a0fc7f449e7ea3133133a62c1628bbfd5cffb312e692c350a4c78ab"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-encoded.f32",
+                    "mean_rgb": [
+                        0.05078834193692038,
+                        0.05233319993098794,
+                        0.029736299840587604
+                    ],
+                    "rows": 580,
+                    "sha256": "bade0326e41624cf739659c05d1d77894114932aa8f9930a7b7a47c483acce4a"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0043/profile-2/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A0043.CR3",
+            "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+            "source_camera_sha256": "61551bf3217a2c8024101fa14d7b2f3b85359694cbdc8407f87e624379067bb7",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-linear.f32",
+                    "mean_rgb": [
+                        0.01537820804939377,
+                        0.012545857958401194,
+                        0.009364909327151212
+                    ],
+                    "rows": 580,
+                    "sha256": "d88cc8152257c4d57595e2ad0ba9bf4ed17f4b588d9eea3753078d5a412cb5bb"
+                },
+                "encoded_srgb": {
+                    "cols": 870,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0043-encoded.f32",
+                    "mean_rgb": [
+                        0.050895443064308946,
+                        0.0533275230926267,
+                        0.02989503046623485
+                    ],
+                    "rows": 580,
+                    "sha256": "44a609e5647a1d8f898a25868e3b8e0946d06da87a3c142dbf0215e8df156b99"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0327/profile-0/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A0327.CR3",
+            "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+            "source_camera_sha256": "d1cebebaa3a241855731e5275e23e394d44f377afd4a1fee9541c70a4d1f1004",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-linear.f32",
+                    "mean_rgb": [
+                        0.052324535333884176,
+                        0.046315526277618695,
+                        0.03508144290572253
+                    ],
+                    "rows": 870,
+                    "sha256": "eff3974199ca9f7f722292482bac509fd5773b167972925da0496e7215035f54"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-encoded.f32",
+                    "mean_rgb": [
+                        0.22220676038906112,
+                        0.20458172959126417,
+                        0.17825331292517832
+                    ],
+                    "rows": 870,
+                    "sha256": "1cb1dbf1a59fab94bdbb3ae94efa2daae0fe3912b6d93740bc4e3d6656728451"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0327/profile-0/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A0327.CR3",
+            "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+            "source_camera_sha256": "55a1b8cc3f509ff2fe506da8cb2fc786d409530330bd08411f97a0b09bf127fc",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-linear.f32",
+                    "mean_rgb": [
+                        0.05095945926691454,
+                        0.044512969874044364,
+                        0.03424275413775816
+                    ],
+                    "rows": 870,
+                    "sha256": "7e8b7ff70bbd994ece39a58d8190f696ef5a6c2abaf04717f8cec8bb53ba8c86"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-encoded.f32",
+                    "mean_rgb": [
+                        0.21955318839348173,
+                        0.20111307988060953,
+                        0.17628930260704517
+                    ],
+                    "rows": 870,
+                    "sha256": "32003f7e22965667a7b3a0aabdd78dbdccc372d347ee583cd65246ef4cf748e5"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0327/profile-1/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A0327.CR3",
+            "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+            "source_camera_sha256": "d1cebebaa3a241855731e5275e23e394d44f377afd4a1fee9541c70a4d1f1004",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-linear.f32",
+                    "mean_rgb": [
+                        0.07107502079736182,
+                        0.061160167570276175,
+                        0.04313200774541511
+                    ],
+                    "rows": 870,
+                    "sha256": "ded2d308c58b13930e84ae8ffdc1b46096ef2359ec7550596116b165d50b4feb"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-encoded.f32",
+                    "mean_rgb": [
+                        0.2200188200821159,
+                        0.19578609688896864,
+                        0.16554059713246647
+                    ],
+                    "rows": 870,
+                    "sha256": "333bb521d88a4929503094168e25ec4b0899b7e79b4303be10b5ac04b9c6ac67"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0327/profile-1/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A0327.CR3",
+            "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+            "source_camera_sha256": "55a1b8cc3f509ff2fe506da8cb2fc786d409530330bd08411f97a0b09bf127fc",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-linear.f32",
+                    "mean_rgb": [
+                        0.06863772563559827,
+                        0.05760488003985668,
+                        0.041349074366885216
+                    ],
+                    "rows": 870,
+                    "sha256": "052290d0a04978f1dcb09798cf36c39a63afdab9ee9d72af1d4b9348d834e358"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-encoded.f32",
+                    "mean_rgb": [
+                        0.21581209698095769,
+                        0.1898162720672805,
+                        0.16183600057831835
+                    ],
+                    "rows": 870,
+                    "sha256": "52bb1329844543f2568d10640e64a4285169840feafdd953eb65660c659fbb35"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0327/profile-2/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A0327.CR3",
+            "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+            "source_camera_sha256": "d1cebebaa3a241855731e5275e23e394d44f377afd4a1fee9541c70a4d1f1004",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-linear.f32",
+                    "mean_rgb": [
+                        0.07793995024786637,
+                        0.06409498303270471,
+                        0.04440616287434317
+                    ],
+                    "rows": 870,
+                    "sha256": "83886c33ba15d720e4e329cdf9e76c3030fa5a52c77d70c0e638249ce17a3a3b"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-encoded.f32",
+                    "mean_rgb": [
+                        0.22453412810951995,
+                        0.1957049055485046,
+                        0.1650408977931539
+                    ],
+                    "rows": 870,
+                    "sha256": "c3b163c5a617a6af822cc0a226ebce1b47cc376be7c325b4860176e2288eafeb"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A0327/profile-2/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A0327.CR3",
+            "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+            "source_camera_sha256": "55a1b8cc3f509ff2fe506da8cb2fc786d409530330bd08411f97a0b09bf127fc",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-linear.f32",
+                    "mean_rgb": [
+                        0.075112296131795,
+                        0.06010580133803448,
+                        0.042478404442893386
+                    ],
+                    "rows": 870,
+                    "sha256": "36062066d124fe525068f780ecbdf014a6a75f44ab20cfc8803d6faf436cd380"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A0327-encoded.f32",
+                    "mean_rgb": [
+                        0.2199736918996553,
+                        0.18915159839510118,
+                        0.16111003683422617
+                    ],
+                    "rows": 870,
+                    "sha256": "3668467cddf55192bb9992096acc9d506d063cb4612d971cd94cf27efb830f64"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9421/profile-0/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A9421.CR3",
+            "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+            "source_camera_sha256": "2d42b14e67529ed8a2e27e517237698cb62245d155cc92ecb56ff6c15245bc83",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-linear.f32",
+                    "mean_rgb": [
+                        0.12869354312004547,
+                        0.08719229456453113,
+                        0.03811286887305198
+                    ],
+                    "rows": 870,
+                    "sha256": "92f8ec45e9517d923125d9314eda6271e67deef01bc56b69099e6aa0bfdd171c"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-encoded.f32",
+                    "mean_rgb": [
+                        0.3534387210258003,
+                        0.29613758036339893,
+                        0.19091531266953388
+                    ],
+                    "rows": 870,
+                    "sha256": "a54ddad7585a93e9b4e646ead2021c33142ef9f882328ca6ca39c5c0d14b9634"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9421/profile-0/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A9421.CR3",
+            "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+            "source_camera_sha256": "556614667d06ba2b150ca5956da466e7fe4cf6fea7f4c51a59b3fe79814f0870",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-linear.f32",
+                    "mean_rgb": [
+                        0.1232878034639233,
+                        0.08361119078821587,
+                        0.0366881959606587
+                    ],
+                    "rows": 870,
+                    "sha256": "1dcca184afb3552d14cf40956eb52edeeab3ce7ef8793965f0eeb60c89aa722e"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-encoded.f32",
+                    "mean_rgb": [
+                        0.3459598566609629,
+                        0.290493796582431,
+                        0.18714900636538453
+                    ],
+                    "rows": 870,
+                    "sha256": "4866b816267246bdf92ba78dc2c017d4a773724229c5a1d62dadcf031a5c7769"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9421/profile-1/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A9421.CR3",
+            "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+            "source_camera_sha256": "2d42b14e67529ed8a2e27e517237698cb62245d155cc92ecb56ff6c15245bc83",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-linear.f32",
+                    "mean_rgb": [
+                        0.21406983852521838,
+                        0.142919620574476,
+                        0.039401991928793255
+                    ],
+                    "rows": 870,
+                    "sha256": "186c1d45da676e6d1b5db7a3e0ce5142873e604144ac5d673c1e3afe7e93441e"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-encoded.f32",
+                    "mean_rgb": [
+                        0.42196303229276805,
+                        0.3412026125788437,
+                        0.15050523373461644
+                    ],
+                    "rows": 870,
+                    "sha256": "971852b67212e1635eb81803ae8be77472bdf337d95a2cbba18d4605ff1e2807"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9421/profile-1/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A9421.CR3",
+            "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+            "source_camera_sha256": "556614667d06ba2b150ca5956da466e7fe4cf6fea7f4c51a59b3fe79814f0870",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-linear.f32",
+                    "mean_rgb": [
+                        0.20449133616240864,
+                        0.1348957364528144,
+                        0.03703530826464659
+                    ],
+                    "rows": 870,
+                    "sha256": "fae2ce2ee4cf11f7ffc5f89d220dcd780f20de0f0f5ac58b8caa8098b20540d2"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-encoded.f32",
+                    "mean_rgb": [
+                        0.4116715932710823,
+                        0.33171675179279925,
+                        0.14589241287961124
+                    ],
+                    "rows": 870,
+                    "sha256": "e5f0dec2fb29f530401a01a5d35b3627751a195162ce9dbddcbe5fd1f4c66c86"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9421/profile-2/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A9421.CR3",
+            "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+            "source_camera_sha256": "2d42b14e67529ed8a2e27e517237698cb62245d155cc92ecb56ff6c15245bc83",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-linear.f32",
+                    "mean_rgb": [
+                        0.25044902161238447,
+                        0.14916682308776688,
+                        0.03666617443326205
+                    ],
+                    "rows": 870,
+                    "sha256": "431b03d8e45d32249ea7980c06448f20e77b4729288daee6902a5bab7b462010"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-encoded.f32",
+                    "mean_rgb": [
+                        0.4483967711195143,
+                        0.342988283729561,
+                        0.1358569894499894
+                    ],
+                    "rows": 870,
+                    "sha256": "65f620ddb9d1b9745329b352241b100cc0de38c3decfebeacc388fe0affb1384"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9421/profile-2/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A9421.CR3",
+            "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+            "source_camera_sha256": "556614667d06ba2b150ca5956da466e7fe4cf6fea7f4c51a59b3fe79814f0870",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-linear.f32",
+                    "mean_rgb": [
+                        0.2387560452941197,
+                        0.13980644562528793,
+                        0.0343463824682942
+                    ],
+                    "rows": 870,
+                    "sha256": "e358e0bbe5f3a38a6554bb0a2d6b8c225c3b408aa48addb7a04df35844e683ce"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9421-encoded.f32",
+                    "mean_rgb": [
+                        0.43710572619798155,
+                        0.33226484994961275,
+                        0.13122855013954277
+                    ],
+                    "rows": 870,
+                    "sha256": "5a6dd51789346950db8692b61b562d2d860ff76502c2398506432d4d95b0a301"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9950/profile-0/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A9950.CR3",
+            "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+            "source_camera_sha256": "85c9563a679763f4ec5f93e593f52d885bde0e5f0632ccc430df5cfeef83fd85",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-linear.f32",
+                    "mean_rgb": [
+                        0.05210840691077361,
+                        0.06828925654698255,
+                        0.08919534586868226
+                    ],
+                    "rows": 870,
+                    "sha256": "d0145b55e4d23da4d56059e699feacb187ada0e9f0f900e0d1b6d4397b322b05"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-encoded.f32",
+                    "mean_rgb": [
+                        0.2147245124122908,
+                        0.24021590801182263,
+                        0.2430373993514884
+                    ],
+                    "rows": 870,
+                    "sha256": "804e4999f39adaef73bb8a5d1051eeb5be64f63bf442b52b4a7432049df8ccb8"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9950/profile-0/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Adobe Standard\\Canon EOS R6 Mark III Adobe Standard.dcp",
+            "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+            "raw": "tests/image/base/6V1A9950.CR3",
+            "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+            "source_camera_sha256": "e00a6f0b6f951684483a7780c02545d96f31b7cbff1555abaa82042fb93cd2ea",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-linear.f32",
+                    "mean_rgb": [
+                        0.03939284690249592,
+                        0.0510118150336598,
+                        0.06523393773660602
+                    ],
+                    "rows": 870,
+                    "sha256": "04acc2ce59c5fb72de51f20f0fe66a98fc27b127e42c9df5fd91ea0925111cdd"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-encoded.f32",
+                    "mean_rgb": [
+                        0.18244751509616217,
+                        0.20343910573357316,
+                        0.20449515637195412
+                    ],
+                    "rows": 870,
+                    "sha256": "b031b589186d2f8afca9bc12f7bb4503388b8ef0d9594bb430f071f30af34748"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9950/profile-1/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A9950.CR3",
+            "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+            "source_camera_sha256": "85c9563a679763f4ec5f93e593f52d885bde0e5f0632ccc430df5cfeef83fd85",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-linear.f32",
+                    "mean_rgb": [
+                        0.08565895298795227,
+                        0.114107313433871,
+                        0.1643760210110452
+                    ],
+                    "rows": 870,
+                    "sha256": "ba452b31969fa1c043e38490de0c6083f6cf99ba599e630a34e6f2e2d6f79b55"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-encoded.f32",
+                    "mean_rgb": [
+                        0.22073869121203357,
+                        0.25329307767839787,
+                        0.2698122728865935
+                    ],
+                    "rows": 870,
+                    "sha256": "407a6115e2329286f26640e35745ae9ec8b8f0eabf018e7a4031c057ed1f1ec8"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9950/profile-1/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+            "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+            "raw": "tests/image/base/6V1A9950.CR3",
+            "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+            "source_camera_sha256": "e00a6f0b6f951684483a7780c02545d96f31b7cbff1555abaa82042fb93cd2ea",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-linear.f32",
+                    "mean_rgb": [
+                        0.05851912891342563,
+                        0.07983345006573395,
+                        0.11962712403743002
+                    ],
+                    "rows": 870,
+                    "sha256": "96be84273ddbaa8107133d1893e70d983d9f8f39293e6c41cb0e24dc9236dbe1"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-encoded.f32",
+                    "mean_rgb": [
+                        0.1727404612852461,
+                        0.20183481399639727,
+                        0.22434734037886547
+                    ],
+                    "rows": 870,
+                    "sha256": "00377eef03753822942a9fc71a8ce8dc6cd746a1b802c47c59c60d7d4e37d3fe"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9950/profile-2/with_lcp",
+            "geometry": "with_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A9950.CR3",
+            "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+            "source_camera_sha256": "85c9563a679763f4ec5f93e593f52d885bde0e5f0632ccc430df5cfeef83fd85",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-linear.f32",
+                    "mean_rgb": [
+                        0.09100630943007341,
+                        0.12519336281100676,
+                        0.17697324822601262
+                    ],
+                    "rows": 870,
+                    "sha256": "ab0fc43e526d079cdadb1824186d13eac8b2ac90e143e7b20f6ef1624dce95bf"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-encoded.f32",
+                    "mean_rgb": [
+                        0.22390322219282385,
+                        0.26183570143899404,
+                        0.27768104818613876
+                    ],
+                    "rows": 870,
+                    "sha256": "371d9767c2cfbe4a8de42c9b218d0fa980a65c159b1cbc232f38820e056f2167"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        },
+        {
+            "directory": "6V1A9950/profile-2/without_lcp",
+            "geometry": "without_lcp",
+            "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Standard.dcp",
+            "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+            "raw": "tests/image/base/6V1A9950.CR3",
+            "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+            "source_camera_sha256": "e00a6f0b6f951684483a7780c02545d96f31b7cbff1555abaa82042fb93cd2ea",
+            "stages": {
+                "dcp_linear": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-linear.f32",
+                    "mean_rgb": [
+                        0.06007470418148727,
+                        0.08575525478150911,
+                        0.12850237941939327
+                    ],
+                    "rows": 870,
+                    "sha256": "a5070c7f8c5eb6c351b2a69bdfb3370f7b6157923605dd7566710f1756adc4b3"
+                },
+                "encoded_srgb": {
+                    "cols": 580,
+                    "dtype": "little-endian float32 RGB",
+                    "file": "6V1A9950-encoded.f32",
+                    "mean_rgb": [
+                        0.1715629249068394,
+                        0.2065059464393348,
+                        0.23067904188949026
+                    ],
+                    "rows": 870,
+                    "sha256": "74db03876f7fdd71eb686e71b502addfbbbe35129dbea267fd08fe688997435f"
+                }
+            },
+            "wb_kelvin": 4924.211272770631
+        }
+    ],
+    "libraw_version": "0.22.2-Release",
+    "sample_step": 8,
+    "source_manifest_sha256": "16e717fd856cfb09b2a124bd2c632d9f17632bf470fa156f346b8b402cf547a4"
+}

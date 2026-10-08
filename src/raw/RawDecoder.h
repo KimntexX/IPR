@@ -30,12 +30,23 @@ struct SourceMetadata
     int rating = 0;
     QString colorLabel;
     bool opticalBlackLevelEstimated = false;
+    bool rawNormalizationApplied = false;
+    unsigned normalizationWhiteLevel = 0;
+    double normalizationBaselineExposureEv = 0.0;
+    QString normalizationProvenance;
+    QString normalizationReason;
+    QStringList availableDcpProfiles;
 };
 
 struct Options
 {
     bool automaticWhiteBalance = true;
     QStringList profileDirectories;
+    // Optional audited per-file manifest, never inferred from camera name alone.
+    QString normalizationManifest;
+    QString dcpProfileOverride;
+    bool useNormalizationEnvironment = true;
+    bool listDcpProfiles = false;
 };
 
 using DecodeFunction = std::function<ColorPipeline::WorkingImage(

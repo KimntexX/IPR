@@ -8,6 +8,17 @@ Le moteur contient maintenant des implémentations des fonctions décrites ci-de
 
 ## Architecture
 
+**Orientation à préparer (8 octobre 2026) :** rendre le backend RAW
+remplaçable si les limitations de LibRaw persistent ou si des problèmes
+de stabilité sont confirmés. Séparer lecture du conteneur/métadonnées,
+développement de la mosaïque et rendu DCP/LCP IPR, avec des contrats
+explicites sur les noirs/blancs, la WB et les gains déjà appliqués.
+Le registre de décodeurs existant est un point d'extension, pas encore
+une abstraction complète du développement RAW. Aucun remplacement
+immédiat n'est décidé et aucune instabilité générale de LibRaw n'est
+démontrée par les mesures actuelles. Voir l'[orientation et les critères
+de validation, §24.7](validation/analyses/analyse-base-colorimetrique.md).
+
 ```text
 Ouverture CR2/CR3/DNG
         │
@@ -29,7 +40,9 @@ ColorPipeline : RGB(A) flottant sRGB linéaire
 
 `RawDecoder` ouvre les CR2, CR3 et DNG par LibRaw, puis transmet au moteur le fabricant et le modèle du boîtier, le fabricant et le modèle d'objectif, la focale et l'ouverture. La distance de mise au point n'est actuellement pas renseignée par le backend LibRaw et reste à zéro. `CameraProfileEngine` fournit :
 
-Pour certains CR3 Canon, LibRaw expose un niveau noir de zéro alors que les pixels de marge masquée conservent un piédestal. Si aucun niveau noir/motif n'est déjà fourni, `RawDecoder` estime alors le médian séparément pour les quatre positions CFA dans les marges hors zone active, et transmet ces niveaux à LibRaw avant le dématriçage. Les fichiers DNG avec motif noir explicite ne sont pas modifiés. Le repli est limité aux CR3 Canon et aux mesures comprises entre 2 % et 25 % du niveau blanc déclaré : la borne basse à 2 % a été abaissée après observation d'un niveau médian de 512 codes (3,1 %) sur des CR3 Canon ISO 100–200 du corpus. Si les dimensions, la CFA ou les marges ne sont pas valides, le décodage LibRaw reste inchangé. Le probe d'intégration affiche si ce repli a été utilisé.
+Pour certains CR3 Canon, LibRaw expose un niveau noir nul ou de petits niveaux incohérents alors que les pixels masqués conservent un piédestal. Lorsque les gardes existantes autorisent le repli, `RawDecoder` estime une médiane séparée pour les quatre canaux CFA avant dématriçage. Depuis le correctif du 7 octobre 2026, une zone `LeftOpticalBlack` Canon valide est préférée ; à défaut, `UpperOpticalBlack` est utilisée. Leurs bornes inclusives sont contrôlées contre les dimensions RAW et converties en rectangles de mesure. La gauche est privilégiée car le corpus ISO 3200 montre un léger décalage sur la zone supérieure. Le pas mémoire `raw_pitch` est respecté. Si aucune zone déclarée n'est valide, le repli historique sur les marges est conservé, avec ses limites connues ; les marges du recadrage photographique ne sont pas toutes masquées.
+
+Les fichiers CR2/DNG et les métadonnées de noir déjà exploitables ne sont pas remplacés. Les gardes de géométrie, CFA, nombre d'échantillons et niveaux compris entre 2 % et 25 % du maximum restent actives. Sur les six RAW audités, les nouvelles médianes sont 512 pour cinq scènes et 2048 pour 9421 (contre 2052–2053 avec les marges mélangées). Aucun noir fixe par modèle n'est ajouté. La sélection incorrecte de disposition ColorData version 66 dans LibRaw 0.22.2 n'est pas corrigée dans la bibliothèque externe par ce changement : le moteur contourne le noir invalide par mesure, sans réinterpréter les niveaux blancs ni les gains WB. Voir le [rapport évolutif, §14–15](validation/analyses/analyse-base-colorimetrique.md).
 
 L'estimateur est implémenté séparément dans `RawBlackLevelEstimator` afin de tester ses gardes et le calcul médian sans ouvrir un RAW réel. Les tests couvrent notamment CR2/DNG, fabricant non Canon, métadonnées de noir déjà présentes, CFA/géométrie invalide, marges avec trop peu d'échantillons et valeurs estimées hors plage. Le corpus local de validation et son manifeste de métadonnées sont décrits dans [`tests/corpus/raw-black-level/`](../tests/corpus/raw-black-level/). Il ne contient pas de copie des photographies.
 
@@ -100,7 +113,7 @@ Le lecteur reconnaît l'enveloppe TIFF DCP en ordre d'octets little-endian ou bi
 | ProfileToneCurve | 50940 | Courbe tonale en points (x,y) |
 | ForwardMatrix1/2 | 50964/50965 | Transformation caméra vers XYZ utilisée en priorité |
 | ProfileLookTableDims / Data | 50981/50982 | Table Look |
-| HueSatMapEncoding / ProfileLookTableEncoding | 51107/51108 | Choix entre valeurs d'entrée linéaires et sRGB |
+| HueSatMapEncoding / ProfileLookTableEncoding | 51107/51108 | Encodage linéaire ou sRGB de l'axe Valeur HSV des tables 3D |
 | BaselineExposureOffset | 51109 | Compensation en stops |
 
 Le parseur vérifie les tailles, dimensions, types numériques, limites de valeurs et la présence d'au moins une matrice exploitable. La taille maximale de fichier est limitée à 64 Mio.
@@ -109,21 +122,126 @@ Le parseur vérifie les tailles, dimensions, types numériques, limites de valeu
 
 1. Interpolation entre les deux illuminants à partir de la température transmise par le décodeur, sur une échelle de température réciproque. Les codes d'illuminant reconnus sont convertis en températures de référence approximatives.
 2. Interpolation élément par élément des matrices ForwardMatrix. Si elles sont absentes, le moteur interpole les ColorMatrix, les inverse et adapte le blanc vers D50 avec Bradford.
-3. Transformation de l'image RGB caméra vers XYZ puis vers sRGB linéaire.
-4. Compensation de l'exposition de base, sous forme de facteur `2^stops`.
+3. Transformation de l'image RGB caméra vers XYZ D50 puis vers ProPhoto linéaire pour le traitement du profil.
+4. Compensation de l'offset **du profil** `BaselineExposureOffset`, sous forme de facteur `2^stops`. Ce champ ne représente pas à lui seul l'exposition de base du négatif.
 5. Interpolation des tables Hue/Sat par illuminant si leurs dimensions correspondent. Les décalages de teinte suivent le chemin circulaire le plus court.
-6. Application successive de la Hue/Sat Map puis de la LookTable. Les tables sRGB sont évaluées après encodage sRGB et reconverties en linéaire ; les valeurs de HueShift sont traitées en degrés.
-7. Application de la courbe tonale si elle est présente.
+6. Application successive de la Hue/Sat Map puis de la LookTable dans ProPhoto. Pour une table 3D encodée en sRGB, seule la composante Valeur HSV est encodée avant interpolation puis décodée après correction ; teinte et saturation restent calculées sur les canaux linéaires. L'encodage est ignoré pour les tables à une seule division Valeur (2,5D). HueShift est exprimé en degrés.
+7. Application de la courbe tonale si elle est présente, dans ProPhoto, selon l'interpolation par canal existante.
+8. Conversion ProPhoto D50 vers sRGB linéaire D65 avec adaptation Bradford, sans écrêtage supplémentaire au gamut sRGB à cette étape. En l'absence de tables et de courbe, le chemin matriciel XYZ vers sRGB direct est conservé.
+
+Correctif du 7 octobre 2026 : les tables étaient auparavant appliquées à tort dans sRGB. Les coefficients ProPhoto/XYZ sont des définitions d'espace colorimétrique, pas des gains empiriques du boîtier. Le traitement des tables reste limité au domaine SDR [0,1] ; ce changement ne constitue pas une prise en charge HDR exhaustive. L'algorithme d'encodage de l'axe Valeur est décrit par le [SDK DNG Adobe](https://android.googlesource.com/platform/external/dng_sdk/+/refs/heads/main/source/dng_tag_values.h).
 
 Les tables sont interpolées trilinéairement dans leurs axes teinte, saturation et valeur. Si les dimensions des tables des deux illuminants diffèrent, l'implémentation choisit la table de l'illuminant le plus proche au lieu de rééchantillonner.
 
 ### Limites DCP
 
+**Contrat d'exposition à compléter (investigation du 8 octobre 2026).**
+`BaselineExposure` du négatif et `BaselineExposureOffset` du DCP sont
+distincts. Les six copies de diagnostic produites par Adobe DNG Converter
+18.6 annoncent +0,26 EV ou +0,28 EV pour le premier, et −0,5 EV pour le
+profil Camera Neutral. Dans le chemin CR3 audité, LibRaw fournit −999
+pour le premier champ : cela signifie inconnu, pas zéro mesuré ni −999 EV.
+L'expérience indépendante améliore les cinq comparaisons Neutral en
+ajoutant la valeur DNG, mais conserve un résidu et des risques de clipping.
+Aucune constante n'a été intégrée : normalisation, WB, CameraCalibration
+et Stage3Gain doivent être réconciliés pour éviter de compter deux fois
+un gain. Adobe DNG Converter reste un témoin local, pas une dépendance
+d'ouverture. Voir le [rapport évolutif, §22](validation/analyses/analyse-base-colorimetrique.md#22-ordre-dcp-exposition-de-base-adobe-et-gamut--reprise-du-8-octobre-2026).
+
+**Complément de diagnostic, §23 :** les blancs des six DNG concordent avec
+le candidat Canon `specular` des décodages A/B indépendants. Ce blanc,
+combiné à l'exposition de base, ramène l'écart de luminance moyenne sous
+0,009 EV sur les cinq références Neutral. La courbe préservant les teintes
+améliore ensuite les cinq ΔE00 moyens, mais 9421 conserve des résidus
+localisés. La WB LibRaw concorde déjà avec les DNG ; la calibration
+diagonale de ce lot ne justifie pas un gain bleu supplémentaire.
+Ces mesures précèdent l'intégration contrôlée décrite ci-dessous ; elles
+ne définissent pas une règle universelle de lecture Canon. Stage3Gain
+n'a pas été mesuré par exécution du SDK.
+Voir le [rapport évolutif, §23](validation/analyses/analyse-base-colorimetrique.md).
+
 - La sélection de température de balance des blancs fournie par LibRaw est une estimation à partir de `cam_mul` et de l'inverse de `cam_xyz` (approximation de McCamy), pas la température EXIF native ni une valeur garantie.
 - L'interpolation des ForwardMatrix est un modèle simplifié. La prise en charge de `CameraCalibration`, `AnalogBalance`, `AsShotNeutral`, `ReductionMatrix`, des matrices de profil multiples et de tous les états du pipeline DNG n'est pas complète.
 - Le repli ColorMatrix + Bradford est une approximation et non une implémentation exhaustive du pipeline DNG.
-- Un DCP Adobe réel a été chargé et appliqué au CR3 du boîtier testé ; le résultat n'a pas encore été comparé à une sortie Adobe de référence pixel à pixel.
+- Les profils Adobe Standard et Camera Neutral réels ont été comparés aux TIFF Lightroom au pas 8. La proximité Neutral est améliorée sur le lot contrôlé, mais la fidélité absolue et la parité Lightroom restent non validées.
 - La courbe tonale est interpolée par segments linéaires ; sa fidélité à la méthode de rendu du logiciel ayant créé le profil n'est pas garantie.
+
+### Normalisation RAW/DCP contrôlée (8 octobre 2026)
+
+Le module `src/raw/RawNormalization` est indépendant de LibRaw pour ses
+tests. `resolve()` lit un manifeste JSON explicite, limité à 1 Mio/256 entrées.
+Chaque calibration est liée à un couple SHA-256 RAW/DCP exact, au boîtier,
+à l'ISO, à la version LibRaw et aux quatre noirs mesurés. Le moteur n'ajoute
+pas de constante d'exposition par modèle. Le manifeste est fourni via
+`RawDecoder::Options::normalizationManifest`, ou, pour les outils et le
+générateur, `IPR_RAW_NORMALIZATION_MANIFEST`. Dans l'IHM, cette variable
+peut fournir l'emplacement du fichier, mais ne déclenche pas l'activation :
+la case expérimentale reste désactivée par défaut.
+
+Le contrat actuel exige un CR3 Canon, une WB caméra, un DCP sélectionné,
+un noir uniforme sans motif/global et une exposition native inconnue.
+Toute incompatibilité, ambiguïté ou valeur invalide refuse la calibration
+sans casser l'ouverture de l'image. Le blanc est installé avant
+`dcraw_process()` dans `color.maximum` et `rawdata.color.maximum`, avec
+`adjust_maximum_thr = 0`. L'exposition supplémentaire ne passe ni par
+la WB ni par le curseur EV ; elle entre dans `applyDcp()` via
+`DcpRenderOptions::cameraBaselineExposureEv`, avant les tables, en plus
+de l'offset lu dans le profil. Les entrées sont préparées hors ligne depuis
+les preuves DNG ; pas de conversion Adobe ni de lecture DNG à l'ouverture.
+
+`DcpRenderOptions::preserveToneCurveHue` est désactivé par défaut et activé
+avec cette calibration. Il transforme les extrêmes RGB ProPhoto et
+interpole le canal intermédiaire ; si les extrêmes transformés sont
+inversés, il conserve la courbe par canal pour ce pixel. Cette garde est
+nécessaire pour les quatre petites décroissances de Camera Neutral.
+La préservation concerne la teinte HSV ProPhoto, pas exactement Lab.
+
+`SourceMetadata` expose application, blanc, exposition et provenance.
+`ImageEditor::cacheKeyForFile()` ajoute le jeton du manifeste afin de ne
+réutiliser aucun décodage calculé avec une autre calibration. L'empreinte
+DNG est une trace locale, pas une signature garantissant un manifeste
+édité manuellement. La configuration doit rester issue de l'audit contrôlé.
+
+Les cinq décodages Windows 0.22.2 correspondent au témoin indépendant
+gardé à un code 16 bits près. WSL 0.21.2 refuse cette calibration, comme
+prévu. Adobe Standard reste sans courbe implicite et conserve un déficit
+important malgré la normalisation : pas d'activation généralisée.
+Le manifeste préparé ne couvre que cinq RAW exacts avec Neutral ; il ne
+sélectionne pas automatiquement ce profil. Voir le [rapport unique, §24](validation/analyses/analyse-base-colorimetrique.md)
+pour l'activation, le retour arrière et les preuves reproductibles.
+
+### Sélection dans l'IHM
+
+Le panneau **Développement RAW / Profil**, sous l'histogramme, propose les
+DCP compatibles avec le boîtier, la WB automatique et la normalisation
+expérimentale. La sélection remplace uniquement le DCP ; le LCP automatique
+reste inchangé. La liste est découverte dans le worker de décodage et mise
+en cache pour la session : redémarrer après installation de nouveaux profils.
+Les profils placés dans `profiles/` à côté de l'exécutable sont recherchés
+indépendamment du répertoire courant. Un build portable peut aussi placer
+son manifeste dans `config/raw-normalization.json` et son état IHM dans
+`config/ipr-ui.ini` ; la présence de ce dernier active le stockage local de
+l'IHM plutôt que le chemin utilisateur habituel. Le dossier doit être inscriptible.
+Une sélection incompatible avec le prochain boîtier retombe sur le choix
+automatique, sans empêcher l'ouverture.
+
+Pour le lot audité, sélectionner **Canon EOS R6 Mark III Camera Neutral**,
+désactiver la WB automatique, puis cocher la normalisation. Le manifeste
+`build-canon-normalization-20261008/normalization.json` est recherché dans
+le dépôt ; le bouton « Choisir le manifeste… » permet de le désigner sinon.
+Le statut indique le profil réellement utilisé et confirme l'application,
+ou explique le refus. Cocher la case n'est pas une preuve d'application.
+
+Ces choix sont propres à la session, non enregistrés dans les sidecars.
+Le changement recharge le RAW sans effacer les réglages photographiques.
+Le cache distingue le profil (chemin/taille/date) et le contenu du manifeste.
+L'IHM n'active aucune calibration via l'environnement à l'insu de la case.
+Le bouton de réinitialisation remet les réglages photographiques à zéro,
+pas le choix du profil ni l'activation expérimentale.
+
+La calibration reste limitée aux cinq couples RAW/DCP exacts et à LibRaw
+0.22.2-Release ; ce panneau ne généralise pas les résultats à Adobe Standard
+ni aux autres images. Voir le [rapport, §25](validation/analyses/analyse-base-colorimetrique.md).
 
 ## LCP : corrections optiques
 
@@ -158,6 +276,14 @@ Pour instrumenter un RAW sans modifier le comportement normal, définir `IPR_LOG
 
 ## Installation des profils et vérifications visuelles
 
+Pour évaluer la base colorimétrique avant les réglages, suivre le
+[protocole v1](validation/protocols/protocole-base-colorimetrique-v1.md) :
+diagnostic sur six scènes existantes, profils et WB explicités, puis charte
+physique pour une mesure de fidélité. Les nuanciers de prises d'escalade
+permettent une identification, pas une référence Lab garantie de la prise
+photographiée. Comparaison Lightroom, conformité DCP et fidélité physique
+doivent recevoir des conclusions distinctes.
+
 Placer les fichiers autorisés dans :
 
 ```text
@@ -178,7 +304,7 @@ La cible `cameraProfileEngineTests` génère des DCP/LCP de petite taille dans u
 
 - ForwardMatrix et repli sans ForwardMatrix ;
 - interpolation multi-illuminants de matrices et tables secondaires ;
-- circularité des HueShift et tables encodées en sRGB ;
+- circularité des HueShift, rotation de teinte dans ProPhoto, encodage de l'axe Valeur des tables 3D et neutralité de l'encodage des tables 2,5D ;
 - sélection de profil par restrictions caméra/objectif ;
 - plusieurs calibrations optiques, éléments XML texte, géométrie, vignettage et CA ;
 - remappage séparé des canaux rouge/bleu avec le vert inchangé.

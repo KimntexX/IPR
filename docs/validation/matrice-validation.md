@@ -1,10 +1,11 @@
 # Matrice de validation des réglages
 
-**Dernière consolidation :** 5 octobre 2026.  
+**Dernière consolidation :** 8 octobre 2026.
 **Légende :** Validé = protocole, export et conclusion disponibles ; À revalider = changement de pipeline ou corpus insuffisant ; À faire = fonction présente mais sans recette complète.
 
 | Fonction | Statut | Preuve / source historique | Prochaine action |
 | --- | --- | --- | --- |
+| Base colorimétrique à l'ouverture | Normalisation Neutral intégrée en mode contrôlé, désactivée par défaut ; fidélité/parité LR non validées | [Rapport évolutif unique](analyses/analyse-base-colorimetrique.md), §20–24 : blancs + base + courbe Neutral améliorés sur 5/5 ; WB déjà concordante ; normalisation liée aux SHA RAW/DCP, ISO, noirs et version LibRaw, avec repli ; cinq vrais décodages Windows vérifiés à 1 code 16 bits près du témoin gardé ; Standard vérifié sur 6 scènes, déficit Y moyen +0,454 à +0,976 EV persistant ; build Windows et 5 suites Windows réussis ; 46 + 11 tests Python réussis ; suite complète WSL 16/17, comparaison JPEG 9933 en échec (MAE 25,1519 > 25), hors mode calibré. | Courbe implicite Standard, résidus de 9421 et échec JPEG 9933 ; valider interactions LCP et rendu visuel du mode contrôlé ; généraliser les métadonnées uniquement après audit ; pas d'activation globale ni constante empirique ; charte physique à poursuivre. |
 | Exposition (EV) | Validé | [analyse de base](analyses/analyse-validation-lumieres-base-2026-10-02.md) | Conserver le corpus EV0 et vérifier à chaque changement tonal. |
 | Noirs et ombres | Validé | [analyse noirs/ombres](analyses/analyse-noirs-ombres-2026-10-02.md) | Ajouter des scènes à bruit élevé. |
 | Blancs et hautes lumières | Validé après v3 | [analyse blancs/HL](analyses/analyse-blancs-hautes-lumieres-2026-10-02.md) | Vérifier la stabilité avec courbes activées. |

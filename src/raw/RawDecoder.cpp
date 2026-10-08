@@ -1,6 +1,7 @@
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
 #include "RawBlackLevelEstimator.h"
+#include "RawNormalization.h"
 
 #include <QFileInfo>
 #include <QBuffer>
@@ -127,6 +128,21 @@ bool estimateMissingCanonCr3BlackLevel(LibRaw &raw, const QString &fileName)
     input.mosaic = data.rawdata.raw_image;
     input.rawWidth = data.sizes.raw_width;
     input.rawHeight = data.sizes.raw_height;
+    input.rowStrideSamples = int(data.sizes.raw_pitch / sizeof(std::uint16_t));
+    // Canon bounds are inclusive. Prefer the left masked area: the audited
+    // high-ISO image has a slightly elevated upper border. Never infer these
+    // rectangles from the smaller photographic crop.
+    const auto addMaskedArea = [&](const libraw_area_t &area) {
+        if (area.l >= 0 && area.t >= 0 && area.r > area.l && area.b > area.t &&
+            area.r < input.rawWidth && area.b < input.rawHeight) {
+            input.maskedAreas.push_back({area.l, area.t, area.r - area.l + 1,
+                                         area.b - area.t + 1});
+            return true;
+        }
+        return false;
+    };
+    if (!addMaskedArea(data.makernotes.canon.LeftOpticalBlack))
+        addMaskedArea(data.makernotes.canon.UpperOpticalBlack);
     input.leftMargin = data.sizes.left_margin;
     input.topMargin = data.sizes.top_margin;
     input.activeWidth = data.sizes.width;
@@ -159,8 +175,10 @@ bool estimateMissingCanonCr3BlackLevel(LibRaw &raw, const QString &fileName)
     data.color.cblack[4] = 0;
     data.rawdata.color.cblack[4] = 0;
     qInfo().noquote()
-        << QStringLiteral("CR3 Canon : niveau noir optique estimé depuis les marges CFA "
-                          "(R=%1, G1=%2, B=%3, G2=%4).")
+        << QStringLiteral("CR3 Canon : niveau noir estimé depuis %1 "
+                          "(R=%2, G1=%3, B=%4, G2=%5).")
+               .arg(input.maskedAreas.empty() ? QStringLiteral("les marges CFA (repli)")
+                                              : QStringLiteral("une zone noire Canon déclarée"))
                .arg(estimate.levels[0])
                .arg(estimate.levels[1])
                .arg(estimate.levels[2])
@@ -288,11 +306,24 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         QString::fromLocal8Bit(raw.imgdata.lens.LensMake).trimmed(),
         QString::fromLocal8Bit(raw.imgdata.lens.Lens).trimmed()
     };
-    const CameraProfileEngine::Selection profiles =
+    CameraProfileEngine::Selection profiles =
         CameraProfileEngine::findProfiles(
             sourceMetadata.cameraMake, sourceMetadata.cameraModel,
             sourceMetadata.lensMake, sourceMetadata.lensModel,
             options.profileDirectories);
+    if (!options.dcpProfileOverride.isEmpty()) {
+        if (CameraProfileEngine::dcpMatchesCamera(options.dcpProfileOverride,
+                sourceMetadata.cameraMake, sourceMetadata.cameraModel)) {
+            profiles.dcpPath = options.dcpProfileOverride;
+        } else {
+            // A session selection may belong to the previous camera. Never
+            // apply it to a different camera, but keep automatic import usable.
+            qWarning() << "Profil DCP incompatible : sélection automatique conservée.";
+        }
+    }
+    if (metadata && options.listDcpProfiles)
+        metadata->availableDcpProfiles = CameraProfileEngine::availableDcpProfiles(
+            sourceMetadata.cameraMake, sourceMetadata.cameraModel, options.profileDirectories);
     timer.mark("find_profiles");
     CameraProfileEngine::CaptureSettings capture;
     capture.focalLengthMm = raw.imgdata.other.focal_len;
@@ -316,12 +347,61 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
     raw.imgdata.params.gamm[1] = 1.0;
 
     std::optional<double> sourceWhiteBalanceKelvin;
+    CameraProfileEngine::DcpRenderOptions dcpOptions;
+    if (metadata) {
+        metadata->rawNormalizationApplied = false;
+        metadata->normalizationWhiteLevel = 0;
+        metadata->normalizationBaselineExposureEv = 0.0;
+        metadata->normalizationProvenance.clear();
+    }
     if ((result = raw.unpack()) == LIBRAW_SUCCESS) {
         const bool estimatedOpticalBlackLevel =
             estimateMissingCanonCr3BlackLevel(raw, fileName);
         sourceWhiteBalanceKelvin = estimateWhiteBalanceKelvin(raw);
         if (metadata)
             metadata->opticalBlackLevelEstimated = estimatedOpticalBlackLevel;
+        const QString manifest = options.normalizationManifest.isEmpty() && options.useNormalizationEnvironment
+            ? qEnvironmentVariable("IPR_RAW_NORMALIZATION_MANIFEST")
+            : options.normalizationManifest;
+        RawNormalization::Context context;
+        context.fileName = fileName;
+        context.profilePath = profiles.dcpPath;
+        context.cameraMake = QString::fromLocal8Bit(raw.imgdata.idata.make).trimmed();
+        context.cameraModel = QString::fromLocal8Bit(raw.imgdata.idata.model).trimmed();
+        context.librawVersion = QString::fromLatin1(LibRaw::version());
+        context.iso = int(std::lround(raw.imgdata.other.iso_speed));
+        context.cameraWhiteBalance = !options.automaticWhiteBalance;
+        context.nativeBaselineUnknown =
+            raw.imgdata.color.dng_levels.baseline_exposure == -999;
+        for (int channel = 0; channel < 4; ++channel)
+            context.black[channel] = raw.imgdata.color.cblack[channel];
+        // Pattern/global black is deliberately not supported by this contract.
+        if (raw.imgdata.color.black || raw.imgdata.color.cblack[4])
+            context.nativeBaselineUnknown = false;
+        QString normalizationReason;
+        const auto calibration = RawNormalization::resolve(manifest, context, &normalizationReason);
+        if (metadata)
+            metadata->normalizationReason = normalizationReason.isEmpty()
+                ? QStringLiteral("Aucune calibration auditée ne correspond au RAW et au profil choisis.")
+                : normalizationReason;
+        if (calibration) {
+            raw.imgdata.color.maximum = raw.imgdata.rawdata.color.maximum = calibration->whiteLevel;
+            raw.imgdata.params.adjust_maximum_thr = 0.0f;
+            dcpOptions.cameraBaselineExposureEv = calibration->baselineExposureEv;
+            dcpOptions.preserveToneCurveHue = true;
+            if (metadata) {
+                metadata->rawNormalizationApplied = true;
+                metadata->normalizationWhiteLevel = calibration->whiteLevel;
+                metadata->normalizationBaselineExposureEv = calibration->baselineExposureEv;
+                metadata->normalizationProvenance = calibration->provenance;
+            }
+            qInfo().noquote() << "IPR RAW normalization |" << QFileInfo(fileName).fileName()
+                             << "| white=" << calibration->whiteLevel
+                             << "| baseline_ev=" << calibration->baselineExposureEv
+                             << "| source=" << calibration->provenance;
+        } else if (!normalizationReason.isEmpty()) {
+            qWarning().noquote() << normalizationReason;
+        }
         result = raw.dcraw_process();
     }
     timer.mark("unpack_and_process");
@@ -381,7 +461,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             !CameraProfileEngine::applyDcp(
                 profiles.dcpPath, cameraRgb,
                 sourceWhiteBalanceKelvin.value_or(5500.0),
-                                            error))
+                                            error, dcpOptions))
             cameraRgb.release();
         if (!cameraRgb.empty()) {
             std::vector<cv::Mat> channels;

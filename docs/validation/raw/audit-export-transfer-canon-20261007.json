@@ -1,0 +1,375 @@
+{
+    "images": [
+        {
+            "all_black_fraction": 0,
+            "any_channel_high_fraction": 0,
+            "any_channel_low_fraction": 9.908838684106222e-06,
+            "raw": "tests/image/base/6V1A0007.CR3",
+            "samples": 504600,
+            "source_float_sha256": "6e88e0971d6d745009514bee432692b2c0d1d65b55171d65ea404427163553dd"
+        },
+        {
+            "all_black_fraction": 1.9817677368212447e-06,
+            "any_channel_high_fraction": 0.005212049147839873,
+            "any_channel_low_fraction": 0.0019183511692429647,
+            "raw": "tests/image/base/6V1A0037.CR3",
+            "samples": 504600,
+            "source_float_sha256": "707fe8214db208fec008ea44a8b79fa62b3061c5c5a8aaf93c6efa874a7aa175"
+        },
+        {
+            "all_black_fraction": 0,
+            "any_channel_high_fraction": 1.9817677368212444e-05,
+            "any_channel_low_fraction": 0.013149028933808957,
+            "raw": "tests/image/base/6V1A0043.CR3",
+            "samples": 504600,
+            "source_float_sha256": "f856fc89e8d8732c2dc9674b5711633c6035de4afacf356a16b4457ad8c2ab86"
+        },
+        {
+            "all_black_fraction": 0,
+            "any_channel_high_fraction": 0,
+            "any_channel_low_fraction": 0.00028141101862861674,
+            "raw": "tests/image/base/6V1A0327.CR3",
+            "samples": 504600,
+            "source_float_sha256": "eff3974199ca9f7f722292482bac509fd5773b167972925da0496e7215035f54"
+        },
+        {
+            "all_black_fraction": 7.927070947284979e-06,
+            "any_channel_high_fraction": 0.0001506143479984146,
+            "any_channel_low_fraction": 0.0022889417360285377,
+            "raw": "tests/image/base/6V1A9421.CR3",
+            "samples": 504600,
+            "source_float_sha256": "2878f2ef7b3d67488a82c7ed9533c6e9a71a2762da9f2d3ade89eafe5dd7ffab"
+        },
+        {
+            "all_black_fraction": 0,
+            "any_channel_high_fraction": 0,
+            "any_channel_low_fraction": 0.0011533888228299643,
+            "raw": "tests/image/base/6V1A9950.CR3",
+            "samples": 504600,
+            "source_float_sha256": "d0145b55e4d23da4d56059e699feacb187ada0e9f0f900e0d1b6d4397b322b05"
+        }
+    ],
+    "neutral_ramp": [
+        {
+            "analytic_srgb16_code": 0,
+            "linear16_code": 0,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 13,
+            "linear16_code": 1,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 26,
+            "linear16_code": 2,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 39,
+            "linear16_code": 3,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 52,
+            "linear16_code": 4,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 65,
+            "linear16_code": 5,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 78,
+            "linear16_code": 6,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 90,
+            "linear16_code": 7,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 103,
+            "linear16_code": 8,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 116,
+            "linear16_code": 9,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 129,
+            "linear16_code": 10,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 142,
+            "linear16_code": 11,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 155,
+            "linear16_code": 12,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 168,
+            "linear16_code": 13,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 181,
+            "linear16_code": 14,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 194,
+            "linear16_code": 15,
+            "qt_srgb16_code": 0
+        },
+        {
+            "analytic_srgb16_code": 207,
+            "linear16_code": 16,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 220,
+            "linear16_code": 17,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 233,
+            "linear16_code": 18,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 245,
+            "linear16_code": 19,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 258,
+            "linear16_code": 20,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 271,
+            "linear16_code": 21,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 284,
+            "linear16_code": 22,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 297,
+            "linear16_code": 23,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 310,
+            "linear16_code": 24,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 323,
+            "linear16_code": 25,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 336,
+            "linear16_code": 26,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 349,
+            "linear16_code": 27,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 362,
+            "linear16_code": 28,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 375,
+            "linear16_code": 29,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 388,
+            "linear16_code": 30,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 401,
+            "linear16_code": 31,
+            "qt_srgb16_code": 207
+        },
+        {
+            "analytic_srgb16_code": 413,
+            "linear16_code": 32,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 426,
+            "linear16_code": 33,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 439,
+            "linear16_code": 34,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 452,
+            "linear16_code": 35,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 465,
+            "linear16_code": 36,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 478,
+            "linear16_code": 37,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 491,
+            "linear16_code": 38,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 504,
+            "linear16_code": 39,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 517,
+            "linear16_code": 40,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 530,
+            "linear16_code": 41,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 543,
+            "linear16_code": 42,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 556,
+            "linear16_code": 43,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 568,
+            "linear16_code": 44,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 581,
+            "linear16_code": 45,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 594,
+            "linear16_code": 46,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 607,
+            "linear16_code": 47,
+            "qt_srgb16_code": 414
+        },
+        {
+            "analytic_srgb16_code": 620,
+            "linear16_code": 48,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 633,
+            "linear16_code": 49,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 646,
+            "linear16_code": 50,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 659,
+            "linear16_code": 51,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 672,
+            "linear16_code": 52,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 685,
+            "linear16_code": 53,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 698,
+            "linear16_code": 54,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 711,
+            "linear16_code": 55,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 724,
+            "linear16_code": 56,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 736,
+            "linear16_code": 57,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 749,
+            "linear16_code": 58,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 762,
+            "linear16_code": 59,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 775,
+            "linear16_code": 60,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 788,
+            "linear16_code": 61,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 801,
+            "linear16_code": 62,
+            "qt_srgb16_code": 622
+        },
+        {
+            "analytic_srgb16_code": 814,
+            "linear16_code": 63,
+            "qt_srgb16_code": 622
+        }
+    ],
+    "note": "Existing native float grids, real ColorPipeline mapping and Qt sRGB output; no TIFF or RAW modified"
+}

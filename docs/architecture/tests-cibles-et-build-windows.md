@@ -10,7 +10,7 @@ bash scripts/build-windows.sh
 
 Le lanceur Bash utilise Python 3.9+ pour sélectionner les tests, puis PowerShell
 et les outils **Windows** CMake/MSVC pour compiler. Un lancement depuis WSL
-produit bien un `appIPR.exe` Windows, pas un binaire Linux. Par défaut :
+produit bien `appIPR.exe` et `iprGenerateTests.exe` Windows, pas des binaires Linux. Par défaut :
 `build-windows-msvc`, `Release`, deux jobs. Fermer l'exécutable de ce dossier
 avant de le relier ; le script refuse de l'arrêter automatiquement.
 
@@ -36,7 +36,7 @@ Il ne réalise pas le déploiement/packaging des DLL pour une distribution auton
 ## Politique des tests
 
 Les règles versionnées sont dans [scripts/test-rules.json](../../scripts/test-rules.json).
-Les treize tests synthétiques CTest sont désormais enregistrés sous Windows
+Les quatorze tests synthétiques CTest sont désormais enregistrés sous Windows
 comme sous Linux/WSL. Les sondes photographiques privées restent séparées.
 
 Le sélecteur compare les SHA-256 des fichiers de code/configuration à la dernière
@@ -50,6 +50,7 @@ chaque build d'un worktree déjà sale, sans nécessiter de commit préalable.
 | --- | --- |
 | Préférences/INI | préférences C++, restauration QML, panneau des réglages |
 | Mélangeur | mathématiques, neutres, pastilles QML, export, comparateur Python |
+| Générateur d'images (`src/tools/`) | séries de paramètres, isolation, manifeste, sources préservées, export 16 bits |
 | Décodage RAW | décodeur, niveau noir, profils, export |
 | Profils locaux | moteur DCP/LCP, décodeur, export |
 | Réglages QML | contraintes de largeur, contrôles, restauration globale |

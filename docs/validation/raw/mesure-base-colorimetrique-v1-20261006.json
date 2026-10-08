@@ -1,0 +1,354 @@
+{
+  "date": "2026-10-06T17:22:00+02:00",
+  "protocol_version": "v1",
+  "pairs_analyzed": 6,
+  "analysis_summary": {
+    "total_regions": 26,
+    "max_delta_E": 48.58,
+    "classification_distribution": {
+      "('wb_balance', 'tonal_curve', 'chroma', 'hue_shift')": 13,
+      "('tonal_curve', 'hue_shift')": 4,
+      "('wb_balance', 'hue_shift')": 2,
+      "('tonal_curve', 'chroma', 'hue_shift')": 2,
+      "('hue_shift',)": 2,
+      "('wb_balance', 'tonal_curve', 'chroma')": 2,
+      "('wb_balance', 'tonal_curve', 'hue_shift')": 1
+    },
+    "delta_E_by_scene": {
+      "6V1A0007": 24.12,
+      "6V1A0037": 11.54,
+      "6V1A0043": 3.14,
+      "6V1A0327": 11.73,
+      "6V1A9421": 29.49,
+      "6V1A9950": 19.36
+    }
+  },
+  "scenes": {
+    "6V1A0007": {
+      "iso": 100,
+      "subject": "Voilier, eau, ciel gris",
+      "priority": "A",
+      "regions": [
+        {
+          "name": "voilier_blanc",
+          "delta_E": 25.52,
+          "classification": [
+            "tonal_curve",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "eau",
+          "delta_E": 19.77,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "ciel_gris",
+          "delta_E": 27.08,
+          "classification": [
+            "tonal_curve",
+            "hue_shift"
+          ]
+        }
+      ]
+    },
+    "6V1A0037": {
+      "iso": 100,
+      "subject": "Végétation, rocher, ciel",
+      "priority": "A",
+      "regions": [
+        {
+          "name": "vegetation_vert_clair",
+          "delta_E": 12.36,
+          "classification": [
+            "wb_balance",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "vegetation_vert_fonce",
+          "delta_E": 14.0,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "roche_grise",
+          "delta_E": 4.2,
+          "classification": [
+            "wb_balance",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "ciel",
+          "delta_E": 13.95,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "ombre",
+          "delta_E": 13.18,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        }
+      ]
+    },
+    "6V1A0043": {
+      "iso": 100,
+      "subject": "Fleur violette/magenta, feuillage",
+      "priority": "A",
+      "regions": [
+        {
+          "name": "fleur_violette",
+          "delta_E": 6.31,
+          "classification": [
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "feuillage_vert",
+          "delta_E": 1.45,
+          "classification": [
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "fond_flou",
+          "delta_E": 1.67,
+          "classification": [
+            "hue_shift"
+          ]
+        }
+      ]
+    },
+    "6V1A0327": {
+      "iso": 100,
+      "subject": "Crashpads colorés, roche orangée, peau",
+      "priority": "A",
+      "regions": [
+        {
+          "name": "crashpad_cyan",
+          "delta_E": 13.76,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "crashpad_vert",
+          "delta_E": 11.84,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "crashpad_rouge",
+          "delta_E": 10.63,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma"
+          ]
+        },
+        {
+          "name": "roche_orangee",
+          "delta_E": 11.66,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "peau",
+          "delta_E": 10.76,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma"
+          ]
+        }
+      ]
+    },
+    "6V1A9421": {
+      "iso": 3200,
+      "subject": "Prises colorées, mur jaune, grimpeurs",
+      "priority": "A/C",
+      "regions": [
+        {
+          "name": "prise_jaune",
+          "delta_E": 38.18,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "prise_bleue",
+          "delta_E": 38.77,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "prise_rouge",
+          "delta_E": 17.3,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "peau",
+          "delta_E": 20.72,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "mur_jaune",
+          "delta_E": 48.58,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "textile",
+          "delta_E": 13.41,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        }
+      ]
+    },
+    "6V1A9950": {
+      "iso": 100,
+      "subject": "Ciel bleu, végétation, terrain, ombres",
+      "priority": "A",
+      "regions": [
+        {
+          "name": "ciel_bleu",
+          "delta_E": 28.23,
+          "classification": [
+            "tonal_curve",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "feuillage_vert",
+          "delta_E": 24.36,
+          "classification": [
+            "tonal_curve",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "terrain",
+          "delta_E": 9.5,
+          "classification": [
+            "wb_balance",
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        },
+        {
+          "name": "ombre",
+          "delta_E": 15.36,
+          "classification": [
+            "tonal_curve",
+            "chroma",
+            "hue_shift"
+          ]
+        }
+      ]
+    }
+  },
+  "methodology": {
+    "conversion": "sRGB to XYZ (D65) to CIELAB",
+    "regions": "Homologous regions defined per scene",
+    "comparison": "Pixel-level ΔE00 calculation",
+    "classification_thresholds": {
+      "wb_balance": "|Δa*| > 2 or |Δb*| > 2",
+      "tonal_curve": "|ΔL*| > 2 or |ΔY| > 0.01",
+      "chroma": "|ΔC*| > 3",
+      "hue_shift": "Δh* > 5°",
+      "gamut": "C* > 100"
+    }
+  },
+  "files_analyzed": {
+    "6V1A0007": [
+      "6V1A0007-IPR.tiff",
+      "6V1A0007.tif"
+    ],
+    "6V1A0037": [
+      "6V1A0037-IPR.tiff",
+      "6V1A0037.tif"
+    ],
+    "6V1A0043": [
+      "6V1A0043-IPR.tiff",
+      "6V1A0043.tif"
+    ],
+    "6V1A0327": [
+      "6V1A0327-IPR.tiff",
+      "6V1A0327.tif"
+    ],
+    "6V1A9421": [
+      "6V1A9421-IPR.tiff",
+      "6V1A9421.tif"
+    ],
+    "6V1A9950": [
+      "6V1A9950-IPR.tiff",
+      "6V1A9950.tif"
+    ]
+  },
+  "metadata": {
+    "image_format": "TIFF 16-bit sRGB",
+    "icc_profile": "sRGB IEC61966-2.1",
+    "dimensions": {
+      "IPR": "6959×4639 or 4639×6959",
+      "Lightroom": "6960×4640 or 4640×6960",
+      "note": "1 pixel difference between IPR and Lightroom exports"
+    }
+  }
+}

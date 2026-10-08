@@ -1,0 +1,200 @@
+\part{Pourquoi et comment compresser une image}
+\section{Réversibilité et théorie de l'information}
+\subsection{Trois pertes à ne pas confondre}
+La conversion analogique-numérique quantifie une mesure physique.
+Un codec avec pertes peut ensuite supprimer de l'information
+numérique. Enfin, un rendu peut écrêter le gamut ou les hautes
+lumières. Une compression \emph{sans perte} garantit seulement
+la reconstruction exacte des données auxquelles elle s'applique,
+pas la préservation de toute la scène d'origine.
+
+Si un encodeur $E$ et un décodeur $D$ sont sans perte sur un domaine
+$\mathcal X$, on exige $D(E(x))=x$ pour tout $x\in\mathcal X$.
+Une transformation inversible est une bijection sur ce domaine.
+L'arrondi de 12,4 et de 12,49 vers 12 est au contraire plusieurs-à-un :
+l'inverse exact est impossible sans information supplémentaire.
+
+\subsection{Entropie : le coût moyen d'une surprise}
+Si un symbole $i$ apparaît avec probabilité $p_i$, l'entropie est
+\begin{equation}
+H=-\sum_i p_i\log_2p_i.
+\end{equation}
+Un symbole certain apporte zéro bit de surprise ; deux symboles
+équiprobables apportent un bit. Cette lecture probabiliste de
+l'information vient de Shannon~\cite{shannon}. Elle ne mesure
+ni la beauté de l'image ni sa valeur scientifique.
+
+Exemple original : les probabilités $(1/2,1/4,1/8,1/8)$ donnent
+$H=1{,}75$ bit par symbole. Un stockage fixe à deux bits consomme
+deux bits par symbole, tandis qu'un code préfixe adapté peut
+atteindre ici exactement 1,75 bit en moyenne. Le fichier réel
+ajoute une description du code, des en-têtes et des limites de blocs.
+
+Il est impossible de raccourcir sans perte \emph{tous} les fichiers :
+il y a $2^n$ suites de $n$ bits et seulement $2^n-1$ suites de
+longueur strictement inférieure à $n$. Une compression efficace
+exploite donc des régularités de la famille d'images rencontrée.
+Un bruit aléatoire indépendant se compresse souvent moins bien
+qu'une plage uniforme, même si les deux ont les mêmes dimensions.
+
+\section{Prédiction, différences et codes entropiques}
+\subsection{Prédire pour rendre les données plus faciles à coder}
+Si une ligne vaut $(100,102,101,103)$, conserver le premier nombre
+et les différences donne $(100,2,-1,2)$. La transformation est
+réversible : les sommes cumulées restituent la ligne.
+Le nombre de valeurs n'a pas changé, mais les résidus se
+concentrent autour de zéro et peuvent coûter moins de bits.
+
+Avec un prédicteur $P_i$ calculé à partir de valeurs déjà connues :
+\begin{equation}
+r_i=x_i-P_i,\qquad x_i=P_i+r_i.
+\end{equation}
+Le décodeur doit employer exactement le même prédicteur et le
+même ordre de parcours. Un prédicteur adaptatif doit préciser
+son état initial et ses règles de mise à jour.
+
+Une soustraction peut aussi être effectuée modulo 256 sur des
+octets. Par exemple $3-250\equiv9\pmod{256}$, puis
+$250+9\equiv3\pmod{256}$. Le résidu stocké est 9, pas un entier
+signé de valeur $-247$. Cette convention permet des filtres
+réversibles sans changer la largeur des octets.
+
+\subsection{RLE : compter les répétitions}
+La suite \texttt{AAAAABBBCC} peut être représentée par
+$(5,A),(3,B),(2,C)$. Sur une photographie bruitée, les suites
+constantes sont courtes ; ce codage peut même grossir les données.
+Des marqueurs doivent distinguer une répétition d'une séquence
+littérale. Le principe est simple, ses conventions binaires
+exactes appartiennent au format qui l'utilise.
+
+\subsection{Huffman : des mots courts pour les symboles fréquents}
+Dans notre exemple de probabilités, on peut choisir
+$A\mapsto0$, $B\mapsto10$, $C\mapsto110$, $D\mapsto111$.
+Aucun mot n'est le début d'un autre : le code est préfixe.
+La suite $ABCD$ devient \texttt{010110111} et se relit sans
+séparateurs en parcourant un arbre. La longueur moyenne vaut
+$0{,}5\times1+0{,}25\times2+0{,}125\times3+0{,}125\times3=1{,}75$.
+
+Huffman code des symboles discrets avec des longueurs entières.
+Un codage arithmétique ou par intervalles représente une suite
+entière par une sous-plage, permettant une adaptation plus fine
+aux probabilités. Les implémentations doivent définir les
+arrondis et la renormalisation pour rester synchronisées.
+
+\subsection{LZ77 et DEFLATE}
+Un dictionnaire glissant remplace une séquence répétée par une
+distance en arrière et une longueur. Il ne cherche pas des
+objets visuels : il cherche des octets déjà rencontrés.
+DEFLATE combine des références de ce type et un codage Huffman ;
+son format est défini par la RFC~1951~\cite{deflate}.
+Zlib ajoute un encadrement et un contrôle d'intégrité décrits
+par la RFC~1950~\cite{zlib}. Zlib, DEFLATE et ZIP sont donc
+trois notions apparentées, mais non interchangeables.
+
+\subsection{Rice/Golomb : encoder des petits résidus}
+Pour un entier non négatif $u$ et un paramètre $k$, un code de
+Rice sépare quotient $q=\lfloor u/2^k\rfloor$ et reste
+$r=u\bmod2^k$. Le quotient est écrit en unaire, le reste sur
+$k$ bits. Avec la convention « $q$ uns suivis d'un zéro »,
+$u=13$, $k=2$ donne $q=3$, $r=1$, donc \texttt{1110 01}.
+
+Pour transformer un résidu signé en entier non négatif, on peut
+utiliser $u=2r$ si $r\ge0$, sinon $u=-2r-1$. Les valeurs
+$0,-1,1,-2,2$ deviennent $0,1,2,3,4$. Le choix de $k$ et les
+conventions varient selon le codec ; cet exemple n'est pas un
+décodeur Canon, Sony ou Nikon.
+
+\section{Transformées : changer de coordonnées}
+\subsection{Pourquoi passer aux fréquences ?}
+Un bloc uniforme contient beaucoup de valeurs égales. Dans une
+base adaptée, il peut être représenté par un coefficient moyen
+et des détails nuls. Une transformée inversible ne compresse
+pas nécessairement à elle seule ; elle concentre l'information
+pour une quantification et un codage plus efficaces.
+
+Pour une transformation orthonormale $A$, $c=Ax$ et
+$x=A^{\mathsf T}c$. L'énergie quadratique se conserve :
+$\|c\|_2^2=\|x\|_2^2$. Les erreurs dans les coefficients se
+traduisent alors directement en erreurs quadratiques dans
+l'image, sous réserve d'arrondis de calcul.
+
+\subsection{DCT 2D et exemple JPEG}
+Une DCT orthonormale d'un bloc $8\times8$ centré est
+\begin{equation}
+F(u,v)=\frac14\alpha(u)\alpha(v)
+\sum_{x=0}^{7}\sum_{y=0}^{7}f(x,y)
+\cos\!\frac{(2x+1)u\pi}{16}
+\cos\!\frac{(2y+1)v\pi}{16},
+\end{equation}
+avec $\alpha(0)=1/\sqrt2$, $\alpha(k)=1$ sinon.
+Le coefficient $(0,0)$ est le DC ; les autres décrivent des
+variations spatiales AC. Dans un exemple 8 bits classique,
+on soustrait 128 avant la transformée.
+
+Si tous les pixels valent 140, le bloc centré vaut 12 ;
+$F(0,0)=96$ et les autres coefficients sont nuls en calcul exact.
+L'inverse retrouve 12 partout, puis 140 après réaddition de 128.
+Cette construction mathématique explique la concentration de
+l'énergie ; le cadre normatif JPEG est T.81~\cite{jpeg}.
+
+\subsection{Quantification : l'étape irréversible}
+On calcule pour chaque coefficient
+\begin{equation}
+\widehat F(u,v)=\operatorname{round}\!\frac{F(u,v)}{Q(u,v)},
+\qquad F_{\mathrm{reconstruit}}=Q\widehat F.
+\end{equation}
+Avec $F=23$ et $Q=10$, on stocke 2 et on reconstruit 20.
+Les valeurs de 15 à moins de 25, selon la convention d'arrondi,
+peuvent partager ce code ; l'information est perdue.
+Les hautes fréquences sont souvent quantifiées plus fortement.
+Des détails faibles deviennent nuls, ce qui favorise ensuite
+les suites de zéros et les codes entropiques.
+
+La « qualité JPEG 90 » est un paramètre d'encodeur, pas une
+unité normalisée garantissant la même table entre bibliothèques.
+Réexporter plusieurs fois avec pertes peut accumuler des erreurs,
+même si certaines configurations se stabilisent partiellement.
+
+\subsection{Zigzag, DC différentiel et sous-échantillonnage}
+Un parcours zigzag regroupe approximativement les coefficients
+des basses vers les hautes fréquences. Les zéros consécutifs
+peuvent être codés efficacement. Le DC est souvent prédit à
+partir du bloc précédent ; les marqueurs de redémarrage
+réinitialisent des états définis par le codec.
+
+Avant le codage, une image peut être convertie en une composante
+de luma et deux de chroma. Le format 4:2:0 usuel conserve une
+grille de luma et deux grilles de chroma à demi-largeur et
+demi-hauteur. Pour un rectangle de dimensions paires, cela
+représente environ $1{,}5WH$ échantillons contre $3WH$ en 4:4:4.
+L'emplacement exact des échantillons de chroma et les règles de
+reconstruction comptent. Les textes colorés et contours
+saturés peuvent souffrir davantage que les surfaces photographiques.
+
+\subsection{Ondelettes et lifting}
+Les ondelettes décomposent l'image par échelles plutôt qu'en
+blocs DCT indépendants. Une étape de Haar produit, pour deux
+valeurs, $(a,d)=((x_0+x_1)/\sqrt2,(x_0-x_1)/\sqrt2)$.
+Appliquée sur lignes puis colonnes, elle donne un fond et
+trois orientations de détails. Le cours 10 développe cette
+construction et son lien avec l'estimation du bruit.
+
+Le lifting construit des transformées par prédiction et mise
+à jour. Avec des règles d'arrondi entières symétriques,
+certaines variantes sont exactement réversibles. Quantifier
+leurs sous-bandes produit en revanche un codec avec pertes.
+Dire « ondelettes » ne suffit donc pas à conclure « sans perte ».
+
+\section{Ce qu'un décodeur doit reconstruire}
+Un décodeur JPEG à DCT ne lit pas directement les pixels : il
+parse les marqueurs, reconstruit les tables, décode les
+symboles, remet les coefficients dans les blocs, déquantifie,
+effectue la DCT inverse, reconstruit les composantes et applique
+les conversions demandées. Une décompression prédictive suit
+une chaîne différente. Les détails normatifs fixent la
+précision, les modes et les conventions.
+
+\resultat{Décompresser exactement un fichier avec pertes ne restaure
+pas les valeurs originales : cela restaure exactement, ou suivant
+la précision autorisée du décodeur, la représentation déjà appauvrie
+que l'encodeur a choisie.}

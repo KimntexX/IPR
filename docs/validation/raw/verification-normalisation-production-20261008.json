@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "analyser_sha256": "b3591b37acc994b64bb347e389ed9583e1d608132d6a31dac6aee610ca761574",
+  "measurement_sha256": "23dc5d6085ca1b0b7b2c396d8fb107658fea58167e180844262f961794c26e32",
+  "scenes": [
+    {
+      "scene": "6V1A9421",
+      "samples": 504600,
+      "max_code_error": 1.0000000000036344,
+      "mean_code_error": 0.004153124587131724,
+      "guarded_extrema_fraction": 2.3781212841854935e-05,
+      "guard_vs_original_experiment_max_code_error": 6.999999999999975,
+      "production_vs_original_experiment_max_code_error": 6.999999999999975,
+      "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+      "production_pixels_sha256": "676801e7a454ae3a226ce0f11227e69a0eda09efd959dd0471fdcac03a3851e1",
+      "production_manifest_sha256": "756d477809d8d6281f13cee9464155bd942a5061c102662e13c02b388768f552"
+    },
+    {
+      "scene": "6V1A0043",
+      "samples": 504600,
+      "max_code_error": 1.0000000000072724,
+      "mean_code_error": 0.0008594266085348213,
+      "guarded_extrema_fraction": 3.963535473642489e-06,
+      "guard_vs_original_experiment_max_code_error": 3.999999999999986,
+      "production_vs_original_experiment_max_code_error": 3.999999999999986,
+      "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "production_pixels_sha256": "e5d861115ed737e8dc4ce435801fe70c86280945accbfbe286b05257132aaa5f",
+      "production_manifest_sha256": "ffc1f45de7373f07c2a4a878668ed4df4cf83c98195c9ba78782f2ce3b8e6071"
+    },
+    {
+      "scene": "6V1A0007",
+      "samples": 504600,
+      "max_code_error": 1.0000000000072724,
+      "mean_code_error": 0.004011758488571815,
+      "guarded_extrema_fraction": 0.0,
+      "guard_vs_original_experiment_max_code_error": 0.0,
+      "production_vs_original_experiment_max_code_error": 1.0000000000072724,
+      "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "production_pixels_sha256": "e3a3a7206193a576bd2f28fd1b0cb708539bd863040cf57b76af321a0afd228a",
+      "production_manifest_sha256": "0483e30fbc43d72406b7ab20609a9f9fa3f9496b8b165494ab2fab98fc43fc90"
+    },
+    {
+      "scene": "6V1A0327",
+      "samples": 504600,
+      "max_code_error": 1.0000000000036344,
+      "mean_code_error": 0.0028319460959175605,
+      "guarded_extrema_fraction": 0.0,
+      "guard_vs_original_experiment_max_code_error": 0.0,
+      "production_vs_original_experiment_max_code_error": 1.0000000000036344,
+      "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "production_pixels_sha256": "b14c434de3185c43f5b095099e92ec7407b5f1433f3ec139879b06006510446b",
+      "production_manifest_sha256": "d0325ded1380264bacd1362fe23b344410afe5c19597bb112a1b1852e8f61077"
+    },
+    {
+      "scene": "6V1A9950",
+      "samples": 504600,
+      "max_code_error": 1.0000000000072724,
+      "mean_code_error": 0.002411150746465863,
+      "guarded_extrema_fraction": 0.0,
+      "guard_vs_original_experiment_max_code_error": 0.0,
+      "production_vs_original_experiment_max_code_error": 1.0000000000072724,
+      "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+      "production_pixels_sha256": "6281b94b102949be9553300a97bd10739980432f0934ac0dfbe693d0331e6230",
+      "production_manifest_sha256": "a4d48ab85fb1ebf67f46018d5e6c4c61c406cf51c821a396d6d82763053cc95a"
+    }
+  ],
+  "production_source_sha256": {
+    "src/raw/RawNormalization.cpp": "0c6f89bf6a47e3e8a6011cd9e36a8433a4d075172413ae1e159be76121915297",
+    "src/raw/RawDecoder.cpp": "95d1ca1770c4cca65f6f588fcddb397edd37930d4ec91c523642e9128d8338f6",
+    "src/profiles/CameraProfileEngine.cpp": "075ce99e95adb6f1d66a9495100144f2879f95fd2eb053be01214abf3c9f1b01"
+  }
+}

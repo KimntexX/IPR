@@ -157,5 +157,26 @@ int main()
                "implausible estimated black levels must be rejected"))
         return 1;
 
+    // Padded stride and bright crop margins must not contaminate a declared
+    // optical black area. Four CFA sites each get 96 samples here.
+    std::vector<std::uint16_t> padded(40 * 32, 12000);
+    RawBlackLevelEstimator::Input masked = validInput;
+    masked.rawWidth = 32; masked.rawHeight = 32; masked.rowStrideSamples = 40;
+    masked.leftMargin = 14; masked.topMargin = 4;
+    masked.activeWidth = 16; masked.activeHeight = 24;
+    masked.maskedAreas = {{0, 0, 12, 32}};
+    masked.mosaic = padded.data();
+    for (int y = 0; y < 32; ++y)
+        for (int x = 0; x < 12; ++x)
+            padded[y * 40 + x] = 2048 + ((y % 2) * 2 + x % 2);
+    const auto optical = RawBlackLevelEstimator::estimate(masked);
+    if (!check(optical.wasEstimated() && optical.levels == std::array<unsigned int, 4>{{2048,2049,2050,2051}},
+               "declared optical black must exclude scene margins and respect stride")) return 1;
+    masked.maskedAreas = {{31, 0, 12, 32}};
+    if (!check(RawBlackLevelEstimator::estimate(masked).status == RawBlackLevelEstimator::Status::InvalidInput,
+               "invalid optical bounds must be rejected")) return 1;
+    masked.maskedAreas = {{0, 0, 12, 32}}; masked.rowStrideSamples = 20;
+    if (!check(RawBlackLevelEstimator::estimate(masked).status == RawBlackLevelEstimator::Status::InvalidInput,
+               "stride shorter than raw width must be rejected")) return 1;
     return 0;
 }

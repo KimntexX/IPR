@@ -1,0 +1,53 @@
+{
+    "images": [
+        {
+            "all_black_fraction": 0,
+            "any_channel_high_fraction": 0,
+            "any_channel_low_fraction": 9.908838684106222e-06,
+            "raw": "tests/image/base/6V1A0007.CR3",
+            "samples": 504600,
+            "source_float_sha256": "6e88e0971d6d745009514bee432692b2c0d1d65b55171d65ea404427163553dd"
+        },
+        {
+            "all_black_fraction": 1.9817677368212447e-06,
+            "any_channel_high_fraction": 0.005212049147839873,
+            "any_channel_low_fraction": 0.0019183511692429647,
+            "raw": "tests/image/base/6V1A0037.CR3",
+            "samples": 504600,
+            "source_float_sha256": "707fe8214db208fec008ea44a8b79fa62b3061c5c5a8aaf93c6efa874a7aa175"
+        },
+        {
+            "all_black_fraction": 0,
+            "any_channel_high_fraction": 1.9817677368212444e-05,
+            "any_channel_low_fraction": 0.013149028933808957,
+            "raw": "tests/image/base/6V1A0043.CR3",
+            "samples": 504600,
+            "source_float_sha256": "f856fc89e8d8732c2dc9674b5711633c6035de4afacf356a16b4457ad8c2ab86"
+        },
+        {
+            "all_black_fraction": 0,
+            "any_channel_high_fraction": 0,
+            "any_channel_low_fraction": 0.00028141101862861674,
+            "raw": "tests/image/base/6V1A0327.CR3",
+            "samples": 504600,
+            "source_float_sha256": "eff3974199ca9f7f722292482bac509fd5773b167972925da0496e7215035f54"
+        },
+        {
+            "all_black_fraction": 7.927070947284979e-06,
+            "any_channel_high_fraction": 0.0001506143479984146,
+            "any_channel_low_fraction": 0.0022889417360285377,
+            "raw": "tests/image/base/6V1A9421.CR3",
+            "samples": 504600,
+            "source_float_sha256": "2878f2ef7b3d67488a82c7ed9533c6e9a71a2762da9f2d3ade89eafe5dd7ffab"
+        },
+        {
+            "all_black_fraction": 0,
+            "any_channel_high_fraction": 0,
+            "any_channel_low_fraction": 0.0011533888228299643,
+            "raw": "tests/image/base/6V1A9950.CR3",
+            "samples": 504600,
+            "source_float_sha256": "d0145b55e4d23da4d56059e699feacb187ada0e9f0f900e0d1b6d4397b322b05"
+        }
+    ],
+    "note": "Existing native float grids, real ColorPipeline mapping and Qt sRGB output; no TIFF or RAW modified"
+}

@@ -42,6 +42,19 @@ Result estimate(const Input &input)
     }
     const int right = input.leftMargin + input.activeWidth;
     const int bottom = input.topMargin + input.activeHeight;
+    const int stride = input.rowStrideSamples ? input.rowStrideSamples : input.rawWidth;
+    if (stride < input.rawWidth) {
+        result.status = Status::InvalidInput;
+        return result;
+    }
+    for (const auto &area : input.maskedAreas) {
+        if (area.left < 0 || area.top < 0 || area.width <= 0 || area.height <= 0 ||
+            area.left > input.rawWidth || area.top > input.rawHeight ||
+            area.width > input.rawWidth - area.left || area.height > input.rawHeight - area.top) {
+            result.status = Status::InvalidInput;
+            return result;
+        }
+    }
 
     for (int channel : input.cfaChannels) {
         if (channel < 0 || channel >= 4) {
@@ -57,24 +70,31 @@ Result estimate(const Input &input)
     const auto addSample = [&](int x, int y) {
         const int channel = input.cfaChannels[(y % 2) * 2 + (x % 2)];
         const std::uint16_t value =
-            input.mosaic[static_cast<std::size_t>(y) * input.rawWidth + x];
+            input.mosaic[static_cast<std::size_t>(y) * stride + x];
         ++histograms[channel][value];
         ++result.sampleCounts[channel];
     };
 
-    for (int y = 0; y < input.rawHeight; ++y) {
-        for (int x = 0; x < input.leftMargin; ++x)
-            addSample(x, y);
-        for (int x = right; x < input.rawWidth; ++x)
-            addSample(x, y);
-    }
-    for (int y = 0; y < input.topMargin; ++y) {
-        for (int x = input.leftMargin; x < right; ++x)
-            addSample(x, y);
-    }
-    for (int y = bottom; y < input.rawHeight; ++y) {
-        for (int x = input.leftMargin; x < right; ++x)
-            addSample(x, y);
+    if (!input.maskedAreas.empty()) {
+        for (const auto &area : input.maskedAreas)
+            for (int y = area.top; y < area.top + area.height; ++y)
+                for (int x = area.left; x < area.left + area.width; ++x)
+                    addSample(x, y);
+    } else {
+        for (int y = 0; y < input.rawHeight; ++y) {
+            for (int x = 0; x < input.leftMargin; ++x)
+                addSample(x, y);
+            for (int x = right; x < input.rawWidth; ++x)
+                addSample(x, y);
+        }
+        for (int y = 0; y < input.topMargin; ++y) {
+            for (int x = input.leftMargin; x < right; ++x)
+                addSample(x, y);
+        }
+        for (int y = bottom; y < input.rawHeight; ++y) {
+            for (int x = input.leftMargin; x < right; ++x)
+                addSample(x, y);
+        }
     }
 
     for (int channel = 0; channel < 4; ++channel) {

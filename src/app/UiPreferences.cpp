@@ -25,6 +25,10 @@ const QMap<QString, QPair<int, int>> integerRanges{
 
 QString UiPreferences::defaultFilePath()
 {
+    const QString portable = QDir(QCoreApplication::applicationDirPath())
+        .filePath(QStringLiteral("config/ipr-ui.ini"));
+    if (QFileInfo(portable).isFile())
+        return portable;
     return QDir(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation))
         .filePath(QStringLiteral("ipr-ui.ini"));
 }

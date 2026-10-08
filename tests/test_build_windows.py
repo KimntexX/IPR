@@ -13,6 +13,13 @@ RULES = json.loads((ROOT / "scripts/test-rules.json").read_text(encoding="utf-8"
 
 
 class SelectionTests(unittest.TestCase):
+    def test_generator_is_targeted_and_registered(self):
+        plan = build.select_tests(["src/tools/generate_test_images.cpp"], RULES)
+        self.assertFalse(plan["full"])
+        self.assertEqual(set(plan["tests"]), {"testImageGeneratorTests", "imageExportTests"})
+        isolated = build.select_tests(["tests/test_image_generator_test.cpp"], RULES)
+        self.assertEqual(isolated["targets"], ["testImageGeneratorTests"])
+
     def test_viewport_is_targeted_and_main_includes_zoom_regressions(self):
         plan = build.select_tests(["src/qml/ImageViewport.qml"], RULES)
         self.assertFalse(plan["full"])
@@ -36,11 +43,37 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(plan["tests"], [])
         self.assertEqual(plan["python"], ["noise_analysis"])
         shared = build.select_tests(["tests/analyse_color_mixer.py"], RULES)
-        self.assertEqual(set(shared["python"]), {"color_mixer_analysis", "noise_analysis"})
+        self.assertEqual(set(shared["python"]), {"color_mixer_analysis", "noise_analysis", "base_colorimetry_analysis"})
+        colour = build.select_tests(["tests/analyse_base_colorimetrique_v2.py"], RULES)
+        self.assertFalse(colour["full"])
+        self.assertEqual(colour["tests"], [])
+        self.assertEqual(colour["python"], ["base_colorimetry_analysis"])
+        diagnostic = build.select_tests(["tests/investigate_tonal_base.py"], RULES)
+        self.assertFalse(diagnostic["full"])
+        self.assertEqual(diagnostic["python"], ["base_colorimetry_analysis"])
+        for path in ("tests/investigate_dcp_order.py", "tests/audit_dng_baseline.py", "tests/investigate_dcp_normalization.py", "tests/investigate_standard_normalization.py", "tests/prepare_raw_normalization.py"):
+            diagnostic = build.select_tests([path], RULES)
+            self.assertFalse(diagnostic["full"])
+            self.assertEqual(diagnostic["python"], ["base_colorimetry_analysis"])
+        probe = build.select_tests(["tests/tonal_base_probe.cpp"], RULES)
+        self.assertFalse(probe["full"])
+        self.assertEqual(set(probe["tests"]), {"rawDecoderTests", "rawBlackLevelEstimatorTests", "cameraProfileEngineTests"})
 
     def test_documentation_and_no_changes_skip_tests(self):
         self.assertEqual(build.select_tests([], RULES)["tests"], [])
         self.assertEqual(build.select_tests(["docs/example.md"], RULES)["tests"], [])
+
+    def test_raw_normalization_is_targeted(self):
+        for path in ("src/raw/RawNormalization.cpp", "src/raw/RawDecoder.cpp", "tests/raw_normalization_test.cpp"):
+            plan = build.select_tests([path], RULES)
+            self.assertFalse(plan['full'])
+            self.assertIn('rawNormalizationTests', plan['tests'])
+
+    def test_raw_development_ui_is_targeted(self):
+        plan=build.select_tests(['src/qml/RawDevelopmentModule.qml'],RULES)
+        self.assertFalse(plan['full'])
+        self.assertIn('editorRawDevelopmentTests',plan['tests'])
+        self.assertIn('settingsQmlTests',plan['tests'])
 
     def test_preferences_are_targeted(self):
         plan = build.select_tests(["src/app/UiPreferences.cpp"], RULES)

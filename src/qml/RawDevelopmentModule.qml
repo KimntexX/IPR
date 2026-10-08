@@ -1,0 +1,126 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Dialogs
+import QtQuick.Layouts
+
+ColumnLayout {
+    id: root
+    required property var editor
+    property color textColor: "#edf2f8"
+    property color secondaryTextColor: "#d7dfeb"
+    Layout.fillWidth: true
+    Layout.minimumWidth: 0
+    implicitWidth: 0
+    spacing: 8
+
+    function selectedIndex() {
+        const profiles = editor.cameraProfiles
+        for (let i = 0; i < profiles.length; ++i)
+            if (profiles[i].path === editor.selectedCameraProfile)
+                return i
+        return 0
+    }
+
+    Label {
+        text: qsTr("Profil couleur DCP")
+        color: root.textColor
+        Layout.fillWidth: true
+    }
+    ComboBox {
+        id: profileSelector
+        objectName: "cameraProfileSelector"
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+        implicitWidth: 0
+        model: root.editor.cameraProfiles
+        textRole: "name"
+        currentIndex: root.selectedIndex()
+        enabled: root.editor.hasImage && !root.editor.busy && count > 1
+        onActivated: function(index) {
+            root.editor.setCameraProfile(model[index].path)
+        }
+        contentItem: Text {
+            text: profileSelector.displayText
+            color: root.textColor
+            elide: Text.ElideRight
+            verticalAlignment: Text.AlignVCenter
+            rightPadding: profileSelector.indicator.width + 6
+        }
+        background: Rectangle {
+            radius: 4
+            color: "#20252c"
+            border.color: profileSelector.activeFocus ? "#71849a" : "#424b58"
+        }
+    }
+    CheckBox {
+        objectName: "rawAutomaticWhiteBalanceToggle"
+        text: qsTr("Balance des blancs automatique")
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+        checked: root.editor.automaticWhiteBalance
+        enabled: root.editor.hasImage && !root.editor.busy
+        onClicked: root.editor.setAutomaticWhiteBalance(checked)
+        contentItem: Text {
+            text: parent.text
+            color: root.textColor
+            wrapMode: Text.WordWrap
+            leftPadding: parent.indicator.width + parent.spacing
+        }
+    }
+    CheckBox {
+        objectName: "rawNormalizationToggle"
+        text: qsTr("Normalisation RAW — expérimentale")
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+        checked: root.editor.rawNormalizationEnabled
+        enabled: root.editor.hasImage && !root.editor.busy
+        onClicked: root.editor.setRawNormalizationEnabled(checked)
+        contentItem: Text {
+            text: parent.text
+            color: root.textColor
+            wrapMode: Text.WordWrap
+            leftPadding: parent.indicator.width + parent.spacing
+            verticalAlignment: Text.AlignVCenter
+        }
+    }
+    Button {
+        objectName: "rawNormalizationManifestButton"
+        text: qsTr("Choisir le manifeste…")
+        Layout.fillWidth: true
+        enabled: !root.editor.busy
+        onClicked: manifestDialog.open()
+    }
+    Label {
+        objectName: "rawNormalizationManifestLabel"
+        text: root.editor.rawNormalizationManifest.length > 0
+              ? root.editor.rawNormalizationManifest : qsTr("Aucun manifeste sélectionné")
+        color: root.secondaryTextColor
+        font.pixelSize: 10
+        wrapMode: Text.WrapAnywhere
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+    }
+    Label {
+        objectName: "rawDevelopmentStatusLabel"
+        text: root.editor.busy ? qsTr("Décodage en cours…") : root.editor.rawDevelopmentStatus
+        color: root.textColor
+        wrapMode: Text.WrapAnywhere
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+    }
+    Label {
+        text: qsTr("Essai : Camera Neutral, WB automatique désactivée, réglages à zéro. Calibration limitée aux cinq RAW audités. Choix conservés pour cette session uniquement.")
+        color: root.secondaryTextColor
+        font.pixelSize: 11
+        wrapMode: Text.WordWrap
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+    }
+    FileDialog {
+        id: manifestDialog
+        title: qsTr("Manifeste de normalisation RAW")
+        fileMode: FileDialog.OpenFile
+        nameFilters: [qsTr("Calibration JSON (*.json)")]
+        onAccepted: root.editor.setRawNormalizationManifest(selectedFile)
+    }
+}

@@ -235,3 +235,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local Windows packages may contain third-party profiles: never commit them.
+/dist/

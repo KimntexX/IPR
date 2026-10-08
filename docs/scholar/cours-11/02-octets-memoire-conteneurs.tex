@@ -1,0 +1,219 @@
+\part{Comment les nombres deviennent des octets}
+\section{Binaire, hexadécimal et ordre des octets}
+\subsection{Un octet n'a pas de type intrinsèque}
+Un octet possède huit bits, donc 256 configurations. La suite
+\texttt{01000001} vaut 65 en entier non signé et représente aussi
+la lettre A en ASCII. Le type est une règle d'interprétation, pas
+une propriété magique de ces huit bits. En hexadécimal, un chiffre
+représente quatre bits : \texttt{41} désigne le même octet.
+
+Pour des bits $b_i\in\{0,1\}$,
+\begin{equation}
+n=\sum_{i=0}^{k-1}b_i2^i.
+\end{equation}
+Le bit d'indice 0 est le bit de poids faible. Le nombre 291 vaut
+\texttt{0x0123} et $1\times256+2\times16+3$.
+Un affichage hexadécimal montre généralement une adresse à gauche,
+les octets au centre et une interprétation texte à droite. Le texte
+illisible ne signifie pas que le fichier est chiffré : des pixels
+et des nombres binaires ne sont pas du texte.
+
+\subsection{Little-endian et big-endian}
+Pour l'entier 16 bits \texttt{0x1234}, big-endian écrit
+\texttt{12 34}, little-endian écrit \texttt{34 12}.
+L'ordre des octets n'est pas la même question que l'ordre des bits
+dans un flux compacté. Un conteneur et son codec interne peuvent
+avoir des conventions différentes.
+
+Lire deux octets $a,b$ en big-endian donne $256a+b$ ; en
+little-endian, $a+256b$. Interpréter \texttt{01 00} avec le mauvais
+ordre transforme 1 en 256. Sur une image, cela produit souvent
+une luminosité aberrante ou des motifs périodiques.
+
+\subsection{Entiers signés et flottants}
+En complément à deux, un entier signé de $b$ bits va de
+$-2^{b-1}$ à $2^{b-1}-1$. Un résidu de compression peut être
+négatif même si l'échantillon final est non signé.
+
+Un flottant binaire normalisé peut être compris comme
+\begin{equation}
+(-1)^s\,2^{e-\mathrm{biais}}\left(1+\frac{m}{2^p}\right).
+\end{equation}
+Il distribue une précision approximativement relative sur une
+large plage. Le type binary32 utilise 1 bit de signe, 8 d'exposant
+et 23 de fraction ; binary16 utilise 1, 5 et 10. Il existe aussi
+zéros, subnormaux, infinis et NaN. Les valeurs très proches de zéro
+ne suivent pas toutes la formule normalisée ci-dessus.
+
+Un flottant 16 bits n'est donc pas un entier 16 bits : il peut
+représenter des valeurs négatives et supérieures à 1, mais ne
+possède pas 65 536 niveaux uniformément répartis entre 0 et 1.
+Dans un moteur, les NaN et infinis doivent être détectés : une
+seule valeur non finie peut contaminer histogrammes et statistiques.
+
+\section{Organisation d'une image en mémoire}
+\subsection{Entrelacé et planaire}
+Une image RGB peut être rangée
+\texttt{R0 G0 B0 R1 G1 B1}, ou en trois plans
+\texttt{R0 R1 ...}, \texttt{G0 G1 ...}, \texttt{B0 B1 ...}.
+La première organisation facilite certaines opérations par pixel ;
+la seconde facilite certaines opérations par canal et certains codecs.
+RGB et BGR sont aussi deux ordres différents. Une permutation R/B
+est un problème d'organisation, pas une balance des blancs.
+
+Pour une image entrelacée de $C$ canaux, avec $s$ octets par composante :
+\begin{equation}\label{eq:address}
+\operatorname{adresse}(x,y,c)=A_0+y\,\mathrm{stride}+xCs+cs.
+\end{equation}
+Le \emph{stride}, ou pitch, est le nombre d'octets séparant les
+débuts de deux lignes. Il peut dépasser $WCs$ pour respecter un
+alignement ou parce que l'image est une vue dans un plus grand tampon.
+
+\subsection{Exemple de lignes rembourrées}
+Une ligne de 3 pixels RGB 8 bits contient 9 octets utiles.
+Si chaque ligne est alignée sur 4 octets, le stride peut être 12.
+Les 3 derniers octets sont du remplissage, pas un quatrième pixel.
+Pour $H=2$, la mémoire allouée vaut alors 24 octets, pas 18.
+Une boucle qui suppose des lignes contiguës de 9 octets lira mal
+la deuxième ligne.
+
+Une région d'intérêt peut conserver le stride de son parent.
+Son pointeur commence plus loin, mais sa largeur n'explique pas
+toute la distance entre ses lignes. En C++/OpenCV, ne présumer
+la continuité d'un \texttt{cv::Mat} qu'après vérification ; dans Qt,
+utiliser le pas réel de l'image. Une vue NumPy peut également être
+non contiguë et même posséder un stride négatif.
+
+\subsection{Origine, axes et orientation}
+En traitement d'image, l'origine est souvent en haut à gauche,
+$x$ croît vers la droite et $y$ vers le bas. En géométrie
+mathématique, $y$ croît souvent vers le haut. Une rotation positive
+peut donc sembler inversée si l'on confond transformation du repère
+et transformation du contenu.
+
+Il faut distinguer la grille stockée de l'orientation d'affichage.
+Une photo portrait peut contenir une grille paysage avec une
+instruction de rotation. Les huit orientations Exif couvrent
+rotations et réflexions~\cite{exif}. Pour un exemple de rotation
+horaire d'une grille $W\times H$ :
+\[
+x'=H-1-y,\qquad y'=x.
+\]
+Les dimensions deviennent $H\times W$. Si le logiciel tourne les
+pixels tout en conservant une instruction de rotation non remise
+à jour, le lecteur suivant peut effectuer une seconde rotation.
+
+\subsection{Alpha droit et alpha prémultiplié}
+L'alpha exprime une couverture ou opacité conventionnelle, pas une
+quatrième couleur ni forcément une transparence physique complète.
+Avec alpha droit, la couleur $C$ est stockée indépendamment de $a$.
+Avec alpha prémultiplié, le tampon stocke $P=aC$.
+
+Pour deux couches, avant-plan $f$ et arrière-plan $b$, en prémultiplié :
+\begin{equation}
+P_{\mathrm{out}}=P_f+(1-a_f)P_b,\qquad
+a_{\mathrm{out}}=a_f+(1-a_f)a_b.
+\end{equation}
+Si l'on veut une couleur droite, diviser $P_{\mathrm{out}}$ par
+$a_{\mathrm{out}}$ quand il est non nul. Les calculs de mélange
+lumineux doivent se faire dans un espace linéaire approprié.
+Dé-prémultiplier quand $a$ est presque nul amplifie les erreurs.
+Des franges sombres autour des objets proviennent fréquemment
+d'un mauvais contrat d'alpha ou d'une interpolation dans le
+mauvais domaine.
+
+\section{Coût mémoire et transfert GPU}
+Pour $6000\times4000$ pixels :
+\begin{center}
+\begin{tabular}{lrr}
+\toprule Représentation & Octets/pixel & Taille sans padding \\
+\midrule Mosaïque stockée en uint16 & 2 & 48 MB \\
+RGB uint16 & 6 & 144 MB \\
+RGBA float32 & 16 & 384 MB \\
+Deux tampons RGBA float32 & 32 & 768 MB \\
+\bottomrule
+\end{tabular}
+\end{center}
+Ici MB signifie $10^6$ octets ; 384 MB représentent environ
+366,2 MiB, avec $1\,\mathrm{MiB}=2^{20}$ octets. Il faut ajouter
+les intermédiaires, pyramides, masques, textures GPU et caches.
+Le petit fichier JPEG de quelques mégaoctets peut ainsi produire
+des centaines de mégaoctets en mémoire.
+
+Un GPU ne lit pas nécessairement le TIFF ou le CR3 directement.
+La chaîne usuelle comprend lecture, décompression CPU ou spécialisée,
+allocation d'un tampon, transfert, traitement, puis éventuellement
+retour CPU. Le coût total est
+\[
+T=T_{\text{lecture}}+T_{\text{décompression}}+
+T_{\text{transferts}}+T_{\text{calcul}}+T_{\text{attentes}}.
+\]
+Un filtre très rapide ne compense pas toujours les transferts.
+Mesurer chaque étage avant de conclure que « le GPU accélérera
+l'ouverture ». Les formats de texture de rendu ne sont pas
+nécessairement les formats photographiques de stockage.
+
+\section{Un fichier est un conteneur structuré}
+\subsection{Signature, en-tête, répertoires et charges utiles}
+Une architecture générale peut être représentée ainsi :
+\begin{center}
+\begin{tikzpicture}[node distance=.45cm,
+box/.style={draw=iprblue,rounded corners,text width=11cm,align=center,minimum height=.8cm}]
+\node[box] (s) {Signature et version : quel contrat de lecture ?};
+\node[box,below=of s] (h) {En-têtes et index : dimensions, types, offsets, compression};
+\node[box,below=of h] (m) {Métadonnées et calibration : Exif, profils, orientation};
+\node[box,below=of m] (d) {Charges utiles : pixels, coefficients, aperçus, masques};
+\node[box,below=of d] (c) {Contrôles éventuels : longueurs, CRC, sommes de contrôle};
+\draw[-{Latex}] (s)--(h);\draw[-{Latex}] (h)--(m);
+\draw[-{Latex}] (m)--(d);\draw[-{Latex}] (d)--(c);
+\end{tikzpicture}
+\end{center}
+Ce schéma est conceptuel : les sections peuvent être dispersées
+dans le fichier, imbriquées ou répétées. Un TIFF utilise des
+répertoires et offsets ; un PNG des chunks successifs ; un fichier
+fondé sur ISO BMFF des boîtes imbriquées. Il n'existe pas un
+en-tête universel de toutes les images.
+
+\subsection{Codec, conteneur et extension}
+Le conteneur organise les blocs ; le codec explique comment
+reconstruire les échantillons de la charge utile. Une même
+extension peut accepter plusieurs codecs. TIFF peut stocker des
+valeurs non compressées ou différents flux compressés. CR3
+désigne une famille de conteneurs Canon, non un simple tableau
+RGB de convention fixe.
+
+Renommer \texttt{photo.jpg} en \texttt{photo.dng} ne convertit rien.
+Le type MIME, l'extension et la signature sont des indices à
+croiser. Une signature valide prouve seulement que quelques
+octets ressemblent à l'entrée d'un format, pas que tous ses blocs
+sont corrects ou que son image se décodera.
+
+\subsection{Offsets, longueurs et débordements}
+Un offset est une distance en octets depuis une origine définie.
+Cette origine peut être le début du fichier, celui d'un bloc ou
+celui d'une structure interne. Une longueur peut compter les
+données seules ou inclure l'en-tête. Ne pas deviner ces conventions.
+
+Si un bloc commence à $o$ et contient $n$ octets dans un fichier
+de taille $S$, vérifier $0\le o\le S$ puis $0\le n\le S-o$.
+Cette seconde forme évite le débordement de $o+n$ dans un entier
+de taille finie. De même, valider $W$, $H$, les canaux et le produit
+avant d'allouer $WHCs$. Un fichier malveillant peut déclarer une
+image gigantesque tout en ne contenant que quelques octets.
+
+\subsection{CRC, hash et identité}
+Un CRC détecte efficacement certaines corruptions accidentelles.
+Un hash cryptographique comme SHA-256 sert à comparer des contenus
+et à contrôler la provenance ; il ne prouve pas à lui seul
+l'authenticité d'un auteur. Une signature cryptographique ajoute
+une identité et une chaîne de confiance à vérifier.
+
+Deux fichiers de hashes différents peuvent décoder les mêmes
+pixels : ordre des métadonnées, compression et horodatages
+diffèrent. À l'inverse, deux fichiers de même nom peuvent avoir
+des contenus distincts. Il faut distinguer identité des octets,
+égalité des pixels décodés et équivalence du rendu colorimétrique.
+
+\resultat{Le fichier peut être compact, dispersé et compressé ; la
+mémoire peut être large, alignée et flottante. Lire un fichier n'est
+jamais simplement copier ses octets dans une texture.}

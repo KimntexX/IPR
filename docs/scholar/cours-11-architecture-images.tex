@@ -1,0 +1,59 @@
+\input{preamble}
+\setcounter{tocdepth}{2}
+\setlength{\emergencystretch}{2em}
+\hypersetup{pdftitle={Cours 11 -- Architecture des images numériques},
+pdfauthor={Projet IPR -- Scholar}}
+\title{Cours 11 -- Architecture des images numériques\\
+\large De la lumière aux octets, des octets à l'image affichée}
+\begin{document}
+\coursmeta{8 octobre 2026}{Cours de référence : physique, mathématiques,
+représentations mémoire, formats, compression, métadonnées et développement RAW.\\
+Exemples originaux, travaux pratiques reproductibles et bibliographie commentée.}
+
+\section*{Comment utiliser ce cours}
+\addcontentsline{toc}{section}{Comment utiliser ce cours}
+Ce cours répond à une question apparemment simple : \emph{que contient un
+fichier image et que fait le logiciel pour le montrer ?} La réponse exige
+de traverser plusieurs couches. Une mesure de capteur n'est pas une couleur
+affichable ; une couleur n'est pas un octet ; un octet n'est pas un fichier ;
+un fichier décodable n'est pas nécessairement interprété correctement.
+
+Le parcours débutant suit les parties I, II et V avant les détails des
+formats. Le parcours développeur suit les parties II à IV, puis VII.
+Pour comprendre les différences Canon/Lightroom/IPR, lire surtout les
+parties V et VI, sans omettre la quantification et la gestion des profils.
+Les encadrés « À retenir » résument les distinctions essentielles.
+Les équations sont accompagnées d'une interprétation et de valeurs numériques.
+
+\paragraph{Prérequis.} Savoir additionner, multiplier, lire un tableau et
+comprendre une fonction. Les matrices, logarithmes, probabilités et
+transformées sont introduits au moment où ils deviennent utiles. Il ne
+s'agit pas d'un catalogue exhaustif de tous les codecs, ni d'une
+spécification de remplacement permettant d'écrire seul un décodeur industriel.
+
+\paragraph{Nature des sources.} Les références normatives décrivent des
+contrats de fichiers. Les manuels constructeurs décrivent des modèles
+et modes précis. Le code des décodeurs et les travaux de rétro-ingénierie
+documentent des implémentations, pas une promesse universelle du constructeur.
+Les exemples, calculs, diagrammes et exercices sont des constructions
+pédagogiques originales. Les liens de la bibliographie ont été recherchés
+le 8 octobre 2026 ; certains documents historiques peuvent changer d'adresse.
+
+\paragraph{Périmètre IPR.} Ce cours est un document Scholar, pas une
+modification du moteur. Les études Canon locales servent d'illustrations
+datées, non de constantes à recopier pour Sony, Nikon ou tous les Canon.
+Les espaces de travail, formats et limites d'un logiciel doivent être
+vérifiés dans son code et sa matrice de validation.
+
+\input{cours-11/01-lumiere-et-echantillons}
+\input{cours-11/02-octets-memoire-conteneurs}
+\input{cours-11/03-compression}
+\input{cours-11/04-formats}
+\input{cours-11/05-raw-couleur-metadonnees}
+\input{cours-11/06-constructeurs}
+\input{cours-11/07-architecture-tp-glossaire}
+
+\clearpage
+\bibliographystyle{plain}
+\bibliography{references-images}
+\end{document}

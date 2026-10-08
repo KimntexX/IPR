@@ -14,6 +14,11 @@ Ce fichier est le point d'entrée unique de la documentation versionnée. Il dis
 
 ## Règles de gouvernance
 
+Cours de fond : [architecture des images numériques — PDF](scholar/cours-11-architecture-images.pdf)
+et [travaux pratiques associés](scholar/README.md#cours-11--architecture-des-images).
+
+Guide pratique : [tester les fonctionnalités en autonomie](validation/procedure-tests-autonomes.md).
+
 1. Un rapport de séance enregistre des faits datés ; il ne devient pas une spécification par accumulation.
 2. Une fonctionnalité terminée met à jour sa spécification, la matrice de validation et, si nécessaire, un ADR.
 3. Les fichiers bruts de mesure restent immuables et sont séparés de leurs conclusions.

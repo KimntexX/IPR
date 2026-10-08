@@ -1,0 +1,3051 @@
+{
+  "schema": 2,
+  "timestamp_utc": "2026-10-07T09:50:38.051870+00:00",
+  "analyser_sha256": "04cdf72ebfbb039c01e4c201eac26799ef1b06be3a97f7eedbb15f18b0577c6f",
+  "archive": "tests/image/base/neutre/6V1A9950-IPR.zip",
+  "archive_sha256": "eab316d3128ac33478801e99fd600adc9c2b03bf23a605f4f7a95c1501e32115",
+  "method": {
+    "rgb": "native 16-bit sRGB SDR",
+    "lab_white": "D65",
+    "global_grid_step": 8,
+    "roi_grid_step": 4,
+    "delta_e": "CIEDE2000 kL=kC=kH=1 (also separately CIE76)",
+    "sign": "Lightroom minus IPR",
+    "geometry": "0/1-pixel crop only; no optical registration",
+    "roi_labels": "historical v1 labels, not verified physical targets"
+  },
+  "scenes": [
+    {
+      "scene": "6V1A0007",
+      "ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0007-IPR-2.tiff",
+        "bytes": 258263634,
+        "size": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "8f058589dde04b70fb7145bf9a3ff035f07b48eed5b44e7da751788dcc21a255",
+        "mtime_utc": "2026-10-07T08:27:52.467706+00:00"
+      },
+      "lr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0007.tif",
+        "bytes": 193793872,
+        "size": [
+          4640,
+          6960
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A0007.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "Custom",
+          "Temperature": "5200",
+          "Tint": "+5",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "1",
+          "LensProfileEnable": "1",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "5AA58CD783D0A176436C87DA6023C018",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "548ba5f82bb64dfd15bfd60b26508e85f56488a90859154e25247e6825776346",
+        "mtime_utc": "2026-10-06T10:44:14.085166+00:00"
+      },
+      "old_export": {
+        "member": "6V1A0007-IPR.tiff",
+        "archive_timestamp_local": [
+          2026,
+          10,
+          6,
+          12,
+          51,
+          34
+        ],
+        "archive_bytes": 258263634,
+        "sha256": "bf2b3a6a2a16f31a4dbaf884a82018f56a9d32c3ec7ba03566a299ebf0aaa0a3",
+        "identical_bytes": false
+      },
+      "crop_candidates": [
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.42909833788871765
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.4304879605770111
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.43056002259254456
+        },
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.4319944679737091
+        }
+      ],
+      "global": {
+        "samples": 504600,
+        "delta_e00_mean": 19.269959897019397,
+        "delta_e00_median": 21.858586244987045,
+        "delta_e00_p95": 26.944956653023464,
+        "delta_e76_mean": 22.26672124227004,
+        "delta_lab_mean_lr_minus_ipr": [
+          21.18559568965119,
+          -0.6600793938187097,
+          -2.1932336589495116
+        ],
+        "rgb_mae_normalized": 0.21815862352010393,
+        "ipr_lab_mean": [
+          40.03262190806503,
+          -1.2598020170201913,
+          -6.584344681590664
+        ],
+        "lr_lab_mean": [
+          61.21821759771626,
+          -1.9198814108389068,
+          -8.777578340539945
+        ],
+        "ipr_y_mean": 0.126022541367181,
+        "lr_y_mean": 0.3413820126112279,
+        "delta_chroma_mean": 2.4403342104338255,
+        "hue_abs_circular_mean_degrees": 8.248782536541146,
+        "hue_usable_fraction": 0.7894926674593737,
+        "lr_neutral_fraction": 0.0314645263575109,
+        "ab_distance_on_lr_neutral_mean": 2.69674807007819,
+        "ipr_any_channel_low_fraction": 9.908838684106222e-06,
+        "lr_any_channel_low_fraction": 0.0031728101466508125,
+        "ipr_any_channel_high_fraction": 0.0,
+        "lr_any_channel_high_fraction": 1.9817677368212447e-06
+      },
+      "regions": [
+        {
+          "number": 1,
+          "name": "voilier_blanc",
+          "coords": [
+            2000,
+            1500,
+            3500,
+            2500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 93750,
+            "delta_e00_mean": 21.624912790767095,
+            "delta_e00_median": 21.99095613100182,
+            "delta_e00_p95": 22.74024222387344,
+            "delta_e76_mean": 26.004806583572737,
+            "delta_lab_mean_lr_minus_ipr": [
+              25.746436503504942,
+              -0.1907289503020128,
+              -0.5804083226276447
+            ],
+            "rgb_mae_normalized": 0.26797935585904054,
+            "ipr_lab_mean": [
+              49.62779255053231,
+              -1.7279114292590962,
+              -9.061080238373874
+            ],
+            "lr_lab_mean": [
+              75.37422905403686,
+              -1.918640379561113,
+              -9.641488561001351
+            ],
+            "ipr_y_mean": 0.1850296799884532,
+            "lr_y_mean": 0.5015181533476063,
+            "delta_chroma_mean": 0.6362284693395857,
+            "hue_abs_circular_mean_degrees": 4.731950533836981,
+            "hue_usable_fraction": 0.9679893333333334,
+            "lr_neutral_fraction": 0.00064,
+            "ab_distance_on_lr_neutral_mean": 3.133007989115859,
+            "ipr_any_channel_low_fraction": 1.0666666666666667e-05,
+            "lr_any_channel_low_fraction": 0.0,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 2,
+          "name": "eau",
+          "coords": [
+            1000,
+            2500,
+            2500,
+            3500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 93750,
+            "delta_e00_mean": 17.755217043363135,
+            "delta_e00_median": 21.807856627751306,
+            "delta_e00_p95": 25.931500336823305,
+            "delta_e76_mean": 20.13213946251701,
+            "delta_lab_mean_lr_minus_ipr": [
+              17.709899698442587,
+              -0.4739914506932878,
+              -1.9897273610909025
+            ],
+            "rgb_mae_normalized": 0.19549493511016164,
+            "ipr_lab_mean": [
+              37.30597729610697,
+              -1.471145947422579,
+              -6.681038638211053
+            ],
+            "lr_lab_mean": [
+              55.015876994549146,
+              -1.9451373981159013,
+              -8.670765999301741
+            ],
+            "ipr_y_mean": 0.11181260420780377,
+            "lr_y_mean": 0.28713960425922724,
+            "delta_chroma_mean": 2.2920498742217665,
+            "hue_abs_circular_mean_degrees": 6.666734398109488,
+            "hue_usable_fraction": 0.6707626666666666,
+            "lr_neutral_fraction": 0.14282666666666666,
+            "ab_distance_on_lr_neutral_mean": 2.5193798023609846,
+            "ipr_any_channel_low_fraction": 3.2e-05,
+            "lr_any_channel_low_fraction": 0.0005546666666666666,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 3,
+          "name": "ciel_gris",
+          "coords": [
+            1000,
+            500,
+            3000,
+            1500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 125000,
+            "delta_e00_mean": 22.072957831959105,
+            "delta_e00_median": 22.203474454186757,
+            "delta_e00_p95": 23.795952260211074,
+            "delta_e76_mean": 27.43539509155123,
+            "delta_lab_mean_lr_minus_ipr": [
+              27.081485845503806,
+              0.009200665542640537,
+              0.4411313031423948
+            ],
+            "rgb_mae_normalized": 0.2847842900434882,
+            "ipr_lab_mean": [
+              51.80818058340441,
+              -0.8809981448714209,
+              -7.998343527916491
+            ],
+            "lr_lab_mean": [
+              78.88966642890618,
+              -0.8717974793287776,
+              -7.557212224774108
+            ],
+            "ipr_y_mean": 0.20528401522010006,
+            "lr_y_mean": 0.564968613127712,
+            "delta_chroma_mean": -0.4157126577785849,
+            "hue_abs_circular_mean_degrees": 5.570256251563158,
+            "hue_usable_fraction": 0.956336,
+            "lr_neutral_fraction": 0.002632,
+            "ab_distance_on_lr_neutral_mean": 2.702333369233015,
+            "ipr_any_channel_low_fraction": 8e-06,
+            "lr_any_channel_low_fraction": 0.0,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        }
+      ],
+      "previous_ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0007-IPR.tiff",
+        "bytes": 258263634,
+        "size": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "bf2b3a6a2a16f31a4dbaf884a82018f56a9d32c3ec7ba03566a299ebf0aaa0a3",
+        "mtime_utc": "2026-10-06T19:52:40.391141+00:00"
+      },
+      "previous_vs_lr_same_crop": {
+        "samples": 504600,
+        "delta_e00_mean": 18.93522662045303,
+        "delta_e00_median": 21.348112066562372,
+        "delta_e00_p95": 26.717901118394057,
+        "delta_e76_mean": 21.90549296796524,
+        "delta_lab_mean_lr_minus_ipr": [
+          20.796068158397496,
+          -0.6664769618597898,
+          -2.3624602893750364
+        ],
+        "rgb_mae_normalized": 0.21473296105876036,
+        "ipr_lab_mean": [
+          40.422149439317614,
+          -1.2534044489790974,
+          -6.415118051164822
+        ],
+        "lr_lab_mean": [
+          61.21821759771626,
+          -1.9198814108389068,
+          -8.777578340539945
+        ],
+        "ipr_y_mean": 0.1288185437613734,
+        "lr_y_mean": 0.3413820126112279,
+        "delta_chroma_mean": 2.6209280656600646,
+        "hue_abs_circular_mean_degrees": 8.121918520711548,
+        "hue_usable_fraction": 0.7867419738406659,
+        "lr_neutral_fraction": 0.0314645263575109,
+        "ab_distance_on_lr_neutral_mean": 2.6893904111356735,
+        "ipr_any_channel_low_fraction": 0.0,
+        "lr_any_channel_low_fraction": 0.0031728101466508125,
+        "ipr_any_channel_high_fraction": 0.0,
+        "lr_any_channel_high_fraction": 1.9817677368212447e-06
+      },
+      "previous_vs_current": {
+        "samples": 504600,
+        "delta_e00_mean": 0.4734037417683833,
+        "delta_e00_median": 0.4204334204158767,
+        "delta_e00_p95": 0.9109270801331409,
+        "delta_e76_mean": 0.5031199795023454,
+        "delta_lab_mean_lr_minus_ipr": [
+          -0.38952753125431616,
+          -0.006397568041070249,
+          -0.16922663042555836
+        ],
+        "rgb_mae_normalized": 0.0036269013209496758,
+        "ipr_lab_mean": [
+          40.422149439317614,
+          -1.2534044489790974,
+          -6.415118051164822
+        ],
+        "lr_lab_mean": [
+          40.03262190806503,
+          -1.2598020170201913,
+          -6.584344681590664
+        ],
+        "ipr_y_mean": 0.1288185437613734,
+        "lr_y_mean": 0.126022541367181,
+        "delta_chroma_mean": 0.180593855226239,
+        "hue_abs_circular_mean_degrees": 1.6099535064167223,
+        "hue_usable_fraction": 0.7896313912009513,
+        "lr_neutral_fraction": 0.1804201347602061,
+        "ab_distance_on_lr_neutral_mean": 0.11594631515516807,
+        "ipr_any_channel_low_fraction": 0.0,
+        "lr_any_channel_low_fraction": 9.908838684106222e-06,
+        "ipr_any_channel_high_fraction": 0.0,
+        "lr_any_channel_high_fraction": 0.0
+      },
+      "previous_vs_current_sign": "current minus previous"
+    },
+    {
+      "scene": "6V1A0037",
+      "ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0037-IPR-2.tiff",
+        "bytes": 258263634,
+        "size": [
+          6959,
+          4639
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "9840cce7b4df5fc0b34cf6069cd5d48f287e43a059d53f858ace0ccf36202385",
+        "mtime_utc": "2026-10-07T08:28:03.843644+00:00"
+      },
+      "lr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0037.tif",
+        "bytes": 193801226,
+        "size": [
+          6960,
+          4640
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A0037.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "Custom",
+          "Temperature": "5200",
+          "Tint": "0",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "1",
+          "LensProfileEnable": "1",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "5EC5AB63E59C1CB26A884E990C73687C",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "ffd7f5559c9ebd5876b1672f906e8d2274498d38520224d3bf576532969fc76e",
+        "mtime_utc": "2026-10-06T10:46:21.510164+00:00"
+      },
+      "old_export": {
+        "member": "6V1A0037-IPR.tiff",
+        "archive_timestamp_local": [
+          2026,
+          10,
+          6,
+          12,
+          51,
+          46
+        ],
+        "archive_bytes": 258263634,
+        "sha256": "b0304b6f6636967c91eaebd527144e078c7e83684fb6997b98dc4957cc06c64c",
+        "identical_bytes": false
+      },
+      "crop_candidates": [
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.4126579165458679
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.4127466082572937
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.4135074317455292
+        },
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.4138519763946533
+        }
+      ],
+      "global": {
+        "samples": 504600,
+        "delta_e00_mean": 11.453591203338002,
+        "delta_e00_median": 8.543615458664526,
+        "delta_e00_p95": 33.403343699409966,
+        "delta_e76_mean": 15.12380189764963,
+        "delta_lab_mean_lr_minus_ipr": [
+          4.5304028837438945,
+          -2.7487025802665235,
+          3.744539658836361
+        ],
+        "rgb_mae_normalized": 0.08922715974253517,
+        "ipr_lab_mean": [
+          16.276796365906215,
+          -5.2605897629009135,
+          6.516063826101688
+        ],
+        "lr_lab_mean": [
+          20.807199249649425,
+          -8.009292343167393,
+          10.260603484937997
+        ],
+        "ipr_y_mean": 0.03554242564601222,
+        "lr_y_mean": 0.0653597334128488,
+        "delta_chroma_mean": 4.481986178210972,
+        "hue_abs_circular_mean_degrees": 18.153898474980288,
+        "hue_usable_fraction": 0.6447899326198969,
+        "lr_neutral_fraction": 0.007271105826397146,
+        "ab_distance_on_lr_neutral_mean": 8.883583506267765,
+        "ipr_any_channel_low_fraction": 0.0019183511692429647,
+        "lr_any_channel_low_fraction": 0.0009017043202536663,
+        "ipr_any_channel_high_fraction": 0.005212049147839873,
+        "lr_any_channel_high_fraction": 0.003906064209274673
+      },
+      "regions": [
+        {
+          "number": 1,
+          "name": "vegetation_vert_clair",
+          "coords": [
+            1000,
+            1000,
+            1500,
+            1500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 15625,
+            "delta_e00_mean": 9.345898260066228,
+            "delta_e00_median": 7.615514938781043,
+            "delta_e00_p95": 24.00322875434579,
+            "delta_e76_mean": 12.367232583252378,
+            "delta_lab_mean_lr_minus_ipr": [
+              1.617773010801414,
+              -1.6560358901247758,
+              2.186574033642384
+            ],
+            "rgb_mae_normalized": 0.06912726996770174,
+            "ipr_lab_mean": [
+              11.25359777616374,
+              -4.1582276944053564,
+              6.091927352178793
+            ],
+            "lr_lab_mean": [
+              12.871370786965233,
+              -5.814263584530104,
+              8.27850138582118
+            ],
+            "ipr_y_mean": 0.01673674179794811,
+            "lr_y_mean": 0.02564553106376564,
+            "delta_chroma_mean": 2.7452027679976028,
+            "hue_abs_circular_mean_degrees": 17.382489100420756,
+            "hue_usable_fraction": 0.445696,
+            "lr_neutral_fraction": 0.003264,
+            "ab_distance_on_lr_neutral_mean": 6.226041876735712,
+            "ipr_any_channel_low_fraction": 0.001984,
+            "lr_any_channel_low_fraction": 0.002176,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 2,
+          "name": "vegetation_vert_fonce",
+          "coords": [
+            2000,
+            1500,
+            2500,
+            2000
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 15625,
+            "delta_e00_mean": 10.490455639413124,
+            "delta_e00_median": 8.351934143006295,
+            "delta_e00_p95": 26.886610937804026,
+            "delta_e76_mean": 14.164512935783163,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.106479462799803,
+              -3.5501294574166833,
+              3.937763728334667
+            ],
+            "rgb_mae_normalized": 0.07900302938378982,
+            "ipr_lab_mean": [
+              13.929579518552453,
+              -5.857810401413669,
+              5.863464300940385
+            ],
+            "lr_lab_mean": [
+              19.03605898135242,
+              -9.407939858830359,
+              9.801228029275066
+            ],
+            "ipr_y_mean": 0.02244726866324805,
+            "lr_y_mean": 0.04608635281689244,
+            "delta_chroma_mean": 5.384535964935215,
+            "hue_abs_circular_mean_degrees": 13.416375049371283,
+            "hue_usable_fraction": 0.626048,
+            "lr_neutral_fraction": 0.006592,
+            "ab_distance_on_lr_neutral_mean": 5.441544034741142,
+            "ipr_any_channel_low_fraction": 0.004544,
+            "lr_any_channel_low_fraction": 0.001216,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 3,
+          "name": "roche_grise",
+          "coords": [
+            3000,
+            2000,
+            3500,
+            2500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 15625,
+            "delta_e00_mean": 3.7090878084887873,
+            "delta_e00_median": 2.9777215141090125,
+            "delta_e00_p95": 9.139211251969616,
+            "delta_e76_mean": 4.699531083603219,
+            "delta_lab_mean_lr_minus_ipr": [
+              1.6500800923298207,
+              -2.1472438473811377,
+              1.6865659010411915
+            ],
+            "rgb_mae_normalized": 0.02037828197655197,
+            "ipr_lab_mean": [
+              7.921396524963796,
+              -4.472235781946856,
+              3.332417390491019
+            ],
+            "lr_lab_mean": [
+              9.571476617293644,
+              -6.619479629327991,
+              5.0189832915322405
+            ],
+            "ipr_y_mean": 0.010166659821416726,
+            "lr_y_mean": 0.015011517480482435,
+            "delta_chroma_mean": 2.7631563772869865,
+            "hue_abs_circular_mean_degrees": 5.75982228961129,
+            "hue_usable_fraction": 0.508672,
+            "lr_neutral_fraction": 6.4e-05,
+            "ab_distance_on_lr_neutral_mean": 0.3432677075445705,
+            "ipr_any_channel_low_fraction": 0.025216,
+            "lr_any_channel_low_fraction": 0.005376,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 4,
+          "name": "ciel",
+          "coords": [
+            1000,
+            500,
+            2000,
+            1000
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 31250,
+            "delta_e00_mean": 10.684706838468722,
+            "delta_e00_median": 8.46561100804534,
+            "delta_e00_p95": 26.38056565905227,
+            "delta_e76_mean": 13.96091395156552,
+            "delta_lab_mean_lr_minus_ipr": [
+              3.3421987666949384,
+              -2.1355054272063088,
+              3.410334860638581
+            ],
+            "rgb_mae_normalized": 0.07705554637979704,
+            "ipr_lab_mean": [
+              12.875887782003906,
+              -4.336672081631037,
+              6.389713916658561
+            ],
+            "lr_lab_mean": [
+              16.218086548698565,
+              -6.472177508837365,
+              9.80004877729716
+            ],
+            "ipr_y_mean": 0.019232685993839396,
+            "lr_y_mean": 0.03269221174374361,
+            "delta_chroma_mean": 4.149725046359778,
+            "hue_abs_circular_mean_degrees": 20.988332660146032,
+            "hue_usable_fraction": 0.616672,
+            "lr_neutral_fraction": 0.005952,
+            "ab_distance_on_lr_neutral_mean": 7.307982312740952,
+            "ipr_any_channel_low_fraction": 0.000992,
+            "lr_any_channel_low_fraction": 0.000224,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 3.2e-05
+          }
+        },
+        {
+          "number": 5,
+          "name": "ombre",
+          "coords": [
+            5000,
+            3000,
+            5500,
+            3500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 15625,
+            "delta_e00_mean": 9.577436902045664,
+            "delta_e00_median": 8.895876672110687,
+            "delta_e00_p95": 18.525197401169972,
+            "delta_e76_mean": 13.205365473108321,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.73613921789521,
+              -4.598407937198726,
+              4.221378484911486
+            ],
+            "rgb_mae_normalized": 0.07052907651382213,
+            "ipr_lab_mean": [
+              14.459734806420759,
+              -6.322517875762869,
+              5.2343939171913
+            ],
+            "lr_lab_mean": [
+              20.19587402431601,
+              -10.92092581296157,
+              9.45577240210279
+            ],
+            "ipr_y_mean": 0.019889596506723756,
+            "lr_y_mean": 0.03655800546232946,
+            "delta_chroma_mean": 6.424660317954661,
+            "hue_abs_circular_mean_degrees": 16.72286781509926,
+            "hue_usable_fraction": 0.835584,
+            "lr_neutral_fraction": 0.0016,
+            "ab_distance_on_lr_neutral_mean": 6.98679531828533,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.0,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        }
+      ],
+      "previous_ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0037-IPR.tiff",
+        "bytes": 258263634,
+        "size": [
+          6959,
+          4639
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "b0304b6f6636967c91eaebd527144e078c7e83684fb6997b98dc4957cc06c64c",
+        "mtime_utc": "2026-10-06T19:52:32.380402+00:00"
+      },
+      "previous_vs_lr_same_crop": {
+        "samples": 504600,
+        "delta_e00_mean": 11.417522853927576,
+        "delta_e00_median": 8.520711356604423,
+        "delta_e00_p95": 33.265240606716155,
+        "delta_e76_mean": 15.053689861334057,
+        "delta_lab_mean_lr_minus_ipr": [
+          4.277920908555873,
+          -2.789598449987473,
+          3.793683268822555
+        ],
+        "rgb_mae_normalized": 0.08881257855868732,
+        "ipr_lab_mean": [
+          16.529278341094166,
+          -5.219693893179992,
+          6.466920216115832
+        ],
+        "lr_lab_mean": [
+          20.807199249649425,
+          -8.009292343167393,
+          10.260603484937997
+        ],
+        "ipr_y_mean": 0.036679371774316585,
+        "lr_y_mean": 0.0653597334128488,
+        "delta_chroma_mean": 4.677542067380698,
+        "hue_abs_circular_mean_degrees": 18.0653661480264,
+        "hue_usable_fraction": 0.6451922314704717,
+        "lr_neutral_fraction": 0.007271105826397146,
+        "ab_distance_on_lr_neutral_mean": 8.702560738905492,
+        "ipr_any_channel_low_fraction": 0.0008145065398335315,
+        "lr_any_channel_low_fraction": 0.0009017043202536663,
+        "ipr_any_channel_high_fraction": 0.005277447483154975,
+        "lr_any_channel_high_fraction": 0.003906064209274673
+      },
+      "previous_vs_current": {
+        "samples": 504600,
+        "delta_e00_mean": 0.3888020778761265,
+        "delta_e00_median": 0.2784798723969397,
+        "delta_e00_p95": 1.1732489962036485,
+        "delta_e76_mean": 0.5693209868339224,
+        "delta_lab_mean_lr_minus_ipr": [
+          -0.25248197518819493,
+          -0.040895869720873675,
+          0.04914360998623094
+        ],
+        "rgb_mae_normalized": 0.002908649160965979,
+        "ipr_lab_mean": [
+          16.529278341094166,
+          -5.219693893179992,
+          6.466920216115832
+        ],
+        "lr_lab_mean": [
+          16.276796365906215,
+          -5.2605897629009135,
+          6.516063826101688
+        ],
+        "ipr_y_mean": 0.036679371774316585,
+        "lr_y_mean": 0.03554242564601222,
+        "delta_chroma_mean": 0.1955558891697246,
+        "hue_abs_circular_mean_degrees": 0.8174670854165106,
+        "hue_usable_fraction": 0.7404042806183115,
+        "lr_neutral_fraction": 0.013513674197384067,
+        "ab_distance_on_lr_neutral_mean": 0.1211709666306288,
+        "ipr_any_channel_low_fraction": 0.0008145065398335315,
+        "lr_any_channel_low_fraction": 0.0019183511692429647,
+        "ipr_any_channel_high_fraction": 0.005277447483154975,
+        "lr_any_channel_high_fraction": 0.005212049147839873
+      },
+      "previous_vs_current_sign": "current minus previous"
+    },
+    {
+      "scene": "6V1A0043",
+      "ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0043-IPR-2.tiff",
+        "bytes": 258263634,
+        "size": [
+          6959,
+          4639
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "fe89d45a5d7d02e296650ecb59b5225b29fe0f7aadd79443d87f2e84e63b409a",
+        "mtime_utc": "2026-10-07T08:28:30.230166+00:00"
+      },
+      "lr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0043.tif",
+        "bytes": 193794390,
+        "size": [
+          6960,
+          4640
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A0043.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "Custom",
+          "Temperature": "5200",
+          "Tint": "0",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "0",
+          "LensProfileEnable": "0",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "880CEC0C6842E0267E86932697AEF29F",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "ff4d1b74e05c8add94292aad5043263fbecb070afce9470bb83f42753648eeb8",
+        "mtime_utc": "2026-10-06T10:40:56.459023+00:00"
+      },
+      "old_export": {
+        "member": "6V1A0043-IPR.tiff",
+        "archive_timestamp_local": [
+          2026,
+          10,
+          6,
+          12,
+          52,
+          0
+        ],
+        "archive_bytes": 258263634,
+        "sha256": "d5976169c81213481b9ddfac406ae8d0b54ab668fb217c3c2a5e0d5fe2162842",
+        "identical_bytes": false
+      },
+      "crop_candidates": [
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.127237007021904
+        },
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.1273922175168991
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.12809821963310242
+        },
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.12860088050365448
+        }
+      ],
+      "global": {
+        "samples": 504600,
+        "delta_e00_mean": 4.415023418003637,
+        "delta_e00_median": 1.6303836574661856,
+        "delta_e00_p95": 19.281328394753,
+        "delta_e76_mean": 6.426899605879133,
+        "delta_lab_mean_lr_minus_ipr": [
+          2.3108732346742142,
+          -0.6461990234077194,
+          2.33006693063829
+        ],
+        "rgb_mae_normalized": 0.03372247168575995,
+        "ipr_lab_mean": [
+          8.349941994170768,
+          -1.3083115543216624,
+          5.337013569326334
+        ],
+        "lr_lab_mean": [
+          10.660815228846426,
+          -1.9545105777295104,
+          7.667080499961932
+        ],
+        "ipr_y_mean": 0.013674998318909084,
+        "lr_y_mean": 0.02676899622733783,
+        "delta_chroma_mean": 3.564058894006592,
+        "hue_abs_circular_mean_degrees": 5.5518202079929635,
+        "hue_usable_fraction": 0.5913000396353547,
+        "lr_neutral_fraction": 0.0035691636940150613,
+        "ab_distance_on_lr_neutral_mean": 4.131307402280895,
+        "ipr_any_channel_low_fraction": 0.013149028933808957,
+        "lr_any_channel_low_fraction": 0.30835513277843835,
+        "ipr_any_channel_high_fraction": 1.9817677368212444e-05,
+        "lr_any_channel_high_fraction": 0.00038049940546967895
+      },
+      "regions": [
+        {
+          "number": 1,
+          "name": "fleur_violette",
+          "coords": [
+            2000,
+            1500,
+            3000,
+            2500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 62500,
+            "delta_e00_mean": 4.858533277955395,
+            "delta_e00_median": 3.542106993587831,
+            "delta_e00_p95": 13.997281198625725,
+            "delta_e76_mean": 6.168913829728052,
+            "delta_lab_mean_lr_minus_ipr": [
+              3.131970049590894,
+              0.9167066466657278,
+              0.883463137555418
+            ],
+            "rgb_mae_normalized": 0.0350179151903563,
+            "ipr_lab_mean": [
+              11.691835529144994,
+              4.367287865840576,
+              1.1418004845106018
+            ],
+            "lr_lab_mean": [
+              14.82380557873586,
+              5.283994512506309,
+              2.0252636220659914
+            ],
+            "ipr_y_mean": 0.018612773978111643,
+            "lr_y_mean": 0.03390817790814999,
+            "delta_chroma_mean": 3.521503920685478,
+            "hue_abs_circular_mean_degrees": 5.860450487955963,
+            "hue_usable_fraction": 0.841168,
+            "lr_neutral_fraction": 0.0148,
+            "ab_distance_on_lr_neutral_mean": 2.7128876880721857,
+            "ipr_any_channel_low_fraction": 3.2e-05,
+            "lr_any_channel_low_fraction": 0.006096,
+            "ipr_any_channel_high_fraction": 1.6e-05,
+            "lr_any_channel_high_fraction": 0.000144
+          }
+        },
+        {
+          "number": 2,
+          "name": "feuillage_vert",
+          "coords": [
+            1000,
+            1000,
+            2000,
+            2000
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 62500,
+            "delta_e00_mean": 0.9538949714972038,
+            "delta_e00_median": 0.8010790239512168,
+            "delta_e00_p95": 1.9625558451298653,
+            "delta_e76_mean": 1.021538325316044,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.4848028039073244,
+              -0.5114297283555936,
+              0.1268824129429213
+            ],
+            "rgb_mae_normalized": 0.008106270583148955,
+            "ipr_lab_mean": [
+              4.3527271907112945,
+              -3.9312410986522064,
+              5.350838450402285
+            ],
+            "lr_lab_mean": [
+              3.867924386805178,
+              -4.4426708270073565,
+              5.477720863344565
+            ],
+            "ipr_y_mean": 0.004821806442156667,
+            "lr_y_mean": 0.004287272457374179,
+            "delta_chroma_mean": 0.413864653800235,
+            "hue_abs_circular_mean_degrees": 4.067489313808907,
+            "hue_usable_fraction": 0.994336,
+            "lr_neutral_fraction": 0.0,
+            "ab_distance_on_lr_neutral_mean": null,
+            "ipr_any_channel_low_fraction": 0.000176,
+            "lr_any_channel_low_fraction": 0.169504,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 3,
+          "name": "fond_flou",
+          "coords": [
+            500,
+            500,
+            1500,
+            1500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 62500,
+            "delta_e00_mean": 1.0551027800187371,
+            "delta_e00_median": 0.8620753583983306,
+            "delta_e00_p95": 2.2473927944969683,
+            "delta_e76_mean": 1.186829773776988,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.3659588476510856,
+              -0.5943566567879977,
+              0.294620407238288
+            ],
+            "rgb_mae_normalized": 0.008145576846977441,
+            "ipr_lab_mean": [
+              4.344798420742215,
+              -3.8489759043386575,
+              5.4374992731711815
+            ],
+            "lr_lab_mean": [
+              3.9788395730926736,
+              -4.443332561125991,
+              5.7321196804084815
+            ],
+            "ipr_y_mean": 0.004864043524591312,
+            "lr_y_mean": 0.004517434625594841,
+            "delta_chroma_mean": 0.5997426573762256,
+            "hue_abs_circular_mean_degrees": 4.210937539027253,
+            "hue_usable_fraction": 0.998288,
+            "lr_neutral_fraction": 0.0,
+            "ab_distance_on_lr_neutral_mean": null,
+            "ipr_any_channel_low_fraction": 0.000144,
+            "lr_any_channel_low_fraction": 0.21984,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        }
+      ],
+      "previous_ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0043-IPR.tiff",
+        "bytes": 258263634,
+        "size": [
+          6959,
+          4639
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "d5976169c81213481b9ddfac406ae8d0b54ab668fb217c3c2a5e0d5fe2162842",
+        "mtime_utc": "2026-10-06T19:52:50.360257+00:00"
+      },
+      "previous_vs_lr_same_crop": {
+        "samples": 504600,
+        "delta_e00_mean": 4.641605600985387,
+        "delta_e00_median": 1.8515272766229298,
+        "delta_e00_p95": 19.643571063938566,
+        "delta_e76_mean": 6.834784181126391,
+        "delta_lab_mean_lr_minus_ipr": [
+          2.196702840784929,
+          -0.9018013296608332,
+          2.7312755392873456
+        ],
+        "rgb_mae_normalized": 0.03578845427489138,
+        "ipr_lab_mean": [
+          8.464112388060292,
+          -1.0527092480684692,
+          4.9358049606778405
+        ],
+        "lr_lab_mean": [
+          10.660815228846426,
+          -1.9545105777295104,
+          7.667080499961932
+        ],
+        "ipr_y_mean": 0.013823501842842909,
+        "lr_y_mean": 0.02676899622733783,
+        "delta_chroma_mean": 4.157680156987315,
+        "hue_abs_circular_mean_degrees": 5.751361821903508,
+        "hue_usable_fraction": 0.5653527546571542,
+        "lr_neutral_fraction": 0.0035691636940150613,
+        "ab_distance_on_lr_neutral_mean": 4.098009498559965,
+        "ipr_any_channel_low_fraction": 0.004528339278636544,
+        "lr_any_channel_low_fraction": 0.30835513277843835,
+        "ipr_any_channel_high_fraction": 1.78359096313912e-05,
+        "lr_any_channel_high_fraction": 0.00038049940546967895
+      },
+      "previous_vs_current": {
+        "samples": 504600,
+        "delta_e00_mean": 0.5959818558484791,
+        "delta_e00_median": 0.446029844032056,
+        "delta_e00_p95": 1.744485303041629,
+        "delta_e76_mean": 0.8333448007118295,
+        "delta_lab_mean_lr_minus_ipr": [
+          -0.1141703938891475,
+          -0.2556023062530665,
+          0.401208608648793
+        ],
+        "rgb_mae_normalized": 0.0035406373668649582,
+        "ipr_lab_mean": [
+          8.464112388060292,
+          -1.0527092480684692,
+          4.9358049606778405
+        ],
+        "lr_lab_mean": [
+          8.349941994170768,
+          -1.3083115543216624,
+          5.337013569326334
+        ],
+        "ipr_y_mean": 0.013823501842842909,
+        "lr_y_mean": 0.013674998318909084,
+        "delta_chroma_mean": 0.5936212629807235,
+        "hue_abs_circular_mean_degrees": 1.3430635969687232,
+        "hue_usable_fraction": 0.5849009116131589,
+        "lr_neutral_fraction": 0.0060424098295679745,
+        "ab_distance_on_lr_neutral_mean": 0.12625086455935253,
+        "ipr_any_channel_low_fraction": 0.004528339278636544,
+        "lr_any_channel_low_fraction": 0.013149028933808957,
+        "ipr_any_channel_high_fraction": 1.78359096313912e-05,
+        "lr_any_channel_high_fraction": 1.9817677368212444e-05
+      },
+      "previous_vs_current_sign": "current minus previous"
+    },
+    {
+      "scene": "6V1A0327",
+      "ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0327-IPR-2.tiff",
+        "bytes": 258263634,
+        "size": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "35a362b41436ecdc560a28cc4684e7a44f076f38d124bd2e63e4c2145975afd8",
+        "mtime_utc": "2026-10-07T08:29:01.043270+00:00"
+      },
+      "lr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0327.tif",
+        "bytes": 193798950,
+        "size": [
+          4640,
+          6960
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A0327.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "As Shot",
+          "Temperature": "5200",
+          "Tint": "+5",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "1",
+          "LensProfileEnable": "1",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "5D7F245E84E41C16B3DB534A9049ADA4",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "37f7c17d1038bdb69dd18b5d94a4d7bc4b67c6989e38ad4f162a5bb522db84f9",
+        "mtime_utc": "2026-10-06T10:42:40.684952+00:00"
+      },
+      "old_export": {
+        "member": "6V1A0327-IPR.tiff",
+        "archive_timestamp_local": [
+          2026,
+          10,
+          6,
+          12,
+          52,
+          16
+        ],
+        "archive_bytes": 258263634,
+        "sha256": "d3c23b03ed54a0fc0ec8c5b9c6cbb1951ad55965ea12b3ce4ef2abd5d800cdb9",
+        "identical_bytes": false
+      },
+      "crop_candidates": [
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.36611053347587585
+        },
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.36650824546813965
+        },
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.3665909171104431
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.3668477535247803
+        }
+      ],
+      "global": {
+        "samples": 504600,
+        "delta_e00_mean": 11.621708841812225,
+        "delta_e00_median": 9.456666248279992,
+        "delta_e00_p95": 26.314959968081514,
+        "delta_e76_mean": 14.948701911636258,
+        "delta_lab_mean_lr_minus_ipr": [
+          11.416517079226317,
+          1.0013854639109565,
+          3.5800708535364767
+        ],
+        "rgb_mae_normalized": 0.11024118455571273,
+        "ipr_lab_mean": [
+          21.838197234862307,
+          1.12262778738294,
+          4.992858142416278
+        ],
+        "lr_lab_mean": [
+          33.254714314086804,
+          2.1240132512938192,
+          8.572928995953125
+        ],
+        "ipr_y_mean": 0.04667188995000117,
+        "lr_y_mean": 0.1211251028555519,
+        "delta_chroma_mean": 6.199930614476046,
+        "hue_abs_circular_mean_degrees": 6.700052588361448,
+        "hue_usable_fraction": 0.6370768925881887,
+        "lr_neutral_fraction": 0.04224534284581847,
+        "ab_distance_on_lr_neutral_mean": 4.402896028965949,
+        "ipr_any_channel_low_fraction": 0.00028141101862861674,
+        "lr_any_channel_low_fraction": 0.0036187078874355925,
+        "ipr_any_channel_high_fraction": 0.0,
+        "lr_any_channel_high_fraction": 3.963535473642489e-06
+      },
+      "regions": [
+        {
+          "number": 1,
+          "name": "crashpad_cyan",
+          "coords": [
+            1500,
+            2000,
+            2500,
+            3000
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 62500,
+            "delta_e00_mean": 11.668157610414939,
+            "delta_e00_median": 8.917945119078983,
+            "delta_e00_p95": 27.42700626993925,
+            "delta_e76_mean": 13.84943795225209,
+            "delta_lab_mean_lr_minus_ipr": [
+              11.760158995483144,
+              1.3075173256409747,
+              3.96203478552395
+            ],
+            "rgb_mae_normalized": 0.11285245221637293,
+            "ipr_lab_mean": [
+              23.366143218817093,
+              2.1287652943893844,
+              4.961990073176833
+            ],
+            "lr_lab_mean": [
+              35.12630221430065,
+              3.436282620030353,
+              8.924024858700795
+            ],
+            "ipr_y_mean": 0.04702018527471697,
+            "lr_y_mean": 0.11823399051267085,
+            "delta_chroma_mean": 4.23020214434217,
+            "hue_abs_circular_mean_degrees": 6.159670472491804,
+            "hue_usable_fraction": 0.527856,
+            "lr_neutral_fraction": 0.087232,
+            "ab_distance_on_lr_neutral_mean": 2.081342683344955,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 1.6e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 2,
+          "name": "crashpad_vert",
+          "coords": [
+            2500,
+            2000,
+            3500,
+            3000
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 62500,
+            "delta_e00_mean": 8.482073298231738,
+            "delta_e00_median": 7.942755016404151,
+            "delta_e00_p95": 14.760984023676432,
+            "delta_e76_mean": 11.972198801890595,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.006372287971296,
+              2.5612824607682687,
+              6.750052284672349
+            ],
+            "rgb_mae_normalized": 0.07083487577630274,
+            "ipr_lab_mean": [
+              18.787311392507192,
+              4.209707349371088,
+              8.538441754105902
+            ],
+            "lr_lab_mean": [
+              26.7936836804784,
+              6.770989810139347,
+              15.288494038778408
+            ],
+            "ipr_y_mean": 0.0287301545152489,
+            "lr_y_mean": 0.057337359989815075,
+            "delta_chroma_mean": 7.238677982482667,
+            "hue_abs_circular_mean_degrees": 5.050415816309869,
+            "hue_usable_fraction": 0.978832,
+            "lr_neutral_fraction": 0.000176,
+            "ab_distance_on_lr_neutral_mean": 4.685095747683733,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 3.2e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 3,
+          "name": "crashpad_rouge",
+          "coords": [
+            4000,
+            2000,
+            5000,
+            3000
+          ],
+          "valid": false,
+          "error": "ROI outside image or invalid; no silent clamping"
+        },
+        {
+          "number": 4,
+          "name": "roche_orangee",
+          "coords": [
+            2000,
+            1500,
+            3000,
+            2500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 62500,
+            "delta_e00_mean": 8.55268208882357,
+            "delta_e00_median": 7.827772665985785,
+            "delta_e00_p95": 16.32226656447838,
+            "delta_e76_mean": 11.769289615687924,
+            "delta_lab_mean_lr_minus_ipr": [
+              7.958553452271036,
+              2.2603217888103746,
+              5.8852364711978975
+            ],
+            "rgb_mae_normalized": 0.07305063981078813,
+            "ipr_lab_mean": [
+              18.30976511442627,
+              3.7793227587026585,
+              7.563571618475108
+            ],
+            "lr_lab_mean": [
+              26.268318566697353,
+              6.039644547512969,
+              13.448808089673058
+            ],
+            "ipr_y_mean": 0.02811955034256161,
+            "lr_y_mean": 0.057418595137663536,
+            "delta_chroma_mean": 6.341577947386047,
+            "hue_abs_circular_mean_degrees": 5.909442227631278,
+            "hue_usable_fraction": 0.846016,
+            "lr_neutral_fraction": 0.030512,
+            "ab_distance_on_lr_neutral_mean": 2.3734677214515925,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.0,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 5,
+          "name": "peau",
+          "coords": [
+            3000,
+            1000,
+            4000,
+            2000
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 62500,
+            "delta_e00_mean": 7.627145577488277,
+            "delta_e00_median": 7.650279644113949,
+            "delta_e00_p95": 11.598502744465288,
+            "delta_e76_mean": 10.896502620925164,
+            "delta_lab_mean_lr_minus_ipr": [
+              7.710328816145846,
+              2.497031189153775,
+              6.393516475373189
+            ],
+            "rgb_mae_normalized": 0.06268500353500674,
+            "ipr_lab_mean": [
+              17.557510190084543,
+              3.8821181531423465,
+              7.7371053009079445
+            ],
+            "lr_lab_mean": [
+              25.267839006230638,
+              6.379149342296047,
+              14.13062177628098
+            ],
+            "ipr_y_mean": 0.024646413589987298,
+            "lr_y_mean": 0.04672180725811154,
+            "delta_chroma_mean": 6.871339909595064,
+            "hue_abs_circular_mean_degrees": 4.892569952860535,
+            "hue_usable_fraction": 0.988128,
+            "lr_neutral_fraction": 1.6e-05,
+            "ab_distance_on_lr_neutral_mean": 8.905497705670605,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.0,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        }
+      ],
+      "previous_ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0327-IPR.tiff",
+        "bytes": 258263634,
+        "size": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "d3c23b03ed54a0fc0ec8c5b9c6cbb1951ad55965ea12b3ce4ef2abd5d800cdb9",
+        "mtime_utc": "2026-10-06T19:53:04.448958+00:00"
+      },
+      "previous_vs_lr_same_crop": {
+        "samples": 504600,
+        "delta_e00_mean": 11.551569175930725,
+        "delta_e00_median": 9.387359189345094,
+        "delta_e00_p95": 26.205603867999997,
+        "delta_e76_mean": 14.867972752110875,
+        "delta_lab_mean_lr_minus_ipr": [
+          11.336455862542914,
+          1.0522177083933502,
+          3.406586827761849
+        ],
+        "rgb_mae_normalized": 0.1102067460682139,
+        "ipr_lab_mean": [
+          21.9182584515447,
+          1.0717955429005768,
+          5.166342168190914
+        ],
+        "lr_lab_mean": [
+          33.254714314086804,
+          2.1240132512938192,
+          8.572928995953125
+        ],
+        "ipr_y_mean": 0.047064083755058495,
+        "lr_y_mean": 0.1211251028555519,
+        "delta_chroma_mean": 6.149764475294436,
+        "hue_abs_circular_mean_degrees": 6.835380165160032,
+        "hue_usable_fraction": 0.6480360681728101,
+        "lr_neutral_fraction": 0.04224534284581847,
+        "ab_distance_on_lr_neutral_mean": 4.386994052961127,
+        "ipr_any_channel_low_fraction": 0.000178359096313912,
+        "lr_any_channel_low_fraction": 0.0036187078874355925,
+        "ipr_any_channel_high_fraction": 0.0,
+        "lr_any_channel_high_fraction": 3.963535473642489e-06
+      },
+      "previous_vs_current": {
+        "samples": 504600,
+        "delta_e00_mean": 0.3809546374912575,
+        "delta_e00_median": 0.3157431375774052,
+        "delta_e00_p95": 1.275953228691118,
+        "delta_e76_mean": 0.4438454318849631,
+        "delta_lab_mean_lr_minus_ipr": [
+          -0.0800612166832582,
+          0.05083224448238804,
+          -0.17348402577461622
+        ],
+        "rgb_mae_normalized": 0.001872304837961697,
+        "ipr_lab_mean": [
+          21.9182584515447,
+          1.0717955429005768,
+          5.166342168190914
+        ],
+        "lr_lab_mean": [
+          21.838197234862307,
+          1.12262778738294,
+          4.992858142416278
+        ],
+        "ipr_y_mean": 0.047064083755058495,
+        "lr_y_mean": 0.04667188995000117,
+        "delta_chroma_mean": -0.050166139181610836,
+        "hue_abs_circular_mean_degrees": 1.836350195705826,
+        "hue_usable_fraction": 0.6514546175188268,
+        "lr_neutral_fraction": 0.11774474831549743,
+        "ab_distance_on_lr_neutral_mean": 0.16696624391001663,
+        "ipr_any_channel_low_fraction": 0.000178359096313912,
+        "lr_any_channel_low_fraction": 0.00028141101862861674,
+        "ipr_any_channel_high_fraction": 0.0,
+        "lr_any_channel_high_fraction": 0.0
+      },
+      "previous_vs_current_sign": "current minus previous"
+    },
+    {
+      "scene": "6V1A9421",
+      "ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A9421-IPR-2.tiff",
+        "bytes": 258263634,
+        "size": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "7dd162b0f4e347e178e85d8856c8ec40a7af463c6d9e2602f6aca3ac9f316139",
+        "mtime_utc": "2026-10-07T08:27:35.662423+00:00"
+      },
+      "lr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A9421.tif",
+        "bytes": 193803452,
+        "size": [
+          4640,
+          6960
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A9421.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "As Shot",
+          "Temperature": "5200",
+          "Tint": "+5",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "1",
+          "LensProfileEnable": "1",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "26561327EA13387F466D072F0F7ABAD3",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True",
+          "Name": "Adobe Color",
+          "Amount": "1",
+          "UUID": "B952C231111CD8E0ECCF14B86BAA7077",
+          "SupportsAmount": "false",
+          "SupportsMonochrome": "false",
+          "SupportsOutputReferred": "false",
+          "ConvertToGrayscale": "False",
+          "LookTable": "E1095149FDB39D7A057BAB208837E2E1"
+        },
+        "sha256": "9d338290a9cd7c430c7fa2bf18410a849457df1dffa9f7b9c467734500486fbe",
+        "mtime_utc": "2026-10-06T10:45:16.574933+00:00"
+      },
+      "old_export": {
+        "member": "6V1A9421-IPR.tiff",
+        "archive_timestamp_local": [
+          2026,
+          10,
+          6,
+          12,
+          52,
+          26
+        ],
+        "archive_bytes": 258263634,
+        "sha256": "fdf2340ca66827774a1547f981fa34ab602c4f71ae4c787494e23d19a568ae75",
+        "identical_bytes": false
+      },
+      "crop_candidates": [
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.3918408453464508
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.3919513523578644
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.39241835474967957
+        },
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.39266082644462585
+        }
+      ],
+      "global": {
+        "samples": 504600,
+        "delta_e00_mean": 21.531277570146795,
+        "delta_e00_median": 22.66462716688183,
+        "delta_e00_p95": 35.83165569554649,
+        "delta_e76_mean": 31.632201488930825,
+        "delta_lab_mean_lr_minus_ipr": [
+          20.27254477974813,
+          1.958834598101712,
+          18.064375854831034
+        ],
+        "rgb_mae_normalized": 0.1891528828700322,
+        "ipr_lab_mean": [
+          32.48097926600229,
+          2.3529902258918622,
+          17.81993486433106
+        ],
+        "lr_lab_mean": [
+          52.75352404575061,
+          4.311824823993638,
+          35.884310719161405
+        ],
+        "ipr_y_mean": 0.09203910808620953,
+        "lr_y_mean": 0.2882406521040883,
+        "delta_chroma_mean": 19.465767601041613,
+        "hue_abs_circular_mean_degrees": 14.819848529442591,
+        "hue_usable_fraction": 0.8937931034482759,
+        "lr_neutral_fraction": 0.01111375346809354,
+        "ab_distance_on_lr_neutral_mean": 4.45702161277841,
+        "ipr_any_channel_low_fraction": 0.0022889417360285377,
+        "lr_any_channel_low_fraction": 0.159778042013476,
+        "ipr_any_channel_high_fraction": 0.0001506143479984146,
+        "lr_any_channel_high_fraction": 0.01371185097106619
+      },
+      "regions": [
+        {
+          "number": 1,
+          "name": "prise_jaune",
+          "coords": [
+            2000,
+            1500,
+            3000,
+            2500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 62500,
+            "delta_e00_mean": 20.829864372031484,
+            "delta_e00_median": 22.491867688029544,
+            "delta_e00_p95": 29.322162562347934,
+            "delta_e76_mean": 35.633291722660914,
+            "delta_lab_mean_lr_minus_ipr": [
+              20.517949579734932,
+              2.486680880981631,
+              25.132230723497393
+            ],
+            "rgb_mae_normalized": 0.18769328690521603,
+            "ipr_lab_mean": [
+              37.3840231672758,
+              3.3248715169663337,
+              25.971422432130687
+            ],
+            "lr_lab_mean": [
+              57.9019727470112,
+              5.811552397948008,
+              51.10365315562815
+            ],
+            "ipr_y_mean": 0.11455795342565074,
+            "lr_y_mean": 0.3260751575244834,
+            "delta_chroma_mean": 26.512386960371614,
+            "hue_abs_circular_mean_degrees": 9.979769002048629,
+            "hue_usable_fraction": 0.949776,
+            "lr_neutral_fraction": 0.010368,
+            "ab_distance_on_lr_neutral_mean": 6.85198572970473,
+            "ipr_any_channel_low_fraction": 1.6e-05,
+            "lr_any_channel_low_fraction": 0.281824,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.00168
+          }
+        },
+        {
+          "number": 2,
+          "name": "prise_bleue",
+          "coords": [
+            1500,
+            1500,
+            2500,
+            2500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 62500,
+            "delta_e00_mean": 20.351346344620197,
+            "delta_e00_median": 20.206670747246555,
+            "delta_e00_p95": 29.068342036290435,
+            "delta_e76_mean": 36.12869791801118,
+            "delta_lab_mean_lr_minus_ipr": [
+              19.552493247843767,
+              4.8589695398736605,
+              24.58687309251049
+            ],
+            "rgb_mae_normalized": 0.1852738613158363,
+            "ipr_lab_mean": [
+              36.21921639495005,
+              5.82877159946448,
+              25.511920392579785
+            ],
+            "lr_lab_mean": [
+              55.77170964279326,
+              10.687741139338161,
+              50.09879348509086
+            ],
+            "ipr_y_mean": 0.11016058713911257,
+            "lr_y_mean": 0.3088936300635195,
+            "delta_chroma_mean": 27.44335280217496,
+            "hue_abs_circular_mean_degrees": 9.607739701634387,
+            "hue_usable_fraction": 0.959952,
+            "lr_neutral_fraction": 0.01048,
+            "ab_distance_on_lr_neutral_mean": 6.927757644964292,
+            "ipr_any_channel_low_fraction": 1.6e-05,
+            "lr_any_channel_low_fraction": 0.317408,
+            "ipr_any_channel_high_fraction": 1.6e-05,
+            "lr_any_channel_high_fraction": 0.004368
+          }
+        },
+        {
+          "number": 3,
+          "name": "prise_rouge",
+          "coords": [
+            3500,
+            1500,
+            4500,
+            2500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 62500,
+            "delta_e00_mean": 12.732926059724678,
+            "delta_e00_median": 11.436279454210135,
+            "delta_e00_p95": 27.512380108896924,
+            "delta_e76_mean": 16.9340732368296,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.244396456770042,
+              1.8039603214047835,
+              9.091654805483003
+            ],
+            "rgb_mae_normalized": 0.08453043387502861,
+            "ipr_lab_mean": [
+              18.520540195471384,
+              0.9507506197151107,
+              8.74407251121546
+            ],
+            "lr_lab_mean": [
+              26.764936652241484,
+              2.7547109411198583,
+              17.83572731669827
+            ],
+            "ipr_y_mean": 0.0354535369189057,
+            "lr_y_mean": 0.08217899555536,
+            "delta_chroma_mean": 9.928246768595125,
+            "hue_abs_circular_mean_degrees": 25.181063169236594,
+            "hue_usable_fraction": 0.73856,
+            "lr_neutral_fraction": 0.00544,
+            "ab_distance_on_lr_neutral_mean": 6.154722677279958,
+            "ipr_any_channel_low_fraction": 0.003664,
+            "lr_any_channel_low_fraction": 0.077008,
+            "ipr_any_channel_high_fraction": 0.003056,
+            "lr_any_channel_high_fraction": 0.003296
+          }
+        },
+        {
+          "number": 4,
+          "name": "peau",
+          "coords": [
+            4000,
+            1000,
+            5000,
+            2000
+          ],
+          "valid": false,
+          "error": "ROI outside image or invalid; no silent clamping"
+        },
+        {
+          "number": 5,
+          "name": "mur_jaune",
+          "coords": [
+            500,
+            500,
+            2000,
+            2000
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 140625,
+            "delta_e00_mean": 25.984645515734016,
+            "delta_e00_median": 26.58050523027303,
+            "delta_e00_p95": 30.964211042304782,
+            "delta_e76_mean": 45.39444764011034,
+            "delta_lab_mean_lr_minus_ipr": [
+              28.724460106723743,
+              -1.6301315481280616,
+              31.523031478902492
+            ],
+            "rgb_mae_normalized": 0.2457234021470009,
+            "ipr_lab_mean": [
+              47.527390848416964,
+              2.9722141871264123,
+              34.99225784259234
+            ],
+            "lr_lab_mean": [
+              76.2518509551414,
+              1.3420826389983715,
+              66.51528932149576
+            ],
+            "ipr_y_mean": 0.17560544984108947,
+            "lr_y_mean": 0.5423589464362877,
+            "delta_chroma_mean": 33.30013107078927,
+            "hue_abs_circular_mean_degrees": 6.921851807937924,
+            "hue_usable_fraction": 0.9863964444444444,
+            "lr_neutral_fraction": 0.003335111111111111,
+            "ab_distance_on_lr_neutral_mean": 6.120202043304503,
+            "ipr_any_channel_low_fraction": 0.000128,
+            "lr_any_channel_low_fraction": 0.052387555555555555,
+            "ipr_any_channel_high_fraction": 7.111111111111111e-06,
+            "lr_any_channel_high_fraction": 0.021518222222222223
+          }
+        },
+        {
+          "number": 6,
+          "name": "textile",
+          "coords": [
+            5000,
+            2000,
+            6500,
+            3000
+          ],
+          "valid": false,
+          "error": "ROI outside image or invalid; no silent clamping"
+        }
+      ],
+      "previous_ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A9421-IPR.tiff",
+        "bytes": 258263634,
+        "size": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "fdf2340ca66827774a1547f981fa34ab602c4f71ae4c787494e23d19a568ae75",
+        "mtime_utc": "2026-10-06T19:53:31.723435+00:00"
+      },
+      "previous_vs_lr_same_crop": {
+        "samples": 504600,
+        "delta_e00_mean": 21.549204827555197,
+        "delta_e00_median": 22.617250973872945,
+        "delta_e00_p95": 35.70892601298844,
+        "delta_e76_mean": 32.78365309027512,
+        "delta_lab_mean_lr_minus_ipr": [
+          19.89228044990073,
+          2.4032300170651477,
+          19.703333235931694
+        ],
+        "rgb_mae_normalized": 0.19235070543442023,
+        "ipr_lab_mean": [
+          32.86124359585072,
+          1.908594806928435,
+          16.1809774832307
+        ],
+        "lr_lab_mean": [
+          52.75352404575061,
+          4.311824823993638,
+          35.884310719161405
+        ],
+        "ipr_y_mean": 0.09459170843577076,
+        "lr_y_mean": 0.2882406521040883,
+        "delta_chroma_mean": 21.23603822411546,
+        "hue_abs_circular_mean_degrees": 14.349874269559045,
+        "hue_usable_fraction": 0.8951407055093143,
+        "lr_neutral_fraction": 0.01111375346809354,
+        "ab_distance_on_lr_neutral_mean": 4.45048017507276,
+        "ipr_any_channel_low_fraction": 0.0010998810939357908,
+        "lr_any_channel_low_fraction": 0.159778042013476,
+        "ipr_any_channel_high_fraction": 0.0001506143479984146,
+        "lr_any_channel_high_fraction": 0.01371185097106619
+      },
+      "previous_vs_current": {
+        "samples": 504600,
+        "delta_e00_mean": 1.1888317466268161,
+        "delta_e00_median": 0.716899924604016,
+        "delta_e00_p95": 2.8745610529688106,
+        "delta_e76_mean": 2.3309435806475443,
+        "delta_lab_mean_lr_minus_ipr": [
+          -0.3802643298473892,
+          0.44439541896342477,
+          1.638957381100793
+        ],
+        "rgb_mae_normalized": 0.00897309065742948,
+        "ipr_lab_mean": [
+          32.86124359585072,
+          1.908594806928435,
+          16.1809774832307
+        ],
+        "lr_lab_mean": [
+          32.48097926600229,
+          2.3529902258918622,
+          17.81993486433106
+        ],
+        "ipr_y_mean": 0.09459170843577076,
+        "lr_y_mean": 0.09203910808620953,
+        "delta_chroma_mean": 1.7702706230738467,
+        "hue_abs_circular_mean_degrees": 1.1663935516278057,
+        "hue_usable_fraction": 0.9141914387633769,
+        "lr_neutral_fraction": 0.031167261196987713,
+        "ab_distance_on_lr_neutral_mean": 0.14125808099035558,
+        "ipr_any_channel_low_fraction": 0.0010998810939357908,
+        "lr_any_channel_low_fraction": 0.0022889417360285377,
+        "ipr_any_channel_high_fraction": 0.0001506143479984146,
+        "lr_any_channel_high_fraction": 0.0001506143479984146
+      },
+      "previous_vs_current_sign": "current minus previous"
+    },
+    {
+      "scene": "6V1A9950",
+      "ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A9950-IPR-2.tiff",
+        "bytes": 258263634,
+        "size": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "72a9f374995d39e1d10bb44aed6cd51e4ea52b550a6866944669324670843184",
+        "mtime_utc": "2026-10-07T08:29:17.234173+00:00"
+      },
+      "lr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A9950.tif",
+        "bytes": 193794942,
+        "size": [
+          4640,
+          6960
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A9950.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "As Shot",
+          "Temperature": "5200",
+          "Tint": "+5",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "1",
+          "LensProfileEnable": "1",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "237F3DDC49E7329D5FF1BB575D51A18F",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "cbb6c675f65f20f6011a01a13e60c602524c29ff1f55418aeefb86cea16cbf0a",
+        "mtime_utc": "2026-10-06T10:44:26.506672+00:00"
+      },
+      "old_export": {
+        "member": "6V1A9950-IPR.tiff",
+        "archive_timestamp_local": [
+          2026,
+          10,
+          6,
+          12,
+          56,
+          36
+        ],
+        "archive_bytes": 258263634,
+        "sha256": "d83e5b0542a5f94afa54d604ce386cb4bab25db467a9c6e7468f8edca058d8fb",
+        "identical_bytes": false
+      },
+      "crop_candidates": [
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.36894574761390686
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.36987385153770447
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.37054190039634705
+        },
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.3713081479072571
+        }
+      ],
+      "global": {
+        "samples": 504600,
+        "delta_e00_mean": 12.390705308189256,
+        "delta_e00_median": 8.568567024603215,
+        "delta_e00_p95": 26.24175963406466,
+        "delta_e76_mean": 15.133170026233861,
+        "delta_lab_mean_lr_minus_ipr": [
+          12.05252097278591,
+          -1.0297987133131774,
+          2.171913055723124
+        ],
+        "rgb_mae_normalized": 0.12398880294424725,
+        "ipr_lab_mean": [
+          24.694879427061622,
+          -1.875243450495606,
+          -0.5459688664054347
+        ],
+        "lr_lab_mean": [
+          36.74740039984669,
+          -2.9050421638088317,
+          1.6259441893174242
+        ],
+        "ipr_y_mean": 0.0662454134226458,
+        "lr_y_mean": 0.17689027423052536,
+        "delta_chroma_mean": 3.7795861182306107,
+        "hue_abs_circular_mean_degrees": 9.681355791680213,
+        "hue_usable_fraction": 0.8387277051129608,
+        "lr_neutral_fraction": 0.010838287752675386,
+        "ab_distance_on_lr_neutral_mean": 3.1164674423007708,
+        "ipr_any_channel_low_fraction": 0.0011533888228299643,
+        "lr_any_channel_low_fraction": 0.00019421323820848196,
+        "ipr_any_channel_high_fraction": 0.0,
+        "lr_any_channel_high_fraction": 0.0
+      },
+      "regions": [
+        {
+          "number": 1,
+          "name": "ciel_bleu",
+          "coords": [
+            1000,
+            500,
+            3000,
+            1500
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 125000,
+            "delta_e00_mean": 23.89689684396006,
+            "delta_e00_median": 23.571334090547786,
+            "delta_e00_p95": 30.694975044082806,
+            "delta_e76_mean": 28.850092077779554,
+            "delta_lab_mean_lr_minus_ipr": [
+              28.228410400242215,
+              -0.1544765258212896,
+              0.3776774757194879
+            ],
+            "rgb_mae_normalized": 0.29599557069250515,
+            "ipr_lab_mean": [
+              49.06189744709628,
+              -0.15379309262943883,
+              -11.541762264035809
+            ],
+            "lr_lab_mean": [
+              77.29030784734057,
+              -0.308269618450728,
+              -11.164084788316442
+            ],
+            "ipr_y_mean": 0.1807435323770037,
+            "lr_y_mean": 0.534411986467483,
+            "delta_chroma_mean": -0.11396895227850122,
+            "hue_abs_circular_mean_degrees": 5.180057314678841,
+            "hue_usable_fraction": 0.993856,
+            "lr_neutral_fraction": 0.001224,
+            "ab_distance_on_lr_neutral_mean": 9.442171730450946,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.0,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 2,
+          "name": "feuillage_vert",
+          "coords": [
+            2000,
+            2000,
+            3500,
+            3000
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 93750,
+            "delta_e00_mean": 21.609950876407357,
+            "delta_e00_median": 23.50760614931246,
+            "delta_e00_p95": 25.30713805154461,
+            "delta_e76_mean": 25.211120756573543,
+            "delta_lab_mean_lr_minus_ipr": [
+              24.68763963557396,
+              -0.5524887202326612,
+              -0.7552475944289854
+            ],
+            "rgb_mae_normalized": 0.2562216786755168,
+            "ipr_lab_mean": [
+              43.98773815242753,
+              -2.446386124296682,
+              -12.238927575808724
+            ],
+            "lr_lab_mean": [
+              68.67537778800184,
+              -2.9988748445293356,
+              -12.994175170237712
+            ],
+            "ipr_y_mean": 0.15134000602567665,
+            "lr_y_mean": 0.43734246449990166,
+            "delta_chroma_mean": 1.4910708777672785,
+            "hue_abs_circular_mean_degrees": 3.782748376679523,
+            "hue_usable_fraction": 0.943392,
+            "lr_neutral_fraction": 0.002496,
+            "ab_distance_on_lr_neutral_mean": 5.2176309137061105,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.0,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 3,
+          "name": "terrain",
+          "coords": [
+            1500,
+            3000,
+            3000,
+            4000
+          ],
+          "valid": true,
+          "measurement": {
+            "samples": 93750,
+            "delta_e00_mean": 7.155432811278494,
+            "delta_e00_median": 6.3170118160421485,
+            "delta_e00_p95": 16.722984182061705,
+            "delta_e76_mean": 9.55668968531767,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.254322857635594,
+              -2.2181391797695147,
+              4.271358461575672
+            ],
+            "rgb_mae_normalized": 0.053794879492722276,
+            "ipr_lab_mean": [
+              15.983993613544703,
+              -3.753419651672697,
+              6.37770388592278
+            ],
+            "lr_lab_mean": [
+              22.2383164711804,
+              -5.97155883144218,
+              10.649062347498626
+            ],
+            "ipr_y_mean": 0.024521461788449692,
+            "lr_y_mean": 0.04844361099323906,
+            "delta_chroma_mean": 5.033224543970609,
+            "hue_abs_circular_mean_degrees": 7.271695220265261,
+            "hue_usable_fraction": 0.764576,
+            "lr_neutral_fraction": 0.019445333333333332,
+            "ab_distance_on_lr_neutral_mean": 2.1514814748932913,
+            "ipr_any_channel_low_fraction": 0.000192,
+            "lr_any_channel_low_fraction": 2.1333333333333335e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "number": 4,
+          "name": "ombre",
+          "coords": [
+            4000,
+            3000,
+            5000,
+            4000
+          ],
+          "valid": false,
+          "error": "ROI outside image or invalid; no silent clamping"
+        }
+      ],
+      "previous_ipr": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A9950-IPR.tiff",
+        "bytes": 258263634,
+        "size": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "samples": 4,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "active_mixer": {},
+        "settings": {},
+        "sha256": "d83e5b0542a5f94afa54d604ce386cb4bab25db467a9c6e7468f8edca058d8fb",
+        "mtime_utc": "2026-10-06T19:53:45.349550+00:00"
+      },
+      "previous_vs_lr_same_crop": {
+        "samples": 504600,
+        "delta_e00_mean": 12.058333426068728,
+        "delta_e00_median": 8.534511889522792,
+        "delta_e00_p95": 25.369888384456615,
+        "delta_e76_mean": 14.835318159955888,
+        "delta_lab_mean_lr_minus_ipr": [
+          11.686706878828323,
+          -0.8890250571283331,
+          1.8449352866971378
+        ],
+        "rgb_mae_normalized": 0.12116335515752467,
+        "ipr_lab_mean": [
+          25.060693521018937,
+          -2.0160171066804327,
+          -0.21899109737953137
+        ],
+        "lr_lab_mean": [
+          36.74740039984669,
+          -2.9050421638088317,
+          1.6259441893174242
+        ],
+        "ipr_y_mean": 0.06883348736253705,
+        "lr_y_mean": 0.17689027423052536,
+        "delta_chroma_mean": 4.062938225400073,
+        "hue_abs_circular_mean_degrees": 9.725617120920697,
+        "hue_usable_fraction": 0.840687673404677,
+        "lr_neutral_fraction": 0.010838287752675386,
+        "ab_distance_on_lr_neutral_mean": 3.098721535858969,
+        "ipr_any_channel_low_fraction": 0.0005132778438367024,
+        "lr_any_channel_low_fraction": 0.00019421323820848196,
+        "ipr_any_channel_high_fraction": 0.0,
+        "lr_any_channel_high_fraction": 0.0
+      },
+      "previous_vs_current": {
+        "samples": 504600,
+        "delta_e00_mean": 0.5451637818781453,
+        "delta_e00_median": 0.24734692348459378,
+        "delta_e00_p95": 1.7561169499926506,
+        "delta_e76_mean": 0.6397970555970337,
+        "delta_lab_mean_lr_minus_ipr": [
+          -0.3658140939572769,
+          0.14077365618487578,
+          -0.32697776902597675
+        ],
+        "rgb_mae_normalized": 0.003371606887397119,
+        "ipr_lab_mean": [
+          25.060693521018937,
+          -2.0160171066804327,
+          -0.21899109737953137
+        ],
+        "lr_lab_mean": [
+          24.694879427061622,
+          -1.875243450495606,
+          -0.5459688664054347
+        ],
+        "ipr_y_mean": 0.06883348736253705,
+        "lr_y_mean": 0.0662454134226458,
+        "delta_chroma_mean": 0.2833521071694615,
+        "hue_abs_circular_mean_degrees": 1.2683014770796017,
+        "hue_usable_fraction": 0.8576516052318668,
+        "lr_neutral_fraction": 0.016012683313515658,
+        "ab_distance_on_lr_neutral_mean": 0.12767268861470518,
+        "ipr_any_channel_low_fraction": 0.0005132778438367024,
+        "lr_any_channel_low_fraction": 0.0011533888228299643,
+        "ipr_any_channel_high_fraction": 0.0,
+        "lr_any_channel_high_fraction": 0.0
+      },
+      "previous_vs_current_sign": "current minus previous"
+    }
+  ],
+  "all_old_new_identical_bytes": false
+}

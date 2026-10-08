@@ -53,7 +53,9 @@ try {
         Invoke-Checked 'cmake' $buildArguments  # All targets, including optional integration targets.
     } else {
         $targets = @($plan.targets)
-        if (-not $plan.tests_only) { $targets += 'appIPR' }
+        # Both executables statically link the engine. Rebuild the generator as
+        # well, even for a targeted application change, to avoid stale exports.
+        if (-not $plan.tests_only) { $targets += @('appIPR', 'iprGenerateTests') }
         if ($targets.Count -gt 0) { Invoke-Checked 'cmake' ($buildArguments + @('--target') + $targets) }
     }
     if (@($plan.tests).Count -eq 0) { Write-Output 'No CTest tests selected.'; exit 0 }

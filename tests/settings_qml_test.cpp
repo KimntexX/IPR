@@ -99,12 +99,12 @@ int main(int argc, char **argv)
     settleLayout();
 
     const QStringList names{
-        "lightSection", "curveSection", "colorSection", "mixerSection",
+        "rawDevelopmentSection", "lightSection", "curveSection", "colorSection", "mixerSection",
         "gradingSection", "effectsSection", "denoiseSection", "sharpeningSection",
         "exportSection"};
     for (const QString &name : names) {
         auto *section = root->findChild<QQuickItem *>(name);
-        if (!check(section != nullptr, "all nine independent settings sections should exist"))
+        if (!check(section != nullptr, "all ten independent settings sections should exist"))
             return 1;
         auto *body = section->property("body").value<QQuickItem *>();
         auto *header = section->findChild<QQuickItem *>(QStringLiteral("sectionToggle"));
@@ -112,10 +112,10 @@ int main(int argc, char **argv)
                    body->parentItem() == section,
                    "the section header must not be inside its collapsible body"))
             return 1;
-        const bool initiallyOpen = name == QStringLiteral("lightSection");
+        const bool initiallyOpen = name == QStringLiteral("lightSection") || name == QStringLiteral("rawDevelopmentSection");
         if (!check(section->property("expanded").toBool() == initiallyOpen &&
                    body->isVisible() == initiallyOpen,
-                   "only Light should start expanded"))
+                   "RAW development and Light should start expanded"))
             return 1;
         if (!initiallyOpen)
             QMetaObject::invokeMethod(header, "clicked");
@@ -131,6 +131,11 @@ int main(int argc, char **argv)
             return 1;
     }
 
+    if (!check(root->findChild<QObject *>("cameraProfileSelector") &&
+               root->findChild<QObject *>("rawNormalizationToggle") &&
+               root->findChild<QObject *>("rawDevelopmentStatusLabel") &&
+               root->findChild<QObject *>("rawNormalizationManifestButton"),
+               "RAW module must expose profile, opt-in, manifest and actual status")) return 1;
     QObject *noiseSection = root->findChild<QObject *>(QStringLiteral("denoiseSection"));
     QObject *sharpSection = root->findChild<QObject *>(QStringLiteral("sharpeningSection"));
     QObject *exportSection = root->findChild<QObject *>(QStringLiteral("exportSection"));

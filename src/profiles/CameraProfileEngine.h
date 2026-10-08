@@ -21,12 +21,25 @@ struct CaptureSettings
     double aperture = 0.0;
 };
 
+struct DcpRenderOptions
+{
+    // Negative metadata, distinct from the profile's BaselineExposureOffset.
+    // Zero means no additional gain; callers must not reapply an existing gain.
+    double cameraBaselineExposureEv = 0.0;
+    bool preserveToneCurveHue = false;
+};
+
 QStringList defaultProfileDirectories();
+QStringList availableDcpProfiles(const QString &cameraMake, const QString &cameraModel,
+                                 const QStringList &profileDirectories = {});
+bool dcpMatchesCamera(const QString &path, const QString &cameraMake,
+                       const QString &cameraModel);
 Selection findProfiles(const QString &cameraMake, const QString &cameraModel,
                        const QString &lensMake, const QString &lensModel,
                        const QStringList &profileDirectories = {});
 bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,
-              double whiteBalanceKelvin = 5500.0, QString *error = nullptr);
+              double whiteBalanceKelvin = 5500.0, QString *error = nullptr,
+              const DcpRenderOptions &options = {});
 bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
               const CaptureSettings &capture = {}, QString *error = nullptr);
 

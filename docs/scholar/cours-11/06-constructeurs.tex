@@ -1,0 +1,238 @@
+\part{Canon, Sony et Nikon : principes communs, variantes réelles}
+\section{Comment lire les informations propres à une marque}
+La marque n'est pas une spécification de codec. Un modèle,
+un firmware, un mode de rafale, un type d'obturateur, une
+taille RAW et un réglage de compression peuvent changer
+les données. Il faut constituer une matrice de support
+\emph{modèle $\times$ mode $\times$ firmware}, pas une
+simple liste d'extensions.
+
+Une documentation de rétro-ingénierie est souvent la
+meilleure explication publique de détails binaires,
+mais elle doit être corroborée par des fichiers et des
+implémentations. Une ancienne constante noire ou un
+offset de MakerNote peut être valide sur un modèle et
+faux sur son successeur. Un nouveau boîtier peut réutiliser
+le conteneur tout en introduisant une nouvelle calibration.
+
+\section{Canon : CR2, CR3, C-RAW et styles de rendu}
+\subsection{CR2 : une organisation héritée de TIFF}
+Les travaux de Laurent Clévy décrivent le CR2 comme une
+structure TIFF enrichie, avec répertoires, métadonnées,
+aperçus et données RAW. Ils expliquent aussi le décodage
+JPEG prédictif sans perte et le réassemblage de tranches
+rencontrés dans les fichiers étudiés~\cite{clevycr2}.
+Ce JPEG sans perte n'est pas le JPEG à DCT avec pertes
+d'une photographie livrée au client.
+
+Il faut donc séparer trois opérations : trouver la charge
+utile, décompresser ses échantillons, puis remettre les
+échantillons dans leur géométrie capteur. Un tableau de
+la bonne taille peut malgré tout avoir ses segments
+permutés. Les modes réduits ou particuliers ne doivent
+pas être traités comme une mosaïque pleine taille sans
+vérifier leur organisation.
+
+\subsection{CR3 : conteneur à boîtes et codec CRX}
+La description publique CR3 de Clévy identifie notamment
+\texttt{ftyp}, \texttt{moov}, des pistes, des données
+\texttt{mdat}, des aperçus et des blocs de métadonnées
+Canon. Les blocs CMT peuvent embarquer des structures
+de type TIFF. La famille CRX comprend des variantes
+prédictives et des variantes à ondelettes et quantification
+pour C-RAW ; les détails observés sont documentés comme
+rétro-ingénierie, non comme une norme officielle Canon~\cite{clevycr3}.
+
+Le décodeur CRX de LibRaw contient lui-même des structures
+de tuiles, plans, sous-bandes et paramètres de quantification~\cite{librawcrx}.
+Le lecteur doit donc interpréter les descripteurs pour
+savoir quel procédé appliquer. Déduire le mode du seul
+suffixe CR3 est insuffisant. Le CR3 n'est pas non plus un
+JPEG renommé : il peut seulement en contenir des aperçus.
+
+\subsection{RAW contre C-RAW : ce que dit Canon et ce qu'on infère}
+Canon présente C-RAW comme une variante de taille réduite
+conservant la souplesse de développement RAW, et signale
+que certaines remontées importantes de sous-exposition
+peuvent révéler davantage de bruit. L'article constructeur
+ne publie pas une description exhaustive de l'algorithme
+binaire~\cite{canonraw}.
+
+Les analyses et le code CRX apportent une description
+plus technique de certains modes. Il ne faut pas convertir
+un comportement observé sur une génération en garantie
+pour toutes les futures versions. Pour tester un débruiteur
+ou des ombres extrêmes, consigner explicitement RAW ou
+C-RAW et éviter de mélanger les deux sans contrôle.
+
+\subsection{Picture Style, Camera Neutral et Adobe Standard}
+Canon distingue des styles de rendu tels que Standard,
+Neutral et Faithful et décrit leurs objectifs visuels.
+Le manuel du R6 Mark III distingue aussi force, finesse
+et seuil de netteté~\cite{canonstyle}. Ces paramètres
+participent à un rendu ; ils ne sont pas les coefficients
+d'une simple matrice RGB à copier dans un décodeur.
+
+Le style Neutre du boîtier, un DCP Adobe Camera Neutral
+et un profil Adobe Standard sont trois objets différents.
+Un profil Camera Matching cherche un rapprochement de
+rendu, pas nécessairement une reproduction bit à bit du
+moteur constructeur. Les noms n'impliquent pas non plus
+une neutralité physique parfaite sous tous les éclairages.
+
+Le JPEG intégré au RAW peut refléter le style choisi sur
+le boîtier alors que le logiciel tiers développe la
+mosaïque avec son propre profil par défaut. L'utilisateur
+voit alors une transition entre l'aperçu Canon et le
+rendu tiers, sans que les mesures RAW aient été changées.
+
+\subsection{Exemple local IPR : calibrations à ne pas universaliser}
+L'audit des six scènes Canon du projet a notamment
+examiné une nouvelle version de ColorData, des zones
+optical-black et la précision des faibles valeurs en
+sortie. Une erreur de sélection de bordure peut biaiser
+le noir ; une mauvaise interprétation du blanc change
+la normalisation. La comparaison à Lightroom a aussi
+isolé des différences de tables et de courbe.
+
+Ces résultats datés sont dans
+\href{../validation/analyses/analyse-base-colorimetrique.md}{le rapport évolutif de base colorimétrique}.
+Les liens PDF relatifs dépendent du lecteur ; le chemin
+depuis la racine est
+\path{docs/validation/analyses/analyse-base-colorimetrique.md}.
+Le cours retient la méthode, pas des valeurs à appliquer
+à tous les RAW Canon. Aucun nouveau correctif n'est
+introduit par la rédaction de ce document.
+
+\section{Sony : ARW, variantes de compression et prudence spectrale}
+\subsection{Ce qui est déjà documentable}
+Les fichiers ARW relèvent d'une famille de structures
+et de codecs Sony, avec métadonnées et aperçus.
+Le code de RawSpeed fournit des exemples de décodage
+de certaines variantes ARW, mais le nom d'une classe
+ne démontre pas le support de tous les modes Sony~\cite{rawspeed,sonyarw2}.
+Un lecteur doit reconnaître le modèle et la variante
+avant d'interpréter profondeur, emballage et compression.
+
+\subsection{Modes du Sony Alpha 7 IV : un exemple précis}
+Le manuel Sony du 7 IV décrit des choix non compressé,
+compressé sans perte L/M/S et compressé. Il précise que
+M et S réduisent la résolution par rapport à L, et
+mentionne une condition de firmware pour ces choix~\cite{sonymodes}.
+Il ne faut pas lire « compression sans perte M » comme
+« toutes les mesures de pleine résolution sont conservées » :
+la compression peut être sans perte sur une représentation
+déjà réduite spatialement.
+
+Cette distinction s'applique bien au-delà de Sony :
+la garantie d'un codec porte sur son entrée, pas sur
+toutes les opérations antérieures de la chaîne caméra.
+Pour un protocole rigoureux, choisir la pleine résolution
+et documenter le mode, sans supposer qu'un autre modèle
+dispose des mêmes menus.
+
+\subsection{Un exemple ARW2 de codage par petits groupes}
+Dans la variante illustrée par le décodeur SonyArw2
+de RawSpeed, un groupe de seize échantillons consomme
+128 bits, avec extrema, positions et valeurs résiduelles
+compactes. Le code impose des invariants et reconstruit
+les valeurs selon la plage du groupe~\cite{sonyarw2}.
+Ce mécanisme est un exemple concret de codage adaptatif
+à la dynamique locale, pas une description de tous les ARW.
+
+Il explique pourquoi des erreurs ou compromis peuvent
+être corrélés à des groupes et à de forts contrastes.
+Les essais doivent inclure arêtes lumineuses, ombres
+remontées et textures fines, et pas seulement des
+aplats correctement exposés. Aucune estimation de
+qualité Sony globale n'est déduite ici d'un seul codec.
+
+\subsection{Couleur et futurs tests Sony dans IPR}
+Une matrice Canon, ses gains et son profil ne peuvent
+pas être réutilisés parce qu'un Sony aurait lui aussi
+un CFA Bayer. Les réponses spectrales, calibrations,
+normalisations et rendus diffèrent. Le futur corpus
+Sony doit contenir un RAW plein format non réduit,
+son mode exact, un rendu neutre de référence clairement
+nommé et, idéalement, une charte sous éclairages connus.
+
+\paragraph{À compléter avec des fichiers réels.} Inventorier
+modèle/firmware, modes compressés et sans perte, géométrie
+native, profondeur utile, niveaux, orientation, gains,
+profil et effet des styles Sony. Cette section donne
+une base documentée ; elle ne revendique aucune validation
+de fichiers Sony dans la campagne Canon actuelle.
+
+\section{Nikon : NEF et coexistence de procédés}
+\subsection{NEF ne décrit pas un codec unique}
+Les NEF utilisent des organisations de la famille TIFF
+avec données Nikon et variantes de compression. Le
+décodeur Nikon de RawSpeed illustre notamment des
+tables, prédictions et décodages de différences pour
+les variantes qu'il traite~\cite{nikondecoder}.
+Ces mécanismes ne doivent pas être appliqués à tout
+fichier Nikon sur le seul nom de marque.
+
+\subsection{Exemple Z6/Z7 : profondeur et réversibilité}
+Le manuel Nikon Z6/Z7 distingue compression sans
+perte, compression non réversible et non compressé,
+ainsi que des choix 12 ou 14 bits~\cite{nikonmodes}.
+Les deux axes sont distincts : un RAW 14 bits avec
+pertes et un RAW 12 bits sans perte ne se comparent
+pas avec une seule étiquette « qualité ».
+
+Le nombre de bits indique une capacité de codage,
+pas à lui seul la dynamique effective du capteur.
+Un choix de mode peut aussi modifier vitesse et
+compatibilité ; il faut consulter le manuel du
+modèle et son firmware au lieu d'extrapoler celui
+d'un Z6 ou d'un Z7 à un Z9.
+
+\subsection{Exemple Z6 III : haute efficacité}
+Le manuel du Z6 III distingue compression sans
+perte et deux variantes haute efficacité, avec
+des tailles et objectifs de qualité différents~\cite{nikonefficiency}.
+Le nom marketing « haute efficacité » ne suffit
+pas à identifier une structure binaire ni à
+garantir la réversibilité. La prise en charge
+doit être vérifiée pour la bibliothèque et sa
+version réellement utilisées.
+
+Une bibliothèque peut ouvrir les métadonnées
+et l'aperçu sans savoir développer un mode
+de compression nouveau. Le test pertinent
+demande les pixels natifs et leur cohérence,
+pas seulement une icône visible dans l'explorateur.
+
+\subsection{Picture Control et futurs tests Nikon}
+Les réglages de rendu Nikon, comme les Picture
+Controls, doivent être distingués de la mosaïque,
+des métadonnées et des profils tiers. Pour une
+comparaison, préciser si la référence est un
+JPEG boîtier, un développement NX Studio ou
+un développement Lightroom avec profil défini.
+
+\paragraph{À compléter avec des fichiers réels.} Tester
+au moins les modes pertinents du modèle retenu,
+la profondeur, les dimensions, les aperçus,
+l'orientation, les gains et la calibration.
+Les formats de certaines gammes, comme NRW,
+doivent faire l'objet d'une vérification séparée ;
+ils ne sont pas couverts par une recette NEF
+automatique supposée universelle.
+
+\section{Synthèse inter-marques et limites de connaissance}
+\begin{longtable}{p{3.2cm}p{4cm}p{7.5cm}}
+\toprule Question & Invariant utile & Variable à vérifier \\ \midrule
+Qu'est-ce qui est mesuré ? & Signal du capteur & CFA, profondeur, prétraitements et lecture. \\
+Comment le fichier s'organise ? & Index et charges utiles & TIFF, boîtes, versions et offsets. \\
+Que fait le codec ? & Reconstruit une représentation & Prédiction, transformée, pertes et mode réduit. \\
+Comment retrouver les couleurs ? & Calibration nécessaire & Matrices, gains, tables et illuminants. \\
+Quel rendu veut-on ? & Choix explicite & Style boîtier, profil tiers ou cible physique. \\
+Peut-on faire confiance au décodage ? & Tests reproductibles & Modèle, firmware, mode et version bibliothèque. \\
+\bottomrule
+\end{longtable}
+Le bon investissement logiciel consiste à généraliser
+les contrats et les contrôles, pas à généraliser des
+constantes issues d'un seul boîtier. Les informations
+manquantes doivent rester identifiées comme telles.

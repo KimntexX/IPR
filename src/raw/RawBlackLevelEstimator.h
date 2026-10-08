@@ -5,6 +5,7 @@
 
 #include <array>
 #include <cstdint>
+#include <vector>
 
 namespace RawBlackLevelEstimator {
 
@@ -19,11 +20,14 @@ enum class Status
 
 struct Input
 {
+    struct MaskedArea { int left, top, width, height; };
     QString extension;
     QString cameraMake;
     const std::uint16_t *mosaic = nullptr;
     int rawWidth = 0;
     int rawHeight = 0;
+    int rowStrideSamples = 0; // 0 retains packed-width compatibility.
+    std::vector<MaskedArea> maskedAreas; // Explicit optical black, not crop margins.
     int leftMargin = 0;
     int topMargin = 0;
     int activeWidth = 0;

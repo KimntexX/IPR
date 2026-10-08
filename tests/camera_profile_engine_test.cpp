@@ -45,7 +45,10 @@ QByteArray makeDcp(bool colorMatrixOnly = false, bool dualIlluminant = false,
                    bool differentSecondHueSat = false,
                    int hueSatEncoding = 0, int lookTableEncoding = 0,
                    float firstHueShift = 0.0f,
-                   float secondHueShift = 0.0f)
+                   float secondHueShift = 0.0f,
+                   int valueDivisions = 1, float lookValueScale = 0.8f,
+                   bool withToneCurve = false, float curveMiddle = .8f,
+                   float curveEnd = 1.f)
 {
     const QByteArray xmp =
         QByteArrayLiteral("<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" "
@@ -55,17 +58,18 @@ QByteArray makeDcp(bool colorMatrixOnly = false, bool dualIlluminant = false,
                           "crs:CameraModelRestriction=\"Canon EOS R6 Mark III\"/>"
                           "</rdf:RDF></x:xmpmeta>");
 
-    const quint16 entryCount = (dualIlluminant ? 10 : 6) + 2;
+    const quint16 entryCount = (dualIlluminant ? 10 : 6) + 2 + (withToneCurve ? 1 : 0);
     constexpr quint32 ifdOffset = 8;
     const quint32 xmpOffset = ifdOffset + 2 + entryCount * 12 + 4;
     const quint32 dimensionsOffset = xmpOffset + quint32(xmp.size());
     const quint32 mapOffset = dimensionsOffset + 12;
-    const quint32 secondMapOffset = mapOffset + 6 * 4;
+    const quint32 secondMapOffset = mapOffset + 6 * valueDivisions * 4;
     const quint32 lookDimensionsOffset =
-        secondMapOffset + (dualIlluminant ? 6 * 4 : 0);
+        secondMapOffset + (dualIlluminant ? 6 * valueDivisions * 4 : 0);
     const quint32 lookDataOffset = lookDimensionsOffset + 12;
-    const quint32 matrixOffset = lookDataOffset + 6 * 4;
+    const quint32 matrixOffset = lookDataOffset + 6 * valueDivisions * 4;
     const quint32 secondMatrixOffset = matrixOffset + 9 * 8;
+    const quint32 curveOffset = secondMatrixOffset + (dualIlluminant ? 9 * 8 : 0);
 
     QByteArray bytes = QByteArrayLiteral("II");
     appendU16(bytes, 0x4352);
@@ -84,13 +88,13 @@ QByteArray makeDcp(bool colorMatrixOnly = false, bool dualIlluminant = false,
 
     appendU16(bytes, 50938);
     appendU16(bytes, 11);
-    appendU32(bytes, 6);
+    appendU32(bytes, 6 * valueDivisions);
     appendU32(bytes, mapOffset);
 
     if (dualIlluminant) {
         appendU16(bytes, 50939);
         appendU16(bytes, 11);
-        appendU32(bytes, 6);
+        appendU32(bytes, 6 * valueDivisions);
         appendU32(bytes, secondMapOffset);
     }
     appendU16(bytes, 50981);
@@ -100,7 +104,7 @@ QByteArray makeDcp(bool colorMatrixOnly = false, bool dualIlluminant = false,
 
     appendU16(bytes, 50982);
     appendU16(bytes, 11);
-    appendU32(bytes, 6);
+    appendU32(bytes, 6 * valueDivisions);
     appendU32(bytes, lookDataOffset);
 
     appendU16(bytes, 51107);
@@ -132,19 +136,25 @@ QByteArray makeDcp(bool colorMatrixOnly = false, bool dualIlluminant = false,
         appendU32(bytes, 9);
         appendU32(bytes, secondMatrixOffset);
     }
+    if (withToneCurve) {
+        appendU16(bytes, 50940);
+        appendU16(bytes, 11);
+        appendU32(bytes, 6);
+        appendU32(bytes, curveOffset);
+    }
     appendU32(bytes, 0);
     bytes.append(xmp);
 
     appendU32(bytes, 1);
     appendU32(bytes, 2);
-    appendU32(bytes, 1);
-    for (int i = 0; i < 2; ++i) {
+    appendU32(bytes, valueDivisions);
+    for (int i = 0; i < 2 * valueDivisions; ++i) {
         appendFloat(bytes, firstHueShift);
         appendFloat(bytes, 1.0f);
         appendFloat(bytes, 1.0f);
     }
     if (dualIlluminant) {
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2 * valueDivisions; ++i) {
             appendFloat(bytes, secondHueShift);
             appendFloat(bytes, i == 0 && differentSecondHueSat ? 0.5f : 1.0f);
             appendFloat(bytes, 1.0f);
@@ -152,11 +162,11 @@ QByteArray makeDcp(bool colorMatrixOnly = false, bool dualIlluminant = false,
     }
     appendU32(bytes, 1);
     appendU32(bytes, 2);
-    appendU32(bytes, 1);
-    for (int i = 0; i < 2; ++i) {
+    appendU32(bytes, valueDivisions);
+    for (int i = 0; i < 2 * valueDivisions; ++i) {
         appendFloat(bytes, 0.0f);
         appendFloat(bytes, 1.0f);
-        appendFloat(bytes, 0.8f);
+        appendFloat(bytes, lookValueScale);
     }
 
     for (int i = 0; i < 9; ++i) {
@@ -171,6 +181,10 @@ QByteArray makeDcp(bool colorMatrixOnly = false, bool dualIlluminant = false,
             appendU32(bytes, i % 4 == 0 ? (halfSecondMatrix ? 1 : 2) : 0);
             appendU32(bytes, 2);
         }
+    }
+    if (withToneCurve) {
+        for (float value : {0.f, 0.f, .5f, curveMiddle, 1.f, curveEnd})
+            appendFloat(bytes, value);
     }
     return bytes;
 }
@@ -260,6 +274,9 @@ int main(int argc, char **argv)
                    manifestSelection.lcpPath == manifestLcpPath,
                "manifest should bypass the recursive profile search"))
         return 1;
+    if (!check(CameraProfileEngine::dcpMatchesCamera(manifestDcpPath,"Canon","EOS R6 Mark III") &&
+               !CameraProfileEngine::dcpMatchesCamera(manifestDcpPath,"Nikon","Z 8"),
+               "manual DCP selection must be checked against camera restriction")) return 1;
     const CameraProfileEngine::Selection directDirectories =
         CameraProfileEngine::findProfiles(
             QStringLiteral("Canon"), QStringLiteral("Canon EOS R6 Mark III"),
@@ -408,8 +425,93 @@ int main(int argc, char **argv)
                                              &error) &&
                    CameraProfileEngine::applyDcp(srgbTableDcp, srgbTableInput,
                                                  5500.0, &error) &&
-                   cv::norm(linearTableInput - srgbTableInput) > 0.01,
-               "DCP sRGB table encoding should use sRGB transfer functions"))
+                   cv::norm(linearTableInput - srgbTableInput) < 1e-6,
+               "DCP encoding must not affect single-Value tables"))
+        return 1;
+
+    // A 120-degree HSV rotation of (.4,.2,.1) in ProPhoto gives (.1,.4,.2).
+    // Identity ForwardMatrix means the synthetic camera input is XYZ D50.
+    const cv::Matx33f proPhotoToXyz(
+        .7976749f, .1351917f, .0313534f,
+        .2880402f, .7118741f, .0000857f,
+        0.f, 0.f, .82521f);
+    const cv::Matx33f xyzToSrgb(
+        3.1338551f, -1.6168649f, -.4907204f,
+        -.9787684f, 1.9161415f, .0334540f,
+        .0719453f, -.2289914f, 1.4052427f);
+    const QString curveDcp = QDir(dcpDirectory).filePath("monotone-curve.dcp");
+    if (!check(writeFile(curveDcp, makeDcp(false, false, false, false,
+                         0, 0, 0.f, 0.f, 1, 1.f, true)), "tone profile written"))
+        return 1;
+    const CameraProfileEngine::DcpRenderOptions stable{0.0, true};
+    const cv::Vec3f triplets[] = {{.1f,.4f,.7f}, {.1f,.7f,.4f}, {.4f,.1f,.7f},
+                                 {.4f,.7f,.1f}, {.7f,.1f,.4f}, {.7f,.4f,.1f}};
+    for (const auto &triplet : triplets) {
+        cv::Mat current(1,1,CV_32FC3);
+        current.at<cv::Vec3f>(0,0) = proPhotoToXyz * triplet;
+        cv::Mat legacy = current.clone();
+        cv::Vec3f expected;
+        for (int c=0;c<3;++c)
+            expected[c] = .16f + (triplet[c]-.1f)/.6f*.72f;
+        if (!check(CameraProfileEngine::applyDcp(curveDcp,current,5500.,&error,stable) &&
+                   cv::norm(current.at<cv::Vec3f>(0,0) - xyzToSrgb*(proPhotoToXyz*expected)) < 1e-5,
+                   "curve preserves relative middle channel for all permutations")) return 1;
+        if (!check(CameraProfileEngine::applyDcp(curveDcp,legacy,5500.,&error) &&
+                   cv::norm(current-legacy) > .01, "legacy option remains available")) return 1;
+    }
+    for (float value : {0.f, .25f, 1.f}) {
+        cv::Mat gray(1,1,CV_32FC3);
+        gray.at<cv::Vec3f>(0,0) = proPhotoToXyz*cv::Vec3f(value,value,value);
+        const float expected = value <= .5f ? value*1.6f : .8f+(value-.5f)*.4f;
+        if (!check(CameraProfileEngine::applyDcp(curveDcp,gray,5500.,&error,stable) &&
+                   cv::norm(gray.at<cv::Vec3f>(0,0) - xyzToSrgb*(proPhotoToXyz*cv::Vec3f(expected,expected,expected))) < 1e-5,
+                   "equal channels, black and white are finite and correct")) return 1;
+    }
+    const QString descendingDcp = QDir(dcpDirectory).filePath("descending-curve.dcp");
+    if (!check(writeFile(descendingDcp, makeDcp(false,false,false,false,
+                        0,0,0.f,0.f,1,1.f,true,1.f,.1f)), "descending profile written")) return 1;
+    cv::Mat descending(1,1,CV_32FC3);
+    descending.at<cv::Vec3f>(0,0)=proPhotoToXyz*cv::Vec3f(.4f,.6f,.8f);
+    cv::Mat descendingLegacy=descending.clone();
+    if (!check(CameraProfileEngine::applyDcp(descendingDcp,descending,5500.,&error,stable) &&
+               CameraProfileEngine::applyDcp(descendingDcp,descendingLegacy,5500.,&error) &&
+               cv::norm(descending-descendingLegacy)<1e-6,
+               "inverted extrema use per-pixel legacy fallback")) return 1;
+    cv::Mat exposureA(1,1,CV_32FC3,cv::Scalar(.02f,.03f,.01f));
+    cv::Mat exposureB = exposureA * 2.f;
+    const CameraProfileEngine::DcpRenderOptions plusOne{1.0, false};
+    if (!check(CameraProfileEngine::applyDcp(dcpPath,exposureA,5500.,&error,plusOne) &&
+               CameraProfileEngine::applyDcp(dcpPath,exposureB,5500.,&error) &&
+               cv::norm(exposureA-exposureB) < 1e-6,
+               "camera exposure applied before nonlinear tables")) return 1;
+    cv::Mat invalidExposure = exposureA.clone();
+    if (!check(!CameraProfileEngine::applyDcp(dcpPath,invalidExposure,5500.,&error,{5.0,true}) &&
+               cv::norm(invalidExposure-exposureA) == 0,
+               "invalid exposure rejected before pixel mutation")) return 1;
+    const QString rotationDcp = QDir(dcpDirectory).filePath("prophoto-rotation.dcp");
+    if (!check(writeFile(rotationDcp, makeDcp(false, false, false, false,
+                          0, 0, 120.f)), "ProPhoto hue test profile should be written"))
+        return 1;
+    cv::Mat rotated(1, 1, CV_32FC3);
+    rotated.at<cv::Vec3f>(0, 0) = proPhotoToXyz * cv::Vec3f(.4f, .2f, .1f);
+    if (!check(CameraProfileEngine::applyDcp(rotationDcp, rotated, 5500., &error) &&
+               cv::norm(rotated.at<cv::Vec3f>(0, 0) -
+                   xyzToSrgb * (proPhotoToXyz * cv::Vec3f(.08f, .32f, .16f))) < 1e-5,
+               "DCP hue rotation must be evaluated in ProPhoto, not sRGB"))
+        return 1;
+
+    const QString encoded3dDcp = QDir(dcpDirectory).filePath("encoded-3d.dcp");
+    if (!check(writeFile(encoded3dDcp, makeDcp(false, false, false, false,
+                              1, 1, 0.f, 0.f, 2)), "3D encoded profile should be written"))
+        return 1;
+    cv::Mat encodedColor(1, 1, CV_32FC3);
+    encodedColor.at<cv::Vec3f>(0, 0) = proPhotoToXyz * cv::Vec3f(.4f, .2f, .1f);
+    const float encodedV = 1.055f * std::pow(.4f, 1.f / 2.4f) - .055f;
+    const float expectedV = std::pow((encodedV * .8f + .055f) / 1.055f, 2.4f);
+    if (!check(CameraProfileEngine::applyDcp(encoded3dDcp, encodedColor, 5500., &error) &&
+               cv::norm(encodedColor.at<cv::Vec3f>(0, 0) - xyzToSrgb *
+                   (proPhotoToXyz * cv::Vec3f(expectedV, expectedV * .5f, expectedV * .25f))) < 1e-5,
+               "sRGB encoding must modify only HSV Value, preserving hue/saturation"))
         return 1;
 
     const QString colorOnlyDcp =

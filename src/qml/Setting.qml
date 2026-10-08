@@ -260,6 +260,21 @@ Item {
             }
 
             SettingsSection {
+                objectName: "rawDevelopmentSection"
+                stateKey: "rawDevelopment"
+                preferences: root.preferences
+                textColor: root.textColor
+                title: qsTr("Développement RAW / Profil")
+                expanded: true
+
+                RawDevelopmentModule {
+                    editor: root.editor
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                }
+            }
+
+            SettingsSection {
                 objectName: "lightSection"
                 stateKey: "light"
                 preferences: root.preferences

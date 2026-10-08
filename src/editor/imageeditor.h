@@ -80,6 +80,12 @@ class ImageEditor final : public QObject
                READ decodedImageCacheEntryCount NOTIFY decodedImageCacheChanged)
     Q_PROPERTY(int selectedImageCount READ selectedImageCount NOTIFY selectionChanged)
     Q_PROPERTY(QStringList selectedImageUrls READ selectedImageUrls NOTIFY selectionChanged)
+    Q_PROPERTY(QVariantList cameraProfiles READ cameraProfiles NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(QString selectedCameraProfile READ selectedCameraProfile WRITE setCameraProfile NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(bool rawNormalizationEnabled READ rawNormalizationEnabled WRITE setRawNormalizationEnabled NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(QString rawNormalizationManifest READ rawNormalizationManifest NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(QString rawDevelopmentStatus READ rawDevelopmentStatus NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(bool automaticWhiteBalance READ automaticWhiteBalance NOTIFY rawDevelopmentChanged)
 
 public:
     enum ToneCurveChannel
@@ -113,6 +119,15 @@ public:
     int decodedImageCacheEntryCount() const;
     int selectedImageCount() const;
     QStringList selectedImageUrls() const;
+    QVariantList cameraProfiles() const;
+    QString selectedCameraProfile() const { return m_cameraProfile; }
+    bool rawNormalizationEnabled() const { return m_rawNormalizationEnabled; }
+    bool automaticWhiteBalance() const { return m_settings.automaticWhiteBalance; }
+    QString rawNormalizationManifest() const;
+    QString rawDevelopmentStatus() const;
+    Q_INVOKABLE void setCameraProfile(const QString &path);
+    Q_INVOKABLE void setRawNormalizationEnabled(bool enabled);
+    Q_INVOKABLE void setRawNormalizationManifest(const QUrl &file);
     Q_INVOKABLE QUrl defaultExportFile(const QString &format,
                                      const QUrl &previousTarget = QUrl()) const;
     Q_INVOKABLE QVariantList toneCurve(int channel) const;
@@ -166,6 +181,7 @@ public:
                                  int quality);
 
 signals:
+    void rawDevelopmentChanged();
     void folderChanged();
     void previewChanged();
     void statusMessageChanged();
@@ -180,6 +196,9 @@ signals:
     void adjustmentsReset(int temperatureKelvin, int tint);
 
 private:
+    // Offline test exporter: reuse the pipeline without loading/saving sidecars.
+    friend class IprTestImageGenerator;
+
     struct ToneCurvePoint
     {
         float x = 0.0f;
@@ -196,7 +215,7 @@ private:
         int blacks = 0;     // gestion des noirs
         int highlights = 0; // gestion des hautes lumières
         int whites = 0;     // gestion des blancs
-        int temperature = 6500; // température cible en kelvins
+        int temperature = 5200; // température cible en kelvins (As Shot typique Canon)
         int tint = 0;       // nuance relative de -150 (vert) à +150 (magenta)
         int vibrance = 0;   // priorité aux couleurs peu saturées
         int saturation = 0; // intensité uniforme de la chrominance
@@ -260,11 +279,14 @@ private:
                                    int quality);
     static LoadResult loadFromDisk(const QString &fileName,
                                    const QString &extension,
-                                   bool automaticWhiteBalance);
+                                   bool automaticWhiteBalance,
+                                   const RawDecoder::Options &rawOptions = {});
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
-                                   bool automaticWhiteBalance);
+                                   bool automaticWhiteBalance,
+                                   const QString &profile = {}, const QString &manifest = {});
+    void reloadRawDevelopment();
     static QString sidecarPathForFile(const QString &fileName);
     static bool readSidecar(const QString &fileName, Settings *settings,
                             UserImageMetadata *metadata);
@@ -291,6 +313,9 @@ private:
     ColorPipeline::WorkingImage m_original;
     ColorPipeline::WorkingImage m_editProxy;
     RawDecoder::SourceMetadata m_sourceMetadata;
+    QString m_cameraProfile;
+    QString m_normalizationManifest;
+    bool m_rawNormalizationEnabled = false;
     QHash<QString, UserImageMetadata> m_userImageMetadata;
     QSet<QString> m_selectedImageKeys;
     DecodedImageCache m_decodedImageCache;

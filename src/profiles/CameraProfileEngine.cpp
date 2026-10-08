@@ -1,6 +1,7 @@
 #include "CameraProfileEngine.h"
 
 #include <QDir>
+#include <QCoreApplication>
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
@@ -507,15 +508,23 @@ public:
                 fileKey.startsWith(modelKey));
     }
 
-    bool apply(cv::Mat &rgb, double whiteBalanceKelvin, QString *error) const
+    bool apply(cv::Mat &rgb, double whiteBalanceKelvin, QString *error,
+               const DcpRenderOptions &options) const
     {
+        if (!std::isfinite(options.cameraBaselineExposureEv) ||
+            std::abs(options.cameraBaselineExposureEv) > 4.0) {
+            if (error)
+                *error = QStringLiteral("Exposition de base caméra DCP invalide.");
+            return false;
+        }
         if (rgb.empty() || rgb.type() != CV_32FC3) {
             if (error)
                 *error = QStringLiteral("L'image caméra DCP doit être RGB flottante.");
             return false;
         }
 
-        const double cameraToSrgb[9] = {
+        // XYZ D50 -> linear sRGB D65 (Bradford adaptation included).
+        const cv::Matx33d xyzToSrgb(
             3.2404542 * 0.9555766 - 1.5371385 * -0.0282895 - 0.4986108 * 0.0122982,
             3.2404542 * -0.0230393 - 1.5371385 * 1.0099416 - 0.4986108 * -0.0204830,
             3.2404542 * 0.0631636 - 1.5371385 * 0.0210077 - 0.4986108 * 1.3299098,
@@ -525,7 +534,16 @@ public:
             0.0556434 * 0.9555766 - 0.2040259 * -0.0282895 + 1.0572252 * 0.0122982,
             0.0556434 * -0.0230393 - 0.2040259 * 1.0099416 + 1.0572252 * -0.0204830,
             0.0556434 * 0.0631636 - 0.2040259 * 0.0210077 + 1.0572252 * 1.3299098
-        };
+        );
+        // DCP HSV tables and profile tone curves operate in linear ProPhoto
+        // (D50), NOT in our final sRGB working space. These are color-space
+        // definitions, not empirical camera calibration coefficients.
+        const cv::Matx33d proPhotoToXyz(
+            0.7976749, 0.1351917, 0.0313534,
+            0.2880402, 0.7118741, 0.0000857,
+            0.0,       0.0,       0.8252100);
+        const cv::Matx33d xyzToProPhoto = proPhotoToXyz.inv();
+        const cv::Matx33d proPhotoToSrgb = xyzToSrgb * proPhotoToXyz;
         const double matrixWeight = illuminantWeight(whiteBalanceKelvin);
         std::array<double, 9> cameraToXyz{};
         if (!cameraToXyzMatrix(matrixWeight, cameraToXyz)) {
@@ -535,37 +553,61 @@ public:
         }
         const HueSatTable hueMap =
             interpolateTables(hueSatMap1, hueSatMap2, matrixWeight);
-        const double exposureScale = std::exp2(baselineExposure);
+        const double exposureScale = std::exp2(
+            baselineExposure + options.cameraBaselineExposureEv);
+        // Extrema interpolation preserves HSV hue, not Lab hue or saturation.
+        // Bounded curves may contain small descending segments (Camera Neutral
+        // does). Guard inverted mapped extrema per pixel, not by rejecting the
+        // entire curve. Unbounded/non-covering curves retain legacy behavior.
+        bool hueStable = options.preserveToneCurveHue && toneCurve.size() >= 4 &&
+                         toneCurve.first() == 0.0 &&
+                         toneCurve[toneCurve.size() - 2] == 1.0;
+        for (qsizetype i = 1; hueStable && i < toneCurve.size(); i += 2)
+            hueStable = toneCurve[i] >= 0.0 && toneCurve[i] <= 1.0;
         cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
             for (int y = rows.start; y < rows.end; ++y) {
                 cv::Vec3f *row = rgb.ptr<cv::Vec3f>(y);
                 for (int x = 0; x < rgb.cols; ++x) {
                     const cv::Vec3f in = row[x];
-                const double x2 =
-                    cameraToXyz[0] * in[0] + cameraToXyz[1] * in[1] +
-                    cameraToXyz[2] * in[2];
-                const double y2 =
-                    cameraToXyz[3] * in[0] + cameraToXyz[4] * in[1] +
-                    cameraToXyz[5] * in[2];
-                const double z2 =
-                    cameraToXyz[6] * in[0] + cameraToXyz[7] * in[1] +
-                    cameraToXyz[8] * in[2];
-                cv::Vec3f out;
-                for (int r = 0; r < 3; ++r) {
-                    out[r] = float(exposureScale *
-                                   (cameraToSrgb[r * 3] * x2 +
-                                    cameraToSrgb[r * 3 + 1] * y2 +
-                                    cameraToSrgb[r * 3 + 2] * z2));
-                }
-                if (!hueMap.isEmpty())
-                    out = applyHueSatMap(out, hueMap, hueSatEncoding);
-                if (!lookTable.isEmpty())
-                    out = applyHueSatMap(out, lookTable, lookTableEncoding);
-                if (toneCurve.size() >= 4 && toneCurve.size() % 2 == 0) {
-                    for (int c = 0; c < 3; ++c)
-                        out[c] = applyCurve(out[c]);
-                }
-                    row[x] = out;
+                    const double x2 =
+                        cameraToXyz[0] * in[0] + cameraToXyz[1] * in[1] +
+                        cameraToXyz[2] * in[2];
+                    const double y2 =
+                        cameraToXyz[3] * in[0] + cameraToXyz[4] * in[1] +
+                        cameraToXyz[5] * in[2];
+                    const double z2 =
+                        cameraToXyz[6] * in[0] + cameraToXyz[7] * in[1] +
+                        cameraToXyz[8] * in[2];
+                    const cv::Vec3d xyz(x2, y2, z2);
+                    // Preserve the matrix-only path, including extended range.
+                    if (hueMap.isEmpty() && lookTable.isEmpty() && toneCurve.isEmpty()) {
+                        row[x] = cv::Vec3f(xyzToSrgb * (xyz * exposureScale));
+                        continue;
+                    }
+                    cv::Vec3f out(xyzToProPhoto * (xyz * exposureScale));
+                    if (!hueMap.isEmpty())
+                        out = applyHueSatMap(out, hueMap, hueSatEncoding);
+                    if (!lookTable.isEmpty())
+                        out = applyHueSatMap(out, lookTable, lookTableEncoding);
+                    if (toneCurve.size() >= 4 && toneCurve.size() % 2 == 0) {
+                        if (hueStable) {
+                            const cv::Vec3f bounded(std::clamp(out[0], 0.f, 1.f),
+                                                    std::clamp(out[1], 0.f, 1.f),
+                                                    std::clamp(out[2], 0.f, 1.f));
+                            const float low = std::min({bounded[0], bounded[1], bounded[2]});
+                            const float high = std::max({bounded[0], bounded[1], bounded[2]});
+                            const float a = applyCurve(low), b = applyCurve(high);
+                            for (int c = 0; c < 3; ++c)
+                                out[c] = b < a ? applyCurve(bounded[c]) :
+                                    (high > low ? a + (bounded[c] - low) /
+                                                     (high - low) * (b - a) : a);
+                        } else {
+                            for (int c = 0; c < 3; ++c)
+                                out[c] = applyCurve(out[c]);
+                        }
+                    }
+                    // Do not clip to the smaller sRGB gamut here.
+                    row[x] = cv::Vec3f(proPhotoToSrgb * cv::Vec3d(out));
                 }
             }
         });
@@ -894,15 +936,8 @@ private:
         if (table.isEmpty())
             return input;
         cv::Vec3f tableInput;
-        for (int c = 0; c < 3; ++c) {
-            const float value = qBound(0.0f, input[c], 1.0f);
-            tableInput[c] = encoding == 1
-                                ? (value <= 0.0031308f
-                                       ? value * 12.92f
-                                       : 1.055f * std::pow(value, 1.0f / 2.4f) -
-                                             0.055f)
-                                : value;
-        }
+        for (int c = 0; c < 3; ++c)
+            tableInput[c] = qBound(0.0f, input[c], 1.0f);
         const float r = tableInput[0];
         const float g = tableInput[1];
         const float b = tableInput[2];
@@ -920,7 +955,13 @@ private:
             hue = std::fmod(hue / 6.0f + 1.0f, 1.0f);
         }
         const float saturation = maximum <= 0.0f ? 0.0f : delta / maximum;
-        const float value = maximum;
+        // Encoding affects only the HSV Value axis, not RGB or H/S.
+        // The tag is inapplicable to a 2.5D table (one Value division).
+        const bool encodeValue = encoding == 1 && table.valDivisions > 1;
+        const float value = encodeValue
+            ? (maximum <= 0.0031308f ? maximum * 12.92f
+               : 1.055f * std::pow(maximum, 1.0f / 2.4f) - 0.055f)
+            : maximum;
 
         const float hCoord = hue * table.hueDivisions;
         const float sCoord = saturation * (table.satDivisions - 1);
@@ -960,7 +1001,10 @@ private:
         if (outHue < 0.0f)
             outHue += 1.0f;
         const float outSaturation = qBound(0.0f, saturation * modify[1], 1.0f);
-        const float outValue = qBound(0.0f, value * modify[2], 1.0f);
+        float outValue = qBound(0.0f, value * modify[2], 1.0f);
+        if (encodeValue)
+            outValue = outValue <= 0.04045f ? outValue / 12.92f
+                : std::pow((outValue + 0.055f) / 1.055f, 2.4f);
         const float sector = outHue * 6.0f;
         const int i = int(std::floor(sector)) % 6;
         const float f = sector - std::floor(sector);
@@ -975,14 +1019,6 @@ private:
         case 3: result = {p, q, outValue}; break;
         case 4: result = {t, p, outValue}; break;
         default: result = {outValue, p, q}; break;
-        }
-        if (encoding == 1) {
-            for (int c = 0; c < 3; ++c) {
-                const float value = qBound(0.0f, result[c], 1.0f);
-                result[c] = value <= 0.04045f
-                                ? value / 12.92f
-                                : std::pow((value + 0.055f) / 1.055f, 2.4f);
-            }
         }
         return result;
     }
@@ -1522,6 +1558,7 @@ LcpData::Model selectLcpModel(const LcpData &profile,
 QStringList defaultProfileDirectories()
 {
     QStringList roots;
+    roots.append(QDir(QCoreApplication::applicationDirPath()).filePath(QStringLiteral("profiles")));
     roots.append(QDir::current().filePath(QStringLiteral("profiles")));
     const QString appData = QStandardPaths::writableLocation(
         QStandardPaths::AppDataLocation);
@@ -1548,6 +1585,46 @@ QStringList defaultProfileDirectories()
         roots.append(adobeRoot);
     roots.removeDuplicates();
     return roots;
+}
+
+bool dcpMatchesCamera(const QString &path, const QString &make, const QString &model)
+{
+    DcpProfile profile;
+    return profile.load(path, nullptr) && profile.matches(make, model, path);
+}
+
+QStringList availableDcpProfiles(const QString &make, const QString &model,
+                                 const QStringList &directories)
+{
+    if (model.trimmed().isEmpty())
+        return {};
+    const auto roots = directories.isEmpty() ? defaultProfileDirectories() : directories;
+    const QString key = make + QLatin1Char('|') + model + QLatin1Char('|') + roots.join('|');
+    static QMutex mutex;
+    static QHash<QString, QStringList> cache;
+    QMutexLocker lock(&mutex);
+    if (cache.contains(key))
+        return cache.value(key);
+    QStringList paths;
+    const auto configured = selectionFromManifests(roots, make, model, {}, {});
+    if (!configured.dcpPath.isEmpty() && dcpMatchesCamera(configured.dcpPath, make, model))
+        paths.append(configured.dcpPath);
+    const QString modelKey = normalized(model);
+    for (const auto &root : roots) {
+        QDirIterator iterator(root, {QStringLiteral("*.dcp"), QStringLiteral("*.DCP")},
+                              QDir::Files, QDirIterator::Subdirectories);
+        while (iterator.hasNext()) {
+            const QString path = iterator.next();
+            // Avoid loading thousands of unrelated Adobe profiles.
+            if (normalized(QFileInfo(path).completeBaseName()).contains(modelKey) &&
+                dcpMatchesCamera(path, make, model))
+                paths.append(QFileInfo(path).canonicalFilePath());
+        }
+    }
+    paths.removeDuplicates();
+    std::sort(paths.begin(), paths.end());
+    cache.insert(key, paths);
+    return paths;
 }
 
 Selection findProfiles(const QString &cameraMake, const QString &cameraModel,
@@ -1631,12 +1708,13 @@ Selection findProfiles(const QString &cameraMake, const QString &cameraModel,
 }
 
 bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,
-              double whiteBalanceKelvin, QString *error)
+              double whiteBalanceKelvin, QString *error,
+              const DcpRenderOptions &options)
 {
     DcpProfile profile;
     if (!profile.load(fileName, error))
         return false;
-    return profile.apply(cameraRgb, whiteBalanceKelvin, error);
+    return profile.apply(cameraRgb, whiteBalanceKelvin, error, options);
 }
 
 bool applyLcp(const QString &fileName, cv::Mat &linearRgb,

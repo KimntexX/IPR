@@ -311,6 +311,23 @@ export :
 
 Les conversions finales et la quantification dépendent du format d'affichage ou d'export ; les transformations de développement et les réglages sont partagés. Le DNG contient un rendu RGB linéaire 16 bits avec les réglages intégrés : il n'est pas une copie du RAW mosaïque source et ne conserve donc pas sa latitude de développement ni ses métadonnées de prise de vue. Le dialogue de sauvegarde est prérempli avec `nom-source-IPR.<format>` dans le dossier de la source. Le backend accepte les URLs `file:` et les chemins absolus natifs que certains dialogues Windows retournent sous la forme `C:/…`. L'appel d'export capture l'image source et les réglages avant le travail asynchrone, de sorte que le rendu utilise un instantané cohérent même si l'interface change ensuite.
 
+### Précision du transfert sRGB de sortie — correctif du 7 octobre 2026
+
+`ColorPipeline::toSrgb()` conserve le gamut mapping existant puis applique
+la fonction de transfert sRGB directement aux canaux RGB flottants :
+`12,92 × C` pour `C ≤ 0,0031308`, sinon `1,055 × C^(1/2,4) − 0,055`.
+La quantification 16 bits intervient ensuite, une seule fois. Alpha reste
+linéaire et non prémultiplié. L'image encodée est marquée ICC sRGB ; la
+conversion ICC des images sources reste inchangée. Cette opération est
+commune à l'aperçu et aux sorties JPEG/PNG/TIFF, pas à la branche DNG linéaire.
+
+L'ancien chemin quantifiait d'abord en linéaire 16 bits puis utilisait une
+conversion entière Qt à précision de table réduite. Dans notre environnement,
+les codes linéaires 1–15 devenaient zéro. Le nouveau chemin rend 13 pour
+le code 1 et 194 pour le code 15. Une rampe exhaustive de 65 536 entrées
+vérifie monotonie, extrêmes, neutralité RGB et conservation alpha, avec une
+tolérance maximale d'un code face à la formule analytique.
+
 ### Proxy d'édition pour l'aperçu interactif
 
 `renderWorkingImage()` recalcule l'intégralité du pipeline à chaque modification de réglage ; son coût est donc proportionnel au nombre de pixels traités. Pour l'aperçu, `ImageEditor::startRender()` ne part pas de l'image source pleine résolution (`m_original`) mais d'un second tampon, `m_editProxy`, produit par `ImageEditor::buildEditProxy()` :

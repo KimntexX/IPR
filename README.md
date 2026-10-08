@@ -80,6 +80,11 @@ modifications non commités. Premier passage, grosse modification et CI GitHub :
 suite complète. Pour forcer celle-ci : `bash scripts/build-windows.sh --full-tests`.
 Voir [les prérequis, règles et options](docs/architecture/tests-cibles-et-build-windows.md).
 
+Le build produit aussi `iprGenerateTests.exe` pour générer automatiquement les
+variantes de validation avec le moteur d'IPR, sans écrire les sidecars.
+Voir [le guide du générateur](docs/validation/tools/generateur-images-tests.md)
+et son lanceur Windows `scripts/generate-test-images.ps1`.
+
 ### Tests (Linux/WSL, validation complète)
 
 ```sh

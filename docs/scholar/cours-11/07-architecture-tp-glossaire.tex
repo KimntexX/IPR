@@ -1,0 +1,553 @@
+\part{Architecture logicielle, diagnostic et travaux pratiques}
+\section{Chaîne d'encodage et chaîne de décodage}
+\subsection{Encoder une image développée}
+Un export doit définir son contrat avant de choisir un
+codec : dimensions, orientation, espace couleur, fonction
+de transfert, profondeur, alpha et métadonnées. Une chaîne
+conceptuelle correcte est : terminer les traitements dans
+leur domaine approprié, effectuer le rendu de sortie,
+convertir les couleurs, appliquer l'encodage de transfert,
+quantifier, compresser puis écrire les structures et les
+métadonnées cohérentes.
+
+Le codec peut effectuer lui-même certaines de ces opérations.
+Il faut connaître son API pour ne pas les appliquer deux
+fois. Une conversion RGB vers YCbCr peut être gérée par
+l'encodeur JPEG ; une bibliothèque TIFF peut attendre
+des octets déjà organisés comme les tags le décrivent.
+
+L'écriture devrait utiliser un fichier temporaire dans
+un emplacement approprié, vérifier les erreurs puis
+publier le résultat complet. Une taille non nulle ne
+prouve pas que l'écriture est terminée. En cas de conflit
+de nom, une stratégie d'incrémentation doit tester le
+nom final complet et préserver les fichiers existants.
+L'atomicité exacte dépend du système de fichiers et de
+l'opération de publication choisie.
+
+\subsection{Décoder une image rendue}
+Le lecteur vérifie la structure, choisit le codec,
+reconstruit les composantes, interprète leur type,
+leur couleur et leur alpha, applique l'orientation
+si demandée et produit un tampon interne. La conversion
+vers l'écran vient ensuite. Il faut savoir si la
+bibliothèque réalise déjà orientation, gestion ICC,
+conversion de profondeur ou prémultiplication.
+
+Un contrat comme « RGBA float32 linéaire sRGB, alpha droit,
+orientation appliquée » est beaucoup plus utile que
+« une image OpenCV ». Les erreurs inter-modules viennent
+souvent d'informations restées implicites.
+
+\section{Mathématiques de traitement : une carte pour se repérer}
+\subsection{Convolution et séparation fréquentielle}
+Un filtre discret linéaire peut s'écrire
+\begin{equation}
+J[x,y]=\sum_{u,v}K[u,v]I[x-u,y-v].
+\end{equation}
+Un noyau de moyenne réduit des variations rapides et
+du bruit, mais aussi des détails. Un noyau passe-haut
+réagit aux contours et au bruit. Les conditions aux
+bords, répétition, symétrie ou remplissage, font partie
+de l'algorithme et peuvent créer des différences de test.
+
+La transformée de Fourier discrète 2D est
+\begin{equation}
+F[k,\ell]=\sum_{x=0}^{W-1}\sum_{y=0}^{H-1}
+I[x,y]e^{-2\pi i(kx/W+\ell y/H)}.
+\end{equation}
+Elle décompose des motifs en fréquences globales ;
+les ondelettes ajoutent une localisation et des
+échelles. FFT désigne un algorithme rapide pour
+calculer une transformée, pas un filtre en soi.
+
+\subsection{Accentuation et débruitage}
+Une accentuation classique utilise
+$J=I+a(I-G_\sigma*I)$ : elle ajoute une différence
+entre image et version floutée. Le paramètre $a$
+augmente aussi le bruit et peut créer des halos.
+L'ordre débruitage/netteté change donc le résultat.
+
+Le débruitage est un problème d'estimation : retrouver
+une image plausible à partir de mesures bruitées.
+Un objectif simplifié est
+\begin{equation}
+\widehat I=\arg\min_J\left[
+\frac{1}{2\sigma^2}\|Y-J\|_2^2+\lambda\mathcal R(J)\right].
+\end{equation}
+Le premier terme attache la solution aux données,
+le second impose une régularité ou un a priori.
+Les méthodes non locales, bayésiennes ou apprises
+diffèrent notamment par cet a priori et leur modèle
+de bruit. Un bruit de photons dépend du signal ;
+un modèle gaussien constant n'est pas toujours suffisant.
+Les cours 05, 08 et 10 développent les outils liés.
+
+\subsection{Géométrie et rééchantillonnage}
+Une transformation affine s'écrit en coordonnées
+homogènes :
+\begin{equation}
+\begin{pmatrix}x'\\y'\\1\end{pmatrix}=
+\begin{pmatrix}a&b&t_x\\c&d&t_y\\0&0&1\end{pmatrix}
+\begin{pmatrix}x\\y\\1\end{pmatrix}.
+\end{equation}
+Une homographie remplace aussi la dernière ligne,
+puis nécessite une division par la troisième
+coordonnée. Pour produire une grille de sortie
+sans trous, on utilise souvent la transformation
+inverse : pour chaque pixel cible, chercher sa
+position source et interpoler.
+
+Un recadrage entier peut simplement changer les
+bornes. Une rotation arbitraire, une correction
+de perspective ou de distorsion impose généralement
+un rééchantillonnage. Les conventions de centre
+de pixel et le filtre doivent être identiques
+pour comparer deux implémentations au pixel près.
+
+\section{Aperçus, proxies, caches et performances}
+\subsection{Pourquoi une image peut apparaître en deux temps}
+Un aperçu intégré est rapide à afficher, mais représente
+un rendu déjà calculé, parfois dans une résolution
+et un profil différents. Le moteur peut ensuite
+remplacer cet aperçu par son développement. Ce
+changement ne signifie pas nécessairement qu'un
+filtre utilisateur a été appliqué.
+
+Un proxy est une représentation réduite choisie
+pour l'interaction. Il peut accélérer le zoom
+global et les réglages, mais ne suffit pas à
+juger du bruit ou de la netteté à l'échelle native.
+Un zoom 100\,\% du proxy n'est pas le 100\,\%
+du RAW pleine résolution.
+
+\subsection{Ce qu'une clé de cache doit distinguer}
+Une clé robuste inclut l'identité de la source,
+le niveau de résolution, l'orientation, les
+paramètres de décodage, la calibration ou son
+identité, la recette de rendu et la version
+de l'étape concernée. Sinon, changer de profil
+peut réutiliser une image développée avec l'ancien.
+
+Un cache borné LRU élimine les entrées les moins
+récemment utilisées selon un budget explicite.
+Le budget doit être en octets ou en coût estimé,
+pas seulement en nombre d'images de tailles
+potentiellement différentes. Précharger des
+vignettes ne justifie pas de garder indéfiniment
+tous les RAW développés.
+
+\subsection{Mesurer l'ouverture}
+Chronométrer séparément : recherche des profils,
+lecture, décompression, dématriçage, transformations,
+copie mémoire, transfert GPU et affichage. Comparer
+le premier passage, avec caches froids, aux suivants,
+avec caches chauds. Une mesure globale de 30 secondes
+ne permet pas de désigner le dématriçage ou le disque
+comme responsable sans autre observation.
+
+Les en-têtes et métadonnées peuvent être lus sans
+développement complet. Une vignette peut provenir
+du fichier ou d'un cache. L'architecture doit
+prévoir annulation et priorité des demandes :
+une image quittant la vue ne doit pas monopoliser
+le calcul au détriment de celle que l'on ouvre.
+
+\section{Sécurité, robustesse et archivage}
+\subsection{Un fichier image est une entrée non fiable}
+Valider tailles, offsets, profondeur, nombre de
+canaux, ratio de décompression et profondeur
+d'imbrication. Limiter mémoire et durée de calcul.
+Une bombe de décompression est un fichier compact
+qui demande énormément de mémoire après expansion.
+Un graphe de répertoires peut contenir une boucle.
+Un profil embarqué peut lui aussi être malformé.
+
+Les CRC n'empêchent pas un attaquant de fabriquer
+un fichier cohérent et malveillant. Les bibliothèques
+doivent être maintenues, testées sur corpus variés
+et éventuellement isolées selon le contexte. Le
+fuzzing explore des entrées modifiées pour trouver
+des plantages ou comportements indéfinis ; il
+complète les tests de conformité, sans les remplacer.
+
+\subsection{Vie privée et provenance}
+Un export peut révéler lieu, date, numéro de série,
+nom de propriétaire et parfois davantage de contexte
+qu'attendu. Une option de suppression des métadonnées
+doit distinguer données privées et informations
+nécessaires à l'affichage, telles qu'un profil ICC.
+Supprimer aveuglément tous les tags peut modifier
+l'interprétation de l'image.
+
+\subsection{Archivage durable}
+Conserver original, sauvegardes vérifiées, hashes,
+recette, profils autorisés et versions significatives.
+Un rendu TIFF peut préserver une apparence stabilisée,
+mais ne remplace pas toutes les possibilités du RAW.
+Un DNG peut améliorer l'interopérabilité sans garantir
+que chaque métadonnée constructeur aura été conservée
+ou interprétée de manière identique. Tester une
+restauration est plus probant que constater qu'une
+copie existe.
+
+\section{Diagnostic : quels nombres comparer ?}
+\subsection{Trois niveaux de test}
+\begin{enumerate}
+\item \textbf{Binaire :} signature, structure, offsets,
+CRC éventuels, hash et longueur. Cela vérifie le fichier.
+\item \textbf{Échantillons :} dimensions, type,
+orientation, tableau décodé et round-trip. Cela vérifie
+les données reconstruites.
+\item \textbf{Rendu :} profil, fonction de transfert,
+géométrie, luminance, couleurs et régions. Cela vérifie
+l'interprétation et les traitements.
+\end{enumerate}
+Un round-trip sans perte doit conserver exactement
+les échantillons du domaine déclaré. Un rendu RAW
+avec dématriçage n'est pas un round-trip réversible
+vers la mosaïque d'origine.
+
+\subsection{MAE, RMSE et PSNR}
+Pour $N$ échantillons comparables $a_i,b_i$,
+\begin{align}
+\mathrm{MAE}&=\frac1N\sum_i|a_i-b_i|,\\
+\mathrm{RMSE}&=\sqrt{\frac1N\sum_i(a_i-b_i)^2},\\
+\mathrm{PSNR}&=20\log_{10}\frac{L_{\max}}{\mathrm{RMSE}}.
+\end{align}
+La plage $L_{\max}$ et le domaine, codes sRGB ou
+valeurs linéaires par exemple, doivent être précisés.
+Une erreur nulle donne un PSNR infini dans cette
+définition ; il faut le représenter explicitement
+dans les rapports plutôt que provoquer une division
+par zéro.
+
+Un décalage d'un pixel sur un contour peut produire
+une forte MAE sans grande différence de couleur
+locale. Une moyenne globale peut masquer une
+dégradation importante sur la peau ou les ombres.
+Mesurer des régions fixes et visualiser les erreurs.
+
+\subsection{Luminance et erreur colorimétrique}
+La luminance relative $Y$ se calcule à partir des
+composantes linéaires avec les poids de l'espace,
+pas directement avec les codes non linéaires.
+Pour des moyennes strictement positives,
+\begin{equation}
+\Delta e_Y=\log_2\frac{\overline Y_{\text{référence}}}
+{\overline Y_{\text{test}}}
+\end{equation}
+décrit un rapport en EV. Cela ne prouve pas qu'un
+curseur d'exposition suffira à corriger le rendu.
+
+La distance Euclidienne CIELAB, notée $\Delta E_{76}$,
+n'est pas uniformément perceptuelle. CIEDE2000
+pondère et couple différemment les écarts ; sa
+mise en œuvre doit être testée avec des paires
+de référence, comme celles de Sharma et collègues~\cite{ciedeimages}.
+Un $\Delta E$ exige une conversion colorimétrique
+cohérente et ne constitue pas seul une évaluation
+du détail ou du bruit.
+
+\subsection{Clipping et fractions sombres}
+« Au moins un canal proche de zéro » n'est pas
+« pixel noir ». Une couleur rouge pure possède
+deux canaux nuls sans être noire. Il faut distinguer
+fraction de canaux, fraction de pixels avec un
+canal écrêté, fraction tous canaux écrêtés et
+seuil de luminance. Pour une sortie 16 bits,
+indiquer explicitement un seuil comme $1/65535$.
+
+Le bruit estimé par MAD est la médiane des écarts
+absolus à une médiane. Sur un coefficient gaussien
+centré, $\sigma\approx\mathrm{MAD}/0{,}67448975$.
+Il faut choisir une zone ou une transformation
+qui sépare suffisamment le bruit de la texture.
+Une faible dispersion après flou peut seulement
+signifier que l'on a détruit du détail.
+
+\section{Travaux pratiques reproductibles}
+\subsection{Lancer le laboratoire autonome}
+Depuis la racine du dépôt, avec Python 3 :
+\begin{verbatim}
+python docs/scholar/references/images-exemples.py
+\end{verbatim}
+Sans option, il affiche des calculs et lance ses
+autotests, sans créer de fichier. Il n'utilise
+que la bibliothèque standard Python. Pour fabriquer
+trois images synthétiques dans un nouveau dossier :
+\begin{verbatim}
+python docs/scholar/references/images-exemples.py \
+  --output-dir build-scholar-images-tp
+\end{verbatim}
+La continuation par antislash ci-dessus est celle
+d'un shell POSIX ; sous PowerShell, écrire la
+commande sur une ligne ou utiliser un accent grave.
+Le dossier existant est refusé. Les photographies
+du corpus et les profils Adobe ne sont pas modifiés.
+
+Les trois fichiers montrent les mêmes deux pixels
+rouge et vert dans PPM, PNG et TIFF. Le programme
+compare les pixels de son PNG avec ceux d'origine,
+teste les cinq filtres et vérifie les offsets TIFF.
+Son décodeur PNG est volontairement limité à RGB
+8 bits non entrelacé et refuse les autres variantes.
+Il ne faut pas le brancher sur la production.
+
+\subsection{Observer les octets}
+\begin{verbatim}
+python docs/scholar/references/images-exemples.py \
+  --inspect build-scholar-images-tp/deux-pixels.tiff
+\end{verbatim}
+Cette option lit seulement les 64 premiers octets
+et la taille. Comparer la signature au tableau
+TIFF de la partie IV. Ouvrir ensuite les trois
+fichiers dans un lecteur compatible et vérifier
+qu'ils montrent bien deux pixels : rouge puis vert.
+Une application peut agrandir ces pixels par
+interpolation ; pour observer leurs codes, préférer
+une lecture numérique ou un zoom sans lissage.
+
+\subsection{Lire les métadonnées d'une photographie réelle}
+Avec ExifTool installé, en lecture seule :
+\begin{verbatim}
+exiftool -G1 -a -s photo.CR3
+exiftool -G1 -a -s photo.tiff
+\end{verbatim}
+Adapter l'extension à Sony ou Nikon. Relever les
+dimensions, modèle, ISO, orientation, profondeur,
+profil, compression, gains et informations de
+développement disponibles. Les doublons sont
+volontairement affichés avec leurs groupes.
+Le cours ne recommande aucune commande d'écriture
+de métadonnées sur les originaux.
+
+\subsection{Éprouver la réversibilité}
+Le laboratoire compacte $[\texttt{ABC},\texttt{123}]$
+sur 12 bits et obtient \texttt{AB C1 23}. Deux
+échantillons font 24 bits, donc trois octets.
+Modifier un seul bit et observer quelle mesure
+change. Ce TP illustre un empaquetage MSB simple,
+pas le format natif d'un CR3 ou d'un ARW.
+
+Pour la compression, comparer l'encodage d'une
+plage uniforme et de données pseudo-aléatoires.
+Comparer les tailles de fichiers, puis vérifier
+les échantillons décodés. Ne pas prendre le ratio
+de compression comme un score de qualité visuelle.
+
+\subsection{Observer une perte sans logiciel photographique}
+Calculer la DCT d'un bloc constant 12 : le coefficient
+DC vaut 96. Quantifier ce coefficient avec $Q=20$
+donne 5, puis une reconstruction DC=100. Le bloc
+inverse devient 12,5 partout, avant les arrondis
+de sortie. L'erreur de 0,5 n'est pas un défaut
+de la transformée inverse : elle a été introduite
+par la quantification.
+
+\subsection{Protocole comparatif RAW minimal}
+Conserver un original RAW, un aperçu extrait si
+disponible et deux développements explicitement
+paramétrés. Désactiver ou harmoniser l'optique,
+le débruitage, la netteté et les réglages ; choisir
+le même profil cible et documenter As Shot.
+Exporter en TIFF sRGB 16 bits sans changement
+de dimensions. Vérifier métadonnées et géométrie
+avant de calculer MAE et différences Lab.
+Ce protocole rapproche les conditions ; il ne
+garantit pas que les moteurs ont le même rendu
+de base ni qu'ils sont physiquement fidèles.
+
+\section{Exercices corrigés}
+\subsection*{1. Estimer la mémoire}
+\emph{Question.} Une photo $8000\times6000$ est chargée
+en RGB uint16 puis en RGBA float32. Quelles tailles ?
+\emph{Correction.} Il y a 48 millions de pixels.
+RGB uint16 : $48\times10^6\times6=288$ MB.
+RGBA float32 : $48\times10^6\times16=768$ MB.
+Garder les deux représente 1056 MB avant caches
+et intermédiaires. La taille compressée n'intervient
+pas dans ce calcul.
+
+\subsection*{2. Lire un entier}
+\emph{Question.} Que vaut \texttt{00 10} sur 16 bits ?
+\emph{Correction.} Big-endian : 16. Little-endian :
+4096. Le fichier doit annoncer sa convention.
+
+\subsection*{3. Calculer une adresse}
+\emph{Question.} RGB uint16, stride 40, pixel $(3,2)$,
+canal 1, origine $A_0$ ?
+\emph{Correction.} $A_0+2\times40+3\times3\times2+
+1\times2=A_0+100$. Ne pas remplacer le stride
+par une largeur supposée.
+
+\subsection*{4. Normaliser un RAW}
+\emph{Question.} $D=4096$, $B=1024$, $W=15360$.
+\emph{Correction.} $(4096-1024)/(15360-1024)
+=3072/14336=3/14\approx0{,}214286$.
+Utiliser 65535 au dénominateur parce que le
+tampon est uint16 serait une erreur.
+
+\subsection*{5. Appliquer un EV}
+\emph{Question.} $L=0{,}18$, réglage $+2$ EV.
+\emph{Correction.} $L'=0{,}72$. Encoder seulement
+ensuite pour une sortie sRGB ; multiplier
+directement le code 0,46136 par quatre écrêterait
+abusivement le résultat.
+
+\subsection*{6. Expliquer un hash différent}
+\emph{Question.} Deux PNG donnent les mêmes pixels,
+mais ont des hashes différents. Est-ce une perte ?
+\emph{Correction.} Pas nécessairement. Filtres,
+compression, chunks ou métadonnées peuvent différer.
+Il faut distinguer identité du fichier et égalité
+de ses pixels interprétés.
+
+\subsection*{7. Interpréter le clipping}
+\emph{Question.} Le pixel linéaire $(1,0,0)$ est-il noir ?
+\emph{Correction.} Non. Il est saturé en rouge dans
+la représentation considérée, avec deux canaux
+nuls. Un compteur « au moins un canal bas »
+ne mesure donc pas le nombre de pixels noirs.
+
+\subsection*{8. Comparer deux TIFF}
+\emph{Question.} Même scène, même taille, forte MAE.
+Que vérifier avant de corriger les couleurs ?
+\emph{Correction.} Orientation, recadrage d'un
+pixel, optique, dématriçage, profil ICC, fonction
+de transfert, profondeur et normalisation, puis
+réglages et rendu de base. Une taille identique
+ne démontre pas l'alignement.
+
+\subsection*{9. Comprendre « sans perte »}
+\emph{Question.} Un RAW réduit est compressé sans
+perte. Peut-on récupérer la résolution originale ?
+\emph{Correction.} Pas en général. Le codec peut
+conserver exactement une représentation déjà
+réduite. La garantie porte sur son entrée.
+
+\subsection*{10. Identifier une fausse conversion}
+\emph{Question.} Renommer TIFF en DNG ou assigner
+sRGB à des codes Adobe RGB convertit-il les données ?
+\emph{Correction.} Non. Le premier change un nom,
+le second une interprétation. Une conversion
+nécessite des transformations et structures
+cohérentes avec le résultat.
+
+\subsection*{11. Diagnostiquer une rotation double}
+\emph{Question.} Un export portrait apparaît
+tourné encore de 90 degrés. Cause possible ?
+\emph{Correction.} Les pixels ont pu être
+réorientés sans remettre l'orientation à l'identité.
+Vérifier le tableau et la métadonnée séparément.
+
+\subsection*{12. Distinguer précision et dynamique}
+\emph{Question.} Convertir un JPEG 8 bits en
+TIFF 16 bits récupère-t-il les hautes lumières
+perdues ?
+\emph{Correction.} Non. Cela augmente la précision
+disponible pour les traitements futurs, sans
+reconstituer les valeurs déjà écrêtées ou quantifiées.
+
+\section{Glossaire}
+\begin{longtable}{p{3.4cm}p{11.2cm}}
+\toprule Terme & Définition dans ce cours \\ \midrule
+ADC / CAN & Convertisseur analogique-numérique. \\
+Aliasing & Repliement de fréquences lié à un échantillonnage insuffisant. \\
+Alpha & Information de couverture/opacité ; droit ou prémultiplié. \\
+Aperçu & Image déjà développée, souvent embarquée et réduite. \\
+Bit / octet & Chiffre binaire / groupe de huit bits. \\
+Bit depth & Nombre de bits de représentation par échantillon. \\
+Black level & Offset associé au signal noir dans une convention de codes. \\
+BMFF & Famille d'organisation de fichiers média en boîtes. \\
+Canal & Champ de valeurs : couleur, alpha, profondeur ou autre grandeur. \\
+CFA & Mosaïque de filtres colorés du capteur. \\
+Chroma & Composantes décrivant une différence colorée dans un modèle donné. \\
+Clipping & Écrêtage de valeurs à une limite. \\
+Codec & Règles et implémentation de codage/décodage d'une représentation. \\
+Conteneur & Structure organisant flux, propriétés et relations. \\
+CRC & Contrôle d'intégrité destiné notamment aux erreurs accidentelles. \\
+DCP & Profil de caméra de la famille DNG ; matrices et rendu possibles. \\
+DCT & Transformée en cosinus discrète. \\
+Dématriçage & Estimation de composantes couleur absentes du CFA. \\
+DEFLATE & Compression combinant références LZ77 et codage Huffman. \\
+Dithering & Signal ajouté pour rendre certaines erreurs de quantification moins structurées. \\
+DNG & Format de négatif numérique fondé sur TIFF et enrichi de calibrations. \\
+Endianness & Ordre des octets d'une valeur multioctet. \\
+Entropie & Quantité moyenne d'information dans un modèle probabiliste. \\
+EOTF / OETF & Relations de transfert vers la lumière d'affichage / vers un signal encodé. \\
+EV & Unité logarithmique d'exposition ; un EV correspond à un facteur deux. \\
+Exif & Conventions de données photographiques et structures associées. \\
+FFT & Famille d'algorithmes rapides de transformée de Fourier discrète. \\
+Gamut & Ensemble des couleurs représentables ou reproductibles. \\
+Gain & Facteur multiplicatif, à distinguer d'une nouvelle acquisition de photons. \\
+HDR / SDR & Contextes de dynamique étendue / standard, à préciser selon l'étape. \\
+ICC & Famille de profils et contrats de gestion colorimétrique. \\
+IFD & Répertoire de champs d'image dans TIFF et familles apparentées. \\
+Illuminant & Description spectrale ou normalisée d'un éclairage de référence. \\
+IPTC & Conventions éditoriales, descriptives et administratives des médias. \\
+JPEG & Famille de procédés de codage ; le mode courant utilise DCT et pertes. \\
+LCP & Profil de corrections d'objectif, distinct d'un profil couleur caméra. \\
+Linéaire & Proportionnel à une grandeur explicitement définie. \\
+Luma / luminance & Signal pondéré souvent non linéaire / grandeur colorimétrique Y. \\
+LUT & Table de correspondance, éventuellement multidimensionnelle. \\
+MAD & Médiane des écarts absolus à une médiane. \\
+MakerNote & Bloc de métadonnées propre au constructeur. \\
+Métamérisme & Réponses identiques malgré des spectres différents. \\
+MTF / PSF & Transmission des contrastes / étalement spatial d'un point. \\
+Offset & Position binaire relative à une origine ; ou décalage additif selon le contexte. \\
+Optical-black & Zone de capteur masquée utilisée pour caractériser le noir. \\
+PCS & Espace de connexion des profils d'une architecture ICC. \\
+Photosite & Élément spatial de mesure du capteur. \\
+Pixel & Position/élément d'une représentation matricielle, dont le sens dépend du stade. \\
+Planar / interleaved & Composantes en plans séparés / entrelacées. \\
+Profil & Description de transformation ; son rôle dépend du type ICC, DCP, etc. \\
+Proxy & Représentation réduite pour l'interaction. \\
+Quantification & Passage à un ensemble discret de valeurs. \\
+RAW & Famille de données photographiques proches des mesures, pas un codec unique. \\
+Résidu & Différence entre valeur et prédiction. \\
+ROI & Région d'intérêt définie dans un repère et un domaine précis. \\
+Round-trip & Encodage puis décodage avec comparaison au domaine initial. \\
+Sidecar & Fichier associé portant paramètres ou métadonnées. \\
+SNR & Rapport signal/bruit, avec conventions à préciser. \\
+sRGB & Espace RGB normalisé avec primaires, blanc et transfert définis. \\
+Stride / pitch & Distance mémoire entre deux débuts de ligne. \\
+Tag & Champ identifié dans une structure de données. \\
+Tone mapping & Adaptation du rendu tonal vers une capacité de sortie. \\
+Tuile / bande & Bloc spatial rectangulaire / portion horizontale de stockage. \\
+White level & Niveau de référence de saturation ou normalisation, selon le contexte. \\
+XMP & Modèle extensible de métadonnées, souvent sérialisé en RDF/XML. \\
+XYZ / Lab & Espaces colorimétriques, non simples synonymes de RGB. \\
+\bottomrule
+\end{longtable}
+
+\section{Bibliographie : quoi lire, dans quel ordre ?}
+Pour la structure binaire, commencer par les exemples de
+ce cours puis les spécifications PNG, TIFF et Netpbm.
+Pour la compression, suivre les calculs de prédiction et
+DCT, puis T.81 et les RFC zlib/DEFLATE. Pour la couleur,
+lire la fiche sRGB et l'architecture ICC avant les tags
+avancés DNG. Pour les capteurs, EMVA fournit un cadre de
+mesure plutôt qu'un simple classement commercial.
+
+Les manuels Sony et Nikon de cette bibliographie sont
+volontairement attachés à des modèles. Les ressources
+Clévy et les décodeurs LibRaw/RawSpeed donnent accès aux
+détails des RAW, mais il faut lire leurs limites et leurs
+licences. Les branches de code en ligne évoluent : conserver
+un commit et les fichiers de test pour une investigation
+reproductible de production.
+
+La ressource historique CR2 \url{http://lclevy.free.fr/cr2/}
+reste intéressante, mais son accès direct a échoué pendant
+la recherche. Le dépôt de l'auteur \texttt{lclevy/libcraw2}
+est donc proposé comme point d'entrée alternatif, sans
+prétendre avoir relu une page inaccessible. Certains
+catalogues de tags ExifTool limitent également l'accès
+automatisé ; leur index et les outils locaux permettent
+de poursuivre la lecture.
+
+\resultat{Pour comprendre une image, toujours demander : que
+mesurent les nombres, comment sont-ils rangés, quelles transformations
+ont déjà été faites, et quelles informations faut-il encore appliquer
+avant de les afficher ?}

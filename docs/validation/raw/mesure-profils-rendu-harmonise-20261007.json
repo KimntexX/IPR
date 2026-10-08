@@ -1,0 +1,5017 @@
+{
+  "schema": 1,
+  "profile_manifest_sha256": "2dd36d228143144460ae351b80e351793e7d4aa48840e1e487ed2a6b4a5e08c7",
+  "reference_sha256": "376f3226e54b6c4a2bdafb90722713b241833bc5b9945a89295dcb393d0c7af9",
+  "lr_suffix": "-2",
+  "baseline_geometry": "without_lcp",
+  "method": "Native grid; same 0/1 pixel crop as v3. Profile variants use actual engine. LOO fits on five scenes, evaluation on sixth. Lab-L substitution is an oracle, not a render.",
+  "profiles": [
+    {
+      "path": "/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS R6 Mark III Adobe Standard.dcp",
+      "sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+      "name": "Adobe Standard",
+      "tags_present": [
+        50708,
+        50721,
+        50722,
+        50778,
+        50779,
+        50932,
+        50936,
+        50937,
+        50938,
+        50939,
+        50941,
+        50964,
+        50965,
+        50981,
+        50982
+      ],
+      "forward_matrices": [
+        true,
+        true
+      ],
+      "illuminants": [
+        [
+          17
+        ],
+        [
+          21
+        ]
+      ],
+      "hue_sat_dimensions": [
+        90,
+        30,
+        1
+      ],
+      "look_dimensions": [
+        36,
+        8,
+        16
+      ],
+      "hue_sat_encoding": [
+        0
+      ],
+      "look_encoding": [
+        0
+      ],
+      "baseline_exposure_offset_ev": [
+        0
+      ],
+      "tone_curve_points": 0,
+      "default_black_render": null,
+      "dynamic_range": null
+    },
+    {
+      "path": "/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+      "sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "name": "Camera Neutral",
+      "tags_present": [
+        50708,
+        50721,
+        50722,
+        50778,
+        50779,
+        50932,
+        50936,
+        50940,
+        50941,
+        50942,
+        50964,
+        50965,
+        50981,
+        50982,
+        51108,
+        51109,
+        51110
+      ],
+      "forward_matrices": [
+        true,
+        true
+      ],
+      "illuminants": [
+        [
+          17
+        ],
+        [
+          21
+        ]
+      ],
+      "hue_sat_dimensions": null,
+      "look_dimensions": [
+        90,
+        16,
+        16
+      ],
+      "hue_sat_encoding": [
+        0
+      ],
+      "look_encoding": [
+        1
+      ],
+      "baseline_exposure_offset_ev": [
+        -0.5
+      ],
+      "tone_curve_points": 128,
+      "default_black_render": [
+        1
+      ],
+      "dynamic_range": null
+    },
+    {
+      "path": "/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Standard.dcp",
+      "sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+      "name": "Camera Standard",
+      "tags_present": [
+        50708,
+        50721,
+        50722,
+        50778,
+        50779,
+        50932,
+        50936,
+        50940,
+        50941,
+        50942,
+        50964,
+        50965,
+        50981,
+        50982,
+        51108,
+        51109,
+        51110
+      ],
+      "forward_matrices": [
+        true,
+        true
+      ],
+      "illuminants": [
+        [
+          17
+        ],
+        [
+          21
+        ]
+      ],
+      "hue_sat_dimensions": null,
+      "look_dimensions": [
+        90,
+        16,
+        16
+      ],
+      "hue_sat_encoding": [
+        0
+      ],
+      "look_encoding": [
+        1
+      ],
+      "baseline_exposure_offset_ev": [
+        -0.5
+      ],
+      "tone_curve_points": 128,
+      "default_black_render": [
+        1
+      ],
+      "dynamic_range": null
+    }
+  ],
+  "scenes": [
+    {
+      "scene": "6V1A0007",
+      "lr_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0007-2.tif",
+        "bytes": 193793768,
+        "size": [
+          4640,
+          6960
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A0007.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "Custom",
+          "Temperature": "5200",
+          "Tint": "0",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "0",
+          "LensProfileEnable": "0",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "5AA58CD783D0A176436C87DA6023C018",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "adc26d18c73bd565396ee7f834d41bddc3e8f2c415d76913b691f980ef55dfc0",
+        "mtime_utc": "2026-10-07T14:01:44.229948+00:00"
+      },
+      "crop_candidates": [
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.06774732921921153
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.12264594398656471
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.19392465638453854
+        },
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.21029522248120808
+        }
+      ],
+      "harmonized_warnings": [
+        "WhiteBalance: expected As Shot, got Custom"
+      ],
+      "new_vs_old_lr": {
+        "samples": 504600,
+        "delta_e00_mean": 6.188953531701017,
+        "delta_e00_median": 3.6869512416375807,
+        "delta_e00_p95": 18.419231718952553,
+        "delta_e76_mean": 6.709020219813951,
+        "delta_lab_mean_lr_minus_ipr": [
+          -1.7759950550325,
+          -1.130718456895259,
+          0.8652577953035957
+        ],
+        "rgb_mae_normalized": 0.05669647637251138,
+        "ipr_lab_mean": [
+          61.21821759771626,
+          -1.9198814108389068,
+          -8.777578340539945
+        ],
+        "lr_lab_mean": [
+          59.44222254268381,
+          -3.0505998677340576,
+          -7.912320545236103
+        ],
+        "ipr_y_mean": 0.3413820126112279,
+        "lr_y_mean": 0.31996126753703114,
+        "delta_chroma_mean": -0.4513511447896813,
+        "hue_abs_circular_mean_degrees": 13.25886805434748,
+        "hue_usable_fraction": 0.9349702734839477,
+        "lr_neutral_fraction": 0.046139516448672216,
+        "ab_distance_on_lr_neutral_mean": 4.354143502067297,
+        "ipr_any_channel_low_fraction": 0.0031728101466508125,
+        "lr_any_channel_low_fraction": 0.003523583036068173,
+        "ipr_any_channel_high_fraction": 1.9817677368212447e-06,
+        "lr_any_channel_high_fraction": 1.9817677368212447e-06
+      },
+      "lr_xmp_rendering": {
+        "ProcessVersion": "15.4",
+        "WhiteBalance": "Custom",
+        "Temperature": "5200",
+        "Tint": "0",
+        "Exposure2012": "0.00",
+        "LensProfileEnable": "0",
+        "ShadowTint": "0",
+        "ToneCurveName2012": "Linear",
+        "CameraProfile": "Adobe Standard",
+        "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+        "LensProfileSetup": "LensDefaults",
+        "LensProfileName": "Camera Settings",
+        "LensProfileDigest": "5AA58CD783D0A176436C87DA6023C018",
+        "LensProfileIsEmbedded": "True",
+        "LensProfileDistortionScale": "100",
+        "LensProfileVignettingScale": "100",
+        "CameraRawProfile": "True",
+        "ProfileName": "Camera Settings",
+        "ToneCurvePV2012": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Red": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Green": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Blue": [
+          "0, 0",
+          "255, 255"
+        ]
+      },
+      "profile_variants": [
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 17.889334982573097,
+            "delta_e00_median": 20.494866263556034,
+            "delta_e00_p95": 25.09553381687781,
+            "delta_e76_mean": 20.501666285068403,
+            "delta_lab_mean_lr_minus_ipr": [
+              19.388025698352195,
+              -1.7917895245588342,
+              -1.3320837686236613
+            ],
+            "rgb_mae_normalized": 0.19672344004598943,
+            "ipr_lab_mean": [
+              40.05419684433002,
+              -1.2588103431753421,
+              -6.580236776612447
+            ],
+            "lr_lab_mean": [
+              59.44222254268381,
+              -3.0505998677340576,
+              -7.912320545236103
+            ],
+            "ipr_y_mean": 0.12613649569260094,
+            "lr_y_mean": 0.31996126753703114,
+            "delta_chroma_mean": 1.9936694559990744,
+            "hue_abs_circular_mean_degrees": 12.227399422252432,
+            "hue_usable_fraction": 0.7821997621878716,
+            "lr_neutral_fraction": 0.046139516448672216,
+            "ab_distance_on_lr_neutral_mean": 2.4587278519689026,
+            "ipr_any_channel_low_fraction": 9.908838684106222e-06,
+            "lr_any_channel_low_fraction": 0.003523583036068173,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 3.228253857367167,
+            "delta_e00_median": 2.0944886155852096,
+            "delta_e00_p95": 9.017303457421454,
+            "delta_e76_mean": 3.5619917310834635,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.08099877226639561,
+              -0.027319176951857264,
+              -0.02180834623665694
+            ],
+            "rgb_mae_normalized": 0.026658066325902,
+            "ipr_lab_mean": [
+              39.97319807206487,
+              -1.2314911662234558,
+              -6.558428430375869
+            ],
+            "lr_lab_mean": [
+              40.05419684433002,
+              -1.2588103431753421,
+              -6.580236776612447
+            ],
+            "ipr_y_mean": 0.12554093254076862,
+            "lr_y_mean": 0.12613649569260094,
+            "delta_chroma_mean": -0.016248516151075656,
+            "hue_abs_circular_mean_degrees": 7.667026624421326,
+            "hue_usable_fraction": 0.6997720967102655,
+            "lr_neutral_fraction": 0.18154181529924693,
+            "ab_distance_on_lr_neutral_mean": 2.2609107323396342,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 9.908838684106222e-06,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 17.252432601344392,
+            "delta_e00_median": 20.614787852727165,
+            "delta_e00_p95": 22.155738718519785,
+            "delta_e76_mean": 19.886477135454424,
+            "delta_lab_mean_lr_minus_ipr": [
+              19.469024470619857,
+              -1.8191087015106928,
+              -1.353892114860365
+            ],
+            "rgb_mae_normalized": 0.19349115827981408,
+            "ipr_lab_mean": [
+              39.97319807206487,
+              -1.2314911662234558,
+              -6.558428430375869
+            ],
+            "lr_lab_mean": [
+              59.44222254268381,
+              -3.0505998677340576,
+              -7.912320545236103
+            ],
+            "ipr_y_mean": 0.12554093254076862,
+            "lr_y_mean": 0.31996126753703114,
+            "delta_chroma_mean": 1.977420939847998,
+            "hue_abs_circular_mean_degrees": 9.066177005686084,
+            "hue_usable_fraction": 0.7961216805390409,
+            "lr_neutral_fraction": 0.046139516448672216,
+            "ab_distance_on_lr_neutral_mean": 1.7895467671964225,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.003523583036068173,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 0.0,
+            "delta_e00_median": 0.0,
+            "delta_e00_p95": 0.0,
+            "delta_e76_mean": 0.0,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rgb_mae_normalized": 0.0,
+            "ipr_lab_mean": [
+              39.97319807206487,
+              -1.2314911662234558,
+              -6.558428430375869
+            ],
+            "lr_lab_mean": [
+              39.97319807206487,
+              -1.2314911662234558,
+              -6.558428430375869
+            ],
+            "ipr_y_mean": 0.12554093254076862,
+            "lr_y_mean": 0.12554093254076862,
+            "delta_chroma_mean": 0.0,
+            "hue_abs_circular_mean_degrees": 0.0,
+            "hue_usable_fraction": 0.7967617915180341,
+            "lr_neutral_fraction": 0.17843043995243757,
+            "ab_distance_on_lr_neutral_mean": 0.0,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.0,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "with_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 10.08226816461322,
+            "delta_e00_median": 8.164740042355284,
+            "delta_e00_p95": 21.62520389167852,
+            "delta_e76_mean": 11.638119236821456,
+            "delta_lab_mean_lr_minus_ipr": [
+              9.00333760831132,
+              -2.301579636212678,
+              2.286702689841698
+            ],
+            "rgb_mae_normalized": 0.09872399241693743,
+            "ipr_lab_mean": [
+              50.43888493437325,
+              -0.7490202315214247,
+              -10.199023235077943
+            ],
+            "lr_lab_mean": [
+              59.44222254268381,
+              -3.0505998677340576,
+              -7.912320545236103
+            ],
+            "ipr_y_mean": 0.22600964584812397,
+            "lr_y_mean": 0.31996126753703114,
+            "delta_chroma_mean": -1.6409881956468082,
+            "hue_abs_circular_mean_degrees": 18.589046181430383,
+            "hue_usable_fraction": 0.9322849782005549,
+            "lr_neutral_fraction": 0.046139516448672216,
+            "ab_distance_on_lr_neutral_mean": 4.491353518778323,
+            "ipr_any_channel_low_fraction": 0.00011692429647245343,
+            "lr_any_channel_low_fraction": 0.003523583036068173,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 12.052034953172377,
+            "delta_e00_median": 13.646488460714641,
+            "delta_e00_p95": 17.260841287699368,
+            "delta_e76_mean": 13.86902539659822,
+            "delta_lab_mean_lr_minus_ipr": [
+              10.465686862307129,
+              0.48247093470203634,
+              -3.6405948047020824
+            ],
+            "rgb_mae_normalized": 0.1271376267511599,
+            "ipr_lab_mean": [
+              39.97319807206487,
+              -1.2314911662234558,
+              -6.558428430375869
+            ],
+            "lr_lab_mean": [
+              50.43888493437325,
+              -0.7490202315214247,
+              -10.199023235077943
+            ],
+            "ipr_y_mean": 0.12554093254076862,
+            "lr_y_mean": 0.22600964584812397,
+            "delta_chroma_mean": 3.6184091354948076,
+            "hue_abs_circular_mean_degrees": 10.962903526904164,
+            "hue_usable_fraction": 0.7905350772889418,
+            "lr_neutral_fraction": 0.016726119698771302,
+            "ab_distance_on_lr_neutral_mean": 2.884670037098844,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.00011692429647245343,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "without_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.311328051562787,
+            "delta_e00_median": 7.9756753830033915,
+            "delta_e00_p95": 10.02074484744995,
+            "delta_e76_mean": 9.753692001620824,
+            "delta_lab_mean_lr_minus_ipr": [
+              9.104632424817982,
+              -2.330557596104588,
+              2.2625556792888073
+            ],
+            "rgb_mae_normalized": 0.08479617638022158,
+            "ipr_lab_mean": [
+              50.337590117868444,
+              -0.7200422716296261,
+              -10.174876224525015
+            ],
+            "lr_lab_mean": [
+              59.44222254268381,
+              -3.0505998677340576,
+              -7.912320545236103
+            ],
+            "ipr_y_mean": 0.2250758718464376,
+            "lr_y_mean": 0.31996126753703114,
+            "delta_chroma_mean": -1.6828736066615195,
+            "hue_abs_circular_mean_degrees": 16.166824318580684,
+            "hue_usable_fraction": 0.9402675386444709,
+            "lr_neutral_fraction": 0.046139516448672216,
+            "ab_distance_on_lr_neutral_mean": 2.4672289941535617,
+            "ipr_any_channel_low_fraction": 0.00014070550931430837,
+            "lr_any_channel_low_fraction": 0.003523583036068173,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 10.538981506709382,
+            "delta_e00_median": 11.578199492687826,
+            "delta_e00_p95": 15.109322323408906,
+            "delta_e76_mean": 12.189437204957704,
+            "delta_lab_mean_lr_minus_ipr": [
+              10.364392045801104,
+              0.5114488945938392,
+              -3.616447794149121
+            ],
+            "rgb_mae_normalized": 0.11343231481226969,
+            "ipr_lab_mean": [
+              39.97319807206487,
+              -1.2314911662234558,
+              -6.558428430375869
+            ],
+            "lr_lab_mean": [
+              50.337590117868444,
+              -0.7200422716296261,
+              -10.174876224525015
+            ],
+            "ipr_y_mean": 0.12554093254076862,
+            "lr_y_mean": 0.2250758718464376,
+            "delta_chroma_mean": 3.660294546509518,
+            "hue_abs_circular_mean_degrees": 6.598471471221949,
+            "hue_usable_fraction": 0.7960126833135156,
+            "lr_neutral_fraction": 0.015212049147839872,
+            "ab_distance_on_lr_neutral_mean": 1.3527325704343838,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.00014070550931430837,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 9.069161536479251,
+            "delta_e00_median": 6.614685684535716,
+            "delta_e00_p95": 21.92246521598909,
+            "delta_e76_mean": 10.524163409496078,
+            "delta_lab_mean_lr_minus_ipr": [
+              7.535214169351301,
+              -1.8399466594459901,
+              3.01870631761634
+            ],
+            "rgb_mae_normalized": 0.08488012267253678,
+            "ipr_lab_mean": [
+              51.90700837333338,
+              -1.2106532082881654,
+              -10.931026862852558
+            ],
+            "lr_lab_mean": [
+              59.44222254268381,
+              -3.0505998677340576,
+              -7.912320545236103
+            ],
+            "ipr_y_mean": 0.24686470318627035,
+            "lr_y_mean": 0.31996126753703114,
+            "delta_chroma_mean": -2.4346680730439276,
+            "hue_abs_circular_mean_degrees": 16.66199911711214,
+            "hue_usable_fraction": 0.9360780816488308,
+            "lr_neutral_fraction": 0.046139516448672216,
+            "ab_distance_on_lr_neutral_mean": 5.292398656178046,
+            "ipr_any_channel_low_fraction": 0.0004954419342053111,
+            "lr_any_channel_low_fraction": 0.003523583036068173,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 13.547890442948976,
+            "delta_e00_median": 15.469343015963487,
+            "delta_e00_p95": 19.216288291449683,
+            "delta_e76_mean": 15.936022052759071,
+            "delta_lab_mean_lr_minus_ipr": [
+              11.933810301267853,
+              0.020837957935330047,
+              -4.372598432476732
+            ],
+            "rgb_mae_normalized": 0.14381432181474754,
+            "ipr_lab_mean": [
+              39.97319807206487,
+              -1.2314911662234558,
+              -6.558428430375869
+            ],
+            "lr_lab_mean": [
+              51.90700837333338,
+              -1.2106532082881654,
+              -10.931026862852558
+            ],
+            "ipr_y_mean": 0.12554093254076862,
+            "lr_y_mean": 0.24686470318627035,
+            "delta_chroma_mean": 4.412089012891926,
+            "hue_abs_circular_mean_degrees": 9.905656942582352,
+            "hue_usable_fraction": 0.7922671422909235,
+            "lr_neutral_fraction": 0.01297859690844233,
+            "ab_distance_on_lr_neutral_mean": 3.024720743463209,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.0004954419342053111,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 7.184705206145963,
+            "delta_e00_median": 7.299670242913024,
+            "delta_e00_p95": 10.002628215663515,
+            "delta_e76_mean": 8.531955414857595,
+            "delta_lab_mean_lr_minus_ipr": [
+              7.638078267877921,
+              -1.8809720423415546,
+              2.994716029464666
+            ],
+            "rgb_mae_normalized": 0.06990240800126742,
+            "ipr_lab_mean": [
+              51.80414427480822,
+              -1.1696278253924952,
+              -10.907036574700728
+            ],
+            "lr_lab_mean": [
+              59.44222254268381,
+              -3.0505998677340576,
+              -7.912320545236103
+            ],
+            "ipr_y_mean": 0.24582150663292732,
+            "lr_y_mean": 0.31996126753703114,
+            "delta_chroma_mean": -2.479802945848418,
+            "hue_abs_circular_mean_degrees": 14.352632373360949,
+            "hue_usable_fraction": 0.942328577090765,
+            "lr_neutral_fraction": 0.046139516448672216,
+            "ab_distance_on_lr_neutral_mean": 2.691893980637303,
+            "ipr_any_channel_low_fraction": 0.0008561236623067776,
+            "lr_any_channel_low_fraction": 0.003523583036068173,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 12.087620691662853,
+            "delta_e00_median": 12.725535733184753,
+            "delta_e00_p95": 17.324032842897786,
+            "delta_e76_mean": 14.33172272368827,
+            "delta_lab_mean_lr_minus_ipr": [
+              11.830946202741016,
+              0.06186334083094393,
+              -4.34860814432491
+            ],
+            "rgb_mae_normalized": 0.12996848251950419,
+            "ipr_lab_mean": [
+              39.97319807206487,
+              -1.2314911662234558,
+              -6.558428430375869
+            ],
+            "lr_lab_mean": [
+              51.80414427480822,
+              -1.1696278253924952,
+              -10.907036574700728
+            ],
+            "ipr_y_mean": 0.12554093254076862,
+            "lr_y_mean": 0.24582150663292732,
+            "delta_chroma_mean": 4.457223885696417,
+            "hue_abs_circular_mean_degrees": 4.588423838744662,
+            "hue_usable_fraction": 0.7961692429647246,
+            "lr_neutral_fraction": 0.01234046769718589,
+            "ab_distance_on_lr_neutral_mean": 1.4416164219432088,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.0008561236623067776,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        }
+      ],
+      "oracle_equal_L_delta_e00_mean": 2.787582219840815,
+      "oracle_equal_L_delta_e00_p95": 4.504672013884863,
+      "local_y_ratio_ev_p10_p50_p90": [
+        0.8963800196820899,
+        1.35966985784634,
+        1.4302630348881442
+      ],
+      "tonal_holdout": [
+        {
+          "model": "exposure",
+          "parameters": {
+            "gain": 1.6130717120209621,
+            "gamma": 1.0,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A0007",
+          "training_scene_ids": [
+            "6V1A0037",
+            "6V1A0043",
+            "6V1A0327",
+            "6V1A9421",
+            "6V1A9950"
+          ],
+          "linear_any_over_one_before_clip_fraction": 1.9817677368212447e-06,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.996077567342292,
+            "delta_e00_median": 10.666140481682467,
+            "delta_e00_p95": 11.715816566380365,
+            "delta_e76_mean": 10.63236052055698,
+            "delta_lab_mean_lr_minus_ipr": [
+              9.798065832362822,
+              -1.6063242574427314,
+              -0.22043180766772155
+            ],
+            "rgb_mae_normalized": 0.10070531113249462,
+            "ipr_lab_mean": [
+              49.644156710320786,
+              -1.4442756102914065,
+              -7.691888737568819
+            ],
+            "lr_lab_mean": [
+              59.44222254268381,
+              -3.0505998677340576,
+              -7.912320545236103
+            ],
+            "ipr_y_mean": 0.20250651413391343,
+            "lr_y_mean": 0.31996126753703114,
+            "delta_chroma_mean": 0.7802248315656146,
+            "hue_abs_circular_mean_degrees": 9.307513004716835,
+            "hue_usable_fraction": 0.8766547760602458,
+            "lr_neutral_fraction": 0.046139516448672216,
+            "ab_distance_on_lr_neutral_mean": 1.6906057362956477,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.003523583036068173,
+            "ipr_any_channel_high_fraction": 1.9817677368212447e-06,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          }
+        },
+        {
+          "model": "power",
+          "parameters": {
+            "gain": 6.211452785509334,
+            "gamma": 1.3553730047972188,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A0007",
+          "training_scene_ids": [
+            "6V1A0037",
+            "6V1A0043",
+            "6V1A0327",
+            "6V1A9421",
+            "6V1A9950"
+          ],
+          "linear_any_over_one_before_clip_fraction": 0.08074118113357115,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.552053112915203,
+            "delta_e00_median": 3.391718371280616,
+            "delta_e00_p95": 8.417284899419908,
+            "delta_e76_mean": 5.985053555197054,
+            "delta_lab_mean_lr_minus_ipr": [
+              -4.7325954216257315,
+              -1.187930311770113,
+              1.2655881316817432
+            ],
+            "rgb_mae_normalized": 0.05496083505617247,
+            "ipr_lab_mean": [
+              64.17481796430864,
+              -1.862669555964071,
+              -9.177908676918141
+            ],
+            "lr_lab_mean": [
+              59.44222254268381,
+              -3.0505998677340576,
+              -7.912320545236103
+            ],
+            "ipr_y_mean": 0.3981994958127926,
+            "lr_y_mean": 0.31996126753703114,
+            "delta_chroma_mean": -0.8031245392989541,
+            "hue_abs_circular_mean_degrees": 9.217690715515982,
+            "hue_usable_fraction": 0.9056024573919936,
+            "lr_neutral_fraction": 0.046139516448672216,
+            "ab_distance_on_lr_neutral_mean": 1.699789516375023,
+            "ipr_any_channel_low_fraction": 0.0,
+            "lr_any_channel_low_fraction": 0.003523583036068173,
+            "ipr_any_channel_high_fraction": 0.0807748711850971,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          }
+        }
+      ]
+    },
+    {
+      "scene": "6V1A0037",
+      "lr_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0037-2.tif",
+        "bytes": 193800978,
+        "size": [
+          6960,
+          4640
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A0037.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "Custom",
+          "Temperature": "5200",
+          "Tint": "0",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "0",
+          "LensProfileEnable": "0",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "5EC5AB63E59C1CB26A884E990C73687C",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "1df8a4f3cf1a84805d817632479252247dec238d5bb28fa1e6d7f5fc0561dd27",
+        "mtime_utc": "2026-10-07T14:01:59.546246+00:00"
+      },
+      "crop_candidates": [
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.12750140358584444
+        },
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.16263801445573672
+        },
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.17007638644440198
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.1828352206114696
+        }
+      ],
+      "harmonized_warnings": [
+        "WhiteBalance: expected As Shot, got Custom"
+      ],
+      "new_vs_old_lr": {
+        "samples": 504600,
+        "delta_e00_mean": 11.882366187218025,
+        "delta_e00_median": 8.091966578292057,
+        "delta_e00_p95": 38.949811539596766,
+        "delta_e76_mean": 15.622808945297892,
+        "delta_lab_mean_lr_minus_ipr": [
+          -2.510125787507169,
+          0.9017264334104571,
+          -1.3010487739958747
+        ],
+        "rgb_mae_normalized": 0.0971580021015276,
+        "ipr_lab_mean": [
+          20.807199249649425,
+          -8.009292343167393,
+          10.260603484937997
+        ],
+        "lr_lab_mean": [
+          18.297073462142794,
+          -7.107565909757033,
+          8.95955471094239
+        ],
+        "ipr_y_mean": 0.0653597334128488,
+        "lr_y_mean": 0.05664709179044156,
+        "delta_chroma_mean": -1.5313146958787582,
+        "hue_abs_circular_mean_degrees": 19.482925180454746,
+        "hue_usable_fraction": 0.6320887831946096,
+        "lr_neutral_fraction": 0.0054795877923107415,
+        "ab_distance_on_lr_neutral_mean": 14.22056045331355,
+        "ipr_any_channel_low_fraction": 0.0009017043202536663,
+        "lr_any_channel_low_fraction": 0.003376932223543401,
+        "ipr_any_channel_high_fraction": 0.003906064209274673,
+        "lr_any_channel_high_fraction": 0.002259215219976219
+      },
+      "lr_xmp_rendering": {
+        "ProcessVersion": "15.4",
+        "WhiteBalance": "Custom",
+        "Temperature": "5200",
+        "Tint": "0",
+        "Exposure2012": "0.00",
+        "LensProfileEnable": "0",
+        "ShadowTint": "0",
+        "ToneCurveName2012": "Linear",
+        "CameraProfile": "Adobe Standard",
+        "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+        "LensProfileSetup": "LensDefaults",
+        "LensProfileName": "Camera Settings",
+        "LensProfileDigest": "5EC5AB63E59C1CB26A884E990C73687C",
+        "LensProfileIsEmbedded": "True",
+        "LensProfileDistortionScale": "100",
+        "LensProfileVignettingScale": "100",
+        "CameraRawProfile": "True",
+        "ProfileName": "Camera Settings",
+        "ToneCurvePV2012": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Red": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Green": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Blue": [
+          "0, 0",
+          "255, 255"
+        ]
+      },
+      "profile_variants": [
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 10.336330635977388,
+            "delta_e00_median": 7.643989368111659,
+            "delta_e00_p95": 30.035873382118915,
+            "delta_e76_mean": 13.632165935260948,
+            "delta_lab_mean_lr_minus_ipr": [
+              1.9552162182952864,
+              -1.8617844462634399,
+              2.460882219516658
+            ],
+            "rgb_mae_normalized": 0.08194977607551687,
+            "ipr_lab_mean": [
+              16.341857243848246,
+              -5.245781463493562,
+              6.498672491425406
+            ],
+            "lr_lab_mean": [
+              18.297073462142794,
+              -7.107565909757033,
+              8.95955471094239
+            ],
+            "ipr_y_mean": 0.035652306261854436,
+            "lr_y_mean": 0.05664709179044156,
+            "delta_chroma_mean": 2.976640456749485,
+            "hue_abs_circular_mean_degrees": 17.318009707631496,
+            "hue_usable_fraction": 0.6146531906460563,
+            "lr_neutral_fraction": 0.0054795877923107415,
+            "ab_distance_on_lr_neutral_mean": 9.550359921859576,
+            "ipr_any_channel_low_fraction": 0.0007253269916765755,
+            "lr_any_channel_low_fraction": 0.003376932223543401,
+            "ipr_any_channel_high_fraction": 0.005214030915576694,
+            "lr_any_channel_high_fraction": 0.002259215219976219
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 7.663887280193554,
+            "delta_e00_median": 5.317449271688719,
+            "delta_e00_p95": 22.977213451182305,
+            "delta_e76_mean": 9.852690564926801,
+            "delta_lab_mean_lr_minus_ipr": [
+              2.66593365091693,
+              -0.6474217416191606,
+              0.9932830319606779
+            ],
+            "rgb_mae_normalized": 0.0616467466576891,
+            "ipr_lab_mean": [
+              13.675923592930786,
+              -4.598359721874397,
+              5.505389459464709
+            ],
+            "lr_lab_mean": [
+              16.341857243848246,
+              -5.245781463493562,
+              6.498672491425406
+            ],
+            "ipr_y_mean": 0.028642163841110905,
+            "lr_y_mean": 0.035652306261854436,
+            "delta_chroma_mean": 1.1469224795036095,
+            "hue_abs_circular_mean_degrees": 17.483323178383884,
+            "hue_usable_fraction": 0.5732084819659136,
+            "lr_neutral_fraction": 0.01367816091954023,
+            "ab_distance_on_lr_neutral_mean": 7.618433779891206,
+            "ipr_any_channel_low_fraction": 0.005412207689258819,
+            "lr_any_channel_low_fraction": 0.0007253269916765755,
+            "ipr_any_channel_high_fraction": 0.004215219976218787,
+            "lr_any_channel_high_fraction": 0.005214030915576694
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.316666227492779,
+            "delta_e00_median": 3.427077343608988,
+            "delta_e00_p95": 18.794921636234758,
+            "delta_e76_mean": 7.271146881659339,
+            "delta_lab_mean_lr_minus_ipr": [
+              4.621149869212128,
+              -2.509206187882646,
+              3.454165251477383
+            ],
+            "rgb_mae_normalized": 0.03658116953437596,
+            "ipr_lab_mean": [
+              13.675923592930786,
+              -4.598359721874397,
+              5.505389459464709
+            ],
+            "lr_lab_mean": [
+              18.297073462142794,
+              -7.107565909757033,
+              8.95955471094239
+            ],
+            "ipr_y_mean": 0.028642163841110905,
+            "lr_y_mean": 0.05664709179044156,
+            "delta_chroma_mean": 4.1235629362530934,
+            "hue_abs_circular_mean_degrees": 4.408617899207436,
+            "hue_usable_fraction": 0.6531193024177566,
+            "lr_neutral_fraction": 0.0054795877923107415,
+            "ab_distance_on_lr_neutral_mean": 3.021552988533348,
+            "ipr_any_channel_low_fraction": 0.005412207689258819,
+            "lr_any_channel_low_fraction": 0.003376932223543401,
+            "ipr_any_channel_high_fraction": 0.004215219976218787,
+            "lr_any_channel_high_fraction": 0.002259215219976219
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 0.0,
+            "delta_e00_median": 0.0,
+            "delta_e00_p95": 0.0,
+            "delta_e76_mean": 0.0,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rgb_mae_normalized": 0.0,
+            "ipr_lab_mean": [
+              13.675923592930786,
+              -4.598359721874397,
+              5.505389459464709
+            ],
+            "lr_lab_mean": [
+              13.675923592930786,
+              -4.598359721874397,
+              5.505389459464709
+            ],
+            "ipr_y_mean": 0.028642163841110905,
+            "lr_y_mean": 0.028642163841110905,
+            "delta_chroma_mean": 0.0,
+            "hue_abs_circular_mean_degrees": 0.0,
+            "hue_usable_fraction": 0.6593896155370591,
+            "lr_neutral_fraction": 0.008400713436385255,
+            "ab_distance_on_lr_neutral_mean": 0.0,
+            "ipr_any_channel_low_fraction": 0.005412207689258819,
+            "lr_any_channel_low_fraction": 0.005412207689258819,
+            "ipr_any_channel_high_fraction": 0.004215219976218787,
+            "lr_any_channel_high_fraction": 0.004215219976218787
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "with_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 11.740715230776795,
+            "delta_e00_median": 8.991668582651005,
+            "delta_e00_p95": 34.0618743443164,
+            "delta_e76_mean": 15.543872344137544,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.869443599510742,
+              -1.3170872644292242,
+              2.906818355250502
+            ],
+            "rgb_mae_normalized": 0.09799363844542923,
+            "ipr_lab_mean": [
+              12.427629862632386,
+              -5.790478645327916,
+              6.052736355691835
+            ],
+            "lr_lab_mean": [
+              18.297073462142794,
+              -7.107565909757033,
+              8.95955471094239
+            ],
+            "ipr_y_mean": 0.039726262789292636,
+            "lr_y_mean": 0.05664709179044156,
+            "delta_chroma_mean": 3.049405924168342,
+            "hue_abs_circular_mean_degrees": 21.434897382605712,
+            "hue_usable_fraction": 0.4499821640903686,
+            "lr_neutral_fraction": 0.0054795877923107415,
+            "ab_distance_on_lr_neutral_mean": 10.845246934611085,
+            "ipr_any_channel_low_fraction": 0.004730479587792311,
+            "lr_any_channel_low_fraction": 0.003376932223543401,
+            "ipr_any_channel_high_fraction": 0.00019223147047166072,
+            "lr_any_channel_high_fraction": 0.002259215219976219
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 9.82779442541586,
+            "delta_e00_median": 6.9887228791991785,
+            "delta_e00_p95": 29.672142038794036,
+            "delta_e76_mean": 12.999045293229367,
+            "delta_lab_mean_lr_minus_ipr": [
+              -1.2482937302986659,
+              -1.1921189234534653,
+              0.5473468962268728
+            ],
+            "rgb_mae_normalized": 0.08079880173233543,
+            "ipr_lab_mean": [
+              13.675923592930786,
+              -4.598359721874397,
+              5.505389459464709
+            ],
+            "lr_lab_mean": [
+              12.427629862632386,
+              -5.790478645327916,
+              6.052736355691835
+            ],
+            "ipr_y_mean": 0.028642163841110905,
+            "lr_y_mean": 0.039726262789292636,
+            "delta_chroma_mean": 1.0741570120847537,
+            "hue_abs_circular_mean_degrees": 21.29620320484989,
+            "hue_usable_fraction": 0.4228438367023385,
+            "lr_neutral_fraction": 0.00327982560443916,
+            "ab_distance_on_lr_neutral_mean": 9.708651441697699,
+            "ipr_any_channel_low_fraction": 0.005412207689258819,
+            "lr_any_channel_low_fraction": 0.004730479587792311,
+            "ipr_any_channel_high_fraction": 0.004215219976218787,
+            "lr_any_channel_high_fraction": 0.00019223147047166072
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "without_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.198936677482651,
+            "delta_e00_median": 9.235210067711808,
+            "delta_e00_p95": 13.466229745214703,
+            "delta_e76_mean": 11.154378242549761,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.559547070042532,
+              -2.731189077165037,
+              4.418329357008556
+            ],
+            "rgb_mae_normalized": 0.07180341790397747,
+            "ipr_lab_mean": [
+              9.73752639210053,
+              -4.376376832591958,
+              4.541225353933662
+            ],
+            "lr_lab_mean": [
+              18.297073462142794,
+              -7.107565909757033,
+              8.95955471094239
+            ],
+            "ipr_y_mean": 0.03132029710335136,
+            "lr_y_mean": 0.05664709179044156,
+            "delta_chroma_mean": 5.177972990780257,
+            "hue_abs_circular_mean_degrees": 10.146578948782475,
+            "hue_usable_fraction": 0.38612366230677764,
+            "lr_neutral_fraction": 0.0054795877923107415,
+            "ab_distance_on_lr_neutral_mean": 3.7649684401634307,
+            "ipr_any_channel_low_fraction": 0.010535077288941735,
+            "lr_any_channel_low_fraction": 0.003376932223543401,
+            "ipr_any_channel_high_fraction": 3.963535473642489e-06,
+            "lr_any_channel_high_fraction": 0.002259215219976219
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 5.8838870501847,
+            "delta_e00_median": 5.7024055779323835,
+            "delta_e00_p95": 10.889506143620055,
+            "delta_e76_mean": 8.212197124249462,
+            "delta_lab_mean_lr_minus_ipr": [
+              -3.9383972008303227,
+              0.22198288928234156,
+              -0.9641641055311507
+            ],
+            "rgb_mae_normalized": 0.053750745893306646,
+            "ipr_lab_mean": [
+              13.675923592930786,
+              -4.598359721874397,
+              5.505389459464709
+            ],
+            "lr_lab_mean": [
+              9.73752639210053,
+              -4.376376832591958,
+              4.541225353933662
+            ],
+            "ipr_y_mean": 0.028642163841110905,
+            "lr_y_mean": 0.03132029710335136,
+            "delta_chroma_mean": -1.0544100545271649,
+            "hue_abs_circular_mean_degrees": 6.814733242421969,
+            "hue_usable_fraction": 0.3743539437177963,
+            "lr_neutral_fraction": 0.0021878715814506538,
+            "ab_distance_on_lr_neutral_mean": 1.4581794287108152,
+            "ipr_any_channel_low_fraction": 0.005412207689258819,
+            "lr_any_channel_low_fraction": 0.010535077288941735,
+            "ipr_any_channel_high_fraction": 0.004215219976218787,
+            "lr_any_channel_high_fraction": 3.963535473642489e-06
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 12.004084491426903,
+            "delta_e00_median": 9.217487394449261,
+            "delta_e00_p95": 34.87558334657771,
+            "delta_e76_mean": 15.921947654760997,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.823286721549818,
+              -0.9010129256783799,
+              3.0069382888325
+            ],
+            "rgb_mae_normalized": 0.10015422742391773,
+            "ipr_lab_mean": [
+              12.473786740593422,
+              -6.206552984078756,
+              5.95261642210939
+            ],
+            "lr_lab_mean": [
+              18.297073462142794,
+              -7.107565909757033,
+              8.95955471094239
+            ],
+            "ipr_y_mean": 0.04200023436280336,
+            "lr_y_mean": 0.05664709179044156,
+            "delta_chroma_mean": 2.5564887916292904,
+            "hue_abs_circular_mean_degrees": 24.179164689286104,
+            "hue_usable_fraction": 0.45480776852952837,
+            "lr_neutral_fraction": 0.0054795877923107415,
+            "ab_distance_on_lr_neutral_mean": 11.44514403771402,
+            "ipr_any_channel_low_fraction": 0.010495441934205312,
+            "lr_any_channel_low_fraction": 0.003376932223543401,
+            "ipr_any_channel_high_fraction": 0.00040824415378517637,
+            "lr_any_channel_high_fraction": 0.002259215219976219
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 10.217722518158691,
+            "delta_e00_median": 7.325710576063193,
+            "delta_e00_p95": 30.695063572085665,
+            "delta_e76_mean": 13.53411603473564,
+            "delta_lab_mean_lr_minus_ipr": [
+              -1.2021368523375298,
+              -1.608193262204336,
+              0.44722696264472606
+            ],
+            "rgb_mae_normalized": 0.08350282631095264,
+            "ipr_lab_mean": [
+              13.675923592930786,
+              -4.598359721874397,
+              5.505389459464709
+            ],
+            "lr_lab_mean": [
+              12.473786740593422,
+              -6.206552984078756,
+              5.95261642210939
+            ],
+            "ipr_y_mean": 0.028642163841110905,
+            "lr_y_mean": 0.04200023436280336,
+            "delta_chroma_mean": 1.5670741446238035,
+            "hue_abs_circular_mean_degrees": 23.824618000430846,
+            "hue_usable_fraction": 0.4268014268727705,
+            "lr_neutral_fraction": 0.0024692826000792707,
+            "ab_distance_on_lr_neutral_mean": 9.573934989786768,
+            "ipr_any_channel_low_fraction": 0.005412207689258819,
+            "lr_any_channel_low_fraction": 0.010495441934205312,
+            "ipr_any_channel_high_fraction": 0.004215219976218787,
+            "lr_any_channel_high_fraction": 0.00040824415378517637
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.199138181606369,
+            "delta_e00_median": 9.365441877487434,
+            "delta_e00_p95": 13.47386281498961,
+            "delta_e76_mean": 11.215993811135949,
+            "delta_lab_mean_lr_minus_ipr": [
+              8.522480353446204,
+              -2.4302039551974306,
+              4.502665143545126
+            ],
+            "rgb_mae_normalized": 0.07250246166891465,
+            "ipr_lab_mean": [
+              9.774593108697406,
+              -4.6773619545598715,
+              4.4568895673969795
+            ],
+            "lr_lab_mean": [
+              18.297073462142794,
+              -7.107565909757033,
+              8.95955471094239
+            ],
+            "ipr_y_mean": 0.03308970984232505,
+            "lr_y_mean": 0.05664709179044156,
+            "delta_chroma_mean": 4.802841710321231,
+            "hue_abs_circular_mean_degrees": 13.512107704829956,
+            "hue_usable_fraction": 0.39150614347998414,
+            "lr_neutral_fraction": 0.0054795877923107415,
+            "ab_distance_on_lr_neutral_mean": 4.047580707668944,
+            "ipr_any_channel_low_fraction": 0.015998810939357906,
+            "lr_any_channel_low_fraction": 0.003376932223543401,
+            "ipr_any_channel_high_fraction": 0.00011692429647245343,
+            "lr_any_channel_high_fraction": 0.002259215219976219
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 6.163222019757752,
+            "delta_e00_median": 6.02334853087182,
+            "delta_e00_p95": 12.007736299062985,
+            "delta_e76_mean": 8.660530776658302,
+            "delta_lab_mean_lr_minus_ipr": [
+              -3.901330484233976,
+              -0.07900223268530367,
+              -1.0484998920677424
+            ],
+            "rgb_mae_normalized": 0.056795928383315875,
+            "ipr_lab_mean": [
+              13.675923592930786,
+              -4.598359721874397,
+              5.505389459464709
+            ],
+            "lr_lab_mean": [
+              9.774593108697406,
+              -4.6773619545598715,
+              4.4568895673969795
+            ],
+            "ipr_y_mean": 0.028642163841110905,
+            "lr_y_mean": 0.03308970984232505,
+            "delta_chroma_mean": -0.6792787740681363,
+            "hue_abs_circular_mean_degrees": 10.038092932416987,
+            "hue_usable_fraction": 0.37793896155370593,
+            "lr_neutral_fraction": 0.001684502576298058,
+            "ab_distance_on_lr_neutral_mean": 1.5481001704719786,
+            "ipr_any_channel_low_fraction": 0.005412207689258819,
+            "lr_any_channel_low_fraction": 0.015998810939357906,
+            "ipr_any_channel_high_fraction": 0.004215219976218787,
+            "lr_any_channel_high_fraction": 0.00011692429647245343
+          }
+        }
+      ],
+      "oracle_equal_L_delta_e00_mean": 3.3898253090793995,
+      "oracle_equal_L_delta_e00_p95": 8.145502682027358,
+      "local_y_ratio_ev_p10_p50_p90": [
+        -0.0794904799084332,
+        0.34945342809605123,
+        1.1718894429673699
+      ],
+      "tonal_holdout": [
+        {
+          "model": "exposure",
+          "parameters": {
+            "gain": 2.0293443496374794,
+            "gamma": 1.0,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A0037",
+          "training_scene_ids": [
+            "6V1A0007",
+            "6V1A0043",
+            "6V1A0327",
+            "6V1A9421",
+            "6V1A9950"
+          ],
+          "linear_any_over_one_before_clip_fraction": 0.011444708680142687,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.441010503390932,
+            "delta_e00_median": 3.9998938603068415,
+            "delta_e00_p95": 8.901055518398655,
+            "delta_e76_mean": 6.599186903979013,
+            "delta_lab_mean_lr_minus_ipr": [
+              -2.6902792747834994,
+              -0.7838973776561579,
+              1.0788412890337502
+            ],
+            "rgb_mae_normalized": 0.03865309421121518,
+            "ipr_lab_mean": [
+              20.987352736926194,
+              -6.323668532100869,
+              7.880713421908029
+            ],
+            "lr_lab_mean": [
+              18.297073462142794,
+              -7.107565909757033,
+              8.95955471094239
+            ],
+            "ipr_y_mean": 0.0561725708473033,
+            "lr_y_mean": 0.05664709179044156,
+            "delta_chroma_mean": 1.1378414865489817,
+            "hue_abs_circular_mean_degrees": 5.393858304320561,
+            "hue_usable_fraction": 0.7049524375743162,
+            "lr_neutral_fraction": 0.0054795877923107415,
+            "ab_distance_on_lr_neutral_mean": 3.2693427733569984,
+            "ipr_any_channel_low_fraction": 0.00533491874752279,
+            "lr_any_channel_low_fraction": 0.003376932223543401,
+            "ipr_any_channel_high_fraction": 0.011444708680142687,
+            "lr_any_channel_high_fraction": 0.002259215219976219
+          }
+        },
+        {
+          "model": "power",
+          "parameters": {
+            "gain": 5.3709518174337685,
+            "gamma": 1.324658236800881,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A0037",
+          "training_scene_ids": [
+            "6V1A0007",
+            "6V1A0043",
+            "6V1A0327",
+            "6V1A9421",
+            "6V1A9950"
+          ],
+          "linear_any_over_one_before_clip_fraction": 0.01978993261989695,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.913794418324316,
+            "delta_e00_median": 2.4173459558506747,
+            "delta_e00_p95": 7.0011552631574725,
+            "delta_e76_mean": 4.230138957863228,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.25144168347912876,
+              -1.8573452268043158,
+              2.31130244472173
+            ],
+            "rgb_mae_normalized": 0.014212417106180018,
+            "ipr_lab_mean": [
+              18.045631778664756,
+              -5.250220682952622,
+              6.648252266220184
+            ],
+            "lr_lab_mean": [
+              18.297073462142794,
+              -7.107565909757033,
+              8.95955471094239
+            ],
+            "ipr_y_mean": 0.05781377115345712,
+            "lr_y_mean": 0.05664709179044156,
+            "delta_chroma_mean": 3.0808149944910497,
+            "hue_abs_circular_mean_degrees": 4.814318417310024,
+            "hue_usable_fraction": 0.6643202536662703,
+            "lr_neutral_fraction": 0.0054795877923107415,
+            "ab_distance_on_lr_neutral_mean": 3.18899535626435,
+            "ipr_any_channel_low_fraction": 0.005543004359889021,
+            "lr_any_channel_low_fraction": 0.003376932223543401,
+            "ipr_any_channel_high_fraction": 0.01978993261989695,
+            "lr_any_channel_high_fraction": 0.002259215219976219
+          }
+        }
+      ]
+    },
+    {
+      "scene": "6V1A0043",
+      "lr_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0043-2.tif",
+        "bytes": 193794394,
+        "size": [
+          6960,
+          4640
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A0043.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "Custom",
+          "Temperature": "5200",
+          "Tint": "0",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "0",
+          "LensProfileEnable": "0",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "880CEC0C6842E0267E86932697AEF29F",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "5a6c2663b9817a99d600a762f2f31503b9f5a7cca3896cc2efabc2e254f0a99b",
+        "mtime_utc": "2026-10-07T14:02:12.594062+00:00"
+      },
+      "crop_candidates": [
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.056878851060146784
+        },
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.06236582158520569
+        },
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.06347039254728393
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.06677498365796303
+        }
+      ],
+      "harmonized_warnings": [
+        "WhiteBalance: expected As Shot, got Custom"
+      ],
+      "new_vs_old_lr": {
+        "samples": 504600,
+        "delta_e00_mean": 0.07742187204996974,
+        "delta_e00_median": 0.06639075448597398,
+        "delta_e00_p95": 0.19324382613254232,
+        "delta_e76_mean": 0.09156116309864372,
+        "delta_lab_mean_lr_minus_ipr": [
+          0.014504750740073572,
+          -0.012733016434028606,
+          0.019559052476280658
+        ],
+        "rgb_mae_normalized": 0.0003289998840100642,
+        "ipr_lab_mean": [
+          10.660815228846426,
+          -1.9545105777295104,
+          7.667080499961932
+        ],
+        "lr_lab_mean": [
+          10.675319979586424,
+          -1.9672435941635262,
+          7.686639552438297
+        ],
+        "ipr_y_mean": 0.02676899622733783,
+        "lr_y_mean": 0.026785768383394637,
+        "delta_chroma_mean": 0.024264562617170037,
+        "hue_abs_circular_mean_degrees": 0.06019367435361517,
+        "hue_usable_fraction": 0.6715041617122474,
+        "lr_neutral_fraction": 0.0035671819262782403,
+        "ab_distance_on_lr_neutral_mean": 0.001632233811867068,
+        "ipr_any_channel_low_fraction": 0.30835513277843835,
+        "lr_any_channel_low_fraction": 0.31087197780420134,
+        "ipr_any_channel_high_fraction": 0.00038049940546967895,
+        "lr_any_channel_high_fraction": 0.00038049940546967895
+      },
+      "lr_xmp_rendering": {
+        "ProcessVersion": "15.4",
+        "WhiteBalance": "Custom",
+        "Temperature": "5200",
+        "Tint": "0",
+        "Exposure2012": "0.00",
+        "LensProfileEnable": "0",
+        "ShadowTint": "0",
+        "ToneCurveName2012": "Linear",
+        "CameraProfile": "Adobe Standard",
+        "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+        "LensProfileSetup": "LensDefaults",
+        "LensProfileName": "Camera Settings",
+        "LensProfileDigest": "880CEC0C6842E0267E86932697AEF29F",
+        "LensProfileIsEmbedded": "True",
+        "LensProfileDistortionScale": "100",
+        "LensProfileVignettingScale": "100",
+        "CameraRawProfile": "True",
+        "ProfileName": "Camera Settings",
+        "ToneCurvePV2012": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Red": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Green": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Blue": [
+          "0, 0",
+          "255, 255"
+        ]
+      },
+      "profile_variants": [
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.4272853478676355,
+            "delta_e00_median": 1.650394877390317,
+            "delta_e00_p95": 19.26094729312238,
+            "delta_e76_mean": 6.455860961416674,
+            "delta_lab_mean_lr_minus_ipr": [
+              2.2401362007239563,
+              -0.6597225069240157,
+              2.360224558895403
+            ],
+            "rgb_mae_normalized": 0.03427417843578452,
+            "ipr_lab_mean": [
+              8.435183778862193,
+              -1.3075210872396692,
+              5.32641499354296
+            ],
+            "lr_lab_mean": [
+              10.675319979586424,
+              -1.9672435941635262,
+              7.686639552438297
+            ],
+            "ipr_y_mean": 0.013783938767849457,
+            "lr_y_mean": 0.026785768383394637,
+            "delta_chroma_mean": 3.606245659961346,
+            "hue_abs_circular_mean_degrees": 5.5383751786930135,
+            "hue_usable_fraction": 0.590709472849782,
+            "lr_neutral_fraction": 0.0035671819262782403,
+            "ab_distance_on_lr_neutral_mean": 4.125469324827337,
+            "ipr_any_channel_low_fraction": 0.0002516845025762981,
+            "lr_any_channel_low_fraction": 0.31087197780420134,
+            "ipr_any_channel_high_fraction": 1.9817677368212444e-05,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 2.1495249556037006,
+            "delta_e00_median": 1.04466981866156,
+            "delta_e00_p95": 8.431912986961787,
+            "delta_e76_mean": 2.742417265642123,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.10118394352494868,
+              0.09647456635681814,
+              -0.0954251664162384
+            ],
+            "rgb_mae_normalized": 0.014842519354226662,
+            "ipr_lab_mean": [
+              8.536367722387178,
+              -1.403995653596419,
+              5.421840159959155
+            ],
+            "lr_lab_mean": [
+              8.435183778862193,
+              -1.3075210872396692,
+              5.32641499354296
+            ],
+            "ipr_y_mean": 0.013908890933387473,
+            "lr_y_mean": 0.013783938767849457,
+            "delta_chroma_mean": -0.08475525359914769,
+            "hue_abs_circular_mean_degrees": 5.021743009237799,
+            "hue_usable_fraction": 0.5676436781609195,
+            "lr_neutral_fraction": 0.006070154577883472,
+            "ab_distance_on_lr_neutral_mean": 3.2807568728576393,
+            "ipr_any_channel_low_fraction": 0.0006619104240982957,
+            "lr_any_channel_low_fraction": 0.0002516845025762981,
+            "ipr_any_channel_high_fraction": 1.1890606420927467e-05,
+            "lr_any_channel_high_fraction": 1.9817677368212444e-05
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 3.199668943741334,
+            "delta_e00_median": 0.8998095356168769,
+            "delta_e00_p95": 15.782683104209113,
+            "delta_e76_mean": 4.861881747369669,
+            "delta_lab_mean_lr_minus_ipr": [
+              2.1389522571991213,
+              -0.5632479405671612,
+              2.264799392479132
+            ],
+            "rgb_mae_normalized": 0.025851471585897918,
+            "ipr_lab_mean": [
+              8.536367722387178,
+              -1.403995653596419,
+              5.421840159959155
+            ],
+            "lr_lab_mean": [
+              10.675319979586424,
+              -1.9672435941635262,
+              7.686639552438297
+            ],
+            "ipr_y_mean": 0.013908890933387473,
+            "lr_y_mean": 0.026785768383394637,
+            "delta_chroma_mean": 3.5214904063621995,
+            "hue_abs_circular_mean_degrees": 2.406785054424708,
+            "hue_usable_fraction": 0.616397146254459,
+            "lr_neutral_fraction": 0.0035671819262782403,
+            "ab_distance_on_lr_neutral_mean": 1.6835178372795725,
+            "ipr_any_channel_low_fraction": 0.0006619104240982957,
+            "lr_any_channel_low_fraction": 0.31087197780420134,
+            "ipr_any_channel_high_fraction": 1.1890606420927467e-05,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 0.0,
+            "delta_e00_median": 0.0,
+            "delta_e00_p95": 0.0,
+            "delta_e76_mean": 0.0,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rgb_mae_normalized": 0.0,
+            "ipr_lab_mean": [
+              8.536367722387178,
+              -1.403995653596419,
+              5.421840159959155
+            ],
+            "lr_lab_mean": [
+              8.536367722387178,
+              -1.403995653596419,
+              5.421840159959155
+            ],
+            "ipr_y_mean": 0.013908890933387473,
+            "lr_y_mean": 0.013908890933387473,
+            "delta_chroma_mean": 0.0,
+            "hue_abs_circular_mean_degrees": 0.0,
+            "hue_usable_fraction": 0.6180935394371779,
+            "lr_neutral_fraction": 0.008341260404280619,
+            "ab_distance_on_lr_neutral_mean": 0.0,
+            "ipr_any_channel_low_fraction": 0.0006619104240982957,
+            "lr_any_channel_low_fraction": 0.0006619104240982957,
+            "ipr_any_channel_high_fraction": 1.1890606420927467e-05,
+            "lr_any_channel_high_fraction": 1.1890606420927467e-05
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "with_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 7.8358471667890015,
+            "delta_e00_median": 6.2174362095908275,
+            "delta_e00_p95": 18.791953807409556,
+            "delta_e76_mean": 10.207894016529814,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.589737671154954,
+              -1.0021034024941597,
+              4.815874297980447
+            ],
+            "rgb_mae_normalized": 0.051919051040037204,
+            "ipr_lab_mean": [
+              5.085582308431424,
+              -0.9651401916694463,
+              2.8707652544581372
+            ],
+            "lr_lab_mean": [
+              10.675319979586424,
+              -1.9672435941635262,
+              7.686639552438297
+            ],
+            "ipr_y_mean": 0.012528336429807415,
+            "lr_y_mean": 0.026785768383394637,
+            "delta_chroma_mean": 6.261634875527204,
+            "hue_abs_circular_mean_degrees": 14.943190879573766,
+            "hue_usable_fraction": 0.20804795877923107,
+            "lr_neutral_fraction": 0.0035671819262782403,
+            "ab_distance_on_lr_neutral_mean": 5.286993438109945,
+            "ipr_any_channel_low_fraction": 0.020277447483154975,
+            "lr_any_channel_low_fraction": 0.31087197780420134,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 6.42953505326168,
+            "delta_e00_median": 5.58016133706776,
+            "delta_e00_p95": 13.565527153448837,
+            "delta_e76_mean": 8.480777759000851,
+            "delta_lab_mean_lr_minus_ipr": [
+              -3.4507854139555967,
+              0.4388554619270056,
+              -2.5510749055011646
+            ],
+            "rgb_mae_normalized": 0.048358095889374904,
+            "ipr_lab_mean": [
+              8.536367722387178,
+              -1.403995653596419,
+              5.421840159959155
+            ],
+            "lr_lab_mean": [
+              5.085582308431424,
+              -0.9651401916694463,
+              2.8707652544581372
+            ],
+            "ipr_y_mean": 0.013908890933387473,
+            "lr_y_mean": 0.012528336429807415,
+            "delta_chroma_mean": -2.740144469165009,
+            "hue_abs_circular_mean_degrees": 14.007340215692553,
+            "hue_usable_fraction": 0.20051922314704718,
+            "lr_neutral_fraction": 0.0024118113357114545,
+            "ab_distance_on_lr_neutral_mean": 4.2202668604276,
+            "ipr_any_channel_low_fraction": 0.0006619104240982957,
+            "lr_any_channel_low_fraction": 0.020277447483154975,
+            "ipr_any_channel_high_fraction": 1.1890606420927467e-05,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "without_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 7.118965678414499,
+            "delta_e00_median": 6.298462239424628,
+            "delta_e00_p95": 14.280470290200267,
+            "delta_e76_mean": 9.060338725248481,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.502819487504521,
+              -0.8878460881339667,
+              4.717371677532965
+            ],
+            "rgb_mae_normalized": 0.04672221544345872,
+            "ipr_lab_mean": [
+              5.172500492081175,
+              -1.0793975060296603,
+              2.9692678749055523
+            ],
+            "lr_lab_mean": [
+              10.675319979586424,
+              -1.9672435941635262,
+              7.686639552438297
+            ],
+            "ipr_y_mean": 0.012540530649107798,
+            "lr_y_mean": 0.026785768383394637,
+            "delta_chroma_mean": 6.147835689275669,
+            "hue_abs_circular_mean_degrees": 13.08036688619418,
+            "hue_usable_fraction": 0.2176218787158145,
+            "lr_neutral_fraction": 0.0035671819262782403,
+            "ab_distance_on_lr_neutral_mean": 2.1278616431396173,
+            "ipr_any_channel_low_fraction": 0.021171224732461354,
+            "lr_any_channel_low_fraction": 0.31087197780420134,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 5.715563677951207,
+            "delta_e00_median": 5.4972922917226095,
+            "delta_e00_p95": 9.897598105816847,
+            "delta_e76_mean": 7.481926762077909,
+            "delta_lab_mean_lr_minus_ipr": [
+              -3.363867230305755,
+              0.3245981475667877,
+              -2.45257228505376
+            ],
+            "rgb_mae_normalized": 0.04306930195559114,
+            "ipr_lab_mean": [
+              8.536367722387178,
+              -1.403995653596419,
+              5.421840159959155
+            ],
+            "lr_lab_mean": [
+              5.172500492081175,
+              -1.0793975060296603,
+              2.9692678749055523
+            ],
+            "ipr_y_mean": 0.013908890933387473,
+            "lr_y_mean": 0.012540530649107798,
+            "delta_chroma_mean": -2.62634528291347,
+            "hue_abs_circular_mean_degrees": 12.373084236407735,
+            "hue_usable_fraction": 0.21068370986920332,
+            "lr_neutral_fraction": 0.002334522393975426,
+            "ab_distance_on_lr_neutral_mean": 1.1654277277412788,
+            "ipr_any_channel_low_fraction": 0.0006619104240982957,
+            "lr_any_channel_low_fraction": 0.021171224732461354,
+            "ipr_any_channel_high_fraction": 1.1890606420927467e-05,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 7.804806820555448,
+            "delta_e00_median": 6.180614499288666,
+            "delta_e00_p95": 18.887166283978278,
+            "delta_e76_mean": 10.212990266795925,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.543693094937601,
+              -1.09621648265366,
+              4.68355726715461
+            ],
+            "rgb_mae_normalized": 0.05196919140176996,
+            "ipr_lab_mean": [
+              5.131626884648795,
+              -0.871027111509977,
+              3.0030822852839862
+            ],
+            "lr_lab_mean": [
+              10.675319979586424,
+              -1.9672435941635262,
+              7.686639552438297
+            ],
+            "ipr_y_mean": 0.012929313108135587,
+            "lr_y_mean": 0.026785768383394637,
+            "delta_chroma_mean": 5.93013120301667,
+            "hue_abs_circular_mean_degrees": 16.513920134607105,
+            "hue_usable_fraction": 0.21370986920332938,
+            "lr_neutral_fraction": 0.0035671819262782403,
+            "ab_distance_on_lr_neutral_mean": 5.783944766105679,
+            "ipr_any_channel_low_fraction": 0.025671819262782402,
+            "lr_any_channel_low_fraction": 0.31087197780420134,
+            "ipr_any_channel_high_fraction": 1.3872374157748712e-05,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 6.512626286471561,
+            "delta_e00_median": 5.596873062511581,
+            "delta_e00_p95": 13.928583473169232,
+            "delta_e76_mean": 8.706067210613114,
+            "delta_lab_mean_lr_minus_ipr": [
+              -3.4047408377386432,
+              0.5329685420864838,
+              -2.4187578746753386
+            ],
+            "rgb_mae_normalized": 0.049149300981465166,
+            "ipr_lab_mean": [
+              8.536367722387178,
+              -1.403995653596419,
+              5.421840159959155
+            ],
+            "lr_lab_mean": [
+              5.131626884648795,
+              -0.871027111509977,
+              3.0030822852839862
+            ],
+            "ipr_y_mean": 0.013908890933387473,
+            "lr_y_mean": 0.012929313108135587,
+            "delta_chroma_mean": -2.4086407966544727,
+            "hue_abs_circular_mean_degrees": 15.786924223599303,
+            "hue_usable_fraction": 0.20531510107015458,
+            "lr_neutral_fraction": 0.0020848196591359493,
+            "ab_distance_on_lr_neutral_mean": 4.443348072478941,
+            "ipr_any_channel_low_fraction": 0.0006619104240982957,
+            "lr_any_channel_low_fraction": 0.025671819262782402,
+            "ipr_any_channel_high_fraction": 1.1890606420927467e-05,
+            "lr_any_channel_high_fraction": 1.3872374157748712e-05
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 7.069284693857639,
+            "delta_e00_median": 6.2387721362301765,
+            "delta_e00_p95": 14.462494673622944,
+            "delta_e76_mean": 9.036943900827218,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.460670660555396,
+              -0.9736544355322307,
+              4.592600386258754
+            ],
+            "rgb_mae_normalized": 0.04677273046669555,
+            "ipr_lab_mean": [
+              5.21464931903101,
+              -0.9935891586313337,
+              3.0940391661798676
+            ],
+            "lr_lab_mean": [
+              10.675319979586424,
+              -1.9672435941635262,
+              7.686639552438297
+            ],
+            "ipr_y_mean": 0.012920720579990972,
+            "lr_y_mean": 0.026785768383394637,
+            "delta_chroma_mean": 5.814902745979811,
+            "hue_abs_circular_mean_degrees": 14.946225280178343,
+            "hue_usable_fraction": 0.22319659135949266,
+            "lr_neutral_fraction": 0.0035671819262782403,
+            "ab_distance_on_lr_neutral_mean": 2.2372854407364806,
+            "ipr_any_channel_low_fraction": 0.026890606420927467,
+            "lr_any_channel_low_fraction": 0.31087197780420134,
+            "ipr_any_channel_high_fraction": 9.908838684106222e-06,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 5.80350652249899,
+            "delta_e00_median": 5.5258092728001325,
+            "delta_e00_p95": 9.97138176474223,
+            "delta_e76_mean": 7.720479894140632,
+            "delta_lab_mean_lr_minus_ipr": [
+              -3.321718403356191,
+              0.4104064949650482,
+              -2.3278009937793813
+            ],
+            "rgb_mae_normalized": 0.04397699324955103,
+            "ipr_lab_mean": [
+              8.536367722387178,
+              -1.403995653596419,
+              5.421840159959155
+            ],
+            "lr_lab_mean": [
+              5.21464931903101,
+              -0.9935891586313337,
+              3.0940391661798676
+            ],
+            "ipr_y_mean": 0.013908890933387473,
+            "lr_y_mean": 0.012920720579990972,
+            "delta_chroma_mean": -2.293412339617613,
+            "hue_abs_circular_mean_degrees": 14.373426485188705,
+            "hue_usable_fraction": 0.21538446294094332,
+            "lr_neutral_fraction": 0.0019738406658739594,
+            "ab_distance_on_lr_neutral_mean": 1.2599570928599784,
+            "ipr_any_channel_low_fraction": 0.0006619104240982957,
+            "lr_any_channel_low_fraction": 0.026890606420927467,
+            "ipr_any_channel_high_fraction": 1.1890606420927467e-05,
+            "lr_any_channel_high_fraction": 9.908838684106222e-06
+          }
+        }
+      ],
+      "oracle_equal_L_delta_e00_mean": 2.066397001694219,
+      "oracle_equal_L_delta_e00_p95": 7.66510311159519,
+      "local_y_ratio_ev_p10_p50_p90": [
+        -0.27706514450407155,
+        -0.11266856657563298,
+        1.051742351744332
+      ],
+      "tonal_holdout": [
+        {
+          "model": "exposure",
+          "parameters": {
+            "gain": 2.064065567513985,
+            "gamma": 1.0,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A0043",
+          "training_scene_ids": [
+            "6V1A0007",
+            "6V1A0037",
+            "6V1A0327",
+            "6V1A9421",
+            "6V1A9950"
+          ],
+          "linear_any_over_one_before_clip_fraction": 0.0012029330162504955,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.537840032745877,
+            "delta_e00_median": 4.342513321046891,
+            "delta_e00_p95": 6.532458405133655,
+            "delta_e76_mean": 6.984226385520443,
+            "delta_lab_mean_lr_minus_ipr": [
+              -3.498904144548482,
+              0.6795351111192968,
+              -1.2274876517886286
+            ],
+            "rgb_mae_normalized": 0.040170604704917505,
+            "ipr_lab_mean": [
+              14.174224124135636,
+              -2.6467787052829133,
+              8.914127204226954
+            ],
+            "lr_lab_mean": [
+              10.675319979586424,
+              -1.9672435941635262,
+              7.686639552438297
+            ],
+            "ipr_y_mean": 0.028637822128559417,
+            "lr_y_mean": 0.026785768383394637,
+            "delta_chroma_mean": -1.2902415602937551,
+            "hue_abs_circular_mean_degrees": 3.244367886879384,
+            "hue_usable_fraction": 0.6684839476813318,
+            "lr_neutral_fraction": 0.0035671819262782403,
+            "ab_distance_on_lr_neutral_mean": 1.7582685441604984,
+            "ipr_any_channel_low_fraction": 0.0006599286563614744,
+            "lr_any_channel_low_fraction": 0.31087197780420134,
+            "ipr_any_channel_high_fraction": 0.0012029330162504955,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          }
+        },
+        {
+          "model": "power",
+          "parameters": {
+            "gain": 5.190490466605484,
+            "gamma": 1.310370476656683,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A0043",
+          "training_scene_ids": [
+            "6V1A0007",
+            "6V1A0037",
+            "6V1A0327",
+            "6V1A9421",
+            "6V1A9950"
+          ],
+          "linear_any_over_one_before_clip_fraction": 0.0039813713832738806,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 1.7577142160786359,
+            "delta_e00_median": 1.036412659811666,
+            "delta_e00_p95": 5.38223516781186,
+            "delta_e76_mean": 2.915571459306932,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.0974945465790987,
+              -0.4846256493428055,
+              1.6428437335146029
+            ],
+            "rgb_mae_normalized": 0.012858209061965987,
+            "ipr_lab_mean": [
+              10.772814526165325,
+              -1.4826179448208145,
+              6.043795818923812
+            ],
+            "lr_lab_mean": [
+              10.675319979586424,
+              -1.9672435941635262,
+              7.686639552438297
+            ],
+            "ipr_y_mean": 0.02599058498277198,
+            "lr_y_mean": 0.026785768383394637,
+            "delta_chroma_mean": 2.5581523460492024,
+            "hue_abs_circular_mean_degrees": 2.5634406299767907,
+            "hue_usable_fraction": 0.5979409433214428,
+            "lr_neutral_fraction": 0.0035671819262782403,
+            "ab_distance_on_lr_neutral_mean": 1.8212093038438661,
+            "ipr_any_channel_low_fraction": 0.0006856916369401506,
+            "lr_any_channel_low_fraction": 0.31087197780420134,
+            "ipr_any_channel_high_fraction": 0.0039813713832738806,
+            "lr_any_channel_high_fraction": 0.00038049940546967895
+          }
+        }
+      ]
+    },
+    {
+      "scene": "6V1A0327",
+      "lr_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0327-2.tif",
+        "bytes": 193798706,
+        "size": [
+          4640,
+          6960
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A0327.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "Custom",
+          "Temperature": "5200",
+          "Tint": "0",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "0",
+          "LensProfileEnable": "0",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "5D7F245E84E41C16B3DB534A9049ADA4",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "07a3b617403947720168b3780d56b5c75bee8d736023ce7829f5c5be72002340",
+        "mtime_utc": "2026-10-07T14:04:34.602582+00:00"
+      },
+      "crop_candidates": [
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.07455157559882337
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.12170868281448699
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.12321765875222256
+        },
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.12819837357643069
+        }
+      ],
+      "harmonized_warnings": [
+        "WhiteBalance: expected As Shot, got Custom"
+      ],
+      "new_vs_old_lr": {
+        "samples": 504600,
+        "delta_e00_mean": 6.459996841855781,
+        "delta_e00_median": 3.8694140112104094,
+        "delta_e00_p95": 22.568232963911353,
+        "delta_e76_mean": 8.064395745876986,
+        "delta_lab_mean_lr_minus_ipr": [
+          -1.8309165907164975,
+          -0.7382177660159026,
+          0.2769309316027436
+        ],
+        "rgb_mae_normalized": 0.05920961521389599,
+        "ipr_lab_mean": [
+          33.254714314086804,
+          2.1240132512938192,
+          8.572928995953125
+        ],
+        "lr_lab_mean": [
+          31.423797723370846,
+          1.3857954852779792,
+          8.849859927555636
+        ],
+        "ipr_y_mean": 0.1211251028555519,
+        "lr_y_mean": 0.10927877230174358,
+        "delta_chroma_mean": -0.24523756041102218,
+        "hue_abs_circular_mean_degrees": 7.8006800448673035,
+        "hue_usable_fraction": 0.764367816091954,
+        "lr_neutral_fraction": 0.04144074514466904,
+        "ab_distance_on_lr_neutral_mean": 7.222346194678594,
+        "ipr_any_channel_low_fraction": 0.0036187078874355925,
+        "lr_any_channel_low_fraction": 0.005879904875148632,
+        "ipr_any_channel_high_fraction": 3.963535473642489e-06,
+        "lr_any_channel_high_fraction": 1.9817677368212447e-06
+      },
+      "lr_xmp_rendering": {
+        "ProcessVersion": "15.4",
+        "WhiteBalance": "Custom",
+        "Temperature": "5200",
+        "Tint": "0",
+        "Exposure2012": "0.00",
+        "LensProfileEnable": "0",
+        "ShadowTint": "0",
+        "ToneCurveName2012": "Linear",
+        "CameraProfile": "Adobe Standard",
+        "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+        "LensProfileSetup": "LensDefaults",
+        "LensProfileName": "Camera Settings",
+        "LensProfileDigest": "5D7F245E84E41C16B3DB534A9049ADA4",
+        "LensProfileIsEmbedded": "True",
+        "LensProfileDistortionScale": "100",
+        "LensProfileVignettingScale": "100",
+        "CameraRawProfile": "True",
+        "ProfileName": "Camera Settings",
+        "ToneCurvePV2012": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Red": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Green": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Blue": [
+          "0, 0",
+          "255, 255"
+        ]
+      },
+      "profile_variants": [
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 10.911349020972319,
+            "delta_e00_median": 8.43414821592152,
+            "delta_e00_p95": 25.758554746095452,
+            "delta_e76_mean": 14.182212408994275,
+            "delta_lab_mean_lr_minus_ipr": [
+              9.536000999095334,
+              0.2674098266506119,
+              3.8695147612371357
+            ],
+            "rgb_mae_normalized": 0.09914700342918745,
+            "ipr_lab_mean": [
+              21.887796724275383,
+              1.1183856586273044,
+              4.980345166318557
+            ],
+            "lr_lab_mean": [
+              31.423797723370846,
+              1.3857954852779792,
+              8.849859927555636
+            ],
+            "ipr_y_mean": 0.04678266246543539,
+            "lr_y_mean": 0.10927877230174358,
+            "delta_chroma_mean": 5.973180454303509,
+            "hue_abs_circular_mean_degrees": 8.410106821375352,
+            "hue_usable_fraction": 0.628170828378914,
+            "lr_neutral_fraction": 0.04144074514466904,
+            "ab_distance_on_lr_neutral_mean": 6.026347213346289,
+            "ipr_any_channel_low_fraction": 5.945303210463734e-06,
+            "lr_any_channel_low_fraction": 0.005879904875148632,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 3.61581757935324,
+            "delta_e00_median": 2.001111057039629,
+            "delta_e00_p95": 13.472156596114754,
+            "delta_e76_mean": 4.6355377786339504,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.3460479437139639,
+              -0.15895213275659822,
+              0.1747519402932179
+            ],
+            "rgb_mae_normalized": 0.029823096105136164,
+            "ipr_lab_mean": [
+              21.541748780561,
+              1.2773377913838888,
+              4.805593226025312
+            ],
+            "lr_lab_mean": [
+              21.887796724275383,
+              1.1183856586273044,
+              4.980345166318557
+            ],
+            "ipr_y_mean": 0.04514271725517509,
+            "lr_y_mean": 0.04678266246543539,
+            "delta_chroma_mean": 0.09463138085521157,
+            "hue_abs_circular_mean_degrees": 6.629272486110981,
+            "hue_usable_fraction": 0.5776535869996037,
+            "lr_neutral_fraction": 0.11855727308759413,
+            "ab_distance_on_lr_neutral_mean": 2.152979775955314,
+            "ipr_any_channel_low_fraction": 7.927070947284978e-05,
+            "lr_any_channel_low_fraction": 5.945303210463734e-06,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 9.39412144160995,
+            "delta_e00_median": 7.372616690542319,
+            "delta_e00_p95": 24.20879448288407,
+            "delta_e76_mean": 12.223183592103197,
+            "delta_lab_mean_lr_minus_ipr": [
+              9.882048942809343,
+              0.10845769389400985,
+              4.044266701530475
+            ],
+            "rgb_mae_normalized": 0.0874264272873083,
+            "ipr_lab_mean": [
+              21.541748780561,
+              1.2773377913838888,
+              4.805593226025312
+            ],
+            "lr_lab_mean": [
+              31.423797723370846,
+              1.3857954852779792,
+              8.849859927555636
+            ],
+            "ipr_y_mean": 0.04514271725517509,
+            "lr_y_mean": 0.10927877230174358,
+            "delta_chroma_mean": 6.067811835158718,
+            "hue_abs_circular_mean_degrees": 4.927932950493423,
+            "hue_usable_fraction": 0.6407609988109394,
+            "lr_neutral_fraction": 0.04144074514466904,
+            "ab_distance_on_lr_neutral_mean": 1.5200496509169683,
+            "ipr_any_channel_low_fraction": 7.927070947284978e-05,
+            "lr_any_channel_low_fraction": 0.005879904875148632,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 0.0,
+            "delta_e00_median": 0.0,
+            "delta_e00_p95": 0.0,
+            "delta_e76_mean": 0.0,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rgb_mae_normalized": 0.0,
+            "ipr_lab_mean": [
+              21.541748780561,
+              1.2773377913838888,
+              4.805593226025312
+            ],
+            "lr_lab_mean": [
+              21.541748780561,
+              1.2773377913838888,
+              4.805593226025312
+            ],
+            "ipr_y_mean": 0.04514271725517509,
+            "lr_y_mean": 0.04514271725517509,
+            "delta_chroma_mean": 0.0,
+            "hue_abs_circular_mean_degrees": 0.0,
+            "hue_usable_fraction": 0.6410384462940943,
+            "lr_neutral_fraction": 0.12357510899722553,
+            "ab_distance_on_lr_neutral_mean": 0.0,
+            "ipr_any_channel_low_fraction": 7.927070947284978e-05,
+            "lr_any_channel_low_fraction": 7.927070947284978e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "with_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 10.867510889318961,
+            "delta_e00_median": 9.87959166679055,
+            "delta_e00_p95": 24.516442902225315,
+            "delta_e76_mean": 14.368327775074729,
+            "delta_lab_mean_lr_minus_ipr": [
+              10.236496084541512,
+              -1.0307894439340566,
+              3.003697874724933
+            ],
+            "rgb_mae_normalized": 0.10476343203928704,
+            "ipr_lab_mean": [
+              21.18730163883,
+              2.4165849292120716,
+              5.846162052830664
+            ],
+            "lr_lab_mean": [
+              31.423797723370846,
+              1.3857954852779792,
+              8.849859927555636
+            ],
+            "ipr_y_mean": 0.06196764324020626,
+            "lr_y_mean": 0.10927877230174358,
+            "delta_chroma_mean": 2.228927094593653,
+            "hue_abs_circular_mean_degrees": 16.658208039879927,
+            "hue_usable_fraction": 0.6825287356321839,
+            "lr_neutral_fraction": 0.04144074514466904,
+            "ab_distance_on_lr_neutral_mean": 9.30159285213011,
+            "ipr_any_channel_low_fraction": 0.00012286959968291715,
+            "lr_any_channel_low_fraction": 0.005879904875148632,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 8.317275736976047,
+            "delta_e00_median": 6.767604621324304,
+            "delta_e00_p95": 19.092058881701202,
+            "delta_e76_mean": 11.326511545171941,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.3544471417319685,
+              1.1392471378281084,
+              1.040568826805436
+            ],
+            "rgb_mae_normalized": 0.07424855930611188,
+            "ipr_lab_mean": [
+              21.541748780561,
+              1.2773377913838888,
+              4.805593226025312
+            ],
+            "lr_lab_mean": [
+              21.18730163883,
+              2.4165849292120716,
+              5.846162052830664
+            ],
+            "ipr_y_mean": 0.04514271725517509,
+            "lr_y_mean": 0.06196764324020626,
+            "delta_chroma_mean": 3.8388847405650672,
+            "hue_abs_circular_mean_degrees": 13.516985387415971,
+            "hue_usable_fraction": 0.5733749504558066,
+            "lr_neutral_fraction": 0.020479587792310742,
+            "ab_distance_on_lr_neutral_mean": 3.9540032979390993,
+            "ipr_any_channel_low_fraction": 7.927070947284978e-05,
+            "lr_any_channel_low_fraction": 0.00012286959968291715,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "without_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 9.02573377625378,
+            "delta_e00_median": 9.810835007831049,
+            "delta_e00_p95": 12.31624706222257,
+            "delta_e76_mean": 11.856815782134571,
+            "delta_lab_mean_lr_minus_ipr": [
+              10.798107223127774,
+              -1.2866001537497955,
+              3.218912961810915
+            ],
+            "rgb_mae_normalized": 0.09319600141050695,
+            "ipr_lab_mean": [
+              20.625690500242424,
+              2.672395639027722,
+              5.630946965744871
+            ],
+            "lr_lab_mean": [
+              31.423797723370846,
+              1.3857954852779792,
+              8.849859927555636
+            ],
+            "ipr_y_mean": 0.05877808611272545,
+            "lr_y_mean": 0.10927877230174358,
+            "delta_chroma_mean": 2.3213041961426155,
+            "hue_abs_circular_mean_degrees": 13.51888595536249,
+            "hue_usable_fraction": 0.6976991676575506,
+            "lr_neutral_fraction": 0.04144074514466904,
+            "ab_distance_on_lr_neutral_mean": 1.8601968691655,
+            "ipr_any_channel_low_fraction": 0.00031311930241775663,
+            "lr_any_channel_low_fraction": 0.005879904875148632,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 6.230475957754234,
+            "delta_e00_median": 5.668786363423479,
+            "delta_e00_p95": 13.972154837382336,
+            "delta_e76_mean": 8.752675441310307,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.9160582803186526,
+              1.3950578476438247,
+              0.8253537397195355
+            ],
+            "rgb_mae_normalized": 0.056979625667706965,
+            "ipr_lab_mean": [
+              21.541748780561,
+              1.2773377913838888,
+              4.805593226025312
+            ],
+            "lr_lab_mean": [
+              20.625690500242424,
+              2.672395639027722,
+              5.630946965744871
+            ],
+            "ipr_y_mean": 0.04514271725517509,
+            "lr_y_mean": 0.05877808611272545,
+            "delta_chroma_mean": 3.746507639016107,
+            "hue_abs_circular_mean_degrees": 9.679361826937741,
+            "hue_usable_fraction": 0.5895600475624256,
+            "lr_neutral_fraction": 0.02065200158541419,
+            "ab_distance_on_lr_neutral_mean": 1.3838749242312736,
+            "ipr_any_channel_low_fraction": 7.927070947284978e-05,
+            "lr_any_channel_low_fraction": 0.00031311930241775663,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 10.970608654346357,
+            "delta_e00_median": 9.631060166253278,
+            "delta_e00_p95": 24.582761006877856,
+            "delta_e76_mean": 14.66822240718359,
+            "delta_lab_mean_lr_minus_ipr": [
+              9.90289475993697,
+              -1.972583712891528,
+              2.434427885055482
+            ],
+            "rgb_mae_normalized": 0.10415239326690673,
+            "ipr_lab_mean": [
+              21.520902963434086,
+              3.358379198169602,
+              6.415432042500369
+            ],
+            "lr_lab_mean": [
+              31.423797723370846,
+              1.3857954852779792,
+              8.849859927555636
+            ],
+            "ipr_y_mean": 0.06566426052846254,
+            "lr_y_mean": 0.10927877230174358,
+            "delta_chroma_mean": 0.4860085855186738,
+            "hue_abs_circular_mean_degrees": 18.656577552341595,
+            "hue_usable_fraction": 0.6982025366627032,
+            "lr_neutral_fraction": 0.04144074514466904,
+            "ab_distance_on_lr_neutral_mean": 10.595316690683362,
+            "ipr_any_channel_low_fraction": 0.04540428061831153,
+            "lr_any_channel_low_fraction": 0.005879904875148632,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 9.198697737792578,
+            "delta_e00_median": 7.403399148591575,
+            "delta_e00_p95": 20.596753754260178,
+            "delta_e76_mean": 12.830820804465917,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.020845817127534663,
+              2.0810414067855727,
+              1.609838816474999
+            ],
+            "rgb_mae_normalized": 0.08022318915109947,
+            "ipr_lab_mean": [
+              21.541748780561,
+              1.2773377913838888,
+              4.805593226025312
+            ],
+            "lr_lab_mean": [
+              21.520902963434086,
+              3.358379198169602,
+              6.415432042500369
+            ],
+            "ipr_y_mean": 0.04514271725517509,
+            "lr_y_mean": 0.06566426052846254,
+            "delta_chroma_mean": 5.581803249640046,
+            "hue_abs_circular_mean_degrees": 15.461738025311389,
+            "hue_usable_fraction": 0.5816765755053508,
+            "lr_neutral_fraction": 0.013731668648434404,
+            "ab_distance_on_lr_neutral_mean": 4.344794055880606,
+            "ipr_any_channel_low_fraction": 7.927070947284978e-05,
+            "lr_any_channel_low_fraction": 0.04540428061831153,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.991287474814797,
+            "delta_e00_median": 9.61982603147134,
+            "delta_e00_p95": 13.566952040757796,
+            "delta_e76_mean": 11.958962817121002,
+            "delta_lab_mean_lr_minus_ipr": [
+              10.497928272305641,
+              -2.233264335445704,
+              2.662816379509476
+            ],
+            "rgb_mae_normalized": 0.0919623180883528,
+            "ipr_lab_mean": [
+              20.92586945106576,
+              3.6190598207235647,
+              6.187043548046292
+            ],
+            "lr_lab_mean": [
+              31.423797723370846,
+              1.3857954852779792,
+              8.849859927555636
+            ],
+            "ipr_y_mean": 0.06206876670282337,
+            "lr_y_mean": 0.10927877230174358,
+            "delta_chroma_mean": 0.5745461315650219,
+            "hue_abs_circular_mean_degrees": 15.67767051513324,
+            "hue_usable_fraction": 0.7141795481569561,
+            "lr_neutral_fraction": 0.04144074514466904,
+            "ab_distance_on_lr_neutral_mean": 2.0641237635232863,
+            "ipr_any_channel_low_fraction": 0.043541418945699566,
+            "lr_any_channel_low_fraction": 0.005879904875148632,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 7.158447834762539,
+            "delta_e00_median": 6.210713759439493,
+            "delta_e00_p95": 16.730445082295155,
+            "delta_e76_mean": 10.34051234143794,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.6158793294962874,
+              2.3417220293397563,
+              1.3814503220209164
+            ],
+            "rgb_mae_normalized": 0.0631908201571054,
+            "ipr_lab_mean": [
+              21.541748780561,
+              1.2773377913838888,
+              4.805593226025312
+            ],
+            "lr_lab_mean": [
+              20.92586945106576,
+              3.6190598207235647,
+              6.187043548046292
+            ],
+            "ipr_y_mean": 0.04514271725517509,
+            "lr_y_mean": 0.06206876670282337,
+            "delta_chroma_mean": 5.493265703593698,
+            "hue_abs_circular_mean_degrees": 11.948244213846694,
+            "hue_usable_fraction": 0.5967043202536663,
+            "lr_neutral_fraction": 0.014086405073325406,
+            "ab_distance_on_lr_neutral_mean": 1.6454716693441844,
+            "ipr_any_channel_low_fraction": 7.927070947284978e-05,
+            "lr_any_channel_low_fraction": 0.043541418945699566,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        }
+      ],
+      "oracle_equal_L_delta_e00_mean": 3.8398473511081077,
+      "oracle_equal_L_delta_e00_p95": 7.291373671901428,
+      "local_y_ratio_ev_p10_p50_p90": [
+        0.07705329688599676,
+        0.9248191332122495,
+        1.5194941165720945
+      ],
+      "tonal_holdout": [
+        {
+          "model": "exposure",
+          "parameters": {
+            "gain": 1.824059197757163,
+            "gamma": 1.0,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A0327",
+          "training_scene_ids": [
+            "6V1A0007",
+            "6V1A0037",
+            "6V1A0043",
+            "6V1A9421",
+            "6V1A9950"
+          ],
+          "linear_any_over_one_before_clip_fraction": 1.9817677368212447e-06,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 4.851699646813305,
+            "delta_e00_median": 3.5842095376558953,
+            "delta_e00_p95": 11.024558817914057,
+            "delta_e76_mean": 6.840034298903656,
+            "delta_lab_mean_lr_minus_ipr": [
+              1.7594575518198636,
+              -0.196833961096497,
+              2.8799368808339567
+            ],
+            "rgb_mae_normalized": 0.043405852807612146,
+            "ipr_lab_mean": [
+              29.664340171551178,
+              1.5826294463744726,
+              5.969923046721703
+            ],
+            "lr_lab_mean": [
+              31.423797723370846,
+              1.3857954852779792,
+              8.849859927555636
+            ],
+            "ipr_y_mean": 0.08234228397108463,
+            "lr_y_mean": 0.10927877230174358,
+            "delta_chroma_mean": 4.132124368177017,
+            "hue_abs_circular_mean_degrees": 5.3541561219181295,
+            "hue_usable_fraction": 0.7302715021799445,
+            "lr_neutral_fraction": 0.04144074514466904,
+            "ab_distance_on_lr_neutral_mean": 1.3957654934523913,
+            "ipr_any_channel_low_fraction": 7.728894173602854e-05,
+            "lr_any_channel_low_fraction": 0.005879904875148632,
+            "ipr_any_channel_high_fraction": 1.9817677368212447e-06,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          }
+        },
+        {
+          "model": "power",
+          "parameters": {
+            "gain": 5.2246261865619985,
+            "gamma": 1.318816614451089,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A0327",
+          "training_scene_ids": [
+            "6V1A0007",
+            "6V1A0037",
+            "6V1A0043",
+            "6V1A9421",
+            "6V1A9950"
+          ],
+          "linear_any_over_one_before_clip_fraction": 3.963535473642489e-06,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.994632265261687,
+            "delta_e00_median": 3.0855566888078494,
+            "delta_e00_p95": 5.54477830793401,
+            "delta_e76_mean": 4.5040282552898265,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.9383022573230368,
+              0.012159259041729096,
+              2.7996578045157303
+            ],
+            "rgb_mae_normalized": 0.019453647243407503,
+            "ipr_lab_mean": [
+              30.485495466047844,
+              1.373636226236173,
+              6.0502021230398375
+            ],
+            "lr_lab_mean": [
+              31.423797723370846,
+              1.3857954852779792,
+              8.849859927555636
+            ],
+            "ipr_y_mean": 0.10319284405759335,
+            "lr_y_mean": 0.10927877230174358,
+            "delta_chroma_mean": 3.9340659189902794,
+            "hue_abs_circular_mean_degrees": 5.3984904615556,
+            "hue_usable_fraction": 0.7271918351169243,
+            "lr_neutral_fraction": 0.04144074514466904,
+            "ab_distance_on_lr_neutral_mean": 1.3994269682936356,
+            "ipr_any_channel_low_fraction": 8.323424494649227e-05,
+            "lr_any_channel_low_fraction": 0.005879904875148632,
+            "ipr_any_channel_high_fraction": 3.963535473642489e-06,
+            "lr_any_channel_high_fraction": 1.9817677368212447e-06
+          }
+        }
+      ]
+    },
+    {
+      "scene": "6V1A9421",
+      "lr_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A9421-2.tif",
+        "bytes": 193801168,
+        "size": [
+          4640,
+          6960
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A9421.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "Custom",
+          "Temperature": "5200",
+          "Tint": "0",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "0",
+          "LensProfileEnable": "0",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "26561327EA13387F466D072F0F7ABAD3",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "cc971cfc7b0579f094bca04cb7a80d7ed0e2f40c3654e624683fcb874744a33f",
+        "mtime_utc": "2026-10-07T14:03:58.052150+00:00"
+      },
+      "crop_candidates": [
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.14821031225571807
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.21660354104138774
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.21687433605237563
+        },
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.2234897462976477
+        }
+      ],
+      "harmonized_warnings": [
+        "WhiteBalance: expected As Shot, got Custom"
+      ],
+      "new_vs_old_lr": {
+        "samples": 504600,
+        "delta_e00_mean": 10.578605303796463,
+        "delta_e00_median": 7.7863289064320504,
+        "delta_e00_p95": 28.829644434916446,
+        "delta_e76_mean": 15.409877384440287,
+        "delta_lab_mean_lr_minus_ipr": [
+          -4.1683784792763765,
+          -1.5668780386868082,
+          -4.272673740752528
+        ],
+        "rgb_mae_normalized": 0.0891988612725591,
+        "ipr_lab_mean": [
+          52.75352404575061,
+          4.311824823993638,
+          35.884310719161405
+        ],
+        "lr_lab_mean": [
+          48.5851455664748,
+          2.744946785306683,
+          31.6116369784095
+        ],
+        "ipr_y_mean": 0.2882406521040883,
+        "lr_y_mean": 0.2347451342354749,
+        "delta_chroma_mean": -5.076305953188978,
+        "hue_abs_circular_mean_degrees": 14.884882846141437,
+        "hue_usable_fraction": 0.9222909235037654,
+        "lr_neutral_fraction": 0.015747126436781608,
+        "ab_distance_on_lr_neutral_mean": 6.397574714283192,
+        "ipr_any_channel_low_fraction": 0.159778042013476,
+        "lr_any_channel_low_fraction": 0.02851961950059453,
+        "ipr_any_channel_high_fraction": 0.01371185097106619,
+        "lr_any_channel_high_fraction": 0.0021125644074514466
+      },
+      "lr_xmp_rendering": {
+        "ProcessVersion": "15.4",
+        "WhiteBalance": "Custom",
+        "Temperature": "5200",
+        "Tint": "0",
+        "Exposure2012": "0.00",
+        "LensProfileEnable": "0",
+        "ShadowTint": "0",
+        "ToneCurveName2012": "Linear",
+        "CameraProfile": "Adobe Standard",
+        "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+        "LensProfileSetup": "LensDefaults",
+        "LensProfileName": "Camera Settings",
+        "LensProfileDigest": "26561327EA13387F466D072F0F7ABAD3",
+        "LensProfileIsEmbedded": "True",
+        "LensProfileDistortionScale": "100",
+        "LensProfileVignettingScale": "100",
+        "CameraRawProfile": "True",
+        "ProfileName": "Camera Settings",
+        "ToneCurvePV2012": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Red": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Green": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Blue": [
+          "0, 0",
+          "255, 255"
+        ]
+      },
+      "profile_variants": [
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 18.190901704936767,
+            "delta_e00_median": 18.11256035024713,
+            "delta_e00_p95": 31.320824697374494,
+            "delta_e76_mean": 25.606554423773844,
+            "delta_lab_mean_lr_minus_ipr": [
+              15.972198468457059,
+              0.2305250715415188,
+              14.018721850989763
+            ],
+            "rgb_mae_normalized": 0.15000151851358945,
+            "ipr_lab_mean": [
+              32.61294709801748,
+              2.5144217137652567,
+              17.59291512741994
+            ],
+            "lr_lab_mean": [
+              48.5851455664748,
+              2.744946785306683,
+              31.6116369784095
+            ],
+            "ipr_y_mean": 0.09247629737089656,
+            "lr_y_mean": 0.2347451342354749,
+            "delta_chroma_mean": 14.579531878272276,
+            "hue_abs_circular_mean_degrees": 15.626288209539489,
+            "hue_usable_fraction": 0.88794887039239,
+            "lr_neutral_fraction": 0.015747126436781608,
+            "ab_distance_on_lr_neutral_mean": 4.623126768631456,
+            "ipr_any_channel_low_fraction": 0.000818470075307174,
+            "lr_any_channel_low_fraction": 0.02851961950059453,
+            "ipr_any_channel_high_fraction": 0.0001506143479984146,
+            "lr_any_channel_high_fraction": 0.0021125644074514466
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 6.72400136424957,
+            "delta_e00_median": 5.008902832135375,
+            "delta_e00_p95": 18.993607912062078,
+            "delta_e76_mean": 8.012009018030382,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.6239471041551687,
+              0.1301835264996264,
+              0.25836503217535495
+            ],
+            "rgb_mae_normalized": 0.03962442938561027,
+            "ipr_lab_mean": [
+              31.988999993862404,
+              2.3842381872655922,
+              17.33455009524478
+            ],
+            "lr_lab_mean": [
+              32.61294709801748,
+              2.5144217137652567,
+              17.59291512741994
+            ],
+            "ipr_y_mean": 0.08866357530522327,
+            "lr_y_mean": 0.09247629737089656,
+            "delta_chroma_mean": 0.2092145913196982,
+            "hue_abs_circular_mean_degrees": 17.195101053314815,
+            "hue_usable_fraction": 0.8637495045580658,
+            "lr_neutral_fraction": 0.03273483947681332,
+            "ab_distance_on_lr_neutral_mean": 5.752063295472257,
+            "ipr_any_channel_low_fraction": 0.004280618311533888,
+            "lr_any_channel_low_fraction": 0.000818470075307174,
+            "ipr_any_channel_high_fraction": 0.00014466904478795085,
+            "lr_any_channel_high_fraction": 0.0001506143479984146
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 16.436684729522035,
+            "delta_e00_median": 16.77949259205734,
+            "delta_e00_p95": 25.535654098171385,
+            "delta_e76_mean": 23.557317798875804,
+            "delta_lab_mean_lr_minus_ipr": [
+              16.59614557261194,
+              0.3607085980411511,
+              14.277086883165572
+            ],
+            "rgb_mae_normalized": 0.14032131573975568,
+            "ipr_lab_mean": [
+              31.988999993862404,
+              2.3842381872655922,
+              17.33455009524478
+            ],
+            "lr_lab_mean": [
+              48.5851455664748,
+              2.744946785306683,
+              31.6116369784095
+            ],
+            "ipr_y_mean": 0.08866357530522327,
+            "lr_y_mean": 0.2347451342354749,
+            "delta_chroma_mean": 14.78874646959197,
+            "hue_abs_circular_mean_degrees": 7.157514070824875,
+            "hue_usable_fraction": 0.9041755846214824,
+            "lr_neutral_fraction": 0.015747126436781608,
+            "ab_distance_on_lr_neutral_mean": 2.449213304021222,
+            "ipr_any_channel_low_fraction": 0.004280618311533888,
+            "lr_any_channel_low_fraction": 0.02851961950059453,
+            "ipr_any_channel_high_fraction": 0.00014466904478795085,
+            "lr_any_channel_high_fraction": 0.0021125644074514466
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 0.0,
+            "delta_e00_median": 0.0,
+            "delta_e00_p95": 0.0,
+            "delta_e76_mean": 0.0,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rgb_mae_normalized": 0.0,
+            "ipr_lab_mean": [
+              31.988999993862404,
+              2.3842381872655922,
+              17.33455009524478
+            ],
+            "lr_lab_mean": [
+              31.988999993862404,
+              2.3842381872655922,
+              17.33455009524478
+            ],
+            "ipr_y_mean": 0.08866357530522327,
+            "lr_y_mean": 0.08866357530522327,
+            "delta_chroma_mean": 0.0,
+            "hue_abs_circular_mean_degrees": 0.0,
+            "hue_usable_fraction": 0.9154260800634165,
+            "lr_neutral_fraction": 0.03206103844629409,
+            "ab_distance_on_lr_neutral_mean": 0.0,
+            "ipr_any_channel_low_fraction": 0.004280618311533888,
+            "lr_any_channel_low_fraction": 0.004280618311533888,
+            "ipr_any_channel_high_fraction": 0.00014466904478795085,
+            "lr_any_channel_high_fraction": 0.00014466904478795085
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "with_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 13.68298893833182,
+            "delta_e00_median": 11.420384547827613,
+            "delta_e00_p95": 31.977644441717118,
+            "delta_e76_mean": 18.276847372702804,
+            "delta_lab_mean_lr_minus_ipr": [
+              10.967686998379934,
+              -0.8523201198113982,
+              4.230652591088232
+            ],
+            "rgb_mae_normalized": 0.12201276526347467,
+            "ipr_lab_mean": [
+              37.6174585680957,
+              3.597266905118147,
+              27.3809843873204
+            ],
+            "lr_lab_mean": [
+              48.5851455664748,
+              2.744946785306683,
+              31.6116369784095
+            ],
+            "ipr_y_mean": 0.1506336788854904,
+            "lr_y_mean": 0.2347451342354749,
+            "delta_chroma_mean": 3.4257056381686235,
+            "hue_abs_circular_mean_degrees": 17.864276873777538,
+            "hue_usable_fraction": 0.8786286167261197,
+            "lr_neutral_fraction": 0.015747126436781608,
+            "ab_distance_on_lr_neutral_mean": 6.145976417295849,
+            "ipr_any_channel_low_fraction": 0.09304597701149425,
+            "lr_any_channel_low_fraction": 0.02851961950059453,
+            "ipr_any_channel_high_fraction": 1.3872374157748712e-05,
+            "lr_any_channel_high_fraction": 0.0021125644074514466
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 13.727682921216806,
+            "delta_e00_median": 13.053813486578825,
+            "delta_e00_p95": 25.212444118995897,
+            "delta_e76_mean": 20.149971274685324,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.628458574232789,
+              1.2130287178525374,
+              10.046434292076496
+            ],
+            "rgb_mae_normalized": 0.10617105362538207,
+            "ipr_lab_mean": [
+              31.988999993862404,
+              2.3842381872655922,
+              17.33455009524478
+            ],
+            "lr_lab_mean": [
+              37.6174585680957,
+              3.597266905118147,
+              27.3809843873204
+            ],
+            "ipr_y_mean": 0.08866357530522327,
+            "lr_y_mean": 0.1506336788854904,
+            "delta_chroma_mean": 11.363040831423355,
+            "hue_abs_circular_mean_degrees": 19.092014309010356,
+            "hue_usable_fraction": 0.8528478002378121,
+            "lr_neutral_fraction": 0.015578676179151804,
+            "ab_distance_on_lr_neutral_mean": 4.7533062591138835,
+            "ipr_any_channel_low_fraction": 0.004280618311533888,
+            "lr_any_channel_low_fraction": 0.09304597701149425,
+            "ipr_any_channel_high_fraction": 0.00014466904478795085,
+            "lr_any_channel_high_fraction": 1.3872374157748712e-05
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "without_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 11.120871307231189,
+            "delta_e00_median": 11.074000085662501,
+            "delta_e00_p95": 15.93483294004681,
+            "delta_e76_mean": 14.530960215705603,
+            "delta_lab_mean_lr_minus_ipr": [
+              11.915656757116444,
+              -0.8869242084010442,
+              4.654163275660373
+            ],
+            "rgb_mae_normalized": 0.10942885774367091,
+            "ipr_lab_mean": [
+              36.66948880935942,
+              3.6318709937080347,
+              26.95747370274855
+            ],
+            "lr_lab_mean": [
+              48.5851455664748,
+              2.744946785306683,
+              31.6116369784095
+            ],
+            "ipr_y_mean": 0.14268992927617272,
+            "lr_y_mean": 0.2347451342354749,
+            "delta_chroma_mean": 3.7684655511011718,
+            "hue_abs_circular_mean_degrees": 10.435307085266494,
+            "hue_usable_fraction": 0.8882203725723345,
+            "lr_neutral_fraction": 0.015747126436781608,
+            "ab_distance_on_lr_neutral_mean": 3.1819004238950552,
+            "ipr_any_channel_low_fraction": 0.09856123662306777,
+            "lr_any_channel_low_fraction": 0.02851961950059453,
+            "ipr_any_channel_high_fraction": 1.5854141894569958e-05,
+            "lr_any_channel_high_fraction": 0.0021125644074514466
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 9.582145761043497,
+            "delta_e00_median": 8.485320758058142,
+            "delta_e00_p95": 16.766657634030732,
+            "delta_e76_mean": 15.554540165288282,
+            "delta_lab_mean_lr_minus_ipr": [
+              4.6804888154961235,
+              1.2476328064422264,
+              9.622923607505365
+            ],
+            "rgb_mae_normalized": 0.08026775216796199,
+            "ipr_lab_mean": [
+              31.988999993862404,
+              2.3842381872655922,
+              17.33455009524478
+            ],
+            "lr_lab_mean": [
+              36.66948880935942,
+              3.6318709937080347,
+              26.95747370274855
+            ],
+            "ipr_y_mean": 0.08866357530522327,
+            "lr_y_mean": 0.14268992927617272,
+            "delta_chroma_mean": 11.020280918490805,
+            "hue_abs_circular_mean_degrees": 6.276376787222673,
+            "hue_usable_fraction": 0.8706440745144669,
+            "lr_neutral_fraction": 0.014528339278636544,
+            "ab_distance_on_lr_neutral_mean": 0.9042080960803963,
+            "ipr_any_channel_low_fraction": 0.004280618311533888,
+            "lr_any_channel_low_fraction": 0.09856123662306777,
+            "ipr_any_channel_high_fraction": 0.00014466904478795085,
+            "lr_any_channel_high_fraction": 1.5854141894569958e-05
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 13.511817852668553,
+            "delta_e00_median": 11.41531404812454,
+            "delta_e00_p95": 32.82035790909966,
+            "delta_e76_mean": 18.320962479835064,
+            "delta_lab_mean_lr_minus_ipr": [
+              10.029353700619113,
+              -3.579877808141318,
+              1.8412170515602853
+            ],
+            "rgb_mae_normalized": 0.11895276695670397,
+            "ipr_lab_mean": [
+              38.55579186585525,
+              6.324824593448107,
+              29.77041992684944
+            ],
+            "lr_lab_mean": [
+              48.5851455664748,
+              2.744946785306683,
+              31.6116369784095
+            ],
+            "ipr_y_mean": 0.1627622879079833,
+            "lr_y_mean": 0.2347451342354749,
+            "delta_chroma_mean": 0.21945421556933628,
+            "hue_abs_circular_mean_degrees": 18.94307442885542,
+            "hue_usable_fraction": 0.8827863654379706,
+            "lr_neutral_fraction": 0.015747126436781608,
+            "ab_distance_on_lr_neutral_mean": 6.542284241710423,
+            "ipr_any_channel_low_fraction": 0.1969124058660325,
+            "lr_any_channel_low_fraction": 0.02851961950059453,
+            "ipr_any_channel_high_fraction": 0.0008501783590963139,
+            "lr_any_channel_high_fraction": 0.0021125644074514466
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 15.15235595222367,
+            "delta_e00_median": 14.569106812797827,
+            "delta_e00_p95": 26.640783121792047,
+            "delta_e76_mean": 23.265411405021403,
+            "delta_lab_mean_lr_minus_ipr": [
+              6.5667918719931695,
+              3.9405864061825504,
+              12.435869831605435
+            ],
+            "rgb_mae_normalized": 0.12162356042372588,
+            "ipr_lab_mean": [
+              31.988999993862404,
+              2.3842381872655922,
+              17.33455009524478
+            ],
+            "lr_lab_mean": [
+              38.55579186585525,
+              6.324824593448107,
+              29.77041992684944
+            ],
+            "ipr_y_mean": 0.08866357530522327,
+            "lr_y_mean": 0.1627622879079833,
+            "delta_chroma_mean": 14.569292254022645,
+            "hue_abs_circular_mean_degrees": 19.532074866896426,
+            "hue_usable_fraction": 0.8562286959968292,
+            "lr_neutral_fraction": 0.014413396749900912,
+            "ab_distance_on_lr_neutral_mean": 4.550139218039554,
+            "ipr_any_channel_low_fraction": 0.004280618311533888,
+            "lr_any_channel_low_fraction": 0.1969124058660325,
+            "ipr_any_channel_high_fraction": 0.00014466904478795085,
+            "lr_any_channel_high_fraction": 0.0008501783590963139
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 10.804551721543243,
+            "delta_e00_median": 10.846611056512618,
+            "delta_e00_p95": 17.670792143639623,
+            "delta_e76_mean": 14.204500553881815,
+            "delta_lab_mean_lr_minus_ipr": [
+              11.074900268589774,
+              -3.6625548631271565,
+              2.3341903897670044
+            ],
+            "rgb_mae_normalized": 0.1054258172590706,
+            "ipr_lab_mean": [
+              37.510245297886335,
+              6.407501648434057,
+              29.277446588643457
+            ],
+            "lr_lab_mean": [
+              48.5851455664748,
+              2.744946785306683,
+              31.6116369784095
+            ],
+            "ipr_y_mean": 0.153409372229497,
+            "lr_y_mean": 0.2347451342354749,
+            "delta_chroma_mean": 0.5803533969502137,
+            "hue_abs_circular_mean_degrees": 12.032015265848937,
+            "hue_usable_fraction": 0.8924078478002379,
+            "lr_neutral_fraction": 0.015747126436781608,
+            "ab_distance_on_lr_neutral_mean": 3.395699718036356,
+            "ipr_any_channel_low_fraction": 0.19880103051922315,
+            "lr_any_channel_low_fraction": 0.02851961950059453,
+            "ipr_any_channel_high_fraction": 0.0007827982560443915,
+            "lr_any_channel_high_fraction": 0.0021125644074514466
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 11.114358853057581,
+            "delta_e00_median": 10.41442577672193,
+            "delta_e00_p95": 18.936540311828907,
+            "delta_e76_mean": 18.853019159002738,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.521245304022826,
+              4.023263461168446,
+              11.942896493397376
+            ],
+            "rgb_mae_normalized": 0.09614071036784812,
+            "ipr_lab_mean": [
+              31.988999993862404,
+              2.3842381872655922,
+              17.33455009524478
+            ],
+            "lr_lab_mean": [
+              37.510245297886335,
+              6.407501648434057,
+              29.277446588643457
+            ],
+            "ipr_y_mean": 0.08866357530522327,
+            "lr_y_mean": 0.153409372229497,
+            "delta_chroma_mean": 14.208393072641762,
+            "hue_abs_circular_mean_degrees": 7.304517036058691,
+            "hue_usable_fraction": 0.8728299643281807,
+            "lr_neutral_fraction": 0.013260007927070947,
+            "ab_distance_on_lr_neutral_mean": 0.9729233074957936,
+            "ipr_any_channel_low_fraction": 0.004280618311533888,
+            "lr_any_channel_low_fraction": 0.19880103051922315,
+            "ipr_any_channel_high_fraction": 0.00014466904478795085,
+            "lr_any_channel_high_fraction": 0.0007827982560443915
+          }
+        }
+      ],
+      "oracle_equal_L_delta_e00_mean": 6.910773061986863,
+      "oracle_equal_L_delta_e00_p95": 9.994702610854143,
+      "local_y_ratio_ev_p10_p50_p90": [
+        0.4930024524120612,
+        1.3480079028973033,
+        1.555985054953938
+      ],
+      "tonal_holdout": [
+        {
+          "model": "exposure",
+          "parameters": {
+            "gain": 1.6597521670091127,
+            "gamma": 1.0,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A9421",
+          "training_scene_ids": [
+            "6V1A0007",
+            "6V1A0037",
+            "6V1A0043",
+            "6V1A0327",
+            "6V1A9950"
+          ],
+          "linear_any_over_one_before_clip_fraction": 0.0013971462544589775,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 9.809135942814391,
+            "delta_e00_median": 10.25775786256317,
+            "delta_e00_p95": 14.70792027225726,
+            "delta_e76_mean": 15.773412520754414,
+            "delta_lab_mean_lr_minus_ipr": [
+              7.804896888866347,
+              -0.0669686502343686,
+              11.028129440326977
+            ],
+            "rgb_mae_normalized": 0.0827353462964863,
+            "ipr_lab_mean": [
+              40.78024867760909,
+              2.811915435541121,
+              20.583507538082063
+            ],
+            "lr_lab_mean": [
+              48.5851455664748,
+              2.744946785306683,
+              31.6116369784095
+            ],
+            "ipr_y_mean": 0.14699235669497587,
+            "lr_y_mean": 0.2347451342354749,
+            "delta_chroma_mean": 11.144485760833737,
+            "hue_abs_circular_mean_degrees": 7.328142078692158,
+            "hue_usable_fraction": 0.9209631391200951,
+            "lr_neutral_fraction": 0.015747126436781608,
+            "ab_distance_on_lr_neutral_mean": 2.8322159890352725,
+            "ipr_any_channel_low_fraction": 0.004268727705112961,
+            "lr_any_channel_low_fraction": 0.02851961950059453,
+            "ipr_any_channel_high_fraction": 0.0013971462544589775,
+            "lr_any_channel_high_fraction": 0.0021125644074514466
+          }
+        },
+        {
+          "model": "power",
+          "parameters": {
+            "gain": 5.394237025017613,
+            "gamma": 1.326854341676637,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A9421",
+          "training_scene_ids": [
+            "6V1A0007",
+            "6V1A0037",
+            "6V1A0043",
+            "6V1A0327",
+            "6V1A9950"
+          ],
+          "linear_any_over_one_before_clip_fraction": 0.0628814902893381,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.324602674804392,
+            "delta_e00_median": 5.251642477659771,
+            "delta_e00_p95": 8.426591649802758,
+            "delta_e76_mean": 9.941289056782242,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.56128060705699,
+              -0.13287338063037415,
+              7.999320617019368
+            ],
+            "rgb_mae_normalized": 0.04301614208562524,
+            "ipr_lab_mean": [
+              48.02386495941695,
+              2.8778201659369644,
+              23.6123163613881
+            ],
+            "lr_lab_mean": [
+              48.5851455664748,
+              2.744946785306683,
+              31.6116369784095
+            ],
+            "ipr_y_mean": 0.23815602230347604,
+            "lr_y_mean": 0.2347451342354749,
+            "delta_chroma_mean": 8.116803927306787,
+            "hue_abs_circular_mean_degrees": 7.311698705380214,
+            "hue_usable_fraction": 0.9196294094332145,
+            "lr_neutral_fraction": 0.015747126436781608,
+            "ab_distance_on_lr_neutral_mean": 2.8005548579514645,
+            "ipr_any_channel_low_fraction": 0.004286563614744352,
+            "lr_any_channel_low_fraction": 0.02851961950059453,
+            "ipr_any_channel_high_fraction": 0.06289536266349584,
+            "lr_any_channel_high_fraction": 0.0021125644074514466
+          }
+        }
+      ]
+    },
+    {
+      "scene": "6V1A9950",
+      "lr_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A9950-2.tif",
+        "bytes": 193794520,
+        "size": [
+          4640,
+          6960
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "samples": 3,
+        "orientation": 1,
+        "compression": 1,
+        "photometric": 2,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "active_mixer": {},
+        "settings": {
+          "RawFileName": "6V1A9950.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "Custom",
+          "Temperature": "5200",
+          "Tint": "0",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "0",
+          "LensProfileEnable": "0",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Adobe Standard",
+          "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "237F3DDC49E7329D5FF1BB575D51A18F",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True"
+        },
+        "sha256": "69e7197992341becf46f131d6ad40567eb0c3e765c9b95a8002d0da5c3297f8b",
+        "mtime_utc": "2026-10-07T14:02:54.676289+00:00"
+      },
+      "crop_candidates": [
+        {
+          "top": 1,
+          "left": 0,
+          "edge_mae": 0.10567513529487703
+        },
+        {
+          "top": 1,
+          "left": 1,
+          "edge_mae": 0.15068496224718503
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "edge_mae": 0.1527912986372919
+        },
+        {
+          "top": 0,
+          "left": 1,
+          "edge_mae": 0.16446713522617382
+        }
+      ],
+      "harmonized_warnings": [
+        "WhiteBalance: expected As Shot, got Custom"
+      ],
+      "new_vs_old_lr": {
+        "samples": 504600,
+        "delta_e00_mean": 8.34971906006226,
+        "delta_e00_median": 5.817816323441199,
+        "delta_e00_p95": 24.374551293953413,
+        "delta_e76_mean": 10.41272358819416,
+        "delta_lab_mean_lr_minus_ipr": [
+          -6.4902789360176465,
+          -0.13390916139537168,
+          -1.1733155330681775
+        ],
+        "rgb_mae_normalized": 0.08045042025965073,
+        "ipr_lab_mean": [
+          36.74740039984669,
+          -2.9050421638088317,
+          1.6259441893174242
+        ],
+        "lr_lab_mean": [
+          30.257121463830764,
+          -3.038951325204162,
+          0.45262865624925336
+        ],
+        "ipr_y_mean": 0.17689027423052536,
+        "lr_y_mean": 0.1277023650285825,
+        "delta_chroma_mean": -1.264511838301208,
+        "hue_abs_circular_mean_degrees": 10.34124222268916,
+        "hue_usable_fraction": 0.8042469282600079,
+        "lr_neutral_fraction": 0.008959571938168846,
+        "ab_distance_on_lr_neutral_mean": 4.6802861387647505,
+        "ipr_any_channel_low_fraction": 0.00019421323820848196,
+        "lr_any_channel_low_fraction": 0.0027189853349187474,
+        "ipr_any_channel_high_fraction": 0.0,
+        "lr_any_channel_high_fraction": 0.0
+      },
+      "lr_xmp_rendering": {
+        "ProcessVersion": "15.4",
+        "WhiteBalance": "Custom",
+        "Temperature": "5200",
+        "Tint": "0",
+        "Exposure2012": "0.00",
+        "LensProfileEnable": "0",
+        "ShadowTint": "0",
+        "ToneCurveName2012": "Linear",
+        "CameraProfile": "Adobe Standard",
+        "CameraProfileDigest": "C2BFF52D13532D941B6D5ECC769C17AD",
+        "LensProfileSetup": "LensDefaults",
+        "LensProfileName": "Camera Settings",
+        "LensProfileDigest": "237F3DDC49E7329D5FF1BB575D51A18F",
+        "LensProfileIsEmbedded": "True",
+        "LensProfileDistortionScale": "100",
+        "LensProfileVignettingScale": "100",
+        "CameraRawProfile": "True",
+        "ProfileName": "Camera Settings",
+        "ToneCurvePV2012": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Red": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Green": [
+          "0, 0",
+          "255, 255"
+        ],
+        "ToneCurvePV2012Blue": [
+          "0, 0",
+          "255, 255"
+        ]
+      },
+      "profile_variants": [
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 9.531659670776234,
+            "delta_e00_median": 6.919541151645163,
+            "delta_e00_p95": 22.972873255683652,
+            "delta_e76_mean": 11.649892832368295,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.513102601373286,
+              -1.1694295681598141,
+              1.013373110138651
+            ],
+            "rgb_mae_normalized": 0.09133032009482649,
+            "ipr_lab_mean": [
+              24.744018862457693,
+              -1.8695217570443357,
+              -0.5607444538894553
+            ],
+            "lr_lab_mean": [
+              30.257121463830764,
+              -3.038951325204162,
+              0.45262865624925336
+            ],
+            "ipr_y_mean": 0.06635694080389962,
+            "lr_y_mean": 0.1277023650285825,
+            "delta_chroma_mean": 2.536059184533005,
+            "hue_abs_circular_mean_degrees": 9.087783287193483,
+            "hue_usable_fraction": 0.7845640110978993,
+            "lr_neutral_fraction": 0.008959571938168846,
+            "ab_distance_on_lr_neutral_mean": 2.9933390912339504,
+            "ipr_any_channel_low_fraction": 9.908838684106223e-05,
+            "lr_any_channel_low_fraction": 0.0027189853349187474,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 4.979982082730954,
+            "delta_e00_median": 3.482285961262135,
+            "delta_e00_p95": 14.918420480993442,
+            "delta_e76_mean": 6.0422733092087375,
+            "delta_lab_mean_lr_minus_ipr": [
+              4.018020116432988,
+              -0.25936860520341054,
+              -0.11019097909268108
+            ],
+            "rgb_mae_normalized": 0.04492288210486362,
+            "ipr_lab_mean": [
+              20.725998746024644,
+              -1.6101531518409449,
+              -0.45055347479664004
+            ],
+            "lr_lab_mean": [
+              24.744018862457693,
+              -1.8695217570443357,
+              -0.5607444538894553
+            ],
+            "ipr_y_mean": 0.04956727848126538,
+            "lr_y_mean": 0.06635694080389962,
+            "delta_chroma_mean": 1.3737129671671877,
+            "hue_abs_circular_mean_degrees": 8.462588097761676,
+            "hue_usable_fraction": 0.7445620293301625,
+            "lr_neutral_fraction": 0.016153388822829965,
+            "ab_distance_on_lr_neutral_mean": 2.312210417290151,
+            "ipr_any_channel_low_fraction": 0.0019639318271898534,
+            "lr_any_channel_low_fraction": 9.908838684106223e-05,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Adobe Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 9.3186436465183,
+            "delta_e00_median": 5.3598298125301245,
+            "delta_e00_p95": 23.89056548520662,
+            "delta_e76_mean": 11.228793820355953,
+            "delta_lab_mean_lr_minus_ipr": [
+              9.531122717806403,
+              -1.4287981733632344,
+              0.9031821310459637
+            ],
+            "rgb_mae_normalized": 0.08947118202473914,
+            "ipr_lab_mean": [
+              20.725998746024644,
+              -1.6101531518409449,
+              -0.45055347479664004
+            ],
+            "lr_lab_mean": [
+              30.257121463830764,
+              -3.038951325204162,
+              0.45262865624925336
+            ],
+            "ipr_y_mean": 0.04956727848126538,
+            "lr_y_mean": 0.1277023650285825,
+            "delta_chroma_mean": 3.909772151700195,
+            "hue_abs_circular_mean_degrees": 4.125159021673832,
+            "hue_usable_fraction": 0.7675029726516053,
+            "lr_neutral_fraction": 0.008959571938168846,
+            "ab_distance_on_lr_neutral_mean": 1.900517459607983,
+            "ipr_any_channel_low_fraction": 0.0019639318271898534,
+            "lr_any_channel_low_fraction": 0.0027189853349187474,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 0.0,
+            "delta_e00_median": 0.0,
+            "delta_e00_p95": 0.0,
+            "delta_e76_mean": 0.0,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rgb_mae_normalized": 0.0,
+            "ipr_lab_mean": [
+              20.725998746024644,
+              -1.6101531518409449,
+              -0.45055347479664004
+            ],
+            "lr_lab_mean": [
+              20.725998746024644,
+              -1.6101531518409449,
+              -0.45055347479664004
+            ],
+            "ipr_y_mean": 0.04956727848126538,
+            "lr_y_mean": 0.04956727848126538,
+            "delta_chroma_mean": 0.0,
+            "hue_abs_circular_mean_degrees": 0.0,
+            "hue_usable_fraction": 0.7687574316290131,
+            "lr_neutral_fraction": 0.014748315497423703,
+            "ab_distance_on_lr_neutral_mean": 0.0,
+            "ipr_any_channel_low_fraction": 0.0019639318271898534,
+            "lr_any_channel_low_fraction": 0.0019639318271898534,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "with_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.511175403483755,
+            "delta_e00_median": 7.625022833774944,
+            "delta_e00_p95": 18.323438468300296,
+            "delta_e76_mean": 11.009971263896999,
+            "delta_lab_mean_lr_minus_ipr": [
+              4.776971305542052,
+              -1.6218879556817491,
+              3.350541093686376
+            ],
+            "rgb_mae_normalized": 0.08013408835755884,
+            "ipr_lab_mean": [
+              25.480150158288687,
+              -1.4170633695224744,
+              -2.8979124374370606
+            ],
+            "lr_lab_mean": [
+              30.257121463830764,
+              -3.038951325204162,
+              0.45262865624925336
+            ],
+            "ipr_y_mean": 0.1116855101481291,
+            "lr_y_mean": 0.1277023650285825,
+            "delta_chroma_mean": 1.8607688183842208,
+            "hue_abs_circular_mean_degrees": 12.891838461142694,
+            "hue_usable_fraction": 0.6571858898137138,
+            "lr_neutral_fraction": 0.008959571938168846,
+            "ab_distance_on_lr_neutral_mean": 3.8308279977061677,
+            "ipr_any_channel_low_fraction": 0.0003448275862068965,
+            "lr_any_channel_low_fraction": 0.0027189853349187474,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 11.043671123664431,
+            "delta_e00_median": 6.952858985597711,
+            "delta_e00_p95": 30.66980447350638,
+            "delta_e76_mean": 13.026550626524454,
+            "delta_lab_mean_lr_minus_ipr": [
+              4.754151412264419,
+              0.19308978231846277,
+              -2.4473589626403967
+            ],
+            "rgb_mae_normalized": 0.11181050315833417,
+            "ipr_lab_mean": [
+              20.725998746024644,
+              -1.6101531518409449,
+              -0.45055347479664004
+            ],
+            "lr_lab_mean": [
+              25.480150158288687,
+              -1.4170633695224744,
+              -2.8979124374370606
+            ],
+            "ipr_y_mean": 0.04956727848126538,
+            "lr_y_mean": 0.1116855101481291,
+            "delta_chroma_mean": 2.049003333315972,
+            "hue_abs_circular_mean_degrees": 10.80354614482694,
+            "hue_usable_fraction": 0.623269916765755,
+            "lr_neutral_fraction": 0.003523583036068173,
+            "ab_distance_on_lr_neutral_mean": 3.3642604076637683,
+            "ipr_any_channel_low_fraction": 0.0019639318271898534,
+            "lr_any_channel_low_fraction": 0.0003448275862068965,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Neutral",
+          "geometry": "without_lcp",
+          "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.638639354427854,
+            "delta_e00_median": 9.512019607270034,
+            "delta_e00_p95": 11.93895080504535,
+            "delta_e76_mean": 11.511823094233094,
+            "delta_lab_mean_lr_minus_ipr": [
+              9.862477039776904,
+              -2.33099761207143,
+              4.474728833518095
+            ],
+            "rgb_mae_normalized": 0.08470354936965414,
+            "ipr_lab_mean": [
+              20.394644424053805,
+              -0.7079537131327339,
+              -4.022100177268652
+            ],
+            "lr_lab_mean": [
+              30.257121463830764,
+              -3.038951325204162,
+              0.45262865624925336
+            ],
+            "ipr_y_mean": 0.07817277470958384,
+            "lr_y_mean": 0.1277023650285825,
+            "delta_chroma_mean": 3.1045862370429766,
+            "hue_abs_circular_mean_degrees": 10.582448731480982,
+            "hue_usable_fraction": 0.5394312326595323,
+            "lr_neutral_fraction": 0.008959571938168846,
+            "ab_distance_on_lr_neutral_mean": 2.084880796688927,
+            "ipr_any_channel_low_fraction": 0.0017399920729290527,
+            "lr_any_channel_low_fraction": 0.0027189853349187474,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 7.59607576670737,
+            "delta_e00_median": 6.284318067798053,
+            "delta_e00_p95": 15.32835394435093,
+            "delta_e76_mean": 9.985447752866724,
+            "delta_lab_mean_lr_minus_ipr": [
+              -0.3313543219703536,
+              0.9021994387082092,
+              -3.571546702472124
+            ],
+            "rgb_mae_normalized": 0.0805850884056099,
+            "ipr_lab_mean": [
+              20.725998746024644,
+              -1.6101531518409449,
+              -0.45055347479664004
+            ],
+            "lr_lab_mean": [
+              20.394644424053805,
+              -0.7079537131327339,
+              -4.022100177268652
+            ],
+            "ipr_y_mean": 0.04956727848126538,
+            "lr_y_mean": 0.07817277470958384,
+            "delta_chroma_mean": 0.805185914657217,
+            "hue_abs_circular_mean_degrees": 6.816090236593042,
+            "hue_usable_fraction": 0.5269797859690845,
+            "lr_neutral_fraction": 0.0031074118113357113,
+            "ab_distance_on_lr_neutral_mean": 1.3013083113710682,
+            "ipr_any_channel_low_fraction": 0.0019639318271898534,
+            "lr_any_channel_low_fraction": 0.0017399920729290527,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "with_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.35491410219126,
+            "delta_e00_median": 7.045291548573067,
+            "delta_e00_p95": 19.27400808976359,
+            "delta_e76_mean": 10.876299895481196,
+            "delta_lab_mean_lr_minus_ipr": [
+              4.034318430974363,
+              -1.2703426713170503,
+              3.340011227574455
+            ],
+            "rgb_mae_normalized": 0.07883027218988423,
+            "ipr_lab_mean": [
+              26.22280303285554,
+              -1.7686086538871497,
+              -2.8873825713251993
+            ],
+            "lr_lab_mean": [
+              30.257121463830764,
+              -3.038951325204162,
+              0.45262865624925336
+            ],
+            "ipr_y_mean": 0.1216603100011406,
+            "lr_y_mean": 0.1277023650285825,
+            "delta_chroma_mean": 1.6724931090328428,
+            "hue_abs_circular_mean_degrees": 12.243837385181118,
+            "hue_usable_fraction": 0.6618410622275069,
+            "lr_neutral_fraction": 0.008959571938168846,
+            "ab_distance_on_lr_neutral_mean": 4.130950780590549,
+            "ipr_any_channel_low_fraction": 0.0005093143083630599,
+            "lr_any_channel_low_fraction": 0.0027189853349187474,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 11.798700521346507,
+            "delta_e00_median": 7.09983252699506,
+            "delta_e00_p95": 32.87634837538207,
+            "delta_e76_mean": 13.935726075307644,
+            "delta_lab_mean_lr_minus_ipr": [
+              5.496804286832229,
+              -0.15845550204617798,
+              -2.4368290965284665
+            ],
+            "rgb_mae_normalized": 0.11881736749051991,
+            "ipr_lab_mean": [
+              20.725998746024644,
+              -1.6101531518409449,
+              -0.45055347479664004
+            ],
+            "lr_lab_mean": [
+              26.22280303285554,
+              -1.7686086538871497,
+              -2.8873825713251993
+            ],
+            "ipr_y_mean": 0.04956727848126538,
+            "lr_y_mean": 0.1216603100011406,
+            "delta_chroma_mean": 2.237279042667352,
+            "hue_abs_circular_mean_degrees": 11.287070220037915,
+            "hue_usable_fraction": 0.6265200158541419,
+            "lr_neutral_fraction": 0.0027487118509710662,
+            "ab_distance_on_lr_neutral_mean": 3.5601201749628264,
+            "ipr_any_channel_low_fraction": 0.0019639318271898534,
+            "lr_any_channel_low_fraction": 0.0005093143083630599,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "profile": "Canon EOS R6 Mark III Camera Standard",
+          "geometry": "without_lcp",
+          "profile_sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 8.25653502922212,
+            "delta_e00_median": 9.132320796912595,
+            "delta_e00_p95": 11.83912590998099,
+            "delta_e76_mean": 11.210436740859707,
+            "delta_lab_mean_lr_minus_ipr": [
+              9.473907916908807,
+              -2.121902629315583,
+              4.814986699140958
+            ],
+            "rgb_mae_normalized": 0.08142783317766365,
+            "ipr_lab_mean": [
+              20.78321354692129,
+              -0.9170486958885679,
+              -4.362358042891837
+            ],
+            "lr_lab_mean": [
+              30.257121463830764,
+              -3.038951325204162,
+              0.45262865624925336
+            ],
+            "ipr_y_mean": 0.0833792784637917,
+            "lr_y_mean": 0.1277023650285825,
+            "delta_chroma_mean": 2.623213618456732,
+            "hue_abs_circular_mean_degrees": 9.736405607183496,
+            "hue_usable_fraction": 0.5443836702338486,
+            "lr_neutral_fraction": 0.008959571938168846,
+            "ab_distance_on_lr_neutral_mean": 2.228904084120507,
+            "ipr_any_channel_low_fraction": 0.002195798652397939,
+            "lr_any_channel_low_fraction": 0.0027189853349187474,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          },
+          "vs_baseline": {
+            "samples": 504600,
+            "delta_e00_mean": 8.065389278221655,
+            "delta_e00_median": 6.369702846736192,
+            "delta_e00_p95": 17.400158993317618,
+            "delta_e76_mean": 10.746068689488853,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.057214800897985175,
+              0.6931044559523647,
+              -3.9118045680949223
+            ],
+            "rgb_mae_normalized": 0.08534261109685304,
+            "ipr_lab_mean": [
+              20.725998746024644,
+              -1.6101531518409449,
+              -0.45055347479664004
+            ],
+            "lr_lab_mean": [
+              20.78321354692129,
+              -0.9170486958885679,
+              -4.362358042891837
+            ],
+            "ipr_y_mean": 0.04956727848126538,
+            "lr_y_mean": 0.0833792784637917,
+            "delta_chroma_mean": 1.2865585332434613,
+            "hue_abs_circular_mean_degrees": 6.098850557978871,
+            "hue_usable_fraction": 0.5305053507728894,
+            "lr_neutral_fraction": 0.0023622671422909233,
+            "ab_distance_on_lr_neutral_mean": 1.4707068763466007,
+            "ipr_any_channel_low_fraction": 0.0019639318271898534,
+            "lr_any_channel_low_fraction": 0.002195798652397939,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        }
+      ],
+      "oracle_equal_L_delta_e00_mean": 3.020233444521852,
+      "oracle_equal_L_delta_e00_p95": 6.206567977374402,
+      "local_y_ratio_ev_p10_p50_p90": [
+        -0.014295085729705706,
+        0.6568605931095364,
+        1.5375151594500305
+      ],
+      "tonal_holdout": [
+        {
+          "model": "exposure",
+          "parameters": {
+            "gain": 1.9153009557765468,
+            "gamma": 1.0,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A9950",
+          "training_scene_ids": [
+            "6V1A0007",
+            "6V1A0037",
+            "6V1A0043",
+            "6V1A0327",
+            "6V1A9421"
+          ],
+          "linear_any_over_one_before_clip_fraction": 0.0,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 5.041553412151246,
+            "delta_e00_median": 3.6478905622084894,
+            "delta_e00_p95": 9.668132232006453,
+            "delta_e76_mean": 6.713402006784549,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.9133184360001226,
+              -0.9057274181871169,
+              0.70257937795928
+            ],
+            "rgb_mae_normalized": 0.05251817087126906,
+            "ipr_lab_mean": [
+              29.34380302782935,
+              -2.1332239070170393,
+              -0.24995072170988547
+            ],
+            "lr_lab_mean": [
+              30.257121463830764,
+              -3.038951325204162,
+              0.45262865624925336
+            ],
+            "ipr_y_mean": 0.09493625346478625,
+            "lr_y_mean": 0.1277023650285825,
+            "delta_chroma_mean": 1.5175029486102956,
+            "hue_abs_circular_mean_degrees": 4.3485879664055505,
+            "hue_usable_fraction": 0.8159849385652002,
+            "lr_neutral_fraction": 0.008959571938168846,
+            "ab_distance_on_lr_neutral_mean": 1.7359386823528238,
+            "ipr_any_channel_low_fraction": 0.0018866428854538249,
+            "lr_any_channel_low_fraction": 0.0027189853349187474,
+            "ipr_any_channel_high_fraction": 0.0,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        },
+        {
+          "model": "power",
+          "parameters": {
+            "gain": 5.319908752795565,
+            "gamma": 1.322351526523211,
+            "training_scenes": 5,
+            "samples_per_scene": 4000,
+            "gain_bounds": [
+              0.25,
+              8
+            ],
+            "gamma_bounds": [
+              0.4,
+              1.6
+            ]
+          },
+          "held_out_scene": "6V1A9950",
+          "training_scene_ids": [
+            "6V1A0007",
+            "6V1A0037",
+            "6V1A0043",
+            "6V1A0327",
+            "6V1A9421"
+          ],
+          "linear_any_over_one_before_clip_fraction": 9.908838684106222e-06,
+          "vs_lr": {
+            "samples": 504600,
+            "delta_e00_mean": 2.7160897819593144,
+            "delta_e00_median": 2.8511457246138665,
+            "delta_e00_p95": 4.840474351601943,
+            "delta_e76_mean": 3.806555895762334,
+            "delta_lab_mean_lr_minus_ipr": [
+              0.4250116419874017,
+              -1.1976383157687178,
+              1.978760513922674
+            ],
+            "rgb_mae_normalized": 0.015273341588607317,
+            "ipr_lab_mean": [
+              29.832109821842135,
+              -1.841313009435473,
+              -1.5261318576732286
+            ],
+            "lr_lab_mean": [
+              30.257121463830764,
+              -3.038951325204162,
+              0.45262865624925336
+            ],
+            "ipr_y_mean": 0.12559486866960412,
+            "lr_y_mean": 0.1277023650285825,
+            "delta_chroma_mean": 1.830320949545864,
+            "hue_abs_circular_mean_degrees": 4.22961522687017,
+            "hue_usable_fraction": 0.795432025366627,
+            "lr_neutral_fraction": 0.008959571938168846,
+            "ab_distance_on_lr_neutral_mean": 1.7978043846862866,
+            "ipr_any_channel_low_fraction": 0.002072929052715022,
+            "lr_any_channel_low_fraction": 0.0027189853349187474,
+            "ipr_any_channel_high_fraction": 9.908838684106222e-06,
+            "lr_any_channel_high_fraction": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "analyser_sha256": "75bbaf58df0096b768261bc7761377c724135c3b9eb8c35524871bd3f1fc274f"
+}

@@ -1,9 +1,22 @@
 # Protocoles de validation
 
+Commencer par la [procédure de tests en autonomie](../procedure-tests-autonomes.md)
+pour les outils, les conventions de fichiers et l'interprétation des résultats.
+
 Créer un protocole depuis [`../../templates/validation-protocol-template.md`](../../templates/validation-protocol-template.md) avant une nouvelle campagne. Nom : `protocole-<fonction>-vN.md`.
 
 ## Campagnes récentes
 
+Les séries IPR peuvent être produites avec le
+[générateur hors IHM](../tools/generateur-images-tests.md). Son manifeste
+définit les états ; les exports Lightroom restent réalisés séparément.
+
+- [Base colorimétrique v1](protocole-base-colorimetrique-v1.md) : six scènes
+  existantes, neutres frais, profils/WB tracés, charte physique et prises
+  d'escalade identifiées ; comparaison Lightroom distincte de la fidélité.
+- [Niveaux blancs Canon](protocole-blancs-canon.md) : cinq variantes par RAW,
+  séparation du blanc candidat et de l'ajustement automatique LibRaw,
+  témoin v3 et contrôle du clipping des hautes lumières.
 - [Bruit v2 après correctif](protocole-bruit-v2.md) : mêmes RAW et Lightroom,
   nouveaux IPR sans écrasement, compléments ISO et textures facultatifs.
 - [Réduction de bruit](protocole-validation-bruit-2026-10-04.md) : luminance et

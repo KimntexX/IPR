@@ -1,0 +1,411 @@
+\part{Des échantillons décodés à une photographie interprétée}
+\section{Décodage, développement et rendu : trois contrats}
+\subsection{Décodage du fichier}
+Le décodage identifie le format, lit les structures, localise
+les charges utiles et reconstruit les échantillons déclarés.
+Pour un RAW mosaïqué, la sortie peut rester une seule grille
+de codes par photosite. Pour un TIFF RGB, elle peut être un
+tableau de composantes déjà rendues. Les deux sorties n'ont
+pas la même signification, même si elles utilisent uint16.
+
+\subsection{Développement du RAW}
+Le développement utilise les mesures et les calibrations pour
+produire une image interprétable : niveaux, corrections,
+balance des blancs, reconstruction colorée, transformation
+vers un espace de travail et éventuellement rendu de base.
+LibRaw sépare notamment ouverture, dépaquetage et étapes de
+traitement dans son API ; lire \texttt{open\_file} ou réussir
+\texttt{unpack} n'est pas obtenir automatiquement un rendu
+final~\cite{libraw}.
+
+\subsection{Rendu et affichage}
+Le rendu décide comment représenter une scène dans les
+contraintes du support. Il comprend éventuellement courbes,
+compression des hautes lumières, choix esthétiques, réduction
+du gamut et conversion vers l'écran. Il n'existe pas un
+seul rendu mathématiquement obligatoire pour toute scène.
+En revanche, une interprétation incorrecte du noir, de la
+matrice ou de la fonction de transfert est un défaut
+technique, pas simplement un style artistique.
+
+\resultat{Deux logiciels peuvent décoder les mêmes mesures puis
+produire des rendus différents. Pour identifier un bug, il faut
+comparer les étapes, pas seulement les images finales.}
+
+\section{Un pipeline RAW conceptuel détaillé}
+\begin{center}
+\begin{tikzpicture}[node distance=.3cm,
+box/.style={draw=iprblue,rounded corners,text width=12.5cm,align=center,minimum height=.66cm}]
+\node[box] (f) {Fichier : structures, métadonnées, aperçus et données RAW};
+\node[box,below=of f] (r) {Décompression et dépaquetage : grille native};
+\node[box,below=of r] (n) {Niveaux, linéarisation éventuelle, pixels défectueux et corrections capteur};
+\node[box,below=of n] (w) {Gains de balance des blancs et reconstruction des canaux};
+\node[box,below=of w] (p) {Transformation caméra, profil, tables et rendu tonal de base};
+\node[box,below=of p] (e) {Réglages, retouches, géométrie et traitement du détail};
+\node[box,below=of e] (o) {Rendu de sortie, gamut, fonction de transfert, quantification et fichier};
+\draw[-{Latex}] (f)--(r);\draw[-{Latex}] (r)--(n);\draw[-{Latex}] (n)--(w);
+\draw[-{Latex}] (w)--(p);\draw[-{Latex}] (p)--(e);\draw[-{Latex}] (e)--(o);
+\end{tikzpicture}
+\end{center}
+Cet ordre est pédagogique, pas universel. Certains débruitages
+opèrent avant dématriçage ; certaines corrections optiques
+après reconstruction ; des profils imposent un domaine
+et un ordre précis. Toute permutation doit être justifiée.
+
+\subsection{Dépaquetage et précision native}
+Un codec peut reconstruire un flux de codes 12 ou 14 bits,
+qu'il faut ensuite ranger dans un tampon. Le dépaquetage
+traduit leur disposition binaire, sans décider de leur couleur.
+Un ordre des bits incorrect peut être masqué sur des faibles
+valeurs et devenir visible sur les plus fortes. Les tests
+doivent inclure zéro, maximum et valeurs traversant les
+frontières d'octets.
+
+\subsection{Linéarisation, noir et blanc}
+Certains fichiers décrivent une table de linéarisation ou
+des niveaux qui ne se résument pas à deux constantes. Une
+normalisation doit respecter les données déclarées. Dans
+le cas simple, on utilise l'équation~\eqref{eq:normalisation}.
+Si les noirs varient entre canaux, lignes ou colonnes,
+écrire $B_c(x,y)$ plutôt qu'une constante universelle.
+
+Les valeurs négatives après soustraction du noir peuvent
+représenter des fluctuations normales autour de zéro.
+Les couper immédiatement introduit un biais positif dans
+les statistiques des ombres. À l'inverse, certaines étapes
+comme des tables définies seulement sur $[0,1]$ exigent une
+politique explicite de bornage. Les deux impératifs doivent
+être conciliés, pas ignorés.
+
+\subsection{Correction des défauts et optique}
+Les photosites chauds ou morts peuvent être remplacés par
+une estimation locale, éventuellement adaptée au CFA.
+Une correction de vignettage multiplie spatialement les
+valeurs ; elle amplifie aussi le bruit des zones sombres.
+Une correction géométrique rééchantillonne la grille ; elle
+change donc les valeurs et les correspondances pixel à pixel.
+Une correction d'aberration chromatique peut déformer
+différemment les canaux. Cela rend une MAE sans recalage
+géométrique difficile à interpréter.
+
+\subsection{Balance des blancs}
+Un modèle diagonal courant est
+\begin{equation}
+\begin{pmatrix}R'\\G'\\B'\end{pmatrix}=
+\begin{pmatrix}g_R&0&0\\0&g_G&0\\0&0&g_B\end{pmatrix}
+\begin{pmatrix}R\\G\\B\end{pmatrix}.
+\end{equation}
+Les gains tentent de rendre neutre une référence éclairée
+par une lumière donnée dans un contexte de calibration.
+Multiplier les gains par une constante commune change
+aussi la luminosité ; leur normalisation importe.
+Un Kelvin affiché est une description de chromaticité ou
+un paramètre d'interface, pas les trois gains eux-mêmes.
+Deux moteurs peuvent afficher des Kelvin différents à
+partir de gains proches, ou l'inverse, suivant leurs modèles.
+
+Sous lumière mixte, une seule balance globale ne peut
+neutraliser toutes les régions. Sous un projecteur à spectre
+discontinu, « corriger la température » ne recrée pas les
+longueurs d'onde absentes. La nuance fournit un degré
+supplémentaire, mais pas une reconstruction spectrale complète.
+
+\subsection{Dématriçage : une estimation, pas une lecture directe}
+Sur une mosaïque RGGB, on peut estimer un vert à la position
+d'un rouge par la moyenne des quatre voisins verts :
+\begin{equation}
+\widehat G(x,y)=\tfrac14[G(x-1,y)+G(x+1,y)+G(x,y-1)+G(x,y+1)].
+\end{equation}
+C'est une approximation bilinéaire simple. Elle lisse des
+contours et peut produire des fausses couleurs. Des méthodes
+adaptatives choisissent une direction ou exploitent la
+corrélation des différences de couleur. Les méthodes
+apprises proposent d'autres compromis, mais exigent des
+données d'entraînement et une validation de généralisation.
+
+La comparaison de deux dématriçages doit séparer détail,
+bruit, moiré et rendu couleur. Plus net ne signifie pas
+nécessairement plus fidèle : une arête peut être un artefact.
+
+\section{La couleur n'est pas contenue dans les nombres seuls}
+\subsection{Du spectre aux composantes}
+Une réponse de caméra peut s'écrire
+\begin{equation}
+c_k=\int S(\lambda)\rho(\lambda)s_k(\lambda)\,d\lambda.
+\end{equation}
+Les fonctions $s_k$ sont les sensibilités spectrales effectives
+des canaux. Les tristimulus d'un observateur standard
+s'obtiennent avec d'autres fonctions de pondération, par
+exemple $\overline x,\overline y,\overline z$ pour XYZ.
+Trois nombres de caméra ne sont donc pas directement les
+trois nombres d'un espace RGB d'affichage.
+
+Deux spectres distincts peuvent donner les mêmes trois
+réponses : c'est une forme de métamérisme. Une matrice
+3$\times$3 peut approximer une transformation sur un domaine
+donné, mais ne reconstitue pas tout le spectre. Une charte
+photographiée sous un illuminant fournit une calibration
+utile ; elle ne garantit pas la perfection sous tous les
+éclairages et pour toutes les matières.
+
+\subsection{Matrices et changement de base}
+Dans un modèle linéaire :
+\begin{equation}
+\begin{pmatrix}X\\Y\\Z\end{pmatrix}=M
+\begin{pmatrix}R_c\\G_c\\B_c\end{pmatrix}.
+\end{equation}
+Chaque colonne indique la contribution d'un canal caméra.
+La direction de la matrice est essentielle : caméra vers
+XYZ et XYZ vers caméra sont deux transformations inverses,
+pas des noms interchangeables. Certaines calibrations
+incluent des conventions de balance ou d'adaptation.
+Appliquer deux fois une correction qui était déjà incorporée
+produit une dérive.
+
+Un espace RGB est défini par des primaires, un point blanc
+et une convention de codage. Le passage entre primaires
+linéaires peut être une matrice ; le passage entre codes
+non linéaires exige d'abord l'inversion de leurs fonctions
+de transfert. Une matrice appliquée directement à des
+codes sRGB ne réalise généralement pas le bon changement
+de base physique.
+
+\subsection{Point blanc et adaptation chromatique}
+D50 et D65 sont des blancs de référence, pas les températures
+mesurées d'une photo particulière. L'adaptation chromatique
+modélise une partie de l'adaptation visuelle lorsque l'on
+change de blanc. Un modèle de type von Kries transforme
+vers un espace de réponses, multiplie par des gains, puis
+revient : $M^{-1}\operatorname{diag}(d)M$.
+Bradford est un choix de matrice de ce type, développé dans
+le cours 03. Confondre D50 et D65 peut déplacer les couleurs
+même lorsque toutes les multiplications sont numériquement
+correctes.
+
+\section{Fonctions de transfert, gamma et HDR}
+\subsection{Linéaire veut dire linéaire par rapport à quoi ?}
+Dans un domaine linéaire par rapport à la lumière, doubler
+un signal non saturé double la grandeur représentée. Une
+valeur sRGB de 0,5 n'est pas la moitié de la lumière de 1.
+La fonction d'encodage sRGB normalisée est~\cite{srgbimages}
+\begin{equation}
+E(L)=\begin{cases}
+12{,}92L,&L\le0{,}0031308,\\
+1{,}055L^{1/2{,}4}-0{,}055,&L>0{,}0031308.
+\end{cases}
+\end{equation}
+Son inverse usuel est
+\begin{equation}
+L(E)=\begin{cases}
+E/12{,}92,&E\le0{,}04045,\\
+((E+0{,}055)/1{,}055)^{2{,}4},&E>0{,}04045.
+\end{cases}
+\end{equation}
+Ainsi $E=0{,}5$ donne $L\approx0{,}21404$ et
+$L=0{,}18$ donne $E\approx0{,}46136$. « Gamma 2,2 » est une
+approximation fréquente, pas la fonction sRGB exacte.
+
+\subsection{Pourquoi l'ordre des opérations compte}
+La moyenne linéaire d'un noir et d'un blanc vaut $L=0{,}5$,
+soit $E\approx0{,}73536$ après encodage. Faire la moyenne
+des codes donne $E=0{,}5$, soit seulement $L\approx0{,}21404$.
+On comprend ainsi pourquoi une interpolation dans le mauvais
+domaine peut produire des transitions trop sombres.
+
+Une correction d'exposition physique utilise
+$L'=2^eL$, et non généralement $E'=2^eE$.
+À $+1$ EV, un code sRGB 0,5 devient environ 0,68584
+tant que le signal reste dans le domaine autorisé ; il ne
+doit pas automatiquement devenir 1.
+
+Quantifier avant l'encodage puis après lui n'est pas non
+plus équivalent :
+\[
+Q(E(L))\ne Q(E(Q(L))).
+\]
+Une quantification linéaire prématurée peut supprimer des
+faibles valeurs que l'encodage aurait réparties sur davantage
+de codes. Ce problème a motivé des contrôles spécifiques
+de sortie sRGB dans IPR ; ce n'est pas une propriété
+inévitable de tout TIFF.
+
+\subsection{OETF, EOTF et courbe artistique}
+Une OETF traduit un signal optique vers un signal électrique
+dans une chaîne donnée ; une EOTF décrit le comportement
+d'un affichage à partir de ses codes. Une transformation
+globale de la scène à l'écran peut aussi inclure une OOTF.
+La courbe artistique ajuste le rendu tonal. Ce sont des
+objets différents, même si plusieurs sont non linéaires.
+Appliquer une courbe de profil ne dispense pas de décrire
+l'encodage final ; appliquer deux encodages sRGB assombrit
+ou éclaircit fortement le résultat selon la direction.
+
+\subsection{HDR n'est pas synonyme de 16 bits}
+HDR peut décrire une scène, un espace de calcul étendu ou
+une diffusion pour un écran à grande luminance. Un TIFF
+16 bits peut rester SDR ; un fichier à 10 bits correctement
+décrit peut porter un rendu HDR. La recommandation
+BT.2100 encadre notamment PQ et HLG~\cite{hdr}.
+
+PQ relie les codes à une luminance d'affichage absolue selon
+une fonction perceptuelle normalisée. HLG emploie une
+construction différente, avec un comportement système lié
+aux conditions d'affichage. Il faut conserver la fonction
+de transfert, les primaires, la plage de codes et les
+métadonnées pertinentes. Ouvrir les codes HDR comme sRGB
+donne une image incohérente, même sans erreur de décompression.
+
+Une \emph{gain map} peut décrire comment transformer une
+base SDR vers un rendu à plus grande dynamique. Elle n'est
+ni nécessairement une deuxième photographie indépendante,
+ni une preuve que le capteur avait conservé toutes les
+hautes lumières. Un moteur doit savoir s'il la prend en
+charge ; l'ignorer peut laisser un rendu SDR utilisable,
+mais différent du rendu voulu sur écran HDR.
+
+\section{Profils ICC, DCP et LCP : des rôles distincts}
+\subsection{ICC : décrire une relation colorimétrique}
+Un profil ICC décrit une transformation entre un espace
+de périphérique ou de travail et un espace de connexion
+normalisé, suivant sa classe et sa structure. Des profils
+peuvent utiliser matrices/courbes ou tables. Le PCS des
+profils ICC classiques utilise notamment une référence D50 ;
+les intentions de rendu guident le traitement des couleurs
+non reproductibles~\cite{iccimages}.
+
+\emph{Assigner} un profil change l'interprétation des nombres
+sans forcément les changer. \emph{Convertir} cherche à
+préserver l'apparence ou une relation colorimétrique en
+calculant de nouveaux nombres. Assigner sRGB à des valeurs
+Adobe RGB ne remplace donc pas une conversion Adobe RGB
+vers sRGB. Un profil écran est destiné à la sortie du
+système d'affichage, pas à devenir automatiquement le
+profil incorporé à chaque photo exportée.
+
+\subsection{DCP : caractériser et rendre des valeurs caméra}
+Un DCP peut comporter matrices, illuminants, tables de
+teinte/saturation, look, courbe et offset d'exposition.
+Ces éléments n'ont pas tous un rôle purement colorimétrique :
+certains participent au rendu de base. Leur domaine et leur
+ordre sont essentiels~\cite{dng}. Une table décrite dans
+des primaires de travail précises ne doit pas être évaluée
+comme si elle était une table sRGB quelconque.
+
+Une interpolation entre deux illuminants peut utiliser
+des températures réciproques. Par exemple,
+\begin{equation}
+w=\operatorname{clip}\left(
+\frac{1/T-1/T_1}{1/T_2-1/T_1},0,1\right),\qquad
+M=(1-w)M_1+wM_2.
+\end{equation}
+C'est une règle de mélange d'un modèle, pas une interpolation
+exacte de tous les spectres lumineux possibles.
+
+Pour une courbe RGB, appliquer $T$ à chaque canal peut
+changer la position relative du canal médian et donc la
+teinte. Une alternative applique la courbe aux minimum et
+maximum puis interpole le médian. DCamProf explique
+l'intérêt de cette stabilisation et les interactions
+avec les tables de rendu~\cite{dcamprofimages}. Elle ne
+garantit ni saturation constante ni fidélité parfaite
+après réduction du gamut. Le cours ne recommande pas
+une substitution aveugle au moteur de production.
+
+\subsection{LCP et corrections d'objectif}
+Un profil d'objectif peut décrire distorsion, vignettage
+et aberrations suivant focale, ouverture ou distance.
+Son action peut être géométrique et photométrique. Il ne
+remplace pas le profil couleur du capteur. Une correction
+de distorsion déplace les coordonnées : pour des tests
+pixel à pixel, son activation doit être harmonisée.
+
+\subsection{Légalité et portabilité}
+Une spécification de format ouverte et les données de
+profils distribuées par un éditeur sont deux objets
+différents. Le fait de pouvoir lire un profil ne donne
+pas automatiquement le droit de le redistribuer avec
+un logiciel. Les licences des bibliothèques, des profils,
+des chartes et des jeux d'images doivent être examinées
+séparément. Cette distinction n'est pas un avis juridique.
+
+\section{Les métadonnées : plusieurs familles et plusieurs vérités}
+\subsection{Inventaire utile}
+\begin{longtable}{p{3.1cm}p{6.5cm}p{5cm}}
+\toprule Famille & Exemples & Conséquence \\ \midrule
+Structure & Dimensions, profondeur, compression, CFA & Nécessaire au décodage. \\
+Prise de vue & Temps, ouverture, ISO, focale, date & Contexte, pas nécessairement une transformation. \\
+Calibration & Noir, blanc, gains, matrices & Change l'interprétation du signal. \\
+Présentation & Orientation, profil, miniature & Change le rendu ou sa géométrie. \\
+Éditorial & Auteur, légende, mots-clés, droits & Organisation et diffusion. \\
+Géographie & Latitude, longitude, altitude & Information sensible à protéger. \\
+Développement & Exposition, courbe, paramètres de profil & Recette, parfois déjà incorporée aux pixels. \\
+Gestion & Note, drapeau, libellé, identifiant & Peut vivre dans un catalogue ou sidecar. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Exif, MakerNotes, IPTC et XMP}
+Exif fournit des conventions de métadonnées photographiques
+et des structures associées aux images ; la page CIPA
+recense les versions de la norme, dont Exif~3.1 publiée
+en 2026~\cite{exif}. Un champ ISO peut figurer en plusieurs
+endroits ou avec plusieurs interprétations historiques.
+Il faut afficher les groupes de tags, pas seulement leurs
+noms courts.
+
+Les MakerNotes contiennent des données propres au
+constructeur. Elles peuvent avoir leurs propres offsets,
+versions et conventions. ExifTool documente les champs
+qu'il sait interpréter ; cette documentation est une
+source d'implémentation précieuse, pas une norme constructeur
+universelle~\cite{exiftoolimages}. Déplacer un bloc sans
+ajuster ses offsets peut casser sa lecture.
+
+IPTC couvre notamment les usages éditoriaux ; XMP propose
+un modèle extensible sérialisé couramment en RDF/XML,
+embarqué ou externe~\cite{xmpimages,iptcimages}. Un catalogue
+peut aussi garder des réglages sans les écrire dans le RAW.
+« Je vois une étoile dans Lightroom » ne prouve donc pas
+que cette étoile est présente dans le fichier transmis.
+
+\subsection{Recette et pixels déjà développés}
+Un TIFF exporté depuis Lightroom peut contenir des
+métadonnées de développement ainsi que des pixels où le
+développement est déjà effectué. Réappliquer les réglages
+XMP sur ces pixels applique potentiellement l'effet deux
+fois. Un moteur doit identifier la nature de l'entrée,
+pas interpréter tout paramètre présent comme une instruction
+de rendu à exécuter.
+
+Un sidecar \texttt{.ipr} ou \texttt{.xmp} est une recette
+non destructive seulement si l'original est préservé et
+si les paramètres, versions et ressources nécessaires
+restent disponibles. Pour reproduire un rendu, conserver
+aussi le profil exact, la version moteur et les conventions.
+
+\subsection{Données absentes, inconnues ou contradictoires}
+Une valeur absente n'est pas automatiquement zéro.
+« GPS absent » ne signifie pas latitude 0, longitude 0.
+« Profil absent » ne prouve pas sRGB. Une température
+calculée par un logiciel n'est pas forcément la valeur
+inscrite par le boîtier. La stratégie correcte est de
+conserver provenance, statut connu/inconnu et hypothèses
+de repli, avec un avertissement si la comparaison dépend
+de cette hypothèse.
+
+\section{Pourquoi le même RAW change d'apparence selon le logiciel}
+Les différences peuvent provenir du dépaquetage, du noir,
+de la normalisation, de la WB, du dématriçage, des matrices,
+des tables, de la courbe de base, de la récupération des
+hautes lumières, des corrections optiques, du bruit,
+du gamut mapping ou de l'affichage. Une miniature Canon
+est un rendu déjà produit par Canon, pas une vue directe
+des valeurs CFA. La comparaison à l'œil de cette miniature
+et d'un export ne permet pas de localiser l'étape différente.
+
+Le bon protocole compare d'abord les mêmes fichiers,
+mêmes profils, mêmes réglages, mêmes fonctions de transfert
+et même géométrie, puis isole les étages. Un profil nommé
+« Neutral » n'est pas forcément une matrice sans courbe.
+« Tous les curseurs à zéro » ne signifie pas « aucun
+traitement ». Cette distinction est centrale pour la
+validation de la base colorimétrique d'IPR.
