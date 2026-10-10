@@ -75,6 +75,19 @@ int main(int argc, char **argv)
         const QByteArray originalSidecar = read(sidecar), originalXmp = read(xmp);
 
         const auto listed = run(executable, {"--list"});
+        for (const QString &group : QStringList{"all", "raw", "lumiere", "courbes", "couleur", "melangeur", "grading", "effets", "bruit", "nettete"}) {
+            const auto help = run(executable, {"help", group});
+            check(help.code == 0 && help.output.contains("Usage:"), "Group help failed: " + help.output);
+        }
+        check(run(executable, {"help", "unknown"}).code != 0, "Unknown help group accepted");
+        check(run(executable, {"--help-group", "lumiere"}).output.contains("exposure"), "Option help missing exposure");
+        const auto groupPlan = run(executable, {"--group", "lumiere", "--dry-run", "--output", directory.filePath("group-plan"), input});
+        check(groupPlan.code == 0 && groupPlan.output.contains("29 export(s) per input")
+              && groupPlan.output.contains("highlights") && !groupPlan.output.contains("denoise"),
+              "Lighting group plan wrong: " + groupPlan.output);
+        check(!QFileInfo::exists(directory.filePath("group-plan")), "Group dry run wrote files");
+        check(run(executable, {"--group", "unknown", "--dry-run", "--output", directory.filePath("bad-group"), input}).code != 0,
+              "Unknown generation group accepted");
         check(listed.code == 0 && listed.output.contains("mixer-violet-hue")
               && listed.output.contains("mixer-magenta-hue") && listed.output.contains("grading-midtones-hue"),
               "Feature catalogue incomplete: " + listed.output);
@@ -191,7 +204,7 @@ int main(int argc, char **argv)
                  {"--feature", "masques"}, {"--feature", "contrast", "--values=101"},
                  {"--feature", "contrast", "--values=0.5"}, {"--feature", "exposure", "--values=nan"},
                  {"--feature", "exposure", "--values=1,1"}, {"--feature", "auto-wb"},
-                 {"--format", "HDR"}, {"--grading-saturation", "0"}}) {
+                 {"--format", "HDR"}, {"--grading-saturation", "0"}, {"--camera-neutral"}}) {
             check(run(executable, options + QStringList{"--output", rejected, input}).code != 0,
                   "Invalid arguments were accepted");
             check(!QFileInfo::exists(rejected), "Invalid arguments created output");

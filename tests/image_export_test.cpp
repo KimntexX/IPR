@@ -454,7 +454,7 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
     currentStream.setVersion(QDataStream::Qt_6_4);
     quint32 magic; quint16 savedVersion;
     currentStream >> magic >> savedVersion;
-    if (!check(magic == 0x49505231u && savedVersion == 4, "new sidecars must declare version 4")) return false;
+    if (!check(magic == 0x49505231u && savedVersion == 6, "new sidecars must declare version 6")) return false;
     currentSidecar.close();
     editor.resetAdjustments();
     for (int band = 0; band < 8; ++band)
@@ -463,7 +463,7 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                        "reset should neutralize all eight mixer bands"))
                 return false;
 
-    for (quint16 version : {quint16(1), quint16(2), quint16(3)}) {
+    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5)}) {
         const QString legacyPath = directory + QStringLiteral("/legacy-%1.png").arg(version);
         if (!QImage(sourcePath).save(legacyPath, "PNG"))
             return false;
@@ -480,7 +480,7 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
             stream << qint32(index == 4 ? 6500 : 0);
         if (version >= 2)
             stream << qint32(12) << qint32(34) << qint32(56) << float(1.5) << qint32(78);
-        for (int band = 0; band < (version == 3 ? 7 : 6); ++band)
+        for (int band = 0; band < (version >= 4 ? 8 : (version == 3 ? 7 : 6)); ++band)
             stream << qint32(11 + band) << qint32(21 + band) << qint32(31 + band);
         for (int zone = 0; zone < 3; ++zone)
             stream << qint32(200 + zone) << qint32(4 + zone);
@@ -488,6 +488,8 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
         for (int curve = 0; curve < 4; ++curve)
             stream << qint32(2) << float(0) << float(0) << float(1) << float(1);
         stream << int(3) << QStringLiteral("green") << true << true << true;
+        if (version >= 5)
+            stream << QString() << QString() << QString() << QString() << false << QString();
         if (stream.status() != QDataStream::Ok)
             return false;
         sidecar.close();
@@ -495,9 +497,9 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
             return false;
         for (int band = 0; band < 8; ++band) {
             for (int component = 0; component < 3; ++component) {
-                const int oldBand = version == 3 ? (band == 7 ? 6 : band)
+                const int oldBand = version >= 4 ? band : version == 3 ? (band == 7 ? 6 : band)
                     : (band == 0 ? 0 : (band == 7 ? 5 : band - 1));
-                const int expected = band == 6 || (version < 3 && band == 1)
+                const int expected = (version < 4 && band == 6) || (version < 3 && band == 1)
                     ? 0 : 11 + 10 * component + oldBand;
                 if (!check(editor.colorMixerValue(band, component) == expected,
                            "legacy mixer channels should migrate without shifting colors"))
@@ -777,10 +779,57 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
                      shadowLift.pixelColor(0, 0).red() >
                          base.pixelColor(0, 0).red() + 5 &&
                      shadowLift.pixelColor(1, 0).red() >=
-                         base.pixelColor(1, 0).red() + 8 &&
+                         base.pixelColor(1, 0).red() + 1 &&
+                     shadowLift.pixelColor(1, 0).red() <=
+                         base.pixelColor(1, 0).red() + 7 &&
                      std::abs(shadowLift.pixelColor(2, 0).red() -
                               base.pixelColor(2, 0).red()) <= 2,
-                 "shadow lift should extend into midtones but preserve highlights");
+                 "bounded shadow lift should gently affect midtones and preserve highlights");
+}
+
+bool verifyPositiveShadowRamp(ImageEditor &editor, const QString &directory)
+{
+    QImage input(256, 1, QImage::Format_RGBA8888);
+    input.setColorSpace(QColorSpace(QColorSpace::SRgb));
+    for (int x=0;x<256;++x) input.setPixelColor(x,0,QColor(x,x,x));
+    const QString path=directory+QStringLiteral("/shadow-ramp.png");
+    if (!input.save(path) || !awaitLoad(editor,QUrl::fromLocalFile(path))) return false;
+    editor.resetAdjustments();
+    editor.setShadows(100);
+    const QString target=directory+QStringLiteral("/shadow-ramp.tiff");
+    if (!awaitExport(editor,QUrl::fromLocalFile(target),QStringLiteral("TIFF"))
+            .startsWith(QStringLiteral("Image exportée"))) return false;
+    const QImage output(target);
+    if (!check(!output.isNull(),"Shadow ramp TIFF unreadable")) return false;
+    if (!check(output.pixelColor(0,0).red()==0,"Shadow ramp lifts absolute black")) return false;
+    for (int x=1;x<256;++x) {
+        if (!check(output.pixelColor(x,0).red()>=output.pixelColor(x-1,0).red(),
+                   "Production shadow ramp reverses dark tone ordering")) return false;
+    }
+    return check(output.pixelColor(1,0).red()<10,"Production shadow ramp creates black pedestal");
+}
+
+bool verifyPositiveHighlightColour(ImageEditor &editor, const QString &directory)
+{
+    QImage input(3,1,QImage::Format_RGBA8888);
+    input.setColorSpace(QColorSpace(QColorSpace::SRgb));
+    input.setPixelColor(0,0,QColor(0,0,240));
+    input.setPixelColor(1,0,QColor(240,100,30));
+    input.setPixelColor(2,0,QColor(120,30,220));
+    const QString path=directory+QStringLiteral("/highlight-colour.png");
+    if (!input.save(path) || !awaitLoad(editor,QUrl::fromLocalFile(path))) return false;
+    editor.resetAdjustments(); editor.setHighlights(100);
+    const QString target=directory+QStringLiteral("/highlight-colour.tiff");
+    if (!awaitExport(editor,QUrl::fromLocalFile(target),QStringLiteral("TIFF"))
+            .startsWith(QStringLiteral("Image exportée"))) return false;
+    const QImage output(target);
+    if (!check(!output.isNull(),"Highlight colour TIFF unreadable")) return false;
+    for (int x=0;x<3;++x) {
+        const QColor colour=output.pixelColor(x,0);
+        if (!check(std::max({colour.red(),colour.green(),colour.blue()})<255,
+                   "Production positive highlights clip saturated colour")) return false;
+    }
+    return true;
 }
 
 bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &directory)
@@ -917,6 +966,9 @@ bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
 
 bool awaitPreview(ImageEditor &editor)
 {
+    // busy includes the render debounce now; awaitLoad can already have waited
+    // for the completed preview, so do not wait for an event that has fired.
+    if (!editor.busy() && !editor.imageSource().isEmpty()) return true;
     QEventLoop loop;
     bool rendered = false;
     const auto connection = QObject::connect(
@@ -1145,6 +1197,10 @@ int main(int argc, char **argv)
         return 1;
 
     if (!verifyBlackShadowSeparation(editor, directory.path()))
+        return 1;
+    if (!verifyPositiveShadowRamp(editor, directory.path()))
+        return 1;
+    if (!verifyPositiveHighlightColour(editor, directory.path()))
         return 1;
 
     if (!verifyHighlightWhiteSeparation(editor, directory.path()))

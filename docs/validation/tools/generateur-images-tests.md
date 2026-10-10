@@ -7,6 +7,61 @@ résolution, sans ouvrir l'IHM. Ce n'est pas un simulateur des curseurs.
 
 ## Démarrage Windows
 
+Les exports locaux du smoke-test du 6 octobre ont été supprimés pendant le
+[nettoyage des builds du 10 octobre](../../reports/storage/build-cleanup-2026-10-10/README.md).
+Leurs manifestes restent conservés dans cet audit ; les chemins historiques
+ci-dessous ne désignent plus des images présentes sur disque.
+
+### Groupes et aide détaillée
+
+Depuis le 10 octobre 2026, le lanceur et l'exécutable proposent une sélection
+par groupe. Les séries restent isolées : un paramètre à la fois, plus un
+neutre obligatoire par image. Aucun nouveau traitement du moteur n'est ajouté.
+
+```powershell
+.\scripts\generate-test-images.ps1 help all
+.\scripts\generate-test-images.ps1 help lumiere
+.\scripts\generate-test-images.ps1 -Help melangeur
+.\scripts\generate-test-images.ps1 -Group lumiere -Images '.\tests\image\base\6V1A0327.CR3' -Output '.\tests\image\generated\lumieres-v001' -DryRun
+```
+
+L'aide nécessite le générateur compilé, comme les autres commandes du lanceur.
+Remplacer les chemins d'exemple par des fichiers existants et un dossier de
+sortie nouveau ; retirer `-DryRun` après vérification pour exporter.
+
+| Groupe | Contenu |
+|---|---|
+| `raw` | Neutre et balance automatique (`auto-wb`, RAW requis) |
+| `lumiere` | Exposition, contraste, ombres, noirs, hautes lumières, blancs |
+| `courbes` | Luminance et canaux rouge/vert/bleu |
+| `couleur` | Température, nuance, vibrance, saturation, niveaux de gris |
+| `melangeur` | Huit bandes × teinte/saturation/luminance |
+| `grading` | Teinte/saturation des ombres, tons moyens et hautes lumières |
+| `effets` | Texture, clarté, voile, grain, flou |
+| `bruit` | Luminance et chrominance |
+| `nettete` | Quantité, rayon, masquage |
+| `all` | Tous les groupes ; RAW requis à cause de `auto-wb` |
+
+Plusieurs groupes : `-Group 'lumiere','couleur'`. Un contrôle seul reste
+disponible via `-Feature exposure`. Les doublons groupe/contrôle sont éliminés.
+Les valeurs par défaut dépendent du contrôle : un `-Values` commun peut être
+invalide pour un groupe hétérogène (EV, température, etc.). Préférer les valeurs
+par défaut ou des campagnes par contrôle. Une grande série peut occuper beaucoup
+d'espace disque ; `-DryRun` affiche le nombre d'exports avant tout décodage.
+
+Équivalents directs pour l'exécutable (avec environnement DLL préparé) :
+
+```sh
+iprGenerateTests help all
+iprGenerateTests help bruit
+iprGenerateTests --help-group nettete
+iprGenerateTests --group lumiere,couleur --input photo.CR3 --output nouvelle-campagne --dry-run
+```
+
+Les sweeps DCP/LCP/normalisation ne sont pas implémentés dans ce catalogue.
+L'export se choisit avec `-Format TIFF|PNG|JPEG` ; sidecars, navigation, IHM
+et export par lot ne sont pas des contrôles pixel générés par `-Group`.
+
 Depuis la racine du projet, compiler avec le lanceur habituel :
 
 ```bash
@@ -222,3 +277,23 @@ ce RAW en JPEG dans `build-generator-smoke-20261006/exposure-raw-v2/`.
 Les racines de profils correspondent à IPR, les quatre états gardent la WB
 de référence et le même DCP. Après les compléments multi-images et catalogue
 complet en mode plan, les deux tests ciblés générateur/export ont passé.
+## Campagne ciblée du 10 octobre 2026
+
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate-photographic-campaign.ps1 -DryRun` prépare
+le plan ; sans `-DryRun`, il génère 527 TIFF couvrant les neuf groupes. Les
+Lumières restantes utilisent six scènes ; les autres groupes une ou deux.
+Ombres/HL déjà exportées ne sont pas régénérées. Les scènes roche/fleur couvrent
+couleurs et détails, les contre-jours les courbes/grading, 9890 le bruit.
+Ce corpus ciblé ne remplace pas une validation complète de toutes les scènes.
+
+Les campagnes sont placées dans des sous-dossiers `generation-<UTC>` des
+dossiers existants (les absents sont créés), sans écrasement. Le manifeste fait
+foi sur les réglages : le numéro global du fichier n'est pas une valeur de
+curseur. Les manifestes complets sont copiés sous `docs/validation/raw/`.
+Le script réserve 350 Mo/export et conserve 30 Gio libres, avec contrôle avant
+chaque groupe. Il ne supprime aucune image.
+
+`-CameraNeutral` / `--camera-neutral` impose un RAW et un DCP Camera Neutral
+effectivement appliqué : l'absence du profil bloque la génération. Le générateur
+ignore les sidecars et désactive la normalisation provenant de l'environnement
+afin que cette campagne soit indépendante d'une configuration expérimentale.

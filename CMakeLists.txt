@@ -36,6 +36,7 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorMixer.cpp
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
+    src/core/ToneRecovery.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
     src/profiles/CameraProfileEngine.h
@@ -166,6 +167,8 @@ if(BUILD_TESTING)
     ipr_add_test(colorPipelineTests tests/color_pipeline_test.cpp)
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
+    ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
+    set_tests_properties(toneRecoveryTests PROPERTIES LABELS "unit;pipeline;lighting")
     add_executable(testImageGeneratorTests tests/test_image_generator_test.cpp)
     target_link_libraries(testImageGeneratorTests PRIVATE iprEngine)
     add_dependencies(testImageGeneratorTests iprGenerateTests)

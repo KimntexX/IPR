@@ -29,11 +29,27 @@ struct DcpRenderOptions
     bool preserveToneCurveHue = false;
 };
 
+struct LcpRenderOptions
+{
+    bool lensCorrection = true; // Distortion and vignetting.
+    bool chromaticAberration = true; // Lateral red/blue registration.
+};
+
+struct LcpApplied
+{
+    bool geometry = false;
+    bool vignetting = false;
+    bool chromaticAberration = false;
+};
+
 QStringList defaultProfileDirectories();
 QStringList availableDcpProfiles(const QString &cameraMake, const QString &cameraModel,
                                  const QStringList &profileDirectories = {});
 bool dcpMatchesCamera(const QString &path, const QString &cameraMake,
                        const QString &cameraModel);
+bool lcpMatchesLens(const QString &path, const QString &cameraMake,
+                    const QString &cameraModel, const QString &lensMake,
+                    const QString &lensModel);
 Selection findProfiles(const QString &cameraMake, const QString &cameraModel,
                        const QString &lensMake, const QString &lensModel,
                        const QStringList &profileDirectories = {});
@@ -41,7 +57,8 @@ bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,
               double whiteBalanceKelvin = 5500.0, QString *error = nullptr,
               const DcpRenderOptions &options = {});
 bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
-              const CaptureSettings &capture = {}, QString *error = nullptr);
+              const CaptureSettings &capture = {}, QString *error = nullptr,
+              const LcpRenderOptions &options = {}, LcpApplied *applied = nullptr);
 
 }
 

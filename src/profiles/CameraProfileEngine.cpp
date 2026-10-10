@@ -1717,9 +1717,20 @@ bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,
     return profile.apply(cameraRgb, whiteBalanceKelvin, error, options);
 }
 
-bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
-              const CaptureSettings &capture, QString *error)
+bool lcpMatchesLens(const QString &path, const QString &cameraMake,
+                    const QString &cameraModel, const QString &lensMake,
+                    const QString &lensModel)
 {
+    LcpData profile;
+    return parseLcp(path, &profile, nullptr) &&
+        lcpMatchScore(profile, cameraMake, cameraModel, lensMake, lensModel) > 0;
+}
+
+bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
+              const CaptureSettings &capture, QString *error,
+              const LcpRenderOptions &options, LcpApplied *applied)
+{
+    if (applied) *applied = {};
     LcpData profile;
     if (!parseLcp(fileName, &profile, error))
         return false;
@@ -1762,12 +1773,12 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
     });
 
     cv::Mat geometryCorrected = linearRgb;
-    if (model.hasGeometry) {
+    if (options.lensCorrection && model.hasGeometry) {
         cv::remap(linearRgb, geometryCorrected, mapX, mapY, cv::INTER_LINEAR,
                   cv::BORDER_REPLICATE);
     }
 
-    if (model.hasRedGreen || model.hasBlueGreen) {
+    if (options.chromaticAberration && (model.hasRedGreen || model.hasBlueGreen)) {
         std::vector<cv::Mat> channels;
         cv::split(geometryCorrected, channels);
         const auto correctChromaticChannel = [&](int channel,
@@ -1812,7 +1823,7 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
         cv::merge(channels, geometryCorrected);
     }
 
-    if (model.hasVignetting) {
+    if (options.lensCorrection && model.hasVignetting) {
         const double vignetteCx = model.vignetteCenterX * linearRgb.cols;
         const double vignetteCy = model.vignetteCenterY * linearRgb.rows;
         const double focalLength = capture.focalLengthMm > 0.0
@@ -1843,6 +1854,11 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
         });
     }
 
+    if (applied) {
+        applied->geometry = options.lensCorrection && model.hasGeometry;
+        applied->vignetting = options.lensCorrection && model.hasVignetting;
+        applied->chromaticAberration = options.chromaticAberration && (model.hasRedGreen || model.hasBlueGreen);
+    }
     linearRgb = std::move(geometryCorrected);
     return true;
 }

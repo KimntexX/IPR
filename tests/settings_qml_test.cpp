@@ -134,7 +134,10 @@ int main(int argc, char **argv)
     if (!check(root->findChild<QObject *>("cameraProfileSelector") &&
                root->findChild<QObject *>("rawNormalizationToggle") &&
                root->findChild<QObject *>("rawDevelopmentStatusLabel") &&
-               root->findChild<QObject *>("rawNormalizationManifestButton"),
+               root->findChild<QObject *>("rawNormalizationManifestButton") &&
+               root->findChild<QObject *>("lensCorrectionToggle") &&
+               root->findChild<QObject *>("chromaticAberrationToggle") &&
+               root->findChild<QObject *>("opticalDevelopmentStatusLabel"),
                "RAW module must expose profile, opt-in, manifest and actual status")) return 1;
     QObject *noiseSection = root->findChild<QObject *>(QStringLiteral("denoiseSection"));
     QObject *sharpSection = root->findChild<QObject *>(QStringLiteral("sharpeningSection"));

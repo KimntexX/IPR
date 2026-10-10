@@ -210,6 +210,40 @@ Le manifeste préparé ne couvre que cinq RAW exacts avec Neutral ; il ne
 sélectionne pas automatiquement ce profil. Voir le [rapport unique, §24](validation/analyses/analyse-base-colorimetrique.md)
 pour l'activation, le retour arrière et les preuves reproductibles.
 
+### Persistance et commandes optiques (9 octobre 2026)
+
+Le sidecar **v6** ajoute chemin/SHA-256 du LCP, état de résolution (y compris
+l'absence de profil), activation distorsion/vignettage et activation de
+l'aberration chromatique latérale. Le lecteur accepte v1–v6 ; v1–v5 conservent
+la politique antérieure, sélection automatique et deux corrections activées.
+Les anciens exécutables ne lisent pas v6.
+
+Le LCP résolu est figé lors du premier chargement réussi. À la restauration,
+une ressource absente/modifiée n'est pas remplacée silencieusement : la recette
+reste identifiable, les corrections LCP sont suspendues et un avertissement
+est affiché. La relocalisation nécessite même nom et SHA-256 sous `profiles/`
+de l'exécutable. Un profil existant doit aussi correspondre au boîtier/objectif.
+La copie des retouches par lot conserve les choix optiques de chaque cible.
+
+Deux cases indépendantes sont disponibles dans Développement RAW / Profil :
+
+- **Activer la correction de l'objectif** : géométrie et vignettage disponibles.
+- **Supprimer l'aberration chromatique** : recalage latéral rouge/bleu, uniquement
+  si ces modèles sont présents dans le LCP ; pas de détection automatique sans
+  profil ni suppression des franges longitudinales violettes/vertes.
+
+Le statut distingue les cases cochées des corrections effectivement appliquées.
+Les choix sont restaurés avant décodage, inclus dans la clé du cache, et appliqués
+à la base pleine résolution utilisée par l'export. Les retouches restent
+conservées. Changer les options optiques nécessite un redécodage si l'état n'est
+pas en cache : le tampon rapide DCP est déjà corrigé par le LCP et ne peut pas
+être réutilisé avec d'autres options optiques. Les valeurs de ce tampon doivent
+correspondre aux activations et à l'empreinte LCP courantes.
+
+La précision des modèles optiques et le comportement aux bords restent à
+vérifier visuellement sur le corpus ; les tests synthétiques ne certifient
+pas une parité Lightroom.
+
 ### Sélection dans l'IHM
 
 Le panneau **Développement RAW / Profil**, sous l'histogramme, propose les
@@ -232,12 +266,21 @@ le dépôt ; le bouton « Choisir le manifeste… » permet de le désigner sino
 Le statut indique le profil réellement utilisé et confirme l'application,
 ou explique le refus. Cocher la case n'est pas une preuve d'application.
 
-Ces choix sont propres à la session, non enregistrés dans les sidecars.
-Le changement recharge le RAW sans effacer les réglages photographiques.
-Le cache distingue le profil (chemin/taille/date) et le contenu du manifeste.
+Ces choix sont enregistrés par image dans les sidecars **v6**, avec les SHA-256
+des ressources et la version du moteur/LibRaw. Ils sont restaurés avant le
+décodage, y compris la WB automatique. Camera Neutral est privilégié à la
+première ouverture ; le choix résolu est ensuite figé pour cette image.
+Le changement DCP réutilise le RGB caméra pré-DCP lorsque disponible, sans
+vider l'aperçu ni réinitialiser zoom/retouches. La calibration et la WB de
+décodage peuvent encore imposer un redécodage. Le tampon actif est plafonné
+à 384 Mio et n'est pas conservé par le LRU. Le cache distingue le profil
+(chemin/taille/date/SHA-256) et le contenu du manifeste.
 L'IHM n'active aucune calibration via l'environnement à l'insu de la case.
-Le bouton de réinitialisation remet les réglages photographiques à zéro,
-pas le choix du profil ni l'activation expérimentale.
+Le bouton général remet les retouches à zéro, sans changer le développement
+RAW. Un bouton distinct réinitialise profil/calibration. Une ressource absente
+ou modifiée produit un avertissement ; le repli ne garantit pas le rendu initial.
+Le LCP reste automatique et n'est pas figé dans le sidecar.
+Voir [ADR-0006](decisions/ADR-0006-restauration-raw-et-retouche-profil.md).
 
 La calibration reste limitée aux cinq couples RAW/DCP exacts et à LibRaw
 0.22.2-Release ; ce panneau ne généralise pas les résultats à Adobe Standard

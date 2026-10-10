@@ -13,6 +13,12 @@ RULES = json.loads((ROOT / "scripts/test-rules.json").read_text(encoding="utf-8"
 
 
 class SelectionTests(unittest.TestCase):
+    def test_tone_recovery_selects_production_and_export_regressions(self):
+        plan = build.select_tests(["src/core/ToneRecovery.h"], RULES)
+        self.assertFalse(plan["full"])
+        self.assertEqual(set(plan["tests"]), {"toneRecoveryTests", "imageExportTests"})
+        self.assertIn("toneRecoveryTests", build.select_tests(["src/editor/imageeditor.cpp"], RULES)["tests"])
+
     def test_generator_is_targeted_and_registered(self):
         plan = build.select_tests(["src/tools/generate_test_images.cpp"], RULES)
         self.assertFalse(plan["full"])
