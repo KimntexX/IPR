@@ -630,6 +630,26 @@ int main(int argc, char **argv)
         }
     }
     const cv::Vec3f channelBefore = channelImage.at<cv::Vec3f>(8, 8);
+    const cv::Mat originalChannels = channelImage.clone();
+    CameraProfileEngine::LcpApplied applied;
+    cv::Mat disabled = originalChannels.clone();
+    if (!check(CameraProfileEngine::applyLcp(textLcpPath, disabled, {}, &error,
+                    {false, false}, &applied) && cv::norm(disabled - originalChannels) == 0.0 &&
+                    !applied.geometry && !applied.vignetting && !applied.chromaticAberration,
+               "disabled optics must be pixel-identical and report no correction")) return 1;
+    cv::Mat caOnly = originalChannels.clone();
+    if (!check(CameraProfileEngine::applyLcp(textLcpPath, caOnly, {}, &error,
+                    {false, true}, &applied) && applied.chromaticAberration && !applied.geometry &&
+                    !applied.vignetting && cv::norm(caOnly - originalChannels) > 0.001,
+               "CA toggle works independently from lens correction")) return 1;
+    cv::Mat lensOnly = originalChannels.clone();
+    if (!check(CameraProfileEngine::applyLcp(lcpPath, lensOnly, capture, &error,
+                    {true, false}, &applied) && !applied.chromaticAberration &&
+                    applied.geometry && applied.vignetting,
+               "lens toggle applies geometry/vignette independently from CA")) return 1;
+    if (!check(CameraProfileEngine::lcpMatchesLens(lcpPath, "Canon", "EOS R6 Mark III", "Canon", "RF 24-70mm F2.8 L IS USM") &&
+                    !CameraProfileEngine::lcpMatchesLens(lcpPath, "Other", "Other camera", "Other", "Unknown lens"),
+               "saved LCP must remain compatible with camera and lens")) return 1;
     if (!check(CameraProfileEngine::applyLcp(textLcpPath, channelImage, {}, &error),
                "LCP text parameters should parse and apply"))
         return 1;

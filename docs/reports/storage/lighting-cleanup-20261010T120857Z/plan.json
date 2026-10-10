@@ -1,0 +1,300 @@
+﻿{
+    "feature":  "hl",
+    "raw_and_neutrals":  "preserved",
+    "verdict":  "negative",
+    "campaign_id":  "mesure-lumieres-intermediaires-v002-20261010T120745Z",
+    "started_at_utc":  "20261010T120857Z",
+    "targets":  [
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0007-IPR.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "9693d2ce5b4d5e7728839b724c81f6016dcc5d44453ed65a0d594cfc4488826a",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0007-IPR-2.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "7f0bba252671eaa6a5499c50c007cd75a48bebcd8d89be5a4e5c0fd7eb799e16",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0007-IPR-3.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "04f25ce5534efba032bf473facd0365a17f829cd209d17ef0c189149dfd1df76",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0007-IPR-4.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "67d6a7c58db24f45b88bb3414651c6f4db6c53a7ead145b5da4e2f350da27a1d",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0007-IPR-5.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "2823d2e3643704dff4d85ff20875a66cfe602fc68f228a70d834bfa9315c283a",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0007-IPR-6.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "cf6b75ba7b12078d1df2da0b0a1b710089b170b515654e93781b53f4bc3da542",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0007-IPR-7.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "707fd00dd19468be0a8e4a72324f4139b9a235d9a5bd8e64462d52b613e42f61",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0007-IPR-8.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "9b62c18bd8c9ea64ba6518f7bbfac317b38980391750129014dd6d12544fc319",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0037-IPR.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "e0892316269d10ad2c695c5df4124111bfdcdecb6e7c5515a063b7b3810f7f21",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0037-IPR-2.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "411fe31f35eceebce275ff378fc9e54598a4e7893a50e4645ea57bd69f3f1306",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0037-IPR-3.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "d842ae835532e5e803e015d05048836a35015cf1daf215a867494aa58795a30f",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0037-IPR-4.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "6d4bb3924ac1a42ab5a9b4ea6733f2ef795393f7f5ddddeeb933a6fdc5889242",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0037-IPR-5.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "a1bf4d8a5d7b82d2415c5f1fc8750c242b9bdee8acf8d1be1cdffb0816ce285d",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0037-IPR-6.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "a6cd517d5ef8da468250558eabfba903e70804adf92c803f90d6ee37b04937dd",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0037-IPR-7.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "4f94c5e24a8d3c91f3b11835601353ac4ab5ab6b8d3537b3e15d8f48f399be36",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0037-IPR-8.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "fa0685041e9c72ec75945a512bed204a76ca4b8f101669dc4dbde88e052ab95b",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0043-IPR.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "b986ee8f14b597137f2fb6148fbd95d935132ade83cde63c5e32a909389a8df5",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0043-IPR-2.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "00d562b8305b85c3efcd0696a8a639fe479d0794f18fe581369981dcf313fd81",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0043-IPR-3.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "c7b2bd83016e297933e0881e24700658ead925c39e9e538c74f9949b69d1213f",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0043-IPR-4.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "7e82b92362d9b3c161ba7563e45b5d1eb5f91e314abecde41b428f7780191be8",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0043-IPR-5.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "04662d288fa1fc4be53727e8f5b7f0fe7148653019878a9a150415137b8738cf",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0043-IPR-6.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "0fdeb1e7724a49b72d03a056628c860ef71efb13a660944a1e3b390ecf2d2447",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0043-IPR-7.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "293cc98d450f1355520137d902be423410a05a81bb15689713f2e8d26ad59258",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0043-IPR-8.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "631faec3373f8452bf38628a5cff04f8fd0c866a371a8a31d694bf072dd87210",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0327-IPR.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "17dbe3e632e9e7dc6857f0d4ecc0067e8a3a6ebbcf4f9363fdf92764a9be2960",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0327-IPR-2.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "83f1ad6fe460bf7798216968d903e3946c15bed6efdfc3ceb1cac2ddae741c66",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0327-IPR-3.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "63fe89ab1b96a7a2e5e3395f1f64d8a3469d77182ae7b637347e666c67123a0f",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0327-IPR-4.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "44d5281dc78a94d809120f99b066346eea1d77ac0682c9b53365449292569fae",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0327-IPR-5.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "fa9d588041d5e69f5516faa6fb9894331914b68fe1b40c12f49bf54d3039345e",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0327-IPR-6.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "4e6f510e797f2fd555f83602b09687e6bb50df1cc16f432b1c9ddd28bb343c39",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0327-IPR-7.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "ecf2c14af76d142bd610fde2d254c3d6e6274508b8e7c2e7508de482f67d424b",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A0327-IPR-8.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "e7139b20c4bea78e913c2ba4dd005edc09739cad6e8d6ff7149d5d911df9b55d",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9421-IPR.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "4a48a7c6ae98e81f85f346310d9e451cc89b2a7c9d250ffcf83ae24aaf2b9765",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9421-IPR-2.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "5259e983ffb335d858664e87058f3d04c7168c9f63b9447020c35a3e88dc08f6",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9421-IPR-3.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "474b82dc2fd303104f83e0ee71efddeeea31df99b603c48cfa692543e7dcb83b",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9421-IPR-4.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "ff1406a933ffff90b7b7fc32a8d3547e7ee166bb48a7c7ffd8698a19d4f49254",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9421-IPR-5.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "4e433881ab96d6f4100b22c3f829a27f0b2577065de19e31ac7f0e484c5d449e",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9421-IPR-6.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "37845ee20c55e05c2914ee78cfbe442fd706feab435f18e6824724fea7636565",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9421-IPR-7.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "4d57f3b63abacec5c117748978061b201d9ca6d745a30541385a9ae90298dba9",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9421-IPR-8.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "6d3709ae20fa4f338e214950648792df8b39437f4c12a96f7c7554e16b1c91f6",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9950-IPR.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "d01bd5de5362d5a98173dcc751ec1be3ff38157e9ea491efcdd0e81817f7cb64",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9950-IPR-2.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "d62d45b306af717bbdd5eb30f042a9df7ad1d0a5e2387edb70763805b19a4d2b",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9950-IPR-3.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "83370021efc16ebf3f0caa4597b495eeebb0758ec4a0328e2116946d20daf5ef",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9950-IPR-4.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "5bc1478a85a84d00e3b5d6602bfcaf6d868f47e6770fd1126821ab0ab1d2af68",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9950-IPR-5.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "ef15e33d5828f1061b14a81857c89b7db1231efff6b208651db6065c50c80696",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9950-IPR-6.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "68e9196e7ce1eebc1844226cdfaab87bc7a07585b57abc92bbc8e06c507aeb79",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9950-IPR-7.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "419865b045e75e089901c30f0bea1ebb77be4bc6f8502754b27b04c889241694",
+                        "deleted":  false
+                    },
+                    {
+                        "path":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\hl\\6V1A9950-IPR-8.tiff",
+                        "bytes":  258263634,
+                        "sha256":  "c95c8152ce7a1b31947df8e70165c01860316cc6d973097323990dd2345a9630",
+                        "deleted":  false
+                    }
+                ],
+    "measured_source":  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\docs\\validation\\raw\\mesure-lumieres-intermediaires-v002-20261010T120745Z.json",
+    "canonical_sha256":  "CBE1FD5413863A2ED1621AA6443F7CBDE21B95EB0724CC5113EF45F4A8D7BA16",
+    "deletion":  "permanent, not recycle bin; hashes cannot restore pixels"
+}

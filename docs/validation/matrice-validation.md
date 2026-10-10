@@ -1,15 +1,15 @@
 # Matrice de validation des réglages
 
-**Dernière consolidation :** 8 octobre 2026.
+**Dernière consolidation :** 10 octobre 2026.
 **Légende :** Validé = protocole, export et conclusion disponibles ; À revalider = changement de pipeline ou corpus insuffisant ; À faire = fonction présente mais sans recette complète.
 
 | Fonction | Statut | Preuve / source historique | Prochaine action |
 | --- | --- | --- | --- |
-| Base colorimétrique à l'ouverture | Normalisation Neutral intégrée en mode contrôlé, désactivée par défaut ; fidélité/parité LR non validées | [Rapport évolutif unique](analyses/analyse-base-colorimetrique.md), §20–24 : blancs + base + courbe Neutral améliorés sur 5/5 ; WB déjà concordante ; normalisation liée aux SHA RAW/DCP, ISO, noirs et version LibRaw, avec repli ; cinq vrais décodages Windows vérifiés à 1 code 16 bits près du témoin gardé ; Standard vérifié sur 6 scènes, déficit Y moyen +0,454 à +0,976 EV persistant ; build Windows et 5 suites Windows réussis ; 46 + 11 tests Python réussis ; suite complète WSL 16/17, comparaison JPEG 9933 en échec (MAE 25,1519 > 25), hors mode calibré. | Courbe implicite Standard, résidus de 9421 et échec JPEG 9933 ; valider interactions LCP et rendu visuel du mode contrôlé ; généraliser les métadonnées uniquement après audit ; pas d'activation globale ni constante empirique ; charte physique à poursuivre. |
-| Exposition (EV) | Validé | [analyse de base](analyses/analyse-validation-lumieres-base-2026-10-02.md) | Conserver le corpus EV0 et vérifier à chaque changement tonal. |
-| Noirs et ombres | Validé | [analyse noirs/ombres](analyses/analyse-noirs-ombres-2026-10-02.md) | Ajouter des scènes à bruit élevé. |
-| Blancs et hautes lumières | Validé après v3 | [analyse blancs/HL](analyses/analyse-blancs-hautes-lumieres-2026-10-02.md) | Vérifier la stabilité avec courbes activées. |
-| Contraste | Validé | [analyse contraste](analyses/analyse-contraste-2026-10-02.md) | Revalider si les masques tonaux changent. |
+| Base colorimétrique à l'ouverture | Camera Neutral accepté visuellement ; normalisation contrôlée disponible dans l'IHM, désactivée par défaut ; fidélité/parité LR non validées | [Rapport unique](analyses/analyse-base-colorimetrique.md), §24–26 : cinq RAW exacts calibrés ; comparaison finale de onze paires, Neutral plus proche sur les cinq scènes comparables ; 17/18 CTest WSL (JPEG 9933 en échec), 76 + 12 tests Python ; preuves Windows et packaging décrits dans le rapport. | Persister le choix DCP/normalisation ; vérifier état exact des exports, optique et résidus 9421/9950 ; Standard, JPEG 9933 et généralisation après audit ; charte physique. |
+| Exposition (EV) | Loi et direction revalidées le 9 octobre sur six scènes IPR à ±1 EV ; parité Lightroom non validée | [campagne complète Camera Neutral](analyses/analyse-validation-lumieres-base-2026-10-02.md#campagne-complete-lumieres--nouveaux-neutres-9-octobre-2026) ; neutres LR 0037/9421 corrigés, 12 variantes IPR ×0,5/×2 | Étudier séparément saturation/gamut/HL ; ne pas modifier la loi EV. |
+| Noirs et ombres | Ombres corrigées : état actuel accepté visuellement par l'utilisateur le 10 octobre ; tests synthétiques/export réussis | [version figée](analyses/analyse-validation-lumieres-base-2026-10-02.md#version-figee-apres-validation-visuelle--10-octobre-2026) ; gain ≤×4 et ordre tonal préservé ; aucune parité LR universelle annoncée | Étendre aux autres boîtiers/objectifs ; comparer les nouvelles campagnes ; Noirs reste séparé. |
+| Blancs et hautes lumières | HL corrigées : état actuel accepté visuellement par l'utilisateur le 10 octobre ; tests RGB/export réussis | [version figée](analyses/analyse-validation-lumieres-base-2026-10-02.md#version-figee-apres-validation-visuelle--10-octobre-2026) ; marge fondée sur maxRGB ; aucune parité LR universelle annoncée | Évolutions possibles après tests d'autres boîtiers/objectifs ; Blancs inchangé et à traiter séparément. |
+| Contraste | Validation historique ; fonctionnement cohérent aux extrêmes le 9 octobre | [analyse contraste](analyses/analyse-contraste-2026-10-02.md) ; six scènes, action opposée toe/shoulder ; saturation +100 moyenne 0,291 % IPR | Recette visuelle et rampe synthétique au pivot 18 %, valeurs intermédiaires. |
 | Température | Validé | [analyse température](analyses/analyse-temperature-2026-10-02.md) | Revalider la calibration froide après profil ou gamut mapping. |
 | Nuance | Validé | [analyse nuance](analyses/analyse-nuance-2026-10-02.md) | Ajouter des gris neutres et carnations. |
 | Vibrance / saturation | Validé | [analyse saturation](analyses/analyse-saturation-2026-10-02.md) | Étendre aux couleurs hors gamut. |
@@ -22,15 +22,37 @@
 | Grain / flou | À faire | Implémentation existante | Définir une cible esthétique et des critères de non-régression. |
 | Réduction de bruit | Fonctionnement/progressivité v2 confirmés ; qualité et calibration à poursuivre | [campagne v2](analyses/analyse-bruit-v2-2026-10-05.md) : 12 scènes, 24 neutres, 136 variantes standards + 9 activations ; 24 progressions IPR strictement décroissantes ; dérive médiane Y ≤0,289 % ; ISO 3200/8000 ajoutés ; 17 tests analyseur réussis ; [correctif](analyses/correctif-bruit-2026-10-05.md) | Priorité au bruit couleur résiduel à haut ISO ; comparer LR 50/100 sur 1020/9421/9734 si souhaité, puis composantes combinées, halos, saturation, aperçu/export et sidecars. ISO 6400 facultatif, netteté séparée. |
 | Netteté / couplage bruit-netteté | À faire | [stratégie d'implémentation](../architecture/denoising-sharpening.md) ; campagne bruit réalisée à gain de netteté 0 | Tester gain/rayon/masquage, peau, feuillage, halos, ISO élevé et couplage au débruitage. |
-| Sidecar `.ipr` | À faire | [rapport session](../reports/sessions/rapport-session-2026-10-02.md) | Effectuer la recette ouverture, invalidation et restauration. |
-| Application par lot | À faire | [rapport session](../reports/sessions/rapport-session-2026-10-02.md) | Vérifier cibles, annotations et sidecars individuels. |
+| Sidecar `.ipr` / retouche DCP et optique | Implémenté v6 ; tests Windows réussis | [ADR-0006](../decisions/ADR-0006-restauration-raw-et-retouche-profil.md) et [contrat optique](../camera-profile-engine.md#persistance-et-commandes-optiques-9-octobre-2026) : DCP/LCP/calibration/WB avant décodage, SHA-256, lecture v1–v6, options objectif/CA indépendantes, cache, sauvegarde atomique et restauration pixel-identique synthétique | Recette visuelle zoom/comparaison, permissions et déplacement. Les anciens exécutables ne lisent pas v6. |
+| Correction objectif / aberration chromatique | Commandes indépendantes intégrées ; tests synthétiques réussis | `cameraProfileEngineTests` : neutralité avec deux options désactivées, CA seule, géométrie/vignettage seuls et compatibilité LCP ; `editorRawDevelopmentTests` : cache, redémarrage, ressources modifiées/manquantes ; `settingsQmlTests` : présence des commandes | Vérifier lignes droites, coins, vignettage et franges à 100 %, aperçu/export. CA latérale seulement avec modèle LCP ; franges longitudinales non traitées. |
+| Application de réglages par lot | Implémentée ; recette manuelle à terminer | `applyAdjustmentsToSelection()` : écrit les réglages dans les sidecars des cibles en conservant leurs annotations | Vérifier cibles, annotations, sidecars individuels et erreurs partielles ; ne pas confondre avec l'export par lot. |
+| Export par lot | Non implémenté | `ImageEditor::exportImage()` exporte seulement l'image active ; `applyAdjustmentsToSelection()` écrit des sidecars | Concevoir file d'export, progression, annulation, erreurs partielles et noms uniques. |
 | Export DNG / Lightroom | Non validé | [diagnostic DNG](analyses/diagnostic-export-dng-lightroom-2026-10-03.md) | Corriger les métadonnées, puis valider avec le SDK Adobe et Lightroom. Le décodage LibRaw seul ne suffit pas. |
-| Sections de réglages / export | Tests automatisés réussis | `settingsQmlTests` : 9 sections, clavier, conservation des valeurs et largeurs 232/280/320 px | Vérifier le confort d'utilisation et les différentes résolutions/DPI sous Windows. |
+| Sections de réglages / export | Tests automatisés réussis | `settingsQmlTests` : 10 sections dont Développement RAW / Profil, clavier, conservation des valeurs et largeurs contraintes | Vérifier confort, résolutions/DPI Windows et lisibilité du statut de calibration. |
 | Dialogue d'export / noms uniques | Tests automatisés réussis sous WSL et export natif Windows | `settingsQmlTests` : filtre, suffixe, format accepté et propositions -2/-3/-4 dans la dernière destination choisie, différente du dossier source ; `imageExportTests` : JPEG/PNG/TIFF/DNG, noms uniques et octets existants préservés ; verrou du temporaire Windows reproduit puis corrigé, test isolé dans cyan réussi | Confirmer visuellement les quatre types et les noms proposés dans le dialogue natif Windows, y compris après changement de dossier. |
 | Préférences globales d’IHM | Recette automatisée, validation Windows à compléter | `uiPreferencesTests` et `uiPreferencesQmlTests` ; [contrat INI](../architecture/ui-preferences.md) | Vérifier redémarrage, fenêtres maximisées, multi-écrans/DPI et visibilité des panneaux. |
 | Zoom / navigation dans l'aperçu | Tests automatisés réussis sous Windows et WSL ; recette visuelle Windows à compléter | `imageViewportQmlTests` et chargement de la fenêtre via `uiPreferencesQmlTests` ; [contrat de zoom](../specifications/zoom-image.md) ; build Windows et suite complète 13 CTest / 39 Python réussis | Vérifier portrait/paysage, clavier, pavé tactile et DPI Windows. Le zoom utilise le proxy 2048 px, pas le RAW pleine résolution. |
 | Comparaison origine / actuel | Recette automatisée Windows et WSL ; recette visuelle à compléter | `imageViewportQmlTests` : capture des deux côtés, géométrie commune, séparation mobile, raccourci, transparence ; `imageExportTests` : neutralité, stabilité, sidecar, reset et libération ; [contrat](../specifications/zoom-image.md) | Vérifier confort sur photos réelles et DPI Windows. Origine = source décodée/profilée avant réglages, pas RAW brut ou JPEG intégré ; référence renouvelée au redécodage de WB automatique. |
 | Build Windows / sélection de tests | Build et sélection vérifiés sous Windows | [contrat de build](../architecture/tests-cibles-et-build-windows.md) : build Release, 11 CTest natifs + 13 Python réussis au bootstrap ; modification du seul comparateur : sa seule suite Python (13 tests) réussie ; second plan sans changement vide | Maintenir la cartographie en ajoutant une fonction ; suite complète pour bootstrap, changements transversaux et CI GitHub. Packaging et installation vierge restent à valider. |
+| Windows autonome | ZIP local produit, démarrage offscreen vérifié sans PATH de développement | [contrat de packaging](../architecture/build-windows-standalone.md) ; profil Neutral, LCP Canon et INI local ; archive privée non redistribuable avec profils Adobe | Recette Windows 10/11 propres : RAW, export, permissions, DPI, GPU et redémarrage. |
+
+## Lecture des statuts et mesures
+
+**Corpus au 9 octobre :** les 423 TIFF Lightroom Adobe Standard ont été
+[supprimés sur demande](../reports/storage/lightroom-cleanup-2026-10-09/README.md).
+Les cinq références Camera Neutral, RAW et exports IPR restent disponibles.
+Les verdicts ci-dessus sont historiques : régénérer les références Lightroom
+Camera Neutral avant de relancer les campagnes concernées. Les mesures
+conservées ne remplacent pas les pixels supprimés.
+
+Les compteurs anciens cités dans les lignes historiques sont des exécutions
+datées, pas le résultat de la suite actuelle. Au 8 octobre, le dernier passage
+complet WSL est **17/18** (JPEG 9933) ; les **16/16 CTest Windows** disponibles
+ont été relancés avec succès pendant la passe documentaire. Les sondes UNIX
+ne sont pas incluses dans ce total Windows. Les tests Python d'analyse/sélection
+sont **76/12**, avec **4 tests documentaires** supplémentaires. Voir les rapports de famille
+pour les preuves, sans fusionner des jeux de tests différents.
+Les [CSV et courbes](metrics/README.md) sont des vues dérivées : vitesse CPU,
+progressivité d'un réglage et proximité Lightroom sont des axes distincts.
 
 ## Recette manuelle — Préférences d’IHM
 

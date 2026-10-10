@@ -1,0 +1,1742 @@
+{
+    "campaign_id": "sonde-correctif-ombres-hl-v001-20261010T122315Z",
+    "data_version": 1,
+    "measured_at_utc": "2026-10-10T12:23:15Z",
+    "old_formula_limit": "Old application skipped RGB scaling at Y<=1e-6; rows describe formula only",
+    "probe_executable_sha256": "ef2dab32c38166042d432e6fd37e4ed5e23910ef7a2f017dfeba5bd86d371111",
+    "production_header_sha256": "2ddff2e2dc75a9e279bbe85d0a29d05da60555f676c00e8f4f2e26db519e7dfe",
+    "protocol_version": "tone-recovery-synthetic-v1",
+    "records": [
+        {
+            "Y": 0,
+            "amount": 0.25,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.016249999403953552
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 0.25,
+            "maximumChannel": 9.999999974752427e-07,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 7.499399430344056e-07,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.016225775703787804
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 0.25,
+            "maximumChannel": 9.999999747378752e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 7.494004421459977e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.01617339625954628
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 0.25,
+            "maximumChannel": 9.999999747378752e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 7.440358604071662e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.016007758677005768
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 0.25,
+            "maximumChannel": 0.0010000000474974513,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0006934172124601901,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.015483967028558254
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 0.25,
+            "maximumChannel": 0.004999999888241291,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0026041665114462376,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.014537098817527294
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 0.25,
+            "maximumChannel": 0.009999999776482582,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0038265306502580643,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.013827592134475708
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 0.25,
+            "maximumChannel": 0.02500000037252903,
+            "newHighlightDeltaY": 5.515630618901923e-05,
+            "newShadowDeltaY": 0.004687500186264515,
+            "oldHighlightFormulaDeltaY": 5.515630618901923e-05,
+            "oldShadowFormulaDeltaY": 0.012419837526977062
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 0.25,
+            "maximumChannel": 0.05000000074505806,
+            "newHighlightDeltaY": 0.0018670657882466912,
+            "newShadowDeltaY": 0.004166666883975267,
+            "oldHighlightFormulaDeltaY": 0.0018670657882466912,
+            "oldShadowFormulaDeltaY": 0.010833332315087318
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 0.25,
+            "maximumChannel": 0.10000000149011612,
+            "newHighlightDeltaY": 0.011666667647659779,
+            "newShadowDeltaY": 0.003000000026077032,
+            "oldHighlightFormulaDeltaY": 0.011666667647659779,
+            "oldShadowFormulaDeltaY": 0.008589675650000572
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 0.25,
+            "maximumChannel": 0.18000000715255737,
+            "newHighlightDeltaY": 0.03720371052622795,
+            "newShadowDeltaY": 0.0018466789042577147,
+            "oldHighlightFormulaDeltaY": 0.03720371052622795,
+            "oldShadowFormulaDeltaY": 0.005493492353707552
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 0.25,
+            "maximumChannel": 0.30000001192092896,
+            "newHighlightDeltaY": 0.07642072439193726,
+            "newShadowDeltaY": 0.0007951836450956762,
+            "oldHighlightFormulaDeltaY": 0.07642072439193726,
+            "oldShadowFormulaDeltaY": 0.001781021011993289
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 0.25,
+            "maximumChannel": 0.44999998807907104,
+            "newHighlightDeltaY": 0.09333444386720657,
+            "newShadowDeltaY": 0.0001348144287476316,
+            "oldHighlightFormulaDeltaY": 0.09333444386720657,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 0.25,
+            "maximumChannel": 0.5600000023841858,
+            "newHighlightDeltaY": 0.07699999958276749,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.07699999958276749,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 0.25,
+            "maximumChannel": 0.800000011920929,
+            "newHighlightDeltaY": 0.034999996423721313,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.034999996423721313,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 0.25,
+            "maximumChannel": 1,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 0.25,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.016249999403953552
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 0.25,
+            "maximumChannel": 1.9999999949504854e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 7.499399430344056e-07,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.016225775703787804
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 0.25,
+            "maximumChannel": 1.9999999494757503e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 7.494004421459977e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.01617339625954628
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 0.25,
+            "maximumChannel": 0.00019999999494757503,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 7.440358604071662e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.016007758677005768
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 0.25,
+            "maximumChannel": 0.0020000000949949026,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0006934172124601901,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.015483967028558254
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 0.25,
+            "maximumChannel": 0.009999999776482582,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0026041665114462376,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.014537098817527294
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 0.25,
+            "maximumChannel": 0.019999999552965164,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0038265306502580643,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.013827592134475708
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 0.25,
+            "maximumChannel": 0.05000000074505806,
+            "newHighlightDeltaY": 2.687101914489176e-05,
+            "newShadowDeltaY": 0.004687500186264515,
+            "oldHighlightFormulaDeltaY": 5.515630618901923e-05,
+            "oldShadowFormulaDeltaY": 0.012419837526977062
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 0.25,
+            "maximumChannel": 0.10000000149011612,
+            "newHighlightDeltaY": 0.000884399632923305,
+            "newShadowDeltaY": 0.004166666883975267,
+            "oldHighlightFormulaDeltaY": 0.0018670657882466912,
+            "oldShadowFormulaDeltaY": 0.010833332315087318
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 0.25,
+            "maximumChannel": 0.20000000298023224,
+            "newHighlightDeltaY": 0.005185185931622982,
+            "newShadowDeltaY": 0.003000000026077032,
+            "oldHighlightFormulaDeltaY": 0.011666667647659779,
+            "oldShadowFormulaDeltaY": 0.008589675650000572
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 0.25,
+            "maximumChannel": 0.36000001430511475,
+            "newHighlightDeltaY": 0.014518520794808865,
+            "newShadowDeltaY": 0.0018466789042577147,
+            "oldHighlightFormulaDeltaY": 0.03720371052622795,
+            "oldShadowFormulaDeltaY": 0.005493492353707552
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 0.25,
+            "maximumChannel": 0.6000000238418579,
+            "newHighlightDeltaY": 0.021834490820765495,
+            "newShadowDeltaY": 0.0007951836450956762,
+            "oldHighlightFormulaDeltaY": 0.07642072439193726,
+            "oldShadowFormulaDeltaY": 0.001781021011993289
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 0.25,
+            "maximumChannel": 0.8999999761581421,
+            "newHighlightDeltaY": 0.008484951220452785,
+            "newShadowDeltaY": 0.0001348144287476316,
+            "oldHighlightFormulaDeltaY": 0.09333444386720657,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 0.25,
+            "maximumChannel": 1.1200000047683716,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.07699999958276749,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 0.25,
+            "maximumChannel": 1.600000023841858,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.034999996423721313,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 0.25,
+            "maximumChannel": 2,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 0.25,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.016249999403953552
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 0.25,
+            "maximumChannel": 9.999999747378752e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 7.499399430344056e-07,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.016225775703787804
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 0.25,
+            "maximumChannel": 9.999999747378752e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 7.494004421459977e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.01617339625954628
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 0.25,
+            "maximumChannel": 0.0009999999310821295,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 7.440358604071662e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.016007758677005768
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 0.25,
+            "maximumChannel": 0.010000000707805157,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0006934172124601901,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.015483967028558254
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 0.25,
+            "maximumChannel": 0.04999999701976776,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0026041665114462376,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.014537098817527294
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 0.25,
+            "maximumChannel": 0.09999999403953552,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0038265306502580643,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.013827592134475708
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 0.25,
+            "maximumChannel": 0.25,
+            "newHighlightDeltaY": 4.24279278377071e-06,
+            "newShadowDeltaY": 0.004687500186264515,
+            "oldHighlightFormulaDeltaY": 5.515630618901923e-05,
+            "oldShadowFormulaDeltaY": 0.012419837526977062
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 0.25,
+            "maximumChannel": 0.5,
+            "newHighlightDeltaY": 9.826662426348776e-05,
+            "newShadowDeltaY": 0.004166666883975267,
+            "oldHighlightFormulaDeltaY": 0.0018670657882466912,
+            "oldShadowFormulaDeltaY": 0.010833332315087318
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 0.25,
+            "maximumChannel": 1,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.011666667647659779,
+            "oldShadowFormulaDeltaY": 0.008589675650000572
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 0.25,
+            "maximumChannel": 1.8000000715255737,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.03720371052622795,
+            "oldShadowFormulaDeltaY": 0.005493492353707552
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 0.25,
+            "maximumChannel": 3,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.07642072439193726,
+            "oldShadowFormulaDeltaY": 0.001781021011993289
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 0.25,
+            "maximumChannel": 4.5,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.09333444386720657,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 0.25,
+            "maximumChannel": 5.599999904632568,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.07699999958276749,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 0.25,
+            "maximumChannel": 8,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.034999996423721313,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 0.25,
+            "maximumChannel": 10,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 0.5,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.032499998807907104
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 0.5,
+            "maximumChannel": 9.999999974752427e-07,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 1.4998798860688112e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.03245155140757561
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 0.5,
+            "maximumChannel": 9.999999747378752e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 1.4988008842919953e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.03234679251909256
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 0.5,
+            "maximumChannel": 9.999999747378752e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.00014880717208143324,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.032015517354011536
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 0.5,
+            "maximumChannel": 0.0010000000474974513,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0013868344249203801,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.03096793405711651
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 0.5,
+            "maximumChannel": 0.004999999888241291,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.005208333022892475,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.02907419763505459
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 0.5,
+            "maximumChannel": 0.009999999776482582,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0076530613005161285,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.027655184268951416
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 0.5,
+            "maximumChannel": 0.02500000037252903,
+            "newHighlightDeltaY": 0.00011031261237803847,
+            "newShadowDeltaY": 0.00937500037252903,
+            "oldHighlightFormulaDeltaY": 0.00011031261237803847,
+            "oldShadowFormulaDeltaY": 0.024839675053954124
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 0.5,
+            "maximumChannel": 0.05000000074505806,
+            "newHighlightDeltaY": 0.0037341315764933825,
+            "newShadowDeltaY": 0.008333333767950535,
+            "oldHighlightFormulaDeltaY": 0.0037341315764933825,
+            "oldShadowFormulaDeltaY": 0.021666664630174637
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 0.5,
+            "maximumChannel": 0.10000000149011612,
+            "newHighlightDeltaY": 0.023333335295319557,
+            "newShadowDeltaY": 0.006000000052154064,
+            "oldHighlightFormulaDeltaY": 0.023333335295319557,
+            "oldShadowFormulaDeltaY": 0.017179351300001144
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 0.5,
+            "maximumChannel": 0.18000000715255737,
+            "newHighlightDeltaY": 0.0744074210524559,
+            "newShadowDeltaY": 0.0036933578085154295,
+            "oldHighlightFormulaDeltaY": 0.0744074210524559,
+            "oldShadowFormulaDeltaY": 0.010986984707415104
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 0.5,
+            "maximumChannel": 0.30000001192092896,
+            "newHighlightDeltaY": 0.1528414487838745,
+            "newShadowDeltaY": 0.0015903672901913524,
+            "oldHighlightFormulaDeltaY": 0.1528414487838745,
+            "oldShadowFormulaDeltaY": 0.003562042023986578
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 0.5,
+            "maximumChannel": 0.44999998807907104,
+            "newHighlightDeltaY": 0.18666888773441315,
+            "newShadowDeltaY": 0.0002696288574952632,
+            "oldHighlightFormulaDeltaY": 0.18666888773441315,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 0.5,
+            "maximumChannel": 0.5600000023841858,
+            "newHighlightDeltaY": 0.15399999916553497,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.15399999916553497,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 0.5,
+            "maximumChannel": 0.800000011920929,
+            "newHighlightDeltaY": 0.06999999284744263,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.06999999284744263,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 0.5,
+            "maximumChannel": 1,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 0.5,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.032499998807907104
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 0.5,
+            "maximumChannel": 1.9999999949504854e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 1.4998798860688112e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.03245155140757561
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 0.5,
+            "maximumChannel": 1.9999999494757503e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 1.4988008842919953e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.03234679251909256
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 0.5,
+            "maximumChannel": 0.00019999999494757503,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.00014880717208143324,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.032015517354011536
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 0.5,
+            "maximumChannel": 0.0020000000949949026,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0013868344249203801,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.03096793405711651
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 0.5,
+            "maximumChannel": 0.009999999776482582,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.005208333022892475,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.02907419763505459
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 0.5,
+            "maximumChannel": 0.019999999552965164,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0076530613005161285,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.027655184268951416
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 0.5,
+            "maximumChannel": 0.05000000074505806,
+            "newHighlightDeltaY": 5.374203828978352e-05,
+            "newShadowDeltaY": 0.00937500037252903,
+            "oldHighlightFormulaDeltaY": 0.00011031261237803847,
+            "oldShadowFormulaDeltaY": 0.024839675053954124
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 0.5,
+            "maximumChannel": 0.10000000149011612,
+            "newHighlightDeltaY": 0.00176879926584661,
+            "newShadowDeltaY": 0.008333333767950535,
+            "oldHighlightFormulaDeltaY": 0.0037341315764933825,
+            "oldShadowFormulaDeltaY": 0.021666664630174637
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 0.5,
+            "maximumChannel": 0.20000000298023224,
+            "newHighlightDeltaY": 0.010370371863245964,
+            "newShadowDeltaY": 0.006000000052154064,
+            "oldHighlightFormulaDeltaY": 0.023333335295319557,
+            "oldShadowFormulaDeltaY": 0.017179351300001144
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 0.5,
+            "maximumChannel": 0.36000001430511475,
+            "newHighlightDeltaY": 0.02903704158961773,
+            "newShadowDeltaY": 0.0036933578085154295,
+            "oldHighlightFormulaDeltaY": 0.0744074210524559,
+            "oldShadowFormulaDeltaY": 0.010986984707415104
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 0.5,
+            "maximumChannel": 0.6000000238418579,
+            "newHighlightDeltaY": 0.04366898164153099,
+            "newShadowDeltaY": 0.0015903672901913524,
+            "oldHighlightFormulaDeltaY": 0.1528414487838745,
+            "oldShadowFormulaDeltaY": 0.003562042023986578
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 0.5,
+            "maximumChannel": 0.8999999761581421,
+            "newHighlightDeltaY": 0.01696990244090557,
+            "newShadowDeltaY": 0.0002696288574952632,
+            "oldHighlightFormulaDeltaY": 0.18666888773441315,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 0.5,
+            "maximumChannel": 1.1200000047683716,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.15399999916553497,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 0.5,
+            "maximumChannel": 1.600000023841858,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.06999999284744263,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 0.5,
+            "maximumChannel": 2,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 0.5,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.032499998807907104
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 0.5,
+            "maximumChannel": 9.999999747378752e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 1.4998798860688112e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.03245155140757561
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 0.5,
+            "maximumChannel": 9.999999747378752e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 1.4988008842919953e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.03234679251909256
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 0.5,
+            "maximumChannel": 0.0009999999310821295,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.00014880717208143324,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.032015517354011536
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 0.5,
+            "maximumChannel": 0.010000000707805157,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0013868344249203801,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.03096793405711651
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 0.5,
+            "maximumChannel": 0.04999999701976776,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.005208333022892475,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.02907419763505459
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 0.5,
+            "maximumChannel": 0.09999999403953552,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0076530613005161285,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.027655184268951416
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 0.5,
+            "maximumChannel": 0.25,
+            "newHighlightDeltaY": 8.48558556754142e-06,
+            "newShadowDeltaY": 0.00937500037252903,
+            "oldHighlightFormulaDeltaY": 0.00011031261237803847,
+            "oldShadowFormulaDeltaY": 0.024839675053954124
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 0.5,
+            "maximumChannel": 0.5,
+            "newHighlightDeltaY": 0.0001965332485269755,
+            "newShadowDeltaY": 0.008333333767950535,
+            "oldHighlightFormulaDeltaY": 0.0037341315764933825,
+            "oldShadowFormulaDeltaY": 0.021666664630174637
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 0.5,
+            "maximumChannel": 1,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.023333335295319557,
+            "oldShadowFormulaDeltaY": 0.017179351300001144
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 0.5,
+            "maximumChannel": 1.8000000715255737,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.0744074210524559,
+            "oldShadowFormulaDeltaY": 0.010986984707415104
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 0.5,
+            "maximumChannel": 3,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.1528414487838745,
+            "oldShadowFormulaDeltaY": 0.003562042023986578
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 0.5,
+            "maximumChannel": 4.5,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.18666888773441315,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 0.5,
+            "maximumChannel": 5.599999904632568,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.15399999916553497,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 0.5,
+            "maximumChannel": 8,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.06999999284744263,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 0.5,
+            "maximumChannel": 10,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 0.75,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04874999821186066
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 0.75,
+            "maximumChannel": 9.999999974752427e-07,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.249819772259798e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04867732524871826
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 0.75,
+            "maximumChannel": 9.999999747378752e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.248201417387463e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04852018877863884
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 0.75,
+            "maximumChannel": 9.999999747378752e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.00022321076539810747,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.0480232760310173
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 0.75,
+            "maximumChannel": 0.0010000000474974513,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.002080251695588231,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04645190015435219
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 0.75,
+            "maximumChannel": 0.004999999888241291,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.007812499534338713,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04361129552125931
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 0.75,
+            "maximumChannel": 0.009999999776482582,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.011479591950774193,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.041482776403427124
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 0.75,
+            "maximumChannel": 0.02500000037252903,
+            "newHighlightDeltaY": 0.0001654689258430153,
+            "newShadowDeltaY": 0.014062500558793545,
+            "oldHighlightFormulaDeltaY": 0.0001654689258430153,
+            "oldShadowFormulaDeltaY": 0.03725951164960861
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 0.75,
+            "maximumChannel": 0.05000000074505806,
+            "newHighlightDeltaY": 0.0056011974811553955,
+            "newShadowDeltaY": 0.012500000186264515,
+            "oldHighlightFormulaDeltaY": 0.0056011974811553955,
+            "oldShadowFormulaDeltaY": 0.032499995082616806
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 0.75,
+            "maximumChannel": 0.10000000149011612,
+            "newHighlightDeltaY": 0.03500000387430191,
+            "newShadowDeltaY": 0.009000000543892384,
+            "oldHighlightFormulaDeltaY": 0.03500000387430191,
+            "oldShadowFormulaDeltaY": 0.025769026950001717
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 0.75,
+            "maximumChannel": 0.18000000715255737,
+            "newHighlightDeltaY": 0.11161113530397415,
+            "newShadowDeltaY": 0.005540036596357822,
+            "oldHighlightFormulaDeltaY": 0.11161113530397415,
+            "oldShadowFormulaDeltaY": 0.016480477526783943
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 0.75,
+            "maximumChannel": 0.30000001192092896,
+            "newHighlightDeltaY": 0.22926215827465057,
+            "newShadowDeltaY": 0.002385550644248724,
+            "oldHighlightFormulaDeltaY": 0.22926215827465057,
+            "oldShadowFormulaDeltaY": 0.005343062803149223
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 0.75,
+            "maximumChannel": 0.44999998807907104,
+            "newHighlightDeltaY": 0.28000330924987793,
+            "newShadowDeltaY": 0.0004044432716909796,
+            "oldHighlightFormulaDeltaY": 0.28000330924987793,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 0.75,
+            "maximumChannel": 0.5600000023841858,
+            "newHighlightDeltaY": 0.23100000619888306,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.23100000619888306,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 0.75,
+            "maximumChannel": 0.800000011920929,
+            "newHighlightDeltaY": 0.10499998927116394,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.10499998927116394,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 0.75,
+            "maximumChannel": 1,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 0.75,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04874999821186066
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 0.75,
+            "maximumChannel": 1.9999999949504854e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.249819772259798e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04867732524871826
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 0.75,
+            "maximumChannel": 1.9999999494757503e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.248201417387463e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04852018877863884
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 0.75,
+            "maximumChannel": 0.00019999999494757503,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.00022321076539810747,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.0480232760310173
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 0.75,
+            "maximumChannel": 0.0020000000949949026,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.002080251695588231,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04645190015435219
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 0.75,
+            "maximumChannel": 0.009999999776482582,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.007812499534338713,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04361129552125931
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 0.75,
+            "maximumChannel": 0.019999999552965164,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.011479591950774193,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.041482776403427124
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 0.75,
+            "maximumChannel": 0.05000000074505806,
+            "newHighlightDeltaY": 8.06130628916435e-05,
+            "newShadowDeltaY": 0.014062500558793545,
+            "oldHighlightFormulaDeltaY": 0.0001654689258430153,
+            "oldShadowFormulaDeltaY": 0.03725951164960861
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 0.75,
+            "maximumChannel": 0.10000000149011612,
+            "newHighlightDeltaY": 0.0026531987823545933,
+            "newShadowDeltaY": 0.012500000186264515,
+            "oldHighlightFormulaDeltaY": 0.0056011974811553955,
+            "oldShadowFormulaDeltaY": 0.032499995082616806
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 0.75,
+            "maximumChannel": 0.20000000298023224,
+            "newHighlightDeltaY": 0.015555557794868946,
+            "newShadowDeltaY": 0.009000000543892384,
+            "oldHighlightFormulaDeltaY": 0.03500000387430191,
+            "oldShadowFormulaDeltaY": 0.025769026950001717
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 0.75,
+            "maximumChannel": 0.36000001430511475,
+            "newHighlightDeltaY": 0.04355556517839432,
+            "newShadowDeltaY": 0.005540036596357822,
+            "oldHighlightFormulaDeltaY": 0.11161113530397415,
+            "oldShadowFormulaDeltaY": 0.016480477526783943
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 0.75,
+            "maximumChannel": 0.6000000238418579,
+            "newHighlightDeltaY": 0.06550347059965134,
+            "newShadowDeltaY": 0.002385550644248724,
+            "oldHighlightFormulaDeltaY": 0.22926215827465057,
+            "oldShadowFormulaDeltaY": 0.005343062803149223
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 0.75,
+            "maximumChannel": 0.8999999761581421,
+            "newHighlightDeltaY": 0.025454852730035782,
+            "newShadowDeltaY": 0.0004044432716909796,
+            "oldHighlightFormulaDeltaY": 0.28000330924987793,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 0.75,
+            "maximumChannel": 1.1200000047683716,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.23100000619888306,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 0.75,
+            "maximumChannel": 1.600000023841858,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.10499998927116394,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 0.75,
+            "maximumChannel": 2,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 0.75,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04874999821186066
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 0.75,
+            "maximumChannel": 9.999999747378752e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.249819772259798e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04867732524871826
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 0.75,
+            "maximumChannel": 9.999999747378752e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.248201417387463e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04852018877863884
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 0.75,
+            "maximumChannel": 0.0009999999310821295,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.00022321076539810747,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.0480232760310173
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 0.75,
+            "maximumChannel": 0.010000000707805157,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.002080251695588231,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04645190015435219
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 0.75,
+            "maximumChannel": 0.04999999701976776,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.007812499534338713,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.04361129552125931
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 0.75,
+            "maximumChannel": 0.09999999403953552,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.011479591950774193,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.041482776403427124
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 0.75,
+            "maximumChannel": 0.25,
+            "newHighlightDeltaY": 1.272837835131213e-05,
+            "newShadowDeltaY": 0.014062500558793545,
+            "oldHighlightFormulaDeltaY": 0.0001654689258430153,
+            "oldShadowFormulaDeltaY": 0.03725951164960861
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 0.75,
+            "maximumChannel": 0.5,
+            "newHighlightDeltaY": 0.0002947998873423785,
+            "newShadowDeltaY": 0.012500000186264515,
+            "oldHighlightFormulaDeltaY": 0.0056011974811553955,
+            "oldShadowFormulaDeltaY": 0.032499995082616806
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 0.75,
+            "maximumChannel": 1,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.03500000387430191,
+            "oldShadowFormulaDeltaY": 0.025769026950001717
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 0.75,
+            "maximumChannel": 1.8000000715255737,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.11161113530397415,
+            "oldShadowFormulaDeltaY": 0.016480477526783943
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 0.75,
+            "maximumChannel": 3,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.22926215827465057,
+            "oldShadowFormulaDeltaY": 0.005343062803149223
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 0.75,
+            "maximumChannel": 4.5,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.28000330924987793,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 0.75,
+            "maximumChannel": 5.599999904632568,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.23100000619888306,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 0.75,
+            "maximumChannel": 8,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.10499998927116394,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 0.75,
+            "maximumChannel": 10,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 1,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06499999761581421
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 1,
+            "maximumChannel": 9.999999974752427e-07,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.9997597721376223e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06490310281515121
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 1,
+            "maximumChannel": 9.999999747378752e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.9976017685839906e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06469358503818512
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 1,
+            "maximumChannel": 9.999999747378752e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0002976143441628665,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06403103470802307
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 1,
+            "maximumChannel": 0.0010000000474974513,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0027736688498407602,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06193586811423302
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 1,
+            "maximumChannel": 0.004999999888241291,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.01041666604578495,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.05814839527010918
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 1,
+            "maximumChannel": 0.009999999776482582,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.015306122601032257,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.05531036853790283
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 1,
+            "maximumChannel": 0.02500000037252903,
+            "newHighlightDeltaY": 0.00022062522475607693,
+            "newShadowDeltaY": 0.01875000074505806,
+            "oldHighlightFormulaDeltaY": 0.00022062522475607693,
+            "oldShadowFormulaDeltaY": 0.04967935010790825
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 1,
+            "maximumChannel": 0.05000000074505806,
+            "newHighlightDeltaY": 0.007468263152986765,
+            "newShadowDeltaY": 0.01666666753590107,
+            "oldHighlightFormulaDeltaY": 0.007468263152986765,
+            "oldShadowFormulaDeltaY": 0.043333329260349274
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 1,
+            "maximumChannel": 0.10000000149011612,
+            "newHighlightDeltaY": 0.046666670590639114,
+            "newShadowDeltaY": 0.012000000104308128,
+            "oldHighlightFormulaDeltaY": 0.046666670590639114,
+            "oldShadowFormulaDeltaY": 0.03435870260000229
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 1,
+            "maximumChannel": 0.18000000715255737,
+            "newHighlightDeltaY": 0.1488148421049118,
+            "newShadowDeltaY": 0.007386715617030859,
+            "oldHighlightFormulaDeltaY": 0.1488148421049118,
+            "oldShadowFormulaDeltaY": 0.021973969414830208
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 1,
+            "maximumChannel": 0.30000001192092896,
+            "newHighlightDeltaY": 0.305682897567749,
+            "newShadowDeltaY": 0.0031807345803827047,
+            "oldHighlightFormulaDeltaY": 0.305682897567749,
+            "oldShadowFormulaDeltaY": 0.007124084047973156
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 1,
+            "maximumChannel": 0.44999998807907104,
+            "newHighlightDeltaY": 0.3733377754688263,
+            "newShadowDeltaY": 0.0005392577149905264,
+            "oldHighlightFormulaDeltaY": 0.3733377754688263,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 1,
+            "maximumChannel": 0.5600000023841858,
+            "newHighlightDeltaY": 0.30799999833106995,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.30799999833106995,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 1,
+            "maximumChannel": 0.800000011920929,
+            "newHighlightDeltaY": 0.13999998569488525,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.13999998569488525,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 1,
+            "maximumChannel": 1,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 1,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06499999761581421
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 1,
+            "maximumChannel": 1.9999999949504854e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.9997597721376223e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06490310281515121
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 1,
+            "maximumChannel": 1.9999999494757503e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.9976017685839906e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06469358503818512
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 1,
+            "maximumChannel": 0.00019999999494757503,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0002976143441628665,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06403103470802307
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 1,
+            "maximumChannel": 0.0020000000949949026,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0027736688498407602,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06193586811423302
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 1,
+            "maximumChannel": 0.009999999776482582,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.01041666604578495,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.05814839527010918
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 1,
+            "maximumChannel": 0.019999999552965164,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.015306122601032257,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.05531036853790283
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 1,
+            "maximumChannel": 0.05000000074505806,
+            "newHighlightDeltaY": 0.00010748407657956704,
+            "newShadowDeltaY": 0.01875000074505806,
+            "oldHighlightFormulaDeltaY": 0.00022062522475607693,
+            "oldShadowFormulaDeltaY": 0.04967935010790825
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 1,
+            "maximumChannel": 0.10000000149011612,
+            "newHighlightDeltaY": 0.00353759853169322,
+            "newShadowDeltaY": 0.01666666753590107,
+            "oldHighlightFormulaDeltaY": 0.007468263152986765,
+            "oldShadowFormulaDeltaY": 0.043333329260349274
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 1,
+            "maximumChannel": 0.20000000298023224,
+            "newHighlightDeltaY": 0.020740743726491928,
+            "newShadowDeltaY": 0.012000000104308128,
+            "oldHighlightFormulaDeltaY": 0.046666670590639114,
+            "oldShadowFormulaDeltaY": 0.03435870260000229
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 1,
+            "maximumChannel": 0.36000001430511475,
+            "newHighlightDeltaY": 0.05807408317923546,
+            "newShadowDeltaY": 0.007386715617030859,
+            "oldHighlightFormulaDeltaY": 0.1488148421049118,
+            "oldShadowFormulaDeltaY": 0.021973969414830208
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 1,
+            "maximumChannel": 0.6000000238418579,
+            "newHighlightDeltaY": 0.08733796328306198,
+            "newShadowDeltaY": 0.0031807345803827047,
+            "oldHighlightFormulaDeltaY": 0.305682897567749,
+            "oldShadowFormulaDeltaY": 0.007124084047973156
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 1,
+            "maximumChannel": 0.8999999761581421,
+            "newHighlightDeltaY": 0.03393980488181114,
+            "newShadowDeltaY": 0.0005392577149905264,
+            "oldHighlightFormulaDeltaY": 0.3733377754688263,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 1,
+            "maximumChannel": 1.1200000047683716,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.30799999833106995,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 1,
+            "maximumChannel": 1.600000023841858,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.13999998569488525,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 1,
+            "maximumChannel": 2,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0,
+            "amount": 1,
+            "maximumChannel": 0,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06499999761581421
+        },
+        {
+            "Y": 9.999999974752427e-07,
+            "amount": 1,
+            "maximumChannel": 9.999999747378752e-06,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.9997597721376223e-06,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06490310281515121
+        },
+        {
+            "Y": 9.999999747378752e-06,
+            "amount": 1,
+            "maximumChannel": 9.999999747378752e-05,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 2.9976017685839906e-05,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06469358503818512
+        },
+        {
+            "Y": 9.999999747378752e-05,
+            "amount": 1,
+            "maximumChannel": 0.0009999999310821295,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0002976143441628665,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06403103470802307
+        },
+        {
+            "Y": 0.0010000000474974513,
+            "amount": 1,
+            "maximumChannel": 0.010000000707805157,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.0027736688498407602,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.06193586811423302
+        },
+        {
+            "Y": 0.004999999888241291,
+            "amount": 1,
+            "maximumChannel": 0.04999999701976776,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.01041666604578495,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.05814839527010918
+        },
+        {
+            "Y": 0.009999999776482582,
+            "amount": 1,
+            "maximumChannel": 0.09999999403953552,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0.015306122601032257,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0.05531036853790283
+        },
+        {
+            "Y": 0.02500000037252903,
+            "amount": 1,
+            "maximumChannel": 0.25,
+            "newHighlightDeltaY": 1.697117113508284e-05,
+            "newShadowDeltaY": 0.01875000074505806,
+            "oldHighlightFormulaDeltaY": 0.00022062522475607693,
+            "oldShadowFormulaDeltaY": 0.04967935010790825
+        },
+        {
+            "Y": 0.05000000074505806,
+            "amount": 1,
+            "maximumChannel": 0.5,
+            "newHighlightDeltaY": 0.000393066497053951,
+            "newShadowDeltaY": 0.01666666753590107,
+            "oldHighlightFormulaDeltaY": 0.007468263152986765,
+            "oldShadowFormulaDeltaY": 0.043333329260349274
+        },
+        {
+            "Y": 0.10000000149011612,
+            "amount": 1,
+            "maximumChannel": 1,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.046666670590639114,
+            "oldShadowFormulaDeltaY": 0.03435870260000229
+        },
+        {
+            "Y": 0.18000000715255737,
+            "amount": 1,
+            "maximumChannel": 1.8000000715255737,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.1488148421049118,
+            "oldShadowFormulaDeltaY": 0.021973969414830208
+        },
+        {
+            "Y": 0.30000001192092896,
+            "amount": 1,
+            "maximumChannel": 3,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.305682897567749,
+            "oldShadowFormulaDeltaY": 0.007124084047973156
+        },
+        {
+            "Y": 0.44999998807907104,
+            "amount": 1,
+            "maximumChannel": 4.5,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.3733377754688263,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.5600000023841858,
+            "amount": 1,
+            "maximumChannel": 5.599999904632568,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.30799999833106995,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 0.800000011920929,
+            "amount": 1,
+            "maximumChannel": 8,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0.13999998569488525,
+            "oldShadowFormulaDeltaY": 0
+        },
+        {
+            "Y": 1,
+            "amount": 1,
+            "maximumChannel": 10,
+            "newHighlightDeltaY": 0,
+            "newShadowDeltaY": 0,
+            "oldHighlightFormulaDeltaY": 0,
+            "oldShadowFormulaDeltaY": 0
+        }
+    ],
+    "schema_version": 1,
+    "units": "Y linear sRGB normalized; amount=slider/100",
+    "verification": "1500000 ramp states: gain bounds, ordering, no new RGB overflow; no real-image parity claim"
+}

@@ -68,6 +68,46 @@ void require(bool condition, const QString &message)
         throw std::runtime_error(message.toUtf8().constData());
 }
 
+QString featureGroup(const QString &name)
+{
+    if (name == "neutral" || name == "auto-wb") return "raw";
+    if (QStringList{"exposure", "contrast", "shadows", "blacks", "highlights", "whites"}.contains(name)) return "lumiere";
+    if (name.startsWith("curve-")) return "courbes";
+    if (name.startsWith("mixer-")) return "melangeur";
+    if (name.startsWith("grading-")) return "grading";
+    if (name.startsWith("denoise-")) return "bruit";
+    if (name.startsWith("sharpening-")) return "nettete";
+    if (QStringList{"temperature", "tint", "vibrance", "saturation", "grayscale"}.contains(name)) return "couleur";
+    return "effets";
+}
+
+const QStringList groups{"raw", "lumiere", "courbes", "couleur", "melangeur",
+                         "grading", "effets", "bruit", "nettete"};
+
+void printGroupHelp(QTextStream &out, const QString &topic, const QList<Feature> &catalogue)
+{
+    require(topic == "all" || groups.contains(topic), "Unknown help group: " + topic + ". Use help all.");
+    out << "Usage: iprGenerateTests --group GROUP --input IMAGE --output NEW_FOLDER [--dry-run]\n"
+        << "Help: iprGenerateTests help all | help GROUP | --help-group GROUP\n"
+        << "Groups: " << groups.join(", ") << " (or all)\n"
+        << "Each control is tested separately, plus one mandatory neutral per image.\n"
+        << "Use --feature NAME for one control; --values overrides every selected control.\n";
+    for (const QString &group : groups) {
+        if (topic != "all" && topic != group) continue;
+        out << "\n[" << group << "]\n";
+        for (const Feature &feature : catalogue) {
+            if (featureGroup(feature.name) != group) continue;
+            QStringList values;
+            for (double value : feature.defaults) values.append(QString::number(value));
+            out << feature.name << " [" << feature.minimum << ", " << feature.maximum
+                << "] defaults=" << values.join(',') << Qt::endl;
+        }
+    }
+    out << "\nRAW/all include auto-wb and require RAW inputs. DCP/LCP/normalization sweeps are not implemented.\n"
+        << "Export: --format TIFF|PNG|JPEG; --quality 1..100. UI/sidecar/batch-export tests are not image controls.\n"
+        << "Defaults vary by control; prefer --dry-run before a large group/all campaign.\n";
+}
+
 QString hashFile(const QString &path)
 {
     QFile file(path);
@@ -197,10 +237,16 @@ public:
         return result;
     }
 
-    static LoadResult load(const QString &path, bool autoWb)
+    static LoadResult load(const QString &path, bool autoWb, bool cameraNeutral)
     {
-        LoadResult result = ImageEditor::loadFromDisk(path, QFileInfo(path).suffix().toLower(), autoWb);
+        RawDecoder::Options options;
+        options.preferCameraNeutral = cameraNeutral;
+        options.useNormalizationEnvironment = false;
+        LoadResult result = ImageEditor::loadFromDisk(path, QFileInfo(path).suffix().toLower(), autoWb, options);
         require(!result.image.isNull(), "Decode failed for " + path + ": " + result.error);
+        if (cameraNeutral)
+            require(QFileInfo(result.metadata.dcpProfile).completeBaseName().contains("Camera Neutral", Qt::CaseInsensitive),
+                    "Camera Neutral was requested but not applied: " + result.metadata.dcpProfile);
         // Export full resolution; free the unused editing proxy immediately.
         result.editProxy = {};
         return result;
@@ -224,12 +270,25 @@ int main(int argc, char **argv)
     QCoreApplication::setOrganizationName("IPR");
     QCoreApplication::setApplicationName("IPR");
     QCoreApplication::setApplicationVersion(IPR_PROJECT_VERSION);
+    if (app.arguments().value(1) == "help") {
+        QTextStream out(stdout), err(stderr);
+        try {
+            require(app.arguments().size() <= 3, "Use help all or help GROUP without image arguments.");
+            printGroupHelp(out, app.arguments().value(2, "all"), features());
+            return 0;
+        } catch (const std::exception &error) {
+            err << error.what() << Qt::endl;
+            return 1;
+        }
+    }
     QCommandLineParser parser;
     parser.setApplicationDescription("Generate isolated IPR test exports. Originals and sidecars are never written.");
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("images", "Input RAW/TIFF/PNG/JPEG files.", "[images...]");
     parser.addOptions({{{"f", "feature"}, "Feature or comma-separated features; repeatable; 'all' selects every feature.", "name", "neutral"},
+        {{"g", "group"}, "Group or comma-separated groups; repeatable; 'all' selects every group.", "name"},
+        {"help-group", "Detailed help for all or one group; no input/output required.", "name"},
         {{"i", "input"}, "Input image (repeatable, or use positional paths).", "path"},
         {{"o", "output"}, "New campaign folder (must not already exist).", "folder"},
         {"values", "Override feature defaults; e.g. --values=-50,-25,25,50. Order is preserved.", "numbers"},
@@ -238,6 +297,7 @@ int main(int argc, char **argv)
         {"grading-hue", "Fixed hue when testing grading saturation, 0..359.", "number", "30"},
         {"grading-saturation", "Fixed saturation when testing grading hue, 1..100.", "number", "25"},
         {"sharpening-base", "Fixed amount for radius/masking tests, 1..200.", "number", "50"},
+        {"camera-neutral", "Require RAW Camera Neutral DCP; fail rather than silently substitute another profile."},
         {"list", "List features, ranges and default values; no exports."},
         {"dry-run", "Validate inputs/options and print the export plan, without decoding or writing."}});
     parser.process(app);
@@ -246,6 +306,10 @@ int main(int argc, char **argv)
     QJsonObject manifest;
     try {
         const auto catalogue = features();
+        if (parser.isSet("help-group")) {
+            printGroupHelp(out, parser.value("help-group"), catalogue);
+            return 0;
+        }
         if (parser.isSet("list")) {
             for (const auto &feature : catalogue) {
                 QStringList values;
@@ -259,6 +323,19 @@ int main(int argc, char **argv)
         QStringList requested;
         for (const QString &argument : parser.values("feature"))
             requested.append(argument.split(',', Qt::KeepEmptyParts));
+        QStringList requestedGroups;
+        for (const QString &argument : parser.values("group"))
+            requestedGroups.append(argument.split(',', Qt::KeepEmptyParts));
+        if (requestedGroups.contains("all")) {
+            require(requestedGroups.size() == 1, "Use group 'all' alone.");
+            requestedGroups = groups;
+        }
+        requestedGroups.removeDuplicates();
+        for (const QString &group : requestedGroups) {
+            require(groups.contains(group), "Unknown group: " + group + ". Use help all.");
+            for (const Feature &feature : catalogue)
+                if (featureGroup(feature.name) == group) requested.append(feature.name);
+        }
         if (requested.contains("all")) {
             require(requested.size() == 1, "Use 'all' alone.");
             for (const auto &feature : catalogue)
@@ -313,6 +390,9 @@ int main(int argc, char **argv)
             if (requested.contains("auto-wb"))
                 require(RawDecoder::supportedExtensions().contains(file.suffix().toLower()),
                         "auto-wb requires a RAW input: " + input);
+            if (parser.isSet("camera-neutral"))
+                require(RawDecoder::supportedExtensions().contains(file.suffix().toLower()),
+                        "Camera Neutral requires a RAW input: " + input);
         }
         inputs.removeDuplicates();
         require(parser.isSet("output") && !parser.value("output").isEmpty(), "Provide --output with a new campaign folder.");
@@ -342,6 +422,7 @@ int main(int argc, char **argv)
             {"iprVersion", QCoreApplication::applicationVersion()}, {"qtVersion", qVersion()},
             {"executableSha256", hashFile(QCoreApplication::applicationFilePath())},
             {"arguments", QJsonArray::fromStringList(app.arguments().mid(1))},
+            {"groups", QJsonArray::fromStringList(requestedGroups)},
             {"format", format}, {"quality", quality}, {"outputColorSpace", "sRGB"},
             {"bitDepth", format == "JPEG" ? 8 : 16}, {"hdr", false},
             {"profileSearchDirectories", QJsonArray::fromStringList(CameraProfileEngine::defaultProfileDirectories())},
@@ -349,6 +430,7 @@ int main(int argc, char **argv)
             {"gradingZones", QJsonArray::fromStringList(zones)},
             {"curveChannels", QJsonArray::fromStringList(channels)},
             {"sidecars", "ignored; never written"}, {"plan", plan},
+            {"cameraNeutralRequired", parser.isSet("camera-neutral")}, {"normalizationEnvironment", "disabled"},
             {"expectedExports", double(inputs.size() * perImage)}, {"exports", QJsonArray{}}};
         saveJson(manifestPath, manifest);
         QJsonArray exports;
@@ -356,7 +438,7 @@ int main(int argc, char **argv)
             const QString &input = inputs.at(inputIndex);
             out << "Decoding " << input << Qt::endl;
             const QString sourceHash = hashFile(input);
-            auto loaded = IprTestImageGenerator::load(input, false);
+            auto loaded = IprTestImageGenerator::load(input, false, parser.isSet("camera-neutral"));
             const QString stem = safeStem(input);
             const QString directory = QString("%1-%2").arg(inputIndex + 1, 3, 10, QChar('0')).arg(stem);
             int sequence = 0;
@@ -389,7 +471,7 @@ int main(int argc, char **argv)
                 for (double value : feature.defaults) {
                     if (feature.name == "auto-wb" && value == 1) {
                         // This switch changes decoding, not just a post-render flag.
-                        auto automatic = IprTestImageGenerator::load(input, true);
+                        auto automatic = IprTestImageGenerator::load(input, true, parser.isSet("camera-neutral"));
                         exportVariant(automatic, feature.name, value);
                     } else exportVariant(loaded, feature.name, value);
                 }

@@ -35,7 +35,7 @@ ColumnLayout {
         model: root.editor.cameraProfiles
         textRole: "name"
         currentIndex: root.selectedIndex()
-        enabled: root.editor.hasImage && !root.editor.busy && count > 1
+        enabled: root.editor.rawImage && !root.editor.busy && count > 1
         onActivated: function(index) {
             root.editor.setCameraProfile(model[index].path)
         }
@@ -58,7 +58,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.minimumWidth: 0
         checked: root.editor.automaticWhiteBalance
-        enabled: root.editor.hasImage && !root.editor.busy
+        enabled: root.editor.rawImage && !root.editor.busy
         onClicked: root.editor.setAutomaticWhiteBalance(checked)
         contentItem: Text {
             text: parent.text
@@ -67,13 +67,61 @@ ColumnLayout {
             leftPadding: parent.indicator.width + parent.spacing
         }
     }
+    Label {
+        text: qsTr("Corrections optiques LCP")
+        color: root.textColor
+        Layout.fillWidth: true
+    }
+    CheckBox {
+        objectName: "lensCorrectionToggle"
+        text: qsTr("Activer la correction de l’objectif")
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+        checked: root.editor.lensCorrectionEnabled
+        enabled: root.editor.rawImage && !root.editor.busy
+        onClicked: root.editor.setLensCorrectionEnabled(checked)
+        contentItem: Text {
+            text: parent.text
+            color: root.textColor
+            wrapMode: Text.WordWrap
+            leftPadding: parent.indicator.width + parent.spacing
+        }
+        ToolTip.visible: hovered
+        ToolTip.text: qsTr("Corrige la distorsion et le vignettage lorsque le profil LCP contient ces données.")
+    }
+    CheckBox {
+        objectName: "chromaticAberrationToggle"
+        text: qsTr("Supprimer l’aberration chromatique")
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+        checked: root.editor.chromaticAberrationEnabled
+        enabled: root.editor.rawImage && !root.editor.busy
+        onClicked: root.editor.setChromaticAberrationEnabled(checked)
+        contentItem: Text {
+            text: parent.text
+            color: root.textColor
+            wrapMode: Text.WordWrap
+            leftPadding: parent.indicator.width + parent.spacing
+        }
+        ToolTip.visible: hovered
+        ToolTip.text: qsTr("Recalage chromatique latéral rouge/bleu selon le LCP. Ne traite pas les franges longitudinales.")
+    }
+    Label {
+        objectName: "opticalDevelopmentStatusLabel"
+        text: root.editor.opticalDevelopmentStatus
+        color: root.secondaryTextColor
+        font.pixelSize: 11
+        wrapMode: Text.WrapAnywhere
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+    }
     CheckBox {
         objectName: "rawNormalizationToggle"
         text: qsTr("Normalisation RAW — expérimentale")
         Layout.fillWidth: true
         Layout.minimumWidth: 0
         checked: root.editor.rawNormalizationEnabled
-        enabled: root.editor.hasImage && !root.editor.busy
+        enabled: root.editor.rawImage && !root.editor.busy
         onClicked: root.editor.setRawNormalizationEnabled(checked)
         contentItem: Text {
             text: parent.text
@@ -87,7 +135,7 @@ ColumnLayout {
         objectName: "rawNormalizationManifestButton"
         text: qsTr("Choisir le manifeste…")
         Layout.fillWidth: true
-        enabled: !root.editor.busy
+        enabled: root.editor.rawImage && !root.editor.busy
         onClicked: manifestDialog.open()
     }
     Label {
@@ -102,16 +150,37 @@ ColumnLayout {
     }
     Label {
         objectName: "rawDevelopmentStatusLabel"
-        text: root.editor.busy ? qsTr("Décodage en cours…") : root.editor.rawDevelopmentStatus
+        text: root.editor.busy ? qsTr("Traitement en cours — image et retouches conservées…") : root.editor.rawDevelopmentStatus
         color: root.textColor
         wrapMode: Text.WrapAnywhere
         Layout.fillWidth: true
         Layout.minimumWidth: 0
     }
     Label {
-        text: qsTr("Essai : Camera Neutral, WB automatique désactivée, réglages à zéro. Calibration limitée aux cinq RAW audités. Choix conservés pour cette session uniquement.")
+        text: qsTr("Profils DCP/LCP, corrections optiques et calibration enregistrés par image dans le fichier .ipr. Camera Neutral privilégié à la première ouverture. La normalisation reste expérimentale et limitée aux RAW audités.")
         color: root.secondaryTextColor
         font.pixelSize: 11
+        wrapMode: Text.WordWrap
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+    }
+    Button {
+        objectName: "resetRawDevelopmentButton"
+        text: qsTr("Réinitialiser profil / calibration")
+        Layout.fillWidth: true
+        enabled: root.editor.rawImage && !root.editor.busy
+        onClicked: root.editor.resetRawDevelopment()
+        ToolTip.visible: hovered
+        ToolTip.text: qsTr("Revient au profil automatique et désactive la calibration sans effacer les retouches ni changer la balance des blancs.")
+    }
+    Label {
+        objectName: "rawProfileProcessingLabel"
+        text: root.editor.rawProfileFastPathAvailable
+              ? qsTr("Changement de DCP sans redécodage RAW disponible.")
+              : qsTr("Un redécodage peut être nécessaire (balance des blancs, calibration ou tampon indisponible).")
+        visible: root.editor.rawImage
+        color: root.secondaryTextColor
+        font.pixelSize: 10
         wrapMode: Text.WordWrap
         Layout.fillWidth: true
         Layout.minimumWidth: 0

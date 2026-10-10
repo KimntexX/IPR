@@ -72,7 +72,7 @@ Le point neutre (le pivot autour duquel les gains rouge/bleu s'annulent) n'est p
 - Pour les fichiers RAW décodés par LibRaw, cette valeur est estimée par `RawDecoder::estimateWhiteBalanceKelvin()` à partir des multiplicateurs **`cam_mul`** (balance « telle que prise de vue », propre à chaque photo) et de **l'inverse** de la matrice `cam_xyz` (approximation de McCamy), et propagée dans `ColorPipeline::WorkingImage::referenceWhiteBalanceKelvin`.
   - `cam_xyz` exprime la réponse des canaux caméra à une couleur XYZ (`RVB_cam = cam_xyz × XYZ`), et non l'inverse : il faut donc inverser cette matrice 3×3 pour convertir un RVB neutre caméra en XYZ. Une ancienne version du code utilisait `cam_xyz` directement (sans inversion) et les multiplicateurs `pre_mul` (constante « lumière du jour » fixe par modèle d'appareil, indépendante de la prise de vue) au lieu de `cam_mul` (balance réellement mesurée/réglée pour la photo). Ce double défaut produisait une température quasi constante et anormalement élevée (~12 000-13 000 K) pour toutes les photos d'un même modèle d'appareil, au lieu de la température « As Shot » réelle (ex. ~5200 K rapportée par Lightroom). Le correctif inverse désormais la matrice et utilise `cam_mul` en priorité (`pre_mul` reste un repli défensif si `cam_mul` est indisponible), et est couvert par le test `whiteBalanceEstimationTest`.
 - Pour les formats standards (JPEG/PNG/TIFF…), une estimation best-effort est tentée via les métadonnées textuelles exposées par `QImageReader` (`readWhiteBalanceKelvin()` dans `imageeditor.cpp`) ; en l'absence de métadonnée exploitable, la valeur reste indéterminée.
-- Si aucune valeur n'est disponible, le rendu retombe sur `6500 K` comme référence neutre par défaut (`.value_or(6500.0)`), afin de ne jamais casser le rendu.
+- Si aucune valeur n'est disponible, le rendu retombe sur `5200 K` comme référence neutre par défaut (`.value_or(5200.0)`). Ce repli d'interface n'est pas une calibration RAW ni une modification de la WB caméra.
 
 `Settings::temperature` est initialisé, au chargement de l'image et lors de `resetAdjustments()`, à cette même référence détectée (arrondie à l'entier le plus proche), et non plus à une constante fixe (`5200` précédemment). Le signal `adjustmentsReset(int temperatureKelvin, int tint)` transmet cette valeur au QML afin que le curseur de température affiche d'emblée la balance des blancs réelle de la photo plutôt qu'un neutre arbitraire, ce qui évite une mauvaise interprétation initiale des couleurs.
 
@@ -433,7 +433,9 @@ Ce modèle évite d'exposer un pointeur brut entre le thread UI, le worker et le
 
 ## Persistance `.ipr` et application par lot
 
-Le sidecar courant v4 est un flux `QDataStream` binaire placé à côté du fichier source sous le nom `source.ext.ipr`. Son en-tête contient la signature `IPR1`, la version du format, la taille et la date de modification du source. Cette signature empêche d'appliquer silencieusement des réglages devenus incohérents après le remplacement d'une image.
+Le sidecar courant v6 est un flux `QDataStream` binaire placé à côté du fichier source sous le nom `source.ext.ipr`. Son en-tête contient la signature `IPR1`, la version du format, la taille et la date de modification du source. Cette signature empêche d'appliquer silencieusement des réglages devenus incohérents après le remplacement d'une image.
+
+La v5 ajoute DCP, manifeste, leurs SHA-256, activation de normalisation et version du moteur/LibRaw ; la v6 ajoute identité/SHA-256 du LCP, résolution explicite et activations objectif/CA latérale. V1 à v6 restent lues. Les options RAW et la WB automatique sont restaurées avant le décodage. Le LCP résolu est figé, et les corrections sont suspendues si ses octets sont absents/modifiés. Le changement DCP utilise un unique tampon caméra actif, plafonné à 384 Mio, lorsque WB/calibration et options/empreinte optiques le permettent ; sinon un redécodage conserve le rendu visible. Voir [ADR-0006](decisions/ADR-0006-restauration-raw-et-retouche-profil.md) et le [contrat optique](camera-profile-engine.md#persistance-et-commandes-optiques-9-octobre-2026).
 
 L'écriture est différée de 450 ms puis atomique via `QSaveFile`. Le payload stocke les réglages du rendu, les courbes, les annotations, le mélangeur huit bandes et le grading trois voies. À l'ouverture, un sidecar valide remplace les réglages neutres et synchronise l'interface QML. Le ruban peut appliquer les réglages courants à plusieurs images : seules leurs sidecars sont écrites, jamais les sources, et les annotations existantes de la cible sont conservées.
 
@@ -454,3 +456,29 @@ non nuls peuvent produire un autre rendu. Détails, constantes et compatibilité
 - Le clipping n'est pas réalisé dans `renderWorkingImage()` ; il intervient lors de la quantification/conversion de sortie. L'image flottante peut donc conserver des valeurs hors de `[0, 1]`.
 - Le retour par valeur sécurise la propriété de l'objet résultat, mais `cv::Mat` copie ses données de façon superficielle lors d'une copie ordinaire. Il faut utiliser `clone()` si une copie indépendante des pixels est nécessaire.
 - Vérifier les valeurs par défaut des réglages lors de leur modification : la température neutre définie dans la fonction couleur doit coïncider avec la valeur initiale et la valeur de réinitialisation de `Settings` et du QML.
+## Correctif Ombres/HL positifs — 10 octobre 2026
+
+Les branches positives du rendu utilisent désormais
+[`ToneRecovery.h`](../src/core/ToneRecovery.h). Ombres :
+`deltaY = 3*a*Y*(1-smoothstep(0.10,0.56,Y))/(1+Y/0.025)^2`, borné à
+90 % de la marge RGB. Le gain maximum est ×4 (+2 EV), le noir reste noir,
+et la rampe ne présente plus l'inversion de tons de l'ancien ajout inverse-racine.
+`0.025` est le genou de la courbe, `3` la borne du gain supplémentaire :
+ce sont des choix initiaux à recetter, pas des constantes physiques ni une
+calibration universelle Lightroom.
+
+HL positives : `deltaY = 0.70*a*masqueHL*max(0,Y/maxRGB-Y_courant)` pour
+`0<maxRGB<1`. Un canal déjà hors gamut/HDR n'est ni relevé ni écrêté par
+cette branche. 0.70 conserve 30 % de marge vers la frontière RGB. Une
+luminance cible inférieure à 1 ne suffisait pas à protéger une couleur saturée.
+Le facteur RGB commun conserve les rapports des canaux avant les traitements
+suivants ; un mélange avec Blancs, saturation ou grading peut encore déborder.
+
+EV, Noirs, Blancs et branches négatives restent inchangés. À zéro, les deux
+nouveaux opérateurs sont identitaires. Les sidecars gardent leurs valeurs,
+mais un ancien réglage positif Ombres/HL produit désormais un rendu différent.
+Ce correctif n'ajoute pas de débruitage ni de traitement spatial : ouvrir les
+ombres peut toujours révéler le bruit du capteur. Il ne récupère pas des
+informations écrêtées dans le RAW. Voir le
+[rapport Lumières](validation/analyses/analyse-validation-lumieres-base-2026-10-02.md)
+pour l'investigation, les preuves et la recette de conformité sur d'autres matériels.

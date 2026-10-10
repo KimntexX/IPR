@@ -81,11 +81,16 @@ class ImageEditor final : public QObject
     Q_PROPERTY(int selectedImageCount READ selectedImageCount NOTIFY selectionChanged)
     Q_PROPERTY(QStringList selectedImageUrls READ selectedImageUrls NOTIFY selectionChanged)
     Q_PROPERTY(QVariantList cameraProfiles READ cameraProfiles NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(bool rawImage READ rawImage NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(bool rawProfileFastPathAvailable READ rawProfileFastPathAvailable NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(QString selectedCameraProfile READ selectedCameraProfile WRITE setCameraProfile NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(bool rawNormalizationEnabled READ rawNormalizationEnabled WRITE setRawNormalizationEnabled NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(QString rawNormalizationManifest READ rawNormalizationManifest NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(QString rawDevelopmentStatus READ rawDevelopmentStatus NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(bool automaticWhiteBalance READ automaticWhiteBalance NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(bool lensCorrectionEnabled READ lensCorrectionEnabled WRITE setLensCorrectionEnabled NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(bool chromaticAberrationEnabled READ chromaticAberrationEnabled WRITE setChromaticAberrationEnabled NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(QString opticalDevelopmentStatus READ opticalDevelopmentStatus NOTIFY rawDevelopmentChanged)
 
 public:
     enum ToneCurveChannel
@@ -100,6 +105,7 @@ public:
     explicit ImageEditor(ImageProvider *provider,
                          ThumbnailProvider *thumbnailProvider = nullptr,
                          QObject *parent = nullptr);
+    ~ImageEditor() override;
 
     QAbstractItemModel *imageModel();
     QUrl folder() const;
@@ -120,6 +126,14 @@ public:
     int selectedImageCount() const;
     QStringList selectedImageUrls() const;
     QVariantList cameraProfiles() const;
+    bool rawImage() const;
+    bool rawProfileFastPathAvailable() const;
+    Q_INVOKABLE void resetRawDevelopment();
+    bool lensCorrectionEnabled() const { return m_lensCorrectionEnabled; }
+    bool chromaticAberrationEnabled() const { return m_chromaticAberrationEnabled; }
+    Q_INVOKABLE void setLensCorrectionEnabled(bool enabled);
+    Q_INVOKABLE void setChromaticAberrationEnabled(bool enabled);
+    QString opticalDevelopmentStatus() const;
     QString selectedCameraProfile() const { return m_cameraProfile; }
     bool rawNormalizationEnabled() const { return m_rawNormalizationEnabled; }
     bool automaticWhiteBalance() const { return m_settings.automaticWhiteBalance; }
@@ -238,6 +252,21 @@ private:
         std::array<QVector<ToneCurvePoint>, 4> toneCurves;
     };
 
+    struct RawDevelopment
+    {
+        QString profile;
+        QString profileSha256;
+        QString manifest;
+        QString manifestSha256;
+        bool normalizationEnabled = false;
+        QString engineVersion;
+        QString lensProfile;
+        QString lensProfileSha256;
+        bool lensProfileResolved = false;
+        bool lensCorrectionEnabled = true;
+        bool chromaticAberrationEnabled = true;
+    };
+
     struct RenderResult
     {
         QImage preview;
@@ -256,6 +285,7 @@ private:
         ColorPipeline::WorkingImage image;
         ColorPipeline::WorkingImage editProxy;
         RawDecoder::SourceMetadata metadata;
+        std::shared_ptr<RawDecoder::DcpSource> dcpSource;
         QString error;
     };
 
@@ -285,13 +315,16 @@ private:
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
                                    bool automaticWhiteBalance,
-                                   const QString &profile = {}, const QString &manifest = {});
+                                   const QString &profile = {}, const QString &manifest = {},
+                                   const QString &lensProfile = {}, bool lensResolved = false,
+                                   bool lensCorrection = true, bool chromaticAberration = true);
     void reloadRawDevelopment();
     static QString sidecarPathForFile(const QString &fileName);
     static bool readSidecar(const QString &fileName, Settings *settings,
-                            UserImageMetadata *metadata);
+                            UserImageMetadata *metadata, RawDevelopment *raw = nullptr);
     static bool writeSidecar(const QString &fileName, const Settings &settings,
-                             const UserImageMetadata &metadata);
+                             const UserImageMetadata &metadata, const RawDevelopment &raw);
+    RawDevelopment rawDevelopmentRecipe() const;
     void beginLoad(const QString &fileName, const QString &extension,
                    bool automaticWhiteBalance, bool freshOpen);
     void applyLoadedImage(LoadResult loaded);
@@ -310,12 +343,24 @@ private:
     ImageListModel m_imageModel;
     QUrl m_folder;
     QUrl m_currentFile;
+    QUrl m_queuedFile;
     ColorPipeline::WorkingImage m_original;
     ColorPipeline::WorkingImage m_editProxy;
     RawDecoder::SourceMetadata m_sourceMetadata;
     QString m_cameraProfile;
     QString m_normalizationManifest;
     bool m_rawNormalizationEnabled = false;
+    QString m_rawDevelopmentWarning;
+    QString m_profileSha256;
+    QString m_manifestSha256;
+    QString m_lensProfile;
+    QString m_lensProfileSha256;
+    bool m_lensProfileResolved = false;
+    bool m_lensCorrectionEnabled = true;
+    bool m_chromaticAberrationEnabled = true;
+    RawDevelopment m_appliedRawDevelopment;
+    bool m_appliedAutomaticWhiteBalance = false;
+    std::shared_ptr<RawDecoder::DcpSource> m_dcpSource;
     QHash<QString, UserImageMetadata> m_userImageMetadata;
     QSet<QString> m_selectedImageKeys;
     DecodedImageCache m_decodedImageCache;

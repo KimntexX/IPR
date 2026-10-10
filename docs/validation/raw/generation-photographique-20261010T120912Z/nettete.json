@@ -1,0 +1,2881 @@
+﻿{
+    "arguments":  [
+                      "--feature",
+                      "neutral",
+                      "--format",
+                      "TIFF",
+                      "--quality",
+                      "100",
+                      "--grading-hue",
+                      "30",
+                      "--grading-saturation",
+                      "25",
+                      "--sharpening-base",
+                      "50",
+                      "--camera-neutral",
+                      "--group",
+                      "nettete",
+                      "--output",
+                      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\nettete\\generation-20261010T120912Z",
+                      "--input",
+                      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0327.CR3",
+                      "--input",
+                      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3"
+                  ],
+    "bitDepth":  16,
+    "cameraNeutralRequired":  true,
+    "curveChannels":  [
+                          "luminance",
+                          "red",
+                          "green",
+                          "blue"
+                      ],
+    "executableSha256":  "c898b5bec335c56209668efb54176421dc3bf7db1532899c5f2015cbb9357116",
+    "expectedExports":  28,
+    "exports":  [
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "neutral",
+                        "file":  "001-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  0,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  0,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-amount",
+                        "file":  "001-6V1A0327/sharpening-amount/6V1A0327-IPR-2.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  0,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  0,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-amount",
+                        "file":  "001-6V1A0327/sharpening-amount/6V1A0327-IPR-3.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  25,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "a71af144dd2c4eaf6679183fc2e84d16716375c2fdd58681593035ab27b7e654",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  25,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-amount",
+                        "file":  "001-6V1A0327/sharpening-amount/6V1A0327-IPR-4.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "e5a7d7f8d91e68076faabc2f48e4119b206fc7f86e89055eea0a83d7c0ea2c89",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  50,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-amount",
+                        "file":  "001-6V1A0327/sharpening-amount/6V1A0327-IPR-5.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  100,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "0b607c38cc464f3136a133f66b1b390aae3a43ee55e18cc6785077e958a2db1f",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  100,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-amount",
+                        "file":  "001-6V1A0327/sharpening-amount/6V1A0327-IPR-6.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  200,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "e807036447b7498f35d5d430a43c6e1bc531761cd76e302878cd042491064488",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  200,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-radius",
+                        "file":  "001-6V1A0327/sharpening-radius/6V1A0327-IPR-7.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  0.30000001192092896,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "83cfc93454d1e3ce0cade689d288e24984baa28f86e5eff567176086309a641f",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  0.3,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-radius",
+                        "file":  "001-6V1A0327/sharpening-radius/6V1A0327-IPR-8.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "e5a7d7f8d91e68076faabc2f48e4119b206fc7f86e89055eea0a83d7c0ea2c89",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  1,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-radius",
+                        "file":  "001-6V1A0327/sharpening-radius/6V1A0327-IPR-9.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  2,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "a370e10de646520481e472dce90248ee0a78a4cc61b97576c19f0b065fe767eb",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  2,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-radius",
+                        "file":  "001-6V1A0327/sharpening-radius/6V1A0327-IPR-10.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  3,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "347b95d635c641ad568654a55817c717c05287a2f9eaccb4455a97291b88d08b",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  3,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-masking",
+                        "file":  "001-6V1A0327/sharpening-masking/6V1A0327-IPR-11.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "e5a7d7f8d91e68076faabc2f48e4119b206fc7f86e89055eea0a83d7c0ea2c89",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  0,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-masking",
+                        "file":  "001-6V1A0327/sharpening-masking/6V1A0327-IPR-12.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  25,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "dbfaeeda653cd9de03268a1412967bd01bb9d2f0aab1106c5ab98601968291be",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  25,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-masking",
+                        "file":  "001-6V1A0327/sharpening-masking/6V1A0327-IPR-13.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  50,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "a011c9fcb189e9e599ed44bab2283977544caf04487410624449be9ce2a58da3",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  50,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-masking",
+                        "file":  "001-6V1A0327/sharpening-masking/6V1A0327-IPR-14.tiff",
+                        "height":  6959,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  100,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "8090185bbe23ba42f9a7e7279a0483fe549bfe94564c67d1d49ffce9e5d39bb2",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+                        "value":  100,
+                        "width":  4639
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "neutral",
+                        "file":  "002-6V1A0043/neutral/6V1A0043-IPR-1.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  0,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "64f7f95506fd5dd2a10be6b0e788cd05489f5469fd9222af2a4f3fe3477cbda2",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  0,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-amount",
+                        "file":  "002-6V1A0043/sharpening-amount/6V1A0043-IPR-2.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  0,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "64f7f95506fd5dd2a10be6b0e788cd05489f5469fd9222af2a4f3fe3477cbda2",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  0,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-amount",
+                        "file":  "002-6V1A0043/sharpening-amount/6V1A0043-IPR-3.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  25,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "f8be770dd6b9325b4c1eea3a84561eae3d676b1c4b67fb180a19bea3d97fc5e0",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  25,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-amount",
+                        "file":  "002-6V1A0043/sharpening-amount/6V1A0043-IPR-4.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "c15e4e49ffe7411cc0000a2bc2566051df737969857c70d914a1e10950041415",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  50,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-amount",
+                        "file":  "002-6V1A0043/sharpening-amount/6V1A0043-IPR-5.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  100,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "800653ea54f01620e340872921739765c4e19141f6918526bc15c1d71d2b161c",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  100,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-amount",
+                        "file":  "002-6V1A0043/sharpening-amount/6V1A0043-IPR-6.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  200,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "aa04e3822ff319450e0313b5e381faa9aa634416ad4e9af52bfc4fb432d53948",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  200,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-radius",
+                        "file":  "002-6V1A0043/sharpening-radius/6V1A0043-IPR-7.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  0.30000001192092896,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "ead755f08f99353751192e1a5f2884f2bcb1324c05c9f1d371b5db418f012232",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  0.3,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-radius",
+                        "file":  "002-6V1A0043/sharpening-radius/6V1A0043-IPR-8.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "c15e4e49ffe7411cc0000a2bc2566051df737969857c70d914a1e10950041415",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  1,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-radius",
+                        "file":  "002-6V1A0043/sharpening-radius/6V1A0043-IPR-9.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  2,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "75a496bfb7067d210bf3c5eb6075b50941411aff9bdead29c104cc898bbc5c68",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  2,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-radius",
+                        "file":  "002-6V1A0043/sharpening-radius/6V1A0043-IPR-10.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  3,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "9fd404741c629902354dda6085f13edb2d427e7c1d1ec14592457f4ea34fed9c",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  3,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-masking",
+                        "file":  "002-6V1A0043/sharpening-masking/6V1A0043-IPR-11.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  0,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "c15e4e49ffe7411cc0000a2bc2566051df737969857c70d914a1e10950041415",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  0,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-masking",
+                        "file":  "002-6V1A0043/sharpening-masking/6V1A0043-IPR-12.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  25,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "2934c09fddf0655a0bd3d4d664d934309e2885f485335dabe8c595462f88142b",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  25,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-masking",
+                        "file":  "002-6V1A0043/sharpening-masking/6V1A0043-IPR-13.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  50,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "c0f581d429dae6e3fb88bbb54fbe5f2df0fa35b966d1440c2a8afbd6e3d35df4",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  50,
+                        "width":  6959
+                    },
+                    {
+                        "cameraMake":  "Canon",
+                        "cameraModel":  "EOS R6 Mark III",
+                        "dcpProfile":  "Canon EOS R6 Mark III Camera Neutral",
+                        "feature":  "sharpening-masking",
+                        "file":  "002-6V1A0043/sharpening-masking/6V1A0043-IPR-14.tiff",
+                        "height":  4639,
+                        "iso":  100,
+                        "lcpProfile":  "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+                        "referenceTemperatureKelvin":  4924.211272770631,
+                        "settings":  {
+                                         "automaticWhiteBalance":  false,
+                                         "blacks":  0,
+                                         "blur":  0,
+                                         "clarity":  0,
+                                         "contrast":  0,
+                                         "dehaze":  0,
+                                         "denoiseChrominance":  0,
+                                         "denoiseLuminance":  0,
+                                         "exposure":  0,
+                                         "grading":  [
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         },
+                                                         {
+                                                             "hue":  0,
+                                                             "saturation":  0
+                                                         }
+                                                     ],
+                                         "grain":  0,
+                                         "grayscale":  false,
+                                         "highlights":  0,
+                                         "mixerHue":  [
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          0
+                                                      ],
+                                         "mixerLuminance":  [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            ],
+                                         "mixerSaturation":  [
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0,
+                                                                 0
+                                                             ],
+                                         "saturation":  0,
+                                         "shadows":  0,
+                                         "sharpeningAmount":  50,
+                                         "sharpeningMasking":  100,
+                                         "sharpeningRadius":  1,
+                                         "temperature":  4924,
+                                         "texture":  0,
+                                         "tint":  0,
+                                         "toneCurves":  [
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ],
+                                                            [
+
+                                                            ]
+                                                        ],
+                                         "vibrance":  0,
+                                         "whites":  0
+                                     },
+                        "sha256":  "4cc967b0346d36e17b4be3a61781cad355ade4cfb52945c27406d3a07e74a9a1",
+                        "source":  "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+                        "sourceProfile":  "DCP Canon EOS R6 Mark III Camera Neutral â†’ sRGB linÃ©aire",
+                        "sourceSha256":  "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+                        "value":  100,
+                        "width":  6959
+                    }
+                ],
+    "finishedUtc":  "2026-10-10T13:14:29Z",
+    "format":  "TIFF",
+    "gradingZones":  [
+                         "shadows",
+                         "midtones",
+                         "highlights"
+                     ],
+    "groups":  [
+                   "nettete"
+               ],
+    "hdr":  false,
+    "iprVersion":  "0.2",
+    "mixerBands":  [
+                       "red",
+                       "orange",
+                       "yellow",
+                       "green",
+                       "cyan",
+                       "blue",
+                       "violet",
+                       "magenta"
+                   ],
+    "normalizationEnvironment":  "disabled",
+    "outputColorSpace":  "sRGB",
+    "plan":  [
+                 {
+                     "feature":  "sharpening-amount",
+                     "values":  [
+                                    0,
+                                    25,
+                                    50,
+                                    100,
+                                    200
+                                ]
+                 },
+                 {
+                     "feature":  "sharpening-radius",
+                     "values":  [
+                                    0.3,
+                                    1,
+                                    2,
+                                    3
+                                ]
+                 },
+                 {
+                     "feature":  "sharpening-masking",
+                     "values":  [
+                                    0,
+                                    25,
+                                    50,
+                                    100
+                                ]
+                 }
+             ],
+    "profileSearchDirectories":  [
+                                     "C:/Users/victo/Documents/Projet/Programmation/IPR/build-windows-msvc/Release/profiles",
+                                     "C:/Users/victo/Documents/Projet/Programmation/IPR/profiles",
+                                     "C:/Users/victo/AppData/Roaming/IPR/IPR/profiles",
+                                     "C:/ProgramData/Adobe/CameraRaw"
+                                 ],
+    "qtVersion":  "6.11.2",
+    "quality":  100,
+    "schema":  1,
+    "sidecars":  "ignored; never written",
+    "startedUtc":  "2026-10-10T13:11:33Z",
+    "status":  "complete",
+    "campaign_id":  "nettete-20261010T120912Z",
+    "schema_version":  1,
+    "data_version":  1,
+    "measured_at_utc":  "2026-10-10T13:14:29Z",
+    "protocol_version":  "isolated-default-controls-camera-neutral-v1",
+    "generator_manifest_sha256":  "A627B1FAED7D63CB27AAF533C09DB2D7DAA438E1670290C19D8CAE6914129F1B"
+}

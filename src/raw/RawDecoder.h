@@ -9,6 +9,7 @@
 #include <QString>
 #include <QStringList>
 #include <functional>
+#include <memory>
 
 namespace RawDecoder {
 
@@ -22,6 +23,11 @@ struct SourceMetadata
     QString embeddedColorProfile;
     QString dcpProfile;
     QString lcpProfile;
+    QString lcpPath;
+    QString lcpSha256;
+    bool lensGeometryApplied = false;
+    bool lensVignettingApplied = false;
+    bool chromaticAberrationApplied = false;
     QDateTime captureDate;
     QString location;
     int iso = 0;
@@ -36,6 +42,20 @@ struct SourceMetadata
     QString normalizationProvenance;
     QString normalizationReason;
     QStringList availableDcpProfiles;
+    QString developmentWarning;
+};
+
+// One immutable, pre-DCP buffer for the active image only (not an unbounded cache).
+// LCP and LibRaw WB have already been applied. A new WB/normalization needs decode.
+struct DcpSource
+{
+    cv::Mat cameraRgb;
+    SourceMetadata metadata;
+    std::optional<double> whiteBalanceKelvin;
+    QString defaultProfile;
+    bool automaticWhiteBalance = false;
+    bool lensCorrectionEnabled = true;
+    bool chromaticAberrationEnabled = true;
 };
 
 struct Options
@@ -45,9 +65,18 @@ struct Options
     // Optional audited per-file manifest, never inferred from camera name alone.
     QString normalizationManifest;
     QString dcpProfileOverride;
+    QString lcpProfileOverride;
+    bool automaticLcpSelection = true;
+    bool lensCorrectionEnabled = true;
+    bool chromaticAberrationEnabled = true;
     bool useNormalizationEnvironment = true;
     bool listDcpProfiles = false;
+    bool preferCameraNeutral = false;
+    std::shared_ptr<DcpSource> retainedDcpSource;
 };
+
+ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString &profile,
+                                        SourceMetadata *metadata, QString *error);
 
 using DecodeFunction = std::function<ColorPipeline::WorkingImage(
     const QString &fileName, const Options &options,
@@ -56,6 +85,7 @@ using DecodeFunction = std::function<ColorPipeline::WorkingImage(
 bool registerFormatHandler(const QStringList &extensions,
                            DecodeFunction decode, QString *error = nullptr);
 QStringList supportedExtensions();
+QString backendVersion();
 ColorPipeline::WorkingImage decode(const QString &fileName,
                                    const Options &options = {},
                                    SourceMetadata *metadata = nullptr,

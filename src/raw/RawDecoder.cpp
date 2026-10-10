@@ -11,6 +11,8 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QSet>
+#include <QFile>
+#include <QCryptographicHash>
 
 #include <cmath>
 #include <optional>
@@ -311,6 +313,33 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             sourceMetadata.cameraMake, sourceMetadata.cameraModel,
             sourceMetadata.lensMake, sourceMetadata.lensModel,
             options.profileDirectories);
+    if (options.preferCameraNeutral) {
+        const auto available = CameraProfileEngine::availableDcpProfiles(
+            sourceMetadata.cameraMake, sourceMetadata.cameraModel, options.profileDirectories);
+        for (const auto &path : available) {
+            if (QFileInfo(path).completeBaseName().endsWith(" Camera Neutral", Qt::CaseInsensitive)) {
+                profiles.dcpPath = path;
+                break;
+            }
+        }
+    }
+    const QString defaultProfile = profiles.dcpPath;
+    if (!options.automaticLcpSelection)
+        profiles.lcpPath.clear();
+    if (!options.lcpProfileOverride.isEmpty()) {
+        if (CameraProfileEngine::lcpMatchesLens(options.lcpProfileOverride,
+                sourceMetadata.cameraMake, sourceMetadata.cameraModel,
+                sourceMetadata.lensMake, sourceMetadata.lensModel)) {
+            profiles.lcpPath = options.lcpProfileOverride;
+        } else {
+            profiles.lcpPath.clear();
+            if (metadata)
+                metadata->developmentWarning += QStringLiteral(" Profil LCP enregistré introuvable ou incompatible ; corrections optiques non appliquées. ");
+        }
+    }
+    const CameraProfileEngine::LcpRenderOptions opticalOptions{
+        options.lensCorrectionEnabled, options.chromaticAberrationEnabled};
+    CameraProfileEngine::LcpApplied opticalApplied;
     if (!options.dcpProfileOverride.isEmpty()) {
         if (CameraProfileEngine::dcpMatchesCamera(options.dcpProfileOverride,
                 sourceMetadata.cameraMake, sourceMetadata.cameraModel)) {
@@ -319,6 +348,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             // A session selection may belong to the previous camera. Never
             // apply it to a different camera, but keep automatic import usable.
             qWarning() << "Profil DCP incompatible : sélection automatique conservée.";
+            if (metadata)
+                metadata->developmentWarning = QStringLiteral("Profil demandé introuvable ou incompatible ; profil automatique utilisé.");
         }
     }
     if (metadata && options.listDcpProfiles)
@@ -335,6 +366,10 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         metadata->lcpProfile = profiles.lcpPath.isEmpty()
                                    ? QString()
                                    : QFileInfo(profiles.lcpPath).completeBaseName();
+        metadata->lcpPath = profiles.lcpPath;
+        QFile lcpFile(profiles.lcpPath);
+        if (lcpFile.open(QIODevice::ReadOnly))
+            metadata->lcpSha256 = QString::fromLatin1(QCryptographicHash::hash(lcpFile.readAll(), QCryptographicHash::Sha256).toHex());
     }
 
     raw.imgdata.params.use_camera_wb = options.automaticWhiteBalance ? 0 : 1;
@@ -439,7 +474,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                 channels[0], channels[1], channels[2]};
             cv::merge(colorChannels, rgb);
             if (!CameraProfileEngine::applyLcp(profiles.lcpPath, rgb, capture,
-                                               error)) {
+                                               error, opticalOptions, &opticalApplied)) {
                 image = {};
             } else {
                 std::vector<cv::Mat> correctedChannels;
@@ -455,8 +490,27 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         rgb16.convertTo(cameraRgb, CV_32FC3, 1.0 / 65535.0);
         if (!profiles.lcpPath.isEmpty() &&
             !CameraProfileEngine::applyLcp(profiles.lcpPath, cameraRgb, capture,
-                                            error))
+                                            error, opticalOptions, &opticalApplied))
             cameraRgb.release();
+        if (metadata) {
+            metadata->lensGeometryApplied = opticalApplied.geometry;
+            metadata->lensVignettingApplied = opticalApplied.vignetting;
+            metadata->chromaticAberrationApplied = opticalApplied.chromaticAberration;
+        }
+        // Calibration changes the LibRaw white level upstream: never reuse this
+        // buffer for a profile-independent fast path when a manifest is active.
+        constexpr size_t retainedBufferLimit = 384u * 1024u * 1024u;
+        if (!cameraRgb.empty() && cameraRgb.total() * cameraRgb.elemSize() <= retainedBufferLimit && options.retainedDcpSource &&
+            options.normalizationManifest.isEmpty() && !options.useNormalizationEnvironment) {
+            options.retainedDcpSource->cameraRgb = cameraRgb.clone();
+            options.retainedDcpSource->whiteBalanceKelvin = sourceWhiteBalanceKelvin;
+            options.retainedDcpSource->defaultProfile = defaultProfile;
+            options.retainedDcpSource->automaticWhiteBalance = options.automaticWhiteBalance;
+            options.retainedDcpSource->lensCorrectionEnabled = options.lensCorrectionEnabled;
+            options.retainedDcpSource->chromaticAberrationEnabled = options.chromaticAberrationEnabled;
+            if (metadata)
+                options.retainedDcpSource->metadata = *metadata;
+        }
         if (!cameraRgb.empty() &&
             !CameraProfileEngine::applyDcp(
                 profiles.dcpPath, cameraRgb,
@@ -471,6 +525,11 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             cv::merge(channels, image.linearRgba);
             image.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
         }
+    }
+    if (metadata) {
+        metadata->lensGeometryApplied = opticalApplied.geometry;
+        metadata->lensVignettingApplied = opticalApplied.vignetting;
+        metadata->chromaticAberrationApplied = opticalApplied.chromaticAberration;
     }
     if (!image.isNull()) {
         image.sourceProfile = profiles.dcpPath.isEmpty()
@@ -591,6 +650,34 @@ void ensureBuiltInHandlers()
 
 }
 
+ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString &profile,
+                                        SourceMetadata *metadata, QString *error)
+{
+    const QString path = profile.isEmpty() ? source.defaultProfile : profile;
+    if (source.cameraRgb.empty() || !CameraProfileEngine::dcpMatchesCamera(
+            path, source.metadata.cameraMake, source.metadata.cameraModel)) {
+        if (error) *error = QStringLiteral("Profil DCP absent ou incompatible avec le boîtier.");
+        return {};
+    }
+    cv::Mat rgb = source.cameraRgb.clone();
+    if (!CameraProfileEngine::applyDcp(path, rgb, source.whiteBalanceKelvin.value_or(5500.0), error))
+        return {};
+    ColorPipeline::WorkingImage image;
+    std::vector<cv::Mat> channels;
+    cv::split(rgb, channels);
+    channels.push_back(cv::Mat(rgb.rows, rgb.cols, CV_32FC1, cv::Scalar(1.0f)));
+    cv::merge(channels, image.linearRgba);
+    image.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+    image.referenceWhiteBalanceKelvin = source.whiteBalanceKelvin;
+    image.sourceProfile = QStringLiteral("DCP %1 → sRGB linéaire").arg(QFileInfo(path).completeBaseName());
+    if (metadata) {
+        *metadata = source.metadata;
+        metadata->dcpProfile = QFileInfo(path).completeBaseName();
+        metadata->developmentWarning.clear();
+    }
+    return image;
+}
+
 bool registerFormatHandler(const QStringList &extensions,
                            DecodeFunction decodeFunction, QString *error)
 {
@@ -609,6 +696,15 @@ QStringList supportedExtensions()
     extensions.removeDuplicates();
     extensions.sort();
     return extensions;
+}
+
+QString backendVersion()
+{
+#ifdef IPR_WITH_LIBRAW
+    return QString::fromLatin1(LibRaw::version());
+#else
+    return QStringLiteral("no-libraw");
+#endif
 }
 
 ColorPipeline::WorkingImage decode(const QString &fileName,

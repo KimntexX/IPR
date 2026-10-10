@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="390" viewBox="0 0 840 390">
+<rect width="840" height="390" fill="white"/>
+<text x="40" y="25">hl: mean linear Y delta (equal weight per scene)</text>
+<path d="M60 45 V330 H640" stroke="black" fill="none"/>
+<polyline points="60.00,187.00 132.50,187.00 205.00,187.00 277.50,187.00 350.00,187.00 422.50,186.79 495.00,186.58 567.50,186.37 640.00,186.17" stroke="#237a44" fill="none"/>
+<text x="655" y="70" fill="#237a44">IPR delta_low</text>
+<polyline points="60.00,188.14 132.50,187.86 205.00,187.57 277.50,187.29 350.00,187.00 422.50,181.93 495.00,176.85 567.50,171.78 640.00,166.70" stroke="#c46b00" fill="none"/>
+<text x="655" y="98" fill="#c46b00">IPR delta_mid</text>
+<polyline points="60.00,223.95 132.50,214.72 205.00,205.48 277.50,196.24 350.00,187.00 422.50,154.50 495.00,122.00 567.50,89.50 640.00,57.00" stroke="#2864b8" fill="none"/>
+<text x="655" y="126" fill="#2864b8">IPR delta_high</text>
+<polyline points="60.00,187.56 132.50,187.43 205.00,187.29 277.50,187.15 350.00,187.00 422.50,186.85 495.00,186.70 567.50,186.54 640.00,186.38" stroke="#237a44" fill="none" stroke-dasharray="6 4"/>
+<text x="655" y="180" fill="#237a44">LR delta_low</text>
+<polyline points="60.00,193.04 132.50,191.60 205.00,190.11 277.50,188.58 350.00,187.00 422.50,185.36 495.00,183.65 567.50,181.88 640.00,180.04" stroke="#c46b00" fill="none" stroke-dasharray="6 4"/>
+<text x="655" y="208" fill="#c46b00">LR delta_mid</text>
+<polyline points="60.00,263.37 132.50,247.69 205.00,229.64 277.50,209.19 350.00,187.00 422.50,158.93 495.00,129.60 567.50,100.46 640.00,73.00" stroke="#2864b8" fill="none" stroke-dasharray="6 4"/>
+<text x="655" y="236" fill="#2864b8">LR delta_high</text>
+<text x="60" y="360">-100</text><text x="340" y="360">0</text><text x="610" y="360">+100</text>
+<text x="60" y="380">Y scale: +/-0.23220; solid IPR, dashed LR; not speed benchmarks</text>
+</svg>

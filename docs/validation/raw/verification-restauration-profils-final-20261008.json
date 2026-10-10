@@ -1,0 +1,11 @@
+{
+    "alternate_profile_change_ms": 1616,
+    "applied_status": "Profil utilisé : Canon EOS R6 Mark III Camera Neutral\nNormalisation appliquée — blanc 14351, base 0.28 EV.\nAdobe DNG Converter 18.6; controlled Neutral experiment 2026-10-08; 6V1A9421",
+    "before_preview_sha256": "aa23896ef7368dfafed7ecce30c23fe7df65da613c8cc3282c55a5216f9d88b2",
+    "dcp_fast_path_available": true,
+    "disabled_restores_original": true,
+    "normalized_preview_sha256": "ca44fdaa379b13ce1ba7c51451b8f1e559e3fe791ac12b2f618c2e2fa61a2827",
+    "original_sidecar_untouched": true,
+    "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+    "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR/tests/image/base/6V1A9421.CR3"
+}

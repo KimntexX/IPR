@@ -1,4 +1,8 @@
 param(
+    [Parameter(Position=0)][ValidateSet('help')][string]$Command,
+    [Parameter(Position=1)][string]$HelpTopic = 'all',
+    [string]$Help,
+    [string[]]$Group = @(),
     [string[]]$Images = @(),
     [string[]]$Feature = @('neutral'),
     [string[]]$Values = @(),
@@ -11,6 +15,7 @@ param(
     [string]$BuildDirectory,
     [ValidateSet('Release', 'Debug')][string]$Config = 'Release',
     [switch]$List,
+    [switch]$CameraNeutral,
     [switch]$DryRun
 )
 $ErrorActionPreference = 'Stop'
@@ -53,10 +58,16 @@ try {
                    '--grading-hue', [string]$GradingHue, '--grading-saturation', [string]$GradingSaturation,
                    '--sharpening-base', [string]$SharpeningBase)
     if ($List) { $arguments += '--list' }
+    if ($CameraNeutral) { $arguments += '--camera-neutral' }
+    if ($Group.Count -gt 0) { $arguments += @('--group', ($Group -join ',')) }
     if ($DryRun) { $arguments += '--dry-run' }
     if ($Values.Count -gt 0) { $arguments += '--values=' + ($Values -join ',') }
     if ($Output) { $arguments += @('--output', $Output) }
     foreach ($imagePath in $Images) { $arguments += @('--input', $imagePath) }
+    if ($Help -or $Command -eq 'help') {
+        $topic = if ($Help) { $Help } else { $HelpTopic }
+        $arguments = @('--help-group', $topic)
+    }
     & $executable @arguments
     if ($LASTEXITCODE -ne 0) { throw "Generation failed (exit $LASTEXITCODE). See message above." }
 } finally {
