@@ -1619,6 +1619,10 @@ QStringList defaultProfileDirectories()
 {
     QStringList roots;
     roots.append(QDir(QCoreApplication::applicationDirPath()).filePath(QStringLiteral("profiles")));
+    roots.append(QDir(QCoreApplication::applicationDirPath()).filePath(QStringLiteral("../Resources/profiles")));
+    roots.append(QDir(QCoreApplication::applicationDirPath()).filePath(QStringLiteral("../share/IPR/profiles")));
+    roots.append(QStandardPaths::locateAll(QStandardPaths::GenericDataLocation,
+        QStringLiteral("IPR/profiles"), QStandardPaths::LocateDirectory));
     roots.append(QDir::current().filePath(QStringLiteral("profiles")));
     const QString appData = QStandardPaths::writableLocation(
         QStandardPaths::AppDataLocation);

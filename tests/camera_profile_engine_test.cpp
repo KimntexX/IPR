@@ -4,6 +4,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QTemporaryDir>
 
 #include <cmath>
@@ -365,8 +366,8 @@ int main(int argc, char **argv)
             QStringLiteral("Canon"), QStringLiteral("Canon EOS R6 Mark III"),
             QStringLiteral("Canon"), QStringLiteral("Canon RF 24-70mm F2.8 L IS USM"),
             {profileRoot});
-    if (!check(manifestSelection.dcpPath == manifestDcpPath &&
-                   manifestSelection.lcpPath == manifestLcpPath,
+    if (!check(manifestSelection.dcpPath == QFileInfo(manifestDcpPath).canonicalFilePath() &&
+                   manifestSelection.lcpPath == QFileInfo(manifestLcpPath).canonicalFilePath(),
                "manifest should bypass the recursive profile search"))
         return 1;
     if (!check(CameraProfileEngine::dcpMatchesCamera(manifestDcpPath,"Canon","EOS R6 Mark III") &&
@@ -387,8 +388,8 @@ int main(int argc, char **argv)
             QStringLiteral("Canon"), QStringLiteral("Canon EOS R6 Mark III"),
             QStringLiteral("Canon"), QStringLiteral("Canon RF 24-70mm F2.8 L IS USM"));
     qunsetenv("IPR_ADOBE_CAMERARAW_DIR");
-    if (!check(environmentProfiles.dcpPath == manifestDcpPath &&
-                   environmentProfiles.lcpPath == manifestLcpPath,
+    if (!check(environmentProfiles.dcpPath == QFileInfo(manifestDcpPath).canonicalFilePath() &&
+                   environmentProfiles.lcpPath == QFileInfo(manifestLcpPath).canonicalFilePath(),
                "default profile lookup should honor the manifest in the CameraRaw root override"))
         return 1;
     const QString lensOnlyDirectory =

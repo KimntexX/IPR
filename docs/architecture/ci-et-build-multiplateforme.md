@@ -1,160 +1,130 @@
-# CI et builds multiplateformes
+# CI et livraison multiplateforme
 
-**Statut :** proposition prête à implémenter lors de la création du dépôt GitHub.  
-**Portée :** Windows 10/11, macOS, Debian/Ubuntu, Fedora et Arch Linux.
+Implémentation du 11 octobre 2026, branche durable `patch_ci_cd` issue de `dev`.
+Les changements couleur locaux non validés ne font pas partie de cette livraison.
+Le paquet « système » utilise les bibliothèques installées, sans les embarquer.
 
-## Objectif
+## Pipelines
 
-La CI (*continuous integration*) exécute automatiquement les vérifications à chaque proposition de changement : configuration CMake, compilation, tests, analyse de la documentation et conservation des journaux utiles. Elle ne publie pas un logiciel par défaut.
-
-La CD (*continuous delivery*) est la seconde étape : pour un tag de version validé, elle produit les paquets installables, leur somme de contrôle et, plus tard, leur signature. Cette séparation évite de confondre un binaire de test avec une publication destinée aux utilisateurs.
-
-## État actuel et écarts à traiter
-
-Le projet est déjà portable dans son principe : CMake 3.21+, C++17, Qt 6.4+, OpenCV, LibTIFF et LibRaw optionnel. En revanche, il faut résoudre les écarts suivants avant de déclarer le support multiplateforme :
-
-| Sujet | État actuel | Travail requis |
+| Workflow | Déclenchement | Contenu |
 | --- | --- | --- |
-| Tests | Les onze cibles synthétiques sont enregistrées sur Windows et UNIX avec labels et environnement Qt headless | Vérifier aussi macOS ; les sondes de corpus privé restent UNIX et hors du socle CI public. |
-| Contrats Qt | Core/Gui/Quick/Concurrent sont demandés explicitement | Vérifier les futurs presets et leurs versions de dépendances. |
-| Dépendances reproductibles | Les chemins et gestionnaires de paquets ne sont pas encore centralisés | Ajouter `CMakePresets.json`, un manifeste vcpkg pour Windows et des scripts d’amorçage Linux/macOS versionnés. |
-| Installation | `install()` installe l’exécutable, mais pas le runtime Qt ni les bibliothèques tierces | Créer une phase de *staging* avec `cmake --install`, puis un script de déploiement spécifique à la plateforme. |
-| Paquets | Aucun générateur de paquet ni métadonnée de distribution | Ajouter CPack et/ou les recettes natives après choix de licence, nom d’éditeur, icône et identifiant final. |
-| Données privées | Le corpus RAW et les profils tiers ne doivent pas être publiés | Tests CI uniquement avec ressources synthétiques, profils autorisés et corpus public explicitement licencié. |
+| `ci.yml` | Push dev/main/patch_*, PR, manuel | Compilation et **tous** les CTest + tests Python, quatre plateformes |
+| `delivery.yml` | Manuel ou tag conforme | Même validation complète, puis archives standalone et système, SHA-256 et mémoire JSON |
+| `linux-distributions.yml` | Manuel | Debian 12 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système et tests complets |
 
-## Ce que la CI fera
+Windows x64 : MSVC 2022, Qt 6.8.3, vcpkg épinglé au commit du manifeste.
+Linux standalone : Ubuntu 24.04 x64, Qt 6.8.3 ; pas un binaire universel glibc.
+Linux système utilise Qt fourni par apt, sans imposer un SDK Qt externe à
+l'utilisateur ; les paquets Debian/Fedora/Arch utilisent aussi leurs dépôts natifs.
+macOS : runners `macos-15` arm64 et `macos-15-intel` x64, dépendances Homebrew.
+Le minimum macOS effectif dépend des bouteilles Homebrew : ne pas annoncer
+macOS 12 sur la seule base du support de Qt. Les versions installées figurent
+dans les journaux ; Homebrew et Arch sont évolutifs, pas hermétiques.
 
-### Politique locale déjà implémentée
+Qt 6.8 couvre Windows 10 1809+ et Windows 11, mais le runner Windows Server
+ne remplace pas une recette sur les deux systèmes utilisateurs.
+[Plateformes Qt](https://doc.qt.io/qt-6.8/supported-platforms.html),
+[runners GitHub](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
 
-[Le lanceur Bash Windows](tests-cibles-et-build-windows.md) compile via les outils
-natifs et applique une sélection par zone depuis un checkpoint de code validé.
-Les builds ordinaires exécutent seulement les tests concernés. Premier passage,
-infrastructure/interface partagée, grosse modification ou zone inconnue : suite
-complète. `GITHUB_ACTIONS=true` et `--full-tests` imposent aussi toute la liste.
-Cette préparation ne provisionne pas encore les runners ou les dépendances GitHub.
+## Exécution
 
-### 1. Contrôles rapides à chaque pull request
+Depuis la racine du projet, Python 3.10+ et CMake/Ninja ou MSVC installés :
 
-1. Vérification de format et de cohérence CMake/QML/C++ ; `git diff --check`.
-2. Contrôle des liens Markdown locaux et compilation de la documentation.
-3. Configuration CMake, compilation et CTest du socle sans LibRaw sur Windows, macOS et Ubuntu.
-4. Conservation en artefact des journaux CMake/CTest et, en cas d’échec, des rapports utiles.
-
-Cette première barrière est courte et ne manipule ni corpus photo privé, ni profils DCP/LCP non redistribuables, ni secret de publication.
-
-### 2. Intégration native
-
-Une seconde matrice valide l’import RAW avec LibRaw et les exports TIFF/DNG :
-
-| Cible | Exécution | But |
-| --- | --- | --- |
-| Ubuntu x86_64 | runner GitHub | compilation et tests LibRaw sur la plateforme Linux de référence |
-| Windows x86_64 | runner GitHub | compilation MSVC et tests headless Windows |
-| macOS x86_64 puis arm64 | runner GitHub si disponible pour le dépôt | compilation, bundle et test de démarrage headless |
-| Debian/Ubuntu | conteneur Debian stable et Ubuntu LTS | vérifier paquets DEB et ABI système |
-| Fedora | conteneur Fedora courant | vérifier RPM et dépendances RPM |
-| Arch | conteneur Arch Linux | vérifier `PKGBUILD` et dépendances rolling release |
-
-Les conteneurs valident la compatibilité de paquets Linux ; ils ne remplacent pas une recette d’interface graphique sur une machine utilisateur réelle. GitHub propose des runners hébergés Linux, Windows et macOS, mais leurs images évoluent chaque semaine : la CI installera donc les versions demandées plutôt que de dépendre implicitement des logiciels préinstallés.
-
-### 3. Publication contrôlée par tag
-
-Sur un tag signé `vX.Y.Z`, après passage de toute la matrice :
-
-- générer les paquets et archives ;
-- lancer un test de démarrage du répertoire déployé ;
-- produire SHA-256, manifeste de composants et notes de version ;
-- publier uniquement après validation manuelle du workflow ;
-- signer et notariser seulement lorsque les certificats et la politique de publication auront été définis.
-
-Les secrets de signature ne doivent jamais être accessibles à une pull request externe.
-
-## Matrice de build recommandée
-
-| Famille | Compilateur et architecture de départ | Distribution cible | Format de livraison initial |
-| --- | --- | --- | --- |
-| Windows 10/11 | MSVC 2022, x86_64 | Windows 10 22H2 et Windows 11 supportés par Qt | ZIP déployé, puis installateur MSIX ou NSIS/WiX |
-| macOS | Apple Clang, arm64 et x86_64 | macOS supporté par la version Qt retenue | `.app` compressée ; DMG après signature/notarisation |
-| Debian/Ubuntu | GCC, x86_64 | Debian stable, Ubuntu LTS | `.deb` et archive `tar.zst` |
-| Fedora | GCC, x86_64 | Fedora stable courant | `.rpm` et archive `tar.zst` |
-| Arch | GCC, x86_64 | Arch courant | `PKGBUILD` et archive `tar.zst` |
-
-Le premier objectif est x86_64 sur toutes les plateformes. macOS arm64 doit être un build natif séparé ; un binaire `universal2` ne sera livré qu’après validation de ses deux architectures. ARM64 Windows et Linux peuvent être ajoutés plus tard comme cibles expérimentales, sans retarder les versions x86_64.
-
-## Prérequis de compilation
-
-| Plateforme | Outils communs | Qt | Bibliothèques IPR |
-| --- | --- | --- | --- |
-| Windows | CMake >= 3.21, Ninja, MSVC Build Tools 2022, vcpkg | Qt 6 MSVC x64, même toolchain que les dépendances | OpenCV, LibTIFF, LibRaw via vcpkg ou builds cohérents MSVC |
-| macOS | CMake, Ninja, Xcode Command Line Tools, Homebrew ou gestionnaire Qt officiel | Qt 6 pour l’architecture ciblée | OpenCV, libtiff, LibRaw ; attention aux préfixes Homebrew arm64/x86_64 |
-| Debian/Ubuntu | CMake, Ninja, GCC/G++, `pkg-config` | `qt6-base-dev`, `qt6-declarative-dev` | `libopencv-dev`, `libtiff-dev`, `libraw-dev` |
-| Fedora | CMake, Ninja, GCC/G++, `pkgconf-pkg-config` | `qt6-qtbase-devel`, `qt6-qtdeclarative-devel` | `opencv-devel`, `libtiff-devel`, `LibRaw-devel` |
-| Arch | CMake, Ninja, `base-devel`, `pkgconf` | `qt6-base`, `qt6-declarative` | `opencv`, `libtiff`, `libraw` |
-
-Les noms de paquets sont les noms usuels à vérifier dans l’image ciblée lors de l’implémentation. Les scripts d’amorçage devront échouer clairement si un paquet ou une version est absent, plutôt que de continuer avec un ensemble incomplet.
-
-## Déploiement et packaging
-
-### Windows
-
-Compiler avec une seule ABI, recommandée ici : **MSVC x64**. Ne jamais mélanger Qt MinGW et bibliothèques OpenCV/LibRaw MSVC. Après `cmake --install`, exécuter `windeployqt --qmldir <racine-qml>` sur `appIPR.exe`, puis ajouter les DLL OpenCV, LibRaw et LibTIFF non prises en charge par l’outil Qt. Le redistribuable officiel Microsoft Visual C++ est requis pour une distribution MSVC.
-
-Le test de livraison s’exécute depuis un répertoire vierge, sans Qt dans le `PATH`, et vérifie au minimum le démarrage de l’application et le chargement QML. Le package final doit aussi préciser l’architecture x64 et la version.
-
-### macOS
-
-Produire un bundle `.app` avec `macdeployqt` ou le mécanisme de déploiement CMake de Qt, puis vérifier les dépendances avec `otool -L` et exécuter l’application depuis le bundle. La distribution hors Mac App Store requiert ensuite un compte Apple, une identité de signature Developer ID, l’horodatage et la notarisation ; ce sont des prérequis de publication, pas de CI ordinaire.
-
-### Linux
-
-Ne pas imposer un unique binaire portable à toutes les distributions lors de la première livraison. Livrer d’abord les formats natifs : DEB pour Debian/Ubuntu, RPM pour Fedora et recette `PKGBUILD` pour Arch. Chaque recette déclare les dépendances système Qt/OpenCV/LibTIFF/LibRaw et place les données d’application dans les emplacements standard. Une AppImage pourra être évaluée ultérieurement, après audit des licences et des bibliothèques embarquées.
-
-CPack est un bon socle commun : il fabrique ses paquets à partir de ce qui est déclaré par `install()`. Il faut donc terminer la phase d’installation et de déploiement avant d’activer les générateurs CPack.
-
-## Structure GitHub proposée
-
-```text
-.github/
-  workflows/
-    ci.yml                 # format, liens, build + CTest multiplateforme
-    docs.yml               # LaTeX/Scholar, artefact PDF
-    release.yml            # tags seulement, paquets et publication contrôlée
-    codeql.yml             # à activer après le socle CI
-cmake/
-  packaging/               # CPack, scripts de staging et métadonnées
-scripts/
-  bootstrap/               # win, macOS, Debian, Fedora, Arch
-  deploy/                  # win, macOS, Linux
-CMakePresets.json
-vcpkg.json
+```bash
+python -m pip install numpy Pillow PyYAML
+python scripts/ci.py --action all --mode system --version 0.1.0-alpha
+python scripts/ci.py --action all --mode standalone --build-dir build-portable --qt-root /chemin/Qt --version 0.1.0-alpha
+python scripts/ci.py --action test --build-dir build-ci
+python scripts/smoke_package.py /chemin/paquet-extrait --mode standalone
 ```
 
-Les actions tierces seront épinglées à un commit SHA révisé, les jobs utiliseront `permissions: contents: read` par défaut et le cache ne portera que sur les téléchargements de dépendances. Les répertoires de build ne seront pas réutilisés comme cache de vérité.
+Windows : fournir `--qt-root`, les chemins CMake des dépendances via
+`--cmake-arg=-D...`, et un ou plusieurs `--runtime-dir` contenant les DLL tierces.
+Le wrapper `scripts/package-windows.ps1` appelle ce même moteur, sans implémentation
+parallèle. `scripts/github_build.py` ajoute les chemins vcpkg/Homebrew des runners.
+Un standalone exige Qt >= 6.8 ; les builds système conservent Qt >= 6.4.
 
-## Séquence d’implémentation
+Linux natif : `--native deb`, `--native rpm` ou `--native arch`, en mode système,
+sur la distribution cible. Arch produit une recette à partir du commit courant ;
+le workflow la compile sans root avec `makepkg`. Ne pas utiliser cette commande
+sur des sources non commitées. Les archives existantes ne sont jamais écrasées.
+Choisir un nouveau dossier de sortie pour répéter une livraison.
 
-1. **Portabilité CMake locale** : presets, modules Qt explicites, tests sans garde `UNIX`, exécution headless et corpus synthétique.
-2. **Scripts d’amorçage** : une commande documentée par plateforme et build reproductible local.
-3. **CI GitHub niveau 1** : Ubuntu, Windows et macOS ; compilation, CTest, liens et documentation ; aucun package publié.
-4. **Packaging** : installation CMake complète, déploiement Qt, recettes DEB/RPM/PKGBUILD et artefacts de test.
-5. **Release** : version, licence du projet, identifiants d’application, signature Windows/macOS, clés de dépôt Linux et politique de rétention.
+Dans GitHub, consulter **Actions → CI native full tests** après le push de la
+branche. Les workflows manuels doivent exister dans la branche par défaut pour
+apparaître dans l'interface de lancement ; leur préparation n'autorise pas à
+fusionner dans `main`. Les paquets se récupèrent dans les artefacts du run.
 
-## Conditions bloquantes avant diffusion publique
+## Tests et sécurité
 
-- Choisir et ajouter une licence pour le code IPR.
-- Définir l’éditeur, le domaine inverse/identifiant d’application et les icônes définitives.
-- Confirmer la politique de distribution des DLL et bibliothèques, en particulier OpenCV, LibRaw et Qt.
-- Ne pas inclure les profils Adobe, les RAW privés ni les exports de test dans le dépôt ou les artefacts.
-- Définir qui possède les certificats de signature et qui peut déclencher une release.
+En local, `build_windows.py` conserve la sélection conservative par fichiers
+modifiés ; une modification transversale ou inconnue entraîne la suite complète.
+La CI appelle directement `ci.py`, sans sélection réduite. Les tests de corpus
+photographique privés ne sont pas remplacés par ces tests synthétiques.
 
-## Références
+Tous les exécutables de test Qt sont lancés offscreen/software ; le smoke test
+du paquet se déroule hors du dépôt avec des préférences temporaires et termine
+normalement. Les chemins SDK sont retirés pour le standalone. Ce contrôle ne
+prouve pas une autonomie totale sur une machine vierge : faire une recette
+Windows 10/11, macOS des deux architectures et Linux avec interface graphique.
 
-- [GitHub Actions — construire et tester du C++](https://docs.github.com/en/actions/use-cases-and-examples/building-and-testing/building-and-testing-cpp)
-- [GitHub Actions — syntaxe des workflows](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions)
-- [GitHub Actions — runners hébergés](https://docs.github.com/en/actions/concepts/runners/github-hosted-runners)
-- [GitHub Actions — cache de dépendances](https://docs.github.com/en/actions/concepts/workflows-and-actions/dependency-caching)
-- [Qt — déploiement Windows](https://doc.qt.io/qt-6/windows-deployment.html)
-- [Qt — déploiement macOS](https://doc.qt.io/qt-6/macos-deployment.html)
-- [Qt — déploiement Linux](https://doc.qt.io/qt-6/linux-deployment.html)
-- [Qt — déploiement avec CMake](https://doc.qt.io/qt-6/cmake-deployment.html)
-- [CMake — CPack](https://cmake.org/cmake/help/latest/module/CPack.html)
+Actions externes épinglées par SHA, permissions `contents: read`, pas de
+`pull_request_target`, pas de secrets ni publication de release automatique.
+Une livraison sur tag vérifie son format, son identité avec HEAD, sa présence
+dans l'histoire de `origin/dev` et l'existence d'un commit de fusion. La validation
+humaine reste indispensable : une ascendance Git n'est pas une preuve qualité.
+
+Les tags suivent `v0.1.X-alpha`, puis `v0.Y.X-beta` (Y >= 2), puis `v1.Y.X`.
+Le script ne crée ni tag ni fusion et ne calcule pas le nombre de patchs livrés.
+Les labels manuels identifient des constructions, pas une validation stable.
+
+## Contenu des paquets et limites
+
+Application, générateur CLI, configuration initiale, dossiers `profiles/dcp` et
+`profiles/lcp` vides, licences, mémoire `package-manifest.json` (UTC, commit,
+mode, dépendances, fichiers et empreintes). Aucun profil Adobe, RAW du corpus
+ou `raw-normalization.json` privé. L'index public est généré depuis un modèle
+vide indépendant de l'index local.
+
+Standalone : bibliothèques dynamiques Qt et tierces ; sous Linux restent glibc,
+chargeur et pilotes du système. Système : DLL/bibliothèques et modules QML
+doivent être installés dans les versions ABI compatibles. Les paquets natifs
+déclarent les dépendances ; les archives génériques ne les installent pas.
+Windows système nécessite le runtime Visual C++ et Qt/OpenCV/LibRaw/TIFF dans
+PATH. macOS système utilise Homebrew de la même architecture.
+
+Pas de signature Authenticode, certificat Apple Developer ID ou notarisation
+configurés. La signature macOS ad hoc n'est pas une signature de distribution.
+Pas de publication publique automatique : choisir la licence IPR et vérifier
+les notices, sources correspondantes et obligations LGPL avant une release.
+Les fichiers de licences génériques ne constituent pas un audit juridique.
+
+## Validation locale du 11 octobre 2026
+
+Mémoire : [validation-ci-cd-20261011.json](../validation/raw/validation-ci-cd-20261011.json).
+Windows MSVC/Qt 6.11.2 : 18 CTest réussis, 113 tests Python réussis ; archives
+standalone et système produites, smoke tests réussis. Linux Ubuntu 24.04 sous
+WSL/Qt 6.4.2 : mêmes 18 CTest et 113 tests Python réussis ; archive système et
+paquet `.deb` produits, dépendances inspectées, smoke réussi.
+
+Les essais ont nécessité deux corrections de cycle de vie : ne pas attendre un
+futur Qt non démarré/consommé à la destruction de l'éditeur ; détruire les racines
+QML avant leurs objets de contexte. Un test de fermeture sans image couvre le
+premier cas ; le smoke de l'application couvre aussi l'ordre de destruction.
+Les tests libèrent également leur memmap TIFF sous Windows et n'attendent pas
+une boucle d'évènements après une erreur d'export synchrone.
+
+Pas de validation locale macOS, Fedora, Arch ou standalone Linux Qt 6.8.3.
+La matrice GitHub devra confirmer ces chemins ; ces résultats locaux ne valent
+pas certification des machines cibles ni validation des fonctions photographiques.
+La compilation actuelle de `patch_couleur` et les images de comparaison sont
+restées intactes. Aucun merge ni tag de validation n'est livré avec cette branche.
+
+## Références de déploiement
+
+- [Qt : déploiement QML CMake](https://doc.qt.io/qt-6.8/qt-generate-deploy-qml-app-script.html).
+- [Qt : dépendances à l'exécution](https://doc.qt.io/qt-6.8/qt-deploy-runtime-dependencies.html).
+- [Qt : imports QML](https://doc.qt.io/qt-6.8/qt-deploy-qml-imports.html).
+- [CMake : CPack Debian](https://cmake.org/cmake/help/latest/cpack_gen/deb.html).
+- [CMake : CPack RPM](https://cmake.org/cmake/help/latest/cpack_gen/rpm.html).
+- [Arch : création de paquets](https://wiki.archlinux.org/title/Creating_packages).
