@@ -104,6 +104,14 @@ ne certifie donc pas tous les liens, les PDF ou l'exactitude technique du texte.
 La politique documentaire ne s'applique pas comme exception aux PR : celles-ci
 effectuent bien la validation complète avant intégration, même pour des docs.
 
+Validation locale de ce patch : compilation Windows réussie, **18 CTest et
+163 tests Python réussis**, plus vérification réelle d'une compilation/exécution
+ciblée limitée à `toneRecoveryTests`. Le code testé est `b434628` ; la
+[mémoire JSON](../validation/raw/validation-ci-scope-v001-20261011T193330Z.json)
+consigne les versions et limites. La nouvelle configuration n'est pas encore
+publiée : il reste à la pousser, vérifier GitHub puis valider son intégration
+dans `dev`. Aucun nouveau tag ni réglage de protection du dépôt n'a été posé.
+
 Tous les exécutables de test Qt sont lancés offscreen/software ; le smoke test
 du paquet se déroule hors du dépôt avec des préférences temporaires et termine
 normalement. Les chemins SDK sont retirés pour le standalone. Ce contrôle ne
