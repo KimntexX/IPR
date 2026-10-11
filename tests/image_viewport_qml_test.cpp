@@ -92,13 +92,15 @@ int main(int argc, char **argv)
     image.fill(QColor(180, 90, 30, 128));
     if (!image.save(alphaCurrent)) return 1;
     QQmlEngine engine;
+    // Destroy the scoped QML root before its window/rendering surface, including
+    // early assertion returns. Visual parenting alone is not QObject ownership.
+    QQuickWindow window;
     QQmlComponent component(&engine, QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/ImageViewport.qml")));
     QScopedPointer<QObject> object(component.createWithInitialProperties({
         {"width", 800}, {"height", 500}, {"hasImage", true}, {"imageKey", "photo-A"},
         {"source", QUrl::fromLocalFile(first)}, {"originalSource", QUrl::fromLocalFile(first)}}));
     if (!object) { std::cerr << component.errorString().toStdString(); return 1; }
     auto *viewport = qobject_cast<QQuickItem *>(object.data());
-    QQuickWindow window;
     window.setColor(QColor("#20252b"));
     window.resize(800, 500);
     viewport->setParentItem(window.contentItem());
@@ -238,6 +240,6 @@ int main(int argc, char **argv)
             && viewport->property("fitMode").toBool(), "without an image, interactions should be disabled")) return 1;
     if (!check(!compare->property("enabled").toBool() && !viewport->property("showingComparison").toBool(),
                "comparison should be disabled without an image")) return 1;
-    std::cout << "Viewport zoom, comparison, click, drag, wheel, shortcuts, bounds and refresh checks passed\n";
+    std::cout << "Viewport zoom, comparison, click, drag, wheel, shortcuts, bounds and refresh checks passed" << std::endl;
     return 0;
 }
