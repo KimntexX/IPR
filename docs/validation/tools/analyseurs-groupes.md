@@ -8,6 +8,10 @@ visuelle automatique.
 
 ## Transition du générateur du 11 octobre 2026
 
+La refonte du générateur est un travail distinct, non inclus dans
+`patch_color`. Cette section décrit son contrat cible, pas le binaire
+du générateur livré avec le correctif WB.
+
 Le [générateur courant](generateur-images-tests.md) écrit directement dans les
 dossiers partagés, sans manifeste ni campagne datée. Les commandes à manifeste
 ci-dessous décrivent les entrées d'analyse archivées, pas sa nouvelle sortie.
@@ -16,6 +20,12 @@ annoncer que ces TIFF sont automatiquement associés par les analyseurs actuels.
 Leurs JSON de mesures versionnés et horodatés restent la mémoire canonique.
 
 ## Structure alignée sur les protocoles
+
+Les méthodes communes couvrent les groupes du tableau. Dans cette livraison
+Couleur, seuls `analyse_groupes.py` et l'entrée dédiée `analyse_couleur.py`
+sont inclus ; les autres entrées dédiées appartiennent au travail de
+modernisation des analyseurs, livré séparément. Utiliser l'entrée commune
+avec le groupe voulu, pas un fichier dédié absent.
 
 | Protocole / groupe CLI | Entrée dédiée | Méthode principale |
 | --- | --- | --- |

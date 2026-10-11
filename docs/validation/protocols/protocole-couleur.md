@@ -6,8 +6,8 @@ et Saturation ; ajout des niveaux de gris. Statut : recette consolidée prête,
 ne sont pas automatiquement transférées aux nouveaux profils.
 
 Appliquer le [socle commun](protocole-commun.md). Ne pas confondre Couleur
-(commandes globales), [Mélangeur](protocole-melangeur.md) (bandes sélectives)
-et [Grading](protocole-grading.md) (zones tonales).
+(commandes globales), Mélangeur (bandes sélectives)
+et Grading (zones tonales).
 
 ## Corpus ciblé
 
@@ -34,6 +34,10 @@ IPR à « nuance 0 » dans LR. Pour température/nuance, examiner séparément l
 déplacements internes puis la comparaison de rendus à valeurs affichées données.
 
 Depuis PowerShell à la racine :
+
+Contrat cible du générateur, livré séparément du correctif WB ; pour les
+mesures de cette livraison, utiliser la sonde détaillée plus bas et les
+exports Lightroom déjà préparés.
 
 ```powershell
 ./scripts/generate-test-images.ps1 couleur

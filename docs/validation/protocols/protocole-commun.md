@@ -34,6 +34,12 @@ Ce document fixe la procédure, pas un verdict sur les images.
 
 ## 2. Générer et associer les états
 
+Le contrat ci-dessous est celui demandé pour la génération. **La livraison
+`patch_color` contient le correctif WB, pas la refonte du générateur** :
+tant que cette refonte n'est pas intégrée, ne pas exécuter les exemples
+ci-dessous avec un ancien binaire/lanceur. Pour la présente validation,
+utiliser les exports préparés et la sonde `wbCameraProbe` du protocole Couleur.
+
 Depuis PowerShell à la racine :
 
 ```powershell
