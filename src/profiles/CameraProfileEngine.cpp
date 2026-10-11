@@ -616,6 +616,66 @@ public:
 
     QString profileName;
 
+    bool whiteBalanceGains(double sourceKelvin, const cv::Vec3d &neutral,
+                            int temperature, int tint, cv::Vec3d &gains,
+                            QString *error) const
+    {
+        const auto fail = [error] {
+            if (error) *error = QStringLiteral("Balance DCP : matrices ou blanc capteur invalides.");
+            return false;
+        };
+        if (!std::isfinite(sourceKelvin) || sourceKelvin < 2000 || sourceKelvin > 50000 ||
+            temperature < 2000 || temperature > 50000 || tint < -150 || tint > 150)
+            return fail();
+        gains = cv::Vec3d(1, 1, 1);
+        if (temperature == int(std::lround(sourceKelvin)) && tint == 0)
+            return true;
+        const QVector<double> &a = colorMatrix1.size() == 9 ? colorMatrix1 : colorMatrix2;
+        const QVector<double> &b = colorMatrix2.size() == 9 ? colorMatrix2 : a;
+        if (a.size() != 9 || !cv::checkRange(neutral) ||
+            neutral[0] <= 0 || neutral[1] <= 0 || neutral[2] <= 0)
+            return fail();
+        const auto matrix = [&](double kelvin) {
+            cv::Matx33d result;
+            const double w = illuminantWeight(kelvin);
+            for (int i = 0; i < 9; ++i) result.val[i] = a[i] * (1-w) + b[i] * w;
+            return result;
+        };
+        const auto planckUv = [](double kelvin) {
+            // Krystek rational approximation in CIE 1960 UCS (not CIE 1976).
+            const double t2 = kelvin * kelvin;
+            return cv::Vec2d(
+                (.860117757 + 1.54118254e-4*kelvin + 1.28641212e-7*t2) /
+                    (1 + 8.42420235e-4*kelvin + 7.08145163e-7*t2),
+                (.317398726 + 4.22806245e-5*kelvin + 4.20481691e-8*t2) /
+                    (1 - 2.89741816e-5*kelvin + 1.61456053e-7*t2));
+        };
+        const cv::Matx33d sourceMatrix = matrix(sourceKelvin);
+        if (std::abs(cv::determinant(sourceMatrix)) < 1e-10) return fail();
+        const cv::Vec3d white = sourceMatrix.inv() * neutral;
+        const double d = white[0] + 15*white[1] + 3*white[2];
+        if (!std::isfinite(d) || d <= 0 || white[1] <= 0) return fail();
+        // Carry the measured off-locus As Shot white, not a universal +5 tint.
+        const cv::Vec2d offset = cv::Vec2d(4*white[0]/d, 6*white[1]/d) - planckUv(sourceKelvin);
+        cv::Vec2d target = planckUv(temperature) + offset;
+        const cv::Vec2d tangent = planckUv(temperature + 1.0) - planckUv(temperature - 1.0);
+        const double length = cv::norm(tangent);
+        if (length <= 0) return fail();
+        // Normal to the locus, Adobe DNG's tint distance convention (-3000).
+        // This is a continuous-locus approximation, not Lightroom's private model.
+        target += cv::Vec2d(-tangent[1], tangent[0]) * (-double(tint)/3000.0/length);
+        if (target[1] <= 0) return fail();
+        const cv::Vec3d xyz(1.5*target[0]/target[1], 1,
+                            (4-target[0]-10*target[1])/(2*target[1]));
+        const cv::Vec3d targetNeutral = matrix(temperature) * xyz;
+        for (int c = 0; c < 3; ++c) {
+            if (!std::isfinite(targetNeutral[c]) || targetNeutral[c] <= 1e-10) return fail();
+            gains[c] = neutral[c] / targetNeutral[c];
+        }
+        gains /= gains[1]; // Green anchor: no arbitrary exposure/profile-name weight.
+        return cv::checkRange(gains);
+    }
+
 private:
     static HueSatTable interpolateTables(const HueSatTable &first,
                                          const HueSatTable &second,
@@ -1715,6 +1775,37 @@ bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,
     if (!profile.load(fileName, error))
         return false;
     return profile.apply(cameraRgb, whiteBalanceKelvin, error, options);
+}
+
+bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tint,
+                       cv::Vec3d &gains, QString *error)
+{
+    DcpProfile profile;
+    return profile.load(source.profilePath, error) &&
+        profile.whiteBalanceGains(source.sourceKelvin, source.cameraNeutral,
+                                  temperature, tint, gains, error);
+}
+
+bool renderWhiteBalance(const DcpWorkingContext &source, int temperature, int tint,
+                         cv::Mat &linearRgb, QString *error)
+{
+    if (source.cameraRgb.empty() || source.cameraRgb.type() != CV_32FC3) {
+        if (error) *error = QStringLiteral("Source capteur DCP absente.");
+        return false;
+    }
+    DcpProfile profile;
+    cv::Vec3d gains;
+    if (!profile.load(source.profilePath, error) ||
+        !profile.whiteBalanceGains(source.sourceKelvin, source.cameraNeutral,
+                                   temperature, tint, gains, error)) return false;
+    cv::Mat rgb;
+    cv::transform(source.cameraRgb, rgb, cv::Matx33f(
+        float(gains[0]),0,0, 0,float(gains[1]),0, 0,0,float(gains[2])));
+    const double kelvin = temperature == int(std::lround(source.sourceKelvin)) && tint == 0
+        ? source.sourceKelvin : double(temperature);
+    if (!profile.apply(rgb, kelvin, error, source.options)) return false;
+    linearRgb = std::move(rgb);
+    return true;
 }
 
 bool lcpMatchesLens(const QString &path, const QString &cameraMake,

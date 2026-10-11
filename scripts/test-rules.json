@@ -23,6 +23,9 @@
     "cameraProfileEngineTests": "cameraProfileEngineTests"
   },
   "python_suites": {
+    "wb_comparison": "test_compare_temperature_tint.py",
+    "wb_adaptation": "test_investigate_wb_adaptation.py",
+    "group_analysis": "test_analyse_groupes.py",
     "documentation_metrics": "test_documentation_metrics.py",
     "selection": "test_build_windows.py",
     "color_mixer_analysis": "test_analyse_color_mixer.py",
@@ -30,6 +33,9 @@
     "base_colorimetry_analysis": "test_analyse_base_colorimetrique.py"
   },
   "rules": [
+    {"patterns": ["tests/compare_temperature_tint.py", "tests/compare_wb_camera_probe.py", "tests/audit_wb_profiles.py", "tests/test_compare_temperature_tint.py", "tests/wb_camera_probe.cpp"], "tests": ["cameraProfileEngineTests", "rawDecoderTests", "imageExportTests"], "python": ["wb_comparison"]},
+    {"patterns": ["tests/investigate_wb_adaptation.py", "tests/test_investigate_wb_adaptation.py"], "tests": [], "python": ["wb_adaptation"]},
+    {"patterns": ["tests/analysis/**", "tests/analyse_groupes.py", "tests/analyse_couleur.py", "tests/test_analyse_groupes.py"], "tests": [], "python": ["group_analysis", "wb_comparison", "wb_adaptation"]},
     {"patterns": ["scripts/export_documentation_metrics.py", "scripts/check_documentation.py", "scripts/consolidate_reports.py", "tests/test_documentation_metrics.py"], "tests": [], "python": ["documentation_metrics"]},
     {"patterns": ["tests/compare_profile_exports.py"], "tests": [], "python": ["base_colorimetry_analysis"]},
     {"patterns": ["src/qml/RawDevelopmentModule.qml", "tests/editor_raw_development_test.cpp", "src/editor/imageeditor.cpp"], "tests": ["editorRawDevelopmentTests", "settingsQmlTests", "rawDecoderTests", "cameraProfileEngineTests"]},
