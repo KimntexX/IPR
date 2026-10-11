@@ -17,6 +17,48 @@ ROOT = Path(__file__).resolve().parents[1]
 VERSION = re.compile(r"v?(\d+)\.(\d+)\.(\d+)(?:-(alpha|beta))?(?:\+[A-Za-z0-9.-]+)?\Z")
 
 
+def load_test_plan(path):
+    if path is None:
+        return None  # Delivery/manual runner defaults to the complete suite.
+    plan = json.loads(path.read_text(encoding='utf8'))
+    rules = json.loads((ROOT / 'scripts/test-rules.json').read_text(encoding='utf8'))
+    if not isinstance(plan, dict) or plan.get('schema') != 1 or type(plan.get('full')) is not bool:
+        raise ValueError('Invalid CI test plan')
+    for key, allowed in [('tests', rules['targets']), ('python', rules['python_suites'])]:
+        values = plan.get(key)
+        if not isinstance(values, list) or any(not isinstance(v, str) or v not in allowed for v in values):
+            raise ValueError('Unknown selection in CI plan: ' + key)
+    expected = sorted({rules['targets'][test] for test in plan['tests']})
+    if plan.get('targets') != expected:
+        raise ValueError('CI build targets do not match selected tests')
+    return plan
+
+
+def run_python_tests(plan, env):
+    rules = json.loads((ROOT / 'scripts/test-rules.json').read_text(encoding='utf8'))
+    patterns = ['test_*.py'] if plan is None or plan['full'] else [rules['python_suites'][s] for s in plan['python']]
+    for pattern in patterns:
+        if not list((ROOT / 'tests').glob(pattern)):
+            raise ValueError('Python test suite missing: ' + pattern)
+        run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-p', pattern], cwd=ROOT, env=env)
+
+
+def run_native_tests(build, test_dir, plan, env):
+    if plan is not None and not plan['full'] and not plan['tests']:
+        return
+    command = ['ctest', '--test-dir', build, '-C', 'Release', '--output-on-failure',
+               '--no-tests=error', '--timeout', '180', '--output-junit', test_dir / 'ctest.xml']
+    if plan is not None and not plan['full']:
+        registered = json.loads(subprocess.check_output(
+            ['ctest', '--test-dir', str(build), '-C', 'Release', '--show-only=json-v1'], env=env, text=True))
+        names = {test['name'] for test in registered['tests']}
+        missing = set(plan['tests']) - names
+        if missing:
+            raise ValueError('Selected CTest tests missing: ' + ', '.join(sorted(missing)))
+        command += ['-R', '^(' + '|'.join(re.escape(test) for test in plan['tests']) + ')$']
+    run(command, cwd=ROOT, env=env)
+
+
 def run(command, **kwargs):
     print('+', ' '.join(map(str, command)), flush=True)
     return subprocess.run(list(map(str, command)), check=True, **kwargs)
@@ -220,7 +262,8 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--action', choices=('build', 'test', 'package', 'all'), default='all')
+    parser.add_argument('--action', choices=('build', 'test', 'python', 'package', 'all'), default='all')
+    parser.add_argument('--test-plan', type=Path, help='Scope produced by ci_scope.py; omitted means full tests')
     parser.add_argument('--mode', choices=('system', 'standalone'), default='system')
     parser.add_argument('--build-dir', type=Path, default=ROOT / 'build-ci')
     parser.add_argument('--output-dir', type=Path, default=ROOT / 'dist')
@@ -231,6 +274,9 @@ def main(argv=None):
     parser.add_argument('--native', choices=('deb', 'rpm', 'arch'))
     parser.add_argument('--jobs', type=int, default=2)
     args = parser.parse_args(argv)
+    if args.test_plan and args.action in ('all', 'package'):
+        parser.error('Delivery packaging may not use a targeted test plan')
+    plan = load_test_plan(args.test_plan)
     label, numeric = release_version(args.version)
     if args.jobs < 1: parser.error('--jobs must be positive')
     build = args.build_dir.resolve()
@@ -246,13 +292,18 @@ def main(argv=None):
         if not (build / 'CMakeCache.txt').exists():
             command += ['-G', 'Visual Studio 17 2022', '-A', 'x64'] if os.name == 'nt' else ['-G', 'Ninja']
         run(command + args.cmake_arg, cwd=ROOT, env=env)
-        run(['cmake', '--build', build, '--config', 'Release', '-j', args.jobs], cwd=ROOT, env=env)
+        command = ['cmake', '--build', build, '--config', 'Release', '-j', args.jobs]
+        if plan is not None and not plan['full']:
+            if not plan['targets']:
+                raise ValueError('A native build requires selected targets')
+            command += ['--target'] + plan['targets']
+        run(command, cwd=ROOT, env=env)
     if args.action in ('test', 'all'):
         test_dir = build / 'test-results'
         test_dir.mkdir(parents=True, exist_ok=True)
-        run(['ctest', '--test-dir', build, '-C', 'Release', '--output-on-failure',
-             '--no-tests=error', '--timeout', '180', '--output-junit', test_dir / 'ctest.xml'], cwd=ROOT, env=env)
-        run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-p', 'test_*.py'], cwd=ROOT, env=env)
+        run_native_tests(build, test_dir, plan, env)
+    if args.action in ('test', 'python', 'all'):
+        run_python_tests(plan, env)
     if args.action in ('package', 'all'):
         state = cache(build)
         if state.get('IPR_DEPLOY_MODE') != args.mode: raise ValueError('Build/package mode mismatch')

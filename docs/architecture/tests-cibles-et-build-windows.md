@@ -36,7 +36,7 @@ Il ne réalise pas le déploiement/packaging des DLL pour une distribution auton
 ## Politique des tests
 
 Les règles versionnées sont dans [scripts/test-rules.json](../../scripts/test-rules.json).
-Les quatorze tests synthétiques CTest sont désormais enregistrés sous Windows
+Les dix-huit tests synthétiques CTest sont désormais enregistrés sous Windows
 comme sous Linux/WSL. Les sondes photographiques privées restent séparées.
 
 Le sélecteur compare les SHA-256 des fichiers de code/configuration à la dernière
@@ -57,7 +57,7 @@ chaque build d'un worktree déjà sale, sans nécessiter de commit préalable.
 | Zoom de l'aperçu QML | clic, glisser, molette, raccourcis, bornes, rafraîchissement et chargement de la fenêtre |
 | Un fichier de test isolé | ce test, pas toute la suite |
 
-Une validation complète est imposée dans les cas suivants :
+Pour le lanceur Windows local, une validation complète est imposée dans les cas suivants :
 
 - premier passage ou checkpoint/configuration invalide : établissement du socle ;
 - demande `--full-tests` ou environnement `GITHUB_ACTIONS=true` ;
@@ -65,6 +65,13 @@ Une validation complète est imposée dans les cas suivants :
   transversale `imageeditor.h` ;
 - au moins vingt fichiers de code/configuration modifiés ;
 - fichier de code inconnu des règles : repli conservateur, à compléter ensuite.
+
+GitHub utilise le même catalogue de règles, avec une portée calculée depuis
+l'ancêtre commun de la branche et `origin/dev`. Les pushes de groupe sont
+ciblés ; les PR vers `dev`/`main`, les pushes d'intégration, les changements
+transversaux/importants et les validations manuelles sont complets. Voir la
+[politique CI](ci-et-build-multiplateforme.md#politique-de-déclenchement--11-octobre-2026).
+La CI ne modifie pas le checkpoint local et ne supprime aucune image.
 
 Les dépendances de tests sont une cartographie maintenue, pas une preuve formelle
 du graphe C++/QML. Les tests existants de détail/bruit, cache et vignettes ne

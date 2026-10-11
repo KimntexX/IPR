@@ -8,7 +8,7 @@ Le paquet « système » utilise les bibliothèques installées, sans les embarq
 
 | Workflow | Déclenchement | Contenu |
 | --- | --- | --- |
-| `ci.yml` | Push dev/main/patch_*, PR, manuel | Compilation et **tous** les CTest + tests Python, quatre plateformes |
+| `ci.yml` | Push dev/main/patch_*, PR vers dev/main, manuel | Tests ciblés sur les branches de groupe ; validation complète aux portes d'intégration |
 | `delivery.yml` | Manuel ou tag conforme | Même validation complète, puis archives standalone et système, SHA-256 et mémoire JSON |
 | `linux-distributions.yml` | Manuel | Debian 12 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système et tests complets |
 
@@ -50,7 +50,7 @@ le workflow la compile sans root avec `makepkg`. Ne pas utiliser cette commande
 sur des sources non commitées. Les archives existantes ne sont jamais écrasées.
 Choisir un nouveau dossier de sortie pour répéter une livraison.
 
-Dans GitHub, consulter **Actions → CI native full tests** après le push de la
+Dans GitHub, consulter **Actions → CI scoped validation** après le push de la
 branche. Les workflows manuels doivent exister dans la branche par défaut pour
 apparaître dans l'interface de lancement ; leur préparation n'autorise pas à
 fusionner dans `main`. Les paquets se récupèrent dans les artefacts du run.
@@ -59,8 +59,50 @@ fusionner dans `main`. Les paquets se récupèrent dans les artefacts du run.
 
 En local, `build_windows.py` conserve la sélection conservative par fichiers
 modifiés ; une modification transversale ou inconnue entraîne la suite complète.
-La CI appelle directement `ci.py`, sans sélection réduite. Les tests de corpus
+La CI appelle `ci.py` avec un plan ciblé ou complet. Les tests de corpus
 photographique privés ne sont pas remplacés par ces tests synthétiques.
+
+### Politique de déclenchement — 11 octobre 2026
+
+| Événement / modification | Validation |
+| --- | --- |
+| Push `patch_*`, documentation seule | Lecture UTF-8, JSON valides, liens locaux signalés ; aucune compilation native |
+| Push `patch_*`, tests/analyse Python seulement | Suites Python concernées, sans installer Qt/OpenCV/LibRaw |
+| Push `patch_*`, code photographique cartographié | Compilation des cibles et tests sélectionnés, Windows, Ubuntu et macOS ARM |
+| Modification transversale, inconnue ou ≥20 fichiers de code | Tous les tests, quatre plateformes, Intel compris |
+| Push `dev`/`main`, PR vers `dev`/`main`, lancement manuel | Tous les tests, quatre plateformes |
+| Tag de version | Workflow de livraison : tous les tests et paquets système/standalone, quatre plateformes |
+| Push sur une branche hors `main`, `dev`, `patch_*` | Aucun déclenchement automatique ; une PR vers `dev`/`main` reste contrôlée |
+
+`scripts/ci_scope.py` partage les règles de `scripts/test-rules.json` avec le
+sélecteur local. La portée est **l'ensemble des changements de la branche depuis
+son ancêtre commun avec `origin/dev`**, et non le seul dernier commit : une
+validation précédente annulée ne fait pas disparaître les changements à tester.
+Les renommages incluent ancien et nouveau chemins. Un historique inaccessible
+impose une validation complète. Le nom `patch_documentation` n'exempte jamais
+une modification de code des tests correspondants.
+
+Le plan `ci-logs/test-plan.json` est conservé comme artefact et partagé entre les
+jobs. Les noms de tests et cibles sont contrôlés ; une sélection CTest manquante
+échoue au lieu de réussir avec seulement une partie de la sélection. Sans
+`--test-plan`, `ci.py` exécute toujours la suite complète ; les actions de
+packaging refusent un plan ciblé. Le sélecteur Windows local conserve ses
+checkpoints existants ; il ne sert pas de checkpoint à GitHub.
+
+Le job final **`CI validation`** vérifie que chaque contrôle attendu a réussi
+et que seuls les contrôles réellement inutiles ont été ignorés. C'est le check
+à rendre obligatoire dans les règles de protection de `dev`/`main`. Ce patch
+ne modifie pas les réglages de protection du dépôt GitHub. On ne filtre pas les
+PR par chemins, ce qui évite de laisser un check requis indéfiniment en attente.
+[Syntaxe GitHub Actions](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax).
+
+Le contrôle documentaire est en lecture seule, sans traduction ni compilation
+LaTeX. UTF-8/JSON invalides font échouer le job ; les liens manquants sont pour
+le moment des **avertissements explicites**, car les archives référencent aussi
+des corpus privés supprimés et des sorties de build non versionnées. Un succès
+ne certifie donc pas tous les liens, les PDF ou l'exactitude technique du texte.
+La politique documentaire ne s'applique pas comme exception aux PR : celles-ci
+effectuent bien la validation complète avant intégration, même pour des docs.
 
 Tous les exécutables de test Qt sont lancés offscreen/software ; le smoke test
 du paquet se déroule hors du dépôt avec des préférences temporaires et termine
