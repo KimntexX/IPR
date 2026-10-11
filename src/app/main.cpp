@@ -1,27 +1,24 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QTemporaryDir>
+#include <QTimer>
 
 #include "imageeditor.h"
 #include "imageprovider.h"
 #include "ThumbnailProvider.h"
 #include "UiPreferences.h"
-// #include "Cr3ImageProvider.h"
-// void readCr2Cr3(const QString &filename) {
-//     cv::Mat img = loadRawImage(filename);
-//     if (!img.empty()) {
-//         QImage qimg(img);
-//         QImage display(qimg.convertToFormat(QImage::Format_RGB888));
-//         label->setPixmap(QPixmap::fromPixmap(QPixmap::fromImage(display)));
-//     }
-// }
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QCoreApplication::setOrganizationName(QStringLiteral("IPR"));
     QCoreApplication::setApplicationName(QStringLiteral("IPR"));
-    UiPreferences uiPreferences;
+    QCoreApplication::setApplicationVersion(QStringLiteral(IPR_RELEASE_LABEL));
+    const bool smokeTest = app.arguments().contains(QStringLiteral("--smoke-test"));
+    QTemporaryDir smokePreferences;
+    if (smokeTest && !smokePreferences.isValid()) return 2;
+    UiPreferences uiPreferences(smokeTest ? smokePreferences.filePath("ipr-ui.ini") : QString{});
     QObject::connect(&app, &QCoreApplication::aboutToQuit,
                      &uiPreferences, &UiPreferences::sync);
 
@@ -43,6 +40,14 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
     engine.load(url);
+    if (smokeTest) {
+        if (engine.rootObjects().isEmpty()) return 3;
+        QTimer::singleShot(1000, &app, [] { QCoreApplication::exit(0); });
+    }
 
-    return app.exec();
+    const int result = app.exec();
+    // Destroy QML bindings while their context objects and providers still live.
+    // Otherwise Qt 6.4 evaluates bindings against a destroyed ImageEditor.
+    qDeleteAll(engine.rootObjects());
+    return result;
 }

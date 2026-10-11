@@ -1,0 +1,55 @@
+name: Delivery archives
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Prototype build label, not a newly created tag
+        default: '0.1.0-alpha'
+        required: true
+  push:
+    tags: ['v0.*-alpha', 'v0.*-beta', 'v1.*']
+permissions:
+  contents: read
+jobs:
+  archives:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, ubuntu-24.04, macos-15, macos-15-intel]
+        mode: [system, standalone]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    env:
+      IPR_BUILD_LABEL: ${{ inputs.version || github.ref_name }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - if: github.ref_type == 'tag'
+        shell: bash
+        run: python scripts/verify_release.py "$IPR_BUILD_LABEL"
+      - uses: ./.github/actions/setup
+        with:
+          mode: ${{ matrix.mode }}
+      - shell: bash
+        env:
+          IPR_MODE: ${{ matrix.mode }}
+        run: python scripts/github_build.py --action all --mode "$IPR_MODE" --version "$IPR_BUILD_LABEL"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: IPR-${{ matrix.os }}-${{ matrix.mode }}
+          path: |
+            dist/*.zip
+            dist/*.tar.gz
+            dist/*.sha256
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: delivery-logs-${{ matrix.os }}-${{ matrix.mode }}
+          path: |
+            build-ci/test-results/
+            build-ci/Testing/Temporary/
+            ci-logs/

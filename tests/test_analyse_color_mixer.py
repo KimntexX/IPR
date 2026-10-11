@@ -142,9 +142,13 @@ class MixerAnalysisTests(unittest.TestCase):
             pixels = np.arange(5 * 6 * 3, dtype=np.uint8).reshape(5, 6, 3)
             Image.fromarray(pixels).save(path, compression="raw")
             mapped = mixer.native_pixels(path)
-            np.testing.assert_array_equal(mapped, pixels)
-            np.testing.assert_allclose(mixer.sample(mapped, 2, 4, 5, 1, 1),
-                                       pixels[1:5:2, 1:6:2] / 255., atol=1e-7)
+            try:
+                np.testing.assert_array_equal(mapped, pixels)
+                np.testing.assert_allclose(mixer.sample(mapped, 2, 4, 5, 1, 1),
+                                           pixels[1:5:2, 1:6:2] / 255., atol=1e-7)
+            finally:
+                # Windows cannot remove a TIFF while its memory map is open.
+                mapped._mmap.close()
             with self.assertRaises(ValueError):
                 mixer.choose_crop(pixels, pixels[:2, :2], 1)
 

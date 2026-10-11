@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-11T14:14:43Z",
+  "group": "ci-cd",
+  "branch": "patch_ci_cd",
+  "base_dev_commit": "4c241541a7fcbfd1e62534c9fdb111c69bd55e6c",
+  "source_state": "uncommitted implementation tested before branch delivery",
+  "source_sha256_raw_bytes": {
+    "scripts/ci.py": "cfb67bcff1ecc039cf1c85b6d140df7bd7cf32a86fc91ae2b50b0dda84e0ad4a",
+    "src/editor/imageeditor.cpp": "eff66c5f8c41f7bf8e5b815c0c4f39e0182181abaa650398fa60961955cfa620",
+    "CMakeLists.txt": "b851566fa8e2562118b0c28893c488bed5dbabc3f3172c97925046d5c4860d84"
+  },
+  "runs": [
+    {
+      "platform": "Windows x64 local",
+      "compiler": "MSVC 19.44.35228",
+      "qt": "6.11.2",
+      "opencv": "5.0.0",
+      "ctest": {"tests": 18, "failures": 0, "skipped": 0, "junit_duration_seconds_rounded": 22},
+      "python": {"version": "3.14", "tests": 113, "failures": 0},
+      "packages": [
+        {"mode": "standalone", "smoke": "passed", "sha256": "3170863bbe27000ff0d5f8954cc2e19f3bae6c25e851c21cc96b2853257bf48a"},
+        {"mode": "system", "smoke": "passed", "sha256": "7855b9b68631a9d352c2af73b5c4a22d29af7294f46ecfa01adce552657f19f4"}
+      ]
+    },
+    {
+      "platform": "Ubuntu 24.04 x64 under WSL",
+      "compiler": "GCC 13.3.0",
+      "qt": "6.4.2",
+      "opencv": "4.6.0",
+      "ctest": {"tests": 18, "failures": 0, "skipped": 0, "junit_duration_seconds_rounded": 19},
+      "python": {"tests": 113, "failures": 0},
+      "packages": [
+        {"mode": "system", "smoke": "passed", "sha256": "54e5c0701e6fc85fac08f063198a653dcb4affed6877e5bcd992d7b1e767014a"},
+        {"format": "deb", "generated": true, "dependencies_inspected": true, "installed_on_clean_machine": false,
+         "sha256": "318f522a7a0282734e96fc037285d2fc27f66e35fd0e6adb9cb708c008d50510"}
+      ]
+    }
+  ],
+  "passed_ctest_names": [
+    "editorLifecycleTests", "colorPipelineTests", "detailProcessingTests", "imageExportTests",
+    "toneRecoveryTests", "testImageGeneratorTests", "colorMixerMathTests", "colorMixerNeutralTests",
+    "colorMixerQmlTests", "settingsQmlTests", "imageViewportQmlTests", "uiPreferencesTests",
+    "uiPreferencesQmlTests", "rawDecoderTests", "rawNormalizationTests", "editorRawDevelopmentTests",
+    "rawBlackLevelEstimatorTests", "cameraProfileEngineTests"
+  ],
+  "scope": "Synthetic regression and offscreen startup/normal shutdown; no pixel corpus analysis",
+  "not_locally_validated": ["macOS arm64", "macOS x64", "Fedora RPM", "Arch package", "Linux standalone Qt 6.8.3", "clean-machine GUI/GPU operation"],
+  "private_profiles_distributed": false,
+  "tags_created": false,
+  "branches_merged": false
+}

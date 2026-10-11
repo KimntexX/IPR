@@ -1,4 +1,5 @@
 #include "DecodedImageCache.h"
+#include "CameraProfileEngine.h"
 
 #include <QSet>
 
@@ -97,6 +98,10 @@ quint64 DecodedImageCache::entrySizeBytes(const Entry &entry)
     };
     add(entry.image.linearRgba);
     add(entry.editProxy.linearRgba);
+    if (entry.image.dcpContext)
+        add(entry.image.dcpContext->cameraRgb);
+    if (entry.editProxy.dcpContext)
+        add(entry.editProxy.dcpContext->cameraRgb);
     return bytes;
 }
 

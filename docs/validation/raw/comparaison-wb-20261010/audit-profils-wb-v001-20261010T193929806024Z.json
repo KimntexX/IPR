@@ -1,0 +1,343 @@
+{
+  "campaign_id": "audit-profils-wb-v001-20261010T193929806024Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "measured_at_utc": "2026-10-10T19:39:29.806024+00:00",
+  "reference": "/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+  "profiles": [
+    {
+      "path": "/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+      "sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "name": "Camera Neutral",
+      "tags_present": [
+        50708,
+        50721,
+        50722,
+        50778,
+        50779,
+        50932,
+        50936,
+        50940,
+        50941,
+        50942,
+        50964,
+        50965,
+        50981,
+        50982,
+        51108,
+        51109,
+        51110
+      ],
+      "forward_matrices": [
+        true,
+        true
+      ],
+      "illuminants": [
+        [
+          17
+        ],
+        [
+          21
+        ]
+      ],
+      "hue_sat_dimensions": null,
+      "look_dimensions": [
+        90,
+        16,
+        16
+      ],
+      "hue_sat_encoding": [
+        0
+      ],
+      "look_encoding": [
+        1
+      ],
+      "baseline_exposure_offset_ev": [
+        -0.5
+      ],
+      "tone_curve_points": 128,
+      "default_black_render": [
+        1
+      ],
+      "dynamic_range": null,
+      "matrices": {
+        "ColorMatrix1": [
+          1.0273,
+          -0.4611,
+          0.0139,
+          -0.3922,
+          1.1425,
+          0.2856,
+          -0.0231,
+          0.0839,
+          0.6645
+        ],
+        "ColorMatrix2": [
+          0.8309,
+          -0.1786,
+          -0.1095,
+          -0.4851,
+          1.2736,
+          0.2353,
+          -0.0956,
+          0.1911,
+          0.5534
+        ],
+        "ForwardMatrix1": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "ForwardMatrix2": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ]
+      },
+      "maximum_absolute_coefficient_difference_to_reference": {
+        "ColorMatrix1": 0.0,
+        "ColorMatrix2": 0.0,
+        "ForwardMatrix1": 0.0,
+        "ForwardMatrix2": 0.0
+      }
+    },
+    {
+      "path": "/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS R6 Mark III Adobe Standard.dcp",
+      "sha256": "b4687f2d793a06c79c21aed9b9aaf61b274408c20766ad98ae87a7f5508d02e5",
+      "name": "Adobe Standard",
+      "tags_present": [
+        50708,
+        50721,
+        50722,
+        50778,
+        50779,
+        50932,
+        50936,
+        50937,
+        50938,
+        50939,
+        50941,
+        50964,
+        50965,
+        50981,
+        50982
+      ],
+      "forward_matrices": [
+        true,
+        true
+      ],
+      "illuminants": [
+        [
+          17
+        ],
+        [
+          21
+        ]
+      ],
+      "hue_sat_dimensions": [
+        90,
+        30,
+        1
+      ],
+      "look_dimensions": [
+        36,
+        8,
+        16
+      ],
+      "hue_sat_encoding": [
+        0
+      ],
+      "look_encoding": [
+        0
+      ],
+      "baseline_exposure_offset_ev": [
+        0
+      ],
+      "tone_curve_points": 0,
+      "default_black_render": null,
+      "dynamic_range": null,
+      "matrices": {
+        "ColorMatrix1": [
+          1.0273,
+          -0.4611,
+          0.0139,
+          -0.3922,
+          1.1425,
+          0.2856,
+          -0.0231,
+          0.0839,
+          0.6645
+        ],
+        "ColorMatrix2": [
+          0.8309,
+          -0.1786,
+          -0.1095,
+          -0.4851,
+          1.2736,
+          0.2353,
+          -0.0956,
+          0.1911,
+          0.5534
+        ],
+        "ForwardMatrix1": [
+          0.4995,
+          0.3266,
+          0.1382,
+          0.2485,
+          0.7091,
+          0.0424,
+          0.108,
+          0.0004,
+          0.7167
+        ],
+        "ForwardMatrix2": [
+          0.5045,
+          0.2415,
+          0.2184,
+          0.2854,
+          0.6442,
+          0.0704,
+          0.1324,
+          0.001,
+          0.6917
+        ]
+      },
+      "maximum_absolute_coefficient_difference_to_reference": {
+        "ColorMatrix1": 0.0,
+        "ColorMatrix2": 0.0,
+        "ForwardMatrix1": 0.29829999999999995,
+        "ForwardMatrix2": 0.2933
+      }
+    },
+    {
+      "path": "/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Standard.dcp",
+      "sha256": "74a2276f3bc0e1897de761ad4ead71c8b36854c23d10efc3e3c602f4a8d5985f",
+      "name": "Camera Standard",
+      "tags_present": [
+        50708,
+        50721,
+        50722,
+        50778,
+        50779,
+        50932,
+        50936,
+        50940,
+        50941,
+        50942,
+        50964,
+        50965,
+        50981,
+        50982,
+        51108,
+        51109,
+        51110
+      ],
+      "forward_matrices": [
+        true,
+        true
+      ],
+      "illuminants": [
+        [
+          17
+        ],
+        [
+          21
+        ]
+      ],
+      "hue_sat_dimensions": null,
+      "look_dimensions": [
+        90,
+        16,
+        16
+      ],
+      "hue_sat_encoding": [
+        0
+      ],
+      "look_encoding": [
+        1
+      ],
+      "baseline_exposure_offset_ev": [
+        -0.5
+      ],
+      "tone_curve_points": 128,
+      "default_black_render": [
+        1
+      ],
+      "dynamic_range": null,
+      "matrices": {
+        "ColorMatrix1": [
+          1.0273,
+          -0.4611,
+          0.0139,
+          -0.3922,
+          1.1425,
+          0.2856,
+          -0.0231,
+          0.0839,
+          0.6645
+        ],
+        "ColorMatrix2": [
+          0.8309,
+          -0.1786,
+          -0.1095,
+          -0.4851,
+          1.2736,
+          0.2353,
+          -0.0956,
+          0.1911,
+          0.5534
+        ],
+        "ForwardMatrix1": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ],
+        "ForwardMatrix2": [
+          0.7978,
+          0.1352,
+          0.0313,
+          0.288,
+          0.7119,
+          0.0001,
+          0.0,
+          0.0,
+          0.8251
+        ]
+      },
+      "maximum_absolute_coefficient_difference_to_reference": {
+        "ColorMatrix1": 0.0,
+        "ColorMatrix2": 0.0,
+        "ForwardMatrix1": 0.0,
+        "ForwardMatrix2": 0.0
+      }
+    }
+  ],
+  "units": {
+    "matrix_coefficients": "dimensionless"
+  },
+  "analyser_sha256": "359c5e05d2f932b101b0d0a59d43ac0897887bff98ece75cd5693f775b3b63be",
+  "dcp_reader_sha256": "ef5b325e680844ab1312b0eb5b88b0d21a13b04b1d172b75a8d5914a962167db",
+  "limitations": [
+    "Local DCP inventory, not proof of the Lightroom rendering algorithm",
+    "Coefficient differences are not perceptual color differences",
+    "No image rendered or profile modified"
+  ]
+}

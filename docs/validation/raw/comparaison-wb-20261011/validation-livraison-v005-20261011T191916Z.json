@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-11 19:19:16 UTC",
+  "group": "couleur",
+  "scope": "correctif temperature/nuance RAW DCP",
+  "version": "v0.1.17-alpha",
+  "validated_branch": "patch_color",
+  "validated_commit": "74f4310f590312ac4f5462a00e68ebd869ab308f",
+  "ci": {
+    "run_id": 38166258163,
+    "url": "https://github.com/KimntexX/IPR/actions/runs/38166258163",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 114549405401,
+        "name": "native (windows-2022)",
+        "status": "completed",
+        "conclusion": "success",
+        "ctest_tests": 18,
+        "python_tests": 148
+      },
+      {
+        "id": 114549405524,
+        "name": "native (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "ctest_tests": 18,
+        "python_tests": 148
+      },
+      {
+        "id": 114549405571,
+        "name": "native (macos-15-intel)",
+        "status": "completed",
+        "conclusion": "success",
+        "ctest_tests": 18,
+        "python_tests": 148
+      },
+      {
+        "id": 114549405574,
+        "name": "native (macos-15)",
+        "status": "completed",
+        "conclusion": "success",
+        "ctest_tests": 18,
+        "python_tests": 148
+      }
+    ]
+  },
+  "operator_acceptance": "acceptation-visuelle-v004-20261011T185155Z.json",
+  "numerical_evidence": [
+    "sonde-wb-capteur-v003-20261011T133656397Z.json",
+    "comparaison-wb-capteur-v003-20261011T134140543650Z.json"
+  ],
+  "patch_counter": {
+    "previous_version": "v0.1.16-alpha",
+    "patches_delivered": 1,
+    "new_counter": 17,
+    "operator_confirmed": true
+  },
+  "render_changes": [
+    "Gains temperature/nuance dans l'espace capteur avant DCP",
+    "Contexte capteur immuable partage et comptabilise dans le cache LRU",
+    "Proxy et restauration identifies par l'empreinte moteur WB capteur v3"
+  ],
+  "limits": [
+    "Ecarts visuels acceptes a 2000 K (plus violet) et 50000 K (plus orange).",
+    "Pas de revendication de parite exacte Lightroom ou de calibration physique.",
+    "Evolutions possibles apres retours de tiers et essais d'autres boitiers, objectifs et profils.",
+    "La CI headless synthetique ne remplace pas une recette visuelle utilisateur.",
+    "Les paquets de livraison declenches par les tags sont une validation distincte."
+  ],
+  "merge_policy": {
+    "target": "dev",
+    "no_fast_forward": true,
+    "main_untouched": true,
+    "branches_preserved": true,
+    "unrelated_local_work_preserved": true
+  }
+}

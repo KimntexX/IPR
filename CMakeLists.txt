@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(IPR VERSION 0.2)
+set(IPR_RELEASE_VERSION "0.1.0" CACHE STRING "Numeric release version")
+project(IPR VERSION "${IPR_RELEASE_VERSION}")
+set(IPR_RELEASE_LABEL "0.1.0-alpha" CACHE STRING "Release label (no automatic tag creation)")
+set(IPR_DEPLOY_MODE "system" CACHE STRING "system or standalone runtime")
+set_property(CACHE IPR_DEPLOY_MODE PROPERTY STRINGS system standalone)
+if(NOT IPR_DEPLOY_MODE MATCHES "^(system|standalone)$")
+    message(FATAL_ERROR "IPR_DEPLOY_MODE must be system or standalone")
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -106,13 +113,12 @@ if(IPR_ENABLE_LIBRAW)
         target_compile_definitions(iprEngine PUBLIC IPR_WITH_LIBRAW=1)
         message(STATUS "LibRaw enabled: CR2/CR3/DNG import is available")
     else()
-        message(WARNING
-            "LibRaw was not found: JPG/PNG/TIFF work, but CR2/CR3/DNG import is disabled. "
-            "Install LibRaw and configure CMake again, or use -DIPR_ENABLE_LIBRAW=OFF.")
+        message(FATAL_ERROR "IPR_ENABLE_LIBRAW=ON requires LibRaw. Install it or explicitly disable RAW support.")
     endif()
 endif()
 
 qt_add_executable(appIPR
+    MANUAL_FINALIZATION
     src/app/main.cpp
 )
 
@@ -123,6 +129,7 @@ qt_add_qml_module(appIPR
 )
 
 target_link_libraries(appIPR PRIVATE iprEngine)
+target_compile_definitions(appIPR PRIVATE IPR_RELEASE_LABEL="${IPR_RELEASE_LABEL}")
 
 # Console tool, intentionally independent of the QML application/sidecar lifecycle.
 add_executable(iprGenerateTests src/tools/generate_test_images.cpp)
@@ -130,7 +137,7 @@ target_link_libraries(iprGenerateTests PRIVATE iprEngine)
 target_compile_definitions(iprGenerateTests PRIVATE IPR_PROJECT_VERSION="${PROJECT_VERSION}")
 
 set_target_properties(appIPR PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ipr
+    MACOSX_BUNDLE_GUI_IDENTIFIER org.ipr.ImageProcessingRoom
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
@@ -138,10 +145,26 @@ set_target_properties(appIPR PROPERTIES
 )
 
 include(GNUInstallDirs)
-install(TARGETS appIPR iprGenerateTests
+install(TARGETS appIPR
     BUNDLE DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+if(APPLE)
+    set(IPR_TOOL_DESTINATION "appIPR.app/Contents/MacOS")
+    set(IPR_DATA_DESTINATION "appIPR.app/Contents/Resources")
+else()
+    set(IPR_TOOL_DESTINATION "${CMAKE_INSTALL_BINDIR}")
+    set(IPR_DATA_DESTINATION "${CMAKE_INSTALL_DATADIR}/IPR")
+endif()
+install(TARGETS iprGenerateTests RUNTIME DESTINATION "${IPR_TOOL_DESTINATION}")
+install(FILES config/ipr-ui.ini DESTINATION "${IPR_DATA_DESTINATION}/config")
+install(FILES packaging/profiles-index.json DESTINATION "${IPR_DATA_DESTINATION}/profiles" RENAME index.json)
+install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/dcp")
+install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/lcp")
+install(DIRECTORY licenses/ DESTINATION "${IPR_DATA_DESTINATION}/licenses")
+install(FILES packaging/README.md DESTINATION "${IPR_DATA_DESTINATION}")
+qt_finalize_executable(appIPR)
+include(cmake/Deployment.cmake)
 
 if(IPR_BUILD_RAW_BENCHMARK AND IPR_ENABLE_LIBRAW AND
    LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY)
@@ -151,11 +174,17 @@ endif()
 
 include(CTest)
 if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY)
+    add_executable(editorLifecycleTests tests/editor_lifecycle_test.cpp)
+    target_link_libraries(editorLifecycleTests PRIVATE iprEngine)
+    add_test(NAME editorLifecycleTests COMMAND editorLifecycleTests)
+    set_tests_properties(editorLifecycleTests PROPERTIES TIMEOUT 10 LABELS "unit;pipeline;lifecycle")
     # Manual corpus diagnostic, never part of the default build or CTest.
     add_executable(tonalBaseProbe EXCLUDE_FROM_ALL tests/tonal_base_probe.cpp)
     target_link_libraries(tonalBaseProbe PRIVATE iprEngine)
     add_executable(rawNormalizationCorpusProbe EXCLUDE_FROM_ALL tests/raw_normalization_corpus_probe.cpp)
     target_link_libraries(rawNormalizationCorpusProbe PRIVATE iprEngine)
+    add_executable(wbCameraProbe EXCLUDE_FROM_ALL tests/wb_camera_probe.cpp)
+    target_link_libraries(wbCameraProbe PRIVATE iprEngine)
 endif()
 if(BUILD_TESTING)
     function(ipr_add_test target source)

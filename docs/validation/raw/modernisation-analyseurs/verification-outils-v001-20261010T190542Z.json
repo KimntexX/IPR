@@ -1,0 +1,57 @@
+{
+  "campaign_id": "verification-outils-v001-20261010T190542Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "measured_at_utc": "2026-10-10T19:05:42+00:00",
+  "scope": "grouped native analyser integration; not photographic acceptance",
+  "branch": "patch_validation",
+  "software_state": "uncommitted working tree; production C++ unchanged",
+  "test_runs": [
+    {
+      "command": "python3 -m unittest discover -s tests -p test_analyse_groupes.py",
+      "environment": "WSL Python 3.12.3",
+      "tests": 22,
+      "failures": 0,
+      "exit_code": 0
+    },
+    {
+      "command": "python3 -m unittest discover -s tests",
+      "environment": "WSL Python 3.12.3",
+      "tests": 130,
+      "failures": 0,
+      "exit_code": 0,
+      "elapsed_seconds_reported_by_unittest": 1.511
+    },
+    {
+      "command": "ctest --test-dir build-windows-msvc -C Release --output-on-failure",
+      "environment": "Windows; Qt offscreen; software Quick backend; prepared runtime paths",
+      "tests": 17,
+      "failures": 0,
+      "exit_code": 0,
+      "elapsed_seconds_reported_by_ctest": 26.38,
+      "rebuilt_for_this_change": false
+    }
+  ],
+  "integration_campaigns": [
+    "mesure-couleur-v001-20261010T185910569266Z",
+    "mesure-couleur-v001-20261010T190505433356Z"
+  ],
+  "current_complete_color_campaign": "mesure-couleur-v001-20261010T190505433356Z",
+  "current_complete_color_records": 40,
+  "current_complete_color_diagnostics": 0,
+  "current_complete_color_exclusions": 0,
+  "observed_monotonic_progressions": 8,
+  "measured_grayscale_enabled_states": 2,
+  "grayscale_max_linear_channel_spread_on_samples": 0.0,
+  "input_images_modified": false,
+  "images_deleted": false,
+  "cleanup_eligible": false,
+  "decision": "tool integration verified; visual acceptance and Lightroom parity not evaluated",
+  "limitations": [
+    "Full color campaign uses two scenes, not all camera/lens combinations",
+    "Native global sampling stride 8, not an exhaustive pixel measurement",
+    "The earlier five-state smoke campaign precedes reference-audit strengthening and remains immutable",
+    "No Lightroom variants were included in the new color integration campaign",
+    "Specialized physical chart, HDR, optical geometry, annotated edge/halo and combined-control recipes remain complementary"
+  ]
+}

@@ -522,7 +522,9 @@ ImageEditor::~ImageEditor()
 {
     // Final flush, even when the 450 ms debounce has not elapsed yet.
     m_sidecarDebounce.stop();
-    m_loadWatcher.waitForFinished();
+    // Qt 6.4 can wait forever on an unstarted/consumed future (takeResult).
+    if (m_loadWatcher.future().isStarted())
+        m_loadWatcher.waitForFinished();
     if (!m_pendingLoadIsFreshOpen && !m_original.isNull()) {
         // If closed during a RAW edit, persist the last committed base, not a
         // requested profile whose worker result has not yet been published.
@@ -539,8 +541,10 @@ ImageEditor::~ImageEditor()
         m_settings.automaticWhiteBalance = m_appliedAutomaticWhiteBalance;
     }
     saveCurrentSidecar();
-    m_renderWatcher.waitForFinished();
-    m_exportWatcher.waitForFinished();
+    if (m_renderWatcher.future().isStarted())
+        m_renderWatcher.waitForFinished();
+    if (m_exportWatcher.future().isStarted())
+        m_exportWatcher.waitForFinished();
 }
 
 QAbstractItemModel *ImageEditor::imageModel()
@@ -1493,6 +1497,17 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     cv::Mat adjusted;
     cv::merge(std::vector<cv::Mat>{channels[0], channels[1], channels[2]}, adjusted);
 
+    const bool whiteBalanceEdit = settings.temperature != referenceTemperature || settings.tint != 0;
+    if (source.dcpContext && whiteBalanceEdit) {
+        QString error;
+        if (source.dcpContext->cameraRgb.size() != adjusted.size() ||
+            !CameraProfileEngine::renderWhiteBalance(*source.dcpContext,
+                settings.temperature, settings.tint, adjusted, &error)) {
+            qWarning() << "Échec de la balance capteur avant DCP :" << error;
+            return {};
+        }
+    }
+
     if (settings.grayscale) {
         cv::Mat gray;
         cv::cvtColor(adjusted, gray, cv::COLOR_RGB2GRAY);
@@ -1572,7 +1587,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     }
 
     QString colorError;
-    if ((settings.temperature != referenceTemperature || settings.tint != 0) &&
+    if (!source.dcpContext && whiteBalanceEdit &&
         !ColorPipeline::applyTemperatureTint(
             adjusted, settings.temperature,
             source.referenceWhiteBalanceKelvin.value_or(5200.0),
@@ -2227,6 +2242,11 @@ ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
     proxy.colorSpace = source.colorSpace;
     proxy.sourceProfile = source.sourceProfile;
     proxy.referenceWhiteBalanceKelvin = source.referenceWhiteBalanceKelvin;
+    if (source.dcpContext) {
+        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*source.dcpContext);
+        cv::resize(source.dcpContext->cameraRgb, context->cameraRgb, proxySize, 0, 0, cv::INTER_AREA);
+        proxy.dcpContext = context;
+    }
     return proxy;
 }
 
@@ -2408,7 +2428,7 @@ ImageEditor::RawDevelopment ImageEditor::rawDevelopmentRecipe() const
         ? rawNormalizationManifest() : m_normalizationManifest;
     return {m_cameraProfile, m_profileSha256, manifest,
             m_manifestSha256.isEmpty() ? resourceDigest(manifest) : m_manifestSha256,
-            m_rawNormalizationEnabled, QStringLiteral("ipr-render-2026-10-09-v2|libraw=") + RawDecoder::backendVersion(),
+            m_rawNormalizationEnabled, QStringLiteral("ipr-render-2026-10-11-wb-capteur-v3|libraw=") + RawDecoder::backendVersion(),
             m_lensProfile, m_lensProfileSha256, m_lensProfileResolved,
             m_lensCorrectionEnabled, m_chromaticAberrationEnabled};
 }
