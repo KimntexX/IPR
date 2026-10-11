@@ -234,7 +234,7 @@ class GroupAnalysisTests(unittest.TestCase):
             path = root / "manifest.json"
             path.write_text(json.dumps(data), encoding="utf-8-sig")
             mapped = inputs.manifest_records(path)
-            self.assertEqual(mapped[1]["reference"], str(root / "neutral.tiff"))
+            self.assertEqual(mapped[1]["reference"], str((root / "neutral.tiff").resolve()))
             self.assertEqual(mapped[1]["value"], 50)
             self.assertEqual(main(["--group", "couleur", "--manifest", str(path), "--output", str(root / "result.json")]), 0)
             self.assertEqual(main(["--group", "couleur", "--manifest", str(path), "--output", str(root / "result.json")]), 1)
@@ -265,7 +265,7 @@ class GroupAnalysisTests(unittest.TestCase):
                  "settings": record["settings"], "expected_sha256": record["expected_sha256"]}]}
             path.write_text(json.dumps(data))
             mapped = inputs.mapping_records(path)
-            self.assertEqual(mapped[1]["reference"], str(root / "neutral.tiff"))
+            self.assertEqual(mapped[1]["reference"], str((root / "neutral.tiff").resolve()))
             data["records"].append(data["records"][0])
             path.write_text(json.dumps(data))
             with self.assertRaises(ValueError):

@@ -136,7 +136,7 @@ class WhiteBalanceComparisonTests(unittest.TestCase):
             self.assertEqual(len(inventory), 2)
             item = next(r for r in result if r['value'] == 2000)
             self.assertEqual(item['scene'], 'actual-scene')
-            self.assertEqual(Path(item['reference']), anchor)
+            self.assertEqual(Path(item['reference']), anchor.resolve())
             self.assertIn('secondary_LR_control_nonzero_or_unknown:LensProfileEnable', item['preflight_issues'])
 
     def test_missing_manual_anchor_is_inventory_only_without_inventing_reference(self):
