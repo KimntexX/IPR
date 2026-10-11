@@ -1,0 +1,1520 @@
+{
+  "campaign_id": "mesure-couleur-v001-20261010T185910569266Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "measured_at_utc": "2026-10-10T18:59:10.569266+00:00",
+  "supersedes_campaign_id": null,
+  "group": "couleur",
+  "protocol": "docs/validation/protocols/protocole-couleur.md",
+  "protocol_version": "grouped-native-v1",
+  "analysis_version": "1.0",
+  "analyser_sources_sha256": {
+    "__init__.py": "d87cd43161a272879d225dde0ccb10b25df3480a4be45dd29b4d27afe32a9ba9",
+    "audit.py": "6a28d8a6d8f9039e925902089c2fda22f8e0e741202a9b2c703e81cbe2c5640d",
+    "campaign.py": "5f597a66a27264e670454764fd9958ad08d09813f7e435a5cea82c2eb688419f",
+    "catalog.py": "6c3b46bfe445f85d25de781b17fee82104157b87b9391574bf323d44c69f1c2c",
+    "cli.py": "60ce33c6f975577adb7701512d3d9b93761ec127cbc43612f65cf8bacb0fd76f",
+    "groups.py": "fae60e20364858107afd1cd0448f27725225e2c42926ae7a79ecd9aa9c3d68f3",
+    "inputs.py": "d1b04d03cc88311875914cf924bad632210d5ed46727e003f5c9465287fe6df1",
+    "metrics.py": "dcc27bdc46bdd8c7ef4c5f10bc57c6e6f433c259e65e399e0317d70df0ce31f8",
+    "native.py": "1560ace07ca79cc6237605359484a86fad5376b5e8dd9fc046258ecaf946d208"
+  },
+  "software": {
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "numpy": "1.26.4",
+    "pillow": "10.2.0",
+    "platform": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "method": {
+    "space": "linear sRGB D65",
+    "global_step": 8,
+    "ROI_step": 1,
+    "ROI_size": 256,
+    "clipping_encoded_threshold": 0.9999847409781033,
+    "black_linear_Y_threshold": 0.001,
+    "geometry": "own-engine only; no cross-engine registration/MAE",
+    "RGB_to_Y": [
+      0.2126,
+      0.7152,
+      0.0722
+    ],
+    "noise_proxy": "unit-norm HH Haar MAD / 0.6744897501960817"
+  },
+  "units": {
+    "Y": "relative linear luminance",
+    "RGB": "linear channel value 0..1",
+    "MAE": "mean absolute linear channel difference to own reference, not error to truth",
+    "chroma": "HSV saturation in linear RGB",
+    "angle": "degrees",
+    "axis": "natural log ratio",
+    "ratio": "dimensionless",
+    "percent": "100 * count / samples",
+    "samples": "native sampled pixels"
+  },
+  "records": [
+    {
+      "scene": "6V1A0327",
+      "engine": "IPR",
+      "feature": "saturation",
+      "value": -100,
+      "file": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/saturation/6V1A0327-IPR-17.tiff",
+      "reference": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+      "expected_sha256": "d53817568b4508925877619dc24ff8c091c2813c76e346599e916a7b10c3fada",
+      "reference_sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+      "settings": {
+        "automaticWhiteBalance": false,
+        "blacks": 0,
+        "blur": 0,
+        "clarity": 0,
+        "contrast": 0,
+        "dehaze": 0,
+        "denoiseChrominance": 0,
+        "denoiseLuminance": 0,
+        "exposure": 0,
+        "grading": [
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          }
+        ],
+        "grain": 0,
+        "grayscale": false,
+        "highlights": 0,
+        "mixerHue": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerLuminance": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerSaturation": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturation": -100,
+        "shadows": 0,
+        "sharpeningAmount": 0,
+        "sharpeningMasking": 0,
+        "sharpeningRadius": 1,
+        "temperature": 4924,
+        "texture": 0,
+        "tint": 0,
+        "toneCurves": [
+          [],
+          [],
+          [],
+          []
+        ],
+        "vibrance": 0,
+        "whites": 0
+      },
+      "reference_settings": {
+        "automaticWhiteBalance": false,
+        "blacks": 0,
+        "blur": 0,
+        "clarity": 0,
+        "contrast": 0,
+        "dehaze": 0,
+        "denoiseChrominance": 0,
+        "denoiseLuminance": 0,
+        "exposure": 0,
+        "grading": [
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          }
+        ],
+        "grain": 0,
+        "grayscale": false,
+        "highlights": 0,
+        "mixerHue": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerLuminance": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerSaturation": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturation": 0,
+        "shadows": 0,
+        "sharpeningAmount": 0,
+        "sharpeningMasking": 0,
+        "sharpeningRadius": 1,
+        "temperature": 4924,
+        "texture": 0,
+        "tint": 0,
+        "toneCurves": [
+          [],
+          [],
+          [],
+          []
+        ],
+        "vibrance": 0,
+        "whites": 0
+      },
+      "provenance": {
+        "kind": "generator_manifest",
+        "manifest": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/docs/validation/raw/generation-photographique-20261010T120912Z/couleur.json",
+        "manifest_sha256": "4233310eda554c651fa9520f234247cf76314b7edc8cf3625e06cc8d7914df99",
+        "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+        "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+        "ipr_version": "0.2",
+        "executable_sha256": "c898b5bec335c56209668efb54176421dc3bf7db1532899c5f2015cbb9357116",
+        "qt_version": "6.11.2",
+        "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+        "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+        "reference_temperature_kelvin": 4924.211272770631,
+        "camera_neutral_required": true,
+        "normalization_environment": "disabled",
+        "profile_hashes": null
+      },
+      "status": "measured",
+      "protocol_usable": true,
+      "issues": [],
+      "metrics": {
+        "samples": 504600,
+        "mean_Y_neutral": 0.0619664636316896,
+        "mean_Y_variant": 0.06196643548172706,
+        "Y_ratio": 0.9999995457226233,
+        "mean_Y_delta": -2.8149962556317682e-08,
+        "MAE_linear_to_own_reference": 0.02097163785826289,
+        "identical_on_samples": false,
+        "clipped_samples_neutral": 0,
+        "clipped_samples_variant": 0,
+        "newly_clipped_samples": 0,
+        "clipped_percent_variant": 0.0,
+        "black_samples_variant": 45245,
+        "channel_mean_RGB_neutral": [
+          0.0710750924460775,
+          0.06116019037932451,
+          0.043132005794484375
+        ],
+        "channel_mean_RGB_variant": [
+          0.06196643548172471,
+          0.06196643548172471,
+          0.06196643548172471
+        ],
+        "quantile_Y_neutral": [
+          0.00042330732922001127,
+          0.019716505058415566,
+          0.3079109944223703
+        ],
+        "quantile_Y_variant": [
+          0.0004228119070446841,
+          0.019716282305885326,
+          0.3079126089671176
+        ],
+        "axis_samples": 504536,
+        "delta_log_R_B": -0.6270958906622827,
+        "delta_log_magenta_green": 0.028815354218943965,
+        "chroma_groups": {
+          "low_chroma": {
+            "samples": 43019,
+            "mean_chroma_delta": -0.16574445702201704,
+            "mean_relative_chroma_delta": -1.0,
+            "hue_delta_degrees": null
+          },
+          "high_chroma": {
+            "samples": 334006,
+            "mean_chroma_delta": -0.7219538125688548,
+            "mean_relative_chroma_delta": -1.0,
+            "hue_delta_degrees": null
+          }
+        },
+        "achromatic_max_linear_channel_spread": 0.0,
+        "grayscale_test_applicable": false
+      },
+      "rois": [],
+      "reference_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+        "sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-10T12:29:22.328880+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/saturation/6V1A0327-IPR-17.tiff",
+        "sha256": "d53817568b4508925877619dc24ff8c091c2813c76e346599e916a7b10c3fada",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-10T12:31:02.692197+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "support": [],
+      "sampling": {
+        "global_step": 8,
+        "pixels_native_not_resized": true,
+        "global_not_exhaustive": true
+      }
+    },
+    {
+      "scene": "6V1A0327",
+      "engine": "IPR",
+      "feature": "saturation",
+      "value": -50,
+      "file": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/saturation/6V1A0327-IPR-18.tiff",
+      "reference": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+      "expected_sha256": "f6cc44181372911de7404ca7d364935cc1ae74a151607b83b9d70a584cdf9067",
+      "reference_sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+      "settings": {
+        "automaticWhiteBalance": false,
+        "blacks": 0,
+        "blur": 0,
+        "clarity": 0,
+        "contrast": 0,
+        "dehaze": 0,
+        "denoiseChrominance": 0,
+        "denoiseLuminance": 0,
+        "exposure": 0,
+        "grading": [
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          }
+        ],
+        "grain": 0,
+        "grayscale": false,
+        "highlights": 0,
+        "mixerHue": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerLuminance": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerSaturation": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturation": -50,
+        "shadows": 0,
+        "sharpeningAmount": 0,
+        "sharpeningMasking": 0,
+        "sharpeningRadius": 1,
+        "temperature": 4924,
+        "texture": 0,
+        "tint": 0,
+        "toneCurves": [
+          [],
+          [],
+          [],
+          []
+        ],
+        "vibrance": 0,
+        "whites": 0
+      },
+      "reference_settings": {
+        "automaticWhiteBalance": false,
+        "blacks": 0,
+        "blur": 0,
+        "clarity": 0,
+        "contrast": 0,
+        "dehaze": 0,
+        "denoiseChrominance": 0,
+        "denoiseLuminance": 0,
+        "exposure": 0,
+        "grading": [
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          }
+        ],
+        "grain": 0,
+        "grayscale": false,
+        "highlights": 0,
+        "mixerHue": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerLuminance": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerSaturation": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturation": 0,
+        "shadows": 0,
+        "sharpeningAmount": 0,
+        "sharpeningMasking": 0,
+        "sharpeningRadius": 1,
+        "temperature": 4924,
+        "texture": 0,
+        "tint": 0,
+        "toneCurves": [
+          [],
+          [],
+          [],
+          []
+        ],
+        "vibrance": 0,
+        "whites": 0
+      },
+      "provenance": {
+        "kind": "generator_manifest",
+        "manifest": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/docs/validation/raw/generation-photographique-20261010T120912Z/couleur.json",
+        "manifest_sha256": "4233310eda554c651fa9520f234247cf76314b7edc8cf3625e06cc8d7914df99",
+        "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+        "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+        "ipr_version": "0.2",
+        "executable_sha256": "c898b5bec335c56209668efb54176421dc3bf7db1532899c5f2015cbb9357116",
+        "qt_version": "6.11.2",
+        "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+        "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+        "reference_temperature_kelvin": 4924.211272770631,
+        "camera_neutral_required": true,
+        "normalization_environment": "disabled",
+        "profile_hashes": null
+      },
+      "status": "measured",
+      "protocol_usable": true,
+      "issues": [],
+      "metrics": {
+        "samples": 504600,
+        "mean_Y_neutral": 0.0619664636316896,
+        "mean_Y_variant": 0.06196643426008495,
+        "Y_ratio": 0.9999995260080544,
+        "mean_Y_delta": -2.9371604677511293e-08,
+        "MAE_linear_to_own_reference": 0.010485803008011819,
+        "identical_on_samples": false,
+        "clipped_samples_neutral": 0,
+        "clipped_samples_variant": 0,
+        "newly_clipped_samples": 0,
+        "clipped_percent_variant": 0.0,
+        "black_samples_variant": 45257,
+        "channel_mean_RGB_neutral": [
+          0.0710750924460775,
+          0.06116019037932451,
+          0.043132005794484375
+        ],
+        "channel_mean_RGB_variant": [
+          0.06652072668710235,
+          0.06156330256237349,
+          0.052549221243750124
+        ],
+        "quantile_Y_neutral": [
+          0.00042330732922001127,
+          0.019716505058415566,
+          0.3079109944223703
+        ],
+        "quantile_Y_variant": [
+          0.00042344404627688134,
+          0.01971623893701198,
+          0.30790914215803733
+        ],
+        "axis_samples": 504536,
+        "delta_log_R_B": -0.3150742034546904,
+        "delta_log_magenta_green": 0.064555685761029,
+        "chroma_groups": {
+          "low_chroma": {
+            "samples": 43019,
+            "mean_chroma_delta": -0.07876858157684419,
+            "mean_relative_chroma_delta": -0.4780377029933042,
+            "hue_delta_degrees": -0.004986294327761795
+          },
+          "high_chroma": {
+            "samples": 334006,
+            "mean_chroma_delta": -0.2617507082540134,
+            "mean_relative_chroma_delta": -0.3721148125141378,
+            "hue_delta_degrees": -8.659033790126722e-05
+          }
+        },
+        "achromatic_max_linear_channel_spread": 0.23758619876975515,
+        "grayscale_test_applicable": false
+      },
+      "rois": [],
+      "reference_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+        "sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-10T12:29:22.328880+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/saturation/6V1A0327-IPR-18.tiff",
+        "sha256": "f6cc44181372911de7404ca7d364935cc1ae74a151607b83b9d70a584cdf9067",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-10T12:31:08.800388+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "support": [],
+      "sampling": {
+        "global_step": 8,
+        "pixels_native_not_resized": true,
+        "global_not_exhaustive": true
+      }
+    },
+    {
+      "scene": "6V1A0327",
+      "engine": "IPR",
+      "feature": "saturation",
+      "value": 0,
+      "file": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/saturation/6V1A0327-IPR-19.tiff",
+      "reference": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+      "expected_sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+      "reference_sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+      "settings": {
+        "automaticWhiteBalance": false,
+        "blacks": 0,
+        "blur": 0,
+        "clarity": 0,
+        "contrast": 0,
+        "dehaze": 0,
+        "denoiseChrominance": 0,
+        "denoiseLuminance": 0,
+        "exposure": 0,
+        "grading": [
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          }
+        ],
+        "grain": 0,
+        "grayscale": false,
+        "highlights": 0,
+        "mixerHue": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerLuminance": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerSaturation": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturation": 0,
+        "shadows": 0,
+        "sharpeningAmount": 0,
+        "sharpeningMasking": 0,
+        "sharpeningRadius": 1,
+        "temperature": 4924,
+        "texture": 0,
+        "tint": 0,
+        "toneCurves": [
+          [],
+          [],
+          [],
+          []
+        ],
+        "vibrance": 0,
+        "whites": 0
+      },
+      "reference_settings": {
+        "automaticWhiteBalance": false,
+        "blacks": 0,
+        "blur": 0,
+        "clarity": 0,
+        "contrast": 0,
+        "dehaze": 0,
+        "denoiseChrominance": 0,
+        "denoiseLuminance": 0,
+        "exposure": 0,
+        "grading": [
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          }
+        ],
+        "grain": 0,
+        "grayscale": false,
+        "highlights": 0,
+        "mixerHue": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerLuminance": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerSaturation": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturation": 0,
+        "shadows": 0,
+        "sharpeningAmount": 0,
+        "sharpeningMasking": 0,
+        "sharpeningRadius": 1,
+        "temperature": 4924,
+        "texture": 0,
+        "tint": 0,
+        "toneCurves": [
+          [],
+          [],
+          [],
+          []
+        ],
+        "vibrance": 0,
+        "whites": 0
+      },
+      "provenance": {
+        "kind": "generator_manifest",
+        "manifest": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/docs/validation/raw/generation-photographique-20261010T120912Z/couleur.json",
+        "manifest_sha256": "4233310eda554c651fa9520f234247cf76314b7edc8cf3625e06cc8d7914df99",
+        "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+        "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+        "ipr_version": "0.2",
+        "executable_sha256": "c898b5bec335c56209668efb54176421dc3bf7db1532899c5f2015cbb9357116",
+        "qt_version": "6.11.2",
+        "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+        "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+        "reference_temperature_kelvin": 4924.211272770631,
+        "camera_neutral_required": true,
+        "normalization_environment": "disabled",
+        "profile_hashes": null
+      },
+      "status": "measured",
+      "protocol_usable": true,
+      "issues": [],
+      "metrics": {
+        "samples": 504600,
+        "mean_Y_neutral": 0.0619664636316896,
+        "mean_Y_variant": 0.0619664636316896,
+        "Y_ratio": 1.0,
+        "mean_Y_delta": 0.0,
+        "MAE_linear_to_own_reference": 0.0,
+        "identical_on_samples": true,
+        "clipped_samples_neutral": 0,
+        "clipped_samples_variant": 0,
+        "newly_clipped_samples": 0,
+        "clipped_percent_variant": 0.0,
+        "black_samples_variant": 45254,
+        "channel_mean_RGB_neutral": [
+          0.0710750924460775,
+          0.06116019037932451,
+          0.043132005794484375
+        ],
+        "channel_mean_RGB_variant": [
+          0.0710750924460775,
+          0.06116019037932451,
+          0.043132005794484375
+        ],
+        "quantile_Y_neutral": [
+          0.00042330732922001127,
+          0.019716505058415566,
+          0.3079109944223703
+        ],
+        "quantile_Y_variant": [
+          0.00042330732922001127,
+          0.019716505058415566,
+          0.3079109944223703
+        ],
+        "axis_samples": 504536,
+        "delta_log_R_B": 0.0,
+        "delta_log_magenta_green": 0.0,
+        "chroma_groups": {
+          "low_chroma": {
+            "samples": 43019,
+            "mean_chroma_delta": 0.0,
+            "mean_relative_chroma_delta": 0.0,
+            "hue_delta_degrees": 0.0
+          },
+          "high_chroma": {
+            "samples": 334006,
+            "mean_chroma_delta": 0.0,
+            "mean_relative_chroma_delta": 0.0,
+            "hue_delta_degrees": 0.0
+          }
+        },
+        "achromatic_max_linear_channel_spread": 0.4751849980081859,
+        "grayscale_test_applicable": false
+      },
+      "rois": [],
+      "reference_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+        "sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-10T12:29:22.328880+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/saturation/6V1A0327-IPR-19.tiff",
+        "sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-10T12:31:13.156549+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "support": [],
+      "sampling": {
+        "global_step": 8,
+        "pixels_native_not_resized": true,
+        "global_not_exhaustive": true
+      }
+    },
+    {
+      "scene": "6V1A0327",
+      "engine": "IPR",
+      "feature": "saturation",
+      "value": 50,
+      "file": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/saturation/6V1A0327-IPR-20.tiff",
+      "reference": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+      "expected_sha256": "0e80dadd01e5c0a2c6e5972651479e81f59a48a5a7d53b84e2188d82c52d7f9a",
+      "reference_sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+      "settings": {
+        "automaticWhiteBalance": false,
+        "blacks": 0,
+        "blur": 0,
+        "clarity": 0,
+        "contrast": 0,
+        "dehaze": 0,
+        "denoiseChrominance": 0,
+        "denoiseLuminance": 0,
+        "exposure": 0,
+        "grading": [
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          }
+        ],
+        "grain": 0,
+        "grayscale": false,
+        "highlights": 0,
+        "mixerHue": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerLuminance": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerSaturation": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturation": 50,
+        "shadows": 0,
+        "sharpeningAmount": 0,
+        "sharpeningMasking": 0,
+        "sharpeningRadius": 1,
+        "temperature": 4924,
+        "texture": 0,
+        "tint": 0,
+        "toneCurves": [
+          [],
+          [],
+          [],
+          []
+        ],
+        "vibrance": 0,
+        "whites": 0
+      },
+      "reference_settings": {
+        "automaticWhiteBalance": false,
+        "blacks": 0,
+        "blur": 0,
+        "clarity": 0,
+        "contrast": 0,
+        "dehaze": 0,
+        "denoiseChrominance": 0,
+        "denoiseLuminance": 0,
+        "exposure": 0,
+        "grading": [
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          }
+        ],
+        "grain": 0,
+        "grayscale": false,
+        "highlights": 0,
+        "mixerHue": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerLuminance": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerSaturation": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturation": 0,
+        "shadows": 0,
+        "sharpeningAmount": 0,
+        "sharpeningMasking": 0,
+        "sharpeningRadius": 1,
+        "temperature": 4924,
+        "texture": 0,
+        "tint": 0,
+        "toneCurves": [
+          [],
+          [],
+          [],
+          []
+        ],
+        "vibrance": 0,
+        "whites": 0
+      },
+      "provenance": {
+        "kind": "generator_manifest",
+        "manifest": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/docs/validation/raw/generation-photographique-20261010T120912Z/couleur.json",
+        "manifest_sha256": "4233310eda554c651fa9520f234247cf76314b7edc8cf3625e06cc8d7914df99",
+        "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+        "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+        "ipr_version": "0.2",
+        "executable_sha256": "c898b5bec335c56209668efb54176421dc3bf7db1532899c5f2015cbb9357116",
+        "qt_version": "6.11.2",
+        "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+        "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+        "reference_temperature_kelvin": 4924.211272770631,
+        "camera_neutral_required": true,
+        "normalization_environment": "disabled",
+        "profile_hashes": null
+      },
+      "status": "measured",
+      "protocol_usable": true,
+      "issues": [],
+      "metrics": {
+        "samples": 504600,
+        "mean_Y_neutral": 0.0619664636316896,
+        "mean_Y_variant": 0.06235958763961404,
+        "Y_ratio": 1.0063441414094736,
+        "mean_Y_delta": 0.00039312400792442865,
+        "MAE_linear_to_own_reference": 0.009914463490522466,
+        "identical_on_samples": false,
+        "clipped_samples_neutral": 0,
+        "clipped_samples_variant": 0,
+        "newly_clipped_samples": 0,
+        "clipped_percent_variant": 0.0,
+        "black_samples_variant": 45253,
+        "channel_mean_RGB_neutral": [
+          0.0710750924460775,
+          0.06116019037932451,
+          0.043132005794484375
+        ],
+        "channel_mean_RGB_variant": [
+          0.07697228781377748,
+          0.06088275195171223,
+          0.03396031931497314
+        ],
+        "quantile_Y_neutral": [
+          0.00042330732922001127,
+          0.019716505058415566,
+          0.3079109944223703
+        ],
+        "quantile_Y_variant": [
+          0.0004234494436244098,
+          0.019724289706588204,
+          0.3079278140448164
+        ],
+        "axis_samples": 431960,
+        "delta_log_R_B": 0.7132159608796048,
+        "delta_log_magenta_green": -0.21175849838744595,
+        "chroma_groups": {
+          "low_chroma": {
+            "samples": 43019,
+            "mean_chroma_delta": 0.07191546156361105,
+            "mean_relative_chroma_delta": 0.4408325592706563,
+            "hue_delta_degrees": 0.0021636380908570925
+          },
+          "high_chroma": {
+            "samples": 334006,
+            "mean_chroma_delta": 0.16791217636650674,
+            "mean_relative_chroma_delta": 0.24891294107598988,
+            "hue_delta_degrees": 0.23205164964358832
+          }
+        },
+        "achromatic_max_linear_channel_spread": 0.6995894582777119,
+        "grayscale_test_applicable": false
+      },
+      "rois": [],
+      "reference_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+        "sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-10T12:29:22.328880+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/saturation/6V1A0327-IPR-20.tiff",
+        "sha256": "0e80dadd01e5c0a2c6e5972651479e81f59a48a5a7d53b84e2188d82c52d7f9a",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-10T12:31:18.080115+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "support": [],
+      "sampling": {
+        "global_step": 8,
+        "pixels_native_not_resized": true,
+        "global_not_exhaustive": true
+      }
+    },
+    {
+      "scene": "6V1A0327",
+      "engine": "IPR",
+      "feature": "saturation",
+      "value": 100,
+      "file": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/saturation/6V1A0327-IPR-21.tiff",
+      "reference": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+      "expected_sha256": "2cb6b027293c8b297321a31953f048d1bd8d0ab7d9d810c5a742ea61d9c65168",
+      "reference_sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+      "settings": {
+        "automaticWhiteBalance": false,
+        "blacks": 0,
+        "blur": 0,
+        "clarity": 0,
+        "contrast": 0,
+        "dehaze": 0,
+        "denoiseChrominance": 0,
+        "denoiseLuminance": 0,
+        "exposure": 0,
+        "grading": [
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          }
+        ],
+        "grain": 0,
+        "grayscale": false,
+        "highlights": 0,
+        "mixerHue": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerLuminance": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerSaturation": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturation": 100,
+        "shadows": 0,
+        "sharpeningAmount": 0,
+        "sharpeningMasking": 0,
+        "sharpeningRadius": 1,
+        "temperature": 4924,
+        "texture": 0,
+        "tint": 0,
+        "toneCurves": [
+          [],
+          [],
+          [],
+          []
+        ],
+        "vibrance": 0,
+        "whites": 0
+      },
+      "reference_settings": {
+        "automaticWhiteBalance": false,
+        "blacks": 0,
+        "blur": 0,
+        "clarity": 0,
+        "contrast": 0,
+        "dehaze": 0,
+        "denoiseChrominance": 0,
+        "denoiseLuminance": 0,
+        "exposure": 0,
+        "grading": [
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          },
+          {
+            "hue": 0,
+            "saturation": 0
+          }
+        ],
+        "grain": 0,
+        "grayscale": false,
+        "highlights": 0,
+        "mixerHue": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerLuminance": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "mixerSaturation": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturation": 0,
+        "shadows": 0,
+        "sharpeningAmount": 0,
+        "sharpeningMasking": 0,
+        "sharpeningRadius": 1,
+        "temperature": 4924,
+        "texture": 0,
+        "tint": 0,
+        "toneCurves": [
+          [],
+          [],
+          [],
+          []
+        ],
+        "vibrance": 0,
+        "whites": 0
+      },
+      "provenance": {
+        "kind": "generator_manifest",
+        "manifest": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/docs/validation/raw/generation-photographique-20261010T120912Z/couleur.json",
+        "manifest_sha256": "4233310eda554c651fa9520f234247cf76314b7edc8cf3625e06cc8d7914df99",
+        "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+        "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+        "ipr_version": "0.2",
+        "executable_sha256": "c898b5bec335c56209668efb54176421dc3bf7db1532899c5f2015cbb9357116",
+        "qt_version": "6.11.2",
+        "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+        "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+        "reference_temperature_kelvin": 4924.211272770631,
+        "camera_neutral_required": true,
+        "normalization_environment": "disabled",
+        "profile_hashes": null
+      },
+      "status": "measured",
+      "protocol_usable": true,
+      "issues": [],
+      "metrics": {
+        "samples": 504600,
+        "mean_Y_neutral": 0.0619664636316896,
+        "mean_Y_variant": 0.06389564153732595,
+        "Y_ratio": 1.0311326125870732,
+        "mean_Y_delta": 0.0019291779056363491,
+        "MAE_linear_to_own_reference": 0.01723025118230223,
+        "identical_on_samples": false,
+        "clipped_samples_neutral": 0,
+        "clipped_samples_variant": 1,
+        "newly_clipped_samples": 1,
+        "clipped_percent_variant": 0.00019817677368212446,
+        "black_samples_variant": 45249,
+        "channel_mean_RGB_neutral": [
+          0.0710750924460775,
+          0.06116019037932451,
+          0.043132005794484375
+        ],
+        "channel_mean_RGB_variant": [
+          0.08330089055210821,
+          0.06141324568347998,
+          0.03134513702386276
+        ],
+        "quantile_Y_neutral": [
+          0.00042330732922001127,
+          0.019716505058415566,
+          0.3079109944223703
+        ],
+        "quantile_Y_variant": [
+          0.0004234108472749064,
+          0.019878702230486454,
+          0.31168434343125645
+        ],
+        "axis_samples": 280632,
+        "delta_log_R_B": 0.6883154318614167,
+        "delta_log_magenta_green": -0.19155374373385808,
+        "chroma_groups": {
+          "low_chroma": {
+            "samples": 43019,
+            "mean_chroma_delta": 0.13807515101256154,
+            "mean_relative_chroma_delta": 0.8500785395336795,
+            "hue_delta_degrees": 0.00023621198230768523
+          },
+          "high_chroma": {
+            "samples": 334006,
+            "mean_chroma_delta": 0.24051061506296312,
+            "mean_relative_chroma_delta": 0.36557907999654965,
+            "hue_delta_degrees": -0.08736880624762136
+          }
+        },
+        "achromatic_max_linear_channel_spread": 0.8883442074865329,
+        "grayscale_test_applicable": false
+      },
+      "rois": [],
+      "reference_metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/neutral/6V1A0327-IPR-1.tiff",
+        "sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-10T12:29:22.328880+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "metadata": {
+        "path": "/mnt/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/couleur/generation-20261010T120912Z/002-6V1A0327/saturation/6V1A0327-IPR-21.tiff",
+        "sha256": "2cb6b027293c8b297321a31953f048d1bd8d0ab7d9d810c5a742ea61d9c65168",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-10T12:31:23.055231+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "support": [],
+      "sampling": {
+        "global_step": 8,
+        "pixels_native_not_resized": true,
+        "global_not_exhaustive": true
+      }
+    }
+  ],
+  "coverage": {
+    "measured": 5,
+    "diagnostic": 0,
+    "excluded": 0
+  },
+  "progressions": [
+    {
+      "scene": "6V1A0327",
+      "engine": "IPR",
+      "feature": "saturation",
+      "reference_sha256": "44b188409cb03e9f2f2cdc533ea910e039e5a581166d0ab5f4ba3e18dc9cfbfa",
+      "metric": "mean_chroma_delta_low",
+      "direction": "increasing",
+      "points": [
+        {
+          "value": -100,
+          "response": -0.16574445702201704,
+          "protocol_usable": true
+        },
+        {
+          "value": -50,
+          "response": -0.07876858157684419,
+          "protocol_usable": true
+        },
+        {
+          "value": 0,
+          "response": 0.0,
+          "protocol_usable": true
+        },
+        {
+          "value": 50,
+          "response": 0.07191546156361105,
+          "protocol_usable": true
+        },
+        {
+          "value": 100,
+          "response": 0.13807515101256154,
+          "protocol_usable": true
+        }
+      ],
+      "scope": "observed states only; no invented zero anchor",
+      "tolerance": 0.0001,
+      "monotonic_observed_means": true,
+      "full_protocol_coverage_not_asserted": true
+    }
+  ],
+  "decision": {
+    "functional": "not_evaluated",
+    "visual": "not_evaluated",
+    "lightroom_parity": "not_evaluated",
+    "physical_accuracy": "not_evaluated",
+    "cleanup_eligible": false
+  },
+  "limitations": [
+    "Successful metrics do not imply acceptance or full protocol coverage",
+    "Profile labels are not cryptographic DCP/LCP identities",
+    "Automatic ROI candidates require visual/semantic verification",
+    "Comparison across versions needs compatible profiles, WB, optics, metrics and scene states"
+  ]
+}

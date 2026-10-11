@@ -29,6 +29,22 @@ struct DcpRenderOptions
     bool preserveToneCurveHue = false;
 };
 
+// Immutable camera-space source. LibRaw WB and optical corrections are already
+// applied; retain it so edits can precede the nonlinear DCP tables and curve.
+struct DcpWorkingContext
+{
+    cv::Mat cameraRgb;
+    QString profilePath;
+    double sourceKelvin = 5500.0;
+    cv::Vec3d cameraNeutral{0.0, 0.0, 0.0}; // Inverse actual LibRaw multipliers, G=1.
+    DcpRenderOptions options;
+};
+
+bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tint,
+                       cv::Vec3d &gains, QString *error = nullptr);
+bool renderWhiteBalance(const DcpWorkingContext &source, int temperature, int tint,
+                         cv::Mat &linearRgb, QString *error = nullptr);
+
 struct LcpRenderOptions
 {
     bool lensCorrection = true; // Distortion and vignetting.

@@ -497,12 +497,27 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             metadata->lensVignettingApplied = opticalApplied.vignetting;
             metadata->chromaticAberrationApplied = opticalApplied.chromaticAberration;
         }
+        if (!cameraRgb.empty()) {
+            auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>();
+            context->cameraRgb = cameraRgb.clone();
+            context->profilePath = profiles.dcpPath;
+            context->sourceKelvin = sourceWhiteBalanceKelvin.value_or(5500.0);
+            context->options = dcpOptions;
+            // scale_colors updates pre_mul to the multipliers actually used,
+            // including auto WB. Ratios remove the common scaling factor.
+            const auto &color = raw.imgdata.color;
+            for (int c = 0; c < 3; ++c)
+                if (color.pre_mul[c] > 0 && std::isfinite(color.pre_mul[c]))
+                    context->cameraNeutral[c] = color.pre_mul[1] / color.pre_mul[c];
+            image.dcpContext = context;
+        }
         // Calibration changes the LibRaw white level upstream: never reuse this
         // buffer for a profile-independent fast path when a manifest is active.
         constexpr size_t retainedBufferLimit = 384u * 1024u * 1024u;
         if (!cameraRgb.empty() && cameraRgb.total() * cameraRgb.elemSize() <= retainedBufferLimit && options.retainedDcpSource &&
             options.normalizationManifest.isEmpty() && !options.useNormalizationEnvironment) {
-            options.retainedDcpSource->cameraRgb = cameraRgb.clone();
+            options.retainedDcpSource->cameraRgb = image.dcpContext->cameraRgb;
+            options.retainedDcpSource->workingContext = image.dcpContext;
             options.retainedDcpSource->whiteBalanceKelvin = sourceWhiteBalanceKelvin;
             options.retainedDcpSource->defaultProfile = defaultProfile;
             options.retainedDcpSource->automaticWhiteBalance = options.automaticWhiteBalance;
@@ -660,7 +675,8 @@ ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString 
         return {};
     }
     cv::Mat rgb = source.cameraRgb.clone();
-    if (!CameraProfileEngine::applyDcp(path, rgb, source.whiteBalanceKelvin.value_or(5500.0), error))
+    if (!CameraProfileEngine::applyDcp(path, rgb, source.whiteBalanceKelvin.value_or(5500.0), error,
+            source.workingContext ? source.workingContext->options : CameraProfileEngine::DcpRenderOptions{}))
         return {};
     ColorPipeline::WorkingImage image;
     std::vector<cv::Mat> channels;
@@ -669,6 +685,11 @@ ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString 
     cv::merge(channels, image.linearRgba);
     image.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
     image.referenceWhiteBalanceKelvin = source.whiteBalanceKelvin;
+    if (source.workingContext) {
+        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*source.workingContext);
+        context->profilePath = path;
+        image.dcpContext = context;
+    }
     image.sourceProfile = QStringLiteral("DCP %1 → sRGB linéaire").arg(QFileInfo(path).completeBaseName());
     if (metadata) {
         *metadata = source.metadata;

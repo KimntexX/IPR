@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "data_version": 2,
+  "group": "couleur",
+  "recorded_at_utc": "2026-10-11T09:30:03Z",
+  "kind": "operator_confirmation_not_embedded_metadata",
+  "audit_memory": {
+    "file": "audit-neutres-wb-v002-20261011T091439198763Z.json",
+    "sha256": "3574d465427421f392761f4bdaa7250261fe4b9a2282507bafa421c1db30ccdf"
+  },
+  "selected_IPR_neutral_pattern": "<scene>-IPR-CameraNeutral-AsShot.tiff",
+  "neutral_directory": "tests/image/base/neutre",
+  "scenes": [
+    "6V1A0007",
+    "6V1A0037",
+    "6V1A0043",
+    "6V1A0327",
+    "6V1A9421",
+    "6V1A9950"
+  ],
+  "raw_normalization_enabled": false,
+  "source": "User explicitly selected these IPR neutrals and confirmed normalization was unchecked",
+  "unknown_settings": [
+    "IPR executable identity",
+    "complete photographic settings",
+    "DCP cryptographic identity at export",
+    "optical correction settings of IPR neutrals"
+  ],
+  "excluded_IPR_reference_pattern": "<scene>-IPR.tiff",
+  "cleanup_eligible": false
+}

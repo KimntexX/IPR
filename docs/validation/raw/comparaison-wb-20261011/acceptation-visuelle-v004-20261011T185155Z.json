@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-11 18:51:55 UTC",
+  "group": "couleur",
+  "branch": "patch_color",
+  "correction": "temperature et nuance dans l'espace capteur avant DCP",
+  "operator_validation": {
+    "source": "confirmation utilisateur dans la conversation du 11 octobre 2026",
+    "accepted": true,
+    "profile": "Camera Neutral",
+    "observations": [
+      {
+        "temperature_kelvin": 2000,
+        "relative_to": "Lightroom",
+        "observation": "legerement plus violet",
+        "decision": "accepte visuellement"
+      },
+      {
+        "temperature_kelvin": 50000,
+        "relative_to": "Lightroom",
+        "observation": "legerement plus orange",
+        "decision": "accepte visuellement"
+      }
+    ]
+  },
+  "limitations": [
+    "Ne certifie pas une parite numerique Lightroom.",
+    "Ne constitue pas une calibration physique ni une validation de tous les boitiers/objectifs/profils.",
+    "Les retours de tiers pourront conduire a de nouvelles evolutions."
+  ],
+  "delivery": {
+    "ci_required_before_dev_merge": true,
+    "production_strengthening": false,
+    "main_merge_authorized": false
+  },
+  "evidence": [
+    "sonde-wb-capteur-v003-20261011T133656397Z.json",
+    "comparaison-wb-capteur-v003-20261011T134140543650Z.json"
+  ]
+}
