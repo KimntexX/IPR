@@ -522,7 +522,9 @@ ImageEditor::~ImageEditor()
 {
     // Final flush, even when the 450 ms debounce has not elapsed yet.
     m_sidecarDebounce.stop();
-    m_loadWatcher.waitForFinished();
+    // Qt 6.4 can wait forever on an unstarted/consumed future (takeResult).
+    if (m_loadWatcher.future().isStarted())
+        m_loadWatcher.waitForFinished();
     if (!m_pendingLoadIsFreshOpen && !m_original.isNull()) {
         // If closed during a RAW edit, persist the last committed base, not a
         // requested profile whose worker result has not yet been published.
@@ -539,8 +541,10 @@ ImageEditor::~ImageEditor()
         m_settings.automaticWhiteBalance = m_appliedAutomaticWhiteBalance;
     }
     saveCurrentSidecar();
-    m_renderWatcher.waitForFinished();
-    m_exportWatcher.waitForFinished();
+    if (m_renderWatcher.future().isStarted())
+        m_renderWatcher.waitForFinished();
+    if (m_exportWatcher.future().isStarted())
+        m_exportWatcher.waitForFinished();
 }
 
 QAbstractItemModel *ImageEditor::imageModel()

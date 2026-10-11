@@ -4,6 +4,7 @@
   "full_patterns": ["CMakeLists.txt", "CMakePresets.json", "cmake/**", ".github/**", "scripts/**", "src/editor/imageeditor.h"],
   "ignored_patterns": ["docs/**", "README.md", "licenses/**", "tests/image/**", ".gitignore", "CMakeLists.txt.user"],
   "targets": {
+    "editorLifecycleTests": "editorLifecycleTests",
     "colorPipelineTests": "colorPipelineTests",
     "detailProcessingTests": "detailProcessingTests",
     "imageExportTests": "imageExportTests",
@@ -23,6 +24,7 @@
     "cameraProfileEngineTests": "cameraProfileEngineTests"
   },
   "python_suites": {
+    "ci_deployment": "test_ci.py",
     "documentation_metrics": "test_documentation_metrics.py",
     "selection": "test_build_windows.py",
     "color_mixer_analysis": "test_analyse_color_mixer.py",
@@ -30,6 +32,7 @@
     "base_colorimetry_analysis": "test_analyse_base_colorimetrique.py"
   },
   "rules": [
+    {"patterns": ["src/editor/imageeditor.cpp", "tests/editor_lifecycle_test.cpp"], "tests": ["editorLifecycleTests"]},
     {"patterns": ["scripts/export_documentation_metrics.py", "scripts/check_documentation.py", "scripts/consolidate_reports.py", "tests/test_documentation_metrics.py"], "tests": [], "python": ["documentation_metrics"]},
     {"patterns": ["tests/compare_profile_exports.py"], "tests": [], "python": ["base_colorimetry_analysis"]},
     {"patterns": ["src/qml/RawDevelopmentModule.qml", "tests/editor_raw_development_test.cpp", "src/editor/imageeditor.cpp"], "tests": ["editorRawDevelopmentTests", "settingsQmlTests", "rawDecoderTests", "cameraProfileEngineTests"]},

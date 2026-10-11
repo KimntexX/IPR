@@ -238,3 +238,7 @@ __marimo__/
 
 # Local Windows packages may contain third-party profiles: never commit them.
 /dist/
+/.worktrees/
+/.ci-cache/
+/dist-*/
+/ci-logs/

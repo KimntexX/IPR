@@ -1,0 +1,82 @@
+name: Linux native distribution packages
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Build label (does not create a tag)
+        default: '0.1.0-alpha'
+        required: true
+permissions:
+  contents: read
+jobs:
+  distro:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: debian:12
+            distro: debian12
+            native: deb
+          - image: fedora:43
+            distro: fedora43
+            native: rpm
+          - image: archlinux:base-devel
+            distro: arch
+            native: arch
+    container: ${{ matrix.image }}
+    env:
+      IPR_BUILD_LABEL: ${{ inputs.version }}
+    steps:
+      - name: Bootstrap distribution
+        shell: bash
+        env:
+          IPR_DISTRO: ${{ matrix.distro }}
+        run: |
+          if [[ "$IPR_DISTRO" == debian12 ]]; then
+            apt-get update
+            apt-get install -y git ca-certificates build-essential cmake ninja-build python3 python3-numpy python3-pil python3-yaml qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins qml6-module-qtcore qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-dialogs qml6-module-qtqml-workerscript qml6-module-qtquick-window qml6-module-qtquick-templates libopencv-dev libraw-dev libtiff-dev libgl1-mesa-dev pkg-config dpkg-dev
+          elif [[ "$IPR_DISTRO" == fedora43 ]]; then
+            dnf install -y git gcc-c++ cmake ninja-build python3 python3-numpy python3-pillow python3-pyyaml qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtimageformats opencv-devel LibRaw-devel libtiff-devel mesa-libGL-devel rpm-build
+          else
+            pacman -Syu --noconfirm git cmake ninja python python-numpy python-pillow python-yaml qt6-base qt6-declarative qt6-imageformats opencv libraw libtiff mesa
+          fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Full build, tests and native package
+        id: package
+        shell: bash
+        env:
+          IPR_NATIVE: ${{ matrix.native }}
+        run: python3 scripts/ci.py --action all --mode system --version "$IPR_BUILD_LABEL" --native "$IPR_NATIVE"
+      - name: Build Arch package without root
+        if: matrix.native == 'arch'
+        shell: bash
+        env:
+          IPR_RECIPE: ${{ steps.package.outputs.arch_recipe }}
+        run: |
+          useradd --create-home ipr-builder
+          cp -r "$IPR_RECIPE" /home/ipr-builder/recipe
+          chown -R ipr-builder:ipr-builder /home/ipr-builder/recipe
+          runuser -u ipr-builder -- bash -c 'cd /home/ipr-builder/recipe && makepkg --noconfirm'
+          cp /home/ipr-builder/recipe/*.pkg.tar.zst dist/
+          sha256sum dist/*.pkg.tar.zst > dist/arch.sha256
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: IPR-${{ matrix.distro }}-system
+          path: |
+            dist/*.deb
+            dist/*.rpm
+            dist/*.pkg.tar.zst
+            dist/*.tar.gz
+            dist/*.sha256
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: tests-${{ matrix.distro }}
+          path: |
+            build-ci/test-results/
+            build-ci/Testing/Temporary/
