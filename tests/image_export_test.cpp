@@ -47,7 +47,9 @@ QString awaitExport(ImageEditor &editor, const QUrl &target,
         });
     QTimer::singleShot(30000, &loop, &QEventLoop::quit);
     editor.exportImage(target, format, 92);
-    loop.exec();
+    // A synchronous validation error can arrive before exec() (Qt 6.4).
+    if (finalStatus.isEmpty())
+        loop.exec();
     QObject::disconnect(connection);
     if (!finalStatus.startsWith(QStringLiteral("Image exportée")))
         std::cerr << "Export status: " << finalStatus.toStdString() << '\n';

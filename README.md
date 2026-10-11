@@ -4,6 +4,12 @@ Application Qt Quick/QML en C++17 pour parcourir un dossier d'images, appliquer 
 
 ## Fonctions disponibles
 
+La CI lance les tests complets sur Windows, Linux et macOS Intel/Apple Silicon.
+Les workflows de livraison préparent des archives **standalone** et **bibliothèques
+système**, ainsi que des paquets Debian/Fedora/Arch. Instructions et limites :
+[CI et livraison multiplateforme](docs/architecture/ci-et-build-multiplateforme.md).
+Les paquets publics ne contiennent pas les profils Adobe locaux.
+
 - ouverture d'un dossier local et liste des fichiers JPG, JPEG, PNG, TIFF et RAW enregistrés ;
 - chargement de JPG/PNG/TIFF avec respect de l'orientation EXIF ;
 - import CR2/CR3/DNG lorsqu'elle est compilée avec **LibRaw** ;
