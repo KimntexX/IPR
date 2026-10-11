@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="32" font-size="20">blanc — réponse IPR par révision</text>
+<text x="30" y="58" font-size="13">Ratio de luminance au neutre ; sans unité</text>
+<path d="M95,470.0h740" stroke="#ddd"/>
+<text x="87" y="474.0" text-anchor="end" font-size="12">0</text>
+<path d="M95,392.0h740" stroke="#ddd"/>
+<text x="87" y="396.0" text-anchor="end" font-size="12">0.448</text>
+<path d="M95,314.0h740" stroke="#ddd"/>
+<text x="87" y="318.0" text-anchor="end" font-size="12">0.896</text>
+<path d="M95,236.0h740" stroke="#ddd"/>
+<text x="87" y="240.0" text-anchor="end" font-size="12">1.34</text>
+<path d="M95,158.0h740" stroke="#ddd"/>
+<text x="87" y="162.0" text-anchor="end" font-size="12">1.79</text>
+<path d="M95,80.0h740" stroke="#ddd"/>
+<text x="87" y="84.0" text-anchor="end" font-size="12">2.24</text>
+<text transform="translate(95.0,490) rotate(25)" font-size="11">v1 [1]</text>
+<text transform="translate(465.0,490) rotate(25)" font-size="11">v2 [2]</text>
+<text transform="translate(835.0,490) rotate(25)" font-size="11">v3 [3]</text>
+<circle cx="95.0" cy="295.86145001151993" r="4" fill="#1565c0"/>
+<circle cx="465.0" cy="295.86145001151993" r="4" fill="#1565c0"/>
+<circle cx="835.0" cy="295.86145001151993" r="4" fill="#1565c0"/>
+<polyline points="95.00,295.86 465.00,295.86 835.00,295.86" fill="none" stroke="#1565c0" stroke-width="2"/>
+<text x="855" y="100" fill="#1565c0" font-size="11">low / -100</text>
+<circle cx="95.0" cy="295.86145001151993" r="4" fill="#d84315"/>
+<circle cx="465.0" cy="295.79179459152454" r="4" fill="#d84315"/>
+<circle cx="835.0" cy="264.9866850985625" r="4" fill="#d84315"/>
+<polyline points="95.00,295.86 465.00,295.79 835.00,264.99" fill="none" stroke="#d84315" stroke-width="2"/>
+<text x="855" y="122" fill="#d84315" font-size="11">low / +100</text>
+<circle cx="95.0" cy="295.86145001151993" r="4" fill="#2e7d32"/>
+<circle cx="465.0" cy="301.79957456612715" r="4" fill="#2e7d32"/>
+<circle cx="835.0" cy="301.79957456612715" r="4" fill="#2e7d32"/>
+<polyline points="95.00,295.86 465.00,301.80 835.00,301.80" fill="none" stroke="#2e7d32" stroke-width="2"/>
+<text x="855" y="144" fill="#2e7d32" font-size="11">mid / -100</text>
+<circle cx="95.0" cy="295.86145001151993" r="4" fill="#7b1fa2"/>
+<circle cx="465.0" cy="230.1763889558653" r="4" fill="#7b1fa2"/>
+<circle cx="835.0" cy="108.88888888888891" r="4" fill="#7b1fa2"/>
+<polyline points="95.00,295.86 465.00,230.18 835.00,108.89" fill="none" stroke="#7b1fa2" stroke-width="2"/>
+<text x="855" y="166" fill="#7b1fa2" font-size="11">mid / +100</text>
+<circle cx="95.0" cy="298.6476668113356" r="4" fill="#00838f"/>
+<circle cx="465.0" cy="320.32791628490133" r="4" fill="#00838f"/>
+<circle cx="835.0" cy="320.32791628490133" r="4" fill="#00838f"/>
+<polyline points="95.00,298.65 465.00,320.33 835.00,320.33" fill="none" stroke="#00838f" stroke-width="2"/>
+<text x="855" y="188" fill="#00838f" font-size="11">high / -100</text>
+<circle cx="95.0" cy="282.53985093740124" r="4" fill="#795548"/>
+<circle cx="465.0" cy="212.76253395701724" r="4" fill="#795548"/>
+<circle cx="835.0" cy="138.70140864691666" r="4" fill="#795548"/>
+<polyline points="95.00,282.54 465.00,212.76 835.00,138.70" fill="none" stroke="#795548" stroke-width="2"/>
+<text x="855" y="210" fill="#795548" font-size="11">high / +100</text>
+<text x="30" y="620" font-size="12">Révisions, pas temps CPU. Sources et corpus exacts : tonalite-revisions.csv. Un ratio moindre n’est pas toujours meilleur.</text></svg>

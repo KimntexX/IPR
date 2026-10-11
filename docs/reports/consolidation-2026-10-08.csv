@@ -1,0 +1,8 @@
+source,target,anchor,original_sha256
+analyse-color-mixer-intermediaires-2026-10-04.md,analyse-color-mixer.md,campagne-1,5494e527e3116a280315c6c0379ff2c39b378264791d2ab2dc81232efbbbd504
+analyse-color-mixer-huit-bandes-2026-10-04.md,analyse-color-mixer.md,campagne-2,00fd94a3028c20cbe83904995b36225b2057d224a2132898b9ac89b1b9cadc43
+analyse-color-mixer-corpus-etendu-2026-10-04.md,analyse-color-mixer.md,campagne-3,c24e3b75ac30e2559011671ea4f47ce4e82b27127b69c076d73443b9873cc0a2
+analyse-color-mixer-red-yellow-green-2026-10-04.md,analyse-color-mixer.md,campagne-4,7f2caa9c2ab543d802536581331eec3d131e648c31a9745b7b37cf62c8d1fd5e
+analyse-bruit-v2-2026-10-05.md,analyse-bruit.md,campagne-1,d26a210817fd4397d269086d299cd715754b58288ade8591992bbe51efcefbdf
+correctif-bruit-2026-10-05.md,analyse-bruit.md,campagne-2,ae8433b332178e2e185774c90d02eba1466195a6d2383f425f495573998d1273
+analyse-bruit-2026-10-04.md,analyse-bruit.md,campagne-3,f7d0c4dcabbaca5ca41fc644bcf949b905901bf3346b85f075afe4f646e803e0

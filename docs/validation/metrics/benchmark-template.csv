@@ -1,0 +1,11 @@
+stage,datetime_utc,machine,os,build_revision,libraw_version,source_sha256,profile_sha256,settings,resolution,cache_mode,repeat,duration_ms,peak_rss_mib
+opening_total,,,,,,,,,,,,,
+profile_lookup,,,,,,,,,,,,,
+raw_decode,,,,,,,,,,,,,
+lcp_dcp,,,,,,,,,,,,,
+proxy,,,,,,,,,,,,,
+render,,,,,,,,,,,,,
+thumbnail,,,,,,,,,,,,,
+decoded_cache_lookup,,,,,,,,,,,,,
+export,,,,,,,,,,,,,
+batch_export_future,,,,,,,,,,,,,

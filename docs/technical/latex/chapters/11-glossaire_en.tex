@@ -1,0 +1,26 @@
+\chapter{Glossary}
+\label{chap:glossaire}
+
+\begin{longtable}{p{0.24\linewidth}p{0.68\linewidth}}
+\toprule
+Term & Definition \\
+\midrule
+\endhead
+\textbf{DCP} & \emph{DNG Camera Profile}. Profile that notably describes a color transformation related to a camera body. \\
+\textbf{LCP} & \emph{Lens Correction Profile}. Optical lens correction profile (distortion, vignetting, aberration according to the profile). \\
+\textbf{EV / IL} & Exposure Value. An increment of +1 corresponds to a doubling of light energy in the linear model. \\
+\textbf{HDR} & \emph{High Dynamic Range}. Working values beyond the usual display range, preserved before final encoding. \\
+\textbf{ICC} & Standardized profile describing the color reproduction of a device or color space~\cite{icc2022}. \\
+\textbf{LRU} & \emph{Least Recently Used}. Eviction policy that removes the element whose last access is the oldest. \\
+\textbf{LMS} & Approximate response space of Long, Medium, and Short cones, used here for chromatic adaptation. \\
+\textbf{MAE} & \emph{Mean Absolute Error}, average of absolute deviations between two images compared pixel by pixel. \\
+\textbf{MAD} & \emph{Median Absolute Deviation}, median of absolute deviations from the median; robust estimator used for Haar coefficient noise. Do not confuse with MAE. \\
+\textbf{CIEDE2000} & Color difference formula used here for Lab D65 comparisons. A low deviation from Lightroom does not prove physical fidelity. \\
+\textbf{RAW Manifest} & JSON file of audited calibrations linked to RAW/DCP fingerprints and decoding context; distinct from the photographic sidecar. \\
+\textbf{Derived CSV} & Regenerable tabular view of evidence; preserves source, location, and provenance, without replacing the original measurement. \\
+\textbf{RAW} & Data from the sensor, before final photographic rendering. \\
+\textbf{Sidecar} & Companion file carrying settings without modifying the source image file. \\
+\textbf{sRGB} & Standard color space notably intended for screens and the web, defined by IEC~61966-2-1~\cite{srgb}. \\
+\textbf{TIFF} & Image container format that can preserve different depths, compressions, and color profiles. \\
+\bottomrule
+\end{longtable}

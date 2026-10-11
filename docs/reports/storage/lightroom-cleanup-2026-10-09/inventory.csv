@@ -1,0 +1,1031 @@
+path,bytes,modified_ns,software,camera_profile,action,reason
+tests/image/6V1A0027-2.CR3,28837076,1785929420000000000,,,keep,protected original/other file
+tests/image/6V1A0027-IPR.jpg,1567146,1790847184322850700,,,keep,IPR export/sidecar retained
+tests/image/6V1A0027.CR3,28837076,1785929420000000000,,,keep,protected original/other file
+tests/image/6V1A0027.jpg,3365679,1790844183435112300,Adobe Lightroom 9.5.1 (Windows),,keep,Producer/profile ambiguous; retained
+tests/image/6V1A0027.xmp,11507,1790866989574342300,,,keep,protected original/other file
+tests/image/6V1A1236.CR3,37162708,1790507712000000000,,,keep,protected original/other file
+tests/image/6V1A1236.dng,39757042,1790533342173630600,,,keep,protected original/other file
+tests/image/6V1A9933-2-2.jpg,6539916,1790929230587457700,Adobe Lightroom 9.5.1 (Windows),,keep,Producer/profile ambiguous; retained
+tests/image/6V1A9933-2-IPR.jpg,4581135,1790763311695501200,,,keep,IPR export/sidecar retained
+tests/image/6V1A9933-2.CR3,43732692,1784998082000000000,,,keep,protected original/other file
+tests/image/6V1A9933-2.dng,39865466,1790691811503547800,,,keep,protected original/other file
+tests/image/6V1A9933-2.jpg,8620474,1790763136068371100,Adobe Lightroom 9.5.1 (Windows),,keep,Producer/profile ambiguous; retained
+tests/image/6V1A9933-IPR.dng,193739509,1790690853937469600,,,keep,IPR export/sidecar retained
+tests/image/6V1A9933-IPR.jpg,3639767,1790929103083859900,,,keep,IPR export/sidecar retained
+tests/image/6V1A9933.CR3,43732692,1784998082000000000,,,keep,protected original/other file
+tests/image/6V1A9933.CR3.ipr,259,1791468712554617400,,,keep,IPR export/sidecar retained
+tests/image/6V1A9933.dng,39890250,1790685944933065600,,,keep,protected original/other file
+tests/image/6V1A9933.jpg,6575970,1790753482700049200,Adobe Lightroom 9.5.1 (Windows),,keep,Producer/profile ambiguous; retained
+tests/image/6V1A9933.xmp,11698,1790764725360921200,,,keep,protected original/other file
+tests/image/IMG_9223.CR2,25566751,1790508930000000000,,,keep,protected original/other file
+tests/image/IMG_9223.dng,26156452,1790533341585690900,,,keep,protected original/other file
+tests/image/IMG_9224.CR2,25599712,1790508952000000000,,,keep,protected original/other file
+tests/image/IMG_9224.dng,25847420,1790533341585690900,,,keep,protected original/other file
+tests/image/archive/color-mixer/2026-10-04-extremes/README.md,972,1791127374196799700,,,keep,protected original/other file
+tests/image/archive/color-mixer/2026-10-04-extremes/base/6V1A0037-IPR.tiff,258263634,1791107971282443000,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/6V1A0037.tif,193803572,1791108070304520800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/6V1A0043-IPR.tiff,258263634,1791107981371274200,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/6V1A0043.tif,193796382,1791108075621021700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/6V1A0327-IPR.tiff,258263634,1791125906541135000,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/6V1A0327.tif,193801096,1791107097035245100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-2.tif,193800488,1791058180262305600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-3.tif,193800334,1791058185080362800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-4.tif,193800962,1791058189132343400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-5.tif,193800568,1791058195205302200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-6.tif,193801060,1791126354347705300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-IPR-2.tiff,258263634,1791126066963764800,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-IPR-3.tiff,258263634,1791124723066287000,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-IPR-4.tiff,258263634,1791124728715512600,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-IPR-5.tiff,258263634,1791124735457101300,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-IPR-6.tiff,258263634,1791124742328962600,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327-IPR.tiff,258263634,1791124709669634600,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/blue/6V1A0327.tif,193800776,1791058164744079800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-2.tif,193800730,1791058133378588000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-3.tif,193800714,1791058137500229800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-4.tif,193800800,1791058141204924600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-5.tif,193800800,1791058146795870900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-6.tif,193800852,1791058150731666800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-IPR-2.tiff,258263634,1791124605594099700,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-IPR-3.tiff,258263634,1791124618291412100,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-IPR-4.tiff,258263634,1791124682300173200,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-IPR-5.tiff,258263634,1791124688223787400,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-IPR-6.tiff,258263634,1791124694415037000,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327-IPR.tiff,258263634,1791124595562293200,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/cyan/6V1A0327.tif,193800850,1791058128201735400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-2.tif,193804902,1791108042334355100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-3.tif,193801932,1791108046485958400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-4.tif,193805046,1791108050092105800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-5.tif,193802380,1791108054790067900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-6.tif,193804662,1791108058195099700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-IPR-2.tiff,258263634,1791124778433855100,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-IPR-3.tiff,258263634,1791124786408708500,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-IPR-4.tiff,258263634,1791124792300876300,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-IPR-5.tiff,258263634,1791124800393846300,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-IPR-6.tiff,258263634,1791124809782066900,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037-IPR.tiff,258263634,1791124768572627600,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0037.tif,193803696,1791108037430902100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-2.tif,193796718,1791108012845123600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-3.tif,193795722,1791108018221600900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-4.tif,193796480,1791108021563873400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-5.tif,193795954,1791108027389851200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-6.tif,193796772,1791108030413578100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-IPR-2.tiff,258263634,1791125241353559700,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-IPR-3.tiff,258263634,1791125248510746500,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-IPR-4.tiff,258263634,1791125255988630400,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-IPR-5.tiff,258263634,1791125264296430700,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-IPR-6.tiff,258263634,1791125272964114300,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043-IPR.tiff,258263634,1791125232243581800,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0043.tif,193796584,1791108009570829000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0327-2.tif,193800980,1791055692495558500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0327-3.tif,193800580,1791055697928909400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0327-4.tif,193800996,1791055702800944700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0327-5.tif,193800536,1791055706814488200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0327-6.tif,193800964,1791055711551107400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/green/6V1A0327.tif,193800966,1791055688091585300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-2.tif,193796286,1791058335291543300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-3.tif,193796056,1791058338913566800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-4.tif,193796748,1791058342149762900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-5.tif,193796178,1791058347877221600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-6.tif,193796576,1791058350836496600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-IPR-2.tiff,258263634,1791125123295598800,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-IPR-3.tiff,258263634,1791125135183901000,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-IPR-4.tiff,258263634,1791125141871417700,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-IPR-5.tiff,258263634,1791125150608644500,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-IPR-6.tiff,258263634,1791125159654896700,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043-IPR.tiff,258263634,1791125115958364800,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0043.tif,193796328,1791058329179370100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0327-2.tif,193800844,1791058295352523100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0327-3.tif,193800882,1791058300531687400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0327-4.tif,193800856,1791058304355311100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0327-5.tif,193800890,1791058308817404500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0327-6.tif,193800820,1791058313759209100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/magenta/6V1A0327.tif,193800864,1791058291115209800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-2.tif,193800650,1791058087359361700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-3.tif,193799996,1791058094301071300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-4.tif,193801446,1791058097165230000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-5.tif,193799910,1791058105433486400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-6.tif,193801632,1791058109064095800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-IPR-2.tiff,258263634,1791125657511993300,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-IPR-3.tiff,258263634,1791125665118884900,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-IPR-4.tiff,258263634,1791125673209289600,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-IPR-5.tiff,258263634,1791125682514860500,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-IPR-6.tiff,258263634,1791125692737932100,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327-IPR.tiff,258263634,1791125649723140000,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/orange/6V1A0327.tif,193800914,1791058076428335300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-2.tif,193800594,1791055168871198500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-3.tif,193800294,1791055187882264300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-4.tif,193800692,1791055192664187200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-5.tif,193800418,1791055198663112800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-6.tif,193800710,1791055203893389900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-IPR-2.tiff,258263634,1791125605720798900,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-IPR-3.tiff,258263634,1791125613075213100,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-IPR-4.tiff,258263634,1791125620794708400,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-IPR-5.tiff,258263634,1791125628374942400,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-IPR-6.tiff,258263634,1791125635981455200,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327-IPR.tiff,258263634,1791125585393995900,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/red/6V1A0327.tif,193800512,1791055153895407300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-2.tif,193796340,1791108093894524300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-3.tif,193796334,1791108098364719600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-4.tif,193796398,1791108101734219700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-5.tif,193796242,1791108150573571600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-6.tif,193796516,1791108154047250300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-IPR-2.tiff,258263634,1791125178365043800,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-IPR-3.tiff,258263634,1791125189219625100,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-IPR-4.tiff,258263634,1791125199503521000,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-IPR-5.tiff,258263634,1791125207873721600,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-IPR-6.tiff,258263634,1791125215205110600,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043-IPR.tiff,258263634,1791125171543910700,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0043.tif,193796410,1791108090150329400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0327-2.tif,193800844,1791058215669827300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0327-3.tif,193800854,1791058218499122400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0327-4.tif,193800862,1791058223745167200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0327-5.tif,193800856,1791058230821588500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0327-6.tif,193800852,1791058234197052700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0327-7.tif,193801580,1791108734095468100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/violet/6V1A0327.tif,193800854,1791058210747043200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-2.tif,193800602,1791055471341612300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-3.tif,193800310,1791055579702720900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-4.tif,193801168,1791055632014492100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-5.tif,193800030,1791055660504552800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-6.tif,193801586,1791107354540167100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-IPR-2.tiff,258263634,1791125711638385800,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-IPR-3.tiff,258263634,1791125720272755500,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-IPR-4.tiff,258263634,1791125727818489100,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-IPR-5.tiff,258263634,1791125736075728800,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-IPR-6.tiff,258263634,1791125743436983100,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327-IPR.tiff,258263634,1791125703259594600,,,keep,IPR export/sidecar retained
+tests/image/archive/color-mixer/2026-10-04-extremes/base/color-mixer/yellow/6V1A0327.tif,193800614,1791055466646657000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/archive/color-mixer/2026-10-04-extremes/manifest.json,19432,1791127373800906500,,,keep,protected original/other file
+tests/image/base/6V1A0007.CR3,38195924,1785922648000000000,,,keep,protected original/other file
+tests/image/base/6V1A0007.CR3.ipr,1079,1791538408981079000,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A0007.xmp,10118,1791383021492383000,,,keep,protected original/other file
+tests/image/base/6V1A0037.CR3,37865684,1785929834000000000,,,keep,protected original/other file
+tests/image/base/6V1A0037.CR3.ipr,1079,1791538378620678900,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A0037.xmp,10111,1791383012038700900,,,keep,protected original/other file
+tests/image/base/6V1A0043.CR3,22877396,1785930012000000000,,,keep,protected original/other file
+tests/image/base/6V1A0043.CR3.ipr,1079,1791538421236826800,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A0043.xmp,10110,1791383003970745300,,,keep,protected original/other file
+tests/image/base/6V1A0106.CR3,32405716,1785942426000000000,,,keep,protected original/other file
+tests/image/base/6V1A0106.CR3.ipr,259,1791193973316193200,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A0106.xmp,11545,1791381744932571600,,,keep,protected original/other file
+tests/image/base/6V1A0112.CR3,50523348,1786057498000000000,,,keep,protected original/other file
+tests/image/base/6V1A0112.CR3.ipr,1093,1791538084615034700,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A0112.xmp,9426,1791147842400572900,,,keep,protected original/other file
+tests/image/base/6V1A0286.CR3,43736276,1787490346000000000,,,keep,protected original/other file
+tests/image/base/6V1A0286.CR3.ipr,730,1791536509516708800,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A0321.CR3,38218964,1787493086000000000,,,keep,protected original/other file
+tests/image/base/6V1A0321.CR3.ipr,259,1791131446570001900,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A0327.CR3,33489620,1787493311000000000,,,keep,protected original/other file
+tests/image/base/6V1A0327.CR3.ipr,1079,1791538443049953700,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A0327.tif.ipr,259,1791123720396449100,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A0327.xmp,10112,1791382743069860900,,,keep,protected original/other file
+tests/image/base/6V1A0624.CR3,33601236,1787506154000000000,,,keep,protected original/other file
+tests/image/base/6V1A0624.CR3.ipr,730,1791536495922138700,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A0624.xmp,9338,1791147708208605600,,,keep,protected original/other file
+tests/image/base/6V1A0767.CR3,38253268,1787596674000000000,,,keep,protected original/other file
+tests/image/base/6V1A0767.xmp,11743,1790951987193556200,,,keep,protected original/other file
+tests/image/base/6V1A1020.CR3,40989396,1787673170000000000,,,keep,protected original/other file
+tests/image/base/6V1A1020.CR3.ipr,259,1791469023499292800,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A1020.xmp,11294,1791194532687072800,,,keep,protected original/other file
+tests/image/base/6V1A8988.CR3,32158420,1784035918000000000,,,keep,protected original/other file
+tests/image/base/6V1A8988.CR3.ipr,259,1791198115356080100,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A8988.xmp,11288,1791194629926615800,,,keep,protected original/other file
+tests/image/base/6V1A9073.CR3,47034580,1784297008000000000,,,keep,protected original/other file
+tests/image/base/6V1A9073.CR3.ipr,259,1791144299199316500,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A9073.xmp,11745,1790952046469426200,,,keep,protected original/other file
+tests/image/base/6V1A9119.CR3,37788884,1784299100000000000,,,keep,protected original/other file
+tests/image/base/6V1A9119.xmp,11753,1790952013399355100,,,keep,protected original/other file
+tests/image/base/6V1A9377.CR3,32744148,1784652984000000000,,,keep,protected original/other file
+tests/image/base/6V1A9377.CR3.ipr,259,1791284116203794300,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A9377.xmp,11292,1791194599900440000,,,keep,protected original/other file
+tests/image/base/6V1A9421.CR3,42297556,1784653948000000000,,,keep,protected original/other file
+tests/image/base/6V1A9421.CR3.ipr,1079,1791538462648192500,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A9421.xmp,10114,1791382847661092400,,,keep,protected original/other file
+tests/image/base/6V1A9734.CR3,42929876,1784658866000000000,,,keep,protected original/other file
+tests/image/base/6V1A9734.CR3.ipr,259,1791194153988063500,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A9734.xmp,11581,1791194573306643800,,,keep,protected original/other file
+tests/image/base/6V1A9890.CR3,49139924,1784662988000000000,,,keep,protected original/other file
+tests/image/base/6V1A9890.CR3.ipr,259,1791304201685689000,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A9890.acr,8336288,1791283106666677100,,,keep,protected original/other file
+tests/image/base/6V1A9890.xmp,15574,1791283106672196500,,,keep,protected original/other file
+tests/image/base/6V1A9944.CR3,36212948,1784998764000000000,,,keep,protected original/other file
+tests/image/base/6V1A9944.xmp,11749,1790952006663743300,,,keep,protected original/other file
+tests/image/base/6V1A9947.CR3,32429268,1784998796000000000,,,keep,protected original/other file
+tests/image/base/6V1A9947.xmp,11751,1790952002867435500,,,keep,protected original/other file
+tests/image/base/6V1A9950.CR3,32106708,1784998944000000000,,,keep,protected original/other file
+tests/image/base/6V1A9950.CR3.ipr,1079,1791538501718851600,,,keep,IPR export/sidecar retained
+tests/image/base/6V1A9950.xmp,10161,1791384014566471100,,,keep,protected original/other file
+tests/image/base/archive-ev-reference/6V1A0007-2.tif,193792784,1790934011464462100,Adobe Lightroom 9.6 (Windows),,keep,Producer/profile ambiguous; retained
+tests/image/base/archive-ev-reference/6V1A0007-IPR-2.tiff,258263634,1790932488337819600,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A0007-IPR.tiff,258263634,1790932365781539400,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A0007.tif,193791602,1790932127911055400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A0043-2.tif,193795828,1790932174738573200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A0043-IPR-2.tiff,258263634,1790932515399296700,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A0043-IPR.tiff,258263634,1790932500954282900,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A0043.tif,193790858,1790932126403461000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A0767-2.tif,193801770,1790932173709767000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A0767-IPR-2.tiff,258263634,1790932559382297300,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A0767-IPR.tiff,258263634,1790932538201681900,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A0767.tif,193795194,1790932126948375600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A9073-2.tif,193803950,1790932176785188400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A9073-IPR-2.tiff,258263634,1790932727078821900,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A9073-IPR.tiff,258263634,1790932588641892400,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A9073.tif,193800570,1790932129908963300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A9119-2.tif,193801106,1790932176766226100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A9119-IPR-2.tiff,258263634,1790932767804164800,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A9119-IPR.tiff,258263634,1790932752886848700,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A9119.tif,193794024,1790932129797956100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A9734-2.tif,193797952,1790932176069097700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A9734-IPR-2.tiff,258263634,1790932797307307100,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A9734-IPR.tiff,258263634,1790932787898452800,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A9734.tif,193794570,1790932129265708800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A9944-2.tif,193793616,1790932175889608100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A9944-IPR-2.tiff,258263634,1790932829596212900,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A9944-IPR.tiff,258263634,1790932817094300300,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A9944.tif,193793360,1790932128496601900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A9947-2.tif,193793834,1790932174935220400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/archive-ev-reference/6V1A9947-IPR-2.tiff,258263634,1790932863886782900,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A9947-IPR.tiff,258263634,1790932852129315900,,,keep,IPR export/sidecar retained
+tests/image/base/archive-ev-reference/6V1A9947.tif,193791118,1790932128912778400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A0007-2.tif,193797216,1790941023120321600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A0007-IPR-2.tiff,258263634,1790943808120020300,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/6V1A0007.tif,193794998,1790940978526525900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A0043-2.tif,193804892,1790941020852098900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A0043-IPR-2.tiff,258263634,1790943798251287600,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/6V1A0043.tif,193796080,1790940977154581400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A0767-2.tif,193808472,1790941021083240500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A0767-IPR-2.tiff,258263634,1790943786862791200,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/6V1A0767.tif,193801252,1790940977238444700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A9073-2.tif,193808300,1790941023996687400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A9073-IPR-2.tiff,258263634,1790943770835556800,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/6V1A9073.tif,193805272,1790940980628983900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A9119-2.tif,193811598,1790941023943428200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A9119-IPR-2.tiff,258263634,1790943759458301400,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/6V1A9119.tif,193800596,1790940979835511300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A9734-2.tif,193802948,1790941023380423300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A9734-IPR-2.tiff,258263634,1790943748361872900,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/6V1A9734.tif,193799216,1790940980623880500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A9944-2.tif,193797070,1790941022015168500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A9944-IPR-2.tiff,258263634,1790943734005884500,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/6V1A9944.tif,193796810,1790940978659347200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A9947-2.tif,193797606,1790941022243298000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/6V1A9947-IPR-2.tiff,258263634,1790943721541781800,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/6V1A9947.tif,193795556,1790940979606848800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/blanc/archive-ipr-pre-correction-v2-2026-10-02/6V1A0007-IPR.tiff,258263634,1790943040080034500,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/archive-ipr-pre-correction-v2-2026-10-02/6V1A0043-IPR.tiff,258263634,1790943014311062800,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/archive-ipr-pre-correction-v2-2026-10-02/6V1A0767-IPR.tiff,258263634,1790942995273099000,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/archive-ipr-pre-correction-v2-2026-10-02/6V1A9073-IPR.tiff,258263634,1790942975450224100,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/archive-ipr-pre-correction-v2-2026-10-02/6V1A9119-IPR.tiff,258263634,1790942957383756200,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/archive-ipr-pre-correction-v2-2026-10-02/6V1A9734-IPR.tiff,258263634,1790942937691308800,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/archive-ipr-pre-correction-v2-2026-10-02/6V1A9944-IPR.tiff,258263634,1790942908848277500,,,keep,IPR export/sidecar retained
+tests/image/base/blanc/archive-ipr-pre-correction-v2-2026-10-02/6V1A9947-IPR.tiff,258263634,1790942888520232800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/6V1A0112-IPR.tiff,258263634,1791147732892986600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0043-2.tif,193796298,1791145504215552300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0043-3.tif,193796298,1791145508299423700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0043-4.tif,193796298,1791145511665611900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0043-IPR-2.tiff,258263634,1791144164760657900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0043-IPR-3.tiff,258263634,1791144172555788400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0043-IPR-4.tiff,258263634,1791144185259942800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0043-IPR-5.tiff,258263634,1791192835116258400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0043-IPR-6.tiff,258263634,1791192842464221600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0043-IPR-7.tiff,258263634,1791192853079422100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0043-IPR-8.tiff,258263634,1791192859057123100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0043-IPR.tiff,258263634,1791144157868253200,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0043.tif,193796298,1791145499853745800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0106-IPR-2.tiff,258263634,1791193616400893000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0106-IPR-3.tiff,258263634,1791193620960799300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0106-IPR-4.tiff,258263634,1791193631387635800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0106-IPR.tiff,258263634,1791193610806274800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0112-2.tif,193787672,1791145483961467700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0112-3.tif,193787672,1791145488742102700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0112-4.tif,193787672,1791145492661863600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0112-IPR-2.tiff,258263634,1791144123117229700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0112-IPR-3.tiff,258263634,1791144131810394300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0112-IPR-4.tiff,258263634,1791144137148207800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0112-IPR-5.tiff,258263634,1791192872127767300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0112-IPR-6.tiff,258263634,1791192878774692500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0112-IPR-7.tiff,258263634,1791192885159022000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0112-IPR-8.tiff,258263634,1791192891307250500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0112-IPR.tiff,258263634,1791144117196564100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0112.tif,193787672,1791145478597404400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0327-2.tif,193801012,1791145461314619500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0327-3.tif,193801012,1791145465420063800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0327-4.tif,193801012,1791145469545581900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0327-IPR-2.tiff,258263634,1791144048233309800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0327-IPR-3.tiff,258263634,1791144053817238500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0327-IPR-4.tiff,258263634,1791144062222444100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0327-IPR-5.tiff,258263634,1791192908115083700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0327-IPR-6.tiff,258263634,1791192913617706700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0327-IPR-7.tiff,258263634,1791192919980634400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0327-IPR-8.tiff,258263634,1791192925610371300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0327-IPR.tiff,258263634,1791144042920682400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0327.tif,193801012,1791145453843431100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0624-2.tif,193796604,1791145438113034700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0624-3.tif,193796604,1791145441853404600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0624-4.tif,193796606,1791145446370725100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A0624-IPR-2.tiff,258263634,1791144751093766100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0624-IPR-3.tiff,258263634,1791144759492121100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0624-IPR-4.tiff,258263634,1791144770947394800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0624-IPR-5.tiff,258263634,1791192938518146600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0624-IPR-6.tiff,258263634,1791192943588105200,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0624-IPR-7.tiff,258263634,1791192948677885100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0624-IPR-8.tiff,258263634,1791192953230299200,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0624-IPR.tiff,258263634,1791144741495311500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A0624.tif,193796604,1791145433416472300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A1020-IPR-2.tiff,258263634,1791194205406118900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A1020-IPR-3.tiff,258263634,1791194211319933700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A1020-IPR-4.tiff,258263634,1791194216236089700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A1020-IPR.tiff,258263634,1791194198913114100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A8988-IPR-2.tiff,258263634,1791193580418075100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A8988-IPR-3.tiff,258263634,1791193585289608400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A8988-IPR-4.tiff,258263634,1791193592688791700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A8988-IPR.tiff,258263634,1791193575413284900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9377-IPR-2.tiff,258263634,1791193538522934400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9377-IPR-3.tiff,258263634,1791193544142399000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9377-IPR-4.tiff,258263634,1791193549937763500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9377-IPR.tiff,258263634,1791193532136827500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9421-IPR-2.tiff,258263634,1791194174197216900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9421-IPR-3.tiff,258263634,1791194179395579700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9421-IPR-4.tiff,258263634,1791194185064722200,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9421-IPR.tiff,258263634,1791194169115376400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9734-IPR-2.tiff,258263634,1791194146017495600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9734-IPR-3.tiff,258263634,1791194150946161300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9734-IPR-4.tiff,258263634,1791194156146063800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9734-IPR.tiff,258263634,1791194140972101800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9890-2.tif,193799934,1791145585713002800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A9890-3.tif,193799934,1791145590925521200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A9890-4.tif,193799934,1791145595895045500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A9890-IPR-2.tiff,258263634,1791144212629236700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9890-IPR-3.tiff,258263634,1791144225504450600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9890-IPR-4.tiff,258263634,1791144240147631100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9890-IPR-5.tiff,258263634,1791193001293285900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9890-IPR-6.tiff,258263634,1791193005868657800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9890-IPR-7.tiff,258263634,1791193010868574300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9890-IPR-8.tiff,258263634,1791193020084970700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9890-IPR.tiff,258263634,1791144206375619700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9890.tif,193799934,1791145581804601900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/couleur/6V1A9950-IPR-2.tiff,258263634,1791193506685776700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9950-IPR-3.tiff,258263634,1791193514115944100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9950-IPR-4.tiff,258263634,1791193520986236400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/couleur/6V1A9950-IPR.tiff,258263634,1791193501049534000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-2.tif,193796288,1791145133014669800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0043-3.tif,193796288,1791145138732005300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0043-4.tif,193796290,1791145142821663100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0043-IPR-2.tiff,258263634,1791143945111567100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-IPR-3.tiff,258263634,1791143953698369300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-IPR-4.tiff,258263634,1791143965893499500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-IPR-5.tiff,258263634,1791192690580823700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-IPR-6.tiff,258263634,1791192695170416900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-IPR-7.tiff,258263634,1791192700441322400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-IPR-8.tiff,258263634,1791192706917901600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-IPR-L001.tiff,258263634,1791194359866718300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-IPR-L005.tiff,258263634,1791194367721430200,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-IPR-L010.tiff,258263634,1791194379956002000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043-IPR.tiff,258263634,1791143936779074700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0043.tif,193796288,1791145126327476900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0106-IPR-2.tiff,258263634,1791193381903160500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0106-IPR-3.tiff,258263634,1791193388341610700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0106-IPR-4.tiff,258263634,1791193392844737600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0106-IPR.tiff,258263634,1791193374615022500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0112-2.tif,193787652,1791145060947079300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0112-3.tif,193787652,1791145067340885700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0112-4.tif,193787654,1791145073125189800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0112-IPR-2.tiff,258263634,1791143899602359900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0112-IPR-3.tiff,258263634,1791143904988293100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0112-IPR-4.tiff,258263634,1791143912957017400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0112-IPR-5.tiff,258263634,1791192721534170300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0112-IPR-6.tiff,258263634,1791192726321450300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0112-IPR-7.tiff,258263634,1791192731529105000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0112-IPR-8.tiff,258263634,1791192737773542900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0112-IPR.tiff,258263634,1791143894627067400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0112.tif,193787652,1791145055540605500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0327-2.tif,193801016,1791145233832134200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0327-3.tif,193801016,1791145237206874700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0327-4.tif,193801018,1791145241681305000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0327-IPR-2.tiff,258263634,1791143991667439900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0327-IPR-3.tiff,258263634,1791143998997504000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0327-IPR-4.tiff,258263634,1791144004154061600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0327-IPR-5.tiff,258263634,1791192755751009000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0327-IPR-6.tiff,258263634,1791192760560018300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0327-IPR-7.tiff,258263634,1791192767095081600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0327-IPR-8.tiff,258263634,1791192772368919400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0327-IPR.tiff,258263634,1791143987217072600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0327.tif,193801016,1791145230106654800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0624-2.tif,193796612,1791145092412152000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0624-3.tif,193796612,1791145107850334600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0624-4.tif,193796610,1791146144205185800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A0624-IPR-2.tiff,258263634,1791143864639017000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0624-IPR-3.tiff,258263634,1791143870640447400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0624-IPR-4.tiff,258263634,1791143876017019500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0624-IPR-5.tiff,258263634,1791192797248655100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0624-IPR-6.tiff,258263634,1791192803205593800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0624-IPR-7.tiff,258263634,1791192808083876100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0624-IPR-8.tiff,258263634,1791192813474687500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0624-IPR.tiff,258263634,1791143857613885000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A0624.tif,193796612,1791145085017567000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A1020-IPR-2.tiff,258263634,1791194055168745700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A1020-IPR-3.tiff,258263634,1791194059532941400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A1020-IPR-4.tiff,258263634,1791194063916676400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A1020-IPR.tiff,258263634,1791194049466554200,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A8988-IPR-2.tiff,258263634,1791193410897939600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A8988-IPR-3.tiff,258263634,1791193415431332100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A8988-IPR-4.tiff,258263634,1791193419848954700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A8988-IPR.tiff,258263634,1791193406696082000,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9377-IPR-2.tiff,258263634,1791193439652066800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9377-IPR-3.tiff,258263634,1791193445154266200,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9377-IPR-4.tiff,258263634,1791193450576778900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9377-IPR.tiff,258263634,1791193431491829300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9421-IPR-2.tiff,258263634,1791194084623233700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9421-IPR-3.tiff,258263634,1791194092021954800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9421-IPR-4.tiff,258263634,1791194097925233400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9421-IPR-L001.tiff,258263634,1791194451423251600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9421-IPR-L005.tiff,258263634,1791194459644186700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9421-IPR-L010.tiff,258263634,1791194465720770900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9421-IPR.tiff,258263634,1791194079428114700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9734-IPR-2.tiff,258263634,1791194119793918600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9734-IPR-3.tiff,258263634,1791194124958793500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9734-IPR-4.tiff,258263634,1791194129315747900,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9734-IPR.tiff,258263634,1791194113870372500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-2.tif,193800024,1791143555726274100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A9890-3.tif,193800024,1791143562634316900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A9890-4.tif,193800024,1791143567735830200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A9890-5.tif,193799938,1791145156402070500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A9890-6.tif,193799938,1791145161638121200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A9890-7.tif,193799938,1791145168460863300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A9890-8.tif,193799940,1791145175277092500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A9890-IPR-2.tiff,258263634,1791146015327877100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-IPR-3.tiff,258263634,1791146021657284600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-IPR-4.tiff,258263634,1791146026453788800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-IPR-5.tiff,258263634,1791192652216767400,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-IPR-6.tiff,258263634,1791192659360271300,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-IPR-7.tiff,258263634,1791192665033860800,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-IPR-8.tiff,258263634,1791192671165263100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-IPR-L001.tiff,258263634,1791194423944807200,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-IPR-L005.tiff,258263634,1791194430203761700,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-IPR-L010.tiff,258263634,1791194437648284100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890-IPR.tiff,258263634,1791146006757276200,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9890.tif,193800024,1791143550409662700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/bruit/luminance/6V1A9950-IPR-2.tiff,258263634,1791193477824147500,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9950-IPR-3.tiff,258263634,1791193483065485600,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9950-IPR-4.tiff,258263634,1791193490580071100,,,keep,IPR export/sidecar retained
+tests/image/base/bruit/luminance/6V1A9950-IPR.tiff,258263634,1791193471117289400,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A0007-2.tif,193797812,1790951664437242400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A0007-IPR-2.tiff,258263634,1790949946842735300,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A0007-IPR.tiff,258263634,1790949941635366500,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A0007.tif,193793382,1790951588064355600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A0043-2.tif,193798912,1790951668214470800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A0043-IPR-2.tiff,258263634,1790949932650836900,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A0043-IPR.tiff,258263634,1790949928372895200,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A0043.tif,193795514,1790951590130938600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A0767-2.tif,193807324,1790951664425361500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A0767-IPR-2.tiff,258263634,1790949920843799700,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A0767-IPR.tiff,258263634,1790949916230021900,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A0767.tif,193800686,1790951592060760800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A9073-2.tif,193810350,1790951673589188400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A9073-IPR-2.tiff,258263634,1790949901856595800,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A9073-IPR.tiff,258263634,1790949897062442400,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A9073.tif,193802524,1790951593355571900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A9119-2.tif,193804136,1790951673525379800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A9119-IPR-2.tiff,258263634,1790949888555063500,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A9119-IPR.tiff,258263634,1790949884517196600,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A9119.tif,193799644,1790951592221373600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A9734-2.tif,193804062,1790951671767331700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A9734-IPR-2.tiff,258263634,1790949874951951700,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A9734-IPR.tiff,258263634,1790949869400995500,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A9734.tif,193797790,1790951593425255900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A9944-2.tif,193799178,1790951671085234600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A9944-IPR-2.tiff,258263634,1790949858745244300,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A9944-IPR.tiff,258263634,1790949800317493400,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A9944.tif,193795218,1790951590252409800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A9947-2.tif,193798660,1790951668836896700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/clarte/6V1A9947-IPR-2.tiff,258263634,1790949792392925700,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A9947-IPR.tiff,258263634,1790949786073446500,,,keep,IPR export/sidecar retained
+tests/image/base/clarte/6V1A9947.tif,193794842,1790951588055215600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-10.tif,193801058,1791137757570211000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-11.tif,193801082,1791137763551496800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-12.tif,193801078,1791137771760702000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-2.tif,193801072,1791137707580730300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-3.tif,193800938,1791137711971911500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-4.tif,193800836,1791137716549804100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-5.tif,193800744,1791137725366313600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-6.tif,193800840,1791137732155747400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-7.tif,193801042,1791137736362529100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-8.tif,193801060,1791137746181587800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-9.tif,193800956,1791137752587013000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/blue/6V1A0327-IPR-10.tiff,258263634,1791132722012703200,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR-11.tiff,258263634,1791132730867527200,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR-12.tiff,258263634,1791132738503274000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR-2.tiff,258263634,1791132639266384700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR-3.tiff,258263634,1791132647895964300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR-4.tiff,258263634,1791132656908093600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR-5.tiff,258263634,1791132671914539700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR-6.tiff,258263634,1791132687194398300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR-7.tiff,258263634,1791132693207550700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR-8.tiff,258263634,1791132701106787800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR-9.tiff,258263634,1791132710281483600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327-IPR.tiff,258263634,1791132627276870000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/blue/6V1A0327.tif,193801068,1791137701142918400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-10.tif,193801082,1791137665394598000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-11.tif,193801104,1791137671587849000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-12.tif,193801120,1791137677800590000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-2.tif,193801104,1791137622411569800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-3.tif,193801066,1791137628599833200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-4.tif,193801032,1791137632409499500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-5.tif,193801038,1791137638209926800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-6.tif,193801058,1791137644001819500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-7.tif,193801110,1791137647999690500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-8.tif,193801098,1791137652810437000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-9.tif,193801098,1791137659394276400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-10.tiff,258263634,1791132590326450800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-11.tiff,258263634,1791132597990798000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-12.tiff,258263634,1791132608942615100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-2.tiff,258263634,1791132476592043900,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-3.tiff,258263634,1791132486289991100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-4.tiff,258263634,1791132507062124800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-5.tiff,258263634,1791132523933108400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-6.tiff,258263634,1791132534002313400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-7.tiff,258263634,1791132541774504800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-8.tiff,258263634,1791132553339442900,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR-9.tiff,258263634,1791132564161752800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327-IPR.tiff,258263634,1791132468687922700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/cyan/6V1A0327.tif,193801126,1791137609578723000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-10.tif,193803292,1791137856623291900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-11.tif,193803882,1791137860564057700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-12.tif,193804158,1791137864191248100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-2.tif,193803492,1791137808662889900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-3.tif,193803948,1791137814853023200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-4.tif,193804376,1791137820460578700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-5.tif,193802600,1791137829743142400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-6.tif,193803046,1791137834250017200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-7.tif,193803806,1791137841031952500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-8.tif,193804102,1791137845932520100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-9.tif,193802992,1791137851039976600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0037-IPR-10.tiff,258263634,1791132919033002400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR-11.tiff,258263634,1791132932625769000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR-12.tiff,258263634,1791132945739062500,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR-2.tiff,258263634,1791132811907890300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR-3.tiff,258263634,1791132822537154500,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR-4.tiff,258263634,1791132833383245700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR-5.tiff,258263634,1791132842059205400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR-6.tiff,258263634,1791132853735958400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR-7.tiff,258263634,1791132873233130200,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR-8.tiff,258263634,1791132884545809100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR-9.tiff,258263634,1791132896781683600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037-IPR.tiff,258263634,1791132801281597600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0037.tif,193803504,1791137801849756800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/green/6V1A0327-IPR-10.tiff,258263634,1791132293033576100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR-11.tiff,258263634,1791132301169039700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR-12.tiff,258263634,1791132317315458800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR-2.tiff,258263634,1791132198586717100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR-3.tiff,258263634,1791132205834012400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR-4.tiff,258263634,1791132219755918700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR-5.tiff,258263634,1791132228227134500,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR-6.tiff,258263634,1791132236117085300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR-7.tiff,258263634,1791132243381766000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR-8.tiff,258263634,1791132254382980200,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR-9.tiff,258263634,1791132274912703400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/green/6V1A0327-IPR.tiff,258263634,1791132174010176700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-10.tif,193796320,1791138041365398100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-11.tif,193796430,1791138044511605000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-12.tif,193796478,1791138048334380500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-2.tif,193796394,1791138005415010000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-3.tif,193796354,1791138008968455300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-4.tif,193796340,1791138012711911100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-5.tif,193796154,1791138019546671900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-6.tif,193796254,1791138023430925000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-7.tif,193796444,1791138027186206900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-8.tif,193796490,1791138031194522900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-9.tif,193796276,1791138036585013000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-10.tiff,258263634,1791133335678516800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-11.tiff,258263634,1791133346241430800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-12.tiff,258263634,1791133360307124700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-2.tiff,258263634,1791133234712959100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-3.tiff,258263634,1791133249970292600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-4.tiff,258263634,1791133265206334000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-5.tiff,258263634,1791133281890634200,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-6.tiff,258263634,1791133289338191000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-7.tiff,258263634,1791133308367989700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-8.tiff,258263634,1791133316755000600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR-9.tiff,258263634,1791133327537928600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043-IPR.tiff,258263634,1791133228260259400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/magenta/6V1A0043.tif,193796374,1791137998852615700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-10.tif,193800852,1791137505863338500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-11.tif,193801336,1791137511667516800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-12.tif,193801512,1791137515592437300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-2.tif,193801118,1791137467680676300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-3.tif,193801036,1791137473281157900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-4.tif,193801000,1791137477518984200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-5.tif,193800602,1791137484512896600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-6.tif,193800816,1791137488193724400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-7.tif,193801172,1791137491830662600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-8.tif,193801294,1791137495358445500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-9.tif,193800590,1791137501748958800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/orange/6V1A0327-IPR-10.tiff,258263634,1791131899826033200,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR-11.tiff,258263634,1791131915674429300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR-12.tiff,258263634,1791131924446944400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR-2.tiff,258263634,1791131800669456100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR-3.tiff,258263634,1791131809854912900,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR-4.tiff,258263634,1791131819672715300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR-5.tiff,258263634,1791131834003698600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR-6.tiff,258263634,1791131843275814400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR-7.tiff,258263634,1791131854680504500,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR-8.tiff,258263634,1791131864470086100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR-9.tiff,258263634,1791131891840743500,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327-IPR.tiff,258263634,1791131789091600500,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/orange/6V1A0327.tif,193801152,1791137461261662600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-10.tif,193801006,1791137430152778200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-11.tif,193801160,1791137434894422000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-12.tif,193801208,1791137439080775800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-2.tif,193801082,1791137370128575300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-3.tif,193801110,1791137376937953600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-4.tif,193801134,1791137384933978500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-5.tif,193800984,1791137400481861800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-6.tif,193801032,1791137406733905300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-7.tif,193801100,1791137411893417500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-8.tif,193801130,1791137416900690300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-9.tif,193800928,1791137426068424900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/red/6V1A0327-IPR-10.tiff,258263634,1791131698105845100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR-11.tiff,258263634,1791131719721246000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR-12.tiff,258263634,1791131729920331800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR-2.tiff,258263634,1791131601547324100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR-3.tiff,258263634,1791131609273595300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR-4.tiff,258263634,1791131619166508600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR-5.tiff,258263634,1791131637330140600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR-6.tiff,258263634,1791131647128449300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR-7.tiff,258263634,1791131665357473100,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR-8.tiff,258263634,1791131672586885800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR-9.tiff,258263634,1791131687349437600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327-IPR.tiff,258263634,1791131590047434000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/red/6V1A0327.tif,193801062,1791137362577645900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-10.tif,193796344,1791137973556356400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-11.tif,193796400,1791137977784881500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-12.tif,193796434,1791137982164715800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-2.tif,193796388,1791137907888428600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-3.tif,193796370,1791137918619714500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-4.tif,193796350,1791137924013056600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-5.tif,193796348,1791137931795412900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-6.tif,193796362,1791137936417165500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-7.tif,193796376,1791137955202590100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-8.tif,193796384,1791137959996883600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-9.tif,193796310,1791137969789354100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/violet/6V1A0043-IPR-10.tiff,258263634,1791133169656556800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR-11.tiff,258263634,1791133178440010300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR-12.tiff,258263634,1791133191828513300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR-2.tiff,258263634,1791133084584954600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR-3.tiff,258263634,1791133093893902800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR-4.tiff,258263634,1791133100379187300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR-5.tiff,258263634,1791133130501342700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR-6.tiff,258263634,1791133138433392900,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR-7.tiff,258263634,1791133145405508600,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR-8.tiff,258263634,1791133154002368000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR-9.tiff,258263634,1791133162436046900,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043-IPR.tiff,258263634,1791133074751756400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/violet/6V1A0043.tif,193796384,1791137893219851300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-10.tif,193800922,1791137580234027600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-11.tif,193801232,1791137585652468800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-12.tif,193801382,1791137589594677800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-2.tif,193801136,1791137537052005200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-3.tif,193801118,1791137542049858600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-4.tif,193801148,1791137548451339100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-5.tif,193800808,1791137556051703300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-6.tif,193800968,1791137560224626300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-7.tif,193801160,1791137564087559300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-8.tif,193801218,1791137567905874800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-9.tif,193800736,1791137575014225000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-10.tiff,258263634,1791132096633977000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-11.tiff,258263634,1791132107133556200,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-12.tiff,258263634,1791132119984239200,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-2.tiff,258263634,1791131967245709300,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-3.tiff,258263634,1791131979322261800,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-4.tiff,258263634,1791131988424661200,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-5.tiff,258263634,1791132004737305000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-6.tiff,258263634,1791132013201106400,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-7.tiff,258263634,1791132033895727000,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-8.tiff,258263634,1791132045429179900,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR-9.tiff,258263634,1791132083129156700,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327-IPR.tiff,258263634,1791131957565713500,,,keep,IPR export/sidecar retained
+tests/image/base/color-mixer/yellow/6V1A0327.tif,193801172,1791137531810743900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A0007-2.tif,193797606,1790941725703515700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A0007-IPR-2.tiff,258263634,1790948023242242100,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A0007-IPR.tiff,258263634,1790948013293372900,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A0007.tif,193794082,1790941691669898600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A0043-2.tif,193796262,1790941726781440400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A0043-IPR-2.tiff,258263634,1790948087119299600,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A0043-IPR.tiff,258263634,1790948079135251500,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A0043.tif,193796214,1790941689567284600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A0767-2.tif,193801952,1790941726015532200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A0767-IPR-2.tiff,258263634,1790948107502977900,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A0767-IPR.tiff,258263634,1790948099268413000,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A0767.tif,193800844,1790941689846034100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A9073-2.tif,193810262,1790941729126337500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A9073-IPR-2.tiff,258263634,1790948136650393200,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A9073-IPR.tiff,258263634,1790948128300394000,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A9073.tif,193803428,1790941693647973200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A9119-2.tif,193800618,1790941728865324500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A9119-IPR-2.tiff,258263634,1790948156324662200,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A9119-IPR.tiff,258263634,1790948147701821900,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A9119.tif,193800134,1790941693519006000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A9734-2.tif,193801476,1790941728343530100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A9734-IPR-2.tiff,258263634,1790948177841223300,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A9734-IPR.tiff,258263634,1790948171303859500,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A9734.tif,193798394,1790941692745598200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A9944-2.tif,193797196,1790941727809548600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A9944-IPR-2.tiff,258263634,1790948202054808800,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A9944-IPR.tiff,258263634,1790948193110946500,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A9944.tif,193796138,1790941691097452000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A9947-2.tif,193795930,1790941727479906600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/contraste/6V1A9947-IPR-2.tiff,258263634,1790948218671920200,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A9947-IPR.tiff,258263634,1790948210533590600,,,keep,IPR export/sidecar retained
+tests/image/base/contraste/6V1A9947.tif,193795528,1790941692427035500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A0007-2.tif,193800494,1790952031140180200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A0007-IPR-2.tiff,258263634,1790952072829242200,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A0007-IPR.tiff,258263634,1790952064834995400,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A0007.tif,193791130,1790951988358353000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A0043-2.tif,193796494,1790952029113987000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A0043-IPR-2.tiff,258263634,1790952100680301300,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A0043-IPR.tiff,258263634,1790952087562132100,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A0043.tif,193796044,1790951989977262200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A0767-2.tif,193802796,1790952029415437500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A0767-IPR-2.tiff,258263634,1790952122193620400,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A0767-IPR.tiff,258263634,1790952113348658200,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A0767.tif,193798312,1790951988290242600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A9073-2.tif,193808970,1790952036180835600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A9073-IPR-2.tiff,258263634,1790952147035370400,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A9073-IPR.tiff,258263634,1790952136847893300,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A9073.tif,193800622,1790951993984804900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A9119-2.tif,193802018,1790952036285626100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A9119-IPR-2.tiff,258263634,1790952163874375900,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A9119-IPR.tiff,258263634,1790952157157207300,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A9119.tif,193796856,1790951992631047400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A9734-2.tif,193801122,1790952034273912900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A9734-IPR-2.tiff,258263634,1790952189564480400,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A9734-IPR.tiff,258263634,1790952184509626900,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A9734.tif,193796028,1790951993984804900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A9944-2.tif,193801348,1790952031186938300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A9944-IPR-2.tiff,258263634,1790952206825834100,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A9944-IPR.tiff,258263634,1790952201836357600,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A9944.tif,193791878,1790951992571718800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A9947-2.tif,193797410,1790952034221050100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/correction_de_voile/6V1A9947-IPR-2.tiff,258263634,1790952223193259100,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A9947-IPR.tiff,258263634,1790952217152678700,,,keep,IPR export/sidecar retained
+tests/image/base/correction_de_voile/6V1A9947.tif,193793574,1790951990070963100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A0007-2.tif,193795754,1790940921281540000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A0007-IPR-2.tiff,258263634,1790943603512039500,,,keep,IPR export/sidecar retained
+tests/image/base/hl/6V1A0007-IPR.jpg,4624769,1790942676973389600,,,keep,IPR export/sidecar retained
+tests/image/base/hl/6V1A0007.tif,193795612,1790940871137450800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A0043-2.tif,193798532,1790940918181669100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A0043-IPR-2.tiff,258263634,1790943621594588100,,,keep,IPR export/sidecar retained
+tests/image/base/hl/6V1A0043.tif,193793676,1790940868884972800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A0767-2.tif,193808080,1790940919049886600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A0767-IPR-2.tiff,258263634,1790943640310655100,,,keep,IPR export/sidecar retained
+tests/image/base/hl/6V1A0767.tif,193792742,1790940869821884700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A9073-2.tif,193808390,1790940924281300000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A9073-IPR-2.tiff,258263634,1790943651635350100,,,keep,IPR export/sidecar retained
+tests/image/base/hl/6V1A9073.tif,193801226,1790940875595288800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A9119-2.tif,193802170,1790940924024185800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A9119-IPR-2.tiff,258263634,1790943666785801300,,,keep,IPR export/sidecar retained
+tests/image/base/hl/6V1A9119.tif,193799930,1790940875245781600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A9734-2.tif,193800858,1790940923241106200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A9734-IPR-2.tiff,258263634,1790943677675985900,,,keep,IPR export/sidecar retained
+tests/image/base/hl/6V1A9734.tif,193795254,1790940874225330600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A9944-2.tif,193796542,1790940922190064800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A9944-IPR-2.tiff,258263634,1790943689090407100,,,keep,IPR export/sidecar retained
+tests/image/base/hl/6V1A9944.tif,193797322,1790940873473628000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A9947-2.tif,193796022,1790940920397502200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/6V1A9947-IPR-2.tiff,258263634,1790943701346595000,,,keep,IPR export/sidecar retained
+tests/image/base/hl/6V1A9947.tif,193795698,1790940872147216200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/hl/archive-ipr-pre-correction-v2-2026-10-02/6V1A0007-IPR.tiff,258263634,1790942702685063500,,,keep,IPR export/sidecar retained
+tests/image/base/hl/archive-ipr-pre-correction-v2-2026-10-02/6V1A0043-IPR.tiff,258263634,1790942741420626700,,,keep,IPR export/sidecar retained
+tests/image/base/hl/archive-ipr-pre-correction-v2-2026-10-02/6V1A0767-IPR.tiff,258263634,1790942761513412200,,,keep,IPR export/sidecar retained
+tests/image/base/hl/archive-ipr-pre-correction-v2-2026-10-02/6V1A9073-IPR.tiff,258263634,1790942780951326700,,,keep,IPR export/sidecar retained
+tests/image/base/hl/archive-ipr-pre-correction-v2-2026-10-02/6V1A9119-IPR.tiff,258263634,1790942801744353300,,,keep,IPR export/sidecar retained
+tests/image/base/hl/archive-ipr-pre-correction-v2-2026-10-02/6V1A9734-IPR.tiff,258263634,1790942821905548500,,,keep,IPR export/sidecar retained
+tests/image/base/hl/archive-ipr-pre-correction-v2-2026-10-02/6V1A9944-IPR.tiff,258263634,1790942838724597000,,,keep,IPR export/sidecar retained
+tests/image/base/hl/archive-ipr-pre-correction-v2-2026-10-02/6V1A9947-IPR.tiff,258263634,1790942860436845900,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A0007-IPR-CameraNeutral-AsShot.tiff,258263634,1791468197210575100,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A0007-IPR.tiff,258263634,1791538419019405300,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A0007-LR-CameraNeutral-AsShot.tif,193793764,1791383018775053000,Adobe Lightroom 9.6 (Windows),Camera Neutral,keep,Camera Neutral reference retained
+tests/image/base/neutre/6V1A0037-IPR-CameraNeutral-AsShot.tiff,258263634,1791468206990995900,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A0037-IPR.tiff,258263634,1791538394132743800,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A0043-IPR-CameraNeutral-AsShot.tiff,258263634,1791468216520208300,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A0043-IPR.tiff,258263634,1791538433067681700,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A0043-LR-CameraNeutral-AsShot.tif,193793860,1791383001889942400,Adobe Lightroom 9.6 (Windows),Camera Neutral,keep,Camera Neutral reference retained
+tests/image/base/neutre/6V1A0327-IPR-CameraNeutral-AsShot.tiff,258263634,1791468144741230500,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A0327-IPR.tiff,258263634,1791538457039878600,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A0327-LR-CameraNeutral-AsShot.tif,193798992,1791382993024614200,Adobe Lightroom 9.6 (Windows),Camera Neutral,keep,Camera Neutral reference retained
+tests/image/base/neutre/6V1A9421-IPR-CameraNeutral-AsShot.tiff,258263634,1791468161918639800,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A9421-IPR.tiff,258263634,1791538474327311800,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A9421-LR-CameraNeutral-AsShot.tif,193801720,1791382830285911300,Adobe Lightroom 9.6 (Windows),Camera Neutral,keep,Camera Neutral reference retained
+tests/image/base/neutre/6V1A9950-IPR-CameraNeutral-AsShot.tiff,258263634,1791468179328991000,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A9950-IPR.tiff,258263634,1791538491038939800,,,keep,IPR export/sidecar retained
+tests/image/base/neutre/6V1A9950-LR-CameraNeutral-AsShot.tif,193794222,1791383044393423200,Adobe Lightroom 9.6 (Windows),Camera Neutral,keep,Camera Neutral reference retained
+tests/image/base/neutre/Archive-IPR.zip,811369109,1791316247080314800,,,keep,IPR export/sidecar retained
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A0007-2.tif,193794708,1790936030066501900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A0007.tif,193796954,1790935980413278800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A0043-2.tif,193797554,1790936028320867000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A0043.tif,193793578,1790935978846936500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A0767-2.tif,193802406,1790936028606624400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A0767.tif,193798736,1790935979211044900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A9073-2.tif,193805394,1790936031784952800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A9073.tif,193808706,1790935982235195200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A9119-2.tif,193801614,1790936031873024100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A9119.tif,193796600,1790935982335234100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A9734-2.tif,193799960,1790936031174224000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A9734.tif,193799484,1790935981526943800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A9944-2.tif,193796248,1790936030129352200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A9944.tif,193796736,1790935981457284400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A9947-2.tif,193795972,1790936031080074000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/noir/archive-validation-final-2026-10-02/6V1A9947.tif,193794414,1790935980351880300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A0007-2.tif,193795818,1790941993088229600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A0007-IPR-2.tiff,258263634,1790950515662530900,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A0007-IPR.tiff,258263634,1790950509570109800,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A0007.tif,193796064,1790941937595951800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A0043-2.tif,193797972,1790941991890873900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A0043-IPR-2.tiff,258263634,1790950543005394800,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A0043-IPR.tiff,258263634,1790950535148094500,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A0043.tif,193796492,1790941935120879800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A0767-2.tif,193802378,1790941992208909400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A0767-IPR-2.tiff,258263634,1790950561153029800,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A0767-IPR.tiff,258263634,1790950554514726900,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A0767.tif,193802252,1790941935480976300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A9073-2.tif,193807396,1790941995072632700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A9073-IPR-2.tiff,258263634,1790950577600439300,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A9073-IPR.tiff,258263634,1790950571755786000,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A9073.tif,193807658,1790941940305029200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A9119-2.tif,193802662,1790941995162399400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A9119-IPR-2.tiff,258263634,1790950594216020900,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A9119-IPR.tiff,258263634,1790950588984808800,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A9119.tif,193801402,1790941940415736900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A9734-2.tif,193800352,1790941994348739200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A9734-IPR-2.tiff,258263634,1790950610322563800,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A9734-IPR.tiff,258263634,1790950604126267200,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A9734.tif,193800936,1790941938912037300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A9944-2.tif,193797802,1790941994211910300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A9944-IPR-2.tiff,258263634,1790950627614133500,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A9944-IPR.tiff,258263634,1790950621763601600,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A9944.tif,193797842,1790941937525574800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A9947-2.tif,193797110,1790941993309111000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/nuance/6V1A9947-IPR-2.tiff,258263634,1790950643835172500,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A9947-IPR.tiff,258263634,1790950637784901400,,,keep,IPR export/sidecar retained
+tests/image/base/nuance/6V1A9947.tif,193796658,1790941938919672600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0007-2.tif,193795204,1790935438824873400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0007-IPR-2.tiff,258263634,1790939998836641000,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0007-IPR.tiff,258263634,1790939984642597500,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0007.tif,193795562,1790935385755996500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0043-2.tif,193796722,1790935436271318900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0043-IPR-2.tiff,258263634,1790940021776961600,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0043-IPR.tiff,258263634,1790940011366219400,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0043.tif,193795700,1790935388323497100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0767-2.tif,193802800,1790935436853842400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0767-IPR-2.tiff,258263634,1790940047624581800,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0767-IPR.tiff,258263634,1790940035723179100,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A0767.tif,193796856,1790935383352047300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9073-2.tif,193804470,1790935444585384200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9073-IPR-2.tiff,258263634,1790940079004106400,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9073-IPR.tiff,258263634,1790940064825641500,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9073.tif,193806054,1790935390458105800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9119-2.tif,193800654,1790935444345335400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9119-IPR-2.tiff,258263634,1790940111520512400,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9119-IPR.tiff,258263634,1790940102263578300,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9119.tif,193800718,1790935390205462700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9734-2.tif,193803458,1790935442151033300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9734-IPR-2.tiff,258263634,1790940147217513000,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9734-IPR.tiff,258263634,1790940135297655500,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9734.tif,193797932,1790935389209926400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9944-2.tif,193796754,1790935441764211200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9944-IPR-2.tiff,258263634,1790940186805498600,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9944-IPR.tiff,258263634,1790940174927404000,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9944.tif,193795054,1790935386303478800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9947-2.tif,193797072,1790935439609955100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9947-IPR-2.tiff,258263634,1790940220854147500,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9947-IPR.tiff,258263634,1790940210973142600,,,keep,IPR export/sidecar retained
+tests/image/base/ombre/archive-validation-final-2026-10-02/6V1A9947.tif,193794068,1790935383407828100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A0007-2.tif,193796186,1790949159321961000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A0007-IPR-2.tiff,258263634,1790949456871572900,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A0007-IPR.tiff,258263634,1790949453025603700,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A0007.tif,193795214,1790949122562119800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A0043-2.tif,193797706,1790949159809530700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A0043-IPR-2.tiff,258263634,1790949442244483900,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A0043-IPR.tiff,258263634,1790949437956153200,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A0043.tif,193794382,1790949118817882700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A0767-2.tif,193803484,1790949158511993900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A0767-IPR-2.tiff,258263634,1790949428146199400,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A0767-IPR.tiff,258263634,1790949423154709200,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A0767.tif,193799050,1790949119294465300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A9073-2.tif,193809604,1790949162272209300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A9073-IPR-2.tiff,258263634,1790949415238477100,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A9073-IPR.tiff,258263634,1790949410364784400,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A9073.tif,193803544,1790949123811244800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A9119-2.tif,193803076,1790949162172111500,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A9119-IPR-2.tiff,258263634,1790949402935093300,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A9119-IPR.tiff,258263634,1790949398011258700,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A9119.tif,193798814,1790949123979118800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A9734-2.tif,193802992,1790949161623689900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A9734-IPR-2.tiff,258263634,1790949386535053900,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A9734-IPR.tiff,258263634,1790949389351199100,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A9734.tif,193797238,1790949122460681100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A9944-2.tif,193797944,1790949161067532900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A9944-IPR-2.tiff,258263634,1790949367619594300,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A9944-IPR.tiff,258263634,1790949362166426800,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A9944.tif,193795662,1790949120509529000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A9947-2.tif,193796956,1790949160567181400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/saturation/6V1A9947-IPR-2.tiff,258263634,1790949343034898400,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A9947-IPR.tiff,258263634,1790949336871306100,,,keep,IPR export/sidecar retained
+tests/image/base/saturation/6V1A9947.tif,193795926,1790949120662546000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A0007-2.tif,193796252,1790941873717405600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A0007-IPR.tiff,258263634,1790949693035045400,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/6V1A0007.tif,193798630,1790941811959991200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A0043-2.tif,193797936,1790941872027737300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A0043-IPR.tiff,258263634,1790949701413838700,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/6V1A0043.tif,193799288,1790941808774142100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A0767-2.tif,193804776,1790941872384706800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A0767-IPR.tiff,258263634,1790949715396506800,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/6V1A0767.tif,193804680,1790941809242624700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A9073-2.tif,193808818,1790941876022954300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A9073-IPR.tiff,258263634,1790949722619993200,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/6V1A9073.tif,193811356,1790941814803268300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A9119-2.tif,193803786,1790941876042056400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A9119-IPR.tiff,258263634,1790949730291195600,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/6V1A9119.tif,193803700,1790941814602173000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A9734-2.tif,193801636,1790941874898849700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A9734-IPR.tiff,258263634,1790949737933516900,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/6V1A9734.tif,193803854,1790941813805697300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A9944-2.tif,193797856,1790941874724060200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A9944-IPR.tiff,258263634,1790949745834856400,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/6V1A9944.tif,193798966,1790941813063507100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A9947-2.tif,193797316,1790941873512058700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/6V1A9947-IPR.tiff,258263634,1790949754756284100,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/6V1A9947.tif,193798954,1790941810419159200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/temperature/archive-ipr-pre-correction-v1-2026-10-02/6V1A0007-IPR-2.tiff,258263634,1790948442858161900,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/archive-ipr-pre-correction-v1-2026-10-02/6V1A0043-IPR-2.tiff,258263634,1790948460989776800,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/archive-ipr-pre-correction-v1-2026-10-02/6V1A0767-IPR-2.tiff,258263634,1790948474622369600,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/archive-ipr-pre-correction-v1-2026-10-02/6V1A9073-IPR-2.tiff,258263634,1790948489083524700,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/archive-ipr-pre-correction-v1-2026-10-02/6V1A9119-IPR-2.tiff,258263634,1790948501674024400,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/archive-ipr-pre-correction-v1-2026-10-02/6V1A9734-IPR-2.tiff,258263634,1790948520154544400,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/archive-ipr-pre-correction-v1-2026-10-02/6V1A9944-IPR-2.tiff,258263634,1790948533020954500,,,keep,IPR export/sidecar retained
+tests/image/base/temperature/archive-ipr-pre-correction-v1-2026-10-02/6V1A9947-IPR-2.tiff,258263634,1790948548987444700,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A0007-2.tif,193796782,1790951533193324100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A0007-IPR-2.tiff,258263634,1790949494452466400,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A0007-IPR.tiff,258263634,1790949486479924400,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A0007.tif,193794718,1790951489893190100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A0043-2.tif,193796908,1790951530934904000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A0043-IPR-2.tiff,258263634,1790949507884238500,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A0043-IPR.tiff,258263634,1790949503100860900,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A0043.tif,193795936,1790951488319236700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A0767-2.tif,193802894,1790951531054687600,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A0767-IPR-2.tiff,258263634,1790949522068395400,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A0767-IPR.tiff,258263634,1790949516583753000,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A0767.tif,193800720,1790951488835265000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A9073-2.tif,193808510,1790951536249882200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A9073-IPR-2.tiff,258263634,1790949542979250400,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A9073-IPR.tiff,258263634,1790949536770204400,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A9073.tif,193804722,1790951492704703700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A9119-2.tif,193802942,1790951536045287800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A9119-IPR-2.tiff,258263634,1790949556369714700,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A9119-IPR.tiff,258263634,1790949550679492200,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A9119.tif,193799234,1790951492631691400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A9734-2.tif,193801032,1790951534759944400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A9734-IPR-2.tiff,258263634,1790949585730142900,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A9734-IPR.tiff,258263634,1790949579830872100,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A9734.tif,193798836,1790951491872414900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A9944-2.tif,193796164,1790951534171596400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A9944-IPR-2.tiff,258263634,1790949603916440900,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A9944-IPR.tiff,258263634,1790949599152833100,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A9944.tif,193796164,1790951490648048300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A9947-2.tif,193796646,1790951532853732700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/texture/6V1A9947-IPR-2.tiff,258263634,1790949618433750000,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A9947-IPR.tiff,258263634,1790949612907725600,,,keep,IPR export/sidecar retained
+tests/image/base/texture/6V1A9947.tif,193795340,1790951491434805900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A0007-2.tif,193797902,1790948999987043900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A0007-IPR-2.tiff,258263634,1790948728113310100,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A0007-IPR.tiff,258263634,1790948722323878000,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A0007.tif,193795234,1790948956847687900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A0043-2.tif,193797214,1790948998735038800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A0043-IPR-2.tiff,258263634,1790948745139738200,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A0043-IPR.tiff,258263634,1790948739544329300,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A0043.tif,193794326,1790948959416516400,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A0767-2.tif,193804130,1790948999104839300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A0767-IPR-2.tiff,258263634,1790948760160435400,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A0767-IPR.tiff,258263634,1790948755296758000,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A0767.tif,193797370,1790948956800849100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A9073-2.tif,193809172,1790949002504366300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A9073-IPR-2.tiff,258263634,1790948773275642100,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A9073-IPR.tiff,258263634,1790948768404024100,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A9073.tif,193803464,1790949030615079700,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A9119-2.tif,193802526,1790949002353628000,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A9119-IPR-2.tiff,258263634,1790948788831873000,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A9119-IPR.tiff,258263634,1790948783731615500,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A9119.tif,193797752,1790948960727143800,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A9734-2.tif,193802910,1790949001571281900,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A9734-IPR-2.tiff,258263634,1790948820588623800,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A9734-IPR.tiff,258263634,1790948815467717300,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A9734.tif,193797366,1790948959929106200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A9944-2.tif,193798536,1790949001166706200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A9944-IPR-2.tiff,258263634,1790948834306255500,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A9944-IPR.tiff,258263634,1790948830165064200,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A9944.tif,193795540,1790948958451277200,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A9947-2.tif,193797624,1790949000456929300,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
+tests/image/base/vibrance/6V1A9947-IPR-2.tiff,258263634,1790948847662941000,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A9947-IPR.tiff,258263634,1790948842964993000,,,keep,IPR export/sidecar retained
+tests/image/base/vibrance/6V1A9947.tif,193794790,1790948958301380100,Adobe Lightroom 9.6 (Windows),Adobe Standard,delete,Lightroom reference with non-Neutral camera profile
