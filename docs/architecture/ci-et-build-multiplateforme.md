@@ -13,7 +13,9 @@ Le paquet « système » utilise les bibliothèques installées, sans les embarq
 | `linux-distributions.yml` | Manuel | Debian 12 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système et tests complets |
 
 Windows x64 : MSVC 2022, Qt 6.8.3, vcpkg épinglé au commit du manifeste.
-Linux portable : Ubuntu 24.04 x64, Qt 6.8.3 ; pas un binaire universel glibc.
+Linux standalone : Ubuntu 24.04 x64, Qt 6.8.3 ; pas un binaire universel glibc.
+Linux système utilise Qt fourni par apt, sans imposer un SDK Qt externe à
+l'utilisateur ; les paquets Debian/Fedora/Arch utilisent aussi leurs dépôts natifs.
 macOS : runners `macos-15` arm64 et `macos-15-intel` x64, dépendances Homebrew.
 Le minimum macOS effectif dépend des bouteilles Homebrew : ne pas annoncer
 macOS 12 sur la seule base du support de Qt. Les versions installées figurent
