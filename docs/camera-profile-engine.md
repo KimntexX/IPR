@@ -341,6 +341,48 @@ Avant un déploiement, vérifier les métadonnées réellement retournées par L
 
 Le moteur ne fabrique pas de profils caméra ou optique à partir du nom de l'équipement. Un profil calibré nécessite une source autorisée, ou des données de calibration mesurées : RAW avec charte couleur pour le rendu caméra ; mires et prises de vue couvrant les réglages optiques pertinents pour l'objectif. Des fichiers de profil synthétiques ne doivent jamais être utilisés comme profils réels.
 
+## Retouche température/nuance avant DCP — 11 octobre 2026
+
+Un RAW développé avec DCP conserve désormais un `DcpWorkingContext` immuable :
+RGB capteur après balance LibRaw et corrections optiques, blanc capteur issu
+des inverses des multiplicateurs effectivement employés, chemin DCP, température
+source et options de rendu. Les réglages manuels ne redécodent pas le RAW.
+L'auto WB et la normalisation modifient toujours le décodage amont.
+
+Le pipeline est : source capteur → gains température/nuance → DCP (matrices,
+tables et courbe) → réglages photographiques → gamut/encodage de sortie.
+Pour un TIFF/JPEG, sans source capteur ni DCP, la balance reste une adaptation
+dans l'espace RGB linéaire du fichier : il s'agit d'un autre domaine d'entrée,
+pas d'un mode de compatibilité avec l'ancien traitement RAW.
+
+La `ColorMatrix` interpolée en température réciproque transforme XYZ vers le
+capteur. Son inverse appliqué au blanc capteur donne un blanc XYZ de référence.
+On conserve l'écart de ce blanc au lieu planckien en CIE 1960 `uv`, puis on
+déplace le blanc selon la température cible et la normale au lieu pour la
+nuance. La distance vaut `-nuance/3000`, selon la convention de distance du
+[DNG SDK, `dng_temperature.cpp`](https://android.googlesource.com/platform/external/dng_sdk/+/refs/heads/android14-prebuilt-test/source/dng_temperature.cpp).
+IPR utilise une approximation continue de Krystek, pas la table Robertson ni
+le modèle propriétaire de Lightroom. Le 11 octobre 2026, l'utilisateur a
+accepté visuellement le rendu, légèrement plus violet à 2000 K et plus orangé
+à 50000 K que Lightroom. La généralisation attend des retours sur d'autres
+boîtiers, objectifs et profils ; aucune parité numérique n'est revendiquée.
+
+Pour chaque canal, `gain = neutre_source / neutre_cible`, puis les gains sont
+normalisés sur le vert. Aucun poids ne dépend du nom commercial du profil.
+Nuance 0 est relative au blanc enregistré, pas une attribution universelle
+de la valeur +5 donnée par Lightroom sur le corpus courant. Le rendu au
+réglage source arrondi/nuance 0 retourne l'image d'origine sans transformation.
+Une matrice absente, singulière ou un blanc cible à composantes capteur non
+positives provoque un échec explicite ; aucun retour silencieux au traitement
+RAW post-DCP. Les combinaisons extrêmes température/nuance hors du domaine
+de caractérisation restent une limite à tester, sans revendication de parité LR.
+
+Le proxy redimensionne aussi le RGB capteur à sa propre géométrie. Le cache
+LRU comptabilise ce tampon, en dédupliquant les allocations partagées. Le
+changement de profil conserve le tampon et les options, et remplace seulement
+le DCP associé. L'empreinte moteur de restauration passe à
+`ipr-render-2026-10-11-wb-capteur-v3` pour distinguer les rendus.
+
 ## Tests automatisés
 
 La cible `cameraProfileEngineTests` génère des DCP/LCP de petite taille dans un répertoire temporaire. Elle couvre notamment :

@@ -6,6 +6,9 @@
 #include <QString>
 #include <opencv2/core.hpp>
 #include <optional>
+#include <memory>
+
+namespace CameraProfileEngine { struct DcpWorkingContext; }
 
 namespace ColorPipeline {
 
@@ -17,6 +20,7 @@ struct WorkingImage
     QColorSpace colorSpace = QColorSpace(QColorSpace::SRgbLinear);
     QString sourceProfile;
     std::optional<double> referenceWhiteBalanceKelvin;
+    std::shared_ptr<const CameraProfileEngine::DcpWorkingContext> dcpContext;
 
     bool isNull() const { return linearRgba.empty(); }
 };

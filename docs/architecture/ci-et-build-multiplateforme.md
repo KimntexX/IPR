@@ -118,7 +118,23 @@ Pas de validation locale macOS, Fedora, Arch ou standalone Linux Qt 6.8.3.
 La matrice GitHub devra confirmer ces chemins ; ces résultats locaux ne valent
 pas certification des machines cibles ni validation des fonctions photographiques.
 La compilation actuelle de `patch_couleur` et les images de comparaison sont
-restées intactes. Aucun merge ni tag de validation n'est livré avec cette branche.
+restées intactes. Cet état local précédait la publication et la validation GitHub.
+
+## Validation GitHub et livraison du 11 octobre 2026
+
+La [CI native 38166255714](https://github.com/KimntexX/IPR/actions/runs/38166255714)
+est réussie sur Windows, Ubuntu, macOS Apple Silicon et macOS Intel :
+18 CTest et 113 tests Python par plateforme. La branche testée est
+`patch_ci_cd`, commit `5682bcbd78534532c7cdc03262ce24d457167220`.
+Le patch CI/CD est intégré dans `dev` avec fusion `--no-ff` et tag
+`v0.1.16-alpha`, conformément au compteur confirmé par l'utilisateur.
+`main` reste inchangée ; la branche de groupe est conservée.
+
+Les corrections de portabilité concernent les chemins canoniques des profils
+(`/var` et `/private/var` sur macOS) et la destruction du root QML avant sa
+fenêtre dans le test de zoom/comparatif. Les compilations et tests natifs
+ne certifient pas les paquets de livraison, les conteneurs Fedora/Arch,
+ni l'ergonomie sur une machine utilisateur ; ces validations restent distinctes.
 
 ## Références de déploiement
 

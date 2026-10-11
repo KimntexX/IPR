@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-11 19:17:59 UTC",
+  "group": "ci-cd",
+  "version": "v0.1.16-alpha",
+  "validated_branch": "patch_ci_cd",
+  "validated_commit": "5682bcbd78534532c7cdc03262ce24d457167220",
+  "ci": {
+    "run_id": 38166255714,
+    "url": "https://github.com/KimntexX/IPR/actions/runs/38166255714",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 114549348031,
+        "name": "native (windows-2022)",
+        "status": "completed",
+        "conclusion": "success",
+        "ctest_tests": 18,
+        "python_tests": 113
+      },
+      {
+        "id": 114549348148,
+        "name": "native (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "ctest_tests": 18,
+        "python_tests": 113
+      },
+      {
+        "id": 114549348228,
+        "name": "native (macos-15)",
+        "status": "completed",
+        "conclusion": "success",
+        "ctest_tests": 18,
+        "python_tests": 113
+      },
+      {
+        "id": 114549348251,
+        "name": "native (macos-15-intel)",
+        "status": "completed",
+        "conclusion": "success",
+        "ctest_tests": 18,
+        "python_tests": 113
+      }
+    ]
+  },
+  "patch_counter": {
+    "previous_named_version": "v0.1.15-alpha",
+    "patches_delivered": 1,
+    "new_counter": 16,
+    "operator_confirmation": "11 octobre 2026 : 16 pour CI/CD, puis 17 pour couleur"
+  },
+  "scope": [
+    "CI native complete Windows/Linux/macOS arm64 et x86_64",
+    "Scripts et workflows de livraison standalone et bibliotheques systeme",
+    "Corrections de portabilite des tests et cycle de vie Qt"
+  ],
+  "limits": [
+    "Tests headless et synthetiques : pas de certification visuelle sur toutes les machines.",
+    "Les jobs de livraison et les conteneurs Debian/Fedora/Arch ne sont pas validates par cette seule CI native.",
+    "Pas de signature/notarisation ni de profils Adobe redistribues."
+  ],
+  "merge_policy": {
+    "target": "dev",
+    "no_fast_forward": true,
+    "main_untouched": true,
+    "branches_preserved": true
+  }
+}

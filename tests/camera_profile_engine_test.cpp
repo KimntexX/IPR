@@ -1,4 +1,5 @@
 #include "CameraProfileEngine.h"
+#include "imageeditor.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -9,6 +10,23 @@
 #include <cmath>
 #include <cstring>
 #include <iostream>
+
+// Exercise the exact renderer/proxy used by preview and export through the
+// existing test-generator friend; no extra production API is introduced.
+class IprTestImageGenerator {
+public:
+    static ColorPipeline::WorkingImage render(const ColorPipeline::WorkingImage &source,
+                                               int temperature, int tint, float ev = 0) {
+        ImageEditor::Settings settings;
+        settings.temperature = temperature;
+        settings.tint = tint;
+        settings.brightness = ev;
+        return ImageEditor::renderWorkingImage(source, settings);
+    }
+    static ColorPipeline::WorkingImage proxy(const ColorPipeline::WorkingImage &source) {
+        return ImageEditor::buildEditProxy(source);
+    }
+};
 
 namespace {
 
@@ -215,6 +233,83 @@ int main(int argc, char **argv)
     const QString dcpPath = QDir(dcpDirectory).filePath("R6.dcp");
     if (!check(writeFile(dcpPath, makeDcp()), "synthetic DCP should be written"))
         return 1;
+
+    const QString wbPath = QDir(dcpDirectory).filePath("WB.dcp");
+    if (!check(writeFile(wbPath, makeDcp(true, false, false, false, 0, 0,
+                                        0, 0, 1, .8f, true)), "WB fixture")) return 1;
+    CameraProfileEngine::DcpWorkingContext wb;
+    wb.profilePath = wbPath;
+    wb.sourceKelvin = 5200.25;
+    wb.cameraNeutral = cv::Vec3d(.95, 1, 1.08);
+    wb.cameraRgb = cv::Mat(2, 3, CV_32FC3, cv::Scalar(.18, .15, .22));
+    wb.options.cameraBaselineExposureEv = -.25;
+    const cv::Mat untouched = wb.cameraRgb.clone();
+    QString wbError;
+    cv::Vec3d gains;
+    if (!check(CameraProfileEngine::whiteBalanceGains(wb, 5200, 0, gains, &wbError) &&
+                   gains == cv::Vec3d(1,1,1), "rounded As Shot is exact identity")) return 1;
+    cv::Mat neutralExpected = untouched.clone(), rendered;
+    if (!check(CameraProfileEngine::applyDcp(wbPath, neutralExpected, wb.sourceKelvin,
+                                             &wbError, wb.options) &&
+                   CameraProfileEngine::renderWhiteBalance(wb, 5200, 0, rendered, &wbError) &&
+                   cv::norm(rendered, neutralExpected, cv::NORM_INF) == 0,
+               "neutral DCP preserves fractional CCT and exposure options exactly")) return 1;
+    for (int temperature : {2000, 3500, 5200, 9000, 50000}) {
+        for (int tint : (temperature == 5200 ? std::vector<int>{-150,-25,0,25,150} : std::vector<int>{0})) {
+            if (!check(CameraProfileEngine::whiteBalanceGains(wb, temperature, tint, gains, &wbError) &&
+                           gains[1] == 1 && gains[0] > 0 && gains[2] > 0,
+                       "individual temperature/tint sweeps have finite positive camera gains")) return 1;
+            cv::Mat expected;
+            cv::transform(untouched, expected, cv::Matx33f(
+                float(gains[0]),0,0, 0,1,0, 0,0,float(gains[2])));
+            const double kelvin = temperature == 5200 && tint == 0 ? wb.sourceKelvin : temperature;
+            if (!check(CameraProfileEngine::applyDcp(wbPath, expected, kelvin, &wbError, wb.options) &&
+                           CameraProfileEngine::renderWhiteBalance(wb, temperature, tint, rendered, &wbError) &&
+                           cv::norm(expected, rendered, cv::NORM_INF) == 0 && cv::checkRange(rendered),
+                       "WB is before nonlinear DCP, not a post-curve multiplication")) return 1;
+        }
+    }
+    if (!check(cv::norm(wb.cameraRgb, untouched, cv::NORM_INF) == 0,
+               "repeated WB edits never mutate the retained camera source")) return 1;
+    ColorPipeline::WorkingImage editorSource;
+    std::vector<cv::Mat> editorChannels;
+    cv::split(neutralExpected, editorChannels);
+    editorChannels.push_back(cv::Mat(neutralExpected.size(), CV_32FC1, cv::Scalar(1)));
+    cv::merge(editorChannels, editorSource.linearRgba);
+    editorSource.referenceWhiteBalanceKelvin = wb.sourceKelvin;
+    editorSource.dcpContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(wb);
+    const auto editorNeutral = IprTestImageGenerator::render(editorSource, 5200, 0);
+    if (!check(editorNeutral.linearRgba.data == editorSource.linearRgba.data,
+               "editor neutral is the untouched source, not a WB round trip")) return 1;
+    if (!CameraProfileEngine::renderWhiteBalance(wb, 2000, 0, rendered, &wbError)) return 1;
+    const auto editorCold = IprTestImageGenerator::render(editorSource, 2000, 0, 1);
+    cv::Mat expectedRgba;
+    editorChannels.clear();
+    cv::split(rendered * 2.f, editorChannels);
+    editorChannels.push_back(cv::Mat(rendered.size(), CV_32FC1, cv::Scalar(1)));
+    cv::merge(editorChannels, expectedRgba);
+    if (!check(!editorCold.isNull() && cv::norm(expectedRgba, editorCold.linearRgba, cv::NORM_INF) < 1e-6,
+               "editor applies WB once before exposure, preserves alpha")) return 1;
+    auto large = editorSource;
+    cv::repeat(editorSource.linearRgba, 1, 800, large.linearRgba);
+    auto largeContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(wb);
+    cv::repeat(wb.cameraRgb, 1, 800, largeContext->cameraRgb);
+    large.dcpContext = largeContext;
+    const auto proxy = IprTestImageGenerator::proxy(large);
+    if (!check(proxy.dcpContext && proxy.dcpContext->cameraRgb.size() == proxy.linearRgba.size() &&
+                   proxy.linearRgba.cols == 2048 && large.dcpContext->cameraRgb.cols == 2400 &&
+                   !IprTestImageGenerator::render(proxy, 2000, 0).isNull(),
+               "proxy WB uses its own camera geometry without mutating the full-resolution source")) return 1;
+    CameraProfileEngine::whiteBalanceGains(wb, 2000, 0, gains, &wbError);
+    if (!check(gains[0] < gains[2], "cold temperature favours blue")) return 1;
+    CameraProfileEngine::whiteBalanceGains(wb, 9000, 0, gains, &wbError);
+    if (!check(gains[0] > gains[2], "warm temperature favours red")) return 1;
+    if (!check(!CameraProfileEngine::whiteBalanceGains(wb, 1999, 0, gains, &wbError) &&
+                   !CameraProfileEngine::whiteBalanceGains(wb, 5200, 151, gains, &wbError),
+               "invalid UI ranges fail explicitly")) return 1;
+    wb.profilePath = dcpPath; // ForwardMatrix alone cannot characterize sensor white.
+    if (!check(!CameraProfileEngine::whiteBalanceGains(wb, 2000, 0, gains, &wbError),
+               "missing ColorMatrix cannot silently use a post-DCP RAW approximation")) return 1;
 
     const QString lcpPath = QDir(lcpDirectory).filePath("RF24-70.lcp");
     const QByteArray lcp =

@@ -2,6 +2,7 @@
 #include "DecodedImageCache.h"
 #include "imageprovider.h"
 #include "RawDecoder.h"
+#include "CameraProfileEngine.h"
 
 #include <QCoreApplication>
 #include <QDataStream>
@@ -109,6 +110,17 @@ bool verifyDecodedImageCache()
     if (!check(imageBytes == 10U * 10U * 4U * sizeof(float),
                "a shallow edit proxy must not be counted twice"))
         return false;
+
+    auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>();
+    context->cameraRgb = cv::Mat::zeros(10, 10, CV_32FC3);
+    auto withContext = sharedProxy;
+    withContext.image.dcpContext = context;
+    withContext.editProxy.dcpContext = context;
+    if (!check(DecodedImageCache::entrySizeBytes(withContext) == imageBytes + 1200,
+               "shared camera source counted exactly once in LRU budget")) return false;
+    DecodedImageCache limited(imageBytes);
+    limited.insert("oversized-context", withContext);
+    if (!check(limited.count() == 0, "pre-DCP storage cannot bypass the LRU budget")) return false;
 
     DecodedImageCache cache(imageBytes * 2);
     cache.insert(QStringLiteral("first"), sharedProxy);

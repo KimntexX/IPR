@@ -46,10 +46,12 @@ struct SourceMetadata
 };
 
 // One immutable, pre-DCP buffer for the active image only (not an unbounded cache).
-// LCP and LibRaw WB have already been applied. A new WB/normalization needs decode.
+// LCP and LibRaw WB have already been applied. Auto WB/normalization needs decode;
+// manual temperature/tint edits reuse the camera-space working context.
 struct DcpSource
 {
     cv::Mat cameraRgb;
+    std::shared_ptr<const CameraProfileEngine::DcpWorkingContext> workingContext;
     SourceMetadata metadata;
     std::optional<double> whiteBalanceKelvin;
     QString defaultProfile;
