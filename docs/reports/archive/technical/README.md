@@ -1,3 +1,5 @@
+*[Français](README.md) | [English](README_en.md)*
+
 # Archives techniques
 
 Onze rapports de développement ont été migrés ici le 3 octobre 2026. Ils sont des preuves datées ; les décisions encore actives sont portées par les ADR et les spécifications.

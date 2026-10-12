@@ -1,4 +1,5 @@
 # CI et livraison multiplateforme
+*[Français](ci-et-build-multiplateforme.md) | [English](ci-et-build-multiplateforme_en.md)*
 
 Implémentation du 11 octobre 2026, branche durable `patch_ci_cd` issue de `dev`.
 Les changements couleur locaux non validés ne font pas partie de cette livraison.

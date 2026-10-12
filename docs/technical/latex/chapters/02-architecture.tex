@@ -8,17 +8,16 @@ L'interface QML constitue la couche de présentation. Elle délègue l'ouverture
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[node distance=9mm and 13mm]
-  \node[component] (qml) {QML\\Main, Settings, ruban de vignettes};
+  \node[component] (qml) {QML\\Main, Setting, ruban de vignettes};
   \node[component, right=of qml] (editor) {\texttt{ImageEditor}\\orchestration et état};
   \node[service, right=of editor] (pipeline) {Décodage RAW / profils\\\texttt{ColorPipeline}\\rendu};
-  \node[service, below=of pipeline] (cache) {\texttt{DecodedImageCache}\\LRU borné};
+  \node[service, below=of pipeline] (cache) {{\footnotesize\texttt{DecodedImageCache}}\\LRU borné};
   \node[storage, below=of editor] (sidecar) {Source +\\sidecar \texttt{.ipr}};
-  \node[component, below=of qml] (providers) {\texttt{ImageProvider}\\\texttt{ThumbnailProvider}};
+  \node[component, below=of qml] (providers) {{\footnotesize\texttt{ImageProvider}}\\{\footnotesize\texttt{ThumbnailProvider}}};
   \draw[flow] (qml) -- node[above, font=\scriptsize]{signaux / propriétés} (editor);
   \draw[flow] (editor) -- node[above, font=\scriptsize]{demande de rendu} (pipeline);
   \draw[flow] (editor) -- (sidecar);
   \draw[flow] (editor) -- (cache);
-  \draw[flow] (pipeline) -- (cache);
   \draw[flow] (editor) -- (providers);
   \draw[flow] (providers) -- (qml);
 \end{tikzpicture}
@@ -39,21 +38,30 @@ synchronisation atomique requise~\cite{qtQSettings,qtQStandardPaths}.
 La géométrie normale est conservée indépendamment de l'état maximisé ou plein
 écran ; la fenêtre est replacée sur un écran disponible au redémarrage.
 Le contrat complet est décrit dans \texttt{docs/architecture/ui-preferences.md}.
+Depuis le build portable du 8 octobre, la présence de
+\texttt{config/ipr-ui.ini} à côté de l'exécutable prend priorité sur ce chemin
+utilisateur. Le manifeste RAW local peut résider dans
+\texttt{config/raw-normalization.json} ; ces deux fichiers ont des rôles distincts.
 
 \section{Image de travail et ordonnancement}
 
 L'image de travail est une représentation RGBA à virgule flottante, \texttt{WorkingImage}. Elle évite les erreurs d'arrondi prématurées et autorise des valeurs supérieures à~1 avant le codage de sortie. Le moteur applique les corrections dans un ordre explicite :
 
 \begin{enumerate}
-  \item décodage et normalisation de l'image source ;
-  \item exposition, contraste et réglages de tonalité ;
-  \item température, teinte et corrections de chrominance ;
-  \item mélangeur de couleur, color grading, texture, clarté, voile et grain ;
-  \item courbes de tonalité et courbes de canaux ;
-  \item conversion vers le format et l'espace de sortie.
+  \item décodage RAW, normalisation contrôlée éventuelle, LCP puis DCP ;
+  \item niveaux de gris éventuels, exposition, contraste ;
+  \item température/nuance, ombres, noirs, hautes lumières et blancs ;
+  \item vibrance/saturation, mélangeur et color grading ;
+  \item réduction du bruit, texture, clarté et correction du voile ;
+  \item courbes luminance/RGB, flou, netteté et grain ;
+  \item gamut mapping et encodage de sortie.
 \end{enumerate}
 
-Cet ordre importe : une correction de balance des blancs agit sur des données plus proches du capteur, tandis que les courbes servent de finition. Les rendus sont déclenchés avec une temporisation courte lors d'une manipulation continue afin de regrouper les événements d'un curseur.
+La WB caméra est appliquée au décodage ; les curseurs température/nuance sont
+une adaptation supplémentaire du RGB de travail. Ils ne doivent pas être
+confondus avec cette WB initiale. L'ordre ci-dessus décrit le chemin avec DCP ;
+sans DCP, le LCP agit sur le sRGB linéaire fourni par LibRaw. Les rendus sont
+regroupés par temporisation pendant la manipulation d'un curseur.
 
 \section{Zoom et comparaison origine/actuel}
 
@@ -90,3 +98,27 @@ Les vignettes suivent une politique distincte : la vue charge les éléments vis
 \section{Profils appareil et objectif}
 
 Les profils DCP (rendu couleur de boîtier) et LCP (corrections d'objectif) sont recherchés dans une bibliothèque locale indexée. Cette stratégie accélère la résolution des profils et évite une exploration répétée de l'arborescence d'installation. Les fichiers de profils doivent provenir d'une source dont la licence autorise explicitement leur redistribution ; l'index local ne constitue pas une autorisation de copier les profils d'un produit tiers.
+
+\section{Développement RAW contrôlé}
+
+\texttt{RawDevelopmentModule.qml} permet de choisir un DCP compatible, de
+modifier la WB automatique et de cocher la normalisation expérimentale.
+\texttt{RawNormalization::resolve()} vérifie un manifeste borné, les SHA-256
+RAW/DCP, l'ISO, les noirs, le boîtier et la version LibRaw. Le gain d'exposition
+de base et le blanc audités ne sont appliqués qu'après validation ; un refus
+conserve le chemin non calibré. Les clés du cache distinguent profil et manifeste.
+
+Camera Neutral est accepté visuellement sur le corpus local, sans parité
+Lightroom ni fidélité physique certifiée. Adobe Standard reste à traiter.
+La calibration actuelle concerne cinq fichiers exacts ; elle ne constitue
+pas une règle générale pour le R6 Mark III. Le sidecar v5 conserve le profil,
+le manifeste, leurs SHA-256, l'activation et la version du moteur/LibRaw.
+Ces choix et la WB automatique sont restaurés avant décodage. Le LCP reste
+automatique et n'est pas encore figé dans la recette.
+
+Le changement de DCP est une retouche : un tampon caméra pré-DCP actif
+(384 Mio maximum, hors LRU) permet d'appliquer le nouveau profil sans
+réexécuter LibRaw. L'aperçu, le zoom et les réglages restent disponibles.
+La WB RAW, la calibration ou l'absence de tampon nécessitent encore un
+décodage. Une erreur conserve la base précédente. Les réinitialisations des
+retouches et du profil/calibration sont distinctes.

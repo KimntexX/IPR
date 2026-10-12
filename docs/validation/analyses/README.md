@@ -1,8 +1,42 @@
+*[Français](README.md) | [English](README_en.md)*
+
 # Analyses de validation
 
-Chaque analyse doit pointer vers son protocole, ses données brutes, la version du logiciel et la décision issue de la campagne. Nom : `analyse-<fonction>-YYYY-MM-DD.md`.
+Chaque ensemble de fonctionnalités possède un seul rapport évolutif ; ses campagnes
+datées y restent explicitement séparées. Chaque campagne pointe vers son protocole,
+ses données brutes, la version du logiciel et la décision. Les anciens noms datés
+restent des renvois compatibles, pas des rapports à alimenter en parallèle.
+
+Depuis le 9 octobre, les [JSON versionnés et horodatés](../data/README.md)
+font autorité sur les données. Avant suppression des exports, préserver mesures,
+audits et provenance. Règle du 10 octobre : IPR seulement si verdict négatif,
+IPR et Lightroom de la série si positif et validé. RAW et neutres communs sont
+préservés ; aucune suppression sur verdict ambigu ou mémoire incomplète.
+Lumières regroupe exposition, contraste, ombres, noirs, blancs et HL dans le
+[rapport commun existant](analyse-validation-lumieres-base-2026-10-02.md).
+Les anciens rapports séparés de ces contrôles restent historiques ; ne plus
+les mettre à jour en parallèle. Les futures conclusions restent dans le rapport commun.
+
+## Rapports de référence
+
+- [Couleur](analyse-couleur.md) : température, nuance, vibrance, saturation,
+  niveaux de gris ; première vérification native de l'outillage sur 40 états,
+  sans nouvelle validation visuelle ou comparaison Lightroom.
+
+- [Base colorimétrique](analyse-base-colorimetrique.md).
+- [Mélangeur de couleurs](analyse-color-mixer.md) : quatre campagnes regroupées.
+- [Bruit](analyse-bruit.md) : deux campagnes et correctif regroupés.
+- [CSV et graphiques dérivés](../metrics/README.md).
+
+Les autres familles ci-dessous conservent leur rapport unique existant ; inutile
+de renommer un fichier uniquement pour sa date. Les liens historiques qui suivent
+renvoient à la campagne correspondante dans le rapport de référence.
 
 ## Campagnes récentes
+
+- [Lumières Camera Neutral — six scènes, 9 octobre](analyse-validation-lumieres-base-2026-10-02.md#campagne-complete-lumieres--nouveaux-neutres-9-octobre-2026) : 144 variantes complètes et auditées ; EV revalidé, amplitude Ombres positive et saturation Blancs/HL à poursuivre.
+
+- [Exposition Camera Neutral — 9 octobre](analyse-validation-lumieres-base-2026-10-02.md#revalidation-de-lexposition--camera-neutral-9-octobre-2026) : loi EV revalidée sur six scènes ; complément LR 0037 et optique 9421 requis.
 
 - [Réduction de bruit v2 — revalidation et corpus étendu](analyse-bruit-v2-2026-10-05.md) :
   145 variantes, 24 neutres et douze scènes ; progressivité et stabilité sombre

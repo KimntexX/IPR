@@ -65,31 +65,17 @@ pas de MAE pixel-à-pixel LR/IPR ni de classement absolu sur leurs seuls ratios.
 ## Outils / mappings
 
 ```bash
-python3 -m unittest discover -s tests -p test_analyse_noise.py
-python3 tests/analyse_noise.py --root tests/image/base --output docs/validation/raw/inventaire-bruit-vNNN-NOUVEL-HORODATAGE.json
-python3 tests/analyse_noise.py --root tests/image/base --analyse --output docs/validation/raw/mesure-bruit-vNNN-NOUVEL-HORODATAGE.json
+python tests/analyse_bruit.py --base tests/image/base --strict --data-version 1
 ```
 
-Le comparateur lit les séries historiques quatre états : fichier sans suffixe
-25, `-2` 50, `-3` 75, `-4` 100, **pas** neutre. Réexports de collision non
-renommés automatiquement. Associations explicites :
-
-- `--neutral-file IMAGE_ID IPR CHEMIN` (ou `LR`).
-- `--variant-file IMAGE_ID COMPOSANTE LR NUMERO CHEMIN`, numéro 1–4 ; la
-  valeur XMP observée reste auditable même si le nom est erroné.
-- `--extra-state IMAGE_ID luminance IPR VALEUR CHEMIN` pour 1/5/10.
-- `--image-id` limite les scènes ; `--previews DOSSIER` produit des aperçus
-  diagnostiques 8 bits, jamais utilisés comme métriques.
-
-Un neutre manquant peut conduire l'outil à une ancre non nulle diagnostique :
-cela **ne valide pas** une réponse à zéro. Les états invalides gardent
-`state_valid=false`. L'analyse refuse d'écraser une mesure et contrôle les
-fichiers pendant la lecture. Le manifeste générateur nécessite des associations
-explicites, il n'est pas importé automatiquement.
-
-L'ancien [lanceur v2](../raw/analyse-bruit-v2-2026-10-05.sh) conserve les
-mappings de la campagne du 5 octobre (suffixes IPR 5–8 et LR 9890 corrigés).
-Il sert à l'historique, pas à certifier la présence actuelle de ces pixels.
+Les valeurs IPR proviennent du TIFF déclaré, les valeurs LR du XMP. Chaque
+série doit avoir une référence propre au moteur. Références ambiguës,
+ancien TIFF IPR non déclaré, géométrie différente ou état non auditable :
+corriger l'entrée ou fournir un mapping explicite à l'analyseur.
+Les ROI automatiques ne remplacent pas une sélection sémantique de zones
+planes/texturées ; annoter les régions dans le mapping si nécessaire.
+Les mémoires des campagnes précédentes restent des preuves, pas une API
+de compatibilité à utiliser pour les nouveaux exports.
 Rapport unique courant : [analyse Bruit](../analyses/analyse-bruit.md).
 Clôture et nettoyage : socle commun. La [netteté](protocole-nettete.md)
 est une recette distincte, puis un test de couplage.

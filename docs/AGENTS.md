@@ -1,5 +1,15 @@
 # Règles documentaires
 
+## Génération des documents en anglais — règle du 11 octobre 2026
+
+La génération des versions anglaises des documents INDEX.md et README.md dans tout le projet est effectuée par l'assistant IA sur la branche **`patch_documentation`**. Cela inclut également la traduction des fichiers de documentation technique LaTeX et des documents markdown dans les sous-dossiers.
+
+Les traductions doivent :
+- Conserver la terminologie technique exacte (DCP, LCP, RAW, EV, etc.)
+- Maintenir la structure et les liens internes
+- Respecter le format des fichiers source (LaTeX, markdown)
+- Ajouter les bascules de langue dans les en-têtes : `*[Français](README.md) | [English](README_en.md)*`
+- Être validées avant fusion dans `dev`
 ## Analyses fonctionnelles — règle du 9 octobre 2026
 
 Règle demandée par l'utilisateur, applicable aux prochaines analyses et reprises :
@@ -18,18 +28,40 @@ Règle demandée par l'utilisateur, applicable aux prochaines analyses et repris
 - Avant clôture, préserver mesures par scène/état, unités, audits, exclusions,
   provenance, réglages, versions des outils et protocole. Ne pas se limiter
   aux moyennes ou aux captures de tableaux.
-- Règle précisée le 10 octobre 2026 : après chaque fonctionnalité analysée,
-  supprimer les exports IPR si le résultat est négatif ; supprimer les exports
-  IPR et Lightroom de la série si le résultat est positif et validé. Un résultat
-  ambigu, incomplet ou une mémoire JSON incomplète bloque cette suppression.
-  Préserver les RAW, les neutres communs et les séries non encore analysées.
-  Journaliser les chemins exacts et tailles supprimés après vérification de leur
-  confinement dans le corpus. Signaler les limites de reproductibilité sans
-  pixels : une empreinte n'est pas une sauvegarde.
+- La suppression des exports après analyse est manuelle, par l'utilisateur.
+  Aucun générateur ou analyseur ne déclenche de nettoyage automatique.
+  Préserver les RAW et les mémoires JSON ; signaler les limites de
+  reproductibilité sans pixels : une empreinte n'est pas une sauvegarde.
 - Les anciennes données JSON/TXT/CSV restent historiques : ne pas inventer
   les métadonnées manquantes ni annoncer une migration complète non vérifiée.
 
+Précision du 11 octobre 2026 : pour les prochaines générations, les exports
+sont placés dans les dossiers existants partagés entre logiciels, sans dossiers
+datés ni fichiers auxiliaires de génération. Leur suppression après analyse
+est désormais **manuelle, par l'utilisateur** ; ne plus appliquer automatiquement
+la suppression conditionnelle historique du 10 octobre. Les JSON versionnés et horodatés des
+mesures restent la source de vérité. Décrire le générateur courant seulement,
+sans maintenir les anciens modes ou leurs tests de compatibilité.
+
+## Protocoles fonctionnels — consolidation du 10 octobre 2026
+
+- Maintenir un protocole évolutif par groupe sous `validation/protocols/`,
+  sans date dans le nom des nouveaux fichiers. Les campagnes portent leurs
+  propres versions et horodatages dans les JSON immuables.
+- Utiliser `validation/protocols/protocole-commun.md` pour les conditions
+  transversales ; éviter de recopier ce socle dans chaque recette.
+- Les anciens protocoles de curseurs fusionnés restent des renvois stables,
+  pas des documents à maintenir en parallèle. Conserver les méthodes
+  spécialisées distinctes lorsqu'elles testent une autre hypothèse (exemple :
+  niveaux blancs capteur Canon versus curseur Blancs).
+- Décrire seulement les options/outils réellement disponibles. Signaler les
+  analyseurs manquants, les conversions 8 bits/redimensionnements historiques
+  et les associations incompatibles avec les déclarations TIFF courantes.
+- Un protocole prêt n'est pas une validation : ne pas modifier les verdicts
+  historiques ni réutiliser une campagne de profil différent sans audit.
+
 ## Conventions de rédaction LaTeX
+
 
 Règle demandée le 8 octobre 2026, applicable à tous les nouveaux documents LaTeX sous `docs/` et aux prochaines reprises de mise en page des documents existants, y compris Scholar et le manuel technique.
 

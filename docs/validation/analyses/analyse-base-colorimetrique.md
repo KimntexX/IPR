@@ -1,7 +1,12 @@
 # Base colorimétrique — Rapport d'analyse évolutif
 
 **Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 8 octobre 2026.
-**Statut :** absence de changement des exports
+**Statut actuel :** Camera Neutral accepté visuellement ; module IHM et ZIP local
+disponibles (§25–26). Normalisation limitée à cinq RAW exacts, désactivée par défaut.
+Standard, résidus et fidélité physique restent ouverts. Les
+[CSV et courbes](../metrics/README.md) sont dérivés de ces preuves.
+
+**Historique des étapes :** absence de changement des exports
 confirmée sur le lot du 6 octobre ; correctif d'espace DCP appliqué puis
 mesuré sur les TIFF v2 du 7 octobre ; audit Canon et perte de précision
 dans l'encodage Qt réalisés (§14) ; fidélité absolue non validée.
@@ -1642,7 +1647,7 @@ de structure sont conservés dans les mesures.
 
 ```powershell
 .\build-windows-msvc\Release\tonalBaseProbe.exe --profile-samples `
-  build-canon-blancs-ab-20261007/manifest.json NOUVEAU_DOSSIER `
+  build-canon-blancs-ab-20261007/manifest.json build-diagnostic-profils-raw-20261007 `
   'C:\ProgramData\Adobe\CameraRaw\CameraProfiles\Adobe Standard\Canon EOS R6 Mark III Adobe Standard.dcp' `
   'C:\ProgramData\Adobe\CameraRaw\CameraProfiles\Camera\Canon EOS R6 Mark III\Canon EOS R6 Mark III Camera Neutral.dcp' `
   'C:\ProgramData\Adobe\CameraRaw\CameraProfiles\Camera\Canon EOS R6 Mark III\Canon EOS R6 Mark III Camera Standard.dcp'
@@ -1650,7 +1655,7 @@ de structure sont conservés dans les mesures.
 
 ```bash
 python3 tests/analyse_tonal_rendering.py \
-  --probe build-canon-profils-tonal-20261007 \
+  --probe build-diagnostic-profils-raw-20261007 \
   --reference docs/validation/raw/mesure-base-colorimetrique-v3-20261007.json \
   --output NOUVELLE_MESURE.json
 python3 -m unittest discover -s tests -p test_analyse_base_colorimetrique.py
@@ -1698,9 +1703,12 @@ L'export Lightroom supplémentaire de **9421 / Camera Neutral** n'a pas
 contre ce nouveau lot reste une comparaison **entre profils différents**,
 pas une validation de notre application de ce DCP au même profil dans LR.
 
-Le dossier **`NOUVEAU_DOSSIER`**, créé par les commandes de l'utilisateur,
+Le dossier **`build-diagnostic-profils-raw-20261007`**, créé par les commandes de l'utilisateur
+(anciennement `NOUVEAU_DOSSIER`, renommé le 9 octobre 2026 sans modifier les données),
 contient les 36 variantes de profils attendues. Son manifeste a exactement
-la même empreinte que `build-canon-profils-tonal-20261007/manifest.json`.
+la même empreinte que l'ancien `build-canon-profils-tonal-20261007/manifest.json`.
+Cette copie a été supprimée le 10 octobre après comparaison SHA-256 des 73
+fichiers ; les commandes utilisent désormais le dossier conservé.
 Les flottants et empreintes DCP sont vérifiés par l'analyseur. Les témoins
 Adobe Standard avec LCP reproduisent encore exactement les grilles v3.
 Le rendu sélectionné pour cette campagne est **Adobe Standard sans LCP**.
@@ -1810,15 +1818,16 @@ nouvelle prise de vue n'est nécessaire ; le corpus RAW existant suffit.
 
 ```bash
 python3 tests/analyse_tonal_rendering.py \
-  --probe NOUVEAU_DOSSIER \
+  --probe build-diagnostic-profils-raw-20261007 \
   --reference docs/validation/raw/mesure-base-colorimetrique-v3-20261007.json \
   --lr-suffix=-2 --geometry=without_lcp \
   --output NOUVELLE_MESURE_HARMONISEE.json
 python3 -m unittest discover -s tests -p test_analyse_base_colorimetrique.py
 ```
 
-`NOUVEAU_DOSSIER` est ici **le nom réellement utilisé par l'utilisateur**,
-pas un dossier créé automatiquement par l'analyseur. Dans les commandes
+`build-diagnostic-profils-raw-20261007` désigne le dossier de sondes réel,
+initialement nommé `NOUVEAU_DOSSIER` par l'utilisateur et renommé le 9 octobre.
+Ce n'est pas un dossier créé automatiquement par l'analyseur. Dans les commandes
 précédentes, ce nom et `NOUVELLE_MESURE.json` étaient des exemples à
 remplacer. Exécuter l'ancienne commande sans `--lr-suffix=-2` continue
 à lire les anciens TIFF LR : elle ne découvre pas automatiquement les
@@ -1883,7 +1892,7 @@ gains internes entre les deux moteurs n'est pas déduite des seuls Kelvin.
 Le Kelvin estimé IPR reste distinct du Kelvin de présentation Lightroom.
 
 Les anciens TIFF restent intacts. La comparaison utilise les variantes
-IPR du dossier `NOUVEAU_DOSSIER`, sans LCP, avec contrôle des empreintes
+IPR du dossier `build-diagnostic-profils-raw-20261007`, sans LCP, avec contrôle des empreintes
 des flottants, profils et références v3. Le témoin IPR Adobe Standard
 avec LCP reproduit encore exactement la grille v3, ce qui vérifie la
 provenance de ces variantes sans demander de nouveaux exports IPR.
@@ -1987,7 +1996,7 @@ nécessaire pour valider la fidélité absolue, indépendamment de LR/Canon.
 
 ```bash
 python3 tests/analyse_tonal_rendering.py \
-  --probe NOUVEAU_DOSSIER \
+  --probe build-diagnostic-profils-raw-20261007 \
   --reference docs/validation/raw/mesure-base-colorimetrique-v3-20261007.json \
   --lr-suffix=-LR-AdobeStandard-AsShot --geometry=without_lcp \
   --neutral-suffix=-LR-CameraNeutral-AsShot \
@@ -2177,7 +2186,7 @@ Enfin, sous WSL/Linux depuis la racine du dépôt :
 python3 tests/investigate_dcp_curve.py \
   --profile '/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp' \
   --diagnostic-profile build-canon-courbes-20261008/neutral-no-curve.dcp \
-  --probe build-canon-courbes-20261008/grids --original-probe NOUVEAU_DOSSIER \
+  --probe build-canon-courbes-20261008/grids --original-probe build-diagnostic-profils-raw-20261007 \
   --reference docs/validation/raw/mesure-profils-as-shot-20261007.json \
   --output NOUVELLE_MESURE_COURBE.json
 python3 -m unittest discover -s tests -p test_analyse_base_colorimetrique.py
@@ -2393,7 +2402,7 @@ Depuis la racine, sous WSL, avec un **nouveau nom de sortie** :
 python3 tests/investigate_dcp_order.py \
   --profile '/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp' \
   --camera-probe build-canon-blancs-ab-20261007 \
-  --original-probe build-canon-profils-tonal-20261007 \
+  --original-probe build-diagnostic-profils-raw-20261007 \
   --no-curve-probe build-canon-courbes-20261008/grids \
   --reference docs/validation/raw/mesure-profils-as-shot-20261007.json \
   --dng-audit docs/validation/raw/audit-dng-reference-20261008-controle.json \
@@ -2729,7 +2738,7 @@ python3 tests/prepare_raw_normalization.py \
   --probe build-canon-blancs-ab-20261007 \
   --audit docs/validation/raw/audit-dng-reference-20261008-controle.json \
   --profile '/mnt/c/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp' \
-  --output NOUVEAU_DOSSIER/normalization.json
+  --output build-diagnostic-profils-raw-20261007/normalization.json
 ```
 
 Pour une session Windows de test, définir la variable **avant le lancement** :
@@ -2976,7 +2985,89 @@ Aucune erreur QML ni bibliothèque Qt/OpenCV/RAW/TIFF issue d'un répertoire
 externe n'a été détectée. Ce test vérifie le démarrage autonome sur la machine
 actuelle, pas le rendu GPU ni une certification sur des Windows 10/11 propres.
 
+## 27. Pistes externes — PhotoCraft et LightCraft (9 octobre 2026)
+
+**Origine :** dépôt [storytold/photocraft](https://github.com/storytold/photocraft/) proposé par l'utilisateur comme point d'appui potentiel. Examen préliminaire des sources publiées sur `main`, sans compilation ni campagne comparative. Figer un commit avant toute expérience reproductible : les liens ci-dessous suivent une branche évolutive.
+
+### Périmètre et intérêt pour IPR
+
+PhotoCraft se présente comme une réimplémentation indépendante de **Photoshop**, en Rust, et non de Lightroom. Son README décrit des réglages non destructifs, un compositeur CPU de référence comparé au GPU, des tuiles copy-on-write, la gestion ICC et une interface de commandes commune à l'IHM et au CLI. Il signale aussi un statut alpha : une commande présente ne garantit pas la parité de comportement. Ces déclarations constituent des pistes à vérifier, pas des résultats de tests IPR. [Source : README](https://github.com/storytold/photocraft/blob/main/README.md).
+
+Le manifeste distingue notamment `color`, `cms`, `raw`, `raster`, `compose`, `gpu`, `algo` et `testkit`. Cette séparation est intéressante pour étudier les contrats du moteur, les tests synthétiques et une future accélération GPU, sans décider d'intégrer Rust ni de remplacer Qt/OpenCV. [Source : Cargo.toml](https://github.com/storytold/photocraft/blob/main/Cargo.toml).
+
+### Point concret : le module RAW
+
+Le module expose `identify`, `decode` vers les données capteur, puis `develop`/`develop_sensor`. Sa documentation décrit les niveaux noir/blanc, la WB, le dématriçage et la conversion couleur. Il annonce une sortie **ProPhoto RGB, blanc D50, gamma 1,8** : elle n'est pas directement comparable au sRGB linéaire flottant d'IPR. Toute comparaison doit harmoniser espace, encodage, WB, profil, tonalité et cadrage.
+
+**Limite déterminante pour notre corpus :** `identify` reconnaît les CR3, mais `decode` retourne explicitement `Unsupported` pour leur décodage ISO BMFF/CRX. Reconnaissance du format et extraction d'un aperçu ne prouvent pas le développement du capteur. Ce module ne constitue donc pas actuellement un remplacement du backend LibRaw pour nos CR3. Les chemins CR2/DNG restent des pistes de diagnostic indépendant. [Source : crates/raw/src/lib.rs](https://github.com/storytold/photocraft/blob/main/crates/raw/src/lib.rs).
+
+### LightCraft : analyse prioritaire, sans utilisation ni intégration
+
+À la demande de l'utilisateur, l'objectif est de comprendre les choix techniques, **pas d'utiliser LightCraft, de reprendre son code ou de changer le backend IPR**. Lecture des sources publiques le 9 octobre 2026 ; les vérifications ciblées sont figées au commit [`c435d143de921e8dc724245065500bc191f91102`](https://github.com/storytold/lightcraft/commit/c435d143de921e8dc724245065500bc191f91102). Aucun binaire compilé, aucun test externe exécuté, aucune comparaison sur nos photos. Les résultats publiés par les auteurs restent leurs résultats, pas une validation indépendante.
+
+#### Décodage : séparer conteneur, capteur et développement
+
+Le contrat distingue reconnaissance du format, lecture des en-têtes sans décompression, décodage des échantillons et développement. `RawImage` conserve CFA, géométrie, orientation, niveaux noir/blanc, WB et données couleur. La normalisation suit le principe `(échantillon − noir)/(blanc − noir)` ; elle ne constitue pas une correction colorimétrique. Cette séparation permet de diagnostiquer les pixels avant d'attribuer un problème aux profils. [Contrat RAW](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/raw/src/lib.rs).
+
+Contrairement à **PhotoCraft**, **LightCraft décode réellement certains CR3** avec un code Rust indépendant : lecture des pistes ISO BMFF, des descripteurs CMP1, des zones CDI1/IAD1 et des métadonnées CTMD. Il sélectionne la piste principale, pas le delta Dual Pixel, et ignore les versions de métadonnées inconnues plutôt que d'inventer une WB. [Adaptateur Canon](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/raw/src/vendor/cr3.rs).
+
+Le décompresseur CRX s'appuie sur prédiction MED, codage Rice adaptatif et longueurs de plages ; le C-RAW ajoute quantification et reconstruction de sous-bandes. Les auteurs citent descriptions publiques et brevets Canon, et déclarent ne pas avoir consulté de décodeur tiers. Certaines familles de marqueurs et variantes restent explicitement non prises en charge. [Décompresseur CRX](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/raw/src/vendor/crx.rs).
+
+La documentation rapporte six comparaisons du capteur sur M50, R100 et R8 contre un oracle externe, **pas sur notre R6 Mark III**. En cas d'échec CR3, le chargement peut se rabattre sur le JPEG intégré avec avertissement : voir une image à l'écran ne prouve donc pas que les données RAW ont été développées. [Périmètre CR3 et preuves déclarées](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/docs/cr3.md).
+
+Pour le dématriçage Bayer, AHD est le choix qualité par défaut : sélection de candidats horizontaux/verticaux selon leur homogénéité en CIELab. PPG et bilinéaire sont également disponibles ; les autres CFA disposent d'une interpolation directionnelle. Des tests synthétiques vérifient couleurs constantes, conservation des échantillons connus et PSNR. Ce sont des invariants utiles, pas une preuve de supériorité visuelle. [Dématriçage](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/raw/src/demosaic/mod.rs).
+
+#### Profils : quatre notions différentes
+
+| Couche | Fonction dans LightCraft | Point d'attention pour IPR |
+|---|---|---|
+| Modèle couleur DNG | Matrices capteur, WB, adaptation chromatique | Correction de caractérisation, pas style créatif |
+| Look embarqué DNG | Tables HSV et courbe du fichier | Respecter espace et ordre des opérations |
+| Profil boîtier JSON | Matrice et table apprises du JPEG boîtier | Approximation d'un rendu, pas mesure spectrale |
+| Look « Neutral », « Vivid », etc. | Décalages internes de réglages | Pas un DCP Canon Camera Neutral |
+
+Le modèle DNG interpole les matrices à deux illuminants selon l'inverse de la température : `g = (1/T − 1/T2)/(1/T1 − 1/T2)`, borné entre 0 et 1. Il combine AnalogBalance, CameraCalibration et ColorMatrix, utilise ForwardMatrix lorsqu'elle est exploitable, sinon inversion et adaptation Bradford. La destination de travail est **Rec.2020 D65 linéaire**, différente du sRGB linéaire IPR. Sans matrice, le module signale un repli générique « caméra ≈ sRGB », qui n'est pas une caractérisation du capteur. [Modèle couleur](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/raw/src/color.rs).
+
+Les tables embarquées sont appliquées en HSV de **ProPhoto linéaire D50**, avec interpolation trilinéaire et traitement de l'encodage de l'axe valeur. HueSatMap, LookTable et courbe ont des rôles et positions distincts ; les gain maps sont conservées mais non rendues dans ce chemin. Ce lecteur de données intégrées au DNG ne prouve pas à lui seul une gestion générale des fichiers `.dcp` Adobe externes. [Tables de profil](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/raw/src/profile.rs).
+
+Pour plusieurs RAW propriétaires sans matrice, dont Canon CR3, le moteur ajuste les pixels capteur au **JPEG intégré au même fichier**. Il sépare couleur et tonalité : matrice régularisée de chromaticité, correction HSV des résidus, courbe tonale monotone et correction de chroma. Une partie des correspondances est réservée à la vérification ; un ajustement insuffisant est rejeté. Le JPEG sert de référence d'apprentissage, pas de remplacement des pixels RAW. [Implémentation de l'ajustement](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/engine/src/camera_preview.rs).
+
+Les fichiers JSON permettent de mutualiser les observations de plusieurs photos d'un modèle ; ils sont validés puis mis en cache par processus. Au commit examiné, les profils embarqués concernent ILCE-7M4, X-H2S et X-T4 : **pas notre Canon**. [Profils boîtier](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/engine/src/camera_profiles.rs).
+
+**Interprétation :** reproduire le JPEG peut rapprocher du Picture Style choisi, mais aussi apprendre ses courbes, son éclairage local et ses traitements. Cela ne remplace pas une mire caractérisée. La documentation distingue explicitement WB relative autour du rendu As Shot et Kelvin physiques non établis sans calibration ; cette distinction est pertinente pour notre investigation. [Analyse des auteurs](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/docs/camera-preview-colour.md).
+
+Les looks intégrés sont des deltas de contraste, saturation, courbes et grading composés avec les réglages utilisateur. Par exemple `lc.neutral` réduit notamment contraste et saturation ; ce nom ne désigne donc pas le profil Canon que nous avons validé visuellement. [Looks internes](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/pipeline/src/profiles.rs).
+
+L'**ICC** est une autre couche : décodage matrice/TRC vers XYZ D50, conversion CMS `moxcms` pour profils LUT/CMYK, génération de profils d'export. Cela gère l'interprétation et la restitution des RGB, pas le style Canon. [Gestion ICC](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/codecs/src/icc.rs).
+
+Pour l'optique, le chemin examiné utilise corrections intégrées DNG ou données constructeur et réglages manuels, pas une collection Adobe LCP. Les coordonnées et rayons normalisés permettent une correction cohérente entre aperçu et export. [Optique](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/pipeline/src/optics.rs).
+
+#### Débruitage manuel : filtrage guidé et chromaticité
+
+La luminance est filtrée dans le domaine logarithmique par filtre autoguidé : localement `a = variance/(variance + ε)`, `b = moyenne·(1 − a)`, puis `q = moyenne(a)·p + moyenne(b)`. La correction RGB est un gain `2^(k·(q − p))`. Les contours restent davantage protégés qu'avec un flou uniforme ; les textures faibles peuvent néanmoins être lissées.
+
+Le bruit couleur est traité en lissant la chromaticité `RGB/Y`, puis en réappliquant la luminance. Rayon et mélange dépendent des curseurs et du rapport de résolution aperçu/source. Les constantes de rayon, epsilon et intensité sont des **choix de réglage empiriques**, pas un modèle mesuré Poisson-Gauss du capteur. Il faut contrôler bavures chromatiques et détails à 100 %. [Code du débruitage manuel](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/pipeline/src/local.rs).
+
+L'import RAW initialise netteté à 40 et réduction du bruit couleur à 25. Un rendu sans action utilisateur n'est donc pas nécessairement un rendu sans traitement de détails ; c'est important pour les comparaisons neutres. [Valeurs initiales RAW](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/develop/src/lib.rs).
+
+#### Débruitage IA : Bayer vers RGB, avant interprétation couleur
+
+Le contrat du modèle prend quatre plans Bayer normalisés **avant WB** et retourne trois plans RGB caméra de résolution double par axe. Le code adapte les quatre phases Bayer, reflète les bords, traite des tuiles chevauchantes, remet leur échelle en cohérence et protège les échantillons saturés. Il s'agit donc aussi d'une reconstruction RGB, pas simplement d'un filtre sur le JPEG rendu. [Disposition Bayer](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/denoise-core/src/bayer.rs), [traitement des tuiles](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/denoise-core/src/run.rs).
+
+L'exécuteur CPU traduit les convolutions en petits blocs im2col et produits matriciels GEMM `faer`, réutilise les buffers selon leur durée de vie et laisse le parallélisme aux tuiles. Ce n'est pas un runtime ONNX universel : seul un sous-ensemble contrôlé d'opérateurs est pris en charge. [Exécuteur CPU](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/crates/denoise/src/cpu.rs).
+
+Le parcours IA est optionnel, sans poids embarqués ; l'offre RawNIND dépend d'une option de compilation et d'une politique de distribution séparée. Le produit nettoyé est un cache recréable, et le curseur mélange rendu ordinaire et nettoyé. La documentation décrit exécution GPU WGSL/wgpu, contrôle CPU/GPU et repli, mais limite le contrat à Bayer RAW. Les temps publiés sont historiques, excluent plusieurs coûts, et ne prédisent pas les performances d'IPR. Aucune parité de qualité Lightroom n'est revendiquée. [Documentation IA et limites](https://github.com/storytold/lightcraft/blob/c435d143de921e8dc724245065500bc191f91102/docs/denoise.md).
+
+#### Conclusion utile pour nos investigations
+
+Les points d'appui sont **méthodologiques** : vérifier les échantillons capteur avant la couleur ; conserver pixels et métadonnées ensemble ; distinguer WB, caractérisation, style et ICC ; tester les replis explicitement ; séparer débruitage manuel et IA ; vérifier aperçu/export et CPU/GPU.
+
+Le rapprochement avec le JPEG boîtier est particulièrement pertinent comme **diagnostic** de notre rendu Canon Neutral, mais ce JPEG n'est ni une vérité colorimétrique physique ni une référence Lightroom. Rien dans cette lecture ne justifie de remplacer LibRaw ou de modifier notre rendu déjà accepté. Aucun code de production changé, aucun résultat IPR nouveau, aucune utilisation ou intégration de LightCraft prévue.
+
 ## Bibliographie et preuves
+
+- [PhotoCraft — dépôt et documentation](https://github.com/storytold/photocraft/), [manifeste](https://github.com/storytold/photocraft/blob/main/Cargo.toml) et [contrat/décodage RAW](https://github.com/storytold/photocraft/blob/main/crates/raw/src/lib.rs), consultés le 9 octobre 2026 ; pistes et limites en §27.
+- [LightCraft — présentation et périmètre](https://github.com/storytold/lightcraft/blob/main/README.md), consulté le 9 octobre 2026 ; projet voisin à examiner séparément.
 
 - Sharma, Wu, Dalal, *The CIEDE2000 Color-Difference Formula: Implementation
   Notes, Supplementary Test Data, and Mathematical Observations*, 2005 :

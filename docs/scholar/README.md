@@ -1,6 +1,10 @@
+*[Français](README.md) | [English](README_en.md)*
+
 # IPR Scholar
 
 Cours LaTeX consacrés aux modèles physiques, mathématiques et de traitement du signal effectivement employés par IPR. Chaque fichier `cours-*.tex` est autonome; `moteur-graphique-ipr.tex` est le guide d'implémentation détaillé.
+
+Mise en forme : suivre les [conventions LaTeX communes](../AGENTS.md) (12 pt, interligne 1,5, chapitres sur une nouvelle page et paragraphes espacés uniformément).
 
 | Document | Sujet |
 | --- | --- |

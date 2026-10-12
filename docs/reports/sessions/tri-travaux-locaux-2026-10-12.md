@@ -215,3 +215,9 @@ Clôture attendue : outils alignés sur les dix protocoles, absence de legacy
 remplacé, fichiers de référence préservés, recette indépendante du worktree
 historique, tests adaptés puis CI verte, JSON de preuve/versionnage cohérents.
 Ce document prépare cette reprise ; il n'annonce pas que ces conditions sont remplies.
+
+## 6. Suivi de la reprise
+
+L'[alignement du 12 octobre](session-2026-10-12.md) consigne les fusions locales
+validées, les lots préparés, leurs tests et le blocage de publication. Le relevé
+JSON initial reste immuable ; il ne décrit pas les fichiers ajoutés depuis.

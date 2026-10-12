@@ -1,5 +1,12 @@
 # Protocole — Base colorimétrique — v1
 
+> Contexte historique du 6 octobre, conservé pour ses méthodes charte/nuanciers
+> et sa bibliographie. Pour une nouvelle campagne, suivre le
+> [protocole RAW/profils](protocole-raw-profils.md) et le
+> [socle commun](protocole-commun.md) : Camera Neutral, commandes DCP/optique
+> disponibles et mémoire JSON. Les affirmations anciennes d'absence de ces
+> commandes dans l'IHM ne décrivent plus la version actuelle.
+
 **Date :** 6 octobre 2026. **Statut :** proposition prête pour la phase A ;
 mesures de fidélité conditionnées à une référence physique.
 **Objectif :** vérifier le rendu à l'ouverture indépendamment des réglages,
@@ -74,10 +81,11 @@ Adobe. Relever le DCP effectivement choisi avant d'attribuer un défaut au profi
 ### Préparer la campagne
 
 **Alternative automatisée pour les exports IPR :** utiliser le
-[générateur de tests](../tools/generateur-images-tests.md), avec `neutral`
-et les six RAW d'origine. Il ignore les sidecars sans les écrire ; les copies
-ci-dessous deviennent inutiles pour ce chemin hors IHM. Choisir un nouveau
-dossier de sortie et conserver son manifeste (profils, WB, paramètres).
+[générateur de tests](../tools/generateur-images-tests.md), avec le groupe
+`raw` et les RAW placés à la racine de base. Il ignore les sidecars sans les
+écrire et produit le neutre sous `base/neutre`, avec provenance dans le TIFF.
+La recette manuelle historique ci-dessous reste un contexte d'expérience,
+pas le rangement du générateur courant.
 La préparation Lightroom et les contrôles du présent protocole restent
 nécessaires ; ne pas mélanger les numéros de cette campagne aux anciennes.
 

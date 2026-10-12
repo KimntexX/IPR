@@ -1,3 +1,5 @@
+*[Français](README.md) | [English](README_en.md)*
+
 # Références d'architecture
 
 Documents de fond issus de la migration du 3 octobre 2026. Ils apportent le contexte technique, légal ou opérationnel qui complète les ADR, sans les remplacer.

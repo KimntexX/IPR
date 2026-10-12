@@ -1,3 +1,5 @@
+*[Français](ui-preferences.md) | [English](ui-preferences_en.md)*
+
 # Préférences globales de l’interface
 
 Implémentation : `src/app/UiPreferences.{h,cpp}`, `Main.qml`, `Setting.qml` et
@@ -18,9 +20,11 @@ Le choix est consigné dans [ADR-0004](../decisions/ADR-0004-preferences-ihm-ini
 
 ## Emplacement et utilisation
 
-Le chemin est calculé par `QStandardPaths::AppConfigLocation`, avec les noms
+Si `config/ipr-ui.ini` existe à côté de l'exécutable, l'application utilise
+ce fichier local : c'est le mode portable, qui exige un dossier inscriptible.
+Sinon, le chemin est calculé par `QStandardPaths::AppConfigLocation`, avec les noms
 d’organisation et d’application `IPR`. Il n’est ni relatif au dossier de travail,
-ni placé à côté des photos ou de l’exécutable. Qt détermine le répertoire selon
+ni placé à côté des photos. Qt détermine le répertoire selon
 le système ; **Affichage → Fichier de préférences…** affiche le chemin exact.
 Le fichier est créé au premier lancement de cette version, si le répertoire
 utilisateur est accessible. [Documentation QStandardPaths](https://doc.qt.io/qt-6/qstandardpaths.html).
@@ -51,7 +55,7 @@ modèle versionné constitue la référence commentée.
 | `theme` | `background`, `panel`, `canvas`, `text`, `secondaryText` | Couleurs opaques `#RRGGBB` : fond, surfaces, aperçu et textes des contrôles principaux. |
 | `layout` | `settingsWidth=320`, `imageInfoWidth=250`, `filmstripHeight=120` | Dimensions des panneaux en unités logiques Qt. |
 | `layout` | `showImageInfo`, `showHistogram`, `showFilmstrip` | Visibilité, également modifiable dans Affichage. |
-| `sections` | `light`, `curves`, `color`, `mixer`, `grading`, `effects`, `denoise`, `sharpening`, `export` | Dépliage indépendant des neuf groupes. Initialement, seule Lumière est ouverte. |
+| `sections` | `rawDevelopment`, `light`, `curves`, `color`, `mixer`, `grading`, `effects`, `denoise`, `sharpening`, `export` | Dix groupes indépendants ; initialement Développement RAW / Profil et Lumière sont ouverts. |
 | `selection` | `toneCurveChannel=0`, `mixerBand=0`, `gradingZone=0` | Dernier canal de courbe, bande du mélangeur et zone du grading consultés. |
 | `export` | `format=JPEG`, `quality=92` | Dernier format choisi et qualité JPEG ; pas le répertoire de destination. |
 

@@ -1,3 +1,5 @@
+*[Français](denoising-sharpening.md) | [English](denoising-sharpening_en.md)*
+
 # Réduction de bruit et netteté
 
 **État :** débruitage CPU corrigé, fonctionnement/progressivité photographiques confirmés ; qualité/calibration à poursuivre ; netteté non validée.  

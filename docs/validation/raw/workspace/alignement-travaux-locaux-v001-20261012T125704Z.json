@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "observed_at_utc": "2026-10-12T12:57:04Z",
+  "group": "workspace-alignment",
+  "scope": "Local integration of CI-validated branches and implementation of generator/analyser/documentation alignment",
+  "inventory_source": "inventaire-travaux-locaux-v001-20261012T090522Z.json",
+  "base": {
+    "origin_dev": "1027092c9e0f934ab4647d6de941441029e88217",
+    "local_dev": "edb38d0144b33445244769475ffc5dc0f0dbef45",
+    "validation_commit": "209b1a697dd24cd2be7088918395ac1d7b3d5f31",
+    "original_worktree_branch": "patch_couleur",
+    "original_worktree_head": "4c241541a7fcbfd1e62534c9fdb111c69bd55e6c",
+    "original_local_changes_preserved": true
+  },
+  "validated_integrations": [
+    {
+      "branch": "patch_ci_cd",
+      "tested_commit": "7b0e7ea257a9f2352ec87cb963a96736c67f892a",
+      "github_run_id": 38226095034,
+      "status": "completed",
+      "conclusion": "success",
+      "local_merge_commit": "027d7df",
+      "merge_strategy": "no-ff",
+      "proposed_version": "v0.1.18-alpha"
+    },
+    {
+      "branch": "patch_documentation",
+      "tested_commit": "6cae5c4c79675425e353c576dea44a158fb23efd",
+      "github_run_id": 38219874888,
+      "status": "completed",
+      "conclusion": "success",
+      "local_merge_commit": "edb38d0",
+      "merge_strategy": "no-ff",
+      "proposed_version": "v0.1.19-alpha"
+    }
+  ],
+  "delivery": {
+    "published": false,
+    "tags_created": false,
+    "main_modified": false,
+    "new_validation_patch_merged_into_dev": false,
+    "new_documentation_changes_merged_into_dev": false,
+    "publication_blocker": "Authorization review requires explicit approval for remote publication and precise immutable version tags",
+    "new_commits_need_new_ci": true
+  },
+  "tests": {
+    "platform": "Windows x64 MSVC",
+    "qt_version": "6.11.2",
+    "libraw_enabled": true,
+    "build": "success",
+    "ctest": {"total": 18, "passed": 18, "failed": 0},
+    "python": {"total": 181, "passed": 181, "failed": 0, "skipped": 0},
+    "documentation_metric_tests": {"total": 7, "passed": 7},
+    "native_generator_integration": {
+      "private_corpus_used": false,
+      "temporary_fixture_dimensions": [48, 32],
+      "colour_states": 31,
+      "groups_checked_without_diagnostics_or_exclusions": ["lumiere", "courbes", "couleur", "melangeur", "grading", "effets", "bruit", "nettete"],
+      "real_raw_optics_validation": false,
+      "raw_options_test": "synthetic registered decoder"
+    },
+    "generator_executable_sha256": "7f447fd7d6244231db75f89240e3e943759c56e157525aaf93d0bf631bc1473c"
+  },
+  "documentation": {
+    "utf8_json_errors": 0,
+    "missing_local_links": 0,
+    "metrics_source_hash_contract": "sha256-text-lf-v1",
+    "verified_source_hashes": 132,
+    "verified_json_values": 286650,
+    "verified_svg_documents": 39,
+    "photographic_json_memories_rewritten": false,
+    "french_latex_compilation": "success",
+    "french_pdf_pages": 30,
+    "french_pdf_sha256": "af61bdb012d7bc1fb788dc97a74f55da2070b14c2960aac6fa5a298f59ba0d56",
+    "latex_overfull_boxes_after_fix": 0,
+    "english_documents_modified": false
+  },
+  "contracts": {
+    "generator_arguments": "all or one photographic group",
+    "source_discovery": "only direct image files at tests/image/base root",
+    "outputs": "only native SDR sRGB ICC TIFF 16-bit in existing shared feature folders",
+    "provenance": "JSON embedded in TIFF ImageDescription tag 270; not a companion file",
+    "manual_wb_support": {"temperature_kelvin": 5200, "relative_tint": 0},
+    "lr_as_shot_tint_plus_five_is_valid": true,
+    "analyser_input": "--base metadata audit or explicit operator --mapping",
+    "replaced_manifest_generator_path_removed": true,
+    "replaced_per_control_analyzers_removed": ["temperature", "tint", "vibrance", "saturation", "texture", "clarity", "dehaze"],
+    "cleanup": "manual by user",
+    "images_written_in_private_corpus": 0,
+    "images_deleted": 0
+  },
+  "limits": [
+    "Tool contract tests are not photographic quality, Lightroom parity or physical colour validation",
+    "Profile labels are not invented DCP cryptographic identities; TIFF declarations are not authenticity signatures",
+    "Some LR controls require explicit mapping and remain diagnostic without a implemented metadata audit",
+    "Whole-run storage estimate is conservative, not an optical-geometry mathematical bound",
+    "Original dirty worktree and unrelated historical operational tools remain preserved",
+    "Local Windows success does not replace new four-platform GitHub validation"
+  ]
+}

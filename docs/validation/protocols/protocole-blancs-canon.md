@@ -1,5 +1,10 @@
 # Protocole — Normalisation des niveaux blancs Canon
 
+> Méthode spécialisée historique du groupe [RAW/profils](protocole-raw-profils.md),
+> pas recette du curseur Blancs. « Aucune modification production » ci-dessous
+> décrit la sonde du 7 octobre, pas l'état actuel du logiciel. Pour une nouvelle
+> campagne, appliquer le [socle commun](protocole-commun.md) et tracer le build.
+
 Date : 7 octobre 2026. Analyse associée : [rapport évolutif unique](../analyses/analyse-base-colorimetrique.md).
 
 **Statut :** exécuté sur les six RAW, trente variantes. **Périmètre :** diagnostic local, aucun

@@ -45,18 +45,15 @@ boîtiers/objectifs avant généralisation.
 ## Reproduction disponible
 
 ```bash
-python3 -m unittest discover -s tests -p 'test_analyse_lumieres*.py'
-python3 tests/analyse_lumieres.py --root tests/image/base --output docs/validation/raw/mesure-lumieres-vNNN-NOUVEL-HORODATAGE.json
-python3 tests/analyse_lumieres_intermediaires.py --root tests/image/base --output docs/validation/raw/mesure-ombres-hl-vNNN-NOUVEL-HORODATAGE.json
+python tests/analyse_lumiere.py --base tests/image/base --strict --data-version 1
+python tests/analyse_lumiere.py --base tests/image/base --feature shadows --feature highlights --data-version 2
 ```
 
-Ces analyseurs ont un corpus et des noms historiques spécifiques ; vérifier
-leurs associations avant exécution. Le second mesure Ombres/HL à huit valeurs
-hors zéro, convention LR historique : sans suffixe −100, `-2` +100, `-3` −75,
-`-4` −50, `-5` −25, `-6` +25, `-7` +50, `-8` +75. Le premier traite la
-campagne des extrêmes ; aucun des deux n'importe directement le manifeste
-global. Les pixels sont natifs mais spatialement échantillonnés : conserver
-le pas. Ne pas réutiliser cette décimation pour analyser le bruit.
+Les valeurs proviennent des déclarations TIFF IPR et du XMP LR, pas des
+suffixes des anciennes campagnes. Une référence ambiguë nécessite une
+association explicite. Les mémoires historiques restent inchangées.
+Les pixels sont natifs, avec pas d'échantillonnage déclaré ; ne pas utiliser
+cette décimation pour mesurer le bruit.
 
 Tests synthétiques ciblés : `toneRecoveryTests`, `colorPipelineTests`,
 `imageExportTests`, via le lanceur Windows qui prépare Qt.

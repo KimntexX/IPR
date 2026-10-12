@@ -18,6 +18,12 @@ Les réglages et annotations doivent survivre à la fermeture sans modifier le R
 porte l'écriture à v4 avec violet/magenta distincts et migrations v1/v2/v3.
 La décision initiale v3 ci-dessus décrit l'état antérieur, pas le format courant.
 
+**Évolution du 8 octobre 2026 :** [ADR-0006](ADR-0006-restauration-raw-et-retouche-profil.md) porte l'écriture à v5 pour enregistrer les choix DCP/calibration par image et restaurer la WB avant décodage.
+
+**Évolution du 9 octobre 2026 :** écriture v6, lecture v1–v6 : identité/SHA-256
+du LCP, résolution explicite et activations objectif/aberration chromatique
+latérale. Voir le [contrat optique](../camera-profile-engine.md#persistance-et-commandes-optiques-9-octobre-2026).
+
 - Le traitement reste non destructif et indépendant des formats RAW/JPEG/TIFF.
 - Un changement de taille ou d'horodatage invalide le sidecar plutôt que de risquer de mauvais réglages.
 - Le format binaire doit être versionné et disposer d'une migration avant toute évolution incompatible.

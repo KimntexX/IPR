@@ -37,6 +37,18 @@
 
 ## Lecture des statuts et mesures
 
+### Protocoles courants
+
+Le [catalogue consolidé](protocols/README.md) propose une recette par groupe,
+dont [Couleur](protocols/protocole-couleur.md), [Lumières](protocols/protocole-lumieres.md),
+[Courbes](protocols/protocole-courbes.md), [Grading](protocols/protocole-grading.md)
+et [Netteté](protocols/protocole-nettete.md), avec le
+[socle commun](protocols/protocole-commun.md). Cette consolidation ne modifie
+pas les verdicts historiques. Les [analyseurs natifs/JSON par groupe](tools/analyseurs-groupes.md)
+sont disponibles ; charte, HDR, transitions, halos, géométrie et combinaisons
+restent des recettes complémentaires.
+
+
 **Corpus au 9 octobre :** les 423 TIFF Lightroom Adobe Standard ont été
 [supprimés sur demande](../reports/storage/lightroom-cleanup-2026-10-09/README.md).
 Les cinq références Camera Neutral, RAW et exports IPR restent disponibles.

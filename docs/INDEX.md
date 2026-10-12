@@ -1,3 +1,5 @@
+*[Français](INDEX.md) | [English](INDEX_en.md)*
+
 # Index documentaire IPR
 
 Ce fichier est le point d'entrée unique de la documentation versionnée. Il distingue la documentation qui définit le produit, les preuves qui la valident et les journaux qui expliquent son évolution.
@@ -14,10 +16,15 @@ Ce fichier est le point d'entrée unique de la documentation versionnée. Il dis
 
 ## Règles de gouvernance
 
+Mise en forme des documents : [conventions LaTeX communes](AGENTS.md).
+
 Cours de fond : [architecture des images numériques — PDF](scholar/cours-11-architecture-images.pdf)
 et [travaux pratiques associés](scholar/README.md#cours-11--architecture-des-images).
 
 Guide pratique : [tester les fonctionnalités en autonomie](validation/procedure-tests-autonomes.md).
+
+Suivi : [CSV et courbes](validation/metrics/README.md),
+[reste à faire priorisé](reports/sessions/session-2026-10-08.md).
 
 1. Un rapport de séance enregistre des faits datés ; il ne devient pas une spécification par accumulation.
 2. Une fonctionnalité terminée met à jour sa spécification, la matrice de validation et, si nécessaire, un ADR.

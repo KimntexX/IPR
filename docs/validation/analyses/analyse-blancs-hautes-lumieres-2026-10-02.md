@@ -97,3 +97,25 @@ La v3 a été mesurée sur les huit scènes. Les valeurs `-100` proviennent des 
 **Blancs est validé comme réglage de point blanc.** La zone haute atteint `×1,903`, contre `×1,926` dans Lightroom (écart inférieur à `2 %`). Les tons moyens et sombres sont moins levés qu'avec Lightroom ; c'est un choix intentionnel qui évite de transformer Blancs en réglage d'exposition ou d'Ombres. La récupération négative v2 demeure volontairement plus protectrice du détail que Lightroom.
 
 Les quatre contrôles tonals Noirs, Ombres, Hautes lumières et Blancs sont désormais validés quantitativement sur ce corpus. Le test suivant peut porter sur le Contraste.
+
+## Revalidation Camera Neutral — 9 octobre 2026
+
+La [campagne complète Lumières](analyse-validation-lumieres-base-2026-10-02.md#campagne-complete-lumieres--nouveaux-neutres-9-octobre-2026)
+est complète : six scènes, douze variantes par contrôle et moteur, TIFF natifs
+16 bits, profils Camera Neutral/WB As Shot LR audités. Les verdicts v3 ci-dessus
+restent ceux de leur ancien corpus, pas une certification du pipeline actuel.
+
+Direction et ciblage IPR cohérents aux deux extrêmes, sans inversion mesurée.
+Les hautes présentent les ratios médians −100/+100 suivants : Blancs
+**0,841/2,396**, HL **0,747/1,896**. Les basses sont largement préservées.
+
+**Qualité positive à revalider :** le taux moyen de pixels avec au moins un
+canal saturé vaut **18,877 % IPR contre 4,746 % LR** pour Blancs +100, et
+**5,622 % contre 0,311 %** pour HL +100. Ce n'est pas une mesure de saturation
+du capteur. Blancs +100 atteint 41,97 % sur 0007, 32,07 % sur 9950 et 31,16 %
+sur 9421. Le réglage fonctionne, mais son extrême/gamut mérite investigation.
+
+Priorité : sonde RGB avant encodage/clipping et tests ±50, puis recette des
+zones claires colorées. Borner Y ne garantit pas que chaque canal soit borné.
+Pas de correctif de production appliqué lors de cette analyse. Ne pas modifier
+la loi EV pour compenser cette limite de rendu. CSV et courbes dans le rapport lié.

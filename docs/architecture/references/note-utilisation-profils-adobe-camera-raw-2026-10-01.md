@@ -1,3 +1,5 @@
+*[Français](note-utilisation-profils-adobe-camera-raw-2026-10-01.md) | [English](note-utilisation-profils-adobe-camera-raw-2026-10-01_en.md)*
+
 # Note de licence — profils Adobe Camera Raw DCP/LCP
 
 ## Conclusion prudente

@@ -1,6 +1,6 @@
 # Spécification — Réglages photographiques
 
-**Statut :** partiellement validé, consolidation au 5 octobre 2026.  
+**Statut :** partiellement validé, consolidation au 8 octobre 2026.
 **Implémentation :** `ImageEditor::renderWorkingImage()` et `ColorPipeline`.
 
 ## Contrat commun
@@ -15,20 +15,20 @@
 | Groupe | Commandes | Statut de référence |
 | --- | --- | --- |
 | Tonalité | EV, contraste, ombres, noirs, hautes lumières, blancs | Validé sur le corpus de base ; détails dans la matrice de validation. |
-| Balance des blancs | température, nuance, balance automatique | Validé ; référence par image et repli 6500 K. |
+| Balance des blancs | température, nuance, balance automatique | Validé sur corpus ; référence par image et repli 5200 K. |
 | Couleur globale | vibrance, saturation | Validé. |
 | Détail et atmosphère | texture, clarté, voile, grain, flou, réduction de bruit, netteté | Texture, clarté et voile validés ; bruit, netteté, grain et flou nécessitent une recette dédiée. |
-| Couleur sélective | mélangeur 8 bandes (rouge, orange, jaune, vert, cyan, bleu, violet, magenta), color grading 3 zones | Non-régression automatisée vérifiée ; nouveaux exports photographiques requis après correction. |
+| Couleur sélective | mélangeur 8 bandes (rouge, orange, jaune, vert, cyan, bleu, violet, magenta), color grading 3 zones | Mélangeur : extrêmes et progressivité mesurés ; calibration/recette visuelle ouvertes. Grading : recette photographique à faire. |
 | Courbes | luminance, rouge, vert, bleu | Implémenté ; recette de stabilité et de compatibilité HDR à compléter. |
 
 ## Organisation du panneau de réglages
 
 L'histogramme et les informations de prise de vue restent en haut, suivis du
-bouton de réinitialisation globale. Les commandes sont réparties en neuf sections
-repliables indépendantes : Lumière, Courbe de tonalité, Couleur, Mélangeur de
+bouton de réinitialisation globale. Les commandes sont réparties en dix sections
+repliables indépendantes : Développement RAW / Profil, Lumière, Courbe de tonalité, Couleur, Mélangeur de
 couleurs, Color grading, Effets, Réduction du bruit, Netteté et Export.
 
-- Au premier lancement, Lumière est dépliée et les autres sections sont repliées.
+- Au premier lancement, Développement RAW / Profil et Lumière sont dépliées ; les autres sections sont repliées.
   Aux lancements suivants, le dépliage est restauré depuis l’INI utilisateur.
 - Cliquer un titre, ou l'activer au clavier, déplie/replie son contenu. Plusieurs
   sections peuvent rester ouvertes en même temps.
@@ -49,6 +49,29 @@ couleurs, Color grading, Effets, Réduction du bruit, Netteté et Export.
 
 Les protocoles et preuves sont référencés depuis [la matrice de validation](../validation/matrice-validation.md). Les fondements et exemples sont disponibles dans [Scholar](../scholar/README.md).
 
+## Développement RAW et base colorimétrique
+
+Le choix DCP et la normalisation expérimentale sont accessibles sous
+l'histogramme. Camera Neutral est accepté visuellement par l'utilisateur,
+sans validation de fidélité physique ni parité Lightroom. Le manifeste est
+limité à cinq RAW exacts et à LibRaw 0.22.2-Release ; il reste désactivé par défaut.
+Le sidecar v6 enregistre les profils DCP/LCP, le manifeste, leurs SHA-256 et les activations.
+Ces choix et la WB automatique sont restaurés avant décodage. Camera Neutral
+est privilégié à la première ouverture lorsqu'il est disponible. Les ressources
+manquantes/modifiées et les changements de version du moteur sont signalés.
+Le changement de DCP utilise le tampon pré-DCP de l'image active lorsque possible,
+sans vider l'aperçu ni réinitialiser zoom/retouches. La WB de décodage et la
+normalisation peuvent nécessiter un redécodage, toujours sans vider l'aperçu.
+La réinitialisation des retouches conserve les choix RAW ; une commande distincte
+réinitialise profil/calibration. Le LCP automatiquement résolu est figé par image ;
+les cases objectif (distorsion/vignettage) et aberration chromatique latérale sont
+indépendantes, conservées au reset des retouches et appliquées à l'export.
+Sans données LCP correspondantes, le statut indique la non-application.
+Les anciens sidecars v1–v5 migrent avec les deux corrections activées pour
+préserver la politique antérieure. Voir [ADR-0006](../decisions/ADR-0006-restauration-raw-et-retouche-profil.md).
+Voir le [contrat des profils](../camera-profile-engine.md) et le
+[rapport unique](../validation/analyses/analyse-base-colorimetrique.md).
+
 ### Réduction de bruit : correctif et revalidation
 
 Les deux bruits sont compris entre 0 et 100. À 0/0, le traitement est bypassé
@@ -56,8 +79,8 @@ sans modification des pixels. La couleur seule préserve Y Rec.709 linéaire
 par pixel à la précision flottante. Le correctif CPU conserve les moyennes
 des plans, pas nécessairement celles de chaque région locale, et protège
 les frontières de couleur sans imposer un bord de luminance.
-Le rendu non nul change mais ni les valeurs de sidecar ni leur format v4
-ne sont modifiés. Une image ouverte avec son ancien sidecar utilise le
+Le rendu non nul change mais les valeurs de réglage du sidecar
+ne sont pas modifiées par ce correctif. Une image ouverte avec son ancien sidecar utilise le
 nouveau moteur : ses anciens TIFF ne constituent pas une validation actuelle.
 Voir [modèle](../architecture/denoising-sharpening.md) et
 [protocole v2](../validation/protocols/protocole-bruit-v2.md).

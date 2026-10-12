@@ -58,3 +58,21 @@ La mesure v2 est disponible dans `mesure-contraste-v2-brut-2026-10-02.txt`.
 **Contraste est validé.** Les tons moyens sont pratiquement ancrés (`1,067` / `0,987` contre `1,049` / `0,990`) et l'épaule est proche de Lightroom (écart inférieur à `5 %` aux deux extrêmes). Le pied IPR reste plus protecteur : il lève moins les noirs à `-100` et les écrase moins à `+100`. Cette différence réduit le clipping (`10,922 %` contre `17,564 %` à `+100`) tout en conservant un effet visuellement net ; elle est retenue comme choix technique.
 
 La validation tonale est donc complète. Les tests Température peuvent commencer.
+
+## Revalidation Camera Neutral — 9 octobre 2026
+
+La [campagne complète Lumières](analyse-validation-lumieres-base-2026-10-02.md#campagne-complete-lumieres--nouveaux-neutres-9-octobre-2026)
+inclut douze variantes Contraste par moteur sur six scènes, avec neutres et
+réglages LR cohérents. Courbe en S fonctionnelle : basses levées à −100 et
+abaissées à +100 ; hautes abaissées à −100 et levées à +100.
+
+Ratios médians IPR −100/+100 : basses **3,196/0,163**, quantiles moyens
+**1,787/0,412**, hautes **0,852/1,392**. Le taux moyen de canal saturé à +100
+est 0,291 % IPR contre 1,105 % LR. Les quantiles moyens de ces scènes sombres
+ne sont pas le pivot linéaire 18 % : leur variation ne démontre pas une
+erreur de pivot. Une rampe synthétique et des valeurs intermédiaires sont
+nécessaires pour le contrôler et certifier la continuité.
+
+Fonctionnement cohérent aux extrêmes ; qualité visuelle/amplitude et parité LR
+non certifiées par ces chiffres. Pas de modification de production. La validation
+v2 ci-dessus reste historique ; CSV par scène et courbes dans le rapport lié.

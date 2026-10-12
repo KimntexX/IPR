@@ -1,90 +1,64 @@
 # Analyseurs photographiques par groupe
 
-Version 1 — 10 octobre 2026. Outil canonique :
-[`tests/analyse_groupes.py`](../../../tests/analyse_groupes.py).
-Il mesure les fichiers explicitement associés, sans générer, modifier ni
-supprimer d'image, sidecar, RAW ou profil. Il ne délivre pas une validation
-visuelle automatique.
+Contrat aligné le 12 octobre 2026, branche `patch_validation`.
+Outil canonique : [analyse_groupes.py](../../../tests/analyse_groupes.py).
+Les dix entrées dédiées partagent la même CLI et les mêmes méthodes natives.
+Elles ne génèrent, modifient ni suppriment d'image. Mesurer ne signifie pas valider.
 
-## Transition du générateur du 11 octobre 2026
+## Commandes courantes
 
-La refonte du générateur est un travail distinct, non inclus dans
-`patch_color`. Cette section décrit son contrat cible, pas le binaire
-du générateur livré avec le correctif WB.
-
-Le [générateur courant](generateur-images-tests.md) écrit directement dans les
-dossiers partagés, sans manifeste ni campagne datée. Les commandes à manifeste
-ci-dessous décrivent les entrées d'analyse archivées, pas sa nouvelle sortie.
-L'entrée directe des nouveaux noms explicites doit encore être adaptée ; ne pas
-annoncer que ces TIFF sont automatiquement associés par les analyseurs actuels.
-Leurs JSON de mesures versionnés et horodatés restent la mémoire canonique.
-
-## Structure alignée sur les protocoles
-
-Les méthodes communes couvrent les groupes du tableau. Dans cette livraison
-Couleur, seuls `analyse_groupes.py` et l'entrée dédiée `analyse_couleur.py`
-sont inclus ; les autres entrées dédiées appartiennent au travail de
-modernisation des analyseurs, livré séparément. Utiliser l'entrée commune
-avec le groupe voulu, pas un fichier dédié absent.
-
-| Protocole / groupe CLI | Entrée dédiée | Méthode principale |
-| --- | --- | --- |
-| RAW/profils — `raw` | `tests/analyse_raw.py` | Y, RGB, chroma, clipping ; pas de certification de charte |
-| Lumières — `lumiere` | `tests/analyse_lumiere.py` | Zones tonales fixes, quantiles, loi EV et clips |
-| Courbes — `courbes` | `tests/analyse_courbes.py` | Réponse dans dix classes de Y, points déclarés |
-| Couleur — `couleur` | `tests/analyse_couleur.py` | Axes chaud/froid, vert/magenta, chroma faible/forte, gris |
-| Mélangeur — `melangeur` | `tests/analyse_melangeur.py` | H/S/L dans huit masques diagnostiques, faibles chromas |
-| Grading — `grading` | `tests/analyse_grading.py` | Réponses par zones tonales, teinte/chroma |
-| Effets — `effets` | `tests/analyse_effets.py` | Contraste interpercentile et détail par ROI natives |
-| Bruit — `bruit` | `tests/analyse_bruit.py` | Haar/MAD Y et chroma, ratios par ROI adjacentes |
-| Netteté — `nettete` | `tests/analyse_nettete.py` | Gradients, résidus, bruit et détail par ROI |
-| Optique — `optique` | `tests/analyse_optique.py` | Diagnostic photométrique ; lignes/franges/recalage restent une recette spécialisée |
-
-L'IHM/persistance/export relève des tests et de la recette manuelle, pas d'un
-analyseur de pixels. Géométrie changée dans une paire optique : exclusion,
-pas redimensionnement automatique ni MAE trompeuse.
-
-Le package `tests/analysis/` sépare catalogue, lecture native, entrées,
-audit, métriques communes, méthodes de groupe, campagne et CLI. Les entrées
-dédiées partagent exactement le même schéma JSON et les mêmes options ; elles
-fixent seulement le groupe. L'alias `color-mixer` désigne `melangeur`.
-
-## Dépendances et premiers usages
-
-Python 3 avec NumPy/Pillow. Depuis la racine du projet, utiliser WSL si Python
-Windows n'est pas installé ; les chemins Windows des manifestes sont convertis
-vers `/mnt/<lecteur>/...` sous WSL. Aucun chemin personnel n'est codé dans
-l'analyseur.
+Depuis la racine, avec Python 3, NumPy et Pillow :
 
 ```bash
-python3 tests/analyse_groupes.py --list
-python3 tests/analyse_couleur.py --help
-python3 -m unittest discover -s tests -p test_analyse_groupes.py
-
-# Manifeste archivé contenant les arguments --output de la génération.
-python3 tests/analyse_couleur.py \
-  --manifest docs/validation/raw/generation-photographique-20261010T120912Z/couleur.json \
-  --feature saturation --scene 6V1A0327 \
-  --output-dir docs/validation/raw --data-version 1 --strict
+python tests/analyse_groupes.py --list
+python tests/analyse_couleur.py --help
+python tests/analyse_couleur.py --base tests/image/base --strict --data-version 1
+python tests/analyse_lumiere.py --base tests/image/base --feature shadows --data-version 2
+python tests/analyse_groupes.py --group all --base tests/image/base --output-dir docs/validation/raw
 ```
 
-Sans `--feature`/`--scene`, traiter les états du groupe présents dans les
-entrées. Sans `--output`, le nom est généré avec groupe/version/horodatage UTC
-réel (microsecondes). `--output CHEMIN` impose un nom pour **un seul groupe**,
-sans écrasement. `--data-version 2 --supersedes ID-ANCIENNE-CAMPAGNE` référence
-une correction d'un seul groupe ; l'ancienne mémoire reste immuable.
+Dix groupes : `raw`, `lumiere`, `courbes`, `couleur`, `melangeur`,
+`grading`, `effets`, `bruit`, `nettete`, `optique`. Chaque entrée est
+`tests/analyse_<groupe>.py`. L'IHM/persistance/export relève de la recette
+transversale et de CTest, pas d'un analyseur pixel.
 
-Plusieurs manifestes : répéter `--manifest`. `--group all` écrit un JSON par
-groupe représenté, pas un mélange de toutes les métriques dans un fichier.
-`--image-root NOUVELLE-RACINE` relocalise les exports d'un seul manifeste ;
-sinon ses arguments `--output` sont utilisés, ou son dossier si cet argument
-manque. Un fichier supprimé reste une exclusion : aucun export n'est recréé.
+`--feature` et `--scene` restreignent les états. `--strict` retourne 2 si
+des états sont diagnostics/exclus, après conservation du JSON. Une erreur
+d'association retourne 1 sans publier de campagne. `--output` impose un
+chemin pour un seul groupe, sans écrasement ; sinon le nom inclut groupe,
+version et UTC réelle. `--data-version` et `--supersedes` conservent le lien
+vers une campagne remplacée sans modifier son JSON.
 
-Le manifeste doit être `complete`, TIFF 16 bits, avec le nombre attendu
-d'exports. Les associations sont `feature/value/file/source`, pas le suffixe.
-Les empreintes TIFF sont comparées aux empreintes déclarées du générateur.
-Les noms DCP/LCP restent des noms : les empreintes des profils absentes du
-manifeste ne sont pas inventées.
+## Associations et provenance
+
+`--base` lit les dossiers du [générateur](generateur-images-tests.md),
+sans campagnes datées. Pour IPR, les réglages, empreintes source/exécutable,
+référence et développement proviennent du JSON embarqué dans le tag TIFF 270.
+Un TIFF IPR non déclaré exige une régénération ou un mapping explicite ;
+le nom seul ne prouve pas son état. Les références doivent rester sous base,
+appartenir à la même scène et conserver leur contexte de développement.
+
+Pour Lightroom, la valeur vient du XMP, jamais du numéro de suffixe. Les
+supports manuels température/nuance sont 5200 K / 0 ; le neutre As Shot
+5200/+5 est distinct et n'est pas une erreur. Pour les autres contrôles,
+chercher un neutre du même moteur sous `base/neutre`, avec le reste des
+métadonnées inchangé. Une référence absente reste exclue ; plusieurs candidates
+différentes bloquent l'association. Les scènes LR simples sont identifiées par
+le nom avant le premier tiret ; pour une autre convention, utiliser un mapping.
+
+Les groupes dont le contrôle XMP n'est pas connu (courbes/grading/optique,
+notamment) demandent un mapping explicite et restent diagnostics si l'audit
+n'est pas implémenté. Les anciens scripts de curseurs et le mode de génération
+à manifeste ont été remplacés : aucun chemin `--legacy` n'est disponible.
+Les sondes spécialisées WB/RAW restent séparées car elles testent une autre
+hypothèse. Git et les JSON historiques sont conservés.
+
+Les TIFF sont revérifiés en dimensions natives, uint16 RGB(A) non compressé,
+ICC sRGB, orientation 1, alpha opaque et empreintes. Aucun recalage ni
+redimensionnement inter-moteurs n'est automatique. Les régions de bruit et
+détail sont adjacentes, stride 1 ; l'échantillonnage global est déclaré.
+Le nom commercial DCP ne vaut pas empreinte du profil. Les déclarations TIFF
+ne sont pas des signatures d'authenticité : conserver cette limite.
 
 ## Ajouter Lightroom ou une association manuelle
 
@@ -107,7 +81,7 @@ Les noms sont **des exemples**, pas une découverte automatique de fichiers.
 `image_root` est relatif au JSON de mapping ; vérifier ce chemin selon son
 emplacement. Une référence explicite peut être donnée dans chaque variante
 avec `reference`; sinon le neutre unique du même `(scene,engine)` est associé.
-Les neutres ambigus sont refusés. Ajouter `--mapping CHEMIN` au manifeste IPR
+Les neutres ambigus sont refusés. Ajouter `--mapping CHEMIN` à la commande d'analyse
 permet de mesurer chaque moteur par rapport à sa propre référence.
 
 Pour la nuance LR, `"value_mode":"delta_from_reference"` exprime un
@@ -177,20 +151,6 @@ humaine et la clôture du [socle commun](../protocols/protocole-commun.md)
 restent nécessaires avant toute suppression. Dans une exécution multi-groupes,
 les campagnes déjà publiées avant une erreur restent conservées.
 
-## Compatibilité historique
-
-Les anciens fichiers Température/Nuance/Vibrance/Saturation/Texture/Clarté/
-Voile redirigent par défaut vers l'analyseur du groupe. `--legacy` exécute
-explicitement le vieux diagnostic texte avec sa quantification historique,
-sans l'assimiler à un JSON canonique. Leurs fonctions Python importables
-restent disponibles pour les sondes existantes.
-
-`analyse_color_mixer.py`, `analyse_noise.py`, `analyse_lumieres.py` et les
-sondes spécialisées RAW conservent leur API historique pour reproduire les
-campagnes et tests existants. Pour une **nouvelle** campagne, employer les
-entrées de groupe ci-dessus. Aucun ancien JSON n'est réécrit ni migré en
-inventant des métadonnées.
-
 ## Recette spécialisée de comparaison WB
 
 `tests/compare_temperature_tint.py` utilise le même analyseur de groupe
@@ -242,8 +202,8 @@ python tests/compare_temperature_tint.py \
 Les supports de cette comparaison sont ceux de la campagne originale,
 déclarés dans le JSON; ils ne remplacent pas les neutres As Shot. Le support
 5200/+5 historique ne doit pas être confondu avec le support 5200/0 du
-générateur actuel. L'entrée directe des nouveaux noms IPR sans manifeste
-reste à intégrer à l'analyseur de groupe.
+générateur actuel. Les nouveaux exports déclarés s'analysent directement avec
+`--base tests/image/base` ; les mémoires historiques ne sont jamais réécrites.
 
 La recette actuelle est décrite dans le
 [guide du générateur](generateur-images-tests.md#ancres-fixes-pour-température-et-nuance).
