@@ -108,6 +108,7 @@ docs/validation/raw/synthese-bruit-v2-2026-10-05-v1.json,ae1749917b4c1ff724127e8
 docs/validation/raw/tests-analyse-bruit-v2-2026-10-05.txt,d42aee89e1bfe7b8c9fca3bafbc6ce1abbf37194a87b1c4461fc5bf908bf71f8,bruit,1224,sha256-text-lf-v1
 docs/validation/raw/validation-ci-cd-20261011.json,9a0a2cdc834d3796939a527ea0b2e6eb10ef5d119771ed34c3e71c9b88f816c7,base-raw-profils,2691,sha256-text-lf-v1
 docs/validation/raw/validation-ci-cd-v002-20261011T191759Z.json,13ef507c7a573e6c74afe6671de098af192b457ae4a3cd2422af9fdb376c4b5e,base-raw-profils,2135,sha256-text-lf-v1
+docs/validation/raw/validation-ci-scope-v001-20261011T193330Z.json,e6a5f395877bd4a6d5aca04b86c06f878e34f1932264c79a7afad4f21a6bcfe4,base-raw-profils,2144,sha256-text-lf-v1
 docs/validation/raw/validation-integration-normalisation-20261008.txt,1752ae35ce52523ad41fb44c372e30eadab4deea7416915f868bfef1e6f13bb3,base-raw-profils,1678,sha256-text-lf-v1
 docs/validation/raw/verification-module-raw-ihm-20261008.json,de492339b6456e41a2ea51499794f74920f0aff7ef0db5672d519566d0095cae,base-raw-profils,686,sha256-text-lf-v1
 docs/validation/raw/verification-normalisation-production-20261008.json,3545219c8c4ae897a7ed5ec01eb538b04bb4928a145bb467e5105d2eec37a9cd,base-raw-profils,3824,sha256-text-lf-v1

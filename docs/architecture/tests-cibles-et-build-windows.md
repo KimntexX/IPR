@@ -1,3 +1,5 @@
+*[Français](tests-cibles-et-build-windows.md) | [English](tests-cibles-et-build-windows_en.md)*
+
 # Build Windows et sélection des tests
 
 ## Commande quotidienne
@@ -50,7 +52,7 @@ chaque build d'un worktree déjà sale, sans nécessiter de commit préalable.
 | --- | --- |
 | Préférences/INI | préférences C++, restauration QML, panneau des réglages |
 | Mélangeur | mathématiques, neutres, pastilles QML, export, comparateur Python |
-| Générateur d'images (`src/tools/`) | séries de paramètres, isolation, manifeste, sources préservées, export 16 bits |
+| Générateur d'images (`src/tools/`) | groupes/all, dossiers partagés, isolation, provenance TIFF, sources préservées, export 16 bits |
 | Décodage RAW | décodeur, niveau noir, profils, export |
 | Profils locaux | moteur DCP/LCP, décodeur, export |
 | Réglages QML | contraintes de largeur, contrôles, restauration globale |

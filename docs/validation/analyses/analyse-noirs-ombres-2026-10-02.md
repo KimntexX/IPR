@@ -138,3 +138,26 @@ Les réglages **Noirs** et **Ombres** peuvent donc être considérés validés s
 - `tests/image/base/ombre/archive-validation-final-2026-10-02` : 16 TIFF Lightroom et 16 TIFF IPR v2.
 
 Les références `EV0` du corpus général dans `tests/image/base` restent inchangées.
+
+## Revalidation Camera Neutral — 9 octobre 2026
+
+La [campagne complète Lumières](analyse-validation-lumieres-base-2026-10-02.md#campagne-complete-lumieres--nouveaux-neutres-9-octobre-2026)
+mesure six scènes actuelles en 16 bits. Chaque contrôle a douze variantes par
+moteur, avec neutres propres et options LR constantes. Pas de fichier manquant.
+Les valeurs historiques ci-dessus ne sont pas directement comparables aux
+nouveaux ratios : corpus, profils et méthode d'agrégation diffèrent.
+
+Noirs et Ombres IPR ne présentent aucune inversion au-delà de la tolérance Y
+0,00002. Noirs préserve mieux les zones hautes que le contrôle LR plus étendu.
+À −100, le taux moyen de Y≤0,001 atteint 50,81 % pour Noirs IPR : contrôler
+visuellement cet extrême avant une validation de qualité.
+
+Ombres +100 produit un delta moyen Y des basses de **+0,05847 IPR** contre
+**+0,01635 LR**. Le ratio médian IPR ×44,302 dépend fortement des neutres
+sombres et ne doit pas être traité comme un facteur global. Direction correcte,
+mais **amplitude positive à affiner ou confirmer visuellement** sur ce pipeline.
+Les hautes restent peu levées (ratio médian ×1,046).
+
+Pas de correctif de production dans cette passe. Tester +25/+50/+75, bruit et
+détails à 100 %, avant de changer la forme/amplitude des Ombres. Données par
+scène et courbes dans le rapport lié ; les verdicts v2 restent historiques.

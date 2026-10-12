@@ -18,7 +18,7 @@ continue par bande (seuil pratique de préparation, pas norme).
 
 Une composante d'une seule bande varie ; toutes les autres sont à zéro.
 Nouvelle campagne : `−100, −50, −25, 0, +25, +50, +100`, pour H/S/L
-séparément. Le manifeste prime sur la numérotation. Comparateur historique :
+séparément. Les métadonnées TIFF/XMP priment sur la numérotation. Conventions historiques de mémoire :
 
 | Mode | Teinte | Saturation | Luminance |
 | --- | --- | --- | --- |
@@ -56,18 +56,15 @@ résultats comme une campagne inter-moteurs identique.
 ## Outils et reproduction
 
 ```bash
-python3 -m unittest discover -s tests -p test_analyse_color_mixer.py
-python3 tests/analyse_color_mixer.py red orange yellow cyan blue --image-id 6V1A0327 --levels intermediate --ipr-mixer-version eight --analyse --output docs/validation/raw/mesure-melangeur-0327-vNNN-NOUVEL-HORODATAGE.json
-python3 tests/analyse_color_mixer.py green --image-id 6V1A0037 --levels intermediate --ipr-mixer-version eight --analyse --output docs/validation/raw/mesure-melangeur-0037-vNNN-NOUVEL-HORODATAGE.json
-python3 tests/analyse_color_mixer.py violet magenta --image-id 6V1A0043 --levels intermediate --ipr-mixer-version eight --analyse --output docs/validation/raw/mesure-melangeur-0043-vNNN-NOUVEL-HORODATAGE.json
+python tests/analyse_melangeur.py --base tests/image/base --scene 6V1A0327 --strict --data-version 1
 ```
 
-Sans `--analyse`, inventaire/audit uniquement. Toujours déclarer `eight` pour
-le moteur courant ; le défaut `legacy-seven` sert à reproduire l'historique.
-`--root` choisit un corpus compatible ; `--variant-file BANDE LR NUMERO CHEMIN`
-permet une substitution LR auditée ; `--inspect-file CHEMIN` inspecte un TIFF.
-Ces commandes ne lisent pas directement le manifeste générateur. Le diagnostic
-`--without-ipr-reference` ne remplace pas un neutre et ne valide pas un RAW.
+Le catalogue est uniquement celui à huit bandes. Les dossiers de bande sont
+partagés par H/S/L : les contrôles proviennent des métadonnées, jamais d'une
+numérotation universelle. Si plusieurs fichiers LR correspondent au même
+état, fournir un mapping explicite ou corriger la série avant mesure.
+Les JSON des anciennes campagnes sont conservés, mais ne servent pas
+d'implémentation de compatibilité du mélangeur courant.
 
 Rapport unique courant : [analyse Mélangeur](../analyses/analyse-color-mixer.md).
 Les rapports extrêmes/intermédiaires restent historiques. Recette IHM : cercles,

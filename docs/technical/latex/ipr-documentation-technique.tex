@@ -1,11 +1,16 @@
 % Documentation technique IPR -- compiler avec latexmk ou pdflatex/bibtex.
-\documentclass[11pt,a4paper,oneside]{report}
+\documentclass[12pt,a4paper,oneside]{report}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
 \usepackage{lmodern}
 \usepackage{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5\baselineskip}
+\setlength{\emergencystretch}{2em}
 \usepackage[a4paper,margin=2.35cm]{geometry}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -53,7 +58,7 @@
 {\large Architecture, pipeline de développement RAW, interface et persistance\par}
 \vfill
 \begin{tabular}{rl}
-Version & 0.1 -- état du projet au 3 octobre 2026\\
+Version & 0.3 -- restauration RAW au 8 octobre 2026\\
 Statut & Document vivant -- sources LaTeX versionnées\\
 Périmètre & Application bureau Windows 10/11, Qt 6, C++ et QML
 \end{tabular}

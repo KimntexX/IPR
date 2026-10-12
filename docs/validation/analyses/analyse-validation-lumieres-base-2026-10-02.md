@@ -439,8 +439,9 @@ fichiers, définit exactement la suppression réalisée.
 Les segments relient les états mesurés ; ce sont des courbes de réponse,
 **pas des mesures de vitesse**. Le zéro est l'identité du neutre.
 
-Le [lanceur de campagne ciblée](../../../scripts/generate-photographic-campaign.ps1)
-prépare ensuite 527 TIFF pour les neuf groupes photographiques, sans
+Le lanceur historique `scripts/generate-photographic-campaign.ps1`
+(retiré le 11 octobre ; voir le [générateur courant](../tools/generateur-images-tests.md))
+préparait alors 527 TIFF pour les neuf groupes photographiques, sans
 régénérer Ombres/HL : six scènes pour les Lumières restantes, une ou deux pour
 les autres groupes. Camera Neutral imposé, normalisation expérimentale
 désactivée, sidecars ignorés, TIFF 16 bits sRGB SDR, aucun écrasement.

@@ -34,11 +34,9 @@ Ce document fixe la procédure, pas un verdict sur les images.
 
 ## 2. Générer et associer les états
 
-Le contrat ci-dessous est celui demandé pour la génération. **La livraison
-`patch_color` contient le correctif WB, pas la refonte du générateur** :
-tant que cette refonte n'est pas intégrée, ne pas exécuter les exemples
-ci-dessous avec un ancien binaire/lanceur. Pour la présente validation,
-utiliser les exports préparés et la sonde `wbCameraProbe` du protocole Couleur.
+Le contrat ci-dessous correspond à l'alignement de `patch_validation` du
+12 octobre 2026. Recompiler cette branche avant de l'utiliser ; un ancien
+exécutable ne possède pas les déclarations de provenance TIFF attendues.
 
 Depuis PowerShell à la racine :
 
@@ -62,9 +60,11 @@ température 5200 et nuance 0 (support 5200 K / 0), pas ce neutre As Shot.
 Lightroom est exporté séparément dans les mêmes dossiers, avec les mêmes
 supports. Une même valeur affichée entre moteurs ne garantit pas le même blanc.
 
-Les analyseurs encore fondés sur un manifeste/mapping ne découvrent pas
-automatiquement ces fichiers : leur entrée directe reste à adapter. Ne pas
-présenter un numéro de TIFF LR comme une preuve de son état ; auditer son XMP.
+Les analyseurs acceptent `--base tests/image/base`. Ils lisent les déclarations
+embarquées IPR et les contrôles XMP Lightroom, sans manifeste de génération.
+Ne pas présenter un numéro de TIFF LR comme une preuve de son état. Si les
+références sont ambiguës ou si le contrôle n'a pas d'audit XMP implémenté,
+fournir une association explicite à l'analyseur ; ne pas inventer les valeurs.
 
 Auditer ICC, profondeur, dimensions, orientation, transparence, profil, WB,
 réglages Lightroom/XMP et provenance IPR. Un état manquant ou ambigu est exclu

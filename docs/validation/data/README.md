@@ -1,3 +1,5 @@
+*[Français](README.md) | [English](README_en.md)*
+
 # Mémoire canonique des tests — JSON
 
 Décision confirmée le **9 octobre 2026** : les **JSON versionnés et horodatés

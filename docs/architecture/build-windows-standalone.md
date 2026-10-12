@@ -1,3 +1,5 @@
+*[Français](build-windows-standalone.md) | [English](build-windows-standalone_en.md)*
+
 # IPR — version autonome Windows x64
 
 ## Utilisation

@@ -11,9 +11,9 @@ Texture/clarté/voile à zéro ; d'abord réduction de bruit à zéro.
 
 | Contrôle | Série | Paramètres fixes |
 | --- | --- | --- |
-| `sharpening-amount` | 0, 25, 50, 100, 200 | Rayon et masquage relevés dans le manifeste |
-| `sharpening-radius` | 0,3 ; 1 ; 2 ; 3 | Quantité `-SharpeningBase 50`, masquage fixe |
-| `sharpening-masking` | 0, 25, 50, 100 | Quantité `-SharpeningBase 50`, rayon fixe |
+| `sharpening-amount` | 0, 25, 50, 100, 200 | Rayon 1 et masquage 0, déclarés dans le TIFF |
+| `sharpening-radius` | 0,3 ; 1 ; 2 ; 3 | Quantité 50, masquage fixe 0 ; référence rayon 1 |
+| `sharpening-masking` | 0, 25, 50, 100 | Quantité 50, rayon fixe 1 ; référence masquage 0 |
 
 Sans quantité non nulle, rayon/masquage n'ont pas de résultat observable.
 Le neutre général est quantité zéro ; ajouter ou identifier l'ancre à quantité

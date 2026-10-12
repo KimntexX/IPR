@@ -44,8 +44,8 @@ propres par défaut, pas une série commune incompatible avec grain/flou.
 
 L'[analyseur de groupe](../tools/analyseurs-groupes.md), `tests/analyse_effets.py`,
 mesure les cinq contrôles en natif 16 bits/JSON : contraste, clips et détail
-dans des ROI adjacentes. Les anciens scripts y redirigent ; `--legacy` conserve
-l'ancien diagnostic. Les résidus binomiaux nouveaux diffèrent des filtres
+dans des ROI adjacentes. Les scripts de curseurs remplacés et leur chemin de
+compatibilité ont été supprimés. Les résidus binomiaux nouveaux diffèrent des filtres
 historiques : comparer seulement des méthodes compatibles. Halos, profils
 de bord et déterminisme du grain restent des recettes complémentaires.
 

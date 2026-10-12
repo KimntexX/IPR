@@ -1,3 +1,5 @@
+*[Français](rapport-dependances-opencv-libraw-2026-10-01.md) | [English](rapport-dependances-opencv-libraw-2026-10-01_en.md)*
+
 # Décision de dépendances — OpenCV et LibRaw
 
 ## Conclusion

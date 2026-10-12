@@ -1,3 +1,5 @@
+*[Français](README.md) | [English](README_en.md)*
+
 # Architecture Decision Records (ADR)
 
 Un ADR consigne un choix qui influe sur la compatibilité, le rendu, les données ou la maintenance. Il est court, daté et n'est pas réécrit pour effacer l'historique : une décision remplacée reçoit un nouvel ADR qui la référence.
@@ -8,6 +10,7 @@ Un ADR consigne un choix qui influe sur la compatibilité, le rendu, les donnée
 | [ADR-0002](ADR-0002-pipeline-lineaire-et-calibration.md) | Pipeline linéaire et calibration de rendu | Accepté, à revalider sur changement de pipeline |
 | [ADR-0003](ADR-0003-profils-dcp-lcp-locaux.md) | Bibliothèque locale DCP/LCP | Accepté sous contrainte de licence |
 | [ADR-0004](ADR-0004-preferences-ihm-ini.md) | Préférences globales d’IHM dans un INI utilisateur | Accepté |
+| [ADR-0006](ADR-0006-restauration-raw-et-retouche-profil.md) | Sidecar v5 et changement DCP sans réouverture visuelle | Accepté ; recette visuelle à compléter |
 
 Utiliser [le modèle](../templates/adr-template.md) pour toute nouvelle décision.
 

@@ -12,16 +12,17 @@
   }
   \draw[message] (0,-1) -- node[above,sloped]{ouvre une image} (2.1,-1);
   \draw[message] (2.1,-2) -- node[above,sloped]{openImage()} (4.2,-2);
-  \draw[message] (4.2,-3) -- node[above,sloped]{get(clé)} (6.5,-3);
+  \draw[message] (4.2,-2.65) -- node[above,sloped]{lire recette RAW/WB .ipr} (10.7,-2.65);
+  \draw[message] (4.2,-3.25) -- node[above,sloped]{find(clé RAW/WB/DCP/manifeste)} (6.5,-3.25);
   \draw[message] (6.5,-3.65) -- node[above,sloped]{miss} (4.2,-3.65);
   \draw[message] (4.2,-4.45) -- node[above,sloped]{décoder asynchrone} (8.4,-4.45);
   \draw[message] (8.4,-5.1) -- node[above,sloped]{WorkingImage} (4.2,-5.1);
-  \draw[message] (4.2,-5.8) -- node[above,sloped]{put(image)} (6.5,-5.8);
+  \node[align=left,anchor=west,font=\scriptsize] at (4.3,-5.8) {retient source active + proxy};
   \draw[message] (4.2,-6.5) -- node[above,sloped]{lire .ipr si valide} (10.7,-6.5);
   \draw[message] (10.7,-7.15) -- node[above,sloped]{Settings + métadonnées} (4.2,-7.15);
   \draw[message] (4.2,-7.75) -- node[above,sloped]{image rendue / propriétés} (2.1,-7.75);
 \end{tikzpicture}
-\caption{Ouverture : le cache évite un nouveau décodage lorsque l'image est encore disponible.}
+\caption{Chemin cache miss. L'ancien RAW inactif est inséré dans le LRU à la transition, pas systématiquement le nouveau RAW actif.}
 \end{figure}
 
 \section{Réglage et application par lot}
@@ -34,7 +35,7 @@
     \draw[densely dashed,gray] (\x,-0.4) -- (\x,-7.2);
   }
   \draw[message] (0,-1) -- node[above,sloped]{modifie un curseur ou un champ} (2.2,-1);
-  \draw[message] (2.2,-1.8) -- node[above,sloped]{setAdjustment()} (4.8,-1.8);
+  \draw[message] (2.2,-1.8) -- node[above,sloped]{setBrightness(), etc.} (4.8,-1.8);
   \draw[message] (4.8,-2.6) -- node[above,sloped]{rendu différé} (7.4,-2.6);
   \draw[message] (7.4,-3.25) -- node[above,sloped]{image rendue} (4.8,-3.25);
   \draw[message] (4.8,-3.95) -- node[above,sloped]{propriété mise à jour} (2.2,-3.95);
@@ -44,4 +45,24 @@
   \draw[message] (4.8,-6.85) -- node[above,sloped]{un sidecar par cible} (10.0,-6.85);
 \end{tikzpicture}
 \caption{Cycle de réglage non destructif et propagation volontaire à une sélection.}
+\end{figure}
+
+\section{Changement de profil et normalisation}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=0.8cm,font=\small]
+  \foreach \x/\name in {0/Module QML,3.1/ImageEditor,6.5/Worker RAW,10.2/Profils et manifeste} {
+    \node[align=center] at (\x,0) {\name};
+    \draw[densely dashed,gray] (\x,-0.4) -- (\x,-7.3);
+  }
+  \draw[message] (0,-1) -- node[above]{setCameraProfile()} (3.1,-1);
+  \draw[message] (3.1,-2) -- node[above]{tampon caméra ou décodage} (6.5,-2);
+  \draw[message] (6.5,-3) -- node[above]{applyProfile() ou resolve()} (10.2,-3);
+  \draw[message] (10.2,-4) -- node[above]{profil / calibration ou refus} (6.5,-4);
+  \draw[message] (6.5,-5) -- node[above]{image + statut réel} (3.1,-5);
+  \draw[message] (3.1,-6) -- node[above]{rendu avec réglages conservés} (0,-6);
+  \draw[message] (0,-7) -- node[above]{décocher : clé non calibrée} (3.1,-7);
+\end{tikzpicture}
+\caption{Le tampon pré-DCP évite LibRaw quand WB/calibration le permettent. Le rendu visible reste conservé, la recette v5 est sauvegardée après succès. La case seule ne garantit pas une calibration.}
 \end{figure}
