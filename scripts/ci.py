@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import plistlib
 import re
 import shutil
 import subprocess
@@ -96,7 +97,7 @@ def cache(build):
 
 def runtime_environment(qt_root=None, runtime_dirs=()):
     env = os.environ.copy()
-    directories = list(map(str, runtime_dirs))
+    directories = [str(Path(directory).resolve()) for directory in runtime_dirs]
     if qt_root:
         qt_root = Path(qt_root)
         directories.insert(0, str(qt_root / 'bin'))
@@ -126,9 +127,13 @@ def smoke(stage, mode, env):
         else:
             child['PATH'] = '/usr/bin:/bin'
             child['LD_LIBRARY_PATH'] = str(stage / 'lib') if platform.system() == 'Linux' else ''
-    with tempfile.TemporaryDirectory(prefix='ipr-package-smoke-') as directory:
-        completed = run([binary, '--smoke-test'], cwd=directory, env=child,
-                        capture_output=True, text=True, timeout=45)
+    try:
+        with tempfile.TemporaryDirectory(prefix='ipr-package-smoke-') as directory:
+            completed = run([binary, '--smoke-test'], cwd=directory, env=child,
+                            capture_output=True, text=True, timeout=45)
+    except subprocess.CalledProcessError as error:
+        raise RuntimeError(f'Package startup failed (exit {error.returncode}): '
+                           + (error.stdout or '') + (error.stderr or '')) from error
     output = completed.stdout + completed.stderr
     if re.search(r'failed to load|is not installed|Type .* unavailable|ReferenceError|Error:', output, re.I):
         raise RuntimeError('QML/runtime smoke errors: ' + output)
@@ -164,6 +169,46 @@ def rewrite_homebrew(binary):
             run(['install_name_tool', '-change', old, new, binary])
 
 
+def deploy_macos(stage, env):
+    bundle = stage / 'appIPR.app'
+    qt_root = Path(env['QT_ROOT_DIR'])
+    # One deployment pass, from the bundle's parent. Scan only project imports;
+    # deploying the whole Homebrew Qt tree pulled unrelated missing frameworks.
+    completed = run([qt_root / 'bin/macdeployqt', 'appIPR.app',
+                     '-executable=appIPR.app/Contents/MacOS/iprGenerateTests',
+                     '-qmldir=' + str(ROOT / 'src/qml'),
+                     '-libpath=' + str(qt_root / 'lib'), '-always-overwrite'],
+                    cwd=stage, env=env, capture_output=True, text=True)
+    output = completed.stdout + completed.stderr
+    print(output, flush=True)
+    if re.search(r'\bERROR:', output):
+        raise RuntimeError('macdeployqt reported unresolved dependencies')
+    with (bundle / 'Contents/Info.plist').open('rb') as stream:
+        executable = plistlib.load(stream)['CFBundleExecutable']
+    if not (bundle / 'Contents/MacOS' / executable).is_file():
+        raise ValueError('Bundle executable missing: ' + executable)
+    broken = [str(p.relative_to(bundle)) for p in bundle.rglob('*') if p.is_symlink() and not p.exists()]
+    if broken:
+        raise ValueError('Broken bundle links: ' + ', '.join(broken))
+
+
+def assert_macos_portable(bundle):
+    magic = {b'\xfe\xed\xfa\xce', b'\xce\xfa\xed\xfe', b'\xfe\xed\xfa\xcf',
+             b'\xcf\xfa\xed\xfe', b'\xca\xfe\xba\xbe', b'\xbe\xba\xfe\xca',
+             b'\xca\xfe\xba\xbf', b'\xbf\xba\xfe\xca'}
+    for binary in bundle.rglob('*'):
+        if not binary.is_file() or binary.is_symlink():
+            continue
+        with binary.open('rb') as stream:
+            if stream.read(4) not in magic:
+                continue
+        lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
+        for line in lines:
+            dependency = line.strip().split(' (', 1)[0]
+            if dependency.startswith('/') and not dependency.startswith(('/System/Library/', '/usr/lib/')):
+                raise ValueError(f'Standalone still uses an external library: {binary.name}: {dependency}')
+
+
 def arch_recipe(output, label):
     recipe = output / 'arch-recipe'
     recipe.mkdir(exist_ok=False)
@@ -177,7 +222,7 @@ def arch_recipe(output, label):
     return recipe
 
 
-def package(build, output, label, mode, env, runtime_dirs, native_format=None):
+def package(build, output, label, mode, env, runtime_dirs, native_format=None, verify_only=False, approval=None):
     if native_format and (mode != 'system' or platform.system() != 'Linux'):
         raise ValueError('Native packages require Linux system mode')
     name = 'IPR-' + label + '-' + platform_name() + '-' + mode
@@ -198,9 +243,7 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None):
     if platform.system() == 'Darwin':
         if mode == 'standalone':
             if 'QT_ROOT_DIR' not in env: raise ValueError('macOS standalone requires QT_ROOT_DIR')
-            bundle = stage / 'appIPR.app'
-            run([Path(env['QT_ROOT_DIR']) / 'bin/macdeployqt', bundle,
-                 '-executable=' + str(bundle / 'Contents/MacOS/iprGenerateTests'), '-always-overwrite'], env=env)
+            deploy_macos(stage, env)
         else:
             for binary in (stage / 'appIPR.app/Contents/MacOS').iterdir():
                 if binary.is_file(): rewrite_homebrew(binary)
@@ -224,6 +267,8 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None):
                     if (folder / 'copyright').exists():
                         shutil.copy2(folder / 'copyright', licenses / (folder.name + '.txt'))
     if platform.system() == 'Darwin':
+        if mode == 'standalone':
+            assert_macos_portable(stage / 'appIPR.app')
         run(['codesign', '--force', '--deep', '--sign', '-', stage / 'appIPR.app'])
         run(['codesign', '--verify', '--deep', '--strict', stage / 'appIPR.app'])
     check = smoke(stage, mode, env)
@@ -233,12 +278,17 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None):
     dirty = bool(subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=no'], cwd=ROOT, text=True))
     manifest = {'schema_version': 1, 'created_at_utc': datetime.now(timezone.utc).isoformat(),
                 'version': label, 'commit': commit, 'mode': mode, 'platform': platform_name(),
+                'downloadable_archive_requested': not verify_only,
+                'github_delivery_approval': approval,
                 'source_dirty': dirty,
                 'private_profiles': False, 'signed_release': False, 'smoke': check,
                 'build_dependencies': {k: v for k, v in cache(build).items()
                     if k in ('Qt6_DIR', 'OpenCV_DIR', 'LIBRAW_LIBRARY', 'TIFF_LIBRARY_RELEASE', 'CMAKE_CXX_COMPILER')},
                 'files': files}
     (stage / 'package-manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf8')
+    if verify_only:
+        print('Packaging verification passed; no downloadable archive created.', flush=True)
+        return
     if os.name == 'nt':
         shutil.make_archive(str(archive.with_suffix('')), 'zip', root_dir=stage.parent, base_dir=stage.name)
     else:
@@ -264,6 +314,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--action', choices=('build', 'test', 'python', 'package', 'all'), default='all')
     parser.add_argument('--test-plan', type=Path, help='Scope produced by ci_scope.py; omitted means full tests')
+    parser.add_argument('--verify-package-only', action='store_true',
+                        help='Exercise deployment/smoke but create no archive; for CI packaging tests')
     parser.add_argument('--mode', choices=('system', 'standalone'), default='system')
     parser.add_argument('--build-dir', type=Path, default=ROOT / 'build-ci')
     parser.add_argument('--output-dir', type=Path, default=ROOT / 'dist')
@@ -274,6 +326,8 @@ def main(argv=None):
     parser.add_argument('--native', choices=('deb', 'rpm', 'arch'))
     parser.add_argument('--jobs', type=int, default=2)
     args = parser.parse_args(argv)
+    if args.verify_package_only and (args.native or args.action not in ('all', 'package')):
+        parser.error('Packaging verification requires all/package without native distro archives')
     if args.test_plan and args.action in ('all', 'package'):
         parser.error('Delivery packaging may not use a targeted test plan')
     plan = load_test_plan(args.test_plan)
@@ -308,7 +362,12 @@ def main(argv=None):
         state = cache(build)
         if state.get('IPR_DEPLOY_MODE') != args.mode: raise ValueError('Build/package mode mismatch')
         if state.get('IPR_RELEASE_LABEL') != label: raise ValueError('Build/package version mismatch')
-        package(build, args.output_dir.resolve(), label, args.mode, env, args.runtime_dir, args.native)
+        approval = None
+        if os.environ.get('GITHUB_ACTIONS') == 'true' and not args.verify_package_only:
+            from delivery_policy import verify_publication_environment
+            approval = verify_publication_environment()
+        package(build, args.output_dir.resolve(), label, args.mode, env, args.runtime_dir,
+                args.native, args.verify_package_only, approval)
     return 0
 
 

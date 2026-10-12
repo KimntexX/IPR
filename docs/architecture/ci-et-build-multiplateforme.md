@@ -9,14 +9,15 @@ Le paquet « système » utilise les bibliothèques installées, sans les embarq
 | Workflow | Déclenchement | Contenu |
 | --- | --- | --- |
 | `ci.yml` | Push dev/main/patch_*, PR vers dev/main, manuel | Tests ciblés sur les branches de groupe ; validation complète aux portes d'intégration |
-| `delivery.yml` | Manuel ou tag conforme | Même validation complète, puis archives standalone et système, SHA-256 et mémoire JSON |
-| `linux-distributions.yml` | Manuel | Debian 12 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système et tests complets |
+| `delivery.yml` | CI réussie sur dev/main, ou manuel limité à dev/main | Commit testé exact, validation complète, puis archives standalone/système, SHA-256 et mémoire JSON |
+| `linux-distributions.yml` | Manuel sur dev/main après CI réussie du commit exact | Debian 12 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système et tests complets |
 
 Windows x64 : MSVC 2022, Qt 6.8.3, vcpkg épinglé au commit du manifeste.
 Linux standalone : Ubuntu 24.04 x64, Qt 6.8.3 ; pas un binaire universel glibc.
 Linux système utilise Qt fourni par apt, sans imposer un SDK Qt externe à
 l'utilisateur ; les paquets Debian/Fedora/Arch utilisent aussi leurs dépôts natifs.
-macOS : runners `macos-15` arm64 et `macos-15-intel` x64, dépendances Homebrew.
+macOS : runners `macos-15` arm64 et `macos-15-intel` x64 ; Homebrew pour les
+dépendances tierces et Qt système, SDK Qt officiel 6.8.3 pour le standalone.
 Le minimum macOS effectif dépend des bouteilles Homebrew : ne pas annoncer
 macOS 12 sur la seule base du support de Qt. Les versions installées figurent
 dans les journaux ; Homebrew et Arch sont évolutifs, pas hermétiques.
@@ -71,7 +72,7 @@ photographique privés ne sont pas remplacés par ces tests synthétiques.
 | Push `patch_*`, code photographique cartographié | Compilation des cibles et tests sélectionnés, Windows, Ubuntu et macOS ARM |
 | Modification transversale, inconnue ou ≥20 fichiers de code | Tous les tests, quatre plateformes, Intel compris |
 | Push `dev`/`main`, PR vers `dev`/`main`, lancement manuel | Tous les tests, quatre plateformes |
-| Tag de version | Workflow de livraison : tous les tests et paquets système/standalone, quatre plateformes |
+| Tag de version | Jalon Git immuable ; ne déclenche pas de livraison indépendante des branches dev/main |
 | Push sur une branche hors `main`, `dev`, `patch_*` | Aucun déclenchement automatique ; une PR vers `dev`/`main` reste contrôlée |
 
 `scripts/ci_scope.py` partage les règles de `scripts/test-rules.json` avec le
@@ -104,13 +105,14 @@ ne certifie donc pas tous les liens, les PDF ou l'exactitude technique du texte.
 La politique documentaire ne s'applique pas comme exception aux PR : celles-ci
 effectuent bien la validation complète avant intégration, même pour des docs.
 
-Validation locale de ce patch : compilation Windows réussie, **18 CTest et
+Validation locale du premier patch de sélection : compilation Windows réussie, **18 CTest et
 163 tests Python réussis**, plus vérification réelle d'une compilation/exécution
 ciblée limitée à `toneRecoveryTests`. Le code testé est `b434628` ; la
 [mémoire JSON](../validation/raw/validation-ci-scope-v001-20261011T193330Z.json)
-consigne les versions et limites. La nouvelle configuration n'est pas encore
-publiée : il reste à la pousser, vérifier GitHub puis valider son intégration
-dans `dev`. Aucun nouveau tag ni réglage de protection du dépôt n'a été posé.
+consigne les versions et limites. Ce premier patch a ensuite été publié et sa
+[CI GitHub a réussi](https://github.com/KimntexX/IPR/actions/runs/38219071933).
+La correction de packaging décrite ci-dessous nécessite une nouvelle validation.
+Aucun nouveau tag ni réglage de protection du dépôt n'a été posé.
 
 Tous les exécutables de test Qt sont lancés offscreen/software ; le smoke test
 du paquet se déroule hors du dépôt avec des préférences temporaires et termine
@@ -118,15 +120,64 @@ normalement. Les chemins SDK sont retirés pour le standalone. Ce contrôle ne
 prouve pas une autonomie totale sur une machine vierge : faire une recette
 Windows 10/11, macOS des deux architectures et Linux avec interface graphique.
 
-Actions externes épinglées par SHA, permissions `contents: read`, pas de
-`pull_request_target`, pas de secrets ni publication de release automatique.
-Une livraison sur tag vérifie son format, son identité avec HEAD, sa présence
-dans l'histoire de `origin/dev` et l'existence d'un commit de fusion. La validation
-humaine reste indispensable : une ascendance Git n'est pas une preuve qualité.
+Actions externes épinglées par SHA, permissions `contents: read`, plus
+`actions: read` seulement pour les jobs de livraison qui consultent la CI.
+Pas de `pull_request_target`, de permission d'écriture ou de publication de
+release automatique. Le token GitHub est utilisé en lecture seule, sans
+être enregistré dans les artefacts.
 
 Les tags suivent `v0.1.X-alpha`, puis `v0.Y.X-beta` (Y >= 2), puis `v1.Y.X`.
 Le script ne crée ni tag ni fusion et ne calcule pas le nombre de patchs livrés.
 Les labels manuels identifient des constructions, pas une validation stable.
+
+### Builds récupérables réservés à dev/main — 12 octobre 2026
+
+`delivery_policy.py` refuse toute livraison hors `dev`/`main`, y compris un
+lancement manuel, un tag ou un événement de PR. Il vérifie via l'API GitHub
+une CI du dépôt d'origine, terminée avec succès, portant le même SHA, avec
+les quatre jobs natifs réussis et le check agrégé lorsqu'il existe. Les sources
+suivies doivent être propres. Les jobs checkoutent ce **SHA**, jamais une
+branche flottante qui aurait avancé pendant la validation. Le contrôle est
+répété avant création des archives ; le mode local reste utilisable hors GitHub.
+
+Les archives portent branche, SHA, plateforme et mode ; les labels alpha/beta
+ne valent pas certification stable. Chaque paquet n'est téléchargeable qu'après
+tests complets, déploiement et démarrage réussis. Un échec de plateforme n'est
+pas masqué : les autres plateformes peuvent publier leurs paquets réussis.
+Les tags restent des jalons des fusions approuvées, sans double déclenchement CD.
+Les anciens runs et archives historiques ne sont pas supprimés ou réécrits.
+
+Sur `patch_ci_cd`, un job de vérification couvre les huit combinaisons
+plateforme/mode avec `--verify-package-only` : installation, contrôle et smoke,
+**sans créer d'archive téléchargeable**. Seuls `test-logs-*` sont publiés par la
+CI, y compris son plan de sélection. Les autres branches de groupe et PR ne
+publient pas de binaires.
+
+Activation : le workflow `workflow_run` et le lancement manuel doivent être
+présents dans la branche par défaut (`main`) pour être disponibles. Actuellement
+`main` ne contient pas ces workflows ; leur publication sur `patch_ci_cd`
+déclenche la CI et les vérifications de packaging, pas une livraison publique.
+Après validation, intégrer dans `dev`, puis déployer les workflows dans `main`
+lors d'une livraison explicitement autorisée. Cette correction n'autorise
+ni fusion anticipée, ni publication sur `main`.
+[Événement workflow_run](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_run).
+
+Correctifs issus des journaux des versions 16/17 :
+
+- Windows système : chemins des DLL tierces rendus absolus avant le lancement
+  depuis un répertoire temporaire hors dépôt.
+- Linux standalone : déploiement depuis le chemin réel de l'exécutable compilé,
+  avec le helper installé ; abandon du chemin erroné `/appIPR`.
+- macOS standalone : un seul passage de `macdeployqt`, depuis le parent du
+  bundle, avec scan QML ciblé et SDK Qt cohérent. Erreurs signalées par l'outil,
+  exécutable manquant, liens cassés et références Mach-O à des bibliothèques
+  externes non système font échouer le contrôle avant signature et publication.
+  La double passe Qt/Homebrew précédente n'est pas conservée.
+
+Sources techniques : [script de déploiement Qt](https://doc.qt.io/qt-6.8/qt-generate-deploy-script.html),
+[dépendances runtime Qt](https://doc.qt.io/qt-6.8/qt-deploy-runtime-dependencies.html).
+Ces changements sont des correctifs candidats : le succès Linux/macOS sera
+confirmé par les jobs GitHub, pas déclaré sur les seuls tests Python.
 
 ## Contenu des paquets et limites
 

@@ -2,6 +2,9 @@
 
 Deux modes : `standalone` embarque les bibliothèques et les modules QML ;
 `system` nécessite les versions compatibles installées sur le système.
+Sur GitHub, les archives récupérables proviennent seulement de `dev`/`main`,
+du commit exact validé par la CI. Les branches de groupe et PR publient des
+journaux de test, pas des exécutables. Les tags n'ont pas de livraison séparée.
 Sur Windows, leurs DLL doivent être accessibles dans PATH ; sur macOS, utiliser
 les dépendances Homebrew de même architecture ; sur Linux, préférer le paquet
 natif de sa distribution. Un binaire Linux n'est pas universel entre distributions.

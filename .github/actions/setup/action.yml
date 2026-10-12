@@ -21,11 +21,11 @@ runs:
       shell: bash
       run: |
         sudo apt-get install -y qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins qml6-module-qtcore qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-dialogs qml6-module-qtqml-workerscript qml6-module-qtquick-window qml6-module-qtquick-templates
-    - if: runner.os == 'Windows' || (runner.os == 'Linux' && inputs.mode == 'standalone')
+    - if: runner.os == 'Windows' || ((runner.os == 'macOS' || runner.os == 'Linux') && inputs.mode == 'standalone')
       uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
       with:
         version: '6.8.3'
-        arch: ${{ runner.os == 'Windows' && 'win64_msvc2022_64' || 'linux_gcc_64' }}
+        arch: ${{ runner.os == 'Windows' && 'win64_msvc2022_64' || runner.os == 'macOS' && 'clang_64' || 'linux_gcc_64' }}
         setup-python: false
         cache: true
         modules: qtimageformats
@@ -44,9 +44,14 @@ runs:
         "IPR_VCPKG_ROOT=$env:GITHUB_WORKSPACE/build-tools/vcpkg" >> $env:GITHUB_ENV
     - if: runner.os == 'macOS'
       shell: bash
+      env:
+        IPR_DEPLOY_MODE: ${{ inputs.mode }}
       run: |
-        brew install cmake ninja qt opencv libraw libtiff
-        echo "QT_ROOT_DIR=$(brew --prefix qt)" >> "$GITHUB_ENV"
+        brew install cmake ninja opencv libraw libtiff
+        if [[ "$IPR_DEPLOY_MODE" == system ]]; then
+          brew install qt
+          echo "QT_ROOT_DIR=$(brew --prefix qt)" >> "$GITHUB_ENV"
+        fi
     - name: Dependency versions
       shell: bash
       run: |

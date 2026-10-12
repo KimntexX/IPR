@@ -136,8 +136,8 @@ class ScopeTests(unittest.TestCase):
         self.assertEqual(workflow['jobs']['validation']['needs'], ['scope', 'documents', 'python', 'native'])
         self.assertIn('fromJSON', workflow['jobs']['native']['strategy']['matrix'])
         delivery = yaml.load((ROOT / '.github/workflows/delivery.yml').read_text(), Loader=yaml.BaseLoader)
-        self.assertNotIn('branches', delivery['on']['push'])
-        self.assertIn('tags', delivery['on']['push'])
+        self.assertNotIn('push', delivery['on'])
+        self.assertEqual(delivery['on']['workflow_run']['branches'], ['dev', 'main'])
 
 
 if __name__ == '__main__':
