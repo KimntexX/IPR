@@ -6,22 +6,23 @@ if(IPR_DEPLOY_MODE STREQUAL "standalone")
     if(WIN32)
         qt_generate_deploy_qml_app_script(TARGET appIPR OUTPUT_SCRIPT ipr_deploy
             DEPLOY_TOOL_OPTIONS --include-plugins qoffscreen)
-    elseif(APPLE)
-        qt_generate_deploy_qml_app_script(TARGET appIPR OUTPUT_SCRIPT ipr_deploy
-            DEPLOY_TOOL_OPTIONS -always-overwrite)
-    else()
+    elseif(NOT APPLE)
         qt_generate_deploy_script(TARGET appIPR OUTPUT_SCRIPT ipr_deploy CONTENT "
             qt_deploy_qml_imports(TARGET appIPR PLUGINS_FOUND ipr_qml_plugins)
             qt_deploy_runtime_dependencies(
-                EXECUTABLE \"\${QT_DEPLOY_BIN_DIR}/appIPR\"
-                ADDITIONAL_EXECUTABLES \"\${QT_DEPLOY_BIN_DIR}/iprGenerateTests\"
+                EXECUTABLE \"$<TARGET_FILE:appIPR>\"
+                ADDITIONAL_EXECUTABLES \"${CMAKE_INSTALL_BINDIR}/$<TARGET_FILE_NAME:iprGenerateTests>\"
                 ADDITIONAL_MODULES \${ipr_qml_plugins}
                 GENERATE_QT_CONF
                 PRE_EXCLUDE_REGEXES \"^ld-linux\" \"^lib(c|m|dl|rt|pthread|resolv)\\.so\"
                 POST_EXCLUDE_REGEXES \"/ld-linux[^/]*$\" \"/lib(c|m|dl|rt|pthread|resolv)\\.so[^/]*$\"
             )")
     endif()
-    install(SCRIPT "${ipr_deploy}")
+    if(NOT APPLE)
+        install(SCRIPT "${ipr_deploy}")
+    endif()
+    # macOS is deployed once by scripts/ci.py, with the generator and QML
+    # sources included, then its bundle is checked and signed.
 endif()
 
 set(CPACK_PACKAGE_NAME "ipr")

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-11T19:33:30Z",
+  "group": "ci-cd",
+  "campaign": "selective-branch-validation-v001",
+  "source_commit": "b434628516b7e66bbd524983dd4e39fe7090deac",
+  "base_dev_commit": "1027092c9e0f934ab4647d6de941441029e88217",
+  "branch": "patch_ci_cd",
+  "platform": "Windows x64",
+  "tools": {
+    "python": "3.14",
+    "cmake": "3.29.6",
+    "msvc": "19.44.35228.0",
+    "qt": "6.11.2",
+    "opencv": "5.0.0",
+    "libtiff": "4.7.2",
+    "libraw": "enabled; version not recorded"
+  },
+  "full_validation": {
+    "build": "passed",
+    "ctest": {"registered": 18, "passed": 18, "failed": 0, "skipped": 0},
+    "python_unittest": {"run": 163, "passed": 163, "failed": 0},
+    "runtime": {"QT_QPA_PLATFORM": "offscreen", "QT_QUICK_BACKEND": "software", "QT_QUICK_CONTROLS_STYLE": "Basic"}
+  },
+  "targeted_validation": {
+    "compiled_targets": ["toneRecoveryTests"],
+    "ctest_regex": "^(toneRecoveryTests)$",
+    "passed": 1,
+    "failed": 0,
+    "scope_unit_tests": 15,
+    "cases": ["docs-only push", "Python-only push", "mapped C++ changes", "unknown-code fallback", "large-change fallback", "build-infrastructure fallback", "PR full validation", "dev/main push full validation", "manual full validation", "missing-history fallback", "deleted/renamed paths", "plan output", "invalid-plan rejection", "missing-CTest rejection", "delivery rejects targeted plan"]
+  },
+  "documentation_check": {
+    "ci_branch": {"errors": 0, "missing_local_link_warnings": 33},
+    "documentation_branch": {"source_commit": "7db5ac7", "errors": 0, "missing_local_link_warnings": 39},
+    "mode": "read-only; link warnings nonblocking; no translation or PDF build"
+  },
+  "github_validation": "not run for this patch; branches not pushed",
+  "repository_protection": "not modified; CI validation must be configured as required check separately",
+  "limits": ["Local Windows validation only; not a new Linux/macOS GitHub validation", "No photographic corpus validation", "No production-rendering or delivery-workflow change", "No dev/main merge, version tag or publication"]
+}

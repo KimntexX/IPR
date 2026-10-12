@@ -1,17 +1,48 @@
-name: Delivery archives
+name: Delivery dev-main archives
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: Prototype build label, not a newly created tag
-        default: '0.1.0-alpha'
-        required: true
-  push:
-    tags: ['v0.*-alpha', 'v0.*-beta', 'v1.*']
+        description: Optional version label; branch and tested SHA are appended (no tag created)
+        default: ''
+        required: false
+  workflow_run:
+    workflows: ['CI scoped validation', 'CI native full tests']
+    branches: [dev, main]
+    types: [completed]
 permissions:
   contents: read
 jobs:
+  approval:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')) ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' &&
+       (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch') &&
+       (github.event.workflow_run.head_branch == 'dev' || github.event.workflow_run.head_branch == 'main') &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      sha: ${{ steps.approval.outputs.sha }}
+      branch: ${{ steps.approval.outputs.branch }}
+      label: ${{ steps.approval.outputs.label }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - id: approval
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/delivery_policy.py
   archives:
+    needs: approval
+    permissions:
+      contents: read
+      actions: read
     strategy:
       fail-fast: false
       matrix:
@@ -20,15 +51,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 120
     env:
-      IPR_BUILD_LABEL: ${{ inputs.version || github.ref_name }}
+      IPR_BUILD_LABEL: ${{ needs.approval.outputs.label }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
+          ref: ${{ needs.approval.outputs.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - if: github.ref_type == 'tag'
-        shell: bash
-        run: python scripts/verify_release.py "$IPR_BUILD_LABEL"
       - uses: ./.github/actions/setup
         with:
           mode: ${{ matrix.mode }}
@@ -38,7 +68,7 @@ jobs:
         run: python scripts/github_build.py --action all --mode "$IPR_MODE" --version "$IPR_BUILD_LABEL"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: IPR-${{ matrix.os }}-${{ matrix.mode }}
+          name: IPR-${{ needs.approval.outputs.branch }}-${{ needs.approval.outputs.sha }}-${{ matrix.os }}-${{ matrix.mode }}
           path: |
             dist/*.zip
             dist/*.tar.gz
@@ -48,7 +78,7 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: delivery-logs-${{ matrix.os }}-${{ matrix.mode }}
+          name: test-logs-delivery-${{ matrix.os }}-${{ matrix.mode }}
           path: |
             build-ci/test-results/
             build-ci/Testing/Temporary/
