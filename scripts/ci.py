@@ -357,6 +357,12 @@ def main(argv=None):
         test_dir.mkdir(parents=True, exist_ok=True)
         run_native_tests(build, test_dir, plan, env)
     if args.action in ('test', 'python', 'all'):
+        # Full native integrations exercise generator -> group analyser on a
+        # tiny temporary fixture. Python-only scopes do not use a stale binary.
+        if args.action in ('test', 'all') and (plan is None or plan['full']):
+            generator = build / ('Release/iprGenerateTests.exe' if os.name == 'nt' else 'iprGenerateTests')
+            if generator.is_file():
+                env['IPR_GENERATOR_TEST_BIN'] = str(generator)
         run_python_tests(plan, env)
     if args.action in ('package', 'all'):
         state = cache(build)

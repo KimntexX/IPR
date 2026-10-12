@@ -1,9 +1,113 @@
-"""Explicit state associations, generator manifests and optional LR mappings."""
+"""Current embedded TIFF declarations and explicit operator associations."""
 import math
 from pathlib import Path
 
 from .catalog import group_for, bounds_for
-from .native import local_path, read_json, sha256
+from .native import local_path, read_json, sha256, embedded_metadata
+from .catalog import GROUPS
+from .audit import field_for, finite_number
+
+
+def feature_folder(feature):
+    if feature in ("temperature", "tint", "vibrance", "saturation", "grayscale"):
+        return "couleur/" + {"tint": "nuance", "grayscale": "niveaux_gris"}.get(feature, feature)
+    if feature in ("texture", "clarity", "dehaze"):
+        return {"clarity": "clarte", "dehaze": "correction_de_voile"}.get(feature, feature)
+    if feature.startswith("mixer-"):
+        return "color-mixer/" + feature.split("-")[1]
+    if feature.startswith("grading-"):
+        return "grading/" + feature.split("-")[1]
+    if feature.startswith("denoise-"):
+        return "bruit/" + ("luminance" if feature.endswith("luminance") else "couleur")
+    return group_for(feature) + "/" + feature
+
+
+def base_records(base, groups):
+    """Exact current layout. LR numeric suffixes do not declare a state."""
+    base = local_path(base)
+    if not base.is_dir():
+        raise ValueError("Missing base directory")
+    records, cache, seen = [], {}, set()
+    def metadata(path):
+        path = local_path(path)
+        if not path.is_relative_to(base):
+            raise ValueError("Image/reference escapes base: " + str(path))
+        if path not in cache:
+            cache[path] = embedded_metadata(path)
+        return cache[path]
+    def tiffs(folder):
+        return sorted(p for p in folder.iterdir() if p.is_file() and p.suffix.lower() in (".tif", ".tiff")) if folder.is_dir() else []
+    neutral_candidates = tiffs(base / "neutre")
+    for group in groups:
+        for feature in GROUPS[group]:
+            if feature == "neutral":
+                continue
+            folder = base / feature_folder(feature)
+            variants = tiffs(folder)
+            for path in variants:
+                declaration, xmp = metadata(path)
+                if declaration:
+                    if declaration.get("feature") != feature:
+                        continue  # Mixer bands share a directory, not a control.
+                    reference_name = declaration.get("reference", "")
+                    if not reference_name or Path(reference_name).is_absolute() or ".." in Path(reference_name).parts:
+                        raise ValueError("Invalid embedded reference path: " + str(path))
+                    reference = local_path(reference_name, base)
+                    ref, _ = metadata(reference)
+                    if not ref or ref.get("scene") != declaration.get("scene"):
+                        raise ValueError("Missing/mismatched embedded IPR reference: " + str(path))
+                    context_keys = ("source_sha256", "executable_sha256", "dcp_profile", "lcp_profile", "lcp_sha256", "raw_normalization")
+                    if any(ref.get(k) != declaration.get(k) for k in context_keys):
+                        raise ValueError("IPR development context differs from reference: " + str(path))
+                    record = {"scene": declaration["scene"], "engine": "IPR", "feature": feature,
+                              "value": declaration["value"], "file": str(path.resolve()), "reference": str(reference),
+                              "settings": declaration.get("settings"), "reference_settings": ref.get("settings"),
+                              "expected_sha256": sha256(path), "reference_sha256": sha256(reference),
+                              "provenance": {"kind": "embedded_tiff", "declaration": declaration}}
+                    if feature in ("temperature", "tint", "sharpening-radius", "sharpening-masking") or feature.startswith("grading-"):
+                        record["reference_role"] = "support"
+                else:
+                    # No declaration is never interpreted as IPR based on a filename.
+                    if "-IPR" in path.stem:
+                        raise ValueError("IPR TIFF lacks current embedded declaration; regenerate or use --mapping: " + str(path))
+                    if not xmp:
+                        raise ValueError("TIFF lacks auditable LR XMP; use --mapping: " + str(path))
+                        continue
+                    field = field_for(feature)
+                    value = finite_number(xmp.get(field)) if field else None
+                    if value is None:
+                        raise ValueError("No XMP control audit for " + feature + "; use --mapping: " + str(path))
+                    scene = path.stem.split("-")[0]
+                    anchor = 5200 if feature == "temperature" else 0
+                    candidates = variants if feature in ("temperature", "tint") else neutral_candidates
+                    matches = []
+                    ignored = {field, "HasSettings", "Version", "UUID", "Digest"}
+                    for candidate in candidates:
+                        if candidate.stem.split("-")[0] != scene:
+                            continue
+                        ipr, baseline = metadata(candidate)
+                        if ipr or not baseline or "-IPR" in candidate.stem:
+                            continue
+                        if feature in ("temperature", "tint") and finite_number(baseline.get(field)) != anchor:
+                            continue
+                        if all(xmp.get(k) == baseline.get(k) for k in (xmp.keys() | baseline.keys()) - ignored):
+                            matches.append(candidate)
+                    unique = {sha256(p): p for p in matches}
+                    if len(unique) > 1:
+                        raise ValueError("Ambiguous LR reference: " + str(path))
+                    record = {"scene": scene, "engine": "LR", "feature": feature, "value": value,
+                              "file": str(path.resolve()), "provenance": {"kind": "embedded_lr_xmp"}}
+                    if unique:
+                        record["reference"] = str(next(iter(unique.values())).resolve())
+                    if feature in ("temperature", "tint"):
+                        record["reference_role"] = "support"
+                validate_record(record)
+                key = (record["engine"], record["scene"], feature, record["value"])
+                if key in seen:
+                    raise ValueError("Duplicate current state: " + str(key))
+                seen.add(key)
+                records.append(record)
+    return records
 
 
 def validate_record(record):
@@ -23,57 +127,6 @@ def validate_record(record):
         raise ValueError("Integer control requires integer state")
 
 
-def manifest_records(path, image_root=None):
-    path = local_path(path)
-    data = read_json(path)
-    if data.get("status") != "complete" or data.get("format") != "TIFF" or data.get("bitDepth") != 16:
-        raise ValueError("Need complete TIFF 16-bit generator manifest: " + str(path))
-    exports = data.get("exports", [])
-    if data.get("expectedExports") != len(exports) or not exports:
-        raise ValueError("Incomplete export count: " + str(path))
-    arguments = data.get("arguments", [])
-    root = image_root
-    if root is None and "--output" in arguments:
-        root = arguments[arguments.index("--output") + 1]
-    root = local_path(root) if root is not None else path.parent
-    neutrals = {}
-    for entry in exports:
-        if entry.get("feature") == "neutral":
-            source = entry["source"]
-            if source in neutrals:
-                raise ValueError("Duplicate neutral source in manifest")
-            neutrals[source] = entry
-    records = []
-    for entry in exports:
-        source = entry["source"]
-        neutral = neutrals.get(source)
-        if neutral is None:
-            raise ValueError("Manifest source without neutral: " + source)
-        relative = Path(entry["file"].replace("\\", "/"))
-        if relative.is_absolute() or ".." in relative.parts or ":" in str(relative):
-            raise ValueError("Export path must stay relative to image root")
-        record = {"scene": Path(source.replace("\\", "/")).stem, "engine": "IPR",
-                  "feature": entry["feature"], "value": entry["value"],
-                  "file": str(local_path(entry["file"], root)),
-                  "reference": str(local_path(neutral["file"], root)),
-                  "expected_sha256": entry.get("sha256"),
-                  "reference_sha256": neutral.get("sha256"),
-                  "settings": entry.get("settings"), "reference_settings": neutral.get("settings"),
-                  "provenance": {"kind": "generator_manifest", "manifest": str(path),
-                                 "manifest_sha256": sha256(path), "source": source,
-                                 "source_sha256": entry.get("sourceSha256"),
-                                 "ipr_version": data.get("iprVersion"),
-                                 "executable_sha256": data.get("executableSha256"),
-                                 "qt_version": data.get("qtVersion"),
-                                 "dcp_profile": entry.get("dcpProfile"),
-                                 "lcp_profile": entry.get("lcpProfile"),
-                                 "reference_temperature_kelvin": entry.get("referenceTemperatureKelvin"),
-                                 "camera_neutral_required": data.get("cameraNeutralRequired"),
-                                 "normalization_environment": data.get("normalizationEnvironment"),
-                                 "profile_hashes": None}}
-        validate_record(record)
-        records.append(record)
-    return records
 
 
 def mapping_records(path):

@@ -5,6 +5,9 @@ from pathlib import Path
 import struct
 import tempfile
 import unittest
+import os
+import subprocess
+import sys
 from unittest.mock import patch
 
 import numpy as np
@@ -14,7 +17,7 @@ from analysis import audit, campaign, catalog, groups, inputs, metrics, native
 from analysis.cli import main
 
 
-def write_tiff(path, array, endian="<", xmp=None, with_icc=True, orientation=1):
+def write_tiff(path, array, endian="<", xmp=None, with_icc=True, orientation=1, declaration=None):
     """Minimal native TIFF fixture, intentionally not Pillow RGB 8-bit saving."""
     array = np.asarray(array)
     height, width, channels = array.shape
@@ -25,6 +28,9 @@ def write_tiff(path, array, endian="<", xmp=None, with_icc=True, orientation=1):
             (284, 3, 1, 1)]
     if with_icc:
         tags.append((34675, 7, len(icc), icc))
+    if declaration:
+        payload = json.dumps(declaration).encode("utf-8") + b"\0"
+        tags.append((270, 2, len(payload), payload))
     if xmp:
         tags.append((700, 1, len(xmp), xmp))
     tags.sort()
@@ -72,6 +78,106 @@ def fixture_record(root, feature="saturation", value=50):
 
 
 class GroupAnalysisTests(unittest.TestCase):
+    def test_current_embedded_tiffs_without_auxiliary_mapping(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory).resolve()
+            (base / "neutre").mkdir()
+            folder = base / "couleur/saturation"
+            folder.mkdir(parents=True)
+            record = fixture_record(base)
+            neutral = base / "neutre/S-IPR-neutre-couleur.tiff"
+            variant = folder / "S-IPR-saturation-50.tiff"
+            declaration = {"ipr_test_schema": 1, "scene": "S", "group": "couleur", "feature": "neutral",
+                           "value": 0, "reference": "neutre/" + neutral.name,
+                           "settings": record["reference_settings"], "source_sha256": "test"}
+            pixels = np.full((32, 32, 3), 25000, dtype=np.uint16)
+            write_tiff(neutral, pixels, declaration=declaration)
+            changed = {**declaration, "feature": "saturation", "value": 50, "settings": record["settings"]}
+            write_tiff(variant, pixels + 100, declaration=changed)
+            records = inputs.base_records(base, ["couleur"])
+            self.assertEqual(len(records), 1)
+            self.assertEqual(records[0]["reference"], str(neutral))
+            output = base / "result.json"
+            self.assertEqual(main(["--base", str(base), "--group", "couleur", "--output", str(output), "--strict"]), 0)
+            self.assertEqual(native.read_json(output)["coverage"]["measured"], 1)
+            changed["reference"] = "../outside.tiff"
+            write_tiff(variant, pixels, declaration=changed)
+            with self.assertRaises(ValueError):
+                inputs.base_records(base, ["couleur"])
+
+    def test_group_entrypoints_share_cli(self):
+        for group in catalog.GROUPS:
+            wrapper = Path(__file__).parent / ("analyse_" + group + ".py")
+            result = subprocess.run([sys.executable, str(wrapper), "--help"], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("--base", result.stdout)
+            result = subprocess.run([sys.executable, str(wrapper), "--group", "raw"], capture_output=True)
+            self.assertNotEqual(result.returncode, 0)
+
+    def test_lr_manual_tint_uses_zero_support_not_as_shot_plus_five(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory).resolve()
+            folder = base / "couleur/nuance"
+            folder.mkdir(parents=True)
+            (base / "neutre").mkdir()
+            pixels = np.full((8, 8, 3), 25000, dtype=np.uint16)
+            def xmp(tint, wb="Custom"):
+                fields = {key: "0" for key in ("Exposure2012", "Contrast2012", "Shadows2012", "Blacks2012", "Highlights2012", "Whites2012", "Vibrance", "Saturation", "LuminanceSmoothing", "ColorNoiseReduction", "Sharpness")}
+                fields.update(Temperature="5200", Tint=str(tint), WhiteBalance=wb, CameraProfile="Camera Neutral")
+                attrs = " ".join('crs:' + key + '=\"' + value + '\"' for key, value in fields.items())
+                return ('<root xmlns:crs=\"' + native.CRS + '\" ' + attrs + '/>').encode()
+            write_tiff(base / "neutre/S-LR-AsShot.tif", pixels, xmp=xmp(5, "As Shot"))
+            write_tiff(folder / "S-5.tif", pixels, xmp=xmp(0))
+            write_tiff(folder / "S-6.tif", pixels + 50, xmp=xmp(25))
+            records = inputs.base_records(base, ["couleur"])
+            state = next(r for r in records if r["value"] == 25)
+            self.assertEqual(Path(state["reference"]).name, "S-5.tif")
+            result = campaign.analyse("couleur", records, step=1)
+            self.assertEqual(result["coverage"]["measured"], 2)
+            write_tiff(folder / "S-duplicate.tif", pixels + 1, xmp=xmp(0))
+            with self.assertRaises(ValueError):
+                inputs.base_records(base, ["couleur"])
+
+    def test_float_radius_declaration_tolerance_does_not_hide_wrong_state(self):
+        record = {"feature": "sharpening-radius", "value": .3,
+                  "settings": {"sharpeningRadius": .30000001192092896, "sharpeningAmount": 50},
+                  "reference_settings": {"sharpeningRadius": 1, "sharpeningAmount": 50}, "expected_sha256": "x"}
+        self.assertNotIn("declared_value_mismatch", audit.ipr_state(record)[0])
+        record["settings"]["sharpeningRadius"] = .31
+        self.assertIn("declared_value_mismatch", audit.ipr_state(record)[0])
+
+
+    @unittest.skipUnless(os.environ.get("IPR_GENERATOR_TEST_BIN"), "Native generator integration uses an explicit rebuilt test binary")
+    def test_rebuilt_generator_to_analyser_on_tiny_fixture(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            base = root / "tests/image/base"
+            base.mkdir(parents=True)
+            image = Image.new("RGB", (48, 32), (100, 120, 130))
+            image.save(base / "tiny.png")
+            result = subprocess.run([os.environ["IPR_GENERATOR_TEST_BIN"], "couleur"], cwd=root, capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            output = root / "measure.json"
+            self.assertEqual(main(["--base", str(base), "--group", "couleur", "--output", str(output), "--strict"]), 0)
+            result = native.read_json(output)
+            self.assertEqual(result["coverage"]["diagnostic"], 0)
+            self.assertEqual(result["coverage"]["excluded"], 0)
+            wb = [r for r in result["records"] if r["feature"] in ("temperature", "tint")]
+            self.assertTrue(all(r["reference_role"] == "support" for r in wb))
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            base = root / "tests/image/base"
+            base.mkdir(parents=True)
+            image.save(base / "tiny.png")
+            result = subprocess.run([os.environ["IPR_GENERATOR_TEST_BIN"], "all"], cwd=root, capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            records = inputs.base_records(base, list(catalog.GROUPS))
+            for group in ("lumiere", "courbes", "couleur", "melangeur", "grading", "effets", "bruit", "nettete"):
+                measured = campaign.analyse(group, records, step=1, patch_size=16)
+                self.assertEqual(measured["coverage"]["diagnostic"], 0, (group, [(r["feature"], r["issues"]) for r in measured["records"]]))
+                self.assertEqual(measured["coverage"]["excluded"], 0, group)
+
     def test_catalog_matches_photographic_groups_and_orange_violet_magenta(self):
         self.assertEqual(len(catalog.GROUPS), 10)
         for feature in ("mixer-orange-hue", "mixer-violet-hue", "mixer-magenta-hue"):
@@ -221,31 +327,6 @@ class GroupAnalysisTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             inputs.validate_record(record)
 
-    def test_manifest_associations_bom_status_and_path_confinement(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            record = fixture_record(root)
-            exports = [{"source": "S.CR3", "file": "neutral.tiff", "feature": "neutral", "value": 0,
-                        "sha256": record["reference_sha256"], "settings": record["reference_settings"]},
-                       {"source": "S.CR3", "file": "variant.tiff", "feature": "saturation", "value": 50,
-                        "sha256": record["expected_sha256"], "settings": record["settings"]}]
-            data = {"status": "complete", "format": "TIFF", "bitDepth": 16,
-                    "expectedExports": 2, "exports": exports, "arguments": ["--output", str(root)]}
-            path = root / "manifest.json"
-            path.write_text(json.dumps(data), encoding="utf-8-sig")
-            mapped = inputs.manifest_records(path)
-            self.assertEqual(mapped[1]["reference"], str((root / "neutral.tiff").resolve()))
-            self.assertEqual(mapped[1]["value"], 50)
-            self.assertEqual(main(["--group", "couleur", "--manifest", str(path), "--output", str(root / "result.json")]), 0)
-            self.assertEqual(main(["--group", "couleur", "--manifest", str(path), "--output", str(root / "result.json")]), 1)
-            data["exports"][1]["file"] = "../outside.tiff"
-            path.write_text(json.dumps(data))
-            with self.assertRaises(ValueError):
-                inputs.manifest_records(path)
-            data["status"] = "running"
-            path.write_text(json.dumps(data))
-            with self.assertRaises(ValueError):
-                inputs.manifest_records(path)
 
     def test_all_dispatch_handlers_return_strict_json(self):
         p = np.full((8, 8, 3), [.4, .3, .2])
