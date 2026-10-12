@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="32" font-size="20">SATURATION — réponse publiée v1</text>
+<text x="30" y="58" font-size="13">delta_chroma (unités et convention : source)</text>
+<path d="M95,470.0h740" stroke="#ddd"/>
+<text x="87" y="474.0" text-anchor="end" font-size="12">-0.455</text>
+<path d="M95,392.0h740" stroke="#ddd"/>
+<text x="87" y="396.0" text-anchor="end" font-size="12">-0.305</text>
+<path d="M95,314.0h740" stroke="#ddd"/>
+<text x="87" y="318.0" text-anchor="end" font-size="12">-0.156</text>
+<path d="M95,236.00000000000003h740" stroke="#ddd"/>
+<text x="87" y="240.00000000000003" text-anchor="end" font-size="12">-0.00588</text>
+<path d="M95,158.0h740" stroke="#ddd"/>
+<text x="87" y="162.0" text-anchor="end" font-size="12">0.144</text>
+<path d="M95,80.00000000000006h740" stroke="#ddd"/>
+<text x="87" y="84.00000000000006" text-anchor="end" font-size="12">0.294</text>
+<text transform="translate(95.0,490) rotate(25)" font-size="11">bare</text>
+<text transform="translate(835.0,490) rotate(25)" font-size="11">suffix_2</text>
+<circle cx="95.0" cy="470.0" r="4" fill="#1565c0"/>
+<circle cx="835.0" cy="131.95958721917765" r="4" fill="#1565c0"/>
+<polyline points="95.00,470.00 835.00,131.96" fill="none" stroke="#1565c0" stroke-width="2"/>
+<text x="855" y="100" fill="#1565c0" font-size="11">LR</text>
+<circle cx="95.0" cy="456.8241835720924" r="4" fill="#d84315"/>
+<circle cx="835.0" cy="108.88888888888891" r="4" fill="#d84315"/>
+<polyline points="95.00,456.82 835.00,108.89" fill="none" stroke="#d84315" stroke-width="2"/>
+<text x="855" y="122" fill="#d84315" font-size="11">IPR</text>
+<text x="30" y="620" font-size="12">Deux états selon la convention de campagne ; ne pas déduire leurs unités du suffixe. Lacunes laissées vides. Voir reglages-reponses.csv.</text></svg>

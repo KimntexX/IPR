@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-12T07:47:24Z",
+  "group": "documentation",
+  "branch": "patch_documentation",
+  "base_commit": "7db5ac7",
+  "published_ci_commit": "0c752eaf292af63d21496dfc59bfbb6c27365c04",
+  "ci_run_url": "https://github.com/KimntexX/IPR/actions/runs/38219071933",
+  "local_validation": {
+    "utf8_json_errors": 0,
+    "missing_local_link_warnings_before": 39,
+    "missing_local_link_warnings_after": 0,
+    "python_tests_run": 151,
+    "python_tests_failed": 0,
+    "documentation_tests": 7,
+    "git_diff_check": "passed",
+    "metrics_check": {
+      "source_hash_format": "sha256-text-lf-v1",
+      "inventoried_root_evidence_sources": 114,
+      "validated_source_hashes": 138,
+      "validated_exact_json_values": 286635,
+      "validated_svg_documents": 39
+    }
+  },
+  "repairs": [
+    "22 absolute-source-link lines converted to existing relative paths",
+    "Unversioned images, PDFs, build outputs and local cleanup scripts labeled explicitly",
+    "Historical removed test identified without restoring a legacy implementation",
+    "7 existing build-cleanup audit files copied with SHA-256 equality checked",
+    "Precise gitignore exception for the documentary audit, not generated builds",
+    "Branch names, historical CI proposal status and four whitespace issues corrected",
+    "Derived CSV provenance regenerated using canonical LF text hashes; three regression tests added"
+  ],
+  "preservation": {
+    "previously_tracked_measurement_json_unchanged": true,
+    "raw_image_or_profile_fingerprints_changed": false,
+    "photographic_verdicts_changed": false,
+    "new_translation_created": false,
+    "cleanup_scripts_executed_or_published": false,
+    "private_image_exports_published": false
+  },
+  "limits": [
+    "Checks file targets, not Markdown heading anchors or external URLs",
+    "No LaTeX rebuild or linguistic certification of existing English texts",
+    "Local artifacts remain unavailable in the public repository",
+    "CSV inventory bytes describe the generating checkout; text hash normalizes CRLF only",
+    "This is documentary validation, not new photographic testing or performance benchmarking",
+    "No merge into dev/main or new version tag"
+  ]
+}

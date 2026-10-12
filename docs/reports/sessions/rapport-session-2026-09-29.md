@@ -108,14 +108,15 @@ cible sont nécessaires.
 
 ### 5. Comparaison avec `6V1A9933`
 
-Le corpus local contient :
+Le corpus local contenait les fichiers privés suivants lors de cette session
+(non versionnés ; leur disponibilité actuelle n'est pas garantie) :
 
-- [`6V1A9933.CR3`](../../../tests/image/6V1A9933.CR3), RAW source ;
-- [`6V1A9933.jpg`](../../../tests/image/6V1A9933.jpg), rendu Lightroom de
+- `tests/image/6V1A9933.CR3`, RAW source ;
+- `tests/image/6V1A9933.jpg`, rendu Lightroom de
   référence ;
-- [`6V1A9933-2.dng`](../../../tests/image/6V1A9933-2.dng), DNG RAW avec les
+- `tests/image/6V1A9933-2.dng`, DNG RAW avec les
   réglages XMP Lightroom ;
-- [`6V1A9933.xmp`](../../../tests/image/6V1A9933.xmp), sidecar de référence.
+- `tests/image/6V1A9933.xmp`, sidecar de référence.
 
 Les métadonnées Lightroom indiquent :
 

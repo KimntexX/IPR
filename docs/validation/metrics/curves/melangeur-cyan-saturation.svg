@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="32" font-size="20">Mélangeur cyan / saturation — 6V1A0327</text>
+<text x="30" y="58" font-size="13">core_saturation_delta</text>
+<path d="M95,470.0h740" stroke="#ddd"/>
+<text x="87" y="474.0" text-anchor="end" font-size="12">-0.142</text>
+<path d="M95,392.0h740" stroke="#ddd"/>
+<text x="87" y="396.0" text-anchor="end" font-size="12">-0.0806</text>
+<path d="M95,314.0h740" stroke="#ddd"/>
+<text x="87" y="318.0" text-anchor="end" font-size="12">-0.0193</text>
+<path d="M95,236.0h740" stroke="#ddd"/>
+<text x="87" y="240.0" text-anchor="end" font-size="12">0.0419</text>
+<path d="M95,158.0h740" stroke="#ddd"/>
+<text x="87" y="162.0" text-anchor="end" font-size="12">0.103</text>
+<path d="M95,80.0h740" stroke="#ddd"/>
+<text x="87" y="84.0" text-anchor="end" font-size="12">0.164</text>
+<text transform="translate(95.0,490) rotate(25)" font-size="11">-50</text>
+<text transform="translate(280.0,490) rotate(25)" font-size="11">-25</text>
+<text transform="translate(650.0,490) rotate(25)" font-size="11">25</text>
+<text transform="translate(835.0,490) rotate(25)" font-size="11">50</text>
+<circle cx="95.0" cy="456.8088804656131" r="4" fill="#1565c0"/>
+<circle cx="280.0" cy="371.1178815795373" r="4" fill="#1565c0"/>
+<circle cx="650.0" cy="230.61423265656217" r="4" fill="#1565c0"/>
+<circle cx="835.0" cy="152.32205533420102" r="4" fill="#1565c0"/>
+<polyline points="95.00,456.81 280.00,371.12 650.00,230.61 835.00,152.32" fill="none" stroke="#1565c0" stroke-width="2"/>
+<text x="855" y="100" fill="#1565c0" font-size="11">LR</text>
+<circle cx="95.0" cy="470.0" r="4" fill="#d84315"/>
+<circle cx="280.0" cy="379.70263822565903" r="4" fill="#d84315"/>
+<circle cx="650.0" cy="199.14908520137305" r="4" fill="#d84315"/>
+<circle cx="835.0" cy="108.88888888888891" r="4" fill="#d84315"/>
+<polyline points="95.00,470.00 280.00,379.70 650.00,199.15 835.00,108.89" fill="none" stroke="#d84315" stroke-width="2"/>
+<text x="855" y="122" fill="#d84315" font-size="11">IPR</text>
+<text x="30" y="620" font-size="12">Progressivité aux valeurs -50/-25/+25/+50 ; neutres propres aux moteurs. Pas de temps CPU ni de parité colorimétrique.</text></svg>

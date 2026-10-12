@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="32" font-size="20">TEXTURE — réponse publiée v1</text>
+<text x="30" y="58" font-size="13">detail_ratio (unités et convention : source)</text>
+<path d="M95,470.0h740" stroke="#ddd"/>
+<text x="87" y="474.0" text-anchor="end" font-size="12">0</text>
+<path d="M95,392.0h740" stroke="#ddd"/>
+<text x="87" y="396.0" text-anchor="end" font-size="12">0.364</text>
+<path d="M95,314.0h740" stroke="#ddd"/>
+<text x="87" y="318.0" text-anchor="end" font-size="12">0.729</text>
+<path d="M95,235.99999999999997h740" stroke="#ddd"/>
+<text x="87" y="239.99999999999997" text-anchor="end" font-size="12">1.09</text>
+<path d="M95,158.0h740" stroke="#ddd"/>
+<text x="87" y="162.0" text-anchor="end" font-size="12">1.46</text>
+<path d="M95,80.0h740" stroke="#ddd"/>
+<text x="87" y="84.0" text-anchor="end" font-size="12">1.82</text>
+<text transform="translate(95.0,490) rotate(25)" font-size="11">bare</text>
+<text transform="translate(835.0,490) rotate(25)" font-size="11">suffix_2</text>
+<circle cx="95.0" cy="359.7401699268919" r="4" fill="#1565c0"/>
+<circle cx="835.0" cy="160.0694856089047" r="4" fill="#1565c0"/>
+<polyline points="95.00,359.74 835.00,160.07" fill="none" stroke="#1565c0" stroke-width="2"/>
+<text x="855" y="100" fill="#1565c0" font-size="11">LR</text>
+<circle cx="95.0" cy="374.5956003424883" r="4" fill="#d84315"/>
+<circle cx="835.0" cy="108.88888888888886" r="4" fill="#d84315"/>
+<polyline points="95.00,374.60 835.00,108.89" fill="none" stroke="#d84315" stroke-width="2"/>
+<text x="855" y="122" fill="#d84315" font-size="11">IPR</text>
+<text x="30" y="620" font-size="12">Deux états selon la convention de campagne ; ne pas déduire leurs unités du suffixe. Lacunes laissées vides. Voir reglages-reponses.csv.</text></svg>

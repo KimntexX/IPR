@@ -288,9 +288,10 @@ python3 tests/analyse_base_colorimetrique_v2.py \
 ```
 
 Les sorties existantes sont refusées pour conserver les mesures historiques.
-La [planche locale de contrôle](../../../build-colorimetrie-inventory/comparaison-v2.png)
+La planche locale de contrôle `build-colorimetrie-inventory/comparaison-v2.png`
 est une visualisation réduite 8 bits avec rectangles historiques, ignorée par
-Git ; elle n'est jamais utilisée comme source de mesure. La comparaison
+Git, dont la disponibilité actuelle n'est pas garantie ; elle n'est jamais
+utilisée comme source de mesure. La comparaison
 cryptographique parcourt les fichiers entiers ; les statistiques Lightroom
 utilisent les grilles documentées.
 
@@ -1253,10 +1254,11 @@ suffisamment chromatiques reste entre 5,53° et 18,14°. Ces masques ne sont
 pas des plages grises ou colorées mesurées physiquement. Les résidus de
 couleur restent à investiguer indépendamment du défaut de sortie corrigé.
 
-La [planche locale v3/LR](../../../build-colorimetrie-v3-20261007/comparaison.png)
+La planche locale v3/LR `build-colorimetrie-v3-20261007/comparaison.png`
 montre encore le rendu IPR plus sombre, particulièrement sur le voilier,
 l'escalade et le ciel. Cette planche 8 bits sert uniquement à la lecture
-visuelle ; tous les chiffres viennent des TIFF 16 bits.
+visuelle ; tous les chiffres viennent des TIFF 16 bits. L'artefact de build
+n'est pas versionné et sa disponibilité actuelle n'est pas garantie.
 
 ### 16.4. Décision et étape suivante
 

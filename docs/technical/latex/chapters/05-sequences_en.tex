@@ -1,0 +1,68 @@
+\chapter{Sequence Diagrams}
+\label{chap:sequences}
+
+\section{Image Opening}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=0.75cm,font=\small]
+  \foreach \x/\name in {0/User,2.1/QML,4.2/ImageEditor,6.5/Cache,8.4/Decoder,10.7/Sidecar} {
+    \node[align=center] at (\x,0) {\name};
+    \draw[densely dashed,gray] (\x,-0.4) -- (\x,-8.0);
+  }
+  \draw[message] (0,-1) -- node[above,sloped]{opens an image} (2.1,-1);
+  \draw[message] (2.1,-2) -- node[above,sloped]{openImage()} (4.2,-2);
+  \draw[message] (4.2,-2.65) -- node[above,sloped]{read RAW/WB recipe .ipr} (10.7,-2.65);
+  \draw[message] (4.2,-3.25) -- node[above,sloped]{find(RAW/WB/DCP/manifest key)} (6.5,-3.25);
+  \draw[message] (6.5,-3.65) -- node[above,sloped]{miss} (4.2,-3.65);
+  \draw[message] (4.2,-4.45) -- node[above,sloped]{asynchronous decode} (8.4,-4.45);
+  \draw[message] (8.4,-5.1) -- node[above,sloped]{WorkingImage} (4.2,-5.1);
+  \node[align=left,anchor=west,font=\scriptsize] at (4.3,-5.8) {retains active source + proxy};
+  \draw[message] (4.2,-6.5) -- node[above,sloped]{read .ipr if valid} (10.7,-6.5);
+  \draw[message] (10.7,-7.15) -- node[above,sloped]{Settings + metadata} (4.2,-7.15);
+  \draw[message] (4.2,-7.75) -- node[above,sloped]{rendered image / properties} (2.1,-7.75);
+\end{tikzpicture}
+\caption{Cache miss path. The old inactive RAW is inserted into the LRU at transition, not systematically the new active RAW.}
+\end{figure}
+
+\section{Adjustment and Batch Application}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=0.8cm,font=\small]
+  \foreach \x/\name in {0/User,2.2/Setting.qml,4.8/ImageEditor,7.4/Pipeline,10.0/Sidecars} {
+    \node[align=center] at (\x,0) {\name};
+    \draw[densely dashed,gray] (\x,-0.4) -- (\x,-7.2);
+  }
+  \draw[message] (0,-1) -- node[above,sloped]{modifies a slider or field} (2.2,-1);
+  \draw[message] (2.2,-1.8) -- node[above,sloped]{setBrightness(), etc.} (4.8,-1.8);
+  \draw[message] (4.8,-2.6) -- node[above,sloped]{deferred render} (7.4,-2.6);
+  \draw[message] (7.4,-3.25) -- node[above,sloped]{rendered image} (4.8,-3.25);
+  \draw[message] (4.8,-3.95) -- node[above,sloped]{updated property} (2.2,-3.95);
+  \draw[message] (4.8,-4.65) -- node[above,sloped]{atomic write, 450 ms} (10.0,-4.65);
+  \draw[message] (0,-5.45) -- node[above,sloped]{apply to N images} (2.2,-5.45);
+  \draw[message] (2.2,-6.15) -- node[above,sloped]{applyAdjustmentsToSelection()} (4.8,-6.15);
+  \draw[message] (4.8,-6.85) -- node[above,sloped]{one sidecar per target} (10.0,-6.85);
+\end{tikzpicture}
+\caption{Non-destructive adjustment cycle and voluntary propagation to a selection.}
+\end{figure}
+
+\section{Profile Change and Normalization}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=0.8cm,font=\small]
+  \foreach \x/\name in {0/QML Module,3.1/ImageEditor,6.5/RAW Worker,10.2/Profiles and manifest} {
+    \node[align=center] at (\x,0) {\name};
+    \draw[densely dashed,gray] (\x,-0.4) -- (\x,-7.3);
+  }
+  \draw[message] (0,-1) -- node[above]{setCameraProfile()} (3.1,-1);
+  \draw[message] (3.1,-2) -- node[above]{camera buffer or decoding} (6.5,-2);
+  \draw[message] (6.5,-3) -- node[above]{applyProfile() or resolve()} (10.2,-3);
+  \draw[message] (10.2,-4) -- node[above]{profile / calibration or refusal} (6.5,-4);
+  \draw[message] (6.5,-5) -- node[above]{image + actual status} (3.1,-5);
+  \draw[message] (3.1,-6) -- node[above]{render with preserved settings} (0,-6);
+  \draw[message] (0,-7) -- node[above]{uncheck: non-calibrated key} (3.1,-7);
+\end{tikzpicture}
+\caption{The pre-DCP buffer avoids LibRaw when WB/calibration allows. The visible render remains preserved; the v5 recipe is saved after success. The checkbox alone does not guarantee calibration.}
+\end{figure}

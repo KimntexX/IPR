@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="32" font-size="20">Bruit v2 — 6V1A9950, progression du curseur</text>
+<text x="30" y="58" font-size="13">Ratio au neutre propre à chaque moteur ; sans unité</text>
+<path d="M95,470.0h740" stroke="#ddd"/>
+<text x="87" y="474.0" text-anchor="end" font-size="12">0</text>
+<path d="M95,392.0h740" stroke="#ddd"/>
+<text x="87" y="396.0" text-anchor="end" font-size="12">0.216</text>
+<path d="M95,314.0h740" stroke="#ddd"/>
+<text x="87" y="318.0" text-anchor="end" font-size="12">0.432</text>
+<path d="M95,236.0h740" stroke="#ddd"/>
+<text x="87" y="240.0" text-anchor="end" font-size="12">0.649</text>
+<path d="M95,158.0h740" stroke="#ddd"/>
+<text x="87" y="162.0" text-anchor="end" font-size="12">0.865</text>
+<path d="M95,80.0h740" stroke="#ddd"/>
+<text x="87" y="84.0" text-anchor="end" font-size="12">1.08</text>
+<text transform="translate(95.0,490) rotate(25)" font-size="11">25</text>
+<text transform="translate(341.66666666666663,490) rotate(25)" font-size="11">50</text>
+<text transform="translate(588.3333333333333,490) rotate(25)" font-size="11">75</text>
+<text transform="translate(835.0,490) rotate(25)" font-size="11">100</text>
+<circle cx="95.0" cy="109.96957792910143" r="4" fill="#1565c0"/>
+<circle cx="341.66666666666663" cy="112.0195710198825" r="4" fill="#1565c0"/>
+<circle cx="588.3333333333333" cy="142.2827996806546" r="4" fill="#1565c0"/>
+<circle cx="835.0" cy="162.8914603859596" r="4" fill="#1565c0"/>
+<polyline points="95.00,109.97 341.67,112.02 588.33,142.28 835.00,162.89" fill="none" stroke="#1565c0" stroke-width="2"/>
+<text x="855" y="100" fill="#1565c0" font-size="11">results/6V1A9950/IPR-couleur</text>
+<circle cx="95.0" cy="109.18507875176442" r="4" fill="#d84315"/>
+<circle cx="341.66666666666663" cy="108.97143525969591" r="4" fill="#d84315"/>
+<circle cx="588.3333333333333" cy="109.28117015247642" r="4" fill="#d84315"/>
+<circle cx="835.0" cy="108.88888888888891" r="4" fill="#d84315"/>
+<polyline points="95.00,109.19 341.67,108.97 588.33,109.28 835.00,108.89" fill="none" stroke="#d84315" stroke-width="2"/>
+<text x="855" y="122" fill="#d84315" font-size="11">results/6V1A9950/IPR-luminance</text>
+<text x="30" y="620" font-size="12">Une baisse du résidu Haar/MAD ne prouve pas la conservation des détails ; ce graphe ne classe pas la qualité LR/IPR.</text></svg>

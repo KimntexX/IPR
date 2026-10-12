@@ -1,0 +1,126 @@
+\chapter{Already Integrated Adjustments}
+\label{chap:reglages-existants}
+
+\section{Calculation Convention}
+
+The pipeline manipulates a pixel $\mathbf{p}=(r,g,b)^T$ in floating-point values. Photometric calculations must be performed on linear components; sRGB encoding or export format is applied at the end. The relative luminance used for normalizations is:
+\begin{equation}
+  Y = 0.2126r + 0.7152g + 0.0722b.
+\end{equation}
+
+The formula is that of Rec.~709/sRGB. Maintaining floating-point precision before encoding reduces detail loss in highlights and avoids unnecessary intermediate saturations.
+
+\section{Global Tonality}
+
+\subsection{Exposure, Contrast, and Tone}
+
+Exposure in IL (EV) values is a multiplicative gain:
+\begin{equation}
+  \mathbf{p}' = 2^{E}\mathbf{p},
+\end{equation}
+where $E$ is the exposure setting. A change of $+1$~EV thus doubles the energy of linear components.
+
+Contrast and \emph{highlights}, \emph{shadows}, \emph{whites}, and \emph{blacks} settings are driven by luminance weighting functions. Generically, a local tone correction takes the form:
+\begin{equation}
+  Y' = Y + a\,w(Y),
+\end{equation}
+where $a$ is the requested intensity and $w$ a soft window focused on the targeted range. Components are then rescaled with chromaticity preservation. This approach prevents a shadow adjustment from affecting highlights as much.
+
+Validation tests performed on the reference corpus have validated the EV slider as well as shadow, black, white, and highlight adjustments. The matrix, analyses, and measurement files are organized in \texttt{docs/validation}; historical evidence remains consultable during documentary migration.
+
+\subsection{Curves}
+
+Available curves are a luminance curve and Red, Green, and Blue curves. Between control points $(x_i,y_i)$, the implementation relies on Lagrange polynomial interpolation:
+\begin{equation}
+  P(x)=\sum_{i=0}^{n} y_i\prod_{j\ne i}\frac{x-x_j}{x_i-x_j}.
+\end{equation}
+
+Channel curves allow creative tinting, while the luminance curve adjusts tonal contrast. HDR values are extended linearly beyond the control interval to avoid introducing abrupt cuts.
+
+\section{White Balance and Tint}
+
+Temperature is calculated from the correlated Planckian locus according to Krystek's algorithm~\cite{krystek1985}. Chromaticity gains are applied using Bradford chromatic adaptation~\cite{lam1985}, formulated matricially:
+\begin{equation}
+ \mathbf{RGB}' = M_{XYZ\rightarrow RGB}\,B^{-1}\,D\,B\,M_{RGB\rightarrow XYZ}\,\mathbf{RGB},
+\end{equation}
+where $B$ is the Bradford matrix and $D$ a diagonal matrix of ratios between reference white and target white in LMS space.
+
+Tint compensates the green-magenta axis. Colored gains are normalized to preserve luminance as much as possible:
+\begin{equation}
+  n=0.2126r_g+0.7152g_g+0.0722b_g, \qquad \mathbf{p}'=\frac{\mathbf{g}\odot\mathbf{p}}{n}.
+\end{equation}
+Temperature validation is recorded in the protocol and analyses of October 2, 2026.
+
+\section{Global Color, Color Mixer, and Color Grading}
+
+\subsection{Vibrance and Saturation}
+
+Saturation adjusts chromatic amplitude uniformly. Vibrance protects already saturated colors more. If $c=(\max(r,g,b)-\min(r,g,b))/\max(r,g,b)$ is the relative chroma, an approximation of the vibrance gain is:
+\begin{equation}
+  g_v = 1+\frac{V}{100}(1-c).
+\end{equation}
+Thus, low-saturation colors receive most of the effect. Vibrance and saturation controls have undergone basic verifications preceding mixer and grading work.
+
+\subsection{Color Mixer}
+
+The C++ \texttt{ColorMixer} module operates in an HSV representation of linear RGB on eight bands: red, orange, yellow, green, cyan, blue, violet, and magenta. The centers, in degrees, are:
+\[0,\;30,\;60,\;120,\;180,\;240,\;270,\;300.\]
+For an original hue $h$, the influence of a band centered at $h_i$ is triangular:
+\begin{equation}
+  w_i(h)=\max\left(0,1-\frac{|\delta_i(h)|}{a_i(h)}\right),
+\end{equation}
+where $\delta_i(h)$ is the signed circular distance in $[-180^\circ,180^\circ]$ and $a_i(h)$ the distance from the center to the neighboring center on the considered side. Weights are calculated on the source hue and multiplied by $q=t^2(3-2t)$, with $t=\operatorname{clamp}(S/0.05,0,1)$, to protect achromatics. Weighted commands are added before application, without multiplied gains at overlaps.
+\begin{align}
+ H'&=H+18^\circ\sum_i qw_iH_i/100,\\
+ S'&=\operatorname{clamp}\left(S\left[1+\sum_i qw_iS_i/100\right],0,1\right),\\
+ Y'&=Y\,2^{0.5\sum_i qw_iL_i/100}.
+\end{align}
+HSV reconversion is normalized to the source luminance before selective gain. The bounds $\pm100$ guarantee a gain between $1/\sqrt{2}$ and $\sqrt{2}$. The chroma threshold $0.05$ and the bound $0.5$ EV are initial empirical choices, not a validated Lightroom calibration. Grays are exactly unchanged, and negative channels are not clipped in this module. Output gamut mapping may modify $Y$. The mixer and grading remain independent of global saturation and vibrance; a zero mixer does not change the base render.
+
+\subsection{Color Grading}
+
+Three independent zones are available: shadows, midtones, and highlights. They receive a color defined by hue and saturation. A smooth function of $Y$ distributes the influence of each zone; chromatic correction is added with intensity proportional to saturation, then bounded at export time. This solution is intentionally lightweight and non-destructive; future visual validation must specify its limits at high saturation.
+
+\section{Local Detail, Haze, and Grain}
+
+\subsection{Texture and Clarity}
+
+Texture and clarity rely on the detail component of a Gaussian blur decomposition:
+\begin{equation}
+  D_\sigma = Y-G_\sigma(Y), \qquad Y'=Y+aD_\sigma w(Y),
+\end{equation}
+where $G_\sigma$ is a Gaussian blur. Texture uses a short scale ($\sigma\approx1.2$), clarity a wider scale ($\sigma\approx8$). Protection weights limit enhancement in extremes and very low chromaticity areas. The blur primitive is consistent with that documented by OpenCV~\cite{opencvGaussian}.
+
+\subsection{Haze Correction}
+
+The simplified physical model by Koschmieder relates observation $I$, scene radiance $J$, atmospheric light $A$, and transmission $t$:
+\begin{equation}
+  I(x)=J(x)t(x)+A(1-t(x)).
+\end{equation}
+The estimation by \emph{dark channel prior} uses locally $\min_c I_c$ then reconstructs $J$ after estimation and bounding of $t$~\cite{he2009,he2011}. The implementation applies this logic as a gradual correction to avoid halos.
+
+\subsection{CPU Noise Reduction and Sharpening}
+
+\paragraph{Consolidation of October 5, 2026.}
+
+Denoising precedes local effects and sharpening. It separates linear RGB into $Y=0.2126R+0.7152G+0.0722B$, $Co=R-B$, and $Cg=G-(R+B)/2$. Planes have a distinct noise estimate by the MAD of the Haar diagonal detail $(p_{00}-p_{01}-p_{10}+p_{11})/2$, normalized by $0.67448975$. Blocks exactly constant do not participate in this estimate; it remains a proxy after demosaicing, not a sensor model.
+
+For $s=\operatorname{clamp}(v,0,100)/100$, residuals of two successive blurs ($\sigma=0.8$ then $1.8$ pixels) undergo a threshold $\lambda_f=\widehat\sigma ms$, with $m=2.55$ for Y and $3.15$ for Co/Cg; $\lambda_m=0.52\lambda_f$. A prefiltered guide and a normalized Sobel protect edges, including isolated luminescent chromatic boundaries. The result is blended with the original with weight $s$. Positive and negative changes are balanced to preserve the mean without adding an offset to blacks. These coefficients are empirical.
+
+Reconstruction writes $RGB=Y+d$, where the luminance of $d$ is zero. If a channel becomes negative, reduce $d$ towards the gray of same Y, without HDR upper clamp. The color setting alone thus preserves linear luminance per pixel at floating precision. At noise 0/0, the path is exactly short-circuited. Preserving global mean does not prevent local drift; photographic validation is still required.
+
+CPU sharpening is an unsharp mask on Y, with threshold relative to noise and local limitation of overshoots. Its historical estimator and calibration do not change in this correction. The native test \texttt{detailProcessingTests} covers synthetic regressions, not Lightroom parity or guaranteed fidelity of all textures.
+
+\subsection{Grain}
+
+Grain is deterministic pseudo-random noise, dependent on pixel position and setting intensity. Its determinism ensures that the same export produces the same result and avoids flickering between two successive renders.
+
+\section{Persistence and Batch Adjustment}
+
+Presentation state is not part of the photographic sidecar. The global file \texttt{ipr-ui.ini} stores open sections, channel/band/zone selections, main colors, visibility and dimensions of panels, as well as export format and quality. Restoration is protected against QML default value writes at startup; it does not modify development settings. Keys reserved for cropping, masks, AI, and GPU are inactive. The View menu provides access to panel visibility and INI path, which is customized with the application closed.
+
+The sidecar uses an \texttt{IPR1} signature, version number, size, and modification date of the source file. It stores settings, curves, and user metadata via \texttt{QDataStream}~\cite{qtQDataStream}. Deferred writing of 450~ms goes through \texttt{QSaveFile}, which writes temporarily then validates the file atomically~\cite{qtQSaveFile}. A non-matching source fingerprint invalidates the sidecar rather than potentially applying settings to another file.
+
+The current v4 format stores eight color mixer triplets. Versions v1/v2/v3 are read while preserving their colors: the old last triplet becomes magenta at index 7; violet, new index 6, starts at zero, as does orange for v1/v2. Values are preserved, but the new model changes the render of old non-zero settings. Old executables do not read v4. INI schema 2 similarly migrates the magenta interface selection 6 to 7, without modifying photo settings.
+
+Batch application copies only development settings from the active image to checked images. Local annotations of the destination are preserved when they exist. This choice prevents a photographic correction from unintentionally overwriting an already established rating.
