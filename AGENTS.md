@@ -42,6 +42,12 @@
 
 ## Branches Git — règle du 10 octobre 2026
 
+- Précision du 12 octobre 2026 : les noms de branches sont en **anglais par
+  défaut**. `patch_color` est le nom retenu pour le groupe Couleur ; ne pas
+  créer ou reprendre `patch_couleur` comme seconde branche de ce groupe.
+  Vérifier les branches existantes avant toute création. Cette convention
+  n'autorise pas le renommage ni la suppression automatique des branches
+  historiques, ni une modification de l'historique publié.
 - `dev` est la branche d'intégration maintenue à jour après chaque validation.
 - Chaque groupe de fonctionnalités dispose d'une branche durable, créée depuis
   `dev` à jour. `patch_light` est la branche du groupe Lumières.

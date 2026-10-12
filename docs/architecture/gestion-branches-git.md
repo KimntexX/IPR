@@ -20,6 +20,16 @@ figés. `main` reste distinct et sa mise à jour nécessite une livraison explic
 
 ## Créer ou reprendre un groupe
 
+Convention adoptée le 12 octobre 2026 : **noms de branches en anglais par
+défaut**, y compris le groupe après le préfixe `patch_`. Par exemple :
+`patch_color`, `patch_light`, `patch_noise`, `patch_documentation`.
+Le groupe Couleur utilise `patch_color` ; `patch_couleur` est une ancienne
+branche locale, pas une seconde branche de travail à reprendre.
+Vérifier l'existence d'une branche avant d'en créer une autre pour le même
+groupe. Les branches historiques ne sont pas renommées ni supprimées
+automatiquement ; un tel changement nécessite un accord explicite et ne
+doit pas réécrire l'historique publié.
+
 Exécuter les commandes avec un état de travail compatible avec le changement de
 branche. Préserver les modifications locales sans rapport avec le groupe ; ne
 pas les ajouter automatiquement ni les effacer.
@@ -29,8 +39,8 @@ Pour un nouveau groupe, actualiser `dev`, puis créer sa branche :
 ```bash
 git switch dev
 git pull --ff-only origin dev
-git switch -c patch_nom_du_groupe
-git push -u origin patch_nom_du_groupe
+git switch -c patch_feature_group
+git push -u origin patch_feature_group
 ```
 
 Pour reprendre un groupe existant, actualiser `dev`, puis fusionner celle-ci dans
