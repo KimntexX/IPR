@@ -12,7 +12,7 @@ FIELDS = {"exposure": "Exposure2012", "contrast": "Contrast2012", "shadows": "Sh
 IPR_FIELDS = {**{f: f for f in FIELDS}, "denoise-luminance": "denoiseLuminance",
               "denoise-chrominance": "denoiseChrominance", "sharpening-amount": "sharpeningAmount",
               "sharpening-radius": "sharpeningRadius", "sharpening-masking": "sharpeningMasking",
-              "auto-wb": "automaticWhiteBalance", "grayscale": "grayscale"}
+              "auto-wb": "automaticWhiteBalance", "grayscale": "grayscale", "blur": "blur"}
 ZERO_IPR = ("exposure", "contrast", "shadows", "blacks", "highlights", "whites", "tint",
             "vibrance", "saturation", "texture", "clarity", "dehaze", "grain", "blur",
             "denoiseLuminance", "denoiseChrominance", "sharpeningAmount", "grayscale",
@@ -63,7 +63,10 @@ def ipr_state(record):
     warnings, supports = neutral_ipr(baseline, record.get("reference_role") == "support"), []
     if feature in IPR_FIELDS:
         key = IPR_FIELDS[feature]
-        if finite_number(settings.get(key)) != value:
+        observed = finite_number(settings.get(key))
+        matches = (observed is not None and math.isclose(observed, value, rel_tol=0, abs_tol=1e-7)
+                   if feature == "sharpening-radius" else observed == value)
+        if not matches:
             warnings.append("declared_value_mismatch")
         settings.pop(key, None)
         baseline.pop(key, None)

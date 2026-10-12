@@ -13,6 +13,12 @@ RULES = json.loads((ROOT / "scripts/test-rules.json").read_text(encoding="utf-8"
 
 
 class SelectionTests(unittest.TestCase):
+    def test_all_group_entrypoints_are_targeted_without_losing_wb_dependents(self):
+        for group in ("raw", "lumiere", "courbes", "couleur", "melangeur", "grading", "effets", "bruit", "nettete", "optique"):
+            plan = build.select_tests(["tests/analyse_" + group + ".py"], RULES)
+            self.assertFalse(plan["full"])
+            self.assertEqual(set(plan["python"]), {"group_analysis", "wb_comparison", "wb_adaptation"})
+
     def test_tone_recovery_selects_production_and_export_regressions(self):
         plan = build.select_tests(["src/core/ToneRecovery.h"], RULES)
         self.assertFalse(plan["full"])

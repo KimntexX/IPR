@@ -170,7 +170,7 @@ def analyse(group, records, step=8, patch_size=256, data_version=1, supersedes=N
     return {"campaign_id": f"mesure-{group}-v{data_version:03d}-{now.strftime('%Y%m%dT%H%M%S%fZ')}",
             "schema_version": 1, "data_version": data_version, "measured_at_utc": now.isoformat(),
             "supersedes_campaign_id": supersedes, "group": group, "protocol": PROTOCOLS[group],
-            "protocol_version": "grouped-native-v1", "analysis_version": "1.0",
+            "protocol_version": "grouped-native-v2", "analysis_version": "2.0",
             "analyser_sources_sha256": {p.name: sha256(p) for p in sorted(package.glob("*.py"))},
             "software": {"python": sys.version, "numpy": np.__version__, "pillow": PIL.__version__, "platform": platform.platform()},
             "method": {"space": "linear sRGB D65", "global_step": step, "ROI_step": 1,
