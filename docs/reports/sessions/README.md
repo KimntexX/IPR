@@ -11,5 +11,7 @@ Une session clôturée doit lier les ADR, spécifications, protocoles et preuves
 
 ## Nouvelles sessions
 
+- [12 octobre — tri préparatoire des travaux locaux](tri-travaux-locaux-2026-10-12.md).
+
 - [5 octobre](session-2026-10-05.md) : correctif débruitage CPU, build et recette v2 préparée.
 - [4 octobre](session-2026-10-04.md) : préférences globales d’IHM et INI utilisateur.

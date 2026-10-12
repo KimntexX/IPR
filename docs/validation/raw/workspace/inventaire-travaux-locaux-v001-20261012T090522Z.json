@@ -1,0 +1,3432 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-12T09:05:22Z",
+  "group": "workspace-triage",
+  "scope": "Local tracked modifications and nonignored untracked files before this planning pass",
+  "git_hash_contract": "Git blob object IDs after git hash-object clean filters; not raw file SHA-256 or backups",
+  "remote_ci_checked": false,
+  "inventory_only": true,
+  "workspace_branch": "patch_couleur",
+  "workspace_head": "4c241541a7fcbfd1e62534c9fdb111c69bd55e6c",
+  "reference_commits": {
+    "patch_ci_cd": "7b0e7ea257a9f2352ec87cb963a96736c67f892a",
+    "patch_documentation": "6cae5c4c79675425e353c576dea44a158fb23efd",
+    "dev": "1027092c9e0f934ab4647d6de941441029e88217"
+  },
+  "summary": {
+    "total": 278,
+    "tracked_changes": 96,
+    "untracked_files": 182,
+    "identical_dev": 39,
+    "identical_documentation_only": 105,
+    "other": 134,
+    "dispositions": {
+      "documentation_changes_to_reconcile": 99,
+      "old_baseline_divergence_do_not_copy": 7,
+      "published_documentation_not_integrated": 105,
+      "already_in_dev": 39,
+      "documentary_tools_to_review": 2,
+      "historical_operational_tools_do_not_execute": 4,
+      "generator_patch_to_prepare": 4,
+      "shared_selection_hunks_to_reconcile": 2,
+      "analysis_entrypoints_to_prepare": 16
+    }
+  },
+  "exclusions": [
+    "Ignored private image corpus",
+    "Ignored builds and installed dependencies",
+    "Files created by this planning pass"
+  ],
+  "limits": [
+    "Equality applies to individual file content, not semantic equivalence of all hunks",
+    "Different content may be older than published branches; do not treat every difference as a new feature",
+    "Local refs used without a new fetch; no remote run status inferred",
+    "Hashes do not preserve uncommitted file contents; actual files remain in the original worktree"
+  ],
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "status": "tracked_change",
+      "local_blob": "37bb06eaa3041b6e3941bb22d46e766c9675c851",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "status": "tracked_change",
+      "local_blob": "d4435649ed247ef143f51a6ad83cd23f2e850d55",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "old_baseline_divergence_do_not_copy"
+    },
+    {
+      "path": "docs/AGENTS.md",
+      "status": "tracked_change",
+      "local_blob": "098e79c5eabe11244cbdd455319c6014b65a3fea",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/build-windows-standalone.md",
+      "status": "tracked_change",
+      "local_blob": "0e82c1d7c24686f3fda4bb7d83ec382492ecd3c4",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/build-windows-standalone_en.md",
+      "status": "untracked",
+      "local_blob": "7c5d668affdd1d7c8e04d818fdab74a2334af5b6",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/architecture/ci-et-build-multiplateforme.md",
+      "status": "tracked_change",
+      "local_blob": "680fa0058845edc8bd22b976938c17f44305c1b3",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/ci-et-build-multiplateforme_en.md",
+      "status": "untracked",
+      "local_blob": "001b22373e26c491ae77398e8e0a1bc3dc9d2e45",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/denoising-sharpening.md",
+      "status": "tracked_change",
+      "local_blob": "fee15c9821a15f1ab250491686ccc94834d9edb9",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/denoising-sharpening_en.md",
+      "status": "untracked",
+      "local_blob": "af4fdf314d7a486091e91afd8d6834bf8214f3f2",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/gestion-branches-git.md",
+      "status": "tracked_change",
+      "local_blob": "585fba04b6b507affdb12826d13ff3a354756b62",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/gestion-branches-git_en.md",
+      "status": "untracked",
+      "local_blob": "9207f8979c92dfd4c901b5345eed44dfdbc3e890",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/architecture/README.md",
+      "status": "tracked_change",
+      "local_blob": "76ac53c18f8b5ffe3239ea06cc381df7fffb48cc",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/README_en.md",
+      "status": "untracked",
+      "local_blob": "18b1b81c645fa8cff8e8d363e4aa1e1216d47593",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/architecture/references/guide-creation-profils-dcp-2026-10-01.md",
+      "status": "tracked_change",
+      "local_blob": "4df16162045952e2f497eac24ddb03fbbb0c0e9a",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/references/guide-creation-profils-dcp-2026-10-01_en.md",
+      "status": "untracked",
+      "local_blob": "8eede3564017f4d3d13f2cce861cc7aa8009e4e7",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/architecture/references/note-utilisation-profils-adobe-camera-raw-2026-10-01.md",
+      "status": "tracked_change",
+      "local_blob": "a31405ee1ad5d0421dc58e8e4de5e109e9f77ef4",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/references/note-utilisation-profils-adobe-camera-raw-2026-10-01_en.md",
+      "status": "untracked",
+      "local_blob": "4393a11b7bd9d4c14a84b75fc77177a105fd6e50",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/architecture/references/rapport-dependances-opencv-libraw-2026-10-01.md",
+      "status": "tracked_change",
+      "local_blob": "8426ff51d6ea136db939258cdd0ba59579f89899",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/references/rapport-dependances-opencv-libraw-2026-10-01_en.md",
+      "status": "untracked",
+      "local_blob": "ec939ac1d434ff633d31535c983e323de23dcb34",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/architecture/references/README.md",
+      "status": "tracked_change",
+      "local_blob": "b74899577a271ab6e8ecbed1a0610c6c5979254c",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/references/README_en.md",
+      "status": "untracked",
+      "local_blob": "cade551101ae07d39c3e8c1ad8fde067f605e711",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/architecture/tests-cibles-et-build-windows.md",
+      "status": "tracked_change",
+      "local_blob": "d3b2da7ea6c19500db7ebad588bd49ba5f4c92b7",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/tests-cibles-et-build-windows_en.md",
+      "status": "untracked",
+      "local_blob": "62c286a6abaf3ffc45a3563cb35822ce90f500a2",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/architecture/ui-preferences.md",
+      "status": "tracked_change",
+      "local_blob": "0ee7648c8099cb8daff3a4034312df508b9c0f0a",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/architecture/ui-preferences_en.md",
+      "status": "untracked",
+      "local_blob": "3e50e171ec3d661fb498c85ad43b194f3eafadbb",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/asset/ipr-interface.png",
+      "status": "untracked",
+      "local_blob": "fad0977a863c95a7820c1b7eba0f98df6f83ddb0",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/camera-profile-engine.md",
+      "status": "tracked_change",
+      "local_blob": "30e88e4be4bb2f40644d588727e5f48ce6140f88",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/decisions/ADR-0001-sidecar-ipr.md",
+      "status": "tracked_change",
+      "local_blob": "5728f80a772337fffc243163e69452c4d8023bf0",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/decisions/README.md",
+      "status": "tracked_change",
+      "local_blob": "de2cd132b7a7512d279fa14095041235e85d1645",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/decisions/README_en.md",
+      "status": "untracked",
+      "local_blob": "4c7a60ad094739bafba894b9080502559ed53381",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/INDEX.md",
+      "status": "tracked_change",
+      "local_blob": "fd71e9f1bbbb09b0520e36cec5ba2a5b953b9de5",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/INDEX_en.md",
+      "status": "untracked",
+      "local_blob": "27c74cb693071f2fcaf6fe1fe497ce5e288a718b",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/README.md",
+      "status": "tracked_change",
+      "local_blob": "fbe657feb1c81d8ecffb58916ab660de99fca700",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/README_en.md",
+      "status": "untracked",
+      "local_blob": "6c7372314203fcc723727e9818aad8701e820740",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/archive/exports/README.md",
+      "status": "tracked_change",
+      "local_blob": "e42244a632cbf941b83d33709a00bd9b2e7cbf59",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/archive/exports/README_en.md",
+      "status": "untracked",
+      "local_blob": "c77a30c5b76ad170056bdef5e4dbe724e368953d",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/archive/README.md",
+      "status": "tracked_change",
+      "local_blob": "59897cefe44d0e7a4b88aaca818147e9ad8a7ae9",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/archive/README_en.md",
+      "status": "untracked",
+      "local_blob": "03314388f2a9e81d357e48fb21f88665a0384ad7",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/archive/technical/rapport-optimisation-performance-2026-10-01.md",
+      "status": "tracked_change",
+      "local_blob": "367bad99552e3f53355f7aedad90223960a5b613",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/archive/technical/README.md",
+      "status": "tracked_change",
+      "local_blob": "b4d204f37b625bbbf8944faf60483122f98cb469",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/archive/technical/README_en.md",
+      "status": "untracked",
+      "local_blob": "e8347fad8c4343d2b36fcbb6f3aea3fc2a618797",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/consolidation-2026-10-08.csv",
+      "status": "untracked",
+      "local_blob": "efb392d4fcdb20cd49ea39e1d8a42e1b3fba75bd",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/documentation-links-2026-10-08.csv",
+      "status": "untracked",
+      "local_blob": "24ea95ec2f963a9f1a798d61d6acb97866fc48a9",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/README.md",
+      "status": "tracked_change",
+      "local_blob": "69a918a2e3ed562fd1c587ed136a1bce59ba1ca1",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/README_en.md",
+      "status": "untracked",
+      "local_blob": "770eeb8c7ec2313bcfd95db376f6e0f8a918c251",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/sessions/rapport-session-2026-10-01.md",
+      "status": "tracked_change",
+      "local_blob": "88383eecd686f1aa61a92bc3d2fe8714aae535a7",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/sessions/README.md",
+      "status": "tracked_change",
+      "local_blob": "6cd578ae1e2c9b25c2f5c26ddcc7f7e3534f6480",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/sessions/README_en.md",
+      "status": "untracked",
+      "local_blob": "0a0993d27333b63485ccbf1d1e97be5995308ffa",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/sessions/session-2026-10-08.md",
+      "status": "untracked",
+      "local_blob": "1fe442d18e7ddb9cbd10d65e771e5f0b3b9b4a30",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/storage/cleanup-2026-10-09/deletion-log.csv",
+      "status": "untracked",
+      "local_blob": "2cd47f8b8500d4b0ec7f7a613acc04f9b8cdaa5a",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/storage/cleanup-2026-10-09/directories-before.csv",
+      "status": "untracked",
+      "local_blob": "b2f9e663fcbcec7fcb2897f0712601c0517ea714",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/storage/cleanup-2026-10-09/inventory-after.csv",
+      "status": "untracked",
+      "local_blob": "37c5c3da1fd2a732474ec6c1156bdbda694835fa",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/storage/cleanup-2026-10-09/inventory-before.csv",
+      "status": "untracked",
+      "local_blob": "8f8779e694a5543866f89bedebb70a297320631c",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/storage/cleanup-2026-10-09/README.md",
+      "status": "untracked",
+      "local_blob": "8b052a78cc2dd80601983b388627b1fc38ef253a",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/storage/cleanup-2026-10-09/README_en.md",
+      "status": "untracked",
+      "local_blob": "edff4ba958dd22d0637270bef669941b9c9896e0",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/storage/cleanup-2026-10-09/summary.json",
+      "status": "untracked",
+      "local_blob": "ef09a4d487c3ac771e14ba5094c751500e54cc0c",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/storage/lightroom-cleanup-2026-10-09/deletion-log.csv",
+      "status": "untracked",
+      "local_blob": "2cdc063aca83afca65008dd0c2dfef8435ca41b7",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/storage/lightroom-cleanup-2026-10-09/inventory.csv",
+      "status": "untracked",
+      "local_blob": "8dc7942f1313e4083346fdf5c67253265f810580",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/storage/lightroom-cleanup-2026-10-09/inventory-after.csv",
+      "status": "untracked",
+      "local_blob": "37297cb27817d433423ee4f17001b74b861c0c35",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/reports/storage/lightroom-cleanup-2026-10-09/README.md",
+      "status": "untracked",
+      "local_blob": "6077228ed1a31876e8edf6b1453325fa1e0cdbc2",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/storage/lightroom-cleanup-2026-10-09/README_en.md",
+      "status": "untracked",
+      "local_blob": "8cc204aac3e58aaa23a1f3b917c05f8e88cd73b4",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/reports/storage/lightroom-cleanup-2026-10-09/summary.json",
+      "status": "untracked",
+      "local_blob": "f37e6debc21fb6e6c19e257bc1ba7bac50c372f8",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/scholar/README.md",
+      "status": "tracked_change",
+      "local_blob": "ae9186a308f37f9ca6de546a76646deedd827b1a",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/scholar/README_en.md",
+      "status": "untracked",
+      "local_blob": "845045d62cb251f1630a07a5d18a34fe78abfca3",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/scholar/references/README.md",
+      "status": "tracked_change",
+      "local_blob": "6f85494e4f96404c59a2c1e7455c727a52864b28",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/scholar/references/README_en.md",
+      "status": "untracked",
+      "local_blob": "a28086c9783ab2f46f3bf2150315b4a9d0266f57",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/specifications/README.md",
+      "status": "tracked_change",
+      "local_blob": "786c5675c4aeb265f5c9011a85fc46d9efe24b9f",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/specifications/README_en.md",
+      "status": "untracked",
+      "local_blob": "8bcfe996a8cd48438a54eeaf261d497b7ea4ba82",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/specifications/reglages-photographiques.md",
+      "status": "tracked_change",
+      "local_blob": "7460bbdd0e1279fe93474e804183c928e2353bbc",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/chapters/01-projet_en.tex",
+      "status": "untracked",
+      "local_blob": "5943383a6384adf40f55895f520d0735d4e42cb1",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/chapters/02-architecture.tex",
+      "status": "tracked_change",
+      "local_blob": "e3a40b9f9372a358d7094ec134dbdc7a1b76de8f",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/chapters/02-architecture_en.tex",
+      "status": "untracked",
+      "local_blob": "d4891fc7d5bd84d8cff7d7f5f93b22f8e5180e8a",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/chapters/03-parcours-utilisateur.tex",
+      "status": "tracked_change",
+      "local_blob": "271cbcfd1532b9251afc0ba1d264a2a76f22e842",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/chapters/03-parcours-utilisateur_en.tex",
+      "status": "untracked",
+      "local_blob": "75b20ea067bab2293b8f607c1e66041016ed4670",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/chapters/04-diagrammes-classes.tex",
+      "status": "tracked_change",
+      "local_blob": "4fbeee1bc46ffe6a767e1a8a33041eb635fea8ea",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/chapters/04-diagrammes-classes_en.tex",
+      "status": "untracked",
+      "local_blob": "76ce49c6ad51c3ba3ad1bd928ec553079e547d17",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/chapters/05-sequences.tex",
+      "status": "tracked_change",
+      "local_blob": "e9150cbebde73d51ff4c4356f95b04968fee129b",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/chapters/05-sequences_en.tex",
+      "status": "untracked",
+      "local_blob": "4c08a8a32d025cf7f815e8e6f2f0ffd2f5c0b11a",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/chapters/06-reglages-existants.tex",
+      "status": "tracked_change",
+      "local_blob": "18a769e3eb324f721bc3fc1b86f65dfdff13b2af",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/chapters/06-reglages-existants_en.tex",
+      "status": "untracked",
+      "local_blob": "53c682cc8d48d40f10822244f4c8263c10e51c9c",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/chapters/07-recadrage-geometrie_en.tex",
+      "status": "untracked",
+      "local_blob": "841d78f8a03d2c0ec09cd544d4bcd5648221a7d7",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/chapters/08-masques-retouche_en.tex",
+      "status": "untracked",
+      "local_blob": "a165afe8fb60b6bbcae318dee3af99054154344c",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/chapters/09-ia_en.tex",
+      "status": "untracked",
+      "local_blob": "85440d753b17631b231da62854bf45682b0209b4",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/chapters/10-qualite-evolutions.tex",
+      "status": "tracked_change",
+      "local_blob": "1462b537e09865b613a9ad5c6f70f246410b48ca",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/chapters/10-qualite-evolutions_en.tex",
+      "status": "untracked",
+      "local_blob": "f25df67449bff62096501b100579053e1d4f3112",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/chapters/11-glossaire.tex",
+      "status": "tracked_change",
+      "local_blob": "6df6de5a3de414e6a42adb79625064c7f6248f5a",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/chapters/11-glossaire_en.tex",
+      "status": "untracked",
+      "local_blob": "5938b2b4315aa6307a3ba5a4c3131e7cf8309e98",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/ipr-documentation-technique.tex",
+      "status": "tracked_change",
+      "local_blob": "e2d3a2f21e37e82ef40a40e393dbc6ebdf8cddd4",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/ipr-documentation-technique_en.tex",
+      "status": "untracked",
+      "local_blob": "032d9d19db750df2ee0a8587a814a9366af4d4c5",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/technical/latex/README.md",
+      "status": "tracked_change",
+      "local_blob": "fa97e4374314c045755210b0a35e0c9c2e61d44d",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/README_en.md",
+      "status": "untracked",
+      "local_blob": "99d99b7582b963c29bf2feca574762b86598380b",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/technical/latex/references_en.bib",
+      "status": "untracked",
+      "local_blob": "f371f091b6095a73cacd4eeafa56703ca188723d",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/templates/validation-protocol-template.md",
+      "status": "tracked_change",
+      "local_blob": "bfa9c53fba9607fbac4b2b439353e74bb6919ba9",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-base-colorimetrique.md",
+      "status": "tracked_change",
+      "local_blob": "4c01734989b06f82238e13edebfbb41dbd6549dd",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-blancs-hautes-lumieres-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "6a3986961fdf087b6d6b2cef8b80d5cc16beba93",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-bruit.md",
+      "status": "untracked",
+      "local_blob": "8ce5fe3e0d248288578c70a414f93d14f153f0b8",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-bruit-2026-10-04.md",
+      "status": "tracked_change",
+      "local_blob": "2a3a687612bd76f5027914efe197ee4f1852ab92",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-bruit-v2-2026-10-05.md",
+      "status": "tracked_change",
+      "local_blob": "3b6362c21f22b9253d8758b3b29887069ee2e5ee",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-color-mixer.md",
+      "status": "untracked",
+      "local_blob": "c67247f5d11d7e232d87ec759edeadcdd32d3bf6",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-color-mixer-corpus-etendu-2026-10-04.md",
+      "status": "tracked_change",
+      "local_blob": "ea56544b978b21758e1accadb1c286aa9dd0af95",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-color-mixer-huit-bandes-2026-10-04.md",
+      "status": "tracked_change",
+      "local_blob": "59194e604434bd31426a3f4bc34bd89637a9f151",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-color-mixer-intermediaires-2026-10-04.md",
+      "status": "tracked_change",
+      "local_blob": "0f921bd8852e9b5fd0d16cbaf881b8e6b86b42cd",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-color-mixer-red-yellow-green-2026-10-04.md",
+      "status": "tracked_change",
+      "local_blob": "4d0472b2c4dfa6ab6ec0f764c2de4bf3e17fb25e",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-contraste-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "fb687d740010fa622c71e78da90fcc7dabbc4326",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-couleur.md",
+      "status": "untracked",
+      "local_blob": "c0ea4b89e4e4fdb5ce1c5a44d1c21e6050a7411e",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-noirs-ombres-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "c430ad6f0f16cdba5ec2027929072cdc92e6afc2",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "113d630019744d490a5e95316b32a2e161695d00",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/correctif-bruit-2026-10-05.md",
+      "status": "tracked_change",
+      "local_blob": "aac4ffa24edba171554169c6468198aa5b9dac81",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/README.md",
+      "status": "tracked_change",
+      "local_blob": "7bae46f59f585b15b5a4488d5ef0bed5975859d9",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/analyses/README_en.md",
+      "status": "untracked",
+      "local_blob": "2091e855cef79e9653df1fbbbaef21e26f517295",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/data/README.md",
+      "status": "tracked_change",
+      "local_blob": "61a7921c3858524193b0ea3eebd6b0446d7d0b66",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/data/README_en.md",
+      "status": "untracked",
+      "local_blob": "fa1f56a9f3091e713a703fb73462aeb9aab9b00d",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/matrice-validation.md",
+      "status": "tracked_change",
+      "local_blob": "064d701a2cb946e8d20d61088ac28b84b8f8160d",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/balance-blancs.csv",
+      "status": "untracked",
+      "local_blob": "530db8456995a8ad83bec4c915635c9a41e4b6a3",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/base-raw-profils.csv",
+      "status": "untracked",
+      "local_blob": "ed72b44c7d2fc982bdb3c0280327064ae6a4a912",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/benchmark-template.csv",
+      "status": "untracked",
+      "local_blob": "bc0393490899fd72aada407e45ae7fb37670d9e6",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/bruit.csv",
+      "status": "untracked",
+      "local_blob": "24d79c63931fb70ff280f03161f9be37d4cced8c",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/bruit-progressivite.csv",
+      "status": "untracked",
+      "local_blob": "301a38691a1d96c12f09ab833038f450a813ade9",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/couleur-globale.csv",
+      "status": "untracked",
+      "local_blob": "9b247bedce59d7fd3db3fc5e308851a94bbc242c",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/curves/base-profils.svg",
+      "status": "untracked",
+      "local_blob": "f3d605ae1b6bc6eb0578e7a7b027ef7feb5a63e5",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/bruit-flat_sigma_chroma_ratio.svg",
+      "status": "untracked",
+      "local_blob": "38f64000233cf2574eb3b8acc07ef1d5de0a0a6f",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/bruit-flat_sigma_Y_ratio.svg",
+      "status": "untracked",
+      "local_blob": "d25fa928f889879bce96a835d78fdc0176a06e16",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-blue-hue.svg",
+      "status": "untracked",
+      "local_blob": "9d12f91dd635425a6e25723d8a58270d8af75f9c",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-blue-luminance.svg",
+      "status": "untracked",
+      "local_blob": "030d4a8cef6812f3ea34ca66de4a53aa88e99cba",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-blue-saturation.svg",
+      "status": "untracked",
+      "local_blob": "da1d76c8e83431e54c5f9b5b3ed20426cf76c09e",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-cyan-hue.svg",
+      "status": "untracked",
+      "local_blob": "9058fe20267abe1cb0d038c79f977a6fe36450d6",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-cyan-luminance.svg",
+      "status": "untracked",
+      "local_blob": "c238ace1ae368abada5a626ff5e574002f84cdc0",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-cyan-saturation.svg",
+      "status": "untracked",
+      "local_blob": "021c10b1fd3d9781c3465311ba15cdf379a1ac6f",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-green-hue.svg",
+      "status": "untracked",
+      "local_blob": "b2f821a66e6fcc30959aba4b1b9c508656e7aa97",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-green-luminance.svg",
+      "status": "untracked",
+      "local_blob": "966ad7fa6f2a80075ad169fd14347beda08c4d86",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-green-saturation.svg",
+      "status": "untracked",
+      "local_blob": "e4891be411e47091de4f8843c4886e81a07f216a",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-magenta-hue.svg",
+      "status": "untracked",
+      "local_blob": "ecad3729f2e7dc549d600d0966f743b5fa45c4a0",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-magenta-luminance.svg",
+      "status": "untracked",
+      "local_blob": "1960c14e0d3fda92a7fe0718d80f842e24a63457",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-magenta-saturation.svg",
+      "status": "untracked",
+      "local_blob": "d41cb6ef23f59bfc5621f36fb16448875b8a65f5",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-orange-hue.svg",
+      "status": "untracked",
+      "local_blob": "b57e0d3e8dd276ee52f21f968ce68ee1f9faca27",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-orange-luminance.svg",
+      "status": "untracked",
+      "local_blob": "5e13979e8bc91080594004ba854330c6b19bc9f2",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-orange-saturation.svg",
+      "status": "untracked",
+      "local_blob": "2535a3e2d4fe36cf64cd583995741fdcb01bfa67",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-red-hue.svg",
+      "status": "untracked",
+      "local_blob": "b1ce21852d7464b4622c26dc7481f9cb31c9c221",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-red-luminance.svg",
+      "status": "untracked",
+      "local_blob": "1e1ab25ec0e42c9696b5ffe5ec2939253d1d4496",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-red-saturation.svg",
+      "status": "untracked",
+      "local_blob": "87cb6655e0917b90986fb1b674b9f5302b1bf960",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-violet-hue.svg",
+      "status": "untracked",
+      "local_blob": "4895a9a13cdb3b256501ace5be350c09fe636370",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-violet-luminance.svg",
+      "status": "untracked",
+      "local_blob": "d930ce354b93b782050550e491ace7b528950af8",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-violet-saturation.svg",
+      "status": "untracked",
+      "local_blob": "592fe0e5b3b28116542966eab1dcd004b4f1be78",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-yellow-hue.svg",
+      "status": "untracked",
+      "local_blob": "63a092d5f6e9206600a01b1c91be6194191d9b74",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-yellow-luminance.svg",
+      "status": "untracked",
+      "local_blob": "81a5a8c5d73fc6d454176300b8b33ef3bed5136e",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/melangeur-yellow-saturation.svg",
+      "status": "untracked",
+      "local_blob": "05a24cfef82971e8a103add83004b4be4ed4b208",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/reponse-clarity.svg",
+      "status": "untracked",
+      "local_blob": "5685e4e17f2e1107f2a2e866a490a0de92a2d2a5",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/reponse-dehaze.svg",
+      "status": "untracked",
+      "local_blob": "3963ecac9438c4294feebf22b94c6bb6f5cf4726",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/reponse-saturation.svg",
+      "status": "untracked",
+      "local_blob": "0dd17cf400a1dfe6b98a539fa6e04744a120dadc",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/reponse-temperature.svg",
+      "status": "untracked",
+      "local_blob": "b255ae3236845ebbc3b7b193fd4f83be6f0ad789",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/reponse-texture.svg",
+      "status": "untracked",
+      "local_blob": "2be6bbb0e3a350438f596dd4decffddd8c0a46c5",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/reponse-tint.svg",
+      "status": "untracked",
+      "local_blob": "d070eaa4c8b0a31e33491579f991b16e86986584",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/reponse-vibrance.svg",
+      "status": "untracked",
+      "local_blob": "a911e182aa0bc6a0542a41e2e06bdf119d6a62a3",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/temps-ouverture.svg",
+      "status": "untracked",
+      "local_blob": "bc7c7f8afdae886c6f9c6281e41f179cfdd26eda",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/tonalite-blanc-1.svg",
+      "status": "untracked",
+      "local_blob": "dc3ac4cf0bd8d9f3b2a88fc7a3256c14e3206fa3",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/tonalite-contraste-1.svg",
+      "status": "untracked",
+      "local_blob": "a5ae9362010e1ca522ed3d0c38621826971b464b",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/tonalite-hl-1.svg",
+      "status": "untracked",
+      "local_blob": "f32e0a56537879a5f26401b52825140a2cae32b7",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/curves/tonalite-ombre-1.svg",
+      "status": "untracked",
+      "local_blob": "6ff49a594a8349609724bce9ce1785598023d95c",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/detail.csv",
+      "status": "untracked",
+      "local_blob": "1c26486b4765a3d7c144913ae82fdb61f338aac0",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/melangeur.csv",
+      "status": "untracked",
+      "local_blob": "3c7dd54edbe283afb9f7bb8afad52397bb4ad9c3",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/melangeur-progressivite.csv",
+      "status": "untracked",
+      "local_blob": "08b75e6c07401247c4b62689265921aa957ae2bb",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/rapports-tableaux.csv",
+      "status": "untracked",
+      "local_blob": "e1c79e04a65956fd9fe843c4b411c28beab0c383",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/README.md",
+      "status": "untracked",
+      "local_blob": "8ac2edee3b950d9cc507020f1af69428bad9d535",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/README_en.md",
+      "status": "untracked",
+      "local_blob": "73188d1abb992a2f99536284e38ece4cb6b1337d",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/metrics/reglages-reponses.csv",
+      "status": "untracked",
+      "local_blob": "b64e17cb54f56b9edf8bed45e9a25f1dee3882b5",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/sources.csv",
+      "status": "untracked",
+      "local_blob": "4679e4eb90c4a3b39f3e12d5253e50a234c5d333",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/temps-ouverture.csv",
+      "status": "untracked",
+      "local_blob": "c08706e8d854aeb838f5dd25b1432c1adf75b1e6",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/tonalite.csv",
+      "status": "untracked",
+      "local_blob": "3a77016e0067d42b49e9bdd6e2046aa564582a83",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/metrics/tonalite-revisions.csv",
+      "status": "untracked",
+      "local_blob": "0e08e7084f735ec7353d6e81f0bfb3e18c7fb9ea",
+      "identical_refs": [],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/procedure-tests-autonomes.md",
+      "status": "tracked_change",
+      "local_blob": "ccf0784434b764d0aa30439ffb3320a915e5fa7d",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-base-colorimetrique-v1.md",
+      "status": "tracked_change",
+      "local_blob": "fd5bef8e141f35e05579a4ec2da1e32ebc5c705b",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-blancs-canon.md",
+      "status": "tracked_change",
+      "local_blob": "7458efedd112ee57891cc94b35f50550063fefc3",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-bruit.md",
+      "status": "untracked",
+      "local_blob": "5e542cf9eaf7b73fe359e431b2c327982592b884",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-bruit-v2.md",
+      "status": "tracked_change",
+      "local_blob": "b6334b162dcd30d27414ee62683cec4c8d2c7d2a",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-color-mixer-intermediaires-2026-10-04.md",
+      "status": "tracked_change",
+      "local_blob": "e9c9eb126f2611b78ba0b37c11253b75853409c6",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-commun.md",
+      "status": "untracked",
+      "local_blob": "dc58c92649c2af2fbeb4078853e4b4cb14eaa47a",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-couleur.md",
+      "status": "untracked",
+      "local_blob": "99c73e706ba0c284a8228885dee94aac3b250d65",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-courbes.md",
+      "status": "untracked",
+      "local_blob": "1f6601f3276f16c3dda2f243855b78edb23e0e2c",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-effets.md",
+      "status": "untracked",
+      "local_blob": "45e1d37653ef2d717b48aeb855cd2bdf1d13bb2d",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-grading.md",
+      "status": "untracked",
+      "local_blob": "bcef69e53625aa59a15dde49e53b1772abcb9adb",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-ihm-persistance-export.md",
+      "status": "untracked",
+      "local_blob": "ec33d56ff3a697df50d3e5756381eb17055099bf",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-lumieres.md",
+      "status": "untracked",
+      "local_blob": "40ef2911c05c26f72befe39bda12ddac6be1ef44",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-melangeur.md",
+      "status": "untracked",
+      "local_blob": "f08d2b218f457df4222f5aec8710b73490a3328b",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-nettete.md",
+      "status": "untracked",
+      "local_blob": "5d2b5a1976410e2e28b51218e8cd8de93cf92cfa",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-optique.md",
+      "status": "untracked",
+      "local_blob": "65fff4e1f2fcd08c3a16291beed76fa13131155b",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-raw-profils.md",
+      "status": "untracked",
+      "local_blob": "9de33d3cc017ff12ee5a36de7791641ce2774408",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-validation-bruit-2026-10-04.md",
+      "status": "tracked_change",
+      "local_blob": "a075ff4c59768e746a5523a3e4814ba7e02437c1",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-validation-clarte-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "1e5a339fdff1383dc1084b57a2ad2ab5741bf0d0",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-validation-color-mixer-2026-10-04.md",
+      "status": "tracked_change",
+      "local_blob": "4767703caeee1fa7c34ca3b718fb3b5fc573ab92",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-validation-correction-voile-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "30f96e4688b70d87e9238220c0fa3550fb57764f",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-validation-nuance-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "40a958a549a621c1826ffb6fbb9b10f05f71d902",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-validation-saturation-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "2095b970a9eed007a04ec28526480c5e17fc09b2",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-validation-temperature-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "f97ac4ef00ef9e0750339052324d17acfffc3806",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-validation-texture-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "7c5e063725ab16ff3b5232507ca1449e301e1027",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/protocole-validation-vibrance-2026-10-02.md",
+      "status": "tracked_change",
+      "local_blob": "553f7ce05bce29faeaa87b2b7284e4eacffe5d63",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/README.md",
+      "status": "tracked_change",
+      "local_blob": "880a4fc091b401a4327102b2502da0c8b3e74c82",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/protocols/README_en.md",
+      "status": "untracked",
+      "local_blob": "c1d209f0e117f0273a95b4e1435abbb1787e1bd2",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261010/audit-profils-wb-v001-20261010T193929806024Z.json",
+      "status": "untracked",
+      "local_blob": "8b0166b7324a71084f45a02fa4227a5d2cfc6768",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261010/comparaison-temperature-nuance-v001-20261010T193900537890Z.json",
+      "status": "untracked",
+      "local_blob": "f098c037d2596eb5bb6656d94df7ac0b8537282c",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261010/comparaison-temperature-nuance-v001-20261010T194534501239Z.json",
+      "status": "untracked",
+      "local_blob": "63359913eab09ab73759f863a638e9929334c99e",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261011/acceptation-visuelle-v004-20261011T185155Z.json",
+      "status": "untracked",
+      "local_blob": "80a6b4c2e2c40c14e6859aab64cca289bbf11c5c",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261011/audit-neutres-wb-v002-20261011T091439198763Z.json",
+      "status": "untracked",
+      "local_blob": "f4a1a7a91e61a374f09e06f8d8683b8033bcf536",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261011/comparaison-temperature-nuance-v002-20261011T093638765086Z.json",
+      "status": "untracked",
+      "local_blob": "0922fc578b4bcd4a0241269164dae10187c1c033",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261011/comparaison-wb-capteur-v003-20261011T134140543650Z.json",
+      "status": "untracked",
+      "local_blob": "a83ecbcef12afe3568389f935c63bf908db1e4b0",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261011/contexte-operateur-wb-v002-20261011T093003Z.json",
+      "status": "untracked",
+      "local_blob": "cf96b72baa7a320901360edb903806cd96ffdf55",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261011/investigation-adaptation-wb-v002-20261011T093106401927Z.json",
+      "status": "untracked",
+      "local_blob": "b4eb76bc7a564a1e5b71cbaff96178130d000fb2",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261011/sonde-wb-capteur-v003-20261011T133656397Z.json",
+      "status": "untracked",
+      "local_blob": "cab15893fd65c6a689c3045c52a9a6c54bdbcdc3",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/comparaison-wb-20261011/validation-livraison-v005-20261011T191916Z.json",
+      "status": "untracked",
+      "local_blob": "2de7c6ccf846b366ea54602189ef7bb1c2526021",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/modernisation-analyseurs/mesure-couleur-v001-20261010T185910569266Z.json",
+      "status": "untracked",
+      "local_blob": "0af069f6204fa1001bcf2fd3bcaacc80e6a56bd0",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/modernisation-analyseurs/mesure-couleur-v001-20261010T190505433356Z.json",
+      "status": "untracked",
+      "local_blob": "59dc6c8a87e4156c9ab4fe42bf7a340d127959f8",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/modernisation-analyseurs/verification-outils-v001-20261010T190542Z.json",
+      "status": "untracked",
+      "local_blob": "413d1359afbc140b137765abcaf98c09c9e6efca",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/raw/README.md",
+      "status": "tracked_change",
+      "local_blob": "d2158ca8ac53bdcff08425de32a84a63ec4f3de5",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/raw/README_en.md",
+      "status": "untracked",
+      "local_blob": "850afaf3e7dffc756b4bd7df7e4ad95f737bc2f4",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/raw/validation-ci-cd-v002-20261011T191759Z.json",
+      "status": "untracked",
+      "local_blob": "0ed15cbdc6da9068820b2c4221799c096718bcf1",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "docs/validation/README.md",
+      "status": "tracked_change",
+      "local_blob": "9c616c0411c2f3ce8653e37a3203b4867147b7ea",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/README_en.md",
+      "status": "untracked",
+      "local_blob": "e9163ba3211a2fba2fcdc4030a0d34febb8d9b87",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/tools/analyseurs-groupes.md",
+      "status": "untracked",
+      "local_blob": "be427f118879de327b3f21313910c73beabc242c",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/tools/generateur-images-tests.md",
+      "status": "tracked_change",
+      "local_blob": "62752edbbcbc4824d3cc43b6c3c51ef84945cae3",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "docs/validation/tools/README.md",
+      "status": "untracked",
+      "local_blob": "fcaf62e8dfbd1f66c6d5669ccd5e7c707b05b18e",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "docs/validation/tools/README_en.md",
+      "status": "untracked",
+      "local_blob": "6e801cafac2271e53fda76602efed6d827b4a67f",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "README.md",
+      "status": "tracked_change",
+      "local_blob": "ea25ef3fdfaeb58ebbd9562797e40382fdaddfab",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "documentation_changes_to_reconcile"
+    },
+    {
+      "path": "README_en.md",
+      "status": "untracked",
+      "local_blob": "c707a74e52f319d813e6617e1a4aa2f38c710bed",
+      "identical_refs": [
+        "patch_documentation"
+      ],
+      "existing_refs": [
+        "patch_documentation"
+      ],
+      "disposition": "published_documentation_not_integrated"
+    },
+    {
+      "path": "scripts/check_documentation.py",
+      "status": "untracked",
+      "local_blob": "a0a79af54d543e7bd3e9fc35a28583963d1f66c4",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "documentary_tools_to_review"
+    },
+    {
+      "path": "scripts/cleanup-obsolete-test-images-20261009.ps1",
+      "status": "untracked",
+      "local_blob": "f28a8af559e68b3185feef74c87b026d900ccabe",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "historical_operational_tools_do_not_execute"
+    },
+    {
+      "path": "scripts/cleanup-unused-builds-20261010.ps1",
+      "status": "untracked",
+      "local_blob": "14271d7529b2e104e36badcb540af7d2e889218e",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "historical_operational_tools_do_not_execute"
+    },
+    {
+      "path": "scripts/consolidate_reports.py",
+      "status": "untracked",
+      "local_blob": "1e94d1373503404f9a82e1b43f567e8606eae557",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "documentary_tools_to_review"
+    },
+    {
+      "path": "scripts/generate-photographic-campaign.ps1",
+      "status": "tracked_change",
+      "local_blob": null,
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "generator_patch_to_prepare"
+    },
+    {
+      "path": "scripts/generate-test-images.ps1",
+      "status": "tracked_change",
+      "local_blob": "9d010def19eb68f6b07bb98d5d98808af3b0717b",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "generator_patch_to_prepare"
+    },
+    {
+      "path": "scripts/inventory-lightroom-references-20261009.py",
+      "status": "untracked",
+      "local_blob": "4f91ea96c34fcc911de7e0339afe7af82f3f399b",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "historical_operational_tools_do_not_execute"
+    },
+    {
+      "path": "scripts/remove-standard-lightroom-references-20261009.ps1",
+      "status": "untracked",
+      "local_blob": "e4cd3784af94168592bf3d091a6cb0f72c225424",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "historical_operational_tools_do_not_execute"
+    },
+    {
+      "path": "scripts/test-rules.json",
+      "status": "tracked_change",
+      "local_blob": "603074482ad3bc2529f00e032acb7b342dcfdc9f",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "shared_selection_hunks_to_reconcile"
+    },
+    {
+      "path": "src/cache/DecodedImageCache.cpp",
+      "status": "tracked_change",
+      "local_blob": "818d298565423e1f1236c556c35a9504ad3c9800",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "src/core/ColorPipeline.h",
+      "status": "tracked_change",
+      "local_blob": "af1e7e4171f5893e8082a142d24332b5f02be0ab",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "src/editor/imageeditor.cpp",
+      "status": "tracked_change",
+      "local_blob": "b9451457e4ad563fe4dc74c3b786b4c46efe8f8d",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "old_baseline_divergence_do_not_copy"
+    },
+    {
+      "path": "src/profiles/CameraProfileEngine.cpp",
+      "status": "tracked_change",
+      "local_blob": "831e495a8566d5094752dab4850080cf1384c04b",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "old_baseline_divergence_do_not_copy"
+    },
+    {
+      "path": "src/profiles/CameraProfileEngine.h",
+      "status": "tracked_change",
+      "local_blob": "4b453786934828526eb1c0a14ef93a30a5652998",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "src/raw/RawDecoder.cpp",
+      "status": "tracked_change",
+      "local_blob": "5abe306adece0eaf695a7ea8730af130296a16b0",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "src/raw/RawDecoder.h",
+      "status": "tracked_change",
+      "local_blob": "b714cad9092c73bba08b4c1b458a372288982858",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "src/tools/generate_test_images.cpp",
+      "status": "tracked_change",
+      "local_blob": "6752f1a08b9312d7eab15c503d0049273906d89c",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "generator_patch_to_prepare"
+    },
+    {
+      "path": "tests/analyse_bruit.py",
+      "status": "untracked",
+      "local_blob": "0daccbabd687fd7b0ad851281882fd247be199a9",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_clarity.py",
+      "status": "tracked_change",
+      "local_blob": "580fdd7848884a2afd151ce50aa640de17038ff4",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_couleur.py",
+      "status": "untracked",
+      "local_blob": "2140dc67e48c18c07114a41bc8f516b4e01f7f64",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/analyse_courbes.py",
+      "status": "untracked",
+      "local_blob": "40d4aa54b4178e885222960455d9cc0dbda85aea",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_dehaze.py",
+      "status": "tracked_change",
+      "local_blob": "96437127d3c3710fc5c19c64189b3ce8a7823ceb",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_effets.py",
+      "status": "untracked",
+      "local_blob": "080be29d82ec65cb2bb130d3b5ad62146aee7313",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_grading.py",
+      "status": "untracked",
+      "local_blob": "3e1a8e21a03f3c82d20a340c6a28e57224d65b14",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_groupes.py",
+      "status": "untracked",
+      "local_blob": "05242a01b510aadf5c97ae92b03f1a908ddd12e6",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/analyse_lumiere.py",
+      "status": "untracked",
+      "local_blob": "d61dd379a26a0038098d93d81fb8523222183891",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_melangeur.py",
+      "status": "untracked",
+      "local_blob": "7728027c26202859f778057a58a0d004495235ea",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_nettete.py",
+      "status": "untracked",
+      "local_blob": "6181f8bb09a663bb57ff6f3a30e5330f8a82222b",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_optique.py",
+      "status": "untracked",
+      "local_blob": "a558135be2887e3df7f23a7bf9d9a9dab973d043",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_raw.py",
+      "status": "untracked",
+      "local_blob": "123a93c21c448e16277c9f116d61da61348d462b",
+      "identical_refs": [],
+      "existing_refs": [],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_saturation.py",
+      "status": "tracked_change",
+      "local_blob": "d104e439b6d09729ee0c7a665759d11d2a113cf0",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_temperature.py",
+      "status": "tracked_change",
+      "local_blob": "8e60ec3e2ccabbab631b923dba7bc968d1600155",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_texture.py",
+      "status": "tracked_change",
+      "local_blob": "9ca4905a596f6dacfba513af2fc50e93c61908bd",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_tint.py",
+      "status": "tracked_change",
+      "local_blob": "98fb964c9b447ce9f56fe78b835d7b15b5f84dc1",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analyse_vibrance.py",
+      "status": "tracked_change",
+      "local_blob": "54186aa94a3313388dc607575fd3b89c8841bc51",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "analysis_entrypoints_to_prepare"
+    },
+    {
+      "path": "tests/analysis/__init__.py",
+      "status": "untracked",
+      "local_blob": "d23f15bab89ce8bf53fc4de2726a85477a46330c",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/analysis/audit.py",
+      "status": "untracked",
+      "local_blob": "c5faad08686f18c0f2fa0e794dd58c6de4607510",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/analysis/campaign.py",
+      "status": "untracked",
+      "local_blob": "67c9f243e373f1b9b82d0527911b0486ea544a31",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/analysis/catalog.py",
+      "status": "untracked",
+      "local_blob": "b12c055a05425b184d633dfbe713d78e493008f3",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/analysis/cli.py",
+      "status": "untracked",
+      "local_blob": "b95b53a7503c1d11663ee297cb75cad5e78d3135",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/analysis/groups.py",
+      "status": "untracked",
+      "local_blob": "0e2b9a77c3ff5aa8bd058bb3e4bab0e2684d4098",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/analysis/inputs.py",
+      "status": "untracked",
+      "local_blob": "e1006e6dd5fbfb0302f9897d07281220b09ec533",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/analysis/metrics.py",
+      "status": "untracked",
+      "local_blob": "79242a1abf02032a4885d6ed6ee9b6c26380ae6b",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/analysis/native.py",
+      "status": "untracked",
+      "local_blob": "01580c12b6c398d87a3da52875f183eb7b868a60",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/audit_wb_profiles.py",
+      "status": "untracked",
+      "local_blob": "3e49d99384bb71ae8008bf9e10a648e628a80fde",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/camera_profile_engine_test.cpp",
+      "status": "tracked_change",
+      "local_blob": "c18515de7254b7a8e2d1678ff057489c38ff13f7",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "old_baseline_divergence_do_not_copy"
+    },
+    {
+      "path": "tests/compare_temperature_tint.py",
+      "status": "untracked",
+      "local_blob": "47138413ebe1ff80b89f680206c26148062b4ffd",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/compare_wb_camera_probe.py",
+      "status": "untracked",
+      "local_blob": "e192cbc4a21e6abe3419912139cc59cac7e81a61",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/image_export_test.cpp",
+      "status": "tracked_change",
+      "local_blob": "2c3d8b9bc2c9050c7a274e0e81bcbaef28e83e52",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "old_baseline_divergence_do_not_copy"
+    },
+    {
+      "path": "tests/investigate_wb_adaptation.py",
+      "status": "untracked",
+      "local_blob": "3f5c95d3fdc7ade39ed0e292a627ecbc98cdfa75",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/test_analyse_groupes.py",
+      "status": "untracked",
+      "local_blob": "a1e365e49b61ada1812d159493f45f84f893ed2e",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "old_baseline_divergence_do_not_copy"
+    },
+    {
+      "path": "tests/test_build_windows.py",
+      "status": "tracked_change",
+      "local_blob": "f881e2f6d82b31096edfe095f0879480d78b48d9",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "shared_selection_hunks_to_reconcile"
+    },
+    {
+      "path": "tests/test_compare_temperature_tint.py",
+      "status": "untracked",
+      "local_blob": "e92d44d5067a6ba52ebc32cd37b2d36894854340",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "old_baseline_divergence_do_not_copy"
+    },
+    {
+      "path": "tests/test_image_generator_test.cpp",
+      "status": "tracked_change",
+      "local_blob": "ef77d0b791d6a687cd4ed6f3a83a9bd50c9d4376",
+      "identical_refs": [],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "generator_patch_to_prepare"
+    },
+    {
+      "path": "tests/test_investigate_wb_adaptation.py",
+      "status": "untracked",
+      "local_blob": "aecccda3b6833008c58e4bc2b5dd57a2272c8997",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    },
+    {
+      "path": "tests/wb_camera_probe.cpp",
+      "status": "untracked",
+      "local_blob": "bffc93479542cbeba4fff6c78375e28ff6766128",
+      "identical_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "existing_refs": [
+        "dev",
+        "patch_documentation",
+        "patch_ci_cd"
+      ],
+      "disposition": "already_in_dev"
+    }
+  ]
+}
