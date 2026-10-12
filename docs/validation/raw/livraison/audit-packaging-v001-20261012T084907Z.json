@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-12T08:49:07Z",
+  "group": "ci-cd",
+  "branch": "patch_ci_cd",
+  "source_commit": "9502dc802f5a539cfb21d96766ddd02e14d0f9ed",
+  "previous_delivery_run": "https://github.com/KimntexX/IPR/actions/runs/38167520082",
+  "previous_failed_jobs": [114553059237, 114553059254, 114553059270, 114553059332],
+  "local_validation": {
+    "platform": "Windows x64",
+    "qt": "6.11.2",
+    "cmake": "3.29.6",
+    "opencv": "5.0.0",
+    "ctest": {"run": 18, "failed": 0, "skipped": 0},
+    "python_tests": {"run": 173, "failed": 0},
+    "delivery_regression_tests": 10,
+    "system_packaging_smoke": "passed; DLL search paths absolute, launched outside repository",
+    "standalone_packaging_smoke": "passed; developer search paths removed",
+    "downloadable_archives_created": false,
+    "rendering_source_diff_against_dev": "empty",
+    "git_diff_check": "passed"
+  },
+  "policy": {
+    "downloadable_build_branches": ["dev", "main"],
+    "require_exact_successful_ci_sha": true,
+    "require_four_native_platforms": true,
+    "reject_pull_requests_and_foreign_repositories": true,
+    "reject_dirty_tracked_sources": true,
+    "tag_trigger_removed": true,
+    "patch_packaging_verification": "eight platform/mode combinations, no archive creation, logs only",
+    "github_token_permissions": "contents:read; actions:read only in delivery jobs"
+  },
+  "pending": [
+    "GitHub validation of Linux and both macOS architectures; not awaited at user's request",
+    "CI on patch_ci_cd followed by eight packaging verification jobs",
+    "Validated integration into dev, then explicitly authorized main workflow deployment",
+    "workflow_run/manual activation needs workflows on default branch main, which currently has none",
+    "Clean-machine graphical and photographic acceptance; signing/notarization and legal notices review"
+  ],
+  "preservation": {
+    "dev_main_not_merged_or_pushed": true,
+    "no_version_tag_created": true,
+    "published_tags_and_measurement_json_not_modified": true,
+    "private_profiles_or_raw_not_published": true,
+    "root_unrelated_local_changes_preserved": true
+  }
+}

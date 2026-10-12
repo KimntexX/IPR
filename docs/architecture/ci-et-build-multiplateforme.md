@@ -179,6 +179,15 @@ Sources techniques : [script de déploiement Qt](https://doc.qt.io/qt-6.8/qt-gen
 Ces changements sont des correctifs candidats : le succès Linux/macOS sera
 confirmé par les jobs GitHub, pas déclaré sur les seuls tests Python.
 
+Validation locale du correctif : **18 CTest et 173 tests Python réussis**,
+Windows système et standalone déployés puis démarrés hors dépôt, sans créer
+d'archive téléchargeable. Les dix tests de régression livraison contrôlent
+notamment branches/SHA/CI, chemins DLL absolus et refus des dépendances macOS
+externes. La [mémoire JSON](../validation/raw/livraison/audit-packaging-v001-20261012T084907Z.json)
+consigne les limites. Source `9502dc8`, pas de changement du rendu photographique.
+Les jobs GitHub seront lancés par le push ; à la demande de l'utilisateur,
+leurs résultats ne sont pas attendus avant le compte rendu de cette action.
+
 ## Contenu des paquets et limites
 
 Application, générateur CLI, configuration initiale, dossiers `profiles/dcp` et
