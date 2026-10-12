@@ -15,10 +15,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / 'docs/validation/raw'
 OUT = ROOT / 'docs/validation/metrics'
+HASH_FORMAT = 'sha256-text-lf-v1'
 
 
 def digest(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    # Text evidence: Git autocrlf must not invalidate cross-platform provenance.
+    # Keep all other bytes exact; this is not the digest of images or profiles.
+    return hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
 
 
 def family(name):
@@ -47,6 +50,9 @@ def numeric_rows(node, pointer='', context=''):
 
 
 def write_csv(path, rows, fields):
+    if 'source_sha256' in fields or 'sha256' in fields:
+        fields = list(fields) + ['source_hash_format']
+        rows = [dict(row, source_hash_format=HASH_FORMAT) for row in rows]
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open('w', newline='', encoding='utf-8') as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
@@ -65,6 +71,8 @@ def validate(output):
             for row in csv.DictReader(stream):
                 source = row.get('source')
                 expected_hash = row.get('source_sha256', row.get('sha256'))
+                if source and expected_hash and row.get('source_hash_format') != HASH_FORMAT:
+                    raise ValueError(f'Regenerate derived provenance: {path.name}')
                 if source and expected_hash and actual_hash(source) != expected_hash:
                     raise ValueError(f'Stale evidence: {path.name} / {source}')
                 pointer = row.get('locator', '')

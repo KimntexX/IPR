@@ -47,7 +47,7 @@ Decision sources: analyses [Blacks/Shadows](../../../validation/analyses/analyse
 - [Deletion log](deletion-log.csv): 156 paths, reasons, sizes, SHA-256 calculated before deletion, and final `deleted` status.
 - [Inventory after](inventory-after.csv).
 - [Machine summary](summary.json).
-- [Script bounded to this operation](../../../../scripts/cleanup-obsolete-test-images-20261009.ps1).
+- Local script bounded to this operation: `scripts/cleanup-obsolete-test-images-20261009.ps1` (not versioned).
 
 The 1,030 preserved files were controlled by presence, size, and UTC date after the operation; their pixels were not fully rehashed. No recursive folder deletion occurred. Empty folders remain in place.
 

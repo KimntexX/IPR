@@ -769,4 +769,3 @@ pour cette analyse sans changement de l'application.
   [l'architecture bruit/netteté](../../architecture/denoising-sharpening.md).
   Cette passe mesure les exports fournis ; elle ne renouvelle pas un benchmark
   de RawTherapee, DxO, IA ou GPU.
-

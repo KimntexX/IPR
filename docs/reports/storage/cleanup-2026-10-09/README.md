@@ -69,7 +69,7 @@ Sources de décision : analyses [Noirs/Ombres](../../../validation/analyses/anal
   SHA-256 calculés avant suppression et statut final `deleted`.
 - [Inventaire après](inventory-after.csv).
 - [Résumé machine](summary.json).
-- [Script borné à cette opération](../../../../scripts/cleanup-obsolete-test-images-20261009.ps1).
+- Script local borné à cette opération : `scripts/cleanup-obsolete-test-images-20261009.ps1` (non versionné).
 
 Les 1 030 fichiers conservés ont été contrôlés par présence, taille et date UTC
 après l'opération ; leurs pixels n'ont pas été intégralement rehachés. Aucune

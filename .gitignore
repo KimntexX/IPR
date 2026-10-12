@@ -238,6 +238,10 @@ __marimo__/
 
 # Local Windows packages may contain third-party profiles: never commit them.
 /dist/
+
+# Preserve the documentary audit; this is not a generated build directory.
+!docs/reports/storage/build-cleanup-2026-10-10/
+!docs/reports/storage/build-cleanup-2026-10-10/**
 /.worktrees/
 /.ci-cache/
 /dist-*/

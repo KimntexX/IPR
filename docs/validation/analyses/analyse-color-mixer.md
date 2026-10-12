@@ -1059,4 +1059,3 @@ dans cette demande d’analyse.
 Ces résultats automatisés et les signes mesurés ne remplacent pas la validation
 photographique de toutes les bandes. Aucun rebuild applicatif n’est nécessaire
 pour cette passe : le code de rendu n’a pas été modifié.
-

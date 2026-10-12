@@ -40,8 +40,8 @@ Cinq fichiers Lightroom sans profil identifiable restent en place :
 - [Journal des 423 suppressions et empreintes](deletion-log.csv).
 - [Inventaire après](inventory-after.csv).
 - [Résumé machine](summary.json).
-- [Script d'inventaire](../../../../scripts/inventory-lightroom-references-20261009.py).
-- [Script de suppression borné](../../../../scripts/remove-standard-lightroom-references-20261009.ps1).
+- Script local d'inventaire : `scripts/inventory-lightroom-references-20261009.py` (non versionné).
+- Script local de suppression borné : `scripts/remove-standard-lightroom-references-20261009.ps1` (non versionné).
 - [Premier nettoyage des intermédiaires IPR](../cleanup-2026-10-09/README.md).
 
 **Suppression définitive, sans passage par la corbeille.** Les empreintes et les

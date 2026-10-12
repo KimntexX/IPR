@@ -1,6 +1,6 @@
 # Noise Reduction and Sharpening
 
-**Status:** CPU noise reduction corrected, photographic functionality/progressivity confirmed; quality/calibration to be continued; sharpening not validated.  
+**Status:** CPU noise reduction corrected, photographic functionality/progressivity confirmed; quality/calibration to be continued; sharpening not validated.
 **Consolidation Date:** October 5, 2026.
 
 The [October 4 photographic campaign](../validation/analyses/analyse-bruit-2026-10-04.md) measures 80 retained variants and ten neutrals. It confirms the settings' activity but notes plateaus at low noise and significant residual color noise at high ISO. The CPU probe identifies a non-zero activation threshold, edge protection driven by noise, and a possible dark bias during RGB reconstruction. The October 4 measurements remain a reference for the old version. [Corrections now applied](../validation/analyses/correctif-bruit-2026-10-05.md) are synthetically tested. The [v2 revalidation](../validation/analyses/analyse-bruit-v2-2026-10-05.md) covers twelve scenes, 24 neutrals, and 145 variants: the 24 standard IPR series are progressive, and dark bias decreases. Color noise at high ISO remains moderately reduced; overall quality, component coupling, and preview/export remain to be validated. No additional recalibration or sharpening changes have been applied during this analysis. The [protocol](../validation/protocols/protocole-validation-bruit-2026-10-04.md) distinguishes neutral measurements, diagnostic series, and separate AI comparison.

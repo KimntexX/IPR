@@ -28,8 +28,8 @@ Five Lightroom files without identifiable profile remain in place:
 - [Log of 423 deletions and fingerprints](deletion-log.csv).
 - [Inventory after](inventory-after.csv).
 - [Machine summary](summary.json).
-- [Inventory script](../../../../scripts/inventory-lightroom-references-20261009.py).
-- [Bounded deletion script](../../../../scripts/remove-standard-lightroom-references-20261009.ps1).
+- Local inventory script: `scripts/inventory-lightroom-references-20261009.py` (not versioned).
+- Local bounded deletion script: `scripts/remove-standard-lightroom-references-20261009.ps1` (not versioned).
 - [First cleanup of intermediate IPR](../cleanup-2026-10-09/README.md).
 
 **Permanent deletion, without recycling bin.** Fingerprints and measurements do not backup pixels; recovery only from a possible external backup. Historical proofs remain consultable, but comparisons using these old TIFFs can no longer be relaunched with the local corpus. Regenerate Lightroom references in Camera Neutral with the white balance and optical options of the protocol before the new campaign. Scripts refuse to overwrite this audit: it is not an automatic purge.

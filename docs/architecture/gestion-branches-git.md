@@ -7,9 +7,10 @@ Règle adoptée le 10 octobre 2026.
 `dev` rassemble les groupes de fonctionnalités validés. Chaque groupe a une
 branche permanente issue de `dev` : la branche existante `patch_light` suit les
 Lumières (exposition, contraste, ombres, noirs, blancs et hautes lumières).
-Les prochains groupes auront chacun leur branche, par exemple `patch_color`
-pour la couleur ou `patch_noise` pour le bruit ; ces noms sont des exemples,
-pas des branches déjà créées.
+`patch_color` suit la couleur, `patch_ci_cd` l'intégration/livraison continue
+et `patch_documentation` la documentation ; ces branches existent et sont
+conservées après intégration. Un prochain groupe pourra utiliser un nom tel
+que `patch_noise`, qui reste ici un exemple et non une branche annoncée créée.
 
 Une branche de groupe est conservée après livraison. Les commits de fusion
 matérialisent les validations dans le graphe Git ; les tags identifient les états

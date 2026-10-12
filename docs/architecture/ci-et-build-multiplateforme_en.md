@@ -1,6 +1,6 @@
 # CI and Multiplatform Builds
 
-**Status:** Proposal ready to implement when creating the GitHub repository.  
+**Status:** Historical proposal; CI/CD is now implemented. See the [current implementation](ci-et-build-multiplateforme.md). This document's proposal tables have not been brought up to date.
 **Scope:** Windows 10/11, macOS, Debian/Ubuntu, Fedora, and Arch Linux.
 
 ## Objective

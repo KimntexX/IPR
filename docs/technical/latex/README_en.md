@@ -29,6 +29,6 @@ Build files can be deleted with `./build.ps1 -Clean`.
 
 ## Maintenance Rule
 
-October 8, 2026 update: documentation version 0.3, RAW recipe v5, DCP change without visual reopening, updated diagrams, and 12 pt / 1.5 line spacing formatting. Since the PDF open in the IDE is locked, the new compilation is available in [build/ipr-documentation-technique-v03.pdf](build/ipr-documentation-technique-v03.pdf) (30 pages). The usual name can be regenerated with `./build.ps1` after closing its preview. Data and reproducible graphics are referenced from [metrics](../../validation/metrics/README.md), without confusing them with current build benchmarks.
+October 8, 2026 update: documentation version 0.3, RAW recipe v5, DCP change without visual reopening, updated diagrams, and 12 pt / 1.5 line spacing formatting. The PDF generated during that session was `build/ipr-documentation-technique-v03.pdf` (30 pages): it is a local, unversioned artifact, not a downloadable repository file. The usual name can be regenerated with `./build.ps1` after closing its preview. Data and reproducible graphics are referenced from [metrics](../../validation/metrics/README.md), without confusing them with current build benchmarks.
 
 The chapters "Cropping and Geometric Effects", "Masks and Local Retouching", and "AI Integration" are intentionally empty: they should only be completed after validating their design. Experiment reports are organized in `docs/validation` and `docs/reports`; the migration is recorded in `docs/reports/migration-registry.md`.

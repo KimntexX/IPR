@@ -1,0 +1,452 @@
+{
+    "arguments": [
+        "--feature",
+        "exposure",
+        "--format",
+        "JPEG",
+        "--quality",
+        "100",
+        "--grading-hue",
+        "30",
+        "--grading-saturation",
+        "25",
+        "--sharpening-base",
+        "50",
+        "--output",
+        "build-generator-smoke-20261006/exposure-raw-v2",
+        "--input",
+        "tests/image/base/6V1A0327.CR3"
+    ],
+    "bitDepth": 8,
+    "curveChannels": [
+        "luminance",
+        "red",
+        "green",
+        "blue"
+    ],
+    "executableSha256": "4c6804dc1411b9bb497333e76c74e7a415879b1886cf8c9fa9356156478a1cd9",
+    "expectedExports": 4,
+    "exports": [
+        {
+            "cameraMake": "Canon",
+            "cameraModel": "EOS R6 Mark III",
+            "dcpProfile": "Canon EOS R6 Mark III Adobe Standard",
+            "feature": "neutral",
+            "file": "001-6V1A0327/neutral/6V1A0327-IPR-1.jpg",
+            "height": 6959,
+            "iso": 100,
+            "lcpProfile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+            "referenceTemperatureKelvin": 4924.211272770631,
+            "settings": {
+                "automaticWhiteBalance": false,
+                "blacks": 0,
+                "blur": 0,
+                "clarity": 0,
+                "contrast": 0,
+                "dehaze": 0,
+                "denoiseChrominance": 0,
+                "denoiseLuminance": 0,
+                "exposure": 0,
+                "grading": [
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    },
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    },
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    }
+                ],
+                "grain": 0,
+                "grayscale": false,
+                "highlights": 0,
+                "mixerHue": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mixerLuminance": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mixerSaturation": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "saturation": 0,
+                "shadows": 0,
+                "sharpeningAmount": 0,
+                "sharpeningMasking": 0,
+                "sharpeningRadius": 1,
+                "temperature": 4924,
+                "texture": 0,
+                "tint": 0,
+                "toneCurves": [
+                    [
+                    ],
+                    [
+                    ],
+                    [
+                    ],
+                    [
+                    ]
+                ],
+                "vibrance": 0,
+                "whites": 0
+            },
+            "sha256": "43f5ea2e26b4bf9f87141ced48701a33c5b727a2e1f9253d0979c61484839a92",
+            "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+            "sourceProfile": "DCP Canon EOS R6 Mark III Adobe Standard → sRGB linéaire",
+            "sourceSha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+            "value": 0,
+            "width": 4639
+        },
+        {
+            "cameraMake": "Canon",
+            "cameraModel": "EOS R6 Mark III",
+            "dcpProfile": "Canon EOS R6 Mark III Adobe Standard",
+            "feature": "exposure",
+            "file": "001-6V1A0327/exposure/6V1A0327-IPR-2.jpg",
+            "height": 6959,
+            "iso": 100,
+            "lcpProfile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+            "referenceTemperatureKelvin": 4924.211272770631,
+            "settings": {
+                "automaticWhiteBalance": false,
+                "blacks": 0,
+                "blur": 0,
+                "clarity": 0,
+                "contrast": 0,
+                "dehaze": 0,
+                "denoiseChrominance": 0,
+                "denoiseLuminance": 0,
+                "exposure": -1,
+                "grading": [
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    },
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    },
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    }
+                ],
+                "grain": 0,
+                "grayscale": false,
+                "highlights": 0,
+                "mixerHue": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mixerLuminance": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mixerSaturation": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "saturation": 0,
+                "shadows": 0,
+                "sharpeningAmount": 0,
+                "sharpeningMasking": 0,
+                "sharpeningRadius": 1,
+                "temperature": 4924,
+                "texture": 0,
+                "tint": 0,
+                "toneCurves": [
+                    [
+                    ],
+                    [
+                    ],
+                    [
+                    ],
+                    [
+                    ]
+                ],
+                "vibrance": 0,
+                "whites": 0
+            },
+            "sha256": "9a58706aec0af7bdcfe5e7073b1f0c2231a159431ad465b3f2fa51a373c0fa7a",
+            "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+            "sourceProfile": "DCP Canon EOS R6 Mark III Adobe Standard → sRGB linéaire",
+            "sourceSha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+            "value": -1,
+            "width": 4639
+        },
+        {
+            "cameraMake": "Canon",
+            "cameraModel": "EOS R6 Mark III",
+            "dcpProfile": "Canon EOS R6 Mark III Adobe Standard",
+            "feature": "exposure",
+            "file": "001-6V1A0327/exposure/6V1A0327-IPR-3.jpg",
+            "height": 6959,
+            "iso": 100,
+            "lcpProfile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+            "referenceTemperatureKelvin": 4924.211272770631,
+            "settings": {
+                "automaticWhiteBalance": false,
+                "blacks": 0,
+                "blur": 0,
+                "clarity": 0,
+                "contrast": 0,
+                "dehaze": 0,
+                "denoiseChrominance": 0,
+                "denoiseLuminance": 0,
+                "exposure": 0,
+                "grading": [
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    },
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    },
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    }
+                ],
+                "grain": 0,
+                "grayscale": false,
+                "highlights": 0,
+                "mixerHue": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mixerLuminance": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mixerSaturation": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "saturation": 0,
+                "shadows": 0,
+                "sharpeningAmount": 0,
+                "sharpeningMasking": 0,
+                "sharpeningRadius": 1,
+                "temperature": 4924,
+                "texture": 0,
+                "tint": 0,
+                "toneCurves": [
+                    [
+                    ],
+                    [
+                    ],
+                    [
+                    ],
+                    [
+                    ]
+                ],
+                "vibrance": 0,
+                "whites": 0
+            },
+            "sha256": "43f5ea2e26b4bf9f87141ced48701a33c5b727a2e1f9253d0979c61484839a92",
+            "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+            "sourceProfile": "DCP Canon EOS R6 Mark III Adobe Standard → sRGB linéaire",
+            "sourceSha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+            "value": 0,
+            "width": 4639
+        },
+        {
+            "cameraMake": "Canon",
+            "cameraModel": "EOS R6 Mark III",
+            "dcpProfile": "Canon EOS R6 Mark III Adobe Standard",
+            "feature": "exposure",
+            "file": "001-6V1A0327/exposure/6V1A0327-IPR-4.jpg",
+            "height": 6959,
+            "iso": 100,
+            "lcpProfile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+            "referenceTemperatureKelvin": 4924.211272770631,
+            "settings": {
+                "automaticWhiteBalance": false,
+                "blacks": 0,
+                "blur": 0,
+                "clarity": 0,
+                "contrast": 0,
+                "dehaze": 0,
+                "denoiseChrominance": 0,
+                "denoiseLuminance": 0,
+                "exposure": 1,
+                "grading": [
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    },
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    },
+                    {
+                        "hue": 0,
+                        "saturation": 0
+                    }
+                ],
+                "grain": 0,
+                "grayscale": false,
+                "highlights": 0,
+                "mixerHue": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mixerLuminance": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "mixerSaturation": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "saturation": 0,
+                "shadows": 0,
+                "sharpeningAmount": 0,
+                "sharpeningMasking": 0,
+                "sharpeningRadius": 1,
+                "temperature": 4924,
+                "texture": 0,
+                "tint": 0,
+                "toneCurves": [
+                    [
+                    ],
+                    [
+                    ],
+                    [
+                    ],
+                    [
+                    ]
+                ],
+                "vibrance": 0,
+                "whites": 0
+            },
+            "sha256": "09867121555b3b01fdb240731115209110cbf607c2cdc41098b2dd07ab5853b0",
+            "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3",
+            "sourceProfile": "DCP Canon EOS R6 Mark III Adobe Standard → sRGB linéaire",
+            "sourceSha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+            "value": 1,
+            "width": 4639
+        }
+    ],
+    "finishedUtc": "2026-10-06T09:59:39Z",
+    "format": "JPEG",
+    "gradingZones": [
+        "shadows",
+        "midtones",
+        "highlights"
+    ],
+    "hdr": false,
+    "iprVersion": "0.2",
+    "mixerBands": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "cyan",
+        "blue",
+        "violet",
+        "magenta"
+    ],
+    "outputColorSpace": "sRGB",
+    "plan": [
+        {
+            "feature": "exposure",
+            "values": [
+                -1,
+                0,
+                1
+            ]
+        }
+    ],
+    "profileSearchDirectories": [
+        "C:/Users/victo/Documents/Projet/Programmation/IPR/profiles",
+        "C:/Users/victo/AppData/Roaming/IPR/IPR/profiles",
+        "C:/ProgramData/Adobe/CameraRaw"
+    ],
+    "qtVersion": "6.11.2",
+    "quality": 100,
+    "schema": 1,
+    "sidecars": "ignored; never written",
+    "startedUtc": "2026-10-06T09:59:12Z",
+    "status": "complete"
+}

@@ -27,6 +27,17 @@ JSON pointées sans perte de précision des grands entiers et parse tous les SVG
 
 ## Données et provenance
 
+Depuis la correction du 12 octobre 2026, les CSV dérivés précisent
+`source_hash_format=sha256-text-lf-v1` : SHA-256 du texte source après conversion
+des seules fins de ligne CRLF en LF. Cela rend la provenance identique dans
+les checkouts Windows/Linux/macOS ; les autres octets, espaces et valeurs restent
+significatifs. Ce format ne s'applique **pas** aux empreintes d'images/RAW ou de
+profils enregistrées dans les JSON. Les preuves JSON ne sont pas réécrites.
+Les CSV antérieurs doivent être régénérés, sans mode de compatibilité legacy.
+`--check` vérifie ce contrat ainsi que les valeurs pointées ; ce n'est pas une
+nouvelle analyse photographique. Les sous-dossiers de synthèse spécialisés
+conservent leur propre procédure et ne sont pas réécrits par cet exporteur.
+
 ### Complément Lumières Camera Neutral — 9 octobre
 
 Le sous-dossier [lumieres-camera-neutral-20261009/](lumieres-camera-neutral-20261009/)
