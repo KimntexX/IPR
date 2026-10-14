@@ -75,6 +75,15 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(build.select_tests([], RULES)["tests"], [])
         self.assertEqual(build.select_tests(["docs/example.md"], RULES)["tests"], [])
 
+    def test_raw_opening_tools_are_targeted(self):
+        plan=build.select_tests(['tests/raw_opening_probe.cpp'],RULES)
+        self.assertFalse(plan['full'])
+        self.assertIn('rawOpeningProbeTests',plan['tests'])
+        self.assertIn('rawDecoderTests',plan['tests'])
+        summary=build.select_tests(['tests/summarize_raw_opening.py'],RULES)
+        self.assertFalse(summary['full'])
+        self.assertEqual(set(summary['python']),{'raw_opening_analysis','neutral_colour_inspection'})
+
     def test_raw_normalization_is_targeted(self):
         for path in ("src/raw/RawNormalization.cpp", "src/raw/RawDecoder.cpp", "tests/raw_normalization_test.cpp"):
             plan = build.select_tests([path], RULES)

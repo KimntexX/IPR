@@ -14,6 +14,11 @@ et `patch_documentation` la documentation ; ces branches existent et sont
 conservées après intégration. Un prochain groupe pourra utiliser un nom tel
 que `patch_noise`, qui reste ici un exemple et non une branche annoncée créée.
 
+Depuis le 14 octobre 2026, `patch_raw_opening` est la branche locale dédiée
+au rendu initial RAW/base colorimétrique, créée depuis `dev`. Le prototype
+Couleur non validé reste sauvegardé sur `patch_color` (commit `8abcd12`),
+sans fusion dans `dev` ni publication implicite.
+
 Une branche de groupe est conservée après livraison. Les commits de fusion
 matérialisent les validations dans le graphe Git ; les tags identifient les états
 figés. `main` reste distinct et sa mise à jour nécessite une livraison explicite.

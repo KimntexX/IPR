@@ -4,6 +4,7 @@
   "full_patterns": ["CMakeLists.txt", "CMakePresets.json", "cmake/**", ".github/**", "scripts/**", "src/editor/imageeditor.h"],
   "ignored_patterns": ["docs/**", "README.md", "licenses/**", "tests/image/**", ".gitignore", "CMakeLists.txt.user"],
   "targets": {
+    "rawOpeningProbeTests": "rawOpeningProbeTests",
     "editorLifecycleTests": "editorLifecycleTests",
     "colorPipelineTests": "colorPipelineTests",
     "detailProcessingTests": "detailProcessingTests",
@@ -24,6 +25,8 @@
     "cameraProfileEngineTests": "cameraProfileEngineTests"
   },
   "python_suites": {
+    "raw_opening_analysis": "test_raw_opening_analysis.py",
+    "neutral_colour_inspection": "test_inspect_neutral_colour_pair.py",
     "delivery_policy": "test_delivery_policy.py",
     "ci_scope": "test_ci_scope.py",
     "wb_comparison": "test_compare_temperature_tint.py",
@@ -37,6 +40,9 @@
     "base_colorimetry_analysis": "test_analyse_base_colorimetrique.py"
   },
   "rules": [
+    {"patterns": ["tests/raw_opening_probe.cpp", "tests/raw_opening_probe_test.cpp"], "tests": ["rawOpeningProbeTests", "rawDecoderTests", "cameraProfileEngineTests"]},
+    {"patterns": ["tests/summarize_raw_opening.py", "tests/audit_opening_corpus.py", "tests/test_raw_opening_analysis.py"], "tests": [], "python": ["raw_opening_analysis", "neutral_colour_inspection"]},
+    {"patterns": ["tests/inspect_neutral_colour_pair.py", "tests/test_inspect_neutral_colour_pair.py"], "tests": [], "python": ["neutral_colour_inspection"]},
     {"patterns": ["tests/test_delivery_policy.py"], "tests": [], "python": ["delivery_policy", "ci_deployment", "ci_scope"]},
     {"patterns": ["tests/test_ci_scope.py"], "tests": [], "python": ["ci_scope", "ci_deployment", "selection"]},
     {"patterns": ["tests/compare_temperature_tint.py", "tests/compare_wb_camera_probe.py", "tests/audit_wb_profiles.py", "tests/test_compare_temperature_tint.py", "tests/wb_camera_probe.cpp"], "tests": ["cameraProfileEngineTests", "rawDecoderTests", "imageExportTests"], "python": ["wb_comparison"]},

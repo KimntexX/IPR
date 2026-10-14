@@ -1,0 +1,429 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "group": "couleur",
+  "status": "diagnostic",
+  "campaign_id": "inspection-neutre-couleur-v001-20261014T084348195456Z",
+  "measured_at_utc": "2026-10-14T08:43:48.195456+00:00",
+  "analyser_sha256": "89a5746f1810a41cefbec6e2f9cfcd9094d9cd29929100779f3aa3570a797e2d",
+  "method": {
+    "space": "native uint16 sRGB, analytic linear Y and CIELAB D65",
+    "global_step": 8,
+    "ROI_step": 4,
+    "normalized_ROI_xywh": [
+      0.25,
+      0.48,
+      0.5,
+      0.28
+    ],
+    "warm_mask": "R>1.1G, G>1.4B, encoded HSV S>.25, linear Y>.002",
+    "geometry": "Independent ROIs and masks; no alignment, MAE or pixel DeltaE"
+  },
+  "records": {
+    "IPR": {
+      "metadata": {
+        "path": "tests\\image\\base\\neutre\\6V1A0081-IPR.tiff",
+        "sha256": "5b437eeda363cfbdd62e13c5fbefcc0cada9563f11960d7bc7a9703ef86ba07d",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-14T08:38:13.666438+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "declaration": null,
+      "ROI_top_left_height_width": [
+        3340,
+        1159,
+        1948,
+        2319
+      ],
+      "global": {
+        "whole_region": {
+          "samples": 504600,
+          "mean_Y": 0.016802665123157395,
+          "median_Y": 0.003242724016732088,
+          "mean_Lab": [
+            9.40916725069336,
+            10.740014855300668,
+            10.484006775912837
+          ],
+          "median_Lab_chroma": 3.0213440172645956,
+          "mean_Lab_hue_degrees": 47.62010743876649,
+          "mean_encoded_HSV_hue_degrees": 55.17431883435263,
+          "mean_linear_HSV_hue_degrees": 53.055354400040635,
+          "median_encoded_HSV_saturation": 0.5256910649597254,
+          "mean_encoded_RGB": [
+            0.15947382994555373,
+            0.058229775679990076,
+            0.028269136033633895
+          ],
+          "mean_linear_RGB": [
+            0.052658230931282544,
+            0.007592793207255212,
+            0.002453733037914342
+          ]
+        },
+        "warm_mask": {
+          "samples": 181521,
+          "mean_Y": 0.03947390317702947,
+          "median_Y": 0.032543003972554795,
+          "mean_Lab": [
+            20.357587074712345,
+            25.440855968609995,
+            23.853316166519463
+          ],
+          "median_Lab_chroma": 38.88501300158264,
+          "mean_Lab_hue_degrees": 43.46434700560445,
+          "mean_encoded_HSV_hue_degrees": 14.505264334234424,
+          "mean_linear_HSV_hue_degrees": 8.149018806058125,
+          "median_encoded_HSV_saturation": 0.8719829186780541,
+          "mean_encoded_RGB": [
+            0.3508018795226979,
+            0.11365178386056136,
+            0.047594937382846196
+          ],
+          "mean_linear_RGB": [
+            0.12891917170185713,
+            0.016442580788595052,
+            0.004237583008458818
+          ]
+        }
+      },
+      "ROI": {
+        "whole_region": {
+          "samples": 282460,
+          "mean_Y": 0.030700516085491163,
+          "median_Y": 0.02405112702252571,
+          "mean_Lab": [
+            17.046001521394494,
+            27.16705749673334,
+            21.156451462425522
+          ],
+          "median_Lab_chroma": 39.79170519212924,
+          "mean_Lab_hue_degrees": 36.120761638758154,
+          "mean_encoded_HSV_hue_degrees": 9.291989746270808,
+          "mean_linear_HSV_hue_degrees": 5.895497930589299,
+          "median_encoded_HSV_saturation": 0.9068719202033669,
+          "mean_encoded_RGB": [
+            0.3219636266751529,
+            0.07005826476483341,
+            0.034176696707642715
+          ],
+          "mean_linear_RGB": [
+            0.11303804235589707,
+            0.009033672384241302,
+            0.0028773655321147353
+          ]
+        },
+        "warm_mask": {
+          "samples": 171061,
+          "mean_Y": 0.04181098099706144,
+          "median_Y": 0.0399018751567772,
+          "mean_Lab": [
+            21.539282606070767,
+            29.859133171692335,
+            26.127305619742355
+          ],
+          "median_Lab_chroma": 46.78151929407515,
+          "mean_Lab_hue_degrees": 39.871969409131374,
+          "mean_encoded_HSV_hue_degrees": 10.718087701291239,
+          "mean_linear_HSV_hue_degrees": 4.9369464680529624,
+          "median_encoded_HSV_saturation": 0.8954582651391162,
+          "mean_encoded_RGB": [
+            0.3833299119150726,
+            0.10387396545839787,
+            0.043613685950819166
+          ],
+          "mean_linear_RGB": [
+            0.14847016046223782,
+            0.013948386145546587,
+            0.0037443090234795433
+          ]
+        }
+      }
+    },
+    "LR": {
+      "metadata": {
+        "path": "tests\\image\\base\\neutre\\6V1A0081.tif",
+        "sha256": "f929c174518a2e600c4d13621a694dd9b92d1fbf7606ad2e7a84586dff545c29",
+        "bytes": 193793546,
+        "modified_at_utc": "2026-10-14T08:37:59.523210+00:00",
+        "dimensions": [
+          4640,
+          6960
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "channels": 3,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "xmp_settings": {
+          "RawFileName": "6V1A0081.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "As Shot",
+          "Temperature": "5200",
+          "Tint": "+5",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "0",
+          "LensProfileEnable": "0",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Camera Neutral",
+          "CameraProfileDigest": "8180D0EC85977057CE86FB64330967A6",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "9F61B9947F6CB191C20DE7543E48F948",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True",
+          "ToneCurvePV2012": "",
+          "ToneCurvePV2012Red": "",
+          "ToneCurvePV2012Green": "",
+          "ToneCurvePV2012Blue": "",
+          "PointColors": "",
+          "ColorVariance": ""
+        }
+      },
+      "declaration": null,
+      "ROI_top_left_height_width": [
+        3340,
+        1160,
+        1948,
+        2320
+      ],
+      "global": {
+        "whole_region": {
+          "samples": 504600,
+          "mean_Y": 0.031000410298702197,
+          "median_Y": 0.005972097312006782,
+          "mean_Lab": [
+            13.729154297463946,
+            9.406947760177221,
+            14.65200467055803
+          ],
+          "median_Lab_chroma": 5.827102527115564,
+          "mean_Lab_hue_degrees": 65.48935169759446,
+          "mean_encoded_HSV_hue_degrees": 60.02633375958178,
+          "mean_linear_HSV_hue_degrees": 56.21642417593281,
+          "median_encoded_HSV_saturation": 0.5272262889796089,
+          "mean_encoded_RGB": [
+            0.2020584421745282,
+            0.10477719188101105,
+            0.03723762140576821
+          ],
+          "mean_linear_RGB": [
+            0.08268920700941479,
+            0.01840216886481672,
+            0.003593541778168666
+          ]
+        },
+        "warm_mask": {
+          "samples": 215228,
+          "mean_Y": 0.06616129392026267,
+          "median_Y": 0.05450047142266285,
+          "mean_Lab": [
+            27.268520182399055,
+            24.352661853584305,
+            31.4091642527547
+          ],
+          "median_Lab_chroma": 43.3930511856639,
+          "mean_Lab_hue_degrees": 53.08495068797678,
+          "mean_encoded_HSV_hue_degrees": 22.43875355750782,
+          "mean_linear_HSV_hue_degrees": 12.164444457754682,
+          "median_encoded_HSV_saturation": 0.8926127539685771,
+          "mean_encoded_RGB": [
+            0.4244345785770885,
+            0.1842547591699489,
+            0.05108727883034403
+          ],
+          "mean_linear_RGB": [
+            0.18864159664239835,
+            0.03592692913490039,
+            0.005002088044421467
+          ]
+        }
+      },
+      "ROI": {
+        "whole_region": {
+          "samples": 282460,
+          "mean_Y": 0.059883595457401566,
+          "median_Y": 0.05092603887904639,
+          "mean_Lab": [
+            25.57086499782263,
+            26.36512723148038,
+            30.821613989784233
+          ],
+          "median_Lab_chroma": 45.93565213505492,
+          "mean_Lab_hue_degrees": 49.59730689812925,
+          "mean_encoded_HSV_hue_degrees": 21.112344995693086,
+          "mean_linear_HSV_hue_degrees": 11.083890722856044,
+          "median_encoded_HSV_saturation": 0.9245729329603094,
+          "mean_encoded_RGB": [
+            0.4149907219841347,
+            0.16056280654419627,
+            0.03794413981413483
+          ],
+          "mean_linear_RGB": [
+            0.18458880425666388,
+            0.028506775200209934,
+            0.0034898898787513993
+          ]
+        },
+        "warm_mask": {
+          "samples": 266808,
+          "mean_Y": 0.06292068533981861,
+          "median_Y": 0.055726042091684316,
+          "mean_Lab": [
+            26.697988950012743,
+            27.975307516217224,
+            32.39811286005904
+          ],
+          "median_Lab_chroma": 47.951891353616176,
+          "mean_Lab_hue_degrees": 48.5183333908314,
+          "mean_encoded_HSV_hue_degrees": 19.30363845140997,
+          "mean_linear_HSV_hue_degrees": 8.922298836988427,
+          "median_encoded_HSV_saturation": 0.9282825216745889,
+          "mean_encoded_RGB": [
+            0.4351049157381879,
+            0.16592286535608675,
+            0.037631587645827205
+          ],
+          "mean_linear_RGB": [
+            0.19486481718703363,
+            0.029703447325673756,
+            0.0034421008107260683
+          ]
+        }
+      }
+    }
+  },
+  "user_reported_IPR": {
+    "temperature_kelvin": 4924.0,
+    "tint": 0.0,
+    "profile": "not independently confirmed",
+    "normalization": "not independently confirmed",
+    "source": "user statement, not embedded metadata"
+  },
+  "limitations": [
+    "Warm mask is not a semantic segmentation",
+    "Hue averages are not perceptual error scores",
+    "Manual IPR export may not declare settings, profile or normalization",
+    "Same normalized ROI is not guaranteed same optical content",
+    "No physical colour target: Lightroom agreement is not absolute accuracy"
+  ]
+}

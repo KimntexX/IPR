@@ -234,3 +234,29 @@ reconstruit ni le RGB caméra pré-DCP ni les valeurs hors gamut perdues.
 Une projection ne certifie donc pas le rendu de l'IHM ou un correctif avant
 DCP. Ses résultats restent `diagnostic`, avec JSON immuable et unités ;
 aucune production modifiée, image générée/supprimée ou coefficient ajusté.
+
+## Rendu d'ouverture — diagnostic sur le corpus racine
+
+`rawOpeningProbe` est une cible native manuelle, exclue de la compilation
+par défaut et de CTest. Elle lit tous les RAW directement dans `base`,
+sans sidecar, sans normalisation et sans optique. Les JSON de scènes sont
+immuables ; les PNG dans un nouveau dossier de build sont des aperçus, pas
+des exports de conformité. `rawOpeningProbeTests` utilise de petits tableaux
+synthétiques, sans la banque privée.
+
+```powershell
+cmake --build build-windows-msvc --config Release --target rawOpeningProbe rawOpeningProbeTests
+./build-windows-msvc/Release/rawOpeningProbe.exe . docs/validation/raw build-NOUVELLE_INSPECTION
+python tests/audit_opening_corpus.py
+python tests/summarize_raw_opening.py CHEMIN_AUDIT_CORPUS.json
+python -m unittest discover -s tests -p test_raw_opening_analysis.py
+ctest --test-dir build-windows-msvc -C Release -R '^rawOpeningProbeTests$' --output-on-failure
+```
+
+Utiliser l'environnement Qt/OpenCV/LibRaw du build. Le comparateur refuse
+un RAW absent, dupliqué, d'empreinte différente ou un rejeu DCP divergent.
+Des campagnes de scènes multiples ne doivent pas être mélangées ; l'outil
+refuse les doublons au lieu de choisir silencieusement une génération.
+Les comparaisons LR sont des distributions indépendantes ; aucune MAE ou
+équivalence de WB n'est annoncée. Voir le
+[rapport unique, §29](../analyses/analyse-base-colorimetrique.md#29-reprise-exhaustive-du-corpus-douverture--14-octobre-2026).

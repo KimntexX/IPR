@@ -1,7 +1,12 @@
 # Matrice de validation des réglages
 
-**Dernière consolidation :** 10 octobre 2026.
+**Dernière consolidation :** 14 octobre 2026 (rendu initial ; autres statuts inchangés).
 **Légende :** Validé = protocole, export et conclusion disponibles ; À revalider = changement de pipeline ou corpus insuffisant ; À faire = fonction présente mais sans recette complète.
+
+Rendu initial : investigation active sur `patch_raw_opening`,
+[19 RAW, 37 neutres et ablations DCP](analyses/analyse-base-colorimetrique.md#29-reprise-exhaustive-du-corpus-douverture--14-octobre-2026).
+Le prototype Couleur reste sauvegardé sur `patch_color` ; validation visuelle
+et calibration des commandes suspendues jusqu'à stabilisation de la base.
 
 | Fonction | Statut | Preuve / source historique | Prochaine action |
 | --- | --- | --- | --- |

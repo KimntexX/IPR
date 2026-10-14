@@ -1,9 +1,13 @@
 # Base colorimétrique — Rapport d'analyse évolutif
 
-**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 8 octobre 2026.
+**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 14 octobre 2026.
 **Statut actuel :** Camera Neutral accepté visuellement ; module IHM et ZIP local
 disponibles (§25–26). Normalisation limitée à cinq RAW exacts, désactivée par défaut.
-Standard, résidus et fidélité physique restent ouverts. Les
+La reprise du 14 octobre sur `patch_raw_opening` mesure 19 RAW (§29) ; le
+prototype Couleur reste sauvegardé et non validé sur `patch_color`.
+Standard, résidus et fidélité physique restent ouverts. Le nouveau cas
+0081 confirme un écart neutre rouge/sombre à investiguer (§28), sans annuler
+les appréciations historiques sur d'autres scènes. Les
 [CSV et courbes](../metrics/README.md) sont dérivés de ces preuves.
 
 **Historique des étapes :** absence de changement des exports
@@ -3063,6 +3067,242 @@ Le parcours IA est optionnel, sans poids embarqués ; l'offre RawNIND dépend d'
 Les points d'appui sont **méthodologiques** : vérifier les échantillons capteur avant la couleur ; conserver pixels et métadonnées ensemble ; distinguer WB, caractérisation, style et ICC ; tester les replis explicitement ; séparer débruitage manuel et IA ; vérifier aperçu/export et CPU/GPU.
 
 Le rapprochement avec le JPEG boîtier est particulièrement pertinent comme **diagnostic** de notre rendu Canon Neutral, mais ce JPEG n'est ni une vérité colorimétrique physique ni une référence Lightroom. Rien dans cette lecture ne justifie de remplacer LibRaw ou de modifier notre rendu déjà accepté. Aucun code de production changé, aucun résultat IPR nouveau, aucune utilisation ou intégration de LightCraft prévue.
+
+## 28. Fleur orange 6V1A0081 — comparaison neutre du 14 octobre 2026
+
+### Contexte et preuve
+
+L'utilisateur décrit une fleur orange vive, assombrie par la prise de vue,
+et observe un rendu IPR plus rouge. L'examen des aperçus dérivés confirme
+visuellement cette direction : pétales rouge-orangé plus sombres dans IPR,
+orange plus jaune et plus lumineux dans LR. Ce constat n'est pas une
+mesure physique de la fleur ni une déclaration que LR est la vérité.
+
+Mémoire canonique : [inspection neutre v001, 08:44:58 UTC / 10:44:58 Paris](../raw/inspection-neutre-couleur-v001-20261014T084458701161Z.json).
+Les deux inspections antérieures du même jour restent préliminaires
+(vue globale puis ROI, avant ajout complet du contexte déclaratif utilisateur).
+Outil : [inspection indépendante de deux neutres](../../../tests/inspect_neutral_colour_pair.py),
+empreinte stockée dans le JSON ; trois tests mathématiques synthétiques réussis.
+
+Entrées, empreintes et réglages :
+
+- `tests/image/base/neutre/6V1A0081.tif` : LR, sRGB 16 bits, 4640 × 6960,
+  Camera Neutral, As Shot **5200 K / +5**, exposition et corrections
+  photographiques nulles dans le XMP ; correction objectif/CA déclarées à zéro.
+- `tests/image/base/neutre/6V1A0081-IPR.tiff` : IPR, sRGB 16 bits RGBA opaque,
+  4639 × 6959, aucune déclaration embarquée des réglages ou profils.
+  L'utilisateur indique **4924 K, autres réglages à zéro**, dont nuance 0.
+  Le profil exact et la normalisation ne sont pas attestés dans ce TIFF.
+  Les valeurs utilisateur sont distinctes des métadonnées vérifiées dans la mémoire.
+
+Les valeurs Kelvin/nuance affichées ne sont pas identiques ; elles ne
+démontrent cependant pas à elles seules des gains caméra physiquement
+différents, ni la cause de l'écart. L'optique IPR n'est pas attestée non plus.
+
+### Mesures de couleur et luminosité
+
+Lecture native sans conversion 8 bits, Y linéaire sRGB et CIELAB D65.
+ROI centrale choisie visuellement : `(x=0,25 ; y=0,48 ; largeur=0,50 ; hauteur=0,28)`
+des dimensions de chaque image, grille native de pas 4, **282 460 points par
+moteur**. Mesures globales au pas 8. Pas de recalage ni comparaison pixel
+à pixel ; la différence de géométrie et les éventuelles corrections optiques
+limitent l'interprétation. Les statistiques du rectangle entier sont
+privilégiées ici ; le masque chaud indépendant reste un diagnostic secondaire.
+
+| Mesure, rectangle central | IPR | LR |
+| --- | ---: | ---: |
+| Luminance linéaire moyenne Y | 0,03070 | 0,05988 |
+| Clarté moyenne L* (D65) | 17,05 | 25,57 |
+| Angle moyen de teinte CIELAB, chromas > 5 | 36,12° | 49,60° |
+| Angle moyen HSV en RGB linéaire, saturation > 0,1 | 5,90° | 11,08° |
+| Rapport des moyennes G/R en RGB linéaire | 0,0799 | 0,1544 |
+
+IPR a **48,73 % de Y moyen en moins** sur cette ROI (rapport équivalent
+−0,964 EV), et **45,80 % en moins** globalement. Ce rapport n'est pas une
+consigne de compensation uniforme : il ne décrit pas toute la courbe tonale.
+L'angle CIELAB IPR est plus proche de l'axe rouge, LR davantage vers le jaune.
+Les angles HSV linéaires et le rapport G/R vont dans le même sens. Les angles
+de différents espaces ne sont pas des unités perceptuelles interchangeables.
+
+Un simple gain d'exposition linéaire conserve les rapports RGB et la teinte
+HSV linéaire, en l'absence d'écrêtage. L'écart observé comporte donc une
+**composante chromatique**, pas seulement une image uniformément plus sombre.
+Les distributions indépendantes ne permettent pas de prouver la dérive de
+chaque pétale ni de calculer une erreur perceptuelle appariée.
+
+### Conclusion et investigation à poursuivre
+
+Le retour utilisateur est confirmé sur ces exports : **plus sombre et plus
+rouge dans IPR**. Ce n'est pas une validation d'un choix de rendu rouge pour
+une fleur orange. Il faut contrôler le contexte du neutre avant de modifier
+un réglage global : profil DCP exact, gains As Shot, normalisation et optique.
+Si vibrance/saturation valent bien zéro comme déclaré, le nouveau bloc A1/A2
+est une identité et **ne peut pas expliquer cet écart neutre** à lui seul.
+
+Suite recommandée : reproduire un neutre IPR avec contexte attesté, puis
+séparer par ablations balance des blancs, traitement DCP et courbe/gamut de
+sortie. Éviter une correction arbitraire du canal rouge ou de la vibrance sur
+la seule base de cette scène. Aucun code de production modifié ni image source
+supprimée dans cette inspection.
+
+## 29. Reprise exhaustive du corpus d'ouverture — 14 octobre 2026
+
+### État Git et périmètre
+
+À la demande de l'utilisateur, l'état A1/A2 et ses preuves sont sauvegardés
+dans le commit local **`8abcd12` de `patch_color`**. La validation
+photographique Couleur est suspendue, sans tag ni fusion dans `dev`.
+La branche locale **`patch_raw_opening`** est créée depuis `dev` actualisé,
+commit `7297197`. Elle reprend l'outil et les preuves du diagnostic neutre
+0081, pas le code du prototype Couleur. Aucun push demandé ou exécuté.
+
+Le rendu neutre est une identité dans le bloc de réglages, indépendamment
+du changement de modèle Couleur. Le programme de diagnostic compile
+uniquement une sonde et des tests ; l'exécutable IHM A1/A2 précédemment
+construit n'est pas une nouvelle livraison du rendu d'ouverture.
+
+### Inspection de la carte et ajouts du corpus
+
+Autorisation de lecture/copie donnée pour `D:/DCIM/100EOSR6` : **500 CR3**
+inventoriés, **60 JPEG intégrés** répartis dans la série examinés visuellement.
+Les métadonnées de ces 500 fichiers indiquent R6 Mark III. Les JPEG servent
+à sélectionner les sujets, jamais à mesurer la fidélité du développement RAW.
+Quatre copies nouvelles, sans XMP/ACR associé, sont déposées à la racine de
+`tests/image/base`, environ **157 MiB** au total, SHA-256 source/destination
+identiques. Aucun fichier existant écrasé, déplacé ou supprimé.
+
+| RAW ajouté | ISO lu | Intérêt observé |
+| --- | ---: | --- |
+| 6V1A0318 | 100 | Peau au soleil, rocher et crashpads colorés : carnations et tons chauds à faible bruit. |
+| 6V1A0524 | 400 | Contre-jour, ciel et rochers sombres : séparation luminosité/gamut et réserve tonale. |
+| 6V1A9608 | 16000 | Prise bleue sur fond jaune : interactions de couleurs saturées ; bruit à contrôler. |
+| 6V1A9616 | 1600 | Prise rouge sur mur clair : zone chaude et fond peu chromatique. |
+
+Le corpus contient désormais **19 RAW** : seize R6 Mark III (0007, 0037,
+0043, 0054, 0081, 0182, 0318, 0327, 0524, 0830, 9421, 9608, 9616, 9890,
+9940, 9950) et trois R7 (7Y6A7003, 7Y6A7298, 7Y6A7599). Deux objectifs
+rapportés par le décodeur : RF24-105mm F2.8 L IS USM Z et Sigma 70-200mm
+F2.8 DG OS HSM Sports 018. La couverture n'est donc pas universelle.
+
+### Preuves et contrôles
+
+- [Audit du corpus, 09:27:42 UTC / 11:27:42 Paris](../raw/audit-corpus-ouverture-v001-20261014T092742619468Z.json) :
+  19 sources RAW, sidecars présents mais non appliqués, **37 TIFF neutres**
+  inspectés, contextes/empreintes/statistiques et preuves des quatre copies.
+- [Synthèse canonique v002, 09:39:38 UTC / 11:39:38 Paris](../raw/synthese-ouverture-v002-20261014T093938429634Z.json) :
+  références aux **19 JSON individuels** de la sonde, extraction indépendante
+  des candidats ColorData Canon, comparaisons LR, exclusions, unités et décision.
+  Les synthèses v001 restent préliminaires ; v002 ajoute les garde-fous,
+  le protocole et la provenance de branche sans modifier leurs données.
+- Outils : [sonde native](../../../tests/raw_opening_probe.cpp),
+  [audit](../../../tests/audit_opening_corpus.py),
+  [synthèse](../../../tests/summarize_raw_opening.py).
+
+**19/19 décodages réussis** avec les profils Camera Neutral appropriés aux
+deux boîtiers. WB caméra, normalisation désactivée, optique/CA désactivées,
+aucune restauration de retouche. Échantillonnage natif au pas 8, sans
+redimensionnement. Sur le RGB caméra échantillonné, le rejeu du DCP reproduit
+le tampon issu du décodage complet avec **erreur flottante maximale nulle
+sur les 19 scènes**. Les ablations sont donc isolées sur un témoin exact.
+La sortie sRGB 16 bits est celle de production. Les PNG d'inspection restent
+dans un dossier de build et ne servent pas aux mesures.
+
+Tests : **4/4 CTest ciblés** (sonde, décodeur, profils, sortie couleur),
+**5 tests Python de synthèse**, **3 d'inspection couleur**, **15 de sélection
+de tests** réussis. Ce ne sont pas des validations photographiques.
+
+La ROI nommée `flower_ROI` dans la sonde est le rectangle proportionnel
+défini pour 0081, appliqué aux autres images comme simple région exploratoire.
+Elle ne constitue pas une annotation de peau, de fleur ou de prise sur ces
+autres scènes ; aucune conclusion sémantique automatique n'en est tirée.
+
+### Luminosité : résidu confirmé, pas de compensation globale proposée
+
+Huit scènes disposent d'une référence LR Camera Neutral neutre sans
+correction optique déclarée. Pour 9421, ce fichier indique **Custom**,
+5200/+5 ; son autre TIFF As Shot a l'optique activée. Le premier reste donc
+une comparaison diagnostique, pas une validation As Shot. Le TIFF générique
+9950 Adobe Standard est exclu ; la référence Camera Neutral est retenue.
+Les fichiers IPR historiques de diverses générations ne sont pas mélangés
+au témoin fraîchement décodé.
+
+Variation de la luminance moyenne du nouveau témoin par rapport au TIFF LR :
+
+| Scène | Témoin actuel sans optique | Courbe DCP préservant la teinte | IPR réglé à 5200/+5 |
+| --- | ---: | ---: | ---: |
+| 0007 | −23,31 % | −23,41 % | −22,68 % |
+| 0037 | −30,83 % | −30,94 % | −30,21 % |
+| 0043 | −38,35 % | −37,94 % | −37,41 % |
+| 0081 | −47,60 % | −42,93 % | −45,14 % |
+| 0327 | −35,63 % | −35,24 % | −34,49 % |
+| 9421 (WB Custom) | −31,83 % | −31,99 % | −30,43 % |
+| 9890 | −34,84 % | −34,64 % | −33,47 % |
+| 9950 | −31,03 % | −31,32 % | −30,50 % |
+
+Moyenne des écarts relatifs par scène : **−34,18 %**, médiane −33,34 %.
+Ce n'est pas un facteur d'exposition à appliquer ni un score perceptuel.
+La nouvelle optique désactivée diffère du contexte Couleur du 13 octobre,
+où IPR appliquait géométrie/vignettage : ne pas comparer directement ces
+moyennes comme une régression. Les gains de vignettage peuvent expliquer
+une partie des variations historiques, notamment 0037/9950 ; cette attribution
+n'est pas une nouvelle ablation optique mesurée ici. Les corrections imposées
+par LR et la géométrie restent à vérifier. Aucun recalage ou MAE inter-moteurs.
+
+### Teinte : piste DCP isolée sur la fleur orange
+
+La production applique actuellement la courbe DCP **canal par canal** lorsque
+la normalisation expérimentale est désactivée. L'option existante
+`preserveToneCurveHue` interpole le canal intermédiaire entre les extrema
+transformés en ProPhoto et conserve la teinte HSV de cet espace lorsque
+les conditions de validité sont réunies. Elle n'est pas une conservation
+garantie de L/h Oklab. Dans `RawDecoder.cpp`, elle est aujourd'hui activée
+avec une calibration de normalisation, pas par défaut pour un neutre.
+
+La sonde ne change que cette option, sans normaliser le RAW, changer ses gains
+WB ou modifier le DCP. Sur la ROI centrale de 0081 :
+
+| Indicateur | Témoin actuel | Courbe préservant la teinte | Référence LR, inspection §28 |
+| --- | ---: | ---: | ---: |
+| Rapport des moyennes linéaires G/R | 0,0799 | 0,1386 | 0,1544 |
+| Y moyen | 0,03061 | 0,03415 | 0,05988 |
+
+Les grilles/géométries diffèrent légèrement de l'inspection TIFF du §28 :
+ces statistiques ne sont pas des correspondances pixel à pixel. L'aperçu
+de l'ablation est visuellement plus orange, cohérent avec l'augmentation
+relative du vert. La modification de courbe est donc une **cause contributive
+isolée du rouge**, mais elle ne suffit pas à corriger la luminosité globale.
+Son effet sur Y moyen varie de **−1,20 % à +8,91 %** selon les 19 scènes,
+médiane −0,079 %. La variation de taux de clipping va de −0,001 à +0,169
+point de pourcentage : aucune innocuité universelle n'est déclarée.
+
+Recopier les nombres LR 5200/+5 dans IPR augmente légèrement Y mais fait
+baisser le G/R de la fleur à **0,0698** : la teinte ne se rapproche pas ici
+de l'orange LR. Les Kelvin/nuances de deux moteurs ne sont pas des gains
+caméra interchangeables. Les Kelvin estimés sont 4924 pour les seize R6,
+5314 pour les trois R7. Les candidats ColorData sont constants par modèle
+dans ce corpus et cohérents numériquement avec les rapports de gains lus ;
+les offsets ne sont pas tous certifiés. Ce constat **ne démontre pas** que
+la constance provient d'un défaut de WB plutôt que des réglages de prise de vue.
+
+### Ce qui reste nécessaire
+
+**Onze scènes n'ont pas encore de référence LR neutre exploitable dans
+`base/neutre`** : 0054, 0182, 0318, 0524, 0830, 9608, 9616, 9940,
+7Y6A7003, 7Y6A7298, 7Y6A7599. Elles sont décodées et mesurées dans IPR,
+mais aucune fidélité LR n'est annoncée. Les préparer selon le
+[protocole RAW/profils v2](../protocols/protocole-raw-profils.md) : Camera Neutral,
+As Shot sans imposer une température universelle, sRGB 16 bits, paramètres
+photographiques à zéro, optique/bruit/netteté contrôlés. Refaire également
+9421 As Shot sans optique si LR permet ce contexte ; sinon tracer le contexte imposé.
+
+Prochaine investigation recommandée : séparer **préservation de teinte de la
+courbe DCP** et **niveau lumineux de base**. Le premier mécanisme doit pouvoir
+être étudié sans activer une calibration de normalisation par fichier. Pour
+le second, reprendre les niveaux noir/blanc, l'exposition de base caméra,
+la courbe DCP et le mapping de sortie, sans gain global ajusté sur ces seules
+moyennes. Les ablations actuelles sont diagnostiques ; aucun comportement
+de production n'est changé sur cette branche à ce stade. Maintenir la pause
+des réglages Couleur et préserver tous les RAW/JSON.
 
 ## Bibliographie et preuves
 
