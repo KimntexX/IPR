@@ -13,6 +13,12 @@ RULES = json.loads((ROOT / "scripts/test-rules.json").read_text(encoding="utf-8"
 
 
 class SelectionTests(unittest.TestCase):
+    def test_vibrance_selects_math_export_and_generator(self):
+        selected = build.select_tests(["src/core/Vibrance.h"], RULES)
+        self.assertTrue({"vibranceMathTests", "imageExportTests", "testImageGeneratorTests"}
+                        <= set(selected["tests"]))
+        self.assertIn("vibranceMathTests", selected["targets"])
+
     def test_all_group_entrypoints_are_targeted_without_losing_wb_dependents(self):
         for group in ("raw", "lumiere", "courbes", "couleur", "melangeur", "grading", "effets", "bruit", "nettete", "optique"):
             plan = build.select_tests(["tests/analyse_" + group + ".py"], RULES)
@@ -74,6 +80,15 @@ class SelectionTests(unittest.TestCase):
     def test_documentation_and_no_changes_skip_tests(self):
         self.assertEqual(build.select_tests([], RULES)["tests"], [])
         self.assertEqual(build.select_tests(["docs/example.md"], RULES)["tests"], [])
+
+    def test_colour_study_is_targeted(self):
+        native = build.select_tests(["tests/colour_model_study.h"], RULES)
+        self.assertFalse(native["full"])
+        self.assertEqual(set(native["tests"]), {"colourModelStudyTests", "vibranceMathTests"})
+        summary = build.select_tests(["tests/compare_colour_model_study.py"], RULES)
+        self.assertFalse(summary["full"])
+        self.assertEqual(summary["tests"], [])
+        self.assertEqual(summary["python"], ["colour_model_study"])
 
     def test_raw_normalization_is_targeted(self):
         for path in ("src/raw/RawNormalization.cpp", "src/raw/RawDecoder.cpp", "tests/raw_normalization_test.cpp"):

@@ -155,22 +155,43 @@ moyens pour renforcer l'épaule.
 
 ### 7. Vibrance et saturation
 
-Après les réglages tonals, le rendu calcule la chrominance relative de chaque
-pixel à partir de ses canaux RGB linéaires. Les deux réglages sont bornés à
-`[-100, +100]` :
+Depuis l'intégration du premier jet A1/A2 le 13 octobre 2026, le rendu commun
+aperçu/export applique `Vibrance::apply()` dans `src/core/Vibrance.h` au RGB
+linéaire sRGB D65, après les réglages tonals et avant mélangeur/grading/courbes.
+Ce modèle remplace la réduction radiale autour de Y ; aucune option legacy.
+Les curseurs restent bornés à `[-100, +100]`.
 
-- **Saturation** applique uniformément un facteur de chrominance autour de la
-  luminance ; `-100` produit un gris de même luminance et `+100` double
-  l'écart aux gris.
-- **Vibrance** module son action en fonction de la chrominance déjà présente :
-  les couleurs proches du gris sont davantage modifiées que les couleurs déjà
-  saturées. Cela permet de renforcer une image sans pousser aussi fortement
-  les couleurs les plus vives.
+Le RGB passe en Oklab, avec racines cubiques signées pour les données HDR ou
+hors gamut. Avec `C = hypot(a,b)`, `h = atan2(b,a)`, `q = clamp(C/max(|L|,0,05),0,1)`,
+`v = vibrance/100` et `s = saturation/100` :
 
-Les deux facteurs sont combinés, bornés pour ne pas inverser les composantes
-couleur autour de la luminance, puis repris par la compression de gamut sRGB
-de sortie. Ils sont appliqués avant les courbes afin que les courbes RGB
-restent la dernière correction colorimétrique utilisateur.
+```text
+B = smoothstep(0,75 ; 1 ; |v|)
+v_effectif = v × (1 − 0,035 B) au négatif ; v × (1 + 0,065 B) au positif
+w = 1 − 0,1 q au négatif ; (1 − q)² × protection_chaude au positif
+gain = max(0, (1 + s) × (1 + v_effectif × w))
+(L,a,b)' = (L, gain × a, gain × b)
+```
+
+La protection chaude est une gaussienne centrée à 50° Oklab, largeur 25°,
+amplitude 0,4, pondérée par des transitions de L (0,10–0,35 / 0,85–1,10) et
+C (0,005–0,025). C'est un proxy chromatique, pas une détection de peau :
+les fleurs, prises et autres objets chauds sont aussi concernés. Les
+constantes sont des paramètres exploratoires de prototype, pas des poids DCP.
+
+A1 ne change l'intensité de commande qu'au-delà de ±75 ; cela ne garantit
+**pas** que le rendu intermédiaire soit identique à l'ancien modèle RGB,
+car A2 change la pondération sur toute la plage. La saturation −100 annule
+C ; +100 double C avant gamut, à vibrance zéro. Le zéro des deux curseurs,
+les noirs et les gris sont conservés exactement sans aller-retour matriciel.
+
+L'opérateur conserve L et h avant sortie, **pas la luminance linéaire Y**.
+La compression de gamut sRGB de production reste inchangée : elle peut
+modifier les teintes/clartés après cet opérateur. On ne promet ni identité
+avec LR, ni absence de dépassement RGB intermédiaire, ni couplage de
+luminosité supplémentaire. La conformité visuelle et le coût pleine
+résolution restent à tester ; les détails de l'étude sont dans le
+[rapport Couleur](validation/analyses/analyse-couleur.md).
 
 ### 8. Effets de détails et d'atmosphère
 

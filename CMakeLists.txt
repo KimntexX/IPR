@@ -44,6 +44,7 @@ set(IPR_ENGINE_SOURCES
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
     src/core/ToneRecovery.h
+    src/core/Vibrance.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
     src/profiles/CameraProfileEngine.h
@@ -185,6 +186,8 @@ if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY
     target_link_libraries(rawNormalizationCorpusProbe PRIVATE iprEngine)
     add_executable(wbCameraProbe EXCLUDE_FROM_ALL tests/wb_camera_probe.cpp)
     target_link_libraries(wbCameraProbe PRIVATE iprEngine)
+    add_executable(colourModelStudyProbe EXCLUDE_FROM_ALL tests/colour_model_study_probe.cpp)
+    target_link_libraries(colourModelStudyProbe PRIVATE iprEngine)
 endif()
 if(BUILD_TESTING)
     function(ipr_add_test target source)
@@ -194,6 +197,10 @@ if(BUILD_TESTING)
     endfunction()
 
     ipr_add_test(colorPipelineTests tests/color_pipeline_test.cpp)
+    ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
+    ipr_add_test(colourModelStudyTests tests/colour_model_study_test.cpp)
+    set_tests_properties(colourModelStudyTests PROPERTIES LABELS "unit;colour;study")
+    set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)

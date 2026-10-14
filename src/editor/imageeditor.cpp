@@ -2,6 +2,7 @@
 
 #include "DetailProcessing.h"
 #include "ToneRecovery.h"
+#include "Vibrance.h"
 #include "RawDecoder.h"
 #include "RawNormalization.h"
 #include "CameraProfileEngine.h"
@@ -1706,27 +1707,14 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     }
     }
 
-    const float saturationFactor =
-        1.0f + static_cast<float>(settings.saturation) / 100.0f;
-    const float vibranceAmount =
-        static_cast<float>(settings.vibrance) / 100.0f;
+    const double saturationAmount = settings.saturation / 100.0;
+    const double vibranceAmount = settings.vibrance / 100.0;
     if (settings.saturation != 0 || settings.vibrance != 0) {
     for (int y = 0; y < adjusted.rows; ++y) {
         cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
         for (int x = 0; x < adjusted.cols; ++x) {
             cv::Vec3f &pixel = row[x];
-            const float luminance = luminanceOf(pixel);
-            const float maximum = std::max({pixel[0], pixel[1], pixel[2]});
-            const float minimum = std::min({pixel[0], pixel[1], pixel[2]});
-            const float chroma = maximum > 1e-6f
-                                     ? std::clamp((maximum - minimum) / maximum,
-                                                  0.0f, 1.0f)
-                                     : 0.0f;
-            const float vibranceFactor =
-                1.0f + vibranceAmount * (1.0f - chroma);
-            pixel = cv::Vec3f(luminance, luminance, luminance) +
-                    (pixel - cv::Vec3f(luminance, luminance, luminance)) *
-                        std::max(0.0f, saturationFactor * vibranceFactor);
+            pixel = Vibrance::apply(pixel, vibranceAmount, saturationAmount);
         }
     }
 

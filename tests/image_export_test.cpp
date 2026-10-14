@@ -1192,6 +1192,22 @@ int main(int argc, char **argv)
         return 1;
 
     editor.resetAdjustments();
+    editor.setVibrance(-100);
+    const QString reducedVibrancePath = directory.filePath(QStringLiteral("reduced-vibrance.png"));
+    const QString reducedVibranceStatus = awaitExport(
+        editor, QUrl::fromLocalFile(reducedVibrancePath), QStringLiteral("PNG"));
+    const QImage reducedVibranceImage(reducedVibrancePath);
+    if (!check(reducedVibranceStatus.startsWith(QStringLiteral("Image exportée")) &&
+                   !reducedVibranceImage.isNull(), "negative vibrance must export successfully"))
+        return 1;
+    const QColor reducedColour = reducedVibranceImage.pixelColor(0, 0);
+    const int reducedSpread = std::max({reducedColour.red(), reducedColour.green(), reducedColour.blue()}) -
+                              std::min({reducedColour.red(), reducedColour.green(), reducedColour.blue()});
+    if (!check(reducedSpread > 0 && reducedSpread < 15,
+               "negative vibrance must strongly reduce export chroma with a weak residual"))
+        return 1;
+
+    editor.resetAdjustments();
     const QList<QByteArray> writerFormats = QImageWriter::supportedImageFormats();
     if ((writerFormats.contains("tiff") || writerFormats.contains("tif")) &&
         !verifyOutput(editor, directory.path(), QStringLiteral("TIFF"),

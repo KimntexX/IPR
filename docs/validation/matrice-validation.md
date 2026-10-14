@@ -1,7 +1,13 @@
 # Matrice de validation des réglages
 
-**Dernière consolidation :** 10 octobre 2026.
+**Dernière consolidation :** 13 octobre 2026 (étude diagnostique Couleur ; autres statuts inchangés).
 **Légende :** Validé = protocole, export et conclusion disponibles ; À revalider = changement de pipeline ou corpus insuffisant ; À faire = fonction présente mais sans recette complète.
+
+Étude Couleur du 13 octobre : [comparaison A1/A2/B](analyses/analyse-couleur.md#étude-comparative-des-modèles--13-octobre-2026),
+392 états diagnostiques sur sept RAW. Le premier jet A1/A2 est ensuite intégré
+localement à la demande de l'utilisateur, avec 7/7 tests natifs ciblés réussis.
+Validation visuelle et nouvelle campagne encore attendues ; les courbes et
+JSON de l'étude décrivent l'état antérieur, pas les nouveaux exports.
 
 | Fonction | Statut | Preuve / source historique | Prochaine action |
 | --- | --- | --- | --- |
@@ -12,7 +18,7 @@
 | Contraste | Validation historique ; fonctionnement cohérent aux extrêmes le 9 octobre | [analyse contraste](analyses/analyse-contraste-2026-10-02.md) ; six scènes, action opposée toe/shoulder ; saturation +100 moyenne 0,291 % IPR | Recette visuelle et rampe synthétique au pivot 18 %, valeurs intermédiaires. |
 | Température | Validé | [analyse température](analyses/analyse-temperature-2026-10-02.md) | Revalider la calibration froide après profil ou gamut mapping. |
 | Nuance | Validé | [analyse nuance](analyses/analyse-nuance-2026-10-02.md) | Ajouter des gris neutres et carnations. |
-| Vibrance / saturation | Validé | [analyse saturation](analyses/analyse-saturation-2026-10-02.md) | Étendre aux couleurs hors gamut. |
+| Vibrance / saturation | Fonctionnement v003 confirmé ; vibrance négative rapprochée de LR, réglage esthétique/validation visuelle finale à poursuivre | [rapport Couleur v003](analyses/analyse-couleur.md#vibrance-et-saturation--validation-quantitative-v003-13-octobre-2026) : 196 états/98 paires, aucun diagnostic ni exclusion, 28 progressions observées ; zéro/positifs/saturation préservés ; réserve optique | Affiner l'extrémité −100 sans affaiblir −25/−50 ; vérifier 9421/9890 et les propositions visuelles aux positifs, carnations/gamut ; parité LR non validée. |
 | Texture | Validé | [analyse texture](analyses/analyse-texture-2026-10-02.md) | Ajouter peau, bruit et feuillage. |
 | Clarté | Validé | [analyse clarté](analyses/analyse-clarte-2026-10-02.md) | Contrôler halos sur contre-jour. |
 | Correction du voile | Validé | [analyse voile](analyses/analyse-correction-voile-2026-10-02.md) | Tester scènes sans voile pour les faux positifs. |

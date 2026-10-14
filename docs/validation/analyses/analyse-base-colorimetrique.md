@@ -1,9 +1,11 @@
 # Base colorimétrique — Rapport d'analyse évolutif
 
-**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 8 octobre 2026.
+**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 14 octobre 2026.
 **Statut actuel :** Camera Neutral accepté visuellement ; module IHM et ZIP local
 disponibles (§25–26). Normalisation limitée à cinq RAW exacts, désactivée par défaut.
-Standard, résidus et fidélité physique restent ouverts. Les
+Standard, résidus et fidélité physique restent ouverts. Le nouveau cas
+0081 confirme un écart neutre rouge/sombre à investiguer (§28), sans annuler
+les appréciations historiques sur d'autres scènes. Les
 [CSV et courbes](../metrics/README.md) sont dérivés de ces preuves.
 
 **Historique des étapes :** absence de changement des exports
@@ -3063,6 +3065,83 @@ Le parcours IA est optionnel, sans poids embarqués ; l'offre RawNIND dépend d'
 Les points d'appui sont **méthodologiques** : vérifier les échantillons capteur avant la couleur ; conserver pixels et métadonnées ensemble ; distinguer WB, caractérisation, style et ICC ; tester les replis explicitement ; séparer débruitage manuel et IA ; vérifier aperçu/export et CPU/GPU.
 
 Le rapprochement avec le JPEG boîtier est particulièrement pertinent comme **diagnostic** de notre rendu Canon Neutral, mais ce JPEG n'est ni une vérité colorimétrique physique ni une référence Lightroom. Rien dans cette lecture ne justifie de remplacer LibRaw ou de modifier notre rendu déjà accepté. Aucun code de production changé, aucun résultat IPR nouveau, aucune utilisation ou intégration de LightCraft prévue.
+
+## 28. Fleur orange 6V1A0081 — comparaison neutre du 14 octobre 2026
+
+### Contexte et preuve
+
+L'utilisateur décrit une fleur orange vive, assombrie par la prise de vue,
+et observe un rendu IPR plus rouge. L'examen des aperçus dérivés confirme
+visuellement cette direction : pétales rouge-orangé plus sombres dans IPR,
+orange plus jaune et plus lumineux dans LR. Ce constat n'est pas une
+mesure physique de la fleur ni une déclaration que LR est la vérité.
+
+Mémoire canonique : [inspection neutre v001, 08:44:58 UTC / 10:44:58 Paris](../raw/inspection-neutre-couleur-v001-20261014T084458701161Z.json).
+Les deux inspections antérieures du même jour restent préliminaires
+(vue globale puis ROI, avant ajout complet du contexte déclaratif utilisateur).
+Outil : [inspection indépendante de deux neutres](../../../tests/inspect_neutral_colour_pair.py),
+empreinte stockée dans le JSON ; trois tests mathématiques synthétiques réussis.
+
+Entrées, empreintes et réglages :
+
+- `tests/image/base/neutre/6V1A0081.tif` : LR, sRGB 16 bits, 4640 × 6960,
+  Camera Neutral, As Shot **5200 K / +5**, exposition et corrections
+  photographiques nulles dans le XMP ; correction objectif/CA déclarées à zéro.
+- `tests/image/base/neutre/6V1A0081-IPR.tiff` : IPR, sRGB 16 bits RGBA opaque,
+  4639 × 6959, aucune déclaration embarquée des réglages ou profils.
+  L'utilisateur indique **4924 K, autres réglages à zéro**, dont nuance 0.
+  Le profil exact et la normalisation ne sont pas attestés dans ce TIFF.
+  Les valeurs utilisateur sont distinctes des métadonnées vérifiées dans la mémoire.
+
+Les valeurs Kelvin/nuance affichées ne sont pas identiques ; elles ne
+démontrent cependant pas à elles seules des gains caméra physiquement
+différents, ni la cause de l'écart. L'optique IPR n'est pas attestée non plus.
+
+### Mesures de couleur et luminosité
+
+Lecture native sans conversion 8 bits, Y linéaire sRGB et CIELAB D65.
+ROI centrale choisie visuellement : `(x=0,25 ; y=0,48 ; largeur=0,50 ; hauteur=0,28)`
+des dimensions de chaque image, grille native de pas 4, **282 460 points par
+moteur**. Mesures globales au pas 8. Pas de recalage ni comparaison pixel
+à pixel ; la différence de géométrie et les éventuelles corrections optiques
+limitent l'interprétation. Les statistiques du rectangle entier sont
+privilégiées ici ; le masque chaud indépendant reste un diagnostic secondaire.
+
+| Mesure, rectangle central | IPR | LR |
+| --- | ---: | ---: |
+| Luminance linéaire moyenne Y | 0,03070 | 0,05988 |
+| Clarté moyenne L* (D65) | 17,05 | 25,57 |
+| Angle moyen de teinte CIELAB, chromas > 5 | 36,12° | 49,60° |
+| Angle moyen HSV en RGB linéaire, saturation > 0,1 | 5,90° | 11,08° |
+| Rapport des moyennes G/R en RGB linéaire | 0,0799 | 0,1544 |
+
+IPR a **48,73 % de Y moyen en moins** sur cette ROI (rapport équivalent
+−0,964 EV), et **45,80 % en moins** globalement. Ce rapport n'est pas une
+consigne de compensation uniforme : il ne décrit pas toute la courbe tonale.
+L'angle CIELAB IPR est plus proche de l'axe rouge, LR davantage vers le jaune.
+Les angles HSV linéaires et le rapport G/R vont dans le même sens. Les angles
+de différents espaces ne sont pas des unités perceptuelles interchangeables.
+
+Un simple gain d'exposition linéaire conserve les rapports RGB et la teinte
+HSV linéaire, en l'absence d'écrêtage. L'écart observé comporte donc une
+**composante chromatique**, pas seulement une image uniformément plus sombre.
+Les distributions indépendantes ne permettent pas de prouver la dérive de
+chaque pétale ni de calculer une erreur perceptuelle appariée.
+
+### Conclusion et investigation à poursuivre
+
+Le retour utilisateur est confirmé sur ces exports : **plus sombre et plus
+rouge dans IPR**. Ce n'est pas une validation d'un choix de rendu rouge pour
+une fleur orange. Il faut contrôler le contexte du neutre avant de modifier
+un réglage global : profil DCP exact, gains As Shot, normalisation et optique.
+Si vibrance/saturation valent bien zéro comme déclaré, le nouveau bloc A1/A2
+est une identité et **ne peut pas expliquer cet écart neutre** à lui seul.
+
+Suite recommandée : reproduire un neutre IPR avec contexte attesté, puis
+séparer par ablations balance des blancs, traitement DCP et courbe/gamut de
+sortie. Éviter une correction arbitraire du canal rouge ou de la vibrance sur
+la seule base de cette scène. Aucun code de production modifié ni image source
+supprimée dans cette inspection.
 
 ## Bibliographie et preuves
 
