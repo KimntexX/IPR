@@ -20,7 +20,33 @@ bool convertSourceToWorking(QImage &image, QString *error)
     if (!image.colorSpace().isValid())
         image.setColorSpace(QColorSpace(QColorSpace::SRgb));
 
-    QImage highPrecision = image.convertToFormat(QImage::Format_RGBA32FPx4);
+    QImage highPrecision;
+    switch (image.format()) {
+    case QImage::Format_RGBA32FPx4: case QImage::Format_RGBX32FPx4: case QImage::Format_RGBA32FPx4_Premultiplied:
+    case QImage::Format_RGBA16FPx4: case QImage::Format_RGBX16FPx4: case QImage::Format_RGBA16FPx4_Premultiplied:
+        // Floating sources may hold HDR values above 1: no integer detour.
+        highPrecision = image.convertToFormat(QImage::Format_RGBA32FPx4);
+        break;
+    default: {
+        // Integer sources: Qt 6.4 converts RGBA64 to RGBA32FPx4 wrongly (colour
+        // divided by alpha twice). Its RGBA64 path is exact, so normalise here.
+        const QImage rgba64 = image.convertToFormat(QImage::Format_RGBA64);
+        if (rgba64.isNull()) break;
+        highPrecision = QImage(rgba64.size(), QImage::Format_RGBA32FPx4);
+        if (highPrecision.isNull()) break;
+        highPrecision.setColorSpace(image.colorSpace());
+        for (int y = 0; y < rgba64.height(); ++y) {
+            const auto *source = reinterpret_cast<const QRgba64 *>(rgba64.constScanLine(y));
+            auto *target = reinterpret_cast<float *>(highPrecision.scanLine(y));
+            for (int x = 0; x < rgba64.width(); ++x) {
+                target[4 * x] = source[x].red() / 65535.f;
+                target[4 * x + 1] = source[x].green() / 65535.f;
+                target[4 * x + 2] = source[x].blue() / 65535.f;
+                target[4 * x + 3] = source[x].alpha() / 65535.f;
+            }
+        }
+    }
+    }
     if (highPrecision.isNull()) {
         if (error)
             *error = QStringLiteral("Impossible de convertir l'image en RGBA flottant.");
