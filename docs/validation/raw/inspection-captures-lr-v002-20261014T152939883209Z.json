@@ -1,0 +1,26 @@
+{
+  "campaign_id": "inspection-captures-lr-v002-20261014T152939883209Z",
+  "schema_version": 1,
+  "data_version": 2,
+  "group": "base-colorimetrique",
+  "observed_at_utc": "2026-10-14T15:29:39.883209+00:00",
+  "status": "user_confirmation_followup",
+  "supersedes_campaign_id": "inspection-captures-lr-v001-20261014T152636152813Z",
+  "inputs": [
+    {
+      "file": "docs\\validation\\raw\\inspection-captures-lr-v001-20261014T152636152813Z.json",
+      "sha256": "243948abdba357f9af74533f632689416874f5d60fc35d8f95669b00e3506c8c"
+    }
+  ],
+  "user_reported": {
+    "LR_clipping_warning_enabled": true,
+    "scope": "Provided screenshots in base/capture",
+    "source": "Explicit user confirmation in conversation"
+  },
+  "conclusion": "On 7Y6A7599, no clearly visible red warning despite enabled indicator; not proof of zero TIFF channel clipping.",
+  "limitations": [
+    "No new pixel measurement",
+    "Previous screenshot observations and limitations otherwise unchanged",
+    "No photographic acceptance or production change"
+  ]
+}

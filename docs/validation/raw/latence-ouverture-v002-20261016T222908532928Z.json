@@ -1,0 +1,1646 @@
+{
+  "campaign_id": "latence-ouverture-v002-20261016T222908532928Z",
+  "schema_version": 1,
+  "data_version": 2,
+  "group": "performance-ouverture",
+  "measured_at_utc": "2026-10-16T22:29:08.532928+00:00",
+  "status": "complete",
+  "tools": {
+    "python": "3.14.3",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "git_head": "032b899f68a0c0b7ec50328e491b0bc10e4890c5",
+    "dirty_worktree": true,
+    "configuration": "Release"
+  },
+  "inputs": {
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-windows-msvc\\Release\\openingLatencyProbe.exe": "ba1de94984857b45412ffaa645a2641a44bf56f1835e8be44b5b07949476d198",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\config\\raw-normalization.json": "443e0a6f7acd0c79b5a899f4c49b663a8992e961db440940c24f609bf03f4dba",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\measure_opening_latency.py": "6916fab762735d7731653c3232c19a6016622fcfef0d63c0747a1add8cec020d",
+    "tests\\opening_latency_probe.cpp": "a470a2941be19227cee29b6f82e3bbf2e1d7fe29c2c89b25df4486abbb492291",
+    "src\\raw\\RawDecoder.cpp": "1d5677d009bc4986a03f05d8c4ed0135c330421d7394cdc31188a65f65f2d120",
+    "src\\editor\\imageeditor.cpp": "55b586ffe3b2c958891694c03eaab84f60e1149ef393bc9e3a3070a783637f1b",
+    "src\\cache\\DecodedImageCache.cpp": "ea5ddf5871febfa085bf463eefc96e471e3c64d77236bf7f14dc7e210116206a",
+    "src\\cache\\DecodedImageCache.h": "16b074fda4af52bb57b7ff5f660363377a86ca2932896537656162425ec22122",
+    "src\\core\\ImageImporter.cpp": "95a9269fa6b0c75a80eb81e68a314b9b0bb595b50792a75b4925a70b844a51d1",
+    "src\\profiles\\CameraProfileEngine.cpp": "87ac616535744ac218a78e35cb10930c06c69ba196828aae08d1c45241b0f0dd",
+    "src\\profiles\\PreparedProfileCache.cpp": "852372de44fab7ff7abfb8b52dc599de396aee61a0f85fabe8848d993222c117",
+    "src\\core\\ColorPipeline.cpp": "5945edb17571b045b03707a74326b8cbc0fb69574bf60bbef19041546a0ee496",
+    "tests\\image\\base\\6V1A0081.CR3": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97",
+    "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+    "tests\\image\\base\\6V1A0081.CR3.ipr": "8850ddb3b38c0cbf729ea8c8d4ff3d50e78a179dc5999f90392a8ca76c9316cc",
+    "tests\\image\\base\\6V1A0043.CR3": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+    "tests\\image\\base\\6V1A0043.CR3.ipr": "e70d72313cf423652588b9f25c70e343e86a43258d2fcfc0d26d7aa02eb4475a",
+    "tests\\image\\base\\7Y6A7599.CR3": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+    "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+    "tests\\image\\base\\7Y6A7599.CR3.ipr": "579979a1a8c3c175ec0c8ad82bed7e2ff11e753145349e62adc7ec5d98628108"
+  },
+  "scenes": [
+    {
+      "scene": "6V1A0081",
+      "source": "tests\\image\\base\\6V1A0081.CR3",
+      "dcp": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp"
+    },
+    {
+      "scene": "6V1A0043",
+      "source": "tests\\image\\base\\6V1A0043.CR3",
+      "dcp": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp"
+    },
+    {
+      "scene": "7Y6A7599",
+      "source": "tests\\image\\base\\7Y6A7599.CR3",
+      "dcp": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp"
+    }
+  ],
+  "settings": {
+    "automatic_wb": false,
+    "normalization": true,
+    "lens_correction": false,
+    "chromatic_aberration": false,
+    "profile": "Camera Neutral",
+    "preview_long_side": 2048,
+    "original_preview": true
+  },
+  "protocol": {
+    "stage_runs_per_scene": 3,
+    "navigation": "A B A C A B A",
+    "budgets_bytes": [
+      268435456,
+      3221225472
+    ],
+    "private_copies": "build-latency-investigation\\latence-ouverture-v002-20261016T222908532928Z"
+  },
+  "units": {
+    "duration": "ms",
+    "memory": "bytes"
+  },
+  "records": [
+    {
+      "label": "stages-6V1A0081",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-windows-msvc\\Release\\openingLatencyProbe.exe",
+        "stages",
+        "tests\\image\\base\\6V1A0081.CR3",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\config\\raw-normalization.json"
+      ],
+      "returncode": 0,
+      "stderr": "IPR RAW timing | file=6V1A0081.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR profile selection cache | storing | dcp=C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS R6 Mark III Adobe Standard.dcp | lcp=C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Canon/Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW.lcp\nIPR profile selection cache | file=C:/Users/victo/AppData/Local/cache/IPR-profile-selection-v1.ini | status=0\nIPR RAW timing | file=6V1A0081.CR3 | stage=find_profiles | elapsed_ms=29991 | delta_ms=29991\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack | elapsed_ms=30246 | delta_ms=255\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0081.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0081.CR3 | stage=black_wb_calibration | elapsed_ms=30250 | delta_ms=4\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack_and_process | elapsed_ms=32893 | delta_ms=2643\nIPR RAW timing | file=6V1A0081.CR3 | stage=make_memory_image | elapsed_ms=33129 | delta_ms=236\nIPR RAW timing | file=6V1A0081.CR3 | stage=color_and_lens_profiles | elapsed_ms=33792 | delta_ms=663\nIPR RAW timing | file=6V1A0081.CR3 | stage=total | elapsed_ms=33809 | delta_ms=17\nIPR RAW timing | file=6V1A0081.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0081.CR3 | stage=find_profiles | elapsed_ms=7 | delta_ms=7\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack | elapsed_ms=246 | delta_ms=239\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0081.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0081.CR3 | stage=black_wb_calibration | elapsed_ms=250 | delta_ms=4\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack_and_process | elapsed_ms=2870 | delta_ms=2620\nIPR RAW timing | file=6V1A0081.CR3 | stage=make_memory_image | elapsed_ms=3112 | delta_ms=242\nIPR RAW timing | file=6V1A0081.CR3 | stage=color_and_lens_profiles | elapsed_ms=3777 | delta_ms=665\nIPR RAW timing | file=6V1A0081.CR3 | stage=total | elapsed_ms=3793 | delta_ms=16\nIPR RAW timing | file=6V1A0081.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0081.CR3 | stage=find_profiles | elapsed_ms=7 | delta_ms=7\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack | elapsed_ms=247 | delta_ms=240\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0081.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0081.CR3 | stage=black_wb_calibration | elapsed_ms=250 | delta_ms=3\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack_and_process | elapsed_ms=2857 | delta_ms=2607\nIPR RAW timing | file=6V1A0081.CR3 | stage=make_memory_image | elapsed_ms=3098 | delta_ms=241\nIPR RAW timing | file=6V1A0081.CR3 | stage=color_and_lens_profiles | elapsed_ms=3762 | delta_ms=664\nIPR RAW timing | file=6V1A0081.CR3 | stage=total | elapsed_ms=3779 | delta_ms=17\n",
+      "raw_timings": [
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 29991,
+          "delta_ms": 29991
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 30246,
+          "delta_ms": 255
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 30250,
+          "delta_ms": 4
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 32893,
+          "delta_ms": 2643
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 33129,
+          "delta_ms": 236
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 33792,
+          "delta_ms": 663
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "total",
+          "elapsed_ms": 33809,
+          "delta_ms": 17
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 7,
+          "delta_ms": 7
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 246,
+          "delta_ms": 239
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 250,
+          "delta_ms": 4
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2870,
+          "delta_ms": 2620
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3112,
+          "delta_ms": 242
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3777,
+          "delta_ms": 665
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "total",
+          "elapsed_ms": 3793,
+          "delta_ms": 16
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 7,
+          "delta_ms": 7
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 247,
+          "delta_ms": 240
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 250,
+          "delta_ms": 3
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2857,
+          "delta_ms": 2607
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3098,
+          "delta_ms": 241
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3762,
+          "delta_ms": 664
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "total",
+          "elapsed_ms": 3779,
+          "delta_ms": 17
+        }
+      ],
+      "measurement": {
+        "libraw": "0.22.2-Release",
+        "logical_processors": 20,
+        "opencv_threads": 20,
+        "qt": "6.11.2",
+        "runs": [
+          {
+            "cache_hit_validation_ms": 88.5403,
+            "camera": "EOS R6 Mark III",
+            "dcp": "Canon EOS R6 Mark III Camera Neutral",
+            "entry_bytes": 982192988,
+            "height": 6959,
+            "import_ms": 33960.3904,
+            "normalization_applied": true,
+            "prepared_cache": {
+              "entries": 16,
+              "hits": 3,
+              "misses": 3867,
+              "preparations": 3867,
+              "retained_bytes": 3836524
+            },
+            "preview_pair_histogram_ms": 539.6148,
+            "preview_valid": true,
+            "proxy_ms": 48.2374,
+            "run": 1,
+            "width": 4639
+          },
+          {
+            "cache_hit_validation_ms": 90.6243,
+            "camera": "EOS R6 Mark III",
+            "dcp": "Canon EOS R6 Mark III Camera Neutral",
+            "entry_bytes": 982192988,
+            "height": 6959,
+            "import_ms": 3945.2907,
+            "normalization_applied": true,
+            "prepared_cache": {
+              "entries": 16,
+              "hits": 6,
+              "misses": 3867,
+              "preparations": 3867,
+              "retained_bytes": 3836524
+            },
+            "preview_pair_histogram_ms": 549.8275,
+            "preview_valid": true,
+            "proxy_ms": 45.9854,
+            "run": 2,
+            "width": 4639
+          },
+          {
+            "cache_hit_validation_ms": 93.4686,
+            "camera": "EOS R6 Mark III",
+            "dcp": "Canon EOS R6 Mark III Camera Neutral",
+            "entry_bytes": 982192988,
+            "height": 6959,
+            "import_ms": 3928.7195,
+            "normalization_applied": true,
+            "prepared_cache": {
+              "entries": 16,
+              "hits": 9,
+              "misses": 3867,
+              "preparations": 3867,
+              "retained_bytes": 3836524
+            },
+            "preview_pair_histogram_ms": 545.5512,
+            "preview_valid": true,
+            "proxy_ms": 44.5744,
+            "run": 3,
+            "width": 4639
+          }
+        ]
+      }
+    },
+    {
+      "label": "stages-6V1A0043",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-windows-msvc\\Release\\openingLatencyProbe.exe",
+        "stages",
+        "tests\\image\\base\\6V1A0043.CR3",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\config\\raw-normalization.json"
+      ],
+      "returncode": 0,
+      "stderr": "IPR RAW timing | file=6V1A0043.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0043.CR3 | stage=find_profiles | elapsed_ms=113 | delta_ms=113\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack | elapsed_ms=363 | delta_ms=250\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0043.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0043.CR3 | stage=black_wb_calibration | elapsed_ms=366 | delta_ms=3\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack_and_process | elapsed_ms=3016 | delta_ms=2650\nIPR RAW timing | file=6V1A0043.CR3 | stage=make_memory_image | elapsed_ms=3077 | delta_ms=61\nIPR RAW timing | file=6V1A0043.CR3 | stage=color_and_lens_profiles | elapsed_ms=3726 | delta_ms=649\nIPR RAW timing | file=6V1A0043.CR3 | stage=total | elapsed_ms=3743 | delta_ms=17\nIPR RAW timing | file=6V1A0043.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0043.CR3 | stage=find_profiles | elapsed_ms=7 | delta_ms=7\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack | elapsed_ms=259 | delta_ms=252\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0043.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0043.CR3 | stage=black_wb_calibration | elapsed_ms=263 | delta_ms=4\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack_and_process | elapsed_ms=2914 | delta_ms=2651\nIPR RAW timing | file=6V1A0043.CR3 | stage=make_memory_image | elapsed_ms=2974 | delta_ms=60\nIPR RAW timing | file=6V1A0043.CR3 | stage=color_and_lens_profiles | elapsed_ms=3618 | delta_ms=644\nIPR RAW timing | file=6V1A0043.CR3 | stage=total | elapsed_ms=3636 | delta_ms=18\nIPR RAW timing | file=6V1A0043.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0043.CR3 | stage=find_profiles | elapsed_ms=7 | delta_ms=7\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack | elapsed_ms=256 | delta_ms=249\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0043.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0043.CR3 | stage=black_wb_calibration | elapsed_ms=260 | delta_ms=4\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack_and_process | elapsed_ms=2917 | delta_ms=2657\nIPR RAW timing | file=6V1A0043.CR3 | stage=make_memory_image | elapsed_ms=2977 | delta_ms=60\nIPR RAW timing | file=6V1A0043.CR3 | stage=color_and_lens_profiles | elapsed_ms=3620 | delta_ms=643\nIPR RAW timing | file=6V1A0043.CR3 | stage=total | elapsed_ms=3640 | delta_ms=20\n",
+      "raw_timings": [
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 113,
+          "delta_ms": 113
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 363,
+          "delta_ms": 250
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 366,
+          "delta_ms": 3
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 3016,
+          "delta_ms": 2650
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3077,
+          "delta_ms": 61
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3726,
+          "delta_ms": 649
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "total",
+          "elapsed_ms": 3743,
+          "delta_ms": 17
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 7,
+          "delta_ms": 7
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 259,
+          "delta_ms": 252
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 263,
+          "delta_ms": 4
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2914,
+          "delta_ms": 2651
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 2974,
+          "delta_ms": 60
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3618,
+          "delta_ms": 644
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "total",
+          "elapsed_ms": 3636,
+          "delta_ms": 18
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 7,
+          "delta_ms": 7
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 256,
+          "delta_ms": 249
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 260,
+          "delta_ms": 4
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2917,
+          "delta_ms": 2657
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 2977,
+          "delta_ms": 60
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3620,
+          "delta_ms": 643
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "total",
+          "elapsed_ms": 3640,
+          "delta_ms": 20
+        }
+      ],
+      "measurement": {
+        "libraw": "0.22.2-Release",
+        "logical_processors": 20,
+        "opencv_threads": 20,
+        "qt": "6.11.2",
+        "runs": [
+          {
+            "cache_hit_validation_ms": 91.9833,
+            "camera": "EOS R6 Mark III",
+            "dcp": "Canon EOS R6 Mark III Camera Neutral",
+            "entry_bytes": 982192988,
+            "height": 4639,
+            "import_ms": 3894.9131,
+            "normalization_applied": true,
+            "prepared_cache": {
+              "entries": 7,
+              "hits": 3,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "preview_pair_histogram_ms": 476.655,
+            "preview_valid": true,
+            "proxy_ms": 37.0636,
+            "run": 1,
+            "width": 6959
+          },
+          {
+            "cache_hit_validation_ms": 91.4067,
+            "camera": "EOS R6 Mark III",
+            "dcp": "Canon EOS R6 Mark III Camera Neutral",
+            "entry_bytes": 982192988,
+            "height": 4639,
+            "import_ms": 3786.1897,
+            "normalization_applied": true,
+            "prepared_cache": {
+              "entries": 7,
+              "hits": 6,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "preview_pair_histogram_ms": 468.8198,
+            "preview_valid": true,
+            "proxy_ms": 46.333,
+            "run": 2,
+            "width": 6959
+          },
+          {
+            "cache_hit_validation_ms": 90.5996,
+            "camera": "EOS R6 Mark III",
+            "dcp": "Canon EOS R6 Mark III Camera Neutral",
+            "entry_bytes": 982192988,
+            "height": 4639,
+            "import_ms": 3791.6012,
+            "normalization_applied": true,
+            "prepared_cache": {
+              "entries": 7,
+              "hits": 9,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "preview_pair_histogram_ms": 479.0268,
+            "preview_valid": true,
+            "proxy_ms": 40.6545,
+            "run": 3,
+            "width": 6959
+          }
+        ]
+      }
+    },
+    {
+      "label": "stages-7Y6A7599",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-windows-msvc\\Release\\openingLatencyProbe.exe",
+        "stages",
+        "tests\\image\\base\\7Y6A7599.CR3",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\config\\raw-normalization.json"
+      ],
+      "returncode": 0,
+      "stderr": "IPR RAW timing | file=7Y6A7599.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR profile selection cache | storing | dcp=C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS R7 Adobe Standard.dcp | lcp=C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Sigma/Canon/Canon (SIGMA 70-200mm F2.8 DG OS HSM S018) - RAW.lcp\nIPR profile selection cache | file=C:/Users/victo/AppData/Local/cache/IPR-profile-selection-v1.ini | status=0\nIPR RAW timing | file=7Y6A7599.CR3 | stage=find_profiles | elapsed_ms=29754 | delta_ms=29754\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=7Y6A7599.CR3 | stage=unpack | elapsed_ms=29982 | delta_ms=228\nIPR RAW normalization | 7Y6A7599.CR3 | white= 16384 | baseline_ev= 0.35 | profile_compensation_ev= -0.02 | source= R7 14bit mode; all-ISO trials authorized 2026-10-16; previously measured ISO20000/32000 only\nIPR RAW timing | file=7Y6A7599.CR3 | stage=black_wb_calibration | elapsed_ms=29985 | delta_ms=3\nIPR RAW timing | file=7Y6A7599.CR3 | stage=unpack_and_process | elapsed_ms=32693 | delta_ms=2708\nIPR RAW timing | file=7Y6A7599.CR3 | stage=make_memory_image | elapsed_ms=32755 | delta_ms=62\nIPR RAW timing | file=7Y6A7599.CR3 | stage=color_and_lens_profiles | elapsed_ms=33547 | delta_ms=792\nIPR RAW timing | file=7Y6A7599.CR3 | stage=total | elapsed_ms=33565 | delta_ms=18\nIPR RAW timing | file=7Y6A7599.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=7Y6A7599.CR3 | stage=find_profiles | elapsed_ms=8 | delta_ms=8\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=7Y6A7599.CR3 | stage=unpack | elapsed_ms=240 | delta_ms=232\nIPR RAW normalization | 7Y6A7599.CR3 | white= 16384 | baseline_ev= 0.35 | profile_compensation_ev= -0.02 | source= R7 14bit mode; all-ISO trials authorized 2026-10-16; previously measured ISO20000/32000 only\nIPR RAW timing | file=7Y6A7599.CR3 | stage=black_wb_calibration | elapsed_ms=242 | delta_ms=2\nIPR RAW timing | file=7Y6A7599.CR3 | stage=unpack_and_process | elapsed_ms=2940 | delta_ms=2698\nIPR RAW timing | file=7Y6A7599.CR3 | stage=make_memory_image | elapsed_ms=3002 | delta_ms=62\nIPR RAW timing | file=7Y6A7599.CR3 | stage=color_and_lens_profiles | elapsed_ms=3783 | delta_ms=781\nIPR RAW timing | file=7Y6A7599.CR3 | stage=total | elapsed_ms=3800 | delta_ms=17\nIPR RAW timing | file=7Y6A7599.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=7Y6A7599.CR3 | stage=find_profiles | elapsed_ms=7 | delta_ms=7\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=7Y6A7599.CR3 | stage=unpack | elapsed_ms=229 | delta_ms=222\nIPR RAW normalization | 7Y6A7599.CR3 | white= 16384 | baseline_ev= 0.35 | profile_compensation_ev= -0.02 | source= R7 14bit mode; all-ISO trials authorized 2026-10-16; previously measured ISO20000/32000 only\nIPR RAW timing | file=7Y6A7599.CR3 | stage=black_wb_calibration | elapsed_ms=231 | delta_ms=2\nIPR RAW timing | file=7Y6A7599.CR3 | stage=unpack_and_process | elapsed_ms=2957 | delta_ms=2726\nIPR RAW timing | file=7Y6A7599.CR3 | stage=make_memory_image | elapsed_ms=3019 | delta_ms=62\nIPR RAW timing | file=7Y6A7599.CR3 | stage=color_and_lens_profiles | elapsed_ms=3820 | delta_ms=801\nIPR RAW timing | file=7Y6A7599.CR3 | stage=total | elapsed_ms=3837 | delta_ms=17\n",
+      "raw_timings": [
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 29754,
+          "delta_ms": 29754
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 29982,
+          "delta_ms": 228
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 29985,
+          "delta_ms": 3
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 32693,
+          "delta_ms": 2708
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 32755,
+          "delta_ms": 62
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 33547,
+          "delta_ms": 792
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "total",
+          "elapsed_ms": 33565,
+          "delta_ms": 18
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 8,
+          "delta_ms": 8
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 240,
+          "delta_ms": 232
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 242,
+          "delta_ms": 2
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2940,
+          "delta_ms": 2698
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3002,
+          "delta_ms": 62
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3783,
+          "delta_ms": 781
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "total",
+          "elapsed_ms": 3800,
+          "delta_ms": 17
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 7,
+          "delta_ms": 7
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 229,
+          "delta_ms": 222
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 231,
+          "delta_ms": 2
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2957,
+          "delta_ms": 2726
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3019,
+          "delta_ms": 62
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3820,
+          "delta_ms": 801
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "total",
+          "elapsed_ms": 3837,
+          "delta_ms": 17
+        }
+      ],
+      "measurement": {
+        "libraw": "0.22.2-Release",
+        "logical_processors": 20,
+        "opencv_threads": 20,
+        "qt": "6.11.2",
+        "runs": [
+          {
+            "cache_hit_validation_ms": 96.5913,
+            "camera": "EOS R7",
+            "dcp": "Canon EOS R7 Camera Neutral",
+            "entry_bytes": 989661568,
+            "height": 4660,
+            "import_ms": 33762.2729,
+            "normalization_applied": true,
+            "prepared_cache": {
+              "entries": 16,
+              "hits": 3,
+              "misses": 3869,
+              "preparations": 3869,
+              "retained_bytes": 3835244
+            },
+            "preview_pair_histogram_ms": 718.0866,
+            "preview_valid": true,
+            "proxy_ms": 37.2258,
+            "run": 1,
+            "width": 6984
+          },
+          {
+            "cache_hit_validation_ms": 88.9412,
+            "camera": "EOS R7",
+            "dcp": "Canon EOS R7 Camera Neutral",
+            "entry_bytes": 989661568,
+            "height": 4660,
+            "import_ms": 3951.3611,
+            "normalization_applied": true,
+            "prepared_cache": {
+              "entries": 16,
+              "hits": 6,
+              "misses": 3869,
+              "preparations": 3869,
+              "retained_bytes": 3835244
+            },
+            "preview_pair_histogram_ms": 717.3795,
+            "preview_valid": true,
+            "proxy_ms": 41.9997,
+            "run": 2,
+            "width": 6984
+          },
+          {
+            "cache_hit_validation_ms": 97.4018,
+            "camera": "EOS R7",
+            "dcp": "Canon EOS R7 Camera Neutral",
+            "entry_bytes": 989661568,
+            "height": 4660,
+            "import_ms": 3991.6936,
+            "normalization_applied": true,
+            "prepared_cache": {
+              "entries": 16,
+              "hits": 9,
+              "misses": 3869,
+              "preparations": 3869,
+              "retained_bytes": 3835244
+            },
+            "preview_pair_histogram_ms": 723.0202,
+            "preview_valid": true,
+            "proxy_ms": 38.0124,
+            "run": 3,
+            "width": 6984
+          }
+        ]
+      }
+    },
+    {
+      "label": "navigation-268435456",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-windows-msvc\\Release\\openingLatencyProbe.exe",
+        "navigation",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\config\\raw-normalization.json",
+        "268435456",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-latency-investigation\\latence-ouverture-v002-20261016T222908532928Z\\6V1A0081.CR3",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-latency-investigation\\latence-ouverture-v002-20261016T222908532928Z\\6V1A0043.CR3",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-latency-investigation\\latence-ouverture-v002-20261016T222908532928Z\\7Y6A7599.CR3",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp"
+      ],
+      "returncode": 0,
+      "stderr": "seturl\nIPR RAW timing | file=6V1A0081.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0081.CR3 | stage=find_profiles | elapsed_ms=110 | delta_ms=110\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack | elapsed_ms=353 | delta_ms=243\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0081.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0081.CR3 | stage=black_wb_calibration | elapsed_ms=357 | delta_ms=4\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack_and_process | elapsed_ms=3012 | delta_ms=2655\nIPR RAW timing | file=6V1A0081.CR3 | stage=make_memory_image | elapsed_ms=3247 | delta_ms=235\nIPR RAW timing | file=6V1A0081.CR3 | stage=color_and_lens_profiles | elapsed_ms=3904 | delta_ms=657\nIPR RAW timing | file=6V1A0081.CR3 | stage=total | elapsed_ms=3935 | delta_ms=31\nseturl\nIPR RAW timing | file=6V1A0043.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0043.CR3 | stage=find_profiles | elapsed_ms=6 | delta_ms=6\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack | elapsed_ms=258 | delta_ms=252\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0043.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0043.CR3 | stage=black_wb_calibration | elapsed_ms=262 | delta_ms=4\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack_and_process | elapsed_ms=2890 | delta_ms=2628\nIPR RAW timing | file=6V1A0043.CR3 | stage=make_memory_image | elapsed_ms=2949 | delta_ms=59\nIPR RAW timing | file=6V1A0043.CR3 | stage=color_and_lens_profiles | elapsed_ms=3586 | delta_ms=637\nIPR RAW timing | file=6V1A0043.CR3 | stage=total | elapsed_ms=3603 | delta_ms=17\nseturl\nIPR RAW timing | file=6V1A0081.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0081.CR3 | stage=find_profiles | elapsed_ms=7 | delta_ms=7\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack | elapsed_ms=250 | delta_ms=243\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0081.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0081.CR3 | stage=black_wb_calibration | elapsed_ms=254 | delta_ms=4\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack_and_process | elapsed_ms=2945 | delta_ms=2691\nIPR RAW timing | file=6V1A0081.CR3 | stage=make_memory_image | elapsed_ms=3186 | delta_ms=241\nIPR RAW timing | file=6V1A0081.CR3 | stage=color_and_lens_profiles | elapsed_ms=3845 | delta_ms=659\nIPR RAW timing | file=6V1A0081.CR3 | stage=total | elapsed_ms=3862 | delta_ms=17\nseturl\nIPR RAW timing | file=7Y6A7599.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=7Y6A7599.CR3 | stage=find_profiles | elapsed_ms=103 | delta_ms=103\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=7Y6A7599.CR3 | stage=unpack | elapsed_ms=324 | delta_ms=221\nIPR RAW normalization | 7Y6A7599.CR3 | white= 16384 | baseline_ev= 0.35 | profile_compensation_ev= -0.02 | source= R7 14bit mode; all-ISO trials authorized 2026-10-16; previously measured ISO20000/32000 only\nIPR RAW timing | file=7Y6A7599.CR3 | stage=black_wb_calibration | elapsed_ms=326 | delta_ms=2\nIPR RAW timing | file=7Y6A7599.CR3 | stage=unpack_and_process | elapsed_ms=3023 | delta_ms=2697\nIPR RAW timing | file=7Y6A7599.CR3 | stage=make_memory_image | elapsed_ms=3089 | delta_ms=66\nIPR RAW timing | file=7Y6A7599.CR3 | stage=color_and_lens_profiles | elapsed_ms=3897 | delta_ms=808\nIPR RAW timing | file=7Y6A7599.CR3 | stage=total | elapsed_ms=3915 | delta_ms=18\nseturl\nIPR RAW timing | file=6V1A0081.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0081.CR3 | stage=find_profiles | elapsed_ms=7 | delta_ms=7\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack | elapsed_ms=249 | delta_ms=242\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0081.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0081.CR3 | stage=black_wb_calibration | elapsed_ms=252 | delta_ms=3\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack_and_process | elapsed_ms=2897 | delta_ms=2645\nIPR RAW timing | file=6V1A0081.CR3 | stage=make_memory_image | elapsed_ms=3163 | delta_ms=266\nIPR RAW timing | file=6V1A0081.CR3 | stage=color_and_lens_profiles | elapsed_ms=3853 | delta_ms=690\nIPR RAW timing | file=6V1A0081.CR3 | stage=total | elapsed_ms=3870 | delta_ms=17\nseturl\nIPR RAW timing | file=6V1A0043.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0043.CR3 | stage=find_profiles | elapsed_ms=7 | delta_ms=7\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack | elapsed_ms=262 | delta_ms=255\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0043.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0043.CR3 | stage=black_wb_calibration | elapsed_ms=266 | delta_ms=4\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack_and_process | elapsed_ms=2863 | delta_ms=2597\nIPR RAW timing | file=6V1A0043.CR3 | stage=make_memory_image | elapsed_ms=2921 | delta_ms=58\nIPR RAW timing | file=6V1A0043.CR3 | stage=color_and_lens_profiles | elapsed_ms=3568 | delta_ms=647\nIPR RAW timing | file=6V1A0043.CR3 | stage=total | elapsed_ms=3584 | delta_ms=16\nseturl\nIPR RAW timing | file=6V1A0081.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0081.CR3 | stage=find_profiles | elapsed_ms=7 | delta_ms=7\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack | elapsed_ms=267 | delta_ms=260\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0081.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0081.CR3 | stage=black_wb_calibration | elapsed_ms=270 | delta_ms=3\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack_and_process | elapsed_ms=2878 | delta_ms=2608\nIPR RAW timing | file=6V1A0081.CR3 | stage=make_memory_image | elapsed_ms=3110 | delta_ms=232\nIPR RAW timing | file=6V1A0081.CR3 | stage=color_and_lens_profiles | elapsed_ms=3771 | delta_ms=661\nIPR RAW timing | file=6V1A0081.CR3 | stage=total | elapsed_ms=3788 | delta_ms=17\n",
+      "raw_timings": [
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 110,
+          "delta_ms": 110
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 353,
+          "delta_ms": 243
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 357,
+          "delta_ms": 4
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 3012,
+          "delta_ms": 2655
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3247,
+          "delta_ms": 235
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3904,
+          "delta_ms": 657
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "total",
+          "elapsed_ms": 3935,
+          "delta_ms": 31
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 6,
+          "delta_ms": 6
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 258,
+          "delta_ms": 252
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 262,
+          "delta_ms": 4
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2890,
+          "delta_ms": 2628
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 2949,
+          "delta_ms": 59
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3586,
+          "delta_ms": 637
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "total",
+          "elapsed_ms": 3603,
+          "delta_ms": 17
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 7,
+          "delta_ms": 7
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 250,
+          "delta_ms": 243
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 254,
+          "delta_ms": 4
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2945,
+          "delta_ms": 2691
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3186,
+          "delta_ms": 241
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3845,
+          "delta_ms": 659
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "total",
+          "elapsed_ms": 3862,
+          "delta_ms": 17
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 103,
+          "delta_ms": 103
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 324,
+          "delta_ms": 221
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 326,
+          "delta_ms": 2
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 3023,
+          "delta_ms": 2697
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3089,
+          "delta_ms": 66
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3897,
+          "delta_ms": 808
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "total",
+          "elapsed_ms": 3915,
+          "delta_ms": 18
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 7,
+          "delta_ms": 7
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 249,
+          "delta_ms": 242
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 252,
+          "delta_ms": 3
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2897,
+          "delta_ms": 2645
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3163,
+          "delta_ms": 266
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3853,
+          "delta_ms": 690
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "total",
+          "elapsed_ms": 3870,
+          "delta_ms": 17
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 7,
+          "delta_ms": 7
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 262,
+          "delta_ms": 255
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 266,
+          "delta_ms": 4
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2863,
+          "delta_ms": 2597
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 2921,
+          "delta_ms": 58
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3568,
+          "delta_ms": 647
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "total",
+          "elapsed_ms": 3584,
+          "delta_ms": 16
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 7,
+          "delta_ms": 7
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 267,
+          "delta_ms": 260
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 270,
+          "delta_ms": 3
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2878,
+          "delta_ms": 2608
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3110,
+          "delta_ms": 232
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3771,
+          "delta_ms": 661
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "total",
+          "elapsed_ms": 3788,
+          "delta_ms": 17
+        }
+      ],
+      "measurement": {
+        "budget_bytes": 268435456,
+        "libraw": "0.22.2-Release",
+        "logical_processors": 20,
+        "opencv_threads": 20,
+        "qt": "6.11.2",
+        "runs": [
+          {
+            "cache_bytes": 0,
+            "cache_entries": 0,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 7,
+              "hits": 4,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "prepared_before": {
+              "entries": 0,
+              "hits": 0,
+              "misses": 0,
+              "preparations": 0,
+              "retained_bytes": 0
+            },
+            "provider_published_ms": 4832.0015,
+            "ready_ms": 4832.0243,
+            "scene": "6V1A0081",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 0,
+            "cache_entries": 0,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 7,
+              "hits": 8,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "prepared_before": {
+              "entries": 7,
+              "hits": 4,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "provider_published_ms": 4452.8531,
+            "ready_ms": 4452.9138,
+            "scene": "6V1A0043",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 0,
+            "cache_entries": 0,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 7,
+              "hits": 12,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "prepared_before": {
+              "entries": 7,
+              "hits": 8,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "provider_published_ms": 4788.9328,
+            "ready_ms": 4788.9462,
+            "scene": "6V1A0081",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 0,
+            "cache_entries": 0,
+            "entry_bytes": 989661568,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 14,
+              "hits": 16,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "prepared_before": {
+              "entries": 7,
+              "hits": 12,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "provider_published_ms": 5022.8021,
+            "ready_ms": 5022.8137,
+            "scene": "7Y6A7599",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 0,
+            "cache_entries": 0,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 14,
+              "hits": 20,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "prepared_before": {
+              "entries": 14,
+              "hits": 16,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "provider_published_ms": 4829.2034,
+            "ready_ms": 4829.219,
+            "scene": "6V1A0081",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 0,
+            "cache_entries": 0,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 14,
+              "hits": 24,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "prepared_before": {
+              "entries": 14,
+              "hits": 20,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "provider_published_ms": 4432.0207,
+            "ready_ms": 4432.0342,
+            "scene": "6V1A0043",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 0,
+            "cache_entries": 0,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 14,
+              "hits": 28,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "prepared_before": {
+              "entries": 14,
+              "hits": 24,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "provider_published_ms": 4703.9598,
+            "ready_ms": 4704.0261,
+            "scene": "6V1A0081",
+            "timed_out": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "navigation-3221225472",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-windows-msvc\\Release\\openingLatencyProbe.exe",
+        "navigation",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\config\\raw-normalization.json",
+        "3221225472",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-latency-investigation\\latence-ouverture-v002-20261016T222908532928Z\\6V1A0081.CR3",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-latency-investigation\\latence-ouverture-v002-20261016T222908532928Z\\6V1A0043.CR3",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-latency-investigation\\latence-ouverture-v002-20261016T222908532928Z\\7Y6A7599.CR3",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp"
+      ],
+      "returncode": 0,
+      "stderr": "seturl\nIPR RAW timing | file=6V1A0081.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0081.CR3 | stage=find_profiles | elapsed_ms=112 | delta_ms=112\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack | elapsed_ms=357 | delta_ms=245\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0081.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0081.CR3 | stage=black_wb_calibration | elapsed_ms=361 | delta_ms=4\nIPR RAW timing | file=6V1A0081.CR3 | stage=unpack_and_process | elapsed_ms=2995 | delta_ms=2634\nIPR RAW timing | file=6V1A0081.CR3 | stage=make_memory_image | elapsed_ms=3256 | delta_ms=261\nIPR RAW timing | file=6V1A0081.CR3 | stage=color_and_lens_profiles | elapsed_ms=3916 | delta_ms=660\nIPR RAW timing | file=6V1A0081.CR3 | stage=total | elapsed_ms=3933 | delta_ms=17\nseturl\nIPR RAW timing | file=6V1A0043.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=6V1A0043.CR3 | stage=find_profiles | elapsed_ms=7 | delta_ms=7\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack | elapsed_ms=256 | delta_ms=249\nCR3 Canon : niveau noir estimÃ© depuis une zone noire Canon dÃ©clarÃ©e (R=512, G1=512, B=512, G2=512).\nIPR RAW normalization | 6V1A0043.CR3 | white= 13995 | baseline_ev= 0.26 | profile_compensation_ev= 0 | source= R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback\nIPR RAW timing | file=6V1A0043.CR3 | stage=black_wb_calibration | elapsed_ms=260 | delta_ms=4\nIPR RAW timing | file=6V1A0043.CR3 | stage=unpack_and_process | elapsed_ms=2878 | delta_ms=2618\nIPR RAW timing | file=6V1A0043.CR3 | stage=make_memory_image | elapsed_ms=2938 | delta_ms=60\nIPR RAW timing | file=6V1A0043.CR3 | stage=color_and_lens_profiles | elapsed_ms=3577 | delta_ms=639\nIPR RAW timing | file=6V1A0043.CR3 | stage=total | elapsed_ms=3593 | delta_ms=16\nseturl\nseturl\nIPR RAW timing | file=7Y6A7599.CR3 | stage=open_file | elapsed_ms=0 | delta_ms=0\nIPR RAW timing | file=7Y6A7599.CR3 | stage=find_profiles | elapsed_ms=102 | delta_ms=102\nQFSFileEngine::open: No file name specified\nIPR RAW timing | file=7Y6A7599.CR3 | stage=unpack | elapsed_ms=321 | delta_ms=219\nIPR RAW normalization | 7Y6A7599.CR3 | white= 16384 | baseline_ev= 0.35 | profile_compensation_ev= -0.02 | source= R7 14bit mode; all-ISO trials authorized 2026-10-16; previously measured ISO20000/32000 only\nIPR RAW timing | file=7Y6A7599.CR3 | stage=black_wb_calibration | elapsed_ms=323 | delta_ms=2\nIPR RAW timing | file=7Y6A7599.CR3 | stage=unpack_and_process | elapsed_ms=3011 | delta_ms=2688\nIPR RAW timing | file=7Y6A7599.CR3 | stage=make_memory_image | elapsed_ms=3071 | delta_ms=60\nIPR RAW timing | file=7Y6A7599.CR3 | stage=color_and_lens_profiles | elapsed_ms=3888 | delta_ms=817\nIPR RAW timing | file=7Y6A7599.CR3 | stage=total | elapsed_ms=3905 | delta_ms=17\nseturl\nseturl\nseturl\n",
+      "raw_timings": [
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 112,
+          "delta_ms": 112
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 357,
+          "delta_ms": 245
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 361,
+          "delta_ms": 4
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2995,
+          "delta_ms": 2634
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3256,
+          "delta_ms": 261
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3916,
+          "delta_ms": 660
+        },
+        {
+          "file": "6V1A0081.CR3",
+          "stage": "total",
+          "elapsed_ms": 3933,
+          "delta_ms": 17
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 7,
+          "delta_ms": 7
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 256,
+          "delta_ms": 249
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 260,
+          "delta_ms": 4
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 2878,
+          "delta_ms": 2618
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 2938,
+          "delta_ms": 60
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3577,
+          "delta_ms": 639
+        },
+        {
+          "file": "6V1A0043.CR3",
+          "stage": "total",
+          "elapsed_ms": 3593,
+          "delta_ms": 16
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "open_file",
+          "elapsed_ms": 0,
+          "delta_ms": 0
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "find_profiles",
+          "elapsed_ms": 102,
+          "delta_ms": 102
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "unpack",
+          "elapsed_ms": 321,
+          "delta_ms": 219
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "black_wb_calibration",
+          "elapsed_ms": 323,
+          "delta_ms": 2
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "unpack_and_process",
+          "elapsed_ms": 3011,
+          "delta_ms": 2688
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "make_memory_image",
+          "elapsed_ms": 3071,
+          "delta_ms": 60
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "color_and_lens_profiles",
+          "elapsed_ms": 3888,
+          "delta_ms": 817
+        },
+        {
+          "file": "7Y6A7599.CR3",
+          "stage": "total",
+          "elapsed_ms": 3905,
+          "delta_ms": 17
+        }
+      ],
+      "measurement": {
+        "budget_bytes": 3221225472,
+        "libraw": "0.22.2-Release",
+        "logical_processors": 20,
+        "opencv_threads": 20,
+        "qt": "6.11.2",
+        "runs": [
+          {
+            "cache_bytes": 0,
+            "cache_entries": 0,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 7,
+              "hits": 4,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "prepared_before": {
+              "entries": 0,
+              "hits": 0,
+              "misses": 0,
+              "preparations": 0,
+              "retained_bytes": 0
+            },
+            "provider_published_ms": 4832.5619,
+            "ready_ms": 4832.6326,
+            "scene": "6V1A0081",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 982192988,
+            "cache_entries": 1,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 7,
+              "hits": 8,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "prepared_before": {
+              "entries": 7,
+              "hits": 4,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "provider_published_ms": 4402.1795,
+            "ready_ms": 4402.1954,
+            "scene": "6V1A0043",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 1964385976,
+            "cache_entries": 2,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 7,
+              "hits": 9,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "prepared_before": {
+              "entries": 7,
+              "hits": 8,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "provider_published_ms": 778.93,
+            "ready_ms": 778.9438,
+            "scene": "6V1A0081",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 1964385976,
+            "cache_entries": 2,
+            "entry_bytes": 989661568,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 14,
+              "hits": 13,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "prepared_before": {
+              "entries": 7,
+              "hits": 9,
+              "misses": 7,
+              "preparations": 7,
+              "retained_bytes": 3662186
+            },
+            "provider_published_ms": 4948.9948,
+            "ready_ms": 4949.0068,
+            "scene": "7Y6A7599",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 2954047544,
+            "cache_entries": 3,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 14,
+              "hits": 14,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "prepared_before": {
+              "entries": 14,
+              "hits": 13,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "provider_published_ms": 806.0445,
+            "ready_ms": 806.0588,
+            "scene": "6V1A0081",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 2954047544,
+            "cache_entries": 3,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 14,
+              "hits": 15,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "prepared_before": {
+              "entries": 14,
+              "hits": 14,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "provider_published_ms": 700.8654,
+            "ready_ms": 700.8796,
+            "scene": "6V1A0043",
+            "timed_out": false
+          },
+          {
+            "cache_bytes": 2954047544,
+            "cache_entries": 3,
+            "entry_bytes": 982192988,
+            "has_image": true,
+            "prepared_after": {
+              "entries": 14,
+              "hits": 16,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "prepared_before": {
+              "entries": 14,
+              "hits": 15,
+              "misses": 14,
+              "preparations": 14,
+              "retained_bytes": 7323092
+            },
+            "provider_published_ms": 788.2147,
+            "ready_ms": 788.2352,
+            "scene": "6V1A0081",
+            "timed_out": false
+          }
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "First process run is NOT OS/disk cold; no filesystem-cache flush",
+    "Provider publication/CPU ready, not first QML/GPU frame or physical display",
+    "No folder scan, thumbnails, concurrent generator or export in this controlled probe",
+    "Three scenes only; no statistical confidence interval",
+    "3 GiB is a diagnostic control, NOT a proposed production default",
+    "Cache accounting is not process RSS; other running applications are uncontrolled"
+  ],
+  "original_inputs_unchanged": true
+}

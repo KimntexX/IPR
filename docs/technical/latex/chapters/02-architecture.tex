@@ -45,7 +45,7 @@ utilisateur. Le manifeste RAW local peut résider dans
 
 \section{Image de travail et ordonnancement}
 
-L'image de travail est une représentation RGBA à virgule flottante, \texttt{WorkingImage}. Elle évite les erreurs d'arrondi prématurées et autorise des valeurs supérieures à~1 avant le codage de sortie. Le moteur applique les corrections dans un ordre explicite :
+L'image de travail est une représentation RGBA à virgule flottante aux primaires Rec.2020, blanc D65 et transfert linéaire, \texttt{WorkingImage}. Elle évite les erreurs d'arrondi prématurées et conserve les coordonnées négatives et supérieures à~1 avant le codage de sortie. Le moteur applique les corrections dans un ordre explicite :
 
 \begin{enumerate}
   \item décodage RAW, normalisation contrôlée éventuelle, LCP puis DCP ;
@@ -60,8 +60,62 @@ L'image de travail est une représentation RGBA à virgule flottante, \texttt{Wo
 La WB caméra est appliquée au décodage ; les curseurs température/nuance sont
 une adaptation supplémentaire du RGB de travail. Ils ne doivent pas être
 confondus avec cette WB initiale. L'ordre ci-dessus décrit le chemin avec DCP ;
-sans DCP, le LCP agit sur le sRGB linéaire fourni par LibRaw. Les rendus sont
+sans DCP, le LCP agit sur le sRGB linéaire fourni par LibRaw avant son passage
+au master Rec.2020. Les retouches WB RAW disposant d'un contexte caméra sont
+rejouées avant le DCP, puis rejoignent le même master. Les rendus sont
 regroupés par temporisation pendant la manipulation d'un curseur.
+
+\section{Cible : espace de travail, affichage ICC et export}
+
+La directive du 15 octobre 2026, consignée dans l'ADR-0008, sépare le master
+retouché de ses destinations. Il s'agit d'une architecture cible, non d'une
+fonction ICC écran livrée : le master Rec.2020 flottant est implémenté,
+mais la sortie d'affichage actuelle reste sRGB.
+Le profil ICC associé à l'écran par le système devra piloter l'aperçu, avec
+une sélection manuelle dans de futurs paramètres avancés. Le profil écran
+ne remplacera ni le DCP caméra ni la calibration RAW.
+
+\begin{center}
+\begin{tabular}{ll}
+Source commune & RAW, calibration, DCP, image de travail et retouches \\
+Branche affichage & Conversion vers le profil ICC écran, puis aperçu \\
+Branche export & Conversion vers l'espace de sortie, puis fichier
+\end{tabular}
+\end{center}
+
+Un changement d'écran ne doit modifier que la transformation d'affichage
+et son cache, pas les pixels du master, les réglages ou l'export. La
+responsabilité de conversion entre IPR, Qt et l'OS devra éviter tout double
+traitement. Le multi-écran, le repli sans profil et l'épreuvage restent à spécifier.
+
+Après l'étude comparative du 15 octobre (rapport RAW/profils, paragraphes
+43--44), l'utilisateur choisit le master Rec.2020 linéaire D65 (ADR-0009).
+Le port local est réalisé après cette décision. Le contrat courant
+conserve le format RGBA flottant 32 bits et l'alpha droit, sans bornage global
+des valeurs signées ou supérieures à un. Les tables DCP restent dans leur
+domaine ProPhoto ; leur sortie est convertie vers le master.
+
+\begin{center}
+\begin{tabular}{ll}
+Entrée actuelle & RAW/DCP ou ICC source vers Rec.2020 linéaire \\
+Travail actuel & Réglages, proxy et cache dans le master \\
+Sortie actuelle & Conversion sRGB, gamut, encodage aperçu/export \\
+Évolution distincte & Conversion vers le profil ICC écran
+\end{tabular}
+\end{center}
+
+Le plan \texttt{docs/architecture/integration-rec2020.md} audite les poids
+de luminance, WB, HSV du mélangeur, inverse chromatique du débruitage,
+courbes par canal, histogramme, DNG et restauration. Les cinq lots couvrent
+référence, frontières, réglages, état/IHM puis qualification complète.
+Il ne suffit pas de changer une étiquette ICC ; les matrices convertissent
+les valeurs. Ce port ne récupère pas les hautes lumières déjà bornées dans
+les tables DCP et n'active pas un affichage HDR. Les performances natives
+et les détails pleine résolution restent à mesurer avant livraison. Les tests
+du contrat vérifient imports flottants/ICC, alpha, réglages, histogramme,
+DNG et restauration. Les neutres réels sont comparés au témoin natif conservé
+dans les preuves JSON du rapport RAW/profils ; cette mesure ne remplace pas
+la qualification visuelle de tous les curseurs.
 
 \section{Zoom et comparaison origine/actuel}
 
@@ -103,18 +157,22 @@ Les profils DCP (rendu couleur de boîtier) et LCP (corrections d'objectif) sont
 
 \texttt{RawDevelopmentModule.qml} permet de choisir un DCP compatible, de
 modifier la WB automatique et de cocher la normalisation expérimentale.
-\texttt{RawNormalization::resolve()} vérifie un manifeste borné, les SHA-256
-RAW/DCP, l'ISO, les noirs, le boîtier et la version LibRaw. Le gain d'exposition
+\texttt{RawNormalization::resolve()} vérifie un manifeste borné de schéma 4,
+le SHA-256 DCP, le mode des niveaux noirs/blancs, le boîtier et la version LibRaw.
+Il n'impose plus de liste de photos ni d'ISO. Le gain d'exposition
 de base et le blanc audités ne sont appliqués qu'après validation ; un refus
 conserve le chemin non calibré. Les clés du cache distinguent profil et manifeste.
 
 Camera Neutral est accepté visuellement sur le corpus local, sans parité
 Lightroom ni fidélité physique certifiée. Adobe Standard reste à traiter.
-La calibration actuelle concerne cinq fichiers exacts ; elle ne constitue
-pas une règle générale pour le R6 Mark III. Le sidecar v5 conserve le profil,
+Le corpus de référence comporte dix-neuf fichiers (seize R6 Mark III et trois R7).
+Depuis l'ADR-0011, l'utilisateur autorise les essais sur les autres photos et ISO
+de modes compatibles, sans déclaration de validation universelle. La calibration
+est demandée par défaut et la configuration est actualisée automatiquement ;
+une désactivation enregistrée est conservée. Le sidecar v6 conserve le profil,
 le manifeste, leurs SHA-256, l'activation et la version du moteur/LibRaw.
-Ces choix et la WB automatique sont restaurés avant décodage. Le LCP reste
-automatique et n'est pas encore figé dans la recette.
+Ces choix et la WB automatique sont restaurés avant décodage. La recette
+conserve aussi le LCP, son empreinte et les activations optiques indépendantes.
 
 Le changement de DCP est une retouche : un tampon caméra pré-DCP actif
 (384 Mio maximum, hors LRU) permet d'appliquer le nouveau profil sans
@@ -122,3 +180,177 @@ réexécuter LibRaw. L'aperçu, le zoom et les réglages restent disponibles.
 La WB RAW, la calibration ou l'absence de tampon nécessitent encore un
 décodage. Une erreur conserve la base précédente. Les réinitialisations des
 retouches et du profil/calibration sont distinctes.
+
+Une compensation de rendu liée au couple boîtier/DCP est séparée de la baseline
+source (ADR-0010). Le bloc \texttt{profile\_rendering} du manifeste sélectionne
+marque, modèle, SHA-256 du DCP et baseline attendue, après sélection d'une règle
+de mode capteur. Les noirs restent propres à la photo. Avant les tables et la courbe DCP,
+\[
+g=2^{E_{\mathrm{DCP}}+E_{\mathrm{source}}+\Delta E_{\mathrm{profil}}}.
+\]
+Pour le R7 Camera Neutral compatible, $E_{\mathrm{source}}=0{,}35$ EV et
+$\Delta E_{\mathrm{profil}}=-0{,}02$ EV ; les R6 gardent une compensation nulle.
+Le contexte DCP transporte cette valeur lors des retouches WB, sans accumulation
+ni nouveau décodage dû au seul coefficient. Le manifeste et l'identité moteur
+participent au cache et à la restauration ; la sélection d'un profil différent
+ne conserve pas la compensation de l'ancien profil.
+
+Un futur DCP IPR peut embarquer son offset avec le tag natif
+\texttt{BaselineExposureOffset} (51109), déjà lu par le moteur. Ne pas dupliquer
+le même offset dans le profil et la configuration externe, ni modifier les
+profils Adobe. Les paramètres supplémentaires de notre bibliothèque de profils
+restent à concevoir ; le calibrage des niveaux RAW reste distinct du rendu.
+
+\section{Transition : formats et caractérisations extensibles}
+
+Le registre \texttt{RawDecoder::registerFormatHandler()} associe des extensions
+à une fonction de décodage et à \texttt{FormatOptions} : lecteur de vignette
+facultatif, identifiant et version du décodeur. Les adaptateurs sont enregistrés
+avant la découverte des dossiers. Les callbacks s'exécutent hors verrou ;
+un format inconnu n'est jamais transmis automatiquement à LibRaw. Le master
+de sortie doit rester un RGBA float fini Rec.2020 linéaire D65. Ce contrat
+permet de nouveaux formats, mais n'implémente ni leur codec ni un chargeur de DLL.
+
+\texttt{CameraCharacterization} lit le catalogue JSON et sélectionne une règle
+par extension, décodeur/version, marque/modèle et niveaux noirs/blancs natifs.
+Il ne lit ni RAW ni DCP. Le cache des documents parsés est indexé par contenu,
+protégé par mutex et borné à huit catalogues ; chaque fichier fait au plus
+1 Mio et contient au plus 256 règles. Les octets sont relus pour détecter une
+mise à jour. Les contextes de sélection restent propres aux images.
+
+L'ADR-0012 retient DCP et JSON complémentaires : matrices, tables et courbe
+dans le DCP ; conditions et provenance de caractérisation dans le catalogue
+\texttt{config/raw-normalization.json}. SQLite pourra indexer une bibliothèque
+plus grande, mais n'est pas une dépendance nouvelle ni la source de vérité.
+Les preuves d'analyse JSON horodatées restent distinctes de la configuration.
+
+Le deuxième lot introduit \texttt{CameraSignal::Source}, contrat RGB caméra
+linéaire float32, fini et déjà dématricé. Le décodeur a appliqué la WB et les
+corrections optiques demandées. L'identité du boîtier, la température source
+facultative et le neutre caméra normalisé à G=1 accompagnent ce tampon. Un
+neutre absent est représenté explicitement par trois zéros. Il ne s'agit ni
+du master Rec.2020 ni d'une mosaïque CFA ; les coordonnées sRGB sont refusées.
+
+\texttt{CameraSignal::render()} consomme le tampon pour le conserver comme
+source immuable des retouches WB et travaille sur une copie unique. Il vérifie
+la compatibilité DCP, applique le gain composé et le profil une fois, puis
+produit le master Rec.2020 RGBA et son contexte. Le décodage LibRaw avec DCP
+et le changement rapide de profil utilisent ce même chemin, sans duplication
+du rendu. Le repli matrice LibRaw sans DCP reste distinct et inchangé.
+
+La sélection des modes et le contrat caméra sont séparés du rendu, mais la
+séparation physique complète reste à réaliser : les règles empiriques R6/R7 gardent leur condition
+de profil validé. Ne pas extrapoler leurs niveaux à un boîtier inconnu ni
+confondre une fixture synthétique d'extension avec une validation constructeur.
+
+\section{Frontière d'import commune aux formats}
+
+L'ADR-0013 formalise une seule frontière avant les retouches :
+\texttt{ImageImport::Result}. Les RAW enregistrés sont traités par
+\texttt{RawDecoder}, avec DCP ou matrice du décodeur ; JPG, PNG et TIFF sont
+lus par Qt, orientés puis convertis depuis leur espace ICC vers Rec.2020.
+Sans espace source valide, sRGB est supposé et un avertissement est conservé.
+Un JPEG ne traverse pas le développement caméra. Un échec RAW ne déclenche
+pas la lecture silencieuse de son aperçu comme image de remplacement.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=11mm and 14mm]
+  \node[service] (raw) {Adaptateur RAW\\DCP ou matrice};
+  \node[service, right=of raw] (raster) {Lecteur raster Qt\\ICC / sRGB supposé};
+  \node[component, below=of raw, xshift=24mm] (import) {\texttt{ImageImport::Result}\\validation commune};
+  \node[component, below=of import] (edit) {Master Rec.2020\\proxy, retouches, sortie};
+  \draw[flow] (raw) -- (import);
+  \draw[flow] (raster) -- (import);
+  \draw[flow] (import) -- (edit);
+\end{tikzpicture}
+\caption{Des décodeurs spécialisés, une frontière et un moteur aval communs.}
+\end{figure}
+
+Le résultat contient le master pleine résolution, \texttt{ImageMetadata}
+indépendant du namespace RAW, la provenance de couleur/décodeur, les
+avertissements, l'erreur et les capacités disponibles. Un tampon caméra
+facultatif accompagne les RAW éligibles au changement rapide de profil.
+L'éditeur ne lit plus les métadonnées raster lui-même ; le générateur utilise
+le même import. L'origine du format ne remplace pas les capacités effectives.
+
+\texttt{ImageImport::complete()} vérifie le type RGBA float32, les dimensions,
+Rec.2020 linéaire D65, les valeurs finies et l'alpha droit dans $[0,1]$.
+Les RGB peuvent rester négatifs ou supérieurs à~1. Ce contrôle ne convertit,
+ne redimensionne et ne clone pas le master ; son coût est linéaire dans les
+pixels. Un résultat erroné ne conserve ni image utilisable ni capacités actives.
+Retour du cache et retouche rapide de profil passent le même contrôle.
+
+Les tests couvrent JPEG, PNG et TIFF avec/sans espace source reconnu, alpha et
+précision 16~bits PNG, métadonnées texte et orientation EXIF JPEG. Le DNG
+linéaire exporté est réimporté par LibRaw via cette frontière. Cela ne certifie
+pas tous les DNG, TIFF float/multipages ou fichiers HDR. Le contrat complet et
+son diagramme sont dans \texttt{docs/architecture/import-images.md}.
+
+\section{Cache partagé des profils préparés}
+
+Depuis le 17 octobre 2026 (ADR-0014), \texttt{PreparedProfileCache} conserve
+les DCP/LCP parsés et immuables dans un magasin commun. La borne initiale est
+de 64 Mio et 16 entrées, avec éviction LRU. Le coût comptable tient compte des
+capacités des vecteurs/chaînes et d'une provision d'objets auxiliaires ; il
+ne s'agit pas d'une mesure exacte du RSS du processus. Une référence active
+reste valide après éviction et un profil dépassant le budget est rendu sans
+être retenu. Les lecteurs actifs et les octets en cours de lecture sont hors
+de cette borne ; les images restent gérées par leurs propres mécanismes.
+
+La clé combine type/révision du parseur et SHA-256 des octets. Le fichier est
+relu et haché à chaque demande, même sur un hit : une modification de même
+taille/date est donc détectée. Le cache évite le reparsage, pas toutes les E/S.
+Les erreurs ne sont pas mémorisées. Les octets hachés sont ceux qui sont parsés.
+
+Un mutex protège les index, le LRU et les compteurs ; préparation et rendu
+s'exécutent hors de ce verrou. Une préparation en cours pour la même clé est
+partagée entre demandeurs, tandis que des clés différentes peuvent avancer
+en parallèle. Un vidage change la génération pour empêcher une ancienne tâche
+de repeupler le magasin. Les objets sont publiés via des références constantes.
+
+WB, gains, interpolation des illuminants, paramètres de capture et cartes
+optiques restent locaux à chaque appel. Le cache ne mémorise ni un rendu
+d'image ni un coefficient R7 à réutiliser sur un R6. Les tests comparent les
+rendus chauds/sans rétention, les modifications de profil et des lectures
+concurrentes DCP/LCP. Aucun pourcentage d'accélération globale n'est déduit de
+ces seuls contrôles ; les compteurs sont conservés dans les preuves de rejeu RAW.
+
+\section{Contrôleur mémoire et préchargement des images}
+
+L'ADR-0015 confie le LRU à \texttt{ImageCacheController}, propriétaire unique
+sur un thread dédié. L'IHM envoie des commandes asynchrones ; les travailleurs
+de décodage, rendu et export attendent une admission via \texttt{QFuture},
+sans bloquer le thread graphique. Un échantillonnage natif intervient toutes
+les 500 ms. Le seuil global de protection est de 80\,\%, avec reprise des
+préchargements sous 75\,\%. Une application externe peut dépasser cette cible :
+il ne s'agit pas d'un plafond matériel garanti au système.
+
+La rétention automatique est bornée à $\min(0{,}25 T, 8\,\mathrm{Gio})$, où
+$T$ est la RAM effective. Chaque tâche réserve son pic estimé avant de
+calculer ; les réservations simultanées s'additionnent. Une marge de 20\,\%
+de RAM, augmentée de $\max(128\,\mathrm{Mio},0{,}02T)$, reste disponible.
+Le probe d'en-tête estime le pic initial à $96N+128\,\mathrm{Mio}$ pour
+$N$ pixels. Cette provision, à affiner par mesure, ne borne pas strictement
+les allocations internes d'une bibliothèque tierce. Sans mesure système
+valide, le contrôleur refuse les nouvelles tâches contrôlées.
+
+Un hit transfère les buffers immuables du cache vers l'éditeur. L'image
+affichée et les références de rendu/export survivent à l'éviction ; le
+contrôleur relit la mémoire disponible sans supposer une libération immédiate.
+L'image précédente reste visible jusqu'au remplacement réussi, et sa recette
+est restaurée si la nouvelle ouverture est refusée.
+
+Un pool séparé n'exécute qu'un préchargement à la fois : voisin suivant puis
+précédent après 250 ms de repos du rendu. La sélection du fichier anticipé
+peut promouvoir ce même calcul si sa clé de développement reste valide.
+Les résultats obsolètes sont abandonnés ; LibRaw reçoit une demande
+d'annulation coopérative. Aucune retouche ni écriture de sidecar ne se fait
+pendant un simple préchargement. Le contrat des formats expose un probe
+optionnel de dimensions, exécuté hors du verrou du registre, pour les futurs
+adaptateurs sans dépendance du contrôleur à LibRaw.
+
+Les capacités détaillées et limites des samplers Windows, Linux et macOS
+sont documentées dans \texttt{docs/architecture/controle-memoire-images.md}.
+Le générateur hors ligne conserve son chemin statique ; il ne dispose pas
+du cache de navigation. Les constantes de rendu Rec.2020/RAW/DCP sont inchangées.

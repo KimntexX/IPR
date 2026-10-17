@@ -37,7 +37,15 @@ set(IPR_ENGINE_SOURCES
     src/app/UiPreferences.cpp
     src/cache/DecodedImageCache.h
     src/cache/DecodedImageCache.cpp
+    src/cache/SystemMemory.h
+    src/cache/SystemMemory.cpp
+    src/cache/ImageCacheController.h
+    src/cache/ImageCacheController.cpp
     src/core/ColorPipeline.h
+    src/core/ImageMetadata.h
+    src/core/ImageImporter.h
+    src/core/ImageImporter.cpp
+    src/core/WorkingColorSpace.h
     src/core/ColorPipeline.cpp
     src/core/ColorMixer.h
     src/core/ColorMixer.cpp
@@ -48,6 +56,8 @@ set(IPR_ENGINE_SOURCES
     src/editor/imageeditor.cpp
     src/profiles/CameraProfileEngine.h
     src/profiles/CameraProfileEngine.cpp
+    src/profiles/PreparedProfileCache.h
+    src/profiles/PreparedProfileCache.cpp
     src/providers/imageprovider.h
     src/providers/imageprovider.cpp
     src/providers/ThumbnailProvider.h
@@ -58,6 +68,10 @@ set(IPR_ENGINE_SOURCES
     src/raw/RawDecoder.cpp
     src/raw/RawNormalization.h
     src/raw/RawNormalization.cpp
+    src/raw/CameraCharacterization.h
+    src/raw/CameraCharacterization.cpp
+    src/raw/CameraSignal.h
+    src/raw/CameraSignal.cpp
 )
 
 set(IPR_QML_FILES
@@ -86,7 +100,7 @@ endforeach()
 add_library(iprEngine STATIC ${IPR_ENGINE_SOURCES})
 qt_add_resources(iprEngine ipr_ui_defaults
     PREFIX "/"
-    FILES config/ipr-ui.ini
+    FILES config/ipr-ui.ini config/raw-normalization.json
 )
 target_include_directories(iprEngine PUBLIC ${IPR_INCLUDE_DIRECTORIES})
 target_link_libraries(iprEngine
@@ -157,7 +171,7 @@ else()
     set(IPR_DATA_DESTINATION "${CMAKE_INSTALL_DATADIR}/IPR")
 endif()
 install(TARGETS iprGenerateTests RUNTIME DESTINATION "${IPR_TOOL_DESTINATION}")
-install(FILES config/ipr-ui.ini DESTINATION "${IPR_DATA_DESTINATION}/config")
+install(FILES config/ipr-ui.ini config/raw-normalization.json DESTINATION "${IPR_DATA_DESTINATION}/config")
 install(FILES packaging/profiles-index.json DESTINATION "${IPR_DATA_DESTINATION}/profiles" RENAME index.json)
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/dcp")
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/lcp")
@@ -183,16 +197,29 @@ if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY
     target_link_libraries(tonalBaseProbe PRIVATE iprEngine)
     add_executable(rawNormalizationCorpusProbe EXCLUDE_FROM_ALL tests/raw_normalization_corpus_probe.cpp)
     target_link_libraries(rawNormalizationCorpusProbe PRIVATE iprEngine)
+    add_executable(openingLatencyProbe EXCLUDE_FROM_ALL tests/opening_latency_probe.cpp)
+    target_link_libraries(openingLatencyProbe PRIVATE iprEngine)
     add_executable(wbCameraProbe EXCLUDE_FROM_ALL tests/wb_camera_probe.cpp)
     target_link_libraries(wbCameraProbe PRIVATE iprEngine)
     add_executable(rawOpeningProbe EXCLUDE_FROM_ALL tests/raw_opening_probe.cpp)
     target_link_libraries(rawOpeningProbe PRIVATE iprEngine)
+    add_executable(rawOpeningTrials EXCLUDE_FROM_ALL tests/raw_opening_trials.cpp)
+    target_link_libraries(rawOpeningTrials PRIVATE iprEngine)
+    add_executable(rawOpeningSplineTests tests/raw_opening_trials.cpp)
+    target_link_libraries(rawOpeningSplineTests PRIVATE iprEngine)
+    add_test(NAME rawOpeningSplineTests COMMAND rawOpeningSplineTests --self-test)
+    set_tests_properties(rawOpeningSplineTests PROPERTIES LABELS "unit;raw;diagnostic")
     add_executable(rawOpeningProbeTests tests/raw_opening_probe_test.cpp)
     target_link_libraries(rawOpeningProbeTests PRIVATE iprEngine)
     add_test(NAME rawOpeningProbeTests COMMAND rawOpeningProbeTests)
     set_tests_properties(rawOpeningProbeTests PROPERTIES LABELS "unit;raw;diagnostic")
 endif()
 if(BUILD_TESTING)
+    # Pure numerical experiment: no image corpus, Qt plugin or production renderer.
+    add_executable(rawHighlightHeadroomTests tests/raw_highlight_headroom_test.cpp)
+    target_compile_features(rawHighlightHeadroomTests PRIVATE cxx_std_17)
+    add_test(NAME rawHighlightHeadroomTests COMMAND rawHighlightHeadroomTests)
+    set_tests_properties(rawHighlightHeadroomTests PROPERTIES LABELS "unit;raw;diagnostic" TIMEOUT 10)
     function(ipr_add_test target source)
         add_executable(${target} ${source})
         target_link_libraries(${target} PRIVATE iprEngine)
@@ -200,6 +227,8 @@ if(BUILD_TESTING)
     endfunction()
 
     ipr_add_test(colorPipelineTests tests/color_pipeline_test.cpp)
+    ipr_add_test(rec2020PipelineTests tests/rec2020_pipeline_test.cpp)
+    set_tests_properties(rec2020PipelineTests PROPERTIES LABELS "unit;pipeline;colour" TIMEOUT 60)
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
@@ -242,11 +271,21 @@ if(BUILD_TESTING)
     set_tests_properties(uiPreferencesTests uiPreferencesQmlTests PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(rawDecoderTests tests/raw_decoder_test.cpp)
+    ipr_add_test(imageImportTests tests/image_import_test.cpp)
+    set_tests_properties(imageImportTests PROPERTIES LABELS "unit;import;pipeline")
     ipr_add_test(rawNormalizationTests tests/raw_normalization_test.cpp)
     ipr_add_test(editorRawDevelopmentTests tests/editor_raw_development_test.cpp)
     set_tests_properties(editorRawDevelopmentTests PROPERTIES LABELS "unit;raw;settings" TIMEOUT 60)
     ipr_add_test(rawBlackLevelEstimatorTests tests/raw_black_level_estimator_test.cpp)
     ipr_add_test(cameraProfileEngineTests tests/camera_profile_engine_test.cpp)
+    ipr_add_test(preparedProfileCacheTests tests/prepared_profile_cache_test.cpp)
+    ipr_add_test(imageCacheControllerTests tests/image_cache_controller_test.cpp)
+    ipr_add_test(editorImageCacheTests tests/editor_image_cache_test.cpp)
+    set_tests_properties(editorImageCacheTests PROPERTIES LABELS "unit;cache;memory;editor;prefetch" TIMEOUT 30)
+    set_tests_properties(imageCacheControllerTests PROPERTIES LABELS "unit;cache;memory;thread" TIMEOUT 20)
+    ipr_add_test(thumbnailProviderTests tests/thumbnail_provider_test.cpp)
+    set_tests_properties(thumbnailProviderTests PROPERTIES LABELS "unit;thumbnail;thread" TIMEOUT 20)
+    set_tests_properties(preparedProfileCacheTests PROPERTIES LABELS "unit;profiles;cache" TIMEOUT 30)
     set_tests_properties(colorPipelineTests PROPERTIES LABELS "unit;pipeline")
     set_tests_properties(detailProcessingTests PROPERTIES LABELS "unit;pipeline;detail;noise")
     set_tests_properties(imageExportTests PROPERTIES LABELS "unit;export;pipeline")

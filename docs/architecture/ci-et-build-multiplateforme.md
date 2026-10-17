@@ -28,6 +28,83 @@ ne remplace pas une recette sur les deux systèmes utilisateurs.
 [Plateformes Qt](https://doc.qt.io/qt-6.8/supported-platforms.html),
 [runners GitHub](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
 
+## Orientation de compatibilité Qt ≥ 6.8 — 15 octobre 2026
+
+Orientation retenue à la suite de l'étude Linux/macOS et de l'accord utilisateur :
+préparer Qt **6.8 minimum** comme cible de distribution, avec deux modes distincts.
+Cette trace documentaire **ne modifie pas** le minimum CMake actuel (Qt 6.4),
+les conteneurs CI, les workflows ni les paquets déjà produits. Leur alignement
+devra faire l'objet d'une intégration et de tests dédiés sur `patch_ci_cd`.
+
+- **Système** : toutes les bibliothèques Qt nécessaires à IPR doivent être
+  disponibles dans une version cohérente ≥ 6.8 dans les dépôts retenus.
+- **Standalone** : embarquer Qt et les dépendances applicatives permet de
+  viser aussi des distributions dont le Qt système est plus ancien, sans le
+  remplacer. Cela ne rend pas le paquet indépendant de la glibc, des pilotes
+  graphiques et des dépendances de la plateforme.
+
+### Cibles Linux à qualifier
+
+Instantané documentaire au 15 octobre 2026, pas un engagement sur les versions
+futures des dépôts ni une validation d'exécution d'IPR :
+
+| Famille / cible | Qt des dépôts observé | Stratégie proposée |
+| --- | --- | --- |
+| Ubuntu 24.04 LTS | 6.4.2 | Standalone Qt ≥ 6.8 ; pas de paquet exigeant Qt ≥ 6.8 système standard |
+| Ubuntu 26.04 LTS | 6.10.2 | Paquet système et qualification standalone |
+| Linux Mint 22.x | Base Ubuntu 24.04 | Standalone ; qualification propre à Mint requise |
+| Debian 12 | 6.4.2 | Standalone à construire sur une base compatible ; le paquet système actuel reste distinct de la future cible ≥ 6.8 |
+| Debian 13 | 6.8.2 | Cible `.deb` système à prévoir pour le nouveau minimum |
+| Fedora 43/44 | 6.10/6.11 | Cibles `.rpm` système ; qualifier chaque version encore maintenue au moment de livrer |
+| Arch Linux | 6.12 au moment du relevé | Paquet système, avec suivi régulier des mises à jour rolling release |
+
+Qt 6.8 référence aussi RHEL 8.10/9.6, openSUSE 15.5 et SLES 15 SP5 dans
+sa matrice de configurations. Ce sont des références du framework, pas des
+promesses de maintenance de ces OS par IPR, ni la preuve qu'ils distribuent
+Qt 6.8 dans leurs dépôts. Les paquets actuels openSUSE n'ont pas été confirmés
+dans cette étude ; cette famille reste à inventorier avant choix d'une cible.
+
+Priorité Linux proposée : x86_64, Ubuntu 24.04/Debian 12 en standalone,
+Debian 13/Ubuntu 26.04/Fedora récent avec bibliothèques système, puis Arch.
+Vérifier séparément X11 et Wayland, les plugins QML/image et les autres
+dépendances. Construire sur une base compatible avec le plus ancien système
+annoncé ; ne pas déduire la compatibilité d'un paquet de sa seule extension
+`.deb`, `.rpm` ou de la version Qt. ARM64 Linux reste une qualification distincte.
+
+### Cible Apple/macOS à qualifier
+
+Qt **6.8** indique macOS **12 Monterey minimum**, avec Intel x86_64 et Apple
+Silicon arm64 ; sa construction demande Xcode 15 / SDK macOS 14 ou supérieur.
+Apple Silicon est la priorité proposée pour IPR. Le build Intel existant
+n'est ni supprimé ni déclaré validé par cette étude.
+
+Pour une application `.app` autonome, Qt et toutes les dépendances doivent
+être construits pour le minimum macOS annoncé, avec un deployment target
+cohérent, puis testés, signés et notarisés selon le circuit de livraison.
+Les bouteilles Homebrew actuelles peuvent imposer un minimum supérieur.
+**macOS 12 est donc un plancher théorique avec Qt 6.8, pas une garantie IPR.**
+Si les dépendances ne permettent pas de le tenir, retenir explicitement un
+minimum plus récent après qualification.
+
+Ne pas confondre « minimum Qt 6.8 » et « prendre automatiquement le dernier Qt » :
+Qt 6.10 relève par exemple le minimum macOS à 13. Épingler le SDK de livraison
+et tester la version minimale de l'OS ; les runners récents seuls ne suffisent pas.
+
+### Sources de l'étude
+
+Consultées le 15 octobre 2026 ; références techniques et catalogues officiels :
+
+- [Qt 6.8, plateformes supportées](https://doc.qt.io/qt-6.8/supported-platforms.html),
+  [macOS Qt 6.8](https://doc.qt.io/qt-6.8/macos.html) et
+  [macOS Qt 6.10](https://doc.qt.io/qt-6.10/macos.html).
+- [Ubuntu 24.04, qt6-base-dev](https://packages.ubuntu.com/noble/qt6-base-dev) et
+  [Ubuntu 26.04, paquet source Qt Base](https://packages.ubuntu.com/en/source/resolute/s390x/qt6-base).
+- [Linux Mint 22, base Ubuntu 24.04](https://www.linuxmint.com/rel_wilma_whatsnew.php).
+- [Debian 12](https://packages.debian.org/bookworm/qt6-base-dev) et
+  [Debian 13](https://packages.debian.org/trixie/qt6-base-dev).
+- [Fedora, Qt Base](https://packages.fedoraproject.org/pkgs/qt6-qtbase/qt6-qtbase/) et
+  [Arch, Qt Base](https://archlinux.org/packages/extra/x86_64/qt6-base/).
+
 ## Exécution
 
 Depuis la racine du projet, Python 3.10+ et CMake/Ninja ou MSVC installés :

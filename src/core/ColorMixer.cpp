@@ -1,4 +1,5 @@
 #include "ColorMixer.h"
+#include "WorkingColorSpace.h"
 
 #include <algorithm>
 #include <cmath>
@@ -6,7 +7,7 @@
 namespace {
 float luminance(const cv::Vec3f &rgb)
 {
-    return 0.2126f * rgb[0] + 0.7152f * rgb[1] + 0.0722f * rgb[2];
+    return WorkingColor::luminance(rgb);
 }
 }
 

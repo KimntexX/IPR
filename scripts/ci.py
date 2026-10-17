@@ -145,7 +145,9 @@ def smoke(stage, mode, env):
 
 def assert_public(stage):
     private = [str(p) for p in stage.rglob('*') if p.suffix.lower() in ('.dcp', '.lcp', '.cr2', '.cr3')]
-    private += [str(p) for p in stage.rglob('raw-normalization.json')]
+    audited = ROOT / 'config/raw-normalization.json'
+    private += [str(p) for p in stage.rglob('raw-normalization.json')
+                if not audited.is_file() or p.read_bytes() != audited.read_bytes()]
     if private: raise ValueError('Private profiles/calibration in public package: ' + ', '.join(private))
 
 

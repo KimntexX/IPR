@@ -49,6 +49,21 @@ class OpeningTests(unittest.TestCase):
         self.assertEqual(len(result['comparisons']),1)
         self.assertFalse(result['comparisons'][0]['WB_equivalence_verified'])
         self.assertEqual(result['comparisons'][0]['LR_WB'],'Custom')
+        self.assertEqual(result['camera_cohorts']['unknown']['scenes'],1)
+
+    def test_multiple_references_need_explicit_choice(self):
+        probes,inventory=fixture()
+        def row(name):
+            return dict(scene='S',file=name,status='measured',metadata=dict(sha256=name,
+                        xmp_settings=dict(CameraProfile='Camera Neutral',WhiteBalance='As Shot')),
+                        distribution=dict(whole_region=dict(mean_Y=.3)))
+        inventory['neutral_exports']=[row('old.tif'),row('new.tif')]
+        self.assertEqual(len(summarize(probes,inventory)['missing_LR']),1)
+        result=summarize(probes,inventory,{'S':'new.tif'})
+        self.assertEqual(result['comparisons'][0]['LR_file'],'new.tif')
+        self.assertEqual(len(result['comparisons'][0]['reference_candidates']),2)
+        with self.assertRaisesRegex(ValueError,'not uniquely eligible'):
+            summarize(probes,inventory,{'S':'absent.tif'})
 
 
 if __name__=='__main__':

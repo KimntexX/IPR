@@ -1,4 +1,5 @@
 #include "CameraProfileEngine.h"
+#include "CameraSignal.h"
 #include "imageeditor.h"
 
 #include <QCoreApplication>
@@ -10,6 +11,8 @@
 #include <cmath>
 #include <cstring>
 #include <iostream>
+#include <limits>
+#include <future>
 
 // Exercise the exact renderer/proxy used by preview and export through the
 // existing test-generator friend; no extra production API is introduced.
@@ -233,6 +236,97 @@ int main(int argc, char **argv)
     const QString dcpPath = QDir(dcpDirectory).filePath("R6.dcp");
     if (!check(writeFile(dcpPath, makeDcp()), "synthetic DCP should be written"))
         return 1;
+    {
+        CameraProfileEngine::configurePreparedProfileCache(64ULL*1024*1024,16);
+        const cv::Mat input(2,2,CV_32FC3,cv::Scalar(.15f,.2f,.05f));
+        QString error;
+        auto before=input.clone(),warm=input.clone();
+        if(!CameraProfileEngine::dcpMatchesCamera(dcpPath,"Canon","EOS R6 Mark III") ||
+            !CameraProfileEngine::applyDcp(dcpPath,before,5200,&error) ||
+            !CameraProfileEngine::applyDcp(dcpPath,warm,5200,&error))return 1;
+        auto stats=CameraProfileEngine::preparedProfileCacheStats();
+        if(!check(stats.preparations==1&&stats.hits>=2&&cv::norm(before,warm,cv::NORM_INF)==0,
+            "matching and rendering reuse one immutable DCP preparation"))return 1;
+        if(!writeFile(dcpPath,makeDcp(false,false,false,false,0,0,45.f)))return 1;
+        auto changed=input.clone();
+        if(!CameraProfileEngine::applyDcp(dcpPath,changed,5200,&error))return 1;
+        if(!check(cv::norm(before,changed,cv::NORM_INF)>1e-6&&
+            CameraProfileEngine::preparedProfileCacheStats().preparations==2,"modified DCP bytes change output immediately"))return 1;
+        auto r7Bytes=makeDcp(false,false,false,false,0,0,20.f);
+        const QByteArray restriction("Canon EOS R6 Mark III");
+        r7Bytes.replace(restriction,QByteArray("Canon EOS R7").leftJustified(restriction.size(),' '));
+        const auto r7Path=temporary.filePath("synthetic-r7.dcp");
+        if(!writeFile(r7Path,r7Bytes)||!writeFile(dcpPath,makeDcp()))return 1;
+        auto r7Expected=input.clone();
+        if(!CameraProfileEngine::dcpMatchesCamera(r7Path,"Canon","EOS R7")||
+            CameraProfileEngine::dcpMatchesCamera(r7Path,"Canon","EOS R6 Mark III")||
+            !CameraProfileEngine::applyDcp(r7Path,r7Expected,5200,&error))return 1;
+        std::vector<std::future<bool>> readers;
+        for(int i=0;i<8;++i)readers.push_back(std::async(std::launch::async,[&,i]{
+            for(int n=0;n<10;++n){auto rgb=input.clone();
+                if(!CameraProfileEngine::applyDcp(i%2?dcpPath:r7Path,rgb,5200,nullptr)||
+                    cv::norm(rgb,i%2?before:r7Expected,cv::NORM_INF)!=0)return false;
+            }return true;
+        }));
+        for(auto &reader:readers)if(!check(reader.get(),"R6/R7 concurrent rendering never mutates shared prepared data"))return 1;
+        CameraProfileEngine::configurePreparedProfileCache(0,16);
+        auto uncached=input.clone();
+        if(!CameraProfileEngine::applyDcp(dcpPath,uncached,5200,&error)||
+            !check(cv::norm(uncached,before,cv::NORM_INF)==0,"cache does not change DCP arithmetic"))return 1;
+        CameraProfileEngine::configurePreparedProfileCache(64ULL*1024*1024,16);
+    }
+    {
+        CameraSignal::Source signal;
+        signal.rgb = cv::Mat(2, 3, CV_32FC3, cv::Scalar(.2f,.3f,.4f)).clone();
+        signal.cameraMake = "Canon";
+        signal.cameraModel = "EOS R6 Mark III";
+        signal.whiteBalanceKelvin = 5200.;
+        signal.cameraNeutral = {.5, 1, .8};
+        signal.whiteBalanceApplied = true;
+        QString error;
+        const auto original = signal.rgb.clone();
+        const auto ownedPixels = signal.rgb.data;
+        auto expected = original.clone();
+        CameraProfileEngine::DcpRenderOptions options;
+        options.cameraBaselineExposureEv = .26;
+        options.profileExposureCompensationEv = -.02;
+        if (!CameraProfileEngine::applyDcp(dcpPath, expected, 5200, &error, options)) return 1;
+        auto result = CameraSignal::render(std::move(signal), dcpPath, options, &error);
+        if (!check(!result.isNull() && result.dcpContext && signal.rgb.empty() &&
+                   result.dcpContext->cameraRgb.data == ownedPixels &&
+                   cv::norm(result.dcpContext->cameraRgb, original, cv::NORM_INF) == 0,
+                   "camera signal transfers immutable storage without an extra source clone")) return 1;
+        std::vector<cv::Mat> channels;
+        cv::split(expected, channels);
+        channels.push_back(cv::Mat(expected.size(), CV_32FC1, cv::Scalar(1.f)));
+        cv::Mat expectedRgba;cv::merge(channels, expectedRgba);
+        if (!check(cv::norm(result.linearRgba, expectedRgba, cv::NORM_INF) == 0 &&
+                   result.colorSpace == ColorPipeline::workingColorSpace() &&
+                   result.referenceWhiteBalanceKelvin == 5200. &&
+                   result.dcpContext->options.profileExposureCompensationEv == -.02,
+                   "shared rendering matches the DCP exactly, including composed gain once")) return 1;
+        signal.rgb = original.clone();
+        signal.coordinates = CameraSignal::Coordinates::LinearSrgb;
+        if (!check(!CameraSignal::validate(signal, &error), "sRGB cannot masquerade as camera RGB")) return 1;
+        signal.coordinates = CameraSignal::Coordinates::CameraRgb;
+        signal.whiteBalanceApplied = false;
+        if (!check(!CameraSignal::validate(signal), "unapplied WB is outside the contract")) return 1;
+        signal.whiteBalanceApplied = true;
+        signal.cameraModel = "Other camera";
+        if (!check(CameraSignal::render(std::move(signal), dcpPath, {}, &error).isNull(),
+                   "a signal cannot use another camera's DCP")) return 1;
+        signal.cameraModel = "EOS R6 Mark III";
+        signal.cameraNeutral = {1, 0, 1};
+        if (!check(!CameraSignal::validate(signal), "partially missing camera neutral is rejected")) return 1;
+        signal.cameraNeutral = {0, 0, 0};
+        signal.whiteBalanceKelvin.reset();
+        if (!check(CameraSignal::validate(signal), "unavailable neutral/temperature is explicit")) return 1;
+        signal.rgb.at<cv::Vec3f>(0,0)[0] = -1.f;
+        signal.rgb.at<cv::Vec3f>(0,0)[1] = 2.f;
+        if (!check(CameraSignal::validate(signal), "signed and extended signal is not clipped at the contract")) return 1;
+        signal.rgb.at<cv::Vec3f>(0,0)[0] = std::numeric_limits<float>::quiet_NaN();
+        if (!check(!CameraSignal::validate(signal), "nonfinite signal is rejected before DCP")) return 1;
+    }
 
     const QString wbPath = QDir(dcpDirectory).filePath("WB.dcp");
     if (!check(writeFile(wbPath, makeDcp(true, false, false, false, 0, 0,
@@ -243,6 +337,7 @@ int main(int argc, char **argv)
     wb.cameraNeutral = cv::Vec3d(.95, 1, 1.08);
     wb.cameraRgb = cv::Mat(2, 3, CV_32FC3, cv::Scalar(.18, .15, .22));
     wb.options.cameraBaselineExposureEv = -.25;
+    wb.options.profileExposureCompensationEv = -.02;
     const cv::Mat untouched = wb.cameraRgb.clone();
     QString wbError;
     cv::Vec3d gains;
@@ -531,10 +626,7 @@ int main(int argc, char **argv)
         .7976749f, .1351917f, .0313534f,
         .2880402f, .7118741f, .0000857f,
         0.f, 0.f, .82521f);
-    const cv::Matx33f xyzToSrgb(
-        3.1338551f, -1.6168649f, -.4907204f,
-        -.9787684f, 1.9161415f, .0334540f,
-        .0719453f, -.2289914f, 1.4052427f);
+    const cv::Matx33f xyzToWorking(WorkingColor::fromXyzD50());
     const QString curveDcp = QDir(dcpDirectory).filePath("monotone-curve.dcp");
     if (!check(writeFile(curveDcp, makeDcp(false, false, false, false,
                          0, 0, 0.f, 0.f, 1, 1.f, true)), "tone profile written"))
@@ -545,22 +637,22 @@ int main(int argc, char **argv)
     for (const auto &triplet : triplets) {
         cv::Mat current(1,1,CV_32FC3);
         current.at<cv::Vec3f>(0,0) = proPhotoToXyz * triplet;
-        cv::Mat legacy = current.clone();
+        cv::Mat channelCurve = current.clone();
         cv::Vec3f expected;
         for (int c=0;c<3;++c)
             expected[c] = .16f + (triplet[c]-.1f)/.6f*.72f;
         if (!check(CameraProfileEngine::applyDcp(curveDcp,current,5500.,&error,stable) &&
-                   cv::norm(current.at<cv::Vec3f>(0,0) - xyzToSrgb*(proPhotoToXyz*expected)) < 1e-5,
+                   cv::norm(current.at<cv::Vec3f>(0,0) - xyzToWorking*(proPhotoToXyz*expected)) < 1e-5,
                    "curve preserves relative middle channel for all permutations")) return 1;
-        if (!check(CameraProfileEngine::applyDcp(curveDcp,legacy,5500.,&error) &&
-                   cv::norm(current-legacy) > .01, "legacy option remains available")) return 1;
+        if (!check(CameraProfileEngine::applyDcp(curveDcp,channelCurve,5500.,&error) &&
+                   cv::norm(current-channelCurve) > .01, "hue-preserving curve differs from per-channel evaluation")) return 1;
     }
     for (float value : {0.f, .25f, 1.f}) {
         cv::Mat gray(1,1,CV_32FC3);
         gray.at<cv::Vec3f>(0,0) = proPhotoToXyz*cv::Vec3f(value,value,value);
         const float expected = value <= .5f ? value*1.6f : .8f+(value-.5f)*.4f;
         if (!check(CameraProfileEngine::applyDcp(curveDcp,gray,5500.,&error,stable) &&
-                   cv::norm(gray.at<cv::Vec3f>(0,0) - xyzToSrgb*(proPhotoToXyz*cv::Vec3f(expected,expected,expected))) < 1e-5,
+                   cv::norm(gray.at<cv::Vec3f>(0,0) - xyzToWorking*(proPhotoToXyz*cv::Vec3f(expected,expected,expected))) < 1e-5,
                    "equal channels, black and white are finite and correct")) return 1;
     }
     const QString descendingDcp = QDir(dcpDirectory).filePath("descending-curve.dcp");
@@ -584,6 +676,22 @@ int main(int argc, char **argv)
     if (!check(!CameraProfileEngine::applyDcp(dcpPath,invalidExposure,5500.,&error,{5.0,true}) &&
                cv::norm(invalidExposure-exposureA) == 0,
                "invalid exposure rejected before pixel mutation")) return 1;
+    CameraProfileEngine::DcpRenderOptions compensated;
+    compensated.cameraBaselineExposureEv = .35;
+    compensated.profileExposureCompensationEv = -.02;
+    auto equivalent = compensated;
+    equivalent.cameraBaselineExposureEv = .33;
+    equivalent.profileExposureCompensationEv = 0;
+    cv::Mat profileGain(2,3,CV_32FC3,cv::Scalar(.03f,.1f,.2f)), referenceGain = profileGain.clone();
+    if (!check(CameraProfileEngine::applyDcp(wbPath,profileGain,5200.,&error,compensated) &&
+        CameraProfileEngine::applyDcp(wbPath,referenceGain,5200.,&error,equivalent) &&
+        cv::norm(profileGain-referenceGain,cv::NORM_INF) < 1e-6,
+        "profile compensation composes once with source baseline before nonlinear DCP")) return 1;
+    compensated.profileExposureCompensationEv = 3;
+    referenceGain = profileGain.clone();
+    if (!check(!CameraProfileEngine::applyDcp(wbPath,profileGain,5200.,&error,compensated) &&
+        cv::norm(profileGain-referenceGain,cv::NORM_INF) == 0,
+        "invalid profile compensation rejected before pixel mutation")) return 1;
     const QString rotationDcp = QDir(dcpDirectory).filePath("prophoto-rotation.dcp");
     if (!check(writeFile(rotationDcp, makeDcp(false, false, false, false,
                           0, 0, 120.f)), "ProPhoto hue test profile should be written"))
@@ -592,7 +700,7 @@ int main(int argc, char **argv)
     rotated.at<cv::Vec3f>(0, 0) = proPhotoToXyz * cv::Vec3f(.4f, .2f, .1f);
     if (!check(CameraProfileEngine::applyDcp(rotationDcp, rotated, 5500., &error) &&
                cv::norm(rotated.at<cv::Vec3f>(0, 0) -
-                   xyzToSrgb * (proPhotoToXyz * cv::Vec3f(.08f, .32f, .16f))) < 1e-5,
+                   xyzToWorking * (proPhotoToXyz * cv::Vec3f(.08f, .32f, .16f))) < 1e-5,
                "DCP hue rotation must be evaluated in ProPhoto, not sRGB"))
         return 1;
 
@@ -605,7 +713,7 @@ int main(int argc, char **argv)
     const float encodedV = 1.055f * std::pow(.4f, 1.f / 2.4f) - .055f;
     const float expectedV = std::pow((encodedV * .8f + .055f) / 1.055f, 2.4f);
     if (!check(CameraProfileEngine::applyDcp(encoded3dDcp, encodedColor, 5500., &error) &&
-               cv::norm(encodedColor.at<cv::Vec3f>(0, 0) - xyzToSrgb *
+               cv::norm(encodedColor.at<cv::Vec3f>(0, 0) - xyzToWorking *
                    (proPhotoToXyz * cv::Vec3f(expectedV, expectedV * .5f, expectedV * .25f))) < 1e-5,
                "sRGB encoding must modify only HSV Value, preserving hue/saturation"))
         return 1;
@@ -680,9 +788,27 @@ int main(int argc, char **argv)
     capture.focalLengthMm = 50.0;
     capture.focusDistanceM = 2.0;
     capture.aperture = 4.0;
+    CameraProfileEngine::clearPreparedProfileCache();
+    const auto lcpInput=image.clone();
     if (!check(CameraProfileEngine::applyLcp(lcpPath, image, capture, &error),
                "LCP multi-setting geometry, CA and vignette should apply"))
         return 1;
+    auto lcpWarm=lcpInput.clone();
+    if(!CameraProfileEngine::applyLcp(lcpPath,lcpWarm,capture,&error)||
+        !check(cv::norm(image,lcpWarm,cv::NORM_INF)==0 &&
+            CameraProfileEngine::preparedProfileCacheStats().preparations==1 &&
+            CameraProfileEngine::preparedProfileCacheStats().hits==1,
+            "LCP parsing is shared without changing the resampling result"))return 1;
+    auto otherCapture=capture;otherCapture.focalLengthMm=24.;otherCapture.aperture=2.8;
+    auto otherExpected=lcpInput.clone();
+    if(!CameraProfileEngine::applyLcp(lcpPath,otherExpected,otherCapture,&error))return 1;
+    std::vector<std::future<bool>> lcpReaders;
+    for(int i=0;i<8;++i)lcpReaders.push_back(std::async(std::launch::async,[&,i]{
+        auto rgb=lcpInput.clone();
+        return CameraProfileEngine::applyLcp(lcpPath,rgb,i%2?capture:otherCapture,nullptr) &&
+            cv::norm(rgb,i%2?image:otherExpected,cv::NORM_INF)==0;
+    }));
+    for(auto &reader:lcpReaders)if(!check(reader.get(),"LCP capture settings stay local to concurrent calls"))return 1;
     if (!check(image.type() == CV_32FC3 &&
                    cv::norm(image.at<cv::Vec3f>(8, 8) - before) > 0.001,
                "LCP remapping should resample image pixels"))

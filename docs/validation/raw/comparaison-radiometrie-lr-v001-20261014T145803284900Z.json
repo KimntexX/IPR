@@ -1,0 +1,1210 @@
+{
+  "campaign_id": "comparaison-radiometrie-lr-v001-20261014T145803284900Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "group": "base-colorimetrique",
+  "measured_at_utc": "2026-10-14T14:58:03.284900+00:00",
+  "inputs": [
+    {
+      "file": "docs\\validation\\raw\\essais-radiometriques-ouverture-v001-20261014T145324616293Z.json",
+      "sha256": "2d7cde9c135b415a37c7dae2cda9bf467a00943c60299d4285f476a40c8e4e2f"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0007-LR-CameraNeutral-AsShot.tif",
+      "sha256": "6c156e965070407b6e92c8ed0a0042620fb25fedece72f00574357b9ebd44052"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0037.tif",
+      "sha256": "eba925e4e093b7b4bd103f1d1d56d3138c1cd10c39d99622b20dce54f8b4f6d9"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0043-LR-CameraNeutral-AsShot.tif",
+      "sha256": "3ac72d4e7a686991887c1967666330ddd4d4df5ac51bf497a69bc0e8a065d92f"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0054.tif",
+      "sha256": "7635bbd273b6ed841bef3767a9bae023364e3bae80d07bdb98164b40cc2a97b7"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0081.tif",
+      "sha256": "f929c174518a2e600c4d13621a694dd9b92d1fbf7606ad2e7a84586dff545c29"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0182.tif",
+      "sha256": "39bdb5d8ee26ced0b81ccfa390cb38d90ca04b8574e54c3d9e2c871f47958bb5"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0318.tif",
+      "sha256": "a59eead8a47a380a58d4cc8e7a26217b5568173581fc2dcd0f7d9fb5d7545fb6"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0327.tif",
+      "sha256": "61700354ab4c0315dd2ffd0a8393bd08afed4017ac91e06083ee3d6ec9ad2447"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0524.tif",
+      "sha256": "5dab5846c75ef47908f75c931c952a88974be0af68c9cce2c9f82a31dea62367"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0830.tif",
+      "sha256": "027c81bf2e09ed2e75380974085b26fc03aba3d185e9fa24cb1688f1db9a5873"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9421-LR-CameraNeutral-AsShot.tif",
+      "sha256": "83e40090df955909ca6b13c64ead2a0c22bbf84b0e0c0a7f38826b0df51d254b"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9608.tif",
+      "sha256": "94f856f1cb3320c4839b1558fd4ac3cb3fbdde445117a89374d138d99793b842"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9616.tif",
+      "sha256": "4018924384675f88ca4d61925e3ae2eb3fb7ca23e7b8c92be1d66ebfb93afa82"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9890.tif",
+      "sha256": "3ce6d7e165b492992e021de72c319c37d5d07507288e79485faa726d881fbe3a"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9940.tif",
+      "sha256": "b72e5f2012e2f2fccb9bba1bcd18fb8f8d912b8d9385c18ca2697ed19e55b38c"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9950-LR-CameraNeutral-AsShot.tif",
+      "sha256": "5c72536d95449d7996176b0c5b9ed0574045e1bb99e2f49b998003b53efb4435"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\7Y6A7003.tif",
+      "sha256": "0ccd70adeb6a1a6248a56c9108f7817e254b9ea795d3b9131e4c4ca30a4c2371"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\7Y6A7298.tif",
+      "sha256": "42f0e0a65b32569eb79fa317850c2abd292492bbc984442b36ee1c046af6499b"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\7Y6A7599.tif",
+      "sha256": "e3a857153c571bc7d3ad40299a927cdf4ebf4b5daab22c0c24792c6588b8096c"
+    }
+  ],
+  "analyser_sha256": "a8615a145801a4716e242ef0c8cc5af54b4c6fc5a01fa33f9188abf8ec8acbf6",
+  "native_reader_sha256": "731cda0574c8c29d8fcbb3a4672bcd2b14f3836bd5e25e4784b24d76fb233d0c",
+  "records": [
+    {
+      "scene": "6V1A0007",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.29349543221795427,
+        "Y_p05_p50_p95": [
+          0.04737029261435459,
+          0.264452474279061,
+          0.5368140005191793
+        ],
+        "black_percent": 0.0,
+        "encoded_clipped_percent": 0.0,
+        "central_ROI_G_over_R": 1.2710785091418835,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -23.310379952351767,
+          "central_ROI_G_over_R_difference": 0.023275984128255045
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -7.556991477967944,
+          "central_ROI_G_over_R_difference": 0.015204528388206073
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -7.709424751220018,
+          "central_ROI_G_over_R_difference": 0.007567306420304343
+        },
+        "hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -23.408247716773733,
+          "central_ROI_G_over_R_difference": 0.020678864547475806
+        },
+        "white_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -16.502360909688473,
+          "central_ROI_G_over_R_difference": 0.020762160246946992
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": 0.1418939422674237,
+          "central_ROI_G_over_R_difference": 0.010491954319215013
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -0.03644034856213896,
+          "central_ROI_G_over_R_difference": 0.002444980325691848
+        },
+        "white_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -16.62496226411787,
+          "central_ROI_G_over_R_difference": 0.014861196348854966
+        }
+      }
+    },
+    {
+      "scene": "6V1A0037",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.04528149943745051,
+        "Y_p05_p50_p95": [
+          0.0004903392203395676,
+          0.005570498529364465,
+          0.23255985647925442
+        ],
+        "black_percent": 14.668450257629805,
+        "encoded_clipped_percent": 0.00931430836305985,
+        "central_ROI_G_over_R": 1.7662560536082048,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.0089179548156956,
+          "mean_Y_relative_percent": -30.831465132446933,
+          "central_ROI_G_over_R_difference": 0.05960013440183887
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": -0.006738010305192232,
+          "mean_Y_relative_percent": -15.296098947353077,
+          "central_ROI_G_over_R_difference": 0.034025403602033544
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": -0.006936187078874357,
+          "mean_Y_relative_percent": -15.387834396558898,
+          "central_ROI_G_over_R_difference": 0.008264493937262696
+        },
+        "hue": {
+          "clipping_percentage_points": -0.0089179548156956,
+          "mean_Y_relative_percent": -30.93906612990126,
+          "central_ROI_G_over_R_difference": 0.02202526413709971
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.008521601268331352,
+          "mean_Y_relative_percent": -16.88189132153527,
+          "central_ROI_G_over_R_difference": 0.03643694280600451
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.02061038446294094,
+          "mean_Y_relative_percent": 1.3956179596694707,
+          "central_ROI_G_over_R_difference": 0.02725307434460955
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": -0.0021799445105033692,
+          "mean_Y_relative_percent": 1.2751117251331934,
+          "central_ROI_G_over_R_difference": 0.01252571806829339
+        },
+        "white_hue": {
+          "clipping_percentage_points": -0.008521601268331352,
+          "mean_Y_relative_percent": -16.986501361085505,
+          "central_ROI_G_over_R_difference": 0.009207705617423567
+        }
+      }
+    },
+    {
+      "scene": "6V1A0043",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.020342404798719682,
+        "Y_p05_p50_p95": [
+          0.0004539285013254799,
+          0.00125639526630182,
+          0.12358119165546429
+        ],
+        "black_percent": 33.89417360285375,
+        "encoded_clipped_percent": 0.0005945303210463733,
+        "central_ROI_G_over_R": 0.6018682881183333,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.0005945303210463733,
+          "mean_Y_relative_percent": -38.35376486145377,
+          "central_ROI_G_over_R_difference": -0.00893160558841044
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": -0.0005945303210463733,
+          "mean_Y_relative_percent": -20.52780316421553,
+          "central_ROI_G_over_R_difference": -0.0049994736351639535
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": -0.0005945303210463733,
+          "mean_Y_relative_percent": -19.97830521190518,
+          "central_ROI_G_over_R_difference": -0.00331406160390757
+        },
+        "hue": {
+          "clipping_percentage_points": -0.0005945303210463733,
+          "mean_Y_relative_percent": -37.941474640799065,
+          "central_ROI_G_over_R_difference": -0.007159119404446246
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.0005945303210463733,
+          "mean_Y_relative_percent": -22.39578910243013,
+          "central_ROI_G_over_R_difference": -0.0053606354139756895
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.0003963535473642489,
+          "mean_Y_relative_percent": -0.6175544816767298,
+          "central_ROI_G_over_R_difference": -0.0012988815444215929
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": -0.00019817677368212438,
+          "mean_Y_relative_percent": -0.011748046881221441,
+          "central_ROI_G_over_R_difference": 0.0003304263744020597
+        },
+        "white_hue": {
+          "clipping_percentage_points": -0.0005945303210463733,
+          "mean_Y_relative_percent": -21.857229477492524,
+          "central_ROI_G_over_R_difference": -0.003668367670530248
+        }
+      }
+    },
+    {
+      "scene": "6V1A0054",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.021299699102692058,
+        "Y_p05_p50_p95": [
+          0.0001478103185474356,
+          0.000649461292750949,
+          0.15386008762550296
+        ],
+        "black_percent": 69.41101862861673,
+        "encoded_clipped_percent": 0.0,
+        "central_ROI_G_over_R": 1.1397573152140164,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -34.13150814731177,
+          "central_ROI_G_over_R_difference": 0.02579030038305441
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -17.480442570574095,
+          "central_ROI_G_over_R_difference": 0.02063809003267081
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -17.43044169814747,
+          "central_ROI_G_over_R_difference": 0.0028686969583995303
+        },
+        "hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -34.08927411624716,
+          "central_ROI_G_over_R_difference": 0.010933588581119702
+        },
+        "white_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -19.171382831663976,
+          "central_ROI_G_over_R_difference": 0.020958276807984344
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -0.010003836787497722,
+          "central_ROI_G_over_R_difference": 0.016485693645778232
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": 0.039389839952130856,
+          "central_ROI_G_over_R_difference": -0.004857399257075956
+        },
+        "white_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -19.12249732269028,
+          "central_ROI_G_over_R_difference": 0.00349100634428412
+        }
+      }
+    },
+    {
+      "scene": "6V1A0081",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.031000410298702197,
+        "Y_p05_p50_p95": [
+          0.0006532788827183545,
+          0.005971903531451477,
+          0.12930599068796092
+        ],
+        "black_percent": 10.801823226317877,
+        "encoded_clipped_percent": 0.0,
+        "central_ROI_G_over_R": 0.15444952894787897,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -47.59901260698373,
+          "central_ROI_G_over_R_difference": -0.07458905254552574
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -28.08261816201635,
+          "central_ROI_G_over_R_difference": -0.06040536401704244
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -22.839887726587815,
+          "central_ROI_G_over_R_difference": -0.00868007249319197
+        },
+        "hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -42.93137978242441,
+          "central_ROI_G_over_R_difference": -0.01584401417904499
+        },
+        "white_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -30.162656205495907,
+          "central_ROI_G_over_R_difference": -0.061909111262020367
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -5.493895851249963,
+          "central_ROI_G_over_R_difference": -0.0436508365444863
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -0.07603875820886286,
+          "central_ROI_G_over_R_difference": 0.00028850330823132486
+        },
+        "white_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -24.96217146453055,
+          "central_ROI_G_over_R_difference": -0.009461906845082385
+        }
+      }
+    },
+    {
+      "scene": "6V1A0182",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.03119182133436991,
+        "Y_p05_p50_p95": [
+          0.0033109169699133234,
+          0.02905809242030132,
+          0.06180056960619769
+        ],
+        "black_percent": 1.0013872374157748,
+        "encoded_clipped_percent": 0.0007927070947284979,
+        "central_ROI_G_over_R": 1.1744342416309714,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.0005945303210463734,
+          "mean_Y_relative_percent": -49.20144459173883,
+          "central_ROI_G_over_R_difference": -0.025186931652169342
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": -0.00039635354736424893,
+          "mean_Y_relative_percent": -24.27092813287154,
+          "central_ROI_G_over_R_difference": -0.03695263036892338
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": -0.00019817677368212455,
+          "mean_Y_relative_percent": -23.962893837955267,
+          "central_ROI_G_over_R_difference": -0.03540258192053414
+        },
+        "hue": {
+          "clipping_percentage_points": -0.0005945303210463734,
+          "mean_Y_relative_percent": -48.82923864461834,
+          "central_ROI_G_over_R_difference": -0.025365597337035917
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.0007927070947284979,
+          "mean_Y_relative_percent": -30.29260050550322,
+          "central_ROI_G_over_R_difference": -0.03430328064353261
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": -0.00019817677368212455,
+          "mean_Y_relative_percent": 1.4101058000942635,
+          "central_ROI_G_over_R_difference": -0.04720274236898159
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": 1.7245192023668254,
+          "central_ROI_G_over_R_difference": -0.05130668859721732
+        },
+        "white_hue": {
+          "clipping_percentage_points": -0.0007927070947284979,
+          "mean_Y_relative_percent": -29.963332221492543,
+          "central_ROI_G_over_R_difference": -0.031951758127726215
+        }
+      }
+    },
+    {
+      "scene": "6V1A0318",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.18877100559399845,
+        "Y_p05_p50_p95": [
+          0.0033717800437233925,
+          0.10480501302371445,
+          0.618594649985844
+        ],
+        "black_percent": 3.01307966706302,
+        "encoded_clipped_percent": 0.0,
+        "central_ROI_G_over_R": 1.2731280806670373,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -30.68111131903237,
+          "central_ROI_G_over_R_difference": 0.02569383252268942
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -15.288333067855442,
+          "central_ROI_G_over_R_difference": 0.025674850582428244
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -15.566066664560518,
+          "central_ROI_G_over_R_difference": 0.01269747030220203
+        },
+        "hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -30.811940021181773,
+          "central_ROI_G_over_R_difference": 0.02602834289043421
+        },
+        "white_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -16.84655027470828,
+          "central_ROI_G_over_R_difference": 0.02514865493207452
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": 0.40956770243505414,
+          "central_ROI_G_over_R_difference": 0.01979092818026018
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -0.04733310512986533,
+          "central_ROI_G_over_R_difference": 0.001229812688330556
+        },
+        "white_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -17.104677301071646,
+          "central_ROI_G_over_R_difference": 0.013879187971163276
+        }
+      }
+    },
+    {
+      "scene": "6V1A0327",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.0913173953512835,
+        "Y_p05_p50_p95": [
+          0.0006382364633461051,
+          0.039405827042037184,
+          0.4091161988077905
+        ],
+        "black_percent": 6.672413793103448,
+        "encoded_clipped_percent": 0.0,
+        "central_ROI_G_over_R": 1.167710936922608,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -35.6345311457487,
+          "central_ROI_G_over_R_difference": -0.019568981550807107
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -17.82716243603205,
+          "central_ROI_G_over_R_difference": -0.02099497778821413
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -17.54359077436107,
+          "central_ROI_G_over_R_difference": 0.00584024454743215
+        },
+        "hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -35.24256943146919,
+          "central_ROI_G_over_R_difference": 0.014758495781804548
+        },
+        "white_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -20.9649693973174,
+          "central_ROI_G_over_R_difference": -0.020822120275505007
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -0.06530612230691846,
+          "central_ROI_G_over_R_difference": -0.015196903637186177
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": 3.117935387653148e-05,
+          "central_ROI_G_over_R_difference": 0.0015973321209701297
+        },
+        "white_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -20.649391546720043,
+          "central_ROI_G_over_R_difference": 0.006950525161666166
+        }
+      }
+    },
+    {
+      "scene": "6V1A0524",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.546939099994184,
+        "Y_p05_p50_p95": [
+          0.0019859907534106633,
+          0.8416780324745309,
+          0.9385829268008752
+        ],
+        "black_percent": 0.93004359889021,
+        "encoded_clipped_percent": 0.015061434799841459,
+        "central_ROI_G_over_R": 0.9719226207386559,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.015061434799841459,
+          "mean_Y_relative_percent": -6.494061761907877,
+          "central_ROI_G_over_R_difference": 0.014511968209402815
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.16428854538248117,
+          "mean_Y_relative_percent": 1.385147930827202,
+          "central_ROI_G_over_R_difference": -0.0004697775987462238
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.19579865239793898,
+          "mean_Y_relative_percent": 1.3143932467317265,
+          "central_ROI_G_over_R_difference": -0.0023328695879453187
+        },
+        "hue": {
+          "clipping_percentage_points": -0.015061434799841459,
+          "mean_Y_relative_percent": -6.5683060084149485,
+          "central_ROI_G_over_R_difference": 0.01359186007127322
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.015061434799841459,
+          "mean_Y_relative_percent": -5.769352583682097,
+          "central_ROI_G_over_R_difference": 0.013095988366061073
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.2800237812128419,
+          "mean_Y_relative_percent": 2.0140435073205065,
+          "central_ROI_G_over_R_difference": -0.0013052393024395315
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.32996432818073723,
+          "mean_Y_relative_percent": 1.9386116073601745,
+          "central_ROI_G_over_R_difference": -0.0034906504430284313
+        },
+        "white_hue": {
+          "clipping_percentage_points": -0.015061434799841459,
+          "mean_Y_relative_percent": -5.843147862799036,
+          "central_ROI_G_over_R_difference": 0.012129545261118535
+        }
+      }
+    },
+    {
+      "scene": "6V1A0830",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.18383768317494303,
+        "Y_p05_p50_p95": [
+          0.0009636851813402477,
+          0.04501675896126306,
+          0.9995835010044656
+        ],
+        "black_percent": 5.328577090764963,
+        "encoded_clipped_percent": 0.6268331351565596,
+        "central_ROI_G_over_R": 0.7322770622321649,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.6254458977407847,
+          "mean_Y_relative_percent": -16.71331159455346,
+          "central_ROI_G_over_R_difference": -0.04263330128815801
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": -0.3343242172017439,
+          "mean_Y_relative_percent": -7.830722071586427,
+          "central_ROI_G_over_R_difference": -0.022278013455861112
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": -0.27824019024970265,
+          "mean_Y_relative_percent": -7.82137427632229,
+          "central_ROI_G_over_R_difference": -0.02230367854202875
+        },
+        "hue": {
+          "clipping_percentage_points": -0.6264367816091954,
+          "mean_Y_relative_percent": -16.691220094963278,
+          "central_ROI_G_over_R_difference": -0.04002505428779435
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.6254458977407847,
+          "mean_Y_relative_percent": -9.999662753078663,
+          "central_ROI_G_over_R_difference": -0.02664593174783536
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": -0.36722156163297653,
+          "mean_Y_relative_percent": 0.02903093996675654,
+          "central_ROI_G_over_R_difference": -0.004481686294091847
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": -0.31688466111771696,
+          "mean_Y_relative_percent": 0.02776751966846458,
+          "central_ROI_G_over_R_difference": -0.006961356343556435
+        },
+        "white_hue": {
+          "clipping_percentage_points": -0.6260404280618311,
+          "mean_Y_relative_percent": -9.979953046982848,
+          "central_ROI_G_over_R_difference": -0.02607174117940747
+        }
+      }
+    },
+    {
+      "scene": "6V1A9421",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.20929783101956276,
+        "Y_p05_p50_p95": [
+          0.0038887222080737824,
+          0.1489756458461561,
+          0.536204676652774
+        ],
+        "black_percent": 1.0007927070947285,
+        "encoded_clipped_percent": 0.03904082441537852,
+        "central_ROI_G_over_R": 0.6803381241436375,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.03745541022592152,
+          "mean_Y_relative_percent": -31.828054013985096,
+          "central_ROI_G_over_R_difference": -0.05082465564465044
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.004359889021006737,
+          "mean_Y_relative_percent": -14.738581095366444,
+          "central_ROI_G_over_R_difference": -0.018028001652837466
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": -0.015259611573523582,
+          "mean_Y_relative_percent": -15.03533152754567,
+          "central_ROI_G_over_R_difference": -0.020542496797673837
+        },
+        "hue": {
+          "clipping_percentage_points": -0.03388822829964328,
+          "mean_Y_relative_percent": -31.9912824053445,
+          "central_ROI_G_over_R_difference": -0.04381945191009551
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.008719778042013477,
+          "mean_Y_relative_percent": -18.55804202044442,
+          "central_ROI_G_over_R_difference": -0.023868181415924727
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.04934601664684899,
+          "mean_Y_relative_percent": 0.42469869816905703,
+          "central_ROI_G_over_R_difference": 0.0021257284951506916
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.0027744748315497447,
+          "mean_Y_relative_percent": 0.07226629786842853,
+          "central_ROI_G_over_R_difference": -0.001665070209195041
+        },
+        "white_hue": {
+          "clipping_percentage_points": -0.020610384462940945,
+          "mean_Y_relative_percent": -18.83153915751058,
+          "central_ROI_G_over_R_difference": -0.025372787785128748
+        }
+      }
+    },
+    {
+      "scene": "6V1A9608",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.16795054236039225,
+        "Y_p05_p50_p95": [
+          0.014194521904435313,
+          0.17091791581033333,
+          0.3177900441639799
+        ],
+        "black_percent": 0.1702338485929449,
+        "encoded_clipped_percent": 0.0,
+        "central_ROI_G_over_R": 1.047767799796384,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -38.78454626120686,
+          "central_ROI_G_over_R_difference": -0.1113524445336258
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -18.62621304190514,
+          "central_ROI_G_over_R_difference": -0.10186941000923289
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -18.327825311137836,
+          "central_ROI_G_over_R_difference": -0.07406927348281622
+        },
+        "hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -37.96372992316947,
+          "central_ROI_G_over_R_difference": -0.0794550203898361
+        },
+        "white_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -23.215843583460405,
+          "central_ROI_G_over_R_difference": -0.10416252438239604
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": 0.2371674933938861,
+          "central_ROI_G_over_R_difference": -0.0862789810535951
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.00019817677368212446,
+          "mean_Y_relative_percent": -0.05343176977277153,
+          "central_ROI_G_over_R_difference": -0.06496168478102304
+        },
+        "white_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -22.78816907064849,
+          "central_ROI_G_over_R_difference": -0.07529276399048901
+        }
+      }
+    },
+    {
+      "scene": "6V1A9616",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.12775537095799314,
+        "Y_p05_p50_p95": [
+          0.0024393015178677184,
+          0.12187825748690602,
+          0.2567758745857019
+        ],
+        "black_percent": 0.678359096313912,
+        "encoded_clipped_percent": 0.00019817677368212446,
+        "central_ROI_G_over_R": 0.35781329249572014,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.00019817677368212446,
+          "mean_Y_relative_percent": -40.76440542830761,
+          "central_ROI_G_over_R_difference": -0.047281059656779756
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.00019817677368212446,
+          "mean_Y_relative_percent": -20.047493509903326,
+          "central_ROI_G_over_R_difference": -0.026312651905668727
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.00019817677368212446,
+          "mean_Y_relative_percent": -19.179577323716444,
+          "central_ROI_G_over_R_difference": -0.004060231969732653
+        },
+        "hue": {
+          "clipping_percentage_points": -0.00019817677368212446,
+          "mean_Y_relative_percent": -39.66197264614231,
+          "central_ROI_G_over_R_difference": -0.011114998030772205
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.00019817677368212446,
+          "mean_Y_relative_percent": -24.786412261440983,
+          "central_ROI_G_over_R_difference": -0.02903169272519024
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -0.5866764614994247,
+          "central_ROI_G_over_R_difference": -0.017038851040444114
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -0.022518103938640177,
+          "central_ROI_G_over_R_difference": 0.0005866714462695044
+        },
+        "white_hue": {
+          "clipping_percentage_points": -0.00019817677368212446,
+          "mean_Y_relative_percent": -23.90960477173515,
+          "central_ROI_G_over_R_difference": -0.005177226452375838
+        }
+      }
+    },
+    {
+      "scene": "6V1A9890",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.12232348527720945,
+        "Y_p05_p50_p95": [
+          0.0003732699257197428,
+          0.06616076741649995,
+          0.3658442595022919
+        ],
+        "black_percent": 8.747720967102655,
+        "encoded_clipped_percent": 0.01109789932619897,
+        "central_ROI_G_over_R": 0.6930990317214679,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.010899722552516845,
+          "mean_Y_relative_percent": -34.84226458227187,
+          "central_ROI_G_over_R_difference": -0.08300804997447031
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": -0.00574712643678161,
+          "mean_Y_relative_percent": -15.729578324715154,
+          "central_ROI_G_over_R_difference": -0.06995115832807064
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": -0.005350772889417361,
+          "mean_Y_relative_percent": -15.73722158268528,
+          "central_ROI_G_over_R_difference": -0.071199823046466
+        },
+        "hue": {
+          "clipping_percentage_points": -0.01070154577883472,
+          "mean_Y_relative_percent": -34.63826503420613,
+          "central_ROI_G_over_R_difference": -0.0806809897365528
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.00792707094728498,
+          "mean_Y_relative_percent": -20.04951476345348,
+          "central_ROI_G_over_R_difference": -0.07252872820353073
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.007728894173602853,
+          "mean_Y_relative_percent": 1.684331896019331,
+          "central_ROI_G_over_R_difference": -0.06241871107573771
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.01208878319460959,
+          "mean_Y_relative_percent": 1.4726812857821292,
+          "central_ROI_G_over_R_difference": -0.0649928238708316
+        },
+        "white_hue": {
+          "clipping_percentage_points": -0.0073325406262386055,
+          "mean_Y_relative_percent": -20.007756522604048,
+          "central_ROI_G_over_R_difference": -0.07317416123542042
+        }
+      }
+    },
+    {
+      "scene": "6V1A9940",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.4840376385495351,
+        "Y_p05_p50_p95": [
+          0.008369823526895026,
+          0.5292304316092197,
+          0.9394048859930275
+        ],
+        "black_percent": 0.46888624653190647,
+        "encoded_clipped_percent": 0.08521601268331351,
+        "central_ROI_G_over_R": 1.0565331060008822,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.08501783590963138,
+          "mean_Y_relative_percent": -17.742148140853896,
+          "central_ROI_G_over_R_difference": 0.03482709570402753
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.062425683709869215,
+          "mean_Y_relative_percent": -7.340524800443838,
+          "central_ROI_G_over_R_difference": 0.02175564734293589
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.3810939357907253,
+          "mean_Y_relative_percent": -8.053646752528664,
+          "central_ROI_G_over_R_difference": 0.009730031347463086
+        },
+        "hue": {
+          "clipping_percentage_points": -0.08501783590963138,
+          "mean_Y_relative_percent": -18.38681710235772,
+          "central_ROI_G_over_R_difference": 0.027590270162563435
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.08224336107808164,
+          "mean_Y_relative_percent": -8.359394943008747,
+          "central_ROI_G_over_R_difference": 0.027952567438942255
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 1.0277447483154976,
+          "mean_Y_relative_percent": 2.0135855507604994,
+          "central_ROI_G_over_R_difference": 0.013879278007360218
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 1.4462940943321443,
+          "mean_Y_relative_percent": 1.2464985565030062,
+          "central_ROI_G_over_R_difference": -0.0013581214259710261
+        },
+        "white_hue": {
+          "clipping_percentage_points": -0.08501783590963138,
+          "mean_Y_relative_percent": -9.052235604958303,
+          "central_ROI_G_over_R_difference": 0.017128905846707898
+        }
+      }
+    },
+    {
+      "scene": "6V1A9950",
+      "camera": "EOS R6 Mark III",
+      "LR": {
+        "mean_Y": 0.11335291331637161,
+        "Y_p05_p50_p95": [
+          0.0006691818069941592,
+          0.014953750990078516,
+          0.47283409563411194
+        ],
+        "black_percent": 8.090764962346412,
+        "encoded_clipped_percent": 0.0,
+        "central_ROI_G_over_R": 1.1146492482130155,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -31.033695466437173,
+          "central_ROI_G_over_R_difference": 0.015308049771487031
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -15.528559096123384,
+          "central_ROI_G_over_R_difference": 0.018008376547841598
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -15.869945326633006,
+          "central_ROI_G_over_R_difference": -0.012332629476200285
+        },
+        "hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -31.31591462417951,
+          "central_ROI_G_over_R_difference": -0.01658170901136291
+        },
+        "white_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -17.094447466695172,
+          "central_ROI_G_over_R_difference": 0.017939696503150193
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": 0.4290348386569942,
+          "central_ROI_G_over_R_difference": 0.02060037538924231
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -0.009545677084465964,
+          "central_ROI_G_over_R_difference": -0.00933383103062524
+        },
+        "white_hue": {
+          "clipping_percentage_points": 0.0,
+          "mean_Y_relative_percent": -17.430363085433243,
+          "central_ROI_G_over_R_difference": -0.012490517154661429
+        }
+      }
+    },
+    {
+      "scene": "7Y6A7003",
+      "camera": "EOS R7",
+      "LR": {
+        "mean_Y": 0.470469120850919,
+        "Y_p05_p50_p95": [
+          0.04118378446926812,
+          0.5584456141166602,
+          0.7698413605880187
+        ],
+        "black_percent": 0.28160919540229884,
+        "encoded_clipped_percent": 0.027744748315497426,
+        "central_ROI_G_over_R": 0.8752589511394229,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": 0.10605777801766497,
+          "mean_Y_relative_percent": -12.45637911861176,
+          "central_ROI_G_over_R_difference": -0.009533686504469285
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.28406818750055063,
+          "mean_Y_relative_percent": 4.297291785764545,
+          "central_ROI_G_over_R_difference": 0.00034944101507239367
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.2952675178984805,
+          "mean_Y_relative_percent": 4.10143279403985,
+          "central_ROI_G_over_R_difference": 7.268938067284125e-05
+        },
+        "hue": {
+          "clipping_percentage_points": 0.1066472164596613,
+          "mean_Y_relative_percent": -12.592262166663437,
+          "central_ROI_G_over_R_difference": -0.007605539620158641
+        },
+        "white_channel": {
+          "clipping_percentage_points": 0.10527186009500322,
+          "mean_Y_relative_percent": -12.465712753352765,
+          "central_ROI_G_over_R_difference": -0.009549039789154334
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.28426466698121605,
+          "mean_Y_relative_percent": 4.287675034474114,
+          "central_ROI_G_over_R_difference": 0.0003215802477416485
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.2956604768598114,
+          "mean_Y_relative_percent": 4.09189651435129,
+          "central_ROI_G_over_R_difference": 4.84213805006517e-05
+        },
+        "white_hue": {
+          "clipping_percentage_points": 0.10527186009500322,
+          "mean_Y_relative_percent": -12.601514211687537,
+          "central_ROI_G_over_R_difference": -0.007624327403858433
+        }
+      }
+    },
+    {
+      "scene": "7Y6A7298",
+      "camera": "EOS R7",
+      "LR": {
+        "mean_Y": 0.44101085638694815,
+        "Y_p05_p50_p95": [
+          0.0025963188285417892,
+          0.5268381413533366,
+          0.8578578243645749
+        ],
+        "black_percent": 3.4308363059849385,
+        "encoded_clipped_percent": 0.016646848989298454,
+        "central_ROI_G_over_R": 1.0459796314149405,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.01094894405000079,
+          "mean_Y_relative_percent": -12.531523865705818,
+          "central_ROI_G_over_R_difference": 0.011340276319120601
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.015182826878502295,
+          "mean_Y_relative_percent": 2.959355543298914,
+          "central_ROI_G_over_R_difference": -0.007760972919354625
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.042886433652328866,
+          "mean_Y_relative_percent": 2.559668657251324,
+          "central_ROI_G_over_R_difference": -0.005506087287900696
+        },
+        "hue": {
+          "clipping_percentage_points": -0.006036957033364872,
+          "mean_Y_relative_percent": -12.84571961573413,
+          "central_ROI_G_over_R_difference": 0.014109700971733696
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.01094894405000079,
+          "mean_Y_relative_percent": -12.535923637393353,
+          "central_ROI_G_over_R_difference": 0.011355479248065903
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.015182826878502295,
+          "mean_Y_relative_percent": 2.9547802066750117,
+          "central_ROI_G_over_R_difference": -0.0077398666421226725
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.042886433652328866,
+          "mean_Y_relative_percent": 2.555152931442284,
+          "central_ROI_G_over_R_difference": -0.005484000109883924
+        },
+        "white_hue": {
+          "clipping_percentage_points": -0.006036957033364872,
+          "mean_Y_relative_percent": -12.850085565216684,
+          "central_ROI_G_over_R_difference": 0.014126100192513036
+        }
+      }
+    },
+    {
+      "scene": "7Y6A7599",
+      "camera": "EOS R7",
+      "LR": {
+        "mean_Y": 0.40259313911836264,
+        "Y_p05_p50_p95": [
+          0.0017997444704351724,
+          0.45230810636859947,
+          0.721122441844771
+        ],
+        "black_percent": 3.7076892588188666,
+        "encoded_clipped_percent": 0.12604042806183116,
+        "central_ROI_G_over_R": 0.6954930387568953,
+        "samples": 504600
+      },
+      "model_deltas": {
+        "channel": {
+          "clipping_percentage_points": -0.024264057077134943,
+          "mean_Y_relative_percent": -11.988512209906554,
+          "central_ROI_G_over_R_difference": 0.004852128102384334
+        },
+        "exposure_channel": {
+          "clipping_percentage_points": 0.2523790516997999,
+          "mean_Y_relative_percent": 5.840412669407136,
+          "central_ROI_G_over_R_difference": 0.04169805394093784
+        },
+        "exposure_hue": {
+          "clipping_percentage_points": 0.6718627429205073,
+          "mean_Y_relative_percent": 4.636880495746687,
+          "central_ROI_G_over_R_difference": 0.02611403854986427
+        },
+        "hue": {
+          "clipping_percentage_points": 0.14510125525647147,
+          "mean_Y_relative_percent": -13.042120511002386,
+          "central_ROI_G_over_R_difference": -0.012381442487810257
+        },
+        "white_channel": {
+          "clipping_percentage_points": -0.024264057077134943,
+          "mean_Y_relative_percent": -11.99357904680527,
+          "central_ROI_G_over_R_difference": 0.004834060429056097
+        },
+        "white_exposure_channel": {
+          "clipping_percentage_points": 0.25355792858379256,
+          "mean_Y_relative_percent": 5.8350799420818555,
+          "central_ROI_G_over_R_difference": 0.04168455267804394
+        },
+        "white_exposure_hue": {
+          "clipping_percentage_points": 0.6724521813625036,
+          "mean_Y_relative_percent": 4.631584924680854,
+          "central_ROI_G_over_R_difference": 0.02609754159536659
+        },
+        "white_hue": {
+          "clipping_percentage_points": 0.14529773473713695,
+          "mean_Y_relative_percent": -13.047031497736516,
+          "central_ROI_G_over_R_difference": -0.012400628872263897
+        }
+      }
+    }
+  ],
+  "units": {
+    "Y": "relative linear sRGB luminance",
+    "clipping": "percent of samples with at least one code >=65534",
+    "differences": "percentage points for clipping; relative percent for mean Y"
+  },
+  "method": {
+    "sample_step": 8,
+    "quantiles": "lower interpolation",
+    "ROI": "normalized fixed central rectangle, not semantic"
+  },
+  "limitations": [
+    "Independent image geometries; similar clipping rates do not prove same pixels or lost detail",
+    "No pixel MAE or DeltaE, no semantic ROI correspondence guaranteed",
+    "No physical colour calibration or IHM validation"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "schema": 4,
+  "entries": [
+    {
+      "camera_make": "Canon", "camera_model": "EOS R6 Mark III",
+      "format_extension": "cr3",
+      "decoder_id": "libraw", "decoder_version": "0.22.2-Release",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "native_white_min": 13000, "native_white_max": 17000,
+      "black_min": 400, "black_max": 640,
+      "white_level": 13995, "baseline_exposure_ev": 0.26,
+      "provenance": "R6 III low-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback"
+    },
+    {
+      "camera_make": "Canon", "camera_model": "EOS R6 Mark III",
+      "format_extension": "cr3",
+      "decoder_id": "libraw", "decoder_version": "0.22.2-Release",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "native_white_min": 13000, "native_white_max": 17000,
+      "black_min": 1600, "black_max": 2400,
+      "white_level": 14351, "baseline_exposure_ev": 0.28,
+      "provenance": "R6 III high-black 14bit mode; evidence 2026-10-14; generalization authorized 2026-10-16; new ISO need visual feedback"
+    },
+    {
+      "camera_make": "Canon", "camera_model": "EOS R7",
+      "format_extension": "cr3",
+      "decoder_id": "libraw", "decoder_version": "0.22.2-Release",
+      "profile_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+      "native_white_min": 13000, "native_white_max": 17000,
+      "black_min": 0, "black_max": 4096,
+      "white_level": 16384, "baseline_exposure_ev": 0.35,
+      "provenance": "R7 14bit mode; all-ISO trials authorized 2026-10-16; previously measured ISO20000/32000 only"
+    }
+  ],
+  "profile_rendering": [
+    {
+      "camera_make": "Canon", "camera_model": "EOS R7",
+      "profile_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+      "baseline_exposure_ev": 0.35, "exposure_compensation_ev": -0.02,
+      "provenance": "Accepted R7 Neutral; investigation-baseline-r7-v002-20261015T214809555208Z; all-ISO trials authorized 2026-10-16"
+    }
+  ]
+}

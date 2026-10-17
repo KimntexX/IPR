@@ -97,7 +97,7 @@ int main(int argc,char **argv) {
             options.useNormalizationEnvironment=false;
             options.lensCorrectionEnabled=false;
             options.chromaticAberrationEnabled=false;
-            RawDecoder::SourceMetadata metadata;
+            ImageMetadata metadata;
             QString error;
             const auto decoded=RawDecoder::decode(path,options,&metadata,&error);
             if(decoded.isNull() || !decoded.dcpContext) throw std::runtime_error(error.toStdString());

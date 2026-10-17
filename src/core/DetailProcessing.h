@@ -18,7 +18,7 @@ struct SharpenSettings
     int masking = 0;
 };
 
-// Both operations require a CV_32FC3 RGB image in a linear working space.
+// Both operations require a CV_32FC3 RGB image in linear Rec.2020 D65.
 // HDR values are preserved. Denoising compresses chroma toward neutral when
 // needed to keep RGB nonnegative without independently lifting its luminance.
 void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings);

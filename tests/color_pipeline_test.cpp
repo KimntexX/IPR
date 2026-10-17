@@ -37,7 +37,7 @@ int main(int argc, char **argv)
         const float value = float(code) / 65535.f;
         ramp.linearRgba.at<cv::Vec4f>(0, code) = {value, value, value, .37f};
     }
-    ramp.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+    ramp.colorSpace = ColorPipeline::workingColorSpace();
     const QImage encodedRamp = ColorPipeline::toSrgb(ramp, ColorPipeline::OutputFormat::HighBitDepth, &error);
     if (!check(!encodedRamp.isNull(), "full-range sRGB ramp should encode")) return 1;
     const auto *codes = reinterpret_cast<const QRgba64 *>(encodedRamp.constScanLine(0));
@@ -109,17 +109,22 @@ int main(int argc, char **argv)
     if (!check(!raw.isNull(), "16-bit RAW RGB should convert to working space"))
         return 1;
     const cv::Vec4f rawLinear = raw.linearRgba.at<cv::Vec4f>(0, 0);
-    if (!check(std::abs(rawLinear[0] - 0.5f) < 0.0001f &&
-                   std::abs(rawLinear[1] - 0.25f) < 0.0001f &&
-                   std::abs(rawLinear[2] - 0.125f) < 0.0001f,
-               "16-bit RAW samples should be normalized as linear values"))
+    const cv::Vec3f expectedRaw(WorkingColor::fromSrgb() *
+        cv::Vec3d(32768./65535., 16384./65535., 8192./65535.));
+    if (!check(cv::norm(cv::Vec3f(rawLinear[0], rawLinear[1], rawLinear[2]) - expectedRaw) < 1e-6 &&
+                   raw.colorSpace == ColorPipeline::workingColorSpace(),
+               "LibRaw linear sRGB samples must be converted, not relabelled Rec.2020"))
         return 1;
     if (!check(raw.sourceProfile.contains(QStringLiteral("LibRaw")),
                "RAW input should retain its decoder provenance"))
         return 1;
 
     cv::Mat neutralRgb(1, 1, CV_32FC3, cv::Scalar(0.25f, 0.5f, 0.75f));
+    WorkingColor::transform(neutralRgb, WorkingColor::fromSrgb());
     const cv::Mat originalNeutral = neutralRgb.clone();
+    const auto control = [](const cv::Mat &pixels) {
+        return cv::Vec3f(WorkingColor::toSrgb() * cv::Vec3d(pixels.at<cv::Vec3f>(0,0)));
+    };
     if (!check(ColorPipeline::applyTemperatureTint(neutralRgb, 6500, 6500.0, 0, &error),
                "neutral temperature and tint adjustments should succeed"))
         return 1;
@@ -131,8 +136,8 @@ int main(int argc, char **argv)
     if (!check(ColorPipeline::applyTemperatureTint(warmRgb, 50000, 6500.0, 0, &error),
                "warm adjustment should succeed"))
         return 1;
-    if (!check(warmRgb.at<cv::Vec3f>(0, 0)[0] > originalNeutral.at<cv::Vec3f>(0, 0)[0] &&
-                   warmRgb.at<cv::Vec3f>(0, 0)[2] < originalNeutral.at<cv::Vec3f>(0, 0)[2],
+    if (!check(control(warmRgb)[0] > control(originalNeutral)[0] &&
+                   control(warmRgb)[2] < control(originalNeutral)[2],
                "positive temperature should warm the image"))
         return 1;
 
@@ -140,8 +145,8 @@ int main(int argc, char **argv)
     if (!check(ColorPipeline::applyTemperatureTint(coolRgb, 2000, 6500.0, 0, &error),
                "cool adjustment should succeed"))
         return 1;
-    if (!check(coolRgb.at<cv::Vec3f>(0, 0)[0] < originalNeutral.at<cv::Vec3f>(0, 0)[0] &&
-                   coolRgb.at<cv::Vec3f>(0, 0)[2] > originalNeutral.at<cv::Vec3f>(0, 0)[2],
+    if (!check(control(coolRgb)[0] < control(originalNeutral)[0] &&
+                   control(coolRgb)[2] > control(originalNeutral)[2],
                "low color temperature should cool the image"))
         return 1;
 
@@ -149,8 +154,8 @@ int main(int argc, char **argv)
     if (!check(ColorPipeline::applyTemperatureTint(mediumCoolRgb, 4000, 6500.0, 0, &error),
                "intermediate cool adjustment should succeed"))
         return 1;
-    if (!check(coolRgb.at<cv::Vec3f>(0, 0)[0] < mediumCoolRgb.at<cv::Vec3f>(0, 0)[0] &&
-                   coolRgb.at<cv::Vec3f>(0, 0)[2] > mediumCoolRgb.at<cv::Vec3f>(0, 0)[2],
+    if (!check(control(coolRgb)[0] < control(mediumCoolRgb)[0] &&
+                   control(coolRgb)[2] > control(mediumCoolRgb)[2],
                "cold calibration should strengthen progressively toward 2000 K"))
         return 1;
 
@@ -158,9 +163,9 @@ int main(int argc, char **argv)
     if (!check(ColorPipeline::applyTemperatureTint(magentaRgb, 6500, 6500.0, 150, &error),
                "magenta tint adjustment should succeed"))
         return 1;
-    if (!check(magentaRgb.at<cv::Vec3f>(0, 0)[0] > originalNeutral.at<cv::Vec3f>(0, 0)[0] &&
-                   magentaRgb.at<cv::Vec3f>(0, 0)[1] < originalNeutral.at<cv::Vec3f>(0, 0)[1] &&
-                   magentaRgb.at<cv::Vec3f>(0, 0)[2] > originalNeutral.at<cv::Vec3f>(0, 0)[2],
+    if (!check(control(magentaRgb)[0] > control(originalNeutral)[0] &&
+                   control(magentaRgb)[1] < control(originalNeutral)[1] &&
+                   control(magentaRgb)[2] > control(originalNeutral)[2],
                "positive tint should shift green toward magenta"))
         return 1;
 
@@ -169,9 +174,7 @@ int main(int argc, char **argv)
                "green tint adjustment should succeed"))
         return 1;
     const cv::Vec3f tintedGrey = neutralGrey.at<cv::Vec3f>(0, 0);
-    const float tintedGreyLuminance = 0.2126f * tintedGrey[0] +
-                                      0.7152f * tintedGrey[1] +
-                                      0.0722f * tintedGrey[2];
+    const float tintedGreyLuminance = WorkingColor::luminance(tintedGrey);
     if (!check(std::abs(tintedGreyLuminance - 0.5f) < 0.0001f,
                "tint should preserve the luminance of a neutral grey"))
         return 1;
@@ -289,6 +292,7 @@ int main(int argc, char **argv)
     outOfGamut.linearRgba = cv::Mat(1, 1, CV_32FC4);
     outOfGamut.linearRgba.at<cv::Vec4f>(0, 0) =
         cv::Vec4f(1.20f, 0.70f, 0.40f, 1.0f);
+    WorkingColor::transform(outOfGamut.linearRgba, WorkingColor::fromSrgb());
     const ColorPipeline::WorkingImage gamutMapped =
         ColorPipeline::mapToSrgbGamut(outOfGamut, &error);
     const cv::Vec4f mapped = gamutMapped.linearRgba.at<cv::Vec4f>(0, 0);

@@ -9,6 +9,11 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Manuel technique LaTeX](../technical/latex/README.md) : diagrammes utilisateur, classes et séquences, pipeline et glossaire.
 - [Moteur de rendu et image de travail](../imageeditor-render-working-image.md) : contrat `WorkingImage`, ordre des opérations et invariants colorimétriques.
 - [Moteur de profils appareil](../camera-profile-engine.md) : DCP/LCP, sélection locale et limites.
+- [Graphe du chemin RAW → DCP → rendu](chemin-ouverture-raw.md) : code actuel, refus de calibration et architecture cible sans liste de photos.
+- [Formats extensibles et stockage des caractérisations](../decisions/ADR-0012-formats-extensibles-et-caracterisations.md) : point d'entrée des futurs adaptateurs, DCP/JSON/SQLite, premier lot et transition restante.
+- [Roadmap ouverture RAW](roadmap-ouverture-raw.md) : HL, contextes multi-boîtiers, caches et corpus R5/6D Mark II prévu.
+- [Travail, affichage ICC et export](gestion-couleurs-affichage.md) : séparation cible, distincte du code actuel.
+- [Intégration Rec.2020 linéaire](integration-rec2020.md) : master porté, audit initial, contrats et qualification restant à compléter.
 - [Recette RAW et changement de profil](../decisions/ADR-0006-restauration-raw-et-retouche-profil.md) : sidecar v5, tampon pré-DCP et réinitialisations distinctes.
 - [Guide détaillé du moteur CPU](../scholar/moteur-graphique-ipr.tex) : explication des constantes, asynchronisme et sidecars.
 - [Références architecture et profils](references/) : licences des dépendances, création de DCP et note d'utilisation des profils Adobe.
@@ -19,6 +24,15 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Build Windows autonome](build-windows-standalone.md) : configuration portable, dépendances et restrictions sur les profils tiers.
 - [Mesures et courbes](../validation/metrics/README.md) : provenance des CSV et limites de comparaison.
 
+[Import commun des formats](import-images.md) : adaptateurs RAW/raster,
+contrat Rec.2020, métadonnées, capacités et validation du cache/des profils.
+
+[Cache des profils préparés](../decisions/ADR-0014-cache-profils-prepares.md) :
+LRU partagé DCP/LCP, 64 Mio/16 entrées, concurrence et invalidation par contenu.
+
 ## Règle de mise à jour
+
+[Contrôle mémoire et navigation](controle-memoire-images.md) : propriété du LRU,
+réservations et préchargement annulable, avec limites du seuil global de RAM.
 
 Une modification des responsabilités de `ImageEditor`, `ColorPipeline`, `RawDecoder`, `CameraProfileEngine`, du cache ou du sidecar doit mettre à jour le manuel LaTeX et, si le choix est durable, créer ou modifier un ADR.

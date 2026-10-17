@@ -1,0 +1,347 @@
+{
+  "campaign_id": "integration-radiometrie-v001-20261014T151336958031Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "group": "base-colorimetrique",
+  "measured_at_utc": "2026-10-14T15:14:59.971107+00:00",
+  "inputs": [
+    {
+      "file": "docs\\validation\\raw\\essais-radiometriques-ouverture-v001-20261014T145324616293Z.json",
+      "sha256": "2d7cde9c135b415a37c7dae2cda9bf467a00943c60299d4285f476a40c8e4e2f"
+    },
+    {
+      "file": "config\\raw-normalization.json",
+      "sha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795"
+    },
+    {
+      "file": "build-windows-msvc\\Release\\rawNormalizationCorpusProbe.exe",
+      "sha256": "47b90f3024365381d9e7a6bb02be0f78601bf396a2ae76132cc5a6edb4e34807"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\verify_raw_radiometry_integration.py",
+      "sha256": "6c736e7b9619eeb9343b00d03c20de7b8252682ee52b2f5398e77e561e65a666"
+    },
+    {
+      "file": "src\\raw\\RawDecoder.cpp",
+      "sha256": "85155aad434161399215bffcad601b432f64cd39ce7959fdf83992b9167d9a7b"
+    },
+    {
+      "file": "src\\raw\\RawNormalization.cpp",
+      "sha256": "8b3edec446000d7812d8bdee619aed8251292b58eb431d19ccda3debcfc84d46"
+    },
+    {
+      "file": "src\\raw\\RawNormalization.h",
+      "sha256": "a1d39e9f4c8984cb19f40777cb419730a3bd531c4a41c3ede76961c41f075e7d"
+    },
+    {
+      "file": "src\\editor\\imageeditor.cpp",
+      "sha256": "2333435bc5a3db1560aef17d7d90425508908cb1cc02d7a254697a92b3c3e56a"
+    },
+    {
+      "file": "src\\qml\\RawDevelopmentModule.qml",
+      "sha256": "e0ffe9840a81ef05f1d9a7298b274b8d4642e8aef03391d961b4a33025d35c4a"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0007.CR3",
+      "sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+      "sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0037.CR3",
+      "sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0043.CR3",
+      "sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0054.CR3",
+      "sha256": "602bcc522c2d4fe0dd070f9e9f37fbb6cde70018ff227bc9f6ff325e4bb355cb"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0081.CR3",
+      "sha256": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0182.CR3",
+      "sha256": "d26fd895f37478e09c2b93abc28011f3366cc0d0a23668dad02a7bac4e059552"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0318.CR3",
+      "sha256": "b0ab90b805a97c9bf5f4ceb4a16300e8b2ce93dba2de5c594e08785f389ee751"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0327.CR3",
+      "sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0524.CR3",
+      "sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0830.CR3",
+      "sha256": "821d87c5eeac4dd063aebbe9210f1a61de8dbdd25f2e6b694fe926422754c8d5"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9421.CR3",
+      "sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9608.CR3",
+      "sha256": "aceefe524cf5224beb5077e834a0453f9a7ad80ec31a5860b0be9da23501bb96"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9616.CR3",
+      "sha256": "fade2f141ad716d3d8a9acba8a79fd39a75d277b406e7ec633f7c9a0d368229b"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9890.CR3",
+      "sha256": "a57c06cb4498dc9385a4d4305bdff769bb2fdb2c5865a0c324ccefabebc0981d"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9940.CR3",
+      "sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9950.CR3",
+      "sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7003.CR3",
+      "sha256": "59fb28d2d31050a9166896bd4036d6a15a91e634478db3d687d5435e048dd400"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp",
+      "sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7298.CR3",
+      "sha256": "9147913687cfd5801acf9d706ab4b032a3c5f549242fe69344c04d396546be33"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7599.CR3",
+      "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+    }
+  ],
+  "records": [
+    {
+      "scene": "6V1A0007",
+      "mean_Y": 0.29338848145943125,
+      "witness_Y": 0.2933884814594401,
+      "absolute_Y_error": 8.826273045769994e-15,
+      "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 13995,
+      "baseline_EV": 0.26,
+      "pixels_sha256": "e3a3a7206193a576bd2f28fd1b0cb708539bd863040cf57b76af321a0afd228a"
+    },
+    {
+      "scene": "6V1A0037",
+      "mean_Y": 0.04585888914609246,
+      "witness_Y": 0.04585888914609356,
+      "absolute_Y_error": 1.1032841307212493e-15,
+      "raw_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 13995,
+      "baseline_EV": 0.26,
+      "pixels_sha256": "5378c17df9739d6e1d470767eae150e1505c91f27d41e945328ae86b62003169"
+    },
+    {
+      "scene": "6V1A0043",
+      "mean_Y": 0.020340014963467944,
+      "witness_Y": 0.02034001496346716,
+      "absolute_Y_error": 7.840950111415168e-16,
+      "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 13995,
+      "baseline_EV": 0.26,
+      "pixels_sha256": "e5d861115ed737e8dc4ce435801fe70c86280945accbfbe286b05257132aaa5f"
+    },
+    {
+      "scene": "6V1A0054",
+      "mean_Y": 0.02130808902007837,
+      "witness_Y": 0.021308089020078892,
+      "absolute_Y_error": 5.238864897449957e-16,
+      "raw_sha256": "602bcc522c2d4fe0dd070f9e9f37fbb6cde70018ff227bc9f6ff325e4bb355cb",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 13995,
+      "baseline_EV": 0.26,
+      "pixels_sha256": "0eafb371710eaf8b7a92f22190a7c1de4e4e252dc7e127199b2c2dfa35e77a96"
+    },
+    {
+      "scene": "6V1A0081",
+      "mean_Y": 0.03097683797167149,
+      "witness_Y": 0.030976837971671414,
+      "absolute_Y_error": 7.632783294297951e-17,
+      "raw_sha256": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 13995,
+      "baseline_EV": 0.26,
+      "pixels_sha256": "b6884b62ccdef4055ddae2e347bbc534d0c171e46805c940b1dde8c185f025ca"
+    },
+    {
+      "scene": "6V1A0182",
+      "mean_Y": 0.031729730282848506,
+      "witness_Y": 0.03172973028284907,
+      "absolute_Y_error": 5.620504062164855e-16,
+      "raw_sha256": "d26fd895f37478e09c2b93abc28011f3366cc0d0a23668dad02a7bac4e059552",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 14351,
+      "baseline_EV": 0.28,
+      "pixels_sha256": "a41ff9454a4b9d234844e7680a91422d5e1fcc27fcff0481be5a6b162f455989"
+    },
+    {
+      "scene": "6V1A0318",
+      "mean_Y": 0.18868165441546997,
+      "witness_Y": 0.18868165441546594,
+      "absolute_Y_error": 4.0245584642661925e-15,
+      "raw_sha256": "b0ab90b805a97c9bf5f4ceb4a16300e8b2ce93dba2de5c594e08785f389ee751",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 13995,
+      "baseline_EV": 0.26,
+      "pixels_sha256": "4a241c542ec4756fd5725a735f7b74680f8a61401235538ceba059fee8cd29f5"
+    },
+    {
+      "scene": "6V1A0327",
+      "mean_Y": 0.09131742382345887,
+      "witness_Y": 0.09131742382345735,
+      "absolute_Y_error": 1.5126788710517758e-15,
+      "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 13995,
+      "baseline_EV": 0.26,
+      "pixels_sha256": "b14c434de3185c43f5b095099e92ec7407b5f1433f3ec139879b06006510446b"
+    },
+    {
+      "scene": "6V1A0524",
+      "mean_Y": 0.5575421248718657,
+      "witness_Y": 0.5575421248718625,
+      "absolute_Y_error": 3.219646771412954e-15,
+      "raw_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 14351,
+      "baseline_EV": 0.28,
+      "pixels_sha256": "3be912134f28c5ab25a6079bc19c466e776f952a35c23cea1af41b9eef94aa01"
+    },
+    {
+      "scene": "6V1A0830",
+      "mean_Y": 0.18388873033981937,
+      "witness_Y": 0.18388873033977668,
+      "absolute_Y_error": 4.268807529683727e-14,
+      "raw_sha256": "821d87c5eeac4dd063aebbe9210f1a61de8dbdd25f2e6b694fe926422754c8d5",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 14351,
+      "baseline_EV": 0.28,
+      "pixels_sha256": "c584863a1cc96dd65c891aac6d9bfe84c5fbb1aba9e244bab67b5641a8793708"
+    },
+    {
+      "scene": "6V1A9421",
+      "mean_Y": 0.20944908283132116,
+      "witness_Y": 0.2094490828135595,
+      "absolute_Y_error": 1.7761653259285026e-11,
+      "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 14351,
+      "baseline_EV": 0.28,
+      "pixels_sha256": "676801e7a454ae3a226ce0f11227e69a0eda09efd959dd0471fdcac03a3851e1"
+    },
+    {
+      "scene": "6V1A9608",
+      "mean_Y": 0.16786080341326587,
+      "witness_Y": 0.16786080341326612,
+      "absolute_Y_error": 2.498001805406602e-16,
+      "raw_sha256": "aceefe524cf5224beb5077e834a0453f9a7ad80ec31a5860b0be9da23501bb96",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 14351,
+      "baseline_EV": 0.28,
+      "pixels_sha256": "f9f805b0dee73cc5e6302efe77a707e606eb4e4f9baa4b7e1fc981c5f1bebc59"
+    },
+    {
+      "scene": "6V1A9616",
+      "mean_Y": 0.12772660286407422,
+      "witness_Y": 0.12772660287077361,
+      "absolute_Y_error": 6.6993910419199665e-12,
+      "raw_sha256": "fade2f141ad716d3d8a9acba8a79fd39a75d277b406e7ec633f7c9a0d368229b",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 14351,
+      "baseline_EV": 0.28,
+      "pixels_sha256": "aaeca1398c35c20f4d6f9e8846e8aa9223f38dac63c76221b2840b2483664bd1"
+    },
+    {
+      "scene": "6V1A9890",
+      "mean_Y": 0.12412492035018091,
+      "witness_Y": 0.12412492035300338,
+      "absolute_Y_error": 2.8224644843533042e-12,
+      "raw_sha256": "a57c06cb4498dc9385a4d4305bdff769bb2fdb2c5865a0c324ccefabebc0981d",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 14351,
+      "baseline_EV": 0.28,
+      "pixels_sha256": "a687a51f9fd4dc9744baad307903cad0b26c7a1410906dbadf18dcae3e121584"
+    },
+    {
+      "scene": "6V1A9940",
+      "mean_Y": 0.4900711607269821,
+      "witness_Y": 0.4900711607269863,
+      "absolute_Y_error": 4.218847493575595e-15,
+      "raw_sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 13995,
+      "baseline_EV": 0.26,
+      "pixels_sha256": "a7140f8be9a3677c99c858a5879ef792dc24f62eecc1ab6e3b094c788a9abbe6"
+    },
+    {
+      "scene": "6V1A9950",
+      "mean_Y": 0.11334209301329982,
+      "witness_Y": 0.11334209301330059,
+      "absolute_Y_error": 7.632783294297951e-16,
+      "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+      "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "white": 13995,
+      "baseline_EV": 0.26,
+      "pixels_sha256": "6281b94b102949be9553300a97bd10739980432f0934ac0dfbe693d0331e6230"
+    },
+    {
+      "scene": "7Y6A7003",
+      "mean_Y": 0.4897202304081102,
+      "witness_Y": 0.48972023040811696,
+      "absolute_Y_error": 6.772360450213455e-15,
+      "raw_sha256": "59fb28d2d31050a9166896bd4036d6a15a91e634478db3d687d5435e048dd400",
+      "profile_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+      "white": 16384,
+      "baseline_EV": 0.35,
+      "pixels_sha256": "79bc4177e314a6b4755b30494cbbaaf211048de82d797e4677047a0c8ed270df"
+    },
+    {
+      "scene": "7Y6A7298",
+      "mean_Y": 0.4522793582118821,
+      "witness_Y": 0.45227935821189796,
+      "absolute_Y_error": 1.587618925213974e-14,
+      "raw_sha256": "9147913687cfd5801acf9d706ab4b032a3c5f549242fe69344c04d396546be33",
+      "profile_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+      "white": 16384,
+      "baseline_EV": 0.35,
+      "pixels_sha256": "91896b0cf768a8be6cd8b0d6e86178e2a0f11c8210bf0e8b3097c9b479b5026f"
+    },
+    {
+      "scene": "7Y6A7599",
+      "mean_Y": 0.4212395822575817,
+      "witness_Y": 0.42123958225756813,
+      "absolute_Y_error": 1.354472090042691e-14,
+      "raw_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "profile_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+      "white": 16384,
+      "baseline_EV": 0.35,
+      "pixels_sha256": "920bf296633e4f7533630ac752815cb3094f9bd8055e320d7576c278affad5f7"
+    }
+  ],
+  "production_modified": true,
+  "validation": "numerical integration only; visual highlight acceptance pending",
+  "method": "Fresh full production decode, no sidecar/LCP, native grid step 8, 16-bit encoded output; exact audited manifest",
+  "units": {
+    "Y": "relative linear sRGB luminance",
+    "error": "absolute difference of mean Y, tolerance 1e-6"
+  }
+}

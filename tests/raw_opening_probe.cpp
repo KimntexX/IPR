@@ -60,7 +60,8 @@ QJsonObject metrics(const ColorPipeline::WorkingImage &image) {
     for(int y=0;y<image.linearRgba.rows;++y)for(int x=0;x<image.linearRgba.cols;++x) {
         const auto p=image.linearRgba.at<cv::Vec4f>(y,x);
         if(!std::isfinite(p[0])||!std::isfinite(p[1])||!std::isfinite(p[2]))throw std::runtime_error("Nonfinite pixel");
-        before.add(p[0],p[1],p[2]);
+        const cv::Vec3d diagnostic = WorkingColor::toSrgb() * cv::Vec3d(p[0],p[1],p[2]);
+        before.add(diagnostic[0],diagnostic[1],diagnostic[2]);
         const QRgba64 pixel=reinterpret_cast<const QRgba64*>(output.constScanLine(y))[x];
         const double r=linear(pixel.red()/65535.),g=linear(pixel.green()/65535.),b=linear(pixel.blue()/65535.);
         after.add(r,g,b);clip+=pixel.red()>=65534||pixel.green()>=65534||pixel.blue()>=65534;
@@ -75,7 +76,7 @@ QJsonObject metrics(const ColorPipeline::WorkingImage &image) {
     return {{"pre_output",before.json()},{"output",after.json()},{"flower_ROI",roi.json()},
             {"encoded_clipped_percent",100.*clip/image.linearRgba.total()},{"hue_bands_linear_HSV",warmBands}};
 }
-QJsonObject metadata(const RawDecoder::SourceMetadata &m) {
+QJsonObject metadata(const ImageMetadata &m) {
     return {{"camera",m.cameraModel},{"lens",m.lensModel},{"ISO",m.iso},{"focal_mm",m.focalLengthMm},
             {"exposure_seconds",m.exposureSeconds},{"dcp",m.dcpProfile},{"lcp",m.lcpProfile},{"lcp_sha256",m.lcpSha256},
             {"lens_geometry",m.lensGeometryApplied},{"lens_vignetting",m.lensVignettingApplied},
@@ -103,7 +104,7 @@ int main(int argc,char **argv) {
             try {
                 RawDecoder::Options options;options.automaticWhiteBalance=false;options.preferCameraNeutral=true;
                 options.useNormalizationEnvironment=false;options.lensCorrectionEnabled=false;options.chromaticAberrationEnabled=false;
-                RawDecoder::SourceMetadata meta;QString error;
+                ImageMetadata meta;QString error;
                 auto full=RawDecoder::decode(file.absoluteFilePath(),options,&meta,&error);
                 if(full.isNull())throw std::runtime_error(error.toStdString());
                 record["metadata"]=metadata(meta);record["width"]=full.linearRgba.cols;record["height"]=full.linearRgba.rows;

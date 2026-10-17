@@ -1,4 +1,5 @@
 #include "DetailProcessing.h"
+#include "WorkingColorSpace.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -21,7 +22,7 @@ constexpr float kMediumThresholdRatio = 0.52f;
 
 float luminanceOf(const cv::Vec3f &rgb)
 {
-    return std::max(0.0f, 0.2126f * rgb[0] + 0.7152f * rgb[1] + 0.0722f * rgb[2]);
+    return std::max(0.0f, WorkingColor::luminance(rgb));
 }
 
 cv::Mat extractLuminance(const cv::Mat &linearRgb)
@@ -216,7 +217,7 @@ void splitLumaChroma(const cv::Mat &rgb, cv::Mat *luma, cv::Mat *chromaOrange,
             const float red = source[x][0];
             const float green = source[x][1];
             const float blue = source[x][2];
-            yRow[x] = 0.2126f * red + 0.7152f * green + 0.0722f * blue;
+            yRow[x] = WorkingColor::luminance(source[x]);
             coRow[x] = red - blue;
             cgRow[x] = green - 0.5f * (red + blue);
         }
@@ -235,10 +236,12 @@ void mergeLumaChroma(const cv::Mat &luma, const cv::Mat &chromaOrange,
             const float yValue = std::max(0.0f, yRow[x]);
             const float co = coRow[x];
             const float cg = cgRow[x];
-            // Inverse of Rec.709 Y with Co=R-B, Cg=G-(R+B)/2.
-            const cv::Vec3f deviation(0.4298f * co - 0.7152f * cg,
-                                     -0.0702f * co + 0.2848f * cg,
-                                     -0.5702f * co - 0.7152f * cg);
+            // Exact inverse of master Y, Co=R-B, Cg=G-(R+B)/2.
+            const auto &w = WorkingColor::lumaWeights();
+            const float k = w[0] + .5f * w[1];
+            const cv::Vec3f deviation((1.f - k) * co - w[1] * cg,
+                                     (.5f - k) * co + (1.f - w[1]) * cg,
+                                     -k * co - w[1] * cg);
             const float minimum = std::min({deviation[0], deviation[1], deviation[2]});
             const float chromaScale = minimum < -yValue ? yValue / -minimum : 1.0f;
             // Compress toward a gray of the same luminance instead of clipping

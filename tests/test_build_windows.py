@@ -66,7 +66,8 @@ class SelectionTests(unittest.TestCase):
         for path in ("tests/investigate_dcp_order.py", "tests/audit_dng_baseline.py", "tests/investigate_dcp_normalization.py", "tests/investigate_standard_normalization.py", "tests/prepare_raw_normalization.py"):
             diagnostic = build.select_tests([path], RULES)
             self.assertFalse(diagnostic["full"])
-            self.assertEqual(diagnostic["python"], ["base_colorimetry_analysis"])
+            expected = ["base_colorimetry_analysis", "raw_opening_levels"] if path == "tests/audit_dng_baseline.py" else ["base_colorimetry_analysis"]
+            self.assertEqual(diagnostic["python"], expected)
         probe = build.select_tests(["tests/tonal_base_probe.cpp"], RULES)
         self.assertFalse(probe["full"])
         self.assertEqual(set(probe["tests"]), {"rawDecoderTests", "rawBlackLevelEstimatorTests", "cameraProfileEngineTests"})
@@ -115,6 +116,12 @@ class SelectionTests(unittest.TestCase):
         self.assertTrue(build.select_tests([], RULES, force_full=True)["full"])
         self.assertTrue(build.select_tests([], RULES, bootstrap=True)["full"])
         self.assertTrue(build.select_tests([f"src/new{i}.cpp" for i in range(20)], RULES)["full"])
+
+    def test_opening_trials_are_targeted(self):
+        plan=build.select_tests(['tests/run_raw_opening_trials.py'],RULES)
+        self.assertFalse(plan['full'])
+        self.assertIn('rawOpeningSplineTests',plan['tests'])
+        self.assertIn('raw_opening_trials',plan['python'])
 
     def test_slashes_and_deleted_path(self):
         plan = build.select_tests([r"src\raw\RawDecoder.cpp"], RULES)

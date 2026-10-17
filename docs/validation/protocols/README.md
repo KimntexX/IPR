@@ -14,6 +14,8 @@ au pipeline Camera Neutral.
 
 ## Catalogue courant
 
+Mesures transversales : [Performance d’ouverture et navigation](protocole-performance-ouverture.md).
+
 | Groupe | Protocole maintenu | Couverture / limites |
 | --- | --- | --- |
 | RAW / profils / base | [RAW et profils](protocole-raw-profils.md) | Base, DCP, WB, normalisation, restauration ; génération neutre/auto-WB seulement |

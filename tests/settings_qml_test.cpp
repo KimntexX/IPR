@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "controlled_memory.h"
 #include "imageprovider.h"
 
 #include <QEventLoop>
@@ -76,7 +77,7 @@ int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);
     ImageProvider provider;
-    ImageEditor editor(&provider);
+    ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
     QQmlEngine engine;
     QQmlComponent component(&engine,
         QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/Setting.qml")));
@@ -139,6 +140,13 @@ int main(int argc, char **argv)
                root->findChild<QObject *>("chromaticAberrationToggle") &&
                root->findChild<QObject *>("opticalDevelopmentStatusLabel"),
                "RAW module must expose profile, opt-in, manifest and actual status")) return 1;
+    auto *calibrationToggle=root->findChild<QObject *>("rawNormalizationToggle");
+    editor.setRawNormalizationEnabled(true);settleLayout();
+    if(!check(editor.rawNormalizationEnabled()&&calibrationToggle->property("checked").toBool(),
+              "calibration checkbox follows enabled backend state"))return 1;
+    editor.setRawNormalizationEnabled(false);settleLayout();
+    if(!check(!editor.rawNormalizationEnabled()&&!calibrationToggle->property("checked").toBool(),
+              "calibration checkbox follows disabled/restored backend state"))return 1;
     QObject *noiseSection = root->findChild<QObject *>(QStringLiteral("denoiseSection"));
     QObject *sharpSection = root->findChild<QObject *>(QStringLiteral("sharpeningSection"));
     QObject *exportSection = root->findChild<QObject *>(QStringLiteral("exportSection"));

@@ -1,8 +1,10 @@
 #include "imageeditor.h"
 #include "DecodedImageCache.h"
+#include "controlled_memory.h"
 #include "imageprovider.h"
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
+#include <tiffio.h>
 
 #include <QCoreApplication>
 #include <QDataStream>
@@ -191,16 +193,18 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
                 return false;
         } else {
             const int changed = channel - ImageEditor::RedCurve;
-            const int unchangedFirst = (changed + 1) % 3;
-            const auto component = [](const QColor &color, int index) {
-                return index == 0 ? color.red()
-                                  : index == 1 ? color.green() : color.blue();
-            };
-            if (!check(component(pixel, changed) >
-                           component(original, changed) &&
-                           std::abs(component(pixel, unchangedFirst) -
-                                    component(original, unchangedFirst)) <= 2,
-                       "RGB curve should affect only its selected channel"))
+            QImage sample(1,1,QImage::Format_RGBA8888);
+            sample.setPixelColor(0,0,original); sample.setColorSpace(QColorSpace(QColorSpace::SRgb));
+            auto expectedMaster = ColorPipeline::fromSourceImage(sample);
+            auto &v = expectedMaster.linearRgba.at<cv::Vec4f>(0,0)[changed];
+            // Interpolating (0,0), (.6,.9), (1,1) gives this quadratic.
+            v += 1.25f * v * (1.f - v);
+            const auto expected = ColorPipeline::toSrgb(expectedMaster,
+                ColorPipeline::OutputFormat::Preview8Bit).pixelColor(0,0);
+            if (!check(std::abs(pixel.red()-expected.red()) <= 2 &&
+                       std::abs(pixel.green()-expected.green()) <= 2 &&
+                       std::abs(pixel.blue()-expected.blue()) <= 2,
+                       "RGB curve must edit a Rec.2020 channel before the sRGB output matrix"))
                 return false;
         }
         editor.resetToneCurve(channel);
@@ -390,14 +394,15 @@ bool verifyUniqueExportNames(ImageEditor &editor, const QString &directory)
 
 bool verifyColorMixer(ImageEditor &editor, const QString &directory)
 {
-    // Exact HSV band centres in the engine's linear RGB space, not gamma RGB.
+    // Rec.2020 HSV centres with low enough chroma to fit the sRGB fixture file.
+    // Otherwise gamut mapping changes the centre before it can be reimported.
     ColorPipeline::WorkingImage patches;
     patches.linearRgba = cv::Mat(1, 8, CV_32FC4);
     const std::array<cv::Vec4f, 8> colors{{
-        {0.6f, 0.1f, 0.1f, 1.0f}, {0.6f, 0.35f, 0.1f, 1.0f},
-        {0.6f, 0.6f, 0.1f, 1.0f}, {0.1f, 0.6f, 0.1f, 1.0f},
-        {0.1f, 0.6f, 0.6f, 1.0f}, {0.1f, 0.1f, 0.6f, 1.0f},
-        {0.35f, 0.1f, 0.6f, 1.0f}, {0.6f, 0.1f, 0.6f, 1.0f}}};
+        {0.35f, 0.25f, 0.25f, 1.0f}, {0.35f, 0.30f, 0.25f, 1.0f},
+        {0.35f, 0.35f, 0.25f, 1.0f}, {0.25f, 0.35f, 0.25f, 1.0f},
+        {0.25f, 0.35f, 0.35f, 1.0f}, {0.25f, 0.25f, 0.35f, 1.0f},
+        {0.30f, 0.25f, 0.35f, 1.0f}, {0.35f, 0.25f, 0.35f, 1.0f}}};
     for (int band = 0; band < 8; ++band)
         patches.linearRgba.at<cv::Vec4f>(0, band) = colors[band];
     const QString sourcePath = directory + QStringLiteral("/mixer-source.png");
@@ -612,6 +617,25 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
                "DNG export should write a nonempty .dng file"))
         return false;
 
+#ifdef Q_OS_WIN
+    TIFF *tiff = TIFFOpenW(reinterpret_cast<const wchar_t *>(expectedPath.utf16()), "r");
+#else
+    TIFF *tiff = TIFFOpen(expectedPath.toUtf8().constData(), "r");
+#endif
+    if (!check(tiff != nullptr, "DNG IFD should open")) return false;
+    uint32_t count = 0, profileBytes = 0;
+    float *matrix = nullptr;
+    void *profile = nullptr;
+    const bool hasMatrix = TIFFGetField(tiff, TIFFTAG_COLORMATRIX1, &count, &matrix) == 1 && count == 9;
+    const bool hasIcc = TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profileBytes, &profile) == 1;
+    const QColorSpace embedded = hasIcc ? QColorSpace::fromIccProfile(
+        QByteArray(static_cast<const char *>(profile), int(profileBytes))) : QColorSpace{};
+    const cv::Matx33d expectedMatrix = WorkingColor::srgbToXyz().inv();
+    bool consistent = hasMatrix && embedded == QColorSpace(QColorSpace::SRgbLinear);
+    if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.val[i]) < 1e-6;
+    TIFFClose(tiff);
+    if (!check(consistent, "DNG linear samples need linear ICC and XYZ-to-stored-RGB matrix")) return false;
+
 #ifdef IPR_WITH_LIBRAW
     QFile firstDng(expectedPath);
     if (!firstDng.open(QIODevice::ReadOnly)) return false;
@@ -623,18 +647,16 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
                firstDng.readAll() == firstDngBytes && QFileInfo::exists(directory + QStringLiteral("/linear-2.dng")),
                "the rendered DNG writer must also preserve an occupied normalized filename")) return false;
     firstDng.close();
-    QString error;
-    RawDecoder::SourceMetadata metadata;
-    const ColorPipeline::WorkingImage decoded = RawDecoder::decode(
+    const auto imported = ImageImport::load(
         expectedPath,
         RawDecoder::Options{
-            true, {directory + QStringLiteral("/empty-profile-directory")}},
-        &metadata, &error);
-    if (decoded.isNull())
-        std::cerr << "DNG decode error: " << error.toStdString() << '\n';
-    return check(!decoded.isNull() &&
-                     decoded.linearRgba.size() == cv::Size(64, 64),
-                 "LibRaw should decode the exported linear DNG");
+            true, {directory + QStringLiteral("/empty-profile-directory")}});
+    if (imported.image.isNull())
+        std::cerr << "DNG decode error: " << imported.error.toStdString() << '\n';
+    return check(!imported.image.isNull() && imported.capabilities.cameraDevelopment &&
+                     imported.image.colorSpace == ColorPipeline::workingColorSpace() &&
+                     imported.image.linearRgba.size() == cv::Size(64, 64),
+                 "exported linear DNG should use the common import contract through LibRaw");
 #else
     return true;
 #endif
@@ -1024,8 +1046,9 @@ bool verifyOriginalPreview(ImageEditor &editor, ImageProvider &provider,
     input.fill(QColor(20, 35, 50));
     if (!input.save(other)) return false;
     editor.loadImage(QUrl::fromLocalFile(other));
-    if (!check(provider.image().isNull() && provider.originalImage().isNull()
-            && editor.originalImageSource().isEmpty(), "changing source must immediately release both previews")) return false;
+    if (!check(!provider.image().isNull() && provider.originalImage() == baseline
+            && editor.originalImageSource() == originalUrl,
+               "changing source preserves the displayed pair until replacement is ready")) return false;
     if (!awaitPreview(editor) || !awaitLoad(editor, QUrl::fromLocalFile(path)) || !awaitPreview(editor)) return false;
     if (!check(editor.adjustmentValue(QStringLiteral("brightness")) == 1
             && provider.originalImage() == baseline && provider.image() != baseline,
@@ -1105,7 +1128,7 @@ int main(int argc, char **argv)
         return 1;
 
     ImageProvider provider;
-    ImageEditor editor(&provider);
+    ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
     if (!check(awaitLoad(editor, QUrl::fromLocalFile(inputPath)) && editor.hasImage(),
                "editor should load the source image"))
         return 1;

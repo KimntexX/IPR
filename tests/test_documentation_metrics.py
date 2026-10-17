@@ -55,6 +55,10 @@ class MetricsTests(unittest.TestCase):
         rows = list(metrics.numeric_rows({'a/b~': [1, True, float('nan')], 'scene': 'RAW'}))
         self.assertEqual(rows, [('/a~1b~0/0', 1, 'RAW')])
 
+    def test_bulk_tile_samples_stay_in_json(self):
+        rows = list(metrics.numeric_rows({'records': [{'iso': 100, 'tiles': [{'x': 1, 'LR_Y': 0.5}]}]}))
+        self.assertEqual(rows, [('/records/0/iso', 100, '')])
+
     def test_csv_round_trip(self):
         import csv
         with tempfile.TemporaryDirectory() as directory:
@@ -74,6 +78,7 @@ class MetricsTests(unittest.TestCase):
     def test_family_classification(self):
         self.assertEqual(metrics.family('mesure-color-mixer-v2.json'), 'melangeur')
         self.assertEqual(metrics.family('mesure-bruit-v2.json'), 'bruit')
+        self.assertEqual(metrics.family('latence-ouverture-v001.json'), 'performance-ouverture')
 
 
 if __name__ == '__main__':

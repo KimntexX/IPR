@@ -2,6 +2,15 @@
 
 ## Objet et contrat
 
+**Directive cible, non implémentée (15 octobre 2026) :** séparer le master de
+travail, l'aperçu converti vers le profil ICC écran et la conversion d'export.
+Voir [ADR-0008](decisions/ADR-0008-separation-travail-affichage-export.md) et
+l'[architecture d'affichage](architecture/gestion-couleurs-affichage.md).
+Le master courant est **Rec.2020 linéaire D65** depuis le port du 15 octobre 2026
+([ADR-0009](decisions/ADR-0009-espace-travail-rec2020-lineaire.md)).
+Le [plan de port](architecture/integration-rec2020.md) distingue l'étude
+préparatoire, l'implémentation locale et les validations encore nécessaires.
+
 `ImageEditor::renderWorkingImage()` construit une nouvelle image de travail à partir :
 
 - d'une image source déjà développée et normalisée ;
@@ -14,7 +23,7 @@ static ColorPipeline::WorkingImage renderWorkingImage(
     const ColorPipeline::WorkingImage &source, const Settings &settings);
 ```
 
-L'entrée est une image RGBA flottante en sRGB linéaire (`CV_32FC4`), avec alpha droit. La fonction renvoie la même représentation logique après les réglages, ainsi que son espace colorimétrique et la provenance de la transformation source. Elle ne charge pas le fichier, ne modifie pas le provider QML et n'écrit rien sur disque. Ces opérations appartiennent respectivement au chargement, au rendu d'aperçu et à l'export.
+L'entrée est une image RGBA flottante en Rec.2020 linéaire D65 (`CV_32FC4`), avec alpha droit. La fonction renvoie la même représentation logique après les réglages, ainsi que son espace colorimétrique et la provenance de la transformation source. Elle ne charge pas le fichier, ne modifie pas le provider QML et n'écrit rien sur disque. Ces opérations appartiennent respectivement au chargement, au rendu d'aperçu et à l'export. Les entrées de type/espace incorrect ou non finies sont refusées, y compris sur le chemin neutre.
 
 Une source vide donne immédiatement un `WorkingImage` vide (`return {}`). Une erreur d'application température/nuance est également signalée par un avertissement puis par une image vide. Les étapes suivantes de conversion doivent vérifier cette image vide ; l'aperçu signale alors l'échec et l'export renvoie un message d'erreur de conversion.
 
@@ -263,15 +272,20 @@ asynchrone que l’aperçu et sont repris par les exports.
 
 Ce même rendu produit un histogramme de 256 bins pour la luminance, le rouge,
 le vert et le bleu. Les bins utilisent des valeurs encodées sRGB pour rester
-lisibles face à l’aperçu ; ils décrivent les pixels après les courbes et avant
-la quantification finale.
+lisibles face à l’aperçu ; ils décrivent désormais les pixels sRGB 8 bits
+réellement affichés après gamut mapping. La luminance est calculée après
+décodage de ces canaux sRGB, puis réencodée pour son bin. L'alpha n'est pas
+un canal de l'histogramme.
 
 ### Compression de gamut de sortie
 
-Les transformations restent en sRGB linéaire sans écrêtage intermédiaire. Avant
+Les réglages utilisent Rec.2020 linéaire, sans bornage global du master ; les
+bornages propres à certains opérateurs restent explicites. Avant
 l'aperçu et les exports JPEG/PNG/TIFF/DNG, `ColorPipeline::mapToSrgbGamut()`
-ramène les couleurs hors gamut dans le cube sRGB. Il conserve d'abord la
-luminance puis réduit la chroma vers le gris de même luminance jusqu'à ce que les
+convertit les valeurs vers sRGB linéaire, puis ramène les couleurs hors gamut
+dans le cube de sortie. Le mapping actuel borne d'abord les composantes
+négatives, recalcule Y, réduit les Y supérieurs à un, puis la chroma vers le gris
+de même Y jusqu'à ce que les
 trois canaux soient représentables. Contrairement à un `clamp` indépendant de
 R, G et B, cette compression préserve la direction de teinte autant que le
 gamut le permet et évite les franges colorées dans les blancs très lumineux.
