@@ -54,12 +54,12 @@ nominal, pas une obligation de borner le master ; rejeter NaN/Inf explicitement.
 Un DCP appliquant une courbe produit un master linéaire au sens du transfert
 de stockage, pas nécessairement un signal physique scene-linear non rendu.
 
-Qt 6.11.2 installé expose les primaires nommées `Bt2020`, mais elles ne sont
-disponibles que depuis Qt 6.8. Le port utilise donc **sur toutes les versions**
-le constructeur aux coordonnées xy explicites avec transfert `Linear`,
-compatible avec le minimum Qt 6.4 du projet. Il n'y a pas de branche legacy
-ni de relèvement implicite du minimum. Le simple espace nommé `Bt2020` ne
-spécifie pas notre contrat linéaire. Vérifier les autres environnements en CI.
+Le port utilise **sur toutes les versions** le constructeur aux coordonnées
+xy explicites avec transfert `Linear`. Le simple espace nommé `Bt2020` ne
+spécifie pas notre contrat linéaire. Les primaires nommées `Bt2020` existent
+depuis Qt 6.8, désormais le minimum du projet
+([ADR-0016](../decisions/ADR-0016-minimum-qt-6-8.md)) ; le chemin explicite,
+unique et sans branche de version, reste celui du contrat.
 
 ## 3. Flux cible et frontières
 

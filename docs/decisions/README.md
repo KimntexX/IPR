@@ -26,6 +26,9 @@ identité de contenu, préparation concurrente et limites de mémoire.
 [ADR-0015](ADR-0015-controle-memoire-et-prechargement.md) : contrôleur dédié,
 seuil global 80/75 %, réservations, cache d’images adaptatif et préchargement.
 
+[ADR-0016](ADR-0016-minimum-qt-6-8.md) : Qt 6.8 minimum pour tous les modes,
+CI Linux sur SDK Qt 6.8.3, `.deb` sur Debian 13 et plus de chemin Qt < 6.8.
+
 [ADR-0013](ADR-0013-contrat-import-commun.md) : frontière d'import commune aux
 RAW et aux images développées, métadonnées indépendantes et contrôles partagés.
 

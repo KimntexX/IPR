@@ -246,3 +246,14 @@ __marimo__/
 /.ci-cache/
 /dist-*/
 /ci-logs/
+
+# Per-family numeric dumps flattened from the canonical JSON evidence by
+# scripts/export_documentation_metrics.py: regenerable, not tracked.
+docs/validation/metrics/base-raw-profils.csv
+docs/validation/metrics/tonalite.csv
+docs/validation/metrics/balance-blancs.csv
+docs/validation/metrics/couleur-globale.csv
+docs/validation/metrics/melangeur.csv
+docs/validation/metrics/bruit.csv
+docs/validation/metrics/detail.csv
+docs/validation/metrics/performance-ouverture.csv

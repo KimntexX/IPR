@@ -16,7 +16,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(IPR_ENABLE_LIBRAW "Enable CR2/CR3/DNG decoding through LibRaw" ON)
 option(IPR_BUILD_RAW_BENCHMARK "Build the command-line RAW loading benchmark" OFF)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Core Gui Quick Concurrent)
+find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Quick Concurrent)
 find_package(TIFF REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
 qt_standard_project_setup()
