@@ -1,5 +1,5 @@
+import importlib.util
 import unittest
-import cv2
 import numpy as np
 
 from investigate_r7_gain import encode, fit_tiles, gain, register, score, summarize_tiles
@@ -35,7 +35,9 @@ class R7GainStudyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Insufficient'):
             fit_tiles(a, a, np.ones((48, 48), bool))
 
+    @unittest.skipUnless(importlib.util.find_spec('cv2'), 'OpenCV (cv2) is optional outside manual studies')
     def test_registration_recovers_translation_not_photometric_gain(self):
+        import cv2
         random = np.random.default_rng(15)
         a = cv2.GaussianBlur(random.uniform(.02, .5, (300, 330, 3)).astype(np.float32), (0, 0), 2)
         b = cv2.warpAffine(a*1.03, np.float32([[1, 0, 3], [0, 1, -2]]), (330, 300))

@@ -7,7 +7,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 import platform
 
-import cv2
 import numpy as np
 
 from analysis import native
@@ -24,6 +23,7 @@ def encode(rgb):
 
 def register(lr, ipr):
     """Affine geometry on smoothed log-Y; template LR -> input IPR coordinates."""
+    import cv2  # Manual image analysis only: numeric unit tests run without OpenCV.
     def features(rgb):
         y = rgb @ LUMA
         return cv2.GaussianBlur(np.log1p(20*y).astype(np.float32), (0, 0), 1.2)
@@ -106,6 +106,7 @@ def summarize_tiles(tiles):
 
 
 def main():
+    import cv2  # Manual image analysis only: numeric unit tests run without OpenCV.
     now = datetime.now(timezone.utc)
     prefix = 'investigation-gain-r7'
     previous = sorted(Path('docs/validation/raw').glob(prefix+'-v[0-9][0-9][0-9]-*.json'))

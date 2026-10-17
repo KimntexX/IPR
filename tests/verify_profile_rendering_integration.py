@@ -9,7 +9,6 @@ import os
 from pathlib import Path
 import subprocess
 
-import cv2
 import numpy as np
 
 from analysis import native
@@ -29,6 +28,7 @@ def compare_codes(before, after, exact=False):
 
 
 def main():
+    import cv2  # Manual image analysis only: numeric unit tests run without OpenCV.
     now = datetime.now(timezone.utc)
     prefix = 'integration-profile-rendering'
     previous = sorted(Path('docs/validation/raw').glob(prefix+'-v[0-9][0-9][0-9]-*.json'))
