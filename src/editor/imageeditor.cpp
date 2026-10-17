@@ -1538,12 +1538,15 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     cv::merge(std::vector<cv::Mat>{channels[0], channels[1], channels[2]}, adjusted);
 
     const bool whiteBalanceEdit = settings.temperature != referenceTemperature || settings.tint != 0;
-    if (source.dcpContext && whiteBalanceEdit) {
+    // RAW with a DCP: exposure and white balance act on the scene-linear camera
+    // signal before the profile tone curve, so highlights keep its shoulder.
+    const bool sceneExposure = source.dcpContext && settings.brightness != 0.0f;
+    if (source.dcpContext && (whiteBalanceEdit || sceneExposure)) {
         QString error;
         if (source.dcpContext->cameraRgb.size() != adjusted.size() ||
-            !CameraProfileEngine::renderWhiteBalance(*source.dcpContext,
-                settings.temperature, settings.tint, adjusted, &error)) {
-            qWarning() << "Échec de la balance capteur avant DCP :" << error;
+            !CameraProfileEngine::renderFromCameraSignal(*source.dcpContext,
+                settings.temperature, settings.tint, settings.brightness, adjusted, &error)) {
+            qWarning() << "Échec du rendu capteur avant DCP :" << error;
             return {};
         }
     }
@@ -1558,8 +1561,9 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         }
     }
 
-    // One brightness unit is one EV in linear light.
-    if (settings.brightness != 0.0f) {
+    // One brightness unit is one EV in linear light. Sources without a camera
+    // signal (rendered rasters, RAW without DCP) have no profile curve to precede.
+    if (settings.brightness != 0.0f && !sceneExposure) {
         const float exposureFactor = static_cast<float>(
             std::exp2(static_cast<double>(settings.brightness)));
         adjusted *= exposureFactor;

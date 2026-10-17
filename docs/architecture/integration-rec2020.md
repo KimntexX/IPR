@@ -94,7 +94,7 @@ préparation comme le contrat actuel.
 | `ColorPipeline::WorkingImage` | `CV_32FC4`, étiquette sRGB linéaire | Identité Rec.2020 centrale, contrôles aux frontières ; bloquant si pixels et étiquette divergent |
 | `ColorPipeline::fromSourceImage` | ICC converti via RGBA64 entier vers sRGB | Conversion float vers le master, alpha/ICC absent/ICC LUT testés ; risque de bornage préalable |
 | `fromLinearRgb16`, `RawDecoder::decode`, `applyProfile` | Sorties marquées sRGB linéaire | Convertir une seule fois tous les chemins, y compris sans DCP et changement de profil à chaud |
-| `CameraProfileEngine` | Tables dans ProPhoto D50 ; matrice finale vers sRGB | Conserver le domaine des tables ; changer la matrice finale et le contrat de `renderWhiteBalance` ensemble |
+| `CameraProfileEngine` | Tables dans ProPhoto D50 ; matrice finale vers sRGB | Conserver le domaine des tables ; changer la matrice finale et le contrat de `renderFromCameraSignal` ensemble |
 | `renderWorkingImage` : WB RAW | Recalcule depuis `dcpContext` | Retour dans le master même après température/nuance, sans double application DCP ni redécodage |
 | WB des images non RAW | Matrices Bradford et normalisation en sRGB | Conjuguer les matrices par les changements de base ; même blanc de référence, aucun gain arbitraire |
 | Exposition / flou | Gain scalaire / convolution RGB | Invariance théorique ; vérifier ordre, frontières et arrondis |

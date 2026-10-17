@@ -45,8 +45,11 @@ struct DcpWorkingContext
 
 bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tint,
                        cv::Vec3d &gains, QString *error = nullptr);
-bool renderWhiteBalance(const DcpWorkingContext &source, int temperature, int tint,
-                         cv::Mat &linearRgb, QString *error = nullptr);
+// Scene-referred source edits: white balance gains and exposure scale the
+// linear camera signal, then the DCP (tables and tone curve) is applied.
+// Exposure therefore precedes the profile tone curve, as in camera RAW editors.
+bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
+                            double exposureEv, cv::Mat &linearRgb, QString *error = nullptr);
 
 struct LcpRenderOptions
 {
@@ -76,7 +79,7 @@ Selection findProfiles(const QString &cameraMake, const QString &cameraModel,
                        const QString &lensMake, const QString &lensModel,
                        const QStringList &profileDirectories = {});
 // Camera RGB input -> linear Rec.2020 D65 output (unbounded float).
-// renderWhiteBalance returns this same master domain.
+// renderFromCameraSignal returns this same master domain.
 bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,
               double whiteBalanceKelvin = 5500.0, QString *error = nullptr,
               const DcpRenderOptions &options = {});

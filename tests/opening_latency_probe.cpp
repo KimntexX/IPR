@@ -215,6 +215,23 @@ public:
         return {{"runs", runs}};
     }
 
+    // Diagnostic render with the generator's decode (Camera Neutral, optics on)
+    // at one exposure value; the output path must stay outside the corpus.
+    static QJsonObject render(const QString &raw, double exposureEv, const QString &out)
+    {
+        RawDecoder::Options options;
+        options.preferCameraNeutral = true;
+        options.useNormalizationEnvironment = false;
+        auto loaded = ImageEditor::loadFromDisk(raw, false, options);
+        if (loaded.image.isNull()) return {{"error", loaded.error}};
+        ImageEditor::Settings settings;
+        settings.temperature = int(std::lround(loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));
+        settings.brightness = float(exposureEv);
+        const auto written = ImageEditor::writeImage(loaded.image, settings, out, "TIFF", 100);
+        return {{"output", out}, {"exposure", exposureEv}, {"success", written.success},
+                {"message", written.message}, {"dcp", loaded.metadata.dcpProfile}};
+    }
+
     // Inputs MUST be private copies: this measures the real editor lifecycle,
     // including its normal .ipr writes, without modifying source recipes.
     // budget < 0 keeps the controller's automatic retention cap. With idleMs
@@ -332,6 +349,12 @@ int main(int argc, char **argv)
     QJsonObject result;
     if (args.size() == 5 && args[1] == "stages")
         result = IprTestImageGenerator::stages(args[2], args[3], args[4]);
+    else if (args.size() == 5 && args[1] == "render") {
+        bool ok = false;
+        const double ev = args[3].toDouble(&ok);
+        if (!ok) return 2;
+        result = IprTestImageGenerator::render(args[2], ev, args[4]);
+    }
     else if (args.size() == 11 && args[1] == "navigation") {
         bool ok = args[3] == "auto", idleOk = false;
         const qint64 budget = ok ? -1 : qint64(args[3].toULongLong(&ok));
@@ -344,7 +367,7 @@ int main(int argc, char **argv)
         result = previews(args.mid(2));
 #endif
     } else {
-        std::cerr << "previews RAW... | stages RAW DCP CONFIG | navigation CONFIG auto|BUDGET IDLE_MS PRIVATE_A DCP_A PRIVATE_B DCP_B PRIVATE_C DCP_C\n";
+        std::cerr << "render RAW EV OUT.tiff | previews RAW... | stages RAW DCP CONFIG | navigation CONFIG auto|BUDGET IDLE_MS PRIVATE_A DCP_A PRIVATE_B DCP_B PRIVATE_C DCP_C\n";
         return 2;
     }
     result["qt"] = QT_VERSION_STR;

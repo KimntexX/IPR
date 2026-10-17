@@ -618,3 +618,82 @@ export, récupération tonale, IHM des réglages, restauration RAW, profils,
 décodeur et générateur). Le générateur a été recompilé avec le correctif après
 la fin de la campagne automatique : ses neuf manifestes confirment désormais
 **527/527 exports produits**, sans constituer une validation de leur rendu.
+
+## Campagne Lumières sur le pipeline Rec.2020 — 17 octobre 2026
+
+Les validations précédentes portent sur l'ancien rendu. La livraison
+`v0.1.23-alpha` a changé la base : master Rec.2020 linéaire, calibration
+d'ouverture RAW, Qt 6.8 minimum. Les six réglages sont revalidés dans l'ordre
+demandé par l'utilisateur : exposition, contraste, ombres, noirs, HL, blancs.
+
+Génération `iprGenerateTests lumiere` depuis `patch_light`, sur les six scènes
+du protocole (0007, 0037, 0043, 0327, 9421, 9950). Les treize autres CR3 ont
+été déplacés temporairement dans `tests/image/base-hors-protocole/`. Résultat :
+300 variantes et six neutres `-IPR-neutre-lumiere`, Camera Neutral, sans
+erreur. Les références Lightroom ont été réexportées par l'utilisateur :
+4 états d'exposition et 8 états pour chaque autre réglage, sur les six scènes.
+
+### Exposition
+
+Mémoire : [mesure-lumiere-v001](../raw/mesure-lumiere-v001-20261017T215824485914Z.json),
+protocole `grouped-native-v2`, analyse 2.0. États : 50 mesurés, 4 exclus.
+Échantillonnage natif une ligne/colonne sur huit, sans conversion 8 bits.
+
+| Moteur | −1 EV | −0,5 EV | 0 EV | +0,5 EV | +1 EV |
+| --- | --- | --- | --- | --- | --- |
+| Gain attendu `2^EV` | 0,5000 | 0,7071 | 1,0000 | 1,4142 | 2,0000 |
+| IPR, médiane des 6 scènes | 0,5000 | 0,7071 | 1,0000 | 1,4142 | 2,0000 |
+| LR, plage des 5 scènes auditées | 0,23–0,33 | 0,47–0,59 | — | 1,55–1,80 | 2,21–3,20 |
+
+- **IPR** : loi `2^EV` exacte sur les pixels non écrêtés des six scènes, avec
+  des quantiles à ±0,0002 et aucune inversion ; 0 EV est identique au neutre.
+- **Écrêtage IPR à +1 EV** : 14,62 % (0007), 13,02 % (9421) et 17,61 % (9950)
+  des échantillons ont un canal saturé ; de 0 à 2,50 % ailleurs. Ces valeurs
+  sont pratiquement celles du 9 octobre : la nouvelle base ne les modifie pas.
+- **Lightroom** : réponse non linéaire du TIFF final, quasiment sans écrêtage
+  (au plus 0,51 % sur 9421 à +1 EV). Ses gains sont identiques à ceux du 9 octobre,
+  ce qui confirme la cohérence des exports. Ce n'est pas une raison de modifier `2^EV`.
+- **Exclusion** : les 4 variantes LR de 6V1A0037 portent `WhiteBalance=Custom`,
+  avec la même température et la même nuance ; leur neutre porte `As Shot`.
+  L'analyseur exige une égalité stricte : un neutre LR « Custom » est demandé à l'utilisateur.
+
+Lecture : la loi d'exposition est revalidée sur le pipeline Rec.2020. L'écart
+visible avec Lightroom en surexposition tient à la compression des hautes
+lumières de sortie (écrêtage net d'IPR, adoucissement de LR). Il sera traité
+avec Blancs et HL, sans modifier l'exposition. Décision visuelle de l'utilisateur
+et parité Lightroom : non évaluées à ce stade.
+
+### Exposition — correction avant le DCP et validation visuelle, 18 octobre 2026
+
+La comparaison dans l'IHM a contredit la lecture précédente. À +1 EV, IPR
+délavait le mur jaune de 9421, que Lightroom conservait ; à 0 EV, IPR
+paraissait un peu plus sombre sur toutes les images. La campagne v001
+validait un invariant (`2^EV` appliqué au rendu), pas le comportement
+photographique. Cause : l'exposition multipliait le master déjà développé, donc
+**après** la courbe tonale et les tables du DCP, sans épaule pour les hautes lumières.
+
+Correction (`patch_light`) : pour un RAW avec DCP, l'exposition et la balance
+des blancs agissent ensemble sur le signal caméra linéaire, **avant** le DCP
+(`CameraProfileEngine::renderFromCameraSignal`). Les sources sans signal caméra
+(raster, RAW sans DCP) gardent la multiplication linéaire. Les tests imposent
+désormais que +1 EV ne soit pas un doublement après la courbe.
+
+Rendu diagnostique des cinq scènes ayant un neutre LR, hors corpus
+(quantiles de Y linéaire, pas d'échantillonnage 8) :
+
+| +1 EV | Canal saturé, avant → après (LR) | Chroma du décile haut, avant → après (LR) |
+| --- | --- | --- |
+| 6V1A9421 | 13,18 % → 0,28 % (0,53 %) | 0,526 → 0,780 (0,695) |
+| 6V1A0007 | 15,00 % → 0 % (0 %) | 0,178 → 0,154 (0,097) |
+| 6V1A9950 | 17,86 % → 0 % (0 %) | 0,297 → 0,232 (0,193) |
+
+Les hautes lumières sont désormais comprimées par l'épaule du profil, et la
+forme de la réponse se rapproche de LR. Un écart de niveau subsiste à tous les
+EV : IPR reste plus sombre dans les tons moyens et bas, dès 0 EV. Exemple à 0 EV,
+Y médian 0,089 contre 0,149 sur 9421, et 0,020 contre 0,039 sur 0327. Cet écart
+du rendu de base est un sujet distinct, à étudier avant le contraste.
+
+**Décision de l'utilisateur, 18 octobre 2026 : exposition validée dans cet état.**
+Les TIFF `lumiere/exposure` de la génération du 17 octobre restent ceux de l'ancien
+calcul ; une campagne v002 sera produite après leur régénération. Les variantes des
+cinq autres réglages, générées à 0 EV, ne sont pas affectées par cette correction.

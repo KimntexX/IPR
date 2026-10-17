@@ -1812,8 +1812,8 @@ bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tin
                                   temperature, tint, gains, error);
 }
 
-bool renderWhiteBalance(const DcpWorkingContext &source, int temperature, int tint,
-                         cv::Mat &linearRgb, QString *error)
+bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
+                            double exposureEv, cv::Mat &linearRgb, QString *error)
 {
     if (source.cameraRgb.empty() || source.cameraRgb.type() != CV_32FC3) {
         if (error) *error = QStringLiteral("Source capteur DCP absente.");
@@ -1824,6 +1824,11 @@ bool renderWhiteBalance(const DcpWorkingContext &source, int temperature, int ti
     if (!profile ||
         !profile->whiteBalanceGains(source.sourceKelvin, source.cameraNeutral,
                                    temperature, tint, gains, error)) return false;
+    if (!std::isfinite(exposureEv) || std::abs(exposureEv) > 10.0) {
+        if (error) *error = QStringLiteral("Exposition hors domaine.");
+        return false;
+    }
+    gains *= std::exp2(exposureEv);
     cv::Mat rgb;
     cv::transform(source.cameraRgb, rgb, cv::Matx33f(
         float(gains[0]),0,0, 0,float(gains[1]),0, 0,0,float(gains[2])));

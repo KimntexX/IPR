@@ -346,7 +346,7 @@ int main(int argc, char **argv)
     cv::Mat neutralExpected = untouched.clone(), rendered;
     if (!check(CameraProfileEngine::applyDcp(wbPath, neutralExpected, wb.sourceKelvin,
                                              &wbError, wb.options) &&
-                   CameraProfileEngine::renderWhiteBalance(wb, 5200, 0, rendered, &wbError) &&
+                   CameraProfileEngine::renderFromCameraSignal(wb, 5200, 0, 0.0, rendered, &wbError) &&
                    cv::norm(rendered, neutralExpected, cv::NORM_INF) == 0,
                "neutral DCP preserves fractional CCT and exposure options exactly")) return 1;
     for (int temperature : {2000, 3500, 5200, 9000, 50000}) {
@@ -359,7 +359,7 @@ int main(int argc, char **argv)
                 float(gains[0]),0,0, 0,1,0, 0,0,float(gains[2])));
             const double kelvin = temperature == 5200 && tint == 0 ? wb.sourceKelvin : temperature;
             if (!check(CameraProfileEngine::applyDcp(wbPath, expected, kelvin, &wbError, wb.options) &&
-                           CameraProfileEngine::renderWhiteBalance(wb, temperature, tint, rendered, &wbError) &&
+                           CameraProfileEngine::renderFromCameraSignal(wb, temperature, tint, 0.0, rendered, &wbError) &&
                            cv::norm(expected, rendered, cv::NORM_INF) == 0 && cv::checkRange(rendered),
                        "WB is before nonlinear DCP, not a post-curve multiplication")) return 1;
         }
@@ -376,15 +376,26 @@ int main(int argc, char **argv)
     const auto editorNeutral = IprTestImageGenerator::render(editorSource, 5200, 0);
     if (!check(editorNeutral.linearRgba.data == editorSource.linearRgba.data,
                "editor neutral is the untouched source, not a WB round trip")) return 1;
-    if (!CameraProfileEngine::renderWhiteBalance(wb, 2000, 0, rendered, &wbError)) return 1;
+    // Exposure scales the scene-linear camera signal before the DCP tone curve,
+    // like WB: never a multiplication of the already rendered master.
+    if (!CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 1.0, rendered, &wbError)) return 1;
     const auto editorCold = IprTestImageGenerator::render(editorSource, 2000, 0, 1);
     cv::Mat expectedRgba;
     editorChannels.clear();
-    cv::split(rendered * 2.f, editorChannels);
+    cv::split(rendered, editorChannels);
     editorChannels.push_back(cv::Mat(rendered.size(), CV_32FC1, cv::Scalar(1)));
     cv::merge(editorChannels, expectedRgba);
     if (!check(!editorCold.isNull() && cv::norm(expectedRgba, editorCold.linearRgba, cv::NORM_INF) < 1e-6,
-               "editor applies WB once before exposure, preserves alpha")) return 1;
+               "editor applies WB and exposure once, before the DCP, preserves alpha")) return 1;
+    cv::Mat coldNeutral;
+    if (!CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, coldNeutral, &wbError)) return 1;
+    if (!check(cv::norm(coldNeutral * 2.f, rendered, cv::NORM_INF) > 1e-3,
+               "with a nonlinear profile curve, +1 EV is not a post-curve doubling")) return 1;
+    cv::Mat brighterOnce;
+    if (!CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 1.0, brighterOnce, &wbError) ||
+        !check(cv::norm(brighterOnce, rendered, cv::NORM_INF) == 0 &&
+               cv::norm(wb.cameraRgb, untouched, cv::NORM_INF) == 0,
+               "exposure edits never accumulate nor mutate the camera source")) return 1;
     auto large = editorSource;
     cv::repeat(editorSource.linearRgba, 1, 800, large.linearRgba);
     auto largeContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(wb);
