@@ -66,7 +66,7 @@ int main(int argc, char **argv)
                           QString::fromLocal8Bit(argv[3])};
     out << "profile_search_roots=" << profileDirectories.join(QLatin1Char(';'))
         << Qt::endl;
-    RawDecoder::SourceMetadata metadata;
+    ImageMetadata metadata;
     QString error;
     RawDecoder::Options options;
     options.automaticWhiteBalance = automaticWhiteBalance;
@@ -122,7 +122,7 @@ int main(int argc, char **argv)
         out << "ERROR: cannot create empty profile directory." << Qt::endl;
         return 5;
     }
-    RawDecoder::SourceMetadata baselineMetadata;
+    ImageMetadata baselineMetadata;
     const QStringList emptyProfileDirectories{
         emptyProfiles.filePath(QStringLiteral("dcp")),
         emptyProfiles.filePath(QStringLiteral("lcp"))};

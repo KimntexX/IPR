@@ -196,11 +196,11 @@ int main(int argc, char **argv)
         RawDecoder::Options received;
         QString error;
         check(RawDecoder::registerFormatHandler({"generatormockraw"},
-            [&](const QString &, const RawDecoder::Options &options, RawDecoder::SourceMetadata *, QString *) {
+            [&](const QString &, const RawDecoder::Options &options, ImageMetadata *, QString *) {
                 received = options;
                 ColorPipeline::WorkingImage result;
                 result.linearRgba = cv::Mat(8, 8, CV_32FC4, cv::Scalar(.1f, .2f, .3f, 1.f)).clone();
-                result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+                result.colorSpace = ColorPipeline::workingColorSpace();
                 return result;
             }, &error), "Cannot register mock decoder");
         IprTestImageGenerator::load("sample.generatormockraw", true, false, true);

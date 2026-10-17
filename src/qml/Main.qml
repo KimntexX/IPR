@@ -116,6 +116,18 @@ ApplicationWindow {
                 visible: imageEditor.hasImage
             }
 
+            // Interim camera rendering (embedded JPEG), not the IPR development.
+            Label {
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.margins: 20
+                visible: imageEditor.hasImage && imageEditor.embeddedPreview
+                text: qsTr("Aperçu boîtier — développement en cours")
+                color: uiPreferences.theme.text
+                padding: 6
+                background: Rectangle { color: uiPreferences.theme.panel; opacity: 0.85; radius: 4 }
+            }
+
             ColumnLayout {
                 anchors.centerIn: parent
                 visible: !imageEditor.hasImage && !root.folderOpen
@@ -228,7 +240,11 @@ ApplicationWindow {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         color: uiPreferences.theme.secondaryText
-        text: imageEditor.statusMessage
+        text: imageEditor.statusMessage + (imageEditor.memoryCacheStatus && imageEditor.memoryCacheStatus.available
+            ? qsTr(" | Cache : %1 image(s), %2 Mio%3")
+                .arg(imageEditor.decodedImageCacheEntryCount)
+                .arg(Math.round(imageEditor.decodedImageCacheSizeBytes / 1048576))
+                .arg(imageEditor.memoryCacheStatus.pressure ? qsTr(" — pression mémoire") : "") : "")
         background: Rectangle { color: uiPreferences.theme.panel }
     }
 
@@ -275,7 +291,7 @@ ApplicationWindow {
 
         title: qsTr("Ouvrir une image")
         fileMode: FileDialog.OpenFile
-        nameFilters: [qsTr("Images (*.jpg *.jpeg *.png *.tif *.tiff *.cr2 *.cr3 *.dng)")]
+        nameFilters: imageEditor.imageFileFilters()
         onAccepted: imageEditor.openImage(selectedFile)
     }
 }

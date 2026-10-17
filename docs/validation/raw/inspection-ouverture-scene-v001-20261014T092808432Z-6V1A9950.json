@@ -1,0 +1,852 @@
+{
+    "LibRaw": "0.22.2-Release",
+    "campaign_id": "inspection-ouverture-scene-v001-20261014T092808432Z-6V1A9950",
+    "data_version": 1,
+    "executable_sha256": "dadeec3b4d6b38626d2ea07f5e58f99332b98fb98c55b119a3569c77be4251d0",
+    "group": "base-colorimetrique",
+    "measured_at_utc": "2026-10-14T09:28:08.432Z",
+    "method": "As Shot; no normalization or LCP; sample-only DCP ablations; production output; independent distributions, no pixel LR MAE",
+    "native_sample_step": 8,
+    "record": {
+        "camera_neutral": [
+            0.5283797979354858,
+            1,
+            0.5908828377723694
+        ],
+        "elapsed_ms": 6306,
+        "height": 6959,
+        "metadata": {
+            "CA": false,
+            "ISO": 100,
+            "black_estimated": true,
+            "camera": "EOS R6 Mark III",
+            "dcp": "Canon EOS R6 Mark III Camera Neutral",
+            "exposure_seconds": 0.0005000000237487257,
+            "focal_mm": 24,
+            "lcp": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+            "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+            "lens": "RF24-105mm F2.8 L IS USM Z",
+            "lens_geometry": false,
+            "lens_vignetting": false,
+            "normalization": false,
+            "warning": ""
+        },
+        "profile_path": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "reference_kelvin": 4924.211272770631,
+        "sample_replay_max_abs_float_error": 0,
+        "scene": "6V1A9950",
+        "sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+        "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A9950.CR3",
+        "stages": {
+            "camera_RGB_before_DCP_not_sRGB": {
+                "mean_RGB": [
+                    0.043786069316587135,
+                    0.05140482076180402,
+                    0.06034164627783768
+                ]
+            },
+            "current": {
+                "encoded_clipped_percent": 0,
+                "flower_ROI": {
+                    "G_over_R_of_means": 1.1299572979845025,
+                    "black_percent": 1.635104578858112,
+                    "mean_RGB": [
+                        0.014662784036169309,
+                        0.01656831983044017,
+                        0.007359324159932326
+                    ],
+                    "mean_Y": 0.015498313433167966,
+                    "outside_srgb_percent": 0,
+                    "samples": 70760
+                },
+                "hue_bands_linear_HSV": [
+                    {
+                        "G_over_R_of_means": 0.6667837235880526,
+                        "black_percent": 11.203262146658373,
+                        "hue_begin_degrees": 0,
+                        "mean_RGB": [
+                            0.021158202158938492,
+                            0.01410794481996578,
+                            0.010005322451195345
+                        ],
+                        "mean_Y": 0.015310620195206136,
+                        "outside_srgb_percent": 0,
+                        "samples": 28938
+                    },
+                    {
+                        "G_over_R_of_means": 0.845385371564199,
+                        "black_percent": 9.984172699203446,
+                        "hue_begin_degrees": 30,
+                        "mean_RGB": [
+                            0.012197250345504842,
+                            0.010311377015396165,
+                            0.006013209316178518
+                        ],
+                        "mean_Y": 0.010401985977493419,
+                        "outside_srgb_percent": 0,
+                        "samples": 77082
+                    },
+                    {
+                        "G_over_R_of_means": 1.1827546247296894,
+                        "black_percent": 15.49357972688362,
+                        "hue_begin_degrees": 60,
+                        "mean_RGB": [
+                            0.006447799487329631,
+                            0.007626164662968841,
+                            0.003401343640646581
+                        ],
+                        "mean_Y": 0.007070612148816063,
+                        "outside_srgb_percent": 0,
+                        "samples": 88314
+                    },
+                    {
+                        "G_over_R_of_means": 1.6761315269603958,
+                        "black_percent": 20.220800885215393,
+                        "hue_begin_degrees": 90,
+                        "mean_RGB": [
+                            0.0040275031649982555,
+                            0.006750625029786353,
+                            0.0028611819695806722
+                        ],
+                        "mean_Y": 0.005890871532385318,
+                        "outside_srgb_percent": 0,
+                        "samples": 119293
+                    },
+                    {
+                        "G_over_R_of_means": 1.713770618128609,
+                        "black_percent": 48.23609689525759,
+                        "hue_begin_degrees": 120,
+                        "mean_RGB": [
+                            0.0036900923621431356,
+                            0.0063239718684217,
+                            0.00417911537425162
+                        ],
+                        "mean_Y": 0.00560915044650779,
+                        "outside_srgb_percent": 0,
+                        "samples": 14655
+                    },
+                    {
+                        "G_over_R_of_means": 1.6134631927404233,
+                        "black_percent": 57.345454545454544,
+                        "hue_begin_degrees": 150,
+                        "mean_RGB": [
+                            0.013258257209463305,
+                            0.0213917100073544,
+                            0.0193099853900279
+                        ],
+                        "mean_Y": 0.019512237425151777,
+                        "outside_srgb_percent": 0,
+                        "samples": 2750
+                    },
+                    {
+                        "G_over_R_of_means": 1.54482010407725,
+                        "black_percent": 19.24557351809084,
+                        "hue_begin_degrees": 180,
+                        "mean_RGB": [
+                            0.10449259088954369,
+                            0.1614222551332864,
+                            0.20965582644374348
+                        ],
+                        "mean_Y": 0.15280147236368222,
+                        "outside_srgb_percent": 0,
+                        "samples": 3897
+                    },
+                    {
+                        "G_over_R_of_means": 1.3964519854047404,
+                        "black_percent": 0.6982613232385736,
+                        "hue_begin_degrees": 210,
+                        "mean_RGB": [
+                            0.15937403953774937,
+                            0.22255819393446372,
+                            0.35104424062860656
+                        ],
+                        "mean_Y": 0.21840193528103657,
+                        "outside_srgb_percent": 0,
+                        "samples": 164838
+                    },
+                    {
+                        "G_over_R_of_means": 0.8807233068320635,
+                        "black_percent": 39.682539682539684,
+                        "hue_begin_degrees": 240,
+                        "mean_RGB": [
+                            0.03404911222036336,
+                            0.029987846709414442,
+                            0.05175203458677727
+                        ],
+                        "mean_Y": 0.03242264612178773,
+                        "outside_srgb_percent": 0,
+                        "samples": 1323
+                    },
+                    {
+                        "G_over_R_of_means": 0.7590885537968296,
+                        "black_percent": 38.079470198675494,
+                        "hue_begin_degrees": 270,
+                        "mean_RGB": [
+                            0.042258427504180546,
+                            0.03207788861987658,
+                            0.046719698059677975
+                        ],
+                        "mean_Y": 0.03529940982823322,
+                        "outside_srgb_percent": 0,
+                        "samples": 302
+                    },
+                    {
+                        "G_over_R_of_means": 0.7682555884726209,
+                        "black_percent": 48.03921568627451,
+                        "hue_begin_degrees": 300,
+                        "mean_RGB": [
+                            0.037563955100009094,
+                            0.028858718430716596,
+                            0.0350265921413572
+                        ],
+                        "mean_Y": 0.03115477222851644,
+                        "outside_srgb_percent": 0,
+                        "samples": 306
+                    },
+                    {
+                        "G_over_R_of_means": 0.5647632332760427,
+                        "black_percent": 41.735537190082646,
+                        "hue_begin_degrees": 330,
+                        "mean_RGB": [
+                            0.027394157764893536,
+                            0.015471213112175286,
+                            0.016870668472259247
+                        ],
+                        "mean_Y": 0.01810707182234127,
+                        "outside_srgb_percent": 0,
+                        "samples": 968
+                    }
+                ],
+                "output": {
+                    "G_over_R_of_means": 1.3642315079585257,
+                    "black_percent": 12.155965120887831,
+                    "mean_RGB": [
+                        0.058519161058549235,
+                        0.07983368333537245,
+                        0.11962730516551148
+                    ],
+                    "mean_Y": 0.07817531539543433,
+                    "outside_srgb_percent": 0,
+                    "samples": 504600
+                },
+                "pre_output": {
+                    "G_over_R_of_means": 1.364228271132345,
+                    "black_percent": 12.155370590566786,
+                    "mean_RGB": [
+                        0.058519128913425617,
+                        0.07983345006573345,
+                        0.11962712403743014
+                    ],
+                    "mean_Y": 0.0781751286495103,
+                    "outside_srgb_percent": 0.08283789139912802,
+                    "samples": 504600
+                }
+            },
+            "display_5200_tint5_diagnostic": {
+                "encoded_clipped_percent": 0,
+                "flower_ROI": {
+                    "G_over_R_of_means": 0.9807056893309826,
+                    "black_percent": 1.6139061616732617,
+                    "mean_RGB": [
+                        0.016764458520673677,
+                        0.016440999849777944,
+                        0.007145169123289176
+                    ],
+                    "mean_Y": 0.015838608184757595,
+                    "outside_srgb_percent": 0,
+                    "samples": 70760
+                },
+                "hue_bands_linear_HSV": [
+                    {
+                        "G_over_R_of_means": 0.6443980832062679,
+                        "black_percent": 9.05135607693246,
+                        "hue_begin_degrees": 0,
+                        "mean_RGB": [
+                            0.023650364711345923,
+                            0.01524024968712047,
+                            0.010522656676196283
+                        ],
+                        "mean_Y": 0.01668762992588177,
+                        "outside_srgb_percent": 0,
+                        "samples": 49186
+                    },
+                    {
+                        "G_over_R_of_means": 0.8240930529889651,
+                        "black_percent": 10.911695950531634,
+                        "hue_begin_degrees": 30,
+                        "mean_RGB": [
+                            0.010121094117020153,
+                            0.00834072335048379,
+                            0.004131946131939133
+                        ],
+                        "mean_Y": 0.008415356460270062,
+                        "outside_srgb_percent": 0,
+                        "samples": 92827
+                    },
+                    {
+                        "G_over_R_of_means": 1.1804556472949732,
+                        "black_percent": 17.03882125729662,
+                        "hue_begin_degrees": 60,
+                        "mean_RGB": [
+                            0.006558924679744799,
+                            0.0077425196783871214,
+                            0.0033191960915012046
+                        ],
+                        "mean_Y": 0.007171523418702607,
+                        "outside_srgb_percent": 0,
+                        "samples": 92166
+                    },
+                    {
+                        "G_over_R_of_means": 1.6512549795793252,
+                        "black_percent": 23.43882387964002,
+                        "hue_begin_degrees": 90,
+                        "mean_RGB": [
+                            0.0035407843096749354,
+                            0.005846737722967081,
+                            0.002414888137568569
+                        ],
+                        "mean_Y": 0.005108712487235508,
+                        "outside_srgb_percent": 0,
+                        "samples": 87338
+                    },
+                    {
+                        "G_over_R_of_means": 1.7105676163759467,
+                        "black_percent": 59.03628514759071,
+                        "hue_begin_degrees": 120,
+                        "mean_RGB": [
+                            0.003256736340100594,
+                            0.005570867718450798,
+                            0.0037321025318792153
+                        ],
+                        "mean_Y": 0.004946124540943078,
+                        "outside_srgb_percent": 0,
+                        "samples": 8571
+                    },
+                    {
+                        "G_over_R_of_means": 1.604281045238229,
+                        "black_percent": 59.51086956521739,
+                        "hue_begin_degrees": 150,
+                        "mean_RGB": [
+                            0.013221395560355145,
+                            0.02121083428907463,
+                            0.01906442838857142
+                        ],
+                        "mean_Y": 0.019357309109332612,
+                        "outside_srgb_percent": 0,
+                        "samples": 1840
+                    },
+                    {
+                        "G_over_R_of_means": 1.3988982919538429,
+                        "black_percent": 29.813036887316827,
+                        "hue_begin_degrees": 180,
+                        "mean_RGB": [
+                            0.05617439563126535,
+                            0.07858226610011651,
+                            0.09410775240824336
+                        ],
+                        "mean_Y": 0.07493929294988558,
+                        "outside_srgb_percent": 0,
+                        "samples": 1979
+                    },
+                    {
+                        "G_over_R_of_means": 1.27432218390261,
+                        "black_percent": 0.6313446180608353,
+                        "hue_begin_degrees": 210,
+                        "mean_RGB": [
+                            0.17500325405870518,
+                            0.22301052890215248,
+                            0.34583259297735763
+                        ],
+                        "mean_Y": 0.22167193529665824,
+                        "outside_srgb_percent": 0,
+                        "samples": 164411
+                    },
+                    {
+                        "G_over_R_of_means": 0.9530602357686035,
+                        "black_percent": 22.065532973869765,
+                        "hue_begin_degrees": 240,
+                        "mean_RGB": [
+                            0.09204124741794438,
+                            0.08772085296458244,
+                            0.130234826566833
+                        ],
+                        "mean_Y": 0.09170887771944967,
+                        "outside_srgb_percent": 0,
+                        "samples": 2411
+                    },
+                    {
+                        "G_over_R_of_means": 0.7698534893780679,
+                        "black_percent": 27.82608695652174,
+                        "hue_begin_degrees": 270,
+                        "mean_RGB": [
+                            0.044818336604656735,
+                            0.03450355282321577,
+                            0.049729351771282196
+                        ],
+                        "mean_Y": 0.037795778539200436,
+                        "outside_srgb_percent": 0,
+                        "samples": 460
+                    },
+                    {
+                        "G_over_R_of_means": 0.7579313873422763,
+                        "black_percent": 33.182844243792324,
+                        "hue_begin_degrees": 300,
+                        "mean_RGB": [
+                            0.04620254509871991,
+                            0.03501835910541687,
+                            0.04312105901416741
+                        ],
+                        "mean_Y": 0.03798113198100484,
+                        "outside_srgb_percent": 0,
+                        "samples": 443
+                    },
+                    {
+                        "G_over_R_of_means": 0.6258877984489343,
+                        "black_percent": 37.1007371007371,
+                        "hue_begin_degrees": 330,
+                        "mean_RGB": [
+                            0.03662249639484974,
+                            0.022921573642276538,
+                            0.02481736984667542
+                        ],
+                        "mean_Y": 0.025971266305431204,
+                        "outside_srgb_percent": 0,
+                        "samples": 1221
+                    }
+                ],
+                "output": {
+                    "G_over_R_of_means": 1.2369897272830697,
+                    "black_percent": 12.011494252873563,
+                    "mean_RGB": [
+                        0.06410358145569245,
+                        0.07929547174274504,
+                        0.11693079273378115
+                    ],
+                    "mean_Y": 0.0787829460432486,
+                    "outside_srgb_percent": 0,
+                    "samples": 504600
+                },
+                "pre_output": {
+                    "G_over_R_of_means": 1.2369859967505783,
+                    "black_percent": 12.01030519223147,
+                    "mean_RGB": [
+                        0.06410356164591509,
+                        0.0792952080978344,
+                        0.11693061741334934
+                    ],
+                    "mean_Y": 0.0787827406147357,
+                    "outside_srgb_percent": 0.08125247720967102,
+                    "samples": 504600
+                }
+            },
+            "hue_preserving_curve": {
+                "encoded_clipped_percent": 0,
+                "flower_ROI": {
+                    "G_over_R_of_means": 1.0980675392016526,
+                    "black_percent": 1.6322781232334653,
+                    "mean_RGB": [
+                        0.015105948905778337,
+                        0.016587352142273915,
+                        0.007348432277805512
+                    ],
+                    "mean_Y": 0.01560535579998062,
+                    "outside_srgb_percent": 0,
+                    "samples": 70760
+                },
+                "hue_bands_linear_HSV": [
+                    {
+                        "G_over_R_of_means": 0.6838417058514509,
+                        "black_percent": 13.531661708457289,
+                        "hue_begin_degrees": 0,
+                        "mean_RGB": [
+                            0.024678393473025244,
+                            0.016876114690266893,
+                            0.012175232617763586
+                        ],
+                        "mean_Y": 0.018195475473846773,
+                        "outside_srgb_percent": 0,
+                        "samples": 23530
+                    },
+                    {
+                        "G_over_R_of_means": 0.8444866699960839,
+                        "black_percent": 8.850201140935022,
+                        "hue_begin_degrees": 30,
+                        "mean_RGB": [
+                            0.011490426990059657,
+                            0.009703512425668605,
+                            0.005476048878462158
+                        ],
+                        "mean_Y": 0.009778187593949467,
+                        "outside_srgb_percent": 0,
+                        "samples": 87998
+                    },
+                    {
+                        "G_over_R_of_means": 1.1931381631498899,
+                        "black_percent": 13.311318606240036,
+                        "hue_begin_degrees": 60,
+                        "mean_RGB": [
+                            0.006318705305269055,
+                            0.007539088441414185,
+                            0.0032396314839974955
+                        ],
+                        "mean_Y": 0.006969214194344114,
+                        "outside_srgb_percent": 0,
+                        "samples": 105384
+                    },
+                    {
+                        "G_over_R_of_means": 1.576965480654074,
+                        "black_percent": 24.038645977406034,
+                        "hue_begin_degrees": 90,
+                        "mean_RGB": [
+                            0.004189213991479205,
+                            0.006606245855635776,
+                            0.002941489195790113
+                        ],
+                        "mean_Y": 0.005827789450475152,
+                        "outside_srgb_percent": 0,
+                        "samples": 99053
+                    },
+                    {
+                        "G_over_R_of_means": 1.6344973682393098,
+                        "black_percent": 56.072956177871035,
+                        "hue_begin_degrees": 120,
+                        "mean_RGB": [
+                            0.0038336898768574464,
+                            0.006266156014369179,
+                            0.004366131974902444
+                        ],
+                        "mean_Y": 0.005611831977884678,
+                        "outside_srgb_percent": 0,
+                        "samples": 12391
+                    },
+                    {
+                        "G_over_R_of_means": 1.6229639823037019,
+                        "black_percent": 56.76258992805755,
+                        "hue_begin_degrees": 150,
+                        "mean_RGB": [
+                            0.013040987688615524,
+                            0.021165053312289,
+                            0.019098954087855884
+                        ],
+                        "mean_Y": 0.019288704596692016,
+                        "outside_srgb_percent": 0,
+                        "samples": 2780
+                    },
+                    {
+                        "G_over_R_of_means": 1.451635587678544,
+                        "black_percent": 25.252185608607935,
+                        "hue_begin_degrees": 180,
+                        "mean_RGB": [
+                            0.05977397642492349,
+                            0.08677003139547726,
+                            0.10616090388681015
+                        ],
+                        "mean_Y": 0.08243069110261152,
+                        "outside_srgb_percent": 0,
+                        "samples": 2974
+                    },
+                    {
+                        "G_over_R_of_means": 1.3774942556391268,
+                        "black_percent": 0.6848239627996859,
+                        "hue_begin_degrees": 210,
+                        "mean_RGB": [
+                            0.16113087923475747,
+                            0.22195686055196026,
+                            0.3526901084489713
+                        ],
+                        "mean_Y": 0.2184641974220851,
+                        "outside_srgb_percent": 0,
+                        "samples": 165590
+                    },
+                    {
+                        "G_over_R_of_means": 0.870106032795964,
+                        "black_percent": 36.21511232130701,
+                        "hue_begin_degrees": 240,
+                        "mean_RGB": [
+                            0.030849458058409024,
+                            0.026842299565107756,
+                            0.04799692514945373
+                        ],
+                        "mean_Y": 0.029221585427973335,
+                        "outside_srgb_percent": 0,
+                        "samples": 1469
+                    },
+                    {
+                        "G_over_R_of_means": 0.7497386486266583,
+                        "black_percent": 36.392405063291136,
+                        "hue_begin_degrees": 270,
+                        "mean_RGB": [
+                            0.04119768937037899,
+                            0.030887499955088788,
+                            0.04567668967075251
+                        ],
+                        "mean_Y": 0.03414722572225036,
+                        "outside_srgb_percent": 0,
+                        "samples": 316
+                    },
+                    {
+                        "G_over_R_of_means": 0.7675098463832727,
+                        "black_percent": 47.57281553398058,
+                        "hue_begin_degrees": 300,
+                        "mean_RGB": [
+                            0.036693172365688455,
+                            0.028162371085704494,
+                            0.03426316361877447
+                        ],
+                        "mean_Y": 0.03041649665871672,
+                        "outside_srgb_percent": 0,
+                        "samples": 309
+                    },
+                    {
+                        "G_over_R_of_means": 0.6721856426893295,
+                        "black_percent": 45.995423340961096,
+                        "hue_begin_degrees": 330,
+                        "mean_RGB": [
+                            0.02515451286331485,
+                            0.016908502395564295,
+                            0.018352049849847625
+                        ],
+                        "mean_Y": 0.01876582834720733,
+                        "outside_srgb_percent": 0,
+                        "samples": 874
+                    }
+                ],
+                "output": {
+                    "G_over_R_of_means": 1.3430997659330097,
+                    "black_percent": 12.143479984145857,
+                    "mean_RGB": [
+                        0.05899592438216642,
+                        0.07923741222868927,
+                        0.11969918294471613
+                    ],
+                    "mean_Y": 0.07785541175819648,
+                    "outside_srgb_percent": 0,
+                    "samples": 504600
+                },
+                "pre_output": {
+                    "G_over_R_of_means": 1.3430998888346135,
+                    "black_percent": 12.146254458977408,
+                    "mean_RGB": [
+                        0.05899591686098325,
+                        0.0792374093776827,
+                        0.11969893306109153
+                    ],
+                    "mean_Y": 0.07785539007857559,
+                    "outside_srgb_percent": 0.07570352754657154,
+                    "samples": 504600
+                }
+            },
+            "sample_replay_witness": {
+                "encoded_clipped_percent": 0,
+                "flower_ROI": {
+                    "G_over_R_of_means": 1.1299572979845025,
+                    "black_percent": 1.635104578858112,
+                    "mean_RGB": [
+                        0.014662784036169309,
+                        0.01656831983044017,
+                        0.007359324159932326
+                    ],
+                    "mean_Y": 0.015498313433167966,
+                    "outside_srgb_percent": 0,
+                    "samples": 70760
+                },
+                "hue_bands_linear_HSV": [
+                    {
+                        "G_over_R_of_means": 0.6667837235880526,
+                        "black_percent": 11.203262146658373,
+                        "hue_begin_degrees": 0,
+                        "mean_RGB": [
+                            0.021158202158938492,
+                            0.01410794481996578,
+                            0.010005322451195345
+                        ],
+                        "mean_Y": 0.015310620195206136,
+                        "outside_srgb_percent": 0,
+                        "samples": 28938
+                    },
+                    {
+                        "G_over_R_of_means": 0.845385371564199,
+                        "black_percent": 9.984172699203446,
+                        "hue_begin_degrees": 30,
+                        "mean_RGB": [
+                            0.012197250345504842,
+                            0.010311377015396165,
+                            0.006013209316178518
+                        ],
+                        "mean_Y": 0.010401985977493419,
+                        "outside_srgb_percent": 0,
+                        "samples": 77082
+                    },
+                    {
+                        "G_over_R_of_means": 1.1827546247296894,
+                        "black_percent": 15.49357972688362,
+                        "hue_begin_degrees": 60,
+                        "mean_RGB": [
+                            0.006447799487329631,
+                            0.007626164662968841,
+                            0.003401343640646581
+                        ],
+                        "mean_Y": 0.007070612148816063,
+                        "outside_srgb_percent": 0,
+                        "samples": 88314
+                    },
+                    {
+                        "G_over_R_of_means": 1.6761315269603958,
+                        "black_percent": 20.220800885215393,
+                        "hue_begin_degrees": 90,
+                        "mean_RGB": [
+                            0.0040275031649982555,
+                            0.006750625029786353,
+                            0.0028611819695806722
+                        ],
+                        "mean_Y": 0.005890871532385318,
+                        "outside_srgb_percent": 0,
+                        "samples": 119293
+                    },
+                    {
+                        "G_over_R_of_means": 1.713770618128609,
+                        "black_percent": 48.23609689525759,
+                        "hue_begin_degrees": 120,
+                        "mean_RGB": [
+                            0.0036900923621431356,
+                            0.0063239718684217,
+                            0.00417911537425162
+                        ],
+                        "mean_Y": 0.00560915044650779,
+                        "outside_srgb_percent": 0,
+                        "samples": 14655
+                    },
+                    {
+                        "G_over_R_of_means": 1.6134631927404233,
+                        "black_percent": 57.345454545454544,
+                        "hue_begin_degrees": 150,
+                        "mean_RGB": [
+                            0.013258257209463305,
+                            0.0213917100073544,
+                            0.0193099853900279
+                        ],
+                        "mean_Y": 0.019512237425151777,
+                        "outside_srgb_percent": 0,
+                        "samples": 2750
+                    },
+                    {
+                        "G_over_R_of_means": 1.54482010407725,
+                        "black_percent": 19.24557351809084,
+                        "hue_begin_degrees": 180,
+                        "mean_RGB": [
+                            0.10449259088954369,
+                            0.1614222551332864,
+                            0.20965582644374348
+                        ],
+                        "mean_Y": 0.15280147236368222,
+                        "outside_srgb_percent": 0,
+                        "samples": 3897
+                    },
+                    {
+                        "G_over_R_of_means": 1.3964519854047404,
+                        "black_percent": 0.6982613232385736,
+                        "hue_begin_degrees": 210,
+                        "mean_RGB": [
+                            0.15937403953774937,
+                            0.22255819393446372,
+                            0.35104424062860656
+                        ],
+                        "mean_Y": 0.21840193528103657,
+                        "outside_srgb_percent": 0,
+                        "samples": 164838
+                    },
+                    {
+                        "G_over_R_of_means": 0.8807233068320635,
+                        "black_percent": 39.682539682539684,
+                        "hue_begin_degrees": 240,
+                        "mean_RGB": [
+                            0.03404911222036336,
+                            0.029987846709414442,
+                            0.05175203458677727
+                        ],
+                        "mean_Y": 0.03242264612178773,
+                        "outside_srgb_percent": 0,
+                        "samples": 1323
+                    },
+                    {
+                        "G_over_R_of_means": 0.7590885537968296,
+                        "black_percent": 38.079470198675494,
+                        "hue_begin_degrees": 270,
+                        "mean_RGB": [
+                            0.042258427504180546,
+                            0.03207788861987658,
+                            0.046719698059677975
+                        ],
+                        "mean_Y": 0.03529940982823322,
+                        "outside_srgb_percent": 0,
+                        "samples": 302
+                    },
+                    {
+                        "G_over_R_of_means": 0.7682555884726209,
+                        "black_percent": 48.03921568627451,
+                        "hue_begin_degrees": 300,
+                        "mean_RGB": [
+                            0.037563955100009094,
+                            0.028858718430716596,
+                            0.0350265921413572
+                        ],
+                        "mean_Y": 0.03115477222851644,
+                        "outside_srgb_percent": 0,
+                        "samples": 306
+                    },
+                    {
+                        "G_over_R_of_means": 0.5647632332760427,
+                        "black_percent": 41.735537190082646,
+                        "hue_begin_degrees": 330,
+                        "mean_RGB": [
+                            0.027394157764893536,
+                            0.015471213112175286,
+                            0.016870668472259247
+                        ],
+                        "mean_Y": 0.01810707182234127,
+                        "outside_srgb_percent": 0,
+                        "samples": 968
+                    }
+                ],
+                "output": {
+                    "G_over_R_of_means": 1.3642315079585257,
+                    "black_percent": 12.155965120887831,
+                    "mean_RGB": [
+                        0.058519161058549235,
+                        0.07983368333537245,
+                        0.11962730516551148
+                    ],
+                    "mean_Y": 0.07817531539543433,
+                    "outside_srgb_percent": 0,
+                    "samples": 504600
+                },
+                "pre_output": {
+                    "G_over_R_of_means": 1.364228271132345,
+                    "black_percent": 12.155370590566786,
+                    "mean_RGB": [
+                        0.058519128913425617,
+                        0.07983345006573345,
+                        0.11962712403743014
+                    ],
+                    "mean_Y": 0.0781751286495103,
+                    "outside_srgb_percent": 0.08283789139912802,
+                    "samples": 504600
+                }
+            }
+        },
+        "status": "measured",
+        "width": 4639
+    },
+    "schema_version": 1,
+    "source_hashes": {
+        "src/core/ColorPipeline.cpp": "7005624ec9ee109fe9a482b5c5f4d5e413df56ee41934b78c44193cc7543646c",
+        "src/core/ColorPipeline.h": "72f70a063030d3390196c4951d695dfaac8c6413c0b5c9db6634977a1457cbf8",
+        "src/editor/imageeditor.cpp": "d17e988710321bf0b5d3e9675b3feb3c287d39eccc9d4cba6c04f70989811167",
+        "src/profiles/CameraProfileEngine.cpp": "50056f043dae5e56e6abb68dab08e15723beec32d52f065369f7aedc75c918f7",
+        "src/profiles/CameraProfileEngine.h": "03a75fdb7b1e3a2e4e5aec3025093eeb88dd258c3151ac7edc0c48da818353df",
+        "src/raw/RawDecoder.cpp": "51f8f479418c496cc7ebbfcd4b2fc9c0d2a781c8194e04d894f32468897a14e4",
+        "src/raw/RawDecoder.h": "65c16a2a3bfcf0e6ff6b8bdb0952c1f6e8ae1707b0d597965a9b24c35ffc14f2",
+        "tests/raw_opening_probe.cpp": "c3821a6babd2bc91a80a6346c57cabff19de7bbc4ffd1b3d674b4ac006254f65"
+    }
+}

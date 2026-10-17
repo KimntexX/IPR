@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     }
 
     const QString rawPath = QString::fromLocal8Bit(argv[1]);
-    RawDecoder::SourceMetadata metadata;
+    ImageMetadata metadata;
     QString error;
     RawDecoder::Options options;
     options.automaticWhiteBalance = false; // use the camera's as-shot values

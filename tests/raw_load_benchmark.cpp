@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     for (int run = 1; run <= runs; ++run) {
         QElapsedTimer timer;
         timer.start();
-        RawDecoder::SourceMetadata metadata;
+        ImageMetadata metadata;
         QString error;
         const ColorPipeline::WorkingImage image = RawDecoder::decode(
             fileName, RawDecoder::Options{false}, &metadata, &error);

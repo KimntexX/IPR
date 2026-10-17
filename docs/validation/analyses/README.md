@@ -19,6 +19,9 @@ les mettre à jour en parallèle. Les futures conclusions restent dans le rappor
 
 ## Rapports de référence
 
+- [Performance d’ouverture et navigation](analyse-performance-ouverture.md) :
+  mesure native par étape, cache des pixels et cache des profils distincts.
+
 - [Couleur](analyse-couleur.md) : température, nuance, vibrance, saturation,
   niveaux de gris ; première vérification native de l'outillage sur 40 états,
   sans nouvelle validation visuelle ou comparaison Lightroom.

@@ -1,0 +1,1052 @@
+{
+  "campaign_id": "audit-export-optique-v001-20261014T214454613860Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "group": "base-colorimetrique",
+  "measured_at_utc": "2026-10-14T21:45:19.758929+00:00",
+  "records": [
+    {
+      "scene": "6V1A0043",
+      "saved_state": {
+        "file": "tests\\image\\base\\6V1A0043.CR3.ipr",
+        "sha256": "b7bd724e56840309644826715ed7a1a86274e207d8cdfc142071b8ba5612cf62",
+        "source_signature_matches": true,
+        "source_size": 22877396,
+        "source_modified_ms": 1785930012000,
+        "settings": {
+          "brightness": 0.0,
+          "contrast": 0,
+          "blur": 0,
+          "grayscale": false,
+          "shadows": 0,
+          "blacks": 0,
+          "highlights": 0,
+          "whites": 0,
+          "temperature": 4924,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "grain": 0,
+          "denoiseLuminance": 0,
+          "denoiseChrominance": 0,
+          "sharpeningAmount": 0,
+          "sharpeningRadius": 1.0,
+          "sharpeningMasking": 0,
+          "mixer": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "grading": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "automaticWhiteBalance": false,
+          "curves": [
+            [],
+            [],
+            [],
+            []
+          ]
+        },
+        "raw": {
+          "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+          "profileSha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "manifest": ":/config/raw-normalization.json",
+          "manifestSha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795",
+          "normalizationEnabled": true,
+          "engineVersion": "ipr-render-2026-10-14-audited-radiometry-v1|libraw=0.22.2-Release",
+          "lensProfile": "C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Canon/Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW.lcp",
+          "lensProfileSha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+          "lensProfileResolved": true,
+          "lensCorrectionEnabled": true,
+          "chromaticAberrationEnabled": true
+        },
+        "user_metadata": {
+          "rating": 0,
+          "colorLabel": "",
+          "flagged": false,
+          "ratingSet": false,
+          "colorLabelSet": false
+        },
+        "limitation": "Current saved state only, not proof of settings at TIFF export time"
+      },
+      "export_metadata": {
+        "path": "tests\\image\\base\\neutre\\6V1A0043-IPR_Raw_audit.tiff",
+        "sha256": "6efa6b577420de003d0ccf45f297d625223b740a7856a5dbc6dbc1f9bd48cf55",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-14T15:36:09.984109+00:00",
+        "dimensions": [
+          6959,
+          4639
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "export_mean_Y": 0.020218885410135137,
+      "LR_mean_Y": 0.020342404798719682,
+      "reproduced_optics": {
+        "CA": false,
+        "baseline_exposure_ev": 0.26,
+        "cols": 870,
+        "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+        "lens_geometry": true,
+        "lens_vignetting": true,
+        "no_lcp": false,
+        "normalization_applied": true,
+        "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "provenance": "Adobe DNG 18.6; radiometric trials 2026-10-14; 6V1A0043; visual validation pending",
+        "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+        "rows": 580,
+        "white_level": 13995
+      },
+      "reproduced_mean_Y": 0.020218885410135137,
+      "export_to_reproduced_relative_percent": 0.0,
+      "output_pixels_sha256": "94473d1f2c28146414411ebc90da6912769571f4897e79f982385c36b3595ee8"
+    },
+    {
+      "scene": "6V1A0081",
+      "saved_state": {
+        "file": "tests\\image\\base\\6V1A0081.CR3.ipr",
+        "sha256": "a2cb070a82d0178ba86cd047853d24dd7e026a684f8d715a92015a4b058ba16d",
+        "source_signature_matches": true,
+        "source_size": 24774868,
+        "source_modified_ms": 1785932152000,
+        "settings": {
+          "brightness": 0.0,
+          "contrast": 0,
+          "blur": 0,
+          "grayscale": false,
+          "shadows": 0,
+          "blacks": 0,
+          "highlights": 0,
+          "whites": 0,
+          "temperature": 4924,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "grain": 0,
+          "denoiseLuminance": 0,
+          "denoiseChrominance": 0,
+          "sharpeningAmount": 0,
+          "sharpeningRadius": 1.0,
+          "sharpeningMasking": 0,
+          "mixer": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "grading": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "automaticWhiteBalance": false,
+          "curves": [
+            [],
+            [],
+            [],
+            []
+          ]
+        },
+        "raw": {
+          "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+          "profileSha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "manifest": ":/config/raw-normalization.json",
+          "manifestSha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795",
+          "normalizationEnabled": true,
+          "engineVersion": "ipr-render-2026-10-14-audited-radiometry-v1|libraw=0.22.2-Release",
+          "lensProfile": "C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Canon/Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW.lcp",
+          "lensProfileSha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+          "lensProfileResolved": true,
+          "lensCorrectionEnabled": true,
+          "chromaticAberrationEnabled": true
+        },
+        "user_metadata": {
+          "rating": 0,
+          "colorLabel": "",
+          "flagged": false,
+          "ratingSet": false,
+          "colorLabelSet": false
+        },
+        "limitation": "Current saved state only, not proof of settings at TIFF export time"
+      },
+      "export_metadata": {
+        "path": "tests\\image\\base\\neutre\\6V1A0081-IPR-RAW_Audit.tiff",
+        "sha256": "2738f58269eaadc918d16cc86c1ccc1a64a5fb2a93318d51a7d95166299d1536",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-14T15:26:11.369075+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "export_mean_Y": 0.03207050265349624,
+      "LR_mean_Y": 0.031000410298702197,
+      "reproduced_optics": {
+        "CA": false,
+        "baseline_exposure_ev": 0.26,
+        "cols": 580,
+        "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+        "lens_geometry": true,
+        "lens_vignetting": true,
+        "no_lcp": false,
+        "normalization_applied": true,
+        "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "provenance": "Adobe DNG 18.6; radiometric trials 2026-10-14; 6V1A0081; visual validation pending",
+        "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0081.CR3",
+        "rows": 870,
+        "white_level": 13995
+      },
+      "reproduced_mean_Y": 0.032070502648075316,
+      "export_to_reproduced_relative_percent": 1.6903145549918008e-08,
+      "output_pixels_sha256": "c4f4ab9317559b7879e38a30c7ed8ae5d24b704925da53ae9b6818dee9175186"
+    },
+    {
+      "scene": "6V1A0524",
+      "saved_state": {
+        "file": "tests\\image\\base\\6V1A0524.CR3.ipr",
+        "sha256": "9b7b99dd1ab3be23da05f3d50fb0c0280dd52a3d2985157338f2a1b9d46007bf",
+        "source_signature_matches": true,
+        "source_size": 42018004,
+        "source_modified_ms": 1787502625000,
+        "settings": {
+          "brightness": 0.0,
+          "contrast": 0,
+          "blur": 0,
+          "grayscale": false,
+          "shadows": 0,
+          "blacks": 0,
+          "highlights": 0,
+          "whites": 0,
+          "temperature": 4924,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "grain": 0,
+          "denoiseLuminance": 0,
+          "denoiseChrominance": 0,
+          "sharpeningAmount": 0,
+          "sharpeningRadius": 1.0,
+          "sharpeningMasking": 0,
+          "mixer": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "grading": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "automaticWhiteBalance": false,
+          "curves": [
+            [],
+            [],
+            [],
+            []
+          ]
+        },
+        "raw": {
+          "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+          "profileSha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "manifest": ":/config/raw-normalization.json",
+          "manifestSha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795",
+          "normalizationEnabled": true,
+          "engineVersion": "ipr-render-2026-10-14-audited-radiometry-v1|libraw=0.22.2-Release",
+          "lensProfile": "C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Canon/Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW.lcp",
+          "lensProfileSha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+          "lensProfileResolved": true,
+          "lensCorrectionEnabled": true,
+          "chromaticAberrationEnabled": true
+        },
+        "user_metadata": {
+          "rating": 0,
+          "colorLabel": "",
+          "flagged": false,
+          "ratingSet": false,
+          "colorLabelSet": false
+        },
+        "limitation": "Current saved state only, not proof of settings at TIFF export time"
+      },
+      "export_metadata": {
+        "path": "tests\\image\\base\\neutre\\6V1A0524-IPR_RAW_Audit.tiff",
+        "sha256": "d737db0ab7f214cb0c39e0e984cf00d557bf14aef2969867b9a1b28e80c71271",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-14T15:29:14.097859+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "export_mean_Y": 0.5639884572793875,
+      "LR_mean_Y": 0.546939099994184,
+      "reproduced_optics": {
+        "CA": false,
+        "baseline_exposure_ev": 0.28,
+        "cols": 580,
+        "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+        "lens_geometry": true,
+        "lens_vignetting": true,
+        "no_lcp": false,
+        "normalization_applied": true,
+        "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "provenance": "Adobe DNG 18.6; radiometric trials 2026-10-14; 6V1A0524; visual validation pending",
+        "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0524.CR3",
+        "rows": 870,
+        "white_level": 14351
+      },
+      "reproduced_mean_Y": 0.5639884572793875,
+      "export_to_reproduced_relative_percent": 0.0,
+      "output_pixels_sha256": "d54d28ac94fc57562636c961f9e901c1fff82cbf056cf7e86c4610bc1c0ac902"
+    },
+    {
+      "scene": "6V1A9421",
+      "saved_state": {
+        "file": "tests\\image\\base\\6V1A9421.CR3.ipr",
+        "sha256": "ae8401e62dbfd14895789b84bbec610eb5a0f6c6d63ebf59cd3b80a168b54224",
+        "source_signature_matches": true,
+        "source_size": 42297556,
+        "source_modified_ms": 1784653948000,
+        "settings": {
+          "brightness": 0.0,
+          "contrast": 0,
+          "blur": 0,
+          "grayscale": false,
+          "shadows": 0,
+          "blacks": 0,
+          "highlights": 0,
+          "whites": 0,
+          "temperature": 4924,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "grain": 0,
+          "denoiseLuminance": 0,
+          "denoiseChrominance": 0,
+          "sharpeningAmount": 0,
+          "sharpeningRadius": 1.0,
+          "sharpeningMasking": 0,
+          "mixer": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "grading": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "automaticWhiteBalance": false,
+          "curves": [
+            [],
+            [],
+            [],
+            []
+          ]
+        },
+        "raw": {
+          "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+          "profileSha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "manifest": ":/config/raw-normalization.json",
+          "manifestSha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795",
+          "normalizationEnabled": true,
+          "engineVersion": "ipr-render-2026-10-14-audited-radiometry-v1|libraw=0.22.2-Release",
+          "lensProfile": "C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Canon/Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW.lcp",
+          "lensProfileSha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+          "lensProfileResolved": true,
+          "lensCorrectionEnabled": true,
+          "chromaticAberrationEnabled": true
+        },
+        "user_metadata": {
+          "rating": 0,
+          "colorLabel": "",
+          "flagged": false,
+          "ratingSet": false,
+          "colorLabelSet": false
+        },
+        "limitation": "Current saved state only, not proof of settings at TIFF export time"
+      },
+      "export_metadata": {
+        "path": "tests\\image\\base\\neutre\\6V1A9421-IPR_RAW_Audit.tiff",
+        "sha256": "1a1ae7fce6965c8a4721c6854b0833f03f07380accd9c02d06590b01af3b1f67",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-14T15:30:39.619264+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "export_mean_Y": 0.21919401689770154,
+      "LR_mean_Y": 0.20929783101956276,
+      "reproduced_optics": {
+        "CA": false,
+        "baseline_exposure_ev": 0.28,
+        "cols": 580,
+        "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+        "lens_geometry": true,
+        "lens_vignetting": true,
+        "no_lcp": false,
+        "normalization_applied": true,
+        "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "provenance": "Adobe DNG 18.6; radiometric trials 2026-10-14; 6V1A9421; visual validation pending",
+        "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9421.CR3",
+        "rows": 870,
+        "white_level": 14351
+      },
+      "reproduced_mean_Y": 0.21919401689770154,
+      "export_to_reproduced_relative_percent": 0.0,
+      "output_pixels_sha256": "d671645e1aac3327152fa0c784cf624c10eebb7ecaec62925442e77da45de618"
+    },
+    {
+      "scene": "6V1A9940",
+      "saved_state": {
+        "file": "tests\\image\\base\\6V1A9940.CR3.ipr",
+        "sha256": "d0a84898856cb285f32f768206b987aa621b530b5f4b21a17836e066ac422435",
+        "source_signature_matches": true,
+        "source_size": 38926036,
+        "source_modified_ms": 1784998666000,
+        "settings": {
+          "brightness": 0.0,
+          "contrast": 0,
+          "blur": 0,
+          "grayscale": false,
+          "shadows": 0,
+          "blacks": 0,
+          "highlights": 0,
+          "whites": 0,
+          "temperature": 4924,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "grain": 0,
+          "denoiseLuminance": 0,
+          "denoiseChrominance": 0,
+          "sharpeningAmount": 0,
+          "sharpeningRadius": 1.0,
+          "sharpeningMasking": 0,
+          "mixer": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "grading": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "automaticWhiteBalance": false,
+          "curves": [
+            [],
+            [],
+            [],
+            []
+          ]
+        },
+        "raw": {
+          "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+          "profileSha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "manifest": ":/config/raw-normalization.json",
+          "manifestSha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795",
+          "normalizationEnabled": true,
+          "engineVersion": "ipr-render-2026-10-14-audited-radiometry-v1|libraw=0.22.2-Release",
+          "lensProfile": "C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Canon/Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW.lcp",
+          "lensProfileSha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+          "lensProfileResolved": true,
+          "lensCorrectionEnabled": false,
+          "chromaticAberrationEnabled": false
+        },
+        "user_metadata": {
+          "rating": 0,
+          "colorLabel": "",
+          "flagged": false,
+          "ratingSet": false,
+          "colorLabelSet": false
+        },
+        "limitation": "Current saved state only, not proof of settings at TIFF export time"
+      },
+      "export_metadata": {
+        "path": "tests\\image\\base\\neutre\\6V1A9940-IPR_Raw_Audit.tiff",
+        "sha256": "c9938be1b80f0d5884bfd2a5cf1ba2ebd17436e1a37efef07970ac87c8e576fd",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-14T15:31:30.800517+00:00",
+        "dimensions": [
+          6959,
+          4639
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "export_mean_Y": 0.4900711607269821,
+      "LR_mean_Y": 0.4840376385495351,
+      "reproduction_status": "No optical replay: saved flags not both enabled"
+    },
+    {
+      "scene": "7Y6A7599",
+      "saved_state": {
+        "file": "tests\\image\\base\\7Y6A7599.CR3.ipr",
+        "sha256": "6c7e592d385aef5e5c017586d4e1346021aa8b5ccc60b4780e9396864a82b1ce",
+        "source_signature_matches": true,
+        "source_size": 55460186,
+        "source_modified_ms": 1757787794000,
+        "settings": {
+          "brightness": 0.0,
+          "contrast": 0,
+          "blur": 0,
+          "grayscale": false,
+          "shadows": 0,
+          "blacks": 0,
+          "highlights": 0,
+          "whites": 0,
+          "temperature": 5314,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "grain": 0,
+          "denoiseLuminance": 0,
+          "denoiseChrominance": 0,
+          "sharpeningAmount": 0,
+          "sharpeningRadius": 1.0,
+          "sharpeningMasking": 0,
+          "mixer": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "grading": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "automaticWhiteBalance": false,
+          "curves": [
+            [],
+            [],
+            [],
+            []
+          ]
+        },
+        "raw": {
+          "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R7/Canon EOS R7 Camera Neutral.dcp",
+          "profileSha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+          "manifest": ":/config/raw-normalization.json",
+          "manifestSha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795",
+          "normalizationEnabled": true,
+          "engineVersion": "ipr-render-2026-10-14-audited-radiometry-v1|libraw=0.22.2-Release",
+          "lensProfile": "C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Sigma/Canon/Canon (SIGMA 70-200mm F2.8 DG OS HSM S018) - RAW.lcp",
+          "lensProfileSha256": "d856486fc4691a9fc2fe010c2eb570dccb0594bd3427f3484f88029d4337c7e7",
+          "lensProfileResolved": true,
+          "lensCorrectionEnabled": true,
+          "chromaticAberrationEnabled": true
+        },
+        "user_metadata": {
+          "rating": 0,
+          "colorLabel": "",
+          "flagged": false,
+          "ratingSet": false,
+          "colorLabelSet": false
+        },
+        "limitation": "Current saved state only, not proof of settings at TIFF export time"
+      },
+      "export_metadata": {
+        "path": "tests\\image\\base\\neutre\\7Y6A7599-IPR-RAW_Audit.tiff",
+        "sha256": "3e6ceba29b311362f79eba724bfadac136a6650ef93b5257f96f905441aabe8c",
+        "bytes": 260364754,
+        "modified_at_utc": "2026-10-14T15:27:42.388476+00:00",
+        "dimensions": [
+          6984,
+          4660
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "export_mean_Y": 0.480759229024092,
+      "LR_mean_Y": 0.40259313911836264,
+      "reproduced_optics": {
+        "CA": false,
+        "baseline_exposure_ev": 0.35,
+        "cols": 873,
+        "lcp_sha256": "d856486fc4691a9fc2fe010c2eb570dccb0594bd3427f3484f88029d4337c7e7",
+        "lens_geometry": true,
+        "lens_vignetting": true,
+        "no_lcp": false,
+        "normalization_applied": true,
+        "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp",
+        "provenance": "Adobe DNG 18.6; radiometric trials 2026-10-14; 7Y6A7599; visual validation pending",
+        "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "rows": 583,
+        "white_level": 16384
+      },
+      "reproduced_mean_Y": 0.4807592290367872,
+      "export_to_reproduced_relative_percent": -2.6406543618406886e-09,
+      "output_pixels_sha256": "9e4550d4c7636e58add7ab841d4293e21cfe824481723accd2d0c35de4602532"
+    }
+  ],
+  "inputs": [
+    {
+      "file": "docs\\validation\\raw\\analyse-exports-raw-audit-v001-20261014T214131815660Z.json",
+      "sha256": "e93e2cd62b4af86af797df0557f766178840ffd7b3b2a823f67a1c5c54e09887"
+    },
+    {
+      "file": "build-windows-msvc\\Release\\rawNormalizationCorpusProbe.exe",
+      "sha256": "d62d1caf6c332abebb74eb70053a4e850e3f3bfedbfcf4266e1494a66b42c989"
+    },
+    {
+      "file": "config\\raw-normalization.json",
+      "sha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\check_raw_audit_optics.py",
+      "sha256": "4755e33c04c84b924e37b5f81dcff953211c9252d56a84a07834a2d777b76156"
+    },
+    {
+      "file": "tests\\inspect_saved_raw_state.py",
+      "sha256": "cea12c64123b45633a06803dd62505e6c8d330b1ce72b8f2270570b681e923a0"
+    },
+    {
+      "file": "tests\\raw_normalization_corpus_probe.cpp",
+      "sha256": "250f61325bc17365e8ccea51780a8b3e3e237d868846d0aa93d48091d4b15a63"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0043.CR3.ipr",
+      "sha256": "b7bd724e56840309644826715ed7a1a86274e207d8cdfc142071b8ba5612cf62"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0043.CR3",
+      "sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+      "sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\LensProfiles\\1.0\\Canon\\Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW.lcp",
+      "sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0081.CR3.ipr",
+      "sha256": "a2cb070a82d0178ba86cd047853d24dd7e026a684f8d715a92015a4b058ba16d"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0081.CR3",
+      "sha256": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0524.CR3.ipr",
+      "sha256": "9b7b99dd1ab3be23da05f3d50fb0c0280dd52a3d2985157338f2a1b9d46007bf"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0524.CR3",
+      "sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9421.CR3.ipr",
+      "sha256": "ae8401e62dbfd14895789b84bbec610eb5a0f6c6d63ebf59cd3b80a168b54224"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9421.CR3",
+      "sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9940.CR3.ipr",
+      "sha256": "d0a84898856cb285f32f768206b987aa621b530b5f4b21a17836e066ac422435"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9940.CR3",
+      "sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7599.CR3.ipr",
+      "sha256": "6c7e592d385aef5e5c017586d4e1346021aa8b5ccc60b4780e9396864a82b1ce"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7599.CR3",
+      "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp",
+      "sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\LensProfiles\\1.0\\Sigma\\Canon\\Canon (SIGMA 70-200mm F2.8 DG OS HSM S018) - RAW.lcp",
+      "sha256": "d856486fc4691a9fc2fe010c2eb570dccb0594bd3427f3484f88029d4337c7e7"
+    }
+  ],
+  "user_reported": {
+    "7599_IPR_lens_and_CA_enabled": true,
+    "earlier_all_disabled_answer_referred_to": "Lightroom",
+    "0081_orange_improved": true,
+    "0043_previous_vibrance_export_replaced": true
+  },
+  "method": "Fresh production decode with saved DCP/LCP, calibrated RAW, camera WB, no photo adjustments; native step 8",
+  "units": {
+    "Y": "relative linear sRGB luminance",
+    "difference": "100*(manual export/replay-1)"
+  },
+  "limitations": [
+    "Saved sidecar is current state, not independently timestamped export recipe",
+    "Differences from no-optics LR are not attributed to calibration alone",
+    "Scalar agreement is not proof of pixel identity, detail preservation or physical fidelity"
+  ]
+}

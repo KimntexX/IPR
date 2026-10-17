@@ -1,5 +1,6 @@
 #include "DecodedImageCache.h"
 #include "CameraProfileEngine.h"
+#include "RawDecoder.h"
 
 #include <QSet>
 
@@ -46,11 +47,34 @@ void DecodedImageCache::insert(const QString &key, Entry entry)
     trim();
 }
 
+std::optional<DecodedImageCache::Entry> DecodedImageCache::take(const QString &key)
+{
+    auto it = m_entries.find(key);
+    if (it == m_entries.end()) return std::nullopt;
+    auto entry = std::move(it->entry);
+    m_sizeBytes -= it->sizeBytes;
+    m_lru.erase(it->lruPosition);
+    m_entries.erase(it);
+    return entry;
+}
+
 void DecodedImageCache::clear()
 {
     m_entries.clear();
     m_lru.clear();
     m_sizeBytes = 0;
+}
+
+bool DecodedImageCache::evictOldest()
+{
+    if (m_lru.empty()) return false;
+    const QString key = m_lru.back();
+    auto it = m_entries.find(key);
+    m_sizeBytes -= it->sizeBytes;
+    m_entries.erase(it);
+    m_lru.pop_back();
+    ++m_evictions;
+    return true;
 }
 
 void DecodedImageCache::setBudgetBytes(quint64 budgetBytes)
@@ -102,6 +126,10 @@ quint64 DecodedImageCache::entrySizeBytes(const Entry &entry)
         add(entry.image.dcpContext->cameraRgb);
     if (entry.editProxy.dcpContext)
         add(entry.editProxy.dcpContext->cameraRgb);
+    if (entry.dcpSource) {
+        add(entry.dcpSource->cameraRgb);
+        if (entry.dcpSource->workingContext) add(entry.dcpSource->workingContext->cameraRgb);
+    }
     return bytes;
 }
 
@@ -115,12 +143,6 @@ void DecodedImageCache::touch(QHash<QString, StoredEntry>::iterator iterator)
 void DecodedImageCache::trim()
 {
     while (!m_lru.empty() && m_sizeBytes > m_budgetBytes) {
-        const QString key = m_lru.back();
-        const auto iterator = m_entries.find(key);
-        if (iterator != m_entries.end()) {
-            m_sizeBytes -= iterator->sizeBytes;
-            m_entries.erase(iterator);
-        }
-        m_lru.pop_back();
+        evictOldest();
     }
 }

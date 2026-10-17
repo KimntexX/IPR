@@ -1,0 +1,757 @@
+{
+  "campaign_id": "apercus-integres-v001-20261017T134839267649Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "group": "performance-ouverture",
+  "measured_at_utc": "2026-10-17T13:48:39.267649+00:00",
+  "status": "complete",
+  "tools": {
+    "platform": "Windows-11-10.0.26300-SP0",
+    "git_head": "032b899f68a0c0b7ec50328e491b0bc10e4890c5",
+    "dirty_worktree": true,
+    "configuration": "Release"
+  },
+  "command": [
+    "openingLatencyProbe.exe",
+    "previews",
+    "tests/image/base/*.CR3 (19 files, root only)"
+  ],
+  "inputs": {
+    "build-windows-msvc/Release/openingLatencyProbe.exe": "0393fca9da930131ea898252af6236a822db9bb5e7105d463509abee0dd5cdad",
+    "tests/opening_latency_probe.cpp": "ee2b4bdfb3859dab205e99088ac4ab14ef60da5001649c5b113fef9d49d7560a",
+    "src/raw/RawDecoder.cpp": "ad1da0e7b2c72d404ad03ce581973226bbee36810a3e5d9060b3b98022a90882",
+    "src/providers/ThumbnailProvider.cpp": "e5727566b408aef0ee146626a7430c13f2707310a1e05f0ac5c01aacab15196d"
+  },
+  "units": {
+    "duration": "ms",
+    "size": "bytes"
+  },
+  "protocol": {
+    "runs_per_scene": 3,
+    "statistic": "median",
+    "fresh_libraw_instance_per_operation": true,
+    "current": "RawDecoder::decodeEmbeddedThumbnail to 116x49 (largest embedded JPEG, then scaled)",
+    "smallest": "smallest embedded preview >= 116x49 via unpack_thumb_ex, scaled",
+    "display": "smallest embedded preview with long side >= 1024, decoded, not scaled"
+  },
+  "measurement": {
+    "libraw": "0.22.2-Release",
+    "logical_processors": 20,
+    "opencv_threads": 20,
+    "qt": "6.11.2",
+    "ribbon_target": "116x49",
+    "runs_per_scene": 3,
+    "scenes": [
+      {
+        "current_ribbon_thumbnail_ms_median": 204.2474,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 12.6405,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 11144,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 339976,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 2922524,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A0007.CR3",
+        "open_metadata_ms_median": 0.2956,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+        "smallest_ribbon_preview_ms_median": 0.8695
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 180.4464,
+        "display_index": 1,
+        "display_preview_height": 1080,
+        "display_preview_ms_median": 12.6196,
+        "display_preview_width": 1620,
+        "embedded_previews": [
+          {
+            "bytes": 18752,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 661936,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 5445908,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A0037.CR3",
+        "open_metadata_ms_median": 0.4203,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+        "smallest_ribbon_preview_ms_median": 0.8594
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 125.9896,
+        "display_index": 1,
+        "display_preview_height": 1080,
+        "display_preview_ms_median": 8.512,
+        "display_preview_width": 1620,
+        "embedded_previews": [
+          {
+            "bytes": 12168,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 176176,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 1241310,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A0043.CR3",
+        "open_metadata_ms_median": 0.3695,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+        "smallest_ribbon_preview_ms_median": 0.7993
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 176.7264,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 10.5958,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 7832,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 109600,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 964913,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A0054.CR3",
+        "open_metadata_ms_median": 0.3739,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "602bcc522c2d4fe0dd070f9e9f37fbb6cde70018ff227bc9f6ff325e4bb355cb",
+        "smallest_ribbon_preview_ms_median": 0.8096
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 189.5163,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 11.1653,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 13792,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 172640,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 1261423,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A0081.CR3",
+        "open_metadata_ms_median": 0.3444,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97",
+        "smallest_ribbon_preview_ms_median": 0.8765
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 140.3747,
+        "display_index": 1,
+        "display_preview_height": 1080,
+        "display_preview_ms_median": 9.0902,
+        "display_preview_width": 1620,
+        "embedded_previews": [
+          {
+            "bytes": 8256,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 187432,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 1787967,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A0182.CR3",
+        "open_metadata_ms_median": 0.2789,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "d26fd895f37478e09c2b93abc28011f3366cc0d0a23668dad02a7bac4e059552",
+        "smallest_ribbon_preview_ms_median": 0.7765
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 201.7596,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 12.9953,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 17168,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 323104,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 2253137,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A0318.CR3",
+        "open_metadata_ms_median": 0.3867,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "b0ab90b805a97c9bf5f4ceb4a16300e8b2ce93dba2de5c594e08785f389ee751",
+        "smallest_ribbon_preview_ms_median": 0.907
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 219.724,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 14.2556,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 16648,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 405656,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 3141566,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A0327.CR3",
+        "open_metadata_ms_median": 0.3236,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+        "smallest_ribbon_preview_ms_median": 0.9496
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 207.3999,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 12.7865,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 10584,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 278152,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 2936246,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A0524.CR3",
+        "open_metadata_ms_median": 0.3972,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+        "smallest_ribbon_preview_ms_median": 0.833
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 219.1332,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 14.069,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 19896,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 513768,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 3663133,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A0830.CR3",
+        "open_metadata_ms_median": 0.4392,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "821d87c5eeac4dd063aebbe9210f1a61de8dbdd25f2e6b694fe926422754c8d5",
+        "smallest_ribbon_preview_ms_median": 0.9369
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 212.043,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 12.9661,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 18896,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 334168,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 2357614,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A9421.CR3",
+        "open_metadata_ms_median": 0.3575,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+        "smallest_ribbon_preview_ms_median": 0.9464
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 159.5977,
+        "display_index": 1,
+        "display_preview_height": 1080,
+        "display_preview_ms_median": 9.7325,
+        "display_preview_width": 1620,
+        "embedded_previews": [
+          {
+            "bytes": 11968,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 282440,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 3304587,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A9608.CR3",
+        "open_metadata_ms_median": 0.2875,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "aceefe524cf5224beb5077e834a0453f9a7ad80ec31a5860b0be9da23501bb96",
+        "smallest_ribbon_preview_ms_median": 0.7809
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 210.9401,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 13.467,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 16024,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 301600,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 2745689,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A9616.CR3",
+        "open_metadata_ms_median": 0.2655,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "fade2f141ad716d3d8a9acba8a79fd39a75d277b406e7ec633f7c9a0d368229b",
+        "smallest_ribbon_preview_ms_median": 0.8978
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 216.1167,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 12.0748,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 15536,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 251048,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 2763927,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A9890.CR3",
+        "open_metadata_ms_median": 0.3193,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "a57c06cb4498dc9385a4d4305bdff769bb2fdb2c5865a0c324ccefabebc0981d",
+        "smallest_ribbon_preview_ms_median": 0.9157
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 140.1388,
+        "display_index": 1,
+        "display_preview_height": 1080,
+        "display_preview_ms_median": 9.4725,
+        "display_preview_width": 1620,
+        "embedded_previews": [
+          {
+            "bytes": 12480,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 297584,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 2336951,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A9940.CR3",
+        "open_metadata_ms_median": 0.2853,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+        "smallest_ribbon_preview_ms_median": 0.808
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 208.9005,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 13.9769,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 13728,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 382784,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 2779006,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "6V1A9950.CR3",
+        "open_metadata_ms_median": 0.3219,
+        "raw_height": 4639,
+        "raw_width": 6959,
+        "ribbon_index": 0,
+        "sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+        "smallest_ribbon_preview_ms_median": 0.8456
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 226.6574,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 12.5894,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 16008,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 297264,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 3931371,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "7Y6A7003.CR3",
+        "open_metadata_ms_median": 0.2516,
+        "raw_height": 4660,
+        "raw_width": 6984,
+        "ribbon_index": 0,
+        "sha256": "59fb28d2d31050a9166896bd4036d6a15a91e634478db3d687d5435e048dd400",
+        "smallest_ribbon_preview_ms_median": 0.8894
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 236.7719,
+        "display_index": 1,
+        "display_preview_height": 1620,
+        "display_preview_ms_median": 12.9604,
+        "display_preview_width": 1080,
+        "embedded_previews": [
+          {
+            "bytes": 17064,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 335816,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 4829617,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "7Y6A7298.CR3",
+        "open_metadata_ms_median": 0.3122,
+        "raw_height": 4660,
+        "raw_width": 6984,
+        "ribbon_index": 0,
+        "sha256": "9147913687cfd5801acf9d706ab4b032a3c5f549242fe69344c04d396546be33",
+        "smallest_ribbon_preview_ms_median": 0.8775
+      },
+      {
+        "current_ribbon_thumbnail_ms_median": 178.4913,
+        "display_index": 1,
+        "display_preview_height": 1080,
+        "display_preview_ms_median": 9.8968,
+        "display_preview_width": 1620,
+        "embedded_previews": [
+          {
+            "bytes": 14880,
+            "format": 4,
+            "height": 120,
+            "index": 0,
+            "width": 160
+          },
+          {
+            "bytes": 276480,
+            "format": 4,
+            "height": 1080,
+            "index": 1,
+            "width": 1620
+          },
+          {
+            "bytes": 4944081,
+            "format": 4,
+            "height": 0,
+            "index": 2,
+            "width": 0
+          }
+        ],
+        "file": "7Y6A7599.CR3",
+        "open_metadata_ms_median": 0.2653,
+        "raw_height": 4660,
+        "raw_width": 6984,
+        "ribbon_index": 0,
+        "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+        "smallest_ribbon_preview_ms_median": 0.8272
+      }
+    ]
+  },
+  "limitations": [
+    "Warm OS file cache: files read repeatedly, no flush",
+    "Canon CR3 only (R6 Mark III, R7)",
+    "Embedded previews are the camera rendering (picture style), not IPR Camera Neutral",
+    "160x120 THMB letterboxing not inspected visually in this campaign",
+    "Single machine; other applications running"
+  ]
+}

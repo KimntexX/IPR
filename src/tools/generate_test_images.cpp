@@ -199,7 +199,7 @@ public:
         options.useNormalizationEnvironment = false;
         options.lensCorrectionEnabled = lensCorrection;
         options.chromaticAberrationEnabled = chromaticAberration;
-        LoadResult result = ImageEditor::loadFromDisk(path, QFileInfo(path).suffix().toLower(), autoWb, options);
+        LoadResult result = ImageEditor::loadFromDisk(path, autoWb, options);
         require(!result.image.isNull(), "Decode failed for " + path + ": " + result.error);
         result.editProxy = {};
         return result;

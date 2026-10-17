@@ -4,6 +4,7 @@
 #include <QString>
 #include <QStringList>
 #include <opencv2/core.hpp>
+#include "PreparedProfileCache.h"
 
 namespace CameraProfileEngine {
 
@@ -27,6 +28,8 @@ struct DcpRenderOptions
     // Zero means no additional gain; callers must not reapply an existing gain.
     double cameraBaselineExposureEv = 0.0;
     bool preserveToneCurveHue = false;
+    // Audited camera/profile rendering adjustment, composed before DCP LUTs/curve.
+    double profileExposureCompensationEv = 0.0;
 };
 
 // Immutable camera-space source. LibRaw WB and optical corrections are already
@@ -59,6 +62,9 @@ struct LcpApplied
 };
 
 QStringList defaultProfileDirectories();
+PreparedProfileCache::Statistics preparedProfileCacheStats();
+void configurePreparedProfileCache(quint64 budgetBytes, int entryLimit = 16);
+void clearPreparedProfileCache();
 QStringList availableDcpProfiles(const QString &cameraMake, const QString &cameraModel,
                                  const QStringList &profileDirectories = {});
 bool dcpMatchesCamera(const QString &path, const QString &cameraMake,
@@ -69,6 +75,8 @@ bool lcpMatchesLens(const QString &path, const QString &cameraMake,
 Selection findProfiles(const QString &cameraMake, const QString &cameraModel,
                        const QString &lensMake, const QString &lensModel,
                        const QStringList &profileDirectories = {});
+// Camera RGB input -> linear Rec.2020 D65 output (unbounded float).
+// renderWhiteBalance returns this same master domain.
 bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,
               double whiteBalanceKelvin = 5500.0, QString *error = nullptr,
               const DcpRenderOptions &options = {});

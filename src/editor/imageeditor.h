@@ -2,8 +2,10 @@
 #define IMAGEEDITOR_H
 
 #include "ColorPipeline.h"
+#include "ImageImporter.h"
 #include "ColorMixer.h"
 #include "DecodedImageCache.h"
+#include "ImageCacheController.h"
 #include "RawDecoder.h"
 
 #include <QAbstractListModel>
@@ -19,6 +21,8 @@
 #include <QStringList>
 
 #include <array>
+#include <atomic>
+#include <QThreadPool>
 
 class ImageProvider;
 class ThumbnailProvider;
@@ -60,6 +64,7 @@ class ImageEditor final : public QObject
     Q_PROPERTY(QAbstractItemModel *imageModel READ imageModel CONSTANT)
     Q_PROPERTY(QUrl folder READ folder NOTIFY folderChanged)
     Q_PROPERTY(QString imageSource READ imageSource NOTIFY previewChanged)
+    Q_PROPERTY(bool embeddedPreview READ embeddedPreview NOTIFY previewChanged)
     Q_PROPERTY(QString originalImageSource READ originalImageSource NOTIFY previewChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
     Q_PROPERTY(bool hasImage READ hasImage NOTIFY hasImageChanged)
@@ -78,6 +83,7 @@ class ImageEditor final : public QObject
                READ decodedImageCacheSizeBytes NOTIFY decodedImageCacheChanged)
     Q_PROPERTY(int decodedImageCacheEntryCount
                READ decodedImageCacheEntryCount NOTIFY decodedImageCacheChanged)
+    Q_PROPERTY(QVariantMap memoryCacheStatus READ memoryCacheStatus NOTIFY decodedImageCacheChanged)
     Q_PROPERTY(int selectedImageCount READ selectedImageCount NOTIFY selectionChanged)
     Q_PROPERTY(QStringList selectedImageUrls READ selectedImageUrls NOTIFY selectionChanged)
     Q_PROPERTY(QVariantList cameraProfiles READ cameraProfiles NOTIFY rawDevelopmentChanged)
@@ -104,7 +110,8 @@ public:
 
     explicit ImageEditor(ImageProvider *provider,
                          ThumbnailProvider *thumbnailProvider = nullptr,
-                         QObject *parent = nullptr);
+                         QObject *parent = nullptr,
+                         ImageCacheController::Sampler memorySampler = {});
     ~ImageEditor() override;
 
     QAbstractItemModel *imageModel();
@@ -120,9 +127,11 @@ public:
     QString imageColorLabel() const;
     bool imageFlagged() const;
     QVariantList histogram() const;
+    bool embeddedPreview() const { return m_embeddedPreview; }
     qulonglong decodedImageCacheBudgetBytes() const;
     qulonglong decodedImageCacheSizeBytes() const;
     int decodedImageCacheEntryCount() const;
+    QVariantMap memoryCacheStatus() const;
     int selectedImageCount() const;
     QStringList selectedImageUrls() const;
     QVariantList cameraProfiles() const;
@@ -149,6 +158,7 @@ public:
 
     Q_INVOKABLE void openFolder(const QUrl &folder);
     Q_INVOKABLE void openImage(const QUrl &fileUrl);
+    Q_INVOKABLE QStringList imageFileFilters() const;
     Q_INVOKABLE void loadImage(const QUrl &fileUrl);
     Q_INVOKABLE void setThumbnailWindow(int firstVisible, int lastVisible,
                                         int prefetchCount);
@@ -272,6 +282,7 @@ private:
         QImage preview;
         QImage originalPreview;
         QVariantList histogram;
+        QString error;
     };
 
     struct ExportResult
@@ -280,13 +291,13 @@ private:
         QString message;
     };
 
-    struct LoadResult
+    struct LoadResult : ImageImport::Result
     {
-        ColorPipeline::WorkingImage image;
         ColorPipeline::WorkingImage editProxy;
-        RawDecoder::SourceMetadata metadata;
-        std::shared_ptr<RawDecoder::DcpSource> dcpSource;
-        QString error;
+        QString cacheKey;
+        bool memoryPressure = false;
+        QSize fullSize;          // true source size, also when image is a proxy
+        bool proxyOnly = false;  // image is the edit proxy restored from the cache
     };
 
     struct UserImageMetadata
@@ -298,6 +309,11 @@ private:
         bool colorLabelSet = false;
     };
 
+    static DecodedImageCache::Entry retainedEntry(const ColorPipeline::WorkingImage &image,
+        const ColorPipeline::WorkingImage &proxy, const ImageMetadata &metadata,
+        std::shared_ptr<RawDecoder::DcpSource> dcpSource, QSize fullSize, bool imageIsProxy);
+    DecodedImageCache::Entry retainedCurrentEntry() const;
+    RawDecoder::Options developmentOptions() const;
     static ColorPipeline::WorkingImage renderWorkingImage(
         const ColorPipeline::WorkingImage &source, const Settings &settings);
     static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
@@ -308,7 +324,6 @@ private:
                                    const QString &target, const QString &format,
                                    int quality);
     static LoadResult loadFromDisk(const QString &fileName,
-                                   const QString &extension,
                                    bool automaticWhiteBalance,
                                    const RawDecoder::Options &rawOptions = {});
     static ColorPipeline::WorkingImage buildEditProxy(
@@ -333,6 +348,12 @@ private:
     void scheduleSidecarSave();
     void saveCurrentSidecar();
     void startRender();
+    void startEmbeddedPreview(const QString &fileName);
+    void restoreBeforeEmbeddedPreview();
+    void schedulePrefetch();
+    void startPrefetch();
+    void cancelPrefetch();
+    static RawDecoder::Options optionsForFile(const QString &path, bool *automaticWhiteBalance, QString *key);
     void setBusy(bool busy);
     void refreshBusyState();
     void setStatusMessage(const QString &message);
@@ -343,13 +364,17 @@ private:
     ImageListModel m_imageModel;
     QUrl m_folder;
     QUrl m_currentFile;
+    QUrl m_displayedFile;
     QUrl m_queuedFile;
     ColorPipeline::WorkingImage m_original;
     ColorPipeline::WorkingImage m_editProxy;
-    RawDecoder::SourceMetadata m_sourceMetadata;
+    ImageMetadata m_sourceMetadata;
+    ImageImport::Provenance m_importProvenance;
+    ImageImport::Capabilities m_importCapabilities;
+    QStringList m_importWarnings;
     QString m_cameraProfile;
     QString m_normalizationManifest;
-    bool m_rawNormalizationEnabled = false;
+    bool m_rawNormalizationEnabled = true;
     QString m_rawDevelopmentWarning;
     QString m_profileSha256;
     QString m_manifestSha256;
@@ -363,17 +388,38 @@ private:
     std::shared_ptr<RawDecoder::DcpSource> m_dcpSource;
     QHash<QString, UserImageMetadata> m_userImageMetadata;
     QSet<QString> m_selectedImageKeys;
-    DecodedImageCache m_decodedImageCache;
+    ImageCacheController m_decodedImageCache;
     QString m_currentCacheKey;
     Settings m_settings;
     QString m_imageSource;
     QString m_originalImageSource;
     QString m_statusMessage = tr("Choisissez un dossier contenant des images.");
+    QString m_memoryWaitMessage;
+    // Camera-rendered embedded JPEG shown while the IPR development runs.
+    QFutureWatcher<QImage> m_embeddedWatcher;
+    QThreadPool m_embeddedPool;
+    quint64 m_embeddedRevision = 0, m_embeddedSerial = 0;
+    bool m_embeddedPreview = false;
+    QImage m_restorePreview, m_restoreOriginal;
+    QString m_restoreImageSource, m_restoreOriginalSource;
+    bool m_masterIsProxy = false; // restored from a proxy-only cache entry
+    QSize m_fullSize;
     QTimer m_renderDebounce;
     QTimer m_sidecarDebounce;
     QFutureWatcher<RenderResult> m_renderWatcher;
     QFutureWatcher<ExportResult> m_exportWatcher;
     QFutureWatcher<LoadResult> m_loadWatcher;
+    QFutureWatcher<LoadResult> m_prefetchWatcher;
+    QThreadPool m_prefetchPool;
+    QTimer m_prefetchTimer;
+    QStringList m_prefetchQueue;
+    QString m_prefetchFile;
+    bool m_prefetchTaskActive = false;
+    std::shared_ptr<LoadResult> m_prefetchTransfer;
+    bool m_prefetchSuspended = false;
+    quint64 m_prefetchGeneration = 0, m_activePrefetchGeneration = 0;
+    std::shared_ptr<std::atomic_bool> m_prefetchCancel;
+    std::shared_ptr<std::atomic_bool> m_loadCancel;
     quint64 m_requestedRevision = 0;
     quint64 m_activeRevision = 0;
     quint64 m_requestedLoadRevision = 0;

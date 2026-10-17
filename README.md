@@ -178,7 +178,10 @@ Consulter le [contrat DCP/LCP](docs/camera-profile-engine.md) avant déploiement
 Le code est regroupé sous `src/` : interface QML, application, éditeur,
 pipeline couleur/détail, décodeurs RAW, profils, caches et fournisseurs d'images.
 
-Le moteur utilise une image RGBA flottante **sRGB linéaire**.
+Le moteur utilise un master RGBA flottant **Rec.2020 linéaire D65**.
+Les tables DCP restent dans leur domaine ProPhoto ; l'aperçu et les exports
+courants sont convertis en sRGB à la sortie. Le port et ses limites de
+validation sont décrits dans le [plan Rec.2020](docs/architecture/integration-rec2020.md).
 Les entrées rendues passent par leur ICC valide, avec hypothèse sRGB signalée
 en son absence. Le développement RAW fournit la base profilée.
 Aperçu et export partagent le moteur de rendu et la compression de gamut sRGB ;

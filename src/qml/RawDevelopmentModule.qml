@@ -117,7 +117,7 @@ ColumnLayout {
     }
     CheckBox {
         objectName: "rawNormalizationToggle"
-        text: qsTr("Normalisation RAW — expérimentale")
+        text: qsTr("Calibration RAW — rendu du boîtier")
         Layout.fillWidth: true
         Layout.minimumWidth: 0
         checked: root.editor.rawNormalizationEnabled
@@ -157,7 +157,7 @@ ColumnLayout {
         Layout.minimumWidth: 0
     }
     Label {
-        text: qsTr("Profils DCP/LCP, corrections optiques et calibration enregistrés par image dans le fichier .ipr. Camera Neutral privilégié à la première ouverture. La normalisation reste expérimentale et limitée aux RAW audités.")
+        text: qsTr("Profils DCP/LCP et réglages enregistrés par image dans le fichier .ipr. Camera Neutral et calibration actifs par défaut pour les boîtiers et modes compatibles. Configuration de calibration mise à jour automatiquement. Nouveaux ISO et hautes lumières à vérifier visuellement ; un boîtier ou mode inconnu ne reçoit pas une règle d'un autre appareil.")
         color: root.secondaryTextColor
         font.pixelSize: 11
         wrapMode: Text.WordWrap

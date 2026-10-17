@@ -15,7 +15,8 @@ struct Parameters {
     std::array<int, BandCount> luminance{};
 };
 
-// Input/output: linear working RGB, not gamma-encoded RGB. No output clipping.
+// Input/output: linear Rec.2020 D65 RGB, not gamma-encoded RGB. No output clipping.
+// HSV band centres refer to these working primaries, not to sRGB channel angles.
 cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters);
 }
 

@@ -4,9 +4,33 @@
 
 `CameraProfileEngine` charge les profils DCP (couleur) et LCP (corrections d'objectif), puis expose la recherche des profils et l'application des corrections au pipeline RAW. Il s'agit d'un moteur C++ interne ; le SDK Adobe DNG n'est pas une dépendance de production.
 
-Le moteur contient maintenant des implémentations des fonctions décrites ci-dessous. Il n'est toutefois pas certifié conforme à l'intégralité des spécifications DNG/LCP et n'a pas encore été validé avec des profils Adobe officiels et des RAW de référence. Les tests actuels utilisent des profils synthétiques : ils valident les chemins de code et des propriétés mesurables, pas la fidélité à un rendu Adobe ou à un appareil particulier.
+Le moteur contient les implémentations décrites ci-dessous, sans certification de conformité à l'intégralité des spécifications DNG/LCP. Les tests unitaires utilisent des profils synthétiques ; ils sont complétés par les rejeux de RAW Canon et de leurs DCP Camera Neutral dans le rapport de base colorimétrique. Ces contrôles sur un corpus limité ne prouvent ni une fidélité universelle au rendu Adobe ni la prise en charge de tous les boîtiers.
 
 ## Architecture
+
+La directive [ADR-0008](decisions/ADR-0008-separation-travail-affichage-export.md)
+sépare développement RAW, affichage ICC et export. Le profil écran ne change
+pas la calibration ou le DCP. Le master cible choisi est désormais Rec.2020
+linéaire D65 ([ADR-0009](decisions/ADR-0009-espace-travail-rec2020-lineaire.md)),
+implémenté dans le moteur local le 15 octobre 2026. Les tables DCP conservent leur domaine
+ProPhoto ; leur raccordement au master a été porté selon le
+[plan d'intégration](architecture/integration-rec2020.md).
+
+La [roadmap ouverture RAW multi-boîtiers](architecture/roadmap-ouverture-raw.md)
+ordonne les prochains essais HL, la validation du rendu, les caches de profils
+et la généralisation des calibrations. Les futurs R5 (CR3) et 6D Mark II (CR2)
+compléteront le corpus ; leur annonce ne vaut pas validation.
+
+### Politique cible de calibration — décision du 15 octobre 2026
+
+La calibration RAW auditée sera **activée par défaut**. Sa désactivation
+sera déplacée dans des paramètres avancés dont l'interface, la portée et
+la persistance restent à définir. Voir [ADR-0007](decisions/ADR-0007-calibration-raw-par-defaut.md).
+Il s'agit d'une décision cible, **pas encore du comportement livré** :
+l'activation est toujours explicite dans l'implémentation actuelle.
+Les contrôles RAW/DCP/moteur restent obligatoires ; distinguer activation
+demandée et calibration effectivement appliquée. Aucun élargissement aux
+RAW non audités ni modification des sidecars existants n'est décidé ici.
 
 **Orientation à préparer (8 octobre 2026) :** rendre le backend RAW
 remplaçable si les limitations de LibRaw persistent ou si des problèmes
@@ -32,7 +56,7 @@ RawDecoder + LibRaw
         └─ sans DCP : rendu couleur usuel LibRaw, puis LCP
         │
         ▼
-ColorPipeline : RGB(A) flottant sRGB linéaire
+ColorPipeline : RGB(A) flottant Rec.2020 linéaire D65
         │
         ├─ aperçu QML
         └─ export
@@ -127,7 +151,7 @@ Le parseur vérifie les tailles, dimensions, types numériques, limites de valeu
 5. Interpolation des tables Hue/Sat par illuminant si leurs dimensions correspondent. Les décalages de teinte suivent le chemin circulaire le plus court.
 6. Application successive de la Hue/Sat Map puis de la LookTable dans ProPhoto. Pour une table 3D encodée en sRGB, seule la composante Valeur HSV est encodée avant interpolation puis décodée après correction ; teinte et saturation restent calculées sur les canaux linéaires. L'encodage est ignoré pour les tables à une seule division Valeur (2,5D). HueShift est exprimé en degrés.
 7. Application de la courbe tonale si elle est présente, dans ProPhoto, selon l'interpolation par canal existante.
-8. Conversion ProPhoto D50 vers sRGB linéaire D65 avec adaptation Bradford, sans écrêtage supplémentaire au gamut sRGB à cette étape. En l'absence de tables et de courbe, le chemin matriciel XYZ vers sRGB direct est conservé.
+8. Conversion ProPhoto D50 vers Rec.2020 linéaire D65, sans gamut mapping à cette étape. Le raccordement PCS/D50 déjà validé est composé directement vers les nouvelles primaires pour conserver les neutres. En l'absence de tables et de courbe, le chemin matriciel XYZ vers Rec.2020 direct est conservé. Les retours de changement de profil et WB caméra utilisent le même contrat ; aucun tampon sRGB intermédiaire n'est créé.
 
 Correctif du 7 octobre 2026 : les tables étaient auparavant appliquées à tort dans sRGB. Les coefficients ProPhoto/XYZ sont des définitions d'espace colorimétrique, pas des gains empiriques du boîtier. Le traitement des tables reste limité au domaine SDR [0,1] ; ce changement ne constitue pas une prise en charge HDR exhaustive. L'algorithme d'encodage de l'axe Valeur est décrit par le [SDK DNG Adobe](https://android.googlesource.com/platform/external/dng_sdk/+/refs/heads/main/source/dng_tag_values.h).
 
@@ -166,12 +190,12 @@ Voir le [rapport évolutif, §23](validation/analyses/analyse-base-colorimetriqu
 - Les profils Adobe Standard et Camera Neutral réels ont été comparés aux TIFF Lightroom au pas 8. La proximité Neutral est améliorée sur le lot contrôlé, mais la fidélité absolue et la parité Lightroom restent non validées.
 - La courbe tonale est interpolée par segments linéaires ; sa fidélité à la méthode de rendu du logiciel ayant créé le profil n'est pas garantie.
 
-### Normalisation RAW/DCP contrôlée (8 octobre 2026)
+### Calibration RAW/DCP contrôlée (intégration du 14 octobre 2026)
 
 Le module `src/raw/RawNormalization` est indépendant de LibRaw pour ses
 tests. `resolve()` lit un manifeste JSON explicite, limité à 1 Mio/256 entrées.
 Chaque calibration est liée à un couple SHA-256 RAW/DCP exact, au boîtier,
-à l'ISO, à la version LibRaw et aux quatre noirs mesurés. Le moteur n'ajoute
+à l'ISO, à la version LibRaw, au noir commun et aux quatre noirs mesurés. Le moteur n'ajoute
 pas de constante d'exposition par modèle. Le manifeste est fourni via
 `RawDecoder::Options::normalizationManifest`, ou, pour les outils et le
 générateur, `IPR_RAW_NORMALIZATION_MANIFEST`. Dans l'IHM, cette variable
@@ -179,7 +203,15 @@ peut fournir l'emplacement du fichier, mais ne déclenche pas l'activation :
 la case expérimentale reste désactivée par défaut.
 
 Le contrat actuel exige un CR3 Canon, une WB caméra, un DCP sélectionné,
-un noir uniforme sans motif/global et une exposition native inconnue.
+des noirs commun/périphériques exacts sans motif spatial et une exposition native inconnue.
+Le schéma courant est **2** : `global_black` est obligatoire, les quatre
+`black_rgbg` peuvent différer. Le schéma remplacé n'est pas pris en charge.
+`config/raw-normalization.json` contient les 19 couples RAW/Camera Neutral
+audités, sans données de pixels ni tables DCP. Il est embarqué en ressource
+Qt (`:/config/raw-normalization.json`) et installé sous `config/`.
+La calibration reste **désactivée par défaut**, en attente de recette visuelle.
+L'IHM utilise le fichier externe configuré ou fourni avec l'application,
+puis la ressource embarquée ; aucun ancien dossier de build n'est recherché.
 Toute incompatibilité, ambiguïté ou valeur invalide refuse la calibration
 sans casser l'ouverture de l'image. Le blanc est installé avant
 `dcraw_process()` dans `color.maximum` et `rawdata.color.maximum`, avec
@@ -188,6 +220,15 @@ la WB ni par le curseur EV ; elle entre dans `applyDcp()` via
 `DcpRenderOptions::cameraBaselineExposureEv`, avant les tables, en plus
 de l'offset lu dans le profil. Les entrées sont préparées hors ligne depuis
 les preuves DNG ; pas de conversion Adobe ni de lecture DNG à l'ouverture.
+
+Pour voir l'intégration : ouvrir un des 19 RAW, sélectionner Camera Neutral,
+désactiver la WB automatique puis cocher **Calibration RAW auditée — validation
+visuelle**. Le statut doit confirmer blanc, EV et provenance. Décocher pour
+retrouver le témoin. La restauration `.ipr` conserve l'activation et l'empreinte
+du manifeste ; une ressource changée n'est pas utilisée silencieusement.
+Les changements de calibration nécessitent un nouveau décodage. Hors couple
+RAW/DCP/version/noirs reconnu, le rendu reste non calibré avec un statut explicite.
+Les hautes lumières de 9940, 0524 et 7Y6A7599 restent à vérifier.
 
 `DcpRenderOptions::preserveToneCurveHue` est désactivé par défaut et activé
 avec cette calibration. Il transforme les extrêmes RGB ProPhoto et
@@ -382,6 +423,77 @@ LRU comptabilise ce tampon, en dédupliquant les allocations partagées. Le
 changement de profil conserve le tampon et les options, et remplace seulement
 le DCP associé. L'empreinte moteur de restauration passe à
 `ipr-render-2026-10-11-wb-capteur-v3` pour distinguer les rendus.
+
+## Compensation de rendu par profil — 16 octobre 2026
+
+Le [graphe actuel / cible](architecture/chemin-ouverture-raw.md) situe les
+responsabilités dans le code et le repli lorsqu'une calibration est refusée.
+
+**Politique courante — ADR-0011/0012 :** calibration demandée par défaut, manifeste
+schéma 4 suivi automatiquement et règles par format/décodeur/modèle/DCP/mode capteur, sans
+empreinte RAW ni liste d'ISO. Les paragraphes décrivant l'intégration initiale
+limitée au corpus ci-dessous sont des antécédents ; la portée actuelle est
+définie dans l'[ADR-0011](decisions/ADR-0011-regles-raw-par-mode-et-configuration-vivante.md).
+Les nouveaux R6 III/R7 compatibles peuvent être ouverts depuis n'importe
+quel dossier ou une carte SD ; cela ne certifie pas leurs ISO/modes visuellement.
+
+L'[ADR-0010](decisions/ADR-0010-compensation-rendu-par-profil-dcp.md) décrit le
+contrat et les futurs DCP IPR. Le manifeste existant contient un bloc
+`profile_rendering`, distinct de `entries` qui conserve les niveaux sources.
+Le R7 Camera Neutral audité reçoit −0,02 EV avec calibration active sur les
+trois RAW couverts à ISO 20000/32000 ; base source +0,35, base effective +0,33.
+Le R6 reçoit zéro compensation. Le SHA-256 du DCP, et non son nom de fichier,
+fait partie de la sélection ; un nouveau DCP ne récupère pas cette règle.
+
+Chemin : **RAW et métadonnées → calibration exacte → paramètres boîtier/DCP
+→ gain composé avant tables/courbe → master Rec.2020 → retouches → sortie**.
+Les options immuables du contexte DCP transportent la compensation pendant
+les retouches WB. À la réouverture, le manifeste et le profil persistés
+permettent de la recalculer ; leur empreinte et l'identité moteur invalident
+les anciens pixels. Le statut IHM l'affiche séparément. Aucun nouveau
+décodage ni nouvelle passe pixel n'est ajouté par le coefficient lui-même.
+Le changement de profil avec calibration conserve néanmoins son besoin
+actuel de redécodage : ne pas réutiliser un tampon calibré pour un autre DCP.
+
+Le premier lot de transition introduit `CameraCharacterization` : sélection
+du mode natif sans lecture RAW/DCP, catalogue borné et cache de huit documents
+parsés par contenu. Le registre de formats route également les vignettes vers
+le callback de l'adaptateur ; une extension future n'est pas envoyée implicitement
+à LibRaw. L'[ADR-0012](decisions/ADR-0012-formats-extensibles-et-caracterisations.md)
+compare DCP/JSON/SQLite et distingue ce lot de la future séparation complète
+du signal caméra et des caractérisations physiques.
+
+Après validation visuelle du premier lot par l'utilisateur, le deuxième lot
+extrait `CameraSignal` : RGB caméra linéaire float32, WB appliquée, identité et
+neutre explicites. L'ouverture LibRaw avec DCP et le changement rapide de
+profil passent par son rendu commun. Le tampon caméra est transféré au
+contexte immuable, puis une copie est rendue ; le gain composé et le DCP ne
+sont pas accumulés. Un signal sRGB, non fini ou sans WB appliquée est refusé.
+Le repli sans DCP, les règles R6/R7 et le besoin de redécodage lors d'un
+changement de profil calibré ne sont pas modifiés par ce lot.
+
+## Profils préparés partagés — 17 octobre 2026
+
+Les appels de compatibilité, recherche, rendu DCP, WB caméra et optique LCP
+utilisent maintenant `PreparedProfileCache`. Le LRU commun est limité par défaut
+à 64 Mio comptabilisés et 16 entrées. Une entrée contient un profil parsé
+immuable, jamais la WB, les gains ou les pixels d'une photo. La même clé en
+cours de préparation est partagée entre lecteurs ; les clés distinctes restent
+préparables en parallèle. Les rendus ne tiennent pas le mutex du magasin.
+
+L'identité repose sur type/révision du parseur et empreinte des octets relus.
+La modification d'un profil de même taille/date est détectée ; un fichier
+supprimé n'est pas servi depuis une entrée ancienne. Le cache supprime le
+reparsage répété mais conserve le coût de lecture/empreinte. Les objets actifs
+après éviction et les buffers de lecture/rendu ne sont pas bornés par ce seul
+budget : voir les limites et tests dans l'[ADR-0014](decisions/ADR-0014-cache-profils-prepares.md).
+Les caches de sélection de chemins et le catalogue de caractérisations sont distincts.
+
+Un futur DCP IPR peut porter son offset via **BaselineExposureOffset (51109)**,
+déjà lu par `CameraProfileEngine`. Les autres paramètres de rendu pourront
+être décrits au niveau de la bibliothèque de profils. Ne pas dupliquer un
+même offset dans le DCP et la compensation externe. Les profils Adobe restent
+inchangés ; la calibration n'est pas généralisée à tous les R7.
 
 ## Tests automatisés
 
