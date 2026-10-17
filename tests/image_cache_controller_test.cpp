@@ -13,7 +13,9 @@
 namespace {
 constexpr quint64 MiB = 1024 * 1024, GiB = 1024 * MiB;
 bool check(bool condition, const char *message) {
-    if (!condition) std::cerr << message << '\n';
+    // Progress on stdout: a CI timeout then shows the last stage reached.
+    if (condition) std::cout << "ok: " << message << std::endl;
+    else std::cerr << message << '\n';
     return condition;
 }
 }
