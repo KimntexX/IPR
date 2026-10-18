@@ -161,15 +161,16 @@ ApplicationWindow {
             }
 
             // Interim camera rendering (embedded JPEG), not the IPR development.
-            Label {
+            ProcessingStatus {
+                objectName: "processingStatus"
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.margins: 20
-                visible: imageEditor.hasImage && imageEditor.embeddedPreview
-                text: qsTr("Aperçu boîtier — développement en cours")
-                color: uiPreferences.theme.text
-                padding: 6
-                background: Rectangle { color: uiPreferences.theme.panel; opacity: 0.85; radius: 4 }
+                width: Math.max(0, Math.min(implicitWidth, parent.width - 40))
+                height: implicitHeight
+                busy: imageEditor.busy
+                embeddedPreview: imageEditor.hasImage && imageEditor.embeddedPreview
+                detail: imageEditor.statusMessage
             }
 
             ColumnLayout {

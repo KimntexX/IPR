@@ -143,6 +143,7 @@ Item {
             height: root.previewHeight * root.zoomScale
             source: root.hasImage ? root.source : ""
             asynchronous: true
+            retainWhileLoading: true
             cache: false
             smooth: true
             visible: root.hasImage
@@ -171,6 +172,7 @@ Item {
             height: canvas.height
             source: root.hasImage ? root.originalSource : ""
             asynchronous: true
+            retainWhileLoading: true
             cache: false
             smooth: true
             fillMode: Image.PreserveAspectFit

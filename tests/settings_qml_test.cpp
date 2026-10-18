@@ -457,5 +457,18 @@ int main(int argc, char **argv)
                    "optional settings screenshot should save"))
             return 1;
     }
+    QQmlComponent statusComponent(&engine,
+        QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/ProcessingStatus.qml")));
+    QScopedPointer<QObject> status(statusComponent.create());
+    if (!status) { std::cerr << statusComponent.errorString().toStdString(); return 1; }
+    qobject_cast<QQuickItem *>(status.data())->setParentItem(window.contentItem());
+    status->setProperty("busy", true);
+    if (!check(!status->property("visible").toBool(), "short operations must not flash a badge")) return 1;
+    for (int i = 0; i < 10 && !status->property("visible").toBool(); ++i) settleLayout();
+    if (!check(status->property("visible").toBool(), "long operations must show a badge")) return 1;
+    status->setProperty("busy", false);
+    if (!check(!status->property("visible").toBool(), "badge must clear when idle without claiming success")) return 1;
+    status->setProperty("embeddedPreview", true);
+    if (!check(status->property("visible").toBool(), "interim camera preview must be labelled immediately")) return 1;
     return 0;
 }

@@ -65,6 +65,24 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Ergonomie — étape 1 : retour sur les traitements
+
+Badge de traitement après 180 ms pour éviter les clignotements, mention immédiate
+de l’aperçu boîtier, détails au survol et maintien de la texture précédente lors
+du chargement asynchrone d’un nouvel aperçu (`retainWhileLoading`, Qt 6.8+).
+Le badge utilise `busy` : aucune progression fictive ni promesse de succès à
+l’arrêt. Les erreurs détaillées restent dans le pied de fenêtre.
+Le moteur écarte déjà les rendus dont la révision ne correspond plus à la
+demande courante ; ce mécanisme n’est pas réimplémenté dans l’IHM.
+
+**IHM-CONN-003 — en attente moteur** : exposer un état typé distinct pour
+ouverture, développement, aperçu, attente mémoire et export, ainsi que les
+révisions demandée/publiée et la dernière erreur. `busy` agrège actuellement
+ces opérations : l’IHM affiche donc « Traitement en cours », pas un diagnostic
+déduit des messages traduits. Vérifier réglages rapides, échec, export concurrent,
+changement d’image et disponibilité effective de la texture avant tout futur
+indicateur « aperçu à jour ». Aucune modification du moteur dans cette étape.
+
 ### Histogramme analytique amont des courbes — IHM-CONN-002
 
 État : **à spécifier**, évolution moteur éventuelle, non nécessaire au fond
