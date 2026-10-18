@@ -752,3 +752,37 @@ contre ×1,08 et 1,02 % pour LR). Cause probable : courbe en S linéaire autour
 de 18 % appliquée au rendu final, sans protection des hautes lumières, alors que
 LR travaille dans un domaine perceptuel avec des hautes lumières protégées.
 **Contrôle visuel de l'utilisateur demandé avant toute correction.**
+
+#### Correction du contraste et validation visuelle, 18 octobre 2026
+
+Les captures de l'utilisateur confirment les mesures : à +100, IPR poussait
+blancs et HL sans harmonie ; à +50, presque aucun effet visible. Nouvelle courbe :
+S à extrémités fixes en domaine logarithmique (16 EV sous le blanc), pivot 0,32,
+appliquée **canal par canal**. Un premier essai, qui conservait les rapports RGB, blanchissait
+et refroidissait le jaune de 9421 à +100 (saturation des tons clairs −0,085 contre LR).
+L'application par canal donne +0,003. Paramètres ajustés sur les 48 références LR,
+écart de luminance médian 0,08 EV. Force positive 0,60 ; force négative 0,45 × 1,08,
+renforcée de 8 % à la demande de l'utilisateur.
+
+**Décision de l'utilisateur : fonctionnement du contraste approuvé dans cette
+version, avec une réserve à +100**, jugé environ 3 % plus fort que Lightroom.
+
+#### Contraste — campagne v002 sur la version approuvée
+
+Mémoire : [mesure-lumiere contraste v002](../raw/mesure-lumiere-v002-20261018T111849048537Z.json),
+qui remplace la campagne du matin ; 102 états mesurés, aucun exclu. Groupe `lumiere`
+régénéré avec la courbe par canal.
+
+| Valeur | Bas 20 %, IPR / LR | Tons moyens, IPR / LR | Haut 20 %, IPR / LR | Canal saturé max, IPR / LR |
+| --- | --- | --- | --- | --- |
+| −100 | 4,527 / 2,860 | 2,394 / 2,183 | 0,963 / 0,953 | 0,00 % / 0,01 % |
+| −50 | 2,207 / 1,703 | 1,604 / 1,505 | 0,978 / 0,973 | 0,01 % / 0,01 % |
+| +50 | 0,351 / 0,484 | 0,502 / 0,577 | 1,039 / 1,037 | 0,20 % / 0,20 % |
+| +100 | 0,128 / 0,126 | 0,224 / 0,251 | 1,094 / 1,082 | 0,57 % / 1,02 % |
+
+Les hautes lumières suivent désormais LR, avec moins d'écrêtage. Les tons moyens
+sont 0,1 à 0,2 EV plus marqués que LR des deux côtés, ce qui est cohérent avec la
+réserve de l'utilisateur à +100. **Point de vigilance** : à −100, les noirs profonds
+remontent bien plus que dans LR (×4,53 contre ×2,86 sur les 20 % bas, +0,44 EV au q5),
+ce qui risque de révéler le bruit sur les scènes à ISO élevé. À reprendre si la
+validation des ombres et des noirs le confirme visuellement.
