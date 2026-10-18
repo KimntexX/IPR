@@ -14,6 +14,15 @@ ColumnLayout {
     property bool expanded: false
     property color textColor: "#edf2f8"
     readonly property Item body: sectionBody
+    // Numeric controls only. Authoritative whole-recipe dirty state needs the engine.
+    readonly property bool modified: hasModifiedControls(sectionBody)
+    function hasModifiedControls(item) {
+        for (let child of item.children) {
+            if (child.modified === true) return true
+            if (hasModifiedControls(child)) return true
+        }
+        return false
+    }
 
     Layout.fillWidth: true
     Layout.minimumWidth: 0
@@ -75,6 +84,16 @@ ColumnLayout {
                     elide: Text.ElideRight
                     Layout.fillWidth: true
                     Layout.minimumWidth: 0
+                }
+                Label {
+                    objectName: "sectionModifiedIndicator"
+                    visible: root.modified
+                    text: "•"
+                    color: root.textColor
+                    Accessible.name: qsTr("Valeurs numériques modifiées")
+                    HoverHandler { id: modifiedHover }
+                    ToolTip.visible: modifiedHover.hovered
+                    ToolTip.text: qsTr("Au moins un réglage numérique diffère de sa valeur de réinitialisation")
                 }
             }
 

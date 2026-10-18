@@ -457,6 +457,27 @@ int main(int argc, char **argv)
                    "optional settings screenshot should save"))
             return 1;
     }
+    auto *exposure = controlWithLabel(root.data(), QStringLiteral("Exposition (EV)"));
+    if (!check(exposure, "exposure control must exist")) return 1;
+    exposure->setProperty("value", 1.25);
+    if (!check(exposure->property("modified").toBool() &&
+               root->findChild<QObject *>("lightSection")->property("modified").toBool(),
+               "numeric modifications must be marked on the control and section")) return 1;
+    QMetaObject::invokeMethod(exposure, "resetToDefault");
+    if (!check(exposure->property("value").toDouble() == 0 &&
+               !exposure->property("modified").toBool() && editor.adjustmentValue("brightness") == 0,
+               "reset gesture must update both slider and engine")) return 1;
+    auto *slider = exposure->findChild<QQuickItem *>("adjustmentSlider");
+    slider->forceActiveFocus();
+    QKeyEvent stepPress(QEvent::KeyPress, Qt::Key_Right, Qt::NoModifier);
+    QKeyEvent stepRelease(QEvent::KeyRelease, Qt::Key_Right, Qt::NoModifier);
+    QCoreApplication::sendEvent(&window, &stepPress);
+    QCoreApplication::sendEvent(&window, &stepRelease);
+    if (!check(std::abs(exposure->property("value").toDouble() - .01) < 1e-6 &&
+               std::abs(editor.adjustmentValue("brightness") - .01) < 1e-6,
+               "keyboard arrows must apply the declared numeric increment")) return 1;
+    QMetaObject::invokeMethod(exposure, "resetToDefault");
+
     QQmlComponent statusComponent(&engine,
         QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/ProcessingStatus.qml")));
     QScopedPointer<QObject> status(statusComponent.create());

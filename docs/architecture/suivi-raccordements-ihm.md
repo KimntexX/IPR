@@ -65,6 +65,21 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Ergonomie — étape 2 : manipulation des réglages
+
+Double-clic sur le nom ou le curseur pour revenir à la valeur de réinitialisation
+(température de référence, rayon 1 et qualité 92 conservés). Focus clavier visible,
+flèches au pas déclaré, nom accessible ; le bouton de réinitialisation reste présent.
+Le nom devient gras et la section porte un point si un de ses contrôles numériques
+diffère de sa référence, y compris après restauration d’un fichier.
+L’indication ne prétend pas couvrir les courbes, profils, cases ou recettes entières.
+
+**IHM-CONN-004 — en attente moteur** : exposer une comparaison canonique des
+recettes par groupe, avec référence neutre/restaurée explicitement définie,
+pour inclure courbes, optique, balance automatique et profils dans un futur
+indicateur exhaustif. Tester restauration, réinitialisation, modification puis
+retour au neutre et changement de photo. Aucun faux état « fichier enregistré ».
+
 ### Ergonomie — étape 1 : retour sur les traitements
 
 Badge de traitement après 180 ms pour éviter les clignotements, mention immédiate

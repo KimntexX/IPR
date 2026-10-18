@@ -16,6 +16,11 @@ ColumnLayout {
     property color secondaryTextColor: controlSlider.palette.windowText
     property alias value: controlSlider.value
     property bool adjustmentEnabled: false
+    readonly property bool modified: Math.abs(value - resetValue) > Math.max(0.000001, increment / 10)
+
+    function resetToDefault() {
+        if (adjustmentEnabled) value = resetValue
+    }
     // UI hints only: these colours do not describe an output colour transform.
     property var trackColors: []
     readonly property bool hasColorTrack: trackColors.length >= 2
@@ -33,11 +38,17 @@ ColumnLayout {
         Layout.fillWidth: true
 
         Label {
+            id: parameterLabel
             Layout.fillWidth: true
             Layout.minimumWidth: 0
             text: control.label
             elide: Text.ElideRight
             color: control.secondaryTextColor
+            font.bold: control.modified
+            TapHandler { onDoubleTapped: control.resetToDefault() }
+            HoverHandler { id: labelHover }
+            ToolTip.visible: labelHover.hovered
+            ToolTip.text: qsTr("Double-clic pour réinitialiser à %1").arg(control.resetValue)
         }
 
         Basic.TextField {
@@ -135,7 +146,7 @@ ColumnLayout {
             enabled: control.adjustmentEnabled
             ToolTip.visible: hovered
             ToolTip.text: qsTr("Réinitialiser")
-            onClicked: control.value = control.resetValue
+            onClicked: control.resetToDefault()
 
             background: Rectangle {
                 radius: 3
@@ -146,6 +157,11 @@ ColumnLayout {
 
     Basic.Slider {
         id: controlSlider
+        objectName: "adjustmentSlider"
+        focusPolicy: Qt.StrongFocus
+        Accessible.name: control.label
+        Accessible.description: qsTr("Flèches : ajuster. Double-clic : réinitialiser.")
+        TapHandler { onDoubleTapped: control.resetToDefault() }
 
         Layout.fillWidth: true
         Layout.minimumWidth: 0
@@ -229,7 +245,7 @@ ColumnLayout {
             radius: width / 2
             color: controlSlider.pressed ? "#c5d1df" : "#9dabbc"
             border.width: 1
-            border.color: "#566474"
+            border.color: controlSlider.activeFocus ? control.textColor : "#566474"
         }
     }
 }
