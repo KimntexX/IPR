@@ -9,6 +9,14 @@ Rectangle {
     property int thumbnailPrefetchCount: 4
     property int thumbnailDelegateWidth: 126
     property int thumbnailDelegateHeight: 76
+    property int activeImageIndex: -1
+    signal collapseRequested()
+    onVisibleChanged: thumbnailWindowTimer.restart()
+    onActiveImageIndexChanged: {
+        thumbnailList.currentIndex = activeImageIndex
+        if (activeImageIndex >= 0)
+            thumbnailList.positionViewAtIndex(activeImageIndex, ListView.Contain)
+    }
 
     implicitHeight: 120
     color: "#2a3039"
@@ -49,6 +57,18 @@ Rectangle {
                 ToolTip.text: qsTr("Désélectionner toutes les images")
                 onClicked: ribbon.editor.clearImageSelection()
             }
+            ToolButton {
+                objectName: "collapseFilmstripButton"
+                text: "▾"
+                implicitWidth: 28
+                implicitHeight: 24
+                padding: 0
+                hoverEnabled: true
+                Accessible.name: qsTr("Replier le ruban")
+                ToolTip.visible: hovered
+                ToolTip.text: Accessible.name
+                onClicked: ribbon.collapseRequested()
+            }
         }
 
         ListView {
@@ -66,11 +86,10 @@ Rectangle {
             property int thumbnailLast: -1
 
             function updateThumbnailWindow() {
-                if (count === 0 || width <= 0) {
+                if (!ribbon.visible || count === 0 || width <= 0) {
                     thumbnailFirst = 0
                     thumbnailLast = -1
-                    ribbon.editor.setThumbnailWindow(0, -1,
-                                                     ribbon.thumbnailPrefetchCount)
+                    ribbon.editor.setThumbnailWindow(0, -1, 0)
                     return
                 }
 

@@ -4,6 +4,11 @@
 #include "imageprovider.h"
 
 #include <QGuiApplication>
+#include <QElapsedTimer>
+#include <QEventLoop>
+#include <QImage>
+#include <QQuickItem>
+#include <QTimer>
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -19,6 +24,16 @@ bool check(bool condition, const char *message)
 {
     if (!condition) std::cerr << "FAILED: " << message << '\n';
     return condition;
+}
+void settleEditor(ImageEditor &editor)
+{
+    QElapsedTimer timer;
+    timer.start();
+    do {
+        QEventLoop loop;
+        QTimer::singleShot(10, &loop, &QEventLoop::quit);
+        loop.exec();
+    } while (editor.busy() && timer.elapsed() < 5000);
 }
 QObject *withProperty(QObject *root, const char *property)
 {
@@ -138,6 +153,40 @@ int main(int argc, char **argv)
                    histogram->property("visible").toBool() && dialog->property("visible").toBool(),
                    "panel visibility and preferences dialog should react at runtime")) return 1;
         QMetaObject::invokeMethod(dialog, "close");
+
+        QTemporaryDir photos;
+        QImage image(8, 8, QImage::Format_RGB32);
+        image.fill(QColor("#6688aa"));
+        const QString first = photos.filePath("01.png");
+        const QString second = photos.filePath("02.png");
+        if (!check(image.save(first) && image.save(second), "navigation fixtures should save")) return 1;
+        editor.openImage(QUrl::fromLocalFile(first));
+        settleEditor(editor);
+        QObject *navigation = root->findChild<QObject *>("collapsedFilmstripNavigation");
+        if (!check(navigation && navigation->property("currentIndex").toInt() == 0 &&
+                   navigation->property("previousName").toString().isEmpty() &&
+                   navigation->property("nextName").toString() == "02.png",
+                   "collapsed navigation must identify the next actual photo and respect the first boundary")) return 1;
+        QMetaObject::invokeMethod(ribbon, "collapseRequested");
+        QCoreApplication::processEvents();
+        if (!check(!preferences.layout().value("showFilmstrip").toBool() &&
+                   navigation->property("visible").toBool(),
+                   "collapsing the ribbon must persist its visibility and expose navigation")) return 1;
+        QMetaObject::invokeMethod(navigation, "navigate", Q_ARG(QVariant, 1));
+        settleEditor(editor);
+        if (!check(editor.imageDetails().value("name").toString() == "02.png" &&
+                   navigation->property("currentIndex").toInt() == 1 &&
+                   navigation->property("nextName").toString().isEmpty() &&
+                   navigation->property("previousName").toString() == "01.png",
+                   "next arrow must open its announced image and stop at the final boundary")) return 1;
+        QMetaObject::invokeMethod(navigation, "navigate", Q_ARG(QVariant, -1));
+        settleEditor(editor);
+        if (!check(editor.imageDetails().value("name").toString() == "01.png",
+                   "previous arrow must return to the announced photo")) return 1;
+        QObject *expand = root->findChild<QObject *>("expandFilmstripButton");
+        QMetaObject::invokeMethod(expand, "clicked");
+        if (!check(preferences.layout().value("showFilmstrip").toBool(),
+                   "the collapsed tab must restore the ribbon")) return 1;
         window->close();
     }
     return 0;

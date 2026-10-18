@@ -59,6 +59,11 @@ Les vérifications automatisées sont consignées ci-dessous à chaque étape.
    état mémorisé dans `sections/optics`. Contrats C++ existants conservés.
    Test ciblé : `settingsQmlTests` (emplacement exclusif des commandes, largeur,
    repliement et conservation des réglages).
+2. **Ruban** : repliement mémorisé, onglet de réouverture, flèches au bas droit
+   de la zone image et nom de la cible au survol. Navigation sans chargement
+   de vignettes hors écran, bornée aux extrémités et suspendue pendant le chargement.
+   `uiPreferencesQmlTests` vérifie deux fichiers réels, aller/retour, cibles,
+   repliement et réouverture. Contrôle visuel souhaité : position et infobulles.
 
 ### 18 octobre 2026 — initialisation
 

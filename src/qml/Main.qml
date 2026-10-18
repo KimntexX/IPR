@@ -220,6 +220,8 @@ ApplicationWindow {
     }
 
     ThumbnailRibbon {
+        id: filmstrip
+        activeImageIndex: filmstripNavigation.currentIndex
         objectName: "thumbnailRibbon"
         anchors.left: parent.left
         anchors.right: parent.right
@@ -230,6 +232,34 @@ ApplicationWindow {
         visible: uiPreferences.layout.showFilmstrip
         color: uiPreferences.theme.panel
         editor: imageEditor
+        onCollapseRequested: uiPreferences.setValue("layout/showFilmstrip", false)
+    }
+
+    FilmstripNavigation {
+        id: filmstripNavigation
+        objectName: "collapsedFilmstripNavigation"
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: uiPreferences.layout.settingsWidth + 28
+        anchors.bottomMargin: 14
+        visible: !uiPreferences.layout.showFilmstrip
+        editor: imageEditor
+    }
+
+    ToolButton {
+        objectName: "expandFilmstripButton"
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottomMargin: 4
+        visible: !uiPreferences.layout.showFilmstrip
+        text: "▴"
+        implicitWidth: 40
+        implicitHeight: 22
+        hoverEnabled: true
+        Accessible.name: qsTr("Afficher le ruban des images")
+        ToolTip.visible: hovered
+        ToolTip.text: Accessible.name
+        onClicked: uiPreferences.setValue("layout/showFilmstrip", true)
     }
 
     footer: Label {
