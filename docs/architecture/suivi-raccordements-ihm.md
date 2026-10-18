@@ -97,6 +97,33 @@ Les vérifications automatisées sont consignées ci-dessous à chaque étape.
    Tests : `settingsQmlTests`, `uiPreferencesQmlTests` (ouverture du dialogue,
    thème réellement modifié, état de calibration synchronisé et indisponibilité
    sans RAW). Contrôle visuel souhaité : organisation et lisibilité du dialogue.
+6. **Histogramme fixe** : titre, histogramme avec informations de prise de vue
+   et réinitialisation placés hors du défilement. Seuls les groupes défilent.
+   `settingsQmlTests` déplace réellement le contenu défilant et contrôle que
+   l’histogramme conserve sa position, aux trois largeurs de panneau testées.
+   L’option Affichage/Histogramme reste fonctionnelle.
+
+### Vérifications du build IHM isolé
+
+- Exécutable : `.worktrees/patch_ui/build-patch_ui/Release/appIPR.exe`.
+  Bibliothèques Qt, OpenCV, LibRaw/TIFF et dépendances déployées localement,
+  configuration INI/RAW dans `Release/config` et répertoires de profils prêts.
+  Aucun profil propriétaire n’est embarqué depuis un autre worktree ;
+  la découverte Adobe locale du moteur reste disponible.
+- Cinq tests ciblés réussis : `settingsQmlTests`, `uiPreferencesQmlTests`,
+  `colorMixerQmlTests`, `imageViewportQmlTests`, `uiPreferencesTests`.
+- Démarrage `appIPR.exe --smoke-test` réussi hors du dossier de l’application,
+  sans chemins Qt/OpenCV/vcpkg dans le PATH ; aucun message d’erreur QML.
+  Vérification hors écran, pas certification GPU ni machine vierge.
+- Vérification documentaire : zéro erreur et zéro avertissement de lien.
+- Captures optionnelles des tests sous `build-patch_ui/ui-review` ; variable
+  `IPR_UI_CAPTURE_DIRECTORY`. Elles utilisent des fichiers synthétiques,
+  pas un corpus de validation photographique.
+- Validation visuelle utilisateur **en attente** : emplacement Optique,
+  repliement/réouverture et noms au survol, traits signés et bandes colorées,
+  préférences, histogramme fixe avec tous les groupes ouverts.
+- Aucun changement moteur, de calcul, de cache, de profil ou de contrat C++ ;
+  aucune fusion, publication ou création de tag.
 
 ### 18 octobre 2026 — initialisation
 

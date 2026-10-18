@@ -4,10 +4,13 @@
 #include "imageprovider.h"
 
 #include <QGuiApplication>
+#include <QFont>
 #include <QElapsedTimer>
 #include <QEventLoop>
 #include <QImage>
+#include <QDir>
 #include <QQuickItem>
+#include <QQuickWindow>
 #include <QTimer>
 #include <QQmlComponent>
 #include <QQmlContext>
@@ -35,6 +38,17 @@ void settleEditor(ImageEditor &editor)
         loop.exec();
     } while (editor.busy() && timer.elapsed() < 5000);
 }
+bool captureReview(QWindow *window, const QString &name)
+{
+    const QString directory = qEnvironmentVariable("IPR_UI_CAPTURE_DIRECTORY");
+    if (directory.isEmpty()) return true;
+    auto *quickWindow = qobject_cast<QQuickWindow *>(window);
+    if (!quickWindow || !QDir().mkpath(directory)) return false;
+    QEventLoop loop;
+    QTimer::singleShot(100, &loop, &QEventLoop::quit);
+    loop.exec();
+    return quickWindow->grabWindow().save(QDir(directory).filePath(name + ".png"));
+}
 QObject *withProperty(QObject *root, const char *property)
 {
     for (QObject *child : root->findChildren<QObject *>())
@@ -52,6 +66,8 @@ QObject *qualityControl(QObject *root)
 int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);
+    if (!qEnvironmentVariableIsEmpty("IPR_UI_CAPTURE_DIRECTORY"))
+        app.setFont(QFont(QStringLiteral("Segoe UI")));
     qmlRegisterModule("IPR", 1, 0); // Local QML files provide the same component types.
     QTemporaryDir directory;
     const QString path = directory.filePath(QStringLiteral("ipr-ui.ini"));
@@ -165,6 +181,7 @@ int main(int argc, char **argv)
         editor.setRawNormalizationEnabled(false);
         if (!check(!calibration->property("checked").toBool(),
                    "preferences calibration must follow restored disabled state")) return 1;
+        if (!check(captureReview(window, "preferences"), "optional preferences capture should save")) return 1;
         QMetaObject::invokeMethod(dialog, "close");
 
         QTemporaryDir photos;
@@ -185,6 +202,11 @@ int main(int argc, char **argv)
         if (!check(!preferences.layout().value("showFilmstrip").toBool() &&
                    navigation->property("visible").toBool(),
                    "collapsing the ribbon must persist its visibility and expose navigation")) return 1;
+        root->findChild<QObject *>("rawDevelopmentSection")->setProperty("expanded", false);
+        root->findChild<QObject *>("lightSection")->setProperty("expanded", false);
+        root->findChild<QObject *>("colorSection")->setProperty("expanded", true);
+        root->findChild<QObject *>("mixerSection")->setProperty("expanded", true);
+        if (!check(captureReview(window, "collapsed-filmstrip"), "optional main window capture should save")) return 1;
         QMetaObject::invokeMethod(navigation, "navigate", Q_ARG(QVariant, 1));
         settleEditor(editor);
         if (!check(editor.imageDetails().value("name").toString() == "02.png" &&

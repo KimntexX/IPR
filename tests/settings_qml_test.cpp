@@ -349,6 +349,19 @@ int main(int argc, char **argv)
         if (!check(scrollView && scrollView->property("contentWidth").toDouble() <= width + 0.5,
                    "sections must not introduce horizontal scrolling"))
             return 1;
+        auto *histogram = root->findChild<QQuickItem *>("histogramModule");
+        auto *header = root->findChild<QQuickItem *>("fixedSettingsHeader");
+        auto *flickable = scrollView->property("contentItem").value<QQuickItem *>();
+        const QPointF histogramPosition = histogram->mapToItem(panel, QPointF(0, 0));
+        if (!check(header && flickable && histogram->parentItem() == header &&
+                   flickable->property("contentHeight").toDouble() > flickable->height(),
+                   "histogram must live outside the scrolling controls")) return 1;
+        flickable->setProperty("contentY", 400);
+        settleLayout();
+        if (!check(flickable->property("contentY").toDouble() > 0 &&
+                   histogram->mapToItem(panel, QPointF(0, 0)) == histogramPosition,
+                   "histogram must stay fixed while expanded settings scroll")) return 1;
+        flickable->setProperty("contentY", 0);
         auto *mixerSection = root->findChild<QQuickItem *>(QStringLiteral("mixerSection"));
         // Regression: a collapsed selector could pass width-only assertions
         // while every button had zero height and remained invisible.

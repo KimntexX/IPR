@@ -181,11 +181,58 @@ Item {
         }
     }
 
+    ColumnLayout {
+        id: fixedSettingsHeader
+        objectName: "fixedSettingsHeader"
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        spacing: 8
+
+        Label {
+            Layout.fillWidth: true
+            text: qsTr("Réglages")
+            font.bold: true
+            font.pixelSize: 18
+            color: root.textColor
+            padding: 0
+            background: Item { }
+        }
+        HistogramModule {
+            id: histogramModule
+            objectName: "histogramModule"
+            visible: !root.preferences || root.preferences.layout.showHistogram
+            Layout.fillWidth: true
+            histogram: root.editor.histogram
+            imageDetails: root.editor.imageDetails
+            textColor: root.secondaryTextColor
+            Component.onCompleted: {
+                root.histogramModuleInstance = histogramModule
+                histogramModule.requestPaint()
+            }
+            Component.onDestruction: {
+                if (root.histogramModuleInstance === histogramModule)
+                    root.histogramModuleInstance = null
+            }
+        }
+        Button {
+            text: qsTr("Réinitialiser les réglages")
+            Layout.fillWidth: true
+            enabled: editor.hasImage
+            onClicked: editor.resetAdjustments()
+        }
+    }
+
     ScrollView {
         id: settingsScrollView
         objectName: "settingsScrollView"
 
-        anchors.fill: parent
+        anchors.top: fixedSettingsHeader.bottom
+        anchors.topMargin: 8
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         clip: true
         rightPadding: 8
         contentWidth: availableWidth
@@ -222,42 +269,6 @@ Item {
             width: settingsScrollView.availableWidth
             implicitWidth: 0
             spacing: 8
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Réglages")
-                font.bold: true
-                font.pixelSize: 18
-                color: root.textColor
-                padding: 0
-                background: Item { }
-            }
-
-            HistogramModule {
-                id: histogramModule
-                objectName: "histogramModule"
-                visible: !root.preferences || root.preferences.layout.showHistogram
-                Layout.fillWidth: true
-                histogram: root.editor.histogram
-                imageDetails: root.editor.imageDetails
-                textColor: root.secondaryTextColor
-
-                Component.onCompleted: {
-                    root.histogramModuleInstance = histogramModule
-                    histogramModule.requestPaint()
-                }
-                Component.onDestruction: {
-                    if (root.histogramModuleInstance === histogramModule)
-                        root.histogramModuleInstance = null
-                }
-            }
-
-            Button {
-                text: qsTr("Réinitialiser les réglages")
-                Layout.fillWidth: true
-                enabled: editor.hasImage
-                onClicked: editor.resetAdjustments()
-            }
 
             SettingsSection {
                 objectName: "rawDevelopmentSection"
