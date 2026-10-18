@@ -126,11 +126,15 @@ LR** (piste XMP ci-dessous) améliorerait directement la prédiction.
 Les exports LR manuels (jusqu'à 64 par paire de scènes) sont le goulot des
 campagnes. Deux pistes sont retenues par l'utilisateur, pour plus tard :
 
-1. **Fichiers XMP préparés** (test à prévoir) : copies du RAW, chacune avec un
-   `.xmp` dérivé du neutre où seul le réglage testé change. Ouverture du dossier
-   dans Lightroom (onglet Local, qui lit et écrit ces fichiers annexes), puis un
-   seul export TIFF 16 bits sRGB avec métadonnées. Premier essai sur deux images
-   pour vérifier que Lightroom relit bien les `.xmp` préparés.
+1. **Fichiers XMP préparés — échec avec Lightroom (version cloud), 18 octobre 2026.**
+   `scripts/prepare_lr_xmp_batch.py` crée, par scène et par valeur, un lien
+   physique vers le RAW et un `.xmp` minimal (réglages Camera Raw du neutre LR,
+   seul le réglage testé changé). Lightroom affiche bien les fichiers mais **ne
+   lit pas ces `.xmp`** : il applique ses réglages par défaut (Adobe Color,
+   optique active, accentuation 40, bruit 25 ; curseurs Lumières à 0). Les
+   exports du premier lot sont donc inutilisables. Les mêmes lots restent
+   exploitables par Camera Raw (Photoshop, Bridge), qui lit les `.xmp` annexes
+   des RAW ; à vérifier sur deux images avant tout lot complet.
 2. **Camera Raw scripté dans Photoshop**, avec la version d'essai disponible,
    pour les validations des autres fonctionnalités. Vérifier d'abord l'égalité
    avec les exports LR sur quelques neutres. L'API cloud Lightroom
