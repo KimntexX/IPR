@@ -24,6 +24,7 @@ Basic.ComboBox {
         color: control.palette.base
         radius: 4
         border.color: control.activeFocus ? control.palette.text : control.palette.mid
+        border.width: control.activeFocus ? 2 : 1
     }
     delegate: Basic.ItemDelegate {
         id: entry

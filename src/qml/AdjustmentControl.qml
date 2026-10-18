@@ -183,7 +183,7 @@ ColumnLayout {
             width: Math.max(0, controlSlider.availableWidth - controlSlider.handle.width)
             height: 3
             radius: height / 2
-            color: "#303946"
+            color: controlSlider.palette.mid
 
             Canvas {
                 id: colorTrack
@@ -221,8 +221,8 @@ ColumnLayout {
                 width: Math.abs(controlSlider.visualPosition - origin) * parent.width
                 height: parent.height
                 radius: height / 2
-                color: controlSlider.enabled ? "#687b91" : "#46515f"
-                opacity: control.hasColorTrack ? 0.25 : 1
+                color: control.textColor
+                opacity: control.hasColorTrack ? 0.25 : (controlSlider.enabled ? 0.65 : 0.3)
             }
             Rectangle {
                 visible: control.bipolar
@@ -231,7 +231,7 @@ ColumnLayout {
                 y: -1
                 width: 1
                 height: parent.height + 2
-                color: "#9dabbc"
+                color: control.textColor
                 opacity: 0.55
             }
         }
@@ -243,7 +243,8 @@ ColumnLayout {
             width: 10
             height: 10
             radius: width / 2
-            color: controlSlider.pressed ? "#c5d1df" : "#9dabbc"
+            color: control.textColor
+            opacity: controlSlider.enabled ? 1 : 0.4
             border.width: 1
             border.color: controlSlider.activeFocus ? control.textColor : "#566474"
         }

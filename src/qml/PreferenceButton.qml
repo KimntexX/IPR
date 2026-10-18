@@ -10,7 +10,7 @@ Basic.Button {
         text: control.text
         font: control.font
         color: control.palette.buttonText
-        opacity: control.enabled ? 1 : 0.45
+        opacity: control.enabled ? 1 : 0.6
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
@@ -19,6 +19,7 @@ Basic.Button {
         radius: 4
         color: control.down || control.hovered ? control.palette.mid : control.palette.button
         border.color: control.activeFocus ? control.palette.text : control.palette.mid
+        border.width: control.activeFocus ? 2 : 1
         opacity: control.enabled ? 1 : 0.6
     }
 }

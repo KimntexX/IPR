@@ -40,6 +40,7 @@ Item {
     readonly property bool showingComparison: comparisonEnabled && comparisonReady && !showingOriginal
     readonly property real maxOffsetX: Math.max(0, (canvas.width - width) / 2)
     readonly property real maxOffsetY: Math.max(0, (canvas.height - height) / 2)
+    readonly property real toolbarHeight: zoomToolbar.visible ? zoomToolbar.height + 12 : 0
 
     function clampPan() {
         offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, offsetX))
@@ -304,7 +305,7 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.margins: 6
-        anchors.topMargin: 46
+        anchors.topMargin: root.toolbarHeight + 4
         spacing: 1
         visible: root.showingComparison || root.showingOriginal
         Repeater {
@@ -328,19 +329,24 @@ Item {
     }
 
     Rectangle {
+        id: zoomToolbar
+        objectName: "viewportToolbar"
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.margins: 6
-        width: controls.implicitWidth + 12
+        width: Math.max(0, Math.min(root.width - 12, controls.implicitWidth + 12))
         height: controls.implicitHeight + 8
         color: Qt.rgba(root.panelColor.r, root.panelColor.g, root.panelColor.b, 0.92)
         radius: 5
         visible: root.hasImage
 
-        RowLayout {
+        GridLayout {
             id: controls
             anchors.centerIn: parent
-            spacing: 3
+            width: Math.max(0, parent.width - 12)
+            columns: root.width < 360 ? 3 : (root.width < 520 ? 4 : 7)
+            columnSpacing: 3
+            rowSpacing: 3
 
             Label {
                 objectName: "zoomPercentage"
@@ -405,6 +411,8 @@ Item {
                     }
                     background: Rectangle {
                         radius: 3
+                        border.width: zoomButton.activeFocus ? 2 : 0
+                        border.color: root.textColor
                         color: zoomButton.down || zoomButton.checked || zoomButton.hovered
                             ? zoomButton.palette.mid : zoomButton.palette.button
                     }

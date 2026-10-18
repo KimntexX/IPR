@@ -22,8 +22,19 @@
 #include <QWindow>
 #include <QtQml>
 #include <iostream>
+#include <cmath>
 
 namespace {
+double luminance(const QColor &colour)
+{
+    const auto linear = [](double c) { return c <= .04045 ? c / 12.92 : std::pow((c + .055) / 1.055, 2.4); };
+    return .2126 * linear(colour.redF()) + .7152 * linear(colour.greenF()) + .0722 * linear(colour.blueF());
+}
+double contrast(const QColor &a, const QColor &b)
+{
+    const double x = luminance(a), y = luminance(b);
+    return (std::max(x, y) + .05) / (std::min(x, y) + .05);
+}
 bool check(bool condition, const char *message)
 {
     if (!condition) std::cerr << "FAILED: " << message << '\n';
@@ -256,6 +267,12 @@ int main(int argc, char **argv)
             QMetaObject::invokeMethod(paletteSelector, "applyPalette", Q_ARG(QVariant, index));
             QCoreApplication::processEvents();
             const QColor expected(panelColours[index]);
+            for (const QString &textKey : {QStringLiteral("text"), QStringLiteral("secondaryText")}) {
+                const QColor textColour = preferences.theme().value(textKey).value<QColor>();
+                if (!check(contrast(textColour, expected) >= 4.5 &&
+                           contrast(textColour, expected.darker(110)) >= 4.5,
+                           "normal palette text must reach 4.5:1 contrast on panels and fields")) return 1;
+            }
             QObject *windowPalette = root->property("palette").value<QObject *>();
             QObject *popupPalette = dialog->property("palette").value<QObject *>();
             QObject *comboSurface = background->property("background").value<QObject *>();

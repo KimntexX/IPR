@@ -181,6 +181,7 @@ ApplicationWindow {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.margins: 20
+                anchors.topMargin: canvas.toolbarHeight + 20
                 width: Math.max(0, Math.min(implicitWidth, parent.width - 40))
                 height: implicitHeight
                 busy: imageEditor.busy

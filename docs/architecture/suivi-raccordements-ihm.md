@@ -65,6 +65,19 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Ergonomie — étape 6 : lisibilité et adaptation
+
+Les cinq palettes sont testées numériquement : contraste minimal 4,5:1 des
+textes principaux et secondaires sur panneaux et champs. Focus clavier renforcé
+par un contour de 2 px sur les contrôles communs ; poignées, origine et remplissage
+des sliders suivent la palette au lieu de gris fixes. Les bandes photographiques
+gardent leurs couleurs de signification.
+La barre de zoom/comparaison passe sur plusieurs rangées lorsque la zone image
+rétrécit ; le badge de traitement et les légendes sont décalés sous elle.
+Tests des commandes dans des vues de 280, 350, 500 et 800 px. Ces vérifications
+automatiques ne constituent pas une certification d’accessibilité complète ni
+un contrôle visuel sur toutes les configurations de moniteurs.
+
 ### Ergonomie — étape 5 : ruban et états distincts
 
 L’image effectivement ouverte porte un contour et un nom gras ; les cases et

@@ -260,6 +260,22 @@ int main(int argc, char **argv)
     if (!check(viewport->property("fitMode").toBool(), "clicking a letterbox should not zoom")) return 1;
     QMetaObject::invokeMethod(viewport, "setZoom", Q_ARG(QVariant, 0.0001), Q_ARG(QVariant, 200), Q_ARG(QVariant, 250));
     if (!check(near(number(viewport, "zoomScale"), .05), "zoom should have a lower bound")) return 1;
+    for (int narrowWidth : {280, 350, 500, 800}) {
+        viewport->setWidth(narrowWidth);
+        settle();
+        auto *toolbar = viewport->findChild<QQuickItem *>("viewportToolbar");
+        if (!check(toolbar && toolbar->x() >= 0 && toolbar->x() + toolbar->width() <= narrowWidth,
+                   "zoom and comparison toolbar must stay inside narrow viewports")) return 1;
+        for (const QString &name : {QStringLiteral("compareImageButton"), QStringLiteral("holdOriginalButton"),
+                                   QStringLiteral("actualSizeButton")}) {
+            auto *button = visualItem(viewport, name);
+            const QPointF position = button->mapToItem(toolbar, QPointF());
+            if (!check(position.x() >= 0 && position.y() >= 0 &&
+                       position.x() + button->width() <= toolbar->width() + .1 &&
+                       position.y() + button->height() <= toolbar->height() + .1,
+                       "every toolbar action must remain visible when its grid wraps")) return 1;
+        }
+    }
     viewport->setProperty("hasImage", false);
     if (!check(!viewport->property("imageReady").toBool() && !plus->property("enabled").toBool()
             && viewport->property("fitMode").toBool(), "without an image, interactions should be disabled")) return 1;

@@ -16,6 +16,7 @@ Basic.CheckBox {
         radius: 3
         color: control.checked ? control.palette.highlight : control.palette.base
         border.color: control.activeFocus || control.hovered ? control.palette.text : control.palette.mid
+        border.width: control.activeFocus ? 2 : 1
         opacity: control.enabled ? 1 : 0.45
         Text {
             anchors.centerIn: parent
