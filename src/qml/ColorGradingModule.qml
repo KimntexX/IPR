@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Basic as Basic
 import QtQuick.Layouts
 
 ColumnLayout {
@@ -62,7 +63,7 @@ ColumnLayout {
     Label {
         visible: root.showTitle
         text: qsTr("Color grading")
-        color: "#edf2f8"
+        color: palette.windowText
         font.bold: true
         font.pixelSize: 14
     }
@@ -74,7 +75,7 @@ ColumnLayout {
         Repeater {
             model: root.zoneNames.length
 
-            ToolButton {
+            Basic.ToolButton {
                 id: zoneButton
 
                 required property int index
@@ -89,7 +90,8 @@ ColumnLayout {
 
                 contentItem: Text {
                     text: root.zoneIcons[zoneButton.index]
-                    color: root.zone === zoneButton.index ? "#f2f6fb" : "#9dabbc"
+                    color: zoneButton.palette.buttonText
+                    opacity: zoneButton.enabled ? 1 : 0.4
                     font.pixelSize: 18
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -97,10 +99,10 @@ ColumnLayout {
 
                 background: Rectangle {
                     radius: 4
-                    color: root.zone === zoneButton.index
-                           ? "#3a4655" : (zoneButton.hovered ? "#303946" : "#222831")
+                    color: root.zone === zoneButton.index || zoneButton.hovered
+                           ? zoneButton.palette.mid : zoneButton.palette.button
                     border.width: 1
-                    border.color: root.zone === zoneButton.index ? "#758ba5" : "#3d4654"
+                    border.color: root.zone === zoneButton.index ? zoneButton.palette.text : zoneButton.palette.mid
                 }
             }
         }
@@ -201,7 +203,7 @@ ColumnLayout {
     Label {
         Layout.alignment: Qt.AlignHCenter
         text: qsTr("%1 · %2°").arg(root.zoneNames[root.zone]).arg(root.hue)
-        color: "#b9c5d4"
+        color: palette.windowText
         font.pixelSize: 12
     }
 

@@ -42,7 +42,7 @@ ColumnLayout {
     // Explicit data keeps the component's header outside its default content
     // property. Caller controls belong only to the collapsible body.
     data: [
-        Button {
+        PreferenceButton {
             id: header
             objectName: "sectionToggle"
             Layout.fillWidth: true
@@ -62,7 +62,7 @@ ColumnLayout {
 
                 Text {
                     text: root.expanded ? "▾" : "▸"
-                    color: "#9dabbc"
+                    color: root.textColor
                     font.pixelSize: 12
                     Layout.preferredWidth: 10
                 }

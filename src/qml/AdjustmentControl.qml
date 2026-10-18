@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Basic as Basic
 import QtQuick.Layouts
 
 ColumnLayout {
@@ -39,7 +40,7 @@ ColumnLayout {
             color: control.secondaryTextColor
         }
 
-        TextField {
+        Basic.TextField {
             id: valueEditor
             objectName: "adjustmentValueEditor"
 
@@ -118,7 +119,7 @@ ColumnLayout {
             }
         }
 
-        ToolButton {
+        PreferenceButton {
             id: resetButton
 
             Layout.preferredWidth: 21
@@ -143,7 +144,7 @@ ColumnLayout {
         }
     }
 
-    Slider {
+    Basic.Slider {
         id: controlSlider
 
         Layout.fillWidth: true

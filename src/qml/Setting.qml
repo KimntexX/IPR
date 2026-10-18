@@ -215,7 +215,8 @@ Item {
                     root.histogramModuleInstance = null
             }
         }
-        Button {
+        PreferenceButton {
+            objectName: "resetAllAdjustmentsButton"
             text: qsTr("Réinitialiser les réglages")
             Layout.fillWidth: true
             enabled: editor.hasImage
@@ -292,7 +293,7 @@ Item {
                 title: qsTr("Lumière")
                 expanded: true
 
-                CheckBox {
+                PreferenceCheckBox {
                     id: grayscaleCheck
                     Layout.fillWidth: true
                     Layout.minimumWidth: 0
@@ -746,14 +747,14 @@ Item {
                         color: root.secondaryTextColor
                     }
 
-                    ComboBox {
+                    PreferenceComboBox {
                         id: formatBox
                         objectName: "exportFormat"
 
                         Layout.preferredWidth: 92
                         Layout.minimumWidth: 92
                         Layout.maximumWidth: 92
-                        implicitHeight: 22
+                        implicitHeight: 26
                         model: ["JPEG", "PNG", "TIFF", "DNG"]
                         onCurrentTextChanged: root.rememberPreference("export/format", currentText)
                         enabled: editor.hasImage
@@ -762,37 +763,27 @@ Item {
                             leftPadding: 7
                             rightPadding: formatBox.indicator.width + 6
                             text: formatBox.displayText
-                            color: formatBox.enabled ? root.textColor : "#7a8797"
+                            color: root.textColor
+                            opacity: formatBox.enabled ? 1 : 0.45
                             font.pixelSize: 12
                             verticalAlignment: Text.AlignVCenter
                             elide: Text.ElideRight
                         }
 
-                        indicator: Canvas {
-                            width: 8
-                            height: 5
+                        indicator: Text {
+                            text: "▾"
+                            color: formatBox.palette.text
                             x: formatBox.width - width - 7
                             y: formatBox.topPadding +
                                (formatBox.availableHeight - height) / 2
 
-                            onPaint: {
-                                const context = getContext("2d")
-                                context.reset()
-                                context.fillStyle = formatBox.enabled ? "#9dabbc" : "#657180"
-                                context.beginPath()
-                                context.moveTo(0, 0)
-                                context.lineTo(width, 0)
-                                context.lineTo(width / 2, height)
-                                context.closePath()
-                                context.fill()
-                            }
                         }
 
                         background: Rectangle {
                             radius: 3
-                            color: formatBox.pressed ? "#303946" : "transparent"
+                            color: formatBox.pressed ? formatBox.palette.mid : formatBox.palette.base
                             border.width: 1
-                            border.color: formatBox.activeFocus ? "#7388a3" : "#3d4654"
+                            border.color: formatBox.activeFocus ? formatBox.palette.text : formatBox.palette.mid
                         }
                     }
                 }
@@ -815,8 +806,9 @@ Item {
                     }
                 }
 
-                Button {
+                PreferenceButton {
                     id: exportButton
+                    objectName: "exportDestinationButton"
 
                     text: qsTr("Choisir la destination…")
                     Layout.fillWidth: true
@@ -826,7 +818,8 @@ Item {
 
                     contentItem: Text {
                         text: exportButton.text
-                        color: exportButton.enabled ? root.textColor : "#7a8797"
+                        color: root.textColor
+                        opacity: exportButton.enabled ? 1 : 0.45
                         font.pixelSize: 12
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -834,10 +827,9 @@ Item {
 
                     background: Rectangle {
                         radius: 3
-                        color: exportButton.down ? "#3d4654"
-                               : (exportButton.hovered ? "#343d49" : "#2d343e")
+                        color: exportButton.down || exportButton.hovered ? exportButton.palette.mid : exportButton.palette.button
                         border.width: 1
-                        border.color: exportButton.enabled ? "#536174" : "#3d4654"
+                        border.color: exportButton.palette.mid
                     }
                 }
             }

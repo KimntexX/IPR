@@ -44,13 +44,14 @@ Rectangle {
                 opacity: 0.7
                 font.pixelSize: 11
             }
-            Button {
+            PreferenceButton {
                 visible: ribbon.editor.selectedImageCount > 0
                 text: qsTr("Appliquer à %1").arg(ribbon.editor.selectedImageCount)
                 enabled: ribbon.editor.hasImage
                 onClicked: ribbon.editor.applyAdjustmentsToSelection()
             }
-            ToolButton {
+            PreferenceButton {
+                implicitWidth: 26
                 visible: ribbon.editor.selectedImageCount > 0
                 text: "×"
                 ToolTip.visible: hovered
@@ -159,7 +160,7 @@ Rectangle {
                             font.pixelSize: 10
                         }
 
-                        CheckBox {
+                        PreferenceCheckBox {
                             id: selectionCheck
                             anchors.top: parent.top
                             anchors.right: parent.right

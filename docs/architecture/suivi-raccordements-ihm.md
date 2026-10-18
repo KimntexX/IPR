@@ -210,6 +210,27 @@ L’exposition affichée suit le curseur EV. Histogramme et métadonnées resten
 fixes en haut du panneau. Tests : proportionnalité des effectifs, limites des
 cinq plages et état des indicateurs d’extrémité ; aucune modification moteur.
 
+### Commandes et textes — harmonisation des palettes
+
+La balance des blancs automatique est proposée une seule fois, dans
+Développement RAW / Profil. Le doublon et son rappel de synchronisation sont
+retirés du groupe Couleur ; température et nuance manuelles restent présentes.
+
+Les boutons d’ouverture, d’export, de réinitialisation (globale, paramètres,
+courbes), de navigation, de zoom/comparaison et de sélection du ruban utilisent
+une présentation liée à la palette. Les menus de l’application et les contrôles
+de choix s’appuient sur Basic pour éviter les substitutions natives Windows
+blanches. Texte, fond, contours, survol et état désactivé suivent le thème.
+Les canaux RGB, roues, couleurs de libellés et graphiques conservent leurs
+couleurs de signification ; leurs bordures et textes s’adaptent. Les étoiles
+gardent une teinte dorée, assombrie sur une palette claire pour rester lisibles.
+Les dialogues natifs du système (ouverture/enregistrement) restent gérés par l’OS.
+
+Les six tests IHM réussissent, y compris vérification des boutons ouvrir,
+réinitialiser et exporter sur les cinq palettes et sous les styles Basic et
+Windows. Tests des réglages : balance automatique unique dans le groupe RAW.
+La régression zoom/comparaison et la largeur des groupes restent couvertes.
+
 Revue des captures : correction de la hauteur utile des champs de valeur,
 du chevauchement entre le bandeau d’information et les flèches de navigation,
 et harmonisation du titre/pied du dialogue Préférences. Régressions couvertes

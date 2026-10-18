@@ -259,7 +259,7 @@ ColumnLayout {
             Layout.fillWidth: true
             Layout.minimumWidth: 0
             elide: Text.ElideRight
-            color: module.curveColor(module.activeCurve)
+            color: module.activeCurve === 0 ? module.textColor : module.curveColor(module.activeCurve)
             text: module.curveName(module.activeCurve)
         }
     }
@@ -267,14 +267,14 @@ ColumnLayout {
     ColumnLayout {
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-        Button {
+        PreferenceButton {
             text: qsTr("Réinitialiser cette courbe")
             Layout.fillWidth: true
             Layout.minimumWidth: 0
             enabled: module.editor.hasImage
             onClicked: module.editor.resetToneCurve(module.activeCurve)
         }
-        Button {
+        PreferenceButton {
             text: qsTr("Réinitialiser les 4 courbes")
             Layout.fillWidth: true
             Layout.minimumWidth: 0

@@ -277,6 +277,17 @@ int main(int argc, char **argv)
                        choicesSurface->property("color").value<QColor>() == expected,
                        "the opened dropdown must follow the selected palette too")) return 1;
             QMetaObject::invokeMethod(choices, "close");
+            for (const QString &name : {QStringLiteral("resetAllAdjustmentsButton"),
+                                       QStringLiteral("exportDestinationButton"),
+                                       QStringLiteral("openImageButton")}) {
+                QObject *button = root->findChild<QObject *>(name);
+                QObject *buttonSurface = button ? button->property("background").value<QObject *>() : nullptr;
+                QObject *buttonText = button ? button->property("contentItem").value<QObject *>() : nullptr;
+                if (!check(buttonSurface && buttonText &&
+                           buttonSurface->property("color").value<QColor>() == expected.darker(110) &&
+                           buttonText->property("color").value<QColor>() == preferences.theme().value("text").value<QColor>(),
+                           "reset, export and opening buttons must follow every interface palette")) return 1;
+            }
             preferences.sync();
             UiPreferences readback(path);
             if (!check(readback.theme().value("panel").value<QColor>() == expected &&

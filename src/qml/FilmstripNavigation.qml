@@ -52,7 +52,7 @@ RowLayout {
 
     Repeater {
         model: [-1, 1]
-        ToolButton {
+        PreferenceButton {
             id: arrow
             required property int modelData
             objectName: modelData < 0 ? "previousImageButton" : "nextImageButton"
@@ -73,14 +73,15 @@ RowLayout {
             contentItem: Text {
                 text: arrow.text
                 font: arrow.font
-                color: arrow.enabled ? "#d7dfeb" : "#57616e"
+                color: arrow.palette.buttonText
+                opacity: arrow.enabled ? 1 : 0.4
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
             background: Rectangle {
                 radius: 4
-                color: arrow.hovered ? "#3a4655" : "#252c35"
-                border.color: "#424c59"
+                color: arrow.hovered ? arrow.palette.mid : arrow.palette.button
+                border.color: arrow.palette.mid
             }
         }
     }

@@ -12,7 +12,7 @@ ColumnLayout {
     implicitWidth: 0
     spacing: 8
 
-    CheckBox {
+    PreferenceCheckBox {
         objectName: "lensCorrectionToggle"
         text: qsTr("Activer la correction de l’objectif")
         Layout.fillWidth: true
@@ -29,7 +29,7 @@ ColumnLayout {
         ToolTip.visible: hovered
         ToolTip.text: qsTr("Corrige la distorsion et le vignettage lorsque le profil LCP contient ces données.")
     }
-    CheckBox {
+    PreferenceCheckBox {
         objectName: "chromaticAberrationToggle"
         text: qsTr("Supprimer l’aberration chromatique")
         Layout.fillWidth: true

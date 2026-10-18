@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Basic as Basic
 import QtQuick.Layouts
 
 ColumnLayout {
@@ -45,7 +46,7 @@ ColumnLayout {
     Label {
         visible: root.showTitle
         text: qsTr("Mélangeur de couleurs")
-        color: "#edf2f8"
+        color: palette.windowText
         font.bold: true
         font.pixelSize: 14
     }
@@ -68,7 +69,7 @@ ColumnLayout {
             Repeater {
                 model: root.bandNames.length
 
-                ToolButton {
+                Basic.ToolButton {
                     id: swatchButton
 
                     required property int index
@@ -91,7 +92,7 @@ ColumnLayout {
                         radius: width / 2
                         color: root.bandColors[swatchButton.index]
                         border.width: root.band === swatchButton.index ? 3 : 1
-                        border.color: root.band === swatchButton.index ? "#f4f7fb" : "#27303a"
+                        border.color: root.band === swatchButton.index ? swatchButton.palette.text : swatchButton.palette.mid
                         opacity: swatchButton.enabled ? 1 : 0.35
 
                         Rectangle {

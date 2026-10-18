@@ -332,7 +332,7 @@ Item {
                     {name: "fitImageButton", label: qsTr("Ajuster"), tip: qsTr("Adapter à la fenêtre — Ctrl 0")},
                     {name: "compareImageButton", label: qsTr("Avant/après"), tip: qsTr("Origine à gauche / actuel à droite — Ctrl Maj C")}
                 ]
-                ToolButton {
+                PreferenceButton {
                     id: zoomButton
                     required property var modelData
                     required property int index
@@ -358,15 +358,16 @@ Item {
                     }
                     contentItem: Text {
                         text: zoomButton.text
-                        color: zoomButton.enabled ? root.textColor : "#7a8797"
+                        color: root.textColor
+                        opacity: zoomButton.enabled ? 1 : 0.45
                         font.pixelSize: 12
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
                     background: Rectangle {
                         radius: 3
-                        color: zoomButton.down || zoomButton.checked ? "#455365"
-                            : (zoomButton.hovered ? "#364252" : "transparent")
+                        color: zoomButton.down || zoomButton.checked || zoomButton.hovered
+                            ? zoomButton.palette.mid : zoomButton.palette.button
                     }
                 }
             }

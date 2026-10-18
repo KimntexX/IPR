@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtCore
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Basic as Basic
 import QtQuick.Dialogs
 import QtQuick.Layouts
 import IPR
@@ -33,10 +34,10 @@ ApplicationWindow {
     Component.onCompleted: uiPreferences.restoreWindow(root)
     onClosing: uiPreferences.saveWindow(root)
 
-    menuBar: MenuBar {
+    menuBar: Basic.MenuBar {
         id: applicationMenuBar
         background: Rectangle { color: uiPreferences.theme.panel }
-        delegate: MenuBarItem {
+        delegate: Basic.MenuBarItem {
             id: menuEntry
             contentItem: Text {
                 text: menuEntry.text
@@ -47,42 +48,44 @@ ApplicationWindow {
             }
         }
 
-        Menu {
+        Basic.Menu {
+            palette: root.palette
             title: qsTr("Fichier")
 
-            MenuItem {
+            Basic.MenuItem {
                 text: qsTr("Ouvrir un dossier…")
                 onTriggered: folderDialog.open()
             }
 
-            MenuItem {
+            Basic.MenuItem {
                 text: qsTr("Ouvrir une image…")
                 onTriggered: imageFileDialog.open()
             }
 
-            MenuItem {
+            Basic.MenuItem {
                 text: qsTr("Quitter")
                 onTriggered: Qt.quit()
             }
         }
 
-        Menu {
+        Basic.Menu {
+            palette: root.palette
             title: qsTr("Affichage")
-            MenuItem {
+            Basic.MenuItem {
                 text: qsTr("Informations de l'image")
                 checkable: true
                 checked: uiPreferences.layout.showImageInfo
                 enabled: uiPreferences.writable
                 onTriggered: uiPreferences.setValue("layout/showImageInfo", checked)
             }
-            MenuItem {
+            Basic.MenuItem {
                 text: qsTr("Histogramme")
                 checkable: true
                 checked: uiPreferences.layout.showHistogram
                 enabled: uiPreferences.writable
                 onTriggered: uiPreferences.setValue("layout/showHistogram", checked)
             }
-            MenuItem {
+            Basic.MenuItem {
                 text: qsTr("Ruban des vignettes")
                 checkable: true
                 checked: uiPreferences.layout.showFilmstrip
@@ -90,9 +93,10 @@ ApplicationWindow {
                 onTriggered: uiPreferences.setValue("layout/showFilmstrip", checked)
             }
         }
-        Menu {
+        Basic.Menu {
+            palette: root.palette
             title: qsTr("Préférences")
-            MenuItem {
+            Basic.MenuItem {
                 action: Action {
                     text: qsTr("Interface et développement RAW…")
                     shortcut: "Ctrl+,"
@@ -169,8 +173,9 @@ ApplicationWindow {
                     text: qsTr("Ouvrez un dossier ou une image")
                 }
 
-                Button {
+                PreferenceButton {
                     id: openButton
+                    objectName: "openImageButton"
 
                     Layout.alignment: Qt.AlignHCenter
                     text: qsTr("Ouvrir…")
@@ -181,17 +186,17 @@ ApplicationWindow {
 
                     contentItem: Text {
                         text: openButton.text
-                        color: openButton.enabled ? "#edf2f8" : "#7a8797"
+                        color: openButton.palette.buttonText
+                        opacity: openButton.enabled ? 1 : 0.45
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     background: Rectangle {
                         radius: 3
-                        color: openButton.down ? "#3d4654"
-                               : (openButton.hovered ? "#343d49" : "#2d343e")
+                        color: openButton.down || openButton.hovered ? openButton.palette.mid : openButton.palette.button
                         border.width: 1
-                        border.color: "#536174"
+                        border.color: openButton.palette.mid
                     }
                 }
 
@@ -279,7 +284,7 @@ ApplicationWindow {
         editor: imageEditor
     }
 
-        ToolButton {
+        PreferenceButton {
             objectName: "filmstripToggleButton"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom

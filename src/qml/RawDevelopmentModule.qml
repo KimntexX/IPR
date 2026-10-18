@@ -25,7 +25,7 @@ ColumnLayout {
         color: root.textColor
         Layout.fillWidth: true
     }
-    ComboBox {
+    PreferenceComboBox {
         id: profileSelector
         objectName: "cameraProfileSelector"
         Layout.fillWidth: true
@@ -51,7 +51,7 @@ ColumnLayout {
             border.color: profileSelector.activeFocus ? profileSelector.palette.text : profileSelector.palette.mid
         }
     }
-    CheckBox {
+    PreferenceCheckBox {
         objectName: "rawAutomaticWhiteBalanceToggle"
         text: qsTr("Balance des blancs automatique")
         Layout.fillWidth: true
@@ -59,6 +59,7 @@ ColumnLayout {
         checked: root.editor.automaticWhiteBalance
         enabled: root.editor.rawImage && !root.editor.busy
         onClicked: root.editor.setAutomaticWhiteBalance(checked)
+        textColor: root.textColor
         contentItem: Text {
             text: parent.text
             color: root.textColor
