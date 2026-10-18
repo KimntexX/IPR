@@ -138,7 +138,7 @@ int main(int argc, char **argv)
         QObject *info = root->findChild<QObject *>(QStringLiteral("imageInfoPanel"));
         QObject *ribbon = root->findChild<QObject *>(QStringLiteral("thumbnailRibbon"));
         QObject *histogram = root->findChild<QObject *>(QStringLiteral("histogramModule"));
-        QObject *dialog = root->findChild<QObject *>(QStringLiteral("preferencesInfoDialog"));
+        QObject *dialog = root->findChild<QObject *>(QStringLiteral("preferencesDialog"));
         if (!check(window && window->isVisible() && info && ribbon && histogram && dialog &&
                    !info->property("visible").toBool() && !ribbon->property("visible").toBool() &&
                    !histogram->property("visible").toBool() &&
@@ -152,6 +152,19 @@ int main(int argc, char **argv)
         if (!check(info->property("visible").toBool() && ribbon->property("visible").toBool() &&
                    histogram->property("visible").toBool() && dialog->property("visible").toBool(),
                    "panel visibility and preferences dialog should react at runtime")) return 1;
+        QObject *background = dialog->findChild<QObject *>("preference_canvasBackground");
+        QObject *calibration = dialog->findChild<QObject *>("rawNormalizationToggle");
+        if (!check(background && calibration && !calibration->property("enabled").toBool(),
+                   "preferences must expose canvas colours and disable calibration without a RAW")) return 1;
+        QMetaObject::invokeMethod(background, "activated", Q_ARG(int, 1));
+        if (!check(preferences.theme().value("canvas").value<QColor>() == QColor("#777777"),
+                   "canvas preference must update the actual persisted theme")) return 1;
+        editor.setRawNormalizationEnabled(true);
+        if (!check(calibration->property("checked").toBool(),
+                   "preferences calibration must reflect the current editor state")) return 1;
+        editor.setRawNormalizationEnabled(false);
+        if (!check(!calibration->property("checked").toBool(),
+                   "preferences calibration must follow restored disabled state")) return 1;
         QMetaObject::invokeMethod(dialog, "close");
 
         QTemporaryDir photos;

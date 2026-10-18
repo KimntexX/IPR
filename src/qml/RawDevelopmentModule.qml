@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Dialogs
 import QtQuick.Layouts
 
 ColumnLayout {
@@ -67,38 +66,10 @@ ColumnLayout {
             leftPadding: parent.indicator.width + parent.spacing
         }
     }
-    CheckBox {
-        objectName: "rawNormalizationToggle"
-        text: qsTr("Calibration RAW — rendu du boîtier")
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
-        checked: root.editor.rawNormalizationEnabled
-        enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setRawNormalizationEnabled(checked)
-        contentItem: Text {
-            text: parent.text
-            color: root.textColor
-            wrapMode: Text.WordWrap
-            leftPadding: parent.indicator.width + parent.spacing
-            verticalAlignment: Text.AlignVCenter
-        }
-    }
-    Button {
-        objectName: "rawNormalizationManifestButton"
-        text: qsTr("Choisir le manifeste…")
-        Layout.fillWidth: true
-        enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: manifestDialog.open()
-    }
-    Label {
-        objectName: "rawNormalizationManifestLabel"
-        text: root.editor.rawNormalizationManifest.length > 0
-              ? root.editor.rawNormalizationManifest : qsTr("Aucun manifeste sélectionné")
-        color: root.secondaryTextColor
-        font.pixelSize: 10
-        wrapMode: Text.WrapAnywhere
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
+    RawCalibrationModule {
+        editor: root.editor
+        textColor: root.textColor
+        secondaryTextColor: root.secondaryTextColor
     }
     Label {
         objectName: "rawDevelopmentStatusLabel"
@@ -136,12 +107,5 @@ ColumnLayout {
         wrapMode: Text.WordWrap
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-    }
-    FileDialog {
-        id: manifestDialog
-        title: qsTr("Manifeste de normalisation RAW")
-        fileMode: FileDialog.OpenFile
-        nameFilters: [qsTr("Calibration JSON (*.json)")]
-        onAccepted: root.editor.setRawNormalizationManifest(selectedFile)
     }
 }

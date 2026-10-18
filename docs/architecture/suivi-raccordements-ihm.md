@@ -36,8 +36,23 @@ objet simulé ne vaut pas validation du raccordement de production.
 
 ## Demandes ouvertes
 
-Aucune demande fonctionnelle précise n’est encore spécifiée : cette action
-prépare l’isolation du chantier, elle ne corrige aucun écran ni calcul moteur.
+### IHM-CONN-001 — valeur par défaut globale de calibration RAW
+
+- Date : 18 octobre 2026 ; état : **en attente moteur**, branche à attribuer.
+- Le menu Préférences utilise actuellement `rawNormalizationEnabled` et
+  `setRawNormalizationEnabled(bool)` : ce contrat porte sur **l’image ouverte**.
+  Son accès avancé réutilise `RawCalibrationModule.qml`, également disponible
+  comme raccourci dans Développement RAW. Le manifeste utilise le contrat existant.
+- Une préférence globale de calibration demanderait une propriété distincte,
+  persistée dans la configuration application, et sa politique d’application
+  aux nouveaux fichiers. Ne pas transformer implicitement le réglage de la photo
+  courante en valeur par défaut ni écraser les choix explicites des sidecars.
+- Critères de raccordement : redémarrage de l’application, RAW sans sidecar,
+  RAW avec choix explicite activé/désactivé, boîtier non caractérisé et fichiers
+  non RAW. Définir explicitement la priorité sidecar/préférence/défaut moteur.
+- Aucun faux contrôle global n’est proposé dans l’IHM. L’explication de portée
+  est affichée dans les préférences ; ce raccordement ne bloque pas les options
+  générales d’affichage déjà opérationnelles.
 
 Pour chaque demande, renseigner :
 
@@ -74,6 +89,14 @@ Les vérifications automatisées sont consignées ci-dessous à chaque étape.
    Repères indicatifs uniquement, sans modifier le rendu ni prétendre reproduire
    le calcul propriétaire Lightroom. `settingsQmlTests` vérifie leur présence
    et leur absence sur les curseurs de lumière. Contrôle visuel souhaité : lisibilité.
+5. **Préférences** : menu dédié et raccourci Ctrl+virgule, affichage des panneaux,
+   couleur du fond et largeur du panneau persistés dans le fichier INI existant.
+   Calibration et manifeste accessibles pour l’image RAW ouverte, via un composant
+   unique réutilisé dans les réglages et les préférences. Portée par image indiquée
+   explicitement ; évolution globale suivie sous `IHM-CONN-001`.
+   Tests : `settingsQmlTests`, `uiPreferencesQmlTests` (ouverture du dialogue,
+   thème réellement modifié, état de calibration synchronisé et indisponibilité
+   sans RAW). Contrôle visuel souhaité : organisation et lisibilité du dialogue.
 
 ### 18 octobre 2026 — initialisation
 

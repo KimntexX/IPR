@@ -67,10 +67,15 @@ ApplicationWindow {
                 enabled: uiPreferences.writable
                 onTriggered: uiPreferences.setValue("layout/showFilmstrip", checked)
             }
-            MenuSeparator { }
+        }
+        Menu {
+            title: qsTr("Préférences")
             MenuItem {
-                text: qsTr("Fichier de préférences…")
-                onTriggered: preferencesInfoDialog.open()
+                action: Action {
+                    text: qsTr("Interface et développement RAW…")
+                    shortcut: "Ctrl+,"
+                    onTriggered: preferencesDialog.open()
+                }
             }
         }
     }
@@ -278,33 +283,11 @@ ApplicationWindow {
         background: Rectangle { color: uiPreferences.theme.panel }
     }
 
-    Dialog {
-        id: preferencesInfoDialog
-        objectName: "preferencesInfoDialog"
-        title: qsTr("Préférences de l'interface")
-        anchors.centerIn: Overlay.overlay
-        width: Math.min(root.width - 40, 640)
-        modal: true
-        standardButtons: Dialog.Ok
-        contentItem: ColumnLayout {
-            Label {
-                Layout.fillWidth: true
-                text: uiPreferences.filePath
-                wrapMode: Text.WrapAnywhere
-            }
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("L'état de l'interface est enregistré automatiquement. " +
-                           "Pour modifier ce fichier manuellement, fermez IPR puis relancez-le.")
-                wrapMode: Text.WordWrap
-            }
-            Label {
-                Layout.fillWidth: true
-                visible: !uiPreferences.writable
-                text: qsTr("Fichier en lecture seule : format plus récent, invalide ou non accessible.")
-                wrapMode: Text.WordWrap
-            }
-        }
+    PreferencesDialog {
+        id: preferencesDialog
+        objectName: "preferencesDialog"
+        editor: imageEditor
+        preferences: uiPreferences
     }
 
     FolderDialog {
