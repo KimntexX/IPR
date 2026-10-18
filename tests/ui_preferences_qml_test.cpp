@@ -408,6 +408,26 @@ int main(int argc, char **argv)
         QMetaObject::invokeMethod(toggle, "clicked");
         if (!check(preferences.layout().value("showFilmstrip").toBool(),
                    "the collapsed tab must restore the ribbon")) return 1;
+        for (const QString &handleName : {QStringLiteral("infoResizeHandle"), QStringLiteral("settingsResizeHandle"),
+                                          QStringLiteral("filmstripResizeHandle")}) {
+            QObject *handle = root->findChild<QObject *>(handleName);
+            if (!check(handle, "all three panel resize handles must exist")) return 1;
+            const double minimum = handle->property("minimumSize").toDouble();
+            const double maximum = handle->property("maximumSize").toDouble();
+            QMetaObject::invokeMethod(handle, "resizeTo", Q_ARG(QVariant, maximum + 1000));
+            if (!check(handle->property("currentSize").toDouble() == maximum,
+                       "panel resizing must clamp at its persisted maximum")) return 1;
+            QMetaObject::invokeMethod(handle, "resizeTo", Q_ARG(QVariant, minimum - 1000));
+            if (!check(handle->property("currentSize").toDouble() == minimum,
+                       "panel resizing must clamp at its persisted minimum")) return 1;
+            QMetaObject::invokeMethod(handle, "resizeTo", Q_ARG(QVariant, handle->property("defaultSize")));
+        }
+        preferences.sync();
+        UiPreferences restoredGeometry(path);
+        if (!check(restoredGeometry.layout().value("settingsWidth").toInt() == 320 &&
+                   restoredGeometry.layout().value("imageInfoWidth").toInt() == 250 &&
+                   restoredGeometry.layout().value("filmstripHeight").toInt() == 120,
+                   "resized panel geometry must survive a new preferences instance")) return 1;
         window->close();
     }
     return 0;

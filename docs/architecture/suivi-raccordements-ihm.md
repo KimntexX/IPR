@@ -65,6 +65,16 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Ergonomie — étape 4 : panneaux redimensionnables
+
+Poignées entre les trois panneaux et au-dessus du ruban : glisser à la souris,
+flèches au clavier (10 px), double-clic pour restaurer la taille usuelle.
+Les limites existantes restent 210–300 px pour Informations, 260–360 pour
+Réglages et 100–260 pour le ruban. Les clés INI existantes et leur écriture
+différée sont réutilisées ; rien dans le moteur ni dans les recettes photo.
+Le bouton du ruban reste au-dessus, séparé de la poignée horizontale.
+Tests : bornes et restauration depuis une nouvelle instance des préférences.
+
 ### Ergonomie — étape 3 : original temporaire
 
 Maintenir Espace lorsque la vue image a le focus, ou le bouton Origine,

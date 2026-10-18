@@ -125,6 +125,21 @@ ApplicationWindow {
             editor: imageEditor
         }
 
+        PanelResizeHandle {
+            objectName: "infoResizeHandle"
+            Layout.fillHeight: true
+            Layout.preferredWidth: 8
+            visible: uiPreferences.layout.showImageInfo
+            currentSize: uiPreferences.layout.imageInfoWidth
+            minimumSize: 210
+            maximumSize: 300
+            defaultSize: 250
+            writable: uiPreferences.writable
+            handleColor: uiPreferences.theme.secondaryText
+            description: qsTr("Largeur du panneau Informations")
+            onSizeEdited: (size) => uiPreferences.setValue("layout/imageInfoWidth", size)
+        }
+
         ImageCanvasBackground {
             objectName: "imageCanvasBackground"
             Layout.fillWidth: true
@@ -247,6 +262,20 @@ ApplicationWindow {
                 }
             }
         }
+        PanelResizeHandle {
+            objectName: "settingsResizeHandle"
+            Layout.fillHeight: true
+            Layout.preferredWidth: 8
+            currentSize: uiPreferences.layout.settingsWidth
+            minimumSize: 260
+            maximumSize: 360
+            defaultSize: 320
+            direction: -1
+            writable: uiPreferences.writable
+            handleColor: uiPreferences.theme.secondaryText
+            description: qsTr("Largeur du panneau Réglages")
+            onSizeEdited: (size) => uiPreferences.setValue("layout/settingsWidth", size)
+        }
         Rectangle {
             id: settingsPanel
             objectName: "settingsPanel"
@@ -285,11 +314,32 @@ ApplicationWindow {
         editor: imageEditor
     }
 
+    PanelResizeHandle {
+        objectName: "filmstripResizeHandle"
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: filmstrip.top
+        anchors.leftMargin: 12
+        anchors.rightMargin: 12
+        height: 8
+        orientation: Qt.Vertical
+        visible: filmstrip.visible
+        currentSize: uiPreferences.layout.filmstripHeight
+        minimumSize: 100
+        maximumSize: 260
+        defaultSize: 120
+        direction: -1
+        writable: uiPreferences.writable
+        handleColor: uiPreferences.theme.secondaryText
+        description: qsTr("Hauteur du ruban")
+        onSizeEdited: (size) => uiPreferences.setValue("layout/filmstripHeight", size)
+    }
+
         PreferenceButton {
             objectName: "filmstripToggleButton"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: uiPreferences.layout.showFilmstrip ? filmstrip.height + 4 : 0
+            anchors.bottomMargin: uiPreferences.layout.showFilmstrip ? filmstrip.height + 12 : 0
             text: uiPreferences.layout.showFilmstrip ? "▾" : "▴"
             implicitWidth: 40
             implicitHeight: 18
