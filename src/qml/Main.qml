@@ -182,20 +182,25 @@ ApplicationWindow {
             }
 
             Rectangle {
+                objectName: "imageStatusOverlay"
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
                 anchors.margins: 12
                 radius: 4
                 color: "#b820242b"
                 visible: imageEditor.hasImage
-                width: infoLabel.implicitWidth + 20
+                width: Math.min(infoLabel.implicitWidth + 20,
+                                Math.max(0, parent.width - 24 -
+                                         (uiPreferences.layout.showFilmstrip ? 0 : 80)))
                 height: infoLabel.implicitHeight + 10
 
                 Label {
                     id: infoLabel
 
                     anchors.centerIn: parent
+                    width: Math.max(0, parent.width - 20)
                     text: imageEditor.imageInfo
+                    elide: Text.ElideRight
                     color: "#edf2f8"
                     font.pixelSize: 12
                 }
@@ -255,16 +260,24 @@ ApplicationWindow {
         objectName: "expandFilmstripButton"
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottomMargin: 4
+        anchors.bottomMargin: 0
         visible: !uiPreferences.layout.showFilmstrip
         text: "▴"
         implicitWidth: 40
-        implicitHeight: 22
+        implicitHeight: 18
+        padding: 0
         hoverEnabled: true
         Accessible.name: qsTr("Afficher le ruban des images")
         ToolTip.visible: hovered
         ToolTip.text: Accessible.name
         onClicked: uiPreferences.setValue("layout/showFilmstrip", true)
+        contentItem: Text {
+            text: "▴"
+            color: uiPreferences.theme.secondaryText
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
+        background: Rectangle { radius: 3; color: uiPreferences.theme.panel }
     }
 
     footer: Label {

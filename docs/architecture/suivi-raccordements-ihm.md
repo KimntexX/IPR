@@ -105,6 +105,11 @@ Les vérifications automatisées sont consignées ci-dessous à chaque étape.
 
 ### Vérifications du build IHM isolé
 
+Revue des captures : correction de la hauteur utile des champs de valeur,
+du chevauchement entre le bandeau d’information et les flèches de navigation,
+et harmonisation du titre/pied du dialogue Préférences. Régressions couvertes
+dans les tests ciblés ; l’appréciation ergonomique finale reste utilisateur.
+
 - Exécutable : `.worktrees/patch_ui/build-patch_ui/Release/appIPR.exe`.
   Bibliothèques Qt, OpenCV, LibRaw/TIFF et dépendances déployées localement,
   configuration INI/RAW dans `Release/config` et répertoires de profils prêts.

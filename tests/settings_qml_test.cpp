@@ -182,9 +182,15 @@ int main(int argc, char **argv)
         return 1;
 
     // Geometry regression: signed values fill from neutral, not from the left.
+    root->findChild<QObject *>("lightSection")->setProperty("expanded", true);
+    settleLayout();
     QObject *contrast = controlWithLabel(root.data(), QStringLiteral("Contraste"));
     auto *track = contrast->findChild<QQuickItem *>("adjustmentTrack");
     auto *fill = contrast->findChild<QQuickItem *>("adjustmentFill");
+    auto *valueField = contrast->findChild<QQuickItem *>("adjustmentValueEditor");
+    if (!check(track->width() > 0 && valueField && valueField->height() - valueField->property("topPadding").toDouble() -
+               valueField->property("bottomPadding").toDouble() >= valueField->property("contentHeight").toDouble(),
+               "compact value fields must leave enough height for their editable text")) return 1;
     for (int value : {-100, -50, 0, 50, 100}) {
         contrast->setProperty("value", value);
         settleLayout();

@@ -41,11 +41,16 @@ ColumnLayout {
 
         TextField {
             id: valueEditor
+            objectName: "adjustmentValueEditor"
 
             Layout.preferredWidth: 50
             Layout.minimumWidth: 50
             Layout.maximumWidth: 50
-            implicitHeight: 22
+            implicitHeight: Math.max(22, contentHeight + topPadding + bottomPadding)
+            topPadding: 2
+            bottomPadding: 2
+            leftPadding: 3
+            rightPadding: 3
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
             selectByMouse: true

@@ -207,6 +207,12 @@ int main(int argc, char **argv)
         root->findChild<QObject *>("colorSection")->setProperty("expanded", true);
         root->findChild<QObject *>("mixerSection")->setProperty("expanded", true);
         if (!check(captureReview(window, "collapsed-filmstrip"), "optional main window capture should save")) return 1;
+        auto *overlay = root->findChild<QQuickItem *>("imageStatusOverlay");
+        auto *navigationItem = qobject_cast<QQuickItem *>(navigation);
+        const QPointF overlayEnd = overlay->mapToItem(nullptr, QPointF(overlay->width(), 0));
+        const QPointF navigationStart = navigationItem->mapToItem(nullptr, QPointF(0, 0));
+        if (!check(overlayEnd.x() <= navigationStart.x(),
+                   "image information must not overlap collapsed navigation arrows")) return 1;
         QMetaObject::invokeMethod(navigation, "navigate", Q_ARG(QVariant, 1));
         settleEditor(editor);
         if (!check(editor.imageDetails().value("name").toString() == "02.png" &&

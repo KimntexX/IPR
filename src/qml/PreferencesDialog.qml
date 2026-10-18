@@ -11,7 +11,23 @@ Dialog {
     width: Math.min(parent ? parent.width - 40 : 560, 560)
     height: Math.min(parent ? parent.height - 40 : 620, 620)
     modal: true
-    standardButtons: Dialog.Close
+    standardButtons: Dialog.NoButton
+    header: Label {
+        text: root.title
+        padding: 12
+        font.bold: true
+        font.pixelSize: 16
+        color: root.preferences.theme.text
+        background: Rectangle { color: root.preferences.theme.panel }
+    }
+    footer: DialogButtonBox {
+        background: Rectangle { color: root.preferences.theme.panel }
+        Button {
+            text: qsTr("Fermer")
+            DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
+        }
+        onRejected: root.close()
+    }
 
     contentItem: ScrollView {
         id: preferencesScroll
