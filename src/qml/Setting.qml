@@ -275,6 +275,20 @@ Item {
             }
 
             SettingsSection {
+                objectName: "opticsSection"
+                stateKey: "optics"
+                preferences: root.preferences
+                textColor: root.textColor
+                title: qsTr("Corrections optiques")
+
+                OpticsModule {
+                    editor: root.editor
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                }
+            }
+
+            SettingsSection {
                 objectName: "lightSection"
                 stateKey: "light"
                 preferences: root.preferences

@@ -67,54 +67,6 @@ ColumnLayout {
             leftPadding: parent.indicator.width + parent.spacing
         }
     }
-    Label {
-        text: qsTr("Corrections optiques LCP")
-        color: root.textColor
-        Layout.fillWidth: true
-    }
-    CheckBox {
-        objectName: "lensCorrectionToggle"
-        text: qsTr("Activer la correction de l’objectif")
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
-        checked: root.editor.lensCorrectionEnabled
-        enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setLensCorrectionEnabled(checked)
-        contentItem: Text {
-            text: parent.text
-            color: root.textColor
-            wrapMode: Text.WordWrap
-            leftPadding: parent.indicator.width + parent.spacing
-        }
-        ToolTip.visible: hovered
-        ToolTip.text: qsTr("Corrige la distorsion et le vignettage lorsque le profil LCP contient ces données.")
-    }
-    CheckBox {
-        objectName: "chromaticAberrationToggle"
-        text: qsTr("Supprimer l’aberration chromatique")
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
-        checked: root.editor.chromaticAberrationEnabled
-        enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setChromaticAberrationEnabled(checked)
-        contentItem: Text {
-            text: parent.text
-            color: root.textColor
-            wrapMode: Text.WordWrap
-            leftPadding: parent.indicator.width + parent.spacing
-        }
-        ToolTip.visible: hovered
-        ToolTip.text: qsTr("Recalage chromatique latéral rouge/bleu selon le LCP. Ne traite pas les franges longitudinales.")
-    }
-    Label {
-        objectName: "opticalDevelopmentStatusLabel"
-        text: root.editor.opticalDevelopmentStatus
-        color: root.secondaryTextColor
-        font.pixelSize: 11
-        wrapMode: Text.WrapAnywhere
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
-    }
     CheckBox {
         objectName: "rawNormalizationToggle"
         text: qsTr("Calibration RAW — rendu du boîtier")

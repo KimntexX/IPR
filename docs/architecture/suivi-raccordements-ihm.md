@@ -50,6 +50,16 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Corrections IHM — demande du 18 octobre 2026
+
+Validation visuelle utilisateur à réaliser sur le build isolé `build-patch_ui`.
+Les vérifications automatisées sont consignées ci-dessous à chaque étape.
+
+1. **Optique** : composant `OpticsModule.qml`, section indépendante repliable,
+   état mémorisé dans `sections/optics`. Contrats C++ existants conservés.
+   Test ciblé : `settingsQmlTests` (emplacement exclusif des commandes, largeur,
+   repliement et conservation des réglages).
+
 ### 18 octobre 2026 — initialisation
 
 Worktree et branche locale créés depuis `dev` à jour. Seules les consignes
