@@ -871,3 +871,48 @@ son point blanc selon le contenu de l'image (q75 de 6V1A0043 remonté de plus de
 4 EV, 45 % de 6V1A0007 écrêtés), ce qu'aucune courbe fixe ne reproduit sans
 sur-remonter les tons profonds. **Décision de l'utilisateur attendue** : plan B
 (point blanc adaptatif) pour HL et blancs positifs.
+
+### Plan B — formes de LR et poids par image, 18 octobre 2026
+
+Décision de l'utilisateur après le second retour visuel (noirs −100 et +100,
+HL et blancs +100 incorrects ; désaturation à noirs −100 sur 6V1A9950) : poids
+par image, calculés à l'ouverture et mémorisés avec l'image. Analyse et mise
+en œuvre : [roadmap Lumières](../../architecture/roadmap-lumieres.md), plan B.
+
+Mémoires : v004 de [ombres](../raw/mesure-lumiere-v004-20261018T184639128499Z.json),
+[noirs](../raw/mesure-lumiere-v004-20261018T185217244210Z.json),
+[HL](../raw/mesure-lumiere-v004-20261018T185740625909Z.json) et
+[blancs](../raw/mesure-lumiere-v004-20261018T190241520566Z.json) (sept scènes :
+6V1A0037 absent de la base pendant la génération ; noirs et blancs sans épaule
+par canal) ; puis v005, huit scènes, version courante :
+[ombres](../raw/mesure-lumiere-v005-20261018T193640466571Z.json),
+[noirs](../raw/mesure-lumiere-v005-20261018T194156744575Z.json),
+[HL](../raw/mesure-lumiere-v005-20261018T194707535131Z.json),
+[blancs](../raw/mesure-lumiere-v005-20261018T195226860887Z.json) ; 136 états
+chacune, aucun exclu.
+
+v004 : écarts aux quantiles réduits de moitié à un quart, mais les blancs,
+écrêtés canal par canal à 1, saturaient environ dix fois plus de canaux que
+LR (6V1A0524 à +25 : 21,5 % contre 2,4 %). Correction : épaule douce par canal,
+dans l'ajustement comme en production.
+
+v005, écart |EV| moyen aux quantiles : ombres 0,10, noirs 0,04, HL 0,06,
+blancs 0,05 (plan A gradué : 0,24 / 0,11 / 0,22 / 0,24). Ratios variante /
+neutre, médiane des scènes, IPR / LR :
+
+| Réglage | Bas 20 % | Tons moyens | Haut 20 % |
+| --- | --- | --- | --- |
+| Ombres −100 | 0,374 / 0,360 | 0,730 / 0,700 | 0,951 / 0,969 |
+| Ombres +100 | 2,730 / 3,327 | 1,465 / 1,398 | 1,065 / 1,031 |
+| Noirs −100 | 0,016 / 0,000 | 0,117 / 0,107 | 0,782 / 0,759 |
+| Noirs +100 | 2,208 / 2,293 | 1,817 / 1,866 | 1,134 / 1,138 |
+| HL −100 | 0,921 / 0,883 | 0,772 / 0,782 | 0,632 / 0,626 |
+| HL +100 | 1,098 / 1,135 | 1,218 / 1,194 | 1,446 / 1,563 |
+| Blancs −100 | 0,976 / 0,981 | 0,917 / 0,931 | 0,833 / 0,856 |
+| Blancs +100 | 2,159 / 2,101 | 4,068 / 4,210 | 2,179 / 2,174 |
+
+Limites : les blancs positifs écrêtent encore plus que LR sur certaines scènes
+à +100 (jusqu'à +35 points de pixels à canal ≥ 0,999) ; ombres +100 remonte
+un peu moins les tons profonds (×2,73 contre ×3,33). Le gain par image est
+validé par validation croisée sur huit scènes seulement. **Validation visuelle
+de l'utilisateur en cours.**

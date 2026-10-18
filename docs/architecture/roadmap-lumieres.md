@@ -11,14 +11,14 @@ protocole : [protocole Lumières](../validation/protocols/protocole-lumieres.md)
 | --- | --- | --- |
 | Exposition | Avant le DCP, sur le signal caméra ; conforme à LR à ±0,03 EV | Validé visuellement, 18 octobre |
 | Contraste | S à extrémités fixes, domaine log, par canal | Validé, réserve à +100 (≈ 3 % plus fort que LR) |
-| Ombres, noirs, HL, blancs | Plan A, zones graduées (règle redéfinie le 18 octobre) | Ombres acceptées ; noirs, HL, blancs à revalider |
+| Ombres, noirs, HL, blancs | Plan B : formes de LR et poids par image | Campagnes du 18 octobre au soir ; validation visuelle à faire |
 
 Comparaisons IPR/LR à réglages égaux : calibration RAW de l'IHM, optique
 coupée des deux côtés. Corpus : six scènes sombres du protocole, plus deux
 scènes claires (6V1A0524 R6 Mark III, 7Y6A7003 R7) pour ne pas ajuster les
 paramètres sur des images sombres seulement.
 
-## Plan A — plages tonales fixes (en cours)
+## Plan A — plages tonales fixes (remplacé par le plan B)
 
 Masques et courbes identiques pour toutes les photos, ajustés sur les
 références LR, par paires qui se recouvrent :
@@ -72,25 +72,44 @@ le quantile q75 de plus de 4 EV ; sur 6V1A0007, il écrête 45 % de l'image. Un
 point blanc fixe assez fort sur-remonte les tons profonds (+1,5 à +2 EV) :
 LR place son point blanc selon le contenu de l'image, ce qui relève du plan B.
 
-## Plan B — plages adaptatives (évolution tracée, non engagée)
+## Plan B — poids par image (engagé le 18 octobre 2026)
 
-Lightroom calcule ses plages à partir de l'histogramme de chaque image. Dans
-ces scènes sombres, blancs à +100 éclaircit les tons moyens d'un facteur 5,7,
-et noirs à −100 les rend quasiment noirs. Le plan B rendrait les masques
-d'IPR adaptatifs : points noir et blanc, bornes de zones tirées de la
-distribution de luminance de l'image.
+Décision de l'utilisateur après validation visuelle du plan A : les courbes ne
+peuvent pas être génériques ; chaque image reçoit des poids, calculés à son
+ouverture et mémorisés avec elle dans le cache.
 
-Conditions avant de l'engager :
+Analyse préalable : les exports LR sont alignés pixel à pixel sur leur neutre
+LR (même RAW, même géométrie), ce qui donne la courbe de transfert propre à LR,
+image par image, sans passer par le rendu d'IPR. Constats sur huit scènes :
 
-- Décision de l'utilisateur, après évaluation du plan A sur des photos variées.
-- Statistiques calculées sur le **master linéaire avant les réglages tonaux**,
-  jamais sur l'histogramme d'affichage. Celui-ci est correct (test du 18 octobre),
-  mais calculé après réglages sur l'aperçu sRGB 8 bits du proxy : s'y appuyer
-  ferait réagir un réglage à son propre effet.
-- Comportement stable pendant le glissement d'un curseur et identique entre
-  aperçu et export (statistiques figées par image, pas par rendu).
-- Corpus élargi : scènes claires, contre-jour, faible et fort contraste,
-  plusieurs boîtiers ; campagnes JSON comparées au plan A.
+- **Noirs et blancs négatifs ne s'adaptent pas** : même courbe sur toutes les
+  scènes (dispersion 0,05 EV pour noirs +100 ; noirs −100 = point noir fixe
+  vers 2^-5).
+- **Ombres, HL et blancs positifs s'adaptent** : forme fixe, gain propre à
+  l'image (blancs +100 : de +0,65 EV sur 6V1A0524 à +4,7 EV sur 6V1A0043). Un
+  gain par image ramène l'écart de 0,42–0,48 EV (courbe fixe) à 0,05–0,17 EV.
+- **Couleur** : LR applique noirs et blancs **canal par canal** ; à noirs −100,
+  il sature les couleurs (×1,40), ce qu'une échelle RGB commune ne fait pas
+  (désaturation vue par l'utilisateur sur 6V1A9950).
+
+Mise en œuvre :
+
+- Formes de LR (nœuds tous les EV, quatre niveaux de curseur, interpolation
+  linéaire), ajustées par `scripts/fit_tone_recovery.py`, qui génère
+  `src/core/ToneRecoveryModel.h`.
+- Gain par image prédit par deux statistiques de luminance (moyenne et
+  quantiles du log2 Y), borné à la plage vue à l'ajustement ±0,3 en log.
+- Statistiques mesurées une fois sur le proxy neutre au chargement, portées
+  par l'image de travail (cache, master reconstruit à l'export) : aperçu et
+  export identiques, stables pendant le glissement d'un curseur.
+- Ombres et HL sur la luminance ; noirs et blancs par canal. Pas de
+  remontée sous 2^-14 (aucune donnée LR : plancher de bruit préservé).
+
+Validation croisée (chaque scène prédite sans l'avoir vue), écart moyen à ±100 :
+ombres 0,27–0,31 EV, noirs 0,06–0,21, HL 0,08–0,11, blancs − 0,04, blancs +
+0,39 (pire 0,77). Limite : huit scènes, un boîtier principal ; le gain des
+blancs positifs reste le moins bien prédit. **Élargir le corpus de références
+LR** (piste XMP ci-dessous) améliorerait directement la prédiction.
 
 ## Points reportés
 
