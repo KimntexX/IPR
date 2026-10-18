@@ -74,24 +74,29 @@ inline float lift(int control, float amount, float x, const Gains &gains)
     return value * gains.value[size_t(index)];
 }
 
+// Soft shoulder of a brightening from y (< 1) to out: tones above the knee
+// approach 1 without reaching it; untouched or darkened tones pass through.
+inline float shoulder(float y, float out, float knee = 0.70f)
+{
+    if (out <= y || out <= knee) return out;
+    const float base = std::max(y, knee);
+    return base + (1.0f - base) * std::tanh((out - base) / (1.0f - base));
+}
+
 // Analytic transfer of the luminance controls (Shadows, Highlights) or the
-// channel controls (Blacks, Whites), before monotone sampling.
+// channel controls (Blacks, Whites), before monotone sampling. Channels roll
+// off near white through the shoulder, as Lightroom does: a hard cap at 1
+// clipped about ten times more channels than Lightroom with Whites +25. The
+// luminance lift is capped at white; the editor then passes the largest sRGB
+// delivery channel through the shoulder.
 inline float transfer(float y, const Amounts &a, const Gains &g, bool perChannel)
 {
     if (y <= 0.0f || y >= 1.0f) return y;
     const float x = std::log2(std::max(y, std::exp2(Model::FirstKnotEv)));
     const float shift = perChannel ? lift(1, a.blacks, x, g) + lift(3, a.whites, x, g)
                                    : lift(0, a.shadows, x, g) + lift(2, a.highlights, x, g);
-    return std::min(1.0f, y * std::exp2(shift));
-}
-
-// Soft shoulder of a brightening from y (< 1) to out: used on the largest
-// sRGB delivery channel, so luminance lifts roll saturated colours off below 1.
-inline float shoulder(float y, float out, float knee = 0.70f)
-{
-    if (out <= y || out <= knee) return out;
-    const float base = std::max(y, knee);
-    return base + (1.0f - base) * std::tanh((out - base) / (1.0f - base));
+    const float out = y * std::exp2(shift);
+    return perChannel ? std::min(1.0f, shoulder(y, out)) : std::min(1.0f, out);
 }
 
 // Production curves, sampled once per render over the 16 EV below white and

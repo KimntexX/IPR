@@ -763,8 +763,8 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
 // Graded-zone rule for Lumières tone controls (18 October 2026): as in
 // Lightroom, a control may reach the whole tonal range, but its effect, in EV
 // of linear light, is weakest at the opposite end of the histogram. Tones next
-// to white and saturated samples are left out: their shift is capped by
-// headroom. Shadows, Highlights and positive Whites adapt to the image, so
+// to white, in the soft shoulder, and black samples are left out: their
+// shift is capped by headroom. Shadows, Highlights and positive Whites adapt to the image, so
 // minimum strengths hold for a bright synthetic image too.
 double evShift(const QImage &base, const QImage &variant, int x)
 {
@@ -781,7 +781,9 @@ bool oppositeEndMovesLeast(const QImage &base, const QImage &variant, int opposi
     const double far = std::abs(evShift(base, variant, opposite));
     for (int x : others) {
         const int code = variant.pixelColor(x, 0).red();
-        if (code == 0 || code == 255) continue; // saturated: shift capped by headroom
+        // Black, or inside the white shoulder (linear > 0.70, code 219): the
+        // shift is capped by headroom, not by the control's zone.
+        if (code == 0 || code >= 219) continue;
         if (far > std::abs(evShift(base, variant, x)) + 0.03) return false;
     }
     return true;

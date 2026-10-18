@@ -40,6 +40,22 @@ GAIN_STATISTICS = {("shadows", -1): ("Q90", "Q95"), ("shadows", 1): ("Q10", "Q95
 ORDER = [(f, s) for f in ("shadows", "blacks", "highlights", "whites") for s in (-1, 1)]
 
 
+SHOULDER_KNEE = 0.70
+
+
+def predict(x, lift, feature):
+    """log2 output for log2 input x and EV lift. Per-channel brightening rolls
+    off near white through the soft shoulder of ToneRecovery::shoulder, as
+    Lightroom does per channel; luminance controls are capped at white."""
+    if feature not in PER_CHANNEL:
+        return np.minimum(x + lift, 0)
+    y, out = 2.0 ** x, 2.0 ** (x + lift)
+    base = np.maximum(y, SHOULDER_KNEE)
+    soft = base + (1 - base) * np.tanh((out - base) / np.maximum(1 - base, 1e-6))
+    out = np.where((out > y) & (out > SHOULDER_KNEE), soft, np.minimum(out, 1.0))
+    return np.log2(np.maximum(out, 2.0 ** -40))
+
+
 def lightroom(path):
     ipr, xmp = embedded_metadata(path)
     return None if ipr or not xmp else xmp
@@ -108,8 +124,8 @@ def fit_control(pairs, stats, feature, sign, train):
         out = []
         for (s, level), (med, w) in data.items():
             ok = ~np.isnan(med)
-            pred = np.minimum(MID[ok] + np.exp(log_gain(coef, s)) *
-                              np.interp(MID[ok], KNOTS, shapes[LEVELS.index(level)]), 0)
+            pred = predict(MID[ok], np.exp(log_gain(coef, s)) *
+                           np.interp(MID[ok], KNOTS, shapes[LEVELS.index(level)]), feature)
             out.append(np.sqrt(w[ok]) * (pred - med[ok]))
         out.append(.02 * np.diff(shapes, 2, axis=1).ravel())  # smooth shapes
         if names:  # gains centred on 1
@@ -130,7 +146,7 @@ def error(pairs, stats, feature, sign, model, scene):
     for level in LEVELS:
         med, w = binned(pairs, scene, feature, sign * level)
         ok = ~np.isnan(med)
-        pred = np.minimum(MID[ok] + np.exp(lg) * np.interp(MID[ok], KNOTS, shapes[LEVELS.index(level)]), 0)
+        pred = predict(MID[ok], np.exp(lg) * np.interp(MID[ok], KNOTS, shapes[LEVELS.index(level)]), feature)
         errs.append(np.sum(w[ok] * np.abs(pred - med[ok])) / w[ok].sum())
     return np.array(errs)
 
