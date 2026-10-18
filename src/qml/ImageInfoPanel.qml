@@ -135,12 +135,14 @@ Rectangle {
                         model: 5
 
                         delegate: ToolButton {
+                            id: ratingButton
                             required property int index
+                            objectName: "imageRatingStar" + index
 
-                            Layout.preferredWidth: 22
-                            Layout.preferredHeight: 22
+                            Layout.preferredWidth: 23.1
+                            Layout.preferredHeight: 23.1
                             text: index < panel.editor.imageRating ? "★" : "☆"
-                            font.pixelSize: 17
+                            font.pixelSize: 18
                             padding: 0
                             ToolTip.visible: hovered
                             ToolTip.text: qsTr("%1 étoile(s)").arg(index + 1)
@@ -149,6 +151,8 @@ Rectangle {
                                            ? 0 : index + 1)
 
                             contentItem: Text {
+                                objectName: "imageRatingGlyph" + ratingButton.index
+                                font: ratingButton.font
                                 text: parent.text
                                 color: parent.hovered ? "#f3c969" : "#d7b35e"
                                 horizontalAlignment: Text.AlignHCenter

@@ -28,6 +28,13 @@ bool check(bool condition, const char *message)
     if (!condition) std::cerr << "FAILED: " << message << '\n';
     return condition;
 }
+QQuickItem *visualItem(QQuickItem *root, const QString &name)
+{
+    if (root->objectName() == name) return root;
+    for (auto *child : root->childItems())
+        if (auto *found = visualItem(child, name)) return found;
+    return nullptr;
+}
 void settleEditor(ImageEditor &editor)
 {
     QElapsedTimer timer;
@@ -192,6 +199,15 @@ int main(int argc, char **argv)
         if (!check(image.save(first) && image.save(second), "navigation fixtures should save")) return 1;
         editor.openImage(QUrl::fromLocalFile(first));
         settleEditor(editor);
+        auto *firstStar = visualItem(qobject_cast<QQuickWindow *>(window)->contentItem(), "imageRatingStar0");
+        auto *starGlyph = visualItem(qobject_cast<QQuickWindow *>(window)->contentItem(), "imageRatingGlyph0");
+        if (!check(firstStar && starGlyph && firstStar->width() >= 23 &&
+                   starGlyph->property("font").value<QFont>().pixelSize() == 18,
+                   "rating stars must render at 18 px with a slightly enlarged hit area")) return 1;
+        QMetaObject::invokeMethod(firstStar, "clicked");
+        if (!check(editor.imageRating() == 1, "enlarged stars must still edit the actual image rating")) return 1;
+        QMetaObject::invokeMethod(firstStar, "clicked");
+        if (!check(editor.imageRating() == 0, "clicking the current rating must clear it")) return 1;
         QObject *navigation = root->findChild<QObject *>("collapsedFilmstripNavigation");
         if (!check(navigation && navigation->property("currentIndex").toInt() == 0 &&
                    navigation->property("previousName").toString().isEmpty() &&
