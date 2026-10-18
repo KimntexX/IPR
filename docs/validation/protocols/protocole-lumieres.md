@@ -20,9 +20,14 @@ globaux du générateur comme les suffixes d'une ancienne campagne.
 
 ## Mesures / critères
 
-- EV : dans les pixels non écrêtés et hors branche non linéaire de sortie,
-  vérifier le gain attendu `2^EV`, neutralité EV0 et conservation des ratios
-  RGB avant gamut. Les TIFF peuvent dévier près des limites de sortie.
+- EV (depuis le 18 octobre 2026) : pour un RAW avec DCP, le gain `2^EV` porte
+  sur le signal caméra **avant** le profil ; le TIFF suit ensuite la courbe et les
+  tables du DCP, comme Lightroom. Ne plus exiger `2^EV` dans le TIFF final : ce
+  critère validait l'ancien calcul après courbe, rejeté visuellement. Vérifier la
+  neutralité à 0 EV, la monotonie et l'écrêtage, puis l'écart à LR par quantile de Y
+  à réglages égaux (calibration RAW active, optique dans le même état des deux côtés).
+  Les tests moteur imposent `2^EV` sur le signal caméra et l'absence de doublement
+  après courbe. Sources sans signal caméra : `2^EV` linéaire dans le TIFF.
 - Ombres/noirs : mesurer Y dans les bas 20 % et les noirs profonds, mais aussi
   tons moyens/HL. Ombres positives : aucune remontée discontinue du noir,
   inversion tonale, posterisation ou halo ; ne pas masquer une amplification

@@ -697,3 +697,30 @@ du rendu de base est un sujet distinct, à étudier avant le contraste.
 Les TIFF `lumiere/exposure` de la génération du 17 octobre restent ceux de l'ancien
 calcul ; une campagne v002 sera produite après leur régénération. Les variantes des
 cinq autres réglages, générées à 0 EV, ne sont pas affectées par cette correction.
+
+### Exposition — campagne v002 sur base comparable, 18 octobre 2026
+
+L'écart de base à 0 EV ne venait pas du moteur, mais de deux biais de méthode.
+D'une part, le **générateur n'appliquait pas la calibration RAW** que l'IHM active
+par défaut (ADR-0007) : ses TIFF étaient 0,3 à 1,1 EV plus sombres que l'écran.
+D'autre part, l'optique différait : le générateur l'activait, alors que les
+références LR ont `LensProfileEnable=0` (effet net sur 9950, vignetage).
+Rendus diagnostiques à 0 EV, calibration active et optique coupée : écart à LR
+de ±0,01 EV à tous les quantiles, sur les cinq scènes. Correction du générateur
+(calibration par défaut, optique coupée hors série `optique`) ; groupe `lumiere`
+entièrement régénéré.
+
+Mémoire : [mesure-lumiere-v002](../raw/mesure-lumiere-v002-20261018T095236504304Z.json),
+qui remplace la v001 sans la modifier. États : 50 mesurés, 4 exclus (LR de 0037,
+neutre « Custom » manquant).
+
+| | −1 EV | −0,5 EV | 0 EV | +0,5 EV | +1 EV |
+| --- | --- | --- | --- | --- | --- |
+| Gain médian IPR / LR, chacun contre son neutre | 0,249 / 0,256 | 0,517 / 0,540 | — | 1,768 / 1,764 | 2,997 / 2,936 |
+| Écart IPR − LR au q50, EV, médiane des scènes | +0,01 | +0,00 | +0,00 | +0,00 | +0,00 |
+| Canal saturé, maximum par scène, IPR / LR | 0 % / 0 % | 0,01 % / 0 % | — | 0,54 % / 0,13 % | 0,91 % / 0,51 % |
+
+Sur les 25 couples scène × EV, l'écart IPR − LR reste dans ±0,03 EV de q10 à q99,
+sauf 9421 à +1 EV (+0,07 EV au q90). L'exposition est **conforme à LR à réglages
+égaux** sur ce corpus. Ce n'est pas une parité universelle : un seul boîtier
+(R6 Mark III), Camera Neutral, optique coupée, six scènes.
