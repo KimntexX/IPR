@@ -143,6 +143,11 @@ int main(int argc, char **argv)
                "normal settings must expose profiles and optics but no advanced calibration controls")) return 1;
     auto *optics = root->findChild<QObject *>("opticsSection");
     auto *rawSection = root->findChild<QObject *>("rawDevelopmentSection");
+    auto *opticsItem = qobject_cast<QQuickItem *>(optics);
+    auto *exportItem = root->findChild<QQuickItem *>("exportSection");
+    const auto sections = opticsItem->parentItem()->childItems();
+    if (!check(sections.indexOf(exportItem) == sections.indexOf(opticsItem) + 1,
+               "optical corrections must be placed immediately before export")) return 1;
     if (!check(optics->findChild<QObject *>("lensCorrectionToggle") &&
                optics->findChild<QObject *>("chromaticAberrationToggle") &&
                !rawSection->findChild<QObject *>("lensCorrectionToggle"),

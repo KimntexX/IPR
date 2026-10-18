@@ -111,6 +111,25 @@ conservés exclusivement dans les options avancées des préférences. Le test
 des réglages en vérifie l’absence ; le test des préférences garde le contrôle
 de synchronisation avec l’état réel de l’image.
 
+Autres ajustements de cette passe :
+
+- Un seul bouton au centre du pied de l’IHM commande le repliement et la
+  réouverture du ruban. Sa position est identique dans les deux états et
+  il ne recouvre plus les vignettes ni les informations de la photo.
+- Étoiles : glyphes de 17 à 18 px (arrondi d’environ +5 %), zone cliquable
+  légèrement agrandie ; notation et suppression de la note vérifiées.
+- Texte des informations réglable de **10 à 20 px**, valeur initiale 12 px,
+  clé INI `layout/imageInfoFontSize`. La validation, la sauvegarde et la
+  restauration sont gérées par `UiPreferences`, sans modification du moteur.
+- Cinq palettes d’interface : bordeaux, blanc cassé, noir mat, bleu marine,
+  gris actuel. Les clés INI existantes `theme/background`, `theme/panel`,
+  `theme/text`, `theme/secondaryText` font foi ; aucune copie parallèle de thème.
+  La couleur `theme/canvas` de la zone photo reste indépendante. Les textes
+  et surfaces des contrôles héritent de la palette ; tests des cinq choix et
+  de leur persistance, captures de contrôle pour les variantes claire et marine.
+- Corrections optiques déplacées immédiatement avant Export. Le test des
+  réglages vérifie l’ordre réel des composants, pas seulement leur existence.
+
 Revue des captures : correction de la hauteur utile des champs de valeur,
 du chevauchement entre le bandeau d’information et les flèches de navigation,
 et harmonisation du titre/pied du dialogue Préférences. Régressions couvertes
@@ -133,7 +152,8 @@ dans les tests ciblés ; l’appréciation ergonomique finale reste utilisateur.
 - Validation visuelle utilisateur **en attente** : emplacement Optique,
   repliement/réouverture et noms au survol, traits signés et bandes colorées,
   préférences, histogramme fixe avec tous les groupes ouverts.
-- Aucun changement moteur, de calcul, de cache, de profil ou de contrat C++ ;
+- Aucun changement moteur, de calcul, de cache, de profil ou de contrat C++ du
+  moteur ; seule la configuration IHM `UiPreferences` reçoit la taille du texte.
   aucune fusion, publication ou création de tag.
 
 ### 18 octobre 2026 — initialisation
