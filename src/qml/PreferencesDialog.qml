@@ -103,7 +103,7 @@ Dialog {
             }
             Rectangle { Layout.fillWidth: true; height: 1; color: "#424c59" }
             Label {
-                text: qsTr("Développement RAW — image ouverte")
+                text: qsTr("Options avancées RAW — image ouverte")
                 font.bold: true
                 color: root.preferences.theme.text
             }
@@ -117,6 +117,13 @@ Dialog {
                 editor: root.editor
                 textColor: root.preferences.theme.text
                 secondaryTextColor: root.preferences.theme.secondaryText
+            }
+            Button {
+                objectName: "resetRawDevelopmentButton"
+                text: qsTr("Réinitialiser profil / calibration")
+                Layout.fillWidth: true
+                enabled: root.editor.rawImage && !root.editor.busy
+                onClicked: root.editor.resetRawDevelopment()
             }
             Label {
                 Layout.fillWidth: true

@@ -133,26 +133,20 @@ int main(int argc, char **argv)
     }
 
     if (!check(root->findChild<QObject *>("cameraProfileSelector") &&
-               root->findChild<QObject *>("rawNormalizationToggle") &&
                root->findChild<QObject *>("rawDevelopmentStatusLabel") &&
-               root->findChild<QObject *>("rawNormalizationManifestButton") &&
                root->findChild<QObject *>("lensCorrectionToggle") &&
                root->findChild<QObject *>("chromaticAberrationToggle") &&
-               root->findChild<QObject *>("opticalDevelopmentStatusLabel"),
-               "RAW module must expose profile, opt-in, manifest and actual status")) return 1;
+               root->findChild<QObject *>("opticalDevelopmentStatusLabel") &&
+               !root->findChild<QObject *>("rawNormalizationToggle") &&
+               !root->findChild<QObject *>("rawNormalizationManifestButton") &&
+               !root->findChild<QObject *>("resetRawDevelopmentButton"),
+               "normal settings must expose profiles and optics but no advanced calibration controls")) return 1;
     auto *optics = root->findChild<QObject *>("opticsSection");
     auto *rawSection = root->findChild<QObject *>("rawDevelopmentSection");
     if (!check(optics->findChild<QObject *>("lensCorrectionToggle") &&
                optics->findChild<QObject *>("chromaticAberrationToggle") &&
                !rawSection->findChild<QObject *>("lensCorrectionToggle"),
                "optical corrections must belong exclusively to their independent section")) return 1;
-    auto *calibrationToggle=root->findChild<QObject *>("rawNormalizationToggle");
-    editor.setRawNormalizationEnabled(true);settleLayout();
-    if(!check(editor.rawNormalizationEnabled()&&calibrationToggle->property("checked").toBool(),
-              "calibration checkbox follows enabled backend state"))return 1;
-    editor.setRawNormalizationEnabled(false);settleLayout();
-    if(!check(!editor.rawNormalizationEnabled()&&!calibrationToggle->property("checked").toBool(),
-              "calibration checkbox follows disabled/restored backend state"))return 1;
     QObject *noiseSection = root->findChild<QObject *>(QStringLiteral("denoiseSection"));
     QObject *sharpSection = root->findChild<QObject *>(QStringLiteral("sharpeningSection"));
     QObject *exportSection = root->findChild<QObject *>(QStringLiteral("exportSection"));

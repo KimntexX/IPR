@@ -66,11 +66,6 @@ ColumnLayout {
             leftPadding: parent.indicator.width + parent.spacing
         }
     }
-    RawCalibrationModule {
-        editor: root.editor
-        textColor: root.textColor
-        secondaryTextColor: root.secondaryTextColor
-    }
     Label {
         objectName: "rawDevelopmentStatusLabel"
         text: root.editor.busy ? qsTr("Traitement en cours — image et retouches conservées…") : root.editor.rawDevelopmentStatus
@@ -86,15 +81,6 @@ ColumnLayout {
         wrapMode: Text.WordWrap
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-    }
-    Button {
-        objectName: "resetRawDevelopmentButton"
-        text: qsTr("Réinitialiser profil / calibration")
-        Layout.fillWidth: true
-        enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.resetRawDevelopment()
-        ToolTip.visible: hovered
-        ToolTip.text: qsTr("Revient au profil automatique et désactive la calibration sans effacer les retouches ni changer la balance des blancs.")
     }
     Label {
         objectName: "rawProfileProcessingLabel"
