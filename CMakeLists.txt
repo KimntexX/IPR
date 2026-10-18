@@ -84,6 +84,7 @@ set(IPR_QML_FILES
     src/qml/FilmstripNavigation.qml
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
+    src/qml/InterfacePaletteSelector.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
     src/qml/CurveChannelButton.qml

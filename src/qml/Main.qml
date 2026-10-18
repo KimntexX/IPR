@@ -17,6 +17,17 @@ ApplicationWindow {
     visible: false
     title: qsTr("IPR — Image Processing Room")
     color: uiPreferences.theme.background
+    palette.window: uiPreferences.theme.panel
+    palette.windowText: uiPreferences.theme.text
+    palette.text: uiPreferences.theme.text
+    palette.buttonText: uiPreferences.theme.text
+    palette.base: Qt.darker(uiPreferences.theme.panel, 1.10)
+    palette.button: Qt.darker(uiPreferences.theme.panel, 1.10)
+    palette.mid: Qt.tint(uiPreferences.theme.panel, Qt.rgba(
+        uiPreferences.theme.text.r, uiPreferences.theme.text.g, uiPreferences.theme.text.b, 0.25))
+    palette.highlight: Qt.tint(uiPreferences.theme.panel, Qt.rgba(
+        uiPreferences.theme.text.r, uiPreferences.theme.text.g, uiPreferences.theme.text.b, 0.18))
+    palette.highlightedText: uiPreferences.theme.text
     readonly property bool folderOpen: imageEditor.folder.toString().length > 0
 
     Component.onCompleted: uiPreferences.restoreWindow(root)
@@ -24,6 +35,17 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         id: applicationMenuBar
+        background: Rectangle { color: uiPreferences.theme.panel }
+        delegate: MenuBarItem {
+            id: menuEntry
+            contentItem: Text {
+                text: menuEntry.text
+                font: menuEntry.font
+                color: uiPreferences.theme.text
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
 
         Menu {
             title: qsTr("Fichier")

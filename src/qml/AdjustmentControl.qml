@@ -11,8 +11,8 @@ ColumnLayout {
     property real maximumValue: 100
     property real increment: 1
     property real resetValue: 0
-    property color textColor: "#edf2f8"
-    property color secondaryTextColor: "#d7dfeb"
+    property color textColor: controlSlider.palette.text
+    property color secondaryTextColor: controlSlider.palette.windowText
     property alias value: controlSlider.value
     property bool adjustmentEnabled: false
     // UI hints only: these colours do not describe an output colour transform.
@@ -112,9 +112,9 @@ ColumnLayout {
 
             background: Rectangle {
                 radius: 3
-                color: valueEditor.activeFocus ? "#303946" : "transparent"
+                color: valueEditor.activeFocus ? valueEditor.palette.base : "transparent"
                 border.width: 1
-                border.color: valueEditor.activeFocus ? "#7388a3" : "#3d4654"
+                border.color: valueEditor.activeFocus ? valueEditor.palette.text : valueEditor.palette.mid
             }
         }
 
@@ -138,7 +138,7 @@ ColumnLayout {
 
             background: Rectangle {
                 radius: 3
-                color: resetButton.hovered ? "#3d4654" : "transparent"
+                color: resetButton.hovered ? resetButton.palette.mid : "transparent"
             }
         }
     }

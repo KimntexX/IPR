@@ -189,6 +189,30 @@ int main(int argc, char **argv)
         QMetaObject::invokeMethod(background, "activated", Q_ARG(int, 1));
         if (!check(preferences.theme().value("canvas").value<QColor>() == QColor("#777777"),
                    "canvas preference must update the actual persisted theme")) return 1;
+        QObject *paletteSelector = dialog->findChild<QObject *>("interfacePaletteSelector");
+        if (!check(paletteSelector, "preferences must expose all five interface palettes")) return 1;
+        const QStringList panelColours{"#42252e", "#f4f0e6", "#1c1e21", "#1b2d45", "#2a3039"};
+        for (int index = 0; index < panelColours.size(); ++index) {
+            QMetaObject::invokeMethod(paletteSelector, "applyPalette", Q_ARG(QVariant, index));
+            QCoreApplication::processEvents();
+            const QColor expected(panelColours[index]);
+            QObject *windowPalette = root->property("palette").value<QObject *>();
+            if (!check(preferences.theme().value("panel").value<QColor>() == expected &&
+                       paletteSelector->property("selectedIndex").toInt() == index &&
+                       info->property("color").value<QColor>() == expected &&
+                       windowPalette && windowPalette->property("windowText").value<QColor>() ==
+                           preferences.theme().value("text").value<QColor>() &&
+                       preferences.theme().value("canvas").value<QColor>() == QColor("#777777"),
+                       "each palette must update panels and text without changing the independent photo canvas")) return 1;
+            preferences.sync();
+            UiPreferences readback(path);
+            if (!check(readback.theme().value("panel").value<QColor>() == expected &&
+                       readback.layout().value("imageInfoFontSize").toInt() == 16,
+                       "palette and information font size must survive an INI reload")) return 1;
+            if ((index == 1 || index == 3) &&
+                !check(captureReview(window, QStringLiteral("palette-%1").arg(index)),
+                       "optional palette captures should save")) return 1;
+        }
         editor.setRawNormalizationEnabled(true);
         if (!check(calibration->property("checked").toBool(),
                    "preferences calibration must reflect the current editor state")) return 1;

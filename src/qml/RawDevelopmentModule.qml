@@ -47,8 +47,8 @@ ColumnLayout {
         }
         background: Rectangle {
             radius: 4
-            color: "#20252c"
-            border.color: profileSelector.activeFocus ? "#71849a" : "#424b58"
+            color: profileSelector.palette.base
+            border.color: profileSelector.activeFocus ? profileSelector.palette.text : profileSelector.palette.mid
         }
     }
     CheckBox {

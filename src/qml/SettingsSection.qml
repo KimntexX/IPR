@@ -80,10 +80,9 @@ ColumnLayout {
 
             background: Rectangle {
                 radius: 4
-                color: header.down ? "#343d49"
-                       : (header.hovered ? "#2d3540" : "#252c35")
+                color: header.down || header.hovered ? header.palette.mid : header.palette.button
                 border.width: 1
-                border.color: header.activeFocus ? "#7388a3" : "#353e4a"
+                border.color: header.activeFocus ? header.palette.text : header.palette.mid
             }
         },
         ColumnLayout {

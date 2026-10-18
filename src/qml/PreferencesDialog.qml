@@ -63,8 +63,14 @@ Dialog {
                     }
                 }
             }
+            InterfacePaletteSelector {
+                objectName: "interfacePaletteSelector"
+                preferences: root.preferences
+            }
             Label {
-                text: qsTr("Fond de la zone image")
+                text: qsTr("Fond de la zone image (indépendant de la palette)")
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
                 color: root.preferences.theme.text
             }
             ComboBox {

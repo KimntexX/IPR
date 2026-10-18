@@ -32,7 +32,7 @@ Rectangle {
 
             Label {
                 text: qsTr("Images du dossier")
-                color: "#edf2f8"
+                color: palette.windowText
                 font.bold: true
                 font.pixelSize: 13
             }
@@ -40,7 +40,8 @@ Rectangle {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 text: qsTr("%n image(s)", "", thumbnailList.count)
-                color: "#8c9caf"
+                color: palette.windowText
+                opacity: 0.7
                 font.pixelSize: 11
             }
             Button {
@@ -174,7 +175,7 @@ Rectangle {
                         Layout.fillWidth: true
                         text: fileName
                         elide: Text.ElideRight
-                        color: imageDelegate.highlighted ? "#ffffff" : "#d7dfeb"
+                        color: imageDelegate.highlighted ? "#ffffff" : palette.windowText
                         font.pixelSize: 11
                     }
                 }
@@ -216,7 +217,7 @@ Rectangle {
                 anchors.centerIn: parent
                 visible: thumbnailList.count === 0
                 text: qsTr("Sélectionnez un dossier pour afficher ses images.")
-                color: "#aeb8c8"
+                color: palette.windowText
                 font.pixelSize: 12
             }
         }
