@@ -225,6 +225,27 @@ int main(int argc, char **argv)
                    "canvas preference must update the actual persisted theme")) return 1;
         QObject *paletteSelector = dialog->findChild<QObject *>("interfacePaletteSelector");
         if (!check(paletteSelector, "preferences must expose all five interface palettes")) return 1;
+        QObject *canvasSurface = root->findChild<QObject *>("imageCanvasBackground");
+        if (!check(canvasSurface && background->property("count").toInt() == 6,
+                   "photo background choices must include blue and red")) return 1;
+        const QStringList starts{"#1b2d45", "#42252e"};
+        const QStringList ends{"#111c2b", "#291a20"};
+        const QColor originalPanel = preferences.theme().value("panel").value<QColor>();
+        for (int index = 0; index < 2; ++index) {
+            QMetaObject::invokeMethod(background, "activated", Q_ARG(int, 4 + index));
+            if (!check(preferences.theme().value("canvas").value<QColor>() == QColor(starts[index]) &&
+                       canvasSurface->property("baseColor").value<QColor>() == QColor(starts[index]) &&
+                       canvasSurface->property("endColor").value<QColor>() == QColor(ends[index]) &&
+                       preferences.theme().value("panel").value<QColor>() == originalPanel,
+                       "coloured photo backgrounds must use the matching interface shades without changing its palette")) return 1;
+            preferences.sync();
+            UiPreferences readback(path);
+            if (!check(readback.theme().value("canvas").value<QColor>() == QColor(starts[index]),
+                       "coloured photo backgrounds must persist in the existing INI")) return 1;
+        }
+        preferences.setValue("theme/canvas", "#777777");
+        if (!check(canvasSurface->property("endColor").value<QColor>() == QColor("#777777"),
+                   "neutral backgrounds must remain uniform after leaving a coloured gradient")) return 1;
         const QStringList panelColours{"#42252e", "#f4f0e6", "#1c1e21", "#1b2d45", "#2a3039"};
         for (int index = 0; index < panelColours.size(); ++index) {
             QMetaObject::invokeMethod(paletteSelector, "applyPalette", Q_ARG(QVariant, index));

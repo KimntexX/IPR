@@ -36,7 +36,8 @@ class ScopeTests(unittest.TestCase):
 
     def test_preferences_components_use_their_focused_qml_tests(self):
         for path in ('src/qml/PreferencesDialog.qml', 'src/qml/PreferenceButton.qml',
-                     'src/qml/AppearancePreferencesPane.qml', 'src/qml/RawCalibrationModule.qml'):
+                     'src/qml/AppearancePreferencesPane.qml', 'src/qml/RawCalibrationModule.qml',
+                     'src/qml/ImageBackgroundOptions.qml', 'src/qml/ImageCanvasBackground.qml'):
             plan = self.scope([path], branch='patch_ui')
             self.assertFalse(plan['full'])
             self.assertEqual(plan['tests'], ['uiPreferencesQmlTests'])

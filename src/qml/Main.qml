@@ -121,10 +121,11 @@ ApplicationWindow {
             editor: imageEditor
         }
 
-        Rectangle {
+        ImageCanvasBackground {
+            objectName: "imageCanvasBackground"
             Layout.fillWidth: true
             Layout.fillHeight: true
-            color: uiPreferences.theme.canvas
+            baseColor: uiPreferences.theme.canvas
             radius: 8
             border.color: "#3d4654"
             clip: true

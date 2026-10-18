@@ -91,6 +91,8 @@ set(IPR_QML_FILES
     src/qml/PreferenceScrollView.qml
     src/qml/InterfacePreferencesPane.qml
     src/qml/AppearancePreferencesPane.qml
+    src/qml/ImageBackgroundOptions.qml
+    src/qml/ImageCanvasBackground.qml
     src/qml/AdvancedRawPreferencesPane.qml
     src/qml/InterfacePaletteSelector.qml
     src/qml/SettingsSection.qml

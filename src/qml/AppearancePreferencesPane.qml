@@ -6,6 +6,7 @@ ColumnLayout {
     id: root
     required property var preferences
     spacing: 12
+    ImageBackgroundOptions { id: backgroundOptions }
     InterfacePaletteSelector {
         objectName: "interfacePaletteSelector"
         preferences: root.preferences
@@ -24,10 +25,7 @@ ColumnLayout {
     PreferenceComboBox {
         objectName: "preference_canvasBackground"
         Layout.fillWidth: true
-        model: [{ label: qsTr("Anthracite"), value: "#15181d" },
-                { label: qsTr("Gris moyen"), value: "#777777" },
-                { label: qsTr("Noir"), value: "#000000" },
-                { label: qsTr("Blanc"), value: "#ffffff" }]
+        model: backgroundOptions.choices
         textRole: "label"
         currentIndex: {
             const color = String(root.preferences.theme.canvas).toLowerCase()

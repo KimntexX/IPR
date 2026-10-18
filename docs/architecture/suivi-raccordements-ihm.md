@@ -172,6 +172,24 @@ deux variantes Basic/Windows des préférences ; seize tests Python de sélectio
 des tests réussis. Contrôle documentaire : zéro erreur et zéro lien manquant.
 Le fichier INI utilisateur reste inchangé par les opérations de build.
 
+### Fonds de la zone image — bleu et rouge
+
+Ajout des choix **Bleu marine — dégradé** et **Rouge bordeaux — dégradé**
+dans Préférences / Apparence. Les deux dégradés verticaux reprennent les
+teintes panneau vers arrière-plan des palettes correspondantes :
+`#1b2d45 → #111c2b` et `#42252e → #291a20`. Les quatre fonds neutres et les
+couleurs personnalisées restent unis. Le catalogue `ImageBackgroundOptions.qml`
+est partagé entre le sélecteur et le fond `ImageCanvasBackground.qml`.
+
+Le choix est conservé dans la clé INI existante `theme/canvas` ; changer la
+palette d’interface ne le remplace pas. Aucun effet sur les pixels, les profils
+ou les exports. Un fond gris neutre reste préférable pour une appréciation
+colorimétrique non influencée par un entourage coloré. Tests Basic et Windows :
+deux extrémités du dégradé, indépendance des panneaux, persistance INI et retour
+à un gris uni. Les fichiers sont déclarés dans CMake et les tests ciblés.
+Build Windows reconstruit, six tests IHM ciblés réussis et démarrage isolé
+vérifié (code 0, sans erreur QML). Fichier INI utilisateur préservé.
+
 Revue des captures : correction de la hauteur utile des champs de valeur,
 du chevauchement entre le bandeau d’information et les flèches de navigation,
 et harmonisation du titre/pied du dialogue Préférences. Régressions couvertes
