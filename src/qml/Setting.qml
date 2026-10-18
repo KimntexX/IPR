@@ -18,6 +18,9 @@ Item {
     // Session-local destination, independent of the source photo directory.
     // Do not use a newly prepared currentFile to forget the accepted folder.
     property url lastExportTarget: ""
+    property string reviewedImageKey: ""
+    readonly property string currentImageKey: (editor.imageDetails.storage || "")
+                                             + "/" + (editor.imageDetails.name || "")
     readonly property color textColor: preferences ? preferences.theme.text : "#edf2f8"
     readonly property color secondaryTextColor: preferences ? preferences.theme.secondaryText : "#d7dfeb"
 
@@ -815,7 +818,7 @@ Item {
                     text: qsTr("Choisir la destination…")
                     Layout.fillWidth: true
                     Layout.preferredHeight: 28
-                    enabled: editor.hasImage
+                    enabled: editor.hasImage && !editor.busy && !editor.embeddedPreview
                     onClicked: root.openExportDialog()
 
                     contentItem: Text {
@@ -858,8 +861,29 @@ Item {
             const target = selectedFile.toString().length > 0
                            ? selectedFile : currentFile
             root.lastExportTarget = target
-            editor.exportImage(target, formatBox.currentText,
-                               Math.round(qualitySlider.value))
+            root.reviewedImageKey = root.currentImageKey
+            exportReview.target = target
+            exportReview.format = formatBox.currentText
+            exportReview.quality = Math.round(qualitySlider.value)
+            exportReview.dimensions = editor.imageDetails.dimensions || ""
+            exportReview.open()
         }
+    }
+
+    ExportReviewDialog {
+        id: exportReview
+        objectName: "exportReviewDialog"
+        palette.window: root.preferences ? root.preferences.theme.panel : "#2a3039"
+        palette.text: root.textColor
+        palette.windowText: root.secondaryTextColor
+        palette.buttonText: root.textColor
+        palette.button: Qt.darker(palette.window, 1.1)
+        palette.mid: Qt.tint(palette.window, Qt.rgba(palette.text.r, palette.text.g, palette.text.b, .25))
+        exportEnabled: editor.hasImage && !editor.busy && !editor.embeddedPreview
+                       && root.currentImageKey === root.reviewedImageKey
+        unavailableReason: root.currentImageKey !== root.reviewedImageKey
+                           ? qsTr("L’image a changé. Fermez ce récapitulatif et recommencez l’export.")
+                           : qsTr("Attendez la fin du traitement avant d’exporter.")
+        onExportConfirmed: editor.exportImage(target, format, quality)
     }
 }

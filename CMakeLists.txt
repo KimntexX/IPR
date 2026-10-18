@@ -85,6 +85,7 @@ set(IPR_QML_FILES
     src/qml/ChevronIcon.qml
         src/qml/ProcessingStatus.qml
         src/qml/PanelResizeHandle.qml
+        src/qml/ExportReviewDialog.qml
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
     src/qml/PreferenceButton.qml

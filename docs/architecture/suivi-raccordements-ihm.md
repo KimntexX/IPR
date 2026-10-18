@@ -65,6 +65,23 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Ergonomie — étape 7 : récapitulatif d’export
+
+Après choix natif du fichier, un dialogue aux couleurs de l’interface récapitule
+format, dimensions pleine résolution, encodage et destination demandée.
+JPEG : sRGB 8 bits et qualité ; PNG/TIFF : sRGB 16 bits ; DNG : rendu linéaire
+16 bits de primaires sRGB, explicitement distinct du RAW mosaïqué d’origine.
+L’écriture ne démarre qu’au bouton Exporter. Annuler n’écrit rien. Les protections
+existantes d’extension et de numérotation restent assurées par l’exporteur.
+Confirmation désactivée pendant un traitement ou si la photo a changé.
+
+**IHM-CONN-006 — en attente moteur** : fournir un descripteur d’export
+canonique (formats/capacités réelles, profondeur, profil ICC, dimensions,
+recette et identifiant d’image/révision) ainsi qu’un signal typé de résultat
+avec le chemin effectivement publié. Les libellés actuels décrivent l’exporteur
+audité ; toute évolution de ses espaces/profondeurs devra les actualiser jusqu’au
+raccordement. L’IHM ne prédit pas le nom final en cas de collision concurrente.
+
 ### Ergonomie — étape 6 : lisibilité et adaptation
 
 Les cinq palettes sont testées numériquement : contraste minimal 4,5:1 des

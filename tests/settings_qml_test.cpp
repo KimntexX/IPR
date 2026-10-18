@@ -340,6 +340,14 @@ int main(int argc, char **argv)
     });
     QTimer::singleShot(5000, &exportLoop, &QEventLoop::quit);
     QMetaObject::invokeMethod(dialog, "accepted");
+    QObject *review = root->findChild<QObject *>("exportReviewDialog");
+    if (!check(review && review->property("visible").toBool() &&
+               review->property("format").toString() == "PNG" &&
+               review->property("encoding").toString().contains("16") &&
+               review->property("dimensions").toString() == editor.imageDetails().value("dimensions").toString() &&
+               !QFileInfo::exists(directory.filePath("dialog-choice.png")),
+               "native destination acceptance must show accurate review without writing a file")) return 1;
+    QMetaObject::invokeMethod(review, "confirm");
     if (!completed) exportLoop.exec();
     QObject::disconnect(exportConnection);
     const QString actualPath = directory.filePath(QStringLiteral("dialog-choice.png"));
@@ -371,6 +379,7 @@ int main(int argc, char **argv)
         });
         QTimer::singleShot(5000, &numberedLoop, &QEventLoop::quit);
         QMetaObject::invokeMethod(dialog, "accepted");
+        QMetaObject::invokeMethod(review, "confirm");
         if (!numberedComplete) numberedLoop.exec();
         QObject::disconnect(numberedConnection);
         if (!check(numberedComplete && editor.statusMessage().endsWith(expected) && !QImage(expected).isNull(),
@@ -457,6 +466,19 @@ int main(int argc, char **argv)
                    "optional settings screenshot should save"))
             return 1;
     }
+    const QString cancelledTarget = directory.filePath(QStringLiteral("cancelled-export.png"));
+    dialog->setProperty("selectedFile", QUrl::fromLocalFile(cancelledTarget));
+    QMetaObject::invokeMethod(dialog, "accepted");
+    QMetaObject::invokeMethod(review, "close");
+    if (!check(!QFileInfo::exists(cancelledTarget), "cancelling the export review must not write a file")) return 1;
+    QMetaObject::invokeMethod(dialog, "accepted");
+    root->setProperty("reviewedImageKey", "another-photo");
+    QMetaObject::invokeMethod(review, "confirm");
+    if (!check(!review->property("exportEnabled").toBool() &&
+               review->property("visible").toBool() && !QFileInfo::exists(cancelledTarget),
+               "a stale photo identity must prevent export confirmation")) return 1;
+    QMetaObject::invokeMethod(review, "close");
+
     auto *exposure = controlWithLabel(root.data(), QStringLiteral("Exposition (EV)"));
     if (!check(exposure, "exposure control must exist")) return 1;
     exposure->setProperty("value", 1.25);
