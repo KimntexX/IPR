@@ -176,6 +176,13 @@ int main(int argc, char **argv)
                    histogram->property("visible").toBool() && dialog->property("visible").toBool(),
                    "panel visibility and preferences dialog should react at runtime")) return 1;
         QObject *background = dialog->findChild<QObject *>("preference_canvasBackground");
+        QObject *infoSize = dialog->findChild<QObject *>("preference_imageInfoFontSize");
+        if (!check(infoSize, "preferences must expose information text sizing")) return 1;
+        infoSize->setProperty("value", 16);
+        QMetaObject::invokeMethod(infoSize, "valueModified");
+        if (!check(info->property("informationFontSize").toInt() == 16 &&
+                   preferences.layout().value("imageInfoFontSize").toInt() == 16,
+                   "changing information text size must immediately update the panel and INI state")) return 1;
         QObject *calibration = dialog->findChild<QObject *>("rawNormalizationToggle");
         if (!check(background && calibration && !calibration->property("enabled").toBool(),
                    "preferences must expose canvas colours and disable calibration without a RAW")) return 1;

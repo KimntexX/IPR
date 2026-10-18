@@ -101,6 +101,19 @@ Dialog {
                 enabled: root.preferences.writable
                 onValueModified: root.preferences.setValue("layout/settingsWidth", value)
             }
+            Label {
+                text: qsTr("Taille du texte des informations (px)")
+                color: root.preferences.theme.text
+            }
+            SpinBox {
+                objectName: "preference_imageInfoFontSize"
+                from: 10
+                to: 20
+                editable: true
+                value: root.preferences.layout.imageInfoFontSize
+                enabled: root.preferences.writable
+                onValueModified: root.preferences.setValue("layout/imageInfoFontSize", value)
+            }
             Rectangle { Layout.fillWidth: true; height: 1; color: "#424c59" }
             Label {
                 text: qsTr("Options avancées RAW — image ouverte")

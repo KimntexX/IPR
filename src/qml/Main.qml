@@ -88,6 +88,7 @@ ApplicationWindow {
         spacing: 12
 
         ImageInfoPanel {
+            preferences: uiPreferences
             objectName: "imageInfoPanel"
             Layout.preferredWidth: uiPreferences.layout.imageInfoWidth
             Layout.minimumWidth: 210

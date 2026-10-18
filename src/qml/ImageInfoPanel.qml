@@ -6,6 +6,8 @@ Rectangle {
     id: panel
 
     required property var editor
+    property var preferences: null
+    readonly property int informationFontSize: preferences ? preferences.layout.imageInfoFontSize : 12
     readonly property var details: editor ? editor.imageDetails : ({})
 
     color: "#2a3039"
@@ -20,7 +22,7 @@ Rectangle {
         Label {
             text: qsTr("Informations")
             font.bold: true
-            font.pixelSize: 16
+            font.pixelSize: panel.informationFontSize + 4
             color: "#edf2f8"
         }
 
@@ -69,6 +71,7 @@ Rectangle {
                     Layout.fillWidth: true
                     visible: !panel.editor.hasImage
                     text: qsTr("Ouvrez une image pour afficher ses informations.")
+                    font.pixelSize: panel.informationFontSize
                     wrapMode: Text.WordWrap
                     color: "#aeb8c8"
                 }
@@ -98,13 +101,13 @@ Rectangle {
                         Label {
                             text: modelData.label
                             color: "#8c9caf"
-                            font.pixelSize: 11
+                            font.pixelSize: panel.informationFontSize - 1
                         }
                         Label {
                             Layout.fillWidth: true
                             text: modelData.value
                             color: "#d7dfeb"
-                            font.pixelSize: 12
+                            font.pixelSize: panel.informationFontSize
                             wrapMode: Text.WordWrap
                             maximumLineCount: 3
                             elide: Text.ElideRight
@@ -123,7 +126,7 @@ Rectangle {
                     visible: panel.editor.hasImage
                     text: qsTr("Classement")
                     color: "#8c9caf"
-                    font.pixelSize: 11
+                    font.pixelSize: panel.informationFontSize - 1
                 }
 
                 RowLayout {
@@ -195,7 +198,7 @@ Rectangle {
                     visible: panel.editor.hasImage
                     text: qsTr("Libellé couleur")
                     color: "#8c9caf"
-                    font.pixelSize: 11
+                    font.pixelSize: panel.informationFontSize - 1
                 }
 
                 RowLayout {
