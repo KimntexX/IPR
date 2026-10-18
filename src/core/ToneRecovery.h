@@ -8,21 +8,23 @@
 // log2(Y): low end for Shadows/Blacks, high end for Highlights/Whites. Zone
 // centres stay in the matching region of Lightroom's histogram; low-end zones
 // fade out over the last 2 EV below white and Highlights over the last EV,
-// which belongs to Whites. Blacks negative also raises a black point (true
-// blacks, as in Lightroom), Whites positive lowers the white point; any
-// brightened tone above the knee gets a soft shoulder, so no output reaches 1
-// from below; the editor passes the largest delivery channel through the same
-// shoulder, so saturated colours roll off instead of being pinned at 1. Plan A parameters (fixed ranges), fitted on eight scenes against
+// which belongs to Whites. Blacks negative first darkens near-black detail
+// through a soft toe y^2 / (y + toe), then raises a black point that grows
+// late (true blacks at -100, as in Lightroom); Whites positive lowers the
+// white point. Any brightened tone above the knee gets a soft shoulder, so no
+// output reaches 1 from below; the editor passes the largest delivery channel
+// through the same shoulder, so saturated colours roll off instead of being
+// pinned at 1. Plan A parameters (fixed ranges), fitted on eight scenes against
 // Lightroom under the separation rules of the export tests (18 October 2026).
 // The curve depends on Y only and its slope stays positive, so tone order is
 // never reversed.
 namespace ToneRecovery {
 struct Zone { float centreEv, width, positive, negative; bool lowEnd; float fadeEv; };
 inline constexpr Zone Shadows{-4.155f, 0.700f, 1.507f, 1.855f, true, 2.0f};
-inline constexpr Zone Blacks{-6.600f, 0.773f, 1.336f, 0.193f, true, 2.0f};
+inline constexpr Zone Blacks{-6.638f, 1.047f, 1.239f, 0.104f, true, 2.0f};
 inline constexpr Zone Highlights{-1.018f, 1.796f, 0.585f, 1.149f, false, 1.0f};
 inline constexpr Zone Whites{0.158f, 1.634f, 0.682f, 1.094f, false, 0.0f};
-inline constexpr float BlackPoint = 0.0563f, BlackPointExponent = 1.533f;
+inline constexpr float BlackToe = 0.01653f, BlackPoint = 0.0424f, BlackPointExponent = 4.02f;
 inline constexpr float WhitePoint = 0.0364f, WhitePointExponent = 1.986f;
 inline constexpr float ShoulderKnee = 0.70f, FloorEv = -16.0f;
 
@@ -84,6 +86,7 @@ inline float target(float y, const Amounts &a)
     if (1.0f + slope < 0.1f) shift *= 0.9f / -slope;
     float out = y * std::exp2(shift);
     if (a.blacks < 0) {
+        out = out * out / (out + BlackToe * -a.blacks);
         const float b = BlackPoint * std::pow(-a.blacks, BlackPointExponent);
         out = std::max(0.0f, (out - b) / (1.0f - b));
     }

@@ -11,7 +11,7 @@ protocole : [protocole Lumières](../validation/protocols/protocole-lumieres.md)
 | --- | --- | --- |
 | Exposition | Avant le DCP, sur le signal caméra ; conforme à LR à ±0,03 EV | Validé visuellement, 18 octobre |
 | Contraste | S à extrémités fixes, domaine log, par canal | Validé, réserve à +100 (≈ 3 % plus fort que LR) |
-| Ombres, noirs, HL, blancs | Plan A en cours : plages fixes recalées sur LR | Campagnes du 18 octobre |
+| Ombres, noirs, HL, blancs | Plan A : plages fixes recalées sur LR | Campagnes du 18 octobre ; validation visuelle à faire, noirs à régénérer |
 
 Comparaisons IPR/LR à réglages égaux : calibration RAW de l'IHM, optique
 coupée des deux côtés. Corpus : six scènes sombres du protocole, plus deux
@@ -53,7 +53,7 @@ un plafond dur figeait les couleurs saturées à 1 (écrêtage blancs +25 :
 | Réglage | Écart | Limite connue |
 | --- | --- | --- |
 | Ombres | 0,25 EV | +100 : tons très profonds (q5) moins remontés que LR (−0,9 EV) |
-| Noirs | 0,34 EV | +100 : q25 moins remonté (−0,6 EV) ; LR déplace les tons moyens |
+| Noirs | 0,31 EV | +100 : q25 moins remonté (−0,7 EV) ; LR déplace les tons moyens. Négatif : orteil doux puis point noir tardif |
 | HL | 0,24 EV | +100 : écrêtage 8,6 % contre 37 % pour LR (scène claire) |
 | Blancs | 0,38 EV | +100 : tons moyens moins éclaircis (jusqu'à −1,9 EV) |
 

@@ -786,3 +786,52 @@ réserve de l'utilisateur à +100. **Point de vigilance** : à −100, les noirs
 remontent bien plus que dans LR (×4,53 contre ×2,86 sur les 20 % bas, +0,44 EV au q5),
 ce qui risque de révéler le bruit sur les scènes à ISO élevé. À reprendre si la
 validation des ombres et des noirs le confirme visuellement.
+
+### Ombres, noirs, HL et blancs — plan A, campagnes du 18 octobre 2026
+
+Plan A ([roadmap Lumières](../../architecture/roadmap-lumieres.md)) : courbe de
+luminance unique à plages fixes, ajustée sur les références LR de huit scènes
+(six du protocole, plus 6V1A0524 et 7Y6A7003, claires), sous les règles de
+séparation des tests d'export. Groupe `lumiere` entièrement régénéré.
+
+Mémoires, chacune remplaçant la précédente sans la modifier :
+[exposition v004](../raw/mesure-lumiere-v004-20261018T145654729513Z.json) (72 états),
+[contraste v003](../raw/mesure-lumiere-v003-20261018T150227383825Z.json),
+[ombres v002](../raw/mesure-lumiere-v002-20261018T150753870527Z.json),
+[noirs v002](../raw/mesure-lumiere-v002-20261018T151320602917Z.json),
+[HL v002](../raw/mesure-lumiere-v002-20261018T151846378645Z.json) et
+[blancs v002](../raw/mesure-lumiere-v002-20261018T152411246100Z.json) (136 états chacune).
+Aucun exclu.
+
+Exposition et contraste tiennent sur huit scènes : exposition à ±0,01 EV en
+médiane, pire écart 0,08 EV ; contraste conforme à sa v002.
+
+Ratios Y variante / neutre du même moteur à ±100, médiane des scènes :
+
+| Réglage | Bas 20 %, IPR / LR | Tons moyens, IPR / LR | Haut 20 %, IPR / LR | Canal saturé max, IPR / LR |
+| --- | --- | --- | --- | --- |
+| Ombres −100 | 0,279 / 0,360 | 0,659 / 0,700 | 0,989 / 0,969 | 0,34 % / 0,03 % |
+| Ombres +100 | 2,820 / 3,327 | 1,531 / 1,398 | 1,009 / 1,031 | 0,35 % / 0,11 % |
+| Noirs −100 | 0,000 / 0,000 | 0,343 / 0,107 | 0,928 / 0,759 | 0,27 % / 0,05 % |
+| Noirs +100 | 2,122 / 2,293 | 1,038 / 1,866 | 1,000 / 1,138 | 0,35 % / 0,08 % |
+| HL −100 | 0,982 / 0,883 | 0,898 / 0,782 | 0,762 / 0,626 | 0,27 % / 0,01 % |
+| HL +100 | 1,009 / 1,135 | 1,052 / 1,194 | 1,150 / 1,563 | 3,72 % / 36,68 % |
+| Blancs −100 | 0,994 / 0,981 | 0,925 / 0,931 | 0,787 / 0,856 | 0,00 % / 0,02 % |
+| Blancs +100 | 1,042 / 2,101 | 1,079 / 4,210 | 1,158 / 2,174 | 12,26 % / 7,24 % |
+
+Lecture : chaque réglage agit dans sa zone, sans déborder sur l'autre
+extrémité. Ombres et blancs négatifs suivent LR. Les écarts restants viennent
+surtout de l'adaptation de LR à ces scènes sombres : ses noirs et blancs
+déplacent aussi les tons moyens (blancs +100 : ×4,2), ce que les plages fixes
+excluent (plan B). HL et blancs positifs sont donc nettement plus doux que LR ;
+les blancs écrêtent tôt sur la scène claire (≈ 10 % dès +25, contre 2,4 %).
+
+**Défaut corrigé après campagne** : les noirs négatifs écrasaient trop tôt
+(à −25, bas 20 % à 0,029 contre 0,481 pour LR). L'ajustement plafonnait les
+tons à 2^-12 et masquait ces tons très profonds. Correction : orteil doux
+y² / (y + orteil) avant un point noir plus tardif ; ajustement avec la moyenne
+du bas 20 % sans ce plancher. Écart prévu à −25 et −50 : +0,01 et +0,00 EV.
+Les rendus noirs de cette campagne précèdent ce correctif : **à régénérer et
+remesurer** avant validation des noirs.
+
+**Validation visuelle de l'utilisateur demandée**, réglage par réglage.
