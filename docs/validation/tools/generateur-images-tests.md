@@ -104,20 +104,27 @@ Chaque variante repart de réglages neufs : aucun cumul entre commandes.
   neutre As Shot du groupe ne remplace pas ces ancres pour une comparaison WB.
 - RAW : Camera Neutral est préféré quand disponible, avec le repli habituel
   du moteur sinon. Le DCP/LCP réellement signalé est affiché dans la console ;
-  ne pas supposer Camera Neutral appliqué si absent. Normalisation
-  expérimentale d'environnement désactivée ; sidecars ignorés.
+  ne pas supposer Camera Neutral appliqué si absent. **Calibration RAW par
+  défaut de l'IHM appliquée** (ADR-0007, même manifeste que l'IHM), depuis le
+  18 octobre 2026 : sans elle, les TIFF étaient 0,3 à 1,1 EV plus sombres que
+  l'écran. Normalisation d'environnement désactivée ; sidecars ignorés.
 - Rayon/masquage : quantité de netteté fixe 50. Grading teinte : saturation
   fixe 25 ; grading saturation : teinte fixe 30°. Ces supports sont nécessaires
   pour rendre le réglage observable.
 - Courbes : points `(0,0)`, `(0.5, 0.5 + 0.004 × valeur)`, `(1,1)`.
   Ce sont des presets diagnostiques, pas des curseurs Lightroom équivalents.
-- Les corrections objectif et CA sont activées dans le décodage de base.
+- Les corrections objectif et CA sont **désactivées** dans le décodage de base,
+  comme les références Lightroom actuelles (`LensProfileEnable=0`). À réglages
+  égaux (calibration, optique coupée), IPR et LR concordent à ±0,01 EV à 0 EV
+  sur les cinq scènes auditées. **Décision de l'utilisateur, 18 octobre 2026 :
+  après validation des tests complets, les corrections optiques seront
+  appliquées par défaut**, avec des références LR réexportées dans le même état.
   Les séries optiques testent chacune 0/1 avec l'autre correction désactivée :
   comparer leur état 1 à leur état 0, pas au neutre général. Le statut réel de
   correction est affiché ; sans profil adapté, une activation peut rester sans
   effet. Optique et WB automatique nécessitent un RAW ; elles sont ignorées
   avec un message explicite pour les sources déjà développées.
-- Profils DCP/LCP arbitraires, calibration RAW, masques, recadrage, IA et gestes
+- Profils DCP/LCP arbitraires, masques, recadrage, IA et gestes
   IHM ne sont pas simulés par ces séries. Leur validation a sa recette dédiée.
 
 ## Écriture et nettoyage

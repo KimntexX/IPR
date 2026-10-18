@@ -112,6 +112,8 @@ public:
                          ThumbnailProvider *thumbnailProvider = nullptr,
                          QObject *parent = nullptr,
                          ImageCacheController::Sampler memorySampler = {});
+    // RAW calibration the IHM applies by default (ADR-0007), for offline tools.
+    static QString defaultCalibrationManifest();
     ~ImageEditor() override;
 
     QAbstractItemModel *imageModel();

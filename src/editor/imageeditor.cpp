@@ -774,6 +774,11 @@ void ImageEditor::resetRawDevelopment()
     reloadRawDevelopment();
 }
 
+QString ImageEditor::defaultCalibrationManifest()
+{
+    return defaultNormalizationManifest();
+}
+
 QString ImageEditor::rawNormalizationManifest() const
 {
     if (!m_normalizationManifest.isEmpty())

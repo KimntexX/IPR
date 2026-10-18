@@ -191,12 +191,16 @@ public:
         return settings;
     }
 
+    // Same RAW recipe as the IHM default: Camera Neutral and the RAW calibration
+    // (ADR-0007). Optics stay off outside the optique series, like the Lightroom
+    // references, until the complete validation enables them by default.
     static LoadResult load(const QString &path, bool autoWb = false,
-                           bool lensCorrection = true, bool chromaticAberration = true)
+                           bool lensCorrection = false, bool chromaticAberration = false)
     {
         RawDecoder::Options options;
         options.preferCameraNeutral = true;
         options.useNormalizationEnvironment = false;
+        options.normalizationManifest = ImageEditor::defaultCalibrationManifest();
         options.lensCorrectionEnabled = lensCorrection;
         options.chromaticAberrationEnabled = chromaticAberration;
         LoadResult result = ImageEditor::loadFromDisk(path, autoWb, options);
@@ -381,8 +385,8 @@ int main(int argc, char **argv)
                             feature.name == "sharpening-radius" ? 1 : 0));
                     if (needsDecode) {
                         auto source = IprTestImageGenerator::load(input.absoluteFilePath(), feature.name == "auto-wb",
-                            feature.name == "lens-correction" ? value == 1 : feature.name == "auto-wb",
-                            feature.name == "chromatic-aberration" ? value == 1 : feature.name == "auto-wb");
+                            feature.name == "lens-correction" && value == 1,
+                            feature.name == "chromatic-aberration" && value == 1);
                         IprTestImageGenerator::write(source,
                             IprTestImageGenerator::adjusted(IprTestImageGenerator::neutral(source), feature.name, value), path,
                             input.absoluteFilePath(), featureGroup(feature.name), feature.name, value, reference);

@@ -217,11 +217,16 @@ public:
 
     // Diagnostic render with the generator's decode (Camera Neutral, optics on)
     // at one exposure value; the output path must stay outside the corpus.
-    static QJsonObject render(const QString &raw, double exposureEv, const QString &out)
+    // An optional manifest applies the RAW calibration the IHM enables by default.
+    static QJsonObject render(const QString &raw, double exposureEv, const QString &out,
+                              const QString &manifest = {}, bool optics = true)
     {
         RawDecoder::Options options;
         options.preferCameraNeutral = true;
         options.useNormalizationEnvironment = false;
+        options.normalizationManifest = manifest;
+        options.lensCorrectionEnabled = optics;
+        options.chromaticAberrationEnabled = optics;
         auto loaded = ImageEditor::loadFromDisk(raw, false, options);
         if (loaded.image.isNull()) return {{"error", loaded.error}};
         ImageEditor::Settings settings;
@@ -229,7 +234,8 @@ public:
         settings.brightness = float(exposureEv);
         const auto written = ImageEditor::writeImage(loaded.image, settings, out, "TIFF", 100);
         return {{"output", out}, {"exposure", exposureEv}, {"success", written.success},
-                {"message", written.message}, {"dcp", loaded.metadata.dcpProfile}};
+                {"message", written.message}, {"dcp", loaded.metadata.dcpProfile},
+                {"raw_normalization", loaded.metadata.rawNormalizationApplied}};
     }
 
     // Inputs MUST be private copies: this measures the real editor lifecycle,
@@ -349,11 +355,12 @@ int main(int argc, char **argv)
     QJsonObject result;
     if (args.size() == 5 && args[1] == "stages")
         result = IprTestImageGenerator::stages(args[2], args[3], args[4]);
-    else if (args.size() == 5 && args[1] == "render") {
+    else if (args.size() >= 5 && args.size() <= 7 && args[1] == "render" &&
+             (args.size() < 7 || args[6] == "no-optics")) {
         bool ok = false;
         const double ev = args[3].toDouble(&ok);
         if (!ok) return 2;
-        result = IprTestImageGenerator::render(args[2], ev, args[4]);
+        result = IprTestImageGenerator::render(args[2], ev, args[4], args.value(5), args.size() < 7);
     }
     else if (args.size() == 11 && args[1] == "navigation") {
         bool ok = args[3] == "auto", idleOk = false;
@@ -367,7 +374,7 @@ int main(int argc, char **argv)
         result = previews(args.mid(2));
 #endif
     } else {
-        std::cerr << "render RAW EV OUT.tiff | previews RAW... | stages RAW DCP CONFIG | navigation CONFIG auto|BUDGET IDLE_MS PRIVATE_A DCP_A PRIVATE_B DCP_B PRIVATE_C DCP_C\n";
+        std::cerr << "render RAW EV OUT.tiff [CONFIG [no-optics]] | previews RAW... | stages RAW DCP CONFIG | navigation CONFIG auto|BUDGET IDLE_MS PRIVATE_A DCP_A PRIVATE_B DCP_B PRIVATE_C DCP_C\n";
         return 2;
     }
     result["qt"] = QT_VERSION_STR;
