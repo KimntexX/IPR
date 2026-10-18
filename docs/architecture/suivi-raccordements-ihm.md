@@ -130,6 +130,15 @@ Autres ajustements de cette passe :
 - Corrections optiques déplacées immédiatement avant Export. Le test des
   réglages vérifie l’ordre réel des composants, pas seulement leur existence.
 
+État de livraison de cette seconde passe : les cinq tests ciblés et le contrôle
+documentaire réussissent. La compilation des sources et du QML de l’application
+réussit, mais la liaison finale échoue avec `LNK1104` : une instance de
+`build-patch_ui/Release/appIPR.exe` est encore ouverte. La fermeture utilisateur
+est demandée ; **l’exécutable existant n’intègre pas encore cette seconde passe**.
+Relancer la cible `appIPR`, puis le test de démarrage isolé après fermeture.
+Ne pas remplacer le fichier INI personnel : les nouveaux défauts embarqués
+sont complétés automatiquement au lancement par `UiPreferences`.
+
 Revue des captures : correction de la hauteur utile des champs de valeur,
 du chevauchement entre le bandeau d’information et les flèches de navigation,
 et harmonisation du titre/pied du dialogue Préférences. Régressions couvertes
