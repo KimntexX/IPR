@@ -113,9 +113,9 @@ de synchronisation avec l’état réel de l’image.
 
 Autres ajustements de cette passe :
 
-- Un seul bouton au centre du pied de l’IHM commande le repliement et la
-  réouverture du ruban. Sa position est identique dans les deux états et
-  il ne recouvre plus les vignettes ni les informations de la photo.
+- Un seul bouton centré au-dessus du ruban commande son repliement ; il
+  revient au bas de la vue pour la réouverture quand le ruban est masqué.
+  Aucun chevauchement avec les vignettes ou les informations de la photo.
 - Étoiles : glyphes de 17 à 18 px (arrondi d’environ +5 %), zone cliquable
   légèrement agrandie ; notation et suppression de la note vérifiées.
 - Texte des informations réglable de **10 à 20 px**, valeur initiale 12 px,
@@ -189,6 +189,26 @@ deux extrémités du dégradé, indépendance des panneaux, persistance INI et r
 à un gris uni. Les fichiers sont déclarés dans CMake et les tests ciblés.
 Build Windows reconstruit, six tests IHM ciblés réussis et démarrage isolé
 vérifié (code 0, sans erreur QML). Fichier INI utilisateur préservé.
+
+### Histogramme — présentation et repères tonals
+
+La présentation utilise des courbes RGB plus lisibles et un remplissage de
+luminance discret ; la hauteur est désormais proportionnelle aux effectifs
+(normalisation au maximum commun), et non logarithmique. Les données du moteur
+ne changent pas : 256 classes sur l’aperçu sRGB après rendu, luminance linéaire
+calculée par le moteur puis réencodée en sRGB pour son abscisse. Ce n’est pas un
+histogramme du RAW ni une reproduction du calcul interne de Lightroom.
+
+Le tableau utilisateur comporte **cinq plages**, dont l’exposition centrale :
+Noirs 0–10 %, Ombres 10–33 %, Exposition 33–66 %, Hautes lumières 66–90 %,
+Blancs 90–100 %. Le survol montre le nom, les intervalles approximatifs en
+luminance linéaire et en EV sous le blanc. Ces limites sont des repères de
+lecture, pas la définition des masques ou des plages d’action des curseurs.
+Les triangles indiquent la présence de valeurs RGB à 0/255 dans l’aperçu,
+sans prétendre mesurer la saturation du capteur ou les réserves du master.
+L’exposition affichée suit le curseur EV. Histogramme et métadonnées restent
+fixes en haut du panneau. Tests : proportionnalité des effectifs, limites des
+cinq plages et état des indicateurs d’extrémité ; aucune modification moteur.
 
 Revue des captures : correction de la hauteur utile des champs de valeur,
 du chevauchement entre le bandeau d’information et les flèches de navigation,

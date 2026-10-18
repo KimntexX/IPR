@@ -205,6 +205,7 @@ Item {
             visible: !root.preferences || root.preferences.layout.showHistogram
             Layout.fillWidth: true
             histogram: root.editor.histogram
+            exposureEV: brightnessSlider.value
             imageDetails: root.editor.imageDetails
             textColor: root.secondaryTextColor
             Component.onCompleted: {

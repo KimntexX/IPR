@@ -215,6 +215,31 @@ int main(int argc, char **argv)
                noise->property("originPosition").toDouble() == 0,
                "unipolar sliders must retain a minimum origin")) return 1;
 
+    QObject *histogramView = root->findChild<QObject *>("histogramModule");
+    QVariantList histogramData;
+    for (int channel = 0; channel < 4; ++channel) {
+        QVariantList bins;
+        for (int bin = 0; bin < 256; ++bin)
+            bins.append(bin == 128 ? 100 : (bin == 255 ? 10 : 0));
+        histogramData.append(QVariant::fromValue(bins));
+    }
+    histogramView->setProperty("histogram", histogramData);
+    QVariant heightRatio;
+    QMetaObject::invokeMethod(histogramView, "relativeHeight", Q_RETURN_ARG(QVariant, heightRatio), Q_ARG(QVariant, 10));
+    if (!check(std::abs(heightRatio.toDouble() - 0.1) < 0.001 &&
+               !histogramView->property("shadowsClipped").toBool() &&
+               histogramView->property("highlightsClipped").toBool(),
+               "histogram must use proportional counts and report only preview-channel endpoint presence")) return 1;
+    const QList<double> zoneBoundaries{0, 0.10, 0.33, 0.66, 0.90, 1};
+    for (int index = 0; index < zoneBoundaries.size(); ++index) {
+        QVariant zone;
+        QMetaObject::invokeMethod(histogramView, "zoneAt", Q_RETURN_ARG(QVariant, zone),
+                                  Q_ARG(QVariant, zoneBoundaries[index]));
+        if (!check(zone.toInt() == std::min(index, 4),
+                   "histogram zones must follow the supplied 10/33/66/90 percent boundaries")) return 1;
+    }
+    contrast->setProperty("value", 0);
+
     QTemporaryDir directory;
     QImage source(8, 8, QImage::Format_RGB32);
     source.fill(QColor(100, 140, 180));
