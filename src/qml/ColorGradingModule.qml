@@ -207,6 +207,7 @@ ColumnLayout {
 
     AdjustmentControl {
         id: intensityControl
+        trackColors: ["#8b8e94", Qt.hsla(root.hue / 360, 0.72, 0.55, 1)]
         Layout.fillWidth: true
         label: qsTr("Intensité")
         valueText: Math.round(value)

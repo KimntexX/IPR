@@ -15,6 +15,9 @@ ColumnLayout {
     property color secondaryTextColor: "#d7dfeb"
     property alias value: controlSlider.value
     property bool adjustmentEnabled: false
+    // UI hints only: these colours do not describe an output colour transform.
+    property var trackColors: []
+    readonly property bool hasColorTrack: trackColors.length >= 2
     // Only bipolar controls have a neutral centre. Positive-only quantities
     // (quality, noise, radius...) keep their minimum as the visual origin.
     readonly property bool bipolar: minimumValue < 0 && maximumValue > 0
@@ -149,6 +152,7 @@ ColumnLayout {
         stepSize: control.increment
         enabled: control.adjustmentEnabled
         onValueChanged: control.valueEdited(value)
+        onMirroredChanged: colorTrack.requestPaint()
 
         background: Rectangle {
             objectName: "adjustmentTrack"
@@ -159,6 +163,34 @@ ColumnLayout {
             radius: height / 2
             color: "#303946"
 
+            Canvas {
+                id: colorTrack
+                objectName: "adjustmentColorTrack"
+                anchors.fill: parent
+                visible: control.hasColorTrack
+                opacity: controlSlider.enabled ? 0.85 : 0.3
+                onWidthChanged: requestPaint()
+                onHeightChanged: requestPaint()
+                Connections {
+                    target: control
+                    function onTrackColorsChanged() { colorTrack.requestPaint() }
+                }
+                onPaint: {
+                    const context = getContext("2d")
+                    context.clearRect(0, 0, width, height)
+                    if (!control.hasColorTrack || width <= 0 || height <= 0)
+                        return
+                    const gradient = context.createLinearGradient(
+                        controlSlider.mirrored ? width : 0, 0,
+                        controlSlider.mirrored ? 0 : width, 0)
+                    for (let index = 0; index < control.trackColors.length; ++index)
+                        gradient.addColorStop(index / (control.trackColors.length - 1),
+                                              String(control.trackColors[index]))
+                    context.fillStyle = gradient
+                    context.fillRect(0, 0, width, height)
+                }
+            }
+
             Rectangle {
                 objectName: "adjustmentFill"
                 readonly property real origin: controlSlider.mirrored
@@ -168,6 +200,7 @@ ColumnLayout {
                 height: parent.height
                 radius: height / 2
                 color: controlSlider.enabled ? "#687b91" : "#46515f"
+                opacity: control.hasColorTrack ? 0.25 : 1
             }
             Rectangle {
                 visible: control.bipolar

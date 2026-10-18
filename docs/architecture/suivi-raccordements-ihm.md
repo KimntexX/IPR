@@ -69,6 +69,11 @@ Les vérifications automatisées sont consignées ci-dessous à chaque étape.
    Les paramètres uniquement positifs gardent une origine au minimum.
    `settingsQmlTests` vérifie la géométrie à −100, −50, 0, +50 et +100.
    Aucun changement de domaine numérique ou de calcul photographique.
+4. **Bandes colorées** : température bleu/orange, nuance vert/magenta,
+   vibrance/saturation gris vers couleurs ; mélangeur suivant la bande choisie.
+   Repères indicatifs uniquement, sans modifier le rendu ni prétendre reproduire
+   le calcul propriétaire Lightroom. `settingsQmlTests` vérifie leur présence
+   et leur absence sur les curseurs de lumière. Contrôle visuel souhaité : lisibilité.
 
 ### 18 octobre 2026 — initialisation
 

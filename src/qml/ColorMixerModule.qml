@@ -14,6 +14,7 @@ ColumnLayout {
                                       qsTr("Bleus"), qsTr("Violets"), qsTr("Magentas")]
     readonly property var bandColors: ["#e55353", "#ed923b", "#e6c34b", "#70bd66",
                                        "#40b8c2", "#5d8ee8", "#8e63d8", "#df65b5"]
+    readonly property var bandHues: [0, 30, 60, 120, 180, 240, 270, 300]
 
     function reload() {
         reloading = true
@@ -118,6 +119,9 @@ ColumnLayout {
 
     AdjustmentControl {
         id: hueControl
+        trackColors: [Qt.hsla(((root.bandHues[root.band] + 330) % 360) / 360, 0.65, 0.55, 1),
+                      root.bandColors[root.band],
+                      Qt.hsla(((root.bandHues[root.band] + 30) % 360) / 360, 0.65, 0.55, 1)]
         Layout.fillWidth: true
         label: qsTr("Teinte")
         valueText: Math.round(value)
@@ -129,6 +133,7 @@ ColumnLayout {
 
     AdjustmentControl {
         id: saturationControl
+        trackColors: ["#7d838b", root.bandColors[root.band]]
         Layout.fillWidth: true
         label: qsTr("Saturation %1").arg(root.bandNames[root.band])
         valueText: Math.round(value)
@@ -140,6 +145,7 @@ ColumnLayout {
 
     AdjustmentControl {
         id: luminanceControl
+        trackColors: ["#20252c", root.bandColors[root.band], "#f2f2ee"]
         Layout.fillWidth: true
         label: qsTr("Luminance %1").arg(root.bandNames[root.band])
         valueText: Math.round(value)

@@ -469,6 +469,7 @@ Item {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     id: temperatureSlider
+                    trackColors: ["#477dda", "#c4c6c4", "#e8ae4e"]
                     label: qsTr("Température (K)")
                     valueText: Math.round(value)
                     minimumValue: 2000
@@ -486,6 +487,7 @@ Item {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     id: tintSlider
+                    trackColors: ["#63b777", "#c4c6c4", "#c46eb5"]
                     label: qsTr("Nuance vert ↔ magenta")
                     valueText: Math.round(value)
                     minimumValue: -150
@@ -501,6 +503,7 @@ Item {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     id: vibranceSlider
+                    trackColors: ["#78828b", "#719e9e", "#b4b93c", "#dc6845"]
                     label: qsTr("Vibrance")
                     valueText: Math.round(value)
                     minimumValue: -100
@@ -516,6 +519,7 @@ Item {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     id: saturationSlider
+                    trackColors: ["#78828b", "#78a5a4", "#5cae6c", "#d2c247", "#db6559"]
                     label: qsTr("Saturation")
                     valueText: Math.round(value)
                     minimumValue: -100

@@ -195,6 +195,17 @@ int main(int argc, char **argv)
                    "bipolar slider fill must extend from zero towards either signed value")) return 1;
     }
     contrast->setProperty("value", 0);
+    for (const QString &label : {QStringLiteral("Température (K)"),
+                                QStringLiteral("Nuance vert ↔ magenta"),
+                                QStringLiteral("Vibrance"), QStringLiteral("Saturation")}) {
+        QObject *control = controlWithLabel(root.data(), label);
+        if (!check(control && control->property("hasColorTrack").toBool(),
+                   "all global colour sliders must expose a coloured track")) return 1;
+    }
+    QObject *mixer = root->findChild<QObject *>("mixerSection");
+    if (!check(controlWithLabel(mixer, QStringLiteral("Teinte"))->property("hasColorTrack").toBool() &&
+               !contrast->property("hasColorTrack").toBool(),
+               "mixer hue must have a coloured track without colouring light sliders")) return 1;
     if (!check(quality->property("originPosition").toDouble() == 0 &&
                noise->property("originPosition").toDouble() == 0,
                "unipolar sliders must retain a minimum origin")) return 1;
