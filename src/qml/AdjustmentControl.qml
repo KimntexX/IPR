@@ -15,6 +15,11 @@ ColumnLayout {
     property color secondaryTextColor: "#d7dfeb"
     property alias value: controlSlider.value
     property bool adjustmentEnabled: false
+    // Only bipolar controls have a neutral centre. Positive-only quantities
+    // (quality, noise, radius...) keep their minimum as the visual origin.
+    readonly property bool bipolar: minimumValue < 0 && maximumValue > 0
+    readonly property real originPosition: bipolar
+        ? (0 - minimumValue) / (maximumValue - minimumValue) : 0
     signal valueEdited(real value)
 
     Layout.fillWidth: true
@@ -146,18 +151,33 @@ ColumnLayout {
         onValueChanged: control.valueEdited(value)
 
         background: Rectangle {
-            x: controlSlider.leftPadding
+            objectName: "adjustmentTrack"
+            x: controlSlider.leftPadding + controlSlider.handle.width / 2
             y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
-            width: controlSlider.availableWidth
+            width: Math.max(0, controlSlider.availableWidth - controlSlider.handle.width)
             height: 3
             radius: height / 2
             color: "#303946"
 
             Rectangle {
-                width: controlSlider.visualPosition * parent.width
+                objectName: "adjustmentFill"
+                readonly property real origin: controlSlider.mirrored
+                    ? 1 - control.originPosition : control.originPosition
+                x: Math.min(origin, controlSlider.visualPosition) * parent.width
+                width: Math.abs(controlSlider.visualPosition - origin) * parent.width
                 height: parent.height
                 radius: height / 2
                 color: controlSlider.enabled ? "#687b91" : "#46515f"
+            }
+            Rectangle {
+                visible: control.bipolar
+                x: (controlSlider.mirrored ? 1 - control.originPosition
+                                          : control.originPosition) * parent.width - 0.5
+                y: -1
+                width: 1
+                height: parent.height + 2
+                color: "#9dabbc"
+                opacity: 0.55
             }
         }
 

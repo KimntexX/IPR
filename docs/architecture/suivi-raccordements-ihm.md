@@ -64,6 +64,11 @@ Les vérifications automatisées sont consignées ci-dessous à chaque étape.
    de vignettes hors écran, bornée aux extrémités et suspendue pendant le chargement.
    `uiPreferencesQmlTests` vérifie deux fichiers réels, aller/retour, cibles,
    repliement et réouverture. Contrôle visuel souhaité : position et infobulles.
+3. **Sliders** : remplissage depuis zéro pour les paramètres bipolaires,
+   repère central discret et alignement du trait sur le centre du curseur.
+   Les paramètres uniquement positifs gardent une origine au minimum.
+   `settingsQmlTests` vérifie la géométrie à −100, −50, 0, +50 et +100.
+   Aucun changement de domaine numérique ou de calcul photographique.
 
 ### 18 octobre 2026 — initialisation
 

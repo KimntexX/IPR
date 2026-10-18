@@ -181,6 +181,24 @@ int main(int argc, char **argv)
                "the initial sharpening radius should match the engine default"))
         return 1;
 
+    // Geometry regression: signed values fill from neutral, not from the left.
+    QObject *contrast = controlWithLabel(root.data(), QStringLiteral("Contraste"));
+    auto *track = contrast->findChild<QQuickItem *>("adjustmentTrack");
+    auto *fill = contrast->findChild<QQuickItem *>("adjustmentFill");
+    for (int value : {-100, -50, 0, 50, 100}) {
+        contrast->setProperty("value", value);
+        settleLayout();
+        const qreal origin = track->width() / 2;
+        const qreal endpoint = (value + 100) / 200.0 * track->width();
+        if (!check(std::abs(fill->x() - std::min(origin, endpoint)) < 0.5 &&
+                   std::abs(fill->width() - std::abs(endpoint - origin)) < 0.5,
+                   "bipolar slider fill must extend from zero towards either signed value")) return 1;
+    }
+    contrast->setProperty("value", 0);
+    if (!check(quality->property("originPosition").toDouble() == 0 &&
+               noise->property("originPosition").toDouble() == 0,
+               "unipolar sliders must retain a minimum origin")) return 1;
+
     QTemporaryDir directory;
     QImage source(8, 8, QImage::Format_RGB32);
     source.fill(QColor(100, 140, 180));
