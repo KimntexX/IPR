@@ -242,7 +242,6 @@ ApplicationWindow {
         visible: uiPreferences.layout.showFilmstrip
         color: uiPreferences.theme.panel
         editor: imageEditor
-        onCollapseRequested: uiPreferences.setValue("layout/showFilmstrip", false)
     }
 
     FilmstripNavigation {
@@ -256,35 +255,12 @@ ApplicationWindow {
         editor: imageEditor
     }
 
-    ToolButton {
-        objectName: "expandFilmstripButton"
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottomMargin: 0
-        visible: !uiPreferences.layout.showFilmstrip
-        text: "▴"
-        implicitWidth: 40
-        implicitHeight: 18
-        padding: 0
-        hoverEnabled: true
-        Accessible.name: qsTr("Afficher le ruban des images")
-        ToolTip.visible: hovered
-        ToolTip.text: Accessible.name
-        onClicked: uiPreferences.setValue("layout/showFilmstrip", true)
-        contentItem: Text {
-            text: "▴"
-            color: uiPreferences.theme.secondaryText
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-        }
-        background: Rectangle { radius: 3; color: uiPreferences.theme.panel }
-    }
-
     footer: Label {
         id: applicationFooter
 
         leftPadding: 12
-        rightPadding: 12
+        rightPadding: width / 2 + 28
+        height: Math.max(22, implicitHeight)
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         color: uiPreferences.theme.secondaryText
@@ -294,6 +270,28 @@ ApplicationWindow {
                 .arg(Math.round(imageEditor.decodedImageCacheSizeBytes / 1048576))
                 .arg(imageEditor.memoryCacheStatus.pressure ? qsTr(" — pression mémoire") : "") : "")
         background: Rectangle { color: uiPreferences.theme.panel }
+        ToolButton {
+            objectName: "filmstripToggleButton"
+            anchors.centerIn: parent
+            text: uiPreferences.layout.showFilmstrip ? "▾" : "▴"
+            implicitWidth: 40
+            implicitHeight: 18
+            padding: 0
+            hoverEnabled: true
+            enabled: uiPreferences.writable
+            Accessible.name: uiPreferences.layout.showFilmstrip
+                ? qsTr("Replier le ruban des images") : qsTr("Afficher le ruban des images")
+            ToolTip.visible: hovered
+            ToolTip.text: Accessible.name
+            onClicked: uiPreferences.setValue("layout/showFilmstrip", !uiPreferences.layout.showFilmstrip)
+            contentItem: Text {
+                text: parent.text
+                color: uiPreferences.theme.secondaryText
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+            background: Rectangle { radius: 3; color: uiPreferences.theme.panel }
+        }
     }
 
     PreferencesDialog {

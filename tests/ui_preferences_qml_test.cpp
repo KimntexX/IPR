@@ -197,7 +197,10 @@ int main(int argc, char **argv)
                    navigation->property("previousName").toString().isEmpty() &&
                    navigation->property("nextName").toString() == "02.png",
                    "collapsed navigation must identify the next actual photo and respect the first boundary")) return 1;
-        QMetaObject::invokeMethod(ribbon, "collapseRequested");
+        auto *toggle = root->findChild<QQuickItem *>("filmstripToggleButton");
+        if (!check(toggle, "a single filmstrip toggle must exist")) return 1;
+        const QPointF expandedTogglePosition = toggle->mapToItem(nullptr, QPointF(0, 0));
+        QMetaObject::invokeMethod(toggle, "clicked");
         QCoreApplication::processEvents();
         if (!check(!preferences.layout().value("showFilmstrip").toBool() &&
                    navigation->property("visible").toBool(),
@@ -224,8 +227,9 @@ int main(int argc, char **argv)
         settleEditor(editor);
         if (!check(editor.imageDetails().value("name").toString() == "01.png",
                    "previous arrow must return to the announced photo")) return 1;
-        QObject *expand = root->findChild<QObject *>("expandFilmstripButton");
-        QMetaObject::invokeMethod(expand, "clicked");
+        if (!check(toggle->mapToItem(nullptr, QPointF(0, 0)) == expandedTogglePosition,
+                   "collapse and expansion must use exactly the same bottom control position")) return 1;
+        QMetaObject::invokeMethod(toggle, "clicked");
         if (!check(preferences.layout().value("showFilmstrip").toBool(),
                    "the collapsed tab must restore the ribbon")) return 1;
         window->close();

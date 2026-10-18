@@ -10,7 +10,6 @@ Rectangle {
     property int thumbnailDelegateWidth: 126
     property int thumbnailDelegateHeight: 76
     property int activeImageIndex: -1
-    signal collapseRequested()
     onVisibleChanged: thumbnailWindowTimer.restart()
     onActiveImageIndexChanged: {
         thumbnailList.currentIndex = activeImageIndex
@@ -56,18 +55,6 @@ Rectangle {
                 ToolTip.visible: hovered
                 ToolTip.text: qsTr("Désélectionner toutes les images")
                 onClicked: ribbon.editor.clearImageSelection()
-            }
-            ToolButton {
-                objectName: "collapseFilmstripButton"
-                text: "▾"
-                implicitWidth: 28
-                implicitHeight: 24
-                padding: 0
-                hoverEnabled: true
-                Accessible.name: qsTr("Replier le ruban")
-                ToolTip.visible: hovered
-                ToolTip.text: Accessible.name
-                onClicked: ribbon.collapseRequested()
             }
         }
 
