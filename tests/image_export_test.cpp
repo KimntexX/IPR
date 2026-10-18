@@ -954,7 +954,7 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
 bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
 {
     // Black, deep shadow, shadow, pivot (0.32 linear ~ sRGB 153), highlight,
-    // white and a saturated orange: perceptual S curve with fixed endpoints.
+    // white and an orange: per-channel perceptual S curve with fixed endpoints.
     const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(105, 105, 105),
         QColor(153, 153, 153), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
     QImage input(int(colors.size()), 1, QImage::Format_RGBA8888);
@@ -975,6 +975,7 @@ bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
         const int delta = std::abs(a.pixelColor(6, 0).hsvHue() - b.pixelColor(6, 0).hsvHue());
         return std::min(delta, 360 - delta);
     };
+    const auto saturation = [](const QImage &image) { return image.pixelColor(6, 0).hsvSaturation(); };
 
     editor.resetAdjustments();
     const auto [baseStatus, base] = exportVariant(QStringLiteral("contrast-base"));
@@ -989,8 +990,9 @@ bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
                    red(strong, 0) <= red(base, 0) + 1 && red(strong, 5) >= red(base, 5) - 1 &&
                    red(strong, 1) + 5 < red(base, 1) && red(strong, 2) + 5 < red(base, 2) &&
                    std::abs(red(strong, 3) - red(base, 3)) <= 6 &&
-                   red(strong, 4) > red(base, 4) + 5 && hueShift(strong, base) <= 3,
-               "positive contrast darkens below and brightens above the pivot, fixed endpoints, hue kept"))
+                   red(strong, 4) > red(base, 4) + 5 && hueShift(strong, base) <= 8 &&
+                   saturation(strong) > saturation(base),
+               "positive contrast darkens below and brightens above the pivot, fixed endpoints, saturates colour"))
         return false;
     for (int x = 1; x < 5; ++x)
         if (!check(red(strong, x) < red(strong, x + 1), "positive contrast keeps tonal order"))
@@ -1003,9 +1005,10 @@ bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
                      red(flat, 0) <= red(base, 0) + 1 && red(flat, 5) >= red(base, 5) - 1 &&
                      red(flat, 1) > red(base, 1) + 5 && red(flat, 2) > red(base, 2) + 5 &&
                      std::abs(red(flat, 3) - red(base, 3)) <= 6 &&
-                     red(flat, 4) + 5 < red(base, 4) && hueShift(flat, base) <= 3 &&
+                     red(flat, 4) + 5 < red(base, 4) && hueShift(flat, base) <= 8 &&
+                     saturation(flat) < saturation(base) &&
                      red(flat, 1) < red(flat, 2) && red(flat, 3) < red(flat, 4),
-                 "negative contrast lifts below and lowers above the pivot, fixed endpoints, hue kept");
+                 "negative contrast lifts below and lowers above the pivot, fixed endpoints, desaturates colour");
 }
 
 bool awaitPreview(ImageEditor &editor)

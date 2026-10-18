@@ -1575,11 +1575,12 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     }
 
     // Contrast: endpoint-preserving S curve in a log domain (16 EV below white),
-    // pivot 0.32, driven by the max RGB norm and applied as a common RGB scale.
-    // Black and white stay fixed and no channel is pushed above 1; hue and
-    // linear saturation are kept. The previous linear-luminance curve barely
-    // moved midtones at +50 and lifted highlights at +100 (6.8 % clipping).
-    // Fitted on the six Lumières scenes against Lightroom (median |gap| 0.07 EV).
+    // pivot 0.32, applied to each RGB channel. Black and white stay fixed, so no
+    // channel goes above 1. Per channel, positive contrast also saturates bright
+    // colours as Lightroom does; a common RGB scale washed them out (bright-tone
+    // saturation -0.085 vs LR at +100, now +0.003). Fitted on the six Lumières
+    // scenes against Lightroom (median |gap| 0.08 EV); the negative strength is
+    // the fitted 0.45 raised by 8 % after the user's visual check.
     const auto luminanceOf = [](const cv::Vec3f &pixel) {
         return std::max(0.0f, WorkingColor::luminance(pixel));
     };
@@ -1597,7 +1598,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     };
     const auto contrastCurve = [](float norm, float amount) {
         constexpr float pivot = 0.32f, floorEv = -16.0f;
-        constexpr float positiveStrength = 0.60f, negativeStrength = 0.45f;
+        constexpr float positiveStrength = 0.60f, negativeStrength = 0.45f * 1.08f;
         const float floorValue = std::exp2(floorEv);
         if (norm <= floorValue || norm >= 1.0f) return norm;
         const auto encode = [&](float value) { return (std::log2(value) - floorEv) / -floorEv; };
@@ -1612,10 +1613,9 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         const float amount = static_cast<float>(settings.contrast) / 100.0f;
         for (int y = 0; y < adjusted.rows; ++y) {
             cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                const float norm = std::max({row[x][0], row[x][1], row[x][2]});
-                if (norm > 0.0f) row[x] *= contrastCurve(norm, amount) / norm;
-            }
+            for (int x = 0; x < adjusted.cols; ++x)
+                for (int c = 0; c < 3; ++c)
+                    row[x][c] = contrastCurve(row[x][c], amount);
         }
     }
 
