@@ -760,6 +760,28 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
                  "combined black and shadow adjustments should not compound");
 }
 
+// Graded-zone rule for Lumières tone controls (18 October 2026): as in
+// Lightroom, a control may reach the whole tonal range, but its effect, in EV
+// of linear light, is weakest at the opposite end of the histogram. Tones next
+// to white are left out of the comparison: their lift is capped by headroom.
+double evShift(const QImage &base, const QImage &variant, int x)
+{
+    const auto linear = [](int code) {
+        const double v = code / 255.0;
+        return std::max(1e-6, v <= 0.04045 ? v / 12.92 : std::pow((v + 0.055) / 1.055, 2.4));
+    };
+    return std::log2(linear(variant.pixelColor(x, 0).red()) / linear(base.pixelColor(x, 0).red()));
+}
+
+bool oppositeEndMovesLeast(const QImage &base, const QImage &variant, int opposite,
+                           std::initializer_list<int> others)
+{
+    const double far = std::abs(evShift(base, variant, opposite));
+    for (int x : others)
+        if (far > std::abs(evShift(base, variant, x)) + 0.03) return false;
+    return true;
+}
+
 bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
 {
     QImage input(3, 1, QImage::Format_RGBA8888);
@@ -795,11 +817,20 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
                    !blackLift.isNull() &&
                    blackLift.pixelColor(0, 0).red() >
                        base.pixelColor(0, 0).red() + 5 &&
-                   std::abs(blackLift.pixelColor(1, 0).red() -
-                            base.pixelColor(1, 0).red()) <= 2 &&
-                   std::abs(blackLift.pixelColor(2, 0).red() -
-                            base.pixelColor(2, 0).red()) <= 2,
-               "black lift should affect the toe without shifting midtones or highlights"))
+                   blackLift.pixelColor(1, 0).red() >= base.pixelColor(1, 0).red() &&
+                   oppositeEndMovesLeast(base, blackLift, 2, {0, 1}),
+               "black lift should be strongest on dark tones and weakest on highlights"))
+        return false;
+
+    editor.resetAdjustments();
+    editor.setBlacks(-100);
+    const auto [blackDarkStatus, blackDark] =
+        exportVariant(QStringLiteral("black-darkening"));
+    if (!check(!blackDarkStatus.isEmpty() && !blackDark.isNull() &&
+                   blackDark.pixelColor(0, 0).red() + 5 < base.pixelColor(0, 0).red() &&
+                   blackDark.pixelColor(2, 0).red() > blackDark.pixelColor(1, 0).red() &&
+                   oppositeEndMovesLeast(base, blackDark, 2, {0, 1}),
+               "black darkening should be strongest on dark tones and weakest on highlights"))
         return false;
 
     editor.resetAdjustments();
@@ -916,11 +947,10 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
     const auto [highlightLiftStatus, highlightLift] =
         exportVariant(QStringLiteral("highlight-lift"));
     if (!check(!highlightLiftStatus.isEmpty() && !highlightLift.isNull() &&
-                   std::abs(highlightLift.pixelColor(0, 0).red() -
-                            base.pixelColor(0, 0).red()) <= 2 &&
+                   oppositeEndMovesLeast(base, highlightLift, 0, {1, 2}) &&
                    highlightLift.pixelColor(2, 0).red() >
                        base.pixelColor(2, 0).red() + 15,
-               "highlight lift should affect upper tones without lifting blacks"))
+               "highlight lift should be strongest on upper tones and weakest on blacks"))
         return false;
 
     editor.resetAdjustments();
@@ -928,11 +958,10 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
     const auto [highlightDarkStatus, highlightDark] =
         exportVariant(QStringLiteral("highlight-darkening"));
     if (!check(!highlightDarkStatus.isEmpty() && !highlightDark.isNull() &&
-                   std::abs(highlightDark.pixelColor(0, 0).red() -
-                            base.pixelColor(0, 0).red()) <= 2 &&
+                   oppositeEndMovesLeast(base, highlightDark, 0, {1, 2}) &&
                    highlightDark.pixelColor(2, 0).red() + 15 <
                        base.pixelColor(2, 0).red(),
-               "highlight recovery should compress upper tones without crushing blacks"))
+               "highlight recovery should be strongest on upper tones and weakest on blacks"))
         return false;
 
     editor.resetAdjustments();
@@ -940,13 +969,12 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
     const auto [whiteLiftStatus, whiteLift] =
         exportVariant(QStringLiteral("white-lift"));
     if (!check(!whiteLiftStatus.isEmpty() && !whiteLift.isNull() &&
-                   std::abs(whiteLift.pixelColor(0, 0).red() -
-                            base.pixelColor(0, 0).red()) <= 2 &&
+                   oppositeEndMovesLeast(base, whiteLift, 0, {1, 2}) &&
                    whiteLift.pixelColor(2, 0).red() >
                        base.pixelColor(2, 0).red() + 15 &&
                    whiteLift.pixelColor(3, 0).red() >=
                        whiteLift.pixelColor(2, 0).red(),
-               "white lift should move the white point without lifting blacks"))
+               "white lift should be strongest near white and weakest on blacks"))
         return false;
 
     editor.resetAdjustments();
@@ -954,11 +982,10 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
     const auto [whiteDarkStatus, whiteDark] =
         exportVariant(QStringLiteral("white-darkening"));
     return check(!whiteDarkStatus.isEmpty() && !whiteDark.isNull() &&
-                     std::abs(whiteDark.pixelColor(0, 0).red() -
-                              base.pixelColor(0, 0).red()) <= 2 &&
+                     oppositeEndMovesLeast(base, whiteDark, 0, {1, 2}) &&
                      whiteDark.pixelColor(2, 0).red() + 8 <
                          base.pixelColor(2, 0).red(),
-                 "white recovery should lower the white point without crushing blacks");
+                 "white recovery should be strongest near white and weakest on blacks");
 }
 
 bool verifyHistogramValues(ImageEditor &editor, const QString &directory)

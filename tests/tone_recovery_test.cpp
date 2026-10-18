@@ -19,11 +19,13 @@ template <typename F> void ramp(F visit)
     for (int i = 0; i <= 20000; ++i) visit(std::exp2(-16.0f + 16.0f * float(i) / 20000.0f) * 0.9999f);
 }
 
+// Tone order is checked on the production curve.
 void monotone(const ToneRecovery::Amounts &a, const char *message)
 {
+    const ToneRecovery::Curve curve(a);
     float previous = -1.0f;
     ramp([&](float y) {
-        const float out = ToneRecovery::target(y, a);
+        const float out = curve(y);
         check(std::isfinite(out) && out >= 0.0f && out <= 1.0f, "Tone curve leaves [0, 1] below white");
         check(out + 1e-7f >= previous, message);
         previous = out;
@@ -54,17 +56,32 @@ int main()
             for (float h : {-1.0f, 1.0f}) for (float w : {-1.0f, 1.0f})
                 monotone(ToneRecovery::Amounts{s, b, h, w}, "Combined controls reverse tones");
 
+        // The sampled curve follows the analytic one.
+        for (float s : {-1.0f, 1.0f}) for (float w : {-1.0f, 1.0f}) {
+            const ToneRecovery::Amounts mixed{s, -s, w, -w};
+            const ToneRecovery::Curve curve(mixed);
+            ramp([&](float y) {
+                const float exact = ToneRecovery::target(y, mixed);
+                check(std::abs(curve(y) - exact) <= 0.002f + 0.01f * exact, "Sampled curve departs from the analytic one");
+            });
+        }
+
         using ToneRecovery::target;
         check(target(0.0f, single(0, 1)) == 0.0f && target(0.0f, single(1, 1)) == 0.0f, "Black must stay black");
         check(target(0.005f, single(1, -1)) == 0.0f, "Negative blacks must reach a true black point");
         check(target(0.6f, single(1, -1)) > 0.5f, "Blacks must not crush bright tones");
-        // Each control stays in its zone of the histogram (fixed ranges, plan A).
+        // Graded zones: a control may reach the whole range, but the opposite
+        // end of the histogram moves least (in EV), as in Lightroom.
         for (int control = 0; control < 4; ++control) {
             const bool low = control < 2;
-            for (float amount : {-1.0f, 1.0f}) {
-                const float far = low ? 0.9f : 0.003f;
-                const float out = target(far, single(control, amount));
-                check(std::abs(std::log2(out / far)) < (low ? 0.05f : 0.1f), "A control leaks into the opposite end");
+            for (float amount : {-1.0f, -.5f, .5f, 1.0f}) {
+                const auto shift = [&](float y) {
+                    return std::abs(std::log2(std::max(target(y, single(control, amount)), 1e-9f) / y));
+                };
+                const float far = shift(low ? 0.8f : 0.01f);
+                for (float y : low ? std::initializer_list<float>{.01f, .05f, .18f}
+                                   : std::initializer_list<float>{.05f, .18f, .5f})
+                    check(far <= shift(y) + 0.03f, "The opposite end of the histogram must move least");
             }
         }
         check(target(0.6f, single(2, 1)) > 0.6f && target(0.95f, single(2, 1)) - 0.95f < target(0.6f, single(2, 1)) - 0.6f,

@@ -1630,7 +1630,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     }
 
     // Shadows, Blacks, Highlights and Whites: one luminance tone curve
-    // (ToneRecovery::target), applied as a common RGB scale. In a brightening,
+    // (ToneRecovery::Curve), applied as a common RGB scale. In a brightening,
     // the largest sRGB delivery channel goes through the same soft shoulder:
     // Y < 1 and Rec.2020 RGB < 1 do not imply headroom for a saturated colour
     // in sRGB, and a hard cap would pin such colours at 1.
@@ -1639,12 +1639,13 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         static_cast<float>(settings.highlights) / 100.0f,
         static_cast<float>(settings.whites) / 100.0f};
     if (!ToneRecovery::identity(tones)) {
+        const ToneRecovery::Curve toneCurve(tones);
         for (int y = 0; y < adjusted.rows; ++y) {
             cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
             for (int x = 0; x < adjusted.cols; ++x) {
                 cv::Vec3f &pixel = row[x];
                 const float luminance = luminanceOf(pixel);
-                float target = ToneRecovery::target(luminance, tones);
+                float target = toneCurve(luminance);
                 if (target > luminance && luminance > 0.0f) {
                     const cv::Vec3d delivery = WorkingColor::toSrgb() * cv::Vec3d(pixel);
                     const float peak = float(std::max({delivery[0], delivery[1], delivery[2], 0.0}));
