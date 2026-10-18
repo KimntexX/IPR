@@ -21,8 +21,8 @@ Basic.Dialog {
     }
     anchors.centerIn: Overlay.overlay
     title: qsTr("Vérifier l’export")
-    width: Math.min(parent ? parent.width - 24 : 520, 520)
-    height: Math.min(parent ? parent.height - 24 : 420, 420)
+    width: Math.min(Overlay.overlay ? Overlay.overlay.width - 24 : 520, 520)
+    height: Math.min(Overlay.overlay ? Overlay.overlay.height - 24 : 420, 420)
     modal: true
     padding: 14
     standardButtons: Dialog.NoButton
@@ -31,6 +31,7 @@ Basic.Dialog {
         padding: 14
         font.bold: true
         font.pixelSize: 16
+        elide: Text.ElideRight
         color: root.palette.text
         background: Rectangle { color: root.palette.window }
     }

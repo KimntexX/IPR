@@ -5,10 +5,12 @@
 
 #include <QGuiApplication>
 #include <QFont>
+#include <QFontDatabase>
 #include <QElapsedTimer>
 #include <QEventLoop>
 #include <QImage>
 #include <QKeyEvent>
+#include <QMouseEvent>
 #include <QDir>
 #include <QQuickItem>
 #include <QQuickWindow>
@@ -90,8 +92,13 @@ QObject *qualityControl(QObject *root)
 int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);
-    if (!qEnvironmentVariableIsEmpty("IPR_UI_CAPTURE_DIRECTORY"))
+    if (!qEnvironmentVariableIsEmpty("IPR_UI_CAPTURE_DIRECTORY")) {
+#ifdef Q_OS_WIN
+        // The offscreen backend does not enumerate Windows fonts automatically.
+        QFontDatabase::addApplicationFont(qEnvironmentVariable("WINDIR", "C:/Windows") + "/Fonts/segoeui.ttf");
+#endif
         app.setFont(QFont(QStringLiteral("Segoe UI")));
+    }
     qmlRegisterModule("IPR", 1, 0); // Local QML files provide the same component types.
     QTemporaryDir directory;
     const QString path = directory.filePath(QStringLiteral("ipr-ui.ini"));
@@ -275,6 +282,10 @@ int main(int argc, char **argv)
             }
             QObject *windowPalette = root->property("palette").value<QObject *>();
             QObject *popupPalette = dialog->property("palette").value<QObject *>();
+            QObject *reviewPalette = root->findChild<QObject *>("exportReviewDialog")->property("palette").value<QObject *>();
+            if (!check(reviewPalette && reviewPalette->property("window").value<QColor>() == expected &&
+                       reviewPalette->property("text").value<QColor>() == preferences.theme().value("text").value<QColor>(),
+                       "the export review must follow all five palettes")) return 1;
             QObject *comboSurface = background->property("background").value<QObject *>();
             QObject *spinSurface = infoSize->property("background").value<QObject *>();
             QObject *closeButton = dialog->findChild<QObject *>("closePreferencesButton");
@@ -461,6 +472,31 @@ int main(int argc, char **argv)
                    badges && badges->isVisible(),
                    "the current image must retain its open outline while also selected for batch processing")) return 1;
         editor.clearImageSelection();
+        auto *infoHandle = root->findChild<QQuickItem *>("infoResizeHandle");
+        const QPointF handlePoint = infoHandle->mapToItem(nullptr, QPointF(infoHandle->width() / 2, infoHandle->height() / 2));
+        const auto sendMouse = [&](QEvent::Type type, QPointF point, Qt::MouseButton button, Qt::MouseButtons buttons) {
+            QMouseEvent event(type, point, QPointF(window->mapToGlobal(point.toPoint())), button, buttons, Qt::NoModifier);
+            QCoreApplication::sendEvent(window, &event);
+            QCoreApplication::processEvents();
+        };
+        sendMouse(QEvent::MouseButtonPress, handlePoint, Qt::LeftButton, Qt::LeftButton);
+        sendMouse(QEvent::MouseMove, handlePoint + QPointF(20, 0), Qt::NoButton, Qt::LeftButton);
+        sendMouse(QEvent::MouseButtonRelease, handlePoint + QPointF(20, 0), Qt::LeftButton, Qt::NoButton);
+        if (!check(preferences.layout().value("imageInfoWidth").toInt() == 270,
+                   "dragging a handle must resize the real panel without coordinate feedback")) return 1;
+        window->resize(1000, 650);
+        QCoreApplication::processEvents();
+        if (!check(captureReview(window, "ergonomics-narrow"), "optional narrow window capture should save")) return 1;
+        auto *fileDialog = root->findChild<QObject *>("exportDialog");
+        root->findChild<QObject *>("exportFormat")->setProperty("currentIndex", 2);
+        QMetaObject::invokeMethod(withProperty(root.data(), "reviewedImageKey"), "prepareExportDialog");
+        fileDialog->setProperty("selectedFile", QUrl::fromLocalFile(photos.filePath("review-only.tiff")));
+        QMetaObject::invokeMethod(fileDialog, "accepted");
+        if (!check(root->findChild<QObject *>("exportReviewDialog")->property("format").toString() == "TIFF",
+                   "the actual-window export review must display the selected format")) return 1;
+        if (!check(captureReview(window, "export-review"), "optional export review capture should save")) return 1;
+        QMetaObject::invokeMethod(root->findChild<QObject *>("exportReviewDialog"), "close");
+        if (!check(!QFileInfo::exists(photos.filePath("review-only.tiff")), "review capture must not export a photo")) return 1;
         window->close();
     }
     return 0;

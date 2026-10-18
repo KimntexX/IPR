@@ -45,7 +45,7 @@ ColumnLayout {
             elide: Text.ElideRight
             color: control.secondaryTextColor
             font.bold: control.modified
-            TapHandler { onDoubleTapped: control.resetToDefault() }
+            TapHandler { onTapped: if (tapCount === 2) control.resetToDefault() }
             HoverHandler { id: labelHover }
             ToolTip.visible: labelHover.hovered
             ToolTip.text: qsTr("Double-clic pour réinitialiser à %1").arg(control.resetValue)
@@ -161,7 +161,9 @@ ColumnLayout {
         focusPolicy: Qt.StrongFocus
         Accessible.name: control.label
         Accessible.description: qsTr("Flèches : ajuster. Double-clic : réinitialiser.")
-        TapHandler { onDoubleTapped: control.resetToDefault() }
+        // Slider also applies its release position: reset after that handler,
+        // otherwise it immediately overwrites the neutral value with the old position.
+        TapHandler { onTapped: if (tapCount === 2) Qt.callLater(control.resetToDefault) }
 
         Layout.fillWidth: true
         Layout.minimumWidth: 0

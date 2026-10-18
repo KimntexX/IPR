@@ -65,6 +65,32 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Vérification transversale des sept étapes
+
+Les sept améliorations sont isolées en commits successifs sur `patch_ui`.
+Les raccordements différés `IHM-CONN-003` à `006` restent documentés, sans
+modification C++ du moteur. Les tests couvrent aussi le glissement réel d’une
+poignée, les deux états de sélection, la palette du récapitulatif d’export,
+l’annulation et l’identité périmée d’une photo. Les captures sont synthétiques.
+
+Le test de double-clic réel a révélé un conflit entre le reset et le traitement
+du relâchement par Slider : celui-ci réappliquait la position précédente.
+Le reset du curseur est maintenant différé à la fin de cette livraison d’événement
+(`Qt.callLater`), après le second clic, sans modifier le calcul photographique.
+Le reset sur le nom reste immédiat. Le test ne se limite donc pas à invoquer
+directement la fonction de réinitialisation.
+
+Vérification finale : six tests CTest IHM réussis ; seize tests Python de
+sélection réussis ; contrôle documentaire sans erreur ni lien manquant.
+Préférences Basic et Windows vérifiées hors écran à 100 %, 125 % et 150 %.
+Les captures Windows hors écran chargent explicitement Segoe UI dans le test
+(aucun changement de police imposé à l’application). Le dialogue d’export
+utilise la largeur disponible de l’overlay, pas celle du panneau Réglages.
+Build `build-patch_ui/Release/appIPR.exe` reconstruit ; démarrage isolé
+`--smoke-test` réussi, code 0 et stderr vide, sans chemins de développement
+dans le PATH. INI personnel préservé par des préférences temporaires de test.
+Validation visuelle utilisateur encore attendue, aucune publication ni fusion.
+
 ### Ergonomie — étape 7 : récapitulatif d’export
 
 Après choix natif du fichier, un dialogue aux couleurs de l’interface récapitule

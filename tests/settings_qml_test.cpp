@@ -8,6 +8,7 @@
 #include <QGuiApplication>
 #include <QImage>
 #include <QKeyEvent>
+#include <QMouseEvent>
 #include <QQmlComponent>
 #include <QQmlEngine>
 #include <QQuickItem>
@@ -479,6 +480,7 @@ int main(int argc, char **argv)
                "a stale photo identity must prevent export confirmation")) return 1;
     QMetaObject::invokeMethod(review, "close");
 
+    for (int i = 0; i < 5; ++i) settleLayout();
     auto *exposure = controlWithLabel(root.data(), QStringLiteral("Exposition (EV)"));
     if (!check(exposure, "exposure control must exist")) return 1;
     exposure->setProperty("value", 1.25);
@@ -499,6 +501,49 @@ int main(int argc, char **argv)
                std::abs(editor.adjustmentValue("brightness") - .01) < 1e-6,
                "keyboard arrows must apply the declared numeric increment")) return 1;
     QMetaObject::invokeMethod(exposure, "resetToDefault");
+
+    QQuickWindow gestureWindow;
+    gestureWindow.resize(280, 100);
+    QQmlComponent gestureComponent(&engine,
+        QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/AdjustmentControl.qml")));
+    QScopedPointer<QObject> gesture(gestureComponent.createWithInitialProperties({
+        {"minimumValue", -100}, {"maximumValue", 100}, {"value", 25}, {"adjustmentEnabled", true}}));
+    if (!gesture) { std::cerr << gestureComponent.errorString().toStdString(); return 1; }
+    auto *gestureItem = qobject_cast<QQuickItem *>(gesture.data());
+    gestureItem->setParentItem(gestureWindow.contentItem());
+    gestureItem->setX(10); gestureItem->setY(10); gestureItem->setWidth(240); gestureItem->setHeight(60);
+    gestureWindow.show();
+    settleLayout();
+    auto *gestureSlider = gesture->findChild<QQuickItem *>("adjustmentSlider");
+    auto *gestureHandle = gestureSlider->property("handle").value<QQuickItem *>();
+    const QPointF gesturePoint = gestureHandle->mapToItem(nullptr, QPointF(5, 5));
+    unsigned long timestamp = 1000;
+    // QWindow pointer delivery uses two press/release pairs (as QTest's
+    // QWindow mouseDClick does), not the QWidget-only double-click shortcut.
+    for (QEvent::Type type : {QEvent::MouseButtonPress, QEvent::MouseButtonRelease,
+                             QEvent::MouseButtonPress, QEvent::MouseButtonRelease}) {
+        QMouseEvent event(type, gesturePoint, QPointF(gestureWindow.mapToGlobal(gesturePoint.toPoint())),
+                          Qt::LeftButton, type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::LeftButton, Qt::NoModifier);
+        event.setTimestamp(timestamp);
+        timestamp += 50;
+        QCoreApplication::sendEvent(&gestureWindow, &event);
+        QCoreApplication::processEvents();
+    }
+    if (!check(gesture->property("value").toDouble() == 0,
+               "a real double click on the slider must restore its reset value")) return 1;
+    const QPointF dragStart = gestureHandle->mapToItem(nullptr, QPointF(5, 5));
+    for (QEvent::Type type : {QEvent::MouseButtonPress, QEvent::MouseMove, QEvent::MouseButtonRelease}) {
+        const QPointF point = type == QEvent::MouseButtonPress ? dragStart : dragStart + QPointF(40, 0);
+        QMouseEvent event(type, point, QPointF(gestureWindow.mapToGlobal(point.toPoint())),
+            type == QEvent::MouseMove ? Qt::NoButton : Qt::LeftButton,
+            type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::LeftButton, Qt::NoModifier);
+        event.setTimestamp(timestamp + 1000);
+        timestamp += 50;
+        QCoreApplication::sendEvent(&gestureWindow, &event);
+        QCoreApplication::processEvents();
+    }
+    if (!check(gesture->property("value").toDouble() > 10,
+               "the reset tap recognizer must not steal normal slider dragging")) return 1;
 
     QQmlComponent statusComponent(&engine,
         QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/ProcessingStatus.qml")));
