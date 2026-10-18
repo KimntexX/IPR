@@ -8,6 +8,7 @@
 #include <QElapsedTimer>
 #include <QEventLoop>
 #include <QImage>
+#include <QKeyEvent>
 #include <QDir>
 #include <QQuickItem>
 #include <QQuickWindow>
@@ -175,6 +176,20 @@ int main(int argc, char **argv)
         if (!check(info->property("visible").toBool() && ribbon->property("visible").toBool() &&
                    histogram->property("visible").toBool() && dialog->property("visible").toBool(),
                    "panel visibility and preferences dialog should react at runtime")) return 1;
+        QObject *tabs = dialog->findChild<QObject *>("preferencesTabs");
+        const QStringList pages{"interfacePreferencesPage", "appearancePreferencesPage", "advancedRawPreferencesPage"};
+        if (!check(tabs && tabs->property("count").toInt() == 3,
+                   "preferences must provide three independent navigation tabs")) return 1;
+        for (int index = 0; index < pages.size(); ++index) {
+            tabs->setProperty("currentIndex", index);
+            QCoreApplication::processEvents();
+            auto *page = dialog->findChild<QQuickItem *>(pages[index]);
+            if (!check(page && page->isVisible() && page->height() > 0 &&
+                       page->property("contentWidth").toDouble() <= page->width() &&
+                       page->findChild<QObject *>("preferenceScrollBar")->property("width").toDouble() == 6,
+                       "each preferences page must fit and use a slim scrollbar")) return 1;
+        }
+        tabs->setProperty("currentIndex", 0);
         QObject *background = dialog->findChild<QObject *>("preference_canvasBackground");
         QObject *infoSize = dialog->findChild<QObject *>("preference_imageInfoFontSize");
         if (!check(infoSize, "preferences must expose information text sizing")) return 1;
@@ -183,6 +198,25 @@ int main(int argc, char **argv)
         if (!check(info->property("informationFontSize").toInt() == 16 &&
                    preferences.layout().value("imageInfoFontSize").toInt() == 16,
                    "changing information text size must immediately update the panel and INI state")) return 1;
+        qobject_cast<QQuickItem *>(infoSize)->forceActiveFocus();
+        QKeyEvent increasePress(QEvent::KeyPress, Qt::Key_Up, Qt::NoModifier);
+        QKeyEvent increaseRelease(QEvent::KeyRelease, Qt::Key_Up, Qt::NoModifier);
+        QCoreApplication::sendEvent(window, &increasePress);
+        QCoreApplication::sendEvent(window, &increaseRelease);
+        if (!check(preferences.layout().value("imageInfoFontSize").toInt() == 17,
+                   "the styled spinbox must keep real keyboard stepping connected to preferences")) return 1;
+        QObject *sizeInput = infoSize->property("contentItem").value<QObject *>();
+        qobject_cast<QQuickItem *>(sizeInput)->forceActiveFocus();
+        sizeInput->setProperty("text", "18");
+        QKeyEvent acceptPress(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier);
+        QKeyEvent acceptRelease(QEvent::KeyRelease, Qt::Key_Return, Qt::NoModifier);
+        QCoreApplication::sendEvent(window, &acceptPress);
+        QCoreApplication::sendEvent(window, &acceptRelease);
+        if (!check(preferences.layout().value("imageInfoFontSize").toInt() == 18,
+                   "typed values must remain connected after restyling the spinbox")) return 1;
+        preferences.setValue("layout/imageInfoFontSize", 16);
+        if (!check(captureReview(window, "preferences-interface"), "interface capture should save")) return 1;
+        tabs->setProperty("currentIndex", 1);
         QObject *calibration = dialog->findChild<QObject *>("rawNormalizationToggle");
         if (!check(background && calibration && !calibration->property("enabled").toBool(),
                    "preferences must expose canvas colours and disable calibration without a RAW")) return 1;
@@ -197,6 +231,11 @@ int main(int argc, char **argv)
             QCoreApplication::processEvents();
             const QColor expected(panelColours[index]);
             QObject *windowPalette = root->property("palette").value<QObject *>();
+            QObject *popupPalette = dialog->property("palette").value<QObject *>();
+            QObject *comboSurface = background->property("background").value<QObject *>();
+            QObject *spinSurface = infoSize->property("background").value<QObject *>();
+            QObject *closeButton = dialog->findChild<QObject *>("closePreferencesButton");
+            QObject *closeText = closeButton->property("contentItem").value<QObject *>();
             if (!check(preferences.theme().value("panel").value<QColor>() == expected &&
                        paletteSelector->property("selectedIndex").toInt() == index &&
                        info->property("color").value<QColor>() == expected &&
@@ -204,6 +243,19 @@ int main(int argc, char **argv)
                            preferences.theme().value("text").value<QColor>() &&
                        preferences.theme().value("canvas").value<QColor>() == QColor("#777777"),
                        "each palette must update panels and text without changing the independent photo canvas")) return 1;
+            if (!check(popupPalette && popupPalette->property("window").value<QColor>() == expected &&
+                       comboSurface->property("color").value<QColor>() == expected.darker(110) &&
+                       spinSurface->property("color").value<QColor>() == expected.darker(110) &&
+                       closeText->property("color").value<QColor>() == preferences.theme().value("text").value<QColor>(),
+                       "preferences controls and close button must follow every palette, not platform white defaults")) return 1;
+            QObject *choices = background->property("popup").value<QObject *>();
+            QMetaObject::invokeMethod(choices, "open");
+            QCoreApplication::processEvents();
+            QObject *choicesSurface = choices->property("background").value<QObject *>();
+            if (!check(choices->property("visible").toBool() && choicesSurface &&
+                       choicesSurface->property("color").value<QColor>() == expected,
+                       "the opened dropdown must follow the selected palette too")) return 1;
+            QMetaObject::invokeMethod(choices, "close");
             preferences.sync();
             UiPreferences readback(path);
             if (!check(readback.theme().value("panel").value<QColor>() == expected &&
@@ -213,6 +265,7 @@ int main(int argc, char **argv)
                 !check(captureReview(window, QStringLiteral("palette-%1").arg(index)),
                        "optional palette captures should save")) return 1;
         }
+        tabs->setProperty("currentIndex", 2);
         editor.setRawNormalizationEnabled(true);
         if (!check(calibration->property("checked").toBool(),
                    "preferences calibration must reflect the current editor state")) return 1;

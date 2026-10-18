@@ -139,6 +139,39 @@ dans le PATH, réussit (code 0, aucun message d’erreur QML).
 Le fichier INI personnel est préservé : les nouveaux défauts embarqués
 sont complétés automatiquement au lancement par `UiPreferences`.
 
+### Préférences — harmonisation après retour visuel
+
+Trois sous-menus (onglets) remplacent la liste unique : **Interface**
+(panneaux, dimensions, taille des informations), **Apparence** (palettes et
+fond photo indépendant), **Avancé · RAW** (calibration de l’image ouverte).
+Chaque page possède son propre composant QML et défilement vertical discret
+de 6 px ; aucun défilement horizontal. Les pages restent instanciées pour
+préserver les valeurs quand on change d’onglet.
+
+Le dialogue est rattaché à l’overlay Qt : sa palette est désormais liée
+explicitement aux couleurs INI. Les contrôles `PreferenceButton`,
+`PreferenceCheckBox`, `PreferenceSpinBox`, `PreferenceComboBox` et
+`PreferenceScrollView` utilisent Qt Quick Controls Basic avec une présentation
+explicite. Cela évite les contrôles blancs natifs Windows vus dans la capture
+utilisateur. Fond, texte, contours, liste déroulante et bouton Fermer suivent
+la palette ; les cinq thèmes restent applicables immédiatement au dialogue.
+Tous les nouveaux fichiers sont déclarés dans CMake. Aucune évolution moteur.
+
+Vérifications : navigation dans les trois pages, largeur contenue, barre fine,
+thème des contrôles pour chaque palette, modification au clavier et saisie
+validée avec Entrée dans les champs numériques, persistance INI existante.
+`uiPreferencesWindowsStyleTests` exécute les mêmes vérifications sous le style
+Windows en plus de `uiPreferencesQmlTests` sous Basic. Ces tests restent hors
+écran : ils ne remplacent pas la validation visuelle utilisateur. Les nouveaux
+composants sont associés au test ciblé des préférences dans les règles locales ;
+le test spécifique Windows est inclus dans les suites complètes de cet OS.
+
+Build `build-patch_ui/Release/appIPR.exe` reconstruit et démarrage isolé réussi
+(code 0, aucun message d’erreur QML). Six tests CTest ciblés réussis, dont les
+deux variantes Basic/Windows des préférences ; seize tests Python de sélection
+des tests réussis. Contrôle documentaire : zéro erreur et zéro lien manquant.
+Le fichier INI utilisateur reste inchangé par les opérations de build.
+
 Revue des captures : correction de la hauteur utile des champs de valeur,
 du chevauchement entre le bandeau d’information et les flèches de navigation,
 et harmonisation du titre/pied du dialogue Préférences. Régressions couvertes
@@ -149,8 +182,9 @@ dans les tests ciblés ; l’appréciation ergonomique finale reste utilisateur.
   configuration INI/RAW dans `Release/config` et répertoires de profils prêts.
   Aucun profil propriétaire n’est embarqué depuis un autre worktree ;
   la découverte Adobe locale du moteur reste disponible.
-- Cinq tests ciblés réussis : `settingsQmlTests`, `uiPreferencesQmlTests`,
-  `colorMixerQmlTests`, `imageViewportQmlTests`, `uiPreferencesTests`.
+- Six tests ciblés réussis : `settingsQmlTests`, `uiPreferencesQmlTests`,
+  `uiPreferencesWindowsStyleTests`, `colorMixerQmlTests`, `imageViewportQmlTests`,
+  `uiPreferencesTests`.
 - Démarrage `appIPR.exe --smoke-test` réussi hors du dossier de l’application,
   sans chemins Qt/OpenCV/vcpkg dans le PATH ; aucun message d’erreur QML.
   Vérification hors écran, pas certification GPU ni machine vierge.

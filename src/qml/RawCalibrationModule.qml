@@ -13,7 +13,7 @@ ColumnLayout {
     implicitWidth: 0
     spacing: 8
 
-    CheckBox {
+    PreferenceCheckBox {
         objectName: "rawNormalizationToggle"
         text: qsTr("Calibration RAW — rendu du boîtier")
         Layout.fillWidth: true
@@ -21,15 +21,9 @@ ColumnLayout {
         checked: root.editor.rawNormalizationEnabled
         enabled: root.editor.rawImage && !root.editor.busy
         onClicked: root.editor.setRawNormalizationEnabled(checked)
-        contentItem: Text {
-            text: parent.text
-            color: root.textColor
-            wrapMode: Text.WordWrap
-            leftPadding: parent.indicator.width + parent.spacing
-            verticalAlignment: Text.AlignVCenter
-        }
+        textColor: root.textColor
     }
-    Button {
+    PreferenceButton {
         objectName: "rawNormalizationManifestButton"
         text: qsTr("Choisir le manifeste…")
         Layout.fillWidth: true

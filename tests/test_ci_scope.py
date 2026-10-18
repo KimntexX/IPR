@@ -34,6 +34,13 @@ class ScopeTests(unittest.TestCase):
         self.assertEqual(plan['tests'], ['imageExportTests', 'toneRecoveryTests'])
         self.assertNotIn('macos-15-intel', plan['matrix']['os'])
 
+    def test_preferences_components_use_their_focused_qml_tests(self):
+        for path in ('src/qml/PreferencesDialog.qml', 'src/qml/PreferenceButton.qml',
+                     'src/qml/AppearancePreferencesPane.qml', 'src/qml/RawCalibrationModule.qml'):
+            plan = self.scope([path], branch='patch_ui')
+            self.assertFalse(plan['full'])
+            self.assertEqual(plan['tests'], ['uiPreferencesQmlTests'])
+
     def test_python_only_needs_no_native_dependencies(self):
         plan = self.scope(['tests/test_investigate_wb_adaptation.py'])
         self.assertFalse(plan['native'])

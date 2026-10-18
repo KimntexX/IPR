@@ -84,6 +84,14 @@ set(IPR_QML_FILES
     src/qml/FilmstripNavigation.qml
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
+    src/qml/PreferenceButton.qml
+    src/qml/PreferenceCheckBox.qml
+    src/qml/PreferenceSpinBox.qml
+    src/qml/PreferenceComboBox.qml
+    src/qml/PreferenceScrollView.qml
+    src/qml/InterfacePreferencesPane.qml
+    src/qml/AppearancePreferencesPane.qml
+    src/qml/AdvancedRawPreferencesPane.qml
     src/qml/InterfacePaletteSelector.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
@@ -275,6 +283,12 @@ if(BUILD_TESTING)
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(uiPreferencesTests uiPreferencesQmlTests PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    if(WIN32)
+        add_test(NAME uiPreferencesWindowsStyleTests COMMAND uiPreferencesQmlTests)
+        set_tests_properties(uiPreferencesWindowsStyleTests PROPERTIES
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Windows"
+            LABELS "unit;preferences;qml")
+    endif()
     ipr_add_test(rawDecoderTests tests/raw_decoder_test.cpp)
     ipr_add_test(imageImportTests tests/image_import_test.cpp)
     set_tests_properties(imageImportTests PROPERTIES LABELS "unit;import;pipeline")
