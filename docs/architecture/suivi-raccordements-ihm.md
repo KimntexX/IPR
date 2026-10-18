@@ -67,7 +67,8 @@ Pour chaque demande, renseigner :
 
 ### Mémos explicatifs au survol prolongé
 
-- Demande du 18 octobre 2026 ; état : **à implémenter**.
+- Demande du 18 octobre 2026 ; état : **reporté à la phase bêta**, sur décision
+  utilisateur. Ne pas intégrer ces mémos pendant la phase alpha actuelle.
 - Ajouter une aide contextuelle après un survol prolongé des fonctions : rôle
   du réglage, effet des valeurs positives/négatives si pertinent, unité,
   valeur de réinitialisation et raccourcis disponibles.
@@ -80,6 +81,18 @@ Pour chaque demande, renseigner :
   Décrire le comportement réel d’IPR, sans promettre une équivalence Lightroom.
 - Évolution de présentation QML a priori ; consigner un raccordement moteur
   uniquement si l’aide nécessite une information dynamique non exposée.
+
+### Reprise prévue le 19 octobre 2026
+
+- Reprendre les améliorations et la validation visuelle de l’IHM, avec les
+  raccordements moteur encore ouverts comme points de suivi distincts.
+- Commencer la création d’un **livre utilisateur** : prise en main, parcours
+  ouverture/retouche/comparaison/export, préférences et raccourcis, avec
+  illustrations du comportement réellement disponible. Le distinguer de la
+  documentation technique et des cours Scholar ; sa structure reste à définir
+  lors de la reprise. Aucun manuel n’est généré dans cette clôture de session.
+- L’implémentation des mémos de survol reste réservée à la bêta ; la reprise
+  du manuel ne vaut pas autorisation de les développer dès maintenant.
 
 ## Journal
 
