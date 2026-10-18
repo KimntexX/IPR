@@ -951,6 +951,40 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
                  "white recovery should lower the white point without crushing blacks");
 }
 
+bool verifyHistogramValues(ImageEditor &editor, const QString &directory)
+{
+    // Known pixels: the histogram counts the displayed sRGB codes per channel,
+    // and bins luminance (linear Y of those codes) in sRGB encoding.
+    QImage input(2, 2, QImage::Format_RGBA8888);
+    input.setPixelColor(0, 0, QColor(255, 0, 0));
+    input.setPixelColor(1, 0, QColor(0, 255, 0));
+    input.setPixelColor(0, 1, QColor(0, 0, 255));
+    input.setPixelColor(1, 1, QColor(128, 128, 128));
+    input.setColorSpace(QColorSpace(QColorSpace::SRgb));
+    const QString inputPath = directory + QStringLiteral("/histogram-source.png");
+    editor.resetAdjustments();
+    if (!input.save(inputPath, "PNG") || !awaitLoad(editor, QUrl::fromLocalFile(inputPath)) ||
+        !awaitHistogram(editor))
+        return check(false, "histogram source should load");
+    const QVariantList histogram = editor.histogram();
+    const auto channel = [&](int index) { return histogram.at(index).toList(); };
+    const auto count = [&](int index, int from, int to) {
+        double total = 0;
+        const QVariantList values = channel(index);
+        for (int bin = std::max(0, from); bin <= std::min(255, to); ++bin) total += values.at(bin).toDouble();
+        return total;
+    };
+    double pixels = 0;
+    for (const QVariant &value : channel(1)) pixels += value.toDouble();
+    // Y of pure red/green/blue: 0.2126/0.7152/0.0722 -> sRGB codes 127/220/76.
+    return check(pixels == 4 &&
+                     count(1, 254, 255) == 1 && count(1, 127, 129) == 1 && count(1, 0, 1) == 2 &&
+                     count(2, 254, 255) == 1 && count(3, 254, 255) == 1 &&
+                     count(0, 76, 76) == 1 && count(0, 127, 127) == 1 &&
+                     count(0, 128, 128) == 1 && count(0, 220, 220) == 1,
+                 "histogram must count displayed sRGB codes and bin luminance in sRGB encoding");
+}
+
 bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
 {
     // Black, deep shadow, shadow, pivot (0.32 linear ~ sRGB 153), highlight,
@@ -1255,6 +1289,8 @@ int main(int argc, char **argv)
         return 1;
 
     if (!verifyContrastResponse(editor, directory.path()))
+        return 1;
+    if (!verifyHistogramValues(editor, directory.path()))
         return 1;
 
     if (!verifyEditProxyDownscaling(editor, provider, directory.path()))
