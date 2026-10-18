@@ -143,6 +143,14 @@ int main(int argc, char **argv)
                "normal settings must expose profiles and optics but no advanced calibration controls")) return 1;
     auto *optics = root->findChild<QObject *>("opticsSection");
     auto *rawSection = root->findChild<QObject *>("rawDevelopmentSection");
+    int automaticWhiteBalanceControls = 0;
+    for (QObject *child : root->findChildren<QObject *>())
+        if (child->property("checked").isValid() &&
+            child->property("text").toString() == QStringLiteral("Balance des blancs automatique"))
+            ++automaticWhiteBalanceControls;
+    if (!check(automaticWhiteBalanceControls == 1 &&
+               rawSection->findChild<QObject *>("rawAutomaticWhiteBalanceToggle"),
+               "automatic white balance must exist once, exclusively under RAW development")) return 1;
     auto *opticsItem = qobject_cast<QQuickItem *>(optics);
     auto *exportItem = root->findChild<QQuickItem *>("exportSection");
     const auto sections = opticsItem->parentItem()->childItems();

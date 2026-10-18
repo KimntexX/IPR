@@ -172,8 +172,6 @@ Item {
             sharpeningAmountSlider.value = editor.adjustmentValue("sharpeningAmount")
             sharpeningRadiusSlider.value = editor.adjustmentValue("sharpeningRadius")
             sharpeningMaskingSlider.value = editor.adjustmentValue("sharpeningMasking")
-            automaticWhiteBalanceCheck.checked =
-                    editor.adjustmentValue("automaticWhiteBalance") > 0
             blurSlider.value = editor.adjustmentValue("blur")
             colorMixerModule.reload()
             colorGradingModule.reload()
@@ -442,26 +440,6 @@ Item {
                 preferences: root.preferences
                 textColor: root.textColor
                 title: qsTr("Couleur")
-
-                CheckBox {
-                    id: automaticWhiteBalanceCheck
-                    text: qsTr("Balance des blancs automatique")
-                    Layout.fillWidth: true
-                    Layout.minimumWidth: 0
-                    checked: false
-                    enabled: editor.hasImage
-                    onToggled: editor.setAutomaticWhiteBalance(checked)
-
-                    contentItem: Text {
-                        text: automaticWhiteBalanceCheck.text
-                        font: automaticWhiteBalanceCheck.font
-                        color: root.secondaryTextColor
-                        leftPadding: automaticWhiteBalanceCheck.indicator.width +
-                                     automaticWhiteBalanceCheck.spacing
-                        verticalAlignment: Text.AlignVCenter
-                        wrapMode: Text.WordWrap
-                    }
-                }
 
                 AdjustmentControl {
                     textColor: root.textColor
