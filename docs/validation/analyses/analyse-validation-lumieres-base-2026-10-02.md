@@ -835,3 +835,39 @@ Les rendus noirs de cette campagne précèdent ce correctif : **à régénérer 
 remesurer** avant validation des noirs.
 
 **Validation visuelle de l'utilisateur demandée**, réglage par réglage.
+
+#### Validation visuelle et règle de zones redéfinie, 18 octobre 2026
+
+Retour de l'utilisateur sur IPR face à LR : blancs incorrects, HL encore trop
+douces, noirs incorrects à −100 comme à +100 ; ombres à +100 acceptables
+(légère perte de détail, compensable par les autres réglages). Cause : la règle
+des tests d'export isolait chaque réglage, alors que LR fait atteindre les tons
+moyens aux noirs et aux blancs. Règle redéfinie (voir la
+[roadmap Lumières](../../architecture/roadmap-lumieres.md)) : effet gradué, le
+plus faible à l'extrémité opposée de l'histogramme. Noirs, HL et blancs
+réajustés ; courbe échantillonnée et rendue croissante. Groupe `lumiere`
+régénéré.
+
+Mémoires : [ombres v003](../raw/mesure-lumiere-v003-20261018T165524982746Z.json),
+[noirs v003](../raw/mesure-lumiere-v003-20261018T170033102725Z.json),
+[HL v003](../raw/mesure-lumiere-v003-20261018T170543333217Z.json),
+[blancs v003](../raw/mesure-lumiere-v003-20261018T171151440516Z.json) ; 136 états
+chacune, aucun exclu. Écart |EV| moyen à LR des rendus : ombres 0,24, noirs 0,11
+(contre 0,33), HL 0,22, blancs 0,24.
+
+| Réglage | Bas 20 %, IPR / LR | Tons moyens, IPR / LR | Haut 20 %, IPR / LR | Canal saturé max, IPR / LR |
+| --- | --- | --- | --- | --- |
+| Noirs −100 | 0,000 / 0,000 | 0,137 / 0,107 | 0,824 / 0,759 | 0,00 % / 0,05 % |
+| Noirs −25 | 0,504 / 0,481 | 0,784 / 0,853 | 0,967 / 0,982 | 0,09 % / 0,04 % |
+| Noirs +100 | 2,598 / 2,293 | 1,885 / 1,866 | 1,090 / 1,138 | 0,36 % / 0,08 % |
+| HL −100 | 0,925 / 0,883 | 0,844 / 0,782 | 0,720 / 0,626 | 0,27 % / 0,01 % |
+| HL +100 | 1,046 / 1,135 | 1,103 / 1,194 | 1,203 / 1,563 | 4,18 % / 36,68 % |
+| Blancs −100 | 0,970 / 0,981 | 0,897 / 0,931 | 0,827 / 0,856 | 0,00 % / 0,02 % |
+| Blancs +100 | 1,179 / 2,101 | 1,239 / 4,210 | 1,333 / 2,174 | 12,26 % / 7,24 % |
+
+Les noirs suivent désormais LR des deux côtés. HL et blancs négatifs sont
+proches de LR. HL et blancs positifs restent nettement plus doux : LR y place
+son point blanc selon le contenu de l'image (q75 de 6V1A0043 remonté de plus de
+4 EV, 45 % de 6V1A0007 écrêtés), ce qu'aucune courbe fixe ne reproduit sans
+sur-remonter les tons profonds. **Décision de l'utilisateur attendue** : plan B
+(point blanc adaptatif) pour HL et blancs positifs.

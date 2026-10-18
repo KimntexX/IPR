@@ -11,7 +11,7 @@ protocole : [protocole Lumières](../validation/protocols/protocole-lumieres.md)
 | --- | --- | --- |
 | Exposition | Avant le DCP, sur le signal caméra ; conforme à LR à ±0,03 EV | Validé visuellement, 18 octobre |
 | Contraste | S à extrémités fixes, domaine log, par canal | Validé, réserve à +100 (≈ 3 % plus fort que LR) |
-| Ombres, noirs, HL, blancs | Plan A : plages fixes recalées sur LR | Campagnes du 18 octobre ; validation visuelle à faire, noirs à régénérer |
+| Ombres, noirs, HL, blancs | Plan A, zones graduées (règle redéfinie le 18 octobre) | Ombres acceptées ; noirs, HL, blancs à revalider |
 
 Comparaisons IPR/LR à réglages égaux : calibration RAW de l'IHM, optique
 coupée des deux côtés. Corpus : six scènes sombres du protocole, plus deux
@@ -41,25 +41,36 @@ encodé (repère communiqué par l'utilisateur ; valeurs approximatives) :
 noirs 0–10 % (< −6,6 EV), ombres 10–33 % (−6,6 à −3,5 EV), exposition
 33–66 %, HL 66–90 % (−1,35 à −0,34 EV), blancs 90–100 % (> −0,34 EV).
 
-Ajustement retenu (18 octobre 2026, huit scènes) : les règles de séparation
-des tests d'export (un réglage ne déplace pas de plus de 2 niveaux sRGB les
-gris de l'autre extrémité ni les tons moyens) sont des contraintes de
-l'ajustement, pas des tests à assouplir. Les tons bas s'effacent sur les 2 EV
-sous le blanc, les HL sur le dernier EV, laissé aux blancs. En éclaircissement,
-le canal sRGB le plus fort passe par la même épaule douce que la luminance :
-un plafond dur figeait les couleurs saturées à 1 (écrêtage blancs +25 :
-30 % contre 2,4 % pour LR). Écart |EV| moyen aux quantiles, huit scènes :
+Règle de zones redéfinie (18 octobre 2026, après validation visuelle de
+l'utilisateur). L'ancienne règle de `verifyBlackShadowSeparation` et
+`verifyHighlightWhiteSeparation` isolait chaque réglage : noirs +100 ne devait
+pas déplacer de plus de 2 niveaux sRGB les gris moyens (110) ni clairs (220),
+blancs et HL pas plus de 2 niveaux le gris sombre (35). Les captures de
+l'utilisateur montrent l'inverse dans LR : noirs et blancs atteignent les tons
+moyens. **Nouvelle règle : un réglage peut agir sur toute la plage tonale,
+mais son effet, en EV de lumière linéaire, est le plus faible à l'extrémité
+opposée de l'histogramme** (marge 0,03 EV ; les tons voisins du blanc, limités
+par la marge, sont exclus de la comparaison). Forces minimales et ordre des
+tons inchangés. Les bornes de centres sont élargies (noirs < −2 EV, HL −4 à
+−0,34 EV, blancs > −3 EV) ; les ombres, jugées correctes, gardent leur ajustement.
+
+Autres éléments : orteil doux des noirs négatifs (y² / (y + orteil)) avant un
+point noir tardif ; tons bas effacés sur les 2 EV sous le blanc, HL sur le
+dernier EV ; épaule douce du canal sRGB le plus fort en éclaircissement ; courbe
+échantillonnée par rendu et rendue croissante (combinaisons sans inversion).
+Écart |EV| moyen prévu aux quantiles, huit scènes :
 
 | Réglage | Écart | Limite connue |
 | --- | --- | --- |
-| Ombres | 0,25 EV | +100 : tons très profonds (q5) moins remontés que LR (−0,9 EV) |
-| Noirs | 0,31 EV | +100 : q25 moins remonté (−0,7 EV) ; LR déplace les tons moyens. Négatif : orteil doux puis point noir tardif |
-| HL | 0,24 EV | +100 : écrêtage 8,6 % contre 37 % pour LR (scène claire) |
-| Blancs | 0,38 EV | +100 : tons moyens moins éclaircis (jusqu'à −1,9 EV) |
+| Ombres | 0,25 EV | +100 : légère perte de détail (validation visuelle), compensable |
+| Noirs | 0,12 EV | proche de LR des deux côtés |
+| HL | 0,20 EV | +100 : écrêtage 9 % contre 37 % pour LR (scène claire) |
+| Blancs | 0,26 EV | +100 : tons moyens moins éclaircis que LR (jusqu'à −1,7 EV) |
 
-Ces écarts restants viennent surtout de l'adaptation de LR aux scènes sombres
-(blancs +100 y éclaircit les tons moyens d'un facteur 5,7), interdite par les
-plages fixes : c'est le périmètre du plan B. Validation visuelle à suivre.
+Blancs positifs : aucune courbe fixe ne reproduit LR. Sur 6V1A0043, LR remonte
+le quantile q75 de plus de 4 EV ; sur 6V1A0007, il écrête 45 % de l'image. Un
+point blanc fixe assez fort sur-remonte les tons profonds (+1,5 à +2 EV) :
+LR place son point blanc selon le contenu de l'image, ce qui relève du plan B.
 
 ## Plan B — plages adaptatives (évolution tracée, non engagée)
 
