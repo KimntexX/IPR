@@ -14,8 +14,8 @@
 // from the image's luminance statistics, bounded to the range seen in fitting.
 // Blacks and negative Whites are the same on every image.
 // Shadows and Highlights act on luminance (common RGB scale); Blacks and Whites
-// act on each channel, as Lightroom does: its Blacks -100 saturates colours
-// (x1.40), which a common scale cannot reproduce. Values at or above 1 (HDR
+// act on each linear sRGB channel, as Lightroom does: its Blacks -100
+// saturates colours (x1.40), which a common scale cannot reproduce. Values at or above 1 (HDR
 // headroom) are left untouched.
 namespace ToneRecovery {
 struct Amounts { float shadows = 0, blacks = 0, highlights = 0, whites = 0; };

@@ -1664,7 +1664,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     // scale RGB by a luminance ratio; in a brightening, the largest sRGB
     // delivery channel goes through a soft shoulder, as Y < 1 and Rec.2020
     // RGB < 1 do not imply headroom for a saturated colour in sRGB. Blacks and
-    // Whites then act on each channel, as in Lightroom.
+    // Whites then act on each linear sRGB channel, as in Lightroom.
     const ToneRecovery::Amounts tones{static_cast<float>(settings.shadows) / 100.0f,
         static_cast<float>(settings.blacks) / 100.0f,
         static_cast<float>(settings.highlights) / 100.0f,
@@ -1690,8 +1690,14 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                     }
                     applyLuminance(pixel, luminance, target, target > luminance);
                 }
-                if (!toneCurve.channelIdentity())
-                    for (int c = 0; c < 3; ++c) pixel[c] = toneCurve.channel(pixel[c]);
+                if (!toneCurve.channelIdentity()) {
+                    // Per channel in linear sRGB, where Lightroom's curves were
+                    // measured: in the wider Rec.2020, Blacks -100 oversaturated
+                    // colours (0.99 vs 0.92 on 6V1A0037).
+                    cv::Vec3d srgb = WorkingColor::toSrgb() * cv::Vec3d(pixel);
+                    for (int c = 0; c < 3; ++c) srgb[c] = toneCurve.channel(float(srgb[c]));
+                    pixel = cv::Vec3f(WorkingColor::fromSrgb() * srgb);
+                }
             }
         }
     }
