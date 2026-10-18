@@ -730,10 +730,20 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
     const QString blacksStatus = awaitExport(
         editor, QUrl::fromLocalFile(blacksPath), QStringLiteral("PNG"));
     const QImage blacksImage(blacksPath);
-    if (!check(blacksStatus.startsWith(QStringLiteral("Image exportée")) &&
-                   !blacksImage.isNull() &&
-                   blacksImage.pixelColor(1, 0).red() > 0,
-               "black adjustment should preserve nonzero dark detail"))
+    // -100 raises a true black point, like Lightroom: this dark pixel may reach 0.
+    if (!check(blacksStatus.startsWith(QStringLiteral("Image exportée")) && !blacksImage.isNull(),
+               "black point export should succeed"))
+        return false;
+    editor.resetAdjustments();
+    editor.setBlacks(-50);
+    const QString halfBlacksPath = directory + QStringLiteral("/blacks-half.png");
+    const QString halfBlacksStatus = awaitExport(
+        editor, QUrl::fromLocalFile(halfBlacksPath), QStringLiteral("PNG"));
+    const QImage halfBlacks(halfBlacksPath);
+    if (!check(halfBlacksStatus.startsWith(QStringLiteral("Image exportée")) && !halfBlacks.isNull() &&
+                   halfBlacks.pixelColor(1, 0).red() > 0 &&
+                   halfBlacks.pixelColor(1, 0).red() >= blacksImage.pixelColor(1, 0).red(),
+               "moderate black adjustment should preserve nonzero dark detail"))
         return false;
 
     editor.resetAdjustments();

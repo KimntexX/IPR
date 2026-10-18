@@ -1629,123 +1629,33 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         return {};
     }
 
-    const float shadowAdjustment =
-        static_cast<float>(settings.shadows) / 100.0f;
-    const float blackAdjustment =
-        static_cast<float>(settings.blacks) / 100.0f;
-    const float highlightAdjustment =
-        static_cast<float>(settings.highlights) / 100.0f;
-    const float whiteAdjustment =
-        static_cast<float>(settings.whites) / 100.0f;
-    if (settings.shadows != 0 || settings.blacks != 0 ||
-        settings.highlights != 0 || settings.whites != 0) {
-    for (int y = 0; y < adjusted.rows; ++y) {
-        for (int x = 0; x < adjusted.cols; ++x) {
-            cv::Vec3f &pixel = adjusted.at<cv::Vec3f>(y, x);
-            const float luminance = luminanceOf(pixel);
-            const float shadowsMask =
-                1.0f - smoothStep(0.10f, 0.56f, luminance);
-            // Blacks is deliberately confined to the toe.  Shadows covers a
-            // wider range, but both masks are evaluated from the source
-            // luminance so an adjustment cannot extend its own range.
-            const float blacksMask =
-                1.0f - smoothStep(0.00f, 0.18f, luminance);
-            // The former upper-tone masks began so late that almost no
-            // photographic tone activated them.  Highlights now covers the
-            // upper midtones; Whites remains distinct, but starts at the
-            // luminous end of the same range using the brightest channel.
-            const float highlightsMask =
-                smoothStep(0.08f, 0.70f, luminance);
-            // The positive branches are deliberately broader than recovery:
-            // pushing a slider to +100 must visibly open bright midtones,
-            // whereas the -100 branches stay confined to the v2 recovery
-            // masks that were validated against the reference corpus.
-            const float highlightLiftMask =
-                smoothStep(0.02f, 0.50f, luminance);
-            const float maximumChannel =
-                std::max({pixel[0], pixel[1], pixel[2], 0.0f});
-            // The lift guard is defined against the fixed sRGB delivery gamut,
-            // not the larger working cube: Y<1 and Rec.2020 RGB<1 do not imply
-            // that a saturated colour still has headroom in the sRGB export.
-            // This scalar guard does not clip or convert the master buffer.
-            float deliveryPeak = maximumChannel;
-            if (shadowAdjustment > 0.f || highlightAdjustment > 0.f) {
-                const cv::Vec3d delivery = WorkingColor::toSrgb() * cv::Vec3d(pixel);
-                deliveryPeak = float(std::max({delivery[0], delivery[1], delivery[2], 0.0}));
+    // Shadows, Blacks, Highlights and Whites: one luminance tone curve
+    // (ToneRecovery::target), applied as a common RGB scale. In a brightening,
+    // the largest sRGB delivery channel goes through the same soft shoulder:
+    // Y < 1 and Rec.2020 RGB < 1 do not imply headroom for a saturated colour
+    // in sRGB, and a hard cap would pin such colours at 1.
+    const ToneRecovery::Amounts tones{static_cast<float>(settings.shadows) / 100.0f,
+        static_cast<float>(settings.blacks) / 100.0f,
+        static_cast<float>(settings.highlights) / 100.0f,
+        static_cast<float>(settings.whites) / 100.0f};
+    if (!ToneRecovery::identity(tones)) {
+        for (int y = 0; y < adjusted.rows; ++y) {
+            cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
+            for (int x = 0; x < adjusted.cols; ++x) {
+                cv::Vec3f &pixel = row[x];
+                const float luminance = luminanceOf(pixel);
+                float target = ToneRecovery::target(luminance, tones);
+                if (target > luminance && luminance > 0.0f) {
+                    const cv::Vec3d delivery = WorkingColor::toSrgb() * cv::Vec3d(pixel);
+                    const float peak = float(std::max({delivery[0], delivery[1], delivery[2], 0.0}));
+                    if (peak >= 1.0f) target = luminance;
+                    else if (peak > 0.0f)
+                        target = std::min(target, luminance *
+                            ToneRecovery::shoulder(peak, peak * target / luminance) / peak);
+                }
+                applyLuminance(pixel, luminance, target, target > luminance);
             }
-            const float whitesMask =
-                smoothStep(0.10f, 0.65f, maximumChannel);
-            const float whiteLiftMask =
-                smoothStep(0.02f, 0.50f, maximumChannel);
-
-            const float blackLift =
-                std::max(0.0f, blackAdjustment) * blacksMask;
-            const float blackDarkening =
-                std::max(0.0f, -blackAdjustment) * blacksMask;
-            // The darkening branch is deliberately more concentrated than
-            // the lifting branch.  A uniform multiplier would crush the
-            // low and middle ranges together at -100.
-            constexpr float shadowDarkeningRange = 0.45f;
-            constexpr float shadowDarkeningAmplitude = 0.57f;
-            const float shadowDarkeningShape = 1.0f - std::sqrt(
-                std::clamp(luminance / shadowDarkeningRange, 0.0f, 1.0f));
-            const float shadowDarkening = shadowDarkeningAmplitude *
-                std::max(0.0f, -shadowAdjustment) * shadowsMask *
-                shadowDarkeningShape;
-            const float highlightDarkening =
-                std::max(0.0f, -highlightAdjustment) * highlightsMask;
-            const float whiteLift =
-                std::max(0.0f, whiteAdjustment) * whiteLiftMask;
-            const float whiteDarkening =
-                std::max(0.0f, -whiteAdjustment) * whitesMask;
-
-            float targetLuminance = luminance;
-
-            // Blacks moves only the foot of the curve.  Its positive branch
-            // is zero at the exact black point and at the end of the toe,
-            // while its negative branch can establish a deeper black point.
-            // This avoids treating "Blacks" as a generic shadow lift.
-            constexpr float blackToeEnd = 0.14f;
-            constexpr float blackLiftAmplitude = 0.08f;
-            const float toePosition = std::clamp(
-                luminance / blackToeEnd, 0.0f, 1.0f);
-            const float blackToeShape = std::sqrt(toePosition) *
-                (1.0f - toePosition);
-            targetLuminance +=
-                blackLiftAmplitude * blackLift * blackToeShape;
-
-            // Bounded gain replaces an additive pedestal with unbounded gain
-            // and reversed deepest-tone ordering. Absolute black is unchanged.
-            targetLuminance += ToneRecovery::positiveShadowDelta(
-                luminance, deliveryPeak, shadowAdjustment);
-
-            // When both sliders darken, retain the strongest local intent
-            // rather than multiplying two near-black reductions together.
-            // This keeps usable shadow detail while the controls remain
-            // semantically independent.
-            const float darkening = std::max(
-                blackDarkening, shadowDarkening);
-            targetLuminance *= 1.0f - darkening;
-
-            // Highlights shapes the upper midtones.  Whites has its own
-            // point-white curve; applying it after Highlights lets either
-            // control stand alone while still composing predictably when
-            // both are used.
-            constexpr float highlightDarkeningAmplitude = 0.52f;
-            constexpr float whiteLiftAmplitude = 0.95f;
-            constexpr float whiteDarkeningAmplitude = 0.22f;
-            targetLuminance += ToneRecovery::positiveHighlightDelta(
-                luminance, targetLuminance, deliveryPeak,
-                highlightAdjustment, highlightLiftMask);
-            targetLuminance *=
-                1.0f - highlightDarkeningAmplitude * highlightDarkening;
-            targetLuminance += (1.0f - std::min(targetLuminance, 1.0f)) *
-                whiteLiftAmplitude * whiteLift;
-            targetLuminance *=
-                1.0f - whiteDarkeningAmplitude * whiteDarkening;
-            applyLuminance(pixel, luminance, targetLuminance, settings.shadows > 0);
         }
-    }
     }
 
     const float saturationFactor =

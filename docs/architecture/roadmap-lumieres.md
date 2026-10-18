@@ -33,6 +33,34 @@ références LR, par paires qui se recouvrent :
 Avantage : comportement prévisible et identique d'une photo à l'autre.
 Limite : la parité avec LR variera selon le contenu de l'image.
 
+Bornes de zones (18 octobre 2026) : sans contrainte, le premier ajustement
+sur six scènes sombres a placé les noirs au gris moyen (−2,6 EV), en apprenant
+l'adaptation de LR à ces images. Le centre de chaque réglage est désormais
+contraint à la zone correspondante de l'histogramme de LR, découpé sur son axe
+encodé (repère communiqué par l'utilisateur ; valeurs approximatives) :
+noirs 0–10 % (< −6,6 EV), ombres 10–33 % (−6,6 à −3,5 EV), exposition
+33–66 %, HL 66–90 % (−1,35 à −0,34 EV), blancs 90–100 % (> −0,34 EV).
+
+Ajustement retenu (18 octobre 2026, huit scènes) : les règles de séparation
+des tests d'export (un réglage ne déplace pas de plus de 2 niveaux sRGB les
+gris de l'autre extrémité ni les tons moyens) sont des contraintes de
+l'ajustement, pas des tests à assouplir. Les tons bas s'effacent sur les 2 EV
+sous le blanc, les HL sur le dernier EV, laissé aux blancs. En éclaircissement,
+le canal sRGB le plus fort passe par la même épaule douce que la luminance :
+un plafond dur figeait les couleurs saturées à 1 (écrêtage blancs +25 :
+30 % contre 2,4 % pour LR). Écart |EV| moyen aux quantiles, huit scènes :
+
+| Réglage | Écart | Limite connue |
+| --- | --- | --- |
+| Ombres | 0,25 EV | +100 : tons très profonds (q5) moins remontés que LR (−0,9 EV) |
+| Noirs | 0,34 EV | +100 : q25 moins remonté (−0,6 EV) ; LR déplace les tons moyens |
+| HL | 0,24 EV | +100 : écrêtage 8,6 % contre 37 % pour LR (scène claire) |
+| Blancs | 0,38 EV | +100 : tons moyens moins éclaircis (jusqu'à −1,9 EV) |
+
+Ces écarts restants viennent surtout de l'adaptation de LR aux scènes sombres
+(blancs +100 y éclaircit les tons moyens d'un facteur 5,7), interdite par les
+plages fixes : c'est le périmètre du plan B. Validation visuelle à suivre.
+
 ## Plan B — plages adaptatives (évolution tracée, non engagée)
 
 Lightroom calcule ses plages à partir de l'histogramme de chaque image. Dans
@@ -60,3 +88,21 @@ Conditions avant de l'engager :
 - Contraste : réserve à +100 ; noirs profonds plus remontés que LR à −100
   (×4,53 contre ×2,86 sur les 20 % bas), à revoir avec ombres et noirs.
 - Transition visuelle entre l'aperçu du boîtier et le rendu IPR (contrôle mémoire).
+- IHM : surligner sur l'histogramme la zone d'un réglage Lumières au survol de
+  son curseur, comme LR (noirs, ombres, exposition, HL, blancs).
+
+## Production des références Lightroom — pistes d'automatisation
+
+Les exports LR manuels (jusqu'à 64 par paire de scènes) sont le goulot des
+campagnes. Deux pistes sont retenues par l'utilisateur, pour plus tard :
+
+1. **Fichiers XMP préparés** (test à prévoir) : copies du RAW, chacune avec un
+   `.xmp` dérivé du neutre où seul le réglage testé change. Ouverture du dossier
+   dans Lightroom (onglet Local, qui lit et écrit ces fichiers annexes), puis un
+   seul export TIFF 16 bits sRGB avec métadonnées. Premier essai sur deux images
+   pour vérifier que Lightroom relit bien les `.xmp` préparés.
+2. **Camera Raw scripté dans Photoshop**, avec la version d'essai disponible,
+   pour les validations des autres fonctionnalités. Vérifier d'abord l'égalité
+   avec les exports LR sur quelques neutres. L'API cloud Lightroom
+   (Firefly Services) est écartée : offre entreprise, sortie TIFF 16 bits non
+   documentée, RAW envoyés en ligne.
