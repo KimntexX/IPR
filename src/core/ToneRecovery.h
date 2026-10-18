@@ -1,35 +1,23 @@
 #ifndef IPR_TONE_RECOVERY_H
 #define IPR_TONE_RECOVERY_H
+#include "ToneRecoveryModel.h"
+#include "ToneStatistics.h"
 #include <algorithm>
 #include <array>
 #include <cmath>
 
-// Shadows, Blacks, Highlights and Whites as one tone curve of luminance.
-// Each control shifts tones by an EV amount weighted by a logistic zone of
-// log2(Y): low end for Shadows/Blacks, high end for Highlights/Whites. As in
-// Lightroom, a control may reach the whole tonal range, graded: strongest at
-// its own end, weakest at the opposite end (rule of 18 October 2026). Low-end zones
-// fade out over the last 2 EV below white and Highlights over the last EV,
-// which belongs to Whites. Blacks negative first darkens near-black detail
-// through a soft toe y^2 / (y + toe), then raises a black point that grows
-// late (true blacks at -100, as in Lightroom); Whites positive lowers the
-// white point. Any brightened tone above the knee gets a soft shoulder, so no
-// output reaches 1 from below; the editor passes the largest delivery channel
-// through the same shoulder, so saturated colours roll off instead of being
-// pinned at 1. Plan A parameters (fixed ranges), fitted on eight scenes against
-// Lightroom under that graded rule (18 October 2026).
-// The curve depends on Y only and its slope stays positive, so tone order is
-// never reversed.
+// Shadows, Blacks, Highlights and Whites (plan B, 18 October 2026). Each control
+// lifts or lowers tones by an EV amount read from Lightroom's own transfer
+// curves (ToneRecoveryModel.h: knots every EV of log2 input, four slider
+// levels, linear in between). Lightroom adapts Shadows, Highlights and positive
+// Whites to the image: their lift is multiplied by a per-image gain predicted
+// from the image's luminance statistics, bounded to the range seen in fitting.
+// Blacks and negative Whites are the same on every image.
+// Shadows and Highlights act on luminance (common RGB scale); Blacks and Whites
+// act on each channel, as Lightroom does: its Blacks -100 saturates colours
+// (x1.40), which a common scale cannot reproduce. Values at or above 1 (HDR
+// headroom) are left untouched.
 namespace ToneRecovery {
-struct Zone { float centreEv, width, positive, negative; bool lowEnd; float fadeEv; };
-inline constexpr Zone Shadows{-4.155f, 0.700f, 1.507f, 1.855f, true, 2.0f};
-inline constexpr Zone Blacks{-2.888f, 1.013f, 1.390f, 2.054f, true, 2.0f};
-inline constexpr Zone Highlights{-1.285f, 2.958f, 0.664f, 1.154f, false, 1.0f};
-inline constexpr Zone Whites{-0.207f, 2.925f, 0.813f, 0.649f, false, 0.0f};
-inline constexpr float BlackToe = 0.00401f, BlackPoint = 0.0365f, BlackPointExponent = 6.17f;
-inline constexpr float WhitePoint = 0.1186f, WhitePointExponent = 2.287f;
-inline constexpr float ShoulderKnee = 0.70f, FloorEv = -16.0f;
-
 struct Amounts { float shadows = 0, blacks = 0, highlights = 0, whites = 0; };
 
 inline bool identity(const Amounts &a)
@@ -37,99 +25,121 @@ inline bool identity(const Amounts &a)
     return a.shadows == 0 && a.blacks == 0 && a.highlights == 0 && a.whites == 0;
 }
 
-// Zone weight and its derivative with respect to x = log2(Y): a logistic
-// window times a linear fade to zero at white over the zone's last fadeEv.
-inline void weight(const Zone &zone, float x, float &w, float &slope)
+// Per-image gains, indexed like Model::Controls.
+struct Gains { std::array<float, 8> value{1, 1, 1, 1, 1, 1, 1, 1}; };
+
+inline Statistics typicalStatistics()
 {
-    const float z = (x - zone.centreEv) / zone.width;
-    const float e = std::exp(zone.lowEnd ? z : -z);
-    const float logistic = 1.0f / (1.0f + e);
-    const float dLogistic = (zone.lowEnd ? -1.0f : 1.0f) * logistic * (1.0f - logistic) / zone.width;
-    float fade = 1.0f, dFade = 0.0f;
-    if (zone.fadeEv > 0.0f && x > -zone.fadeEv) {
-        fade = std::max(0.0f, -x / zone.fadeEv);
-        dFade = x < 0.0f ? -1.0f / zone.fadeEv : 0.0f;
+    Statistics s;
+    for (int i = 0; i < Model::StatisticCount; ++i) s.log2Luminance[size_t(i)] = Model::TypicalStatistics[i];
+    return s;
+}
+
+inline Gains gains(const Statistics &statistics)
+{
+    Gains g;
+    for (int i = 0; i < 8; ++i) {
+        const auto &c = Model::Controls[i];
+        if (c.gainStatisticCount == 0) continue;
+        float logGain = c.gainCoefficients[0];
+        for (int k = 0; k < c.gainStatisticCount; ++k)
+            logGain += c.gainCoefficients[k + 1] * statistics.log2Luminance[size_t(c.gainStatistics[k])];
+        g.value[size_t(i)] = std::exp(std::clamp(logGain, c.logGainMin, c.logGainMax));
     }
-    w = logistic * fade;
-    slope = dLogistic * fade + logistic * dFade;
+    return g;
 }
 
-inline float zoneShift(const Zone &zone, float amount, float x, float &slope)
+// EV lift of one control (0 Shadows, 1 Blacks, 2 Highlights, 3 Whites) at
+// x = log2(input) for a slider amount in [-1, 1].
+inline float lift(int control, float amount, float x, const Gains &gains)
 {
-    float w = 0, dw = 0;
-    weight(zone, x, w, dw);
-    const float strength = (amount > 0 ? zone.positive : zone.negative) * amount;
-    slope += strength * dw;
-    return strength * w;
+    if (amount == 0.0f) return 0.0f;
+    const int index = 2 * control + (amount > 0.0f ? 1 : 0);
+    const auto &c = Model::Controls[index];
+    const float knot = std::clamp(x - Model::FirstKnotEv, 0.0f, float(Model::KnotCount - 1));
+    const int k = std::min(int(knot), Model::KnotCount - 2);
+    const float t = knot - float(k);
+    const auto at = [&](int level) {
+        return c.lift[level][k] + (c.lift[level][k + 1] - c.lift[level][k]) * t;
+    };
+    const float level = std::min(std::abs(amount), 1.0f);
+    float value;
+    if (level <= Model::Levels[0]) value = at(0) * level / Model::Levels[0];
+    else {
+        int l = 0;
+        while (l < 2 && level > Model::Levels[l + 1]) ++l;
+        const float u = (level - Model::Levels[l]) / (Model::Levels[l + 1] - Model::Levels[l]);
+        value = at(l) + (at(l + 1) - at(l)) * u;
+    }
+    return value * gains.value[size_t(index)];
 }
 
-// Soft shoulder of a brightening from y (< 1) to out: tones above the knee
-// approach 1 without reaching it; untouched or darkened tones pass through.
-inline float shoulder(float y, float out)
+// Analytic transfer of the luminance controls (Shadows, Highlights) or the
+// channel controls (Blacks, Whites), before monotone sampling.
+inline float transfer(float y, const Amounts &a, const Gains &g, bool perChannel)
 {
-    if (out <= y || out <= ShoulderKnee) return out;
-    const float base = std::max(y, ShoulderKnee);
+    if (y <= 0.0f || y >= 1.0f) return y;
+    const float x = std::log2(std::max(y, std::exp2(Model::FirstKnotEv)));
+    const float shift = perChannel ? lift(1, a.blacks, x, g) + lift(3, a.whites, x, g)
+                                   : lift(0, a.shadows, x, g) + lift(2, a.highlights, x, g);
+    return std::min(1.0f, y * std::exp2(shift));
+}
+
+// Soft shoulder of a brightening from y (< 1) to out: used on the largest
+// sRGB delivery channel, so luminance lifts roll saturated colours off below 1.
+inline float shoulder(float y, float out, float knee = 0.70f)
+{
+    if (out <= y || out <= knee) return out;
+    const float base = std::max(y, knee);
     return base + (1.0f - base) * std::tanh((out - base) / (1.0f - base));
 }
 
-// Target luminance for a source luminance y (linear working space).
-// Values at or above 1 (existing HDR headroom) are left untouched.
-inline float target(float y, const Amounts &a)
-{
-    if (y <= 0.0f || y >= 1.0f || identity(a)) return y;
-    const float x = std::log2(std::max(y, std::exp2(FloorEv)));
-    float slope = 0.0f;
-    float shift = 0.0f;
-    if (a.shadows != 0) shift += zoneShift(Shadows, a.shadows, x, slope);
-    if (a.blacks != 0) shift += zoneShift(Blacks, a.blacks, x, slope);
-    if (a.highlights != 0) shift += zoneShift(Highlights, a.highlights, x, slope);
-    if (a.whites != 0) shift += zoneShift(Whites, a.whites, x, slope);
-    // Combined controls: keep the curve increasing (d x'/dx >= 0.1).
-    if (1.0f + slope < 0.1f) shift *= 0.9f / -slope;
-    float out = y * std::exp2(shift);
-    if (a.blacks < 0) {
-        out = out * out / (out + BlackToe * -a.blacks);
-        const float b = BlackPoint * std::pow(-a.blacks, BlackPointExponent);
-        out = std::max(0.0f, (out - b) / (1.0f - b));
-    }
-    if (a.whites > 0)
-        out /= std::max(0.05f, 1.0f - WhitePoint * std::pow(a.whites, WhitePointExponent));
-    return shoulder(y, out);
-}
-
-// Production form of target(): sampled once per render over the 16 EV below
-// white and made non-decreasing by a running maximum, so strong combined
-// controls can never reverse tone order (the slope guard of target() is only
-// local); linear interpolation in log2(Y) between samples.
+// Production curves, sampled once per render over the 16 EV below white and
+// made non-decreasing by a running maximum (no tone reversal, whatever the
+// combination); linear interpolation in log2 between samples.
 class Curve {
 public:
-    explicit Curve(const Amounts &amounts) : amounts_(amounts), identity_(identity(amounts))
+    Curve(const Amounts &amounts, const Gains &gains)
+        : amounts_(amounts), gains_(gains),
+          luminanceIdentity_(amounts.shadows == 0 && amounts.highlights == 0),
+          channelIdentity_(amounts.blacks == 0 && amounts.whites == 0)
     {
-        if (identity_) return;
-        float previous = 0.0f;
-        for (int i = 0; i <= Samples; ++i) {
-            // The last sample sits just below white: 1 itself is headroom, left untouched.
-            const float y = i == Samples ? std::nextafter(1.0f, 0.0f)
-                                         : std::exp2(FloorEv * (1.0f - float(i) / Samples));
-            previous = std::max(previous, target(y, amounts_));
-            out_[i] = previous;
-        }
+        sample(luminance_, false);
+        sample(channel_, true);
     }
-    float operator()(float y) const
-    {
-        if (identity_ || y <= 0.0f || y >= 1.0f) return y;
-        const float position = (std::log2(y) - FloorEv) / -FloorEv * Samples;
-        if (position <= 0.0f) return std::min(target(y, amounts_), out_[0]);
-        const int i = std::min(int(position), Samples - 1);
-        const float f = position - float(i);
-        return out_[i] + (out_[i + 1] - out_[i]) * f;
-    }
+    bool luminanceIdentity() const { return luminanceIdentity_; }
+    bool channelIdentity() const { return channelIdentity_; }
+    float luminance(float y) const { return luminanceIdentity_ ? y : read(luminance_, y, false); }
+    float channel(float v) const { return channelIdentity_ ? v : read(channel_, v, true); }
 
 private:
     static constexpr int Samples = 4096;
+    static constexpr float SpanEv = 16.0f;
+    using Table = std::array<float, Samples + 1>;
+    void sample(Table &table, bool perChannel) const
+    {
+        float previous = 0.0f;
+        for (int i = 0; i <= Samples; ++i) {
+            // The last sample sits just below white: 1 itself is headroom.
+            const float y = i == Samples ? std::nextafter(1.0f, 0.0f)
+                                         : std::exp2(-SpanEv * (1.0f - float(i) / Samples));
+            previous = std::max(previous, transfer(y, amounts_, gains_, perChannel));
+            table[size_t(i)] = previous;
+        }
+    }
+    float read(const Table &table, float y, bool perChannel) const
+    {
+        if (y <= 0.0f || y >= 1.0f) return y;
+        const float position = (std::log2(y) + SpanEv) / SpanEv * Samples;
+        if (position <= 0.0f) return std::min(transfer(y, amounts_, gains_, perChannel), table[0]);
+        const int i = std::min(int(position), Samples - 1);
+        const float f = position - float(i);
+        return table[size_t(i)] + (table[size_t(i) + 1] - table[size_t(i)]) * f;
+    }
     Amounts amounts_;
-    bool identity_;
-    std::array<float, Samples + 1> out_{};
+    Gains gains_;
+    bool luminanceIdentity_, channelIdentity_;
+    Table luminance_{}, channel_{};
 };
 }
 #endif

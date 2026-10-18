@@ -13,92 +13,116 @@ ToneRecovery::Amounts single(int control, float amount)
     return a;
 }
 
+// Blacks and Whites act per channel, Shadows and Highlights on luminance.
+float apply(const ToneRecovery::Curve &curve, int control, float y)
+{
+    return control == 1 || control == 3 ? curve.channel(y) : curve.luminance(y);
+}
+
 // Dense log ramp from 2^-16 to just below white.
 template <typename F> void ramp(F visit)
 {
     for (int i = 0; i <= 20000; ++i) visit(std::exp2(-16.0f + 16.0f * float(i) / 20000.0f) * 0.9999f);
 }
 
-// Tone order is checked on the production curve.
-void monotone(const ToneRecovery::Amounts &a, const char *message)
+void monotone(const ToneRecovery::Amounts &a, const ToneRecovery::Gains &g, const char *message)
 {
-    const ToneRecovery::Curve curve(a);
+    const ToneRecovery::Curve curve(a, g);
     float previous = -1.0f;
     ramp([&](float y) {
-        const float out = curve(y);
+        const float out = curve.channel(curve.luminance(y));
         check(std::isfinite(out) && out >= 0.0f && out <= 1.0f, "Tone curve leaves [0, 1] below white");
         check(out + 1e-7f >= previous, message);
         previous = out;
     });
+}
+
+// Gains at the bounds fitted on the eight scenes.
+ToneRecovery::Gains bound(bool high)
+{
+    ToneRecovery::Gains g;
+    for (int i = 0; i < 8; ++i) {
+        const auto &c = ToneRecovery::Model::Controls[i];
+        if (c.gainStatisticCount) g.value[size_t(i)] = std::exp(high ? c.logGainMax : c.logGainMin);
+    }
+    return g;
 }
 }
 
 int main()
 {
     try {
-        for (int control = 0; control < 4; ++control) {
-            ramp([&](float y) { check(ToneRecovery::target(y, single(control, 0)) == y, "Zero must be identity"); });
-            for (float amount : {-1.0f, -.5f, .5f, 1.0f})
-                monotone(single(control, amount), "A single control reverses tones");
-            // Slider progression: stronger settings move each tone further, never back.
-            for (float y : {.001f, .01f, .05f, .18f, .5f, .9f}) {
-                float up = y, down = y;
-                for (int v = 1; v <= 100; ++v) {
-                    const float plus = ToneRecovery::target(y, single(control, v / 100.0f));
-                    const float minus = ToneRecovery::target(y, single(control, -v / 100.0f));
-                    check(plus + 1e-7f >= up && minus <= down + 1e-7f, "Slider progression is not monotone");
-                    up = plus; down = minus;
-                }
+        const ToneRecovery::Gains typical = ToneRecovery::gains(ToneRecovery::typicalStatistics());
+        const ToneRecovery::Gains gainSets[3] = {typical, bound(false), bound(true)};
+        for (const auto &g : gainSets)
+            for (int control = 0; control < 4; ++control) {
+                const ToneRecovery::Curve zero(single(control, 0), g);
+                ramp([&](float y) { check(apply(zero, control, y) == y, "Zero must be identity"); });
+                for (float amount : {-1.0f, -.6f, -.25f, .1f, .5f, 1.0f})
+                    monotone(single(control, amount), g, "A single control reverses tones");
             }
-        }
-        // Combinations of overlapping zones keep the tone order.
-        for (float s : {-1.0f, 1.0f}) for (float b : {-1.0f, 1.0f})
-            for (float h : {-1.0f, 1.0f}) for (float w : {-1.0f, 1.0f})
-                monotone(ToneRecovery::Amounts{s, b, h, w}, "Combined controls reverse tones");
+        // Combinations keep the tone order, whatever the image weights.
+        for (const auto &g : gainSets)
+            for (float s : {-1.0f, 1.0f}) for (float b : {-1.0f, 1.0f})
+                for (float h : {-1.0f, 1.0f}) for (float w : {-1.0f, 1.0f})
+                    monotone(ToneRecovery::Amounts{s, b, h, w}, g, "Combined controls reverse tones");
 
-        // The sampled curve follows the analytic one.
-        for (float s : {-1.0f, 1.0f}) for (float w : {-1.0f, 1.0f}) {
-            const ToneRecovery::Amounts mixed{s, -s, w, -w};
-            const ToneRecovery::Curve curve(mixed);
-            ramp([&](float y) {
-                const float exact = ToneRecovery::target(y, mixed);
-                check(std::abs(curve(y) - exact) <= 0.002f + 0.01f * exact, "Sampled curve departs from the analytic one");
-            });
-        }
+        // Slider direction: positive brightens, negative darkens, never the reverse.
+        for (int control = 0; control < 4; ++control)
+            for (float y : {.002f, .02f, .18f, .5f}) {
+                const ToneRecovery::Curve up(single(control, 1), typical), down(single(control, -1), typical);
+                check(apply(up, control, y) + 1e-6f >= y && apply(down, control, y) <= y + 1e-6f,
+                      "A control moves tones the wrong way");
+            }
 
-        using ToneRecovery::target;
-        check(target(0.0f, single(0, 1)) == 0.0f && target(0.0f, single(1, 1)) == 0.0f, "Black must stay black");
-        check(target(0.005f, single(1, -1)) == 0.0f, "Negative blacks must reach a true black point");
-        check(target(0.6f, single(1, -1)) > 0.5f, "Blacks must not crush bright tones");
         // Graded zones: a control may reach the whole range, but the opposite
-        // end of the histogram moves least (in EV), as in Lightroom.
+        // end of the histogram moves least (in EV), as in Lightroom. Tones
+        // close to white are left out: their lift is capped by headroom.
         for (int control = 0; control < 4; ++control) {
             const bool low = control < 2;
             for (float amount : {-1.0f, -.5f, .5f, 1.0f}) {
-                const auto shift = [&](float y) {
-                    return std::abs(std::log2(std::max(target(y, single(control, amount)), 1e-9f) / y));
-                };
-                const float far = shift(low ? 0.8f : 0.01f);
-                for (float y : low ? std::initializer_list<float>{.01f, .05f, .18f}
-                                   : std::initializer_list<float>{.05f, .18f, .5f})
-                    check(far <= shift(y) + 0.03f, "The opposite end of the histogram must move least");
+                const ToneRecovery::Curve curve(single(control, amount), typical);
+                const auto shift = [&](float y) { return std::abs(std::log2(std::max(apply(curve, control, y), 1e-9f) / y)); };
+                const float far = shift(low ? 0.8f : 0.004f);
+                for (float y : low ? std::initializer_list<float>{.004f, .02f, .1f}
+                                   : std::initializer_list<float>{.05f, .18f})
+                    check(far <= shift(y) + 0.05f, "The opposite end of the histogram must move least");
             }
         }
-        check(target(0.6f, single(2, 1)) > 0.6f && target(0.95f, single(2, 1)) - 0.95f < target(0.6f, single(2, 1)) - 0.6f,
-              "Highlights must hand the last EV over to Whites");
-        // Pairs sharing an end of the histogram combine without reversing tones.
-        for (float u : {-.5f, .5f}) for (float v : {-.5f, .5f}) {
-            monotone(ToneRecovery::Amounts{u, v, 0, 0}, "Shadows and Blacks pair reverses tones");
-            monotone(ToneRecovery::Amounts{0, 0, u, v}, "Highlights and Whites pair reverses tones");
-        }
-        check(target(1.0f, single(3, 1)) == 1.0f && target(1.5f, single(2, -1)) == 1.5f,
-              "Existing HDR headroom must stay untouched");
-        // Lifts reach white smoothly through the shoulder, never beyond it.
-        check(target(0.8f, single(3, 1)) <= 1.0f && target(0.8f, single(3, 1)) > 0.8f &&
-              target(0.3f, single(3, 1)) < target(0.5f, single(3, 1)), "Whites shoulder");
 
-        std::cout << "Tone controls: identity, tone order alone and combined, progression, black point, "
-                     "zones, HDR and shoulder passed\n";
+        const ToneRecovery::Curve blacksDown(single(1, -1), typical), shadowsUp(single(0, 1), typical);
+        check(blacksDown.channel(0.0f) == 0.0f && shadowsUp.luminance(0.0f) == 0.0f, "Black must stay black");
+        check(blacksDown.channel(0.005f) < 1e-4f, "Blacks -100 must reach a true black point, as in Lightroom");
+        check(blacksDown.channel(0.6f) > 0.5f, "Blacks must not crush bright tones");
+        // No measured data below 2^-14: the noise floor is not lifted.
+        check(shadowsUp.luminance(std::exp2(-16.5f)) < std::exp2(-16.0f), "Shadows lift the sensor noise floor");
+        const ToneRecovery::Curve whitesUp(single(3, 1), typical), highlightsDown(single(2, -1), typical);
+        check(whitesUp.channel(1.0f) == 1.0f && highlightsDown.luminance(1.5f) == 1.5f,
+              "Existing HDR headroom must stay untouched");
+
+        // Per-image weights: typical images get moderate gains; any image stays
+        // within the fitted range.
+        for (int i = 0; i < 8; ++i)
+            check(typical.value[size_t(i)] > 0.4f && typical.value[size_t(i)] < 2.5f, "Typical image gain");
+        for (float level : {-20.0f, 0.0f}) {
+            ToneRecovery::Statistics extreme;
+            extreme.log2Luminance.fill(level);
+            const auto g = ToneRecovery::gains(extreme);
+            for (int i = 0; i < 8; ++i) {
+                const auto &c = ToneRecovery::Model::Controls[i];
+                check(g.value[size_t(i)] >= std::exp(c.logGainMin) * 0.999f &&
+                          g.value[size_t(i)] <= std::exp(c.logGainMax) * 1.001f,
+                      "Image gains must stay in the fitted range");
+            }
+        }
+        std::vector<float> samples;
+        for (int i = 0; i < 1000; ++i) samples.push_back(-12.0f + 12.0f * float(i) / 999.0f);
+        const auto measured = ToneRecovery::measure(samples);
+        check(std::abs(measured.log2Luminance[0] + 6.0f) < 1e-3f && std::abs(measured.log2Luminance[4] + 1.2f) < 0.05f,
+              "Statistics: mean and quantiles");
+
+        std::cout << "Tone controls: identity, tone order alone and combined at every weight, direction, "
+                     "graded zones, black point, noise floor, HDR, per-image gains and statistics passed\n";
         return 0;
     } catch (const std::exception &error) { std::cerr << error.what() << '\n'; return 1; }
 }

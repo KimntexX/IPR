@@ -1501,8 +1501,38 @@ void ImageEditor::exportImage(const QUrl &target, const QString &format, int qua
             auto master = loadFromDisk(sourceFile, settings.automaticWhiteBalance, options);
             if (master.image.isNull())
                 return ExportResult{false, tr("Échec de la reconstruction pleine résolution : %1").arg(master.error)};
+            // Same tone weights as the preview the user validated.
+            master.image.toneStatistics = source.toneStatistics;
             return writeImage(master.image, settings, fileName, format, quality);
         }));
+}
+
+namespace {
+// Statistics of the neutral rendering (the proxy as loaded), sampled on at
+// most about one million pixels; the master shares them, so preview and
+// export apply the same per-image tone weights.
+ToneRecovery::Statistics measureToneStatistics(const cv::Mat &linearRgba)
+{
+    const int stride = std::max(1, int(std::sqrt(double(linearRgba.total()) / 1.0e6)));
+    std::vector<float> values;
+    values.reserve(linearRgba.total() / size_t(stride * stride) + linearRgba.rows);
+    for (int y = 0; y < linearRgba.rows; y += stride) {
+        const auto *row = linearRgba.ptr<cv::Vec4f>(y);
+        for (int x = 0; x < linearRgba.cols; x += stride) {
+            const cv::Vec3f rgb(row[x][0], row[x][1], row[x][2]);
+            values.push_back(std::log2(std::max(WorkingColor::luminance(rgb), 0x1p-20f)));
+        }
+    }
+    return ToneRecovery::measure(std::move(values));
+}
+
+void attachToneStatistics(ColorPipeline::WorkingImage &image, ColorPipeline::WorkingImage &proxy)
+{
+    if (proxy.isNull()) return;
+    const auto statistics = measureToneStatistics(proxy.linearRgba);
+    proxy.toneStatistics = statistics;
+    image.toneStatistics = statistics;
+}
 }
 
 ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
@@ -1629,32 +1659,39 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         return {};
     }
 
-    // Shadows, Blacks, Highlights and Whites: one luminance tone curve
-    // (ToneRecovery::Curve), applied as a common RGB scale. In a brightening,
-    // the largest sRGB delivery channel goes through the same soft shoulder:
-    // Y < 1 and Rec.2020 RGB < 1 do not imply headroom for a saturated colour
-    // in sRGB, and a hard cap would pin such colours at 1.
+    // Shadows, Blacks, Highlights and Whites (ToneRecovery, plan B): per-image
+    // weights from the statistics measured at load. Shadows and Highlights
+    // scale RGB by a luminance ratio; in a brightening, the largest sRGB
+    // delivery channel goes through a soft shoulder, as Y < 1 and Rec.2020
+    // RGB < 1 do not imply headroom for a saturated colour in sRGB. Blacks and
+    // Whites then act on each channel, as in Lightroom.
     const ToneRecovery::Amounts tones{static_cast<float>(settings.shadows) / 100.0f,
         static_cast<float>(settings.blacks) / 100.0f,
         static_cast<float>(settings.highlights) / 100.0f,
         static_cast<float>(settings.whites) / 100.0f};
     if (!ToneRecovery::identity(tones)) {
-        const ToneRecovery::Curve toneCurve(tones);
+        const auto statistics = source.toneStatistics ? *source.toneStatistics
+                                                      : measureToneStatistics(source.linearRgba);
+        const ToneRecovery::Curve toneCurve(tones, ToneRecovery::gains(statistics));
         for (int y = 0; y < adjusted.rows; ++y) {
             cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
             for (int x = 0; x < adjusted.cols; ++x) {
                 cv::Vec3f &pixel = row[x];
-                const float luminance = luminanceOf(pixel);
-                float target = toneCurve(luminance);
-                if (target > luminance && luminance > 0.0f) {
-                    const cv::Vec3d delivery = WorkingColor::toSrgb() * cv::Vec3d(pixel);
-                    const float peak = float(std::max({delivery[0], delivery[1], delivery[2], 0.0}));
-                    if (peak >= 1.0f) target = luminance;
-                    else if (peak > 0.0f)
-                        target = std::min(target, luminance *
-                            ToneRecovery::shoulder(peak, peak * target / luminance) / peak);
+                if (!toneCurve.luminanceIdentity()) {
+                    const float luminance = luminanceOf(pixel);
+                    float target = toneCurve.luminance(luminance);
+                    if (target > luminance && luminance > 0.0f) {
+                        const cv::Vec3d delivery = WorkingColor::toSrgb() * cv::Vec3d(pixel);
+                        const float peak = float(std::max({delivery[0], delivery[1], delivery[2], 0.0}));
+                        if (peak >= 1.0f) target = luminance;
+                        else if (peak > 0.0f)
+                            target = std::min(target, luminance *
+                                ToneRecovery::shoulder(peak, peak * target / luminance) / peak);
+                    }
+                    applyLuminance(pixel, luminance, target, target > luminance);
                 }
-                applyLuminance(pixel, luminance, target, target > luminance);
+                if (!toneCurve.channelIdentity())
+                    for (int c = 0; c < 3; ++c) pixel[c] = toneCurve.channel(pixel[c]);
             }
         }
     }
@@ -2115,7 +2152,10 @@ ImageEditor::LoadResult ImageEditor::loadFromDisk(const QString &fileName,
     options.automaticWhiteBalance = automaticWhiteBalance;
     LoadResult result;
     static_cast<ImageImport::Result &>(result) = ImageImport::load(fileName, options);
-    if (!result.image.isNull()) result.editProxy = buildEditProxy(result.image);
+    if (!result.image.isNull()) {
+        result.editProxy = buildEditProxy(result.image);
+        attachToneStatistics(result.image, result.editProxy);
+    }
     return result;
 }
 
@@ -2540,7 +2580,10 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
                 loaded.dcpSource = source;
                 loaded.image = RawDecoder::applyProfile(*source, options.dcpProfileOverride, &loaded.metadata, &loaded.error);
                 ImageImport::complete(loaded);
-                if (!loaded.image.isNull()) loaded.editProxy = buildEditProxy(loaded.image);
+                if (!loaded.image.isNull()) {
+                    loaded.editProxy = buildEditProxy(loaded.image);
+                    attachToneStatistics(loaded.image, loaded.editProxy);
+                }
             } else {
                 loaded = loadFromDisk(fileName, automaticWhiteBalance, options);
             }

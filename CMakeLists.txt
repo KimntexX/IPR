@@ -52,6 +52,8 @@ set(IPR_ENGINE_SOURCES
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
     src/core/ToneRecovery.h
+    src/core/ToneRecoveryModel.h
+    src/core/ToneStatistics.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
     src/profiles/CameraProfileEngine.h
