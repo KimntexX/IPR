@@ -106,7 +106,7 @@ ApplicationWindow {
         anchors.fill: parent
         anchors.margins: 12
         anchors.bottomMargin: uiPreferences.layout.showFilmstrip
-                              ? uiPreferences.layout.filmstripHeight + 16 : 12
+                              ? uiPreferences.layout.filmstripHeight + 34 : 30
         spacing: 12
 
         ImageInfoPanel {
@@ -279,24 +279,11 @@ ApplicationWindow {
         editor: imageEditor
     }
 
-    footer: Label {
-        id: applicationFooter
-
-        leftPadding: 12
-        rightPadding: width / 2 + 28
-        height: Math.max(22, implicitHeight)
-        verticalAlignment: Text.AlignVCenter
-        elide: Text.ElideRight
-        color: uiPreferences.theme.secondaryText
-        text: imageEditor.statusMessage + (imageEditor.memoryCacheStatus && imageEditor.memoryCacheStatus.available
-            ? qsTr(" | Cache : %1 image(s), %2 Mio%3")
-                .arg(imageEditor.decodedImageCacheEntryCount)
-                .arg(Math.round(imageEditor.decodedImageCacheSizeBytes / 1048576))
-                .arg(imageEditor.memoryCacheStatus.pressure ? qsTr(" — pression mémoire") : "") : "")
-        background: Rectangle { color: uiPreferences.theme.panel }
         ToolButton {
             objectName: "filmstripToggleButton"
-            anchors.centerIn: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: uiPreferences.layout.showFilmstrip ? filmstrip.height + 4 : 0
             text: uiPreferences.layout.showFilmstrip ? "▾" : "▴"
             implicitWidth: 40
             implicitHeight: 18
@@ -316,6 +303,22 @@ ApplicationWindow {
             }
             background: Rectangle { radius: 3; color: uiPreferences.theme.panel }
         }
+
+    footer: Label {
+        id: applicationFooter
+
+        leftPadding: 12
+        rightPadding: 12
+        height: Math.max(22, implicitHeight)
+        verticalAlignment: Text.AlignVCenter
+        elide: Text.ElideRight
+        color: uiPreferences.theme.secondaryText
+        text: imageEditor.statusMessage + (imageEditor.memoryCacheStatus && imageEditor.memoryCacheStatus.available
+            ? qsTr(" | Cache : %1 image(s), %2 Mio%3")
+                .arg(imageEditor.decodedImageCacheEntryCount)
+                .arg(Math.round(imageEditor.decodedImageCacheSizeBytes / 1048576))
+                .arg(imageEditor.memoryCacheStatus.pressure ? qsTr(" — pression mémoire") : "") : "")
+        background: Rectangle { color: uiPreferences.theme.panel }
     }
 
     PreferencesDialog {

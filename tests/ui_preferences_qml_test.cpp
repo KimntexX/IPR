@@ -321,6 +321,8 @@ int main(int argc, char **argv)
         auto *toggle = root->findChild<QQuickItem *>("filmstripToggleButton");
         if (!check(toggle, "a single filmstrip toggle must exist")) return 1;
         const QPointF expandedTogglePosition = toggle->mapToItem(nullptr, QPointF(0, 0));
+        if (!check(toggle->mapToItem(qobject_cast<QQuickItem *>(ribbon), QPointF(0, toggle->height())).y() <= 0,
+                   "the filmstrip toggle must sit above the expanded ribbon")) return 1;
         QMetaObject::invokeMethod(toggle, "clicked");
         QCoreApplication::processEvents();
         if (!check(!preferences.layout().value("showFilmstrip").toBool() &&
@@ -348,8 +350,10 @@ int main(int argc, char **argv)
         settleEditor(editor);
         if (!check(editor.imageDetails().value("name").toString() == "01.png",
                    "previous arrow must return to the announced photo")) return 1;
-        if (!check(toggle->mapToItem(nullptr, QPointF(0, 0)) == expandedTogglePosition,
-                   "collapse and expansion must use exactly the same bottom control position")) return 1;
+        const QPointF collapsedTogglePosition = toggle->mapToItem(nullptr, QPointF(0, 0));
+        if (!check(collapsedTogglePosition.x() == expandedTogglePosition.x() &&
+                   collapsedTogglePosition.y() > expandedTogglePosition.y(),
+                   "the toggle must remain centred and return to the bottom when the ribbon is hidden")) return 1;
         QMetaObject::invokeMethod(toggle, "clicked");
         if (!check(preferences.layout().value("showFilmstrip").toBool(),
                    "the collapsed tab must restore the ribbon")) return 1;
