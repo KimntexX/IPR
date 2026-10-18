@@ -36,6 +36,11 @@ QQuickItem *visualItem(QQuickItem *root, const QString &name)
         if (auto *found = visualItem(child, name)) return found;
     return nullptr;
 }
+QVariantList listValue(const QVariant &value)
+{
+    return value.metaType() == QMetaType::fromType<QJSValue>()
+        ? value.value<QJSValue>().toVariant().toList() : value.toList();
+}
 void settleEditor(ImageEditor &editor)
 {
     QElapsedTimer timer;
@@ -288,6 +293,12 @@ int main(int argc, char **argv)
                            buttonText->property("color").value<QColor>() == preferences.theme().value("text").value<QColor>(),
                            "reset, export and opening buttons must follow every interface palette")) return 1;
             }
+            auto *navigationButton = visualItem(qobject_cast<QQuickWindow *>(window)->contentItem(), "nextImageButton");
+            auto *navigationIcon = navigationButton->property("contentItem").value<QQuickItem *>();
+            auto *navigationSurface = navigationButton->property("background").value<QQuickItem *>();
+            if (!check(navigationIcon->property("strokeColor").value<QColor>() == preferences.theme().value("text").value<QColor>() &&
+                       navigationSurface->property("color").value<QColor>() == expected.darker(110),
+                       "navigation chevrons and button surfaces must follow every palette")) return 1;
             preferences.sync();
             UiPreferences readback(path);
             if (!check(readback.theme().value("panel").value<QColor>() == expected &&
@@ -343,6 +354,20 @@ int main(int argc, char **argv)
         root->findChild<QObject *>("lightSection")->setProperty("expanded", false);
         root->findChild<QObject *>("colorSection")->setProperty("expanded", true);
         root->findChild<QObject *>("mixerSection")->setProperty("expanded", true);
+        root->findChild<QObject *>("curveSection")->setProperty("expanded", true);
+        auto *curveView = root->findChild<QObject *>("toneCurveModule");
+        if (!check(curveView && listValue(curveView->property("histogram")).size() == 4 &&
+                   listValue(curveView->property("histogram")) == editor.histogram(),
+                   "tone curve background must follow the same live preview histogram as the fixed histogram")) return 1;
+        QVariantList syntheticHistogram;
+        for (int channel = 0; channel < 4; ++channel) {
+            QVariantList bins;
+            for (int bin = 0; bin < 256; ++bin)
+                bins.append(std::max(0, 100 - std::abs(bin - 170)));
+            syntheticHistogram.append(QVariant::fromValue(bins));
+        }
+        curveView->setProperty("histogram", syntheticHistogram);
+        if (!check(captureReview(window, "tone-curve-histogram"), "optional tone curve capture should save")) return 1;
         if (!check(captureReview(window, "collapsed-filmstrip"), "optional main window capture should save")) return 1;
         auto *overlay = root->findChild<QQuickItem *>("imageStatusOverlay");
         auto *navigationItem = qobject_cast<QQuickItem *>(navigation);
@@ -370,6 +395,8 @@ int main(int argc, char **argv)
                    navigation->property("nextName").toString().isEmpty() &&
                    navigation->property("previousName").toString() == "01.png",
                    "next arrow must open its announced image and stop at the final boundary")) return 1;
+        if (!check(listValue(curveView->property("histogram")) == editor.histogram(),
+                   "curve backdrop must refresh from the editor when navigating to another photo")) return 1;
         QMetaObject::invokeMethod(navigation, "navigate", Q_ARG(QVariant, -1));
         settleEditor(editor);
         if (!check(editor.imageDetails().value("name").toString() == "01.png",

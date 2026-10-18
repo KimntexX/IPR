@@ -403,6 +403,8 @@ Item {
 
                 ToneCurveModule {
                     id: toneCurveModule
+                    objectName: "toneCurveModule"
+                    histogram: root.editor.histogram
                     showTitle: false
                     Layout.fillWidth: true
 

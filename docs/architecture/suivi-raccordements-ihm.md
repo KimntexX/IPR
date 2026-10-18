@@ -65,6 +65,36 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Histogramme analytique amont des courbes — IHM-CONN-002
+
+État : **à spécifier**, évolution moteur éventuelle, non nécessaire au fond
+illustratif demandé. Les courbes opèrent sur le master linéaire Rec.2020,
+alors que le seul histogramme actuellement exposé à l’IHM décrit l’aperçu sRGB
+après traitement. Un diagnostic exact de leur signal d’entrée demanderait un
+histogramme amont distinct, avec espace, domaine, bornes, nombre de classes,
+gestion des valeurs négatives/supérieures à 1 et notifications définis.
+Ne pas déduire ce signal à partir de l’aperçu. Aucune nouvelle propriété moteur
+n’est implémentée sur `patch_ui` ; le fond ci-dessous est explicitement indicatif.
+
+### Navigation et fond de courbe — retours visuels
+
+Navigation : boutons précédent/suivant carrés de 28 px, espacement 6 px et
+marges de 12 px dans le coin inférieur droit de la zone image. Le composant
+`ChevronIcon.qml` dessine les flèches au centre géométrique, sans dépendance
+aux glyphes ou métriques d’une police. Il équipe aussi le bouton du ruban.
+Tests : position des contrôles, centrage des icônes, palette et navigation réelle.
+
+Courbes : une seule silhouette de luminance, gris atténué, derrière la grille
+et les poignées ; les canaux RGB ne sont pas superposés, même lorsqu’une courbe
+R/G/B est sélectionnée. Les effectifs sont normalisés au maximum de luminance.
+Hauteur maximale 72 % du graphe et opacité 18 % : choix purement visuels pour
+préserver la lisibilité de la courbe, sans influence sur les pixels.
+L’infobulle précise la provenance sRGB après rendu et la limite de ce repère.
+Le fond se rafraîchit avec l’histogramme courant et disparaît sans données.
+Tests : indépendance aux pics RGB, données vides, liaison à l’histogramme de
+l’éditeur et rafraîchissement lors du changement de photo. La capture de test
+`tone-curve-histogram.png` utilise un histogramme synthétique, pas une mesure.
+
 ### Corrections IHM — demande du 18 octobre 2026
 
 Validation visuelle utilisateur à réaliser sur le build isolé `build-patch_ui`.

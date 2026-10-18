@@ -14,6 +14,17 @@ ColumnLayout {
     required property var evaluateCurve
     property color textColor: "#edf2f8"
     property color secondaryTextColor: "#d7dfeb"
+    // Display reference only: these are the current sRGB preview counts,
+    // not the linear Rec.2020 signal entering the tone-curve operation.
+    property var histogram: []
+    readonly property var luminanceHistogram: histogram && histogram.length === 4 &&
+        histogram[0].length === 256 ? histogram[0] : []
+    readonly property real histogramPeak: {
+        let peak = 1
+        for (const count of luminanceHistogram)
+            if (Number.isFinite(count)) peak = Math.max(peak, count)
+        return peak
+    }
     signal curvePointsEdited(var points)
     signal commitRequested()
     signal activeCurveRequested(int channel)
@@ -23,8 +34,12 @@ ColumnLayout {
     spacing: 12
 
     function requestPaint() {
-        toneCanvas.requestPaint()
+        if (toneCanvas) toneCanvas.requestPaint()
     }
+    function histogramHeight(count) {
+        return Number.isFinite(count) ? Math.max(0, Math.min(1, count / histogramPeak)) : 0
+    }
+    onHistogramChanged: requestPaint()
 
     onVisibleChanged: if (visible) requestPaint()
 
@@ -44,9 +59,13 @@ ColumnLayout {
 
         Canvas {
             id: toneCanvas
+            objectName: "toneCurveCanvas"
             anchors.fill: parent
             anchors.margins: 10
             antialiasing: true
+            onWidthChanged: requestPaint()
+            onHeightChanged: requestPaint()
+            Component.onCompleted: requestPaint()
 
             property real leftMargin: 8
             property real rightMargin: 8
@@ -81,6 +100,26 @@ ColumnLayout {
 
                 const graphWidth = width - leftMargin - rightMargin
                 const graphHeight = height - topMargin - bottomMargin
+                // One subdued, filled luminance silhouette, behind both the
+                // grid and editable curve. Never stack the RGB channels here.
+                if (module.luminanceHistogram.length === 256 && graphWidth > 0 && graphHeight > 0) {
+                    const baseline = height - bottomMargin
+                    context.save()
+                    context.beginPath()
+                    context.rect(leftMargin, topMargin, graphWidth, graphHeight)
+                    context.clip()
+                    context.beginPath()
+                    context.moveTo(leftMargin, baseline)
+                    for (let bin = 0; bin < 256; ++bin)
+                        context.lineTo(leftMargin + bin / 255 * graphWidth,
+                            baseline - module.histogramHeight(module.luminanceHistogram[bin]) * graphHeight * 0.72)
+                    context.lineTo(leftMargin + graphWidth, baseline)
+                    context.closePath()
+                    context.fillStyle = "#aeb8c8"
+                    context.globalAlpha = 0.18
+                    context.fill()
+                    context.restore()
+                }
                 context.strokeStyle = "#303946"
                 context.lineWidth = 1
                 for (let step = 0; step <= 4; ++step) {
@@ -128,9 +167,13 @@ ColumnLayout {
 
         MouseArea {
             anchors.fill: parent
+            hoverEnabled: true
             enabled: module.editor.hasImage
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             property int draggedIndex: -1
+            ToolTip.visible: containsMouse && pressedButtons === Qt.NoButton
+            ToolTip.delay: 900
+            ToolTip.text: qsTr("Fond monochrome : luminance de l’aperçu sRGB, repère visuel après rendu (pas le signal linéaire d’entrée des courbes).")
 
             function nearestPoint(mouse) {
                 let nearest = -1

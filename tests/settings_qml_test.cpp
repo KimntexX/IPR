@@ -232,6 +232,23 @@ int main(int argc, char **argv)
         histogramData.append(QVariant::fromValue(bins));
     }
     histogramView->setProperty("histogram", histogramData);
+    QObject *curveView = root->findChild<QObject *>("toneCurveModule");
+    QVariantList curveData;
+    for (int channel = 0; channel < 4; ++channel) {
+        QVariantList bins;
+        for (int bin = 0; bin < 256; ++bin)
+            bins.append(bin == 128 ? (channel == 0 ? 100 : 10000) : 0);
+        curveData.append(QVariant::fromValue(bins));
+    }
+    curveView->setProperty("histogram", curveData);
+    QVariant curveHeight;
+    QMetaObject::invokeMethod(curveView, "histogramHeight", Q_RETURN_ARG(QVariant, curveHeight), Q_ARG(QVariant, 50));
+    if (!check(curveView->property("histogramPeak").toDouble() == 100 &&
+               std::abs(curveHeight.toDouble() - 0.5) < 0.001,
+               "curve backdrop must use luminance alone, ignoring stronger RGB channel peaks")) return 1;
+    curveView->setProperty("histogram", QVariantList{});
+    if (!check(curveView->property("histogramPeak").toDouble() == 1,
+               "curve backdrop must clear safely when changing to an empty image")) return 1;
     QVariant heightRatio;
     QMetaObject::invokeMethod(histogramView, "relativeHeight", Q_RETURN_ARG(QVariant, heightRatio), Q_ARG(QVariant, 10));
     if (!check(std::abs(heightRatio.toDouble() - 0.1) < 0.001 &&
