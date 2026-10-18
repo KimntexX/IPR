@@ -131,12 +131,12 @@ Autres ajustements de cette passe :
   réglages vérifie l’ordre réel des composants, pas seulement leur existence.
 
 État de livraison de cette seconde passe : les cinq tests ciblés et le contrôle
-documentaire réussissent. La compilation des sources et du QML de l’application
-réussit, mais la liaison finale échoue avec `LNK1104` : une instance de
-`build-patch_ui/Release/appIPR.exe` est encore ouverte. La fermeture utilisateur
-est demandée ; **l’exécutable existant n’intègre pas encore cette seconde passe**.
-Relancer la cible `appIPR`, puis le test de démarrage isolé après fermeture.
-Ne pas remplacer le fichier INI personnel : les nouveaux défauts embarqués
+documentaire réussissent. Après fermeture de l’instance utilisateur qui bloquait
+la liaison (`LNK1104`), la cible `appIPR` est reconstruite avec succès.
+**L’exécutable intègre maintenant cette seconde passe**. Son démarrage isolé
+hors du dossier de l’application, avec uniquement les dossiers système Windows
+dans le PATH, réussit (code 0, aucun message d’erreur QML).
+Le fichier INI personnel est préservé : les nouveaux défauts embarqués
 sont complétés automatiquement au lancement par `UiPreferences`.
 
 Revue des captures : correction de la hauteur utile des champs de valeur,
