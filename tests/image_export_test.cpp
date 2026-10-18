@@ -688,8 +688,13 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
 
     const QColor highlight = output.pixelColor(0, 0);
     const QColor shadow = output.pixelColor(1, 0);
-    if (!check(highlight.red() >= 160 && highlight.green() >= 160 &&
-                   highlight.blue() >= 160,
+    std::cout << "Tonal combination: highlight " << highlight.red() << ',' << highlight.green() << ','
+              << highlight.blue() << " shadow " << shadow.red() << ',' << shadow.green() << ','
+              << shadow.blue() << '\n';
+    // Guards against inversion to black, not a calibrated level: the perceptual
+    // contrast curve yields 157 here (the former linear curve gave >= 160).
+    if (!check(highlight.red() >= 140 && highlight.green() >= 140 &&
+                   highlight.blue() >= 140 && highlight.red() > shadow.red() + 100,
                "highlight recovery should not turn bright pixels black") ||
         !check(shadow.red() > 0 && shadow.green() > 0 && shadow.blue() > 0,
                "contrast should preserve nonzero shadow detail"))
@@ -948,23 +953,27 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
 
 bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
 {
-    QImage input(4, 1, QImage::Format_RGBA8888);
-    input.setPixelColor(0, 0, QColor(30, 30, 30, 255));
-    input.setPixelColor(1, 0, QColor(105, 105, 105, 255));
-    input.setPixelColor(2, 0, QColor(135, 135, 135, 255));
-    input.setPixelColor(3, 0, QColor(210, 210, 210, 255));
+    // Black, deep shadow, shadow, pivot (0.32 linear ~ sRGB 153), highlight,
+    // white and a saturated orange: perceptual S curve with fixed endpoints.
+    const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(105, 105, 105),
+        QColor(153, 153, 153), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
+    QImage input(int(colors.size()), 1, QImage::Format_RGBA8888);
+    for (int x = 0; x < colors.size(); ++x) input.setPixelColor(x, 0, colors[x]);
     input.setColorSpace(QColorSpace(QColorSpace::SRgb));
-    const QString inputPath = directory + QStringLiteral("/contrast-source.bmp");
-    if (!input.save(inputPath, "BMP") ||
+    const QString inputPath = directory + QStringLiteral("/contrast-source.png");
+    if (!input.save(inputPath, "PNG") ||
         !awaitLoad(editor, QUrl::fromLocalFile(inputPath)))
         return false;
 
     const auto exportVariant = [&](const QString &name) {
-        const QString path = directory + QLatin1Char('/') + name +
-            QStringLiteral(".jpg");
-        const QString status = awaitExport(
-            editor, QUrl::fromLocalFile(path), QStringLiteral("JPEG"));
+        const QString path = directory + QLatin1Char('/') + name + QStringLiteral(".png");
+        const QString status = awaitExport(editor, QUrl::fromLocalFile(path), QStringLiteral("PNG"));
         return std::pair<QString, QImage>{status, QImage(path)};
+    };
+    const auto red = [](const QImage &image, int x) { return image.pixelColor(x, 0).red(); };
+    const auto hueShift = [](const QImage &a, const QImage &b) {
+        const int delta = std::abs(a.pixelColor(6, 0).hsvHue() - b.pixelColor(6, 0).hsvHue());
+        return std::min(delta, 360 - delta);
     };
 
     editor.resetAdjustments();
@@ -974,30 +983,29 @@ bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setContrast(-100);
-    const auto [flatStatus, flat] = exportVariant(QStringLiteral("contrast-flat"));
-    if (!check(!flatStatus.isEmpty() && !flat.isNull() &&
-                   flat.pixelColor(0, 0).red() >
-                       base.pixelColor(0, 0).red() + 5 &&
-                   flat.pixelColor(3, 0).red() + 5 <
-                       base.pixelColor(3, 0).red() &&
-                   std::abs(flat.pixelColor(1, 0).red() -
-                            base.pixelColor(1, 0).red()) <= 12,
-               "negative contrast should flatten extremes without lifting midtones globally"))
+    editor.setContrast(100);
+    const auto [strongStatus, strong] = exportVariant(QStringLiteral("contrast-strong"));
+    if (!check(!strongStatus.isEmpty() && !strong.isNull() &&
+                   red(strong, 0) <= red(base, 0) + 1 && red(strong, 5) >= red(base, 5) - 1 &&
+                   red(strong, 1) + 5 < red(base, 1) && red(strong, 2) + 5 < red(base, 2) &&
+                   std::abs(red(strong, 3) - red(base, 3)) <= 6 &&
+                   red(strong, 4) > red(base, 4) + 5 && hueShift(strong, base) <= 3,
+               "positive contrast darkens below and brightens above the pivot, fixed endpoints, hue kept"))
         return false;
+    for (int x = 1; x < 5; ++x)
+        if (!check(red(strong, x) < red(strong, x + 1), "positive contrast keeps tonal order"))
+            return false;
 
     editor.resetAdjustments();
-    editor.setContrast(100);
-    const auto [strongStatus, strong] =
-        exportVariant(QStringLiteral("contrast-strong"));
-    return check(!strongStatus.isEmpty() && !strong.isNull() &&
-                     strong.pixelColor(0, 0).red() + 5 <
-                         base.pixelColor(0, 0).red() &&
-                     strong.pixelColor(3, 0).red() >
-                         base.pixelColor(3, 0).red() + 5 &&
-                     std::abs(strong.pixelColor(1, 0).red() -
-                              base.pixelColor(1, 0).red()) <= 12,
-                 "positive contrast should separate extremes without crushing midtones");
+    editor.setContrast(-100);
+    const auto [flatStatus, flat] = exportVariant(QStringLiteral("contrast-flat"));
+    return check(!flatStatus.isEmpty() && !flat.isNull() &&
+                     red(flat, 0) <= red(base, 0) + 1 && red(flat, 5) >= red(base, 5) - 1 &&
+                     red(flat, 1) > red(base, 1) + 5 && red(flat, 2) > red(base, 2) + 5 &&
+                     std::abs(red(flat, 3) - red(base, 3)) <= 6 &&
+                     red(flat, 4) + 5 < red(base, 4) && hueShift(flat, base) <= 3 &&
+                     red(flat, 1) < red(flat, 2) && red(flat, 3) < red(flat, 4),
+                 "negative contrast lifts below and lowers above the pivot, fixed endpoints, hue kept");
 }
 
 bool awaitPreview(ImageEditor &editor)

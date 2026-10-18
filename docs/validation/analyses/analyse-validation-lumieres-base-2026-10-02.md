@@ -724,3 +724,31 @@ Sur les 25 couples scène × EV, l'écart IPR − LR reste dans ±0,03 EV de q10
 sauf 9421 à +1 EV (+0,07 EV au q90). L'exposition est **conforme à LR à réglages
 égaux** sur ce corpus. Ce n'est pas une parité universelle : un seul boîtier
 (R6 Mark III), Camera Neutral, optique coupée, six scènes.
+
+L'exposition est complétée par [v003](../raw/mesure-lumiere-v003-20261018T100527858427Z.json)
+(54 états, aucun exclu) : variantes LR de 0037 réexportées en « As Shot ».
+
+### Contraste — campagne du 18 octobre 2026
+
+Mémoire : [mesure-lumiere contraste](../raw/mesure-lumiere-v001-20261018T100916500016Z.json),
+102 états mesurés (54 IPR, 48 LR), aucun exclu, base calibrée et optique coupée.
+Le numéro v001 suit la numérotation de ce réglage ; l'horodatage identifie la campagne.
+Ratios Y variante / neutre du même moteur, médiane des six scènes :
+
+| Valeur | Bas 20 %, IPR / LR | Tons moyens 40–60 %, IPR / LR | Haut 20 %, IPR / LR | Canal saturé max, IPR / LR |
+| --- | --- | --- | --- | --- |
+| −100 | 3,054 / 2,860 | 1,519 / 2,183 | 0,825 / 0,953 | 0,00 % / 0,01 % |
+| −50 | 1,740 / 1,703 | 1,226 / 1,505 | 0,916 / 0,973 | 0,01 % / 0,01 % |
+| +50 | 0,419 / 0,484 | 0,737 / 0,577 | 1,236 / 1,037 | 1,02 % / 0,20 % |
+| +100 | 0,179 / 0,126 | 0,558 / 0,251 | 1,417 / 1,082 | 6,81 % / 1,02 % |
+
+Écart direct IPR − LR au q50 : −0,36 EV à −100, −0,21 EV à −50, +0,18 EV à +50 et
++0,99 EV à +100 (pire écart toutes scènes et quantiles : 1,44 EV à +100).
+
+Lecture : le sens est correct et les ombres répondent comme LR. En revanche,
+les tons moyens réagissent environ deux fois moins dans IPR, et un contraste
+positif fait monter les hautes lumières (×1,42 et 6,81 % d'écrêtage à +100,
+contre ×1,08 et 1,02 % pour LR). Cause probable : courbe en S linéaire autour
+de 18 % appliquée au rendu final, sans protection des hautes lumières, alors que
+LR travaille dans un domaine perceptuel avec des hautes lumières protégées.
+**Contrôle visuel de l'utilisateur demandé avant toute correction.**
