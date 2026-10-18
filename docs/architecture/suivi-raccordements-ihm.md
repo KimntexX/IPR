@@ -63,6 +63,24 @@ Pour chaque demande, renseigner :
 - responsable/branche moteur, état et dépendances ;
 - critères de vérification, preuve et commit de raccordement une fois connus.
 
+## Améliorations IHM à prévoir
+
+### Mémos explicatifs au survol prolongé
+
+- Demande du 18 octobre 2026 ; état : **à implémenter**.
+- Ajouter une aide contextuelle après un survol prolongé des fonctions : rôle
+  du réglage, effet des valeurs positives/négatives si pertinent, unité,
+  valeur de réinitialisation et raccourcis disponibles.
+- Employer un délai homogène, à ajuster après essai, pour ne pas afficher
+  systématiquement les mémos lors d’un simple passage de la souris.
+- Présenter les mémos en superposition, sans modifier la taille des groupes
+  ni déplacer les commandes ; les masquer à la sortie du pointeur ou au début
+  d’une manipulation. Respecter la palette et proposer aussi un accès clavier.
+- Prévoir un composant commun et des textes propres à chaque fonction.
+  Décrire le comportement réel d’IPR, sans promettre une équivalence Lightroom.
+- Évolution de présentation QML a priori ; consigner un raccordement moteur
+  uniquement si l’aide nécessite une information dynamique non exposée.
+
 ## Journal
 
 ### Stabilité des réglages pendant les traitements
