@@ -65,6 +65,18 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Ergonomie — étape 3 : original temporaire
+
+Maintenir Espace lorsque la vue image a le focus, ou le bouton Origine,
+affiche la référence d’ouverture existante en plein cadre. Relâcher restaure
+le comparatif éventuel, son séparateur, le zoom et le déplacement, sans rendu
+ni modification de recette. Ce n’est pas le RAW brut : la référence conserve
+le développement de base. La commande reste locale à la vue pour ne pas
+intercepter les espaces dans les champs et dialogues ; perte de focus, masquage,
+changement de photo ou désactivation de la fenêtre annulent le maintien.
+Tests : pixels synthétiques avant/après, appui/relâchement réel et transformée
+conservée. Aucun raccordement moteur nécessaire.
+
 ### Ergonomie — étape 2 : manipulation des réglages
 
 Double-clic sur le nom ou le curseur pour revenir à la valeur de réinitialisation

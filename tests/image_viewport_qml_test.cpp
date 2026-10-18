@@ -189,6 +189,31 @@ int main(int argc, char **argv)
     const QImage split = window.grabWindow();
     if (!check(!split.isNull() && split.pixelColor(200, 250) == QColor("#58718a")
             && split.pixelColor(700, 250) == QColor("#bd7642"), "split should paint origin left and current right")) return 1;
+    viewport->forceActiveFocus();
+    const double savedScale = number(viewport, "zoomScale");
+    const double savedOffset = number(viewport, "offsetX");
+    const double savedSplit = number(viewport, "comparisonPosition");
+    QKeyEvent holdPress(QEvent::KeyPress, Qt::Key_Space, Qt::NoModifier, " ");
+    QKeyEvent holdRelease(QEvent::KeyRelease, Qt::Key_Space, Qt::NoModifier, " ");
+    QCoreApplication::sendEvent(&window, &holdPress);
+    settle();
+    if (!check(viewport->property("showingOriginal").toBool() &&
+               !viewport->property("showingComparison").toBool() &&
+               window.grabWindow().pixelColor(700, 250) == QColor("#58718a"),
+               "holding Space must show the original across the entire image")) return 1;
+    QCoreApplication::sendEvent(&window, &holdRelease);
+    settle();
+    if (!check(!viewport->property("showingOriginal").toBool() &&
+               viewport->property("showingComparison").toBool() &&
+               near(savedScale, number(viewport, "zoomScale")) &&
+               near(savedOffset, number(viewport, "offsetX")) &&
+               near(savedSplit, number(viewport, "comparisonPosition")),
+               "release must restore the split and preserve the image transform")) return 1;
+    QCoreApplication::sendEvent(&window, &holdPress);
+    auto *otherFocus = new QQuickItem(window.contentItem());
+    otherFocus->forceActiveFocus();
+    if (!check(!viewport->property("originalHeld").toBool(), "losing focus must release the original")) return 1;
+    viewport->forceActiveFocus();
     viewport->setProperty("source", QUrl::fromLocalFile(alphaCurrent));
     viewport->setProperty("originalSource", QUrl::fromLocalFile(alphaOriginal));
     if (!check(waitForImage(viewport) && waitForComparison(viewport), "transparent comparison fixtures should load")) return 1;

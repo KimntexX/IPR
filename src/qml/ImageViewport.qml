@@ -10,6 +10,7 @@ Item {
     property url source
     property url originalSource
     property bool comparisonEnabled: false
+    property bool originalHeld: false
     property real comparisonPosition: 0.5
     // Stable photo identity: preview URLs change on every adjustment.
     property string imageKey: ""
@@ -35,7 +36,8 @@ Item {
     readonly property bool comparisonReady: imageReady && originalCanvas.status === Image.Ready
         && originalCanvas.sourceSize.width === previewWidth
         && originalCanvas.sourceSize.height === previewHeight
-    readonly property bool showingComparison: comparisonEnabled && comparisonReady
+    readonly property bool showingOriginal: originalHeld && comparisonReady
+    readonly property bool showingComparison: comparisonEnabled && comparisonReady && !showingOriginal
     readonly property real maxOffsetX: Math.max(0, (canvas.width - width) / 2)
     readonly property real maxOffsetY: Math.max(0, (canvas.height - height) / 2)
 
@@ -106,6 +108,7 @@ Item {
     }
 
     function resetView() {
+        originalHeld = false
         fitImage()
         comparisonEnabled = false
         comparisonPosition = 0.5
@@ -125,13 +128,33 @@ Item {
     onHasImageChanged: if (!hasImage) resetView()
     onWidthChanged: clampPan()
     onHeightChanged: clampPan()
+    onActiveFocusChanged: if (!activeFocus) originalHeld = false
+    onVisibleChanged: if (!visible) originalHeld = false
+    Keys.onPressed: (event) => {
+        if (event.key === Qt.Key_Space && event.modifiers === Qt.NoModifier && comparisonReady) {
+            if (!event.isAutoRepeat) originalHeld = true
+            event.accepted = true
+        }
+    }
+    Keys.onReleased: (event) => {
+        if (event.key === Qt.Key_Space) {
+            if (!event.isAutoRepeat) originalHeld = false
+            event.accepted = true
+        }
+    }
+    Connections {
+        target: root.Window.window
+        function onActiveChanged() {
+            if (!root.Window.window.active) root.originalHeld = false
+        }
+    }
 
     // Clip both halves: translucent images must not be painted twice on the left.
     Item {
         id: currentClip
         objectName: "currentClip"
         x: root.showingComparison ? root.width * root.comparisonPosition : 0
-        width: root.width - x
+        width: root.showingOriginal ? 0 : root.width - x
         height: root.height
         clip: true
         Image {
@@ -159,10 +182,10 @@ Item {
     // Both images use precisely the same transform in viewport coordinates.
     Item {
         objectName: "originalClip"
-        width: root.width * root.comparisonPosition
+        width: root.showingOriginal ? root.width : root.width * root.comparisonPosition
         height: root.height
         clip: true
-        visible: root.showingComparison
+        visible: root.showingComparison || root.showingOriginal
         Image {
             id: originalCanvas
             objectName: "originalViewportImage"
@@ -283,9 +306,10 @@ Item {
         anchors.margins: 6
         anchors.topMargin: 46
         spacing: 1
-        visible: root.showingComparison
+        visible: root.showingComparison || root.showingOriginal
         Repeater {
-            model: [qsTr("Origine ←"), qsTr("→ Actuel")]
+            model: root.showingOriginal ? [qsTr("Origine — relâcher pour revenir")]
+                                        : [qsTr("Origine ←"), qsTr("→ Actuel")]
             Rectangle {
                 required property string modelData
                 width: caption.implicitWidth + 14
@@ -325,6 +349,19 @@ Item {
                 color: root.textColor
                 text: Math.round(root.zoomScale * 100) + " %"
                 font.pixelSize: 12
+            }
+            PreferenceButton {
+                objectName: "holdOriginalButton"
+                text: qsTr("Origine")
+                implicitHeight: 26
+                enabled: root.comparisonReady
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Maintenir pour voir l’original — Espace dans la vue image")
+                Accessible.name: ToolTip.text
+                onPressed: root.originalHeld = true
+                onReleased: root.originalHeld = false
+                onCanceled: root.originalHeld = false
+                onEnabledChanged: if (!enabled) root.originalHeld = false
             }
             Repeater {
                 model: [
