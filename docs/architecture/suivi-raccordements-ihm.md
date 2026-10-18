@@ -65,6 +65,17 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Stabilité des réglages pendant les traitements
+
+Retour utilisateur : le remplacement temporaire de la description RAW / Profil
+par « Traitement en cours » changeait le nombre de lignes et déplaçait les curseurs
+situés en dessous. Ce remplacement est supprimé. La section conserve la description
+du profil effectivement utilisé ; seul le badge sur la zone image et le pied de
+fenêtre portent les informations transitoires. Les nouvelles descriptions et
+avertissements de profil restent affichés lorsque le développement change réellement.
+Test ciblé : texte, hauteur et position du groupe Lumière avant, pendant et après
+un rendu, à trois largeurs. Aucun changement du moteur.
+
 ### Vérification transversale des sept étapes
 
 Les sept améliorations sont isolées en commits successifs sur `patch_ui`.

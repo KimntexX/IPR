@@ -69,7 +69,9 @@ ColumnLayout {
     }
     Label {
         objectName: "rawDevelopmentStatusLabel"
-        text: root.editor.busy ? qsTr("Traitement en cours — image et retouches conservées…") : root.editor.rawDevelopmentStatus
+        // Transient progress belongs to the image overlay. Replacing this
+        // wrapped profile description would move all controls below the group.
+        text: root.editor.rawDevelopmentStatus
         color: root.textColor
         wrapMode: Text.WrapAnywhere
         Layout.fillWidth: true

@@ -276,6 +276,29 @@ int main(int argc, char **argv)
                awaitLoad(editor, QUrl::fromLocalFile(first)),
                "test source should load in the editor"))
         return 1;
+    rawSection->setProperty("expanded", true);
+    auto *profileStatus = root->findChild<QQuickItem *>("rawDevelopmentStatusLabel");
+    auto *lightSection = root->findChild<QQuickItem *>("lightSection");
+    for (int width : {232, 292, 332}) {
+        panel->setWidth(width);
+        settleLayout();
+        const QString stableText = profileStatus->property("text").toString();
+        const qreal stableHeight = profileStatus->height();
+        const qreal stableLightY = lightSection->y();
+        editor.setBrightness(width / 1000.0);
+        if (!check(editor.busy() && profileStatus->property("text").toString() == stableText,
+                   "processing must not replace the RAW profile description")) return 1;
+        settleLayout();
+        if (!check(std::abs(profileStatus->height() - stableHeight) < .1 &&
+                   std::abs(lightSection->y() - stableLightY) < .1,
+                   "profile status and downstream controls must not move during rendering")) return 1;
+        for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+        if (!check(!editor.busy() && profileStatus->property("text").toString() == stableText &&
+                   std::abs(lightSection->y() - stableLightY) < .1,
+                   "finishing a render must preserve profile text and control positions")) return 1;
+    }
+    panel->setWidth(320);
+    editor.setBrightness(0);
     noiseSection->setProperty("expanded", true);
     sharpSection->setProperty("expanded", true);
     exportSection->setProperty("expanded", true);
