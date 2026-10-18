@@ -82,6 +82,7 @@ set(IPR_QML_FILES
     src/qml/RawDevelopmentModule.qml
     src/qml/OpticsModule.qml
     src/qml/FilmstripNavigation.qml
+    src/qml/ChevronIcon.qml
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
     src/qml/PreferenceButton.qml

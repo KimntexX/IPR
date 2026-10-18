@@ -6,6 +6,7 @@ import QtQml.Models
 RowLayout {
     id: root
     required property var editor
+    spacing: 6
     property int currentIndex: -1
     readonly property int imageCount: folderItems.items.count
     readonly property string previousName: nameAt(currentIndex - 1)
@@ -59,9 +60,17 @@ RowLayout {
             readonly property string targetName: modelData < 0 ? root.previousName : root.nextName
             text: modelData < 0 ? "‹" : "›"
             font.pixelSize: 22
-            Layout.preferredWidth: 30
+            Layout.minimumWidth: 28
+            Layout.preferredWidth: 28
+            Layout.maximumWidth: 28
+            Layout.minimumHeight: 28
             Layout.preferredHeight: 28
+            Layout.maximumHeight: 28
             padding: 0
+            leftPadding: 0
+            rightPadding: 0
+            topPadding: 0
+            bottomPadding: 0
             enabled: !root.editor.busy && root.currentIndex >= 0 && targetName.length > 0
             hoverEnabled: true
             Accessible.name: modelData < 0 ? qsTr("Image précédente") : qsTr("Image suivante")
@@ -70,13 +79,11 @@ RowLayout {
             ToolTip.delay: 250
             ToolTip.text: targetName
             onClicked: root.navigate(modelData)
-            contentItem: Text {
-                text: arrow.text
-                font: arrow.font
-                color: arrow.palette.buttonText
+            contentItem: ChevronIcon {
+                objectName: arrow.modelData < 0 ? "previousImageChevron" : "nextImageChevron"
+                direction: arrow.modelData < 0 ? "left" : "right"
+                strokeColor: arrow.palette.buttonText
                 opacity: arrow.enabled ? 1 : 0.4
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
             }
             background: Rectangle {
                 radius: 4

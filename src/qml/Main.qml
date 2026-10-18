@@ -149,6 +149,17 @@ ApplicationWindow {
                 visible: imageEditor.hasImage
             }
 
+            FilmstripNavigation {
+                id: filmstripNavigation
+                objectName: "collapsedFilmstripNavigation"
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 12
+                z: 2
+                visible: !uiPreferences.layout.showFilmstrip
+                editor: imageEditor
+            }
+
             // Interim camera rendering (embedded JPEG), not the IPR development.
             Label {
                 anchors.top: parent.top
@@ -273,17 +284,6 @@ ApplicationWindow {
         editor: imageEditor
     }
 
-    FilmstripNavigation {
-        id: filmstripNavigation
-        objectName: "collapsedFilmstripNavigation"
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.rightMargin: uiPreferences.layout.settingsWidth + 28
-        anchors.bottomMargin: 14
-        visible: !uiPreferences.layout.showFilmstrip
-        editor: imageEditor
-    }
-
         PreferenceButton {
             objectName: "filmstripToggleButton"
             anchors.horizontalCenter: parent.horizontalCenter
@@ -300,11 +300,10 @@ ApplicationWindow {
             ToolTip.visible: hovered
             ToolTip.text: Accessible.name
             onClicked: uiPreferences.setValue("layout/showFilmstrip", !uiPreferences.layout.showFilmstrip)
-            contentItem: Text {
-                text: parent.text
-                color: uiPreferences.theme.secondaryText
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+            contentItem: ChevronIcon {
+                objectName: "filmstripToggleChevron"
+                direction: uiPreferences.layout.showFilmstrip ? "down" : "up"
+                strokeColor: uiPreferences.theme.secondaryText
             }
             background: Rectangle { radius: 3; color: uiPreferences.theme.panel }
         }

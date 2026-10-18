@@ -118,6 +118,7 @@
     {"patterns": ["src/qml/ImageViewport.qml"], "tests": ["imageViewportQmlTests", "uiPreferencesQmlTests"]},
     {"patterns": ["src/qml/*Preferences*.qml", "src/qml/Preference*.qml", "src/qml/InterfacePaletteSelector.qml", "src/qml/RawCalibrationModule.qml"], "tests": ["uiPreferencesQmlTests"]},
     {"patterns": ["src/qml/ImageBackgroundOptions.qml", "src/qml/ImageCanvasBackground.qml"], "tests": ["uiPreferencesQmlTests"]},
+    {"patterns": ["src/qml/FilmstripNavigation.qml", "src/qml/ChevronIcon.qml"], "tests": ["uiPreferencesQmlTests"]},
     {"patterns": ["tests/image_viewport_qml_test.cpp"], "tests": ["imageViewportQmlTests"]},
     {"patterns": ["src/qml/Setting.qml", "src/qml/RawDevelopmentModule.qml", "src/qml/SettingsSection.qml", "src/qml/AdjustmentControl.qml", "src/qml/CurveChannelButton.qml", "src/qml/HistogramModule.qml", "src/qml/ToneCurveModule.qml", "src/qml/ColorGradingModule.qml"], "tests": ["settingsQmlTests", "colorMixerQmlTests", "uiPreferencesQmlTests"]},
     {"patterns": ["tests/color_pipeline_test.cpp"], "tests": ["colorPipelineTests"]},

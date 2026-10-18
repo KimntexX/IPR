@@ -346,6 +346,19 @@ int main(int argc, char **argv)
         if (!check(captureReview(window, "collapsed-filmstrip"), "optional main window capture should save")) return 1;
         auto *overlay = root->findChild<QQuickItem *>("imageStatusOverlay");
         auto *navigationItem = qobject_cast<QQuickItem *>(navigation);
+        for (const QString &name : {QStringLiteral("previousImageButton"), QStringLiteral("nextImageButton")}) {
+            auto *button = visualItem(qobject_cast<QQuickWindow *>(window)->contentItem(), name);
+            auto *icon = button ? button->property("contentItem").value<QQuickItem *>() : nullptr;
+            if (!check(button && icon && button->width() == 28 && button->height() == 28 &&
+                       icon->width() > 0 && icon->height() > 0 &&
+                       icon->mapToItem(button, QPointF(icon->width() / 2, icon->height() / 2)) ==
+                           QPointF(button->width() / 2, button->height() / 2),
+                       "navigation must use square buttons with geometrically centred vector arrows")) return 1;
+        }
+        if (!check(navigationItem->parentItem()->objectName() == "imageCanvasBackground" &&
+                   navigationItem->x() + navigationItem->width() <= navigationItem->parentItem()->width() - 11.5 &&
+                   navigationItem->y() + navigationItem->height() <= navigationItem->parentItem()->height() - 11.5,
+                   "navigation must sit inside the image pane, with consistent right and bottom margins")) return 1;
         const QPointF overlayEnd = overlay->mapToItem(nullptr, QPointF(overlay->width(), 0));
         const QPointF navigationStart = navigationItem->mapToItem(nullptr, QPointF(0, 0));
         if (!check(overlayEnd.x() <= navigationStart.x(),
