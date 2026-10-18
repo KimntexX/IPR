@@ -65,6 +65,21 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Ergonomie — étape 5 : ruban et états distincts
+
+L’image effectivement ouverte porte un contour et un nom gras ; les cases et
+le fond teinté désignent séparément la sélection multiple, avec compteur.
+Un clic ne marque plus une photo comme ouverte avant la notification du moteur.
+Les vignettes s’adaptent à la hauteur du ruban. Infobulles avec nom complet et
+état ; badge Ouverte avec note, drapeau et libellé connus de la photo courante.
+
+**IHM-CONN-005 — en attente moteur** : `ImageListModel` expose seulement nom
+et URL. Ajouter des rôles légers pour note, libellé couleur, drapeau et présence
+de retouches, avec `dataChanged` ciblé après édition/restauration. Ne pas décoder
+les photos pour les lire. Sans ces rôles, aucun badge inventé sur les autres
+images ni faux « non retouché » ; pas de lecture de sidecars en QML. Tester
+navigation, sélection indépendante, changement de dossier et grands corpus.
+
 ### Ergonomie — étape 4 : panneaux redimensionnables
 
 Poignées entre les trois panneaux et au-dessus du ruban : glisser à la souris,

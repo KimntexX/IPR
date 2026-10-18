@@ -428,6 +428,22 @@ int main(int argc, char **argv)
                    restoredGeometry.layout().value("imageInfoWidth").toInt() == 250 &&
                    restoredGeometry.layout().value("filmstripHeight").toInt() == 120,
                    "resized panel geometry must survive a new preferences instance")) return 1;
+        QCoreApplication::processEvents();
+        auto *firstThumbnail = visualItem(qobject_cast<QQuickWindow *>(window)->contentItem(), "thumbnail_0");
+        if (!check(firstThumbnail && firstThumbnail->property("opened").toBool() &&
+                   !firstThumbnail->property("batchSelected").toBool(),
+                   "the open image and batch selection must be distinct states")) return 1;
+        const QUrl firstUrl = firstThumbnail->property("fileUrl").toUrl();
+        editor.setImageSelected(firstUrl, true);
+        editor.setImageRating(4);
+        editor.setImageFlagged(true);
+        QCoreApplication::processEvents();
+        auto *badges = visualItem(qobject_cast<QQuickWindow *>(window)->contentItem(), "currentPhotoBadges_0");
+        if (!check(firstThumbnail->property("opened").toBool() &&
+                   firstThumbnail->property("batchSelected").toBool() &&
+                   badges && badges->isVisible(),
+                   "the current image must retain its open outline while also selected for batch processing")) return 1;
+        editor.clearImageSelection();
         window->close();
     }
     return 0;
