@@ -52,14 +52,14 @@ ColumnLayout {
             border.color: profileSelector.activeFocus ? "#71849a" : "#424b58"
         }
     }
-    CheckBox {
+    BackendCheckBox {
         objectName: "rawAutomaticWhiteBalanceToggle"
         text: qsTr("Balance des blancs automatique")
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-        checked: root.editor.automaticWhiteBalance
+        backendChecked: root.editor.automaticWhiteBalance
         enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setAutomaticWhiteBalance(checked)
+        onChangeRequested: (checked) => root.editor.setAutomaticWhiteBalance(checked)
         contentItem: Text {
             text: parent.text
             color: root.textColor
@@ -72,14 +72,14 @@ ColumnLayout {
         color: root.textColor
         Layout.fillWidth: true
     }
-    CheckBox {
+    BackendCheckBox {
         objectName: "lensCorrectionToggle"
         text: qsTr("Activer la correction de l’objectif")
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-        checked: root.editor.lensCorrectionEnabled
+        backendChecked: root.editor.lensCorrectionEnabled
         enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setLensCorrectionEnabled(checked)
+        onChangeRequested: (checked) => root.editor.setLensCorrectionEnabled(checked)
         contentItem: Text {
             text: parent.text
             color: root.textColor
@@ -89,14 +89,14 @@ ColumnLayout {
         ToolTip.visible: hovered
         ToolTip.text: qsTr("Corrige la distorsion et le vignettage lorsque le profil LCP contient ces données.")
     }
-    CheckBox {
+    BackendCheckBox {
         objectName: "chromaticAberrationToggle"
         text: qsTr("Supprimer l’aberration chromatique")
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-        checked: root.editor.chromaticAberrationEnabled
+        backendChecked: root.editor.chromaticAberrationEnabled
         enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setChromaticAberrationEnabled(checked)
+        onChangeRequested: (checked) => root.editor.setChromaticAberrationEnabled(checked)
         contentItem: Text {
             text: parent.text
             color: root.textColor
@@ -115,14 +115,14 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.minimumWidth: 0
     }
-    CheckBox {
+    BackendCheckBox {
         objectName: "rawNormalizationToggle"
         text: qsTr("Calibration RAW — rendu du boîtier")
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-        checked: root.editor.rawNormalizationEnabled
+        backendChecked: root.editor.rawNormalizationEnabled
         enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setRawNormalizationEnabled(checked)
+        onChangeRequested: (checked) => root.editor.setRawNormalizationEnabled(checked)
         contentItem: Text {
             text: parent.text
             color: root.textColor

@@ -152,15 +152,15 @@ Rectangle {
                             font.pixelSize: 10
                         }
 
-                        CheckBox {
+                        BackendCheckBox {
                             id: selectionCheck
                             anchors.top: parent.top
                             anchors.right: parent.right
                             anchors.margins: 1
-                            checked: ribbon.editor.selectedImageUrls.indexOf(
-                                         imageDelegate.fileUrl.toString()) >= 0
-                            onToggled: ribbon.editor.setImageSelected(
-                                           imageDelegate.fileUrl, checked)
+                            backendChecked: ribbon.editor.selectedImageUrls.indexOf(
+                                                imageDelegate.fileUrl.toString()) >= 0
+                            onChangeRequested: (checked) => ribbon.editor.setImageSelected(
+                                                   imageDelegate.fileUrl, checked)
                         }
                     }
 

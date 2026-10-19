@@ -82,6 +82,7 @@ set(IPR_QML_FILES
     src/qml/HistogramModule.qml
     src/qml/Setting.qml
     src/qml/RawDevelopmentModule.qml
+    src/qml/BackendCheckBox.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
     src/qml/CurveChannelButton.qml

@@ -147,6 +147,24 @@ int main(int argc, char **argv)
     editor.setRawNormalizationEnabled(false);settleLayout();
     if(!check(!editor.rawNormalizationEnabled()&&!calibrationToggle->property("checked").toBool(),
               "calibration checkbox follows disabled/restored backend state"))return 1;
+    // A click replaces a plain QML binding: the box must still show the engine
+    // state afterwards, whether the engine refuses the change (optics: no RAW
+    // open) or accepts it (calibration).
+    const std::pair<const char *, const char *> toggles[] = {
+        {"lensCorrectionToggle", "lensCorrectionEnabled"},
+        {"chromaticAberrationToggle", "chromaticAberrationEnabled"},
+        {"rawNormalizationToggle", "rawNormalizationEnabled"}};
+    for (const auto &[name, state] : toggles) {
+        QObject *toggle = root->findChild<QObject *>(QString::fromLatin1(name));
+        QMetaObject::invokeMethod(toggle, "toggle");
+        QMetaObject::invokeMethod(toggle, "clicked");
+        settleLayout();
+        if (!check(toggle->property("checked").toBool() == editor.property(state).toBool(),
+                   "a RAW development checkbox must show the engine state after a click")) return 1;
+    }
+    editor.setRawNormalizationEnabled(true);settleLayout();
+    if(!check(calibrationToggle->property("checked").toBool(),
+              "after a click, the checkbox must still follow later engine changes"))return 1;
     QObject *noiseSection = root->findChild<QObject *>(QStringLiteral("denoiseSection"));
     QObject *sharpSection = root->findChild<QObject *>(QStringLiteral("sharpeningSection"));
     QObject *exportSection = root->findChild<QObject *>(QStringLiteral("exportSection"));
