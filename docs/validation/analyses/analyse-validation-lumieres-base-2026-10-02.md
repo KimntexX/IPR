@@ -916,3 +916,24 @@ Limites : les blancs positifs écrêtent encore plus que LR sur certaines scène
 un peu moins les tons profonds (×2,73 contre ×3,33). Le gain par image est
 validé par validation croisée sur huit scènes seulement. **Validation visuelle
 de l'utilisateur en cours.**
+
+#### Noirs et blancs par canal sRGB linéaire — campagnes v006, 19 octobre 2026
+
+Retour de l'utilisateur : noirs −100 trop forts sur 6V1A0037 (−80 dans IPR
+≈ −100 dans LR). À optique égale, la luminance d'IPR est même un peu plus claire
+que LR ; l'écart venait de la saturation : la courbe appliquée canal par canal
+en Rec.2020 sursaturait (0,992 contre 0,922). Noirs et blancs agissent désormais
+par canal en sRGB linéaire, l'espace où les courbes LR ont été mesurées.
+
+Mémoires : [noirs v006](../raw/mesure-lumiere-v006-20261018T210000875070Z.json),
+[blancs v006](../raw/mesure-lumiere-v006-20261018T211442150960Z.json) ; 136 états
+chacune, aucun exclu. Luminance inchangée par rapport à v005 (par exemple noirs −100,
+tons moyens ×0,131 contre ×0,107 pour LR ; blancs +100, ×4,12 contre ×4,21).
+Saturation médiane à noirs −100, IPR / LR : 0007 0,586 / 0,559 ; 0037 0,948 / 0,922 ;
+0043 0,999 / 0,987 ; 0327 0,935 / 0,896 ; 0524 0,084 / 0,086 ; 9421 0,999 / 1,000 ;
+9950 0,725 / 0,706 ; 7003 0,383 / 0,343. Excès résiduel d'environ +0,03.
+
+Point de méthode : l'IHM appliquait la correction d'objectif alors que sa case
+pouvait paraître décochée (liaison QML rompue par le clic, corrigée le
+19 octobre) ; les comparaisons visuelles antérieures sur les images munies d'un
+profil d'objectif (dont 6V1A0043) n'étaient pas à optique égale avec LR.
