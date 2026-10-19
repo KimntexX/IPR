@@ -1,7 +1,10 @@
 #include "imageeditor.h"
 
 #include "DetailProcessing.h"
-#include "ImageMath.h"
+#include "ColorAdjustments.h"
+#include "Contrast.h"
+#include "Histogram.h"
+#include "ToneCurve.h"
 #include "ToneRecovery.h"
 #include "RawDecoder.h"
 #include "RawNormalization.h"
@@ -1529,9 +1532,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
 
     const int referenceTemperature = static_cast<int>(std::lround(
         source.referenceWhiteBalanceKelvin.value_or(5200.0)));
-    const bool hasToneCurves = std::any_of(
-        settings.toneCurves.cbegin(), settings.toneCurves.cend(),
-        [](const QVector<ToneCurvePoint> &curve) { return !curve.isEmpty(); });
+    const bool hasToneCurves = !ToneCurve::isIdentity(settings.toneCurves);
     // A neutral pipeline returns its shallow source and therefore avoids all
     // RGB split/merge buffers and per-pixel passes.
     if (!settings.grayscale && settings.brightness == 0.0f &&
@@ -1571,15 +1572,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         }
     }
 
-    if (settings.grayscale) {
-        for (int y = 0; y < adjusted.rows; ++y) {
-            auto *row = adjusted.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                const float value = WorkingColor::luminance(row[x]);
-                row[x] = {value, value, value};
-            }
-        }
-    }
+    if (settings.grayscale) ColorAdjustments::toGrayscale(adjusted);
 
     // One brightness unit is one EV in linear light. Sources without a camera
     // signal (rendered rasters, RAW without DCP) have no profile curve to precede.
@@ -1589,35 +1582,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         adjusted *= exposureFactor;
     }
 
-    // Contrast: endpoint-preserving S curve in a log domain (16 EV below white),
-    // pivot 0.32, applied to each RGB channel. Black and white stay fixed, so no
-    // channel goes above 1. Per channel, positive contrast also saturates bright
-    // colours as Lightroom does; a common RGB scale washed them out (bright-tone
-    // saturation -0.085 vs LR at +100, now +0.003). Fitted on the six Lumières
-    // scenes against Lightroom (median |gap| 0.08 EV); the negative strength is
-    // the fitted 0.45 raised by 8 % after the user's visual check.
-    const auto contrastCurve = [](float norm, float amount) {
-        constexpr float pivot = 0.32f, floorEv = -16.0f;
-        constexpr float positiveStrength = 0.60f, negativeStrength = 0.45f * 1.08f;
-        const float floorValue = std::exp2(floorEv);
-        if (norm <= floorValue || norm >= 1.0f) return norm;
-        const auto encode = [&](float value) { return (std::log2(value) - floorEv) / -floorEv; };
-        const float v0 = encode(pivot), v = encode(norm);
-        const float g = std::exp((amount > 0.0f ? positiveStrength : negativeStrength) * amount);
-        const float out = v <= v0
-            ? v0 * std::pow(v / v0, g)
-            : 1.0f - (1.0f - v0) * std::pow((1.0f - v) / (1.0f - v0), g);
-        return std::exp2(floorEv + out * -floorEv);
-    };
-    if (settings.contrast != 0) {
-        const float amount = static_cast<float>(settings.contrast) / 100.0f;
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < adjusted.cols; ++x)
-                for (int c = 0; c < 3; ++c)
-                    row[x][c] = contrastCurve(row[x][c], amount);
-        }
-    }
+    Contrast::apply(adjusted, settings.contrast);
 
     QString colorError;
     if (!source.dcpContext && whiteBalanceEdit &&
@@ -1639,89 +1604,10 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         ToneRecovery::apply(adjusted, tones, source.toneStatistics ? *source.toneStatistics
                                                                    : ToneRecovery::measure(source.linearRgba));
 
-    const float saturationFactor =
-        1.0f + static_cast<float>(settings.saturation) / 100.0f;
-    const float vibranceAmount =
-        static_cast<float>(settings.vibrance) / 100.0f;
-    if (settings.saturation != 0 || settings.vibrance != 0) {
-    for (int y = 0; y < adjusted.rows; ++y) {
-        cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < adjusted.cols; ++x) {
-            cv::Vec3f &pixel = row[x];
-            const float luminance = WorkingColor::nonNegativeLuminance(pixel);
-            const float maximum = std::max({pixel[0], pixel[1], pixel[2]});
-            const float minimum = std::min({pixel[0], pixel[1], pixel[2]});
-            const float chroma = maximum > 1e-6f
-                                     ? std::clamp((maximum - minimum) / maximum,
-                                                  0.0f, 1.0f)
-                                     : 0.0f;
-            const float vibranceFactor =
-                1.0f + vibranceAmount * (1.0f - chroma);
-            pixel = cv::Vec3f(luminance, luminance, luminance) +
-                    (pixel - cv::Vec3f(luminance, luminance, luminance)) *
-                        std::max(0.0f, saturationFactor * vibranceFactor);
-        }
-    }
-
-    }
-
-    const bool hasColorMixer =
-        std::any_of(settings.mixerHue.cbegin(), settings.mixerHue.cend(),
-                    [](int value) { return value != 0; }) ||
-        std::any_of(settings.mixerSaturation.cbegin(), settings.mixerSaturation.cend(),
-                    [](int value) { return value != 0; }) ||
-        std::any_of(settings.mixerLuminance.cbegin(), settings.mixerLuminance.cend(),
-                    [](int value) { return value != 0; });
-    const bool hasColorGrading = std::any_of(
-        settings.gradingSaturation.cbegin(), settings.gradingSaturation.cend(),
-        [](int value) { return value != 0; });
-    if (hasColorMixer || hasColorGrading) {
-        const auto hsvToRgb = [](float hue, float saturation, float value) {
-            hue = std::fmod(hue + 360.0f, 360.0f);
-            saturation = std::clamp(saturation, 0.0f, 1.0f);
-            const float chroma = value * saturation;
-            const float secondary = chroma *
-                (1.0f - std::abs(std::fmod(hue / 60.0f, 2.0f) - 1.0f));
-            const float offset = value - chroma;
-            cv::Vec3f rgb;
-            if (hue < 60.0f) rgb = {chroma, secondary, 0.0f};
-            else if (hue < 120.0f) rgb = {secondary, chroma, 0.0f};
-            else if (hue < 180.0f) rgb = {0.0f, chroma, secondary};
-            else if (hue < 240.0f) rgb = {0.0f, secondary, chroma};
-            else if (hue < 300.0f) rgb = {secondary, 0.0f, chroma};
-            else rgb = {chroma, 0.0f, secondary};
-            return rgb + cv::Vec3f(offset, offset, offset);
-        };
-        const ColorMixer::Parameters mixerParameters{
-            settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance};
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                cv::Vec3f pixel = row[x];
-                const float originalLuminance = WorkingColor::nonNegativeLuminance(pixel);
-                if (hasColorMixer) {
-                    pixel = ColorMixer::apply(pixel, mixerParameters);
-                }
-                if (hasColorGrading) {
-                    const float shadows = 1.0f - ImageMath::smoothStep(0.12f, 0.42f, originalLuminance);
-                    const float highlights = ImageMath::smoothStep(0.58f, 0.88f, originalLuminance);
-                    const float midtones = std::clamp(1.0f - shadows - highlights, 0.0f, 1.0f);
-                    const std::array<float, 3> weights{shadows, midtones, highlights};
-                    for (size_t zone = 0; zone < weights.size(); ++zone) {
-                        if (settings.gradingSaturation[zone] == 0 || weights[zone] == 0.0f)
-                            continue;
-                        const cv::Vec3f color = hsvToRgb(
-                            static_cast<float>(settings.gradingHue[zone]), 1.0f, 1.0f);
-                        const float colorLuminance = WorkingColor::nonNegativeLuminance(color);
-                        pixel += (color - cv::Vec3f(colorLuminance, colorLuminance,
-                                                    colorLuminance)) *
-                                 (settings.gradingSaturation[zone] * 0.0035f * weights[zone]);
-                    }
-                }
-                row[x] = pixel;
-            }
-        }
-    }
+    ColorAdjustments::applySaturationVibrance(adjusted, settings.saturation, settings.vibrance);
+    ColorAdjustments::applyMixerAndGrading(adjusted,
+        {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
+        settings.gradingHue, settings.gradingSaturation);
 
     // Denoise before local-detail enhancement and sharpening. The operation
     // runs in linear RGB and keeps luminance and chrominance independent so
@@ -1731,154 +1617,10 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
     }
 
-    const auto applyLocalContrast = [&adjusted](int adjustment, double sigma, bool protectExtremes) {
-        if (adjustment == 0)
-            return;
-
-        cv::Mat luminance(adjusted.rows, adjusted.cols, CV_32F);
-        for (int y = 0; y < adjusted.rows; ++y) {
-            const cv::Vec3f *sourceRow = adjusted.ptr<cv::Vec3f>(y);
-            float *luminanceRow = luminance.ptr<float>(y);
-            for (int x = 0; x < adjusted.cols; ++x)
-                luminanceRow[x] = WorkingColor::nonNegativeLuminance(sourceRow[x]);
-        }
-        cv::Mat localBase;
-        cv::GaussianBlur(luminance, localBase, cv::Size(0, 0), sigma);
-        const float amount = static_cast<float>(adjustment) / 100.0f;
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *pixelRow = adjusted.ptr<cv::Vec3f>(y);
-            const float *luminanceRow = luminance.ptr<float>(y);
-            const float *baseRow = localBase.ptr<float>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                const float luminance = luminanceRow[x];
-                float protection = 1.0f;
-                if (protectExtremes) {
-                    protection =
-                        ImageMath::smoothStep(0.03f, 0.16f, luminance) *
-                        (1.0f - ImageMath::smoothStep(0.72f, 0.98f, luminance));
-                }
-                const float target = std::max(
-                    0.0f, luminance + (luminance - baseRow[x]) * amount *
-                                      protection);
-                WorkingColor::scaleToLuminance(pixelRow[x], luminance, target);
-            }
-        }
-    };
-    // Texture targets fine details; clarity uses a wider neighbourhood and
-    // protects the deepest shadows and brightest highlights.
-    applyLocalContrast(settings.texture, 1.2, false);
-    applyLocalContrast(settings.clarity, 8.0, true);
-
-    if (settings.dehaze != 0) {
-        cv::Mat darkChannel(adjusted.rows, adjusted.cols, CV_32F);
-        std::vector<float> brightSamples;
-        const int sampleStep = std::max(
-            1, static_cast<int>(std::sqrt(
-                   static_cast<double>(adjusted.total()) / 8192.0)));
-        for (int y = 0; y < adjusted.rows; ++y) {
-            const cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            float *darkRow = darkChannel.ptr<float>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                darkRow[x] = std::max(0.0f, std::min({row[x][0], row[x][1],
-                                                       row[x][2]}));
-                if (x % sampleStep == 0 && y % sampleStep == 0)
-                    brightSamples.push_back(std::max(
-                        {row[x][0], row[x][1], row[x][2], 0.0f}));
-            }
-        }
-        const int kernelSize = std::max(
-            1, std::min(15, std::min(adjusted.cols, adjusted.rows) | 1));
-        cv::erode(darkChannel, darkChannel,
-                  cv::getStructuringElement(
-                      cv::MORPH_RECT, cv::Size(kernelSize, kernelSize)));
-        const size_t percentile = (brightSamples.size() - 1) * 99 / 100;
-        std::nth_element(brightSamples.begin(),
-                         brightSamples.begin() +
-                             static_cast<qsizetype>(percentile),
-                         brightSamples.end());
-        const float airlight = std::max(0.10f, brightSamples[percentile]);
-        const float amount = static_cast<float>(settings.dehaze) / 100.0f;
-        const cv::Vec3f airlightRgb(airlight, airlight, airlight);
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            const float *darkRow = darkChannel.ptr<float>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                const float haze =
-                    std::clamp(darkRow[x] / airlight, 0.0f, 1.0f);
-                const float transmission =
-                    std::clamp(1.0f - 0.85f * amount * haze, 0.12f, 2.0f);
-                row[x] = (row[x] - airlightRgb) / transmission + airlightRgb;
-                row[x][0] = std::max(0.0f, row[x][0]);
-                row[x][1] = std::max(0.0f, row[x][1]);
-                row[x][2] = std::max(0.0f, row[x][2]);
-            }
-        }
-    }
-
-    const auto applyToneCurve = [](const QVector<ToneCurvePoint> &curve,
-                                   float value) {
-        if (curve.isEmpty())
-            return value;
-
-        std::vector<double> weights(static_cast<size_t>(curve.size()), 1.0);
-        for (qsizetype index = 0; index < curve.size(); ++index) {
-            for (qsizetype other = 0; other < curve.size(); ++other) {
-                if (index != other) {
-                    weights[static_cast<size_t>(index)] /=
-                        static_cast<double>(curve.at(index).x -
-                                            curve.at(other).x);
-                }
-            }
-        }
-
-        const auto evaluateInsideRange = [&curve, &weights](double sample) {
-            double numerator = 0.0;
-            double denominator = 0.0;
-            for (qsizetype index = 0; index < curve.size(); ++index) {
-                const double distance = sample - curve.at(index).x;
-                if (std::abs(distance) < 1e-9)
-                    return static_cast<double>(curve.at(index).y);
-                const double term = weights[static_cast<size_t>(index)] / distance;
-                numerator += term * curve.at(index).y;
-                denominator += term;
-            }
-            return numerator / denominator;
-        };
-
-        if (value <= 1.0f)
-            return static_cast<float>(evaluateInsideRange(value));
-
-        const qsizetype endpoint = curve.size() - 1;
-        double derivative = 0.0;
-        for (qsizetype index = 0; index < endpoint; ++index) {
-            derivative +=
-                weights[static_cast<size_t>(index)] /
-                weights[static_cast<size_t>(endpoint)] *
-                (curve.at(index).y - curve.at(endpoint).y) /
-                (curve.at(endpoint).x - curve.at(index).x);
-        }
-        return curve.constLast().y +
-               (value - curve.constLast().x) * static_cast<float>(derivative);
-    };
-    const QVector<ToneCurvePoint> &luminanceCurve =
-        settings.toneCurves[LuminanceCurve];
-    const QVector<ToneCurvePoint> &redCurve = settings.toneCurves[RedCurve];
-    const QVector<ToneCurvePoint> &greenCurve =
-        settings.toneCurves[GreenCurve];
-    const QVector<ToneCurvePoint> &blueCurve = settings.toneCurves[BlueCurve];
-    if (hasToneCurves) {
-    for (int y = 0; y < adjusted.rows; ++y) {
-        cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < adjusted.cols; ++x) {
-            const float luminance = WorkingColor::nonNegativeLuminance(row[x]);
-            WorkingColor::scaleToLuminance(row[x], luminance,
-                           applyToneCurve(luminanceCurve, luminance));
-            row[x][0] = applyToneCurve(redCurve, row[x][0]);
-            row[x][1] = applyToneCurve(greenCurve, row[x][1]);
-            row[x][2] = applyToneCurve(blueCurve, row[x][2]);
-        }
-    }
-    }
+    DetailProcessing::applyTexture(adjusted, settings.texture);
+    DetailProcessing::applyClarity(adjusted, settings.clarity);
+    DetailProcessing::dehaze(adjusted, settings.dehaze);
+    ToneCurve::apply(adjusted, settings.toneCurves);
 
     if (settings.blur > 0) {
         const double sigma = static_cast<double>(settings.blur) / 2.0;
@@ -1894,27 +1636,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                                               settings.sharpeningMasking});
     }
 
-    if (settings.grain > 0) {
-        const float amount = 0.06f * static_cast<float>(settings.grain) / 100.0f;
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                quint32 hash = static_cast<quint32>(x) * 0x9e3779b9u +
-                               static_cast<quint32>(y) * 0x85ebca6bu;
-                hash ^= hash >> 16;
-                hash *= 0x7feb352du;
-                hash ^= hash >> 15;
-                const float noise =
-                    static_cast<float>(hash & 0xffffu) / 32767.5f - 1.0f;
-                const float luminance = WorkingColor::nonNegativeLuminance(row[x]);
-                const float shadowsWeight =
-                    0.45f + 0.55f * (1.0f - std::clamp(luminance, 0.0f, 1.0f));
-                WorkingColor::scaleToLuminance(row[x], luminance,
-                               std::max(0.0f, luminance + noise * amount *
-                                                  shadowsWeight));
-            }
-        }
-    }
+    DetailProcessing::addGrain(adjusted, settings.grain);
 
     const cv::Mat alpha = channels[3];
     cv::split(adjusted, channels);
@@ -1953,43 +1675,7 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
         return result;
     }
 
-    std::array<std::array<quint64, 256>, 4> bins{};
-    const auto srgbBin = [](float linear) {
-        const float bounded = std::clamp(linear, 0.0f, 1.0f);
-        const float encoded = bounded <= 0.0031308f
-                                  ? bounded * 12.92f
-                                  : 1.055f * std::pow(bounded, 1.0f / 2.4f) -
-                                        0.055f;
-        return std::clamp(
-            static_cast<int>(std::lround(encoded * 255.0f)), 0, 255);
-    };
-    // Histogram of the actual sRGB preview, after gamut mapping. Do not
-    // encode Rec.2020 master channels with the sRGB transfer function.
-    const auto decode = [](uchar code) {
-        const float v = code / 255.f;
-        return v <= .04045f ? v / 12.92f : std::pow((v + .055f) / 1.055f, 2.4f);
-    };
-    for (int y = 0; y < result.preview.height(); ++y) {
-        const uchar *row = result.preview.constScanLine(y);
-        for (int x = 0; x < result.preview.width(); ++x) {
-            const uchar *p = row + 4 * x;
-            const float luminance = .2126f * decode(p[0]) +
-                .7152f * decode(p[1]) + .0722f * decode(p[2]);
-            ++bins[0][static_cast<size_t>(srgbBin(luminance))];
-            ++bins[1][p[0]];
-            ++bins[2][p[1]];
-            ++bins[3][p[2]];
-        }
-    }
-    result.histogram.reserve(4);
-    for (const auto &channel : bins) {
-        QVariantList values;
-        values.reserve(256);
-        for (const quint64 value : channel)
-            values.append(static_cast<double>(value));
-        result.histogram.append(QVariant::fromValue(values));
-    }
-
+    result.histogram = Histogram::compute(result.preview);
     return result;
 }
 

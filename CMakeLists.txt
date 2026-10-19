@@ -52,6 +52,14 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorMixer.cpp
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
+    src/core/ColorAdjustments.h
+    src/core/ColorAdjustments.cpp
+    src/core/Contrast.h
+    src/core/Contrast.cpp
+    src/core/Histogram.h
+    src/core/Histogram.cpp
+    src/core/ToneCurve.h
+    src/core/ToneCurve.cpp
     src/core/ToneRecovery.h
     src/core/ToneRecovery.cpp
     src/core/ToneRecoveryModel.h

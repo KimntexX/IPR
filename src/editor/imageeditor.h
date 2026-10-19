@@ -4,6 +4,7 @@
 #include "ColorPipeline.h"
 #include "ImageImporter.h"
 #include "ColorMixer.h"
+#include "ToneCurve.h"
 #include "DecodedImageCache.h"
 #include "ImageCacheController.h"
 #include "RawDecoder.h"
@@ -107,6 +108,9 @@ public:
         BlueCurve
     };
     Q_ENUM(ToneCurveChannel)
+    static_assert(LuminanceCurve == ToneCurve::Luminance && RedCurve == ToneCurve::Red &&
+                  GreenCurve == ToneCurve::Green && BlueCurve == ToneCurve::Blue,
+                  "QML curve channels follow ToneCurve::Channel");
 
     explicit ImageEditor(ImageProvider *provider,
                          ThumbnailProvider *thumbnailProvider = nullptr,
@@ -225,11 +229,7 @@ private:
     // Offline test exporter: reuse the pipeline without loading/saving sidecars.
     friend class IprTestImageGenerator;
 
-    struct ToneCurvePoint
-    {
-        float x = 0.0f;
-        float y = 0.0f;
-    };
+    using ToneCurvePoint = ToneCurve::Point;
 
     struct Settings
     {
