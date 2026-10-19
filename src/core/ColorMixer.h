@@ -1,5 +1,5 @@
-#ifndef IPR_COLOR_MIXER_H
-#define IPR_COLOR_MIXER_H
+#ifndef IPR_CORE_COLORMIXER_H
+#define IPR_CORE_COLORMIXER_H
 
 #include <array>
 #include <opencv2/core.hpp>
@@ -20,4 +20,4 @@ struct Parameters {
 cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters);
 }
 
-#endif
+#endif // IPR_CORE_COLORMIXER_H

@@ -1,5 +1,6 @@
 // Manual measurement only: no changes to rendering, no corpus sidecar writes.
 #include "imageeditor.h"
+#include "Sidecar.h"
 #include "imageprovider.h"
 #include "CameraProfileEngine.h"
 #include <QCoreApplication>
@@ -215,6 +216,93 @@ public:
         return {{"runs", runs}};
     }
 
+    // Diagnostic render with the generator's decode (Camera Neutral, optics on)
+    // at one exposure value; the output path must stay outside the corpus.
+    // An optional manifest applies the RAW calibration the IHM enables by default.
+    static QJsonObject render(const QString &raw, double exposureEv, const QString &out,
+                              const QString &manifest = {}, bool optics = true)
+    {
+        RawDecoder::Options options;
+        options.preferCameraNeutral = true;
+        options.useNormalizationEnvironment = false;
+        options.normalizationManifest = manifest;
+        options.lensCorrectionEnabled = optics;
+        options.chromaticAberrationEnabled = optics;
+        auto loaded = ImageEditor::loadFromDisk(raw, false, options);
+        if (loaded.image.isNull()) return {{"error", loaded.error}};
+        ImageEditor::Settings settings;
+        settings.temperature = int(std::lround(loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));
+        settings.brightness = float(exposureEv);
+        const auto written = ImageEditor::writeImage(loaded.image, settings, out, "TIFF", 100);
+        return {{"output", out}, {"exposure", exposureEv}, {"success", written.success},
+                {"message", written.message}, {"dcp", loaded.metadata.dcpProfile},
+                {"raw_normalization", loaded.metadata.rawNormalizationApplied}};
+    }
+
+    // Equivalence check for refactors: renders every settings set of a JSON
+    // file (keys of ImageEditor::Settings; arrays for mixer/grading; tone
+    // curves as [[x, y], ...] per channel) on the full master and the proxy
+    // preview, and reports SHA-256 digests of the pixels and the histogram.
+    // Same digests before and after a refactor prove identical output.
+    static QJsonObject equivalence(const QString &raw, const QString &settingsPath, const QString &manifest)
+    {
+        QFile file(settingsPath);
+        if (!file.open(QIODevice::ReadOnly)) return {{"error", "cannot read " + settingsPath}};
+        const QJsonObject sets = QJsonDocument::fromJson(file.readAll()).object();
+        RawDecoder::Options options;
+        options.preferCameraNeutral = true;
+        options.useNormalizationEnvironment = false;
+        options.normalizationManifest = manifest;
+        options.lensCorrectionEnabled = false;
+        options.chromaticAberrationEnabled = false;
+        const auto loaded = ImageEditor::loadFromDisk(raw, false, options);
+        if (loaded.image.isNull()) return {{"error", loaded.error}};
+        const auto digest = [](const cv::Mat &m) {
+            QCryptographicHash h(QCryptographicHash::Sha256);
+            for (int y = 0; y < m.rows; ++y)
+                h.addData(QByteArrayView(reinterpret_cast<const char *>(m.ptr(y)), qsizetype(m.cols * m.elemSize())));
+            return QString::fromLatin1(h.result().toHex());
+        };
+        QJsonObject out;
+        for (auto it = sets.begin(); it != sets.end(); ++it) {
+            const QJsonObject j = it.value().toObject();
+            ImageEditor::Settings s;
+            s.temperature = int(std::lround(loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));
+            const auto integer = [&](const char *key, int &target) { if (j.contains(key)) target = j[key].toInt(); };
+            s.brightness = float(j.value("brightness").toDouble(0.0));
+            integer("contrast", s.contrast); integer("shadows", s.shadows); integer("blacks", s.blacks);
+            integer("highlights", s.highlights); integer("whites", s.whites); integer("temperature", s.temperature);
+            integer("tint", s.tint); integer("vibrance", s.vibrance); integer("saturation", s.saturation);
+            integer("texture", s.texture); integer("clarity", s.clarity); integer("dehaze", s.dehaze);
+            integer("grain", s.grain); integer("denoiseLuminance", s.denoiseLuminance);
+            integer("denoiseChrominance", s.denoiseChrominance); integer("sharpeningAmount", s.sharpeningAmount);
+            integer("sharpeningMasking", s.sharpeningMasking); integer("blur", s.blur);
+            s.sharpeningRadius = float(j.value("sharpeningRadius").toDouble(1.0));
+            s.grayscale = j.value("grayscale").toBool(false);
+            const auto array = [&](const char *key, auto &target) {
+                const QJsonArray a = j.value(key).toArray();
+                for (int i = 0; i < a.size() && i < int(target.size()); ++i) target[size_t(i)] = a[i].toInt();
+            };
+            array("mixerHue", s.mixerHue); array("mixerSaturation", s.mixerSaturation);
+            array("mixerLuminance", s.mixerLuminance); array("gradingHue", s.gradingHue);
+            array("gradingSaturation", s.gradingSaturation);
+            const QJsonArray curves = j.value("toneCurves").toArray();
+            for (int c = 0; c < curves.size() && c < 4; ++c)
+                for (const auto &point : curves[c].toArray())
+                    s.toneCurves[size_t(c)].append({float(point.toArray()[0].toDouble()), float(point.toArray()[1].toDouble())});
+            const auto master = ImageEditor::renderWorkingImage(loaded.image, s);
+            const auto preview = ImageEditor::renderPreview(loaded.editProxy, s, true);
+            QCryptographicHash histogram(QCryptographicHash::Sha256);
+            histogram.addData(QJsonDocument(QJsonArray::fromVariantList(preview.histogram)).toJson(QJsonDocument::Compact));
+            const QImage view = preview.preview.convertToFormat(QImage::Format_RGBA8888);
+            out[it.key()] = QJsonObject{
+                {"master", master.isNull() ? QString("null") : digest(master.linearRgba)},
+                {"preview", digest(cv::Mat(view.height(), view.width(), CV_8UC4, const_cast<uchar *>(view.constBits()), size_t(view.bytesPerLine())))},
+                {"histogram", QString::fromLatin1(histogram.result().toHex())}};
+        }
+        return {{"raw", raw}, {"sets", out}};
+    }
+
     // Inputs MUST be private copies: this measures the real editor lifecycle,
     // including its normal .ipr writes, without modifying source recipes.
     // budget < 0 keeps the controller's automatic retention cap. With idleMs
@@ -232,7 +320,7 @@ public:
             recipe.lensProfileResolved = true;
             recipe.lensCorrectionEnabled = false;
             recipe.chromaticAberrationEnabled = false;
-            if (!ImageEditor::writeSidecar(paths[i], {}, {}, recipe))
+            if (!Sidecar::write(paths[i], {}, {}, recipe))
                 return {{"error", "Cannot seed private sidecar"}};
         }
         ImageProvider provider;
@@ -332,6 +420,15 @@ int main(int argc, char **argv)
     QJsonObject result;
     if (args.size() == 5 && args[1] == "stages")
         result = IprTestImageGenerator::stages(args[2], args[3], args[4]);
+    else if (args.size() >= 5 && args.size() <= 7 && args[1] == "render" &&
+             (args.size() < 7 || args[6] == "no-optics")) {
+        bool ok = false;
+        const double ev = args[3].toDouble(&ok);
+        if (!ok) return 2;
+        result = IprTestImageGenerator::render(args[2], ev, args[4], args.value(5), args.size() < 7);
+    }
+    else if (args.size() == 5 && args[1] == "equivalence")
+        result = IprTestImageGenerator::equivalence(args[2], args[3], args[4]);
     else if (args.size() == 11 && args[1] == "navigation") {
         bool ok = args[3] == "auto", idleOk = false;
         const qint64 budget = ok ? -1 : qint64(args[3].toULongLong(&ok));
@@ -344,7 +441,7 @@ int main(int argc, char **argv)
         result = previews(args.mid(2));
 #endif
     } else {
-        std::cerr << "previews RAW... | stages RAW DCP CONFIG | navigation CONFIG auto|BUDGET IDLE_MS PRIVATE_A DCP_A PRIVATE_B DCP_B PRIVATE_C DCP_C\n";
+        std::cerr << "render RAW EV OUT.tiff [CONFIG [no-optics]] | equivalence RAW SETTINGS.json CONFIG | previews RAW... | stages RAW DCP CONFIG | navigation CONFIG auto|BUDGET IDLE_MS PRIVATE_A DCP_A PRIVATE_B DCP_B PRIVATE_C DCP_C\n";
         return 2;
     }
     result["qt"] = QT_VERSION_STR;

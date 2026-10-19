@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "SystemMemory.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -13,8 +14,15 @@
 #include <QDateTime>
 #include <tiffio.h>
 
+#include <algorithm>
+#include <atomic>
 #include <cmath>
+#include <exception>
+#include <functional>
+#include <mutex>
 #include <stdexcept>
+#include <thread>
+#include <vector>
 
 namespace {
 struct Feature {
@@ -191,12 +199,16 @@ public:
         return settings;
     }
 
+    // Same RAW recipe as the IHM default: Camera Neutral and the RAW calibration
+    // (ADR-0007). Optics stay off outside the optique series, like the Lightroom
+    // references, until the complete validation enables them by default.
     static LoadResult load(const QString &path, bool autoWb = false,
-                           bool lensCorrection = true, bool chromaticAberration = true)
+                           bool lensCorrection = false, bool chromaticAberration = false)
     {
         RawDecoder::Options options;
         options.preferCameraNeutral = true;
         options.useNormalizationEnvironment = false;
+        options.normalizationManifest = ImageEditor::defaultCalibrationManifest();
         options.lensCorrectionEnabled = lensCorrection;
         options.chromaticAberrationEnabled = chromaticAberration;
         LoadResult result = ImageEditor::loadFromDisk(path, autoWb, options);
@@ -234,6 +246,8 @@ public:
     static QString digest(const QString &path)
     {
         static QHash<QString, QString> hashes;
+        static std::mutex lock;
+        const std::lock_guard<std::mutex> guard(lock);
         if (!hashes.contains(path)) {
             QFile file(path);
             require(file.open(QIODevice::ReadOnly), "Cannot hash source: " + path);
@@ -276,6 +290,49 @@ public:
             && TIFFRewriteDirectory(tiff) == 1;
         TIFFClose(tiff);
         require(tagged, "Cannot embed TIFF provenance: " + path);
+    }
+
+    // Variants of one decoded source are independent renders of the same
+    // read-only master: they run in parallel. One render of a 32 MP CR3 was
+    // measured at about 1.0 GiB (31 B/px: float working copy, split channels,
+    // 16-bit output) on top of the shared master; 36 B/px keeps ~15 % above.
+    // The worker count follows the free memory, keeping 2 GiB for the system,
+    // and stays at most 4 (writes of ~250 MB TIFF files).
+    static int workerCount(quint64 pixels, quint64 *freeBytes = nullptr)
+    {
+        const quint64 perRender = pixels * 36 + 128ULL * 1024 * 1024;
+        const quint64 reserve = 2ULL * 1024 * 1024 * 1024;
+        const auto memory = SystemMemory::read();
+        const quint64 free = memory.valid && memory.availableBytes > reserve ? memory.availableBytes - reserve : 0;
+        if (freeBytes) *freeBytes = memory.valid ? memory.availableBytes : 0;
+        const int byMemory = int(std::min<quint64>(free / std::max<quint64>(perRender, 1), 4));
+        const int byCores = std::max(1, int(std::thread::hardware_concurrency()) / 2);
+        return std::clamp(std::min(byMemory, byCores), 1, 4);
+    }
+
+    // Runs jobs on `workers` threads; the first failure stops new jobs and is
+    // rethrown once running ones have finished (no file is deleted).
+    static void runParallel(const std::vector<std::function<void()>> &jobs, int workers)
+    {
+        std::atomic<size_t> next{0};
+        std::atomic<bool> failed{false};
+        std::exception_ptr error;
+        std::mutex errorLock;
+        const auto work = [&] {
+            for (size_t i = 0; !failed && (i = next++) < jobs.size();) {
+                try { jobs[i](); }
+                catch (...) {
+                    const std::lock_guard<std::mutex> guard(errorLock);
+                    if (!error) error = std::current_exception();
+                    failed = true;
+                }
+            }
+        };
+        std::vector<std::thread> threads;
+        for (int t = 1; t < workers; ++t) threads.emplace_back(work);
+        work();
+        for (auto &thread : threads) thread.join();
+        if (error) std::rethrow_exception(error);
     }
 };
 
@@ -345,7 +402,8 @@ int main(int argc, char **argv)
                 "Not enough space for estimated complete run; no output written.");
         out << "Base: " << base << "\nGroup: " << group << "\n"
             << inputs.size() << " source(s), " << total << " variant(s), TIFF 16-bit sRGB SDR.\n";
-        qsizetype completed = 0;
+        std::atomic<qsizetype> completed{0};
+        std::mutex outputLock;
         for (const QFileInfo &input : inputs) {
             out << "Decoding " << input.fileName() << Qt::endl;
             auto loaded = IprTestImageGenerator::load(input.absoluteFilePath());
@@ -356,6 +414,7 @@ int main(int argc, char **argv)
             require(QDir().mkpath(QFileInfo(neutralPath).absolutePath()), "Cannot create neutre folder.");
             IprTestImageGenerator::write(loaded, neutral, neutralPath, input.absoluteFilePath(),
                 group, "neutral", 0, neutralPath);
+            std::vector<std::function<void()>> parallel, sequential;
             for (const Feature &feature : selected) {
                 if (rawOnly(feature.name) && !RawDecoder::supportedExtensions().contains(input.suffix().toLower())) {
                     out << "Skipped " << feature.name << " (RAW input required)." << Qt::endl;
@@ -365,7 +424,10 @@ int main(int argc, char **argv)
                 require(QDir().mkpath(folder), "Cannot create " + folder);
                 for (double value : feature.values) {
                     const QString path = QDir(folder).filePath(fileName(input.completeBaseName(), feature.name, value));
-                    out << '[' << ++completed << '/' << total << "] " << path << Qt::endl;
+                    const auto report = [&out, &outputLock, &completed, total, path] {
+                        const std::lock_guard<std::mutex> guard(outputLock);
+                        out << '[' << ++completed << '/' << total << "] " << path << Qt::endl;
+                    };
                     const bool needsDecode = (feature.name == "auto-wb" && value == 1)
                         || featureGroup(feature.name) == "optique";
                     auto support = neutral;
@@ -379,22 +441,37 @@ int main(int argc, char **argv)
                         || feature.name.startsWith("grading-") || featureGroup(feature.name) == "optique")
                         reference = QDir(folder).filePath(fileName(input.completeBaseName(), feature.name,
                             feature.name == "sharpening-radius" ? 1 : 0));
-                    if (needsDecode) {
-                        auto source = IprTestImageGenerator::load(input.absoluteFilePath(), feature.name == "auto-wb",
-                            feature.name == "lens-correction" ? value == 1 : feature.name == "auto-wb",
-                            feature.name == "chromatic-aberration" ? value == 1 : feature.name == "auto-wb");
+                    const QString inputPath = input.absoluteFilePath();
+                    const QString name = feature.name;
+                    // A variant that needs its own decode holds a second master:
+                    // those run one at a time, after the parallel batch.
+                    if (needsDecode) sequential.push_back([=, &out, &outputLock] {
+                        report();
+                        auto source = IprTestImageGenerator::load(inputPath, name == "auto-wb",
+                            name == "lens-correction" && value == 1, name == "chromatic-aberration" && value == 1);
                         IprTestImageGenerator::write(source,
-                            IprTestImageGenerator::adjusted(IprTestImageGenerator::neutral(source), feature.name, value), path,
-                            input.absoluteFilePath(), featureGroup(feature.name), feature.name, value, reference);
-                        if (featureGroup(feature.name) == "optique")
+                            IprTestImageGenerator::adjusted(IprTestImageGenerator::neutral(source), name, value), path,
+                            inputPath, featureGroup(name), name, value, reference);
+                        if (featureGroup(name) == "optique") {
+                            const std::lock_guard<std::mutex> guard(outputLock);
                             out << "Optical status: geometry=" << source.metadata.lensGeometryApplied
                                 << ", vignetting=" << source.metadata.lensVignettingApplied
                                 << ", CA=" << source.metadata.chromaticAberrationApplied << Qt::endl;
-                    } else IprTestImageGenerator::write(loaded,
-                        IprTestImageGenerator::adjusted(support, feature.name, value), path,
-                        input.absoluteFilePath(), featureGroup(feature.name), feature.name, value, reference);
+                        }
+                    });
+                    else parallel.push_back([=, &loaded] {
+                        report();
+                        IprTestImageGenerator::write(loaded, IprTestImageGenerator::adjusted(support, name, value), path,
+                            inputPath, featureGroup(name), name, value, reference);
+                    });
                 }
             }
+            quint64 freeBytes = 0;
+            const int workers = IprTestImageGenerator::workerCount(quint64(loaded.image.linearRgba.total()), &freeBytes);
+            out << "Parallel renders: " << workers << " (free memory " << freeBytes / (1024 * 1024)
+                << " MiB, 2 GiB reserve)" << Qt::endl;
+            IprTestImageGenerator::runParallel(parallel, workers);
+            IprTestImageGenerator::runParallel(sequential, 1);
         }
         out << "Complete. Only TIFF images written; remove them manually after analysis." << Qt::endl;
         return 0;

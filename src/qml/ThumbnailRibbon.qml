@@ -186,16 +186,16 @@ Rectangle {
                             font.pixelSize: 10
                         }
 
-                        PreferenceCheckBox {
+                        BackendCheckBox {
                             id: selectionCheck
                             anchors.top: parent.top
                             anchors.right: parent.right
                             anchors.margins: 1
                             Accessible.name: qsTr("Sélectionner %1 pour traitement groupé").arg(imageDelegate.fileName)
-                            checked: ribbon.editor.selectedImageUrls.indexOf(
-                                         imageDelegate.fileUrl.toString()) >= 0
-                            onToggled: ribbon.editor.setImageSelected(
-                                           imageDelegate.fileUrl, checked)
+                            backendChecked: ribbon.editor.selectedImageUrls.indexOf(
+                                                imageDelegate.fileUrl.toString()) >= 0
+                            onChangeRequested: (checked) => ribbon.editor.setImageSelected(
+                                                   imageDelegate.fileUrl, checked)
                         }
                         Rectangle {
                             objectName: "currentPhotoBadges_" + imageDelegate.index

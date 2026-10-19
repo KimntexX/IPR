@@ -207,6 +207,12 @@ int main(int argc, char **argv)
         check(received.automaticWhiteBalance && !received.lensCorrectionEnabled
               && received.chromaticAberrationEnabled && received.preferCameraNeutral
               && !received.useNormalizationEnvironment, "RAW decode options incorrect");
+        // Base decode: the IHM's default RAW calibration, optics off like the LR references.
+        IprTestImageGenerator::load("sample.generatormockraw");
+        check(!received.automaticWhiteBalance && !received.lensCorrectionEnabled
+              && !received.chromaticAberrationEnabled
+              && received.normalizationManifest == ImageEditor::defaultCalibrationManifest()
+              && !received.normalizationManifest.isEmpty(), "Base decode differs from the IHM recipe");
 
         QTextStream(stdout) << "Generator: root discovery, groups/all, current presets, TIFF/ICC, isolation, shared folders and safety passed.\n";
         return 0;

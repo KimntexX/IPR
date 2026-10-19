@@ -11,12 +11,13 @@ Le paquet « système » utilise les bibliothèques installées, sans les embarq
 | --- | --- | --- |
 | `ci.yml` | Push dev/main/patch_*, PR vers dev/main, manuel | Tests ciblés sur les branches de groupe ; validation complète aux portes d'intégration |
 | `delivery.yml` | CI réussie sur dev/main, ou manuel limité à dev/main | Commit testé exact, validation complète, puis archives standalone/système, SHA-256 et mémoire JSON |
-| `linux-distributions.yml` | Manuel sur dev/main après CI réussie du commit exact | Debian 12 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système et tests complets |
+| `linux-distributions.yml` | Manuel sur dev/main après CI réussie du commit exact | Debian 13 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système et tests complets |
 
 Windows x64 : MSVC 2022, Qt 6.8.3, vcpkg épinglé au commit du manifeste.
 Linux standalone : Ubuntu 24.04 x64, Qt 6.8.3 ; pas un binaire universel glibc.
-Linux système utilise Qt fourni par apt, sans imposer un SDK Qt externe à
-l'utilisateur ; les paquets Debian/Fedora/Arch utilisent aussi leurs dépôts natifs.
+Ubuntu 24.04 ne fournit que Qt 6.4.2 : la CI Linux y compile donc avec le SDK
+Qt 6.8.3 dans les deux modes, et aucune archive système Ubuntu 24.04 n'est produite.
+Les paquets Debian 13, Fedora et Arch utilisent leurs dépôts natifs (Qt ≥ 6.8).
 macOS : runners `macos-15` arm64 et `macos-15-intel` x64 ; Homebrew pour les
 dépendances tierces et Qt système, SDK Qt officiel 6.8.3 pour le standalone.
 Le minimum macOS effectif dépend des bouteilles Homebrew : ne pas annoncer
@@ -28,13 +29,29 @@ ne remplace pas une recette sur les deux systèmes utilisateurs.
 [Plateformes Qt](https://doc.qt.io/qt-6.8/supported-platforms.html),
 [runners GitHub](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
 
+## Minimum Qt 6.8 effectif — 17 octobre 2026
+
+Décision : [ADR-0016](../decisions/ADR-0016-minimum-qt-6-8.md). L'orientation
+du 15 octobre ci-dessous est désormais appliquée, sur décision de l'utilisateur,
+depuis `patch_light` :
+
+- `find_package(Qt6 6.8)` pour tous les modes ; le contrôle propre au standalone
+  dans `cmake/Deployment.cmake` devient inutile et est retiré.
+- CI Linux : SDK Qt 6.8.3 (`install-qt-action`) en mode système comme standalone ;
+  la combinaison Ubuntu 24.04 + système est exclue du packaging et de la livraison.
+- Paquet `.deb` construit sur Debian 13 (Qt 6.8.2) au lieu de Debian 12 (6.4.2).
+- Plus aucun chemin propre à Qt < 6.8 : le contournement de conversion RGBA64
+  vers flottant, propre à Qt 6.4.2, est supprimé. Qt 6.8.3 convertit exactement.
+
+La version de flux `QDataStream::Qt_6_4` des sidecars `.ipr` (ADR-0001) est un
+**format de fichier**, pas un minimum de compilation : elle reste inchangée.
+
 ## Orientation de compatibilité Qt ≥ 6.8 — 15 octobre 2026
 
 Orientation retenue à la suite de l'étude Linux/macOS et de l'accord utilisateur :
 préparer Qt **6.8 minimum** comme cible de distribution, avec deux modes distincts.
-Cette trace documentaire **ne modifie pas** le minimum CMake actuel (Qt 6.4),
-les conteneurs CI, les workflows ni les paquets déjà produits. Leur alignement
-devra faire l'objet d'une intégration et de tests dédiés sur `patch_ci_cd`.
+À cette date, la trace était documentaire : CMake, CI et paquets restaient à
+Qt 6.4. Elle est appliquée depuis le 17 octobre (section précédente).
 
 - **Système** : toutes les bibliothèques Qt nécessaires à IPR doivent être
   disponibles dans une version cohérente ≥ 6.8 dans les dépôts retenus.
@@ -50,11 +67,11 @@ futures des dépôts ni une validation d'exécution d'IPR :
 
 | Famille / cible | Qt des dépôts observé | Stratégie proposée |
 | --- | --- | --- |
-| Ubuntu 24.04 LTS | 6.4.2 | Standalone Qt ≥ 6.8 ; pas de paquet exigeant Qt ≥ 6.8 système standard |
+| Ubuntu 24.04 LTS | 6.4.2 | Standalone Qt ≥ 6.8 seulement ; plus d'archive système |
 | Ubuntu 26.04 LTS | 6.10.2 | Paquet système et qualification standalone |
 | Linux Mint 22.x | Base Ubuntu 24.04 | Standalone ; qualification propre à Mint requise |
-| Debian 12 | 6.4.2 | Standalone à construire sur une base compatible ; le paquet système actuel reste distinct de la future cible ≥ 6.8 |
-| Debian 13 | 6.8.2 | Cible `.deb` système à prévoir pour le nouveau minimum |
+| Debian 12 | 6.4.2 | Standalone seulement ; le `.deb` système passe à Debian 13 |
+| Debian 13 | 6.8.2 | Cible `.deb` système depuis le 17 octobre 2026 |
 | Fedora 43/44 | 6.10/6.11 | Cibles `.rpm` système ; qualifier chaque version encore maintenue au moment de livrer |
 | Arch Linux | 6.12 au moment du relevé | Paquet système, avec suivi régulier des mises à jour rolling release |
 
@@ -121,7 +138,7 @@ Windows : fournir `--qt-root`, les chemins CMake des dépendances via
 `--cmake-arg=-D...`, et un ou plusieurs `--runtime-dir` contenant les DLL tierces.
 Le wrapper `scripts/package-windows.ps1` appelle ce même moteur, sans implémentation
 parallèle. `scripts/github_build.py` ajoute les chemins vcpkg/Homebrew des runners.
-Un standalone exige Qt >= 6.8 ; les builds système conservent Qt >= 6.4.
+Tous les modes exigent Qt >= 6.8.
 
 Linux natif : `--native deb`, `--native rpm` ou `--native arch`, en mode système,
 sur la distribution cible. Arch produit une recette à partir du commit courant ;

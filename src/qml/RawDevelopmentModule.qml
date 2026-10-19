@@ -51,14 +51,14 @@ ColumnLayout {
             border.color: profileSelector.activeFocus ? profileSelector.palette.text : profileSelector.palette.mid
         }
     }
-    PreferenceCheckBox {
+    BackendCheckBox {
         objectName: "rawAutomaticWhiteBalanceToggle"
         text: qsTr("Balance des blancs automatique")
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-        checked: root.editor.automaticWhiteBalance
+        backendChecked: root.editor.automaticWhiteBalance
         enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setAutomaticWhiteBalance(checked)
+        onChangeRequested: (checked) => root.editor.setAutomaticWhiteBalance(checked)
         textColor: root.textColor
         contentItem: Text {
             text: parent.text

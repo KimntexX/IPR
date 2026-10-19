@@ -1,40 +1,86 @@
-#ifndef IPR_TONE_RECOVERY_H
-#define IPR_TONE_RECOVERY_H
-#include <algorithm>
+#ifndef IPR_CORE_TONERECOVERY_H
+#define IPR_CORE_TONERECOVERY_H
+
+#include "ToneStatistics.h"
+
+#include <opencv2/core.hpp>
+
+#include <array>
+
+// Shadows, Blacks, Highlights and Whites (plan B, 18 October 2026). Each control
+// lifts or lowers tones by an EV amount read from Lightroom's own transfer
+// curves (ToneRecoveryModel.h: knots every EV of log2 input, four slider
+// levels, linear in between). Lightroom adapts Shadows, Highlights and positive
+// Whites to the image: their lift is multiplied by a per-image gain predicted
+// from the image's luminance statistics, bounded to the range seen in fitting.
+// Blacks and negative Whites are the same on every image.
+// Shadows, Highlights and negative Whites act on luminance (common RGB scale);
+// Blacks and positive Whites act on each linear sRGB channel, as Lightroom
+// does: its Blacks -100 saturates colours (x1.40), which a common scale cannot
+// reproduce. Values at or above 1 (HDR headroom) are left untouched.
 namespace ToneRecovery {
-inline float smoothStep(float lo, float hi, float value)
+struct Amounts { float shadows = 0, blacks = 0, highlights = 0, whites = 0; };
+
+inline bool identity(const Amounts &a)
 {
-    const float t = std::clamp((value - lo) / (hi - lo), 0.0f, 1.0f);
-    return t * t * (3.0f - 2.0f * t);
+    return a.shadows == 0 && a.blacks == 0 && a.highlights == 0 && a.whites == 0;
 }
-// Additional Y compatible with uniform RGB scaling; existing HDR is not clipped.
-inline float rgbHeadroom(float sourceY, float currentY, float maximumChannel)
-{
-    if (sourceY <= 0 || maximumChannel <= 0 || maximumChannel >= 1) return 0;
-    return std::max(0.0f, sourceY / maximumChannel - currentY);
+
+// Applies the four controls (slider amounts in [-1, 1]) to a linear Rec.2020
+// RGB image (CV_32FC3) in place, weighted by the image's statistics.
+void apply(cv::Mat &rgb, const Amounts &amounts, const Statistics &statistics);
+
+// Building blocks of apply(), exposed for the unit tests.
+
+// Per-image gains, indexed like Model::Controls.
+struct Gains { std::array<float, 8> value{1, 1, 1, 1, 1, 1, 1, 1}; };
+
+// Median statistics of the fitting scenes, for images without measurement.
+Statistics typicalStatistics();
+Gains gains(const Statistics &statistics);
+
+// EV lift of one control (0 Shadows, 1 Blacks, 2 Highlights, 3 Whites) at
+// x = log2(input) for a slider amount in [-1, 1].
+float lift(int control, float amount, float x, const Gains &gains);
+
+// Soft shoulder of a brightening from y (< 1) to out: tones above the knee
+// approach 1 without reaching it; untouched or darkened tones pass through.
+float shoulder(float y, float out, float knee = 0.70f);
+
+// Analytic transfer of the luminance controls or of the channel controls,
+// before monotone sampling.
+float transfer(float y, const Amounts &a, const Gains &g, bool perChannel);
+
+// Brightening of a linear sRGB colour of luminance y to the luminance target,
+// whitening a colour that would leave the gamut.
+void brightenTowardWhite(float rgb[3], float y, float target);
+
+// Darkening of a colour of luminance y to the luminance target, keeping and
+// amplifying the colour of bright tones.
+void darkenKeepingColour(float rgb[3], float y, float target);
+
+// Production curves, sampled once per render over the 16 EV below white and
+// made non-decreasing by a running maximum (no tone reversal, whatever the
+// combination); linear interpolation in log2 between samples.
+class Curve {
+public:
+    Curve(const Amounts &amounts, const Gains &gains);
+    bool luminanceIdentity() const { return luminanceIdentity_; }
+    bool channelIdentity() const { return channelIdentity_; }
+    float luminance(float y) const;
+    float channel(float v) const;
+
+private:
+    static constexpr int Samples = 4096;
+    static constexpr float SpanEv = 16.0f;
+    using Table = std::array<float, Samples + 1>;
+    void sample(Table &table, bool perChannel) const;
+    float read(const Table &table, float y, bool perChannel) const;
+    Amounts amounts_;
+    Gains gains_;
+    bool luminanceIdentity_, channelIdentity_;
+    Table luminance_{}, channel_{};
+};
 }
-inline float positiveShadowDelta(float y, float maximumChannel, float amount)
-{
-    if (y <= 0) return 0;
-    // No black pedestal: gain <=4 (+2 EV). k locates maximum lift at Y=.025.
-    // Delta=3*a*Y/(1+Y/k)^2, <=.01875 before masking. The unmasked output
-    // derivative is >=1-3/27: tone ordering is preserved, unlike inverse-root lift.
-    constexpr float maximumExtraGain = 3.0f;
-    constexpr float knee = 0.025f;
-    const float u = y / knee;
-    const float mask = 1.0f - smoothStep(0.10f, 0.56f, y);
-    const float delta = std::clamp(amount, 0.0f, 1.0f) * maximumExtraGain * y * mask /
-                        ((1.0f + u) * (1.0f + u));
-    // Retain 10% channel headroom instead of clipping RGB independently.
-    return std::min(delta, 0.90f * rgbHeadroom(y, y, maximumChannel));
-}
-inline float positiveHighlightDelta(float sourceY, float currentY,
-                                   float maximumChannel, float amount, float mask)
-{
-    // Y<=1 does not guarantee RGB<=1. Keep 30% actual RGB headroom at +100.
-    constexpr float amplitude = 0.70f;
-    return rgbHeadroom(sourceY, currentY, maximumChannel) * amplitude *
-           std::clamp(amount, 0.0f, 1.0f) * std::clamp(mask, 0.0f, 1.0f);
-}
-}
-#endif
+
+#endif // IPR_CORE_TONERECOVERY_H

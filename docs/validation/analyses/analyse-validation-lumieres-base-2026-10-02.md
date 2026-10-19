@@ -618,3 +618,394 @@ export, récupération tonale, IHM des réglages, restauration RAW, profils,
 décodeur et générateur). Le générateur a été recompilé avec le correctif après
 la fin de la campagne automatique : ses neuf manifestes confirment désormais
 **527/527 exports produits**, sans constituer une validation de leur rendu.
+
+## Campagne Lumières sur le pipeline Rec.2020 — 17 octobre 2026
+
+Les validations précédentes portent sur l'ancien rendu. La livraison
+`v0.1.23-alpha` a changé la base : master Rec.2020 linéaire, calibration
+d'ouverture RAW, Qt 6.8 minimum. Les six réglages sont revalidés dans l'ordre
+demandé par l'utilisateur : exposition, contraste, ombres, noirs, HL, blancs.
+
+Génération `iprGenerateTests lumiere` depuis `patch_light`, sur les six scènes
+du protocole (0007, 0037, 0043, 0327, 9421, 9950). Les treize autres CR3 ont
+été déplacés temporairement dans `tests/image/base-hors-protocole/`. Résultat :
+300 variantes et six neutres `-IPR-neutre-lumiere`, Camera Neutral, sans
+erreur. Les références Lightroom ont été réexportées par l'utilisateur :
+4 états d'exposition et 8 états pour chaque autre réglage, sur les six scènes.
+
+### Exposition
+
+Mémoire : [mesure-lumiere-v001](../raw/mesure-lumiere-v001-20261017T215824485914Z.json),
+protocole `grouped-native-v2`, analyse 2.0. États : 50 mesurés, 4 exclus.
+Échantillonnage natif une ligne/colonne sur huit, sans conversion 8 bits.
+
+| Moteur | −1 EV | −0,5 EV | 0 EV | +0,5 EV | +1 EV |
+| --- | --- | --- | --- | --- | --- |
+| Gain attendu `2^EV` | 0,5000 | 0,7071 | 1,0000 | 1,4142 | 2,0000 |
+| IPR, médiane des 6 scènes | 0,5000 | 0,7071 | 1,0000 | 1,4142 | 2,0000 |
+| LR, plage des 5 scènes auditées | 0,23–0,33 | 0,47–0,59 | — | 1,55–1,80 | 2,21–3,20 |
+
+- **IPR** : loi `2^EV` exacte sur les pixels non écrêtés des six scènes, avec
+  des quantiles à ±0,0002 et aucune inversion ; 0 EV est identique au neutre.
+- **Écrêtage IPR à +1 EV** : 14,62 % (0007), 13,02 % (9421) et 17,61 % (9950)
+  des échantillons ont un canal saturé ; de 0 à 2,50 % ailleurs. Ces valeurs
+  sont pratiquement celles du 9 octobre : la nouvelle base ne les modifie pas.
+- **Lightroom** : réponse non linéaire du TIFF final, quasiment sans écrêtage
+  (au plus 0,51 % sur 9421 à +1 EV). Ses gains sont identiques à ceux du 9 octobre,
+  ce qui confirme la cohérence des exports. Ce n'est pas une raison de modifier `2^EV`.
+- **Exclusion** : les 4 variantes LR de 6V1A0037 portent `WhiteBalance=Custom`,
+  avec la même température et la même nuance ; leur neutre porte `As Shot`.
+  L'analyseur exige une égalité stricte : un neutre LR « Custom » est demandé à l'utilisateur.
+
+Lecture : la loi d'exposition est revalidée sur le pipeline Rec.2020. L'écart
+visible avec Lightroom en surexposition tient à la compression des hautes
+lumières de sortie (écrêtage net d'IPR, adoucissement de LR). Il sera traité
+avec Blancs et HL, sans modifier l'exposition. Décision visuelle de l'utilisateur
+et parité Lightroom : non évaluées à ce stade.
+
+### Exposition — correction avant le DCP et validation visuelle, 18 octobre 2026
+
+La comparaison dans l'IHM a contredit la lecture précédente. À +1 EV, IPR
+délavait le mur jaune de 9421, que Lightroom conservait ; à 0 EV, IPR
+paraissait un peu plus sombre sur toutes les images. La campagne v001
+validait un invariant (`2^EV` appliqué au rendu), pas le comportement
+photographique. Cause : l'exposition multipliait le master déjà développé, donc
+**après** la courbe tonale et les tables du DCP, sans épaule pour les hautes lumières.
+
+Correction (`patch_light`) : pour un RAW avec DCP, l'exposition et la balance
+des blancs agissent ensemble sur le signal caméra linéaire, **avant** le DCP
+(`CameraProfileEngine::renderFromCameraSignal`). Les sources sans signal caméra
+(raster, RAW sans DCP) gardent la multiplication linéaire. Les tests imposent
+désormais que +1 EV ne soit pas un doublement après la courbe.
+
+Rendu diagnostique des cinq scènes ayant un neutre LR, hors corpus
+(quantiles de Y linéaire, pas d'échantillonnage 8) :
+
+| +1 EV | Canal saturé, avant → après (LR) | Chroma du décile haut, avant → après (LR) |
+| --- | --- | --- |
+| 6V1A9421 | 13,18 % → 0,28 % (0,53 %) | 0,526 → 0,780 (0,695) |
+| 6V1A0007 | 15,00 % → 0 % (0 %) | 0,178 → 0,154 (0,097) |
+| 6V1A9950 | 17,86 % → 0 % (0 %) | 0,297 → 0,232 (0,193) |
+
+Les hautes lumières sont désormais comprimées par l'épaule du profil, et la
+forme de la réponse se rapproche de LR. Un écart de niveau subsiste à tous les
+EV : IPR reste plus sombre dans les tons moyens et bas, dès 0 EV. Exemple à 0 EV,
+Y médian 0,089 contre 0,149 sur 9421, et 0,020 contre 0,039 sur 0327. Cet écart
+du rendu de base est un sujet distinct, à étudier avant le contraste.
+
+**Décision de l'utilisateur, 18 octobre 2026 : exposition validée dans cet état.**
+Les TIFF `lumiere/exposure` de la génération du 17 octobre restent ceux de l'ancien
+calcul ; une campagne v002 sera produite après leur régénération. Les variantes des
+cinq autres réglages, générées à 0 EV, ne sont pas affectées par cette correction.
+
+### Exposition — campagne v002 sur base comparable, 18 octobre 2026
+
+L'écart de base à 0 EV ne venait pas du moteur, mais de deux biais de méthode.
+D'une part, le **générateur n'appliquait pas la calibration RAW** que l'IHM active
+par défaut (ADR-0007) : ses TIFF étaient 0,3 à 1,1 EV plus sombres que l'écran.
+D'autre part, l'optique différait : le générateur l'activait, alors que les
+références LR ont `LensProfileEnable=0` (effet net sur 9950, vignetage).
+Rendus diagnostiques à 0 EV, calibration active et optique coupée : écart à LR
+de ±0,01 EV à tous les quantiles, sur les cinq scènes. Correction du générateur
+(calibration par défaut, optique coupée hors série `optique`) ; groupe `lumiere`
+entièrement régénéré.
+
+Mémoire : [mesure-lumiere-v002](../raw/mesure-lumiere-v002-20261018T095236504304Z.json),
+qui remplace la v001 sans la modifier. États : 50 mesurés, 4 exclus (LR de 0037,
+neutre « Custom » manquant).
+
+| | −1 EV | −0,5 EV | 0 EV | +0,5 EV | +1 EV |
+| --- | --- | --- | --- | --- | --- |
+| Gain médian IPR / LR, chacun contre son neutre | 0,249 / 0,256 | 0,517 / 0,540 | — | 1,768 / 1,764 | 2,997 / 2,936 |
+| Écart IPR − LR au q50, EV, médiane des scènes | +0,01 | +0,00 | +0,00 | +0,00 | +0,00 |
+| Canal saturé, maximum par scène, IPR / LR | 0 % / 0 % | 0,01 % / 0 % | — | 0,54 % / 0,13 % | 0,91 % / 0,51 % |
+
+Sur les 25 couples scène × EV, l'écart IPR − LR reste dans ±0,03 EV de q10 à q99,
+sauf 9421 à +1 EV (+0,07 EV au q90). L'exposition est **conforme à LR à réglages
+égaux** sur ce corpus. Ce n'est pas une parité universelle : un seul boîtier
+(R6 Mark III), Camera Neutral, optique coupée, six scènes.
+
+L'exposition est complétée par [v003](../raw/mesure-lumiere-v003-20261018T100527858427Z.json)
+(54 états, aucun exclu) : variantes LR de 0037 réexportées en « As Shot ».
+
+### Contraste — campagne du 18 octobre 2026
+
+Mémoire : [mesure-lumiere contraste](../raw/mesure-lumiere-v001-20261018T100916500016Z.json),
+102 états mesurés (54 IPR, 48 LR), aucun exclu, base calibrée et optique coupée.
+Le numéro v001 suit la numérotation de ce réglage ; l'horodatage identifie la campagne.
+Ratios Y variante / neutre du même moteur, médiane des six scènes :
+
+| Valeur | Bas 20 %, IPR / LR | Tons moyens 40–60 %, IPR / LR | Haut 20 %, IPR / LR | Canal saturé max, IPR / LR |
+| --- | --- | --- | --- | --- |
+| −100 | 3,054 / 2,860 | 1,519 / 2,183 | 0,825 / 0,953 | 0,00 % / 0,01 % |
+| −50 | 1,740 / 1,703 | 1,226 / 1,505 | 0,916 / 0,973 | 0,01 % / 0,01 % |
+| +50 | 0,419 / 0,484 | 0,737 / 0,577 | 1,236 / 1,037 | 1,02 % / 0,20 % |
+| +100 | 0,179 / 0,126 | 0,558 / 0,251 | 1,417 / 1,082 | 6,81 % / 1,02 % |
+
+Écart direct IPR − LR au q50 : −0,36 EV à −100, −0,21 EV à −50, +0,18 EV à +50 et
++0,99 EV à +100 (pire écart toutes scènes et quantiles : 1,44 EV à +100).
+
+Lecture : le sens est correct et les ombres répondent comme LR. En revanche,
+les tons moyens réagissent environ deux fois moins dans IPR, et un contraste
+positif fait monter les hautes lumières (×1,42 et 6,81 % d'écrêtage à +100,
+contre ×1,08 et 1,02 % pour LR). Cause probable : courbe en S linéaire autour
+de 18 % appliquée au rendu final, sans protection des hautes lumières, alors que
+LR travaille dans un domaine perceptuel avec des hautes lumières protégées.
+**Contrôle visuel de l'utilisateur demandé avant toute correction.**
+
+#### Correction du contraste et validation visuelle, 18 octobre 2026
+
+Les captures de l'utilisateur confirment les mesures : à +100, IPR poussait
+blancs et HL sans harmonie ; à +50, presque aucun effet visible. Nouvelle courbe :
+S à extrémités fixes en domaine logarithmique (16 EV sous le blanc), pivot 0,32,
+appliquée **canal par canal**. Un premier essai, qui conservait les rapports RGB, blanchissait
+et refroidissait le jaune de 9421 à +100 (saturation des tons clairs −0,085 contre LR).
+L'application par canal donne +0,003. Paramètres ajustés sur les 48 références LR,
+écart de luminance médian 0,08 EV. Force positive 0,60 ; force négative 0,45 × 1,08,
+renforcée de 8 % à la demande de l'utilisateur.
+
+**Décision de l'utilisateur : fonctionnement du contraste approuvé dans cette
+version, avec une réserve à +100**, jugé environ 3 % plus fort que Lightroom.
+
+#### Contraste — campagne v002 sur la version approuvée
+
+Mémoire : [mesure-lumiere contraste v002](../raw/mesure-lumiere-v002-20261018T111849048537Z.json),
+qui remplace la campagne du matin ; 102 états mesurés, aucun exclu. Groupe `lumiere`
+régénéré avec la courbe par canal.
+
+| Valeur | Bas 20 %, IPR / LR | Tons moyens, IPR / LR | Haut 20 %, IPR / LR | Canal saturé max, IPR / LR |
+| --- | --- | --- | --- | --- |
+| −100 | 4,527 / 2,860 | 2,394 / 2,183 | 0,963 / 0,953 | 0,00 % / 0,01 % |
+| −50 | 2,207 / 1,703 | 1,604 / 1,505 | 0,978 / 0,973 | 0,01 % / 0,01 % |
+| +50 | 0,351 / 0,484 | 0,502 / 0,577 | 1,039 / 1,037 | 0,20 % / 0,20 % |
+| +100 | 0,128 / 0,126 | 0,224 / 0,251 | 1,094 / 1,082 | 0,57 % / 1,02 % |
+
+Les hautes lumières suivent désormais LR, avec moins d'écrêtage. Les tons moyens
+sont 0,1 à 0,2 EV plus marqués que LR des deux côtés, ce qui est cohérent avec la
+réserve de l'utilisateur à +100. **Point de vigilance** : à −100, les noirs profonds
+remontent bien plus que dans LR (×4,53 contre ×2,86 sur les 20 % bas, +0,44 EV au q5),
+ce qui risque de révéler le bruit sur les scènes à ISO élevé. À reprendre si la
+validation des ombres et des noirs le confirme visuellement.
+
+### Ombres, noirs, HL et blancs — plan A, campagnes du 18 octobre 2026
+
+Plan A ([roadmap Lumières](../../architecture/roadmap-lumieres.md)) : courbe de
+luminance unique à plages fixes, ajustée sur les références LR de huit scènes
+(six du protocole, plus 6V1A0524 et 7Y6A7003, claires), sous les règles de
+séparation des tests d'export. Groupe `lumiere` entièrement régénéré.
+
+Mémoires, chacune remplaçant la précédente sans la modifier :
+[exposition v004](../raw/mesure-lumiere-v004-20261018T145654729513Z.json) (72 états),
+[contraste v003](../raw/mesure-lumiere-v003-20261018T150227383825Z.json),
+[ombres v002](../raw/mesure-lumiere-v002-20261018T150753870527Z.json),
+[noirs v002](../raw/mesure-lumiere-v002-20261018T151320602917Z.json),
+[HL v002](../raw/mesure-lumiere-v002-20261018T151846378645Z.json) et
+[blancs v002](../raw/mesure-lumiere-v002-20261018T152411246100Z.json) (136 états chacune).
+Aucun exclu.
+
+Exposition et contraste tiennent sur huit scènes : exposition à ±0,01 EV en
+médiane, pire écart 0,08 EV ; contraste conforme à sa v002.
+
+Ratios Y variante / neutre du même moteur à ±100, médiane des scènes :
+
+| Réglage | Bas 20 %, IPR / LR | Tons moyens, IPR / LR | Haut 20 %, IPR / LR | Canal saturé max, IPR / LR |
+| --- | --- | --- | --- | --- |
+| Ombres −100 | 0,279 / 0,360 | 0,659 / 0,700 | 0,989 / 0,969 | 0,34 % / 0,03 % |
+| Ombres +100 | 2,820 / 3,327 | 1,531 / 1,398 | 1,009 / 1,031 | 0,35 % / 0,11 % |
+| Noirs −100 | 0,000 / 0,000 | 0,343 / 0,107 | 0,928 / 0,759 | 0,27 % / 0,05 % |
+| Noirs +100 | 2,122 / 2,293 | 1,038 / 1,866 | 1,000 / 1,138 | 0,35 % / 0,08 % |
+| HL −100 | 0,982 / 0,883 | 0,898 / 0,782 | 0,762 / 0,626 | 0,27 % / 0,01 % |
+| HL +100 | 1,009 / 1,135 | 1,052 / 1,194 | 1,150 / 1,563 | 3,72 % / 36,68 % |
+| Blancs −100 | 0,994 / 0,981 | 0,925 / 0,931 | 0,787 / 0,856 | 0,00 % / 0,02 % |
+| Blancs +100 | 1,042 / 2,101 | 1,079 / 4,210 | 1,158 / 2,174 | 12,26 % / 7,24 % |
+
+Lecture : chaque réglage agit dans sa zone, sans déborder sur l'autre
+extrémité. Ombres et blancs négatifs suivent LR. Les écarts restants viennent
+surtout de l'adaptation de LR à ces scènes sombres : ses noirs et blancs
+déplacent aussi les tons moyens (blancs +100 : ×4,2), ce que les plages fixes
+excluent (plan B). HL et blancs positifs sont donc nettement plus doux que LR ;
+les blancs écrêtent tôt sur la scène claire (≈ 10 % dès +25, contre 2,4 %).
+
+**Défaut corrigé après campagne** : les noirs négatifs écrasaient trop tôt
+(à −25, bas 20 % à 0,029 contre 0,481 pour LR). L'ajustement plafonnait les
+tons à 2^-12 et masquait ces tons très profonds. Correction : orteil doux
+y² / (y + orteil) avant un point noir plus tardif ; ajustement avec la moyenne
+du bas 20 % sans ce plancher. Écart prévu à −25 et −50 : +0,01 et +0,00 EV.
+Les rendus noirs de cette campagne précèdent ce correctif : **à régénérer et
+remesurer** avant validation des noirs.
+
+**Validation visuelle de l'utilisateur demandée**, réglage par réglage.
+
+#### Validation visuelle et règle de zones redéfinie, 18 octobre 2026
+
+Retour de l'utilisateur sur IPR face à LR : blancs incorrects, HL encore trop
+douces, noirs incorrects à −100 comme à +100 ; ombres à +100 acceptables
+(légère perte de détail, compensable par les autres réglages). Cause : la règle
+des tests d'export isolait chaque réglage, alors que LR fait atteindre les tons
+moyens aux noirs et aux blancs. Règle redéfinie (voir la
+[roadmap Lumières](../../architecture/roadmap-lumieres.md)) : effet gradué, le
+plus faible à l'extrémité opposée de l'histogramme. Noirs, HL et blancs
+réajustés ; courbe échantillonnée et rendue croissante. Groupe `lumiere`
+régénéré.
+
+Mémoires : [ombres v003](../raw/mesure-lumiere-v003-20261018T165524982746Z.json),
+[noirs v003](../raw/mesure-lumiere-v003-20261018T170033102725Z.json),
+[HL v003](../raw/mesure-lumiere-v003-20261018T170543333217Z.json),
+[blancs v003](../raw/mesure-lumiere-v003-20261018T171151440516Z.json) ; 136 états
+chacune, aucun exclu. Écart |EV| moyen à LR des rendus : ombres 0,24, noirs 0,11
+(contre 0,33), HL 0,22, blancs 0,24.
+
+| Réglage | Bas 20 %, IPR / LR | Tons moyens, IPR / LR | Haut 20 %, IPR / LR | Canal saturé max, IPR / LR |
+| --- | --- | --- | --- | --- |
+| Noirs −100 | 0,000 / 0,000 | 0,137 / 0,107 | 0,824 / 0,759 | 0,00 % / 0,05 % |
+| Noirs −25 | 0,504 / 0,481 | 0,784 / 0,853 | 0,967 / 0,982 | 0,09 % / 0,04 % |
+| Noirs +100 | 2,598 / 2,293 | 1,885 / 1,866 | 1,090 / 1,138 | 0,36 % / 0,08 % |
+| HL −100 | 0,925 / 0,883 | 0,844 / 0,782 | 0,720 / 0,626 | 0,27 % / 0,01 % |
+| HL +100 | 1,046 / 1,135 | 1,103 / 1,194 | 1,203 / 1,563 | 4,18 % / 36,68 % |
+| Blancs −100 | 0,970 / 0,981 | 0,897 / 0,931 | 0,827 / 0,856 | 0,00 % / 0,02 % |
+| Blancs +100 | 1,179 / 2,101 | 1,239 / 4,210 | 1,333 / 2,174 | 12,26 % / 7,24 % |
+
+Les noirs suivent désormais LR des deux côtés. HL et blancs négatifs sont
+proches de LR. HL et blancs positifs restent nettement plus doux : LR y place
+son point blanc selon le contenu de l'image (q75 de 6V1A0043 remonté de plus de
+4 EV, 45 % de 6V1A0007 écrêtés), ce qu'aucune courbe fixe ne reproduit sans
+sur-remonter les tons profonds. **Décision de l'utilisateur attendue** : plan B
+(point blanc adaptatif) pour HL et blancs positifs.
+
+### Plan B — formes de LR et poids par image, 18 octobre 2026
+
+Décision de l'utilisateur après le second retour visuel (noirs −100 et +100,
+HL et blancs +100 incorrects ; désaturation à noirs −100 sur 6V1A9950) : poids
+par image, calculés à l'ouverture et mémorisés avec l'image. Analyse et mise
+en œuvre : [roadmap Lumières](../../architecture/roadmap-lumieres.md), plan B.
+
+Mémoires : v004 de [ombres](../raw/mesure-lumiere-v004-20261018T184639128499Z.json),
+[noirs](../raw/mesure-lumiere-v004-20261018T185217244210Z.json),
+[HL](../raw/mesure-lumiere-v004-20261018T185740625909Z.json) et
+[blancs](../raw/mesure-lumiere-v004-20261018T190241520566Z.json) (sept scènes :
+6V1A0037 absent de la base pendant la génération ; noirs et blancs sans épaule
+par canal) ; puis v005, huit scènes, version courante :
+[ombres](../raw/mesure-lumiere-v005-20261018T193640466571Z.json),
+[noirs](../raw/mesure-lumiere-v005-20261018T194156744575Z.json),
+[HL](../raw/mesure-lumiere-v005-20261018T194707535131Z.json),
+[blancs](../raw/mesure-lumiere-v005-20261018T195226860887Z.json) ; 136 états
+chacune, aucun exclu.
+
+v004 : écarts aux quantiles réduits de moitié à un quart, mais les blancs,
+écrêtés canal par canal à 1, saturaient environ dix fois plus de canaux que
+LR (6V1A0524 à +25 : 21,5 % contre 2,4 %). Correction : épaule douce par canal,
+dans l'ajustement comme en production.
+
+v005, écart |EV| moyen aux quantiles : ombres 0,10, noirs 0,04, HL 0,06,
+blancs 0,05 (plan A gradué : 0,24 / 0,11 / 0,22 / 0,24). Ratios variante /
+neutre, médiane des scènes, IPR / LR :
+
+| Réglage | Bas 20 % | Tons moyens | Haut 20 % |
+| --- | --- | --- | --- |
+| Ombres −100 | 0,374 / 0,360 | 0,730 / 0,700 | 0,951 / 0,969 |
+| Ombres +100 | 2,730 / 3,327 | 1,465 / 1,398 | 1,065 / 1,031 |
+| Noirs −100 | 0,016 / 0,000 | 0,117 / 0,107 | 0,782 / 0,759 |
+| Noirs +100 | 2,208 / 2,293 | 1,817 / 1,866 | 1,134 / 1,138 |
+| HL −100 | 0,921 / 0,883 | 0,772 / 0,782 | 0,632 / 0,626 |
+| HL +100 | 1,098 / 1,135 | 1,218 / 1,194 | 1,446 / 1,563 |
+| Blancs −100 | 0,976 / 0,981 | 0,917 / 0,931 | 0,833 / 0,856 |
+| Blancs +100 | 2,159 / 2,101 | 4,068 / 4,210 | 2,179 / 2,174 |
+
+Limites : les blancs positifs écrêtent encore plus que LR sur certaines scènes
+à +100 (jusqu'à +35 points de pixels à canal ≥ 0,999) ; ombres +100 remonte
+un peu moins les tons profonds (×2,73 contre ×3,33). Le gain par image est
+validé par validation croisée sur huit scènes seulement. **Validation visuelle
+de l'utilisateur en cours.**
+
+#### Noirs et blancs par canal sRGB linéaire — campagnes v006, 19 octobre 2026
+
+Retour de l'utilisateur : noirs −100 trop forts sur 6V1A0037 (−80 dans IPR
+≈ −100 dans LR). À optique égale, la luminance d'IPR est même un peu plus claire
+que LR ; l'écart venait de la saturation : la courbe appliquée canal par canal
+en Rec.2020 sursaturait (0,992 contre 0,922). Noirs et blancs agissent désormais
+par canal en sRGB linéaire, l'espace où les courbes LR ont été mesurées.
+
+Mémoires : [noirs v006](../raw/mesure-lumiere-v006-20261018T210000875070Z.json),
+[blancs v006](../raw/mesure-lumiere-v006-20261018T211442150960Z.json) ; 136 états
+chacune, aucun exclu. Luminance inchangée par rapport à v005 (par exemple noirs −100,
+tons moyens ×0,131 contre ×0,107 pour LR ; blancs +100, ×4,12 contre ×4,21).
+Saturation médiane à noirs −100, IPR / LR : 0007 0,586 / 0,559 ; 0037 0,948 / 0,922 ;
+0043 0,999 / 0,987 ; 0327 0,935 / 0,896 ; 0524 0,084 / 0,086 ; 9421 0,999 / 1,000 ;
+9950 0,725 / 0,706 ; 7003 0,383 / 0,343. Excès résiduel d'environ +0,03.
+
+Point de méthode : l'IHM appliquait la correction d'objectif alors que sa case
+pouvait paraître décochée (liaison QML rompue par le clic, corrigée le
+19 octobre) ; les comparaisons visuelles antérieures sur les images munies d'un
+profil d'objectif (dont 6V1A0043) n'étaient pas à optique égale avec LR.
+
+#### Éclaircissement vers le blanc et blancs négatifs sur la luminance, 19 octobre 2026
+
+Retour de l'utilisateur : noirs validés dans leur état ; blancs et HL encore
+moins forts que LR. Aucune campagne antérieure n'était plus proche de LR (HL +100,
+haut 20 % : 1,15 à 1,26 en v002–v004, 1,45 en v005 contre 1,56 ; blancs +100,
+tons moyens : 1,08 à 3,66, puis 4,12 contre 4,21) ; le défaut de case optique
+de l'IHM n'a donc pas fait écarter un meilleur équilibre.
+
+Deux causes. (1) Le gain par image est sous-estimé sur 6V1A9421 (blancs : −0,25 EV
+au q95 à +50) et 6V1A9950 (HL +100 : −0,22 EV) ; à reprendre avec le corpus élargi.
+(2) LR blanchit les couleurs claires qu'il éclaircit (HL +100, saturation du quart
+le plus clair : 9950 0,20, IPR 0,42 ; 7003 0,06, IPR 0,15), alors qu'IPR freinait
+l'éclaircissement pour garder la teinte. Simulation sur les paires LR : atteindre
+la luminance visée (épaule à 0,80) et rapprocher du blanc la couleur qui sortirait
+du gamut ramène l'écart des tons clairs de 0,089 à 0,058 EV et l'écart de
+saturation de 0,079 à 0,046 à HL +100, sans écrêtage supplémentaire ; sans effet
+sur les ombres ; défavorable aux blancs (0043 +100 : saturation 0,01 contre 0,85
+chez LR), qui restent par canal.
+
+Valeurs négatives : HL et ombres restent sur la luminance (saturation à −100 :
+−0,044 et −0,009 contre −0,121 et +0,048 par canal) ; les blancs négatifs passent
+sur la luminance (−0,026 contre −0,040 par canal), les blancs positifs restent
+par canal. Régénération et campagnes groupées avec le réajustement sur 19 scènes.
+
+#### Couleur des ciels à HL et blancs négatifs ; blancs positifs en pourcentage, 19 octobre 2026
+
+Retour de l'utilisateur : HL −100 et blancs −100 encore trop faibles, surtout sur
+les ciels saturés à l'ouverture ; blancs +100 environ 2 % trop forts.
+
+Mesure sur 6V1A0524 (ciel, 19 % de l'image à Y ≥ 0,9) : IPR à HL −100 y est plus
+sombre que LR (Y 0,70 contre 0,77) mais gris (saturation 0,06 contre 0,14) ; blancs
+−100 : 0,05 contre 0,12. LR redonne sa couleur au ciel qu'il assombrit ; IPR
+assombrissait à rapports RGB constants. Ajusté sur les paires LR : couleur gardée
+à partir de Y = 0,3, entièrement à 0,8, amplifiée (×2,5) en proportion de
+l'assombrissement (`ToneRecovery::darkenKeepingColour`). Écart de saturation des
+tons Y > 0,6 : HL −100 −0,20 → −0,12, HL −50 −0,13 → +0,00, blancs −100 −0,08 → −0,01,
+blancs −50 −0,04 → −0,01 ; tons sombres et luminance inchangés.
+
+Blancs positifs, luminosité affichée moyenne IPR / LR : +50 dans ±3 % sur les huit
+scènes (moyenne 1,5 %) ; +100 médiane +0,6 %, 0524 +1,2 %, mais 0037 +9,7 % et
+9421 −16,3 % (gain par image ; à revoir avec le corpus de 19 scènes).
+
+#### HL sur 19 scènes : modèle pondéré adopté, limite d'une courbe globale, 19 octobre 2026
+
+Noirs et blancs validés visuellement par l'utilisateur ; HL négatifs jugés encore
+trop doux. Onze scènes supplémentaires (6V1A0054, 0081, 0182, 0318, 0830, 9608,
+9616, 9890, 9940, 7Y6A7298, 7599) ont reçu leurs références LR HL (88 exports par
+préréglages, réglages vérifiés identiques au neutre hors curseur HL). HL réajustées
+seules (`scripts/fit_tone_recovery.py --only highlights`) ; noirs, blancs et ombres
+inchangés au 1/10 000 d'EV.
+
+Gain par image : la paire quantile 5 % / quantile 95 % prédit le mieux sur les
+19 scènes (validation croisée à −100 : 0,328 EV contre 0,381 pour l'ancienne paire).
+Un décalage de zone selon l'image n'apporte rien (0,339). Résidus pondérés par
+l'ampleur de l'effet de LR (1 + 4 |effet|), pour que les hautes lumières des scènes
+sombres comptent. Critère de l'utilisateur, luminosité affichée des 10 % les plus
+clairs, IPR / LR, scènes hors ±3 % sur 19 :
+
+| Modèle | HL −100 | HL −50 | HL +50 | HL +100 |
+| --- | --- | --- | --- | --- |
+| 8 scènes (matin) | 15 (moyenne 16,9 %) | 9 (6,4 %) | 6 (4,2 %) | 7 (5,8 %) |
+| 19 scènes | 13 (14,6 %) | 8 (5,1 %) | 6 (2,9 %) | 8 (4,1 %) |
+| **19 scènes pondéré (adopté)** | 14 (**13,0 %**) | 10 (4,8 %) | **5 (2,7 %)** | **5 (3,8 %)** |
+
+Écarts restants à HL −100 : 0054 +50 %, 0081 −48 %, 9890 −28 %, 0327 −22 %,
+0043 −21 %. Cause démontrée : **les HL de LR sont un traitement local**. À luminance
+de départ égale, le résultat de LR varie dans l'image (écart interquartile à HL −100 :
+0,16 EV en médiane, 0,70 sur 0037, 0,48 sur 0043), alors qu'il est quasi nul pour les
+blancs (0,01) et faible pour les ombres +100 (0,05). Aucune courbe globale, même
+ajustée par image, ne peut le reproduire. Direction : opérateur local pour les HL
+(roadmap).

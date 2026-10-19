@@ -54,12 +54,12 @@ nominal, pas une obligation de borner le master ; rejeter NaN/Inf explicitement.
 Un DCP appliquant une courbe produit un master linéaire au sens du transfert
 de stockage, pas nécessairement un signal physique scene-linear non rendu.
 
-Qt 6.11.2 installé expose les primaires nommées `Bt2020`, mais elles ne sont
-disponibles que depuis Qt 6.8. Le port utilise donc **sur toutes les versions**
-le constructeur aux coordonnées xy explicites avec transfert `Linear`,
-compatible avec le minimum Qt 6.4 du projet. Il n'y a pas de branche legacy
-ni de relèvement implicite du minimum. Le simple espace nommé `Bt2020` ne
-spécifie pas notre contrat linéaire. Vérifier les autres environnements en CI.
+Le port utilise **sur toutes les versions** le constructeur aux coordonnées
+xy explicites avec transfert `Linear`. Le simple espace nommé `Bt2020` ne
+spécifie pas notre contrat linéaire. Les primaires nommées `Bt2020` existent
+depuis Qt 6.8, désormais le minimum du projet
+([ADR-0016](../decisions/ADR-0016-minimum-qt-6-8.md)) ; le chemin explicite,
+unique et sans branche de version, reste celui du contrat.
 
 ## 3. Flux cible et frontières
 
@@ -94,7 +94,7 @@ préparation comme le contrat actuel.
 | `ColorPipeline::WorkingImage` | `CV_32FC4`, étiquette sRGB linéaire | Identité Rec.2020 centrale, contrôles aux frontières ; bloquant si pixels et étiquette divergent |
 | `ColorPipeline::fromSourceImage` | ICC converti via RGBA64 entier vers sRGB | Conversion float vers le master, alpha/ICC absent/ICC LUT testés ; risque de bornage préalable |
 | `fromLinearRgb16`, `RawDecoder::decode`, `applyProfile` | Sorties marquées sRGB linéaire | Convertir une seule fois tous les chemins, y compris sans DCP et changement de profil à chaud |
-| `CameraProfileEngine` | Tables dans ProPhoto D50 ; matrice finale vers sRGB | Conserver le domaine des tables ; changer la matrice finale et le contrat de `renderWhiteBalance` ensemble |
+| `CameraProfileEngine` | Tables dans ProPhoto D50 ; matrice finale vers sRGB | Conserver le domaine des tables ; changer la matrice finale et le contrat de `renderFromCameraSignal` ensemble |
 | `renderWorkingImage` : WB RAW | Recalcule depuis `dcpContext` | Retour dans le master même après température/nuance, sans double application DCP ni redécodage |
 | WB des images non RAW | Matrices Bradford et normalisation en sRGB | Conjuguer les matrices par les changements de base ; même blanc de référence, aucun gain arbitraire |
 | Exposition / flou | Gain scalaire / convolution RGB | Invariance théorique ; vérifier ordre, frontières et arrondis |

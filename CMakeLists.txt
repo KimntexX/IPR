@@ -45,13 +45,31 @@ set(IPR_ENGINE_SOURCES
     src/core/ImageMetadata.h
     src/core/ImageImporter.h
     src/core/ImageImporter.cpp
+    src/core/ImageExporter.h
+    src/core/ImageExporter.cpp
+    src/core/EditRecipe.h
+    src/core/Sidecar.h
+    src/core/Sidecar.cpp
     src/core/WorkingColorSpace.h
+    src/core/ImageMath.h
     src/core/ColorPipeline.cpp
     src/core/ColorMixer.h
     src/core/ColorMixer.cpp
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
+    src/core/ColorAdjustments.h
+    src/core/ColorAdjustments.cpp
+    src/core/Contrast.h
+    src/core/Contrast.cpp
+    src/core/Histogram.h
+    src/core/Histogram.cpp
+    src/core/ToneCurve.h
+    src/core/ToneCurve.cpp
     src/core/ToneRecovery.h
+    src/core/ToneRecovery.cpp
+    src/core/ToneRecoveryModel.h
+    src/core/ToneStatistics.h
+    src/core/ToneStatistics.cpp
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
     src/profiles/CameraProfileEngine.h
@@ -83,6 +101,7 @@ set(IPR_QML_FILES
     src/qml/HistogramModule.qml
     src/qml/Setting.qml
     src/qml/RawDevelopmentModule.qml
+    src/qml/BackendCheckBox.qml
     src/qml/OpticsModule.qml
     src/qml/FilmstripNavigation.qml
     src/qml/ChevronIcon.qml

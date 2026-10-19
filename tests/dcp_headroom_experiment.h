@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_TESTS_DCP_HEADROOM_EXPERIMENT_H
+#define IPR_TESTS_DCP_HEADROOM_EXPERIMENT_H
 // Requires raw_opening_trial_helpers.h. Diagnostic only; no production API change.
 #include "raw_highlight_headroom.h"
 #include <QTemporaryDir>
@@ -127,3 +128,5 @@ QJsonObject runHeadroomExperiment(const cv::Mat &camera,
         {"gamut_chroma_knee",.85},{"highlight_gate_Y_begin",.25},{"highlight_gate_Y_end",.75},
         {"production_modified",false}};
 }
+
+#endif // IPR_TESTS_DCP_HEADROOM_EXPERIMENT_H

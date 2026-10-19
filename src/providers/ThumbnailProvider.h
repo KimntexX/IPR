@@ -1,5 +1,5 @@
-#ifndef THUMBNAILPROVIDER_H
-#define THUMBNAILPROVIDER_H
+#ifndef IPR_PROVIDERS_THUMBNAILPROVIDER_H
+#define IPR_PROVIDERS_THUMBNAILPROVIDER_H
 
 #include <QHash>
 #include <QImage>
@@ -50,4 +50,4 @@ private:
     QThreadPool m_pool;
 };
 
-#endif // THUMBNAILPROVIDER_H
+#endif // IPR_PROVIDERS_THUMBNAILPROVIDER_H

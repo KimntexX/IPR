@@ -161,6 +161,21 @@ int main(int argc, char **argv)
                optics->findChild<QObject *>("chromaticAberrationToggle") &&
                !rawSection->findChild<QObject *>("lensCorrectionToggle"),
                "optical corrections must belong exclusively to their independent section")) return 1;
+    // A click replaces a plain QML binding: the box must still show the engine
+    // state afterwards (here the engine refuses: no RAW is open).
+    const std::pair<const char *, const char *> toggles[] = {
+        {"lensCorrectionToggle", "lensCorrectionEnabled"},
+        {"chromaticAberrationToggle", "chromaticAberrationEnabled"},
+        {"rawAutomaticWhiteBalanceToggle", "automaticWhiteBalance"}};
+    for (const auto &[name, state] : toggles) {
+        QObject *toggle = root->findChild<QObject *>(QString::fromLatin1(name));
+        if (!check(toggle, "RAW development checkbox exists")) return 1;
+        QMetaObject::invokeMethod(toggle, "toggle");
+        QMetaObject::invokeMethod(toggle, "clicked");
+        settleLayout();
+        if (!check(toggle->property("checked").toBool() == editor.property(state).toBool(),
+                   "a RAW development checkbox must show the engine state after a click")) return 1;
+    }
     QObject *noiseSection = root->findChild<QObject *>(QStringLiteral("denoiseSection"));
     QObject *sharpSection = root->findChild<QObject *>(QStringLiteral("sharpeningSection"));
     QObject *exportSection = root->findChild<QObject *>(QStringLiteral("exportSection"));
