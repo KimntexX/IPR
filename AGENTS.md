@@ -65,6 +65,16 @@
   par pixel et les fonctions qu'elle appelle vivent dans le même `.cpp`.
 - `ImageEditor` évolue vers un simple cadenceur des modules de traitement : ne pas
   y ajouter de traitement d'image, mais un module derrière une interface courte.
+- Toujours vérifier la libération des ressources, code de test compris :
+  mémoire allouée, threads et tâches asynchrones terminés ou rejoints, mutex et
+  verrous relâchés sur tous les chemins, y compris les sorties anticipées et
+  les erreurs (RAII, `qScopeGuard`). Un thread bloqué ne doit pas transformer
+  un échec en attente infinie.
+- Toujours vérifier qu'un élément est initialisé et non nul avant usage :
+  pointeurs, objets Qt, images, matrices, résultats optionnels, entrées de cache.
+- Supprimer les éléments devenus inutiles lors de chaque modification :
+  fonctions, paramètres, variables, includes, fichiers, tests et documentation
+  qui ne servent plus.
 
 ## Branches Git — règle du 10 octobre 2026
 
