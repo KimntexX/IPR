@@ -40,6 +40,25 @@
   Le générateur ne supprime ni n'écrase les fichiers existants, sources ou
   références. Aucun ancien mode de génération ni test de compatibilité legacy.
 
+## Code C++ — règle du 19 octobre 2026
+
+- Respecter le C++ standard, sans extension propre à un compilateur. Les en-têtes
+  utilisent une garde d'inclusion standard, sans `#pragma once` :
+  `#ifndef IPR_<CHEMIN>_<FICHIER>_H`, `#define IPR_<CHEMIN>_<FICHIER>_H`,
+  `#endif // IPR_<CHEMIN>_<FICHIER>_H`. Le nom suit le chemin sous `src/`, en
+  majuscules : `src/cache/ImageCacheController.h` donne
+  `IPR_CACHE_IMAGECACHECONTROLLER_H`. Les en-têtes existants sont mis en
+  conformité lors de la refactorisation d'harmonisation.
+- Sans état, invariant ou ressource à porter, écrire des fonctions libres dans un
+  espace de noms plutôt qu'une classe (approche procédurale). Réserver les classes
+  aux objets qui encapsulent un état, un invariant ou la durée de vie d'une
+  ressource : cache, contrôleur, objet Qt exposé au QML.
+- Séparer l'interface (`.h`) de l'implémentation (`.cpp`). Garder en ligne dans
+  l'en-tête seulement de petites fonctions utilitaires ; une boucle de traitement
+  par pixel et les fonctions qu'elle appelle vivent dans le même `.cpp`.
+- `ImageEditor` évolue vers un simple cadenceur des modules de traitement : ne pas
+  y ajouter de traitement d'image, mais un module derrière une interface courte.
+
 ## Branches Git — règle du 10 octobre 2026
 
 - `dev` est la branche d'intégration maintenue à jour après chaque validation.
