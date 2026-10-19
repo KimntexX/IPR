@@ -8,6 +8,8 @@ Item {
 
     required property var editor
     property var preferences: null
+    property var resetAction: null
+    readonly property bool exportDialogVisible: exportDialog.visible || exportReview.visible
     property bool preferencesReady: false
     property bool restoringPreferences: false
     property int activeCurve: 0
@@ -222,8 +224,8 @@ Item {
             objectName: "resetAllAdjustmentsButton"
             text: qsTr("Réinitialiser les réglages")
             Layout.fillWidth: true
-            enabled: editor.hasImage
-            onClicked: editor.resetAdjustments()
+            enabled: root.resetAction ? root.resetAction.enabled : editor.hasImage
+            onClicked: root.resetAction ? root.resetAction.trigger() : editor.resetAdjustments()
         }
     }
 

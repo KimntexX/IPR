@@ -91,6 +91,7 @@ QObject *qualityControl(QObject *root)
 
 int main(int argc, char **argv)
 {
+    QGuiApplication::setAttribute(Qt::AA_DontUseNativeDialogs);
     QGuiApplication app(argc, argv);
     if (!qEnvironmentVariableIsEmpty("IPR_UI_CAPTURE_DIRECTORY")) {
 #ifdef Q_OS_WIN
@@ -182,6 +183,15 @@ int main(int argc, char **argv)
         QScopedPointer<QObject> root(mainComponent.create());
         if (!root) { std::cerr << mainComponent.errorString().toStdString(); return 1; }
         auto *window = qobject_cast<QWindow *>(root.data());
+        const auto shortcut = [&](int key, Qt::KeyboardModifiers modifiers, const QString &text) {
+            window->requestActivate();
+            QCoreApplication::processEvents();
+            QKeyEvent press(QEvent::KeyPress, key, modifiers, text);
+            QKeyEvent release(QEvent::KeyRelease, key, modifiers, text);
+            QCoreApplication::sendEvent(window, &press);
+            QCoreApplication::sendEvent(window, &release);
+            QCoreApplication::processEvents();
+        };
         QObject *info = root->findChild<QObject *>(QStringLiteral("imageInfoPanel"));
         QObject *ribbon = root->findChild<QObject *>(QStringLiteral("thumbnailRibbon"));
         QObject *histogram = root->findChild<QObject *>(QStringLiteral("histogramModule"));
@@ -194,6 +204,27 @@ int main(int argc, char **argv)
         preferences.setValue("layout/showImageInfo", true);
         preferences.setValue("layout/showHistogram", true);
         preferences.setValue("layout/showFilmstrip", true);
+        auto *applicationActions = root->findChild<QObject *>("applicationActions");
+        if (!check(applicationActions && !root->findChild<QObject *>("saveAdjustmentsAction")->property("enabled").toBool() &&
+                   !root->findChild<QObject *>("duplicateImageAction")->property("enabled").toBool() &&
+                   !root->findChild<QObject *>("exportImageAction")->property("enabled").toBool(),
+                   "file actions must guard unavailable engine APIs and missing images")) return 1;
+        qobject_cast<QQuickWindow *>(window)->contentItem()->forceActiveFocus();
+        shortcut(Qt::Key_O, Qt::ControlModifier, "o");
+        QObject *openDialog = root->findChild<QObject *>("openImageDialog");
+        if (!check(openDialog && openDialog->property("visible").toBool(), "Ctrl O must open the image chooser")) return 1;
+        QMetaObject::invokeMethod(openDialog, "close");
+        QCoreApplication::processEvents();
+        shortcut(Qt::Key_O, Qt::ControlModifier | Qt::ShiftModifier, "O");
+        QObject *folderChooser = root->findChild<QObject *>("openFolderDialog");
+        if (!check(folderChooser && folderChooser->property("visible").toBool(), "Ctrl Shift O must open the folder chooser")) return 1;
+        QMetaObject::invokeMethod(folderChooser, "close");
+        {
+            QEventLoop closingDialogs;
+            QTimer::singleShot(250, &closingDialogs, &QEventLoop::quit);
+            closingDialogs.exec();
+        }
+        window->requestActivate();
         QMetaObject::invokeMethod(dialog, "open");
         QCoreApplication::processEvents();
         if (!check(info->property("visible").toBool() && ribbon->property("visible").toBool() &&
@@ -354,6 +385,23 @@ int main(int argc, char **argv)
         if (!check(image.save(first) && image.save(second), "navigation fixtures should save")) return 1;
         editor.openImage(QUrl::fromLocalFile(first));
         settleEditor(editor);
+        editor.setBrightness(1);
+        settleEditor(editor);
+        shortcut(Qt::Key_R, Qt::ControlModifier | Qt::ShiftModifier, "R");
+        auto *resetConfirmation = root->findChild<QObject *>("resetAdjustmentsDialog");
+        if (!check(resetConfirmation && resetConfirmation->property("visible").toBool() && editor.adjustmentValue("brightness") == 1,
+                   "reset shortcut must ask before changing the current recipe")) return 1;
+        QMetaObject::invokeMethod(resetConfirmation, "close");
+        QCoreApplication::processEvents();
+        shortcut(Qt::Key_R, Qt::ControlModifier | Qt::ShiftModifier, "R");
+        QMetaObject::invokeMethod(resetConfirmation, "confirm");
+        settleEditor(editor);
+        if (!check(editor.adjustmentValue("brightness") == 0, "confirmed reset must update the engine")) return 1;
+        shortcut(Qt::Key_E, Qt::ControlModifier, "e");
+        auto *exportChooser = root->findChild<QObject *>("exportDialog");
+        if (!check(exportChooser->property("visible").toBool(), "Ctrl E must open the existing export flow")) return 1;
+        QMetaObject::invokeMethod(exportChooser, "close");
+        QCoreApplication::processEvents();
         auto *firstStar = visualItem(qobject_cast<QQuickWindow *>(window)->contentItem(), "imageRatingStar0");
         auto *starGlyph = visualItem(qobject_cast<QQuickWindow *>(window)->contentItem(), "imageRatingGlyph0");
         if (!check(firstStar && starGlyph && firstStar->width() >= 23 &&

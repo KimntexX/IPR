@@ -34,6 +34,23 @@ ApplicationWindow {
     Component.onCompleted: uiPreferences.restoreWindow(root)
     onClosing: uiPreferences.saveWindow(root)
 
+    ApplicationActions {
+        id: fileActions
+        objectName: "applicationActions"
+        editor: imageEditor
+        settings: settingsView
+        viewport: canvas
+        blocked: folderDialog.visible || imageFileDialog.visible || preferencesDialog.visible
+                 || resetDialog.visible || settingsView.exportDialogVisible
+        onOpenImageRequested: imageFileDialog.open()
+        onOpenFolderRequested: folderDialog.open()
+        onPreferencesRequested: preferencesDialog.open()
+        onResetRequested: {
+            resetDialog.imageKey = canvas.imageKey
+            resetDialog.open()
+        }
+    }
+
     menuBar: Basic.MenuBar {
         id: applicationMenuBar
         background: Rectangle { color: uiPreferences.theme.panel }
@@ -52,20 +69,19 @@ ApplicationWindow {
             palette: root.palette
             title: qsTr("Fichier")
 
-            Basic.MenuItem {
-                text: qsTr("Ouvrir un dossier…")
-                onTriggered: folderDialog.open()
-            }
-
-            Basic.MenuItem {
-                text: qsTr("Ouvrir une image…")
-                onTriggered: imageFileDialog.open()
-            }
-
-            Basic.MenuItem {
-                text: qsTr("Quitter")
-                onTriggered: Qt.quit()
-            }
+            Basic.MenuItem { action: fileActions.openImageAction }
+            Basic.MenuItem { action: fileActions.openFolderAction }
+            Basic.MenuSeparator { }
+            Basic.MenuItem { action: fileActions.saveAction }
+            Basic.MenuItem { action: fileActions.exportAction }
+            Basic.MenuItem { action: fileActions.duplicateAction }
+            Basic.MenuSeparator { }
+            Basic.MenuItem { action: fileActions.quitAction }
+        }
+        Basic.Menu {
+            palette: root.palette
+            title: qsTr("Édition")
+            Basic.MenuItem { action: fileActions.resetAction }
         }
 
         Basic.Menu {
@@ -97,11 +113,7 @@ ApplicationWindow {
             palette: root.palette
             title: qsTr("Préférences")
             Basic.MenuItem {
-                action: Action {
-                    text: qsTr("Interface et développement RAW…")
-                    shortcut: "Ctrl+,"
-                    onTriggered: preferencesDialog.open()
-                }
+                action: fileActions.preferencesAction
             }
         }
     }
@@ -210,7 +222,7 @@ ApplicationWindow {
                     implicitHeight: 30
                     leftPadding: 16
                     rightPadding: 16
-                    onClicked: imageFileDialog.open()
+                    onClicked: fileActions.openImageAction.trigger()
 
                     contentItem: Text {
                         text: openButton.text
@@ -291,10 +303,12 @@ ApplicationWindow {
             focus: true
 
             Setting {
+                id: settingsView
                 anchors.fill: parent
                 anchors.margins: 14
                 editor: imageEditor
                 preferences: uiPreferences
+                resetAction: fileActions.resetAction
             }
 
         }
@@ -386,6 +400,7 @@ ApplicationWindow {
 
     FolderDialog {
         id: folderDialog
+        objectName: "openFolderDialog"
 
         title: qsTr("Choisir le dossier d'images")
         currentFolder: StandardPaths.standardLocations(
@@ -395,10 +410,43 @@ ApplicationWindow {
 
     FileDialog {
         id: imageFileDialog
+        objectName: "openImageDialog"
 
         title: qsTr("Ouvrir une image")
         fileMode: FileDialog.OpenFile
         nameFilters: imageEditor.imageFileFilters()
         onAccepted: imageEditor.openImage(selectedFile)
+    }
+
+    Basic.Dialog {
+        id: resetDialog
+        objectName: "resetAdjustmentsDialog"
+        property string imageKey: ""
+        anchors.centerIn: Overlay.overlay
+        width: Math.min(root.width - 40, 470)
+        modal: true
+        palette: root.palette
+        title: qsTr("Réinitialiser les retouches ?")
+        standardButtons: Dialog.NoButton
+        function confirm() {
+            if (!imageEditor.hasImage || imageEditor.busy || imageKey !== canvas.imageKey) return
+            imageEditor.resetAdjustments()
+            close()
+        }
+        contentItem: Label {
+            text: qsTr("Les retouches de l’image ouverte seront remises à leur référence. Le fichier source, la notation et les choix de profil/calibration sont conservés. Cette action n’a pas d’annulation dans l’interface actuelle.")
+            color: uiPreferences.theme.text
+            wrapMode: Text.WordWrap
+        }
+        footer: RowLayout {
+            Item { Layout.fillWidth: true }
+            PreferenceButton { text: qsTr("Annuler"); onClicked: resetDialog.close() }
+            PreferenceButton {
+                objectName: "confirmResetAdjustmentsButton"
+                text: qsTr("Réinitialiser")
+                enabled: imageEditor.hasImage && !imageEditor.busy && resetDialog.imageKey === canvas.imageKey
+                onClicked: resetDialog.confirm()
+            }
+        }
     }
 }

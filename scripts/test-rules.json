@@ -120,6 +120,7 @@
     {"patterns": ["src/qml/ImageBackgroundOptions.qml", "src/qml/ImageCanvasBackground.qml"], "tests": ["uiPreferencesQmlTests"]},
     {"patterns": ["src/qml/FilmstripNavigation.qml", "src/qml/ChevronIcon.qml"], "tests": ["uiPreferencesQmlTests"]},
     {"patterns": ["src/qml/ProcessingStatus.qml"], "tests": ["settingsQmlTests", "uiPreferencesQmlTests"]},
+    {"patterns": ["src/qml/ApplicationActions.qml"], "tests": ["uiPreferencesQmlTests", "settingsQmlTests"]},
     {"patterns": ["src/qml/PanelResizeHandle.qml"], "tests": ["uiPreferencesQmlTests"]},
     {"patterns": ["src/qml/ExportReviewDialog.qml"], "tests": ["settingsQmlTests", "uiPreferencesQmlTests"]},
     {"patterns": ["tests/image_viewport_qml_test.cpp"], "tests": ["imageViewportQmlTests"]},

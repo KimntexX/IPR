@@ -96,6 +96,41 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Raccourcis de fichier — IHM et commandes moteur manquantes
+
+Actions partagées par le menu et le clavier : ouvrir une image (Ctrl+O),
+ouvrir un dossier (Ctrl+Maj+O), exporter (Ctrl+E), réinitialiser les retouches
+avec confirmation (Ctrl+Maj+R), préférences (Ctrl+virgule) et quitter (Ctrl+Q).
+Sur macOS, les commandes utilisent Command ; les séquences standard Qt sont
+utilisées pour Ouvrir et Enregistrer. Le zoom garde ses commandes existantes.
+La confirmation de reset vérifie l’identité de la photo ; aucun Ctrl+Z fictif.
+
+**IHM-CONN-007 — en attente moteur : sauvegarde manuelle**
+
+Réserver Ctrl+S et l’action Enregistrer les réglages. Le moteur sauvegarde
+déjà automatiquement, mais `saveCurrentSidecar` est privé et non invocable
+depuis QML. Exposer `saveCurrentAdjustments()` : écrire la recette courante
+dans le compagnon de la photo effectivement affichée, synchroniser le timer
+de sauvegarde et notifier succès/échec sans ambiguïté. Ne pas modifier la
+sélection ni remplacer cette opération par un export. Tester modification
+récente non encore écrite, dossier en lecture seule, photo changée pendant
+une ouverture, résultat après relance. L’action reste désactivée sans ce contrat.
+
+**IHM-CONN-008 — en attente moteur : duplication physique**
+
+Choix utilisateur confirmé : copie physique du fichier source et de ses
+réglages, pas copie virtuelle ni export développé. Réserver Ctrl+D et exposer
+`duplicateCurrentImage()` ; capture de la recette en mémoire, copie du fichier
+et création d’un compagnon cohérent pour la nouvelle URL, sans écrasement.
+Nom disponible proposé dans le dossier courant (suffixe de copie et compteur),
+rafraîchissement du modèle sans perdre la photo ouverte ni la sélection.
+Copie sur worker avec remontée du résultat/chemin réel et gestion des erreurs
+et de l’espace disque ; ne retirer que ses propres fichiers temporaires en cas
+d’échec, jamais la source. Les profils externes restent des références, pas
+des fichiers tiers recopiés implicitement. Tester RAW/raster, noms Unicode,
+concurrence sur le nom, permissions et nettoyage d’une copie partielle.
+L’action est désactivée tant que le moteur n’expose pas la commande.
+
 ### Livre utilisateur — paragraphes non coupés entre deux pages
 
 Retour du 19 octobre 2026 : le bloc « Gestes et clavier » du mélangeur
