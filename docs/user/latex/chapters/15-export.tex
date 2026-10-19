@@ -1,0 +1,46 @@
+\chapter{Exporter une image}
+\label{chap:export}
+\section{Choisir un format}
+Ouvrir la famille Export et choisir le format. Le contrôle Qualité JPEG
+n’apparaît que pour JPEG ; il va de 1 à 100, référence 92.
+\begin{longtable}{@{}L{2cm}L{4.6cm}L{7cm}@{}}
+\toprule Format & Encodage actuel & Usage et limites\\\midrule\endhead
+JPEG & sRGB, 8 bits & Copie courante ; compression avec perte, qualité réglable.\\
+PNG & sRGB, 16 bits & Image rendue à haute profondeur ; pas de réglage Qualité JPEG.\\
+TIFF & sRGB, 16 bits & Référence de comparaison ou échange de rendu à haute profondeur.\\
+DNG & RGB linéaire, 16 bits, primaires sRGB & Contient le rendu développé ; ne préserve pas la mosaïque RAW d’origine.\\
+\bottomrule
+\end{longtable}
+Ces propriétés décrivent l’exporteur actuel, pas toutes les capacités théoriques
+de chaque format. Aucun sélecteur utilisateur de gamut de sortie ou de redimensionnement
+n’est proposé dans ce panneau.
+
+\section{Destination et confirmation}
+\begin{enumerate}
+\item Attendre la fin du développement et cliquer sur \emph{Choisir la destination…}.
+\item Vérifier le nom, le dossier et le type du dialogue natif. Le format du
+panneau est sélectionné initialement ; changer le type dans le dialogue change
+aussi le format demandé.
+\item Dans \emph{Vérifier l’export}, contrôler format, encodage, dimensions
+pleine résolution et destination demandée.
+\item Cliquer sur \emph{Exporter}, ou \emph{Annuler} pour revenir sans écrire.
+\item Lire le message final pour connaître le fichier réellement publié ou l’erreur.
+\end{enumerate}
+L’extension est adaptée au format. Si le nom est pris, l’exporteur ajoute
+un numéro disponible plutôt que d’écraser le fichier. Le chemin final peut
+donc différer du nom demandé dans le récapitulatif.
+
+\attention{Le récapitulatif ne promet pas un nom final réservé. Un autre
+processus peut créer un fichier entre le choix et l’écriture ; la protection
+contre les collisions reste assurée par l’exporteur.}
+
+\section{Gestes et contrôles}
+\touche{Tab} permet de parcourir les commandes du dialogue et \touche{Entrée}
+de valider une saisie active. Utiliser explicitement le bouton Exporter pour
+lancer l’écriture ; aucun \touche{Ctrl + E} global n’est déclaré dans IPR.
+Ne pas confondre l’export avec la sauvegarde automatique des compagnons.
+
+Pour un test reproductible, exporter une référence neutre et l’état retouché
+avec le même profil, la même balance, les mêmes corrections optiques et le
+même format. Noter les réglages : un TIFF IPR ne constitue pas à lui seul
+un relevé complet et fiable de la recette appliquée.

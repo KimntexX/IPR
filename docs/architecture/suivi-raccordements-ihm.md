@@ -96,6 +96,29 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### 19 octobre 2026 — livre utilisateur par familles
+
+Création du [livre utilisateur](../user/README.md), indépendant des cours et
+du manuel technique : 19 chapitres et deux annexes, PDF local de 44 pages.
+Chaque famille de réglages a son chapitre ; recadrage/géométrie, masques et IA
+reprennent les familles réservées du manuel technique et restent vides.
+Les raccourcis réellement déclarés et les gestes sont expliqués dans les
+parcours puis regroupés en aide-mémoire. Les valeurs de référence non nulles,
+la portée par image de la calibration, les sidecars, les limites de l’aperçu,
+la sélection multiple et les formats d’export sont explicités.
+
+Compilation LaTeX en trois passes, contrôle des liens et des références,
+inspection visuelle du schéma de disposition, des tableaux, de l’aide-mémoire
+et d’un chapitre réservé. Mise en page 12 pt, interligne 1,5, chapitres sur
+une nouvelle page. Sources et lanceur versionnés, PDF sous le `build/` local
+ignoré ; aucune traduction anglaise produite par ce chantier.
+
+Les demandes de raccordement moteur restent ouvertes : aucun indicateur de
+fin de rendu exact, badge complet de toutes les vignettes ou état exhaustif
+de recette n’est simulé en QML. Les mémos restent reportés à la bêta.
+Cette reprise est documentaire, sans modification du moteur ni nouvelle
+commande IHM ; aucun rebuild de l’application n’est nécessaire pour lire le livre.
+
 ### Stabilité des réglages pendant les traitements
 
 Retour utilisateur : le remplacement temporaire de la description RAW / Profil

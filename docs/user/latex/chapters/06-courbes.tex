@@ -1,0 +1,29 @@
+\chapter{Courbe de tonalité}
+\section{Choisir un canal}
+Choisir la luminance ou un canal rouge, vert ou bleu avec les boutons du module.
+La diagonale représente la correspondance de référence. Une modification de
+canal peut apporter une dominante colorée, même si la forme paraît proche
+de celle de la courbe de luminance.
+
+\section{Manipuler les points}
+Double-cliquer dans le graphe pour ajouter une poignée, la faire glisser
+pour modifier la courbe et cliquer avec le bouton droit sur une poignée
+intérieure pour la supprimer. Les extrémités ne se manipulent pas comme les
+points intérieurs. Éviter d’accumuler des points très proches : une courbe
+plus simple est plus facile à contrôler.
+
+Utiliser les commandes de réinitialisation de la courbe courante ou de
+toutes les courbes selon l’intention. Le double-clic dans ce graphe
+\emph{ajoute un point} : ce n’est pas le geste de remise à zéro des sliders.
+Aucun raccourci spécifique d’ajout/suppression de points au clavier n’est déclaré.
+
+\section{Le fond monochrome}
+La silhouette grise est la luminance de l’aperçu courant ; elle reste monochrome
+même si une courbe RGB est sélectionnée. C’est un repère de lecture après rendu,
+pas l’histogramme exact du signal linéaire entrant dans les courbes.
+
+\paragraph{Exemple.}
+Pour donner un contraste doux, commencer par deux points intérieurs éloignés,
+abaisser légèrement la zone sombre et relever légèrement la zone claire.
+Comparer avec \touche{Ctrl + Maj + C} et surveiller les transitions plutôt
+que chercher une forme géométrique parfaite.
