@@ -1,5 +1,6 @@
 // Manual measurement only: no changes to rendering, no corpus sidecar writes.
 #include "imageeditor.h"
+#include "Sidecar.h"
 #include "imageprovider.h"
 #include "CameraProfileEngine.h"
 #include <QCoreApplication>
@@ -319,7 +320,7 @@ public:
             recipe.lensProfileResolved = true;
             recipe.lensCorrectionEnabled = false;
             recipe.chromaticAberrationEnabled = false;
-            if (!ImageEditor::writeSidecar(paths[i], {}, {}, recipe))
+            if (!Sidecar::write(paths[i], {}, {}, recipe))
                 return {{"error", "Cannot seed private sidecar"}};
         }
         ImageProvider provider;

@@ -47,6 +47,9 @@ set(IPR_ENGINE_SOURCES
     src/core/ImageImporter.cpp
     src/core/ImageExporter.h
     src/core/ImageExporter.cpp
+    src/core/EditRecipe.h
+    src/core/Sidecar.h
+    src/core/Sidecar.cpp
     src/core/WorkingColorSpace.h
     src/core/ImageMath.h
     src/core/ColorPipeline.cpp

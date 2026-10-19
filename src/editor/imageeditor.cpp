@@ -5,6 +5,7 @@
 #include "Contrast.h"
 #include "Histogram.h"
 #include "ImageExporter.h"
+#include "Sidecar.h"
 #include "ToneCurve.h"
 #include "ToneRecovery.h"
 #include "RawDecoder.h"
@@ -935,7 +936,7 @@ void ImageEditor::applyAdjustmentsToSelection()
         Settings targetSettings;
         UserImageMetadata targetMetadata;
         RawDevelopment targetRaw;
-        if (!readSidecar(fileName, &targetSettings, &targetMetadata, &targetRaw))
+        if (!Sidecar::read(fileName, &targetSettings, &targetMetadata, &targetRaw))
             targetMetadata = m_userImageMetadata.value(fileName);
         if (QFileInfo(fileName).canonicalFilePath() == currentFileKey()) {
             targetRaw = rawDevelopmentRecipe();
@@ -944,7 +945,7 @@ void ImageEditor::applyAdjustmentsToSelection()
         // Retouches can be copied across cameras; RAW profiles cannot.
         Settings copied = m_settings;
         copied.automaticWhiteBalance = targetSettings.automaticWhiteBalance;
-        if (writeSidecar(fileName, copied, targetMetadata, targetRaw))
+        if (Sidecar::write(fileName, copied, targetMetadata, targetRaw))
             ++written;
     }
     setStatusMessage(tr("Réglages appliqués à %n image(s).", nullptr, written));
@@ -1627,152 +1628,6 @@ QString ImageEditor::cacheKeyForFile(const QString &fileName,
             .arg(lensCorrection).arg(chromaticAberration);
 }
 
-QString ImageEditor::sidecarPathForFile(const QString &fileName)
-{
-    return fileName + QStringLiteral(".ipr");
-}
-
-bool ImageEditor::readSidecar(const QString &fileName, Settings *settings,
-                              UserImageMetadata *metadata, RawDevelopment *raw)
-{
-    if (!settings || !metadata)
-        return false;
-    const QFileInfo sourceInfo(fileName);
-    QFile file(sidecarPathForFile(fileName));
-    if (!sourceInfo.exists() || !file.open(QIODevice::ReadOnly))
-        return false;
-    QDataStream stream(&file);
-    stream.setVersion(QDataStream::Qt_6_4);
-    quint32 magic = 0;
-    quint16 version = 0;
-    qint64 sourceSize = -1;
-    qint64 sourceModified = -1;
-    stream >> magic >> version >> sourceSize >> sourceModified;
-    if (magic != 0x49505231u || version < 1 || version > 6 || file.size() > 1024 * 1024 ||
-        sourceSize != sourceInfo.size() ||
-        sourceModified != sourceInfo.lastModified().toMSecsSinceEpoch())
-        return false;
-
-    Settings loaded;
-    qint32 value = 0;
-    stream >> loaded.brightness;
-    const auto readInt = [&stream, &value](int &target) {
-        stream >> value;
-        target = value;
-    };
-    readInt(loaded.contrast); readInt(loaded.blur); stream >> loaded.grayscale;
-    readInt(loaded.shadows); readInt(loaded.blacks); readInt(loaded.highlights);
-    readInt(loaded.whites); readInt(loaded.temperature); readInt(loaded.tint);
-    readInt(loaded.vibrance); readInt(loaded.saturation); readInt(loaded.texture);
-    readInt(loaded.clarity); readInt(loaded.dehaze); readInt(loaded.grain);
-    if (version >= 2) {
-        readInt(loaded.denoiseLuminance);
-        readInt(loaded.denoiseChrominance);
-        readInt(loaded.sharpeningAmount);
-        stream >> loaded.sharpeningRadius;
-        readInt(loaded.sharpeningMasking);
-        if (loaded.denoiseLuminance < 0 || loaded.denoiseLuminance > 100 ||
-            loaded.denoiseChrominance < 0 || loaded.denoiseChrominance > 100 ||
-            loaded.sharpeningAmount < 0 || loaded.sharpeningAmount > 200 ||
-            !std::isfinite(loaded.sharpeningRadius) ||
-            loaded.sharpeningRadius < 0.3f || loaded.sharpeningRadius > 3.0f ||
-            loaded.sharpeningMasking < 0 || loaded.sharpeningMasking > 100)
-            return false;
-    }
-    const size_t storedMixerBands = version >= 4 ? 8 : (version == 3 ? 7 : 6);
-    for (size_t storedIndex = 0; storedIndex < storedMixerBands; ++storedIndex) {
-        // Preserve technical band identity: legacy last band was magenta at
-        // 300 degrees, not violet. Newly inserted bands start neutral.
-        const size_t oldIndex = version >= 3 || storedIndex == 0
-            ? storedIndex : storedIndex + 1;
-        const size_t index = version < 4 && oldIndex == 6 ? 7 : oldIndex;
-        readInt(loaded.mixerHue[index]); readInt(loaded.mixerSaturation[index]);
-        readInt(loaded.mixerLuminance[index]);
-    }
-    for (size_t index = 0; index < loaded.gradingHue.size(); ++index) {
-        readInt(loaded.gradingHue[index]); readInt(loaded.gradingSaturation[index]);
-    }
-    stream >> loaded.automaticWhiteBalance;
-    for (QVector<ToneCurvePoint> &curve : loaded.toneCurves) {
-        qint32 count = 0;
-        stream >> count;
-        if (count < 0 || count > 64)
-            return false;
-        for (qint32 index = 0; index < count; ++index) {
-            ToneCurvePoint point;
-            stream >> point.x >> point.y;
-            if (!std::isfinite(point.x) || !std::isfinite(point.y))
-                return false;
-            curve.append(point);
-        }
-    }
-    UserImageMetadata loadedMetadata;
-    stream >> loadedMetadata.rating >> loadedMetadata.colorLabel >> loadedMetadata.flagged
-           >> loadedMetadata.ratingSet >> loadedMetadata.colorLabelSet;
-    RawDevelopment loadedRaw;
-    if (version >= 5) {
-        stream >> loadedRaw.profile >> loadedRaw.profileSha256 >> loadedRaw.manifest
-               >> loadedRaw.manifestSha256 >> loadedRaw.normalizationEnabled >> loadedRaw.engineVersion;
-    }
-    if (version >= 6) {
-        stream >> loadedRaw.lensProfile >> loadedRaw.lensProfileSha256 >> loadedRaw.lensProfileResolved
-               >> loadedRaw.lensCorrectionEnabled >> loadedRaw.chromaticAberrationEnabled;
-    }
-    if (stream.status() != QDataStream::Ok)
-        return false;
-    *settings = std::move(loaded);
-    *metadata = std::move(loadedMetadata);
-    if (raw) *raw = std::move(loadedRaw);
-    return true;
-}
-
-bool ImageEditor::writeSidecar(const QString &fileName, const Settings &settings,
-                               const UserImageMetadata &metadata, const RawDevelopment &raw)
-{
-    const QFileInfo sourceInfo(fileName);
-    if (!sourceInfo.exists() || !sourceInfo.isFile())
-        return false;
-    QSaveFile file(sidecarPathForFile(fileName));
-    if (!file.open(QIODevice::WriteOnly))
-        return false;
-    QDataStream stream(&file);
-    stream.setVersion(QDataStream::Qt_6_4);
-    stream << quint32(0x49505231u) << quint16(6) << qint64(sourceInfo.size())
-           << qint64(sourceInfo.lastModified().toMSecsSinceEpoch());
-    stream << settings.brightness;
-    const auto writeInt = [&stream](int value) { stream << qint32(value); };
-    writeInt(settings.contrast); writeInt(settings.blur); stream << settings.grayscale;
-    writeInt(settings.shadows); writeInt(settings.blacks); writeInt(settings.highlights);
-    writeInt(settings.whites); writeInt(settings.temperature); writeInt(settings.tint);
-    writeInt(settings.vibrance); writeInt(settings.saturation); writeInt(settings.texture);
-    writeInt(settings.clarity); writeInt(settings.dehaze); writeInt(settings.grain);
-    writeInt(settings.denoiseLuminance);
-    writeInt(settings.denoiseChrominance);
-    writeInt(settings.sharpeningAmount);
-    stream << settings.sharpeningRadius;
-    writeInt(settings.sharpeningMasking);
-    for (size_t index = 0; index < settings.mixerHue.size(); ++index) {
-        writeInt(settings.mixerHue[index]); writeInt(settings.mixerSaturation[index]);
-        writeInt(settings.mixerLuminance[index]);
-    }
-    for (size_t index = 0; index < settings.gradingHue.size(); ++index) {
-        writeInt(settings.gradingHue[index]); writeInt(settings.gradingSaturation[index]);
-    }
-    stream << settings.automaticWhiteBalance;
-    for (const QVector<ToneCurvePoint> &curve : settings.toneCurves) {
-        stream << qint32(curve.size());
-        for (const ToneCurvePoint &point : curve)
-            stream << point.x << point.y;
-    }
-    stream << metadata.rating << metadata.colorLabel << metadata.flagged
-           << metadata.ratingSet << metadata.colorLabelSet;
-    stream << raw.profile << raw.profileSha256 << raw.manifest << raw.manifestSha256
-           << raw.normalizationEnabled << raw.engineVersion;
-    stream << raw.lensProfile << raw.lensProfileSha256 << raw.lensProfileResolved
-           << raw.lensCorrectionEnabled << raw.chromaticAberrationEnabled;
-    return stream.status() == QDataStream::Ok && file.commit();
-}
-
 ImageEditor::RawDevelopment ImageEditor::rawDevelopmentRecipe() const
 {
     const QString manifest = m_normalizationManifest.isEmpty() && m_rawNormalizationEnabled
@@ -1827,7 +1682,7 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
         m_lensProfileResolved = false;
         m_lensCorrectionEnabled = true;
         m_chromaticAberrationEnabled = true;
-        if (readSidecar(fileName, &persisted, &metadata, &raw)) {
+        if (Sidecar::read(fileName, &persisted, &metadata, &raw)) {
             automaticWhiteBalance = persisted.automaticWhiteBalance;
             m_cameraProfile = relocateResource(raw.profile, raw.profileSha256, "profiles");
             m_profileSha256 = raw.profileSha256;
@@ -2018,7 +1873,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
             m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
         UserImageMetadata metadata;
         Settings persisted;
-        if (readSidecar(m_currentFile.toLocalFile(), &persisted, &metadata)) {
+        if (Sidecar::read(m_currentFile.toLocalFile(), &persisted, &metadata)) {
             m_settings = std::move(persisted);
             m_userImageMetadata.insert(currentFileKey(), std::move(metadata));
         }
@@ -2102,7 +1957,7 @@ void ImageEditor::saveCurrentSidecar()
         return;
     if (m_currentFile != m_displayedFile) return;
     if (m_loadWatcher.isRunning()) return;
-    if (!writeSidecar(m_currentFile.toLocalFile(), m_settings,
+    if (!Sidecar::write(m_currentFile.toLocalFile(), m_settings,
                  m_userImageMetadata.value(currentFileKey()), rawDevelopmentRecipe()))
         setStatusMessage(tr("Échec de sauvegarde des réglages .ipr : vérifiez les permissions du dossier."));
 }
@@ -2141,7 +1996,7 @@ RawDecoder::Options ImageEditor::optionsForFile(const QString &path, bool *autom
     Settings settings;
     UserImageMetadata metadata;
     RawDevelopment raw;
-    const bool saved = readSidecar(path, &settings, &metadata, &raw);
+    const bool saved = Sidecar::read(path, &settings, &metadata, &raw);
     RawDecoder::Options options;
     options.automaticWhiteBalance = saved && settings.automaticWhiteBalance;
     *automaticWhiteBalance = options.automaticWhiteBalance;
