@@ -25,16 +25,17 @@ ColumnLayout {
     Basic.Menu {
         id: parameterMenu
         popupType: Popup.Item
+        width: Math.min(360, control.Window.window ? control.Window.window.width - 24 : 360)
         objectName: "adjustmentContextMenu"
         parent: controlSlider
         palette: controlSlider.palette
-        Basic.MenuItem {
+        ActionMenuItem {
             objectName: "contextResetParameter"
             text: qsTr("Réinitialiser %1").arg(control.label)
             enabled: control.adjustmentEnabled
             onTriggered: control.resetToDefault()
         }
-        Basic.MenuItem {
+        ActionMenuItem {
             text: qsTr("Saisir une valeur…")
             enabled: control.adjustmentEnabled
             onTriggered: { valueEditor.forceActiveFocus(); valueEditor.selectAll() }

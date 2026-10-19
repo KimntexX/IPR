@@ -538,9 +538,12 @@ int main(int argc, char **argv)
         if (!check(photoMenu && photoMenu->property("visible").toBool() &&
                    photoMenu->property("currentPhoto").toBool() &&
                    photoMenu->findChild<QObject *>("contextExportImage")->property("enabled").toBool() &&
+                   photoMenu->findChild<QObject *>("contextExportImage")->property("shortcutHint").toString().endsWith("+E") &&
                    !photoMenu->findChild<QObject *>("contextDuplicateImage")->property("enabled").toBool() &&
                    viewport->property("zoomScale").toDouble() == previousZoom,
                    "right-clicking the image must open guarded photo actions without zooming")) return 1;
+        if (!check(photoMenu->property("width").toDouble() >= 400,
+                   "context actions and their shortcut labels must have enough space")) return 1;
         if (!check(captureReview(window, "photo-context-menu"), "context menu capture should save")) return 1;
         QMetaObject::invokeMethod(photoMenu, "close");
         QCoreApplication::processEvents();

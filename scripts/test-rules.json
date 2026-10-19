@@ -122,6 +122,7 @@
     {"patterns": ["src/qml/ProcessingStatus.qml"], "tests": ["settingsQmlTests", "uiPreferencesQmlTests"]},
     {"patterns": ["src/qml/ApplicationActions.qml"], "tests": ["uiPreferencesQmlTests", "settingsQmlTests"]},
     {"patterns": ["src/qml/PhotoContextMenu.qml"], "tests": ["uiPreferencesQmlTests", "imageViewportQmlTests"]},
+    {"patterns": ["src/qml/ActionMenuItem.qml"], "tests": ["uiPreferencesQmlTests", "settingsQmlTests"]},
     {"patterns": ["src/qml/PanelResizeHandle.qml"], "tests": ["uiPreferencesQmlTests"]},
     {"patterns": ["src/qml/ExportReviewDialog.qml"], "tests": ["settingsQmlTests", "uiPreferencesQmlTests"]},
     {"patterns": ["tests/image_viewport_qml_test.cpp"], "tests": ["imageViewportQmlTests"]},

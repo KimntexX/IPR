@@ -5,6 +5,7 @@ import QtQuick.Controls.Basic as Basic
 Basic.Menu {
     id: root
     popupType: Popup.Item
+    width: Math.min(440, parent && parent.Window.window ? parent.Window.window.width - 24 : 440)
     required property var actions
     required property var editor
     property string targetName: ""
@@ -14,41 +15,43 @@ Basic.Menu {
     readonly property bool currentPhoto: editor.hasImage && targetKey === currentImageKey
     readonly property bool hasTarget: targetUrl.toString().length > 0
     function openFor(item, x, y) { popup(item, x, y) }
-    Basic.MenuItem {
+    ActionMenuItem {
         text: root.targetName
         enabled: false
         visible: text.length > 0
     }
-    Basic.MenuItem {
+    ActionMenuItem {
         objectName: "contextOpenTarget"
         text: qsTr("Ouvrir cette image")
         visible: root.hasTarget
+        implicitHeight: root.hasTarget ? 32 : 0
+        height: implicitHeight
         enabled: !root.editor.busy && !root.actions.blocked
         onTriggered: root.editor.loadImage(root.targetUrl)
     }
-    Basic.MenuItem { action: root.actions.openImageAction }
+    ActionMenuItem { action: root.actions.openImageAction }
     Basic.MenuSeparator { }
-    Basic.MenuItem {
+    ActionMenuItem {
         objectName: "contextSaveAdjustments"
         action: root.actions.saveAction
         enabled: root.currentPhoto && root.actions.saveAction.enabled
     }
-    Basic.MenuItem {
+    ActionMenuItem {
         objectName: "contextExportImage"
         action: root.actions.exportAction
         enabled: root.currentPhoto && root.actions.exportAction.enabled
     }
-    Basic.MenuItem {
+    ActionMenuItem {
         objectName: "contextDuplicateImage"
         action: root.actions.duplicateAction
         enabled: root.currentPhoto && root.actions.duplicateAction.enabled
     }
-    Basic.MenuItem {
+    ActionMenuItem {
         objectName: "contextResetAdjustments"
         action: root.actions.resetAction
         enabled: root.currentPhoto && root.actions.resetAction.enabled
     }
-    Basic.MenuItem {
+    ActionMenuItem {
         text: root.currentPhoto
               ? qsTr("Enregistrer et dupliquer : raccordement moteur requis")
               : qsTr("Ouvrir cette image pour agir sur ses retouches")

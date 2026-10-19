@@ -5,9 +5,9 @@ Item {
     id: root
     required property var editor
     required property var settings
-    required property var viewport
     property bool blocked: false
-    readonly property string commandModifier: Qt.platform.os === "osx" ? "Meta" : "Ctrl"
+    // Qt maps Ctrl to the physical Command key on macOS; Meta would mean Control.
+    readonly property string commandModifier: "Ctrl"
     readonly property bool photoReady: editor.hasImage && !editor.busy && !editor.embeddedPreview && !blocked
     // These methods are deliberately not emulated in QML. See IHM-CONN-007/008.
     readonly property bool manualSaveAvailable: typeof editor.saveCurrentAdjustments === "function"

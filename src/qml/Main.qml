@@ -39,7 +39,6 @@ ApplicationWindow {
         objectName: "applicationActions"
         editor: imageEditor
         settings: settingsView
-        viewport: canvas
         blocked: folderDialog.visible || imageFileDialog.visible || preferencesDialog.visible
                  || resetDialog.visible || settingsView.exportDialogVisible
         onOpenImageRequested: imageFileDialog.open()
@@ -77,40 +76,43 @@ ApplicationWindow {
         Basic.Menu {
             palette: root.palette
             title: qsTr("Fichier")
+            width: 440
 
-            Basic.MenuItem { action: fileActions.openImageAction }
-            Basic.MenuItem { action: fileActions.openFolderAction }
+            ActionMenuItem { action: fileActions.openImageAction }
+            ActionMenuItem { action: fileActions.openFolderAction }
             Basic.MenuSeparator { }
-            Basic.MenuItem { action: fileActions.saveAction }
-            Basic.MenuItem { action: fileActions.exportAction }
-            Basic.MenuItem { action: fileActions.duplicateAction }
+            ActionMenuItem { action: fileActions.saveAction }
+            ActionMenuItem { action: fileActions.exportAction }
+            ActionMenuItem { action: fileActions.duplicateAction }
             Basic.MenuSeparator { }
-            Basic.MenuItem { action: fileActions.quitAction }
+            ActionMenuItem { action: fileActions.quitAction }
         }
         Basic.Menu {
             palette: root.palette
             title: qsTr("Édition")
-            Basic.MenuItem { action: fileActions.resetAction }
+            width: 440
+            ActionMenuItem { action: fileActions.resetAction }
         }
 
         Basic.Menu {
             palette: root.palette
             title: qsTr("Affichage")
-            Basic.MenuItem {
+            width: 300
+            ActionMenuItem {
                 text: qsTr("Informations de l'image")
                 checkable: true
                 checked: uiPreferences.layout.showImageInfo
                 enabled: uiPreferences.writable
                 onTriggered: uiPreferences.setValue("layout/showImageInfo", checked)
             }
-            Basic.MenuItem {
+            ActionMenuItem {
                 text: qsTr("Histogramme")
                 checkable: true
                 checked: uiPreferences.layout.showHistogram
                 enabled: uiPreferences.writable
                 onTriggered: uiPreferences.setValue("layout/showHistogram", checked)
             }
-            Basic.MenuItem {
+            ActionMenuItem {
                 text: qsTr("Ruban des vignettes")
                 checkable: true
                 checked: uiPreferences.layout.showFilmstrip
@@ -121,7 +123,8 @@ ApplicationWindow {
         Basic.Menu {
             palette: root.palette
             title: qsTr("Préférences")
-            Basic.MenuItem {
+            width: 400
+            ActionMenuItem {
                 action: fileActions.preferencesAction
             }
         }

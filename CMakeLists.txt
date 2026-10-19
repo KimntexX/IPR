@@ -78,6 +78,7 @@ set(IPR_QML_FILES
     src/qml/Main.qml
     src/qml/ApplicationActions.qml
     src/qml/PhotoContextMenu.qml
+    src/qml/ActionMenuItem.qml
     src/qml/ImageViewport.qml
     src/qml/HistogramModule.qml
     src/qml/Setting.qml
