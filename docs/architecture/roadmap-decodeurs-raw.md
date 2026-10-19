@@ -16,10 +16,11 @@ peut ouvrir, et de la justesse de leurs niveaux. Constats du 20 octobre 2026 :
   ou incohérent alors que les pixels masqués portent un piédestal ; IPR le
   corrige par `RawBlackLevelEstimator`. Testé par l'utilisateur : RawTherapee
   présente le même défaut de noirs, puisqu'il lit ses RAW avec LibRaw.
-- **Sony :** le nouveau format ARW 6.0 (a7 V, 2026) n'est pas documenté
-  publiquement ; il risque de ne pas fonctionner avec les bibliothèques libres.
-- **Nikon :** HE/HE\* (codec TicoRAW breveté) n'a aucune voie libre ; les
-  autres NEF sont à réévaluer plus tard.
+- **Sony :** le nouveau format ARW6 (A7R VI, a7 V) reste un risque pour qui
+  dépend d'un tiers. Son codec repose toutefois sur une norme publique
+  (SMPTE RDD 34, LLVC) et LightCraft le décode déjà (§3) : la voie propre existe.
+- **Nikon :** HE/HE\* (JPEG XS, technologie TicoRAW brevetée) n'a aucune voie
+  libre ; les autres NEF sont à réévaluer plus tard.
 
 ## 2. Ce que LibRaw fait aujourd'hui
 
@@ -35,7 +36,9 @@ peut ouvrir, et de la justesse de leurs niveaux. Constats du 20 octobre 2026 :
 | Vignette embarquée | LibRaw (extraction) et Qt (JPEG) | Extraction IPR, Qt inchangé |
 | Import DNG | LibRaw | Lecteur IPR (libtiff + LJ92) ou abandon : décision ouverte |
 
-## 3. Leçons de RawTherapee
+## 3. Leçons des projets existants
+
+### RawTherapee
 
 - Jusqu'en 2024, RawTherapee lisait les RAW avec un dcraw modifié et ses propres
   décodeurs (CR3 en 2019, C-RAW en 2022, réalignés sur LibRaw et ART). Les
@@ -54,6 +57,29 @@ Le partage « LibRaw pour lire, traitement maison ensuite » reste une option
 de repli : indépendance du rendu, mais pas des boîtiers. RawTherapee est sous
 GPLv3 : s'en inspirer, ne pas recopier, tant qu'IPR n'a pas choisi sa licence.
 
+### LightCraft (consulté le 20 octobre 2026)
+
+Logiciel de retouche en Rust sans dépendance C/C++, en alpha, sous licence
+**MIT ou Apache-2.0**, développé en grande partie par des agents IA. Il fait
+déjà ce que vise IPR : des décodeurs propres pour une dizaine de formats
+(545 boîtiers vérifiés sur un vrai fichier, 651 non vérifiés, sur les 1 446 de
+la liste Adobe).
+
+| Sujet | Ce que fait LightCraft | Ce qu'IPR en retient |
+| --- | --- | --- |
+| Organisation | Un fichier par fabricant (`cr2`, `cr3`, `crx`, `crx_wavelet`, `arw`, `arw6`, `nef`, `nefc`…) au-dessus de briques communes (`ljpeg`, `tiffraw`, `dng`, `jxl`) ; dématriçages AHD, PPG, bilinéaire, X-Trans | Même découpage pour `src/raw/` : socle commun P0, puis un module par format |
+| Écriture propre | Code de LibRaw, rawspeed, rawler, RawTherapee, darktable interdit en lecture ; décodeurs tiers utilisés seulement comme **exécutables oracles** (DNGLab 0.8.0 pour le CR3, LibRaw pour l'ARW6) | Confirme le point 5 de l'ADR-0018 ; DNGLab est un oracle CR3 possible après le retrait de LibRaw |
+| Licence | MIT/Apache-2.0 | Lecture du code et des documents permise ; portage en C++ possible avec mention d'origine (fichier NOTICE), quelle que soit la future licence d'IPR. Leur provenance « propre » reste une affirmation : l'oracle IPR valide tout |
+| CR3 | CRX 0x100 sans perte et C-RAW en tuiles horizontales ; 0x200 C-RAW en tuile unique, QP adaptatif 131–175 ; autres variantes refusées explicitement, repli sur le JPEG embarqué avec avertissement | Liste de variantes de départ pour P2 ; même politique de refus explicite |
+| R6 Mark III | `ColorData` version 66 : noir au mot 383, **égal aux colonnes masquées** (512 à bas ISO, 2047–2048 au-delà) ; le blanc du mot 661 n'est pas l'écrêtage, il est déduit des données | Cohérent avec les fenêtres ADR-0011 et le noir optique de 2048 contrôlé ; la lecture de `ColorData` 66 pourrait remplacer l'estimateur. **À vérifier** par l'essai du §10 |
+| R7 | C-RAW sans référence externe chez eux | Notre corpus R7 pourra combler ce manque côté IPR |
+| Sony ARW6 | Décodé pour l'A7R VI à partir de SMPTE RDD 34 (ondelettes 5/3, tuiles, courbe de compression 12 vers 14 bits mesurée) ; codes 12 bits identiques à LibRaw ; a7 V non vérifié ; mode compressé 12 bits non pris en charge ; ≈ 896 Mo de pic mémoire | Le format est documenté ; budget mémoire à surveiller sur le poste 16 Go |
+| Nikon HE/HE\* | Détecté par les marqueurs JPEG XS `FF10 FF50`, message clair et JPEG embarqué | Même détection et même message pour IPR |
+| Robustesse | Entrées traitées comme hostiles : calculs vérifiés, récursion bornée, allocations plafonnées, erreur exploitable plutôt que plantage | Règles à reprendre pour le §7 |
+| Tests | Corpus CC0 hors Git, épinglé par SHA-256 et téléchargé par commande ; test impossible = **ignoré**, jamais réussi ; encodeurs de test synthétiques ; tableau de couverture régénéré, la vérification échoue s'il est périmé | Confirme le §7 ; ajouter le tableau de couverture vérifié |
+| Couleur | Profils Adobe interdits par leurs règles : couleur estimée sur le JPEG du boîtier, calibration mesurée absente | Avantage IPR : DCP locaux (ADR-0003) et références Lightroom |
+| Limites | Alpha ; 45 % de boîtiers non vérifiés ; bugs de niveaux par boîtier récurrents ; confiance de décodage CR3 la plus basse (0,6) | La largeur ne remplace pas la profondeur : IPR reste sur un corpus restreint et validé |
+
 ## 4. Formats
 
 | Format | Variantes à couvrir | Coût estimé | Limites |
@@ -62,8 +88,8 @@ GPLv3 : s'en inspirer, ne pas recopier, tant qu'IPR n'a pas choisi sa licence.
 | **CR3** (R6 Mark III, R7, puis R5) | ISO BMFF, CRX sans perte et C-RAW, données Canon par version de `ColorData` | Inclus dans 9 à 15 semaines avec dématriçage et validation | Le corpus de 19,5 à 53 Mo laisse supposer du C-RAW : à confirmer à l'inventaire |
 | **CR2** (6D Mark II annoncé) | TIFF, LJ92 en bandes ; sRAW/mRAW en option | 1 à 2 semaines avec le socle | Ne valide pas le CR3 ; règles CR3 non transposables |
 | **DNG** | LJ92, deflate (flottant), JPEG avec perte | 1 à 2 semaines avec le socle | JPEG XL (DNG 1.7) refusé explicitement tant qu'il n'est pas traité |
-| **Sony ARW** | Non compressé 12/14 bits ; cRAW avec perte ; sans perte LJ92 (depuis l'A1, 2021) ; YUV420 des rafales A1 | 2 à 4 semaines, puis 1 à 3 jours par boîtier | ARW 6.0 (a7 V) inconnu : analyse sur échantillons avant toute estimation |
-| **Nikon NEF** | Non compressé ; compressé sans ou avec perte (Huffman), WB chiffrée par numéro de série et nombre de déclenchements, courbe de linéarisation | 3 à 5 semaines, puis 1 à 3 jours par boîtier | HE/HE\* : brevet intoPIX ; voie SDK Nikon propriétaire à étudier, sinon refus explicite |
+| **Sony ARW** | Non compressé 12/14 bits ; cRAW avec perte ; sans perte LJ92 (depuis l'A1, 2021) ; YUV420 des rafales A1 ; ARW6 (SMPTE RDD 34) | 2 à 4 semaines, plus l'ARW6 à estimer à partir de la documentation LightCraft, puis 1 à 3 jours par boîtier | ARW6 de l'a7 V non vérifié publiquement ; mode compressé 12 bits non documenté |
+| **Nikon NEF** | Non compressé ; compressé sans ou avec perte (Huffman), WB chiffrée par numéro de série et nombre de déclenchements, courbe de linéarisation | 3 à 5 semaines, puis 1 à 3 jours par boîtier | HE/HE\* (JPEG XS) : brevet intoPIX ; voie SDK Nikon propriétaire à étudier, sinon détection (`FF10 FF50`) et refus explicite |
 
 Estimations internes, à remesurer sur le premier format livré. Un format
 ou une variante non couvert est refusé explicitement, jamais décodé au hasard
@@ -118,6 +144,7 @@ jamais validation de rendu (niveau C).
 | Robustesse | Fuzzing des lecteurs, fichiers tronqués ou corrompus : erreur explicite, ni plantage, ni blocage, mémoire bornée ; ASan/UBSan | CI (job borné en durée) |
 | Rendu | Empreintes du master pour les paliers sans changement d'image ; tolérances chiffrées (ΔE2000 p95, EV, détail) pour P3 | Local, sonde d'équivalence existante |
 | Performance | Temps d'ouverture et pic mémoire par mégapixel, sur le poste 16 Go | Local, avant fusion |
+| Couverture | Tableau des boîtiers, formats, variantes et niveaux (§6), régénéré depuis les JSON ; la vérification échoue s'il est périmé | CI |
 
 Un RAW absent du poste est signalé comme **ignoré**, jamais compté comme réussi.
 La CI télécharge un jeu public figé (URL et SHA-256) et le met en cache.
@@ -164,6 +191,13 @@ qui reste la référence pour le catalogue.
 - **Nikon :** périmètre hors HE/HE\*, et étude de la licence du SDK Nikon.
 - **CR2 :** priorité à fixer à la réception des fichiers du 6D Mark II.
 
+**Essai prévu le 21 octobre 2026 :** passer l'outil en ligne de commande de
+LightCraft, en boîte noire, sur les 19 CR3 du corpus. Comparer ses noirs et
+blancs par canal à LibRaw, à `RawBlackLevelEstimator` et aux colonnes masquées,
+par ISO et par boîtier ; noter les variantes CRX refusées (C-RAW du R7). Les
+résultats vont dans un JSON de preuve horodaté ; l'essai ne modifie pas le
+moteur. Il dira si la lecture de `ColorData` 66 suffit pour le R6 Mark III.
+
 ## Sources consultées les 19 et 20 octobre 2026
 
 - [RawTherapee — notes de version 5.11/5.12](https://rawtherapee.com/downloads/5.12/) :
@@ -180,3 +214,9 @@ qui reste la référence pour le catalogue.
   [licence TicoRAW](https://github.com/storytold/lightcraft/pull/603),
   [TICO](https://en.wikipedia.org/wiki/TICO_(codec)).
 - [LibRaw — API C++](https://www.libraw.org/docs/API-CXX.html).
+- LightCraft : [dépôt](https://github.com/storytold/lightcraft),
+  [AGENTS.md](https://github.com/storytold/lightcraft/blob/main/AGENTS.md),
+  [couverture des boîtiers](https://github.com/storytold/lightcraft/blob/main/docs/raw-parity.md),
+  [CR3](https://github.com/storytold/lightcraft/blob/main/docs/cr3.md),
+  [ARW6](https://github.com/storytold/lightcraft/blob/main/docs/arw6-compression.md),
+  [détection Nikon HE (#603)](https://github.com/storytold/lightcraft/pull/603).

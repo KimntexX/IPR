@@ -18,11 +18,15 @@ reste exact, mais il ne traite pas le risque de dépendance.
   projet ([moteur de profils](../camera-profile-engine.md)). L'utilisateur a
   vérifié le 20 octobre 2026 que RawTherapee présente le même défaut de noirs :
   RawTherapee lit en effet ses RAW avec LibRaw depuis sa version 5.11.
-- **Sony :** l'ARW 6.0 de l'a7 V (2026) est un nouveau format « léger » encore
-  non documenté publiquement ; sa prise en charge par les bibliothèques libres
-  n'est pas acquise.
-- **Nikon :** les NEF HE/HE\* reposent sur le codec TicoRAW, breveté par
-  intoPIX. LibRaw 0.22 les refuse, darktable ne les prend pas en charge.
+- **Sony :** l'ARW6 (A7R VI, a7 V) illustre la course permanente aux nouveaux
+  formats. Son codec repose sur une norme publique (SMPTE RDD 34) et LightCraft
+  le décode déjà pour l'A7R VI ; l'a7 V n'est vérifié publiquement nulle part.
+- **Nikon :** les NEF HE/HE\* reposent sur JPEG XS (technologie TicoRAW,
+  brevetée par intoPIX). LibRaw 0.22 les refuse, darktable ne les prend pas en charge.
+- **Précédent :** LightCraft (Rust, MIT/Apache-2.0) a écrit ses propres
+  décodeurs pour une dizaine de formats, avec des oracles en boîte noire et des
+  agents IA ; l'indépendance visée est donc atteignable
+  ([analyse](../architecture/roadmap-decodeurs-raw.md#lightcraft-consulté-le-20-octobre-2026)).
 - **Constat utilisateur :** dépendre d'un framework externe pour intégrer un
   format ou un nouveau boîtier est un problème sérieux pour IPR.
 
@@ -54,8 +58,10 @@ OpenCV n'est utilisé que pour `core` et `imgproc`.
 5. **Écriture propre :** travailler à partir de descriptions publiques des
    formats et du comportement observable des outils, sans recopier de code
    LGPL (LibRaw, rawler/dnglab) ou GPL (RawTherapee, dcraw modifié). Aucune
-   licence n'est encore choisie pour IPR : toute reprise de code tiers exige
-   d'abord ce choix.
+   licence n'est encore choisie pour IPR : toute reprise de code sous licence
+   réciproque exige d'abord ce choix. Le code et les documents sous licence
+   permissive (LightCraft, MIT/Apache-2.0) peuvent être lus et portés avec
+   mention d'origine ; l'oracle IPR les valide comme le reste.
 6. **Intégration des boîtiers :** procédure outillée, corpus minimal défini,
    tests automatisés et agents IA, décrits dans la
    [roadmap des décodeurs RAW](../architecture/roadmap-decodeurs-raw.md).
