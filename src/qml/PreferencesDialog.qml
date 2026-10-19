@@ -25,7 +25,8 @@ Basic.Dialog {
     palette.button: Qt.darker(preferences.theme.panel, 1.10)
     palette.mid: Qt.tint(preferences.theme.panel, Qt.rgba(
         preferences.theme.text.r, preferences.theme.text.g, preferences.theme.text.b, 0.25))
-    palette.highlight: palette.mid
+    palette.highlight: Qt.tint(preferences.theme.panel, Qt.rgba(
+        preferences.theme.text.r, preferences.theme.text.g, preferences.theme.text.b, 0.25))
     palette.highlightedText: preferences.theme.text
 
     header: Label {

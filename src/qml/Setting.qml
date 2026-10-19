@@ -879,8 +879,9 @@ Item {
         palette.text: root.textColor
         palette.windowText: root.secondaryTextColor
         palette.buttonText: root.textColor
-        palette.button: Qt.darker(palette.window, 1.1)
-        palette.mid: Qt.tint(palette.window, Qt.rgba(palette.text.r, palette.text.g, palette.text.b, .25))
+        palette.button: Qt.darker(root.preferences ? root.preferences.theme.panel : "#2a3039", 1.1)
+        palette.mid: Qt.tint(root.preferences ? root.preferences.theme.panel : "#2a3039",
+                             Qt.rgba(root.textColor.r, root.textColor.g, root.textColor.b, .25))
         exportEnabled: editor.hasImage && !editor.busy && !editor.embeddedPreview
                        && root.currentImageKey === root.reviewedImageKey
         unavailableReason: root.currentImageKey !== root.reviewedImageKey

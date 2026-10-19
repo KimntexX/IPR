@@ -36,6 +36,21 @@ objet simulé ne vaut pas validation du raccordement de production.
 
 ## Demandes ouvertes
 
+### IHM-CONN-009 — identité des fichiers ouverts par un alias de chemin
+
+- Date : 19 octobre 2026 ; état : **en attente moteur**.
+- Les URL du modèle de dossier conservent le chemin d’ouverture, alors que
+  `selectedImageUrls` utilise `canonicalFilePath()`. Un dossier accessible via
+  un lien symbolique peut donc ne pas cocher visuellement les images sélectionnées.
+  Le runner macOS révèle ce cas avec `/var` et `/private/var`.
+- Unifier l’identité des fichiers dans le modèle et l’API de sélection, sans
+  comparaison approximative de noms ni substitution de préfixes côté QML.
+  Vérifier sélection/désélection et traitement groupé via chemin canonique,
+  alias symbolique et fichiers homonymes dans deux dossiers différents.
+- Le test de parcours IHM emploie désormais un dossier temporaire canonique :
+  il vérifie le parcours normal, **pas** la résolution du défaut des alias.
+  Aucun correctif moteur n’est inclus dans `patch_ui` pour ce point.
+
 ### IHM-CONN-001 — valeur par défaut globale de calibration RAW
 
 - Date : 18 octobre 2026 ; état : **en attente moteur**, branche à attribuer.

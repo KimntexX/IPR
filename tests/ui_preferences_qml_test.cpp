@@ -12,6 +12,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QDir>
+#include <QFileInfo>
 #include <QQuickItem>
 #include <QQuickWindow>
 #include <QTimer>
@@ -380,8 +381,14 @@ int main(int argc, char **argv)
         QTemporaryDir photos;
         QImage image(8, 8, QImage::Format_RGB32);
         image.fill(QColor("#6688aa"));
-        const QString first = photos.filePath("01.png");
-        const QString second = photos.filePath("02.png");
+        // macOS exposes its temporary directory through /var -> /private/var.
+        // The editor selection API returns canonical paths; use the same
+        // identity for fixtures instead of accidentally testing that alias.
+        const QDir photoDirectory(QFileInfo(photos.path()).canonicalFilePath());
+        if (!check(photos.isValid() && !photoDirectory.path().isEmpty(),
+                   "navigation fixtures need a valid canonical directory")) return 1;
+        const QString first = photoDirectory.filePath("01.png");
+        const QString second = photoDirectory.filePath("02.png");
         if (!check(image.save(first) && image.save(second), "navigation fixtures should save")) return 1;
         editor.openImage(QUrl::fromLocalFile(first));
         settleEditor(editor);
