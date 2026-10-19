@@ -33,6 +33,9 @@ LRU partagé DCP/LCP, 64 Mio/16 entrées, concurrence et invalidation par conten
 
 ## Règle de mise à jour
 
+[Suivi des raccordements IHM](suivi-raccordements-ihm.md) : chantier isolé
+`patch_ui`, demandes d’interfaces moteur et validation des connexions.
+
 [Contrôle mémoire et navigation](controle-memoire-images.md) : propriété du LRU,
 réservations et préchargement annulable, avec limites du seuil global de RAM.
 

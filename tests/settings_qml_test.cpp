@@ -8,6 +8,7 @@
 #include <QGuiApplication>
 #include <QImage>
 #include <QKeyEvent>
+#include <QMouseEvent>
 #include <QQmlComponent>
 #include <QQmlEngine>
 #include <QQuickItem>
@@ -100,12 +101,12 @@ int main(int argc, char **argv)
     settleLayout();
 
     const QStringList names{
-        "rawDevelopmentSection", "lightSection", "curveSection", "colorSection", "mixerSection",
+        "rawDevelopmentSection", "opticsSection", "lightSection", "curveSection", "colorSection", "mixerSection",
         "gradingSection", "effectsSection", "denoiseSection", "sharpeningSection",
         "exportSection"};
     for (const QString &name : names) {
         auto *section = root->findChild<QQuickItem *>(name);
-        if (!check(section != nullptr, "all ten independent settings sections should exist"))
+        if (!check(section != nullptr, "all eleven independent settings sections should exist"))
             return 1;
         auto *body = section->property("body").value<QQuickItem *>();
         auto *header = section->findChild<QQuickItem *>(QStringLiteral("sectionToggle"));
@@ -133,38 +134,48 @@ int main(int argc, char **argv)
     }
 
     if (!check(root->findChild<QObject *>("cameraProfileSelector") &&
-               root->findChild<QObject *>("rawNormalizationToggle") &&
                root->findChild<QObject *>("rawDevelopmentStatusLabel") &&
-               root->findChild<QObject *>("rawNormalizationManifestButton") &&
                root->findChild<QObject *>("lensCorrectionToggle") &&
                root->findChild<QObject *>("chromaticAberrationToggle") &&
-               root->findChild<QObject *>("opticalDevelopmentStatusLabel"),
-               "RAW module must expose profile, opt-in, manifest and actual status")) return 1;
-    auto *calibrationToggle=root->findChild<QObject *>("rawNormalizationToggle");
-    editor.setRawNormalizationEnabled(true);settleLayout();
-    if(!check(editor.rawNormalizationEnabled()&&calibrationToggle->property("checked").toBool(),
-              "calibration checkbox follows enabled backend state"))return 1;
-    editor.setRawNormalizationEnabled(false);settleLayout();
-    if(!check(!editor.rawNormalizationEnabled()&&!calibrationToggle->property("checked").toBool(),
-              "calibration checkbox follows disabled/restored backend state"))return 1;
+               root->findChild<QObject *>("opticalDevelopmentStatusLabel") &&
+               !root->findChild<QObject *>("rawNormalizationToggle") &&
+               !root->findChild<QObject *>("rawNormalizationManifestButton") &&
+               !root->findChild<QObject *>("resetRawDevelopmentButton"),
+               "normal settings must expose profiles and optics but no advanced calibration controls")) return 1;
+    auto *optics = root->findChild<QObject *>("opticsSection");
+    auto *rawSection = root->findChild<QObject *>("rawDevelopmentSection");
+    int automaticWhiteBalanceControls = 0;
+    for (QObject *child : root->findChildren<QObject *>())
+        if (child->property("checked").isValid() &&
+            child->property("text").toString() == QStringLiteral("Balance des blancs automatique"))
+            ++automaticWhiteBalanceControls;
+    if (!check(automaticWhiteBalanceControls == 1 &&
+               rawSection->findChild<QObject *>("rawAutomaticWhiteBalanceToggle"),
+               "automatic white balance must exist once, exclusively under RAW development")) return 1;
+    auto *opticsItem = qobject_cast<QQuickItem *>(optics);
+    auto *exportItem = root->findChild<QQuickItem *>("exportSection");
+    const auto sections = opticsItem->parentItem()->childItems();
+    if (!check(sections.indexOf(exportItem) == sections.indexOf(opticsItem) + 1,
+               "optical corrections must be placed immediately before export")) return 1;
+    if (!check(optics->findChild<QObject *>("lensCorrectionToggle") &&
+               optics->findChild<QObject *>("chromaticAberrationToggle") &&
+               !rawSection->findChild<QObject *>("lensCorrectionToggle"),
+               "optical corrections must belong exclusively to their independent section")) return 1;
     // A click replaces a plain QML binding: the box must still show the engine
-    // state afterwards, whether the engine refuses the change (optics: no RAW
-    // open) or accepts it (calibration).
+    // state afterwards (here the engine refuses: no RAW is open).
     const std::pair<const char *, const char *> toggles[] = {
         {"lensCorrectionToggle", "lensCorrectionEnabled"},
         {"chromaticAberrationToggle", "chromaticAberrationEnabled"},
-        {"rawNormalizationToggle", "rawNormalizationEnabled"}};
+        {"rawAutomaticWhiteBalanceToggle", "automaticWhiteBalance"}};
     for (const auto &[name, state] : toggles) {
         QObject *toggle = root->findChild<QObject *>(QString::fromLatin1(name));
+        if (!check(toggle, "RAW development checkbox exists")) return 1;
         QMetaObject::invokeMethod(toggle, "toggle");
         QMetaObject::invokeMethod(toggle, "clicked");
         settleLayout();
         if (!check(toggle->property("checked").toBool() == editor.property(state).toBool(),
                    "a RAW development checkbox must show the engine state after a click")) return 1;
     }
-    editor.setRawNormalizationEnabled(true);settleLayout();
-    if(!check(calibrationToggle->property("checked").toBool(),
-              "after a click, the checkbox must still follow later engine changes"))return 1;
     QObject *noiseSection = root->findChild<QObject *>(QStringLiteral("denoiseSection"));
     QObject *sharpSection = root->findChild<QObject *>(QStringLiteral("sharpeningSection"));
     QObject *exportSection = root->findChild<QObject *>(QStringLiteral("exportSection"));
@@ -193,6 +204,83 @@ int main(int argc, char **argv)
                "the initial sharpening radius should match the engine default"))
         return 1;
 
+    // Geometry regression: signed values fill from neutral, not from the left.
+    root->findChild<QObject *>("lightSection")->setProperty("expanded", true);
+    settleLayout();
+    QObject *contrast = controlWithLabel(root.data(), QStringLiteral("Contraste"));
+    auto *track = contrast->findChild<QQuickItem *>("adjustmentTrack");
+    auto *fill = contrast->findChild<QQuickItem *>("adjustmentFill");
+    auto *valueField = contrast->findChild<QQuickItem *>("adjustmentValueEditor");
+    if (!check(track->width() > 0 && valueField && valueField->height() - valueField->property("topPadding").toDouble() -
+               valueField->property("bottomPadding").toDouble() >= valueField->property("contentHeight").toDouble(),
+               "compact value fields must leave enough height for their editable text")) return 1;
+    for (int value : {-100, -50, 0, 50, 100}) {
+        contrast->setProperty("value", value);
+        settleLayout();
+        const qreal origin = track->width() / 2;
+        const qreal endpoint = (value + 100) / 200.0 * track->width();
+        if (!check(std::abs(fill->x() - std::min(origin, endpoint)) < 0.5 &&
+                   std::abs(fill->width() - std::abs(endpoint - origin)) < 0.5,
+                   "bipolar slider fill must extend from zero towards either signed value")) return 1;
+    }
+    contrast->setProperty("value", 0);
+    for (const QString &label : {QStringLiteral("Température (K)"),
+                                QStringLiteral("Nuance vert ↔ magenta"),
+                                QStringLiteral("Vibrance"), QStringLiteral("Saturation")}) {
+        QObject *control = controlWithLabel(root.data(), label);
+        if (!check(control && control->property("hasColorTrack").toBool(),
+                   "all global colour sliders must expose a coloured track")) return 1;
+    }
+    QObject *mixer = root->findChild<QObject *>("mixerSection");
+    if (!check(controlWithLabel(mixer, QStringLiteral("Teinte"))->property("hasColorTrack").toBool() &&
+               !contrast->property("hasColorTrack").toBool(),
+               "mixer hue must have a coloured track without colouring light sliders")) return 1;
+    if (!check(quality->property("originPosition").toDouble() == 0 &&
+               noise->property("originPosition").toDouble() == 0,
+               "unipolar sliders must retain a minimum origin")) return 1;
+
+    QObject *histogramView = root->findChild<QObject *>("histogramModule");
+    QVariantList histogramData;
+    for (int channel = 0; channel < 4; ++channel) {
+        QVariantList bins;
+        for (int bin = 0; bin < 256; ++bin)
+            bins.append(bin == 128 ? 100 : (bin == 255 ? 10 : 0));
+        histogramData.append(QVariant::fromValue(bins));
+    }
+    histogramView->setProperty("histogram", histogramData);
+    QObject *curveView = root->findChild<QObject *>("toneCurveModule");
+    QVariantList curveData;
+    for (int channel = 0; channel < 4; ++channel) {
+        QVariantList bins;
+        for (int bin = 0; bin < 256; ++bin)
+            bins.append(bin == 128 ? (channel == 0 ? 100 : 10000) : 0);
+        curveData.append(QVariant::fromValue(bins));
+    }
+    curveView->setProperty("histogram", curveData);
+    QVariant curveHeight;
+    QMetaObject::invokeMethod(curveView, "histogramHeight", Q_RETURN_ARG(QVariant, curveHeight), Q_ARG(QVariant, 50));
+    if (!check(curveView->property("histogramPeak").toDouble() == 100 &&
+               std::abs(curveHeight.toDouble() - 0.5) < 0.001,
+               "curve backdrop must use luminance alone, ignoring stronger RGB channel peaks")) return 1;
+    curveView->setProperty("histogram", QVariantList{});
+    if (!check(curveView->property("histogramPeak").toDouble() == 1,
+               "curve backdrop must clear safely when changing to an empty image")) return 1;
+    QVariant heightRatio;
+    QMetaObject::invokeMethod(histogramView, "relativeHeight", Q_RETURN_ARG(QVariant, heightRatio), Q_ARG(QVariant, 10));
+    if (!check(std::abs(heightRatio.toDouble() - 0.1) < 0.001 &&
+               !histogramView->property("shadowsClipped").toBool() &&
+               histogramView->property("highlightsClipped").toBool(),
+               "histogram must use proportional counts and report only preview-channel endpoint presence")) return 1;
+    const QList<double> zoneBoundaries{0, 0.10, 0.33, 0.66, 0.90, 1};
+    for (int index = 0; index < zoneBoundaries.size(); ++index) {
+        QVariant zone;
+        QMetaObject::invokeMethod(histogramView, "zoneAt", Q_RETURN_ARG(QVariant, zone),
+                                  Q_ARG(QVariant, zoneBoundaries[index]));
+        if (!check(zone.toInt() == std::min(index, 4),
+                   "histogram zones must follow the supplied 10/33/66/90 percent boundaries")) return 1;
+    }
+    contrast->setProperty("value", 0);
+
     QTemporaryDir directory;
     QImage source(8, 8, QImage::Format_RGB32);
     source.fill(QColor(100, 140, 180));
@@ -203,6 +291,29 @@ int main(int argc, char **argv)
                awaitLoad(editor, QUrl::fromLocalFile(first)),
                "test source should load in the editor"))
         return 1;
+    rawSection->setProperty("expanded", true);
+    auto *profileStatus = root->findChild<QQuickItem *>("rawDevelopmentStatusLabel");
+    auto *lightSection = root->findChild<QQuickItem *>("lightSection");
+    for (int width : {232, 292, 332}) {
+        panel->setWidth(width);
+        settleLayout();
+        const QString stableText = profileStatus->property("text").toString();
+        const qreal stableHeight = profileStatus->height();
+        const qreal stableLightY = lightSection->y();
+        editor.setBrightness(width / 1000.0);
+        if (!check(editor.busy() && profileStatus->property("text").toString() == stableText,
+                   "processing must not replace the RAW profile description")) return 1;
+        settleLayout();
+        if (!check(std::abs(profileStatus->height() - stableHeight) < .1 &&
+                   std::abs(lightSection->y() - stableLightY) < .1,
+                   "profile status and downstream controls must not move during rendering")) return 1;
+        for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+        if (!check(!editor.busy() && profileStatus->property("text").toString() == stableText &&
+                   std::abs(lightSection->y() - stableLightY) < .1,
+                   "finishing a render must preserve profile text and control positions")) return 1;
+    }
+    panel->setWidth(320);
+    editor.setBrightness(0);
     noiseSection->setProperty("expanded", true);
     sharpSection->setProperty("expanded", true);
     exportSection->setProperty("expanded", true);
@@ -268,6 +379,14 @@ int main(int argc, char **argv)
     });
     QTimer::singleShot(5000, &exportLoop, &QEventLoop::quit);
     QMetaObject::invokeMethod(dialog, "accepted");
+    QObject *review = root->findChild<QObject *>("exportReviewDialog");
+    if (!check(review && review->property("visible").toBool() &&
+               review->property("format").toString() == "PNG" &&
+               review->property("encoding").toString().contains("16") &&
+               review->property("dimensions").toString() == editor.imageDetails().value("dimensions").toString() &&
+               !QFileInfo::exists(directory.filePath("dialog-choice.png")),
+               "native destination acceptance must show accurate review without writing a file")) return 1;
+    QMetaObject::invokeMethod(review, "confirm");
     if (!completed) exportLoop.exec();
     QObject::disconnect(exportConnection);
     const QString actualPath = directory.filePath(QStringLiteral("dialog-choice.png"));
@@ -299,6 +418,7 @@ int main(int argc, char **argv)
         });
         QTimer::singleShot(5000, &numberedLoop, &QEventLoop::quit);
         QMetaObject::invokeMethod(dialog, "accepted");
+        QMetaObject::invokeMethod(review, "confirm");
         if (!numberedComplete) numberedLoop.exec();
         QObject::disconnect(numberedConnection);
         if (!check(numberedComplete && editor.statusMessage().endsWith(expected) && !QImage(expected).isNull(),
@@ -332,6 +452,19 @@ int main(int argc, char **argv)
         if (!check(scrollView && scrollView->property("contentWidth").toDouble() <= width + 0.5,
                    "sections must not introduce horizontal scrolling"))
             return 1;
+        auto *histogram = root->findChild<QQuickItem *>("histogramModule");
+        auto *header = root->findChild<QQuickItem *>("fixedSettingsHeader");
+        auto *flickable = scrollView->property("contentItem").value<QQuickItem *>();
+        const QPointF histogramPosition = histogram->mapToItem(panel, QPointF(0, 0));
+        if (!check(header && flickable && histogram->parentItem() == header &&
+                   flickable->property("contentHeight").toDouble() > flickable->height(),
+                   "histogram must live outside the scrolling controls")) return 1;
+        flickable->setProperty("contentY", 400);
+        settleLayout();
+        if (!check(flickable->property("contentY").toDouble() > 0 &&
+                   histogram->mapToItem(panel, QPointF(0, 0)) == histogramPosition,
+                   "histogram must stay fixed while expanded settings scroll")) return 1;
+        flickable->setProperty("contentY", 0);
         auto *mixerSection = root->findChild<QQuickItem *>(QStringLiteral("mixerSection"));
         // Regression: a collapsed selector could pass width-only assertions
         // while every button had zero height and remained invisible.
@@ -372,5 +505,111 @@ int main(int argc, char **argv)
                    "optional settings screenshot should save"))
             return 1;
     }
+    const QString cancelledTarget = directory.filePath(QStringLiteral("cancelled-export.png"));
+    dialog->setProperty("selectedFile", QUrl::fromLocalFile(cancelledTarget));
+    QMetaObject::invokeMethod(dialog, "accepted");
+    QMetaObject::invokeMethod(review, "close");
+    if (!check(!QFileInfo::exists(cancelledTarget), "cancelling the export review must not write a file")) return 1;
+    QMetaObject::invokeMethod(dialog, "accepted");
+    root->setProperty("reviewedImageKey", "another-photo");
+    QMetaObject::invokeMethod(review, "confirm");
+    if (!check(!review->property("exportEnabled").toBool() &&
+               review->property("visible").toBool() && !QFileInfo::exists(cancelledTarget),
+               "a stale photo identity must prevent export confirmation")) return 1;
+    QMetaObject::invokeMethod(review, "close");
+
+    for (int i = 0; i < 5; ++i) settleLayout();
+    auto *exposure = controlWithLabel(root.data(), QStringLiteral("Exposition (EV)"));
+    if (!check(exposure, "exposure control must exist")) return 1;
+    exposure->setProperty("value", 1.25);
+    if (!check(exposure->property("modified").toBool() &&
+               root->findChild<QObject *>("lightSection")->property("modified").toBool(),
+               "numeric modifications must be marked on the control and section")) return 1;
+    QMetaObject::invokeMethod(exposure, "resetToDefault");
+    if (!check(exposure->property("value").toDouble() == 0 &&
+               !exposure->property("modified").toBool() && editor.adjustmentValue("brightness") == 0,
+               "reset gesture must update both slider and engine")) return 1;
+    auto *slider = exposure->findChild<QQuickItem *>("adjustmentSlider");
+    slider->forceActiveFocus();
+    QKeyEvent stepPress(QEvent::KeyPress, Qt::Key_Right, Qt::NoModifier);
+    QKeyEvent stepRelease(QEvent::KeyRelease, Qt::Key_Right, Qt::NoModifier);
+    QCoreApplication::sendEvent(&window, &stepPress);
+    QCoreApplication::sendEvent(&window, &stepRelease);
+    if (!check(std::abs(exposure->property("value").toDouble() - .01) < 1e-6 &&
+               std::abs(editor.adjustmentValue("brightness") - .01) < 1e-6,
+               "keyboard arrows must apply the declared numeric increment")) return 1;
+    QMetaObject::invokeMethod(exposure, "resetToDefault");
+
+    QQuickWindow gestureWindow;
+    gestureWindow.resize(280, 100);
+    QQmlComponent gestureComponent(&engine,
+        QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/AdjustmentControl.qml")));
+    QScopedPointer<QObject> gesture(gestureComponent.createWithInitialProperties({
+        {"minimumValue", -100}, {"maximumValue", 100}, {"value", 25}, {"adjustmentEnabled", true}}));
+    if (!gesture) { std::cerr << gestureComponent.errorString().toStdString(); return 1; }
+    auto *gestureItem = qobject_cast<QQuickItem *>(gesture.data());
+    gestureItem->setParentItem(gestureWindow.contentItem());
+    gestureItem->setX(10); gestureItem->setY(10); gestureItem->setWidth(240); gestureItem->setHeight(60);
+    gestureWindow.show();
+    settleLayout();
+    auto *gestureSlider = gesture->findChild<QQuickItem *>("adjustmentSlider");
+    auto *gestureHandle = gestureSlider->property("handle").value<QQuickItem *>();
+    const QPointF gesturePoint = gestureHandle->mapToItem(nullptr, QPointF(5, 5));
+    unsigned long timestamp = 1000;
+    // QWindow pointer delivery uses two press/release pairs (as QTest's
+    // QWindow mouseDClick does), not the QWidget-only double-click shortcut.
+    for (QEvent::Type type : {QEvent::MouseButtonPress, QEvent::MouseButtonRelease,
+                             QEvent::MouseButtonPress, QEvent::MouseButtonRelease}) {
+        QMouseEvent event(type, gesturePoint, QPointF(gestureWindow.mapToGlobal(gesturePoint.toPoint())),
+                          Qt::LeftButton, type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::LeftButton, Qt::NoModifier);
+        event.setTimestamp(timestamp);
+        timestamp += 50;
+        QCoreApplication::sendEvent(&gestureWindow, &event);
+        QCoreApplication::processEvents();
+    }
+    if (!check(gesture->property("value").toDouble() == 0,
+               "a real double click on the slider must restore its reset value")) return 1;
+    const QPointF dragStart = gestureHandle->mapToItem(nullptr, QPointF(5, 5));
+    for (QEvent::Type type : {QEvent::MouseButtonPress, QEvent::MouseMove, QEvent::MouseButtonRelease}) {
+        const QPointF point = type == QEvent::MouseButtonPress ? dragStart : dragStart + QPointF(40, 0);
+        QMouseEvent event(type, point, QPointF(gestureWindow.mapToGlobal(point.toPoint())),
+            type == QEvent::MouseMove ? Qt::NoButton : Qt::LeftButton,
+            type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::LeftButton, Qt::NoModifier);
+        event.setTimestamp(timestamp + 1000);
+        timestamp += 50;
+        QCoreApplication::sendEvent(&gestureWindow, &event);
+        QCoreApplication::processEvents();
+    }
+    if (!check(gesture->property("value").toDouble() > 10,
+               "the reset tap recognizer must not steal normal slider dragging")) return 1;
+    const double contextValue = gesture->property("value").toDouble();
+    const QPointF contextPoint = gestureHandle->mapToItem(nullptr, QPointF(5, 5));
+    for (QEvent::Type type : {QEvent::MouseButtonPress, QEvent::MouseButtonRelease}) {
+        QMouseEvent event(type, contextPoint, QPointF(gestureWindow.mapToGlobal(contextPoint.toPoint())), Qt::RightButton,
+            type == QEvent::MouseButtonPress ? Qt::RightButton : Qt::NoButton, Qt::NoModifier);
+        QCoreApplication::sendEvent(&gestureWindow, &event);
+    }
+    settleLayout();
+    QObject *parameterMenu = gesture->findChild<QObject *>("adjustmentContextMenu");
+    if (!check(parameterMenu && parameterMenu->property("visible").toBool() &&
+               gesture->property("value").toDouble() == contextValue,
+               "right-click must open a parameter menu without moving the slider")) return 1;
+    QMetaObject::invokeMethod(parameterMenu->findChild<QObject *>("contextResetParameter"), "triggered");
+    if (!check(gesture->property("value").toDouble() == 0, "parameter context reset must use its declared reference")) return 1;
+    QMetaObject::invokeMethod(parameterMenu, "close");
+
+    QQmlComponent statusComponent(&engine,
+        QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/ProcessingStatus.qml")));
+    QScopedPointer<QObject> status(statusComponent.create());
+    if (!status) { std::cerr << statusComponent.errorString().toStdString(); return 1; }
+    qobject_cast<QQuickItem *>(status.data())->setParentItem(window.contentItem());
+    status->setProperty("busy", true);
+    if (!check(!status->property("visible").toBool(), "short operations must not flash a badge")) return 1;
+    for (int i = 0; i < 10 && !status->property("visible").toBool(); ++i) settleLayout();
+    if (!check(status->property("visible").toBool(), "long operations must show a badge")) return 1;
+    status->setProperty("busy", false);
+    if (!check(!status->property("visible").toBool(), "badge must clear when idle without claiming success")) return 1;
+    status->setProperty("embeddedPreview", true);
+    if (!check(status->property("visible").toBool(), "interim camera preview must be labelled immediately")) return 1;
     return 0;
 }

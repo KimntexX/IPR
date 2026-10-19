@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Basic as Basic
 import QtQuick.Layouts
 
 ColumnLayout {
@@ -11,10 +12,43 @@ ColumnLayout {
     property real maximumValue: 100
     property real increment: 1
     property real resetValue: 0
-    property color textColor: "#edf2f8"
-    property color secondaryTextColor: "#d7dfeb"
+    property color textColor: controlSlider.palette.text
+    property color secondaryTextColor: controlSlider.palette.windowText
     property alias value: controlSlider.value
     property bool adjustmentEnabled: false
+    readonly property bool modified: Math.abs(value - resetValue) > Math.max(0.000001, increment / 10)
+
+    function resetToDefault() {
+        if (adjustmentEnabled) value = resetValue
+    }
+
+    Basic.Menu {
+        id: parameterMenu
+        popupType: Popup.Item
+        width: Math.min(360, control.Window.window ? control.Window.window.width - 24 : 360)
+        objectName: "adjustmentContextMenu"
+        parent: controlSlider
+        palette: controlSlider.palette
+        ActionMenuItem {
+            objectName: "contextResetParameter"
+            text: qsTr("Réinitialiser %1").arg(control.label)
+            enabled: control.adjustmentEnabled
+            onTriggered: control.resetToDefault()
+        }
+        ActionMenuItem {
+            text: qsTr("Saisir une valeur…")
+            enabled: control.adjustmentEnabled
+            onTriggered: { valueEditor.forceActiveFocus(); valueEditor.selectAll() }
+        }
+    }
+    // UI hints only: these colours do not describe an output colour transform.
+    property var trackColors: []
+    readonly property bool hasColorTrack: trackColors.length >= 2
+    // Only bipolar controls have a neutral centre. Positive-only quantities
+    // (quality, noise, radius...) keep their minimum as the visual origin.
+    readonly property bool bipolar: minimumValue < 0 && maximumValue > 0
+    readonly property real originPosition: bipolar
+        ? (0 - minimumValue) / (maximumValue - minimumValue) : 0
     signal valueEdited(real value)
 
     Layout.fillWidth: true
@@ -24,20 +58,35 @@ ColumnLayout {
         Layout.fillWidth: true
 
         Label {
+            id: parameterLabel
             Layout.fillWidth: true
             Layout.minimumWidth: 0
             text: control.label
             elide: Text.ElideRight
             color: control.secondaryTextColor
+            font.bold: control.modified
+            TapHandler { onTapped: if (tapCount === 2) control.resetToDefault() }
+            TapHandler {
+                acceptedButtons: Qt.RightButton
+                onTapped: (point) => parameterMenu.popup(parameterLabel, point.position.x, point.position.y)
+            }
+            HoverHandler { id: labelHover }
+            ToolTip.visible: labelHover.hovered
+            ToolTip.text: qsTr("Double-clic pour réinitialiser à %1").arg(control.resetValue)
         }
 
-        TextField {
+        Basic.TextField {
             id: valueEditor
+            objectName: "adjustmentValueEditor"
 
             Layout.preferredWidth: 50
             Layout.minimumWidth: 50
             Layout.maximumWidth: 50
-            implicitHeight: 22
+            implicitHeight: Math.max(22, contentHeight + topPadding + bottomPadding)
+            topPadding: 2
+            bottomPadding: 2
+            leftPadding: 3
+            rightPadding: 3
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
             selectByMouse: true
@@ -99,13 +148,13 @@ ColumnLayout {
 
             background: Rectangle {
                 radius: 3
-                color: valueEditor.activeFocus ? "#303946" : "transparent"
+                color: valueEditor.activeFocus ? valueEditor.palette.base : "transparent"
                 border.width: 1
-                border.color: valueEditor.activeFocus ? "#7388a3" : "#3d4654"
+                border.color: valueEditor.activeFocus ? valueEditor.palette.text : valueEditor.palette.mid
             }
         }
 
-        ToolButton {
+        PreferenceButton {
             id: resetButton
 
             Layout.preferredWidth: 21
@@ -121,17 +170,35 @@ ColumnLayout {
             enabled: control.adjustmentEnabled
             ToolTip.visible: hovered
             ToolTip.text: qsTr("Réinitialiser")
-            onClicked: control.value = control.resetValue
+            onClicked: control.resetToDefault()
 
             background: Rectangle {
                 radius: 3
-                color: resetButton.hovered ? "#3d4654" : "transparent"
+                color: resetButton.hovered ? resetButton.palette.mid : "transparent"
             }
         }
     }
 
-    Slider {
+    Basic.Slider {
         id: controlSlider
+        objectName: "adjustmentSlider"
+        focusPolicy: Qt.StrongFocus
+        Accessible.name: control.label
+        Accessible.description: qsTr("Flèches : ajuster. Double-clic : réinitialiser.")
+        // Slider also applies its release position: reset after that handler,
+        // otherwise it immediately overwrites the neutral value with the old position.
+        TapHandler { onTapped: if (tapCount === 2) Qt.callLater(control.resetToDefault) }
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            onClicked: (mouse) => parameterMenu.popup(controlSlider, mouse.x, mouse.y)
+        }
+        Keys.onPressed: (event) => {
+            if (event.key === Qt.Key_Menu || (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier)) {
+                parameterMenu.popup(controlSlider, width / 2, height / 2)
+                event.accepted = true
+            }
+        }
 
         Layout.fillWidth: true
         Layout.minimumWidth: 0
@@ -144,20 +211,65 @@ ColumnLayout {
         stepSize: control.increment
         enabled: control.adjustmentEnabled
         onValueChanged: control.valueEdited(value)
+        onMirroredChanged: colorTrack.requestPaint()
 
         background: Rectangle {
-            x: controlSlider.leftPadding
+            objectName: "adjustmentTrack"
+            x: controlSlider.leftPadding + controlSlider.handle.width / 2
             y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
-            width: controlSlider.availableWidth
+            width: Math.max(0, controlSlider.availableWidth - controlSlider.handle.width)
             height: 3
             radius: height / 2
-            color: "#303946"
+            color: controlSlider.palette.mid
+
+            Canvas {
+                id: colorTrack
+                objectName: "adjustmentColorTrack"
+                anchors.fill: parent
+                visible: control.hasColorTrack
+                opacity: controlSlider.enabled ? 0.85 : 0.3
+                onWidthChanged: requestPaint()
+                onHeightChanged: requestPaint()
+                Connections {
+                    target: control
+                    function onTrackColorsChanged() { colorTrack.requestPaint() }
+                }
+                onPaint: {
+                    const context = getContext("2d")
+                    context.clearRect(0, 0, width, height)
+                    if (!control.hasColorTrack || width <= 0 || height <= 0)
+                        return
+                    const gradient = context.createLinearGradient(
+                        controlSlider.mirrored ? width : 0, 0,
+                        controlSlider.mirrored ? 0 : width, 0)
+                    for (let index = 0; index < control.trackColors.length; ++index)
+                        gradient.addColorStop(index / (control.trackColors.length - 1),
+                                              String(control.trackColors[index]))
+                    context.fillStyle = gradient
+                    context.fillRect(0, 0, width, height)
+                }
+            }
 
             Rectangle {
-                width: controlSlider.visualPosition * parent.width
+                objectName: "adjustmentFill"
+                readonly property real origin: controlSlider.mirrored
+                    ? 1 - control.originPosition : control.originPosition
+                x: Math.min(origin, controlSlider.visualPosition) * parent.width
+                width: Math.abs(controlSlider.visualPosition - origin) * parent.width
                 height: parent.height
                 radius: height / 2
-                color: controlSlider.enabled ? "#687b91" : "#46515f"
+                color: control.textColor
+                opacity: control.hasColorTrack ? 0.25 : (controlSlider.enabled ? 0.65 : 0.3)
+            }
+            Rectangle {
+                visible: control.bipolar
+                x: (controlSlider.mirrored ? 1 - control.originPosition
+                                          : control.originPosition) * parent.width - 0.5
+                y: -1
+                width: 1
+                height: parent.height + 2
+                color: control.textColor
+                opacity: 0.55
             }
         }
 
@@ -168,9 +280,10 @@ ColumnLayout {
             width: 10
             height: 10
             radius: width / 2
-            color: controlSlider.pressed ? "#c5d1df" : "#9dabbc"
+            color: control.textColor
+            opacity: controlSlider.enabled ? 1 : 0.4
             border.width: 1
-            border.color: "#566474"
+            border.color: controlSlider.activeFocus ? control.textColor : "#566474"
         }
     }
 }

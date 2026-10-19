@@ -1,0 +1,71 @@
+\chapter{Aide-mémoire clavier et souris}
+\label{chap:raccourcis}
+Les gestes sont également expliqués dans leurs familles. Leur effet dépend
+du focus : une flèche dans un curseur ajuste sa valeur ; ce n’est pas une
+commande globale de changement de photo. Les raccourcis ci-dessous reprennent
+les séquences déclarées dans la version décrite, notamment sur Windows.
+Sur macOS, Qt associe la notation Ctrl à la touche physique Command ; les
+menus affichent alors Cmd. Ouvrir et Enregistrer utilisent les séquences
+standard Qt. Cette convention est décrite dans la documentation
+\href{https://doc.qt.io/qt-6/qkeysequence.html}{QKeySequence de Qt} ; elle
+ne remplace pas la qualification de l’application sur une machine macOS.
+
+\section*{Fichiers et application}
+\begin{longtable}{@{}L{4.4cm}L{9.2cm}@{}}
+\toprule Touche & Action et disponibilité\\\midrule\endhead
+\touche{Ctrl + O} & Ouvrir une image.\\
+\touche{Ctrl + Maj + O} & Ouvrir un dossier.\\
+\touche{Ctrl + E} & Choisir la destination d’export puis vérifier le récapitulatif.\\
+\touche{Ctrl + Maj + R} & Demander la remise à zéro des retouches, avec confirmation.\\
+\touche{Ctrl + virgule} & Ouvrir les préférences.\\
+\touche{Ctrl + Q} & Quitter hors dialogue modal.\\
+\touche{Ctrl + S} & Réservé à l’enregistrement manuel du compagnon ; désactivé en attente moteur. Sauvegarde automatique conservée.\\
+\touche{Ctrl + D} & Réservé à la copie physique du fichier et de ses réglages ; désactivé en attente moteur.\\
+\bottomrule
+\end{longtable}
+
+\clearpage
+\section*{Vue image et comparaison}
+
+\begin{longtable}{@{}L{4.4cm}L{9.2cm}@{}}
+\toprule Touche ou geste & Action et contexte\\\midrule\endhead
+\touche{Ctrl + +} & Agrandir une photo prête. \touche{Ctrl + =} est également accepté.\\
+\touche{Ctrl + $-$} & Réduire une photo prête.\\
+\touche{Ctrl + 0} & Ajuster à la vue.\\
+\touche{Ctrl + 1} & Afficher à 100\,\% de l’aperçu.\\
+\touche{Ctrl + Maj + C} & Activer ou désactiver le comparatif partagé, si les deux aperçus sont disponibles.\\
+\touche{Espace} maintenu & Original temporaire lorsque la vue image a le focus ; relâcher restaure la vue.\\
+\touche{Ctrl + molette} & Zoom centré autour du pointeur dans la vue image.\\
+Molette sans Ctrl & Déplacer l’image si elle dépasse la vue.\\
+\touche{Maj + molette} & Déplacement horizontal à partir de la molette verticale, sur une image agrandie.\\
+Clic dans la photo & Basculer entre ajustement et agrandissement, sans glissement.\\
+Clic gauche maintenu, déplacement & Parcourir une image agrandie ; ou déplacer le séparateur du comparatif.\\
+\bottomrule
+\end{longtable}
+
+\clearpage
+\section*{Réglages et manipulation des contrôles}
+\begin{longtable}{@{}L{4.4cm}L{9.2cm}@{}}
+\toprule Touche ou geste & Action et contexte\\\midrule\endhead
+\touche{Tab}, \touche{Maj + Tab} & Parcourir les contrôles qui acceptent le focus.\\
+\touche{Espace} sur un bouton ou une case & Activer la commande focalisée ; ne pas confondre avec le maintien dans la vue image.\\
+Flèches sur un slider & Ajuster au pas déclaré : par exemple 0,01 EV pour l’exposition.\\
+\touche{Entrée} dans un champ & Confirmer la saisie numérique.\\
+Double-clic sur nom ou slider & Restaurer la référence du paramètre ; cette référence n’est pas toujours zéro.\\
+Flèches sur une poignée de panneau & Redimensionner au pas de 10 px dans sa direction.\\
+Double-clic sur une poignée de panneau & Restaurer sa dimension usuelle.\\
+Double-clic dans les courbes & Ajouter un point de contrôle.\\
+Clic droit sur un point intérieur & Supprimer ce point de courbe.\\
+Glisser dans une roue de grading & Modifier teinte et intensité de la zone active.\\
+Clic droit dans la vue & Ouvrir les actions de la photo, sans zoomer.\\
+Clic droit sur une vignette & Afficher le contexte de cette cible sans la charger implicitement.\\
+Clic droit sur un slider ou son nom & Réinitialiser ce paramètre ou activer sa saisie numérique.\\
+\touche{Maj + F10}, touche Menu & Ouvrir le contexte dans la vue, une vignette ou un slider focalisé.\\
+\bottomrule
+\end{longtable}
+
+\attention{Ne pas supposer les raccourcis de Lightroom ou d’un autre éditeur :
+Ctrl + Z et les touches numériques de notation ne sont pas déclarés comme
+commandes globales de l’application décrite. Ctrl + S et Ctrl + D sont réservés,
+mais leur action reste désactivée tant que le raccordement moteur manque.
+Les raccourcis propres aux dialogues natifs dépendent du système.}

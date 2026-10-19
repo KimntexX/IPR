@@ -8,7 +8,15 @@ Rectangle {
     required property var editor
     property int thumbnailPrefetchCount: 4
     property int thumbnailDelegateWidth: 126
-    property int thumbnailDelegateHeight: 76
+    readonly property int thumbnailDelegateHeight: Math.max(0, thumbnailList.height - 8)
+    property int activeImageIndex: -1
+    signal contextMenuRequested(var item, url fileUrl, string fileName, int index, real x, real y)
+    onVisibleChanged: thumbnailWindowTimer.restart()
+    onActiveImageIndexChanged: {
+        thumbnailList.currentIndex = activeImageIndex
+        if (activeImageIndex >= 0)
+            thumbnailList.positionViewAtIndex(activeImageIndex, ListView.Contain)
+    }
 
     implicitHeight: 120
     color: "#2a3039"
@@ -25,7 +33,7 @@ Rectangle {
 
             Label {
                 text: qsTr("Images du dossier")
-                color: "#edf2f8"
+                color: palette.windowText
                 font.bold: true
                 font.pixelSize: 13
             }
@@ -33,16 +41,20 @@ Rectangle {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 text: qsTr("%n image(s)", "", thumbnailList.count)
-                color: "#8c9caf"
+                      + (ribbon.editor.selectedImageCount > 0
+                         ? qsTr(" · %1 sélectionnée(s)").arg(ribbon.editor.selectedImageCount) : "")
+                color: palette.windowText
+                opacity: 0.7
                 font.pixelSize: 11
             }
-            Button {
+            PreferenceButton {
                 visible: ribbon.editor.selectedImageCount > 0
                 text: qsTr("Appliquer à %1").arg(ribbon.editor.selectedImageCount)
                 enabled: ribbon.editor.hasImage
                 onClicked: ribbon.editor.applyAdjustmentsToSelection()
             }
-            ToolButton {
+            PreferenceButton {
+                implicitWidth: 26
                 visible: ribbon.editor.selectedImageCount > 0
                 text: "×"
                 ToolTip.visible: hovered
@@ -53,6 +65,7 @@ Rectangle {
 
         ListView {
             id: thumbnailList
+            objectName: "thumbnailList"
 
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -66,11 +79,10 @@ Rectangle {
             property int thumbnailLast: -1
 
             function updateThumbnailWindow() {
-                if (count === 0 || width <= 0) {
+                if (!ribbon.visible || count === 0 || width <= 0) {
                     thumbnailFirst = 0
                     thumbnailLast = -1
-                    ribbon.editor.setThumbnailWindow(0, -1,
-                                                     ribbon.thumbnailPrefetchCount)
+                    ribbon.editor.setThumbnailWindow(0, -1, 0)
                     return
                 }
 
@@ -105,13 +117,33 @@ Rectangle {
                 required property string fileName
                 required property url fileUrl
                 required property int index
+                objectName: "thumbnail_" + index
+                readonly property bool opened: index === ribbon.activeImageIndex
+                readonly property bool batchSelected: selectionCheck.checked
 
                 width: ribbon.thumbnailDelegateWidth
                 height: ribbon.thumbnailDelegateHeight
-                highlighted: ListView.isCurrentItem
+                highlighted: opened
                 onClicked: {
-                    thumbnailList.currentIndex = index
                     ribbon.editor.loadImage(fileUrl)
+                }
+                hoverEnabled: true
+                ToolTip.visible: hovered
+                ToolTip.text: fileName + (opened ? qsTr(" — image ouverte") : "")
+                              + (batchSelected ? qsTr(" — sélectionnée pour traitement groupé") : "")
+                Accessible.name: ToolTip.text
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    onClicked: (mouse) => ribbon.contextMenuRequested(imageDelegate,
+                        imageDelegate.fileUrl, imageDelegate.fileName, imageDelegate.index, mouse.x, mouse.y)
+                }
+                Keys.onPressed: (event) => {
+                    if (event.key === Qt.Key_Menu || (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier)) {
+                        ribbon.contextMenuRequested(imageDelegate, fileUrl, fileName, index, width / 2, height / 2)
+                        event.accepted = true
+                    }
                 }
 
                 contentItem: ColumnLayout {
@@ -120,8 +152,10 @@ Rectangle {
                     spacing: 2
 
                     Rectangle {
+                        id: thumbnailBox
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 51
+                        Layout.fillHeight: true
+                        Layout.minimumHeight: 0
                         color: "#20262f"
                         radius: 3
                         border.width: 1
@@ -137,7 +171,7 @@ Rectangle {
                                     index <= thumbnailList.thumbnailLast
                                     ? ribbon.editor.thumbnailSource(fileUrl) : ""
                             sourceSize.width: 116
-                            sourceSize.height: 49
+                            sourceSize.height: Math.max(1, thumbnailBox.height - 2)
                             fillMode: Image.PreserveAspectFit
                             asynchronous: true
                             cache: false
@@ -157,10 +191,34 @@ Rectangle {
                             anchors.top: parent.top
                             anchors.right: parent.right
                             anchors.margins: 1
+                            Accessible.name: qsTr("Sélectionner %1 pour traitement groupé").arg(imageDelegate.fileName)
                             backendChecked: ribbon.editor.selectedImageUrls.indexOf(
                                                 imageDelegate.fileUrl.toString()) >= 0
                             onChangeRequested: (checked) => ribbon.editor.setImageSelected(
                                                    imageDelegate.fileUrl, checked)
+                        }
+                        Rectangle {
+                            objectName: "currentPhotoBadges_" + imageDelegate.index
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
+                            anchors.margins: 2
+                            visible: imageDelegate.opened
+                            width: Math.min(parent.width - 4, badgeText.implicitWidth + 8)
+                            height: badgeText.implicitHeight + 4
+                            radius: 2
+                            color: imageDelegate.palette.window
+                            Label {
+                                id: badgeText
+                                anchors.fill: parent
+                                anchors.margins: 2
+                                text: qsTr("Ouverte")
+                                    + (ribbon.editor.imageRating > 0 ? " ★" + ribbon.editor.imageRating : "")
+                                    + (ribbon.editor.imageFlagged ? " ⚑" : "")
+                                    + (ribbon.editor.imageColorLabel ? " · " + ribbon.editor.imageColorLabel : "")
+                                color: imageDelegate.palette.text
+                                font.pixelSize: 9
+                                elide: Text.ElideRight
+                            }
                         }
                     }
 
@@ -168,17 +226,19 @@ Rectangle {
                         Layout.fillWidth: true
                         text: fileName
                         elide: Text.ElideRight
-                        color: imageDelegate.highlighted ? "#ffffff" : "#d7dfeb"
+                        color: palette.windowText
+                        font.bold: imageDelegate.opened
                         font.pixelSize: 11
                     }
                 }
 
                 background: Rectangle {
                     radius: 4
-                    color: selectionCheck.checked ? "#38586c"
-                          : (imageDelegate.highlighted ? "#465a71"
-                          : (imageDelegate.hovered ? "#343d49" : "transparent")
-                             )
+                    color: imageDelegate.batchSelected ? imageDelegate.palette.highlight
+                          : (imageDelegate.hovered ? imageDelegate.palette.mid : "transparent")
+                    border.width: imageDelegate.opened ? 2 : 1
+                    border.color: imageDelegate.opened || imageDelegate.activeFocus
+                                  ? imageDelegate.palette.text : "transparent"
                 }
             }
 
@@ -210,7 +270,7 @@ Rectangle {
                 anchors.centerIn: parent
                 visible: thumbnailList.count === 0
                 text: qsTr("Sélectionnez un dossier pour afficher ses images.")
-                color: "#aeb8c8"
+                color: palette.windowText
                 font.pixelSize: 12
             }
         }

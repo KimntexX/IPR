@@ -189,6 +189,31 @@ int main(int argc, char **argv)
     const QImage split = window.grabWindow();
     if (!check(!split.isNull() && split.pixelColor(200, 250) == QColor("#58718a")
             && split.pixelColor(700, 250) == QColor("#bd7642"), "split should paint origin left and current right")) return 1;
+    viewport->forceActiveFocus();
+    const double savedScale = number(viewport, "zoomScale");
+    const double savedOffset = number(viewport, "offsetX");
+    const double savedSplit = number(viewport, "comparisonPosition");
+    QKeyEvent holdPress(QEvent::KeyPress, Qt::Key_Space, Qt::NoModifier, " ");
+    QKeyEvent holdRelease(QEvent::KeyRelease, Qt::Key_Space, Qt::NoModifier, " ");
+    QCoreApplication::sendEvent(&window, &holdPress);
+    settle();
+    if (!check(viewport->property("showingOriginal").toBool() &&
+               !viewport->property("showingComparison").toBool() &&
+               window.grabWindow().pixelColor(700, 250) == QColor("#58718a"),
+               "holding Space must show the original across the entire image")) return 1;
+    QCoreApplication::sendEvent(&window, &holdRelease);
+    settle();
+    if (!check(!viewport->property("showingOriginal").toBool() &&
+               viewport->property("showingComparison").toBool() &&
+               near(savedScale, number(viewport, "zoomScale")) &&
+               near(savedOffset, number(viewport, "offsetX")) &&
+               near(savedSplit, number(viewport, "comparisonPosition")),
+               "release must restore the split and preserve the image transform")) return 1;
+    QCoreApplication::sendEvent(&window, &holdPress);
+    auto *otherFocus = new QQuickItem(window.contentItem());
+    otherFocus->forceActiveFocus();
+    if (!check(!viewport->property("originalHeld").toBool(), "losing focus must release the original")) return 1;
+    viewport->forceActiveFocus();
     viewport->setProperty("source", QUrl::fromLocalFile(alphaCurrent));
     viewport->setProperty("originalSource", QUrl::fromLocalFile(alphaOriginal));
     if (!check(waitForImage(viewport) && waitForComparison(viewport), "transparent comparison fixtures should load")) return 1;
@@ -235,6 +260,22 @@ int main(int argc, char **argv)
     if (!check(viewport->property("fitMode").toBool(), "clicking a letterbox should not zoom")) return 1;
     QMetaObject::invokeMethod(viewport, "setZoom", Q_ARG(QVariant, 0.0001), Q_ARG(QVariant, 200), Q_ARG(QVariant, 250));
     if (!check(near(number(viewport, "zoomScale"), .05), "zoom should have a lower bound")) return 1;
+    for (int narrowWidth : {280, 350, 500, 800}) {
+        viewport->setWidth(narrowWidth);
+        settle();
+        auto *toolbar = viewport->findChild<QQuickItem *>("viewportToolbar");
+        if (!check(toolbar && toolbar->x() >= 0 && toolbar->x() + toolbar->width() <= narrowWidth,
+                   "zoom and comparison toolbar must stay inside narrow viewports")) return 1;
+        for (const QString &name : {QStringLiteral("compareImageButton"), QStringLiteral("holdOriginalButton"),
+                                   QStringLiteral("actualSizeButton")}) {
+            auto *button = visualItem(viewport, name);
+            const QPointF position = button->mapToItem(toolbar, QPointF());
+            if (!check(position.x() >= 0 && position.y() >= 0 &&
+                       position.x() + button->width() <= toolbar->width() + .1 &&
+                       position.y() + button->height() <= toolbar->height() + .1,
+                       "every toolbar action must remain visible when its grid wraps")) return 1;
+        }
+    }
     viewport->setProperty("hasImage", false);
     if (!check(!viewport->property("imageReady").toBool() && !plus->property("enabled").toBool()
             && viewport->property("fitMode").toBool(), "without an image, interactions should be disabled")) return 1;
