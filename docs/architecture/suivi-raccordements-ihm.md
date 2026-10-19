@@ -96,6 +96,22 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Menus contextuels par zone
+
+Clic droit sur la vue image : actions partagées de fichier, export et remise
+à zéro avec confirmation. Clic droit sur une vignette différente : ouverture
+explicite de la cible ; les commandes de retouche sont désactivées pour ne
+pas modifier par erreur la photo actuellement ouverte. Pas de chargement
+implicite au simple clic droit. Les commandes manuelles de sauvegarde et de
+duplication indiquent leur attente moteur ; elles ne sont pas simulées.
+
+Clic droit sur un curseur ou son nom : remise à la référence de ce seul
+paramètre ou saisie de valeur. Le champ texte conserve son menu d’édition.
+Le graphe de courbe conserve le clic droit de suppression de point. Accès
+clavier au contexte via Maj+F10 ou la touche Menu dans la zone focalisée.
+Menus dessinés dans l’overlay et liés à la palette ; le clic droit ne zoome
+pas, ne déplace pas un slider et ne modifie pas la sélection multiple.
+
 ### Raccourcis de fichier — IHM et commandes moteur manquantes
 
 Actions partagées par le menu et le clavier : ouvrir une image (Ctrl+O),

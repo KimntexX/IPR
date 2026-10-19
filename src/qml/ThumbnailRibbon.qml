@@ -10,6 +10,7 @@ Rectangle {
     property int thumbnailDelegateWidth: 126
     readonly property int thumbnailDelegateHeight: Math.max(0, thumbnailList.height - 8)
     property int activeImageIndex: -1
+    signal contextMenuRequested(var item, url fileUrl, string fileName, int index, real x, real y)
     onVisibleChanged: thumbnailWindowTimer.restart()
     onActiveImageIndexChanged: {
         thumbnailList.currentIndex = activeImageIndex
@@ -131,6 +132,19 @@ Rectangle {
                 ToolTip.text: fileName + (opened ? qsTr(" — image ouverte") : "")
                               + (batchSelected ? qsTr(" — sélectionnée pour traitement groupé") : "")
                 Accessible.name: ToolTip.text
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    onClicked: (mouse) => ribbon.contextMenuRequested(imageDelegate,
+                        imageDelegate.fileUrl, imageDelegate.fileName, imageDelegate.index, mouse.x, mouse.y)
+                }
+                Keys.onPressed: (event) => {
+                    if (event.key === Qt.Key_Menu || (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier)) {
+                        ribbon.contextMenuRequested(imageDelegate, fileUrl, fileName, index, width / 2, height / 2)
+                        event.accepted = true
+                    }
+                }
 
                 contentItem: ColumnLayout {
                     anchors.fill: parent

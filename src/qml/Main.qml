@@ -51,6 +51,15 @@ ApplicationWindow {
         }
     }
 
+    PhotoContextMenu {
+        id: photoMenu
+        objectName: "photoContextMenu"
+        actions: fileActions
+        editor: imageEditor
+        currentImageKey: canvas.imageKey
+        palette: root.palette
+    }
+
     menuBar: Basic.MenuBar {
         id: applicationMenuBar
         background: Rectangle { color: uiPreferences.theme.panel }
@@ -174,6 +183,12 @@ ApplicationWindow {
                 textColor: uiPreferences.theme.text
                 panelColor: uiPreferences.theme.panel
                 visible: imageEditor.hasImage
+                onContextMenuRequested: (x, y) => {
+                    photoMenu.targetName = imageEditor.imageDetails.name || ""
+                    photoMenu.targetUrl = ""
+                    photoMenu.targetKey = canvas.imageKey
+                    photoMenu.openFor(canvas, x, y)
+                }
             }
 
             FilmstripNavigation {
@@ -327,6 +342,13 @@ ApplicationWindow {
         visible: uiPreferences.layout.showFilmstrip
         color: uiPreferences.theme.panel
         editor: imageEditor
+        onContextMenuRequested: (item, fileUrl, fileName, index, x, y) => {
+            photoMenu.targetName = fileName
+            photoMenu.targetUrl = fileUrl
+            photoMenu.targetKey = index === filmstripNavigation.currentIndex
+                                  ? canvas.imageKey : fileUrl.toString()
+            photoMenu.openFor(item, x, y)
+        }
     }
 
     PanelResizeHandle {

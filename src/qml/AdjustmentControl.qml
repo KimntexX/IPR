@@ -21,6 +21,25 @@ ColumnLayout {
     function resetToDefault() {
         if (adjustmentEnabled) value = resetValue
     }
+
+    Basic.Menu {
+        id: parameterMenu
+        popupType: Popup.Item
+        objectName: "adjustmentContextMenu"
+        parent: controlSlider
+        palette: controlSlider.palette
+        Basic.MenuItem {
+            objectName: "contextResetParameter"
+            text: qsTr("Réinitialiser %1").arg(control.label)
+            enabled: control.adjustmentEnabled
+            onTriggered: control.resetToDefault()
+        }
+        Basic.MenuItem {
+            text: qsTr("Saisir une valeur…")
+            enabled: control.adjustmentEnabled
+            onTriggered: { valueEditor.forceActiveFocus(); valueEditor.selectAll() }
+        }
+    }
     // UI hints only: these colours do not describe an output colour transform.
     property var trackColors: []
     readonly property bool hasColorTrack: trackColors.length >= 2
@@ -46,6 +65,10 @@ ColumnLayout {
             color: control.secondaryTextColor
             font.bold: control.modified
             TapHandler { onTapped: if (tapCount === 2) control.resetToDefault() }
+            TapHandler {
+                acceptedButtons: Qt.RightButton
+                onTapped: (point) => parameterMenu.popup(parameterLabel, point.position.x, point.position.y)
+            }
             HoverHandler { id: labelHover }
             ToolTip.visible: labelHover.hovered
             ToolTip.text: qsTr("Double-clic pour réinitialiser à %1").arg(control.resetValue)
@@ -164,6 +187,17 @@ ColumnLayout {
         // Slider also applies its release position: reset after that handler,
         // otherwise it immediately overwrites the neutral value with the old position.
         TapHandler { onTapped: if (tapCount === 2) Qt.callLater(control.resetToDefault) }
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            onClicked: (mouse) => parameterMenu.popup(controlSlider, mouse.x, mouse.y)
+        }
+        Keys.onPressed: (event) => {
+            if (event.key === Qt.Key_Menu || (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier)) {
+                parameterMenu.popup(controlSlider, width / 2, height / 2)
+                event.accepted = true
+            }
+        }
 
         Layout.fillWidth: true
         Layout.minimumWidth: 0

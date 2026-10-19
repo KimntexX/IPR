@@ -17,6 +17,7 @@ Item {
     property bool hasImage: false
     property color textColor: "#edf2f8"
     property color panelColor: "#2a3039"
+    signal contextMenuRequested(real x, real y)
     property real previewWidth: 0
     property real previewHeight: 0
     property bool fitMode: true
@@ -132,6 +133,12 @@ Item {
     onActiveFocusChanged: if (!activeFocus) originalHeld = false
     onVisibleChanged: if (!visible) originalHeld = false
     Keys.onPressed: (event) => {
+        if (hasImage && (event.key === Qt.Key_Menu ||
+                (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier))) {
+            contextMenuRequested(width / 2, height / 2)
+            event.accepted = true
+            return
+        }
         if (event.key === Qt.Key_Space && event.modifiers === Qt.NoModifier && comparisonReady) {
             if (!event.isAutoRepeat) originalHeld = true
             event.accepted = true
@@ -247,6 +254,14 @@ Item {
             wheel.accepted = root.handleWheel(wheel.angleDelta.x, wheel.angleDelta.y,
                 wheel.pixelDelta.x, wheel.pixelDelta.y, wheel.modifiers, wheel.x, wheel.y)
         }
+    }
+
+    MouseArea {
+        objectName: "viewportContextArea"
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        enabled: root.hasImage
+        onClicked: (mouse) => root.contextMenuRequested(mouse.x, mouse.y)
     }
 
     Item {

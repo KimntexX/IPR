@@ -567,6 +567,21 @@ int main(int argc, char **argv)
     }
     if (!check(gesture->property("value").toDouble() > 10,
                "the reset tap recognizer must not steal normal slider dragging")) return 1;
+    const double contextValue = gesture->property("value").toDouble();
+    const QPointF contextPoint = gestureHandle->mapToItem(nullptr, QPointF(5, 5));
+    for (QEvent::Type type : {QEvent::MouseButtonPress, QEvent::MouseButtonRelease}) {
+        QMouseEvent event(type, contextPoint, QPointF(gestureWindow.mapToGlobal(contextPoint.toPoint())), Qt::RightButton,
+            type == QEvent::MouseButtonPress ? Qt::RightButton : Qt::NoButton, Qt::NoModifier);
+        QCoreApplication::sendEvent(&gestureWindow, &event);
+    }
+    settleLayout();
+    QObject *parameterMenu = gesture->findChild<QObject *>("adjustmentContextMenu");
+    if (!check(parameterMenu && parameterMenu->property("visible").toBool() &&
+               gesture->property("value").toDouble() == contextValue,
+               "right-click must open a parameter menu without moving the slider")) return 1;
+    QMetaObject::invokeMethod(parameterMenu->findChild<QObject *>("contextResetParameter"), "triggered");
+    if (!check(gesture->property("value").toDouble() == 0, "parameter context reset must use its declared reference")) return 1;
+    QMetaObject::invokeMethod(parameterMenu, "close");
 
     QQmlComponent statusComponent(&engine,
         QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/ProcessingStatus.qml")));

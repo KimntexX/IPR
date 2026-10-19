@@ -520,6 +520,46 @@ int main(int argc, char **argv)
                    badges && badges->isVisible(),
                    "the current image must retain its open outline while also selected for batch processing")) return 1;
         editor.clearImageSelection();
+        const auto rightClick = [&](QQuickItem *item) {
+            const QPointF point = item->mapToItem(nullptr, QPointF(item->width() / 2, item->height() / 2));
+            for (QEvent::Type type : {QEvent::MouseButtonPress, QEvent::MouseButtonRelease}) {
+                QMouseEvent event(type, point, QPointF(window->mapToGlobal(point.toPoint())), Qt::RightButton,
+                    type == QEvent::MouseButtonPress ? Qt::RightButton : Qt::NoButton, Qt::NoModifier);
+                QCoreApplication::sendEvent(window, &event);
+            }
+            QEventLoop loop;
+            QTimer::singleShot(60, &loop, &QEventLoop::quit);
+            loop.exec();
+        };
+        auto *viewport = root->findChild<QQuickItem *>("imageViewport");
+        const double previousZoom = viewport->property("zoomScale").toDouble();
+        rightClick(viewport);
+        QObject *photoMenu = root->findChild<QObject *>("photoContextMenu");
+        if (!check(photoMenu && photoMenu->property("visible").toBool() &&
+                   photoMenu->property("currentPhoto").toBool() &&
+                   photoMenu->findChild<QObject *>("contextExportImage")->property("enabled").toBool() &&
+                   !photoMenu->findChild<QObject *>("contextDuplicateImage")->property("enabled").toBool() &&
+                   viewport->property("zoomScale").toDouble() == previousZoom,
+                   "right-clicking the image must open guarded photo actions without zooming")) return 1;
+        if (!check(captureReview(window, "photo-context-menu"), "context menu capture should save")) return 1;
+        QMetaObject::invokeMethod(photoMenu, "close");
+        QCoreApplication::processEvents();
+        auto *otherThumbnail = visualItem(qobject_cast<QQuickWindow *>(window)->contentItem(), "thumbnail_1");
+        rightClick(otherThumbnail);
+        if (!check(photoMenu->property("visible").toBool() && !photoMenu->property("currentPhoto").toBool() &&
+                   photoMenu->property("targetName").toString() == "02.png" &&
+                   !photoMenu->findChild<QObject *>("contextResetAdjustments")->property("enabled").toBool() &&
+                   !photoMenu->findChild<QObject *>("contextExportImage")->property("enabled").toBool() &&
+                   editor.imageDetails().value("name").toString() == "01.png",
+                   "another thumbnail's context must not silently open it or mutate the current photo")) return 1;
+        QMetaObject::invokeMethod(photoMenu, "close");
+        QCoreApplication::processEvents();
+        viewport->forceActiveFocus();
+        shortcut(Qt::Key_F10, Qt::ShiftModifier, "");
+        if (!check(photoMenu->property("visible").toBool() && photoMenu->property("currentPhoto").toBool(),
+                   "Shift F10 must expose the same image context menu from the keyboard")) return 1;
+        QMetaObject::invokeMethod(photoMenu, "close");
+        QCoreApplication::processEvents();
         auto *infoHandle = root->findChild<QQuickItem *>("infoResizeHandle");
         const QPointF handlePoint = infoHandle->mapToItem(nullptr, QPointF(infoHandle->width() / 2, infoHandle->height() / 2));
         const auto sendMouse = [&](QEvent::Type type, QPointF point, Qt::MouseButton button, Qt::MouseButtons buttons) {
