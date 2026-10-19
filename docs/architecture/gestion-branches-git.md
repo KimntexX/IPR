@@ -4,6 +4,13 @@
 
 Règle adoptée le 10 octobre 2026.
 
+## Langue des commits et pull requests
+
+Depuis le 19 octobre 2026, tous les nouveaux messages de commit (fusions
+comprises), titres et descriptions de PR sont rédigés en anglais, comme les
+noms des branches. Ne pas réécrire l’historique publié pour traduire les
+anciens messages. Cette règle ne change pas la langue des documents du projet.
+
 ## Organisation
 
 `dev` rassemble les groupes de fonctionnalités validés. Chaque groupe a une

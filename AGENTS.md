@@ -1,5 +1,12 @@
 # Règles du projet IPR
 
+## Langue Git — règle du 19 octobre 2026
+
+- Rédiger tous les nouveaux messages de commit en anglais, y compris les
+  commits de fusion, ainsi que les titres et descriptions des pull requests.
+- Cette règle ne demande pas de traduire la documentation ni de réécrire
+  l’historique Git publié. Les noms des branches restent en anglais.
+
 ## Prototypage, versionnage et absence de legacy — règle du 11 octobre 2026
 
 - Le projet est actuellement en prototypage **alpha**. Chaque fusion validée
