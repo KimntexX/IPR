@@ -2,6 +2,7 @@
 #define IPR_EDITOR_IMAGEEDITOR_H
 
 #include "ColorPipeline.h"
+#include "ImageExporter.h"
 #include "ImageImporter.h"
 #include "ColorMixer.h"
 #include "ToneCurve.h"
@@ -287,11 +288,7 @@ private:
         QString error;
     };
 
-    struct ExportResult
-    {
-        bool success = false;
-        QString message;
-    };
+    using ExportResult = ImageExporter::Result;
 
     struct LoadResult : ImageImport::Result
     {
