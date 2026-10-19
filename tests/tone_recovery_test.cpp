@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
+#include <vector>
 
 namespace {
 void check(bool ok, const char *message) { if (!ok) throw std::runtime_error(message); }
@@ -88,8 +89,9 @@ int main()
                 const ToneRecovery::Curve curve(single(control, amount), typical);
                 const auto shift = [&](float y) { return std::abs(std::log2(std::max(apply(curve, control, y, amount), 1e-9f) / y)); };
                 const float far = shift(low ? 0.8f : 0.004f);
-                for (float y : low ? std::initializer_list<float>{.004f, .02f, .1f}
-                                   : std::initializer_list<float>{.05f, .18f})
+                // Named arrays: an initializer_list chosen by ?: would dangle.
+                static const std::vector<float> lowEnd{.004f, .02f, .1f}, highEnd{.05f, .18f};
+                for (float y : low ? lowEnd : highEnd)
                     check(far <= shift(y) + 0.05f, "The opposite end of the histogram must move least");
             }
         }
