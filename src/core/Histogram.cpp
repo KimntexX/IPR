@@ -7,14 +7,19 @@
 #include <cmath>
 
 namespace Histogram {
+namespace {
+int bin(float linear)
+{
+    const float encoded = WorkingColor::srgbEncode(std::clamp(linear, 0.0f, 1.0f));
+    return std::clamp(static_cast<int>(std::lround(encoded * 255.0f)), 0, 255);
+}
+
+float decode(uchar code) { return WorkingColor::srgbDecode(code / 255.f); }
+}
+
 QVariantList compute(const QImage &preview)
 {
     std::array<std::array<quint64, 256>, 4> bins{};
-    const auto bin = [](float linear) {
-        const float encoded = WorkingColor::srgbEncode(std::clamp(linear, 0.0f, 1.0f));
-        return std::clamp(static_cast<int>(std::lround(encoded * 255.0f)), 0, 255);
-    };
-    const auto decode = [](uchar code) { return WorkingColor::srgbDecode(code / 255.f); };
     for (int y = 0; y < preview.height(); ++y) {
         const uchar *row = preview.constScanLine(y);
         for (int x = 0; x < preview.width(); ++x) {

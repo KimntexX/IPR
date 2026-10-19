@@ -7,6 +7,14 @@
 #include <cmath>
 
 namespace ToneRecovery {
+namespace {
+// Lift of one slider level at knot k, interpolated at fraction t to knot k + 1.
+float levelLift(const Model::Control &c, int level, int k, float t)
+{
+    return c.lift[level][k] + (c.lift[level][k + 1] - c.lift[level][k]) * t;
+}
+}
+
 Statistics typicalStatistics()
 {
     Statistics s;
@@ -36,17 +44,15 @@ float lift(int control, float amount, float x, const Gains &gains)
     const float knot = std::clamp(x - Model::FirstKnotEv, 0.0f, float(Model::KnotCount - 1));
     const int k = std::min(int(knot), Model::KnotCount - 2);
     const float t = knot - float(k);
-    const auto at = [&](int level) {
-        return c.lift[level][k] + (c.lift[level][k + 1] - c.lift[level][k]) * t;
-    };
     const float level = std::min(std::abs(amount), 1.0f);
     float value;
-    if (level <= Model::Levels[0]) value = at(0) * level / Model::Levels[0];
+    if (level <= Model::Levels[0]) value = levelLift(c, 0, k, t) * level / Model::Levels[0];
     else {
         int l = 0;
         while (l < 2 && level > Model::Levels[l + 1]) ++l;
         const float u = (level - Model::Levels[l]) / (Model::Levels[l + 1] - Model::Levels[l]);
-        value = at(l) + (at(l + 1) - at(l)) * u;
+        const float low = levelLift(c, l, k, t);
+        value = low + (levelLift(c, l + 1, k, t) - low) * u;
     }
     return value * gains.value[size_t(index)];
 }

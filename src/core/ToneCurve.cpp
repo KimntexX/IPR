@@ -8,6 +8,21 @@
 
 namespace ToneCurve {
 namespace {
+double evaluateInsideRange(const QVector<Point> &curve, const std::vector<double> &weights, double sample)
+{
+    double numerator = 0.0;
+    double denominator = 0.0;
+    for (qsizetype index = 0; index < curve.size(); ++index) {
+        const double distance = sample - curve.at(index).x;
+        if (std::abs(distance) < 1e-9)
+            return static_cast<double>(curve.at(index).y);
+        const double term = weights[static_cast<size_t>(index)] / distance;
+        numerator += term * curve.at(index).y;
+        denominator += term;
+    }
+    return numerator / denominator;
+}
+
 float evaluate(const QVector<Point> &curve, float value)
 {
     if (curve.isEmpty())
@@ -23,22 +38,8 @@ float evaluate(const QVector<Point> &curve, float value)
         }
     }
 
-    const auto evaluateInsideRange = [&curve, &weights](double sample) {
-        double numerator = 0.0;
-        double denominator = 0.0;
-        for (qsizetype index = 0; index < curve.size(); ++index) {
-            const double distance = sample - curve.at(index).x;
-            if (std::abs(distance) < 1e-9)
-                return static_cast<double>(curve.at(index).y);
-            const double term = weights[static_cast<size_t>(index)] / distance;
-            numerator += term * curve.at(index).y;
-            denominator += term;
-        }
-        return numerator / denominator;
-    };
-
     if (value <= 1.0f)
-        return static_cast<float>(evaluateInsideRange(value));
+        return static_cast<float>(evaluateInsideRange(curve, weights, value));
 
     const qsizetype endpoint = curve.size() - 1;
     double derivative = 0.0;

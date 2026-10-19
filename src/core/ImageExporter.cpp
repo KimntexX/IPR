@@ -28,6 +28,12 @@ QString tr(const char *text) { return QCoreApplication::translate("ImageExporter
 
 constexpr uint16_t LinearRawPhotometricInterpretation = 34892;
 
+bool occupied(const QString &path)
+{
+    const QFileInfo info(path);
+    return info.exists() || info.isSymLink();
+}
+
 TIFF *openTiffForWrite(const QString &fileName)
 {
 #ifdef Q_OS_WIN
@@ -188,10 +194,6 @@ QString availablePath(const QString &target)
 {
     if (target.isEmpty())
         return {};
-    const auto occupied = [](const QString &path) {
-        const QFileInfo info(path);
-        return info.exists() || info.isSymLink();
-    };
     if (!occupied(target))
         return target;
 
@@ -223,6 +225,29 @@ QString availablePath(const QString &target)
     }
 }
 
+namespace {
+// Renames the staged file to the first free name; bounded retries if another
+// process keeps taking the proposed names.
+Result publish(const QString &stagedPath, const QString &normalizedTarget, const QString &normalized)
+{
+    QFile completed(stagedPath);
+    for (int attempt = 0; attempt < 32; ++attempt) {
+        const QString finalPath = availablePath(normalizedTarget);
+        if (finalPath.isEmpty())
+            return {false, tr("Échec de l'export : aucun nom de fichier disponible.")};
+        if (completed.rename(finalPath))
+            return {true, normalized == QStringLiteral("DNG")
+                ? tr("Image exportée (DNG linéaire) : %1").arg(finalPath)
+                : tr("Image exportée : %1").arg(finalPath)};
+        const QFileInfo collision(finalPath);
+        if (!collision.exists() && !collision.isSymLink())
+            return {false, tr("Échec de l'export (publication de %1) : %2")
+                .arg(finalPath, completed.errorString())};
+    }
+    return {false, tr("Échec de l'export : noms occupés par un autre processus, réessayez.")};
+}
+}
+
 bool supports(const QString &format) { return !suffix(normalizedFormat(format)).isEmpty(); }
 
 Result write(const ColorPipeline::WorkingImage &rendered, const QString &target,
@@ -247,32 +272,14 @@ Result write(const ColorPipeline::WorkingImage &rendered, const QString &target,
         // QSaveFile commit or TIFFOpenW touches this reserved temporary path.
     }
     auto cleanup = qScopeGuard([&] { QFile::remove(stagedPath); });
-    const auto publish = [&]() -> Result {
-        QFile completed(stagedPath);
-        // Bound retries if another process continually takes proposed names.
-        for (int attempt = 0; attempt < 32; ++attempt) {
-            const QString finalPath = availablePath(normalizedTarget);
-            if (finalPath.isEmpty())
-                return {false, tr("Échec de l'export : aucun nom de fichier disponible.")};
-            if (completed.rename(finalPath)) {
-                cleanup.dismiss();
-                return {true, normalized == QStringLiteral("DNG")
-                    ? tr("Image exportée (DNG linéaire) : %1").arg(finalPath)
-                    : tr("Image exportée : %1").arg(finalPath)};
-            }
-            const QFileInfo collision(finalPath);
-            if (!collision.exists() && !collision.isSymLink())
-                return {false, tr("Échec de l'export (publication de %1) : %2")
-                    .arg(finalPath, completed.errorString())};
-        }
-        return {false, tr("Échec de l'export : noms occupés par un autre processus, réessayez.")};
-    };
 
     if (normalized == QStringLiteral("DNG")) {
         QString dngError;
         if (!writeLinearDng(rendered, stagedPath, &dngError))
             return {false, tr("Échec de l'export DNG : %1").arg(dngError)};
-        return publish();
+        Result published = publish(stagedPath, normalizedTarget, normalized);
+        if (published.success) cleanup.dismiss();
+        return published;
     }
 
     QSaveFile destination(stagedPath);
@@ -301,6 +308,8 @@ Result write(const ColorPipeline::WorkingImage &rendered, const QString &target,
     if (!destination.commit())
         return {false, tr("Échec de l'export (validation du temporaire) : %1").arg(destination.errorString())};
 
-    return publish();
+    Result published = publish(stagedPath, normalizedTarget, normalized);
+    if (published.success) cleanup.dismiss();
+    return published;
 }
 }
