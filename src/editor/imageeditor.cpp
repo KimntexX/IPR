@@ -1663,7 +1663,8 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     // weights from the statistics measured at load. Shadows and Highlights
     // scale RGB by a luminance ratio; a brightening reaches its luminance and
     // pulls a colour that would leave the sRGB delivery gamut toward white
-    // (ToneRecovery::brightenTowardWhite), as Lightroom does. Blacks and
+    // (ToneRecovery::brightenTowardWhite); a darkening keeps, then amplifies,
+    // the colour of bright tones (darkenKeepingColour), as Lightroom does. Blacks and
     // Whites then act on each linear sRGB channel, as in Lightroom.
     const ToneRecovery::Amounts tones{static_cast<float>(settings.shadows) / 100.0f,
         static_cast<float>(settings.blacks) / 100.0f,
@@ -1685,8 +1686,10 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                         float rgb[3] = {float(delivery[0]), float(delivery[1]), float(delivery[2])};
                         ToneRecovery::brightenTowardWhite(rgb, luminance, target);
                         pixel = cv::Vec3f(WorkingColor::fromSrgb() * cv::Vec3d(rgb[0], rgb[1], rgb[2]));
-                    } else {
-                        applyLuminance(pixel, luminance, target);
+                    } else if (target < luminance) {
+                        float rgb[3] = {pixel[0], pixel[1], pixel[2]};
+                        ToneRecovery::darkenKeepingColour(rgb, luminance, target);
+                        pixel = cv::Vec3f(rgb[0], rgb[1], rgb[2]);
                     }
                 }
                 if (!toneCurve.channelIdentity()) {

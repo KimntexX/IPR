@@ -128,6 +128,30 @@ int main()
         ToneRecovery::brightenTowardWhite(hdr, luma(hdr), 0.99f);
         check(hdr[0] == 1.2f && hdr[1] == 0.4f, "HDR headroom must stay untouched");
 
+        // Darkening: luminance target reached; dark tones keep their ratios;
+        // bright colours keep more colour than a plain ratio, never below zero.
+        {
+            const auto sat = [](const float *c) {
+                const float hi = std::max({c[0], c[1], c[2]}), lo = std::min({c[0], c[1], c[2]});
+                return (hi - lo) / std::max(hi, 1e-6f);
+            };
+            float dark[3] = {0.12f, 0.06f, 0.03f};
+            const float yDark = luma(dark);
+            ToneRecovery::darkenKeepingColour(dark, yDark, yDark * 0.5f);
+            check(std::abs(dark[0] / dark[1] - 2.0f) < 1e-4f && std::abs(luma(dark) - yDark * 0.5f) < 1e-5f,
+                  "Dark tones must darken with their channel ratios");
+            float sky[3] = {0.80f, 0.86f, 0.95f};
+            const float ySky = luma(sky), before = sat(sky);
+            ToneRecovery::darkenKeepingColour(sky, ySky, ySky * 0.7f);
+            check(std::abs(luma(sky) - ySky * 0.7f) < 1e-4f, "Darkening must reach its luminance target");
+            check(sat(sky) > before && std::min({sky[0], sky[1], sky[2]}) >= 0.0f,
+                  "Darkening a bright sky must recover its colour, as Lightroom does");
+            float vivid[3] = {0.95f, 0.70f, 0.01f};
+            const float yVivid = luma(vivid);
+            ToneRecovery::darkenKeepingColour(vivid, yVivid, yVivid * 0.4f);
+            check(std::min({vivid[0], vivid[1], vivid[2]}) >= 0.0f, "Darkening must not create negative channels");
+        }
+
         // Per-image weights: typical images get moderate gains; any image stays
         // within the fitted range.
         for (int i = 0; i < 8; ++i)

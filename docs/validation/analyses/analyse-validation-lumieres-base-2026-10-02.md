@@ -961,3 +961,21 @@ Valeurs négatives : HL et ombres restent sur la luminance (saturation à −100
 −0,044 et −0,009 contre −0,121 et +0,048 par canal) ; les blancs négatifs passent
 sur la luminance (−0,026 contre −0,040 par canal), les blancs positifs restent
 par canal. Régénération et campagnes groupées avec le réajustement sur 19 scènes.
+
+#### Couleur des ciels à HL et blancs négatifs ; blancs positifs en pourcentage, 19 octobre 2026
+
+Retour de l'utilisateur : HL −100 et blancs −100 encore trop faibles, surtout sur
+les ciels saturés à l'ouverture ; blancs +100 environ 2 % trop forts.
+
+Mesure sur 6V1A0524 (ciel, 19 % de l'image à Y ≥ 0,9) : IPR à HL −100 y est plus
+sombre que LR (Y 0,70 contre 0,77) mais gris (saturation 0,06 contre 0,14) ; blancs
+−100 : 0,05 contre 0,12. LR redonne sa couleur au ciel qu'il assombrit ; IPR
+assombrissait à rapports RGB constants. Ajusté sur les paires LR : couleur gardée
+à partir de Y = 0,3, entièrement à 0,8, amplifiée (×2,5) en proportion de
+l'assombrissement (`ToneRecovery::darkenKeepingColour`). Écart de saturation des
+tons Y > 0,6 : HL −100 −0,20 → −0,12, HL −50 −0,13 → +0,00, blancs −100 −0,08 → −0,01,
+blancs −50 −0,04 → −0,01 ; tons sombres et luminance inchangés.
+
+Blancs positifs, luminosité affichée moyenne IPR / LR : +50 dans ±3 % sur les huit
+scènes (moyenne 1,5 %) ; +100 médiane +0,6 %, 0524 +1,2 %, mais 0037 +9,7 % et
+9421 −16,3 % (gain par image ; à revoir avec le corpus de 19 scènes).

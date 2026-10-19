@@ -128,6 +128,29 @@ inline void brightenTowardWhite(float rgb[3], float y, float target)
     for (int c = 0; c < 3; ++c) rgb[c] = target + t * (rgb[c] - target);
 }
 
+// Darkening of a colour of luminance y (any linear RGB with the same white and
+// luminance weights) to the luminance target. Dark tones keep their channel
+// ratios; from y = 0.3 to 0.8 and above, the colour's absolute chroma is kept
+// and then amplified in proportion to the darkening (factor 2.5 at full), as
+// Lightroom recovers bright skies: with ratios only, Highlights -100 left
+// bright tones 0.20 less saturated than Lightroom (0.12 now; Whites -100 0.08
+// -> 0.01). Falls back to ratios if a channel would go negative.
+inline void darkenKeepingColour(float rgb[3], float y, float target)
+{
+    if (y <= 0.0f || target >= y) return;
+    constexpr float start = 0.3f, full = 0.8f, amplitude = 2.5f;
+    const float ratio = target / y;
+    const float alpha = amplitude * std::clamp((y - start) / (full - start), 0.0f, 1.0f);
+    const float factor = (1.0f - alpha) * ratio + alpha;
+    float out[3];
+    for (int c = 0; c < 3; ++c) {
+        out[c] = target + factor * (rgb[c] - y);
+        if (out[c] < 0.0f) { for (int k = 0; k < 3; ++k) rgb[k] *= ratio; return; }
+    }
+    // The amplified colour never crosses white unless the channel already did.
+    for (int c = 0; c < 3; ++c) rgb[c] = std::min(out[c], std::max(rgb[c], 0.9999f));
+}
+
 // Production curves, sampled once per render over the 16 EV below white and
 // made non-decreasing by a running maximum (no tone reversal, whatever the
 // combination); linear interpolation in log2 between samples.
