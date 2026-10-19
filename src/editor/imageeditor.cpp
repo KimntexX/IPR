@@ -1,6 +1,7 @@
 #include "imageeditor.h"
 
 #include "DetailProcessing.h"
+#include "ImageMath.h"
 #include "ToneRecovery.h"
 #include "RawDecoder.h"
 #include "RawNormalization.h"
@@ -1611,21 +1612,6 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     // saturation -0.085 vs LR at +100, now +0.003). Fitted on the six Lumières
     // scenes against Lightroom (median |gap| 0.08 EV); the negative strength is
     // the fitted 0.45 raised by 8 % after the user's visual check.
-    const auto luminanceOf = [](const cv::Vec3f &pixel) {
-        return std::max(0.0f, WorkingColor::luminance(pixel));
-    };
-    const auto applyLuminance = [](cv::Vec3f &pixel, float sourceLuminance,
-                                   float targetLuminance, bool boundedShadowLift = false) {
-        // The bounded positive-shadow gain is safe below the legacy floor;
-        // do not retain a discontinuity at Y=1e-6 for the corrected branch.
-        if (sourceLuminance > 1e-6f || (boundedShadowLift && sourceLuminance > 0.0f))
-            pixel *= std::max(0.0f, targetLuminance) / sourceLuminance;
-    };
-    const auto smoothStep = [](float edge0, float edge1, float value) {
-        const float t = std::clamp((value - edge0) / (edge1 - edge0),
-                                   0.0f, 1.0f);
-        return t * t * (3.0f - 2.0f * t);
-    };
     const auto contrastCurve = [](float norm, float amount) {
         constexpr float pivot = 0.32f, floorEv = -16.0f;
         constexpr float positiveStrength = 0.60f, negativeStrength = 0.45f * 1.08f;
@@ -1679,7 +1665,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             for (int x = 0; x < adjusted.cols; ++x) {
                 cv::Vec3f &pixel = row[x];
                 if (!toneCurve.luminanceIdentity()) {
-                    const float luminance = luminanceOf(pixel);
+                    const float luminance = WorkingColor::nonNegativeLuminance(pixel);
                     const float target = toneCurve.luminance(luminance);
                     if (target > luminance && luminance > 0.0f) {
                         const cv::Vec3d delivery = WorkingColor::toSrgb() * cv::Vec3d(pixel);
@@ -1713,7 +1699,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
         for (int x = 0; x < adjusted.cols; ++x) {
             cv::Vec3f &pixel = row[x];
-            const float luminance = luminanceOf(pixel);
+            const float luminance = WorkingColor::nonNegativeLuminance(pixel);
             const float maximum = std::max({pixel[0], pixel[1], pixel[2]});
             const float minimum = std::min({pixel[0], pixel[1], pixel[2]});
             const float chroma = maximum > 1e-6f
@@ -1763,13 +1749,13 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
             for (int x = 0; x < adjusted.cols; ++x) {
                 cv::Vec3f pixel = row[x];
-                const float originalLuminance = luminanceOf(pixel);
+                const float originalLuminance = WorkingColor::nonNegativeLuminance(pixel);
                 if (hasColorMixer) {
                     pixel = ColorMixer::apply(pixel, mixerParameters);
                 }
                 if (hasColorGrading) {
-                    const float shadows = 1.0f - smoothStep(0.12f, 0.42f, originalLuminance);
-                    const float highlights = smoothStep(0.58f, 0.88f, originalLuminance);
+                    const float shadows = 1.0f - ImageMath::smoothStep(0.12f, 0.42f, originalLuminance);
+                    const float highlights = ImageMath::smoothStep(0.58f, 0.88f, originalLuminance);
                     const float midtones = std::clamp(1.0f - shadows - highlights, 0.0f, 1.0f);
                     const std::array<float, 3> weights{shadows, midtones, highlights};
                     for (size_t zone = 0; zone < weights.size(); ++zone) {
@@ -1777,7 +1763,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                             continue;
                         const cv::Vec3f color = hsvToRgb(
                             static_cast<float>(settings.gradingHue[zone]), 1.0f, 1.0f);
-                        const float colorLuminance = luminanceOf(color);
+                        const float colorLuminance = WorkingColor::nonNegativeLuminance(color);
                         pixel += (color - cv::Vec3f(colorLuminance, colorLuminance,
                                                     colorLuminance)) *
                                  (settings.gradingSaturation[zone] * 0.0035f * weights[zone]);
@@ -1796,9 +1782,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
     }
 
-    const auto applyLocalContrast = [&adjusted, &luminanceOf, &applyLuminance,
-                                     &smoothStep](int adjustment, double sigma,
-                                                  bool protectExtremes) {
+    const auto applyLocalContrast = [&adjusted](int adjustment, double sigma, bool protectExtremes) {
         if (adjustment == 0)
             return;
 
@@ -1807,7 +1791,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             const cv::Vec3f *sourceRow = adjusted.ptr<cv::Vec3f>(y);
             float *luminanceRow = luminance.ptr<float>(y);
             for (int x = 0; x < adjusted.cols; ++x)
-                luminanceRow[x] = luminanceOf(sourceRow[x]);
+                luminanceRow[x] = WorkingColor::nonNegativeLuminance(sourceRow[x]);
         }
         cv::Mat localBase;
         cv::GaussianBlur(luminance, localBase, cv::Size(0, 0), sigma);
@@ -1821,13 +1805,13 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                 float protection = 1.0f;
                 if (protectExtremes) {
                     protection =
-                        smoothStep(0.03f, 0.16f, luminance) *
-                        (1.0f - smoothStep(0.72f, 0.98f, luminance));
+                        ImageMath::smoothStep(0.03f, 0.16f, luminance) *
+                        (1.0f - ImageMath::smoothStep(0.72f, 0.98f, luminance));
                 }
                 const float target = std::max(
                     0.0f, luminance + (luminance - baseRow[x]) * amount *
                                       protection);
-                applyLuminance(pixelRow[x], luminance, target);
+                WorkingColor::scaleToLuminance(pixelRow[x], luminance, target);
             }
         }
     };
@@ -1937,8 +1921,8 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     for (int y = 0; y < adjusted.rows; ++y) {
         cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
         for (int x = 0; x < adjusted.cols; ++x) {
-            const float luminance = luminanceOf(row[x]);
-            applyLuminance(row[x], luminance,
+            const float luminance = WorkingColor::nonNegativeLuminance(row[x]);
+            WorkingColor::scaleToLuminance(row[x], luminance,
                            applyToneCurve(luminanceCurve, luminance));
             row[x][0] = applyToneCurve(redCurve, row[x][0]);
             row[x][1] = applyToneCurve(greenCurve, row[x][1]);
@@ -1973,10 +1957,10 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                 hash ^= hash >> 15;
                 const float noise =
                     static_cast<float>(hash & 0xffffu) / 32767.5f - 1.0f;
-                const float luminance = luminanceOf(row[x]);
+                const float luminance = WorkingColor::nonNegativeLuminance(row[x]);
                 const float shadowsWeight =
                     0.45f + 0.55f * (1.0f - std::clamp(luminance, 0.0f, 1.0f));
-                applyLuminance(row[x], luminance,
+                WorkingColor::scaleToLuminance(row[x], luminance,
                                std::max(0.0f, luminance + noise * amount *
                                                   shadowsWeight));
             }

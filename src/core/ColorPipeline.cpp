@@ -38,7 +38,7 @@ bool convertSourceToWorking(QImage &image, QString *error)
                 auto *row = rgb.ptr<cv::Vec4f>(y);
                 for (int x = 0; x < rgb.cols; ++x) for (int c = 0; c < 3; ++c) {
                     const double v = std::abs(double(row[x][c]));
-                    const double decoded = v <= .04045 ? v / 12.92 : std::pow((v + .055) / 1.055, 2.4);
+                    const double decoded = WorkingColor::srgbDecode(v);
                     row[x][c] = float(std::copysign(decoded, row[x][c]));
                 }
             }
@@ -101,8 +101,7 @@ QImage toEncodedSrgbRgba64(const cv::Mat &linearRgba)
         for (int x = 0; x < linearRgba.cols; ++x) {
             for (int channel = 0; channel < 3; ++channel) {
                 const double linear = std::clamp(double(source[x][channel]), 0.0, 1.0);
-                const double encoded = linear <= 0.0031308
-                    ? 12.92 * linear : 1.055 * std::pow(linear, 1.0 / 2.4) - 0.055;
+                const double encoded = WorkingColor::srgbEncode(linear);
                 destination[x][channel] = static_cast<quint16>(std::lround(encoded * 65535.0));
             }
             destination[x][3] = static_cast<quint16>(std::lround(
