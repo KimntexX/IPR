@@ -29,6 +29,7 @@ sans procédures fictives. Les mémos de survol prolongé sont réservés à la 
 | Sujet utilisateur | Source de contrôle |
 | --- | --- |
 | Menus, ouverture, disposition | `src/qml/Main.qml` |
+| Commandes de fichier et contexte | `ApplicationActions.qml`, `PhotoContextMenu.qml` |
 | Zoom, comparaison, Espace, molette | `src/qml/ImageViewport.qml` |
 | Champs, pas clavier et reset | `src/qml/AdjustmentControl.qml` |
 | Familles et domaines des valeurs | `src/qml/Setting.qml` |
@@ -48,3 +49,6 @@ utilisateur. Ne pas inventer de raccourcis issus d’autres logiciels.
 Mise en page : 12 pt, interligne 1,5, chapitres sur une nouvelle page,
 conformément aux [conventions documentaires](../AGENTS.md).
 La traduction anglaise relève du chantier documentaire dédié.
+
+Référence pour les conventions de clavier et la correspondance Ctrl/Command :
+[QKeySequence — documentation officielle Qt](https://doc.qt.io/qt-6/qkeysequence.html).

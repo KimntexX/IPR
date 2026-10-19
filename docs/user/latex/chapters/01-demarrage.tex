@@ -4,8 +4,8 @@
 Depuis l’écran d’accueil, cliquer sur \emph{Ouvrir…} et sélectionner une image.
 IPR ouvre son dossier contenant et affiche ses images dans le ruban du bas.
 Les menus \emph{Fichier / Ouvrir une image…} et \emph{Ouvrir un dossier…}
-permettent ensuite de changer de photo ou de dossier. Aucun raccourci dédié
-à l’ouverture n’est actuellement déclaré dans l’application.
+permettent ensuite de changer de photo ou de dossier. Utiliser
+\touche{Ctrl + O} pour une image et \touche{Ctrl + Maj + O} pour un dossier.
 
 Un RAW contient des données à développer ; un JPEG, PNG ou TIFF contient déjà
 une image rendue. Un DNG peut contenir des données de natures différentes :
@@ -57,6 +57,11 @@ pas réécrit par ces retouches. Garder le compagnon avec l’image lors d’un
 déplacement ou d’une sauvegarde ; vérifier les droits d’écriture du dossier.
 Le stockage est automatique et différé : attendre les traitements et vérifier
 les éventuels avertissements de sauvegarde avant de quitter.
+
+La commande \emph{Enregistrer les réglages} et \touche{Ctrl + S} sont réservés
+mais restent désactivés dans ce build : une sauvegarde manuelle immédiate
+nécessite encore son raccordement moteur. Cela ne désactive pas la sauvegarde
+automatique existante. \touche{Ctrl + Q} permet de quitter hors dialogue modal.
 
 \attention{Le fichier compagnon n’est ni une copie de la photo ni un export.
 Les préférences de l’interface sont, elles, stockées dans un INI distinct.}

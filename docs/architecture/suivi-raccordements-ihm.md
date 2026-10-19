@@ -96,6 +96,29 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Documentation et vérification des commandes de fichier
+
+Le livre utilisateur décrit les nouveaux raccourcis dans les parcours et
+l’annexe, les menus contextuels par zone, la confirmation des resets et
+les deux commandes préparées mais désactivées (Ctrl+S et Ctrl+D). Aucune
+équivalence entre sauvegarder, exporter et copier le fichier source.
+Les choix privilégient les conventions de fichier (Ouvrir/Enregistrer), des
+lettres mémorisables (Exporter/Dupliquer), et une combinaison plus volontaire
+avec confirmation pour réinitialiser. Les commandes de vue existantes restent
+inchangées pour préserver les habitudes déjà testées. Les raccourcis natifs
+de saisie et de courbe ne sont pas remplacés par le menu photo.
+
+Vérification de cette livraison locale : six tests IHM réussis ; tests des
+préférences Basic et Windows également réussis à 125 % et 150 % ; seize tests
+Python de sélection réussis. Les tests ouvrent les dialogues hors écran,
+sans fenêtres natives interactives. Le menu photo est contrôlé par clic droit
+réel et par Maj+F10 ; les gestes de zoom et de slider restent couverts.
+Le manuel recompilé contient 46 pages, sans débordement ni référence indéfinie ;
+ses six blocs de consignes restent chacun sur une page. Contrôle documentaire :
+zéro erreur et zéro lien manquant. Exécutable Windows reconstruit et démarrage
+isolé réussi (code 0, stderr vide), INI utilisateur préservé.
+Aucun fichier moteur modifié, aucune fusion ni publication GitHub.
+
 ### Menus contextuels par zone
 
 Clic droit sur la vue image : actions partagées de fichier, export et remise
