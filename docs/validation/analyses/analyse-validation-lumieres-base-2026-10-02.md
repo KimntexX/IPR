@@ -979,3 +979,33 @@ blancs −50 −0,04 → −0,01 ; tons sombres et luminance inchangés.
 Blancs positifs, luminosité affichée moyenne IPR / LR : +50 dans ±3 % sur les huit
 scènes (moyenne 1,5 %) ; +100 médiane +0,6 %, 0524 +1,2 %, mais 0037 +9,7 % et
 9421 −16,3 % (gain par image ; à revoir avec le corpus de 19 scènes).
+
+#### HL sur 19 scènes : modèle pondéré adopté, limite d'une courbe globale, 19 octobre 2026
+
+Noirs et blancs validés visuellement par l'utilisateur ; HL négatifs jugés encore
+trop doux. Onze scènes supplémentaires (6V1A0054, 0081, 0182, 0318, 0830, 9608,
+9616, 9890, 9940, 7Y6A7298, 7599) ont reçu leurs références LR HL (88 exports par
+préréglages, réglages vérifiés identiques au neutre hors curseur HL). HL réajustées
+seules (`scripts/fit_tone_recovery.py --only highlights`) ; noirs, blancs et ombres
+inchangés au 1/10 000 d'EV.
+
+Gain par image : la paire quantile 5 % / quantile 95 % prédit le mieux sur les
+19 scènes (validation croisée à −100 : 0,328 EV contre 0,381 pour l'ancienne paire).
+Un décalage de zone selon l'image n'apporte rien (0,339). Résidus pondérés par
+l'ampleur de l'effet de LR (1 + 4 |effet|), pour que les hautes lumières des scènes
+sombres comptent. Critère de l'utilisateur, luminosité affichée des 10 % les plus
+clairs, IPR / LR, scènes hors ±3 % sur 19 :
+
+| Modèle | HL −100 | HL −50 | HL +50 | HL +100 |
+| --- | --- | --- | --- | --- |
+| 8 scènes (matin) | 15 (moyenne 16,9 %) | 9 (6,4 %) | 6 (4,2 %) | 7 (5,8 %) |
+| 19 scènes | 13 (14,6 %) | 8 (5,1 %) | 6 (2,9 %) | 8 (4,1 %) |
+| **19 scènes pondéré (adopté)** | 14 (**13,0 %**) | 10 (4,8 %) | **5 (2,7 %)** | **5 (3,8 %)** |
+
+Écarts restants à HL −100 : 0054 +50 %, 0081 −48 %, 9890 −28 %, 0327 −22 %,
+0043 −21 %. Cause démontrée : **les HL de LR sont un traitement local**. À luminance
+de départ égale, le résultat de LR varie dans l'image (écart interquartile à HL −100 :
+0,16 EV en médiane, 0,70 sur 0037, 0,48 sur 0043), alors qu'il est quasi nul pour les
+blancs (0,01) et faible pour les ombres +100 (0,05). Aucune courbe globale, même
+ajustée par image, ne peut le reproduire. Direction : opérateur local pour les HL
+(roadmap).

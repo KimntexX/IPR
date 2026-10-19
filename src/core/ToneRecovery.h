@@ -122,7 +122,9 @@ inline void brightenTowardWhite(float rgb[3], float y, float target)
     const float scale = target / y;
     float m = 0.0f;
     for (int c = 0; c < 3; ++c) { rgb[c] *= scale; m = std::max(m, rgb[c]); }
-    const float fit = std::min(shoulder(peak, m), 0.9999f); // tanh rounds to 1 in float
+    // 0.995 linear is sRGB code 254: a lifted colour nears white but does not
+    // clip on an 8-bit display (tanh would also round to 1 in float).
+    const float fit = std::min(shoulder(peak, m), 0.995f);
     if (m <= fit) return;
     const float t = std::clamp((fit - target) / std::max(m - target, 1e-9f), 0.0f, 1.0f);
     for (int c = 0; c < 3; ++c) rgb[c] = target + t * (rgb[c] - target);

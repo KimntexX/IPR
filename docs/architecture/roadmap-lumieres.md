@@ -12,7 +12,7 @@ protocole : [protocole Lumières](../validation/protocols/protocole-lumieres.md)
 | Exposition | Avant le DCP, sur le signal caméra ; conforme à LR à ±0,03 EV | Validé visuellement, 18 octobre |
 | Contraste | S à extrémités fixes, domaine log, par canal | Validé, réserve à +100 (≈ 3 % plus fort que LR) |
 | Noirs, blancs | Plan B : formes de LR, poids par image, couleur des tons clairs | **Validés visuellement le 19 octobre** |
-| Ombres, HL | Plan B | Ombres acceptées ; HL négatifs : gain par image à affiner (±8 % selon la scène à −100), corpus de 19 scènes en préparation |
+| Ombres, HL | Plan B ; HL réajustées sur 19 scènes (modèle pondéré) | Ombres acceptées ; HL : opérateur local à engager (traitement local de LR démontré) |
 
 Comparaisons IPR/LR à réglages égaux : calibration RAW de l'IHM, optique
 coupée des deux côtés. Corpus : six scènes sombres du protocole, plus deux
@@ -111,6 +111,18 @@ ombres 0,27–0,31 EV, noirs 0,06–0,21, HL 0,08–0,11, blancs − 0,04, blanc
 0,39 (pire 0,77). Limite : huit scènes, un boîtier principal ; le gain des
 blancs positifs reste le moins bien prédit. **Élargir le corpus de références
 LR** (piste XMP ci-dessous) améliorerait directement la prédiction.
+
+## HL — opérateur local (direction retenue le 19 octobre 2026)
+
+Les HL de LR agissent sur le voisinage, pas seulement sur la luminance du pixel
+(dispersion de 0,16 EV en médiane à HL −100, jusqu'à 0,70 EV sur 6V1A0037 ; détails
+dans le rapport). Le modèle global pondéré est adopté comme étape intermédiaire.
+Étape suivante : module `LocalTone` séparant l'image en une base lissée préservant
+les contours et une couche de détail ; la courbe HL s'applique à la base, le détail
+est conservé ; rayon et force ajustés sur les paires LR des 19 scènes, avec le
+critère de l'utilisateur (±3 % de luminosité affichée par scène). Vérifier le même
+besoin pour les ombres (dispersion faible, 0,05 EV à +100). Module conforme à la
+cible d'architecture : `ImageEditor` cadenceur, modules `.h`/`.cpp`.
 
 ## Points reportés
 
