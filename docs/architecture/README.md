@@ -12,6 +12,8 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Graphe du chemin RAW → DCP → rendu](chemin-ouverture-raw.md) : code actuel, refus de calibration et architecture cible sans liste de photos.
 - [Formats extensibles et stockage des caractérisations](../decisions/ADR-0012-formats-extensibles-et-caracterisations.md) : point d'entrée des futurs adaptateurs, DCP/JSON/SQLite, premier lot et transition restante.
 - [Roadmap ouverture RAW](roadmap-ouverture-raw.md) : HL, contextes multi-boîtiers, caches et corpus R5/6D Mark II prévu.
+- [Roadmap décodeurs RAW](roadmap-decodeurs-raw.md) : indépendance de LibRaw, formats CR3/CR2/DNG/Sony/Nikon, corpus minimal par boîtier, tests automatisés et agents IA (ADR-0018).
+- [Roadmap couche image sans OpenCV](roadmap-couche-image-sans-opencv.md) : usage mesuré, paliers, tolérances et retrait immédiat d'`imgcodecs`.
 - [Roadmap Lumières](roadmap-lumieres.md) : état des six réglages, plan A en cours, plan B adaptatif tracé, points reportés.
 - [Travail, affichage ICC et export](gestion-couleurs-affichage.md) : séparation cible, distincte du code actuel.
 - [Intégration Rec.2020 linéaire](integration-rec2020.md) : master porté, audit initial, contrats et qualification restant à compléter.

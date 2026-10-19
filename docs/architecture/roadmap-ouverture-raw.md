@@ -73,6 +73,8 @@ de commit de gel ni de livraison.
   RAW CR2 étendront les contrôles multi-boîtiers et de non-régression du rendu,
   mais ne constituent pas une validation du conteneur CR3.
 
+Le nombre minimal d'images par boîtier et la procédure outillée d'intégration
+sont définis dans la [roadmap des décodeurs RAW](roadmap-decodeurs-raw.md#6-corpus-minimal-par-boîtier).
 Les images annoncées ne sont ni inventoriées ni validées par cette roadmap.
 À leur réception, relever modèle réel, format et mode RAW, ISO, profondeur,
 WB, niveaux noir/blanc et DCP. Tester séparément RAW/C-RAW si ces modes sont
