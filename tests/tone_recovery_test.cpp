@@ -1,4 +1,5 @@
 #include "ToneRecovery.h"
+#include "ToneRecoveryModel.h"
 #include <array>
 #include <algorithm>
 #include <cmath>

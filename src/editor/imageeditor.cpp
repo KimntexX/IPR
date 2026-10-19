@@ -1509,28 +1509,12 @@ void ImageEditor::exportImage(const QUrl &target, const QString &format, int qua
 }
 
 namespace {
-// Statistics of the neutral rendering (the proxy as loaded), sampled on at
-// most about one million pixels; the master shares them, so preview and
-// export apply the same per-image tone weights.
-ToneRecovery::Statistics measureToneStatistics(const cv::Mat &linearRgba)
-{
-    const int stride = std::max(1, int(std::sqrt(double(linearRgba.total()) / 1.0e6)));
-    std::vector<float> values;
-    values.reserve(linearRgba.total() / size_t(stride * stride) + linearRgba.rows);
-    for (int y = 0; y < linearRgba.rows; y += stride) {
-        const auto *row = linearRgba.ptr<cv::Vec4f>(y);
-        for (int x = 0; x < linearRgba.cols; x += stride) {
-            const cv::Vec3f rgb(row[x][0], row[x][1], row[x][2]);
-            values.push_back(std::log2(std::max(WorkingColor::luminance(rgb), 0x1p-20f)));
-        }
-    }
-    return ToneRecovery::measure(std::move(values));
-}
-
+// Statistics of the neutral rendering (the proxy as loaded), measured once;
+// the master shares them, so preview and export apply the same tone weights.
 void attachToneStatistics(ColorPipeline::WorkingImage &image, ColorPipeline::WorkingImage &proxy)
 {
     if (proxy.isNull()) return;
-    const auto statistics = measureToneStatistics(proxy.linearRgba);
+    const auto statistics = ToneRecovery::measure(proxy.linearRgba);
     proxy.toneStatistics = statistics;
     image.toneStatistics = statistics;
 }
@@ -1645,50 +1629,15 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         return {};
     }
 
-    // Shadows, Blacks, Highlights and Whites (ToneRecovery, plan B): per-image
-    // weights from the statistics measured at load. Shadows and Highlights
-    // scale RGB by a luminance ratio; a brightening reaches its luminance and
-    // pulls a colour that would leave the sRGB delivery gamut toward white
-    // (ToneRecovery::brightenTowardWhite); a darkening keeps, then amplifies,
-    // the colour of bright tones (darkenKeepingColour), as Lightroom does. Blacks and
-    // Whites then act on each linear sRGB channel, as in Lightroom.
+    // Shadows, Blacks, Highlights and Whites, weighted by the statistics
+    // measured at load (ToneRecovery).
     const ToneRecovery::Amounts tones{static_cast<float>(settings.shadows) / 100.0f,
         static_cast<float>(settings.blacks) / 100.0f,
         static_cast<float>(settings.highlights) / 100.0f,
         static_cast<float>(settings.whites) / 100.0f};
-    if (!ToneRecovery::identity(tones)) {
-        const auto statistics = source.toneStatistics ? *source.toneStatistics
-                                                      : measureToneStatistics(source.linearRgba);
-        const ToneRecovery::Curve toneCurve(tones, ToneRecovery::gains(statistics));
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                cv::Vec3f &pixel = row[x];
-                if (!toneCurve.luminanceIdentity()) {
-                    const float luminance = WorkingColor::nonNegativeLuminance(pixel);
-                    const float target = toneCurve.luminance(luminance);
-                    if (target > luminance && luminance > 0.0f) {
-                        const cv::Vec3d delivery = WorkingColor::toSrgb() * cv::Vec3d(pixel);
-                        float rgb[3] = {float(delivery[0]), float(delivery[1]), float(delivery[2])};
-                        ToneRecovery::brightenTowardWhite(rgb, luminance, target);
-                        pixel = cv::Vec3f(WorkingColor::fromSrgb() * cv::Vec3d(rgb[0], rgb[1], rgb[2]));
-                    } else if (target < luminance) {
-                        float rgb[3] = {pixel[0], pixel[1], pixel[2]};
-                        ToneRecovery::darkenKeepingColour(rgb, luminance, target);
-                        pixel = cv::Vec3f(rgb[0], rgb[1], rgb[2]);
-                    }
-                }
-                if (!toneCurve.channelIdentity()) {
-                    // Per channel in linear sRGB, where Lightroom's curves were
-                    // measured: in the wider Rec.2020, Blacks -100 oversaturated
-                    // colours (0.99 vs 0.92 on 6V1A0037).
-                    cv::Vec3d srgb = WorkingColor::toSrgb() * cv::Vec3d(pixel);
-                    for (int c = 0; c < 3; ++c) srgb[c] = toneCurve.channel(float(srgb[c]));
-                    pixel = cv::Vec3f(WorkingColor::fromSrgb() * srgb);
-                }
-            }
-        }
-    }
+    if (!ToneRecovery::identity(tones))
+        ToneRecovery::apply(adjusted, tones, source.toneStatistics ? *source.toneStatistics
+                                                                   : ToneRecovery::measure(source.linearRgba));
 
     const float saturationFactor =
         1.0f + static_cast<float>(settings.saturation) / 100.0f;
