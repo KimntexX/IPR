@@ -11,6 +11,7 @@ Ce fichier est le point d'entrée unique de la documentation versionnée. Il dis
 | Décisions | Choix d'architecture stables et leurs conséquences | [decisions/README.md](decisions/README.md) |
 | Validation | Protocoles, matrice de statut et mesures reproductibles | [validation/README.md](validation/README.md) |
 | Rapports | Journaux de séance et historiques datés | [reports/README.md](reports/README.md) |
+| Utilisateur | Prise en main, familles de réglages et raccourcis | [user/README.md](user/README.md) |
 | Technique | Manuel LaTeX de référence et sources compilables | [technical/latex/README.md](technical/latex/README.md) |
 | Scholar | Cours sur les modèles utilisés par IPR | [scholar/README.md](scholar/README.md) |
 

@@ -34,6 +34,15 @@ class ScopeTests(unittest.TestCase):
         self.assertEqual(plan['tests'], ['imageExportTests', 'toneRecoveryTests'])
         self.assertNotIn('macos-15-intel', plan['matrix']['os'])
 
+    def test_preferences_components_use_their_focused_qml_tests(self):
+        for path in ('src/qml/PreferencesDialog.qml', 'src/qml/PreferenceButton.qml',
+                     'src/qml/AppearancePreferencesPane.qml', 'src/qml/RawCalibrationModule.qml',
+                     'src/qml/ImageBackgroundOptions.qml', 'src/qml/ImageCanvasBackground.qml',
+                     'src/qml/ChevronIcon.qml', 'src/qml/FilmstripNavigation.qml'):
+            plan = self.scope([path], branch='patch_ui')
+            self.assertFalse(plan['full'])
+            self.assertEqual(plan['tests'], ['uiPreferencesQmlTests'])
+
     def test_python_only_needs_no_native_dependencies(self):
         plan = self.scope(['tests/test_investigate_wb_adaptation.py'])
         self.assertFalse(plan['native'])
@@ -138,6 +147,28 @@ class ScopeTests(unittest.TestCase):
         delivery = yaml.load((ROOT / '.github/workflows/delivery.yml').read_text(), Loader=yaml.BaseLoader)
         self.assertNotIn('push', delivery['on'])
         self.assertEqual(delivery['on']['workflow_run']['branches'], ['dev', 'main'])
+
+    def test_ci_dependencies_respect_the_qt_minimum(self):
+        import yaml
+        load = lambda path: yaml.load((ROOT / path).read_text(encoding='utf8'), Loader=yaml.BaseLoader)
+        self.assertIn('find_package(Qt6 6.8 REQUIRED', (ROOT / 'CMakeLists.txt').read_text())
+        setup = load('.github/actions/setup/action.yml')
+        sdk = next(step for step in setup['runs']['steps'] if 'install-qt-action@' in step.get('uses', ''))
+        self.assertIn("runner.os == 'Linux'", sdk['if'])
+        self.assertGreaterEqual(tuple(map(int, sdk['with']['version'].split('.'))), (6, 8))
+        self.assertFalse(any('qt6-base-dev' in step.get('run', '') for step in setup['runs']['steps']))
+        for workflow in ('ci', 'delivery'):
+            jobs = load(f'.github/workflows/{workflow}.yml')['jobs']
+            # Locate the packaging matrix without coupling the test to its job name.
+            matrix = next(value['strategy']['matrix'] for value in jobs.values()
+                          if isinstance(value.get('strategy', {}).get('matrix'), dict)
+                          and 'mode' in value['strategy']['matrix'])
+            self.assertIn({'os': 'ubuntu-24.04', 'mode': 'system'}, matrix['exclude'])
+        distro_matrix = load('.github/workflows/linux-distributions.yml')['jobs']
+        images = [entry['image'] for value in distro_matrix.values()
+                  for entry in value.get('strategy', {}).get('matrix', {}).get('include', [])]
+        self.assertIn('debian:13', images)
+        self.assertNotIn('debian:12', images)
 
 
 if __name__ == '__main__':

@@ -71,6 +71,18 @@ Règle demandée le 8 octobre 2026, applicable à tous les nouveaux documents La
 - Les paragraphes sont séparés dans les sources par une ligne vide, sans retrait de première ligne, avec un espacement vertical uniforme de `0.5\baselineskip`. Ne pas utiliser `\\` comme séparation de paragraphes.
 - L'espacement des paragraphes suit donc l'interligne du texte ; **chaque paragraphe ne commence pas sur une nouvelle page**. Les sauts de page restent automatiques, sauf aux limites des chapitres.
 - Les tailles des titres, légendes, notes et blocs de code peuvent être adaptées à leur rôle ; ne pas réduire le corps du texte pour faire tenir une page.
+- Conserver les paragraphes explicatifs courts et les blocs de consignes
+  (par exemple « Gestes et clavier ») sur une seule page, avec leur intitulé.
+  S’il manque de place, déplacer le bloc entier à la page suivante ; ne pas
+  laisser une consigne reprendre au début de la page suivante au milieu d’une
+  phrase. Utiliser les mécanismes de pagination LaTeX (`samepage`, réservation
+  d’espace ou pénalité de coupure), pas une succession de `\\` ou de lignes vides.
+- Éviter les lignes veuves/orphelines. Pour un manuel composé de paragraphes
+  courts tenant chacun sur une page, `\interlinepenalty=10000` avec
+  `\clubpenalty=10000`, `\widowpenalty=10000` et `\raggedbottom` permet de
+  conserver ces paragraphes entiers sans étirer les blancs. Pour un passage
+  trop long, le découper en paragraphes cohérents ou autoriser localement une
+  coupure maîtrisée ; ne pas rendre un bloc plus haut qu’une page insécable.
 
 Préambule de référence pour un nouveau document :
 

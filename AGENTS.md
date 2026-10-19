@@ -1,5 +1,12 @@
 # Règles du projet IPR
 
+## Langue Git — règle du 19 octobre 2026
+
+- Rédiger tous les nouveaux messages de commit en anglais, y compris les
+  commits de fusion, ainsi que les titres et descriptions des pull requests.
+- Cette règle ne demande pas de traduire la documentation ni de réécrire
+  l’historique Git publié. Les noms des branches restent en anglais.
+
 ## Prototypage, versionnage et absence de legacy — règle du 11 octobre 2026
 
 - Le projet est actuellement en prototypage **alpha**. Chaque fusion validée
@@ -61,3 +68,25 @@
 La procédure détaillée est dans
 [Gestion des branches Git](docs/architecture/gestion-branches-git.md).
 Les travaux sous `docs/` suivent également les règles de [docs/AGENTS.md](docs/AGENTS.md).
+
+## Chantier IHM isolé — règle du 18 octobre 2026
+
+- Le chantier IHM travaille dans le worktree `.worktrees/patch_ui`, sur la
+  branche durable `patch_ui`, créée depuis `dev` à jour. Ne pas changer la
+  branche du worktree principal ni intervenir dans les worktrees des autres agents.
+- Les corrections concernent la présentation QML, les composants/assets,
+  les tests IHM et les déclarations CMake nécessaires à ces éléments.
+- Ne pas modifier le moteur/master de traitement : `src/core/`, `src/raw/`,
+  `src/profiles/`, `src/cache/` et `src/editor/` restent hors de ce chantier.
+  Ne pas modifier non plus `main` ou `dev` dans le cadre des corrections IHM.
+- Utiliser les interfaces existantes du moteur. Toute nouvelle propriété,
+  commande, notification ou modification du contrat C++ nécessaire est décrite
+  dans [le suivi des raccordements IHM](docs/architecture/suivi-raccordements-ihm.md),
+  puis prise en charge sur la branche moteur concernée. Ne pas contourner cette
+  séparation par un calcul photographique en QML ni annoncer un raccordement fini
+  lorsqu'il n'est que documenté.
+- Les constructions et fichiers générés de ce chantier restent dans ce
+  worktree. Ne pas réutiliser un cache CMake ou écrire dans un dossier de build
+  du worktree principal ; ne pas copier les modifications locales des autres agents.
+- Aucune fusion, publication ni création de tag n'est implicite. La branche
+  reste indépendante jusqu'à validation et autorisation de livraison.

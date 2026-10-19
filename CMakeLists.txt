@@ -16,7 +16,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(IPR_ENABLE_LIBRAW "Enable CR2/CR3/DNG decoding through LibRaw" ON)
 option(IPR_BUILD_RAW_BENCHMARK "Build the command-line RAW loading benchmark" OFF)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Core Gui Quick Concurrent)
+find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Quick Concurrent)
 find_package(TIFF REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
 qt_standard_project_setup()
@@ -76,10 +76,32 @@ set(IPR_ENGINE_SOURCES
 
 set(IPR_QML_FILES
     src/qml/Main.qml
+    src/qml/ApplicationActions.qml
+    src/qml/PhotoContextMenu.qml
+    src/qml/ActionMenuItem.qml
     src/qml/ImageViewport.qml
     src/qml/HistogramModule.qml
     src/qml/Setting.qml
     src/qml/RawDevelopmentModule.qml
+    src/qml/OpticsModule.qml
+    src/qml/FilmstripNavigation.qml
+    src/qml/ChevronIcon.qml
+        src/qml/ProcessingStatus.qml
+        src/qml/PanelResizeHandle.qml
+        src/qml/ExportReviewDialog.qml
+    src/qml/RawCalibrationModule.qml
+    src/qml/PreferencesDialog.qml
+    src/qml/PreferenceButton.qml
+    src/qml/PreferenceCheckBox.qml
+    src/qml/PreferenceSpinBox.qml
+    src/qml/PreferenceComboBox.qml
+    src/qml/PreferenceScrollView.qml
+    src/qml/InterfacePreferencesPane.qml
+    src/qml/AppearancePreferencesPane.qml
+    src/qml/ImageBackgroundOptions.qml
+    src/qml/ImageCanvasBackground.qml
+    src/qml/AdvancedRawPreferencesPane.qml
+    src/qml/InterfacePaletteSelector.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
     src/qml/CurveChannelButton.qml
@@ -270,6 +292,12 @@ if(BUILD_TESTING)
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(uiPreferencesTests uiPreferencesQmlTests PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    if(WIN32)
+        add_test(NAME uiPreferencesWindowsStyleTests COMMAND uiPreferencesQmlTests)
+        set_tests_properties(uiPreferencesWindowsStyleTests PROPERTIES
+            ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Windows"
+            LABELS "unit;preferences;qml")
+    endif()
     ipr_add_test(rawDecoderTests tests/raw_decoder_test.cpp)
     ipr_add_test(imageImportTests tests/image_import_test.cpp)
     set_tests_properties(imageImportTests PROPERTIES LABELS "unit;import;pipeline")
