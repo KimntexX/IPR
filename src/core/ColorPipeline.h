@@ -1,5 +1,5 @@
-#ifndef COLORPIPELINE_H
-#define COLORPIPELINE_H
+#ifndef IPR_CORE_COLORPIPELINE_H
+#define IPR_CORE_COLORPIPELINE_H
 
 #include "ToneStatistics.h"
 #include <QColorSpace>
@@ -65,4 +65,4 @@ QImage toSrgb(const WorkingImage &source, OutputFormat outputFormat,
 
 }
 
-#endif
+#endif // IPR_CORE_COLORPIPELINE_H

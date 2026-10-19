@@ -1,5 +1,5 @@
-#ifndef IMAGEEDITOR_H
-#define IMAGEEDITOR_H
+#ifndef IPR_EDITOR_IMAGEEDITOR_H
+#define IPR_EDITOR_IMAGEEDITOR_H
 
 #include "ColorPipeline.h"
 #include "ImageImporter.h"
@@ -432,4 +432,4 @@ private:
     QVariantList m_histogram;
 };
 
-#endif // IMAGEEDITOR_H
+#endif // IPR_EDITOR_IMAGEEDITOR_H

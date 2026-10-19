@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_CACHE_IMAGECACHECONTROLLER_H
+#define IPR_CACHE_IMAGECACHECONTROLLER_H
 
 #include "DecodedImageCache.h"
 #include "SystemMemory.h"
@@ -62,3 +63,5 @@ private:
     mutable QMutex m_mutex;
     Statistics m_statistics;
 };
+
+#endif // IPR_CACHE_IMAGECACHECONTROLLER_H

@@ -1,5 +1,5 @@
-#ifndef WORKINGCOLORSPACE_H
-#define WORKINGCOLORSPACE_H
+#ifndef IPR_CORE_WORKINGCOLORSPACE_H
+#define IPR_CORE_WORKINGCOLORSPACE_H
 
 #include <opencv2/core.hpp>
 
@@ -71,4 +71,4 @@ inline void transform(cv::Mat &image, const cv::Matx33d &matrix)
     }
 }
 }
-#endif
+#endif // IPR_CORE_WORKINGCOLORSPACE_H

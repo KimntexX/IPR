@@ -1,5 +1,5 @@
-#ifndef DETAILPROCESSING_H
-#define DETAILPROCESSING_H
+#ifndef IPR_CORE_DETAILPROCESSING_H
+#define IPR_CORE_DETAILPROCESSING_H
 
 #include <opencv2/core.hpp>
 
@@ -26,4 +26,4 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings);
 
 }
 
-#endif
+#endif // IPR_CORE_DETAILPROCESSING_H

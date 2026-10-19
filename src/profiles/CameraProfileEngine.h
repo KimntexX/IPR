@@ -1,5 +1,5 @@
-#ifndef CAMERAPROFILEENGINE_H
-#define CAMERAPROFILEENGINE_H
+#ifndef IPR_PROFILES_CAMERAPROFILEENGINE_H
+#define IPR_PROFILES_CAMERAPROFILEENGINE_H
 
 #include <QString>
 #include <QStringList>
@@ -89,4 +89,4 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
 
 }
 
-#endif
+#endif // IPR_PROFILES_CAMERAPROFILEENGINE_H

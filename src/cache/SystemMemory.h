@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_CACHE_SYSTEMMEMORY_H
+#define IPR_CACHE_SYSTEMMEMORY_H
 
 #include <QString>
 #include <QtGlobal>
@@ -16,3 +17,5 @@ Snapshot read();
 quint64 estimateDecodePeak(const QString &fileName);
 quint64 estimateProcessingPeak(quint64 pixels);
 }
+
+#endif // IPR_CACHE_SYSTEMMEMORY_H

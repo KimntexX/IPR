@@ -1,5 +1,5 @@
-#ifndef IPR_TONE_RECOVERY_H
-#define IPR_TONE_RECOVERY_H
+#ifndef IPR_CORE_TONERECOVERY_H
+#define IPR_CORE_TONERECOVERY_H
 #include "ToneRecoveryModel.h"
 #include "ToneStatistics.h"
 #include <algorithm>
@@ -201,4 +201,4 @@ private:
     Table luminance_{}, channel_{};
 };
 }
-#endif
+#endif // IPR_CORE_TONERECOVERY_H

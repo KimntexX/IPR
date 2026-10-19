@@ -1,5 +1,5 @@
-#ifndef IPR_TONE_STATISTICS_H
-#define IPR_TONE_STATISTICS_H
+#ifndef IPR_CORE_TONESTATISTICS_H
+#define IPR_CORE_TONESTATISTICS_H
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -35,4 +35,4 @@ inline Statistics measure(std::vector<float> log2Luminance)
     return s;
 }
 }
-#endif
+#endif // IPR_CORE_TONESTATISTICS_H

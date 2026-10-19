@@ -1,5 +1,5 @@
-#ifndef UIPREFERENCES_H
-#define UIPREFERENCES_H
+#ifndef IPR_APP_UIPREFERENCES_H
+#define IPR_APP_UIPREFERENCES_H
 
 #include <QObject>
 #include <QPointer>
@@ -61,4 +61,4 @@ private:
     bool m_writable = true;
 };
 
-#endif
+#endif // IPR_APP_UIPREFERENCES_H
