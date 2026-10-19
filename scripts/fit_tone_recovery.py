@@ -30,7 +30,10 @@ KNOTS = np.arange(-16, 2.01, 1.0)
 EDGES = np.arange(-14, 0.001, .25)
 MID = (EDGES[1:] + EDGES[:-1]) / 2
 LEVELS = (25, 50, 75, 100)
-PER_CHANNEL = {"blacks", "whites"}
+# Applied per linear sRGB channel: Blacks, and Whites when lifting (production
+# routing of ToneRecovery::transfer); the rest acts on luminance.
+def per_channel(feature, sign):
+    return feature == "blacks" or (feature == "whites" and sign > 0)
 # Model::Statistic order: mean, then quantiles 1, 5, 10, 90, 95, 99.9 %.
 STATISTICS = {"Mean": None, "Q1": .01, "Q5": .05, "Q10": .10, "Q90": .90, "Q95": .95, "Q999": .999}
 # Statistic pairs chosen by leave-one-out prediction of the per-scene gains.
@@ -43,16 +46,17 @@ ORDER = [(f, s) for f in ("shadows", "blacks", "highlights", "whites") for s in 
 SHOULDER_KNEE = 0.70
 
 
-def predict(x, lift, feature):
-    """log2 output for log2 input x and EV lift. Per-channel brightening rolls
-    off near white through the soft shoulder of ToneRecovery::shoulder, as
-    Lightroom does per channel; luminance controls are capped at white."""
-    if feature not in PER_CHANNEL:
-        return np.minimum(x + lift, 0)
+def predict(x, lift, feature, sign):
+    """log2 output for log2 input x and EV lift, as ToneRecovery::transfer:
+    brightening rolls off near white through the soft shoulder (knee 0.70 per
+    channel, 0.80 on luminance, which then stays just below white)."""
+    channel = per_channel(feature, sign)
+    knee = SHOULDER_KNEE if channel else 0.80
     y, out = 2.0 ** x, 2.0 ** (x + lift)
-    base = np.maximum(y, SHOULDER_KNEE)
+    base = np.maximum(y, knee)
     soft = base + (1 - base) * np.tanh((out - base) / np.maximum(1 - base, 1e-6))
-    out = np.where((out > y) & (out > SHOULDER_KNEE), soft, np.minimum(out, 1.0))
+    out = np.where((out > y) & (out > knee), soft, out)
+    out = np.minimum(out, 1.0 if channel else 0.9999)
     return np.log2(np.maximum(out, 2.0 ** -40))
 
 
@@ -95,7 +99,7 @@ def statistics(rgb):
 
 def binned(pairs, scene, feature, value):
     n, v = pairs[("neutral", scene)], pairs[(feature, scene, value)]
-    a, b = (n.ravel(), v.ravel()) if feature in PER_CHANNEL else (n @ LUMA, v @ LUMA)
+    a, b = (n.ravel(), v.ravel()) if per_channel(feature, np.sign(value)) else (n @ LUMA, v @ LUMA)
     keep = (a > 2 ** -14) & (a < .98)
     x, y = np.log2(a[keep]), np.log2(np.maximum(b[keep], 2 ** -16))
     idx = np.digitize(x, EDGES) - 1
@@ -125,7 +129,7 @@ def fit_control(pairs, stats, feature, sign, train):
         for (s, level), (med, w) in data.items():
             ok = ~np.isnan(med)
             pred = predict(MID[ok], np.exp(log_gain(coef, s)) *
-                           np.interp(MID[ok], KNOTS, shapes[LEVELS.index(level)]), feature)
+                           np.interp(MID[ok], KNOTS, shapes[LEVELS.index(level)]), feature, sign)
             out.append(np.sqrt(w[ok]) * (pred - med[ok]))
         out.append(.02 * np.diff(shapes, 2, axis=1).ravel())  # smooth shapes
         if names:  # gains centred on 1
@@ -146,7 +150,7 @@ def error(pairs, stats, feature, sign, model, scene):
     for level in LEVELS:
         med, w = binned(pairs, scene, feature, sign * level)
         ok = ~np.isnan(med)
-        pred = predict(MID[ok], np.exp(lg) * np.interp(MID[ok], KNOTS, shapes[LEVELS.index(level)]), feature)
+        pred = predict(MID[ok], np.exp(lg) * np.interp(MID[ok], KNOTS, shapes[LEVELS.index(level)]), feature, sign)
         errs.append(np.sum(w[ok] * np.abs(pred - med[ok])) / w[ok].sum())
     return np.array(errs)
 
@@ -181,7 +185,7 @@ def header(models, stats):
         names = list(GAIN_STATISTICS.get((feature, sign), ()))
         co = [0.0, 0.0, 0.0] if coef is None else list(coef)
         lines.append(f"    // {feature}{'+' if sign > 0 else '-'}")
-        lines.append("    {" + ("true" if feature in PER_CHANNEL else "false") + ", {")
+        lines.append("    {" + ("true" if per_channel(feature, sign) else "false") + ", {")
         lines += ["        {" + ", ".join(f(v) for v in s) + "}," for s in shapes]
         lines.append(f"    }}, {{{', '.join(names + ['Mean'] * (2 - len(names)))}}}, {len(names)}, "
                      f"{{{', '.join(f(v) for v in co)}}}, {f(lo)}, {f(hi)}}},")

@@ -937,3 +937,27 @@ Point de méthode : l'IHM appliquait la correction d'objectif alors que sa case
 pouvait paraître décochée (liaison QML rompue par le clic, corrigée le
 19 octobre) ; les comparaisons visuelles antérieures sur les images munies d'un
 profil d'objectif (dont 6V1A0043) n'étaient pas à optique égale avec LR.
+
+#### Éclaircissement vers le blanc et blancs négatifs sur la luminance, 19 octobre 2026
+
+Retour de l'utilisateur : noirs validés dans leur état ; blancs et HL encore
+moins forts que LR. Aucune campagne antérieure n'était plus proche de LR (HL +100,
+haut 20 % : 1,15 à 1,26 en v002–v004, 1,45 en v005 contre 1,56 ; blancs +100,
+tons moyens : 1,08 à 3,66, puis 4,12 contre 4,21) ; le défaut de case optique
+de l'IHM n'a donc pas fait écarter un meilleur équilibre.
+
+Deux causes. (1) Le gain par image est sous-estimé sur 6V1A9421 (blancs : −0,25 EV
+au q95 à +50) et 6V1A9950 (HL +100 : −0,22 EV) ; à reprendre avec le corpus élargi.
+(2) LR blanchit les couleurs claires qu'il éclaircit (HL +100, saturation du quart
+le plus clair : 9950 0,20, IPR 0,42 ; 7003 0,06, IPR 0,15), alors qu'IPR freinait
+l'éclaircissement pour garder la teinte. Simulation sur les paires LR : atteindre
+la luminance visée (épaule à 0,80) et rapprocher du blanc la couleur qui sortirait
+du gamut ramène l'écart des tons clairs de 0,089 à 0,058 EV et l'écart de
+saturation de 0,079 à 0,046 à HL +100, sans écrêtage supplémentaire ; sans effet
+sur les ombres ; défavorable aux blancs (0043 +100 : saturation 0,01 contre 0,85
+chez LR), qui restent par canal.
+
+Valeurs négatives : HL et ombres restent sur la luminance (saturation à −100 :
+−0,044 et −0,009 contre −0,121 et +0,048 par canal) ; les blancs négatifs passent
+sur la luminance (−0,026 contre −0,040 par canal), les blancs positifs restent
+par canal. Régénération et campagnes groupées avec le réajustement sur 19 scènes.

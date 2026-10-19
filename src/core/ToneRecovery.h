@@ -13,9 +13,10 @@
 // Whites to the image: their lift is multiplied by a per-image gain predicted
 // from the image's luminance statistics, bounded to the range seen in fitting.
 // Blacks and negative Whites are the same on every image.
-// Shadows and Highlights act on luminance (common RGB scale); Blacks and Whites
-// act on each linear sRGB channel, as Lightroom does: its Blacks -100
-// saturates colours (x1.40), which a common scale cannot reproduce. Values at or above 1 (HDR
+// Shadows, Highlights and negative Whites act on luminance (common RGB scale);
+// Blacks and positive Whites act on each linear sRGB channel, as Lightroom
+// does: its Blacks -100 saturates colours (x1.40), which a common scale cannot
+// reproduce. Values at or above 1 (HDR
 // headroom) are left untouched.
 namespace ToneRecovery {
 struct Amounts { float shadows = 0, blacks = 0, highlights = 0, whites = 0; };
@@ -93,10 +94,38 @@ inline float transfer(float y, const Amounts &a, const Gains &g, bool perChannel
 {
     if (y <= 0.0f || y >= 1.0f) return y;
     const float x = std::log2(std::max(y, std::exp2(Model::FirstKnotEv)));
-    const float shift = perChannel ? lift(1, a.blacks, x, g) + lift(3, a.whites, x, g)
-                                   : lift(0, a.shadows, x, g) + lift(2, a.highlights, x, g);
+    // Whites act per channel when lifting and on luminance when lowering: in
+    // Lightroom's renders, negative Whites keep colour ratios (saturation gap
+    // -0.026 vs -0.040 per channel at -100), positive Whites do not.
+    const float whitesChannel = a.whites > 0 ? a.whites : 0.0f;
+    const float whitesLuminance = a.whites < 0 ? a.whites : 0.0f;
+    const float shift = perChannel ? lift(1, a.blacks, x, g) + lift(3, whitesChannel, x, g)
+                                   : lift(0, a.shadows, x, g) + lift(2, a.highlights, x, g)
+                                         + lift(3, whitesLuminance, x, g);
     const float out = y * std::exp2(shift);
-    return perChannel ? std::min(1.0f, shoulder(y, out)) : std::min(1.0f, out);
+    // Luminance lifts roll off from 0.80 and stay just below white; the colour
+    // is then fitted by brightenTowardWhite().
+    return perChannel ? std::min(1.0f, shoulder(y, out)) : std::min(0.9999f, shoulder(y, out, 0.80f));
+}
+
+// Brightening of a linear sRGB colour of luminance y (Rec.709 weights) to the
+// luminance target: the luminance is reached in full, and a colour that would
+// leave the gamut is pulled toward white of that luminance just enough for its
+// largest channel to stay in the soft shoulder. Lightroom whitens bright
+// colours this way (Highlights +100, top quarter saturation 0.20 vs 0.42 when
+// the colour was preserved and the lift held back, on 6V1A9950). Colours with
+// a channel already at or above 1 (headroom) are left untouched.
+inline void brightenTowardWhite(float rgb[3], float y, float target)
+{
+    const float peak = std::max({rgb[0], rgb[1], rgb[2]});
+    if (peak >= 1.0f || y <= 0.0f || target <= y) return;
+    const float scale = target / y;
+    float m = 0.0f;
+    for (int c = 0; c < 3; ++c) { rgb[c] *= scale; m = std::max(m, rgb[c]); }
+    const float fit = std::min(shoulder(peak, m), 0.9999f); // tanh rounds to 1 in float
+    if (m <= fit) return;
+    const float t = std::clamp((fit - target) / std::max(m - target, 1e-9f), 0.0f, 1.0f);
+    for (int c = 0; c < 3; ++c) rgb[c] = target + t * (rgb[c] - target);
 }
 
 // Production curves, sampled once per render over the 16 EV below white and
@@ -106,8 +135,8 @@ class Curve {
 public:
     Curve(const Amounts &amounts, const Gains &gains)
         : amounts_(amounts), gains_(gains),
-          luminanceIdentity_(amounts.shadows == 0 && amounts.highlights == 0),
-          channelIdentity_(amounts.blacks == 0 && amounts.whites == 0)
+          luminanceIdentity_(amounts.shadows == 0 && amounts.highlights == 0 && amounts.whites >= 0),
+          channelIdentity_(amounts.blacks == 0 && amounts.whites <= 0)
     {
         sample(luminance_, false);
         sample(channel_, true);

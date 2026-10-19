@@ -1661,9 +1661,9 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
 
     // Shadows, Blacks, Highlights and Whites (ToneRecovery, plan B): per-image
     // weights from the statistics measured at load. Shadows and Highlights
-    // scale RGB by a luminance ratio; in a brightening, the largest sRGB
-    // delivery channel goes through a soft shoulder, as Y < 1 and Rec.2020
-    // RGB < 1 do not imply headroom for a saturated colour in sRGB. Blacks and
+    // scale RGB by a luminance ratio; a brightening reaches its luminance and
+    // pulls a colour that would leave the sRGB delivery gamut toward white
+    // (ToneRecovery::brightenTowardWhite), as Lightroom does. Blacks and
     // Whites then act on each linear sRGB channel, as in Lightroom.
     const ToneRecovery::Amounts tones{static_cast<float>(settings.shadows) / 100.0f,
         static_cast<float>(settings.blacks) / 100.0f,
@@ -1679,16 +1679,15 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                 cv::Vec3f &pixel = row[x];
                 if (!toneCurve.luminanceIdentity()) {
                     const float luminance = luminanceOf(pixel);
-                    float target = toneCurve.luminance(luminance);
+                    const float target = toneCurve.luminance(luminance);
                     if (target > luminance && luminance > 0.0f) {
                         const cv::Vec3d delivery = WorkingColor::toSrgb() * cv::Vec3d(pixel);
-                        const float peak = float(std::max({delivery[0], delivery[1], delivery[2], 0.0}));
-                        if (peak >= 1.0f) target = luminance;
-                        else if (peak > 0.0f)
-                            target = std::min(target, luminance *
-                                ToneRecovery::shoulder(peak, peak * target / luminance) / peak);
+                        float rgb[3] = {float(delivery[0]), float(delivery[1]), float(delivery[2])};
+                        ToneRecovery::brightenTowardWhite(rgb, luminance, target);
+                        pixel = cv::Vec3f(WorkingColor::fromSrgb() * cv::Vec3d(rgb[0], rgb[1], rgb[2]));
+                    } else {
+                        applyLuminance(pixel, luminance, target);
                     }
-                    applyLuminance(pixel, luminance, target, target > luminance);
                 }
                 if (!toneCurve.channelIdentity()) {
                     // Per channel in linear sRGB, where Lightroom's curves were
