@@ -96,6 +96,18 @@ Pour chaque demande, renseigner :
 
 ## Journal
 
+### Livre utilisateur — paragraphes non coupés entre deux pages
+
+Retour du 19 octobre 2026 : le bloc « Gestes et clavier » du mélangeur
+commençait en bas de page et reprenait au milieu de sa phrase sur la suivante.
+Le livre conserve désormais ses courts paragraphes sur une seule page ;
+ils passent entièrement à la suivante si nécessaire, sans réduction du corps
+ni étirement vertical pour remplir la page. Les tableaux multipages restent
+autorisés. Les consignes de rédaction sous `docs/AGENTS.md` reprennent cette
+règle pour les prochaines générations et reprises, sans recompilation globale
+des autres livres. Les passages futurs dépassant une page devront être
+restructurés plutôt que forcés dans un bloc insécable.
+
 ### 19 octobre 2026 — livre utilisateur par familles
 
 Création du [livre utilisateur](../user/README.md), indépendant des cours et

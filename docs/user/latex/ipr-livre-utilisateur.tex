@@ -9,6 +9,13 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.5\baselineskip}
 \setlength{\emergencystretch}{3em}
+% Prose paragraphs in this manual are short enough to fit on a page.
+% Move the whole paragraph rather than splitting instructions across pages.
+\interlinepenalty=10000
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\raggedbottom
 \usepackage[a4paper,margin=2.4cm]{geometry}
 \usepackage{array,longtable,booktabs}
 \usepackage{etoolbox}
@@ -25,7 +32,7 @@
 \newcommand{\gestesreglages}{\paragraph{Gestes et clavier.}
 Cliquer sur le curseur pour lui donner le focus, puis utiliser les flèches
 pour avancer au pas prévu par ce réglage. Le champ numérique permet une saisie
-directe ; \touche{Entrée} la confirme. Double-cliquer sur le nom ou le curseur,
+directe à confirmer avec \touche{Entrée}. Double-cliquer sur le nom ou le curseur,
 ou cliquer sur sa flèche de réinitialisation, restaure sa référence.
 Ce double-clic n’a pas la même fonction dans le graphe des courbes.}
 \begin{document}
