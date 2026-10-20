@@ -1009,3 +1009,46 @@ de départ égale, le résultat de LR varie dans l'image (écart interquartile �
 blancs (0,01) et faible pour les ombres +100 (0,05). Aucune courbe globale, même
 ajustée par image, ne peut le reproduire. Direction : opérateur local pour les HL
 (roadmap).
+
+#### HL : traitement local ou courbe propre à chaque image ? Diagnostic du 20 octobre 2026
+
+Question : qu'est-ce qui, au-delà de la luminance du pixel, explique les HL de LR ?
+Outil : `scripts/analyse_local_tone.py`, sur les 152 paires LR neutre → HL des
+19 scènes (alignées au pixel), moyennées par blocs 8×8. Simulation sur le neutre
+LR : seul l'opérateur est testé, pas le développement IPR. Critère de l'utilisateur :
+luminosité affichée des 10 % les plus clairs, prédiction / LR, à ±3 %. Preuves :
+`analyse-hl-local-v001` à `v004` (`docs/validation/raw/`). La v001 ajustait son gain
+« idéal » sur le critère lui-même (test dégénéré) ; ses comptes ne sont pas utilisés.
+
+**Dispersion entre pixels** (écart quadratique médian de l'effet de LR autour de
+sa médiane par niveau, HL −100) : luminance seule 0,121 EV ; base lissée par filtre
+guidé 0,119 ; luminance × saturation 0,113 ; luminance × teinte 0,110 ; **luminance ×
+détail local par rapport à un flou gaussien large (≈ 128 px natifs) 0,091 (−25 %)**,
+avec le même ordre de gain à toutes les valeurs. Le traitement local de LR existe,
+lié au détail plus qu'à la luminosité moyenne du voisinage.
+
+**Critère, plafonds par scène** (chaque scène avec sa propre table) :
+
+| HL | Courbe globale propre | Table locale propre | Courbe commune + gain + décalage ajustés |
+| --- | --- | --- | --- |
+| −100 | 16/19 (1,2 %) | 18/19 (0,8 %) | 11/19 (4,2 %) |
+| −75 | 19/19 (0,8 %) | 19/19 (0,6 %) | 13/19 (2,4 %) |
+| −50 | 19/19 (0,5 %) | 19/19 (0,4 %) | 17/19 (1,3 %) |
+| +50 | 19/19 (0,3 %) | 19/19 (0,2 %) | 19/19 (0,9 %) |
+| +100 | 19/19 (0,4 %) | 19/19 (0,3 %) | 15/19 (2,0 %) |
+
+Une courbe globale adaptée à chaque image suffirait au critère ; le traitement
+local n'ajoute que deux scènes à −100. **Mais aucune forme transférable d'une scène
+à l'autre n'a été trouvée** (validation croisée par scène) : à −100, avec un gain
+ajusté sur les pixels de la scène, luminance 9/19 (9,6 %), détail local 7/19,
+rang dans l'histogramme 3/19, distance aux quantiles 99 % / 99,9 % 6–7/19, distance
+à la médiane 7/19. Le gain et le décalage de zone idéaux ne se prédisent pas des
+statistiques de l'image (décalage : erreur 1,9 EV pour 2,1 EV de dispersion ; gain :
+0,86 pour 1,65). Le modèle pondéré en production (5/19, 13,0 %) est proche de ce
+qu'une forme commune avec gain peut atteindre.
+
+Conclusion : l'écart des HL négatifs vient d'une adaptation de la courbe à chaque
+image que 19 scènes ne permettent pas d'apprendre, pas du seul traitement local.
+Un opérateur local reproduirait mieux la texture des HL (−25 % de dispersion),
+pas la luminosité moyenne mesurée par le critère. Seuil convenu non atteint
+(HL −100 dans ±3 % sur au moins 15 scènes) : décision de l'utilisateur à prendre.
