@@ -1009,3 +1009,124 @@ de départ égale, le résultat de LR varie dans l'image (écart interquartile �
 blancs (0,01) et faible pour les ombres +100 (0,05). Aucune courbe globale, même
 ajustée par image, ne peut le reproduire. Direction : opérateur local pour les HL
 (roadmap).
+
+#### HL : traitement local ou courbe propre à chaque image ? Diagnostic du 20 octobre 2026
+
+Question : qu'est-ce qui, au-delà de la luminance du pixel, explique les HL de LR ?
+Outil : `scripts/analyse_local_tone.py`, sur les 152 paires LR neutre → HL des
+19 scènes (alignées au pixel), moyennées par blocs 8×8. Simulation sur le neutre
+LR : seul l'opérateur est testé, pas le développement IPR. Critère de l'utilisateur :
+luminosité affichée des 10 % les plus clairs, prédiction / LR, à ±3 %. Preuves :
+`analyse-hl-local-v001` à `v004` (`docs/validation/raw/`). La v001 ajustait son gain
+« idéal » sur le critère lui-même (test dégénéré) ; ses comptes ne sont pas utilisés.
+
+**Dispersion entre pixels** (écart quadratique médian de l'effet de LR autour de
+sa médiane par niveau, HL −100) : luminance seule 0,121 EV ; base lissée par filtre
+guidé 0,119 ; luminance × saturation 0,113 ; luminance × teinte 0,110 ; **luminance ×
+détail local par rapport à un flou gaussien large (≈ 128 px natifs) 0,091 (−25 %)**,
+avec le même ordre de gain à toutes les valeurs. Le traitement local de LR existe,
+lié au détail plus qu'à la luminosité moyenne du voisinage.
+
+**Critère, plafonds par scène** (chaque scène avec sa propre table) :
+
+| HL | Courbe globale propre | Table locale propre | Courbe commune + gain + décalage ajustés |
+| --- | --- | --- | --- |
+| −100 | 16/19 (1,2 %) | 18/19 (0,8 %) | 11/19 (4,2 %) |
+| −75 | 19/19 (0,8 %) | 19/19 (0,6 %) | 13/19 (2,4 %) |
+| −50 | 19/19 (0,5 %) | 19/19 (0,4 %) | 17/19 (1,3 %) |
+| +50 | 19/19 (0,3 %) | 19/19 (0,2 %) | 19/19 (0,9 %) |
+| +100 | 19/19 (0,4 %) | 19/19 (0,3 %) | 15/19 (2,0 %) |
+
+Une courbe globale adaptée à chaque image suffirait au critère ; le traitement
+local n'ajoute que deux scènes à −100. **Mais aucune forme transférable d'une scène
+à l'autre n'a été trouvée** (validation croisée par scène) : à −100, avec un gain
+ajusté sur les pixels de la scène, luminance 9/19 (9,6 %), détail local 7/19,
+rang dans l'histogramme 3/19, distance aux quantiles 99 % / 99,9 % 6–7/19, distance
+à la médiane 7/19. Le gain et le décalage de zone idéaux ne se prédisent pas des
+statistiques de l'image (décalage : erreur 1,9 EV pour 2,1 EV de dispersion ; gain :
+0,86 pour 1,65). Le modèle pondéré en production (5/19, 13,0 %) est proche de ce
+qu'une forme commune avec gain peut atteindre.
+
+Conclusion : l'écart des HL négatifs vient d'une adaptation de la courbe à chaque
+image que 19 scènes ne permettent pas d'apprendre, pas du seul traitement local.
+Un opérateur local reproduirait mieux la texture des HL (−25 % de dispersion),
+pas la luminosité moyenne mesurée par le critère. Seuil convenu non atteint
+(HL −100 dans ±3 % sur au moins 15 scènes) : décision de l'utilisateur à prendre.
+
+#### HL sur 49 scènes : courbe propre à chaque image et prédiction, 20 octobre 2026
+
+Corpus porté à 49 scènes (30 nouvelles : 21 EOS 60D, 5 R7, 4 R6 Mark III, choisies
+par leurs histogrammes pour compléter les 19 premières), toutes les références LR
+neutres et HL réexportées le 20 octobre avec les préréglages autonomes
+« IPR Lumières complet » (392 exports HL, 49 neutres, réglages vérifiés).
+Preuves : `analyse-hl-local-v005` et `fit-hl-adaptatif-v001`/`v002`.
+
+Les conclusions sur 19 scènes tiennent : une courbe globale propre à chaque scène
+atteindrait le critère (45/49 à −100, 48–49/49 ailleurs) ; le traitement local
+n'y ajoute que deux scènes. Prédiction de cette courbe d'après l'image, par
+validation croisée (scènes hors ±3 %, écart moyen) :
+
+| HL | Forme actuelle (commune + gain Q5/Q95) | Formes principales (3) | 5 scènes voisines |
+| --- | --- | --- | --- |
+| −100 | 9/49 (26,5 %) | 9/49 (20,9 %) | 13/49 (17,4 %) |
+| −50 | 26/49 (7,8 %) | 19/49 (6,6 %) | 30/49 (5,5 %) |
+| +50 | 28/49 (4,3 %) | 36/49 (3,1 %) | 32/49 (3,2 %) |
+| +100 | 19/49 (6,5 %) | 32/49 (4,6 %) | 28/49 (4,9 %) |
+
+Simulation sur le neutre LR, opérateur seul. La force de HL suit surtout les
+tons sombres de l'image (corrélation de rang du gain idéal avec le quantile 5 % :
+−0,77 à −100). **La réserve au-dessus du blanc n'explique pas l'écart** : le master
+IPR ne dépasse 1 sur aucune des 49 scènes (décodage LibRaw 16 bits écrêté au blanc)
+et les erreurs se concentrent sur les scènes sombres sans blanc écrêté (moyenne
+20,7 % sur 38 scènes contre 6,1 % sur les 11 scènes ayant plus de 2 % de pixels
+au-dessus de 0,9 ; 6V1A0054 : 269 %). Sur une image sombre, les 10 % les plus clairs
+sont des tons moyens : l'écart relatif de luminosité y grossit vite.
+Constat séparé : IPR ne conserve aucune réserve RAW au-dessus du blanc, contrairement
+à LR ; à traiter avec le décodage (roadmap d'ouverture RAW, ADR-0018), pas ici.
+
+#### HL au critère perceptuel ΔL\*, 20 octobre 2026
+
+Critère adopté par l'utilisateur (protocole Lumières) : |ΔL\*| ≤ 2 sur la clarté
+moyenne des 10 % les plus clairs, sur 80 % des scènes, au plus deux au-delà de 4.
+Ajustement pondéré par la part de vraies hautes lumières. Preuve :
+`fit-hl-adaptatif-v003`. Simulation sur le neutre LR, validation croisée, 49 scènes
+dont 29 avec au moins 5 % de pixels à L\* ≥ 70 :
+
+| HL | Forme actuelle, scènes HL / sombres | Formes principales (3), scènes HL / sombres |
+| --- | --- | --- |
+| −100 | 7/29 · 5/20 (ΔL\* moyen 7,7 · 6,5) | 3/29 · 3/20 (5,8 · 6,3) |
+| −50 | 17/29 · 11/20 (3,2 · 3,6) | 14/29 · 8/20 (2,4 · 3,3) |
+| +50 | 21/29 · 10/20 (1,6 · 3,9) | **29/29** · 11/20 (0,7 · 2,8) |
+| +100 | 16/29 · 5/20 (2,2 · 7,3) | **25/29**, aucun > 4 · 8/20 (1,1 · 5,0) |
+
+Positifs : le modèle adaptatif atteint le critère sur les scènes à hautes lumières.
+Négatifs : aucun modèle ne l'atteint, scènes claires comprises (−100 : au mieux 9/29
+avec les cinq scènes voisines). Seuil de réussite global atteint seulement à ±25.
+
+#### HL par scènes de référence voisines : intégration et campagne IPR réelle, 20 octobre 2026
+
+Modèle intégré (`ToneRecovery`, tables `ToneRecoveryHighlights.h` générées par
+`scripts/build_highlights_references.py`, preuve `references-hl-v001`) : les HL d'une
+image sont la moyenne des courbes LR des cinq scènes de référence les plus proches,
+distance sur les sept statistiques qu'IPR mesure à l'ouverture (13 statistiques
+calculées côté IPR n'apportent rien de plus). Les HL quittent le modèle « forme commune
++ gain » ; Ombres, Noirs et Blancs y restent à l'identique (rendus sans HL identiques
+bit à bit avant/après). Un HL positif n'assombrit jamais, un négatif n'éclaircit jamais.
+
+Campagne réelle IPR contre LR, rendus en mémoire, 49 scènes, critère ΔL\* (preuves
+`campagne-hl-ipr-v001`, `ecart-neutre-hl-v001`). Écart des neutres eux-mêmes : CR3
+0,6 en moyenne (calibrés), **CR2 du 60D 4,8** (IPR plus clair, jusqu'à 9,2 sur IMG_4062 :
+aucune règle de normalisation 60D). Effet HL seul, écart du neutre retiré (scènes à
+ΔL\* ≤ 2 sur 49, écart moyen) :
+
+| HL | Ancien modèle | Scènes voisines |
+| --- | --- | --- |
+| −100 | 13 (6,9) | **19 (5,3)** |
+| −50 | 26 (3,4) | **33 (2,5)** |
+| −25 | 36 (1,6) | **40 (1,1)** |
+| +50 | 32 (2,2) | 33 (1,9) |
+| +100 | 23 (3,7) | 24 (3,1) |
+
+Amélioration à toutes les valeurs, nette sur les négatifs ; seuil de 80 % non atteint
+(−25 : 40/49 mais trois scènes au-delà de 4). Écart absolu, neutre compris, à −100 :
+moyenne 7,8 → 6,7. Régressions à surveiller : 6V1A0054 et 6V1A0182 (scènes sombres).

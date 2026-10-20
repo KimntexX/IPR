@@ -108,7 +108,7 @@
     {"patterns": ["src/core/ColorPipeline.*", "tests/rec2020_pipeline_test.cpp"], "tests": ["rec2020PipelineTests", "colorPipelineTests", "imageExportTests", "colorMixerNeutralTests", "rawDecoderTests", "cameraProfileEngineTests"]},
     {"patterns": ["src/core/DetailProcessing.*"], "tests": ["detailProcessingTests", "colorPipelineTests", "imageExportTests"], "python": ["noise_analysis"]},
     {"patterns": ["src/editor/imageeditor.cpp"], "tests": ["colorPipelineTests", "imageExportTests", "toneRecoveryTests", "colorMixerMathTests", "colorMixerNeutralTests", "colorMixerQmlTests", "settingsQmlTests", "editorRawDevelopmentTests"]},
-    {"patterns": ["src/core/ToneRecovery.h"], "tests": ["toneRecoveryTests", "imageExportTests"]},
+    {"patterns": ["src/core/ToneRecovery*", "src/core/ToneStatistics.*"], "tests": ["toneRecoveryTests", "imageExportTests"]},
     {"patterns": ["tests/tone_recovery_test.cpp"], "tests": ["toneRecoveryTests"]},
     {"patterns": ["src/app/UiPreferences.*", "config/**"], "tests": ["uiPreferencesTests", "uiPreferencesQmlTests", "settingsQmlTests"]},
     {"patterns": ["src/raw/RawDecoder.*"], "tests": ["rawDecoderTests", "rawNormalizationTests", "rawBlackLevelEstimatorTests", "cameraProfileEngineTests", "imageExportTests", "editorRawDevelopmentTests"]},
