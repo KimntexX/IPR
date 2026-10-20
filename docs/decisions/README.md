@@ -32,6 +32,9 @@ CI Linux sur SDK Qt 6.8.3, `.deb` sur Debian 13 et plus de chemin Qt < 6.8.
 [ADR-0017](ADR-0017-imageeditor-cadenceur-modules.md) : `ImageEditor` cadenceur de
 modules `.h`/`.cpp`, fonctions libres, gardes d'inclusion standard (19 octobre 2026).
 
+[ADR-0019](ADR-0019-analyses-ipr-en-memoire.md) : états IPR rendus en mémoire
+pour les analyses, TIFF IPR réservés à la revue visuelle (20 octobre 2026).
+
 [ADR-0013](ADR-0013-contrat-import-commun.md) : frontière d'import commune aux
 RAW et aux images développées, métadonnées indépendantes et contrôles partagés.
 

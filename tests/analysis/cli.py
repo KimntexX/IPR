@@ -1,11 +1,13 @@
-"""Protocol-grouped campaigns from current TIFF metadata or explicit mappings."""
+"""Protocol-grouped campaigns: LR states from TIFF metadata, IPR states rendered
+in memory by iprRenderServer, or explicit mappings."""
 import argparse
 from pathlib import Path
 import sys
 
 from .campaign import analyse
 from .catalog import GROUPS, ALIASES, group_for
-from .inputs import base_records, mapping_records
+from .inputs import base_records, mapping_records, render_records
+from .render import RenderServer, worker_count
 from .native import write_immutable, local_path, signature, sha256, verify_unchanged
 
 
@@ -22,7 +24,9 @@ def main(argv=None):
     parser.add_argument("--group", choices=[*GROUPS, *ALIASES, "all"], default="all")
     parser.add_argument("--feature", action="append", default=[], help="Restrict mapped controls, repeatable")
     parser.add_argument("--scene", action="append", default=[], help="Restrict mapped source stems/scene IDs, repeatable")
-    parser.add_argument("--base", type=Path, help="Existing shared base layout; states audited from TIFF metadata")
+    parser.add_argument("--base", type=Path, help="Shared base layout: LR states from TIFF metadata, IPR states rendered in memory")
+    parser.add_argument("--render-server", type=Path, help="iprRenderServer executable (default: IPR_RENDER_SERVER_BIN or the Release build)")
+    parser.add_argument("--render-workers", type=int, help="Parallel render servers (default: from free memory, at most 4)")
     parser.add_argument("--mapping", action="append", default=[], help="Explicit IPR/LR file/reference/state JSON, repeatable")
     parser.add_argument("--output", type=Path, help="Exact immutable output, one group only")
     parser.add_argument("--output-dir", type=Path, default=Path("docs/validation/raw"))
@@ -42,13 +46,20 @@ def main(argv=None):
         parser.error("Provide --base and/or --mapping; no LR suffix inference")
     if args.step < 1 or args.patch_size < 2 or args.data_version < 1:
         parser.error("--step/--data-version positive; --patch-size >=2")
+    if args.render_workers is not None and args.render_workers < 1:
+        parser.error("--render-workers must be positive")
+    servers = []
     try:
         input_snapshots = {str(local_path(p)): (signature(local_path(p)), sha256(local_path(p)))
                            for p in args.mapping}
         records = []
         group = ALIASES.get(args.group, args.group)
         if args.base:
-            records.extend(base_records(args.base, list(GROUPS) if group == "all" else [group]))
+            groups = list(GROUPS) if group == "all" else [group]
+            records.extend(base_records(args.base, groups))
+            for _ in range(args.render_workers or worker_count()):
+                servers.append(RenderServer(args.render_server))
+            records.extend(render_records(args.base, groups, servers[0]))
         for mapping in args.mapping:
             records.extend(mapping_records(mapping))
         for feature in args.feature:
@@ -67,10 +78,11 @@ def main(argv=None):
             raise ValueError("Output already exists; choose a new version/timestamp")
         diagnostic = False
         for group in groups:
-            result = analyse(group, records, args.step, args.patch_size, args.data_version, args.supersedes)
+            result = analyse(group, records, args.step, args.patch_size, args.data_version, args.supersedes, servers)
             output = args.output or args.output_dir / (result["campaign_id"] + ".json")
             protected = {local_path(p) for p in args.mapping}
-            protected.update(local_path(r[k]) for r in records for k in ("file", "reference") if r.get(k))
+            protected.update(local_path(r[k]) for r in records for k in ("file", "reference")
+                             if r.get(k) and not r.get("render"))
             if output.resolve() in protected:
                 raise ValueError("Output must not be an input")
             for path, (before, digest) in input_snapshots.items():
@@ -82,3 +94,6 @@ def main(argv=None):
     except (ValueError, OSError, KeyError, TypeError) as error:
         print("Analysis failed: " + str(error), file=sys.stderr)
         return 1
+    finally:
+        for server in servers:
+            server.close()

@@ -197,7 +197,9 @@ cela ne constitue pas un tone mapping HDR dédié.
 | [Tests en autonomie](docs/validation/procedure-tests-autonomes.md) | Génération des images, audits et analyses |
 
 Le build produit aussi `iprGenerateTests.exe`, qui génère des variantes de
-validation sans écrire les sidecars. Voir le [guide du générateur](docs/validation/tools/generateur-images-tests.md)
+validation pour la revue visuelle sans écrire les sidecars, et
+`iprRenderServer.exe`, qui rend ces mêmes variantes en mémoire pour les
+analyseurs, sans TIFF. Voir le [guide du générateur](docs/validation/tools/generateur-images-tests.md)
 et `scripts/generate-test-images.ps1`.
 
 Depuis PowerShell : `./scripts/generate-test-images.ps1 couleur` (ou `all`).

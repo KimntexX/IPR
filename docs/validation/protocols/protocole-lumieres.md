@@ -54,7 +54,7 @@ python tests/analyse_lumiere.py --base tests/image/base --strict --data-version 
 python tests/analyse_lumiere.py --base tests/image/base --feature shadows --feature highlights --data-version 2
 ```
 
-Les valeurs proviennent des déclarations TIFF IPR et du XMP LR, pas des
+Les valeurs proviennent des déclarations des rendus IPR en mémoire et du XMP LR, pas des
 suffixes des anciennes campagnes. Une référence ambiguë nécessite une
 association explicite. Les mémoires historiques restent inchangées.
 Les pixels sont natifs, avec pas d'échantillonnage déclaré ; ne pas utiliser

@@ -1496,6 +1496,17 @@ ImageEditor::ExportResult ImageEditor::writeImage(const ColorPipeline::WorkingIm
     return ImageExporter::write(rendered, target, format, quality);
 }
 
+QImage ImageEditor::renderSrgb16(const ColorPipeline::WorkingImage &source,
+                                 const Settings &settings, QString *error)
+{
+    const ColorPipeline::WorkingImage rendered = renderWorkingImage(source, settings);
+    if (rendered.isNull()) {
+        if (error) *error = tr("Échec du rendu avant export.");
+        return {};
+    }
+    return ColorPipeline::toSrgb(rendered, ColorPipeline::OutputFormat::HighBitDepth, error);
+}
+
 ImageEditor::LoadResult ImageEditor::loadFromDisk(const QString &fileName,
                                                   bool automaticWhiteBalance,
                                                   const RawDecoder::Options &rawOptions)

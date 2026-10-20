@@ -120,6 +120,30 @@ public:
                          ImageCacheController::Sampler memorySampler = {});
     // RAW calibration the IHM applies by default (ADR-0007), for offline tools.
     static QString defaultCalibrationManifest();
+
+    // Offline tools (test generator, render server): the export pipeline
+    // without sidecars or preferences.
+    using Settings = EditRecipe::Settings;
+    using ExportResult = ImageExporter::Result;
+    struct LoadResult : ImageImport::Result
+    {
+        ColorPipeline::WorkingImage editProxy;
+        QString cacheKey;
+        bool memoryPressure = false;
+        QSize fullSize;          // true source size, also when image is a proxy
+        bool proxyOnly = false;  // image is the edit proxy restored from the cache
+    };
+    static LoadResult loadFromDisk(const QString &fileName,
+                                   bool automaticWhiteBalance,
+                                   const RawDecoder::Options &rawOptions = {});
+    static ExportResult writeImage(const ColorPipeline::WorkingImage &source,
+                                   const Settings &settings,
+                                   const QString &target, const QString &format,
+                                   int quality);
+    // The 16-bit sRGB pixels of a TIFF export, in memory; null with *error set
+    // on failure.
+    static QImage renderSrgb16(const ColorPipeline::WorkingImage &source,
+                               const Settings &settings, QString *error);
     ~ImageEditor() override;
 
     QAbstractItemModel *imageModel();
@@ -233,8 +257,6 @@ private:
 
     using ToneCurvePoint = ToneCurve::Point;
 
-    using Settings = EditRecipe::Settings;
-
     using RawDevelopment = EditRecipe::RawDevelopment;
 
     struct RenderResult
@@ -243,17 +265,6 @@ private:
         QImage originalPreview;
         QVariantList histogram;
         QString error;
-    };
-
-    using ExportResult = ImageExporter::Result;
-
-    struct LoadResult : ImageImport::Result
-    {
-        ColorPipeline::WorkingImage editProxy;
-        QString cacheKey;
-        bool memoryPressure = false;
-        QSize fullSize;          // true source size, also when image is a proxy
-        bool proxyOnly = false;  // image is the edit proxy restored from the cache
     };
 
     using UserImageMetadata = EditRecipe::UserImageMetadata;
@@ -268,13 +279,6 @@ private:
     static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
                                       const Settings &settings,
                                       bool includeOriginal);
-    static ExportResult writeImage(const ColorPipeline::WorkingImage &source,
-                                   const Settings &settings,
-                                   const QString &target, const QString &format,
-                                   int quality);
-    static LoadResult loadFromDisk(const QString &fileName,
-                                   bool automaticWhiteBalance,
-                                   const RawDecoder::Options &rawOptions = {});
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
