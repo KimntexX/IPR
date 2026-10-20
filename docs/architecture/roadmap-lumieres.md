@@ -132,6 +132,11 @@ transférable entre scènes n'a été trouvée. Options : valider avec réserve 
 ou réunir davantage de scènes LR pour apprendre l'adaptation par image. Le module
 base/détail reste utile pour la clarté, la texture et la correction de voile.
 
+**Sur 49 scènes (20 octobre)** : une courbe prédite d'après l'image améliore la
+forme actuelle (HL +100 : 19 → 32/49 dans ±3 % ; −100 : écart 26,5 → 17,4 %),
+sans atteindre le critère aux valeurs négatives, surtout sur les scènes sombres.
+Le master IPR n'a aucune réserve au-dessus du blanc (sujet du décodage, ADR-0018).
+
 ## Points reportés
 
 - Corrections optiques par défaut **après validation des tests complets**

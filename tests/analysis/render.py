@@ -150,6 +150,11 @@ class RenderServer:
     def states(self, base, group):
         return self._request({"op": "list", "base": str(base), "group": group})["states"]
 
+    def statistics(self, source):
+        """Luminance of the unclipped master: log2 quantiles and shares above white."""
+        header = self._request({"op": "statistics", "source": str(source)})
+        return {k: header[k] for k in ("log2_quantiles", "above_1", "above_2", "above_4", "pixels")}
+
     def render(self, source, feature, value):
         """Pixels (height, width, 3) uint16 and metadata shaped like native.inspect()."""
         header = self._request({"op": "render", "source": str(source), "feature": feature, "value": value})

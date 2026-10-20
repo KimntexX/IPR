@@ -169,6 +169,11 @@ class GroupAnalysisTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     server.render(base / "tiny.png", "invented", 0)
                 self.assertEqual(server.render(base / "tiny.png", "neutral", 0)[0].shape, (32, 48, 3))
+                stats = server.statistics(base / "tiny.png")
+                self.assertEqual(stats["pixels"], 48 * 32)
+                self.assertEqual(stats["above_1"], 0)
+                quantiles = [stats["log2_quantiles"][q] for q in ("0.01", "0.5", "0.99", "1")]
+                self.assertEqual(quantiles, sorted(quantiles))
 
     @unittest.skipUnless(os.environ.get("IPR_RENDER_SERVER_BIN"), "Native render integration uses an explicit rebuilt binary")
     def test_in_memory_campaigns_on_tiny_fixture_write_no_image(self):

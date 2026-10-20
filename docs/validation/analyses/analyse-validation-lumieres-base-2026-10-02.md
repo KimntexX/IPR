@@ -1052,3 +1052,34 @@ image que 19 scènes ne permettent pas d'apprendre, pas du seul traitement local
 Un opérateur local reproduirait mieux la texture des HL (−25 % de dispersion),
 pas la luminosité moyenne mesurée par le critère. Seuil convenu non atteint
 (HL −100 dans ±3 % sur au moins 15 scènes) : décision de l'utilisateur à prendre.
+
+#### HL sur 49 scènes : courbe propre à chaque image et prédiction, 20 octobre 2026
+
+Corpus porté à 49 scènes (30 nouvelles : 21 EOS 60D, 5 R7, 4 R6 Mark III, choisies
+par leurs histogrammes pour compléter les 19 premières), toutes les références LR
+neutres et HL réexportées le 20 octobre avec les préréglages autonomes
+« IPR Lumières complet » (392 exports HL, 49 neutres, réglages vérifiés).
+Preuves : `analyse-hl-local-v005` et `fit-hl-adaptatif-v001`/`v002`.
+
+Les conclusions sur 19 scènes tiennent : une courbe globale propre à chaque scène
+atteindrait le critère (45/49 à −100, 48–49/49 ailleurs) ; le traitement local
+n'y ajoute que deux scènes. Prédiction de cette courbe d'après l'image, par
+validation croisée (scènes hors ±3 %, écart moyen) :
+
+| HL | Forme actuelle (commune + gain Q5/Q95) | Formes principales (3) | 5 scènes voisines |
+| --- | --- | --- | --- |
+| −100 | 9/49 (26,5 %) | 9/49 (20,9 %) | 13/49 (17,4 %) |
+| −50 | 26/49 (7,8 %) | 19/49 (6,6 %) | 30/49 (5,5 %) |
+| +50 | 28/49 (4,3 %) | 36/49 (3,1 %) | 32/49 (3,2 %) |
+| +100 | 19/49 (6,5 %) | 32/49 (4,6 %) | 28/49 (4,9 %) |
+
+Simulation sur le neutre LR, opérateur seul. La force de HL suit surtout les
+tons sombres de l'image (corrélation de rang du gain idéal avec le quantile 5 % :
+−0,77 à −100). **La réserve au-dessus du blanc n'explique pas l'écart** : le master
+IPR ne dépasse 1 sur aucune des 49 scènes (décodage LibRaw 16 bits écrêté au blanc)
+et les erreurs se concentrent sur les scènes sombres sans blanc écrêté (moyenne
+20,7 % sur 38 scènes contre 6,1 % sur les 11 scènes ayant plus de 2 % de pixels
+au-dessus de 0,9 ; 6V1A0054 : 269 %). Sur une image sombre, les 10 % les plus clairs
+sont des tons moyens : l'écart relatif de luminosité y grossit vite.
+Constat séparé : IPR ne conserve aucune réserve RAW au-dessus du blanc, contrairement
+à LR ; à traiter avec le décodage (roadmap d'ouverture RAW, ADR-0018), pas ici.

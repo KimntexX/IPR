@@ -1,4 +1,5 @@
 #include "TestRecipes.h"
+#include "WorkingColorSpace.h"
 
 #include <QCoreApplication>
 #include <QColorSpace>
@@ -7,6 +8,7 @@
 #include <QJsonObject>
 
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <exception>
 #include <optional>
@@ -24,6 +26,7 @@
 // followed for a render by `bytes` bytes of little-endian uint16 RGB, row-major.
 //   {"op":"list","base":DIR,"group":G}  -> {"ok":true,"states":[...]}
 //   {"op":"render","source":FILE,"feature":F,"value":V}  -> header + pixels
+//   {"op":"statistics","source":FILE}  -> luminance of the unclipped master
 //   {"op":"quit"}
 // An error answers {"ok":false,"error":...} and the server keeps serving.
 // Diagnostics go to stderr; stdout carries only the protocol.
@@ -121,6 +124,36 @@ void render(Masters &masters, const QJsonObject &request)
           {"declaration", declared}},
          reinterpret_cast<const char *>(rgb.data()), rgb.size() * sizeof(quint16));
 }
+// Luminance statistics of the default master (linear Rec.2020, not clipped):
+// log2 quantiles and the share of the image above the output white (headroom).
+QJsonObject statistics(Masters &masters, const QJsonObject &request)
+{
+    const QString source = request.value("source").toString();
+    require(!source.isEmpty() && QFileInfo(source).isFile(), "Missing source: " + source);
+    const cv::Mat &rgba = masters.get(source, Decode{}).image.linearRgba;
+    require(!rgba.empty() && rgba.type() == CV_32FC4, "Unexpected master layout");
+    std::vector<float> x;
+    x.reserve(rgba.total());
+    qint64 above1 = 0, above2 = 0, above4 = 0;
+    for (int row = 0; row < rgba.rows; ++row) {
+        const auto *pixel = rgba.ptr<cv::Vec4f>(row);
+        for (int col = 0; col < rgba.cols; ++col) {
+            const float y = WorkingColor::nonNegativeLuminance({pixel[col][0], pixel[col][1], pixel[col][2]});
+            above1 += y > 1; above2 += y > 2; above4 += y > 4;
+            x.push_back(std::log2(std::max(y, 1.0f / 1048576)));
+        }
+    }
+    require(!x.empty(), "Empty master");
+    QJsonObject quantiles;
+    for (const double q : {.01, .05, .1, .25, .5, .75, .9, .95, .99, .999, 1.0}) {
+        const auto k = std::min(x.size() - 1, size_t(q * double(x.size() - 1)));
+        std::nth_element(x.begin(), x.begin() + std::ptrdiff_t(k), x.end());
+        quantiles.insert(QString::number(q, 'g', 6), double(x[k]));
+    }
+    const double n = double(x.size());
+    return {{"ok", true}, {"log2_quantiles", quantiles}, {"above_1", above1 / n}, {"above_2", above2 / n},
+            {"above_4", above4 / n}, {"pixels", qint64(x.size())}};
+}
 } // namespace
 
 int main(int argc, char **argv)
@@ -145,6 +178,7 @@ int main(int argc, char **argv)
             if (op == "quit") return 0;
             if (op == "list") send(list(request.value("base").toString(), request.value("group").toString()));
             else if (op == "render") render(masters, request);
+            else if (op == "statistics") send(statistics(masters, request));
             else require(false, "Unknown op: " + op);
         } catch (const std::exception &error) {
             line.clear();

@@ -173,7 +173,9 @@ def main():
         top = y0 >= np.quantile(y0, .9)
         index = {}
         for name, (first, second) in predictors(rgb).items():
-            index[name] = bin_index(first, second)
+            cells, count = bin_index(first, second)
+            index[name] = cells.astype(np.int16), count  # at most 56 x 16 cells
+        del rgb
         coarse = bin_index(log2(y0), None)[0]
         data[scene] = {"y0": y0, "valid": valid, "top": top, "index": index, "coarse": coarse,
                        "e": {v: np.log2(np.maximum(y1, FLOOR / 4) / np.maximum(y0, FLOOR)).astype(np.float32)
@@ -276,12 +278,12 @@ def main():
                   f"({p['mean_abs_pixel_gain']:.1%})", flush=True)
 
     now = datetime.now(timezone.utc)
-    result = {"campaign_id": f"analyse-hl-local-v004-{now.strftime('%Y%m%dT%H%M%S%fZ')}", "schema_version": 1,
+    result = {"campaign_id": f"analyse-hl-local-v005-{now.strftime('%Y%m%dT%H%M%S%fZ')}", "schema_version": 1,
               "measured_at_utc": now.isoformat(), "group": "lumiere", "feature": "highlights",
-              "supersedes_campaign_id": "analyse-hl-local-v003-20261020T094724650533Z",
-              "supersedes_reason": "adds image-relative predictors (percentile rank, distance to the 99th/99.9th "
-                                   "percentiles and median): v003 showed a per-image global curve meets the criterion "
-                                   "but its gain/shift are not predictable from statistics",
+              "supersedes_campaign_id": "analyse-hl-local-v004-20261020T100214007790Z",
+              "supersedes_reason": "49 scenes instead of 19 (30 new: 21 EOS 60D, 5 R7, 4 R6 Mark III), all LR "
+                                   "neutral and Highlights references re-exported on 20 October 2026 with the "
+                                   "self-contained presets (IPR Lumieres complet)",
               "question": "What explains Lightroom Highlights beyond the pixel luminance?",
               "method": {"input": "Lightroom pairs neutral -> Highlights variant, pixel-aligned",
                          "downsampling": f"block mean {FACTOR}x{FACTOR} of linear sRGB",
