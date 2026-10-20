@@ -40,6 +40,14 @@ globaux du générateur comme les suffixes d'une ancienne campagne.
 - Toutes séries : zones fixes calculées sur le neutre propre, moyennes,
   percentiles, nombre de pixels, clips et variations hors zone ciblée. Les
   quantiles peuvent contenir des ex æquo : conserver effectifs et bornes.
+- **Critère d'écart à LR, décision utilisateur du 20 octobre 2026** : écart de
+  clarté perceptuelle |ΔL\*| (CIE L\* moyen) sur la zone du réglage, IPR contre
+  LR à réglages égaux. Réussi si |ΔL\*| ≤ 2 sur au moins 80 % des scènes, et jamais
+  au-delà de 4 sur plus de deux scènes. ΔL\* ≤ 2 équivaut à l'ancien ±3 % de
+  luminosité affichée sur une scène claire (≈ 2,2) ; sur une scène sombre, le ±3 %
+  relatif exigeait ≈ 0,7, en deçà de la perception. Pour HL, la zone est celle des
+  10 % les plus clairs du neutre ; les scènes sans vraies hautes lumières
+  (moins de 5 % de pixels à L\* ≥ 70) comptent moins dans les ajustements.
 
 Les tests moteur du correctif actuel contrôlent, pour Ombres positives, noir
 continu, ordre tonal et gain ≤×4 ; pour HL positives, marge RGB fondée sur

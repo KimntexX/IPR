@@ -1083,3 +1083,22 @@ au-dessus de 0,9 ; 6V1A0054 : 269 %). Sur une image sombre, les 10 % les plus cl
 sont des tons moyens : l'écart relatif de luminosité y grossit vite.
 Constat séparé : IPR ne conserve aucune réserve RAW au-dessus du blanc, contrairement
 à LR ; à traiter avec le décodage (roadmap d'ouverture RAW, ADR-0018), pas ici.
+
+#### HL au critère perceptuel ΔL\*, 20 octobre 2026
+
+Critère adopté par l'utilisateur (protocole Lumières) : |ΔL\*| ≤ 2 sur la clarté
+moyenne des 10 % les plus clairs, sur 80 % des scènes, au plus deux au-delà de 4.
+Ajustement pondéré par la part de vraies hautes lumières. Preuve :
+`fit-hl-adaptatif-v003`. Simulation sur le neutre LR, validation croisée, 49 scènes
+dont 29 avec au moins 5 % de pixels à L\* ≥ 70 :
+
+| HL | Forme actuelle, scènes HL / sombres | Formes principales (3), scènes HL / sombres |
+| --- | --- | --- |
+| −100 | 7/29 · 5/20 (ΔL\* moyen 7,7 · 6,5) | 3/29 · 3/20 (5,8 · 6,3) |
+| −50 | 17/29 · 11/20 (3,2 · 3,6) | 14/29 · 8/20 (2,4 · 3,3) |
+| +50 | 21/29 · 10/20 (1,6 · 3,9) | **29/29** · 11/20 (0,7 · 2,8) |
+| +100 | 16/29 · 5/20 (2,2 · 7,3) | **25/29**, aucun > 4 · 8/20 (1,1 · 5,0) |
+
+Positifs : le modèle adaptatif atteint le critère sur les scènes à hautes lumières.
+Négatifs : aucun modèle ne l'atteint, scènes claires comprises (−100 : au mieux 9/29
+avec les cinq scènes voisines). Seuil de réussite global atteint seulement à ±25.
