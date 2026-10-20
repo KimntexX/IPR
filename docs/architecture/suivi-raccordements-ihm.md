@@ -28,6 +28,27 @@ le comparatif avant/après passe de `Ctrl+Maj+C` à `Ctrl+Maj+Y`.
 La duplication physique (IHM-CONN-008) et les autres contrats non mentionnés
 restent à raccorder ; cette reprise ne les déclare pas implémentés.
 
+Le ruban accepte `Ctrl+clic` (Command+clic selon la convention Qt sur macOS) :
+ajout/retrait de la seule cible, sans chargement ni rendu. Un clic normal
+continue d’ouvrir la photo sans vider les cases ; le clic droit garde son
+contexte. Les cases et le compteur suivent la même sélection canonique.
+L’application groupée attend une image prête, côté QML comme côté C++.
+
+Les confirmations de réinitialisation et d’export partagent un pied de dialogue :
+boutons de 36 px, marges identiques de 14 px, espacement de 12 px. Les textes
+multilignes utilisent un interligne de 1,5. Le récapitulatif d’export est agrandi
+pour ce texte, avec défilement conservé sur les petits écrans.
+
+Vérifications locales Windows : neuf tests ciblés réussis (six IHM, cycle de
+vie, recettes RAW et cache/préchargement). Build Release `build-patch_ui`,
+démarrage `--smoke-test` hors écran réussi. Captures synthétiques des deux
+confirmations contrôlées ; validation visuelle sur les photos de l’utilisateur
+encore attendue. Manuel français recompilé (48 pages), sans débordement ni
+avertissement de pagination dans le journal final. Pas de qualification réelle
+macOS/Linux ni de nouvelle campagne de rendu photographique.
+Les commits restent locaux : aucune fusion, publication ou version alpha
+supplémentaire n’est créée pour cette reprise.
+
 Initialisé le **18 octobre 2026**, à la demande de l’utilisateur pour isoler
 les agents qui travaillent simultanément.
 
@@ -64,6 +85,14 @@ objet simulé ne vaut pas validation du raccordement de production.
 
 ### IHM-CONN-009 — identité des fichiers ouverts par un alias de chemin
 
+Reprise du 20 octobre : **raccordé côté IHM**. `isImageSelected(url)` et
+`setImageSelected(url, bool)` utilisent la même clé canonique. Les cases du
+ruban interrogent désormais cette commande, avec notification de sélection,
+au lieu de comparer les chaînes d’URL. Le test portable couvre les chemins
+avec `./` ; un vrai lien symbolique est également testé hors Windows.
+Qualification d’un dossier `/var` réel sur macOS restant à faire.
+La demande initiale ci-dessous décrit le défaut historique.
+
 - Date : 19 octobre 2026 ; état : **en attente moteur**.
 - Les URL du modèle de dossier conservent le chemin d’ouverture, alors que
   `selectedImageUrls` utilise `canonicalFilePath()`. Un dossier accessible via
@@ -75,7 +104,8 @@ objet simulé ne vaut pas validation du raccordement de production.
   alias symbolique et fichiers homonymes dans deux dossiers différents.
 - Le test de parcours IHM emploie désormais un dossier temporaire canonique :
   il vérifie le parcours normal, **pas** la résolution du défaut des alias.
-  Aucun correctif moteur n’est inclus dans `patch_ui` pour ce point.
+  Ce constat s’appliquait à la livraison du 19 octobre ; le raccordement
+  ciblé ci-dessus le remplace dans la reprise courante.
 
 ### IHM-CONN-001 — valeur par défaut globale de calibration RAW
 

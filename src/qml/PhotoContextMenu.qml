@@ -62,10 +62,10 @@ Basic.Menu {
     }
     ActionMenuItem {
         text: root.currentPhoto
-              ? qsTr("Enregistrer et dupliquer : raccordement moteur requis")
+              ? qsTr("Dupliquer : raccordement moteur requis")
               : qsTr("Ouvrir cette image pour agir sur ses retouches")
         enabled: false
-        visible: !root.currentPhoto || !root.actions.manualSaveAvailable || !root.actions.duplicationAvailable
+        visible: !root.currentPhoto || !root.actions.duplicationAvailable
         font.pixelSize: 10
     }
 }

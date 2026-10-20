@@ -45,6 +45,14 @@
 
 namespace {
 
+QString selectionKey(const QUrl &url)
+{
+    if (!url.isLocalFile()) return {};
+    const QFileInfo info(url.toLocalFile());
+    const QString canonical = info.canonicalFilePath();
+    return canonical.isEmpty() ? info.absoluteFilePath() : canonical;
+}
+
 QString defaultNormalizationManifest()
 {
     const QStringList candidates{qEnvironmentVariable("IPR_RAW_NORMALIZATION_MANIFEST"),
@@ -901,12 +909,7 @@ void ImageEditor::setImageFlagged(bool flagged)
 
 void ImageEditor::setImageSelected(const QUrl &fileUrl, bool selected)
 {
-    if (!fileUrl.isLocalFile())
-        return;
-    const QFileInfo fileInfo(fileUrl.toLocalFile());
-    const QString key = fileInfo.canonicalFilePath().isEmpty()
-                            ? fileInfo.absoluteFilePath()
-                            : fileInfo.canonicalFilePath();
+    const QString key = selectionKey(fileUrl);
     if (key.isEmpty())
         return;
     const bool changed = selected ? !m_selectedImageKeys.contains(key)
@@ -919,6 +922,12 @@ void ImageEditor::setImageSelected(const QUrl &fileUrl, bool selected)
         emit selectionChanged();
 }
 
+bool ImageEditor::isImageSelected(const QUrl &fileUrl) const
+{
+    const QString key = selectionKey(fileUrl);
+    return !key.isEmpty() && m_selectedImageKeys.contains(key);
+}
+
 void ImageEditor::clearImageSelection()
 {
     if (m_selectedImageKeys.isEmpty())
@@ -929,7 +938,8 @@ void ImageEditor::clearImageSelection()
 
 void ImageEditor::applyAdjustmentsToSelection()
 {
-    if (m_selectedImageKeys.isEmpty() || m_currentFile.isEmpty())
+    if (m_selectedImageKeys.isEmpty() || m_currentFile.isEmpty() ||
+        !hasImage() || busy() || embeddedPreview())
         return;
     int written = 0;
     for (const QString &fileName : std::as_const(m_selectedImageKeys)) {

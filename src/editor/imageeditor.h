@@ -196,6 +196,7 @@ public:
     Q_INVOKABLE void setThumbnailWindow(int firstVisible, int lastVisible,
                                         int prefetchCount);
     Q_INVOKABLE void setImageSelected(const QUrl &fileUrl, bool selected);
+    Q_INVOKABLE bool isImageSelected(const QUrl &fileUrl) const;
     Q_INVOKABLE void clearImageSelection();
     Q_INVOKABLE void applyAdjustmentsToSelection();
     bool hasCopiedAdjustments() const { return m_hasCopiedAdjustments; }

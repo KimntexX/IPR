@@ -108,7 +108,8 @@ Les travaux sous `docs/` suivent également les règles de [docs/AGENTS.md](docs
 
 Complément du 20 octobre 2026 : à la demande explicite de l’utilisateur,
 `patch_ui` peut ajouter les raccordements de commandes dans `ImageEditor`
-nécessaires au copier/coller des recettes et à la sauvegarde manuelle.
+nécessaires au copier/coller des recettes, à la sauvegarde manuelle et à la
+résolution de l’identité des vignettes sélectionnées.
 Cette exception ne permet pas de modifier les calculs photographiques, les
 décodeurs, les caches ou les profils ; les autres raccordements restent suivis
 dans le document dédié.

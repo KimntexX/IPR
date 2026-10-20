@@ -10,7 +10,6 @@ Item {
     readonly property string commandModifier: "Ctrl"
     readonly property bool photoReady: editor.hasImage && !editor.busy && !editor.embeddedPreview && !blocked
     // File operations are supplied by the engine, never emulated in QML.
-    readonly property bool manualSaveAvailable: typeof editor.saveCurrentAdjustments === "function"
     readonly property bool duplicationAvailable: typeof editor.duplicateCurrentImage === "function"
     property alias openImageAction: openImage
     property alias openFolderAction: openFolder
@@ -48,7 +47,7 @@ Item {
         objectName: "saveAdjustmentsAction"
         text: qsTr("Enregistrer les réglages")
         shortcut: StandardKey.Save
-        enabled: root.photoReady && root.manualSaveAvailable
+        enabled: root.photoReady
         onTriggered: root.editor.saveCurrentAdjustments()
     }
     Action {

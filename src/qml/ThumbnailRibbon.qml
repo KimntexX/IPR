@@ -50,7 +50,7 @@ Rectangle {
             PreferenceButton {
                 visible: ribbon.editor.selectedImageCount > 0
                 text: qsTr("Appliquer à %1").arg(ribbon.editor.selectedImageCount)
-                enabled: ribbon.editor.hasImage
+                enabled: ribbon.editor.hasImage && !ribbon.editor.busy && !ribbon.editor.embeddedPreview
                 onClicked: ribbon.editor.applyAdjustmentsToSelection()
             }
             PreferenceButton {
@@ -135,9 +135,19 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    acceptedButtons: Qt.RightButton
-                    onClicked: (mouse) => ribbon.contextMenuRequested(imageDelegate,
-                        imageDelegate.fileUrl, imageDelegate.fileName, imageDelegate.index, mouse.x, mouse.y)
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: (mouse) => {
+                        if (mouse.button === Qt.RightButton) {
+                            ribbon.contextMenuRequested(imageDelegate, imageDelegate.fileUrl,
+                                imageDelegate.fileName, imageDelegate.index, mouse.x, mouse.y)
+                        } else if (mouse.modifiers & Qt.ControlModifier) {
+                            ribbon.editor.setImageSelected(imageDelegate.fileUrl,
+                                                           !imageDelegate.batchSelected)
+                        } else {
+                            imageDelegate.forceActiveFocus()
+                            ribbon.editor.loadImage(imageDelegate.fileUrl)
+                        }
+                    }
                 }
                 Keys.onPressed: (event) => {
                     if (event.key === Qt.Key_Menu || (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier)) {
@@ -192,8 +202,10 @@ Rectangle {
                             anchors.right: parent.right
                             anchors.margins: 1
                             Accessible.name: qsTr("Sélectionner %1 pour traitement groupé").arg(imageDelegate.fileName)
-                            backendChecked: ribbon.editor.selectedImageUrls.indexOf(
-                                                imageDelegate.fileUrl.toString()) >= 0
+                            // selectedImageCount notifies on every selection change;
+                            // the engine resolves aliases using its canonical identity.
+                            backendChecked: ribbon.editor.selectedImageCount > 0 &&
+                                            ribbon.editor.isImageSelected(imageDelegate.fileUrl)
                             onChangeRequested: (checked) => ribbon.editor.setImageSelected(
                                                    imageDelegate.fileUrl, checked)
                         }

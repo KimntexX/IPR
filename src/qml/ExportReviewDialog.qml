@@ -22,7 +22,7 @@ Basic.Dialog {
     anchors.centerIn: Overlay.overlay
     title: qsTr("Vérifier l’export")
     width: Math.min(Overlay.overlay ? Overlay.overlay.width - 24 : 520, 520)
-    height: Math.min(Overlay.overlay ? Overlay.overlay.height - 24 : 420, 420)
+    height: Math.min(Overlay.overlay ? Overlay.overlay.height - 24 : 560, 560)
     modal: true
     padding: 14
     standardButtons: Dialog.NoButton
@@ -33,7 +33,6 @@ Basic.Dialog {
         font.pixelSize: 16
         elide: Text.ElideRight
         color: root.palette.text
-        background: Rectangle { color: root.palette.window }
     }
     background: Rectangle { color: root.palette.window; border.color: root.palette.mid; radius: 6 }
     contentItem: PreferenceScrollView {

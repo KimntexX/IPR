@@ -6,6 +6,7 @@
 #include <QEventLoop>
 #include <QDir>
 #include <QFileInfo>
+#include <QFile>
 #include <QGuiApplication>
 #include <QImage>
 #include <QKeyEvent>
@@ -296,6 +297,21 @@ int main(int argc, char **argv)
                "test source should load in the editor"))
         return 1;
     rawSection->setProperty("expanded", true);
+    const QUrl firstUrl = QUrl::fromLocalFile(first);
+    const QUrl aliasUrl = QUrl::fromLocalFile(directory.path() + "/./first.png");
+    editor.setImageSelected(aliasUrl, true);
+    if (!check(editor.selectedImageCount() == 1 && editor.isImageSelected(firstUrl) &&
+               editor.isImageSelected(aliasUrl), "selection queries must resolve canonical path aliases")) return 1;
+    editor.setImageSelected(firstUrl, false);
+    if (!check(!editor.isImageSelected(aliasUrl), "canonical deselection must clear aliases too")) return 1;
+#ifndef Q_OS_WIN
+    const QUrl symbolicUrl = QUrl::fromLocalFile(directory.filePath("first-link.png"));
+    if (!check(QFile::link(first, symbolicUrl.toLocalFile()), "symbolic selection fixture must be created")) return 1;
+    editor.setImageSelected(symbolicUrl, true);
+    if (!check(editor.isImageSelected(firstUrl) && editor.isImageSelected(symbolicUrl),
+               "symbolic paths and original paths must share a selection identity")) return 1;
+    editor.clearImageSelection();
+#endif
     auto *profileStatus = root->findChild<QQuickItem *>("rawDevelopmentStatusLabel");
     auto *lightSection = root->findChild<QQuickItem *>("lightSection");
     for (int width : {232, 292, 332}) {
@@ -441,6 +457,11 @@ int main(int argc, char **argv)
                confirmButton->height() == cancelButton->height() &&
                confirmButton->height() >= 36,
                "confirmation buttons must share alignment and comfortable height")) return 1;
+    for (QObject *child : review->findChildren<QObject *>()) {
+        if (child->property("wrapMode").toInt() > 0 && child->property("lineHeight").isValid() &&
+            !check(child->property("lineHeight").toDouble() == 1.5,
+                   "wrapped confirmation text must use 1.5 line spacing")) return 1;
+    }
     QMetaObject::invokeMethod(review, "confirm");
     if (!completed) exportLoop.exec();
     QObject::disconnect(exportConnection);
