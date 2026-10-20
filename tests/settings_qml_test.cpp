@@ -386,6 +386,14 @@ int main(int argc, char **argv)
                review->property("dimensions").toString() == editor.imageDetails().value("dimensions").toString() &&
                !QFileInfo::exists(directory.filePath("dialog-choice.png")),
                "native destination acceptance must show accurate review without writing a file")) return 1;
+    settleLayout();
+    auto *confirmButton = review->findChild<QQuickItem *>("confirmExportButton");
+    auto *cancelButton = review->findChild<QQuickItem *>("cancelConfirmationButton");
+    if (!check(confirmButton && cancelButton &&
+               std::abs(confirmButton->y() - cancelButton->y()) < 0.5 &&
+               confirmButton->height() == cancelButton->height() &&
+               confirmButton->height() >= 36,
+               "confirmation buttons must share alignment and comfortable height")) return 1;
     QMetaObject::invokeMethod(review, "confirm");
     if (!completed) exportLoop.exec();
     QObject::disconnect(exportConnection);

@@ -51,6 +51,7 @@ Basic.Dialog {
                     text: modelData
                     color: root.palette.text
                     wrapMode: Text.WrapAnywhere
+                    lineHeight: 1.5
                     textFormat: Text.PlainText
                 }
             }
@@ -59,6 +60,7 @@ Basic.Dialog {
                 text: qsTr("L’extension sera adaptée au format. Un numéro sera ajouté si le nom est pris ; aucun fichier existant ne sera remplacé.")
                 color: root.palette.windowText
                 wrapMode: Text.WordWrap
+                lineHeight: 1.5
             }
             Label {
                 Layout.fillWidth: true
@@ -66,6 +68,7 @@ Basic.Dialog {
                 text: qsTr("Ce DNG contient le rendu développé, pas la mosaïque RAW d’origine.")
                 color: root.palette.windowText
                 wrapMode: Text.WordWrap
+                lineHeight: 1.5
             }
             Label {
                 Layout.fillWidth: true
@@ -73,24 +76,15 @@ Basic.Dialog {
                 text: root.unavailableReason
                 color: root.palette.windowText
                 wrapMode: Text.WordWrap
+                lineHeight: 1.5
             }
         }
     }
-    footer: RowLayout {
-        spacing: 8
-        Item { Layout.fillWidth: true }
-        PreferenceButton {
-            text: qsTr("Annuler")
-            Layout.bottomMargin: 12
-            onClicked: root.close()
-        }
-        PreferenceButton {
-            objectName: "confirmExportButton"
-            text: qsTr("Exporter")
-            enabled: root.exportEnabled
-            Layout.rightMargin: 14
-            Layout.bottomMargin: 12
-            onClicked: root.confirm()
-        }
+    footer: ConfirmationFooter {
+        confirmObjectName: "confirmExportButton"
+        confirmText: qsTr("Exporter")
+        confirmEnabled: root.exportEnabled
+        onCancelled: root.close()
+        onConfirmed: root.confirm()
     }
 }
