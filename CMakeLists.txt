@@ -186,10 +186,16 @@ qt_add_qml_module(appIPR
 target_link_libraries(appIPR PRIVATE iprEngine)
 target_compile_definitions(appIPR PRIVATE IPR_RELEASE_LABEL="${IPR_RELEASE_LABEL}")
 
-# Console tool, intentionally independent of the QML application/sidecar lifecycle.
+# Console tools, intentionally independent of the QML application/sidecar
+# lifecycle: TIFF exports for visual review and in-memory renders for analysis,
+# from the same test recipes.
+add_library(iprTestRecipes STATIC src/tools/TestRecipes.cpp)
+target_include_directories(iprTestRecipes PUBLIC src/tools)
+target_link_libraries(iprTestRecipes PUBLIC iprEngine)
 add_executable(iprGenerateTests src/tools/generate_test_images.cpp)
-target_link_libraries(iprGenerateTests PRIVATE iprEngine)
-target_compile_definitions(iprGenerateTests PRIVATE IPR_PROJECT_VERSION="${PROJECT_VERSION}")
+target_link_libraries(iprGenerateTests PRIVATE iprTestRecipes)
+add_executable(iprRenderServer src/tools/render_server.cpp)
+target_link_libraries(iprRenderServer PRIVATE iprTestRecipes)
 
 set_target_properties(appIPR PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER org.ipr.ImageProcessingRoom
@@ -275,7 +281,7 @@ if(BUILD_TESTING)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
     set_tests_properties(toneRecoveryTests PROPERTIES LABELS "unit;pipeline;lighting")
     add_executable(testImageGeneratorTests tests/test_image_generator_test.cpp)
-    target_link_libraries(testImageGeneratorTests PRIVATE iprEngine)
+    target_link_libraries(testImageGeneratorTests PRIVATE iprTestRecipes)
     add_dependencies(testImageGeneratorTests iprGenerateTests)
     add_test(NAME testImageGeneratorTests
         COMMAND testImageGeneratorTests $<TARGET_FILE:iprGenerateTests>)
