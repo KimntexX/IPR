@@ -109,6 +109,20 @@ class SelectionTests(unittest.TestCase):
         self.assertIn("colorMixerNeutralProbe", plan["targets"])
         self.assertIn("color_mixer_analysis", plan["python"])
 
+    def test_running_build_executable_blocks_compilation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "Release"
+            output.mkdir()
+            (output / "appIPR.exe").write_bytes(b"")
+            (output / "iprGenerateTests.exe").write_bytes(b"")
+            listing = ('"System","4","Services","0","1 Ko"\n'
+                       '"appIPR.exe","1234","Console","1","300 000 Ko"\n')
+            self.assertEqual(build.running_build_executables(Path(directory), "Release", lambda: listing),
+                             ["appIPR.exe"])
+            self.assertEqual(build.running_build_executables(Path(directory), "Release",
+                                                             lambda: '"System","4"\n'), [])
+            self.assertEqual(build.running_build_executables(Path(directory), "Debug", lambda: listing), [])
+
     def test_full_guards(self):
         for paths in (["CMakeLists.txt"], ["src/editor/imageeditor.h"], ["src/new_component.cpp"],
                       ["scripts/test-rules.json"], [".github/workflows/ci.yml"]):

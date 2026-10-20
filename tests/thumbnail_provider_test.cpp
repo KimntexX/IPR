@@ -2,6 +2,7 @@
 #include <QGuiApplication>
 #include <QElapsedTimer>
 #include <QQuickTextureFactory>
+#include <QScopeGuard>
 #include <QThread>
 #include <QUrl>
 #include <atomic>
@@ -52,13 +53,19 @@ int main(int argc, char **argv)
     std::atomic_bool release{false};
     ThumbnailProvider provider([&](const QString &, const QSize &size) {
         ++calls;
-        peak.store(std::max(peak.load(), ++running));
+        // Atomic maximum: a plain load-then-store lets a slower thread
+        // overwrite the true peak with its own lower count.
+        const int now = ++running;
+        int previous = peak.load();
+        while (previous < now && !peak.compare_exchange_weak(previous, now)) {}
         while (!release.load()) QThread::msleep(1);
         --running;
         QImage image(size, QImage::Format_RGBA8888);
         image.fill(Qt::red);
         return image;
     }, 3);
+    // On any early return, free the blocked decodes before the pool waits for them.
+    const auto releaseOnExit = qScopeGuard([&] { release.store(true); });
     if (!check(provider.maxThreadCount() == 3, "dedicated bounded pool")) return 1;
     const QStringList files{"C:/ipr/A.CR3", "C:/ipr/B.CR3", "C:/ipr/C.CR3", "C:/ipr/D.CR3"};
     provider.setActiveFiles(files);

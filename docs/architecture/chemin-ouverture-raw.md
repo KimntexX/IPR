@@ -17,7 +17,7 @@ blocs pointillés de droite décrivent la cible, **pas une généralisation déj
 | Résoudre la calibration | `src/raw/RawNormalization.cpp`, `resolve()` | Règles modèle/DCP/mode capteur sans liste de photos, puis compensation du profil |
 | Transmettre le signal caméra | `src/raw/CameraSignal.cpp`, `render()` | Contrat RGB caméra float, WB appliquée, identité et neutre ; rendu DCP commun |
 | Appliquer le profil | `src/profiles/CameraProfileEngine.cpp`, `applyDcp()` | Matrices, gain, tables et courbe du profil |
-| Refaire la WB | `DcpWorkingContext`, `renderWhiteBalance()` | Retoucher la source caméra avant le DCP, sans accumuler le rendu précédent |
+| Refaire la WB ou l'exposition | `DcpWorkingContext`, `renderFromCameraSignal()` | Retoucher la source caméra avant le DCP (gains WB et `2^EV`), sans accumuler le rendu précédent |
 | Retoucher / sortir | `src/core/ColorPipeline.cpp` | Master Rec.2020, retouches, conversion de sortie sRGB |
 
 ## Cible : deux responsabilités distinctes

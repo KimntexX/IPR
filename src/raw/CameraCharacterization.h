@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_RAW_CAMERACHARACTERIZATION_H
+#define IPR_RAW_CAMERACHARACTERIZATION_H
 
 #include <QJsonObject>
 #include <QString>
@@ -26,3 +27,5 @@ std::optional<QJsonObject> loadCatalog(const QString &path, QString *reason);
 std::optional<QJsonObject> selectSensorMode(const QJsonObject &catalog,
                                            const SensorContext &context, QString *reason);
 }
+
+#endif // IPR_RAW_CAMERACHARACTERIZATION_H

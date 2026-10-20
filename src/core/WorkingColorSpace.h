@@ -1,7 +1,10 @@
-#ifndef WORKINGCOLORSPACE_H
-#define WORKINGCOLORSPACE_H
+#ifndef IPR_CORE_WORKINGCOLORSPACE_H
+#define IPR_CORE_WORKINGCOLORSPACE_H
 
 #include <opencv2/core.hpp>
+
+#include <algorithm>
+#include <cmath>
 
 // Linear RGB, D65. Matrices derived from the published CIE xy primaries;
 // no transfer function, gamut mapping or range clipping in these operations.
@@ -55,6 +58,32 @@ inline const cv::Vec3f &lumaWeights()
     return weights;
 }
 inline float luminance(const cv::Vec3f &rgb) { return rgb.dot(lumaWeights()); }
+inline float nonNegativeLuminance(const cv::Vec3f &rgb) { return std::max(0.0f, luminance(rgb)); }
+
+// Scales a colour from its luminance to the target luminance (channel ratios
+// kept); luminances at or below 1e-6 are left untouched.
+inline void scaleToLuminance(cv::Vec3f &rgb, float sourceLuminance, float targetLuminance)
+{
+    if (sourceLuminance > 1e-6f) rgb *= std::max(0.0f, targetLuminance) / sourceLuminance;
+}
+
+// sRGB transfer function (IEC 61966-2-1), without clamping.
+inline float srgbEncode(float linear)
+{
+    return linear <= 0.0031308f ? linear * 12.92f : 1.055f * std::pow(linear, 1.0f / 2.4f) - 0.055f;
+}
+inline double srgbEncode(double linear)
+{
+    return linear <= 0.0031308 ? 12.92 * linear : 1.055 * std::pow(linear, 1.0 / 2.4) - 0.055;
+}
+inline float srgbDecode(float encoded)
+{
+    return encoded <= .04045f ? encoded / 12.92f : std::pow((encoded + .055f) / 1.055f, 2.4f);
+}
+inline double srgbDecode(double encoded)
+{
+    return encoded <= .04045 ? encoded / 12.92 : std::pow((encoded + .055) / 1.055, 2.4);
+}
 
 // In-place, preserves straight alpha bit-for-bit, including extended RGB.
 inline void transform(cv::Mat &image, const cv::Matx33d &matrix)
@@ -71,4 +100,4 @@ inline void transform(cv::Mat &image, const cv::Matx33d &matrix)
     }
 }
 }
-#endif
+#endif // IPR_CORE_WORKINGCOLORSPACE_H

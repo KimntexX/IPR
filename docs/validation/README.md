@@ -15,9 +15,11 @@ La validation sépare strictement :
 - [metrics/](metrics/README.md) : CSV et courbes dérivés, avec provenance ;
 - [matrice-validation.md](matrice-validation.md) : statut unique des fonctionnalités.
 
-Pour produire les variantes IPR sans manipulation répétée de l'IHM :
+Pour regarder les variantes IPR sans manipulation répétée de l'IHM :
 [générateur d'images de test](tools/generateur-images-tests.md), exécutable
 `iprGenerateTests` et lanceur Windows `scripts/generate-test-images.ps1`.
+Les mesures n'en ont pas besoin : les analyseurs rendent les états IPR en
+mémoire avec `iprRenderServer`.
 
 Pour les mesurer selon les mêmes groupes : [analyseurs natifs unifiés](tools/analyseurs-groupes.md),
 `tests/analyse_groupes.py` ou une entrée dédiée par groupe, manifestes/mappings

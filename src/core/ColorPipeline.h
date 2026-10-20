@@ -1,6 +1,7 @@
-#ifndef COLORPIPELINE_H
-#define COLORPIPELINE_H
+#ifndef IPR_CORE_COLORPIPELINE_H
+#define IPR_CORE_COLORPIPELINE_H
 
+#include "ToneStatistics.h"
 #include <QColorSpace>
 #include <QImage>
 #include <QString>
@@ -35,6 +36,9 @@ struct WorkingImage
     QString sourceProfile;
     std::optional<double> referenceWhiteBalanceKelvin;
     std::shared_ptr<const CameraProfileEngine::DcpWorkingContext> dcpContext;
+    // Luminance statistics at neutral settings, measured once on the edit
+    // proxy at load and shared by the master: per-image tone-control weights.
+    std::optional<ToneRecovery::Statistics> toneStatistics;
 
     bool isNull() const { return linearRgba.empty(); }
 };
@@ -61,4 +65,4 @@ QImage toSrgb(const WorkingImage &source, OutputFormat outputFormat,
 
 }
 
-#endif
+#endif // IPR_CORE_COLORPIPELINE_H

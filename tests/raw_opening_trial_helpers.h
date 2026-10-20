@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_TESTS_RAW_OPENING_TRIAL_HELPERS_H
+#define IPR_TESTS_RAW_OPENING_TRIAL_HELPERS_H
 // Offline DCP experiment. No production option, source/profile mutation or TIFF export.
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
@@ -190,3 +191,4 @@ void selfTest() {
 }
 }
 
+#endif // IPR_TESTS_RAW_OPENING_TRIAL_HELPERS_H

@@ -1,7 +1,14 @@
 # Générateur d'images IPR de test
 
 Contrat aligné — 12 octobre 2026, branche `patch_validation` à recompiler.
-Source : [generate_test_images.cpp](../../../src/tools/generate_test_images.cpp).
+Source : [generate_test_images.cpp](../../../src/tools/generate_test_images.cpp),
+recettes partagées dans [TestRecipes.cpp](../../../src/tools/TestRecipes.cpp).
+
+**Depuis le 20 octobre 2026, ces TIFF servent à la revue visuelle seulement.**
+Les analyses rendent les mêmes états en mémoire, sans fichier
+([ADR-0019](../../decisions/ADR-0019-analyses-ipr-en-memoire.md),
+[analyseurs](analyseurs-groupes.md#associations-et-provenance)). Ne générer
+que les groupes à regarder.
 Lanceur Windows : [generate-test-images.ps1](../../../scripts/generate-test-images.ps1).
 
 ## Utilisation
@@ -104,20 +111,27 @@ Chaque variante repart de réglages neufs : aucun cumul entre commandes.
   neutre As Shot du groupe ne remplace pas ces ancres pour une comparaison WB.
 - RAW : Camera Neutral est préféré quand disponible, avec le repli habituel
   du moteur sinon. Le DCP/LCP réellement signalé est affiché dans la console ;
-  ne pas supposer Camera Neutral appliqué si absent. Normalisation
-  expérimentale d'environnement désactivée ; sidecars ignorés.
+  ne pas supposer Camera Neutral appliqué si absent. **Calibration RAW par
+  défaut de l'IHM appliquée** (ADR-0007, même manifeste que l'IHM), depuis le
+  18 octobre 2026 : sans elle, les TIFF étaient 0,3 à 1,1 EV plus sombres que
+  l'écran. Normalisation d'environnement désactivée ; sidecars ignorés.
 - Rayon/masquage : quantité de netteté fixe 50. Grading teinte : saturation
   fixe 25 ; grading saturation : teinte fixe 30°. Ces supports sont nécessaires
   pour rendre le réglage observable.
 - Courbes : points `(0,0)`, `(0.5, 0.5 + 0.004 × valeur)`, `(1,1)`.
   Ce sont des presets diagnostiques, pas des curseurs Lightroom équivalents.
-- Les corrections objectif et CA sont activées dans le décodage de base.
+- Les corrections objectif et CA sont **désactivées** dans le décodage de base,
+  comme les références Lightroom actuelles (`LensProfileEnable=0`). À réglages
+  égaux (calibration, optique coupée), IPR et LR concordent à ±0,01 EV à 0 EV
+  sur les cinq scènes auditées. **Décision de l'utilisateur, 18 octobre 2026 :
+  après validation des tests complets, les corrections optiques seront
+  appliquées par défaut**, avec des références LR réexportées dans le même état.
   Les séries optiques testent chacune 0/1 avec l'autre correction désactivée :
   comparer leur état 1 à leur état 0, pas au neutre général. Le statut réel de
   correction est affiché ; sans profil adapté, une activation peut rester sans
   effet. Optique et WB automatique nécessitent un RAW ; elles sont ignorées
   avec un message explicite pour les sources déjà développées.
-- Profils DCP/LCP arbitraires, calibration RAW, masques, recadrage, IA et gestes
+- Profils DCP/LCP arbitraires, masques, recadrage, IA et gestes
   IHM ne sont pas simulés par ces séries. Leur validation a sa recette dédiée.
 
 ## Écriture et nettoyage
@@ -156,13 +170,9 @@ Les noms DCP ne prouvent pas leur identité cryptographique ; cette limite est
 conservée dans les mesures. Les déclarations ne constituent pas une signature
 contre la falsification d'un TIFF.
 
-```bash
-python tests/analyse_couleur.py --base tests/image/base --strict --data-version 1
-```
-
-L'analyseur lit ces déclarations et le XMP LR. Un ancien TIFF IPR sans déclaration
-n'est pas déduit de son nom : utiliser une association explicite vérifiable ou
-régénérer. Les groupes sans contrôle XMP connu (courbes/grading/optique, par
+Les analyseurs ne lisent pas ces TIFF IPR : ils demandent les mêmes états
+à `iprRenderServer`, qui renvoie la même déclaration avec les pixels. Les
+groupes sans contrôle XMP connu (courbes/grading/optique, par
 exemple) demandent une association opérateur et restent diagnostics si non auditables.
 Les anciens JSON d'analyse restent conservés comme preuves historiques.
 

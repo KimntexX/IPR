@@ -1,5 +1,5 @@
-#ifndef DETAILPROCESSING_H
-#define DETAILPROCESSING_H
+#ifndef IPR_CORE_DETAILPROCESSING_H
+#define IPR_CORE_DETAILPROCESSING_H
 
 #include <opencv2/core.hpp>
 
@@ -24,6 +24,19 @@ struct SharpenSettings
 void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings);
 void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings);
 
+// Local contrast on luminance, slider values in [-100, 100]: texture targets
+// fine details; clarity uses a wider neighbourhood and protects the deepest
+// shadows and brightest highlights.
+void applyTexture(cv::Mat &linearRgb, int texture);
+void applyClarity(cv::Mat &linearRgb, int clarity);
+
+// Dehaze from the dark channel and the 99th percentile airlight, slider value
+// in [-100, 100]; RGB stays nonnegative.
+void dehaze(cv::Mat &linearRgb, int amount);
+
+// Deterministic monochrome grain, stronger in shadows, slider value in [0, 100].
+void addGrain(cv::Mat &linearRgb, int amount);
+
 }
 
-#endif
+#endif // IPR_CORE_DETAILPROCESSING_H

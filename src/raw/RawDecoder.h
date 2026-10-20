@@ -1,5 +1,5 @@
-#ifndef RAWDECODER_H
-#define RAWDECODER_H
+#ifndef IPR_RAW_RAWDECODER_H
+#define IPR_RAW_RAWDECODER_H
 
 #include "ColorPipeline.h"
 #include "ImageMetadata.h"
@@ -84,4 +84,4 @@ QImage decodeEmbeddedThumbnail(const QString &fileName,
 
 }
 
-#endif
+#endif // IPR_RAW_RAWDECODER_H

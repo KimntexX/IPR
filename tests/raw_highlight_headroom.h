@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_TESTS_RAW_HIGHLIGHT_HEADROOM_H
+#define IPR_TESTS_RAW_HIGHLIGHT_HEADROOM_H
 // Experimental mathematical scaffold only. Not linked into the production renderer.
 #include <algorithm>
 #include <array>
@@ -56,3 +57,5 @@ inline double highlightWeight(double luminance, double begin, double end)
     return t*t*(3-2*t);
 }
 }
+
+#endif // IPR_TESTS_RAW_HIGHLIGHT_HEADROOM_H

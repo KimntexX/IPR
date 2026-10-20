@@ -1014,10 +1014,7 @@ private:
         // Encoding affects only the HSV Value axis, not RGB or H/S.
         // The tag is inapplicable to a 2.5D table (one Value division).
         const bool encodeValue = encoding == 1 && table.valDivisions > 1;
-        const float value = encodeValue
-            ? (maximum <= 0.0031308f ? maximum * 12.92f
-               : 1.055f * std::pow(maximum, 1.0f / 2.4f) - 0.055f)
-            : maximum;
+        const float value = encodeValue ? WorkingColor::srgbEncode(maximum) : maximum;
 
         const float hCoord = hue * table.hueDivisions;
         const float sCoord = saturation * (table.satDivisions - 1);
@@ -1059,8 +1056,7 @@ private:
         const float outSaturation = qBound(0.0f, saturation * modify[1], 1.0f);
         float outValue = qBound(0.0f, value * modify[2], 1.0f);
         if (encodeValue)
-            outValue = outValue <= 0.04045f ? outValue / 12.92f
-                : std::pow((outValue + 0.055f) / 1.055f, 2.4f);
+            outValue = WorkingColor::srgbDecode(outValue);
         const float sector = outHue * 6.0f;
         const int i = int(std::floor(sector)) % 6;
         const float f = sector - std::floor(sector);
@@ -1812,8 +1808,8 @@ bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tin
                                   temperature, tint, gains, error);
 }
 
-bool renderWhiteBalance(const DcpWorkingContext &source, int temperature, int tint,
-                         cv::Mat &linearRgb, QString *error)
+bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
+                            double exposureEv, cv::Mat &linearRgb, QString *error)
 {
     if (source.cameraRgb.empty() || source.cameraRgb.type() != CV_32FC3) {
         if (error) *error = QStringLiteral("Source capteur DCP absente.");
@@ -1824,6 +1820,11 @@ bool renderWhiteBalance(const DcpWorkingContext &source, int temperature, int ti
     if (!profile ||
         !profile->whiteBalanceGains(source.sourceKelvin, source.cameraNeutral,
                                    temperature, tint, gains, error)) return false;
+    if (!std::isfinite(exposureEv) || std::abs(exposureEv) > 10.0) {
+        if (error) *error = QStringLiteral("Exposition hors domaine.");
+        return false;
+    }
+    gains *= std::exp2(exposureEv);
     cv::Mat rgb;
     cv::transform(source.cameraRgb, rgb, cv::Matx33f(
         float(gains[0]),0,0, 0,float(gains[1]),0, 0,0,float(gains[2])));

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_CORE_IMAGEIMPORTER_H
+#define IPR_CORE_IMAGEIMPORTER_H
 
 #include "ColorPipeline.h"
 #include "ImageMetadata.h"
@@ -42,3 +43,5 @@ Result load(const QString &fileName, const RawDecoder::Options &options = {});
 // Failure clears image/retained buffers/capabilities, never substitutes a profile.
 bool complete(Result &result);
 }
+
+#endif // IPR_CORE_IMAGEIMPORTER_H

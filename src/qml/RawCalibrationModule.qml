@@ -13,14 +13,14 @@ ColumnLayout {
     implicitWidth: 0
     spacing: 8
 
-    PreferenceCheckBox {
+    BackendCheckBox {
         objectName: "rawNormalizationToggle"
         text: qsTr("Calibration RAW — rendu du boîtier")
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-        checked: root.editor.rawNormalizationEnabled
+        backendChecked: root.editor.rawNormalizationEnabled
         enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setRawNormalizationEnabled(checked)
+        onChangeRequested: (checked) => root.editor.setRawNormalizationEnabled(checked)
         textColor: root.textColor
     }
     PreferenceButton {

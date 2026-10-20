@@ -32,7 +32,8 @@ conditionnés par `IPR_LOG_RAW_TIMING` ont été ajoutés au chemin RAW.
 - [Sonde C++](../../../tests/opening_latency_probe.cpp) et
   [lanceur de mesure](../../../tests/measure_opening_latency.py).
 - [Courbe de navigation dérivée du JSON](../metrics/curves/latence-navigation.svg)
-  et [données numériques dérivées](../metrics/performance-ouverture.csv).
+  et données numériques dérivées `performance-ouverture.csv`, générées localement
+  par `scripts/export_documentation_metrics.py` et non suivies par Git.
 
 Windows, compilation Release, Qt 6.11.2, LibRaw 0.22.2-Release,
 20 processeurs logiques / 20 threads OpenCV déclarés. Trois scènes :

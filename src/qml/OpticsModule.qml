@@ -12,14 +12,14 @@ ColumnLayout {
     implicitWidth: 0
     spacing: 8
 
-    PreferenceCheckBox {
+    BackendCheckBox {
         objectName: "lensCorrectionToggle"
         text: qsTr("Activer la correction de l’objectif")
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-        checked: root.editor.lensCorrectionEnabled
+        backendChecked: root.editor.lensCorrectionEnabled
         enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setLensCorrectionEnabled(checked)
+        onChangeRequested: (checked) => root.editor.setLensCorrectionEnabled(checked)
         contentItem: Text {
             text: parent.text
             color: root.textColor
@@ -29,14 +29,14 @@ ColumnLayout {
         ToolTip.visible: hovered
         ToolTip.text: qsTr("Corrige la distorsion et le vignettage lorsque le profil LCP contient ces données.")
     }
-    PreferenceCheckBox {
+    BackendCheckBox {
         objectName: "chromaticAberrationToggle"
         text: qsTr("Supprimer l’aberration chromatique")
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-        checked: root.editor.chromaticAberrationEnabled
+        backendChecked: root.editor.chromaticAberrationEnabled
         enabled: root.editor.rawImage && !root.editor.busy
-        onClicked: root.editor.setChromaticAberrationEnabled(checked)
+        onChangeRequested: (checked) => root.editor.setChromaticAberrationEnabled(checked)
         contentItem: Text {
             text: parent.text
             color: root.textColor

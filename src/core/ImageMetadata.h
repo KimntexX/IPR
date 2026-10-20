@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_CORE_IMAGEMETADATA_H
+#define IPR_CORE_IMAGEMETADATA_H
 
 #include <QDateTime>
 #include <QString>
@@ -42,3 +43,5 @@ struct ImageMetadata
     bool cameraRaw = false;
     bool hasEmbeddedColorProfile = false;
 };
+
+#endif // IPR_CORE_IMAGEMETADATA_H

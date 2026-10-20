@@ -1,5 +1,5 @@
-#ifndef RAWBLACKLEVELESTIMATOR_H
-#define RAWBLACKLEVELESTIMATOR_H
+#ifndef IPR_RAW_RAWBLACKLEVELESTIMATOR_H
+#define IPR_RAW_RAWBLACKLEVELESTIMATOR_H
 
 #include <QString>
 
@@ -57,4 +57,4 @@ QString statusName(Status status);
 
 }
 
-#endif
+#endif // IPR_RAW_RAWBLACKLEVELESTIMATOR_H

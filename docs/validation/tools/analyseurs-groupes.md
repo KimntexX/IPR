@@ -3,11 +3,15 @@
 Contrat aligné le 12 octobre 2026, branche `patch_validation`.
 Outil canonique : [analyse_groupes.py](../../../tests/analyse_groupes.py).
 Les dix entrées dédiées partagent la même CLI et les mêmes méthodes natives.
-Elles ne génèrent, modifient ni suppriment d'image. Mesurer ne signifie pas valider.
+Elles ne génèrent, modifient ni suppriment d'image : les états IPR sont rendus
+en mémoire par `iprRenderServer` ([ADR-0019](../../decisions/ADR-0019-analyses-ipr-en-memoire.md)).
+Mesurer ne signifie pas valider.
 
 ## Commandes courantes
 
-Depuis la racine, avec Python 3, NumPy et Pillow :
+Depuis la racine, avec Python 3, NumPy et Pillow, après compilation de
+`iprRenderServer` (Release dans `build-windows-msvc`, ou chemin donné par
+`--render-server` ou `IPR_RENDER_SERVER_BIN`) :
 
 ```bash
 python tests/analyse_groupes.py --list
@@ -22,7 +26,10 @@ Dix groupes : `raw`, `lumiere`, `courbes`, `couleur`, `melangeur`,
 `tests/analyse_<groupe>.py`. L'IHM/persistance/export relève de la recette
 transversale et de CTest, pas d'un analyseur pixel.
 
-`--feature` et `--scene` restreignent les états. `--strict` retourne 2 si
+`--feature` et `--scene` restreignent les états. `--render-workers N` fixe le
+nombre de serveurs parallèles (une scène par serveur) ; par défaut il suit la
+mémoire libre : environ 2,5 Gio par serveur pour 32 Mpx, 2 Gio de réserve,
+au plus 4. Une campagne n'écrit que son JSON. `--strict` retourne 2 si
 des états sont diagnostics/exclus, après conservation du JSON. Une erreur
 d'association retourne 1 sans publier de campagne. `--output` impose un
 chemin pour un seul groupe, sans écrasement ; sinon le nom inclut groupe,
@@ -31,12 +38,16 @@ vers une campagne remplacée sans modifier son JSON.
 
 ## Associations et provenance
 
-`--base` lit les dossiers du [générateur](generateur-images-tests.md),
-sans campagnes datées. Pour IPR, les réglages, empreintes source/exécutable,
-référence et développement proviennent du JSON embarqué dans le tag TIFF 270.
-Un TIFF IPR non déclaré exige une régénération ou un mapping explicite ;
-le nom seul ne prouve pas son état. Les références doivent rester sous base,
-appartenir à la même scène et conserver leur contexte de développement.
+`--base` lit les TIFF Lightroom des dossiers partagés, sans campagnes datées.
+Les états IPR sont ceux des sources à la racine de base, listés et rendus par
+`iprRenderServer` avec les recettes du [générateur](generateur-images-tests.md) :
+le serveur renvoie les codes 16 bits sRGB de l'export TIFF et sa déclaration
+(réglages, empreintes source/exécutable, profils, référence). Les TIFF IPR
+présents dans base servent à la revue visuelle et ne sont pas analysés.
+Référence et variante doivent partager leur contexte de développement ; à la
+clôture, chaque source doit avoir encore l'empreinte décodée. Le JSON indique
+`ipr_pixels.kind = in_memory_render`, le serveur et son SHA-256 ; l'empreinte
+des pixels IPR porte sur les échantillons uint16, pas sur un fichier.
 
 Pour Lightroom, la valeur vient du XMP, jamais du numéro de suffixe. Les
 supports manuels température/nuance sont 5200 K / 0 ; le neutre As Shot
@@ -139,8 +150,8 @@ Chaque état est `measured`, `diagnostic` (réglages/provenance insuffisants) ou
 contient versions, heure réelle, hashes du code/des entrées, métadonnées,
 réglages déclarés, contrôles, ROI, valeurs sans arrondi, unités, effectifs,
 exclusions et progressions. Un dénominateur nul donne `null`, jamais NaN/Inf.
-Sources TIFF et JSON sont revérifiées avant publication ; changement détecté
-→ arrêt sans publication de la campagne concernée.
+Sources TIFF, RAW rendus et JSON sont revérifiés avant publication ; changement
+détecté → arrêt sans publication de la campagne concernée.
 
 - 0 : mesure publiée ; **pas** validation.
 - 1 : erreur d'entrée, exécution ou publication.

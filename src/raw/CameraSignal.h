@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_RAW_CAMERASIGNAL_H
+#define IPR_RAW_CAMERASIGNAL_H
 
 #include "ColorPipeline.h"
 #include "CameraProfileEngine.h"
@@ -27,3 +28,5 @@ ColorPipeline::WorkingImage render(Source &&source, const QString &profile,
                                    const CameraProfileEngine::DcpRenderOptions &options = {},
                                    QString *error = nullptr);
 }
+
+#endif // IPR_RAW_CAMERASIGNAL_H

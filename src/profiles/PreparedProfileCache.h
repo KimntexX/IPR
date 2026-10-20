@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_PROFILES_PREPAREDPROFILECACHE_H
+#define IPR_PROFILES_PREPAREDPROFILECACHE_H
 
 #include <QString>
 #include <QByteArray>
@@ -31,3 +32,5 @@ void configure(quint64 budgetBytes, int entryLimit);
 // Clears retained entries/counters, not live reader references or active work.
 void clear();
 }
+
+#endif // IPR_PROFILES_PREPAREDPROFILECACHE_H

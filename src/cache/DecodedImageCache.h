@@ -1,5 +1,5 @@
-#ifndef DECODEDIMAGECACHE_H
-#define DECODEDIMAGECACHE_H
+#ifndef IPR_CACHE_DECODEDIMAGECACHE_H
+#define IPR_CACHE_DECODEDIMAGECACHE_H
 
 #include "ColorPipeline.h"
 #include "ImageMetadata.h"
@@ -63,4 +63,4 @@ private:
     QHash<QString, StoredEntry> m_entries;
 };
 
-#endif // DECODEDIMAGECACHE_H
+#endif // IPR_CACHE_DECODEDIMAGECACHE_H

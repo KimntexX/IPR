@@ -1,4 +1,5 @@
-#pragma once
+#ifndef IPR_RAW_RAWNORMALIZATION_H
+#define IPR_RAW_RAWNORMALIZATION_H
 
 #include <QString>
 #include <array>
@@ -38,3 +39,5 @@ std::optional<Calibration> resolve(const QString &manifestPath,
                                    const Context &context, QString *reason = nullptr);
 QString cacheToken(const QString &manifestPath);
 }
+
+#endif // IPR_RAW_RAWNORMALIZATION_H
