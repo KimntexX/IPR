@@ -17,6 +17,10 @@ struct SensorContext
     std::array<unsigned, 4> black{};
     unsigned globalBlack = 0;
     unsigned nativeWhite = 0;
+    // Canon specular white of the file (maker notes), 0 when unknown. A rule
+    // with specular_white_min/max matches only within those bounds: on the
+    // EOS 60D it tells apart ISO modes whose black and native white are equal.
+    unsigned specularWhite = 0;
     QString decoderId;
     QString decoderVersion;
 };

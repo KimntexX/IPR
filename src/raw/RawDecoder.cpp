@@ -435,6 +435,9 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             context.black[channel] = raw.imgdata.color.cblack[channel];
         context.globalBlack = raw.imgdata.color.black;
         context.nativeWhiteLevel = raw.imgdata.color.maximum;
+        if (context.cameraMake.compare(QStringLiteral("Canon"), Qt::CaseInsensitive) == 0 &&
+            raw.imgdata.makernotes.canon.SpecularWhiteLevel > 0)
+            context.specularWhiteLevel = unsigned(raw.imgdata.makernotes.canon.SpecularWhiteLevel);
         // Common and per-channel black are audited independently; spatial patterns
         // remain unsupported. Never replace the measured black by a DNG average.
         if (raw.imgdata.color.cblack[4])

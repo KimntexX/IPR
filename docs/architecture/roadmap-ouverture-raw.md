@@ -79,7 +79,9 @@ de commit de gel ni de livraison.
   le comportement de LR ; aucune règle de noir/blanc, DCP ni validation de rendu
   60D n'existe encore, et les règles CR3 ne s'y appliquent pas. Mesure du 20 octobre
   (`ecart-neutre-hl-v001`) : neutre IPR plus clair que LR de 4,8 L\* en moyenne sur
-  les 10 % les plus clairs (CR3 : 0,6) ; une règle de normalisation 60D est nécessaire.
+  les 10 % les plus clairs (CR3 : 0,6). **Règles 60D ajoutées le 20 octobre**
+  (ADR-0011, extension) : écart ramené à 0,9 L\*, 19/21 CR2 à ΔL\* ≤ 2 ; validation
+  visuelle de l'utilisateur à obtenir.
 
 Les images annoncées ne sont ni inventoriées ni validées par cette roadmap.
 À leur réception, relever modèle réel, format et mode RAW, ISO, profondeur,
