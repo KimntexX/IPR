@@ -1102,3 +1102,31 @@ dont 29 avec au moins 5 % de pixels à L\* ≥ 70 :
 Positifs : le modèle adaptatif atteint le critère sur les scènes à hautes lumières.
 Négatifs : aucun modèle ne l'atteint, scènes claires comprises (−100 : au mieux 9/29
 avec les cinq scènes voisines). Seuil de réussite global atteint seulement à ±25.
+
+#### HL par scènes de référence voisines : intégration et campagne IPR réelle, 20 octobre 2026
+
+Modèle intégré (`ToneRecovery`, tables `ToneRecoveryHighlights.h` générées par
+`scripts/build_highlights_references.py`, preuve `references-hl-v001`) : les HL d'une
+image sont la moyenne des courbes LR des cinq scènes de référence les plus proches,
+distance sur les sept statistiques qu'IPR mesure à l'ouverture (13 statistiques
+calculées côté IPR n'apportent rien de plus). Les HL quittent le modèle « forme commune
++ gain » ; Ombres, Noirs et Blancs y restent à l'identique (rendus sans HL identiques
+bit à bit avant/après). Un HL positif n'assombrit jamais, un négatif n'éclaircit jamais.
+
+Campagne réelle IPR contre LR, rendus en mémoire, 49 scènes, critère ΔL\* (preuves
+`campagne-hl-ipr-v001`, `ecart-neutre-hl-v001`). Écart des neutres eux-mêmes : CR3
+0,6 en moyenne (calibrés), **CR2 du 60D 4,8** (IPR plus clair, jusqu'à 9,2 sur IMG_4062 :
+aucune règle de normalisation 60D). Effet HL seul, écart du neutre retiré (scènes à
+ΔL\* ≤ 2 sur 49, écart moyen) :
+
+| HL | Ancien modèle | Scènes voisines |
+| --- | --- | --- |
+| −100 | 13 (6,9) | **19 (5,3)** |
+| −50 | 26 (3,4) | **33 (2,5)** |
+| −25 | 36 (1,6) | **40 (1,1)** |
+| +50 | 32 (2,2) | 33 (1,9) |
+| +100 | 23 (3,7) | 24 (3,1) |
+
+Amélioration à toutes les valeurs, nette sur les négatifs ; seuil de 80 % non atteint
+(−25 : 40/49 mais trois scènes au-delà de 4). Écart absolu, neutre compris, à −100 :
+moyenne 7,8 → 6,7. Régressions à surveiller : 6V1A0054 et 6V1A0182 (scènes sombres).

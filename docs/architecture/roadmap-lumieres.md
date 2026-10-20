@@ -12,7 +12,7 @@ protocole : [protocole Lumières](../validation/protocols/protocole-lumieres.md)
 | Exposition | Avant le DCP, sur le signal caméra ; conforme à LR à ±0,03 EV | Validé visuellement, 18 octobre |
 | Contraste | S à extrémités fixes, domaine log, par canal | Validé, réserve à +100 (≈ 3 % plus fort que LR) |
 | Noirs, blancs | Plan B : formes de LR, poids par image, couleur des tons clairs | **Validés visuellement le 19 octobre** |
-| Ombres, HL | Plan B ; HL réajustées sur 19 scènes (modèle pondéré) | Ombres acceptées ; HL : diagnostic du 20 octobre, seuil non atteint, décision utilisateur à prendre |
+| Ombres, HL | Plan B ; HL par scènes de référence voisines (49 scènes, 20 octobre) | Ombres acceptées ; HL : amélioration mesurée, seuil ΔL\* non atteint, validation visuelle à faire |
 
 Comparaisons IPR/LR à réglages égaux : calibration RAW de l'IHM, optique
 coupée des deux côtés. Corpus : six scènes sombres du protocole, plus deux

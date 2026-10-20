@@ -77,7 +77,9 @@ de commit de gel ni de livraison.
   R6 Mark III et le R7. 21 RAW sont à la racine de `tests/image/base` depuis le
   20 octobre (sélection pour la calibration HL). Ils servent d'abord à apprendre
   le comportement de LR ; aucune règle de noir/blanc, DCP ni validation de rendu
-  60D n'existe encore, et les règles CR3 ne s'y appliquent pas.
+  60D n'existe encore, et les règles CR3 ne s'y appliquent pas. Mesure du 20 octobre
+  (`ecart-neutre-hl-v001`) : neutre IPR plus clair que LR de 4,8 L\* en moyenne sur
+  les 10 % les plus clairs (CR3 : 0,6) ; une règle de normalisation 60D est nécessaire.
 
 Les images annoncées ne sont ni inventoriées ni validées par cette roadmap.
 À leur réception, relever modèle réel, format et mode RAW, ISO, profondeur,

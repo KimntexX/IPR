@@ -67,6 +67,7 @@ set(IPR_ENGINE_SOURCES
     src/core/ToneCurve.cpp
     src/core/ToneRecovery.h
     src/core/ToneRecovery.cpp
+    src/core/ToneRecoveryHighlights.h
     src/core/ToneRecoveryModel.h
     src/core/ToneStatistics.h
     src/core/ToneStatistics.cpp
