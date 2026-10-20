@@ -46,6 +46,12 @@
 - Les images sont supprimées manuellement par l'utilisateur après analyse.
   Le générateur ne supprime ni n'écrase les fichiers existants, sources ou
   références. Aucun ancien mode de génération ni test de compatibilité legacy.
+- Complément du 20 octobre 2026 : les analyses mesurent les états IPR **en
+  mémoire** (`iprRenderServer`, `tests/analysis` avec `--base`) ; aucun TIFF
+  IPR n'est écrit pour mesurer. `iprGenerateTests` ne sert plus qu'à la revue
+  visuelle, à la demande, avec les mêmes recettes (`src/tools/TestRecipes`).
+  Les TIFF IPR présents dans base ne sont pas analysés. Les références
+  Lightroom restent des TIFF exportés une fois et réutilisés.
 
 ## Code C++ — règle du 19 octobre 2026
 

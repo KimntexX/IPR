@@ -60,8 +60,10 @@ température 5200 et nuance 0 (support 5200 K / 0), pas ce neutre As Shot.
 Lightroom est exporté séparément dans les mêmes dossiers, avec les mêmes
 supports. Une même valeur affichée entre moteurs ne garantit pas le même blanc.
 
-Les analyseurs acceptent `--base tests/image/base`. Ils lisent les déclarations
-embarquées IPR et les contrôles XMP Lightroom, sans manifeste de génération.
+Les analyseurs acceptent `--base tests/image/base`. Ils rendent les états IPR
+en mémoire (`iprRenderServer`) et lisent les contrôles XMP Lightroom, sans
+manifeste de génération ni TIFF IPR ; le générateur ne sert qu'à la revue
+visuelle ([ADR-0019](../../decisions/ADR-0019-analyses-ipr-en-memoire.md)).
 Ne pas présenter un numéro de TIFF LR comme une preuve de son état. Si les
 références sont ambiguës ou si le contrôle n'a pas d'audit XMP implémenté,
 fournir une association explicite à l'analyseur ; ne pas inventer les valeurs.

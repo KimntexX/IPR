@@ -1,15 +1,23 @@
-#define IPR_GENERATOR_UNIT_TEST
-#include "../src/tools/generate_test_images.cpp"
+#include "TestRecipes.h"
 
 #include <QColorSpace>
+#include <QCoreApplication>
+#include <QDir>
 #include <QDirIterator>
 #include <QFile>
 #include <QImage>
 #include <QProcess>
 #include <QTemporaryDir>
+#include <QTextStream>
 #include <tiffio.h>
 
+#include <stdexcept>
+
+using namespace TestRecipes;
+
 namespace {
+const QStringList bands{"red", "orange", "yellow", "green", "cyan", "blue", "violet", "magenta"};
+
 void check(bool ok, const QString &message)
 {
     if (!ok) throw std::runtime_error(message.toUtf8().constData());
@@ -79,12 +87,12 @@ int main(int argc, char **argv)
                 image.setPixelColor(x, y, QColor(30 + x * 4, 40 + y * 5, 50 + (x + y) * 2));
 
         // Unit-test the current presets and their isolation, not a legacy mode.
-        IprTestImageGenerator::Settings baseline;
+        TestRecipes::Settings baseline;
         for (const Feature &feature : features()) {
-            check(groups.contains(featureGroup(feature.name)), "Unmapped group");
+            check(TestRecipes::groups().contains(featureGroup(feature.name)), "Unmapped group");
             check(!featureFolder(feature.name).contains("generation-"), "Dated directory returned");
             for (double value : feature.values) {
-                const auto settings = IprTestImageGenerator::adjusted(baseline, feature.name, value);
+                const auto settings = TestRecipes::adjusted(baseline, feature.name, value);
                 if (feature.name.startsWith("mixer-")) {
                     const auto parts = feature.name.split('-');
                     const int selectedBand = bands.indexOf(parts.at(1));
@@ -203,12 +211,14 @@ int main(int argc, char **argv)
                 result.colorSpace = ColorPipeline::workingColorSpace();
                 return result;
             }, &error), "Cannot register mock decoder");
-        IprTestImageGenerator::load("sample.generatormockraw", true, false, true);
+        TestRecipes::Decode decode;
+        decode.automaticWhiteBalance = decode.chromaticAberration = true;
+        TestRecipes::load("sample.generatormockraw", decode);
         check(received.automaticWhiteBalance && !received.lensCorrectionEnabled
               && received.chromaticAberrationEnabled && received.preferCameraNeutral
               && !received.useNormalizationEnvironment, "RAW decode options incorrect");
         // Base decode: the IHM's default RAW calibration, optics off like the LR references.
-        IprTestImageGenerator::load("sample.generatormockraw");
+        TestRecipes::load("sample.generatormockraw");
         check(!received.automaticWhiteBalance && !received.lensCorrectionEnabled
               && !received.chromaticAberrationEnabled
               && received.normalizationManifest == ImageEditor::defaultCalibrationManifest()
