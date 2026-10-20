@@ -32,6 +32,15 @@ Basic.Menu {
     ActionMenuItem { action: root.actions.openImageAction }
     Basic.MenuSeparator { }
     ActionMenuItem {
+        action: root.actions.copyAction
+        enabled: root.currentPhoto && root.actions.copyAction.enabled
+    }
+    ActionMenuItem {
+        action: root.actions.pasteAction
+        enabled: root.currentPhoto && root.actions.pasteAction.enabled
+    }
+    Basic.MenuSeparator { }
+    ActionMenuItem {
         objectName: "contextSaveAdjustments"
         action: root.actions.saveAction
         enabled: root.currentPhoto && root.actions.saveAction.enabled

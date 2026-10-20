@@ -89,6 +89,7 @@ class ImageEditor final : public QObject
     Q_PROPERTY(QVariantMap memoryCacheStatus READ memoryCacheStatus NOTIFY decodedImageCacheChanged)
     Q_PROPERTY(int selectedImageCount READ selectedImageCount NOTIFY selectionChanged)
     Q_PROPERTY(QStringList selectedImageUrls READ selectedImageUrls NOTIFY selectionChanged)
+    Q_PROPERTY(bool hasCopiedAdjustments READ hasCopiedAdjustments NOTIFY copiedAdjustmentsChanged)
     Q_PROPERTY(QVariantList cameraProfiles READ cameraProfiles NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(bool rawImage READ rawImage NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(bool rawProfileFastPathAvailable READ rawProfileFastPathAvailable NOTIFY rawDevelopmentChanged)
@@ -197,6 +198,10 @@ public:
     Q_INVOKABLE void setImageSelected(const QUrl &fileUrl, bool selected);
     Q_INVOKABLE void clearImageSelection();
     Q_INVOKABLE void applyAdjustmentsToSelection();
+    bool hasCopiedAdjustments() const { return m_hasCopiedAdjustments; }
+    Q_INVOKABLE void copyAdjustments();
+    Q_INVOKABLE void pasteAdjustments();
+    Q_INVOKABLE void saveCurrentAdjustments();
     Q_INVOKABLE int colorMixerValue(int band, int component) const;
     Q_INVOKABLE int colorGradingValue(int zone, int component) const;
     Q_INVOKABLE double adjustmentValue(const QString &name) const;
@@ -247,6 +252,7 @@ signals:
     void histogramChanged();
     void decodedImageCacheChanged();
     void selectionChanged();
+    void copiedAdjustmentsChanged();
     void toneCurveChanged(int channel);
     void toneCurvesReset();
     void adjustmentsReset(int temperatureKelvin, int tint);
@@ -294,7 +300,7 @@ private:
     void releaseCurrentImage();
     void scheduleRender();
     void scheduleSidecarSave();
-    void saveCurrentSidecar();
+    bool saveCurrentSidecar();
     void startRender();
     void startEmbeddedPreview(const QString &fileName);
     void restoreBeforeEmbeddedPreview();
@@ -339,6 +345,8 @@ private:
     ImageCacheController m_decodedImageCache;
     QString m_currentCacheKey;
     Settings m_settings;
+    Settings m_copiedAdjustments;
+    bool m_hasCopiedAdjustments = false;
     QString m_imageSource;
     QString m_originalImageSource;
     QString m_statusMessage = tr("Choisissez un dossier contenant des images.");

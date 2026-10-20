@@ -106,6 +106,13 @@ Les travaux sous `docs/` suivent également les règles de [docs/AGENTS.md](docs
 
 ## Chantier IHM isolé — règle du 18 octobre 2026
 
+Complément du 20 octobre 2026 : à la demande explicite de l’utilisateur,
+`patch_ui` peut ajouter les raccordements de commandes dans `ImageEditor`
+nécessaires au copier/coller des recettes et à la sauvegarde manuelle.
+Cette exception ne permet pas de modifier les calculs photographiques, les
+décodeurs, les caches ou les profils ; les autres raccordements restent suivis
+dans le document dédié.
+
 - Le chantier IHM travaille dans le worktree `.worktrees/patch_ui`, sur la
   branche durable `patch_ui`, créée depuis `dev` à jour. Ne pas changer la
   branche du worktree principal ni intervenir dans les worktrees des autres agents.

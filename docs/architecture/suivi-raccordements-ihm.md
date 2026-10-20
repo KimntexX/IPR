@@ -2,6 +2,32 @@
 
 ## Périmètre du chantier
 
+### Reprise du 20 octobre 2026
+
+`origin/dev` a été fusionnée dans `patch_ui` (base `c86c934`). À la demande
+explicite de l’utilisateur, une exception ciblée au périmètre QML autorise les
+commandes de copie/collage de recette et de sauvegarde manuelle dans
+`ImageEditor`. Aucun calcul photographique, profil ou décodeur n’est modifié.
+Les indications « aucun changement moteur » ci-dessous décrivent les étapes
+antérieures, pas cette reprise.
+
+Le presse-papiers interne capture `EditRecipe::Settings` par valeur et reste
+disponible pendant les changements d’image, jusqu’à la fermeture de l’application
+ou une nouvelle copie. Coller remplace les retouches de l’image ouverte et
+programme un seul rendu et la sauvegarde automatique. Les réglages de prise de
+vue/développement (`RawDevelopment`, dont profil, calibration et optique), la
+balance automatique et le classement de la cible sont préservés. Température
+et nuance manuelles sont copiées en valeur absolue, sans prétendre produire une
+apparence identique entre boîtiers. Le presse-papiers système n’est pas utilisé.
+
+Commandes partagées entre Édition, clic droit et clavier : `Ctrl+Maj+C` pour
+copier, `Ctrl+Maj+V` pour coller. Elles attendent une image développée et prête,
+hors dialogue modal ; coller exige un instantané. Afin d’éviter un doublon,
+le comparatif avant/après passe de `Ctrl+Maj+C` à `Ctrl+Maj+Y`.
+`Ctrl+S` écrit immédiatement le compagnon courant et signale succès/échec.
+La duplication physique (IHM-CONN-008) et les autres contrats non mentionnés
+restent à raccorder ; cette reprise ne les déclare pas implémentés.
+
 Initialisé le **18 octobre 2026**, à la demande de l’utilisateur pour isoler
 les agents qui travaillent simultanément.
 
@@ -159,7 +185,16 @@ Sur macOS, les commandes utilisent Command ; les séquences standard Qt sont
 utilisées pour Ouvrir et Enregistrer. Le zoom garde ses commandes existantes.
 La confirmation de reset vérifie l’identité de la photo ; aucun Ctrl+Z fictif.
 
-**IHM-CONN-007 — en attente moteur : sauvegarde manuelle**
+**IHM-CONN-007 — raccordé le 20 octobre 2026 : sauvegarde manuelle**
+
+`saveCurrentAdjustments()` est maintenant invocable : arrêt du timer différé,
+écriture atomique existante du compagnon de l’image affichée et résultat explicite.
+Les gardes interdisent la sauvegarde durant un chargement/rendu ou sur un aperçu
+embarqué. Le test IHM couvre la commande et l’écriture immédiate ; le test
+des recettes vérifie également la relecture des compagnons. La qualification
+complète des droits d’écriture réels reste à compléter sur les plateformes cibles.
+
+Contrat initial conservé comme critères de qualification :
 
 Réserver Ctrl+S et l’action Enregistrer les réglages. Le moteur sauvegarde
 déjà automatiquement, mais `saveCurrentSidecar` est privé et non invocable
