@@ -1,7 +1,6 @@
 #include "ColorAdjustments.h"
 
 #include "ImageMath.h"
-#include "Vibrance.h"
 #include "WorkingColorSpace.h"
 
 #include <algorithm>
@@ -40,24 +39,6 @@ void toGrayscale(cv::Mat &linearRgb)
         for (int x = 0; x < linearRgb.cols; ++x) {
             const float value = WorkingColor::luminance(row[x]);
             row[x] = {value, value, value};
-        }
-    }
-}
-
-void applySaturationVibrance(cv::Mat &linearRgb, int saturation, int vibrance)
-{
-    if (saturation == 0 && vibrance == 0) return;
-    // The A1/A2 model is tuned on linear sRGB D65: unclipped round trip from
-    // the Rec.2020 master. Greys are left exact, without the matrices.
-    const cv::Matx33f toSrgb(WorkingColor::toSrgb()), fromSrgb(WorkingColor::fromSrgb());
-    const double saturationAmount = saturation / 100.0;
-    const double vibranceAmount = vibrance / 100.0;
-    for (int y = 0; y < linearRgb.rows; ++y) {
-        cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < linearRgb.cols; ++x) {
-            cv::Vec3f &pixel = row[x];
-            if (pixel[0] == pixel[1] && pixel[1] == pixel[2]) continue;
-            pixel = fromSrgb * Vibrance::apply(toSrgb * pixel, vibranceAmount, saturationAmount);
         }
     }
 }

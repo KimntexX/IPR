@@ -72,6 +72,8 @@ set(IPR_ENGINE_SOURCES
     src/core/ToneStatistics.h
     src/core/ToneStatistics.cpp
     src/core/Vibrance.h
+    src/core/Vibrance.cpp
+    src/core/VibranceModel.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
     src/profiles/CameraProfileEngine.h
@@ -262,8 +264,6 @@ if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY
     target_link_libraries(rawOpeningProbeTests PRIVATE iprEngine)
     add_test(NAME rawOpeningProbeTests COMMAND rawOpeningProbeTests)
     set_tests_properties(rawOpeningProbeTests PROPERTIES LABELS "unit;raw;diagnostic")
-    add_executable(colourModelStudyProbe EXCLUDE_FROM_ALL tests/colour_model_study_probe.cpp)
-    target_link_libraries(colourModelStudyProbe PRIVATE iprEngine)
 endif()
 if(BUILD_TESTING)
     # Pure numerical experiment: no image corpus, Qt plugin or production renderer.
@@ -281,8 +281,6 @@ if(BUILD_TESTING)
     ipr_add_test(rec2020PipelineTests tests/rec2020_pipeline_test.cpp)
     set_tests_properties(rec2020PipelineTests PROPERTIES LABELS "unit;pipeline;colour" TIMEOUT 60)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
-    ipr_add_test(colourModelStudyTests tests/colour_model_study_test.cpp)
-    set_tests_properties(colourModelStudyTests PROPERTIES LABELS "unit;colour;study")
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)

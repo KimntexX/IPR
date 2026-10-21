@@ -1358,6 +1358,50 @@ accélérée vers +100), protection insuffisante des couleurs déjà saturées (
 positif), baisse de Y de LR au négatif non reproduite, forte dispersion par scène
 à +100 à expliquer avant tout ajustement.
 
+### Correctif vibrance : tables de réponse Lightroom — 21 octobre 2026
+
+**Diagnostic pixel par pixel** (49 scènes, 40 000 à 60 000 pixels non écrêtés par
+état) : la vibrance LR est une fonction fixe du pixel, pas une adaptation à la
+scène. Saturation ProPhoto linéaire, clarté et teinte Oklab expliquent 93–95 % de
+la variance du gain log de chroma au positif ; l'identité de la scène n'ajoute que
+2 %. La dispersion par scène vient donc du contenu. Au positif, le gain culmine sur
+les tons moyens modérément saturés (×3,7 à +100 pour L ≈ 0,5) et retombe pour les
+ombres, les hautes lumières et les couleurs déjà saturées. Au négatif, les couleurs
+faibles sont presque entièrement désaturées à −100, les saturées gardent ×0,35 et
+s'assombrissent (L × 0,88). Les quasi-gris (C Oklab < 0,01) sont moins renforcés au
+positif et davantage désaturés à −100.
+
+**Modèle** (`src/core/Vibrance.cpp`, tables `src/core/VibranceModel.h` générées par
+`scripts/build_vibrance_model.py`) : gains log de chroma et de clarté par cellule
+saturation × clarté × teinte (12 × 9 × 12) à chaque valeur mesurée, médianes sur
+les scènes, chroma rendue monotone en fonction du curseur (régression isotone,
+61 cellules ajustées), facteur quasi-gris par valeur et par chroma. Le modèle A1/A2
+et l'étude A1/A2/B (sonde, comparateurs) sont retirés ; leurs JSON restent.
+Preuves : [v001](../raw/modele-vibrance-lr-v001-20261021T143113962366Z.json) (tables
+brutes), [v002](../raw/modele-vibrance-lr-v002-20261021T143629632031Z.json)
+(monotonie), [v003](../raw/modele-vibrance-lr-v003-20261021T151401834847Z.json)
+(facteur quasi-gris par signe), [v004](../raw/modele-vibrance-lr-v004-20261021T214946002023Z.json)
+(facteur par valeur, retenue). Validation croisée à deux plis de scènes, écart médian
+de variation de chroma (peu / très saturés) : −100 0,002 / 0,006 contre 0,020 / 0,122
+pour A1/A2 ; +50 0,012 / 0,012 contre 0,088 / 0,127 ; +100 0,072 / 0,035 contre
+0,407 / 0,263.
+
+**Mesure du rendu IPR** ([v007](../raw/mesure-couleur-v007-20261021T222150364055Z.json),
+637 états, aucune exclusion ; v005 et v006 mesurent les étapes v002 et v003) :
+
+| Valeur | Peu saturés LR / IPR | Très saturés LR / IPR | Y LR / IPR | Écart peu / très |
+| ---: | --- | --- | --- | --- |
+| −100 | −0,97 / −0,97 | −0,79 / −0,79 | 0,88 / 0,88 | 0,004 / 0,011 |
+| −50 | −0,53 / −0,53 | −0,40 / −0,39 | 0,95 / 0,95 | 0,002 / 0,009 |
+| −25 | −0,28 / −0,28 | −0,19 / −0,19 | 0,98 / 0,98 | 0,002 / 0,006 |
+| +25 | +0,11 / +0,11 | +0,05 / +0,06 | 1,00 / 1,00 | 0,013 / 0,005 |
+| +50 | +0,26 / +0,28 | +0,11 / +0,12 | 1,00 / 1,00 | 0,032 / 0,011 |
+| +100 | +0,90 / +0,91 | +0,22 / +0,24 | 0,98 / 0,98 | 0,135 / 0,022 |
+
+Limite : à +100, les médianes coïncident mais l'écart par scène des couleurs peu
+saturées reste de 0,135 (60D surtout : IMG_5414, 4062, 5383) ; à revoir en revue
+visuelle. Validation visuelle de l'utilisateur à faire avant toute fusion.
+
 ## Historique et compatibilité
 
 Un premier [smoke-test de cinq saturations 0327](../raw/modernisation-analyseurs/mesure-couleur-v001-20261010T185910569266Z.json)

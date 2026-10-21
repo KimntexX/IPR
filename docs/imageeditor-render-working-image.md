@@ -52,7 +52,7 @@ chaque module ignore ses réglages neutres.
 | 5 | Contraste | `Contrast::apply` |
 | 6 | Température et nuance sans DCP | `ColorPipeline::applyTemperatureTint` |
 | 7 | Ombres, noirs, hautes lumières, blancs | `ToneRecovery::apply` |
-| 8 | Saturation, vibrance | `ColorAdjustments::applySaturationVibrance` |
+| 8 | Saturation, vibrance | `Vibrance::apply` |
 | 9 | Mélangeur, étalonnage | `ColorAdjustments::applyMixerAndGrading` |
 | 10 | Bruit | `DetailProcessing::reduceNoise` |
 | 11 | Texture, clarté, voile | `DetailProcessing::applyTexture`, `applyClarity`, `dehaze` |
@@ -144,43 +144,28 @@ et [rapport Lumières](validation/analyses/analyse-validation-lumieres-base-2026
 
 ### Vibrance et saturation
 
-Après les réglages tonals, `ColorAdjustments::applySaturationVibrance` passe le
-master Rec.2020 linéaire en RGB linéaire sRGB D65 (matrices `WorkingColor`,
-sans écrêtage), applique `Vibrance::apply()` de `src/core/Vibrance.h` (premier
-jet A1/A2 du 13 octobre 2026, réglé dans cette base), puis revient en Rec.2020.
-Ce modèle remplace la réduction radiale autour de Y ; aucune option legacy.
-Les deux réglages sont bornés à `[-100, +100]`.
+Après les réglages tonals, `Vibrance::apply` (`src/core/Vibrance.cpp`) passe le
+master Rec.2020 linéaire en RGB linéaire sRGB D65 (matrices `WorkingColor`, sans
+écrêtage), agit en Oklab puis revient en Rec.2020. Les gris, le zéro des deux
+curseurs et les entrées vides ou d'un autre type restent inchangés. Les deux
+réglages sont bornés à `[-100, +100]`.
 
-Le RGB passe en Oklab, avec racines cubiques signées pour les données HDR ou
-hors gamut. Avec `C = hypot(a,b)`, `h = atan2(b,a)`, `q = clamp(C/max(|L|,0,05),0,1)`,
-`v = vibrance/100` et `s = saturation/100` :
+- **Saturation** multiplie la chroma Oklab par `1 + s/100` et conserve L.
+  Mesurée sur 49 scènes, elle suit LR à moins de 0,05 de variation de chroma.
+- **Vibrance** suit les tables de réponse LR de `src/core/VibranceModel.h`,
+  générées par `scripts/build_vibrance_model.py` : gains log de chroma et de
+  clarté Oklab selon la saturation ProPhoto linéaire `(max − min)/max`, la
+  clarté et la teinte Oklab du pixel, mesurés aux valeurs ±25, ±50, ±100 sur les
+  49 scènes de la base. Interpolation trilinéaire entre centres de cellules
+  (teinte circulaire), linéaire entre valeurs mesurées, zéro à zéro. Le gain de
+  clarté s'efface sous une chroma Oklab de 0,01 pour rester continu vers le gris.
 
-```text
-B = smoothstep(0,75 ; 1 ; |v|)
-v_effectif = v × (1 − 0,035 B) au négatif ; v × (1 + 0,065 B) au positif
-w = 1 − 0,1 q au négatif ; (1 − q)² × protection_chaude au positif
-gain = max(0, (1 + s) × (1 + v_effectif × w))
-(L,a,b)' = (L, gain × a, gain × b)
-```
-
-La protection chaude est une gaussienne centrée à 50° Oklab, largeur 25°,
-amplitude 0,4, pondérée par des transitions de L (0,10–0,35 / 0,85–1,10) et
-C (0,005–0,025). C'est un proxy chromatique, pas une détection de peau :
-les fleurs, prises et autres objets chauds sont aussi concernés. Les
-constantes sont des paramètres exploratoires de prototype, pas des poids DCP.
-
-A1 ne change l'intensité de commande qu'au-delà de ±75 ; cela ne garantit
-**pas** que le rendu intermédiaire soit identique à l'ancien modèle RGB,
-car A2 change la pondération sur toute la plage. La saturation −100 annule
-C ; +100 double C avant gamut, à vibrance zéro. Le zéro des deux curseurs,
-les noirs et les gris sont conservés exactement sans aller-retour matriciel.
-
-L'opérateur conserve L et h avant sortie, **pas la luminance linéaire Y**.
-La compression de gamut sRGB de production reste inchangée : elle peut
-modifier les teintes/clartés après cet opérateur. On ne promet ni identité
-avec LR, ni absence de dépassement RGB intermédiaire, ni couplage de
-luminosité supplémentaire. La conformité visuelle et le coût pleine
-résolution restent à tester ; les détails de l'étude sont dans le
+LR ne s'adapte pas à la scène : saturation, clarté et teinte du pixel expliquent
+93–95 % de la variance de son gain positif, l'identité de la scène 2 % de plus.
+La réponse positive est maximale sur les tons moyens modérément saturés et
+protège les couleurs déjà saturées ; au négatif, les couleurs faibles sont
+presque entièrement désaturées et les couleurs saturées assombries. Les détails
+et la validation croisée sont dans le
 [rapport Couleur](validation/analyses/analyse-couleur.md).
 
 ### Effets de détails et d'atmosphère

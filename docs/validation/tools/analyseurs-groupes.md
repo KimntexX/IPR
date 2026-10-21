@@ -36,27 +36,6 @@ chemin pour un seul groupe, sans écrasement ; sinon le nom inclut groupe,
 version et UTC réelle. `--data-version` et `--supersedes` conservent le lien
 vers une campagne remplacée sans modifier son JSON.
 
-### Comparaison ciblée vibrance/saturation
-
-```bash
-python tests/compare_vibrance_saturation.py --base tests/image/base --output-dir docs/validation/raw --data-version 1 --step 8
-```
-
-Cette recette sélectionne les deux commandes avant association et réutilise
-le moteur canonique Couleur : elle évite que des supports température/nuance
-ambigus bloquent une analyse qui ne les concerne pas. Les références IPR
-déclarées restent sous `base/neutre`. Pour LR, elle choisit explicitement
-le zéro propre unique de chaque série, avec audit des autres paramètres,
-sans substituer le neutre As Shot. Les doublons, commandes secondaires actives
-et changements de développement restent diagnostics ; les références manquantes
-restent exclues. Le JSON distingue les réponses internes auditées des paires
-à développement déclaré compatible. Aucun recalage/MAE inter-moteurs,
-aucune suppression d'image et aucun verdict automatique de fidélité LR.
-
-Une reprise utilise un nouveau `--data-version` et peut renseigner
-`--supersedes IDENTIFIANT_CAMPAGNE_PRECEDENTE` : la campagne antérieure
-reste immuable. L'option appartient à l'analyseur, pas au générateur.
-
 ## Associations et provenance
 
 `--base` lit les TIFF Lightroom des dossiers partagés, sans campagnes datées.
@@ -559,35 +538,24 @@ variable d'environnement ; le champ d'application dans la preuve est réel.
 Ce diagnostic n'applique aucun correctif, ne modifie ni photo ni recette,
 et ne compare pas les pixels LR/IPR de géométries différentes par MAE.
 
-## Étude diagnostique des modèles de vibrance/saturation
+## Modèle de vibrance Lightroom
 
-La cible native `colourModelStudyProbe`, exclue de la compilation par défaut,
-compare le témoin courant, l'ajustement des extrémités RGB, un candidat OKLCh
-adaptatif et les opérateurs ProPhoto de LightCraft PR #598. Elle utilise les
-sept RAW du corpus étudié et le chargeur courant, avant sortie sRGB, sans
-produire de TIFF. Elle ne modifie pas `iprGenerateTests` ni ses arguments.
+`scripts/build_vibrance_model.py` régénère `src/core/VibranceModel.h` depuis les
+références LR `base/couleur/vibrance` et leurs neutres `base/neutre` (XMP
+identique hors Vibrance) : gains log de chroma et de clarté Oklab par saturation
+ProPhoto linéaire, clarté et teinte Oklab du pixel neutre, médianes sur les
+scènes. Il refuse un état absent ou dupliqué, écrit une preuve immuable
+`modele-vibrance-lr-vNNN` (empreintes des TIFF, tables, validation croisée à deux
+plis contre le modèle remplacé) et ne lit aucun TIFF IPR. Le gain de chroma de
+chaque cellule est rendu monotone en fonction du curseur (régression isotone de
+chaque côté de zéro).
 
 ```powershell
-cmake --build build-windows-msvc --config Release --target colourModelStudyProbe colourModelStudyTests
-./build-windows-msvc/Release/colourModelStudyProbe.exe . docs/validation/raw
-python tests/compare_colour_model_study.py CHEMIN_SONDE.json CHEMIN_REFERENCE_COULEUR_V003.json
-python scripts/plot_colour_model_study.py CHEMIN_COMPARAISON.json docs/validation/metrics/curves/etude-modeles-couleur-v001.svg
-python -m unittest discover -s tests -p test_compare_colour_model_study.py
-ctest --test-dir build-windows-msvc -C Release -R '^(colourModelStudyTests|vibranceMathTests)$' --output-on-failure
+python scripts/build_vibrance_model.py --data-version N --supersedes CAMPAGNE_PRÉCÉDENTE
+ctest --test-dir build-windows-msvc -C Release -R '^vibranceMathTests$' --output-on-failure
 ```
 
-Utiliser l'environnement Qt/OpenCV/LibRaw du build ; les JSON sont créés
-avec horodatage, sans écraser les campagnes précédentes. Le comparateur
-refuse les états absents/dupliqués, contextes de développement incompatibles
-et un témoin qui ne reproduit pas la référence. Le SVG est un dérivé régénérable.
-Les réponses LR proviennent de la mémoire auditée : aucune nouvelle validation
-de leurs pixels, aucun recalage ou score global de qualité. Le rapport
-[Couleur](../analyses/analyse-couleur.md#étude-comparative-des-modèles--13-octobre-2026)
-décrit les limites et conclusions. Une étude n'autorise pas le remplacement
-automatique de la production, la publication Git ou la suppression d'images.
+L'effet du modèle intégré se mesure ensuite avec `tests/analyse_couleur.py`
+(états IPR rendus en mémoire). L'étude A1/A2/B du 13 octobre et sa sonde sont
+retirées ; ses JSON restent la mémoire de cette étude.
 
-Après l'intégration locale A1/A2 du 13 octobre, la sonde recompilée suit la
-nouvelle production dans son modèle `current`. La comparaison aux anciennes
-métriques v003 doit donc être refusée par le contrôle de témoin. Les fichiers
-de l'étude déjà stockés restent interprétables ; ne pas réécrire leur contexte
-ni annoncer qu'ils valident une nouvelle génération de TIFF.

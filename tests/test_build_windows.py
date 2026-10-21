@@ -91,14 +91,12 @@ class SelectionTests(unittest.TestCase):
         self.assertFalse(summary['full'])
         self.assertEqual(set(summary['python']),{'raw_opening_analysis','neutral_colour_inspection'})
 
-    def test_colour_study_is_targeted(self):
-        native = build.select_tests(["tests/colour_model_study.h"], RULES)
-        self.assertFalse(native["full"])
-        self.assertEqual(set(native["tests"]), {"colourModelStudyTests", "vibranceMathTests"})
-        summary = build.select_tests(["tests/compare_colour_model_study.py"], RULES)
-        self.assertFalse(summary["full"])
-        self.assertEqual(summary["tests"], [])
-        self.assertEqual(summary["python"], ["colour_model_study"])
+    def test_vibrance_model_is_targeted(self):
+        for path in ("src/core/Vibrance.cpp", "src/core/VibranceModel.h", "tests/vibrance_math_test.cpp"):
+            plan = build.select_tests([path], RULES)
+            self.assertFalse(plan["full"])
+            self.assertIn("vibranceMathTests", plan["tests"])
+            self.assertIn("imageExportTests", plan["tests"])
 
     def test_raw_normalization_is_targeted(self):
         for path in ("src/raw/RawNormalization.cpp", "src/raw/RawDecoder.cpp", "tests/raw_normalization_test.cpp"):

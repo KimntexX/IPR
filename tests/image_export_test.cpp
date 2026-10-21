@@ -1309,8 +1309,9 @@ int main(int argc, char **argv)
     const QColor reducedColour = reducedVibranceImage.pixelColor(0, 0);
     const int reducedSpread = std::max({reducedColour.red(), reducedColour.green(), reducedColour.blue()}) -
                               std::min({reducedColour.red(), reducedColour.green(), reducedColour.blue()});
-    if (!check(reducedSpread > 0 && reducedSpread < 15,
-               "negative vibrance must strongly reduce export chroma with a weak residual"))
+    // Lightroom keeps a residual on saturated colours at -100 (input spread 104).
+    if (!check(reducedSpread > 0 && reducedSpread < 104 / 3,
+               "negative vibrance must strongly reduce export chroma with a residual"))
         return 1;
 
     editor.resetAdjustments();
