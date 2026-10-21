@@ -224,7 +224,9 @@ def arch_recipe(output, label):
     return recipe
 
 
-def package(build, output, label, mode, env, runtime_dirs, native_format=None, verify_only=False, approval=None):
+def package(build, output, label, mode, env, runtime_dirs, native_format=None, verify_only=False, approval=None, installer=False):
+    if installer and (os.name != 'nt' or mode != 'standalone'):
+        raise ValueError('Windows installer requires Windows standalone mode')
     if native_format and (mode != 'system' or platform.system() != 'Linux'):
         raise ValueError('Native packages require Linux system mode')
     name = 'IPR-' + label + '-' + platform_name() + '-' + mode
@@ -288,6 +290,11 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None, v
                     if k in ('Qt6_DIR', 'OpenCV_DIR', 'LIBRAW_LIBRARY', 'TIFF_LIBRARY_RELEASE', 'CMAKE_CXX_COMPILER')},
                 'files': files}
     (stage / 'package-manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf8')
+    installer_path = None
+    if installer:
+        from windows_installer import build_installer
+        installer_path = build_installer(stage, output, label, verify_only=verify_only,
+                                        exercise_install=os.environ.get('GITHUB_ACTIONS') == 'true')
     if verify_only:
         print('Packaging verification passed; no downloadable archive created.', flush=True)
         return
@@ -295,7 +302,7 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None, v
         shutil.make_archive(str(archive.with_suffix('')), 'zip', root_dir=stage.parent, base_dir=stage.name)
     else:
         with tarfile.open(archive, 'w:gz') as stream: stream.add(stage, arcname=name)
-    packages = [archive]
+    packages = [archive] + ([installer_path] if installer_path else [])
     if native_format in ('deb', 'rpm'):
         if mode != 'system' or platform.system() != 'Linux': raise ValueError('Native packages require Linux system mode')
         before = set(output.iterdir())
@@ -326,8 +333,12 @@ def main(argv=None):
     parser.add_argument('--runtime-dir', type=Path, action='append', default=[])
     parser.add_argument('--cmake-arg', action='append', default=[])
     parser.add_argument('--native', choices=('deb', 'rpm', 'arch'))
+    parser.add_argument('--windows-installer', action='store_true',
+                        help='Compile an Inno Setup installer as well as the Windows standalone ZIP')
     parser.add_argument('--jobs', type=int, default=2)
     args = parser.parse_args(argv)
+    if args.windows_installer and (os.name != 'nt' or args.mode != 'standalone' or args.action not in ('all', 'package')):
+        parser.error('--windows-installer requires Windows standalone all/package')
     if args.verify_package_only and (args.native or args.action not in ('all', 'package')):
         parser.error('Packaging verification requires all/package without native distro archives')
     if args.test_plan and args.action in ('all', 'package'):
@@ -378,7 +389,7 @@ def main(argv=None):
             from delivery_policy import verify_publication_environment
             approval = verify_publication_environment()
         package(build, args.output_dir.resolve(), label, args.mode, env, args.runtime_dir,
-                args.native, args.verify_package_only, approval)
+                args.native, args.verify_package_only, approval, args.windows_installer)
     return 0
 
 

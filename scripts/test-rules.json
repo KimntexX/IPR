@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "full_threshold": 20,
-  "full_patterns": ["CMakeLists.txt", "CMakePresets.json", "cmake/**", ".github/**", "scripts/**", "src/editor/imageeditor.h", "src/core/ColorPipeline.h", "src/core/WorkingColorSpace.h"],
+  "full_patterns": ["CMakeLists.txt", "CMakePresets.json", "cmake/**", "packaging/**", ".github/**", "scripts/**", "src/editor/imageeditor.h", "src/core/ColorPipeline.h", "src/core/WorkingColorSpace.h"],
   "ignored_patterns": ["docs/**", "README.md", "licenses/**", "tests/image/**", ".gitignore", "CMakeLists.txt.user"],
   "targets": {
     "imageCacheControllerTests": "imageCacheControllerTests",
@@ -33,6 +33,7 @@
     "cameraProfileEngineTests": "cameraProfileEngineTests"
   },
   "python_suites": {
+    "windows_installer": "test_windows_installer.py",
     "opening_latency": "test_measure_opening_latency.py",
     "profile_rendering_integration": "test_verify_profile_rendering_integration.py",
     "r7_gain_study": "test_investigate_r7_gain.py",
@@ -143,6 +144,7 @@
     {"patterns": ["tests/analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis", "noise_analysis", "base_colorimetry_analysis"]},
     {"patterns": ["tests/test_analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis"]},
     {"patterns": ["tests/analyse_noise.py", "tests/test_analyse_noise.py"], "tests": [], "python": ["noise_analysis"]},
-    {"patterns": ["tests/test_build_windows.py"], "tests": [], "python": ["selection"]}
+    {"patterns": ["tests/test_build_windows.py"], "tests": [], "python": ["selection"]},
+    {"patterns": ["tests/test_windows_installer.py"], "tests": [], "python": ["windows_installer"]}
   ]
 }

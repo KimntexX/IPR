@@ -69,12 +69,18 @@ jobs:
       - shell: bash
         env:
           IPR_MODE: ${{ matrix.mode }}
-        run: python scripts/github_build.py --action all --mode "$IPR_MODE" --version "$IPR_BUILD_LABEL"
+        run: |
+          installer=()
+          if [[ "$RUNNER_OS" == Windows && "$IPR_MODE" == standalone ]]; then
+            installer+=(--windows-installer)
+          fi
+          python scripts/github_build.py --action all --mode "$IPR_MODE" --version "$IPR_BUILD_LABEL" "${installer[@]}"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: IPR-${{ needs.approval.outputs.branch }}-${{ needs.approval.outputs.sha }}-${{ matrix.os }}-${{ matrix.mode }}
           path: |
             dist/*.zip
+            dist/*-setup.exe
             dist/*.tar.gz
             dist/*.sha256
           if-no-files-found: error

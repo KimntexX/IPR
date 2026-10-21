@@ -49,6 +49,15 @@ runs:
           brew install qt
           echo "QT_ROOT_DIR=$(brew --prefix qt)" >> "$GITHUB_ENV"
         fi
+    - name: Install Windows installer compiler
+      if: runner.os == 'Windows' && inputs.mode == 'standalone'
+      shell: pwsh
+      run: |
+        choco upgrade innosetup --version=6.7.3 --allow-downgrade --yes --no-progress
+        if ($LASTEXITCODE) { exit $LASTEXITCODE }
+        $compiler = "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe"
+        if (-not (Test-Path -LiteralPath $compiler)) { throw "Inno Setup compiler missing" }
+        "IPR_ISCC=$compiler" >> $env:GITHUB_ENV
     - name: Dependency versions
       shell: bash
       run: |

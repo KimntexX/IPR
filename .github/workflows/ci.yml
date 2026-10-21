@@ -135,7 +135,12 @@ jobs:
       - shell: bash
         env:
           IPR_MODE: ${{ matrix.mode }}
-        run: python scripts/github_build.py --action all --mode "$IPR_MODE" --verify-package-only
+        run: |
+          installer=()
+          if [[ "$RUNNER_OS" == Windows && "$IPR_MODE" == standalone ]]; then
+            installer+=(--windows-installer)
+          fi
+          python scripts/github_build.py --action all --mode "$IPR_MODE" --verify-package-only "${installer[@]}"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
