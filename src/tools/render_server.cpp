@@ -23,7 +23,7 @@
 // Protocol: one JSON request per line on stdin; one JSON header line on stdout,
 // followed for a render by `bytes` bytes of little-endian uint16 RGB, row-major.
 //   {"op":"list","base":DIR,"group":G}  -> {"ok":true,"states":[...]}
-//   {"op":"render","source":FILE,"feature":F,"value":V[,"highlight_mode":M]}  -> header + pixels
+//   {"op":"render","source":FILE,"feature":F,"value":V}  -> header + pixels
 //   {"op":"quit"}
 // An error answers {"ok":false,"error":...} and the server keeps serving.
 // Diagnostics go to stderr; stdout carries only the protocol.
@@ -97,10 +97,7 @@ void render(Masters &masters, const QJsonObject &request)
                                                 [&](const Feature &known) { return known.name == feature; }),
             "Unknown feature: " + feature);
     require(feature == "neutral" || eligible(feature, source), "RAW source required for " + feature);
-    Decode decode = feature == "neutral" ? Decode{} : decodeFor(feature, value);
-    decode.highlightMode = request.value("highlight_mode").toInt(0);
-    require(decode.highlightMode >= 0 && decode.highlightMode <= 9, "highlight_mode must be 0-9");
-    const LoadResult &master = masters.get(source, decode);
+    const LoadResult &master = masters.get(source, feature == "neutral" ? Decode{} : decodeFor(feature, value));
     const Settings settings = settingsFor(master, feature, value);
     QString error;
     const QImage image = ImageEditor::renderSrgb16(master.image, settings, &error);

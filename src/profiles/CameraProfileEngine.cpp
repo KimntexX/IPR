@@ -1808,24 +1808,8 @@ bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tin
                                   temperature, tint, gains, error);
 }
 
-void recoverHighlights(cv::Vec3f &rgb, float amount, float headroom)
-{
-    // Rational shoulder f(t) = t (1 + a) / (1 + a t) on t = (peak - knee) /
-    // (headroom - knee): f(0) = 0, f(1) = 1, slope 1 at the knee when
-    // a = (headroom - knee) / (1 - knee) - 1, so the headroom spreads over the
-    // tones under white instead of piling up next to it.
-    constexpr float knee = 0.5f;
-    const float peak = std::max({rgb[0], rgb[1], rgb[2]});
-    if (amount <= 0.0f || headroom <= 1.0f || peak <= knee) return;
-    const float t = std::min((peak - knee) / (headroom - knee), 1.0f);
-    const float a = (headroom - knee) / (1.0f - knee) - 1.0f;
-    const float mapped = knee + (1.0f - knee) * t * (1.0f + a) / (1.0f + a * t);
-    const float target = peak + (std::min(mapped, 1.0f) - peak) * std::min(amount, 1.0f);
-    rgb *= target / peak;
-}
-
 bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
-                            double exposureEv, double highlightRecovery, cv::Mat &linearRgb, QString *error)
+                            double exposureEv, cv::Mat &linearRgb, QString *error)
 {
     if (source.cameraRgb.empty() || source.cameraRgb.type() != CV_32FC3) {
         if (error) *error = QStringLiteral("Source capteur DCP absente.");
@@ -1844,17 +1828,6 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
     cv::Mat rgb;
     cv::transform(source.cameraRgb, rgb, cv::Matx33f(
         float(gains[0]),0,0, 0,float(gains[1]),0, 0,0,float(gains[2])));
-    if (highlightRecovery > 0.0 && source.headroom > 1.0) {
-        const float amount = float(std::min(highlightRecovery, 1.0));
-        // Exposure and white balance edits scale the signal's headroom too.
-        const float headroom = float(source.headroom * std::max({gains[0], gains[1], gains[2]}));
-        cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
-            for (int y = rows.start; y < rows.end; ++y) {
-                auto *row = rgb.ptr<cv::Vec3f>(y);
-                for (int x = 0; x < rgb.cols; ++x) recoverHighlights(row[x], amount, headroom);
-            }
-        });
-    }
     const double kelvin = temperature == int(std::lround(source.sourceKelvin)) && tint == 0
         ? source.sourceKelvin : double(temperature);
     if (!profile->apply(rgb, kelvin, error, source.options)) return false;

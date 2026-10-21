@@ -44,9 +44,6 @@ struct Options
     bool useNormalizationEnvironment = true;
     bool listDcpProfiles = false;
     bool preferCameraNeutral = false;
-    // LibRaw highlight mode (params.highlight): 0 clips at white; 2 blends;
-    // 3-9 rebuild clipped channels from the others.
-    int highlightMode = 0;
     std::shared_ptr<DcpSource> retainedDcpSource;
     std::function<bool()> cancellationRequested;
 };

@@ -150,12 +150,9 @@ class RenderServer:
     def states(self, base, group):
         return self._request({"op": "list", "base": str(base), "group": group})["states"]
 
-    def render(self, source, feature, value, highlight_mode=0):
+    def render(self, source, feature, value):
         """Pixels (height, width, 3) uint16 and metadata shaped like native.inspect()."""
-        request = {"op": "render", "source": str(source), "feature": feature, "value": value}
-        if highlight_mode:
-            request["highlight_mode"] = highlight_mode
-        header = self._request(request)
+        header = self._request({"op": "render", "source": str(source), "feature": feature, "value": value})
         width, height = header["width"], header["height"]
         if header["channels"] != 3 or header["dtype"] != "<u2" or header["bytes"] != width * height * 6:
             raise ValueError("Unexpected render layout from iprRenderServer")

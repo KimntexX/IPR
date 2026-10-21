@@ -46,7 +46,6 @@ ColorPipeline::WorkingImage render(Source &&source, const QString &profile,
     context->profilePath = profile;
     context->sourceKelvin = source.whiteBalanceKelvin.value_or(5500.0);
     context->cameraNeutral = source.cameraNeutral;
-    context->headroom = source.headroom;
     context->options = options;
     // One working copy: preserve the immutable camera buffer before nonlinear DCP.
     auto rendered = context->cameraRgb.clone();

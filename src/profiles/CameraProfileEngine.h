@@ -40,9 +40,6 @@ struct DcpWorkingContext
     QString profilePath;
     double sourceKelvin = 5500.0;
     cv::Vec3d cameraNeutral{0.0, 0.0, 0.0}; // Inverse actual LibRaw multipliers, G=1.
-    // Largest value of cameraRgb: above 1 when the decoder rebuilt clipped
-    // highlights (headroom); 1 when it clipped at white.
-    double headroom = 1.0;
     DcpRenderOptions options;
 };
 
@@ -51,15 +48,8 @@ bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tin
 // Scene-referred source edits: white balance gains and exposure scale the
 // linear camera signal, then the DCP (tables and tone curve) is applied.
 // Exposure therefore precedes the profile tone curve, as in camera RAW editors.
-// highlightRecovery (0..1) brings the headroom above white back under it
-// before the profile, whose tables clip at 1 (soft shoulder on the largest
-// channel, ratios kept); 0, or a source without headroom, leaves it as is.
 bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
-                            double exposureEv, double highlightRecovery, cv::Mat &linearRgb,
-                            QString *error = nullptr);
-// The shoulder of renderFromCameraSignal, on one camera RGB value: the
-// largest channel's range [knee, headroom] is mapped onto [knee, 1].
-void recoverHighlights(cv::Vec3f &rgb, float amount, float headroom);
+                            double exposureEv, cv::Mat &linearRgb, QString *error = nullptr);
 
 struct LcpRenderOptions
 {

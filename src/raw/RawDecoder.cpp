@@ -398,7 +398,6 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
     raw.imgdata.params.use_auto_wb = options.automaticWhiteBalance ? 1 : 0;
     raw.imgdata.params.use_camera_matrix = profiles.dcpPath.isEmpty() ? 1 : 0;
     raw.imgdata.params.no_auto_bright = 1;
-    raw.imgdata.params.highlight = std::clamp(options.highlightMode, 0, 9);
     raw.imgdata.params.output_bps = 16;
     raw.imgdata.params.output_color = profiles.dcpPath.isEmpty() ? 1 : 0;
     raw.imgdata.params.gamm[0] = 1.0;
@@ -523,19 +522,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         cv::Mat rgb16(int(processed->height), int(processed->width), CV_16UC3,
                       processed->data);
         cv::Mat cameraRgb;
-        // With a highlight mode, LibRaw scales by the largest white-balance
-        // multiplier instead of the smallest, keeping room above white for the
-        // clipped channels it rebuilds; restore the usual exposure, so the
-        // rebuilt highlights land above 1 (headroom).
-        double headroomGain = 1.0;
-        if (options.highlightMode > 0) {
-            const auto &m = raw.imgdata.color.pre_mul;
-            const double low = std::min({m[0], m[1], m[2]}), high = std::max({m[0], m[1], m[2]});
-            if (low > 0 && std::isfinite(high / low)) headroomGain = high / low;
-            qInfo().noquote() << QStringLiteral("IPR headroom | %1 | highlight mode %2, headroom x%3")
-                .arg(QFileInfo(fileName).fileName()).arg(options.highlightMode).arg(headroomGain, 0, 'f', 3);
-        }
-        rgb16.convertTo(cameraRgb, CV_32FC3, headroomGain / 65535.0);
+        rgb16.convertTo(cameraRgb, CV_32FC3, 1.0 / 65535.0);
         if (!profiles.lcpPath.isEmpty() &&
             !CameraProfileEngine::applyLcp(profiles.lcpPath, cameraRgb, capture,
                                             error, opticalOptions, &opticalApplied))
@@ -552,7 +539,6 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             signal.cameraModel = sourceMetadata.cameraModel;
             signal.whiteBalanceKelvin = sourceWhiteBalanceKelvin;
             signal.whiteBalanceApplied = true;
-            signal.headroom = headroomGain;
             // scale_colors updates pre_mul to the multipliers actually used,
             // including auto WB. Ratios remove the common scaling factor.
             const auto &color = raw.imgdata.color;
@@ -746,10 +732,7 @@ ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString 
     signal.cameraModel = source.metadata.cameraModel;
     signal.whiteBalanceKelvin = source.whiteBalanceKelvin;
     signal.whiteBalanceApplied = true;
-    if (source.workingContext) {
-        signal.cameraNeutral = source.workingContext->cameraNeutral;
-        signal.headroom = source.workingContext->headroom;
-    }
+    if (source.workingContext) signal.cameraNeutral = source.workingContext->cameraNeutral;
     auto image = CameraSignal::render(std::move(signal), path,
         source.workingContext ? source.workingContext->options : CameraProfileEngine::DcpRenderOptions{}, error);
     if (image.isNull()) return {};
