@@ -1,56 +1,95 @@
 *[Français](build-windows-standalone.md) | [English](build-windows-standalone_en.md)*
 
-# IPR — version autonome Windows x64
+# IPR — distributions Windows x64
 
-## Utilisation
+Mise à jour du 21 octobre 2026. Cette version française décrit le packaging
+courant ; sa traduction relève du chantier documentaire.
 
-Extraire l'archive entière dans un dossier accessible en écriture, puis lancer
-`appIPR.exe`. Ne pas déplacer l'exécutable seul. Le kit Qt, OpenCV et LibRaw
-n'ont pas besoin d'être installés séparément : leurs dépendances sont incluses.
-La cible est Windows 10/11 x64 ; les essais actuels ne remplacent pas un test
-sur une machine propre et sur chaque version de Windows.
+## ZIP portable et installateur
 
-- `config/ipr-ui.ini` : état de l'IHM portable, lu et mis à jour dans ce dossier.
-- `config/raw-normalization.json` : calibration expérimentale, désactivée par défaut.
-- `profiles/dcp` et `profiles/lcp` : profils locaux ; redémarrer après ajout.
-- `profiles/index.json` : sélection explicite facultative par appareil/objectif.
-- `licenses` : textes et notices des dépendances ; audit complet avant publication.
-- `package-manifest.json` : inventaire et SHA-256 des fichiers à l'empaquetage.
+Les deux distributions utilisent le même contenu standalone vérifié :
 
-Pour reproduire le rendu testé, ouvrir un RAW, sélectionner **Camera Neutral**
-dans « Développement RAW / Profil », désactiver la WB automatique et activer
-la normalisation uniquement pour les RAW audités. Le manifeste est détecté
-dans `config`. Vérifier le statut d'application. Le profil et l'activation RAW
-restent des choix de session, indépendants de la persistance de l'IHM.
-La calibration concerne uniquement 0007, 0043, 0327, 9421 et 9950 du corpus
-exact (empreintes SHA-256), avec LibRaw 0.22.2-Release. Aucun autre RAW n'est
-calibré automatiquement. Camera Neutral peut toutefois être sélectionné
-pour d'autres RAW compatibles, sans cette calibration spécifique.
+- ZIP : extraire toute l’archive et lancer `bin/appIPR.exe`. Les préférences
+  restent dans `bin/config/ipr-ui.ini` ; le dossier doit être accessible en écriture.
+- Inno Setup : `IPR-<version>-windows-x64-setup.exe`, installation par utilisateur
+  dans `%LOCALAPPDATA%/Programs/IPR`, sans élévation par défaut. Raccourci Démarrer,
+  bureau facultatif, mise à niveau avec AppId constant et désinstallation Windows.
 
-## Profils et distribution
+Cible : Windows 10/11 x64. Windows ARM et 32 bits ne sont pas certifiés.
+Qt/QML et les DLL tierces proviennent du packaging existant.
+Le mode `system` reste distinct et n’est pas enveloppé dans cet installateur.
 
-Le script n'inclut aucun profil Adobe par défaut. L'option explicite
-`-IncludeLocalAdobeProfiles` produit une **copie locale privée de test** avec
-Camera Neutral pour le Canon EOS R6 Mark III et les LCP Canon installés.
-Cette copie ne doit pas être publiée, committée ou redistribuée : aucun droit
-de redistribution de ces profils n'a été établi. Voir
-`licenses/ADOBE-PROFILES-NOTICE.md`. Les droits de toutes les dépendances
-doivent également être vérifiés avant une distribution publique.
+## Préférences et profils
 
-## Reproduction depuis le dépôt
+L’installateur omet `bin/config/ipr-ui.ini`. Le comportement existant de
+`UiPreferences` utilise alors `QStandardPaths::AppConfigLocation/ipr-ui.ini`,
+initialisé avec les valeurs embarquées. Le manifeste installé possède son
+propre inventaire et l’empreinte du manifeste portable source.
 
-Compiler la version Release, puis depuis PowerShell à la racine :
+La calibration publique reste dans `bin/config/raw-normalization.json` ;
+c’est une ressource distribuée, distincte des préférences utilisateur.
+Les profils personnels sont recherchés dans
+`QStandardPaths::AppDataLocation/profiles` : `index.json`, `dcp/`, `lcp/`.
+Ils ne sont pas gérés par le désinstalleur. Redémarrer après ajout.
+Les profils embarqués sont dans `bin/profiles/`, avec un index public vide.
+
+Le chargement DCP/LCP est multiplateforme : racine portable, ressources du
+bundle macOS et `share/IPR/profiles/` sur Unix. La découverte Adobe n’est pas
+complètement uniforme : automatique sous Windows, cas WSL sous Linux, pas de
+racine Adobe macOS implicite. `IPR_ADOBE_CAMERARAW_DIR` fonctionne sur les trois OS.
+
+Aucun DCP/LCP privé n’est inclus. L’inventaire SHA-256 est vérifié avant
+compilation ; les fichiers modifiés ou supplémentaires sont refusés.
+Cela ne remplace pas l’audit juridique. Il n’existe pas d’option courante
+d’empaquetage privé des profils Adobe.
+
+## Construction locale
+
+Préparer un build Release standalone au même libellé de version que le paquet.
+Depuis la racine, adapter les chemins et la version de cet exemple :
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/package-windows.ps1
-# Copie locale de test seulement, avec les profils Adobe installés :
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/package-windows.ps1 -Destination dist/IPR-Windows-x64-local -IncludeLocalAdobeProfiles
+$env:IPR_ISCC = 'C:/Program Files (x86)/Inno Setup 6/ISCC.exe'
+./scripts/package-windows.ps1 -BuildDirectory build-ci -OutputDirectory dist `
+  -Mode standalone -Version 0.1.20-alpha -QtRoot 'C:/Qt/6.8.3/msvc2022_64' `
+  -RuntimeDirectory 'build-ci/vcpkg_installed/x64-windows/bin' -Installer
 ```
 
-Le script refuse toute destination existante et ne supprime rien. Ses chemins
-Qt/OpenCV/vcpkg sont paramétrables. Les dossiers générés et archives `dist/`
-ne doivent pas entrer dans le dépôt. Ils ne contiennent pas les photographies.
+La version est illustrative, pas un jalon livré. Inno Setup 6.3+ est requis ;
+la CI installe 6.7.3. Sans `-Installer`, seul le ZIP est demandé.
+Le script ne recompile pas le C++, refuse les sorties existantes et n’installe
+pas IPR sur le poste développeur. Les sorties restent dans `dist/`, hors Git.
 
-L'accord visuel Camera Neutral a été accepté par l'utilisateur ; la parité
-exacte Lightroom et la fidélité colorimétrique physique ne sont pas validées.
-Le rendu Adobe Standard reste à traiter et le test JPEG 9933 reste en échec.
+Pour compiler seulement le setup depuis un staging déjà mesuré :
+
+```powershell
+python scripts/windows_installer.py --stage 'dist/.staging/IPR-<libelle>-windows-x64-standalone' `
+  --version '<libelle>' --output-dir dist --iscc 'CHEMIN/ISCC.exe'
+```
+
+Le libellé doit correspondre au manifeste. Ce script ne transforme pas
+un dossier de build ou un paquet system en standalone.
+
+## CI et limites de validation
+
+Sur `patch_ci_cd`, le setup est compilé/testé temporairement puis supprimé :
+pas de binaire téléchargeable. Sur `dev`/`main`, ZIP, setup et SHA-256 sont livrés
+seulement après validation du commit exact par la politique existante.
+
+Le runner Windows GitHub hébergé et jetable teste installation silencieuse,
+réinstallation du même paquet, démarrage QML hors environnement développeur et
+désinstallation. Un fichier non possédé doit survivre. Une installation IPR
+préexistante bloque ce test ; il n’est pas exécuté automatiquement en local.
+
+Restent à vérifier sur une machine utilisateur sans SDK : compte standard,
+chemins avec espaces/accents, préférences/profils personnels, mise à niveau
+entre deux versions différentes et ouverture RAW réelle. Photos et sidecars
+ne doivent pas être altérés. Pas de signature de distribution configurée ;
+un avertissement Windows reste possible, sans justifier de désactiver la sécurité.
+
+## Références
+
+- [Inno : mode sans élévation](https://jrsoftware.org/ishelp/topic_setup_privilegesrequired.htm).
+- [Inno : identité AppId](https://jrsoftware.org/ishelp/topic_setup_appid.htm).
+- [Inno : versions officielles](https://jrsoftware.org/isdl.php).
+- [Qt : emplacements applicatifs](https://doc.qt.io/qt-6/qstandardpaths.html).

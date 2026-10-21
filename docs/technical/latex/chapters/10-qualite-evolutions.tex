@@ -21,6 +21,35 @@ Les cinq suites Windows ciblées de la dernière adaptation portable et les
 76 tests Python d'analyse plus 12 de sélection réussissent. Ces nombres sont
 une photographie datée, pas une garantie d'exécution future.
 
+\section{Livraison et installateur Windows : ajout du 21 octobre 2026}
+\begingroup
+\interlinepenalty=10000
+\clubpenalty=10000
+\widowpenalty=10000
+
+Les chiffres et restrictions du 8 octobre ci-dessus sont historiques, non une
+qualification de la distribution actuelle. Le packaging Windows standalone peut
+désormais compiler un installateur Inno Setup en complément du ZIP. Les profils
+DCP/LCP privés ne sont pas distribués. La signature de distribution reste à mettre
+en place ; la création d'un installateur n'est pas une certification de rendu.
+
+La branche \texttt{patch\_ci\_cd} effectue une vérification sans publier de
+binaire téléchargeable. Les livraisons sont réservées à \texttt{dev} et
+\texttt{main}, après validation du commit exact. Sur un runner Windows GitHub
+hébergé jetable, la recette demande installation silencieuse temporaire,
+réinstallation du même paquet, démarrage QML et désinstallation. Elle contrôle
+la conservation d'un fichier non possédé par l'installateur. Elle refuse une
+installation IPR déjà présente. Ces contrôles sont implémentés dans le pipeline ;
+leur succès doit être établi sur le prochain run, pas déduit des seuls tests Python.
+
+La recette sur une machine utilisateur reste nécessaire : compte standard,
+absence de SDK, chemins avec accents, conservation des préférences et profils,
+mise à niveau entre deux versions différentes et ouverture photographique.
+Aucune installation de test n'est déclenchée automatiquement sur le poste local.
+Les détails opérationnels sont dans
+\texttt{docs/architecture/build-windows-standalone.md}.
+\endgroup
+
 \section{Éléments à compléter avant une distribution}
 
 \begin{itemize}

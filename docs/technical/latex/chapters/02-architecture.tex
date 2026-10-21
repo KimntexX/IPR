@@ -220,7 +220,7 @@ mise à jour. Les contextes de sélection restent propres aux images.
 
 L'ADR-0012 retient DCP et JSON complémentaires : matrices, tables et courbe
 dans le DCP ; conditions et provenance de caractérisation dans le catalogue
-\texttt{config/raw-normalization.json}. SQLite pourra indexer une bibliothèque
+\path{config/raw-normalization.json}. SQLite pourra indexer une bibliothèque
 plus grande, mais n'est pas une dépendance nouvelle ni la source de vérité.
 Les preuves d'analyse JSON horodatées restent distinctes de la configuration.
 
@@ -258,7 +258,7 @@ pas la lecture silencieuse de son aperçu comme image de remplacement.
 \begin{tikzpicture}[node distance=11mm and 14mm]
   \node[service] (raw) {Adaptateur RAW\\DCP ou matrice};
   \node[service, right=of raw] (raster) {Lecteur raster Qt\\ICC / sRGB supposé};
-  \node[component, below=of raw, xshift=24mm] (import) {\texttt{ImageImport::Result}\\validation commune};
+  \node[component, below=of raw, xshift=24mm] (import) {\texttt{ImageImport::}\\\texttt{Result}\\validation commune};
   \node[component, below=of import] (edit) {Master Rec.2020\\proxy, retouches, sortie};
   \draw[flow] (raw) -- (import);
   \draw[flow] (raster) -- (import);
@@ -315,6 +315,36 @@ d'image ni un coefficient R7 à réutiliser sur un R6. Les tests comparent les
 rendus chauds/sans rétention, les modifications de profil et des lectures
 concurrentes DCP/LCP. Aucun pourcentage d'accélération globale n'est déduit de
 ces seuls contrôles ; les compteurs sont conservés dans les preuves de rejeu RAW.
+
+\section{Distributions et données utilisateur}
+\begingroup
+\interlinepenalty=10000
+\clubpenalty=10000
+\widowpenalty=10000
+
+État du 21 octobre 2026 : le ZIP Windows et l'installateur Inno Setup partagent
+le staging standalone de \texttt{scripts/ci.py}. La recette ne redéploie pas une
+seconde fois les dépendances. L'exécutable reste dans \texttt{bin} ; les notices,
+profils publics et ressources distribuées conservent leur arborescence.
+
+Le ZIP contient \texttt{bin/config/ipr-ui.ini}. L'installateur omet ce fichier
+et laisse \texttt{UiPreferences} utiliser le répertoire retourné par
+\texttt{QStandardPaths::}\allowbreak\texttt{AppConfigLocation}. Les valeurs par défaut sont déjà
+embarquées dans l'application. Les préférences ne sont donc ni recopiées depuis
+le poste de construction, ni remplacées par une nouvelle version du paquet.
+
+Les profils personnels sont recherchés dans le sous-dossier \texttt{profiles}
+de \texttt{QStandardPaths::}\allowbreak\texttt{AppDataLocation}. Ils sont distincts des ressources
+publiques installées et restent hors du périmètre du désinstalleur. Le catalogue
+\texttt{index.json} référence des chemins relatifs à sa racine. Les emplacements
+portables, macOS et Unix existent ; la découverte Adobe macOS reste manuelle via
+\path{IPR_ADOBE_CAMERARAW_DIR}, contrairement au chemin Windows implicite.
+
+L'installation Windows s'effectue par utilisateur, sans élévation par défaut,
+avec une identité \texttt{AppId} stable. Le manifeste installé retire le fichier
+INI portable de son inventaire et conserve l'empreinte du manifeste source.
+Le moteur photographique n'est pas modifié par cette séparation de distribution.
+\endgroup
 
 \section{Contrôleur mémoire et préchargement des images}
 

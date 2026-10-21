@@ -17,7 +17,10 @@ Les archives contiennent une mémoire JSON de construction, un inventaire SHA-25
 les notices de licences et un test de démarrage hors du dépôt. Ce test n'est pas
 une validation photographique ni un test sur une machine vierge.
 Les applications ne sont pas signées par un certificat de distribution ; macOS
-reçoit seulement une signature ad hoc. Aucun installateur ni notarisation.
+reçoit seulement une signature ad hoc. Pas de notarisation. Windows standalone
+peut aussi produire un installateur Inno Setup (`--windows-installer`) : installation
+par utilisateur, préférences dans le dossier Qt utilisateur et profils personnels
+conservés. Le ZIP reste portable. Voir docs/architecture/build-windows-standalone.md.
 
 Le standalone Linux conserve les bibliothèques de base du système (glibc,
 chargeur, pilotes). Ubuntu 24.04 est sa cible initiale ; pas une garantie de
