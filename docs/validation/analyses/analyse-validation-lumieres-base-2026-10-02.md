@@ -1130,3 +1130,35 @@ aucune règle de normalisation 60D). Effet HL seul, écart du neutre retiré (sc
 Amélioration à toutes les valeurs, nette sur les négatifs ; seuil de 80 % non atteint
 (−25 : 40/49 mais trois scènes au-delà de 4). Écart absolu, neutre compris, à −100 :
 moyenne 7,8 → 6,7. Régressions à surveiller : 6V1A0054 et 6V1A0182 (scènes sombres).
+
+#### Revue visuelle et hautes lumières écrêtées, 21 octobre 2026
+
+Retours de l'utilisateur sur la version des scènes voisines : conformes sur 0524,
+0327, 9141 ; force insuffisante sur 9616 (±100), 9605 (+100), 7423 (+100) ; trop forte
+sur 0783 (+100) et IMG_8055 ; à −100, **voile** sur IMG_8055 et IMG_7423, pic bleu au
+lieu d'un pic vert sur 0830, halo sur le contour de 0783. Planches comparatives IPR/LR
+(`scripts/compare_lumieres_visual.py`, effet en ΔL\* et histogrammes par canal) :
+
+- **Voile et pic** : sur les zones entièrement écrêtées (ciel de 7423 et 0830, fenêtre
+  de 8055), LR redonne un dégradé (7423 à −100 : L\* 82–97) quand IPR rend un aplat
+  (91,9, dispersion 0,1). IPR écrête au blanc dès le décodage (master ≤ 1).
+- **Reconstruction LibRaw** (commit 783ef72, désactivée par défaut) : les modes de
+  reconstruction redonnent du relief là où un ou deux canaux seulement saturent ; avec
+  la compensation d'échelle, le neutre est inchangé (≤ 0,06 L\* en moyenne) et la
+  reconstruction loge au-dessus de 1. Une récupération avant le profil (dont les tables
+  bornent à 1) ramène cette réserve sous le blanc pour HL négatif.
+- **Ajustement de sa forme** (`fit-recuperation-hl-v001`, 11 scènes écrêtées) : aucune
+  forme fixe ne bat l'écrêtage à −100 en moyenne (4,48 contre 4,52 au mieux) ; −50 :
+  2,06 → 1,71. Gains nets sur certaines scènes (7423 6,8 → 4,5 ; 5414 8,7 → 4,0),
+  pertes sur d'autres (0524, 6006, où LR garde le ciel presque blanc) ; franges colorées
+  sur 5414 avec une forme forte.
+- **Remplissage multi-échelle des pixels entièrement saturés** (prototype retiré) :
+  utile seulement quand la zone est bordée de tons clairs non saturés (5414 : 77–86
+  contre 62–84 pour LR) ; sans effet sur 7423 et 0830, où le dégradé de LR vient d'un
+  traitement local des tons (distance au bord), le même comportement local qu'au
+  diagnostic du 20 octobre, et probablement le halo vu sur 0783.
+
+Décision (recommandation acceptée par l'utilisateur) : **HL mises de côté avec réserve**
+— voile sur les ciels entièrement écrêtés à HL négatif, force variable selon la scène ;
+reconstruction, remplissage et traitement local repris avec le module local partagé avec
+clarté et texture.
