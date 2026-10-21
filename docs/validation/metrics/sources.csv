@@ -165,6 +165,8 @@ docs/validation/raw/mesure-correction-voile-brut-2026-10-02.txt,e2df7ea4ef1046c2
 docs/validation/raw/mesure-couleur-v001-20261012T212646781304Z.json,9b89636eb22e1c6f59cf8deeaa83aa5d5100b347aa8dd0f88f9fafc01acd46d2,base-raw-profils,3093383,sha256-text-lf-v1
 docs/validation/raw/mesure-couleur-v002-20261013T092025490768Z.json,4deb43f939c37ad66f02a6bfcef3073307c547f6904e72366707175a6c03f270,base-raw-profils,3410152,sha256-text-lf-v1
 docs/validation/raw/mesure-couleur-v003-20261013T103940441925Z.json,9de458c6d6b422beeb87175c3c91f4be4962bd0dd943a602f297a25970c1af5f,base-raw-profils,3314783,sha256-text-lf-v1
+docs/validation/raw/mesure-couleur-v004-20261021T135305383058Z.json,cf1f2380eed0bd8d58716163cff61e1232e8b2983569d79db224f59e537da92d,base-raw-profils,9404380,sha256-text-lf-v1
+docs/validation/raw/mesure-couleur-v004-20261021T141819844745Z.json,b82ab110bd3b24d56b77e06d380163bdfa87231e51635251c82d3cc793ef82a6,base-raw-profils,9406958,sha256-text-lf-v1
 docs/validation/raw/mesure-courbe-dcp-neutral-20261008-controle.json,d1059787ea91d56e7e85079caeb3b0cd8ed8d7d392afba6bbf0f99a450114508,base-raw-profils,111883,sha256-text-lf-v1
 docs/validation/raw/mesure-courbe-dcp-neutral-20261008.json,b9e5921ba46d08bb12835fb4d2f582258666c4a657f2378a9e482fbb7a67966c,base-raw-profils,111619,sha256-text-lf-v1
 docs/validation/raw/mesure-exposition-camera-neutral-20261009.json,db1f0ccff78a1348a25543ace9e298e59866d719ec05a9d30eabd6a689c01857,base-raw-profils,113723,sha256-text-lf-v1

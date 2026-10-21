@@ -1327,6 +1327,37 @@ fusion ou publication automatique. Les TIFF restent conservés à cette passe :
 conformité incomplète (+150 manquant, optique non homogène), attribution causale
 non isolée et `cleanup_eligible=false`. RAW et neutres communs sont intacts.
 
+## Campagne vibrance/saturation sur 49 scènes — 21 octobre 2026
+
+Première mesure du modèle A1/A2 sur le master Rec.2020 (aller-retour sRGB linéaire,
+fusion de `dev` dans `patch_color`, `bcb5d57`). Références LR des 49 RAW de la base
+(R6 III, R7, EOS 60D), préréglages autonomes du groupe « IPR Couleur »
+(`scripts/make_lr_presets.py`), valeurs −100, −50, −25, +25, +50, +100 ; neutres
+communs de `base/neutre`, états IPR rendus en mémoire. Campagnes
+[vibrance](../raw/mesure-couleur-v004-20261021T135305383058Z.json) et
+[saturation](../raw/mesure-couleur-v004-20261021T141819844745Z.json) : 637 états
+mesurés chacune, aucune exclusion.
+
+Médianes sur les scènes de la variation relative de chroma, pixels peu et très
+saturés (LR / IPR), et écart absolu médian par scène (IPR − LR) :
+
+| Réglage | Valeur | Peu saturés | Très saturés | Y | Écart peu / très |
+| --- | ---: | --- | --- | --- | --- |
+| Vibrance | −100 | −0,97 / −0,96 | −0,79 / −0,92 | 0,88 / 1,00 | 0,01 / 0,13 |
+| Vibrance | −50 | −0,53 / −0,48 | −0,40 / −0,37 | 0,95 / 1,00 | 0,05 / 0,04 |
+| Vibrance | +25 | +0,11 / +0,21 | +0,05 / +0,10 | 1,00 / 1,00 | 0,10 / 0,03 |
+| Vibrance | +50 | +0,26 / +0,42 | +0,11 / +0,18 | 1,00 / 1,00 | 0,14 / 0,06 |
+| Vibrance | +100 | +0,90 / +0,86 | +0,22 / +0,31 | 0,98 / 1,00 | 0,31 / 0,09 |
+| Saturation | −100 | −1,00 / −1,00 | −1,00 / −1,00 | 0,99 / 1,00 | 0,00 / 0,00 |
+| Saturation | +50 | +0,45 / +0,44 | +0,22 / +0,23 | 1,01 / 1,00 | 0,03 / 0,02 |
+| Saturation | +100 | +0,86 / +0,85 | +0,32 / +0,35 | 1,02 / 1,00 | 0,05 / 0,03 |
+
+Décision de l'utilisateur : **saturation conservée telle quelle** (écart ≤ 0,05).
+**Vibrance à corriger** : réponse positive trop forte au départ (LR progressive,
+accélérée vers +100), protection insuffisante des couleurs déjà saturées (−100 et
+positif), baisse de Y de LR au négatif non reproduite, forte dispersion par scène
+à +100 à expliquer avant tout ajustement.
+
 ## Historique et compatibilité
 
 Un premier [smoke-test de cinq saturations 0327](../raw/modernisation-analyseurs/mesure-couleur-v001-20261010T185910569266Z.json)
