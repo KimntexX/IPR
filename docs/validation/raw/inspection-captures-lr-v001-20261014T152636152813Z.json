@@ -1,0 +1,63 @@
+{
+  "campaign_id": "inspection-captures-lr-v001-20261014T152636152813Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "group": "base-colorimetrique",
+  "observed_at_utc": "2026-10-14T15:26:36.152813+00:00",
+  "status": "qualitative_visual_inspection",
+  "records": [
+    {
+      "file": "tests\\image\\base\\capture\\6V1A0524.png",
+      "sha256": "c85a0f531ff4e419383ab8b3ca67d5c20fbcba5316e113450d3350cc69e658ee",
+      "width": 2223,
+      "height": 1114,
+      "scene": "6V1A0524",
+      "observations": [
+        "Camera Neutral displayed; six Light sliders display zero; user tone curve appears straight; WB label Telle quelle visible at bottom.",
+        "Large bright sky with visible cloud structure; histogram concentrated near right edge; tiny red-looking marker near right sky boundary."
+      ],
+      "limits": [
+        "Marker too small to certify its nature or measure area; screenshot is not a TIFF histogram export."
+      ]
+    },
+    {
+      "file": "tests\\image\\base\\capture\\6V1A9910.jpg",
+      "sha256": "e3205408d1ce4f275aad5b54f00925d8c2cd416dcbccfb67b8dbbd15e95ad791",
+      "width": 2204,
+      "height": 1106,
+      "scene": "6V1A9940",
+      "observations": [
+        "Filename does not match on-screen identity: breadcrumb reads 6V1A9940.CR3; association based on displayed content.",
+        "Camera Neutral displayed; Light sliders zero; straight user curve; WB Telle quelle visible.",
+        "Red warning-shaped overlays on several clouds near horizon; blue overlays in dark corners. Cloud texture visible elsewhere."
+      ],
+      "limits": [
+        "JPEG compression, scaled display; warning areas not quantified or pixel-aligned with IPR."
+      ]
+    },
+    {
+      "file": "tests\\image\\base\\capture\\7Y6A7599.png",
+      "sha256": "8a3d436c43b122afc5a90ed9dd9265553c5fc34865a34668e550633ac52d08a9",
+      "width": 2211,
+      "height": 1108,
+      "scene": "7Y6A7599",
+      "observations": [
+        "Camera Neutral displayed; Light sliders zero; straight user curve; WB Telle quelle visible.",
+        "Bright yellow wall and skin, visibly noisy image at ISO 32000; no clearly identifiable red warning overlay."
+      ],
+      "limits": [
+        "No visible red overlay does not certify clipping warnings enabled or absence of clipped TIFF channels."
+      ]
+    }
+  ],
+  "limitations": [
+    "No numeric histogram bins, clipping fractions or brightness errors inferred from screenshot pixels.",
+    "Temperature/tint numeric values, optical settings, noise and sharpening not visible; cannot attest them from screenshots.",
+    "Independent warning thresholds, display rendering, image scaling and geometry prevent direct overlay-area equivalence to TIFF analysis.",
+    "No production changes or photographic acceptance."
+  ],
+  "numeric_reference": {
+    "file": "docs/validation/raw/comparaison-radiometrie-lr-v001-20261014T145803284900Z.json"
+  },
+  "decision": "Maintain targeted visual review of IPR calibrated highlights; LR itself has local warnings on 9940."
+}

@@ -145,7 +145,9 @@ def smoke(stage, mode, env):
 
 def assert_public(stage):
     private = [str(p) for p in stage.rglob('*') if p.suffix.lower() in ('.dcp', '.lcp', '.cr2', '.cr3')]
-    private += [str(p) for p in stage.rglob('raw-normalization.json')]
+    audited = ROOT / 'config/raw-normalization.json'
+    private += [str(p) for p in stage.rglob('raw-normalization.json')
+                if not audited.is_file() or p.read_bytes() != audited.read_bytes()]
     if private: raise ValueError('Private profiles/calibration in public package: ' + ', '.join(private))
 
 
@@ -357,12 +359,15 @@ def main(argv=None):
         test_dir.mkdir(parents=True, exist_ok=True)
         run_native_tests(build, test_dir, plan, env)
     if args.action in ('test', 'python', 'all'):
-        # Full native integrations exercise generator -> group analyser on a
-        # tiny temporary fixture. Python-only scopes do not use a stale binary.
+        # Full native integrations exercise generator/render server -> group
+        # analyser on a tiny temporary fixture. Python-only scopes do not use a
+        # stale binary.
         if args.action in ('test', 'all') and (plan is None or plan['full']):
-            generator = build / ('Release/iprGenerateTests.exe' if os.name == 'nt' else 'iprGenerateTests')
-            if generator.is_file():
-                env['IPR_GENERATOR_TEST_BIN'] = str(generator)
+            for variable, name in (('IPR_GENERATOR_TEST_BIN', 'iprGenerateTests'),
+                                   ('IPR_RENDER_SERVER_BIN', 'iprRenderServer')):
+                binary = build / ('Release/' + name + '.exe' if os.name == 'nt' else name)
+                if binary.is_file():
+                    env[variable] = str(binary)
         run_python_tests(plan, env)
     if args.action in ('package', 'all'):
         state = cache(build)

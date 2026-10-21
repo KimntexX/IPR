@@ -1,0 +1,349 @@
+{
+  "campaign_id": "investigation-ouverture-hl-v001-20261014T221843582060Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "group": "base-colorimetrique",
+  "measured_at_utc": "2026-10-14T22:20:02.020577+00:00",
+  "inputs": [
+    {
+      "file": "docs\\validation\\raw\\analyse-exports-raw-audit-v003-20261014T221456972997Z.json",
+      "sha256": "a8bcfc48b7f6ae7e27cf42365aa2c9dff9b071a6886ead0980503544144c12fb"
+    },
+    {
+      "file": "build-windows-msvc\\Release\\rawNormalizationCorpusProbe.exe",
+      "sha256": "f79f53834c236725db877edc898acabd1230b181c5a7209ebf9df63e42e483b8"
+    },
+    {
+      "file": "build-windows-msvc\\Release\\editorRawDevelopmentTests.exe",
+      "sha256": "c815fff31eed61134921b1682ccb1ec22f80a8f4f6e238a6365da75d4d47a157"
+    },
+    {
+      "file": "config\\raw-normalization.json",
+      "sha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\analyse_opening_highlights.py",
+      "sha256": "8eefc6faa13da7748618eb390e76e24fc5b58bc53051b91ab3a3928e9ef20107"
+    },
+    {
+      "file": "tests\\raw_normalization_corpus_probe.cpp",
+      "sha256": "31b3482da5928d10cca29c7895bdce92cbba58da8ac551f0b768644f43e0de6f"
+    },
+    {
+      "file": "tests\\raw_opening_trial_helpers.h",
+      "sha256": "3f24df3687626c937a71a23995968e63f3bb3504231d8fdaab72fb40619fb750"
+    },
+    {
+      "file": "src\\core\\ColorPipeline.cpp",
+      "sha256": "7005624ec9ee109fe9a482b5c5f4d5e413df56ee41934b78c44193cc7543646c"
+    },
+    {
+      "file": "src\\raw\\RawDecoder.cpp",
+      "sha256": "85155aad434161399215bffcad601b432f64cd39ce7959fdf83992b9167d9a7b"
+    },
+    {
+      "file": "src\\raw\\RawNormalization.cpp",
+      "sha256": "8b3edec446000d7812d8bdee619aed8251292b58eb431d19ccda3debcfc84d46"
+    },
+    {
+      "file": "src\\editor\\imageeditor.cpp",
+      "sha256": "2333435bc5a3db1560aef17d7d90425508908cb1cc02d7a254697a92b3c3e56a"
+    },
+    {
+      "file": "src\\qml\\RawDevelopmentModule.qml",
+      "sha256": "e0ffe9840a81ef05f1d9a7298b274b8d4642e8aef03391d961b4a33025d35c4a"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9940.CR3",
+      "sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9940.CR3.ipr",
+      "sha256": "d0a84898856cb285f32f768206b987aa621b530b5f4b21a17836e066ac422435"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+      "sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0524.CR3",
+      "sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0524.CR3.ipr",
+      "sha256": "0c2869841a0591ededcede230b2978f0b3e716d882098859f51c6fcdbc62587c"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7003.CR3",
+      "sha256": "59fb28d2d31050a9166896bd4036d6a15a91e634478db3d687d5435e048dd400"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7003.CR3.ipr",
+      "sha256": "b14f92e9c145ff9733190e07d554651f2b174441b471772ff4654115ef6301e0"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp",
+      "sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7298.CR3",
+      "sha256": "9147913687cfd5801acf9d706ab4b032a3c5f549242fe69344c04d396546be33"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7298.CR3.ipr",
+      "sha256": "21da6334abeacd68892e7664870495e6fc9ecca876678995e0de78d2c7307bc9"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7599.CR3",
+      "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7599.CR3.ipr",
+      "sha256": "b2a01de8d39b202b889f14df9d9dc5c604354b80de518dc440952580e64dedd6"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0054.CR3",
+      "sha256": "602bcc522c2d4fe0dd070f9e9f37fbb6cde70018ff227bc9f6ff325e4bb355cb"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0054.CR3.ipr",
+      "sha256": "52b0e51f531971630d51fd52b6204a87b1e569b377d643d5df08a6a6723d80cd"
+    }
+  ],
+  "records": [
+    {
+      "scene": "6V1A9940",
+      "stages": {
+        "above_one_srgb_percent": 1.5069361870788744,
+        "camera_RGB_at_upper_bound_percent": 3.501387237415775,
+        "candidate": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.008392230420331707,
+            0.5311488873292562,
+            0.9598151663677776
+          ],
+          "black_percent": 0.4710661910424098,
+          "central_ROI_G_over_R": 1.0551757143168539,
+          "encoded_clipped_percent": 1.5315101070154578,
+          "mean_Y": 0.4900694274099264,
+          "outside_srgb_percent": 0.00039635354736424893,
+          "mean_Y_relative_to_LR_percent": 1.2461404609910298
+        },
+        "candidate_map_mean_Y": 0.4900694038589718,
+        "current_map_mean_Y": 0.4900711373364316,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 0.06896551724137931,
+        "pre_gamut_mean_Y": 0.490069403860771,
+        "current_mean_Y_relative_to_LR_percent": 1.2464937241195795
+      },
+      "LR": {
+        "mean_Y": 0.4840376385495351,
+        "Y_p05_p50_p95": [
+          0.008369823526895026,
+          0.5292304316092197,
+          0.9394048859930275
+        ],
+        "black_percent": 0.46888624653190647,
+        "encoded_clipped_percent": 0.08521601268331351,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 1.0565331060008822,
+        "samples": 504600
+      },
+      "native_proof_sha256": "72a5e8881666b887ca00948327d742cd388d2b26f454ac59019cb293a0a50c72"
+    },
+    {
+      "scene": "6V1A0524",
+      "stages": {
+        "above_one_srgb_percent": 0.3434403487911217,
+        "camera_RGB_at_upper_bound_percent": 0.2001585414189457,
+        "candidate": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0019727582466931505,
+            0.85576803804775,
+            0.960171651167616
+          ],
+          "black_percent": 0.9700753071739993,
+          "central_ROI_G_over_R": 0.9684318971172252,
+          "encoded_clipped_percent": 0.3450257629805787,
+          "mean_Y": 0.5575421026589513,
+          "outside_srgb_percent": 0,
+          "mean_Y_relative_to_LR_percent": 1.9386075460467334
+        },
+        "candidate_map_mean_Y": 0.5575421030188569,
+        "current_map_mean_Y": 0.557542125253408,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 0.020610384462940945,
+        "pre_gamut_mean_Y": 0.5575421030206655,
+        "current_mean_Y_relative_to_LR_percent": 1.9386116771203055
+      },
+      "LR": {
+        "mean_Y": 0.546939099994184,
+        "Y_p05_p50_p95": [
+          0.0019859907534106633,
+          0.8416780324745309,
+          0.9385829268008752
+        ],
+        "black_percent": 0.93004359889021,
+        "encoded_clipped_percent": 0.015061434799841459,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.9719226207386559,
+        "samples": 504600
+      },
+      "native_proof_sha256": "9f9421477e89c9b242cf246e0aca7b7e05e47ce0b6d2bdf95d651eedf0b2d4e5"
+    },
+    {
+      "scene": "7Y6A7003",
+      "stages": {
+        "above_one_srgb_percent": 0.3228157867333125,
+        "camera_RGB_at_upper_bound_percent": 0.19254989105212797,
+        "candidate": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.041834235766113365,
+            0.5691429209062626,
+            0.8269767585559767
+          ],
+          "black_percent": 0.22870211549456831,
+          "central_ROI_G_over_R": 0.8748194073233028,
+          "encoded_clipped_percent": 0.32320874569464336,
+          "mean_Y": 0.4896621587589089,
+          "outside_srgb_percent": 0.028882483657819195,
+          "mean_Y_relative_to_LR_percent": 4.079553164568206
+        },
+        "candidate_map_mean_Y": 0.48966214284047005,
+        "current_map_mean_Y": 0.4897202137077914,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 3.0407164427782987,
+        "pre_gamut_mean_Y": 0.48966214285285004,
+        "current_mean_Y_relative_to_LR_percent": 4.091892964633614
+      },
+      "LR": {
+        "mean_Y": 0.470469120850919,
+        "Y_p05_p50_p95": [
+          0.04118378446926812,
+          0.5584456141166602,
+          0.7698413605880187
+        ],
+        "black_percent": 0.28160919540229884,
+        "encoded_clipped_percent": 0.027744748315497426,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.8752589511394229,
+        "samples": 504600
+      },
+      "native_proof_sha256": "bb4639f0bf528e1e6338512980cb563372ce0226a74dea93d5677a5d8a47f2ff"
+    },
+    {
+      "scene": "7Y6A7298",
+      "stages": {
+        "above_one_srgb_percent": 0.05894384419963101,
+        "camera_RGB_at_upper_bound_percent": 0.0005894384419963101,
+        "candidate": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.0037212504295617826,
+            0.5307940359592711,
+            0.9070628124779969
+          ],
+          "black_percent": 2.3939059924276807,
+          "central_ROI_G_over_R": 1.0400999022259292,
+          "encoded_clipped_percent": 0.0583544057576347,
+          "mean_Y": 0.4520146701680116,
+          "outside_srgb_percent": 0.11906656528325464,
+          "mean_Y_relative_to_LR_percent": 2.4951344443567613
+        },
+        "candidate_map_mean_Y": 0.4520146784777826,
+        "current_map_mean_Y": 0.45227936008646075,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 14.140824702972145,
+        "pre_gamut_mean_Y": 0.4520146784727045,
+        "current_mean_Y_relative_to_LR_percent": 2.5551533565027373
+      },
+      "LR": {
+        "mean_Y": 0.44101085638694815,
+        "Y_p05_p50_p95": [
+          0.0025963188285417892,
+          0.5268381413533366,
+          0.8578578243645749
+        ],
+        "black_percent": 3.4308363059849385,
+        "encoded_clipped_percent": 0.016646848989298454,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 1.0459796314149405,
+        "samples": 504600
+      },
+      "native_proof_sha256": "168fa577bbaee1e530b3baf4edb647c0b6b3b33385dae19bd96cb1a38c9d9d4d"
+    },
+    {
+      "scene": "7Y6A7599",
+      "stages": {
+        "above_one_srgb_percent": 0.7977066915016731,
+        "camera_RGB_at_upper_bound_percent": 0.12456799074188687,
+        "candidate": {
+          "ROI_samples": 71504,
+          "Y_p05_p50_p95": [
+            0.0029723603842281214,
+            0.4616423200458669,
+            0.7838901048964148
+          ],
+          "black_percent": 2.6894111313484976,
+          "central_ROI_G_over_R": 0.7216856688989203,
+          "encoded_clipped_percent": 0.7920087865623754,
+          "mean_Y": 0.4209763475245115,
+          "outside_srgb_percent": 0.13950043127246006,
+          "mean_Y_relative_to_LR_percent": 4.566200121146169
+        },
+        "candidate_map_mean_Y": 0.42097634630908853,
+        "current_map_mean_Y": 0.42123958226037617,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 21.860896457278486,
+        "pre_gamut_mean_Y": 0.4209763462999445,
+        "current_mean_Y_relative_to_LR_percent": 4.63158492537834
+      },
+      "LR": {
+        "mean_Y": 0.40259313911836264,
+        "Y_p05_p50_p95": [
+          0.0017997444704351724,
+          0.45230810636859947,
+          0.721122441844771
+        ],
+        "black_percent": 3.7076892588188666,
+        "encoded_clipped_percent": 0.12604042806183116,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.6954930387568953,
+        "samples": 504600
+      },
+      "native_proof_sha256": "8a41afbfba0ac471ce38ad698733b338e8eab8662ea1be8491bf14b0ac5559db"
+    }
+  ],
+  "editor_0054": {
+    "alternate_profile_change_ms": 1357,
+    "applied_status": "Profil utilisé : Canon EOS R6 Mark III Camera Neutral\nNormalisation appliquée — blanc 13995, base 0.26 EV.\nAdobe DNG 18.6; radiometric trials 2026-10-14; 6V1A0054; visual validation pending",
+    "before_preview_sha256": "85bb68903b98c2467eeb0e910eb52e427f0ad3268e7d15f94e96afdbd13f8aa9",
+    "dcp_fast_path_available": true,
+    "disabled_restores_original": true,
+    "normalized_preview_sha256": "94cbbae98a2ded73b98decb352eab9bf6ff283de56b1ba84ef05c278e15bdb32",
+    "original_sidecar_untouched": true,
+    "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+    "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0054.CR3"
+  },
+  "method": {
+    "sample_step": 8,
+    "optics": false,
+    "production_modified": false,
+    "candidate": "Radial chroma compression around original linear Y, before negative-channel clipping",
+    "camera_bound": "At least one camera RGB component >=65534/65535 after LibRaw WB, not proof of sensor saturation"
+  },
+  "units": {
+    "Y": "relative linear sRGB luminance",
+    "fractions": "percent of samples",
+    "errors": "relative percent"
+  },
+  "limitations": [
+    "Five targeted scenes only, not corpus acceptance",
+    "Candidate is an experiment, not deployed and not a Lightroom algorithm",
+    "Independent geometry, no pixel MAE or physical colour target",
+    "0054 test reproduces programmatic editor activation, not the exact user click sequence"
+  ]
+}

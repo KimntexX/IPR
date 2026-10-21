@@ -1,0 +1,969 @@
+{
+  "campaign_id": "audit-niveaux-eos60d-v001-20261020T171246774641Z",
+  "schema_version": 1,
+  "measured_at_utc": "2026-10-20T17:12:46.774641+00:00",
+  "group": "raw",
+  "camera_model": "EOS 60D",
+  "format_extension": "cr2",
+  "purpose": "Sensor levels for RAW normalisation rules (ADR-0011)",
+  "libraw_version": "0.22.2-Release",
+  "converter_commands": [
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\_MG_7906.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_3064.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_3089.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_3135.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_3902.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_4002.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_4062.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_5383.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_5397.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_5414.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_5949.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_5970.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_5975.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_6006.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_6222.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_6236.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_6253.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_6302.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_7423.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_7958.CR2"
+    ],
+    [
+      "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+      "-c",
+      "-p0",
+      "-d",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\dng",
+      "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z\\inputs-without-sidecars\\IMG_8055.CR2"
+    ]
+  ],
+  "method": {
+    "adobe": "Adobe DNG Converter -c -p0 on a verified copy: mosaic SubIFD WhiteLevel/BlackLevel, IFD0 BaselineExposure (Adobe interpretation, not a physical calibration)",
+    "libraw": "tonalBaseProbe --scalars-only, values after unpack (rule matching inputs)"
+  },
+  "software": {
+    "probe_sha256": "e6c8abd228e24683ede5621e0e736cebcae27cef0713bad91cc8e668ee9f5d4f",
+    "converter_sha256": "9a1b851707b13181c41f18eb50b7c9b0a211f1fa2a3896571bd14bb10598a13b",
+    "script_sha256": "3052765e641f141cac090b9cb8a54ae6e86ad2a058d09b08f83aefc6753bf2e0"
+  },
+  "artifacts": "build-colorimetrie-inventory\\audit-niveaux-eos60d-v001-20261020T171246774641Z",
+  "records": [
+    {
+      "file": "_MG_7906.CR2",
+      "sha256": "9ee01584bb023802bba258edb565ec7616eb0899b4ce81d3a1573738384aeddd",
+      "iso": 400,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2047,
+        "cblack": [
+          0,
+          1,
+          1,
+          1
+        ],
+        "black_totals": [
+          2047,
+          2048,
+          2048,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 15677,
+        "canon_normal_white": 15165
+      },
+      "adobe_dng": {
+        "white_level": 15000,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": 0.0,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_3064.CR2",
+      "sha256": "819fb97a603e37319a7b3929b9db1f501a5c09fca79e0df80fad28ad3f574cf6",
+      "iso": 160,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "black_totals": [
+          2049,
+          2048,
+          2048,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 11222,
+        "canon_normal_white": 10710
+      },
+      "adobe_dng": {
+        "white_level": 11222,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.5,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_3089.CR2",
+      "sha256": "361876644cba47907b1157a1c956db174f48fffd187003f667c9a725b56e8297",
+      "iso": 3200,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2046,
+        "cblack": [
+          1,
+          0,
+          1,
+          2
+        ],
+        "black_totals": [
+          2047,
+          2046,
+          2047,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 15094,
+        "canon_normal_white": 14582
+      },
+      "adobe_dng": {
+        "white_level": 15000,
+        "black_level": [
+          2047.0,
+          2047.0,
+          2047.0,
+          2047.0
+        ],
+        "baseline_exposure": 0.0,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_3135.CR2",
+      "sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+      "iso": 160,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "black_totals": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 11222,
+        "canon_normal_white": 10710
+      },
+      "adobe_dng": {
+        "white_level": 11222,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.5,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_3902.CR2",
+      "sha256": "9ba021536f41680c416ab50e922c9088f3bf2bc9959cea746121e5e00bd19b66",
+      "iso": 2000,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "black_totals": [
+          2048,
+          2048,
+          2048,
+          2049
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 15677,
+        "canon_normal_white": 15165
+      },
+      "adobe_dng": {
+        "white_level": 15000,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": 0.0,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_4002.CR2",
+      "sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "black_totals": [
+          2048,
+          2049,
+          2048,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12749,
+        "canon_normal_white": 12237
+      },
+      "adobe_dng": {
+        "white_level": 12749,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.28,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_4062.CR2",
+      "sha256": "27fc4fc5e804178186aa7d1ffc6cc00209fe2f9702e4f13d5598888ac2335700",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "black_totals": [
+          2048,
+          2049,
+          2048,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12749,
+        "canon_normal_white": 12237
+      },
+      "adobe_dng": {
+        "white_level": 12749,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.28,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_5383.CR2",
+      "sha256": "4a31077c95ed477da8f92c3c12dc74f118babd03437e0684b1843f823e850f72",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "black_totals": [
+          2049,
+          2049,
+          2048,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12279,
+        "canon_normal_white": 11767
+      },
+      "adobe_dng": {
+        "white_level": 12279,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.34,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_5397.CR2",
+      "sha256": "411820a28b9bc8bb42cc8ef0310591e47253aadeb0ccc06f29994617b281a951",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "black_totals": [
+          2048,
+          2049,
+          2048,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12279,
+        "canon_normal_white": 11767
+      },
+      "adobe_dng": {
+        "white_level": 12279,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.34,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_5414.CR2",
+      "sha256": "aae43a10423a1562fabf6d149b6cf93ab19ef63d215a851f08285c68e5b04a8f",
+      "iso": 160,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "black_totals": [
+          2049,
+          2049,
+          2048,
+          2049
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 11222,
+        "canon_normal_white": 10710
+      },
+      "adobe_dng": {
+        "white_level": 11222,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.5,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_5949.CR2",
+      "sha256": "07a3531a85ca4362aa615542a0a090299ed24a65e5c2acd3d47d49cea57447b6",
+      "iso": 4000,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "black_totals": [
+          2049,
+          2049,
+          2048,
+          2049
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 15677,
+        "canon_normal_white": 15165
+      },
+      "adobe_dng": {
+        "white_level": 15000,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": 0.0,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_5970.CR2",
+      "sha256": "d6e93e3b179af35d7ed5bfe2aa069861cec7842f049daaf0b4d9a15019975f13",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          0,
+          2,
+          0,
+          1
+        ],
+        "black_totals": [
+          2048,
+          2050,
+          2048,
+          2049
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12279,
+        "canon_normal_white": 11767
+      },
+      "adobe_dng": {
+        "white_level": 12279,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.34,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_5975.CR2",
+      "sha256": "727b3763be123c4c022e38c915cea01d1e0cf626ce2325b275466bb8789144cc",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2047,
+        "cblack": [
+          0,
+          1,
+          1,
+          1
+        ],
+        "black_totals": [
+          2047,
+          2048,
+          2048,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12279,
+        "canon_normal_white": 11767
+      },
+      "adobe_dng": {
+        "white_level": 12279,
+        "black_level": [
+          2047.0,
+          2047.0,
+          2047.0,
+          2047.0
+        ],
+        "baseline_exposure": -0.34,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_6006.CR2",
+      "sha256": "292a958dd458d7e94908e4f24bac2e11bb1d03c0ae8f5d8832d666c357a013ea",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2049,
+        "cblack": [
+          0,
+          2,
+          0,
+          0
+        ],
+        "black_totals": [
+          2049,
+          2051,
+          2049,
+          2049
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12279,
+        "canon_normal_white": 11767
+      },
+      "adobe_dng": {
+        "white_level": 12279,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.34,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_6222.CR2",
+      "sha256": "eea82210feb8138e10a57834bed29b68eb17ba816e26ebd99df46c3aec0c2733",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2049,
+        "cblack": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "black_totals": [
+          2049,
+          2050,
+          2049,
+          2049
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12279,
+        "canon_normal_white": 11767
+      },
+      "adobe_dng": {
+        "white_level": 12279,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.34,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_6236.CR2",
+      "sha256": "d89cf09d0d4d0efe0141fa8d8b53418d7ebc2e02521f90140922a5e340021fa6",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          1,
+          2,
+          0,
+          1
+        ],
+        "black_totals": [
+          2049,
+          2050,
+          2048,
+          2049
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12279,
+        "canon_normal_white": 11767
+      },
+      "adobe_dng": {
+        "white_level": 12279,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.34,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_6253.CR2",
+      "sha256": "25d580c6b8122d95ad86fd5397195aabb6a376657482d1a2a606a8b24d275b45",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2049,
+        "cblack": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "black_totals": [
+          2049,
+          2050,
+          2049,
+          2049
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12279,
+        "canon_normal_white": 11767
+      },
+      "adobe_dng": {
+        "white_level": 12279,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.34,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_6302.CR2",
+      "sha256": "e9a05d228ad49e635cf085a30a2b778a93404636aaf7cc2b02c7782df7ff9673",
+      "iso": 6400,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "black_totals": [
+          2048,
+          2048,
+          2048,
+          2049
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 15094,
+        "canon_normal_white": 14582
+      },
+      "adobe_dng": {
+        "white_level": 15000,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": 0.0,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_7423.CR2",
+      "sha256": "8eea727fdd9cd4b2766292cbccf172a841d5e22aa595e1378e2503c59dd5226c",
+      "iso": 500,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "black_totals": [
+          2048,
+          2049,
+          2049,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 15094,
+        "canon_normal_white": 14582
+      },
+      "adobe_dng": {
+        "white_level": 15000,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": 0.0,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_7958.CR2",
+      "sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+      "iso": 100,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2048,
+        "cblack": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "black_totals": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 12279,
+        "canon_normal_white": 11767
+      },
+      "adobe_dng": {
+        "white_level": 12279,
+        "black_level": [
+          2048.0,
+          2048.0,
+          2048.0,
+          2048.0
+        ],
+        "baseline_exposure": -0.34,
+        "baseline_exposure_offset": null
+      }
+    },
+    {
+      "file": "IMG_8055.CR2",
+      "sha256": "c302e7051b181e75b079e77994560cc4e564df4c3ac0ffac805f82c7f689bd3d",
+      "iso": 1250,
+      "dcp": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Adobe Standard/Canon EOS 60D Adobe Standard.dcp",
+      "dcp_sha256": "f31a34ab0996904746c7b132f2226e74a20fcfa508e4bd7ba669640c5e2d3460",
+      "libraw": {
+        "black": 2047,
+        "cblack": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "black_totals": [
+          2047,
+          2047,
+          2047,
+          2047
+        ],
+        "maximum": 12279,
+        "dng_baseline_exposure": -999,
+        "canon_specular_white": 11222,
+        "canon_normal_white": 10710
+      },
+      "adobe_dng": {
+        "white_level": 11222,
+        "black_level": [
+          2047.0,
+          2047.0,
+          2047.0,
+          2047.0
+        ],
+        "baseline_exposure": -0.5,
+        "baseline_exposure_offset": null
+      }
+    }
+  ]
+}

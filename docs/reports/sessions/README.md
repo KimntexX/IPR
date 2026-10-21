@@ -16,5 +16,9 @@ Une session clôturée doit lier les ADR, spécifications, protocoles et preuves
 
 - [12 octobre — tri préparatoire des travaux locaux](tri-travaux-locaux-2026-10-12.md).
 
+- [17 octobre — contrôleur mémoire : attente, admission sous pression et build Windows](session-2026-10-17.md).
+
+- [18 octobre — Lumières : exposition appliquée avant le DCP, validée](session-2026-10-18.md).
+
 - [5 octobre](session-2026-10-05.md) : correctif débruitage CPU, build et recette v2 préparée.
 - [4 octobre](session-2026-10-04.md) : préférences globales d’IHM et INI utilisateur.

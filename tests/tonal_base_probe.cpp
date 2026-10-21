@@ -3,6 +3,7 @@
 #define RawDecoder DiagnosticRawDecoder
 #include "../src/raw/RawDecoder.cpp"
 #undef RawDecoder
+#include "raw_opening_trial_helpers.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -168,9 +169,9 @@ QJsonObject saveEncodedSample(const QDir &out, const QString &name, const cv::Ma
     channels.push_back(cv::Mat(rgb.rows, rgb.cols, CV_32FC1, cv::Scalar(1.f)));
     ColorPipeline::WorkingImage working;
     cv::merge(channels, working.linearRgba);
-    working.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+    working.colorSpace = ColorPipeline::workingColorSpace();
+    WorkingColor::transform(working.linearRgba, WorkingColor::fromSrgb()); // Diagnostic samples are linear sRGB.
     QString error;
-    working = ColorPipeline::mapToSrgbGamut(working, &error);
     const QImage encoded = ColorPipeline::toSrgb(working, ColorPipeline::OutputFormat::HighBitDepth, &error);
     require(!encoded.isNull(), error);
     cv::Mat encodedRgb(encoded.height(), encoded.width(), CV_32FC3);
@@ -205,10 +206,10 @@ void auditSampleExport(const QString &manifestPath, const QString &outputPath)
         channels.push_back(cv::Mat(rows, cols, CV_32FC1, cv::Scalar(1.f)));
         ColorPipeline::WorkingImage working;
         cv::merge(channels, working.linearRgba);
-        working.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+        working.colorSpace = ColorPipeline::workingColorSpace();
+        WorkingColor::transform(working.linearRgba, WorkingColor::fromSrgb());
         QString error;
-        // The editor maps the loaded working image before the output function.
-        working = ColorPipeline::mapToSrgbGamut(working, &error);
+        // Output conversion includes the Rec.2020 -> sRGB matrix and gamut mapping.
         const QImage output = ColorPipeline::toSrgb(working, ColorPipeline::OutputFormat::HighBitDepth, &error);
         require(!output.isNull(), error);
         quint64 low = 0, black = 0, high = 0;
@@ -244,7 +245,8 @@ void auditSampleExport(const QString &manifestPath, const QString &outputPath)
 }
 
 QJsonObject process(const QString &path, const QDir &out, bool calibrationOnly = false,
-                    unsigned whiteCandidate = 0, bool disableAutoMaximum = false)
+                    unsigned whiteCandidate = 0, bool disableAutoMaximum = false,
+                    bool scalarsOnly = false)
 {
     WhiteTraceRaw raw;
     require(raw.open_file(QFile::encodeName(path).constData()) == LIBRAW_SUCCESS, "open RAW: " + path);
@@ -267,7 +269,7 @@ QJsonObject process(const QString &path, const QDir &out, bool calibrationOnly =
     require(raw.unpack() == LIBRAW_SUCCESS, "unpack: " + path);
     result["border_audit"] = borderAudit(raw);
     result["before_black_estimation"] = metadata(raw);
-    result["black_estimated"] = DiagnosticRawDecoder::estimateMissingCanonCr3BlackLevel(raw, path);
+    result["black_estimated"] = DiagnosticRawDecoder::readBlackLevel(raw, path);
     result["after_black_estimation"] = metadata(raw);
     if (whiteCandidate) {
         require(whiteCandidate > d.color.cblack[0] && whiteCandidate <= 65535,
@@ -289,6 +291,10 @@ QJsonObject process(const QString &path, const QDir &out, bool calibrationOnly =
     require(raw.dcraw_process() == LIBRAW_SUCCESS, "process: " + path);
     result["before_scale_colors"] = raw.beforeScale;
     result["after_process"] = metadata(raw);
+    if (scalarsOnly) {
+        writeNew(out.filePath(QFileInfo(path).completeBaseName() + ".json"), QJsonDocument(result).toJson());
+        return result;
+    }
     int status = 0;
     auto *memory = raw.dcraw_make_mem_image(&status);
     require(memory && !status && memory->bits == 16 && memory->colors == 3, "memory image: " + path);
@@ -302,7 +308,7 @@ QJsonObject process(const QString &path, const QDir &out, bool calibrationOnly =
     auto noLens = sample(rgb);
     stages["camera_rgb"] = saveSample(out, stem + "-camera", noLens);
     QString error;
-    require(CameraProfileEngine::applyDcp(profiles.dcpPath, noLens, kelvin.value_or(5500), &error), error);
+    require(applyDcpForSrgbAnalysis(profiles.dcpPath, noLens, kelvin.value_or(5500), &error), error);
     stages["dcp_without_lcp"] = saveSample(out, stem + "-dcp-no-lcp", noLens);
     if (!profiles.lcpPath.isEmpty()) {
         CameraProfileEngine::CaptureSettings capture;
@@ -313,7 +319,7 @@ QJsonObject process(const QString &path, const QDir &out, bool calibrationOnly =
     auto withLens = sample(rgb);
     rgb.release();
     stages["camera_rgb_after_lcp"] = saveSample(out, stem + "-camera-lcp", withLens);
-    require(CameraProfileEngine::applyDcp(profiles.dcpPath, withLens, kelvin.value_or(5500), &error), error);
+    require(applyDcpForSrgbAnalysis(profiles.dcpPath, withLens, kelvin.value_or(5500), &error), error);
     stages["dcp_with_lcp"] = saveSample(out, stem + "-dcp-lcp", withLens);
     stages["encoded_srgb"] = saveEncodedSample(out, stem + "-encoded-srgb", withLens);
     result["stages"] = stages;
@@ -322,12 +328,67 @@ QJsonObject process(const QString &path, const QDir &out, bool calibrationOnly =
 }
 }
 
+void radiometricTrials(const QString &specPath, const QDir &out)
+{
+    QFile specFile(specPath);require(specFile.open(QIODevice::ReadOnly),"Cannot read radiometric spec");
+    const auto spec=QJsonDocument::fromJson(specFile.readAll()).object();
+    require(!out.exists()&&QDir().mkpath(out.absolutePath()),"New diagnostic folder required");
+    QJsonArray records;
+    for(const auto &value:spec["scenes"].toArray()) {
+        const auto scene=value.toObject();const QString path=scene["RAW"].toString(),profile=scene["DCP"].toString();
+        require(digest(path)==scene["RAW_sha256"].toString()&&digest(profile)==scene["DCP_sha256"].toString(),"Input hash changed");
+        QJsonObject models,decodes;double referenceKelvin=0;
+        for(bool fixedWhite:{false,true}) {
+            QTextStream(stdout)<<scene["scene"].toString()<<" / "<<(fixedWhite?"fixed white":"current white")<<Qt::endl;
+            WhiteTraceRaw raw;require(raw.open_file(QFile::encodeName(path).constData())==LIBRAW_SUCCESS,"Open RAW failed");
+            auto &d=raw.imgdata;d.params.use_camera_wb=1;d.params.use_auto_wb=0;d.params.use_camera_matrix=0;
+            d.params.no_auto_bright=1;d.params.output_bps=16;d.params.output_color=0;d.params.gamm[0]=d.params.gamm[1]=1;
+            require(raw.unpack()==LIBRAW_SUCCESS,"Unpack failed");
+            const bool blackEstimated=DiagnosticRawDecoder::readBlackLevel(raw,path);
+            const auto kelvin=DiagnosticRawDecoder::estimateWhiteBalanceKelvin(raw);require(kelvin.has_value(),"Missing source WB");referenceKelvin=*kelvin;
+            if(fixedWhite) {
+                const unsigned white=unsigned(scene["white_level"].toInt());require(white>2048&&white<=65535,"Invalid white");
+                d.color.maximum=d.rawdata.color.maximum=white;d.params.adjust_maximum_thr=0;
+            }
+            QJsonObject trace{{"after_black_estimation",metadata(raw)},{"black_estimated",blackEstimated},{"adjust_maximum_thr",d.params.adjust_maximum_thr}};
+            require(raw.dcraw_process()==LIBRAW_SUCCESS,"Process failed");trace["before_scale_colors"]=raw.beforeScale;trace["after_process"]=metadata(raw);
+            const QString prefix=fixedWhite?"white_":"";decodes[fixedWhite?"fixed_white":"current_white"]=trace;
+            int status=0;auto *memory=raw.dcraw_make_mem_image(&status);require(memory&&!status&&memory->colors==3&&memory->bits==16,"Invalid camera RGB");
+            cv::Mat full;cv::Mat(memory->height,memory->width,CV_16UC3,memory->data).convertTo(full,CV_32FC3,1./65535.);
+            cv::Mat camera=sample3(full);full.release();LibRaw::dcraw_clear_mem(memory);
+            for(bool baseline:{false,true})for(bool hue:{false,true}) {
+                const QString name=prefix+(baseline?"exposure_":"")+(hue?"hue":"channel");
+                cv::Mat image=camera.clone();CameraProfileEngine::DcpRenderOptions options;
+                options.cameraBaselineExposureEv=baseline?scene["camera_baseline_EV"].toDouble():0;
+                options.preserveToneCurveHue=hue;QString error;
+                require(applyDcpForSrgbAnalysis(profile,image,*kelvin,&error,options),error);
+                models[name]=metrics(image);
+                if(!hue) {
+                    const QString preview=out.filePath(scene["scene"].toString()+"-"+name+".png");
+                    require(!QFileInfo::exists(preview)&&ColorPipeline::toSrgb(working(image),ColorPipeline::OutputFormat::Preview8Bit).save(preview),"Cannot save preview");
+                }
+            }
+        }
+        require(digest(path)==scene["RAW_sha256"].toString()&&digest(profile)==scene["DCP_sha256"].toString(),"Input changed during trial");
+        records.append(QJsonObject{{"scene",scene["scene"]},{"RAW_sha256",scene["RAW_sha256"]},{"DCP_sha256",scene["DCP_sha256"]},
+            {"camera",scene["camera"]},{"white_level",scene["white_level"]},{"camera_baseline_EV",scene["camera_baseline_EV"]},
+            {"reference_kelvin",referenceKelvin},{"models",models},{"decodes",decodes}});
+    }
+    writeNew(out.filePath("result.json"),QJsonDocument(QJsonObject{{"records",records},{"sample_step",8},
+        {"spec_sha256",digest(specPath)},{"executable_sha256",digest(QCoreApplication::applicationFilePath())},
+        {"measured_at_utc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)}}).toJson());
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
     app.setOrganizationName("IPR");
     app.setApplicationName("IPR");
     try {
+        if(app.arguments().value(1)=="--radiometric") {
+            require(argc==4,"Usage: tonalBaseProbe --radiometric SPEC_JSON NEW_OUTPUT_DIRECTORY");
+            radiometricTrials(app.arguments()[2],QDir(app.arguments()[3]));return 0;
+        }
         if (app.arguments().value(1) == "--profile-samples") {
             require(argc >= 5, "Usage: tonalBaseProbe --profile-samples WHITE_MANIFEST NEW_DIRECTORY DCP...");
             QFile input(app.arguments()[2]);
@@ -360,7 +421,7 @@ int main(int argc, char **argv)
                         cv::Mat rgb(rows, cols, CV_32FC3);
                         std::memcpy(rgb.data, bytes.constData(), size_t(bytes.size()));
                         QString error;
-                        require(CameraProfileEngine::applyDcp(profile, rgb, source["wb_kelvin"].toDouble(), &error), error);
+                        require(applyDcpForSrgbAnalysis(profile, rgb, source["wb_kelvin"].toDouble(), &error), error);
                         const QString directory = stem + "/profile-" + QString::number(profileIndex - 4) + "/" + geometry;
                         QDir folder(out.filePath(directory));
                         require(QDir().mkpath(folder.absolutePath()), "Cannot create profile variant directory");
@@ -438,7 +499,8 @@ int main(int argc, char **argv)
             return 0;
         }
         const bool calibrationOnly = app.arguments().value(1) == "--calibration-only";
-        const int directoryIndex = calibrationOnly ? 2 : 1;
+        const bool scalarsOnly = app.arguments().value(1) == "--scalars-only";
+        const int directoryIndex = calibrationOnly || scalarsOnly ? 2 : 1;
         require(argc >= directoryIndex + 2, "Usage: tonalBaseProbe [--calibration-only] OUTPUT_DIRECTORY RAW...");
         const QDir out(app.arguments()[directoryIndex]);
         require(!out.exists(), "Output directory already exists; refuse overwrite");
@@ -446,7 +508,7 @@ int main(int argc, char **argv)
         QJsonArray images;
         for (int i = directoryIndex + 1; i < argc; ++i) {
             QTextStream(stdout) << "Investigating " << app.arguments()[i] << Qt::endl;
-            images.append(process(app.arguments()[i], out, calibrationOnly));
+            images.append(process(app.arguments()[i], out, calibrationOnly, 0, false, scalarsOnly));
         }
         writeNew(out.filePath("manifest.json"), QJsonDocument(QJsonObject{
             {"libraw_version", LibRaw::version()}, {"sample_step", 8},

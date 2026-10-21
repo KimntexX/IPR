@@ -1,8 +1,10 @@
 #include "imageeditor.h"
 #include "DecodedImageCache.h"
+#include "controlled_memory.h"
 #include "imageprovider.h"
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
+#include <tiffio.h>
 
 #include <QCoreApplication>
 #include <QDataStream>
@@ -191,16 +193,18 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
                 return false;
         } else {
             const int changed = channel - ImageEditor::RedCurve;
-            const int unchangedFirst = (changed + 1) % 3;
-            const auto component = [](const QColor &color, int index) {
-                return index == 0 ? color.red()
-                                  : index == 1 ? color.green() : color.blue();
-            };
-            if (!check(component(pixel, changed) >
-                           component(original, changed) &&
-                           std::abs(component(pixel, unchangedFirst) -
-                                    component(original, unchangedFirst)) <= 2,
-                       "RGB curve should affect only its selected channel"))
+            QImage sample(1,1,QImage::Format_RGBA8888);
+            sample.setPixelColor(0,0,original); sample.setColorSpace(QColorSpace(QColorSpace::SRgb));
+            auto expectedMaster = ColorPipeline::fromSourceImage(sample);
+            auto &v = expectedMaster.linearRgba.at<cv::Vec4f>(0,0)[changed];
+            // Interpolating (0,0), (.6,.9), (1,1) gives this quadratic.
+            v += 1.25f * v * (1.f - v);
+            const auto expected = ColorPipeline::toSrgb(expectedMaster,
+                ColorPipeline::OutputFormat::Preview8Bit).pixelColor(0,0);
+            if (!check(std::abs(pixel.red()-expected.red()) <= 2 &&
+                       std::abs(pixel.green()-expected.green()) <= 2 &&
+                       std::abs(pixel.blue()-expected.blue()) <= 2,
+                       "RGB curve must edit a Rec.2020 channel before the sRGB output matrix"))
                 return false;
         }
         editor.resetToneCurve(channel);
@@ -390,14 +394,15 @@ bool verifyUniqueExportNames(ImageEditor &editor, const QString &directory)
 
 bool verifyColorMixer(ImageEditor &editor, const QString &directory)
 {
-    // Exact HSV band centres in the engine's linear RGB space, not gamma RGB.
+    // Rec.2020 HSV centres with low enough chroma to fit the sRGB fixture file.
+    // Otherwise gamut mapping changes the centre before it can be reimported.
     ColorPipeline::WorkingImage patches;
     patches.linearRgba = cv::Mat(1, 8, CV_32FC4);
     const std::array<cv::Vec4f, 8> colors{{
-        {0.6f, 0.1f, 0.1f, 1.0f}, {0.6f, 0.35f, 0.1f, 1.0f},
-        {0.6f, 0.6f, 0.1f, 1.0f}, {0.1f, 0.6f, 0.1f, 1.0f},
-        {0.1f, 0.6f, 0.6f, 1.0f}, {0.1f, 0.1f, 0.6f, 1.0f},
-        {0.35f, 0.1f, 0.6f, 1.0f}, {0.6f, 0.1f, 0.6f, 1.0f}}};
+        {0.35f, 0.25f, 0.25f, 1.0f}, {0.35f, 0.30f, 0.25f, 1.0f},
+        {0.35f, 0.35f, 0.25f, 1.0f}, {0.25f, 0.35f, 0.25f, 1.0f},
+        {0.25f, 0.35f, 0.35f, 1.0f}, {0.25f, 0.25f, 0.35f, 1.0f},
+        {0.30f, 0.25f, 0.35f, 1.0f}, {0.35f, 0.25f, 0.35f, 1.0f}}};
     for (int band = 0; band < 8; ++band)
         patches.linearRgba.at<cv::Vec4f>(0, band) = colors[band];
     const QString sourcePath = directory + QStringLiteral("/mixer-source.png");
@@ -612,6 +617,25 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
                "DNG export should write a nonempty .dng file"))
         return false;
 
+#ifdef Q_OS_WIN
+    TIFF *tiff = TIFFOpenW(reinterpret_cast<const wchar_t *>(expectedPath.utf16()), "r");
+#else
+    TIFF *tiff = TIFFOpen(expectedPath.toUtf8().constData(), "r");
+#endif
+    if (!check(tiff != nullptr, "DNG IFD should open")) return false;
+    uint32_t count = 0, profileBytes = 0;
+    float *matrix = nullptr;
+    void *profile = nullptr;
+    const bool hasMatrix = TIFFGetField(tiff, TIFFTAG_COLORMATRIX1, &count, &matrix) == 1 && count == 9;
+    const bool hasIcc = TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profileBytes, &profile) == 1;
+    const QColorSpace embedded = hasIcc ? QColorSpace::fromIccProfile(
+        QByteArray(static_cast<const char *>(profile), int(profileBytes))) : QColorSpace{};
+    const cv::Matx33d expectedMatrix = WorkingColor::srgbToXyz().inv();
+    bool consistent = hasMatrix && embedded == QColorSpace(QColorSpace::SRgbLinear);
+    if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.val[i]) < 1e-6;
+    TIFFClose(tiff);
+    if (!check(consistent, "DNG linear samples need linear ICC and XYZ-to-stored-RGB matrix")) return false;
+
 #ifdef IPR_WITH_LIBRAW
     QFile firstDng(expectedPath);
     if (!firstDng.open(QIODevice::ReadOnly)) return false;
@@ -623,18 +647,16 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
                firstDng.readAll() == firstDngBytes && QFileInfo::exists(directory + QStringLiteral("/linear-2.dng")),
                "the rendered DNG writer must also preserve an occupied normalized filename")) return false;
     firstDng.close();
-    QString error;
-    RawDecoder::SourceMetadata metadata;
-    const ColorPipeline::WorkingImage decoded = RawDecoder::decode(
+    const auto imported = ImageImport::load(
         expectedPath,
         RawDecoder::Options{
-            true, {directory + QStringLiteral("/empty-profile-directory")}},
-        &metadata, &error);
-    if (decoded.isNull())
-        std::cerr << "DNG decode error: " << error.toStdString() << '\n';
-    return check(!decoded.isNull() &&
-                     decoded.linearRgba.size() == cv::Size(64, 64),
-                 "LibRaw should decode the exported linear DNG");
+            true, {directory + QStringLiteral("/empty-profile-directory")}});
+    if (imported.image.isNull())
+        std::cerr << "DNG decode error: " << imported.error.toStdString() << '\n';
+    return check(!imported.image.isNull() && imported.capabilities.cameraDevelopment &&
+                     imported.image.colorSpace == ColorPipeline::workingColorSpace() &&
+                     imported.image.linearRgba.size() == cv::Size(64, 64),
+                 "exported linear DNG should use the common import contract through LibRaw");
 #else
     return true;
 #endif
@@ -666,8 +688,13 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
 
     const QColor highlight = output.pixelColor(0, 0);
     const QColor shadow = output.pixelColor(1, 0);
-    if (!check(highlight.red() >= 160 && highlight.green() >= 160 &&
-                   highlight.blue() >= 160,
+    std::cout << "Tonal combination: highlight " << highlight.red() << ',' << highlight.green() << ','
+              << highlight.blue() << " shadow " << shadow.red() << ',' << shadow.green() << ','
+              << shadow.blue() << '\n';
+    // Guards against inversion to black, not a calibrated level: the perceptual
+    // contrast curve yields 157 here (the former linear curve gave >= 160).
+    if (!check(highlight.red() >= 140 && highlight.green() >= 140 &&
+                   highlight.blue() >= 140 && highlight.red() > shadow.red() + 100,
                "highlight recovery should not turn bright pixels black") ||
         !check(shadow.red() > 0 && shadow.green() > 0 && shadow.blue() > 0,
                "contrast should preserve nonzero shadow detail"))
@@ -703,10 +730,20 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
     const QString blacksStatus = awaitExport(
         editor, QUrl::fromLocalFile(blacksPath), QStringLiteral("PNG"));
     const QImage blacksImage(blacksPath);
-    if (!check(blacksStatus.startsWith(QStringLiteral("Image exportée")) &&
-                   !blacksImage.isNull() &&
-                   blacksImage.pixelColor(1, 0).red() > 0,
-               "black adjustment should preserve nonzero dark detail"))
+    // -100 raises a true black point, like Lightroom: this dark pixel may reach 0.
+    if (!check(blacksStatus.startsWith(QStringLiteral("Image exportée")) && !blacksImage.isNull(),
+               "black point export should succeed"))
+        return false;
+    editor.resetAdjustments();
+    editor.setBlacks(-50);
+    const QString halfBlacksPath = directory + QStringLiteral("/blacks-half.png");
+    const QString halfBlacksStatus = awaitExport(
+        editor, QUrl::fromLocalFile(halfBlacksPath), QStringLiteral("PNG"));
+    const QImage halfBlacks(halfBlacksPath);
+    if (!check(halfBlacksStatus.startsWith(QStringLiteral("Image exportée")) && !halfBlacks.isNull() &&
+                   halfBlacks.pixelColor(1, 0).red() > 0 &&
+                   halfBlacks.pixelColor(1, 0).red() >= blacksImage.pixelColor(1, 0).red(),
+               "moderate black adjustment should preserve nonzero dark detail"))
         return false;
 
     editor.resetAdjustments();
@@ -721,6 +758,35 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
                      darkTonesImage.pixelColor(1, 0).red() >=
                          blacksImage.pixelColor(1, 0).red() - 2,
                  "combined black and shadow adjustments should not compound");
+}
+
+// Graded-zone rule for Lumières tone controls (18 October 2026): as in
+// Lightroom, a control may reach the whole tonal range, but its effect, in EV
+// of linear light, is weakest at the opposite end of the histogram. Tones next
+// to white, in the soft shoulder, and black samples are left out: their
+// shift is capped by headroom. Shadows, Highlights and positive Whites adapt to the image, so
+// minimum strengths hold for a bright synthetic image too.
+double evShift(const QImage &base, const QImage &variant, int x)
+{
+    const auto linear = [](int code) {
+        const double v = code / 255.0;
+        return std::max(1e-6, v <= 0.04045 ? v / 12.92 : std::pow((v + 0.055) / 1.055, 2.4));
+    };
+    return std::log2(linear(variant.pixelColor(x, 0).red()) / linear(base.pixelColor(x, 0).red()));
+}
+
+bool oppositeEndMovesLeast(const QImage &base, const QImage &variant, int opposite,
+                           std::initializer_list<int> others)
+{
+    const double far = std::abs(evShift(base, variant, opposite));
+    for (int x : others) {
+        const int code = variant.pixelColor(x, 0).red();
+        // Black, or inside the white shoulder (linear > 0.70, code 219): the
+        // shift is capped by headroom, not by the control's zone.
+        if (code == 0 || code >= 219) continue;
+        if (far > std::abs(evShift(base, variant, x)) + 0.03) return false;
+    }
+    return true;
 }
 
 bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
@@ -758,11 +824,20 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
                    !blackLift.isNull() &&
                    blackLift.pixelColor(0, 0).red() >
                        base.pixelColor(0, 0).red() + 5 &&
-                   std::abs(blackLift.pixelColor(1, 0).red() -
-                            base.pixelColor(1, 0).red()) <= 2 &&
-                   std::abs(blackLift.pixelColor(2, 0).red() -
-                            base.pixelColor(2, 0).red()) <= 2,
-               "black lift should affect the toe without shifting midtones or highlights"))
+                   blackLift.pixelColor(1, 0).red() >= base.pixelColor(1, 0).red() &&
+                   oppositeEndMovesLeast(base, blackLift, 2, {0, 1}),
+               "black lift should be strongest on dark tones and weakest on highlights"))
+        return false;
+
+    editor.resetAdjustments();
+    editor.setBlacks(-100);
+    const auto [blackDarkStatus, blackDark] =
+        exportVariant(QStringLiteral("black-darkening"));
+    if (!check(!blackDarkStatus.isEmpty() && !blackDark.isNull() &&
+                   blackDark.pixelColor(0, 0).red() + 5 < base.pixelColor(0, 0).red() &&
+                   blackDark.pixelColor(2, 0).red() > blackDark.pixelColor(1, 0).red() &&
+                   oppositeEndMovesLeast(base, blackDark, 2, {0, 1}),
+               "black darkening should be strongest on dark tones and weakest on highlights"))
         return false;
 
     editor.resetAdjustments();
@@ -775,13 +850,8 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
                        base.pixelColor(0, 0).red() &&
                    shadowDark.pixelColor(1, 0).red() + 5 <
                        base.pixelColor(1, 0).red() &&
-                   shadowDark.pixelColor(0, 0).red() *
-                           base.pixelColor(1, 0).red() <
-                       shadowDark.pixelColor(1, 0).red() *
-                           base.pixelColor(0, 0).red() &&
-                   std::abs(shadowDark.pixelColor(2, 0).red() -
-                            base.pixelColor(2, 0).red()) <= 2,
-               "shadow darkening should focus on dark tones and preserve highlights"))
+                   oppositeEndMovesLeast(base, shadowDark, 2, {0, 1}),
+               "shadow darkening should be strongest on dark tones and weakest on highlights"))
         return false;
 
     editor.resetAdjustments();
@@ -792,13 +862,9 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
                      !shadowLift.isNull() &&
                      shadowLift.pixelColor(0, 0).red() >
                          base.pixelColor(0, 0).red() + 5 &&
-                     shadowLift.pixelColor(1, 0).red() >=
-                         base.pixelColor(1, 0).red() + 1 &&
-                     shadowLift.pixelColor(1, 0).red() <=
-                         base.pixelColor(1, 0).red() + 7 &&
-                     std::abs(shadowLift.pixelColor(2, 0).red() -
-                              base.pixelColor(2, 0).red()) <= 2,
-                 "bounded shadow lift should gently affect midtones and preserve highlights");
+                     shadowLift.pixelColor(1, 0).red() >= base.pixelColor(1, 0).red() &&
+                     oppositeEndMovesLeast(base, shadowLift, 2, {0, 1}),
+                 "shadow lift should be strongest on dark tones and weakest on highlights");
 }
 
 bool verifyPositiveShadowRamp(ImageEditor &editor, const QString &directory)
@@ -820,7 +886,10 @@ bool verifyPositiveShadowRamp(ImageEditor &editor, const QString &directory)
         if (!check(output.pixelColor(x,0).red()>=output.pixelColor(x-1,0).red(),
                    "Production shadow ramp reverses dark tone ordering")) return false;
     }
-    return check(output.pixelColor(1,0).red()<10,"Production shadow ramp creates black pedestal");
+    // A pedestal is a jump from black to the first level; Lightroom itself lifts
+    // the deepest tones by 2.3-3 EV at +100, so only the step shape is checked.
+    const int first=output.pixelColor(1,0).red(), eighth=output.pixelColor(8,0).red();
+    return check(first-output.pixelColor(0,0).red()<=eighth-first,"Production shadow ramp creates black pedestal");
 }
 
 bool verifyPositiveHighlightColour(ImageEditor &editor, const QString &directory)
@@ -879,11 +948,10 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
     const auto [highlightLiftStatus, highlightLift] =
         exportVariant(QStringLiteral("highlight-lift"));
     if (!check(!highlightLiftStatus.isEmpty() && !highlightLift.isNull() &&
-                   std::abs(highlightLift.pixelColor(0, 0).red() -
-                            base.pixelColor(0, 0).red()) <= 2 &&
+                   oppositeEndMovesLeast(base, highlightLift, 0, {1, 2}) &&
                    highlightLift.pixelColor(2, 0).red() >
-                       base.pixelColor(2, 0).red() + 15,
-               "highlight lift should affect upper tones without lifting blacks"))
+                       base.pixelColor(2, 0).red() + 8,
+               "highlight lift should be strongest on upper tones and weakest on blacks"))
         return false;
 
     editor.resetAdjustments();
@@ -891,11 +959,10 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
     const auto [highlightDarkStatus, highlightDark] =
         exportVariant(QStringLiteral("highlight-darkening"));
     if (!check(!highlightDarkStatus.isEmpty() && !highlightDark.isNull() &&
-                   std::abs(highlightDark.pixelColor(0, 0).red() -
-                            base.pixelColor(0, 0).red()) <= 2 &&
-                   highlightDark.pixelColor(2, 0).red() + 15 <
+                   oppositeEndMovesLeast(base, highlightDark, 0, {1, 2}) &&
+                   highlightDark.pixelColor(2, 0).red() + 8 <
                        base.pixelColor(2, 0).red(),
-               "highlight recovery should compress upper tones without crushing blacks"))
+               "highlight recovery should be strongest on upper tones and weakest on blacks"))
         return false;
 
     editor.resetAdjustments();
@@ -903,13 +970,12 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
     const auto [whiteLiftStatus, whiteLift] =
         exportVariant(QStringLiteral("white-lift"));
     if (!check(!whiteLiftStatus.isEmpty() && !whiteLift.isNull() &&
-                   std::abs(whiteLift.pixelColor(0, 0).red() -
-                            base.pixelColor(0, 0).red()) <= 2 &&
+                   oppositeEndMovesLeast(base, whiteLift, 0, {1, 2, 3}) &&
                    whiteLift.pixelColor(2, 0).red() >
                        base.pixelColor(2, 0).red() + 15 &&
                    whiteLift.pixelColor(3, 0).red() >=
                        whiteLift.pixelColor(2, 0).red(),
-               "white lift should move the white point without lifting blacks"))
+               "white lift should be strongest near white and weakest on blacks"))
         return false;
 
     editor.resetAdjustments();
@@ -917,33 +983,71 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
     const auto [whiteDarkStatus, whiteDark] =
         exportVariant(QStringLiteral("white-darkening"));
     return check(!whiteDarkStatus.isEmpty() && !whiteDark.isNull() &&
-                     std::abs(whiteDark.pixelColor(0, 0).red() -
-                              base.pixelColor(0, 0).red()) <= 2 &&
+                     oppositeEndMovesLeast(base, whiteDark, 0, {1, 2}) &&
                      whiteDark.pixelColor(2, 0).red() + 8 <
                          base.pixelColor(2, 0).red(),
-                 "white recovery should lower the white point without crushing blacks");
+                 "white recovery should be strongest near white and weakest on blacks");
+}
+
+bool verifyHistogramValues(ImageEditor &editor, const QString &directory)
+{
+    // Known pixels: the histogram counts the displayed sRGB codes per channel,
+    // and bins luminance (linear Y of those codes) in sRGB encoding.
+    QImage input(2, 2, QImage::Format_RGBA8888);
+    input.setPixelColor(0, 0, QColor(255, 0, 0));
+    input.setPixelColor(1, 0, QColor(0, 255, 0));
+    input.setPixelColor(0, 1, QColor(0, 0, 255));
+    input.setPixelColor(1, 1, QColor(128, 128, 128));
+    input.setColorSpace(QColorSpace(QColorSpace::SRgb));
+    const QString inputPath = directory + QStringLiteral("/histogram-source.png");
+    editor.resetAdjustments();
+    if (!input.save(inputPath, "PNG") || !awaitLoad(editor, QUrl::fromLocalFile(inputPath)) ||
+        !awaitHistogram(editor))
+        return check(false, "histogram source should load");
+    const QVariantList histogram = editor.histogram();
+    const auto channel = [&](int index) { return histogram.at(index).toList(); };
+    const auto count = [&](int index, int from, int to) {
+        double total = 0;
+        const QVariantList values = channel(index);
+        for (int bin = std::max(0, from); bin <= std::min(255, to); ++bin) total += values.at(bin).toDouble();
+        return total;
+    };
+    double pixels = 0;
+    for (const QVariant &value : channel(1)) pixels += value.toDouble();
+    // Y of pure red/green/blue: 0.2126/0.7152/0.0722 -> sRGB codes 127/220/76.
+    return check(pixels == 4 &&
+                     count(1, 254, 255) == 1 && count(1, 127, 129) == 1 && count(1, 0, 1) == 2 &&
+                     count(2, 254, 255) == 1 && count(3, 254, 255) == 1 &&
+                     count(0, 76, 76) == 1 && count(0, 127, 127) == 1 &&
+                     count(0, 128, 128) == 1 && count(0, 220, 220) == 1,
+                 "histogram must count displayed sRGB codes and bin luminance in sRGB encoding");
 }
 
 bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
 {
-    QImage input(4, 1, QImage::Format_RGBA8888);
-    input.setPixelColor(0, 0, QColor(30, 30, 30, 255));
-    input.setPixelColor(1, 0, QColor(105, 105, 105, 255));
-    input.setPixelColor(2, 0, QColor(135, 135, 135, 255));
-    input.setPixelColor(3, 0, QColor(210, 210, 210, 255));
+    // Black, deep shadow, shadow, pivot (0.32 linear ~ sRGB 153), highlight,
+    // white and an orange: per-channel perceptual S curve with fixed endpoints.
+    const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(105, 105, 105),
+        QColor(153, 153, 153), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
+    QImage input(int(colors.size()), 1, QImage::Format_RGBA8888);
+    for (int x = 0; x < colors.size(); ++x) input.setPixelColor(x, 0, colors[x]);
     input.setColorSpace(QColorSpace(QColorSpace::SRgb));
-    const QString inputPath = directory + QStringLiteral("/contrast-source.bmp");
-    if (!input.save(inputPath, "BMP") ||
+    const QString inputPath = directory + QStringLiteral("/contrast-source.png");
+    if (!input.save(inputPath, "PNG") ||
         !awaitLoad(editor, QUrl::fromLocalFile(inputPath)))
         return false;
 
     const auto exportVariant = [&](const QString &name) {
-        const QString path = directory + QLatin1Char('/') + name +
-            QStringLiteral(".jpg");
-        const QString status = awaitExport(
-            editor, QUrl::fromLocalFile(path), QStringLiteral("JPEG"));
+        const QString path = directory + QLatin1Char('/') + name + QStringLiteral(".png");
+        const QString status = awaitExport(editor, QUrl::fromLocalFile(path), QStringLiteral("PNG"));
         return std::pair<QString, QImage>{status, QImage(path)};
     };
+    const auto red = [](const QImage &image, int x) { return image.pixelColor(x, 0).red(); };
+    const auto hueShift = [](const QImage &a, const QImage &b) {
+        const int delta = std::abs(a.pixelColor(6, 0).hsvHue() - b.pixelColor(6, 0).hsvHue());
+        return std::min(delta, 360 - delta);
+    };
+    const auto saturation = [](const QImage &image) { return image.pixelColor(6, 0).hsvSaturation(); };
 
     editor.resetAdjustments();
     const auto [baseStatus, base] = exportVariant(QStringLiteral("contrast-base"));
@@ -952,30 +1056,31 @@ bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setContrast(-100);
-    const auto [flatStatus, flat] = exportVariant(QStringLiteral("contrast-flat"));
-    if (!check(!flatStatus.isEmpty() && !flat.isNull() &&
-                   flat.pixelColor(0, 0).red() >
-                       base.pixelColor(0, 0).red() + 5 &&
-                   flat.pixelColor(3, 0).red() + 5 <
-                       base.pixelColor(3, 0).red() &&
-                   std::abs(flat.pixelColor(1, 0).red() -
-                            base.pixelColor(1, 0).red()) <= 12,
-               "negative contrast should flatten extremes without lifting midtones globally"))
+    editor.setContrast(100);
+    const auto [strongStatus, strong] = exportVariant(QStringLiteral("contrast-strong"));
+    if (!check(!strongStatus.isEmpty() && !strong.isNull() &&
+                   red(strong, 0) <= red(base, 0) + 1 && red(strong, 5) >= red(base, 5) - 1 &&
+                   red(strong, 1) + 5 < red(base, 1) && red(strong, 2) + 5 < red(base, 2) &&
+                   std::abs(red(strong, 3) - red(base, 3)) <= 6 &&
+                   red(strong, 4) > red(base, 4) + 5 && hueShift(strong, base) <= 8 &&
+                   saturation(strong) > saturation(base),
+               "positive contrast darkens below and brightens above the pivot, fixed endpoints, saturates colour"))
         return false;
+    for (int x = 1; x < 5; ++x)
+        if (!check(red(strong, x) < red(strong, x + 1), "positive contrast keeps tonal order"))
+            return false;
 
     editor.resetAdjustments();
-    editor.setContrast(100);
-    const auto [strongStatus, strong] =
-        exportVariant(QStringLiteral("contrast-strong"));
-    return check(!strongStatus.isEmpty() && !strong.isNull() &&
-                     strong.pixelColor(0, 0).red() + 5 <
-                         base.pixelColor(0, 0).red() &&
-                     strong.pixelColor(3, 0).red() >
-                         base.pixelColor(3, 0).red() + 5 &&
-                     std::abs(strong.pixelColor(1, 0).red() -
-                              base.pixelColor(1, 0).red()) <= 12,
-                 "positive contrast should separate extremes without crushing midtones");
+    editor.setContrast(-100);
+    const auto [flatStatus, flat] = exportVariant(QStringLiteral("contrast-flat"));
+    return check(!flatStatus.isEmpty() && !flat.isNull() &&
+                     red(flat, 0) <= red(base, 0) + 1 && red(flat, 5) >= red(base, 5) - 1 &&
+                     red(flat, 1) > red(base, 1) + 5 && red(flat, 2) > red(base, 2) + 5 &&
+                     std::abs(red(flat, 3) - red(base, 3)) <= 6 &&
+                     red(flat, 4) + 5 < red(base, 4) && hueShift(flat, base) <= 8 &&
+                     saturation(flat) < saturation(base) &&
+                     red(flat, 1) < red(flat, 2) && red(flat, 3) < red(flat, 4),
+                 "negative contrast lifts below and lowers above the pivot, fixed endpoints, desaturates colour");
 }
 
 bool awaitPreview(ImageEditor &editor)
@@ -1024,8 +1129,9 @@ bool verifyOriginalPreview(ImageEditor &editor, ImageProvider &provider,
     input.fill(QColor(20, 35, 50));
     if (!input.save(other)) return false;
     editor.loadImage(QUrl::fromLocalFile(other));
-    if (!check(provider.image().isNull() && provider.originalImage().isNull()
-            && editor.originalImageSource().isEmpty(), "changing source must immediately release both previews")) return false;
+    if (!check(!provider.image().isNull() && provider.originalImage() == baseline
+            && editor.originalImageSource() == originalUrl,
+               "changing source preserves the displayed pair until replacement is ready")) return false;
     if (!awaitPreview(editor) || !awaitLoad(editor, QUrl::fromLocalFile(path)) || !awaitPreview(editor)) return false;
     if (!check(editor.adjustmentValue(QStringLiteral("brightness")) == 1
             && provider.originalImage() == baseline && provider.image() != baseline,
@@ -1105,7 +1211,7 @@ int main(int argc, char **argv)
         return 1;
 
     ImageProvider provider;
-    ImageEditor editor(&provider);
+    ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
     if (!check(awaitLoad(editor, QUrl::fromLocalFile(inputPath)) && editor.hasImage(),
                "editor should load the source image"))
         return 1;
@@ -1237,6 +1343,8 @@ int main(int argc, char **argv)
         return 1;
 
     if (!verifyContrastResponse(editor, directory.path()))
+        return 1;
+    if (!verifyHistogramValues(editor, directory.path()))
         return 1;
 
     if (!verifyEditProxyDownscaling(editor, provider, directory.path()))

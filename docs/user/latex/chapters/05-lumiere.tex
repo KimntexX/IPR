@@ -1,0 +1,39 @@
+\chapter{Lumière et histogramme}
+\section{Lire l’histogramme fixe}
+L’histogramme reste en haut du panneau Réglages pendant le défilement.
+Il décrit l’aperçu sRGB courant après traitement, pas les valeurs brutes du
+capteur. Les indicateurs d’extrémité signalent des valeurs de l’aperçu à ses
+bornes ; ils ne mesurent pas directement la saturation du capteur.
+
+Les plages de lecture sont Noirs (0--10\,\%), Ombres (10--33\,\%),
+Exposition (33--66\,\%), Hautes lumières (66--90\,\%) et Blancs (90--100\,\%).
+Elles servent de repères visuels ; elles ne définissent pas des frontières
+rigides d’action des curseurs.
+
+\section{Les réglages}
+\begin{longtable}{@{}L{3cm}L{2.8cm}L{7.8cm}@{}}
+\toprule Réglage & Domaine & Utilisation\\\midrule\endhead
+Exposition & $-5$ à $+5$ EV & Corriger globalement le niveau lumineux ; commencer par de petites variations.\\
+Contraste & $-100$ à $+100$ & Renforcer ou adoucir la séparation des tons.\\
+Ombres & $-100$ à $+100$ & Éclaircir ou assombrir les zones sombres sans cibler seulement l’extrémité noire.\\
+Noirs & $-100$ à $+100$ & Ajuster les tons les plus sombres et l’assise de l’image.\\
+Hautes lumières & $-100$ à $+100$ & Modérer ou renforcer les tons clairs.\\
+Blancs & $-100$ à $+100$ & Ajuster les tons les plus proches du blanc.\\
+\bottomrule
+\end{longtable}
+La valeur zéro est la référence de ces six réglages. La case \emph{Niveaux
+de gris}, placée dans ce groupe, active ou désactive le rendu monochrome.
+
+\section{Procédure conseillée}
+Régler d’abord l’exposition, puis les ombres et hautes lumières, enfin les
+noirs, blancs et le contraste. Revenir sur les étapes précédentes si nécessaire :
+ces réglages interagissent visuellement. Une hausse des ombres rend aussi le
+bruit présent plus visible. Un réglage de hautes lumières ne peut pas recréer
+une information qui n’existe plus dans la source.
+
+\paragraph{Exemple.}
+Sur un contre-jour, essayer une légère baisse des hautes lumières et une
+hausse modérée des ombres, sans déplacer immédiatement les deux curseurs
+aux extrêmes. Maintenir \touche{Espace} dans la vue image pour contrôler
+l’effet, puis vérifier les transitions au zoom avec \touche{Ctrl + 1}.
+\gestesreglages

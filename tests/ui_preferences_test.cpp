@@ -25,6 +25,7 @@ int main(int argc, char **argv)
         UiPreferences preferences(path);
         if (!check(preferences.writable() && QFile::exists(path) &&
                    preferences.value("window/normalWidth").toInt() == 1440 &&
+                   preferences.layout().value("imageInfoFontSize").toInt() == 12 &&
                    preferences.sectionExpanded("light") && !preferences.sectionExpanded("denoise") &&
                    preferences.theme().value("background").value<QColor>() == QColor("#20242b") &&
                    preferences.value("future/aiEnabled").toString() == "false",
@@ -36,6 +37,11 @@ int main(int argc, char **argv)
                    preferences.setValue("selection/mixerBand", 1) &&
                    preferences.setValue("window/normalX", -1500),
                    "valid preferences including negative monitor coordinates should be accepted")) return 1;
+        if (!check(preferences.setValue("layout/imageInfoFontSize", 16) &&
+                   !preferences.setValue("layout/imageInfoFontSize", 9) &&
+                   !preferences.setValue("layout/imageInfoFontSize", 21) &&
+                   !preferences.setValue("layout/imageInfoFontSize", "huge"),
+                   "information font size must be validated within 10 to 20 px")) return 1;
         if (!check(!preferences.setValue("window/normalWidth", -1) &&
                    !preferences.setValue("sections/light", "sometimes") &&
                    !preferences.setValue("theme/background", "#00000000") &&
@@ -50,6 +56,7 @@ int main(int argc, char **argv)
     {
         UiPreferences restored(path);
         if (!check(restored.sectionExpanded("denoise") &&
+                   restored.layout().value("imageInfoFontSize").toInt() == 16 &&
                    restored.theme().value("background").value<QColor>() == QColor("#123456") &&
                    restored.value("export/format").toString() == "TIFF" &&
                    restored.value("export/quality").toInt() == 81 &&

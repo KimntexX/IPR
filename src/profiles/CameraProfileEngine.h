@@ -1,9 +1,10 @@
-#ifndef CAMERAPROFILEENGINE_H
-#define CAMERAPROFILEENGINE_H
+#ifndef IPR_PROFILES_CAMERAPROFILEENGINE_H
+#define IPR_PROFILES_CAMERAPROFILEENGINE_H
 
 #include <QString>
 #include <QStringList>
 #include <opencv2/core.hpp>
+#include "PreparedProfileCache.h"
 
 namespace CameraProfileEngine {
 
@@ -27,6 +28,8 @@ struct DcpRenderOptions
     // Zero means no additional gain; callers must not reapply an existing gain.
     double cameraBaselineExposureEv = 0.0;
     bool preserveToneCurveHue = false;
+    // Audited camera/profile rendering adjustment, composed before DCP LUTs/curve.
+    double profileExposureCompensationEv = 0.0;
 };
 
 // Immutable camera-space source. LibRaw WB and optical corrections are already
@@ -42,8 +45,11 @@ struct DcpWorkingContext
 
 bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tint,
                        cv::Vec3d &gains, QString *error = nullptr);
-bool renderWhiteBalance(const DcpWorkingContext &source, int temperature, int tint,
-                         cv::Mat &linearRgb, QString *error = nullptr);
+// Scene-referred source edits: white balance gains and exposure scale the
+// linear camera signal, then the DCP (tables and tone curve) is applied.
+// Exposure therefore precedes the profile tone curve, as in camera RAW editors.
+bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
+                            double exposureEv, cv::Mat &linearRgb, QString *error = nullptr);
 
 struct LcpRenderOptions
 {
@@ -59,6 +65,9 @@ struct LcpApplied
 };
 
 QStringList defaultProfileDirectories();
+PreparedProfileCache::Statistics preparedProfileCacheStats();
+void configurePreparedProfileCache(quint64 budgetBytes, int entryLimit = 16);
+void clearPreparedProfileCache();
 QStringList availableDcpProfiles(const QString &cameraMake, const QString &cameraModel,
                                  const QStringList &profileDirectories = {});
 bool dcpMatchesCamera(const QString &path, const QString &cameraMake,
@@ -69,6 +78,8 @@ bool lcpMatchesLens(const QString &path, const QString &cameraMake,
 Selection findProfiles(const QString &cameraMake, const QString &cameraModel,
                        const QString &lensMake, const QString &lensModel,
                        const QStringList &profileDirectories = {});
+// Camera RGB input -> linear Rec.2020 D65 output (unbounded float).
+// renderFromCameraSignal returns this same master domain.
 bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,
               double whiteBalanceKelvin = 5500.0, QString *error = nullptr,
               const DcpRenderOptions &options = {});
@@ -78,4 +89,4 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
 
 }
 
-#endif
+#endif // IPR_PROFILES_CAMERAPROFILEENGINE_H

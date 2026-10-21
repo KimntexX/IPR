@@ -1,5 +1,5 @@
-#ifndef IPR_VIBRANCE_H
-#define IPR_VIBRANCE_H
+#ifndef IPR_CORE_VIBRANCE_H
+#define IPR_CORE_VIBRANCE_H
 
 #include <algorithm>
 #include <cmath>
@@ -73,4 +73,4 @@ inline cv::Vec3f apply(const cv::Vec3f &rgb, double vibrance, double saturation)
 
 } // namespace Vibrance
 
-#endif
+#endif // IPR_CORE_VIBRANCE_H

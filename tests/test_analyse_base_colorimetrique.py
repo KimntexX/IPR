@@ -42,14 +42,17 @@ class BaseColorimetryTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 normalization_manifest.build({}, {}, {}, Path('unused'))
 
-    def test_manifest_builder_keeps_only_measured_file_profile_pairs(self):
+    def test_manifest_builder_requires_explicit_model_rules_and_source_evidence(self):
         tags = {50778:(17,),50779:(21,),50964:(1,),50965:(1,),50940:(0,0,1,1),
                 50981:(1,2,1),50982:(0,),51108:(1,),51109:(-.5,)}
         sha='a'*64
         scene={'scene':'A','comparison_available':True,'raw_sha256':sha,'dng_sha256':sha,
                'dng_white':13995,'black_rgbg':[512]*4,'dng_baseline_exposure_ev':.26}
         measure={'diagnostic_only':True,'inputs_sha256':{'profile':sha},
-                 'libraw_version':'0.22.2-Release','scenes':[scene,{'comparison_available':False}]}
+                 'libraw_version':'0.22.2-Release','scenes':[scene,{'comparison_available':False}],
+                 'model_rules':[dict(camera_model='EOS R6 Mark III',white_level=13995,
+                    baseline_exposure_ev=.26,black_min=400,black_max=640,
+                    native_white_min=13000,native_white_max=17000,provenance='explicit proposal')]}
         manifest={'images':[{'raw':'A.CR3','variant':'baseline','raw_sha256':sha,'camera':'EOS R6 Mark III','iso':100}]}
         audit={'scenes':[{'scene':'A','path':'A.dng','raw_sha256':sha,'sha256':sha,'ifd0':{'make':'Canon'}}]}
         with mock.patch.object(normalization_manifest,'read_dcp',return_value=tags), \
@@ -58,6 +61,10 @@ class BaseColorimetryTests(unittest.TestCase):
             self.assertEqual(len(output['entries']),1)
             self.assertEqual(output['entries'][0]['camera_model'],'EOS R6 Mark III')
             self.assertEqual(output['entries'][0]['baseline_exposure_ev'],.26)
+            self.assertEqual(output['schema'],4)
+            self.assertEqual(output['entries'][0]['decoder_id'],'libraw')
+            self.assertEqual(output['entries'][0]['format_extension'],'cr3')
+            self.assertNotIn('raw_sha256',output['entries'][0])
             measure['scenes'].append(scene)
             with self.assertRaises(ValueError):
                 normalization_manifest.build(measure,manifest,audit,Path('profile'))

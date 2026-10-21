@@ -1,8 +1,28 @@
 # Base colorimétrique — Rapport d'analyse évolutif
 
-**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 14 octobre 2026.
-**Statut actuel :** Camera Neutral accepté visuellement ; module IHM et ZIP local
-disponibles (§25–26). Normalisation limitée à cinq RAW exacts, désactivée par défaut.
+**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 17 octobre 2026.
+**État de référence courant (§51–55) :** master Rec.2020, calibration demandée
+par défaut et règles R6/R7 par mode sans liste de RAW/ISO, configuration vivante.
+Le premier lot d'architecture extensible conserve le rendu des 19 témoins
+acceptés ; ce n'est pas une validation universelle. Les états datés ci-dessous
+sont historiques et ne décrivent pas tous la politique courante.
+
+**Résumé historique :**
+**État historique du lot initial :** Camera Neutral accepté visuellement ; module IHM et ZIP local
+disponibles (§25–26). Calibration actuelle limitée à 19 couples RAW/DCP exacts,
+activée explicitement (§35) ; l'ancienne étape à cinq RAW reste historique.
+La reprise du 14 octobre sur `patch_raw_opening` mesure 19 RAW (§29) et
+compare désormais leurs 19 neutres LR, avec recherche de méthodes (§30) et
+confirmation du corpus entièrement As Shot (§31) ; le
+prototype Couleur reste sauvegardé et non validé sur `patch_color`.
+Les essais DCP isolés sont mesurés au §32 ; aucune variante n'est encore
+intégrée au rendu de production.
+L'audit DNG/LibRaw de tout le corpus est maintenant disponible au §33.
+Les décodages radiométriques comparés aux 19 références LR sont au §34.
+Le candidat est intégré dans le moteur et le build Windows, en activation
+explicite et limitée au corpus audité (§35) ; recette visuelle HL en attente.
+Les 13 réexports retenus reproduisent le témoin calibré ; contrôle d'activation
+et première étude HL réalisés le 15 octobre (§39), sans nouveau changement du rendu.
 Standard, résidus et fidélité physique restent ouverts. Le nouveau cas
 0081 confirme un écart neutre rouge/sombre à investiguer (§28), sans annuler
 les appréciations historiques sur d'autres scènes. Les
@@ -3143,7 +3163,2599 @@ sortie. Éviter une correction arbitraire du canal rouge ou de la vibrance sur
 la seule base de cette scène. Aucun code de production modifié ni image source
 supprimée dans cette inspection.
 
+## 29. Reprise exhaustive du corpus d'ouverture — 14 octobre 2026
+
+### État Git et périmètre
+
+À la demande de l'utilisateur, l'état A1/A2 et ses preuves sont sauvegardés
+dans le commit local **`8abcd12` de `patch_color`**. La validation
+photographique Couleur est suspendue, sans tag ni fusion dans `dev`.
+La branche locale **`patch_raw_opening`** est créée depuis `dev` actualisé,
+commit `7297197`. Elle reprend l'outil et les preuves du diagnostic neutre
+0081, pas le code du prototype Couleur. Aucun push demandé ou exécuté.
+
+Le rendu neutre est une identité dans le bloc de réglages, indépendamment
+du changement de modèle Couleur. Le programme de diagnostic compile
+uniquement une sonde et des tests ; l'exécutable IHM A1/A2 précédemment
+construit n'est pas une nouvelle livraison du rendu d'ouverture.
+
+### Inspection de la carte et ajouts du corpus
+
+Autorisation de lecture/copie donnée pour `D:/DCIM/100EOSR6` : **500 CR3**
+inventoriés, **60 JPEG intégrés** répartis dans la série examinés visuellement.
+Les métadonnées de ces 500 fichiers indiquent R6 Mark III. Les JPEG servent
+à sélectionner les sujets, jamais à mesurer la fidélité du développement RAW.
+Quatre copies nouvelles, sans XMP/ACR associé, sont déposées à la racine de
+`tests/image/base`, environ **157 MiB** au total, SHA-256 source/destination
+identiques. Aucun fichier existant écrasé, déplacé ou supprimé.
+
+| RAW ajouté | ISO lu | Intérêt observé |
+| --- | ---: | --- |
+| 6V1A0318 | 100 | Peau au soleil, rocher et crashpads colorés : carnations et tons chauds à faible bruit. |
+| 6V1A0524 | 400 | Contre-jour, ciel et rochers sombres : séparation luminosité/gamut et réserve tonale. |
+| 6V1A9608 | 16000 | Prise bleue sur fond jaune : interactions de couleurs saturées ; bruit à contrôler. |
+| 6V1A9616 | 1600 | Prise rouge sur mur clair : zone chaude et fond peu chromatique. |
+
+Le corpus contient désormais **19 RAW** : seize R6 Mark III (0007, 0037,
+0043, 0054, 0081, 0182, 0318, 0327, 0524, 0830, 9421, 9608, 9616, 9890,
+9940, 9950) et trois R7 (7Y6A7003, 7Y6A7298, 7Y6A7599). Deux objectifs
+rapportés par le décodeur : RF24-105mm F2.8 L IS USM Z et Sigma 70-200mm
+F2.8 DG OS HSM Sports 018. La couverture n'est donc pas universelle.
+
+### Preuves et contrôles
+
+- [Audit du corpus, 09:27:42 UTC / 11:27:42 Paris](../raw/audit-corpus-ouverture-v001-20261014T092742619468Z.json) :
+  19 sources RAW, sidecars présents mais non appliqués, **37 TIFF neutres**
+  inspectés, contextes/empreintes/statistiques et preuves des quatre copies.
+- [Synthèse canonique v002, 09:39:38 UTC / 11:39:38 Paris](../raw/synthese-ouverture-v002-20261014T093938429634Z.json) :
+  références aux **19 JSON individuels** de la sonde, extraction indépendante
+  des candidats ColorData Canon, comparaisons LR, exclusions, unités et décision.
+  Les synthèses v001 restent préliminaires ; v002 ajoute les garde-fous,
+  le protocole et la provenance de branche sans modifier leurs données.
+- Outils : [sonde native](../../../tests/raw_opening_probe.cpp),
+  [audit](../../../tests/audit_opening_corpus.py),
+  [synthèse](../../../tests/summarize_raw_opening.py).
+
+**19/19 décodages réussis** avec les profils Camera Neutral appropriés aux
+deux boîtiers. WB caméra, normalisation désactivée, optique/CA désactivées,
+aucune restauration de retouche. Échantillonnage natif au pas 8, sans
+redimensionnement. Sur le RGB caméra échantillonné, le rejeu du DCP reproduit
+le tampon issu du décodage complet avec **erreur flottante maximale nulle
+sur les 19 scènes**. Les ablations sont donc isolées sur un témoin exact.
+La sortie sRGB 16 bits est celle de production. Les PNG d'inspection restent
+dans un dossier de build et ne servent pas aux mesures.
+
+Tests : **4/4 CTest ciblés** (sonde, décodeur, profils, sortie couleur),
+**5 tests Python de synthèse**, **3 d'inspection couleur**, **15 de sélection
+de tests** réussis. Ce ne sont pas des validations photographiques.
+
+La ROI nommée `flower_ROI` dans la sonde est le rectangle proportionnel
+défini pour 0081, appliqué aux autres images comme simple région exploratoire.
+Elle ne constitue pas une annotation de peau, de fleur ou de prise sur ces
+autres scènes ; aucune conclusion sémantique automatique n'en est tirée.
+
+### Luminosité : résidu confirmé, pas de compensation globale proposée
+
+Huit scènes disposent d'une référence LR Camera Neutral neutre sans
+correction optique déclarée. Pour 9421, ce fichier indique **Custom**,
+5200/+5 ; son autre TIFF As Shot a l'optique activée. Le premier reste donc
+une comparaison diagnostique, pas une validation As Shot. Le TIFF générique
+9950 Adobe Standard est exclu ; la référence Camera Neutral est retenue.
+Les fichiers IPR historiques de diverses générations ne sont pas mélangés
+au témoin fraîchement décodé.
+
+Variation de la luminance moyenne du nouveau témoin par rapport au TIFF LR :
+
+| Scène | Témoin actuel sans optique | Courbe DCP préservant la teinte | IPR réglé à 5200/+5 |
+| --- | ---: | ---: | ---: |
+| 0007 | −23,31 % | −23,41 % | −22,68 % |
+| 0037 | −30,83 % | −30,94 % | −30,21 % |
+| 0043 | −38,35 % | −37,94 % | −37,41 % |
+| 0081 | −47,60 % | −42,93 % | −45,14 % |
+| 0327 | −35,63 % | −35,24 % | −34,49 % |
+| 9421 (WB Custom) | −31,83 % | −31,99 % | −30,43 % |
+| 9890 | −34,84 % | −34,64 % | −33,47 % |
+| 9950 | −31,03 % | −31,32 % | −30,50 % |
+
+Moyenne des écarts relatifs par scène : **−34,18 %**, médiane −33,34 %.
+Ce n'est pas un facteur d'exposition à appliquer ni un score perceptuel.
+La nouvelle optique désactivée diffère du contexte Couleur du 13 octobre,
+où IPR appliquait géométrie/vignettage : ne pas comparer directement ces
+moyennes comme une régression. Les gains de vignettage peuvent expliquer
+une partie des variations historiques, notamment 0037/9950 ; cette attribution
+n'est pas une nouvelle ablation optique mesurée ici. Les corrections imposées
+par LR et la géométrie restent à vérifier. Aucun recalage ou MAE inter-moteurs.
+
+### Teinte : piste DCP isolée sur la fleur orange
+
+La production applique actuellement la courbe DCP **canal par canal** lorsque
+la normalisation expérimentale est désactivée. L'option existante
+`preserveToneCurveHue` interpole le canal intermédiaire entre les extrema
+transformés en ProPhoto et conserve la teinte HSV de cet espace lorsque
+les conditions de validité sont réunies. Elle n'est pas une conservation
+garantie de L/h Oklab. Dans `RawDecoder.cpp`, elle est aujourd'hui activée
+avec une calibration de normalisation, pas par défaut pour un neutre.
+
+La sonde ne change que cette option, sans normaliser le RAW, changer ses gains
+WB ou modifier le DCP. Sur la ROI centrale de 0081 :
+
+| Indicateur | Témoin actuel | Courbe préservant la teinte | Référence LR, inspection §28 |
+| --- | ---: | ---: | ---: |
+| Rapport des moyennes linéaires G/R | 0,0799 | 0,1386 | 0,1544 |
+| Y moyen | 0,03061 | 0,03415 | 0,05988 |
+
+Les grilles/géométries diffèrent légèrement de l'inspection TIFF du §28 :
+ces statistiques ne sont pas des correspondances pixel à pixel. L'aperçu
+de l'ablation est visuellement plus orange, cohérent avec l'augmentation
+relative du vert. La modification de courbe est donc une **cause contributive
+isolée du rouge**, mais elle ne suffit pas à corriger la luminosité globale.
+Son effet sur Y moyen varie de **−1,20 % à +8,91 %** selon les 19 scènes,
+médiane −0,079 %. La variation de taux de clipping va de −0,001 à +0,169
+point de pourcentage : aucune innocuité universelle n'est déclarée.
+
+Recopier les nombres LR 5200/+5 dans IPR augmente légèrement Y mais fait
+baisser le G/R de la fleur à **0,0698** : la teinte ne se rapproche pas ici
+de l'orange LR. Les Kelvin/nuances de deux moteurs ne sont pas des gains
+caméra interchangeables. Les Kelvin estimés sont 4924 pour les seize R6,
+5314 pour les trois R7. Les candidats ColorData sont constants par modèle
+dans ce corpus et cohérents numériquement avec les rapports de gains lus ;
+les offsets ne sont pas tous certifiés. Ce constat **ne démontre pas** que
+la constance provient d'un défaut de WB plutôt que des réglages de prise de vue.
+
+### Ce qui reste nécessaire
+
+**Onze scènes n'ont pas encore de référence LR neutre exploitable dans
+`base/neutre`** : 0054, 0182, 0318, 0524, 0830, 9608, 9616, 9940,
+7Y6A7003, 7Y6A7298, 7Y6A7599. Elles sont décodées et mesurées dans IPR,
+mais aucune fidélité LR n'est annoncée. Les préparer selon le
+[protocole RAW/profils v2](../protocols/protocole-raw-profils.md) : Camera Neutral,
+As Shot sans imposer une température universelle, sRGB 16 bits, paramètres
+photographiques à zéro, optique/bruit/netteté contrôlés. Refaire également
+9421 As Shot sans optique si LR permet ce contexte ; sinon tracer le contexte imposé.
+
+**Mise à jour après réception :** ces onze références sont reçues et la
+couverture atteint 19/19 dans la campagne du §30. La liste ci-dessus décrit
+seulement l'état initial du §29 ; elle n'est plus une demande d'exports.
+
+Prochaine investigation recommandée : séparer **préservation de teinte de la
+courbe DCP** et **niveau lumineux de base**. Le premier mécanisme doit pouvoir
+être étudié sans activer une calibration de normalisation par fichier. Pour
+le second, reprendre les niveaux noir/blanc, l'exposition de base caméra,
+la courbe DCP et le mapping de sortie, sans gain global ajusté sur ces seules
+moyennes. Les ablations actuelles sont diagnostiques ; aucun comportement
+de production n'est changé sur cette branche à ce stade. Maintenir la pause
+des réglages Couleur et préserver tous les RAW/JSON.
+
+## 30. Corpus LR complet et méthodes de développement — 14 octobre 2026
+
+### Audit et nouvelle campagne
+
+À la demande de l'utilisateur, la présence des références est contrôlée
+avant comparaison : **19/19 RAW disposent d'un TIFF LR**, aucun manquant.
+Les **49 TIFF neutres** présents passent la lecture native (sRGB 16 bits,
+opaque, géométrie/orientation tracées) dans le
+[nouvel audit, 09:52:31 UTC / 11:52:31 Paris](../raw/audit-corpus-ouverture-v001-20261014T095231171788Z.json).
+
+Mémoire de comparaison faisant autorité :
+[synthèse v004, 10:01:59 UTC / 12:01:59 Paris](../raw/synthese-ouverture-v004-20261014T100159424287Z.json).
+Elle conserve les 19 comparaisons, cohortes par boîtier, deux audits DCP,
+sélection des références, empreintes et limites. La synthèse v003 est
+préliminaire ; v004 ajoute les cohortes et le contrôle des DCP/code de sonde.
+Les 19 sondes natives du §29 sont réutilisées **sans nouveau décodage** :
+les empreintes des RAW, DCP et sources de calcul sont vérifiées inchangées.
+Les TIFF LR sont relus et mesurés, pas remplacés par leur ancienne mémoire.
+
+Cas particuliers explicites :
+
+- 0327 possède deux Camera Neutral/As Shot avec mêmes réglages et même Y
+  moyen, mais empreintes différentes. L'export nouvellement fourni
+  `6V1A0327.tif` est sélectionné explicitement ; l'autre reste tracé. Les
+  moyennes égales ne prouvent pas une identité de tous les pixels.
+- 9950 générique est Adobe Standard/Custom : exclu. La référence nommée
+  Camera Neutral/As Shot est retenue.
+- 9421 sans optique reste **Custom 5200/+5**. L'autre export est As Shot mais
+  optique et CA activées. La comparaison sans optique est diagnostique :
+  **18 références As Shot et une Custom**, pas 19 validations As Shot.
+- R6 : valeurs LR As Shot 5200/+5 ; R7 : 5350/+8. La sonde WB alternative
+  conserve son essai fixe 5200/+5, qui n'est pas le réglage LR des R7.
+
+### Résultats sur les dix-neuf scènes
+
+Écart de Y moyen du témoin IPR sans optique par rapport au TIFF LR, en
+pourcentage ; les scènes déjà comparées au §29 sont confirmées :
+
+| Scène | IPR courant | Courbe DCP préservant la teinte |
+| --- | ---: | ---: |
+| 0007 | −23,31 % | −23,41 % |
+| 0037 | −30,83 % | −30,94 % |
+| 0043 | −38,35 % | −37,94 % |
+| 0054 | −34,13 % | −34,09 % |
+| 0081 | −47,60 % | −42,93 % |
+| 0182 | −49,20 % | −48,83 % |
+| 0318 | −30,68 % | −30,81 % |
+| 0327 | −35,63 % | −35,24 % |
+| 0524 | −6,49 % | −6,57 % |
+| 0830 | −16,71 % | −16,69 % |
+| 9421 (Custom) | −31,83 % | −31,99 % |
+| 9608 | −38,78 % | −37,96 % |
+| 9616 | −40,76 % | −39,66 % |
+| 9890 | −34,84 % | −34,64 % |
+| 9940 | −17,74 % | −18,39 % |
+| 9950 | −31,03 % | −31,32 % |
+| 7Y6A7003 | −12,46 % | −12,59 % |
+| 7Y6A7298 | −12,53 % | −12,85 % |
+| 7Y6A7599 | −11,99 % | −13,04 % |
+
+Moyenne des écarts relatifs par scène : **−28,68 %** sur 19, médiane −31,03 %.
+Par boîtier : R6 Mark III **−31,75 %** sur 16 scènes (dont 9421 diagnostique),
+R7 **−12,33 %** sur trois. Moyennes des rapports logarithmiques : −0,569 EV
+et −0,190 EV respectivement. Ce ne sont ni des compensations recommandées,
+ni des scores de fidélité. Le déficit varie beaucoup avec la scène : un seul
+gain global serait insuffisamment justifié et pourrait écrêter 0524.
+
+Le constat visuel favorable sur 7Y6A7599 reste valable comme appréciation
+utilisateur : un écart de Y moyen ne décrit pas à lui seul la luminosité
+perçue des visages, le contraste ou la fidélité des couleurs. Les statistiques
+utilisent des géométries indépendantes, pas une superposition de pixels.
+
+Les deux DCP attestés comportent **128 points de courbe**, deux matrices
+Forward et une LookTable 90 × 16 × 16, sans HueSatMap distincte. Le R6 porte
+un `BaselineExposureOffset` **−0,5 EV** ; le R7 n'a pas ce tag, valeur par
+défaut 0. Ce sont des paramètres de profils, pas une mesure du défaut.
+
+### Recherche : notre principe est-il correct ?
+
+**Le socle est cohérent, mais le rendu initial n'est pas encore complètement
+maîtrisé.** Le code sépare import RAW, RGB caméra, DCP, retouches et sortie,
+conserve un contexte avant DCP pour WB/profils et trace ses ressources.
+Ces choix permettent les ablations reproductibles. Il n'est pas nécessaire
+de remplacer le décodeur pour corriger une mauvaise application de courbe.
+
+La documentation LibRaw distingue WB caméra, interpolation, niveaux et
+auto-éclaircissement par histogramme. `no_auto_bright=1` désactive ce dernier ;
+cela est adapté à une base déterministe, mais ne fournit pas à lui seul un
+rendu photographique par défaut. Notre gamma de travail 1, sortie caméra
+sans seconde matrice et WB As Shot évitent de confondre décodage et look.
+Changer le dématriçage peut affecter détails/fausses couleurs, pas expliquer
+automatiquement le déficit global observé. [LibRaw, paramètres](https://www.libraw.org/docs/API-datastruct.html).
+
+La spécification DNG distingue `BaselineExposure` caméra et
+`BaselineExposureOffset` profil, dont les EV s'additionnent. Une courbe SDR
+`ProfileToneCurve` contient des points en gamma linéaire et recommande une
+interpolation cubique. Ce document fixe des conventions de format, pas tout
+le rendu privé de Lightroom. [Adobe, DNG 1.7.1.0, p. 36–37, 51 et 63](https://helpx.adobe.com/content/dam/help/en/camera-raw/digital-negative/jcr_content/root/content/flex/items/position/position-par/download_section_733958301/download-1/DNG_Spec_1_7_1_0.pdf).
+
+Deux écarts concrets du code IPR méritent une étude séparée :
+
+1. `applyCurve()` interpole linéairement les 128 points, pas par spline.
+   C'est un écart à la recommandation ; **son importance n'est pas mesurée
+   ici** et il n'explique pas encore les −31,75 % du R6.
+2. La préservation de teinte de la courbe est liée à l'activation d'une
+   calibration RAW. Le rendu du profil devrait pouvoir être contrôlé
+   indépendamment de cette calibration. Notre ablation isole déjà une
+   contribution au rouge de 0081, sans corriger toute sa luminosité.
+
+RawTherapee sépare le traitement de caractérisation DCP de son étape de
+look/courbe et applique une courbe « film-like » plus tard, après l'exposition.
+Sa documentation signale qu'un profil Adobe peut attendre une exposition
+de base supplémentaire. Elle confirme donc l'importance de l'ordre et du
+point zéro ; ce n'est pas une preuve que ses paramètres conviennent à IPR.
+[RawPedia, Color Management](https://rawpedia.pixls.us/color_management/).
+Le code public comporte `apply`, `setStep2ApplyState`, `step2ApplyTile` et
+`tone_curve.Apply` : une référence pour comparer les responsabilités, sans
+en importer l'implémentation. [RawTherapee, dcp.cc](https://github.com/RawTherapee/RawTherapee/blob/dev/rtengine/dcp.cc).
+
+Un élément historique local renforce la piste radiométrique :
+[l'audit Adobe DNG du 8 octobre](../raw/audit-dng-reference-20261008.json)
+contient des `BaselineExposure` **+0,26 EV**, et **+0,28 pour 9421**, ainsi
+que les niveaux blanc/noir et la calibration caméra. Il ne faut pas confondre
+ces valeurs avec le −0,5 du profil, ni les additionner deux fois. Cet audit
+ne couvre pas les nouveaux RAW/R7 et n'est pas une calibration physique.
+Il justifie de contrôler les métadonnées et les niveaux, pas d'ajouter
+arbitrairement +0,57 EV pour annuler une moyenne mesurée contre LR.
+
+### Autres approches et comparaison
+
+| Approche | Intérêt pour IPR | Limite / coût de changement |
+| --- | --- | --- |
+| DCP/DNG mieux appliqué, pipeline actuel | Corriger courbe/interpolation et exposition de base attestée sans tout reconstruire ; piste prioritaire. | Rendu de profils et extrêmes à revalider, métadonnées manquantes à traiter explicitement. |
+| Pipeline référé à la scène, transformation d'affichage tardive | Séparer la lumière de la scène du look ; edits sur valeurs flottantes à grande plage, sortie contrôlée. | Refonte moyenne à forte : ordre des réglages, gamut, profils, caches et validations Lumières/Couleur/détails. |
+| Profil colorimétrique propre mesuré | Base indépendante d'un look constructeur ; fidélité évaluée sur charte et éclairages connus. | Acquisition/calibration nécessaires ; les photos seules ne donnent pas la couleur physique de référence. |
+| Courbe ajustée au JPEG embarqué | Point de départ proche du Picture Style ; référence visuelle propre au boîtier. | Imite aussi le look, les traitements et limites du JPEG ; pas une vérité colorimétrique. |
+| Autre décodeur / décodeur maison | Contrôle des métadonnées/CFA et indépendance technique possibles. | Ne corrige pas à lui seul DCP/courbe/exposition ; coût et maintenance élevés, risque multi-boîtiers. |
+
+Darktable documente une transformation d'affichage en fin de traitement et
+des opérations en RGB linéaire référé à la scène. C'est une direction
+architecturale pertinente pour séparer retouche et restitution.
+[Workflow / tone mapping](https://darktable-org.github.io/dtdocs/en/overview/workflow/tone-mapping/).
+Son module sigmoid distingue modes par canal, ratios RGB et préservation
+de teinte ; une seule transformation d'affichage doit être choisie, pas
+empilée sur une autre courbe de base. Notre proposition future ne consiste
+donc pas à ajouter sigmoid sur un DCP déjà rendu.
+[Darktable 5.6, sigmoid](https://docs.darktable.org/usermanual/5.6/en/module-reference/processing-modules/sigmoid/).
+
+**Nuance importante :** un tampon en *sRGB à encodage linéaire* n'est pas
+forcément *linéaire par rapport à la lumière de la scène*. Dans IPR, les
+retouches reçoivent déjà les valeurs après LookTable/courbe DCP. Réorganiser
+cette séparation peut améliorer la cohérence, mais change les résultats
+des commandes existantes : les tests de rendu doivent être rejoués.
+
+DCamProf distingue profil mesuré, look et reproduction tonale ; sa méthode
+de caractérisation nécessite une cible mesurée ou les sensibilités
+spectrales du capteur. Elle constitue une voie d'autonomie future, pas
+une solution immédiate sans acquisitions. Le nom « Neutral » d'un look
+ne garantit pas une caractérisation physiquement neutre.
+[A. Torger, DCamProf](https://rawtherapee.com/mirror/dcamprof/dcamprof.html).
+
+### Recommandation et bibliographie de cette reprise
+
+Ordre conseillé, sans changement de production dans cette campagne :
+
+1. Isoler puis tester l'application de la courbe DCP préservant la teinte,
+   indépendamment de la normalisation expérimentale.
+2. Vérifier exposition de base caméra, niveaux noirs/blancs et interpolation
+   du profil séparément, sur R6 et R7 ; comparer aussi plages/écrêtages,
+   pas seulement le Y moyen. Utiliser les métadonnées attestées avant tout fit.
+3. Mesurer l'effet d'une spline de référence sur les 128 points, avec tests
+   gris/dégradés/couleurs/HDR et conditions de validité explicites.
+4. Stabiliser le neutre avant de reprendre A1/A2. Réserver la refonte
+   référée à la scène à une étape architecturale explicitement décidée.
+
+Il n'y a pas une méthode universellement meilleure : le meilleur premier
+pas pour IPR est **corriger et caractériser son rendu DCP existant**, pas
+changer de bibliothèque ni appliquer un éclaircissement automatique global.
+Les références LR sont complètes, mais la fidélité physique et la parfaite
+équivalence WB/optique ne sont toujours pas prouvées.
+
+Sources primaires consultées le **14 octobre 2026** (liens évolutifs pour les
+branches de code ; les observations IPR restent liées aux JSON) :
+
+- Adobe, [DNG Specification 1.7.1.0](https://helpx.adobe.com/content/dam/help/en/camera-raw/digital-negative/jcr_content/root/content/flex/items/position/position-par/download_section_733958301/download-1/DNG_Spec_1_7_1_0.pdf) :
+  exposition de base, matrices et courbe de profil.
+- LibRaw, [Data Structures and Constants](https://www.libraw.org/docs/API-datastruct.html) :
+  WB, interpolation, auto-éclaircissement et ajustement du maximum.
+- RawTherapee, [Color Management](https://rawpedia.pixls.us/color_management/) et
+  [code DCP](https://github.com/RawTherapee/RawTherapee/blob/dev/rtengine/dcp.cc) :
+  séparation des étapes de caractérisation et de rendu.
+- Darktable, [Tone mapping](https://darktable-org.github.io/dtdocs/en/overview/workflow/tone-mapping/) et
+  [Sigmoid 5.6](https://docs.darktable.org/usermanual/5.6/en/module-reference/processing-modules/sigmoid/) :
+  restitution de la scène vers l'affichage et contrôle de teinte.
+- Anders Torger, [DCamProf](https://rawtherapee.com/mirror/dcamprof/dcamprof.html) :
+  caractérisation mesurée et reproduction tonale.
+
+## 31. Référence 9421 As Shot conforme et reprise — 14 octobre 2026
+
+Le nouvel export `6V1A9421-LR-CameraNeutral-AsShot.tif` est conforme aux
+déclarations attendues : RAW source `6V1A9421.CR3`, Camera Neutral,
+**As Shot 5200 K / +5**, exposition et retouches à zéro, netteté et bruit à
+zéro, correction d'objectif et aberrations chromatiques désactivées,
+courbe utilisateur Linear, sans recadrage déclaré. La lecture native
+confirme le TIFF sRGB 16 bits. La réserve « Custom » du §30 est levée.
+
+Preuves immuables de cette reprise :
+
+- [Audit, 14:19:55 UTC / 16:19:55 Paris](../raw/audit-corpus-ouverture-v001-20261014T141955676305Z.json) :
+  19 RAW, 46 TIFF présents lus sans erreur.
+- [Synthèse v005, 14:20:51 UTC / 16:20:51 Paris](../raw/synthese-ouverture-v005-20261014T142051876200Z.json) :
+  **19 comparaisons, aucune référence manquante, toutes LR As Shot**.
+  Elle remplace v004 comme mémoire de comparaison courante, sans l'effacer.
+
+Le TIFF 9421 a changé d'empreinte (nouveau SHA-256
+`83e40090df955909ca6b13c64ead2a0c22bbf84b0e0c0a7f38826b0df51d254b`),
+mais son Y moyen mesuré reste **0,2092978310**, comme dans l'export Custom
+précédent. Cela confirme que cette modification de référence ne résout
+pas le décalage lumineux ; cette seule moyenne ne prouve pas une identité
+de tous les pixels.
+
+| 9421 | Y moyen linéaire | Écart relatif au LR |
+| --- | ---: | ---: |
+| LR Camera Neutral As Shot | 0,2092978310 | Référence |
+| IPR courant, sans normalisation ni optique | 0,1426824043 | −31,83 % |
+| IPR, ablation courbe préservant la teinte | 0,1423407708 | −31,99 % |
+| IPR, essai WB fixe 5200/+5 | 0,1456082712 | −30,43 % |
+
+Sur l'ensemble, les résultats restent inchangés aux précisions publiées :
+**−28,68 %** en moyenne des écarts relatifs des 19 scènes ; R6 Mark III
+**−31,75 %** (16 scènes), R7 **−12,33 %** (trois scènes). Le défaut n'était
+donc pas expliqué par la déclaration Custom de 9421. Une égalité de valeurs
+WB affichées ne démontre toujours pas l'équivalence physique des deux
+moteurs : la température IPR est estimée selon sa propre méthode.
+
+Les 19 mesures natives IPR sont réutilisées après vérification des empreintes
+RAW, code et DCP, sans nouveau décodage ni correctif de production. Les TIFF
+LR sont relus dans ce nouvel audit. Trois anciens exports 9421 ne sont plus
+présents (IPR neutre couleur, IPR neutre mélangeur et LR optique) : aucun
+nettoyage n'a été effectué par l'analyseur, et aucune référence nécessaire
+à cette campagne n'est perdue. Les anciennes empreintes restent en mémoire.
+
+**Décision :** le corpus LR est prêt pour les expériences DCP proposées au
+§30. La préservation de teinte seule ne corrige pas le niveau lumineux de
+9421 ; poursuivre séparément courbe, exposition de base et niveaux, sans
+compensation globale ni validation photographique prématurée. Aucun nouvel
+export LR n'est demandé à ce stade, aucune image n'est supprimée.
+
+## 32. Essais DCP : teinte, spline et exposition caméra — 14 octobre 2026
+
+### Méthode et preuves
+
+À la demande de l'utilisateur, les 19 RAW sont **redécodés** depuis leurs
+sources avec Camera Neutral, WB caméra, normalisation et optique désactivées,
+sans sidecars. L'exécutable manuel `rawOpeningTrials` réutilise le moteur
+de production, sans ajout d'option dans l'IHM ni modification de `src/`.
+Le lanceur est `tests/run_raw_opening_trials.py`.
+
+Mémoire canonique :
+[essais DCP v001, lancement 14:29:58 UTC / 16:29:58 Paris](../raw/essais-ouverture-dcp-v001-20261014T142958920826Z.json).
+Elle conserve résultats par scène/variante, quantiles Y, noirs, écrêtage,
+hors-gamut, région centrale, références LR, empreintes du code/exécutable,
+des RAW et des DCP, ainsi que la spécification diagnostique et son empreinte.
+Les entrées sont vérifiées avant/après ; aucune image ou ressource Adobe
+originale n'est écrite, supprimée ou remplacée.
+
+Les copies temporaires des deux DCP résident uniquement dans un nouveau
+dossier de build : seul l'identifiant du tag `ProfileToneCurve` est masqué.
+Les autres tags restent identiques. Après tables/matrices, l'image est
+ramenée en ProPhoto linéaire pour tester les courbes, puis reconvertie par
+les mêmes matrices de sortie. **Le rejeu linéaire par canal reproduit le
+témoin de production avec une erreur maximale RGB de 1,1921 × 10⁻⁷**,
+inférieure à la tolérance 2 × 10⁻⁵. Le rejeu préservant la teinte retrouve
+également l'ablation antérieure (écart Y moyen maximal 1,12 × 10⁻⁹).
+
+Variantes : interpolation linéaire ou spline cubique naturelle (dérivée
+seconde nulle aux bornes), chacune appliquée par canal ou par interpolation
+des extrema préservant la teinte HSV ProPhoto. La spline est un candidat
+mathématique explicite, **pas une reproduction certifiée de celle d'Adobe**.
+Les tests synthétiques vérifient identité, passage aux nœuds, courbure,
+conditions aux bornes et invariance d'une entrée neutre sous courbe identité.
+
+### Interpolation : piste écartée comme cause principale
+
+Sur les 19 scènes, remplacer seulement l'interpolation linéaire par cette
+spline modifie le Y moyen de **−0,1630 % à +0,00345 %** relativement au témoin.
+La plus grande différence absolue de Y moyen vaut 0,00002583. L'écart moyen
+au LR passe de **−28,6801 % à −28,6906 %** : aucun rattrapage significatif.
+La hausse maximale d'écrêtage est de 0,00059 point de pourcentage.
+
+**Conclusion :** la spline peut améliorer la continuité de la courbe, mais
+ne corrige ni le déficit de luminosité ni à elle seule la fleur trop rouge.
+Ne pas la présenter comme un correctif visible justifiant une livraison.
+
+### Préservation de teinte : effet ciblé, pas éclaircissement général
+
+Sur 0081, la région centrale fixe donne :
+
+| Variante | G/R des moyennes linéaires, région centrale | Écart Y global au LR | Hors-gamut sRGB avant sortie |
+| --- | ---: | ---: | ---: |
+| Production | 0,079860 | −47,60 % | 1,09830 % |
+| Spline seule | 0,079704 | −47,64 % | 1,11871 % |
+| Teinte préservée, linéaire | 0,138606 | −42,93 % | 0,00040 % |
+| Teinte préservée, spline | 0,138502 | −42,96 % | 0,00040 % |
+
+Le gain relatif de vert par rapport au rouge va dans le sens d'un orange
+moins rouge ; ce ratio n'est pas un ΔE ni une validation colorimétrique
+physique. Le manque de luminosité demeure. Cette région est choisie pour
+0081, pas un masque sémantique transportable aux autres photos.
+
+La préservation de teinte modifie peu la moyenne globale du corpus :
+écart moyen **−28,42 %**, contre −28,68 %. Elle augmente l'écrêtage jusqu'à
+**+0,16937 point** sur 7Y6A7599. Ce compromis doit être examiné sur les
+hautes lumières, même si la fleur n'a pas d'écrêtage de sortie dans ces essais.
+
+### Exposition caméra : contribution importante attestée sur six scènes
+
+Cette variante conserve l'offset DCP R6 **−0,5 EV** et ajoute uniquement le
+`BaselineExposure` de l'audit DNG du 8 octobre : **+0,26 EV** pour
+0007/0037/0043/0327/9950 et **+0,28 EV** pour 9421, avant tables et courbe.
+Ce n'est ni un gain après rendu ni une normalisation noir/blanc. La provenance
+est l'interprétation Adobe de ces scènes historiques, **pas une calibration
+physique**, ni une valeur universelle à appliquer aux autres RAW/R7.
+
+| Scène | Production : écart Y au LR | Exposition caméra, courbe actuelle | Exposition caméra + teinte préservée |
+| --- | ---: | ---: | ---: |
+| 0007 | −23,31 % | −7,56 % | −7,71 % |
+| 0037 | −30,83 % | −15,30 % | −15,39 % |
+| 0043 | −38,35 % | −20,53 % | −19,98 % |
+| 0327 | −35,63 % | −17,83 % | −17,54 % |
+| 9421 | −31,83 % | −14,74 % | −15,04 % |
+| 9950 | −31,03 % | −15,53 % | −15,87 % |
+| Moyenne sur ces mêmes six scènes | **−31,83 %** | **−15,25 %** | **−15,25 %** |
+
+La spline ajoutée à cette variante laisse la conclusion inchangée. La hausse
+maximale d'écrêtage par rapport à la production vaut **+0,04182 point** pour
+l'exposition seule (9421) et **+0,02220 point** avec teinte préservée.
+L'écart diminue sur les six scènes, mais un résidu important subsiste.
+Il serait incorrect de publier cette moyenne comme résultat des 19 scènes.
+
+### Décision et suite proposée
+
+1. **Exposition/niveaux : piste prioritaire pour la luminosité.** Étendre
+   l'audit DNG aux 19 RAW pour vérifier exposition caméra, niveaux et calibration
+   sur R6 et R7, puis isoler leurs effets. Ne pas extrapoler les six valeurs
+   ni ajuster une compensation globale aux moyennes Lightroom.
+2. **Teinte : candidat pertinent pour la fleur**, à découpler de la normalisation
+   expérimentale et à revoir sur les hautes lumières avant intégration.
+3. **Spline : faible priorité visuelle**, cause principale de l'assombrissement
+   non retenue sur ce corpus. Son éventuelle intégration relève d'un objectif
+   de courbe mieux définie, avec contrôle des dépassements et dégradés.
+
+Résultat de campagne : 19/19 essais natifs terminés ; 5 tests CTest ciblés et
+43 tests Python réussis (28 diagnostics/sélection, 15 portée CI). Outils diagnostiques et règles de sélection
+des tests ajoutés ; **aucun code de production, réglage IHM ou profil original
+modifié**, aucune suppression d'image, aucun push/fusion/tag. La recette
+photographique reste à valider après décision sur les changements de rendu.
+
+## 33. Audit complet des niveaux et calibrations RAW — 14 octobre 2026
+
+### Périmètre et traçabilité
+
+**19/19 RAW audités**, seize R6 Mark III et trois R7, sans échec de conversion
+ni scène manquante. Mémoire canonique :
+[audit niveaux v001, 14:44:13 UTC / 16:44:13 Paris](../raw/audit-niveaux-ouverture-v001-20261014T144413419955Z.json).
+Cette mémoire relie RAW, copies, DNG, traces LibRaw, convertisseur, profils,
+code et protocole par empreintes ; elle conserve les valeurs par scène,
+avant et après estimation des noirs, avant mise à l'échelle et après traitement.
+
+Adobe DNG Converter **18.6** a produit 19 DNG mosaïqués compressés sans perte,
+avec `-c -p0 -d`, depuis des copies RAW vérifiées **sans sidecars**. Les
+sources originales, TIFF, sidecars et profils installés ne sont pas modifiés.
+Le témoin natif `tonalBaseProbe --scalars-only` exécute les paramètres de
+décodage et l'estimation de noirs d'IPR, sans normalisation, DCP/LCP appliqué
+aux pixels, ni export de pixels. Son résultat reste une trace diagnostique,
+pas une nouvelle recette photographique.
+
+Les DNG de ce témoin embarquent **Adobe Standard**, et non Camera Neutral.
+On n'en compare pas le rendu ni les tables : seules leurs métadonnées caméra
+et capteur servent de référence Adobe. L'offset du **Camera Neutral déployé**
+est lu séparément : **−0,5 EV sur R6 III, 0 sur R7**. Ne pas confondre le
+profil embarqué dans le DNG avec le profil IPR/LR de la comparaison visuelle.
+
+Le premier traitement a refusé les noirs non uniformes plutôt que d'en faire
+une moyenne. L'analyseur a été adapté pour conserver chaque valeur CFA et
+des bornes de plage ; les 19 conversions et traces déjà complètes ont été
+relues et vérifiées, sans refaire les calculs natifs. Le JSON indique cette
+réutilisation. Les copies locales occupent environ **1,33 Gio** (RAW + DNG),
+hors petites traces ; aucune suppression automatique. Elles restent dans
+un dossier de build ignoré, pas distribuées avec le dépôt.
+
+### Exposition de base et plage utile
+
+`BaselineExposure` Adobe mesuré : **+0,26 EV sur les neuf R6 à ISO 100**,
+**+0,28 EV sur les sept autres R6** (ISO 400 à 25600), **+0,35 EV sur les
+trois R7** (ISO 20000/32000). Cette association observée ne prouve pas une
+loi générale par ISO : aucun cas intermédiaire n'autorise une extrapolation.
+Sur les 19 CR3, LibRaw expose la sentinelle **−999** dans son champ DNG
+BaselineExposure ; ce n'est pas une exposition négative à appliquer.
+
+Le tableau distingue le blanc mosaïque DNG du maximum **après soustraction
+des noirs, avant mise à l'échelle** de LibRaw. Le gain de plage indicatif
+est calculé par `maximum_LibRaw / (blanc_DNG − noir_DNG)` ; il ne prédit pas
+le rendu après tables, courbes, dématriçage et écrêtage.
+
+| RAW | ISO | Base caméra Adobe (EV) | Blanc DNG | Noir(s) DNG, ordre CFA | Maximum LibRaw avant scale | Écart de plage indicatif (EV) |
+| --- | ---: | ---: | ---: | --- | ---: | ---: |
+| 0007 | 100 | +0,26 | 13995 | 512 ×4 | 14618 | +0,11660 |
+| 0037 | 100 | +0,26 | 13995 | 512 ×4 | 15871 | +0,23525 |
+| 0043 | 100 | +0,26 | 13995 | 512 ×4 | 15871 | +0,23525 |
+| 0054 | 100 | +0,26 | 13995 | 512 ×4 | 15871 | +0,23525 |
+| 0081 | 100 | +0,26 | 13995 | 512 ×4 | 15871 | +0,23525 |
+| 0182 | 3200 | +0,28 | 14351 | 2048, 2048, 2049, 2049 | 14336 | +0,22063 à +0,22075 |
+| 0318 | 100 | +0,26 | 13995 | 512 ×4 | 15871 | +0,23525 |
+| 0327 | 100 | +0,26 | 13995 | 512 ×4 | 15679 | +0,21769 |
+| 0524 | 400 | +0,28 | 14351 | 2048 ×4 | 12511 | +0,02419 |
+| 0830 | 3200 | +0,28 | 14351 | 2048 ×4 | 14335 | +0,22053 |
+| 9421 | 3200 | +0,28 | 14351 | 2048 ×4 | 14335 | +0,22053 |
+| 9608 | 16000 | +0,28 | 14351 | 2048 ×4 | 14336 | +0,22063 |
+| 9616 | 1600 | +0,28 | 14351 | 2048 ×4 | 14335 | +0,22053 |
+| 9890 | 25600 | +0,28 | 14351 | 2047, 2047, 2048, 2047 | 14338 | +0,22072 à +0,22083 |
+| 9940 | 100 | +0,26 | 13995 | 512 ×4 | 15871 | +0,23525 |
+| 9950 | 100 | +0,26 | 13995 | 512 ×4 | 15871 | +0,23525 |
+| 7Y6A7003 | 20000 | +0,35 | 16384 | 2044, 2045, 2046, 2045 | 14338 | −0,00020 à 0 |
+| 7Y6A7298 | 32000 | +0,35 | 16384 | 2038, 2037, 2039, 2041 | 14346 | −0,00010 à +0,00030 |
+| 7Y6A7599 | 32000 | +0,35 | 16384 | 2038, 2038, 2040, 2042 | 14345 | −0,00010 à +0,00030 |
+
+**Lecture :** la plage LibRaw est trop large par rapport au témoin Adobe sur
+la plupart des R6, ce qui peut contribuer à un signal plus faible à l'entrée
+du profil. L'ajustement de maximum LibRaw dépend aussi du contenu : 0524 et
+0007 n'ont pas le même écart que 0081. Ne pas ajouter +0,235 EV à tous les R6
+après rendu. Sur R7, la différence de plage est négligeable ; copier le réglage
+R6 ne serait pas justifié. Le blanc DNG 16384 versus 16383 côté LibRaw n'est
+pas, à lui seul, un défaut visible démontré.
+
+### Noirs, balance des blancs et calibration
+
+L'estimation de noirs déjà présente dans IPR s'active sur les **16 R6 III**.
+Elle remplace les valeurs LibRaw initiales incohérentes avec les noirs DNG
+par environ 512 à ISO 100 ou 2048 sur les autres scènes. Les petites
+différences par canal restent documentées, notamment 0182/9890 à hauts ISO.
+Sur les R7, les noirs LibRaw sont déjà renseignés et cette estimation ne
+s'active pas. Les valeurs DNG sont en ordre CFA, les `cblack` LibRaw en
+ordre RGBG avec une composante commune : il ne faut pas soustraire ces
+tableaux terme à terme sans mise en correspondance.
+
+Les gains normalisés de WB issus de `AsShotNeutral` DNG et de LibRaw
+coïncident à moins de **8,18 × 10⁻⁷ d'erreur relative** sur les 19 scènes
+(moins de 0,000082 %). Cela renforce la distinction entre gains appliqués
+et valeurs Kelvin/nuance affichées : l'affichage 4924 contre 5200 K ne prouve
+pas à lui seul un blanc mal décodé. Cela ne valide pas pour autant toutes
+les adaptations WB ni le rendu final des profils.
+
+Deux calibrations DNG non identitaires sont relevées, identiques pour les
+deux illuminants au sein de chaque boîtier ; `AnalogBalance` vaut (1,1,1) :
+
+| Boîtier | Diagonale CameraCalibration1/2 Adobe | Observation |
+| --- | --- | --- |
+| R6 Mark III | (1, 1, 1,0017) | Ajustement de référence bleu de 0,17 % |
+| R7 | (1,0072, 1, 0,9897) | Ajustements rouge +0,72 %, bleu −1,03 % |
+
+Ce sont des coefficients de calibration, **pas des pourcentages de correction
+à appliquer directement aux pixels sRGB**. Il faut vérifier leur convention,
+leur compatibilité avec le DCP choisi et la WB déjà appliquée avant tout essai,
+pour ne pas appliquer deux fois une compensation. Ils ne suffisent pas à
+expliquer un manque global de luminance de l'ordre de 30 %.
+
+### Conclusion et prochaine expérience
+
+L'audit renforce une cause **radiométrique et dépendante du boîtier**, plutôt
+qu'un unique défaut de température ou de spline :
+
+1. **R6 III :** comparer des décodages frais avec blanc DNG fixé avant la
+   soustraction des noirs, ajustement automatique du maximum désactivé, puis
+   exposition caméra séparément et conjointement. Garder les noirs par canal
+   et un témoin inchangé. Évaluer particulièrement 0524, proche de LR dès
+   le neutre courant, pour détecter une surcorrection.
+2. **R7 :** conserver d'abord ses niveaux actuels ; tester séparément +0,35 EV
+   et la convention de calibration. La simple présence de ce tag ne garantit
+   pas qu'ajouter cet EV au pipeline actuel améliore le rendu.
+3. **Teintes :** garder la préservation de teinte comme axe indépendant,
+   notamment sur 0081. Ne pas utiliser vibrance/saturation pour masquer
+   le défaut de départ.
+
+Ces essais demandent **aucune nouvelle image LR** : les 19 références actuelles
+suffisent. Ce constat n'est ni une calibration physique du capteur ni une
+validation de changements de production. Aucun fichier `config/` n'a été
+modifié ; pas d'activation globale de la normalisation expérimentale.
+
+## 34. Décodages radiométriques contrôlés sur les 19 RAW — 14 octobre 2026
+
+### Exécution et témoins
+
+À la demande de l'utilisateur : **38 décodages natifs, 152 variantes de rendu**,
+soit deux décodages par RAW et huit variantes par scène. Les RAW, DCP et
+références LR restent inchangés. Aucune option de production ni calibration
+déployée n'est modifiée.
+
+- [Essais radiométriques v001, démarrage 14:53:24 UTC / 16:53:24 Paris](../raw/essais-radiometriques-ouverture-v001-20261014T145324616293Z.json) :
+  paramètres par scène, traces LibRaw, témoins et tous les résultats.
+- [Comparaison LR complémentaire, 14:58:03 UTC / 16:58:03 Paris](../raw/comparaison-radiometrie-lr-v001-20261014T145803284900Z.json) :
+  relecture des 19 TIFF LR, quantiles, région centrale et taux à la borne haute.
+
+Le témoin **courant** conserve le maximum automatique LibRaw et n'ajoute pas
+d'exposition caméra. Le deuxième décodage fixe le blanc brut DNG audité avant
+soustraction des noirs et désactive `adjust_maximum_thr`. **Les noirs déjà
+calculés par IPR sont conservés**, pas remplacés par ceux du DNG ; la
+calibration matricielle reste inchangée. Chaque RGB caméra est traité par
+Camera Neutral avec/sans exposition de base, puis avec/sans préservation de
+teinte. L'interpolation de courbe reste linéaire.
+
+Sur les 19 scènes, le Y moyen du témoin reproduit **exactement** celui de la
+synthèse v005 (erreur mesurée 0). Les gains WB et noirs sont identiques entre
+les deux décodages. Les variantes ne sont donc pas de simples gains après
+rendu ni un changement implicite de balance des blancs.
+
+### Résultats de luminance : effet conjoint nettement confirmé
+
+Écarts moyens signés de Y par rapport à LR ; entre parenthèses, moyenne des
+valeurs absolues. Moyennes calculées par scène, pas sur un assemblage des pixels.
+
+| Variante | R6 Mark III, 16 scènes | R7, trois scènes |
+| --- | ---: | ---: |
+| Courant | −31,75 % (31,75 %) | −12,33 % (12,33 %) |
+| Blanc fixé seul | −18,82 % (18,82 %) | −12,33 % (12,33 %) |
+| Exposition caméra seule | −15,30 % (15,47 %) | +4,37 % (4,37 %) |
+| Blanc + exposition | +0,21 % (1,06 %) | +4,36 % (4,36 %) |
+| Blanc + exposition + teinte préservée | **+0,47 % (0,50 %)** | **+3,76 % (3,76 %)** |
+
+Sur tout le corpus, la dernière variante donne un écart signé **+0,99 %**,
+et une erreur absolue moyenne **1,02 %**, contre 28,68 % au témoin. Aucune
+des 19 scènes n'a un écart absolu de Y supérieur au témoin pour cette
+combinaison. Cela ne signifie pas qu'aucun aspect de l'image ne se dégrade.
+Le blanc fixé seul n'apporte pratiquement rien au R7, conformément à l'audit.
+
+| Scène | Courant : écart Y au LR | Blanc + exposition | Avec teinte préservée en plus |
+| --- | ---: | ---: | ---: |
+| 0007 | −23,31 % | +0,14 % | −0,04 % |
+| 0037 | −30,83 % | +1,40 % | +1,27 % |
+| 0043 | −38,35 % | −0,62 % | −0,01 % |
+| 0054 | −34,13 % | −0,01 % | +0,04 % |
+| 0081 | −47,60 % | −5,49 % | −0,08 % |
+| 0182 | −49,20 % | +1,41 % | +1,72 % |
+| 0318 | −30,68 % | +0,41 % | −0,05 % |
+| 0327 | −35,63 % | −0,07 % | environ 0 % |
+| 0524 | −6,49 % | +2,01 % | +1,94 % |
+| 0830 | −16,71 % | +0,03 % | +0,03 % |
+| 9421 | −31,83 % | +0,43 % | +0,07 % |
+| 9608 | −38,78 % | +0,24 % | −0,05 % |
+| 9616 | −40,76 % | −0,59 % | −0,02 % |
+| 9890 | −34,84 % | +1,68 % | +1,47 % |
+| 9940 | −17,74 % | +2,01 % | +1,25 % |
+| 9950 | −31,03 % | +0,43 % | −0,01 % |
+| 7Y6A7003 | −12,46 % | +4,29 % | +4,09 % |
+| 7Y6A7298 | −12,53 % | +2,96 % | +2,56 % |
+| 7Y6A7599 | −11,99 % | +5,84 % | +4,63 % |
+
+**Interprétation :** les deux pistes radiométriques se complètent sur R6 III ;
+le déficit initial n'impose pas un ajustement arbitraire des commandes Couleur.
+Sur R7, l'exposition rapproche les moyennes mais les dépasse : ne pas ajuster
+un coefficient ad hoc pour annuler ce résidu sans analyser sa provenance.
+
+### Fleur 0081 : convergence de deux indicateurs indépendants
+
+Dans la région centrale fixe, le rapport G/R linéaire passe de **0,079860**
+au témoin à **0,110799** avec blanc/exposition, puis **0,154738** en ajoutant
+la préservation de teinte. Le TIFF LR relu donne **0,154450**. L'écart de Y
+global passe simultanément de −47,60 % à −0,076 %.
+
+Les aperçus natifs courant et blanc/exposition ont été inspectés : la fleur
+s'éclaircit. Le rapprochement de G/R avec teinte préservée va dans le sens
+d'un orange moins rouge ; ni cette région indépendante ni ces deux scalaires
+ne prouvent une identité de couleur sur toute la fleur ou une fidélité physique.
+
+### Hautes lumières : réserve réelle, à caractériser par étape
+
+Le taux suivant compte les échantillons sRGB 16 bits ayant **au moins un
+canal ≥65534**, au pas 8. Il s'agit d'une présence à la borne de sortie,
+pas d'une mesure directe de saturation du capteur ou de détails détruits.
+La conversion de production `toSrgb()` applique déjà son gamut mapping ;
+ce contrôle ne décrit pas une simple sortie sans traitement de gamut.
+
+| Scène | LR : borne haute | IPR courant | Blanc + exposition | Avec teinte préservée en plus |
+| --- | ---: | ---: | ---: | ---: |
+| 0524 | 0,0151 % | 0 % | 0,2951 % | 0,3450 % |
+| 0830 | 0,6268 % | 0,0014 % | 0,2596 % | 0,3099 % |
+| 9421 | 0,0390 % | 0,0016 % | 0,0884 % | 0,0418 % |
+| 9940 | 0,0852 % | 0,0002 % | 1,1130 % | **1,5315 %** |
+| 7Y6A7003 | 0,0277 % | 0,1338 % | 0,3120 % | 0,3234 % |
+| 7Y6A7599 | 0,1260 % | 0,1018 % | 0,3796 % | **0,7985 %** |
+
+Pour 9940, la dernière variante dépasse LR de **1,4463 point** ; pour
+7Y6A7599, de **0,6725 point**. Inversement, 0830 reste en dessous de LR.
+Les géométries ne sont pas alignées : ces taux ne localisent pas les mêmes
+pixels et ne suffisent pas à conclure une perte de détails. Ils justifient
+un contrôle ciblé des plages et des couleurs des hautes lumières, pas une
+validation générale fondée sur le seul excellent Y moyen.
+
+### Bilan et suite
+
+**Candidat retenu pour la prochaine recette :** niveaux audités + exposition
+caméra + courbe préservant la teinte, avec décisions et replis par boîtier.
+Ce candidat est maintenant fortement étayé sur R6 III, mais pas encore livré
+en production ni accepté dans l'IHM. R7 conserve un excès lumineux résiduel.
+
+Avant intégration définitive : examiner 9940, 0524 et 7Y6A7599, distinguer
+saturation dans le RGB caméra après WB, tables/courbe DCP et mapping sRGB,
+puis comparer les détails et transitions à LR. Ne pas réduire globalement
+l'exposition pour masquer les plages à la borne, ni modifier les curseurs
+Lumières/Couleur pour compenser. Une recette visuelle reste nécessaire.
+
+Les 19 références LR actuelles suffisent ; aucune image supplémentaire demandée.
+Contrôles ciblés : **5 CTest et 73 tests Python réussis**. Les outils de tests
+partagent désormais leurs fonctions de mesure dans un en-tête dédié ; le
+code de production sous `src/` et les configurations déployées restent
+inchangés. JSON immuables et aperçus locaux conservés ; aucune suppression,
+publication, fusion ou tag de validation.
+
+## 35. Intégration de production, activation contrôlée — 14 octobre 2026
+
+Intégration autorisée par l'utilisateur, sur `patch_raw_opening`, sans fusion
+ni publication. Le moteur applique le candidat blanc + exposition caméra +
+préservation de teinte via la calibration RAW existante, **sur activation
+explicite seulement**. Il n'y a pas de nouvelle compensation globale ni de
+changement de la loi du curseur EV, de la spline ou des matrices.
+
+Le manifeste de production `config/raw-normalization.json` contient les
+**19 couples RAW/Camera Neutral exacts**, avec ISO, SHA-256 RAW/DCP, version
+LibRaw, blanc DNG, exposition de base, quatre noirs RGBG et noir commun.
+Le contrat courant, schéma 2, accepte les noirs non uniformes et le noir
+commun audités ; les motifs spatiaux restent exclus. Aucun transfert aux
+RAW non audités, autre DCP ou autre version de LibRaw. Les anciens manifestes
+de schéma remplacé sont refusés, pas interprétés en mode de compatibilité.
+
+Le manifeste est installé avec l'application et embarqué en ressource Qt.
+L'ancien repli vers des dossiers de build datés a été retiré. La politique
+de paquet public accepte seulement les octets du manifeste suivi dans le
+dépôt ; les autres manifestes privés et profils Adobe restent interdits.
+Les SHA de photos ne contiennent ni pixels ni données de profils DCP.
+
+### Validation du chemin de production
+
+[Preuve d'intégration v001](../raw/integration-radiometrie-v001-20261014T151336958031Z.json) :
+**19 nouveaux décodages par `RawDecoder::decode()`**, hors IHM et sans LCP,
+comparés au témoin `white_exposure_hue` du §34, sortie sRGB 16 bits au pas 8.
+Les 19 calibrations s'appliquent, avec les blancs et EV attendus, et les
+écarts absolus de Y moyen respectent la tolérance **1e-6**. Ce contrôle confirme
+l'intégration numérique, pas la fidélité physique ni l'acceptation visuelle.
+
+Le build Windows `build-windows-msvc/Release/appIPR.exe` est recompilé.
+**20/20 CTest réussis ; 204 tests Python exécutés, un ignoré**, sans échec.
+Les tests vérifient notamment ressource embarquée, noir commun/non uniforme,
+empreintes incompatibles, restauration IHM/sidecar et défaut désactivé.
+La version du moteur enregistrée dans les recettes est actualisée pour
+signaler une réouverture de sidecar antérieur.
+
+### Manipulation pour la recette visuelle
+
+1. Utiliser le nouvel exécutable de build, pas un ancien standalone.
+2. Ouvrir le RAW original et choisir **Camera Neutral**. Désactiver la WB
+   automatique ; ne pas imposer manuellement les nombres Kelvin/nuance de LR.
+3. Cocher **Calibration RAW auditée — validation visuelle** dans le panneau
+   Développement RAW / Profil. Le manifeste fourni est trouvé automatiquement.
+   Vérifier le statut « Normalisation appliquée », blanc et base EV.
+4. Comparer coché/décoché, retouches à zéro, avec optique/CA désactivées pour
+   retrouver les conditions des tests. Ne pas effacer les retouches existantes
+   sans les conserver. L'état coché est mémorisé par image dans son `.ipr`.
+5. Examiner **9940, 0524 et 7Y6A7599** : textures claires, reflets, transitions
+   vers le blanc et dominantes. Examiner **0081** pour l'orange de la fleur,
+   et **9421** comme contrôle général du rendu.
+
+La calibration est **désactivée par défaut**, pas validée universellement.
+R7 reste légèrement plus lumineux que LR sur les scènes auditées ; la réserve
+HL du §34 est maintenue. Une validation visuelle explicite reste nécessaire
+avant activation générale ou livraison sur `dev`. Aucun original, TIFF ou
+sidecar utilisateur n'a été modifié par les vérifications.
+
+## 36. Captures Lightroom : contrôle qualitatif des hautes lumières — 14 octobre 2026
+
+**Confirmation utilisateur après inspection : l'avertissement d'écrêtage LR
+était activé pour les captures fournies.** Cette information est déclarative,
+distincte des pixels observés ; elle lève l'incertitude d'activation indiquée
+dans la première mémoire qualitative, conservée comme historique. La
+[mémoire de confirmation v002](../raw/inspection-captures-lr-v002-20261014T152939883209Z.json) trace cette
+précision sans réécrire les observations initiales.
+
+Trois captures fournies dans `tests/image/base/capture` ont été inspectées,
+sans en extraire de mesures de pixels photographiques. Elles affichent
+**Appareil photo Neutre**, les six commandes Lumière à zéro, une courbe
+utilisateur droite et la mention WB **Telle quelle** en bas du panneau.
+Les nombres T/nuance et les panneaux optique/détails ne sont pas visibles :
+leurs états ne peuvent pas être certifiés par ces captures seules.
+
+| Capture | Identification et constat | Utilité pour la recette |
+| --- | --- | --- |
+| `6V1A0524.png` | Grand ciel clair, structure nuageuse encore visible ; histogramme concentré à droite. Petit repère rouge apparent près du bord droit du ciel, trop petit pour une mesure fiable. | Un pic à droite est attendu pour une image majoritairement claire ; vérifier les transitions nuageuses dans IPR, pas simplement la hauteur du pic. |
+| `6V1A9910.jpg` | Le fil d'Ariane affiche **6V1A9940.CR3** : associée à 9940 malgré son nom. Alertes rouges visibles sur quelques nuages près de l'horizon, alertes bleues dans les coins sombres. | LR signale déjà des zones localement à la limite ; comparer leur étendue et les textures voisines avec IPR, sans exiger zéro alerte. |
+| `7Y6A7599.png` | Mur jaune et carnations clairs, grain visible à ISO 32000 ; aucune surimpression rouge nettement identifiable malgré l'avertissement activé, confirmé par l'utilisateur. | Contrôler front, bras, mur jaune et transitions colorées. L'absence d'alerte visible à cette échelle ne certifie pas zéro canal à la borne dans le TIFF. |
+
+Le fichier 9910 n'est **pas renommé** et aucune nouvelle scène 9910 n'est
+inventée dans le corpus : la référence affichée est 9940. L'inventaire des
+captures, leurs empreintes et les observations sont conservés dans la
+[mémoire qualitative v001](../raw/inspection-captures-lr-v001-20261014T152636152813Z.json).
+
+Rapprochement avec les mesures TIFF du §34 : LR a respectivement **0,0151 %,
+0,0852 % et 0,1260 %** d'échantillons avec au moins un canal ≥65534 pour
+0524, 9940 et 7599. Le candidat IPR est à **0,3450 %, 1,5315 % et 0,7985 %**.
+Ces valeurs viennent des TIFF/essais natifs, **pas des captures**. Le masque
+d'avertissement LR et notre seuil numérique ne sont pas présumés équivalents.
+Une absence de rouge sur une capture n'invalide donc pas le taux TIFF.
+
+**Conclusion :** ces captures rendent le contrôle mieux ciblé et confirment
+que LR peut lui-même signaler des limites locales. Elles ne lèvent pas la
+réserve sur la sortie IPR, surtout 9940. Pour accepter le candidat, regarder
+les mêmes zones dans le build actuel, calibration coché/décoché et à 100 % :
+texture, transitions vers le blanc, dominante et conservation de détails.
+Des captures IPR correspondantes seraient utiles ; aucun nouvel export LR
+n'est requis à ce stade. Aucun correctif de production ni verdict de
+validation photographique n'est ajouté à partir de ces seules captures.
+
+## 37. Exports IHM `_RAW_Audit` et rapprochement optique — 14 octobre 2026
+
+Six TIFF manuels ont été fournis dans `base/neutre`. L'export 0043 initial
+avec vibrance active est **exclu** ; seul le fichier régénéré
+`6V1A0043-IPR_Raw_audit.tiff`, d'empreinte tracée dans la nouvelle campagne,
+est mesuré. Aucun ancien résultat 0043 n'est recyclé pour cette comparaison.
+Les six fichiers sont lisibles en sRGB 16 bits, sans déclaration embarquée
+des réglages IPR : leur nom ne suffit pas à certifier une recette neutre.
+
+Preuves canoniques :
+
+- [Mesures des six exports v001](../raw/analyse-exports-raw-audit-v001-20261014T214131815660Z.json) :
+  relecture TIFF IPR/LR, empreintes, dimensions, luminance, quantiles, région
+  centrale et borne haute par canal/trois canaux.
+- [Audit optique et rejeu de production v001](../raw/audit-export-optique-v001-20261014T214454613860Z.json) :
+  lecture seule des `.ipr` actuels, recettes LCP, cinq nouveaux décodages avec
+  optique et rapprochement avec les exports. Les `.ipr` ne sont pas modifiés.
+
+### Retours utilisateur et clarification des conditions
+
+L'utilisateur confirme une **nette amélioration des oranges sur 0081**.
+Le retour initial positif sur luminosité/colorimétrie de 0043 précédait
+l'identification de la vibrance active : il n'est pas traité comme validation
+isolée du neutre. Le nouvel export 0043 permet désormais la comparaison
+quantitative, mais ne vaut pas nouvelle acceptation visuelle déclarée.
+
+La première réponse « tout désactivé » concernait **Lightroom**, précision
+apportée ensuite par l'utilisateur. Sur **IPR 7599**, correction d'objectif
+et option CA étaient activées. Les `.ipr` actuels enregistrent également
+optique/CA activées pour 0043, 0081, 0524 et 9421 ; 9940 les a désactivées.
+Ils enregistrent retouches à zéro, WB caméra et calibration activée.
+Ce sont des états sauvegardés actuels, pas une attestation historique de
+l'export ; le rejeu numérique ci-dessous complète ce constat.
+
+### Résultats : ne pas confondre calibration et correction optique
+
+| Scène | Export IPR : écart Y moyen à LR | Écart au candidat sans optique | Recette optique actuellement sauvegardée |
+| --- | ---: | ---: | --- |
+| 0043 régénérée | −0,61 % | −0,60 % | Activée |
+| 0081 | +3,45 % | +3,53 % | Activée |
+| 0524 | +3,12 % | +1,16 % | Activée |
+| 9421 | +4,73 % | +4,65 % | Activée |
+| 9940 | +1,25 % | environ 0 % | Désactivée |
+| 7Y6A7599 | +19,42 % | +14,13 % | Activée |
+
+Le contrôle avec `rawNormalizationCorpusProbe`, DCP/manifest et LCP exacts,
+**reproduit les Y moyens des cinq exports avec optique**, avec des écarts
+relatifs inférieurs à **1,7 × 10⁻⁸ %**. 9940 retrouve déjà le témoin sans
+optique. Il n'est donc pas justifié d'ajouter une correction d'exposition
+pour annuler l'écart 7599 sans tenir compte du LCP.
+
+Pour les cinq décodages LCP, le moteur confirme géométrie et vignettage
+appliqués. L'option CA est enregistrée active, mais le statut natif indique
+**CA non appliquée** : option activée et correction effectivement exécutée
+ne sont pas synonymes. Le gain de luminosité observé est lié au traitement
+optique reproduit, sans isoler ici vignettage et changement de géométrie.
+
+En particulier, 7599 garde un écart de +4,63 % à LR dans le candidat sans
+optique ; le traitement LCP ajoute ensuite environ +14,13 % à son Y moyen
+(effets multiplicatifs). Le +19,42 % final ne doit pas être attribué à la
+seule calibration. Cela ne valide pas pour autant la fidélité du vignettage
+par rapport à une référence Lightroom ayant les mêmes corrections.
+
+### Couleurs et hautes lumières des exports réels
+
+Pour 0081, le G/R linéaire de la région centrale vaut **0,154758** dans
+l'export IPR contre **0,154450** dans LR. Cette convergence est cohérente
+avec le retour visuel sur l'orange ; elle n'est pas une mesure de fidélité
+physique ni une identité prouvée sur toute la fleur.
+
+Sur la grille de pas 8 des six TIFF IPR et des six LR, **aucun échantillon
+n'a ses trois canaux ≥65534 simultanément**. Cela ne prouve ni absence de
+blancs saturés entre les échantillons ni conservation de tous les détails.
+Le taux avec au moins un canal à la borne reste différent :
+
+| Scène | IPR, au moins un canal haut | LR, même seuil |
+| --- | ---: | ---: |
+| 0043 | 0,00040 % | 0,00059 % |
+| 0081 | 0 % | 0 % |
+| 0524 | 0,58541 % | 0,01506 % |
+| 9421 | 0,04836 % | 0,03904 % |
+| 9940 | 1,53151 % | 0,08522 % |
+| 7Y6A7599 | 0,95450 % | 0,12604 % |
+
+Les TIFF LR et IPR n'ont pas exactement les mêmes dimensions : différence
+d'un pixel par côté sur les R6, et 6984 × 4660 IPR contre 6960 × 4640 LR
+pour 7599. Les distributions restent indépendantes : aucune MAE/DeltaE
+inter-moteurs ou superposition quantitative n'est annoncée.
+
+**Conclusion :** amélioration de l'ouverture confirmée sur les indicateurs
+et retour positif 0081, sans nouvelle dérive de calibration démontrée pour
+7599. Pour une recette neutre stricte, fournir en priorité 7599 avec les
+deux options optiques IPR désactivées et calibration maintenue ; ne pas
+supprimer l'export optique, utile pour son propre groupe de validation.
+9940 constitue déjà un contrôle sans optique : la réserve sur ses canaux
+hauts reste inchangée. Aucune modification du moteur n'est faite pour
+compenser un écart de conditions de comparaison.
+
+## 38. Nouveaux exports sans optique et priorités — 15 octobre 2026
+
+Onze `_RAW_Audit` sont maintenant présents. Dix ont été régénérés ; 9940
+est l'export sans optique déjà mesuré. Tous les TIFF et leurs références LR
+sont relus en sRGB 16 bits, avec vérification des empreintes LR.
+
+- [Mesures des onze exports v002](../raw/analyse-exports-raw-audit-v002-20261014T220331351638Z.json),
+  remplaçant la comparaison v001 comme photographie courante des fichiers.
+- [Qualification des recettes et témoins](../raw/qualification-exports-raw-audit-v001-20261014T220436648451Z.json) :
+  états `.ipr` actuels et rapprochement avec les deux rendus contrôlés.
+
+### Sept calibrés, quatre non calibrés : deux ensembles distincts
+
+Les onze `.ipr` enregistrent objectif et CA désactivés, conformément à la
+nouvelle consigne. En revanche, la calibration est enregistrée **désactivée**
+pour **0054, 0318, 9608 et 9616**. Leurs Y moyens reproduisent le témoin
+non calibré, tandis que les sept autres reproduisent le candidat calibré
+sans optique à la tolérance absolue 1e-7. Ce double constat distingue une
+différence d'activation d'une régression du moteur ; les fichiers restent
+conservés et les deux ensembles ne sont pas moyennés ensemble.
+
+| Scène | Calibration sauvegardée / témoin reproduit | Écart Y moyen à LR |
+| --- | --- | ---: |
+| 0043 | Activée / calibré | −0,012 % |
+| 0054 | Désactivée / non calibré | −34,13 % |
+| 0081 | Activée / calibré | −0,076 % |
+| 0318 | Désactivée / non calibré | −30,68 % |
+| 0327 | Activée / calibré | +0,00003 % |
+| 0524 | Activée / calibré | +1,94 % |
+| 9421 | Activée / calibré | +0,072 % |
+| 9608 | Désactivée / non calibré | −38,78 % |
+| 9616 | Désactivée / non calibré | −40,76 % |
+| 9940 | Activée / calibré, export inchangé | +1,25 % |
+| 7Y6A7599 | Activée / calibré | +4,63 % |
+
+L'état `.ipr` ne date pas la recette d'un TIFF ; ici l'accord des mesures
+avec les témoins indépendants renforce la qualification. Le problème
+d'activation doit être levé avant d'interpréter les quatre nouveaux rendus
+plus sombres : la case est **mémorisée par image**, pas appliquée globalement
+aux images suivantes. Aucun état utilisateur n'est modifié par cet audit.
+
+7599 passe de **+19,42 %** avec optique à **+4,63 %** sans optique, retrouvant
+l'essai contrôlé : le surcroît dû au LCP est donc levé dans la comparaison
+neutre. 0081 et 0043 retrouvent également les témoins sans optique, et les
+retours visuels positifs antérieurs restent consignés avec leurs conditions.
+
+### Ce qui peut encore améliorer l'ouverture
+
+1. **Terminer la recette correctement activée.** Régénérer seulement 0054,
+   0318, 9608 et 9616 avec calibration cochée, Camera Neutral, WB caméra,
+   retouches à zéro et optique/CA désactivées ; vérifier le statut appliqué
+   avant export. Aucun nouveau TIFF Lightroom n'est requis.
+2. **Priorité de rendu : transitions et couleur des hautes lumières.**
+   9940 conserve 1,5315 % d'échantillons avec au moins un canal haut contre
+   0,0852 % LR ; 7599 sans optique est à 0,7985 % contre 0,1260 %.
+   Aucun échantillon à trois canaux hauts n'est détecté au pas 8 dans les
+   onze exports, sans preuve d'absence entre les points. Isoler les étapes
+   RGB caméra/WB, DCP et gamut sRGB avant toute modification. Ne pas réduire
+   globalement exposition ou HL pour obtenir simplement un taux plus faible.
+3. **R7 : caractériser le résidu, sans ajustement de façade.** Le +4,63 % de
+   7599 demeure, mais l'essai n'est plus pollué par l'optique. Examiner la
+   calibration et les transformations DCP avant tout gain empirique ; les
+   trois scènes R7 à hauts ISO ne valident pas toute sa plage d'usage.
+4. **Ergonomie et généralisation contrôlée.** Rendre l'état appliqué/non
+   appliqué plus évident, et envisager une préférence de calibration pour
+   les ouvertures suivantes, sans contourner les contrôles d'éligibilité.
+   L'application actuelle reste limitée aux 19 couples RAW/DCP exacts.
+   Passer à de nouveaux fichiers d'un boîtier exige des règles attestées
+   et des tests supplémentaires, pas la copie d'une constante d'ISO/modèle.
+
+**Direction recommandée :** stabiliser ce socle, contrôler les hautes
+lumières, puis reprendre les fonctions Couleur sur cette base figée.
+Il reste une marge d'amélioration ciblée, mais les exports correctement
+calibrés ne justifient plus une refonte générale ni un changement de décodeur
+pour traiter le défaut sombre initial. Une proximité de Y avec LR ne certifie
+ni fidélité physique ni identité du rendu.
+
+Cette reprise ne modifie pas le moteur ni les réglages utilisateur. Seul
+l'analyseur est ajusté pour produire une nouvelle version horodatée de ses
+mémoires sans écraser les précédentes. Les validations HL, l'activation
+générale et la livraison Git restent ouvertes.
+
+## 39. Réexports, investigation de l'activation et étude HL — 15 octobre 2026
+
+Cette reprise remplace le constat courant du §38, sans réécrire les mesures
+historiques. Les **13 exports retenus reproduisent maintenant le témoin
+calibré sans optique** (écart absolu de Y moyen inférieur à 1e-7).
+
+- [Comparaison courante des 13 exports v004](../raw/analyse-exports-raw-audit-v004-20261014T222151936912Z.json).
+- [Investigation moteur et candidat de gamut v001](../raw/investigation-ouverture-hl-v001-20261014T221843582060Z.json).
+
+### Statut « non appliquée » : contrôle du code et des nouveaux pixels
+
+Le premier passage sur les nouveaux fichiers avait encore mesuré l'ancien
+0054, inchangé. Le fichier **`6V1A0054-IPR_RAW_Audit-2.tiff`** est ensuite
+apparu ; il est sélectionné explicitement, sans supprimer l'ancien ni choisir
+silencieusement le plus récent. Son écart Y à LR est **+0,0394 %**, contre
+−34,13 % pour l'ancien export. Son rendu numérique correspond au témoin
+calibré. 0318, 9608 et 9616 reproduisent eux aussi désormais ce témoin.
+
+L'investigation de production couvre la liaison `checked` QML, le setter
+(refus pendant une opération en cours), la restauration par image, le signal
+`rawDevelopmentChanged`, la résolution de recette et les clés de cache.
+Aucun défaut n'est reproduit sur ces chemins. Le test QML ajouté contrôle
+le suivi de la case lorsque le moteur est activé puis désactivé. Une
+reproduction réelle sur une copie temporaire du RAW 0054 confirme :
+statut **« Normalisation appliquée »**, aperçu différent après activation,
+puis restitution de l'aperçu initial à la désactivation. Le sidecar source
+reste inchangé. Ce test n'est pas la reproduction exacte des clics utilisateur
+et n'exclut pas une anomalie intermittente ; les exports actuels ne montrent
+plus le défaut supposé. Aucun correctif de production n'est justifié à ce stade.
+
+### Comparaison de luminosité des exports retenus
+
+| Scène | Écart Y moyen IPR à LR |
+| --- | ---: |
+| 0043 | −0,012 % |
+| 0054, nouveau suffixe `-2` | +0,039 % |
+| 0081 | −0,076 % |
+| 0318 | −0,047 % |
+| 0327 | +0,00003 % |
+| 0524 | +1,939 % |
+| 9421 | +0,072 % |
+| 9608 | −0,053 % |
+| 9616 | −0,023 % |
+| 9940 | +1,246 % |
+| 7Y6A7003 | +4,092 % |
+| 7Y6A7298 | +2,555 % |
+| 7Y6A7599 | +4,632 % |
+
+Ces valeurs comparent la luminance linéaire sRGB moyenne, pas la fidélité
+colorimétrique physique ni une superposition pixel à pixel. Aucune scène
+ne présente de trois canaux simultanément hauts sur la grille de pas 8.
+
+### Essai ciblé : préserver Y pendant le gamut mapping
+
+Le moteur actuel borne d'abord les canaux négatifs, puis comprime la chroma
+autour du gris de même Y. L'essai conserve le **Y initial**, avant ce bornage :
+avec `w=(0,2126; 0,7152; 0,0722)`, `Y=w·RGB`, `n=(Y,Y,Y)` et `d=RGB−n`,
+on choisit le plus grand `s` dans `[0,1]` tel que `n+s·d` reste dans le cube
+RGB. Pour `0<Y<1`, cette construction conserve Y en arithmétique exacte.
+Y hors de cet intervalle est borné à noir/blanc. Les mesures flottantes
+conservent aussi les très faibles dépassements numériques ; le candidat
+n'est pas qualifié pour une intégration.
+
+| Scène | Écart Y courant à LR | Candidat préservant Y |
+| --- | ---: | ---: |
+| 9940 | +1,2465 % | +1,2461 % |
+| 0524 | +1,9386 % | +1,9386 % |
+| 7Y6A7003 | +4,0919 % | +4,0796 % |
+| 7Y6A7298 | +2,5552 % | +2,4951 % |
+| 7Y6A7599 | +4,6316 % | +4,5662 % |
+
+**Le gamut mapping seul n'explique donc pas le résidu R7.** Sur ces cinq
+scènes, les valeurs Y avant gamut ne dépassent pas 1 sur les échantillons
+mesurés, mais certains canaux dépassent 1 : atteindre une borne sRGB n'est
+pas équivalent à un blanc entièrement écrêté. Le candidat ne réduit pas
+le taux de canaux hauts de 9940 (1,5315 %) ; il ne résout pas le point HL.
+Les RGB caméra présentent aussi quelques valeurs à la borne après LibRaw/WB,
+sans preuve suffisante d'une saturation du capteur ni localisation de toute
+la perte en amont. Les sondes n'isolent pas encore chaque sous-étape DCP.
+
+### Conclusion et prochaine amélioration proposée
+
+Le socle calibré fonctionne sur les nouveaux exports ; aucune baisse
+globale d'exposition ne doit masquer le résidu. La prochaine étude utile
+est d'isoler la réserve de dynamique à la sortie du décodeur, puis les
+matrices, tables et courbe DCP, avant d'essayer une transition douce vers
+le gamut de sortie. Comparer les couleurs et détails des zones HL, pas
+seulement leur taux de canaux hauts. Les fichiers actuels suffisent pour
+cette étude ciblée ; aucun nouveau TIFF LR n'est demandé.
+
+Cette reprise modifie uniquement les outils de diagnostic et les tests.
+**Aucun nouveau changement de rendu n'est intégré en production.** Quatre
+tests CTest ciblés passent (IHM réglages, spline/gamut, normalisation et
+développement RAW), ainsi que la reproduction réelle de 0054. Les JSON
+restent les preuves canoniques ; aucun fichier image n'est supprimé.
+
+## 40. Politique cible de calibration et localisation HL — 15 octobre 2026
+
+### Décision utilisateur : calibration par défaut
+
+La calibration sera **active par défaut**, avec désactivation dans les futurs
+paramètres avancés, à définir. Décision consignée dans
+[ADR-0007](../../decisions/ADR-0007-calibration-raw-par-defaut.md) et dans
+l'[architecture RAW/profils](../../camera-profile-engine.md).
+Ce changement de défaut n'est pas encore implémenté ; la calibration effective
+reste conditionnée à une recette auditée éligible. Le sort des désactivations
+enregistrées dans les sidecars devra être défini, sans écrasement silencieux.
+
+### Méthode et preuve canonique
+
+[Investigation HL v002, sept scènes](../raw/investigation-ouverture-hl-v002-20261014T222831654729Z.json),
+suite de v001 : les mêmes échantillons caméra sont rejoués par le moteur DCP
+de production avec des copies temporaires de profils dont seuls certains
+identifiants de tags sont masqués. Quatre étapes cumulatives : matrices et
+expositions, Hue/Sat, LookTable, courbe. La variante complète reproduit
+**exactement** la sortie initiale sur les sept scènes (erreur maximale 0).
+Les profils Adobe et les réglages utilisateur restent intacts.
+
+Les statistiques principales sont dans le domaine sRGB linéaire non borné.
+Les sous-objets `prophoto_bounds` et `camera_buffer` ne décrivent que des
+composantes : pas de luminance sRGB attribuée à ces espaces. Le taux à la
+borne linéaire utilise `65534/65535`, pas le seuil de code du TIFF encodé.
+
+### Deux mécanismes différents, sans correction globale justifiée
+
+| Scène | Maximum ProPhoto après matrices/exposition | ProPhoto à la borne avant LookTable | ProPhoto à la borne après LookTable |
+| --- | ---: | ---: | ---: |
+| 0043 | 0,84685 | 0 % | 0 % |
+| 0081 | 0,20755 | 0 % | 0 % |
+| 0524 | 0,85845 | 0 % | 0 % |
+| 9940 | 0,84687 | 0 % | 0 % |
+| 7Y6A7003 | 1,27475 | 0,45210 % | 0,27212 % |
+| 7Y6A7298 | 1,27476 | 0,13891 % | 0,00196 % |
+| 7Y6A7599 | 1,27478 | 0,51654 % | 0,01493 % |
+
+Les colonnes de taux concernent les échantillons ayant au moins une composante
+au-dessus ou proche de 1, pas des pixels entièrement blancs. Le maximum est
+le maximum de toutes les composantes sur la grille. L'étape Hue/Sat reproduit
+ici numériquement l'étape matrices/exposition.
+
+**R7 : réserve de dynamique bornée dans la table de rendu.** La conversion
+matricielle avec les expositions de base produit des composantes ProPhoto
+jusqu'à environ 1,275. Après LookTable, les maxima sont limités à 1.
+L'inspection de `CameraProfileEngine::applyHueSatMap` confirme le bornage
+de chaque composante d'entrée et de la valeur HSV de sortie à `[0,1]`.
+La courbe vient ensuite et borne aussi son domaine. Une partie de la réserve
+au-dessus de 1 est donc supprimée dans ce chemin, avant le gamut final.
+Ce constat ne prouve pas que LR conserve cette réserve de la même manière,
+ni que ce bornage explique tout le résidu lumineux R7.
+
+**9940 : problème surtout de gamut de sortie, pas de débordement ProPhoto
+avant courbe.** Les maxima restent inférieurs à 1 en ProPhoto. En revanche,
+la proportion de composantes sRGB à la borne passe d'environ 0,00079 % après
+matrices à 4,91558 % après LookTable, puis 1,51367 % après courbe, avant gamut.
+Le gamut de destination est donc une piste distincte. Ces taux linéaires ne
+doivent pas être confondus avec les 1,5315 % de codes hauts du TIFF final.
+La diminution après courbe n'indique pas, à elle seule, une restauration
+des détails ni une fidélité colorimétrique supérieure.
+
+**Réserve amont : limite de la preuve.** Le tampon caméra présente déjà
+quelques valeurs à la borne après LibRaw/WB (jusqu'à 3,50 % sur 9940).
+Il est quantifié en 16 bits. Il faut une mesure intermédiaire supplémentaire
+pour séparer saturation réelle du capteur, effets WB et bornage d'export
+LibRaw ; aucune conclusion de remplacement du décodeur n'est tirée ici.
+
+### Prochain essai recommandé
+
+1. Étudier hors production une conservation de réserve au passage des tables :
+   séparer coordonnées bornées d'interrogation et signal étendu, avec gestion
+   explicite des composantes négatives. Vérifier identité à l'état neutre,
+   continuité, teinte et gradients ; ne pas supprimer les bornes sans modèle.
+2. Pour 9940/0524, comparer une compression progressive du gamut, plutôt qu'une
+   baisse d'exposition globale. Contrôler les détails et teintes des HL ainsi
+   que les scènes 0043/0081, qui ne doivent pas perdre leurs acquis.
+3. N'intégrer un candidat qu'après comparaison au témoin et contrôle visuel.
+   Les TIFF LR actuels suffisent ; aucune nouvelle génération n'est demandée.
+
+Cette campagne ne modifie pas le rendu de production. Les quatre tests CTest
+ciblés (spline/diagnostic, normalisation, développement RAW, profils) passent,
+ainsi que la reproduction réelle d'activation/désactivation de 0054.
+Pas de suppression d'image, pas de publication Git ni de validation générale
+des hautes lumières ou de la fidélité physique.
+
+## 41. Roadmap acceptée et préparation du premier essai — 15 octobre 2026
+
+La [roadmap d'architecture](../../architecture/roadmap-ouverture-raw.md)
+ordonne les essais HL, la validation comportementale, les caches/contextes
+multi-boîtiers, la généralisation des recettes, puis la politique de calibration
+par défaut. Les résultats de campagne restent dans ce rapport ; la roadmap
+ne crée pas un second rapport d'analyse.
+
+**Corpus annoncé :** EOS R5 pour étendre les contrôles CR3, et EOS 6D Mark II
+(précision de l'utilisateur) pour les contrôles CR2 et multi-boîtiers. Les
+fichiers ne sont pas déclarés reçus ou validés. Les formats sont distingués
+dans la roadmap, avec références Canon ; un test CR2 ne valide pas le CR3.
+
+Le premier point dispose désormais d'un socle **hors production** :
+`tests/raw_highlight_headroom.h` et `rawHighlightHeadroomTests`, ajouté à CMake,
+CTest et aux règles de tests ciblés. Le modèle sépare un signal étendu `p`
+des coordonnées bornées `q`, puis applique `p + s×(F(q)−q)` pour reporter la
+correction de table sans supprimer systématiquement la réserve. Une épaule
+scalaire indépendante prépare les comparaisons de sortie. Les formules,
+conditions et risques sont au [protocole](../protocols/protocole-raw-profils.md#préparation-expérimentale-de-la-conservation-de-réserve).
+
+Le test numérique passe : identité signée/étendue, coordonnées bornées,
+continuité C0, rampe synthétique, épaule C1 et refus des valeurs non finies.
+Ces propriétés ne valent pas validation du comportement d'une table réelle.
+**Le candidat n'est pas raccordé aux tables DCP ni testé sur le corpus réel** ;
+aucun gain de rendu, de gamut ou de latence n'est encore revendiqué pour lui.
+La campagne canonique de localisation reste la v002 du §40. Le prochain pas
+est le rejeu des vraies tables avec témoin exact, puis un nouveau JSON de
+mesures avant toute intégration. Aucun nouveau TIFF LR n'est requis à ce stade.
+
+Aucun fichier de production sous `src/` n'est modifié dans cette préparation,
+aucune image n'est supprimée et aucune livraison Git n'est effectuée.
+
+## 42. Essais réels des candidats HL — 15 octobre 2026
+
+### Raccordement et traçabilité
+
+Le modèle est maintenant testé **sur les sept RAW**, et plus seulement sur
+des rampes synthétiques. La sonde conserve le même RGB caméra échantillonné
+au pas 8, sans LCP/CA, puis consulte les tables réelles avec le moteur existant.
+Des copies temporaires isolent matrices/exposition, Hue/Sat, LookTable et
+courbe. L'inverse de l'opérateur matriciel permet d'interroger ces étapes
+dans leur espace ProPhoto sans dupliquer le code d'interpolation.
+Les profils originaux, RAW et TIFF de référence restent intacts.
+
+- [Premier essai, six rendus par scène, v003](../raw/investigation-ouverture-hl-v003-20261015T091138736616Z.json).
+- [Qualification de ses changements au témoin](../raw/qualification-candidats-hl-v001-20261015T091450519216Z.json).
+- [Deuxième essai avec protection des tons sombres, huit rendus par scène, v004](../raw/investigation-ouverture-hl-v004-20261015T091604167463Z.json).
+- [Qualification courante des changements, v002](../raw/qualification-candidats-hl-v002-20261015T091833845268Z.json).
+
+L'erreur maximale du rejeu séquentiel isolé contre le rendu direct est
+**8,94e-6 RGB flottant**, sous la garde de 2e-5. Elle n'est pas nulle :
+la matrice est reconstruite puis inversée avec des passages flottants.
+Le rejeu direct complet conserve son contrôle antérieur distinct. Les
+distances de couleur décrivent les différences **au témoin IPR**, pas à
+des pixels Lightroom non alignés ni à une charte de fidélité absolue.
+
+### Premier essai : réserve conservée, mais bénéfice non universel
+
+Les tables étendues suivies de la courbe bornée ne suffisent pas : sur 7599,
+les échantillons à au moins un code haut passent de **0,79849 % à 1,13919 %**.
+La variante prolongeant aussi la courbe ne résout pas ce point. Sur 9940,
+le signal ProPhoto est déjà dans le domaine ; l'extension ne change presque rien.
+L'épaule avant courbe réduit certains taux mais les dégrade ailleurs : le
+candidat combiné reste moins bon sur 7599 qu'un gamut doux seul.
+
+Le gamut doux sans sélection de luminosité réduit les codes hauts mais
+modifie aussi la fleur 0081 : Delta E00 moyen au témoin **0,2349** sur la
+grille et **0,7003** dans la ROI centrale fixe. Cela ne prouve pas une
+dégradation physique, mais contrevient à la volonté de limiter cet essai
+aux HL et de préserver les acquis de la base. Aucun de ces modèles n'est
+retenu tel quel pour une intégration.
+
+### Deuxième essai : compression de gamut limitée aux HL
+
+Le modèle `highlight_gated_soft_gamut` mélange le gamut courant et le gamut
+doux avec un poids smoothstep nul à Y ≤ 0,25 et unitaire à Y ≥ 0,75.
+Les seuils, communs à toutes les scènes, ne sont pas ajustés à LR. Le gamut
+doux compresse la chroma autour du gris de même Y ; le mélange protège les
+tons sombres tout en réduisant certains codes hauts. Ce n'est pas une
+nouvelle calibration ni une réparation du décodage.
+
+| Scène | Codes hauts courant | Gamut doux limité aux HL | Delta E00 moyen au témoin |
+| --- | ---: | ---: | ---: |
+| 0043 | 0,00040 % | 0 % | 0,000003 |
+| 0081 | 0 % | 0 % | 0,000002 |
+| 9940 | 1,53151 % | 0 % | 0,004945 |
+| 0524 | 0,34503 % | 0 % | 0,000574 |
+| 7Y6A7003 | 0,32341 % | 0,27704 % | 0,000619 |
+| 7Y6A7298 | 0,05953 % | 0,00295 % | 0,087981 |
+| 7Y6A7599 | 0,79849 % | 0,02142 % | 0,117666 |
+
+Taux : grille de pas 8, au moins un canal encodé ≥ 65534/65535.
+**Zéro sur la grille n'est ni une preuve d'absence de clipping à pleine
+résolution ni une récupération démontrée des textures.** Sur la ROI centrale
+de 0081, le Delta E00 moyen de ce candidat vaut 0 à la précision de la preuve.
+Le changement moyen est donc très limité sur les deux contrôles sombres.
+L'effet visuel global sur 9940 est discret sur les aperçus consultés ; ne pas
+annoncer un gain spectaculaire de détail d'après le seul taux.
+
+La luminosité moyenne reste proche du témoin : 9940 passe de +1,246499 % à
++1,246495 % de Y par rapport à LR ; 7599 de +4,631585 % à +4,615538 %.
+Le résidu R7 n'est donc pas corrigé. La combinaison extension/épaule/gamut
+protégé réduit davantage les codes hauts de 7003 (0,00609 %) mais remonte
+ceux de 7599 à 0,10610 % et modifie plus le signal : pas de choix universel.
+
+### Conclusion et recette visuelle proposée
+
+Le **gamut doux limité aux HL** est le candidat prioritaire pour une
+comparaison visuelle, pas une validation de production. L'extension de
+réserve seule n'est pas retenue à ce stade. Aucun coefficient spécifique
+R7/R6 n'est ajouté et aucun changement de décodeur n'est justifié par ces essais.
+
+Les aperçus sRGB 16 bits sont sous
+`build-colorimetrie-inventory/investigation-ouverture-hl-v004-20261015T091604167463Z/`.
+Dans chaque sous-dossier scène, comparer **`current.png`** à
+**`highlight_gated_soft_gamut.png`** : priorité 9940 (bâtiments/ciel), 0524,
+7599 et 7298 ; 0081 sert de contrôle couleur. Ils sont au pas 8 et non des
+TIFF de validation pleine résolution. Les empreintes sont dans les JSON.
+
+Avant intégration : vérifier visuellement, puis étudier les gradients et
+détails en pleine résolution sur des zones ciblées et tester d'autres
+boîtiers. Les dérivées du traitement réel n'ont pas été certifiées par les
+tests synthétiques. Les modèles très coûteux de cette sonde (rejeux et
+inversions) ne constituent pas une proposition d'implémentation performante.
+Les caches/contextes de la roadmap restent à réaliser et à mesurer.
+
+Les trois CTest ciblés passent (socle HL, rejeu/spline, moteur de profils),
+ainsi que les trois tests numériques de qualification et les tests de sélection
+CI. La reproduction de 0054 passe dans les deux campagnes. **Aucun rendu de
+production n'est modifié, aucun export utilisateur supprimé, aucune publication Git.**
+
+## 43. Étude préalable : ProPhoto et espaces de calcul comparables — 15 octobre 2026
+
+### Conclusion et portée de l'autorisation conditionnelle
+
+**Deux alternatives méritent réellement étude : Rec.2020 linéaire et ACEScg.**
+Il n'existe pas, dans les sources consultées, de preuve d'un espace universellement
+supérieur pour IPR. Pour notre photographie RAW avec DCP, je recommande un
+comparatif prioritaire **ProPhoto linéaire / Rec.2020 linéaire**, avec ACEScg
+en candidat secondaire. Ce classement est une proposition d'ingénierie, pas
+un résultat mesuré sur nos images.
+
+L'utilisateur autorise le lancement des actions de gel/bascule seulement
+si aucune alternative meilleure ou comparable ne mérite étude. Cette condition
+**n'est pas remplie** : cette reprise documente la recherche, sans commit de gel,
+stash, branche supplémentaire, migration ou nouvelle campagne photographique.
+Les résultats HL du §42 et les preuves JSON restent inchangés.
+
+### Le point déterminant : coordonnées, bornage et rendu sont distincts
+
+Un espace RGB linéaire décrit des coordonnées. Avec un blanc commun et des
+matrices inversibles, `RGB_B = inverse(M_B) × M_A × RGB_A`. Un changement de
+blanc exige une adaptation chromatique explicitée. Si les composantes étendues
+sont conservées, sans quantification ou gamut mapping intermédiaire, ce
+changement n'élimine pas à lui seul une couleur hors du gamut nominal.
+La spécification W3C décrit cette distinction entre conversion étendue et
+réduction de gamut [S1] ; elle sert ici de référence mathématique, pas de
+recommandation d'employer un pipeline CSS.
+
+Il faut donc **nuancer notre justification antérieure** : rester en sRGB
+flottant étendu n'impose pas de perdre toutes les couleurs hors sRGB.
+ProPhoto peut réduire certaines excursions de coordonnées et offrir un autre
+domaine aux opérations, mais « gamut plus large » n'est pas synonyme de
+« meilleure conservation » à politique de calcul identique.
+
+Dans IPR, `RawDecoder` conserve bien une sortie DCP sRGB flottante et le
+`WorkingImage` autorise des valeurs étendues. `toSrgb()` effectue le gamut
+mapping sur sa sortie dérivée ; cela ne signifie pas que le master RAW est
+forcément borné dès sa création. Les imports QImage passent, eux, par un
+tampon entier 16 bits et doivent être audités séparément. Les bornages DCP
+du §40 et ceux de certains opérateurs sont des sujets distincts.
+**Déplacer l'espace après DCP ne récupère pas les valeurs déjà bornées
+dans les tables ou la courbe.**
+
+Pour un gain d'exposition `g`, `M × (g×RGB) = g×(M×RGB)`. En revanche,
+une courbe non linéaire par canal ne vérifie généralement pas
+`F(M×RGB) = M×F(RGB)`. Changer de primaires peut donc changer le comportement
+d'un réglage, sans que l'une des conversions soit moins fidèle.
+
+### Comparaison des familles
+
+| Option | Rôle et propriétés documentées | Intérêt proposé pour IPR | Réserve / priorité |
+| --- | --- | --- | --- |
+| Primaires ProPhoto, D50, calcul linéaire flottant | Espace large ; le ROMM RGB de fichier possède un encodage distinct [S2] | Proximité avec les opérations DCP déjà en ProPhoto ; candidat simple à explorer | Ne supprime pas les bornages ; domaine des réglages à auditer. Prioritaire |
+| Primaires Rec.2020, D65, calcul linéaire flottant | Primaires et blanc définis par BT.2020 [S3] ; usage photographique documenté [S4–S5] | Candidat large gamut crédible pour traitement photo, cohérent avec de nombreuses destinations D65 | Conversion/adaptation depuis le DCP D50 ; composantes hors domaine toujours possibles. Prioritaire |
+| ACEScg / AP1 | Calcul RGB linéaire flottant, blanc ACES, destiné au rendu/compositing [S6] | Contrats explicites sur les valeurs étendues ; piste de pipeline et d'interopérabilité | Ne signifie pas adopter tout ACES ; adaptations et domaine de rendu DCP à traiter. Secondaire |
+| ACES2065-1 / AP0 | Encodage linéaire AP0, distinct d'AP1 [S7] | Échanges/interopérabilité ACES éventuels | Pas de bénéfice justifié comme premier espace de retouche IPR ; ne pas choisir seulement le plus grand triangle |
+| XYZ | Base colorimétrique intermédiaire pour les conversions | Référence de comparaison commune ; Y directement disponible | Les opérateurs créatifs RGB restent à redéfinir. Pas le premier master utilisateur proposé |
+| sRGB linéaire étendu | Coordonnées actuelles conservables hors `[0,1]` [S1] | Témoin indispensable ; permet de tester l'effet des bornages sans migration complète | Les opérations qui supposent des composantes positives/bornées doivent être adaptées |
+| Oklab/OKLCh, Lab ; modèles d'apparence/HDR | Espaces perceptuels, non équivalents à un master RGB linéaire [S8] | Étapes locales pour teinte/chroma, métriques et compression de gamut | Ne remplacent pas partout l'exposition, le mélange linéaire ou le débruitage ; domaines et luminance à spécifier |
+
+Le gamut nominal d'AP1, de Rec.2020 et de ProPhoto n'autorise pas un classement
+unique « plus grand donc meilleur ». Leur blanc diffère ; les transformations
+et les opérateurs comptent autant que la couverture. De même, le gamut et
+la réserve de luminance ne sont pas la même propriété : tous les candidats
+RGB de calcul doivent être testés avec valeurs négatives et supérieures à 1.
+
+### Pourquoi Rec.2020 mérite un vrai comparatif
+
+Le manuel darktable 5.6 décrit Rec.2020 linéaire comme espace de travail par
+défaut et sépare profil d'entrée et profil d'export [S4]. Les notes de version
+**RawTherapee 5.13, publiée le 26 juillet 2026**, annoncent aussi le passage
+du défaut ProPhoto à Rec.2020 et préviennent que certains outils changent de
+comportement selon l'espace [S5]. Il ne faut donc pas généraliser les anciennes
+pages RawPedia décrivant ProPhoto comme défaut actuel.
+
+Ces choix prouvent la pertinence d'un essai photo, pas une supériorité sur IPR.
+La justification de RawTherapee concernant les couleurs non physiques porte
+sur les gamuts nominaux : **Rec.2020 flottant étendu ne garantit pas que tous
+les triplets arbitraires correspondent à une couleur physique**. Cette nuance
+doit rester présente dans le choix d'architecture.
+
+### ACES : espace de calcul et transformée de rendu ne se confondent pas
+
+AP1/ACEScg est un candidat RGB ; une chaîne ACES complète implique aussi
+des transformations d'entrée et de sortie. La documentation ACES 2 distingue
+le rendu tonal/chromatique de l'encodage pour l'affichage [S9]. Cette séparation
+est utile pour nos HL, indépendamment du choix de primaires.
+
+Notre DCP contient déjà tables et courbe de rendu. Convertir son résultat en
+AP1 ne recrée pas un signal de scène neutre. Ajouter ensuite une transformée
+ACES complète pourrait cumuler deux rendus tonals ; ce serait une expérience
+distincte. Le premier comparatif doit donc conserver le DCP et une sortie sRGB
+communs. Aucune dépendance OCIO/ACES n'est nécessaire pour le seul essai
+matriciel AP1 ; leur adoption éventuelle doit être étudiée séparément.
+
+### Coût attendu et risques — analyse qualitative, sans benchmark
+
+À format `CV_32FC4` identique, changer les primaires ne change pas la taille
+du tampon. Les matrices de changement d'espace et d'adaptation peuvent être
+composées/préparées hors boucle pixel et mises en cache. Cela ne prouve pas
+une latence nulle : les passages supplémentaires sur l'image et les tampons
+comptent, et doivent être mesurés.
+
+Le coût principal de migration est l'audit des réglages : luminance dérivée
+du bon espace, courbes, HSV, mélangeur, fonctions perceptuelles, seuils de bruit,
+histogrammes, cache et restauration. La transformation écran est séparée.
+Les conversions gamma/log ne doivent pas être introduites dans les calculs
+linéaires par simple copie d'un profil de fichier. Ne pas promettre un gain GPU
+ou une correspondance Lightroom sur la base du choix de gamut.
+
+### Proposition d'essai comparatif, à autoriser avant exécution
+
+1. Figer un commit de travail ciblé et reproductible, sans livraison/tag ni
+   intégration de travaux étrangers à l'ouverture RAW ; conserver les JSON.
+2. Garder décodage, WB, calibration et DCP strictement identiques ; conserver
+   ProPhoto dans les opérations DCP qui l'exigent, même si le master est Rec.2020.
+3. Comparer le témoin actuel, un témoin sRGB étendu à bornages contrôlés,
+   ProPhoto linéaire et Rec.2020 linéaire ; AP1 seulement si le coût de l'essai
+   reste raisonnable. Aucune sélection d'espace par nom de boîtier.
+4. À réglages neutres et sortie commune identique, attendre un accord numérique
+   des changements de coordonnées réversibles. Une forte différence signale
+   un bornage, une adaptation, un transfert ou un rendu différent, pas une victoire.
+5. Introduire ensuite les réglages sensibles un par un, avec luminance et
+   espaces intermédiaires explicites ; séparer cette étude de celle des tables
+   étendues et du gamut de sortie. Sinon, l'origine du gain est indécidable.
+6. Conserver mesures par scène et variante : erreur de rejeu, excursions et
+   bornages par étape, tons/couleurs/gradients, images comparables, temps à froid/
+   chaud et mémoire. L'écrêtage seul ne suffit pas. Reprendre les sept scènes
+   puis R5/6D II à réception ; pas de nouveaux exports LR demandés à ce stade.
+
+Il s'agit d'une étude documentaire et mathématique : **aucune nouvelle mesure
+photo, aucun classement numérique des espaces ni bénéfice de production ne
+sont publiés ici**. Les références de la campagne restent les JSON du §42.
+
+### Bibliographie de cette étude
+
+Sources primaires consultées le 15 octobre 2026 :
+
+- **S1.** W3C, *CSS Color 4*, §11.1 : [conversions sans bornage et valeurs étendues](https://www.w3.org/TR/css-color-4/#converting-colors).
+- **S2.** ICC, [spécification ROMM RGB](https://www.color.org/chardata/rgb/ROMMRGB.pdf) : primaires, D50 et transfert de fichier.
+- **S3.** ITU-R, [BT.2020-2, tableau 3](https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.2020-2-201510-I!!PDF-E.pdf) : primaires et blanc D65. L'essai IPR porte sur leurs coordonnées linéaires, pas sur tout le codage vidéo.
+- **S4.** darktable 5.6, [Input color profile](https://docs.darktable.org/usermanual/5.6/en/module-reference/processing-modules/input-color-profile/) : espace de travail et sortie séparés.
+- **S5.** RawTherapee, [notes de version 5.13](https://www.rawtherapee.com/downloads/5.13/) : changement de défaut et conséquences sur les outils.
+- **S6.** Academy/ACES, [ACEScg specification](https://docs.acescentral.com/encodings/acescg) : AP1, blanc, transfert linéaire et valeurs étendues.
+- **S7.** Academy/ACES, [ACES2065-1 specification](https://docs.acescentral.com/encodings/aces2065-1/) : AP0 et distinction avec ACEScg.
+- **S8.** Björn Ottosson, [A perceptual color space for image processing](https://bottosson.github.io/posts/oklab/) : modèle Oklab et comparaison par son auteur aux espaces perceptuels ; pas une certification indépendante ni un classement IPR.
+- **S9.** Academy/ACES, [Output Transforms](https://docs.acescentral.com/system-components/output-transforms/) : séparation rendu/encodage de destination.
+
+Les tentatives de lecture du manuel Blender concernant AgX n'ont pas abouti ;
+il n'est pas évalué ici sur la base de seuls extraits de recherche. Ni AgX ni
+une transformée ACES ne doivent être présentés comme un simple remplacement
+de primaires RGB.
+
+## 44. Comparatif exécuté : sRGB étendu, ProPhoto et Rec.2020 — 15 octobre 2026
+
+### Corpus et mémoire canonique
+
+L'utilisateur autorise les comparatifs proposés au §43.
+[Campagne espaces de travail v001](../raw/comparatif-espaces-travail-v001-20261015T100527950069Z.json) :
+**sept RAW, trois espaces, six états, soit 126 variantes**.
+Les sept références LR sont présentes, d'empreintes inchangées et toujours
+Camera Neutral / As Shot. Aucun nouvel export LR n'est requis pour cette étape.
+
+La sonde décode une seule base commune par scène, calibration auditée,
+WB caméra et sans optique/CA, puis conserve la grille de pas 8 **après le
+DCP actuel, avant gamut de sortie**. Ses tables et sa courbe ne changent pas.
+Ce test ne répare donc pas les pertes antérieures au master.
+
+Les matrices sont reconstruites depuis les primaires/blancs documentés au
+§43 ; ProPhoto D50 est adapté à D65 par Bradford. Calcul float32, gamut
+mapping sRGB et encodage 16 bits communs à toutes les sorties. Les paramètres,
+matrices, empreintes, références et métriques détaillées sont dans le JSON.
+
+États : neutre, EV −1/+1, chroma ×1,25 autour du même Y XYZ D65, puissance
+signée 1,2 par canal, bornage au cube unité. Les deux derniers sont des
+sondes mathématiques dépendantes des primaires, **pas des réglages de
+production migrés**. Les distances perceptuelles comparent les mêmes pixels
+IPR du même opérateur, pas des pixels Lightroom non alignés.
+
+### Contrôles : les changements de coordonnées sont réversibles
+
+- Rejeu DCP natif : erreur maximale **0** sur les sept scènes.
+- Reproduction de la sortie native par l'analyseur : **0 code 16 bits**
+  d'écart maximal, sous la garde de quatre codes.
+- Y moyen des témoins neutres identique aux exports calibrés de la mémoire
+  v004 des §§39–40, par comparaison des deux JSON.
+- Identité, EV ±1 et chroma à Y commun : erreur linéaire maximale au même
+  opérateur sRGB **7,153e-7**, sous la garde de `5e-6`.
+- Neutres : Delta E00 moyen maximal d'une autre branche au témoin sRGB
+  **8,671e-6** ; aucun changement visuel significatif démontré par le seul espace.
+
+Une conversion réversible sans bornage n'a donc pas à changer l'image neutre
+pour être correcte, et ne suffit pas à améliorer les HL.
+
+### Valeurs étendues et domaine de départ
+
+| Scène | Échantillons avec composante sRGB négative | Avec composante sRGB > 1 |
+| --- | ---: | ---: |
+| 0043 | 3,6110 % | 0,0004 % |
+| 0081 | 0,0055 % | 0 % |
+| 9940 | 0,0690 % | 1,5069 % |
+| 0524 | 0,0206 % | 0,3434 % |
+| 7Y6A7003 | 3,0407 % | 0,3228 % |
+| 7Y6A7298 | 14,1408 % | 0,0589 % |
+| 7Y6A7599 | 21,8609 % | 0,7977 % |
+
+Dans **ProPhoto et Rec.2020**, aucun échantillon de départ de ces sept scènes
+ne présente de composante négative ou supérieure à 1. Cela concerne le signal
+post-DCP échantillonné, pas tout le RAW ni d'autres prises ou réglages.
+Le contrôle EV +1 reste libre de sortir du domaine. Les valeurs sRGB négatives
+du même signal ne constituent pas, à elles seules, une erreur de décodage.
+
+Le bornage au cube modifie peu la sortie actuelle sur ce corpus, en partie
+parce que le gamut final traite déjà ces excursions. Sur 7599, le Delta E00
+moyen au rendu courant est d'environ **0,0109** pour un bornage sRGB, et reste
+négligeable dans les deux espaces larges. Ce test ne rend pas le bornage
+inoffensif dans un pipeline général.
+
+### Courbe RGB : des comportements différents, pas un classement de fidélité
+
+Avec la même puissance signée par canal dans chaque espace :
+
+| Scène | Delta E00 moyen ProPhoto au même opérateur sRGB | Rec.2020 au même opérateur sRGB |
+| --- | ---: | ---: |
+| 0043 | 0,1196 | 0,0862 |
+| 0081 | 0,3992 | 0,2975 |
+| 9940 | 0,2109 | 0,1062 |
+| 0524 | 0,0366 | 0,0214 |
+| 7Y6A7003 | 0,2641 | 0,1835 |
+| 7Y6A7298 | 0,3784 | 0,2544 |
+| 7Y6A7599 | 0,6187 | 0,3796 |
+
+Rec.2020 reste plus proche du témoin sRGB pour **cette sonde et ce corpus**.
+Ce n'est pas une preuve de fidélité à la scène ou de supériorité sur ProPhoto.
+Les courbes réelles, le mélangeur et la vibrance ne sont pas validés par ce test.
+
+À neutre, les codes hauts restent pratiquement identiques : environ
+**1,5315 %** sur 9940. Un seul échantillon Rec.2020 change de côté au voisinage
+du seuil, compatible avec les arrondis float32/16 bits, sans récupération de
+détail démontrée. Le résidu Y à LR reste de **+4,6316 %** sur 7599,
+**+2,5552 %** sur 7298 et **+4,0919 %** sur 7003. Le seul changement d'espace
+de master ne résout donc pas la limitation HL.
+
+### Coût : diagnostic local, pas benchmark IPR
+
+Chaque état d'un espace comporte trois passages conversion/opérateur/retour.
+La moyenne des médianes des 42 états vaut **11,36 ms** en sRGB, **11,69 ms**
+en ProPhoto et **11,07 ms** en Rec.2020. Mesures NumPy au pas 8, hors sorties,
+métriques, I/O et décodage, avec la charge locale présente : elles ne
+classent pas les latences des futurs moteurs C++ à pleine résolution.
+
+Les quatre tampons RGB de grille représentent **23,10–23,30 Mio** dans les
+trois espaces. C'est une comptabilité logique, pas un pic RSS ; ni le RAW
+complet du décodeur ni le master RGBA applicatif ne sont comptés. Les seules
+primaires ne changent pas ce volume.
+
+### Conclusion et suite proposée
+
+**Aucun avantage mesuré ne justifie une bascule immédiate vers ProPhoto
+plutôt que Rec.2020.** Les deux préservent le corpus de départ et les
+opérations invariantes ; les différences concernent surtout les opérateurs
+dépendants des primaires. ACEScg n'a pas été exécuté ici.
+
+Je recommande Rec.2020 comme candidat prioritaire d'un prototype photographique
+à évaluer face à ProPhoto, sans le déclarer choisi pour la production.
+Le prochain pas utile est de porter les opérateurs réels un par un avec
+des domaines explicites et une sortie commune, sans confondre cela avec
+l'étude de réserve interne DCP. R5 et 6D II compléteront la validation à réception.
+
+Les aperçus neutres doivent paraître identiques. Pour voir la dépendance aux
+primaires, comparer les `*-signed_channel_power_1p2.png` de 0081 et 7599 sous
+`build-colorimetrie-inventory/comparatif-espaces-travail-v001-20261015T100527950069Z/`.
+Ce sont des PNG sRGB 16 bits au pas 8 ; les sorties du lanceur n'incorporent
+pas d'ICC. Ce n'est pas une validation de détails pleine résolution.
+
+La sonde compile ; six tests numériques d'espaces, trois tests de qualification
+et quinze tests de sélection CI passent. **Aucun changement du rendu de
+production, aucun commit/stash de gel, aucune migration ni suppression de
+source/référence. Aucun nouvel export LR demandé pour cette étape.**
+
+## 45. Choix Rec.2020 et préparation du port — 15 octobre 2026
+
+À la suite du §44, l'utilisateur retient **Rec.2020 linéaire D65** pour le
+master. La recommandation de comparaison du §44 devient donc une décision
+de cible, consignée dans [ADR-0009](../../decisions/ADR-0009-espace-travail-rec2020-lineaire.md).
+La production reste sRGB linéaire : aucune bascule C++/QML dans cette étude.
+
+Le [plan d'intégration](../../architecture/integration-rec2020.md) contient
+l'audit du code et les contrats mathématiques, sans dupliquer les mesures de
+la campagne. Il propose cinq lots : référence native, conversions/frontières,
+réglages, état/IHM, puis qualification complète. Le changement transversal
+exige une suite finale complète, pas seulement les tests sélectionnés par fichier.
+
+Points bloquants identifiés par lecture du code :
+
+- `toSrgb` refuse aujourd'hui une image de travail non sRGB ; tous les imports,
+  retours DCP/WB et changements de profil doivent adopter ensemble le contrat cible.
+- Mélangeur HSV, protection de vibrance, maxima des canaux dans les tonalités
+  et courbes RGB dépendent des primaires. Remplacer les poids Y ne suffit pas.
+- L'inverse Co/Cg du débruitage contient les coefficients Rec.709 : porter
+  séparation et reconstruction ensemble et tester leur identité.
+- L'histogramme actuel précède le mapping de sortie ; proposition de le
+  calculer sur la sortie sRGB commune, indépendamment du futur profil écran.
+- Le DNG possède un chemin d'écriture séparé : pixels linéaires, matrices et
+  ICC demandent un audit de cohérence, pas uniquement un changement de `toSrgb`.
+- Clés de cache, version moteur et restauration `.ipr` doivent distinguer le
+  nouveau master sans effacer les retouches ni maintenir un ancien moteur.
+
+L'implémentation devra préserver les neutres et requalifier chaque groupe
+avec des critères distincts pour invariants mathématiques et opérateurs
+créatifs dépendants du master. Garder mapping de sortie, calibration et DCP
+constants pendant la comparaison. Les essais d'extension des HL restent
+expérimentaux et ne sont pas implicitement intégrés à ce port.
+
+**Pas de nouveaux exports LR demandés pour commencer.** Les RAW et références
+actuels suffisent sous réserve de leur présence ; R5/6D II élargiront ensuite
+la qualification. Aucune nouvelle mesure photo ou de performance native
+n'est annoncée ici ; le JSON comparatif du §44 demeure la preuve disponible.
+Les seuils proposés dans le plan ne sont pas des résultats acquis.
+
+## 46. Port de production du master Rec.2020 — 15 octobre 2026
+
+Après autorisation utilisateur, le moteur local a été porté sur
+`patch_raw_opening` : **master unique Rec.2020 linéaire D65**, `CV_32FC4`,
+alpha droit et coordonnées étendues. Les entrées RAW (avec/sans DCP et profil
+à chaud) et les formats classiques pris en charge rejoignent ce contrat.
+Les imports ICC passent par float, sans intermédiaire sRGB entier. Les
+tables DCP restent dans leur domaine ProPhoto et l'optique précède le changement
+de primaires ; cela ne constitue pas un second master de retouche.
+
+### Réglages et sorties
+
+Les poids Y sont centralisés et utilisés pour gris, tonalité, mélangeur,
+grading et traitement des détails. L'inverse Co/Cg du débruitage est adaptée
+avec la séparation. Les protections chromatiques HSV et les courbes par canal
+sont définies sur Rec.2020 ; elles nécessitent leur qualification photo propre.
+Les matrices de WB non RAW sont conjuguées vers le master en préservant les
+axes calibrés des commandes, sans conversion aller-retour des pixels.
+
+L'aperçu et les exports ordinaires restent sRGB : transformation des valeurs
+avant gamut mapping/encodage, jamais une simple affectation ICC. L'histogramme
+correspond aux pixels de l'aperçu après mapping. Le DNG a son contrôle distinct :
+ICC linéaire et ColorMatrix XYZ D65→RGB stocké, avec illuminant D65.
+Le jeton `ipr-render-rec2020-linear-d65-v1` identifie recettes et caches.
+Le format binaire `.ipr` n'a pas changé ; un changement de moteur est signalé
+sans effacer les réglages/métadonnées. Aucun ancien renderer sélectionnable ajouté.
+
+Un test de HL saturées a révélé que la réserve du cube Rec.2020 ne suffit
+pas à empêcher une levée d'atteindre la frontière sRGB de livraison. Le
+garde-fou Ombres/HL utilise donc une projection **scalaire** de réserve sRGB,
+fixe et indépendante du moniteur ; le master n'est ni converti en sRGB pour
+les retouches, ni borné par cette vérification.
+
+### Rejeu des neutres réels et correction du raccordement
+
+Preuve finale : [intégration neutres v004](../raw/integration-rec2020-neutres-v004-20261015T142825111603Z.json).
+Même RAW, même DCP, WB, calibration et absence d'optique que le témoin natif
+du §44. La version finale conserve sources/empreintes, versions Python/NumPy/
+OpenCV/LibRaw, unités, recette et mesures par scène. Les références sont les
+PNG natifs IPR conservés, pas des TIFF Lightroom utilisés comme vérité pixel.
+
+- Sept scènes : `6V1A0043`, `6V1A0081`, `6V1A9940`, `6V1A0524`,
+  `7Y6A7003`, `7Y6A7298`, `7Y6A7599`.
+- **Différence maximale : un code sRGB 16 bits sur chaque scène** ; les sept
+  garde-fous de neutre passent. Delta E00 moyen maximal de l'ordre de `3,1e-6`.
+- Rejeu DCP natif contrôlé à `1e-6` près ; grille native au pas 8 sans
+  redimensionnement. Ce n'est pas un contrôle de détails pleine résolution.
+- [Essai v001 rejeté](../raw/integration-rec2020-neutres-v001-20261015T141710249497Z.json) :
+  le remplacement simultané du raccordement PCS/D50 arrondi produisait jusqu'à
+  194 codes d'écart, au-delà du garde-fou de quatre. La correction compose le
+  raccordement déjà validé vers Rec.2020, sans tampon sRGB intermédiaire.
+  Les versions v002/v003 restent des preuves immuables de rejeux intermédiaires.
+
+La conservation des neutres confirme le changement de coordonnées isolé :
+aucun nouveau gain global, nouveau look DCP ou correctif HL expérimental
+n'a été glissé dans ce port. Cela ne récupère pas un détail déjà perdu en amont.
+
+### Vérifications exécutées
+
+- Build Windows Release de `appIPR`, `iprGenerateTests`, tests et sondes.
+- **22 CTest C++/QML réussis**, dont le nouveau `rec2020PipelineTests`.
+- **220 tests Python réussis** via le lanceur CI local complet ; le test
+  d'intégration générateur→analyseur a été exécuté avec le binaire reconstruit.
+- Cas ajoutés/portés : matrices signées/étendues, alpha, imports float et
+  ProPhoto hors cube, JPEG/PNG/TIFF/BMP, RAW mal étiqueté refusé, rendu des
+  groupes, histogramme égal à l'aperçu, courbes dans le master, profils/WB,
+  restauration et tags DNG cohérents. Une modification des en-têtes du
+  contrat/espace déclenche la suite complète dans les règles de sélection.
+- Le descripteur Qt utilise les xy explicites, disponibles avec le minimum
+  Qt 6.4 ; il ne dépend pas de l'énumération `Bt2020` ajoutée dans Qt 6.8.
+  Cela ne vaut pas compilation réellement exécutée sur chaque OS/version Qt.
+
+### Limites et suite
+
+Il reste la comparaison visuelle des réglages sur cette base, les interactions
+de curseurs, les détails pleine résolution et un benchmark natif répété CPU/RSS.
+Le corpus réel rejoué ici est CR3 R6 Mark III/R7 ; R5 et 6D Mark II restent
+attendus pour étendre la validation matérielle/CR2. Les profils ICC LUT et les
+autres versions Qt devront aussi être qualifiés, pas déduits d'un import matriciel.
+Les statuts photographiques antérieurs sRGB ne deviennent pas automatiquement
+validés sous Rec.2020. L'affichage ICC écran, la calibration active par défaut
+et l'intégration des candidats HL restent des évolutions distinctes.
+
+Les générateurs reconstruits utilisent ce même moteur. Aucune série complète
+d'exports utilisateur n'a été générée, écrasée ou supprimée ; aucune publication
+Git/CI distante ni archive standalone mise à jour dans cette action. Le binaire
+reconstruit est `build-windows-msvc/Release/appIPR.exe`. Le manuel LaTeX source
+est actualisé ; son PDF n'est pas recompilé par cette action.
+
+### Point de reprise après retour utilisateur — 15 octobre 2026
+
+L'utilisateur examine les résultats du port Rec.2020 et prépare de nouveaux
+exports. **État lors de cette consigne : retour visuel et nouvelle campagne en attente** ;
+la campagne a ensuite été exécutée au §47. Aucune nouvelle
+validation photographique ni correction supplémentaire n'est déduite de cet
+accord. À réception, auditer les fichiers et leurs recettes avant de comparer
+les neutres et réglages concernés ; conserver les mesures dans de nouveaux
+JSON immuables et faire évoluer ce seul rapport.
+
+L'orientation Linux/macOS avec Qt ≥ 6.8, les différences système/standalone
+et les cibles encore à qualifier sont consignées dans la
+[documentation CI et livraison](../../architecture/ci-et-build-multiplateforme.md#orientation-de-compatibilité-qt--68--15-octobre-2026).
+Cette décision documentaire ne modifie pas le minimum CMake ni la CI actuelle.
+
+### Retour visuel utilisateur : calibration active — 15 octobre 2026
+
+L'utilisateur indique ne pas voir de différence notable entre Lightroom et
+IPR lorsque la calibration est activée. Seule `6V1A0182` présente un rendu
+jugé légèrement plus lumineux, estimé visuellement à environ **4 %**. Il
+s'agit d'une appréciation visuelle, pas d'une mesure de Y ni d'une différence
+uniforme par pixel ; le sens exact IPR/LR et la répartition ombres/tons moyens/HL
+seront vérifiés sur les exports. Aucun gain correctif de −4 % n'est appliqué
+sur cette seule indication, et la validation visuelle rapportée ne vaut pas
+qualification exhaustive de tous les réglages.
+
+`6V1A0182` dispose d'une recette dans le manifeste courant (R6 Mark III,
+ISO 3200, blanc 14351 et exposition de base +0,28 EV). La présence de cette
+entrée ne prouve pas que l'export utilisateur l'a effectivement utilisée :
+contrôler l'état « Normalisation appliquée », le DCP, la WB et la recette.
+Les anciens essais radiométriques ne remplacent pas une mesure du nouvel export.
+
+La calibration courante reste une bibliothèque de **19 couples RAW/DCP
+exacts**, avec gardes de version LibRaw, modèle/ISO, WB caméra et niveaux noirs.
+Elle n'est pas encore une calibration générique par boîtier/ISO : un autre
+RAW du même modèle n'est pas automatiquement couvert. L'activation demandée
+doit rester distincte du diagnostic d'application effective ; un contexte
+non éligible conserve son rendu de développement sans cette recette, sans
+en emprunter une autre.
+
+Demande initiale, satisfaite par les exports analysés au §47 : fournir des TIFF IPR neutres **du binaire
+Rec.2020 courant**, Camera Neutral, WB à la prise de vue, calibration activée
+et effectivement appliquée, optique désactivée et retouches nulles. Les
+températures/nuances affichées ne doivent pas être forcées pour égaler les
+valeurs numériques Lightroom. Stocker les fichiers dans `tests/image/base/neutre`.
+Priorité à `6V1A0182`, puis aux sept témoins du rejeu ; compléter idéalement
+les 19 scènes pour qualifier la calibration du corpus. Ne pas régénérer les
+séries de curseurs avant cette vérification du neutre. Les références LR
+Camera Neutral/As Shot déjà conformes peuvent être conservées : aucun nouvel
+export LR n'est demandé sauf anomalie relevée lors de leur audit.
+
+## 47. Validation des exports neutres Rec.2020 avec calibration — 15 octobre 2026
+
+Preuve canonique : [analyse neutres Rec.2020 v001](../raw/analyse-neutres-rec2020-v001-20261015T212901690091Z.json).
+Campagne complète sur les **19 couples LR/IPR** fournis. Le diagnostic
+`tests/analyse_neutres_rec2020.py` audite d'abord l'ensemble du corpus,
+rejoue chaque RAW dans le moteur actuel, puis mesure les distributions.
+Aucun changement du code de production et aucune correction de gain dans
+cette campagne. Les six tests du diagnostic et quinze tests de sélection CI passent.
+
+### Audit et portée de la validation
+
+- La référence LR de `9421`, initialement absente, a été remplacée par
+  `6V1A9421.tif`. Le neutre LR `9950`, initialement Adobe Standard/Custom,
+  a été réexporté et passe maintenant Camera Neutral/As Shot. L'analyse
+  n'a repris qu'après ces corrections ; les nouveaux octets sont identifiés
+  dans la preuve, sans modifier les anciennes campagnes.
+- Tous les TIFF sont 16 bits sRGB, structure valide et alpha opaque le cas
+  échéant. Les métadonnées LR déclarent Camera Neutral/As Shot, retouches,
+  bruit/netteté et optique neutres suivant les contrôles disponibles.
+- Les sidecars IPR déclarent le moteur Rec.2020, calibration activée,
+  Camera Neutral compatible et optique désactivée, sans retouche active.
+  Les empreintes des RAW, DCP, manifeste, sidecars et exports sont conservées.
+- **Les 19 TIFF IPR coïncident exactement avec le rejeu natif sur la grille
+  au pas 8 : écart maximal zéro code 16 bits pour chacun.** Le rejeu confirme
+  l'application effective de la calibration et l'absence de corrections
+  optiques, au-delà de la seule case cochée ou du nom du fichier.
+- Les sources n'ont pas changé pendant la campagne. Aucune photographie
+  n'est supprimée, écrasée ou retouchée par le diagnostic.
+
+Cette identité vaut pour la grille contrôlée, pas pour chaque pixel pleine
+résolution. Le rejeu vérifie l'export face au moteur ; LR n'est pas une vérité
+colorimétrique physique. Sur les seize R6, les TIFF IPR sont plus petits d'un
+pixel par dimension que LR (par exemple `4639×6959` contre `4640×6960`).
+Sur les trois R7, IPR est au contraire plus grand : `4660×6984` contre
+`4640×6960` pour 7003/7298, dimensions inversées pour 7599, soit 20/24 pixels
+supplémentaires. Les distributions ci-dessous sont indépendantes, sans MAE
+ni Delta E pixel à pixel. Ces différences de géométrie sont également présentes
+dans les sources du rejeu : ce contrôle ne les attribue donc pas à une perte
+provoquée par l'écriture TIFF. Le cadrage différent peut notamment biaiser les
+statistiques R7 ; leur écart ne constitue pas une mesure isolée d'un gain tonal.
+
+### Luminance moyenne et écrêtage de sortie
+
+`ΔY = 100 × (moyenne Y IPR / moyenne Y LR − 1)` ; positif = IPR plus lumineux
+en moyenne sur la grille. Y est calculé après décodage du sRGB exporté, avec
+les mêmes coefficients pour les deux logiciels. Écrêtage = fraction de
+samples dont au moins un canal vaut au moins 65534/65535, pas saturation
+prouvée du capteur ou disparition démontrée d'un détail.
+
+| Scène | ΔY IPR/LR (%) | Codes hauts LR (%) | Codes hauts IPR (%) |
+| --- | ---: | ---: | ---: |
+| 6V1A0007 | −0,036 | 0 | 0 |
+| 6V1A0037 | +1,275 | 0,00931 | 0,00713 |
+| 6V1A0043 | −0,012 | 0,00059 | 0,00040 |
+| 6V1A0054 | +0,039 | 0 | 0 |
+| 6V1A0081 | −0,076 | 0 | 0 |
+| 6V1A0182 | +1,725 | 0,00079 | 0,00079 |
+| 6V1A0318 | −0,047 | 0 | 0 |
+| 6V1A0327 | environ 0 | 0 | 0 |
+| 6V1A0524 | +1,939 | 0,01506 | 0,34503 |
+| 6V1A0830 | +0,028 | 0,62683 | 0,30995 |
+| 6V1A9421 | +0,072 | 0,03904 | 0,04182 |
+| 6V1A9608 | −0,053 | 0 | 0,00020 |
+| 6V1A9616 | −0,023 | 0,00020 | 0,00020 |
+| 6V1A9890 | +1,473 | 0,01110 | 0,02319 |
+| 6V1A9940 | +1,246 | 0,08522 | 1,53151 |
+| 6V1A9950 | −0,010 | 0 | 0 |
+| 7Y6A7003 | +4,092 | 0,02775 | 0,32340 |
+| 7Y6A7298 | +2,555 | 0,01665 | 0,05953 |
+| 7Y6A7599 | +4,632 | 0,12604 | 0,79849 |
+
+Synthèse descriptive, **poids égal pour chaque scène**, pas moyenne pondérée
+par les pixels ni seuil universel d'acceptation :
+
+- 16 scènes R6 Mark III : moyenne signée **+0,471 %**, moyenne des écarts
+  absolus **0,503 %** ; les 16 sont à moins de 2 % en valeur absolue.
+- 3 scènes R7 : moyenne signée **+3,760 %**, de +2,555 à +4,632 %.
+- Ensemble : moyenne signée **+0,990 %**, médiane des écarts signés
+  **+0,039 %** ; 11/19 scènes sont à moins de 1 % en valeur absolue.
+
+La base n'est donc pas globalement plus sombre que LR avec ces recettes
+calibrées. La proximité des R6 ne doit pas masquer les résidus R7 ni les HL.
+
+### Cas 6V1A0182 : quantification du retour visuel
+
+Le signe du retour utilisateur est confirmé : **IPR plus lumineux en moyenne**.
+La moyenne Y est `0,03172973035` contre `0,03119182133` pour LR, soit
+**+1,7245 %**, pas un gain global mesuré de 4 %.
+
+La différence dépend du niveau de la distribution : P10 de Y **+4,32 %**,
+médiane **+2,17 %**, P95 **+1,55 %** et P99 **+0,18 %**. Ces quantiles sont
+définis indépendamment, pas sur des pixels correspondants ; ils sont
+compatibles avec une impression plus marquée dans les basses valeurs sans
+prouver un écart uniforme de 4 % dans une zone donnée. La fraction Y≤0,001
+passe de 1,0014 % à 0,8987 %, et les taux de codes hauts sont identiques.
+
+Le chroma Lab moyen vaut 11,9522 dans IPR contre 10,4292 dans LR (écart
+absolu **+1,523 C***). C'est une statistique de rendu, sensible à la WB,
+au bruit et à la géométrie, pas une preuve d'erreur de saturation de 14,6 %
+ni une cible de correction automatique. La seule luminance moyenne ne
+résume donc pas cette comparaison visuelle.
+
+### Conclusion et priorités
+
+1. Les nouveaux exports sont **exploitables et cohérents avec le moteur
+   Rec.2020 calibré**. Pas de nouvelle anomalie d'entrée à signaler après
+   correction des références 9421/9950. Le contrôle de la calibration et de
+   l'export sur ce corpus passe ; il ne valide pas tous les réglages photo.
+2. Le retour de proximité visuelle est étayé sur les R6. Ne pas ajouter
+   de correction globale de luminosité pour traiter le seul cas 0182 : elle
+   déplacerait des scènes déjà proches de LR. Aucun coefficient n'est modifié.
+3. Les écarts de HL persistent : surtout `9940` (+1,446 point de taux de
+   codes hauts), `7599` (+0,672 point), `0524` (+0,330 point) et `7003`
+   (+0,296 point). Le changement d'espace seul n'a pas résolu les pertes
+   antérieures/localisées dans le pipeline DCP et la sortie. Les essais du
+   §42 restent expérimentaux ; une baisse de ces taux ne suffira pas à
+   démontrer une récupération de détails.
+4. Conserver comme pistes distinctes le résidu R7 (cadrage à harmoniser avant
+   d'isoler WB/matrice/profil/base tonale, sans cause unique démontrée), les détails HL et la
+   qualification des fonctions de réglage sur le nouveau master. Pas de
+   nouvel export demandé pour terminer cette campagne ; les R5/6D II futurs
+   élargiront la validation, qui reste limitée aux boîtiers et scènes testés.
+
+## 48. Résidu R7 : recalage et coefficient candidat — 15 octobre 2026
+
+Investigation demandée jusqu'à identification d'un coefficient cohérent.
+**Essais uniquement : ni le moteur de production, ni le manifeste de
+calibration courant, ni les photos/sidecars ne sont modifiés.** La sonde
+diagnostique et les analyseurs sont enrichis, et la sonde est recompilée.
+
+Preuves canoniques :
+
+- [Gain après recalage, v002](../raw/investigation-gain-r7-v002-20261015T214350898330Z.json) :
+  trois R7 et témoins R6 `0081`, `0182`, `9421`, mesures par tuile et validation croisée.
+- [Balayage natif avant DCP, v002](../raw/investigation-baseline-r7-v002-20261015T214809555208Z.json) :
+  quinze rendus complets, cinq valeurs par R7, moyenne de surface après sortie.
+- Les v001 restent historiques : gain avant durcissement du masque de
+  recalage/précision des sommes, et balayage EV sur grille ponctuelle au pas 8.
+  Leurs métriques ne doivent pas être confondues avec celles de la v002 par
+  moyenne de surface ; elles ne définissent pas une seconde implémentation.
+
+### Méthode et vérifications
+
+Les empreintes des RAW, TIFF, DCP et sidecars sélectionnés sont confrontées
+à la campagne neutre du §47 avant traitement, puis contrôlées à nouveau en
+fin de campagne. Les trois R7 utilisent bien **Canon EOS R7 Camera Neutral**,
+SHA-256 `49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39`,
+et non le profil R6. Les blancs restent à 16384, la baseline déclarée DNG à
++0,35 EV ; les noirs propres à chaque source ne sont pas remplacés pour
+ajuster artificiellement le rendu. Les références LR sont Camera Neutral /
+As Shot, 5350 K / +8. L'IPR à environ 5314 K n'est pas forcé à afficher 5350 :
+ces indications ne prouvent pas à elles seules une erreur de gains WB.
+
+Le recalage utilise log-Y, translation puis affine ECC, sur des images
+moyennées en linéaire à un quart des dimensions. Garde-fous : corrélation ECC
+au moins 0,97, matrice proche de l'identité, corrélation des gradients au
+moins 0,90, recouvrement utile et au moins trente tuiles. Les R7 passent avec
+ECC supérieur à 0,9996 et corrélation des gradients supérieure à 0,995.
+Le décalage est proche de douze pixels natifs sur les deux axes ; un simple
+redimensionnement de la totalité de l'image aurait donc été inadapté.
+
+Les tuiles font 24×24 pixels de la grille quart (environ 96×96 pixels natifs).
+On retient les zones communes où les deux luminances sont entre 0,01 et 0,65,
+avec tous les canaux sous 0,97 et au moins 80 % de pixels admissibles par tuile.
+Le gain par scène est `exp(médiane(log(Y_LR / Y_IPR)))` des moyennes de tuiles.
+Le gain commun donne un poids égal aux trois scènes. Les MAE et Delta E00
+appariés sont des mesures **après recalage et filtrage**, pas des différences
+sur les pixels natifs sans interpolation ni une mesure de justesse physique.
+
+### Le cadrage ne suffit pas à expliquer le résidu
+
+| Scène R7 | ΔY indépendant du §47 (%) | ΔY sur recouvrement recalé (%) | ΔY sur masque non écrêté (%) |
+| --- | ---: | ---: | ---: |
+| 7003 | +4,092 | +3,853 | +1,482 |
+| 7298 | +2,555 | +3,107 | +1,635 |
+| 7599 | +4,632 | +3,902 | +2,349 |
+
+**Ne pas attribuer toute la différence entre ces colonnes au cadrage** :
+le recouvrement enlève aussi des bordures, le filtrage change l'échantillonnage
+et le dernier masque exclut ombres profondes et valeurs proches du plafond.
+Le résidu existe néanmoins sur des zones correctement correspondantes.
+
+Les gains robustes par scène valent respectivement 0,98916 / 0,98171 / 0,97912.
+Le gain commun **après rendu** est **0,98332**, soit −1,668 % du RGB linéaire
+de sortie et `log2(k) ≈ −0,02427 EV` dans ce seul domaine. Il ramène les biais
+du masque à −0,211 / −0,060 / +0,642 %. En validation croisée, le gain calculé
+sur les deux autres scènes donne −0,506 / +0,022 / +0,857 % sur la scène tenue
+à l'écart. Cela justifie l'ordre de grandeur d'un petit ajustement, mais pas
+une correction globale de −3,8 % déduite des seules moyennes indépendantes.
+
+Cette multiplication de sortie n'est pas retenue comme solution de moteur :
+elle ne restaure pas les HL bornées et dégrade légèrement le Delta E00 médian
+sur 7298 (1,690 → 1,720). Il faut tester la position réelle du gain dans le DCP.
+
+### Balayage natif : candidat +0,33 EV effectif avant DCP
+
+Les essais font varier uniquement l'exposition de base effective dans des
+manifestes privés : 0,30 / 0,32 / 0,33 / 0,34 / 0,35 EV. Chaque variante est
+redécodée avec le moteur Rec.2020, le même DCP et l'optique désactivée. On
+calcule d'abord la sortie complète 16 bits de production, puis son décodage
+linéaire et la moyenne de surface, **pas une moyenne du RAW avant le DCP**.
+Le témoin 0,35 EV retrouve le SHA-256 de l'aperçu ponctuel du §47 et les mesures
+des TIFF manuels recalés à moins de 0,000001 point de biais Y. Tous les candidats
+partagent la même transformation et le même masque défini sur ce témoin.
+
+Objectif annoncé : minimiser la moyenne par scène de
+`100 × MAE(Y_IPR, Y_LR) / moyenne(Y_LR)` sur ce masque, pas seulement annuler
+une moyenne signée ni optimiser chaque scène indépendamment.
+
+| Baseline effective (EV) | MAE Y normalisée moyenne (%) | Biais Y absolu moyen (%) | Moyenne des Delta E00 médians |
+| --- | ---: | ---: | ---: |
+| +0,30 | 1,889 | 1,190 | 1,541 |
+| +0,32 | 1,459 | 0,360 | 1,470 |
+| **+0,33** | **1,444** | **0,612** | **1,456** |
+| +0,34 | 1,598 | 1,216 | 1,459 |
+| +0,35 actuel | 1,946 | 1,822 | 1,478 |
+
+**+0,33 EV est le meilleur candidat de la grille pour cet objectif**, avec
+une réduction de MAE normalisée moyenne de **25,78 %**. +0,32 annule mieux le
+biais moyen mais n'a pas la meilleure MAE appariée ; le voisinage 0,32–0,33
+est une plage cohérente, pas une constante physique identifiée à 0,001 EV.
+
+| Scène | ΔY actuel +0,35 (%) | ΔY candidat +0,33 (%) | MAE Y normalisée actuelle → candidat (%) | Delta E00 médian actuel → candidat |
+| --- | ---: | ---: | ---: | ---: |
+| 7003 | +1,482 | +0,215 | 1,640 → 1,322 | 1,133 → 1,103 |
+| 7298 | +1,635 | +0,470 | 1,696 → 1,014 | 1,690 → 1,663 |
+| 7599 | +2,349 | +1,151 | 2,502 → 1,997 | 1,611 → 1,603 |
+
+En validation croisée, les deux autres scènes sélectionnent 0,32 pour 7003,
+0,33 pour 7298 et 7599. Les biais tenus à l'écart deviennent respectivement
+−0,415 / +0,470 / +1,151 %, et les MAE diminuent sur les trois scènes. Il ne
+s'agit pas d'un jeu de validation indépendant acquis après l'ajustement.
+Le P95 Delta E00 peut légèrement augmenter (7003 : 3,159 → 3,193) : ne pas
+transformer la baisse du médian en promesse d'amélioration de chaque couleur.
+
+### Coefficient proposé, portée et suite
+
+Le coefficient candidat à tester visuellement est donc **une compensation de
+rendu de −0,02 EV avant les tables et la courbe DCP**, par rapport au +0,35 EV
+actuel, soit un multiplicateur `2^(−0,02) ≈ 0,986233`. La baseline DNG déclarée
+reste +0,35 EV : ne pas réécrire cette donnée source en prétendant qu'elle vaut
+0,33. Une éventuelle intégration doit distinguer baseline source documentée et
+compensation empirique de rendu, liée au couple boîtier/profil audité. Ce gain
+avant DCP n'est **pas** interchangeable avec le 0,98332 ajusté après rendu.
+
+Une sélection de coefficient en mémoire par modèle/profil, composée avec le
+gain déjà calculé, n'exige pas de nouveau décodage ni de passe plein cadre.
+Ne pas appliquer ce coefficient aux R6 : les témoins 0081/9421 ont des gains
+robustes proches de 1 ; le cas 0182 est distinct. Aucun réglage de production
+n'est installé dans cette investigation.
+
+Le résidu n'est pas exclusivement un gain : dans les tuiles R7 sombres, les
+gains ajustés vont de 0,936 à 0,866, contre environ 0,988–0,993 dans les tuiles
+claires admissibles. Après le candidat natif, le biais moyen du canal bleu
+reste notamment +6,53 % sur 7298 et +12,36 % sur 7599 ; ces rapports de moyennes
+ne sont pas des corrections WB à appliquer. Bruit à haut ISO, traitement des
+basses valeurs, WB et rendu DCP restent à distinguer, sans cause unique prouvée.
+
+Les taux ponctuels de codes hauts diminuent légèrement, mais demeurent loin
+de LR sur certaines scènes. Ni un gain de sortie ni cette compensation ne
+démontrent une récupération des détails déjà bornés. Le traitement des HL
+reste une étude séparée.
+
+**Conclusion : coefficient candidat cohérent identifié, pas calibration R7
+universelle ni validation visuelle obtenue.** Avant généralisation, ajouter
+au moins deux R7 à bas/moyen ISO (gris, couleurs et HL non écrêtées), puisque
+les trois sources actuelles sont à ISO 20000/32000. Les références présentes
+suffisent à cette investigation ; pas de nouveau TIFF demandé pour la terminer.
+Vérifications : sonde native compilée, quatre CTest ciblés, cinq tests du
+nouvel analyseur, six tests espaces de travail et quinze tests de sélection CI
+réussis. Aucun push, fusion, tag ou nettoyage des images n'est effectué.
+
+## 49. Intégration de la compensation R7 au chemin DCP — 16 octobre 2026
+
+Après acceptation utilisateur du §48, **la compensation −0,02 EV est intégrée
+au code de production** sur `patch_raw_opening`. La baseline source reste
++0,35 EV ; le moteur compose une base effective +0,33 avant tables/courbe,
+pas une multiplication tardive du sRGB. Le R6 ne reçoit aucune compensation.
+
+L'[ADR-0010](../../decisions/ADR-0010-compensation-rendu-par-profil-dcp.md) décrit
+la décision, le chemin fonctionnel et l'évolution vers nos DCP. La règle est
+dans `profile_rendering` du manifeste existant : marque/modèle, SHA-256 DCP,
+ISO autorisés 20000/32000, baseline attendue et provenance. Elle n'est résolue
+qu'après validation de la calibration RAW exacte déjà en place. Hors périmètre,
+la compensation vaut zéro ; une règle applicable invalide/ambiguë refuse la
+calibration entière. Aucun coefficient de secours n'est copié sur un modèle.
+
+`RawDecoder` transmet les champs source et rendu distincts dans les options
+et le contexte DCP immuable. Les retouches WB réutilisent ces options une fois,
+sans accumulation. Les changements de profil calibré résolvent de nouveau les
+paramètres ; le tampon calibré ne passe pas au chemin rapide d'un autre DCP.
+L'empreinte du manifeste et l'identité moteur `|profile-render=1` invalident
+les anciens pixels. Le sidecar conserve la recette et ses ressources, pas une
+copie indépendante du coefficient. Le statut IHM affiche compensation et base
+effective séparément, avec la provenance.
+
+Preuve canonique : [intégration du rendu par profil v001](../raw/integration-profile-rendering-v001-20261015T220248871933Z.json).
+Les 19 RAW sont rejoués avec le moteur compilé :
+
+- **16/16 R6 : zéro code 16 bits d'écart** au témoin neutre précédent ;
+- **3/3 R7 : zéro code d'écart** au candidat natif +0,33 EV accepté, tout en
+  déclarant baseline source +0,35 et compensation −0,02 séparées ;
+- mêmes blancs, source Kelvin et SHA-256 DCP ; corrections optiques désactivées ;
+- contrôles sur la grille au pas 8, pas certification de chaque pixel natif.
+
+Build Windows `appIPR.exe`, générateur et sonde reconstruits ; **22/22 CTest**
+réussis, dont composition DCP/WB, sélection caméra/profil/ISO, paramètres invalides,
+isolation R7→R6, cache, restauration et export. Les tests Python du comparateur
+vérifient l'identité stricte R6, la tolérance explicite R7 et les géométries.
+La suite Python complète passe : **235 tests exécutés, dont un ignoré**.
+Les résultats historiques du §48 restent immuables ; aucun TIFF n'est effacé
+ni remplacé et aucune livraison GitHub n'est déclenchée par cette intégration.
+
+### Voir la correction dans l'IHM
+
+1. Utiliser le nouvel exécutable `build-windows-msvc/Release/appIPR.exe`, pas
+   l'ancien standalone ; ouvrir l'un des R7 audités avec Camera Neutral.
+2. Activer la calibration RAW et laisser la WB automatique désactivée.
+3. Si la recette signale un manifeste modifié, **Choisir le manifeste…** puis
+   sélectionner le `config/raw-normalization.json` courant. C'est nécessaire
+   pour confirmer les nouveaux octets : on ne contourne pas les SHA-256 sauvés.
+4. Vérifier le statut : base source 0,35 EV, compensation −0,02 EV, base
+   effective 0,33 EV. Ne pas changer le curseur d'exposition pour cette base.
+   Les retouches et annotations sont conservées ; aucun sidecar à supprimer.
+
+Le choix de calibration par défaut n'est pas changé ici (ADR-0007). Pour nos
+futurs DCP, l'offset natif `BaselineExposureOffset` pourra porter le décalage
+dans le profil lui-même ; les extensions non représentables restent à concevoir
+au niveau de la bibliothèque. Ne pas encoder et appliquer deux fois le même
+offset. La portée reste les trois R7 à hauts ISO ; les résidus bleus/ombres,
+les HL et la validation bas/moyen ISO ne sont pas déclarés résolus.
+
+## 50. Retour rouge sur 0081, export neutre −2 — 16 octobre 2026
+
+L'utilisateur observe le retour d'une fleur plus rouge dans
+`6V1A0081-IPR_RAW_Audit-2.tiff`. Investigation **sans modification du rendu
+de production, sans réécriture de recette et sans nettoyage des images**.
+Le [graphe actuel / cible](../../architecture/chemin-ouverture-raw.md) montre
+le chemin des ressources et la future séparation décodage/profil.
+
+Preuve canonique : [diagnostic export 0081 v001](../raw/investigation-export-0081-v001-20261016T085825677079Z.json).
+L'analyseur `tests/investigate_0081_export.py` inspecte les trois TIFF natifs
+16 bits sRGB (ancien IPR, nouveau IPR, LR), le sidecar actuel et leurs empreintes.
+Il rejoue ensuite le moteur courant deux fois avec le même DCP Camera Neutral,
+la même source et l'optique désactivée : calibration actuelle appliquée, puis
+calibration explicitement désactivée. La sonde diagnostique est recompilée
+avec le mode `--working-space-uncalibrated` ; ce n'est pas un autre décodeur
+ou une ancienne implémentation. Le champ `normalization_applied` expose l'état
+réel dans les deux cas.
+
+### Constat vérifié
+
+- La recette courante déclare toutes les retouches à zéro, WB automatique
+  désactivée, température source arrondie 4924 K, optique désactivée et le bon
+  DCP R6 Mark III Camera Neutral. La signature du RAW correspond.
+- Elle demande la calibration, mais mémorise `:/config/raw-normalization.json`
+  avec SHA-256 `3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795`.
+- Le manifeste courant, modifié lors de l'intégration R7, a l'empreinte
+  `e6076fbb0904d2bb728dfe492deea556bca3c9fddf4ea2bd358e3bfa9256a085`.
+- Sur la grille au pas 8, l'ancien TIFF est **exactement identique au rejeu
+  calibré**, et le nouveau « −2 » **exactement identique au rejeu non calibré** :
+  zéro code 16 bits d'écart dans les deux comparaisons correspondantes.
+- Entre les deux exports, l'écart atteint 11370 codes, MAE 2342,16 codes par
+  composante sur cette grille. Aucun coefficient R7 n'est présent : la
+  compensation du profil vaut zéro dans les deux rejeux R6.
+
+La moyenne Y passe de 0,03097684 (ancien IPR) à 0,01624452 (« −2 »), contre
+0,03100041 dans LR. Le ratio des sommes G/R de la ROI centrale indicative
+passe de 0,154738 à 0,079860, contre 0,154450 dans LR. Ces statistiques
+indépendantes LR/IPR ne constituent pas une MAE LR recalée ni une mesure
+spectrale de la fleur ; l'identité exacte des rejeux démontre en revanche
+quel chemin de rendu reproduit chaque export IPR.
+
+### Cause et responsabilité du changement
+
+L'ajout des paramètres R7 a modifié **le manifeste partagé**, y compris son
+empreinte utilisée par les recettes R6. Dans `ImageEditor::loadImage()`, une
+empreinte différente entraîne un avertissement puis un manifeste vide passé
+au décodeur. La case d'activation peut rester cochée : c'est l'état demandé,
+pas la preuve d'application. Le DCP reste sélectionné, mais blanc/baseline
+audités et option de courbe calibrée ne sont alors plus appliqués.
+
+**Il s'agit donc d'un effet indirect de la mise à jour des ressources et de
+leur restauration, pas d'une fuite du −0,02 EV R7 dans le rendu du R6.**
+La preuve du §49 reste exacte pour le moteur avec calibration active. Elle
+ne couvrait pas ce scénario IHM réel : réouverture d'une recette attachée à
+l'ancienne empreinte du manifeste embarqué après mise à jour de l'application.
+Il faut expliciter cette limite ; « R6 inchangé » ne garantissait pas que son
+ancienne recette continuerait à activer automatiquement la nouvelle ressource.
+
+Le TIFF IPR ne déclarant pas la recette complète à l'instant de l'export,
+le sidecar courant reste une preuve d'état actuel seulement. L'identité
+pixel du nouveau TIFF avec le chemin non calibré et le contrôle du code de
+restauration concordent avec le refus d'empreinte observé.
+
+### Revenir au rendu accepté et évolution à prévoir
+
+Dans l'IHM actuelle : **Développement RAW / Profil → Choisir le manifeste… →
+`config/raw-normalization.json` courant**, puis laisser la calibration activée,
+Camera Neutral et WB automatique désactivée. Le statut de 0081 doit indiquer
+**Normalisation appliquée, blanc 13995, base 0,26 EV**, sans compensation R7.
+Cette sélection confirme les nouveaux octets et met à jour leur empreinte
+sans supprimer le sidecar ni les retouches. Réexporter seulement après cette
+vérification ; cocher/décocher la calibration ne confirme pas à lui seul
+l'empreinte modifiée. Aucun nouveau TIFF n'est nécessaire pour conclure ce
+diagnostic ; un export manuel permettra de confirmer le chemin IHM réactivé.
+
+Évolutions proposées, **non implémentées par cette investigation** : confirmation
+explicite d'une ressource mise à jour, état « demandée mais non appliquée »
+plus visible, avertissement ou blocage de l'export neutre attendu, et à terme
+empreintes de recettes résolues par image pour éviter qu'un ajout R7 invalide
+indirectement toutes les recettes R6 d'un manifeste global. Ne pas supprimer
+les contrôles d'intégrité ni accepter silencieusement une ressource modifiée.
+
+## 51. Ouverture des règles R6/R7 aux nouvelles photos et automatisme — 16 octobre 2026
+
+L'utilisateur accepte visuellement R6/R7 et demande des essais sur d'autres
+photos, notamment sur carte SD, sans liste de fichiers ni confirmation du
+manifeste à chaque mise à jour. **Implémenté dans le code de production**,
+selon l'[ADR-0011](../../decisions/ADR-0011-regles-raw-par-mode-et-configuration-vivante.md).
+Le [graphe](../../architecture/chemin-ouverture-raw.md) est actualisé.
+
+### Portée effective et règles de capteur
+
+Le manifeste de production est remplacé par un **schéma 3**, avec trois
+règles de mode : R6 III noir bas → blanc 13995/base +0,26 ; R6 III noir haut
+→ blanc 14351/base +0,28 ; R7 compatible → blanc 16384/base +0,35 et compensation
+de profil −0,02 EV. Le noir est lu/estimé sur chaque RAW, pas copié depuis une
+référence. Le blanc natif et les noirs totaux par canal déterminent le mode ;
+les fenêtres sont documentées dans l'ADR comme contrôles de plausibilité du
+prototype, pas comme spécifications constructeur. Une autre échelle native,
+un motif noir spatial non géré, un profil ou boîtier incompatible sont refusés.
+
+Il n'y a plus d'empreinte RAW ni de liste d'ISO pour sélectionner une règle.
+Une nouvelle photo n'a pas besoin d'être répertoriée, même si son nom ou son
+chemin change. La correction R7 est ouverte aux autres ISO sur autorisation
+utilisateur, mais **ces ISO ne sont pas déclarés validés par la mesure sur
+les trois sources à hauts ISO**. Le SHA-256 DCP et la version LibRaw restent
+contrôlés ; pas de coefficient R7 sur un R6, pas de recette d'un autre modèle.
+Le parseur et les tests de l'ancien schéma 2 sont remplacés, sans mode legacy.
+Les anciennes preuves JSON restent conservées ; aucun pixel n'est supprimé.
+
+### Configuration et restauration automatiques
+
+La calibration est demandée par défaut pour les nouvelles images. Une
+désactivation explicitement enregistrée dans un sidecar reste respectée.
+Le manifeste sélectionné est traité comme configuration vivante : son
+empreinte actuelle est adoptée automatiquement avant le lookup cache et le
+décodage, puis conservée dans la recette. La modification est annoncée et ses
+règles restent validées. Cela corrige le refus d'empreinte du scénario 0081,
+sans supprimer les contrôles d'identité des profils DCP/LCP.
+
+Une sélection de manifeste n'est plus nécessaire pour une mise à jour de ses
+octets. Un ancien manifeste externe **de schéma 2** n'est cependant pas converti
+silencieusement : il faut sélectionner le manifeste courant de schéma 3.
+Le manifeste embarqué est mis à jour avec le nouvel exécutable. La désactivation
+volontaire reste accessible ; le panneau avancé prévu n'est pas encore créé.
+
+### Vérifications et limites
+
+Preuve canonique : [intégration des règles par mode v002](../raw/integration-profile-rendering-v002-20261016T091525148378Z.json).
+Les **19 RAW** sont rejoués : 16 R6 exactement identiques au témoin accepté,
+3 R7 exactement identiques au candidat +0,33 EV, sur la grille au pas 8. Ce
+contrôle confirme la non-régression du corpus, pas le rendu de toutes les
+photos de la carte. Aucune lecture/copie/écriture de carte SD n'est déclenchée.
+
+Les tests synthétiques vérifient un RAW de nom inconnu sans même lire ses
+octets pour la sélection, plusieurs ISO nouveaux, les deux modes R6, un R7 à
+ISO 400, l'isolation R7→R6, le refus d'une échelle 12 bits non rééchelonnée,
+d'un profil modifié et de règles invalides/ambiguës. Le test de restauration
+modifie le manifeste entre deux sessions : calibration appliquée et retouches
+conservées, sans resélection manuelle. Les recettes explicitement désactivées
+et le changement rapide de profil sans calibration restent couverts.
+
+Suite complète Windows : **22/22 CTest**. Suite Python : **235 tests, dont un
+ignoré**, sans échec. Build Windows de l'application et du générateur réalisé.
+Les analyseurs et le préparateur de règles suivent le schéma courant ; les
+propositions de mode doivent avoir leurs bornes explicites, pas être déduites
+silencieusement d'une seule photo. Les résidus HL/bleus et les nouveaux ISO
+restent soumis aux retours visuels futurs. Aucun push ou merge n'est effectué.
+
+## 52. Transition des formats et du catalogue de caractérisations — 16 octobre 2026
+
+### Périmètre livré localement
+
+Demande utilisateur : réserver un point d'entrée pour des formats encore
+inconnus, étudier le stockage des nouvelles caractérisations et démarrer la
+transition sans changer le rendu accepté. Branche : `patch_raw_opening`.
+
+`RawDecoder` enregistre désormais ensemble le décodeur, son identifiant/version
+et son lecteur de vignette facultatif. Une vignette d'un format tiers n'est
+plus envoyée automatiquement à LibRaw. La liste d'extensions reste dynamique
+dans le modèle ; le filtre du dialogue d'ouverture est maintenant dérivé de
+la même liste, au lieu d'une liste CR2/CR3/DNG écrite en QML. Aucun codec futur
+ni chargeur de plugins n'est simulé par une extension joker.
+
+Le nouveau module `CameraCharacterization` sélectionne le mode à partir des
+métadonnées natives : format, décodeur/version, marque/modèle et plage de
+noir/blanc. La restriction Canon/CR3 devient une donnée du catalogue, pas une
+condition du moteur générique. Les documents parsés sont mis en cache par
+contenu, sous mutex, avec huit entrées maximum ; catalogue limité à 1 Mio et
+256 règles. Les sélections restent locales aux images, y compris en concurrence.
+Les octets de configuration sont toujours relus pour détecter les mises à jour ;
+ce lot ne promet pas une accélération mesurée du décodage.
+
+Le catalogue `config/raw-normalization.json` passe au **schéma 4 seulement** :
+`format_extension`, `decoder_id` et `decoder_version` sont déclarés dans chaque
+règle. Le préparateur et ses tests suivent ce contrat. Les anciens fichiers
+externes doivent être remplacés par la configuration courante, sans parseur
+legacy ni conversion implicite. Les preuves historiques restent intactes.
+
+### Stockage et séparation restante
+
+L'[ADR-0012](../../decisions/ADR-0012-formats-extensibles-et-caracterisations.md)
+compare DCP, JSON et SQLite, avec sources. Choix : DCP pour les matrices/tables/
+courbe et offset natif ; JSON versionné pour les conditions et données IPR ;
+SQLite uniquement comme éventuel index dérivé futur. Les preuves d'analyse
+JSON horodatées restent la mémoire canonique, distincte du catalogue de production.
+
+La sélection des modes est extraite, mais le contrat caméra pré-DCP commun
+et les caractérisations physiques indépendantes du profil restent à réaliser.
+Les règles empiriques R6/R7 gardent le SHA-256 DCP de leur domaine accepté.
+Retirer cette condition sans nouvelles mesures ne serait pas une séparation
+physique démontrée. Les niveaux et gains acceptés ne sont pas modifiés.
+
+### Résultats
+
+Preuve canonique : [intégration v003](../raw/integration-profile-rendering-v003-20261016T135724740625Z.json).
+Les **19 RAW** rejoués sont exactement identiques à leurs témoins acceptés :
+16 R6 et 3 R7, écart maximal **0 code 16 bits** sur la grille au pas 8, avec
+calibration active et optique désactivée. Le contrôle préserve niveaux, WB,
+baseline et compensation ; il ne mesure pas tous les pixels pleine résolution.
+
+Les tests couvrent le routage des vignettes d'un format fictif, le refus des
+jokers/extensions malformées, l'enregistrement atomique, le contrat Rec.2020,
+un constructeur et un format fictifs dans le catalogue, deux décodeurs isolés,
+les mises à jour de contenu, l'éviction du cache et huit lecteurs concurrents.
+Ces fixtures ne constituent pas une validation d'un nouveau boîtier réel.
+
+Suite Windows : **22/22 CTest** ; Python : **235 tests, un ignoré**, sans échec.
+Build local de l'application et du générateur. Aucun profil Adobe modifié,
+aucune photo supprimée, aucun push/merge/tag ni mise à jour du standalone.
+La qualification R5 CR3 et 6D Mark II CR2 reste à faire à réception du corpus.
+
+## 53. Contrat RGB caméra et rendu DCP commun — 16 octobre 2026
+
+L'utilisateur confirme l'absence d'anomalie ou de régression visuelle du
+premier lot (§52) et autorise la suite. Cette confirmation concerne le lot
+précédent ; les contrôles du présent lot sont les tests et rejeux ci-dessous.
+
+### Intégration
+
+`src/raw/CameraSignal.h/.cpp` définit un signal **RGB caméra linéaire float32**
+déjà dématricé, normalisé et corrigé optiquement si demandé. Il transporte
+marque/modèle, température source facultative et neutre caméra normalisé à G=1.
+La WB du décodeur doit déjà être appliquée. Un neutre indisponible est déclaré
+par trois zéros, pas par une estimation silencieuse. Le contrat refuse les
+coordonnées sRGB, types/dimensions incorrects, valeurs non finies, WB non
+appliquée, température hors domaine et neutre partiellement invalide.
+Les coordonnées signées ou supérieures à 1 ne sont pas écrêtées à cette frontière.
+
+L'ouverture LibRaw avec DCP et le changement rapide de profil utilisent
+maintenant `CameraSignal::render()` au lieu de dupliquer la construction du
+master et du contexte. Compatibilité du DCP, application des options de gain,
+rendu du profil et assemblage RGBA Rec.2020 sont centralisés. Le signal est
+transféré au contexte immuable ; une copie de travail est rendue, sans copie
+supplémentaire du tampon source. Les éventuels alias doivent rester en lecture
+seule : l'immuabilité est un contrat d'usage du `cv::Mat`, pas une protection
+matérielle de ses octets.
+
+Les gains source/DCP/compensation restent composés une seule fois avant les
+tables/courbe. Les retouches WB repartent toujours de la source caméra, pas
+d'un rendu déjà traité. Le décodeur renseigne son identité avant la capture
+des métadonnées du tampon réutilisable, pour la conserver lors d'une retouche
+de profil. Les coefficients R6/R7 et le catalogue schéma 4 ne changent pas.
+
+### Vérifications
+
+Preuve canonique : [intégration v004](../raw/integration-profile-rendering-v004-20261016T140847990289Z.json).
+**19/19 RAW** identiques aux témoins acceptés : **0 code 16 bits d'écart maximal**
+sur la grille au pas 8, dont 0081/0043 et les trois R7. Source, DCP, configuration,
+nouveau module et exécutable sont identifiés dans la mémoire JSON. Ce contrôle
+ne couvre pas chaque pixel pleine résolution ni un nouveau corpus constructeur.
+
+Les tests synthétiques comparent le rendu commun à l'appel DCP direct avec
+gain composé, vérifient la conservation du tampon source, son transfert sans
+clone supplémentaire, le master Rec.2020 et les refus du contrat. Les tests
+IHM de changement de profil et de restauration continuent de passer.
+Suite complète : **22/22 CTest**, **235 tests Python dont un ignoré**, sans échec.
+Application Windows et générateur recompilés ; documentation et diagramme
+mis à jour. Pas de push, merge, tag ni renouvellement du standalone.
+
+### Limites et prochaine étape
+
+Ce n'est pas encore un décodeur universel : LibRaw conserve décompression,
+dématriçage, WB, niveaux et optique ; sa sortie courante passe encore par du
+RGB 16 bits avant conversion float. Sans DCP, le chemin matrice LibRaw reste
+inchangé. Une nouvelle extension doit fournir un véritable adaptateur.
+
+Le changement d'un profil avec calibration nécessite encore le redécodage,
+car les règles empiriques sont liées à leur DCP. Les retirer de ce domaine
+sans caractérisation physique reste exclu. La suite consiste à préparer les
+profils et leurs paramètres de rendu dans un cache partagé borné, puis à
+caractériser séparément les nouveaux modes/boîtiers (R5 et 6D Mark II prévus).
+Les choix de stockage et les étapes sont suivis dans l'ADR-0012 et la roadmap.
+
+## 54. Frontière d'import commune RAW et images développées — 16 octobre 2026
+
+L'utilisateur approuve une architecture à décodeurs spécialisés qui rejoignent
+un contrat commun, plutôt que deux moteurs de retouches indépendants. Décision
+et diagramme : [ADR-0013](../../decisions/ADR-0013-contrat-import-commun.md),
+[architecture d'import](../../architecture/import-images.md).
+
+### Implémentation
+
+`ImageImport::load()` centralise le choix du décodeur et la construction de
+`ImageImport::Result`. Les RAW enregistrés, dont DNG avec LibRaw activé, passent
+par `RawDecoder`. JPG/PNG/TIFF passent par Qt, l'orientation automatique et la
+conversion de leur espace source vers Rec.2020. Sans espace valide, sRGB est
+supposé et l'avertissement est conservé. Pas de DCP réappliqué au JPEG ni de
+repli RAW silencieux sur la lecture de son aperçu en cas d'échec.
+
+Le résultat rassemble le master pleine résolution, `ImageMetadata`, provenance,
+avertissements/erreur et capacités. Le type de métadonnées est sorti du namespace
+RAW ; ses références sont remplacées dans le moteur, le cache, les tests et
+les sondes, sans alias legacy. L'éditeur ne lit plus lui-même le raster ni ses
+métadonnées. Son wrapper construit le proxy après import ; le générateur
+photographique utilise le même chemin.
+
+`ImageImport::complete()` contrôle espace, dimensions, float32 RGBA fini et
+alpha droit dans [0,1], tout en autorisant les RGB signés/étendus. Un échec
+efface le master, les capacités et le tampon caméra facultatif. Retour du
+cache et changement rapide de profil passent ce même contrôle. L'éditeur
+utilise les capacités pour l'état RAW et le chemin rapide, en conservant ses
+conditions de réglages WB/optique/calibration. Les descripteurs sont disponibles
+dans `imageDetails`. Aucune copie de coefficients n'est ajoutée au `.ipr`.
+
+Cette validation parcourt les pixels ; elle ne convertit, ne clippe, ne
+redimensionne ni ne clone le master. Le coût n'est pas supposé nul et aucune
+accélération n'est revendiquée sans mesure isolée.
+
+### Défaut de métadonnées découvert et corrigé
+
+Le nouveau test PNG a d'abord échoué : les appels de lecture de textes sur
+`QImageReader` après les pixels peuvent provoquer une nouvelle tentative de
+lecture, avec erreur libpng et champs perdus. Le lecteur commun prend maintenant
+les textes de l'image décodée. Le test vérifie marque, notation, exposition
+fractionnaire et température source. Cette correction restaure ces informations ;
+elle ne prétend pas à une lecture EXIF exhaustive. Une température source récupérée
+peut corriger la référence des retouches WB d'une image développée concernée.
+
+### Couverture et limites
+
+Le nouveau `imageImportTests` couvre JPG/PNG/TIFF avec et sans espace source
+reconnu, équivalence pixel à l'import Qt/ICC direct, dimensions, provenance,
+capacités RAW absentes sur raster, alpha et précision PNG 16 bits, métadonnées
+et orientation EXIF JPEG. Un format RAW fictif teste le contrat et les RGB
+étendus ; il ne caractérise pas un constructeur réel. Les résultats invalides
+(espace, type, NaN, alpha, erreur du décodeur) sont refusés.
+
+Le test d'export DNG réimporte réellement son DNG linéaire 64×64 via le lecteur
+commun et LibRaw. Cela ne qualifie pas tous les DNG mosaïqués/compressés ni tous
+les TIFF float, multipages, CMJN ou HDR. Les plugins déployés conditionnent les
+formats lisibles. Les vignettes gardent leur chemin léger dédié.
+
+Suite complète Windows : **23/23 CTest** ; **235 tests Python dont un ignoré**,
+sans échec. Application et générateur Windows recompilés. Le rejeu RAW de ce
+lot utilise maintenant `ImageImport::load()` lui-même, pas un appel direct qui
+contournerait la nouvelle frontière. Les preuves natives sont conservées dans
+la même famille JSON d'intégration ; la v005 précède le correctif raster.
+
+Preuve finale : [intégration v006](../raw/integration-profile-rendering-v006-20261016T142535955642Z.json).
+Les **19 RAW** importés par la nouvelle frontière conservent exactement les
+témoins acceptés : **0 code 16 bits d'écart maximal** au pas 8, 16 R6 et 3 R7.
+Cette preuve contrôle le corpus, pas tous les pixels pleine résolution ni
+les boîtiers futurs. La suite reste le cache partagé borné des profils préparés
+et la caractérisation physique des nouveaux modes/boîtiers. Aucun push, merge,
+tag, nettoyage d'images ou renouvellement du standalone n'est effectué.
+
+## 55. Cache partagé borné des profils DCP/LCP préparés — 17 octobre 2026
+
+### Conditions de reprise
+
+L'utilisateur confirme le rendu visuel et autorise le cache si les contrôles
+sont bons. Le socle local précédent est revérifié : 23/23 CTest. Les changements
+restent locaux et non publiés ; aucune CI GitHub ne valide cet état de travail.
+Les consultations GitHub du commit ne donnent pas de statut permettant
+d'annoncer une validation distante des modifications locales. Aucun push,
+merge ou tag n'est déclenché pour contourner cette limite.
+
+### Intégration
+
+`PreparedProfileCache` partage les DCP/LCP parsés et immuables entre la recherche,
+les contrôles de compatibilité, le rendu DCP, les retouches WB et l'optique.
+Budget initial commun : **64 Mio et 16 entrées**, éviction LRU. Les entrées
+contiennent les matrices/tables/modèles, pas les pixels, WB, expositions ou
+réglages de capture d'une photo. Les opérations de rendu restent inchangées.
+Les APIs de contrôle et statistiques sont exposées au moteur, sans nouveau
+panneau IHM. Voir l'[ADR-0014](../../decisions/ADR-0014-cache-profils-prepares.md).
+
+L'identité combine type/révision du parseur et SHA-256 des octets réellement
+parsés. Le contenu est relu/haché à chaque accès ; même taille et date ne
+suffisent pas à réutiliser une entrée. Un fichier supprimé n'est pas servi
+depuis une entrée ancienne. Les erreurs ne sont pas conservées. Le cache évite
+le reparsage, **pas toutes les E/S** ; aucun pourcentage d'accélération globale
+n'est déduit des seuls compteurs.
+
+La préparation a lieu hors mutex ; les demandes simultanées de la même clé
+partagent une préparation. Des clés différentes peuvent avancer en parallèle.
+Le rendu conserve une référence constante et reste valide après éviction.
+Une entrée trop grande pour le budget est utilisable sans être conservée.
+Un vidage change la génération et empêche une préparation antérieure de
+repeupler le cache. Les limites portent sur le coût comptable des entrées
+retenues, pas sur le RSS global, les lecteurs actifs ou les buffers transitoires.
+
+### Vérifications
+
+Nouveau `preparedProfileCacheTests` : hits/LRU, limites en octets/entrées,
+suppression, modification avec taille/date identiques, huit lecteurs,
+exceptions de parseur et vidage en cours de préparation. Les fixtures DCP
+contrôlent l'équivalence chaud/sans rétention, le changement effectif des
+tables après modification et l'isolation concurrente de profils R6/R7 fictifs.
+Les fixtures LCP contrôlent une préparation unique et des paramètres de
+capture concurrents sans contamination. Ces fixtures ne caractérisent pas
+de nouveaux boîtiers physiques.
+
+Preuve canonique : [intégration v007](../raw/integration-profile-rendering-v007-20261016T220959682955Z.json),
+mesurée en UTC le 16 octobre à 22 h, soit le 17 octobre en heure de Paris.
+**19/19 RAW** identiques aux témoins acceptés : **0 code 16 bits d'écart maximal**
+sur la grille au pas 8, 16 R6 et 3 R7. Les compteurs de cache sont conservés
+par scène dans cette mémoire : dans chaque processus de rejeu, **une préparation,
+trois hits et une entrée retenue**. Il s'agit de réutilisations dans un processus
+traitant une scène, pas d'une mesure de navigation chaude entre 19 images.
+
+Suite finale : **24/24 CTest**, **235 tests Python dont un ignoré**, sans échec.
+Application et générateur Windows recompilés après fermeture de l'application
+par l'utilisateur. Le diagramme du chemin, la roadmap, le manuel LaTeX et
+les données dérivées sont mis à jour. La CI GitHub reste à exécuter lors d'une
+publication autorisée. Pas de suppression d'images ni renouvellement du standalone.
+
+### Suite
+
+Mesurer à froid/chaud en navigation réelle et en dossier mixte avant de modifier
+les budgets. La caractérisation physique indépendante du DCP et la qualification
+R5/6D Mark II restent ouvertes ; aucune constante acceptée R6/R7 n'est modifiée.
+Les caches de sélection, le catalogue de caractérisations, le LRU des images
+et le tampon caméra actif restent des mécanismes distincts.
+
 ## Bibliographie et preuves
+
+Les mesures de latence du 17 octobre sont maintenues dans le
+[rapport unique de performance d’ouverture](analyse-performance-ouverture.md),
+avec deux campagnes JSON et un contrôle des permissions du cache persistant.
+Cette investigation ne modifie ni les constantes RAW/DCP acceptées ni la
+validation photographique décrite ci-dessus.
 
 - [PhotoCraft — dépôt et documentation](https://github.com/storytold/photocraft/), [manifeste](https://github.com/storytold/photocraft/blob/main/Cargo.toml) et [contrat/décodage RAW](https://github.com/storytold/photocraft/blob/main/crates/raw/src/lib.rs), consultés le 9 octobre 2026 ; pistes et limites en §27.
 - [LightCraft — présentation et périmètre](https://github.com/storytold/lightcraft/blob/main/README.md), consulté le 9 octobre 2026 ; projet voisin à examiner séparément.

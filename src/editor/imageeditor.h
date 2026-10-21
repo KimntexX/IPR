@@ -1,9 +1,14 @@
-#ifndef IMAGEEDITOR_H
-#define IMAGEEDITOR_H
+#ifndef IPR_EDITOR_IMAGEEDITOR_H
+#define IPR_EDITOR_IMAGEEDITOR_H
 
 #include "ColorPipeline.h"
+#include "ImageExporter.h"
+#include "ImageImporter.h"
 #include "ColorMixer.h"
+#include "EditRecipe.h"
+#include "ToneCurve.h"
 #include "DecodedImageCache.h"
+#include "ImageCacheController.h"
 #include "RawDecoder.h"
 
 #include <QAbstractListModel>
@@ -19,6 +24,8 @@
 #include <QStringList>
 
 #include <array>
+#include <atomic>
+#include <QThreadPool>
 
 class ImageProvider;
 class ThumbnailProvider;
@@ -60,6 +67,7 @@ class ImageEditor final : public QObject
     Q_PROPERTY(QAbstractItemModel *imageModel READ imageModel CONSTANT)
     Q_PROPERTY(QUrl folder READ folder NOTIFY folderChanged)
     Q_PROPERTY(QString imageSource READ imageSource NOTIFY previewChanged)
+    Q_PROPERTY(bool embeddedPreview READ embeddedPreview NOTIFY previewChanged)
     Q_PROPERTY(QString originalImageSource READ originalImageSource NOTIFY previewChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
     Q_PROPERTY(bool hasImage READ hasImage NOTIFY hasImageChanged)
@@ -78,6 +86,7 @@ class ImageEditor final : public QObject
                READ decodedImageCacheSizeBytes NOTIFY decodedImageCacheChanged)
     Q_PROPERTY(int decodedImageCacheEntryCount
                READ decodedImageCacheEntryCount NOTIFY decodedImageCacheChanged)
+    Q_PROPERTY(QVariantMap memoryCacheStatus READ memoryCacheStatus NOTIFY decodedImageCacheChanged)
     Q_PROPERTY(int selectedImageCount READ selectedImageCount NOTIFY selectionChanged)
     Q_PROPERTY(QStringList selectedImageUrls READ selectedImageUrls NOTIFY selectionChanged)
     Q_PROPERTY(QVariantList cameraProfiles READ cameraProfiles NOTIFY rawDevelopmentChanged)
@@ -101,10 +110,40 @@ public:
         BlueCurve
     };
     Q_ENUM(ToneCurveChannel)
+    static_assert(LuminanceCurve == ToneCurve::Luminance && RedCurve == ToneCurve::Red &&
+                  GreenCurve == ToneCurve::Green && BlueCurve == ToneCurve::Blue,
+                  "QML curve channels follow ToneCurve::Channel");
 
     explicit ImageEditor(ImageProvider *provider,
                          ThumbnailProvider *thumbnailProvider = nullptr,
-                         QObject *parent = nullptr);
+                         QObject *parent = nullptr,
+                         ImageCacheController::Sampler memorySampler = {});
+    // RAW calibration the IHM applies by default (ADR-0007), for offline tools.
+    static QString defaultCalibrationManifest();
+
+    // Offline tools (test generator, render server): the export pipeline
+    // without sidecars or preferences.
+    using Settings = EditRecipe::Settings;
+    using ExportResult = ImageExporter::Result;
+    struct LoadResult : ImageImport::Result
+    {
+        ColorPipeline::WorkingImage editProxy;
+        QString cacheKey;
+        bool memoryPressure = false;
+        QSize fullSize;          // true source size, also when image is a proxy
+        bool proxyOnly = false;  // image is the edit proxy restored from the cache
+    };
+    static LoadResult loadFromDisk(const QString &fileName,
+                                   bool automaticWhiteBalance,
+                                   const RawDecoder::Options &rawOptions = {});
+    static ExportResult writeImage(const ColorPipeline::WorkingImage &source,
+                                   const Settings &settings,
+                                   const QString &target, const QString &format,
+                                   int quality);
+    // The 16-bit sRGB pixels of a TIFF export, in memory; null with *error set
+    // on failure.
+    static QImage renderSrgb16(const ColorPipeline::WorkingImage &source,
+                               const Settings &settings, QString *error);
     ~ImageEditor() override;
 
     QAbstractItemModel *imageModel();
@@ -120,9 +159,11 @@ public:
     QString imageColorLabel() const;
     bool imageFlagged() const;
     QVariantList histogram() const;
+    bool embeddedPreview() const { return m_embeddedPreview; }
     qulonglong decodedImageCacheBudgetBytes() const;
     qulonglong decodedImageCacheSizeBytes() const;
     int decodedImageCacheEntryCount() const;
+    QVariantMap memoryCacheStatus() const;
     int selectedImageCount() const;
     QStringList selectedImageUrls() const;
     QVariantList cameraProfiles() const;
@@ -149,6 +190,7 @@ public:
 
     Q_INVOKABLE void openFolder(const QUrl &folder);
     Q_INVOKABLE void openImage(const QUrl &fileUrl);
+    Q_INVOKABLE QStringList imageFileFilters() const;
     Q_INVOKABLE void loadImage(const QUrl &fileUrl);
     Q_INVOKABLE void setThumbnailWindow(int firstVisible, int lastVisible,
                                         int prefetchCount);
@@ -213,104 +255,30 @@ private:
     // Offline test exporter: reuse the pipeline without loading/saving sidecars.
     friend class IprTestImageGenerator;
 
-    struct ToneCurvePoint
-    {
-        float x = 0.0f;
-        float y = 0.0f;
-    };
+    using ToneCurvePoint = ToneCurve::Point;
 
-    struct Settings
-    {
-        float brightness = 0; // gestion de l'exposition
-        int contrast = 0;   // gestion du contraste
-        int blur = 0;
-        bool grayscale = false;
-        int shadows = 0;    // gestion des ombres
-        int blacks = 0;     // gestion des noirs
-        int highlights = 0; // gestion des hautes lumières
-        int whites = 0;     // gestion des blancs
-        int temperature = 5200; // température cible en kelvins (As Shot typique Canon)
-        int tint = 0;       // nuance relative de -150 (vert) à +150 (magenta)
-        int vibrance = 0;   // priorité aux couleurs peu saturées
-        int saturation = 0; // intensité uniforme de la chrominance
-        int texture = 0;    // micro-contraste local
-        int clarity = 0;    // contraste local à plus grande échelle
-        int dehaze = 0;     // récupération ou ajout de voile
-        int grain = 0;      // grain monochrome déterministe
-        int denoiseLuminance = 0;
-        int denoiseChrominance = 0;
-        int sharpeningAmount = 0;
-        float sharpeningRadius = 1.0f;
-        int sharpeningMasking = 0;
-        // Red, orange, yellow, green, cyan, blue, violet, magenta (sidecar v4).
-        std::array<int, ColorMixer::BandCount> mixerHue{};
-        std::array<int, ColorMixer::BandCount> mixerSaturation{};
-        std::array<int, ColorMixer::BandCount> mixerLuminance{};
-        std::array<int, 3> gradingHue{};
-        std::array<int, 3> gradingSaturation{};
-        bool automaticWhiteBalance = false;
-        std::array<QVector<ToneCurvePoint>, 4> toneCurves;
-    };
-
-    struct RawDevelopment
-    {
-        QString profile;
-        QString profileSha256;
-        QString manifest;
-        QString manifestSha256;
-        bool normalizationEnabled = false;
-        QString engineVersion;
-        QString lensProfile;
-        QString lensProfileSha256;
-        bool lensProfileResolved = false;
-        bool lensCorrectionEnabled = true;
-        bool chromaticAberrationEnabled = true;
-    };
+    using RawDevelopment = EditRecipe::RawDevelopment;
 
     struct RenderResult
     {
         QImage preview;
         QImage originalPreview;
         QVariantList histogram;
-    };
-
-    struct ExportResult
-    {
-        bool success = false;
-        QString message;
-    };
-
-    struct LoadResult
-    {
-        ColorPipeline::WorkingImage image;
-        ColorPipeline::WorkingImage editProxy;
-        RawDecoder::SourceMetadata metadata;
-        std::shared_ptr<RawDecoder::DcpSource> dcpSource;
         QString error;
     };
 
-    struct UserImageMetadata
-    {
-        int rating = 0;
-        QString colorLabel;
-        bool flagged = false;
-        bool ratingSet = false;
-        bool colorLabelSet = false;
-    };
+    using UserImageMetadata = EditRecipe::UserImageMetadata;
 
+    static DecodedImageCache::Entry retainedEntry(const ColorPipeline::WorkingImage &image,
+        const ColorPipeline::WorkingImage &proxy, const ImageMetadata &metadata,
+        std::shared_ptr<RawDecoder::DcpSource> dcpSource, QSize fullSize, bool imageIsProxy);
+    DecodedImageCache::Entry retainedCurrentEntry() const;
+    RawDecoder::Options developmentOptions() const;
     static ColorPipeline::WorkingImage renderWorkingImage(
         const ColorPipeline::WorkingImage &source, const Settings &settings);
     static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
                                       const Settings &settings,
                                       bool includeOriginal);
-    static ExportResult writeImage(const ColorPipeline::WorkingImage &source,
-                                   const Settings &settings,
-                                   const QString &target, const QString &format,
-                                   int quality);
-    static LoadResult loadFromDisk(const QString &fileName,
-                                   const QString &extension,
-                                   bool automaticWhiteBalance,
-                                   const RawDecoder::Options &rawOptions = {});
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
@@ -319,11 +287,6 @@ private:
                                    const QString &lensProfile = {}, bool lensResolved = false,
                                    bool lensCorrection = true, bool chromaticAberration = true);
     void reloadRawDevelopment();
-    static QString sidecarPathForFile(const QString &fileName);
-    static bool readSidecar(const QString &fileName, Settings *settings,
-                            UserImageMetadata *metadata, RawDevelopment *raw = nullptr);
-    static bool writeSidecar(const QString &fileName, const Settings &settings,
-                             const UserImageMetadata &metadata, const RawDevelopment &raw);
     RawDevelopment rawDevelopmentRecipe() const;
     void beginLoad(const QString &fileName, const QString &extension,
                    bool automaticWhiteBalance, bool freshOpen);
@@ -333,6 +296,12 @@ private:
     void scheduleSidecarSave();
     void saveCurrentSidecar();
     void startRender();
+    void startEmbeddedPreview(const QString &fileName);
+    void restoreBeforeEmbeddedPreview();
+    void schedulePrefetch();
+    void startPrefetch();
+    void cancelPrefetch();
+    static RawDecoder::Options optionsForFile(const QString &path, bool *automaticWhiteBalance, QString *key);
     void setBusy(bool busy);
     void refreshBusyState();
     void setStatusMessage(const QString &message);
@@ -343,13 +312,17 @@ private:
     ImageListModel m_imageModel;
     QUrl m_folder;
     QUrl m_currentFile;
+    QUrl m_displayedFile;
     QUrl m_queuedFile;
     ColorPipeline::WorkingImage m_original;
     ColorPipeline::WorkingImage m_editProxy;
-    RawDecoder::SourceMetadata m_sourceMetadata;
+    ImageMetadata m_sourceMetadata;
+    ImageImport::Provenance m_importProvenance;
+    ImageImport::Capabilities m_importCapabilities;
+    QStringList m_importWarnings;
     QString m_cameraProfile;
     QString m_normalizationManifest;
-    bool m_rawNormalizationEnabled = false;
+    bool m_rawNormalizationEnabled = true;
     QString m_rawDevelopmentWarning;
     QString m_profileSha256;
     QString m_manifestSha256;
@@ -363,17 +336,38 @@ private:
     std::shared_ptr<RawDecoder::DcpSource> m_dcpSource;
     QHash<QString, UserImageMetadata> m_userImageMetadata;
     QSet<QString> m_selectedImageKeys;
-    DecodedImageCache m_decodedImageCache;
+    ImageCacheController m_decodedImageCache;
     QString m_currentCacheKey;
     Settings m_settings;
     QString m_imageSource;
     QString m_originalImageSource;
     QString m_statusMessage = tr("Choisissez un dossier contenant des images.");
+    QString m_memoryWaitMessage;
+    // Camera-rendered embedded JPEG shown while the IPR development runs.
+    QFutureWatcher<QImage> m_embeddedWatcher;
+    QThreadPool m_embeddedPool;
+    quint64 m_embeddedRevision = 0, m_embeddedSerial = 0;
+    bool m_embeddedPreview = false;
+    QImage m_restorePreview, m_restoreOriginal;
+    QString m_restoreImageSource, m_restoreOriginalSource;
+    bool m_masterIsProxy = false; // restored from a proxy-only cache entry
+    QSize m_fullSize;
     QTimer m_renderDebounce;
     QTimer m_sidecarDebounce;
     QFutureWatcher<RenderResult> m_renderWatcher;
     QFutureWatcher<ExportResult> m_exportWatcher;
     QFutureWatcher<LoadResult> m_loadWatcher;
+    QFutureWatcher<LoadResult> m_prefetchWatcher;
+    QThreadPool m_prefetchPool;
+    QTimer m_prefetchTimer;
+    QStringList m_prefetchQueue;
+    QString m_prefetchFile;
+    bool m_prefetchTaskActive = false;
+    std::shared_ptr<LoadResult> m_prefetchTransfer;
+    bool m_prefetchSuspended = false;
+    quint64 m_prefetchGeneration = 0, m_activePrefetchGeneration = 0;
+    std::shared_ptr<std::atomic_bool> m_prefetchCancel;
+    std::shared_ptr<std::atomic_bool> m_loadCancel;
     quint64 m_requestedRevision = 0;
     quint64 m_activeRevision = 0;
     quint64 m_requestedLoadRevision = 0;
@@ -384,4 +378,4 @@ private:
     QVariantList m_histogram;
 };
 
-#endif // IMAGEEDITOR_H
+#endif // IPR_EDITOR_IMAGEEDITOR_H

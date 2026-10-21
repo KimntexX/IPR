@@ -1,0 +1,90 @@
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5\baselineskip}
+\setlength{\emergencystretch}{3em}
+% Prose paragraphs in this manual are short enough to fit on a page.
+% Move the whole paragraph rather than splitting instructions across pages.
+\interlinepenalty=10000
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\raggedbottom
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{array,longtable,booktabs}
+\usepackage{etoolbox}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\AtBeginEnvironment{longtable}{\setlength{\parskip}{0pt}}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black,
+ pdftitle={IPR -- Livre utilisateur},pdfauthor={Projet IPR},pageanchor=false}
+\newcommand{\touche}[1]{\textsf{#1}}
+\newcommand{\chemin}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\attention}[1]{\par\noindent\textbf{À retenir.} #1\par}
+\newcommand{\gestesreglages}{\paragraph{Gestes et clavier.}
+Cliquer sur le curseur pour lui donner le focus, puis utiliser les flèches
+pour avancer au pas prévu par ce réglage. Le champ numérique permet une saisie
+directe à confirmer avec \touche{Entrée}. Double-cliquer sur le nom ou le curseur,
+ou cliquer sur sa flèche de réinitialisation, restaure sa référence.
+Le clic droit sur le nom ou le curseur ouvre aussi la remise à zéro et la saisie.
+Ce double-clic n’a pas la même fonction dans le graphe des courbes.}
+\begin{document}
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\Huge\bfseries IPR\par}
+\vspace{0.5cm}
+{\LARGE Livre utilisateur\par}
+\vspace{1cm}
+{\large Ouvrir, développer, comparer et exporter ses photos\par}
+\vfill
+Édition française -- prototype alpha\par
+Interface de la branche \texttt{patch\_ui}\par
+État décrit : 19 octobre 2026\par
+\vfill
+\begin{minipage}{0.88\textwidth}
+Ce livre décrit les commandes présentes, leurs gestes d’utilisation et leurs
+limites. Il ne constitue ni une certification de rendu pour tous les boîtiers,
+ni la description de fonctions futures. Les chapitres réservés sont volontairement vides.
+\end{minipage}
+\end{titlepage}
+\pagenumbering{roman}
+\hypersetup{pageanchor=true}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+\part{Prendre en main IPR}
+\input{chapters/01-demarrage}
+\input{chapters/02-navigation-comparaison}
+\input{chapters/03-informations-selection}
+\part{Familles de réglages déjà intégrées}
+\input{chapters/04-raw-profils}
+\input{chapters/05-lumiere}
+\input{chapters/06-courbes}
+\input{chapters/07-couleur}
+\input{chapters/08-melangeur}
+\input{chapters/09-grading}
+\input{chapters/10-effets}
+\input{chapters/11-bruit}
+\input{chapters/12-nettete}
+\input{chapters/13-optique}
+\part{Personnaliser et livrer}
+\input{chapters/14-preferences}
+\input{chapters/15-export}
+\input{chapters/16-depannage}
+\part{Familles réservées}
+\input{chapters/17-recadrage-geometrie}
+\input{chapters/18-masques-retouche}
+\input{chapters/19-ia}
+\appendix
+\input{chapters/20-raccourcis}
+\input{chapters/21-glossaire}
+\end{document}

@@ -28,6 +28,15 @@ class DeploymentTests(unittest.TestCase):
                 file.unlink()
             ci.assert_public(stage)
 
+    def test_only_repository_audited_manifest_is_public(self):
+        with tempfile.TemporaryDirectory() as directory:
+            stage=Path(directory)
+            file=stage/'raw-normalization.json'
+            file.write_bytes((ROOT/'config/raw-normalization.json').read_bytes())
+            ci.assert_public(stage)
+            file.write_bytes(file.read_bytes()+b' ')
+            with self.assertRaises(ValueError):ci.assert_public(stage)
+
     def test_offscreen_runtime(self):
         env = ci.runtime_environment()
         self.assertEqual(env['QT_QPA_PLATFORM'], 'offscreen')

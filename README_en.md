@@ -104,7 +104,7 @@ and the [Light report](docs/validation/analyses/analyse-validation-lumieres-base
 
 | Dependency | Usage |
 | --- | --- |
-| Qt ≥ 6.4 | Quick/QML interface, Core, Gui and Concurrent |
+| Qt ≥ 6.8 | Quick/QML interface, Core, Gui and Concurrent |
 | OpenCV | Image computation: `core`, `imgproc`, `imgcodecs` |
 | LibTIFF | Writing the linear DNG |
 | LibRaw ≥ 0.21, optional | CR2/CR3/DNG decoding; `IPR_ENABLE_LIBRAW` option |

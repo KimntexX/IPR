@@ -13,7 +13,7 @@ from unittest.mock import patch
 import numpy as np
 from PIL import ImageCms
 
-from analysis import audit, campaign, catalog, groups, inputs, metrics, native
+from analysis import audit, campaign, catalog, groups, inputs, metrics, native, render
 from analysis.cli import main
 
 
@@ -78,32 +78,23 @@ def fixture_record(root, feature="saturation", value=50):
 
 
 class GroupAnalysisTests(unittest.TestCase):
-    def test_current_embedded_tiffs_without_auxiliary_mapping(self):
+    def test_base_ignores_ipr_review_tiffs(self):
+        """IPR TIFFs in base serve visual review; IPR states are rendered in memory."""
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory).resolve()
             (base / "neutre").mkdir()
             folder = base / "couleur/saturation"
             folder.mkdir(parents=True)
             record = fixture_record(base)
-            neutral = base / "neutre/S-IPR-neutre-couleur.tiff"
-            variant = folder / "S-IPR-saturation-50.tiff"
             declaration = {"ipr_test_schema": 1, "scene": "S", "group": "couleur", "feature": "neutral",
-                           "value": 0, "reference": "neutre/" + neutral.name,
+                           "value": 0, "reference": "neutre/S-IPR-neutre-couleur.tiff",
                            "settings": record["reference_settings"], "source_sha256": "test"}
             pixels = np.full((32, 32, 3), 25000, dtype=np.uint16)
-            write_tiff(neutral, pixels, declaration=declaration)
-            changed = {**declaration, "feature": "saturation", "value": 50, "settings": record["settings"]}
-            write_tiff(variant, pixels + 100, declaration=changed)
-            records = inputs.base_records(base, ["couleur"])
-            self.assertEqual(len(records), 1)
-            self.assertEqual(records[0]["reference"], str(neutral))
-            output = base / "result.json"
-            self.assertEqual(main(["--base", str(base), "--group", "couleur", "--output", str(output), "--strict"]), 0)
-            self.assertEqual(native.read_json(output)["coverage"]["measured"], 1)
-            changed["reference"] = "../outside.tiff"
-            write_tiff(variant, pixels, declaration=changed)
-            with self.assertRaises(ValueError):
-                inputs.base_records(base, ["couleur"])
+            write_tiff(base / "neutre/S-IPR-neutre-couleur.tiff", pixels, declaration=declaration)
+            write_tiff(folder / "S-IPR-saturation-50.tiff", pixels + 100,
+                       declaration={**declaration, "feature": "saturation", "value": 50})
+            write_tiff(folder / "S-IPR-saturation-25.tiff", pixels + 50)  # no declaration
+            self.assertEqual(inputs.base_records(base, ["couleur"]), [])
 
     def test_group_entrypoints_share_cli(self):
         for group in catalog.GROUPS:
@@ -147,36 +138,75 @@ class GroupAnalysisTests(unittest.TestCase):
         self.assertIn("declared_value_mismatch", audit.ipr_state(record)[0])
 
 
-    @unittest.skipUnless(os.environ.get("IPR_GENERATOR_TEST_BIN"), "Native generator integration uses an explicit rebuilt test binary")
-    def test_rebuilt_generator_to_analyser_on_tiny_fixture(self):
+    @unittest.skipUnless(os.environ.get("IPR_RENDER_SERVER_BIN") and os.environ.get("IPR_GENERATOR_TEST_BIN"),
+                         "Native render integration uses explicit rebuilt binaries")
+    def test_in_memory_render_equals_generator_tiff(self):
+        """Same pixels and declarations as the TIFF export, for every state of a group."""
         from PIL import Image
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory).resolve()
             base = root / "tests/image/base"
             base.mkdir(parents=True)
-            image = Image.new("RGB", (48, 32), (100, 120, 130))
-            image.save(base / "tiny.png")
-            result = subprocess.run([os.environ["IPR_GENERATOR_TEST_BIN"], "couleur"], cwd=root, capture_output=True)
+            Image.new("RGB", (48, 32), (100, 120, 130)).save(base / "tiny.png")
+            result = subprocess.run([os.environ["IPR_GENERATOR_TEST_BIN"], "lumiere"], cwd=root, capture_output=True)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            output = root / "measure.json"
-            self.assertEqual(main(["--base", str(base), "--group", "couleur", "--output", str(output), "--strict"]), 0)
-            result = native.read_json(output)
-            self.assertEqual(result["coverage"]["diagnostic"], 0)
-            self.assertEqual(result["coverage"]["excluded"], 0)
-            wb = [r for r in result["records"] if r["feature"] in ("temperature", "tint")]
-            self.assertTrue(all(r["reference_role"] == "support" for r in wb))
+            with render.RenderServer(os.environ["IPR_RENDER_SERVER_BIN"]) as server:
+                states = server.states(base, "lumiere")
+                self.assertEqual(len(states), 5 + 5 * 9)
+                for state in states + [{"source": str(base / "tiny.png"), "feature": "neutral", "value": 0}]:
+                    feature, value = state["feature"], state["value"]
+                    name = ("neutre/tiny-IPR-neutre-lumiere.tiff" if feature == "neutral" else
+                            "lumiere/" + feature + "/tiny-IPR-" + feature + "-" + format(value, "g") + ".tiff")
+                    stored, stored_metadata, _ = native.inspect(base / name)
+                    try:
+                        pixels, metadata = server.render(state["source"], feature, value)
+                        np.testing.assert_array_equal(pixels, stored[:, :, :3], name)
+                        self.assertEqual(metadata["icc_sha256"], stored_metadata["icc_sha256"])
+                        declared, _ = native.embedded_metadata(base / name)
+                        self.assertEqual(metadata["declaration"]["settings"], declared["settings"], name)
+                    finally:
+                        stored._mmap.close()
+                with self.assertRaises(ValueError):
+                    server.render(base / "tiny.png", "invented", 0)
+                self.assertEqual(server.render(base / "tiny.png", "neutral", 0)[0].shape, (32, 48, 3))
+
+    @unittest.skipUnless(os.environ.get("IPR_RENDER_SERVER_BIN"), "Native render integration uses an explicit rebuilt binary")
+    def test_in_memory_campaigns_on_tiny_fixture_write_no_image(self):
+        from PIL import Image
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory).resolve()
             base = root / "tests/image/base"
             base.mkdir(parents=True)
-            image.save(base / "tiny.png")
-            result = subprocess.run([os.environ["IPR_GENERATOR_TEST_BIN"], "all"], cwd=root, capture_output=True)
-            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            records = inputs.base_records(base, list(catalog.GROUPS))
-            for group in ("lumiere", "courbes", "couleur", "melangeur", "grading", "effets", "bruit", "nettete"):
-                measured = campaign.analyse(group, records, step=1, patch_size=16)
-                self.assertEqual(measured["coverage"]["diagnostic"], 0, (group, [(r["feature"], r["issues"]) for r in measured["records"]]))
-                self.assertEqual(measured["coverage"]["excluded"], 0, group)
+            Image.new("RGB", (48, 32), (100, 120, 130)).save(base / "tiny.png")
+            Image.new("RGB", (40, 24), (140, 90, 60)).save(base / "tiny2.png")
+            output = root / "measure.json"
+            self.assertEqual(main(["--base", str(base), "--group", "couleur", "--output", str(output), "--strict",
+                                   "--render-server", os.environ["IPR_RENDER_SERVER_BIN"]]), 0)
+            result = native.read_json(output)
+            self.assertEqual(result["coverage"]["diagnostic"], 0)
+            self.assertEqual(result["coverage"]["excluded"], 0)
+            self.assertEqual(result["ipr_pixels"]["kind"], "in_memory_render")
+            self.assertEqual(main(["--base", str(base), "--group", "lumiere", "--output", str(root / "two.json"),
+                                   "--strict", "--render-workers", "2",
+                                   "--render-server", os.environ["IPR_RENDER_SERVER_BIN"]]), 0)
+            self.assertEqual(native.read_json(root / "two.json")["ipr_pixels"]["parallel_servers"], 2)
+            wb = [r for r in result["records"] if r["feature"] in ("temperature", "tint")]
+            self.assertTrue(wb and all(r["reference_role"] == "support" for r in wb))
+            self.assertEqual(sorted(p.name for p in base.rglob("*") if p.is_file()), ["tiny.png", "tiny2.png"])
+            with render.RenderServer(os.environ["IPR_RENDER_SERVER_BIN"]) as server:
+                records = inputs.render_records(base, list(catalog.GROUPS), server)
+                for group in ("lumiere", "courbes", "couleur", "melangeur", "grading", "effets", "bruit", "nettete"):
+                    measured = campaign.analyse(group, records, step=1, patch_size=16, servers=[server])
+                    self.assertEqual(measured["coverage"]["diagnostic"], 0, (group, [(r["feature"], r["issues"]) for r in measured["records"]]))
+                    self.assertEqual(measured["coverage"]["excluded"], 0, group)
+            self.assertEqual(sorted(p.name for p in base.rglob("*") if p.is_file()), ["tiny.png", "tiny2.png"])
+
+    def test_render_worker_count_follows_free_memory(self):
+        gib = 1024 ** 3
+        self.assertEqual(render.worker_count(available=1 * gib), 1)
+        self.assertEqual(render.worker_count(available=2 * gib + render.PER_WORKER_BYTES), 1)
+        self.assertLessEqual(render.worker_count(available=64 * gib), 4)
+        self.assertEqual(render.worker_count(available=64 * gib, limit=1), 1)
 
     def test_catalog_matches_photographic_groups_and_orange_violet_magenta(self):
         self.assertEqual(len(catalog.GROUPS), 10)

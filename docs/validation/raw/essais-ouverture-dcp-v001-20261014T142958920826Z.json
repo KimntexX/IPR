@@ -1,0 +1,2260 @@
+{
+  "executable_sha256": "b6feda1d5cbcee6dba97f978f4c93ed8155a67887a8b366c539086c0c8187fdd",
+  "measured_at_utc": "2026-10-14T14:32:46.272Z",
+  "records": [
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "camera_baseline_channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.04065827997652624,
+            0.24051948454679917,
+            0.5040463615235045
+          ],
+          "black_percent": 0.0013872374157748713,
+          "central_ROI_G_over_R": 1.2862830565351289,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.2713160071250352,
+          "outside_srgb_percent": 0.014268727705112961,
+          "relative_mean_Y_to_LR_percent": -7.556991577452665
+        },
+        "camera_baseline_channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.040634016085439276,
+            0.2406991900008253,
+            0.5040333757761823
+          ],
+          "black_percent": 0.0013872374157748713,
+          "central_ROI_G_over_R": 1.28634793995485,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.2713271140840301,
+          "outside_srgb_percent": 0.01466508125247721,
+          "relative_mean_Y_to_LR_percent": -7.553207205440127
+        },
+        "camera_baseline_hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.040506170206138684,
+            0.2384968192146013,
+            0.5037554881049935
+          ],
+          "black_percent": 0.0011890606420927466,
+          "central_ROI_G_over_R": 1.2786458164532135,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.27086862274714163,
+          "outside_srgb_percent": 0.019024970273483946,
+          "relative_mean_Y_to_LR_percent": -7.709424742941017
+        },
+        "camera_baseline_hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.04047461494456511,
+            0.2383912428292003,
+            0.5038329744320093
+          ],
+          "black_percent": 0.0013872374157748713,
+          "central_ROI_G_over_R": 1.2786656845768358,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.27087928730990113,
+          "outside_srgb_percent": 0.0186286167261197,
+          "relative_mean_Y_to_LR_percent": -7.7057911045300465
+        },
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.027525933089932765,
+            0.1895388036600573,
+            0.4333723142342361
+          ],
+          "black_percent": 0.01743955608402695,
+          "central_ROI_G_over_R": 1.294354492667774,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.22508053113439513,
+          "outside_srgb_percent": 0.014070550931430836,
+          "relative_mean_Y_to_LR_percent": -23.310380187707036
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.027475573620795963,
+            0.1895094240784586,
+            0.4333503718736548
+          ],
+          "black_percent": 0.01743955608402695,
+          "central_ROI_G_over_R": 1.2944824304960099,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.22508572546152425,
+          "outside_srgb_percent": 0.013872374157748711,
+          "relative_mean_Y_to_LR_percent": -23.30861037238491
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.027525933089932765,
+            0.1895388036600573,
+            0.4333723142342361
+          ],
+          "black_percent": 0.01743955608402695,
+          "central_ROI_G_over_R": 1.2943544932701385,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.22508053182515209,
+          "outside_srgb_percent": 0.014070550931430836,
+          "relative_mean_Y_to_LR_percent": -23.310379952351767
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.027680697723287788,
+            0.19006621721703817,
+            0.4332650723657052
+          ],
+          "black_percent": 0.017241379310344827,
+          "central_ROI_G_over_R": 1.291757365760758,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.2247932941094289,
+          "outside_srgb_percent": 0.01743955608402695,
+          "relative_mean_Y_to_LR_percent": -23.4082478181487
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.027638947028596046,
+            0.19007194747639292,
+            0.4333482070360294
+          ],
+          "black_percent": 0.01743955608402695,
+          "central_ROI_G_over_R": 1.2919177909747135,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.22480363866254977,
+          "outside_srgb_percent": 0.0178359096313912,
+          "relative_mean_Y_to_LR_percent": -23.40472321367949
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A0007",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A0007-LR-CameraNeutral-AsShot.tif",
+        "LR_sha256": "6c156e965070407b6e92c8ed0a0042620fb25fedece72f00574357b9ebd44052",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.29349543221795427
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "camera_baseline_channel_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.00041204319484235613,
+            0.00386640672418672,
+            0.1892000384484552
+          ],
+          "black_percent": 18.272691240586603,
+          "central_ROI_G_over_R": 1.800281480973399,
+          "encoded_clipped_percent": 0.002576298057867618,
+          "mean_Y": 0.03835519645768543,
+          "outside_srgb_percent": 1.055885850178359,
+          "relative_mean_Y_to_LR_percent": -15.296098993657903
+        },
+        "camera_baseline_channel_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0004116553416851676,
+            0.003855181776801032,
+            0.18916020485255483
+          ],
+          "black_percent": 18.288545382481175,
+          "central_ROI_G_over_R": 1.8005672327704976,
+          "encoded_clipped_percent": 0.002179944510503369,
+          "mean_Y": 0.03834527785702695,
+          "outside_srgb_percent": 1.0626238604835514,
+          "relative_mean_Y_to_LR_percent": -15.318003305091278
+        },
+        "camera_baseline_hue_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.00041214381935207736,
+            0.0039191842067508595,
+            0.1888497366065848
+          ],
+          "black_percent": 18.24891002774475,
+          "central_ROI_G_over_R": 1.7745205737937277,
+          "encoded_clipped_percent": 0.0023781212841854932,
+          "mean_Y": 0.03831365741745301,
+          "outside_srgb_percent": 0.9732461355529132,
+          "relative_mean_Y_to_LR_percent": -15.387834118926447
+        },
+        "camera_baseline_hue_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.000411750533416195,
+            0.003910228364807748,
+            0.1888482971892548
+          ],
+          "black_percent": 18.269124058660324,
+          "central_ROI_G_over_R": 1.7746869937169225,
+          "encoded_clipped_percent": 0.0019817677368212444,
+          "mean_Y": 0.038303729599110006,
+          "outside_srgb_percent": 0.976218787158145,
+          "relative_mean_Y_to_LR_percent": -15.40975878676285
+        },
+        "channel_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0003419872773771301,
+            0.002742510631750754,
+            0.1477219758821534
+          ],
+          "black_percent": 22.74256837098692,
+          "central_ROI_G_over_R": 1.8258561379592775,
+          "encoded_clipped_percent": 0.00039635354736424893,
+          "mean_Y": 0.03132054953133732,
+          "outside_srgb_percent": 0.9659135949266746,
+          "relative_mean_Y_to_LR_percent": -30.83146556442574
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.00034163957954072235,
+            0.0027228623846449833,
+            0.14773296267671504
+          ],
+          "black_percent": 22.76198969480777,
+          "central_ROI_G_over_R": 1.82747512908726,
+          "encoded_clipped_percent": 0.00039635354736424893,
+          "mean_Y": 0.03131153373577569,
+          "outside_srgb_percent": 0.9708680142687277,
+          "relative_mean_Y_to_LR_percent": -30.851376114371377
+        },
+        "current": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0003419872773771301,
+            0.002742510631750754,
+            0.1477219758821534
+          ],
+          "black_percent": 22.74256837098692,
+          "central_ROI_G_over_R": 1.8258561880100437,
+          "encoded_clipped_percent": 0.00039635354736424893,
+          "mean_Y": 0.0313205497269438,
+          "outside_srgb_percent": 0.9659135949266746,
+          "relative_mean_Y_to_LR_percent": -30.831465132446933
+        },
+        "hue_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.00034210986920939603,
+            0.002761755361397777,
+            0.1484084464493608
+          ],
+          "black_percent": 22.71997621878716,
+          "central_ROI_G_over_R": 1.7882813215316107,
+          "encoded_clipped_percent": 0.00039635354736424893,
+          "mean_Y": 0.03127182630122156,
+          "outside_srgb_percent": 0.8927863654379706,
+          "relative_mean_Y_to_LR_percent": -30.93906630804305
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0003417591006719875,
+            0.002739764467784922,
+            0.1483845025575562
+          ],
+          "black_percent": 22.743162901307965,
+          "central_ROI_G_over_R": 1.7897190123940627,
+          "encoded_clipped_percent": 0.00039635354736424893,
+          "mean_Y": 0.03126284593449878,
+          "outside_srgb_percent": 0.8935790725326992,
+          "relative_mean_Y_to_LR_percent": -30.958898616677565
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A0037",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A0037.tif",
+        "LR_sha256": "eba925e4e093b7b4bd103f1d1d56d3138c1cd10c39d99622b20dce54f8b4f6d9",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.04528149943745051
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "camera_baseline_channel_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.00038292940623744413,
+            0.0010406929296637036,
+            0.09293792832334308
+          ],
+          "black_percent": 46.984740388426474,
+          "central_ROI_G_over_R": 0.5968688154709474,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.016166555820790966,
+          "outside_srgb_percent": 2.861474435196195,
+          "relative_mean_Y_to_LR_percent": -20.527803960481293
+        },
+        "camera_baseline_channel_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0003824723442038511,
+            0.00103966022929633,
+            0.092900909297357
+          ],
+          "black_percent": 47.08164883075703,
+          "central_ROI_G_over_R": 0.5968833890715906,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.01616119368820377,
+          "outside_srgb_percent": 2.9147839873166865,
+          "relative_mean_Y_to_LR_percent": -20.55416334443936
+        },
+        "camera_baseline_hue_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0003834027666071187,
+            0.0010439381882060988,
+            0.09387446470182481
+          ],
+          "black_percent": 46.660721363456204,
+          "central_ROI_G_over_R": 0.598554232099243,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.01627833703966479,
+          "outside_srgb_percent": 2.912405866032501,
+          "relative_mean_Y_to_LR_percent": -19.978305413088027
+        },
+        "camera_baseline_hue_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0003829806633233819,
+            0.001042848089350785,
+            0.09384039499323679
+          ],
+          "black_percent": 46.80063416567578,
+          "central_ROI_G_over_R": 0.5985643907480748,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.016273132138347007,
+          "outside_srgb_percent": 2.968093539437178,
+          "relative_mean_Y_to_LR_percent": -20.003891873338343
+        },
+        "channel_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.00031798762318530424,
+            0.0008508333764412512,
+            0.06935887403901858
+          ],
+          "black_percent": 56.195204122076895,
+          "central_ROI_G_over_R": 0.5929366638677226,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.012540326831277053,
+          "outside_srgb_percent": 2.105033690051526,
+          "relative_mean_Y_to_LR_percent": -38.35376419180135
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0003176311856614325,
+            0.00085016018429875,
+            0.0693428918203173
+          ],
+          "black_percent": 56.21918351169243,
+          "central_ROI_G_over_R": 0.5929418761140819,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.012534788094818852,
+          "outside_srgb_percent": 2.162901307966706,
+          "relative_mean_Y_to_LR_percent": -38.38099173207009
+        },
+        "current": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.00031798762318530424,
+            0.0008508333764412512,
+            0.06935887403901858
+          ],
+          "black_percent": 56.195204122076895,
+          "central_ROI_G_over_R": 0.5929366825299228,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.01254032669505365,
+          "outside_srgb_percent": 2.105033690051526,
+          "relative_mean_Y_to_LR_percent": -38.35376486145377
+        },
+        "hue_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.00031823422409645215,
+            0.0008529937326992571,
+            0.06980417923691158
+          ],
+          "black_percent": 56.13119302417757,
+          "central_ROI_G_over_R": 0.5947091521275395,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.012624196530044925,
+          "outside_srgb_percent": 2.1712247324613556,
+          "relative_mean_Y_to_LR_percent": -37.94147420151883
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.00031796565586275947,
+            0.0008522409385385022,
+            0.06978002120113326
+          ],
+          "black_percent": 56.15794688862465,
+          "central_ROI_G_over_R": 0.5947085566392087,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.012618569617238734,
+          "outside_srgb_percent": 2.2251288149028934,
+          "relative_mean_Y_to_LR_percent": -37.96913520257485
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A0043",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A0043-LR-CameraNeutral-AsShot.tif",
+        "LR_sha256": "3ac72d4e7a686991887c1967666330ddd4d4df5ac51bf497a69bc0e8a065d92f",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.020342404798719682
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "602bcc522c2d4fe0dd070f9e9f37fbb6cde70018ff227bc9f6ff325e4bb355cb",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 5.960464477539063e-08,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00010586359804429415,
+            0.00045325200227420835,
+            0.08728442540350365
+          ],
+          "black_percent": 78.81311930241776,
+          "central_ROI_G_over_R": 1.1655476054830192,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.014029790627915525,
+          "outside_srgb_percent": 0.08977407847800238,
+          "relative_mean_Y_to_LR_percent": -34.13150786650171
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00010569636294363066,
+            0.0004530387066585316,
+            0.0872639553997308
+          ],
+          "black_percent": 78.8281807372176,
+          "central_ROI_G_over_R": 1.1656601377937594,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.014027827305738812,
+          "outside_srgb_percent": 0.08957590170432025,
+          "relative_mean_Y_to_LR_percent": -34.140725471723485
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00010586359804429415,
+            0.00045325200227420835,
+            0.08728442540350365
+          ],
+          "black_percent": 78.81311930241776,
+          "central_ROI_G_over_R": 1.1655476155970708,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.014029790568103826,
+          "outside_srgb_percent": 0.08977407847800238,
+          "relative_mean_Y_to_LR_percent": -34.13150814731177
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00010586359804429415,
+            0.00045341923737487186,
+            0.08754995800383407
+          ],
+          "black_percent": 78.7893380895759,
+          "central_ROI_G_over_R": 1.1506909292587917,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.014038786293621344,
+          "outside_srgb_percent": 0.08620689655172414,
+          "relative_mean_Y_to_LR_percent": -34.08927409755292
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00010569636294363066,
+            0.000453333966370155,
+            0.08751664154943638
+          ],
+          "black_percent": 78.80697582243361,
+          "central_ROI_G_over_R": 1.150861013798215,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.014036871171405752,
+          "outside_srgb_percent": 0.08640507332540626,
+          "relative_mean_Y_to_LR_percent": -34.09826540868064
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A0054",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A0054.tif",
+        "LR_sha256": "7635bbd273b6ed841bef3767a9bae023364e3bae80d07bdb98164b40cc2a97b7",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.021299699102692058
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 5.960464477539063e-08,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004572670619367478,
+            0.002853273247505661,
+            0.07300172001866997
+          ],
+          "black_percent": 21.662108600871978,
+          "central_ROI_G_over_R": 0.07986047551869636,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.016244521028939893,
+          "outside_srgb_percent": 1.0982956797463337,
+          "relative_mean_Y_to_LR_percent": -47.59901281171122
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00045709982683608434,
+            0.002835491918033069,
+            0.07303892472632115
+          ],
+          "black_percent": 21.686880697582243,
+          "central_ROI_G_over_R": 0.07970380251408654,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.016233109214824317,
+          "outside_srgb_percent": 1.1187078874355925,
+          "relative_mean_Y_to_LR_percent": -47.635824628089196
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004572670619367478,
+            0.002853273247505661,
+            0.07300172001866997
+          ],
+          "black_percent": 21.662108600871978,
+          "central_ROI_G_over_R": 0.07986047640235323,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.016244521092406258,
+          "outside_srgb_percent": 1.0982956797463337,
+          "relative_mean_Y_to_LR_percent": -47.59901260698373
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004572691878066715,
+            0.0029212249649288964,
+            0.07858203142098909
+          ],
+          "black_percent": 21.646650812524772,
+          "central_ROI_G_over_R": 0.13860551570265178,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.01769150644223092,
+          "outside_srgb_percent": 0.00039635354736424893,
+          "relative_mean_Y_to_LR_percent": -42.93137970831451
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00045718391680195467,
+            0.0029020061608082425,
+            0.07862653108983064
+          ],
+          "black_percent": 21.67063020214031,
+          "central_ROI_G_over_R": 0.13850176657743637,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.01768126139339981,
+          "outside_srgb_percent": 0.00039635354736424893,
+          "relative_mean_Y_to_LR_percent": -42.96442781552469
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A0081",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A0081.tif",
+        "LR_sha256": "f929c174518a2e600c4d13621a694dd9b92d1fbf7606ad2e7a84586dff545c29",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.031000410298702197
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "d26fd895f37478e09c2b93abc28011f3366cc0d0a23668dad02a7bac4e059552",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0019762387319938006,
+            0.013839970586509253,
+            0.03391287710017292
+          ],
+          "black_percent": 1.55410225921522,
+          "central_ROI_G_over_R": 1.149247324673428,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.01584499471789283,
+          "outside_srgb_percent": 2.122869599682917,
+          "relative_mean_Y_to_LR_percent": -49.20144435287139
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0019718648568273446,
+            0.013814051628964284,
+            0.03386777617613546
+          ],
+          "black_percent": 1.5550931430836306,
+          "central_ROI_G_over_R": 1.1495621788744212,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.01581916585162681,
+          "outside_srgb_percent": 2.1313912009512483,
+          "relative_mean_Y_to_LR_percent": -49.284250887280336
+        },
+        "current": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0019762387319938006,
+            0.013839970586509253,
+            0.03391287710017292
+          ],
+          "black_percent": 1.55410225921522,
+          "central_ROI_G_over_R": 1.149247309978802,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.015844994643385728,
+          "outside_srgb_percent": 2.122869599682917,
+          "relative_mean_Y_to_LR_percent": -49.20144459173883
+        },
+        "hue_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.002007042534641641,
+            0.013979243120172385,
+            0.033979431812102556
+          ],
+          "black_percent": 1.5394371779627427,
+          "central_ROI_G_over_R": 1.1490686612263776,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.01596109250950583,
+          "outside_srgb_percent": 2.783392786365438,
+          "relative_mean_Y_to_LR_percent": -48.82923847759256
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.002002530539564234,
+            0.013951372624372429,
+            0.03393663947801424
+          ],
+          "black_percent": 1.5418152992469283,
+          "central_ROI_G_over_R": 1.1493391985642871,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.01593622339067649,
+          "outside_srgb_percent": 2.7976615140705507,
+          "relative_mean_Y_to_LR_percent": -48.90896809184865
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A0182",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A0182.tif",
+        "LR_sha256": "39bdb5d8ee26ced0b81ccfa390cb38d90ca04b8574e54c3d9e2c871f47958bb5",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.03119182133436991
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "b0ab90b805a97c9bf5f4ceb4a16300e8b2ce93dba2de5c594e08785f389ee751",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0018961761221752986,
+            0.0597423087102765,
+            0.47999382594013446
+          ],
+          "black_percent": 3.433214427269124,
+          "central_ROI_G_over_R": 1.2988219208013136,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.13085396312187816,
+          "outside_srgb_percent": 0.9508521601268332,
+          "relative_mean_Y_to_LR_percent": -30.68111137612207
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0018921308754790312,
+            0.05970593236406073,
+            0.48002317195038124
+          ],
+          "black_percent": 3.433214427269124,
+          "central_ROI_G_over_R": 1.298875321161849,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.13084572403116185,
+          "outside_srgb_percent": 0.9821640903686087,
+          "relative_mean_Y_to_LR_percent": -30.685475971569552
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0018961761221752986,
+            0.0597423087102765,
+            0.47999382594013446
+          ],
+          "black_percent": 3.433214427269124,
+          "central_ROI_G_over_R": 1.2988219131897267,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.13085396322964696,
+          "outside_srgb_percent": 0.9508521601268332,
+          "relative_mean_Y_to_LR_percent": -30.68111131903237
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0019253741708221519,
+            0.05977143251515105,
+            0.47835335119686345
+          ],
+          "black_percent": 3.4322235434007133,
+          "central_ROI_G_over_R": 1.2991564229274277,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.13060699611318094,
+          "outside_srgb_percent": 0.27586206896551724,
+          "relative_mean_Y_to_LR_percent": -30.811940264764214
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0019209426768623387,
+            0.059742609857706706,
+            0.47840360897532325
+          ],
+          "black_percent": 3.4322235434007133,
+          "central_ROI_G_over_R": 1.2992628617345334,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.13059805382573542,
+          "outside_srgb_percent": 0.2893380895759017,
+          "relative_mean_Y_to_LR_percent": -30.816677373314004
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A0318",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A0318.tif",
+        "LR_sha256": "a59eead8a47a380a58d4cc8e7a26217b5568173581fc2dcd0f7d9fb5d7545fb6",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.18877100559399845
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 8.940696716308594e-08,
+      "models": {
+        "camera_baseline_channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0005461763749240887,
+            0.02795768802520512,
+            0.3588342130354503
+          ],
+          "black_percent": 7.552715021799445,
+          "central_ROI_G_over_R": 1.146715951493206,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07503809529681614,
+          "outside_srgb_percent": 0.4710661910424098,
+          "relative_mean_Y_to_LR_percent": -17.827162055864033
+        },
+        "camera_baseline_channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0005457044318010299,
+            0.027919598469772683,
+            0.3588537515271841
+          ],
+          "black_percent": 7.555489496630995,
+          "central_ROI_G_over_R": 1.1465604414354842,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07502442537544209,
+          "outside_srgb_percent": 0.4766151407055093,
+          "relative_mean_Y_to_LR_percent": -17.842131735322663
+        },
+        "camera_baseline_hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0005462406234373379,
+            0.028656772675699892,
+            0.3568715047094746
+          ],
+          "black_percent": 7.539833531510107,
+          "central_ROI_G_over_R": 1.173551204659438,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.0752970449847332,
+          "outside_srgb_percent": 0.7625842251288149,
+          "relative_mean_Y_to_LR_percent": -17.543591015624738
+        },
+        "camera_baseline_hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0005458452116315321,
+            0.02861427789837747,
+            0.35685475021772384
+          ],
+          "black_percent": 7.545580657946888,
+          "central_ROI_G_over_R": 1.1735700887799085,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07528460243818334,
+          "outside_srgb_percent": 0.773880301228696,
+          "relative_mean_Y_to_LR_percent": -17.557216619489147
+        },
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004525662911199342,
+            0.01886117389611926,
+            0.2992157814836917
+          ],
+          "black_percent": 8.856718192627824,
+          "central_ROI_G_over_R": 1.1481419296683126,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.058776869323703795,
+          "outside_srgb_percent": 0.03111375346809354,
+          "relative_mean_Y_to_LR_percent": -35.63453151768233
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00045227126761608014,
+            0.01882849642794691,
+            0.29913897326162786
+          ],
+          "black_percent": 8.859889021006738,
+          "central_ROI_G_over_R": 1.1480053101168646,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.05876624523159773,
+          "outside_srgb_percent": 0.029131985731272295,
+          "relative_mean_Y_to_LR_percent": -35.64616576553314
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004525662911199342,
+            0.01886117389611926,
+            0.2992157814836917
+          ],
+          "black_percent": 8.856718192627824,
+          "central_ROI_G_over_R": 1.1481419553718009,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.058776869663343896,
+          "outside_srgb_percent": 0.03111375346809354,
+          "relative_mean_Y_to_LR_percent": -35.6345311457487
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004526012498697905,
+            0.01933820294917841,
+            0.2981054288282682
+          ],
+          "black_percent": 8.843043995243757,
+          "central_ROI_G_over_R": 1.1824694237582372,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.059134798804744294,
+          "outside_srgb_percent": 0.49564011097899324,
+          "relative_mean_Y_to_LR_percent": -35.24256952658129
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00045244110100220593,
+            0.019305724560857128,
+            0.29805060126929606
+          ],
+          "black_percent": 8.84879112168054,
+          "central_ROI_G_over_R": 1.1825027396171879,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.05912688116045007,
+          "outside_srgb_percent": 0.5035671819262783,
+          "relative_mean_Y_to_LR_percent": -35.251239993214476
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A0327",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A0327.tif",
+        "LR_sha256": "61700354ab4c0315dd2ffd0a8393bd08afed4017ac91e06083ee3d6ec9ad2447",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.0913173953512835
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0015156344741459966,
+            0.7764901279419321,
+            0.9024004833327286
+          ],
+          "black_percent": 1.8917954815695601,
+          "central_ROI_G_over_R": 0.9864345918702996,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.5114205371071706,
+          "outside_srgb_percent": 0.012683313515655966,
+          "relative_mean_Y_to_LR_percent": -6.494061749725166
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0015138737814336441,
+            0.7765440969977065,
+            0.9024644863026041
+          ],
+          "black_percent": 1.896353547364249,
+          "central_ROI_G_over_R": 0.9864300704166655,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.5114365152097341,
+          "outside_srgb_percent": 0.013079667063020214,
+          "relative_mean_Y_to_LR_percent": -6.491140381959792
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0015156344741459966,
+            0.7764901279419321,
+            0.9024004833327286
+          ],
+          "black_percent": 1.8917954815695601,
+          "central_ROI_G_over_R": 0.9864345889480587,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.5114205370405386,
+          "outside_srgb_percent": 0.012683313515655966,
+          "relative_mean_Y_to_LR_percent": -6.494061761907877
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.001521026861311317,
+            0.7752639013364314,
+            0.9020470216230168
+          ],
+          "black_percent": 1.8850574712643677,
+          "central_ROI_G_over_R": 0.9855144896636946,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.5110144667260065,
+          "outside_srgb_percent": 0.017637732857709077,
+          "relative_mean_Y_to_LR_percent": -6.568305917159611
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0015191898734894808,
+            0.775307287448941,
+            0.9020730970163299
+          ],
+          "black_percent": 1.8874355925485533,
+          "central_ROI_G_over_R": 0.9855112851087909,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.5110300839352512,
+          "outside_srgb_percent": 0.017637732857709077,
+          "relative_mean_Y_to_LR_percent": -6.565450533581285
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A0524",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A0524.tif",
+        "LR_sha256": "5dab5846c75ef47908f75c931c952a88974be0af68c9cce2c9f82a31dea62367",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.546939099994184
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "821d87c5eeac4dd063aebbe9210f1a61de8dbdd25f2e6b694fe926422754c8d5",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0006890138113044785,
+            0.021308471161216366,
+            0.984954377927572
+          ],
+          "black_percent": 9.65101070154578,
+          "central_ROI_G_over_R": 0.689643757530649,
+          "encoded_clipped_percent": 0.0013872374157748713,
+          "mean_Y": 0.1531123187000678,
+          "outside_srgb_percent": 1.8921918351169242,
+          "relative_mean_Y_to_LR_percent": -16.713311408323428
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0006886720186623033,
+            0.0212703694130166,
+            0.984954377927572
+          ],
+          "black_percent": 9.664090368608798,
+          "central_ROI_G_over_R": 0.6895453397660838,
+          "encoded_clipped_percent": 0.0013872374157748713,
+          "mean_Y": 0.15310299165380364,
+          "outside_srgb_percent": 1.8985334918747523,
+          "relative_mean_Y_to_LR_percent": -16.718384930847797
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0006890138113044785,
+            0.021308471161216366,
+            0.984954377927572
+          ],
+          "black_percent": 9.65101070154578,
+          "central_ROI_G_over_R": 0.6896437609440069,
+          "encoded_clipped_percent": 0.0013872374157748713,
+          "mean_Y": 0.15311231835770683,
+          "outside_srgb_percent": 1.8921918351169242,
+          "relative_mean_Y_to_LR_percent": -16.71331159455346
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0006902364227183688,
+            0.021590419769985214,
+            0.984954377927572
+          ],
+          "black_percent": 9.611573523583036,
+          "central_ROI_G_over_R": 0.6922520268111744,
+          "encoded_clipped_percent": 0.00039635354736424893,
+          "mean_Y": 0.15315293067361357,
+          "outside_srgb_percent": 1.7158145065398336,
+          "relative_mean_Y_to_LR_percent": -16.691220195659962
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.000689804162500552,
+            0.02155043585899852,
+            0.984954377927572
+          ],
+          "black_percent": 9.625644074514467,
+          "central_ROI_G_over_R": 0.69216319136133,
+          "encoded_clipped_percent": 0.00039635354736424893,
+          "mean_Y": 0.1531437072354695,
+          "outside_srgb_percent": 1.719579865239794,
+          "relative_mean_Y_to_LR_percent": -16.696237359706412
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A0830",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A0830.tif",
+        "LR_sha256": "027c81bf2e09ed2e75380974085b26fc03aba3d185e9fa24cb1688f1db9a5873",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.18383768317494303
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "camera_baseline_channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00290858774756771,
+            0.11578787918553318,
+            0.4759965763512601
+          ],
+          "black_percent": 1.2958779231074118,
+          "central_ROI_G_over_R": 0.6623101077993067,
+          "encoded_clipped_percent": 0.043400713436385255,
+          "mean_Y": 0.17845030003865167,
+          "outside_srgb_percent": 10.113357114546176,
+          "relative_mean_Y_to_LR_percent": -14.738581298545716
+        },
+        "camera_baseline_channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0028926527809567406,
+            0.11574950886373474,
+            0.47607639759249865
+          ],
+          "black_percent": 1.297463337296869,
+          "central_ROI_G_over_R": 0.6623448504032885,
+          "encoded_clipped_percent": 0.04359889021006738,
+          "mean_Y": 0.17845155026097892,
+          "outside_srgb_percent": 10.163892191835117,
+          "relative_mean_Y_to_LR_percent": -14.73798395727316
+        },
+        "camera_baseline_hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0029901010587956344,
+            0.11867507187504085,
+            0.4716231529792022
+          ],
+          "black_percent": 1.288149028933809,
+          "central_ROI_G_over_R": 0.6597956229918275,
+          "encoded_clipped_percent": 0.023781212841854936,
+          "mean_Y": 0.17782920812390393,
+          "outside_srgb_percent": 9.30499405469679,
+          "relative_mean_Y_to_LR_percent": -15.035331585790534
+        },
+        "camera_baseline_hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0029757690330126383,
+            0.1186906187466702,
+            0.4716593313362968
+          ],
+          "black_percent": 1.2905271502179945,
+          "central_ROI_G_over_R": 0.6597450430129973,
+          "encoded_clipped_percent": 0.02318668252080856,
+          "mean_Y": 0.1778287261365237,
+          "outside_srgb_percent": 9.355330955212048,
+          "relative_mean_Y_to_LR_percent": -15.035561873595181
+        },
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.002157886233362411,
+            0.0833828302736332,
+            0.40233355168307927
+          ],
+          "black_percent": 1.8856520015854141,
+          "central_ROI_G_over_R": 0.6295134668223008,
+          "encoded_clipped_percent": 0.0015854141894569957,
+          "mean_Y": 0.14268240456783698,
+          "outside_srgb_percent": 9.837891399128022,
+          "relative_mean_Y_to_LR_percent": -31.828053892015408
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.002153277347367854,
+            0.08334655697773218,
+            0.4023394359733122
+          ],
+          "black_percent": 1.888624653190646,
+          "central_ROI_G_over_R": 0.6294066865623812,
+          "encoded_clipped_percent": 0.0015854141894569957,
+          "mean_Y": 0.14267947968987024,
+          "outside_srgb_percent": 9.866032500990883,
+          "relative_mean_Y_to_LR_percent": -31.82945136371996
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.002157886233362411,
+            0.0833828302736332,
+            0.40233355168307927
+          ],
+          "black_percent": 1.8856520015854141,
+          "central_ROI_G_over_R": 0.629513468498987,
+          "encoded_clipped_percent": 0.0015854141894569957,
+          "mean_Y": 0.14268240431255708,
+          "outside_srgb_percent": 9.837891399128022,
+          "relative_mean_Y_to_LR_percent": -31.828054013985096
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0021868568800591276,
+            0.08512727977676579,
+            0.39733897347476754
+          ],
+          "black_percent": 1.8749504558065795,
+          "central_ROI_G_over_R": 0.6365186743145198,
+          "encoded_clipped_percent": 0.005152596115735236,
+          "mean_Y": 0.1423407704806179,
+          "outside_srgb_percent": 8.78735632183908,
+          "relative_mean_Y_to_LR_percent": -31.991282572195633
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0021796126239825055,
+            0.0850930368738267,
+            0.3973550075762358
+          ],
+          "black_percent": 1.8767340467697187,
+          "central_ROI_G_over_R": 0.6364620529443067,
+          "encoded_clipped_percent": 0.005152596115735236,
+          "mean_Y": 0.14233757317445822,
+          "outside_srgb_percent": 8.827586206896552,
+          "relative_mean_Y_to_LR_percent": -31.992810206831933
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A9421",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A9421-LR-CameraNeutral-AsShot.tif",
+        "LR_sha256": "83e40090df955909ca6b13c64ead2a0c22bbf84b0e0c0a7f38826b0df51d254b",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.20929783101956276
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "aceefe524cf5224beb5077e834a0453f9a7ad80ec31a5860b0be9da23501bb96",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0066237077297616465,
+            0.0964751824915936,
+            0.2133721171190523
+          ],
+          "black_percent": 0.40249702734839476,
+          "central_ROI_G_over_R": 0.9364153406914285,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.10281168662111803,
+          "outside_srgb_percent": 34.08878319460959,
+          "relative_mean_Y_to_LR_percent": -38.784546226410946
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.006603816874155011,
+            0.09644183770581316,
+            0.21334986112073984
+          ],
+          "black_percent": 0.40309155766944116,
+          "central_ROI_G_over_R": 0.936337187134303,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.10280648873124182,
+          "outside_srgb_percent": 34.26238604835513,
+          "relative_mean_Y_to_LR_percent": -38.787641119587924
+        },
+        "current": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0066237077297616465,
+            0.0964751824915936,
+            0.2133721171190523
+          ],
+          "black_percent": 0.40249702734839476,
+          "central_ROI_G_over_R": 0.9364153552627581,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.10281168656267808,
+          "outside_srgb_percent": 34.08878319460959,
+          "relative_mean_Y_to_LR_percent": -38.78454626120686
+        },
+        "hue_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.006850174710287249,
+            0.09972700874739995,
+            0.21392785408620216
+          ],
+          "black_percent": 0.39496630994847404,
+          "central_ROI_G_over_R": 0.9683127846210613,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.10419025221824052,
+          "outside_srgb_percent": 37.226119698771306,
+          "relative_mean_Y_to_LR_percent": -37.96372982549434
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.006830792547900925,
+            0.09970153326524786,
+            0.21395791970451317
+          ],
+          "black_percent": 0.39615537059056677,
+          "central_ROI_G_over_R": 0.9682456364153333,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.10418455646969693,
+          "outside_srgb_percent": 37.36900515259612,
+          "relative_mean_Y_to_LR_percent": -37.96712115038292
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A9608",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A9608.tif",
+        "LR_sha256": "94f856f1cb3320c4839b1558fd4ac3cb3fbdde445117a89374d138d99793b842",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.16795054236039225
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "fade2f141ad716d3d8a9acba8a79fd39a75d277b406e7ec633f7c9a0d368229b",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0015446221278021032,
+            0.06556557711162869,
+            0.16766455371399616
+          ],
+          "black_percent": 1.9215219976218787,
+          "central_ROI_G_over_R": 0.31053223189887347,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07567665357190978,
+          "outside_srgb_percent": 7.469877130400317,
+          "relative_mean_Y_to_LR_percent": -40.76440543795783
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.001542716403519401,
+            0.06553024703177608,
+            0.16766334043414835
+          ],
+          "black_percent": 1.9244946492271107,
+          "central_ROI_G_over_R": 0.3103696205282615,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07567021851542992,
+          "outside_srgb_percent": 7.508323424494649,
+          "relative_mean_Y_to_LR_percent": -40.76944245239535
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0015446221278021032,
+            0.06556557711162869,
+            0.16766455371399616
+          ],
+          "black_percent": 1.9215219976218787,
+          "central_ROI_G_over_R": 0.3105322328389404,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07567665358423845,
+          "outside_srgb_percent": 7.469877130400317,
+          "relative_mean_Y_to_LR_percent": -40.76440542830761
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0015555991752569526,
+            0.06641506494298888,
+            0.16613793950867778
+          ],
+          "black_percent": 1.9056678557273088,
+          "central_ROI_G_over_R": 0.34669830103974225,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07708507061524474,
+          "outside_srgb_percent": 0.11652794292508918,
+          "relative_mean_Y_to_LR_percent": -39.661972692646444
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.001553499051980118,
+            0.06637570730416853,
+            0.1661040437655789
+          ],
+          "black_percent": 1.9100277447483156,
+          "central_ROI_G_over_R": 0.34669632935268774,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07707709173788413,
+          "outside_srgb_percent": 0.11732065001981767,
+          "relative_mean_Y_to_LR_percent": -39.66821812663546
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A9616",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A9616.tif",
+        "LR_sha256": "4018924384675f88ca4d61925e3ae2eb3fb7ca23e7b8c92be1d66ebfb93afa82",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.12775537095799314
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "a57c06cb4498dc9385a4d4305bdff769bb2fdb2c5865a0c324ccefabebc0981d",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00044697856012940407,
+            0.036300234587534765,
+            0.26073168473648306
+          ],
+          "black_percent": 9.636543797066984,
+          "central_ROI_G_over_R": 0.6100909935995134,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.07970321275462688,
+          "outside_srgb_percent": 19.824811732065,
+          "relative_mean_Y_to_LR_percent": -34.842264693485895
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004466386571493832,
+            0.036275400779061086,
+            0.2608216267728725
+          ],
+          "black_percent": 9.64546175188268,
+          "central_ROI_G_over_R": 0.6100355607904319,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.07969739632243061,
+          "outside_srgb_percent": 19.866230677764566,
+          "relative_mean_Y_to_LR_percent": -34.84701965299599
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00044697856012940407,
+            0.036300234587534765,
+            0.26073168473648306
+          ],
+          "black_percent": 9.636543797066984,
+          "central_ROI_G_over_R": 0.6100909817469976,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.07970321289066774,
+          "outside_srgb_percent": 19.824811732065,
+          "relative_mean_Y_to_LR_percent": -34.84226458227187
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00045384015961976213,
+            0.03756026374118279,
+            0.257738860899276
+          ],
+          "black_percent": 9.49821640903686,
+          "central_ROI_G_over_R": 0.6124180511047461,
+          "encoded_clipped_percent": 0.00039635354736424893,
+          "mean_Y": 0.07995275209745283,
+          "outside_srgb_percent": 16.714823622671425,
+          "relative_mean_Y_to_LR_percent": -34.63826515712503
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004529276890069613,
+            0.03755285007587674,
+            0.2577412831393087
+          ],
+          "black_percent": 9.51307966706302,
+          "central_ROI_G_over_R": 0.6123714686447309,
+          "encoded_clipped_percent": 0.00039635354736424893,
+          "mean_Y": 0.07994669011949382,
+          "outside_srgb_percent": 16.731866825208087,
+          "relative_mean_Y_to_LR_percent": -34.64322085140179
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A9890",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A9890.tif",
+        "LR_sha256": "3ce6d7e165b492992e021de72c319c37d5d07507288e79485faa726d881fbe3a",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.12232348527720945
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.003936250727413888,
+            0.40610213658772637,
+            0.8666735965416132
+          ],
+          "black_percent": 0.8143083630598494,
+          "central_ROI_G_over_R": 1.0913602085709686,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.39815896413066515,
+          "outside_srgb_percent": 0.12049147839873167,
+          "relative_mean_Y_to_LR_percent": -17.742148043737583
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.003915379587856244,
+            0.4061847918267585,
+            0.8667071946916067
+          ],
+          "black_percent": 0.8147047166072137,
+          "central_ROI_G_over_R": 1.0913471988552936,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.3981725367832058,
+          "outside_srgb_percent": 0.12148236226714229,
+          "relative_mean_Y_to_LR_percent": -17.739343994742274
+        },
+        "current": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.003936250727413888,
+            0.40610213658772637,
+            0.8666735965416132
+          ],
+          "black_percent": 0.8143083630598494,
+          "central_ROI_G_over_R": 1.0913602017049098,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.3981589636605856,
+          "outside_srgb_percent": 0.12049147839873167,
+          "relative_mean_Y_to_LR_percent": -17.742148140853896
+        },
+        "hue_linear": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.003964615415666613,
+            0.40089244709270583,
+            0.8642385792358642
+          ],
+          "black_percent": 0.8131193024177567,
+          "central_ROI_G_over_R": 1.0841233827266064,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.39503852363720265,
+          "outside_srgb_percent": 0.09631391200951249,
+          "relative_mean_Y_to_LR_percent": -18.386817020888447
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.0039422923398251325,
+            0.40087293823426734,
+            0.8642294047999899
+          ],
+          "black_percent": 0.8135156559651209,
+          "central_ROI_G_over_R": 1.0841128478541497,
+          "encoded_clipped_percent": 0.00019817677368212446,
+          "mean_Y": 0.39505186820159466,
+          "outside_srgb_percent": 0.09651208878319462,
+          "relative_mean_Y_to_LR_percent": -18.384060093879217
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A9940",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A9940.tif",
+        "LR_sha256": "b72e5f2012e2f2fccb9bba1bcd18fb8f8d912b8d9385c18ca2697ed19e55b38c",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.4840376385495351
+      }
+    },
+    {
+      "DCP_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "RAW_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+      "camera": "EOS R6 Mark III",
+      "curve_replay_max_abs_error": 5.960464477539063e-08,
+      "models": {
+        "camera_baseline_channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0005634082041099679,
+            0.010364603284850683,
+            0.4141278648323397
+          ],
+          "black_percent": 9.852358303606817,
+          "central_ROI_G_over_R": 1.1326576213605337,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.09575083934497948,
+          "outside_srgb_percent": 0.08680142687277051,
+          "relative_mean_Y_to_LR_percent": -15.528558954867066
+        },
+        "camera_baseline_channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0005629459455054503,
+            0.010343935548399175,
+            0.41418857396843645
+          ],
+          "black_percent": 9.86008719778042,
+          "central_ROI_G_over_R": 1.1326453859444017,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.09574604866357136,
+          "outside_srgb_percent": 0.08719778042013476,
+          "relative_mean_Y_to_LR_percent": -15.532785296535712
+        },
+        "camera_baseline_hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0005635898478845587,
+            0.010439082532601368,
+            0.41203879127348353
+          ],
+          "black_percent": 9.845223939754261,
+          "central_ROI_G_over_R": 1.1023166219553664,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.09536386744629934,
+          "outside_srgb_percent": 0.08125247720967102,
+          "relative_mean_Y_to_LR_percent": -15.869945768278814
+        },
+        "camera_baseline_hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0005631658549386674,
+            0.010422849173504025,
+            0.41202484521027277
+          ],
+          "black_percent": 9.852358303606817,
+          "central_ROI_G_over_R": 1.1023268378130946,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.09536015752746298,
+          "outside_srgb_percent": 0.08145065398335315,
+          "relative_mean_Y_to_LR_percent": -15.873218660635812
+        },
+        "channel_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004666048274726643,
+            0.006973167730019535,
+            0.3517022874688634
+          ],
+          "black_percent": 12.155965120887831,
+          "central_ROI_G_over_R": 1.1299572941613674,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.0781753153334795,
+          "outside_srgb_percent": 0.08283789139912802,
+          "relative_mean_Y_to_LR_percent": -31.03369552109376
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004663537386138997,
+            0.006955098569804553,
+            0.35174823233283375
+          ],
+          "black_percent": 12.164288545382481,
+          "central_ROI_G_over_R": 1.130099762871333,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07817125391838546,
+          "outside_srgb_percent": 0.08283789139912802,
+          "relative_mean_Y_to_LR_percent": -31.037278503634937
+        },
+        "current": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0004666048274726643,
+            0.006973167730019535,
+            0.3517022874688634
+          ],
+          "black_percent": 12.155965120887831,
+          "central_ROI_G_over_R": 1.1299572979845025,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07817531539543433,
+          "outside_srgb_percent": 0.08283789139912802,
+          "relative_mean_Y_to_LR_percent": -31.033695466437173
+        },
+        "hue_linear": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00046677324361217424,
+            0.007033133479929695,
+            0.3503949430578846
+          ],
+          "black_percent": 12.143479984145857,
+          "central_ROI_G_over_R": 1.0980675528815247,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.0778554118015942,
+          "outside_srgb_percent": 0.07570352754657154,
+          "relative_mean_Y_to_LR_percent": -31.31591458589401
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.00046656183765865185,
+            0.007012417201068217,
+            0.3505435470593308
+          ],
+          "black_percent": 12.155172413793103,
+          "central_ROI_G_over_R": 1.0981243088648884,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.07785160721287908,
+          "outside_srgb_percent": 0.07590170432025367,
+          "relative_mean_Y_to_LR_percent": -31.31927099606805
+        }
+      },
+      "reference_kelvin": 4924.211272770631,
+      "scene": "6V1A9950",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\6V1A9950-LR-CameraNeutral-AsShot.tif",
+        "LR_sha256": "5c72536d95449d7996176b0c5b9ed0574045e1bb99e2f49b998003b53efb4435",
+        "LR_WB": "As Shot",
+        "LR_T": "5200",
+        "LR_tint": "+5",
+        "LR_Y": 0.11335291331637161
+      }
+    },
+    {
+      "DCP_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+      "RAW_sha256": "59fb28d2d31050a9166896bd4036d6a15a91e634478db3d687d5435e048dd400",
+      "camera": "EOS R7",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.02587167281416038,
+            0.4727373332300206,
+            0.7304362103452446
+          ],
+          "black_percent": 0.318100279197342,
+          "central_ROI_G_over_R": 0.8657252568939093,
+          "encoded_clipped_percent": 0.1338025263331624,
+          "mean_Y": 0.41186570280193624,
+          "outside_srgb_percent": 3.3688371754895776,
+          "relative_mean_Y_to_LR_percent": -12.45637927160641
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.02584656108641633,
+            0.47277317070520897,
+            0.7304748821556231
+          ],
+          "black_percent": 0.31868971763933834,
+          "central_ROI_G_over_R": 0.8657018345113863,
+          "encoded_clipped_percent": 0.13242716996850434,
+          "mean_Y": 0.411878517887991,
+          "outside_srgb_percent": 3.37866114952285,
+          "relative_mean_Y_to_LR_percent": -12.453655376352323
+        },
+        "current": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.02587167281416038,
+            0.4727373332300206,
+            0.7304362103452446
+          ],
+          "black_percent": 0.318100279197342,
+          "central_ROI_G_over_R": 0.8657252646349536,
+          "encoded_clipped_percent": 0.1338025263331624,
+          "mean_Y": 0.4118657035217288,
+          "outside_srgb_percent": 3.3688371754895776,
+          "relative_mean_Y_to_LR_percent": -12.45637911861176
+        },
+        "hue_linear": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.026483255490741292,
+            0.47176028622136673,
+            0.7295111092797397
+          ],
+          "black_percent": 0.30965166152872825,
+          "central_ROI_G_over_R": 0.8676534107884482,
+          "encoded_clipped_percent": 0.13439196477515872,
+          "mean_Y": 0.41122641462595455,
+          "outside_srgb_percent": 2.923025233859702,
+          "relative_mean_Y_to_LR_percent": -12.592262403495159
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.026462452741881644,
+            0.47180526559109365,
+            0.7295720408190035
+          ],
+          "black_percent": 0.3098481410093937,
+          "central_ROI_G_over_R": 0.8676366462866067,
+          "encoded_clipped_percent": 0.13262364944916977,
+          "mean_Y": 0.4112391411570425,
+          "outside_srgb_percent": 2.929902015682992,
+          "relative_mean_Y_to_LR_percent": -12.589557330935886
+        }
+      },
+      "reference_kelvin": 5314.207813798319,
+      "scene": "7Y6A7003",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\7Y6A7003.tif",
+        "LR_sha256": "0ccd70adeb6a1a6248a56c9108f7817e254b9ea795d3b9131e4c4ca30a4c2371",
+        "LR_WB": "As Shot",
+        "LR_T": "5350",
+        "LR_tint": "+8",
+        "LR_Y": 0.470469120850919
+      }
+    },
+    {
+      "DCP_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+      "RAW_sha256": "9147913687cfd5801acf9d706ab4b032a3c5f549242fe69344c04d396546be33",
+      "camera": "EOS R7",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.00226103590360926,
+            0.4390440586911232,
+            0.8248312167366401
+          ],
+          "black_percent": 3.0519157731762285,
+          "central_ROI_G_over_R": 1.057319901481227,
+          "encoded_clipped_percent": 0.005697904939297664,
+          "mean_Y": 0.3857454761542618,
+          "outside_srgb_percent": 16.84968730290652,
+          "relative_mean_Y_to_LR_percent": -12.531523755550323
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.0022564682032387455,
+            0.43905317250713427,
+            0.8248628911215199
+          ],
+          "black_percent": 3.053094650060221,
+          "central_ROI_G_over_R": 1.0573173850368065,
+          "encoded_clipped_percent": 0.005697904939297664,
+          "mean_Y": 0.3857558898256157,
+          "outside_srgb_percent": 16.873264840586373,
+          "relative_mean_Y_to_LR_percent": -12.52916243695622
+        },
+        "current": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.00226103590360926,
+            0.4390440586911232,
+            0.8248312167366401
+          ],
+          "black_percent": 3.0519157731762285,
+          "central_ROI_G_over_R": 1.0573199077340611,
+          "encoded_clipped_percent": 0.005697904939297664,
+          "mean_Y": 0.3857454756684641,
+          "outside_srgb_percent": 16.84968730290652,
+          "relative_mean_Y_to_LR_percent": -12.531523865705818
+        },
+        "hue_linear": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.0023359554021788144,
+            0.43485318250632815,
+            0.8243854062660927
+          ],
+          "black_percent": 2.9862916266339723,
+          "central_ROI_G_over_R": 1.0600893382923677,
+          "encoded_clipped_percent": 0.010609891955933582,
+          "mean_Y": 0.38435983898614445,
+          "outside_srgb_percent": 14.07520055642989,
+          "relative_mean_Y_to_LR_percent": -12.845719460270477
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.00233190273490727,
+            0.43484203253700543,
+            0.8244023043245
+          ],
+          "black_percent": 2.9888458598826233,
+          "central_ROI_G_over_R": 1.0600871411622077,
+          "encoded_clipped_percent": 0.010609891955933582,
+          "mean_Y": 0.38436995016981673,
+          "outside_srgb_percent": 14.089150599557135,
+          "relative_mean_Y_to_LR_percent": -12.84342673129888
+        }
+      },
+      "reference_kelvin": 5314.207813798319,
+      "scene": "7Y6A7298",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\7Y6A7298.tif",
+        "LR_sha256": "42f0e0a65b32569eb79fa317850c2abd292492bbc984442b36ee1c046af6499b",
+        "LR_WB": "As Shot",
+        "LR_T": "5350",
+        "LR_tint": "+8",
+        "LR_Y": 0.44101085638694815
+      }
+    },
+    {
+      "DCP_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+      "RAW_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "camera": "EOS R7",
+      "curve_replay_max_abs_error": 1.1920928955078125e-07,
+      "models": {
+        "channel_linear": {
+          "ROI_samples": 71504,
+          "Y_p05_p50_p95": [
+            0.0019132571846726665,
+            0.3804608359924262,
+            0.6907480715792521
+          ],
+          "black_percent": 3.304784864792645,
+          "central_ROI_G_over_R": 0.7003451637379317,
+          "encoded_clipped_percent": 0.10177637098469622,
+          "mean_Y": 0.3543282121920063,
+          "outside_srgb_percent": 24.221204458512375,
+          "relative_mean_Y_to_LR_percent": -11.988512032781173
+        },
+        "channel_natural_spline": {
+          "ROI_samples": 71504,
+          "Y_p05_p50_p95": [
+            0.0019109220346653795,
+            0.38047812446731977,
+            0.6907615952067422
+          ],
+          "black_percent": 3.3061602211573033,
+          "central_ROI_G_over_R": 0.7003387708640739,
+          "encoded_clipped_percent": 0.10236580942669252,
+          "mean_Y": 0.35434043589866826,
+          "outside_srgb_percent": 24.239673529694926,
+          "relative_mean_Y_to_LR_percent": -11.985475789617983
+        },
+        "current": {
+          "ROI_samples": 71504,
+          "Y_p05_p50_p95": [
+            0.0019132571846726665,
+            0.3804608359924262,
+            0.6907480715792521
+          ],
+          "black_percent": 3.304784864792645,
+          "central_ROI_G_over_R": 0.7003451668592796,
+          "encoded_clipped_percent": 0.10177637098469622,
+          "mean_Y": 0.35432821147891164,
+          "outside_srgb_percent": 24.221204458512375,
+          "relative_mean_Y_to_LR_percent": -11.988512209906554
+        },
+        "hue_linear": {
+          "ROI_samples": 71504,
+          "Y_p05_p50_p95": [
+            0.0019668007618172975,
+            0.3722403825430523,
+            0.6859121346806328
+          ],
+          "black_percent": 3.2607734611235877,
+          "central_ROI_G_over_R": 0.6831116005247052,
+          "encoded_clipped_percent": 0.27114168331830263,
+          "mean_Y": 0.35008645716001313,
+          "outside_srgb_percent": 21.768354621885063,
+          "relative_mean_Y_to_LR_percent": -13.04212040804613
+        },
+        "hue_natural_spline": {
+          "ROI_samples": 71504,
+          "Y_p05_p50_p95": [
+            0.001963557000769599,
+            0.37224635830314556,
+            0.6859473555231999
+          ],
+          "black_percent": 3.262345296968911,
+          "central_ROI_G_over_R": 0.6831032938815274,
+          "encoded_clipped_percent": 0.27153464227963353,
+          "mean_Y": 0.35009738394893464,
+          "outside_srgb_percent": 21.783680021376966,
+          "relative_mean_Y_to_LR_percent": -13.039406305926693
+        }
+      },
+      "reference_kelvin": 5314.207813798319,
+      "scene": "7Y6A7599",
+      "LR_reference": {
+        "LR_file": "tests\\image\\base\\neutre\\7Y6A7599.tif",
+        "LR_sha256": "e3a857153c571bc7d3ad40299a927cdf4ebf4b5daab22c0c24792c6588b8096c",
+        "LR_WB": "As Shot",
+        "LR_T": "5350",
+        "LR_tint": "+8",
+        "LR_Y": 0.40259313911836264
+      }
+    }
+  ],
+  "sample_step": 8,
+  "spec_sha256": "451ed308e879e6a35d29cafe36843dcd7924ceff203281f98011710db90dc2d3",
+  "campaign_id": "essais-ouverture-dcp-v001-20261014T142958920826Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "group": "base-colorimetrique",
+  "inputs": [
+    {
+      "file": "docs\\validation\\raw\\synthese-ouverture-v005-20261014T142051876200Z.json",
+      "sha256": "c0fcdbe4cfe0172ae6e94ef1ff3d74e2edcd7ee275bf08cf282ca287c6a5f04d"
+    },
+    {
+      "file": "build-windows-msvc\\Release\\rawOpeningTrials.exe",
+      "sha256": "b6feda1d5cbcee6dba97f978f4c93ed8155a67887a8b366c539086c0c8187fdd"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\run_raw_opening_trials.py",
+      "sha256": "66d368875a3e97bfa29a5bba47806d2bd36ca5f1c43d6bd499c9c37b3cd86d12"
+    },
+    {
+      "file": "tests\\raw_opening_trials.cpp",
+      "sha256": "166140f14a0d643d6e9e8e12fc3c1caaefdaac7b381027e431e34b422d85ffa2"
+    },
+    {
+      "file": "src\\raw\\RawDecoder.cpp",
+      "sha256": "51f8f479418c496cc7ebbfcd4b2fc9c0d2a781c8194e04d894f32468897a14e4"
+    },
+    {
+      "file": "src\\raw\\RawDecoder.h",
+      "sha256": "65c16a2a3bfcf0e6ff6b8bdb0952c1f6e8ae1707b0d597965a9b24c35ffc14f2"
+    },
+    {
+      "file": "src\\profiles\\CameraProfileEngine.cpp",
+      "sha256": "50056f043dae5e56e6abb68dab08e15723beec32d52f065369f7aedc75c918f7"
+    },
+    {
+      "file": "src\\profiles\\CameraProfileEngine.h",
+      "sha256": "03a75fdb7b1e3a2e4e5aec3025093eeb88dd258c3151ac7edc0c48da818353df"
+    },
+    {
+      "file": "src\\core\\ColorPipeline.cpp",
+      "sha256": "7005624ec9ee109fe9a482b5c5f4d5e413df56ee41934b78c44193cc7543646c"
+    },
+    {
+      "file": "src\\core\\ColorPipeline.h",
+      "sha256": "72f70a063030d3390196c4951d695dfaac8c6413c0b5c9db6634977a1457cbf8"
+    },
+    {
+      "file": "docs\\validation\\raw\\audit-dng-reference-20261008.json",
+      "sha256": "be62e39a0c5777185b45d2a9b94e5748c57960f68f872cafb857e782bafb9798"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+      "sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+      "sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0007-LR-CameraNeutral-AsShot.tif",
+      "sha256": "6c156e965070407b6e92c8ed0a0042620fb25fedece72f00574357b9ebd44052"
+    },
+    {
+      "file": "build-colorimetrie-inventory\\essais-ouverture-dcp-v001-20261014T142958920826Z\\0-without-tone-curve.dcp",
+      "sha256": "1b682b2b6aaebab224f15d449fb3bd4aa10406804cb5ce4cd23d0f8abae31341"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0037.CR3",
+      "sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0037.tif",
+      "sha256": "eba925e4e093b7b4bd103f1d1d56d3138c1cd10c39d99622b20dce54f8b4f6d9"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+      "sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0043-LR-CameraNeutral-AsShot.tif",
+      "sha256": "3ac72d4e7a686991887c1967666330ddd4d4df5ac51bf497a69bc0e8a065d92f"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0054.CR3",
+      "sha256": "602bcc522c2d4fe0dd070f9e9f37fbb6cde70018ff227bc9f6ff325e4bb355cb"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0054.tif",
+      "sha256": "7635bbd273b6ed841bef3767a9bae023364e3bae80d07bdb98164b40cc2a97b7"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0081.CR3",
+      "sha256": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0081.tif",
+      "sha256": "f929c174518a2e600c4d13621a694dd9b92d1fbf7606ad2e7a84586dff545c29"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0182.CR3",
+      "sha256": "d26fd895f37478e09c2b93abc28011f3366cc0d0a23668dad02a7bac4e059552"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0182.tif",
+      "sha256": "39bdb5d8ee26ced0b81ccfa390cb38d90ca04b8574e54c3d9e2c871f47958bb5"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0318.CR3",
+      "sha256": "b0ab90b805a97c9bf5f4ceb4a16300e8b2ce93dba2de5c594e08785f389ee751"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0318.tif",
+      "sha256": "a59eead8a47a380a58d4cc8e7a26217b5568173581fc2dcd0f7d9fb5d7545fb6"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0327.CR3",
+      "sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0327.tif",
+      "sha256": "61700354ab4c0315dd2ffd0a8393bd08afed4017ac91e06083ee3d6ec9ad2447"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0524.CR3",
+      "sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0524.tif",
+      "sha256": "5dab5846c75ef47908f75c931c952a88974be0af68c9cce2c9f82a31dea62367"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0830.CR3",
+      "sha256": "821d87c5eeac4dd063aebbe9210f1a61de8dbdd25f2e6b694fe926422754c8d5"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A0830.tif",
+      "sha256": "027c81bf2e09ed2e75380974085b26fc03aba3d185e9fa24cb1688f1db9a5873"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9421.CR3",
+      "sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9421-LR-CameraNeutral-AsShot.tif",
+      "sha256": "83e40090df955909ca6b13c64ead2a0c22bbf84b0e0c0a7f38826b0df51d254b"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9608.CR3",
+      "sha256": "aceefe524cf5224beb5077e834a0453f9a7ad80ec31a5860b0be9da23501bb96"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9608.tif",
+      "sha256": "94f856f1cb3320c4839b1558fd4ac3cb3fbdde445117a89374d138d99793b842"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9616.CR3",
+      "sha256": "fade2f141ad716d3d8a9acba8a79fd39a75d277b406e7ec633f7c9a0d368229b"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9616.tif",
+      "sha256": "4018924384675f88ca4d61925e3ae2eb3fb7ca23e7b8c92be1d66ebfb93afa82"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9890.CR3",
+      "sha256": "a57c06cb4498dc9385a4d4305bdff769bb2fdb2c5865a0c324ccefabebc0981d"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9890.tif",
+      "sha256": "3ce6d7e165b492992e021de72c319c37d5d07507288e79485faa726d881fbe3a"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9940.CR3",
+      "sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9940.tif",
+      "sha256": "b72e5f2012e2f2fccb9bba1bcd18fb8f8d912b8d9385c18ca2697ed19e55b38c"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9950.CR3",
+      "sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\6V1A9950-LR-CameraNeutral-AsShot.tif",
+      "sha256": "5c72536d95449d7996176b0c5b9ed0574045e1bb99e2f49b998003b53efb4435"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7003.CR3",
+      "sha256": "59fb28d2d31050a9166896bd4036d6a15a91e634478db3d687d5435e048dd400"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp",
+      "sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\7Y6A7003.tif",
+      "sha256": "0ccd70adeb6a1a6248a56c9108f7817e254b9ea795d3b9131e4c4ca30a4c2371"
+    },
+    {
+      "file": "build-colorimetrie-inventory\\essais-ouverture-dcp-v001-20261014T142958920826Z\\1-without-tone-curve.dcp",
+      "sha256": "27e3e91f1ab26ab96a2bcf591cb8494309567086547cdc4398f40e187f6cb790"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7298.CR3",
+      "sha256": "9147913687cfd5801acf9d706ab4b032a3c5f549242fe69344c04d396546be33"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\7Y6A7298.tif",
+      "sha256": "42f0e0a65b32569eb79fa317850c2abd292492bbc984442b36ee1c046af6499b"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+    },
+    {
+      "file": "tests\\image\\base\\neutre\\7Y6A7599.tif",
+      "sha256": "e3a857153c571bc7d3ad40299a927cdf4ebf4b5daab22c0c24792c6588b8096c"
+    },
+    {
+      "file": "build-colorimetrie-inventory\\essais-ouverture-dcp-v001-20261014T142958920826Z\\specification.json",
+      "sha256": "451ed308e879e6a35d29cafe36843dcd7924ceff203281f98011710db90dc2d3"
+    }
+  ],
+  "protocol": "docs/validation/protocols/protocole-raw-profils.md",
+  "protocol_sha256": "2ca0189cb6e49e6e162d9497f19552aefb1a99d77f63e605e0388970924f443f",
+  "units": {
+    "Y": "relative linear sRGB luminance",
+    "percent": "percent or percentage point differences as labelled"
+  },
+  "method": {
+    "spline": "Natural cubic with zero second derivatives at endpoints",
+    "interpolation_witness": "Linear replay must match production within 2e-5 max RGB error",
+    "baseline": "Only six scenes with historical Adobe DNG evidence, no R7 extrapolation",
+    "production_modified": false,
+    "normalization": false,
+    "optics": false
+  },
+  "limitations": [
+    "No LR pixel alignment or inter-engine MAE",
+    "Mean Y is not physical fidelity or perceived brightness",
+    "ROI fixed geometry, flower-specific only for 0081",
+    "Cubic boundary conditions are experimental, not certified Adobe renderer",
+    "Baseline experiment does not alter white/black levels or camera calibration",
+    "Spline may overshoot; no undocumented output clamp before normal sRGB output"
+  ]
+}
