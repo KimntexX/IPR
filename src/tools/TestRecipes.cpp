@@ -142,6 +142,7 @@ LoadResult load(const QString &path, const Decode &decode)
     options.normalizationManifest = ImageEditor::defaultCalibrationManifest();
     options.lensCorrectionEnabled = decode.lensCorrection;
     options.chromaticAberrationEnabled = decode.chromaticAberration;
+    options.highlightMode = decode.highlightMode;
     LoadResult result = ImageEditor::loadFromDisk(path, decode.automaticWhiteBalance, options);
     require(!result.image.isNull(), "Decode failed for " + path + ": " + result.error);
     result.editProxy = {};

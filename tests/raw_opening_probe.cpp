@@ -134,7 +134,7 @@ int main(int argc,char **argv) {
                     if(!CameraProfileEngine::applyDcp(context.profilePath,stable,context.sourceKelvin,&error,hueOptions))throw std::runtime_error(error.toStdString());
                     stages["hue_preserving_curve"]=metrics(working(stable));preview(working(stable),"hue-curve");
                     cv::Mat changed;
-                    if(CameraProfileEngine::renderFromCameraSignal(context, 5200, 5, 0.0,changed,&error)) {
+                    if(CameraProfileEngine::renderFromCameraSignal(context, 5200, 5, 0.0, 0.0, changed, &error)) {
                         stages["display_5200_tint5_diagnostic"]=metrics(working(changed));preview(working(changed),"5200-5");
                     }else record["WB_diagnostic_error"]=error;
                     stages["camera_RGB_before_DCP_not_sRGB"]=QJsonObject{{"mean_RGB",array(cv::mean(beforeProfile).val,3)}};

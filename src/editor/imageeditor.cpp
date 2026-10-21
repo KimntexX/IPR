@@ -1367,11 +1367,15 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     // RAW with a DCP: exposure and white balance act on the scene-linear camera
     // signal before the profile tone curve, so highlights keep its shoulder.
     const bool sceneExposure = source.dcpContext && settings.brightness != 0.0f;
-    if (source.dcpContext && (whiteBalanceEdit || sceneExposure)) {
+    // Negative Highlights first bring the camera signal's headroom (rebuilt
+    // clipped highlights) under white, where the profile tables can keep it.
+    const double highlightRecovery = settings.highlights < 0 ? -settings.highlights / 100.0 : 0.0;
+    const bool recovery = source.dcpContext && highlightRecovery > 0.0 && source.dcpContext->headroom > 1.0;
+    if (source.dcpContext && (whiteBalanceEdit || sceneExposure || recovery)) {
         QString error;
         if (source.dcpContext->cameraRgb.size() != adjusted.size() ||
             !CameraProfileEngine::renderFromCameraSignal(*source.dcpContext,
-                settings.temperature, settings.tint, settings.brightness, adjusted, &error)) {
+                settings.temperature, settings.tint, settings.brightness, highlightRecovery, adjusted, &error)) {
             qWarning() << "Échec du rendu capteur avant DCP :" << error;
             return {};
         }

@@ -28,7 +28,11 @@ struct Decode {
     bool automaticWhiteBalance = false;
     bool lensCorrection = false;
     bool chromaticAberration = false;
-    bool isDefault() const { return !automaticWhiteBalance && !lensCorrection && !chromaticAberration; }
+    int highlightMode = 0; // RawDecoder::Options::highlightMode
+    bool isDefault() const
+    {
+        return !automaticWhiteBalance && !lensCorrection && !chromaticAberration && highlightMode == 0;
+    }
 };
 
 // The state a variant is measured against: the neutral ("neutral", 0) or a

@@ -20,6 +20,7 @@ struct Source
     std::optional<double> whiteBalanceKelvin;
     cv::Vec3d cameraNeutral{0, 0, 0}; // Inverse applied WB gains, G=1; all-zero = unavailable.
     bool whiteBalanceApplied = false;
+    double headroom = 1.0; // largest rgb value, see DcpWorkingContext::headroom
     Coordinates coordinates = Coordinates::CameraRgb;
 };
 
