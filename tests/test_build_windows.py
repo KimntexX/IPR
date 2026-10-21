@@ -13,6 +13,12 @@ RULES = json.loads((ROOT / "scripts/test-rules.json").read_text(encoding="utf-8"
 
 
 class SelectionTests(unittest.TestCase):
+    def test_all_group_entrypoints_are_targeted_without_losing_wb_dependents(self):
+        for group in ("raw", "lumiere", "courbes", "couleur", "melangeur", "grading", "effets", "bruit", "nettete", "optique"):
+            plan = build.select_tests(["tests/analyse_" + group + ".py"], RULES)
+            self.assertFalse(plan["full"])
+            self.assertEqual(set(plan["python"]), {"group_analysis", "wb_comparison", "wb_adaptation"})
+
     def test_tone_recovery_selects_production_and_export_regressions(self):
         plan = build.select_tests(["src/core/ToneRecovery.h"], RULES)
         self.assertFalse(plan["full"])
@@ -60,7 +66,8 @@ class SelectionTests(unittest.TestCase):
         for path in ("tests/investigate_dcp_order.py", "tests/audit_dng_baseline.py", "tests/investigate_dcp_normalization.py", "tests/investigate_standard_normalization.py", "tests/prepare_raw_normalization.py"):
             diagnostic = build.select_tests([path], RULES)
             self.assertFalse(diagnostic["full"])
-            self.assertEqual(diagnostic["python"], ["base_colorimetry_analysis"])
+            expected = ["base_colorimetry_analysis", "raw_opening_levels"] if path == "tests/audit_dng_baseline.py" else ["base_colorimetry_analysis"]
+            self.assertEqual(diagnostic["python"], expected)
         probe = build.select_tests(["tests/tonal_base_probe.cpp"], RULES)
         self.assertFalse(probe["full"])
         self.assertEqual(set(probe["tests"]), {"rawDecoderTests", "rawBlackLevelEstimatorTests", "cameraProfileEngineTests"})
@@ -68,6 +75,15 @@ class SelectionTests(unittest.TestCase):
     def test_documentation_and_no_changes_skip_tests(self):
         self.assertEqual(build.select_tests([], RULES)["tests"], [])
         self.assertEqual(build.select_tests(["docs/example.md"], RULES)["tests"], [])
+
+    def test_raw_opening_tools_are_targeted(self):
+        plan=build.select_tests(['tests/raw_opening_probe.cpp'],RULES)
+        self.assertFalse(plan['full'])
+        self.assertIn('rawOpeningProbeTests',plan['tests'])
+        self.assertIn('rawDecoderTests',plan['tests'])
+        summary=build.select_tests(['tests/summarize_raw_opening.py'],RULES)
+        self.assertFalse(summary['full'])
+        self.assertEqual(set(summary['python']),{'raw_opening_analysis','neutral_colour_inspection'})
 
     def test_raw_normalization_is_targeted(self):
         for path in ("src/raw/RawNormalization.cpp", "src/raw/RawDecoder.cpp", "tests/raw_normalization_test.cpp"):
@@ -93,6 +109,20 @@ class SelectionTests(unittest.TestCase):
         self.assertIn("colorMixerNeutralProbe", plan["targets"])
         self.assertIn("color_mixer_analysis", plan["python"])
 
+    def test_running_build_executable_blocks_compilation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "Release"
+            output.mkdir()
+            (output / "appIPR.exe").write_bytes(b"")
+            (output / "iprGenerateTests.exe").write_bytes(b"")
+            listing = ('"System","4","Services","0","1 Ko"\n'
+                       '"appIPR.exe","1234","Console","1","300 000 Ko"\n')
+            self.assertEqual(build.running_build_executables(Path(directory), "Release", lambda: listing),
+                             ["appIPR.exe"])
+            self.assertEqual(build.running_build_executables(Path(directory), "Release",
+                                                             lambda: '"System","4"\n'), [])
+            self.assertEqual(build.running_build_executables(Path(directory), "Debug", lambda: listing), [])
+
     def test_full_guards(self):
         for paths in (["CMakeLists.txt"], ["src/editor/imageeditor.h"], ["src/new_component.cpp"],
                       ["scripts/test-rules.json"], [".github/workflows/ci.yml"]):
@@ -100,6 +130,12 @@ class SelectionTests(unittest.TestCase):
         self.assertTrue(build.select_tests([], RULES, force_full=True)["full"])
         self.assertTrue(build.select_tests([], RULES, bootstrap=True)["full"])
         self.assertTrue(build.select_tests([f"src/new{i}.cpp" for i in range(20)], RULES)["full"])
+
+    def test_opening_trials_are_targeted(self):
+        plan=build.select_tests(['tests/run_raw_opening_trials.py'],RULES)
+        self.assertFalse(plan['full'])
+        self.assertIn('rawOpeningSplineTests',plan['tests'])
+        self.assertIn('raw_opening_trials',plan['python'])
 
     def test_slashes_and_deleted_path(self):
         plan = build.select_tests([r"src\raw\RawDecoder.cpp"], RULES)

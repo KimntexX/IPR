@@ -1,12 +1,11 @@
-#include <QCoreApplication>
+#include "TestRecipes.h"
+
 #include <QColorSpace>
+#include <QCoreApplication>
 #include <QDir>
+#include <QDirIterator>
 #include <QFile>
-#include <QFileInfo>
 #include <QImage>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QProcess>
 #include <QTemporaryDir>
 #include <QTextStream>
@@ -14,7 +13,11 @@
 
 #include <stdexcept>
 
+using namespace TestRecipes;
+
 namespace {
+const QStringList bands{"red", "orange", "yellow", "green", "cyan", "blue", "violet", "magenta"};
+
 void check(bool ok, const QString &message)
 {
     if (!ok) throw std::runtime_error(message.toUtf8().constData());
@@ -27,28 +30,47 @@ QByteArray read(const QString &path)
     return file.readAll();
 }
 
-void write(const QString &path, const QByteArray &bytes)
+void writeFixture(const QString &path, const QByteArray &bytes)
 {
     QFile file(path);
     check(file.open(QIODevice::WriteOnly) && file.write(bytes) == bytes.size(), "Cannot write fixture");
 }
 
 struct Result { int code; QByteArray output; };
-Result run(const QString &executable, const QStringList &args)
+Result run(const QString &executable, const QString &cwd, const QStringList &args)
 {
     QProcess process;
+    process.setWorkingDirectory(cwd);
     process.setProcessChannelMode(QProcess::MergedChannels);
     process.start(executable, args);
     check(process.waitForStarted(10000), "Generator did not start: " + process.errorString());
     check(process.waitForFinished(60000), "Generator timed out");
-    if (process.exitStatus() != QProcess::NormalExit)
-        check(false, "Generator crashed: " + process.readAll());
+    check(process.exitStatus() == QProcess::NormalExit, "Generator crashed: " + process.readAll());
     return {process.exitCode(), process.readAll()};
 }
 
-QJsonObject manifest(const QString &folder)
+void checkTiff(const QString &path)
 {
-    return QJsonDocument::fromJson(read(folder + "/manifest.json")).object();
+    TIFF *tiff = TIFFOpen(QFile::encodeName(path).constData(), "r");
+    check(tiff != nullptr, "Missing TIFF: " + path);
+    uint16_t bits = 0;
+    uint32_t width = 0, height = 0, iccLength = 0;
+    void *icc = nullptr;
+    TIFFGetField(tiff, TIFFTAG_BITSPERSAMPLE, &bits);
+    TIFFGetField(tiff, TIFFTAG_IMAGEWIDTH, &width);
+    TIFFGetField(tiff, TIFFTAG_IMAGELENGTH, &height);
+    TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &iccLength, &icc);
+    TIFFClose(tiff);
+    check(bits == 16 && width == 48 && height == 32 && iccLength > 0,
+          "Export must be full-resolution, 16-bit and ICC-tagged");
+}
+
+QString makeBase(QTemporaryDir &directory, const QImage &image)
+{
+    const QString base = directory.filePath("tests/image/base");
+    check(QDir().mkpath(base), "Cannot create base fixture");
+    check(image.save(base + "/photo with spaces.png"), "Cannot save source fixture");
+    return base;
 }
 } // namespace
 
@@ -58,162 +80,151 @@ int main(int argc, char **argv)
     try {
         check(app.arguments().size() == 2, "Expected generator executable argument");
         const QString executable = app.arguments().at(1);
-        QTemporaryDir directory;
-        check(directory.isValid(), "Cannot create temporary directory");
-        const QString input = directory.filePath("photo with spaces.png");
         QImage image(48, 32, QImage::Format_RGB32);
         image.setColorSpace(QColorSpace(QColorSpace::SRgb));
         for (int y = 0; y < image.height(); ++y)
             for (int x = 0; x < image.width(); ++x)
                 image.setPixelColor(x, y, QColor(30 + x * 4, 40 + y * 5, 50 + (x + y) * 2));
-        check(image.save(input), "Cannot save PNG fixture");
+
+        // Unit-test the current presets and their isolation, not a legacy mode.
+        TestRecipes::Settings baseline;
+        for (const Feature &feature : features()) {
+            check(TestRecipes::groups().contains(featureGroup(feature.name)), "Unmapped group");
+            check(!featureFolder(feature.name).contains("generation-"), "Dated directory returned");
+            for (double value : feature.values) {
+                const auto settings = TestRecipes::adjusted(baseline, feature.name, value);
+                if (feature.name.startsWith("mixer-")) {
+                    const auto parts = feature.name.split('-');
+                    const int selectedBand = bands.indexOf(parts.at(1));
+                    for (int band = 0; band < ColorMixer::BandCount; ++band) {
+                        check(settings.mixerHue.at(band) ==
+                              (parts.at(2) == "hue" && band == selectedBand ? int(value) : 0), "Hue isolation broken");
+                        check(settings.mixerSaturation.at(band) ==
+                              (parts.at(2) == "saturation" && band == selectedBand ? int(value) : 0), "Saturation isolation broken");
+                        check(settings.mixerLuminance.at(band) ==
+                              (parts.at(2) == "luminance" && band == selectedBand ? int(value) : 0), "Luminance isolation broken");
+                    }
+                }
+                if (feature.name == "tint") check(settings.tint == int(value), "Tint value mismatch");
+                if (feature.name == "temperature") check(settings.temperature == int(value), "Temperature mismatch");
+                if (feature.name == "sharpening-radius" || feature.name == "sharpening-masking")
+                    check(settings.sharpeningAmount == 50, "Missing sharpening support");
+                if (feature.name == "grading-shadows-hue")
+                    check(settings.gradingSaturation.at(0) == 25, "Missing grading support");
+            }
+        }
+        check(featureFolder("mixer-violet-hue") == "color-mixer/violet"
+              && featureFolder("mixer-magenta-hue") == "color-mixer/magenta", "Violet/magenta folders conflated");
+        check(featureFolder("vibrance") == "couleur/vibrance"
+              && featureFolder("saturation") == "couleur/saturation", "Existing colour folders not reused");
+
+        QTemporaryDir directory;
+        check(directory.isValid(), "Cannot create temporary directory");
+        const QString base = makeBase(directory, image);
+        const QString input = base + "/photo with spaces.png";
         const QByteArray original = read(input);
-        const QString sidecar = directory.filePath("photo with spaces.ipr");
-        const QString xmp = directory.filePath("photo with spaces.xmp");
-        write(sidecar, "{\"settings\":{\"brightness\":4,\"contrast\":100}}");
-        write(xmp, "do not change this metadata");
-        const QByteArray originalSidecar = read(sidecar), originalXmp = read(xmp);
+        writeFixture(base + "/photo with spaces.png.ipr", "{\"settings\":{\"brightness\":4}}");
+        writeFixture(base + "/photo with spaces.xmp", "do not change this metadata");
+        const QByteArray sidecar = read(base + "/photo with spaces.png.ipr");
+        check(QDir().mkpath(base + "/lumiere/exposure"), "Cannot create shared LR folder");
+        const QString lr = base + "/lumiere/exposure/photo with spaces-2.tif";
+        writeFixture(lr, "LR sentinel: must not be decoded or overwritten");
+        // Subdirectory images must never be selected as inputs.
+        check(QDir().mkpath(base + "/nested"), "Cannot create nested folder");
+        writeFixture(base + "/nested/broken.png", "not an image");
 
-        const auto listed = run(executable, {"--list"});
-        for (const QString &group : QStringList{"all", "raw", "lumiere", "courbes", "couleur", "melangeur", "grading", "effets", "bruit", "nettete"}) {
-            const auto help = run(executable, {"help", group});
-            check(help.code == 0 && help.output.contains("Usage:"), "Group help failed: " + help.output);
-        }
-        check(run(executable, {"help", "unknown"}).code != 0, "Unknown help group accepted");
-        check(run(executable, {"--help-group", "lumiere"}).output.contains("exposure"), "Option help missing exposure");
-        const auto groupPlan = run(executable, {"--group", "lumiere", "--dry-run", "--output", directory.filePath("group-plan"), input});
-        check(groupPlan.code == 0 && groupPlan.output.contains("29 export(s) per input")
-              && groupPlan.output.contains("highlights") && !groupPlan.output.contains("denoise"),
-              "Lighting group plan wrong: " + groupPlan.output);
-        check(!QFileInfo::exists(directory.filePath("group-plan")), "Group dry run wrote files");
-        check(run(executable, {"--group", "unknown", "--dry-run", "--output", directory.filePath("bad-group"), input}).code != 0,
-              "Unknown generation group accepted");
-        check(listed.code == 0 && listed.output.contains("mixer-violet-hue")
-              && listed.output.contains("mixer-magenta-hue") && listed.output.contains("grading-midtones-hue"),
-              "Feature catalogue incomplete: " + listed.output);
-        const QString output = directory.filePath("campaign");
-        const QStringList args{"--feature", "exposure", "--values=-1,0,1", "--output", output, input};
-        const auto dry = run(executable, args + QStringList{"--dry-run"});
-        check(dry.code == 0 && dry.output.contains("4 total") && !QFileInfo::exists(output),
-              "Dry run must be write-free: " + dry.output);
-        const auto generated = run(executable, args);
-        check(generated.code == 0, "Export failed: " + generated.output);
-        const QJsonObject document = manifest(output);
-        const QJsonArray exports = document.value("exports").toArray();
-        check(document.value("status") == "complete" && exports.size() == 4, "Missing neutral or exposure exports");
-        check(document.value("bitDepth").toInt() == 16 && !document.value("hdr").toBool(), "Wrong output mode");
-        check(document.value("profileSearchDirectories").toArray().size() >= 2,
-              "Profile search roots missing");
-        check(document.value("mixerBands").toArray().size() == 8, "Mixer band order missing");
-        QList<QImage> rendered;
-        for (const auto &entry : exports) {
-            const QJsonObject object = entry.toObject();
-            const QString path = output + '/' + object.value("file").toString();
-            TIFF *tiff = TIFFOpen(QFile::encodeName(path).constData(), "r");
-            check(tiff != nullptr, "Missing TIFF output");
-            uint16_t bits = 0;
-            uint32_t width = 0, height = 0, iccLength = 0;
-            void *iccData = nullptr;
-            TIFFGetField(tiff, TIFFTAG_BITSPERSAMPLE, &bits);
-            TIFFGetField(tiff, TIFFTAG_IMAGEWIDTH, &width);
-            TIFFGetField(tiff, TIFFTAG_IMAGELENGTH, &height);
-            TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &iccLength, &iccData);
-            TIFFClose(tiff);
-            check(bits == 16 && width == 48 && height == 32 && iccLength > 0,
-                  "Export must be full-resolution 16-bit ICC-tagged TIFF");
-            check(object.value("sha256").toString().size() == 64 && object.value("sourceSha256").toString().size() == 64,
-                  "Hashes missing");
-            const auto settings = object.value("settings").toObject();
-            check(settings.value("contrast").toInt() == 0 && settings.value("tint").toInt() == 0,
-                  "Sidecars or previous settings contaminated export");
-            check(settings.value("exposure").toDouble() == object.value("value").toDouble(), "Exposure/value mismatch");
-            QImage exported(path);
-            check(!exported.isNull() && exported.colorSpace() == QColorSpace(QColorSpace::SRgb), "Cannot read sRGB export");
-            rendered.append(exported);
-        }
-        check(rendered.at(0) == rendered.at(2), "Zero exposure must match baseline");
-        check(rendered.at(1) != rendered.at(0) && rendered.at(3) != rendered.at(0), "Exposure variants have no effect");
-        check(run(executable, args).code != 0, "Existing campaign must not be overwritten");
-        check(manifest(output) == document, "Rejected run modified existing manifest");
+        for (const QStringList &args : QList<QStringList>{{}, {"unknown"}, {"all", "couleur"}, {"--feature", "exposure"},
+                                                         {"--group", "couleur"}, {"--legacy"}, {"help", "all"}})
+            check(run(executable, directory.path(), args).code != 0, "Removed/invalid arguments accepted");
+        check(!QFileInfo::exists(base + "/neutre"), "Rejected arguments wrote output");
+        check(run(executable, directory.path(), {"optique"}).code != 0,
+              "Optics with no RAW source reported a completed generation");
+        check(!QFileInfo::exists(base + "/neutre"), "Ineligible group wrote output");
 
-        const QString allOutput = directory.filePath("parameters");
-        // Exercise every post-render feature with its complete default sweep.
-        // auto-wb needs actual RAW decoding, tested separately in rawDecoderTests.
-        QStringList names;
-        for (const QByteArray &line : listed.output.split('\n')) {
-            const QString name = QString::fromUtf8(line).section(' ', 0, 0);
-            if (!name.isEmpty() && name != "auto-wb" && name != "neutral") names.append(name);
-        }
-        const auto all = run(executable, {"--feature", names.join(','), "--format", "PNG", "--output", allOutput, input});
-        check(all.code == 0, "Feature sweep failed: " + all.output);
-        const auto allManifest = manifest(allOutput);
-        const auto allExports = allManifest.value("exports").toArray();
-        check(allExports.size() == allManifest.value("expectedExports").toInt(), "Sweep is incomplete");
-        bool violetSeen = false, magentaSeen = false, curveSeen = false;
-        for (const auto &entry : allExports) {
-            const auto object = entry.toObject();
-            const auto settings = object.value("settings").toObject();
-            const QString feature = object.value("feature").toString();
-            const int value = object.value("value").toInt();
-            if (feature == "mixer-violet-hue" || feature == "mixer-magenta-hue") {
-                const auto hues = settings.value("mixerHue").toArray();
-                const int band = feature == "mixer-violet-hue" ? 6 : 7;
-                check(hues.at(band).toInt() == value && hues.at(13 - band).toInt() == 0,
-                      "Violet/magenta are not isolated");
-                violetSeen |= band == 6;
-                magentaSeen |= band == 7;
+        const auto lighting = run(executable, directory.path(), {"lumiere"});
+        check(lighting.code == 0, "Lighting generation failed: " + lighting.output);
+        const QString neutral = base + "/neutre/photo with spaces-IPR-neutre-lumiere.tiff";
+        checkTiff(neutral);
+        const QString zero = base + "/lumiere/exposure/photo with spaces-IPR-exposure-0.tiff";
+        check(QImage(zero) == QImage(neutral), "EV0 differs from current baseline");
+        check(QImage(base + "/lumiere/exposure/photo with spaces-IPR-exposure--1.tiff") != QImage(neutral),
+              "Exposure sweep has no effect");
+        check(!QFileInfo::exists(base + "/couleur"), "One group generated another group");
+        const QByteArray before = read(zero);
+        check(run(executable, directory.path(), {"lumiere"}).code != 0, "Existing IPR exports accepted");
+        check(read(zero) == before && read(lr) == "LR sentinel: must not be decoded or overwritten",
+              "Existing IPR/LR exports modified");
+
+        // A separate group can use the same source without reusing an old neutral.
+        const auto colour = run(executable, directory.path(), {"couleur"});
+        check(colour.code == 0, "Colour generation failed: " + colour.output);
+        checkTiff(base + "/couleur/temperature/photo with spaces-IPR-temperature-5200.tiff");
+        check(QImage(base + "/couleur/temperature/photo with spaces-IPR-temperature-5200.tiff") ==
+              QImage(base + "/couleur/nuance/photo with spaces-IPR-tint-0.tiff"), "Manual WB anchors differ");
+        check(read(input) == original && read(base + "/photo with spaces.png.ipr") == sidecar
+              && read(base + "/photo with spaces.xmp") == "do not change this metadata", "Source/sidecars modified");
+
+        QTemporaryDir allDirectory;
+        const QString allBase = makeBase(allDirectory, image);
+        const auto all = run(executable, allDirectory.path(), {"all"});
+        check(all.code == 0, "All groups failed: " + all.output);
+        qsizetype expected = 1; // one fresh neutral for all
+        for (const Feature &feature : features()) {
+            if (rawOnly(feature.name)) continue;
+            for (double value : feature.values) {
+                checkTiff(allBase + '/' + featureFolder(feature.name) + '/'
+                          + fileName("photo with spaces", feature.name, value));
+                ++expected;
             }
-            if (feature.startsWith("sharpening-") && feature != "sharpening-amount")
-                check(settings.value("sharpeningAmount").toInt() == 50, "Radius/masking support amount missing");
-            if (feature == "grading-shadows-hue")
-                check(settings.value("grading").toArray().at(0).toObject().value("saturation").toInt() == 25,
-                      "Grading hue would be invisible without saturation");
-            if (feature == "curve-luminance") {
-                const auto points = settings.value("toneCurves").toArray().at(0).toArray();
-                check(points.size() == 3, "Curve preset missing");
-                curveSeen = true;
-            }
-            check(QFileInfo::exists(allOutput + '/' + object.value("file").toString()), "Missing sweep file");
         }
-        check(violetSeen && magentaSeen && curveSeen, "Feature coverage missing");
-        check(read(input) == original && read(sidecar) == originalSidecar && read(xmp) == originalXmp,
-              "Generation modified originals/sidecars");
-
-        // Canonical duplicates are ignored; distinct paths with the same stem
-        // must never collide, even when their source bytes are identical.
-        check(QDir().mkpath(directory.filePath("other")), "Cannot create second fixture folder");
-        const QString secondInput = directory.filePath("other/photo with spaces.png");
-        write(secondInput, original);
-        const QString multiOutput = directory.filePath("multiple");
-        const auto multi = run(executable, {"--output", multiOutput, "--input", input, input, secondInput});
-        check(multi.code == 0, "Multiple inputs failed: " + multi.output);
-        const auto multiExports = manifest(multiOutput).value("exports").toArray();
-        check(multiExports.size() == 2 && multiExports.at(0).toObject().value("file")
-              != multiExports.at(1).toObject().value("file"), "Same-name sources collided or duplicate repeated");
-
-#ifdef IPR_WITH_LIBRAW
-        const QString rawPlan = directory.filePath("plan.CR3");
-        write(rawPlan, "no decode should be attempted during a dry run");
-        const QString dryAll = directory.filePath("dry-all");
-        const auto allPlan = run(executable, {"--feature", "all", "--dry-run", "--output", dryAll, rawPlan});
-        check(allPlan.code == 0 && !QFileInfo::exists(dryAll), "All-feature RAW plan failed: " + allPlan.output);
-#endif
-
-        const QString rejected = directory.filePath("rejected");
-        for (const QStringList &options : QList<QStringList>{
-                 {"--feature", "masques"}, {"--feature", "contrast", "--values=101"},
-                 {"--feature", "contrast", "--values=0.5"}, {"--feature", "exposure", "--values=nan"},
-                 {"--feature", "exposure", "--values=1,1"}, {"--feature", "auto-wb"},
-                 {"--format", "HDR"}, {"--grading-saturation", "0"}, {"--camera-neutral"}}) {
-            check(run(executable, options + QStringList{"--output", rejected, input}).code != 0,
-                  "Invalid arguments were accepted");
-            check(!QFileInfo::exists(rejected), "Invalid arguments created output");
+        qsizetype written = 0;
+        QDirIterator outputs(allBase, QDir::Files, QDirIterator::Subdirectories);
+        while (outputs.hasNext()) {
+            const QString path = outputs.next();
+            if (path == allBase + "/photo with spaces.png") continue;
+            check(path.endsWith(".tiff") && !path.contains("generation-"), "Non-image/datetime auxiliary file written: " + path);
+            ++written;
         }
-        const QString broken = directory.filePath("broken.png");
-        write(broken, "not an image");
-        check(run(executable, {"--output", rejected, broken}).code != 0, "Decode failure ignored");
-        check(manifest(rejected).value("status") == "failed", "Partial campaign not marked failed");
-        QTextStream(stdout) << "Generator: feature sweeps, TIFF/ICC, isolation, sidecars and error handling passed.\n";
+        check(written == expected, "All group export count incorrect");
+
+        // Multiple root sources, case-insensitive extensions, empty/corrupt inputs.
+        QTemporaryDir multiDirectory;
+        const QString multiBase = makeBase(multiDirectory, image);
+        check(image.save(multiBase + "/second.PNG", "PNG"), "Cannot create second source");
+        check(run(executable, multiDirectory.path(), {"bruit"}).code == 0, "Multiple root images failed");
+        checkTiff(multiBase + "/bruit/couleur/second-IPR-denoise-chrominance-100.tiff");
+        QTemporaryDir badDirectory;
+        check(QDir().mkpath(badDirectory.filePath("tests/image/base")), "Cannot create empty base");
+        check(run(executable, badDirectory.path(), {"couleur"}).code != 0, "Empty base accepted");
+        writeFixture(badDirectory.filePath("tests/image/base/broken.png"), "not an image");
+        check(run(executable, badDirectory.path(), {"couleur"}).code != 0, "Corrupt source accepted");
+        check(!QFileInfo::exists(badDirectory.filePath("tests/image/base/manifest.json")), "Failure wrote auxiliary manifest");
+
+        // Current RAW decode options, independent of an installed camera profile.
+        RawDecoder::Options received;
+        QString error;
+        check(RawDecoder::registerFormatHandler({"generatormockraw"},
+            [&](const QString &, const RawDecoder::Options &options, ImageMetadata *, QString *) {
+                received = options;
+                ColorPipeline::WorkingImage result;
+                result.linearRgba = cv::Mat(8, 8, CV_32FC4, cv::Scalar(.1f, .2f, .3f, 1.f)).clone();
+                result.colorSpace = ColorPipeline::workingColorSpace();
+                return result;
+            }, &error), "Cannot register mock decoder");
+        TestRecipes::Decode decode;
+        decode.automaticWhiteBalance = decode.chromaticAberration = true;
+        TestRecipes::load("sample.generatormockraw", decode);
+        check(received.automaticWhiteBalance && !received.lensCorrectionEnabled
+              && received.chromaticAberrationEnabled && received.preferCameraNeutral
+              && !received.useNormalizationEnvironment, "RAW decode options incorrect");
+        // Base decode: the IHM's default RAW calibration, optics off like the LR references.
+        TestRecipes::load("sample.generatormockraw");
+        check(!received.automaticWhiteBalance && !received.lensCorrectionEnabled
+              && !received.chromaticAberrationEnabled
+              && received.normalizationManifest == ImageEditor::defaultCalibrationManifest()
+              && !received.normalizationManifest.isEmpty(), "Base decode differs from the IHM recipe");
+
+        QTextStream(stdout) << "Generator: root discovery, groups/all, current presets, TIFF/ICC, isolation, shared folders and safety passed.\n";
         return 0;
     } catch (const std::exception &error) {
         QTextStream(stderr) << error.what() << '\n';

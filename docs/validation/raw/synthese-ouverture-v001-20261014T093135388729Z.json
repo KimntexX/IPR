@@ -1,0 +1,1963 @@
+{
+  "RAW_count": 19,
+  "comparisons": [
+    {
+      "scene": "6V1A0007",
+      "LR_file": "tests\\image\\base\\neutre\\6V1A0007-LR-CameraNeutral-AsShot.tif",
+      "LR_sha256": "6c156e965070407b6e92c8ed0a0042620fb25fedece72f00574357b9ebd44052",
+      "LR_WB": "As Shot",
+      "LR_T": "5200",
+      "LR_tint": "+5",
+      "IPR_reference_kelvin": 4924.211272770631,
+      "LR_Y": 0.29349543221795427,
+      "WB_equivalence_verified": false,
+      "geometry": "independent whole-image distributions, not pixel aligned",
+      "models": {
+        "current": {
+          "mean_Y": 0.22508053182515209,
+          "ratio_to_LR": 0.7668962004764823,
+          "delta_EV": -0.38289677295026603
+        },
+        "hue_preserving_curve": {
+          "mean_Y": 0.22479329440695978,
+          "ratio_to_LR": 0.7659175228322627,
+          "delta_EV": -0.3847390497440317
+        },
+        "display_5200_tint5_diagnostic": {
+          "mean_Y": 0.22692261914115985,
+          "ratio_to_LR": 0.7731725752128353,
+          "delta_EV": -0.37113762948789897
+        }
+      }
+    },
+    {
+      "scene": "6V1A0037",
+      "LR_file": "tests\\image\\base\\neutre\\6V1A0037.tif",
+      "LR_sha256": "eba925e4e093b7b4bd103f1d1d56d3138c1cd10c39d99622b20dce54f8b4f6d9",
+      "LR_WB": "As Shot",
+      "LR_T": "5200",
+      "LR_tint": "+5",
+      "IPR_reference_kelvin": 4924.211272770631,
+      "LR_Y": 0.04528149943745051,
+      "WB_equivalence_verified": false,
+      "geometry": "independent whole-image distributions, not pixel aligned",
+      "models": {
+        "current": {
+          "mean_Y": 0.0313205497269438,
+          "ratio_to_LR": 0.6916853486755307,
+          "delta_EV": -0.5318121974024796
+        },
+        "hue_preserving_curve": {
+          "mean_Y": 0.03127182638188683,
+          "ratio_to_LR": 0.6906093387009874,
+          "delta_EV": -0.5340582518537381
+        },
+        "display_5200_tint5_diagnostic": {
+          "mean_Y": 0.03160397065204872,
+          "ratio_to_LR": 0.6979444374562903,
+          "delta_EV": -0.518815905152863
+        }
+      }
+    },
+    {
+      "scene": "6V1A0043",
+      "LR_file": "tests\\image\\base\\neutre\\6V1A0043-LR-CameraNeutral-AsShot.tif",
+      "LR_sha256": "3ac72d4e7a686991887c1967666330ddd4d4df5ac51bf497a69bc0e8a065d92f",
+      "LR_WB": "As Shot",
+      "LR_T": "5200",
+      "LR_tint": "+5",
+      "IPR_reference_kelvin": 4924.211272770631,
+      "LR_Y": 0.020342404798719682,
+      "WB_equivalence_verified": false,
+      "geometry": "independent whole-image distributions, not pixel aligned",
+      "models": {
+        "current": {
+          "mean_Y": 0.01254032669505365,
+          "ratio_to_LR": 0.6164623513854623,
+          "delta_EV": -0.6979153059008284
+        },
+        "hue_preserving_curve": {
+          "mean_Y": 0.012624196440684762,
+          "ratio_to_LR": 0.6205852535920093,
+          "delta_EV": -0.6882986790752602
+        },
+        "display_5200_tint5_diagnostic": {
+          "mean_Y": 0.012732982358389116,
+          "ratio_to_LR": 0.6259329948635428,
+          "delta_EV": -0.6759198676846976
+        }
+      }
+    },
+    {
+      "scene": "6V1A0081",
+      "LR_file": "tests\\image\\base\\neutre\\6V1A0081.tif",
+      "LR_sha256": "f929c174518a2e600c4d13621a694dd9b92d1fbf7606ad2e7a84586dff545c29",
+      "LR_WB": "As Shot",
+      "LR_T": "5200",
+      "LR_tint": "+5",
+      "IPR_reference_kelvin": 4924.211272770631,
+      "LR_Y": 0.031000410298702197,
+      "WB_equivalence_verified": false,
+      "geometry": "independent whole-image distributions, not pixel aligned",
+      "models": {
+        "current": {
+          "mean_Y": 0.016244521092406258,
+          "ratio_to_LR": 0.5240098739301627,
+          "delta_EV": -0.9323340981325204
+        },
+        "hue_preserving_curve": {
+          "mean_Y": 0.01769150641925655,
+          "ratio_to_LR": 0.5706862021757559,
+          "delta_EV": -0.8092304123588066
+        },
+        "display_5200_tint5_diagnostic": {
+          "mean_Y": 0.017005584718060837,
+          "ratio_to_LR": 0.5485599885357891,
+          "delta_EV": -0.8662786977214507
+        }
+      }
+    },
+    {
+      "scene": "6V1A0327",
+      "LR_file": "tests\\image\\base\\neutre\\6V1A0327-LR-CameraNeutral-AsShot.tif",
+      "LR_sha256": "2bb91d9152e6af57d1725cd4a97b95dbb43584069799a4316edeba973ee50f5a",
+      "LR_WB": "As Shot",
+      "LR_T": "5200",
+      "LR_tint": "+5",
+      "IPR_reference_kelvin": 4924.211272770631,
+      "LR_Y": 0.0913173953512835,
+      "WB_equivalence_verified": false,
+      "geometry": "independent whole-image distributions, not pixel aligned",
+      "models": {
+        "current": {
+          "mean_Y": 0.058776869663343896,
+          "ratio_to_LR": 0.643654688542513,
+          "delta_EV": -0.6356411840883803
+        },
+        "hue_preserving_curve": {
+          "mean_Y": 0.059134798891598186,
+          "ratio_to_LR": 0.647574305685308,
+          "delta_EV": -0.6268823510563099
+        },
+        "display_5200_tint5_diagnostic": {
+          "mean_Y": 0.05982029279679209,
+          "ratio_to_LR": 0.6550810233545639,
+          "delta_EV": -0.6102547382179386
+        }
+      }
+    },
+    {
+      "scene": "6V1A9421",
+      "LR_file": "tests\\image\\base\\neutre\\6V1A9421-LR-CameraNeutral-AsShot.tif",
+      "LR_sha256": "2730debc0bbfd4b44147d559da7482436072773b62a53fdef1a87369fb038560",
+      "LR_WB": "Custom",
+      "LR_T": "5200",
+      "LR_tint": "+5",
+      "IPR_reference_kelvin": 4924.211272770631,
+      "LR_Y": 0.20929783101956276,
+      "WB_equivalence_verified": false,
+      "geometry": "independent whole-image distributions, not pixel aligned",
+      "models": {
+        "current": {
+          "mean_Y": 0.14268240431255708,
+          "ratio_to_LR": 0.681719459860149,
+          "delta_EV": -0.5527499291494111
+        },
+        "hue_preserving_curve": {
+          "mean_Y": 0.1423407708298337,
+          "ratio_to_LR": 0.680087175946555,
+          "delta_EV": -0.5562084069880248
+        },
+        "display_5200_tint5_diagnostic": {
+          "mean_Y": 0.14560827119471043,
+          "ratio_to_LR": 0.6956989018252208,
+          "delta_EV": -0.5234650515037766
+        }
+      }
+    },
+    {
+      "scene": "6V1A9890",
+      "LR_file": "tests\\image\\base\\neutre\\6V1A9890.tif",
+      "LR_sha256": "3ce6d7e165b492992e021de72c319c37d5d07507288e79485faa726d881fbe3a",
+      "LR_WB": "As Shot",
+      "LR_T": "5200",
+      "LR_tint": "+5",
+      "IPR_reference_kelvin": 4924.211272770631,
+      "LR_Y": 0.12232348527720945,
+      "WB_equivalence_verified": false,
+      "geometry": "independent whole-image distributions, not pixel aligned",
+      "models": {
+        "current": {
+          "mean_Y": 0.07970321289066774,
+          "ratio_to_LR": 0.6515773541772812,
+          "delta_EV": -0.6179916315762237
+        },
+        "hue_preserving_curve": {
+          "mean_Y": 0.07995275224781152,
+          "ratio_to_LR": 0.6536173496579387,
+          "delta_EV": -0.613481815912236
+        },
+        "display_5200_tint5_diagnostic": {
+          "mean_Y": 0.08138319430440881,
+          "ratio_to_LR": 0.6653112778791271,
+          "delta_EV": -0.5878986054294737
+        }
+      }
+    },
+    {
+      "scene": "6V1A9950",
+      "LR_file": "tests\\image\\base\\neutre\\6V1A9950-LR-CameraNeutral-AsShot.tif",
+      "LR_sha256": "5c72536d95449d7996176b0c5b9ed0574045e1bb99e2f49b998003b53efb4435",
+      "LR_WB": "As Shot",
+      "LR_T": "5200",
+      "LR_tint": "+5",
+      "IPR_reference_kelvin": 4924.211272770631,
+      "LR_Y": 0.11335291331637161,
+      "WB_equivalence_verified": false,
+      "geometry": "independent whole-image distributions, not pixel aligned",
+      "models": {
+        "current": {
+          "mean_Y": 0.07817531539543433,
+          "ratio_to_LR": 0.6896630453356283,
+          "delta_EV": -0.5360364309075455
+        },
+        "hue_preserving_curve": {
+          "mean_Y": 0.07785541175819648,
+          "ratio_to_LR": 0.6868408537582049,
+          "delta_EV": -0.5419522405189983
+        },
+        "display_5200_tint5_diagnostic": {
+          "mean_Y": 0.0787829460432486,
+          "ratio_to_LR": 0.6950235661201127,
+          "delta_EV": -0.5248661988523441
+        }
+      }
+    }
+  ],
+  "missing_LR": [
+    {
+      "scene": "6V1A0054",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    },
+    {
+      "scene": "6V1A0182",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    },
+    {
+      "scene": "6V1A0318",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    },
+    {
+      "scene": "6V1A0524",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    },
+    {
+      "scene": "6V1A0830",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    },
+    {
+      "scene": "6V1A9608",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    },
+    {
+      "scene": "6V1A9616",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    },
+    {
+      "scene": "6V1A9940",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    },
+    {
+      "scene": "7Y6A7003",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    },
+    {
+      "scene": "7Y6A7298",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    },
+    {
+      "scene": "7Y6A7599",
+      "eligible_references": 0,
+      "reason": "No unique compatible stored LR neutral"
+    }
+  ],
+  "ablation_effects": [
+    {
+      "scene": "6V1A0007",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 0.9987238460125221,
+      "ROI_G_over_R_current": 1.2943544932701385,
+      "ROI_G_over_R_candidate": 1.2917573736893593,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0007",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.0081841254819797,
+      "ROI_G_over_R_current": 1.2943544932701385,
+      "ROI_G_over_R_candidate": 1.1710771403608693,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0037",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 0.9984443649462814,
+      "ROI_G_over_R_current": 1.8258561880100437,
+      "ROI_G_over_R_candidate": 1.7882813177453045,
+      "new_encoded_clipped_percent": 0.0
+    },
+    {
+      "scene": "6V1A0037",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.009049040568439,
+      "ROI_G_over_R_current": 1.8258561880100437,
+      "ROI_G_over_R_candidate": 1.620532943028283,
+      "new_encoded_clipped_percent": 0.0007927070947284977
+    },
+    {
+      "scene": "6V1A0043",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 1.0066880032450984,
+      "ROI_G_over_R_current": 0.5929366825299228,
+      "ROI_G_over_R_candidate": 0.594709168713887,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0043",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.0153628902994574,
+      "ROI_G_over_R_current": 0.5929366825299228,
+      "ROI_G_over_R_candidate": 0.5506763960201121,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0054",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 1.0006411871575724,
+      "ROI_G_over_R_current": 1.1655476155970708,
+      "ROI_G_over_R_candidate": 1.150690903795136,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0054",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.0148112618084817,
+      "ROI_G_over_R_current": 1.1655476155970708,
+      "ROI_G_over_R_candidate": 1.0543820969876772,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0081",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 1.0890752838214914,
+      "ROI_G_over_R_current": 0.07986047640235323,
+      "ROI_G_over_R_candidate": 0.13860551476883398,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0081",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.0468504809298655,
+      "ROI_G_over_R_current": 0.07986047640235323,
+      "ROI_G_over_R_candidate": 0.0698366089689218,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0182",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 1.00732709708237,
+      "ROI_G_over_R_current": 1.149247309978802,
+      "ROI_G_over_R_candidate": 1.1490686442939355,
+      "new_encoded_clipped_percent": 0.0
+    },
+    {
+      "scene": "6V1A0182",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.009757537993582,
+      "ROI_G_over_R_current": 1.149247309978802,
+      "ROI_G_over_R_candidate": 1.0111783571688924,
+      "new_encoded_clipped_percent": 0.0
+    },
+    {
+      "scene": "6V1A0318",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 0.9981126543624852,
+      "ROI_G_over_R_current": 1.2988219131897267,
+      "ROI_G_over_R_candidate": 1.2991564235574715,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0318",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.0139475061529888,
+      "ROI_G_over_R_current": 1.2988219131897267,
+      "ROI_G_over_R_candidate": 1.1921536094510778,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0327",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 1.0060896272684203,
+      "ROI_G_over_R_current": 1.1481419553718009,
+      "ROI_G_over_R_candidate": 1.1824694327044125,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0327",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.017752274651995,
+      "ROI_G_over_R_current": 1.1481419553718009,
+      "ROI_G_over_R_candidate": 1.0419989975608006,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0524",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 0.9992059943153769,
+      "ROI_G_over_R_current": 0.9864345889480587,
+      "ROI_G_over_R_candidate": 0.9855144808099291,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0524",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.003967060668521,
+      "ROI_G_over_R_current": 0.9864345889480587,
+      "ROI_G_over_R_candidate": 0.9581414078432465,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A0830",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 1.0002652464639084,
+      "ROI_G_over_R_current": 0.6896437609440069,
+      "ROI_G_over_R_candidate": 0.6922520079443706,
+      "new_encoded_clipped_percent": -0.0009908838684106224
+    },
+    {
+      "scene": "6V1A0830",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.0050831734733563,
+      "ROI_G_over_R_current": 0.6896437609440069,
+      "ROI_G_over_R_candidate": 0.6282860463787084,
+      "new_encoded_clipped_percent": 0.00535077288941736
+    },
+    {
+      "scene": "6V1A9421",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 0.9976056369082834,
+      "ROI_G_over_R_current": 0.629513468498987,
+      "ROI_G_over_R_candidate": 0.636518672233542,
+      "new_encoded_clipped_percent": 0.0035671819262782407
+    },
+    {
+      "scene": "6V1A9421",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.020506150679547,
+      "ROI_G_over_R_current": 0.629513468498987,
+      "ROI_G_over_R_candidate": 0.5779508358923515,
+      "new_encoded_clipped_percent": 0.002972651605231867
+    },
+    {
+      "scene": "6V1A9608",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 1.0134086458223412,
+      "ROI_G_over_R_current": 0.9364153552627581,
+      "ROI_G_over_R_candidate": 0.9683127794065478,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A9608",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.0212277577866449,
+      "ROI_G_over_R_current": 0.9364153552627581,
+      "ROI_G_over_R_candidate": 0.8340261255781057,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A9616",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 1.018610985339753,
+      "ROI_G_over_R_current": 0.3105322328389404,
+      "ROI_G_over_R_candidate": 0.34669829446494793,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A9616",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.031148419076264,
+      "ROI_G_over_R_current": 0.3105322328389404,
+      "ROI_G_over_R_candidate": 0.28293479256577414,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A9890",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 1.0031308569390558,
+      "ROI_G_over_R_current": 0.6100909817469976,
+      "ROI_G_over_R_candidate": 0.6124180419849151,
+      "new_encoded_clipped_percent": 0.00019817677368212446
+    },
+    {
+      "scene": "6V1A9890",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.02107796352006,
+      "ROI_G_over_R_current": 0.6100909817469976,
+      "ROI_G_over_R_candidate": 0.5601761050717887,
+      "new_encoded_clipped_percent": 0.0011890606420927468
+    },
+    {
+      "scene": "6V1A9940",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 0.992162827657988,
+      "ROI_G_over_R_current": 1.0913602017049098,
+      "ROI_G_over_R_candidate": 1.0841233761634457,
+      "new_encoded_clipped_percent": 0.0
+    },
+    {
+      "scene": "6V1A9940",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.0054631276833395,
+      "ROI_G_over_R_current": 1.0913602017049098,
+      "ROI_G_over_R_candidate": 1.0527975840403303,
+      "new_encoded_clipped_percent": 0.0003963535473642489
+    },
+    {
+      "scene": "6V1A9950",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 0.9959078689274269,
+      "ROI_G_over_R_current": 1.1299572979845025,
+      "ROI_G_over_R_candidate": 1.0980675392016526,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "6V1A9950",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 1.0077726664067896,
+      "ROI_G_over_R_current": 1.1299572979845025,
+      "ROI_G_over_R_candidate": 0.9807056893309826,
+      "new_encoded_clipped_percent": 0
+    },
+    {
+      "scene": "7Y6A7003",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 0.9984478246766172,
+      "ROI_G_over_R_current": 0.8657252646349536,
+      "ROI_G_over_R_candidate": 0.8676534115192642,
+      "new_encoded_clipped_percent": 0.0005894384419963261
+    },
+    {
+      "scene": "7Y6A7003",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 0.9995490012579021,
+      "ROI_G_over_R_current": 0.8657252646349536,
+      "ROI_G_over_R_candidate": 0.8574385050150397,
+      "new_encoded_clipped_percent": 0.02711416833183028
+    },
+    {
+      "scene": "7Y6A7298",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 0.9964078972915236,
+      "ROI_G_over_R_current": 1.0573199077340611,
+      "ROI_G_over_R_candidate": 1.0600893323866742,
+      "new_encoded_clipped_percent": 0.004911987016635918
+    },
+    {
+      "scene": "7Y6A7298",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 0.9991692420323219,
+      "ROI_G_over_R_current": 1.0573199077340611,
+      "ROI_G_over_R_candidate": 1.050203164098855,
+      "new_encoded_clipped_percent": 0.0
+    },
+    {
+      "scene": "7Y6A7599",
+      "model": "hue_preserving_curve",
+      "output_Y_ratio": 0.9880287411615098,
+      "ROI_G_over_R_current": 0.7003451668592796,
+      "ROI_G_over_R_candidate": 0.683111596269085,
+      "new_encoded_clipped_percent": 0.1693653123336064
+    },
+    {
+      "scene": "7Y6A7599",
+      "model": "display_5200_tint5_diagnostic",
+      "output_Y_ratio": 0.9981551676500093,
+      "ROI_G_over_R_current": 0.7003451668592796,
+      "ROI_G_over_R_candidate": 0.6965346070837733,
+      "new_encoded_clipped_percent": -0.0005894384419963122
+    }
+  ],
+  "descriptive": {
+    "current_to_LR_scene_mean_relative_percent": -34.17914597020988,
+    "current_to_LR_scene_median_relative_percent": -33.33515929812849,
+    "hue_curve_Y_ratio_min": 0.9880287411615098,
+    "hue_curve_Y_ratio_max": 1.0890752838214914
+  },
+  "decision": {
+    "production_modified": false,
+    "photographic_validation": false,
+    "colour_tuning_suspended": true,
+    "automatic_cleanup": false
+  },
+  "limitations": [
+    "Independent distributions, differing geometry: no inter-engine MAE or pixel DeltaE",
+    "WB and exact profile application are not physically equated by equal display numbers",
+    "Custom WB references remain diagnostic, not As Shot validation",
+    "No LR reference for missing scenes: no fidelity claim on them"
+  ],
+  "canon_metadata": [
+    {
+      "raw": "tests\\image\\base\\6V1A0007.CR3",
+      "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "a8b46dfaeba7fdc82b245b265cad750e026ce3eacffb7bde8a2238d8d4f32f27",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              2040,
+              1024,
+              1024,
+              1680,
+              5600
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              29,
+              63,
+              102,
+              141,
+              159,
+              177
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A0037.CR3",
+      "raw_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "91c6787abc716da16fbc925e9e63f70a06f89103d53a3cc4e1ece09c32fdbdfc",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1960,
+              1024,
+              1024,
+              1836,
+              5004
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              45,
+              96,
+              130,
+              155,
+              167,
+              177
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A0043.CR3",
+      "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "8288d29c6856787b8635ff6f328a17f422c5dd21200c5ad76ec73da35e375ae3",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1774,
+              1024,
+              1024,
+              1982,
+              4413
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              41,
+              81,
+              116,
+              147,
+              162,
+              177
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A0054.CR3",
+      "raw_sha256": "602bcc522c2d4fe0dd070f9e9f37fbb6cde70018ff227bc9f6ff325e4bb355cb",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "c5e5ddaaa82979880597e905928c01dbe69b23c0c4b9ec5949997b70b0a2807c",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              2076,
+              1024,
+              1024,
+              1608,
+              5953
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              35,
+              69,
+              104,
+              139,
+              156,
+              173
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A0081.CR3",
+      "raw_sha256": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "980ff84d1ec07de5401744b289ae353f1e4906a8779c243fae74581e18e85fd8",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1833,
+              1024,
+              1024,
+              1986,
+              4503
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              52,
+              105,
+              140,
+              168,
+              177,
+              186
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A0182.CR3",
+      "raw_sha256": "d26fd895f37478e09c2b93abc28011f3366cc0d0a23668dad02a7bac4e059552",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "6d2b359acf8f626c181d62d4d876084382cea50544b67f5dbf665e07667cabe6",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              2194,
+              1024,
+              1024,
+              1479,
+              6816
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              2048,
+              2048,
+              2049,
+              2049
+            ],
+            "0x27c": [
+              0,
+              32,
+              64,
+              96,
+              128,
+              144,
+              160
+            ],
+            "0x290": [
+              2048,
+              2048,
+              2049,
+              2049,
+              13535,
+              14351,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A0318.CR3",
+      "raw_sha256": "b0ab90b805a97c9bf5f4ceb4a16300e8b2ce93dba2de5c594e08785f389ee751",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "a841e1836a1e6eec7ce964f34c5d6640d8aa2c3973eef609d47de15ed94fa71a",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1846,
+              1024,
+              1024,
+              1827,
+              4797
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              39,
+              86,
+              122,
+              149,
+              161,
+              172
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A0327.CR3",
+      "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "2383ff188edea635dcb49c897355b08fe9b94ea3f735f0978ad00faa5fe1d113",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1853,
+              1024,
+              1024,
+              1830,
+              4797
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              46,
+              92,
+              126,
+              154,
+              169,
+              181
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A0524.CR3",
+      "raw_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "d138923003d5ec2ba14d1ae5d002b90e808ab32352a82b5b963578500288cba1",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1840,
+              1024,
+              1024,
+              1820,
+              4797
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              2048,
+              2048,
+              2048,
+              2048
+            ],
+            "0x27c": [
+              0,
+              43,
+              90,
+              125,
+              150,
+              161,
+              172
+            ],
+            "0x290": [
+              2048,
+              2048,
+              2048,
+              2048,
+              13535,
+              14351,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A0830.CR3",
+      "raw_sha256": "821d87c5eeac4dd063aebbe9210f1a61de8dbdd25f2e6b694fe926422754c8d5",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "5c1b628ef51321cd0a59f2f6f9d4766b7b8692df2698521d69c873c84ac907ad",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1824,
+              1024,
+              1024,
+              2028,
+              4429
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              2048,
+              2048,
+              2048,
+              2048
+            ],
+            "0x27c": [
+              0,
+              40,
+              83,
+              118,
+              147,
+              160,
+              173
+            ],
+            "0x290": [
+              2048,
+              2048,
+              2048,
+              2048,
+              13535,
+              14351,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A9421.CR3",
+      "raw_sha256": "f921e0a166a1e836533f0efe7b08f35589bfdb28aa3f6a6df41d5ba91248bb4d",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "03f0032eecad046638880cd01a5ab83eec62ad988b8fd3075cd2333bce1eea6b",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1657,
+              1024,
+              1024,
+              2212,
+              3935
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              2048,
+              2048,
+              2048,
+              2048
+            ],
+            "0x27c": [
+              0,
+              36,
+              72,
+              105,
+              136,
+              151,
+              166
+            ],
+            "0x290": [
+              2048,
+              2048,
+              2048,
+              2048,
+              13535,
+              14351,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A9608.CR3",
+      "raw_sha256": "aceefe524cf5224beb5077e834a0453f9a7ad80ec31a5860b0be9da23501bb96",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "31bb19369e87568cc0c8df4b7fa51f4eb0af2c92627835727961ffeb50c604c5",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              2341,
+              1024,
+              1024,
+              1570,
+              6750
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              2048,
+              2048,
+              2048,
+              2048
+            ],
+            "0x27c": [
+              0,
+              33,
+              68,
+              103,
+              136,
+              152,
+              166
+            ],
+            "0x290": [
+              2048,
+              2048,
+              2048,
+              2048,
+              13535,
+              14351,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A9616.CR3",
+      "raw_sha256": "fade2f141ad716d3d8a9acba8a79fd39a75d277b406e7ec633f7c9a0d368229b",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "3ffa9fb4fb4197b76762128651b43a99eed682e0e08e2163d03b4aba84a19bff",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1542,
+              1024,
+              1024,
+              2456,
+              3562
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              2048,
+              2048,
+              2048,
+              2048
+            ],
+            "0x27c": [
+              0,
+              36,
+              74,
+              111,
+              145,
+              158,
+              171
+            ],
+            "0x290": [
+              2048,
+              2048,
+              2048,
+              2048,
+              13535,
+              14351,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A9890.CR3",
+      "raw_sha256": "a57c06cb4498dc9385a4d4305bdff769bb2fdb2c5865a0c324ccefabebc0981d",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "6a4b950aab5327b31d20b7f164782a73729499f0ebf096f7683df8afc63ae9b2",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              1638,
+              1024,
+              1024,
+              2335,
+              3783
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              2047,
+              2047,
+              2048,
+              2047
+            ],
+            "0x27c": [
+              0,
+              34,
+              69,
+              102,
+              134,
+              150,
+              166
+            ],
+            "0x290": [
+              2047,
+              2047,
+              2048,
+              2047,
+              13535,
+              14351,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A9940.CR3",
+      "raw_sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "bef4dd11a88499ba8d0d6627069f25458a9073f83454321c4702d55204b89c22",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              2016,
+              1024,
+              1024,
+              1662,
+              5600
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              31,
+              63,
+              95,
+              127,
+              144,
+              160
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\6V1A9950.CR3",
+      "raw_sha256": "3afd99231f2a5cd586351845c184e6884b253bef415c2bcfc56f3f6cc949ac01",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 66,
+          "payload_sha256": "0a99dc8020d994c24f4dbd9ad33d18511f5da04ffc2438afa2c8cccd833ed58e",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0x6e": [
+              1938,
+              1024,
+              1024,
+              1733,
+              5200
+            ],
+            "0xcd": [
+              2068,
+              1024,
+              1024,
+              1616,
+              5907
+            ],
+            "0x16b": [
+              3500,
+              239,
+              772,
+              396
+            ],
+            "0x17f": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "0x27c": [
+              0,
+              46,
+              98,
+              134,
+              159,
+              170,
+              182
+            ],
+            "0x290": [
+              512,
+              512,
+              512,
+              512,
+              13200,
+              13995,
+              12735
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\7Y6A7003.CR3",
+      "raw_sha256": "59fb28d2d31050a9166896bd4036d6a15a91e634478db3d687d5435e048dd400",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 48,
+          "payload_sha256": "82a4e70bed850df2607a5719d3d7124fc18fb52c95f8232544d4da43fa7a3db1",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1811,
+              1024,
+              1024,
+              1558,
+              5200
+            ],
+            "0x6e": [
+              1683,
+              1024,
+              1024,
+              1879,
+              4326
+            ],
+            "0xcd": [
+              1811,
+              1024,
+              1024,
+              1558,
+              5200
+            ],
+            "0x16b": [
+              2044,
+              2045,
+              2046,
+              2045
+            ],
+            "0x17f": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "0x27c": [
+              2044,
+              2045,
+              2046,
+              2045,
+              13135,
+              13660,
+              12735
+            ],
+            "0x290": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\7Y6A7298.CR3",
+      "raw_sha256": "9147913687cfd5801acf9d706ab4b032a3c5f549242fe69344c04d396546be33",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 48,
+          "payload_sha256": "01748d2c94d3abe9442befaaf1a955ca780e9c1ada4028980c2adc73f723d4ac",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1811,
+              1024,
+              1024,
+              1558,
+              5200
+            ],
+            "0x6e": [
+              1862,
+              1024,
+              1024,
+              1742,
+              4882
+            ],
+            "0xcd": [
+              1811,
+              1024,
+              1024,
+              1558,
+              5200
+            ],
+            "0x16b": [
+              2038,
+              2037,
+              2039,
+              2041
+            ],
+            "0x17f": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "0x27c": [
+              2038,
+              2037,
+              2039,
+              2041,
+              13135,
+              13660,
+              12735
+            ],
+            "0x290": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    },
+    {
+      "raw": "tests\\image\\base\\7Y6A7599.CR3",
+      "raw_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "color_data_records": [
+        {
+          "source": "/moov/trak/CTMD/sample0/record8",
+          "word_count": 3778,
+          "version_word": 48,
+          "payload_sha256": "d82d2a98cd14c9313068faec3345511248a9cb8f5aea5abdb172473fa9eaa3bd",
+          "candidate_words_not_certified": {
+            "0x69": [
+              1811,
+              1024,
+              1024,
+              1558,
+              5200
+            ],
+            "0x6e": [
+              1492,
+              1024,
+              1024,
+              2072,
+              3761
+            ],
+            "0xcd": [
+              1811,
+              1024,
+              1024,
+              1558,
+              5200
+            ],
+            "0x16b": [
+              2038,
+              2038,
+              2040,
+              2042
+            ],
+            "0x17f": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "0x27c": [
+              2038,
+              2038,
+              2040,
+              2042,
+              13135,
+              13660,
+              12735
+            ],
+            "0x290": [
+              338,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "limitations": "Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding."
+    }
+  ],
+  "campaign_id": "synthese-ouverture-v001-20261014T093135388729Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "group": "base-colorimetrique",
+  "measured_at_utc": "2026-10-14T09:31:35.388729+00:00",
+  "analyser_sha256": "dd3c865b1dd81dd2b4e49bfe62e22d28113a2727253801b53d8f7e0f968d35ff",
+  "canon_auditor_sha256": "e3919748205b50a7da4e787c6d082e4bdc03647cb17337f1531874054fb024c9",
+  "inputs": [
+    {
+      "file": "docs\\validation\\raw\\audit-corpus-ouverture-v001-20261014T092742619468Z.json",
+      "sha256": "5fee52e8a5469b3f36d74984db4259609b011e61e1348643656bb33a80751561"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092643627Z-6V1A0007.json",
+      "sha256": "7ccf32d84e7e40a1fe56ea2471a81fd944c6b0d82f4909fcb1fe607ebebf5b72"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092648979Z-6V1A0037.json",
+      "sha256": "a33eac4382680090e7fe4982a9ef0adc02336ba8990b43b633883112eecd880d"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092654021Z-6V1A0043.json",
+      "sha256": "e80594881aedb196299f3c039f7101160ea8a9380310030637fb4ca97085b12e"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092659180Z-6V1A0054.json",
+      "sha256": "2d5a7ef20a3a4509d85397de225020c08e88f333af957a0f7b924584f1954e64"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092704665Z-6V1A0081.json",
+      "sha256": "b8fe42be2449d9ac3e1f3c2cd434a598fa439ce19dac424ac883121344ad3695"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092709966Z-6V1A0182.json",
+      "sha256": "26863463f9f448786f50348c874bd22ffa357d316cdcbaec163fe4bfcc5c75dc"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092715653Z-6V1A0318.json",
+      "sha256": "8bece8e56e1e2f57a0816e9b5d733bb6d75aafa15c1fe8fb3e8d15a0fe25e824"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092721154Z-6V1A0327.json",
+      "sha256": "b51c7e193c13a22708e1a4ede945290a718a26ba9ccc9b8fff242aee6c9c1ddf"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092727020Z-6V1A0524.json",
+      "sha256": "647ada9c72622862bae326c2bb6103e2e668ce62f7e812b2a21137fe7afd7899"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092732424Z-6V1A0830.json",
+      "sha256": "874590f41e12aab26eb6cff4162cd1e6eeedbb9bfba0704f768559284142ef40"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092737897Z-6V1A9421.json",
+      "sha256": "1fd8258cede83ebe35a8f595f37e6b7dcdd9df8befcb0aa176b63457e0f44209"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092743447Z-6V1A9608.json",
+      "sha256": "ee1f6f25dfda7fbab243c83545d17f371f8fe65bac391ca39560f329c16bc47e"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092749746Z-6V1A9616.json",
+      "sha256": "91122f1717f3f068488c16248bdf663ea2eebf32be153a12b790113f2e64aa51"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092756011Z-6V1A9890.json",
+      "sha256": "0562e2cbddfc2d5d90b04d50f089d04b5c02d0a03ba9019c307594d93bf46a26"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092802122Z-6V1A9940.json",
+      "sha256": "5500d2c3c9b7547dfd86fd166c70a0bf51be8179e2f82a207fa667e77e8000c3"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092808432Z-6V1A9950.json",
+      "sha256": "991361ef12d42ea96df40e37053e7120038a9b7595bd3d682212d9bc875ba04e"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092824117Z-7Y6A7003.json",
+      "sha256": "e8635ad03189f80dfa0b468c2861b6e9cb9c8f6625b0bd4cdf9af71ab5d814c8"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092830069Z-7Y6A7298.json",
+      "sha256": "c0fbbd1f6f4a31b979e2bdc0b703f79f726272ed87869314b913227f91189a29"
+    },
+    {
+      "file": "docs\\validation\\raw\\inspection-ouverture-scene-v001-20261014T092835613Z-7Y6A7599.json",
+      "sha256": "1012b7eb2bd6cd6059f3acb40e24e68fc229a8377a87cb51dea2787cb9b5ca31"
+    }
+  ]
+}

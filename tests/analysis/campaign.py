@@ -1,6 +1,8 @@
 """Bounded-memory campaign execution, immutable provenance and explicit exclusions."""
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
+import queue
 import platform
 import sys
 import json
@@ -102,75 +104,130 @@ def progressions(group, records):
     return list(series.values())
 
 
-def analyse(group, records, step=8, patch_size=256, data_version=1, supersedes=None):
+RENDER_CONTEXT = ("source_sha256", "executable_sha256", "dcp_profile", "lcp_profile", "lcp_sha256",
+                  "raw_normalization")
+
+
+def measure_record(group, original, load, step, patch_size):
+    record = dict(original)
+    record.update(status="excluded", protocol_usable=False, issues=[], metrics=None, rois=[])
+    try:
+        if not record.get("reference"):
+            raise ValueError("Missing explicit own-engine neutral/reference")
+        baseline, metadata0, _ = load(record["reference"], record.get("reference_render"))
+        variant, metadata1, _ = load(record["file"], record.get("render"))
+        record.update(reference_metadata=metadata0, metadata=metadata1)
+        if record.get("render"):
+            declared, reference = metadata1["declaration"], metadata0["declaration"]
+            if any(reference.get(k) != declared.get(k) for k in RENDER_CONTEXT):
+                raise ValueError("IPR development context differs from reference")
+            record.update(settings=declared["settings"], reference_settings=reference["settings"],
+                          expected_sha256=metadata1["sha256"], reference_sha256=metadata0["sha256"])
+            record["provenance"] = {**record["provenance"], "declaration": declared}
+        if baseline.shape != variant.shape:
+            raise ValueError("Within-engine geometry mismatch; annotated registration needed")
+        for key_hash, metadata in (("expected_sha256", metadata1), ("reference_sha256", metadata0)):
+            expected = record.get(key_hash)
+            if expected and metadata["sha256"].lower() != expected.lower():
+                raise ValueError("Pixel file hash differs from declared " + key_hash)
+        if metadata0["icc_sha256"] != metadata1["icc_sha256"]:
+            raise ValueError("Within-engine ICC profile changed")
+        warnings, supports = audit(record, metadata1, metadata0)
+        record["issues"].extend(warnings)
+        record["support"] = supports
+        record["metrics"] = measure(group, record, encoded(baseline, step=step), encoded(variant, step=step))
+        record["sampling"] = {"global_step": step, "pixels_native_not_resized": True,
+                              "global_not_exhaustive": step != 1}
+        if group in SPATIAL:
+            rois = (explicit_rois(record["rois_declared"], baseline.shape) if record.get("rois_declared")
+                    else select_rois(baseline, patch_size))
+            if not rois:
+                record["issues"].append("no_admissible_native_ROI")
+            for roi in rois:
+                record["rois"].append({"roi": roi, "sampling_step": 1,
+                                       "metrics": measure_roi(group, record, encoded(baseline, roi["box"]),
+                                                              encoded(variant, roi["box"]))})
+        record["protocol_usable"] = not record["issues"]
+        record["status"] = "measured" if record["protocol_usable"] else "diagnostic"
+    except (ValueError, OSError, KeyError, TypeError) as error:
+        record["issues"].append(str(error))
+        record["status"] = "excluded"
+        record["protocol_usable"] = False
+        record["metrics"] = None
+        record["rois"] = []
+    return record
+
+
+def analyse(group, records, step=8, patch_size=256, data_version=1, supersedes=None, servers=()):
+    """File states are measured in this thread; rendered states one source per
+    render server, the servers working in parallel."""
     selected = [r for r in records if group_for(r["feature"]) == group]
     if not selected:
         raise ValueError("No mapped states for group " + group)
     if step < 1 or patch_size < 2 or data_version < 1:
         raise ValueError("Positive step/version and ROI size >= 2 required")
-    cache = {}
-    def load(path):
-        path = str(Path(path).resolve())
-        if path not in cache:
-            cache[path] = inspect(Path(path))
-        return cache[path]
-    measured = []
     seen = set()
-    for original in selected:
-        record = dict(original)
+    for record in selected:
         key = (record["scene"], record["engine"], record["feature"], record["value"], record["file"])
         if key in seen:
             raise ValueError("Duplicate state association: " + str(key))
         seen.add(key)
-        record.update(status="excluded", protocol_usable=False, issues=[], metrics=None, rois=[])
+    cache = {}
+    def load_file(path, render=None):
+        if render is not None:
+            raise ValueError("IPR state rendered in memory needs iprRenderServer")
+        path = str(Path(path).resolve())
+        if path not in cache:
+            cache[path] = inspect(Path(path))
+        return cache[path]
+    measured = [None] * len(selected)
+    by_source = {}
+    for index, record in enumerate(selected):
+        if record.get("render") and servers:
+            by_source.setdefault(record["render"]["source"], []).append(index)
+        else:
+            measured[index] = measure_record(group, record, load_file, step, patch_size)
+    idle = queue.Queue()
+    for server in servers:
+        idle.put(server)
+    def measure_source(indices):
+        # A source's references stay in memory while its variants are measured
+        # and released (about 6 bytes per pixel each).
+        server = idle.get()
         try:
-            if not record.get("reference"):
-                raise ValueError("Missing explicit own-engine neutral/reference")
-            baseline, metadata0, _ = load(record["reference"])
-            variant, metadata1, _ = load(record["file"])
-            record.update(reference_metadata=metadata0, metadata=metadata1)
-            if baseline.shape != variant.shape:
-                raise ValueError("Within-engine geometry mismatch; annotated registration needed")
-            for key_hash, metadata in (("expected_sha256", metadata1), ("reference_sha256", metadata0)):
-                expected = record.get(key_hash)
-                if expected and metadata["sha256"].lower() != expected.lower():
-                    raise ValueError("Pixel file hash differs from declared " + key_hash)
-            if metadata0["icc_sha256"] != metadata1["icc_sha256"]:
-                raise ValueError("Within-engine ICC profile changed")
-            warnings, supports = audit(record, metadata1, metadata0)
-            record["issues"].extend(warnings)
-            record["support"] = supports
-            record["metrics"] = measure(group, record, encoded(baseline, step=step), encoded(variant, step=step))
-            record["sampling"] = {"global_step": step, "pixels_native_not_resized": True,
-                                  "global_not_exhaustive": step != 1}
-            if group in SPATIAL:
-                rois = (explicit_rois(record["rois_declared"], baseline.shape) if record.get("rois_declared")
-                        else select_rois(baseline, patch_size))
-                if not rois:
-                    record["issues"].append("no_admissible_native_ROI")
-                for roi in rois:
-                    record["rois"].append({"roi": roi, "sampling_step": 1,
-                                           "metrics": measure_roi(group, record, encoded(baseline, roi["box"]),
-                                                                  encoded(variant, roi["box"]))})
-            record["protocol_usable"] = not record["issues"]
-            record["status"] = "measured" if record["protocol_usable"] else "diagnostic"
-        except (ValueError, OSError, KeyError, TypeError) as error:
-            record["issues"].append(str(error))
-            record["status"] = "excluded"
-            record["protocol_usable"] = False
-            record["metrics"] = None
-            record["rois"] = []
-        measured.append(record)
+            references, rendered = {selected[i]["reference"] for i in indices}, {}
+            def load(path, render=None):
+                if render is None:
+                    return load_file(path)
+                if path in rendered:
+                    return rendered[path]
+                pixels, metadata = server.render(render["source"], render["feature"], render["value"])
+                if path in references:
+                    rendered[path] = pixels, metadata, None
+                return pixels, metadata, None
+            for i in indices:
+                measured[i] = measure_record(group, selected[i], load, step, patch_size)
+        finally:
+            idle.put(server)
+    with ThreadPoolExecutor(max_workers=max(1, len(servers))) as pool:
+        for future in [pool.submit(measure_source, indices) for indices in by_source.values()]:
+            future.result()
     # Recheck full hashes at campaign close, including references, before publication.
     for path, (_, metadata, before) in cache.items():
         verify_unchanged(path, before, metadata["sha256"])
+    # Rendered states: each source must still be the file the server decoded.
+    declared_sources = {r["render"]["source"]: r["metadata"]["declaration"]["source_sha256"]
+                        for r in measured if r.get("render") and r.get("metadata")}
+    for source, digest in declared_sources.items():
+        if sha256(source) != digest:
+            raise ValueError("Source changed during campaign: " + source)
     now = datetime.now(timezone.utc)
     package = Path(__file__).parent
     counts = {status: sum(r["status"] == status for r in measured) for status in ("measured", "diagnostic", "excluded")}
     return {"campaign_id": f"mesure-{group}-v{data_version:03d}-{now.strftime('%Y%m%dT%H%M%S%fZ')}",
             "schema_version": 1, "data_version": data_version, "measured_at_utc": now.isoformat(),
             "supersedes_campaign_id": supersedes, "group": group, "protocol": PROTOCOLS[group],
-            "protocol_version": "grouped-native-v1", "analysis_version": "1.0",
+            "protocol_version": "grouped-native-v2", "analysis_version": "2.0",
             "analyser_sources_sha256": {p.name: sha256(p) for p in sorted(package.glob("*.py"))},
             "software": {"python": sys.version, "numpy": np.__version__, "pillow": PIL.__version__, "platform": platform.platform()},
             "method": {"space": "linear sRGB D65", "global_step": step, "ROI_step": 1,
@@ -181,6 +238,9 @@ def analyse(group, records, step=8, patch_size=256, data_version=1, supersedes=N
                       "MAE": "mean absolute linear channel difference to own reference, not error to truth",
                       "chroma": "HSV saturation in linear RGB", "angle": "degrees", "axis": "natural log ratio",
                       "ratio": "dimensionless", "percent": "100 * count / samples", "samples": "native sampled pixels"},
+            "ipr_pixels": ({"kind": "in_memory_render", "server": str(servers[0].executable),
+                            "server_sha256": servers[0].sha256, "parallel_servers": len(servers)}
+                           if servers else None),
             "records": measured, "coverage": counts, "progressions": progressions(group, measured),
             "decision": {"functional": "not_evaluated", "visual": "not_evaluated", "lightroom_parity": "not_evaluated",
                          "physical_accuracy": "not_evaluated", "cleanup_eligible": False},

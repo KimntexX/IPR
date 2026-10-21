@@ -10,12 +10,14 @@ Item {
     property url source
     property url originalSource
     property bool comparisonEnabled: false
+    property bool originalHeld: false
     property real comparisonPosition: 0.5
     // Stable photo identity: preview URLs change on every adjustment.
     property string imageKey: ""
     property bool hasImage: false
     property color textColor: "#edf2f8"
     property color panelColor: "#2a3039"
+    signal contextMenuRequested(real x, real y)
     property real previewWidth: 0
     property real previewHeight: 0
     property bool fitMode: true
@@ -35,9 +37,11 @@ Item {
     readonly property bool comparisonReady: imageReady && originalCanvas.status === Image.Ready
         && originalCanvas.sourceSize.width === previewWidth
         && originalCanvas.sourceSize.height === previewHeight
-    readonly property bool showingComparison: comparisonEnabled && comparisonReady
+    readonly property bool showingOriginal: originalHeld && comparisonReady
+    readonly property bool showingComparison: comparisonEnabled && comparisonReady && !showingOriginal
     readonly property real maxOffsetX: Math.max(0, (canvas.width - width) / 2)
     readonly property real maxOffsetY: Math.max(0, (canvas.height - height) / 2)
+    readonly property real toolbarHeight: zoomToolbar.visible ? zoomToolbar.height + 12 : 0
 
     function clampPan() {
         offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, offsetX))
@@ -106,6 +110,7 @@ Item {
     }
 
     function resetView() {
+        originalHeld = false
         fitImage()
         comparisonEnabled = false
         comparisonPosition = 0.5
@@ -125,13 +130,39 @@ Item {
     onHasImageChanged: if (!hasImage) resetView()
     onWidthChanged: clampPan()
     onHeightChanged: clampPan()
+    onActiveFocusChanged: if (!activeFocus) originalHeld = false
+    onVisibleChanged: if (!visible) originalHeld = false
+    Keys.onPressed: (event) => {
+        if (hasImage && (event.key === Qt.Key_Menu ||
+                (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier))) {
+            contextMenuRequested(width / 2, height / 2)
+            event.accepted = true
+            return
+        }
+        if (event.key === Qt.Key_Space && event.modifiers === Qt.NoModifier && comparisonReady) {
+            if (!event.isAutoRepeat) originalHeld = true
+            event.accepted = true
+        }
+    }
+    Keys.onReleased: (event) => {
+        if (event.key === Qt.Key_Space) {
+            if (!event.isAutoRepeat) originalHeld = false
+            event.accepted = true
+        }
+    }
+    Connections {
+        target: root.Window.window
+        function onActiveChanged() {
+            if (!root.Window.window.active) root.originalHeld = false
+        }
+    }
 
     // Clip both halves: translucent images must not be painted twice on the left.
     Item {
         id: currentClip
         objectName: "currentClip"
         x: root.showingComparison ? root.width * root.comparisonPosition : 0
-        width: root.width - x
+        width: root.showingOriginal ? 0 : root.width - x
         height: root.height
         clip: true
         Image {
@@ -143,6 +174,7 @@ Item {
             height: root.previewHeight * root.zoomScale
             source: root.hasImage ? root.source : ""
             asynchronous: true
+            retainWhileLoading: true
             cache: false
             smooth: true
             visible: root.hasImage
@@ -158,10 +190,10 @@ Item {
     // Both images use precisely the same transform in viewport coordinates.
     Item {
         objectName: "originalClip"
-        width: root.width * root.comparisonPosition
+        width: root.showingOriginal ? root.width : root.width * root.comparisonPosition
         height: root.height
         clip: true
-        visible: root.showingComparison
+        visible: root.showingComparison || root.showingOriginal
         Image {
             id: originalCanvas
             objectName: "originalViewportImage"
@@ -171,6 +203,7 @@ Item {
             height: canvas.height
             source: root.hasImage ? root.originalSource : ""
             asynchronous: true
+            retainWhileLoading: true
             cache: false
             smooth: true
             fillMode: Image.PreserveAspectFit
@@ -221,6 +254,14 @@ Item {
             wheel.accepted = root.handleWheel(wheel.angleDelta.x, wheel.angleDelta.y,
                 wheel.pixelDelta.x, wheel.pixelDelta.y, wheel.modifiers, wheel.x, wheel.y)
         }
+    }
+
+    MouseArea {
+        objectName: "viewportContextArea"
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        enabled: root.hasImage
+        onClicked: (mouse) => root.contextMenuRequested(mouse.x, mouse.y)
     }
 
     Item {
@@ -279,11 +320,12 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.margins: 6
-        anchors.topMargin: 46
+        anchors.topMargin: root.toolbarHeight + 4
         spacing: 1
-        visible: root.showingComparison
+        visible: root.showingComparison || root.showingOriginal
         Repeater {
-            model: [qsTr("Origine ←"), qsTr("→ Actuel")]
+            model: root.showingOriginal ? [qsTr("Origine — relâcher pour revenir")]
+                                        : [qsTr("Origine ←"), qsTr("→ Actuel")]
             Rectangle {
                 required property string modelData
                 width: caption.implicitWidth + 14
@@ -302,19 +344,24 @@ Item {
     }
 
     Rectangle {
+        id: zoomToolbar
+        objectName: "viewportToolbar"
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.margins: 6
-        width: controls.implicitWidth + 12
+        width: Math.max(0, Math.min(root.width - 12, controls.implicitWidth + 12))
         height: controls.implicitHeight + 8
         color: Qt.rgba(root.panelColor.r, root.panelColor.g, root.panelColor.b, 0.92)
         radius: 5
         visible: root.hasImage
 
-        RowLayout {
+        GridLayout {
             id: controls
             anchors.centerIn: parent
-            spacing: 3
+            width: Math.max(0, parent.width - 12)
+            columns: root.width < 360 ? 3 : (root.width < 520 ? 4 : 7)
+            columnSpacing: 3
+            rowSpacing: 3
 
             Label {
                 objectName: "zoomPercentage"
@@ -324,6 +371,19 @@ Item {
                 text: Math.round(root.zoomScale * 100) + " %"
                 font.pixelSize: 12
             }
+            PreferenceButton {
+                objectName: "holdOriginalButton"
+                text: qsTr("Origine")
+                implicitHeight: 26
+                enabled: root.comparisonReady
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Maintenir pour voir l’original — Espace dans la vue image")
+                Accessible.name: ToolTip.text
+                onPressed: root.originalHeld = true
+                onReleased: root.originalHeld = false
+                onCanceled: root.originalHeld = false
+                onEnabledChanged: if (!enabled) root.originalHeld = false
+            }
             Repeater {
                 model: [
                     {name: "zoomOutButton", label: "−", tip: qsTr("Réduire — Ctrl −")},
@@ -332,7 +392,7 @@ Item {
                     {name: "fitImageButton", label: qsTr("Ajuster"), tip: qsTr("Adapter à la fenêtre — Ctrl 0")},
                     {name: "compareImageButton", label: qsTr("Avant/après"), tip: qsTr("Origine à gauche / actuel à droite — Ctrl Maj C")}
                 ]
-                ToolButton {
+                PreferenceButton {
                     id: zoomButton
                     required property var modelData
                     required property int index
@@ -358,15 +418,18 @@ Item {
                     }
                     contentItem: Text {
                         text: zoomButton.text
-                        color: zoomButton.enabled ? root.textColor : "#7a8797"
+                        color: root.textColor
+                        opacity: zoomButton.enabled ? 1 : 0.45
                         font.pixelSize: 12
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
                     background: Rectangle {
                         radius: 3
-                        color: zoomButton.down || zoomButton.checked ? "#455365"
-                            : (zoomButton.hovered ? "#364252" : "transparent")
+                        border.width: zoomButton.activeFocus ? 2 : 0
+                        border.color: root.textColor
+                        color: zoomButton.down || zoomButton.checked || zoomButton.hovered
+                            ? zoomButton.palette.mid : zoomButton.palette.button
                     }
                 }
             }

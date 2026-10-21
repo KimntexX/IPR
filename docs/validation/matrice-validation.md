@@ -1,7 +1,26 @@
 # Matrice de validation des réglages
 
-**Dernière consolidation :** 10 octobre 2026.
+**Dernière consolidation :** 16 octobre 2026 (règles RAW par mode et restauration automatique ; autres statuts inchangés).
 **Légende :** Validé = protocole, export et conclusion disponibles ; À revalider = changement de pipeline ou corpus insuffisant ; À faire = fonction présente mais sans recette complète.
+
+**Port du 15 octobre 2026 :** le master est Rec.2020 linéaire D65. Tous les
+verdicts photographiques sRGB historiques ci-dessous sont des antécédents,
+pas une revalidation sous Rec.2020. Les invariants automatisés et les neutres
+ont leur contrôle propre ; chaque groupe de réglages reste à requalifier
+visuellement suivant son protocole avant validation photographique globale.
+
+Rendu initial : investigation active sur `patch_raw_opening`,
+[19 RAW, 46 TIFF présents audités, 19 références LR As Shot](analyses/analyse-base-colorimetrique.md#31-référence-9421-as-shot-conforme-et-reprise--14-octobre-2026).
+Le prototype Couleur reste sauvegardé sur `patch_color` ; validation visuelle
+et calibration des commandes suspendues jusqu'à stabilisation de la base.
+
+Mesures transversales du 17 octobre : [performance d’ouverture et navigation](analyses/analyse-performance-ouverture.md).
+Trois RAW, deux campagnes JSON ; découverte de profils coûteuse sans sélection
+persistée, cache de pixels 256 Mio trop petit pour les entrées mesurées.
+Le diagnostic est suivi d’une intégration locale du contrôleur mémoire
+([ADR-0015](../decisions/ADR-0015-controle-memoire-et-prechargement.md)) :
+26/26 tests natifs, préchargement suivant/précédent, seuil global 80/75 %.
+Pic RSS, latence réelle du mode adaptatif et validation Linux/macOS restent ouverts.
 
 | Fonction | Statut | Preuve / source historique | Prochaine action |
 | --- | --- | --- | --- |
@@ -37,6 +56,18 @@
 
 ## Lecture des statuts et mesures
 
+### Protocoles courants
+
+Le [catalogue consolidé](protocols/README.md) propose une recette par groupe,
+dont [Couleur](protocols/protocole-couleur.md), [Lumières](protocols/protocole-lumieres.md),
+[Courbes](protocols/protocole-courbes.md), [Grading](protocols/protocole-grading.md)
+et [Netteté](protocols/protocole-nettete.md), avec le
+[socle commun](protocols/protocole-commun.md). Cette consolidation ne modifie
+pas les verdicts historiques. Les [analyseurs natifs/JSON par groupe](tools/analyseurs-groupes.md)
+sont disponibles ; charte, HDR, transitions, halos, géométrie et combinaisons
+restent des recettes complémentaires.
+
+
 **Corpus au 9 octobre :** les 423 TIFF Lightroom Adobe Standard ont été
 [supprimés sur demande](../reports/storage/lightroom-cleanup-2026-10-09/README.md).
 Les cinq références Camera Neutral, RAW et exports IPR restent disponibles.
@@ -53,6 +84,92 @@ sont **76/12**, avec **4 tests documentaires** supplémentaires. Voir les rappor
 pour les preuves, sans fusionner des jeux de tests différents.
 Les [CSV et courbes](metrics/README.md) sont des vues dérivées : vitesse CPU,
 progressivité d'un réglage et proximité Lightroom sont des axes distincts.
+
+## Migration Rec.2020 — préparation du 15 octobre 2026
+
+**Master porté localement ; qualification visuelle et multi-OS à compléter.**
+Les tests automatisés et le rejeu des neutres sont détaillés au §46 du rapport
+RAW/profils. Ils ne valident pas photographiquement tous les réglages. Voir le
+[plan de port](../architecture/integration-rec2020.md) et la qualification
+ajoutée au [protocole RAW/profils](protocols/protocole-raw-profils.md).
+Gates : conversions/neutres, réglages de tous les groupes, cache/restauration,
+sorties dont DNG, pleine résolution et performances natives, CI complète,
+puis accord visuel utilisateur. Les verdicts historiques restent inchangés.
+
+**Neutres calibrés, campagne du 15 octobre :** les 19 couples Camera Neutral /
+As Shot passent l'audit et les exports IPR sont identiques au rejeu natif sur
+la grille contrôlée au pas 8. Voir le [§47 du rapport unique](analyses/analyse-base-colorimetrique.md#47-validation-des-exports-neutres-rec2020-avec-calibration--15-octobre-2026)
+et sa preuve JSON horodatée. Écart absolu moyen de luminance par scène R6 :
+0,503 %. Les trois R7 restent plus lumineux de 2,555 à 4,632 %, avec un cadrage
+différent à harmoniser ; des écarts de codes hauts persistent. Ce contrôle
+confirme l'application de la calibration, pas la fidélité physique, la parité
+LR ni la validation de tous les réglages sur le nouveau master.
+
+**Résidu R7, étude du 15 octobre :** un coefficient candidat de rendu
+**−0,02 EV avant DCP** (gain 0,986233, baseline effective +0,33 au lieu de +0,35)
+est identifié par recalage et quinze essais natifs ; MAE Y normalisée moyenne
+réduite de 25,78 % sur le masque non écrêté. Voir le
+[§48 du rapport unique](analyses/analyse-base-colorimetrique.md#48-résidu-r7--recalage-et-coefficient-candidat--15-octobre-2026).
+**Au terme de l'étude du 15 octobre, non intégré et non validé visuellement** : trois R7 à ISO
+20000/32000 seulement, résidus bleus/ombres et HL encore présents. La baseline
+documentée DNG n'est pas réécrite et le coefficient ne s'applique pas aux R6.
+
+**Mise à jour du 16 octobre :** le candidat est accepté par l'utilisateur et
+intégré localement. Voir le [§49](analyses/analyse-base-colorimetrique.md#49-intégration-de-la-compensation-r7-au-chemin-dcp--16-octobre-2026)
+et l'[ADR-0010](../decisions/ADR-0010-compensation-rendu-par-profil-dcp.md).
+Rejeu : 16 R6 identiques au neutre précédent et 3 R7 identiques au candidat
++0,33 EV, au pas 8. La baseline source reste +0,35 et la compensation vaut
+−0,02 EV ; calibration active et profils/ISO audités requis. Les limites
+bas/moyen ISO, bleus/ombres et HL restent ouvertes. Build Windows, 22 CTest
+et suite Python (235 tests, dont un ignoré) réussis ; pas de livraison GitHub.
+
+**Restauration d'une ancienne recette, 16 octobre :** le
+[§50](analyses/analyse-base-colorimetrique.md#50-retour-rouge-sur-0081-export-neutre-2--16-octobre-2026)
+identifie l'export 0081 « −2 » comme exactement égal au rejeu non calibré au
+pas 8. Le manifeste partagé a changé d'empreinte ; la recette conserve
+l'ancienne empreinte malgré une calibration demandée. Le coefficient R7
+n'est pas appliqué au R6. Il faut confirmer le manifeste courant dans l'IHM ;
+une confirmation dédiée et un avertissement plus visible restent à prévoir.
+
+**Correction implémentée ensuite le 16 octobre :** voir le
+[§51](analyses/analyse-base-colorimetrique.md#51-ouverture-des-règles-r6r7-aux-nouvelles-photos-et-automatisme--16-octobre-2026)
+et l'[ADR-0011](../decisions/ADR-0011-regles-raw-par-mode-et-configuration-vivante.md).
+Manifeste schéma 3 vivant, calibration active par défaut, règles modèle/DCP/mode
+sans liste de RAW ou d'ISO. Les 19 témoins restent identiques au pas 8 ; les
+nouveaux ISO sont autorisés à l'essai, pas déclarés validés. Restauration d'un
+manifeste modifié testée avec conservation des retouches ; 22 CTest et 235 tests
+Python (un ignoré) réussis. La mise à jour des profils DCP/LCP reste contrôlée.
+
+**Transition formats/caractérisations — 16 octobre :**
+voir le [§52](analyses/analyse-base-colorimetrique.md#52-transition-des-formats-et-du-catalogue-de-caractérisations--16-octobre-2026)
+et l'[ADR-0012](../decisions/ADR-0012-formats-extensibles-et-caracterisations.md).
+Catalogue schéma 4, identités format/décodeur dans les données, callbacks de
+vignettes dédiés et filtres d'ouverture dynamiques. Les 19 témoins gardent
+0 code d'écart au pas 8 ([preuve v003](raw/integration-profile-rendering-v003-20261016T135724740625Z.json)).
+Pas de nouveau boîtier certifié : le contrat caméra commun et la séparation
+physique des règles empiriques restent à réaliser.
+
+**Deuxième lot — contrat caméra :** `CameraSignal` centralise le rendu DCP de
+l'ouverture et du changement rapide de profil ; contrôles de coordonnées,
+WB, identité et valeurs finies. [§53](analyses/analyse-base-colorimetrique.md#53-contrat-rgb-caméra-et-rendu-dcp-commun--16-octobre-2026),
+[preuve v004](raw/integration-profile-rendering-v004-20261016T140847990289Z.json) :
+19 témoins inchangés au pas 8 ; 22 CTest et 235 tests Python (un ignoré) réussis.
+La validation visuelle utilisateur couvre le premier lot ; la caractérisation
+physique indépendante du DCP reste à réaliser.
+
+La frontière commune d'import est contrôlée au
+[§54](analyses/analyse-base-colorimetrique.md#54-frontière-dimport-commune-raw-et-images-développées--16-octobre-2026) :
+23 CTest et 235 tests Python (un ignoré) réussis, tests JPG/PNG/TIFF avec ICC,
+alpha, orientation, métadonnées, réimport d'un DNG linéaire exporté. Les 19 RAW
+restent identiques au pas 8 ([preuve v006](raw/integration-profile-rendering-v006-20261016T142535955642Z.json)).
+Ce contrôle ne qualifie pas tous les DNG ni tous les TIFF spécialisés.
+
+Le cache partagé DCP/LCP est contrôlé au
+[§55](analyses/analyse-base-colorimetrique.md#55-cache-partagé-borné-des-profils-dcplcp-préparés--17-octobre-2026) :
+24 CTest et 235 tests Python (un ignoré) réussis. Les 19 RAW restent identiques
+au pas 8 ([preuve v007](raw/integration-profile-rendering-v007-20261016T220959682955Z.json)).
+Budget initial 64 Mio/16 entrées ; invalidation par contenu et concurrence
+testées. Pas de CI GitHub couvrant les modifications locales non publiées.
 
 ## Recette manuelle — Préférences d’IHM
 

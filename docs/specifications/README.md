@@ -1,3 +1,5 @@
+*[Français](README.md) | [English](README_en.md)*
+
 # Spécifications fonctionnelles
 
 Une spécification décrit le comportement attendu, les limites et les critères d'acceptation d'une fonctionnalité. Elle ne contient ni une trace exhaustive de développement ni des mesures brutes.

@@ -1,0 +1,55 @@
+\chapter{Navigation, zoom et comparaison}
+\label{chap:navigation}
+\section{Passer d’une image à l’autre}
+Cliquer sur une vignette pour ouvrir sa photo. Le contour de la vignette et
+son nom en gras identifient l’image effectivement ouverte, indépendamment des
+cases de sélection multiple. Si le ruban est replié, les boutons précédent
+et suivant apparaissent en bas à droite de la zone image. Leur survol indique
+le nom de la cible ; ils ne dépassent pas les extrémités du dossier.
+
+Le bouton centré au-dessus du ruban le replie. Lorsqu’il est masqué, ce bouton
+revient en bas de la vue et permet de le rouvrir. Son état est mémorisé.
+Les flèches du clavier ne sont pas des raccourcis globaux de changement de photo.
+
+\section{Examiner les détails}
+Cliquer dans la photo pour passer du mode ajusté à un agrandissement, puis
+cliquer de nouveau sans déplacer la souris pour revenir au mode ajusté.
+Quand l’image dépasse la vue, maintenir le bouton gauche et déplacer la souris
+pour parcourir les détails. Un clic dans une marge vide ne déclenche pas le zoom.
+
+\paragraph{Clavier et molette.}
+\touche{Ctrl + +} agrandit ; \touche{Ctrl + $-$} réduit.
+\touche{Ctrl + 0} ajuste à la vue et \touche{Ctrl + 1} affiche à 100\,\%.
+\touche{Ctrl + molette} zoome autour de la souris. Sans Ctrl, la molette déplace
+l’image agrandie ; \touche{Maj + molette verticale} permet un déplacement horizontal.
+Les boutons correspondants restent disponibles au-dessus de la photo.
+
+\attention{100\,\% signifie un pixel de l’aperçu par unité de la vue ;
+l’aperçu interactif peut être réduit par rapport à la source pleine résolution.
+L’export est reconstruit indépendamment à sa résolution prévue.}
+
+\section{Afficher un comparatif partagé}
+Cliquer sur \emph{Avant/après} ou utiliser \touche{Ctrl + Maj + C} lorsque
+les deux aperçus sont prêts. L’origine est à gauche et l’état courant à droite.
+Déplacer le séparateur pour choisir la largeur des deux zones. Les deux côtés
+partagent le même zoom et le même déplacement.
+
+\section{Voir temporairement l’original}
+Donner le focus à la vue image, puis maintenir \touche{Espace}. Relâcher revient
+à la présentation précédente, y compris au comparatif partagé s’il était actif.
+Le bouton \emph{Origine} remplit le même rôle tant que le clic est maintenu.
+La commande ne s’applique pas à une saisie dans un champ numérique.
+Un changement de photo réinitialise la vue et la comparaison.
+
+\attention{L’origine est la référence de développement exposée par IPR,
+pas la mosaïque RAW brute ni nécessairement le JPEG du boîtier. Modifier
+le profil de développement peut modifier cette référence.}
+
+\section{Menu contextuel de la photo}
+Un clic droit dans la vue ouvre les actions de la photo : export et
+réinitialisation des retouches, ainsi que les commandes de fichier.
+Le clic droit ne déclenche pas le zoom. Avec le focus dans la vue,
+\touche{Maj + F10} ou la touche Menu ouvre aussi ce contexte.
+La réinitialisation demande confirmation ; elle n’a pas d’annulation générale.
+Les actions Enregistrer et Dupliquer restent désactivées tant que leur
+raccordement moteur manque.

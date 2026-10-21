@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="32" font-size="20">TEMPERATURE — réponse publiée v3</text>
+<text x="30" y="58" font-size="13">delta_log_R_B (unités et convention : source)</text>
+<path d="M95,470.0h740" stroke="#ddd"/>
+<text x="87" y="474.0" text-anchor="end" font-size="12">-7.04</text>
+<path d="M95,392.0h740" stroke="#ddd"/>
+<text x="87" y="396.0" text-anchor="end" font-size="12">-5.02</text>
+<path d="M95,314.0h740" stroke="#ddd"/>
+<text x="87" y="318.0" text-anchor="end" font-size="12">-2.99</text>
+<path d="M95,236.0h740" stroke="#ddd"/>
+<text x="87" y="240.0" text-anchor="end" font-size="12">-0.965</text>
+<path d="M95,157.99999999999994h740" stroke="#ddd"/>
+<text x="87" y="161.99999999999994" text-anchor="end" font-size="12">1.06</text>
+<path d="M95,80.0h740" stroke="#ddd"/>
+<text x="87" y="84.0" text-anchor="end" font-size="12">3.09</text>
+<text transform="translate(95.0,490) rotate(25)" font-size="11">bare</text>
+<text transform="translate(835.0,490) rotate(25)" font-size="11">suffix_2</text>
+<circle cx="95.0" cy="470.0" r="4" fill="#1565c0"/>
+<circle cx="835.0" cy="108.88888888888886" r="4" fill="#1565c0"/>
+<polyline points="95.00,470.00 835.00,108.89" fill="none" stroke="#1565c0" stroke-width="2"/>
+<text x="855" y="100" fill="#1565c0" font-size="11">LR</text>
+<circle cx="95.0" cy="378.52606307820406" r="4" fill="#d84315"/>
+<text x="855" y="122" fill="#d84315" font-size="11">IPR</text>
+<text x="30" y="620" font-size="12">Deux états selon la convention de campagne ; ne pas déduire leurs unités du suffixe. Lacunes laissées vides. Voir reglages-reponses.csv.</text></svg>

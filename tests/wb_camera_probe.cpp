@@ -97,7 +97,7 @@ int main(int argc,char **argv) {
             options.useNormalizationEnvironment=false;
             options.lensCorrectionEnabled=false;
             options.chromaticAberrationEnabled=false;
-            RawDecoder::SourceMetadata metadata;
+            ImageMetadata metadata;
             QString error;
             const auto decoded=RawDecoder::decode(path,options,&metadata,&error);
             if(decoded.isNull() || !decoded.dcpContext) throw std::runtime_error(error.toStdString());
@@ -108,20 +108,20 @@ int main(int argc,char **argv) {
             const cv::Mat neutralPixels=output(neutral);
             cv::Mat rgb;
             const int ref=int(std::lround(context.sourceKelvin));
-            if(!CameraProfileEngine::renderWhiteBalance(context,ref,0,rgb,&error)) throw std::runtime_error(error.toStdString());
+            if(!CameraProfileEngine::renderFromCameraSignal(context, ref, 0, 0.0,rgb,&error)) throw std::runtime_error(error.toStdString());
             const bool exact=cv::norm(rgba(rgb).linearRgba,neutral.linearRgba,cv::NORM_INF)==0;
             identity &= exact;
             for(const QString feature : {"temperature","tint"}) {
                 const std::vector<int> values=feature=="temperature" ? std::vector<int>{2000,3500,5200,6500,9000,50000} : std::vector<int>{-150,-100,-50,-25,0,25,50,100,150};
                 cv::Mat supportRgb;
-                if(!CameraProfileEngine::renderWhiteBalance(context,5200,0,supportRgb,&error)) throw std::runtime_error(error.toStdString());
+                if(!CameraProfileEngine::renderFromCameraSignal(context, 5200, 0, 0.0,supportRgb,&error)) throw std::runtime_error(error.toStdString());
                 const cv::Mat support=output(rgba(supportRgb));
                 for(int value:values) {
                     const int temp=feature=="temperature" ? value:5200;
                     const int tint=feature=="tint"?value:0;
                     cv::Vec3d gains;
                     if(!CameraProfileEngine::whiteBalanceGains(context,temp,tint,gains,&error) ||
-                       !CameraProfileEngine::renderWhiteBalance(context,temp,tint,rgb,&error)) throw std::runtime_error(error.toStdString());
+                       !CameraProfileEngine::renderFromCameraSignal(context, temp, tint, 0.0,rgb,&error)) throw std::runtime_error(error.toStdString());
                     const cv::Mat pixels=output(rgba(rgb));
                     records.append(QJsonObject{{"scene",scene},{"feature",feature},{"value",value},
                         {"engine","IPR"},{"settings",QJsonObject{{"temperature",temp},{"tint",tint},

@@ -1,30 +1,18 @@
 param(
-    [Parameter(Position=0)][ValidateSet('help')][string]$Command,
-    [Parameter(Position=1)][string]$HelpTopic = 'all',
-    [string]$Help,
-    [string[]]$Group = @(),
-    [string[]]$Images = @(),
-    [string[]]$Feature = @('neutral'),
-    [string[]]$Values = @(),
-    [string]$Output,
-    [ValidateSet('TIFF', 'PNG', 'JPEG')][string]$Format = 'TIFF',
-    [int]$Quality = 100,
-    [int]$GradingHue = 30,
-    [int]$GradingSaturation = 25,
-    [int]$SharpeningBase = 50,
-    [string]$BuildDirectory,
-    [ValidateSet('Release', 'Debug')][string]$Config = 'Release',
-    [switch]$List,
-    [switch]$CameraNeutral,
-    [switch]$DryRun
+    [Parameter(Mandatory=$true, Position=0)]
+    [ValidateSet('all', 'raw', 'lumiere', 'courbes', 'couleur', 'melangeur',
+                 'grading', 'effets', 'bruit', 'nettete', 'optique')]
+    [string]$Group
 )
 $ErrorActionPreference = 'Stop'
+if ($args.Count -gt 0) { throw 'Provide only one group, or all.' }
 $previousPath = $env:PATH
 $previousPluginPath = $env:QT_PLUGIN_PATH
 
 try {
     $projectRoot = Split-Path $PSScriptRoot
-    if (-not $BuildDirectory) { $BuildDirectory = Join-Path $projectRoot 'build-windows-msvc' }
+    $BuildDirectory = Join-Path $projectRoot 'build-windows-msvc'
+    $Config = 'Release'
     $executable = Join-Path $BuildDirectory ($Config + '/iprGenerateTests.exe')
     $cachePath = Join-Path $BuildDirectory 'CMakeCache.txt'
     if (-not (Test-Path -LiteralPath $executable -PathType Leaf)) {
@@ -54,22 +42,9 @@ try {
     $runtimeDirectories = @($runtimeDirectories | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -Unique)
     $env:PATH = ($runtimeDirectories -join ';') + ';' + $env:PATH
 
-    $arguments = @('--feature', ($Feature -join ','), '--format', $Format, '--quality', [string]$Quality,
-                   '--grading-hue', [string]$GradingHue, '--grading-saturation', [string]$GradingSaturation,
-                   '--sharpening-base', [string]$SharpeningBase)
-    if ($List) { $arguments += '--list' }
-    if ($CameraNeutral) { $arguments += '--camera-neutral' }
-    if ($Group.Count -gt 0) { $arguments += @('--group', ($Group -join ',')) }
-    if ($DryRun) { $arguments += '--dry-run' }
-    if ($Values.Count -gt 0) { $arguments += '--values=' + ($Values -join ',') }
-    if ($Output) { $arguments += @('--output', $Output) }
-    foreach ($imagePath in $Images) { $arguments += @('--input', $imagePath) }
-    if ($Help -or $Command -eq 'help') {
-        $topic = if ($Help) { $Help } else { $HelpTopic }
-        $arguments = @('--help-group', $topic)
-    }
-    & $executable @arguments
-    if ($LASTEXITCODE -ne 0) { throw "Generation failed (exit $LASTEXITCODE). See message above." }
+    Push-Location -LiteralPath $projectRoot
+    try { & $executable $Group.ToLowerInvariant() } finally { Pop-Location }
+    if ($LASTEXITCODE -ne 0) { throw "Generation failed (exit $LASTEXITCODE). No files deleted; see message above." }
 } finally {
     $env:PATH = $previousPath
     $env:QT_PLUGIN_PATH = $previousPluginPath

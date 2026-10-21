@@ -1,0 +1,499 @@
+{
+  "campaign_id": "investigation-export-0081-v001-20261016T085825677079Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "group": "base-colorimetrique",
+  "measured_at_utc": "2026-10-16T08:58:25.677079+00:00",
+  "inputs": {
+    "tests\\image\\base\\6V1A0081.CR3": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97",
+    "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+    "config\\raw-normalization.json": "e6076fbb0904d2bb728dfe492deea556bca3c9fddf4ea2bd358e3bfa9256a085",
+    "build-windows-msvc\\Release\\rawNormalizationCorpusProbe.exe": "8e43b67cecc2497da111f4a979a1885acb23434145113984a65d3a3f90b49fe4",
+    "tests\\image\\base\\6V1A0081.CR3.ipr": "4999401f6917329d5fd0010e789204d4bab09d52754ced8e0d93ab91d0ec2e5e",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\investigate_0081_export.py": "932b069b9c951a54e4e4df1ecc3404b05afdcee8f2f8b9ad0710dba7d9368f41",
+    "tests\\analysis\\native.py": "731cda0574c8c29d8fcbb3a4672bcd2b14f3836bd5e25e4784b24d76fb233d0c",
+    "tests\\inspect_saved_raw_state.py": "cea12c64123b45633a06803dd62505e6c8d330b1ce72b8f2270570b681e923a0",
+    "tests\\raw_normalization_corpus_probe.cpp": "442fe677620daa95e1bb2e22b76e844bb6a0b64f8762154516f1895efbf47a8e",
+    "src\\editor\\imageeditor.cpp": "a1f8fba9b0bafde17b64251a6a02d7d935aab56d8e369e7fc2aa1e86ef60ce0e",
+    "src\\raw\\RawDecoder.cpp": "a0ec33403da42381019204713aa6107ec3f4c10e4bc828f14a22f6d7090d3f1f",
+    "src\\raw\\RawNormalization.cpp": "8aeeb5d136e7f7e432fa81012d4ae56eeb23e4f79e48ea83cd0efcc55527d116",
+    "src\\profiles\\CameraProfileEngine.cpp": "311e346e024143db3763989e83f6faa8e30e951a0972238db9102d8839e51a31",
+    "tests\\image\\base\\neutre\\6V1A0081-IPR_RAW_Audit.tiff": "41ed22fd329f0601b0310204a8c80b62e917f9ca6ac62bf9bc35247452ec528a",
+    "tests\\image\\base\\neutre\\6V1A0081-IPR_RAW_Audit-2.tiff": "a84f35315ec43ff4b85361316c91146200a8a00a3b243b6fd3654ebc2b44be1d",
+    "tests\\image\\base\\neutre\\6V1A0081.tif": "f929c174518a2e600c4d13621a694dd9b92d1fbf7606ad2e7a84586dff545c29"
+  },
+  "status": "complete",
+  "saved_recipe": {
+    "file": "tests\\image\\base\\6V1A0081.CR3.ipr",
+    "sha256": "4999401f6917329d5fd0010e789204d4bab09d52754ced8e0d93ab91d0ec2e5e",
+    "source_signature_matches": true,
+    "source_size": 24774868,
+    "source_modified_ms": 1785932152000,
+    "settings": {
+      "brightness": 0.0,
+      "contrast": 0,
+      "blur": 0,
+      "grayscale": false,
+      "shadows": 0,
+      "blacks": 0,
+      "highlights": 0,
+      "whites": 0,
+      "temperature": 4924,
+      "tint": 0,
+      "vibrance": 0,
+      "saturation": 0,
+      "texture": 0,
+      "clarity": 0,
+      "dehaze": 0,
+      "grain": 0,
+      "denoiseLuminance": 0,
+      "denoiseChrominance": 0,
+      "sharpeningAmount": 0,
+      "sharpeningRadius": 1.0,
+      "sharpeningMasking": 0,
+      "mixer": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "grading": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "automaticWhiteBalance": false,
+      "curves": [
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    "raw": {
+      "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+      "profileSha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+      "manifest": ":/config/raw-normalization.json",
+      "manifestSha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795",
+      "normalizationEnabled": true,
+      "engineVersion": "ipr-render-rec2020-linear-d65-v1|profile-render=1|libraw=0.22.2-Release",
+      "lensProfile": "C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Canon/Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW.lcp",
+      "lensProfileSha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+      "lensProfileResolved": true,
+      "lensCorrectionEnabled": false,
+      "chromaticAberrationEnabled": false
+    },
+    "user_metadata": {
+      "rating": 0,
+      "colorLabel": "",
+      "flagged": false,
+      "ratingSet": false,
+      "colorLabelSet": false
+    },
+    "limitation": "Current saved state only, not proof of settings at TIFF export time"
+  },
+  "exports": {
+    "previous": {
+      "metadata": {
+        "path": "tests\\image\\base\\neutre\\6V1A0081-IPR_RAW_Audit.tiff",
+        "sha256": "41ed22fd329f0601b0310204a8c80b62e917f9ca6ac62bf9bc35247452ec528a",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-15T16:24:31.589008+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "distribution": {
+        "mean_Y": 0.03097683797051799,
+        "Y_p05_p50_p95": [
+          0.0006559721237038984,
+          0.005988164958126078,
+          0.1291736354824078
+        ],
+        "black_percent": 10.789338089575901,
+        "encoded_clipped_percent": 0.0,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.15473803407363002,
+        "samples": 504600
+      }
+    },
+    "current": {
+      "metadata": {
+        "path": "tests\\image\\base\\neutre\\6V1A0081-IPR_RAW_Audit-2.tiff",
+        "sha256": "a84f35315ec43ff4b85361316c91146200a8a00a3b243b6fd3654ebc2b44be1d",
+        "bytes": 258263634,
+        "modified_at_utc": "2026-10-16T08:54:08.898517+00:00",
+        "dimensions": [
+          4639,
+          6959
+        ],
+        "bits": [
+          16,
+          16,
+          16,
+          16
+        ],
+        "channels": 4,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB",
+        "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+        "xmp_settings": {}
+      },
+      "distribution": {
+        "mean_Y": 0.016244521002872662,
+        "Y_p05_p50_p95": [
+          0.0004572670619367478,
+          0.002853273247505661,
+          0.07300172001866997
+        ],
+        "black_percent": 21.662108600871978,
+        "encoded_clipped_percent": 0.0,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.0798604757899125,
+        "samples": 504600
+      }
+    },
+    "LR": {
+      "metadata": {
+        "path": "tests\\image\\base\\neutre\\6V1A0081.tif",
+        "sha256": "f929c174518a2e600c4d13621a694dd9b92d1fbf7606ad2e7a84586dff545c29",
+        "bytes": 193793546,
+        "modified_at_utc": "2026-10-14T08:37:59.523210+00:00",
+        "dimensions": [
+          4640,
+          6960
+        ],
+        "bits": [
+          16,
+          16,
+          16
+        ],
+        "channels": 3,
+        "orientation": 1,
+        "compression": 1,
+        "icc": "sRGB IEC61966-2.1",
+        "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+        "xmp_settings": {
+          "RawFileName": "6V1A0081.CR3",
+          "Version": "18.7",
+          "ProcessVersion": "15.4",
+          "WhiteBalance": "As Shot",
+          "Temperature": "5200",
+          "Tint": "+5",
+          "Exposure2012": "0.00",
+          "Contrast2012": "0",
+          "Highlights2012": "0",
+          "Shadows2012": "0",
+          "Whites2012": "0",
+          "Blacks2012": "0",
+          "Texture": "0",
+          "Clarity2012": "0",
+          "Dehaze": "0",
+          "Vibrance": "0",
+          "Saturation": "0",
+          "ParametricShadows": "0",
+          "ParametricDarks": "0",
+          "ParametricLights": "0",
+          "ParametricHighlights": "0",
+          "ParametricShadowSplit": "25",
+          "ParametricMidtoneSplit": "50",
+          "ParametricHighlightSplit": "75",
+          "Sharpness": "0",
+          "LuminanceSmoothing": "0",
+          "ColorNoiseReduction": "0",
+          "HueAdjustmentRed": "0",
+          "HueAdjustmentOrange": "0",
+          "HueAdjustmentYellow": "0",
+          "HueAdjustmentGreen": "0",
+          "HueAdjustmentAqua": "0",
+          "HueAdjustmentBlue": "0",
+          "HueAdjustmentPurple": "0",
+          "HueAdjustmentMagenta": "0",
+          "SaturationAdjustmentRed": "0",
+          "SaturationAdjustmentOrange": "0",
+          "SaturationAdjustmentYellow": "0",
+          "SaturationAdjustmentGreen": "0",
+          "SaturationAdjustmentAqua": "0",
+          "SaturationAdjustmentBlue": "0",
+          "SaturationAdjustmentPurple": "0",
+          "SaturationAdjustmentMagenta": "0",
+          "LuminanceAdjustmentRed": "0",
+          "LuminanceAdjustmentOrange": "0",
+          "LuminanceAdjustmentYellow": "0",
+          "LuminanceAdjustmentGreen": "0",
+          "LuminanceAdjustmentAqua": "0",
+          "LuminanceAdjustmentBlue": "0",
+          "LuminanceAdjustmentPurple": "0",
+          "LuminanceAdjustmentMagenta": "0",
+          "SplitToningShadowHue": "0",
+          "SplitToningShadowSaturation": "0",
+          "SplitToningHighlightHue": "0",
+          "SplitToningHighlightSaturation": "0",
+          "SplitToningBalance": "0",
+          "ColorGradeMidtoneHue": "0",
+          "ColorGradeMidtoneSat": "0",
+          "ColorGradeShadowLum": "0",
+          "ColorGradeMidtoneLum": "0",
+          "ColorGradeHighlightLum": "0",
+          "ColorGradeBlending": "50",
+          "ColorGradeGlobalHue": "0",
+          "ColorGradeGlobalSat": "0",
+          "ColorGradeGlobalLum": "0",
+          "AutoLateralCA": "0",
+          "LensProfileEnable": "0",
+          "LensManualDistortionAmount": "0",
+          "VignetteAmount": "0",
+          "DefringePurpleAmount": "0",
+          "DefringePurpleHueLo": "30",
+          "DefringePurpleHueHi": "70",
+          "DefringeGreenAmount": "0",
+          "DefringeGreenHueLo": "40",
+          "DefringeGreenHueHi": "60",
+          "PerspectiveUpright": "0",
+          "PerspectiveVertical": "0",
+          "PerspectiveHorizontal": "0",
+          "PerspectiveRotate": "0.0",
+          "PerspectiveAspect": "0",
+          "PerspectiveScale": "100",
+          "PerspectiveX": "0.00",
+          "PerspectiveY": "0.00",
+          "GrainAmount": "0",
+          "Glow": "0",
+          "PostCropVignetteAmount": "0",
+          "ShadowTint": "0",
+          "RedHue": "0",
+          "RedSaturation": "0",
+          "GreenHue": "0",
+          "GreenSaturation": "0",
+          "BlueHue": "0",
+          "BlueSaturation": "0",
+          "HDREditMode": "0",
+          "ConvertToGrayscale": "False",
+          "OverrideLookVignette": "False",
+          "ToneCurveName2012": "Linear",
+          "CameraProfile": "Camera Neutral",
+          "CameraProfileDigest": "8180D0EC85977057CE86FB64330967A6",
+          "LensProfileSetup": "LensDefaults",
+          "LensProfileName": "Camera Settings",
+          "LensProfileDigest": "9F61B9947F6CB191C20DE7543E48F948",
+          "LensProfileIsEmbedded": "True",
+          "LensProfileDistortionScale": "100",
+          "LensProfileVignettingScale": "100",
+          "HasSettings": "True",
+          "CropTop": "0",
+          "CropLeft": "0",
+          "CropBottom": "1",
+          "CropRight": "1",
+          "CropAngle": "0",
+          "CropConstrainToWarp": "0",
+          "CropConstrainToUnitSquare": "1",
+          "HasCrop": "False",
+          "AlreadyApplied": "True",
+          "ToneCurvePV2012": "",
+          "ToneCurvePV2012Red": "",
+          "ToneCurvePV2012Green": "",
+          "ToneCurvePV2012Blue": "",
+          "PointColors": "",
+          "ColorVariance": ""
+        }
+      },
+      "distribution": {
+        "mean_Y": 0.031000410298702197,
+        "Y_p05_p50_p95": [
+          0.0006532788827183545,
+          0.005971903531451477,
+          0.12930599068796092
+        ],
+        "black_percent": 10.801823226317877,
+        "encoded_clipped_percent": 0.0,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.15444952894787897,
+        "samples": 504600
+      }
+    }
+  },
+  "replays": {
+    "calibrated": {
+      "native": {
+        "CA": false,
+        "DCP_replay_max_abs_error": 0,
+        "backend_version": "0.22.2-Release",
+        "baseline_exposure_ev": 0.26,
+        "byte_order": "little",
+        "camera": "EOS R6 Mark III",
+        "cols": 580,
+        "decode_ms": 4037,
+        "domain": "Unbounded post-DCP linear sRGB float32 analysis derivative; upstream tables and curve unchanged",
+        "effective_camera_exposure_ev": 0.26,
+        "engine": "ipr-render-rec2020-linear-d65-v1|profile-render=1",
+        "lens_geometry": false,
+        "lens_vignetting": false,
+        "master_domain": "Rec.2020 linear D65 float32",
+        "native_preview_sha256": "e180c7ada0351207903c0ad27fc6096ff70f0af3e8e8057e3fe5f5019c070b42",
+        "no_lcp": true,
+        "normalization_applied": true,
+        "output_area": {},
+        "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "profile_exposure_compensation_ev": 0,
+        "profile_rendering_provenance": "",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0081.CR3",
+        "raw_sha256": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97",
+        "rows": 870,
+        "sample_step": 8,
+        "source_kelvin": 4924.211272770631,
+        "source_sha256": "da218d213348a2fc623f95acba46e21fcef219d2407a0ba21422416f9909005f",
+        "white_level": 13995
+      },
+      "proof_sha256": "28de06936389a43b65d53ffc321b6f26abe14e2c2fb72d77c41f4f7716b9a7b6"
+    },
+    "uncalibrated": {
+      "native": {
+        "CA": false,
+        "DCP_replay_max_abs_error": 0,
+        "backend_version": "0.22.2-Release",
+        "baseline_exposure_ev": 0,
+        "byte_order": "little",
+        "camera": "EOS R6 Mark III",
+        "cols": 580,
+        "decode_ms": 3981,
+        "domain": "Unbounded post-DCP linear sRGB float32 analysis derivative; upstream tables and curve unchanged",
+        "effective_camera_exposure_ev": 0,
+        "engine": "ipr-render-rec2020-linear-d65-v1|profile-render=1",
+        "lens_geometry": false,
+        "lens_vignetting": false,
+        "master_domain": "Rec.2020 linear D65 float32",
+        "native_preview_sha256": "f689a41cf6621cf639855c81530070a802c6ecf816c36b9b8bff68e8a617388e",
+        "no_lcp": true,
+        "normalization_applied": false,
+        "output_area": {},
+        "profile": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+        "profile_exposure_compensation_ev": 0,
+        "profile_rendering_provenance": "",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0081.CR3",
+        "raw_sha256": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97",
+        "rows": 870,
+        "sample_step": 8,
+        "source_kelvin": 4924.211272770631,
+        "source_sha256": "fdad56b532e7549c3637a7f750df22fb235ab1997eecd152401e9cd0dc9b6729",
+        "white_level": 0
+      },
+      "proof_sha256": "e1821dd1f5edb20868256e66532a7cd816b27040505b67b0d334ee4e1dba238f"
+    }
+  },
+  "comparisons": {
+    "calibrated": {
+      "previous": {
+        "max_16bit_codes": 0,
+        "mean_abs_codes": 0.0,
+        "required_max_codes": 0,
+        "passed": true
+      },
+      "current": {
+        "max_16bit_codes": 11370,
+        "mean_abs_codes": 2342.1599042145594,
+        "required_max_codes": 0,
+        "passed": false
+      }
+    },
+    "uncalibrated": {
+      "previous": {
+        "max_16bit_codes": 11370,
+        "mean_abs_codes": 2342.1599042145594,
+        "required_max_codes": 0,
+        "passed": false
+      },
+      "current": {
+        "max_16bit_codes": 0,
+        "mean_abs_codes": 0.0,
+        "required_max_codes": 0,
+        "passed": true
+      }
+    }
+  },
+  "method": {
+    "sample_step": 8,
+    "bits": 16,
+    "output": "sRGB",
+    "master": "Rec.2020 linear D65",
+    "hypothesis": "Saved embedded-manifest hash no longer matches current resource; normalization skipped"
+  },
+  "units": {
+    "codes": "unsigned 16bit sRGB",
+    "Y": "linear sRGB relative luminance",
+    "fractions": "percent"
+  },
+  "tools": {
+    "numpy": "2.4.2",
+    "opencv": "5.0.0"
+  },
+  "limitations": [
+    "Saved state is current, not independent TIFF-time metadata",
+    "Exact replay checks a step-eight grid, not all full-resolution pixels",
+    "LR distributions are independent geometries, not registered MAE/DeltaE",
+    "No image, sidecar, profile or production configuration modified"
+  ],
+  "manifest_hash_matches_saved": false,
+  "diagnosis_confirmed": true,
+  "completed_at_utc": "2026-10-16T08:58:38.027779+00:00"
+}

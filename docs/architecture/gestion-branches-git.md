@@ -1,15 +1,30 @@
+*[Français](gestion-branches-git.md) | [English](gestion-branches-git_en.md)*
+
 # Gestion des branches Git
 
 Règle adoptée le 10 octobre 2026.
+
+## Langue des commits et pull requests
+
+Depuis le 19 octobre 2026, tous les nouveaux messages de commit (fusions
+comprises), titres et descriptions de PR sont rédigés en anglais, comme les
+noms des branches. Ne pas réécrire l’historique publié pour traduire les
+anciens messages. Cette règle ne change pas la langue des documents du projet.
 
 ## Organisation
 
 `dev` rassemble les groupes de fonctionnalités validés. Chaque groupe a une
 branche permanente issue de `dev` : la branche existante `patch_light` suit les
 Lumières (exposition, contraste, ombres, noirs, blancs et hautes lumières).
-Les prochains groupes auront chacun leur branche, par exemple `patch_color`
-pour la couleur ou `patch_noise` pour le bruit ; ces noms sont des exemples,
-pas des branches déjà créées.
+`patch_color` suit la couleur, `patch_ci_cd` l'intégration/livraison continue
+et `patch_documentation` la documentation ; ces branches existent et sont
+conservées après intégration. Un prochain groupe pourra utiliser un nom tel
+que `patch_noise`, qui reste ici un exemple et non une branche annoncée créée.
+
+Depuis le 14 octobre 2026, `patch_raw_opening` est la branche locale dédiée
+au rendu initial RAW/base colorimétrique, créée depuis `dev`. Le prototype
+Couleur non validé reste sauvegardé sur `patch_color` (commit `8abcd12`),
+sans fusion dans `dev` ni publication implicite.
 
 Une branche de groupe est conservée après livraison. Les commits de fusion
 matérialisent les validations dans le graphe Git ; les tags identifient les états
@@ -47,6 +62,40 @@ pas forcer un pull, réinitialiser l'historique ou écraser une branche distante
 Les commits propres à la branche distante `dev` doivent aussi être conservés.
 
 ## Livrer après validation
+
+### Versions de prototypage
+
+Règle précisée le 11 octobre 2026 : le projet est en alpha. Les prochaines
+fusions validées dans `dev` sont identifiées par `v0.1.X-alpha`. Le compteur
+`X` augmente du nombre de patchs livrés, et non du nombre de commits. Examiner
+les tags existants et identifier les patchs de la livraison avant de choisir
+le prochain numéro ; ne pas créer de tag sur une fusion non validée.
+
+Après validation de toutes les fonctionnalités de réglages implémentées, la
+première série beta utilise `v0.2.X-beta`. La version mineure évolue ensuite
+à chaque intégration d'un autre panneau de fonctionnalités : `v0.3.X-beta`,
+`v0.4.X-beta`, etc.
+
+Le passage en version stable **`v1.Y.X`** intervient après validation de tous
+les panneaux de fonctionnalités sur les boîtiers que l'utilisateur possède
+actuellement. Documenter les modèles couverts, les campagnes et les preuves
+avant de déclarer ce jalon validé par l'utilisateur. Il ne constitue pas une
+validation universelle pour les autres boîtiers. `Y` désigne la version mineure
+et `X` la version de patch ; aucun calendrier de sortie n'est imposé.
+
+Les tags historiques déjà publiés ne sont ni renommés ni déplacés.
+
+Poser le tag de version sur le commit de fusion validé de `dev` ; publier ce
+tag seulement dans le cadre d'une livraison autorisée. Cette règle documentaire
+ne crée pas elle-même de tag et n'autorise aucune fusion ou publication.
+
+Pendant le prototypage, aucun legacy n'est conservé, même dans les tests.
+Un remplacement supprime l'ancienne implémentation, ses options de compatibilité
+et les tests qui ne concernent que celle-ci ; les tests de l'implémentation
+courante sont maintenus. L'historique Git et les preuves d'analyse JSON restent
+conservés : ce sont des traces, pas des chemins d'exécution legacy.
+
+### Procédure de livraison
 
 Valider les tests adaptés aux zones modifiées, les résultats et l'accord de
 l'utilisateur avant la livraison. Consigner les preuves et limites dans le

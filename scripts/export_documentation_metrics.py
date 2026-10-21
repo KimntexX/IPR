@@ -15,14 +15,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / 'docs/validation/raw'
 OUT = ROOT / 'docs/validation/metrics'
+HASH_FORMAT = 'sha256-text-lf-v1'
 
 
 def digest(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    # Text evidence: Git autocrlf must not invalidate cross-platform provenance.
+    # Keep all other bytes exact; this is not the digest of images or profiles.
+    return hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
 
 
 def family(name):
-    for key, target in [('color-mixer', 'melangeur'), ('bruit', 'bruit'),
+    for key, target in [('cache-memoire', 'performance-ouverture'), ('latence-ouverture', 'performance-ouverture'),
+                        ('color-mixer', 'melangeur'), ('bruit', 'bruit'),
                         ('temperature', 'balance-blancs'), ('nuance', 'balance-blancs'),
                         ('blancs-hautes', 'tonalite'), ('contraste', 'tonalite'),
                         ('ombre', 'tonalite'), ('lumiere', 'tonalite'),
@@ -33,10 +37,17 @@ def family(name):
     return 'base-raw-profils'
 
 
+# Per-tile samples stay in their canonical JSON: flattening them would copy
+# hundreds of thousands of values into derived CSVs tracked by Git.
+BULK_KEYS = {'tiles'}
+
+
 def numeric_rows(node, pointer='', context=''):
     if isinstance(node, dict):
         context = str(node.get('scene', node.get('path', context)))
         for key, value in node.items():
+            if key in BULK_KEYS:
+                continue
             escaped = str(key).replace('~', '~0').replace('/', '~1')
             yield from numeric_rows(value, pointer + '/' + escaped, context)
     elif isinstance(node, list):
@@ -47,6 +58,9 @@ def numeric_rows(node, pointer='', context=''):
 
 
 def write_csv(path, rows, fields):
+    if 'source_sha256' in fields or 'sha256' in fields:
+        fields = list(fields) + ['source_hash_format']
+        rows = [dict(row, source_hash_format=HASH_FORMAT) for row in rows]
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open('w', newline='', encoding='utf-8') as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
@@ -65,6 +79,8 @@ def validate(output):
             for row in csv.DictReader(stream):
                 source = row.get('source')
                 expected_hash = row.get('source_sha256', row.get('sha256'))
+                if source and expected_hash and row.get('source_hash_format') != HASH_FORMAT:
+                    raise ValueError(f'Regenerate derived provenance: {path.name}')
                 if source and expected_hash and actual_hash(source) != expected_hash:
                     raise ValueError(f'Stale evidence: {path.name} / {source}')
                 pointer = row.get('locator', '')
@@ -311,6 +327,18 @@ def main():
     stages = ['opening_total', 'profile_lookup', 'raw_decode', 'lcp_dcp', 'proxy',
               'render', 'thumbnail', 'decoded_cache_lookup', 'export', 'batch_export_future']
     write_csv(output / 'benchmark-template.csv', [{field: stage if field == 'stage' else '' for field in benchmark_fields} for stage in stages], benchmark_fields)
+    latency_campaigns = sorted(RAW.glob('latence-ouverture-v[0-9][0-9][0-9]-*.json'))
+    completed = [(path, json.loads(path.read_text(encoding='utf-8'))) for path in latency_campaigns]
+    completed = [(path, data) for path, data in completed if data.get('status') == 'complete']
+    if completed:
+        latency_source, latency = completed[-1]
+        navigation = [record for record in latency['records'] if record['label'].startswith('navigation-')]
+        chart(output / 'curves/latence-navigation.svg', 'Navigation RAW — cache adaptatif et préchargement',
+              [f'{index+1}: {run["scene"]}' for index, run in enumerate(navigation[0]['measurement']['runs'])],
+              [(record['label'].removeprefix('navigation-'),
+                [run['ready_ms'] / 1000 for run in record['measurement']['runs']]) for record in navigation],
+              'Temps moteur prêt (s), pas première présentation GPU',
+              f'Source : {latency_source.name} ; résultat lié à la mémoire libre de la machine mesurée.')
     # One selected scene, components and engines stay separate; no pooled quality score.
     groups = defaultdict(list)
     for row in noise:

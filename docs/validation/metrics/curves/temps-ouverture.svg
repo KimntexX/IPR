@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="32" font-size="20">Ouverture RAW — benchmark historique Windows</text>
+<text x="30" y="58" font-size="13">Durée (secondes)</text>
+<path d="M95,470.0h740" stroke="#ddd"/>
+<text x="87" y="474.0" text-anchor="end" font-size="12">0</text>
+<path d="M95,392.0h740" stroke="#ddd"/>
+<text x="87" y="396.0" text-anchor="end" font-size="12">3.4</text>
+<path d="M95,314.0h740" stroke="#ddd"/>
+<text x="87" y="318.0" text-anchor="end" font-size="12">6.8</text>
+<path d="M95,236.0h740" stroke="#ddd"/>
+<text x="87" y="240.0" text-anchor="end" font-size="12">10.2</text>
+<path d="M95,158.0h740" stroke="#ddd"/>
+<text x="87" y="162.0" text-anchor="end" font-size="12">13.6</text>
+<path d="M95,80.0h740" stroke="#ddd"/>
+<text x="87" y="84.0" text-anchor="end" font-size="12">17</text>
+<text transform="translate(95.0,490) rotate(25)" font-size="11">Avant</text>
+<text transform="translate(835.0,490) rotate(25)" font-size="11">Après parallélisation</text>
+<circle cx="95.0" cy="298.7142937829175" r="4" fill="#1565c0"/>
+<circle cx="835.0" cy="299.17319721551513" r="4" fill="#1565c0"/>
+<polyline points="95.00,298.71 835.00,299.17" fill="none" stroke="#1565c0" stroke-width="2"/>
+<text x="855" y="100" fill="#1565c0" font-size="11">Recherche DCP/LCP, premier lancement</text>
+<circle cx="95.0" cy="404.90454808601964" r="4" fill="#d84315"/>
+<circle cx="835.0" cy="404.9963287725392" r="4" fill="#d84315"/>
+<polyline points="95.00,404.90 835.00,405.00" fill="none" stroke="#d84315" stroke-width="2"/>
+<text x="855" y="122" fill="#d84315" font-size="11">LibRaw : décompression + développement</text>
+<circle cx="95.0" cy="463.55240677200266" r="4" fill="#2e7d32"/>
+<circle cx="835.0" cy="463.4376809138532" r="4" fill="#2e7d32"/>
+<polyline points="95.00,463.55 835.00,463.44" fill="none" stroke="#2e7d32" stroke-width="2"/>
+<text x="855" y="144" fill="#2e7d32" font-size="11">Copie de l&#x27;image mémoire</text>
+<circle cx="95.0" cy="352.1077081656571" r="4" fill="#7b1fa2"/>
+<circle cx="835.0" cy="451.39146580816424" r="4" fill="#7b1fa2"/>
+<polyline points="95.00,352.11 835.00,451.39" fill="none" stroke="#7b1fa2" stroke-width="2"/>
+<text x="855" y="166" fill="#7b1fa2" font-size="11">Application DCP/LCP</text>
+<circle cx="95.0" cy="108.88888888888886" r="4" fill="#00838f"/>
+<circle cx="835.0" cy="208.5856596207339" r="4" fill="#00838f"/>
+<polyline points="95.00,108.89 835.00,208.59" fill="none" stroke="#00838f" stroke-width="2"/>
+<text x="855" y="188" fill="#00838f" font-size="11">Total, premier chargement</text>
+<circle cx="95.0" cy="278.79788480817837" r="4" fill="#795548"/>
+<circle cx="835.0" cy="379.94020135270614" r="4" fill="#795548"/>
+<polyline points="95.00,278.80 835.00,379.94" fill="none" stroke="#795548" stroke-width="2"/>
+<text x="855" y="210" fill="#795548" font-size="11">Total, chargement suivant dans le même processus</text>
+<text x="30" y="620" font-size="12">Une campagne locale, sans répétitions/variance publiées ; ne décrit pas le build actuel. Détails : temps-ouverture.csv.</text></svg>

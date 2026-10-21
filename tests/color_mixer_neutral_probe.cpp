@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "controlled_memory.h"
 #include "imageprovider.h"
 
 #include <QCoreApplication>
@@ -59,7 +60,7 @@ int main(int argc, char **argv)
     QCoreApplication app(argc, argv);
     QTemporaryDir temporary;
     ImageProvider provider;
-    ImageEditor editor(&provider);
+    ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
     QImage input(5, 1, QImage::Format_RGBA8888);
     const int values[] = {0, 64, 128, 192, 255};
     for (int x = 0; x < 5; ++x) input.setPixelColor(x, 0, QColor(values[x], values[x], values[x], 255));

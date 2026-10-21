@@ -1,79 +1,119 @@
+*[Français](README.md) | [English](README_en.md)*
+
 # IPR — Image Processing Room
 
-Application Qt Quick/QML en C++17 pour parcourir un dossier d'images, appliquer quelques réglages et exporter le résultat.
+IPR est une application de développement et de retouche photographique non destructive,
+écrite en **C++17 avec Qt Quick/QML**. Elle permet de parcourir un dossier d'images,
+développer des RAW, ajuster le rendu et exporter une image sans modifier l'original.
 
-## Fonctions disponibles
+Le projet est en développement actif. **Fonction disponible ne signifie pas qualité
+entièrement validée** : les résultats et limites sont suivis dans la
+[matrice de validation](docs/validation/matrice-validation.md).
 
-La CI lance les tests complets sur Windows, Linux et macOS Intel/Apple Silicon.
-Les workflows de livraison préparent des archives **standalone** et **bibliothèques
-système**, ainsi que des paquets Debian/Fedora/Arch. Instructions et limites :
-[CI et livraison multiplateforme](docs/architecture/ci-et-build-multiplateforme.md).
-Les paquets publics ne contiennent pas les profils Adobe locaux.
+## Aperçu de l'interface
 
-- ouverture d'un dossier local et liste des fichiers JPG, JPEG, PNG, TIFF et RAW enregistrés ;
-- chargement de JPG/PNG/TIFF avec respect de l'orientation EXIF ;
-- import CR2/CR3/DNG lorsqu'elle est compilée avec **LibRaw** ;
-- réglages non destructifs : exposition (±5 EV), contraste, ombres, noirs, hautes lumières, blancs, quatre courbes de tonalité (luminance, rouge, vert et bleu), histogramme RGBl, balance des blancs, température de 2000 à 50000 K (initialisée sur la balance des blancs détectée dans le fichier source, ou 6500 K à défaut), nuance de -150 à 150 (vert ↔ magenta), vibrance, saturation, texture, clarté, correction du voile, grain et flou gaussien ;
-- rendu et export hors du thread de l'interface ;
-- export JPEG, PNG, TIFF ou DNG linéaire rendu ; le dialogue propose par défaut `nom-source-IPR.<format>` dans le dossier de l’image.
+![Interface d'IPR : informations à gauche, aperçu au centre, réglages à droite et ruban de vignettes en bas](docs/asset/ipr-interface.png)
 
-Le pipeline de travail est une image `CV_32FC4` RGBA à alpha droit en sRGB linéaire ; son espace colorimétrique et la provenance du profil ou de la transformation source sont conservés avec les pixels. Les fichiers JPEG/PNG/TIFF passent par le profil ICC fourni par Qt lorsqu'il est valide ; en son absence, IPR interprète l'entrée comme sRGB et signale cette hypothèse. Les fichiers RAW sont développés par LibRaw en RGB 16 bits linéaire ; le DCP sélectionné, ou la matrice couleur de LibRaw en son absence, fournit la transformation vers sRGB linéaire. L'aperçu et tous les exports passent par la même compression de gamut sRGB : elle conserve la luminance et réduit la chroma vers un neutre de même luminance lorsqu'une couleur est hors gamut, plutôt que d'écrêter indépendamment les canaux. L’export DNG produit une image RGB linéaire 16 bits avec les réglages IPR intégrés, des balises DNG et un profil sRGB ; il ne recopie ni la mosaïque RAW, ni les métadonnées de prise de vue, ni la latitude de développement du fichier d’origine. Les transformations RAW et les réglages peuvent produire des valeurs flottantes hors de [0, 1] ; la compression de gamut de sortie les ramène dans sRGB, sans tone mapping HDR dédié. L'espace de travail reste sRGB linéaire : un gamut plus large attend l'adaptation et la validation de toute la chaîne DCP/réglages/sortie. La température couleur se règle entre 2000 K et 50000 K ; à l'ouverture d'une image, elle est initialisée sur la balance des blancs détectée dans le fichier source (estimée par LibRaw pour les RAW, ou lue dans les métadonnées disponibles pour les autres formats), afin d’éviter une mauvaise interprétation initiale des couleurs, avec un repli à 6500 K si aucune valeur fiable n'est disponible ; la nuance va de -150 (vert) à +150 (magenta). Ces réglages agissent après décodage et ne remplacent pas une balance des blancs RAW colorimétriquement complète.
+*Écran d'accueil sans image ouverte. Les réglages sont regroupés en sections
+repliables ; l'histogramme reste en haut du panneau de droite.*
 
-Pour les CR3 Canon dont LibRaw ne fournit pas de niveau noir utilisable, le décodeur estime un niveau par photosite CFA à partir des marges masquées du capteur avant le développement. Cette correction de repli n'est appliquée que si aucun niveau noir DNG ou niveau de motif n'est présent et si les marges fournissent des mesures plausibles. L'algorithme est isolé dans `RawBlackLevelEstimator` et dispose de tests synthétiques ; le corpus RAW local documenté, sans copie des photos dans le dépôt, se trouve dans [`tests/corpus/raw-black-level/`](tests/corpus/raw-black-level/). Les décodeurs RAW sont enregistrés par extension, ce qui permet d'ajouter un backend propre à un format ou à un fabricant sans changer le pipeline de rendu. Les décodeurs peuvent aussi rapporter le format, le boîtier et l'objectif pour alimenter la sélection des profils ; ces métadonnées sont affichées avec les dimensions de l'image.
+## Fonctionnalités
 
-Les réglages restent non destructifs : l'image de travail dérive de l'original conservé en mémoire et ne modifie jamais le fichier source.
+### Navigation et consultation
 
-Les réglages s'ouvrent depuis le bouton ou le menu **Réglages**. Le module
-d'histogramme et de courbe se trouve à la fin de la section **Lumière**. Les
-pastilles gris, rouge, verte et bleue sélectionnent respectivement les courbes
-Luminance, Rouge, Vert et Bleu. Un double-clic ajoute une poignée, un clic droit
-supprime une poignée interne et les boutons de réinitialisation restaurent la
-diagonale d'identité. La saturation agit uniformément sur la chrominance ;
-la vibrance privilégie les couleurs peu saturées et préserve davantage les
-couleurs déjà vives. La section **Effets** contient la texture (micro-détails),
-la clarté (contraste local de rayon plus large), la correction du voile et un
-grain monochrome stable entre deux rendus.
+- Ouverture d'une image et accès à son dossier ; parcours des fichiers JPEG, PNG, TIFF et RAW pris en charge.
+- Ruban horizontal de vignettes avec chargement autour de la zone visible et libération des éléments éloignés.
+- Panneau d'informations : nom, dimensions et métadonnées disponibles du boîtier, de l'objectif et de la prise de vue.
+- Notation par étoiles, libellés de couleur et marquage par drapeau.
+- Zoom, déplacement dans l'aperçu et comparaison **origine / actuel**.
+- Multisélection et application de réglages aux images sélectionnées.
 
-## Dépendances
+La comparaison « origine » utilise la base décodée et profilée avant les retouches :
+ce n'est ni la mosaïque RAW ni nécessairement le JPEG intégré du boîtier.
+Le zoom porte sur le proxy d'aperçu, pas sur une vue RAW pleine résolution.
+Voir le [contrat de navigation et de comparaison](docs/specifications/zoom-image.md).
 
-- Qt 6.4 ou plus récent : modules Core, Gui, Quick, QML et Concurrent ;
-- OpenCV : `core`, `imgproc`, `imgcodecs` ;
-- LibTIFF : export DNG linéaire ;
-- LibRaw 0.21+ est **facultatif** mais requis pour CR2/CR3/DNG.
+### Développement RAW et optique
 
-Qt ne décode pas les RAW et OpenCV n'est pas un décodeur RAW. LibRaw fournit l'import CR2/CR3 et DNG ; son rendu de base convient à cette application mais il ne remplace pas un moteur RAW photo spécialisé.
+- Import **CR2, CR3 et DNG** via le backend facultatif LibRaw.
+- Sélection et activation de profils caméra **DCP**, dont Camera Neutral lorsque le profil compatible est disponible.
+- Balance des blancs du fichier source et option de balance automatique.
+- Profils optiques **LCP** : commandes indépendantes de correction objectif
+  (distorsion/vignettage) et d'aberration chromatique latérale.
+- Mémorisation des profils, de leurs empreintes et des options de développement dans les sidecars.
+- Normalisation RAW expérimentale, désactivée par défaut et limitée aux cas audités.
 
-Pour éviter un scan récursif de milliers de profils, `profiles/index.json` peut associer directement un boîtier/objectif à un DCP/LCP local sous `profiles/dcp` ou `profiles/lcp`. Seuls le manifeste et la structure des dossiers sont versionnés : les profils eux-mêmes sont ignorés par Git tant que leur droit de redistribution n'a pas été établi.
+Les profils ICC des images rendues servent à interpréter leurs couleurs ;
+les DCP interviennent dans le développement RAW et les LCP dans les corrections optiques.
+La correction des franges longitudinales et la correction CA sans modèle LCP
+ne sont pas implémentées. Voir le [moteur de profils](docs/camera-profile-engine.md).
 
-Un moteur interne sélectionne les profils DCP caméra et LCP optiques dans `profiles/dcp` et `profiles/lcp`, sous le répertoire courant puis le répertoire de données utilisateur. Sous Windows, il recherche aussi directement les profils installés par Adobe dans `%ProgramData%\\Adobe\\CameraRaw\\CameraProfiles` et `%ProgramData%\\Adobe\\CameraRaw\\LensProfiles`. Sous WSL, il détecte `/mnt/c/ProgramData/Adobe/CameraRaw` si ce dossier est monté ; pour tout autre chemin, définir `IPR_ADOBE_CAMERARAW_DIR` vers la racine `CameraRaw`. Les fichiers restent à leur emplacement d'origine et ne sont pas copiés dans le projet. L'implémentation comprend matrices DCP ForwardMatrix avec repli ColorMatrix, interpolation simplifiée multi-illuminants, tables Hue/Sat et Look, courbe tonale et compensation d'exposition de base. Le parseur LCP prend en charge plusieurs modèles optiques, sélection/interpolation approximative selon les paramètres de capture, distorsion, vignettage et remappage CA rouge/bleu.
+### Réglages photographiques
 
-Ces fonctions ne constituent pas encore une implémentation certifiée de l'intégralité des spécifications DNG/LCP. Les températures de balance de blancs, l'interpolation de matrices, le repli ColorMatrix et la sélection optique ont des limites documentées ; la distance de mise au point n'est pas encore fournie par LibRaw. Les tests automatisés utilisent uniquement des profils synthétiques et aucun profil Canon/Sigma calibré n'est livré dans le dépôt. Voir la [documentation détaillée du moteur DCP/LCP](docs/camera-profile-engine.md) avant de déployer des profils réels.
+| Ensemble | Réglages disponibles |
+| --- | --- |
+| Lumière | Exposition (±5 EV), contraste, ombres, noirs, blancs et hautes lumières |
+| Courbe de tonalité | Courbes luminance, rouge, vert et bleu, indépendantes de l'histogramme |
+| Couleur | Température (2 000–50 000 K), nuance vert/magenta (−150 à +150), vibrance et saturation |
+| Mélangeur de couleurs | Teinte, saturation et luminance sur huit bandes : rouge, orange, jaune, vert, cyan, bleu, violet et magenta |
+| Color grading | Roues chromatiques pour ombres, tons moyens et hautes lumières |
+| Effets | Texture, clarté, correction du voile, grain et flou |
+| Réduction du bruit | Traitements classiques de luminance et de chrominance |
+| Netteté | Quantité, rayon et masquage |
 
-### Windows : OpenCV et vcpkg
+Les champs numériques et les curseurs sont liés. La température neutre dépend
+de la référence détectée à l'ouverture, pas d'une température universelle appliquée
+à toutes les photos. Les méthodes, paramètres et limites sont détaillés dans les
+[spécifications des réglages](docs/specifications/reglages-photographiques.md).
 
-Consulter le guide complet [d'installation OpenCV sous Windows](docs/installation-opencv-windows.md). Il détaille les deux parcours compatibles :
+### Sauvegarde, préférences et export
 
-- **Qt MSVC 64 bits + vcpkg `x64-windows`** ;
-- **Qt MinGW 64 bits + compilation manuelle d'OpenCV avec le MinGW fourni par Qt**.
+- Retouches non destructives conservées dans des **sidecars `.ipr`** ; lecture des versions historiques prises en charge.
+- Préférences d'interface dans **`ipr-ui.ini`** : état de fenêtre, sections et paramètres d'affichage.
+- Rendu et export en arrière-plan pour conserver une interface réactive.
+- Export de l'image active en **JPEG, PNG, TIFF ou DNG linéaire rendu**.
+- Dialogue adapté au format choisi et numérotation automatique pour éviter d'écraser un export existant.
 
-Ne mélangez pas des bibliothèques MSVC avec un exécutable MinGW. Le kit historique du projet étant Qt MinGW, le second parcours est le choix direct.
+**L'application de réglages par lot n'est pas un export par lot** :
+la file d'export multiple reste à implémenter. Le DNG exporté contient un rendu
+RGB linéaire avec les retouches intégrées, pas la mosaïque RAW originale ;
+sa compatibilité Lightroom n'est pas encore validée.
 
-## Licences
+Le menu **Affichage → Fichier de préférences…** indique l'emplacement du fichier INI.
+Voir les [préférences d'IHM](docs/architecture/ui-preferences.md)
+et le [modèle de configuration](config/ipr-ui.ini).
 
-L'inventaire des dépendances, les textes des licences et la comparaison des options de licence pour IPR sont dans [`licenses/`](licenses/README.md). Aucun fichier `LICENSE` à la racine n'a encore été choisi pour le code d'IPR ; la licence des dépendances ne détermine pas automatiquement celle du projet.
+## État du projet et prochaines étapes
 
-## Architecture
+Le rendu Camera Neutral a été accepté visuellement sur le corpus étudié,
+sans certification de fidélité physique ni de parité Lightroom.
+L'exposition a été revalidée ; l'amplitude positive des ombres et la saturation
+des blancs/hautes lumières restent à affiner. La qualité du bruit, de la netteté
+et des autres réglages suit des campagnes séparées.
 
-L’état global de l’interface est conservé dans un `ipr-ui.ini` utilisateur,
-indépendant des sidecars photo. Le menu **Affichage → Fichier de préférences…**
-affiche son emplacement. Voir le [contrat et la procédure de personnalisation](docs/architecture/ui-preferences.md)
-et le [modèle embarqué](config/ipr-ui.ini).
+Les prochaines évolutions comprennent le recadrage et la géométrie manuelle,
+les masques et retouches locales, l'intégration d'IA et l'export par lot.
+Elles ne doivent pas être interprétées comme des fonctionnalités déjà livrées.
 
-`ImageEditor` possède l'image de travail linéaire, les métadonnées source et les paramètres. `RawDecoder` sélectionne un décodeur enregistré selon l'extension et fournit les métadonnées disponibles ; le backend LibRaw traite actuellement CR2 et CR3. `CameraProfileEngine` sélectionne les profils DCP/LCP, puis applique les transformations couleur et optiques au décodage RAW. `ColorPipeline` normalise les entrées et encode les sorties sRGB. Le rendu OpenCV est lancé en arrière-plan et partagé entre aperçu et export. `ImageProvider` expose l'aperçu sous l'URL QML `image://editor/preview?revision=…`. Le numéro de révision évite que le cache QML n'affiche un aperçu dépassé.
+Pour l'état précis, consulter la [matrice de validation](docs/validation/matrice-validation.md)
+et le [rapport Lumières](docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md).
 
-Le détail des transformations tonales et couleur, de la reconstruction RGBA, du modèle d'asynchronisme et du choix d'un retour `WorkingImage` par valeur est expliqué dans [la documentation de `ImageEditor::renderWorkingImage`](docs/imageeditor-render-working-image.md).
+## Compilation
 
-### Build Windows et tests ciblés
+### Dépendances
+
+| Dépendance | Usage |
+| --- | --- |
+| Qt ≥ 6.8 | Interface Quick/QML, Core, Gui et Concurrent |
+| OpenCV | Calculs image : `core`, `imgproc`, `imgcodecs` |
+| LibTIFF | Écriture du DNG linéaire |
+| LibRaw ≥ 0.21, facultatif | Décodage CR2/CR3/DNG ; option `IPR_ENABLE_LIBRAW` |
+| CMake ≥ 3.21 et compilateur C++17 | Configuration et compilation |
+
+Qt et OpenCV ne remplacent pas un décodeur RAW. Sans LibRaw, les formats rendus
+restent utilisables, mais le backend RAW actuel n'est pas disponible.
+
+### Windows
 
 Depuis WSL ou Git Bash, application fermée :
 
@@ -81,17 +121,24 @@ Depuis WSL ou Git Bash, application fermée :
 bash scripts/build-windows.sh
 ```
 
-Les tests sont sélectionnés depuis le dernier code validé, y compris les
-modifications non commités. Premier passage, grosse modification et CI GitHub :
-suite complète. Pour forcer celle-ci : `bash scripts/build-windows.sh --full-tests`.
-Voir [les prérequis, règles et options](docs/architecture/tests-cibles-et-build-windows.md).
+Le lanceur prépare le build et sélectionne les tests concernés par les changements.
+Le premier passage, les modifications transversales et la validation CI imposent
+une suite complète. Pour la demander explicitement :
 
-Le build produit aussi `iprGenerateTests.exe` pour générer automatiquement les
-variantes de validation avec le moteur d'IPR, sans écrire les sidecars.
-Voir [le guide du générateur](docs/validation/tools/generateur-images-tests.md)
-et son lanceur Windows `scripts/generate-test-images.ps1`.
+```bash
+bash scripts/build-windows.sh --full-tests
+```
 
-### Tests (Linux/WSL, validation complète)
+- [Prérequis, options et tests ciblés](docs/architecture/tests-cibles-et-build-windows.md).
+- [Installation OpenCV : MSVC/vcpkg ou MinGW](docs/installation-opencv-windows.md).
+- [Packaging Windows autonome](docs/architecture/build-windows-standalone.md).
+
+Ne pas mélanger bibliothèques MSVC et MinGW. Choisir les dépendances compatibles
+avec le kit Qt utilisé. Le packaging autonome exige également les DLL et plugins Qt.
+
+### Linux / WSL
+
+Avec les dépendances de développement installées et Ninja disponible :
 
 ```sh
 cmake -S . -B build -G Ninja -DIPR_ENABLE_LIBRAW=ON -DBUILD_TESTING=ON
@@ -99,11 +146,79 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-Lorsque le corpus local `tests/image/6V1A9933.CR3` et son JPEG Lightroom
-associé sont disponibles, CTest ajoute
-`tonalReferenceComparisonProbe`. Cette sonde rend le CR3 avec
-la base de référence fixe suivante : balance des blancs *As Shot*,
-`exposition=-0,49`, `contraste=41` et les quatre réglages tonals à `-100`.
-Elle compare aussi une variante automatique au JPEG et échoue si la variante
-*As Shot* dépasse un écart RGB moyen de 25 niveaux. Les sorties de contrôle
-restent dans le répertoire de build.
+Les tests utilisant un corpus photographique local ne sont disponibles que
+lorsque leurs fichiers sont présents ; les images de test ne sont pas livrées
+dans le dépôt. La sonde optionnelle `tonalReferenceComparisonProbe` compare
+un développement de 9933 à son JPEG de référence : ce diagnostic historique
+ne certifie pas le rendu de toutes les images.
+
+Les prérequis et la stratégie Windows/macOS/Linux sont décrits dans le
+[plan multi-OS et CI](docs/architecture/ci-et-build-multiplateforme.md) ;
+ce plan ne vaut pas certification de chaque plateforme.
+
+## Profils locaux et redistribution
+
+`profiles/index.json` associe les boîtiers/objectifs aux ressources de
+`profiles/dcp/` et `profiles/lcp/` afin de limiter les recherches coûteuses.
+Seuls le manifeste et la structure sont versionnés ; les profils Adobe ne
+sont pas fournis avec le dépôt.
+
+Le moteur peut aussi rechercher les profils installés dans Adobe Camera Raw,
+notamment sous `%ProgramData%/Adobe/CameraRaw` sur Windows et son montage
+`/mnt/c/ProgramData/Adobe/CameraRaw` sous WSL. La variable
+`IPR_ADOBE_CAMERARAW_DIR` permet de préciser une autre racine.
+
+Un profil installé localement n'est pas automatiquement redistribuable.
+Les transformations DCP/LCP sont partielles et non certifiées pour l'intégralité
+de leurs spécifications ; les tests de profils utilisent des ressources synthétiques.
+Consulter le [contrat DCP/LCP](docs/camera-profile-engine.md) avant déploiement.
+
+## Architecture et documentation
+
+Le code est regroupé sous `src/` : interface QML, application, éditeur,
+pipeline couleur/détail, décodeurs RAW, profils, caches et fournisseurs d'images.
+
+Le moteur utilise un master RGBA flottant **Rec.2020 linéaire D65**.
+Les tables DCP restent dans leur domaine ProPhoto ; l'aperçu et les exports
+courants sont convertis en sRGB à la sortie. Le port et ses limites de
+validation sont décrits dans le [plan Rec.2020](docs/architecture/integration-rec2020.md).
+Les entrées rendues passent par leur ICC valide, avec hypothèse sRGB signalée
+en son absence. Le développement RAW fournit la base profilée.
+Aperçu et export partagent le moteur de rendu et la compression de gamut sRGB ;
+cela ne constitue pas un tone mapping HDR dédié.
+
+| Ressource | Contenu |
+| --- | --- |
+| [Index documentaire](docs/INDEX.md) | Point d'entrée de la documentation |
+| [Architecture](docs/architecture/README.md) | Composants, contrats et décisions techniques |
+| [Moteur de rendu](docs/imageeditor-render-working-image.md) | Transformations, mathématiques et asynchronisme |
+| [Manuel technique LaTeX](docs/technical/latex/README.md) | Documentation technique et diagrammes |
+| [Cours Scholar](docs/scholar/README.md) | Fondements mathématiques et physiques |
+| [Tests en autonomie](docs/validation/procedure-tests-autonomes.md) | Génération des images, audits et analyses |
+
+Le build produit aussi `iprGenerateTests.exe`, qui génère des variantes de
+validation pour la revue visuelle sans écrire les sidecars, et
+`iprRenderServer.exe`, qui rend ces mêmes variantes en mémoire pour les
+analyseurs, sans TIFF. Voir le [guide du générateur](docs/validation/tools/generateur-images-tests.md)
+et `scripts/generate-test-images.ps1`.
+
+Depuis PowerShell : `./scripts/generate-test-images.ps1 couleur` (ou `all`).
+Le générateur lit les images à la racine de `tests/image/base` et écrit les
+TIFF dans les dossiers existants partagés avec Lightroom, sans dossiers datés
+ni fichiers auxiliaires. Les images sont supprimées manuellement après analyse.
+
+Chaque ensemble de fonctionnalités possède un rapport d'analyse évolutif.
+Les **JSON versionnés et horodatés font autorité sur les mesures** ; CSV et
+courbes en sont dérivés. Les images sont temporaires et leur suppression reste
+à l'initiative de l'utilisateur. Voir le [contrat de mémoire des tests](docs/validation/data/README.md).
+
+## Licences
+
+Les CI vérifient les branches de travail ; les archives téléchargeables sont
+réservées à `dev` et `main`, sur un commit validé, en modes standalone et
+bibliothèques système. Voir le [contrat CI/CD](docs/architecture/ci-et-build-multiplateforme.md).
+
+L'inventaire et les textes des licences des dépendances sont dans
+[licenses/](licenses/README.md). Aucune licence du code IPR n'a encore été
+choisie à la racine ; les licences des dépendances ne déterminent pas
+automatiquement celle du projet.

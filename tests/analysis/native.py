@@ -53,6 +53,37 @@ def linearize(encoded):
     return np.where(encoded <= .04045, encoded / 12.92, ((encoded + .055) / 1.055) ** 2.4)
 
 
+def embedded_metadata(path):
+    """Read declarations without allocating pixels or pretending to audit them."""
+    with Image.open(path) as image:
+        if image.format != "TIFF":
+            raise ValueError("Expected TIFF: " + str(path))
+        description = image.tag_v2.get(270, "")
+        if isinstance(description, bytes):
+            description = description.decode("utf-8")
+        ipr = None
+        if description and str(description).lstrip().startswith("{"):
+            ipr = json.loads(description)
+            if not isinstance(ipr, dict) or ipr.get("ipr_test_schema") != 1:
+                ipr = None
+        xmp = image.tag_v2.get(700, b"")
+        if isinstance(xmp, tuple):
+            xmp = bytes(xmp)
+        settings = {}
+        if xmp:
+            try:
+                elements = list(ET.fromstring(xmp).iter())
+            except ET.ParseError as error:
+                raise ValueError("Invalid embedded XMP: " + str(path)) from error
+            for element in elements:
+                for key, value in element.attrib.items():
+                    if key.startswith("{" + CRS + "}"):
+                        settings[key.split("}")[1]] = value
+                if element.tag.startswith("{" + CRS + "}") and element.text:
+                    settings[element.tag.split("}")[1]] = element.text.strip()
+        return ipr, settings
+
+
 def inspect(path):
     path = Path(path)
     before = signature(path)

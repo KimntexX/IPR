@@ -34,7 +34,7 @@ principal coût résiduel.
 
 ### Point A — Chargement asynchrone de l'image
 
-**Problème initial** : [ImageEditor::loadImage()](/c/Users/victo/Documents/Projet/Programmation/IPR/imageeditor.cpp)
+**Problème initial** : [ImageEditor::loadImage()](../../../../src/editor/imageeditor.cpp)
 et `ImageEditor::setAutomaticWhiteBalance()` décodaient le fichier RAW/standard
 de façon strictement synchrone sur le thread UI. Pour un CR3/CR2 de grande
 taille, le dématriçage LibRaw peut prendre plusieurs secondes, pendant
@@ -43,7 +43,7 @@ figée.
 
 **Solution mise en œuvre** :
 
-- Ajout d'une structure `LoadResult` ([imageeditor.h](/c/Users/victo/Documents/Projet/Programmation/IPR/imageeditor.h))
+- Ajout d'une structure `LoadResult` ([imageeditor.h](../../../../src/editor/imageeditor.h))
   regroupant l'image décodée (`ColorPipeline::WorkingImage`), les métadonnées
   source (`RawDecoder::SourceMetadata`) et un message d'erreur éventuel.
 - Extraction de toute la logique de décodage (branches RAW via
@@ -72,8 +72,8 @@ figée.
   flash de contenu vide) ; le message de statut indique
   « Ouverture de *fichier*… ».
 
-**Fichiers modifiés** : [imageeditor.h](/c/Users/victo/Documents/Projet/Programmation/IPR/imageeditor.h),
-[imageeditor.cpp](/c/Users/victo/Documents/Projet/Programmation/IPR/imageeditor.cpp).
+**Fichiers modifiés** : [imageeditor.h](../../../../src/editor/imageeditor.h),
+[imageeditor.cpp](../../../../src/editor/imageeditor.cpp).
 
 **Impact sur les tests** : les tests `imageExportTests` et
 `tonalReferenceComparisonProbe` appelaient `loadImage()` puis vérifiaient
@@ -88,7 +88,7 @@ synchrone).
 
 ### Point B — Suppression du double décodage RAW
 
-**Problème initial** : [ImageProvider::requestImage()](/c/Users/victo/Documents/Projet/Programmation/IPR/imageprovider.cpp)
+**Problème initial** : [ImageProvider::requestImage()](../../../../src/providers/imageprovider.cpp)
 redécodait entièrement le fichier RAW via `RawDecoder::decode()` en secours
 si `m_image` était encore nul — alors que `ImageEditor` avait déjà décodé et
 allait pousser l'image rendue via `setImage()` quelques instants après.
@@ -104,7 +104,7 @@ cache ou retourner un pixel transparent 1×1. Les `#include` devenus inutiles
 `url()` sont conservés tels quels pour ne pas changer l'API publique, bien
 qu'ils ne soient plus utilisés en interne.
 
-**Fichier modifié** : [imageprovider.cpp](/c/Users/victo/Documents/Projet/Programmation/IPR/imageprovider.cpp).
+**Fichier modifié** : [imageprovider.cpp](../../../../src/providers/imageprovider.cpp).
 
 ## Validation
 
@@ -128,15 +128,15 @@ qu'ils ne soient plus utilisés en interne.
 **Problème initial** : `renderWorkingImage()` recalculait l'intégralité du
 pipeline (exposition, contraste, courbes, effets, dehaze, grain…) en pleine
 résolution capteur à chaque glissement de curseur, alors que l'aperçu affiché
-dans [Main.qml](/c/Users/victo/Documents/Projet/Programmation/IPR/Main.qml)
+dans [Main.qml](../../../../src/qml/Main.qml)
 (`Image.PreserveAspectFit`) est de toute façon mis à l'échelle de la zone
 d'affichage, bien plus petite qu'un capteur de 24-50 Mpx.
 
 **Solution mise en œuvre** :
 
-- Ajout d'un second tampon `m_editProxy` ([imageeditor.h](/c/Users/victo/Documents/Projet/Programmation/IPR/imageeditor.h))
+- Ajout d'un second tampon `m_editProxy` ([imageeditor.h](../../../../src/editor/imageeditor.h))
   et d'une fonction statique `ImageEditor::buildEditProxy(source)`
-  ([imageeditor.cpp](/c/Users/victo/Documents/Projet/Programmation/IPR/imageeditor.cpp)) :
+  ([imageeditor.cpp](../../../../src/editor/imageeditor.cpp)) :
   si le plus grand côté de l'image source ne dépasse pas 2048 px, le proxy
   est une copie superficielle de la source (aucun coût) ; sinon, l'image est
   réduite par `cv::resize(..., cv::INTER_AREA)` jusqu'à ce seuil, en
@@ -154,13 +154,13 @@ d'affichage, bien plus petite qu'un capteur de 24-50 Mpx.
   reste représentative, mais ses comptages exacts aux extrêmes (0/255)
   peuvent légèrement différer d'un calcul en pleine résolution, par effet de
   moyennage du redimensionnement — compromis documenté dans
-  [imageeditor-render-working-image.md](/c/Users/victo/Documents/Projet/Programmation/IPR/docs/imageeditor-render-working-image.md).
+  [imageeditor-render-working-image.md](../../../../docs/imageeditor-render-working-image.md).
 
-**Fichiers modifiés** : [imageeditor.h](/c/Users/victo/Documents/Projet/Programmation/IPR/imageeditor.h),
-[imageeditor.cpp](/c/Users/victo/Documents/Projet/Programmation/IPR/imageeditor.cpp),
-[docs/imageeditor-render-working-image.md](/c/Users/victo/Documents/Projet/Programmation/IPR/docs/imageeditor-render-working-image.md).
+**Fichiers modifiés** : [imageeditor.h](../../../../src/editor/imageeditor.h),
+[imageeditor.cpp](../../../../src/editor/imageeditor.cpp),
+[docs/imageeditor-render-working-image.md](../../../../docs/imageeditor-render-working-image.md).
 
-**Tests ajoutés** : [tests/image_export_test.cpp](/c/Users/victo/Documents/Projet/Programmation/IPR/tests/image_export_test.cpp)
+**Tests ajoutés** : [tests/image_export_test.cpp](../../../../tests/image_export_test.cpp)
 contient désormais `verifyEditProxyDownscaling()`, qui charge une image
 synthétique de 2200×1600 (donc au-delà du seuil de 2048 px) et vérifie que
 (a) l'aperçu produit par le fournisseur QML est bien plafonné à 2048 px sur
@@ -237,7 +237,7 @@ bon candidat pour une session ultérieure courte et autonome.
 **Objectif** : remplacer `cv::Mat` par `cv::UMat` dans `renderWorkingImage()`
 pour profiter de l'accélération OpenCL automatique d'OpenCV sur les
 opérations vectorisables (`cv::multiply`, `cv::pow`, `cv::LUT`, etc.), sans
-dépendance CUDA supplémentaire (le [CMakeLists.txt](/c/Users/victo/Documents/Projet/Programmation/IPR/CMakeLists.txt)
+dépendance CUDA supplémentaire (le [CMakeLists.txt](../../../../CMakeLists.txt)
 ne lie actuellement que `core imgproc imgcodecs`).
 La mesure rend ce chantier non prioritaire : `cv::UMat` ne peut pas accélérer
 le décodage/dématriçage interne de LibRaw, qui représente maintenant la plus

@@ -1,0 +1,32 @@
+﻿{
+    "Applied":  true,
+    "DeletedFolders":  [
+                           "build-canon-profils-tonal-20261007",
+                           "build-generator-smoke-20261006",
+                           "build-scholar-haar-preview",
+                           "build-scholar-images-tp-20261008",
+                           "build-git-cleanup-main-20261009"
+                       ],
+    "DeletedFiles":  93,
+    "FreedBytes":  792331647,
+    "IdenticalDuplicateFiles":  73,
+    "RetainedFolders":  [
+                            "build",
+                            "build-calibration-canon-20261007",
+                            "build-canon-blancs-ab-20261007",
+                            "build-canon-courbes-20261008",
+                            "build-canon-dng-reference-20261008",
+                            "build-canon-noirs-correctif-20261007",
+                            "build-canon-normalization-20261008",
+                            "build-colorimetrie-dcp-prophoto-20261007",
+                            "build-colorimetrie-inventory",
+                            "build-colorimetrie-v3-20261007",
+                            "build-diagnostic-profils-raw-20261007",
+                            "build-tonal-base-20261006",
+                            "build-windows-msvc",
+                            "build-wsl-libraw",
+                            "build-wsl-nolibraw"
+                        ],
+    "CompletedUtc":  "2026-10-10T11:50:57.9721848Z",
+    "Recovery":  "Permanent deletion; duplicate remains locally, smoke images must be regenerated"
+}

@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "data_version": 2,
+  "recorded_at_utc": "20261012T133136Z",
+  "group": "workspace-alignment-delivery",
+  "previous_snapshot": "alignement-travaux-locaux-v001-20261012T125704Z.json",
+  "authorization": "User approved publication on agreed group branches and dev after green CI; no main delivery",
+  "validated_runs": [
+    {
+      "branch": "dev",
+      "commit": "edb38d0144b33445244769475ffc5dc0f0dbef45",
+      "run_id": 38253269702,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "branch": "patch_validation",
+      "commit": "209b1a697dd24cd2be7088918395ac1d7b3d5f31",
+      "run_id": 38253270187,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "branch": "patch_documentation",
+      "commit": "f2e2e9dd870a8463c0c11f2dd6e94f346dd60fb7",
+      "run_id": 38253269621,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "published_dev": {
+    "commit": "79f0a0d42a731f670273d7fb6b48ef7d98dcf21b",
+    "publication_success": true,
+    "merges": [
+      {
+        "commit": "b4d778ba7dbd9f1656f11eb546908dd7184f2346",
+        "source_branch": "patch_validation",
+        "tag": "v0.1.20-alpha",
+        "patches": 1,
+        "strategy": "no-ff"
+      },
+      {
+        "commit": "79f0a0d42a731f670273d7fb6b48ef7d98dcf21b",
+        "source_branch": "patch_documentation",
+        "tag": "v0.1.21-alpha",
+        "patches": 1,
+        "strategy": "no-ff"
+      }
+    ]
+  },
+  "validation": {
+    "ctest": {
+      "passed": 18,
+      "total": 18
+    },
+    "python": {
+      "passed": 181,
+      "total": 181,
+      "skipped": 0
+    },
+    "native_build_reused_from": "patch_validation/build-alignment",
+    "reuse_reason": "src/tests/scripts/CMakeLists/cmake/profiles/config identical to the built validated tooling commit",
+    "documentation_errors": 0,
+    "local_link_warnings": 0,
+    "metrics_source_hashes": 132,
+    "metrics_json_values": 286650,
+    "metrics_svg_count": 39
+  },
+  "followup": {
+    "patch_validation_synchronized_and_published": true,
+    "patch_documentation_synchronized_locally": true,
+    "documentation_followup": "This JSON and report update will be published on patch_documentation, not merged into dev without its own validation",
+    "new_ci_waited_for": false,
+    "old_json_modified": false,
+    "main_modified": false,
+    "original_dirty_worktree_preserved": true,
+    "private_images_modified": false
+  },
+  "limits": [
+    "Tool validation is not photographic quality validation",
+    "New integration CI remains pending at this snapshot",
+    "Group branches are preserved; no squash, rebase, force push or main merge"
+  ]
+}

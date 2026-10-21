@@ -13,7 +13,7 @@ Dans Qt Creator : `Édition > Préférences > Kits`, puis regarder le kit sélec
 | `Desktop Qt … MSVC 64-bit` | Microsoft Visual C++ | vcpkg | `x64-windows` |
 | `Desktop Qt … MinGW 64-bit` | MinGW-w64 fourni par Qt | Compilation manuelle avec ce MinGW | Ne pas utiliser `x64-windows` |
 
-Le projet IPR était configuré avec un kit `Desktop Qt 6.7.2 MinGW 64-bit`. Le chemin **sans vcpkg / MinGW** de ce document est donc le choix le plus direct. Si vous préférez vcpkg, installez aussi un kit Qt `MSVC 64-bit` dans le Qt Online Installer et ouvrez IPR avec ce kit.
+Le projet IPR était configuré avec un kit `Desktop Qt 6.7.2 MinGW 64-bit`, désormais inférieur au minimum Qt 6.8 ([ADR-0016](decisions/ADR-0016-minimum-qt-6-8.md)) : choisir un kit Qt 6.8 ou plus récent. Le chemin **sans vcpkg / MinGW** de ce document reste le plus direct avec un kit MinGW. Si vous préférez vcpkg, installez aussi un kit Qt `MSVC 64-bit` dans le Qt Online Installer et ouvrez IPR avec ce kit.
 
 ## 2. Méthode recommandée avec vcpkg (Qt MSVC)
 
@@ -25,7 +25,7 @@ Installer avant de commencer :
 - [Git for Windows](https://git-scm.com/download/win) ;
 - [CMake](https://cmake.org/download/) 3.21 ou supérieur, accessible dans `PATH` ;
 - Visual Studio 2022 Community ou Build Tools, avec la charge **Desktop development with C++**, MSVC v143 et un Windows SDK ;
-- Qt 6 installé avec un kit **MSVC 64-bit** compatible avec Visual Studio ;
+- Qt 6.8 ou plus récent, installé avec un kit **MSVC 64-bit** compatible avec Visual Studio ;
 - accès Internet à GitHub lors du bootstrap et de l'installation des ports ;
 - suffisamment d'espace disque : OpenCV et ses dépendances peuvent nécessiter plusieurs Go pendant la compilation.
 

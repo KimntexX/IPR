@@ -238,7 +238,22 @@ __marimo__/
 
 # Local Windows packages may contain third-party profiles: never commit them.
 /dist/
+
+# Preserve the documentary audit; this is not a generated build directory.
+!docs/reports/storage/build-cleanup-2026-10-10/
+!docs/reports/storage/build-cleanup-2026-10-10/**
 /.worktrees/
 /.ci-cache/
 /dist-*/
 /ci-logs/
+
+# Per-family numeric dumps flattened from the canonical JSON evidence by
+# scripts/export_documentation_metrics.py: regenerable, not tracked.
+docs/validation/metrics/base-raw-profils.csv
+docs/validation/metrics/tonalite.csv
+docs/validation/metrics/balance-blancs.csv
+docs/validation/metrics/couleur-globale.csv
+docs/validation/metrics/melangeur.csv
+docs/validation/metrics/bruit.csv
+docs/validation/metrics/detail.csv
+docs/validation/metrics/performance-ouverture.csv

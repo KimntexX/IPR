@@ -1,5 +1,5 @@
-#ifndef IPR_COLOR_MIXER_H
-#define IPR_COLOR_MIXER_H
+#ifndef IPR_CORE_COLORMIXER_H
+#define IPR_CORE_COLORMIXER_H
 
 #include <array>
 #include <opencv2/core.hpp>
@@ -15,8 +15,9 @@ struct Parameters {
     std::array<int, BandCount> luminance{};
 };
 
-// Input/output: linear working RGB, not gamma-encoded RGB. No output clipping.
+// Input/output: linear Rec.2020 D65 RGB, not gamma-encoded RGB. No output clipping.
+// HSV band centres refer to these working primaries, not to sRGB channel angles.
 cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters);
 }
 
-#endif
+#endif // IPR_CORE_COLORMIXER_H

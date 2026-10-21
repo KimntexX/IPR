@@ -1,12 +1,11 @@
-# Protocole de validation — Clarté
+# Clarté — protocole consolidé
 
-**Date :** 2 octobre 2026  
-**Corpus :** huit scènes neutres et deux extrêmes par scène dans `tests/image/base/clarte`.
+Statut : remplacé le 10 octobre 2026.
 
-## Objectif
+La méthode, le corpus et les états utiles sont regroupés dans le
+[protocole de groupe](protocole-effets.md) et le [socle commun](protocole-commun.md).
 
-Valider que Clarté agit sur le contraste local à moyenne échelle (rayon `sigma = 8` dans IPR), dans les deux sens, sans dérive chromatique ou d'exposition notable. Les ombres profondes et hautes lumières doivent être protégées.
-
-## Mesures
-
-`tests/analyse_clarity.py` analyse six zones natives de 512×512 pixels. Il mesure le ratio du résidu par rapport à un lissage local 17×17, les gradients, la luminance, la dérive de chrominance et le clipping. Les variantes doivent avoir des effets opposés et préserver la luminance moyenne ; une évaluation visuelle complémentaire reste nécessaire pour exclure les halos.
+Ce chemin est conservé pour les liens historiques, pas pour une maintenance
+parallèle. Utiliser les déclarations TIFF/XMP et les associations auditées, jamais
+les seuls suffixes automatiques. Les résultats et JSON historiques restent
+inchangés ; ils ne valident pas automatiquement le pipeline courant.

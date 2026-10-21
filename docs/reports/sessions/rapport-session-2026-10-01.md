@@ -7,7 +7,8 @@ documentation des modèles utilisés par le pipeline de rendu, l'amélioration
 des performances d'ouverture et d'édition, puis la correction d'erreurs QML
 signalées au démarrage de l'application.
 
-Les travaux ont été réalisés dans [build-wsl-libraw](/c/Users/victo/Documents/Projet/Programmation/IPR/build-wsl-libraw).
+Les travaux ont été réalisés dans `build-wsl-libraw`, dossier de compilation
+local non versionné.
 La configuration sans LibRaw n'a volontairement pas été construite, car elle
 ne représente pas le produit cible avec prise en charge RAW.
 
@@ -16,7 +17,7 @@ ne représente pas le produit cible avec prise en charge RAW.
 ### Balance des blancs RAW et température
 
 - Correction de l'estimation de la température « As Shot » pour les RAW
-  LibRaw dans [RawDecoder.cpp](/c/Users/victo/Documents/Projet/Programmation/IPR/RawDecoder.cpp).
+  LibRaw dans [RawDecoder.cpp](../../../src/raw/RawDecoder.cpp).
   L'ancienne implémentation utilisait `pre_mul`, une calibration fixe proche
   de D65, ainsi que `cam_xyz` dans le mauvais sens. Elle remontait donc une
   valeur presque constante et erronée, autour de 12 000–13 000 K.
@@ -26,15 +27,16 @@ ne représente pas le produit cible avec prise en charge RAW.
 - Les températures obtenues sont devenues plausibles : environ 5117 K pour
   les CR3 Canon testés et environ 4810 K pour le CR2 du Canon 60D.
 - Ajout du test de régression
-  [white_balance_estimation_test.cpp](/c/Users/victo/Documents/Projet/Programmation/IPR/tests/white_balance_estimation_test.cpp)
+  `white_balance_estimation_test.cpp` (test historique remplacé depuis ;
+  les tests courants du décodeur sont dans [raw_decoder_test.cpp](../../../tests/raw_decoder_test.cpp))
   et de sa cible CMake conditionnelle.
 - Correction du bouton de remise à zéro individuel de la température dans
-  [Setting.qml](/c/Users/victo/Documents/Projet/Programmation/IPR/Setting.qml).
+  [Setting.qml](../../../src/qml/Setting.qml).
   Il reprend maintenant la température de référence détectée dans le fichier,
   au lieu de revenir systématiquement à 6500 K.
 - Remplacement du modèle de gains logarithmiques trop faible par une
   adaptation chromatique 3×3 dans
-  [ColorPipeline.cpp](/c/Users/victo/Documents/Projet/Programmation/IPR/ColorPipeline.cpp).
+  [ColorPipeline.cpp](../../../src/core/ColorPipeline.cpp).
   La chromaticité de la température cible est calculée sur le locus de Planck
   (approximation de Krystek), puis adaptée en espace LMS avec la matrice de
   Bradford. À 2000 K, l'effet froid est désormais suffisamment marqué, sans
@@ -43,7 +45,7 @@ ne représente pas le produit cible avec prise en charge RAW.
 ### Documentation des modèles de rendu
 
 La documentation technique
-[imageeditor-render-working-image.md](/c/Users/victo/Documents/Projet/Programmation/IPR/docs/imageeditor-render-working-image.md)
+[imageeditor-render-working-image.md](../../../docs/imageeditor-render-working-image.md)
 a été enrichie et mise à jour pour décrire :
 
 - l'estimation de la température source par `cam_mul`, matrice caméra inversée
@@ -54,7 +56,7 @@ a été enrichie et mise à jour pour décrire :
 - l'interpolation barycentrique de Lagrange utilisée pour les courbes de
   tonalité, choisie pour sa continuité et sa stabilité numérique.
 
-[camera-profile-engine.md](/c/Users/victo/Documents/Projet/Programmation/IPR/docs/camera-profile-engine.md)
+[camera-profile-engine.md](../../../docs/camera-profile-engine.md)
 a également été corrigé afin de décrire la bonne source des données de
 balance des blancs RAW.
 
@@ -75,7 +77,7 @@ Le détail est disponible dans
      asynchrone, sans dupliquer la logique de chargement.
 
 2. **Suppression du double décodage RAW** :
-   - [imageprovider.cpp](/c/Users/victo/Documents/Projet/Programmation/IPR/imageprovider.cpp)
+   - [imageprovider.cpp](../../../src/providers/imageprovider.cpp)
      ne décode plus le RAW en secours lorsque son image n'est pas encore
      disponible.
    - Il renvoie temporairement un pixel transparent jusqu'à la publication du
@@ -93,7 +95,7 @@ Le détail est disponible dans
 ### Correction des erreurs QML au démarrage
 
 Deux erreurs signalées dans la console ont été analysées et corrigées dans
-[Setting.qml](/c/Users/victo/Documents/Projet/Programmation/IPR/Setting.qml) :
+[Setting.qml](../../../src/qml/Setting.qml) :
 
 - L'avertissement Qt sur l'injection implicite du paramètre `value` dans les
   gestionnaires de signal est supprimé. Les 15 handlers `onValueEdited`

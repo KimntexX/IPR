@@ -1,0 +1,26 @@
+\chapter{Effets}
+\section{Choisir le type d’effet}
+\begin{longtable}{@{}L{3.6cm}L{2.8cm}L{7.2cm}@{}}
+\toprule Contrôle & Domaine & Intention\\\midrule\endhead
+Texture & $-100$ à $+100$ & Adoucir ou renforcer les petits détails.\\
+Clarté & $-100$ à $+100$ & Modifier la présence des structures et le contraste local.\\
+Correction du voile & $-100$ à $+100$ & Modifier l’impression de voile et la séparation des tons.\\
+Grain & 0 à 100 & Ajouter un effet de grain ; ce n’est pas du débruitage.\\
+Flou gaussien & 0 à 20 & Adoucir globalement ; ce n’est pas une simulation complète de profondeur de champ.\\
+\bottomrule
+\end{longtable}
+La référence de ces contrôles est zéro. Une valeur négative de texture ou
+de clarté ne correspond pas à une réduction du bruit identique au module dédié.
+
+\section{Contrôler les artefacts}
+Examiner les contours, les transitions de ciel et les textures fines après
+une forte correction. Un gain de clarté peut rendre le bruit plus visible ;
+un excès de lissage peut donner une matière artificielle. Vérifier également
+à la taille de livraison, car un détail agréable au fort zoom peut être excessif
+en vue ajustée.
+
+\paragraph{Exemple.}
+Sur un paysage voilé, commencer par une petite correction du voile, puis
+rééquilibrer éventuellement la lumière. Comparer avec \touche{Ctrl + Maj + C}
+et examiner les limites ciel/bâtiments au zoom \touche{Ctrl + 1}.
+\gestesreglages

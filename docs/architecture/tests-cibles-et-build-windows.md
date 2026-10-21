@@ -1,3 +1,5 @@
+*[Français](tests-cibles-et-build-windows.md) | [English](tests-cibles-et-build-windows_en.md)*
+
 # Build Windows et sélection des tests
 
 ## Commande quotidienne
@@ -12,7 +14,10 @@ Le lanceur Bash utilise Python 3.9+ pour sélectionner les tests, puis PowerShel
 et les outils **Windows** CMake/MSVC pour compiler. Un lancement depuis WSL
 produit bien `appIPR.exe` et `iprGenerateTests.exe` Windows, pas des binaires Linux. Par défaut :
 `build-windows-msvc`, `Release`, deux jobs. Fermer l'exécutable de ce dossier
-avant de le relier ; le script refuse de l'arrêter automatiquement.
+avant de le relier ; le script refuse de l'arrêter automatiquement. Avant de
+compiler, il vérifie qu'aucun `.exe` de `<build>/<config>` ne tourne (IPR,
+générateur, sonde ou test). Sinon, il s'arrête avec le nom du programme à fermer :
+Windows verrouille un exécutable lancé, et l'ancien binaire resterait en place.
 
 Prérequis : MSVC/Visual Studio Build Tools 2022 x64, CMake et CTest Windows,
 Qt MSVC, OpenCV/LibTIFF/LibRaw de la même ABI. Le cache CMake existant est réutilisé.
@@ -50,7 +55,7 @@ chaque build d'un worktree déjà sale, sans nécessiter de commit préalable.
 | --- | --- |
 | Préférences/INI | préférences C++, restauration QML, panneau des réglages |
 | Mélangeur | mathématiques, neutres, pastilles QML, export, comparateur Python |
-| Générateur d'images (`src/tools/`) | séries de paramètres, isolation, manifeste, sources préservées, export 16 bits |
+| Générateur d'images (`src/tools/`) | groupes/all, dossiers partagés, isolation, provenance TIFF, sources préservées, export 16 bits |
 | Décodage RAW | décodeur, niveau noir, profils, export |
 | Profils locaux | moteur DCP/LCP, décodeur, export |
 | Réglages QML | contraintes de largeur, contrôles, restauration globale |
