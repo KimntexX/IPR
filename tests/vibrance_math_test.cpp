@@ -69,6 +69,15 @@ int main()
         check(gain(weak, .25) - 1 < (gain(weak, 1) - 1) / 4, "Progressive positive response");
         check(gain(weak, -1) < .25, "Vibrance -100 nearly removes weak colours");
         check(gain(strong, -1) > gain(weak, -1), "Saturated colours keep more chroma at -100");
+        // Lightroom turns blues towards cyan when boosting, back when reducing.
+        const cv::Vec3f blue(.06f, .14f, .45f);
+        const auto hue = [](const cv::Vec3f &rgb) {
+            const cv::Vec3d lab = Vibrance::toOklab(cv::Vec3d(rgb));
+            return std::atan2(lab[2], lab[1]) * 180.0 / 3.14159265358979323846;
+        };
+        check(hue(Vibrance::applyPixel(blue, 1, 0)) < hue(blue) - 1, "Vibrance +100 turns blue towards cyan");
+        check(hue(Vibrance::applyPixel(blue, -.5, 0)) > hue(blue), "Vibrance -50 turns blue away from cyan");
+        check(std::abs(hue(Vibrance::applyPixel(blue, 0, .5)) - hue(blue)) < 1e-6, "Saturation keeps the hue");
 
         // Image path: Rec.2020 greys exact, colours changed, unsupported inputs untouched.
         cv::Mat image(1, 2, CV_32FC3);

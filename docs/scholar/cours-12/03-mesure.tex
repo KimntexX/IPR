@@ -1,0 +1,176 @@
+\chapter{Mesurer Lightroom}
+
+\section{Le protocole}
+\subsection{Des paires d'exports comparables}
+Chaque scène est exportée de Lightroom en TIFF 16 bits sRGB, une fois à l'état
+neutre et une fois par valeur testée du curseur : $-100$, $-50$, $-25$, $+25$,
+$+50$, $+100$. Les préréglages utilisés sont \emph{autonomes} : chacun fixe
+tout l'état de développement (profil Camera Neutral, balance des blancs Prise
+de vue, corrections optiques, bruit et netteté désactivés, tous les autres
+curseurs à zéro) et ne change que le curseur étudié. Appliqué à n'importe
+quelle photo, un préréglage donne donc un état connu, quels que soient ses
+réglages précédents.
+
+L'analyseur ne se fie pas au nom des fichiers. Il lit le XMP embarqué dans
+chaque TIFF, y trouve la valeur du curseur, et associe l'export au neutre dont
+\emph{tous les autres réglages} sont identiques. Une association ambiguë, un
+état manquant ou dupliqué arrête l'analyse.
+
+\subsection{Comparer un pixel à lui-même}
+Dans une paire, le neutre et la variante ont la même géométrie : le pixel
+$(x,y)$ de l'un correspond exactement au pixel $(x,y)$ de l'autre. On peut
+donc mesurer, pour chaque pixel, l'effet du curseur :
+\begin{equation}
+\gamma = \ln\frac{C_{\text{variante}}}{C_{\text{neutre}}},\qquad
+\lambda = \ln\frac{L_{\text{variante}}}{L_{\text{neutre}}},\qquad
+\Delta h = h_{\text{variante}}-h_{\text{neutre}}\ (\text{ramené à }]-180^\circ,180^\circ]).
+\end{equation}
+Le logarithme rend les gains additifs et symétriques : doubler la chroma donne
+$\gamma=\ln 2\approx0{,}69$, la diviser par deux donne $-0{,}69$.
+
+\subsection{Échantillonnage et exclusions}
+Un pixel sur 8 dans chaque direction est lu, puis 40\,000 à 60\,000 pixels par
+état sont tirés au hasard avec une graine fixe (reproductible). Sont exclus :
+\begin{itemize}
+\item les pixels dont un canal est écrêté ($\le0{,}002$ ou $\ge0{,}995$ en
+valeur encodée) dans l'un des deux exports : leur valeur ne dit plus rien de
+l'effet du curseur ;
+\item les pixels très sombres ($L\le0{,}08$), dominés par le bruit ;
+\item pour les tables, les quasi-gris ($C\le0{,}01$), traités à part
+(section~\ref{sec:quasigris}).
+\end{itemize}
+
+\resultat{Comparer chaque export à son propre neutre, et non à \IPR{},
+mesure le comportement du curseur indépendamment du rendu de base.}
+
+\section{Quelle variable explique la réponse ?}
+On range les pixels en 20 classes d'une variable candidate, on retire de
+chaque pixel la médiane de sa classe, et on mesure la variance restante de
+$\gamma$. Plus elle est basse, mieux la variable explique la réponse.
+
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+Valeur & variance totale & $C/L$ Oklab & $C$ Oklab & $s$ ProPhoto\\
+\midrule
+$-100$ & 0,7465 & 0,5841 & \textbf{0,2031} & 0,5246\\
+$-50$ & 0,0115 & 0,0078 & \textbf{0,0037} & 0,0054\\
+$+50$ & 0,0184 & 0,0130 & 0,0183 & \textbf{0,0130}\\
+$+100$ & 0,1355 & \textbf{0,0715} & 0,1344 & 0,0759\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Au positif, la saturation relative ($s$ ou $C/L$) explique bien plus que la
+chroma absolue. Au négatif, la chroma absolue explique mieux, mais aucune
+variable seule ne suffit.
+
+On ajoute ensuite des variables, en croisant les classes. La part de variance
+expliquée devient :
+
+\begin{center}
+\begin{tabular}{lrrrrr}
+\toprule
+Valeur & $s$ & $s$+$L$ & $s$+$L$+$h$ & $s$+scène & $s$+$L$+$h$+scène\\
+\midrule
+$-100$ & 73\,\% & 79\,\% & 85\,\% & 80\,\% & 88\,\%\\
+$+25$ & 25\,\% & 52\,\% & 93\,\% & 56\,\% & 95\,\%\\
+$+50$ & 29\,\% & 59\,\% & 94\,\% & 58\,\% & 96\,\%\\
+$+100$ & 44\,\% & 77\,\% & 95\,\% & 67\,\% & 97\,\%\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Saturation, clarté et teinte expliquent 93 à 95\,\% de la variance au positif.
+Connaître en plus l'image d'où vient le pixel n'apporte que 2\,\%.
+
+\resultat{La vibrance de Lightroom est une fonction fixe du pixel, pas une
+adaptation à l'image. Les grandes différences constatées d'une scène à
+l'autre viennent de leur contenu : une scène riche en tons moyens peu saturés
+réagit davantage.}
+
+\section{La forme de la réponse}
+\subsection{Le gain selon la saturation et la clarté}
+Gain médian de chroma à $+100$, selon la saturation $s$ (lignes) et la clarté
+$L$ (colonnes) du pixel neutre :
+
+\begin{center}
+\begin{tabular}{lrrrrrr}
+\toprule
+$s$ \textbackslash{} $L$ & 0,19 & 0,38 & 0,53 & 0,68 & 0,82 & 0,96\\
+\midrule
+0,00--0,10 & -- & 2,80 & 3,73 & 3,07 & 2,06 & 1,72\\
+0,10--0,20 & 1,53 & 2,89 & 3,70 & 3,11 & 2,13 & 1,82\\
+0,20--0,30 & 1,37 & 2,55 & 3,35 & 2,88 & 2,20 & 1,89\\
+0,30--0,45 & 1,24 & 2,00 & 2,42 & 2,44 & 2,13 & 1,85\\
+0,45--0,60 & 1,22 & 1,67 & 1,74 & 1,83 & 1,92 & 1,79\\
+0,60--0,80 & 1,19 & 1,38 & 1,42 & 1,45 & 1,53 & --\\
+0,80--1,00 & 1,13 & 1,22 & 1,31 & -- & -- & --\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Trois tendances se lisent :
+\begin{itemize}
+\item le gain décroît quand la saturation augmente : les couleurs déjà vives
+sont protégées, c'est la définition même de la vibrance ;
+\item il culmine sur les tons moyens ($L\approx0{,}5$) et retombe fortement
+dans les ombres et les hautes lumières ;
+\item la dépendance à $L$ est aussi forte que celle à $s$. L'ancien modèle, qui
+l'ignorait, ne pouvait pas reproduire Lightroom.
+\end{itemize}
+
+\subsection{Une réponse progressive au curseur}
+Au maximum du gain, la chroma est multipliée par 1,18 à $+25$, 1,42 à $+50$ et
+2,49 à $+100$. En logarithme, $0{,}16$, $0{,}35$ et $0{,}91$ : la réponse
+croît plus vite que le curseur, à peu près comme $V^{1{,}3}$. Le curseur est
+doux au début et s'accélère vers $+100$.
+
+\subsection{Le côté négatif}
+À $-25$ et $-50$, le gain est presque uniforme (0,70 puis 0,45) jusqu'à
+$s\approx0{,}5$ ; au-delà, les couleurs saturées sont protégées. À $-100$, les
+couleurs faibles sont presque entièrement désaturées (gain 0,03 à 0,05), les
+plus saturées gardent jusqu'à 0,35 de leur chroma.
+
+\subsection{La clarté change aussi}
+Lightroom ne garde pas la clarté constante. Pour les couleurs saturées, à
+$-100$, $L$ est multipliée par 0,88 en médiane : désaturer assombrit. Ces
+gains de clarté sont mesurés et reproduits comme ceux de la chroma. Ils
+dépendent eux aussi de la couleur : certains bleus s'éclaircissent légèrement
+en désaturant.
+
+\subsection{Les quasi-gris}
+\label{sec:quasigris}
+Les pixels presque gris ($C<0{,}01$), souvent du bruit chromatique, reçoivent un
+traitement particulier. À $+100$, Lightroom ne multiplie leur chroma que par
+1,2 environ, quand leur classe de saturation prévoirait 1,55. À $-100$, au
+contraire, il les désature davantage. La transition se fait entre $C=0{,}004$
+et $C=0{,}012$.
+
+\subsection{La teinte tourne}
+Lightroom fait tourner les teintes en même temps qu'il les renforce. Rotation
+médiane par famille de teinte, sur 13 scènes :
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Famille (teinte Oklab) & $+100$ & $+50$ & $-50$\\
+\midrule
+rouge (0°) & $+1{,}4^\circ$ & $+0{,}3^\circ$ & $-1{,}5^\circ$\\
+orange (30°) & $+3{,}3^\circ$ & $+0{,}9^\circ$ & $-5{,}2^\circ$\\
+jaune-orangé (60°) & $+4{,}6^\circ$ & $+2{,}0^\circ$ & $-3{,}6^\circ$\\
+vert (150°) & $+0{,}1^\circ$ & $0{,}0^\circ$ & $0{,}0^\circ$\\
+cyan (210°) & $-3{,}6^\circ$ & $-2{,}5^\circ$ & $+3{,}9^\circ$\\
+bleu-cyan (240°) & $-7{,}7^\circ$ & $-2{,}5^\circ$ & $+5{,}4^\circ$\\
+bleu (270°) & $-5{,}1^\circ$ & $-1{,}5^\circ$ & $+1{,}6^\circ$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+En renforçant, les bleus partent vers le cyan, les oranges vers le jaune ; en
+désaturant, le mouvement s'inverse. Le chapitre 5 explique comment le modèle
+le reproduit.
+
+\resultat{La vibrance de Lightroom agit sur trois grandeurs à la fois : la
+chroma, la clarté et la teinte. Toutes trois dépendent de la saturation, de la
+clarté et de la teinte du pixel de départ.}

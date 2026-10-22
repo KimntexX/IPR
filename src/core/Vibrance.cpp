@@ -9,9 +9,10 @@
 namespace Vibrance {
 namespace {
 constexpr double DegreesPerRadian = 180.0 / 3.14159265358979323846;
-// Below this Oklab chroma (the fitting threshold) the lightness gain fades
-// out, so near-greys stay continuous with the exact grey identity.
-constexpr double LightnessChromaFade = 0.01;
+// Below this Oklab chroma (the fitting threshold) the lightness gain and the
+// hue rotation fade out, so near-greys stay continuous with the exact grey
+// identity.
+constexpr double NearGreyFade = 0.01;
 
 const cv::Matx33d &toProPhoto()
 {
@@ -90,13 +91,22 @@ double nearGrey(int valueIndex, double chroma)
     return factor[index] * (1.0 - weight) + factor[index + 1] * weight;
 }
 
-// Log chroma and lightness gains at a slider value in [-100, 100], linear
-// between the measured values on the slider's side, zero at zero; the chroma
-// gain of each measured value is scaled by its near-grey factor.
-void logGains(double value, const Position &p, double pixelChroma, double &chroma, double &lightness)
+struct Response {
+    double logChroma = 0.0, logLightness = 0.0, rotationDegrees = 0.0;
+};
+
+Response at(int index, const Position &p, double pixelChroma)
 {
-    chroma = lightness = 0.0;
-    if (value == 0.0) return;
+    return {lookup(Model::LogChromaGain[index], p) * nearGrey(index, pixelChroma),
+            lookup(Model::LogLightnessGain[index], p), lookup(Model::HueRotation[index], p)};
+}
+
+// Response at a slider value in [-100, 100], linear between the measured
+// values on the slider's side, zero at zero; the chroma gain of each measured
+// value is scaled by its near-grey factor.
+Response response(double value, const Position &p, double pixelChroma)
+{
+    if (value == 0.0) return {};
     int nearIndex = -1, farIndex = -1;
     for (int i = 0; i < Model::ValueCount; ++i) {
         const double v = Model::Values[i];
@@ -107,16 +117,15 @@ void logGains(double value, const Position &p, double pixelChroma, double &chrom
             farIndex = i;
     }
     if (farIndex < 0) farIndex = nearIndex; // beyond the last measured value
-    if (farIndex < 0) return;
+    if (farIndex < 0) return {};
     const double near = nearIndex < 0 ? 0.0 : Model::Values[nearIndex];
     const double far = Model::Values[farIndex];
-    const double nearChroma = nearIndex < 0 ? 0.0
-                                            : lookup(Model::LogChromaGain[nearIndex], p) * nearGrey(nearIndex, pixelChroma);
-    const double nearLightness = nearIndex < 0 ? 0.0 : lookup(Model::LogLightnessGain[nearIndex], p);
+    const Response low = nearIndex < 0 ? Response{} : at(nearIndex, p, pixelChroma);
+    const Response high = at(farIndex, p, pixelChroma);
     const double t = far == near ? 1.0 : (value - near) / (far - near);
-    const double farChroma = lookup(Model::LogChromaGain[farIndex], p) * nearGrey(farIndex, pixelChroma);
-    chroma = nearChroma + (farChroma - nearChroma) * t;
-    lightness = nearLightness + (lookup(Model::LogLightnessGain[farIndex], p) - nearLightness) * t;
+    return {low.logChroma + (high.logChroma - low.logChroma) * t,
+            low.logLightness + (high.logLightness - low.logLightness) * t,
+            low.rotationDegrees + (high.rotationDegrees - low.rotationDegrees) * t};
 }
 }
 
@@ -140,7 +149,7 @@ cv::Vec3f applyPixel(const cv::Vec3f &rgb, double vibrance, double saturation)
     const double chroma = std::hypot(lab[1], lab[2]);
     if (chroma < 1e-12) return rgb;
     double chromaGain = std::max(0.0, 1.0 + saturation);
-    double lightnessGain = 1.0;
+    double lightnessGain = 1.0, rotation = 0.0;
     if (vibrance != 0.0) {
         const cv::Vec3d prophoto = toProPhoto() * cv::Vec3d(rgb);
         const double peak = std::max({prophoto[0], prophoto[1], prophoto[2]});
@@ -148,14 +157,17 @@ cv::Vec3f applyPixel(const cv::Vec3f &rgb, double vibrance, double saturation)
         const double relative = peak > 1e-6 ? std::clamp((peak - low) / peak, 0.0, 1.0) : 0.0;
         double hue = std::atan2(lab[2], lab[1]) * DegreesPerRadian;
         if (hue < 0.0) hue += 360.0;
-        double logChroma = 0.0, logLightness = 0.0;
-        logGains(vibrance * 100.0, position(relative, lab[0], hue), chroma, logChroma, logLightness);
-        chromaGain *= std::exp(logChroma);
-        lightnessGain = std::exp(logLightness * std::min(1.0, chroma / LightnessChromaFade));
+        const Response r = response(vibrance * 100.0, position(relative, lab[0], hue), chroma);
+        const double fade = std::min(1.0, chroma / NearGreyFade);
+        chromaGain *= std::exp(r.logChroma);
+        lightnessGain = std::exp(r.logLightness * fade);
+        rotation = r.rotationDegrees * fade / DegreesPerRadian;
     }
     lab[0] *= lightnessGain;
-    lab[1] *= chromaGain;
-    lab[2] *= chromaGain;
+    const double a = lab[1] * chromaGain, b = lab[2] * chromaGain;
+    const double cosine = std::cos(rotation), sine = std::sin(rotation);
+    lab[1] = a * cosine - b * sine;
+    lab[2] = a * sine + b * cosine;
     return cv::Vec3f(fromOklab(lab));
 }
 

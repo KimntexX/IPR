@@ -2,12 +2,13 @@
 
 For each Lightroom vibrance reference of tests/image/base/couleur/vibrance and
 its neutral (base/neutre, XMP identical except Vibrance), pixels are compared
-in Oklab: log chroma gain and log lightness gain per cell of the neutral
+in Oklab: log chroma gain, log lightness gain and hue rotation per cell of the neutral
 pixel's linear ProPhoto saturation, Oklab lightness and Oklab hue. Cells take
 the median over the 49 scenes, falling back to (saturation, lightness) then
 saturation when sparse. Pixels clipped in either export are excluded.
 Each cell's chroma gain is made monotone in the slider value (isotonic fit on
 each side of zero, zero fixed): a stronger slider never gives less chroma.
+Hue rotation falls back along the hue (never pooled across hues).
 Near-greys (Oklab C <= 0.01, outside the tables' fit) get a factor on the log
 chroma gain per chroma bin and measured value, least squares against LR.
 A two-fold scene cross-validation compares the table with the model it
@@ -67,7 +68,8 @@ def oklab(rgb):
 
 
 def samples(job):
-    """Rows: value, L, C, hue (degrees), ProPhoto saturation, L variant, C variant."""
+    """Rows: value, L, C, hue (degrees), ProPhoto saturation, L variant, C variant,
+    hue rotation (degrees, variant - neutral)."""
     stem, files = job
     neutral_encoded = read(BASE / "neutre" / f"{stem}.tif")
     neutral = linear(neutral_encoded)
@@ -90,8 +92,10 @@ def samples(job):
             index = np.random.default_rng(seed).choice(index, SAMPLES, replace=False)
         variant = oklab(linear(variant_encoded[index]))
         hue = np.degrees(np.arctan2(lab[index, 2], lab[index, 1])) % 360
+        rotation = (np.degrees(np.arctan2(variant[:, 2], variant[:, 1])) - hue + 180) % 360 - 180
         rows.append(np.column_stack([np.full(len(index), value), lab[index, 0], chroma[index], hue,
-                                     saturation[index], variant[:, 0], np.hypot(variant[:, 1], variant[:, 2])]))
+                                     saturation[index], variant[:, 0], np.hypot(variant[:, 1], variant[:, 2]),
+                                     rotation]))
     return stem, np.vstack(rows)
 
 
@@ -103,20 +107,34 @@ def cells(rows):
 
 
 def fit(rows, column):
-    """Median log gain per (saturation, lightness, hue) cell with sparse-cell fallbacks."""
+    """Median per (saturation, lightness, hue) cell; column 6: log chroma gain,
+    5: log lightness gain, 7: hue rotation in degrees. Sparse cells fall back to
+    (saturation, lightness) then saturation for the gains, and to (saturation,
+    hue), hue, then zero for the rotation, which depends on the hue first."""
     s, l, h = cells(rows)
-    reference = rows[:, 2] if column == 6 else rows[:, 1]
-    y = np.log(np.maximum(rows[:, column], 1e-5) / reference)
+    if column == 7:
+        y = rows[:, 7]
+    else:
+        reference = rows[:, 2] if column == 6 else rows[:, 1]
+        y = np.log(np.maximum(rows[:, column], 1e-5) / reference)
     ns, nl = len(S_EDGES) - 1, len(L_EDGES) - 1
+    median = lambda m, fallback: np.median(y[m]) if m.sum() >= MINIMUM else fallback
     table = np.zeros((ns, nl, HUE_BINS))
+    if column == 7:
+        for k in range(HUE_BINS):
+            hue = median(h == k, 0.0)
+            for i in range(ns):
+                level = median((s == i) & (h == k), hue)
+                for j in range(nl):
+                    table[i, j, k] = median((s == i) & (l == j) & (h == k), level)
+        return table
     for i in range(ns):
         base = np.median(y[s == i]) if (s == i).any() else 0.0
         for j in range(nl):
             m = (s == i) & (l == j)
-            middle = np.median(y[m]) if m.sum() >= MINIMUM else base
+            middle = median(m, base)
             for k in range(HUE_BINS):
-                mk = m & (h == k)
-                table[i, j, k] = np.median(y[mk]) if mk.sum() >= MINIMUM else middle
+                table[i, j, k] = median(m & (h == k), middle)
     return table
 
 
@@ -219,7 +237,7 @@ def near_grey(data, chroma):
     return np.array(factors)
 
 
-def header(chroma, lightness, grey):
+def header(chroma, lightness, rotation, grey):
     def table(t):
         def nested(a, indent):
             if a.ndim == 1:
@@ -248,6 +266,8 @@ inline constexpr float HueStepDegrees = {360 / HUE_BINS:.4f}f; // centre k: (k +
 // Natural log of the Oklab chroma and lightness gains, [value][saturation][lightness][hue].
 inline constexpr float LogChromaGain[ValueCount][SaturationCount][LightnessCount][HueCount] = {table(chroma)};
 inline constexpr float LogLightnessGain[ValueCount][SaturationCount][LightnessCount][HueCount] = {table(lightness)};
+// Oklab hue rotation in degrees, same axes.
+inline constexpr float HueRotation[ValueCount][SaturationCount][LightnessCount][HueCount] = {table(rotation)};
 // Factor on the log chroma gain by the pixel's Oklab chroma, [value][chroma];
 // 1 from the last centre (near-grey protection, outside the tables' fit).
 inline constexpr int NearGreyCount = {len(grey[0])};
@@ -283,6 +303,7 @@ def main():
     fitted = {s: d[d[:, 2] > FIT_CHROMA] for s, d in data.items()}
     chroma, adjusted = monotone(np.array([fit(np.vstack([d[d[:, 0] == v] for d in fitted.values()]), 6) for v in VALUES]))
     lightness = np.array([fit(np.vstack([d[d[:, 0] == v] for d in fitted.values()]), 5) for v in VALUES])
+    rotation = np.array([fit(np.vstack([d[d[:, 0] == v] for d in fitted.values()]), 7) for v in VALUES])
     grey = near_grey(data, chroma)
     validation = cross_validation(fitted)
     stamp = datetime.now(timezone.utc)
@@ -290,7 +311,7 @@ def main():
     evidence = args.evidence_dir / f"{campaign}.json"
     if evidence.exists():
         sys.exit("Exists, nothing overwritten: " + str(evidence))
-    args.header.write_text(header(chroma, lightness, grey), encoding="utf-8", newline="\n")
+    args.header.write_text(header(chroma, lightness, rotation, grey), encoding="utf-8", newline="\n")
     record = {
         "campaign_id": campaign, "measured_at_utc": stamp.isoformat(), "supersedes_campaign_id": args.supersedes,
         "purpose": "Lightroom vibrance response tables of the production model (VibranceModel.h)",
@@ -309,7 +330,8 @@ def main():
         "tables": {"values": VALUES, "near_grey_chroma_edges": NEAR_GREY_EDGES, "near_grey_anchor": NEAR_GREY_ANCHOR,
                    "near_grey_factor": grey.round(5).tolist(),
                    "log_chroma_gain": chroma.round(5).tolist(),
-                   "log_lightness_gain": lightness.round(5).tolist()},
+                   "log_lightness_gain": lightness.round(5).tolist(),
+                   "hue_rotation_degrees": rotation.round(4).tolist()},
         "cross_validation": validation,
     }
     evidence.write_text(json.dumps(record, ensure_ascii=False, indent=1), encoding="utf-8")

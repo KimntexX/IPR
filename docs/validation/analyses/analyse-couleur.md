@@ -1402,6 +1402,42 @@ Limite : à +100, les médianes coïncident mais l'écart par scène des couleur
 saturées reste de 0,135 (60D surtout : IMG_5414, 4062, 5383) ; à revoir en revue
 visuelle. Validation visuelle de l'utilisateur à faire avant toute fusion.
 
+### Rotation de teinte de la vibrance — 22 octobre 2026
+
+**Retour visuel de l'utilisateur** : vibrance d'IPR « moins forte », les couleurs
+ne basculent pas vers leurs teintes voisines (le bleu devrait tendre vers le
+cyan). La mesure par famille de teinte Oklab sur 13 scènes le confirme : à +100,
+LR fait tourner le bleu-cyan de −7,7°, le bleu de −5,1°, le jaune-orangé de
++4,6°, l'orange de +3,3° ; rotation deux fois plus faible à +50, inversée à
+−50. Le modèle précédent conservait la teinte, ce qu'une mesure de chroma seule
+ne pouvait pas révéler.
+
+**Correctif** : table de rotation de teinte (médiane de Δh par cellule et par
+valeur), appliquée par une rotation plane de `(a, b)` avec le gain de chroma,
+estompée sous C = 0,01. Le repli des cellules vides conserve la teinte : un
+premier essai ([v005](../raw/modele-vibrance-lr-v005-20261022T085613257151Z.json))
+qui repliait toutes teintes confondues donnait aux bleus sans données la rotation
+des oranges ; la version retenue est
+[v006](../raw/modele-vibrance-lr-v006-20261022T090137950558Z.json).
+
+Rotation médiane à +100, LR / IPR : rouge +1,35° / +1,44°, orange +3,31° / +3,30°,
+jaune-orangé +4,61° / +4,82°, bleu −5,13° / −5,10°, bleu-cyan −7,67° / −4,55° ;
+écart < 0,6° à +50 et −50 pour toutes les familles.
+
+**Grands ciels bleus** : le gain de chroma des bleus à +100 reste inférieur à LR
+(bleu-cyan 1,66 contre 2,78). Ni le modèle (prédit 1,667, rendu 1,670) ni le point
+de départ (bleus neutres IPR/LR identiques) ne sont en cause ; l'écart vient
+surtout de 6V1A9141, ciel saturé couvrant 82 % de l'image (chroma finale 0,164
+contre 0,196, −16 %), quand la médiane des scènes est à −5 %. Dépendance à l'image
+non modélisée.
+
+**Mesure du rendu** ([v008](../raw/mesure-couleur-v008-20261022T094449411179Z.json),
+637 états, aucune exclusion), écart médian par scène peu / très saturés :
+−100 0,004 / 0,011 ; −50 0,003 / 0,004 ; −25 0,003 / 0,003 ; +25 0,014 / 0,003 ;
++50 0,031 / 0,007 ; +100 0,143 / 0,016. La démarche est expliquée dans le
+[cours 12](../../scholar/cours-12-vibrance-saturation-oklab.tex). Revue visuelle de
+l'utilisateur à refaire avant toute fusion.
+
 ## Historique et compatibilité
 
 Un premier [smoke-test de cinq saturations 0327](../raw/modernisation-analyseurs/mesure-couleur-v001-20261010T185910569266Z.json)

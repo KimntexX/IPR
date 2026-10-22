@@ -154,11 +154,13 @@ réglages sont bornés à `[-100, +100]`.
   Mesurée sur 49 scènes, elle suit LR à moins de 0,05 de variation de chroma.
 - **Vibrance** suit les tables de réponse LR de `src/core/VibranceModel.h`,
   générées par `scripts/build_vibrance_model.py` : gains log de chroma et de
-  clarté Oklab selon la saturation ProPhoto linéaire `(max − min)/max`, la
+  clarté Oklab et rotation de teinte, appliquée par une rotation plane de
+  `(a, b)`, selon la saturation ProPhoto linéaire `(max − min)/max`, la
   clarté et la teinte Oklab du pixel, mesurés aux valeurs ±25, ±50, ±100 sur les
   49 scènes de la base. Interpolation trilinéaire entre centres de cellules
-  (teinte circulaire), linéaire entre valeurs mesurées, zéro à zéro. Le gain de
-  clarté s'efface sous une chroma Oklab de 0,01 pour rester continu vers le gris.
+  (teinte circulaire), linéaire entre valeurs mesurées, zéro à zéro. Un facteur
+  par valeur atténue la réponse des quasi-gris ; le gain de clarté et la rotation
+  s'effacent sous une chroma Oklab de 0,01 pour rester continus vers le gris.
 
 LR ne s'adapte pas à la scène : saturation, clarté et teinte du pixel expliquent
 93–95 % de la variance de son gain positif, l'identité de la scène 2 % de plus.
@@ -166,7 +168,8 @@ La réponse positive est maximale sur les tons moyens modérément saturés et
 protège les couleurs déjà saturées ; au négatif, les couleurs faibles sont
 presque entièrement désaturées et les couleurs saturées assombries. Les détails
 et la validation croisée sont dans le
-[rapport Couleur](validation/analyses/analyse-couleur.md).
+[rapport Couleur](validation/analyses/analyse-couleur.md) ; la démarche complète
+est expliquée dans le [cours 12](scholar/cours-12-vibrance-saturation-oklab.tex).
 
 ### Effets de détails et d'atmosphère
 

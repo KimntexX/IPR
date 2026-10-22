@@ -4,7 +4,7 @@
 #include <opencv2/core.hpp>
 
 // Vibrance and saturation in Oklab. Vibrance follows the Lightroom response
-// tables (VibranceModel.h): chroma and lightness gains by the pixel's linear
+// tables (VibranceModel.h): chroma and lightness gains and hue rotation by the pixel's linear
 // ProPhoto saturation, Oklab lightness and hue, interpolated between the
 // measured slider values, scaled down on near-greys as Lightroom does.
 // Saturation scales the Oklab chroma uniformly.
