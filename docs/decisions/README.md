@@ -11,12 +11,12 @@ Un ADR consigne un choix qui influe sur la compatibilité, le rendu, les donnée
 | [ADR-0003](ADR-0003-profils-dcp-lcp-locaux.md) | Bibliothèque locale DCP/LCP | Accepté sous contrainte de licence |
 | [ADR-0004](ADR-0004-preferences-ihm-ini.md) | Préférences globales d’IHM dans un INI utilisateur | Accepté |
 | [ADR-0006](ADR-0006-restauration-raw-et-retouche-profil.md) | Sidecar v5 et changement DCP sans réouverture visuelle | Accepté ; recette visuelle à compléter |
-| [ADR-0007](ADR-0007-calibration-raw-par-defaut.md) | Calibration RAW active par défaut ; désactivation dans les futurs paramètres avancés | Défaut actif implémenté ; panneau avancé restant |
+| [ADR-0007](ADR-0007-calibration-raw-par-defaut.md) | Calibration RAW active par défaut ; désactivation dans les paramètres avancés | Défaut et panneau par image intégrés dans dev ; relecture du 22 octobre |
 | [ADR-0008](ADR-0008-separation-travail-affichage-export.md) | Travail indépendant de l'écran, affichage ICC et export séparés | Directive acceptée ; implémentation à venir |
-| [ADR-0009](ADR-0009-espace-travail-rec2020-lineaire.md) | Master Rec.2020 linéaire D65 flottant | Port local implémenté ; qualification visuelle et multi-OS à compléter |
+| [ADR-0009](ADR-0009-espace-travail-rec2020-lineaire.md) | Master Rec.2020 linéaire D65 flottant | Intégré dans dev ; qualification photographique et multi-OS par campagne |
 | [ADR-0010](ADR-0010-compensation-rendu-par-profil-dcp.md) | Compensation de rendu séparée de la baseline source, liée au boîtier/DCP | Intégré ; portée étendue par ADR-0011 |
-| [ADR-0011](ADR-0011-regles-raw-par-mode-et-configuration-vivante.md) | Règles par modèle/mode capteur, sans liste de photos ; configuration suivie automatiquement | Accepté, intégré localement ; ouverture des nouveaux ISO à l'essai |
-| [ADR-0012](ADR-0012-formats-extensibles-et-caracterisations.md) | Adaptateurs de formats/vignettes et catalogue JSON de caractérisations distinct du rôle DCP | Premier lot local ; contrats caméra et caractérisation physique restants |
+| [ADR-0011](ADR-0011-regles-raw-par-mode-et-configuration-vivante.md) | Règles par modèle/mode capteur, sans liste de photos ; configuration suivie automatiquement | Accepté, intégré dans dev ; nouveaux ISO à l'essai, pas validation universelle |
+| [ADR-0012](ADR-0012-formats-extensibles-et-caracterisations.md) | Adaptateurs de formats/vignettes et catalogue JSON de caractérisations distinct du rôle DCP | Adaptateurs, contrat CameraSignal et import commun intégrés ; caractérisation physique indépendante restante |
 
 Utiliser [le modèle](../templates/adr-template.md) pour toute nouvelle décision.
 

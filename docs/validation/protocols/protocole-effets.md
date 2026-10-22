@@ -14,8 +14,8 @@ et effets voisins à zéro ; une commande à la fois.
 | Contrôle | Série |
 | --- | --- |
 | `texture`, `clarity`, `dehaze` | −100, −50, −25, 0, +25, +50, +100 |
-| `grain` | 0, 25, 50, 75, 100 |
-| `blur` | 0, 1, 5, 10, 20 |
+| `grain` | 0, 25, 50, 100 ; 75 en complément manuel |
+| `blur` | 0, 5, 20 ; 1 et 10 en complément manuel |
 
 Le groupe générateur `effets` couvre ces cinq commandes. Utiliser leurs valeurs
 propres par défaut, pas une série commune incompatible avec grain/flou.

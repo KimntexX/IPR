@@ -1,6 +1,6 @@
 # Analyseurs photographiques par groupe
 
-Contrat aligné le 12 octobre 2026, branche `patch_validation`.
+Contrat relu le 22 octobre 2026 sur `dev` ; alignement initial du 12 octobre.
 Outil canonique : [analyse_groupes.py](../../../tests/analyse_groupes.py).
 Les dix entrées dédiées partagent la même CLI et les mêmes méthodes natives.
 Elles ne génèrent, modifient ni suppriment d'image : les états IPR sont rendus
@@ -51,7 +51,7 @@ des pixels IPR porte sur les échantillons uint16, pas sur un fichier.
 
 Pour Lightroom, la valeur vient du XMP, jamais du numéro de suffixe. Les
 supports manuels température/nuance sont 5200 K / 0 ; le neutre As Shot
-5200/+5 est distinct et n'est pas une erreur. Pour les autres contrôles,
+(par exemple 5200/+5 sur plusieurs scènes Canon) est distinct et n'est pas une erreur. Pour les autres contrôles,
 chercher un neutre du même moteur sous `base/neutre`, avec le reste des
 métadonnées inchangé. Une référence absente reste exclue ; plusieurs candidates
 différentes bloquent l'association. Les scènes LR simples sont identifiées par
@@ -83,7 +83,7 @@ Créer un JSON de mapping versionné, par exemple :
     {"scene": "6V1A0327", "engine": "LR", "feature": "neutral", "value": 0,
      "file": "neutre/6V1A0327-LR-CameraNeutral-AsShot.tif"},
     {"scene": "6V1A0327", "engine": "LR", "feature": "saturation", "value": 50,
-     "file": "saturation/6V1A0327-LR-S050.tif"}
+     "file": "couleur/saturation/6V1A0327-LR-S050.tif"}
   ]
 }
 ```

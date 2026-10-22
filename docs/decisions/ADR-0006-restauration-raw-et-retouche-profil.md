@@ -12,7 +12,18 @@ Les options RAW et la WB automatique sont restaurées **avant** le décodage et 
 
 Un changement de DCP ne doit pas vider l'image affichée ni réinitialiser zoom, comparaison et retouches. Un worker applique le nouveau DCP à une copie indépendante du RGB caméra déjà dématricé, équilibré en blanc et corrigé par le LCP. Une erreur conserve le rendu et la recette précédents. L'origine de comparaison est renouvelée après succès : c'est la base développée avec le nouveau profil, avant les retouches.
 
-## Limites et coûts
+## Constat d'intégration — 22 octobre 2026
+
+La décision du 8 octobre et ses coûts initiaux ci-dessous sont historiques.
+Le format courant est v6 ; l'optique est persistée. La calibration suit le
+catalogue par modèle/profil/mode (ADR-0011/0012). Les entrées du contrôleur
+mémoire peuvent retenir un signal caméra réduit avec le proxy ; le modèle
+« un tampon actif de 384 Mio hors LRU » n'est plus le contrat de cache.
+Le chemin rapide reste conditionné à la compatibilité de la recette.
+Voir [le contrôle mémoire](../architecture/controle-memoire-images.md)
+et [le contrat RAW/profils](../camera-profile-engine.md).
+
+## Limites et coûts de l'implémentation initiale
 
 - Un seul tampon caméra actif, plafonné à **384 Mio**, hors budget du LRU d'images développées. Il consomme 12 octets par pixel et est libéré au changement d'image. Les workers peuvent prolonger temporairement sa durée de vie.
 - Le chemin rapide est réservé au développement DCP, sans normalisation active et avec la même WB de décodage. WB automatique, calibration, image sans DCP, tampon trop grand ou absent imposent encore un décodage. Le rendu précédent reste visible pendant ce travail.

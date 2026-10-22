@@ -3,7 +3,7 @@
 # Préférences globales de l’interface
 
 Implémentation : `src/app/UiPreferences.{h,cpp}`, `Main.qml`, `Setting.qml` et
-`SettingsSection.qml`. Schéma courant : **2**, mis à jour le 4 octobre 2026.
+`SettingsSection.qml`. Schéma courant : **2**, introduit le 4 octobre 2026, relu sur `dev` le 22 octobre 2026.
 
 ## Deux persistances distinctes
 
@@ -53,21 +53,26 @@ modèle versionné constitue la référence commentée.
 | `meta` | `schemaVersion=2` | Version du contrat, non modifiable par l’API QML. |
 | `window` | `normalWidth=1440`, `normalHeight=900`, `normalX=0`, `normalY=0`, `positionSaved=false`, `state=normal` | Taille/position de la fenêtre normale ; état normal, maximisé ou plein écran. |
 | `theme` | `background`, `panel`, `canvas`, `text`, `secondaryText` | Couleurs opaques `#RRGGBB` : fond, surfaces, aperçu et textes des contrôles principaux. |
-| `layout` | `settingsWidth=320`, `imageInfoWidth=250`, `filmstripHeight=120` | Dimensions des panneaux en unités logiques Qt. |
+| `layout` | `settingsWidth=320`, `imageInfoWidth=250`, `filmstripHeight=120`, `imageInfoFontSize=12` | Dimensions des panneaux et taille du texte d'information en unités logiques Qt. |
 | `layout` | `showImageInfo`, `showHistogram`, `showFilmstrip` | Visibilité, également modifiable dans Affichage. |
-| `sections` | `rawDevelopment`, `light`, `curves`, `color`, `mixer`, `grading`, `effects`, `denoise`, `sharpening`, `export` | Dix groupes indépendants ; initialement Développement RAW / Profil et Lumière sont ouverts. |
+| `sections` | `rawDevelopment`, `light`, `curves`, `color`, `mixer`, `grading`, `effects`, `denoise`, `sharpening`, `optics`, `export` | Onze groupes indépendants ; initialement Développement RAW / Profil et Lumière sont ouverts. |
 | `selection` | `toneCurveChannel=0`, `mixerBand=0`, `gradingZone=0` | Dernier canal de courbe, bande du mélangeur et zone du grading consultés. |
 | `export` | `format=JPEG`, `quality=92` | Dernier format choisi et qualité JPEG ; pas le répertoire de destination. |
 
-Les tailles ne sont pas encore réglables par glissement de séparateurs : elles
-se personnalisent dans l’INI. Les couleurs concernent les surfaces raccordées et
-les textes principaux, pas un système complet de thèmes clair/sombre : certains
-modules imbriqués, bordures et contrôles gardent leur palette actuelle.
+Les tailles se règlent avec les séparateurs souris/clavier et dans les
+préférences. Le dialogue comporte Interface, Apparence et Avancé · RAW.
+Cinq palettes (bordeaux, blanc cassé, noir mat, bleu marine, gris) modifient
+surfaces et textes, y compris le dialogue de préférences. Le fond photo reste
+indépendant ; les choix bleu et bordeaux produisent un dégradé visuel.
+Les couleurs sémantiques des graphiques sont conservées. Les dialogues natifs
+d'ouverture/enregistrement dépendent du système et ne sont pas recolorés.
+Voir le [manuel utilisateur](../user/README.md) pour les gestes et raccourcis.
 
 ### Bornes et traitement des erreurs
 
 - Taille normale : largeur 1000–8192, hauteur 650–8192 ; coordonnées ±200000.
 - Largeur réglages : 260–360 ; informations : 210–300 ; ruban : 100–260.
+- Texte des informations : 10–20, référence 12.
 - Canal de courbe : 0–3 ; bande HSL : 0–7 (violet 6, magenta 7) ; zone grading : 0–2.
 - Qualité JPEG : 1–100 ; format : JPEG, PNG, TIFF ou DNG.
 - Booléens : `true`, `false`, `1` ou `0` ; couleurs de thème valides et opaques.

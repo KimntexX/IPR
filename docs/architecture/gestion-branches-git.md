@@ -18,13 +18,15 @@ branche permanente issue de `dev` : la branche existante `patch_light` suit les
 Lumières (exposition, contraste, ombres, noirs, blancs et hautes lumières).
 `patch_color` suit la couleur, `patch_ci_cd` l'intégration/livraison continue
 et `patch_documentation` la documentation ; ces branches existent et sont
-conservées après intégration. Un prochain groupe pourra utiliser un nom tel
-que `patch_noise`, qui reste ici un exemple et non une branche annoncée créée.
+conservées après intégration. `patch_noise` et `patch_ui` existent également
+(relecture du 22 octobre 2026). Leur existence ne signifie pas que tous leurs
+travaux locaux sont livrés dans `dev`.
 
 Depuis le 14 octobre 2026, `patch_raw_opening` est la branche locale dédiée
-au rendu initial RAW/base colorimétrique, créée depuis `dev`. Le prototype
-Couleur non validé reste sauvegardé sur `patch_color` (commit `8abcd12`),
-sans fusion dans `dev` ni publication implicite.
+au rendu initial RAW/base colorimétrique, créée depuis `dev`. Le point de sauvegarde
+Couleur du 14 octobre est `8abcd12` ; il ne désigne pas la tête courante de
+`patch_color`. Vérifier les références Git avant chaque reprise, sans déduire
+une livraison des travaux récents de ce seul repère historique.
 
 Une branche de groupe est conservée après livraison. Les commits de fusion
 matérialisent les validations dans le graphe Git ; les tags identifient les états

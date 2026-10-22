@@ -11,7 +11,7 @@ L'interface QML constitue la couche de présentation. Elle délègue l'ouverture
   \node[component] (qml) {QML\\Main, Setting, ruban de vignettes};
   \node[component, right=of qml] (editor) {\texttt{ImageEditor}\\orchestration et état};
   \node[service, right=of editor] (pipeline) {Décodage RAW / profils\\\texttt{ColorPipeline}\\rendu};
-  \node[service, below=of pipeline] (cache) {{\footnotesize\texttt{DecodedImageCache}}\\LRU borné};
+  \node[service, below=of pipeline] (cache) {Contrôleur mémoire\\thread dédié + LRU borné};
   \node[storage, below=of editor] (sidecar) {Source +\\sidecar \texttt{.ipr}};
   \node[component, below=of qml] (providers) {{\footnotesize\texttt{ImageProvider}}\\{\footnotesize\texttt{ThumbnailProvider}}};
   \draw[flow] (qml) -- node[above, font=\scriptsize]{signaux / propriétés} (editor);
@@ -49,16 +49,18 @@ L'image de travail est une représentation RGBA à virgule flottante aux primair
 
 \begin{enumerate}
   \item décodage RAW, normalisation contrôlée éventuelle, LCP puis DCP ;
-  \item niveaux de gris éventuels, exposition, contraste ;
-  \item température/nuance, ombres, noirs, hautes lumières et blancs ;
+  \item si contexte caméra DCP : retouche WB et gain d'exposition avant le profil ;
+  \item niveaux de gris éventuels, exposition sans contexte caméra, contraste ;
+  \item adaptation WB sans contexte caméra, puis tons par \texttt{ToneRecovery} ;
   \item vibrance/saturation, mélangeur et color grading ;
   \item réduction du bruit, texture, clarté et correction du voile ;
   \item courbes luminance/RGB, flou, netteté et grain ;
   \item gamut mapping et encodage de sortie.
 \end{enumerate}
 
-La WB caméra est appliquée au décodage ; les curseurs température/nuance sont
-une adaptation supplémentaire du RGB de travail. Ils ne doivent pas être
+La WB caméra initiale est appliquée au décodage. Les curseurs manuels de WB
+et l'exposition sont rejoués avant le profil lorsqu'un contexte caméra est
+retenu ; sinon, ils agissent dans le master de travail. Ils ne doivent pas être
 confondus avec cette WB initiale. L'ordre ci-dessus décrit le chemin avec DCP ;
 sans DCP, le LCP agit sur le sRGB linéaire fourni par LibRaw avant son passage
 au master Rec.2020. Les retouches WB RAW disposant d'un contexte caméra sont
@@ -155,7 +157,7 @@ Les profils DCP (rendu couleur de boîtier) et LCP (corrections d'objectif) sont
 
 \section{Développement RAW contrôlé}
 
-\texttt{RawDevelopmentModule.qml} permet de choisir un DCP compatible, de
+\texttt{RawDevelopmentModule.qml} permet de choisir un DCP compatible et de
 modifier la WB automatique. La calibration RAW est accessible dans les options avancées des préférences, pas comme réglage courant de ce module.
 \texttt{RawNormalization::resolve()} vérifie un manifeste borné de schéma 4,
 le SHA-256 DCP, le mode des niveaux noirs/blancs, le boîtier et la version LibRaw.
@@ -165,7 +167,7 @@ conserve le chemin non calibré. Les clés du cache distinguent profil et manife
 
 Camera Neutral est accepté visuellement sur le corpus local, sans parité
 Lightroom ni fidélité physique certifiée. Adobe Standard reste à traiter.
-Le corpus de référence comporte dix-neuf fichiers (seize R6 Mark III et trois R7).
+Le corpus initial du 14 octobre comportait dix-neuf fichiers (seize R6 Mark III et trois R7) ; il a été étendu depuis, notamment aux CR2 du 60D. Consulter les campagnes plutôt qu'un compteur figé pour sa couverture actuelle.
 Depuis l'ADR-0011, l'utilisateur autorise les essais sur les autres photos et ISO
 de modes compatibles, sans déclaration de validation universelle. La calibration
 est demandée par défaut et la configuration est actualisée automatiquement ;
@@ -174,9 +176,11 @@ le manifeste, leurs SHA-256, l'activation et la version du moteur/LibRaw.
 Ces choix et la WB automatique sont restaurés avant décodage. La recette
 conserve aussi le LCP, son empreinte et les activations optiques indépendantes.
 
-Le changement de DCP est une retouche : un tampon caméra pré-DCP actif
-(384 Mio maximum, hors LRU) permet d'appliquer le nouveau profil sans
-réexécuter LibRaw. L'aperçu, le zoom et les réglages restent disponibles.
+Le changement de DCP est une retouche : le signal caméra retenu avec le proxy
+permet d'appliquer le nouveau profil sans réexécuter LibRaw lorsque son contexte
+reste compatible. Le contrôleur peut retenir ce signal dans une entrée de LRU ;
+l'export reconstruit la pleine résolution si nécessaire.
+L'aperçu, le zoom et les réglages restent disponibles.
 La WB RAW, la calibration ou l'absence de tampon nécessitent encore un
 décodage. Une erreur conserve la base précédente. Les réinitialisations des
 retouches et du profil/calibration sont distinctes.

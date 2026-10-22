@@ -1,7 +1,8 @@
 # ADR-0007 — Calibration RAW active par défaut
 
 **Date :** 15 octobre 2026. **Statut :** décision acceptée par l'utilisateur,
-comportement par défaut implémenté le 16 octobre 2026 ; paramètres avancés à venir.
+comportement par défaut implémenté le 16 octobre 2026 ; panneau avancé intégré
+dans `dev`, constat documentaire du 22 octobre 2026.
 
 ## Contexte
 
@@ -40,6 +41,14 @@ l'[ADR-0011](ADR-0011-regles-raw-par-mode-et-configuration-vivante.md) : défaut
 configuration suivie automatiquement, désactivation enregistrée respectée,
 règles par modèle/mode sans liste de photos. Les contraintes de corpus décrites
 dans le contexte précédent sont historiques, pas les gardes du schéma courant.
+
+## Constat d'intégration — 22 octobre 2026
+
+Le panneau Préférences / Avancé · RAW expose l'interrupteur pour l'image
+ouverte et le choix du manifeste. La portée courante est par image et persistée
+par sidecar, pas une préférence globale remplaçant toutes les recettes.
+La demande globale d'évolution reste suivie dans les raccordements IHM.
+Ce constat ne remplace pas les décisions et conditions historiques ci-dessus.
 
 ## Références
 

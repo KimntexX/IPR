@@ -12,7 +12,7 @@ La directive [ADR-0008](decisions/ADR-0008-separation-travail-affichage-export.m
 sépare développement RAW, affichage ICC et export. Le profil écran ne change
 pas la calibration ou le DCP. Le master cible choisi est désormais Rec.2020
 linéaire D65 ([ADR-0009](decisions/ADR-0009-espace-travail-rec2020-lineaire.md)),
-implémenté dans le moteur local le 15 octobre 2026. Les tables DCP conservent leur domaine
+introduit le 15 octobre 2026 et intégré dans `dev` ; relecture du présent contrat le 22 octobre 2026. Les tables DCP conservent leur domaine
 ProPhoto ; leur raccordement au master a été porté selon le
 [plan d'intégration](architecture/integration-rec2020.md).
 
@@ -21,16 +21,19 @@ ordonne les prochains essais HL, la validation du rendu, les caches de profils
 et la généralisation des calibrations. Les futurs R5 (CR3) et 6D Mark II (CR2)
 compléteront le corpus ; leur annonce ne vaut pas validation.
 
-### Politique cible de calibration — décision du 15 octobre 2026
+### Politique courante de calibration — relecture du 22 octobre 2026
 
-La calibration RAW auditée sera **activée par défaut**. Sa désactivation
-sera déplacée dans des paramètres avancés dont l'interface, la portée et
-la persistance restent à définir. Voir [ADR-0007](decisions/ADR-0007-calibration-raw-par-defaut.md).
-Il s'agit d'une décision cible, **pas encore du comportement livré** :
-l'activation est toujours explicite dans l'implémentation actuelle.
-Les contrôles RAW/DCP/moteur restent obligatoires ; distinguer activation
-demandée et calibration effectivement appliquée. Aucun élargissement aux
-RAW non audités ni modification des sidecars existants n'est décidé ici.
+La calibration RAW est **active par défaut** pour une nouvelle recette.
+Son interrupteur et le choix du manifeste sont dans les préférences avancées
+RAW, pas dans les réglages ordinaires. Le choix explicite est mémorisé par image.
+Voir [ADR-0007](decisions/ADR-0007-calibration-raw-par-defaut.md).
+
+Une activation demandée ne garantit pas une application : le catalogue doit
+reconnaître le format, le décodeur, le boîtier, le profil et le mode capteur.
+Les règles courantes n'imposent plus une liste de cinq empreintes de RAW ni
+d'ISO. Un boîtier inconnu n'hérite pas silencieusement de la calibration Canon.
+Voir [ADR-0011](decisions/ADR-0011-regles-raw-par-mode-et-configuration-vivante.md)
+et [ADR-0012](decisions/ADR-0012-formats-extensibles-et-caracterisations.md).
 
 **Orientation à préparer (8 octobre 2026) :** rendre le backend RAW
 remplaçable si les limitations de LibRaw persistent ou si des problèmes
@@ -79,7 +82,13 @@ Sur la paire `6V1A1236.CR3` / `6V1A1236.dng`, les valeurs mosaïque décodées p
 - `applyDcp(...)` : application du profil couleur à une image `CV_32FC3` RGB caméra ;
 - `applyLcp(...)` : sélection et application d'un modèle optique à une image `CV_32FC3`.
 
-Les profils sont recherchés dans `profiles/dcp` et `profiles/lcp` sous le répertoire courant, puis dans le répertoire de données utilisateur Qt de l'application. Sous Windows, les emplacements Adobe suivants sont aussi parcourus directement :
+Les racines de profils sont, dans l'ordre construit par `defaultProfileDirectories()` :
+`profiles` près de l'exécutable, `../Resources/profiles` (bundle macOS),
+`../share/IPR/profiles` (installation), les répertoires `IPR/profiles` trouvés
+via Qt `GenericDataLocation`, `profiles` du répertoire courant, puis
+`AppDataLocation/profiles` pour les profils personnels. Les sous-dossiers
+DCP/LCP sont parcourus dans ces racines. Sous Windows, la racine Adobe permet
+aussi de rechercher les emplacements suivants :
 
 - `%ProgramData%/Adobe/CameraRaw/CameraProfiles` pour les DCP ;
 - `%ProgramData%/Adobe/CameraRaw/LensProfiles` pour les LCP.
@@ -192,66 +201,41 @@ Voir le [rapport évolutif, §23](validation/analyses/analyse-base-colorimetriqu
 - Les profils Adobe Standard et Camera Neutral réels ont été comparés aux TIFF Lightroom au pas 8. La proximité Neutral est améliorée sur le lot contrôlé, mais la fidélité absolue et la parité Lightroom restent non validées.
 - La courbe tonale est interpolée par segments linéaires ; sa fidélité à la méthode de rendu du logiciel ayant créé le profil n'est pas garantie.
 
-### Calibration RAW/DCP contrôlée (intégration du 14 octobre 2026)
+### Résolution de la calibration RAW/DCP
 
-Le module `src/raw/RawNormalization` est indépendant de LibRaw pour ses
-tests. `resolve()` lit un manifeste JSON explicite, limité à 1 Mio/256 entrées.
-Chaque calibration est liée à un couple SHA-256 RAW/DCP exact, au boîtier,
-à l'ISO, à la version LibRaw, au noir commun et aux quatre noirs mesurés. Le moteur n'ajoute
-pas de constante d'exposition par modèle. Le manifeste est fourni via
-`RawDecoder::Options::normalizationManifest`, ou, pour les outils et le
-générateur, `IPR_RAW_NORMALIZATION_MANIFEST`. Dans l'IHM, cette variable
-peut fournir l'emplacement du fichier, mais ne déclenche pas l'activation :
-la case expérimentale reste désactivée par défaut.
+`RawNormalization::resolve()` ne dépend pas de LibRaw pour ses tests. Il
+interroge un catalogue JSON de caractérisation borné à 1 Mio et 256 règles.
+Le schéma courant est **4** ; les règles par modèle/profil et mode sont
+séparées des photographies de validation. Les SHA-256 restent utiles à la
+traçabilité des ressources et des campagnes, pas comme liste des seules
+photos autorisées à s'ouvrir.
 
-Le contrat actuel exige un CR3 Canon, une WB caméra, un DCP sélectionné,
-des noirs commun/périphériques exacts sans motif spatial et une exposition native inconnue.
-Le schéma courant est **2** : `global_black` est obligatoire, les quatre
-`black_rgbg` peuvent différer. Le schéma remplacé n'est pas pris en charge.
-`config/raw-normalization.json` contient les 19 couples RAW/Camera Neutral
-audités, sans données de pixels ni tables DCP. Il est embarqué en ressource
-Qt (`:/config/raw-normalization.json`) et installé sous `config/`.
-La calibration reste **désactivée par défaut**, en attente de recette visuelle.
-L'IHM utilise le fichier externe configuré ou fourni avec l'application,
-puis la ressource embarquée ; aucun ancien dossier de build n'est recherché.
-Toute incompatibilité, ambiguïté ou valeur invalide refuse la calibration
-sans casser l'ouverture de l'image. Le blanc est installé avant
-`dcraw_process()` dans `color.maximum` et `rawdata.color.maximum`, avec
-`adjust_maximum_thr = 0`. L'exposition supplémentaire ne passe ni par
-la WB ni par le curseur EV ; elle entre dans `applyDcp()` via
-`DcpRenderOptions::cameraBaselineExposureEv`, avant les tables, en plus
-de l'offset lu dans le profil. Les entrées sont préparées hors ligne depuis
-les preuves DNG ; pas de conversion Adobe ni de lecture DNG à l'ouverture.
+Le chemin du manifeste arrive par `RawDecoder::Options::normalizationManifest`.
+L'IHM résout sa configuration externe ou la ressource embarquée ; elle ne
+recherche pas un ancien dossier de build. Les recettes des outils de test
+fixent explicitement le manifeste et ignorent l'activation par environnement.
+Une règle invalide, ambiguë ou incompatible est refusée sans empêcher
+l'ouverture non calibrée, avec diagnostic de l'application effective.
 
-Pour voir l'intégration : ouvrir un des 19 RAW, sélectionner Camera Neutral,
-désactiver la WB automatique puis cocher **Calibration RAW auditée — validation
-visuelle**. Le statut doit confirmer blanc, EV et provenance. Décocher pour
-retrouver le témoin. La restauration `.ipr` conserve l'activation et l'empreinte
-du manifeste ; une ressource changée n'est pas utilisée silencieusement.
-Les changements de calibration nécessitent un nouveau décodage. Hors couple
-RAW/DCP/version/noirs reconnu, le rendu reste non calibré avec un statut explicite.
-Les hautes lumières de 9940, 0524 et 7Y6A7599 restent à vérifier.
+Le blanc sélectionné est installé avant `dcraw_process()`, dans les deux
+structures couleur LibRaw, avec `adjust_maximum_thr = 0`. Le gain de base
+caméra est transmis séparément de l'offset du profil. La compensation empirique
+par profil/modèle reste distincte de `BaselineExposureOffset` lu dans le DCP :
+ne pas compter deux fois un gain ni présenter une compensation de rendu
+comme une mesure physique du capteur.
 
-`DcpRenderOptions::preserveToneCurveHue` est désactivé par défaut et activé
-avec cette calibration. Il transforme les extrêmes RGB ProPhoto et
-interpole le canal intermédiaire ; si les extrêmes transformés sont
-inversés, il conserve la courbe par canal pour ce pixel. Cette garde est
-nécessaire pour les quatre petites décroissances de Camera Neutral.
-La préservation concerne la teinte HSV ProPhoto, pas exactement Lab.
+Le catalogue est une configuration vivante : ses nouveaux octets sont validés,
+son digest invalide les entrées de cache correspondantes et la recette résolue
+est actualisée. Les DCP/LCP gardent leurs contrôles d'identité indépendants.
+Changer les niveaux de développement peut nécessiter un redécodage. La courbe
+préservant la teinte est activée selon la règle de rendu ; ce n'est pas une
+garantie de teinte Lab constante ni une prise en charge HDR exhaustive.
 
-`SourceMetadata` expose application, blanc, exposition et provenance.
-`ImageEditor::cacheKeyForFile()` ajoute le jeton du manifeste afin de ne
-réutiliser aucun décodage calculé avec une autre calibration. L'empreinte
-DNG est une trace locale, pas une signature garantissant un manifeste
-édité manuellement. La configuration doit rester issue de l'audit contrôlé.
-
-Les cinq décodages Windows 0.22.2 correspondent au témoin indépendant
-gardé à un code 16 bits près. WSL 0.21.2 refuse cette calibration, comme
-prévu. Adobe Standard reste sans courbe implicite et conserve un déficit
-important malgré la normalisation : pas d'activation généralisée.
-Le manifeste préparé ne couvre que cinq RAW exacts avec Neutral ; il ne
-sélectionne pas automatiquement ce profil. Voir le [rapport unique, §24](validation/analyses/analyse-base-colorimetrique.md)
-pour l'activation, le retour arrière et les preuves reproductibles.
+Les anciennes restrictions par fichiers, schémas et versions LibRaw,
+ainsi que les mesures de cinq puis dix-neuf RAW, sont conservées dans le
+[rapport RAW/profils](validation/analyses/analyse-base-colorimetrique.md),
+notamment les campagnes des §24 et suivants. Elles ne définissent plus le
+contrat courant et ne sont pas recalculées par cette mise à jour documentaire.
 
 ### Persistance et commandes optiques (9 octobre 2026)
 
@@ -268,7 +252,7 @@ est affiché. La relocalisation nécessite même nom et SHA-256 sous `profiles/`
 de l'exécutable. Un profil existant doit aussi correspondre au boîtier/objectif.
 La copie des retouches par lot conserve les choix optiques de chaque cible.
 
-Deux cases indépendantes sont disponibles dans Développement RAW / Profil :
+Deux cases indépendantes sont disponibles dans le groupe **Corrections optiques**, immédiatement avant Export :
 
 - **Activer la correction de l'objectif** : géométrie et vignettage disponibles.
 - **Supprimer l'aberration chromatique** : recalage latéral rouge/bleu, uniquement
@@ -289,45 +273,33 @@ pas une parité Lightroom.
 
 ### Sélection dans l'IHM
 
-Le panneau **Développement RAW / Profil**, sous l'histogramme, propose les
-DCP compatibles avec le boîtier, la WB automatique et la normalisation
-expérimentale. La sélection remplace uniquement le DCP ; le LCP automatique
-reste inchangé. La liste est découverte dans le worker de décodage et mise
-en cache pour la session : redémarrer après installation de nouveaux profils.
-Les profils placés dans `profiles/` à côté de l'exécutable sont recherchés
-indépendamment du répertoire courant. Un build portable peut aussi placer
-son manifeste dans `config/raw-normalization.json` et son état IHM dans
-`config/ipr-ui.ini` ; la présence de ce dernier active le stockage local de
-l'IHM plutôt que le chemin utilisateur habituel. Le dossier doit être inscriptible.
-Une sélection incompatible avec le prochain boîtier retombe sur le choix
-automatique, sans empêcher l'ouverture.
+Le groupe **Développement RAW / Profil** propose les DCP compatibles et la
+WB automatique. La calibration est dans **Préférences / Avancé · RAW** ;
+objectif et aberration chromatique sont dans **Corrections optiques**.
 
-Pour le lot audité, sélectionner **Canon EOS R6 Mark III Camera Neutral**,
-désactiver la WB automatique, puis cocher la normalisation. Le manifeste
-`build-canon-normalization-20261008/normalization.json` est recherché dans
-le dépôt ; le bouton « Choisir le manifeste… » permet de le désigner sinon.
-Le statut indique le profil réellement utilisé et confirme l'application,
-ou explique le refus. Cocher la case n'est pas une preuve d'application.
+Camera Neutral est préféré lors d'une nouvelle ouverture si un profil
+compatible est disponible. Le choix résolu et les options RAW/optique sont
+restaurés avant décodage depuis le sidecar **v6**. Le statut doit indiquer
+la ressource réellement appliquée ; ni le libellé commercial ni la case
+cochée ne suffisent à établir l'état du rendu.
 
-Ces choix sont enregistrés par image dans les sidecars **v6**, avec les SHA-256
-des ressources et la version du moteur/LibRaw. Ils sont restaurés avant le
-décodage, y compris la WB automatique. Camera Neutral est privilégié à la
-première ouverture ; le choix résolu est ensuite figé pour cette image.
-Le changement DCP réutilise le RGB caméra pré-DCP lorsque disponible, sans
-vider l'aperçu ni réinitialiser zoom/retouches. La calibration et la WB de
-décodage peuvent encore imposer un redécodage. Le tampon actif est plafonné
-à 384 Mio et n'est pas conservé par le LRU. Le cache distingue le profil
-(chemin/taille/date/SHA-256) et le contenu du manifeste.
-L'IHM n'active aucune calibration via l'environnement à l'insu de la case.
-Le bouton général remet les retouches à zéro, sans changer le développement
-RAW. Un bouton distinct réinitialise profil/calibration. Une ressource absente
-ou modifiée produit un avertissement ; le repli ne garantit pas le rendu initial.
-Le LCP reste automatique et n'est pas figé dans le sidecar.
-Voir [ADR-0006](decisions/ADR-0006-restauration-raw-et-retouche-profil.md).
+Le changement de DCP réutilise le signal caméra lorsqu'il est compatible,
+sans vider l'aperçu, réinitialiser le zoom ou effacer les retouches.
+WB de décodage, niveaux de calibration ou options optiques peuvent exiger
+un redécodage. Le cache de pixels géré par `ImageCacheController` peut retenir
+le proxy et sa source caméra réduite ; l'export reconstruit la pleine définition
+si nécessaire. Ce cache est distinct du cache borné des profils préparés.
 
-La calibration reste limitée aux cinq couples RAW/DCP exacts et à LibRaw
-0.22.2-Release ; ce panneau ne généralise pas les résultats à Adobe Standard
-ni aux autres images. Voir le [rapport, §25](validation/analyses/analyse-base-colorimetrique.md).
+Le bouton général réinitialise les retouches, pas tous les choix RAW.
+La réinitialisation profil/calibration est distincte et dans les préférences
+avancées. Le LCP résolu est bien enregistré par image : il n'est pas remplacé
+silencieusement par une autre sélection automatique à la restauration.
+
+Les chemins locaux de profils et l'INI portable restent indépendants du
+répertoire des photos. Voir [la distribution Windows](architecture/build-windows-standalone.md),
+[les préférences](architecture/ui-preferences.md),
+[le contrôle mémoire](architecture/controle-memoire-images.md)
+et [ADR-0006](decisions/ADR-0006-restauration-raw-et-retouche-profil.md).
 
 ## LCP : corrections optiques
 
@@ -495,7 +467,8 @@ Un futur DCP IPR peut porter son offset via **BaselineExposureOffset (51109)**,
 déjà lu par `CameraProfileEngine`. Les autres paramètres de rendu pourront
 être décrits au niveau de la bibliothèque de profils. Ne pas dupliquer un
 même offset dans le DCP et la compensation externe. Les profils Adobe restent
-inchangés ; la calibration n'est pas généralisée à tous les R7.
+inchangés ; les R7 de modes compatibles sont ouverts à l'essai suivant le
+catalogue, sans garantie de fidélité à tous les ISO et modes.
 
 ## Tests automatisés
 
@@ -520,7 +493,9 @@ Les succès des tests synthétiques et de compilation ne constituent pas une cer
 
 ### Vérification manuelle d'un CR3 réel avec les profils Adobe
 
-Quand LibRaw est activé, CMake construit `rawProfileIntegrationProbe`. Il prend le chemin du RAW et les répertoires de profils et affiche les noms DCP/LCP sélectionnés, les métadonnées LibRaw et un écart pixel moyen entre le rendu profilé et un développement de référence sans profil :
+Sur UNIX avec `BUILD_TESTING`, LibRaw activé et ses dépendances trouvées,
+CMake construit `rawProfileIntegrationProbe`. Cette cible n'est pas déclarée
+pour Windows par le bloc CMake courant ; ne pas la présenter comme universelle. Il prend le chemin du RAW et les répertoires de profils et affiche les noms DCP/LCP sélectionnés, les métadonnées LibRaw et un écart pixel moyen entre le rendu profilé et un développement de référence sans profil :
 
 ```sh
 ./build/rawProfileIntegrationProbe image.cr3 \
@@ -528,7 +503,9 @@ Quand LibRaw est activé, CMake construit `rawProfileIntegrationProbe`. Il prend
   /mnt/c/ProgramData/Adobe/CameraRaw/LensProfiles
 ```
 
-Le probe retourne une erreur si les profils attendus ne sont pas sélectionnés, si la comparaison ne montre aucune différence mesurable ou si le décodage échoue. Il n'applique pas les réglages de l'interface ; ceux-ci sont remis à zéro par `ImageEditor` à l'ouverture.
+Le probe retourne une erreur si les profils attendus ne sont pas sélectionnés, si la comparaison ne montre aucune différence mesurable ou si le décodage échoue. Il n'applique pas les réglages de l'interface ; une ouverture sans sidecar part de valeurs neutres, tandis qu'un sidecar
+valide restaure les choix de l'image. La sonde ne constitue pas un test de
+cette restauration.
 
 Le paramètre optionnel `--camera-wb` remplace la balance des blancs automatique par celle enregistrée par le boîtier. Il peut être ajouté après le chemin d'aperçu, ou seul, pour comparer les deux modes :
 

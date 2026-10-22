@@ -21,7 +21,10 @@ Hautes lumières & $-100$ à $+100$ & Modérer ou renforcer les tons clairs.\\
 Blancs & $-100$ à $+100$ & Ajuster les tons les plus proches du blanc.\\
 \bottomrule
 \end{longtable}
-La valeur zéro est la référence de ces six réglages. La case \emph{Niveaux
+La valeur zéro est la référence de ces six réglages. Sur un RAW avec signal
+caméra et DCP, l'exposition agit avant le profil : $+1$ EV double le signal
+linéaire à cet endroit, pas nécessairement les valeurs du TIFF après courbe.
+Sans ce contexte caméra, le gain est appliqué au master linéaire. La case \emph{Niveaux
 de gris}, placée dans ce groupe, active ou désactive le rendu monochrome.
 
 \section{Procédure conseillée}

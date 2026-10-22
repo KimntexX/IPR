@@ -1,6 +1,7 @@
 # Générateur d'images IPR de test
 
-Contrat aligné — 12 octobre 2026, branche `patch_validation` à recompiler.
+Contrat relu le 22 octobre 2026 sur `dev` ; alignement initial du 12 octobre.
+Recompiler la référence étudiée, pas un ancien exécutable de branche.
 Source : [generate_test_images.cpp](../../../src/tools/generate_test_images.cpp),
 recettes partagées dans [TestRecipes.cpp](../../../src/tools/TestRecipes.cpp).
 

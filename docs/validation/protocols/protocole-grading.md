@@ -12,8 +12,8 @@ indépendamment ; autres zones à saturation zéro.
 
 | Série générateur | Valeurs | Support fixe |
 | --- | --- | --- |
-| `grading-<zone>-hue` | 0, 60, 120, 180, 240, 300° | `-GradingSaturation 25` |
-| `grading-<zone>-saturation` | 0, 25, 50, 100 | `-GradingHue 30` |
+| `grading-<zone>-hue` | 0, 60, 120, 180, 240, 300° | Saturation fixe 25 (pas une option CLI) |
+| `grading-<zone>-saturation` | 0, 25, 50, 100 | Teinte fixe 30° (pas une option CLI) |
 
 Zones : `shadows`, `midtones`, `highlights`. Le groupe `grading` couvre ces
 séries. Pour comparer les teintes, utiliser aussi l'état de support commun

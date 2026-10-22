@@ -11,10 +11,20 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.5\baselineskip}
 \setlength{\emergencystretch}{2em}
+\interlinepenalty=10000
+\clubpenalty=10000
+\widowpenalty=10000
+\raggedbottom
 \usepackage[a4paper,margin=2.35cm]{geometry}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{longtable}
+\usepackage{placeins}
+\usepackage{etoolbox}
+% Keep a heading with its following content without another package.
+\newcommand{\ReserveSectionSpace}{\par
+  \ifdim\dimexpr\pagegoal-\pagetotal\relax<8\baselineskip\newpage\fi}
+\pretocmd{\section}{\FloatBarrier\ReserveSectionSpace}{}{}
 \usepackage{array}
 \usepackage{amsmath,amssymb,mathtools}
 \usepackage{xcolor}
@@ -53,14 +63,14 @@
 \vspace*{2.7cm}
 {\Huge\bfseries Documentation technique\par}
 \vspace{0.35cm}
-{\LARGE \IPR{} -- Image Processing and Rendering\par}
+{\LARGE \IPR{} -- Image Processing Room\par}
 \vspace{1.2cm}
 {\large Architecture, pipeline de développement RAW, interface et persistance\par}
 \vfill
 \begin{tabular}{rl}
-Version & 0.3 -- restauration RAW au 8 octobre 2026\\
+Référence & Relecture sur \texttt{dev} (\texttt{a15f703}), 22 octobre 2026\\
 Statut & Document vivant -- sources LaTeX versionnées\\
-Périmètre & Application bureau Windows 10/11, Qt 6, C++ et QML
+Périmètre & Bureau Windows/Linux/macOS, Qt $\geq 6.8$, C++ et QML
 \end{tabular}
 \vfill
 {\small Les chapitres non démarrés sont présents comme jalons volontairement vides.}

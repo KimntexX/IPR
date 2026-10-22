@@ -1,7 +1,10 @@
 # Préparation de l'intégration de Rec.2020 linéaire
 
-Étude puis port local du 15 octobre 2026, sur `patch_raw_opening`. **Master
-Rec.2020 linéaire implémenté ; qualification visuelle/multi-OS à compléter.** Décision :
+Étude puis port du 15 octobre 2026, initialement sur `patch_raw_opening`.
+**Relecture du 22 octobre : master Rec.2020 intégré dans `dev` ; qualification
+photographique détaillée et multi-OS à lire par campagne.**
+Les lots de préparation ci-dessous gardent leur rôle de checklist ; les
+étapes déjà implémentées ne sont pas de nouveaux travaux à effectuer. Décision :
 [ADR-0009](../decisions/ADR-0009-espace-travail-rec2020-lineaire.md).
 Les résultats photographiques restent dans le seul
 [rapport RAW/profils, §44–45](../validation/analyses/analyse-base-colorimetrique.md).

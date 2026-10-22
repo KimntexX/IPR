@@ -1,6 +1,7 @@
 # Import commun des images
 
-État : 16 octobre 2026, implémentation locale sur `patch_raw_opening`.
+État relu le 22 octobre 2026 : contrat intégré dans `dev` (`a15f703`).
+L'introduction du 16 octobre sur `patch_raw_opening` est historique.
 Décision : [ADR-0013](../decisions/ADR-0013-contrat-import-commun.md).
 
 ![Import des formats vers une frontière commune](diagrams/import-commun.svg)

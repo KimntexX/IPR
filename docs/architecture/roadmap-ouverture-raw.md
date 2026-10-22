@@ -5,7 +5,7 @@ Objectif : un moteur commun, des données adaptées à chaque image et un coût
 de sélection faible, y compris dans un dossier mélangeant plusieurs boîtiers.
 Les résultats restent dans le [rapport évolutif unique](../validation/analyses/analyse-base-colorimetrique.md).
 
-## État courant — 17 octobre 2026
+## État courant — relecture du 22 octobre 2026 sur dev
 
 Le master Rec.2020 est porté et la calibration est maintenant demandée par
 défaut, avec respect d'une désactivation enregistrée. Les règles R6/R7 sont
@@ -21,10 +21,17 @@ partagé DCP/LCP est implémenté le 17 octobre : voir l'ADR-0014, budget initia
 64 Mio/16 entrées, données immuables et préparation concurrente. Le choix de stockage est DCP +
 JSON versionné ; SQLite reste un éventuel index dérivé, pas un chantier actif.
 
+La calibration, les adaptateurs, le contrat caméra, l'import commun et le cache
+de profils sont intégrés dans `dev`. Le contrôleur mémoire d'images est lui
+aussi intégré, avec une politique d'admission et non un plafond RAM absolu.
+Le rendu HL garde la réserve visuelle du 21 octobre : voir la
+[roadmap Lumières](roadmap-lumieres.md). La caractérisation physique indépendante
+du profil et la gestion ICC par écran ne sont pas déclarées livrées.
+
 Les jalons et comptes rendus datés ci-dessous décrivent le chemin historique
 des essais ; cet état courant prévaut pour les décisions déjà intégrées.
 
-## Jalons
+## Jalons initiaux du 15 octobre — historique, pas liste des travaux courants
 
 | Étape | Travail | Critère de passage | État |
 | --- | --- | --- | --- |
@@ -77,7 +84,7 @@ de commit de gel ni de livraison.
   R6 Mark III et le R7. 21 RAW sont à la racine de `tests/image/base` depuis le
   20 octobre (sélection pour la calibration HL). Ils servent d'abord à apprendre
   le comportement de LR ; aucune règle de noir/blanc, DCP ni validation de rendu
-  60D n'existe encore, et les règles CR3 ne s'y appliquent pas. Mesure du 20 octobre
+  60D n'existait au début de cette campagne, et les règles CR3 ne s'y appliquaient pas. Mesure du 20 octobre
   (`ecart-neutre-hl-v001`) : neutre IPR plus clair que LR de 4,8 L\* en moyenne sur
   les 10 % les plus clairs (CR3 : 0,6). **Règles 60D ajoutées le 20 octobre**
   (ADR-0011, extension) : écart ramené à 0,9 L\*, 19/21 CR2 à ΔL\* ≤ 2 ; validation
@@ -111,7 +118,7 @@ budget après mesures de référence ; aucun chiffre de latence n'est promis ici
 
 Après comparaison des espaces, l'utilisateur choisit le master Rec.2020
 linéaire D65 ([ADR-0009](../decisions/ADR-0009-espace-travail-rec2020-lineaire.md)).
-Le port du master est maintenant implémenté localement : suivre l'état des cinq lots du
+Le port du master est maintenant intégré dans `dev` : suivre l'état des cinq lots du
 [plan d'intégration](integration-rec2020.md). Les tests Windows et le rejeu des
 neutres ne remplacent pas la qualification visuelle/multi-OS. Les essais HL ci-dessous restent
 séparés ; conserver la même calibration, les mêmes DCP et le mapping sRGB

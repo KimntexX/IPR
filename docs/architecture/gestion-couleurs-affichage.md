@@ -1,7 +1,7 @@
 # Gestion des couleurs : travail, écran et export
 
 **Directive du 15 octobre 2026 :** [ADR-0008](../decisions/ADR-0008-separation-travail-affichage-export.md).
-Affichage ICC écran encore cible ; master Rec.2020 porté localement. Ce document ne remplace pas les résultats
+Relecture du 22 octobre 2026 : master Rec.2020 intégré dans `dev` ; affichage ICC écran encore cible. Ce document ne remplace pas les résultats
 du [rapport évolutif RAW/profils](../validation/analyses/analyse-base-colorimetrique.md).
 
 ## État réel et séparation cible
@@ -19,8 +19,7 @@ coordonnées sRGB flottantes ne borne pas, à elle seule, le master RAW.
 dérivée. Le bornage des imports entiers QImage, des tables/courbes DCP et
 des différents opérateurs doit être distingué. L'[étude comparative, §43](../validation/analyses/analyse-base-colorimetrique.md#43-étude-préalable-prophoto-et-espaces-de-calcul-comparables--15-octobre-2026)
 retient **Rec.2020 linéaire** comme alternative prioritaire à ProPhoto et
-**ACEScg** comme piste secondaire ; aucune migration ni supériorité mesurée
-n'est actée. Le choix d'espace et la politique de bornage doivent être évalués
+**ACEScg** comme piste secondaire ; au stade de cette étude initiale, aucune migration ni supériorité mesurée n'était actée. Le choix d'espace et la politique de bornage doivent être évalués
 séparément. Le reste de ce document décrit l'option ProPhoto, pas son adoption.
 
 Le [comparatif réel du §44](../validation/analyses/analyse-base-colorimetrique.md#44-comparatif-exécuté-srgb-étendu-prophoto-et-rec2020--15-octobre-2026)
@@ -30,7 +29,7 @@ de départ du corpus dans leur cube nominal. Les différences d'opérateurs RGB
 ne prouvent pas une supériorité. L'utilisateur a ensuite retenu Rec.2020
 linéaire D65 : [ADR-0009](../decisions/ADR-0009-espace-travail-rec2020-lineaire.md).
 Le [plan d'intégration](integration-rec2020.md) distingue l'étude initiale du
-port local réalisé ; les neutres sont rejoués dans le rapport §46.
+port intégré dans `dev` ; les neutres sont rejoués dans le rapport §46.
 
 ```text
 RAW → calibration/WB/DCP → image de travail + retouches

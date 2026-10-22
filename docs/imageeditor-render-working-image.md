@@ -9,7 +9,8 @@ l'[architecture d'affichage](architecture/gestion-couleurs-affichage.md).
 Le master courant est **Rec.2020 linéaire D65** depuis le port du 15 octobre 2026
 ([ADR-0009](decisions/ADR-0009-espace-travail-rec2020-lineaire.md)).
 Le [plan de port](architecture/integration-rec2020.md) distingue l'étude
-préparatoire, l'implémentation locale et les validations encore nécessaires.
+préparatoire, l'implémentation intégrée dans `dev` et les validations encore nécessaires.
+Relecture du présent contrat : 22 octobre 2026, référence `a15f703`.
 
 `ImageEditor::renderWorkingImage()` construit une nouvelle image de travail à partir :
 
@@ -99,7 +100,7 @@ Le point neutre (le pivot autour duquel les gains rouge/bleu s'annulent) n'est p
 
 - Pour les fichiers RAW décodés par LibRaw, cette valeur est estimée par `RawDecoder::estimateWhiteBalanceKelvin()` à partir des multiplicateurs **`cam_mul`** (balance « telle que prise de vue », propre à chaque photo) et de **l'inverse** de la matrice `cam_xyz` (approximation de McCamy), et propagée dans `ColorPipeline::WorkingImage::referenceWhiteBalanceKelvin`.
   - `cam_xyz` exprime la réponse des canaux caméra à une couleur XYZ (`RVB_cam = cam_xyz × XYZ`), et non l'inverse : il faut donc inverser cette matrice 3×3 pour convertir un RVB neutre caméra en XYZ. Une ancienne version du code utilisait `cam_xyz` directement (sans inversion) et les multiplicateurs `pre_mul` (constante « lumière du jour » fixe par modèle d'appareil, indépendante de la prise de vue) au lieu de `cam_mul` (balance réellement mesurée/réglée pour la photo). Ce double défaut produisait une température quasi constante et anormalement élevée (~12 000-13 000 K) pour toutes les photos d'un même modèle d'appareil, au lieu de la température « As Shot » réelle (ex. ~5200 K rapportée par Lightroom). Le correctif inverse désormais la matrice et utilise `cam_mul` en priorité (`pre_mul` reste un repli défensif si `cam_mul` est indisponible), et est couvert par le test `whiteBalanceEstimationTest`.
-- Pour les formats standards (JPEG/PNG/TIFF…), une estimation best-effort est tentée via les métadonnées textuelles exposées par `QImageReader` (`readWhiteBalanceKelvin()` dans `imageeditor.cpp`) ; en l'absence de métadonnée exploitable, la valeur reste indéterminée.
+- Pour les formats standards (JPEG/PNG/TIFF…), une estimation best-effort est tentée via les métadonnées textuelles exposées par `QImageReader` (`readWhiteBalanceKelvin()` dans `ImageImporter.cpp`) ; en l'absence de métadonnée exploitable, la valeur reste indéterminée.
 - Si aucune valeur n'est disponible, le rendu retombe sur `5200 K` comme référence neutre par défaut (`.value_or(5200.0)`). Ce repli d'interface n'est pas une calibration RAW ni une modification de la WB caméra.
 
 `Settings::temperature` est initialisé, au chargement de l'image et lors de `resetAdjustments()`, à cette même référence détectée (arrondie à l'entier le plus proche), et non plus à une constante fixe (`5200` précédemment). Le signal `adjustmentsReset(int temperatureKelvin, int tint)` transmet cette valeur au QML afin que le curseur de température affiche d'emblée la balance des blancs réelle de la photo plutôt qu'un neutre arbitraire, ce qui évite une mauvaise interprétation initiale des couleurs.
@@ -114,7 +115,7 @@ Le gain RGB appliqué pour une température/référence donnée n'est plus un ga
 4. Les étapes 1 à 3 sont combinées en une seule matrice `netMatrix = XYZtoRGB × Bradford⁻¹ × diag(gain) × Bradford × RGBtoXYZ`, précalculée une fois par appel puis appliquée par un simple produit matrice-vecteur par pixel (coût identique au gain diagonal précédent).
 5. Pour les seules cibles plus froides que la référence, une calibration empirique, issue du corpus Lightroom/IPR de huit scènes, est composée après Bradford. Son intensité augmente continûment en logarithme des kelvins jusqu'à 2000 K ; à cette borne, elle applique les coefficients RGB `(0,35 ; 1,19 ; 0,84)`. Ces valeurs v3 ont été ajustées après une première validation v2, car la composition matricielle et le rendu hors gamut atténuent l'effet des coefficients directs. Elles compensent la sous-atténuation rouge observée sans changer la branche chaude, déjà proche de Lightroom. Cette partie doit rester identifiée comme une calibration de rendu et être revalidée à chaque évolution du pipeline, à la différence de l'adaptation Bradford qui est le modèle colorimétrique de base.
 
-La Nuance emploie des gains symétriques sur R/B (magenta) et opposés sur G (vert). Avant application, ils sont normalisés par leur luminance Rec. 709 sur un gris neutre (`0,2126 R + 0,7152 G + 0,0722 B`). Le curseur reste donc chromatique : à nuance négative il va vers le vert, à nuance positive vers le magenta, sans provoquer le décalage d'exposition qui affectait auparavant les deux extrêmes.
+La Nuance emploie des gains symétriques sur R/B (magenta) et opposés sur G (vert). Avant application, ils sont normalisés par leur luminance Rec. 709 sur un gris neutre (`0,2126 R + 0,7152 G + 0,0722 B`). Ce modèle garde la luminance d'un gris neutre dans son domaine sRGB, pas nécessairement celle de toute couleur. La matrice est conjuguée vers Rec.2020 ; ce paragraphe décrit le repli sans contexte caméra, pas un gain supplémentaire du chemin DCP.
 
 Cas particulier : si la température demandée est strictement égale à la référence détectée et que la nuance est nulle, la fonction retourne immédiatement sans passer par la matrice (évite un bruit flottant négligeable mais non nul introduit par l'aller-retour via l'inverse de Bradford, et garantit un résultat bit-à-bit identique à l'image source dans ce cas neutre).
 
@@ -165,7 +166,7 @@ restent la dernière correction colorimétrique utilisateur.
 
 Avant les effets locaux, `DetailProcessing::reduceNoise()` traite le RGB
 linéaire si l'un des deux bruits est non nul. Depuis le correctif consolidé
-le 5 octobre, le modèle emploie Y Rec.709 et Co/Cg, des seuils Haar/MAD
+le 5 octobre et porté depuis en Rec.2020, le modèle emploie Y Rec.2020 et Co/Cg, des seuils Haar/MAD
 proportionnels au curseur, des guides de structure préfiltrés, un rééquilibrage
 des changements pour conserver la moyenne et une compression vers le gris
 préservant Y si la reconstruction produit des canaux négatifs. Pas de clamp
@@ -423,7 +424,7 @@ Ce modèle évite d'exposer un pointeur brut entre le thread UI, le worker et le
 
 Le sidecar courant v6, lu et écrit par le module `Sidecar` (données dans `EditRecipe.h`), est un flux `QDataStream` binaire placé à côté du fichier source sous le nom `source.ext.ipr`. Son en-tête contient la signature `IPR1`, la version du format, la taille et la date de modification du source. Cette signature empêche d'appliquer silencieusement des réglages devenus incohérents après le remplacement d'une image.
 
-La v5 ajoute DCP, manifeste, leurs SHA-256, activation de normalisation et version du moteur/LibRaw ; la v6 ajoute identité/SHA-256 du LCP, résolution explicite et activations objectif/CA latérale. V1 à v6 restent lues. Les options RAW et la WB automatique sont restaurées avant le décodage. Le LCP résolu est figé, et les corrections sont suspendues si ses octets sont absents/modifiés. Le changement DCP utilise un unique tampon caméra actif, plafonné à 384 Mio, lorsque WB/calibration et options/empreinte optiques le permettent ; sinon un redécodage conserve le rendu visible. Voir [ADR-0006](decisions/ADR-0006-restauration-raw-et-retouche-profil.md) et le [contrat optique](camera-profile-engine.md#persistance-et-commandes-optiques-9-octobre-2026).
+La v5 ajoute DCP, manifeste, leurs SHA-256, activation de normalisation et version du moteur/LibRaw ; la v6 ajoute identité/SHA-256 du LCP, résolution explicite et activations objectif/CA latérale. V1 à v6 restent lues. Les options RAW et la WB automatique sont restaurées avant le décodage. Le LCP résolu est figé, et les corrections sont suspendues si ses octets sont absents/modifiés. Le changement DCP utilise le signal caméra retenu, éventuellement réduit avec le proxy dans le cache géré par `ImageCacheController`, lorsque WB/calibration et options/empreinte optiques le permettent ; sinon un redécodage conserve le rendu visible. L'export reconstruit la pleine résolution si nécessaire. Voir [ADR-0006](decisions/ADR-0006-restauration-raw-et-retouche-profil.md) et le [contrat optique](camera-profile-engine.md#persistance-et-commandes-optiques-9-octobre-2026).
 
 L'écriture est différée de 450 ms puis atomique via `QSaveFile`. Le payload stocke les réglages du rendu, les courbes, les annotations, le mélangeur huit bandes et le grading trois voies. À l'ouverture, un sidecar valide remplace les réglages neutres et synchronise l'interface QML. Le ruban peut appliquer les réglages courants à plusieurs images : seules leurs sidecars sont écrites, jamais les sources, et les annotations existantes de la cible sont conservées.
 
@@ -441,6 +442,6 @@ non nuls peuvent produire un autre rendu. Détails, constantes et compatibilité
 
 - Les opérations colorées sont des ajustements empiriques du RGB de travail ; la température ne constitue pas à elle seule une balance des blancs RAW physiquement complète.
 - Les réglages tonals dépendent des statistiques mesurées à l'ouverture : une même valeur de curseur agit différemment selon l'image, comme dans Lightroom. L'ordre des modules fait partie du comportement visible de l'éditeur.
-- Le clipping n'est pas réalisé dans `renderWorkingImage()` ; il intervient lors de la quantification/conversion de sortie. L'image flottante peut donc conserver des valeurs hors de `[0, 1]`.
+- Il n'y a pas de clamp global final du master dans `renderWorkingImage()` ; les RGB peuvent rester signés/étendus. Certains opérateurs et protections ont néanmoins leurs bornes propres (tons, HSV, reconstruction chromatique). Ne pas affirmer que tout signal étendu traverse sans perte l'ensemble des réglages.
 - Le retour par valeur sécurise la propriété de l'objet résultat, mais `cv::Mat` copie ses données de façon superficielle lors d'une copie ordinaire. Il faut utiliser `clone()` si une copie indépendante des pixels est nécessaire.
 - Vérifier les valeurs par défaut des réglages lors de leur modification : la température neutre définie dans la fonction couleur doit coïncider avec la valeur initiale et la valeur de réinitialisation de `Settings` et du QML.

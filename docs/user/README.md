@@ -1,7 +1,8 @@
 # Livre utilisateur IPR
 
-Manuel français de la version alpha, fondé sur l’interface de `patch_ui`,
-vérifiée dans les sources le **19 octobre 2026**. Il décrit l’utilisation,
+Manuel français de la version alpha, relu contre les sources de `dev`
+(`a15f703`) le **22 octobre 2026**. L'interface issue de `patch_ui` y est
+intégrée ; les ajouts non fusionnés de cette branche ne sont pas présumés livrés. Il décrit l’utilisation,
 pas les algorithmes de la [documentation technique](../technical/latex/README.md).
 
 - [Source principale LaTeX](latex/ipr-livre-utilisateur.tex).
@@ -37,7 +38,7 @@ sans procédures fictives. Les mémos de survol prolongé sont réservés à la 
 | Sélection et navigation | `ThumbnailRibbon.qml`, `FilmstripNavigation.qml` |
 | Notes et libellés | `ImageInfoPanel.qml` |
 | Préférences | Composants Preferences et `src/app/UiPreferences.cpp` |
-| Sidecars, application groupée, export | `src/editor/imageeditor.cpp`, lecture seule dans ce chantier |
+| Sidecars, application groupée, export | `src/editor/imageeditor.cpp`, lecture seule pour la relecture |
 
 Une fonction exposée n’est pas une fonction validée sur tous les appareils.
 Les limites et raccordements restent suivis dans le

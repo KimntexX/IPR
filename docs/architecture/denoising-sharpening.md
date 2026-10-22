@@ -3,7 +3,9 @@
 # Réduction de bruit et netteté
 
 **État :** débruitage CPU corrigé, fonctionnement/progressivité photographiques confirmés ; qualité/calibration à poursuivre ; netteté non validée.  
-**Date de consolidation :** 5 octobre 2026.
+**Relecture du modèle courant :** 22 octobre 2026, master Rec.2020 dans `dev`.
+Les campagnes photographiques ci-dessous datent des 4–5 octobre ; elles ne
+constituent pas une nouvelle qualification du master courant.
 
 La [campagne photographique du 4 octobre](../validation/analyses/analyse-bruit-2026-10-04.md)
 mesure 80 variantes retenues et dix neutres. Elle confirme l'activité des réglages mais relève
@@ -37,18 +39,18 @@ Les réglages sont :
   suffisant sans renforcer systématiquement le bruit.
 
 Introduits dans le sidecar `.ipr` v2, ils sont conservés dans le format courant
-v4. Les versions v1/v2/v3 restent lues ; les sidecars v1 prennent les valeurs
+v6. Les versions antérieures restent lues ; les sidecars v1 prennent les valeurs
 par défaut des réglages de bruit et de netteté. Le correctif ne change ni
 les champs ni les valeurs mémorisées, mais change le rendu des réglages de
 bruit non nuls. Aucun sidecar utilisateur n'est réécrit par le build.
 
 ## Modèle mathématique mis en œuvre
 
-Le débruitage utilise la luminance sRGB linéaire Rec.709 et les deux axes
+Le débruitage utilise la luminance du master Rec.2020 linéaire D65 et les deux axes
 Co/Cg. Ce n'est plus exactement la transformée YCoCg classique :
 
 \[
-Y=0{,}2126R+0{,}7152G+0{,}0722B,\quad Co=R-B,\quad
+Y=0{,}2627R+0{,}6780G+0{,}0593B,\quad Co=R-B,\quad
 Cg=G-\tfrac12(R+B).
 \]
 
@@ -89,7 +91,10 @@ sans ajouter un offset aux noirs inchangés, ni renormaliser l'exposition.
 Les résultats Y candidats sont non négatifs ; Co/Cg restent signés.
 
 La reconstruction est `RGB=Y+d`, où
-`d=(0,4298*Co-0,7152*Cg ; -0,0702*Co+0,2848*Cg ; -0,5702*Co-0,7152*Cg)`.
+`d=(0,3983*Co-0,6780*Cg ; -0,1017*Co+0,3220*Cg ; -0,6017*Co-0,6780*Cg)`.
+Ces coefficients sont l'inverse exact de Y/Co/Cg pour les poids Rec.2020 ;
+le code les dérive de `WorkingColor::lumaWeights()`, sans recopier les anciens
+coefficients Rec.709.
 Si un canal serait négatif, réduire `d` par `t=min(1,Y/(-min(d)))`.
 Ce rapprochement du gris garde Y constant ; aucun clamp supérieur SDR
 n'est introduit. Le réglage couleur seul conserve ainsi la luminance linéaire

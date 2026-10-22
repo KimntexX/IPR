@@ -18,15 +18,15 @@ L'exposition en valeurs IL (EV) est un gain multiplicatif :
 \begin{equation}
   \mathbf{p}' = 2^{E}\mathbf{p},
 \end{equation}
-où $E$ est le réglage d'exposition. Une variation de $+1$~EV double donc l'énergie des composantes linéaires.
+où $E$ est le réglage d'exposition. Sur le chemin RAW avec signal caméra et DCP, ce gain est appliqué au signal caméra avant le profil. La courbe et les tables DCP peuvent ensuite modifier la réponse : le TIFF final ne doit pas nécessairement doubler à $+1$~EV. Sans ce contexte caméra, le gain est appliqué au master linéaire. Les tests distinguent ces deux chemins et contrôlent l'absence de double application.
 
 Le contraste et les réglages \emph{hautes lumières}, \emph{ombres}, \emph{blancs} et \emph{noirs} sont pilotés par des fonctions de pondération de luminance. De façon générique, une correction locale de tonalité prend la forme :
 \begin{equation}
   Y' = Y + a\,w(Y),
 \end{equation}
-où $a$ est l'intensité demandée et $w$ une fenêtre douce concentrée sur la plage ciblée. Les composantes sont ensuite remises à l'échelle avec conservation de chromaticité. Cette approche évite qu'un réglage d'ombres affecte autant les hautes lumières.
+où $a$ est l'intensité demandée et $w$ une fenêtre douce concentrée sur la plage ciblée. Cette expression pédagogique ne décrit pas toutes les protections couleur. Le modèle courant \texttt{ToneRecovery} utilise des courbes de gain EV, interpolées selon le curseur et adaptées aux statistiques de l'image neutre. Les HL exploitent les scènes de référence voisines ; les courbes échantillonnées sont rendues non décroissantes. Ombres, HL et blancs négatifs agissent sur Y ; noirs et blancs positifs passent par des composantes sRGB linéaires puis reviennent au master Rec.~2020. L'éclaircissement peut rapprocher les couleurs du blanc et l'assombrissement renforcer leur chroma : la chromaticité n'est donc pas universellement conservée.
 
-Cette équation décrit le principe, pas l'algorithme complet de \texttt{ToneRecovery}, qui exploite aussi des statistiques de l'image source. Les validations sRGB historiques ne qualifient pas automatiquement le master Rec.~2020. La matrice, le rapport évolutif Lumières et les JSON de \texttt{docs/validation} précisent les campagnes et les limites ; une validation sur corpus n'est pas une garantie pour tous les boîtiers.
+Les constantes de gain, d'épaule et de protection sont des choix empiriques du modèle, pas des lois physiques. La réserve HL du 21 octobre reste ouverte : certaines zones entièrement écrêtées donnent un voile et la force varie selon la scène. Le traitement local n'est pas déclaré intégré. Les validations sRGB historiques ne qualifient pas automatiquement le master Rec.~2020. La matrice, le rapport évolutif Lumières et les JSON de \texttt{docs/validation} précisent les campagnes et les limites ; une validation sur corpus n'est pas une garantie pour tous les boîtiers.
 
 \subsection{Courbes}
 
@@ -47,9 +47,9 @@ où $B$ est la matrice de Bradford et $D$ une matrice diagonale de rapports entr
 
 La teinte compense l'axe vert--magenta. Les gains colorés sont normalisés pour conserver autant que possible la luminance :
 \begin{equation}
-  n=0{,}2627r_g+0{,}6780g_g+0{,}0593b_g, \qquad \mathbf{p}'=\frac{\mathbf{g}\odot\mathbf{p}}{n}.
+  n=0{,}2126r_g+0{,}7152g_g+0{,}0722b_g, \qquad \mathbf{p}'=\frac{\mathbf{g}\odot\mathbf{p}}{n}.
 \end{equation}
-Cette écriture illustre la normalisation de gains dans le master ; le chemin RAW comprend également les matrices du profil et la référence de blanc source. Les essais du 2 octobre 2026 sont historiques : consulter le rapport Couleur et la matrice pour la qualification du chemin courant.
+Cette écriture décrit la normalisation des axes empiriques dans le repli sRGB linéaire. Le code conjugue ensuite la matrice complète vers Rec.~2020 ; appliquer ces gains directement aux composantes Rec.~2020 serait incorrect. Le chemin RAW avec contexte caméra rejoue la WB avant le DCP et suit ses matrices et sa référence source. Les essais du 2 octobre 2026 sont historiques : consulter le rapport Couleur et la matrice pour la qualification du chemin courant.
 
 \section{Couleur globale, mélangeur et color grading}
 
