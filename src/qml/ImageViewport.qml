@@ -390,7 +390,7 @@ Item {
                     {name: "zoomInButton", label: "+", tip: qsTr("Agrandir — Ctrl +")},
                     {name: "actualSizeButton", label: "100 %", tip: qsTr("100 % de l'aperçu — Ctrl 1")},
                     {name: "fitImageButton", label: qsTr("Ajuster"), tip: qsTr("Adapter à la fenêtre — Ctrl 0")},
-                    {name: "compareImageButton", label: qsTr("Avant/après"), tip: qsTr("Origine à gauche / actuel à droite — Ctrl Maj C")}
+                    {name: "compareImageButton", label: qsTr("Avant/après"), tip: qsTr("Origine à gauche / actuel à droite — Ctrl Maj Y")}
                 ]
                 PreferenceButton {
                     id: zoomButton
@@ -457,7 +457,7 @@ Item {
         onActivated: root.actualSize()
     }
     Shortcut {
-        sequence: "Ctrl+Shift+C"
+        sequence: "Ctrl+Shift+Y"
         enabled: root.comparisonReady && root.visible
         onActivated: root.toggleComparison()
     }
