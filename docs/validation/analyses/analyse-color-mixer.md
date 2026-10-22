@@ -1109,3 +1109,41 @@ dispersion entre scènes faible (±3° sur la rotation).
 (rotation, gain de chroma, gain de clarté selon teinte fine, saturation et
 clarté), sur le modèle de la vibrance, validées sur scènes exclues puis sur
 le rendu.
+
+### Correctif : tables de réponse Lightroom — 22 octobre 2026
+
+Le mélangeur HSV triangulaire (±18°) est remplacé par des tables mesurées
+([modele-melangeur-lr-v001](../raw/modele-melangeur-lr-v001-20261022T153032225474Z.json),
+`scripts/build_mixer_model.py`, `src/core/ColorMixerModel.h`) : pour chaque bande,
+composante et valeur, rotation de teinte, gain de chroma et gain de clarté Oklab
+selon la teinte Oklab du pixel (5°), sa saturation ProPhoto linéaire et sa clarté
+Oklab ; replis qui conservent la teinte, effet principal monotone, fenêtre de
+teinte par bande, effets estompés sous une chroma Oklab de 0,02, effets des
+curseurs additionnés (hypothèse non vérifiée par des exports combinés).
+Validation croisée à deux plis de scènes, erreur médiane de l'effet principal
+moyenné sur la bande : 0,04° (p90 0,15°) de rotation, 0,002 de gain de chroma,
+0,004 de gain de clarté (log).
+
+**Magenta décalé de −10°** vers l'ancienne bande d'IPR, à la demande de
+l'utilisateur (garder le magenta proche de celui d'IPR ou le décaler peu).
+
+**Mesure du rendu**
+([mesure-melangeur-v002](../raw/mesure-melangeur-v002-20261022T172841133607Z.json),
+2 808 états, aucune exclusion), écart médian par scène |IPR − LR| dans le noyau
+des bandes, ancien → nouveau, à −100 / +100 :
+
+| Bande | Rotation de teinte (°) | Δ saturation | Rapport Y |
+| --- | --- | --- | --- |
+| Rouge | 0,64 → 0,71 ; 1,47 → 0,42 | 0,140 → 0,006 ; 0,047 → 0,013 | 0,062 → 0,026 ; 0,076 → 0,023 |
+| Orange | 1,46 → 0,41 ; 1,91 → 0,65 | 0,201 → 0,021 ; 0,080 → 0,006 | 0,030 → 0,032 ; 0,064 → 0,023 |
+| Jaune | 7,99 → 0,21 ; 24,28 → 0,65 | 0,097 → 0,017 ; 0,059 → 0,013 | 0,185 → 0,055 ; 0,095 → 0,039 |
+| Vert | 36,69 → 2,05 ; 28,07 → 1,12 | 0,048 → 0,024 ; 0,030 → 0,026 | 0,186 → 0,079 ; 0,156 → 0,064 |
+| Cyan | 12,70 → 1,27 ; 21,13 → 0,90 | 0,174 → 0,018 ; 0,041 → 0,009 | 0,067 → 0,041 ; 0,124 → 0,039 |
+| Bleu | 25,63 → 2,87 ; 23,80 → 1,73 | 0,157 → 0,009 ; 0,066 → 0,008 | 0,177 → 0,069 ; 0,215 → 0,060 |
+| Violet | 33,04 → 1,19 ; 33,70 → 0,60 | 0,039 → 0,020 ; 0,025 → 0,017 | 0,124 → 0,072 ; 0,177 → 0,079 |
+| Magenta | 3,58 → 19,00 ; 4,79 → 10,21 | 0,188 → 0,181 ; 0,137 → 0,094 | 0,114 → 0,161 ; 0,145 → 0,162 |
+
+Sept bandes passent sous 3° de rotation et sous 0,03 de saturation. Le magenta
+s'écarte de LR par construction : le noyau mesuré est celui de l'ancien magenta
+d'IPR, où LR agit peu ; la bande décalée y agit davantage. Revue visuelle de
+l'utilisateur à faire, notamment sur le magenta.

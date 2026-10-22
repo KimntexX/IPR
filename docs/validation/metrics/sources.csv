@@ -208,6 +208,7 @@ docs/validation/raw/mesure-lumieres-camera-neutral-20261009.json,876e475cac11c67
 docs/validation/raw/mesure-lumieres-intermediaires-v001-20261010T150000Z.json,e46d8ffacf5358f968a641608554139abfef464fd65d5f5b9acc4c583852362d,tonalite,779428,sha256-text-lf-v1
 docs/validation/raw/mesure-lumieres-intermediaires-v002-20261010T120745Z.json,cbe1fd5413863a2ed1621aa6443f7cbde21b95eb0724cc5113ef45f4a8d7ba16,tonalite,850972,sha256-text-lf-v1
 docs/validation/raw/mesure-melangeur-v001-20261022T151922205633Z.json,0c1c6dd0fae708ae9478362867a88a2eda3682563f055194bef8b753c07a7353,base-raw-profils,41056294,sha256-text-lf-v1
+docs/validation/raw/mesure-melangeur-v002-20261022T172841133607Z.json,16e338f59a7b4ac243c2bb490bd0438f297199ad671551b9d6363827bb6e390b,base-raw-profils,41054517,sha256-text-lf-v1
 docs/validation/raw/mesure-normalisation-adobe-standard-20261008.json,13147a007e2396290d6bf0e4ab089d50f74d50a6bf1509c04d411b865f17d5e8,base-raw-profils,34329,sha256-text-lf-v1
 docs/validation/raw/mesure-normalisation-dcp-neutral-20261008-controle.json,28d4d2edc3c65504005d9b27b1620c9ddeab9328b2b3a9da9e185684bbaa08cd,base-raw-profils,125283,sha256-text-lf-v1
 docs/validation/raw/mesure-normalisation-dcp-neutral-20261008-rendu-controle.json,23dc5d6085ca1b0b7b2c396d8fb107658fea58167e180844262f961794c26e32,base-raw-profils,169968,sha256-text-lf-v1
@@ -227,6 +228,7 @@ docs/validation/raw/mesure-temperature-v2-brut-2026-10-02.txt,634ceb6285e24ee758
 docs/validation/raw/mesure-temperature-v3-brut-2026-10-02.txt,d8544649580113a759265f12fe3a5b5fe2e7fe6dc75937263a37fb730b612f32,balance-blancs,293,sha256-text-lf-v1
 docs/validation/raw/mesure-texture-brut-2026-10-02.txt,0629192bec250f37e1e41eaa8eb022ac893b9cdafc43ec4d91d61c524938111f,detail,455,sha256-text-lf-v1
 docs/validation/raw/mesure-vibrance-brut-2026-10-02.txt,6b418182d5b673d074ebf13de87cbfdde40bb317a08a5a26ed6bca86bb39a685,couleur-globale,598,sha256-text-lf-v1
+docs/validation/raw/modele-melangeur-lr-v001-20261022T153032225474Z.json,4d28928469431ab09aa884cf9aef1265633d90084644af717157dec4fd2e6847,base-raw-profils,7427353,sha256-text-lf-v1
 docs/validation/raw/modele-vibrance-lr-v001-20261021T143113962366Z.json,df59af01d8889dc18005c8a8f90857ab8e87555a288e5c2c4c0479f8a780b405,couleur-globale,395150,sha256-text-lf-v1
 docs/validation/raw/modele-vibrance-lr-v002-20261021T143629632031Z.json,998e1864a36c011d5dc09dda76bcc3b46e8404f1476af82d872390520f2d1bbe,couleur-globale,395328,sha256-text-lf-v1
 docs/validation/raw/modele-vibrance-lr-v003-20261021T151401834847Z.json,547dfc69a39c1f12ce2e0b068e9af49db5e0627066c08c0ad82615152174bcfb,couleur-globale,396022,sha256-text-lf-v1
