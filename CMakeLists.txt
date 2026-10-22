@@ -71,6 +71,9 @@ set(IPR_ENGINE_SOURCES
     src/core/ToneRecoveryModel.h
     src/core/ToneStatistics.h
     src/core/ToneStatistics.cpp
+    src/core/Vibrance.h
+    src/core/Vibrance.cpp
+    src/core/VibranceModel.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
     src/profiles/CameraProfileEngine.h
@@ -277,6 +280,8 @@ if(BUILD_TESTING)
     ipr_add_test(colorPipelineTests tests/color_pipeline_test.cpp)
     ipr_add_test(rec2020PipelineTests tests/rec2020_pipeline_test.cpp)
     set_tests_properties(rec2020PipelineTests PROPERTIES LABELS "unit;pipeline;colour" TIMEOUT 60)
+    ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
+    set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)

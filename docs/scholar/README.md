@@ -11,7 +11,7 @@ Mise en forme : suivre les [conventions LaTeX communes](../AGENTS.md) (12 pt, in
 | `cours-01-espace-lineaire-colorimetrie.tex` | espace linéaire, luminance et gamut |
 | `cours-02-exposition-tonalite.tex` | EV, contraste, ombres et hautes lumières |
 | `cours-03-balance-blancs-adaptation.tex` | Planck, Bradford et nuance |
-| `cours-04-couleur-hsv-mixer-grading.tex` | vibrance, saturation, HSL et grading |
+| `cours-04-couleur-hsv-mixer-grading.tex` | mélangeur HSL et grading (vibrance et saturation : cours 12) |
 | `cours-05-contraste-local-gaussien.tex` | texture, clarté et flou |
 | `cours-06-voile-atmospherique.tex` | modèle atmosphérique et DCP |
 | `cours-07-courbes-interpolation.tex` | courbes de tonalité et interpolation |
@@ -19,6 +19,7 @@ Mise en forme : suivre les [conventions LaTeX communes](../AGENTS.md) (12 pt, in
 | `cours-09-raw-profils-appareil.tex` | RAW, DCP et LCP |
 | [cours-10-filtre-haar-ondelettes.tex](cours-10-filtre-haar-ondelettes.tex) | Haar 1D/2D, multi-échelle, MAD, bruit, exercices corrigés et application IPR ; [PDF](cours-10-filtre-haar-ondelettes.pdf) |
 | [cours-11-architecture-images.tex](cours-11-architecture-images.tex) | Architecture complète d'une image : physique, échantillonnage, binaire, mémoire, compression, formats, RAW, couleur, métadonnées, Canon/Sony/Nikon et exercices ; [PDF](cours-11-architecture-images.pdf) |
+| [cours-12-vibrance-saturation-oklab.tex](cours-12-vibrance-saturation-oklab.tex) | Vibrance et saturation : Oklab, mesure de Lightroom pixel par pixel, tables de réponse, rotation de teinte, validation croisée, implémentation et exercices corrigés ; [PDF](cours-12-vibrance-saturation-oklab.pdf) |
 | `moteur-graphique-ipr.tex` | pipeline, concurrence, persistance et registre des constantes |
 
 ## Compilation Windows

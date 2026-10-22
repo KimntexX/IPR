@@ -43,27 +43,6 @@ void toGrayscale(cv::Mat &linearRgb)
     }
 }
 
-void applySaturationVibrance(cv::Mat &linearRgb, int saturation, int vibrance)
-{
-    if (saturation == 0 && vibrance == 0) return;
-    const float saturationFactor = 1.0f + static_cast<float>(saturation) / 100.0f;
-    const float vibranceAmount = static_cast<float>(vibrance) / 100.0f;
-    for (int y = 0; y < linearRgb.rows; ++y) {
-        cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < linearRgb.cols; ++x) {
-            cv::Vec3f &pixel = row[x];
-            const float luminance = WorkingColor::nonNegativeLuminance(pixel);
-            const float maximum = std::max({pixel[0], pixel[1], pixel[2]});
-            const float minimum = std::min({pixel[0], pixel[1], pixel[2]});
-            const float chroma = maximum > 1e-6f ? std::clamp((maximum - minimum) / maximum, 0.0f, 1.0f) : 0.0f;
-            const float vibranceFactor = 1.0f + vibranceAmount * (1.0f - chroma);
-            pixel = cv::Vec3f(luminance, luminance, luminance) +
-                    (pixel - cv::Vec3f(luminance, luminance, luminance)) *
-                        std::max(0.0f, saturationFactor * vibranceFactor);
-        }
-    }
-}
-
 void applyMixerAndGrading(cv::Mat &linearRgb, const ColorMixer::Parameters &mixer,
                           const std::array<int, 3> &gradingHue,
                           const std::array<int, 3> &gradingSaturation)

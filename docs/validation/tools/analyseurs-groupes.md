@@ -537,3 +537,25 @@ dans `investigation-export-0081-vNNN-HORODATAGE.json`. Le mode de sonde
 variable d'environnement ; le champ d'application dans la preuve est réel.
 Ce diagnostic n'applique aucun correctif, ne modifie ni photo ni recette,
 et ne compare pas les pixels LR/IPR de géométries différentes par MAE.
+
+## Modèle de vibrance Lightroom
+
+`scripts/build_vibrance_model.py` régénère `src/core/VibranceModel.h` depuis les
+références LR `base/couleur/vibrance` et leurs neutres `base/neutre` (XMP
+identique hors Vibrance) : gains log de chroma et de clarté Oklab par saturation
+ProPhoto linéaire, clarté et teinte Oklab du pixel neutre, médianes sur les
+scènes. Il refuse un état absent ou dupliqué, écrit une preuve immuable
+`modele-vibrance-lr-vNNN` (empreintes des TIFF, tables, validation croisée à deux
+plis contre le modèle remplacé) et ne lit aucun TIFF IPR. Le gain de chroma de
+chaque cellule est rendu monotone en fonction du curseur (régression isotone de
+chaque côté de zéro).
+
+```powershell
+python scripts/build_vibrance_model.py --data-version N --supersedes CAMPAGNE_PRÉCÉDENTE
+ctest --test-dir build-windows-msvc -C Release -R '^vibranceMathTests$' --output-on-failure
+```
+
+L'effet du modèle intégré se mesure ensuite avec `tests/analyse_couleur.py`
+(états IPR rendus en mémoire). L'étude A1/A2/B du 13 octobre et sa sonde sont
+retirées ; ses JSON restent la mémoire de cette étude.
+
