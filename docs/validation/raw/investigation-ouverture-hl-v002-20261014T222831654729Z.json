@@ -1,0 +1,1994 @@
+{
+  "campaign_id": "investigation-ouverture-hl-v002-20261014T222831654729Z",
+  "schema_version": 1,
+  "data_version": 2,
+  "group": "base-colorimetrique",
+  "supersedes_campaign_id": "investigation-ouverture-hl-v001-20261014T221843582060Z",
+  "measured_at_utc": "2026-10-14T22:29:35.209767+00:00",
+  "inputs": [
+    {
+      "file": "docs\\validation\\raw\\analyse-exports-raw-audit-v004-20261014T222151936912Z.json",
+      "sha256": "c9b97e8b845910cab474ca79c99ccfdc3c60f8e2215bd80e403d4ddc32261aa0"
+    },
+    {
+      "file": "build-windows-msvc\\Release\\rawNormalizationCorpusProbe.exe",
+      "sha256": "9ec0ea770045b0f4cedbec0a7e9efd8d4c22cf0b1e3dee83c8fe44205655c4b0"
+    },
+    {
+      "file": "build-windows-msvc\\Release\\editorRawDevelopmentTests.exe",
+      "sha256": "c815fff31eed61134921b1682ccb1ec22f80a8f4f6e238a6365da75d4d47a157"
+    },
+    {
+      "file": "config\\raw-normalization.json",
+      "sha256": "3cefa4e11f42714686a3259e12957d5c115a9886bfac350e6cf6f4f906179795"
+    },
+    {
+      "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\analyse_opening_highlights.py",
+      "sha256": "33925f1f6f108be154056ae2fb3dfb512173d027c571523a9b3a61d18475a997"
+    },
+    {
+      "file": "tests\\raw_normalization_corpus_probe.cpp",
+      "sha256": "c448eb82e1b7e1c261610f1bbadff4a0a331c75325884f5542c5a9a2034d2709"
+    },
+    {
+      "file": "tests\\raw_opening_trial_helpers.h",
+      "sha256": "cafcf9ab856f28053cb0e3303f231fb869db89658bc2fd803c8abaadd0dbf874"
+    },
+    {
+      "file": "src\\core\\ColorPipeline.cpp",
+      "sha256": "7005624ec9ee109fe9a482b5c5f4d5e413df56ee41934b78c44193cc7543646c"
+    },
+    {
+      "file": "src\\raw\\RawDecoder.cpp",
+      "sha256": "85155aad434161399215bffcad601b432f64cd39ce7959fdf83992b9167d9a7b"
+    },
+    {
+      "file": "src\\raw\\RawNormalization.cpp",
+      "sha256": "8b3edec446000d7812d8bdee619aed8251292b58eb431d19ccda3debcfc84d46"
+    },
+    {
+      "file": "src\\editor\\imageeditor.cpp",
+      "sha256": "2333435bc5a3db1560aef17d7d90425508908cb1cc02d7a254697a92b3c3e56a"
+    },
+    {
+      "file": "src\\qml\\RawDevelopmentModule.qml",
+      "sha256": "e0ffe9840a81ef05f1d9a7298b274b8d4642e8aef03391d961b4a33025d35c4a"
+    },
+    {
+      "file": "src\\profiles\\CameraProfileEngine.cpp",
+      "sha256": "50056f043dae5e56e6abb68dab08e15723beec32d52f065369f7aedc75c918f7"
+    },
+    {
+      "file": "src\\profiles\\CameraProfileEngine.h",
+      "sha256": "03a75fdb7b1e3a2e4e5aec3025093eeb88dd258c3151ac7edc0c48da818353df"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0043.CR3",
+      "sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0043.CR3.ipr",
+      "sha256": "6ace5a3dfe7e13077f7d40eb7b4dd1eb16e62c02a797ee810dd13b9740945e31"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+      "sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0081.CR3",
+      "sha256": "97231d05cd7bd19ebf3b7497df7290f7e5c17579e879c6c03f425a0a7cefab97"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0081.CR3.ipr",
+      "sha256": "6367438a4fecf21a352d590a4aff7900858fbb5eaf5f26c92cd1a12eb9db017f"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9940.CR3",
+      "sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A9940.CR3.ipr",
+      "sha256": "d0a84898856cb285f32f768206b987aa621b530b5f4b21a17836e066ac422435"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0524.CR3",
+      "sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0524.CR3.ipr",
+      "sha256": "0c2869841a0591ededcede230b2978f0b3e716d882098859f51c6fcdbc62587c"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7003.CR3",
+      "sha256": "59fb28d2d31050a9166896bd4036d6a15a91e634478db3d687d5435e048dd400"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7003.CR3.ipr",
+      "sha256": "b14f92e9c145ff9733190e07d554651f2b174441b471772ff4654115ef6301e0"
+    },
+    {
+      "file": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp",
+      "sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7298.CR3",
+      "sha256": "9147913687cfd5801acf9d706ab4b032a3c5f549242fe69344c04d396546be33"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7298.CR3.ipr",
+      "sha256": "21da6334abeacd68892e7664870495e6fc9ecca876678995e0de78d2c7307bc9"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7599.CR3",
+      "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+    },
+    {
+      "file": "tests\\image\\base\\7Y6A7599.CR3.ipr",
+      "sha256": "b2a01de8d39b202b889f14df9d9dc5c604354b80de518dc440952580e64dedd6"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0054.CR3",
+      "sha256": "602bcc522c2d4fe0dd070f9e9f37fbb6cde70018ff227bc9f6ff325e4bb355cb"
+    },
+    {
+      "file": "tests\\image\\base\\6V1A0054.CR3.ipr",
+      "sha256": "52b0e51f531971630d51fd52b6204a87b1e569b377d643d5df08a6a6723d80cd"
+    }
+  ],
+  "records": [
+    {
+      "scene": "6V1A0043",
+      "stages": {
+        "above_one_srgb_percent": 0.00039635354736424893,
+        "camera_RGB_at_upper_bound_percent": 0.0017835909631391202,
+        "candidate": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.00045393015477986494,
+            0.0012605981111409518,
+            0.12343062938577702
+          ],
+          "black_percent": 33.97720967102656,
+          "central_ROI_G_over_R": 0.6021863375253126,
+          "encoded_clipped_percent": 0.00039635354736424893,
+          "mean_Y": 0.020335675736271257,
+          "outside_srgb_percent": 0,
+          "mean_Y_relative_to_LR_percent": -0.033078991962887105
+        },
+        "candidate_map_mean_Y": 0.020335676864721926,
+        "current_map_mean_Y": 0.020340014902785856,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 3.61097899326199,
+        "pre_gamut_mean_Y": 0.02033567686385181,
+        "current_mean_Y_relative_to_LR_percent": -0.01174834518078427
+      },
+      "LR": {
+        "mean_Y": 0.020342404798719682,
+        "Y_p05_p50_p95": [
+          0.0004539285013254799,
+          0.00125639526630182,
+          0.12358119165546429
+        ],
+        "black_percent": 33.89417360285375,
+        "encoded_clipped_percent": 0.0005945303210463733,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.6018682881183333,
+        "samples": 504600
+      },
+      "dcp_stage_ablation": {
+        "full": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.0004539972451981157,
+            0.0012606383330887184,
+            0.12342716555967925,
+            0.3320589165747166
+          ],
+          "channel_max": [
+            1.0068565607070923,
+            0.990069568157196,
+            0.9996036887168884
+          ],
+          "channel_min": [
+            -0.014963128603994846,
+            3.428464333410375e-05,
+            -0.007887006737291813
+          ],
+          "channel_upper_percent": [
+            0.00039635354736424893,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.02033567686385181,
+          "negative_channel_percent": 3.61097899326199,
+          "profile_copy_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.9900902509689331,
+              0.9900431036949158,
+              0.9954503178596497
+            ],
+            "channel_min": [
+              3.3489097404526547e-05,
+              5.683337803930044e-05,
+              1.0472462236066349e-05
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0.00039635354736424893
+        },
+        "matrix_exposure": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.0017011859338323118,
+            0.004365229112887755,
+            0.053273938085883855,
+            0.12125911081433297
+          ],
+          "channel_max": [
+            1.0020743608474731,
+            0.8714529275894165,
+            0.8578068017959595
+          ],
+          "channel_min": [
+            -0.03771578148007393,
+            -0.0021735671907663345,
+            -0.0029799549374729395
+          ],
+          "channel_upper_percent": [
+            0.00019817677368212446,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.012967433727235212,
+          "negative_channel_percent": 0.44431232659532305,
+          "profile_copy_sha256": "f53801a997ca0de18d02255e295d0d0b231febdd98ca38188b68f0be23f84bed",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.8468543291091919,
+              0.8467065691947937,
+              0.8466324210166931
+            ],
+            "channel_min": [
+              -2.3835459828092098e-08,
+              0.00011619705765042454,
+              -3.717534093061747e-12
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0.0019817677368212444,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0.00019817677368212446
+        },
+        "plus_hue_sat": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.0017011859338323118,
+            0.004365229112887755,
+            0.053273938085883855,
+            0.12125911081433297
+          ],
+          "channel_max": [
+            1.0020743608474731,
+            0.8714529275894165,
+            0.8578068017959595
+          ],
+          "channel_min": [
+            -0.03771578148007393,
+            -0.0021735671907663345,
+            -0.0029799549374729395
+          ],
+          "channel_upper_percent": [
+            0.00019817677368212446,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.012967433727235212,
+          "negative_channel_percent": 0.44431232659532305,
+          "profile_copy_sha256": "f53801a997ca0de18d02255e295d0d0b231febdd98ca38188b68f0be23f84bed",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.8468543291091919,
+              0.8467065691947937,
+              0.8466324210166931
+            ],
+            "channel_min": [
+              -2.3835459828092098e-08,
+              0.00011619705765042454,
+              -3.717534093061747e-12
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0.0019817677368212444,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0.00019817677368212446
+        },
+        "plus_look": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.0017428850745898668,
+            0.00449067741157487,
+            0.05512894175127148,
+            0.1248394839927554
+          ],
+          "channel_max": [
+            0.8615611791610718,
+            0.8728592991828918,
+            1.0377732515335083
+          ],
+          "channel_min": [
+            -0.00015335757052525878,
+            0.00013492268044501543,
+            -6.514824053738266e-05
+          ],
+          "channel_upper_percent": [
+            0,
+            0,
+            0.0009908838684106222
+          ],
+          "mean_Y_unbounded": 0.013446512193770382,
+          "negative_channel_percent": 0.033690051525961155,
+          "profile_copy_sha256": "c1d6c472dbc035de454a2a09883782b762fc772458418db1458f1876f44bf645",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.8558381795883179,
+              0.869678258895874,
+              0.9919546842575073
+            ],
+            "channel_min": [
+              0.00013180456880945712,
+              0.00022365653421729803,
+              4.121694655623287e-05
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0.0009908838684106222
+        }
+      },
+      "camera_buffer": {
+        "channel_max": [
+          1,
+          1,
+          1
+        ],
+        "channel_min": [
+          0,
+          0.00013733119703829288,
+          0
+        ],
+        "channel_upper_percent": [
+          0.0013872374157748713,
+          0.0007927070947284979,
+          0.0007927070947284979
+        ],
+        "negative_channel_percent": 0,
+        "samples": 504600,
+        "upper_channel_percent": 0.0017835909631391202
+      },
+      "full_replay_max_abs_error": 0,
+      "native_proof_sha256": "7d7ddc0880e3d10773132841d06a5b5fdeb7907b2c672ee56a584e79e8f92c27"
+    },
+    {
+      "scene": "6V1A0081",
+      "stages": {
+        "above_one_srgb_percent": 0,
+        "camera_RGB_at_upper_bound_percent": 0,
+        "candidate": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0006559721237038984,
+            0.005988164958126078,
+            0.1291736354824078
+          ],
+          "black_percent": 10.789338089575901,
+          "central_ROI_G_over_R": 0.15473844182667007,
+          "encoded_clipped_percent": 0,
+          "mean_Y": 0.030976837161106684,
+          "outside_srgb_percent": 0,
+          "mean_Y_relative_to_LR_percent": -0.07604137289918267
+        },
+        "candidate_map_mean_Y": 0.03097683674582029,
+        "current_map_mean_Y": 0.03097683759073101,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 0.005548949663099485,
+        "pre_gamut_mean_Y": 0.030976836744862523,
+        "current_mean_Y_relative_to_LR_percent": -0.07603998703260562
+      },
+      "LR": {
+        "mean_Y": 0.031000410298702197,
+        "Y_p05_p50_p95": [
+          0.0006532788827183545,
+          0.005971903531451477,
+          0.12930599068796092
+        ],
+        "black_percent": 10.801823226317877,
+        "encoded_clipped_percent": 0.0,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.15444952894787897,
+        "samples": 504600
+      },
+      "dcp_stage_ablation": {
+        "full": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.0006558957688277587,
+            0.005988299697637558,
+            0.12917536504808813,
+            0.20003010232783855
+          ],
+          "channel_max": [
+            0.6631312370300293,
+            0.34728187322616577,
+            0.1377914845943451
+          ],
+          "channel_min": [
+            7.816797005943954e-05,
+            0.00030602896003983915,
+            -0.0008429353474639356
+          ],
+          "channel_upper_percent": [
+            0,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.030976836744862523,
+          "negative_channel_percent": 0.005548949663099485,
+          "profile_copy_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.4784716069698334,
+              0.3678869307041168,
+              0.15926428139209747
+            ],
+            "channel_min": [
+              0.00020904824486933649,
+              0.00030756992055103183,
+              0.00015179729962255806
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0
+        },
+        "matrix_exposure": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.002448091856064275,
+            0.011697545087337493,
+            0.05402345152553171,
+            0.07584524785764515
+          ],
+          "channel_max": [
+            0.31285086274147034,
+            0.1059536263346672,
+            0.06523437052965164
+          ],
+          "channel_min": [
+            -0.00030761866946704686,
+            0.0008940740372054279,
+            -0.0008021290996111929
+          ],
+          "channel_upper_percent": [
+            0,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.018869322473514524,
+          "negative_channel_percent": 0.009908838684106223,
+          "profile_copy_sha256": "f53801a997ca0de18d02255e295d0d0b231febdd98ca38188b68f0be23f84bed",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.20754897594451904,
+              0.12299829721450806,
+              0.07383084297180176
+            ],
+            "channel_min": [
+              0.00046516876318491995,
+              0.0011238876031711698,
+              0.0005038325325585902
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0
+        },
+        "plus_hue_sat": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.002448091856064275,
+            0.011697545087337493,
+            0.05402345152553171,
+            0.07584524785764515
+          ],
+          "channel_max": [
+            0.31285086274147034,
+            0.1059536263346672,
+            0.06523437052965164
+          ],
+          "channel_min": [
+            -0.00030761866946704686,
+            0.0008940740372054279,
+            -0.0008021290996111929
+          ],
+          "channel_upper_percent": [
+            0,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.018869322473514524,
+          "negative_channel_percent": 0.009908838684106223,
+          "profile_copy_sha256": "f53801a997ca0de18d02255e295d0d0b231febdd98ca38188b68f0be23f84bed",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.20754897594451904,
+              0.12299829721450806,
+              0.07383084297180176
+            ],
+            "channel_min": [
+              0.00046516876318491995,
+              0.0011238876031711698,
+              0.0005038325325585902
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0
+        },
+        "plus_look": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.0024831258402438837,
+            0.011851409079227595,
+            0.05591484695523977,
+            0.07967929830960928
+          ],
+          "channel_max": [
+            0.25355103611946106,
+            0.1353321522474289,
+            0.05850834771990776
+          ],
+          "channel_min": [
+            0.00031951742130331695,
+            0.0011935309739783406,
+            0.0004944225656799972
+          ],
+          "channel_upper_percent": [
+            0,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.019434452549448342,
+          "negative_channel_percent": 0,
+          "profile_copy_sha256": "c1d6c472dbc035de454a2a09883782b762fc772458418db1458f1876f44bf645",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.1849476844072342,
+              0.14290516078472137,
+              0.0657530128955841
+            ],
+            "channel_min": [
+              0.0008189533255062997,
+              0.001199481193907559,
+              0.0005974355153739452
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0
+        }
+      },
+      "camera_buffer": {
+        "channel_max": [
+          0.24507515132427216,
+          0.14528115093708038,
+          0.08720531314611435
+        ],
+        "channel_min": [
+          0.0005493247881531715,
+          0.0013275349047034979,
+          0.0005951018538326025
+        ],
+        "channel_upper_percent": [
+          0,
+          0,
+          0
+        ],
+        "negative_channel_percent": 0,
+        "samples": 504600,
+        "upper_channel_percent": 0
+      },
+      "full_replay_max_abs_error": 0,
+      "native_proof_sha256": "b43d893ebc244ccf3a6eed4135734b0bc1e30edcffc689d17ef224091c361e9d"
+    },
+    {
+      "scene": "6V1A9940",
+      "stages": {
+        "above_one_srgb_percent": 1.5069361870788744,
+        "camera_RGB_at_upper_bound_percent": 3.501387237415775,
+        "candidate": {
+          "ROI_samples": 70470,
+          "Y_p05_p50_p95": [
+            0.008392230420331707,
+            0.5311488873292562,
+            0.9598151663677776
+          ],
+          "black_percent": 0.4710661910424098,
+          "central_ROI_G_over_R": 1.0551757143168539,
+          "encoded_clipped_percent": 1.5315101070154578,
+          "mean_Y": 0.4900694274099264,
+          "outside_srgb_percent": 0.00039635354736424893,
+          "mean_Y_relative_to_LR_percent": 1.2461404609910298
+        },
+        "candidate_map_mean_Y": 0.4900694038589718,
+        "current_map_mean_Y": 0.4900711373364316,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 0.06896551724137931,
+        "pre_gamut_mean_Y": 0.490069403860771,
+        "current_mean_Y_relative_to_LR_percent": 1.2464937241195795
+      },
+      "LR": {
+        "mean_Y": 0.4840376385495351,
+        "Y_p05_p50_p95": [
+          0.008369823526895026,
+          0.5292304316092197,
+          0.9394048859930275
+        ],
+        "black_percent": 0.46888624653190647,
+        "encoded_clipped_percent": 0.08521601268331351,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 1.0565331060008822,
+        "samples": 504600
+      },
+      "dcp_stage_ablation": {
+        "full": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.008391798640042544,
+            0.5311455891430378,
+            0.9598178329348565,
+            0.981250185918808
+          ],
+          "channel_max": [
+            1.088363766670227,
+            0.9901496171951294,
+            1.0029648542404175
+          ],
+          "channel_min": [
+            -0.08660238236188889,
+            0,
+            -0.015230298042297363
+          ],
+          "channel_upper_percent": [
+            0.0005945303210463733,
+            0,
+            1.5130796670630202
+          ],
+          "mean_Y_unbounded": 0.490069403860771,
+          "negative_channel_percent": 0.06896551724137931,
+          "profile_copy_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.9901530146598816,
+              0.9901492595672607,
+              0.9993239641189575
+            ],
+            "channel_min": [
+              0,
+              0,
+              0
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 1.5136741973840666
+        },
+        "matrix_exposure": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.01346666763573885,
+            0.20911289075314998,
+            0.6692338777542113,
+            0.8040251385331153
+          ],
+          "channel_max": [
+            1.3280982971191406,
+            0.8845058679580688,
+            0.8869163393974304
+          ],
+          "channel_min": [
+            -0.10505165159702301,
+            -0.004249087534844875,
+            -0.012774731032550335
+          ],
+          "channel_upper_percent": [
+            0.0007927070947284979,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.25257386273272714,
+          "negative_channel_percent": 1.6753864447086801,
+          "profile_copy_sha256": "f53801a997ca0de18d02255e295d0d0b231febdd98ca38188b68f0be23f84bed",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.8468716740608215,
+              0.8467274904251099,
+              0.8466324806213379
+            ],
+            "channel_min": [
+              -3.501723142562696e-07,
+              -1.0594165544830503e-08,
+              0
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0.05568767340467697,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0.0007927070947284979
+        },
+        "plus_hue_sat": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.01346666763573885,
+            0.20911289075314998,
+            0.6692338777542113,
+            0.8040251385331153
+          ],
+          "channel_max": [
+            1.3280982971191406,
+            0.8845058679580688,
+            0.8869163393974304
+          ],
+          "channel_min": [
+            -0.10505165159702301,
+            -0.004249087534844875,
+            -0.012774731032550335
+          ],
+          "channel_upper_percent": [
+            0.0007927070947284979,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.25257386273272714,
+          "negative_channel_percent": 1.6753864447086801,
+          "profile_copy_sha256": "f53801a997ca0de18d02255e295d0d0b231febdd98ca38188b68f0be23f84bed",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.8468716740608215,
+              0.8467274904251099,
+              0.8466324806213379
+            ],
+            "channel_min": [
+              -3.501723142562696e-07,
+              -1.0594165544830503e-08,
+              0
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0.05568767340467697,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0.0007927070947284979
+        },
+        "plus_look": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.014115966586582363,
+            0.21469478384703397,
+            0.6830272044122219,
+            0.7374516769766808
+          ],
+          "channel_max": [
+            0.8581588864326477,
+            0.8888512253761292,
+            1.0471514463424683
+          ],
+          "channel_min": [
+            -0.015507498756051064,
+            0,
+            -3.682344186017872e-06
+          ],
+          "channel_upper_percent": [
+            0,
+            0,
+            4.915576694411415
+          ],
+          "mean_Y_unbounded": 0.2527052006380856,
+          "negative_channel_percent": 0.036860879904875146,
+          "profile_copy_sha256": "c1d6c472dbc035de454a2a09883782b762fc772458418db1458f1876f44bf645",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.8565782308578491,
+              0.881180465221405,
+              0.9988044500350952
+            ],
+            "channel_min": [
+              0,
+              0,
+              0
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 4.915576694411415
+        }
+      },
+      "camera_buffer": {
+        "channel_max": [
+          1,
+          1,
+          1
+        ],
+        "channel_min": [
+          0,
+          0,
+          0
+        ],
+        "channel_upper_percent": [
+          0.03884264764169639,
+          0.7029330162504954,
+          3.4976218787158144
+        ],
+        "negative_channel_percent": 0,
+        "samples": 504600,
+        "upper_channel_percent": 3.501387237415775
+      },
+      "full_replay_max_abs_error": 0,
+      "native_proof_sha256": "541b84245052f8bad9679010a035fdda530bfb26fdfc0bfabd2a41166e05b79c"
+    },
+    {
+      "scene": "6V1A0524",
+      "stages": {
+        "above_one_srgb_percent": 0.3434403487911217,
+        "camera_RGB_at_upper_bound_percent": 0.2001585414189457,
+        "candidate": {
+          "ROI_samples": 70760,
+          "Y_p05_p50_p95": [
+            0.0019727582466931505,
+            0.85576803804775,
+            0.960171651167616
+          ],
+          "black_percent": 0.9700753071739993,
+          "central_ROI_G_over_R": 0.9684318971172252,
+          "encoded_clipped_percent": 0.3450257629805787,
+          "mean_Y": 0.5575421026589513,
+          "outside_srgb_percent": 0,
+          "mean_Y_relative_to_LR_percent": 1.9386075460467334
+        },
+        "candidate_map_mean_Y": 0.5575421030188569,
+        "current_map_mean_Y": 0.557542125253408,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 0.020610384462940945,
+        "pre_gamut_mean_Y": 0.5575421030206655,
+        "current_mean_Y_relative_to_LR_percent": 1.9386116771203055
+      },
+      "LR": {
+        "mean_Y": 0.546939099994184,
+        "Y_p05_p50_p95": [
+          0.0019859907534106633,
+          0.8416780324745309,
+          0.9385829268008752
+        ],
+        "black_percent": 0.93004359889021,
+        "encoded_clipped_percent": 0.015061434799841459,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.9719226207386559,
+        "samples": 504600
+      },
+      "dcp_stage_ablation": {
+        "full": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.0019726651328383013,
+            0.8557678553581237,
+            0.9601718008041382,
+            0.9756060907006263
+          ],
+          "channel_max": [
+            0.9854441285133362,
+            0.9887107014656067,
+            1.0030536651611328
+          ],
+          "channel_min": [
+            -0.004645549692213535,
+            0.00011823761451523751,
+            -1.2708881513390224e-05
+          ],
+          "channel_upper_percent": [
+            0,
+            0,
+            0.34403487911216807
+          ],
+          "mean_Y_unbounded": 0.5575421030206655,
+          "negative_channel_percent": 0.020610384462940945,
+          "profile_copy_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.9882290959358215,
+              0.9886385798454285,
+              0.9990030527114868
+            ],
+            "channel_min": [
+              2.9039647415629588e-05,
+              0.00010141429811483249,
+              1.123520723922411e-05
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0.34403487911216807
+        },
+        "matrix_exposure": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.00645414762776345,
+            0.46013113532066346,
+            0.6562392051458359,
+            0.7232334041595458
+          ],
+          "channel_max": [
+            0.7607654929161072,
+            0.8727898597717285,
+            0.8765432238578796
+          ],
+          "channel_min": [
+            -0.011019029654562473,
+            0.00018462006119079888,
+            -0.00032331011607311666
+          ],
+          "channel_upper_percent": [
+            0,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.33292180740770777,
+          "negative_channel_percent": 0.11196987713040031,
+          "profile_copy_sha256": "f53801a997ca0de18d02255e295d0d0b231febdd98ca38188b68f0be23f84bed",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.8013753890991211,
+              0.8502291440963745,
+              0.8584510684013367
+            ],
+            "channel_min": [
+              -2.2143167655030993e-07,
+              0.0003406343748793006,
+              -1.5086148476284311e-12
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0.006936187078874356,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0
+        },
+        "plus_hue_sat": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.00645414762776345,
+            0.46013113532066346,
+            0.6562392051458359,
+            0.7232334041595458
+          ],
+          "channel_max": [
+            0.7607654929161072,
+            0.8727898597717285,
+            0.8765432238578796
+          ],
+          "channel_min": [
+            -0.011019029654562473,
+            0.00018462006119079888,
+            -0.00032331011607311666
+          ],
+          "channel_upper_percent": [
+            0,
+            0,
+            0
+          ],
+          "mean_Y_unbounded": 0.33292180740770777,
+          "negative_channel_percent": 0.11196987713040031,
+          "profile_copy_sha256": "f53801a997ca0de18d02255e295d0d0b231febdd98ca38188b68f0be23f84bed",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.8013753890991211,
+              0.8502291440963745,
+              0.8584510684013367
+            ],
+            "channel_min": [
+              -2.2143167655030993e-07,
+              0.0003406343748793006,
+              -1.5086148476284311e-12
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0.006936187078874356,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0
+        },
+        "plus_look": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.006543449142668396,
+            0.4588739107429981,
+            0.6466437258005142,
+            0.696394907295704
+          ],
+          "channel_max": [
+            0.664831817150116,
+            0.7654260396957397,
+            1.0478005409240723
+          ],
+          "channel_min": [
+            -0.00033950372016988695,
+            0.00046535313595086336,
+            -4.399966201162897e-05
+          ],
+          "channel_upper_percent": [
+            0,
+            0,
+            0.7730875941339675
+          ],
+          "mean_Y_unbounded": 0.33009823690270035,
+          "negative_channel_percent": 0.00931430836305985,
+          "profile_copy_sha256": "c1d6c472dbc035de454a2a09883782b762fc772458418db1458f1876f44bf645",
+          "prophoto_bounds": {
+            "channel_max": [
+              0.7209551334381104,
+              0.7522619366645813,
+              0.998237133026123
+            ],
+            "channel_min": [
+              0.00011429267760831863,
+              0.0003991408448200673,
+              4.4218915718374774e-05
+            ],
+            "channel_upper_percent": [
+              0,
+              0,
+              0
+            ],
+            "negative_channel_percent": 0,
+            "samples": 504600,
+            "upper_channel_percent": 0
+          },
+          "samples": 504600,
+          "upper_channel_percent": 0.7730875941339675
+        }
+      },
+      "camera_buffer": {
+        "channel_max": [
+          0.9332875609397888,
+          0.9903258085250854,
+          1
+        ],
+        "channel_min": [
+          0,
+          0.000396734569221735,
+          0
+        ],
+        "channel_upper_percent": [
+          0,
+          0,
+          0.2001585414189457
+        ],
+        "negative_channel_percent": 0,
+        "samples": 504600,
+        "upper_channel_percent": 0.2001585414189457
+      },
+      "full_replay_max_abs_error": 0,
+      "native_proof_sha256": "a2bb33632feb458fdbed9fa08099e6664721776cd4afa4ac70459baa459189d8"
+    },
+    {
+      "scene": "7Y6A7003",
+      "stages": {
+        "above_one_srgb_percent": 0.3228157867333125,
+        "camera_RGB_at_upper_bound_percent": 0.19254989105212797,
+        "candidate": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.041834235766113365,
+            0.5691429209062626,
+            0.8269767585559767
+          ],
+          "black_percent": 0.22870211549456831,
+          "central_ROI_G_over_R": 0.8748194073233028,
+          "encoded_clipped_percent": 0.32320874569464336,
+          "mean_Y": 0.4896621587589089,
+          "outside_srgb_percent": 0.028882483657819195,
+          "mean_Y_relative_to_LR_percent": 4.079553164568206
+        },
+        "candidate_map_mean_Y": 0.48966214284047005,
+        "current_map_mean_Y": 0.4897202137077914,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 3.0407164427782987,
+        "pre_gamut_mean_Y": 0.48966214285285004,
+        "current_mean_Y_relative_to_LR_percent": 4.091892964633614
+      },
+      "LR": {
+        "mean_Y": 0.470469120850919,
+        "Y_p05_p50_p95": [
+          0.04118378446926812,
+          0.5584456141166602,
+          0.7698413605880187
+        ],
+        "black_percent": 0.28160919540229884,
+        "encoded_clipped_percent": 0.027744748315497426,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.8752589511394229,
+        "samples": 504600
+      },
+      "dcp_stage_ablation": {
+        "full": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.04183485473692417,
+            0.5691409962296485,
+            0.8269839172124862,
+            0.8781248869299888
+          ],
+          "channel_max": [
+            1.198858380317688,
+            1.0000001192092896,
+            1.0005263090133667
+          ],
+          "channel_min": [
+            -0.11470912396907806,
+            -0.0029758589807897806,
+            -0.02501952089369297
+          ],
+          "channel_upper_percent": [
+            0.04224308834306889,
+            0.27212408072162986,
+            0.28076917787090905
+          ],
+          "mean_Y_unbounded": 0.48966214285285004,
+          "negative_channel_percent": 3.0407164427782987,
+          "profile_copy_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+          "prophoto_bounds": {
+            "channel_max": [
+              1,
+              1,
+              1
+            ],
+            "channel_min": [
+              0,
+              0,
+              0
+            ],
+            "channel_upper_percent": [
+              0.27212408072162986,
+              0.27212408072162986,
+              0.27212408072162986
+            ],
+            "negative_channel_percent": 0,
+            "samples": 508959,
+            "upper_channel_percent": 0.27212408072162986
+          },
+          "samples": 508959,
+          "upper_channel_percent": 0.32301226621397794
+        },
+        "matrix_exposure": {
+          "Y_at_or_above_one_percent": 0.34757220129715755,
+          "Y_p05_p50_p95_p99": [
+            0.037518873124942176,
+            0.32680901209712027,
+            0.6091348282575606,
+            0.7065417451500893
+          ],
+          "channel_max": [
+            1.7870290279388428,
+            1.3679629564285278,
+            1.295517086982727
+          ],
+          "channel_min": [
+            -0.1467270404100418,
+            -0.06436866521835327,
+            -0.021567726507782936
+          ],
+          "channel_upper_percent": [
+            0.8802280733811564,
+            0.352287708833128,
+            0.28548468540687955
+          ],
+          "mean_Y_unbounded": 0.31462043015765845,
+          "negative_channel_percent": 3.421493676307915,
+          "profile_copy_sha256": "f8c9631b829c880d698649627e209e1a46de670c5ae9e91c4d8bde1f9a9745f8",
+          "prophoto_bounds": {
+            "channel_max": [
+              1.2747548818588257,
+              1.2743560075759888,
+              1.2743908166885376
+            ],
+            "channel_min": [
+              -1.1434139196353499e-05,
+              -3.618662594817579e-05,
+              -7.748909292004669e-10
+            ],
+            "channel_upper_percent": [
+              0.4104456351100973,
+              0.3516982703911317,
+              0.2923614672301698
+            ],
+            "negative_channel_percent": 0.734243819246737,
+            "samples": 508959,
+            "upper_channel_percent": 0.45209928501116986
+          },
+          "samples": 508959,
+          "upper_channel_percent": 0.9456557404427469
+        },
+        "plus_hue_sat": {
+          "Y_at_or_above_one_percent": 0.34757220129715755,
+          "Y_p05_p50_p95_p99": [
+            0.037518873124942176,
+            0.32680901209712027,
+            0.6091348282575606,
+            0.7065417451500893
+          ],
+          "channel_max": [
+            1.7870290279388428,
+            1.3679629564285278,
+            1.295517086982727
+          ],
+          "channel_min": [
+            -0.1467270404100418,
+            -0.06436866521835327,
+            -0.021567726507782936
+          ],
+          "channel_upper_percent": [
+            0.8802280733811564,
+            0.352287708833128,
+            0.28548468540687955
+          ],
+          "mean_Y_unbounded": 0.31462043015765845,
+          "negative_channel_percent": 3.421493676307915,
+          "profile_copy_sha256": "f8c9631b829c880d698649627e209e1a46de670c5ae9e91c4d8bde1f9a9745f8",
+          "prophoto_bounds": {
+            "channel_max": [
+              1.2747548818588257,
+              1.2743560075759888,
+              1.2743908166885376
+            ],
+            "channel_min": [
+              -1.1434139196353499e-05,
+              -3.618662594817579e-05,
+              -7.748909292004669e-10
+            ],
+            "channel_upper_percent": [
+              0.4104456351100973,
+              0.3516982703911317,
+              0.2923614672301698
+            ],
+            "negative_channel_percent": 0.734243819246737,
+            "samples": 508959,
+            "upper_channel_percent": 0.45209928501116986
+          },
+          "samples": 508959,
+          "upper_channel_percent": 0.9456557404427469
+        },
+        "plus_look": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.041308787283301354,
+            0.32800486513376237,
+            0.6011410611510277,
+            0.6928912562310695
+          ],
+          "channel_max": [
+            0.9999135136604309,
+            1.0000001192092896,
+            1.003286600112915
+          ],
+          "channel_min": [
+            -0.03332024812698364,
+            0,
+            -0.00023484675330109894
+          ],
+          "channel_upper_percent": [
+            0,
+            0.27212408072162986,
+            0.29098611086551174
+          ],
+          "mean_Y_unbounded": 0.31378362460328535,
+          "negative_channel_percent": 0.18567310922883767,
+          "profile_copy_sha256": "efd7edff87dcb6dd3705d6efefe453538d2eb8d581e08f91b7fe052424c614d6",
+          "prophoto_bounds": {
+            "channel_max": [
+              1,
+              1,
+              1
+            ],
+            "channel_min": [
+              0,
+              0,
+              0
+            ],
+            "channel_upper_percent": [
+              0.27212408072162986,
+              0.27212408072162986,
+              0.27212408072162986
+            ],
+            "negative_channel_percent": 0,
+            "samples": 508959,
+            "upper_channel_percent": 0.27212408072162986
+          },
+          "samples": 508959,
+          "upper_channel_percent": 0.29098611086551174
+        }
+      },
+      "camera_buffer": {
+        "channel_max": [
+          1,
+          0.999847412109375,
+          1
+        ],
+        "channel_min": [
+          0,
+          0,
+          0
+        ],
+        "channel_upper_percent": [
+          0.17899280688621283,
+          0,
+          0.13419548529449327
+        ],
+        "negative_channel_percent": 0,
+        "samples": 508959,
+        "upper_channel_percent": 0.19254989105212797
+      },
+      "full_replay_max_abs_error": 0,
+      "native_proof_sha256": "b58faa81e2a9df38d28f8b030eb1f46d56943470167e944db252a5ea26cd9c2b"
+    },
+    {
+      "scene": "7Y6A7298",
+      "stages": {
+        "above_one_srgb_percent": 0.05894384419963101,
+        "camera_RGB_at_upper_bound_percent": 0.0005894384419963101,
+        "candidate": {
+          "ROI_samples": 71248,
+          "Y_p05_p50_p95": [
+            0.0037212504295617826,
+            0.5307940359592711,
+            0.9070628124779969
+          ],
+          "black_percent": 2.3939059924276807,
+          "central_ROI_G_over_R": 1.0400999022259292,
+          "encoded_clipped_percent": 0.0583544057576347,
+          "mean_Y": 0.4520146701680116,
+          "outside_srgb_percent": 0.11906656528325464,
+          "mean_Y_relative_to_LR_percent": 2.4951344443567613
+        },
+        "candidate_map_mean_Y": 0.4520146784777826,
+        "current_map_mean_Y": 0.45227936008646075,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 14.140824702972145,
+        "pre_gamut_mean_Y": 0.4520146784727045,
+        "current_mean_Y_relative_to_LR_percent": 2.5551533565027373
+      },
+      "LR": {
+        "mean_Y": 0.44101085638694815,
+        "Y_p05_p50_p95": [
+          0.0025963188285417892,
+          0.5268381413533366,
+          0.8578578243645749
+        ],
+        "black_percent": 3.4308363059849385,
+        "encoded_clipped_percent": 0.016646848989298454,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 1.0459796314149405,
+        "samples": 504600
+      },
+      "dcp_stage_ablation": {
+        "full": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.0037214854554506018,
+            0.5307887236490846,
+            0.9070605161666869,
+            0.9457602990388869
+          ],
+          "channel_max": [
+            1.303649663925171,
+            1.0000001192092896,
+            1.0008002519607544
+          ],
+          "channel_min": [
+            -0.13026152551174164,
+            -0.0031814405228942633,
+            -0.042386122047901154
+          ],
+          "channel_upper_percent": [
+            0.05442481614432597,
+            0.001964794806654367,
+            0.0047155075359704805
+          ],
+          "mean_Y_unbounded": 0.4520146784727045,
+          "negative_channel_percent": 14.140824702972145,
+          "profile_copy_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+          "prophoto_bounds": {
+            "channel_max": [
+              1,
+              1,
+              1
+            ],
+            "channel_min": [
+              0,
+              0,
+              0
+            ],
+            "channel_upper_percent": [
+              0.001964794806654367,
+              0.001964794806654367,
+              0.001964794806654367
+            ],
+            "negative_channel_percent": 0,
+            "samples": 508959,
+            "upper_channel_percent": 0.001964794806654367
+          },
+          "samples": 508959,
+          "upper_channel_percent": 0.059140323680296446
+        },
+        "matrix_exposure": {
+          "Y_at_or_above_one_percent": 0.02672120937049939,
+          "Y_p05_p50_p95_p99": [
+            0.00697222056144965,
+            0.28161103223562234,
+            0.7697221826314926,
+            0.8732051647663116
+          ],
+          "channel_max": [
+            2.0719199180603027,
+            1.2929985523223877,
+            1.2933628559112549
+          ],
+          "channel_min": [
+            -0.2533709406852722,
+            -0.061424754559993744,
+            -0.05931948497891426
+          ],
+          "channel_upper_percent": [
+            0.7886686353910629,
+            0.10315172734935427,
+            0.030061360541811816
+          ],
+          "mean_Y_unbounded": 0.30234587708765054,
+          "negative_channel_percent": 14.481520122446012,
+          "profile_copy_sha256": "f8c9631b829c880d698649627e209e1a46de670c5ae9e91c4d8bde1f9a9745f8",
+          "prophoto_bounds": {
+            "channel_max": [
+              1.274757742881775,
+              1.2744135856628418,
+              1.2743908166885376
+            ],
+            "channel_min": [
+              -2.0317622329457663e-05,
+              -2.790308826661203e-05,
+              -3.228229683571726e-09
+            ],
+            "channel_upper_percent": [
+              0.08821928681878108,
+              0.04892339068569374,
+              0.02318457871852153
+            ],
+            "negative_channel_percent": 5.236374639214554,
+            "samples": 508959,
+            "upper_channel_percent": 0.13891099283046376
+          },
+          "samples": 508959,
+          "upper_channel_percent": 0.8969288292377186
+        },
+        "plus_hue_sat": {
+          "Y_at_or_above_one_percent": 0.02672120937049939,
+          "Y_p05_p50_p95_p99": [
+            0.00697222056144965,
+            0.28161103223562234,
+            0.7697221826314926,
+            0.8732051647663116
+          ],
+          "channel_max": [
+            2.0719199180603027,
+            1.2929985523223877,
+            1.2933628559112549
+          ],
+          "channel_min": [
+            -0.2533709406852722,
+            -0.061424754559993744,
+            -0.05931948497891426
+          ],
+          "channel_upper_percent": [
+            0.7886686353910629,
+            0.10315172734935427,
+            0.030061360541811816
+          ],
+          "mean_Y_unbounded": 0.30234587708765054,
+          "negative_channel_percent": 14.481520122446012,
+          "profile_copy_sha256": "f8c9631b829c880d698649627e209e1a46de670c5ae9e91c4d8bde1f9a9745f8",
+          "prophoto_bounds": {
+            "channel_max": [
+              1.274757742881775,
+              1.2744135856628418,
+              1.2743908166885376
+            ],
+            "channel_min": [
+              -2.0317622329457663e-05,
+              -2.790308826661203e-05,
+              -3.228229683571726e-09
+            ],
+            "channel_upper_percent": [
+              0.08821928681878108,
+              0.04892339068569374,
+              0.02318457871852153
+            ],
+            "negative_channel_percent": 5.236374639214554,
+            "samples": 508959,
+            "upper_channel_percent": 0.13891099283046376
+          },
+          "samples": 508959,
+          "upper_channel_percent": 0.8969288292377186
+        },
+        "plus_look": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.011683331054262818,
+            0.30270398353785277,
+            0.7564312017083168,
+            0.8560788296818732
+          ],
+          "channel_max": [
+            0.9999135136604309,
+            1.0000001192092896,
+            1.0042660236358643
+          ],
+          "channel_min": [
+            -0.04447098821401596,
+            0,
+            -0.05769481137394905
+          ],
+          "channel_upper_percent": [
+            0,
+            0.001964794806654367,
+            0.01611131741456581
+          ],
+          "mean_Y_unbounded": 0.3093931273706848,
+          "negative_channel_percent": 2.6029601598557055,
+          "profile_copy_sha256": "efd7edff87dcb6dd3705d6efefe453538d2eb8d581e08f91b7fe052424c614d6",
+          "prophoto_bounds": {
+            "channel_max": [
+              1,
+              1,
+              1
+            ],
+            "channel_min": [
+              0,
+              0,
+              0
+            ],
+            "channel_upper_percent": [
+              0.001964794806654367,
+              0.001964794806654367,
+              0.001964794806654367
+            ],
+            "negative_channel_percent": 0,
+            "samples": 508959,
+            "upper_channel_percent": 0.001964794806654367
+          },
+          "samples": 508959,
+          "upper_channel_percent": 0.01611131741456581
+        }
+      },
+      "camera_buffer": {
+        "channel_max": [
+          1,
+          0.9999237060546875,
+          1
+        ],
+        "channel_min": [
+          0,
+          0,
+          0
+        ],
+        "channel_upper_percent": [
+          0.0003929589613308734,
+          0,
+          0.0003929589613308734
+        ],
+        "negative_channel_percent": 0,
+        "samples": 508959,
+        "upper_channel_percent": 0.0005894384419963101
+      },
+      "full_replay_max_abs_error": 0,
+      "native_proof_sha256": "859ea0f34ef3b116adbd6edf4f0478ebc4692f4561501dbe71bdfadeb25cf4af"
+    },
+    {
+      "scene": "7Y6A7599",
+      "stages": {
+        "above_one_srgb_percent": 0.7977066915016731,
+        "camera_RGB_at_upper_bound_percent": 0.12456799074188687,
+        "candidate": {
+          "ROI_samples": 71504,
+          "Y_p05_p50_p95": [
+            0.0029723603842281214,
+            0.4616423200458669,
+            0.7838901048964148
+          ],
+          "black_percent": 2.6894111313484976,
+          "central_ROI_G_over_R": 0.7216856688989203,
+          "encoded_clipped_percent": 0.7920087865623754,
+          "mean_Y": 0.4209763475245115,
+          "outside_srgb_percent": 0.13950043127246006,
+          "mean_Y_relative_to_LR_percent": 4.566200121146169
+        },
+        "candidate_map_mean_Y": 0.42097634630908853,
+        "current_map_mean_Y": 0.42123958226037617,
+        "luminance_above_one_percent": 0,
+        "negative_srgb_percent": 21.860896457278486,
+        "pre_gamut_mean_Y": 0.4209763462999445,
+        "current_mean_Y_relative_to_LR_percent": 4.63158492537834
+      },
+      "LR": {
+        "mean_Y": 0.40259313911836264,
+        "Y_p05_p50_p95": [
+          0.0017997444704351724,
+          0.45230810636859947,
+          0.721122441844771
+        ],
+        "black_percent": 3.7076892588188666,
+        "encoded_clipped_percent": 0.12604042806183116,
+        "all_channels_high_percent": 0.0,
+        "central_ROI_G_over_R": 0.6954930387568953,
+        "samples": 504600
+      },
+      "dcp_stage_ablation": {
+        "full": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.00297233579052845,
+            0.4616433093719184,
+            0.783888794350624,
+            0.8369778231263161
+          ],
+          "channel_max": [
+            1.3296676874160767,
+            1.0000001192092896,
+            1
+          ],
+          "channel_min": [
+            -0.1307748407125473,
+            -0.006914423778653145,
+            -0.04012184590101242
+          ],
+          "channel_upper_percent": [
+            0.7829707304517652,
+            0.01493244053057319,
+            0.01493244053057319
+          ],
+          "mean_Y_unbounded": 0.4209763462999445,
+          "negative_channel_percent": 21.860896457278486,
+          "profile_copy_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+          "prophoto_bounds": {
+            "channel_max": [
+              1,
+              1,
+              1
+            ],
+            "channel_min": [
+              0,
+              0,
+              0
+            ],
+            "channel_upper_percent": [
+              0.01493244053057319,
+              0.01493244053057319,
+              0.01493244053057319
+            ],
+            "negative_channel_percent": 0,
+            "samples": 508959,
+            "upper_channel_percent": 0.01493244053057319
+          },
+          "samples": 508959,
+          "upper_channel_percent": 0.7979031709823384
+        },
+        "matrix_exposure": {
+          "Y_at_or_above_one_percent": 0.04754803432103568,
+          "Y_p05_p50_p95_p99": [
+            0.007440648173354565,
+            0.23443369643837214,
+            0.5504429642319679,
+            0.6367215877771377
+          ],
+          "channel_max": [
+            2.1854164600372314,
+            1.2750380039215088,
+            1.274412751197815
+          ],
+          "channel_min": [
+            -0.19134224951267242,
+            -0.0705147385597229,
+            -0.05477076396346092
+          ],
+          "channel_upper_percent": [
+            5.01435282606261,
+            0.02986488106114638,
+            0.012181727801257076
+          ],
+          "mean_Y_unbounded": 0.25108518408825237,
+          "negative_channel_percent": 19.13474366304555,
+          "profile_copy_sha256": "f8c9631b829c880d698649627e209e1a46de670c5ae9e91c4d8bde1f9a9745f8",
+          "prophoto_bounds": {
+            "channel_max": [
+              1.2747784852981567,
+              1.2744048833847046,
+              1.274390697479248
+            ],
+            "channel_min": [
+              -1.2654165402636863e-05,
+              -3.2182422728510574e-05,
+              -2.4862036873685156e-09
+            ],
+            "channel_upper_percent": [
+              0.516544554669433,
+              0.036741662884436664,
+              0.01493244053057319
+            ],
+            "negative_channel_percent": 6.974235645700341,
+            "samples": 508959,
+            "upper_channel_percent": 0.516544554669433
+          },
+          "samples": 508959,
+          "upper_channel_percent": 5.01435282606261
+        },
+        "plus_hue_sat": {
+          "Y_at_or_above_one_percent": 0.04754803432103568,
+          "Y_p05_p50_p95_p99": [
+            0.007440648173354565,
+            0.23443369643837214,
+            0.5504429642319679,
+            0.6367215877771377
+          ],
+          "channel_max": [
+            2.1854164600372314,
+            1.2750380039215088,
+            1.274412751197815
+          ],
+          "channel_min": [
+            -0.19134224951267242,
+            -0.0705147385597229,
+            -0.05477076396346092
+          ],
+          "channel_upper_percent": [
+            5.01435282606261,
+            0.02986488106114638,
+            0.012181727801257076
+          ],
+          "mean_Y_unbounded": 0.25108518408825237,
+          "negative_channel_percent": 19.13474366304555,
+          "profile_copy_sha256": "f8c9631b829c880d698649627e209e1a46de670c5ae9e91c4d8bde1f9a9745f8",
+          "prophoto_bounds": {
+            "channel_max": [
+              1.2747784852981567,
+              1.2744048833847046,
+              1.274390697479248
+            ],
+            "channel_min": [
+              -1.2654165402636863e-05,
+              -3.2182422728510574e-05,
+              -2.4862036873685156e-09
+            ],
+            "channel_upper_percent": [
+              0.516544554669433,
+              0.036741662884436664,
+              0.01493244053057319
+            ],
+            "negative_channel_percent": 6.974235645700341,
+            "samples": 508959,
+            "upper_channel_percent": 0.516544554669433
+          },
+          "samples": 508959,
+          "upper_channel_percent": 5.01435282606261
+        },
+        "plus_look": {
+          "Y_at_or_above_one_percent": 0,
+          "Y_p05_p50_p95_p99": [
+            0.010750269234622828,
+            0.2580491187870502,
+            0.5448114192068576,
+            0.6225905325889587
+          ],
+          "channel_max": [
+            0.9999135136604309,
+            1.0000001192092896,
+            1
+          ],
+          "channel_min": [
+            -0.04941241070628166,
+            -6.267081971600419e-06,
+            -0.042381931096315384
+          ],
+          "channel_upper_percent": [
+            0,
+            0.01493244053057319,
+            0.01493244053057319
+          ],
+          "mean_Y_unbounded": 0.2625649017165216,
+          "negative_channel_percent": 2.5373360133134497,
+          "profile_copy_sha256": "efd7edff87dcb6dd3705d6efefe453538d2eb8d581e08f91b7fe052424c614d6",
+          "prophoto_bounds": {
+            "channel_max": [
+              1,
+              1,
+              1
+            ],
+            "channel_min": [
+              0,
+              0,
+              0
+            ],
+            "channel_upper_percent": [
+              0.01493244053057319,
+              0.01493244053057319,
+              0.01493244053057319
+            ],
+            "negative_channel_percent": 0,
+            "samples": 508959,
+            "upper_channel_percent": 0.01493244053057319
+          },
+          "samples": 508959,
+          "upper_channel_percent": 0.01493244053057319
+        }
+      },
+      "camera_buffer": {
+        "channel_max": [
+          1,
+          0.9999237060546875,
+          1
+        ],
+        "channel_min": [
+          0,
+          0,
+          0
+        ],
+        "channel_upper_percent": [
+          0.12456799074188687,
+          0,
+          0.0001964794806654367
+        ],
+        "negative_channel_percent": 0,
+        "samples": 508959,
+        "upper_channel_percent": 0.12456799074188687
+      },
+      "full_replay_max_abs_error": 0,
+      "native_proof_sha256": "d947bfc8088e2599bcf5ac21b7789b8448ad449f9102623f0445c4cf0a4d50ca"
+    }
+  ],
+  "editor_0054": {
+    "alternate_profile_change_ms": 1326,
+    "applied_status": "Profil utilisé : Canon EOS R6 Mark III Camera Neutral\nNormalisation appliquée — blanc 13995, base 0.26 EV.\nAdobe DNG 18.6; radiometric trials 2026-10-14; 6V1A0054; visual validation pending",
+    "before_preview_sha256": "85bb68903b98c2467eeb0e910eb52e427f0ad3268e7d15f94e96afdbd13f8aa9",
+    "dcp_fast_path_available": true,
+    "disabled_restores_original": true,
+    "normalized_preview_sha256": "94cbbae98a2ded73b98decb352eab9bf6ff283de56b1ba84ef05c278e15bdb32",
+    "original_sidecar_untouched": true,
+    "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+    "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0054.CR3"
+  },
+  "method": {
+    "sample_step": 8,
+    "optics": false,
+    "production_modified": false,
+    "candidate": "Radial chroma compression around original linear Y, before negative-channel clipping",
+    "ablation": "Cumulative matrix/exposure, hue-sat, look, full curve, replayed via production applyDcp on same sampled camera buffer",
+    "domains": "DCP stages are unbounded linear sRGB; nested ProPhoto records and camera buffer report component bounds only, no sRGB luminance interpretation",
+    "profile_copies": "Temporary IFD tag identifiers hidden; matrix/baseline payloads unchanged; original DCP never modified",
+    "camera_bound": "At least one camera RGB component >=65534/65535 after LibRaw WB, not proof of sensor saturation"
+  },
+  "units": {
+    "Y": "relative linear sRGB luminance",
+    "fractions": "percent of samples",
+    "errors": "relative percent"
+  },
+  "limitations": [
+    "Seven targeted scenes only, not corpus acceptance",
+    "No mosaic or floating-point LibRaw intermediate; the post-WB camera buffer is already quantized to 16 bits",
+    "Ablations localize changes but are not acceptable alternative complete renderings",
+    "Candidate is an experiment, not deployed and not a Lightroom algorithm",
+    "Independent geometry, no pixel MAE or physical colour target",
+    "0054 test reproduces programmatic editor activation, not the exact user click sequence"
+  ]
+}

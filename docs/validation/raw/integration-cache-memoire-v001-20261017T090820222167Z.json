@@ -1,0 +1,254 @@
+{
+  "campaign_id": "integration-cache-memoire-v001-20261017T090820222167Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "measured_at_utc": "2026-10-17T09:08:20.222167+00:00",
+  "group": "performance-ouverture",
+  "status": "failed",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "git_head": "032b899f68a0c0b7ec50328e491b0bc10e4890c5",
+  "dirty_worktree": true,
+  "inputs": {
+    "src/cache/SystemMemory.cpp": "0ef5837a03f01cd30901bd068f6d4f7703552b0c3ebb4915f6b6db3027f3a197",
+    "src/cache/SystemMemory.h": "a0c92673451d2512434d2468f5ef27bc9cb8754548196eb71f77cda6358949b9",
+    "src/cache/ImageCacheController.cpp": "e3e5de30b33b5781dea77685cb6bb053cc4925aada2de7162998b5f063bc480d",
+    "src/cache/ImageCacheController.h": "6c6c76aa1ff677767ea81bb130fdbe1d6c4f8a9609acd50f128ce58e91d55b9b",
+    "src/cache/DecodedImageCache.cpp": "6a6b0d79c8a76d20174d0c7271e8c00030c4770e17d43e354f78dbdc42f1f66c",
+    "src/cache/DecodedImageCache.h": "8ee9a4f18c77e7fbc49e6c4ea8ac1bde73f5fed41861178cbb080bb5bd0c4c10",
+    "src/editor/imageeditor.cpp": "5fea1dd49f530e6cf4aa6852eb6cba68a1ad7ca950ea1e07c9d040ae17c49d04",
+    "src/editor/imageeditor.h": "bd5a267c1eef4fd359d569a37c367440d763e7baa6c695dddad3441b7c7a1ead",
+    "src/raw/RawDecoder.cpp": "ad1da0e7b2c72d404ad03ce581973226bbee36810a3e5d9060b3b98022a90882",
+    "src/raw/RawDecoder.h": "1f47763f53b0240bed3b9b1bd6a794ad6e14b17765df261cb16766ef6d25716e",
+    "src/qml/Main.qml": "d4b4ee7c408cb139d709e77c028b158ef673e69a4bc6a91f436f9ec50686eb9e",
+    "tests/image_cache_controller_test.cpp": "8c458cbd4c620dd8dcaa714a0593cc423997f2124193a72928aa7e44afd17359",
+    "tests/editor_image_cache_test.cpp": "f9b57a5e592e0d8880a509a9113cfe76e462925184defb5866544358b4a0d4e3",
+    "tests/controlled_memory.h": "9904c0b74209aaf58d51a2ea1d48b8676d20f07f0cd4119ab07635d16816b759",
+    "CMakeLists.txt": "092c7dc635aa113d22f4f9ae904a68b937ff4b6627674cb8285d2ac9851af5b8",
+    "tests/verify_memory_cache_integration.py": "14a79e8b21f2d0e569f7ffe259584b3c122ea340372cda8a6f217228fb293c8b",
+    "build-windows-msvc/Release/appIPR.exe": "126cea56edead6586dbe1b29accf09377a46916ae9b9d87c735c79e49d122a5a",
+    "build-windows-msvc/Release/imageCacheControllerTests.exe": "af12574a9d3d17fdcd190add42df146fc103dcd977784b4ff2b2868c9b45f540",
+    "build-windows-msvc/Release/editorImageCacheTests.exe": "db69b430b1aeba4720390ba89fde08c6cdae0ac2d97767166379e792154144a1"
+  },
+  "command": [
+    "ctest",
+    "--test-dir",
+    "build-windows-msvc",
+    "-C",
+    "Release",
+    "--output-on-failure",
+    "--output-junit",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-latency-investigation\\integration-cache-memoire-v001-20261017T090820222167Z\\ctest.xml"
+  ],
+  "returncode": 8,
+  "stdout": "Internal ctest changing into directory: C:/Users/victo/Documents/Projet/Programmation/IPR/build-windows-msvc\nTest project C:/Users/victo/Documents/Projet/Programmation/IPR/build-windows-msvc\n      Start  1: editorLifecycleTests\n 1/26 Test  #1: editorLifecycleTests .............   Passed    0.05 sec\n      Start  2: rawOpeningSplineTests\n 2/26 Test  #2: rawOpeningSplineTests ............   Passed    0.05 sec\n      Start  3: rawOpeningProbeTests\n 3/26 Test  #3: rawOpeningProbeTests .............   Passed    0.05 sec\n      Start  4: rawHighlightHeadroomTests\n 4/26 Test  #4: rawHighlightHeadroomTests ........   Passed    0.02 sec\n      Start  5: colorPipelineTests\n 5/26 Test  #5: colorPipelineTests ...............   Passed    0.06 sec\n      Start  6: rec2020PipelineTests\n 6/26 Test  #6: rec2020PipelineTests .............   Passed    0.07 sec\n      Start  7: detailProcessingTests\n 7/26 Test  #7: detailProcessingTests ............   Passed    0.13 sec\n      Start  8: imageExportTests\n 8/26 Test  #8: imageExportTests .................   Passed    4.46 sec\n      Start  9: toneRecoveryTests\n 9/26 Test  #9: toneRecoveryTests ................   Passed    0.05 sec\n      Start 10: testImageGeneratorTests\n10/26 Test #10: testImageGeneratorTests ..........   Passed    4.50 sec\n      Start 11: colorMixerMathTests\n11/26 Test #11: colorMixerMathTests ..............   Passed    0.05 sec\n      Start 12: colorMixerNeutralTests\n12/26 Test #12: colorMixerNeutralTests ...........***Failed    0.07 sec\n\n      Start 13: colorMixerQmlTests\n13/26 Test #13: colorMixerQmlTests ...............   Passed    0.13 sec\n      Start 14: settingsQmlTests\n14/26 Test #14: settingsQmlTests .................***Failed    6.46 sec\nFAILED: test source should load in the editor\n\n      Start 15: imageViewportQmlTests\n15/26 Test #15: imageViewportQmlTests ............   Passed    1.52 sec\n      Start 16: uiPreferencesTests\n16/26 Test #16: uiPreferencesTests ...............   Passed    0.17 sec\n      Start 17: uiPreferencesQmlTests\n17/26 Test #17: uiPreferencesQmlTests ............   Passed    0.35 sec\n      Start 18: rawDecoderTests\n18/26 Test #18: rawDecoderTests ..................   Passed    0.05 sec\n      Start 19: imageImportTests\n19/26 Test #19: imageImportTests .................   Passed    0.12 sec\n      Start 20: rawNormalizationTests\n20/26 Test #20: rawNormalizationTests ............   Passed    0.24 sec\n      Start 21: editorRawDevelopmentTests\n21/26 Test #21: editorRawDevelopmentTests ........   Passed    9.31 sec\n      Start 22: rawBlackLevelEstimatorTests\n22/26 Test #22: rawBlackLevelEstimatorTests ......   Passed    0.04 sec\n      Start 23: cameraProfileEngineTests\n23/26 Test #23: cameraProfileEngineTests .........   Passed    0.96 sec\n      Start 24: preparedProfileCacheTests\n24/26 Test #24: preparedProfileCacheTests ........   Passed    0.16 sec\n      Start 25: imageCacheControllerTests\n25/26 Test #25: imageCacheControllerTests ........   Passed    0.07 sec\n      Start 26: editorImageCacheTests\n26/26 Test #26: editorImageCacheTests ............   Passed    4.17 sec\n\n92% tests passed, 2 tests failed out of 26\n\nLabel Time Summary:\ncache          =   4.40 sec*proc (3 tests)\ncolor-mixer    =   0.25 sec*proc (3 tests)\ncolour         =   0.07 sec*proc (1 test)\ndetail         =   0.13 sec*proc (1 test)\ndiagnostic     =   0.12 sec*proc (3 tests)\neditor         =   4.17 sec*proc (1 test)\nexport         =   8.97 sec*proc (2 tests)\ngenerator      =   4.50 sec*proc (1 test)\nimport         =   0.12 sec*proc (1 test)\nlifecycle      =   0.05 sec*proc (1 test)\nlighting       =   0.05 sec*proc (1 test)\nmemory         =   4.24 sec*proc (2 tests)\nnoise          =   0.13 sec*proc (1 test)\npipeline       =   4.94 sec*proc (7 tests)\npreferences    =   0.52 sec*proc (2 tests)\nprefetch       =   4.17 sec*proc (1 test)\nprofiles       =   1.12 sec*proc (2 tests)\nqml            =   8.50 sec*proc (4 tests)\nraw            =   9.77 sec*proc (7 tests)\nsettings       =  15.77 sec*proc (2 tests)\nthread         =   0.07 sec*proc (1 test)\nunit           =  33.32 sec*proc (26 tests)\nviewport       =   1.52 sec*proc (1 test)\n\nTotal Test time (real) =  33.34 sec\n\nThe following tests FAILED:\n\t 12 - colorMixerNeutralTests (Failed)\n\t 14 - settingsQmlTests (Failed)\n",
+  "stderr": "Errors while running CTest\n",
+  "tests": [
+    {
+      "name": "editorLifecycleTests",
+      "duration_seconds": 0.0481015,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "rawOpeningSplineTests",
+      "duration_seconds": 0.0473032,
+      "status": "run",
+      "failure": false,
+      "stdout": "Spline tests passed\n"
+    },
+    {
+      "name": "rawOpeningProbeTests",
+      "duration_seconds": 0.0532425,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "rawHighlightHeadroomTests",
+      "duration_seconds": 0.0222625,
+      "status": "run",
+      "failure": false,
+      "stdout": "Experimental headroom scaffold passed: identity, signed residual, bounded query, C0 continuity, synthetic ramps, C1 shoulder, invalid input\n"
+    },
+    {
+      "name": "colorPipelineTests",
+      "duration_seconds": 0.0611832,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "rec2020PipelineTests",
+      "duration_seconds": 0.0716221,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "detailProcessingTests",
+      "duration_seconds": 0.127716,
+      "status": "run",
+      "failure": false,
+      "stdout": "gray noise=0.0001 amount=1 sigma_ratio=0.999863\ngray noise=0.0001 amount=5 sigma_ratio=0.992755\ngray noise=0.0001 amount=10 sigma_ratio=0.971265\ngray noise=0.0001 amount=25 sigma_ratio=0.831552\ngray noise=0.0001 amount=50 sigma_ratio=0.523336\ngray noise=0.0001 amount=75 sigma_ratio=0.252604\ngray noise=0.0001 amount=100 sigma_ratio=0.00907724\ngray noise=0.005 amount=1 sigma_ratio=0.999805\ngray noise=0.005 amount=5 sigma_ratio=0.992715\ngray noise=0.005 amount=10 sigma_ratio=0.971257\ngray noise=0.005 amount=25 sigma_ratio=0.831461\ngray noise=0.005 amount=50 sigma_ratio=0.523403\ngray noise=0.005 amount=75 sigma_ratio=0.252619\ngray noise=0.005 amount=100 sigma_ratio=0.00908123\nchroma sigma_ratio=0.0091225\ndark luma=100 color=0 relative_mean_drift=-1.21014e-08\ndark luma=0 color=100 relative_mean_drift=-1.80597e-08\ndark luma=100 color=100 relative_mean_drift=-1.13802e-08\nstrong_edge_contrast_ratio=0.993351\nisoluminant_color_edge_ratio=0.986932\n"
+    },
+    {
+      "name": "imageExportTests",
+      "duration_seconds": 4.46278,
+      "status": "run",
+      "failure": false,
+      "stdout": "Export status: Format d'export non pris en charge : BMP\nExport status: Échec de l'export (création du temporaire) : Le chemin d’accès spécifié est introuvable.\n"
+    },
+    {
+      "name": "toneRecoveryTests",
+      "duration_seconds": 0.0530202,
+      "status": "run",
+      "failure": false,
+      "stdout": "Tone recovery: bounded gain, tone ordering, slider progression, RGB headroom passed\n"
+    },
+    {
+      "name": "testImageGeneratorTests",
+      "duration_seconds": 4.5035,
+      "status": "run",
+      "failure": false,
+      "stdout": "Generator: root discovery, groups/all, current presets, TIFF/ICC, isolation, shared folders and safety passed.\n"
+    },
+    {
+      "name": "colorMixerMathTests",
+      "duration_seconds": 0.0489376,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "colorMixerNeutralTests",
+      "duration_seconds": 0.0736675,
+      "status": "fail",
+      "failure": true,
+      "stdout": ""
+    },
+    {
+      "name": "colorMixerQmlTests",
+      "duration_seconds": 0.129576,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "settingsQmlTests",
+      "duration_seconds": 6.46362,
+      "status": "fail",
+      "failure": true,
+      "stdout": "FAILED: test source should load in the editor\n"
+    },
+    {
+      "name": "imageViewportQmlTests",
+      "duration_seconds": 1.5194,
+      "status": "run",
+      "failure": false,
+      "stdout": "Viewport zoom, comparison, click, drag, wheel, shortcuts, bounds and refresh checks passed\n"
+    },
+    {
+      "name": "uiPreferencesTests",
+      "duration_seconds": 0.170554,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "uiPreferencesQmlTests",
+      "duration_seconds": 0.348581,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "rawDecoderTests",
+      "duration_seconds": 0.0484516,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "imageImportTests",
+      "duration_seconds": 0.118214,
+      "status": "run",
+      "failure": false,
+      "stdout": "Common import: JPEG/PNG/TIFF, ICC, alpha, 16bit, synthetic RAW, cache and invalid results passed\n"
+    },
+    {
+      "name": "rawNormalizationTests",
+      "duration_seconds": 0.243842,
+      "status": "run",
+      "failure": false,
+      "stdout": "59 model-policy assertions passed\n"
+    },
+    {
+      "name": "editorRawDevelopmentTests",
+      "duration_seconds": 9.30714,
+      "status": "run",
+      "failure": false,
+      "stdout": "RAW recipe v6, optics, restart, fingerprints, profile-only processing and rollback passed\n"
+    },
+    {
+      "name": "rawBlackLevelEstimatorTests",
+      "duration_seconds": 0.0440198,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "cameraProfileEngineTests",
+      "duration_seconds": 0.956575,
+      "status": "run",
+      "failure": false,
+      "stdout": ""
+    },
+    {
+      "name": "preparedProfileCacheTests",
+      "duration_seconds": 0.158931,
+      "status": "run",
+      "failure": false,
+      "stdout": "Prepared cache budget, LRU, content invalidation, concurrency and failure tests passed\n"
+    },
+    {
+      "name": "imageCacheControllerTests",
+      "duration_seconds": 0.0718988,
+      "status": "run",
+      "failure": false,
+      "stdout": "Memory controller: thread, cap, LRU, pins, hysteresis, reservation, pressure, native sampler passed\n"
+    },
+    {
+      "name": "editorImageCacheTests",
+      "duration_seconds": 4.16828,
+      "status": "run",
+      "failure": false,
+      "stdout": "Editor: preload promotion, cache reuse, recipe isolation, latest request and pressure passed\n"
+    }
+  ],
+  "policy": {
+    "global_high_percent": 80,
+    "resume_percent": 75,
+    "reserve_percent": 20,
+    "additional_safety_percent": 2,
+    "minimum_safety_bytes": 134217728,
+    "retention_percent": 25,
+    "maximum_retention_bytes": 8589934592,
+    "sample_interval_ms": 500,
+    "prefetch_delay_ms": 250,
+    "simultaneous_prefetch": 1,
+    "peak_bytes_per_pixel": 96,
+    "peak_margin_bytes": 134217728
+  },
+  "coverage": [
+    "Deterministic injected memory: LRU, ownership, pressure/hysteresis, reservations, concurrent admissions, commit",
+    "Editor: preload promotion, no speculative sidecars, recipe restore, latest selection, denied admission keeps displayed image",
+    "Native Windows RAM sampler smoke; full current native test suite"
+  ],
+  "limitations": [
+    "No physical 80% hard guarantee, no peak RSS validation",
+    "No new real-corpus timing or pixel-parity campaign",
+    "Linux/macOS implementations not compiled or executed in this campaign",
+    "No GitHub CI or standalone deployment; local Release build"
+  ]
+}

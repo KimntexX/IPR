@@ -1,8 +1,5 @@
 # Public payloads never copy local profiles or audited calibration files.
 if(IPR_DEPLOY_MODE STREQUAL "standalone")
-    if(Qt6_VERSION VERSION_LESS 6.8)
-        message(FATAL_ERROR "Standalone deployment requires Qt >= 6.8; system builds support Qt >= 6.4")
-    endif()
     if(WIN32)
         qt_generate_deploy_qml_app_script(TARGET appIPR OUTPUT_SCRIPT ipr_deploy
             DEPLOY_TOOL_OPTIONS --include-plugins qoffscreen)

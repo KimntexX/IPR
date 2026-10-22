@@ -15,6 +15,11 @@ from investigate_tonal_base import read_dcp
 TAGS = {271: 'make', 272: 'model', 305: 'software', 50708: 'unique_camera_model',
         50723: 'camera_calibration_1', 50724: 'camera_calibration_2',
         50727: 'analog_balance', 50728: 'as_shot_neutral',
+        50721: 'color_matrix_1', 50722: 'color_matrix_2',
+        50713: 'black_level_repeat_dim', 50715: 'black_level_delta_h',
+        50716: 'black_level_delta_v', 50778: 'calibration_illuminant_1',
+        50779: 'calibration_illuminant_2',
+        33421: 'cfa_repeat_pattern_dim', 33422: 'cfa_pattern',
         50730: 'baseline_exposure', 50731: 'baseline_noise',
         50936: 'profile_name', 50964: 'forward_matrix_1', 50965: 'forward_matrix_2',
         51109: 'baseline_exposure_offset', 51110: 'default_black_render',
@@ -25,7 +30,7 @@ TAGS = {271: 'make', 272: 'model', 305: 'software', 50708: 'unique_camera_model'
 def plain(value):
     if value is None or isinstance(value, (str, int)):
         return value
-    if isinstance(value, (tuple, list)):
+    if isinstance(value, (tuple, list, bytes)):
         return [plain(x) for x in value]
     return float(value)
 

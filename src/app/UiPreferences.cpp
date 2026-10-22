@@ -17,6 +17,7 @@ const QMap<QString, QPair<int, int>> integerRanges{
     {"window/normalWidth", {1000, 8192}}, {"window/normalHeight", {650, 8192}},
     {"window/normalX", {-200000, 200000}}, {"window/normalY", {-200000, 200000}},
     {"layout/settingsWidth", {260, 360}}, {"layout/imageInfoWidth", {210, 300}},
+    {"layout/imageInfoFontSize", {10, 20}},
     {"layout/filmstripHeight", {100, 260}}, {"selection/toneCurveChannel", {0, 3}},
     {"selection/mixerBand", {0, 7}}, {"selection/gradingZone", {0, 2}},
     {"export/quality", {1, 100}}, {"meta/schemaVersion", {2, 2}}
@@ -100,7 +101,7 @@ QVariantMap UiPreferences::layout() const
 {
     QVariantMap result;
     for (const QString &key : {QStringLiteral("settingsWidth"), QStringLiteral("imageInfoWidth"),
-                              QStringLiteral("filmstripHeight"), QStringLiteral("showImageInfo"),
+                              QStringLiteral("filmstripHeight"), QStringLiteral("imageInfoFontSize"), QStringLiteral("showImageInfo"),
                               QStringLiteral("showHistogram"), QStringLiteral("showFilmstrip")})
         result.insert(key, value(QStringLiteral("layout/") + key));
     return result;

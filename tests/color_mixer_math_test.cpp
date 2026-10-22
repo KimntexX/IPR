@@ -1,4 +1,5 @@
 #include "ColorMixer.h"
+#include "WorkingColorSpace.h"
 #include <opencv2/imgproc.hpp>
 
 #include <cmath>
@@ -6,7 +7,7 @@
 #include <limits>
 
 namespace {
-float y(const cv::Vec3f &rgb) { return rgb.dot(cv::Vec3f(0.2126f, 0.7152f, 0.0722f)); }
+float y(const cv::Vec3f &rgb) { return WorkingColor::luminance(rgb); }
 bool check(bool condition, const char *message)
 {
     if (!condition) std::cerr << "FAILED: " << message << '\n';

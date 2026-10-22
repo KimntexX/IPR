@@ -63,8 +63,13 @@ restent inférés des noms, sans manifeste. Voir le rapport Lumières pour les l
   rapports (y compris EV et noirs), avec ligne, section, en-têtes et cellule
   d'origine. Ce niveau de preuve est distinct des échantillons bruts.
 - `base-raw-profils.csv`, `tonalite.csv`, `balance-blancs.csv`, `couleur-globale.csv`,
-  `melangeur.csv`, `bruit.csv`, `detail.csv` : valeurs numériques, emplacement
-  JSON Pointer ou ligne/token textuel, contexte et empreinte source.
+  `melangeur.csv`, `bruit.csv`, `detail.csv`, `performance-ouverture.csv` : valeurs
+  numériques, emplacement JSON Pointer ou ligne/token textuel, contexte et empreinte
+  source. **Générés localement, non suivis par Git** depuis le 17 octobre 2026 :
+  ces vidages recopient les JSON canoniques (≈ 95 Mo) et chaque régénération
+  alourdissait l'historique. Les recréer avec
+  `python scripts/export_documentation_metrics.py`. Les échantillons par tuile
+  restent uniquement dans leurs JSON.
 - `temps-ouverture.csv` : les deux états du benchmark Windows du 1er octobre.
 - `tonalite-revisions.csv` : réponses de luminance, moteur, région, révision et corpus.
 - `reglages-reponses.csv` : mesures nommées des campagnes couleur/détail/WB.

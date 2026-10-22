@@ -28,7 +28,7 @@ Each scene has equal weight. Summary ratios are medians of ratios per scene; del
 
 - `sources.csv`: source files, family, size, and SHA-256.
 - `rapports-tableaux.csv`: numeric cells of tables published in reports (including EV and blacks), with line, section, headers, and source cell. This level of proof is distinct from raw samples.
-- `base-raw-profils.csv`, `tonalite.csv`, `balance-blancs.csv`, `couleur-globale.csv`, `melangeur.csv`, `bruit.csv`, `detail.csv`: numeric values, JSON Pointer location or textual line/token, context, and source fingerprint.
+- `base-raw-profils.csv`, `tonalite.csv`, `balance-blancs.csv`, `couleur-globale.csv`, `melangeur.csv`, `bruit.csv`, `detail.csv`, `performance-ouverture.csv`: numeric values, JSON Pointer location or textual line/token, context, and source fingerprint. **Generated locally and not tracked by Git** since 17 October 2026; recreate them with `python scripts/export_documentation_metrics.py`.
 - `temps-ouverture.csv`: two states of the October 1 Windows benchmark.
 - `tonalite-revisions.csv`: luminance responses, engine, region, revision, and corpus.
 - `reglages-reponses.csv`: named measurements of color/detail/WB campaigns.

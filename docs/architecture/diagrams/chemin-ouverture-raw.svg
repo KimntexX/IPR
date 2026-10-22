@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Ouverture RAW : code actuel et architecture cible</title>
+  <desc id="desc">À gauche, règles courantes par modèle, DCP et mode capteur sans liste de photos. À droite, cible : davantage de paramètres de rendu portés par les DCP IPR. La configuration est suivie automatiquement.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#52657c"/></marker>
+    <style>
+      text{font-family:Segoe UI,Arial,sans-serif;fill:#193047;font-size:18px}
+      .heading{font-size:26px;font-weight:700}.label{font-size:21px;font-weight:600}
+      .small{font-size:16px}.box{fill:#edf4fb;stroke:#537ba5;stroke-width:2;rx:12}
+      .future{fill:#f3f0fc;stroke:#8270ae;stroke-width:2;stroke-dasharray:9 5;rx:12}
+      .good{fill:#e7f5ee;stroke:#3d8b68;stroke-width:2;rx:12}
+      .warn{fill:#fff0ed;stroke:#bf6555;stroke-width:2;rx:12}
+      .edge{fill:none;stroke:#52657c;stroke-width:2.5;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1600" height="1100" fill="#fbfcfe"/>
+  <text x="800" y="43" text-anchor="middle" class="heading">Du RAW au rendu : aujourd'hui et cible proposée</text>
+  <text x="400" y="88" text-anchor="middle" class="label">ACTUEL — implémenté</text>
+  <text x="1200" y="88" text-anchor="middle" class="label">CIBLE — à concevoir / valider</text>
+  <path d="M800 105V1000" stroke="#d4dce6" stroke-width="2"/>
+
+  <rect class="box" x="65" y="115" width="670" height="85"/>
+  <text x="400" y="146" text-anchor="middle" class="label">ImageEditor::loadImage()</text>
+  <text x="400" y="177" text-anchor="middle">Recette .ipr : DCP, manifeste, empreintes, réglages</text>
+  <path class="edge" d="M400 200V225"/>
+  <rect class="box" x="65" y="230" width="670" height="85"/>
+  <text x="400" y="262" text-anchor="middle" class="label">Registre RawDecoder → adaptateur LibRaw</text>
+  <text x="400" y="292" text-anchor="middle">Extensions futures : callbacks image et vignette dédiés</text>
+  <path class="edge" d="M400 315V340"/>
+  <rect class="box" x="65" y="345" width="670" height="115"/>
+  <text x="400" y="376" text-anchor="middle" class="label">CameraCharacterization → RawNormalization</text>
+  <text x="400" y="406" text-anchor="middle">JSON v4 : format, décodeur, modèle, mode ; puis DCP/WB</text>
+  <text x="400" y="435" text-anchor="middle">Calibration activée ET conditions réellement satisfaites ?</text>
+  <path class="edge" d="M310 460V495H220V520"/>
+  <path class="edge" d="M490 460V495H585V520"/>
+  <text x="235" y="490" class="small">Oui</text><text x="560" y="490" class="small">Non</text>
+  <rect class="good" x="50" y="525" width="335" height="145"/>
+  <text x="218" y="556" text-anchor="middle" class="label">Chemin calibré</text>
+  <text x="218" y="588" text-anchor="middle">Blanc et baseline audités</text>
+  <text x="218" y="617" text-anchor="middle">Compensation DCP distincte</text>
+  <text x="218" y="643" text-anchor="middle" class="small">R7 : −0,02 EV ; R6 : 0</text>
+  <text x="218" y="662" text-anchor="middle" class="small">Nouveaux ISO : à tester</text>
+  <rect class="warn" x="420" y="525" width="335" height="145"/>
+  <text x="588" y="556" text-anchor="middle" class="label">Chemin non calibré</text>
+  <text x="588" y="588" text-anchor="middle">Paramètres ordinaires LibRaw</text>
+  <text x="588" y="617" text-anchor="middle">DCP compatible toujours utilisé</text>
+  <text x="588" y="647" text-anchor="middle" class="small">Modèle, profil ou mode inconnu signalé</text>
+  <path class="edge" d="M218 670V705H400V725"/>
+  <path class="edge" d="M588 670V705H400"/>
+  <rect class="box" x="65" y="730" width="670" height="105"/>
+  <text x="400" y="762" text-anchor="middle" class="label">CameraSignal → DCP préparé (cache partagé)</text>
+  <text x="400" y="793" text-anchor="middle">Gain composé → tables couleur → courbe DCP</text>
+  <text x="400" y="819" text-anchor="middle" class="small">Même magasin pour les LCP ; WB et gains restent propres à l'image</text>
+  <path class="edge" d="M400 835V865"/>
+  <rect class="box" x="65" y="870" width="670" height="95"/>
+  <text x="400" y="903" text-anchor="middle" class="label">ColorPipeline / ImageEditor</text>
+  <text x="400" y="937" text-anchor="middle">Master Rec.2020 → retouches → affichage / export sRGB</text>
+
+  <rect class="box" x="865" y="115" width="670" height="85"/>
+  <text x="1200" y="146" text-anchor="middle" class="label">ImageEditor : ouvrir une image quelconque</text>
+  <text x="1200" y="177" text-anchor="middle">Même recette fonctionnelle, pas d'inscription de chaque photo</text>
+  <path class="edge" d="M1200 200V225"/>
+  <rect class="future" x="865" y="230" width="670" height="115"/>
+  <text x="1200" y="261" text-anchor="middle" class="label">Décodage commun, paramètres du capteur validés</text>
+  <text x="1200" y="292" text-anchor="middle">Métadonnées RAW : noir, blanc, mosaïque, WB, mode</text>
+  <text x="1200" y="322" text-anchor="middle" class="small">Règles par modèle / mode si nécessaires, pas par empreinte RAW</text>
+  <path class="edge" d="M1200 345V375"/>
+  <rect class="future" x="865" y="380" width="670" height="85"/>
+  <text x="1200" y="412" text-anchor="middle" class="label">Signal caméra correctement normalisé</text>
+  <text x="1200" y="443" text-anchor="middle">Ne pas compenser une erreur de capteur par un rendu artistique</text>
+  <path class="edge" d="M1200 465V500"/>
+  <rect class="future" x="865" y="505" width="670" height="165"/>
+  <text x="1200" y="539" text-anchor="middle" class="label">DCP compatible + paramètres du profil</text>
+  <text x="1200" y="573" text-anchor="middle">Matrices, tables couleur, courbe, BaselineExposureOffset</text>
+  <text x="1200" y="605" text-anchor="middle">DCP IPR : décalage porté directement par le profil</text>
+  <text x="1200" y="640" text-anchor="middle" class="small">Vérifier compatibilité et version ; éviter de compter deux fois l'offset</text>
+  <path class="edge" d="M1200 670V725"/>
+  <rect class="box" x="865" y="730" width="670" height="105"/>
+  <text x="1200" y="762" text-anchor="middle" class="label">CameraProfileEngine::applyDcp()</text>
+  <text x="1200" y="793" text-anchor="middle">Même moteur, données du profil adaptées au boîtier</text>
+  <text x="1200" y="819" text-anchor="middle" class="small">Pas de correction lumineuse générique attachée à toutes les images</text>
+  <path class="edge" d="M1200 835V865"/>
+  <rect class="box" x="865" y="870" width="670" height="95"/>
+  <text x="1200" y="903" text-anchor="middle" class="label">ColorPipeline / ImageEditor</text>
+  <text x="1200" y="937" text-anchor="middle">Master Rec.2020 → retouches → affichage / export sRGB</text>
+  <text x="800" y="1010" text-anchor="middle" class="label">Configuration actualisée automatiquement ; calibration active par défaut ; aucune liste de photos.</text>
+  <text x="800" y="1044" text-anchor="middle" class="small">Cible : profils et décodage réutilisables ; décodeur incompatible → échec explicite, DCP absent → repli signalé.</text>
+  <text x="800" y="1076" text-anchor="middle" class="small">16 octobre 2026 — pointillés : évolution non implémentée ; le dessin ne remplace pas les preuves JSON.</text>
+</svg>

@@ -22,6 +22,6 @@ AbstractButton {
         radius: width / 2
         color: channelButton.curveColor(channelButton.channel)
         border.width: channelButton.channelSelected ? 3 : 1
-        border.color: channelButton.channelSelected ? "#ffffff" : "#5a6575"
+        border.color: channelButton.channelSelected ? channelButton.palette.text : channelButton.palette.mid
     }
 }

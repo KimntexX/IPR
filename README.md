@@ -104,7 +104,7 @@ et le [rapport Lumières](docs/validation/analyses/analyse-validation-lumieres-b
 
 | Dépendance | Usage |
 | --- | --- |
-| Qt ≥ 6.4 | Interface Quick/QML, Core, Gui et Concurrent |
+| Qt ≥ 6.8 | Interface Quick/QML, Core, Gui et Concurrent |
 | OpenCV | Calculs image : `core`, `imgproc`, `imgcodecs` |
 | LibTIFF | Écriture du DNG linéaire |
 | LibRaw ≥ 0.21, facultatif | Décodage CR2/CR3/DNG ; option `IPR_ENABLE_LIBRAW` |
@@ -178,7 +178,10 @@ Consulter le [contrat DCP/LCP](docs/camera-profile-engine.md) avant déploiement
 Le code est regroupé sous `src/` : interface QML, application, éditeur,
 pipeline couleur/détail, décodeurs RAW, profils, caches et fournisseurs d'images.
 
-Le moteur utilise une image RGBA flottante **sRGB linéaire**.
+Le moteur utilise un master RGBA flottant **Rec.2020 linéaire D65**.
+Les tables DCP restent dans leur domaine ProPhoto ; l'aperçu et les exports
+courants sont convertis en sRGB à la sortie. Le port et ses limites de
+validation sont décrits dans le [plan Rec.2020](docs/architecture/integration-rec2020.md).
 Les entrées rendues passent par leur ICC valide, avec hypothèse sRGB signalée
 en son absence. Le développement RAW fournit la base profilée.
 Aperçu et export partagent le moteur de rendu et la compression de gamut sRGB ;
@@ -194,7 +197,9 @@ cela ne constitue pas un tone mapping HDR dédié.
 | [Tests en autonomie](docs/validation/procedure-tests-autonomes.md) | Génération des images, audits et analyses |
 
 Le build produit aussi `iprGenerateTests.exe`, qui génère des variantes de
-validation sans écrire les sidecars. Voir le [guide du générateur](docs/validation/tools/generateur-images-tests.md)
+validation pour la revue visuelle sans écrire les sidecars, et
+`iprRenderServer.exe`, qui rend ces mêmes variantes en mémoire pour les
+analyseurs, sans TIFF. Voir le [guide du générateur](docs/validation/tools/generateur-images-tests.md)
 et `scripts/generate-test-images.ps1`.
 
 Depuis PowerShell : `./scripts/generate-test-images.ps1 couleur` (ou `all`).

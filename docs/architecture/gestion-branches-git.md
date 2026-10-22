@@ -4,6 +4,13 @@
 
 Règle adoptée le 10 octobre 2026.
 
+## Langue des commits et pull requests
+
+Depuis le 19 octobre 2026, tous les nouveaux messages de commit (fusions
+comprises), titres et descriptions de PR sont rédigés en anglais, comme les
+noms des branches. Ne pas réécrire l’historique publié pour traduire les
+anciens messages. Cette règle ne change pas la langue des documents du projet.
+
 ## Organisation
 
 `dev` rassemble les groupes de fonctionnalités validés. Chaque groupe a une
@@ -13,6 +20,11 @@ Lumières (exposition, contraste, ombres, noirs, blancs et hautes lumières).
 et `patch_documentation` la documentation ; ces branches existent et sont
 conservées après intégration. Un prochain groupe pourra utiliser un nom tel
 que `patch_noise`, qui reste ici un exemple et non une branche annoncée créée.
+
+Depuis le 14 octobre 2026, `patch_raw_opening` est la branche locale dédiée
+au rendu initial RAW/base colorimétrique, créée depuis `dev`. Le prototype
+Couleur non validé reste sauvegardé sur `patch_color` (commit `8abcd12`),
+sans fusion dans `dev` ni publication implicite.
 
 Une branche de groupe est conservée après livraison. Les commits de fusion
 matérialisent les validations dans le graphe Git ; les tags identifient les états

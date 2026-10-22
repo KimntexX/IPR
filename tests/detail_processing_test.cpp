@@ -1,4 +1,5 @@
 #include "DetailProcessing.h"
+#include "WorkingColorSpace.h"
 
 #include <algorithm>
 #include <cmath>
@@ -22,7 +23,7 @@ cv::Mat component(const cv::Mat &rgb, int kind = 0)
         float *row = result.ptr<float>(y);
         for (int x = 0; x < rgb.cols; ++x) {
             const auto &p = source[x];
-            row[x] = kind == 0 ? 0.2126f*p[0] + 0.7152f*p[1] + 0.0722f*p[2] :
+            row[x] = kind == 0 ? WorkingColor::luminance(p) :
                      kind == 1 ? p[0] - p[2] : p[1] - 0.5f*(p[0]+p[2]);
         }
     }
@@ -155,8 +156,9 @@ int main()
     // Same Y on both sides: a chromatic border must not require a luma edge.
     auto colorEdge = noisy(.02f, .002f, true);
     const cv::Vec3f firstColor(.4f, .05f, .05f);
-    const float edgeY = .2126f*firstColor[0] + .7152f*firstColor[1] + .0722f*firstColor[2];
-    const cv::Vec3f secondColor(.05f, (edgeY - .2126f*.05f - .0722f*.1f)/.7152f, .1f);
+    const float edgeY = WorkingColor::luminance(firstColor);
+    const auto &weights = WorkingColor::lumaWeights();
+    const cv::Vec3f secondColor(.05f, (edgeY - weights[0]*.05f - weights[2]*.1f)/weights[1], .1f);
     for (int y = 0; y < colorEdge.rows; ++y) {
         auto *row = colorEdge.ptr<cv::Vec3f>(y);
         for (int x = 0; x < colorEdge.cols; ++x)

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare opt-in per-file Camera Neutral calibration from controlled evidence.
-
-Not a general camera calibration database. No DCP payloads are copied.
-"""
+"""Prepare schema-4 model/mode rules with explicit proposed mode bounds and evidence."""
 import argparse
 import json
 from pathlib import Path
@@ -20,26 +17,33 @@ def build(measure, manifest, audit, profile):
     if digest not in measure['inputs_sha256'].values():
         raise ValueError('Profile differs from measured profile')
     entries = []
+    seen = set()
+    rules = measure.get('model_rules')
+    if not isinstance(rules, list) or not rules:
+        raise ValueError('Explicit model_rules/mode bounds required; never infer a universal camera policy from one file')
     for scene in measure['scenes']:
         # Do not enable an unmeasured scene simply because its metadata agree.
         if not scene.get('comparison_available'):
             continue
+        if scene['raw_sha256'] in seen: raise ValueError('Duplicate source evidence')
+        seen.add(scene['raw_sha256'])
         row = next(x for x in manifest['images'] if Path(x['raw']).stem == scene['scene'] and x['variant'] == 'baseline')
         dng = next(x for x in audit['scenes'] if x['scene'] == scene['scene'])
         if (file_hash(local_path(row['raw'])) != scene['raw_sha256'] or
                 row['raw_sha256'] != scene['raw_sha256'] or dng['raw_sha256'] != scene['raw_sha256'] or
                 file_hash(local_path(dng['path'])) != scene['dng_sha256'] or dng['sha256'] != scene['dng_sha256']):
             raise ValueError('RAW/DNG evidence mismatch')
-        entries.append({'camera_make': dng['ifd0']['make'], 'camera_model': row['camera'],
-                        'iso': row['iso'], 'raw_sha256': scene['raw_sha256'],
-                        'profile_sha256': digest, 'white_level': scene['dng_white'],
-                        'black_rgbg': scene['black_rgbg'],
-                        'baseline_exposure_ev': scene['dng_baseline_exposure_ev'],
-                        'dng_sha256': scene['dng_sha256'],
-                        'provenance': 'Adobe DNG Converter 18.6; controlled Neutral experiment 2026-10-08; '+scene['scene']})
-    if len({x['raw_sha256'] for x in entries}) != len(entries) or not entries:
-        raise ValueError('Missing or duplicate measured scenes')
-    return {'schema': 1, 'libraw_version': measure['libraw_version'], 'entries': entries}
+        matches = [r for r in rules if r['camera_model'] == row['camera'] and
+                   r['white_level'] == scene['dng_white'] and r['baseline_exposure_ev'] == scene['dng_baseline_exposure_ev']]
+        if len(matches) != 1: raise ValueError('Missing/ambiguous proposed model rule')
+        rule = dict(matches[0], camera_make=dng['ifd0']['make'], profile_sha256=digest,
+                    format_extension=Path(row['raw']).suffix[1:].lower(),
+                    decoder_id='libraw', decoder_version=measure['libraw_version'])
+        for key in ('black_min', 'black_max', 'native_white_min', 'native_white_max', 'provenance'):
+            if key not in rule: raise ValueError('Missing mode bound/provenance')
+        if rule not in entries: entries.append(rule)
+    if not entries: raise ValueError('Missing measured scenes')
+    return {'schema': 4, 'entries': entries}
 
 
 def main():
@@ -60,7 +64,7 @@ def main():
     with args.output.open('x', encoding='utf-8') as stream:
         json.dump(result, stream, indent=2, allow_nan=False)
         stream.write('\n')
-    print(len(result['entries']), 'audited RAW/profile pairs written:', args.output)
+    print(len(result['entries']), 'proposed model/mode rules written:', args.output)
 
 
 if __name__ == '__main__':

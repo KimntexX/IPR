@@ -68,9 +68,9 @@ pas de MAE pixel-à-pixel LR/IPR ni de classement absolu sur leurs seuls ratios.
 python tests/analyse_bruit.py --base tests/image/base --strict --data-version 1
 ```
 
-Les valeurs IPR proviennent du TIFF déclaré, les valeurs LR du XMP. Chaque
-série doit avoir une référence propre au moteur. Références ambiguës,
-ancien TIFF IPR non déclaré, géométrie différente ou état non auditable :
+Les valeurs IPR proviennent des rendus en mémoire déclarés, les valeurs LR du
+XMP. Chaque série doit avoir une référence propre au moteur. Références ambiguës,
+géométrie différente ou état non auditable :
 corriger l'entrée ou fournir un mapping explicite à l'analyseur.
 Les ROI automatiques ne remplacent pas une sélection sémantique de zones
 planes/texturées ; annoter les régions dans le mapping si nécessaire.

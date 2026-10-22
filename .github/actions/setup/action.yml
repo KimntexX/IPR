@@ -17,11 +17,8 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install -y ninja-build libopencv-dev libraw-dev libtiff-dev libgl1-mesa-dev libxkbcommon-dev libxcb-cursor0 libxcb-xinerama0 libxcb-icccm4 libxcb-keysyms1 libxcb-image0 libxcb-render-util0 libegl1
-    - if: runner.os == 'Linux' && inputs.mode == 'system'
-      shell: bash
-      run: |
-        sudo apt-get install -y qt6-base-dev qt6-declarative-dev qt6-image-formats-plugins qml6-module-qtcore qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-dialogs qml6-module-qtqml-workerscript qml6-module-qtquick-window qml6-module-qtquick-templates
-    - if: runner.os == 'Windows' || ((runner.os == 'macOS' || runner.os == 'Linux') && inputs.mode == 'standalone')
+    # Ubuntu 24.04 ships Qt 6.4.2, below the Qt 6.8 minimum: Linux always uses the SDK.
+    - if: runner.os == 'Windows' || runner.os == 'Linux' || (runner.os == 'macOS' && inputs.mode == 'standalone')
       uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
       with:
         version: '6.8.3'

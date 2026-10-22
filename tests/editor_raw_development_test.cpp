@@ -1,5 +1,6 @@
 #include "imageeditor.h"
 #include "imageprovider.h"
+#include "controlled_memory.h"
 #include <QCoreApplication>
 #include <QEventLoop>
 #include <QFile>
@@ -58,6 +59,12 @@ QByteArray matrixDcp(int numerator)
 int main(int argc,char **argv)
 {
     QCoreApplication app(argc,argv);
+    {
+        ImageProvider defaultsProvider;
+        ImageEditor defaults(&defaultsProvider);
+        if (defaults.rawNormalizationManifest().isEmpty() ||
+            !QFileInfo(defaults.rawNormalizationManifest()).isFile() || !defaults.rawNormalizationEnabled()) return 1;
+    }
     QTemporaryDir dir;
     if (!dir.isValid()) return 1;
     if (argc == 4) {
@@ -68,6 +75,8 @@ int main(int argc,char **argv)
         ImageProvider provider;
         ImageEditor editor(&provider);
         editor.loadImage(QUrl::fromLocalFile(copy));
+        if (!settle(editor)) return 3;
+        editor.setRawNormalizationEnabled(false);
         if (!settle(editor)) return 3;
         QString neutral;
         QString alternate;
@@ -122,7 +131,7 @@ int main(int argc,char **argv)
     std::atomic<int> decodes{0};
     std::atomic<bool> environmentDisabled{false};
     RawDecoder::registerFormatHandler({"uimockraw"},
-        [&](const QString &,const RawDecoder::Options &options,RawDecoder::SourceMetadata *meta,QString *) {
+        [&](const QString &,const RawDecoder::Options &options,ImageMetadata *meta,QString *) {
             ++decodes;
             environmentDisabled=!options.useNormalizationEnvironment;
             meta->cameraMake="Mock"; meta->cameraModel="Test camera";
@@ -135,16 +144,22 @@ int main(int argc,char **argv)
             meta->normalizationReason="No matching calibration";
             ColorPipeline::WorkingImage image;
             image.linearRgba=cv::Mat(8,8,CV_32FC4,cv::Scalar(.1f,.2f,.3f,1.f)).clone();
-            image.colorSpace=QColorSpace(QColorSpace::SRgbLinear);
+            image.colorSpace=ColorPipeline::workingColorSpace();
             return image;
         });
     ImageProvider provider;
-    ImageEditor editor(&provider);
+    ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
+    if(!editor.imageFileFilters().join(' ').contains("*.uimockraw"))return 1;
     const auto check=[](bool ok,const char *label) {
         if (!ok) std::cerr << "FAILED: " << label << '\n';
         return ok;
     };
     editor.loadImage(QUrl::fromLocalFile(raw));
+    if (!settle(editor) || !editor.rawNormalizationEnabled()) return 1;
+    // Establish the explicitly disabled fixture for the toggle/cache tests.
+    editor.setRawNormalizationEnabled(false);
+    if (!settle(editor)) return 1;
+    decodes = 1; // Begin counting this workflow after fixture initialization.
     if (!check(settle(editor) && decodes==1 && editor.cameraProfiles().size()==2 && environmentDisabled,
                "initial decode discovers profiles, UI overrides environment")) return 1;
     editor.setCameraProfile(profile);
@@ -180,16 +195,22 @@ int main(int argc,char **argv)
     const QString other = dir.filePath("B.uimockraw");
     if (!write(other, "other")) return 1;
     editor.loadImage(QUrl::fromLocalFile(other));
-    if (!check(settle(editor) && editor.selectedCameraProfile().isEmpty() && !editor.rawNormalizationEnabled() &&
+    if (!check(settle(editor) && editor.selectedCameraProfile().isEmpty() && editor.rawNormalizationEnabled() &&
                !editor.automaticWhiteBalance(), "new image must not inherit another photo's RAW choices")) return 1;
+    // Resource contents change between sessions, while the sidecar still pins
+    // the previous manifest digest. Follow live config, not a disabled fallback.
+    if (!write(manifest,"{\"updated_configuration\":true}")) return 1;
     {
         ImageProvider restoredProvider;
-        ImageEditor restored(&restoredProvider);
+        ImageEditor restored(&restoredProvider, nullptr, nullptr, controlledMemory);
         restored.loadImage(QUrl::fromLocalFile(raw));
         if (!check(settle(restored) && restored.selectedCameraProfile() == profile &&
                    restored.rawNormalizationEnabled() && restored.automaticWhiteBalance() &&
                    restored.rawNormalizationManifest() == manifest && restored.colorMixerValue(6,0) == 23,
                    "restart restores profile, manifest, activation, WB and mixer")) return 1;
+        if (!check(restored.rawDevelopmentStatus().contains("Normalisation appliquée") &&
+                   restored.rawDevelopmentStatus().contains("mise à jour automatiquement"),
+                   "changed manifest is refreshed automatically without losing calibration or edits")) return 1;
         restored.resetAdjustments();
         if (!check(settle(restored) && restored.selectedCameraProfile() == profile &&
                    restored.rawNormalizationEnabled() && restored.automaticWhiteBalance() &&
@@ -199,7 +220,7 @@ int main(int argc,char **argv)
     if (!write(profile, "modified profile")) return 1;
     {
         ImageProvider changedProvider;
-        ImageEditor changed(&changedProvider);
+        ImageEditor changed(&changedProvider, nullptr, nullptr, controlledMemory);
         changed.loadImage(QUrl::fromLocalFile(raw));
         if (!check(settle(changed) && changed.rawDevelopmentStatus().contains("absente ou modifiée") &&
                    changed.selectedCameraProfile() == profile,
@@ -210,7 +231,7 @@ int main(int argc,char **argv)
     if (!QFile::rename(profile, profile + ".backup")) return 1;
     {
         ImageProvider missingProvider;
-        ImageEditor missing(&missingProvider);
+        ImageEditor missing(&missingProvider, nullptr, nullptr, controlledMemory);
         missing.loadImage(QUrl::fromLocalFile(raw));
         if (!check(settle(missing) && missing.rawDevelopmentStatus().contains("absente ou modifiée") &&
                    missing.selectedCameraProfile() == profile,
@@ -227,7 +248,7 @@ int main(int argc,char **argv)
         !write(neutral,matrixDcp(2)) || !write(alternate,matrixDcp(1))) return 1;
     std::atomic<int> fastDecodes{0};
     RawDecoder::registerFormatHandler({"fastmockraw"},
-        [&](const QString &,const RawDecoder::Options &options,RawDecoder::SourceMetadata *meta,QString *error) {
+        [&](const QString &,const RawDecoder::Options &options,ImageMetadata *meta,QString *error) {
             ++fastDecodes;
             auto source = options.retainedDcpSource ? options.retainedDcpSource : std::make_shared<RawDecoder::DcpSource>();
             source->cameraRgb = cv::Mat(8,8,CV_32FC3,cv::Scalar(.15f,.2f,.1f));
@@ -242,8 +263,12 @@ int main(int argc,char **argv)
     QImage edited;
     {
         ImageProvider fastProvider;
-        ImageEditor fast(&fastProvider);
+        ImageEditor fast(&fastProvider, nullptr, nullptr, controlledMemory);
         fast.loadImage(QUrl::fromLocalFile(fastRaw));
+        if (!settle(fast)) return 1;
+        fast.setRawNormalizationEnabled(false);
+        if (!settle(fast)) return 1;
+        fastDecodes = 1; // Explicit no-calibration fast-path fixture initialized.
         if (!check(settle(fast) && fastDecodes == 1 && fast.selectedCameraProfile() == neutral,
                    "automatic Camera Neutral is frozen into recipe")) return 1;
         const QImage baseline = fastProvider.originalImage();
@@ -271,7 +296,7 @@ int main(int argc,char **argv)
     }
     {
         ImageProvider fastProvider;
-        ImageEditor fast(&fastProvider);
+        ImageEditor fast(&fastProvider, nullptr, nullptr, controlledMemory);
         fast.loadImage(QUrl::fromLocalFile(fastRaw));
         if (!check(settle(fast) && fast.selectedCameraProfile() == alternate && fastProvider.image() == edited,
                    "fresh editor reproduces edited pixels from saved RAW recipe")) return 1;
@@ -290,7 +315,7 @@ int main(int argc,char **argv)
     if (!write(opticRaw, "optical") || !write(lens, "mock LCP")) return 1;
     std::atomic<int> opticDecodes{0};
     RawDecoder::registerFormatHandler({"opticmockraw"},
-        [&](const QString &, const RawDecoder::Options &options, RawDecoder::SourceMetadata *meta, QString *) {
+        [&](const QString &, const RawDecoder::Options &options, ImageMetadata *meta, QString *) {
             ++opticDecodes;
             const QString path = options.automaticLcpSelection ? lens : options.lcpProfileOverride;
             meta->lcpPath = path;
@@ -305,13 +330,13 @@ int main(int argc,char **argv)
             result.linearRgba = cv::Mat(8,8,CV_32FC4,cv::Scalar(
                 meta->lensGeometryApplied ? .3f : .1f,
                 meta->chromaticAberrationApplied ? .4f : .2f, .1f, 1.f)).clone();
-            result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+            result.colorSpace = ColorPipeline::workingColorSpace();
             return result;
         });
     QImage opticalBaseline;
     {
         ImageProvider p;
-        ImageEditor optics(&p);
+        ImageEditor optics(&p, nullptr, nullptr, controlledMemory);
         optics.loadImage(QUrl::fromLocalFile(opticRaw));
         if (!check(settle(optics) && optics.opticalDevelopmentStatus().contains("test-lens"),
                    "automatic LCP discovered and frozen on first open")) return 1;
@@ -335,7 +360,7 @@ int main(int argc,char **argv)
     }
     {
         ImageProvider p;
-        ImageEditor optics(&p);
+        ImageEditor optics(&p, nullptr, nullptr, controlledMemory);
         optics.loadImage(QUrl::fromLocalFile(opticRaw));
         if (!check(settle(optics) && !optics.lensCorrectionEnabled() && !optics.chromaticAberrationEnabled() &&
                    p.image() == opticalBaseline && optics.opticalDevelopmentStatus().contains("test-lens"),
@@ -344,7 +369,7 @@ int main(int argc,char **argv)
     if (!write(lens, "changed LCP")) return 1;
     {
         ImageProvider p;
-        ImageEditor optics(&p);
+        ImageEditor optics(&p, nullptr, nullptr, controlledMemory);
         optics.loadImage(QUrl::fromLocalFile(opticRaw));
         if (!check(settle(optics) && optics.rawDevelopmentStatus().contains("LCP enregistré est absent ou modifié") &&
                    optics.opticalDevelopmentStatus().contains("Aucun profil LCP"),
@@ -353,7 +378,7 @@ int main(int argc,char **argv)
     if (!QFile::rename(lens, lens + ".backup")) return 1;
     {
         ImageProvider p;
-        ImageEditor optics(&p);
+        ImageEditor optics(&p, nullptr, nullptr, controlledMemory);
         optics.loadImage(QUrl::fromLocalFile(opticRaw));
         if (!check(settle(optics) && optics.rawDevelopmentStatus().contains("LCP enregistré est absent ou modifié"),
                    "missing LCP keeps saved fingerprint and warning")) return 1;

@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtCore
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Basic as Basic
 import QtQuick.Dialogs
 import QtQuick.Layouts
 import IPR
@@ -17,60 +18,114 @@ ApplicationWindow {
     visible: false
     title: qsTr("IPR — Image Processing Room")
     color: uiPreferences.theme.background
+    palette.window: uiPreferences.theme.panel
+    palette.windowText: uiPreferences.theme.text
+    palette.text: uiPreferences.theme.text
+    palette.buttonText: uiPreferences.theme.text
+    palette.base: Qt.darker(uiPreferences.theme.panel, 1.10)
+    palette.button: Qt.darker(uiPreferences.theme.panel, 1.10)
+    palette.mid: Qt.tint(uiPreferences.theme.panel, Qt.rgba(
+        uiPreferences.theme.text.r, uiPreferences.theme.text.g, uiPreferences.theme.text.b, 0.25))
+    palette.highlight: Qt.tint(uiPreferences.theme.panel, Qt.rgba(
+        uiPreferences.theme.text.r, uiPreferences.theme.text.g, uiPreferences.theme.text.b, 0.18))
+    palette.highlightedText: uiPreferences.theme.text
     readonly property bool folderOpen: imageEditor.folder.toString().length > 0
 
     Component.onCompleted: uiPreferences.restoreWindow(root)
     onClosing: uiPreferences.saveWindow(root)
 
-    menuBar: MenuBar {
+    ApplicationActions {
+        id: fileActions
+        objectName: "applicationActions"
+        editor: imageEditor
+        settings: settingsView
+        blocked: folderDialog.visible || imageFileDialog.visible || preferencesDialog.visible
+                 || resetDialog.visible || settingsView.exportDialogVisible
+        onOpenImageRequested: imageFileDialog.open()
+        onOpenFolderRequested: folderDialog.open()
+        onPreferencesRequested: preferencesDialog.open()
+        onResetRequested: {
+            resetDialog.imageKey = canvas.imageKey
+            resetDialog.open()
+        }
+    }
+
+    PhotoContextMenu {
+        id: photoMenu
+        objectName: "photoContextMenu"
+        actions: fileActions
+        editor: imageEditor
+        currentImageKey: canvas.imageKey
+        palette: root.palette
+    }
+
+    menuBar: Basic.MenuBar {
         id: applicationMenuBar
-
-        Menu {
-            title: qsTr("Fichier")
-
-            MenuItem {
-                text: qsTr("Ouvrir un dossier…")
-                onTriggered: folderDialog.open()
-            }
-
-            MenuItem {
-                text: qsTr("Ouvrir une image…")
-                onTriggered: imageFileDialog.open()
-            }
-
-            MenuItem {
-                text: qsTr("Quitter")
-                onTriggered: Qt.quit()
+        background: Rectangle { color: uiPreferences.theme.panel }
+        delegate: Basic.MenuBarItem {
+            id: menuEntry
+            contentItem: Text {
+                text: menuEntry.text
+                font: menuEntry.font
+                color: uiPreferences.theme.text
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
             }
         }
 
-        Menu {
+        Basic.Menu {
+            palette: root.palette
+            title: qsTr("Fichier")
+            width: 440
+
+            ActionMenuItem { action: fileActions.openImageAction }
+            ActionMenuItem { action: fileActions.openFolderAction }
+            Basic.MenuSeparator { }
+            ActionMenuItem { action: fileActions.saveAction }
+            ActionMenuItem { action: fileActions.exportAction }
+            ActionMenuItem { action: fileActions.duplicateAction }
+            Basic.MenuSeparator { }
+            ActionMenuItem { action: fileActions.quitAction }
+        }
+        Basic.Menu {
+            palette: root.palette
+            title: qsTr("Édition")
+            width: 440
+            ActionMenuItem { action: fileActions.resetAction }
+        }
+
+        Basic.Menu {
+            palette: root.palette
             title: qsTr("Affichage")
-            MenuItem {
+            width: 300
+            ActionMenuItem {
                 text: qsTr("Informations de l'image")
                 checkable: true
                 checked: uiPreferences.layout.showImageInfo
                 enabled: uiPreferences.writable
                 onTriggered: uiPreferences.setValue("layout/showImageInfo", checked)
             }
-            MenuItem {
+            ActionMenuItem {
                 text: qsTr("Histogramme")
                 checkable: true
                 checked: uiPreferences.layout.showHistogram
                 enabled: uiPreferences.writable
                 onTriggered: uiPreferences.setValue("layout/showHistogram", checked)
             }
-            MenuItem {
+            ActionMenuItem {
                 text: qsTr("Ruban des vignettes")
                 checkable: true
                 checked: uiPreferences.layout.showFilmstrip
                 enabled: uiPreferences.writable
                 onTriggered: uiPreferences.setValue("layout/showFilmstrip", checked)
             }
-            MenuSeparator { }
-            MenuItem {
-                text: qsTr("Fichier de préférences…")
-                onTriggered: preferencesInfoDialog.open()
+        }
+        Basic.Menu {
+            palette: root.palette
+            title: qsTr("Préférences")
+            width: 400
+            ActionMenuItem {
+                action: fileActions.preferencesAction
             }
         }
     }
@@ -79,10 +134,11 @@ ApplicationWindow {
         anchors.fill: parent
         anchors.margins: 12
         anchors.bottomMargin: uiPreferences.layout.showFilmstrip
-                              ? uiPreferences.layout.filmstripHeight + 16 : 12
+                              ? uiPreferences.layout.filmstripHeight + 34 : 30
         spacing: 12
 
         ImageInfoPanel {
+            preferences: uiPreferences
             objectName: "imageInfoPanel"
             Layout.preferredWidth: uiPreferences.layout.imageInfoWidth
             Layout.minimumWidth: 210
@@ -93,10 +149,26 @@ ApplicationWindow {
             editor: imageEditor
         }
 
-        Rectangle {
+        PanelResizeHandle {
+            objectName: "infoResizeHandle"
+            Layout.fillHeight: true
+            Layout.preferredWidth: 8
+            visible: uiPreferences.layout.showImageInfo
+            currentSize: uiPreferences.layout.imageInfoWidth
+            minimumSize: 210
+            maximumSize: 300
+            defaultSize: 250
+            writable: uiPreferences.writable
+            handleColor: uiPreferences.theme.secondaryText
+            description: qsTr("Largeur du panneau Informations")
+            onSizeEdited: (size) => uiPreferences.setValue("layout/imageInfoWidth", size)
+        }
+
+        ImageCanvasBackground {
+            objectName: "imageCanvasBackground"
             Layout.fillWidth: true
             Layout.fillHeight: true
-            color: uiPreferences.theme.canvas
+            baseColor: uiPreferences.theme.canvas
             radius: 8
             border.color: "#3d4654"
             clip: true
@@ -114,6 +186,37 @@ ApplicationWindow {
                 textColor: uiPreferences.theme.text
                 panelColor: uiPreferences.theme.panel
                 visible: imageEditor.hasImage
+                onContextMenuRequested: (x, y) => {
+                    photoMenu.targetName = imageEditor.imageDetails.name || ""
+                    photoMenu.targetUrl = ""
+                    photoMenu.targetKey = canvas.imageKey
+                    photoMenu.openFor(canvas, x, y)
+                }
+            }
+
+            FilmstripNavigation {
+                id: filmstripNavigation
+                objectName: "collapsedFilmstripNavigation"
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 12
+                z: 2
+                visible: !uiPreferences.layout.showFilmstrip
+                editor: imageEditor
+            }
+
+            // Interim camera rendering (embedded JPEG), not the IPR development.
+            ProcessingStatus {
+                objectName: "processingStatus"
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.margins: 20
+                anchors.topMargin: canvas.toolbarHeight + 20
+                width: Math.max(0, Math.min(implicitWidth, parent.width - 40))
+                height: implicitHeight
+                busy: imageEditor.busy
+                embeddedPreview: imageEditor.hasImage && imageEditor.embeddedPreview
+                detail: imageEditor.statusMessage
             }
 
             ColumnLayout {
@@ -128,29 +231,30 @@ ApplicationWindow {
                     text: qsTr("Ouvrez un dossier ou une image")
                 }
 
-                Button {
+                PreferenceButton {
                     id: openButton
+                    objectName: "openImageButton"
 
                     Layout.alignment: Qt.AlignHCenter
                     text: qsTr("Ouvrir…")
                     implicitHeight: 30
                     leftPadding: 16
                     rightPadding: 16
-                    onClicked: imageFileDialog.open()
+                    onClicked: fileActions.openImageAction.trigger()
 
                     contentItem: Text {
                         text: openButton.text
-                        color: openButton.enabled ? "#edf2f8" : "#7a8797"
+                        color: openButton.palette.buttonText
+                        opacity: openButton.enabled ? 1 : 0.45
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     background: Rectangle {
                         radius: 3
-                        color: openButton.down ? "#3d4654"
-                               : (openButton.hovered ? "#343d49" : "#2d343e")
+                        color: openButton.down || openButton.hovered ? openButton.palette.mid : openButton.palette.button
                         border.width: 1
-                        border.color: "#536174"
+                        border.color: openButton.palette.mid
                     }
                 }
 
@@ -165,24 +269,43 @@ ApplicationWindow {
             }
 
             Rectangle {
+                objectName: "imageStatusOverlay"
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
                 anchors.margins: 12
                 radius: 4
                 color: "#b820242b"
                 visible: imageEditor.hasImage
-                width: infoLabel.implicitWidth + 20
+                width: Math.min(infoLabel.implicitWidth + 20,
+                                Math.max(0, parent.width - 24 -
+                                         (uiPreferences.layout.showFilmstrip ? 0 : 80)))
                 height: infoLabel.implicitHeight + 10
 
                 Label {
                     id: infoLabel
 
                     anchors.centerIn: parent
+                    width: Math.max(0, parent.width - 20)
                     text: imageEditor.imageInfo
+                    elide: Text.ElideRight
                     color: "#edf2f8"
                     font.pixelSize: 12
                 }
             }
+        }
+        PanelResizeHandle {
+            objectName: "settingsResizeHandle"
+            Layout.fillHeight: true
+            Layout.preferredWidth: 8
+            currentSize: uiPreferences.layout.settingsWidth
+            minimumSize: 260
+            maximumSize: 360
+            defaultSize: 320
+            direction: -1
+            writable: uiPreferences.writable
+            handleColor: uiPreferences.theme.secondaryText
+            description: qsTr("Largeur du panneau Réglages")
+            onSizeEdited: (size) => uiPreferences.setValue("layout/settingsWidth", size)
         }
         Rectangle {
             id: settingsPanel
@@ -198,16 +321,20 @@ ApplicationWindow {
             focus: true
 
             Setting {
+                id: settingsView
                 anchors.fill: parent
                 anchors.margins: 14
                 editor: imageEditor
                 preferences: uiPreferences
+                resetAction: fileActions.resetAction
             }
 
         }
     }
 
     ThumbnailRibbon {
+        id: filmstrip
+        activeImageIndex: filmstripNavigation.currentIndex
         objectName: "thumbnailRibbon"
         anchors.left: parent.left
         anchors.right: parent.right
@@ -218,51 +345,87 @@ ApplicationWindow {
         visible: uiPreferences.layout.showFilmstrip
         color: uiPreferences.theme.panel
         editor: imageEditor
+        onContextMenuRequested: (item, fileUrl, fileName, index, x, y) => {
+            photoMenu.targetName = fileName
+            photoMenu.targetUrl = fileUrl
+            photoMenu.targetKey = index === filmstripNavigation.currentIndex
+                                  ? canvas.imageKey : fileUrl.toString()
+            photoMenu.openFor(item, x, y)
+        }
     }
+
+    PanelResizeHandle {
+        objectName: "filmstripResizeHandle"
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: filmstrip.top
+        anchors.leftMargin: 12
+        anchors.rightMargin: 12
+        height: 8
+        orientation: Qt.Vertical
+        visible: filmstrip.visible
+        currentSize: uiPreferences.layout.filmstripHeight
+        minimumSize: 100
+        maximumSize: 260
+        defaultSize: 120
+        direction: -1
+        writable: uiPreferences.writable
+        handleColor: uiPreferences.theme.secondaryText
+        description: qsTr("Hauteur du ruban")
+        onSizeEdited: (size) => uiPreferences.setValue("layout/filmstripHeight", size)
+    }
+
+        PreferenceButton {
+            objectName: "filmstripToggleButton"
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: uiPreferences.layout.showFilmstrip ? filmstrip.height + 12 : 0
+            text: uiPreferences.layout.showFilmstrip ? "▾" : "▴"
+            implicitWidth: 40
+            implicitHeight: 18
+            padding: 0
+            hoverEnabled: true
+            enabled: uiPreferences.writable
+            Accessible.name: uiPreferences.layout.showFilmstrip
+                ? qsTr("Replier le ruban des images") : qsTr("Afficher le ruban des images")
+            ToolTip.visible: hovered
+            ToolTip.text: Accessible.name
+            onClicked: uiPreferences.setValue("layout/showFilmstrip", !uiPreferences.layout.showFilmstrip)
+            contentItem: ChevronIcon {
+                objectName: "filmstripToggleChevron"
+                direction: uiPreferences.layout.showFilmstrip ? "down" : "up"
+                strokeColor: uiPreferences.theme.secondaryText
+            }
+            background: Rectangle { radius: 3; color: uiPreferences.theme.panel }
+        }
 
     footer: Label {
         id: applicationFooter
 
         leftPadding: 12
         rightPadding: 12
+        height: Math.max(22, implicitHeight)
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         color: uiPreferences.theme.secondaryText
-        text: imageEditor.statusMessage
+        text: imageEditor.statusMessage + (imageEditor.memoryCacheStatus && imageEditor.memoryCacheStatus.available
+            ? qsTr(" | Cache : %1 image(s), %2 Mio%3")
+                .arg(imageEditor.decodedImageCacheEntryCount)
+                .arg(Math.round(imageEditor.decodedImageCacheSizeBytes / 1048576))
+                .arg(imageEditor.memoryCacheStatus.pressure ? qsTr(" — pression mémoire") : "") : "")
         background: Rectangle { color: uiPreferences.theme.panel }
     }
 
-    Dialog {
-        id: preferencesInfoDialog
-        objectName: "preferencesInfoDialog"
-        title: qsTr("Préférences de l'interface")
-        anchors.centerIn: Overlay.overlay
-        width: Math.min(root.width - 40, 640)
-        modal: true
-        standardButtons: Dialog.Ok
-        contentItem: ColumnLayout {
-            Label {
-                Layout.fillWidth: true
-                text: uiPreferences.filePath
-                wrapMode: Text.WrapAnywhere
-            }
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("L'état de l'interface est enregistré automatiquement. " +
-                           "Pour modifier ce fichier manuellement, fermez IPR puis relancez-le.")
-                wrapMode: Text.WordWrap
-            }
-            Label {
-                Layout.fillWidth: true
-                visible: !uiPreferences.writable
-                text: qsTr("Fichier en lecture seule : format plus récent, invalide ou non accessible.")
-                wrapMode: Text.WordWrap
-            }
-        }
+    PreferencesDialog {
+        id: preferencesDialog
+        objectName: "preferencesDialog"
+        editor: imageEditor
+        preferences: uiPreferences
     }
 
     FolderDialog {
         id: folderDialog
+        objectName: "openFolderDialog"
 
         title: qsTr("Choisir le dossier d'images")
         currentFolder: StandardPaths.standardLocations(
@@ -272,10 +435,43 @@ ApplicationWindow {
 
     FileDialog {
         id: imageFileDialog
+        objectName: "openImageDialog"
 
         title: qsTr("Ouvrir une image")
         fileMode: FileDialog.OpenFile
-        nameFilters: [qsTr("Images (*.jpg *.jpeg *.png *.tif *.tiff *.cr2 *.cr3 *.dng)")]
+        nameFilters: imageEditor.imageFileFilters()
         onAccepted: imageEditor.openImage(selectedFile)
+    }
+
+    Basic.Dialog {
+        id: resetDialog
+        objectName: "resetAdjustmentsDialog"
+        property string imageKey: ""
+        anchors.centerIn: Overlay.overlay
+        width: Math.min(root.width - 40, 470)
+        modal: true
+        palette: root.palette
+        title: qsTr("Réinitialiser les retouches ?")
+        standardButtons: Dialog.NoButton
+        function confirm() {
+            if (!imageEditor.hasImage || imageEditor.busy || imageKey !== canvas.imageKey) return
+            imageEditor.resetAdjustments()
+            close()
+        }
+        contentItem: Label {
+            text: qsTr("Les retouches de l’image ouverte seront remises à leur référence. Le fichier source, la notation et les choix de profil/calibration sont conservés. Cette action n’a pas d’annulation dans l’interface actuelle.")
+            color: uiPreferences.theme.text
+            wrapMode: Text.WordWrap
+        }
+        footer: RowLayout {
+            Item { Layout.fillWidth: true }
+            PreferenceButton { text: qsTr("Annuler"); onClicked: resetDialog.close() }
+            PreferenceButton {
+                objectName: "confirmResetAdjustmentsButton"
+                text: qsTr("Réinitialiser")
+                enabled: imageEditor.hasImage && !imageEditor.busy && resetDialog.imageKey === canvas.imageKey
+                onClicked: resetDialog.confirm()
+            }
+        }
     }
 }

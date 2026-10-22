@@ -1,9 +1,12 @@
 #include "DetailProcessing.h"
+#include "ImageMath.h"
+#include "WorkingColorSpace.h"
 
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <vector>
 
 namespace DetailProcessing {
@@ -21,7 +24,7 @@ constexpr float kMediumThresholdRatio = 0.52f;
 
 float luminanceOf(const cv::Vec3f &rgb)
 {
-    return std::max(0.0f, 0.2126f * rgb[0] + 0.7152f * rgb[1] + 0.0722f * rgb[2]);
+    return std::max(0.0f, WorkingColor::luminance(rgb));
 }
 
 cv::Mat extractLuminance(const cv::Mat &linearRgb)
@@ -216,7 +219,7 @@ void splitLumaChroma(const cv::Mat &rgb, cv::Mat *luma, cv::Mat *chromaOrange,
             const float red = source[x][0];
             const float green = source[x][1];
             const float blue = source[x][2];
-            yRow[x] = 0.2126f * red + 0.7152f * green + 0.0722f * blue;
+            yRow[x] = WorkingColor::luminance(source[x]);
             coRow[x] = red - blue;
             cgRow[x] = green - 0.5f * (red + blue);
         }
@@ -235,10 +238,12 @@ void mergeLumaChroma(const cv::Mat &luma, const cv::Mat &chromaOrange,
             const float yValue = std::max(0.0f, yRow[x]);
             const float co = coRow[x];
             const float cg = cgRow[x];
-            // Inverse of Rec.709 Y with Co=R-B, Cg=G-(R+B)/2.
-            const cv::Vec3f deviation(0.4298f * co - 0.7152f * cg,
-                                     -0.0702f * co + 0.2848f * cg,
-                                     -0.5702f * co - 0.7152f * cg);
+            // Exact inverse of master Y, Co=R-B, Cg=G-(R+B)/2.
+            const auto &w = WorkingColor::lumaWeights();
+            const float k = w[0] + .5f * w[1];
+            const cv::Vec3f deviation((1.f - k) * co - w[1] * cg,
+                                     (.5f - k) * co + (1.f - w[1]) * cg,
+                                     -k * co - w[1] * cg);
             const float minimum = std::min({deviation[0], deviation[1], deviation[2]});
             const float chromaScale = minimum < -yValue ? yValue / -minimum : 1.0f;
             // Compress toward a gray of the same luminance instead of clipping
@@ -320,6 +325,103 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings)
                 sourceLuma[x] + detail * amount * edgeMask,
                 minimum[x] - 0.15f * localRange, maximum[x] + 0.15f * localRange);
             pixels[x] *= std::max(0.0f, targetLuma) / sourceLuma[x];
+        }
+    }
+}
+
+
+namespace {
+void applyLocalContrast(cv::Mat &adjusted, int adjustment, double sigma, bool protectExtremes)
+{
+    if (adjustment == 0)
+        return;
+
+    cv::Mat luminance(adjusted.rows, adjusted.cols, CV_32F);
+    for (int y = 0; y < adjusted.rows; ++y) {
+        const cv::Vec3f *sourceRow = adjusted.ptr<cv::Vec3f>(y);
+        float *luminanceRow = luminance.ptr<float>(y);
+        for (int x = 0; x < adjusted.cols; ++x)
+            luminanceRow[x] = WorkingColor::nonNegativeLuminance(sourceRow[x]);
+    }
+    cv::Mat localBase;
+    cv::GaussianBlur(luminance, localBase, cv::Size(0, 0), sigma);
+    const float amount = static_cast<float>(adjustment) / 100.0f;
+    for (int y = 0; y < adjusted.rows; ++y) {
+        cv::Vec3f *pixelRow = adjusted.ptr<cv::Vec3f>(y);
+        const float *luminanceRow = luminance.ptr<float>(y);
+        const float *baseRow = localBase.ptr<float>(y);
+        for (int x = 0; x < adjusted.cols; ++x) {
+            const float luminance = luminanceRow[x];
+            float protection = 1.0f;
+            if (protectExtremes) {
+                protection = ImageMath::smoothStep(0.03f, 0.16f, luminance) *
+                             (1.0f - ImageMath::smoothStep(0.72f, 0.98f, luminance));
+            }
+            const float target = std::max(0.0f, luminance + (luminance - baseRow[x]) * amount * protection);
+            WorkingColor::scaleToLuminance(pixelRow[x], luminance, target);
+        }
+    }
+}
+}
+
+void applyTexture(cv::Mat &linearRgb, int texture) { applyLocalContrast(linearRgb, texture, 1.2, false); }
+void applyClarity(cv::Mat &linearRgb, int clarity) { applyLocalContrast(linearRgb, clarity, 8.0, true); }
+
+void dehaze(cv::Mat &adjusted, int dehazeAmount)
+{
+    if (dehazeAmount == 0) return;
+    cv::Mat darkChannel(adjusted.rows, adjusted.cols, CV_32F);
+    std::vector<float> brightSamples;
+    const int sampleStep = std::max(
+        1, static_cast<int>(std::sqrt(static_cast<double>(adjusted.total()) / 8192.0)));
+    for (int y = 0; y < adjusted.rows; ++y) {
+        const cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
+        float *darkRow = darkChannel.ptr<float>(y);
+        for (int x = 0; x < adjusted.cols; ++x) {
+            darkRow[x] = std::max(0.0f, std::min({row[x][0], row[x][1], row[x][2]}));
+            if (x % sampleStep == 0 && y % sampleStep == 0)
+                brightSamples.push_back(std::max({row[x][0], row[x][1], row[x][2], 0.0f}));
+        }
+    }
+    const int kernelSize = std::max(1, std::min(15, std::min(adjusted.cols, adjusted.rows) | 1));
+    cv::erode(darkChannel, darkChannel,
+              cv::getStructuringElement(cv::MORPH_RECT, cv::Size(kernelSize, kernelSize)));
+    const size_t percentile = (brightSamples.size() - 1) * 99 / 100;
+    std::nth_element(brightSamples.begin(), brightSamples.begin() + static_cast<std::ptrdiff_t>(percentile),
+                     brightSamples.end());
+    const float airlight = std::max(0.10f, brightSamples[percentile]);
+    const float amount = static_cast<float>(dehazeAmount) / 100.0f;
+    const cv::Vec3f airlightRgb(airlight, airlight, airlight);
+    for (int y = 0; y < adjusted.rows; ++y) {
+        cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
+        const float *darkRow = darkChannel.ptr<float>(y);
+        for (int x = 0; x < adjusted.cols; ++x) {
+            const float haze = std::clamp(darkRow[x] / airlight, 0.0f, 1.0f);
+            const float transmission = std::clamp(1.0f - 0.85f * amount * haze, 0.12f, 2.0f);
+            row[x] = (row[x] - airlightRgb) / transmission + airlightRgb;
+            row[x][0] = std::max(0.0f, row[x][0]);
+            row[x][1] = std::max(0.0f, row[x][1]);
+            row[x][2] = std::max(0.0f, row[x][2]);
+        }
+    }
+}
+
+void addGrain(cv::Mat &adjusted, int grain)
+{
+    if (grain <= 0) return;
+    const float amount = 0.06f * static_cast<float>(grain) / 100.0f;
+    for (int y = 0; y < adjusted.rows; ++y) {
+        cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
+        for (int x = 0; x < adjusted.cols; ++x) {
+            std::uint32_t hash = static_cast<std::uint32_t>(x) * 0x9e3779b9u + static_cast<std::uint32_t>(y) * 0x85ebca6bu;
+            hash ^= hash >> 16;
+            hash *= 0x7feb352du;
+            hash ^= hash >> 15;
+            const float noise = static_cast<float>(hash & 0xffffu) / 32767.5f - 1.0f;
+            const float luminance = WorkingColor::nonNegativeLuminance(row[x]);
+            const float shadowsWeight = 0.45f + 0.55f * (1.0f - std::clamp(luminance, 0.0f, 1.0f));
+            WorkingColor::scaleToLuminance(row[x], luminance,
+                                           std::max(0.0f, luminance + noise * amount * shadowsWeight));
         }
     }
 }

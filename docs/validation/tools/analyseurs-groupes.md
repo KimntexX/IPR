@@ -3,11 +3,15 @@
 Contrat aligné le 12 octobre 2026, branche `patch_validation`.
 Outil canonique : [analyse_groupes.py](../../../tests/analyse_groupes.py).
 Les dix entrées dédiées partagent la même CLI et les mêmes méthodes natives.
-Elles ne génèrent, modifient ni suppriment d'image. Mesurer ne signifie pas valider.
+Elles ne génèrent, modifient ni suppriment d'image : les états IPR sont rendus
+en mémoire par `iprRenderServer` ([ADR-0019](../../decisions/ADR-0019-analyses-ipr-en-memoire.md)).
+Mesurer ne signifie pas valider.
 
 ## Commandes courantes
 
-Depuis la racine, avec Python 3, NumPy et Pillow :
+Depuis la racine, avec Python 3, NumPy et Pillow, après compilation de
+`iprRenderServer` (Release dans `build-windows-msvc`, ou chemin donné par
+`--render-server` ou `IPR_RENDER_SERVER_BIN`) :
 
 ```bash
 python tests/analyse_groupes.py --list
@@ -22,7 +26,10 @@ Dix groupes : `raw`, `lumiere`, `courbes`, `couleur`, `melangeur`,
 `tests/analyse_<groupe>.py`. L'IHM/persistance/export relève de la recette
 transversale et de CTest, pas d'un analyseur pixel.
 
-`--feature` et `--scene` restreignent les états. `--strict` retourne 2 si
+`--feature` et `--scene` restreignent les états. `--render-workers N` fixe le
+nombre de serveurs parallèles (une scène par serveur) ; par défaut il suit la
+mémoire libre : environ 2,5 Gio par serveur pour 32 Mpx, 2 Gio de réserve,
+au plus 4. Une campagne n'écrit que son JSON. `--strict` retourne 2 si
 des états sont diagnostics/exclus, après conservation du JSON. Une erreur
 d'association retourne 1 sans publier de campagne. `--output` impose un
 chemin pour un seul groupe, sans écrasement ; sinon le nom inclut groupe,
@@ -31,12 +38,16 @@ vers une campagne remplacée sans modifier son JSON.
 
 ## Associations et provenance
 
-`--base` lit les dossiers du [générateur](generateur-images-tests.md),
-sans campagnes datées. Pour IPR, les réglages, empreintes source/exécutable,
-référence et développement proviennent du JSON embarqué dans le tag TIFF 270.
-Un TIFF IPR non déclaré exige une régénération ou un mapping explicite ;
-le nom seul ne prouve pas son état. Les références doivent rester sous base,
-appartenir à la même scène et conserver leur contexte de développement.
+`--base` lit les TIFF Lightroom des dossiers partagés, sans campagnes datées.
+Les états IPR sont ceux des sources à la racine de base, listés et rendus par
+`iprRenderServer` avec les recettes du [générateur](generateur-images-tests.md) :
+le serveur renvoie les codes 16 bits sRGB de l'export TIFF et sa déclaration
+(réglages, empreintes source/exécutable, profils, référence). Les TIFF IPR
+présents dans base servent à la revue visuelle et ne sont pas analysés.
+Référence et variante doivent partager leur contexte de développement ; à la
+clôture, chaque source doit avoir encore l'empreinte décodée. Le JSON indique
+`ipr_pixels.kind = in_memory_render`, le serveur et son SHA-256 ; l'empreinte
+des pixels IPR porte sur les échantillons uint16, pas sur un fichier.
 
 Pour Lightroom, la valeur vient du XMP, jamais du numéro de suffixe. Les
 supports manuels température/nuance sont 5200 K / 0 ; le neutre As Shot
@@ -139,8 +150,8 @@ Chaque état est `measured`, `diagnostic` (réglages/provenance insuffisants) ou
 contient versions, heure réelle, hashes du code/des entrées, métadonnées,
 réglages déclarés, contrôles, ROI, valeurs sans arrondi, unités, effectifs,
 exclusions et progressions. Un dénominateur nul donne `null`, jamais NaN/Inf.
-Sources TIFF et JSON sont revérifiées avant publication ; changement détecté
-→ arrêt sans publication de la campagne concernée.
+Sources TIFF, RAW rendus et JSON sont revérifiés avant publication ; changement
+détecté → arrêt sans publication de la campagne concernée.
 
 - 0 : mesure publiée ; **pas** validation.
 - 1 : erreur d'entrée, exécution ou publication.
@@ -234,3 +245,295 @@ reconstruit ni le RGB caméra pré-DCP ni les valeurs hors gamut perdues.
 Une projection ne certifie donc pas le rendu de l'IHM ou un correctif avant
 DCP. Ses résultats restent `diagnostic`, avec JSON immuable et unités ;
 aucune production modifiée, image générée/supprimée ou coefficient ajusté.
+
+## Rendu d'ouverture — diagnostic sur le corpus racine
+
+`rawOpeningProbe` est une cible native manuelle, exclue de la compilation
+par défaut et de CTest. Elle lit tous les RAW directement dans `base`,
+sans sidecar, sans normalisation et sans optique. Les JSON de scènes sont
+immuables ; les PNG dans un nouveau dossier de build sont des aperçus, pas
+des exports de conformité. `rawOpeningProbeTests` utilise de petits tableaux
+synthétiques, sans la banque privée.
+
+```powershell
+cmake --build build-windows-msvc --config Release --target rawOpeningProbe rawOpeningProbeTests
+./build-windows-msvc/Release/rawOpeningProbe.exe . docs/validation/raw build-NOUVELLE_INSPECTION
+python tests/audit_opening_corpus.py
+python tests/summarize_raw_opening.py CHEMIN_AUDIT_CORPUS.json
+python -m unittest discover -s tests -p test_raw_opening_analysis.py
+ctest --test-dir build-windows-msvc -C Release -R '^rawOpeningProbeTests$' --output-on-failure
+```
+
+Utiliser l'environnement Qt/OpenCV/LibRaw du build. Le comparateur refuse
+un RAW absent, dupliqué, d'empreinte différente ou un rejeu DCP divergent.
+Des campagnes de scènes multiples ne doivent pas être mélangées ; l'outil
+refuse les doublons au lieu de choisir silencieusement une génération.
+Les comparaisons LR sont des distributions indépendantes ; aucune MAE ou
+équivalence de WB n'est annoncée. Voir le
+[rapport unique, §30](../analyses/analyse-base-colorimetrique.md#30-corpus-lr-complet-et-méthodes-de-développement--14-octobre-2026).
+
+En présence de plusieurs références éligibles, ajouter une sélection explicite,
+par exemple `--lr-reference 6V1A0327=6V1A0327.tif`. Le JSON conserve le choix
+et les candidats avec leurs empreintes ; une sélection absente ou ambiguë
+est refusée. Sans sélection, une ambiguïté reste une référence manquante.
+La réutilisation des sondes vérifie les empreintes des RAW, du code natif
+et des DCP. Si ces sources changent, produire une nouvelle campagne native.
+Les synthèses restent versionnées, horodatées et immuables.
+
+Essai DCP indépendant du générateur photographique :
+
+```powershell
+cmake --build build-windows-msvc --config Release --target rawOpeningTrials rawOpeningSplineTests
+ctest --test-dir build-windows-msvc -C Release -R '^rawOpeningSplineTests$' --output-on-failure
+python -m unittest discover -s tests -p test_raw_opening_trials.py
+python tests/run_raw_opening_trials.py CHEMIN_SYNTHESE_OUVERTURE_COMPLETE.json
+```
+
+La cible de corpus est exclue de la compilation par défaut ; le test spline
+synthétique est compilé normalement, sans corpus privé. Le lanceur crée des
+copies DCP jetables et une spécification dans un nouveau dossier de build,
+pas dans les profils utilisateur. Il vérifie les entrées, exécute les variantes
+et conserve le résultat complet sous `docs/validation/raw/`. Il ne faut pas
+modifier les sources ou références pendant l'exécution. Voir la recette
+[RAW/profils](../protocols/protocole-raw-profils.md#essais-isolés-de-courbe-dcp-et-exposition-caméra).
+
+Audit radiométrique de tous les RAW racine :
+
+```powershell
+cmake --build build-windows-msvc --config Release --target tonalBaseProbe
+python tests/audit_raw_opening_levels.py --summary CHEMIN_SYNTHESE_OUVERTURE_COMPLETE.json
+python -m unittest discover -s tests -p test_audit_raw_opening_levels.py
+```
+
+Le convertisseur Adobe installé produit des DNG depuis des copies RAW sans
+sidecars, puis `tonalBaseProbe --scalars-only` mesure les scalaires LibRaw
+avant/après traitement sans exporter de pixels. Les copies sont locales,
+non distribuables, jamais utilisées comme substituts aux références TIFF LR.
+`--reuse-artifacts DOSSIER` permet de relire un dossier diagnostique complet
+après contrôle du corpus, des copies et des empreintes ; ce mode ne relance
+ni conversion ni décodage et sa provenance est explicite dans le JSON.
+Les noirs CFA non uniformes sont conservés ; aucun gain scalaire unique
+n'est déclaré dans ce cas, seulement des bornes descriptives.
+
+Décodages radiométriques contrôlés sur toutes les scènes auditées :
+
+```powershell
+cmake --build build-windows-msvc --config Release --target tonalBaseProbe rawOpeningSplineTests
+python tests/run_raw_radiometric_trials.py --audit CHEMIN_AUDIT_NIVEAUX.json --summary CHEMIN_SYNTHESE_OUVERTURE.json
+python -m unittest discover -s tests -p test_raw_radiometric_trials.py
+```
+
+Le JSON canonique conserve les huit variantes par RAW, paramètres auditables,
+traces LibRaw et bilans par boîtier. Les variantes de blanc nécessitent un
+nouveau décodage, pas une multiplication après rendu. Ne pas modifier les
+entrées pendant la campagne. Témoin, blanc seul, exposition seule, combinaison
+et versions préservant la teinte sont distincts ; aucun mode de production
+n'est activé automatiquement par ce lanceur.
+
+Les TIFF manuels suffixés `_RAW_Audit` se comparent avec le même outil :
+
+```powershell
+python tests/compare_raw_radiometric_output.py CHEMIN_ESSAIS_RADIOMETRIQUES.json --ipr-audit-exports tests/image/base/neutre
+```
+
+L'analyseur refuse les doublons par scène sans sélection explicite et les références LR dont
+l'empreinte a changé. Il conserve les métadonnées d'export et distingue
+un canal à la borne de trois canaux simultanément à la borne, sur la grille
+de pas 8. Il ne suppose pas que le nom d'un TIFF atteste ses réglages.
+`tests/inspect_saved_raw_state.py` lit en lecture seule les `.ipr` courants
+v6 ; `tests/check_raw_audit_optics.py` peut rejouer les recettes où les deux
+options optiques sont actives, via la sonde manuelle de production avec
+argument LCP. Un état `.ipr` actuel ne date pas la recette d'un ancien export.
+
+Pour retenir explicitement un nouvel export sans effacer son prédécesseur :
+
+```powershell
+python tests/compare_raw_radiometric_output.py CHEMIN_ESSAIS_RADIOMETRIQUES.json --ipr-audit-exports tests/image/base/neutre --ipr-reference 6V1A0054=6V1A0054-IPR_RAW_Audit-2.tiff
+```
+
+L'option est répétable par scène ; le JSON conserve les candidats, leurs
+empreintes et la sélection. Aucun choix automatique du fichier le plus récent.
+
+L'étude ciblée des étapes HL se lance après compilation des sondes :
+
+```powershell
+cmake --build build-windows-msvc --config Release --target rawNormalizationCorpusProbe editorRawDevelopmentTests rawOpeningSplineTests
+python tests/analyse_opening_highlights.py CHEMIN_ANALYSE_EXPORTS_RAW_AUDIT.json
+```
+
+Elle mesure 0043, 0081, 9940, 0524 et les trois R7, puis reproduit l'activation/désactivation
+de 0054 sur une copie RAW temporaire. Les `.ipr` sources restent intacts.
+Le candidat de gamut préservant Y est uniquement diagnostique : aucun
+changement du moteur. Les paramètres sont figés pour cette étude, pas un
+outil de génération de TIFF. Le JSON horodaté conserve les empreintes,
+mesures et limites ; les artefacts intermédiaires restent dans un dossier build.
+La sonde rejoue les matrices/exposition, puis les tables Hue/Sat, la LookTable
+et la courbe, par masquage des seuls identifiants de tags dans des copies DCP
+temporaires. Le rejeu complet doit être identique à la sortie native à `1e-6`
+près. Les bornes sont mesurées en RGB caméra, en ProPhoto reconstitué et en
+sRGB linéaire ; ne pas interpréter des composantes ProPhoto comme une luminance
+sRGB. Le seuil linéaire `65534/65535` n'est pas le seuil d'écrêtage du TIFF encodé.
+
+Le nouveau test numérique `rawHighlightHeadroomTests` prépare la séparation
+signal étendu/coordonnées de table et une épaule scalaire indépendante :
+
+```powershell
+cmake --build build-windows-msvc --config Release --target rawHighlightHeadroomTests
+ctest --test-dir build-windows-msvc -C Release -R '^rawHighlightHeadroomTests$' --output-on-failure
+```
+
+Il ne lit aucune image, n'utilise pas les tables Adobe et ne produit pas
+d'exports. Il est intégré à CTest et à la sélection ciblée pour ses deux
+fichiers sources. Invariants et limites sont dans le
+[protocole RAW/profils](../protocols/protocole-raw-profils.md#préparation-expérimentale-de-la-conservation-de-réserve).
+
+La sonde `rawNormalizationCorpusProbe` raccorde désormais le modèle aux
+tables réelles par copies DCP temporaires isolant les étapes. Les aperçus
+PNG sRGB 16 bits au pas 8 restent sous le dossier build diagnostique ; ce
+ne sont pas des exports de validation en pleine résolution. Le témoin
+rejoué doit respecter une erreur maximale de `2e-5` RGB flottant.
+
+Pour qualifier les changements de couleur par rapport au témoin IPR :
+
+```powershell
+python -m pip install opencv-python-headless
+python tests/qualify_headroom_candidates.py CHEMIN_INVESTIGATION_OUVERTURE_HL.json
+python -m unittest discover -s tests -p test_headroom_candidates.py
+```
+
+OpenCV Python est requis seulement pour la lecture native des PNG dans la
+campagne manuelle ; les tests numériques de qualification n'en dépendent pas.
+La qualification vérifie les empreintes et la profondeur 16 bits, conserve
+Delta E00, changement Y, chroma et teinte par masque défini sur le témoin.
+Elle publie un JSON immuable distinct, lié à la campagne de rendu. Pas de
+MAE/Delta E pixel à pixel LR à partir de grilles non alignées. La comparaison
+au témoin IPR est possible car les variantes partagent exactement la grille.
+
+### Comparatif contrôlé des espaces de travail
+
+```powershell
+cmake --build build-windows-msvc --config Release --target rawNormalizationCorpusProbe
+python -m unittest discover -s tests -p test_working_spaces.py
+python tests/compare_working_spaces.py CHEMIN_ANALYSE_EXPORTS_RAW_AUDIT.json
+```
+
+Le lanceur vérifie d'abord les sept références Camera Neutral/As Shot et leurs
+empreintes avant tout décodage. La sonde, en mode diagnostique
+`--working-space-source`, conserve une grille flottante **après DCP, avant
+gamut sRGB**, et un témoin PNG 16 bits de la sortie actuelle. RAW, DCP et
+recettes utilisateur ne sont pas modifiés.
+
+Trois espaces flottants sont comparés : sRGB étendu, ProPhoto linéaire D50
+avec adaptation Bradford, Rec.2020 linéaire D65. Six états par espace : neutre,
+exposition ±1 EV, gain de chroma 1,25 à Y D65 commun, puissance signée 1,2
+par canal, puis bornage isolé au cube unité. Les deux derniers sont des tests
+diagnostiques dépendants des primaires, pas des curseurs de production.
+
+Le JSON `comparatif-espaces-travail-vNNN-HORODATAGE.json` conserve matrices,
+paramètres, données par scène/état, différences au même opérateur sRGB,
+provenance, vérifications et limites. Les aperçus sRGB 16 bits neutres,
+puissance et bornage restent dans le dossier de build de la campagne ; ceux
+écrits par OpenCV n'incorporent pas d'ICC et leurs valeurs sont explicitement
+encodées sRGB. Ils ne sont pas des exports pleine résolution.
+
+Les trois répétitions chronométrées concernent NumPy (conversion/opérateur/
+retour), hors rendu de sortie, mesures perceptuelles et I/O. Ce ne sont pas
+des mesures de latence IPR ni de RSS ; le volume des quatre tampons est une
+comptabilité logique RGB de la grille. La preuve ne doit pas servir à annoncer
+un espace « plus rapide » en production. ACEScg n'est pas exécuté par ce lanceur.
+
+### Rejeu des neutres après port du master Rec.2020
+
+```powershell
+cmake --build build-windows-msvc --config Release --target rawNormalizationCorpusProbe --parallel 4
+python tests/verify_rec2020_opening.py docs/validation/raw/comparatif-espaces-travail-v001-20261015T100527950069Z.json
+```
+
+Ce contrôle local attend les RAW/DCP et les PNG natifs du comparatif cité,
+vérifiés par SHA-256 avant de décoder. Il rejoue le moteur **actuel**, pas un
+ancien moteur : les PNG conservés servent de témoins historiques. Le master
+est Rec.2020 ; les métriques/échantillons sRGB des sondes sont des dérivées
+d'analyse explicitement converties. Le script conserve une nouvelle mémoire
+`integration-rec2020-neutres-vNNN-HORODATAGE.json` et retourne un échec si les
+garde-fous de neutre ne passent pas. Il ne supprime ni source, ni référence,
+ni sidecar. Les aperçus au pas 8 ne valident pas les détails pleine résolution
+et les décodages uniques ne constituent pas un benchmark.
+
+### Exports manuels neutres Rec.2020 face à Lightroom
+
+```powershell
+python tests/analyse_neutres_rec2020.py
+```
+
+Ce diagnostic spécialisé du groupe RAW/profils utilise les RAW à la racine de
+`tests/image/base`, les sidecars courants et les TIFF dans `base/neutre`.
+Il sélectionne un seul export IPR contenant `RAW_Audit` par scène (casse
+indifférente, suffixe de numérotation accepté sans ambiguïté). Pour LR, il
+reprend le chemin explicite de la mémoire des essais radiométriques ; s'il
+est absent, il cherche seulement `<scène>.tif` dans `neutre`. Le chemin et
+l'empreinte effectivement utilisés sont conservés dans la nouvelle preuve.
+
+Avant toute comparaison LR/IPR, tous les TIFF doivent passer le contrôle
+16 bits sRGB, structure, orientation, alpha opaque, profil Camera Neutral/
+As Shot LR et réglages neutres. Les recettes `.ipr` sont vérifiées, puis les
+19 exports IPR sont confrontés au rejeu natif du moteur Rec.2020 avec calibration
+effectivement appliquée et optique désactivée. Un écart supérieur à quatre
+codes 16 bits interrompt la procédure ; la recette courante seule ne prouve
+pas celle qui a servi à exporter le TIFF.
+
+L'analyse mesure ensuite les distributions de Y, l'écrêtage et des résumés
+colorimétriques Lab, sans MAE/Delta E pixel à pixel sur des géométries non
+alignées. Les masques de tons sont définis indépendamment sur chaque image.
+Elle publie un JSON immuable `analyse-neutres-rec2020-vNNN-HORODATAGE.json`,
+contenant audits, recettes, empreintes, versions, mesures et limites. Au premier
+échec, elle conserve le motif d'arrêt, retourne un code non nul et ne poursuit
+pas les images suivantes. Aucune photographie ou recette n'est modifiée.
+
+### Résidu R7 : recalage, gain et exposition de base
+
+```powershell
+python tests/investigate_r7_gain.py
+python tests/investigate_r7_baseline.py
+```
+
+Ces outils spécialisés consomment la campagne neutre Rec.2020 auditée, avec
+contrôle de ses empreintes avant mesure. Le premier recale les trois R7 et
+trois témoins R6 par translation puis affine ECC sur log-Y. Il ajuste un gain
+de luminance sur des tuiles spatiales non écrêtées, en linéaire, et conserve
+les résidus par tonalité/canal ainsi que la validation croisée par scène.
+Les métriques appariées portent sur des images filtrées et recalées, pas sur
+les pixels natifs sans interpolation ni sur une charte physique.
+
+Le second vérifie séparément les expositions de base 0,30/0,32/0,33/0,34/0,35 EV
+avec `rawNormalizationCorpusProbe --working-space-area`. Les manifestes
+d'essai sont isolés dans `build-colorimetrie-inventory` : aucun changement du
+manifeste de production, des profils, des sidecars ou des photos. Le mode de
+sonde calcule la sortie complète de production en 16 bits, la décode en
+linéaire, puis en fait la moyenne de surface ; moyenner avant le DCP ne
+testerait pas le même opérateur. Le témoin 0,35 EV doit reproduire le TIFF
+manuel avant de poursuivre. Une seule transformation et un seul masque par
+scène servent à toutes les variantes. La grille ponctuelle au pas 8 est
+conservée pour l'audit historique ; elle n'est pas utilisée comme substitut
+de la moyenne de surface dans l'étude courante du gain.
+
+Chaque exécution publie un JSON immuable `investigation-gain-r7-vNNN-…` ou
+`investigation-baseline-r7-vNNN-…`. Un minimum de MAE n'autorise pas à déployer
+automatiquement le coefficient : contrôler couleurs, ombres, HL, stabilité
+entre scènes, portée ISO/profil et validation visuelle. Les trois R7 à hauts
+ISO ne représentent pas toute la gamme d'usage du boîtier.
+
+### Diagnostic ciblé d'un export 0081 après restauration
+
+```powershell
+python tests/investigate_0081_export.py
+```
+
+Compare les exports 0081 courant `-IPR_RAW_Audit-2.tiff`, précédent et LR
+dans `base/neutre`, ainsi que le sidecar courant. Rejoue le moteur actuel
+avec et sans calibration, même DCP et optique désactivée. Conserve les
+empreintes, distributions et comparaisons exactes sur la grille au pas 8
+dans `investigation-export-0081-vNNN-HORODATAGE.json`. Le mode de sonde
+`--working-space-uncalibrated` désactive aussi la recherche du manifeste par
+variable d'environnement ; le champ d'application dans la preuve est réel.
+Ce diagnostic n'applique aucun correctif, ne modifie ni photo ni recette,
+et ne compare pas les pixels LR/IPR de géométries différentes par MAE.
