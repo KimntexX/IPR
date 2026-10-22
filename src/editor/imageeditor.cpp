@@ -8,6 +8,7 @@
 #include "Sidecar.h"
 #include "ToneCurve.h"
 #include "ToneRecovery.h"
+#include "Vibrance.h"
 #include "RawDecoder.h"
 #include "RawNormalization.h"
 #include "CameraProfileEngine.h"
@@ -1449,7 +1450,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         ToneRecovery::apply(adjusted, tones, source.toneStatistics ? *source.toneStatistics
                                                                    : ToneRecovery::measure(source.linearRgba));
 
-    ColorAdjustments::applySaturationVibrance(adjusted, settings.saturation, settings.vibrance);
+    Vibrance::apply(adjusted, settings.saturation, settings.vibrance);
     ColorAdjustments::applyMixerAndGrading(adjusted,
         {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
         settings.gradingHue, settings.gradingSaturation);

@@ -31,6 +31,51 @@
       "white_level": 16384, "baseline_exposure_ev": 0.35,
       "provenance": "R7 14bit mode; all-ISO trials authorized 2026-10-16; previously measured ISO20000/32000 only"
     }
+,
+    {
+      "camera_make": "Canon", "camera_model": "EOS 60D",
+      "format_extension": "cr2",
+      "decoder_id": "libraw", "decoder_version": "0.22.2-Release",
+      "profile_sha256": "9e60085ae947ce8658e7682fe1a62797e8c4d9176f624f96a22829123875fe9d",
+      "native_white_min": 12000, "native_white_max": 12600,
+      "black_min": 1900, "black_max": 2200,
+      "specular_white_min": 11100, "specular_white_max": 11400,
+      "white_level": 11222, "baseline_exposure_ev": -0.5,
+      "provenance": "60D ISO 160 multiples (160, 1250 seen); Adobe DNG WhiteLevel and BaselineExposure, audit-niveaux-eos60d-v001-20261020T171246774641Z; added 2026-10-20 on user request, visual validation pending"
+    },
+    {
+      "camera_make": "Canon", "camera_model": "EOS 60D",
+      "format_extension": "cr2",
+      "decoder_id": "libraw", "decoder_version": "0.22.2-Release",
+      "profile_sha256": "9e60085ae947ce8658e7682fe1a62797e8c4d9176f624f96a22829123875fe9d",
+      "native_white_min": 12000, "native_white_max": 12600,
+      "black_min": 1900, "black_max": 2200,
+      "specular_white_min": 12200, "specular_white_max": 12400,
+      "white_level": 12279, "baseline_exposure_ev": -0.34,
+      "provenance": "60D ISO 100, specular 12279; Adobe DNG WhiteLevel and BaselineExposure, audit-niveaux-eos60d-v001-20261020T171246774641Z; added 2026-10-20 on user request, visual validation pending"
+    },
+    {
+      "camera_make": "Canon", "camera_model": "EOS 60D",
+      "format_extension": "cr2",
+      "decoder_id": "libraw", "decoder_version": "0.22.2-Release",
+      "profile_sha256": "9e60085ae947ce8658e7682fe1a62797e8c4d9176f624f96a22829123875fe9d",
+      "native_white_min": 12000, "native_white_max": 12600,
+      "black_min": 1900, "black_max": 2200,
+      "specular_white_min": 12600, "specular_white_max": 12900,
+      "white_level": 12749, "baseline_exposure_ev": -0.28,
+      "provenance": "60D ISO 100, specular 12749; Adobe DNG WhiteLevel and BaselineExposure, audit-niveaux-eos60d-v001-20261020T171246774641Z; added 2026-10-20 on user request, visual validation pending"
+    },
+    {
+      "camera_make": "Canon", "camera_model": "EOS 60D",
+      "format_extension": "cr2",
+      "decoder_id": "libraw", "decoder_version": "0.22.2-Release",
+      "profile_sha256": "9e60085ae947ce8658e7682fe1a62797e8c4d9176f624f96a22829123875fe9d",
+      "native_white_min": 12000, "native_white_max": 12600,
+      "black_min": 1900, "black_max": 2200,
+      "specular_white_min": 15000, "specular_white_max": 15800,
+      "white_level": 15000, "baseline_exposure_ev": 0.0,
+      "provenance": "60D ISO 400-6400 seen, Adobe white capped at 15000; Adobe DNG WhiteLevel and BaselineExposure, audit-niveaux-eos60d-v001-20261020T171246774641Z; added 2026-10-20 on user request, visual validation pending"
+    }
   ],
   "profile_rendering": [
     {

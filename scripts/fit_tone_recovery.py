@@ -1,10 +1,11 @@
-"""Fit the Shadows/Blacks/Highlights/Whites model (plan B) on Lightroom's own
-transfer curves and generate src/core/ToneRecoveryModel.h.
+"""Fit the Shadows/Blacks/Whites model (plan B) on Lightroom's own transfer
+curves and generate src/core/ToneRecoveryModel.h. Highlights adapt to each image
+from reference scenes instead (scripts/build_highlights_references.py).
 
 Inputs: the Lumieres LR references of tests/image/base (lumiere/<control>/ and
 their LR neutral in neutre/, matched by XMP), pixel-aligned since both come from
 the same RAW. Per control and sign: EV lift shapes (knots every EV, four slider
-levels) and, for Shadows, Highlights and positive Whites, a per-image gain
+levels) and, for Shadows and positive Whites, a per-image gain
 predicted from luminance statistics. Leave-one-scene-out errors are printed.
 
 Usage: python scripts/fit_tone_recovery.py [--json OUT.json] [--header OUT.h]
@@ -38,9 +39,8 @@ def per_channel(feature, sign):
 STATISTICS = {"Mean": None, "Q1": .01, "Q5": .05, "Q10": .10, "Q90": .90, "Q95": .95, "Q999": .999}
 # Statistic pairs chosen by leave-one-out prediction of the per-scene gains.
 GAIN_STATISTICS = {("shadows", -1): ("Q90", "Q95"), ("shadows", 1): ("Q10", "Q95"),
-                   ("highlights", -1): ("Q5", "Q95"), ("highlights", 1): ("Q5", "Q95"),  # 19 scenes, 19 Oct
                    ("whites", 1): ("Q95", "Q999")}
-ORDER = [(f, s) for f in ("shadows", "blacks", "highlights", "whites") for s in (-1, 1)]
+ORDER = [(f, s) for f in ("shadows", "blacks", "whites") for s in (-1, 1)]
 
 
 SHOULDER_KNEE = 0.70
@@ -70,7 +70,7 @@ def pixels(path):
     return linearize(encoded(data, step=STEP)).reshape(-1, 3)
 
 
-def load_pairs(features=("shadows", "blacks", "highlights", "whites")):
+def load_pairs(features=("shadows", "blacks", "whites")):
     neutrals, pairs = {}, {}
     for p in sorted((BASE / "neutre").iterdir()):
         if p.suffix.lower() in (".tif", ".tiff") and (xmp := lightroom(p)):
@@ -180,8 +180,8 @@ def header(models, stats):
              "    int gainStatistics[2]; int gainStatisticCount;",
              "    float gainCoefficients[3]; // log gain = c0 + c1 s1 + c2 s2",
              "    float logGainMin, logGainMax;", "};",
-             "// Order: Shadows -, +; Blacks -, +; Highlights -, +; Whites -, +.",
-             "inline constexpr Control Controls[8] = {"]
+             "// Order: Shadows -, +; Blacks -, +; Whites -, +. Highlights: ToneRecoveryHighlights.h.",
+             f"inline constexpr Control Controls[{len(ORDER)}] = {{"]
     for feature, sign in ORDER:
         shapes, coef, (lo, hi) = models[(feature, sign)]
         shapes = np.array(shapes)
@@ -224,15 +224,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--json", type=Path, help="also write the fitted model as JSON")
     parser.add_argument("--header", type=Path, default=ROOT / "src/core/ToneRecoveryModel.h")
-    parser.add_argument("--only", nargs="+", choices=["shadows", "blacks", "highlights", "whites"],
+    parser.add_argument("--only", nargs="+", choices=["shadows", "blacks", "whites"],
                         help="refit these controls; the others keep their current header values")
     parser.add_argument("--gain", action="append", default=[],
-                        help="override gain statistics, e.g. highlights-=Q10,Q95")
+                        help="override gain statistics, e.g. shadows-=Q10,Q95")
     args = parser.parse_args()
     for item in args.gain:
         key, names = item.split("=")
         GAIN_STATISTICS[(key[:-1], 1 if key[-1] == "+" else -1)] = tuple(names.split(","))
-    pairs = load_pairs(args.only or ("shadows", "blacks", "highlights", "whites"))
+    pairs = load_pairs(args.only or ("shadows", "blacks", "whites"))
     scenes = sorted(k[1] for k in pairs if k[0] == "neutral")
     stats = {s: statistics(pairs[("neutral", s)]) for s in scenes}
     models = existing_models(args.header) if args.only else {}
