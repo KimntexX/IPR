@@ -15,7 +15,7 @@ void check(bool ok, const char *message)
 
 double chroma(const cv::Vec3f &rgb)
 {
-    const cv::Vec3d lab = Vibrance::toOklab(cv::Vec3d(rgb));
+    const cv::Vec3d lab = WorkingColor::toOklab(cv::Vec3d(rgb));
     return std::hypot(lab[1], lab[2]);
 }
 
@@ -51,8 +51,8 @@ int main()
                 }
             }
             if (!grey) {
-                const cv::Vec3d before = Vibrance::toOklab(cv::Vec3d(rgb));
-                const cv::Vec3d after = Vibrance::toOklab(cv::Vec3d(Vibrance::applyPixel(rgb, 0, .5)));
+                const cv::Vec3d before = WorkingColor::toOklab(cv::Vec3d(rgb));
+                const cv::Vec3d after = WorkingColor::toOklab(cv::Vec3d(Vibrance::applyPixel(rgb, 0, .5)));
                 check(std::abs(after[0] - before[0]) < 2e-6, "Saturation alone preserves Oklab L");
             }
             const cv::Vec3f left = Vibrance::applyPixel(rgb, -1e-6, 0), right = Vibrance::applyPixel(rgb, 1e-6, 0);
@@ -72,7 +72,7 @@ int main()
         // Lightroom turns blues towards cyan when boosting, back when reducing.
         const cv::Vec3f blue(.06f, .14f, .45f);
         const auto hue = [](const cv::Vec3f &rgb) {
-            const cv::Vec3d lab = Vibrance::toOklab(cv::Vec3d(rgb));
+            const cv::Vec3d lab = WorkingColor::toOklab(cv::Vec3d(rgb));
             return std::atan2(lab[2], lab[1]) * 180.0 / 3.14159265358979323846;
         };
         check(hue(Vibrance::applyPixel(blue, 1, 0)) < hue(blue) - 1, "Vibrance +100 turns blue towards cyan");

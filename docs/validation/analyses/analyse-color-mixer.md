@@ -1059,3 +1059,120 @@ dans cette demande d’analyse.
 Ces résultats automatisés et les signes mesurés ne remplacent pas la validation
 photographique de toutes les bandes. Aucun rebuild applicatif n’est nécessaire
 pour cette passe : le code de rendu n’a pas été modifié.
+
+## Campagne Lightroom complète — 22 octobre 2026
+
+**Entrées.** Préréglages autonomes du groupe « IPR Mélangeur »
+(`scripts/make_lr_presets.py --controls mixer`) : 24 réglages (8 bandes ×
+teinte/saturation/luminance) à −100, −50, −25, +25, +50, +100, sur 9 scènes
+choisies pour couvrir chaque bande dans au moins 8 scènes et chaque famille de
+boîtiers (6V1A0830, 6V1A9608, 6V1A9890, 7Y6A7003, 7Y6A7232, 7Y6A7298,
+IMG_3064, IMG_3089, _MG_7906). 1 296 exports LR, neutres communs de `base/neutre` ;
+les 9 doublons identiques de « Bleu Luminance +100 » ont été supprimés avec
+l'accord de l'utilisateur. Les composantes d'une bande partagent son dossier :
+l'analyseur ignore, pour une composante, les exports à 0 sur son curseur.
+
+**Mesure du mélangeur actuel d'IPR**
+([mesure-melangeur-v001](../raw/mesure-melangeur-v001-20261022T151922205633Z.json),
+2 808 états, aucune exclusion), médianes sur les scènes, LR / IPR, dans le
+noyau de chaque bande défini par les centres HSV d'IPR :
+
+| Bande | Rotation teinte −100 / +100 | Δ saturation −100 / +100 | Rapport Y −100 / +100 |
+| --- | --- | --- | --- |
+| Rouge | −8,4 / −7,9 ; +10,5 / +9,0 | −0,22 / −0,35 ; +0,09 / +0,14 | 0,85 / 0,82 ; 1,17 / 1,23 |
+| Orange | −11,4 / −12,5 ; +14,7 / +14,7 | −0,23 / −0,44 ; +0,10 / +0,19 | 0,78 / 0,78 ; 1,23 / 1,28 |
+| Jaune | −28,7 / −20,7 ; +48,2 / +23,8 | −0,43 / −0,53 ; +0,18 / +0,25 | 0,55 / 0,74 ; 1,37 / 1,35 |
+| Vert | −53,3 / −16,3 ; +39,2 / +11,5 | −0,56 / −0,48 ; +0,19 / +0,16 | 0,62 / 0,78 ; 1,37 / 1,28 |
+| Cyan | −23,1 / −10,4 ; +32,9 / +11,8 | −0,33 / −0,47 ; +0,15 / +0,18 | 0,83 / 0,75 ; 1,19 / 1,32 |
+| Bleu | −45,0 / −19,7 ; +47,0 / +23,3 | −0,36 / −0,57 ; +0,17 / +0,23 | 0,61 / 0,74 ; 1,45 / 1,35 |
+| Violet | −52,3 / −19,1 ; +51,9 / +18,2 | −0,38 / −0,37 ; +0,22 / +0,24 | 0,68 / 0,78 ; 1,37 / 1,28 |
+| Magenta | −6,9 / −10,7 ; +3,0 / +7,8 | −0,04 / −0,22 ; +0,02 / +0,16 | 0,98 / 0,85 ; 1,02 / 1,18 |
+
+Le curseur Teinte d'IPR (±18° HSV) est 2 à 3 fois trop faible hors rouge et
+orange ; la saturation d'IPR est trop forte sur la plupart des bandes ; la
+luminance est trop faible en jaune, vert, bleu et violet. Le magenta de LR est
+centré plus loin (≈315° HSV sur l'interface) que celui d'IPR (300°), d'où un
+noyau IPR presque inactif côté LR.
+
+**Réponse pixel par pixel de Lightroom** (teinte Oklab du pixel neutre, pas de
+5°). Centres et rotations Teinte −100 / +100 : rouge 12°, −20° / +36° ;
+orange 47–57°, −38° / +49° ; jaune 92°, −49° / +41° ; vert 138°, −40° / +36° ;
+cyan 178°, −34° / +68° ; bleu 240–270° (bande de 80–90°), −78° / +70° ;
+violet 300–320°, −62° / +32° ; magenta 350°, −27° / +20°. Le curseur Teinte
+change aussi la chroma (jusqu'à ×0,6 en cyan +100) et le curseur Saturation
+fait tourner la teinte (jusqu'à ±8°). La rotation dépend peu de la clarté et
+modérément de la saturation (±4°) ; les gains de saturation +100 et de
+luminance dépendent fortement de la saturation et de la clarté du pixel ;
+dispersion entre scènes faible (±3° sur la rotation).
+
+**Suite proposée.** Tables de réponse LR par bande, composante et valeur
+(rotation, gain de chroma, gain de clarté selon teinte fine, saturation et
+clarté), sur le modèle de la vibrance, validées sur scènes exclues puis sur
+le rendu.
+
+### Correctif : tables de réponse Lightroom — 22 octobre 2026
+
+Le mélangeur HSV triangulaire (±18°) est remplacé par des tables mesurées
+([modele-melangeur-lr-v001](../raw/modele-melangeur-lr-v001-20261022T153032225474Z.json),
+`scripts/build_mixer_model.py`, `src/core/ColorMixerModel.h`) : pour chaque bande,
+composante et valeur, rotation de teinte, gain de chroma et gain de clarté Oklab
+selon la teinte Oklab du pixel (5°), sa saturation ProPhoto linéaire et sa clarté
+Oklab ; replis qui conservent la teinte, effet principal monotone, fenêtre de
+teinte par bande, effets estompés sous une chroma Oklab de 0,02, effets des
+curseurs additionnés (hypothèse non vérifiée par des exports combinés).
+Validation croisée à deux plis de scènes, erreur médiane de l'effet principal
+moyenné sur la bande : 0,04° (p90 0,15°) de rotation, 0,002 de gain de chroma,
+0,004 de gain de clarté (log).
+
+**Magenta décalé de −10°** vers l'ancienne bande d'IPR, à la demande de
+l'utilisateur (garder le magenta proche de celui d'IPR ou le décaler peu).
+
+**Mesure du rendu**
+([mesure-melangeur-v002](../raw/mesure-melangeur-v002-20261022T172841133607Z.json),
+2 808 états, aucune exclusion), écart médian par scène |IPR − LR| dans le noyau
+des bandes, ancien → nouveau, à −100 / +100 :
+
+| Bande | Rotation de teinte (°) | Δ saturation | Rapport Y |
+| --- | --- | --- | --- |
+| Rouge | 0,64 → 0,71 ; 1,47 → 0,42 | 0,140 → 0,006 ; 0,047 → 0,013 | 0,062 → 0,026 ; 0,076 → 0,023 |
+| Orange | 1,46 → 0,41 ; 1,91 → 0,65 | 0,201 → 0,021 ; 0,080 → 0,006 | 0,030 → 0,032 ; 0,064 → 0,023 |
+| Jaune | 7,99 → 0,21 ; 24,28 → 0,65 | 0,097 → 0,017 ; 0,059 → 0,013 | 0,185 → 0,055 ; 0,095 → 0,039 |
+| Vert | 36,69 → 2,05 ; 28,07 → 1,12 | 0,048 → 0,024 ; 0,030 → 0,026 | 0,186 → 0,079 ; 0,156 → 0,064 |
+| Cyan | 12,70 → 1,27 ; 21,13 → 0,90 | 0,174 → 0,018 ; 0,041 → 0,009 | 0,067 → 0,041 ; 0,124 → 0,039 |
+| Bleu | 25,63 → 2,87 ; 23,80 → 1,73 | 0,157 → 0,009 ; 0,066 → 0,008 | 0,177 → 0,069 ; 0,215 → 0,060 |
+| Violet | 33,04 → 1,19 ; 33,70 → 0,60 | 0,039 → 0,020 ; 0,025 → 0,017 | 0,124 → 0,072 ; 0,177 → 0,079 |
+| Magenta | 3,58 → 19,00 ; 4,79 → 10,21 | 0,188 → 0,181 ; 0,137 → 0,094 | 0,114 → 0,161 ; 0,145 → 0,162 |
+
+Sept bandes passent sous 3° de rotation et sous 0,03 de saturation. Le magenta
+s'écarte de LR par construction : le noyau mesuré est celui de l'ancien magenta
+d'IPR, où LR agit peu ; la bande décalée y agit davantage. Revue visuelle de
+l'utilisateur à faire, notamment sur le magenta.
+
+### Réglages combinés et revue visuelle — 22 octobre 2026
+
+**Additivité.** Trois exports LR combinés de l'utilisateur
+(`color-mixer/mixed` : 8, 12 et 15 curseurs, valeurs intermédiaires) sont
+comparés à la somme des effets par curseur des tables : écart médian pixel de
+0,4° / 1,0° / 2,7° de rotation, 0,007 à 0,047 de log chroma, ≤ 0,014 de log
+clarté. Les écarts se concentrent où deux bandes voisines se chevauchent avec
+des réglages opposés ou cumulés (orange entre rouge +52 et jaune −79 ; vert
+avec teinte, saturation et luminance réglées ensemble) : LR applique
+vraisemblablement ses curseurs successivement. Additivité conservée, piste
+d'amélioration notée.
+
+**Prise turquoise de 6V1A9608.** Le vert constaté dans IPR venait surtout de
+la vibrance à +100 restée active dans IPR (0 dans LR). Rendu IPR à réglages
+identiques (option `mixer` du serveur de rendu) : prise LR 199,6° → 175,8°,
+IPR 199,7° → 173,1° (Oklab), soit 2,7° de plus vers le vert ; chroma 0,084 /
+0,089, écart déjà présent au neutre (0,065 / 0,071).
+
+**Bruit.** Mesure du proxy du protocole Bruit sur les zones planes des neutres,
+sans réduction de bruit : luminance équivalente (IPR/LR 0,99 et 1,19 ; 0,94 et
+0,85 en relatif), **bruit de couleur 1,28 (ISO 16 000) et 1,62 (ISO 25 600)
+fois celui de LR**. Cause probable : dématriçage LibRaw par défaut (AHD), quand
+celui de LR lisse déjà la chrominance. La vibrance +100 multiplie encore le
+bruit couleur par 1,25 à 1,5. Étude de dématriçage (DCB, AAHD, DHT, passes de
+médiane) à mener sur le décodage RAW, hors du chantier Couleur.
+
+Validation de l'utilisateur, vibrance à 0 : couleurs proches de LR ; bruit
+plus élevé confirmé visuellement.
