@@ -1,0 +1,135 @@
+\chapter{Construire le modèle}
+
+\section{Pourquoi une table plutôt qu'une formule}
+Le chapitre 3 a montré une réponse à trois variables, en cloche selon la
+clarté, décroissante selon la saturation, avec des particularités par teinte.
+On pourrait chercher une formule à quelques constantes. Chaque hypothèse de
+forme risque pourtant de reproduire l'erreur des anciens modèles : imposer un
+comportement que Lightroom n'a pas.
+
+Une \textbf{table de réponse} évite ce piège : on découpe l'espace des pixels
+en cellules et on stocke, pour chacune, la réponse mesurée. C'est la même
+démarche que pour les hautes lumières dans \IPR{} : une référence mesurée,
+interpolée, plutôt qu'un modèle paramétrique deviné.
+
+\section{Le découpage}
+Trois axes, ceux du pixel neutre :
+\begin{itemize}
+\item saturation ProPhoto $s$ : 12 classes, de bornes
+0 ; 0,05 ; 0,1 ; 0,15 ; 0,2 ; 0,3 ; 0,4 ; \ldots ; 0,9 ; 1 (plus fines près du
+gris, où la réponse varie vite) ;
+\item clarté Oklab $L$ : 9 classes, de bornes 0 ; 0,2 ; 0,3 ; \ldots ; 0,9 ; 1,2 ;
+\item teinte Oklab $h$ : 12 secteurs de $30^\circ$.
+\end{itemize}
+Soit $12\times9\times12=1\,296$ cellules par valeur mesurée et par grandeur
+(gain de chroma, gain de clarté, rotation), pour six valeurs du curseur.
+
+\section{Remplir une cellule}
+La valeur d'une cellule est la \textbf{médiane}, sur toutes les scènes, des
+$\gamma$ (ou $\lambda$, ou $\Delta h$) de ses pixels. La médiane résiste aux
+pixels aberrants (bruit, bord d'un objet) mieux que la moyenne.
+
+Une cellule doit contenir au moins 40 pixels pour être jugée fiable. Sinon,
+elle reçoit une valeur de repli :
+\begin{itemize}
+\item pour les gains : la médiane de sa classe (saturation, clarté), toutes
+teintes confondues, puis de sa classe de saturation seule ;
+\item pour la rotation : la médiane de sa classe (saturation, teinte), puis de
+sa teinte seule, puis zéro.
+\end{itemize}
+La différence est essentielle. Un gain varie peu d'une teinte à l'autre, une
+rotation dépend d'abord de la teinte : les bleus tournent dans un sens, les
+oranges dans l'autre. Un premier essai qui repliait aussi la rotation « toutes
+teintes confondues » donnait à des cellules bleues vides la rotation des
+oranges, majoritaires dans le corpus, donc le mauvais sens.
+
+\resultat{Une valeur de repli doit conserver la variable dont la grandeur
+dépend le plus.}
+
+\section{Interpoler entre les cellules}
+Un pixel tombe rarement au centre d'une cellule. Prendre la valeur de sa
+cellule créerait des marches visibles dans un dégradé de ciel. Le modèle
+interpole donc entre les centres des cellules voisines, linéairement sur
+chaque axe (interpolation \emph{trilinéaire}). Sur un axe, avec deux centres
+$x_0<x_1$ et leurs valeurs $v_0,v_1$ :
+\begin{equation}
+v(x)=(1-t)\,v_0+t\,v_1,\qquad t=\frac{x-x_0}{x_1-x_0}\in[0,1].
+\end{equation}
+Au-delà du premier ou du dernier centre, la valeur reste constante. La teinte
+est un axe circulaire : le secteur centré sur $345^\circ$ a pour voisin celui
+centré sur $15^\circ$.
+
+\section{Entre les valeurs mesurées du curseur}
+Les tables existent pour $\pm25$, $\pm50$ et $\pm100$. Pour une valeur
+intermédiaire $V$, on interpole linéairement entre les deux valeurs mesurées
+qui l'encadrent, du même côté de zéro, avec zéro pour origine (réponse nulle).
+L'interpolation se fait sur $\gamma$ et $\lambda$, c'est-à-dire en
+logarithme : les gains se combinent par multiplication, et cette interpolation
+garantit qu'un gain reste positif.
+
+\section{Monotonie : un curseur cohérent}
+Une médiane reste une estimation bruitée. Dans quelques cellules peu
+peuplées, elle donnait par exemple un gain plus faible à $+50$ qu'à $+25$. Le
+photographe verrait alors la couleur \emph{diminuer} en poussant le curseur.
+
+Le modèle impose donc, cellule par cellule, que $\gamma$ croisse avec la
+valeur du curseur. Il utilise la \textbf{régression isotone} : la suite
+croissante la plus proche, au sens des moindres carrés, des valeurs mesurées.
+L'algorithme \emph{Pool Adjacent Violators}~\cite{ayer1955} la calcule en un
+passage : chaque fois que deux valeurs voisines violent l'ordre, on les
+remplace par leur moyenne, et on recommence si le bloc obtenu viole l'ordre
+avec son voisin.
+
+Exemple : les valeurs $(0{,}162\,;\ 0{,}090\,;\ 0{,}924)$ pour $+25$, $+50$,
+$+100$ violent l'ordre entre $+25$ et $+50$. On les remplace par leur moyenne :
+$(0{,}126\,;\ 0{,}126\,;\ 0{,}924)$.
+
+La contrainte est appliquée séparément de chaque côté de zéro, qui reste fixe.
+Elle a modifié 61 cellules sur 1\,296, sans dégrader la validation croisée.
+
+\section{Les quasi-gris}
+Les tables sont construites sur des pixels de chroma supérieure à 0,01. Pour
+les quasi-gris, on mesure un \textbf{facteur} $f$ qui multiplie le gain prédit
+par la table, par classe de chroma et par valeur du curseur. Il est obtenu par
+moindres carrés :
+\begin{equation}
+f=\frac{\sum_i \gamma_i^{\text{LR}}\,\gamma_i^{\text{table}}}{\sum_i \left(\gamma_i^{\text{table}}\right)^2}.
+\end{equation}
+À $+100$, il vaut 0,74 près du gris et remonte à 1 vers $C=0{,}016$ : le
+renforcement est atténué. À $-100$, il vaut 1,38 : la désaturation est
+renforcée. À $\pm25$ et $\pm50$, il reste proche de 1.
+
+Un premier essai calculait un seul facteur par sens du curseur. La valeur
+$-100$, aux logarithmes très grands, dominait alors l'ajustement et
+désaturait trop les quasi-gris à $-25$ et $-50$ : un facteur par valeur a
+corrigé ce biais.
+
+Enfin, sous $C=0{,}01$, le gain de clarté et la rotation s'estompent
+proportionnellement à $C/0{,}01$. Un gris exact reste exactement gris, et un
+presque-gris ne change pas brusquement de teinte, ce qui aurait révélé le
+bruit.
+
+\section{La saturation}
+La saturation n'utilise pas de table : sa mesure sur 49 scènes suit
+Lightroom à moins de 0,05 de variation de chroma. Elle multiplie la chroma
+par $1+S/100$ et conserve $L$ et $h$. Combinée à la vibrance, le gain total de
+chroma est $(1+S/100)\,e^{\gamma}$.
+
+\section{Exemple déroulé}
+Un bleu de ciel, en RGB linéaire sRGB $(0{,}10\,;\ 0{,}20\,;\ 0{,}45)$, à
+vibrance $+100$.
+\begin{enumerate}
+\item Oklab : $L=0{,}583$, $a=-0{,}017$, $b=-0{,}093$, soit $C=0{,}094$ et
+$h=259{,}5^\circ$.
+\item ProPhoto linéaire : $(0{,}182\,;\ 0{,}197\,;\ 0{,}415)$. La saturation
+vaut donc $s=(0{,}415-0{,}182)/0{,}415$, soit $s=0{,}561$.
+\item Position dans les tables : $s$ entre les centres 0,55 et 0,65
+($t=0{,}11$) ; $L$ entre 0,55 et 0,65 ($t=0{,}33$) ; $h$ entre les secteurs
+centrés sur $255^\circ$ et $285^\circ$ ($t=0{,}15$).
+\item Lecture interpolée à $+100$ : $\gamma=0{,}541$ (gain $1{,}72$),
+$\lambda=-0{,}043$ (clarté $\times0{,}96$), rotation $-4{,}7^\circ$. Le pixel
+n'est pas un quasi-gris ($C>0{,}016$) : facteur 1, pas d'estompage.
+\item Résultat : $L'=0{,}558$, $C'=0{,}162$ et $h'=254{,}8^\circ$. De retour en RGB
+linéaire sRGB, le pixel vaut $(0{,}015\,;\ 0{,}172\,;\ 0{,}628)$.
+\end{enumerate}
+Le bleu est plus intense, un peu plus sombre, et a tourné vers le cyan.

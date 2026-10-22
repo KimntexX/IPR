@@ -9,8 +9,7 @@ Item {
     // Qt maps Ctrl to the physical Command key on macOS; Meta would mean Control.
     readonly property string commandModifier: "Ctrl"
     readonly property bool photoReady: editor.hasImage && !editor.busy && !editor.embeddedPreview && !blocked
-    // These methods are deliberately not emulated in QML. See IHM-CONN-007/008.
-    readonly property bool manualSaveAvailable: typeof editor.saveCurrentAdjustments === "function"
+    // File operations are supplied by the engine, never emulated in QML.
     readonly property bool duplicationAvailable: typeof editor.duplicateCurrentImage === "function"
     property alias openImageAction: openImage
     property alias openFolderAction: openFolder
@@ -18,6 +17,8 @@ Item {
     property alias exportAction: exportPhoto
     property alias duplicateAction: duplicate
     property alias resetAction: reset
+    property alias copyAction: copyEdits
+    property alias pasteAction: pasteEdits
     property alias preferencesAction: preferences
     property alias quitAction: quit
     signal openImageRequested()
@@ -46,7 +47,7 @@ Item {
         objectName: "saveAdjustmentsAction"
         text: qsTr("Enregistrer les réglages")
         shortcut: StandardKey.Save
-        enabled: root.photoReady && root.manualSaveAvailable
+        enabled: root.photoReady
         onTriggered: root.editor.saveCurrentAdjustments()
     }
     Action {
@@ -64,6 +65,22 @@ Item {
         shortcut: root.commandModifier + "+D"
         enabled: root.photoReady && root.duplicationAvailable
         onTriggered: root.editor.duplicateCurrentImage()
+    }
+    Action {
+        id: copyEdits
+        objectName: "copyAdjustmentsAction"
+        text: qsTr("Copier les paramètres")
+        shortcut: root.commandModifier + "+Shift+C"
+        enabled: root.photoReady
+        onTriggered: root.editor.copyAdjustments()
+    }
+    Action {
+        id: pasteEdits
+        objectName: "pasteAdjustmentsAction"
+        text: qsTr("Coller les paramètres")
+        shortcut: root.commandModifier + "+Shift+V"
+        enabled: root.photoReady && root.editor.hasCopiedAdjustments
+        onTriggered: root.editor.pasteAdjustments()
     }
     Action {
         id: reset

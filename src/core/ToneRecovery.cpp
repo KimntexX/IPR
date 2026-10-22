@@ -1,17 +1,56 @@
 #include "ToneRecovery.h"
 
+#include "ToneRecoveryHighlights.h"
 #include "ToneRecoveryModel.h"
 #include "WorkingColorSpace.h"
 
 #include <algorithm>
 #include <cmath>
+#include <numeric>
 
 namespace ToneRecovery {
+static_assert(Highlights::BinCount == HighlightBins, "Highlights tables match Adaptation");
+static_assert(Highlights::StatisticCount == Model::StatisticCount, "Highlights use the measured statistics");
+
 namespace {
-// Lift of one slider level at knot k, interpolated at fraction t to knot k + 1.
-float levelLift(const Model::Control &c, int level, int k, float t)
+// Model::Controls index of Shadows (0), Blacks (1) or Whites (3), by sign.
+int modelIndex(int control, bool lifting)
 {
-    return c.lift[level][k] + (c.lift[level][k + 1] - c.lift[level][k]) * t;
+    return (control == 3 ? 4 : 2 * control) + (lifting ? 1 : 0);
+}
+
+// Interpolation between the four slider levels (linear from 0 below the first),
+// of a lift read at one input by `at(level)`.
+template <typename Read>
+float levelled(float amount, Read at)
+{
+    const float level = std::min(std::abs(amount), 1.0f);
+    if (level <= Model::Levels[0]) return at(0) * level / Model::Levels[0];
+    int l = 0;
+    while (l < 2 && level > Model::Levels[l + 1]) ++l;
+    const float u = (level - Model::Levels[l]) / (Model::Levels[l + 1] - Model::Levels[l]);
+    const float low = at(l);
+    return low + (at(l + 1) - low) * u;
+}
+
+// Highlights: linear between bin centres; below the first bin the lift fades
+// to 0 over 2 EV, as the other controls do, so the noise floor stays dark. The
+// sign follows the slider: measurement noise of the reference medians never
+// makes a positive Highlights darken a tone, or a negative one brighten it.
+float highlightsLift(float amount, float x, const Adaptation &adaptation)
+{
+    const bool lifting = amount > 0.0f;
+    const auto &tables = adaptation.highlights[lifting ? 1 : 0];
+    const float position = (x - Highlights::FirstBinEv) / Highlights::BinEv - 0.5f;
+    const float fade = std::clamp((x - Highlights::FirstBinEv + 2.0f) / 2.0f, 0.0f, 1.0f);
+    const float p = std::clamp(position, 0.0f, float(HighlightBins - 1));
+    const int i = std::min(int(p), HighlightBins - 2);
+    const float t = p - float(i);
+    const float value = fade * levelled(amount, [&](int level) {
+        const auto &table = tables[size_t(level)];
+        return table[size_t(i)] + (table[size_t(i) + 1] - table[size_t(i)]) * t;
+    });
+    return lifting ? std::max(value, 0.0f) : std::min(value, 0.0f);
 }
 }
 
@@ -22,39 +61,54 @@ Statistics typicalStatistics()
     return s;
 }
 
-Gains gains(const Statistics &statistics)
+Adaptation adapt(const Statistics &statistics)
 {
-    Gains g;
-    for (int i = 0; i < 8; ++i) {
+    Adaptation a;
+    for (int i = 0; i < 6; ++i) {
         const auto &c = Model::Controls[i];
         if (c.gainStatisticCount == 0) continue;
         float logGain = c.gainCoefficients[0];
         for (int k = 0; k < c.gainStatisticCount; ++k)
             logGain += c.gainCoefficients[k + 1] * statistics.log2Luminance[size_t(c.gainStatistics[k])];
-        g.value[size_t(i)] = std::exp(std::clamp(logGain, c.logGainMin, c.logGainMax));
+        a.gain[size_t(i)] = std::exp(std::clamp(logGain, c.logGainMin, c.logGainMax));
     }
-    return g;
+    // Highlights: mean curves of the nearest reference scenes, distance on the
+    // standardised statistics.
+    float distance[Highlights::SceneCount];
+    for (int s = 0; s < Highlights::SceneCount; ++s) {
+        float d = 0.0f;
+        for (int k = 0; k < Highlights::StatisticCount; ++k) {
+            const float z = (statistics.log2Luminance[size_t(k)] - Highlights::StatisticMean[k])
+                / Highlights::StatisticScale[k] - Highlights::Scenes[s].position[k];
+            d += z * z;
+        }
+        distance[s] = d;
+    }
+    int order[Highlights::SceneCount];
+    std::iota(order, order + Highlights::SceneCount, 0);
+    std::partial_sort(order, order + Highlights::Neighbours, order + Highlights::SceneCount,
+                      [&](int l, int r) { return distance[l] < distance[r] || (distance[l] == distance[r] && l < r); });
+    for (int n = 0; n < Highlights::Neighbours; ++n)
+        for (int sign = 0; sign < 2; ++sign)
+            for (int level = 0; level < 4; ++level)
+                for (int b = 0; b < HighlightBins; ++b)
+                    a.highlights[size_t(sign)][size_t(level)][size_t(b)] +=
+                        Highlights::Scenes[order[n]].lift[sign][level][b] / float(Highlights::Neighbours);
+    return a;
 }
 
-float lift(int control, float amount, float x, const Gains &gains)
+float lift(int control, float amount, float x, const Adaptation &adaptation)
 {
     if (amount == 0.0f) return 0.0f;
-    const int index = 2 * control + (amount > 0.0f ? 1 : 0);
+    if (control == 2) return highlightsLift(amount, x, adaptation);
+    const int index = modelIndex(control, amount > 0.0f);
     const auto &c = Model::Controls[index];
     const float knot = std::clamp(x - Model::FirstKnotEv, 0.0f, float(Model::KnotCount - 1));
     const int k = std::min(int(knot), Model::KnotCount - 2);
     const float t = knot - float(k);
-    const float level = std::min(std::abs(amount), 1.0f);
-    float value;
-    if (level <= Model::Levels[0]) value = levelLift(c, 0, k, t) * level / Model::Levels[0];
-    else {
-        int l = 0;
-        while (l < 2 && level > Model::Levels[l + 1]) ++l;
-        const float u = (level - Model::Levels[l]) / (Model::Levels[l + 1] - Model::Levels[l]);
-        const float low = levelLift(c, l, k, t);
-        value = low + (levelLift(c, l + 1, k, t) - low) * u;
-    }
-    return value * gains.value[size_t(index)];
+    return levelled(amount, [&](int level) {
+        return c.lift[level][k] + (c.lift[level][k + 1] - c.lift[level][k]) * t;
+    }) * adaptation.gain[size_t(index)];
 }
 
 float shoulder(float y, float out, float knee)
@@ -67,7 +121,7 @@ float shoulder(float y, float out, float knee)
 // Channels roll off near white through the shoulder, as Lightroom does: a hard
 // cap at 1 clipped about ten times more channels than Lightroom with Whites
 // +25. The luminance lift is capped at white; apply() then fits the colour.
-float transfer(float y, const Amounts &a, const Gains &g, bool perChannel)
+float transfer(float y, const Amounts &a, const Adaptation &g, bool perChannel)
 {
     if (y <= 0.0f || y >= 1.0f) return y;
     const float x = std::log2(std::max(y, std::exp2(Model::FirstKnotEv)));
@@ -128,8 +182,8 @@ void darkenKeepingColour(float rgb[3], float y, float target)
     for (int c = 0; c < 3; ++c) rgb[c] = std::min(out[c], std::max(rgb[c], 0.9999f));
 }
 
-Curve::Curve(const Amounts &amounts, const Gains &gains)
-    : amounts_(amounts), gains_(gains),
+Curve::Curve(const Amounts &amounts, const Adaptation &adaptation)
+    : amounts_(amounts), adaptation_(adaptation),
       luminanceIdentity_(amounts.shadows == 0 && amounts.highlights == 0 && amounts.whites >= 0),
       channelIdentity_(amounts.blacks == 0 && amounts.whites <= 0)
 {
@@ -147,7 +201,7 @@ void Curve::sample(Table &table, bool perChannel) const
         // The last sample sits just below white: 1 itself is headroom.
         const float y = i == Samples ? std::nextafter(1.0f, 0.0f)
                                      : std::exp2(-SpanEv * (1.0f - float(i) / Samples));
-        previous = std::max(previous, transfer(y, amounts_, gains_, perChannel));
+        previous = std::max(previous, transfer(y, amounts_, adaptation_, perChannel));
         table[size_t(i)] = previous;
     }
 }
@@ -156,7 +210,7 @@ float Curve::read(const Table &table, float y, bool perChannel) const
 {
     if (y <= 0.0f || y >= 1.0f) return y;
     const float position = (std::log2(y) + SpanEv) / SpanEv * Samples;
-    if (position <= 0.0f) return std::min(transfer(y, amounts_, gains_, perChannel), table[0]);
+    if (position <= 0.0f) return std::min(transfer(y, amounts_, adaptation_, perChannel), table[0]);
     const int i = std::min(int(position), Samples - 1);
     const float f = position - float(i);
     return table[size_t(i)] + (table[size_t(i) + 1] - table[size_t(i)]) * f;
@@ -171,7 +225,7 @@ float Curve::read(const Table &table, float y, bool perChannel) const
 void apply(cv::Mat &image, const Amounts &amounts, const Statistics &statistics)
 {
     if (identity(amounts)) return;
-    const Curve toneCurve(amounts, gains(statistics));
+    const Curve toneCurve(amounts, adapt(statistics));
     for (int y = 0; y < image.rows; ++y) {
         cv::Vec3f *row = image.ptr<cv::Vec3f>(y);
         for (int x = 0; x < image.cols; ++x) {

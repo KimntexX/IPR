@@ -24,6 +24,8 @@
 // followed for a render by `bytes` bytes of little-endian uint16 RGB, row-major.
 //   {"op":"list","base":DIR,"group":G}  -> {"ok":true,"states":[...]}
 //   {"op":"render","source":FILE,"feature":F,"value":V}  -> header + pixels
+//     optional "mixer":{"hue":[8],"saturation":[8],"luminance":[8]} sets the
+//     colour mixer sliders on top of the state (combined-slider checks)
 //   {"op":"quit"}
 // An error answers {"ok":false,"error":...} and the server keeps serving.
 // Diagnostics go to stderr; stdout carries only the protocol.
@@ -98,7 +100,18 @@ void render(Masters &masters, const QJsonObject &request)
             "Unknown feature: " + feature);
     require(feature == "neutral" || eligible(feature, source), "RAW source required for " + feature);
     const LoadResult &master = masters.get(source, feature == "neutral" ? Decode{} : decodeFor(feature, value));
-    const Settings settings = settingsFor(master, feature, value);
+    Settings settings = settingsFor(master, feature, value);
+    if (request.contains("mixer")) {
+        const QJsonObject mixer = request.value("mixer").toObject();
+        const auto set = [&](const char *key, auto &target) {
+            const QJsonArray values = mixer.value(key).toArray();
+            require(values.isEmpty() || values.size() == int(target.size()), QString("mixer.%1 needs 8 values").arg(key));
+            for (int i = 0; i < values.size(); ++i) target.at(size_t(i)) = values.at(i).toInt();
+        };
+        set("hue", settings.mixerHue);
+        set("saturation", settings.mixerSaturation);
+        set("luminance", settings.mixerLuminance);
+    }
     QString error;
     const QImage image = ImageEditor::renderSrgb16(master.image, settings, &error);
     require(!image.isNull() && image.format() == QImage::Format_RGBA64, "Render failed: " + error);

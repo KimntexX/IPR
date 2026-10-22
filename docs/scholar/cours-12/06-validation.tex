@@ -1,0 +1,122 @@
+\chapter{Valider le modèle}
+
+\section{Deux niveaux de validation}
+Un modèle construit sur des mesures les reproduit toujours bien : ce n'est pas
+une preuve. Deux contrôles indépendants sont donc menés.
+\begin{enumerate}
+\item La \textbf{validation croisée} vérifie que le modèle prédit des images
+qu'il n'a pas vues. Les 49 scènes sont réparties en deux groupes (une sur
+deux) ; on construit les tables sur un groupe et on mesure l'erreur sur
+l'autre, puis on inverse.
+\item La \textbf{campagne de rendu} mesure le résultat réel d'\IPR{}, de la
+lecture du RAW à l'image finale, contre les exports Lightroom. Elle contrôle
+tout ce que la validation croisée ignore : conversions, rendu de base,
+compression de sortie.
+\end{enumerate}
+
+\section{L'indicateur}
+Pour chaque scène, on calcule la variation moyenne de chroma
+$\overline{C_{\text{variante}}/C_{\text{neutre}}}-1$ sur deux groupes de pixels :
+les couleurs peu saturées ($s<0{,}3$) et les couleurs saturées ($s>0{,}5$).
+L'écart est la différence entre le modèle (ou \IPR{}) et Lightroom ; on en
+retient la médiane sur les scènes, en valeur absolue, et le 90\textsuperscript{e}
+centile, qui renseigne sur les scènes difficiles.
+
+\section{Validation croisée}
+Écart médian de variation de chroma (peu saturées / saturées) sur les scènes
+exclues de la construction :
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Valeur & Ancien modèle A1/A2 & Tables & 90\textsuperscript{e} centile des tables\\
+\midrule
+$-100$ & 0,020 / 0,122 & 0,002 / 0,006 & 0,007 / 0,026\\
+$-50$ & 0,047 / 0,030 & 0,003 / 0,005 & 0,007 / 0,020\\
+$-25$ & 0,044 / 0,025 & 0,002 / 0,004 & 0,005 / 0,013\\
+$+25$ & 0,079 / 0,076 & 0,004 / 0,005 & 0,012 / 0,015\\
+$+50$ & 0,088 / 0,127 & 0,012 / 0,012 & 0,030 / 0,035\\
+$+100$ & 0,407 / 0,263 & 0,072 / 0,035 & 0,153 / 0,087\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Les tables divisent l'erreur par 5 à 20 selon la valeur. Le point faible
+reste $+100$ sur les couleurs peu saturées, où la réponse de Lightroom est la
+plus forte et la plus variable.
+
+\section{Campagne de rendu}
+Variation de chroma médiane sur les scènes, Lightroom puis \IPR{}, et écart
+médian par scène (campagne \texttt{mesure-couleur-v008}, 637 états mesurés,
+aucune exclusion) :
+
+\begin{center}\small
+\begin{tabular}{lrrrr}
+\toprule
+Valeur & Peu saturées & Saturées & Clarté $Y$ & Écart\\
+ & LR / \IPR{} & LR / \IPR{} & LR / \IPR{} & peu / saturées\\
+\midrule
+$-100$ & $-0{,}97$ / $-0{,}97$ & $-0{,}79$ / $-0{,}79$ & 0,88 / 0,87 & 0,004 / 0,011\\
+$-50$ & $-0{,}53$ / $-0{,}53$ & $-0{,}40$ / $-0{,}39$ & 0,95 / 0,95 & 0,003 / 0,004\\
+$-25$ & $-0{,}28$ / $-0{,}28$ & $-0{,}19$ / $-0{,}19$ & 0,98 / 0,98 & 0,003 / 0,003\\
+$+25$ & $+0{,}11$ / $+0{,}11$ & $+0{,}05$ / $+0{,}06$ & 1,00 / 1,00 & 0,014 / 0,003\\
+$+50$ & $+0{,}26$ / $+0{,}28$ & $+0{,}11$ / $+0{,}12$ & 1,00 / 1,00 & 0,031 / 0,007\\
+$+100$ & $+0{,}90$ / $+0{,}91$ & $+0{,}22$ / $+0{,}24$ & 0,98 / 0,98 & 0,143 / 0,016\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Avec l'ancien modèle, la même campagne donnait des écarts de 0,31 / 0,09 à
+$+100$, 0,14 / 0,06 à $+50$, et 0,01 / 0,13 à $-100$, sans baisse de clarté au
+négatif.
+
+\section{Le cas des grands ciels bleus}
+Mesuré par famille de teinte, le gain de chroma d'\IPR{} à $+100$ restait plus
+faible que celui de Lightroom sur les bleus (1,66 contre 2,78 pour le
+bleu-cyan). Trois vérifications ont localisé la cause.
+
+\begin{enumerate}
+\item \textbf{Le modèle est bien appliqué.} Sur les pixels bleus d'\IPR{}, la
+table prédit un gain de 1,667 et le rendu donne 1,670 : la compression de
+sortie ne retire presque rien (elle concerne 25\,\% de ces pixels, et y réduit
+le gain de 2,06 à 1,94).
+\item \textbf{Le point de départ est identique.} Les bleus neutres d'\IPR{} et de
+Lightroom ont la même chroma (0,055 contre 0,056 en médiane), la même
+saturation et la même clarté, scène par scène.
+\item \textbf{L'écart vient d'une scène.} La chroma finale des bleus à $+100$
+est de 0,118 contre 0,124 en médiane (5\,\% de moins), mais la scène 6V1A9141,
+un grand ciel bleu saturé qui couvre 82\,\% de l'image, atteint 0,164 contre
+0,196 ($-16\,\%$). Elle pèse lourd dans les statistiques par famille.
+\end{enumerate}
+
+Sur ce type de ciel, Lightroom pousse plus fort que son comportement médian.
+C'est la trace d'une dépendance à l'image que les 2\,\% de variance « scène »
+du chapitre 3 laissaient entrevoir. La reproduire demanderait une variable
+supplémentaire, par exemple l'étendue de la zone de couleur, ou un traitement
+local ; ce n'est pas fait.
+
+\resultat{Un écart global peut cacher un cas particulier très présent dans
+l'échantillon. Avant de corriger un modèle, il faut vérifier qu'il est bien
+appliqué, que le point de départ est le même, puis isoler les scènes qui
+portent l'écart.}
+
+\section{Historique des versions du modèle}
+\begin{center}
+\begin{tabular}{lp{11cm}}
+\toprule
+Version & Changement\\
+\midrule
+v001 & tables brutes de gain de chroma et de clarté\\
+v002 & monotonie imposée par régression isotone\\
+v003 & facteur quasi-gris, un par sens du curseur\\
+v004 & facteur quasi-gris par valeur (corrige $-25$ et $-50$)\\
+v005 & table de rotation de teinte\\
+v006 & repli de la rotation qui conserve la teinte (version retenue)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Chaque version est une preuve JSON horodatée et immuable
+(\texttt{modele-vibrance-lr-vNNN}), qui renvoie à celle qu'elle remplace. Les
+campagnes de rendu \texttt{mesure-couleur-v004} à \texttt{v008} mesurent
+respectivement l'ancien modèle puis les versions v002, v003, v004 et v006.

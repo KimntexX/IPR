@@ -1,4 +1,5 @@
 #include "ToneRecovery.h"
+#include "ToneRecoveryHighlights.h"
 #include "ToneRecoveryModel.h"
 #include <array>
 #include <algorithm>
@@ -30,7 +31,7 @@ template <typename F> void ramp(F visit)
     for (int i = 0; i <= 20000; ++i) visit(std::exp2(-16.0f + 16.0f * float(i) / 20000.0f) * 0.9999f);
 }
 
-void monotone(const ToneRecovery::Amounts &a, const ToneRecovery::Gains &g, const char *message)
+void monotone(const ToneRecovery::Amounts &a, const ToneRecovery::Adaptation &g, const char *message)
 {
     const ToneRecovery::Curve curve(a, g);
     float previous = -1.0f;
@@ -42,13 +43,19 @@ void monotone(const ToneRecovery::Amounts &a, const ToneRecovery::Gains &g, cons
     });
 }
 
-// Gains at the bounds fitted on the eight scenes.
-ToneRecovery::Gains bound(bool high)
+// Adaptation of an image whose statistics are those of a reference scene,
+// with the Shadows/Blacks/Whites gains at the bounds of their fitted range.
+ToneRecovery::Adaptation bound(bool high)
 {
-    ToneRecovery::Gains g;
-    for (int i = 0; i < 8; ++i) {
+    ToneRecovery::Statistics s;
+    const auto &scene = ToneRecovery::Highlights::Scenes[high ? ToneRecovery::Highlights::SceneCount - 1 : 0];
+    for (int k = 0; k < ToneRecovery::Highlights::StatisticCount; ++k)
+        s.log2Luminance[size_t(k)] = ToneRecovery::Highlights::StatisticMean[k]
+            + scene.position[k] * ToneRecovery::Highlights::StatisticScale[k];
+    ToneRecovery::Adaptation g = ToneRecovery::adapt(s);
+    for (int i = 0; i < 6; ++i) {
         const auto &c = ToneRecovery::Model::Controls[i];
-        if (c.gainStatisticCount) g.value[size_t(i)] = std::exp(high ? c.logGainMax : c.logGainMin);
+        if (c.gainStatisticCount) g.gain[size_t(i)] = std::exp(high ? c.logGainMax : c.logGainMin);
     }
     return g;
 }
@@ -57,8 +64,8 @@ ToneRecovery::Gains bound(bool high)
 int main()
 {
     try {
-        const ToneRecovery::Gains typical = ToneRecovery::gains(ToneRecovery::typicalStatistics());
-        const ToneRecovery::Gains gainSets[3] = {typical, bound(false), bound(true)};
+        const ToneRecovery::Adaptation typical = ToneRecovery::adapt(ToneRecovery::typicalStatistics());
+        const ToneRecovery::Adaptation gainSets[3] = {typical, bound(false), bound(true)};
         for (const auto &g : gainSets)
             for (int control = 0; control < 4; ++control) {
                 const ToneRecovery::Curve zero(single(control, 0), g);
@@ -157,18 +164,39 @@ int main()
 
         // Per-image weights: typical images get moderate gains; any image stays
         // within the fitted range.
-        for (int i = 0; i < 8; ++i)
-            check(typical.value[size_t(i)] > 0.4f && typical.value[size_t(i)] < 2.5f, "Typical image gain");
+        for (int i = 0; i < 6; ++i)
+            check(typical.gain[size_t(i)] > 0.4f && typical.gain[size_t(i)] < 2.5f, "Typical image gain");
         for (float level : {-20.0f, 0.0f}) {
             ToneRecovery::Statistics extreme;
             extreme.log2Luminance.fill(level);
-            const auto g = ToneRecovery::gains(extreme);
-            for (int i = 0; i < 8; ++i) {
+            const auto g = ToneRecovery::adapt(extreme);
+            for (int i = 0; i < 6; ++i) {
                 const auto &c = ToneRecovery::Model::Controls[i];
-                check(g.value[size_t(i)] >= std::exp(c.logGainMin) * 0.999f &&
-                          g.value[size_t(i)] <= std::exp(c.logGainMax) * 1.001f,
+                check(g.gain[size_t(i)] >= std::exp(c.logGainMin) * 0.999f &&
+                          g.gain[size_t(i)] <= std::exp(c.logGainMax) * 1.001f,
                       "Image gains must stay in the fitted range");
             }
+        }
+
+        // Highlights: an image with a reference scene's statistics averages the
+        // curves of its nearest scenes, itself included; the curve is finite and
+        // lowers (raises) bright tones for a negative (positive) slider.
+        {
+            namespace H = ToneRecovery::Highlights;
+            ToneRecovery::Statistics s;
+            for (int k = 0; k < H::StatisticCount; ++k)
+                s.log2Luminance[size_t(k)] = H::StatisticMean[k] + H::Scenes[0].position[k] * H::StatisticScale[k];
+            const auto a = ToneRecovery::adapt(s);
+            bool includesItself = false;
+            for (int b = 0; b < H::BinCount && !includesItself; ++b)
+                includesItself = a.highlights[0][3][size_t(b)] != 0.0f;
+            check(includesItself, "Highlights curves must come from the reference scenes");
+            for (const auto &sign : a.highlights)
+                for (const auto &level : sign)
+                    for (float v : level) check(std::isfinite(v) && std::abs(v) < 8.0f, "Highlights lift out of range");
+            check(ToneRecovery::lift(2, -1.0f, std::log2(.6f), a) < 0.0f && ToneRecovery::lift(2, 1.0f, std::log2(.3f), a) > 0.0f,
+                  "Highlights must lower, or raise, bright tones");
+            check(ToneRecovery::lift(2, -1.0f, -17.0f, a) == 0.0f, "Highlights must leave the noise floor");
         }
         std::vector<float> samples;
         for (int i = 0; i < 1000; ++i) samples.push_back(-12.0f + 12.0f * float(i) / 999.0f);
@@ -176,8 +204,9 @@ int main()
         check(std::abs(measured.log2Luminance[0] + 6.0f) < 1e-3f && std::abs(measured.log2Luminance[4] + 1.2f) < 0.05f,
               "Statistics: mean and quantiles");
 
-        std::cout << "Tone controls: identity, tone order alone and combined at every weight, direction, "
-                     "graded zones, black point, noise floor, HDR, per-image gains and statistics passed\n";
+        std::cout << "Tone controls: identity, tone order alone and combined at every adaptation, direction, "
+                     "graded zones, black point, noise floor, HDR, per-image gains, Highlights references "
+                     "and statistics passed\n";
         return 0;
     } catch (const std::exception &error) { std::cerr << error.what() << '\n'; return 1; }
 }

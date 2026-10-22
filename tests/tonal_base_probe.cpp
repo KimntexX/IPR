@@ -269,7 +269,7 @@ QJsonObject process(const QString &path, const QDir &out, bool calibrationOnly =
     require(raw.unpack() == LIBRAW_SUCCESS, "unpack: " + path);
     result["border_audit"] = borderAudit(raw);
     result["before_black_estimation"] = metadata(raw);
-    result["black_estimated"] = DiagnosticRawDecoder::estimateMissingCanonCr3BlackLevel(raw, path);
+    result["black_estimated"] = DiagnosticRawDecoder::readBlackLevel(raw, path);
     result["after_black_estimation"] = metadata(raw);
     if (whiteCandidate) {
         require(whiteCandidate > d.color.cblack[0] && whiteCandidate <= 65535,
@@ -344,7 +344,7 @@ void radiometricTrials(const QString &specPath, const QDir &out)
             auto &d=raw.imgdata;d.params.use_camera_wb=1;d.params.use_auto_wb=0;d.params.use_camera_matrix=0;
             d.params.no_auto_bright=1;d.params.output_bps=16;d.params.output_color=0;d.params.gamm[0]=d.params.gamm[1]=1;
             require(raw.unpack()==LIBRAW_SUCCESS,"Unpack failed");
-            const bool blackEstimated=DiagnosticRawDecoder::estimateMissingCanonCr3BlackLevel(raw,path);
+            const bool blackEstimated=DiagnosticRawDecoder::readBlackLevel(raw,path);
             const auto kelvin=DiagnosticRawDecoder::estimateWhiteBalanceKelvin(raw);require(kelvin.has_value(),"Missing source WB");referenceKelvin=*kelvin;
             if(fixedWhite) {
                 const unsigned white=unsigned(scene["white_level"].toInt());require(white>2048&&white<=65535,"Invalid white");

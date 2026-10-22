@@ -88,6 +88,8 @@ def base_records(base, groups):
                 value = finite_number(xmp.get(field)) if field else None
                 if value is None:
                     raise ValueError("No XMP control audit for " + feature + "; use --mapping: " + str(path))
+                if feature.startswith("mixer-") and value == 0:
+                    continue  # the three components of a band share its folder: another component's state
                 scene = path.stem.split("-")[0]
                 anchor = 5200 if feature == "temperature" else 0
                 candidates = variants if feature in ("temperature", "tint") else neutral_candidates

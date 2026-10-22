@@ -12,7 +12,7 @@ protocole : [protocole Lumières](../validation/protocols/protocole-lumieres.md)
 | Exposition | Avant le DCP, sur le signal caméra ; conforme à LR à ±0,03 EV | Validé visuellement, 18 octobre |
 | Contraste | S à extrémités fixes, domaine log, par canal | Validé, réserve à +100 (≈ 3 % plus fort que LR) |
 | Noirs, blancs | Plan B : formes de LR, poids par image, couleur des tons clairs | **Validés visuellement le 19 octobre** |
-| Ombres, HL | Plan B ; HL réajustées sur 19 scènes (modèle pondéré) | Ombres acceptées ; HL : opérateur local à engager (traitement local de LR démontré) |
+| Ombres, HL | Plan B ; HL par scènes de référence voisines (49 scènes, 20 octobre) | Ombres acceptées ; **HL mises de côté avec réserve (21 octobre)** : voile sur ciels écrêtés, force variable ; reprise avec le module local |
 
 Comparaisons IPR/LR à réglages égaux : calibration RAW de l'IHM, optique
 coupée des deux côtés. Corpus : six scènes sombres du protocole, plus deux
@@ -123,6 +123,19 @@ est conservé ; rayon et force ajustés sur les paires LR des 19 scènes, avec l
 critère de l'utilisateur (±3 % de luminosité affichée par scène). Vérifier le même
 besoin pour les ombres (dispersion faible, 0,05 EV à +100). Module conforme à la
 cible d'architecture : `ImageEditor` cadenceur, modules `.h`/`.cpp`.
+
+**Diagnostic du 20 octobre 2026** ([rapport](../validation/analyses/analyse-validation-lumieres-base-2026-10-02.md#hl--traitement-local-ou-courbe-propre-à-chaque-image--diagnostic-du-20-octobre-2026)) :
+le traitement local de LR explique 25 % de la dispersion entre pixels (détail par
+rapport à un flou large), mais pas la luminosité des tons clairs. Une courbe
+globale propre à chaque image atteindrait le critère (16/19 à −100) ; aucune forme
+transférable entre scènes n'a été trouvée. Options : valider avec réserve chiffrée,
+ou réunir davantage de scènes LR pour apprendre l'adaptation par image. Le module
+base/détail reste utile pour la clarté, la texture et la correction de voile.
+
+**Sur 49 scènes (20 octobre)** : une courbe prédite d'après l'image améliore la
+forme actuelle (HL +100 : 19 → 32/49 dans ±3 % ; −100 : écart 26,5 → 17,4 %),
+sans atteindre le critère aux valeurs négatives, surtout sur les scènes sombres.
+Le master IPR n'a aucune réserve au-dessus du blanc (sujet du décodage, ADR-0018).
 
 ## Points reportés
 

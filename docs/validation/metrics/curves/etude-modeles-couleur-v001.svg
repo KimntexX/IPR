@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1000" viewBox="0 0 1100 1000">
+<rect width="1100" height="1000" fill="white"/>
+<g font-family="sans-serif" font-size="12" fill="#222">
+<text x="35" y="28" font-size="20">Étude des modèles Couleur — médianes sur sept scènes</text>
+<path d="M35,52 h22" stroke="#666666" stroke-width="3"/>
+<text x="63" y="56">IPR courant</text>
+<path d="M245,52 h22" stroke="#1976d2" stroke-width="3"/>
+<text x="273" y="56">A1 extrémités RGB</text>
+<path d="M455,52 h22" stroke="#00876c" stroke-width="3"/>
+<text x="483" y="56">A2 OKLCh</text>
+<path d="M665,52 h22" stroke="#c35091" stroke-width="3"/>
+<text x="693" y="56">B PR598 ProPhoto</text>
+<path d="M875,52 h22" stroke="#b57600" stroke-width="3"/>
+<text x="903" y="56">LR descriptif</text>
+<text x="85" y="102">vibrance — ΔC/C chroma faible (%)</text>
+<path d="M85,315.00 h430" stroke="#e0e0e0"/>
+<text x="77" y="319.00" text-anchor="end">-112.9</text>
+<path d="M85,266.25 h430" stroke="#e0e0e0"/>
+<text x="77" y="270.25" text-anchor="end">-59.3</text>
+<path d="M85,217.50 h430" stroke="#e0e0e0"/>
+<text x="77" y="221.50" text-anchor="end">-5.7</text>
+<path d="M85,168.75 h430" stroke="#e0e0e0"/>
+<text x="77" y="172.75" text-anchor="end">47.9</text>
+<path d="M85,120.00 h430" stroke="#e0e0e0"/>
+<text x="77" y="124.00" text-anchor="end">101.5</text>
+<text x="85.0" y="335" text-anchor="middle">-100</text>
+<text x="192.5" y="335" text-anchor="middle">-50</text>
+<text x="300.0" y="335" text-anchor="middle">0</text>
+<text x="407.5" y="335" text-anchor="middle">50</text>
+<text x="515.0" y="335" text-anchor="middle">100</text>
+<polyline points="85.00,301.55 192.50,255.07 246.25,233.27 300.00,212.33 353.75,195.18 407.50,178.55 515.00,146.76" fill="none" stroke="#666666" stroke-width="2"/>
+<polyline points="85.00,298.21 192.50,255.07 246.25,233.27 300.00,212.33 353.75,195.18 407.50,178.55 515.00,142.76" fill="none" stroke="#1976d2" stroke-width="2"/>
+<polyline points="85.00,299.58 192.50,255.65 246.25,233.51 300.00,212.33 353.75,192.99 407.50,174.39 515.00,134.89" fill="none" stroke="#00876c" stroke-width="2"/>
+<polyline points="85.00,276.24 192.50,253.55 246.25,235.98 300.00,212.33 353.75,196.88 407.50,178.86 515.00,133.45" fill="none" stroke="#c35091" stroke-width="2"/>
+<polyline points="85.00,300.94 192.50,260.21 246.25,236.83 300.00,212.33 353.75,203.35 407.50,190.45 515.00,134.80" fill="none" stroke="#b57600" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="85" y="372">vibrance — ΔC/C chroma fort (%)</text>
+<path d="M85,585.00 h430" stroke="#e0e0e0"/>
+<text x="77" y="589.00" text-anchor="end">-102.1</text>
+<path d="M85,536.25 h430" stroke="#e0e0e0"/>
+<text x="77" y="540.25" text-anchor="end">-66.1</text>
+<path d="M85,487.50 h430" stroke="#e0e0e0"/>
+<text x="77" y="491.50" text-anchor="end">-30.2</text>
+<path d="M85,438.75 h430" stroke="#e0e0e0"/>
+<text x="77" y="442.75" text-anchor="end">5.8</text>
+<path d="M85,390.00 h430" stroke="#e0e0e0"/>
+<text x="77" y="394.00" text-anchor="end">41.8</text>
+<text x="85.0" y="605" text-anchor="middle">-100</text>
+<text x="192.5" y="605" text-anchor="middle">-50</text>
+<text x="300.0" y="605" text-anchor="middle">0</text>
+<text x="407.5" y="605" text-anchor="middle">50</text>
+<text x="515.0" y="605" text-anchor="middle">100</text>
+<polyline points="85.00,568.42 192.50,495.18 246.25,468.65 300.00,446.61 353.75,439.83 407.50,433.21 515.00,420.46" fill="none" stroke="#666666" stroke-width="2"/>
+<polyline points="85.00,562.80 192.50,495.18 246.25,468.65 300.00,446.61 353.75,439.83 407.50,433.21 515.00,418.85" fill="none" stroke="#1976d2" stroke-width="2"/>
+<polyline points="85.00,571.55 192.50,498.92 246.25,470.13 300.00,446.61 353.75,432.47 407.50,420.32 515.00,403.45" fill="none" stroke="#00876c" stroke-width="2"/>
+<polyline points="85.00,524.94 192.50,493.55 246.25,472.37 300.00,446.61 353.75,435.83 407.50,424.47 515.00,404.30" fill="none" stroke="#c35091" stroke-width="2"/>
+<polyline points="85.00,563.47 192.50,505.40 246.25,475.61 300.00,446.61 353.75,440.21 407.50,431.94 515.00,412.32" fill="none" stroke="#b57600" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="85" y="642">vibrance — Δ luminance Y (%)</text>
+<path d="M85,855.00 h430" stroke="#e0e0e0"/>
+<text x="77" y="859.00" text-anchor="end">-30.3</text>
+<path d="M85,806.25 h430" stroke="#e0e0e0"/>
+<text x="77" y="810.25" text-anchor="end">-21.9</text>
+<path d="M85,757.50 h430" stroke="#e0e0e0"/>
+<text x="77" y="761.50" text-anchor="end">-13.5</text>
+<path d="M85,708.75 h430" stroke="#e0e0e0"/>
+<text x="77" y="712.75" text-anchor="end">-5.2</text>
+<path d="M85,660.00 h430" stroke="#e0e0e0"/>
+<text x="77" y="664.00" text-anchor="end">3.2</text>
+<text x="85.0" y="875" text-anchor="middle">-100</text>
+<text x="192.5" y="875" text-anchor="middle">-50</text>
+<text x="300.0" y="875" text-anchor="middle">0</text>
+<text x="407.5" y="875" text-anchor="middle">50</text>
+<text x="515.0" y="875" text-anchor="middle">100</text>
+<polyline points="85.00,678.58 192.50,678.58 246.25,678.58 300.00,678.53 353.75,678.53 407.50,678.53 515.00,678.53" fill="none" stroke="#666666" stroke-width="2"/>
+<polyline points="85.00,678.58 192.50,678.58 246.25,678.58 300.00,678.53 353.75,678.53 407.50,678.53 515.00,678.53" fill="none" stroke="#1976d2" stroke-width="2"/>
+<polyline points="85.00,678.92 192.50,678.35 246.25,678.34 300.00,678.53 353.75,678.43 407.50,678.16 515.00,675.37" fill="none" stroke="#00876c" stroke-width="2"/>
+<polyline points="85.00,786.04 192.50,726.51 246.25,700.01 300.00,678.53 353.75,676.41 407.50,674.70 515.00,675.46" fill="none" stroke="#c35091" stroke-width="2"/>
+<polyline points="85.00,841.55 192.50,750.96 246.25,712.73 300.00,678.53 353.75,674.41 407.50,673.45 515.00,685.90" fill="none" stroke="#b57600" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="625" y="102">saturation — ΔC/C chroma faible (%)</text>
+<path d="M625,315.00 h430" stroke="#e0e0e0"/>
+<text x="617" y="319.00" text-anchor="end">-115.1</text>
+<path d="M625,266.25 h430" stroke="#e0e0e0"/>
+<text x="617" y="270.25" text-anchor="end">-60.4</text>
+<path d="M625,217.50 h430" stroke="#e0e0e0"/>
+<text x="617" y="221.50" text-anchor="end">-5.6</text>
+<path d="M625,168.75 h430" stroke="#e0e0e0"/>
+<text x="617" y="172.75" text-anchor="end">49.2</text>
+<path d="M625,120.00 h430" stroke="#e0e0e0"/>
+<text x="617" y="124.00" text-anchor="end">103.9</text>
+<text x="625.0" y="335" text-anchor="middle">-100</text>
+<text x="732.5" y="335" text-anchor="middle">-50</text>
+<text x="840.0" y="335" text-anchor="middle">0</text>
+<text x="947.5" y="335" text-anchor="middle">50</text>
+<text x="1055.0" y="335" text-anchor="middle">100</text>
+<polyline points="625.00,301.55 732.50,255.12 786.25,233.39 840.00,212.52 893.75,192.44 947.50,173.09 1055.00,136.37" fill="none" stroke="#666666" stroke-width="2"/>
+<polyline points="625.00,301.55 732.50,255.12 786.25,233.39 840.00,212.52 893.75,192.44 947.50,173.09 1055.00,136.37" fill="none" stroke="#1976d2" stroke-width="2"/>
+<polyline points="625.00,301.55 732.50,255.03 786.25,233.30 840.00,212.52 893.75,192.60 947.50,173.48 1055.00,137.47" fill="none" stroke="#00876c" stroke-width="2"/>
+<polyline points="625.00,301.55 732.50,255.13 786.25,233.39 840.00,212.52 893.75,194.04 947.50,176.18 1055.00,142.13" fill="none" stroke="#c35091" stroke-width="2"/>
+<polyline points="625.00,301.55 732.50,254.18 786.25,232.78 840.00,212.52 893.75,191.13 947.50,171.36 1055.00,133.45" fill="none" stroke="#b57600" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="625" y="372">saturation — ΔC/C chroma fort (%)</text>
+<path d="M625,585.00 h430" stroke="#e0e0e0"/>
+<text x="617" y="589.00" text-anchor="end">-110.9</text>
+<path d="M625,536.25 h430" stroke="#e0e0e0"/>
+<text x="617" y="540.25" text-anchor="end">-71.3</text>
+<path d="M625,487.50 h430" stroke="#e0e0e0"/>
+<text x="617" y="491.50" text-anchor="end">-31.7</text>
+<path d="M625,438.75 h430" stroke="#e0e0e0"/>
+<text x="617" y="442.75" text-anchor="end">7.9</text>
+<path d="M625,390.00 h430" stroke="#e0e0e0"/>
+<text x="617" y="394.00" text-anchor="end">47.5</text>
+<text x="625.0" y="605" text-anchor="middle">-100</text>
+<text x="732.5" y="605" text-anchor="middle">-50</text>
+<text x="840.0" y="605" text-anchor="middle">0</text>
+<text x="947.5" y="605" text-anchor="middle">50</text>
+<text x="1055.0" y="605" text-anchor="middle">100</text>
+<polyline points="625.00,571.55 732.50,495.96 786.25,470.02 840.00,448.45 893.75,430.61 947.50,415.60 1055.00,403.45" fill="none" stroke="#666666" stroke-width="2"/>
+<polyline points="625.00,571.55 732.50,495.96 786.25,470.02 840.00,448.45 893.75,430.61 947.50,415.60 1055.00,403.45" fill="none" stroke="#1976d2" stroke-width="2"/>
+<polyline points="625.00,571.55 732.50,496.53 786.25,470.02 840.00,448.45 893.75,430.90 947.50,417.67 1055.00,405.96" fill="none" stroke="#00876c" stroke-width="2"/>
+<polyline points="625.00,571.55 732.50,496.32 786.25,470.23 840.00,448.45 893.75,432.56 947.50,418.96 1055.00,405.18" fill="none" stroke="#c35091" stroke-width="2"/>
+<polyline points="625.00,571.55 732.50,494.07 786.25,468.85 840.00,448.45 893.75,431.51 947.50,418.36 1055.00,406.89" fill="none" stroke="#b57600" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="625" y="642">saturation — Δ luminance Y (%)</text>
+<path d="M625,855.00 h430" stroke="#e0e0e0"/>
+<text x="617" y="859.00" text-anchor="end">-3.3</text>
+<path d="M625,806.25 h430" stroke="#e0e0e0"/>
+<text x="617" y="810.25" text-anchor="end">-0.4</text>
+<path d="M625,757.50 h430" stroke="#e0e0e0"/>
+<text x="617" y="761.50" text-anchor="end">2.4</text>
+<path d="M625,708.75 h430" stroke="#e0e0e0"/>
+<text x="617" y="712.75" text-anchor="end">5.3</text>
+<path d="M625,660.00 h430" stroke="#e0e0e0"/>
+<text x="617" y="664.00" text-anchor="end">8.2</text>
+<text x="625.0" y="875" text-anchor="middle">-100</text>
+<text x="732.5" y="875" text-anchor="middle">-50</text>
+<text x="840.0" y="875" text-anchor="middle">0</text>
+<text x="947.5" y="875" text-anchor="middle">50</text>
+<text x="1055.0" y="875" text-anchor="middle">100</text>
+<polyline points="625.00,798.91 732.50,798.91 786.25,798.91 840.00,798.78 893.75,796.01 947.50,788.00 1055.00,745.88" fill="none" stroke="#666666" stroke-width="2"/>
+<polyline points="625.00,798.91 732.50,798.91 786.25,798.91 840.00,798.78 893.75,796.01 947.50,788.00 1055.00,745.88" fill="none" stroke="#1976d2" stroke-width="2"/>
+<polyline points="625.00,800.08 732.50,798.18 786.25,798.17 840.00,798.78 893.75,796.27 947.50,787.06 1055.00,758.11" fill="none" stroke="#00876c" stroke-width="2"/>
+<polyline points="625.00,791.88 732.50,795.40 786.25,797.15 840.00,798.78 893.75,796.16 947.50,792.83 1055.00,766.82" fill="none" stroke="#c35091" stroke-width="2"/>
+<polyline points="625.00,841.55 732.50,832.25 786.25,818.03 840.00,798.78 893.75,771.88 947.50,737.43 1055.00,673.45" fill="none" stroke="#b57600" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="35" y="942">Réponses propres à chaque moteur ; masques variables ; corrections optiques différentes. Pas de MAE inter-moteurs.</text>
+<text x="35" y="966">Source : comparaison-modeles-couleur-v001-20261013T140227537090Z</text>
+</g></svg>

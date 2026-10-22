@@ -73,6 +73,27 @@ Le corpus de 19 sources doit rester identique aux témoins acceptés au pas 8 ;
 les nouvelles images SD restent à observer par l'utilisateur. Aucun accès,
 effacement ou copie de carte n'est nécessaire à cette intégration.
 
+## Extension du 20 octobre 2026 : EOS 60D (CR2)
+
+Sur décision de l'utilisateur, le 60D entre dans les boîtiers de la fin de l'alpha.
+Pour LibRaw, ses modes ISO ont le même noir (≈ 2048) et le même blanc (12279) ;
+Adobe lit, lui, le blanc spéculaire Canon de chaque fichier, plafonné à 15000, et
+compense par sa base d'exposition (net −0,34 EV pour tous les modes). Une règle peut
+donc borner ce blanc spéculaire (`specular_white_min`/`max`, facultatifs) ; quatre
+règles 60D en découlent, valeurs d'Adobe, preuve `audit-niveaux-eos60d-v001` :
+
+| Mode 60D | Blanc spéculaire | Blanc cible | Base source |
+| --- | --- | ---: | ---: |
+| ISO multiples de 160 (160, 1250 vus) | 11100–11400 | 11222 | −0,50 EV |
+| ISO 100, spéculaire 12279 | 12200–12400 | 12279 | −0,34 EV |
+| ISO 100, spéculaire 12749 | 12600–12900 | 12749 | −0,28 EV |
+| ISO 400–6400 vus | 15000–15800 | 15000 | 0 |
+
+Noir 1900–2200, blanc natif 12000–12600, DCP Camera Neutral 60D. Un blanc
+spéculaire non observé n'est rattaché à aucune règle (rendu ordinaire). Écart du
+neutre IPR/LR sur 21 CR2 : 4,8 → 0,9 L\* en moyenne (`ecart-neutre-60d-v001`) ;
+CR3 inchangés. Validation visuelle de l'utilisateur à obtenir.
+
 ## Références
 
 - [Rapport unique RAW/profils](../validation/analyses/analyse-base-colorimetrique.md).

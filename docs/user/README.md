@@ -1,8 +1,17 @@
 # Livre utilisateur IPR
 
 Manuel français de la version alpha, fondé sur l’interface de `patch_ui`,
-vérifiée dans les sources le **19 octobre 2026**. Il décrit l’utilisation,
+vérifiée dans les sources le **20 octobre 2026**. Il décrit l’utilisation,
 pas les algorithmes de la [documentation technique](../technical/latex/README.md).
+
+**État de livraison au 22 octobre 2026 :** les ajouts du 20 octobre
+(copier/coller, sauvegarde manuelle et `Ctrl+clic`) sont validés par l'utilisateur
+et publiés sur `patch_ui`. Ils ne sont pas encore intégrés dans `dev` au contrôle
+de cette reprise. La branche est maintenant synchronisée avec `dev` ; sa nouvelle
+CI doit être validée avant intégration. Le
+[bilan IHM](../architecture/suivi-raccordements-ihm.md#état-actuel--22-octobre-2026)
+distingue la livraison précédente, les ajouts publiés et les raccordements restants.
+La duplication physique `Ctrl+D` reste indisponible ; `Ctrl+S` est fonctionnel.
 
 - [Source principale LaTeX](latex/ipr-livre-utilisateur.tex).
 - [Chapitres par famille](latex/chapters/).
@@ -37,7 +46,7 @@ sans procédures fictives. Les mémos de survol prolongé sont réservés à la 
 | Sélection et navigation | `ThumbnailRibbon.qml`, `FilmstripNavigation.qml` |
 | Notes et libellés | `ImageInfoPanel.qml` |
 | Préférences | Composants Preferences et `src/app/UiPreferences.cpp` |
-| Sidecars, application groupée, export | `src/editor/imageeditor.cpp`, lecture seule dans ce chantier |
+| Sidecars, copier/coller, application groupée, export | `src/editor/imageeditor.cpp` ; raccordements de commandes autorisés le 20 octobre |
 
 Une fonction exposée n’est pas une fonction validée sur tous les appareils.
 Les limites et raccordements restent suivis dans le

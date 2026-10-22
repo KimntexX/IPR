@@ -53,7 +53,6 @@ QString processFile(const QString &label, const QString &root,
     const QString make = QString::fromLocal8Bit(data.idata.make).trimmed();
     const QString model = QString::fromLocal8Bit(data.idata.model).trimmed();
     const QString lens = QString::fromLocal8Bit(data.lens.Lens).trimmed();
-    const QString extension = info.suffix();
     const auto number = [](double value) {
         return QString::number(value, 'g', 8);
     };
@@ -62,8 +61,7 @@ QString processFile(const QString &label, const QString &root,
     RawBlackLevelEstimator::Result estimate;
     if (status == LIBRAW_SUCCESS) {
         RawBlackLevelEstimator::Input input;
-        input.extension = extension;
-        input.cameraMake = make;
+        input.marginsAreMasked = make.contains(QStringLiteral("Canon"), Qt::CaseInsensitive);
         input.mosaic = data.rawdata.raw_image;
         input.rawWidth = data.sizes.raw_width;
         input.rawHeight = data.sizes.raw_height;
@@ -73,19 +71,11 @@ QString processFile(const QString &label, const QString &root,
         input.activeHeight = data.sizes.height;
         input.maximum = data.color.maximum;
         input.hasCfa = data.idata.filters != 0 && data.idata.colors >= 3;
-        input.globalBlack = data.color.black;
-        input.rawGlobalBlack = data.rawdata.color.black;
-        input.patternBlack = data.color.cblack[4];
-        input.rawPatternBlack = data.rawdata.color.cblack[4];
-        for (int channel = 0; channel < 4; ++channel) {
-            input.channelBlack[channel] = data.color.cblack[channel];
-            input.rawChannelBlack[channel] = data.rawdata.color.cblack[channel];
-        }
         for (int row = 0; row < 2; ++row) {
             for (int column = 0; column < 2; ++column)
                 input.cfaChannels[row * 2 + column] = raw.COLOR(row, column);
         }
-        estimate = RawBlackLevelEstimator::estimate(input);
+        estimate = RawBlackLevelEstimator::measure(input);
         decodeStatus = QStringLiteral("ok");
     } else {
         estimate.status = RawBlackLevelEstimator::Status::InvalidInput;

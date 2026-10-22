@@ -431,15 +431,16 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                        output.pixelColor(band, 0) != base.pixelColor(band, 0),
                        "each of eight mixer bands should work with global saturation/vibrance at zero"))
                 return false;
+            // Lightroom bands overlap their neighbours: only non-adjacent bands stay intact.
             for (int other = 0; other < 8; ++other) {
-                if (other == band)
+                if ((other - band + 8) % 8 <= 1 || (band - other + 8) % 8 <= 1)
                     continue;
                 const QColor actual = output.pixelColor(other, 0);
                 const QColor expected = base.pixelColor(other, 0);
                 if (!check(std::abs(actual.red() - expected.red()) <= 2 &&
                            std::abs(actual.green() - expected.green()) <= 2 &&
                            std::abs(actual.blue() - expected.blue()) <= 2,
-                           "a mixer band should preserve the other band centres"))
+                           "a mixer band should preserve the non-adjacent band centres"))
                     return false;
             }
         }
@@ -1295,6 +1296,23 @@ int main(int argc, char **argv)
                    vibrantImage.pixelColor(0, 0).blue() >
                        200,
                "vibrance control should increase the chrominance of the export"))
+        return 1;
+
+    editor.resetAdjustments();
+    editor.setVibrance(-100);
+    const QString reducedVibrancePath = directory.filePath(QStringLiteral("reduced-vibrance.png"));
+    const QString reducedVibranceStatus = awaitExport(
+        editor, QUrl::fromLocalFile(reducedVibrancePath), QStringLiteral("PNG"));
+    const QImage reducedVibranceImage(reducedVibrancePath);
+    if (!check(reducedVibranceStatus.startsWith(QStringLiteral("Image exportée")) &&
+                   !reducedVibranceImage.isNull(), "negative vibrance must export successfully"))
+        return 1;
+    const QColor reducedColour = reducedVibranceImage.pixelColor(0, 0);
+    const int reducedSpread = std::max({reducedColour.red(), reducedColour.green(), reducedColour.blue()}) -
+                              std::min({reducedColour.red(), reducedColour.green(), reducedColour.blue()});
+    // Lightroom keeps a residual on saturated colours at -100 (input spread 104).
+    if (!check(reducedSpread > 0 && reducedSpread < 104 / 3,
+               "negative vibrance must strongly reduce export chroma with a residual"))
         return 1;
 
     editor.resetAdjustments();

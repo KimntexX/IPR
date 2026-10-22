@@ -7,13 +7,16 @@
 
 #include <array>
 
-// Shadows, Blacks, Highlights and Whites (plan B, 18 October 2026). Each control
-// lifts or lowers tones by an EV amount read from Lightroom's own transfer
-// curves (ToneRecoveryModel.h: knots every EV of log2 input, four slider
-// levels, linear in between). Lightroom adapts Shadows, Highlights and positive
-// Whites to the image: their lift is multiplied by a per-image gain predicted
-// from the image's luminance statistics, bounded to the range seen in fitting.
-// Blacks and negative Whites are the same on every image.
+// Shadows, Blacks, Highlights and Whites. Each control lifts or lowers tones by
+// an EV amount read from Lightroom's own transfer curves, at four slider levels,
+// linear in between. Lightroom adapts its controls to the image:
+// - Shadows and positive Whites (ToneRecoveryModel.h, plan B, 18 October 2026):
+//   one curve shape, multiplied by a per-image gain predicted from the image's
+//   luminance statistics and bounded to the range seen in fitting; Blacks and
+//   negative Whites are the same on every image;
+// - Highlights (ToneRecoveryHighlights.h, 20 October 2026): the mean curve of
+//   the reference scenes whose luminance statistics are closest to the image's.
+//   No single shape scaled by a gain follows Lightroom from one image to the next.
 // Shadows, Highlights and negative Whites act on luminance (common RGB scale);
 // Blacks and positive Whites act on each linear sRGB channel, as Lightroom
 // does: its Blacks -100 saturates colours (x1.40), which a common scale cannot
@@ -27,21 +30,28 @@ inline bool identity(const Amounts &a)
 }
 
 // Applies the four controls (slider amounts in [-1, 1]) to a linear Rec.2020
-// RGB image (CV_32FC3) in place, weighted by the image's statistics.
+// RGB image (CV_32FC3) in place, adapted to the image's statistics.
 void apply(cv::Mat &rgb, const Amounts &amounts, const Statistics &statistics);
 
 // Building blocks of apply(), exposed for the unit tests.
 
-// Per-image gains, indexed like Model::Controls.
-struct Gains { std::array<float, 8> value{1, 1, 1, 1, 1, 1, 1, 1}; };
+inline constexpr int HighlightBins = 56; // 0.25 EV bins from 2^-14 to white
+
+// Per-image adaptation: gains of Shadows, Blacks and Whites (indexed like
+// Model::Controls) and the Highlights curves of the nearest reference scenes
+// (EV lift per sign -/+, slider level and bin).
+struct Adaptation {
+    std::array<float, 6> gain{1, 1, 1, 1, 1, 1};
+    std::array<std::array<std::array<float, HighlightBins>, 4>, 2> highlights{};
+};
 
 // Median statistics of the fitting scenes, for images without measurement.
 Statistics typicalStatistics();
-Gains gains(const Statistics &statistics);
+Adaptation adapt(const Statistics &statistics);
 
 // EV lift of one control (0 Shadows, 1 Blacks, 2 Highlights, 3 Whites) at
 // x = log2(input) for a slider amount in [-1, 1].
-float lift(int control, float amount, float x, const Gains &gains);
+float lift(int control, float amount, float x, const Adaptation &adaptation);
 
 // Soft shoulder of a brightening from y (< 1) to out: tones above the knee
 // approach 1 without reaching it; untouched or darkened tones pass through.
@@ -49,7 +59,7 @@ float shoulder(float y, float out, float knee = 0.70f);
 
 // Analytic transfer of the luminance controls or of the channel controls,
 // before monotone sampling.
-float transfer(float y, const Amounts &a, const Gains &g, bool perChannel);
+float transfer(float y, const Amounts &a, const Adaptation &adaptation, bool perChannel);
 
 // Brightening of a linear sRGB colour of luminance y to the luminance target,
 // whitening a colour that would leave the gamut.
@@ -64,7 +74,7 @@ void darkenKeepingColour(float rgb[3], float y, float target);
 // combination); linear interpolation in log2 between samples.
 class Curve {
 public:
-    Curve(const Amounts &amounts, const Gains &gains);
+    Curve(const Amounts &amounts, const Adaptation &adaptation);
     bool luminanceIdentity() const { return luminanceIdentity_; }
     bool channelIdentity() const { return channelIdentity_; }
     float luminance(float y) const;
@@ -77,7 +87,7 @@ private:
     void sample(Table &table, bool perChannel) const;
     float read(const Table &table, float y, bool perChannel) const;
     Amounts amounts_;
-    Gains gains_;
+    Adaptation adaptation_;
     bool luminanceIdentity_, channelIdentity_;
     Table luminance_{}, channel_{};
 };

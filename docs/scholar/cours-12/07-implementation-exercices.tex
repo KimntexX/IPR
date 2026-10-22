@@ -1,0 +1,131 @@
+\chapter{Implémentation, limites et exercices}
+
+\section{Organisation du code}
+\begin{longtable}{p{5.6cm}p{9.4cm}}
+\toprule Fichier & Rôle\\ \midrule
+\small\texttt{scripts/\allowbreak build\_vibrance\_model.py} & Lit les paires Lightroom,
+échantillonne, construit les tables, impose la monotonie, mesure le facteur
+quasi-gris, valide par validation croisée, écrit l'en-tête C++ et la preuve
+JSON. Refuse un état absent ou dupliqué ; ne réécrit jamais une preuve.\\
+\small\texttt{src/\allowbreak core/\allowbreak VibranceModel.h} & En-tête généré : axes, tables de gain de
+chroma, de gain de clarté et de rotation, facteur quasi-gris. Ne se modifie
+pas à la main.\\
+\small\texttt{src/\allowbreak core/\allowbreak Vibrance.h/\allowbreak .cpp} & Le module : conversions, lecture
+interpolée des tables, transformation du pixel, boucle sur l'image.\\
+\small\texttt{src/\allowbreak editor/\allowbreak imageeditor.cpp} & Le cadenceur appelle
+\texttt{Vibrance::apply} après les réglages tonals, sans traitement propre.\\
+\small\texttt{tests/\allowbreak vibrance\_math\_test.cpp} & Tests unitaires du modèle.\\
+\small\texttt{tests/\allowbreak analyse\_couleur.py} & Campagne de mesure du rendu réel
+d'\IPR{} contre Lightroom, rendu en mémoire.\\
+\bottomrule
+\end{longtable}
+
+\section{Le traitement d'une image}
+La fonction \texttt{Vibrance::apply} reçoit le master Rec.2020 linéaire en
+\texttt{float} sur trois canaux. Elle :
+\begin{enumerate}
+\item ne fait rien si les deux curseurs sont à zéro, si l'image est vide ou
+d'un autre type ;
+\item parcourt les lignes en parallèle (\texttt{cv::parallel\_for\_}) : chaque
+pixel est indépendant, aucune donnée n'est partagée en écriture ;
+\item laisse intact tout pixel gris ($R=G=B$), sans aller-retour matriciel qui
+introduirait une erreur d'arrondi ;
+\item convertit le pixel en sRGB linéaire, applique la transformation, revient
+en Rec.2020.
+\end{enumerate}
+
+\section{Ce que vérifient les tests}
+\begin{itemize}
+\item identités exactes : curseurs à zéro, gris, y compris un gris HDR à 4 ;
+\item résultats finis pour des valeurs négatives ou supérieures à 1 ;
+\item la chroma ne diminue jamais quand la vibrance augmente ;
+\item continuité de part et d'autre de zéro ;
+\item saturation $-100$ : gris ; saturation seule : clarté et teinte conservées ;
+\item comportement Lightroom : gain $+100$ plausible sur une couleur modérée,
+plus faible sur une couleur saturée, réponse progressive, quasi-suppression des
+couleurs faibles à $-100$ ;
+\item rotation : à $+100$ le bleu tourne vers le cyan, à $-50$ dans l'autre sens ;
+\item chemin image : un gris Rec.2020 inchangé, une couleur modifiée, un type
+non pris en charge ignoré.
+\end{itemize}
+
+\section{Limites}
+\begin{itemize}
+\item Les tables décrivent Lightroom avec le profil Camera Neutral et la
+version de processus courante, sur 49 scènes de trois boîtiers Canon. Un autre
+profil ou une autre version de Lightroom demande une nouvelle mesure.
+\item Les médianes décrivent le comportement typique. Sur certaines images,
+comme un grand ciel bleu saturé, Lightroom s'en écarte ; la part de variance
+non expliquée, 5\,\% au positif, existe bien.
+\item Les couleurs poussées hors du gamut sRGB sont compressées à la sortie,
+comme le reste du rendu.
+\item Les quasi-gris et les pixels très sombres sont traités par extrapolation
+prudente : les mesures y sont rares et bruitées.
+\end{itemize}
+
+\section{Exercices}
+\paragraph{Exercice 1 -- Logarithme d'un gain.} Une couleur passe d'une chroma
+0,05 à 0,08. Calculer $\gamma$. Quel $\gamma$ ramène ensuite la chroma à 0,05 ?
+
+\paragraph{Exercice 2 -- Rotation.} Un pixel a $a=-0{,}02$ et $b=-0{,}09$.
+Calculer sa chroma et sa teinte, puis $(a',b')$ après une rotation de
+$-5^\circ$. Vérifier que la chroma est conservée.
+
+\paragraph{Exercice 3 -- Interpolation entre valeurs.} Une cellule donne
+$\gamma=0{,}35$ à $+50$ et $\gamma=0{,}91$ à $+100$. Quel gain de chroma à
+$+75$ ? À $+20$, sachant que $\gamma=0{,}16$ à $+25$ ?
+
+\paragraph{Exercice 4 -- Régression isotone.} Rendre croissante la suite
+$(-3{,}69\,;\ -0{,}82\,;\ -0{,}36)$ pour $-100$, $-50$, $-25$, puis la suite
+$(0{,}20\,;\ 0{,}15\,;\ 0{,}10)$ pour $+25$, $+50$, $+100$.
+
+\paragraph{Exercice 5 -- Choix d'une variable.} Pourquoi la chroma absolue
+explique-t-elle mal le gain positif, alors que la saturation relative
+l'explique bien ? Indice : comparer un bleu sombre et un bleu clair d'aspect
+également vif.
+
+\section{Corrigés}
+\paragraph{Corrigé 1.} $\gamma=\ln(0{,}08/0{,}05)=\ln1{,}6\approx0{,}47$. Le
+retour demande $\gamma=\ln(0{,}05/0{,}08)\approx-0{,}47$ : en logarithme, les
+gains inverses sont opposés.
+
+\paragraph{Corrigé 2.} $C=\sqrt{0{,}0004+0{,}0081}\approx0{,}0922$ ;
+$h=\operatorname{atan2}(-0{,}09,-0{,}02)\approx-102{,}5^\circ$, soit
+$257{,}5^\circ$. Avec $\cos(-5^\circ)\approx0{,}9962$ et
+$\sin(-5^\circ)\approx-0{,}0872$ :
+$a'=-0{,}02\times0{,}9962-(-0{,}09)(-0{,}0872)\approx-0{,}0278$ et
+$b'=-0{,}02\times(-0{,}0872)+(-0{,}09)\times0{,}9962\approx-0{,}0879$.
+On trouve $C'=\sqrt{0{,}000773+0{,}00773}\approx0{,}0922$ : la chroma est
+conservée, et la teinte devient $252{,}5^\circ$, plus proche du cyan.
+
+\paragraph{Corrigé 3.} À $+75$, $t=0{,}5$ : $\gamma=0{,}63$, gain $e^{0{,}63}\approx1{,}88$.
+À $+20$, entre 0 et $+25$, $t=0{,}8$ : $\gamma=0{,}128$, gain $\approx1{,}14$.
+
+\paragraph{Corrigé 4.} La première suite est déjà croissante et négative : elle
+est inchangée. La seconde viole l'ordre deux fois. On regroupe les deux
+premiers termes en leur moyenne $0{,}175$, qui viole encore l'ordre avec
+$0{,}10$ ; on regroupe les trois, de moyenne $0{,}15$. Résultat :
+$(0{,}15\,;\ 0{,}15\,;\ 0{,}15)$.
+
+\paragraph{Corrigé 5.} À aspect égal, un bleu sombre a une chroma Oklab plus
+faible qu'un bleu clair, parce que la chroma croît avec la luminosité. Classer
+par chroma mélange donc des couleurs vives sombres et des couleurs ternes
+claires, qui ne réagissent pas pareil. La saturation relative, rapport
+indépendant de l'échelle, regroupe les couleurs selon leur « vivacité »,
+critère que la vibrance utilise.
+
+\section{Glossaire}
+\begin{description}
+\item[Chroma $C$] distance au gris dans le plan $(a,b)$ d'Oklab, mesure
+absolue de l'intensité.
+\item[Saturation $s$] $(\max-\min)/\max$ en ProPhoto linéaire, mesure relative.
+\item[Teinte $h$] angle de la couleur dans le plan $(a,b)$.
+\item[Gain log $\gamma$] logarithme du rapport des chromas après et avant.
+\item[Cellule] case de la table, définie par une plage de saturation, de clarté
+et de teinte.
+\item[Repli] valeur donnée à une cellule trop peu peuplée.
+\item[Régression isotone] suite monotone la plus proche des mesures.
+\item[Quasi-gris] pixel de chroma inférieure à 0,016, traité par un facteur.
+\item[Validation croisée] mesure de l'erreur sur des données exclues de la
+construction du modèle.
+\end{description}

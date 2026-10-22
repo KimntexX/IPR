@@ -18,6 +18,7 @@ struct Context
     std::array<unsigned, 4> black{};
     unsigned globalBlack = 0;
     unsigned nativeWhiteLevel = 0;
+    unsigned specularWhiteLevel = 0; // Canon maker notes, 0 when unknown
     bool cameraWhiteBalance = false;
     bool nativeBaselineUnknown = false;
     QString decoderId;

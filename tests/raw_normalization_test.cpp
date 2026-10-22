@@ -8,6 +8,7 @@
 #include <QTemporaryDir>
 #include <iostream>
 #include <future>
+#include <tuple>
 #include <vector>
 
 int main(int argc,char **argv)
@@ -16,7 +17,7 @@ int main(int argc,char **argv)
     QFile bundled(":/config/raw-normalization.json");
     if(!bundled.open(QIODevice::ReadOnly))return 1;
     const auto defaults=QJsonDocument::fromJson(bundled.readAll()).object();
-    if(defaults["schema"].toInt()!=4 || defaults["entries"].toArray().size()!=3)return 1;
+    if(defaults["schema"].toInt()!=4 || defaults["entries"].toArray().size()!=7)return 1;
     QTemporaryDir dir;
     if(!dir.isValid())return 1;
     const auto write=[](const QString &p,const QByteArray &b){QFile f(p);return f.open(QIODevice::WriteOnly)&&f.write(b)==b.size();};
@@ -138,6 +139,31 @@ int main(int argc,char **argv)
         if(!save({modified}))return 1;
         result=RawNormalization::resolve(path,c);
         if(!check(result&&result->whiteLevel==unsigned(14000+i),"catalog revisions survive bounded-cache eviction"))return 1;
+    }
+    // EOS 60D: equal black and native white in every ISO mode; the Canon
+    // specular white of each file selects Adobe's white and baseline.
+    {
+        auto bundledEntries=defaults["entries"].toArray();
+        for(qsizetype i=0;i<bundledEntries.size();++i){auto e=bundledEntries[i].toObject();e["profile_sha256"]=hash("dcp");bundledEntries[i]=e;}
+        if(!save(bundledEntries))return 1;
+        auto d60=c;d60.fileName="IMG_0001.CR2";d60.cameraModel="EOS 60D";d60.black={2049,2050,2048,2049};d60.nativeWhiteLevel=12279;
+        const std::vector<std::tuple<unsigned,unsigned,double>> modes{{11222,11222,-.5},{12279,12279,-.34},{12749,12749,-.28},
+                                                                       {15094,15000,0.0},{15677,15000,0.0}};
+        for(const auto &[specular,white,ev]:modes){
+            d60.specularWhiteLevel=specular;
+            result=RawNormalization::resolve(path,d60);
+            if(!check(result&&result->whiteLevel==white&&result->baselineExposureEv==ev,"60D mode from the specular white"))return 1;
+        }
+        d60.specularWhiteLevel=13500;
+        if(!check(!RawNormalization::resolve(path,d60),"unseen 60D specular white not guessed"))return 1;
+        d60.specularWhiteLevel=0;
+        if(!check(!RawNormalization::resolve(path,d60),"unknown specular white matches no bounded rule"))return 1;
+        changed=c;changed.specularWhiteLevel=12279;
+        if(!check(RawNormalization::resolve(path,changed).has_value(),"rules without specular bounds ignore it"))return 1;
+        auto bounded=low;bounded["specular_white_min"]=14000;
+        if(!save({bounded})||!check(!RawNormalization::resolve(path,c),"half specular bounds rejected"))return 1;
+        bounded["specular_white_max"]=13000;
+        if(!save({bounded})||!check(!RawNormalization::resolve(path,c),"inverted specular bounds rejected"))return 1;
     }
     if(!write(path,"{broken")||!check(!RawNormalization::resolve(path,c),"invalid JSON rejected"))return 1;
     if(!write(path,QByteArray(1024*1024+1,' '))||!check(!RawNormalization::resolve(path,c),"size limit"))return 1;

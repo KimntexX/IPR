@@ -85,6 +85,50 @@ inline double srgbDecode(double encoded)
     return encoded <= .04045 ? encoded / 12.92 : std::pow((encoded + .055) / 1.055, 2.4);
 }
 
+// Linear sRGB D65 -> XYZ -> Bradford D65 to D50 -> linear ProPhoto RGB.
+inline const cv::Matx33d &srgbToProPhoto()
+{
+    static const cv::Matx33d matrix = cv::Matx33d(
+        .7976749, .1351917, .0313534,
+        .2880402, .7118741, .0000857,
+        .0000000, .0000000, .8252100).inv() * cv::Matx33d(
+        1.0478112, .0228866, -.0501270,
+        .0295424, .9904844, -.0170491,
+        -.0092345, .0150436, .7521316) * srgbToXyz();
+    return matrix;
+}
+
+// Relative saturation (max - min) / max of a linear sRGB colour in linear
+// ProPhoto RGB, clamped to [0, 1]; 0 when the maximum is not positive.
+inline double proPhotoSaturation(const cv::Vec3d &linearSrgb)
+{
+    const cv::Vec3d p = srgbToProPhoto() * linearSrgb;
+    const double peak = std::max({p[0], p[1], p[2]});
+    const double low = std::min({p[0], p[1], p[2]});
+    return peak > 1e-6 ? std::clamp((peak - low) / peak, 0.0, 1.0) : 0.0;
+}
+
+// Ottosson Oklab (2020) from and to linear sRGB; signed cube roots keep
+// HDR and out-of-gamut values defined.
+inline cv::Vec3d toOklab(const cv::Vec3d &p)
+{
+    const double l = std::cbrt(.4122214708 * p[0] + .5363325363 * p[1] + .0514459929 * p[2]);
+    const double m = std::cbrt(.2119034982 * p[0] + .6806995451 * p[1] + .1073969566 * p[2]);
+    const double s = std::cbrt(.0883024619 * p[0] + .2817188376 * p[1] + .6299787005 * p[2]);
+    return {.2104542553 * l + .7936177850 * m - .0040720468 * s,
+            1.9779984951 * l - 2.4285922050 * m + .4505937099 * s,
+            .0259040371 * l + .7827717662 * m - .8086757660 * s};
+}
+inline cv::Vec3d fromOklab(const cv::Vec3d &p)
+{
+    const double l = p[0] + .3963377774 * p[1] + .2158037573 * p[2];
+    const double m = p[0] - .1055613458 * p[1] - .0638541728 * p[2];
+    const double s = p[0] - .0894841775 * p[1] - 1.2914855480 * p[2];
+    return {4.0767416621 * l * l * l - 3.3077115913 * m * m * m + .2309699292 * s * s * s,
+            -1.2684380046 * l * l * l + 2.6097574011 * m * m * m - .3413193965 * s * s * s,
+            -.0041960863 * l * l * l - .7034186147 * m * m * m + 1.7076147010 * s * s * s};
+}
+
 // In-place, preserves straight alpha bit-for-bit, including extended RGB.
 inline void transform(cv::Mat &image, const cv::Matx33d &matrix)
 {

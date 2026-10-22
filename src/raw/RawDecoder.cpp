@@ -129,70 +129,73 @@ private:
     qint64 m_lastElapsed = 0;
 };
 
-bool estimateMissingCanonCr3BlackLevel(LibRaw &raw, const QString &fileName)
+// Black level read by IPR on every RAW after unpacking: measured on the
+// optical black pixels and compared with LibRaw's value, which is kept when it
+// agrees (RawBlackLevelEstimator). Returns true when the measurement replaced it.
+bool readBlackLevel(LibRaw &raw, const QString &fileName)
 {
     auto &data = raw.imgdata;
     RawBlackLevelEstimator::Input input;
-    input.extension = QFileInfo(fileName).suffix();
-    input.cameraMake = QString::fromLocal8Bit(data.idata.make);
     input.mosaic = data.rawdata.raw_image;
     input.rawWidth = data.sizes.raw_width;
     input.rawHeight = data.sizes.raw_height;
     input.rowStrideSamples = int(data.sizes.raw_pitch / sizeof(std::uint16_t));
-    // Canon bounds are inclusive. Prefer the left masked area: the audited
-    // high-ISO image has a slightly elevated upper border. Never infer these
-    // rectangles from the smaller photographic crop.
-    const auto addMaskedArea = [&](const libraw_area_t &area) {
-        if (area.l >= 0 && area.t >= 0 && area.r > area.l && area.b > area.t &&
-            area.r < input.rawWidth && area.b < input.rawHeight) {
-            input.maskedAreas.push_back({area.l, area.t, area.r - area.l + 1,
-                                         area.b - area.t + 1});
-            return true;
-        }
-        return false;
-    };
-    if (!addMaskedArea(data.makernotes.canon.LeftOpticalBlack))
-        addMaskedArea(data.makernotes.canon.UpperOpticalBlack);
+    const bool canon = QString::fromLocal8Bit(data.idata.make).contains(QStringLiteral("Canon"), Qt::CaseInsensitive);
+    if (canon) {
+        // Canon bounds are inclusive. Prefer the left masked area: the audited
+        // high-ISO image has a slightly elevated upper border. Never infer these
+        // rectangles from the smaller photographic crop.
+        const auto addCanonArea = [&](const libraw_area_t &area) {
+            if (area.l >= 0 && area.t >= 0 && area.r > area.l && area.b > area.t &&
+                area.r < input.rawWidth && area.b < input.rawHeight) {
+                input.maskedAreas.push_back({area.l, area.t, area.r - area.l + 1, area.b - area.t + 1});
+                return true;
+            }
+            return false;
+        };
+        if (!addCanonArea(data.makernotes.canon.LeftOpticalBlack))
+            addCanonArea(data.makernotes.canon.UpperOpticalBlack);
+        input.marginsAreMasked = true;
+    } else {
+        // Masked areas declared by the format (top, left, bottom, right; exclusive).
+        for (const auto &m : data.sizes.mask)
+            if (m[2] > m[0] && m[3] > m[1])
+                input.maskedAreas.push_back({m[1], m[0], m[3] - m[1], m[2] - m[0]});
+    }
     input.leftMargin = data.sizes.left_margin;
     input.topMargin = data.sizes.top_margin;
     input.activeWidth = data.sizes.width;
     input.activeHeight = data.sizes.height;
     input.maximum = data.color.maximum;
     input.hasCfa = data.idata.filters != 0 && data.idata.colors >= 3;
-    input.globalBlack = data.color.black;
-    input.rawGlobalBlack = data.rawdata.color.black;
-    input.patternBlack = data.color.cblack[4];
-    input.rawPatternBlack = data.rawdata.color.cblack[4];
-    for (int channel = 0; channel < 4; ++channel) {
-        input.channelBlack[channel] = data.color.cblack[channel];
-        input.rawChannelBlack[channel] = data.rawdata.color.cblack[channel];
-    }
-    for (int row = 0; row < 2; ++row) {
+    for (int row = 0; row < 2; ++row)
         for (int column = 0; column < 2; ++column)
             input.cfaChannels[row * 2 + column] = raw.COLOR(row, column);
-    }
 
-    const RawBlackLevelEstimator::Result estimate =
-        RawBlackLevelEstimator::estimate(input);
-    if (!estimate.wasEstimated())
+    const auto measured = RawBlackLevelEstimator::measure(input);
+    std::array<unsigned int, 4> decoder{};
+    for (int channel = 0; channel < 4; ++channel)
+        decoder[size_t(channel)] = data.color.black + data.color.cblack[channel];
+    const bool pattern = data.color.cblack[4] != 0 || data.rawdata.color.cblack[4] != 0;
+    const auto decision = RawBlackLevelEstimator::decide(decoder, pattern, measured, int(data.color.maximum));
+    const QString name = QFileInfo(fileName).fileName();
+    if (decision.source != RawBlackLevelEstimator::Source::Measured) {
+        if (measured.wasMeasured())
+            qInfo().noquote() << QStringLiteral("IPR black | %1 | LibRaw kept (%2 %3 %4 %5), measured %6 %7 %8 %9")
+                .arg(name).arg(decoder[0]).arg(decoder[1]).arg(decoder[2]).arg(decoder[3])
+                .arg(measured.levels[0]).arg(measured.levels[1]).arg(measured.levels[2]).arg(measured.levels[3]);
         return false;
+    }
     for (int channel = 0; channel < 4; ++channel) {
-        data.color.cblack[channel] = estimate.levels[channel];
-        data.rawdata.color.cblack[channel] = estimate.levels[channel];
+        data.color.cblack[channel] = measured.levels[size_t(channel)];
+        data.rawdata.color.cblack[channel] = measured.levels[size_t(channel)];
     }
     data.color.black = 0;
     data.rawdata.color.black = 0;
-    data.color.cblack[4] = 0;
-    data.rawdata.color.cblack[4] = 0;
-    qInfo().noquote()
-        << QStringLiteral("CR3 Canon : niveau noir estimé depuis %1 "
-                          "(R=%2, G1=%3, B=%4, G2=%5).")
-               .arg(input.maskedAreas.empty() ? QStringLiteral("les marges CFA (repli)")
-                                              : QStringLiteral("une zone noire Canon déclarée"))
-               .arg(estimate.levels[0])
-               .arg(estimate.levels[1])
-               .arg(estimate.levels[2])
-               .arg(estimate.levels[3]);
+    qInfo().noquote() << QStringLiteral("IPR black | %1 | measured on %2 (%3 %4 %5 %6) replaces LibRaw (%7 %8 %9 %10)")
+        .arg(name, input.maskedAreas.empty() ? QStringLiteral("the CFA margins") : QStringLiteral("the optical black"))
+        .arg(measured.levels[0]).arg(measured.levels[1]).arg(measured.levels[2]).arg(measured.levels[3])
+        .arg(decoder[0]).arg(decoder[1]).arg(decoder[2]).arg(decoder[3]);
     return true;
 }
 
@@ -412,8 +415,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
     }
     if ((result = raw.unpack()) == LIBRAW_SUCCESS) {
         timer.mark("unpack");
-        const bool estimatedOpticalBlackLevel =
-            estimateMissingCanonCr3BlackLevel(raw, fileName);
+        const bool estimatedOpticalBlackLevel = readBlackLevel(raw, fileName);
         sourceWhiteBalanceKelvin = estimateWhiteBalanceKelvin(raw);
         if (metadata)
             metadata->opticalBlackLevelEstimated = estimatedOpticalBlackLevel;
@@ -435,6 +437,9 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             context.black[channel] = raw.imgdata.color.cblack[channel];
         context.globalBlack = raw.imgdata.color.black;
         context.nativeWhiteLevel = raw.imgdata.color.maximum;
+        if (context.cameraMake.compare(QStringLiteral("Canon"), Qt::CaseInsensitive) == 0 &&
+            raw.imgdata.makernotes.canon.SpecularWhiteLevel > 0)
+            context.specularWhiteLevel = unsigned(raw.imgdata.makernotes.canon.SpecularWhiteLevel);
         // Common and per-channel black are audited independently; spatial patterns
         // remain unsupported. Never replace the measured black by a DNG average.
         if (raw.imgdata.color.cblack[4])

@@ -231,9 +231,9 @@ int main(int argc, char **argv)
             && originalOnly.pixelColor(200, 250) != currentOnly.pixelColor(200, 250),
                "transparent origin must not be blended over the current preview")) return 1;
     viewport->setProperty("comparisonPosition", .7);
-    key(window, Qt::Key_C, Qt::ControlModifier | Qt::ShiftModifier, "C");
-    if (!check(!viewport->property("comparisonEnabled").toBool(), "Ctrl Shift C should toggle the comparison")) return 1;
-    key(window, Qt::Key_C, Qt::ControlModifier | Qt::ShiftModifier, "C");
+    key(window, Qt::Key_Y, Qt::ControlModifier | Qt::ShiftModifier, "Y");
+    if (!check(!viewport->property("comparisonEnabled").toBool(), "Ctrl Shift Y should toggle the comparison")) return 1;
+    key(window, Qt::Key_Y, Qt::ControlModifier | Qt::ShiftModifier, "Y");
     viewport->setProperty("source", QUrl::fromLocalFile(first));
     if (!check(waitForImage(viewport) && waitForComparison(viewport)
             && viewport->property("showingComparison").toBool()

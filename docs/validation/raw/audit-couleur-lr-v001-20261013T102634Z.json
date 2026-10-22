@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "audit-couleur-lr-v001-20261013T102634Z",
+  "measured_at_utc": "2026-10-13T10:26:34Z",
+  "group": "couleur",
+  "scope": "Preflight XMP of Lightroom vibrance/saturation TIFFs only; no pixel comparison",
+  "image_root": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base",
+  "method": "Read TIFF XMP with tests/analysis/native.py; compare controls against the unique clean series zero using tests/analysis/audit.py; require Camera Neutral; audit every LR TIFF, including extras",
+  "lr_files_checked": 103,
+  "expected_controls": {"levels": [-100, -50, -25, 0, 25, 50, 100], "CameraProfile": "Camera Neutral", "secondary_colour_control": 0},
+  "errors": [
+    {
+      "file": "couleur/vibrance/6V1A0007-8.tif",
+      "Vibrance": 0,
+      "Saturation": -100,
+      "CameraProfile": "Camera Neutral",
+      "issues": ["secondary_control_nonzero:Saturation", "other_lr_settings_changed:Saturation"],
+      "sha256": "fd13e07d97228dbfd45bc2be5b9ecf0a92aa1968e1e95fdd2c2c5a2aafb4af8b"
+    },
+    {
+      "file": "couleur/vibrance/6V1A0037-8.tif",
+      "Vibrance": 0,
+      "Saturation": -100,
+      "CameraProfile": "Camera Neutral",
+      "issues": ["secondary_control_nonzero:Saturation", "other_lr_settings_changed:Saturation"],
+      "sha256": "f9aa09d3b80ebeeafe06f685051e428fbc908c1ea7bdb50a997e44ffa37efcd2"
+    },
+    {
+      "file": "couleur/vibrance/6V1A0043-8.tif",
+      "Vibrance": 0,
+      "Saturation": -100,
+      "CameraProfile": "Camera Neutral",
+      "issues": ["secondary_control_nonzero:Saturation", "other_lr_settings_changed:Saturation"],
+      "sha256": "5bc4e669d2bc0b43bec224c02cdd6445a6519d62b140d8e294a6f1d0ab8d8beb"
+    },
+    {
+      "file": "couleur/vibrance/6V1A0327-9.tif",
+      "Vibrance": 0,
+      "Saturation": -100,
+      "CameraProfile": "Camera Neutral",
+      "issues": ["secondary_control_nonzero:Saturation", "other_lr_settings_changed:Saturation"],
+      "sha256": "580fc4d86f8b0860f3f4423d49264d2aba564b0d50b1c3ae4e2c859ae40eb7ac"
+    },
+    {
+      "file": "couleur/vibrance/6V1A9421-8.tif",
+      "Vibrance": 0,
+      "Saturation": -100,
+      "CameraProfile": "Camera Neutral",
+      "issues": ["secondary_control_nonzero:Saturation", "other_lr_settings_changed:Saturation"],
+      "sha256": "e26ee21fc001d8c4ba2626014d15fe92f882de30ce37735bef9304816ba81394"
+    },
+    {
+      "file": "couleur/vibrance/6V1A9950.tif",
+      "Vibrance": -100,
+      "Saturation": 0,
+      "CameraProfile": "Adobe Standard",
+      "issues": ["profile_not_Camera_Neutral", "other_lr_settings_changed:Amount,CameraProfile,CameraProfileDigest,Group,Look,LookTable,Name,Parameters,SupportsAmount,SupportsMonochrome,SupportsOutputReferred,WhiteBalance"],
+      "sha256": "5483726afddece5c553087ef1a30d0f041ac704427df9016fc2045d5ac71931e"
+    }
+  ],
+  "missing_valid_states": [{"scene": "6V1A9950", "feature": "vibrance", "value": -100}],
+  "decision": {"stopped_before_pixel_analysis": true, "reason": "User requires stopping on any LR error", "images_modified": false, "images_deleted": false},
+  "limitations": ["Metadata preflight is not pixel validation, ICC/geometry validation or proof of Lightroom authenticity", "No new IPR-vs-LR metrics; historical v001/v002 unchanged"]
+}

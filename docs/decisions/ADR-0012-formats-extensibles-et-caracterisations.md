@@ -85,6 +85,12 @@ le domaine implémenté actuellement. Un autre CFA, une autre échelle ou une
 baseline native déjà renseignée peut demander un nouvel adaptateur/contrat,
 pas seulement une ligne JSON. Aucun Sony/Nikon n'est déclaré validé.
 
+Complément du 20 octobre 2026 : une entrée peut porter `specular_white_min` et
+`specular_white_max` (entiers, ensemble). Ils bornent le blanc spéculaire Canon lu
+dans les métadonnées du fichier ; une entrée bornée ne correspond jamais à un fichier
+sans cette valeur. Les entrées sans ces champs l'ignorent (règles R6/R7 inchangées).
+Audit des niveaux d'un boîtier : `scripts/audit_camera_levels.py`.
+
 ## Ajouter un nouveau boîtier
 
 1. Vérifier d'abord que le décodeur comprend le format et le mode de capture.

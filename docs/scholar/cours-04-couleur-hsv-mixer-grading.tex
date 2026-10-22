@@ -4,11 +4,12 @@
 \coursmeta{4 octobre 2026}{Approches de manipulation chromatique globales et par bandes ; modèle huit bandes corrigé.}
 
 \section{Saturation et vibrance}
-Dans \IPR{}, la saturation agit autour du neutre de même luminance :
-\begin{equation}
-\mathbf{p}'=Y\mathbf{1}+g_s(\mathbf{p}-Y\mathbf{1}),\qquad g_s=1+S/100.
-\end{equation}
-La chroma relative $c=(\max-\min)/\max$ permet à la vibrance de protéger les couleurs déjà vives : $g_v=1+(V/100)(1-c)$. Le gain total est $g_sg_v$. Ce n'est pas un modèle perceptuel complet, mais il est stable, peu coûteux et facilement testable.
+Depuis le 22 octobre 2026, \IPR{} applique la saturation et la vibrance en
+Oklab. La saturation multiplie la chroma par $1+S/100$ ; la vibrance suit des
+tables de réponse mesurées sur Lightroom (gain de chroma, gain de clarté et
+rotation de teinte selon la saturation, la clarté et la teinte du pixel). Le
+cours 12, \emph{Vibrance et saturation}, en détaille la mesure, la construction
+et la validation.
 
 \section{Mélangeur de couleur}
 Le module \texttt{ColorMixer} convertit temporairement un pixel RGB linéaire en HSV, représentation courante des manipulations créatives de couleur~\cite{gonzalezWoods}. Les huit centres sont $0,30,60,120,180,240,270,300$ degrés : rouge, orange, jaune, vert, cyan, bleu, violet, magenta. Pour un centre $h_i$, la pondération circulaire est

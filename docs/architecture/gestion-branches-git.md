@@ -26,6 +26,11 @@ au rendu initial RAW/base colorimétrique, créée depuis `dev`. Le prototype
 Couleur non validé reste sauvegardé sur `patch_color` (commit `8abcd12`),
 sans fusion dans `dev` ni publication implicite.
 
+Le 21 octobre 2026, `patch_color` reprend le travail Couleur après fusion de
+`dev` à jour. L'ancienne branche locale `patch_couleur`, au nom non uniforme et
+entièrement contenue dans `dev`, est abandonnée et supprimée avec l'accord de
+l'utilisateur ; elle n'est plus à maintenir.
+
 Une branche de groupe est conservée après livraison. Les commits de fusion
 matérialisent les validations dans le graphe Git ; les tags identifient les états
 figés. `main` reste distinct et sa mise à jour nécessite une livraison explicite.
