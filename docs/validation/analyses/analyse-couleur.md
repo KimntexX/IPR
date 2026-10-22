@@ -1438,6 +1438,21 @@ non modélisée.
 [cours 12](../../scholar/cours-12-vibrance-saturation-oklab.tex). Revue visuelle de
 l'utilisateur à refaire avant toute fusion.
 
+### Décision de l'utilisateur — 22 octobre 2026
+
+**Vibrance et saturation validées.** L'utilisateur accepte l'état mesuré (modèle
+[v006](../raw/modele-vibrance-lr-v006-20261022T090137950558Z.json), campagne
+[v008](../raw/mesure-couleur-v008-20261022T094449411179Z.json)). Selon lui, le
+léger manque d'intensité restant tient en partie au rendu d'ouverture d'IPR, un
+peu plus sombre que Lightroom par choix accepté : une vibrance strictement
+identique n'est pas attendue. La mesure sur les bleus neutres de 13 scènes donne
+une clarté identique (0,515 / 0,514) ; l'effet de l'ouverture plus sombre se
+mesurerait donc sur d'autres tons.
+
+**Réserve reportée à la bêta** : les grands ciels bleus saturés à +100
+(6V1A9141, −16 % de chroma finale), où Lightroom dépend de l'étendue de la zone
+de couleur. Repris avec l'intégration des calques et de la détection de forme.
+
 ## Historique et compatibilité
 
 Un premier [smoke-test de cinq saturations 0327](../raw/modernisation-analyseurs/mesure-couleur-v001-20261010T185910569266Z.json)
