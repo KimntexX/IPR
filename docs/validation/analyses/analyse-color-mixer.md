@@ -1147,3 +1147,32 @@ Sept bandes passent sous 3° de rotation et sous 0,03 de saturation. Le magenta
 s'écarte de LR par construction : le noyau mesuré est celui de l'ancien magenta
 d'IPR, où LR agit peu ; la bande décalée y agit davantage. Revue visuelle de
 l'utilisateur à faire, notamment sur le magenta.
+
+### Réglages combinés et revue visuelle — 22 octobre 2026
+
+**Additivité.** Trois exports LR combinés de l'utilisateur
+(`color-mixer/mixed` : 8, 12 et 15 curseurs, valeurs intermédiaires) sont
+comparés à la somme des effets par curseur des tables : écart médian pixel de
+0,4° / 1,0° / 2,7° de rotation, 0,007 à 0,047 de log chroma, ≤ 0,014 de log
+clarté. Les écarts se concentrent où deux bandes voisines se chevauchent avec
+des réglages opposés ou cumulés (orange entre rouge +52 et jaune −79 ; vert
+avec teinte, saturation et luminance réglées ensemble) : LR applique
+vraisemblablement ses curseurs successivement. Additivité conservée, piste
+d'amélioration notée.
+
+**Prise turquoise de 6V1A9608.** Le vert constaté dans IPR venait surtout de
+la vibrance à +100 restée active dans IPR (0 dans LR). Rendu IPR à réglages
+identiques (option `mixer` du serveur de rendu) : prise LR 199,6° → 175,8°,
+IPR 199,7° → 173,1° (Oklab), soit 2,7° de plus vers le vert ; chroma 0,084 /
+0,089, écart déjà présent au neutre (0,065 / 0,071).
+
+**Bruit.** Mesure du proxy du protocole Bruit sur les zones planes des neutres,
+sans réduction de bruit : luminance équivalente (IPR/LR 0,99 et 1,19 ; 0,94 et
+0,85 en relatif), **bruit de couleur 1,28 (ISO 16 000) et 1,62 (ISO 25 600)
+fois celui de LR**. Cause probable : dématriçage LibRaw par défaut (AHD), quand
+celui de LR lisse déjà la chrominance. La vibrance +100 multiplie encore le
+bruit couleur par 1,25 à 1,5. Étude de dématriçage (DCB, AAHD, DHT, passes de
+médiane) à mener sur le décodage RAW, hors du chantier Couleur.
+
+Validation de l'utilisateur, vibrance à 0 : couleurs proches de LR ; bruit
+plus élevé confirmé visuellement.
