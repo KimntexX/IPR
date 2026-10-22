@@ -1059,3 +1059,53 @@ dans cette demande d’analyse.
 Ces résultats automatisés et les signes mesurés ne remplacent pas la validation
 photographique de toutes les bandes. Aucun rebuild applicatif n’est nécessaire
 pour cette passe : le code de rendu n’a pas été modifié.
+
+## Campagne Lightroom complète — 22 octobre 2026
+
+**Entrées.** Préréglages autonomes du groupe « IPR Mélangeur »
+(`scripts/make_lr_presets.py --controls mixer`) : 24 réglages (8 bandes ×
+teinte/saturation/luminance) à −100, −50, −25, +25, +50, +100, sur 9 scènes
+choisies pour couvrir chaque bande dans au moins 8 scènes et chaque famille de
+boîtiers (6V1A0830, 6V1A9608, 6V1A9890, 7Y6A7003, 7Y6A7232, 7Y6A7298,
+IMG_3064, IMG_3089, _MG_7906). 1 296 exports LR, neutres communs de `base/neutre` ;
+les 9 doublons identiques de « Bleu Luminance +100 » ont été supprimés avec
+l'accord de l'utilisateur. Les composantes d'une bande partagent son dossier :
+l'analyseur ignore, pour une composante, les exports à 0 sur son curseur.
+
+**Mesure du mélangeur actuel d'IPR**
+([mesure-melangeur-v001](../raw/mesure-melangeur-v001-20261022T151922205633Z.json),
+2 808 états, aucune exclusion), médianes sur les scènes, LR / IPR, dans le
+noyau de chaque bande défini par les centres HSV d'IPR :
+
+| Bande | Rotation teinte −100 / +100 | Δ saturation −100 / +100 | Rapport Y −100 / +100 |
+| --- | --- | --- | --- |
+| Rouge | −8,4 / −7,9 ; +10,5 / +9,0 | −0,22 / −0,35 ; +0,09 / +0,14 | 0,85 / 0,82 ; 1,17 / 1,23 |
+| Orange | −11,4 / −12,5 ; +14,7 / +14,7 | −0,23 / −0,44 ; +0,10 / +0,19 | 0,78 / 0,78 ; 1,23 / 1,28 |
+| Jaune | −28,7 / −20,7 ; +48,2 / +23,8 | −0,43 / −0,53 ; +0,18 / +0,25 | 0,55 / 0,74 ; 1,37 / 1,35 |
+| Vert | −53,3 / −16,3 ; +39,2 / +11,5 | −0,56 / −0,48 ; +0,19 / +0,16 | 0,62 / 0,78 ; 1,37 / 1,28 |
+| Cyan | −23,1 / −10,4 ; +32,9 / +11,8 | −0,33 / −0,47 ; +0,15 / +0,18 | 0,83 / 0,75 ; 1,19 / 1,32 |
+| Bleu | −45,0 / −19,7 ; +47,0 / +23,3 | −0,36 / −0,57 ; +0,17 / +0,23 | 0,61 / 0,74 ; 1,45 / 1,35 |
+| Violet | −52,3 / −19,1 ; +51,9 / +18,2 | −0,38 / −0,37 ; +0,22 / +0,24 | 0,68 / 0,78 ; 1,37 / 1,28 |
+| Magenta | −6,9 / −10,7 ; +3,0 / +7,8 | −0,04 / −0,22 ; +0,02 / +0,16 | 0,98 / 0,85 ; 1,02 / 1,18 |
+
+Le curseur Teinte d'IPR (±18° HSV) est 2 à 3 fois trop faible hors rouge et
+orange ; la saturation d'IPR est trop forte sur la plupart des bandes ; la
+luminance est trop faible en jaune, vert, bleu et violet. Le magenta de LR est
+centré plus loin (≈315° HSV sur l'interface) que celui d'IPR (300°), d'où un
+noyau IPR presque inactif côté LR.
+
+**Réponse pixel par pixel de Lightroom** (teinte Oklab du pixel neutre, pas de
+5°). Centres et rotations Teinte −100 / +100 : rouge 12°, −20° / +36° ;
+orange 47–57°, −38° / +49° ; jaune 92°, −49° / +41° ; vert 138°, −40° / +36° ;
+cyan 178°, −34° / +68° ; bleu 240–270° (bande de 80–90°), −78° / +70° ;
+violet 300–320°, −62° / +32° ; magenta 350°, −27° / +20°. Le curseur Teinte
+change aussi la chroma (jusqu'à ×0,6 en cyan +100) et le curseur Saturation
+fait tourner la teinte (jusqu'à ±8°). La rotation dépend peu de la clarté et
+modérément de la saturation (±4°) ; les gains de saturation +100 et de
+luminance dépendent fortement de la saturation et de la clarté du pixel ;
+dispersion entre scènes faible (±3° sur la rotation).
+
+**Suite proposée.** Tables de réponse LR par bande, composante et valeur
+(rotation, gain de chroma, gain de clarté selon teinte fine, saturation et
+clarté), sur le modèle de la vibrance, validées sur scènes exclues puis sur
+le rendu.

@@ -207,6 +207,7 @@ docs/validation/raw/mesure-lumiere-v006-20261018T211442150960Z.json,d6fd33582b73
 docs/validation/raw/mesure-lumieres-camera-neutral-20261009.json,876e475cac11c67dcb85ffd1d021e9832fb15fbab24dd88069a1328844f22a9a,tonalite,572758,sha256-text-lf-v1
 docs/validation/raw/mesure-lumieres-intermediaires-v001-20261010T150000Z.json,e46d8ffacf5358f968a641608554139abfef464fd65d5f5b9acc4c583852362d,tonalite,779428,sha256-text-lf-v1
 docs/validation/raw/mesure-lumieres-intermediaires-v002-20261010T120745Z.json,cbe1fd5413863a2ed1621aa6443f7cbde21b95eb0724cc5113ef45f4a8d7ba16,tonalite,850972,sha256-text-lf-v1
+docs/validation/raw/mesure-melangeur-v001-20261022T151922205633Z.json,0c1c6dd0fae708ae9478362867a88a2eda3682563f055194bef8b753c07a7353,base-raw-profils,41056294,sha256-text-lf-v1
 docs/validation/raw/mesure-normalisation-adobe-standard-20261008.json,13147a007e2396290d6bf0e4ab089d50f74d50a6bf1509c04d411b865f17d5e8,base-raw-profils,34329,sha256-text-lf-v1
 docs/validation/raw/mesure-normalisation-dcp-neutral-20261008-controle.json,28d4d2edc3c65504005d9b27b1620c9ddeab9328b2b3a9da9e185684bbaa08cd,base-raw-profils,125283,sha256-text-lf-v1
 docs/validation/raw/mesure-normalisation-dcp-neutral-20261008-rendu-controle.json,23dc5d6085ca1b0b7b2c396d8fb107658fea58167e180844262f961794c26e32,base-raw-profils,169968,sha256-text-lf-v1
