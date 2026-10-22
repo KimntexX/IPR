@@ -4,6 +4,15 @@ Manuel français de la version alpha, fondé sur l’interface de `patch_ui`,
 vérifiée dans les sources le **20 octobre 2026**. Il décrit l’utilisation,
 pas les algorithmes de la [documentation technique](../technical/latex/README.md).
 
+**État de livraison au 22 octobre 2026 :** les ajouts du 20 octobre
+(copier/coller, sauvegarde manuelle et `Ctrl+clic`) sont validés par l'utilisateur
+et publiés sur `patch_ui`. Ils ne sont pas encore intégrés dans `dev` au contrôle
+de cette reprise. La branche est maintenant synchronisée avec `dev` ; sa nouvelle
+CI doit être validée avant intégration. Le
+[bilan IHM](../architecture/suivi-raccordements-ihm.md#état-actuel--22-octobre-2026)
+distingue la livraison précédente, les ajouts publiés et les raccordements restants.
+La duplication physique `Ctrl+D` reste indisponible ; `Ctrl+S` est fonctionnel.
+
 - [Source principale LaTeX](latex/ipr-livre-utilisateur.tex).
 - [Chapitres par famille](latex/chapters/).
 - Compilation : `powershell -ExecutionPolicy Bypass -File docs/user/latex/compile.ps1`

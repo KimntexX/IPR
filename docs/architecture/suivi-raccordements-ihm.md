@@ -1,5 +1,60 @@
 # IHM — suivi des raccordements au moteur
 
+## État actuel — 22 octobre 2026
+
+La première livraison IHM est déjà intégrée dans `dev` par la
+[PR #7](https://github.com/KimntexX/IPR/pull/7), commit `87706c2`.
+Il ne faut pas la confondre avec la reprise du 20 octobre : ses trois patchs
+ci-dessous ont été publiés sur `origin/patch_ui`, mais ne figurent pas encore
+dans `origin/dev` à la vérification du 22 octobre.
+
+| Patch validé visuellement par l'utilisateur | Commit publié |
+| --- | --- |
+| Confirmations harmonisées, boutons alignés et interligne 1,5 | `38e867d` |
+| Copier/coller des retouches et sauvegarde manuelle `Ctrl+S` | `82a331b` |
+| Multisélection `Ctrl+clic` et identité canonique des fichiers | `0e95283` |
+
+La [CI de `0e95283`](https://github.com/KimntexX/IPR/actions/runs/39429439915)
+est réussie. À la demande de mise à jour de l'utilisateur, `origin/dev`
+(`b14e353`, `v0.1.33-alpha`) a été fusionnée dans `patch_ui` par `ad15a66`,
+sans conflit et sans reprendre les travaux documentaires locaux non liés.
+Cette nouvelle combinaison doit être vérifiée par la CI avant fusion dans
+`dev`. Le suivi de livraison est la
+[liste des PR IHM](https://github.com/KimntexX/IPR/pulls?q=is%3Apr+head%3Apatch_ui)
+et la [CI de branche](https://github.com/KimntexX/IPR/actions?query=branch%3Apatch_ui).
+Pas de fusion dans `main`, ni de tag posé sur cet état en attente de CI.
+
+Vérifications après synchronisation : application Windows Release reconstruite,
+neuf tests ciblés réussis (six IHM, cycle de vie, recettes RAW et cache),
+contrôle documentaire sans erreur ni lien manquant. Le manuel technique français
+est actualisé pour les commandes et le raccourci Avant/après `Ctrl+Maj+Y`, puis
+recompilé localement. Les traductions restent sur le chantier documentaire dédié.
+
+### Raccordements restant réellement à réaliser
+
+| Référence | État actuel | Travail restant |
+| --- | --- | --- |
+| IHM-CONN-001 | En attente moteur | Préférence globale de calibration RAW, distincte du choix de la photo ouverte |
+| IHM-CONN-002 | À spécifier | Histogramme analytique en amont des courbes, distinct de l'aperçu sRGB |
+| IHM-CONN-003 | En attente moteur | États typés des traitements et révisions de rendu |
+| IHM-CONN-004 | En attente moteur | Comparaison canonique des recettes par groupe |
+| IHM-CONN-005 | En attente moteur | Rôles légers des vignettes : classement et présence de retouches |
+| IHM-CONN-006 | En attente moteur | Descripteur d'export et résultat typé avec destination réellement publiée |
+| IHM-CONN-007 | Raccordé et validé sur Windows | Compléter la qualification des permissions et des plateformes cibles |
+| IHM-CONN-008 | En attente moteur | Duplication physique source et réglages ; `Ctrl+D` désactivé |
+| IHM-CONN-009 | Raccordé, tests portables réussis | Qualification réelle des alias `/var` et `/private/var` sur macOS |
+
+Les mémos au survol prolongé restent **reportés à la bêta**. Le livre utilisateur
+français est créé et décrit déjà les commandes disponibles ; il n'est plus
+un travail « à commencer ». Les chapitres des familles non implémentées restent
+volontairement réservés. Il n'y a pas de nouvelle fonctionnalité moteur livrée
+par cette seule mise à jour de suivi.
+
+Les indications de publication, validation ou état moteur dans les sections
+datées ci-dessous décrivent leur étape historique. Ce bilan fait autorité sur
+l'état courant ; une ancienne mention « local » ne signifie pas que le commit
+est encore absent de GitHub.
+
 ## Périmètre du chantier
 
 ### Reprise du 20 octobre 2026
@@ -39,15 +94,16 @@ boutons de 36 px, marges identiques de 14 px, espacement de 12 px. Les textes
 multilignes utilisent un interligne de 1,5. Le récapitulatif d’export est agrandi
 pour ce texte, avec défilement conservé sur les petits écrans.
 
-Vérifications locales Windows : neuf tests ciblés réussis (six IHM, cycle de
+Vérifications locales Windows du 20 octobre : neuf tests ciblés réussis (six IHM, cycle de
 vie, recettes RAW et cache/préchargement). Build Release `build-patch_ui`,
 démarrage `--smoke-test` hors écran réussi. Captures synthétiques des deux
-confirmations contrôlées ; validation visuelle sur les photos de l’utilisateur
-encore attendue. Manuel français recompilé (48 pages), sans débordement ni
+confirmations contrôlées ; validation visuelle ensuite confirmée par
+l'utilisateur avant sa demande de publication. Manuel français recompilé
+(48 pages), sans débordement ni
 avertissement de pagination dans le journal final. Pas de qualification réelle
 macOS/Linux ni de nouvelle campagne de rendu photographique.
-Les commits restent locaux : aucune fusion, publication ou version alpha
-supplémentaire n’est créée pour cette reprise.
+Les trois patchs sont publiés sur `origin/patch_ui` ; leur intégration dans
+`dev` reste distincte. Voir le bilan du 22 octobre ci-dessus.
 
 Initialisé le **18 octobre 2026**, à la demande de l’utilisateur pour isoler
 les agents qui travaillent simultanément.
@@ -81,7 +137,7 @@ Les règles applicables sont également consignées dans l’[AGENTS.md](../../A
 **raccordé côté IHM**, **validé**. Une maquette visuelle ou un test avec un
 objet simulé ne vaut pas validation du raccordement de production.
 
-## Demandes ouvertes
+## Demandes et critères de qualification
 
 ### IHM-CONN-009 — identité des fichiers ouverts par un alias de chemin
 
@@ -93,7 +149,8 @@ avec `./` ; un vrai lien symbolique est également testé hors Windows.
 Qualification d’un dossier `/var` réel sur macOS restant à faire.
 La demande initiale ci-dessous décrit le défaut historique.
 
-- Date : 19 octobre 2026 ; état : **en attente moteur**.
+- Demande initiale du 19 octobre 2026 : ancien état **en attente moteur**,
+  remplacé par le raccordement du 20 octobre décrit ci-dessus.
 - Les URL du modèle de dossier conservent le chemin d’ouverture, alors que
   `selectedImageUrls` utilise `canonicalFilePath()`. Un dossier accessible via
   un lien symbolique peut donc ne pas cocher visuellement les images sélectionnées.
@@ -153,7 +210,7 @@ Pour chaque demande, renseigner :
 - Évolution de présentation QML a priori ; consigner un raccordement moteur
   uniquement si l’aide nécessite une information dynamique non exposée.
 
-### Reprise prévue le 19 octobre 2026
+### Reprise prévue le 19 octobre 2026 — plan historique réalisé pour le livre
 
 - Reprendre les améliorations et la validation visuelle de l’IHM, avec les
   raccordements moteur encore ouverts comme points de suivi distincts.
@@ -169,9 +226,11 @@ Pour chaque demande, renseigner :
 
 ### Documentation et vérification des commandes de fichier
 
-Le livre utilisateur décrit les nouveaux raccourcis dans les parcours et
-l’annexe, les menus contextuels par zone, la confirmation des resets et
-les deux commandes préparées mais désactivées (Ctrl+S et Ctrl+D). Aucune
+À cette étape du 19 octobre, le livre utilisateur décrivait les nouveaux
+raccourcis dans les parcours et l’annexe, les menus contextuels par zone,
+la confirmation des resets et les deux commandes alors préparées mais
+désactivées (Ctrl+S et Ctrl+D). Depuis le 20 octobre, Ctrl+S est raccordé ;
+seul Ctrl+D attend encore sa commande moteur. Aucune
 équivalence entre sauvegarder, exporter et copier le fichier source.
 Les choix privilégient les conventions de fichier (Ouvrir/Enregistrer), des
 lettres mémorisables (Exporter/Dupliquer), et une combinaison plus volontaire
@@ -197,7 +256,8 @@ Clic droit sur la vue image : actions partagées de fichier, export et remise
 explicite de la cible ; les commandes de retouche sont désactivées pour ne
 pas modifier par erreur la photo actuellement ouverte. Pas de chargement
 implicite au simple clic droit. Les commandes manuelles de sauvegarde et de
-duplication indiquent leur attente moteur ; elles ne sont pas simulées.
+duplication indiquaient leur attente moteur à cette étape. Depuis le 20 octobre,
+la sauvegarde est raccordée ; seule la duplication reste indisponible.
 
 Clic droit sur un curseur ou son nom : remise à la référence de ce seul
 paramètre ou saisie de valeur. Le champ texte conserve son menu d’édition.
@@ -233,7 +293,8 @@ dans le compagnon de la photo effectivement affichée, synchroniser le timer
 de sauvegarde et notifier succès/échec sans ambiguïté. Ne pas modifier la
 sélection ni remplacer cette opération par un export. Tester modification
 récente non encore écrite, dossier en lecture seule, photo changée pendant
-une ouverture, résultat après relance. L’action reste désactivée sans ce contrat.
+une ouverture, résultat après relance. L'action est désormais active avec ce
+contrat ; les limites de qualification sont décrites dans le bilan courant.
 
 **IHM-CONN-008 — en attente moteur : duplication physique**
 
