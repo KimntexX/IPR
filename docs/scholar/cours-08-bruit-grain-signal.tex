@@ -23,7 +23,7 @@ L'aperçu peut être recalculé plusieurs fois par seconde. Un générateur alé
 Un grain plus crédible demande une corrélation spatiale, une taille dépendante de la résolution et éventuellement une composante chromatique. La réduction de bruit est une tâche différente : un module CPU est désormais intégré, mais sa qualité photographique ne se déduit pas de la seule baisse d'une statistique de bruit.
 
 \section{Débruitage : estimateur et seuillage}
-Les plans employés sont Y Rec.709 linéaire, $Co=R-B$ et $Cg=G-(R+B)/2$.
+Les plans du moteur courant relu le 22 octobre 2026 sont Y Rec.2020 linéaire, $Co=R-B$ et $Cg=G-(R+B)/2$.
 Le coefficient diagonal Haar
 \begin{equation}
 h=\frac{p_{00}-p_{01}-p_{10}+p_{11}}{2}
@@ -50,7 +50,7 @@ pour conserver la moyenne ; le gamut négatif est comprimé vers un gris
 de même luminance, pas coupé indépendamment par canal. Le plancher
 historique 0,00025 reste uniquement dans la netteté, pas dans le débruitage.
 
-Sur un aplat synthétique de signal 0,05 et bruit gaussien monochrome
+Dans l'essai synthétique historique du 5 octobre, sur un aplat de signal 0,05 et bruit gaussien monochrome
 $\sigma=0{,}005$, le proxy Haar restant est environ 0,831, 0,523, 0,253
 et 0,009 fois celui du neutre pour les réglages 25/50/75/100. Cet exemple
 ne contient pas de texture à préserver : une baisse aussi forte ne valide

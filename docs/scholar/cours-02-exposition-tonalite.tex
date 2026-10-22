@@ -8,22 +8,24 @@ Une valeur d'exposition $E$ est logarithmique : un incrément d'un IL/EV double 
 \begin{equation}
 \mathbf{p}'=2^E\mathbf{p}.
 \end{equation}
-Le contraste ne doit pas être une simple multiplication autour de zéro. En photographie, le gris moyen est un pivot perceptuel usuel, voisin de $18\%$ en lumière linéaire. \IPR{} emploie une courbe en S asymétrique qui conserve ce pivot : sous le pivot, une loi de puissance agit sur le \emph{toe}; au-dessus, la courbe utilise une épaule indépendante. Pour une luminance $Y\le p$, une forme représentative est $Y'=p(Y/p)^a$.
+Le contraste ne doit pas être une simple multiplication autour de zéro. En photographie, le gris moyen est un pivot perceptuel usuel, voisin de $18\%$ en lumière linéaire. Ce pivot est une convention pédagogique, pas une description du contraste courant d'\IPR{}. Le module \texttt{Contrast} utilise désormais une courbe en S dans un domaine log sur 16 EV sous le blanc, pivot de modèle $0{,}32$, par canal et à extrémités fixes. Pour une luminance $Y\le p$, une forme représentative est $Y'=p(Y/p)^a$.
 
-Les réglages de plage tonale utilisent une fenêtre douce, plutôt qu'un seuil. Cette logique relève des transformations ponctuelles et des fonctions de transfert étudiées en traitement d'image~\cite{gonzalezWoods}. La fonction utilisée est
+Les réglages de plage tonale utilisent une fenêtre douce, plutôt qu'un seuil. Cette logique relève des transformations ponctuelles et des fonctions de transfert étudiées en traitement d'image~\cite{gonzalezWoods}. Une fonction de transition fréquemment utilisée est
 \begin{equation}
 S(e_0,e_1,x)=t^2(3-2t),\quad t=\operatorname{clamp}\left(\frac{x-e_0}{e_1-e_0},0,1\right).
 \end{equation}
 Elle est continue avec pente nulle aux bornes : les transitions entre ombres et tons moyens ne créent pas de bandes.
 
 \section{Application dans \IPR{}}
-Chaque correction calcule d'abord $Y$, puis modifie une luminance cible $Y'$ avant de remettre l'image à l'échelle : $\mathbf{p}'=\mathbf{p}\,Y'/Y$ si $Y>10^{-6}$. Les noirs sont confinés au pied de courbe; les ombres couvrent une plage plus large; les blancs utilisent aussi le maximum RGB afin de réagir aux canaux proches de la saturation. Les masques sont évalués sur la luminance d'entrée afin qu'un réglage ne déplace pas lui-même sa zone d'action.
+Relecture du 22 octobre 2026 : l'exposition RAW avec contexte caméra est rejouée avant le DCP. Le gain $2^E$ n'est donc pas une promesse de doublement du TIFF après la courbe. Les autres sources reçoivent le gain dans le master linéaire.
+
+\texttt{ToneRecovery} emploie des courbes de gain EV et les statistiques du neutre, mesurées à l'ouverture. Les HL utilisent les scènes de référence voisines. Ombres, HL et blancs négatifs agissent sur la luminance ; noirs et blancs positifs sur les canaux sRGB linéaires, avec retour au master Rec.~2020. Les épaules et protections couleur ne préservent pas toujours la chromaticité. Les courbes sont rendues non décroissantes pour éviter les inversions tonales.
 
 \section{Exemple applicatif}
-Considérons un pixel neutre $Y=0{,}04$. Avec \emph{Ombres} positif, le masque des ombres est proche de un et la correction le remonte sans éclaircir une zone à $Y=0{,}80$. Avec \emph{Noirs} positif, une forme $\sqrt{u}(1-u)$, où $u=Y/0{,}14$, laisse le noir absolu à zéro : l'absence de lumière ne devient pas un voile gris.
+Considérons un pixel neutre $Y=0{,}04$. Dans un modèle pédagogique à fenêtre douce, avec \emph{Ombres} positif, le masque des ombres peut être proche de un et la correction le remonte sans éclaircir une zone à $Y=0{,}80$. Avec \emph{Noirs} positif, une forme $\sqrt{u}(1-u)$, où $u=Y/0{,}14$, laisse le noir absolu à zéro : l'absence de lumière ne devient pas un voile gris.
 
 \section{Interprétation des constantes}
-Le pivot $0{,}18$ a une justification photographique. Les bornes des masques ($0{,}10$, $0{,}56$, $0{,}70$, etc.) et les amplitudes sont des paramètres de rendu calibrés sur le corpus de validation Lightroom/IPR : elles ne sont pas des constantes universelles. Elles doivent être renommées et regroupées lorsqu'une calibration automatisée sera disponible.
+Le pivot $0{,}18$ a une justification photographique. Les bornes des fenêtres de l'exemple ne sont pas les paramètres du modèle actuel. Celui-ci utilise des tables générées et versionnées dans \texttt{ToneRecoveryModel.h} et \texttt{ToneRecoveryHighlights.h}. Les coefficients restent empiriques : leur proximité avec LR sur corpus n'est pas une loi physique ni une validation universelle. La réserve HL du 21 octobre demeure ouverte.
 
 \resultat{Exposition est un gain physique; tonalité et contraste sont des choix de \emph{tone mapping} continus, évalués par comparaison visuelle et métrique.}
 \bibliographystyle{plain}\bibliography{references}

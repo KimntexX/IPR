@@ -4,7 +4,7 @@
 \coursmeta{4 octobre 2026}{Approches de manipulation chromatique globales et par bandes ; modèle huit bandes corrigé.}
 
 \section{Saturation et vibrance}
-Dans \IPR{}, la saturation agit autour du neutre de même luminance :
+Dans le modèle courant de \texttt{dev} relu le 22 octobre 2026, la saturation agit autour du neutre de même luminance Rec.~2020. Les variantes expérimentales non fusionnées de \texttt{patch\_color} ne sont pas décrites comme production :
 \begin{equation}
 \mathbf{p}'=Y\mathbf{1}+g_s(\mathbf{p}-Y\mathbf{1}),\qquad g_s=1+S/100.
 \end{equation}
@@ -34,7 +34,7 @@ Trois poids de luminance lissés identifient ombres, tons moyens et hautes lumi�
 Au centre du bleu, avec $S=0{,}4$, le curseur de saturation $-30$ donne $S'=0{,}28$ ; la normalisation maintient $Y$. À mi-chemin entre bleu et violet, deux commandes $+50$ donnent un gain de saturation $1{,}5$, pas le produit $1{,}25^2$. Au centre du vert, une luminance $+100$ sur $Y=0{,}01$ donne $Y'=0{,}014142$, pas une interpolation vers le blanc. Un gris $Y=0{,}2$ reste à $0{,}2$ quelle que soit la bande. Le fondu de la bande bleue rejoint cyan et violet, pas directement magenta.
 
 \section{Limites}
-HSV n'est pas perceptuellement uniforme : un même déplacement de teinte n'a pas la même perception partout. Les paramètres $0{,}18$, $0{,}05$, $0{,}5$ et $0{,}0035$ (grading) sont des échelles/protections empiriques. Une future version peut employer OKLCh avec une migration de rendu explicite. Le sidecar v4 conserve les valeurs v1/v2/v3 et leur identité de couleur, pas leur rendu exact : l'ancienne dernière bande est magenta (indice 7), le nouveau violet (6) commence à zéro. Les anciens TIFF restent une campagne historique, non une validation du moteur corrigé.
+HSV n'est pas perceptuellement uniforme : un même déplacement de teinte n'a pas la même perception partout. Les paramètres $0{,}18$, $0{,}05$, $0{,}5$ et $0{,}0035$ (grading) sont des échelles/protections empiriques. Une future version peut employer OKLCh avec une migration de rendu explicite. La séparation violet/magenta introduite en v4 est conservée dans le sidecar courant v6. La lecture des valeurs v1/v2/v3 conserve leur identité de couleur, pas leur rendu exact : l'ancienne dernière bande est magenta (indice 7), le nouveau violet (6) commence à zéro. Les anciens TIFF restent une campagne historique, non une validation du moteur corrigé.
 
 \resultat{Le mixer est une édition sélective par teinte; le grading est une coloration graduée par luminance. Les deux sont créatifs, non des corrections colorimétriques de référence.}
 \bibliographystyle{plain}\bibliography{references}
