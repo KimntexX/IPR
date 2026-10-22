@@ -5,11 +5,10 @@
 Décision confirmée le **9 octobre 2026** : les **JSON versionnés et horodatés
 font autorité sur les données**, en remplacement de la règle CSV initiale.
 CSV et graphiques sont des dérivés pour comparaisons et tableaux. Un seul
-rapport évolutif par ensemble interprète les campagnes successives. Les images
-peuvent être supprimées après analyse suivant la règle du 10 octobre : exports
-IPR seulement si résultat négatif, exports IPR et Lightroom de la série si
-résultat positif et validé. Préserver RAW et neutres communs ; une conclusion
-ambiguë ou une mémoire incomplète bloque la suppression. Journaliser les cibles.
+rapport évolutif par ensemble interprète les campagnes successives. Depuis la règle du 11 octobre, les images sont supprimées **manuellement par
+l'utilisateur** après analyse. La suppression conditionnelle automatique du
+10 octobre est abandonnée. Préserver RAW et mémoires JSON ; signaler avant
+nettoyage toute conclusion ambiguë ou mémoire incomplète.
 
 ## Organisation et versions
 
@@ -59,8 +58,8 @@ et règles d'agrégation explicites.
 4. Comparer les versions à protocole, métriques, scènes et réglages compatibles ;
    sinon signaler explicitement le changement de conditions.
 5. Signaler les limites de mémoire avant suppression des images par l'utilisateur.
-   La suppression autorisée le 10 octobre reste conditionnée au verdict explicite,
-   au contrôle des chemins et à la mémoire complète ; elle exclut les RAW et neutres.
+   Ni le générateur ni l'analyseur ne suppriment automatiquement les exports.
+   Les RAW et mémoires JSON ne sont pas des exports temporaires.
 
 Après suppression, les métriques stockées restent comparables et leurs synthèses
 recalculables. **Nouvelle métrique pixel, nouvelles ROI ou inspection visuelle

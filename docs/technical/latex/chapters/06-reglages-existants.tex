@@ -5,10 +5,10 @@
 
 Le pipeline manipule un pixel $\mathbf{p}=(r,g,b)^T$ en valeurs flottantes. Les calculs photométriques doivent être réalisés sur des composantes linéaires ; le codage sRGB ou le format d'export est appliqué à la fin. La luminance relative utilisée pour les normalisations est :
 \begin{equation}
-  Y = 0{,}2126r + 0{,}7152g + 0{,}0722b.
+  Y = 0{,}2627r + 0{,}6780g + 0{,}0593b.
 \end{equation}
 
-La formule est celle de Rec.~709/sRGB. Conserver une précision flottante avant l'encodage réduit les pertes de détails dans les hautes lumières et évite les saturations intermédiaires inutiles.
+La formule est celle du master Rec.~2020 linéaire D65, définie dans \texttt{WorkingColorSpace.h}, et non celle du signal sRGB de sortie. Conserver une précision flottante avant l'encodage réduit les pertes de détails dans les hautes lumières et évite les saturations intermédiaires inutiles.
 
 \section{Tonalité globale}
 
@@ -26,7 +26,7 @@ Le contraste et les réglages \emph{hautes lumières}, \emph{ombres}, \emph{blan
 \end{equation}
 où $a$ est l'intensité demandée et $w$ une fenêtre douce concentrée sur la plage ciblée. Les composantes sont ensuite remises à l'échelle avec conservation de chromaticité. Cette approche évite qu'un réglage d'ombres affecte autant les hautes lumières.
 
-Les tests de validation réalisés sur le corpus de référence ont validé le curseur EV ainsi que les ajustements d'ombres, de noirs, de blancs et de hautes lumières. La matrice, les analyses et les fichiers de mesure sont organisés dans \texttt{docs/validation}; les preuves historiques restent consultables durant la migration documentaire.
+Cette équation décrit le principe, pas l'algorithme complet de \texttt{ToneRecovery}, qui exploite aussi des statistiques de l'image source. Les validations sRGB historiques ne qualifient pas automatiquement le master Rec.~2020. La matrice, le rapport évolutif Lumières et les JSON de \texttt{docs/validation} précisent les campagnes et les limites ; une validation sur corpus n'est pas une garantie pour tous les boîtiers.
 
 \subsection{Courbes}
 
@@ -47,9 +47,9 @@ où $B$ est la matrice de Bradford et $D$ une matrice diagonale de rapports entr
 
 La teinte compense l'axe vert--magenta. Les gains colorés sont normalisés pour conserver autant que possible la luminance :
 \begin{equation}
-  n=0{,}2126r_g+0{,}7152g_g+0{,}0722b_g, \qquad \mathbf{p}'=\frac{\mathbf{g}\odot\mathbf{p}}{n}.
+  n=0{,}2627r_g+0{,}6780g_g+0{,}0593b_g, \qquad \mathbf{p}'=\frac{\mathbf{g}\odot\mathbf{p}}{n}.
 \end{equation}
-La validation de température est consignée dans le protocole et les analyses du 2 octobre 2026.
+Cette écriture illustre la normalisation de gains dans le master ; le chemin RAW comprend également les matrices du profil et la référence de blanc source. Les essais du 2 octobre 2026 sont historiques : consulter le rapport Couleur et la matrice pour la qualification du chemin courant.
 
 \section{Couleur globale, mélangeur et color grading}
 
@@ -59,7 +59,7 @@ La saturation ajuste uniformément l'amplitude chromatique. La vibrance protège
 \begin{equation}
   g_v = 1+\frac{V}{100}(1-c).
 \end{equation}
-Les couleurs peu saturées reçoivent donc l'essentiel de l'effet. Les contrôles de vibrance et saturation ont fait l'objet des vérifications de base précédant les travaux de mixer et grading.
+Les couleurs peu saturées reçoivent donc l'essentiel de l'effet. Cette description correspond à \texttt{ColorAdjustments} dans \texttt{dev} au 22 octobre 2026 ; les variantes expérimentales étudiées sur \texttt{patch\_color} ne sont pas présumées intégrées. Les vérifications historiques ne constituent pas une validation de toutes les variantes.
 
 \subsection{Mélangeur de couleur}
 
@@ -103,10 +103,10 @@ L'estimation par \emph{dark channel prior} utilise localement $\min_c I_c$ puis 
 
 \subsection{Réduction de bruit et netteté CPU}
 
-\paragraph{Consolidation du 5 octobre 2026.}
+\paragraph{Modèle introduit le 5 octobre 2026, porté au master Rec.~2020.}
 
 Le débruitage précède les effets locaux et la netteté. Il sépare le RGB
-linéaire en $Y=0{,}2126R+0{,}7152G+0{,}0722B$, $Co=R-B$ et
+linéaire en $Y=0{,}2627R+0{,}6780G+0{,}0593B$, $Co=R-B$ et
 $Cg=G-(R+B)/2$. Les plans ont une estimation de bruit distincte par le MAD
 du détail diagonal Haar $(p_{00}-p_{01}-p_{10}+p_{11})/2$, normalisé par
 $0{,}67448975$. Les blocs exactement constants ne participent pas à cette
@@ -152,6 +152,6 @@ l'INI, qui se personnalise application fermée.
 
 Le sidecar utilise une signature \texttt{IPR1}, un numéro de version, la taille et la date de modification du fichier source. Il stocke les réglages, les courbes et les métadonnées utilisateur via \texttt{QDataStream}~\cite{qtQDataStream}. L'écriture différée de 450~ms passe par \texttt{QSaveFile}, qui écrit temporairement puis valide le fichier de façon atomique~\cite{qtQSaveFile}. Une empreinte source non concordante invalide le sidecar plutôt que d'appliquer potentiellement des réglages à un autre fichier.
 
-Le format courant v4 stocke huit triplets de mélangeur. Les versions v1/v2/v3 sont lues en conservant leurs couleurs : l'ancien dernier triplet devient magenta à l'indice 7 ; violet, nouvel indice 6, commence à zéro, ainsi qu'orange pour v1/v2. Les valeurs sont conservées mais le nouveau modèle change le rendu des anciens réglages non nuls. Les anciens exécutables ne lisent pas v4. L'INI schéma 2 migre de même la sélection d'interface magenta 6 vers 7, sans modifier les réglages photo.
+Le format courant est v6 (\texttt{Sidecar.h}), et non v4. Il conserve les huit triplets du mélangeur, les choix de développement RAW, les références et empreintes de ressources ainsi que les réglages optiques. Les lectures d'anciens schémas présentes dans le code ne garantissent pas un rendu identique après changement de modèle. Le numéro de schéma de l'INI est indépendant de celui du sidecar.
 
 L'application par lot copie seulement les réglages de développement de l'image active vers les images cochées. Les annotations locales de destination sont préservées lorsqu'elles existent. Ce choix évite qu'une correction photographique n'écrase involontairement un classement déjà établi.

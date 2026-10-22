@@ -156,7 +156,7 @@ Les profils DCP (rendu couleur de boîtier) et LCP (corrections d'objectif) sont
 \section{Développement RAW contrôlé}
 
 \texttt{RawDevelopmentModule.qml} permet de choisir un DCP compatible, de
-modifier la WB automatique et de cocher la normalisation expérimentale.
+modifier la WB automatique. La calibration RAW est accessible dans les options avancées des préférences, pas comme réglage courant de ce module.
 \texttt{RawNormalization::resolve()} vérifie un manifeste borné de schéma 4,
 le SHA-256 DCP, le mode des niveaux noirs/blancs, le boîtier et la version LibRaw.
 Il n'impose plus de liste de photos ni d'ISO. Le gain d'exposition
@@ -220,7 +220,7 @@ mise à jour. Les contextes de sélection restent propres aux images.
 
 L'ADR-0012 retient DCP et JSON complémentaires : matrices, tables et courbe
 dans le DCP ; conditions et provenance de caractérisation dans le catalogue
-\texttt{config/raw-normalization.json}. SQLite pourra indexer une bibliothèque
+\texttt{config/}\allowbreak\texttt{raw-normalization.json}. SQLite pourra indexer une bibliothèque
 plus grande, mais n'est pas une dépendance nouvelle ni la source de vérité.
 Les preuves d'analyse JSON horodatées restent distinctes de la configuration.
 
@@ -258,7 +258,7 @@ pas la lecture silencieuse de son aperçu comme image de remplacement.
 \begin{tikzpicture}[node distance=11mm and 14mm]
   \node[service] (raw) {Adaptateur RAW\\DCP ou matrice};
   \node[service, right=of raw] (raster) {Lecteur raster Qt\\ICC / sRGB supposé};
-  \node[component, below=of raw, xshift=24mm] (import) {\texttt{ImageImport::Result}\\validation commune};
+  \node[component, below=of raw, xshift=24mm] (import) {\texttt{ImageImport::}\\\texttt{Result}\\validation commune};
   \node[component, below=of import] (edit) {Master Rec.2020\\proxy, retouches, sortie};
   \draw[flow] (raw) -- (import);
   \draw[flow] (raster) -- (import);

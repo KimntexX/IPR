@@ -3,19 +3,27 @@
 
 \section{État de validation}
 
+\subsection{Périmètre de lecture au 22 octobre 2026}
+
+Le master courant est Rec.~2020 linéaire D65. La calibration RAW est active par défaut, sous réserve de compatibilité des règles du catalogue avec le boîtier, le profil et le mode. Le sidecar courant est v6 et mémorise le développement RAW et les réglages optiques. Les caches partagés et le contrôleur mémoire sont intégrés ; leur qualification sur tous les systèmes et corpus reste distincte de leur présence dans le code.
+
+La matrice de validation et les JSON de campagne font référence pour le statut de chaque groupe. Les chiffres datés ci-dessous décrivent des campagnes historiques, pas une nouvelle exécution au 22 octobre. Les travaux non fusionnés de \texttt{patch\_color}, \texttt{patch\_noise} et \texttt{patch\_ci\_cd} ne sont pas présumés livrés dans \texttt{dev}.
+
+\subsection{Campagnes historiques d'octobre 2026}
+
 Les ajustements fondamentaux ont été comparés à des exports de référence sur un corpus TIFF en sRGB : exposition, noirs, ombres, blancs, hautes lumières, contraste et température. Les mesures utilisent notamment les différences par pixel (MAE) et des inspections de superposition lorsque les dimensions et l'encodage le permettent. Cette méthode distingue un décalage spatial d'une différence de rendu.
 
 Le mélangeur huit bandes dispose de campagnes aux extrêmes et aux valeurs
 intermédiaires. Le bruit v2 a une progressivité mesurée sur douze scènes ;
 cela ne garantit pas la conservation de tous les détails. Color grading,
 courbes, netteté, grain/flou et leurs interactions nécessitent une recette
-photographique. Sidecars v4 et application des réglages à une sélection sont
+photographique. Sidecars v4 et application des réglages à une sélection étaient alors
 implémentés ; leur recette manuelle complète reste ouverte. L'export par lot
 n'est pas implémenté. Le DNG de rendu n'est pas certifié compatible Lightroom.
 
 Au 8 octobre, Camera Neutral est accepté visuellement par l'utilisateur.
-La normalisation demeure expérimentale, limitée à cinq fichiers exacts et
-désactivée par défaut. La suite complète WSL passe 17 tests sur 18 : la sonde
+La normalisation était alors expérimentale, limitée à cinq fichiers exacts et
+désactivée par défaut ; cette restriction n'est plus le contrat courant. La suite complète WSL passe 17 tests sur 18 : la sonde
 JPEG 9933 reste en échec (MAE RGB 25,1519 pour un seuil 25), hors mode calibré.
 Les cinq suites Windows ciblées de la dernière adaptation portable et les
 76 tests Python d'analyse plus 12 de sélection réussissent. Ces nombres sont
@@ -27,8 +35,7 @@ une photographie datée, pas une garantie d'exécution future.
   \item Établir des jeux de tests reproductibles pour chaque réglage et enregistrer les métriques dans un format structuré.
   \item Mesurer la durée d'ouverture sur des RAW représentatifs, le pic mémoire et l'efficacité réelle du cache LRU et du préchargement de vignettes.
   \item Formaliser la compatibilité des profils DCP/LCP : origine, licence, version et droit de redistribution de chaque fichier.
-  \item Compléter la recette du schéma sidecar v4 et de ses migrations ;
-  définir sauvegarde/conflits et persistance du choix DCP/normalisation.
+  \item Compléter la recette du schéma sidecar v6 et de la persistance RAW/optique déjà implémentée ; vérifier les conflits, les déplacements et les ressources manquantes.
   \item Ajouter un test de non-régression pour le rendu des profils, le rendu en lot et les métadonnées.
   \item Documenter le format d'export final (profondeur, profil ICC incorporé, métadonnées EXIF/XMP) et ses conditions d'utilisation.
 \end{itemize}

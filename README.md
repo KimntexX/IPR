@@ -41,7 +41,8 @@ Voir le [contrat de navigation et de comparaison](docs/specifications/zoom-image
 - Profils optiques **LCP** : commandes indépendantes de correction objectif
   (distorsion/vignettage) et d'aberration chromatique latérale.
 - Mémorisation des profils, de leurs empreintes et des options de développement dans les sidecars.
-- Normalisation RAW expérimentale, désactivée par défaut et limitée aux cas audités.
+- Calibration RAW expérimentale active par défaut, appliquée seulement aux
+  boîtiers/profils/modes caractérisés ; diagnostic de l’application effective.
 
 Les profils ICC des images rendues servent à interpréter leurs couleurs ;
 les DCP interviennent dans le développement RAW et les LCP dans les corrections optiques.

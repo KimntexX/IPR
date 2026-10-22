@@ -4,6 +4,9 @@
 
 Les rapports sont des preuves historiques, pas la référence fonctionnelle du produit.
 
+État documentaire : [audit du 22 octobre 2026](documentation-audit-2026-10-22.md),
+corrections françaises, limites de couverture et préalable à la traduction anglaise.
+
 - `sessions/` reçoit tous les nouveaux rapports de séance, nommés `session-YYYY-MM-DD.md`.
 - `archive/` reçoit les journaux devenus inactifs ou consolidés.
 - Les campagnes de mesure et leurs protocoles appartiennent à `../validation/`.
