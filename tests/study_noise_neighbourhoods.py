@@ -47,10 +47,15 @@ def sha256(path):
 
 
 def sources(base, scenes):
-    """RAWs at the root of one base folder or of several (no recursion)."""
+    """RAWs at the root of one base folder or of several (no recursion); a scene
+    present in several folders is taken once, from the first folder."""
     folders = base if isinstance(base, (list, tuple)) else [base]
-    raws = sorted((p for folder in folders for p in Path(folder).iterdir()
-                   if p.is_file() and p.suffix.lower() in RAW_SUFFIXES), key=lambda p: p.name)
+    found = {}
+    for folder in folders:
+        for p in Path(folder).iterdir():
+            if p.is_file() and p.suffix.lower() in RAW_SUFFIXES:
+                found.setdefault(p.stem, p)
+    raws = sorted(found.values(), key=lambda p: p.name)
     if scenes:
         wanted = set(scenes)
         raws = [p for p in raws if p.stem in wanted]

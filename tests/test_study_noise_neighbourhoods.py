@@ -16,6 +16,16 @@ class NeighbourhoodStudyTests(unittest.TestCase):
             self.assertEqual([p.name for p in sources(base, [])], ["A.CR3", "B.cr2"])
             self.assertEqual([p.name for p in sources(base, ["B"])], ["B.cr2"])
 
+    def test_a_scene_in_several_folders_is_taken_once_from_the_first(self):
+        with tempfile.TemporaryDirectory() as directory:
+            first, second = Path(directory) / "base", Path(directory) / "other"
+            first.mkdir()
+            second.mkdir()
+            for folder, name in ((first, "A.CR3"), (second, "A.CR3"), (second, "B.CR3")):
+                (folder / name).write_bytes(b"x")
+            self.assertEqual([p.parent.name + "/" + p.name for p in sources([first, second], [])],
+                             ["base/A.CR3", "other/B.CR3"])
+
     def test_missing_scene_or_empty_base_is_refused(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
