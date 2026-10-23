@@ -12,6 +12,7 @@
 #include "RawDecoder.h"
 
 #include <QAbstractListModel>
+#include <QColor>
 #include <QFutureWatcher>
 #include <QHash>
 #include <QImage>
@@ -204,6 +205,8 @@ public:
     Q_INVOKABLE void pasteAdjustments();
     Q_INVOKABLE void saveCurrentAdjustments();
     Q_INVOKABLE int colorMixerValue(int band, int component) const;
+    // Colour a mixer slider reaches at a value, for the UI tracks (ColorMixer::trackColour).
+    Q_INVOKABLE QColor colorMixerTrackColor(int band, int component, int value) const;
     Q_INVOKABLE int colorGradingValue(int zone, int component) const;
     Q_INVOKABLE double adjustmentValue(const QString &name) const;
     Q_INVOKABLE void setImageRating(int rating);

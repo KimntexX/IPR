@@ -105,7 +105,7 @@
     {"patterns": ["tests/tonal_base_probe.cpp"], "tests": ["rawDecoderTests", "rawBlackLevelEstimatorTests", "cameraProfileEngineTests"], "python": ["base_colorimetry_analysis"]},
     {"patterns": ["src/tools/**"], "tests": ["testImageGeneratorTests", "imageExportTests"], "python": ["group_analysis"]},
     {"patterns": ["tests/test_image_generator_test.cpp"], "tests": ["testImageGeneratorTests"]},
-    {"patterns": ["src/core/ColorMixer.*", "src/qml/ColorMixerModule.qml"], "tests": ["colorMixerMathTests", "colorMixerNeutralTests", "colorMixerQmlTests", "imageExportTests", "settingsQmlTests"], "python": ["color_mixer_analysis"]},
+    {"patterns": ["src/core/ColorMixer.*", "src/core/ColorMixerModel.h", "src/qml/ColorMixerModule.qml"], "tests": ["colorMixerMathTests", "colorMixerNeutralTests", "colorMixerQmlTests", "imageExportTests", "settingsQmlTests"], "python": ["color_mixer_analysis"]},
     {"patterns": ["src/core/Vibrance.*", "src/core/VibranceModel.h", "tests/vibrance_math_test.cpp"], "tests": ["vibranceMathTests", "imageExportTests", "testImageGeneratorTests", "rec2020PipelineTests"]},
     {"patterns": ["src/core/ColorAdjustments.*"], "tests": ["colorMixerMathTests", "colorMixerNeutralTests", "imageExportTests", "rec2020PipelineTests"]},
     {"patterns": ["src/core/ColorPipeline.*", "tests/rec2020_pipeline_test.cpp"], "tests": ["rec2020PipelineTests", "colorPipelineTests", "imageExportTests", "colorMixerNeutralTests", "rawDecoderTests", "cameraProfileEngineTests"]},

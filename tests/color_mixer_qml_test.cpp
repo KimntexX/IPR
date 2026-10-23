@@ -1,3 +1,4 @@
+#include <QColor>
 #include <QGuiApplication>
 #include <QQmlComponent>
 #include <QQmlEngine>
@@ -31,6 +32,10 @@ ColorMixerModule {
         property var values: [[0,0,0], [0,0,0], [0,0,0], [0,0,0],
                               [0,0,0], [0,0,0], [0,0,0], [0,0,0]]
         function colorMixerValue(band, component) { return values[band][component] }
+        // Encodes its arguments so the test can check which colours each track asks for.
+        function colorMixerTrackColor(band, component, value) {
+            return Qt.rgba(band / 8, component / 3, (value + 100) / 200, 1)
+        }
         function setColorMixer(band, hue, saturation, luminance) {
             values[band] = [hue, saturation, luminance]
             commits++
@@ -103,5 +108,20 @@ ColorMixerModule {
                "violet and magenta should expose independent editable controls")) return 1;
     select(8);
     if (!check(root->property("band").toInt() == 6, "an invalid band must not break selection")) return 1;
+    // Slider tracks come from the engine, for the selected band, at -100..+100.
+    const auto expected = [](int band, int component, int value) {
+        return QColor::fromRgbF(band / 8.0, component / 3.0, (value + 100) / 200.0).name();
+    };
+    for (int band = 0; band < 8; ++band) {
+        select(band);
+        const QList<QObject *> controls{hue, saturation, luminance};
+        for (int component = 0; component < 3; ++component) {
+            const QVariantList stops = controls.at(component)->property("trackColors").toList();
+            bool matches = stops.size() == 5;
+            for (int i = 0; matches && i < 5; ++i)
+                matches = stops.at(i).value<QColor>().name() == expected(band, component, -100 + 50 * i);
+            if (!check(matches, "each track must follow the selected band from -100 to +100")) return 1;
+        }
+    }
     return 0;
 }

@@ -129,6 +129,26 @@ class GroupAnalysisTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 inputs.base_records(base, ["couleur"])
 
+    def test_mixer_components_share_the_band_folder(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory).resolve()
+            folder = base / "color-mixer/red"
+            folder.mkdir(parents=True)
+            (base / "neutre").mkdir()
+            pixels = np.full((8, 8, 3), 25000, dtype=np.uint16)
+            def xmp(**changed):
+                fields = {key: "0" for key in ("HueAdjustmentRed", "SaturationAdjustmentRed", "LuminanceAdjustmentRed")}
+                fields.update(changed, WhiteBalance="As Shot", CameraProfile="Camera Neutral")
+                attrs = " ".join('crs:' + key + '=\"' + value + '\"' for key, value in fields.items())
+                return ('<root xmlns:crs=\"' + native.CRS + '\" ' + attrs + '/>').encode()
+            write_tiff(base / "neutre/S.tif", pixels, xmp=xmp())
+            write_tiff(folder / "S-2.tif", pixels + 50, xmp=xmp(HueAdjustmentRed="+50"))
+            write_tiff(folder / "S-3.tif", pixels + 25, xmp=xmp(SaturationAdjustmentRed="-25"))
+            records = inputs.base_records(base, ["melangeur"])
+            self.assertEqual(sorted((r["feature"], r["value"]) for r in records),
+                             [("mixer-red-hue", 50), ("mixer-red-saturation", -25)])
+            self.assertTrue(all(Path(r["reference"]).name == "S.tif" for r in records))
+
     def test_float_radius_declaration_tolerance_does_not_hide_wrong_state(self):
         record = {"feature": "sharpening-radius", "value": .3,
                   "settings": {"sharpeningRadius": .30000001192092896, "sharpeningAmount": 50},

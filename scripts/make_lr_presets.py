@@ -12,6 +12,7 @@ Import the .zip from Lightroom's Presets panel; never overwrites a file.
 Usage: python scripts/make_lr_presets.py [--controls highlights shadows ...]
            [--out tests/image/lr-presets]
        python scripts/make_lr_presets.py --controls vibrance saturation
+       python scripts/make_lr_presets.py --controls mixer   (24 mixer controls)
 """
 import argparse
 import sys
@@ -34,6 +35,21 @@ PANELS = {"vibrance": ("IPR Couleur", "IPR-Couleur-presets.zip"),
           "saturation": ("IPR Couleur", "IPR-Couleur-presets.zip")}
 LUMIERES = ("IPR Lumières complet", "IPR-Lumieres-complet-presets.zip")
 BANDS = ("Red", "Orange", "Yellow", "Green", "Aqua", "Blue", "Purple", "Magenta")
+# Colour mixer: IPR band and component names (TestRecipes), Lightroom field parts, labels.
+MIXER_BANDS = (("red", "Red", "Rouge"), ("orange", "Orange", "Orange"), ("yellow", "Yellow", "Jaune"),
+               ("green", "Green", "Vert"), ("cyan", "Aqua", "Cyan"), ("blue", "Blue", "Bleu"),
+               ("violet", "Purple", "Violet"), ("magenta", "Magenta", "Magenta"))
+MIXER_COMPONENTS = (("hue", "Hue", "Teinte"), ("saturation", "Saturation", "Saturation"),
+                    ("luminance", "Luminance", "Luminance"))
+MIXER = []
+for band, lr_band, band_label in MIXER_BANDS:
+    for component, lr_component, component_label in MIXER_COMPONENTS:
+        control = f"mixer-{band}-{component}"
+        MIXER.append(control)
+        FIELDS[control] = f"{lr_component}Adjustment{lr_band}"
+        LABELS[control] = f"Mélangeur {band_label} {component_label}"
+        VALUES[control] = (-100, -50, -25, 25, 50, 100)
+        PANELS[control] = ("IPR Mélangeur", "IPR-Melangeur-presets.zip")
 # Settings of the current Lightroom neutral references (6V1A0037, 11 October 2026).
 BASELINE = {
     "WhiteBalance": "As Shot", "CameraProfile": "Camera Neutral", "ConvertToGrayscale": "False",
@@ -88,9 +104,10 @@ def preset(group, control=None, value=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--controls", nargs="+", default=["highlights"], choices=sorted(LABELS))
+    parser.add_argument("--controls", nargs="+", default=["highlights"], choices=sorted(LABELS) + ["mixer"])
     parser.add_argument("--out", type=Path, default=ROOT / "tests/image/lr-presets")
     args = parser.parse_args()
+    args.controls = [c for control in args.controls for c in (MIXER if control == "mixer" else [control])]
     panels = {PANELS.get(c, LUMIERES) for c in args.controls}
     if len(panels) > 1:
         sys.exit("Un seul panneau par archive : " + ", ".join(sorted(g for g, _ in panels)))

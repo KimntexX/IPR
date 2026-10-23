@@ -55,6 +55,7 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorPipeline.cpp
     src/core/ColorMixer.h
     src/core/ColorMixer.cpp
+    src/core/ColorMixerModel.h
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
     src/core/ColorAdjustments.h
