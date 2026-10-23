@@ -962,6 +962,12 @@ void ImageEditor::applyAdjustmentsToSelection()
     setStatusMessage(tr("Réglages appliqués à %n image(s).", nullptr, written));
 }
 
+QColor ImageEditor::colorMixerTrackColor(int band, int component, int value) const
+{
+    const cv::Vec3f colour = ColorMixer::trackColour(band, component, value);
+    return QColor::fromRgbF(colour[0], colour[1], colour[2]);
+}
+
 int ImageEditor::colorMixerValue(int band, int component) const
 {
     if (band < 0 || band >= static_cast<int>(m_settings.mixerHue.size()))

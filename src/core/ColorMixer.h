@@ -21,6 +21,13 @@ struct Parameters {
 // Input/output: linear Rec.2020 D65 RGB, slider values in [-100, 100]
 // (clamped). Zero settings and greys are returned unchanged; no clipping.
 cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters);
+
+// Encoded sRGB colour (channels in [0, 1]) that one slider (component 0 hue,
+// 1 saturation, 2 luminance) of a band reaches at a value, applied by apply()
+// to the band's reference colour at its response peak; the chroma is reduced
+// to fit sRGB, the hue kept. For the UI slider tracks; neutral grey when the
+// band or component is invalid.
+cv::Vec3f trackColour(int band, int component, int value);
 }
 
 #endif // IPR_CORE_COLORMIXER_H

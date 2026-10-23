@@ -1,5 +1,4 @@
 #include <QColor>
-#include <QSet>
 #include <QGuiApplication>
 #include <QQmlComponent>
 #include <QQmlEngine>
@@ -33,6 +32,10 @@ ColorMixerModule {
         property var values: [[0,0,0], [0,0,0], [0,0,0], [0,0,0],
                               [0,0,0], [0,0,0], [0,0,0], [0,0,0]]
         function colorMixerValue(band, component) { return values[band][component] }
+        // Encodes its arguments so the test can check which colours each track asks for.
+        function colorMixerTrackColor(band, component, value) {
+            return Qt.rgba(band / 8, component / 3, (value + 100) / 200, 1)
+        }
         function setColorMixer(band, hue, saturation, luminance) {
             values[band] = [hue, saturation, luminance]
             commits++
@@ -105,29 +108,20 @@ ColorMixerModule {
                "violet and magenta should expose independent editable controls")) return 1;
     select(8);
     if (!check(root->property("band").toInt() == 6, "an invalid band must not break selection")) return 1;
-    // Measured slider tracks: eight colours per palette, and the tracks follow the band.
-    for (const char *name : {"centreColors", "hueLowColors", "hueHighColors", "saturationLowColors",
-                             "saturationHighColors", "luminanceLowColors", "luminanceHighColors"}) {
-        if (!check(root->property(name).toList().size() == 8, "each track palette must have eight bands")) return 1;
-    }
-    const auto track = [](QObject *control) {
-        QStringList colours;
-        for (const QVariant &colour : control->property("trackColors").toList())
-            colours.append(colour.value<QColor>().name());
-        return colours;
+    // Slider tracks come from the engine, for the selected band, at -100..+100.
+    const auto expected = [](int band, int component, int value) {
+        return QColor::fromRgbF(band / 8.0, component / 3.0, (value + 100) / 200.0).name();
     };
-    QSet<QString> hueTracks;
     for (int band = 0; band < 8; ++band) {
         select(band);
-        const QStringList colours = track(hue);
-        const QString expectedLow = root->property("hueLowColors").toList().at(band).toString();
-        const QString expectedHigh = root->property("hueHighColors").toList().at(band).toString();
-        if (!check(colours.size() == 3 && colours.first() == expectedLow && colours.last() == expectedHigh,
-                   "the hue track must run from the band's -100 colour to its +100 colour")) return 1;
-        if (!check(track(saturation).size() == 2 && track(luminance).size() == 3,
-                   "saturation and luminance tracks keep their stops")) return 1;
-        hueTracks.insert(colours.join(QLatin1Char(',')));
+        const QList<QObject *> controls{hue, saturation, luminance};
+        for (int component = 0; component < 3; ++component) {
+            const QVariantList stops = controls.at(component)->property("trackColors").toList();
+            bool matches = stops.size() == 5;
+            for (int i = 0; matches && i < 5; ++i)
+                matches = stops.at(i).value<QColor>().name() == expected(band, component, -100 + 50 * i);
+            if (!check(matches, "each track must follow the selected band from -100 to +100")) return 1;
+        }
     }
-    if (!check(hueTracks.size() == 8, "each band must have its own hue track")) return 1;
     return 0;
 }
