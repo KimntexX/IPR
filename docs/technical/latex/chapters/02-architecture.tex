@@ -117,11 +117,36 @@ DNG et restauration. Les neutres réels sont comparés au témoin natif conserv�
 dans les preuves JSON du rapport RAW/profils ; cette mesure ne remplace pas
 la qualification visuelle de tous les curseurs.
 
+\section{Commandes de retouche et sélection multiple}
+
+Les menus et raccourcis utilisent \texttt{ApplicationActions.qml}.
+Les commandes C++
+\texttt{copyAdjustments()} et \texttt{pasteAdjustments()} échangent un
+instantané interne de \texttt{EditRecipe::Settings}, conservé pendant les
+changements d'image. Ctrl Maj C copie ; Ctrl Maj V colle. Le collage remplace
+les retouches de la cible prête, sans copier son classement, son développement
+RAW ni la balance automatique. Température et nuance manuelles sont des valeurs
+absolues : leur copie ne garantit pas une apparence identique entre boîtiers.
+
+\texttt{saveCurrentAdjustments()}, associé à Ctrl S, synchronise la sauvegarde
+différée du compagnon et signale son résultat. Ce n'est ni un export ni une
+duplication du fichier. La duplication physique et son raccourci Ctrl D restent
+désactivés en attente d'une commande moteur dédiée. Le presse-papiers des
+retouches n'est pas le presse-papiers système et n'est pas persisté à la fermeture.
+
+Ctrl clic dans le ruban ajoute ou retire une image de la sélection sans
+déclencher son ouverture. Les cases et les commandes de sélection utilisent
+la même identité canonique du fichier ; les tests couvrent les alias de chemin,
+sans constituer une qualification réelle de tous les systèmes de fichiers.
+Les confirmations utilisent un pied de dialogue partagé et un interligne 1,5.
+L'état de livraison et les raccordements différés sont détaillés dans
+\texttt{docs/architecture/suivi-raccordements-ihm.md}.
+
 \section{Zoom et comparaison origine/actuel}
 
 Le composant \texttt{ImageViewport.qml} affiche le proxy de travail avec un
 zoom et un déplacement communs aux deux rendus. Le bouton Avant/après,
-également accessible par Ctrl Maj C, sépare l'origine à gauche du rendu
+également accessible par Ctrl Maj Y, sépare l'origine à gauche du rendu
 actuel à droite. Une frontière mobile définit deux clips complémentaires,
 sans double composition alpha. Le zoom à 100\,\% porte sur les pixels du
 proxy (plus grand côté limité à 2048 pixels), pas sur le RAW pleine résolution.

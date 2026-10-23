@@ -10,6 +10,7 @@ standard Qt. Cette convention est décrite dans la documentation
 \href{https://doc.qt.io/qt-6/qkeysequence.html}{QKeySequence de Qt} ; elle
 ne remplace pas la qualification de l’application sur une machine macOS.
 
+\clearpage
 \section*{Fichiers et application}
 \begin{longtable}{@{}L{4.4cm}L{9.2cm}@{}}
 \toprule Touche & Action et disponibilité\\\midrule\endhead
@@ -19,7 +20,9 @@ ne remplace pas la qualification de l’application sur une machine macOS.
 \touche{Ctrl + Maj + R} & Demander la remise à zéro des retouches, avec confirmation.\\
 \touche{Ctrl + virgule} & Ouvrir les préférences.\\
 \touche{Ctrl + Q} & Quitter hors dialogue modal.\\
-\touche{Ctrl + S} & Réservé à l’enregistrement manuel du compagnon ; désactivé en attente moteur. Sauvegarde automatique conservée.\\
+\touche{Ctrl + S} & Enregistrer immédiatement les réglages de l’image prête dans son compagnon.\\
+\touche{Ctrl + Maj + C} & Copier un instantané des paramètres de l’image ouverte.\\
+\touche{Ctrl + Maj + V} & Coller l’instantané sur l’image ouverte, sans copier son classement ni le développement RAW.\\
 \touche{Ctrl + D} & Réservé à la copie physique du fichier et de ses réglages ; désactivé en attente moteur.\\
 \bottomrule
 \end{longtable}
@@ -33,7 +36,7 @@ ne remplace pas la qualification de l’application sur une machine macOS.
 \touche{Ctrl + $-$} & Réduire une photo prête.\\
 \touche{Ctrl + 0} & Ajuster à la vue.\\
 \touche{Ctrl + 1} & Afficher à 100\,\% de l’aperçu.\\
-\touche{Ctrl + Maj + C} & Activer ou désactiver le comparatif partagé, si les deux aperçus sont disponibles.\\
+\touche{Ctrl + Maj + Y} & Activer ou désactiver le comparatif partagé, si les deux aperçus sont disponibles.\\
 \touche{Espace} maintenu & Original temporaire lorsque la vue image a le focus ; relâcher restaure la vue.\\
 \touche{Ctrl + molette} & Zoom centré autour du pointeur dans la vue image.\\
 Molette sans Ctrl & Déplacer l’image si elle dépasse la vue.\\
@@ -59,6 +62,7 @@ Clic droit sur un point intérieur & Supprimer ce point de courbe.\\
 Glisser dans une roue de grading & Modifier teinte et intensité de la zone active.\\
 Clic droit dans la vue & Ouvrir les actions de la photo, sans zoomer.\\
 Clic droit sur une vignette & Afficher le contexte de cette cible sans la charger implicitement.\\
+\touche{Ctrl + clic} sur une vignette & Ajouter ou retirer cette image de la sélection groupée, sans la charger.\\
 Clic droit sur un slider ou son nom & Réinitialiser ce paramètre ou activer sa saisie numérique.\\
 \touche{Maj + F10}, touche Menu & Ouvrir le contexte dans la vue, une vignette ou un slider focalisé.\\
 \bottomrule
@@ -66,6 +70,6 @@ Clic droit sur un slider ou son nom & Réinitialiser ce paramètre ou activer sa
 
 \attention{Ne pas supposer les raccourcis de Lightroom ou d’un autre éditeur :
 Ctrl + Z et les touches numériques de notation ne sont pas déclarés comme
-commandes globales de l’application décrite. Ctrl + S et Ctrl + D sont réservés,
-mais leur action reste désactivée tant que le raccordement moteur manque.
+commandes globales de l’application décrite. Ctrl + D reste réservé et
+désactivé tant que le raccordement de duplication physique manque.
 Les raccourcis propres aux dialogues natifs dépendent du système.}

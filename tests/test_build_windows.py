@@ -13,6 +13,12 @@ RULES = json.loads((ROOT / "scripts/test-rules.json").read_text(encoding="utf-8"
 
 
 class SelectionTests(unittest.TestCase):
+    def test_vibrance_selects_math_export_and_generator(self):
+        selected = build.select_tests(["src/core/Vibrance.h"], RULES)
+        self.assertTrue({"vibranceMathTests", "imageExportTests", "testImageGeneratorTests"}
+                        <= set(selected["tests"]))
+        self.assertIn("vibranceMathTests", selected["targets"])
+
     def test_all_group_entrypoints_are_targeted_without_losing_wb_dependents(self):
         for group in ("raw", "lumiere", "courbes", "couleur", "melangeur", "grading", "effets", "bruit", "nettete", "optique"):
             plan = build.select_tests(["tests/analyse_" + group + ".py"], RULES)
@@ -84,6 +90,13 @@ class SelectionTests(unittest.TestCase):
         summary=build.select_tests(['tests/summarize_raw_opening.py'],RULES)
         self.assertFalse(summary['full'])
         self.assertEqual(set(summary['python']),{'raw_opening_analysis','neutral_colour_inspection'})
+
+    def test_vibrance_model_is_targeted(self):
+        for path in ("src/core/Vibrance.cpp", "src/core/VibranceModel.h", "tests/vibrance_math_test.cpp"):
+            plan = build.select_tests([path], RULES)
+            self.assertFalse(plan["full"])
+            self.assertIn("vibranceMathTests", plan["tests"])
+            self.assertIn("imageExportTests", plan["tests"])
 
     def test_raw_normalization_is_targeted(self):
         for path in ("src/raw/RawNormalization.cpp", "src/raw/RawDecoder.cpp", "tests/raw_normalization_test.cpp"):

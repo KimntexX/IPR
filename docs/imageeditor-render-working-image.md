@@ -52,7 +52,7 @@ chaque module ignore ses réglages neutres.
 | 5 | Contraste | `Contrast::apply` |
 | 6 | Température et nuance sans DCP | `ColorPipeline::applyTemperatureTint` |
 | 7 | Ombres, noirs, hautes lumières, blancs | `ToneRecovery::apply` |
-| 8 | Saturation, vibrance | `ColorAdjustments::applySaturationVibrance` |
+| 8 | Saturation, vibrance | `Vibrance::apply` |
 | 9 | Mélangeur, étalonnage | `ColorAdjustments::applyMixerAndGrading` |
 | 10 | Bruit | `DetailProcessing::reduceNoise` |
 | 11 | Texture, clarté, voile | `DetailProcessing::applyTexture`, `applyClarity`, `dehaze` |
@@ -144,22 +144,32 @@ et [rapport Lumières](validation/analyses/analyse-validation-lumieres-base-2026
 
 ### Vibrance et saturation
 
-Après les réglages tonals, `ColorAdjustments::applySaturationVibrance` calcule la chrominance relative de chaque
-pixel à partir de ses canaux RGB linéaires. Les deux réglages sont bornés à
-`[-100, +100]` :
+Après les réglages tonals, `Vibrance::apply` (`src/core/Vibrance.cpp`) passe le
+master Rec.2020 linéaire en RGB linéaire sRGB D65 (matrices `WorkingColor`, sans
+écrêtage), agit en Oklab puis revient en Rec.2020. Les gris, le zéro des deux
+curseurs et les entrées vides ou d'un autre type restent inchangés. Les deux
+réglages sont bornés à `[-100, +100]`.
 
-- **Saturation** applique uniformément un facteur de chrominance autour de la
-  luminance ; `-100` produit un gris de même luminance et `+100` double
-  l'écart aux gris.
-- **Vibrance** module son action en fonction de la chrominance déjà présente :
-  les couleurs proches du gris sont davantage modifiées que les couleurs déjà
-  saturées. Cela permet de renforcer une image sans pousser aussi fortement
-  les couleurs les plus vives.
+- **Saturation** multiplie la chroma Oklab par `1 + s/100` et conserve L.
+  Mesurée sur 49 scènes, elle suit LR à moins de 0,05 de variation de chroma.
+- **Vibrance** suit les tables de réponse LR de `src/core/VibranceModel.h`,
+  générées par `scripts/build_vibrance_model.py` : gains log de chroma et de
+  clarté Oklab et rotation de teinte, appliquée par une rotation plane de
+  `(a, b)`, selon la saturation ProPhoto linéaire `(max − min)/max`, la
+  clarté et la teinte Oklab du pixel, mesurés aux valeurs ±25, ±50, ±100 sur les
+  49 scènes de la base. Interpolation trilinéaire entre centres de cellules
+  (teinte circulaire), linéaire entre valeurs mesurées, zéro à zéro. Un facteur
+  par valeur atténue la réponse des quasi-gris ; le gain de clarté et la rotation
+  s'effacent sous une chroma Oklab de 0,01 pour rester continus vers le gris.
 
-Les deux facteurs sont combinés, bornés pour ne pas inverser les composantes
-couleur autour de la luminance, puis repris par la compression de gamut sRGB
-de sortie. Ils sont appliqués avant les courbes afin que les courbes RGB
-restent la dernière correction colorimétrique utilisateur.
+LR ne s'adapte pas à la scène : saturation, clarté et teinte du pixel expliquent
+93–95 % de la variance de son gain positif, l'identité de la scène 2 % de plus.
+La réponse positive est maximale sur les tons moyens modérément saturés et
+protège les couleurs déjà saturées ; au négatif, les couleurs faibles sont
+presque entièrement désaturées et les couleurs saturées assombries. Les détails
+et la validation croisée sont dans le
+[rapport Couleur](validation/analyses/analyse-couleur.md) ; la démarche complète
+est expliquée dans le [cours 12](scholar/cours-12-vibrance-saturation-oklab.tex).
 
 ### Effets de détails et d'atmosphère
 

@@ -43,56 +43,38 @@ void toGrayscale(cv::Mat &linearRgb)
     }
 }
 
-void applySaturationVibrance(cv::Mat &linearRgb, int saturation, int vibrance)
-{
-    if (saturation == 0 && vibrance == 0) return;
-    const float saturationFactor = 1.0f + static_cast<float>(saturation) / 100.0f;
-    const float vibranceAmount = static_cast<float>(vibrance) / 100.0f;
-    for (int y = 0; y < linearRgb.rows; ++y) {
-        cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < linearRgb.cols; ++x) {
-            cv::Vec3f &pixel = row[x];
-            const float luminance = WorkingColor::nonNegativeLuminance(pixel);
-            const float maximum = std::max({pixel[0], pixel[1], pixel[2]});
-            const float minimum = std::min({pixel[0], pixel[1], pixel[2]});
-            const float chroma = maximum > 1e-6f ? std::clamp((maximum - minimum) / maximum, 0.0f, 1.0f) : 0.0f;
-            const float vibranceFactor = 1.0f + vibranceAmount * (1.0f - chroma);
-            pixel = cv::Vec3f(luminance, luminance, luminance) +
-                    (pixel - cv::Vec3f(luminance, luminance, luminance)) *
-                        std::max(0.0f, saturationFactor * vibranceFactor);
-        }
-    }
-}
-
 void applyMixerAndGrading(cv::Mat &linearRgb, const ColorMixer::Parameters &mixer,
                           const std::array<int, 3> &gradingHue,
                           const std::array<int, 3> &gradingSaturation)
 {
     const bool hasColorMixer = anyNonZero(mixer.hue) || anyNonZero(mixer.saturation) || anyNonZero(mixer.luminance);
     const bool hasColorGrading = anyNonZero(gradingSaturation);
-    if (!hasColorMixer && !hasColorGrading) return;
-    for (int y = 0; y < linearRgb.rows; ++y) {
-        cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < linearRgb.cols; ++x) {
-            cv::Vec3f pixel = row[x];
-            const float originalLuminance = WorkingColor::nonNegativeLuminance(pixel);
-            if (hasColorMixer) pixel = ColorMixer::apply(pixel, mixer);
-            if (hasColorGrading) {
-                const float shadows = 1.0f - ImageMath::smoothStep(0.12f, 0.42f, originalLuminance);
-                const float highlights = ImageMath::smoothStep(0.58f, 0.88f, originalLuminance);
-                const float midtones = std::clamp(1.0f - shadows - highlights, 0.0f, 1.0f);
-                const std::array<float, 3> weights{shadows, midtones, highlights};
-                for (size_t zone = 0; zone < weights.size(); ++zone) {
-                    if (gradingSaturation[zone] == 0 || weights[zone] == 0.0f)
-                        continue;
-                    const cv::Vec3f color = hsvToRgb(static_cast<float>(gradingHue[zone]), 1.0f, 1.0f);
-                    const float colorLuminance = WorkingColor::nonNegativeLuminance(color);
-                    pixel += (color - cv::Vec3f(colorLuminance, colorLuminance, colorLuminance)) *
-                             (gradingSaturation[zone] * 0.0035f * weights[zone]);
+    if ((!hasColorMixer && !hasColorGrading) || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
+    // Pixels are independent: rows run in parallel.
+    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &range) {
+        for (int y = range.start; y < range.end; ++y) {
+            cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
+            for (int x = 0; x < linearRgb.cols; ++x) {
+                cv::Vec3f pixel = row[x];
+                const float originalLuminance = WorkingColor::nonNegativeLuminance(pixel);
+                if (hasColorMixer) pixel = ColorMixer::apply(pixel, mixer);
+                if (hasColorGrading) {
+                    const float shadows = 1.0f - ImageMath::smoothStep(0.12f, 0.42f, originalLuminance);
+                    const float highlights = ImageMath::smoothStep(0.58f, 0.88f, originalLuminance);
+                    const float midtones = std::clamp(1.0f - shadows - highlights, 0.0f, 1.0f);
+                    const std::array<float, 3> weights{shadows, midtones, highlights};
+                    for (size_t zone = 0; zone < weights.size(); ++zone) {
+                        if (gradingSaturation[zone] == 0 || weights[zone] == 0.0f)
+                            continue;
+                        const cv::Vec3f color = hsvToRgb(static_cast<float>(gradingHue[zone]), 1.0f, 1.0f);
+                        const float colorLuminance = WorkingColor::nonNegativeLuminance(color);
+                        pixel += (color - cv::Vec3f(colorLuminance, colorLuminance, colorLuminance)) *
+                                 (gradingSaturation[zone] * 0.0035f * weights[zone]);
+                    }
                 }
+                row[x] = pixel;
             }
-            row[x] = pixel;
         }
-    }
+    });
 }
 }

@@ -8,6 +8,7 @@
 #include "Sidecar.h"
 #include "ToneCurve.h"
 #include "ToneRecovery.h"
+#include "Vibrance.h"
 #include "RawDecoder.h"
 #include "RawNormalization.h"
 #include "CameraProfileEngine.h"
@@ -44,6 +45,14 @@
 #include <vector>
 
 namespace {
+
+QString selectionKey(const QUrl &url)
+{
+    if (!url.isLocalFile()) return {};
+    const QFileInfo info(url.toLocalFile());
+    const QString canonical = info.canonicalFilePath();
+    return canonical.isEmpty() ? info.absoluteFilePath() : canonical;
+}
 
 QString defaultNormalizationManifest()
 {
@@ -901,12 +910,7 @@ void ImageEditor::setImageFlagged(bool flagged)
 
 void ImageEditor::setImageSelected(const QUrl &fileUrl, bool selected)
 {
-    if (!fileUrl.isLocalFile())
-        return;
-    const QFileInfo fileInfo(fileUrl.toLocalFile());
-    const QString key = fileInfo.canonicalFilePath().isEmpty()
-                            ? fileInfo.absoluteFilePath()
-                            : fileInfo.canonicalFilePath();
+    const QString key = selectionKey(fileUrl);
     if (key.isEmpty())
         return;
     const bool changed = selected ? !m_selectedImageKeys.contains(key)
@@ -919,6 +923,12 @@ void ImageEditor::setImageSelected(const QUrl &fileUrl, bool selected)
         emit selectionChanged();
 }
 
+bool ImageEditor::isImageSelected(const QUrl &fileUrl) const
+{
+    const QString key = selectionKey(fileUrl);
+    return !key.isEmpty() && m_selectedImageKeys.contains(key);
+}
+
 void ImageEditor::clearImageSelection()
 {
     if (m_selectedImageKeys.isEmpty())
@@ -929,7 +939,8 @@ void ImageEditor::clearImageSelection()
 
 void ImageEditor::applyAdjustmentsToSelection()
 {
-    if (m_selectedImageKeys.isEmpty() || m_currentFile.isEmpty())
+    if (m_selectedImageKeys.isEmpty() || m_currentFile.isEmpty() ||
+        !hasImage() || busy() || embeddedPreview())
         return;
     int written = 0;
     for (const QString &fileName : std::as_const(m_selectedImageKeys)) {
@@ -1252,6 +1263,36 @@ void ImageEditor::setAutomaticWhiteBalance(bool enabled)
     beginLoad(fileName, extension, enabled, false);
 }
 
+void ImageEditor::copyAdjustments()
+{
+    if (!hasImage() || busy() || embeddedPreview()) return;
+    m_copiedAdjustments = m_settings;
+    m_hasCopiedAdjustments = true;
+    emit copiedAdjustmentsChanged();
+    setStatusMessage(tr("Paramètres copiés. Ouvrez une autre image pour les coller."));
+}
+
+void ImageEditor::pasteAdjustments()
+{
+    if (!m_hasCopiedAdjustments || !hasImage() || busy() || embeddedPreview()) return;
+    // Transfer edits, not the target's camera development, optics or metadata.
+    const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
+    m_settings = m_copiedAdjustments;
+    m_settings.automaticWhiteBalance = automaticWhiteBalance;
+    emit toneCurvesReset();
+    emit adjustmentsReset(static_cast<int>(std::lround(
+        m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), 0);
+    scheduleRender();
+}
+
+void ImageEditor::saveCurrentAdjustments()
+{
+    if (!hasImage() || busy() || embeddedPreview()) return;
+    m_sidecarDebounce.stop();
+    if (saveCurrentSidecar())
+        setStatusMessage(tr("Réglages enregistrés : %1.ipr").arg(m_currentFile.toLocalFile()));
+}
+
 void ImageEditor::resetAdjustments()
 {
     if (m_original.isNull())
@@ -1409,7 +1450,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         ToneRecovery::apply(adjusted, tones, source.toneStatistics ? *source.toneStatistics
                                                                    : ToneRecovery::measure(source.linearRgba));
 
-    ColorAdjustments::applySaturationVibrance(adjusted, settings.saturation, settings.vibrance);
+    Vibrance::apply(adjusted, settings.saturation, settings.vibrance);
     ColorAdjustments::applyMixerAndGrading(adjusted,
         {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
         settings.gradingHue, settings.gradingSaturation);
@@ -1962,15 +2003,19 @@ void ImageEditor::scheduleSidecarSave()
         m_sidecarDebounce.start();
 }
 
-void ImageEditor::saveCurrentSidecar()
+bool ImageEditor::saveCurrentSidecar()
 {
     if (m_original.isNull() || !m_currentFile.isLocalFile())
-        return;
-    if (m_currentFile != m_displayedFile) return;
-    if (m_loadWatcher.isRunning()) return;
+        return false;
+    if (m_currentFile != m_displayedFile) return false;
+    if (m_loadWatcher.isRunning()) return false;
     if (!Sidecar::write(m_currentFile.toLocalFile(), m_settings,
                  m_userImageMetadata.value(currentFileKey()), rawDevelopmentRecipe()))
+    {
         setStatusMessage(tr("Échec de sauvegarde des réglages .ipr : vérifiez les permissions du dossier."));
+        return false;
+    }
+    return true;
 }
 
 void ImageEditor::startRender()
