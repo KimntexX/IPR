@@ -19,6 +19,7 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Guide détaillé du moteur CPU](../scholar/moteur-graphique-ipr.tex) : explication des constantes, asynchronisme et sidecars.
 - [Références architecture et profils](references/) : licences des dépendances, création de DCP et note d'utilisation des profils Adobe.
 - [CI et build multiplateforme](ci-et-build-multiplateforme.md) : matrice Windows/macOS/Linux, prérequis, packaging et feuille de route GitHub.
+- [Réseau Git vertical local](graphe-git-local.md) : `scripts/git_network.py`, page HTML/SVG des branches, fusions et tags, en lecture seule.
 - [Réduction de bruit et netteté](denoising-sharpening.md) : algorithmes, ordre de pipeline, limites IA/GPU et validation attendue.
 - [Arborescence des sources](../../src/README.md) : domaines C++/QML et bibliothèque interne `iprEngine`.
 - [Préférences de l’interface](ui-preferences.md) : INI utilisateur, géométrie, sections, couleurs et schéma extensible.
