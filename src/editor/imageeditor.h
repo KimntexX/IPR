@@ -150,6 +150,9 @@ public:
     // on failure.
     static QImage renderSrgb16(const ColorPipeline::WorkingImage &source,
                                const Settings &settings, QString *error);
+    // The linear Rec.2020 working image of the same render, for analysers.
+    static ColorPipeline::WorkingImage renderLinear(const ColorPipeline::WorkingImage &source,
+                                                    const Settings &settings);
     ~ImageEditor() override;
 
     QAbstractItemModel *imageModel();

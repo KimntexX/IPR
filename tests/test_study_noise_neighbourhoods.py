@@ -1,0 +1,37 @@
+import tempfile
+import unittest
+from pathlib import Path
+
+from study_noise_neighbourhoods import main, sources
+
+
+class NeighbourhoodStudyTests(unittest.TestCase):
+    def test_sources_are_the_raws_at_the_base_root(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            for name in ("A.CR3", "B.cr2", "C.tif", "D.CR3.ipr"):
+                (base / name).write_bytes(b"x")
+            (base / "neutre").mkdir()
+            (base / "neutre" / "E.CR3").write_bytes(b"x")
+            self.assertEqual([p.name for p in sources(base, [])], ["A.CR3", "B.cr2"])
+            self.assertEqual([p.name for p in sources(base, ["B"])], ["B.cr2"])
+
+    def test_missing_scene_or_empty_base_is_refused(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            with self.assertRaises(SystemExit):
+                sources(base, [])
+            (base / "A.CR3").write_bytes(b"x")
+            with self.assertRaises(SystemExit):
+                sources(base, ["Z"])
+
+    def test_missing_probe_is_refused_before_any_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            out = Path(directory) / "raw"
+            with self.assertRaises(SystemExit):
+                main(["--data-version", "1", "--probe", str(Path(directory) / "missing.exe"), "--output-dir", str(out)])
+            self.assertFalse(out.exists())
+
+
+if __name__ == "__main__":
+    unittest.main()

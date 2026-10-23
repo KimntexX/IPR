@@ -250,6 +250,9 @@ if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY
     # Manual corpus diagnostic, never part of the default build or CTest.
     add_executable(tonalBaseProbe EXCLUDE_FROM_ALL tests/tonal_base_probe.cpp)
     target_link_libraries(tonalBaseProbe PRIVATE iprEngine)
+    # Experimental adaptive-neighbourhood denoising study (manual, not in CTest).
+    add_executable(noiseNeighbourhoodProbe EXCLUDE_FROM_ALL tests/noise_neighbourhood_probe.cpp)
+    target_link_libraries(noiseNeighbourhoodProbe PRIVATE iprTestRecipes)
     add_executable(rawNormalizationCorpusProbe EXCLUDE_FROM_ALL tests/raw_normalization_corpus_probe.cpp)
     target_link_libraries(rawNormalizationCorpusProbe PRIVATE iprEngine)
     add_executable(openingLatencyProbe EXCLUDE_FROM_ALL tests/opening_latency_probe.cpp)

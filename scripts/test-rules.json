@@ -59,6 +59,7 @@
     "selection": "test_build_windows.py",
     "color_mixer_analysis": "test_analyse_color_mixer.py",
     "noise_analysis": "test_analyse_noise.py",
+    "noise_neighbourhood_study": "test_study_noise_neighbourhoods.py",
     "base_colorimetry_analysis": "test_analyse_base_colorimetrique.py"
   },
   "rules": [
@@ -148,6 +149,7 @@
     {"patterns": ["tests/analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis", "noise_analysis", "base_colorimetry_analysis"]},
     {"patterns": ["tests/test_analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis"]},
     {"patterns": ["tests/analyse_noise.py", "tests/test_analyse_noise.py"], "tests": [], "python": ["noise_analysis"]},
+    {"patterns": ["tests/study_noise_neighbourhoods.py", "tests/test_study_noise_neighbourhoods.py", "tests/noise_neighbourhood_probe.cpp"], "tests": [], "python": ["noise_neighbourhood_study"]},
     {"patterns": ["tests/test_build_windows.py"], "tests": [], "python": ["selection"]}
   ]
 }

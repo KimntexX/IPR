@@ -1630,6 +1630,12 @@ QImage ImageEditor::renderSrgb16(const ColorPipeline::WorkingImage &source,
     return ColorPipeline::toSrgb(rendered, ColorPipeline::OutputFormat::HighBitDepth, error);
 }
 
+ColorPipeline::WorkingImage ImageEditor::renderLinear(const ColorPipeline::WorkingImage &source,
+                                                    const Settings &settings)
+{
+    return renderWorkingImage(source, settings);
+}
+
 ImageEditor::LoadResult ImageEditor::loadFromDisk(const QString &fileName,
                                                   bool automaticWhiteBalance,
                                                   const RawDecoder::Options &rawOptions)
