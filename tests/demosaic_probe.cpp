@@ -1,5 +1,5 @@
 // Demosaicing study: LibRaw's Bayer algorithms and their noise options, plus
-// OpenCV's edge-aware demosaic plugged into LibRaw through interpolate_bayer_cb,
+// OpenCV's edge-aware demosaic and our RCD plugged into LibRaw through interpolate_bayer_cb,
 // applied to the same unpacked RAW. Not a production path. For each variant:
 //  - cost of dcraw_process (LibRaw is built without OpenMP: one core);
 //  - noise left in flat zones and detail kept in textured zones, as ratios to
@@ -57,7 +57,7 @@ struct Variant {
     int fbdd = 0;           // fbdd_noiserd (0 off, 1 light, 2 full, before interpolation)
     int dcbIterations = 0;
     int dcbEnhance = 0;
-    enum class Ours { None, OpenCvEdgeAware, Rcd, Lmmse } ours = Ours::None;
+    enum class Ours { None, OpenCvEdgeAware, Rcd } ours = Ours::None;
     int oursMedianPasses = 0;   // our parallel 3x3 median on R-G, B-G after our interpolation
 };
 
@@ -81,9 +81,6 @@ const std::vector<Variant> &variants()
         {"RCD", 0, 0, 0, 0, 0, Variant::Ours::Rcd},
         {"RCD-median1", 0, 0, 0, 0, 0, Variant::Ours::Rcd, 1},
         {"RCD-median3", 0, 0, 0, 0, 0, Variant::Ours::Rcd, 3},
-        {"RCD-auto", 0, 0, 0, 0, 0, Variant::Ours::Rcd, -1},
-        {"LMMSE", 0, 0, 0, 0, 0, Variant::Ours::Lmmse},
-        {"LMMSE-median1", 0, 0, 0, 0, 0, Variant::Ours::Lmmse, 1},
     };
     return list;
 }
@@ -131,42 +128,8 @@ struct Pattern {
 constexpr int OursTile = 512;
 constexpr int OursMargin = 12;     // even: keeps the pattern; covers the 9-pixel stencils and medians
 constexpr float Eps = 1e-5f;
-constexpr double NoiseOnePass = 0.01, NoiseTwoPasses = 0.04;   // provisional, calibrated on the study scenes
-int oursMedianPasses = 0;          // set by process() for the callback; -1: from the mosaic noise
-double oursNoise = 0;              // relative mosaic noise measured by the last interpolation
-int oursPassesUsed = 0;
-
-// Relative noise of the mosaic, before interpolation: the two greens of each 2x2
-// cell see almost the same signal, so their difference is mostly noise. Robust
-// sigma of one green over the median green level, on mid-tone cells.
-double mosaicNoise(const cv::Mat &cfa, const Pattern &p)
-{
-    int g1x = -1, g2x = -1;
-    for (int x = 0; x < 2; ++x) {
-        if (p.at(0, x) == 1) g1x = x;
-        if (p.at(1, x) == 1) g2x = x;
-    }
-    if (g1x < 0 || g2x < 0) return 0;
-    std::vector<float> diff, level;
-    for (int y = 0; y + 1 < cfa.rows; y += 4)
-        for (int x = 0; x + 1 < cfa.cols; x += 4) {
-            const float a = cfa.at<float>(y, x + g1x), b = cfa.at<float>(y + 1, x + g2x), m = 0.5f * (a + b);
-            if (m < 0.02f || m > 0.6f) continue;
-            diff.push_back(std::abs(a - b));
-            level.push_back(m);
-        }
-    if (diff.size() < 1000) return 0;
-    const auto mid = [](std::vector<float> v) {
-        std::nth_element(v.begin(), v.begin() + v.size() / 2, v.end());
-        return double(v[v.size() / 2]);
-    };
-    return mid(diff) / 0.6745 / std::sqrt(2.0) / std::max(1e-6, mid(level));
-}
-
-// Median passes chosen from the mosaic noise (thresholds from the study).
-int passesFor(double noise) { return noise < NoiseOnePass ? 0 : noise < NoiseTwoPasses ? 1 : 2; }
+int oursMedianPasses = 0;          // set by process() for the callback
 double oursMs = 0;                 // time of our interpolation, measured inside the callback
-
 // RCD-style demosaic, written from the published description (L. Sanz Rodriguez,
 // 2017): green from ratio-corrected directional estimates, the direction decided
 // per pixel and pulled toward the most decided diagonal neighbour; red and blue
@@ -300,9 +263,7 @@ void oursInterpolate(void *context, cv::Mat (*demosaic)(const cv::Mat &, const P
     for (int y = 0; y < h; y += OursTile)
         for (int x = 0; x < w; x += OursTile)
             tiles.emplace_back(x, y, std::min(OursTile, w - x), std::min(OursTile, h - y));
-    oursNoise = mosaicNoise(cfa, pattern);
-    const int passes = oursMedianPasses >= 0 ? oursMedianPasses : passesFor(oursNoise);
-    oursPassesUsed = passes;
+    const int passes = oursMedianPasses;
     cv::parallel_for_(cv::Range(0, int(tiles.size())), [&](const cv::Range &range) {
         for (int i = range.start; i < range.end; ++i) {
             const cv::Rect core = tiles[size_t(i)];
@@ -338,92 +299,6 @@ void oursInterpolate(void *context, cv::Mat (*demosaic)(const cv::Mat &, const P
 }
 
 void rcdInterpolate(void *context) { oursInterpolate(context, rcd); }
-
-// Directional LMMSE demosaic, written from Zhang and Wu (IEEE TIP 2005): the
-// colour differences G - C estimated along rows and columns are denoised by a
-// local linear minimum mean square-error estimate (signal from a 9-tap Gaussian,
-// noise from the residual), then fused with weights inverse to their errors.
-cv::Mat lmmse(const cv::Mat &cfa, const Pattern &p)
-{
-    const int H = cfa.rows, W = cfa.cols;
-    const auto T = [&](int y, int x) { return cfa.at<float>(y, x); };
-    constexpr int L = 4;                         // half window, 9 taps
-    float gauss[2 * L + 1], sum = 0;
-    for (int k = -L; k <= L; ++k) sum += gauss[k + L] = std::exp(-0.5f * k * k / 4.f);   // sigma 2
-    for (float &g : gauss) g /= sum;
-    // 1. Directional colour differences G - C (Hamilton-Adams interpolation along the line).
-    cv::Mat dh(H, W, CV_32F, cv::Scalar(0.f)), dv(H, W, CV_32F, cv::Scalar(0.f));
-    for (int y = 2; y < H - 2; ++y)
-        for (int x = 2; x < W - 2; ++x) {
-            const float h = 0.5f * (T(y, x - 1) + T(y, x + 1)) + 0.25f * (2 * T(y, x) - T(y, x - 2) - T(y, x + 2));
-            const float v = 0.5f * (T(y - 1, x) + T(y + 1, x)) + 0.25f * (2 * T(y, x) - T(y - 2, x) - T(y + 2, x));
-            const bool green = p.at(y, x) == 1;
-            dh.at<float>(y, x) = green ? T(y, x) - h : h - T(y, x);
-            dv.at<float>(y, x) = green ? T(y, x) - v : v - T(y, x);
-        }
-    // 2. LMMSE along each direction, at red and blue pixels.
-    cv::Mat G = cfa.clone();
-    const int B0 = 2 + 2 * L;
-    for (int y = B0; y < H - B0; ++y)
-        for (int x = B0; x < W - B0; ++x) {
-            if (p.at(y, x) == 1) continue;
-            float est[2], err[2];
-            for (int dir = 0; dir < 2; ++dir) {
-                const cv::Mat &d = dir == 0 ? dh : dv;
-                const auto at = [&](int k) { return dir == 0 ? d.at<float>(y, x + k) : d.at<float>(y + k, x); };
-                // smoothed signal over the window, then its mean and variance, and the noise
-                float s[2 * L + 1];
-                for (int j = -L; j <= L; ++j) {
-                    float a = 0;
-                    for (int k = -L; k <= L; ++k) a += gauss[k + L] * at(j + k);
-                    s[j + L] = a;
-                }
-                float mean = 0;
-                for (float v : s) mean += v;
-                mean /= 2 * L + 1;
-                float signal = 1e-12f, noise = 1e-12f;
-                for (int j = -L; j <= L; ++j) {
-                    signal += (s[j + L] - mean) * (s[j + L] - mean);
-                    noise += (at(j) - s[j + L]) * (at(j) - s[j + L]);
-                }
-                signal /= 2 * L + 1;
-                noise /= 2 * L + 1;
-                est[dir] = mean + signal / (signal + noise) * (at(0) - mean);
-                err[dir] = signal * noise / (signal + noise);
-            }
-            const float fused = (err[1] * est[0] + err[0] * est[1]) / (err[0] + err[1]);
-            G.at<float>(y, x) = std::max(0.f, T(y, x) + fused);
-        }
-    // 3. Red and blue from bilinear colour differences G - C.
-    cv::Mat dR(H, W, CV_32F, cv::Scalar(0.f)), dB(H, W, CV_32F, cv::Scalar(0.f));
-    for (int y = 0; y < H; ++y)
-        for (int x = 0; x < W; ++x) {
-            if (p.at(y, x) == 0) dR.at<float>(y, x) = G.at<float>(y, x) - T(y, x);
-            if (p.at(y, x) == 2) dB.at<float>(y, x) = G.at<float>(y, x) - T(y, x);
-        }
-    for (int y = 1; y < H - 1; ++y)
-        for (int x = 1; x < W - 1; ++x) {
-            const int c = p.at(y, x);
-            if (c == 1) continue;
-            cv::Mat &d = c == 0 ? dB : dR;   // the difference known on the diagonals
-            d.at<float>(y, x) = 0.25f * (d.at<float>(y - 1, x - 1) + d.at<float>(y - 1, x + 1) +
-                                         d.at<float>(y + 1, x - 1) + d.at<float>(y + 1, x + 1));
-        }
-    for (int y = 1; y < H - 1; ++y)
-        for (int x = 1; x < W - 1; ++x) {
-            if (p.at(y, x) != 1) continue;
-            for (cv::Mat *d : {&dR, &dB})
-                d->at<float>(y, x) = 0.25f * (d->at<float>(y - 1, x) + d->at<float>(y + 1, x) +
-                                              d->at<float>(y, x - 1) + d->at<float>(y, x + 1));
-        }
-    cv::Mat R = cv::max(G - dR, 0.f), Bl = cv::max(G - dB, 0.f);
-    cv::Mat rgb;
-    cv::merge(std::vector<cv::Mat>{R, G, Bl}, rgb);
-    return rgb;
-}
-
-void lmmseInterpolate(void *context) { oursInterpolate(context, lmmse); }
-
 // LibRaw keeps its callbacks protected: a subclass sets the interpolation step.
 class StudyRaw : public LibRaw
 {
@@ -448,7 +323,6 @@ cv::Mat process(StudyRaw &raw, const Variant &v, double *ms)
     oursMs = 0;
     raw.setBayerInterpolation(v.ours == Variant::Ours::OpenCvEdgeAware ? openCvEdgeAware
                               : v.ours == Variant::Ours::Rcd           ? rcdInterpolate
-                              : v.ours == Variant::Ours::Lmmse         ? lmmseInterpolate
                                                                        : nullptr);
     const auto t0 = Clock::now();
     const int result = raw.dcraw_process();
@@ -719,10 +593,6 @@ QJsonObject study(const QString &path, const QDir &crops)
         QJsonObject m;
         m.insert("ms_per_megapixel", ms / megapixels);
         if (v.ours != Variant::Ours::None) m.insert("ours_ms_per_megapixel", ours / megapixels);
-        if (v.ours == Variant::Ours::Rcd || v.ours == Variant::Ours::Lmmse) {
-            m.insert("mosaic_noise", oursNoise);
-            m.insert("median_passes", oursPassesUsed);
-        }
         m.insert("flat_luma_hh_ratio", median(lumaHh));
         m.insert("flat_chroma_hh_ratio", median(chromaHh));
         m.insert("flat_luma_mid_ratio", median(lumaMid));
