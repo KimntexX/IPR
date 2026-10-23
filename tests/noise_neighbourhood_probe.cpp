@@ -657,6 +657,11 @@ Planes candidateE(const Input &in, const NoiseProfile &profile, const CandidateE
         out.y = g16 + wiener(b[0], sigmaOf(profile, 0, 1, level), k.lumaAlpha, 2)
                     + wiener(b[1], sigmaOf(profile, 0, 2, level), k.lumaAlpha, 3)
                     + wiener(b[2], sigmaOf(profile, 0, 3, level), k.lumaAlpha, 6);
+        // Near black the noise is skewed and the shrunk bands no longer average to
+        // zero: the G16 mean of the input is restored, as for the chroma.
+        cv::Mat meanOut;
+        cv::GaussianBlur(out.y, meanOut, cv::Size(0, 0), 16.0, 16.0, cv::BORDER_REFLECT);
+        out.y += g16 - meanOut;
     }
     // Chrominance: half-resolution impulse median + joint blocks, guided upsampling,
     // fine residual shrunk.
