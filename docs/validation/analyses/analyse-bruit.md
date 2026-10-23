@@ -2800,3 +2800,67 @@ Ordre recommandé avant une nouvelle correction de production :
 Aucune modification du moteur pendant cette analyse, aucune suppression de
 photo, aucun déploiement automatique de BM3D ou d'un modèle IA. Les quatre
 tests de l'analyseur passent ; les mesures complètes restent dans le JSON.
+
+<a id="bruit-20261023-voisinages"></a>
+
+## Étude des voisinages adaptatifs — 23 octobre 2026, étape 1
+
+Application du [protocole des voisinages adaptatifs](../protocols/protocole-bruit-voisinages-adaptatifs.md).
+Aucune modification du débruitage de production : les candidats n'existent que
+dans la sonde manuelle `noiseNeighbourhoodProbe` (exclue de CTest).
+
+### 25. Banc
+
+Pour chaque RAW de la racine de base (9 scènes : 6V1A0830, 9608, 9890 ;
+7Y6A7003, 7232, 7298 ; IMG_3064, 3089 ; _MG_7906), le master linéaire Rec.2020
+neutre juste avant le débruitage est rendu **en mémoire**
+(`TestRecipes::neutral`, nouvel accès `ImageEditor::renderLinear`). Tous les
+candidats reçoivent ce même signal. Zones automatiques de 256 × 256 pixels natifs
+(marge de traitement 24) : 2 sombres, 4 planes, 4 détaillées par scène.
+Référence : `DetailProcessing::reduceNoise` sur l'image entière à 50 et 100.
+Candidats : A fenêtres adaptatives 3/5/9/17 (homogénéité ≤ (1+κ)σ² dans Y, Co
+et Cg) ; B similarité de blocs 5×5 dans 17×17 sur Y/Co/Cg normalisés par le
+bruit ; C = B limité à la fenêtre de A ; D fusion médiane / C / référence par
+confiance (voisins effectifs), D à poids fixes, D robuste (médiane quand la
+confiance est faible). Mesures sur la zone intérieure : rapports HH/MAD et bande
+moyenne (gaussiennes 1 − 4) de Y et Co/Cg, corrélation de la bande moyenne Y,
+dérives, corrélation du |ΔY| retiré avec le gradient lissé, temps par Mpx.
+Lanceur : `tests/study_noise_neighbourhoods.py --data-version N --tuning STEM`.
+Preuves : [v001](../raw/etude-voisinages-bruit-v001-20261023T093242Z.json),
+[v002](../raw/etude-voisinages-bruit-v002-20261023T093757Z.json) ; réglage sur
+6V1A9608, vérification sur les huit autres.
+
+### 26. Constats
+
+1. **Le bruit développé est corrélé spatialement.** Le modèle affine reproduit
+   le bruit HH le plus fin des zones planes de 9608 (×0,98 à 1,16), mais
+   l'écart-type des pixels y est environ deux fois plus grand ; en chrominance,
+   le rapport atteint 3 à 4. L'énergie restante est aux fréquences moyennes :
+   c'est elle que laisse la référence, sous forme de **taches colorées**
+   (bande moyenne chromatique 0,51 à 0,66 de l'entrée à la force 100, alors que
+   le HH est réduit à 0,07 à 0,34).
+2. **Le modèle de bruit est faux dans les ombres de certaines scènes.** Sur
+   6V1A9890 et 7Y6A7232, le HH mesuré des zones sombres et planes ne vaut que
+   7 à 20 % de la prédiction (surestimation ×5 à ×14) ; il est sous-estimé dans
+   les tons moyens détaillés (×1,2 à 1,6). Le prototype de production partage
+   ce modèle.
+3. Avec un facteur de corrélation mesuré sur les zones planes, **C** réduit la
+   bande moyenne chromatique à 0,10–0,18 sur les neuf scènes (v001), environ
+   quatre fois mieux que la référence, en gardant le détail moyen sur 9608,
+   7003, 7298, 3064 ; mais elle lisse trop où le facteur est surestimé
+   (7232, 3089, _MG_7906). **B** seule donne un rendu « plastique » ; **A** seule
+   dérive en luminosité (jusqu'à −4 %) ; C et D laissent des **points colorés
+   isolés** (blocs sans voisin similaire), que D robuste vise à corriger.
+4. Le facteur unique par scène est instable : estimé sur l'écart-type brut (v001),
+   il absorbe les dégradés ; sur le résidu d'un flou large par médiane (v002),
+   il tombe à 1 dans les ombres surestimées. Les conclusions sur les candidats
+   restent donc **conditionnées à l'estimation du bruit**.
+5. Coût en mono-thread : référence 0,06 s/Mpx ; A 0,08 ; B et C 1,3 à 2,4 s/Mpx,
+   soit 30 à 60 s pour 24 Mpx sans parallélisation ; budget visé : 10 s.
+
+### 27. Suite
+
+Étape A du protocole d'abord : estimer le bruit **par échelle et par niveau de
+signal** (HH et bande moyenne, par plan), avec une confiance, à partir de zones
+planes validées, puis rejouer A à D sur cette estimation. Seuils d'acceptation
+à fixer avant la comparaison finale ; aucune intégration sans validation visuelle.
