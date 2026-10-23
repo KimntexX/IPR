@@ -24,7 +24,7 @@ inline QColorSpace workingColorSpace()
 }
 inline QString engineIdentity()
 {
-    return QStringLiteral("ipr-render-rec2020-linear-d65-v1|profile-render=2");
+    return QStringLiteral("ipr-render-rec2020-linear-d65-v1|profile-render=2|noise-model=1");
 }
 
 struct WorkingImage

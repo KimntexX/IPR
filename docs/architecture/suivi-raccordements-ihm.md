@@ -1,5 +1,22 @@
 # IHM — suivi des raccordements au moteur
 
+## Complément courant — 23 octobre 2026
+
+La PR #8 est maintenant fusionnée dans `dev`, commit `5549946` ; les ajouts
+de copier/coller, sauvegarde et Ctrl+clic ne sont donc plus en attente de livraison.
+Le bilan daté du 22 octobre ci-dessous reste la trace de la préparation.
+
+**IHM-CONN-010 — raccordé sur `patch_noise`, validation visuelle attendue :**
+`estimateImageNoise()` lance une estimation asynchrone du signal développé
+entrant dans le débruitage. `noiseAnalysisRunning`, `noiseAnalysisReady` et
+`noiseAnalysisSummary` exposent son état, sans décoder des messages traduits.
+`setDenoiseGlobal(0…100)` modifie les deux intensités dans une seule commande ;
+les contrôles séparés restent disponibles en avancé. Le bouton n'applique pas
+de correction. L'état d'analyse périmé est invalidé après édition amont,
+navigation ou développement. Les intensités restent dans le sidecar existant.
+Ce raccordement appartient au chantier Bruit, pas à une modification moteur
+effectuée depuis le worktree IHM. Les autres contrats ouverts restent ouverts.
+
 ## État actuel — 22 octobre 2026
 
 La première livraison IHM est déjà intégrée dans `dev` par la

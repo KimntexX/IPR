@@ -12,6 +12,7 @@ Item {
     readonly property bool exportDialogVisible: exportDialog.visible || exportReview.visible
     property bool preferencesReady: false
     property bool restoringPreferences: false
+    property bool synchronizingNoiseControls: false
     property int activeCurve: 0
     property var curvePoints: []
     property var toneCurveModuleInstance: null
@@ -28,6 +29,14 @@ Item {
 
     implicitWidth: 320
     implicitHeight: 720
+
+    function refreshNoiseControls() {
+        synchronizingNoiseControls = true
+        denoiseLuminanceSlider.value = editor.adjustmentValue("denoiseLuminance")
+        denoiseChrominanceSlider.value = editor.adjustmentValue("denoiseChrominance")
+        denoiseGlobalSlider.value = Math.min(denoiseLuminanceSlider.value, denoiseChrominanceSlider.value)
+        synchronizingNoiseControls = false
+    }
 
     function curveName(channel) {
         return [qsTr("Luminance"), qsTr("Rouge"), qsTr("Vert"), qsTr("Bleu")][channel]
@@ -172,8 +181,7 @@ Item {
             claritySlider.value = editor.adjustmentValue("clarity")
             dehazeSlider.value = editor.adjustmentValue("dehaze")
             grainSlider.value = editor.adjustmentValue("grain")
-            denoiseLuminanceSlider.value = editor.adjustmentValue("denoiseLuminance")
-            denoiseChrominanceSlider.value = editor.adjustmentValue("denoiseChrominance")
+            root.refreshNoiseControls()
             sharpeningAmountSlider.value = editor.adjustmentValue("sharpeningAmount")
             sharpeningRadiusSlider.value = editor.adjustmentValue("sharpeningRadius")
             sharpeningMaskingSlider.value = editor.adjustmentValue("sharpeningMasking")
@@ -635,18 +643,65 @@ Item {
                 textColor: root.textColor
                 title: qsTr("Réduction du bruit")
 
+                PreferenceButton {
+                    objectName: "estimateNoiseButton"
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    text: editor.noiseAnalysisRunning ? qsTr("Estimation en cours…") : qsTr("Estimer le bruit")
+                    enabled: editor.hasImage && !editor.busy && !editor.embeddedPreview
+                    onClicked: editor.estimateImageNoise()
+                }
+
+                Text {
+                    text: editor.noiseAnalysisSummary
+                    Layout.minimumWidth: 0
+                    visible: text.length > 0
+                    color: root.secondaryTextColor
+                    wrapMode: Text.WordWrap
+                    font.pixelSize: 11
+                    Layout.fillWidth: true
+                }
+
+                AdjustmentControl {
+                    id: denoiseGlobalSlider
+                    objectName: "denoiseGlobalControl"
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                    label: qsTr("Réduction globale")
+                    minimumValue: 0
+                    maximumValue: 100
+                    valueText: Math.round(value)
+                    visible: editor.noiseAnalysisReady || value > 0
+                    adjustmentEnabled: editor.hasImage && !editor.noiseAnalysisRunning
+                    onValueEdited: function(value) {
+                        if (!root.synchronizingNoiseControls) editor.setDenoiseGlobal(Math.round(value))
+                    }
+                }
+
+                PreferenceCheckBox {
+                    id: separateNoiseControls
+                    objectName: "separateNoiseControls"
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    implicitWidth: 0
+                    text: qsTr("Réglages séparés (avancé)")
+                }
+
                 AdjustmentControl {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     id: denoiseLuminanceSlider
+                    visible: separateNoiseControls.checked
                     label: qsTr("Bruit de luminance")
                     valueText: Math.round(value)
                     minimumValue: 0
                     maximumValue: 100
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
-                        if (editor)
+                        if (editor && !root.synchronizingNoiseControls) {
                             editor.setDenoiseLuminance(Math.round(value))
+                            root.refreshNoiseControls()
+                        }
                     }
                 }
 
@@ -654,14 +709,17 @@ Item {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     id: denoiseChrominanceSlider
+                    visible: separateNoiseControls.checked
                     label: qsTr("Bruit de couleur")
                     valueText: Math.round(value)
                     minimumValue: 0
                     maximumValue: 100
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
-                        if (editor)
+                        if (editor && !root.synchronizingNoiseControls) {
                             editor.setDenoiseChrominance(Math.round(value))
+                            root.refreshNoiseControls()
+                        }
                     }
                 }
             }

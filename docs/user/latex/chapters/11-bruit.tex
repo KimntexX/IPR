@@ -1,5 +1,20 @@
 \chapter{Réduction du bruit}
+\section{Estimer puis corriger globalement}
+Dans le panneau Réduction du bruit, cliquer sur \emph{Estimer le bruit}.
+L'analyse se déroule en arrière-plan et ne modifie pas l'image.
+Une fois terminée, le curseur \emph{Réduction globale}, de 0 à 100, apparaît.
+Zéro n'applique aucune correction ; augmenter progressivement l'intensité.
+Cent correspond à la correction maximale prévue, pas à une suppression garantie
+de tout le bruit. L'intensité est conservée dans le compagnon de l'image.
+
+Ce premier prototype est expérimental. Les retouches de lumière et de couleur,
+ou un changement de développement, rendent l'estimation affichée périmée :
+relancer le bouton si nécessaire. Les statistiques sont réutilisées lorsque
+leur signal d'entrée est inchangé. L'export est estimé séparément à pleine
+résolution ; il ne faut pas assimiler son bruit à celui du seul aperçu.
+
 \section{Séparer deux composantes}
+L'option \emph{Réglages séparés (avancé)} révèle les deux commandes.
 \emph{Bruit de luminance} agit sur les fluctuations de clarté ;
 \emph{Bruit de couleur} vise les variations chromatiques parasites.
 Les deux contrôles vont de 0 à 100, référence zéro. Leur présence ne signifie

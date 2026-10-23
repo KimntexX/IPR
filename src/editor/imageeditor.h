@@ -10,6 +10,7 @@
 #include "DecodedImageCache.h"
 #include "ImageCacheController.h"
 #include "RawDecoder.h"
+#include "NoiseEstimation.h"
 
 #include <QAbstractListModel>
 #include <QFutureWatcher>
@@ -90,6 +91,9 @@ class ImageEditor final : public QObject
     Q_PROPERTY(int selectedImageCount READ selectedImageCount NOTIFY selectionChanged)
     Q_PROPERTY(QStringList selectedImageUrls READ selectedImageUrls NOTIFY selectionChanged)
     Q_PROPERTY(bool hasCopiedAdjustments READ hasCopiedAdjustments NOTIFY copiedAdjustmentsChanged)
+    Q_PROPERTY(bool noiseAnalysisReady READ noiseAnalysisReady NOTIFY noiseAnalysisChanged)
+    Q_PROPERTY(bool noiseAnalysisRunning READ noiseAnalysisRunning NOTIFY noiseAnalysisChanged)
+    Q_PROPERTY(QString noiseAnalysisSummary READ noiseAnalysisSummary NOTIFY noiseAnalysisChanged)
     Q_PROPERTY(QVariantList cameraProfiles READ cameraProfiles NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(bool rawImage READ rawImage NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(bool rawProfileFastPathAvailable READ rawProfileFastPathAvailable NOTIFY rawDevelopmentChanged)
@@ -227,6 +231,11 @@ public:
     Q_INVOKABLE void setGrain(int value);
     Q_INVOKABLE void setDenoiseLuminance(int value);
     Q_INVOKABLE void setDenoiseChrominance(int value);
+    Q_INVOKABLE void setDenoiseGlobal(int value);
+    Q_INVOKABLE void estimateImageNoise();
+    bool noiseAnalysisReady() const { return m_noiseAnalysisReady; }
+    bool noiseAnalysisRunning() const { return m_noiseWatcher.isRunning(); }
+    QString noiseAnalysisSummary() const { return m_noiseAnalysisSummary; }
     Q_INVOKABLE void setSharpeningAmount(int value);
     Q_INVOKABLE void setSharpeningRadius(float value);
     Q_INVOKABLE void setSharpeningMasking(int value);
@@ -254,6 +263,7 @@ signals:
     void decodedImageCacheChanged();
     void selectionChanged();
     void copiedAdjustmentsChanged();
+    void noiseAnalysisChanged();
     void toneCurveChanged(int channel);
     void toneCurvesReset();
     void adjustmentsReset(int temperatureKelvin, int tint);
@@ -282,7 +292,8 @@ private:
     DecodedImageCache::Entry retainedCurrentEntry() const;
     RawDecoder::Options developmentOptions() const;
     static ColorPipeline::WorkingImage renderWorkingImage(
-        const ColorPipeline::WorkingImage &source, const Settings &settings);
+        const ColorPipeline::WorkingImage &source, const Settings &settings,
+        NoiseEstimation::Result *noiseAnalysis = nullptr);
     static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
                                       const Settings &settings,
                                       bool includeOriginal);
@@ -366,6 +377,12 @@ private:
     QFutureWatcher<RenderResult> m_renderWatcher;
     QFutureWatcher<ExportResult> m_exportWatcher;
     QFutureWatcher<LoadResult> m_loadWatcher;
+    QFutureWatcher<NoiseEstimation::Result> m_noiseWatcher;
+    ImageCacheController::CancelToken m_noiseCancel;
+    QByteArray m_noiseInputKey;
+    quint64 m_noiseLoadRevision = 0;
+    bool m_noiseAnalysisReady = false;
+    QString m_noiseAnalysisSummary;
     QFutureWatcher<LoadResult> m_prefetchWatcher;
     QThreadPool m_prefetchPool;
     QTimer m_prefetchTimer;

@@ -2,6 +2,7 @@
 #define IPR_CORE_DETAILPROCESSING_H
 
 #include <opencv2/core.hpp>
+#include "NoiseEstimation.h"
 
 namespace DetailProcessing {
 
@@ -22,6 +23,7 @@ struct SharpenSettings
 // HDR values are preserved. Denoising compresses chroma toward neutral when
 // needed to keep RGB nonnegative without independently lifting its luminance.
 void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings);
+NoiseEstimation::Result estimateNoise(const cv::Mat &linearRgb);
 void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings);
 
 // Local contrast on luminance, slider values in [-100, 100]: texture targets

@@ -182,6 +182,9 @@ int main(int argc, char **argv)
                    "a RAW development checkbox must show the engine state after a click")) return 1;
     }
     QObject *noiseSection = root->findChild<QObject *>(QStringLiteral("denoiseSection"));
+    QObject *estimateButton = root->findChild<QObject *>(QStringLiteral("estimateNoiseButton"));
+    QObject *globalNoise = root->findChild<QObject *>(QStringLiteral("denoiseGlobalControl"));
+    if (!check(estimateButton && globalNoise, "noise analysis button and global control exist")) return 1;
     QObject *sharpSection = root->findChild<QObject *>(QStringLiteral("sharpeningSection"));
     QObject *exportSection = root->findChild<QObject *>(QStringLiteral("exportSection"));
     auto *exportHeader = exportSection->findChild<QQuickItem *>(QStringLiteral("sectionToggle"));
@@ -408,6 +411,18 @@ int main(int argc, char **argv)
                savedMetadata.rating == 2 && savedMetadata.colorLabel == "blue" &&
                editor.statusMessage().startsWith(QStringLiteral("Réglages enregistrés")),
                "manual save must persist the latest recipe and metadata and report success")) return 1;
+    editor.resetAdjustments();
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+
+    editor.setDenoiseGlobal(75);
+    if (!check(globalNoise->property("value").toInt()==75,
+               "global amount updates the visible control and both engine components")) return 1;
+    editor.setDenoiseLuminance(43);
+    editor.setDenoiseChrominance(12);
+    editor.adjustmentsReset(5200,0);
+    if (!check(editor.adjustmentValue("denoiseLuminance")==43 &&
+               editor.adjustmentValue("denoiseChrominance")==12 && globalNoise->property("value").toInt()==12,
+               "restoring unequal advanced amounts must not overwrite them through the global control")) return 1;
     editor.resetAdjustments();
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
 

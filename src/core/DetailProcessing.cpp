@@ -14,7 +14,7 @@ namespace {
 
 constexpr float kNoiseFloor = 0.00025f;
 // Denoising thresholds are in units of measured input noise, not absolute RGB.
-// Keep the legacy estimator/floor for sharpening until its separate validation.
+// Sharpening has its own estimator/floor, separate from adaptive denoising.
 constexpr float kDenoiseSigmaEpsilon = 1e-7f;
 constexpr double kFineSigma = 0.8;
 constexpr double kCoarseSigma = 1.8;
@@ -67,45 +67,6 @@ float smoothStep(float edge0, float edge1, float value)
     return t * t * (3.0f - 2.0f * t);
 }
 
-float estimateDenoiseSigma(const cv::Mat &plane)
-{
-    // Unit-norm diagonal Haar filter. MAD estimates output high-frequency noise;
-    // demosaicing can correlate it, so this is not a physical sensor-noise model.
-    // Sample complete adjacent 2x2 blocks, never decimated individual pixels.
-    const int pairRows = plane.rows / 2;
-    const int pairColumns = plane.cols / 2;
-    if (pairRows == 0 || pairColumns == 0)
-        return 0.0f;
-    const int stride = std::max(1, static_cast<int>(std::sqrt(
-        static_cast<double>(pairRows) * pairColumns / 16384.0)));
-    std::vector<float> samples;
-    samples.reserve(static_cast<size_t>((pairRows + stride - 1) / stride) *
-                    ((pairColumns + stride - 1) / stride));
-    for (int y = 0; y < pairRows; y += stride) {
-        const float *first = plane.ptr<float>(2 * y);
-        const float *second = plane.ptr<float>(2 * y + 1);
-        for (int x = 0; x < pairColumns; x += stride) {
-            const int column = 2 * x;
-            // Exact constant blocks carry no measurable noise. Letting a large
-            // black border dominate the MAD would disable denoising elsewhere.
-            if (first[column] == first[column + 1] && first[column] == second[column] &&
-                first[column] == second[column + 1])
-                continue;
-            samples.push_back((first[column] - first[column + 1] -
-                               second[column] + second[column + 1]) * 0.5f);
-        }
-    }
-    if (samples.empty())
-        return 0.0f;
-    const auto middle = samples.begin() + samples.size() / 2;
-    std::nth_element(samples.begin(), middle, samples.end());
-    const float center = *middle;
-    for (float &value : samples)
-        value = std::abs(value - center);
-    std::nth_element(samples.begin(), middle, samples.end());
-    return *middle / 0.67448975f;
-}
-
 cv::Mat structureProtection(const cv::Mat &guide, float noiseSigma)
 {
     cv::Mat gradientX, gradientY, magnitude;
@@ -129,8 +90,10 @@ float softThreshold(float value, float threshold)
 }
 
 cv::Mat denoisePlane(const cv::Mat &plane, const cv::Mat &lumaProtection,
-                     float noiseSigma, int amount, bool isChrominance)
+                     const cv::Mat &lumaGuide, const NoiseEstimation::Model &model,
+                     int amount, bool isChrominance)
 {
+    const float noiseSigma = NoiseEstimation::sigma(model, static_cast<float>(cv::mean(lumaGuide)[0]));
     if (amount <= 0 || noiseSigma <= kDenoiseSigmaEpsilon)
         return plane;
 
@@ -151,8 +114,6 @@ cv::Mat denoisePlane(const cv::Mat &plane, const cv::Mat &lumaProtection,
     }
     const float strength = static_cast<float>(std::clamp(amount, 0, 100)) / 100.0f;
     const float multiplier = isChrominance ? kChromaThresholdAtMaximum : kLumaThresholdAtMaximum;
-    const float fineThreshold = noiseSigma * multiplier * strength;
-    const float mediumThreshold = fineThreshold * kMediumThresholdRatio;
     cv::Mat result(plane.rows, plane.cols, CV_32F);
 
     for (int y = 0; y < plane.rows; ++y) {
@@ -160,8 +121,11 @@ cv::Mat denoisePlane(const cv::Mat &plane, const cv::Mat &lumaProtection,
         const float *fine = fineBase.ptr<float>(y);
         const float *coarse = coarseBase.ptr<float>(y);
         const float *edge = protectionMap.ptr<float>(y);
+        const float *guide = lumaGuide.ptr<float>(y);
         float *target = result.ptr<float>(y);
         for (int x = 0; x < plane.cols; ++x) {
+            const float fineThreshold = NoiseEstimation::sigma(model, guide[x]) * multiplier * strength;
+            const float mediumThreshold = fineThreshold * kMediumThresholdRatio;
             // Strong luminance edges protect real detail from the shrinkage.
             // Chroma is allowed slightly more smoothing while still following
             // the same structure map, preventing colour bleeding over edges.
@@ -256,6 +220,14 @@ void mergeLumaChroma(const cv::Mat &luma, const cv::Mat &chromaOrange,
 
 }
 
+NoiseEstimation::Result estimateNoise(const cv::Mat &linearRgb)
+{
+    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return {};
+    cv::Mat luma, co, cg;
+    splitLumaChroma(linearRgb, &luma, &co, &cg);
+    return NoiseEstimation::estimate(luma, co, cg);
+}
+
 void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings)
 {
     if (linearRgb.empty() || linearRgb.type() != CV_32FC3 ||
@@ -265,21 +237,23 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings)
     cv::Mat luma, chromaOrange, chromaGreen;
     splitLumaChroma(linearRgb, &luma, &chromaOrange, &chromaGreen);
 
-    const float lumaSigma = estimateDenoiseSigma(luma);
+    const auto estimate = NoiseEstimation::estimate(luma, chromaOrange, chromaGreen);
+    if (!estimate.valid) return;
+    const float lumaSigma = NoiseEstimation::sigma(estimate.planes[0], static_cast<float>(cv::mean(luma)[0]));
     cv::Mat lumaGuide;
     cv::GaussianBlur(luma, lumaGuide, cv::Size(), kFineSigma, kFineSigma,
                      cv::BORDER_REPLICATE);
     const cv::Mat protection = structureProtection(lumaGuide, lumaSigma);
 
     if (settings.luminance > 0)
-        luma = denoisePlane(luma, protection, lumaSigma,
+        luma = denoisePlane(luma, protection, lumaGuide, estimate.planes[0],
                             settings.luminance, false);
     if (settings.chrominance > 0) {
-        chromaOrange = denoisePlane(chromaOrange, protection,
-                                    estimateDenoiseSigma(chromaOrange),
+        chromaOrange = denoisePlane(chromaOrange, protection, lumaGuide,
+                                    estimate.planes[1],
                                     settings.chrominance, true);
-        chromaGreen = denoisePlane(chromaGreen, protection,
-                                   estimateDenoiseSigma(chromaGreen),
+        chromaGreen = denoisePlane(chromaGreen, protection, lumaGuide,
+                                   estimate.planes[2],
                                    settings.chrominance, true);
     }
     mergeLumaChroma(luma, chromaOrange, chromaGreen, &linearRgb);

@@ -54,6 +54,20 @@ QString selectionKey(const QUrl &url)
     return canonical.isEmpty() ? info.absoluteFilePath() : canonical;
 }
 
+QByteArray noiseInputKey(const EditRecipe::Settings &s)
+{
+    // Exactly the controls upstream of denoising; downstream changes keep the estimate.
+    QByteArray key;
+    QDataStream stream(&key, QIODevice::WriteOnly);
+    stream << s.brightness << s.contrast << s.grayscale << s.shadows << s.blacks
+           << s.highlights << s.whites << s.temperature << s.tint << s.vibrance << s.saturation;
+    for (size_t i=0; i<s.mixerHue.size(); ++i)
+        stream << s.mixerHue[i] << s.mixerSaturation[i] << s.mixerLuminance[i];
+    for (size_t i=0; i<s.gradingHue.size(); ++i)
+        stream << s.gradingHue[i] << s.gradingSaturation[i];
+    return key;
+}
+
 QString defaultNormalizationManifest()
 {
     const QStringList candidates{qEnvironmentVariable("IPR_RAW_NORMALIZATION_MANIFEST"),
@@ -205,6 +219,25 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     , m_decodedImageCache(nullptr, std::move(memorySampler))
 {
     m_embeddedPool.setMaxThreadCount(1);
+    connect(&m_noiseWatcher, &QFutureWatcher<NoiseEstimation::Result>::finished, this, [this] {
+        NoiseEstimation::Result result;
+        try { result = m_noiseWatcher.future().takeResult(); } catch (...) { /* report below */ }
+        if (m_noiseLoadRevision == m_requestedLoadRevision && !m_original.isNull() &&
+            m_noiseInputKey == noiseInputKey(m_settings) && m_noiseCancel && !m_noiseCancel->load()) {
+            m_noiseAnalysisReady = result.valid;
+            const int affine = static_cast<int>(std::count_if(result.planes.begin(), result.planes.end(),
+                [](const auto &model) { return model.affine; }));
+            m_noiseAnalysisSummary = result.valid
+                ? tr("Estimation expérimentale sur l'aperçu : %1 zones, %2/3 plans affines. "
+                     "L'export est estimé séparément à pleine résolution.")
+                    .arg(result.planes[0].patches).arg(affine)
+                : tr("Estimation indisponible : image trop petite, données invalides ou mémoire insuffisante.");
+            setStatusMessage(m_noiseAnalysisSummary);
+        }
+        emit noiseAnalysisChanged();
+        refreshBusyState();
+        if (!busy()) schedulePrefetch();
+    });
     connect(&m_embeddedWatcher, &QFutureWatcher<QImage>::finished, this, [this] {
         QImage preview;
         try { preview = m_embeddedWatcher.result(); } catch (...) { /* optional interim view */ }
@@ -343,8 +376,10 @@ ImageEditor::~ImageEditor()
 {
     cancelPrefetch();
     if (m_loadCancel) m_loadCancel->store(true);
+    if (m_noiseCancel) m_noiseCancel->store(true);
     // Workers waiting for memory must not delay or deadlock closing.
     m_decodedImageCache.abortWaiting();
+    if (m_noiseWatcher.future().isStarted()) m_noiseWatcher.waitForFinished();
     if (m_prefetchWatcher.future().isStarted()) m_prefetchWatcher.waitForFinished();
     // Final flush, even when the 450 ms debounce has not elapsed yet.
     m_sidecarDebounce.stop();
@@ -1175,6 +1210,42 @@ void ImageEditor::setDenoiseLuminance(int value)
     scheduleRender();
 }
 
+void ImageEditor::setDenoiseGlobal(int value)
+{
+    value = std::clamp(value, 0, 100);
+    if (m_settings.denoiseLuminance == value && m_settings.denoiseChrominance == value) return;
+    m_settings.denoiseLuminance = value;
+    m_settings.denoiseChrominance = value;
+    scheduleRender();
+    emit adjustmentsReset(m_settings.temperature, m_settings.tint);
+}
+
+void ImageEditor::estimateImageNoise()
+{
+    if (busy() || m_original.isNull() || m_embeddedPreview || m_noiseWatcher.isRunning()) return;
+    cancelPrefetch();
+    const auto source = m_editProxy.isNull() ? m_original : m_editProxy;
+    const auto settings = m_settings;
+    m_noiseInputKey = noiseInputKey(settings);
+    m_noiseLoadRevision = m_requestedLoadRevision;
+    m_noiseAnalysisReady = false;
+    m_noiseAnalysisSummary = tr("Estimation du bruit en cours…");
+    m_noiseCancel = std::make_shared<std::atomic_bool>(false);
+    const auto cancel = m_noiseCancel;
+    auto *controller = &m_decodedImageCache;
+    m_noiseWatcher.setFuture(QtConcurrent::run([source, settings, controller, cancel] {
+        NoiseEstimation::Result result;
+        const auto admission = controller->acquire({},
+            SystemMemory::estimateProcessingPeak(source.linearRgba.total()), false, cancel).result();
+        if (!admission.reservation) return result;
+        const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
+        if (!cancel->load()) renderWorkingImage(source, settings, &result);
+        return result;
+    }));
+    setBusy(true);
+    emit noiseAnalysisChanged();
+}
+
 void ImageEditor::setDenoiseChrominance(int value)
 {
     value = qBound(0, value, 100);
@@ -1370,7 +1441,8 @@ void attachToneStatistics(ColorPipeline::WorkingImage &image, ColorPipeline::Wor
 }
 
 ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
-    const ColorPipeline::WorkingImage &source, const Settings &settings)
+    const ColorPipeline::WorkingImage &source, const Settings &settings,
+    NoiseEstimation::Result *noiseAnalysis)
 {
     if (source.isNull() || source.colorSpace != ColorPipeline::workingColorSpace() ||
         source.linearRgba.type() != CV_32FC4 || !cv::checkRange(source.linearRgba, true))
@@ -1381,7 +1453,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     const bool hasToneCurves = !ToneCurve::isIdentity(settings.toneCurves);
     // A neutral pipeline returns its shallow source and therefore avoids all
     // RGB split/merge buffers and per-pixel passes.
-    if (!settings.grayscale && settings.brightness == 0.0f &&
+    if (!noiseAnalysis && !settings.grayscale && settings.brightness == 0.0f &&
         settings.contrast == 0 && settings.blur == 0 && settings.shadows == 0 &&
         settings.blacks == 0 && settings.highlights == 0 && settings.whites == 0 &&
         settings.temperature == referenceTemperature && settings.tint == 0 &&
@@ -1458,6 +1530,10 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     // Denoise before local-detail enhancement and sharpening. The operation
     // runs in linear RGB and keeps luminance and chrominance independent so
     // coloured speckles can be removed without flattening edge detail.
+    if (noiseAnalysis) {
+        *noiseAnalysis = DetailProcessing::estimateNoise(adjusted);
+        return {}; // Analysis only: no denoising, preview publication or recipe mutation.
+    }
     if (settings.denoiseLuminance != 0 || settings.denoiseChrominance != 0) {
         DetailProcessing::reduceNoise(
             adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
@@ -1912,6 +1988,10 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
     m_fullSize = loaded.proxyOnly ? loaded.fullSize
         : QSize(loaded.image.linearRgba.cols, loaded.image.linearRgba.rows);
     m_original = std::move(loaded.image);
+    m_noiseAnalysisReady = false;
+    m_noiseAnalysisSummary.clear();
+    if (m_noiseCancel) m_noiseCancel->store(true);
+    emit noiseAnalysisChanged();
     m_editProxy = std::move(loaded.editProxy);
     m_displayedFile = m_currentFile;
     // Refresh comparison without blanking the displayed pair while rendering.
@@ -1949,6 +2029,10 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
 
 void ImageEditor::releaseCurrentImage()
 {
+    if (m_noiseCancel) m_noiseCancel->store(true);
+    m_noiseAnalysisReady = false;
+    m_noiseAnalysisSummary.clear();
+    emit noiseAnalysisChanged();
     const bool hadImage = !m_original.isNull();
     const quint64 cacheSizeBefore = m_decodedImageCache.sizeBytes();
     const qsizetype cacheCountBefore = m_decodedImageCache.count();
@@ -1988,6 +2072,12 @@ void ImageEditor::scheduleRender()
 {
     if (m_original.isNull())
         return;
+    if (m_noiseInputKey != noiseInputKey(m_settings)) {
+        m_noiseAnalysisReady = false;
+        m_noiseAnalysisSummary.clear();
+        if (m_noiseCancel) m_noiseCancel->store(true);
+        emit noiseAnalysisChanged();
+    }
     cancelPrefetch();
     ++m_requestedRevision;
     m_renderDebounce.start();
@@ -2180,7 +2270,7 @@ void ImageEditor::setBusy(bool busy)
 void ImageEditor::refreshBusyState()
 {
     setBusy(m_renderDebounce.isActive() || m_loadWatcher.isRunning() || m_renderWatcher.isRunning() ||
-            m_exportWatcher.isRunning());
+            m_exportWatcher.isRunning() || m_noiseWatcher.isRunning());
 }
 
 void ImageEditor::setStatusMessage(const QString &message)

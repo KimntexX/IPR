@@ -1,0 +1,5154 @@
+{
+  "campaign_id": "noise-ptc-exploratory-v001-20261020T212358Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "measured_at_utc": "2026-10-20T21:23:58.110394+00:00",
+  "audit_campaign_id": "noise-pairs-v003-20261020T211741Z",
+  "audit_sha256": "59d3b356c75fc86f4726b36ccc955ca9d6e3d8a8f644c54ca580a5fb48e3a5d0",
+  "source_sha256": "fb31568671684c3d86a28a7e77f10a8d3f7ce9794fe79dd2eba5e778806b65c6",
+  "revision": "c86c93466cc6f27a25625e39da303d27c5933dbc",
+  "versions": {
+    "python": "3.14.3",
+    "numpy": "2.4.2",
+    "scipy": "1.17.1"
+  },
+  "configuration": {
+    "model": "variance DN^2 = a*signal DN+b; nonnegative least squares and unconstrained diagnostic",
+    "weighting": "equal total weight per disjoint pair, equal ROI weights within pair",
+    "reference_black": "median of all sampled CFA/ROI means for same-ISO dark-like files at 1/200s, unconfirmed identity",
+    "validation": "leave one entire pair out; not an independent unseen dataset",
+    "min_pairs": 3,
+    "units": "decoder DN and DN^2; no conversion to electrons or normalized NoiseProfile"
+  },
+  "audit": {
+    "production_modified": false,
+    "raw_files_modified": false,
+    "physical_calibration_validated": false,
+    "fitted_coefficients_experimental": true,
+    "normalization_validated": false
+  },
+  "planes": [
+    {
+      "folder": "iso-100",
+      "offset": [
+        0,
+        0
+      ],
+      "plane": "R",
+      "dark_paths": [
+        "protocole\\iso-100\\6V1A9626.CR3",
+        "protocole\\iso-100\\6V1A9727.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 511.9581604003906,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 0,
+          "signal_dn": 1271.8328247070312,
+          "variance_dn2": 259.07017185239357
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 1,
+          "signal_dn": 1361.4429626464844,
+          "variance_dn2": 274.6632773918539
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 2,
+          "signal_dn": 1167.0248718261719,
+          "variance_dn2": 236.79951004375724
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 0,
+          "signal_dn": 637.2138366699219,
+          "variance_dn2": 129.47341467598844
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 1,
+          "signal_dn": 684.9039306640625,
+          "variance_dn2": 139.0100840058787
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 2,
+          "signal_dn": 587.4774780273438,
+          "variance_dn2": 120.2712835975381
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 0,
+          "signal_dn": 314.8795166015625,
+          "variance_dn2": 64.06099666233851
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 1,
+          "signal_dn": 338.8681640625,
+          "variance_dn2": 70.21219150739036
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 2,
+          "signal_dn": 290.08612060546875,
+          "variance_dn2": 61.73480453542437
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 3,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 0.20110866833043176,
+        "b_dn2": 1.9081126340409496,
+        "normalized_rmse": 0.005332374123615395,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          290.08612060546875,
+          1361.4429626464844
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 0.20110866833043167,
+        "b_dn2": 1.9081126340409693,
+        "normalized_rmse": 0.0053323741236154,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          290.08612060546875,
+          1361.4429626464844
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.19917205773832733,
+            "b_dn2": 2.7399066927961018,
+            "normalized_rmse": 0.007694578249367269,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              290.08612060546875,
+              684.9039306640625
+            ]
+          },
+          "held_relative_mae": 0.0070878065028460585
+        },
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.20102667154273257,
+            "b_dn2": 2.1405653429790252,
+            "normalized_rmse": 0.005534521783547867,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              290.08612060546875,
+              1361.4429626464844
+            ]
+          },
+          "held_relative_mae": 0.0040091183050348445
+        },
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.2016458526457144,
+            "b_dn2": 1.318485562994022,
+            "normalized_rmse": 0.0038132706176282664,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              587.4774780273438,
+              1361.4429626464844
+            ]
+          },
+          "held_relative_mae": 0.0169566609464931
+        }
+      ],
+      "loo_relative_mae": 0.009351195251458002,
+      "loo_slope_range": [
+        0.19917205773832733,
+        0.2016458526457144
+      ]
+    },
+    {
+      "folder": "iso-100",
+      "offset": [
+        0,
+        1
+      ],
+      "plane": "G1",
+      "dark_paths": [
+        "protocole\\iso-100\\6V1A9626.CR3",
+        "protocole\\iso-100\\6V1A9727.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 511.9635314941406,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 0,
+          "signal_dn": 2894.6114807128906,
+          "variance_dn2": 564.5883060947324
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 1,
+          "signal_dn": 3113.7123413085938,
+          "variance_dn2": 616.4806030008925
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 2,
+          "signal_dn": 2651.9342346191406,
+          "variance_dn2": 531.932480475903
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 0,
+          "signal_dn": 1453.2686462402344,
+          "variance_dn2": 290.9015189799926
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 1,
+          "signal_dn": 1569.9032897949219,
+          "variance_dn2": 318.3522417885418
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 2,
+          "signal_dn": 1336.7796936035156,
+          "variance_dn2": 268.42376064097266
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 0,
+          "signal_dn": 720.2643127441406,
+          "variance_dn2": 148.46913071065234
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 1,
+          "signal_dn": 779.6348266601562,
+          "variance_dn2": 157.4267810131614
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 2,
+          "signal_dn": 663.0687561035156,
+          "variance_dn2": 132.39252429126944
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 3,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 0.19580993832312135,
+        "b_dn2": 6.216697906376117,
+        "normalized_rmse": 0.010807797340322445,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          663.0687561035156,
+          3113.7123413085938
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 0.1958099383231215,
+        "b_dn2": 6.216697906376084,
+        "normalized_rmse": 0.0108077973403225,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          663.0687561035156,
+          3113.7123413085938
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.20057247450868565,
+            "b_dn2": 1.2746412074898559,
+            "normalized_rmse": 0.00792509237914277,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              663.0687561035156,
+              1569.9032897949219
+            ]
+          },
+          "held_relative_mae": 0.01601406272917326
+        },
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.1960002808711478,
+            "b_dn2": 4.989083172270239,
+            "normalized_rmse": 0.010920841042571756,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              663.0687561035156,
+              3113.7123413085938
+            ]
+          },
+          "held_relative_mae": 0.008925936582237209
+        },
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.19401698789539595,
+            "b_dn2": 10.756174313777796,
+            "normalized_rmse": 0.009939908623276688,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              1336.7796936035156,
+              3113.7123413085938
+            ]
+          },
+          "held_relative_mae": 0.03193164911585136
+        }
+      ],
+      "loo_relative_mae": 0.018957216142420612,
+      "loo_slope_range": [
+        0.19401698789539595,
+        0.20057247450868565
+      ]
+    },
+    {
+      "folder": "iso-100",
+      "offset": [
+        1,
+        0
+      ],
+      "plane": "G2",
+      "dark_paths": [
+        "protocole\\iso-100\\6V1A9626.CR3",
+        "protocole\\iso-100\\6V1A9727.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 511.9605407714844,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 0,
+          "signal_dn": 2893.0810546875,
+          "variance_dn2": 569.8603040975419
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 1,
+          "signal_dn": 3114.184600830078,
+          "variance_dn2": 619.8858028985362
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 2,
+          "signal_dn": 2650.0997314453125,
+          "variance_dn2": 515.1847451268292
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 0,
+          "signal_dn": 1452.5775451660156,
+          "variance_dn2": 293.80628636552325
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 1,
+          "signal_dn": 1570.1890869140625,
+          "variance_dn2": 313.0960423240715
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 2,
+          "signal_dn": 1336.0694580078125,
+          "variance_dn2": 266.8791152198753
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 0,
+          "signal_dn": 719.828857421875,
+          "variance_dn2": 145.78804997694053
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 1,
+          "signal_dn": 779.7723388671875,
+          "variance_dn2": 155.40667721070133
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 2,
+          "signal_dn": 662.9096984863281,
+          "variance_dn2": 130.54169039076328
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 3,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 0.19611865486195607,
+        "b_dn2": 3.7355623013002757,
+        "normalized_rmse": 0.01049045416364819,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          662.9096984863281,
+          3114.184600830078
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 0.19611865486195595,
+        "b_dn2": 3.73556230130042,
+        "normalized_rmse": 0.010490454163648234,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          662.9096984863281,
+          3114.184600830078
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.2003010438933248,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.00770770424801037,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              662.9096984863281,
+              1570.1890869140625
+            ]
+          },
+          "held_relative_mae": 0.017836977104842666
+        },
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.19649275015610432,
+            "b_dn2": 1.7733371256255075,
+            "normalized_rmse": 0.009872706771557115,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              662.9096984863281,
+              3114.184600830078
+            ]
+          },
+          "held_relative_mae": 0.013693630466581461
+        },
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.19447159435386524,
+            "b_dn2": 7.905140393195992,
+            "normalized_rmse": 0.009826303540916296,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              1336.0694580078125,
+              3114.184600830078
+            ]
+          },
+          "held_relative_mae": 0.029730617634777096
+        }
+      ],
+      "loo_relative_mae": 0.020420408402067075,
+      "loo_slope_range": [
+        0.19447159435386524,
+        0.2003010438933248
+      ]
+    },
+    {
+      "folder": "iso-100",
+      "offset": [
+        1,
+        1
+      ],
+      "plane": "B",
+      "dark_paths": [
+        "protocole\\iso-100\\6V1A9626.CR3",
+        "protocole\\iso-100\\6V1A9727.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 512.00244140625,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 0,
+          "signal_dn": 1934.3086853027344,
+          "variance_dn2": 442.47935206146605
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 1,
+          "signal_dn": 2103.668701171875,
+          "variance_dn2": 481.8969698770138
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "roi": 2,
+          "signal_dn": 1780.2487487792969,
+          "variance_dn2": 405.47835991140005
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 0,
+          "signal_dn": 968.2171630859375,
+          "variance_dn2": 218.752322815571
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 1,
+          "signal_dn": 1057.282470703125,
+          "variance_dn2": 240.1640875056747
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "roi": 2,
+          "signal_dn": 895.1815185546875,
+          "variance_dn2": 204.56722714546902
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 0,
+          "signal_dn": 481.230712890625,
+          "variance_dn2": 111.94445354464231
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 1,
+          "signal_dn": 526.2263793945312,
+          "variance_dn2": 118.32473206672886
+        },
+        {
+          "pair_id": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "roi": 2,
+          "signal_dn": 444.9335632324219,
+          "variance_dn2": 101.14288120145203
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 3,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 0.22829703052496567,
+        "b_dn2": 0.0,
+        "normalized_rmse": 0.004932514760074444,
+        "intercept_at_boundary": true,
+        "signal_range_dn": [
+          444.9335632324219,
+          2103.668701171875
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 0.22893506211214942,
+        "b_dn2": -0.9327823867877535,
+        "normalized_rmse": 0.004696413181384515,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          444.9335632324219,
+          2103.668701171875
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9658.CR3 | protocole\\iso-100\\6V1A9659.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.22580330961399717,
+            "b_dn2": 1.2402694807973411,
+            "normalized_rmse": 0.00744480999469293,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              444.9335632324219,
+              1057.282470703125
+            ]
+          },
+          "held_relative_mae": 0.009117725659202823
+        },
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9660.CR3 | protocole\\iso-100\\6V1A9661.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.2285724452933326,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.004225996202972139,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              444.9335632324219,
+              2103.668701171875
+            ]
+          },
+          "held_relative_mae": 0.00605396452615032
+        },
+        {
+          "held_pair": "protocole\\iso-100\\6V1A9662.CR3 | protocole\\iso-100\\6V1A9663.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 0.2283072367289018,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.003872290536712624,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              895.1815185546875,
+              2103.668701171875
+            ]
+          },
+          "held_relative_mae": 0.012744787546386612
+        }
+      ],
+      "loo_relative_mae": 0.009305492577246584,
+      "loo_slope_range": [
+        0.22580330961399717,
+        0.2285724452933326
+      ]
+    },
+    {
+      "folder": "iso-1600",
+      "offset": [
+        0,
+        0
+      ],
+      "plane": "R",
+      "dark_paths": [
+        "protocole\\iso-1600\\6V1A9622.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.0740356445312,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 0,
+          "signal_dn": 5134.642608642578,
+          "variance_dn2": 17532.099516071274
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 1,
+          "signal_dn": 5491.100677490234,
+          "variance_dn2": 18077.3517853288
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 2,
+          "signal_dn": 4720.393951416016,
+          "variance_dn2": 15702.97985375458
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 0,
+          "signal_dn": 2555.764129638672,
+          "variance_dn2": 8514.598664179497
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 1,
+          "signal_dn": 2737.895782470703,
+          "variance_dn2": 8836.156876510995
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 2,
+          "signal_dn": 2353.8990478515625,
+          "variance_dn2": 7688.674018208363
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 0,
+          "signal_dn": 1279.2459106445312,
+          "variance_dn2": 4163.423752869543
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 1,
+          "signal_dn": 1370.1250305175781,
+          "variance_dn2": 4443.3123747909385
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 2,
+          "signal_dn": 1178.21630859375,
+          "variance_dn2": 3921.126156512455
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 0,
+          "signal_dn": 641.8966979980469,
+          "variance_dn2": 2088.705948076223
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 1,
+          "signal_dn": 688.8397827148438,
+          "variance_dn2": 2211.998030423114
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 2,
+          "signal_dn": 591.8851318359375,
+          "variance_dn2": 1979.8895689722078
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 0,
+          "signal_dn": 324.81683349609375,
+          "variance_dn2": 1095.091909586812
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 1,
+          "signal_dn": 350.4342956542969,
+          "variance_dn2": 1170.270839962892
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 2,
+          "signal_dn": 300.0768737792969,
+          "variance_dn2": 1026.0474368807147
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 0,
+          "signal_dn": 164.56365966796875,
+          "variance_dn2": 555.2250124983667
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 1,
+          "signal_dn": 176.09417724609375,
+          "variance_dn2": 611.0471248108629
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 2,
+          "signal_dn": 150.92758178710938,
+          "variance_dn2": 521.3229257997733
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 0,
+          "signal_dn": 10301.23257446289,
+          "variance_dn2": 34770.057431774076
+        }
+      ],
+      "excluded_points": [
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 1,
+          "signal_dn": 10964.323516845703,
+          "variance_dn2": 37231.532168025304,
+          "reason": "reject_drift_or_structure"
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 2,
+          "signal_dn": 9316.642669677734,
+          "variance_dn2": 31926.868037840097,
+          "reason": "reject_drift_or_structure"
+        }
+      ],
+      "independent_pairs": 7,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 3.363025634319504,
+        "b_dn2": 0.0,
+        "normalized_rmse": 0.010817157059252486,
+        "intercept_at_boundary": true,
+        "signal_range_dn": [
+          150.92758178710938,
+          10301.23257446289
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 3.3758359218051934,
+        "b_dn2": -88.7183360697421,
+        "normalized_rmse": 0.009848536448151207,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          150.92758178710938,
+          10301.23257446289
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.3256874461291006,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.017751637264317558,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              150.92758178710938,
+              5491.100677490234
+            ]
+          },
+          "held_relative_mae": 0.01470741255547562
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.3676495236493453,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.008790948888478738,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              150.92758178710938,
+              10301.23257446289
+            ]
+          },
+          "held_relative_mae": 0.016329542311119296
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.3673814779979465,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.00882214340188555,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              150.92758178710938,
+              10301.23257446289
+            ]
+          },
+          "held_relative_mae": 0.0283596066007471
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.3641045531954212,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.010395659987482039,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              150.92758178710938,
+              10301.23257446289
+            ]
+          },
+          "held_relative_mae": 0.02727854696946462
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.3633177512659658,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.010676368811988603,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              150.92758178710938,
+              10301.23257446289
+            ]
+          },
+          "held_relative_mae": 0.0288132403985711
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.363018399069237,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.01081776863110357,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              150.92758178710938,
+              10301.23257446289
+            ]
+          },
+          "held_relative_mae": 0.008663756784404245
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.363012194046993,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.01081294927551706,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              300.0768737792969,
+              10301.23257446289
+            ]
+          },
+          "held_relative_mae": 0.020148250029868277
+        }
+      ],
+      "loo_relative_mae": 0.020614336521378607,
+      "loo_slope_range": [
+        3.3256874461291006,
+        3.3676495236493453
+      ]
+    },
+    {
+      "folder": "iso-1600",
+      "offset": [
+        0,
+        1
+      ],
+      "plane": "G1",
+      "dark_paths": [
+        "protocole\\iso-1600\\6V1A9622.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.0409545898438,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 0,
+          "signal_dn": 11864.021270751953,
+          "variance_dn2": 39842.4819430249
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 1,
+          "signal_dn": 12770.88217163086,
+          "variance_dn2": 42050.82820076027
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 2,
+          "signal_dn": 10892.188232421875,
+          "variance_dn2": 36308.10395255371
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 0,
+          "signal_dn": 5887.057586669922,
+          "variance_dn2": 19081.379164202983
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 1,
+          "signal_dn": 6342.228210449219,
+          "variance_dn2": 20871.368855689958
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 2,
+          "signal_dn": 5411.976623535156,
+          "variance_dn2": 17467.861608611776
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 0,
+          "signal_dn": 2935.1632690429688,
+          "variance_dn2": 9662.32747085125
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 1,
+          "signal_dn": 3161.5379333496094,
+          "variance_dn2": 10215.61042030389
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 2,
+          "signal_dn": 2701.932373046875,
+          "variance_dn2": 8715.107374121315
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 0,
+          "signal_dn": 1471.6170654296875,
+          "variance_dn2": 4662.507401135788
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 1,
+          "signal_dn": 1585.3614501953125,
+          "variance_dn2": 5085.587957200001
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 2,
+          "signal_dn": 1355.8238220214844,
+          "variance_dn2": 4366.479691426323
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 0,
+          "signal_dn": 744.5254516601562,
+          "variance_dn2": 2382.7496607618104
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 1,
+          "signal_dn": 809.1111145019531,
+          "variance_dn2": 2597.0442288672393
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 2,
+          "signal_dn": 689.4839477539062,
+          "variance_dn2": 2234.548741186319
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 0,
+          "signal_dn": 380.4427795410156,
+          "variance_dn2": 1254.9463958488761
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 1,
+          "signal_dn": 410.2769470214844,
+          "variance_dn2": 1359.9564518705288
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 2,
+          "signal_dn": 349.3597412109375,
+          "variance_dn2": 1171.570979211194
+        }
+      ],
+      "excluded_points": [
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 0,
+          "signal_dn": 14333.959045410156,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 1,
+          "signal_dn": 14333.959045410156,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 2,
+          "signal_dn": 14333.959045410156,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        }
+      ],
+      "independent_pairs": 6,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 3.3077582349716885,
+        "b_dn2": 0.0,
+        "normalized_rmse": 0.012970921398598208,
+        "intercept_at_boundary": true,
+        "signal_range_dn": [
+          349.3597412109375,
+          12770.88217163086
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 3.326797152717504,
+        "b_dn2": -153.1586648301884,
+        "normalized_rmse": 0.01151590410021391,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          349.3597412109375,
+          12770.88217163086
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.252268157283882,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.009489408733670336,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              349.3597412109375,
+              6342.228210449219
+            ]
+          },
+          "held_relative_mae": 0.022728606059297028
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.3194246403715977,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.011078681712674291,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              349.3597412109375,
+              12770.88217163086
+            ]
+          },
+          "held_relative_mae": 0.02041399543205798
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.3105640739514257,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.012514331030952985,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              349.3597412109375,
+              12770.88217163086
+            ]
+          },
+          "held_relative_mae": 0.01886314844426533
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.309044551122972,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.012512904584532001,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              349.3597412109375,
+              12770.88217163086
+            ]
+          },
+          "held_relative_mae": 0.034485908889718454
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.308036111000483,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.012895669879569274,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              349.3597412109375,
+              12770.88217163086
+            ]
+          },
+          "held_relative_mae": 0.028327089043436615
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.3077485431592417,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.01297426071301987,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              689.4839477539062,
+              12770.88217163086
+            ]
+          },
+          "held_relative_mae": 0.006167282701259949
+        }
+      ],
+      "loo_relative_mae": 0.021831005095005893,
+      "loo_slope_range": [
+        3.252268157283882,
+        3.3194246403715977
+      ]
+    },
+    {
+      "folder": "iso-1600",
+      "offset": [
+        1,
+        0
+      ],
+      "plane": "G2",
+      "dark_paths": [
+        "protocole\\iso-1600\\6V1A9622.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.223876953125,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 0,
+          "signal_dn": 11860.923217773438,
+          "variance_dn2": 39814.411506973694
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 1,
+          "signal_dn": 12783.109832763672,
+          "variance_dn2": 42204.26310538582
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 2,
+          "signal_dn": 10888.599395751953,
+          "variance_dn2": 35841.86365050655
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 0,
+          "signal_dn": 5885.791229248047,
+          "variance_dn2": 19267.70454978512
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 1,
+          "signal_dn": 6347.467041015625,
+          "variance_dn2": 20893.394202450712
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 2,
+          "signal_dn": 5411.484802246094,
+          "variance_dn2": 17807.387363711623
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 0,
+          "signal_dn": 2932.899871826172,
+          "variance_dn2": 9508.579470968069
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 1,
+          "signal_dn": 3164.5095825195312,
+          "variance_dn2": 10130.544786206548
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 2,
+          "signal_dn": 2702.180633544922,
+          "variance_dn2": 8768.094526917595
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 0,
+          "signal_dn": 1470.7795715332031,
+          "variance_dn2": 4734.253841677465
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 1,
+          "signal_dn": 1587.1500244140625,
+          "variance_dn2": 5002.140259720442
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 2,
+          "signal_dn": 1354.0969848632812,
+          "variance_dn2": 4418.800397819719
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 0,
+          "signal_dn": 745.072021484375,
+          "variance_dn2": 2438.361060595575
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 1,
+          "signal_dn": 810.2927856445312,
+          "variance_dn2": 2594.158611136246
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 2,
+          "signal_dn": 689.7689208984375,
+          "variance_dn2": 2246.2398892951987
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 0,
+          "signal_dn": 380.3749084472656,
+          "variance_dn2": 1254.3638848267085
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 1,
+          "signal_dn": 410.63922119140625,
+          "variance_dn2": 1357.5569182729312
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 2,
+          "signal_dn": 349.57330322265625,
+          "variance_dn2": 1158.8393663398106
+        }
+      ],
+      "excluded_points": [
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 0,
+          "signal_dn": 14333.776123046875,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 1,
+          "signal_dn": 14333.776123046875,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 2,
+          "signal_dn": 14333.776123046875,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        }
+      ],
+      "independent_pairs": 6,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 3.3055686810495497,
+        "b_dn2": 0.0,
+        "normalized_rmse": 0.010702003360832971,
+        "intercept_at_boundary": true,
+        "signal_range_dn": [
+          349.57330322265625,
+          12783.109832763672
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 3.321611657802718,
+        "b_dn2": -129.0857714033813,
+        "normalized_rmse": 0.009444449180803694,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          349.57330322265625,
+          12783.109832763672
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.2702362078172773,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.009542336546204691,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              349.57330322265625,
+              6347.467041015625
+            ]
+          },
+          "held_relative_mae": 0.013928355962999786
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.310175719522723,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.011330372855505332,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              349.57330322265625,
+              12783.109832763672
+            ]
+          },
+          "held_relative_mae": 0.007580963517785818
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.309367295755508,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.00945575973773501,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              349.57330322265625,
+              12783.109832763672
+            ]
+          },
+          "held_relative_mae": 0.024805339533530302
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.306745096678228,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.010129955927795291,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              349.57330322265625,
+              12783.109832763672
+            ]
+          },
+          "held_relative_mae": 0.029942857947514164
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.305765091106541,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.010649573345872484,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              349.57330322265625,
+              12783.109832763672
+            ]
+          },
+          "held_relative_mae": 0.019269417671082284
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.3055685348797894,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.010706005325731264,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              689.7689208984375,
+              12783.109832763672
+            ]
+          },
+          "held_relative_mae": 0.001783904523129461
+        }
+      ],
+      "loo_relative_mae": 0.016218473192673635,
+      "loo_slope_range": [
+        3.2702362078172773,
+        3.310175719522723
+      ]
+    },
+    {
+      "folder": "iso-1600",
+      "offset": [
+        1,
+        1
+      ],
+      "plane": "B",
+      "dark_paths": [
+        "protocole\\iso-1600\\6V1A9622.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.2509765625,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 0,
+          "signal_dn": 7890.011535644531,
+          "variance_dn2": 28396.526641564426
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 1,
+          "signal_dn": 8574.6025390625,
+          "variance_dn2": 31082.55517103494
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "roi": 2,
+          "signal_dn": 7283.6815185546875,
+          "variance_dn2": 26592.565719324146
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 0,
+          "signal_dn": 3923.8858947753906,
+          "variance_dn2": 14468.980714408774
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 1,
+          "signal_dn": 4267.990173339844,
+          "variance_dn2": 15557.318614856102
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "roi": 2,
+          "signal_dn": 3624.370574951172,
+          "variance_dn2": 12996.934136719987
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 0,
+          "signal_dn": 1959.4886474609375,
+          "variance_dn2": 7066.04490503566
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 1,
+          "signal_dn": 2131.8370666503906,
+          "variance_dn2": 7694.135257719317
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "roi": 2,
+          "signal_dn": 1814.8310241699219,
+          "variance_dn2": 6457.710029947127
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 0,
+          "signal_dn": 985.288818359375,
+          "variance_dn2": 3542.8401086492095
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 1,
+          "signal_dn": 1071.8739318847656,
+          "variance_dn2": 3854.4258354618705
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "roi": 2,
+          "signal_dn": 911.6792602539062,
+          "variance_dn2": 3196.461559087724
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 0,
+          "signal_dn": 499.9004821777344,
+          "variance_dn2": 1853.4384363697525
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 1,
+          "signal_dn": 548.2548828125,
+          "variance_dn2": 2000.9534910470147
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "roi": 2,
+          "signal_dn": 465.5840148925781,
+          "variance_dn2": 1691.6589414015261
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 0,
+          "signal_dn": 256.4405212402344,
+          "variance_dn2": 959.04453486636
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 1,
+          "signal_dn": 279.0393981933594,
+          "variance_dn2": 1052.3386055499811
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "roi": 2,
+          "signal_dn": 236.9898681640625,
+          "variance_dn2": 915.4056462202507
+        }
+      ],
+      "excluded_points": [
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 0,
+          "signal_dn": 14333.7490234375,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 1,
+          "signal_dn": 14333.7490234375,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-1600\\6V1A9664.CR3 | protocole\\iso-1600\\6V1A9665.CR3",
+          "roi": 2,
+          "signal_dn": 14240.160369873047,
+          "variance_dn2": 19497.68323687335,
+          "reason": "reject_saturation"
+        }
+      ],
+      "independent_pairs": 6,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 3.6254436514522466,
+        "b_dn2": 0.0,
+        "normalized_rmse": 0.007848032608502212,
+        "intercept_at_boundary": true,
+        "signal_range_dn": [
+          236.9898681640625,
+          8574.6025390625
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 3.625888079523626,
+        "b_dn2": -2.389007544638635,
+        "normalized_rmse": 0.007847007456108404,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          236.9898681640625,
+          8574.6025390625
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9666.CR3 | protocole\\iso-1600\\6V1A9667.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.630647055005043,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.01226675131750861,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              236.9898681640625,
+              4267.990173339844
+            ]
+          },
+          "held_relative_mae": 0.005306264468126476
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9668.CR3 | protocole\\iso-1600\\6V1A9669.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.6215590623724747,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.006510144467002825,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              236.9898681640625,
+              8574.6025390625
+            ]
+          },
+          "held_relative_mae": 0.011413945729791345
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9670.CR3 | protocole\\iso-1600\\6V1A9671.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.6246700225733433,
+            "b_dn2": 13.59277160616852,
+            "normalized_rmse": 0.007637690881507005,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              236.9898681640625,
+              8574.6025390625
+            ]
+          },
+          "held_relative_mae": 0.011301735292552456
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9672.CR3 | protocole\\iso-1600\\6V1A9673.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.623219952464692,
+            "b_dn2": 16.313880498714763,
+            "normalized_rmse": 0.0075816540562832855,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              236.9898681640625,
+              8574.6025390625
+            ]
+          },
+          "held_relative_mae": 0.020853103743433896
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9674.CR3 | protocole\\iso-1600\\6V1A9675.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.62532565730882,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.007823862796386178,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              236.9898681640625,
+              8574.6025390625
+            ]
+          },
+          "held_relative_mae": 0.010364245919618898
+        },
+        {
+          "held_pair": "protocole\\iso-1600\\6V1A9676.CR3 | protocole\\iso-1600\\6V1A9677.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 3.625315349971218,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.0077409964076255566,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              465.5840148925781,
+              8574.6025390625
+            ]
+          },
+          "held_relative_mae": 0.043589307182084314
+        }
+      ],
+      "loo_relative_mae": 0.017138100389267896,
+      "loo_slope_range": [
+        3.6215590623724747,
+        3.630647055005043
+      ]
+    },
+    {
+      "folder": "iso-16000",
+      "offset": [
+        0,
+        0
+      ],
+      "plane": "R",
+      "dark_paths": [
+        "protocole\\iso-16000\\6V1A9741.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2049.7848510742188,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 0,
+          "signal_dn": 3143.734161376953,
+          "variance_dn2": 102904.87635885835
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 1,
+          "signal_dn": 3398.6592712402344,
+          "variance_dn2": 110610.26754025697
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 2,
+          "signal_dn": 2918.765899658203,
+          "variance_dn2": 96928.87972244945
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 0,
+          "signal_dn": 1619.6201782226562,
+          "variance_dn2": 55034.48845599168
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 1,
+          "signal_dn": 1742.7737731933594,
+          "variance_dn2": 58248.71091915369
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 2,
+          "signal_dn": 1496.2634887695312,
+          "variance_dn2": 51641.60330875446
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 0,
+          "signal_dn": 853.5556640625,
+          "variance_dn2": 30994.228313724296
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 1,
+          "signal_dn": 915.8414001464844,
+          "variance_dn2": 32876.0834789396
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 2,
+          "signal_dn": 786.248046875,
+          "variance_dn2": 28895.69042312314
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 0,
+          "signal_dn": 485.4935302734375,
+          "variance_dn2": 19104.022135528434
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 1,
+          "signal_dn": 519.7243957519531,
+          "variance_dn2": 19627.463660642938
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 2,
+          "signal_dn": 442.96697998046875,
+          "variance_dn2": 18040.164047650087
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 0,
+          "signal_dn": 405.0778503417969,
+          "variance_dn2": 16466.770617668702
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 1,
+          "signal_dn": 432.8548278808594,
+          "variance_dn2": 17548.44843844591
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 2,
+          "signal_dn": 369.49908447265625,
+          "variance_dn2": 15831.188796293878
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 5,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 31.559934453547903,
+        "b_dn2": 3890.2218200999655,
+        "normalized_rmse": 0.007445852706366647,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          369.49908447265625,
+          3398.6592712402344
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 31.559934453547903,
+        "b_dn2": 3890.2218200999714,
+        "normalized_rmse": 0.007445852706366649,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          369.49908447265625,
+          3398.6592712402344
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.535589272242287,
+            "b_dn2": 3895.668839188526,
+            "normalized_rmse": 0.009923863181544026,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              369.49908447265625,
+              1742.7737731933594
+            ]
+          },
+          "held_relative_mae": 0.005219151994500892
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.571513278476335,
+            "b_dn2": 3883.1287972304713,
+            "normalized_rmse": 0.007085435395573991,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              369.49908447265625,
+              3398.6592712402344
+            ]
+          },
+          "held_relative_mae": 0.007213553164839656
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.576854605181783,
+            "b_dn2": 3829.674197514833,
+            "normalized_rmse": 0.00755105251064931,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              369.49908447265625,
+              3398.6592712402344
+            ]
+          },
+          "held_relative_mae": 0.006321777936458897
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.515754152087567,
+            "b_dn2": 4007.1004883672144,
+            "normalized_rmse": 0.006691944716586057,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              369.49908447265625,
+              3398.6592712402344
+            ]
+          },
+          "held_relative_mae": 0.01778994815268201
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.56681052995852,
+            "b_dn2": 3873.949328453404,
+            "normalized_rmse": 0.0073317475055366226,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              442.96697998046875,
+              3398.6592712402344
+            ]
+          },
+          "held_relative_mae": 0.010309631385177783
+        }
+      ],
+      "loo_relative_mae": 0.009370812526731848,
+      "loo_slope_range": [
+        31.515754152087567,
+        31.576854605181783
+      ]
+    },
+    {
+      "folder": "iso-16000",
+      "offset": [
+        0,
+        1
+      ],
+      "plane": "G1",
+      "dark_paths": [
+        "protocole\\iso-16000\\6V1A9741.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.0952758789062,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 0,
+          "signal_dn": 7356.835266113281,
+          "variance_dn2": 239858.1354338264
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 1,
+          "signal_dn": 7984.738189697266,
+          "variance_dn2": 258032.75334058044
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 2,
+          "signal_dn": 6792.724426269531,
+          "variance_dn2": 218405.76989268482
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 0,
+          "signal_dn": 3793.4298095703125,
+          "variance_dn2": 126902.98751050745
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 1,
+          "signal_dn": 4098.554901123047,
+          "variance_dn2": 133534.26054135044
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 2,
+          "signal_dn": 3489.6646118164062,
+          "variance_dn2": 113180.09528261836
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 0,
+          "signal_dn": 2009.5271606445312,
+          "variance_dn2": 67757.9861756172
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 1,
+          "signal_dn": 2159.318359375,
+          "variance_dn2": 72043.86708252237
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 2,
+          "signal_dn": 1836.8984680175781,
+          "variance_dn2": 62289.30750936916
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 0,
+          "signal_dn": 1132.7941589355469,
+          "variance_dn2": 39511.43434843371
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 1,
+          "signal_dn": 1215.2804870605469,
+          "variance_dn2": 42340.15041570332
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 2,
+          "signal_dn": 1033.4246826171875,
+          "variance_dn2": 37276.8904677459
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 0,
+          "signal_dn": 946.3283386230469,
+          "variance_dn2": 33844.89478517942
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 1,
+          "signal_dn": 1016.3506164550781,
+          "variance_dn2": 35595.132827146874
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 2,
+          "signal_dn": 859.2718811035156,
+          "variance_dn2": 30515.61076488447
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 5,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 31.894750912600486,
+        "b_dn2": 3513.1521559835155,
+        "normalized_rmse": 0.008177774499368044,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          859.2718811035156,
+          7984.738189697266
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 31.894750912600482,
+        "b_dn2": 3513.152155983492,
+        "normalized_rmse": 0.008177774499368032,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          859.2718811035156,
+          7984.738189697266
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.910082160860853,
+            "b_dn2": 3500.572014076148,
+            "normalized_rmse": 0.012114510593536439,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              859.2718811035156,
+              4098.554901123047
+            ]
+          },
+          "held_relative_mae": 0.0053871080723962295
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.89070124979032,
+            "b_dn2": 3519.490723646523,
+            "normalized_rmse": 0.00607653519118972,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              859.2718811035156,
+              7984.738189697266
+            ]
+          },
+          "held_relative_mae": 0.012843438630594386
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.89576454835353,
+            "b_dn2": 3509.797426189369,
+            "normalized_rmse": 0.00837481984512568,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              859.2718811035156,
+              7984.738189697266
+            ]
+          },
+          "held_relative_mae": 0.003338276138167662
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.920055124163195,
+            "b_dn2": 3362.4511190736525,
+            "normalized_rmse": 0.008062495811195352,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              859.2718811035156,
+              7984.738189697266
+            ]
+          },
+          "held_relative_mae": 0.00984012603364224
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.87242134655255,
+            "b_dn2": 3642.0893830476275,
+            "normalized_rmse": 0.008142318417904564,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              1033.4246826171875,
+              7984.738189697266
+            ]
+          },
+          "held_relative_mae": 0.010139043305346282
+        }
+      ],
+      "loo_relative_mae": 0.00830959843602936,
+      "loo_slope_range": [
+        31.87242134655255,
+        31.920055124163195
+      ]
+    },
+    {
+      "folder": "iso-16000",
+      "offset": [
+        1,
+        0
+      ],
+      "plane": "G2",
+      "dark_paths": [
+        "protocole\\iso-16000\\6V1A9741.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2047.113037109375,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 0,
+          "signal_dn": 7360.6624755859375,
+          "variance_dn2": 236358.8088971487
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 1,
+          "signal_dn": 7994.342529296875,
+          "variance_dn2": 258537.9706648267
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 2,
+          "signal_dn": 6794.543670654297,
+          "variance_dn2": 220230.90258368637
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 0,
+          "signal_dn": 3795.0918579101562,
+          "variance_dn2": 125933.07785472859
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 1,
+          "signal_dn": 4105.1082763671875,
+          "variance_dn2": 136030.1844285044
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 2,
+          "signal_dn": 3495.5562438964844,
+          "variance_dn2": 114717.57366483817
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 0,
+          "signal_dn": 2013.6205749511719,
+          "variance_dn2": 67856.83875714874
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 1,
+          "signal_dn": 2169.1722106933594,
+          "variance_dn2": 73625.99269050264
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 2,
+          "signal_dn": 1843.0787048339844,
+          "variance_dn2": 62222.51542739668
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 0,
+          "signal_dn": 1140.2825622558594,
+          "variance_dn2": 39381.772218166
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 1,
+          "signal_dn": 1224.1950988769531,
+          "variance_dn2": 40881.61693455039
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 2,
+          "signal_dn": 1038.1405029296875,
+          "variance_dn2": 36839.97675059394
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 0,
+          "signal_dn": 951.0894470214844,
+          "variance_dn2": 33147.770839858575
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 1,
+          "signal_dn": 1021.0921630859375,
+          "variance_dn2": 36123.6614879512
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 2,
+          "signal_dn": 861.87890625,
+          "variance_dn2": 31134.76063876713
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 5,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 31.876056268624648,
+        "b_dn2": 3523.3102102671996,
+        "normalized_rmse": 0.007242048047658332,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          861.87890625,
+          7994.342529296875
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 31.87605626862464,
+        "b_dn2": 3523.310210267236,
+        "normalized_rmse": 0.007242048047658376,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          861.87890625,
+          7994.342529296875
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 32.3866340530065,
+            "b_dn2": 2640.2354311963213,
+            "normalized_rmse": 0.008585370989419543,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              861.87890625,
+              4105.1082763671875
+            ]
+          },
+          "held_relative_mae": 0.014193433488515109
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.837705491884726,
+            "b_dn2": 3395.026621679674,
+            "normalized_rmse": 0.00600610998208048,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              861.87890625,
+              7994.342529296875
+            ]
+          },
+          "held_relative_mae": 0.009370871640958655
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.890795147317487,
+            "b_dn2": 3386.581928711385,
+            "normalized_rmse": 0.007142755294808424,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              861.87890625,
+              7994.342529296875
+            ]
+          },
+          "held_relative_mae": 0.006375210504951246
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.814818646149984,
+            "b_dn2": 3900.4276005884026,
+            "normalized_rmse": 0.0061670209426228076,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              861.87890625,
+              7994.342529296875
+            ]
+          },
+          "held_relative_mae": 0.023577541514614015
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 31.857267758512652,
+            "b_dn2": 3632.4621876628958,
+            "normalized_rmse": 0.007133497183525095,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              1038.1405029296875,
+              7994.342529296875
+            ]
+          },
+          "held_relative_mae": 0.008716441450625837
+        }
+      ],
+      "loo_relative_mae": 0.012446699719932971,
+      "loo_slope_range": [
+        31.814818646149984,
+        32.3866340530065
+      ]
+    },
+    {
+      "folder": "iso-16000",
+      "offset": [
+        1,
+        1
+      ],
+      "plane": "B",
+      "dark_paths": [
+        "protocole\\iso-16000\\6V1A9741.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.7141723632812,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 0,
+          "signal_dn": 4982.244079589844,
+          "variance_dn2": 185927.36190131825
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 1,
+          "signal_dn": 5455.0968017578125,
+          "variance_dn2": 201095.1130820391
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "roi": 2,
+          "signal_dn": 4609.728546142578,
+          "variance_dn2": 171136.9810087992
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 0,
+          "signal_dn": 2572.6935119628906,
+          "variance_dn2": 96379.74304237033
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 1,
+          "signal_dn": 2799.68310546875,
+          "variance_dn2": 107010.16019988326
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "roi": 2,
+          "signal_dn": 2372.364013671875,
+          "variance_dn2": 90746.67214299884
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 0,
+          "signal_dn": 1365.3310241699219,
+          "variance_dn2": 53706.77155794466
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 1,
+          "signal_dn": 1479.6631164550781,
+          "variance_dn2": 57633.06638398444
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "roi": 2,
+          "signal_dn": 1249.0495300292969,
+          "variance_dn2": 49112.50170402012
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 0,
+          "signal_dn": 770.8577270507812,
+          "variance_dn2": 31449.31222329835
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 1,
+          "signal_dn": 834.4444274902344,
+          "variance_dn2": 34879.77727464723
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "roi": 2,
+          "signal_dn": 704.9731750488281,
+          "variance_dn2": 29441.479764371958
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 0,
+          "signal_dn": 645.0657348632812,
+          "variance_dn2": 27673.302951110716
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 1,
+          "signal_dn": 697.8229370117188,
+          "variance_dn2": 29802.909998757466
+        },
+        {
+          "pair_id": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "roi": 2,
+          "signal_dn": 586.7681274414062,
+          "variance_dn2": 25001.234561447258
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 5,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 36.297627869126465,
+        "b_dn2": 4080.279705572494,
+        "normalized_rmse": 0.006588894768500664,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          586.7681274414062,
+          5455.0968017578125
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 36.29762786912646,
+        "b_dn2": 4080.2797055724755,
+        "normalized_rmse": 0.006588894768500616,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          586.7681274414062,
+          5455.0968017578125
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9706.CR3 | protocole\\iso-16000\\6V1A9707.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 36.4779600595298,
+            "b_dn2": 3859.8463365471184,
+            "normalized_rmse": 0.009760358171825776,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              586.7681274414062,
+              2799.68310546875
+            ]
+          },
+          "held_relative_mae": 0.005200304407213098
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9708.CR3 | protocole\\iso-16000\\6V1A9709.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 36.28034673279564,
+            "b_dn2": 4048.9487165966425,
+            "normalized_rmse": 0.005150569799506721,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              586.7681274414062,
+              5455.0968017578125
+            ]
+          },
+          "held_relative_mae": 0.010112035722357159
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9710.CR3 | protocole\\iso-16000\\6V1A9711.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 36.288009199801614,
+            "b_dn2": 4134.661580364701,
+            "normalized_rmse": 0.006716701076096581,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              586.7681274414062,
+              5455.0968017578125
+            ]
+          },
+          "held_relative_mae": 0.003658551436378149
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9712.CR3 | protocole\\iso-16000\\6V1A9713.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 36.280299237204254,
+            "b_dn2": 4149.206157128793,
+            "normalized_rmse": 0.0062803789843225676,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              586.7681274414062,
+              5455.0968017578125
+            ]
+          },
+          "held_relative_mae": 0.014651754589919292
+        },
+        {
+          "held_pair": "protocole\\iso-16000\\6V1A9714.CR3 | protocole\\iso-16000\\6V1A9715.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 36.307084006957524,
+            "b_dn2": 4041.052489039576,
+            "normalized_rmse": 0.006464118374715783,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              704.9731750488281,
+              5455.0968017578125
+            ]
+          },
+          "held_relative_mae": 0.011896987310864604
+        }
+      ],
+      "loo_relative_mae": 0.00910392669334646,
+      "loo_slope_range": [
+        36.280299237204254,
+        36.4779600595298
+      ]
+    },
+    {
+      "folder": "iso-3200",
+      "offset": [
+        0,
+        0
+      ],
+      "plane": "R",
+      "dark_paths": [
+        "protocole\\iso-3200\\6V1A9621.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.261962890625,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 0,
+          "signal_dn": 5059.483459472656,
+          "variance_dn2": 33376.41460267026
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 1,
+          "signal_dn": 5448.589782714844,
+          "variance_dn2": 35713.3162454194
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 2,
+          "signal_dn": 4699.112762451172,
+          "variance_dn2": 30787.74161575039
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 0,
+          "signal_dn": 2531.2175903320312,
+          "variance_dn2": 16592.80455350058
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 1,
+          "signal_dn": 2722.7766723632812,
+          "variance_dn2": 17650.49879373698
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 2,
+          "signal_dn": 2351.9403076171875,
+          "variance_dn2": 15276.703715054942
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 0,
+          "signal_dn": 1273.3362121582031,
+          "variance_dn2": 8403.721404146349
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 1,
+          "signal_dn": 1368.3976440429688,
+          "variance_dn2": 8914.12852296874
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 2,
+          "signal_dn": 1181.0519714355469,
+          "variance_dn2": 7724.845024393423
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 0,
+          "signal_dn": 642.6285705566406,
+          "variance_dn2": 4273.940101959298
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 1,
+          "signal_dn": 692.2974548339844,
+          "variance_dn2": 4621.051626717121
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 2,
+          "signal_dn": 595.8936462402344,
+          "variance_dn2": 4067.2261795745276
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 0,
+          "signal_dn": 331.5827331542969,
+          "variance_dn2": 2286.017258727055
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 1,
+          "signal_dn": 358.01202392578125,
+          "variance_dn2": 2504.7255289445307
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 2,
+          "signal_dn": 307.34539794921875,
+          "variance_dn2": 2130.424360300299
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 0,
+          "signal_dn": 175.28921508789062,
+          "variance_dn2": 1291.5854927011296
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 1,
+          "signal_dn": 189.52359008789062,
+          "variance_dn2": 1382.501090293241
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 2,
+          "signal_dn": 161.65872192382812,
+          "variance_dn2": 1218.0760238806727
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 0,
+          "signal_dn": 10063.432037353516,
+          "variance_dn2": 67183.43083883212
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 1,
+          "signal_dn": 10850.752532958984,
+          "variance_dn2": 72089.25345006595
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 2,
+          "signal_dn": 9335.845520019531,
+          "variance_dn2": 62439.968836521424
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 7,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 6.64000620857534,
+        "b_dn2": 0.0,
+        "normalized_rmse": 0.008353078715626308,
+        "intercept_at_boundary": true,
+        "signal_range_dn": [
+          161.65872192382812,
+          10850.752532958984
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 6.64890004751761,
+        "b_dn2": -60.35093318337594,
+        "normalized_rmse": 0.008205563062058564,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          161.65872192382812,
+          10850.752532958984
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.533649079012769,
+            "b_dn2": 89.85118342281729,
+            "normalized_rmse": 0.006468631069070952,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              161.65872192382812,
+              5448.589782714844
+            ]
+          },
+          "held_relative_mae": 0.018991020416778293
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.656835587749311,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.0070409541248135634,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              161.65872192382812,
+              10850.752532958984
+            ]
+          },
+          "held_relative_mae": 0.013575517707750734
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.646441660494812,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.0072183869133628405,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              161.65872192382812,
+              10850.752532958984
+            ]
+          },
+          "held_relative_mae": 0.02081750669285946
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.641091970065623,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.008245595928838369,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              161.65872192382812,
+              10850.752532958984
+            ]
+          },
+          "held_relative_mae": 0.013695002617207906
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.63979305350053,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.008323291436374515,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              161.65872192382812,
+              10850.752532958984
+            ]
+          },
+          "held_relative_mae": 0.011368786656448339
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.639758938672917,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.008251873401913398,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              161.65872192382812,
+              10850.752532958984
+            ]
+          },
+          "held_relative_mae": 0.043326435780418414
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.639836975665899,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.008177872245170262,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              307.34539794921875,
+              10850.752532958984
+            ]
+          },
+          "held_relative_mae": 0.10247058316443058
+        }
+      ],
+      "loo_relative_mae": 0.032034979005127674,
+      "loo_slope_range": [
+        6.533649079012769,
+        6.656835587749311
+      ]
+    },
+    {
+      "folder": "iso-3200",
+      "offset": [
+        0,
+        1
+      ],
+      "plane": "G1",
+      "dark_paths": [
+        "protocole\\iso-3200\\6V1A9621.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.6547241210938,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 0,
+          "signal_dn": 11677.231903076172,
+          "variance_dn2": 75966.2563009662
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 1,
+          "signal_dn": 12652.352661132812,
+          "variance_dn2": 82517.08974205081
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 2,
+          "signal_dn": 10827.014099121094,
+          "variance_dn2": 70715.78472921626
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 0,
+          "signal_dn": 5818.064758300781,
+          "variance_dn2": 37446.17297414693
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 1,
+          "signal_dn": 6292.710235595703,
+          "variance_dn2": 40304.367723674644
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 2,
+          "signal_dn": 5393.688446044922,
+          "variance_dn2": 34967.33746664432
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 0,
+          "signal_dn": 2919.7881469726562,
+          "variance_dn2": 18884.380860500107
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 1,
+          "signal_dn": 3155.9190368652344,
+          "variance_dn2": 20034.56636589333
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 2,
+          "signal_dn": 2703.513641357422,
+          "variance_dn2": 17385.585537377538
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 0,
+          "signal_dn": 1475.5789489746094,
+          "variance_dn2": 9491.052615707948
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 1,
+          "signal_dn": 1599.272216796875,
+          "variance_dn2": 10171.516864546793
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 2,
+          "signal_dn": 1367.6373291015625,
+          "variance_dn2": 8820.975978331377
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 0,
+          "signal_dn": 763.4041748046875,
+          "variance_dn2": 4960.544323579213
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 1,
+          "signal_dn": 828.3624572753906,
+          "variance_dn2": 5415.784253659516
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 2,
+          "signal_dn": 706.3202514648438,
+          "variance_dn2": 4670.06664956356
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 0,
+          "signal_dn": 404.2674560546875,
+          "variance_dn2": 2739.26311450775
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 1,
+          "signal_dn": 437.95013427734375,
+          "variance_dn2": 2980.056568193485
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 2,
+          "signal_dn": 372.3423767089844,
+          "variance_dn2": 2535.1021767912976
+        }
+      ],
+      "excluded_points": [
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 0,
+          "signal_dn": 14333.345275878906,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 1,
+          "signal_dn": 14333.345275878906,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 2,
+          "signal_dn": 14333.345275878906,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        }
+      ],
+      "independent_pairs": 6,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 6.497914761152247,
+        "b_dn2": 0.0,
+        "normalized_rmse": 0.0068360261843952615,
+        "intercept_at_boundary": true,
+        "signal_range_dn": [
+          372.3423767089844,
+          12652.352661132812
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 6.5104281969223505,
+        "b_dn2": -99.3324234686789,
+        "normalized_rmse": 0.006542482505158674,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          372.3423767089844,
+          12652.352661132812
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.413630087461381,
+            "b_dn2": 80.77665729589546,
+            "normalized_rmse": 0.006625062943045582,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              372.3423767089844,
+              6292.710235595703
+            ]
+          },
+          "held_relative_mae": 0.015189896959875826
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.511755150291445,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.005246554915556154,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              372.3423767089844,
+              12652.352661132812
+            ]
+          },
+          "held_relative_mae": 0.01095102528759454
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.502178973231072,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.006053758315419836,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              372.3423767089844,
+              12652.352661132812
+            ]
+          },
+          "held_relative_mae": 0.013561368935179447
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.498991171958469,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.006674070093867449,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              372.3423767089844,
+              12652.352661132812
+            ]
+          },
+          "held_relative_mae": 0.01328965874311245
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.497761234965994,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.0068232501848286406,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              372.3423767089844,
+              12652.352661132812
+            ]
+          },
+          "held_relative_mae": 0.007807536436447191
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.497647117813533,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.00669927902692787,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              706.3202514648438,
+              12652.352661132812
+            ]
+          },
+          "held_relative_mae": 0.04394139669852671
+        }
+      ],
+      "loo_relative_mae": 0.01745681384345603,
+      "loo_slope_range": [
+        6.413630087461381,
+        6.511755150291445
+      ]
+    },
+    {
+      "folder": "iso-3200",
+      "offset": [
+        1,
+        0
+      ],
+      "plane": "G2",
+      "dark_paths": [
+        "protocole\\iso-3200\\6V1A9621.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.2020874023438,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 0,
+          "signal_dn": 11669.075744628906,
+          "variance_dn2": 77155.06739192511
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 1,
+          "signal_dn": 12658.896575927734,
+          "variance_dn2": 81866.58495814895
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 2,
+          "signal_dn": 10823.737121582031,
+          "variance_dn2": 71086.2294965389
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 0,
+          "signal_dn": 5817.248779296875,
+          "variance_dn2": 37394.78271826378
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 1,
+          "signal_dn": 6298.0318603515625,
+          "variance_dn2": 40981.84454206741
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 2,
+          "signal_dn": 5391.536712646484,
+          "variance_dn2": 34684.76930488568
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 0,
+          "signal_dn": 2918.9844665527344,
+          "variance_dn2": 18783.81740593865
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 1,
+          "signal_dn": 3160.515106201172,
+          "variance_dn2": 20272.487982223185
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 2,
+          "signal_dn": 2703.246063232422,
+          "variance_dn2": 17207.566032250867
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 0,
+          "signal_dn": 1476.8399047851562,
+          "variance_dn2": 9257.406968995108
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 1,
+          "signal_dn": 1601.947998046875,
+          "variance_dn2": 10260.014164358634
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 2,
+          "signal_dn": 1368.1288452148438,
+          "variance_dn2": 8852.060400328037
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 0,
+          "signal_dn": 763.4705810546875,
+          "variance_dn2": 5129.520617722723
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 1,
+          "signal_dn": 829.7691955566406,
+          "variance_dn2": 5524.683265872777
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 2,
+          "signal_dn": 706.9447937011719,
+          "variance_dn2": 4673.219682375998
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 0,
+          "signal_dn": 404.2540588378906,
+          "variance_dn2": 2713.6895170530206
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 1,
+          "signal_dn": 439.8127136230469,
+          "variance_dn2": 3068.7870686159736
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 2,
+          "signal_dn": 373.22802734375,
+          "variance_dn2": 2547.863522060012
+        }
+      ],
+      "excluded_points": [
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 0,
+          "signal_dn": 14333.797912597656,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 1,
+          "signal_dn": 14333.797912597656,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 2,
+          "signal_dn": 14333.797912597656,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        }
+      ],
+      "independent_pairs": 6,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 6.520099247717114,
+        "b_dn2": 0.0,
+        "normalized_rmse": 0.011316293335089,
+        "intercept_at_boundary": true,
+        "signal_range_dn": [
+          373.22802734375,
+          12658.896575927734
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 6.534686091258362,
+        "b_dn2": -115.77010440527829,
+        "normalized_rmse": 0.011079808806538078,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          373.22802734375,
+          12658.896575927734
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.434677792486866,
+            "b_dn2": 62.62154840099256,
+            "normalized_rmse": 0.008801940866758414,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              373.22802734375,
+              6298.0318603515625
+            ]
+          },
+          "held_relative_mae": 0.016536246185976815
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.533819527007702,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.011205179233943308,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              373.22802734375,
+              12658.896575927734
+            ]
+          },
+          "held_relative_mae": 0.012057331833078236
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.525643824709321,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.010855466879922773,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              373.22802734375,
+              12658.896575927734
+            ]
+          },
+          "held_relative_mae": 0.018863883157854328
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.521823744367549,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.011037761302462604,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              373.22802734375,
+              12658.896575927734
+            ]
+          },
+          "held_relative_mae": 0.022231822843503706
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.519633153707465,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.011258938134661337,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              373.22802734375,
+              12658.896575927734
+            ]
+          },
+          "held_relative_mae": 0.021386962004066395
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 6.519803688226821,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.011208730042367722,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              706.9447937011719,
+              12658.896575927734
+            ]
+          },
+          "held_relative_mae": 0.04642832352876666
+        }
+      ],
+      "loo_relative_mae": 0.022917428258874356,
+      "loo_slope_range": [
+        6.434677792486866,
+        6.533819527007702
+      ]
+    },
+    {
+      "folder": "iso-3200",
+      "offset": [
+        1,
+        1
+      ],
+      "plane": "B",
+      "dark_paths": [
+        "protocole\\iso-3200\\6V1A9621.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.1572875976562,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 0,
+          "signal_dn": 7797.870361328125,
+          "variance_dn2": 57592.86709366911
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 1,
+          "signal_dn": 8526.603820800781,
+          "variance_dn2": 63487.46743175537
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "roi": 2,
+          "signal_dn": 7260.55615234375,
+          "variance_dn2": 53229.267965191386
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 0,
+          "signal_dn": 3891.6995239257812,
+          "variance_dn2": 27960.656941985108
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 1,
+          "signal_dn": 4246.385650634766,
+          "variance_dn2": 32101.663554933606
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "roi": 2,
+          "signal_dn": 3621.1306762695312,
+          "variance_dn2": 25782.432898687617
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 0,
+          "signal_dn": 1959.5982971191406,
+          "variance_dn2": 14329.981631035145
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 1,
+          "signal_dn": 2136.6127319335938,
+          "variance_dn2": 15300.61427739382
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "roi": 2,
+          "signal_dn": 1820.1532592773438,
+          "variance_dn2": 13260.912235595539
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 0,
+          "signal_dn": 990.985595703125,
+          "variance_dn2": 7302.003002797059
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 1,
+          "signal_dn": 1084.4068298339844,
+          "variance_dn2": 8031.346767876092
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "roi": 2,
+          "signal_dn": 921.56689453125,
+          "variance_dn2": 6751.358711015885
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 0,
+          "signal_dn": 513.3470458984375,
+          "variance_dn2": 3843.512104296374
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 1,
+          "signal_dn": 561.7519226074219,
+          "variance_dn2": 4215.830316839409
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "roi": 2,
+          "signal_dn": 476.6230163574219,
+          "variance_dn2": 3604.900956424959
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 0,
+          "signal_dn": 271.3170471191406,
+          "variance_dn2": 2124.6208451964994
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 1,
+          "signal_dn": 298.00958251953125,
+          "variance_dn2": 2410.3083178530624
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "roi": 2,
+          "signal_dn": 252.3702392578125,
+          "variance_dn2": 2047.4425148373957
+        }
+      ],
+      "excluded_points": [
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 0,
+          "signal_dn": 14333.809356689453,
+          "variance_dn2": 5.351397412997537,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 1,
+          "signal_dn": 14333.842712402344,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-3200\\6V1A9678.CR3 | protocole\\iso-3200\\6V1A9679.CR3",
+          "roi": 2,
+          "signal_dn": 14271.171752929688,
+          "variance_dn2": 17452.38482046462,
+          "reason": "reject_saturation"
+        }
+      ],
+      "independent_pairs": 6,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 7.372323290775683,
+        "b_dn2": 0.0,
+        "normalized_rmse": 0.0145374535554558,
+        "intercept_at_boundary": true,
+        "signal_range_dn": [
+          252.3702392578125,
+          8526.603820800781
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 7.380483818006075,
+        "b_dn2": -43.44830904594455,
+        "normalized_rmse": 0.014492927427346933,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          252.3702392578125,
+          8526.603820800781
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9680.CR3 | protocole\\iso-3200\\6V1A9681.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 7.270527153391103,
+            "b_dn2": 100.75462575112635,
+            "normalized_rmse": 0.024789366190149223,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              252.3702392578125,
+              4246.385650634766
+            ]
+          },
+          "held_relative_mae": 0.014065592012028635
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9682.CR3 | protocole\\iso-3200\\6V1A9683.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 7.386040190033684,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.008588172455429196,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              252.3702392578125,
+              8526.603820800781
+            ]
+          },
+          "held_relative_mae": 0.029456823453832316
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9684.CR3 | protocole\\iso-3200\\6V1A9685.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 7.377083168335934,
+            "b_dn2": 8.700623899628956,
+            "normalized_rmse": 0.014208091038300785,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              252.3702392578125,
+              8526.603820800781
+            ]
+          },
+          "held_relative_mae": 0.01778115969129537
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9686.CR3 | protocole\\iso-3200\\6V1A9687.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 7.372336975308957,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.014618077245748639,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              252.3702392578125,
+              8526.603820800781
+            ]
+          },
+          "held_relative_mae": 0.0038119292036100177
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9688.CR3 | protocole\\iso-3200\\6V1A9689.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 7.37185665648267,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.014517654649477517,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              252.3702392578125,
+              8526.603820800781
+            ]
+          },
+          "held_relative_mae": 0.01948043917307293
+        },
+        {
+          "held_pair": "protocole\\iso-3200\\6V1A9690.CR3 | protocole\\iso-3200\\6V1A9691.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 7.371740846649477,
+            "b_dn2": 0.0,
+            "normalized_rmse": 0.014298483057201015,
+            "intercept_at_boundary": true,
+            "signal_range_dn": [
+              476.6230163574219,
+              8526.603820800781
+            ]
+          },
+          "held_relative_mae": 0.07950984946535018
+        }
+      ],
+      "loo_relative_mae": 0.027350965499864908,
+      "loo_slope_range": [
+        7.270527153391103,
+        7.386040190033684
+      ]
+    },
+    {
+      "folder": "iso-51200",
+      "offset": [
+        0,
+        0
+      ],
+      "plane": "R",
+      "dark_paths": [
+        "protocole\\iso-51200\\6V1A9617.CR3",
+        "protocole\\iso-51200\\6V1A9738.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.4951171875,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 0,
+          "signal_dn": 2241.5374755859375,
+          "variance_dn2": 253706.52304205866
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 1,
+          "signal_dn": 2405.2455139160156,
+          "variance_dn2": 263338.26895365876
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 2,
+          "signal_dn": 2054.5889892578125,
+          "variance_dn2": 235762.381704233
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 0,
+          "signal_dn": 1286.1440124511719,
+          "variance_dn2": 158060.8512592112
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 1,
+          "signal_dn": 1373.2554931640625,
+          "variance_dn2": 168406.16712624652
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 2,
+          "signal_dn": 1170.3397216796875,
+          "variance_dn2": 148384.83513862235
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 0,
+          "signal_dn": 4161.735626220703,
+          "variance_dn2": 415271.2673534446
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 1,
+          "signal_dn": 4475.514007568359,
+          "variance_dn2": 460727.63083648356
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 2,
+          "signal_dn": 3815.5704956054688,
+          "variance_dn2": 392291.2514864443
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 0,
+          "signal_dn": 8035.59814453125,
+          "variance_dn2": 740868.1678157281
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 1,
+          "signal_dn": 8645.708526611328,
+          "variance_dn2": 794093.0991162487
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 2,
+          "signal_dn": 7390.761169433594,
+          "variance_dn2": 694066.3069815174
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 4,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 86.15795742454078,
+        "b_dn2": 55893.998103056285,
+        "normalized_rmse": 0.01730766651172067,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          1170.3397216796875,
+          8645.708526611328
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 86.15795742454075,
+        "b_dn2": 55893.998103056416,
+        "normalized_rmse": 0.01730766651172068,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          1170.3397216796875,
+          8645.708526611328
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 91.81096310815211,
+            "b_dn2": 42863.58944235257,
+            "normalized_rmse": 0.015746222599856283,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              1170.3397216796875,
+              4475.514007568359
+            ]
+          },
+          "held_relative_mae": 0.048877706737604866
+        },
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 86.00749640196841,
+            "b_dn2": 53394.86708752789,
+            "normalized_rmse": 0.010736949000682316,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              1170.3397216796875,
+              8645.708526611328
+            ]
+          },
+          "held_relative_mae": 0.02848549078813652
+        },
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 86.41395001645297,
+            "b_dn2": 53885.20439520443,
+            "normalized_rmse": 0.017501292580388617,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              1170.3397216796875,
+              8645.708526611328
+            ]
+          },
+          "held_relative_mae": 0.016200478856562353
+        },
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 84.64459418214608,
+            "b_dn2": 65695.07399084122,
+            "normalized_rmse": 0.012619741107817413,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              2054.5889892578125,
+              8645.708526611328
+            ]
+          },
+          "held_relative_mae": 0.09835191013133286
+        }
+      ],
+      "loo_relative_mae": 0.04797889662840915,
+      "loo_slope_range": [
+        84.64459418214608,
+        91.81096310815211
+      ]
+    },
+    {
+      "folder": "iso-51200",
+      "offset": [
+        0,
+        1
+      ],
+      "plane": "G1",
+      "dark_paths": [
+        "protocole\\iso-51200\\6V1A9617.CR3",
+        "protocole\\iso-51200\\6V1A9738.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2045.7793579101562,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 0,
+          "signal_dn": 5234.3448486328125,
+          "variance_dn2": 524374.6330215761
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 1,
+          "signal_dn": 5638.321990966797,
+          "variance_dn2": 561315.220389822
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 2,
+          "signal_dn": 4765.383361816406,
+          "variance_dn2": 484628.51737515134
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 0,
+          "signal_dn": 3003.2005310058594,
+          "variance_dn2": 317844.749626746
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 1,
+          "signal_dn": 3212.6146850585938,
+          "variance_dn2": 340161.8592073517
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 2,
+          "signal_dn": 2710.137908935547,
+          "variance_dn2": 290232.087675631
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 0,
+          "signal_dn": 9718.904327392578,
+          "variance_dn2": 906764.4542435623
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 1,
+          "signal_dn": 10491.673034667969,
+          "variance_dn2": 969532.2879084836
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 2,
+          "signal_dn": 8865.00521850586,
+          "variance_dn2": 845082.1399199215
+        }
+      ],
+      "excluded_points": [
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 0,
+          "signal_dn": 14336.119018554688,
+          "variance_dn2": 40.15167399133248,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 1,
+          "signal_dn": 14336.219177246094,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 2,
+          "signal_dn": 14329.684478759766,
+          "variance_dn2": 5485.474587616114,
+          "reason": "reject_saturation"
+        }
+      ],
+      "independent_pairs": 3,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 87.47818730625909,
+        "b_dn2": 60849.134040784666,
+        "normalized_rmse": 0.010595399967454748,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          2710.137908935547,
+          10491.673034667969
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 87.47818730625907,
+        "b_dn2": 60849.13404078475,
+        "normalized_rmse": 0.010595399967454748,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          2710.137908935547,
+          10491.673034667969
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 92.54744976083563,
+            "b_dn2": 40870.20058663214,
+            "normalized_rmse": 0.003900442369333146,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              2710.137908935547,
+              5638.321990966797
+            ]
+          },
+          "held_relative_mae": 0.03328583475837225
+        },
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 87.79740947672147,
+            "b_dn2": 55530.197915971774,
+            "normalized_rmse": 0.008491103880859063,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              2710.137908935547,
+              10491.673034667969
+            ]
+          },
+          "held_relative_mae": 0.019653921608189403
+        },
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 85.30113817964138,
+            "b_dn2": 79595.58073481527,
+            "normalized_rmse": 0.006044623213852647,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              4765.383361816406,
+              10491.673034667969
+            ]
+          },
+          "held_relative_mae": 0.055595647563927736
+        }
+      ],
+      "loo_relative_mae": 0.036178467976829796,
+      "loo_slope_range": [
+        85.30113817964138,
+        92.54744976083563
+      ]
+    },
+    {
+      "folder": "iso-51200",
+      "offset": [
+        1,
+        0
+      ],
+      "plane": "G2",
+      "dark_paths": [
+        "protocole\\iso-51200\\6V1A9617.CR3",
+        "protocole\\iso-51200\\6V1A9738.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2045.8511657714844,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 0,
+          "signal_dn": 5257.369689941406,
+          "variance_dn2": 525851.8105134477
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 1,
+          "signal_dn": 5661.218963623047,
+          "variance_dn2": 565143.4303335272
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 2,
+          "signal_dn": 4781.55419921875,
+          "variance_dn2": 491840.9774877081
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 0,
+          "signal_dn": 3017.8072204589844,
+          "variance_dn2": 323025.00621833606
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 1,
+          "signal_dn": 3228.8518981933594,
+          "variance_dn2": 348648.1452098009
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 2,
+          "signal_dn": 2726.4238891601562,
+          "variance_dn2": 299389.0938135704
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 0,
+          "signal_dn": 9757.907470703125,
+          "variance_dn2": 914503.9306031109
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 1,
+          "signal_dn": 10526.989318847656,
+          "variance_dn2": 988350.4198204494
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 2,
+          "signal_dn": 8897.243591308594,
+          "variance_dn2": 839967.5343693293
+        }
+      ],
+      "excluded_points": [
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 0,
+          "signal_dn": 14336.041015625,
+          "variance_dn2": 40.29211724381492,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 1,
+          "signal_dn": 14336.149200439453,
+          "variance_dn2": 0.0,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 2,
+          "signal_dn": 14330.381622314453,
+          "variance_dn2": 4267.778117197276,
+          "reason": "reject_saturation"
+        }
+      ],
+      "independent_pairs": 3,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 87.49523759517976,
+        "b_dn2": 64959.14258863839,
+        "normalized_rmse": 0.007122384916654176,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          2726.4238891601562,
+          10526.989318847656
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 87.49523759517977,
+        "b_dn2": 64959.14258863812,
+        "normalized_rmse": 0.00712238491665418,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          2726.4238891601562,
+          10526.989318847656
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 90.6548859860664,
+            "b_dn2": 52858.33104593701,
+            "normalized_rmse": 0.0075542875692407255,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              2726.4238891601562,
+              5661.218963623047
+            ]
+          },
+          "held_relative_mae": 0.02244473290689061
+        },
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 87.75150894212815,
+            "b_dn2": 60950.95060911006,
+            "normalized_rmse": 0.004234773252235947,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              2726.4238891601562,
+              10526.989318847656
+            ]
+          },
+          "held_relative_mae": 0.014286862444026298
+        },
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 86.2068476646755,
+            "b_dn2": 76082.991593688,
+            "normalized_rmse": 0.004427352227613439,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              4781.55419921875,
+              10526.989318847656
+            ]
+          },
+          "held_relative_mae": 0.032225494644170474
+        }
+      ],
+      "loo_relative_mae": 0.022985696665029125,
+      "loo_slope_range": [
+        86.2068476646755,
+        90.6548859860664
+      ]
+    },
+    {
+      "folder": "iso-51200",
+      "offset": [
+        1,
+        1
+      ],
+      "plane": "B",
+      "dark_paths": [
+        "protocole\\iso-51200\\6V1A9617.CR3",
+        "protocole\\iso-51200\\6V1A9738.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2046.9986572265625,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 0,
+          "signal_dn": 3577.6014404296875,
+          "variance_dn2": 416251.784497273
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 1,
+          "signal_dn": 3878.6554565429688,
+          "variance_dn2": 452221.05900748365
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "roi": 2,
+          "signal_dn": 3268.3531799316406,
+          "variance_dn2": 383206.3671197533
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 0,
+          "signal_dn": 2051.8453369140625,
+          "variance_dn2": 262019.75025941525
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 1,
+          "signal_dn": 2220.593780517578,
+          "variance_dn2": 285290.02986900834
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "roi": 2,
+          "signal_dn": 1860.5992431640625,
+          "variance_dn2": 242557.00258764773
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 0,
+          "signal_dn": 6617.668395996094,
+          "variance_dn2": 701907.414637094
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 2,
+          "signal_dn": 6059.8421630859375,
+          "variance_dn2": 645207.7788903391
+        }
+      ],
+      "excluded_points": [
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "roi": 1,
+          "signal_dn": 7213.614898681641,
+          "variance_dn2": 742078.301196107,
+          "reason": "reject_drift_or_structure"
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 0,
+          "signal_dn": 12714.217224121094,
+          "variance_dn2": 1072946.8320007008,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 1,
+          "signal_dn": 13597.92904663086,
+          "variance_dn2": 633981.5471193772,
+          "reason": "reject_saturation"
+        },
+        {
+          "pair_id": "protocole\\iso-51200\\6V1A9716.CR3 | protocole\\iso-51200\\6V1A9717.CR3",
+          "roi": 2,
+          "signal_dn": 11721.402252197266,
+          "variance_dn2": 1136603.9986374269,
+          "reason": "reject_saturation"
+        }
+      ],
+      "independent_pairs": 3,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 95.4195870165579,
+        "b_dn2": 71016.07763740777,
+        "normalized_rmse": 0.010422473846167558,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          1860.5992431640625,
+          6617.668395996094
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 95.4195870165579,
+        "b_dn2": 71016.07763740772,
+        "normalized_rmse": 0.01042247384616758,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          1860.5992431640625,
+          6617.668395996094
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9718.CR3 | protocole\\iso-51200\\6V1A9719.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 101.50141049497259,
+            "b_dn2": 55078.48321766013,
+            "normalized_rmse": 0.008713053785882338,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              1860.5992431640625,
+              3878.6554565429688
+            ]
+          },
+          "held_relative_mae": 0.03705604027341346
+        },
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9720.CR3 | protocole\\iso-51200\\6V1A9721.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 95.63941065397728,
+            "b_dn2": 67545.8235060572,
+            "normalized_rmse": 0.005588403995357258,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              1860.5992431640625,
+              6617.668395996094
+            ]
+          },
+          "held_relative_mae": 0.018034117621599517
+        },
+        {
+          "held_pair": "protocole\\iso-51200\\6V1A9722.CR3 | protocole\\iso-51200\\6V1A9723.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 93.23642184257515,
+            "b_dn2": 83236.5246813113,
+            "normalized_rmse": 0.007089867580003125,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              3268.3531799316406,
+              6617.668395996094
+            ]
+          },
+          "held_relative_mae": 0.041211140354138275
+        }
+      ],
+      "loo_relative_mae": 0.032100432749717085,
+      "loo_slope_range": [
+        93.23642184257515,
+        101.50141049497259
+      ]
+    },
+    {
+      "folder": "iso-6400",
+      "offset": [
+        0,
+        0
+      ],
+      "plane": "R",
+      "dark_paths": [
+        "protocole\\iso-6400\\6V1A9620.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.0303955078125,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 0,
+          "signal_dn": 4975.167022705078,
+          "variance_dn2": 64090.06638431229
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 1,
+          "signal_dn": 5356.048034667969,
+          "variance_dn2": 69652.98489999995
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 2,
+          "signal_dn": 4616.655975341797,
+          "variance_dn2": 61154.20225884508
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 0,
+          "signal_dn": 2500.7943420410156,
+          "variance_dn2": 32487.662448961524
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 1,
+          "signal_dn": 2691.7903747558594,
+          "variance_dn2": 34887.2065725624
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 2,
+          "signal_dn": 2315.365203857422,
+          "variance_dn2": 30288.955607280768
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 0,
+          "signal_dn": 1266.320556640625,
+          "variance_dn2": 16755.35000526341
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 1,
+          "signal_dn": 1360.2466125488281,
+          "variance_dn2": 17905.291132023212
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 2,
+          "signal_dn": 1170.2393188476562,
+          "variance_dn2": 15796.968625113195
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 0,
+          "signal_dn": 650.0537719726562,
+          "variance_dn2": 8827.131169390228
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 1,
+          "signal_dn": 699.0151672363281,
+          "variance_dn2": 9594.671585570119
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 2,
+          "signal_dn": 599.4329833984375,
+          "variance_dn2": 7939.597189040278
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 0,
+          "signal_dn": 343.07647705078125,
+          "variance_dn2": 4935.885336843725
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 1,
+          "signal_dn": 368.3442077636719,
+          "variance_dn2": 5177.730995297905
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 2,
+          "signal_dn": 314.3345947265625,
+          "variance_dn2": 4633.665952052766
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 0,
+          "signal_dn": 193.21719360351562,
+          "variance_dn2": 2958.903251626993
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 1,
+          "signal_dn": 207.39132690429688,
+          "variance_dn2": 3212.159159135682
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 2,
+          "signal_dn": 176.60989379882812,
+          "variance_dn2": 2812.951235877531
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 6,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 12.921229687995508,
+        "b_dn2": 444.76236410452907,
+        "normalized_rmse": 0.010553203670088157,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          176.60989379882812,
+          5356.048034667969
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 12.921229687995503,
+        "b_dn2": 444.76236410454237,
+        "normalized_rmse": 0.01055320367008813,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          176.60989379882812,
+          5356.048034667969
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.800925914694183,
+            "b_dn2": 536.0403160421623,
+            "normalized_rmse": 0.006910870327561583,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              176.60989379882812,
+              2691.7903747558594
+            ]
+          },
+          "held_relative_mae": 0.011633071395461487
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.936661999014424,
+            "b_dn2": 467.3174777386618,
+            "normalized_rmse": 0.010953376974723315,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              176.60989379882812,
+              5356.048034667969
+            ]
+          },
+          "held_relative_mae": 0.008698378546347965
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.922482320522962,
+            "b_dn2": 438.32959457641425,
+            "normalized_rmse": 0.010625652612930971,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              176.60989379882812,
+              5356.048034667969
+            ]
+          },
+          "held_relative_mae": 0.007982414213143892
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.917002328713783,
+            "b_dn2": 462.6079422266253,
+            "normalized_rmse": 0.010402035466932908,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              176.60989379882812,
+              5356.048034667969
+            ]
+          },
+          "held_relative_mae": 0.01595407576973356
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.926941717468623,
+            "b_dn2": 423.2051379742295,
+            "normalized_rmse": 0.010510356665088755,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              176.60989379882812,
+              5356.048034667969
+            ]
+          },
+          "held_relative_mae": 0.016284046596898416
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.92902474696468,
+            "b_dn2": 416.81702195708465,
+            "normalized_rmse": 0.010504531616472287,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              314.3345947265625,
+              5356.048034667969
+            ]
+          },
+          "held_relative_mae": 0.030141231070873725
+        }
+      ],
+      "loo_relative_mae": 0.01511553626540984,
+      "loo_slope_range": [
+        12.800925914694183,
+        12.936661999014424
+      ]
+    },
+    {
+      "folder": "iso-6400",
+      "offset": [
+        0,
+        1
+      ],
+      "plane": "G1",
+      "dark_paths": [
+        "protocole\\iso-6400\\6V1A9620.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.2987670898438,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 0,
+          "signal_dn": 11574.442413330078,
+          "variance_dn2": 151025.48702500356
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 1,
+          "signal_dn": 12491.674774169922,
+          "variance_dn2": 160914.14971850993
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 2,
+          "signal_dn": 10684.633178710938,
+          "variance_dn2": 136013.78578973704
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 0,
+          "signal_dn": 5810.672790527344,
+          "variance_dn2": 74760.8127961265
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 1,
+          "signal_dn": 6267.622802734375,
+          "variance_dn2": 82420.0547156053
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 2,
+          "signal_dn": 5349.209655761719,
+          "variance_dn2": 69115.66826080078
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 0,
+          "signal_dn": 2940.205841064453,
+          "variance_dn2": 38467.87344346195
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 1,
+          "signal_dn": 3176.5927734375,
+          "variance_dn2": 41143.900906050374
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 2,
+          "signal_dn": 2706.2243041992188,
+          "variance_dn2": 35217.85841208034
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 0,
+          "signal_dn": 1515.3061218261719,
+          "variance_dn2": 19976.99630471675
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 1,
+          "signal_dn": 1631.792724609375,
+          "variance_dn2": 21678.775049836997
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 2,
+          "signal_dn": 1388.7281494140625,
+          "variance_dn2": 17923.112417399312
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 0,
+          "signal_dn": 800.2954711914062,
+          "variance_dn2": 10706.867611642738
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 1,
+          "signal_dn": 862.6712951660156,
+          "variance_dn2": 11553.176722030765
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 2,
+          "signal_dn": 731.738037109375,
+          "variance_dn2": 9817.91993712727
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 0,
+          "signal_dn": 450.1675720214844,
+          "variance_dn2": 6244.118789008778
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 1,
+          "signal_dn": 483.3328552246094,
+          "variance_dn2": 6670.892324549502
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 2,
+          "signal_dn": 409.683349609375,
+          "variance_dn2": 5748.44908122624
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 6,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 12.866836495320703,
+        "b_dn2": 447.2153819920735,
+        "normalized_rmse": 0.009823541351632594,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          409.683349609375,
+          12491.674774169922
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 12.866836495320703,
+        "b_dn2": 447.2153819920755,
+        "normalized_rmse": 0.009823541351632603,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          409.683349609375,
+          12491.674774169922
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.925193650630277,
+            "b_dn2": 347.5960493493825,
+            "normalized_rmse": 0.009426387991438032,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              409.683349609375,
+              6267.622802734375
+            ]
+          },
+          "held_relative_mae": 0.010186997240091141
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.85773347089863,
+            "b_dn2": 430.8113747452075,
+            "normalized_rmse": 0.009546185998868775,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              409.683349609375,
+              12491.674774169922
+            ]
+          },
+          "held_relative_mae": 0.007825629124837055
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.866800601151157,
+            "b_dn2": 449.7871517975387,
+            "normalized_rmse": 0.010032213629888034,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              409.683349609375,
+              12491.674774169922
+            ]
+          },
+          "held_relative_mae": 0.003562443677789715
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.865166580919377,
+            "b_dn2": 462.72308653711923,
+            "normalized_rmse": 0.009767718021302137,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              409.683349609375,
+              12491.674774169922
+            ]
+          },
+          "held_relative_mae": 0.011300038644272098
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.865670131838108,
+            "b_dn2": 457.47963286502403,
+            "normalized_rmse": 0.009839972398605882,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              409.683349609375,
+              12491.674774169922
+            ]
+          },
+          "held_relative_mae": 0.0033810948629803537
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.867528600631463,
+            "b_dn2": 441.46178362255216,
+            "normalized_rmse": 0.00982922810271543,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              731.738037109375,
+              12491.674774169922
+            ]
+          },
+          "held_relative_mae": 0.0030973843041650025
+        }
+      ],
+      "loo_relative_mae": 0.006558931309022561,
+      "loo_slope_range": [
+        12.85773347089863,
+        12.925193650630277
+      ]
+    },
+    {
+      "folder": "iso-6400",
+      "offset": [
+        1,
+        0
+      ],
+      "plane": "G2",
+      "dark_paths": [
+        "protocole\\iso-6400\\6V1A9620.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.2771606445312,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 0,
+          "signal_dn": 11562.36392211914,
+          "variance_dn2": 148350.82856410256
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 1,
+          "signal_dn": 12491.45654296875,
+          "variance_dn2": 160524.00349635363
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 2,
+          "signal_dn": 10679.4921875,
+          "variance_dn2": 141280.52270699304
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 0,
+          "signal_dn": 5806.590484619141,
+          "variance_dn2": 73862.81493459413
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 1,
+          "signal_dn": 6272.73291015625,
+          "variance_dn2": 82396.92093663896
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 2,
+          "signal_dn": 5347.860046386719,
+          "variance_dn2": 68082.03647904721
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 0,
+          "signal_dn": 2944.8980102539062,
+          "variance_dn2": 38844.95860072864
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 1,
+          "signal_dn": 3177.9747924804688,
+          "variance_dn2": 41027.43909105684
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 2,
+          "signal_dn": 2707.120635986328,
+          "variance_dn2": 35380.938249199746
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 0,
+          "signal_dn": 1515.7459106445312,
+          "variance_dn2": 19697.702195043727
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 1,
+          "signal_dn": 1634.479248046875,
+          "variance_dn2": 21569.766939891662
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 2,
+          "signal_dn": 1388.0511169433594,
+          "variance_dn2": 18452.77835725287
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 0,
+          "signal_dn": 800.9849853515625,
+          "variance_dn2": 10887.311752445072
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 1,
+          "signal_dn": 864.1201477050781,
+          "variance_dn2": 11600.886606595153
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 2,
+          "signal_dn": 732.4732666015625,
+          "variance_dn2": 9882.101238700356
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 0,
+          "signal_dn": 451.9048767089844,
+          "variance_dn2": 6350.575574359708
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 1,
+          "signal_dn": 485.2954406738281,
+          "variance_dn2": 6773.701535826411
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 2,
+          "signal_dn": 410.20068359375,
+          "variance_dn2": 5819.3570660061
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 6,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 12.895975583769848,
+        "b_dn2": 412.8954175904607,
+        "normalized_rmse": 0.013943925599094945,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          410.20068359375,
+          12491.45654296875
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 12.895975583769845,
+        "b_dn2": 412.8954175904611,
+        "normalized_rmse": 0.01394392559909487,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          410.20068359375,
+          12491.45654296875
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.799828606545413,
+            "b_dn2": 567.8448561796926,
+            "normalized_rmse": 0.014483555962393218,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              410.20068359375,
+              6272.73291015625
+            ]
+          },
+          "held_relative_mae": 0.010097360123848743
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.90652853010056,
+            "b_dn2": 485.58288891249555,
+            "normalized_rmse": 0.013016012250024217,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              410.20068359375,
+              12491.45654296875
+            ]
+          },
+          "held_relative_mae": 0.017898644576432508
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.896915020818929,
+            "b_dn2": 399.5585510956738,
+            "normalized_rmse": 0.014156990221516444,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              410.20068359375,
+              12491.45654296875
+            ]
+          },
+          "held_relative_mae": 0.0075424381842826085
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.895525869683235,
+            "b_dn2": 417.76550131404457,
+            "normalized_rmse": 0.013998883034215523,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              410.20068359375,
+              12491.45654296875
+            ]
+          },
+          "held_relative_mae": 0.00810523203024746
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.89919707802228,
+            "b_dn2": 384.365948936912,
+            "normalized_rmse": 0.01395946270866534,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              410.20068359375,
+              12491.45654296875
+            ]
+          },
+          "held_relative_mae": 0.008911982884654366
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 12.901741986363879,
+            "b_dn2": 364.8562068756094,
+            "normalized_rmse": 0.013932934454019748,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              732.4732666015625,
+              12491.45654296875
+            ]
+          },
+          "held_relative_mae": 0.024713041799586402
+        }
+      ],
+      "loo_relative_mae": 0.012878116599842013,
+      "loo_slope_range": [
+        12.799828606545413,
+        12.90652853010056
+      ]
+    },
+    {
+      "folder": "iso-6400",
+      "offset": [
+        1,
+        1
+      ],
+      "plane": "B",
+      "dark_paths": [
+        "protocole\\iso-6400\\6V1A9620.CR3"
+      ],
+      "excluded_pairs": [],
+      "empirical_black_dn": 2048.0736694335938,
+      "points": [
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 0,
+          "signal_dn": 7764.7542724609375,
+          "variance_dn2": 111988.46702752924
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 1,
+          "signal_dn": 8443.44351196289,
+          "variance_dn2": 121630.71113469724
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "roi": 2,
+          "signal_dn": 7181.738128662109,
+          "variance_dn2": 103490.93293030794
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 0,
+          "signal_dn": 3908.144561767578,
+          "variance_dn2": 57584.969408550445
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 1,
+          "signal_dn": 4247.678680419922,
+          "variance_dn2": 61396.075448034855
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "roi": 2,
+          "signal_dn": 3605.8123779296875,
+          "variance_dn2": 51325.25122551649
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 0,
+          "signal_dn": 1982.9573059082031,
+          "variance_dn2": 29310.82824209861
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 1,
+          "signal_dn": 2159.1846923828125,
+          "variance_dn2": 31958.66660133599
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "roi": 2,
+          "signal_dn": 1826.6495056152344,
+          "variance_dn2": 27094.264977831008
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 0,
+          "signal_dn": 1022.8107604980469,
+          "variance_dn2": 15166.966523315825
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 1,
+          "signal_dn": 1109.2481384277344,
+          "variance_dn2": 16605.183942024432
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "roi": 2,
+          "signal_dn": 939.363037109375,
+          "variance_dn2": 14134.052859194744
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 0,
+          "signal_dn": 541.7042846679688,
+          "variance_dn2": 8374.54365817195
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 1,
+          "signal_dn": 588.6831359863281,
+          "variance_dn2": 9219.35999988667
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "roi": 2,
+          "signal_dn": 496.3651428222656,
+          "variance_dn2": 7672.50732049137
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 0,
+          "signal_dn": 305.78460693359375,
+          "variance_dn2": 5035.282232076266
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 1,
+          "signal_dn": 332.0899658203125,
+          "variance_dn2": 5487.120483122749
+        },
+        {
+          "pair_id": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "roi": 2,
+          "signal_dn": 279.3172607421875,
+          "variance_dn2": 4701.771442649202
+        }
+      ],
+      "excluded_points": [],
+      "independent_pairs": 6,
+      "dark_identity_confirmed": false,
+      "status": "exploratory_only",
+      "constrained": {
+        "a_dn_per_signal_dn": 14.323823455164286,
+        "b_dn2": 707.9232728300068,
+        "normalized_rmse": 0.006507091325793891,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          279.3172607421875,
+          8443.44351196289
+        ]
+      },
+      "unconstrained": {
+        "a_dn_per_signal_dn": 14.323823455164282,
+        "b_dn2": 707.9232728300133,
+        "normalized_rmse": 0.006507091325793886,
+        "intercept_at_boundary": false,
+        "signal_range_dn": [
+          279.3172607421875,
+          8443.44351196289
+        ]
+      },
+      "leave_one_pair_out": [
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9694.CR3 | protocole\\iso-6400\\6V1A9695.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 14.3335118585416,
+            "b_dn2": 695.9758000586882,
+            "normalized_rmse": 0.01273271975808264,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              279.3172607421875,
+              4247.678680419922
+            ]
+          },
+          "held_relative_mae": 0.0007218558755332106
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9696.CR3 | protocole\\iso-6400\\6V1A9697.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 14.325489538599928,
+            "b_dn2": 723.3096824730043,
+            "normalized_rmse": 0.002572631100876214,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              279.3172607421875,
+              8443.44351196289
+            ]
+          },
+          "held_relative_mae": 0.012870269331910092
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9698.CR3 | protocole\\iso-6400\\6V1A9699.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 14.328087498639889,
+            "b_dn2": 646.7295224588917,
+            "normalized_rmse": 0.00631246900627432,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              279.3172607421875,
+              8443.44351196289
+            ]
+          },
+          "held_relative_mae": 0.010162889531402992
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9700.CR3 | protocole\\iso-6400\\6V1A9701.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 14.320328297984435,
+            "b_dn2": 732.2356514748623,
+            "normalized_rmse": 0.006488661088060468,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              279.3172607421875,
+              8443.44351196289
+            ]
+          },
+          "held_relative_mae": 0.00608590624340856
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9702.CR3 | protocole\\iso-6400\\6V1A9703.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 14.320146273049891,
+            "b_dn2": 729.5598919717404,
+            "normalized_rmse": 0.006461788466278505,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              279.3172607421875,
+              8443.44351196289
+            ]
+          },
+          "held_relative_mae": 0.013802682131093947
+        },
+        {
+          "held_pair": "protocole\\iso-6400\\6V1A9704.CR3 | protocole\\iso-6400\\6V1A9705.CR3",
+          "model": {
+            "a_dn_per_signal_dn": 14.322844521444223,
+            "b_dn2": 713.3994641337948,
+            "normalized_rmse": 0.0065067434405262645,
+            "intercept_at_boundary": false,
+            "signal_range_dn": [
+              496.3651428222656,
+              8443.44351196289
+            ]
+          },
+          "held_relative_mae": 0.0057437848900231125
+        }
+      ],
+      "loo_relative_mae": 0.008231231333895318,
+      "loo_slope_range": [
+        14.320146273049891,
+        14.3335118585416
+      ]
+    }
+  ]
+}

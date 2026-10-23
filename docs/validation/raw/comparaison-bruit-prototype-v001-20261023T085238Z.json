@@ -1,0 +1,4165 @@
+{
+  "campaign_id": "noise-prototype-comparison-v001-20261023T085239Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "measured_at_utc": "2026-10-23T08:52:39.057077+00:00",
+  "revision": "812a41bec46bfb4ddff1ed1bdebccdaa6b7ed376",
+  "source_sha256": {
+    "tests/study_noise_exports.py": "6c0d1ca71f44317c8535974f1d663f5aceb77e2dc58100b91e9848fdd285e6ec",
+    "tests/analyse_noise.py": "e62b4d557c3f82cb8dc5949c175bada5d352be613feb3093749bbc948d990965",
+    "src/core/NoiseEstimation.cpp": "cee243943c7fb0ed9486ebb091c330a913f97716be639cf684c1f74784615566",
+    "src/core/DetailProcessing.cpp": "a9e01b312baadbd3912dee6447115bb4d529fa1692ee24956b0ebbee0aa3b20d",
+    "src/editor/imageeditor.cpp": "10de38a7f34b40ecfdc20b6985ed1629c996e826e47439341c0aa3647f9436db"
+  },
+  "versions": {
+    "python": "3.14.3",
+    "numpy": "2.4.2",
+    "opencv": "5.0.0"
+  },
+  "configuration": {
+    "patch_size": 256,
+    "selection": "six low-structure and four detail candidates on LR neutral",
+    "output_domain": "encoded and linearized sRGB uint16 samples; not sensor sigma",
+    "registration": "integer local search on sigma-2 blurred Y; threshold NCC 0.8; no warp or resampling",
+    "metrics": "Haar HH MAD; medium-band MAD (Gaussian sigma1 minus sigma4); gradient and mean",
+    "limitations": [
+      "No clean ground truth or AI-reference image supplied",
+      "Texture, demosaic correlations and local tone differences affect noise proxies",
+      "Matched-region summary excludes NCC below 0.8; flat uniform regions may fail registration",
+      "Opening: optics off on both engines; received prototype exports: optics on user-declared",
+      "Do not infer pure denoising gain from optics-off neutral to optics-on processed state",
+      "No cross-engine MAE/PSNR/SSIM as fidelity to a clean image",
+      "Current sidecar is not proof of export-time settings"
+    ]
+  },
+  "audit": {
+    "production_modified": false,
+    "source_images_modified": false,
+    "ipr_tiffs_generated": false
+  },
+  "scenes": [
+    {
+      "scene": "6V1A9608",
+      "inputs": {
+        "LR_neutral": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\neutre\\6V1A9608.tif",
+          "sha256": "a2e1c14fc496a9e2244575418bff277acc34964acda251862616e11b5c70933b",
+          "bytes": 193793684,
+          "modified_at_utc": "2026-10-20T10:49:33.770074+00:00",
+          "dimensions": [
+            6960,
+            4640
+          ],
+          "bits": [
+            16,
+            16,
+            16
+          ],
+          "channels": 3,
+          "orientation": 1,
+          "compression": 1,
+          "icc": "sRGB IEC61966-2.1",
+          "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+          "xmp_settings": {
+            "RawFileName": "6V1A9608.CR3",
+            "Version": "18.7",
+            "ProcessVersion": "15.4",
+            "WhiteBalance": "As Shot",
+            "Temperature": "5200",
+            "Tint": "+5",
+            "Exposure2012": "0.00",
+            "Contrast2012": "0",
+            "Highlights2012": "0",
+            "Shadows2012": "0",
+            "Whites2012": "0",
+            "Blacks2012": "0",
+            "Texture": "0",
+            "Clarity2012": "0",
+            "Dehaze": "0",
+            "Vibrance": "0",
+            "Saturation": "0",
+            "ParametricShadows": "0",
+            "ParametricDarks": "0",
+            "ParametricLights": "0",
+            "ParametricHighlights": "0",
+            "ParametricShadowSplit": "25",
+            "ParametricMidtoneSplit": "50",
+            "ParametricHighlightSplit": "75",
+            "Sharpness": "0",
+            "LuminanceSmoothing": "0",
+            "ColorNoiseReduction": "0",
+            "HueAdjustmentRed": "0",
+            "HueAdjustmentOrange": "0",
+            "HueAdjustmentYellow": "0",
+            "HueAdjustmentGreen": "0",
+            "HueAdjustmentAqua": "0",
+            "HueAdjustmentBlue": "0",
+            "HueAdjustmentPurple": "0",
+            "HueAdjustmentMagenta": "0",
+            "SaturationAdjustmentRed": "0",
+            "SaturationAdjustmentOrange": "0",
+            "SaturationAdjustmentYellow": "0",
+            "SaturationAdjustmentGreen": "0",
+            "SaturationAdjustmentAqua": "0",
+            "SaturationAdjustmentBlue": "0",
+            "SaturationAdjustmentPurple": "0",
+            "SaturationAdjustmentMagenta": "0",
+            "LuminanceAdjustmentRed": "0",
+            "LuminanceAdjustmentOrange": "0",
+            "LuminanceAdjustmentYellow": "0",
+            "LuminanceAdjustmentGreen": "0",
+            "LuminanceAdjustmentAqua": "0",
+            "LuminanceAdjustmentBlue": "0",
+            "LuminanceAdjustmentPurple": "0",
+            "LuminanceAdjustmentMagenta": "0",
+            "SplitToningShadowHue": "0",
+            "SplitToningShadowSaturation": "0",
+            "SplitToningHighlightHue": "0",
+            "SplitToningHighlightSaturation": "0",
+            "SplitToningBalance": "0",
+            "ColorGradeMidtoneHue": "0",
+            "ColorGradeMidtoneSat": "0",
+            "ColorGradeShadowLum": "0",
+            "ColorGradeMidtoneLum": "0",
+            "ColorGradeHighlightLum": "0",
+            "ColorGradeBlending": "50",
+            "ColorGradeGlobalHue": "0",
+            "ColorGradeGlobalSat": "0",
+            "ColorGradeGlobalLum": "0",
+            "AutoLateralCA": "0",
+            "LensProfileEnable": "0",
+            "LensManualDistortionAmount": "0",
+            "VignetteAmount": "0",
+            "DefringePurpleAmount": "0",
+            "DefringePurpleHueLo": "30",
+            "DefringePurpleHueHi": "70",
+            "DefringeGreenAmount": "0",
+            "DefringeGreenHueLo": "40",
+            "DefringeGreenHueHi": "60",
+            "PerspectiveUpright": "0",
+            "PerspectiveVertical": "0",
+            "PerspectiveHorizontal": "0",
+            "PerspectiveRotate": "0.0",
+            "PerspectiveAspect": "0",
+            "PerspectiveScale": "100",
+            "PerspectiveX": "0.00",
+            "PerspectiveY": "0.00",
+            "GrainAmount": "0",
+            "Glow": "0",
+            "PostCropVignetteAmount": "0",
+            "ShadowTint": "0",
+            "RedHue": "0",
+            "RedSaturation": "0",
+            "GreenHue": "0",
+            "GreenSaturation": "0",
+            "BlueHue": "0",
+            "BlueSaturation": "0",
+            "HDREditMode": "0",
+            "ConvertToGrayscale": "False",
+            "OverrideLookVignette": "False",
+            "ToneCurveName2012": "Linear",
+            "CameraProfile": "Camera Neutral",
+            "CameraProfileDigest": "8180D0EC85977057CE86FB64330967A6",
+            "LensProfileSetup": "LensDefaults",
+            "LensProfileName": "Camera Settings",
+            "LensProfileDigest": "6F02042DABCA8D737DD5A8C8E2440825",
+            "LensProfileIsEmbedded": "True",
+            "LensProfileDistortionScale": "100",
+            "LensProfileVignettingScale": "100",
+            "HasSettings": "True",
+            "CropTop": "0",
+            "CropLeft": "0",
+            "CropBottom": "1",
+            "CropRight": "1",
+            "CropAngle": "0",
+            "CropConstrainToWarp": "0",
+            "CropConstrainToUnitSquare": "1",
+            "HasCrop": "False",
+            "AlreadyApplied": "True",
+            "ToneCurvePV2012": "",
+            "ToneCurvePV2012Red": "",
+            "ToneCurvePV2012Green": "",
+            "ToneCurvePV2012Blue": "",
+            "PointColors": "",
+            "ColorVariance": ""
+          }
+        },
+        "LR_100": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A9608.tif",
+          "sha256": "933eed3b7389eb799c414ac7a1b515b3055c338616bd0df1b42efb5f7e7f32c7",
+          "bytes": 193794062,
+          "modified_at_utc": "2026-10-23T08:46:34.496397+00:00",
+          "dimensions": [
+            6960,
+            4640
+          ],
+          "bits": [
+            16,
+            16,
+            16
+          ],
+          "channels": 3,
+          "orientation": 1,
+          "compression": 1,
+          "icc": "sRGB IEC61966-2.1",
+          "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+          "xmp_settings": {
+            "RawFileName": "6V1A9608.CR3",
+            "Version": "18.7",
+            "ProcessVersion": "15.4",
+            "WhiteBalance": "As Shot",
+            "Temperature": "5200",
+            "Tint": "+5",
+            "Exposure2012": "0.00",
+            "Contrast2012": "0",
+            "Highlights2012": "0",
+            "Shadows2012": "0",
+            "Whites2012": "0",
+            "Blacks2012": "0",
+            "Texture": "0",
+            "Clarity2012": "0",
+            "Dehaze": "0",
+            "Vibrance": "0",
+            "Saturation": "0",
+            "ParametricShadows": "0",
+            "ParametricDarks": "0",
+            "ParametricLights": "0",
+            "ParametricHighlights": "0",
+            "ParametricShadowSplit": "25",
+            "ParametricMidtoneSplit": "50",
+            "ParametricHighlightSplit": "75",
+            "Sharpness": "0",
+            "LuminanceSmoothing": "100",
+            "LuminanceNoiseReductionDetail": "50",
+            "LuminanceNoiseReductionContrast": "0",
+            "ColorNoiseReduction": "100",
+            "ColorNoiseReductionDetail": "50",
+            "ColorNoiseReductionSmoothness": "50",
+            "HueAdjustmentRed": "0",
+            "HueAdjustmentOrange": "0",
+            "HueAdjustmentYellow": "0",
+            "HueAdjustmentGreen": "0",
+            "HueAdjustmentAqua": "0",
+            "HueAdjustmentBlue": "0",
+            "HueAdjustmentPurple": "0",
+            "HueAdjustmentMagenta": "0",
+            "SaturationAdjustmentRed": "0",
+            "SaturationAdjustmentOrange": "0",
+            "SaturationAdjustmentYellow": "0",
+            "SaturationAdjustmentGreen": "0",
+            "SaturationAdjustmentAqua": "0",
+            "SaturationAdjustmentBlue": "0",
+            "SaturationAdjustmentPurple": "0",
+            "SaturationAdjustmentMagenta": "0",
+            "LuminanceAdjustmentRed": "0",
+            "LuminanceAdjustmentOrange": "0",
+            "LuminanceAdjustmentYellow": "0",
+            "LuminanceAdjustmentGreen": "0",
+            "LuminanceAdjustmentAqua": "0",
+            "LuminanceAdjustmentBlue": "0",
+            "LuminanceAdjustmentPurple": "0",
+            "LuminanceAdjustmentMagenta": "0",
+            "SplitToningShadowHue": "0",
+            "SplitToningShadowSaturation": "0",
+            "SplitToningHighlightHue": "0",
+            "SplitToningHighlightSaturation": "0",
+            "SplitToningBalance": "0",
+            "ColorGradeMidtoneHue": "0",
+            "ColorGradeMidtoneSat": "0",
+            "ColorGradeShadowLum": "0",
+            "ColorGradeMidtoneLum": "0",
+            "ColorGradeHighlightLum": "0",
+            "ColorGradeBlending": "50",
+            "ColorGradeGlobalHue": "0",
+            "ColorGradeGlobalSat": "0",
+            "ColorGradeGlobalLum": "0",
+            "AutoLateralCA": "1",
+            "LensProfileEnable": "1",
+            "LensManualDistortionAmount": "0",
+            "VignetteAmount": "0",
+            "DefringePurpleAmount": "0",
+            "DefringePurpleHueLo": "30",
+            "DefringePurpleHueHi": "70",
+            "DefringeGreenAmount": "0",
+            "DefringeGreenHueLo": "40",
+            "DefringeGreenHueHi": "60",
+            "PerspectiveUpright": "0",
+            "PerspectiveVertical": "0",
+            "PerspectiveHorizontal": "0",
+            "PerspectiveRotate": "0.0",
+            "PerspectiveAspect": "0",
+            "PerspectiveScale": "100",
+            "PerspectiveX": "0.00",
+            "PerspectiveY": "0.00",
+            "GrainAmount": "0",
+            "Glow": "0",
+            "PostCropVignetteAmount": "0",
+            "ShadowTint": "0",
+            "RedHue": "0",
+            "RedSaturation": "0",
+            "GreenHue": "0",
+            "GreenSaturation": "0",
+            "BlueHue": "0",
+            "BlueSaturation": "0",
+            "HDREditMode": "0",
+            "ConvertToGrayscale": "False",
+            "OverrideLookVignette": "False",
+            "ToneCurveName2012": "Linear",
+            "CameraProfile": "Camera Neutral",
+            "CameraProfileDigest": "8180D0EC85977057CE86FB64330967A6",
+            "LensProfileSetup": "LensDefaults",
+            "LensProfileName": "Camera Settings",
+            "LensProfileDigest": "6F02042DABCA8D737DD5A8C8E2440825",
+            "LensProfileIsEmbedded": "True",
+            "LensProfileDistortionScale": "100",
+            "LensProfileVignettingScale": "100",
+            "HasSettings": "True",
+            "CropTop": "0",
+            "CropLeft": "0",
+            "CropBottom": "1",
+            "CropRight": "1",
+            "CropAngle": "0",
+            "CropConstrainToWarp": "0",
+            "CropConstrainToUnitSquare": "1",
+            "HasCrop": "False",
+            "AlreadyApplied": "True",
+            "ToneCurvePV2012": "",
+            "ToneCurvePV2012Red": "",
+            "ToneCurvePV2012Green": "",
+            "ToneCurvePV2012Blue": "",
+            "PointColors": "",
+            "ColorVariance": ""
+          }
+        },
+        "IPR_prototype": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A9608-IPR.tiff",
+          "sha256": "c1e181c73441763956d85ebf273403ca681a1038b08339156f30b3466a8a3ec1",
+          "bytes": 258263634,
+          "modified_at_utc": "2026-10-23T08:35:29.242215+00:00",
+          "dimensions": [
+            6959,
+            4639
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "channels": 4,
+          "orientation": 1,
+          "compression": 1,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "xmp_settings": {}
+        },
+        "IPR_neutral": {
+          "path": null,
+          "render": {
+            "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9608.CR3",
+            "feature": "neutral",
+            "value": 0
+          },
+          "sha256": "8f5eb42093835e71ff2413f88a781aad47c3ee71d31a9c95fd305ddc1e393e0e",
+          "sha256_scope": "uint16 RGB samples, row-major",
+          "bytes": 193696806,
+          "dimensions": [
+            6959,
+            4639
+          ],
+          "bits": [
+            16,
+            16,
+            16
+          ],
+          "channels": 3,
+          "orientation": 1,
+          "compression": 1,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "xmp_settings": {},
+          "declaration": {
+            "chromatic_aberration_applied": false,
+            "created_at_utc": "2026-10-23T08:53:41.871Z",
+            "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+            "executable_sha256": "9830d1aa604a71faf9e42f2e14aa833ff8e9e799f993b7c3bf2e3c92a3e97381",
+            "feature": "neutral",
+            "group": "neutral",
+            "ipr_test_schema": 1,
+            "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+            "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+            "lens_geometry_applied": false,
+            "lens_vignetting_applied": false,
+            "qt_version": "6.11.2",
+            "raw_normalization": true,
+            "reference": "state:neutral:0",
+            "scene": "6V1A9608",
+            "settings": {
+              "automaticWhiteBalance": false,
+              "blacks": 0,
+              "blur": 0,
+              "clarity": 0,
+              "contrast": 0,
+              "dehaze": 0,
+              "denoiseChrominance": 0,
+              "denoiseLuminance": 0,
+              "exposure": 0,
+              "grading": [
+                {
+                  "hue": 0,
+                  "saturation": 0
+                },
+                {
+                  "hue": 0,
+                  "saturation": 0
+                },
+                {
+                  "hue": 0,
+                  "saturation": 0
+                }
+              ],
+              "grain": 0,
+              "grayscale": false,
+              "highlights": 0,
+              "mixerHue": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "mixerLuminance": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "mixerSaturation": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "saturation": 0,
+              "shadows": 0,
+              "sharpeningAmount": 0,
+              "sharpeningMasking": 0,
+              "sharpeningRadius": 1,
+              "temperature": 4924,
+              "texture": 0,
+              "tint": 0,
+              "toneCurves": [
+                [],
+                [],
+                [],
+                []
+              ],
+              "vibrance": 0,
+              "whites": 0
+            },
+            "source_sha256": "aceefe524cf5224beb5077e834a0453f9a7ad80ec31a5860b0be9da23501bb96",
+            "value": 0
+          }
+        }
+      },
+      "raw_source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9608.CR3",
+        "sha256": "aceefe524cf5224beb5077e834a0453f9a7ad80ec31a5860b0be9da23501bb96"
+      },
+      "regions": [
+        {
+          "top": 3726,
+          "left": 4644,
+          "size": 256,
+          "mean_Y": 0.2761962413787842,
+          "structure": 0.025398614858332377,
+          "sigma_Y": 0.03014235943555832,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 3726,
+          "left": 5506,
+          "size": 256,
+          "mean_Y": 0.2712808847427368,
+          "structure": 0.025530922857190566,
+          "sigma_Y": 0.029692910611629486,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 3288,
+          "left": 5506,
+          "size": 256,
+          "mean_Y": 0.2700236439704895,
+          "structure": 0.025971932809373443,
+          "sigma_Y": 0.0297508854418993,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 3726,
+          "left": 6368,
+          "size": 256,
+          "mean_Y": 0.26281115412712097,
+          "structure": 0.02682437144205934,
+          "sigma_Y": 0.029567910358309746,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 3288,
+          "left": 6368,
+          "size": 256,
+          "mean_Y": 0.26333722472190857,
+          "structure": 0.02703963773850795,
+          "sigma_Y": 0.02940421551465988,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 4164,
+          "left": 4644,
+          "size": 256,
+          "mean_Y": 0.2545514702796936,
+          "structure": 0.02716327184993438,
+          "sigma_Y": 0.027554135769605637,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 2849,
+          "left": 2921,
+          "size": 256,
+          "mean_Y": 0.03846793621778488,
+          "structure": 0.17460591344815757,
+          "sigma_Y": 0.00945132877677679,
+          "clipping": 0.0,
+          "kind": "detail"
+        },
+        {
+          "top": 657,
+          "left": 2921,
+          "size": 256,
+          "mean_Y": 0.15949973464012146,
+          "structure": 0.15579540288602806,
+          "sigma_Y": 0.017201168462634087,
+          "clipping": 0.0,
+          "kind": "detail"
+        },
+        {
+          "top": 2411,
+          "left": 2921,
+          "size": 256,
+          "mean_Y": 0.07950646430253983,
+          "structure": 0.1540597161868836,
+          "sigma_Y": 0.01728110760450363,
+          "clipping": 0.0,
+          "kind": "detail"
+        },
+        {
+          "top": 1972,
+          "left": 2921,
+          "size": 256,
+          "mean_Y": 0.10015303641557693,
+          "structure": 0.14637463247582466,
+          "sigma_Y": 0.021088456735014915,
+          "clipping": 0.0,
+          "kind": "detail"
+        }
+      ],
+      "current_sidecar": {
+        "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9608.CR3.ipr",
+        "sha256": "45374d916969d5905090e8be92d6b7d55699653a71d0f81c352ab90f27016595",
+        "source_signature_matches": true,
+        "source_size": 49066196,
+        "source_modified_ms": 1791923884000,
+        "settings": {
+          "brightness": 0.0,
+          "contrast": 0,
+          "blur": 0,
+          "grayscale": false,
+          "shadows": 0,
+          "blacks": 0,
+          "highlights": 0,
+          "whites": 0,
+          "temperature": 4924,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "grain": 0,
+          "denoiseLuminance": 100,
+          "denoiseChrominance": 100,
+          "sharpeningAmount": 0,
+          "sharpeningRadius": 1.0,
+          "sharpeningMasking": 0,
+          "mixer": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "grading": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "automaticWhiteBalance": false,
+          "curves": [
+            [],
+            [],
+            [],
+            []
+          ]
+        },
+        "raw": {
+          "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+          "profileSha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "manifest": ":/config/raw-normalization.json",
+          "manifestSha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+          "normalizationEnabled": true,
+          "engineVersion": "ipr-render-rec2020-linear-d65-v1|profile-render=2|noise-model=1|libraw=0.22.2-Release",
+          "lensProfile": "C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Canon/Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW.lcp",
+          "lensProfileSha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+          "lensProfileResolved": true,
+          "lensCorrectionEnabled": true,
+          "chromaticAberrationEnabled": true
+        },
+        "user_metadata": {
+          "rating": 0,
+          "colorLabel": "",
+          "flagged": false,
+          "ratingSet": false,
+          "colorLabelSet": false
+        },
+        "limitation": "Current saved state only, not proof of settings at TIFF export time"
+      },
+      "opening": {
+        "regions": [
+          {
+            "reference_roi": {
+              "top": 3726,
+              "left": 4644,
+              "size": 256,
+              "mean_Y": 0.2761962413787842,
+              "structure": 0.025398614858332377,
+              "sigma_Y": 0.03014235943555832,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3726,
+              "left": 4644,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9873483180999756,
+              "offset_yx": [
+                1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.03014235943555832,
+              "sigma_YCoCg": 0.02320886217057705,
+              "sigma_Co": 0.023703645914793015,
+              "sigma_Cg": 0.028037723153829575,
+              "sigma_chroma": 0.025961286074698556,
+              "mean_Y": 0.2761962413787842,
+              "mean_Co": 0.4002179205417633,
+              "mean_Cg": 0.06198246031999588,
+              "gradient_mean": 0.0070150019600987434,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.016114022582769394,
+              "medium_band_chroma_mad": 0.03781974083162074,
+              "relative_sigma_Y": 0.10913385093543015
+            },
+            "target": {
+              "sigma_Y": 0.02268628589808941,
+              "sigma_YCoCg": 0.019860871136188507,
+              "sigma_Co": 0.03468506410717964,
+              "sigma_Cg": 0.022512009367346764,
+              "sigma_chroma": 0.029239051266026654,
+              "mean_Y": 0.27702972292900085,
+              "mean_Co": 0.39825931191444397,
+              "mean_Cg": 0.05695199966430664,
+              "gradient_mean": 0.007161537650972605,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.016346435993909836,
+              "medium_band_chroma_mad": 0.042240418914144005,
+              "relative_sigma_Y": 0.0818911619238186
+            },
+            "ratios": {
+              "sigma_Y": 0.7526380257852963,
+              "relative_sigma_Y": 0.7503736120543396,
+              "sigma_chroma": 1.1262558866266088,
+              "medium_band_Y_mad": 1.0144230535824716,
+              "medium_band_chroma_mad": 1.116888111481377,
+              "mean_Y": 1.0030177150349906,
+              "gradient_mean": 1.02088890234206
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3726,
+              "left": 5506,
+              "size": 256,
+              "mean_Y": 0.2712808847427368,
+              "structure": 0.025530922857190566,
+              "sigma_Y": 0.029692910611629486,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3726,
+              "left": 5506,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9699824452400208,
+              "offset_yx": [
+                1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.029692910611629486,
+              "sigma_YCoCg": 0.022824369370937347,
+              "sigma_Co": 0.025439254939556122,
+              "sigma_Cg": 0.02868395671248436,
+              "sigma_chroma": 0.027110192405840713,
+              "mean_Y": 0.2712808847427368,
+              "mean_Co": 0.39941415190696716,
+              "mean_Cg": 0.05604434385895729,
+              "gradient_mean": 0.006926051340997219,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.01600451022386551,
+              "medium_band_chroma_mad": 0.03707466775766147,
+              "relative_sigma_Y": 0.10945448898763396
+            },
+            "target": {
+              "sigma_Y": 0.022594822570681572,
+              "sigma_YCoCg": 0.019533244892954826,
+              "sigma_Co": 0.032910216599702835,
+              "sigma_Cg": 0.022069143131375313,
+              "sigma_chroma": 0.02801900636347126,
+              "mean_Y": 0.2720961272716522,
+              "mean_Co": 0.39817821979522705,
+              "mean_Cg": 0.050811007618904114,
+              "gradient_mean": 0.007092840038239956,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.01627465710043907,
+              "medium_band_chroma_mad": 0.040816936994773394,
+              "relative_sigma_Y": 0.08303985358866799
+            },
+            "ratios": {
+              "sigma_Y": 0.7609500754645492,
+              "relative_sigma_Y": 0.7586701500936132,
+              "sigma_chroma": 1.0335229622875988,
+              "medium_band_Y_mad": 1.0168794216626964,
+              "medium_band_chroma_mad": 1.1009387126965848,
+              "mean_Y": 1.0030051602407908,
+              "gradient_mean": 1.0240813544444103
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3288,
+              "left": 5506,
+              "size": 256,
+              "mean_Y": 0.2700236439704895,
+              "structure": 0.025971932809373443,
+              "sigma_Y": 0.0297508854418993,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3288,
+              "left": 5506,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9876763224601746,
+              "offset_yx": [
+                1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.0297508854418993,
+              "sigma_YCoCg": 0.02286502532660961,
+              "sigma_Co": 0.024303004145622253,
+              "sigma_Cg": 0.028312427923083305,
+              "sigma_chroma": 0.02638398742989694,
+              "mean_Y": 0.2700236439704895,
+              "mean_Co": 0.3932368755340576,
+              "mean_Cg": 0.05875672027468681,
+              "gradient_mean": 0.00701303593814373,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.01607242226600647,
+              "medium_band_chroma_mad": 0.0372653770928869,
+              "relative_sigma_Y": 0.11017881621192673
+            },
+            "target": {
+              "sigma_Y": 0.022765465080738068,
+              "sigma_YCoCg": 0.019675813615322113,
+              "sigma_Co": 0.03390257805585861,
+              "sigma_Cg": 0.021777473390102386,
+              "sigma_chroma": 0.028492482746245572,
+              "mean_Y": 0.27081790566444397,
+              "mean_Co": 0.3915793299674988,
+              "mean_Cg": 0.05343963950872421,
+              "gradient_mean": 0.0071848370134830475,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.016417551785707474,
+              "medium_band_chroma_mad": 0.04168802620981251,
+              "relative_sigma_Y": 0.0840618903129158
+            },
+            "ratios": {
+              "sigma_Y": 0.7652029424534909,
+              "relative_sigma_Y": 0.7629587356540886,
+              "sigma_chroma": 1.0799157186513588,
+              "medium_band_Y_mad": 1.0214733979725608,
+              "medium_band_chroma_mad": 1.1186798433812115,
+              "mean_Y": 1.0029414523938551,
+              "gradient_mean": 1.024497389840097
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3726,
+              "left": 6368,
+              "size": 256,
+              "mean_Y": 0.26281115412712097,
+              "structure": 0.02682437144205934,
+              "sigma_Y": 0.029567910358309746,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3726,
+              "left": 6368,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9670252203941345,
+              "offset_yx": [
+                1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.029567910358309746,
+              "sigma_YCoCg": 0.022836895659565926,
+              "sigma_Co": 0.03011671081185341,
+              "sigma_Cg": 0.03276648372411728,
+              "sigma_chroma": 0.03146949892965926,
+              "mean_Y": 0.26281115412712097,
+              "mean_Co": 0.3911638557910919,
+              "mean_Cg": 0.05129629373550415,
+              "gradient_mean": 0.007049744017422199,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.01615794189274311,
+              "medium_band_chroma_mad": 0.03893237514270855,
+              "relative_sigma_Y": 0.11250629927224412
+            },
+            "target": {
+              "sigma_Y": 0.022801022976636887,
+              "sigma_YCoCg": 0.019413985311985016,
+              "sigma_Co": 0.034860190004110336,
+              "sigma_Cg": 0.022854194045066833,
+              "sigma_chroma": 0.029474964228750494,
+              "mean_Y": 0.26406797766685486,
+              "mean_Co": 0.39208120107650757,
+              "mean_Cg": 0.04593052715063095,
+              "gradient_mean": 0.00713655399158597,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.01638931781053543,
+              "medium_band_chroma_mad": 0.04201007189006152,
+              "relative_sigma_Y": 0.08634527812911263
+            },
+            "ratios": {
+              "sigma_Y": 0.7711408314057236,
+              "relative_sigma_Y": 0.7674706099804534,
+              "sigma_chroma": 0.9366200680421713,
+              "medium_band_Y_mad": 1.0143196404175854,
+              "medium_band_chroma_mad": 1.0790523757174209,
+              "mean_Y": 1.0047822305864764,
+              "gradient_mean": 1.0123139186258727
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3288,
+              "left": 6368,
+              "size": 256,
+              "mean_Y": 0.26333722472190857,
+              "structure": 0.02703963773850795,
+              "sigma_Y": 0.02940421551465988,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3288,
+              "left": 6368,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9792594313621521,
+              "offset_yx": [
+                1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.02940421551465988,
+              "sigma_YCoCg": 0.022549085319042206,
+              "sigma_Co": 0.028297746554017067,
+              "sigma_Cg": 0.03129791468381882,
+              "sigma_chroma": 0.029835565384210387,
+              "mean_Y": 0.26333722472190857,
+              "mean_Co": 0.3892441391944885,
+              "mean_Cg": 0.052092600613832474,
+              "gradient_mean": 0.007120543159544468,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.01615694910287857,
+              "medium_band_chroma_mad": 0.038739599384362486,
+              "relative_sigma_Y": 0.11165992785756572
+            },
+            "target": {
+              "sigma_Y": 0.022620543837547302,
+              "sigma_YCoCg": 0.01959039829671383,
+              "sigma_Co": 0.034417636692523956,
+              "sigma_Cg": 0.022611144930124283,
+              "sigma_chroma": 0.029119045232885436,
+              "mean_Y": 0.26434287428855896,
+              "mean_Co": 0.38839781284332275,
+              "mean_Cg": 0.04687576740980148,
+              "gradient_mean": 0.007250344380736351,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.01647552289068699,
+              "medium_band_chroma_mad": 0.04220804804277444,
+              "relative_sigma_Y": 0.08557273918741809
+            },
+            "ratios": {
+              "sigma_Y": 0.7692959475919198,
+              "relative_sigma_Y": 0.7663692860036176,
+              "sigma_chroma": 0.9759843615464332,
+              "medium_band_Y_mad": 1.0197174470118038,
+              "medium_band_chroma_mad": 1.0895323832339892,
+              "mean_Y": 1.0038188659719962,
+              "gradient_mean": 1.0182291179596175
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 4164,
+              "left": 4644,
+              "size": 256,
+              "mean_Y": 0.2545514702796936,
+              "structure": 0.02716327184993438,
+              "sigma_Y": 0.027554135769605637,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 4164,
+              "left": 4644,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9979029297828674,
+              "offset_yx": [
+                1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.027554135769605637,
+              "sigma_YCoCg": 0.021463174372911453,
+              "sigma_Co": 0.022933369502425194,
+              "sigma_Cg": 0.025744887068867683,
+              "sigma_chroma": 0.024379690799141776,
+              "mean_Y": 0.2545514702796936,
+              "mean_Co": 0.37001144886016846,
+              "mean_Cg": 0.05312815308570862,
+              "gradient_mean": 0.006914450787007809,
+              "clipped_percent": 0.0,
+              "black_percent": 0.00152587890625,
+              "medium_band_Y_mad": 0.015359099954366684,
+              "medium_band_chroma_mad": 0.036110344770632775,
+              "relative_sigma_Y": 0.10824583232353743
+            },
+            "target": {
+              "sigma_Y": 0.021516762673854828,
+              "sigma_YCoCg": 0.018959270790219307,
+              "sigma_Co": 0.032138824462890625,
+              "sigma_Cg": 0.0211414135992527,
+              "sigma_chroma": 0.027201685672317844,
+              "mean_Y": 0.25521767139434814,
+              "mean_Co": 0.3673989772796631,
+              "mean_Cg": 0.04804600030183792,
+              "gradient_mean": 0.0070589263923466206,
+              "clipped_percent": 0.0,
+              "black_percent": 0.00152587890625,
+              "medium_band_Y_mad": 0.015483900904655457,
+              "medium_band_chroma_mad": 0.040132511228175745,
+              "relative_sigma_Y": 0.08430749546573647
+            },
+            "ratios": {
+              "sigma_Y": 0.7808904933098826,
+              "relative_sigma_Y": 0.7788521151904367,
+              "sigma_chroma": 1.1157518730005964,
+              "medium_band_Y_mad": 1.008125537997641,
+              "medium_band_chroma_mad": 1.1113854349242893,
+              "mean_Y": 1.0026171568128148,
+              "gradient_mean": 1.020894733333019
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 2849,
+              "left": 2921,
+              "size": 256,
+              "mean_Y": 0.03846793621778488,
+              "structure": 0.17460591344815757,
+              "sigma_Y": 0.00945132877677679,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 2849,
+              "left": 2921,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9980928897857666,
+              "offset_yx": [
+                1,
+                0
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.00945132877677679,
+              "sigma_YCoCg": 0.009160677902400494,
+              "sigma_Co": 0.009545134380459785,
+              "sigma_Cg": 0.008521996438503265,
+              "sigma_chroma": 0.009048038838303518,
+              "mean_Y": 0.03846793621778488,
+              "mean_Co": -0.035315461456775665,
+              "mean_Cg": -0.0007515928009524941,
+              "gradient_mean": 0.006716729141771793,
+              "clipped_percent": 0.0,
+              "black_percent": 0.02899169921875,
+              "medium_band_Y_mad": 0.011774567887187004,
+              "medium_band_chroma_mad": 0.016095995584382745,
+              "relative_sigma_Y": 0.24569367910117199
+            },
+            "target": {
+              "sigma_Y": 0.009919415228068829,
+              "sigma_YCoCg": 0.010814208537340164,
+              "sigma_Co": 0.015372242778539658,
+              "sigma_Cg": 0.009460446424782276,
+              "sigma_chroma": 0.012763343891757763,
+              "mean_Y": 0.040508657693862915,
+              "mean_Co": -0.03382558375597,
+              "mean_Cg": -0.0052053360268473625,
+              "gradient_mean": 0.006953208241611719,
+              "clipped_percent": 0.0,
+              "black_percent": 0.06866455078125,
+              "medium_band_Y_mad": 0.012250183150172234,
+              "medium_band_chroma_mad": 0.018217399892613943,
+              "relative_sigma_Y": 0.24487148656055382
+            },
+            "ratios": {
+              "sigma_Y": 1.049525993894339,
+              "relative_sigma_Y": 0.9966535869232533,
+              "sigma_chroma": 1.4106199276826772,
+              "medium_band_Y_mad": 1.0403934367309386,
+              "medium_band_chroma_mad": 1.1317970234962977,
+              "mean_Y": 1.0530499339638228,
+              "gradient_mean": 1.0352074789452572
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 657,
+              "left": 2921,
+              "size": 256,
+              "mean_Y": 0.15949973464012146,
+              "structure": 0.15579540288602806,
+              "sigma_Y": 0.017201168462634087,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 657,
+              "left": 2921,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.999793291091919,
+              "offset_yx": [
+                0,
+                0
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.017201168462634087,
+              "sigma_YCoCg": 0.015464105643332005,
+              "sigma_Co": 0.013685268349945545,
+              "sigma_Cg": 0.014383064582943916,
+              "sigma_chroma": 0.014038502708749907,
+              "mean_Y": 0.15949973464012146,
+              "mean_Co": 0.01826452650129795,
+              "mean_Cg": 0.013176155276596546,
+              "gradient_mean": 0.02484932541847229,
+              "clipped_percent": 0.0,
+              "black_percent": 0.030517578125,
+              "medium_band_Y_mad": 0.03755391016602516,
+              "medium_band_chroma_mad": 0.039740892643437525,
+              "relative_sigma_Y": 0.10784449580085513
+            },
+            "target": {
+              "sigma_Y": 0.017798330634832382,
+              "sigma_YCoCg": 0.018452761694788933,
+              "sigma_Co": 0.02474137954413891,
+              "sigma_Cg": 0.01549649890512228,
+              "sigma_chroma": 0.020643126459715243,
+              "mean_Y": 0.16140064597129822,
+              "mean_Co": 0.018940545618534088,
+              "mean_Cg": 0.007978634908795357,
+              "gradient_mean": 0.024892717599868774,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0396728515625,
+              "medium_band_Y_mad": 0.03811778873205185,
+              "medium_band_chroma_mad": 0.04285663303798957,
+              "relative_sigma_Y": 0.11027422181443715
+            },
+            "ratios": {
+              "sigma_Y": 1.034716372524082,
+              "relative_sigma_Y": 1.0225299028526105,
+              "sigma_chroma": 1.4704649696615302,
+              "medium_band_Y_mad": 1.015015175877393,
+              "medium_band_chroma_mad": 1.0784013691515948,
+              "mean_Y": 1.011917959208307,
+              "gradient_mean": 1.0017462116442093
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 2411,
+              "left": 2921,
+              "size": 256,
+              "mean_Y": 0.07950646430253983,
+              "structure": 0.1540597161868836,
+              "sigma_Y": 0.01728110760450363,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 2411,
+              "left": 2921,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9939250349998474,
+              "offset_yx": [
+                1,
+                0
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.01728110760450363,
+              "sigma_YCoCg": 0.016257699579000473,
+              "sigma_Co": 0.01585998944938183,
+              "sigma_Cg": 0.01458363700658083,
+              "sigma_chroma": 0.015235185159265651,
+              "mean_Y": 0.07950646430253983,
+              "mean_Co": -0.07769954204559326,
+              "mean_Cg": -0.0005666137440130115,
+              "gradient_mean": 0.012248743325471878,
+              "clipped_percent": 0.0,
+              "black_percent": 0.00152587890625,
+              "medium_band_Y_mad": 0.025849081575870514,
+              "medium_band_chroma_mad": 0.031915266722363986,
+              "relative_sigma_Y": 0.21735474915278793
+            },
+            "target": {
+              "sigma_Y": 0.019170310348272324,
+              "sigma_YCoCg": 0.02013550139963627,
+              "sigma_Co": 0.024912798777222633,
+              "sigma_Cg": 0.015159624628722668,
+              "sigma_chroma": 0.02062112705210557,
+              "mean_Y": 0.08228446543216705,
+              "mean_Co": -0.07335507869720459,
+              "mean_Cg": -0.005141756031662226,
+              "gradient_mean": 0.012574400752782822,
+              "clipped_percent": 0.0,
+              "black_percent": 0.00152587890625,
+              "medium_band_Y_mad": 0.026763319969177246,
+              "medium_band_chroma_mad": 0.03377479959571773,
+              "relative_sigma_Y": 0.232976057480446
+            },
+            "ratios": {
+              "sigma_Y": 1.1093218552308735,
+              "relative_sigma_Y": 1.0718701035452287,
+              "sigma_chroma": 1.3535199498093613,
+              "medium_band_Y_mad": 1.0353683124339765,
+              "medium_band_chroma_mad": 1.058264682214005,
+              "mean_Y": 1.0349405693486295,
+              "gradient_mean": 1.0265870072265881
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 1972,
+              "left": 2921,
+              "size": 256,
+              "mean_Y": 0.10015303641557693,
+              "structure": 0.14637463247582466,
+              "sigma_Y": 0.021088456735014915,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 1972,
+              "left": 2921,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9943709969520569,
+              "offset_yx": [
+                0,
+                0
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.021088456735014915,
+              "sigma_YCoCg": 0.0196879580616951,
+              "sigma_Co": 0.018917934969067574,
+              "sigma_Cg": 0.016819555312395096,
+              "sigma_chroma": 0.017899521004772555,
+              "mean_Y": 0.10015303641557693,
+              "mean_Co": -0.0935775637626648,
+              "mean_Cg": -0.00042432936606928706,
+              "gradient_mean": 0.014659863896667957,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.03104477934539318,
+              "medium_band_chroma_mad": 0.037413961277623586,
+              "relative_sigma_Y": 0.2105623303072916
+            },
+            "target": {
+              "sigma_Y": 0.02313414216041565,
+              "sigma_YCoCg": 0.023930689319968224,
+              "sigma_Co": 0.027737898752093315,
+              "sigma_Cg": 0.016804847866296768,
+              "sigma_chroma": 0.022932443600614815,
+              "mean_Y": 0.10294553637504578,
+              "mean_Co": -0.08927437663078308,
+              "mean_Cg": -0.005634647328406572,
+              "gradient_mean": 0.014979371801018715,
+              "clipped_percent": 0.0,
+              "black_percent": 0.00152587890625,
+              "medium_band_Y_mad": 0.031882692128419876,
+              "medium_band_chroma_mad": 0.039611485842587967,
+              "relative_sigma_Y": 0.2247221489636477
+            },
+            "ratios": {
+              "sigma_Y": 1.0970049848173153,
+              "relative_sigma_Y": 1.0672476346347965,
+              "sigma_chroma": 1.2811763842451611,
+              "medium_band_Y_mad": 1.0269904570331898,
+              "medium_band_chroma_mad": 1.0587354156021611,
+              "mean_Y": 1.0278823294770774,
+              "gradient_mean": 1.0217947387917687
+            }
+          }
+        ],
+        "summary": {
+          "flat": {
+            "accepted_regions": 6,
+            "attempted_regions": 6,
+            "median_target_to_reference": {
+              "sigma_Y": 0.7672494450227053,
+              "relative_sigma_Y": 0.7646640108288532,
+              "sigma_chroma": 1.0567193404694788,
+              "medium_band_Y_mad": 1.015651237622584,
+              "medium_band_chroma_mad": 1.1061620738104372,
+              "mean_Y": 1.0030114376378907,
+              "gradient_mean": 1.0208918178375395
+            }
+          },
+          "detail": {
+            "accepted_regions": 4,
+            "attempted_regions": 4,
+            "median_target_to_reference": {
+              "sigma_Y": 1.073265489355827,
+              "relative_sigma_Y": 1.0448887687437036,
+              "sigma_chroma": 1.3820699387460191,
+              "medium_band_Y_mad": 1.031179384733583,
+              "medium_band_chroma_mad": 1.068568392376878,
+              "mean_Y": 1.0314114494128535,
+              "gradient_mean": 1.0241908730091784
+            }
+          }
+        }
+      },
+      "processed_exports": {
+        "regions": [
+          {
+            "reference_roi": {
+              "top": 3726,
+              "left": 4644,
+              "size": 256,
+              "mean_Y": 0.2761962413787842,
+              "structure": 0.025398614858332377,
+              "sigma_Y": 0.03014235943555832,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3713,
+              "left": 4634,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9479129314422607,
+              "offset_yx": [
+                -12,
+                -9
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.0001612034102436155,
+              "sigma_YCoCg": 0.00017664054757915437,
+              "sigma_Co": 0.0008005105191841722,
+              "sigma_Cg": 0.0008994241361506283,
+              "sigma_chroma": 0.0008514049764990854,
+              "mean_Y": 0.28320762515068054,
+              "mean_Co": 0.4127770662307739,
+              "mean_Cg": 0.06687726080417633,
+              "gradient_mean": 0.0006664734100922942,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.0005644853226840496,
+              "medium_band_chroma_mad": 0.0016176020390888974,
+              "relative_sigma_Y": 0.0005692057555224627
+            },
+            "target": {
+              "sigma_Y": 0.0059608700685203075,
+              "sigma_YCoCg": 0.005457459483295679,
+              "sigma_Co": 0.01293820422142744,
+              "sigma_Cg": 0.010052069090306759,
+              "sigma_chroma": 0.011585361916480283,
+              "mean_Y": 0.27073192596435547,
+              "mean_Co": 0.3954499363899231,
+              "mean_Cg": 0.05393235385417938,
+              "gradient_mean": 0.004954472184181213,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.009678401984274387,
+              "medium_band_chroma_mad": 0.0303525615394497,
+              "relative_sigma_Y": 0.022017610399244582
+            },
+            "ratios": {
+              "sigma_Y": 36.977319893618,
+              "relative_sigma_Y": 38.681285608285975,
+              "sigma_chroma": 13.607345782871082,
+              "medium_band_Y_mad": 17.145533453828214,
+              "medium_band_chroma_mad": 18.76392388609102,
+              "mean_Y": 0.9559485759619383,
+              "gradient_mean": 7.4338632406881935
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3726,
+              "left": 5506,
+              "size": 256,
+              "mean_Y": 0.2712808847427368,
+              "structure": 0.025530922857190566,
+              "sigma_Y": 0.029692910611629486,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3744,
+              "left": 5535,
+              "size": 256
+            },
+            "registration": {
+              "status": "unreliable",
+              "ncc": 0.5441682934761047,
+              "offset_yx": [
+                19,
+                30
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.00018671472207643092,
+              "sigma_YCoCg": 0.00019900919869542122,
+              "sigma_Co": 0.0008736808667890728,
+              "sigma_Cg": 0.0009793160716071725,
+              "sigma_chroma": 0.0009280027546029726,
+              "mean_Y": 0.29880160093307495,
+              "mean_Co": 0.4356035590171814,
+              "mean_Cg": 0.07049383223056793,
+              "gradient_mean": 0.00035219191340729594,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.00042702583596110344,
+              "medium_band_chroma_mad": 0.001570232465356821,
+              "relative_sigma_Y": 0.0006248785866386672
+            },
+            "target": {
+              "sigma_Y": 0.00572026614099741,
+              "sigma_YCoCg": 0.005226857960224152,
+              "sigma_Co": 0.012419715523719788,
+              "sigma_Cg": 0.009673790074884892,
+              "sigma_chroma": 0.011131746226515131,
+              "mean_Y": 0.2764033079147339,
+              "mean_Co": 0.40545356273651123,
+              "mean_Cg": 0.05434540659189224,
+              "gradient_mean": 0.005049572326242924,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.010116507299244404,
+              "medium_band_chroma_mad": 0.029863078928479683,
+              "relative_sigma_Y": 0.02069536064583577
+            },
+            "ratios": {
+              "sigma_Y": 30.636395873785688,
+              "relative_sigma_Y": 33.119010778013354,
+              "sigma_chroma": 11.995380586211326,
+              "medium_band_Y_mad": 23.69062114585003,
+              "medium_band_chroma_mad": 19.01825340344977,
+              "mean_Y": 0.925039581620723,
+              "gradient_mean": 14.337558967185297
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3288,
+              "left": 5506,
+              "size": 256,
+              "mean_Y": 0.2700236439704895,
+              "structure": 0.025971932809373443,
+              "sigma_Y": 0.0297508854418993,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3289,
+              "left": 5519,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9562599658966064,
+              "offset_yx": [
+                2,
+                14
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.00017761261551640928,
+              "sigma_YCoCg": 0.00019529213022906333,
+              "sigma_Co": 0.00089618208585307,
+              "sigma_Cg": 0.0009464535396546125,
+              "sigma_chroma": 0.0009216606299850028,
+              "mean_Y": 0.2837391495704651,
+              "mean_Co": 0.4135127067565918,
+              "mean_Cg": 0.06700936704874039,
+              "gradient_mean": 0.0007162473630160093,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.0005691468832083046,
+              "medium_band_chroma_mad": 0.0017021357427717842,
+              "relative_sigma_Y": 0.0006259714804435196
+            },
+            "target": {
+              "sigma_Y": 0.005855693016201258,
+              "sigma_YCoCg": 0.00543145090341568,
+              "sigma_Co": 0.013025470077991486,
+              "sigma_Cg": 0.009684344753623009,
+              "sigma_chroma": 0.011477138233455171,
+              "mean_Y": 0.2653196454048157,
+              "mean_Co": 0.3883814513683319,
+              "mean_Cg": 0.0517093762755394,
+              "gradient_mean": 0.0051012104377150536,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.009971094317734241,
+              "medium_band_chroma_mad": 0.030002400683497174,
+              "relative_sigma_Y": 0.02207033334175779
+            },
+            "ratios": {
+              "sigma_Y": 32.96890257021333,
+              "relative_sigma_Y": 35.257729834784634,
+              "sigma_chroma": 12.452672773536966,
+              "medium_band_Y_mad": 17.519369097704214,
+              "medium_band_chroma_mad": 17.626326696272063,
+              "mean_Y": 0.9350829654859629,
+              "gradient_mean": 7.122135034793884
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3726,
+              "left": 6368,
+              "size": 256,
+              "mean_Y": 0.26281115412712097,
+              "structure": 0.02682437144205934,
+              "sigma_Y": 0.029567910358309746,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3757,
+              "left": 6399,
+              "size": 256
+            },
+            "registration": {
+              "status": "unreliable",
+              "ncc": 0.2833458185195923,
+              "offset_yx": [
+                32,
+                32
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.00020529450557660311,
+              "sigma_YCoCg": 0.00022278072719927877,
+              "sigma_Co": 0.0010871827835217118,
+              "sigma_Cg": 0.0012037979904562235,
+              "sigma_chroma": 0.0011469734100258075,
+              "mean_Y": 0.30997434258461,
+              "mean_Co": 0.45085275173187256,
+              "mean_Cg": 0.07395853102207184,
+              "gradient_mean": 0.00032739309244789183,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.00041900627547875047,
+              "medium_band_chroma_mad": 0.0018537423322160054,
+              "relative_sigma_Y": 0.0006622951559952622
+            },
+            "target": {
+              "sigma_Y": 0.0060284011997282505,
+              "sigma_YCoCg": 0.005461651366204023,
+              "sigma_Co": 0.012632367201149464,
+              "sigma_Cg": 0.009535380639135838,
+              "sigma_chroma": 0.01119151877624041,
+              "mean_Y": 0.273857980966568,
+              "mean_Co": 0.40686678886413574,
+              "mean_Cg": 0.04979250952601433,
+              "gradient_mean": 0.005234953016042709,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.010442083701491356,
+              "medium_band_chroma_mad": 0.03195599673988197,
+              "relative_sigma_Y": 0.022012873893436705
+            },
+            "ratios": {
+              "sigma_Y": 29.364649496081263,
+              "relative_sigma_Y": 33.23725637152958,
+              "sigma_chroma": 9.75743524515411,
+              "medium_band_Y_mad": 24.921067565301698,
+              "medium_band_chroma_mad": 17.238640011894777,
+              "mean_Y": 0.8834859642998235,
+              "gradient_mean": 15.989808999638283
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3288,
+              "left": 6368,
+              "size": 256,
+              "mean_Y": 0.26333722472190857,
+              "structure": 0.02703963773850795,
+              "sigma_Y": 0.02940421551465988,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3319,
+              "left": 6389,
+              "size": 256
+            },
+            "registration": {
+              "status": "unreliable",
+              "ncc": 0.2228679209947586,
+              "offset_yx": [
+                32,
+                22
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.0001980371307581663,
+              "sigma_YCoCg": 0.00021487160120159388,
+              "sigma_Co": 0.0010221644770354033,
+              "sigma_Cg": 0.0011808990966528654,
+              "sigma_chroma": 0.001104387362882384,
+              "mean_Y": 0.30423879623413086,
+              "mean_Co": 0.44208669662475586,
+              "mean_Cg": 0.07269297540187836,
+              "gradient_mean": 0.0005296836607158184,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.0006155853043310344,
+              "medium_band_chroma_mad": 0.0018845493379161236,
+              "relative_sigma_Y": 0.000650926618200804
+            },
+            "target": {
+              "sigma_Y": 0.005978179629892111,
+              "sigma_YCoCg": 0.005533761344850063,
+              "sigma_Co": 0.012647224590182304,
+              "sigma_Cg": 0.009426895529031754,
+              "sigma_chroma": 0.01115389279914844,
+              "mean_Y": 0.2714594006538391,
+              "mean_Co": 0.39385002851486206,
+              "mean_Cg": 0.051550790667533875,
+              "gradient_mean": 0.005262861493974924,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.010428320616483688,
+              "medium_band_chroma_mad": 0.03152056503995257,
+              "relative_sigma_Y": 0.022022370989890287
+            },
+            "ratios": {
+              "sigma_Y": 30.187165442183588,
+              "relative_sigma_Y": 33.83234050369809,
+              "sigma_chroma": 10.099620091665534,
+              "medium_band_Y_mad": 16.94049637493588,
+              "medium_band_chroma_mad": 16.72578393453314,
+              "mean_Y": 0.8922576739520559,
+              "gradient_mean": 9.93585772848393
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 4164,
+              "left": 4644,
+              "size": 256,
+              "mean_Y": 0.2545514702796936,
+              "structure": 0.02716327184993438,
+              "sigma_Y": 0.027554135769605637,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 4171,
+              "left": 4649,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9905099868774414,
+              "offset_yx": [
+                8,
+                6
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.0001607748563401401,
+              "sigma_YCoCg": 0.0001699610147625208,
+              "sigma_Co": 0.0007756233098916709,
+              "sigma_Cg": 0.0008527534082531929,
+              "sigma_chroma": 0.0008151011882382296,
+              "mean_Y": 0.2559025287628174,
+              "mean_Co": 0.3702547252178192,
+              "mean_Cg": 0.06007654592394829,
+              "gradient_mean": 0.0011397670023143291,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.0005808116984553635,
+              "medium_band_chroma_mad": 0.0016617756029948666,
+              "relative_sigma_Y": 0.0006282659929834218
+            },
+            "target": {
+              "sigma_Y": 0.00510699488222599,
+              "sigma_YCoCg": 0.004746710415929556,
+              "sigma_Co": 0.011484568007290363,
+              "sigma_Cg": 0.008582188747823238,
+              "sigma_chroma": 0.010137782450253634,
+              "mean_Y": 0.2410636991262436,
+              "mean_Co": 0.3466827869415283,
+              "mean_Cg": 0.0466875284910202,
+              "gradient_mean": 0.0049309455789625645,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.008948421105742455,
+              "medium_band_chroma_mad": 0.02734624641402365,
+              "relative_sigma_Y": 0.02118525062353535
+            },
+            "ratios": {
+              "sigma_Y": 31.76488537126402,
+              "relative_sigma_Y": 33.720193134971055,
+              "sigma_chroma": 12.437452670343385,
+              "medium_band_Y_mad": 15.406750810185615,
+              "medium_band_chroma_mad": 16.456040373164708,
+              "mean_Y": 0.9420137436378085,
+              "gradient_mean": 4.326275079862937
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 2849,
+              "left": 2921,
+              "size": 256,
+              "mean_Y": 0.03846793621778488,
+              "structure": 0.17460591344815757,
+              "sigma_Y": 0.00945132877677679,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 2834,
+              "left": 2930,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9438916444778442,
+              "offset_yx": [
+                -14,
+                9
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.0005302825593389571,
+              "sigma_YCoCg": 0.0005718404427170753,
+              "sigma_Co": 0.0007324022590182722,
+              "sigma_Cg": 0.0004591676697600633,
+              "sigma_chroma": 0.0006112479112307685,
+              "mean_Y": 0.03585228696465492,
+              "mean_Co": -0.03671003505587578,
+              "mean_Cg": 0.0009095401037484407,
+              "gradient_mean": 0.0030312826856970787,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.004859144799411297,
+              "medium_band_chroma_mad": 0.002086979960546488,
+              "relative_sigma_Y": 0.014790759648379967
+            },
+            "target": {
+              "sigma_Y": 0.003796127624809742,
+              "sigma_YCoCg": 0.004332709591835737,
+              "sigma_Co": 0.007381511852145195,
+              "sigma_Cg": 0.0046248300932347775,
+              "sigma_chroma": 0.006159373775581816,
+              "mean_Y": 0.043391987681388855,
+              "mean_Co": -0.039339981973171234,
+              "mean_Cg": -0.0048172492533922195,
+              "gradient_mean": 0.006185468751937151,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.010658924467861652,
+              "medium_band_chroma_mad": 0.015548510573502755,
+              "relative_sigma_Y": 0.08748452946390214
+            },
+            "ratios": {
+              "sigma_Y": 7.158688434976897,
+              "relative_sigma_Y": 5.914809755798062,
+              "sigma_chroma": 10.076719547686809,
+              "medium_band_Y_mad": 2.1935803331386667,
+              "medium_band_chroma_mad": 7.450244308733701,
+              "mean_Y": 1.2102990173030514,
+              "gradient_mean": 2.0405450079343987
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 657,
+              "left": 2921,
+              "size": 256,
+              "mean_Y": 0.15949973464012146,
+              "structure": 0.15579540288602806,
+              "sigma_Y": 0.017201168462634087,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 675,
+              "left": 2926,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9785881042480469,
+              "offset_yx": [
+                18,
+                5
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.001108981086872518,
+              "sigma_YCoCg": 0.0011243512853980064,
+              "sigma_Co": 0.0017408084822818637,
+              "sigma_Cg": 0.0012541136238723993,
+              "sigma_chroma": 0.001517104998602082,
+              "mean_Y": 0.1570737361907959,
+              "mean_Co": 0.009282577782869339,
+              "mean_Cg": 0.012869216501712799,
+              "gradient_mean": 0.0203409306704998,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.017991922795772552,
+              "medium_band_chroma_mad": 0.008381374967960771,
+              "relative_sigma_Y": 0.007060257900311544
+            },
+            "target": {
+              "sigma_Y": 0.007634056266397238,
+              "sigma_YCoCg": 0.008152005262672901,
+              "sigma_Co": 0.012910209596157074,
+              "sigma_Cg": 0.008145262487232685,
+              "sigma_chroma": 0.01079395230679259,
+              "mean_Y": 0.1602524220943451,
+              "mean_Co": 0.016380999237298965,
+              "mean_Cg": 0.007068818435072899,
+              "gradient_mean": 0.023066740483045578,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.03260501101613045,
+              "medium_band_chroma_mad": 0.03674127756787923,
+              "relative_sigma_Y": 0.04763769662029105
+            },
+            "ratios": {
+              "sigma_Y": 6.883847124865173,
+              "relative_sigma_Y": 6.74730261881637,
+              "sigma_chroma": 7.1148353718025765,
+              "medium_band_Y_mad": 1.8122026970786824,
+              "medium_band_chroma_mad": 4.383681401718573,
+              "mean_Y": 1.0202369026206144,
+              "gradient_mean": 1.1340061502937515
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 2411,
+              "left": 2921,
+              "size": 256,
+              "mean_Y": 0.07950646430253983,
+              "structure": 0.1540597161868836,
+              "sigma_Y": 0.01728110760450363,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 2406,
+              "left": 2932,
+              "size": 256
+            },
+            "registration": {
+              "status": "unreliable",
+              "ncc": 0.7971889972686768,
+              "offset_yx": [
+                -4,
+                11
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.0022133972961455584,
+              "sigma_YCoCg": 0.002345019020140171,
+              "sigma_Co": 0.002316155005246401,
+              "sigma_Cg": 0.0008864226983860135,
+              "sigma_chroma": 0.0017536132995249973,
+              "mean_Y": 0.0730651319026947,
+              "mean_Co": -0.07591944187879562,
+              "mean_Cg": -0.0002653150586411357,
+              "gradient_mean": 0.005990250967442989,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.010892353951931,
+              "medium_band_chroma_mad": 0.006652629622093422,
+              "relative_sigma_Y": 0.03029348252040761
+            },
+            "target": {
+              "sigma_Y": 0.009791347198188305,
+              "sigma_YCoCg": 0.010127177461981773,
+              "sigma_Co": 0.012986724264919758,
+              "sigma_Cg": 0.008301567286252975,
+              "sigma_chroma": 0.010898876697651947,
+              "mean_Y": 0.08232463896274567,
+              "mean_Co": -0.0752210021018982,
+              "mean_Cg": -0.004447505809366703,
+              "gradient_mean": 0.011067905463278294,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.022214755415916443,
+              "medium_band_chroma_mad": 0.028363971718207287,
+              "relative_sigma_Y": 0.11893580490063466
+            },
+            "ratios": {
+              "sigma_Y": 4.4236736058361945,
+              "relative_sigma_Y": 3.926118590707158,
+              "sigma_chroma": 6.215096966135085,
+              "medium_band_Y_mad": 2.0394815954340344,
+              "medium_band_chroma_mad": 4.263572952266931,
+              "mean_Y": 1.126729492152049,
+              "gradient_mean": 1.8476530488342398
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 1972,
+              "left": 2921,
+              "size": 256,
+              "mean_Y": 0.10015303641557693,
+              "structure": 0.14637463247582466,
+              "sigma_Y": 0.021088456735014915,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 1977,
+              "left": 2932,
+              "size": 256
+            },
+            "registration": {
+              "status": "unreliable",
+              "ncc": 0.7750006914138794,
+              "offset_yx": [
+                5,
+                11
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.0029825724195688963,
+              "sigma_YCoCg": 0.003146424191072583,
+              "sigma_Co": 0.0026866241823881865,
+              "sigma_Cg": 0.001087072305381298,
+              "sigma_chroma": 0.0020493505915923707,
+              "mean_Y": 0.09224333614110947,
+              "mean_Co": -0.09455691277980804,
+              "mean_Cg": -0.0012698195641860366,
+              "gradient_mean": 0.007782191503793001,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.014202596619725227,
+              "medium_band_chroma_mad": 0.006966592465246374,
+              "relative_sigma_Y": 0.032333744033349994
+            },
+            "target": {
+              "sigma_Y": 0.011749092489480972,
+              "sigma_YCoCg": 0.012210852466523647,
+              "sigma_Co": 0.01511879451572895,
+              "sigma_Cg": 0.009329214692115784,
+              "sigma_chroma": 0.012562089682461768,
+              "mean_Y": 0.1029047816991806,
+              "mean_Co": -0.09169308841228485,
+              "mean_Cg": -0.004773660562932491,
+              "gradient_mean": 0.013463462702929974,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.02734510228037834,
+              "medium_band_chroma_mad": 0.034018463004135135,
+              "relative_sigma_Y": 0.11417440759776207
+            },
+            "ratios": {
+              "sigma_Y": 3.939248017045365,
+              "relative_sigma_Y": 3.531122392754738,
+              "sigma_chroma": 6.129790448739603,
+              "medium_band_Y_mad": 1.925359355936378,
+              "medium_band_chroma_mad": 4.883084976455856,
+              "mean_Y": 1.1155795746780208,
+              "gradient_mean": 1.730034874670965
+            }
+          }
+        ],
+        "summary": {
+          "flat": {
+            "accepted_regions": 3,
+            "attempted_regions": 6,
+            "median_target_to_reference": {
+              "sigma_Y": 32.96890257021333,
+              "relative_sigma_Y": 35.257729834784634,
+              "sigma_chroma": 12.452672773536966,
+              "medium_band_Y_mad": 17.145533453828214,
+              "medium_band_chroma_mad": 17.626326696272063,
+              "mean_Y": 0.9420137436378085,
+              "gradient_mean": 7.122135034793884
+            }
+          },
+          "detail": {
+            "accepted_regions": 2,
+            "attempted_regions": 4,
+            "median_target_to_reference": {
+              "sigma_Y": 7.021267779921034,
+              "relative_sigma_Y": 6.331056187307216,
+              "sigma_chroma": 8.595777459744692,
+              "medium_band_Y_mad": 2.002891515108675,
+              "medium_band_chroma_mad": 5.916962855226137,
+              "mean_Y": 1.115267959961833,
+              "gradient_mean": 1.5872755791140751
+            }
+          }
+        }
+      },
+      "protocol_valid_for_pure_denoising_gain": false
+    },
+    {
+      "scene": "6V1A9890",
+      "inputs": {
+        "LR_neutral": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\neutre\\6V1A9890.tif",
+          "sha256": "53697f0684eb816e9cecf06a5710816afbf1d53d5da239aeb466ffa135b02708",
+          "bytes": 193797968,
+          "modified_at_utc": "2026-10-20T10:49:39.800685+00:00",
+          "dimensions": [
+            4640,
+            6960
+          ],
+          "bits": [
+            16,
+            16,
+            16
+          ],
+          "channels": 3,
+          "orientation": 1,
+          "compression": 1,
+          "icc": "sRGB IEC61966-2.1",
+          "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+          "xmp_settings": {
+            "RawFileName": "6V1A9890.CR3",
+            "Version": "18.7",
+            "ProcessVersion": "15.4",
+            "WhiteBalance": "As Shot",
+            "Temperature": "5200",
+            "Tint": "+5",
+            "Exposure2012": "0.00",
+            "Contrast2012": "0",
+            "Highlights2012": "0",
+            "Shadows2012": "0",
+            "Whites2012": "0",
+            "Blacks2012": "0",
+            "Texture": "0",
+            "Clarity2012": "0",
+            "Dehaze": "0",
+            "Vibrance": "0",
+            "Saturation": "0",
+            "ParametricShadows": "0",
+            "ParametricDarks": "0",
+            "ParametricLights": "0",
+            "ParametricHighlights": "0",
+            "ParametricShadowSplit": "25",
+            "ParametricMidtoneSplit": "50",
+            "ParametricHighlightSplit": "75",
+            "Sharpness": "0",
+            "LuminanceSmoothing": "0",
+            "ColorNoiseReduction": "0",
+            "HueAdjustmentRed": "0",
+            "HueAdjustmentOrange": "0",
+            "HueAdjustmentYellow": "0",
+            "HueAdjustmentGreen": "0",
+            "HueAdjustmentAqua": "0",
+            "HueAdjustmentBlue": "0",
+            "HueAdjustmentPurple": "0",
+            "HueAdjustmentMagenta": "0",
+            "SaturationAdjustmentRed": "0",
+            "SaturationAdjustmentOrange": "0",
+            "SaturationAdjustmentYellow": "0",
+            "SaturationAdjustmentGreen": "0",
+            "SaturationAdjustmentAqua": "0",
+            "SaturationAdjustmentBlue": "0",
+            "SaturationAdjustmentPurple": "0",
+            "SaturationAdjustmentMagenta": "0",
+            "LuminanceAdjustmentRed": "0",
+            "LuminanceAdjustmentOrange": "0",
+            "LuminanceAdjustmentYellow": "0",
+            "LuminanceAdjustmentGreen": "0",
+            "LuminanceAdjustmentAqua": "0",
+            "LuminanceAdjustmentBlue": "0",
+            "LuminanceAdjustmentPurple": "0",
+            "LuminanceAdjustmentMagenta": "0",
+            "SplitToningShadowHue": "0",
+            "SplitToningShadowSaturation": "0",
+            "SplitToningHighlightHue": "0",
+            "SplitToningHighlightSaturation": "0",
+            "SplitToningBalance": "0",
+            "ColorGradeMidtoneHue": "0",
+            "ColorGradeMidtoneSat": "0",
+            "ColorGradeShadowLum": "0",
+            "ColorGradeMidtoneLum": "0",
+            "ColorGradeHighlightLum": "0",
+            "ColorGradeBlending": "50",
+            "ColorGradeGlobalHue": "0",
+            "ColorGradeGlobalSat": "0",
+            "ColorGradeGlobalLum": "0",
+            "AutoLateralCA": "0",
+            "LensProfileEnable": "0",
+            "LensManualDistortionAmount": "0",
+            "VignetteAmount": "0",
+            "DefringePurpleAmount": "0",
+            "DefringePurpleHueLo": "30",
+            "DefringePurpleHueHi": "70",
+            "DefringeGreenAmount": "0",
+            "DefringeGreenHueLo": "40",
+            "DefringeGreenHueHi": "60",
+            "PerspectiveUpright": "0",
+            "PerspectiveVertical": "0",
+            "PerspectiveHorizontal": "0",
+            "PerspectiveRotate": "0.0",
+            "PerspectiveAspect": "0",
+            "PerspectiveScale": "100",
+            "PerspectiveX": "0.00",
+            "PerspectiveY": "0.00",
+            "GrainAmount": "0",
+            "Glow": "0",
+            "PostCropVignetteAmount": "0",
+            "ShadowTint": "0",
+            "RedHue": "0",
+            "RedSaturation": "0",
+            "GreenHue": "0",
+            "GreenSaturation": "0",
+            "BlueHue": "0",
+            "BlueSaturation": "0",
+            "HDREditMode": "0",
+            "ConvertToGrayscale": "False",
+            "OverrideLookVignette": "False",
+            "ToneCurveName2012": "Linear",
+            "CameraProfile": "Camera Neutral",
+            "CameraProfileDigest": "8180D0EC85977057CE86FB64330967A6",
+            "LensProfileSetup": "LensDefaults",
+            "LensProfileName": "Camera Settings",
+            "LensProfileDigest": "B92C0D07A8A007588DDA47F4722CD95F",
+            "LensProfileIsEmbedded": "True",
+            "LensProfileDistortionScale": "100",
+            "LensProfileVignettingScale": "100",
+            "HasSettings": "True",
+            "CropTop": "0",
+            "CropLeft": "0",
+            "CropBottom": "1",
+            "CropRight": "1",
+            "CropAngle": "0",
+            "CropConstrainToWarp": "0",
+            "CropConstrainToUnitSquare": "1",
+            "HasCrop": "False",
+            "AlreadyApplied": "True",
+            "ToneCurvePV2012": "",
+            "ToneCurvePV2012Red": "",
+            "ToneCurvePV2012Green": "",
+            "ToneCurvePV2012Blue": "",
+            "PointColors": "",
+            "ColorVariance": ""
+          }
+        },
+        "LR_100": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A9890.tif",
+          "sha256": "73f02cf2113bece228bf44ae0529bcf25278f9c7e1409c14231874c6904f9696",
+          "bytes": 193798500,
+          "modified_at_utc": "2026-10-23T08:46:58.290484+00:00",
+          "dimensions": [
+            4640,
+            6960
+          ],
+          "bits": [
+            16,
+            16,
+            16
+          ],
+          "channels": 3,
+          "orientation": 1,
+          "compression": 1,
+          "icc": "sRGB IEC61966-2.1",
+          "icc_sha256": "2b3aa1645779a9e634744faf9b01e9102b0c9b88fd6deced7934df86b949af7e",
+          "xmp_settings": {
+            "RawFileName": "6V1A9890.CR3",
+            "Version": "18.7",
+            "ProcessVersion": "15.4",
+            "WhiteBalance": "As Shot",
+            "Temperature": "5200",
+            "Tint": "+5",
+            "Exposure2012": "0.00",
+            "Contrast2012": "0",
+            "Highlights2012": "0",
+            "Shadows2012": "0",
+            "Whites2012": "0",
+            "Blacks2012": "0",
+            "Texture": "0",
+            "Clarity2012": "0",
+            "Dehaze": "0",
+            "Vibrance": "0",
+            "Saturation": "0",
+            "ParametricShadows": "0",
+            "ParametricDarks": "0",
+            "ParametricLights": "0",
+            "ParametricHighlights": "0",
+            "ParametricShadowSplit": "25",
+            "ParametricMidtoneSplit": "50",
+            "ParametricHighlightSplit": "75",
+            "Sharpness": "0",
+            "LuminanceSmoothing": "100",
+            "LuminanceNoiseReductionDetail": "50",
+            "LuminanceNoiseReductionContrast": "0",
+            "ColorNoiseReduction": "100",
+            "ColorNoiseReductionDetail": "50",
+            "ColorNoiseReductionSmoothness": "50",
+            "HueAdjustmentRed": "0",
+            "HueAdjustmentOrange": "0",
+            "HueAdjustmentYellow": "0",
+            "HueAdjustmentGreen": "0",
+            "HueAdjustmentAqua": "0",
+            "HueAdjustmentBlue": "0",
+            "HueAdjustmentPurple": "0",
+            "HueAdjustmentMagenta": "0",
+            "SaturationAdjustmentRed": "0",
+            "SaturationAdjustmentOrange": "0",
+            "SaturationAdjustmentYellow": "0",
+            "SaturationAdjustmentGreen": "0",
+            "SaturationAdjustmentAqua": "0",
+            "SaturationAdjustmentBlue": "0",
+            "SaturationAdjustmentPurple": "0",
+            "SaturationAdjustmentMagenta": "0",
+            "LuminanceAdjustmentRed": "0",
+            "LuminanceAdjustmentOrange": "0",
+            "LuminanceAdjustmentYellow": "0",
+            "LuminanceAdjustmentGreen": "0",
+            "LuminanceAdjustmentAqua": "0",
+            "LuminanceAdjustmentBlue": "0",
+            "LuminanceAdjustmentPurple": "0",
+            "LuminanceAdjustmentMagenta": "0",
+            "SplitToningShadowHue": "0",
+            "SplitToningShadowSaturation": "0",
+            "SplitToningHighlightHue": "0",
+            "SplitToningHighlightSaturation": "0",
+            "SplitToningBalance": "0",
+            "ColorGradeMidtoneHue": "0",
+            "ColorGradeMidtoneSat": "0",
+            "ColorGradeShadowLum": "0",
+            "ColorGradeMidtoneLum": "0",
+            "ColorGradeHighlightLum": "0",
+            "ColorGradeBlending": "50",
+            "ColorGradeGlobalHue": "0",
+            "ColorGradeGlobalSat": "0",
+            "ColorGradeGlobalLum": "0",
+            "AutoLateralCA": "1",
+            "LensProfileEnable": "1",
+            "LensManualDistortionAmount": "0",
+            "VignetteAmount": "0",
+            "DefringePurpleAmount": "0",
+            "DefringePurpleHueLo": "30",
+            "DefringePurpleHueHi": "70",
+            "DefringeGreenAmount": "0",
+            "DefringeGreenHueLo": "40",
+            "DefringeGreenHueHi": "60",
+            "PerspectiveUpright": "0",
+            "PerspectiveVertical": "0",
+            "PerspectiveHorizontal": "0",
+            "PerspectiveRotate": "0.0",
+            "PerspectiveAspect": "0",
+            "PerspectiveScale": "100",
+            "PerspectiveX": "0.00",
+            "PerspectiveY": "0.00",
+            "GrainAmount": "0",
+            "Glow": "0",
+            "PostCropVignetteAmount": "0",
+            "ShadowTint": "0",
+            "RedHue": "0",
+            "RedSaturation": "0",
+            "GreenHue": "0",
+            "GreenSaturation": "0",
+            "BlueHue": "0",
+            "BlueSaturation": "0",
+            "HDREditMode": "0",
+            "ConvertToGrayscale": "False",
+            "OverrideLookVignette": "False",
+            "ToneCurveName2012": "Linear",
+            "CameraProfile": "Camera Neutral",
+            "CameraProfileDigest": "8180D0EC85977057CE86FB64330967A6",
+            "LensProfileSetup": "LensDefaults",
+            "LensProfileName": "Camera Settings",
+            "LensProfileDigest": "B92C0D07A8A007588DDA47F4722CD95F",
+            "LensProfileIsEmbedded": "True",
+            "LensProfileDistortionScale": "100",
+            "LensProfileVignettingScale": "100",
+            "HasSettings": "True",
+            "CropTop": "0",
+            "CropLeft": "0",
+            "CropBottom": "1",
+            "CropRight": "1",
+            "CropAngle": "0",
+            "CropConstrainToWarp": "0",
+            "CropConstrainToUnitSquare": "1",
+            "HasCrop": "False",
+            "AlreadyApplied": "True",
+            "ToneCurvePV2012": "",
+            "ToneCurvePV2012Red": "",
+            "ToneCurvePV2012Green": "",
+            "ToneCurvePV2012Blue": "",
+            "PointColors": "",
+            "ColorVariance": ""
+          }
+        },
+        "IPR_prototype": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A9890-IPR.tiff",
+          "sha256": "e36f7f71bc798b4225efbc34b9d3801a8fb4191645032c58ebc4ce0f26d66d73",
+          "bytes": 258263634,
+          "modified_at_utc": "2026-10-23T08:36:31.038730+00:00",
+          "dimensions": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "channels": 4,
+          "orientation": 1,
+          "compression": 1,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "xmp_settings": {}
+        },
+        "IPR_neutral": {
+          "path": null,
+          "render": {
+            "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9890.CR3",
+            "feature": "neutral",
+            "value": 0
+          },
+          "sha256": "a6a1451f77013596a6e7549fbd28c30a4f0e44057c80bab529e5ecf2d7bdd226",
+          "sha256_scope": "uint16 RGB samples, row-major",
+          "bytes": 193696806,
+          "dimensions": [
+            4639,
+            6959
+          ],
+          "bits": [
+            16,
+            16,
+            16
+          ],
+          "channels": 3,
+          "orientation": 1,
+          "compression": 1,
+          "icc": "sRGB",
+          "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+          "xmp_settings": {},
+          "declaration": {
+            "chromatic_aberration_applied": false,
+            "created_at_utc": "2026-10-23T08:53:52.331Z",
+            "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+            "executable_sha256": "9830d1aa604a71faf9e42f2e14aa833ff8e9e799f993b7c3bf2e3c92a3e97381",
+            "feature": "neutral",
+            "group": "neutral",
+            "ipr_test_schema": 1,
+            "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+            "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+            "lens_geometry_applied": false,
+            "lens_vignetting_applied": false,
+            "qt_version": "6.11.2",
+            "raw_normalization": true,
+            "reference": "state:neutral:0",
+            "scene": "6V1A9890",
+            "settings": {
+              "automaticWhiteBalance": false,
+              "blacks": 0,
+              "blur": 0,
+              "clarity": 0,
+              "contrast": 0,
+              "dehaze": 0,
+              "denoiseChrominance": 0,
+              "denoiseLuminance": 0,
+              "exposure": 0,
+              "grading": [
+                {
+                  "hue": 0,
+                  "saturation": 0
+                },
+                {
+                  "hue": 0,
+                  "saturation": 0
+                },
+                {
+                  "hue": 0,
+                  "saturation": 0
+                }
+              ],
+              "grain": 0,
+              "grayscale": false,
+              "highlights": 0,
+              "mixerHue": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "mixerLuminance": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "mixerSaturation": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "saturation": 0,
+              "shadows": 0,
+              "sharpeningAmount": 0,
+              "sharpeningMasking": 0,
+              "sharpeningRadius": 1,
+              "temperature": 4924,
+              "texture": 0,
+              "tint": 0,
+              "toneCurves": [
+                [],
+                [],
+                [],
+                []
+              ],
+              "vibrance": 0,
+              "whites": 0
+            },
+            "source_sha256": "a57c06cb4498dc9385a4d4305bdff769bb2fdb2c5865a0c324ccefabebc0981d",
+            "value": 0
+          }
+        }
+      },
+      "raw_source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9890.CR3",
+        "sha256": "a57c06cb4498dc9385a4d4305bdff769bb2fdb2c5865a0c324ccefabebc0981d"
+      },
+      "regions": [
+        {
+          "top": 3016,
+          "left": 219,
+          "size": 256,
+          "mean_Y": 0.3353601396083832,
+          "structure": 0.026715738962832334,
+          "sigma_Y": 0.028226912021636963,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 1005,
+          "left": 3037,
+          "size": 256,
+          "mean_Y": 0.34535861015319824,
+          "structure": 0.026939182880992504,
+          "sigma_Y": 0.030044611543416977,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 2346,
+          "left": 2473,
+          "size": 256,
+          "mean_Y": 0.35548174381256104,
+          "structure": 0.026939434379041963,
+          "sigma_Y": 0.02878805622458458,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 1676,
+          "left": 3037,
+          "size": 256,
+          "mean_Y": 0.3161764144897461,
+          "structure": 0.027539371785784306,
+          "sigma_Y": 0.02935415506362915,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 335,
+          "left": 3037,
+          "size": 256,
+          "mean_Y": 0.3361550271511078,
+          "structure": 0.027793945888161087,
+          "sigma_Y": 0.029264139011502266,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 1676,
+          "left": 2473,
+          "size": 256,
+          "mean_Y": 0.3172270953655243,
+          "structure": 0.028277470494979744,
+          "sigma_Y": 0.02952340431511402,
+          "clipping": 0.0,
+          "kind": "flat"
+        },
+        {
+          "top": 335,
+          "left": 782,
+          "size": 256,
+          "mean_Y": 0.03561921417713165,
+          "structure": 0.1850638134761846,
+          "sigma_Y": 0.0036680500488728285,
+          "clipping": 0.0010528564453125,
+          "kind": "detail"
+        },
+        {
+          "top": 3687,
+          "left": 1346,
+          "size": 256,
+          "mean_Y": 0.010105211287736893,
+          "structure": 0.17918272830427814,
+          "sigma_Y": 0.004044912755489349,
+          "clipping": 0.0,
+          "kind": "detail"
+        },
+        {
+          "top": 3016,
+          "left": 782,
+          "size": 256,
+          "mean_Y": 0.010912821628153324,
+          "structure": 0.16465302098484214,
+          "sigma_Y": 0.005442488007247448,
+          "clipping": 0.0,
+          "kind": "detail"
+        },
+        {
+          "top": 2346,
+          "left": 1346,
+          "size": 256,
+          "mean_Y": 0.006992913782596588,
+          "structure": 0.15482278540730476,
+          "sigma_Y": 0.003362610237672925,
+          "clipping": 0.0,
+          "kind": "detail"
+        }
+      ],
+      "current_sidecar": {
+        "file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9890.CR3.ipr",
+        "sha256": "53213131437ea19b29569792e66bf27729525016109fe7681e56f26547ad32b6",
+        "source_signature_matches": true,
+        "source_size": 49139924,
+        "source_modified_ms": 1784662988000,
+        "settings": {
+          "brightness": 0.0,
+          "contrast": 0,
+          "blur": 0,
+          "grayscale": false,
+          "shadows": 0,
+          "blacks": 0,
+          "highlights": 0,
+          "whites": 0,
+          "temperature": 4924,
+          "tint": 0,
+          "vibrance": 0,
+          "saturation": 0,
+          "texture": 0,
+          "clarity": 0,
+          "dehaze": 0,
+          "grain": 0,
+          "denoiseLuminance": 100,
+          "denoiseChrominance": 100,
+          "sharpeningAmount": 0,
+          "sharpeningRadius": 1.0,
+          "sharpeningMasking": 0,
+          "mixer": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "grading": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "automaticWhiteBalance": false,
+          "curves": [
+            [],
+            [],
+            [],
+            []
+          ]
+        },
+        "raw": {
+          "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+          "profileSha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+          "manifest": ":/config/raw-normalization.json",
+          "manifestSha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+          "normalizationEnabled": true,
+          "engineVersion": "ipr-render-rec2020-linear-d65-v1|profile-render=2|noise-model=1|libraw=0.22.2-Release",
+          "lensProfile": "C:/ProgramData/Adobe/CameraRaw/LensProfiles/1.0/Canon/Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW.lcp",
+          "lensProfileSha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+          "lensProfileResolved": true,
+          "lensCorrectionEnabled": false,
+          "chromaticAberrationEnabled": false
+        },
+        "user_metadata": {
+          "rating": 0,
+          "colorLabel": "",
+          "flagged": false,
+          "ratingSet": false,
+          "colorLabelSet": false
+        },
+        "limitation": "Current saved state only, not proof of settings at TIFF export time"
+      },
+      "opening": {
+        "regions": [
+          {
+            "reference_roi": {
+              "top": 3016,
+              "left": 219,
+              "size": 256,
+              "mean_Y": 0.3353601396083832,
+              "structure": 0.026715738962832334,
+              "sigma_Y": 0.028226912021636963,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3015,
+              "left": 219,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.997124969959259,
+              "offset_yx": [
+                -1,
+                0
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.028226912021636963,
+              "sigma_YCoCg": 0.02477419748902321,
+              "sigma_Co": 0.026770127937197685,
+              "sigma_Cg": 0.02509375475347042,
+              "sigma_chroma": 0.02594548397507022,
+              "mean_Y": 0.3353601396083832,
+              "mean_Co": 0.3118935525417328,
+              "mean_Cg": 0.02501036785542965,
+              "gradient_mean": 0.008959393948316574,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.01950937509536743,
+              "medium_band_chroma_mad": 0.0555541325120544,
+              "relative_sigma_Y": 0.08416895357509971
+            },
+            "target": {
+              "sigma_Y": 0.030308660119771957,
+              "sigma_YCoCg": 0.031199462711811066,
+              "sigma_Co": 0.04384820535778999,
+              "sigma_Cg": 0.027273379266262054,
+              "sigma_chroma": 0.03651371201138208,
+              "mean_Y": 0.334803968667984,
+              "mean_Co": 0.2933325171470642,
+              "mean_Cg": 0.019761402159929276,
+              "gradient_mean": 0.009092838503420353,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.019962601363658905,
+              "medium_band_chroma_mad": 0.060856845616948756,
+              "relative_sigma_Y": 0.09052658557290948
+            },
+            "ratios": {
+              "sigma_Y": 1.0737504724760278,
+              "relative_sigma_Y": 1.0755341694029399,
+              "sigma_chroma": 1.407324374695279,
+              "medium_band_Y_mad": 1.0232312037713136,
+              "medium_band_chroma_mad": 1.0954512808519465,
+              "mean_Y": 0.9983415711209787,
+              "gradient_mean": 1.0148943729758475
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 1005,
+              "left": 3037,
+              "size": 256,
+              "mean_Y": 0.34535861015319824,
+              "structure": 0.026939182880992504,
+              "sigma_Y": 0.030044611543416977,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 1004,
+              "left": 3037,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9890626072883606,
+              "offset_yx": [
+                -1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.030044611543416977,
+              "sigma_YCoCg": 0.026269644498825073,
+              "sigma_Co": 0.02991766855120659,
+              "sigma_Cg": 0.025946199893951416,
+              "sigma_chroma": 0.028002430077376676,
+              "mean_Y": 0.34535861015319824,
+              "mean_Co": 0.23549184203147888,
+              "mean_Cg": 0.0413484051823616,
+              "gradient_mean": 0.009303678758442402,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.020175397396087646,
+              "medium_band_chroma_mad": 0.05746843170389456,
+              "relative_sigma_Y": 0.08699540321316858
+            },
+            "target": {
+              "sigma_Y": 0.032581184059381485,
+              "sigma_YCoCg": 0.03377110883593559,
+              "sigma_Co": 0.04474475234746933,
+              "sigma_Cg": 0.02768067643046379,
+              "sigma_chroma": 0.03720425184225854,
+              "mean_Y": 0.3452455997467041,
+              "mean_Co": 0.21927034854888916,
+              "mean_Cg": 0.036897897720336914,
+              "gradient_mean": 0.00948676373809576,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.020759964361786842,
+              "medium_band_chroma_mad": 0.06236323515512866,
+              "relative_sigma_Y": 0.09437103349987742
+            },
+            "ratios": {
+              "sigma_Y": 1.0844268700994502,
+              "relative_sigma_Y": 1.0847818392040327,
+              "sigma_chroma": 1.3286079722172424,
+              "medium_band_Y_mad": 1.0289742479031692,
+              "medium_band_chroma_mad": 1.0851737781266508,
+              "mean_Y": 0.9996727737396094,
+              "gradient_mean": 1.0196787727099048
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 2346,
+              "left": 2473,
+              "size": 256,
+              "mean_Y": 0.35548174381256104,
+              "structure": 0.026939434379041963,
+              "sigma_Y": 0.02878805622458458,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 2345,
+              "left": 2473,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9974256753921509,
+              "offset_yx": [
+                -1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.02878805622458458,
+              "sigma_YCoCg": 0.024979354813694954,
+              "sigma_Co": 0.025768166407942772,
+              "sigma_Cg": 0.025291714817285538,
+              "sigma_chroma": 0.025531052058486846,
+              "mean_Y": 0.35548174381256104,
+              "mean_Co": 0.3018805980682373,
+              "mean_Cg": 0.03670358285307884,
+              "gradient_mean": 0.009576477110385895,
+              "clipped_percent": 0.0,
+              "black_percent": 0.02593994140625,
+              "medium_band_Y_mad": 0.02063942700624466,
+              "medium_band_chroma_mad": 0.05605561467273832,
+              "relative_sigma_Y": 0.08098321988586843
+            },
+            "target": {
+              "sigma_Y": 0.03118584305047989,
+              "sigma_YCoCg": 0.03238294646143913,
+              "sigma_Co": 0.04463091120123863,
+              "sigma_Cg": 0.027169615030288696,
+              "sigma_chroma": 0.036946625120211844,
+              "mean_Y": 0.3548398017883301,
+              "mean_Co": 0.28302305936813354,
+              "mean_Cg": 0.03170707821846008,
+              "gradient_mean": 0.009738057851791382,
+              "clipped_percent": 0.0,
+              "black_percent": 0.01678466796875,
+              "medium_band_Y_mad": 0.021157871931791306,
+              "medium_band_chroma_mad": 0.06131014369958161,
+              "relative_sigma_Y": 0.08788710537349174
+            },
+            "ratios": {
+              "sigma_Y": 1.0832910290013826,
+              "relative_sigma_Y": 1.0852508148892217,
+              "sigma_chroma": 1.4471250552297674,
+              "medium_band_Y_mad": 1.0251191530360695,
+              "medium_band_chroma_mad": 1.0937377826917085,
+              "mean_Y": 0.9981941631732024,
+              "gradient_mean": 1.0168726703507962
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 1676,
+              "left": 3037,
+              "size": 256,
+              "mean_Y": 0.3161764144897461,
+              "structure": 0.027539371785784306,
+              "sigma_Y": 0.02935415506362915,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 1675,
+              "left": 3037,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9960823059082031,
+              "offset_yx": [
+                -1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.02935415506362915,
+              "sigma_YCoCg": 0.025532279163599014,
+              "sigma_Co": 0.026789061725139618,
+              "sigma_Cg": 0.025491833686828613,
+              "sigma_chroma": 0.026148493387098525,
+              "mean_Y": 0.3161764144897461,
+              "mean_Co": 0.22378459572792053,
+              "mean_Cg": 0.040169406682252884,
+              "gradient_mean": 0.008707299828529358,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.019741322845220566,
+              "medium_band_chroma_mad": 0.05662086298502351,
+              "relative_sigma_Y": 0.09284106504592275
+            },
+            "target": {
+              "sigma_Y": 0.0324772372841835,
+              "sigma_YCoCg": 0.033829573541879654,
+              "sigma_Co": 0.04470543563365936,
+              "sigma_Cg": 0.02775237150490284,
+              "sigma_chroma": 0.03720732521521403,
+              "mean_Y": 0.31602728366851807,
+              "mean_Co": 0.20663833618164062,
+              "mean_Cg": 0.03514622896909714,
+              "gradient_mean": 0.008915426209568977,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.020276149734854698,
+              "medium_band_chroma_mad": 0.0619955153275593,
+              "relative_sigma_Y": 0.10276719436113298
+            },
+            "ratios": {
+              "sigma_Y": 1.1063931908033,
+              "relative_sigma_Y": 1.1069152891589555,
+              "sigma_chroma": 1.4229242451716873,
+              "medium_band_Y_mad": 1.0270917452608104,
+              "medium_band_chroma_mad": 1.0949235327613678,
+              "mean_Y": 0.9995283303421961,
+              "gradient_mean": 1.0239025168695461
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 335,
+              "left": 3037,
+              "size": 256,
+              "mean_Y": 0.3361550271511078,
+              "structure": 0.027793945888161087,
+              "sigma_Y": 0.029264139011502266,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 334,
+              "left": 3037,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9950850009918213,
+              "offset_yx": [
+                -1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.029264139011502266,
+              "sigma_YCoCg": 0.025676053017377853,
+              "sigma_Co": 0.03202733397483826,
+              "sigma_Cg": 0.026345863938331604,
+              "sigma_chroma": 0.0293245176276858,
+              "mean_Y": 0.3361550271511078,
+              "mean_Co": 0.24043558537960052,
+              "mean_Cg": 0.03853224962949753,
+              "gradient_mean": 0.009343074634671211,
+              "clipped_percent": 0.0,
+              "black_percent": 0.01220703125,
+              "medium_band_Y_mad": 0.020262153819203377,
+              "medium_band_chroma_mad": 0.05705744517170532,
+              "relative_sigma_Y": 0.0870554852608154
+            },
+            "target": {
+              "sigma_Y": 0.03159907087683678,
+              "sigma_YCoCg": 0.03319234400987625,
+              "sigma_Co": 0.04450377821922302,
+              "sigma_Cg": 0.027526967227458954,
+              "sigma_chroma": 0.037002163453826516,
+              "mean_Y": 0.33602243661880493,
+              "mean_Co": 0.22431552410125732,
+              "mean_Cg": 0.034268978983163834,
+              "gradient_mean": 0.009567941538989544,
+              "clipped_percent": 0.0,
+              "black_percent": 0.01220703125,
+              "medium_band_Y_mad": 0.020893491804599762,
+              "medium_band_chroma_mad": 0.061966189009758775,
+              "relative_sigma_Y": 0.09403857431307129
+            },
+            "ratios": {
+              "sigma_Y": 1.0797881620373921,
+              "relative_sigma_Y": 1.0802142338456306,
+              "sigma_chroma": 1.2618166110562758,
+              "medium_band_Y_mad": 1.0311584834973484,
+              "medium_band_chroma_mad": 1.0860316094294333,
+              "mean_Y": 0.9996055673079575,
+              "gradient_mean": 1.0240677628201613
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 1676,
+              "left": 2473,
+              "size": 256,
+              "mean_Y": 0.3172270953655243,
+              "structure": 0.028277470494979744,
+              "sigma_Y": 0.02952340431511402,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 1675,
+              "left": 2473,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9935389757156372,
+              "offset_yx": [
+                -1,
+                1
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.02952340431511402,
+              "sigma_YCoCg": 0.025745173916220665,
+              "sigma_Co": 0.026771266013383865,
+              "sigma_Cg": 0.02546321414411068,
+              "sigma_chroma": 0.026125427829111238,
+              "mean_Y": 0.3172270953655243,
+              "mean_Co": 0.2157069444656372,
+              "mean_Cg": 0.03984851390123367,
+              "gradient_mean": 0.008970379829406738,
+              "clipped_percent": 0.0,
+              "black_percent": 0.01373291015625,
+              "medium_band_Y_mad": 0.0201420821249485,
+              "medium_band_chroma_mad": 0.05600555143131972,
+              "relative_sigma_Y": 0.0930670952968117
+            },
+            "target": {
+              "sigma_Y": 0.03201807290315628,
+              "sigma_YCoCg": 0.033171217888593674,
+              "sigma_Co": 0.04348045960068703,
+              "sigma_Cg": 0.0274516474455595,
+              "sigma_chroma": 0.03636030331668226,
+              "mean_Y": 0.3172215223312378,
+              "mean_Co": 0.20017139613628387,
+              "mean_Cg": 0.03518983721733093,
+              "gradient_mean": 0.009169595316052437,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0091552734375,
+              "medium_band_Y_mad": 0.020756738260388374,
+              "medium_band_chroma_mad": 0.0619431946630709,
+              "relative_sigma_Y": 0.10093285180607482
+            },
+            "ratios": {
+              "sigma_Y": 1.0844979989914358,
+              "relative_sigma_Y": 1.084517051748284,
+              "sigma_chroma": 1.3917591533627032,
+              "medium_band_Y_mad": 1.0305160177397223,
+              "medium_band_chroma_mad": 1.1060188334906869,
+              "mean_Y": 0.9999824320356996,
+              "gradient_mean": 1.022208143962046
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 335,
+              "left": 782,
+              "size": 256,
+              "mean_Y": 0.03561921417713165,
+              "structure": 0.1850638134761846,
+              "sigma_Y": 0.0036680500488728285,
+              "clipping": 0.0010528564453125,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 334,
+              "left": 782,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9996156096458435,
+              "offset_yx": [
+                -1,
+                0
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.0036680500488728285,
+              "sigma_YCoCg": 0.003813697723671794,
+              "sigma_Co": 0.00587784219533205,
+              "sigma_Cg": 0.004823211580514908,
+              "sigma_chroma": 0.005376448587294358,
+              "mean_Y": 0.03561921417713165,
+              "mean_Co": 0.025387585163116455,
+              "mean_Cg": -0.0009171571582555771,
+              "gradient_mean": 0.006591827608644962,
+              "clipped_percent": 0.10528564453125,
+              "black_percent": 5.49468994140625,
+              "medium_band_Y_mad": 0.002727883867919445,
+              "medium_band_chroma_mad": 0.006516073745463936,
+              "relative_sigma_Y": 0.10297953319890477
+            },
+            "target": {
+              "sigma_Y": 0.004102461505681276,
+              "sigma_YCoCg": 0.004943030886352062,
+              "sigma_Co": 0.009351507760584354,
+              "sigma_Cg": 0.005581467412412167,
+              "sigma_chroma": 0.0077007621659186554,
+              "mean_Y": 0.03723481297492981,
+              "mean_Co": 0.023225920274853706,
+              "mean_Cg": -0.005782263353466988,
+              "gradient_mean": 0.00677010603249073,
+              "clipped_percent": 0.1007080078125,
+              "black_percent": 2.64892578125,
+              "medium_band_Y_mad": 0.0034356331452727318,
+              "medium_band_chroma_mad": 0.00941181106120155,
+              "relative_sigma_Y": 0.11017811499264042
+            },
+            "ratios": {
+              "sigma_Y": 1.1184311694280016,
+              "relative_sigma_Y": 1.0699030338371374,
+              "sigma_chroma": 1.4323139226360544,
+              "medium_band_Y_mad": 1.2594499295503685,
+              "medium_band_chroma_mad": 1.4443991011847337,
+              "mean_Y": 1.0453575081629793,
+              "gradient_mean": 1.0270453710913134
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3687,
+              "left": 1346,
+              "size": 256,
+              "mean_Y": 0.010105211287736893,
+              "structure": 0.17918272830427814,
+              "sigma_Y": 0.004044912755489349,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 3686,
+              "left": 1346,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9904590845108032,
+              "offset_yx": [
+                0,
+                0
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.004044912755489349,
+              "sigma_YCoCg": 0.004130462650209665,
+              "sigma_Co": 0.006982642225921154,
+              "sigma_Cg": 0.005118984263390303,
+              "sigma_chroma": 0.006122143919578119,
+              "mean_Y": 0.010105211287736893,
+              "mean_Co": 0.01942482963204384,
+              "mean_Cg": -0.008023825474083424,
+              "gradient_mean": 0.0018106793286278844,
+              "clipped_percent": 0.0,
+              "black_percent": 3.33404541015625,
+              "medium_band_Y_mad": 0.00301151885651052,
+              "medium_band_chroma_mad": 0.008409149900740504,
+              "relative_sigma_Y": 0.4002798793923314
+            },
+            "target": {
+              "sigma_Y": 0.0044276658445596695,
+              "sigma_YCoCg": 0.005105683114379644,
+              "sigma_Co": 0.010215993970632553,
+              "sigma_Cg": 0.006067556794732809,
+              "sigma_chroma": 0.008401838437666752,
+              "mean_Y": 0.011990795843303204,
+              "mean_Co": 0.019987449049949646,
+              "mean_Cg": -0.012552937492728233,
+              "gradient_mean": 0.002047204179689288,
+              "clipped_percent": 0.0,
+              "black_percent": 1.74102783203125,
+              "medium_band_Y_mad": 0.0036522902082651854,
+              "medium_band_chroma_mad": 0.01081636742895561,
+              "relative_sigma_Y": 0.3692553774095401
+            },
+            "ratios": {
+              "sigma_Y": 1.0946257959583643,
+              "relative_sigma_Y": 0.9224929765895556,
+              "sigma_chroma": 1.372368658436525,
+              "medium_band_Y_mad": 1.2127734815172746,
+              "medium_band_chroma_mad": 1.2862616978683097,
+              "mean_Y": 1.1865952627684835,
+              "gradient_mean": 1.1306276861517164
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3016,
+              "left": 782,
+              "size": 256,
+              "mean_Y": 0.010912821628153324,
+              "structure": 0.16465302098484214,
+              "sigma_Y": 0.005442488007247448,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 3015,
+              "left": 782,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9854760766029358,
+              "offset_yx": [
+                -1,
+                0
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.005442488007247448,
+              "sigma_YCoCg": 0.005309693515300751,
+              "sigma_Co": 0.006491115316748619,
+              "sigma_Cg": 0.006400314625352621,
+              "sigma_chroma": 0.006445874857567093,
+              "mean_Y": 0.010912821628153324,
+              "mean_Co": 0.005289777182042599,
+              "mean_Cg": -0.002142735756933689,
+              "gradient_mean": 0.0017968290485441685,
+              "clipped_percent": 0.0,
+              "black_percent": 1.690673828125,
+              "medium_band_Y_mad": 0.0035443014930933714,
+              "medium_band_chroma_mad": 0.008148814367024025,
+              "relative_sigma_Y": 0.49872417901587474
+            },
+            "target": {
+              "sigma_Y": 0.005804210901260376,
+              "sigma_YCoCg": 0.006646673660725355,
+              "sigma_Co": 0.010837297886610031,
+              "sigma_Cg": 0.006888784468173981,
+              "sigma_chroma": 0.009080263678222051,
+              "mean_Y": 0.013019384816288948,
+              "mean_Co": 0.004999645985662937,
+              "mean_Cg": -0.007613976951688528,
+              "gradient_mean": 0.0020359333138912916,
+              "clipped_percent": 0.0,
+              "black_percent": 1.35955810546875,
+              "medium_band_Y_mad": 0.0040940698236227036,
+              "medium_band_chroma_mad": 0.010744358325529231,
+              "relative_sigma_Y": 0.4458129921775222
+            },
+            "ratios": {
+              "sigma_Y": 1.0664627820091184,
+              "relative_sigma_Y": 0.8939069147544412,
+              "sigma_chroma": 1.4086937582355226,
+              "medium_band_Y_mad": 1.1551133083911294,
+              "medium_band_chroma_mad": 1.3185179882129414,
+              "mean_Y": 1.193035610762759,
+              "gradient_mean": 1.1330701245846682
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 2346,
+              "left": 1346,
+              "size": 256,
+              "mean_Y": 0.006992913782596588,
+              "structure": 0.15482278540730476,
+              "sigma_Y": 0.003362610237672925,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 2345,
+              "left": 1346,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9878748059272766,
+              "offset_yx": [
+                -1,
+                0
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.003362610237672925,
+              "sigma_YCoCg": 0.0034078205935657024,
+              "sigma_Co": 0.00442996621131897,
+              "sigma_Cg": 0.004380769561976194,
+              "sigma_chroma": 0.00440543656114606,
+              "mean_Y": 0.006992913782596588,
+              "mean_Co": 0.003724304959177971,
+              "mean_Cg": -0.002218501176685095,
+              "gradient_mean": 0.0015482278540730476,
+              "clipped_percent": 0.0,
+              "black_percent": 4.40673828125,
+              "medium_band_Y_mad": 0.002466509584337473,
+              "medium_band_chroma_mad": 0.005591142749517457,
+              "relative_sigma_Y": 0.4808596734084616
+            },
+            "target": {
+              "sigma_Y": 0.0038881346117705107,
+              "sigma_YCoCg": 0.004545554518699646,
+              "sigma_Co": 0.008040121756494045,
+              "sigma_Cg": 0.004994281101971865,
+              "sigma_chroma": 0.006692772280033223,
+              "mean_Y": 0.008811677806079388,
+              "mean_Co": 0.0032114440109580755,
+              "mean_Cg": -0.006854437757283449,
+              "gradient_mean": 0.0018198403995484114,
+              "clipped_percent": 0.0,
+              "black_percent": 2.642822265625,
+              "medium_band_Y_mad": 0.0030823764391243458,
+              "medium_band_chroma_mad": 0.007972548365803288,
+              "relative_sigma_Y": 0.44124793227096815
+            },
+            "ratios": {
+              "sigma_Y": 1.156284652978774,
+              "relative_sigma_Y": 0.917623075237907,
+              "sigma_chroma": 1.5192075035333434,
+              "medium_band_Y_mad": 1.2496916528107878,
+              "medium_band_chroma_mad": 1.4259246674557464,
+              "mean_Y": 1.2600867220770255,
+              "gradient_mean": 1.1754344780458579
+            }
+          }
+        ],
+        "summary": {
+          "flat": {
+            "accepted_regions": 6,
+            "attempted_regions": 6,
+            "median_target_to_reference": {
+              "sigma_Y": 1.0838589495504163,
+              "relative_sigma_Y": 1.0846494454761584,
+              "sigma_chroma": 1.399541764028991,
+              "medium_band_Y_mad": 1.0280329965819899,
+              "medium_band_chroma_mad": 1.0943306577265381,
+              "mean_Y": 0.9995669488250768,
+              "gradient_mean": 1.0209434583359753
+            }
+          },
+          "detail": {
+            "accepted_regions": 4,
+            "attempted_regions": 4,
+            "median_target_to_reference": {
+              "sigma_Y": 1.106528482693183,
+              "relative_sigma_Y": 0.9200580259137313,
+              "sigma_chroma": 1.4205038404357886,
+              "medium_band_Y_mad": 1.2312325671640312,
+              "medium_band_chroma_mad": 1.3722213278343438,
+              "mean_Y": 1.1898154367656213,
+              "gradient_mean": 1.1318489053681922
+            }
+          }
+        }
+      },
+      "processed_exports": {
+        "regions": [
+          {
+            "reference_roi": {
+              "top": 3016,
+              "left": 219,
+              "size": 256,
+              "mean_Y": 0.3353601396083832,
+              "structure": 0.026715738962832334,
+              "sigma_Y": 0.028226912021636963,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 3020,
+              "left": 246,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9593718647956848,
+              "offset_yx": [
+                4,
+                27
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.00029644815367646515,
+              "sigma_YCoCg": 0.00025162246311083436,
+              "sigma_Co": 0.0015876219840720296,
+              "sigma_Cg": 0.0017112846253439784,
+              "sigma_chroma": 0.001650611800704134,
+              "mean_Y": 0.36000120639801025,
+              "mean_Co": 0.34076058864593506,
+              "mean_Cg": 0.02593480423092842,
+              "gradient_mean": 0.0016075444873422384,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.001110501354560256,
+              "medium_band_chroma_mad": 0.0029715284573138593,
+              "relative_sigma_Y": 0.0008234643340298085
+            },
+            "target": {
+              "sigma_Y": 0.010331036522984505,
+              "sigma_YCoCg": 0.01194007694721222,
+              "sigma_Co": 0.025293299928307533,
+              "sigma_Cg": 0.016810962930321693,
+              "sigma_chroma": 0.021475095994057534,
+              "mean_Y": 0.33969634771347046,
+              "mean_Co": 0.30240559577941895,
+              "mean_Cg": 0.020720330998301506,
+              "gradient_mean": 0.006256880238652229,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.011637155897915363,
+              "medium_band_chroma_mad": 0.04329673331922445,
+              "relative_sigma_Y": 0.03041256284479868
+            },
+            "ratios": {
+              "sigma_Y": 34.84938730385717,
+              "relative_sigma_Y": 36.932459109634955,
+              "sigma_chroma": 13.010385594539237,
+              "medium_band_Y_mad": 10.479191087996039,
+              "medium_band_chroma_mad": 14.570526226211184,
+              "mean_Y": 0.943597803774882,
+              "gradient_mean": 3.8921972535869047
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 1005,
+              "left": 3037,
+              "size": 256,
+              "mean_Y": 0.34535861015319824,
+              "structure": 0.026939182880992504,
+              "sigma_Y": 0.030044611543416977,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 1033,
+              "left": 3026,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.946627676486969,
+              "offset_yx": [
+                28,
+                -10
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.00027082086307927966,
+              "sigma_YCoCg": 0.0003331548359710723,
+              "sigma_Co": 0.002117156982421875,
+              "sigma_Cg": 0.0019341869046911597,
+              "sigma_chroma": 0.0020277367519597393,
+              "mean_Y": 0.36997759342193604,
+              "mean_Co": 0.2513367235660553,
+              "mean_Cg": 0.043084416538476944,
+              "gradient_mean": 0.001659244648180902,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.0008409066358581185,
+              "medium_band_chroma_mad": 0.003476046343464628,
+              "relative_sigma_Y": 0.0007319926068345053
+            },
+            "target": {
+              "sigma_Y": 0.01205035112798214,
+              "sigma_YCoCg": 0.013721129857003689,
+              "sigma_Co": 0.02685522846877575,
+              "sigma_Cg": 0.017436213791370392,
+              "sigma_chroma": 0.022640945734316385,
+              "mean_Y": 0.3404921889305115,
+              "mean_Co": 0.2166338562965393,
+              "mean_Cg": 0.037826940417289734,
+              "gradient_mean": 0.006654310971498489,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.0124050909653306,
+              "medium_band_chroma_mad": 0.044921922485426063,
+              "relative_sigma_Y": 0.03539097670884135
+            },
+            "ratios": {
+              "sigma_Y": 44.49565292336632,
+              "relative_sigma_Y": 48.348817157989174,
+              "sigma_chroma": 11.165623798273948,
+              "medium_band_Y_mad": 14.75204313576572,
+              "medium_band_chroma_mad": 12.923280660479257,
+              "mean_Y": 0.9203048913889271,
+              "gradient_mean": 4.01044594526424
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 2346,
+              "left": 2473,
+              "size": 256,
+              "mean_Y": 0.35548174381256104,
+              "structure": 0.026939434379041963,
+              "sigma_Y": 0.02878805622458458,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 2360,
+              "left": 2468,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.967681348323822,
+              "offset_yx": [
+                14,
+                -4
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.00027330624288879335,
+              "sigma_YCoCg": 0.00025510202976875007,
+              "sigma_Co": 0.0016526401741430163,
+              "sigma_Cg": 0.0017084015998989344,
+              "sigma_chroma": 0.0016807521488501358,
+              "mean_Y": 0.3609083592891693,
+              "mean_Co": 0.3179217576980591,
+              "mean_Cg": 0.03506164997816086,
+              "gradient_mean": 0.001861416269093752,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.000937428732868284,
+              "medium_band_chroma_mad": 0.003048827750636937,
+              "relative_sigma_Y": 0.0007572732408500773
+            },
+            "target": {
+              "sigma_Y": 0.011458692140877247,
+              "sigma_YCoCg": 0.013094674795866013,
+              "sigma_Co": 0.02559678442776203,
+              "sigma_Cg": 0.016635505482554436,
+              "sigma_chroma": 0.021586285179500193,
+              "mean_Y": 0.35553717613220215,
+              "mean_Co": 0.2876330316066742,
+              "mean_Cg": 0.031989686191082,
+              "gradient_mean": 0.006819877773523331,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.012135826982557774,
+              "medium_band_chroma_mad": 0.04328049790345461,
+              "relative_sigma_Y": 0.032229237644100746
+            },
+            "ratios": {
+              "sigma_Y": 41.926199781465364,
+              "relative_sigma_Y": 42.55958867359661,
+              "sigma_chroma": 12.843229261535178,
+              "medium_band_Y_mad": 12.945866237132877,
+              "medium_band_chroma_mad": 14.19578324633551,
+              "mean_Y": 0.9851175983633462,
+              "gradient_mean": 3.66381119943883
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 1676,
+              "left": 3037,
+              "size": 256,
+              "mean_Y": 0.3161764144897461,
+              "structure": 0.027539371785784306,
+              "sigma_Y": 0.02935415506362915,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 1698,
+              "left": 3027,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9353606104850769,
+              "offset_yx": [
+                22,
+                -9
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.00019308840273879468,
+              "sigma_YCoCg": 0.00022929247643332928,
+              "sigma_Co": 0.0018369854660704732,
+              "sigma_Cg": 0.0018409896874800324,
+              "sigma_chroma": 0.0018389886666265755,
+              "mean_Y": 0.3370199203491211,
+              "mean_Co": 0.24054892361164093,
+              "mean_Cg": 0.04242659732699394,
+              "gradient_mean": 0.0008991969516500831,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.0006114760763011873,
+              "medium_band_chroma_mad": 0.0031277012038449866,
+              "relative_sigma_Y": 0.0005729287531098256
+            },
+            "target": {
+              "sigma_Y": 0.012534397654235363,
+              "sigma_YCoCg": 0.014237740077078342,
+              "sigma_Co": 0.02741539478302002,
+              "sigma_Cg": 0.01788037270307541,
+              "sigma_chroma": 0.023144239014382447,
+              "mean_Y": 0.32034194469451904,
+              "mean_Co": 0.20957939326763153,
+              "mean_Cg": 0.03742437809705734,
+              "gradient_mean": 0.006035437807440758,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.011669189669191837,
+              "medium_band_chroma_mad": 0.04529110883350541,
+              "relative_sigma_Y": 0.03912818118834946
+            },
+            "ratios": {
+              "sigma_Y": 64.91533140491919,
+              "relative_sigma_Y": 68.29502093578627,
+              "sigma_chroma": 12.585308128536775,
+              "medium_band_Y_mad": 19.083640589471056,
+              "medium_band_chroma_mad": 14.480637977127595,
+              "mean_Y": 0.9505133831931204,
+              "gradient_mean": 6.71203099205947
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 335,
+              "left": 3037,
+              "size": 256,
+              "mean_Y": 0.3361550271511078,
+              "structure": 0.027793945888161087,
+              "sigma_Y": 0.029264139011502266,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 364,
+              "left": 3029,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9567153453826904,
+              "offset_yx": [
+                29,
+                -7
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.00029768532840535045,
+              "sigma_YCoCg": 0.0003856797411572188,
+              "sigma_Co": 0.0021279160864651203,
+              "sigma_Cg": 0.002048482419922948,
+              "sigma_chroma": 0.0020885769193125744,
+              "mean_Y": 0.39163607358932495,
+              "mean_Co": 0.2751983404159546,
+              "mean_Cg": 0.04474169760942459,
+              "gradient_mean": 0.0021304574329406023,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.0009013296221382916,
+              "medium_band_chroma_mad": 0.003590928354642413,
+              "relative_sigma_Y": 0.0007601070189400056
+            },
+            "target": {
+              "sigma_Y": 0.01240412425249815,
+              "sigma_YCoCg": 0.01413330901414156,
+              "sigma_Co": 0.026072364300489426,
+              "sigma_Cg": 0.016917748376727104,
+              "sigma_chroma": 0.021977015156245488,
+              "mean_Y": 0.3424578309059143,
+              "mean_Co": 0.2308206558227539,
+              "mean_Cg": 0.036783769726753235,
+              "gradient_mean": 0.0069589633494615555,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.01259608007967472,
+              "medium_band_chroma_mad": 0.04490026090854672,
+              "relative_sigma_Y": 0.0362208807422658
+            },
+            "ratios": {
+              "sigma_Y": 41.66857775270595,
+              "relative_sigma_Y": 47.65234347234028,
+              "sigma_chroma": 10.522483013687095,
+              "medium_band_Y_mad": 13.974998458157959,
+              "medium_band_chroma_mad": 12.50380304872942,
+              "mean_Y": 0.8744287209482657,
+              "gradient_mean": 3.2664174565817636
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 1676,
+              "left": 2473,
+              "size": 256,
+              "mean_Y": 0.3172270953655243,
+              "structure": 0.028277470494979744,
+              "sigma_Y": 0.02952340431511402,
+              "clipping": 0.0,
+              "kind": "flat"
+            },
+            "target_roi": {
+              "top": 1699,
+              "left": 2469,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9204310774803162,
+              "offset_yx": [
+                23,
+                -3
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 0.0001974074839381501,
+              "sigma_YCoCg": 0.0002441662654746324,
+              "sigma_Co": 0.0018276568735018373,
+              "sigma_Cg": 0.001862618257291615,
+              "sigma_chroma": 0.001845220368906457,
+              "mean_Y": 0.3292345404624939,
+              "mean_Co": 0.2301158905029297,
+              "mean_Cg": 0.04088358208537102,
+              "gradient_mean": 0.0010566206183284521,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.0005256246658973396,
+              "medium_band_chroma_mad": 0.0031804492023437153,
+              "relative_sigma_Y": 0.0005995953026703728
+            },
+            "target": {
+              "sigma_Y": 0.012319941073656082,
+              "sigma_YCoCg": 0.014026448130607605,
+              "sigma_Co": 0.026147108525037766,
+              "sigma_Cg": 0.01781020127236843,
+              "sigma_chroma": 0.022370455444429112,
+              "mean_Y": 0.3166482150554657,
+              "mean_Co": 0.20023532211780548,
+              "mean_Cg": 0.03717564791440964,
+              "gradient_mean": 0.006242477800697088,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.012012175284326077,
+              "medium_band_chroma_mad": 0.04495980837019905,
+              "relative_sigma_Y": 0.038907344137398846
+            },
+            "ratios": {
+              "sigma_Y": 62.4086829327912,
+              "relative_sigma_Y": 64.8893411341285,
+              "sigma_chroma": 12.123460060050517,
+              "medium_band_Y_mad": 22.853142296545478,
+              "medium_band_chroma_mad": 14.136307643922615,
+              "mean_Y": 0.9617709448427024,
+              "gradient_mean": 5.907965160260203
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 335,
+              "left": 782,
+              "size": 256,
+              "mean_Y": 0.03561921417713165,
+              "structure": 0.1850638134761846,
+              "sigma_Y": 0.0036680500488728285,
+              "clipping": 0.0010528564453125,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 361,
+              "left": 794,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9932897090911865,
+              "offset_yx": [
+                26,
+                12
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 2.212049912486691e-05,
+              "sigma_YCoCg": 1.926120421558153e-05,
+              "sigma_Co": 9.753767517395318e-05,
+              "sigma_Cg": 0.00010856269364012405,
+              "sigma_chroma": 0.00010319752063092172,
+              "mean_Y": 0.03163459897041321,
+              "mean_Co": 0.01890859566628933,
+              "mean_Cg": 0.0017083536367863417,
+              "gradient_mean": 0.004798434674739838,
+              "clipped_percent": 0.07476806640625,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 6.888586358400062e-05,
+              "medium_band_chroma_mad": 0.0001957329705123331,
+              "relative_sigma_Y": 0.0006992501831793562
+            },
+            "target": {
+              "sigma_Y": 0.00016304856399074197,
+              "sigma_YCoCg": 0.0003266486746724695,
+              "sigma_Co": 0.0020290156826376915,
+              "sigma_Cg": 0.000979728763923049,
+              "sigma_chroma": 0.001593231478983497,
+              "mean_Y": 0.033087413758039474,
+              "mean_Co": 0.017864253371953964,
+              "mean_Cg": -0.006062270142138004,
+              "gradient_mean": 0.005114808212965727,
+              "clipped_percent": 0.05340576171875,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.001507562818005681,
+              "medium_band_chroma_mad": 0.005905505414093072,
+              "relative_sigma_Y": 0.004927812284848795
+            },
+            "ratios": {
+              "sigma_Y": 7.370926084007292,
+              "relative_sigma_Y": 7.047280649170486,
+              "sigma_chroma": 15.438660437217006,
+              "medium_band_Y_mad": 21.88493748310686,
+              "medium_band_chroma_mad": 30.171234813610347,
+              "mean_Y": 1.0459248681794586,
+              "gradient_mean": 1.0659326550575667
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3687,
+              "left": 1346,
+              "size": 256,
+              "mean_Y": 0.010105211287736893,
+              "structure": 0.17918272830427814,
+              "sigma_Y": 0.004044912755489349,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 3682,
+              "left": 1360,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9027844071388245,
+              "offset_yx": [
+                -4,
+                14
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 2.3262275135493837e-05,
+              "sigma_YCoCg": 2.6491490643820725e-05,
+              "sigma_Co": 0.00011249187809880823,
+              "sigma_Cg": 0.00010926934919552878,
+              "sigma_chroma": 0.00011089232009434091,
+              "mean_Y": 0.004247608594596386,
+              "mean_Co": 0.009593438357114792,
+              "mean_Cg": -0.0027897765394300222,
+              "gradient_mean": 0.00014561577700078487,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 8.311843703268096e-05,
+              "medium_band_chroma_mad": 0.0002629898845625389,
+              "relative_sigma_Y": 0.005476558072014226
+            },
+            "target": {
+              "sigma_Y": 0.00016829140076879412,
+              "sigma_YCoCg": 0.0002881688124034554,
+              "sigma_Co": 0.00200648489408195,
+              "sigma_Cg": 0.0009298454970121384,
+              "sigma_chroma": 0.0015637445888783766,
+              "mean_Y": 0.010716335847973824,
+              "mean_Co": 0.016247423365712166,
+              "mean_Cg": -0.011841811239719391,
+              "gradient_mean": 0.0009185024537146091,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.0015386852901428938,
+              "medium_band_chroma_mad": 0.00611282094471659,
+              "relative_sigma_Y": 0.015704192473644206
+            },
+            "ratios": {
+              "sigma_Y": 7.23452026031681,
+              "relative_sigma_Y": 2.8675296175337284,
+              "sigma_chroma": 14.101468772120839,
+              "medium_band_Y_mad": 18.511961305743817,
+              "medium_band_chroma_mad": 23.24355917675215,
+              "mean_Y": 2.5229103881197195,
+              "gradient_mean": 6.307712478914001
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 3016,
+              "left": 782,
+              "size": 256,
+              "mean_Y": 0.010912821628153324,
+              "structure": 0.16465302098484214,
+              "sigma_Y": 0.005442488007247448,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 3020,
+              "left": 804,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.9093614220619202,
+              "offset_yx": [
+                4,
+                22
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 3.0506284019793384e-05,
+              "sigma_YCoCg": 2.154674075427465e-05,
+              "sigma_Co": 0.00010280237620463595,
+              "sigma_Cg": 0.00014012544124852866,
+              "sigma_chroma": 0.00012288911228911688,
+              "mean_Y": 0.004735277965664864,
+              "mean_Co": 0.0028278680983930826,
+              "mean_Cg": 0.0010263270232826471,
+              "gradient_mean": 0.00015112230903469026,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 7.734997052466497e-05,
+              "medium_band_chroma_mad": 0.00023477286340437448,
+              "relative_sigma_Y": 0.006442342823587571
+            },
+            "target": {
+              "sigma_Y": 0.00018416337843518704,
+              "sigma_YCoCg": 0.0003553398419171572,
+              "sigma_Co": 0.002243143506348133,
+              "sigma_Cg": 0.001223633880726993,
+              "sigma_chroma": 0.001806788956150496,
+              "mean_Y": 0.012254776433110237,
+              "mean_Co": 0.003814719384536147,
+              "mean_Cg": -0.008064087480306625,
+              "gradient_mean": 0.0008843648247420788,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.001620945055037737,
+              "medium_band_chroma_mad": 0.006714002990816863,
+              "relative_sigma_Y": 0.015027885611818278
+            },
+            "ratios": {
+              "sigma_Y": 6.036899752054245,
+              "relative_sigma_Y": 2.332674001264907,
+              "sigma_chroma": 14.702595880908694,
+              "medium_band_Y_mad": 20.955988011926365,
+              "medium_band_chroma_mad": 28.597866437624077,
+              "mean_Y": 2.5879740369981823,
+              "gradient_mean": 5.851980626758899
+            }
+          },
+          {
+            "reference_roi": {
+              "top": 2346,
+              "left": 1346,
+              "size": 256,
+              "mean_Y": 0.006992913782596588,
+              "structure": 0.15482278540730476,
+              "sigma_Y": 0.003362610237672925,
+              "clipping": 0.0,
+              "kind": "detail"
+            },
+            "target_roi": {
+              "top": 2361,
+              "left": 1359,
+              "size": 256
+            },
+            "registration": {
+              "status": "accepted_integer_translation",
+              "ncc": 0.8835489749908447,
+              "offset_yx": [
+                15,
+                13
+              ],
+              "search_margin_pixels": 32
+            },
+            "reference": {
+              "sigma_Y": 1.6484324078192003e-05,
+              "sigma_YCoCg": 1.2257106391189154e-05,
+              "sigma_Co": 5.953452637186274e-05,
+              "sigma_Cg": 7.48559323255904e-05,
+              "sigma_chroma": 6.763050507964357e-05,
+              "mean_Y": 0.002358855679631233,
+              "mean_Co": 0.0011775423772633076,
+              "mean_Cg": 0.0005470843752846122,
+              "gradient_mean": 0.00016079543274827302,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 5.734719889005646e-05,
+              "medium_band_chroma_mad": 0.00012966376834177299,
+              "relative_sigma_Y": 0.006988271567664981
+            },
+            "target": {
+              "sigma_Y": 0.00015141998301260173,
+              "sigma_YCoCg": 0.000273970072157681,
+              "sigma_Co": 0.0015677224146202207,
+              "sigma_Cg": 0.0008242643671110272,
+              "sigma_chroma": 0.001252430699917484,
+              "mean_Y": 0.008767422288656235,
+              "mean_Co": 0.002290703821927309,
+              "mean_Cg": -0.0072853839956223965,
+              "gradient_mean": 0.000972399371676147,
+              "clipped_percent": 0.0,
+              "black_percent": 0.0,
+              "medium_band_Y_mad": 0.001325931865721941,
+              "medium_band_chroma_mad": 0.005232290194923815,
+              "relative_sigma_Y": 0.01727075279680746
+            },
+            "ratios": {
+              "sigma_Y": 9.185695591420904,
+              "relative_sigma_Y": 2.4713911915959224,
+              "sigma_chroma": 18.518724626447586,
+              "medium_band_Y_mad": 23.12112694926843,
+              "medium_band_chroma_mad": 40.3527543726196,
+              "mean_Y": 3.7168116576029235,
+              "gradient_mean": 6.047431541158565
+            }
+          }
+        ],
+        "summary": {
+          "flat": {
+            "accepted_regions": 6,
+            "attempted_regions": 6,
+            "median_target_to_reference": {
+              "sigma_Y": 43.21092635241584,
+              "relative_sigma_Y": 48.000580315164726,
+              "sigma_chroma": 12.354384094293646,
+              "medium_band_Y_mad": 14.36352079696184,
+              "medium_band_chroma_mad": 14.166045445129063,
+              "mean_Y": 0.9470555934840013,
+              "gradient_mean": 3.9513215994255724
+            }
+          },
+          "detail": {
+            "accepted_regions": 4,
+            "attempted_regions": 4,
+            "median_target_to_reference": {
+              "sigma_Y": 7.30272317216205,
+              "relative_sigma_Y": 2.669460404564825,
+              "sigma_chroma": 15.07062815906285,
+              "medium_band_Y_mad": 21.420462747516613,
+              "medium_band_chroma_mad": 29.384550625617212,
+              "mean_Y": 2.555442212558951,
+              "gradient_mean": 5.949706083958732
+            }
+          }
+        }
+      },
+      "protocol_valid_for_pure_denoising_gain": false
+    }
+  ],
+  "render_server_sha256": "9830d1aa604a71faf9e42f2e14aa833ff8e9e799f993b7c3bf2e3c92a3e97381"
+}
