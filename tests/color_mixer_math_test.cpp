@@ -1,6 +1,7 @@
 #include "ColorMixer.h"
 #include "WorkingColorSpace.h"
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <limits>
@@ -115,6 +116,39 @@ int main()
     const cv::Vec3f signedResult = ColorMixer::apply(outOfGamut, single(3, 1, 100));
     for (int c = 0; c < 3; ++c)
         if (!check(std::isfinite(signedResult[c]), "negative working colours stay finite")) return 1;
+    // Slider track colours: encoded sRGB at the band's reference colour.
+    const auto encodedHue = [](const cv::Vec3f &encoded) {
+        cv::Vec3d linear;
+        for (int c = 0; c < 3; ++c) linear[c] = WorkingColor::srgbDecode(double(encoded[c]));
+        const cv::Vec3d lab = WorkingColor::toOklab(linear);
+        return std::atan2(lab[2], lab[1]) * DegreesPerRadian;
+    };
+    for (int band = 0; band < int(ColorMixer::BandCount); ++band) {
+        const cv::Vec3f reference = ColorMixer::trackColour(band, 0, 0);
+        for (int component = 0; component < 3; ++component) {
+            for (int value : {-100, -50, 0, 50, 100}) {
+                const cv::Vec3f c = ColorMixer::trackColour(band, component, value);
+                for (int k = 0; k < 3; ++k)
+                    if (!check(std::isfinite(c[k]) && c[k] >= 0.0f && c[k] <= 1.0f, "track colours are encoded sRGB")) return 1;
+            }
+            if (!check(cv::norm(ColorMixer::trackColour(band, component, 0) - reference) == 0,
+                       "every track passes through the band's reference colour at zero")) return 1;
+        }
+        const double low = std::remainder(encodedHue(ColorMixer::trackColour(band, 0, -100)) - encodedHue(reference), 360.0);
+        const double high = std::remainder(encodedHue(ColorMixer::trackColour(band, 0, 100)) - encodedHue(reference), 360.0);
+        if (!check(low < -5 && high > 5, "the hue track turns both ways from the reference")) return 1;
+        const cv::Vec3f grey = ColorMixer::trackColour(band, 1, -100);
+        const float spread = std::max({grey[0], grey[1], grey[2]}) - std::min({grey[0], grey[1], grey[2]});
+        const float referenceSpread = std::max({reference[0], reference[1], reference[2]}) -
+                                      std::min({reference[0], reference[1], reference[2]});
+        // Lightroom keeps a residual at -100: 4 to 12 % of the reference here, violet about 25 %.
+        if (!check(spread < 0.3f * referenceSpread, "saturation -100 strongly desaturates the track")) return 1;
+        for (int other = 0; other < band; ++other)
+            if (!check(std::abs(std::remainder(encodedHue(ColorMixer::trackColour(other, 0, 0)) - encodedHue(reference), 360.0)) > 10,
+                       "bands have distinct reference hues")) return 1;
+    }
+    if (!check(ColorMixer::trackColour(8, 0, 0) == cv::Vec3f(0.5f, 0.5f, 0.5f) &&
+               ColorMixer::trackColour(0, 3, 0) == cv::Vec3f(0.5f, 0.5f, 0.5f), "invalid track requests give grey")) return 1;
     // Malformed imported values clamp to +-100.
     const cv::Vec3f orange = colour(0.6, 0.08, Peaks[1]);
     return check(cv::norm(ColorMixer::apply(orange, single(1, 0, std::numeric_limits<int>::max())) -
