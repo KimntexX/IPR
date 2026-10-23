@@ -15,7 +15,16 @@ ColumnLayout {
                                       qsTr("Bleus"), qsTr("Violets"), qsTr("Magentas")]
     readonly property var bandColors: ["#e55353", "#ed923b", "#e6c34b", "#70bd66",
                                        "#40b8c2", "#5d8ee8", "#8e63d8", "#df65b5"]
-    readonly property var bandHues: [0, 30, 60, 120, 180, 240, 270, 300]
+    // Slider tracks: the colour each slider reaches at -100 and +100, measured on
+    // the Lightroom mixer (scripts/mixer_track_colours.py from the model
+    // modele-melangeur-lr-v001); regenerate them with the model.
+    readonly property var centreColors: ["#e07080", "#df784d", "#bc9202", "#76aa49", "#08b09f", "#24a3e3", "#a384e3", "#d273b0"]
+    readonly property var hueLowColors: ["#e265a1", "#ef4772", "#e1603a", "#b3994e", "#4bb067", "#07c6ac", "#629ce0", "#b47dc9"]
+    readonly property var hueHighColors: ["#d5926f", "#bd9f37", "#6caa02", "#05ab84", "#5989b7", "#b077e9", "#e071dc", "#d47893"]
+    readonly property var saturationLowColors: ["#a39d9d", "#999391", "#8e8b87", "#8e918b", "#8f9694", "#a3a7ab", "#a89ec1", "#a29d9f"]
+    readonly property var saturationHighColors: ["#ea084d", "#d76a0b", "#b49305", "#6aa80a", "#04ad9c", "#0992c4", "#9858f9", "#db00aa"]
+    readonly property var luminanceLowColors: ["#991b39", "#a34302", "#7f6404", "#497a02", "#008072", "#006185", "#764abf", "#932473"]
+    readonly property var luminanceHighColors: ["#ffa6b1", "#fda07d", "#dbb356", "#9ac877", "#56d6c4", "#8bcffe", "#c2a9fb", "#f3a4d4"]
 
     function reload() {
         reloading = true
@@ -120,9 +129,8 @@ ColumnLayout {
 
     AdjustmentControl {
         id: hueControl
-        trackColors: [Qt.hsla(((root.bandHues[root.band] + 330) % 360) / 360, 0.65, 0.55, 1),
-                      root.bandColors[root.band],
-                      Qt.hsla(((root.bandHues[root.band] + 30) % 360) / 360, 0.65, 0.55, 1)]
+        trackColors: [root.hueLowColors[root.band], root.centreColors[root.band],
+                      root.hueHighColors[root.band]]
         Layout.fillWidth: true
         label: qsTr("Teinte")
         valueText: Math.round(value)
@@ -134,7 +142,7 @@ ColumnLayout {
 
     AdjustmentControl {
         id: saturationControl
-        trackColors: ["#7d838b", root.bandColors[root.band]]
+        trackColors: [root.saturationLowColors[root.band], root.saturationHighColors[root.band]]
         Layout.fillWidth: true
         label: qsTr("Saturation %1").arg(root.bandNames[root.band])
         valueText: Math.round(value)
@@ -146,7 +154,8 @@ ColumnLayout {
 
     AdjustmentControl {
         id: luminanceControl
-        trackColors: ["#20252c", root.bandColors[root.band], "#f2f2ee"]
+        trackColors: [root.luminanceLowColors[root.band], root.centreColors[root.band],
+                      root.luminanceHighColors[root.band]]
         Layout.fillWidth: true
         label: qsTr("Luminance %1").arg(root.bandNames[root.band])
         valueText: Math.round(value)

@@ -1,3 +1,5 @@
+#include <QColor>
+#include <QSet>
 #include <QGuiApplication>
 #include <QQmlComponent>
 #include <QQmlEngine>
@@ -103,5 +105,29 @@ ColorMixerModule {
                "violet and magenta should expose independent editable controls")) return 1;
     select(8);
     if (!check(root->property("band").toInt() == 6, "an invalid band must not break selection")) return 1;
+    // Measured slider tracks: eight colours per palette, and the tracks follow the band.
+    for (const char *name : {"centreColors", "hueLowColors", "hueHighColors", "saturationLowColors",
+                             "saturationHighColors", "luminanceLowColors", "luminanceHighColors"}) {
+        if (!check(root->property(name).toList().size() == 8, "each track palette must have eight bands")) return 1;
+    }
+    const auto track = [](QObject *control) {
+        QStringList colours;
+        for (const QVariant &colour : control->property("trackColors").toList())
+            colours.append(colour.value<QColor>().name());
+        return colours;
+    };
+    QSet<QString> hueTracks;
+    for (int band = 0; band < 8; ++band) {
+        select(band);
+        const QStringList colours = track(hue);
+        const QString expectedLow = root->property("hueLowColors").toList().at(band).toString();
+        const QString expectedHigh = root->property("hueHighColors").toList().at(band).toString();
+        if (!check(colours.size() == 3 && colours.first() == expectedLow && colours.last() == expectedHigh,
+                   "the hue track must run from the band's -100 colour to its +100 colour")) return 1;
+        if (!check(track(saturation).size() == 2 && track(luminance).size() == 3,
+                   "saturation and luminance tracks keep their stops")) return 1;
+        hueTracks.insert(colours.join(QLatin1Char(',')));
+    }
+    if (!check(hueTracks.size() == 8, "each band must have its own hue track")) return 1;
     return 0;
 }
