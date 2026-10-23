@@ -643,17 +643,20 @@ struct CandidateE { double lumaAlpha, chromaH2, chromaFineAlpha; };
 
 Planes candidateE(const Input &in, const NoiseProfile &profile, const CandidateE &k)
 {
-    cv::Mat guideY;
+    cv::Mat guideY, level;
     cv::GaussianBlur(in.planes.y, guideY, cv::Size(0, 0), 1.0, 1.0, cv::BORDER_REFLECT);
+    // The noise level is read on G4: on G1 the noise itself raises sigma where it is
+    // positive, shrinks bright deviations more than dark ones and darkens the shadows.
+    cv::GaussianBlur(in.planes.y, level, cv::Size(0, 0), 4.0, 4.0, cv::BORDER_REFLECT);
     Planes out;
-    // Luminance: Wiener shrinkage per band, sigma of each band at the pixel's level.
+    // Luminance: Wiener shrinkage per band, sigma of each band at the local level.
     {
         const auto b = bands(in.planes.y);   // fine, mid, coarse, pixel
         cv::Mat g16;
         cv::GaussianBlur(in.planes.y, g16, cv::Size(0, 0), 16.0, 16.0, cv::BORDER_REFLECT);
-        out.y = g16 + wiener(b[0], sigmaOf(profile, 0, 1, guideY), k.lumaAlpha, 2)
-                    + wiener(b[1], sigmaOf(profile, 0, 2, guideY), k.lumaAlpha, 3)
-                    + wiener(b[2], sigmaOf(profile, 0, 3, guideY), k.lumaAlpha, 6);
+        out.y = g16 + wiener(b[0], sigmaOf(profile, 0, 1, level), k.lumaAlpha, 2)
+                    + wiener(b[1], sigmaOf(profile, 0, 2, level), k.lumaAlpha, 3)
+                    + wiener(b[2], sigmaOf(profile, 0, 3, level), k.lumaAlpha, 6);
     }
     // Chrominance: half-resolution impulse median + joint blocks, guided upsampling,
     // fine residual shrunk.
@@ -674,7 +677,13 @@ Planes candidateE(const Input &in, const NoiseProfile &profile, const CandidateE
         const double eps = std::pow(profile.at(0, 4, meanOf(in.planes.y)), 2) * 4.0;
         const cv::Mat smoothChroma = guided(guideY, up, 3, eps);
         const cv::Mat fineResidual = plane - upLow;
-        *out.all()[size_t(c)] = smoothChroma + wiener(fineResidual, sigmaOf(profile, c, 1, guideY), k.chromaFineAlpha, 2);
+        cv::Mat denoised = smoothChroma + wiener(fineResidual, sigmaOf(profile, c, 1, level), k.chromaFineAlpha, 2);
+        // The median and the block weights bias the skewed chroma noise near black:
+        // the G16 mean of the input is restored (the noise has almost no energy there).
+        cv::Mat meanIn, meanOut;
+        cv::GaussianBlur(plane, meanIn, cv::Size(0, 0), 16.0, 16.0, cv::BORDER_REFLECT);
+        cv::GaussianBlur(denoised, meanOut, cv::Size(0, 0), 16.0, 16.0, cv::BORDER_REFLECT);
+        *out.all()[size_t(c)] = denoised + meanIn - meanOut;
     }
     return out;
 }
