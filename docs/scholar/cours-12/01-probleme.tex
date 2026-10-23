@@ -1,0 +1,57 @@
+\chapter{Saturation et vibrance : ce que l'on cherche à reproduire}
+
+\section{Deux curseurs voisins, deux intentions}
+Les deux curseurs modifient l'intensité des couleurs, sans changer la
+luminosité générale de l'image. Leur intention diffère pourtant.
+
+\begin{itemize}
+\item La \textbf{saturation} agit uniformément : chaque couleur voit son
+intensité multipliée par le même facteur. À $-100$, l'image devient grise ; à
+$+100$, toutes les couleurs, y compris celles qui sont déjà vives, sont
+renforcées autant.
+\item La \textbf{vibrance} est sélective. Elle renforce surtout les couleurs
+ternes et épargne celles qui sont déjà intenses. Les tons chair sont réputés
+protégés. Le photographe s'en sert pour réveiller une image sans faire
+« baver » les couleurs vives.
+\end{itemize}
+
+La description de la vibrance reste qualitative : les éditeurs ne publient pas
+leur formule. Pour reproduire Lightroom, il faut donc le \emph{mesurer}.
+
+\section{Pourquoi un modèle mathématique simple ne suffit pas}
+Un premier modèle de vibrance, utilisé par \IPR{} jusqu'en octobre 2026,
+pondérait le gain par la saturation relative du pixel,
+$g_v=1+(V/100)(1-c)$ avec $c=(\max-\min)/\max$. Un second prototype (A1/A2)
+travaillait en Oklab avec un poids $(1-q)^2$ et une protection des tons chair.
+Mesurés sur 49 scènes, ces modèles restaient loin de Lightroom :
+
+\begin{itemize}
+\item à $+25$ et $+50$, ils renforçaient environ deux fois trop les couleurs
+peu saturées ;
+\item à $+100$, ils renforçaient trop les couleurs saturées ;
+\item à $-100$, ils retiraient trop d'intensité aux couleurs saturées ;
+\item ils ne modifiaient jamais la clarté, alors que Lightroom assombrit
+légèrement en désaturant, ni la teinte, alors que Lightroom la fait tourner.
+\end{itemize}
+
+Le dernier point est le plus parlant : aucun choix de constantes n'aurait
+corrigé un modèle qui ne possède pas le degré de liberté nécessaire.
+
+\resultat{On ne devine pas le comportement d'un logiciel de référence : on le
+mesure, on identifie les variables qui l'expliquent, puis on choisit la
+représentation du modèle.}
+
+\section{La démarche suivie}
+\begin{enumerate}
+\item \textbf{Constituer des paires} : pour chaque photographie, un export
+Lightroom neutre et un export avec le seul curseur modifié.
+\item \textbf{Comparer pixel par pixel} chaque export à son neutre : gain
+d'intensité, changement de clarté, rotation de teinte.
+\item \textbf{Chercher les variables explicatives} : de quoi dépend la réponse
+d'un pixel ? De sa saturation, de sa clarté, de sa teinte, de l'image ?
+\item \textbf{Construire un modèle} à partir de ces variables.
+\item \textbf{Valider} sur des images exclues de la construction, puis sur le
+rendu réel d'\IPR{}.
+\end{enumerate}
+
+Ces cinq étapes structurent les chapitres suivants.

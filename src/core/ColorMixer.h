@@ -4,10 +4,13 @@
 #include <array>
 #include <opencv2/core.hpp>
 
+// Colour mixer following the Lightroom response tables (ColorMixerModel.h):
+// for each band (red, orange, yellow, green, cyan, blue, violet, magenta) and
+// component, a hue rotation, a chroma gain and a lightness gain in Oklab, by
+// the pixel's Oklab hue, linear ProPhoto saturation and Oklab lightness,
+// interpolated between the measured slider values. Active sliders add up.
 namespace ColorMixer {
 inline constexpr size_t BandCount = 8;
-inline constexpr std::array<float, BandCount> Centers{
-    0.0f, 30.0f, 60.0f, 120.0f, 180.0f, 240.0f, 270.0f, 300.0f};
 
 struct Parameters {
     std::array<int, BandCount> hue{};
@@ -15,8 +18,8 @@ struct Parameters {
     std::array<int, BandCount> luminance{};
 };
 
-// Input/output: linear Rec.2020 D65 RGB, not gamma-encoded RGB. No output clipping.
-// HSV band centres refer to these working primaries, not to sRGB channel angles.
+// Input/output: linear Rec.2020 D65 RGB, slider values in [-100, 100]
+// (clamped). Zero settings and greys are returned unchanged; no clipping.
 cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters);
 }
 

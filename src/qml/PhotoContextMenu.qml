@@ -32,6 +32,15 @@ Basic.Menu {
     ActionMenuItem { action: root.actions.openImageAction }
     Basic.MenuSeparator { }
     ActionMenuItem {
+        action: root.actions.copyAction
+        enabled: root.currentPhoto && root.actions.copyAction.enabled
+    }
+    ActionMenuItem {
+        action: root.actions.pasteAction
+        enabled: root.currentPhoto && root.actions.pasteAction.enabled
+    }
+    Basic.MenuSeparator { }
+    ActionMenuItem {
         objectName: "contextSaveAdjustments"
         action: root.actions.saveAction
         enabled: root.currentPhoto && root.actions.saveAction.enabled
@@ -53,10 +62,10 @@ Basic.Menu {
     }
     ActionMenuItem {
         text: root.currentPhoto
-              ? qsTr("Enregistrer et dupliquer : raccordement moteur requis")
+              ? qsTr("Dupliquer : raccordement moteur requis")
               : qsTr("Ouvrir cette image pour agir sur ses retouches")
         enabled: false
-        visible: !root.currentPhoto || !root.actions.manualSaveAvailable || !root.actions.duplicationAvailable
+        visible: !root.currentPhoto || !root.actions.duplicationAvailable
         font.pixelSize: 10
     }
 }

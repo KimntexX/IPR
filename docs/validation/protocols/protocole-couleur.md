@@ -92,7 +92,7 @@ conserve leurs identités, statistiques natives et réserves de provenance.
 L'[analyseur de groupe](../tools/analyseurs-groupes.md), `tests/analyse_couleur.py`,
 lit les associations déclarées et les TIFF natifs 16 bits, puis écrit un JSON
 immuable. Il calcule axes WB, chroma faible/forte, gris, Y, clips et progressions.
-L'entrée `--base tests/image/base` lit les déclarations TIFF IPR et le XMP LR.
+L'entrée `--base tests/image/base` rend les états IPR en mémoire et lit le XMP LR.
 Une association ambiguë doit être explicitée ; ne pas utiliser un diagnostic
 ancien 8 bits/redimensionné pour certifier cette recette.
 Les tolérances, références physiques et recette visuelle restent nécessaires :

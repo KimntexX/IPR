@@ -72,6 +72,16 @@ de commit de gel ni de livraison.
 - **À venir : Canon EOS 6D Mark II**, modèle précisé par l'utilisateur ; ses
   RAW CR2 étendront les contrôles multi-boîtiers et de non-régression du rendu,
   mais ne constituent pas une validation du conteneur CR3.
+- **Canon EOS 60D (CR2), décision utilisateur du 20 octobre 2026 : boîtier à
+  faire fonctionner d'ici la fin de la version alpha**, au même titre que le
+  R6 Mark III et le R7. 21 RAW sont à la racine de `tests/image/base` depuis le
+  20 octobre (sélection pour la calibration HL). Ils servent d'abord à apprendre
+  le comportement de LR ; aucune règle de noir/blanc, DCP ni validation de rendu
+  60D n'existe encore, et les règles CR3 ne s'y appliquent pas. Mesure du 20 octobre
+  (`ecart-neutre-hl-v001`) : neutre IPR plus clair que LR de 4,8 L\* en moyenne sur
+  les 10 % les plus clairs (CR3 : 0,6). **Règles 60D ajoutées le 20 octobre**
+  (ADR-0011, extension) : écart ramené à 0,9 L\*, 19/21 CR2 à ΔL\* ≤ 2 ; validation
+  visuelle de l'utilisateur à obtenir.
 
 Le nombre minimal d'images par boîtier et la procédure outillée d'intégration
 sont définis dans la [roadmap des décodeurs RAW](roadmap-decodeurs-raw.md#6-corpus-minimal-par-boîtier).

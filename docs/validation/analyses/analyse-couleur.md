@@ -5,6 +5,707 @@ Protocole : [Couleur](../protocols/protocole-couleur.md).
 Les campagnes ci-dessous vérifient aussi l'outillage ; elles ne remplacent
 pas les validations photographiques historiques ni ne certifient la fidélité.
 
+## Premier jet A1/A2 intégré en production locale — 13 octobre 2026
+
+**Point d'arrêt du 14 octobre 2026 :** à la demande de l'utilisateur, l'état
+A1/A2 et ses preuves sont sauvegardés sur `patch_color`. Les validations
+visuelles et le réglage des coefficients Couleur sont suspendus : le cas
+neutre 0081 montre un écart rouge/sombre à traiter d'abord dans le rendu
+d'ouverture. Les tests mathématiques/fonctionnels restent utiles, mais
+ne constituent pas une validation photographique. Une nouvelle branche
+`patch_raw_opening`, issue de `dev`, porte cette investigation, sans fusion
+du prototype Couleur dans `dev`, sans tag de validation et sans push implicite.
+La future correction du rendu de base nécessitera de rejouer les comparaisons
+Couleur avec des neutres compatibles ; les JSON actuels sont conservés.
+
+À la demande de l'utilisateur, `Vibrance::apply()` remplace l'ancien bloc
+RGB radial du rendu partagé par l'IHM et les exports sur `patch_color`.
+L'implémentation reprend le candidat **A2 étudié, qui contient déjà A1** :
+correction d'intensité aux extrémités −3,5 % / +6,5 %, pondération OKLCh,
+proxy de tons chauds et saturation multiplicative en chroma Oklab.
+Pas de sélecteur d'ancien modèle ni d'import du modèle ProPhoto B.
+
+La clarté L et la teinte h sont conservées par l'opérateur avant sortie ;
+Y n'est plus un invariant. Le zéro et les gris restent exactement inchangés.
+Le gamut de sortie est volontairement inchangé pour comparer le candidat
+étudié ; sa dérive de teinte positive connue n'est pas annoncée corrigée.
+La protection chaude n'est pas une détection de peau. Les constantes
+exploratoires sont conservées, sans nouvelle calibration silencieuse.
+
+**Les courbes/JSON de l'étude et v003 restent des preuves historiques** :
+« current » y désigne l'état mesuré avant cette intégration. Ils ne sont pas
+réécrits et ne certifient pas les nouveaux exports de production. Dans la
+sonde recompilée, « current » suit désormais la production A1/A2 ; le
+comparateur refusera son rapprochement avec le témoin v003 devenu différent.
+Il faudra une nouvelle campagne/neutres compatibles avant nouvelle mesure.
+
+Tests natifs ciblés : **7/7 réussis** (mathématiques A1/A2, correspondance
+avec le candidat étudié, export, générateur, gamut, mélangeur et neutralité).
+L'ancien test de conservation de Y est remplacé par les invariants L,
+zéro/gris, finitude HDR/RGB signés, intensité monotone et désaturation complète
+à saturation −100. L'application Windows et le générateur sont recompilés.
+Validation visuelle utilisateur encore attendue ; aucun tag, fusion ou push.
+
+Pour voir le correctif : fermer l'ancien IPR, lancer
+`build-windows-msvc/Release/appIPR.exe`, garder Camera Neutral, normalisation
+RAW désactivée et mêmes réglages secondaires que les références LR. Tester
+les commandes séparément à −100, −50, −25, 0, +25, +50, +100 puis ensemble.
+Observer les peaux, jaunes/oranges/rouges, bleus, gris, ombres et aplats proches
+du gamut. Le standalone déjà présent dans `dist` n'est pas mis à jour par
+cette compilation. Aucun nouveau TIFF de corpus n'est généré ou supprimé.
+
+### Référence As Shot du corpus complémentaire
+
+Information communiquée par l'utilisateur le 13 octobre 2026 : pour
+**7Y6A7599**, Lightroom affiche en balance des blancs **As Shot** une
+température de **5 350 K** et une nuance de **+8**. Ces valeurs sont propres
+à cette image, pas des défauts globaux ni un réglage manuel erroné.
+Elles sont déclaratives, à confirmer dans les métadonnées des futurs exports
+et à consigner dans leur prochaine mémoire JSON, sans réécrire les campagnes
+antérieures. Ne pas appliquer à cette scène l'ancienne référence 5200/+5.
+
+Complément communiqué par l'utilisateur : IPR affiche **5 314 K**, soit
+**36 K de moins** que Lightroom. Au rendu neutre, les deux images lui
+paraissent semblables, sans différence réellement marquante. Il s'agit
+d'une appréciation visuelle favorable sur cette scène, pas d'une mesure
+de fidélité colorimétrique ni d'une validation des réglages non neutres.
+La nuance affichée dans IPR n'a pas été précisée.
+
+Pour la fleur orange **6V1A0081**, l'inspection des nouveaux exports neutres
+du 14 octobre relève un écart de teinte et de luminosité ; les mesures et
+limites sont conservées uniquement dans le
+[rapport Base colorimétrique, §28](analyse-base-colorimetrique.md#28-fleur-orange-6v1a0081--comparaison-neutre-du-14-octobre-2026).
+Ne pas attribuer ce résidu au bloc A1/A2 lorsque ses deux curseurs sont à zéro.
+
+## Étude comparative des modèles — 13 octobre 2026
+
+### Objectif et conclusion
+
+Le produit vise un comportement photographique cohérent, mathématiquement
+explicable, et visuellement proche des usages de Lightroom, **pas sa copie**.
+Deux études ont été exécutées : famille A (ajustement asymétrique puis modèle
+perceptuel adaptatif), famille B (opérateurs de LightCraft PR #598).
+Le rendu courant sert de témoin ; les candidats restent diagnostiques.
+**Aucune nouvelle modification du code de production n'est livrée par cette étude.**
+
+Recommandation : essayer **A1, correction douce des extrémités**, avant un
+remplacement de modèle. A2 est une piste de fond pour préserver les teintes,
+à associer à une gestion de gamut perceptuelle. B n'est pas recommandé tel
+quel dans IPR : son couplage couleur/luminosité est trop important ici.
+Cette recommandation n'est ni une validation visuelle ni un classement de
+fidélité physique. Les coefficients A restent des hypothèses à valider.
+
+### Preuves et méthode
+
+- [Sonde native v001 — 14:01:15 UTC / 16:01:15 Paris](../raw/sonde-modeles-couleur-v001-20261013T140115169Z.json).
+- [Comparaison v001 — 14:02:27 UTC / 16:02:27 Paris](../raw/comparaison-modeles-couleur-v001-20261013T140227537090Z.json).
+- Référence LR et témoin : [campagne Couleur v003](../raw/mesure-couleur-v003-20261013T103940441925Z.json).
+- [Courbes dérivées : chroma faible, fort et luminance](../metrics/curves/etude-modeles-couleur-v001.svg).
+
+Les sept RAW 0007, 0037, 0043, 0327, 9421, 9890 et 9950 sont décodés avec
+le chargeur courant, DCP Camera Neutral, sans normalisation RAW. La sonde
+échantillonne les pixels natifs tous les huit pixels, **avant la sortie**,
+puis applique les quatre modèles et la même conversion de production en
+sRGB 16 bits : **392 états** (7 scènes × 4 modèles × 2 commandes × 7 valeurs).
+Elle ne génère pas de TIFF et ne touche ni les images ni les profils.
+Les JSON gardent les empreintes RAW/DCP/LCP, outils, exécutables et paramètres.
+
+Le témoin retrouve les mesures v003 avec un écart absolu maximal de
+**3,1653 × 10⁻¹³**. Les réponses LR sont reprises du JSON audité, pas recalculées
+sur de nouveaux pixels. Les corrections optiques diffèrent entre moteurs ;
+les masques de chroma sont propres à chaque moteur et varient avec les états.
+On compare donc des réponses statistiques, **pas une MAE, un Delta E de
+pixels superposés ou une couleur absolue de référence**. Aucun ajustement
+automatique aux mesures LR, aucune recherche de paramètres n'a été effectué.
+
+### Étude A : du changement minimal au modèle perceptuel
+
+**A1 — extrémités RGB.** Avec `a = curseur/100`, on définit
+`b = smoothstep(0,75 ; 1 ; |a|)` et :
+
+```text
+a_effectif = a × (1 − 0,035 b)     si a < 0
+a_effectif = a × (1 + 0,065 b)     si a > 0
+RGB' = Y + (RGB − Y) × max(0, (1 + saturation) × facteur_vibrance)
+```
+
+Les pourcentages concernent **l'intensité de commande**, non un pourcentage
+garanti de chroma en sortie. La courbe ne change pas jusqu'à |a| = 0,75,
+puis raccorde continûment les extrémités. Les états ±25 et ±50 restent ceux
+de production ; la saturation n'est pas modifiée. On ne transpose donc pas
+aveuglément la demande visuelle de +2–3 % de saturation : certains forts
+chromas sont déjà plus renforcés qu'avec LR.
+
+**A2 — OKLCh adaptatif.** Le RGB linéaire passe en Oklab puis en coordonnées
+polaires `(L, C, h)`. La chroma relative exploratoire est
+`q = clamp(C / max(|L|, 0,05), 0, 1)`. Le gain conserve `L` et `h` avant
+sortie, et multiplie `C` par `max(0, (1+s)(1+a_effectif w))`.
+Pour a positif, `w = (1−q)² × protection_ch chaude` ; pour a négatif,
+`w = 1−0,1q`. La protection chaude est une gaussienne autour de 50° Oklab,
+largeur 25°, amplitude 0,4, adoucie selon L et C. Ce n'est **pas un détecteur
+de peau** : prises d'escalade, bois et objets chauds peuvent être protégés.
+Ces constantes exploratoires ne sont ni physiques ni calibrées pour tous
+les boîtiers. Les détails et matrices sont dans `tests/colour_model_study.h`.
+
+Conserver la clarté perceptuelle Oklab `L` ne signifie pas conserver la
+luminance photométrique `Y`. De même, préserver `h` avant sortie ne garantit
+pas sa conservation après le traitement de gamut RGB de production.
+
+### Étude B : transposition contrôlée de LightCraft PR #598
+
+La [PR #598](https://github.com/storytold/lightcraft/pull/598) est ouverte,
+non fusionnée lors de la consultation ; état étudié :
+`b9e312a748fde0b0e5b0eeb070a69b7ecf2df59f`.
+Elle propose vibrance HSV et saturation autour du gris en ProPhoto linéaire
+D50, avec adaptation Bradford. Ses paramètres sont ajustés sur des rendus
+Lightroom, **pas des constantes physiques**. Sa validation annoncée ne vaut
+pas pour IPR. Nous réexprimons ses opérateurs, sans importer le logiciel ou
+son pipeline complet. Le couplage saturation/valeur HSV peut modifier Y.
+La branche principale utilise une autre approche OKLCh : ne pas confondre
+le contenu d'une PR et le comportement livré.
+
+Dans notre sonde, sRGB linéaire D65 → XYZ → Bradford D50 → ProPhoto linéaire,
+puis transformation et trajet inverse. Aucune courbe gamma ProPhoto n'est
+appliquée dans le calcul linéaire. Cette conversion ne rend pas les bases
+IPR et LightCraft identiques. La gestion des masques et les combinaisons de
+réglages ne sont pas évaluées ; la parité CPU/GPU annoncée n'est pas testée ici.
+
+### Résultats descriptifs
+
+Médianes sur sept scènes des variations relatives de chroma forte
+(`C ≥ 0,5` au neutre), après la même sortie sRGB :
+
+| Modèle | Vibrance −100 | Vibrance +100 | Variation Y médiane à −100 |
+| --- | ---: | ---: | ---: |
+| Production courante | −89,84 % | +19,29 % | −0,008 % |
+| A1 extrémités RGB | −85,70 % | +20,48 % | −0,008 % |
+| A2 OKLCh adaptatif | −92,15 % | +31,84 % | −0,067 % |
+| B ProPhoto / PR598 | −57,77 % | +31,21 % | −18,43 % |
+| Lightroom, descriptif | −86,19 % | +25,29 % | Voir mémoire par scène |
+
+A1 répond à la direction du retour visuel sur −100 sans toucher aux
+intermédiaires. Mais la proximité de cette médiane avec LR n'est pas une
+preuve de progrès perceptuel : l'écart absolu médian de réponse ΔC forte
+ne passe que de 0,03302 à 0,03294. À +100 il passe de 0,06595 à 0,06097.
+
+A2 limite remarquablement la dérive de teinte perceptuelle à −100 : moyenne
+absolue Oklab entre **0,066° et 0,444°** selon la scène, contre **1,596° à
+7,866°** pour la production. En revanche sa désaturation est ici trop forte
+pour le retour utilisateur. À +100, la dérive atteint **5,256° sur 9421**
+après sortie, malgré la conservation de h par l'opérateur : indication qu'il
+faut traiter conjointement opérateur et mapping de gamut, pas remplacer une
+formule isolément. A2 n'est pas une amélioration systématique.
+
+B change déjà fortement Y **avant** le mapping final : à −100 son ratio
+de luminance moyenne est entre **0,743 et 0,962** ; à +100 entre **0,769 et
+1,052**. Après sortie, cela représente jusqu'à −25,71 % à −100 et −22,02 %
+à +100. Ce n'est donc pas seulement un écrêtage final. La valeur HSV n'est
+pas Y : augmenter V et S ne garantit pas d'augmenter Y. Ce résultat concerne
+la transposition isolée sur notre base, **pas un défaut démontré de LightCraft**.
+
+Pour la saturation +100, les médianes de ΔC/C forte sont +36,56 % (courant),
++34,52 % (A2), +35,15 % (B). Les trois opérateurs ne conservent pas la même
+grandeur : Y sRGB pour RGB radial, L Oklab pour A2, Y ProPhoto D50 pour B.
+Le gamut de sortie et ces choix expliquent des variations de luminosité
+différentes ; aucune loi ne garantit toutes ces invariances simultanément.
+
+### Robustesse, coût et suite proposée
+
+Les **56 progressions de moyennes de chroma faible** sont monotones sur les
+sept états observés. Les tests synthétiques couvrent 11 couleurs × 4 modèles
+× 201 valeurs de vibrance : identité au zéro, gris, HDR, RGB signés, valeurs
+finies et monotonie de saturation HSV sur ces échantillons. Ils ne prouvent
+pas la monotonie de tous les pixels, la qualité des peaux ou les associations
+avec les autres commandes.
+
+À vibrance +100 : 2 901 nouveaux points écrêtés pour le courant, 3 025 pour
+A1, 4 569 pour A2 et 2 714 pour B, sur les mêmes grilles échantillonnées.
+Ces comptes ne sont pas des nombres de pixels de l'image entière ; la baisse
+de B n'annule pas son changement de luminance. Aucun nouvel écrêtage à −100.
+
+Temps médians de l'opérateur sur les pixels échantillonnés, hors décodage et
+sortie : courant 25,64 ms ; A1 29,13 ms ; A2 114,64 ms ; B 91,15 ms. Ce sont
+des mesures exploratoires CPU, pas un benchmark contrôlé, ni des délais IHM
+pleine résolution, ni une justification suffisante pour un port GPU.
+
+Vérifications de clôture : **2/2 CTest ciblés** (`vibranceMathTests`,
+`colourModelStudyTests`) et **5/5 tests Python du comparateur** réussis.
+Les tests de sélection vérifient que les modifications de la sonde native
+ou du comparateur déclenchent leurs suites ciblées. La vérification
+documentaire passe sans erreur de fichier ou lien local ; elle ne contrôle
+pas les liens externes, ne compile pas LaTeX et ne vaut pas validation visuelle.
+
+Suite recommandée, **à décider avant modification de production** :
+
+1. A1 : contrôler visuellement les extrémités sur les scènes actuelles,
+   les neutres, jaunes/rouges et peaux, puis vérifier les combinaisons de réglages.
+2. A2 : définir un mapping de gamut qui préserve mieux h/L, diminuer la
+   désaturation négative, tester séparément le proxy de tons chauds.
+3. B : retenir les idées d'asymétrie et de fondu près des gris, mais éviter
+   d'adopter ses coefficients ajustés à LR sans étude de luminance propre à IPR.
+4. Étendre ensuite à d'autres illuminants, boîtiers et objectifs. Les sept
+   scènes actuelles ne suffisent pas à déclarer une généralisation matérielle.
+
+### Bibliographie de l'étude
+
+- [LightCraft PR #598](https://github.com/storytold/lightcraft/pull/598) : hypothèse B,
+  contexte d'ajustement empirique, limites revendiquées ; consultation du 13/10/2026.
+- [Code du commit étudié](https://github.com/Exalted5373/lightcraft/blob/b9e312a748fde0b0e5b0eeb070a69b7ecf2df59f/crates/pipeline/src/colorops.rs) : opérateurs et coefficients.
+- [Code de la branche principale](https://github.com/storytold/lightcraft/blob/main/crates/pipeline/src/colorops.rs) : comparaison de structure, lien évolutif.
+- [B. Ottosson, Oklab](https://bottosson.github.io/posts/oklab/) : définition et matrices
+  d'un espace perceptuel ; ne prescrit pas notre heuristique de vibrance.
+- [W3C, CSS Color 4 — conversions](https://www.w3.org/TR/css-color-4/#color-conversion-code) :
+  matrices sRGB/XYZ/ProPhoto et adaptation D65/D50 utilisées par la sonde.
+
+## Vibrance et saturation — validation quantitative v003, 13 octobre 2026
+
+Mémoire canonique : [Couleur v003, 10:39:40 UTC / 12:39:40 Paris](../raw/mesure-couleur-v003-20261013T103940441925Z.json).
+Cette campagne référence v002, sans modifier les preuves antérieures.
+Elle mesure le correctif de vibrance négative avec protection résiduelle `0,1C`.
+Les propositions visuelles de réduction/renforcement de quelques pourcents
+restent **consignées, mais non appliquées**.
+
+### Audit et couverture
+
+Après correction par l'utilisateur, les cinq fichiers LR de saturation −100
+ne sont plus présents dans la série vibrance et le −100 de 9950 est conforme
+au contexte Camera Neutral de son zéro. L'audit préalable ne relève aucun
+état manquant, doublon, changement de réglage secondaire ou mauvais profil.
+Les 98 variantes IPR déclarent le générateur corrigé, SHA-256
+`81d9aa4d575869c4628c424bca19f1f4542540da7860c6cda8ac31986dce3c5f`,
+et des neutres compatibles. L'audit natif des TIFF/empreintes passe ensuite :
+**196 états mesurés, zéro diagnostic, zéro exclusion, 98 paires**.
+Les sept scènes couvrent les sept valeurs −100…+100 pour les deux commandes.
+
+Méthode inchangée : TIFF 16 bits sRGB, RGB linéarisé, points natifs espacés
+de huit, sans recalage inter-moteurs. Les références sont propres à chaque
+moteur. Les 98 paires gardent `different_optical_development` (IPR corrigé
+géométrie/vignettage, LR sans correction objectif). Ce résultat valide des
+réponses internes observées, **pas une conformité pixel/perceptuelle Lightroom**.
+
+### Non-régression et effets du correctif
+
+- Les **14 zéros IPR** restent identiques à leur neutre sur les points mesurés.
+- Les **28 progressions de chroma faible** (sept scènes × deux moteurs × deux
+  commandes) sont croissantes sur les états observés, tolérance `1e-4`.
+  Cela ne prouve pas la monotonie de chaque pixel ou de toutes les teintes.
+- Comparées à v002, les métriques des **49 états IPR saturation** et des
+  **28 états IPR vibrance ≥ 0** sont exactement identiques. Le correctif
+  est donc isolé aux 21 états négatifs de vibrance mesurés.
+- Les 98 états LR ont également des métriques identiques à v002 : les sept
+  fichiers de vibrance 9950 ont été réexportés (empreintes différentes),
+  sans différence des statistiques stockées. Cela ne prouve pas une identité
+  exhaustive de leurs pixels.
+- Aucun nouvel écrêtage mesuré sur les 21 états IPR de vibrance négative ;
+  dérive maximale de luminance moyenne **0,0993 %**, sur 9890.
+
+### Vibrance négative : rapprochement et résidus
+
+Médianes des moyennes de variation relative `ΔC/C` par scène, pour les forts
+chromas (`C ≥ 0,5` au neutre), en pourcentage :
+
+| Vibrance | IPR v002 avant correctif | IPR v003 | Lightroom |
+| --- | ---: | ---: | ---: |
+| −100 | −21,51 % | −89,84 % | −86,19 % |
+| −50 | −10,44 % | −35,82 % | −43,36 % |
+| −25 | −5,15 % | −16,25 % | −21,38 % |
+
+Les valeurs v003/LR proviennent des paires v003 ; la colonne historique
+provient des paires v002. Les JSON conservent leur précision complète.
+À −100, l'écart absolu médian entre les réponses appariées de ΔC des forts
+chromas passe de **0,41015 à 0,03302**. Cette réduction concerne une statistique
+de réponse par scène, pas une MAE de pixels ni une calibration physique.
+
+La médiane confirme le retour visuel « −100 légèrement trop fort » : IPR
+désature davantage que LR. Mais les écarts ne sont pas uniformes ; les valeurs
+par scène empêchent de généraliser un ajustement global à partir de la seule médiane :
+
+| Scène | Variation relative moyenne IPR à −100, forts chromas | Lightroom |
+| --- | ---: | ---: |
+| 0007 | −90,54 % | −86,19 % |
+| 0037 | −91,72 % | −88,36 % |
+| 0043 | −89,84 % | −90,56 % |
+| 0327 | −87,59 % | −78,81 % |
+| 9421 | −86,96 % | −62,16 % |
+| 9890 | −84,46 % | −67,53 % |
+| 9950 | −91,36 % | −86,97 % |
+
+9421 et 9890 restent les cas prioritaires ; 0043 est légèrement moins
+désaturée dans IPR. Les contextes optiques, bases et masques différents
+limitent l'attribution de ces écarts à la seule formule. Une différence
+de 3,65 **points de pourcentage** entre médianes à −100 ne démontre pas
+qu'une réduction de 3–4 % d'un coefficient corrigerait toutes les scènes.
+Les états −25 et −50 désaturent encore moins que LR en médiane : éviter
+de réduire uniformément toute la branche négative pour corriger son endpoint.
+
+### Positifs et saturation
+
+Les demandes visuelles restent pertinentes comme cibles de recette, mais
+ne sont pas des pourcentages déduits directement de ces métriques.
+À vibrance +100, les médianes de `ΔC/C` sont : faibles chromas **+72,11 % IPR
+contre +85,25 % LR**, forts chromas **+19,29 % contre +25,29 %**.
+L'écart signé médian de ΔC des forts chromas est −0,06087 ; sa médiane
+absolue vaut 0,06595 et les écarts vont de −0,26381 à +0,08488 selon la scène.
+Un renforcement uniforme de 6–7 % n'est donc pas une calibration démontrée,
+ni une commande sélective jaune/rouge. Vérifier les carnations et le gamut.
+
+La saturation reste fonctionnellement cohérente et inchangée. À +100,
+ΔC médian des forts chromas vaut **+0,24051 IPR contre +0,22537 LR**, tandis
+que les faibles chromas donnent +0,14579 contre +0,14412. Le souhait visuel
+d'augmenter de 2–3 % ne découle pas d'un manque global mesuré : l'agrégat
+IPR est déjà supérieur pour les forts chromas. Garder ce choix esthétique
+distinct d'une recherche de parité LR, et contrôler la luminance/écrêtage.
+
+### Conclusion et suite
+
+**Correctif négatif fonctionnel et nettement plus proche de LR sur ce corpus** ;
+zéro, positifs, saturation et progressivité observée préservés. La recette
+visuelle n'est pas déclarée définitivement validée : les petits ajustements
+proposés et les résidus par scène restent à examiner. Pour la prochaine
+itération, cibler préférentiellement l'extrémité négative, sans affaiblir
+automatiquement −25/−50, et traiter séparément positifs et saturation.
+
+Aucune nouvelle modification de production, génération ou suppression d'image
+pendant cette analyse. Pas de push/fusion/tag. Rapport unique et dérivés mis
+à jour ; les mémoires JSON antérieures, dont l'audit interrompu, sont conservées.
+
+## Reprise après génération — arrêt sur erreurs Lightroom, 13 octobre 2026
+
+Précontrôle XMP à **12:26:34 Paris / 10:26:34 UTC**, sur 103 TIFF LR
+des dossiers vibrance/saturation. À la demande de l'utilisateur, **arrêt
+avant les mesures dès détection d'erreurs LR** : pas de campagne comparative
+v003 publiée lors de cette tentative. [Trace JSON du précontrôle](../raw/audit-couleur-lr-v001-20261013T102634Z.json)
+avec chemins relatifs à `tests/image/base`, valeurs, motifs et SHA-256.
+
+| Fichier dans `couleur/vibrance/` | Défaut constaté dans le XMP | Action requise |
+| --- | --- | --- |
+| `6V1A0007-8.tif` | Vibrance 0, Saturation −100 | Sortir de la série vibrance ou retirer cet export supplémentaire |
+| `6V1A0037-8.tif` | Vibrance 0, Saturation −100 | Même action |
+| `6V1A0043-8.tif` | Vibrance 0, Saturation −100 | Même action |
+| `6V1A0327-9.tif` | Vibrance 0, Saturation −100 | Même action |
+| `6V1A9421-8.tif` | Vibrance 0, Saturation −100 | Même action |
+| `6V1A9950.tif` | Vibrance −100, profil Adobe Standard et contexte différent du zéro de série | Réexporter à −100 avec Camera Neutral et les autres paramètres identiques au zéro `6V1A9950-4.tif` |
+
+Les cinq premiers fichiers étaient déjà diagnostics supplémentaires en v002,
+mais la nouvelle consigne impose de s'arrêter, sans les ignorer. Ne pas les
+déplacer en écrasant un fichier de saturation existant : ils ne remplacent
+aucun état vibrance attendu. Le −100 de 9950 est maintenant incompatible,
+alors qu'il était admissible dans v002 ; les empreintes/mesures historiques
+restent celles de leurs fichiers d'alors.
+
+Aucune autre erreur d'association ou de réglages XMP relevée dans ce
+précontrôle ; cela ne valide ni les pixels ni les TIFF IPR fraîchement générés.
+Aucune image supprimée, déplacée ou corrigée automatiquement, aucun nouveau
+changement de production. Reprendre l'audit après correction de ces six fichiers.
+
+## Correctif de production — vibrance négative, 13 octobre 2026
+
+Appliqué localement sur `patch_color` après autorisation de l'utilisateur.
+**Validation photographique en attente** : les mesures v002 ci-dessous
+décrivent le rendu avant ce correctif, pas celui des nouveaux exécutables.
+Aucun nouveau TIFF du corpus n'a été généré pendant cette intégration.
+
+Le facteur est désormais centralisé dans `src/core/Vibrance.h` et utilisé
+par `ImageEditor::renderWorkingImage`, donc par l'aperçu, l'export et le
+générateur. Pour `v = vibrance/100`, la pondération vaut `1−C` au positif,
+inchangée, et `1−0,1C` au négatif. À −100, le facteur résiduel est `0,1C`,
+au lieu de C : forte réduction aussi sur les couleurs déjà saturées.
+La loi de saturation et le mélangeur ne changent pas.
+
+Le coefficient nommé `negativeChromaProtection = 0.1` est un réglage
+explicite de prototype : il conserve un faible résidu afin que vibrance −100
+ne soit pas strictement la même commande que saturation −100. Il ne vient
+pas d'une loi physique ou d'un poids commercial DCP, et ne signifie pas 10 %
+de chroma HSV restant. La prochaine campagne doit évaluer ce choix sur les
+sept scènes, notamment peaux et gradients ; il pourra être ajusté après mesure.
+Voir les [équations et limites](../../imageeditor-render-working-image.md#7-vibrance-et-saturation).
+
+Vérifications : **13/13 CTest ciblés réussis**, dont nouveau `vibranceMathTests`,
+export négatif, génération sur petits fixtures temporaires, RAW/DCP, IHM,
+cycle de vie, Lumières et mélangeur. Tests mathématiques : monotonie du gain,
+identité au zéro, continuité au changement de signe, loi positive inchangée,
+bornes, gris/noirs inchangés, luminance et absence de dépassement pour une
+réduction seule. La régression d'export vérifie une forte réduction à −100
+avec un résidu couleur faible. Sélection de tests : **15 tests Python réussis** ;
+comparateur : **cinq tests réussis**. Règles de sélection et CMake complétés.
+
+Application Windows et générateur Release recompilés. SHA-256 du générateur :
+`81d9aa4d575869c4628c424bca19f1f4542540da7860c6cda8ac31986dce3c5f`.
+Utiliser `./scripts/generate-test-images.ps1 couleur` après retrait manuel
+des anciens exports IPR Couleur et de leurs neutres Couleur ; conserver les
+références LR, le mélangeur et les JSON. Le générateur refuse les destinations
+existantes : il ne remplacera pas silencieusement les anciens résultats.
+La future analyse doit porter une nouvelle version et référencer v002.
+Pas de nouvelle parité Lightroom déclarée, ni de fusion/tag/push déclenché.
+
+### Retour visuel utilisateur — 13 octobre 2026
+
+Après le correctif, l'utilisateur juge la désaturation à **vibrance −100
+légèrement trop forte**. Il propose de réduire son intensité d'environ
+**3 à 4 %**, donc de conserver un peu plus de couleur. Vers **+100**, il
+propose de renforcer l'effet d'environ **6 à 7 %**, avec pour objectif des
+jaunes et rouges plus présents.
+
+Pour la **saturation**, l'utilisateur propose également, sur appréciation
+visuelle, de renforcer l'effet vers **+100 d'environ 2 à 3 %**. Cette piste
+est distincte de l'ajustement de vibrance : elle ne concerne pas les valeurs
+négatives ni le zéro. Le sens exact du pourcentage reste à préciser avant
+conversion en coefficient, et le gamut/écrêtage sera à contrôler.
+
+Ce sont des estimations visuelles et des pistes de réglage, pas des mesures
+de ΔC, des points de curseur supplémentaires ou une validation numérique.
+La référence exacte de ces pourcentages (intensité du traitement ou réponse
+colorimétrique observée) reste à préciser avant conversion en coefficients.
+Un renforcement global de vibrance n'est pas un renforcement sélectif des
+jaunes/rouges : vérifier aussi les autres couleurs, carnations, gradients
+et écrêtages. Aucune scène particulière n'a été indiquée pour ce retour.
+
+**Retour consigné uniquement : aucun nouvel ajustement de production appliqué.**
+La validation photographique du correctif reste en cours ; les JSON v001/v002
+et leurs conclusions quantitatives ne sont pas modifiés par cette appréciation.
+
+## Vibrance et saturation — reprise complète du 13 octobre 2026
+
+Mémoire canonique : [Couleur v002, 09:20:25 UTC / 11:20:25 Paris](../raw/mesure-couleur-v002-20261013T092025490768Z.json).
+Elle référence explicitement la campagne v001 dans `supersedes_campaign_id` ;
+les deux JSON restent immuables. Cette reprise complète le corpus et corrige
+les associations, **sans modification du code de rendu**.
+
+### Nettoyage autorisé et génération
+
+Sur demande explicite de l'utilisateur, 224 fichiers ont été supprimés :
+217 variantes IPR courantes du groupe Couleur et sept neutres Couleur,
+soit 57 851 612 345 octets (environ 53,88 Gio). Le neutre 9890 sans déclaration
+était inclus dans ce remplacement. La suppression est définitive sur disque,
+pas un passage par la corbeille ; les fichiers ont ensuite été régénérés
+depuis les sept RAW conservés. Aucun fichier du mélangeur, TIFF Lightroom,
+ancien dossier de campagne, RAW ou JSON de mesure n'a été supprimé.
+
+Commande : `./scripts/generate-test-images.ps1 couleur`. Le lanceur utilise
+le générateur courant recompilé dans `build-windows-msvc/Release` ; son
+SHA-256 embarqué est
+`368d8a938c8c9a06c12a9bc2a1fde74960cc62a1c70e859ae50bee414e25d266`.
+Génération terminée sans erreur : **217 variantes et sept neutres TIFF**.
+Le groupe complet a été remplacé parce que le générateur n'accepte pas une
+sélection de curseurs et refuse l'écrasement des fichiers existants.
+Température/nuance/niveaux de gris sont régénérés, mais pas réanalysés ici.
+
+### Corpus complet et audit
+
+Sept scènes : 0007, 0037, 0043, 0327, 9421, **9890** et 9950, préfixe 6V1A.
+Chaque commande dispose, dans chaque moteur, de −100, −50, −25, 0, +25, +50
+et +100 : **196 états requis mesurés, aucune exclusion, 98 paires**.
+Le zéro IPR 9890 est maintenant déclaré et compatible avec ses variantes ;
+0037 +50 est présent, 0327 +25 n'est plus ambigu et 9950 utilise Camera Neutral
+avec les autres paramètres constants.
+
+Cinq fichiers LR supplémentaires restent diagnostics dans le dossier vibrance :
+0007−8, 0037−8, 0043−8, 9421−8 et 0327−9 déclarent Saturation −100.
+Ils ne sont pas des états requis manquants : l'inventaire total contient donc
+**201 associations : 196 mesurées, cinq diagnostics, zéro exclue**.
+Ils sont conservés, sans choisir un autre fichier sur la seule base du suffixe.
+
+Les **98 paires** conservent la réserve `different_optical_development` :
+géométrie/vignettage actifs côté IPR, correction objectif désactivée côté LR.
+La normalisation IPR est désactivée. Les références restent propres à chaque
+moteur : neutres IPR déclarés sous `base/neutre`, zéro LR audité dans chaque série.
+Leurs balances et rendus de base ne sont pas supposés identiques. L'agrégat de
+développement déclaré compatible reste vide. Ni MAE ni recalage inter-moteurs.
+Méthode identique à v001 : TIFF 16 bits sRGB, mesures en RGB linéaire,
+grille native de pas huit, empreintes complètes vérifiées à la clôture.
+
+### Résultats et comparaison avec v001
+
+- Les **14 zéros IPR** sont identiques à leur neutre indépendant sur les points
+  échantillonnés. Le zéro LR utilisé comme référence n'est pas une preuve
+  indépendante d'identité.
+- Les **14 progressions IPR** de chroma faible passent le contrôle de moyenne
+  croissante, tolérance `1e-4` ; les sept progressions saturation LR passent aussi.
+  Le JSON laisse cinq progressions vibrance LR indéterminées à cause des fichiers
+  diagnostics supplémentaires ; les deux séries sans ces extras passent.
+  Ce verdict conservateur ne signifie pas qu'un des sept états requis manque.
+- À saturation −100, l'écart entre canaux linéaires IPR est nul sur les points
+  mesurés des sept scènes ; le résidu LR est de 2,25 à 3,43 × 10⁻⁵.
+- Les **84 états IPR communs mesurés** aux deux campagnes ont des métriques
+  exactement identiques. L'évolution des agrégats vient du corpus complété
+  et des corrections LR, pas d'un correctif de rendu IPR.
+
+Médianes des moyennes de ΔC par scène, relativement au zéro propre :
+faible chroma `0,02 ≤ C < 0,25`, forte chroma `C ≥ 0,5` au neutre.
+Chaque ligne porte sept scènes ; les masques sont propres au moteur et à l'état.
+
+| Commande | Valeur | ΔC faible IPR | ΔC faible LR | ΔC forte IPR | ΔC forte LR |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Saturation | +50 | +0,07522 | +0,07608 | +0,16791 | +0,15025 |
+| Vibrance | −100 | −0,13661 | −0,16480 | −0,14888 | −0,55708 |
+| Vibrance | +50 | +0,06159 | +0,03666 | +0,06865 | +0,07229 |
+| Vibrance | +100 | +0,11914 | +0,12675 | +0,12975 | +0,16409 |
+
+**Saturation : fonctionnement cohérent confirmé sur le corpus élargi.**
+Les réponses de faibles chromas restent proches ; l'action IPR sur les forts
+chromas est un peu plus forte aux positifs intermédiaires. Cela n'établit pas
+une conformité perceptuelle Lightroom ou une validation universelle du gamut.
+
+**Vibrance : l'écart négatif est confirmé, pas résolu par les nouveaux exports.**
+À −100, la médiane des moyennes de variation relative `ΔC/C` vaut
+**−21,51 % IPR contre −86,19 % LR** pour les forts chromas, et −81,40 % contre
+−97,43 % pour les faibles. À +50, la protection relative IPR est effective :
++37,15 % sur les faibles chromas contre +9,89 % sur les forts ; LR donne
++24,06 % et +10,82 %. Ne pas comparer les seuls ΔC absolus pour juger cette
+protection. La formule décrite dans v001 protège actuellement les couleurs
+déjà saturées aussi bien en réduction qu'en augmentation.
+
+La vibrance +100 conserve la luminance moyenne IPR à la précision des mesures.
+La saturation +100 monte jusqu'à **+4,95 %** côté IPR. Les réponses LR à
+vibrance +100 de 0007 et 9950 présentent respectivement **−27,93 % et −34,28 %**
+de luminance moyenne ; elles sont auditées dans leur série, mais ces cas restent
+à examiner visuellement et ne doivent pas être masqués par une médiane.
+Pour 9890, saturation +100 donne +4,04 % IPR contre +9,18 % LR ; vibrance +100
+donne une moyenne IPR quasi inchangée contre +4,54 % LR.
+
+### Conclusion actuelle
+
+Le corpus vibrance/saturation est désormais complet et exploitable pour les
+**réponses internes**, avec toutes les réserves conservées. Aucun nouveau
+réexport n'est requis pour combler les états de cette campagne. La parité LR
+reste non validée, notamment à cause des contextes optiques différents.
+
+Priorité proposée : décider d'un correctif ciblé de **vibrance négative**,
+séparant sa pondération de celle des positifs, puis le vérifier sur ce corpus
+et sur les carnations/gradients. Il ne faut pas ajouter des poids commerciaux
+par profil pour forcer ces seules médianes. La saturation ne justifie pas
+un changement immédiat sur la base de ces moyennes seules ; garder les
+contrôles de gamut et de luminance dans une prochaine recette.
+
+Tests ciblés réussis : deux CTest générateur/export, cinq tests du comparateur
+(dont le lien entre versions), dix WB, 14 sélection Windows ; suite groupe :
+26 exécutés dont un ignoré. Les nouveaux TIFF sont conservés après analyse.
+Pas de modification de production, de suppression après mesure, de publication
+Git ni de nouvelle validation visuelle déclarée pendant cette reprise.
+
+## Vibrance et saturation — campagne native du 12 octobre 2026
+
+Mémoire canonique : [mesure Couleur v001, UTC 21:26:46](../raw/mesure-couleur-v001-20261012T212646781304Z.json).
+Les données et exclusions font autorité dans ce JSON immuable ; cette section
+est une interprétation, pas une validation de fidélité Lightroom.
+
+### Corpus et contrôles
+
+Le groupe Couleur a été généré dans les dossiers partagés existants :
+217 variantes et sept neutres prévus, sans écrasement ni suppression.
+La présente analyse porte seulement sur vibrance et saturation, aux valeurs
+−100, −50, −25, 0, +25, +50 et +100. Six scènes sont comparables :
+6V1A0007, 0037, 0043, 0327, 9421 et 9950. Les quatorze variantes IPR de
+9890 sont exclues : son neutre déclaré n'est plus présent lors de l'analyse,
+et aucune référence n'est substituée.
+
+Sur **189 associations** (98 IPR, 91 LR), **166 sont mesurées, neuf sont
+diagnostics et quatorze exclues**. Les comparaisons de réponses propres aux
+moteurs portent sur **82 paires** : 40 vibrance et 42 saturation.
+Les neuf diagnostics sont conservés :
+
+- Six fichiers LR placés dans vibrance déclarent en réalité Saturation −100
+  et Vibrance 0 : suffixe −8 des scènes 0007, 0037, 0043, 9421 et 9950,
+  et suffixe −9 de 0327. Ils ne deviennent pas des références zéro.
+- `vibrance/6V1A0327-5.tif` et `-6.tif` déclarent tous deux +25 : les deux
+  sont écartés de l'agrégat apparié, sans choix arbitraire. Les n°7 et 8
+  déclarent déjà +50 et +100.
+- `vibrance/6V1A9950-7.tif` déclare bien +100, mais Adobe Standard,
+  netteté 40, bruit couleur 25, corrections objectif et aberrations actives,
+  au lieu du développement de sa référence : ce n'est pas une variation
+  isolée de vibrance. Son réexport doit conserver les paramètres du n°4.
+
+IPR utilise Camera Neutral, sans normalisation RAW, avec géométrie et
+vignettage LCP actifs. Les séries LR admissibles utilisent Camera Neutral,
+5200 K / +5 (Custom), sans correction objectif. Les références IPR viennent
+de `base/neutre` ; le zéro LR est le fichier unique propre de chaque série,
+audité explicitement. Le neutre LR As Shot n'est pas substitué au support
+Custom : même température affichée ne suffit pas à prouver le même développement.
+
+**Les 82 paires ont des développements optiques différents** : l'agrégat
+« compatible_declared_development » contient zéro scène. Les dimensions
+diffèrent également d'un pixel. Aucun recalage, redimensionnement, MAE ou
+superposition inter-moteurs n'est réalisé. Mesures sur TIFF 16 bits sRGB,
+RGB linéarisé et grille native espacée de huit pixels ; empreintes complètes
+et métadonnées sont conservées avant/après mesure.
+
+### Résultats
+
+Les douze zéros IPR (six scènes × deux commandes) sont identiques à leur
+neutre indépendant **sur les points échantillonnés**. Les douze séries IPR
+ont une réponse moyenne de chroma faible croissante sur les sept états,
+à tolérance `1e-4`. Pour LR, les six séries saturation passent ce contrôle ;
+les diagnostics empêchent un verdict global de progression vibrance.
+Le zéro LR choisi comme référence n'est pas un test indépendant d'identité.
+
+Le tableau donne la médiane des moyennes par scène de ΔC, relativement au
+zéro de chaque moteur, pour les points de chroma élevé (C ≥ 0,5 au neutre).
+C = (max RGB − min RGB) / max RGB en RGB linéaire ; il ne s'agit pas d'une
+mesure perceptuelle ni d'une différence pixel à pixel. Les masques sont
+propres aux moteurs et les points écrêtés sont filtrés selon la méthode du JSON.
+
+| Commande | Valeur | Scènes appariées | ΔC IPR | ΔC LR |
+| --- | ---: | ---: | ---: | ---: |
+| Saturation | −100 | 6 | −0,70149 | −0,69688 |
+| Saturation | +25 | 6 | +0,10588 | +0,08478 |
+| Saturation | +50 | 6 | +0,18354 | +0,15218 |
+| Saturation | +100 | 6 | +0,25323 | +0,23795 |
+| Vibrance | −100 | 6 | −0,16128 | −0,55909 |
+| Vibrance | +25 | 5 | +0,03582 | +0,03655 |
+| Vibrance | +50 | 6 | +0,06894 | +0,07352 |
+| Vibrance | +100 | 5 | +0,12975 | +0,16409 |
+
+**Saturation : fonctionnement cohérent**, zéro conservé, direction correcte
+et niveaux de gris à −100 (écart entre canaux linéaires IPR nul sur les points
+mesurés ; résidu LR de l'ordre de 2,3 à 3,4 × 10⁻⁵). Les réponses des faibles
+chromas sont relativement proches : à +50, ΔC médian 0,07572 IPR contre
+0,07468 LR. IPR agit davantage sur les forts chromas aux positifs intermédiaires.
+Ce constat ne constitue pas une nouvelle validation visuelle ou une parité LR.
+
+**Vibrance : divergence importante aux valeurs négatives.** À −100, IPR
+conserve nettement plus les couleurs déjà saturées que Lightroom. À +25/+50,
+son action sur les faibles chromas est plus forte (à +50 : 0,06184 contre
+0,03399), tandis que la réponse des forts chromas est plus proche.
+
+Le code actuel applique, avant les contraintes de sortie :
+
+```text
+S = 1 + saturation / 100
+V = 1 + (vibrance / 100) × (1 − C)
+RGB' = Y + (RGB − Y) × max(0, S × V)
+```
+
+À saturation −100, le facteur est nul ; à vibrance −100 seule, il vaut C.
+La même protection des couleurs déjà saturées agit donc aux valeurs positives
+et négatives. C'est une piste structurelle pour expliquer l'écart négatif,
+pas la démonstration du fonctionnement interne Lightroom ni une attribution
+exclusive de toutes les différences à cette formule.
+
+La luminance théorique est conservée avant bornage, mais pas nécessairement
+après les contraintes de gamut et l'encodage : saturation +100 donne jusqu'à
+**+4,95 % de luminance moyenne** IPR sur ce corpus. Vibrance +100 conserve
+la moyenne IPR à la précision des mesures. LR présente notamment **−27,93 %**
+pour vibrance +100 de 0007 : ce cas reste à examiner visuellement, sans
+le dissimuler par une médiane ni conclure automatiquement à un défaut IPR.
+
+### Conclusion et suite
+
+La saturation et la progressivité IPR passent les contrôles fonctionnels
+observés. La vibrance négative nécessite une décision de rendu : conserver
+la protection actuelle, ou chercher une réduction plus proche de Lightroom.
+Avant ajustement de coefficients, homogénéiser les options optiques et
+résoudre les deux associations LR vibrance mentionnées ci-dessus ; compléter
+9890 seulement si une référence LR et un neutre IPR de même développement
+sont disponibles. Les neutres source ne sont pas à remplacer arbitrairement.
+
+**Aucun code de production modifié pendant cette campagne, aucune image
+supprimée.** L'outil spécialisé réutilise le moteur canonique Couleur et
+conserve ses sources/empreintes ; le commit de base `7297197` ne contient pas
+encore ce nouvel outil local. Vérifications ciblées : cinq tests du comparateur,
+14 de sélection Windows, dix WB ; suite groupe : 26 exécutés dont un ignoré ;
+deux CTest générateur/export réussis. Pas de nouvelle validation photographique
+déclarée, ni de publication Git déclenchée par cette analyse.
+
 ## Correctif du 11 octobre 2026 — retouche WB dans l'espace capteur
 
 **Correctif de production livré depuis `patch_color` dans `dev`**, isolé
@@ -625,6 +1326,132 @@ et d'analyse ont changé, sur `patch_couleur` créée depuis `dev`, sans commit,
 fusion ou publication automatique. Les TIFF restent conservés à cette passe :
 conformité incomplète (+150 manquant, optique non homogène), attribution causale
 non isolée et `cleanup_eligible=false`. RAW et neutres communs sont intacts.
+
+## Campagne vibrance/saturation sur 49 scènes — 21 octobre 2026
+
+Première mesure du modèle A1/A2 sur le master Rec.2020 (aller-retour sRGB linéaire,
+fusion de `dev` dans `patch_color`, `bcb5d57`). Références LR des 49 RAW de la base
+(R6 III, R7, EOS 60D), préréglages autonomes du groupe « IPR Couleur »
+(`scripts/make_lr_presets.py`), valeurs −100, −50, −25, +25, +50, +100 ; neutres
+communs de `base/neutre`, états IPR rendus en mémoire. Campagnes
+[vibrance](../raw/mesure-couleur-v004-20261021T135305383058Z.json) et
+[saturation](../raw/mesure-couleur-v004-20261021T141819844745Z.json) : 637 états
+mesurés chacune, aucune exclusion.
+
+Médianes sur les scènes de la variation relative de chroma, pixels peu et très
+saturés (LR / IPR), et écart absolu médian par scène (IPR − LR) :
+
+| Réglage | Valeur | Peu saturés | Très saturés | Y | Écart peu / très |
+| --- | ---: | --- | --- | --- | --- |
+| Vibrance | −100 | −0,97 / −0,96 | −0,79 / −0,92 | 0,88 / 1,00 | 0,01 / 0,13 |
+| Vibrance | −50 | −0,53 / −0,48 | −0,40 / −0,37 | 0,95 / 1,00 | 0,05 / 0,04 |
+| Vibrance | +25 | +0,11 / +0,21 | +0,05 / +0,10 | 1,00 / 1,00 | 0,10 / 0,03 |
+| Vibrance | +50 | +0,26 / +0,42 | +0,11 / +0,18 | 1,00 / 1,00 | 0,14 / 0,06 |
+| Vibrance | +100 | +0,90 / +0,86 | +0,22 / +0,31 | 0,98 / 1,00 | 0,31 / 0,09 |
+| Saturation | −100 | −1,00 / −1,00 | −1,00 / −1,00 | 0,99 / 1,00 | 0,00 / 0,00 |
+| Saturation | +50 | +0,45 / +0,44 | +0,22 / +0,23 | 1,01 / 1,00 | 0,03 / 0,02 |
+| Saturation | +100 | +0,86 / +0,85 | +0,32 / +0,35 | 1,02 / 1,00 | 0,05 / 0,03 |
+
+Décision de l'utilisateur : **saturation conservée telle quelle** (écart ≤ 0,05).
+**Vibrance à corriger** : réponse positive trop forte au départ (LR progressive,
+accélérée vers +100), protection insuffisante des couleurs déjà saturées (−100 et
+positif), baisse de Y de LR au négatif non reproduite, forte dispersion par scène
+à +100 à expliquer avant tout ajustement.
+
+### Correctif vibrance : tables de réponse Lightroom — 21 octobre 2026
+
+**Diagnostic pixel par pixel** (49 scènes, 40 000 à 60 000 pixels non écrêtés par
+état) : la vibrance LR est une fonction fixe du pixel, pas une adaptation à la
+scène. Saturation ProPhoto linéaire, clarté et teinte Oklab expliquent 93–95 % de
+la variance du gain log de chroma au positif ; l'identité de la scène n'ajoute que
+2 %. La dispersion par scène vient donc du contenu. Au positif, le gain culmine sur
+les tons moyens modérément saturés (×3,7 à +100 pour L ≈ 0,5) et retombe pour les
+ombres, les hautes lumières et les couleurs déjà saturées. Au négatif, les couleurs
+faibles sont presque entièrement désaturées à −100, les saturées gardent ×0,35 et
+s'assombrissent (L × 0,88). Les quasi-gris (C Oklab < 0,01) sont moins renforcés au
+positif et davantage désaturés à −100.
+
+**Modèle** (`src/core/Vibrance.cpp`, tables `src/core/VibranceModel.h` générées par
+`scripts/build_vibrance_model.py`) : gains log de chroma et de clarté par cellule
+saturation × clarté × teinte (12 × 9 × 12) à chaque valeur mesurée, médianes sur
+les scènes, chroma rendue monotone en fonction du curseur (régression isotone,
+61 cellules ajustées), facteur quasi-gris par valeur et par chroma. Le modèle A1/A2
+et l'étude A1/A2/B (sonde, comparateurs) sont retirés ; leurs JSON restent.
+Preuves : [v001](../raw/modele-vibrance-lr-v001-20261021T143113962366Z.json) (tables
+brutes), [v002](../raw/modele-vibrance-lr-v002-20261021T143629632031Z.json)
+(monotonie), [v003](../raw/modele-vibrance-lr-v003-20261021T151401834847Z.json)
+(facteur quasi-gris par signe), [v004](../raw/modele-vibrance-lr-v004-20261021T214946002023Z.json)
+(facteur par valeur, retenue). Validation croisée à deux plis de scènes, écart médian
+de variation de chroma (peu / très saturés) : −100 0,002 / 0,006 contre 0,020 / 0,122
+pour A1/A2 ; +50 0,012 / 0,012 contre 0,088 / 0,127 ; +100 0,072 / 0,035 contre
+0,407 / 0,263.
+
+**Mesure du rendu IPR** ([v007](../raw/mesure-couleur-v007-20261021T222150364055Z.json),
+637 états, aucune exclusion ; v005 et v006 mesurent les étapes v002 et v003) :
+
+| Valeur | Peu saturés LR / IPR | Très saturés LR / IPR | Y LR / IPR | Écart peu / très |
+| ---: | --- | --- | --- | --- |
+| −100 | −0,97 / −0,97 | −0,79 / −0,79 | 0,88 / 0,88 | 0,004 / 0,011 |
+| −50 | −0,53 / −0,53 | −0,40 / −0,39 | 0,95 / 0,95 | 0,002 / 0,009 |
+| −25 | −0,28 / −0,28 | −0,19 / −0,19 | 0,98 / 0,98 | 0,002 / 0,006 |
+| +25 | +0,11 / +0,11 | +0,05 / +0,06 | 1,00 / 1,00 | 0,013 / 0,005 |
+| +50 | +0,26 / +0,28 | +0,11 / +0,12 | 1,00 / 1,00 | 0,032 / 0,011 |
+| +100 | +0,90 / +0,91 | +0,22 / +0,24 | 0,98 / 0,98 | 0,135 / 0,022 |
+
+Limite : à +100, les médianes coïncident mais l'écart par scène des couleurs peu
+saturées reste de 0,135 (60D surtout : IMG_5414, 4062, 5383) ; à revoir en revue
+visuelle. Validation visuelle de l'utilisateur à faire avant toute fusion.
+
+### Rotation de teinte de la vibrance — 22 octobre 2026
+
+**Retour visuel de l'utilisateur** : vibrance d'IPR « moins forte », les couleurs
+ne basculent pas vers leurs teintes voisines (le bleu devrait tendre vers le
+cyan). La mesure par famille de teinte Oklab sur 13 scènes le confirme : à +100,
+LR fait tourner le bleu-cyan de −7,7°, le bleu de −5,1°, le jaune-orangé de
++4,6°, l'orange de +3,3° ; rotation deux fois plus faible à +50, inversée à
+−50. Le modèle précédent conservait la teinte, ce qu'une mesure de chroma seule
+ne pouvait pas révéler.
+
+**Correctif** : table de rotation de teinte (médiane de Δh par cellule et par
+valeur), appliquée par une rotation plane de `(a, b)` avec le gain de chroma,
+estompée sous C = 0,01. Le repli des cellules vides conserve la teinte : un
+premier essai ([v005](../raw/modele-vibrance-lr-v005-20261022T085613257151Z.json))
+qui repliait toutes teintes confondues donnait aux bleus sans données la rotation
+des oranges ; la version retenue est
+[v006](../raw/modele-vibrance-lr-v006-20261022T090137950558Z.json).
+
+Rotation médiane à +100, LR / IPR : rouge +1,35° / +1,44°, orange +3,31° / +3,30°,
+jaune-orangé +4,61° / +4,82°, bleu −5,13° / −5,10°, bleu-cyan −7,67° / −4,55° ;
+écart < 0,6° à +50 et −50 pour toutes les familles.
+
+**Grands ciels bleus** : le gain de chroma des bleus à +100 reste inférieur à LR
+(bleu-cyan 1,66 contre 2,78). Ni le modèle (prédit 1,667, rendu 1,670) ni le point
+de départ (bleus neutres IPR/LR identiques) ne sont en cause ; l'écart vient
+surtout de 6V1A9141, ciel saturé couvrant 82 % de l'image (chroma finale 0,164
+contre 0,196, −16 %), quand la médiane des scènes est à −5 %. Dépendance à l'image
+non modélisée.
+
+**Mesure du rendu** ([v008](../raw/mesure-couleur-v008-20261022T094449411179Z.json),
+637 états, aucune exclusion), écart médian par scène peu / très saturés :
+−100 0,004 / 0,011 ; −50 0,003 / 0,004 ; −25 0,003 / 0,003 ; +25 0,014 / 0,003 ;
++50 0,031 / 0,007 ; +100 0,143 / 0,016. La démarche est expliquée dans le
+[cours 12](../../scholar/cours-12-vibrance-saturation-oklab.tex). Revue visuelle de
+l'utilisateur à refaire avant toute fusion.
+
+### Décision de l'utilisateur — 22 octobre 2026
+
+**Vibrance et saturation validées.** L'utilisateur accepte l'état mesuré (modèle
+[v006](../raw/modele-vibrance-lr-v006-20261022T090137950558Z.json), campagne
+[v008](../raw/mesure-couleur-v008-20261022T094449411179Z.json)). Selon lui, le
+léger manque d'intensité restant tient en partie au rendu d'ouverture d'IPR, un
+peu plus sombre que Lightroom par choix accepté : une vibrance strictement
+identique n'est pas attendue. La mesure sur les bleus neutres de 13 scènes donne
+une clarté identique (0,515 / 0,514) ; l'effet de l'ouverture plus sombre se
+mesurerait donc sur d'autres tons.
+
+**Réserve reportée à la bêta** : les grands ciels bleus saturés à +100
+(6V1A9141, −16 % de chroma finale), où Lightroom dépend de l'étendue de la zone
+de couleur. Repris avec l'intégration des calques et de la détection de forme.
 
 ## Historique et compatibilité
 

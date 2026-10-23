@@ -22,6 +22,12 @@ Le diagnostic est suivi d’une intégration locale du contrôleur mémoire
 26/26 tests natifs, préchargement suivant/précédent, seuil global 80/75 %.
 Pic RSS, latence réelle du mode adaptatif et validation Linux/macOS restent ouverts.
 
+Étude Couleur du 13 octobre : [comparaison A1/A2/B](analyses/analyse-couleur.md#étude-comparative-des-modèles--13-octobre-2026),
+392 états diagnostiques sur sept RAW. Le premier jet A1/A2 est ensuite intégré
+localement à la demande de l'utilisateur, avec 7/7 tests natifs ciblés réussis.
+Validation visuelle et nouvelle campagne encore attendues ; les courbes et
+JSON de l'étude décrivent l'état antérieur (master sRGB), pas les nouveaux exports.
+
 | Fonction | Statut | Preuve / source historique | Prochaine action |
 | --- | --- | --- | --- |
 | Base colorimétrique à l'ouverture | Camera Neutral accepté visuellement ; normalisation contrôlée disponible dans l'IHM, désactivée par défaut ; fidélité/parité LR non validées | [Rapport unique](analyses/analyse-base-colorimetrique.md), §24–26 : cinq RAW exacts calibrés ; comparaison finale de onze paires, Neutral plus proche sur les cinq scènes comparables ; 17/18 CTest WSL (JPEG 9933 en échec), 76 + 12 tests Python ; preuves Windows et packaging décrits dans le rapport. | Persister le choix DCP/normalisation ; vérifier état exact des exports, optique et résidus 9421/9950 ; Standard, JPEG 9933 et généralisation après audit ; charte physique. |
@@ -31,7 +37,7 @@ Pic RSS, latence réelle du mode adaptatif et validation Linux/macOS restent ouv
 | Contraste | Validation historique ; fonctionnement cohérent aux extrêmes le 9 octobre | [analyse contraste](analyses/analyse-contraste-2026-10-02.md) ; six scènes, action opposée toe/shoulder ; saturation +100 moyenne 0,291 % IPR | Recette visuelle et rampe synthétique au pivot 18 %, valeurs intermédiaires. |
 | Température | Validé | [analyse température](analyses/analyse-temperature-2026-10-02.md) | Revalider la calibration froide après profil ou gamut mapping. |
 | Nuance | Validé | [analyse nuance](analyses/analyse-nuance-2026-10-02.md) | Ajouter des gris neutres et carnations. |
-| Vibrance / saturation | Validé | [analyse saturation](analyses/analyse-saturation-2026-10-02.md) | Étendre aux couleurs hors gamut. |
+| Vibrance / saturation | **Validé par l'utilisateur (22 octobre 2026)**, réserve sur les grands ciels bleus saturés à +100 | [rapport Couleur](analyses/analyse-couleur.md#rotation-de-teinte-de-la-vibrance--22-octobre-2026) : 49 scènes, campagnes v004 (saturation) et v008 (vibrance), 637 états chacune, aucune exclusion ; écart ≤ 0,031 jusqu'à +50 et à toutes les valeurs négatives, 0,143 sur les couleurs peu saturées à +100 | Ciels saturés (6V1A9141) repris en bêta avec les calques et la détection de forme. |
 | Texture | Validé | [analyse texture](analyses/analyse-texture-2026-10-02.md) | Ajouter peau, bruit et feuillage. |
 | Clarté | Validé | [analyse clarté](analyses/analyse-clarte-2026-10-02.md) | Contrôler halos sur contre-jour. |
 | Correction du voile | Validé | [analyse voile](analyses/analyse-correction-voile-2026-10-02.md) | Tester scènes sans voile pour les faux positifs. |

@@ -1,4 +1,6 @@
-"""Current embedded TIFF declarations and explicit operator associations."""
+"""LR states from embedded TIFF declarations, IPR states rendered in memory,
+and explicit operator associations."""
+import json
 import math
 from pathlib import Path
 
@@ -22,8 +24,40 @@ def feature_folder(feature):
     return group_for(feature) + "/" + feature
 
 
+SUPPORT_FEATURES = ("temperature", "tint", "sharpening-radius", "sharpening-masking")
+
+
+def render_key(source, feature, value):
+    return "render:" + json.dumps([str(source), feature, value])
+
+
+def render_records(base, groups, server):
+    """IPR states of the sources at the root of base, rendered in memory on use."""
+    base = local_path(base)
+    if not base.is_dir():
+        raise ValueError("Missing base directory")
+    records = []
+    for group in groups:
+        for state in server.states(base, group):
+            source, feature, value, reference = state["source"], state["feature"], state["value"], state["reference"]
+            record = {"scene": state["scene"], "engine": "IPR", "feature": feature, "value": value,
+                      "file": render_key(source, feature, value),
+                      "reference": render_key(source, reference["feature"], reference["value"]),
+                      "render": {"source": source, "feature": feature, "value": value},
+                      "reference_render": {"source": source, "feature": reference["feature"],
+                                           "value": reference["value"]},
+                      "provenance": {"kind": "in_memory_render", "server": str(server.executable),
+                                     "server_sha256": server.sha256}}
+            if feature in SUPPORT_FEATURES or feature.startswith("grading-"):
+                record["reference_role"] = "support"
+            validate_record(record)
+            records.append(record)
+    return records
+
+
 def base_records(base, groups):
-    """Exact current layout. LR numeric suffixes do not declare a state."""
+    """LR states of the current layout. LR numeric suffixes do not declare a state.
+    IPR TIFFs in base serve visual review only: IPR states are rendered in memory."""
     base = local_path(base)
     if not base.is_dir():
         raise ValueError("Missing base directory")
@@ -46,61 +80,40 @@ def base_records(base, groups):
             variants = tiffs(folder)
             for path in variants:
                 declaration, xmp = metadata(path)
-                if declaration:
-                    if declaration.get("feature") != feature:
-                        continue  # Mixer bands share a directory, not a control.
-                    reference_name = declaration.get("reference", "")
-                    if not reference_name or Path(reference_name).is_absolute() or ".." in Path(reference_name).parts:
-                        raise ValueError("Invalid embedded reference path: " + str(path))
-                    reference = local_path(reference_name, base)
-                    ref, _ = metadata(reference)
-                    if not ref or ref.get("scene") != declaration.get("scene"):
-                        raise ValueError("Missing/mismatched embedded IPR reference: " + str(path))
-                    context_keys = ("source_sha256", "executable_sha256", "dcp_profile", "lcp_profile", "lcp_sha256", "raw_normalization")
-                    if any(ref.get(k) != declaration.get(k) for k in context_keys):
-                        raise ValueError("IPR development context differs from reference: " + str(path))
-                    record = {"scene": declaration["scene"], "engine": "IPR", "feature": feature,
-                              "value": declaration["value"], "file": str(path.resolve()), "reference": str(reference),
-                              "settings": declaration.get("settings"), "reference_settings": ref.get("settings"),
-                              "expected_sha256": sha256(path), "reference_sha256": sha256(reference),
-                              "provenance": {"kind": "embedded_tiff", "declaration": declaration}}
-                    if feature in ("temperature", "tint", "sharpening-radius", "sharpening-masking") or feature.startswith("grading-"):
-                        record["reference_role"] = "support"
-                else:
-                    # No declaration is never interpreted as IPR based on a filename.
-                    if "-IPR" in path.stem:
-                        raise ValueError("IPR TIFF lacks current embedded declaration; regenerate or use --mapping: " + str(path))
-                    if not xmp:
-                        raise ValueError("TIFF lacks auditable LR XMP; use --mapping: " + str(path))
+                if declaration or "-IPR" in path.stem:
+                    continue
+                if not xmp:
+                    raise ValueError("TIFF lacks auditable LR XMP; use --mapping: " + str(path))
+                field = field_for(feature)
+                value = finite_number(xmp.get(field)) if field else None
+                if value is None:
+                    raise ValueError("No XMP control audit for " + feature + "; use --mapping: " + str(path))
+                if feature.startswith("mixer-") and value == 0:
+                    continue  # the three components of a band share its folder: another component's state
+                scene = path.stem.split("-")[0]
+                anchor = 5200 if feature == "temperature" else 0
+                candidates = variants if feature in ("temperature", "tint") else neutral_candidates
+                matches = []
+                ignored = {field, "HasSettings", "Version", "UUID", "Digest"}
+                for candidate in candidates:
+                    if candidate.stem.split("-")[0] != scene:
                         continue
-                    field = field_for(feature)
-                    value = finite_number(xmp.get(field)) if field else None
-                    if value is None:
-                        raise ValueError("No XMP control audit for " + feature + "; use --mapping: " + str(path))
-                    scene = path.stem.split("-")[0]
-                    anchor = 5200 if feature == "temperature" else 0
-                    candidates = variants if feature in ("temperature", "tint") else neutral_candidates
-                    matches = []
-                    ignored = {field, "HasSettings", "Version", "UUID", "Digest"}
-                    for candidate in candidates:
-                        if candidate.stem.split("-")[0] != scene:
-                            continue
-                        ipr, baseline = metadata(candidate)
-                        if ipr or not baseline or "-IPR" in candidate.stem:
-                            continue
-                        if feature in ("temperature", "tint") and finite_number(baseline.get(field)) != anchor:
-                            continue
-                        if all(xmp.get(k) == baseline.get(k) for k in (xmp.keys() | baseline.keys()) - ignored):
-                            matches.append(candidate)
-                    unique = {sha256(p): p for p in matches}
-                    if len(unique) > 1:
-                        raise ValueError("Ambiguous LR reference: " + str(path))
-                    record = {"scene": scene, "engine": "LR", "feature": feature, "value": value,
-                              "file": str(path.resolve()), "provenance": {"kind": "embedded_lr_xmp"}}
-                    if unique:
-                        record["reference"] = str(next(iter(unique.values())).resolve())
-                    if feature in ("temperature", "tint"):
-                        record["reference_role"] = "support"
+                    ipr, baseline = metadata(candidate)
+                    if ipr or not baseline or "-IPR" in candidate.stem:
+                        continue
+                    if feature in ("temperature", "tint") and finite_number(baseline.get(field)) != anchor:
+                        continue
+                    if all(xmp.get(k) == baseline.get(k) for k in (xmp.keys() | baseline.keys()) - ignored):
+                        matches.append(candidate)
+                unique = {sha256(p): p for p in matches}
+                if len(unique) > 1:
+                    raise ValueError("Ambiguous LR reference: " + str(path))
+                record = {"scene": scene, "engine": "LR", "feature": feature, "value": value,
+                          "file": str(path.resolve()), "provenance": {"kind": "embedded_lr_xmp"}}
+                if unique:
+                    record["reference"] = str(next(iter(unique.values())).resolve())
+                if feature in ("temperature", "tint"):
+                    record["reference_role"] = "support"
                 validate_record(record)
                 key = (record["engine"], record["scene"], feature, record["value"])
                 if key in seen:

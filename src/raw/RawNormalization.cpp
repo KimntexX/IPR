@@ -60,7 +60,7 @@ std::optional<Calibration> resolve(const QString &manifestPath,
     const auto root = *catalog;
     const auto selected = CameraCharacterization::selectSensorMode(root,
         {QFileInfo(c.fileName).suffix(), c.cameraMake, c.cameraModel, c.black,
-         c.globalBlack, c.nativeWhiteLevel, c.decoderId, c.decoderVersion}, reason);
+         c.globalBlack, c.nativeWhiteLevel, c.specularWhiteLevel, c.decoderId, c.decoderVersion}, reason);
     if (!selected) return std::nullopt;
     const QString profileHash = hashFile(c.profilePath);
     if (profileHash.isEmpty())

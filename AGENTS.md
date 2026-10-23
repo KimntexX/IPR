@@ -46,6 +46,12 @@
 - Les images sont supprimées manuellement par l'utilisateur après analyse.
   Le générateur ne supprime ni n'écrase les fichiers existants, sources ou
   références. Aucun ancien mode de génération ni test de compatibilité legacy.
+- Complément du 20 octobre 2026 : les analyses mesurent les états IPR **en
+  mémoire** (`iprRenderServer`, `tests/analysis` avec `--base`) ; aucun TIFF
+  IPR n'est écrit pour mesurer. `iprGenerateTests` ne sert plus qu'à la revue
+  visuelle, à la demande, avec les mêmes recettes (`src/tools/TestRecipes`).
+  Les TIFF IPR présents dans base ne sont pas analysés. Les références
+  Lightroom restent des TIFF exportés une fois et réutilisés.
 
 ## Code C++ — règle du 19 octobre 2026
 
@@ -99,6 +105,14 @@ La procédure détaillée est dans
 Les travaux sous `docs/` suivent également les règles de [docs/AGENTS.md](docs/AGENTS.md).
 
 ## Chantier IHM isolé — règle du 18 octobre 2026
+
+Complément du 20 octobre 2026 : à la demande explicite de l’utilisateur,
+`patch_ui` peut ajouter les raccordements de commandes dans `ImageEditor`
+nécessaires au copier/coller des recettes, à la sauvegarde manuelle et à la
+résolution de l’identité des vignettes sélectionnées.
+Cette exception ne permet pas de modifier les calculs photographiques, les
+décodeurs, les caches ou les profils ; les autres raccordements restent suivis
+dans le document dédié.
 
 - Le chantier IHM travaille dans le worktree `.worktrees/patch_ui`, sur la
   branche durable `patch_ui`, créée depuis `dev` à jour. Ne pas changer la

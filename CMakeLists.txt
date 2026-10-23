@@ -55,6 +55,7 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorPipeline.cpp
     src/core/ColorMixer.h
     src/core/ColorMixer.cpp
+    src/core/ColorMixerModel.h
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
     src/core/ColorAdjustments.h
@@ -67,9 +68,13 @@ set(IPR_ENGINE_SOURCES
     src/core/ToneCurve.cpp
     src/core/ToneRecovery.h
     src/core/ToneRecovery.cpp
+    src/core/ToneRecoveryHighlights.h
     src/core/ToneRecoveryModel.h
     src/core/ToneStatistics.h
     src/core/ToneStatistics.cpp
+    src/core/Vibrance.h
+    src/core/Vibrance.cpp
+    src/core/VibranceModel.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
     src/profiles/CameraProfileEngine.h
@@ -108,6 +113,7 @@ set(IPR_QML_FILES
         src/qml/ProcessingStatus.qml
         src/qml/PanelResizeHandle.qml
         src/qml/ExportReviewDialog.qml
+        src/qml/ConfirmationFooter.qml
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
     src/qml/PreferenceButton.qml
@@ -186,10 +192,16 @@ qt_add_qml_module(appIPR
 target_link_libraries(appIPR PRIVATE iprEngine)
 target_compile_definitions(appIPR PRIVATE IPR_RELEASE_LABEL="${IPR_RELEASE_LABEL}")
 
-# Console tool, intentionally independent of the QML application/sidecar lifecycle.
+# Console tools, intentionally independent of the QML application/sidecar
+# lifecycle: TIFF exports for visual review and in-memory renders for analysis,
+# from the same test recipes.
+add_library(iprTestRecipes STATIC src/tools/TestRecipes.cpp)
+target_include_directories(iprTestRecipes PUBLIC src/tools)
+target_link_libraries(iprTestRecipes PUBLIC iprEngine)
 add_executable(iprGenerateTests src/tools/generate_test_images.cpp)
-target_link_libraries(iprGenerateTests PRIVATE iprEngine)
-target_compile_definitions(iprGenerateTests PRIVATE IPR_PROJECT_VERSION="${PROJECT_VERSION}")
+target_link_libraries(iprGenerateTests PRIVATE iprTestRecipes)
+add_executable(iprRenderServer src/tools/render_server.cpp)
+target_link_libraries(iprRenderServer PRIVATE iprTestRecipes)
 
 set_target_properties(appIPR PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER org.ipr.ImageProcessingRoom
@@ -270,12 +282,14 @@ if(BUILD_TESTING)
     ipr_add_test(colorPipelineTests tests/color_pipeline_test.cpp)
     ipr_add_test(rec2020PipelineTests tests/rec2020_pipeline_test.cpp)
     set_tests_properties(rec2020PipelineTests PROPERTIES LABELS "unit;pipeline;colour" TIMEOUT 60)
+    ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
+    set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
     set_tests_properties(toneRecoveryTests PROPERTIES LABELS "unit;pipeline;lighting")
     add_executable(testImageGeneratorTests tests/test_image_generator_test.cpp)
-    target_link_libraries(testImageGeneratorTests PRIVATE iprEngine)
+    target_link_libraries(testImageGeneratorTests PRIVATE iprTestRecipes)
     add_dependencies(testImageGeneratorTests iprGenerateTests)
     add_test(NAME testImageGeneratorTests
         COMMAND testImageGeneratorTests $<TARGET_FILE:iprGenerateTests>)

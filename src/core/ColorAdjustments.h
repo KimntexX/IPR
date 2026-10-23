@@ -12,10 +12,6 @@ namespace ColorAdjustments {
 // Replaces each pixel by its luminance.
 void toGrayscale(cv::Mat &linearRgb);
 
-// Uniform saturation and vibrance (priority to weakly saturated colours),
-// slider values in [-100, 100].
-void applySaturationVibrance(cv::Mat &linearRgb, int saturation, int vibrance);
-
 // Colour mixer (eight hue bands), then colour grading of shadows, midtones
 // and highlights weighted by the luminance before mixing.
 void applyMixerAndGrading(cv::Mat &linearRgb, const ColorMixer::Parameters &mixer,

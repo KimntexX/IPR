@@ -89,6 +89,14 @@ std::optional<QJsonObject> selectSensorMode(const QJsonObject &catalog,
             std::floor(blackMax) != blackMax || std::floor(whiteMin) != whiteMin || std::floor(whiteMax) != whiteMax)
             return reject(reason, "Invalid sensor mode bounds.");
         bool matches = c.nativeWhite >= whiteMin && c.nativeWhite <= whiteMax;
+        const bool specularBounded = entry.contains("specular_white_min") || entry.contains("specular_white_max");
+        if (specularBounded) {
+            const double specularMin = bound("specular_white_min"), specularMax = bound("specular_white_max");
+            if (specularMin <= 0 || specularMax < specularMin || specularMax > 65535 ||
+                std::floor(specularMin) != specularMin || std::floor(specularMax) != specularMax)
+                return reject(reason, "Invalid specular white bounds.");
+            matches &= c.specularWhite >= specularMin && c.specularWhite <= specularMax;
+        }
         for (unsigned black : c.black) {
             const double total = double(c.globalBlack) + black;
             matches &= total >= blackMin && total <= blackMax;
