@@ -11,6 +11,9 @@ Usage: python tests/study_noise_neighbourhoods.py --data-version N [--scene STEM
            [--base tests/image/base] [--probe build-patch_noise/Release/noiseNeighbourhoodProbe.exe]
            [--crops build-patch_noise/voisinages-vNNN] [--output-dir docs/validation/raw]
            [--tuning STEM ...]   scenes used to choose the parameters (the others verify them)
+       python tests/study_noise_neighbourhoods.py --data-version N --pairs-from AUDIT.json
+           [--pairs-root tests/image/colorimétrie] [--jobs N]
+           developed noise truth from exposure-matched pairs (step A of the protocol)
 """
 import argparse
 import hashlib
@@ -25,7 +28,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tests"))
-from analysis.render import runtime_env  # noqa: E402
+from analysis.render import available_memory, runtime_env  # noqa: E402
+from concurrent.futures import ThreadPoolExecutor  # noqa: E402
 
 RAW_SUFFIXES = (".cr3", ".cr2")
 
@@ -43,7 +47,10 @@ def sha256(path):
 
 
 def sources(base, scenes):
-    raws = sorted(p for p in Path(base).iterdir() if p.is_file() and p.suffix.lower() in RAW_SUFFIXES)
+    """RAWs at the root of one base folder or of several (no recursion)."""
+    folders = base if isinstance(base, (list, tuple)) else [base]
+    raws = sorted((p for folder in folders for p in Path(folder).iterdir()
+                   if p.is_file() and p.suffix.lower() in RAW_SUFFIXES), key=lambda p: p.name)
     if scenes:
         wanted = set(scenes)
         raws = [p for p in raws if p.stem in wanted]
@@ -55,26 +62,98 @@ def sources(base, scenes):
     return raws
 
 
+PAIR_WORKER_BYTES = 3 * 1024 ** 3   # two 24 Mpx masters, planes and bands
+
+
+def audited_pairs(audit, root):
+    """Exposure-, geometry- and level-matched pairs of the noise pair audit, not rejected."""
+    record = json.loads(Path(audit).read_text(encoding="utf-8"))
+    found = []
+    for group in record["groups"]:
+        for pair in group["pair_candidates"]:
+            if (pair.get("matching_exposure_metadata") and pair.get("matching_geometry")
+                    and pair.get("matching_decoder_levels") and pair.get("status") != "rejected"
+                    and not pair.get("declared_dark_pair")):
+                a, b = (Path(root) / pair[k].replace("\\", "/") for k in ("left", "right"))
+                if a.is_file() and b.is_file():
+                    found.append((group["folder"], a, b))
+    if not found:
+        raise SystemExit("No usable pair in " + str(audit))
+    return found
+
+
+def pair_jobs(requested, count):
+    if requested:
+        return max(1, requested)
+    free = available_memory()
+    by_memory = 1 if free is None else max(1, int((free - 2 * 1024 ** 3) // PAIR_WORKER_BYTES))
+    return max(1, min(by_memory, count, 4))
+
+
+def run_pairs(args, stamp):
+    campaign = f"etude-bruit-paires-developpe-v{args.data_version:03d}-{stamp.strftime('%Y%m%dT%H%M%SZ')}"
+    output = args.output_dir / f"{campaign}.json"
+    if output.exists():
+        raise SystemExit("Exists, nothing overwritten: " + str(output))
+    pairs = audited_pairs(args.pairs_from, args.pairs_root)
+    jobs = pair_jobs(args.jobs, len(pairs))
+    chunks = [pairs[i::jobs] for i in range(jobs)]
+    start = time.monotonic()
+    with tempfile.TemporaryDirectory() as tmp:
+        def work(index):
+            out = Path(tmp) / f"pairs-{index}.json"
+            cmd = [str(args.probe), "--pairs", str(out)] + [str(x) for _, a, b in chunks[index] for x in (a, b)]
+            r = subprocess.run(cmd, env=runtime_env(args.probe), capture_output=True, text=True, timeout=args.timeout)
+            if r.returncode != 0:
+                raise RuntimeError(r.stderr[-2000:])
+            return json.loads(out.read_text(encoding="utf-8"))["pairs"]
+        with ThreadPoolExecutor(jobs) as pool:
+            results = [p for chunk in pool.map(work, range(jobs)) for p in chunk]
+    folders = {(a.name, b.name): folder for folder, a, b in pairs}
+    for r in results:
+        r["folder"] = folders.get((r["a"], r["b"]))
+    record = {
+        "campaign_id": campaign,
+        "protocol": "docs/validation/protocols/protocole-bruit-voisinages-adaptatifs.md",
+        "step": "A - developed noise truth from exposure-matched pairs vs blind single-image estimate",
+        "runner": "tests/study_noise_neighbourhoods.py",
+        "pairs_source": {"audit": str(Path(args.pairs_from).name), "audit_sha256": sha256(args.pairs_from)},
+        "commit": git("rev-parse", "HEAD"), "local_changes": git("status", "--short").splitlines(),
+        "probe": {"sha256": sha256(args.probe)}, "jobs": jobs,
+        "duration_seconds": round(time.monotonic() - start, 1),
+        "bands": "haar_hh: Haar HH MAD; fine: x - G1; mid: G1 - G4; coarse: G4 - G16; pixel: x - G16 (MAD sigma)",
+        "pairs": results,
+    }
+    output.write_text(json.dumps(record, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"{output}\n{len(results)} paires, {jobs} processus, {record['duration_seconds']:.0f} s")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--data-version", type=int, required=True)
-    parser.add_argument("--base", type=Path, default=ROOT / "tests/image/base")
+    parser.add_argument("--base", type=Path, action="append", help="RAW folder (repeatable; default tests/image/base)")
     parser.add_argument("--probe", type=Path, default=ROOT / "build-patch_noise/Release/noiseNeighbourhoodProbe.exe")
     parser.add_argument("--crops", type=Path)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "docs/validation/raw")
     parser.add_argument("--scene", action="append", default=[])
     parser.add_argument("--tuning", action="append", default=[])
     parser.add_argument("--timeout", type=int, default=3600, help="seconds per run of the probe")
+    parser.add_argument("--pairs-from", type=Path, help="noise pair audit JSON (step A)")
+    parser.add_argument("--pairs-root", type=Path, default=ROOT.parents[1] / "tests/image/colorimétrie"
+                        if (ROOT.parents[1] / "tests/image/colorimétrie").is_dir() else ROOT / "tests/image/colorimétrie")
+    parser.add_argument("--jobs", type=int, default=0, help="parallel probe processes (default: from free memory)")
     args = parser.parse_args(argv)
     if not args.probe.is_file():
         raise SystemExit("Probe not built: " + str(args.probe))
     stamp = datetime.now(timezone.utc)
+    if args.pairs_from:
+        return run_pairs(args, stamp)
     campaign = f"etude-voisinages-bruit-v{args.data_version:03d}-{stamp.strftime('%Y%m%dT%H%M%SZ')}"
     output = args.output_dir / f"{campaign}.json"
     if output.exists():
         raise SystemExit("Exists, nothing overwritten: " + str(output))
     crops = args.crops or ROOT / f"build-patch_noise/voisinages-v{args.data_version:03d}"
-    raws = sources(args.base, args.scene)
+    raws = sources(args.base or [ROOT / "tests/image/base"], args.scene)
     with tempfile.TemporaryDirectory() as tmp:
         probe_json = Path(tmp) / "probe.json"
         start = time.monotonic()
@@ -98,6 +177,7 @@ def main(argv=None):
         "verification_scenes": sorted(p.stem for p in raws if p.stem not in set(args.tuning)),
         "crops_directory": str(crops.relative_to(ROOT)) if crops.is_relative_to(ROOT) else str(crops),
         "crops_status": "derived 8-bit sRGB montages, regenerable, not tracked",
+        "sources": [str(Path(b)) for b in (args.base or [ROOT / "tests/image/base"])],
     })
     output.write_text(json.dumps(record, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"{output}\n{len(raws)} scènes, {duration:.0f} s ; planches : {crops}")
