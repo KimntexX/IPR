@@ -16,9 +16,6 @@ void apply(cv::Mat &linearRgb, int saturation, int vibrance);
 // One linear sRGB D65 pixel; amounts in [-1, 1], clamped. Zero amounts and
 // greys are returned unchanged.
 cv::Vec3f applyPixel(const cv::Vec3f &linearSrgb, double vibrance, double saturation);
-
-// Ottosson Oklab (2021) from linear sRGB, signed cube roots for HDR/signed values.
-cv::Vec3d toOklab(const cv::Vec3d &linearSrgb);
 }
 
 #endif // IPR_CORE_VIBRANCE_H

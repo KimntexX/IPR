@@ -431,15 +431,16 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                        output.pixelColor(band, 0) != base.pixelColor(band, 0),
                        "each of eight mixer bands should work with global saturation/vibrance at zero"))
                 return false;
+            // Lightroom bands overlap their neighbours: only non-adjacent bands stay intact.
             for (int other = 0; other < 8; ++other) {
-                if (other == band)
+                if ((other - band + 8) % 8 <= 1 || (band - other + 8) % 8 <= 1)
                     continue;
                 const QColor actual = output.pixelColor(other, 0);
                 const QColor expected = base.pixelColor(other, 0);
                 if (!check(std::abs(actual.red() - expected.red()) <= 2 &&
                            std::abs(actual.green() - expected.green()) <= 2 &&
                            std::abs(actual.blue() - expected.blue()) <= 2,
-                           "a mixer band should preserve the other band centres"))
+                           "a mixer band should preserve the non-adjacent band centres"))
                     return false;
             }
         }
