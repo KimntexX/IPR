@@ -20,6 +20,7 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Recette RAW et changement de profil](../decisions/ADR-0006-restauration-raw-et-retouche-profil.md) : sidecar v5, tampon pré-DCP et réinitialisations distinctes.
 - [Guide détaillé du moteur CPU](../scholar/moteur-graphique-ipr.tex) : explication des constantes, asynchronisme et sidecars.
 - [Références architecture et profils](references/) : licences des dépendances, création de DCP et note d'utilisation des profils Adobe.
+- [Étude d’autonomie des profils caméra](references/etude-autonomie-profils-camera.md) : données DCP, droits, corpus externes et raccordement proposé à la passerelle MCP d’analyse.
 - [CI et build multiplateforme](ci-et-build-multiplateforme.md) : matrice Windows/macOS/Linux, prérequis, packaging et feuille de route GitHub.
 - [Réduction de bruit et netteté](denoising-sharpening.md) : algorithmes, ordre de pipeline, limites IA/GPU et validation attendue.
 - [Arborescence des sources](../../src/README.md) : domaines C++/QML et bibliothèque interne `iprEngine`.
