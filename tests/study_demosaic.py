@@ -9,7 +9,7 @@ crops stay a derived folder.
 
 Usage: python tests/study_demosaic.py --data-version N [--scene STEM ...]
            [--base tests/image/base ...] [--crops build-patch_noise/dematricage-vNNN] [--jobs N]
-           [--variants AHD,RCD,...] [--threads 8]
+           [--variants AHD,RCD,...] [--threads 8[,12,16]]
 """
 import argparse
 import json
@@ -49,7 +49,8 @@ def main(argv=None):
     parser.add_argument("--jobs", type=int, default=0, help="parallel probe processes (default: from free memory)")
     parser.add_argument("--timeout", type=int, default=7200, help="seconds per probe process")
     parser.add_argument("--variants", help="comma-separated variants (AHD, the reference, always runs first)")
-    parser.add_argument("--threads", type=int, default=8, help="OpenCV threads of our interpolations (default 8)")
+    parser.add_argument("--threads", default="8",
+                        help="OpenCV threads of our interpolations; a list (8,12,16) adds scaling timings")
     args = parser.parse_args(argv)
     if not args.probe.is_file():
         raise SystemExit("Probe not built: " + str(args.probe))
@@ -67,7 +68,7 @@ def main(argv=None):
     with tempfile.TemporaryDirectory() as tmp:
         def work(index):
             out = Path(tmp) / f"part-{index}.json"
-            options = ["--threads", str(args.threads)] + (["--variants", args.variants] if args.variants else [])
+            options = ["--threads", args.threads] + (["--variants", args.variants] if args.variants else [])
             r = subprocess.run([str(args.probe), *options, str(out), str(crops), *map(str, chunks[index])],
                                env=runtime_env(args.probe), capture_output=True, text=True, timeout=args.timeout)
             if r.returncode != 0:

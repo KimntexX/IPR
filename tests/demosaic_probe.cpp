@@ -87,6 +87,8 @@ const std::vector<Variant> &variants()
 
 // Variants of this run: AHD first (reference of the ratios), then the requested ones or all.
 std::vector<Variant> selected;
+// OpenCV threads of our interpolations: the first for the measures, the others for scaling.
+std::vector<int> threadCounts{8};
 
 // OpenCV edge-aware demosaic in place of LibRaw's interpolation. At this step the
 // image is white-balanced, one colour per pixel (second green folded into 1).
@@ -592,7 +594,20 @@ QJsonObject study(const QString &path, const QDir &crops)
         }
         QJsonObject m;
         m.insert("ms_per_megapixel", ms / megapixels);
-        if (v.ours != Variant::Ours::None) m.insert("ours_ms_per_megapixel", ours / megapixels);
+        if (v.ours != Variant::Ours::None) {
+            m.insert("ours_ms_per_megapixel", ours / megapixels);
+            // scaling: our interpolation again at each further thread count
+            QJsonObject byThreads;
+            byThreads.insert(QString::number(threadCounts.front()), ours / megapixels);
+            for (size_t t = 1; t < threadCounts.size(); ++t) {
+                cv::setNumThreads(threadCounts[t]);
+                double unused = 0;
+                process(raw, v, &unused);
+                byThreads.insert(QString::number(threadCounts[t]), oursMs / megapixels);
+            }
+            cv::setNumThreads(threadCounts.front());
+            m.insert("ours_ms_per_megapixel_by_threads", byThreads);
+        }
         m.insert("flat_luma_hh_ratio", median(lumaHh));
         m.insert("flat_chroma_hh_ratio", median(chromaHh));
         m.insert("flat_luma_mid_ratio", median(lumaMid));
@@ -692,19 +707,23 @@ int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
     QStringList args = QCoreApplication::arguments();
-    // options: --threads N (default 8, the performance baseline), --variants A,B,...
-    int threads = 8;
+    // options: --threads N[,M...] (default 8, the performance baseline), --variants A,B,...
     QStringList wanted;
     for (int i = 1; i + 1 < args.size();) {
-        if (args[i] == "--threads") { threads = args[i + 1].toInt(); args.remove(i, 2); }
+        if (args[i] == "--threads") {
+            threadCounts.clear();
+            for (const QString &t : args[i + 1].split(',')) threadCounts.push_back(t.toInt());
+            args.remove(i, 2);
+        }
         else if (args[i] == "--variants") { wanted = args[i + 1].split(','); args.remove(i, 2); }
         else ++i;
     }
-    if (args.size() < 4 || threads < 1) {
-        std::cerr << "usage: demosaicProbe [--threads N] [--variants A,B] OUTPUT.json CROPS_DIR RAW...\n";
+    if (args.size() < 4 || threadCounts.empty() ||
+        std::any_of(threadCounts.begin(), threadCounts.end(), [](int t) { return t < 1; })) {
+        std::cerr << "usage: demosaicProbe [--threads N[,M...]] [--variants A,B] OUTPUT.json CROPS_DIR RAW...\n";
         return 2;
     }
-    cv::setNumThreads(threads);
+    cv::setNumThreads(threadCounts.front());
     selected.push_back(variants().front());
     for (const auto &v : variants())
         if (&v != &variants().front() && (wanted.isEmpty() || wanted.contains(v.name))) selected.push_back(v);

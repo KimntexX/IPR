@@ -1003,7 +1003,7 @@ int main(int argc, char **argv)
             for (const auto &[name, ms] : variantMs) timings.insert(name, ms / (zonePixels / 1e6));
             {
                 const int defaultThreads = cv::getNumThreads();
-                for (int threads : {1, 8}) {
+                for (int threads : {1, 8, 12, 16}) {
                     cv::setNumThreads(threads);
                     const auto t0 = Clock::now();
                     const Planes out = candidateETiled(full, profile, CandidateE{1.0, 1.0, 2.0});
