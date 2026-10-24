@@ -212,6 +212,30 @@ linéaires (tables par niveau et écart local, comme pour le voile), hypothèse
 d'une égalisation locale d'histogramme (CLAHE), dont la pente locale est l'inverse
 de la dynamique locale.
 
+### 6 quater. Égalisation locale d'histogramme (CLAHE) — 25 octobre 2026
+
+Choix de l'utilisateur : étudier CLAHE, jusqu'à un état suffisant ou une
+impasse. [etude-clarte-clahe-v001](../raw/etude-clarte-clahe-v001-20261024T215027Z.json),
+`tests/study_clarity_clahe.py` : égalisation du log2 de la luminance du neutre par
+tuiles (128 à 1024 pixels), histogrammes limités (1,5 à 4 fois le compte moyen,
+ou sans limite), courbes interpolées entre les centres des tuiles ; l'effet,
+brut ou lissé à la moitié d'une tuile, est ajusté au résidu avec une force par
+valeur, en validation croisée par scène.
+
+- Meilleur réglage (tuiles de 1024 pixels, limite 1,5, effet brut) : part
+  inexpliquée 0,73 → 0,62 à +100, 0,67 → 0,67 à −100 ; contrôle complémentaire
+  à 2048 et 4096 pixels : 0,60 à 0,61 à +100, sans gain pour les négatifs ;
+  égalisation globale : 0,64.
+- Lissé, l'effet n'explique plus rien (0,71 à 0,73) : ce que CLAHE capte est du
+  contraste local, déjà rendu en partie par les bandes, pas la composante tonale.
+
+**Conclusion de l'étude de la clarté** : ni le masquage non linéaire, ni CLAHE,
+ni une régression des coefficients affines locaux ne prédisent l'adaptation de
+Lightroom à chaque image, alors qu'une grille affine propre à la scène en
+explique les deux tiers. Faute de piste qui se transpose d'une scène à l'autre,
+la clarté reste au premier état validé (§5) avec la réserve du §6 ; l'utilisateur
+la juge visuellement meilleure que celle de Lightroom.
+
 <a id="effets-20261024-voile"></a>
 
 ## Voile — 24 octobre 2026
@@ -283,6 +307,68 @@ croisée du §8 donne l'estimation hors échantillon).
 - Mesures en luminance ; la saturation ajoutée par le voile suit les rapports
   de canaux de la loi par canal, non vérifiée séparément.
 
+<a id="effets-20261025-voile-couleur"></a>
+
+### 10 bis. Reprise du voile : couleur — 25 octobre 2026
+
+**Retour de l'utilisateur** : sur des images sombres comme 6V1A9539, le voile vers
++100 tire les couleurs vers le jaune et l'image paraît délavée.
+
+**Cause** : la loi v003 appliquait un gain en IL à chaque canal selon son propre
+niveau. Dans une image sombre, R, G et B tombent dans des cases différentes de la
+table, irrégulière dans les ombres profondes (quatre scènes) : sur 6V1A9539 à +100,
+le bleu baissait de 1,99 IL et le rouge montait de 0,56 IL par rapport au vert
+dans les tons moyens-sombres, saturation +2,6 IL. La couleur du voile n'avait
+jamais été mesurée (réserve du §10).
+
+**Ce que fait Lightroom de la couleur** (paires à ±100, rapports log2 R/G et B/G par
+ton) : il retire ou ajoute une dominante propre à la scène (bleue sur 6V1A0327,
+chaude sur _MG_7580) et sature à +100 (+0,8 à +1,9 IL d'écart entre canaux). La
+couleur qu'il ajoute dans les ombres à −100 dépend de chaque scène (magenta sur
+6V1A0043, verte sur 6V1A0327) ; aucun estimateur simple de l'air ambiant ne la
+retrouve.
+
+**Modèles comparés** (`tests/study_dehaze_law.py`, part du changement de
+couleur de Lightroom inexpliquée, validation croisée par scène, avec la luminance
+de Lightroom pour juger la couleur à part) :
+
+| Modèle | −100 | −50 | −25 | +25 | +50 | +100 |
+|---|---:|---:|---:|---:|---:|---:|
+| Rapports conservés | 1,00 | 1,00 | 1,00 | 1,00 | 1,00 | 1,00 |
+| Gain par canal (v003) | 0,49 | 0,53 | 0,58 | 0,73 | 0,68 | 1,24 |
+| Part β de lumière à la couleur de l'air ambiant ([v004](../raw/etude-loi-voile-v004-20261024T215525Z.json)) | 0,48 | 0,58 | 0,54 | 0,84 | 0,92 | 1,08 |
+| Expansion de chroma κ h centrée sur le gris ([v005](../raw/etude-loi-voile-v005-20261024T221133Z.json) ; [v006](../raw/etude-loi-voile-v006-20261024T221611Z.json) bornée) | | | | 0,86 | 0,78 | 0,80 |
+| Expansion bornée centrée sur l'air ambiant ([v007](../raw/etude-loi-voile-v007-20261024T222843Z.json)) | | | | 0,84 | 0,75 | 0,74 |
+
+Au-delà de 1,00, le modèle fait pire que de ne rien changer : le gain par canal à
++100 se transpose mal, d'où le jaunissement. Non bornée, l'expansion faisait
+croître une couleur forte de 4,5 IL (Lightroom : 1,9 au plus) ; centrée sur le
+gris, elle accentuait la dominante du voile (B/G −0,53 dans les tons clairs de
+_MG_7580, que Lightroom débarrasse de sa dominante chaude).
+
+**État livré** (`src/core/Dehaze`, [v007](../raw/etude-loi-voile-v007-20261024T222843Z.json)) :
+
+- luminance : gain en IL de la luminance f(log2(Y/A), h), sans changer les
+  rapports de canaux (validation croisée en luminance 0,15 à 0,19 pour les
+  négatifs, 0,29 à 0,34 pour les positifs, contre 0,44 à 0,59 par canal) ;
+- couleur, en sRGB linéaire comme l'ajustement : pour ajouter du voile, une part β
+  (0,35 à 0,95) de la variation devient de la lumière à la couleur de l'air
+  ambiant (moyenne des 0,1 % de pixels au canal sombre le plus clair, He et al.
+  2009) ; pour le retirer, les rapports log2 R/G et B/G, pris depuis ceux de l'air
+  ambiant, gagnent κ h d / (1 + d²), κ de 1,3 à 10,5 : la dominante du voile est
+  retirée, ses couleurs pâles saturées, les couleurs fortes presque pas.
+
+Rendu IPR en mémoire contre Lightroom : part du changement de luminance (IL)
+inexpliquée 0,07 à −100, 0,08 à −50 et −25, 0,14 à +25, +50 et +100 (en
+échantillon). 6V1A9539 à +100 : B/G 0,00 à +0,02, R/G −0,10, saturation −0,09 à
++0,16 (avant : −1,99, +0,56, +2,6) ; _MG_7580, tons clairs : B/G −0,19 (avant
+−0,53 ; Lightroom +0,13).
+
+**Réserves** : la couleur que Lightroom donne aux ombres, propre à chaque scène,
+n'est pas reproduite (6V1A0327 à +100 : R/G +0,86 à +0,97 chez Lightroom, environ
+0 chez IPR) ; pas d'export Lightroom de 6V1A9539 au voile pour juger son rendu ;
+quatre scènes.
+
 <a id="effets-20261024-grain"></a>
 
 ## Grain — 24 octobre 2026
@@ -341,13 +427,15 @@ le rendu de la zone visible en pleine résolution est un futur chantier.
 ## Conclusion actuelle et prochaines actions — 24 octobre 2026
 
 - Texture : conforme à Lightroom, validation visuelle de l'utilisateur en cours.
-- Clarté : premier état validé avec la réserve du §6.
-- Voile : loi en IL ajustée sur Lightroom, réserve du §10 ; validation visuelle de
-  l'utilisateur à venir.
+- Clarté : premier état validé avec la réserve du §6 ; étude de l'adaptation
+  close (§6 ter et 6 quater), sans piste transposable.
+- Voile : loi en IL sur la luminance et loi de couleur (§10 bis), après le
+  retour de l'utilisateur sur 6V1A9539 ; réserves des §10 et 10 bis ; validation
+  visuelle à refaire.
 - Grain : conforme à Lightroom (§12).
 - Aperçu : effets à l'échelle de l'image entière sur le proxy.
-- Prochaines actions : étude de la clarté (masquage non linéaire, grille affine
-  locale), puis flou (IPR seul).
+- Prochaines actions : flou (IPR seul) ; export Lightroom de 6V1A9539 au voile
+  si l'utilisateur souhaite juger sa couleur sur une scène sombre.
 - Limites : quatre scènes pour la texture et le voile, vingt pour la clarté ;
   trois boîtiers Canon ; mesures en luminance (la chrominance suit les rapports de
   canaux) ; halo jugé sur un bord synthétique et sur les anneaux de Lightroom.

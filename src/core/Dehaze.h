@@ -4,12 +4,13 @@
 #include <opencv2/core.hpp>
 
 // Dehaze following Lightroom's response, fitted on its neutral -> state pairs
-// (tests/study_dehaze_law.py, etude-loi-voile-v003): each channel y gains
-// f(log2(y / A), h) EV, where A is the airlight (99th percentile of max RGB) and h
-// the dark channel smoothed at about 128 pixels over A. f is a bilinear table per
-// slider value, bounded by Lightroom's observed change: positive values lower the
-// tones under the haze, negative values lift them towards a veil. Multiplicative,
-// the change never turns a channel negative.
+// (tests/study_dehaze_law.py, etude-loi-voile-v007). The luminance Y gains
+// f(log2(Y / A), h) EV, where A is the airlight (99th percentile of max RGB) and h
+// the dark channel smoothed at about 128 pixels over A; f is a bilinear table per
+// slider value, bounded by Lightroom's observed change. Colour, in linear sRGB as
+// fitted: adding haze turns part of the change into light of the airlight's colour
+// (mean of the haziest pixels); removing it takes the airlight's cast away and
+// saturates where there is haze, faint colours more than strong ones. Never negative.
 // Study: docs/validation/analyses/analyse-effets.md.
 namespace Dehaze {
 
