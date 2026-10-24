@@ -604,6 +604,71 @@ NoiseProfile profileFrom(const Planes &planes)
     return profile;
 }
 
+// Profile P (study of the profile, tests/study_noise_profile.py): the noise level
+// of each plane and Y bin is the median over the tiles whose spectral signature is
+// within one combined envelope per plane, pooled over the training D tiles of the
+// R6 Mark III pairs; Haar HH and the G1 - G4 band are measured, the other bands
+// follow from E's spectral ratios to HH. A bin with fewer than 16 compatible tiles
+// abstains (zero: no denoising at that brightness), never copied from another.
+// Source: etude-profil-bruit-v002-20261024T224800Z.json (envelopes and factors from
+// training pairs only). Experimental, not validated on other camera models.
+struct Envelope { std::array<double, 8> centre, scale; double threshold; };
+const std::array<Envelope, 3> PooledEnvelopes{{
+    {{0.4027124951174135, -0.9826004976346726, 0.3836589491574601, 0.06976624175287525, 0.9072966485435149, 0.9056823099457951, -0.337388712752277, -0.33846828777862464},
+     {0.10200845907583175, 0.16219201007340514, 0.02546380592701276, 0.02, 0.13393552221977922, 0.13155258466076242, 0.06619467705717287, 0.05867558377353217}, 2.7188142360057808},
+    {{0.5026200876240622, 1.3598577514173655, 0.13345001203167672, 0.2454385937174146, 1.3084273960570219, 1.3117804967968514, -0.15182301922319447, -0.15373456517200612},
+     {0.1050166934385727, 0.3504525738838166, 0.04159296872774241, 0.048016539839175, 0.1803402962975983, 0.18764527018956212, 0.09135353110311482, 0.09301455979448785}, 2.761434508599607},
+    {{0.6534506839423733, 1.8456991149156377, 0.08171611226320509, 0.2702519112721852, 1.572545890972946, 1.5823825340776323, -0.09965270560984275, -0.09633196646751113},
+     {0.11902435432321858, 0.23978930139619656, 0.021178936821311244, 0.053404364302277234, 0.1903535969427559, 0.1731799786940547, 0.0682754803412445, 0.06146470869770194}, 3.426720349705339}
+}};
+// Per plane: factors of the Haar HH and G1 - G4 medians, median truth/estimate on training pairs.
+constexpr std::array<std::array<double, 2>, 3> PooledFactors{{{1.0004972806255716, 0.9862743830113119}, {1.0675423675950784, 0.9947362958494619}, {1.0832147123179374, 0.9973246628136947}}};
+constexpr int PooledMinimumTiles = 16;
+const std::array<const char *, 8> SignatureFeatures{"log_fine_hh", "log_mid_hh", "spectral_flatness",
+    "top8_power_fraction", "log_lh_hh", "log_hl_hh", "hh_corr_x", "hh_corr_y"};
+
+bool noiseCompatible(const cv::Mat &tile, const Envelope &envelope)
+{
+    const QJsonObject s = NoiseSpectralStudy::signature(tile);
+    if (!s.value("valid").toBool()) return false;
+    const QJsonObject f = s.value("features").toObject();
+    double score = 0;
+    for (size_t i = 0; i < SignatureFeatures.size(); ++i)
+        score = std::max(score, std::abs((f.value(SignatureFeatures[i]).toDouble() - envelope.centre[i]) / envelope.scale[i]));
+    return score <= envelope.threshold;
+}
+
+NoiseProfile pooledProfileFrom(const Planes &planes)
+{
+    std::vector<int> tileBins;
+    for (int y = 0; y + Tile <= planes.y.rows; y += Tile)
+        for (int x = 0; x + Tile <= planes.y.cols; x += Tile)
+            tileBins.push_back(yBin(meanOf(planes.y(cv::Rect(x, y, Tile, Tile)))));
+    NoiseProfile profile;
+    for (int c = 0; c < 3; ++c) {
+        const cv::Mat &plane = *planes.all()[size_t(c)];
+        const cv::Mat mid = bands(plane)[1];
+        std::array<std::vector<double>, BinCount> hh, middle;
+        size_t t = 0;
+        for (int y = 0; y + Tile <= plane.rows; y += Tile)
+            for (int x = 0; x + Tile <= plane.cols; x += Tile, ++t) {
+                if (tileBins[t] < 0) continue;
+                const cv::Rect r(x, y, Tile, Tile);
+                if (!noiseCompatible(plane(r), PooledEnvelopes[size_t(c)])) continue;
+                hh[size_t(tileBins[t])].push_back(NoiseEstimation::haarSigma(plane(r)));
+                middle[size_t(tileBins[t])].push_back(madSigma(mid(r)));
+            }
+        const auto &spectrum = Spectra[size_t(c)];
+        for (int bi = 0; bi < BinCount; ++bi) {
+            if (int(hh[size_t(bi)].size()) < PooledMinimumTiles) continue;   // abstain: zero
+            const double haar = quantileOf(hh[size_t(bi)], 0.5) * PooledFactors[size_t(c)][0];
+            for (int k = 0; k < 5; ++k) profile.sigma[size_t(c)][size_t(k)][size_t(bi)] = haar * spectrum[size_t(k)];
+            profile.sigma[size_t(c)][2][size_t(bi)] = quantileOf(middle[size_t(bi)], 0.5) * PooledFactors[size_t(c)][1];
+        }
+    }
+    return profile;
+}
+
 // G study: support is an auditable heuristic, never a calibrated probability.
 // No nearest-bin fill: interpolate measured support, fading toward missing bins.
 struct ProfileSupport {
@@ -1109,7 +1174,9 @@ int main(int argc, char **argv)
     QStringList arguments = QCoreApplication::arguments();
     const bool impulseStudy = arguments.size() > 1 && arguments.at(1) == QStringLiteral("--impulse-study");
     const bool profileStudy = arguments.size() > 1 && arguments.at(1) == QStringLiteral("--profile-study");
-    const bool eOnly = profileStudy || impulseStudy || (arguments.size() > 1 && arguments.at(1) == QStringLiteral("--e-only"));
+    const bool estimateStudy = arguments.size() > 1 && arguments.at(1) == QStringLiteral("--estimate-study");
+    const bool eOnly = profileStudy || impulseStudy || estimateStudy
+        || (arguments.size() > 1 && arguments.at(1) == QStringLiteral("--e-only"));
     if (eOnly) {
         arguments.removeAt(1);
         --argc;
@@ -1207,11 +1274,14 @@ int main(int argc, char **argv)
                 productionResults.emplace_back(name, split(denoised));
             }
 
-            const auto zones = selectZones(full, model, impulseStudy || profileStudy);
+            const auto zones = selectZones(full, model, impulseStudy || profileStudy || estimateStudy);
             // Blind scale-aware profile for candidate E; bias of q25 measured on the pair truth.
             const auto profileStart = Clock::now();
             const NoiseProfile profile = profileFrom(full);
             const double profileMs = std::chrono::duration<double, std::milli>(Clock::now() - profileStart).count();
+            const auto pooledStart = Clock::now();
+            const NoiseProfile pooledProfile = estimateStudy ? pooledProfileFrom(full) : NoiseProfile{};
+            const double pooledMs = std::chrono::duration<double, std::milli>(Clock::now() - pooledStart).count();
             const auto supportStart=Clock::now();
             const ProfileSupport support=profileStudy?supportFrom(full):ProfileSupport{};
             const double supportMs=std::chrono::duration<double,std::milli>(Clock::now()-supportStart).count();
@@ -1306,6 +1376,12 @@ int main(int argc, char **argv)
                                                      {"chroma", "half-res median 3 + joint blocks 3x3 in 9x9, guided upsampling r3"}}},
                                        timed(name, [&] { return candidateE(in, profile, k); })});
                 }
+                if (estimateStudy)
+                    // Same strength as E-l1-c1-f2; only the noise profile changes.
+                    results.push_back({{"E-P-l1-c1-f2", "E-P", {{"luma_wiener_alpha", 1.0}, {"chroma_h2", 1.0},
+                                                                 {"chroma_fine_alpha", 2.0},
+                                                                 {"profile", "pooled spectral envelope, median, abstention"}}},
+                                       timed("E-P-l1-c1-f2", [&] { return candidateE(in, pooledProfile, CandidateE{1.0, 1.0, 2.0}); })});
                 if (profileStudy) {
                     // E's default estimate is computed once above; only the gate is timed here.
                     const Planes estimate=results[2].second;
@@ -1408,6 +1484,7 @@ int main(int argc, char **argv)
             }
             timings.insert("E-profile-full-image", profileMs / (master.total() / 1e6));
             if (profileStudy) timings.insert("G-support-profile-full-image",supportMs/(master.total()/1e6));
+            if (estimateStudy) timings.insert("E-P-profile-full-image", pooledMs / (master.total() / 1e6));
             QJsonArray modelPlanes;
             for (const auto &p : model.planes)
                 modelPlanes.append(QJsonObject{{"slope", p.slope}, {"intercept", p.intercept}, {"affine", p.affine},
@@ -1417,6 +1494,16 @@ int main(int argc, char **argv)
                 {"iso", loaded.metadata.iso}, {"camera", loaded.metadata.cameraModel},
                 {"blind_noise_profile", blindProfile(full)},
                 {"profile_support",support.bins},
+                {"pooled_profile", [&] {
+                    QJsonArray bins;
+                    if (!estimateStudy) return bins;
+                    for (int bi = 0; bi < BinCount; ++bi)
+                        bins.append(QJsonObject{{"bin", bi},
+                            {"haar_y_co_cg", QJsonArray{pooledProfile.sigma[0][0][size_t(bi)], pooledProfile.sigma[1][0][size_t(bi)], pooledProfile.sigma[2][0][size_t(bi)]}},
+                            {"mid_y_co_cg", QJsonArray{pooledProfile.sigma[0][2][size_t(bi)], pooledProfile.sigma[1][2][size_t(bi)], pooledProfile.sigma[2][2][size_t(bi)]}},
+                            {"e_haar_y_co_cg", QJsonArray{profile.sigma[0][0][size_t(bi)], profile.sigma[1][0][size_t(bi)], profile.sigma[2][0][size_t(bi)]}}});
+                    return bins;
+                }()},
                 {"width", master.cols}, {"height", master.rows},
                 {"input", "neutral linear Rec.2020 master before the denoiser (TestRecipes::neutral, renderWorkingImage)"},
                 {"noise_model", modelPlanes}, {"zones", zoneRecords},
@@ -1426,11 +1513,13 @@ int main(int argc, char **argv)
         }
         QJsonObject root{
             {"study", "adaptive-neighbourhood denoising candidates (protocole-bruit-voisinages-adaptatifs)"},
-            {"candidate_scope", profileStudy ? "reference, E and G gates; only E full-image timing at 8 threads" :
+            {"candidate_scope", estimateStudy ? "reference, E and E-P (pooled spectral profile); only E full-image timing at 8 threads" :
+                profileStudy ? "reference, E and G gates; only E full-image timing at 8 threads" :
                 impulseStudy ? "reference, E and F; only E full-image timing at 8 threads" :
                 eOnly ? "reference and E; full-image timing at 8 threads" : "all candidates and thread scaling"},
             {"impulse_study", impulseStudy},
             {"profile_study",profileStudy},
+            {"estimate_study", estimateStudy},
             {"profile_controls",profileStudy?profileControls():QJsonArray{}},
             {"profile_support_rule","exploratory: Y G2 gradient/HH <= 1, <=1% Y outside (0,1), >=16 eligible 32px tiles, per-plane q75/q25 <=2 and q25>1e-7; interpolate binary support, fading toward missing bins, no nearest-bin fill. G-structure multiplies by 1/(1+(G2 gradient/Y HH)^4). Not a probability or RCD synthetic simulation; gating can make spatial seams and change means."},
             {"noise_profile_calibration", QJsonObject{

@@ -18,6 +18,12 @@ uses one envelope per plane, pooled over all training D tiles of every bin
 (median and 1.4826 MAD, floor 0.02, threshold the 95th percentile of the
 training scores, as the parent rule), with the other rules of S.
 
+A faint fine texture can pass the envelope (parent injection study: 4 of 24 at
+one sigma) and adds as much energy as the noise; on photographs P then rose up
+to 1.7 times E (campaign v012). Profile Q is P with the 25th percentile of the
+compatible tiles instead of their median: the added energy of a texture sits in
+the upper part of the distribution. Its factor is also fitted on training pairs.
+
 Both are compared, on the held-out pairs, with the truth: the median sigma of
 D = (A - B)/sqrt(2) over quiet tiles of the bin (mean-image gradient below 3
 HH sigmas of D(Y)), per plane (Y, Co, Cg), bin and scale (Haar HH; G1 - G4 band,
@@ -133,7 +139,9 @@ def estimate(t, models, pooled):
                        "s_mid_raw": float(np.median(t[f"{plane}_mid_a"][sel])) if n >= MIN_TILES else None,
                        "pooled_compatible_tiles": n_p,
                        "p_hh_raw": float(np.median(t[f"{plane}_hh_a"][sel_p])) if n_p >= MIN_TILES else None,
-                       "p_mid_raw": float(np.median(t[f"{plane}_mid_a"][sel_p])) if n_p >= MIN_TILES else None}
+                       "p_mid_raw": float(np.median(t[f"{plane}_mid_a"][sel_p])) if n_p >= MIN_TILES else None,
+                       "q_hh_raw": float(np.quantile(t[f"{plane}_hh_a"][sel_p], .25)) if n_p >= MIN_TILES else None,
+                       "q_mid_raw": float(np.quantile(t[f"{plane}_mid_a"][sel_p], .25)) if n_p >= MIN_TILES else None}
         out[plane] = rows
     return out
 
@@ -185,7 +193,7 @@ def main(argv=None):
         p["bins"] = estimate(table(record), models, pooled)
     # S and P calibration: one factor per plane and scale, median truth / raw over training cells.
     calibration = {}
-    for profile in ("s", "p"):
+    for profile in ("s", "p", "q"):
         for plane in PLANES:
             for scale in ("hh", "mid"):
                 ratios = [r[f"truth_{scale}"] / r[f"{profile}_{scale}_raw"] for p in pairs if p["split"] == "train"
@@ -197,7 +205,7 @@ def main(argv=None):
         for plane in PLANES:
             for b, r in p["bins"][plane].items():
                 for scale in ("hh", "mid"):
-                    for profile in ("s", "p"):
+                    for profile in ("s", "p", "q"):
                         k = calibration[f"{profile}_{plane}_{scale}"]
                         raw = r[f"{profile}_{scale}_raw"]
                         r[f"{profile}_{scale}"] = None if raw is None or k is None else raw * k
@@ -209,12 +217,15 @@ def main(argv=None):
                     key = (plane, scale)
                     s = summary.setdefault(key, {"truth_cells": 0, "e": [], "e_measured_bin": [], "s": [],
                                                  "e_on_s_cells": [], "s_abstained": 0, "p": [], "e_on_p_cells": [],
-                                                 "p_abstained": 0, "by_iso": {}})
+                                                 "p_abstained": 0, "q": [], "e_on_q_cells": [], "by_iso": {}})
                     if r[f"truth_{scale}"] is None:
                         continue
                     s["truth_cells"] += 1
                     iso = s["by_iso"].setdefault(str(p["iso"]), {"e": [], "s": [], "s_abstained": 0, "p": [],
                                                                  "p_abstained": 0})
+                    if r[f"q_{scale}_log2_error"] is not None:
+                        s["q"].append(r[f"q_{scale}_log2_error"])
+                        iso.setdefault("q", []).append(r[f"q_{scale}_log2_error"])
                     if r[f"p_{scale}_log2_error"] is None:
                         s["p_abstained"] += 1
                         iso["p_abstained"] += 1
@@ -249,15 +260,17 @@ def main(argv=None):
             "e_all": stats(s["e"]), "e_measured_bins": stats(s["e_measured_bin"]),
             "e_on_s_cells": stats(s["e_on_s_cells"]), "s": stats(s["s"]),
             "p_abstained": s["p_abstained"], "e_on_p_cells": stats(s["e_on_p_cells"]), "p": stats(s["p"]),
+            "q": stats(s["q"]),
             "by_iso": {iso: {"e": stats(v["e"]), "s": stats(v["s"]), "s_abstained": v["s_abstained"],
-                             "p": stats(v["p"]), "p_abstained": v["p_abstained"]}
+                             "p": stats(v["p"]), "p_abstained": v["p_abstained"], "q": stats(v.get("q", []))}
                        for iso, v in sorted(s["by_iso"].items(), key=lambda kv: int(kv[0]))}}
         r = report[f"{plane}_{scale}"]
         print(f"{plane:2s} {scale:3s}: truth cells {s['truth_cells']:2d} | E all {r['e_all']['median_abs_log2']:.3f} "
               f"(max {r['e_all']['max_abs_log2']:.2f}) | E on S cells {r['e_on_s_cells']['median_abs_log2'] or 0:.3f} | "
               f"S {r['s']['median_abs_log2'] or 0:.3f} (max {r['s']['max_abs_log2'] or 0:.2f}, {r['s']['cells']} cells, "
               f"{s['s_abstained']} abstained) | P {r['p']['median_abs_log2'] or 0:.3f} (max {r['p']['max_abs_log2'] or 0:.2f}, "
-              f"{r['p']['cells']} cells; E on them {r['e_on_p_cells']['median_abs_log2'] or 0:.3f})", flush=True)
+              f"{r['p']['cells']} cells; E on them {r['e_on_p_cells']['median_abs_log2'] or 0:.3f}) | "
+              f"Q {r['q']['median_abs_log2'] or 0:.3f} (max {r['q']['max_abs_log2'] or 0:.2f})", flush=True)
     record = {"schema_version": 1, "data_version": args.data_version, "measured_at_utc": stamp.isoformat(),
               "campaign_id": output.stem, "runner": "tests/study_noise_profile.py", "runner_sha256": sha256(Path(__file__)),
               "commit": git("rev-parse", "HEAD"), "local_changes": git("status", "--short").splitlines(),
@@ -268,6 +281,7 @@ def main(argv=None):
                         "s": f"median of frame-A tiles within the frozen combined envelope, >= {MIN_TILES} tiles, "
                              "else abstain; one factor per plane and scale from training pairs",
                         "p": "as s, with one combined envelope per plane pooled over all training D tiles",
+                        "q": "as p, 25th percentile of the compatible tiles instead of the median",
                         "truth": f"median of D over quiet tiles of the mean-image bin, >= {MIN_TRUTH_TILES} tiles",
                         "e_mid": f"E HH times its band ratio {E_MID_RATIO}",
                         "score": "log2(estimate / truth), held-out pairs only"},

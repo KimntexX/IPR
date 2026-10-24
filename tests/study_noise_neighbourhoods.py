@@ -143,15 +143,16 @@ def main(argv=None):
     parser.add_argument("--candidate-e-only", action="store_true", help="reference and E only; full-image timing at 8 threads")
     parser.add_argument("--impulse-study", action="store_true", help="reference, E and experimental impulse prefilter F")
     parser.add_argument("--profile-study", action="store_true", help="reference, E and experimental support/structure gates G")
+    parser.add_argument("--estimate-study", action="store_true", help="reference, E and E-P: same strength, pooled spectral profile")
     parser.add_argument("--timeout", type=int, default=3600, help="seconds per run of the probe")
     parser.add_argument("--pairs-from", type=Path, help="noise pair audit JSON (step A)")
     parser.add_argument("--pairs-root", type=Path, default=ROOT.parents[1] / "tests/image/colorimétrie"
                         if (ROOT.parents[1] / "tests/image/colorimétrie").is_dir() else ROOT / "tests/image/colorimétrie")
     parser.add_argument("--jobs", type=int, default=0, help="parallel probe processes (default: from free memory)")
     args = parser.parse_args(argv)
-    if sum((args.candidate_e_only,args.impulse_study,args.profile_study))>1:
+    if sum((args.candidate_e_only,args.impulse_study,args.profile_study,args.estimate_study))>1:
         parser.error("Select one photographic study scope")
-    if args.pairs_from and (args.candidate_e_only or args.impulse_study or args.profile_study):
+    if args.pairs_from and (args.candidate_e_only or args.impulse_study or args.profile_study or args.estimate_study):
         parser.error("Photographic candidate flags do not apply to pair calibration")
     if not args.probe.is_file():
         raise SystemExit("Probe not built: " + str(args.probe))
@@ -168,7 +169,8 @@ def main(argv=None):
     with tempfile.TemporaryDirectory() as tmp:
         probe_json = Path(tmp) / "probe.json"
         start = time.monotonic()
-        scope = ["--profile-study"] if args.profile_study else ["--impulse-study"] if args.impulse_study else ["--e-only"] if args.candidate_e_only else []
+        scope = (["--estimate-study"] if args.estimate_study else ["--profile-study"] if args.profile_study
+                 else ["--impulse-study"] if args.impulse_study else ["--e-only"] if args.candidate_e_only else [])
         result = subprocess.run([str(args.probe), *scope, str(probe_json), str(crops), *map(str, raws)],
                                 env=runtime_env(args.probe), capture_output=True, text=True, timeout=args.timeout)
         duration = time.monotonic() - start

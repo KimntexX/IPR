@@ -526,3 +526,9 @@ Limites : un seul boîtier ; D est un résidu différentiel après développemen
 qui efface ce que les deux vues ont en commun (dont un motif fixe du capteur) ;
 tuiles corrélées ; les constantes d'E viennent de synthèses antérieures qui
 peuvent inclure ces paires.
+
+Rejeu photographique (point 3) : `tests/study_noise_neighbourhoods.py
+--estimate-study` ajoute la variante E-P-l1-c1-f2, même force qu'E-l1-c1-f2,
+profil P calculé dans le probe (enveloppes et facteurs de etude-profil-bruit-v002),
+sigma nul dans une classe de moins de 16 tuiles compatibles. Le profil Q (quartile
+25 % des tuiles compatibles) est un contrôle de `tests/study_noise_profile.py`.

@@ -3985,9 +3985,89 @@ indépendantes ; D n'est pas le bruit marginal d'une vue unique ; la sélection
 d'une tuile reste une compatibilité avec une enveloppe, pas une probabilité de
 bruit. Aucune modification du débruiteur de production, aucune publication.
 
+<a id="bruit-20261025-rejeu"></a>
+
+## 57. Rejeu d'E avec le profil P, à force inchangée — campagne v012
+
+Point 3 de la procédure. Preuve :
+[etude-voisinages-bruit-v012-20261024T225407Z.json](../raw/etude-voisinages-bruit-v012-20261024T225407Z.json),
+mêmes douze scènes et mêmes 116 zones que v011 (R6 Mark III, R7, 60D), banc de
+372 s, `--estimate-study`. La variante **E-P-l1-c1-f2** reprend exactement
+E-l1-c1-f2 et ne change que le profil : celui de P, calculé dans le probe avec
+les enveloppes communes et les facteurs de v002 ; une classe de moins de 16
+tuiles compatibles reçoit un sigma nul, donc aucun débruitage à cette
+luminosité. Le JSON conserve, par scène et par classe, les sigmas de P et d'E.
+
+| Mesure | E-l1-c1-f2 | E-P-l1-c1-f2 |
+| --- | ---: | ---: |
+| Médiane chroma bande moyenne sortie/entrée, 47 zones planes | 0,1113 | 0,1391 |
+| Zones planes avec ce ratio ≤ 0,15 | 34/47 | 29/47 |
+| Médiane HH Y sortie/entrée, zones de détail | 0,2488 | 0,2210 |
+| Médiane HH Y sortie/entrée, zones sombres | 0,1948 | 0,1516 |
+| Maximum absolu de dérive moyenne Y relative, 116 zones | 0,18 % | 0,24 % |
+| Zones de dérive chromatique > 0,1 σ | 6 | 5 |
+
+Lecture, sans vérité propre sur ces photographies :
+
+- Dans la plupart des classes, P relève le sigma de 0 à 10 % par rapport à E,
+  dans le sens des paires réservées (E trop bas de 6 à 10 % dans les ombres).
+- **Sur 6V1A9273 et 6V1A9426, P dépasse E de 40 à 70 %** dans les classes 6 à 9.
+  L'étude d'injection (§52) montre qu'une texture fine d'un sigma peut passer
+  l'enveloppe combinée (4/24) : elle ajoute autant d'énergie que le bruit
+  (facteur √2 ≈ 1,4). Une contamination par des textures faibles est donc
+  probable ; elle ne pouvait pas apparaître sur les paires, scènes calmes.
+- **Les abstentions laissent du bruit** : 6V1A0513 (ISO 400) n'a pas assez de
+  tuiles compatibles dans les classes 4, 7 à 9 et 11, la Lune 9997 n'est couverte
+  que dans les classes 0 à 2. D'où moins de réduction de chroma dans les aplats.
+  C'est la conséquence voulue de l'abstention, pas une recopie masquée.
+- Les dérives restent sous les seuils ; aucune zone au-delà de 1 % de dérive Y.
+
+Le bénéfice de l'estimation n'apparaît donc pas comme un gain net sur ces
+indicateurs, qui mêlent bruit et détail réel : P est plus juste sur les paires,
+mais sa sélection n'est pas encore assez sûre sur des photographies texturées.
+
+## 58. Quartile 25 % des tuiles compatibles — contrôle v003
+
+Pour réduire la contamination, le profil Q prend le quartile 25 % des tuiles
+compatibles au lieu de leur médiane (facteur ajusté sur les paires
+d'ajustement : 1,04 à 1,16). Preuve :
+[etude-profil-bruit-v003-20261024T230132Z.json](../raw/etude-profil-bruit-v003-20261024T230132Z.json).
+Sur les paires réservées, Q est **moins juste** que P : écart médian 0,027 à 0,062
+contre 0,008 à 0,014, maximum hors ISO 100 de 0,09 à 0,12 contre 0,02 à 0,04 ; son
+rapport à la vérité varie davantage d'un ISO à l'autre. Sa meilleure résistance
+aux textures n'est pas démontrable sans vérité sur les photographies : Q n'est
+pas retenu en l'état.
+
 <a id="conclusion-actuelle"></a>
 
-## Conclusion actuelle et prochaines actions — 25 octobre 2026, après le profil P
+## Conclusion actuelle et prochaines actions — 25 octobre 2026, après rejeu d'E
+
+**L'estimation est plus juste, mais la sélection des tuiles n'est pas encore assez
+sûre pour la production.** Sur les paires R6 Mark III réservées, le profil P suit
+la vérité à 1 % près en médiane et à moins de 3 % au pire hors ISO 100, contre
+4 à 13 % en médiane et jusqu'à 38 % pour E ; il corrige Cg à ISO 51200 et les ombres
+d'ISO 1600, et s'abstient sans recopier une autre luminosité. Rejoué à force
+inchangée sur douze photographies (v012), il relève le sigma de 0 à 10 % dans la
+plupart des classes, mais jusqu'à 1,7 fois sur deux scènes texturées, très
+probablement par des textures faibles que l'enveloppe accepte ; ses abstentions
+laissent du bruit dans les tons sans tuiles compatibles. Le quartile 25 % (Q)
+perd la justesse sur les paires sans preuve de robustesse.
+
+Prochaines actions, dans l'ordre :
+
+1. **Mesurer la contamination** : injecter des textures faibles connues (1 σ, §52)
+   dans une part croissante des tuiles A des paires réservées, et suivre
+   l'erreur de P face à la vérité ; c'est mesurable avec le corpus actuel.
+2. Selon le résultat, durcir la sélection (seuil d'enveloppe, cohérence entre
+   plans, rapport HH/bande moyenne), ou combiner P avec une borne tirée d'E.
+3. Point 4, séparé : protection spatiale des petites formes (étoiles, points,
+   lignes fines), qu'une signature 32 × 32 ne protège pas.
+4. Avant toute intégration : conservation du détail, autres boîtiers (les
+   enveloppes viennent des seules paires R6 Mark III), coût pleine image et
+   validation visuelle de l'utilisateur. Les planches v012 sont dans
+   `build-patch_noise/voisinages-v012` (dérivés sRGB 8 bits non suivis).
+
+## Conclusion du 25 octobre 2026, après le profil P — historique
 
 **L'estimation du bruit d'E est fiabilisée sur les paires R6 Mark III** : le profil
 P, construit sur les seules tuiles spectralement compatibles avec une enveloppe
