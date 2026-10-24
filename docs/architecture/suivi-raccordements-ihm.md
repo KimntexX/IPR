@@ -43,6 +43,7 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-007 | Raccordé et validé sur Windows | Compléter la qualification des permissions et des plateformes cibles |
 | IHM-CONN-008 | En attente moteur | Duplication physique source et réglages ; `Ctrl+D` désactivé |
 | IHM-CONN-009 | Raccordé, tests portables réussis | Qualification réelle des alias `/var` et `/private/var` sur macOS |
+| IHM-CONN-010 | Raccordé, tests réussis (23 octobre 2026) | Revue visuelle des pistes du mélangeur : `ImageEditor::colorMixerTrackColor(bande, composante, valeur)` renvoie la couleur atteinte par le modèle Lightroom (`ColorMixer::trackColour`), échantillonnée à −100, −50, 0, +50, +100 |
 
 Les mémos au survol prolongé restent **reportés à la bêta**. Le livre utilisateur
 français est créé et décrit déjà les commandes disponibles ; il n'est plus
