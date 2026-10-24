@@ -112,8 +112,15 @@ int main(int argc, char **argv)
             && near(canvas->width(), 800) && near(canvas->height(), 500), "initial image should fit")) return 1;
     if (!check(canvas->property("mipmap").toBool() && canvas->property("smooth").toBool(),
                "reduced previews are mipmapped, so the grain does not alias")) return 1;
+    auto *fitCanvas = viewport->findChild<QQuickItem *>("fitViewportImage");
+    for (int i = 0; i < 50 && fitCanvas && !fitCanvas->isVisible(); ++i) settle();
+    if (!check(fitCanvas && fitCanvas->isVisible() && !canvas->isVisible()
+            && fitCanvas->property("sourceSize").toSize() == QSize(800, 500)
+            && near(fitCanvas->width(), 800) && near(fitCanvas->height(), 500),
+               "at fit the preview is reduced to the exact displayed size and replaces the mipmapped one")) return 1;
     click(window, QPointF(400, 250));
     if (!check(near(number(viewport, "zoomScale"), 1), "click should zoom to actual preview size")) return 1;
+    if (!check(!fitCanvas->isVisible() && canvas->isVisible(), "zoomed views use the full preview")) return 1;
     mouse(window, QEvent::MouseButtonPress, QPointF(400, 250), Qt::LeftButton, Qt::LeftButton);
     mouse(window, QEvent::MouseMove, QPointF(490, 310), Qt::NoButton, Qt::LeftButton);
     mouse(window, QEvent::MouseButtonRelease, QPointF(490, 310), Qt::LeftButton, Qt::NoButton);
