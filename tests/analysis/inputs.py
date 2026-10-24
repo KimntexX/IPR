@@ -95,6 +95,8 @@ def base_records(base, groups):
                 candidates = variants if feature in ("temperature", "tint") else neutral_candidates
                 matches = []
                 ignored = {field, "HasSettings", "Version", "UUID", "Digest"}
+                if feature == "grain":   # size and roughness accompany the amount (scripts/make_lr_presets.py)
+                    ignored |= {"GrainSize", "GrainFrequency"}
                 for candidate in candidates:
                     if candidate.stem.split("-")[0] != scene:
                         continue

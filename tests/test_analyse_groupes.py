@@ -149,6 +149,23 @@ class GroupAnalysisTests(unittest.TestCase):
                              [("mixer-red-hue", 50), ("mixer-red-saturation", -25)])
             self.assertTrue(all(Path(r["reference"]).name == "S.tif" for r in records))
 
+    def test_grain_size_and_roughness_do_not_break_the_neutral_pairing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory).resolve()
+            folder = base / "effets/grain"
+            folder.mkdir(parents=True)
+            (base / "neutre").mkdir()
+            pixels = np.full((8, 8, 3), 25000, dtype=np.uint16)
+            def xmp(**changed):
+                fields = {"GrainAmount": "0", "Texture": "0", "WhiteBalance": "As Shot", "CameraProfile": "Camera Neutral"}
+                fields.update(changed)
+                attrs = " ".join('crs:' + key + '=\"' + value + '\"' for key, value in fields.items())
+                return ('<root xmlns:crs=\"' + native.CRS + '\" ' + attrs + '/>').encode()
+            write_tiff(base / "neutre/S.tif", pixels, xmp=xmp())
+            write_tiff(folder / "S-2.tif", pixels + 50, xmp=xmp(GrainAmount="+50", GrainSize="25", GrainFrequency="50"))
+            records = inputs.base_records(base, ["effets"])
+            self.assertEqual([(r["feature"], r["value"], Path(r["reference"]).name) for r in records], [("grain", 50, "S.tif")])
+
     def test_float_radius_declaration_tolerance_does_not_hide_wrong_state(self):
         record = {"feature": "sharpening-radius", "value": .3,
                   "settings": {"sharpeningRadius": .30000001192092896, "sharpeningAmount": 50},
