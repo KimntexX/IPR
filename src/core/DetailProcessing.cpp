@@ -1,5 +1,4 @@
 #include "DetailProcessing.h"
-#include "ImageMath.h"
 #include "WorkingColorSpace.h"
 
 #include <opencv2/imgproc.hpp>
@@ -329,43 +328,6 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings)
     }
 }
 
-
-namespace {
-void applyLocalContrast(cv::Mat &adjusted, int adjustment, double sigma, bool protectExtremes)
-{
-    if (adjustment == 0)
-        return;
-
-    cv::Mat luminance(adjusted.rows, adjusted.cols, CV_32F);
-    for (int y = 0; y < adjusted.rows; ++y) {
-        const cv::Vec3f *sourceRow = adjusted.ptr<cv::Vec3f>(y);
-        float *luminanceRow = luminance.ptr<float>(y);
-        for (int x = 0; x < adjusted.cols; ++x)
-            luminanceRow[x] = WorkingColor::nonNegativeLuminance(sourceRow[x]);
-    }
-    cv::Mat localBase;
-    cv::GaussianBlur(luminance, localBase, cv::Size(0, 0), sigma);
-    const float amount = static_cast<float>(adjustment) / 100.0f;
-    for (int y = 0; y < adjusted.rows; ++y) {
-        cv::Vec3f *pixelRow = adjusted.ptr<cv::Vec3f>(y);
-        const float *luminanceRow = luminance.ptr<float>(y);
-        const float *baseRow = localBase.ptr<float>(y);
-        for (int x = 0; x < adjusted.cols; ++x) {
-            const float luminance = luminanceRow[x];
-            float protection = 1.0f;
-            if (protectExtremes) {
-                protection = ImageMath::smoothStep(0.03f, 0.16f, luminance) *
-                             (1.0f - ImageMath::smoothStep(0.72f, 0.98f, luminance));
-            }
-            const float target = std::max(0.0f, luminance + (luminance - baseRow[x]) * amount * protection);
-            WorkingColor::scaleToLuminance(pixelRow[x], luminance, target);
-        }
-    }
-}
-}
-
-void applyTexture(cv::Mat &linearRgb, int texture) { applyLocalContrast(linearRgb, texture, 1.2, false); }
-void applyClarity(cv::Mat &linearRgb, int clarity) { applyLocalContrast(linearRgb, clarity, 8.0, true); }
 
 void dehaze(cv::Mat &adjusted, int dehazeAmount)
 {

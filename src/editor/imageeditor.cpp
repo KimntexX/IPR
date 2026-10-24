@@ -1,6 +1,7 @@
 #include "imageeditor.h"
 
 #include "DetailProcessing.h"
+#include "LocalContrast.h"
 #include "ColorAdjustments.h"
 #include "Contrast.h"
 #include "Histogram.h"
@@ -1469,8 +1470,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
     }
 
-    DetailProcessing::applyTexture(adjusted, settings.texture);
-    DetailProcessing::applyClarity(adjusted, settings.clarity);
+    LocalContrast::apply(adjusted, settings.texture, settings.clarity);
     DetailProcessing::dehaze(adjusted, settings.dehaze);
     ToneCurve::apply(adjusted, settings.toneCurves);
 
