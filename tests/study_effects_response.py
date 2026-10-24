@@ -31,8 +31,8 @@ from study_lr_neutral_noise import linear, read_tiff  # noqa: E402
 from study_sources import git, sources  # noqa: E402
 
 WEIGHTS = np.array([.2126, .7152, .0722], np.float32)
-SIGMAS = (1, 2, 4, 8, 16, 32, 64)
-BANDS = ("fine", "1-2", "2-4", "4-8", "8-16", "16-32", "32-64", "64+")
+SIGMAS = (1, 2, 4, 8, 16, 32, 64, 128, 256)
+BANDS = ("fine", "1-2", "2-4", "4-8", "8-16", "16-32", "32-64", "64-128", "128-256", "256+")
 TONES = np.array([0.003, 0.02, 0.08, 0.25, 0.6, 1.0])   # linear luminance bins of the neutral
 FEATURES = ("texture", "clarity", "dehaze")
 
@@ -41,8 +41,19 @@ def log_luma(rgb):
     return np.log2(np.clip(rgb @ WEIGHTS, 1e-4, None)).astype(np.float32)
 
 
+def gaussian(l, sigma):
+    """Gaussian blur; beyond sigma 16 at reduced resolution (area reduction, sigma 4, bilinear
+    enlargement), which keeps 256-pixel scales tractable on 32 Mpx images."""
+    if sigma <= 16:
+        return cv2.GaussianBlur(l, (0, 0), sigma, borderType=cv2.BORDER_REFLECT)
+    f = sigma // 4
+    small = cv2.resize(l, (max(1, l.shape[1] // f), max(1, l.shape[0] // f)), interpolation=cv2.INTER_AREA)
+    small = cv2.GaussianBlur(small, (0, 0), 4, borderType=cv2.BORDER_REFLECT)
+    return cv2.resize(small, (l.shape[1], l.shape[0]), interpolation=cv2.INTER_LINEAR)
+
+
 def bands(l):
-    blurred = [l] + [cv2.GaussianBlur(l, (0, 0), s, borderType=cv2.BORDER_REFLECT) for s in SIGMAS]
+    blurred = [l] + [gaussian(l, s) for s in SIGMAS]
     return [blurred[i] - blurred[i + 1] for i in range(len(SIGMAS))] + [blurred[-1]]
 
 
@@ -55,7 +66,7 @@ def response(neutral, variant):
     b0, b1 = bands(l0), bands(l1)
     result = {"valid_fraction": float(valid.mean()), "band_gain": {}, "tone": [], "mid_gain_by_tone": []}
     for name, a, b in zip(BANDS, b0, b1):
-        if name == "64+":
+        if name == "256+":
             continue
         a, b = a[valid], b[valid]
         result["band_gain"][name] = float(np.dot(a, b) / max(np.dot(a, a), 1e-12))
@@ -109,7 +120,7 @@ def main(argv=None):
             states.append({"scene": r["scene"], "feature": r["feature"], "value": r["value"],
                            "lr_state": Path(r["file"]).name, "lr_neutral": Path(r["reference"]).name,
                            "lr": lr, "ipr": ipr})
-            g = lambda x: " ".join(f"{x['band_gain'][b]:.2f}" for b in BANDS[:-1])
+            g = lambda x: " ".join(f"{x['band_gain'][b]:.2f}" for b in BANDS[:-1])  # noqa: E731
             print(f"{r['scene']} {r['feature']} {r['value']:+.0f}\n  LR  {g(lr)}\n  IPR {g(ipr)}", flush=True)
     finally:
         server.close()
@@ -117,6 +128,7 @@ def main(argv=None):
               "commit": git("rev-parse", "HEAD"), "local_changes": git("status", "--short").splitlines(),
               "render_server": {"path": str(server.executable), "sha256": server.sha256},
               "method": {"domain": "log2 of linear sRGB luminance (Rec.709 weights)",
+                         "large_scales": "sigma above 16 computed at 1/(sigma/4) resolution",
                          "bands": "difference of Gaussians, sigma " + ", ".join(map(str, SIGMAS)) + " native pixels",
                          "gain": "least-squares slope of the variant band on the neutral band, valid pixels",
                          "valid": "neutral luminance > 0.002, no channel >= 0.98 in either image, eroded 5x5",

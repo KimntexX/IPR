@@ -3,12 +3,13 @@
 
 #include <opencv2/core.hpp>
 
-// Texture and clarity, following Lightroom's response measured by scale
-// (tests/study_effects_response.py, etude-reponse-effets-v001): the logarithm
-// of the luminance is split into difference-of-Gaussian bands from 1 to 64
-// pixels, and each band is multiplied by the gain Lightroom gives it at the
-// slider value (interpolated between the measured values). Texture acts mostly
-// up to 8-16 pixels, clarity at every scale. Colours keep their channel ratios.
+// Texture and clarity, following Lightroom's response measured by scale and by
+// amplitude (tests/study_effects_response.py, tests/study_effects_amplitude.py):
+// the logarithm of the luminance is split into difference-of-Gaussian bands from
+// 1 to 256 pixels; in each band, small variations are amplified (or reduced) by
+// the gain Lightroom gives them at the slider value, large ones (edges) much less,
+// which avoids halos. Texture acts mostly up to 8-16 pixels, clarity at every
+// scale. Colours keep their channel ratios.
 // Study: docs/validation/analyses/analyse-effets.md.
 namespace LocalContrast {
 
