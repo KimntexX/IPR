@@ -3,15 +3,16 @@
 ## Bilan actuel — 24 octobre 2026
 
 **Dernier résultat :** l'ouverture des RAW Bayer passe d'AHD (LibRaw, un cœur)
-à **RCD**, une interpolation écrite pour IPR, suivie d'une **médiane couleur
-guidée par la luminance** ([état livré](#dematricage-20261024-etat-livre)). Face
-à 65 neutres Lightroom sans réduction de bruit, le grain couleur visible d'IPR
-est au niveau de LR (0,96) et le détail couleur des textures est conservé ;
-l'ouverture passe de 3,7–4,1 s à 1,9–2,2 s. La visionneuse réduit désormais
-l'aperçu avec mipmap. **Point ouvert : le grain de luminance visible**, 1,04 fois
-celui de LR en médiane, 1,28 sur le R7, que le dématriçage ne change pas
-([retour visuel](#dematricage-20261024-retour), [conclusion](#conclusion-actuelle)).
-Validation visuelle de l'utilisateur en attente avant fusion dans `dev`.
+à **RCD**, une interpolation écrite pour IPR dont le vert est mélangé à une
+estimation par différence de couleur, suivie d'une **médiane couleur guidée par
+la luminance** ([état livré](#dematricage-20261024-nettete)). Face à 65 neutres
+Lightroom sans réduction de bruit : netteté au niveau de LR, grain couleur sous
+LR, grain de luminance à ±5 % sur le 60D et le R6 Mark III jusqu'à ISO 3200 ;
+ouverture de 3,7–4,1 s à 1,9–2,2 s. La visionneuse affiche à l'ajustement un
+aperçu réduit à la taille exacte de l'écran. Retour visuel favorable de
+l'utilisateur ; **proposition de figer cet état**. Points ouverts : grain de
+luminance du 60D au-delà d'ISO 6400 et du R7, à traiter par le débruitage
+([conclusion](#conclusion-actuelle)).
 
 Lecture rapide : [point de départ](#dematricage-20261023-depart),
 [résultats LibRaw et RCD](#dematricage-20261023-resultats),
@@ -20,6 +21,7 @@ Lecture rapide : [point de départ](#dematricage-20261023-depart),
 [ISO 400 à 1250](#dematricage-20261024-iso-moyens),
 [mesure intégrée face à LR](#dematricage-20261024-mesure-lr),
 [retour visuel et médiane guidée](#dematricage-20261024-retour),
+[netteté et état livré](#dematricage-20261024-nettete),
 [conclusion actuelle](#conclusion-actuelle).
 
 <a id="dematricage-20261023-depart"></a>
@@ -378,33 +380,108 @@ devient celle de l'ouverture ; la médiane partout est retirée.
   2 597 à 2 683 ms et 3 735 à 4 062 ms). La médiane guidée ne coûte rien de
   mesurable à l'échelle de l'ouverture.
 
+<a id="dematricage-20261024-nettete"></a>
+
+## Second retour visuel et netteté — 24 octobre 2026
+
+### 15. Flou en vue ajustée, netteté aux ISO moyens
+
+Retour de l'utilisateur : flou visible en plein format (vue ajustée) qui
+disparaît au zoom ; jambes de 6V1A9602 légèrement floues ; cheveux de 6V1A9890
+encore flous, mais la réduction de bruit d'IPR était restée active sur cette
+image : sans elle, le rendu est nettement plus proche de LR.
+
+- **Vue ajustée** : le mipmap du §12 mélange deux niveaux pré-réduits (1/2 et 1/4
+  pour une échelle de 0,44) et adoucit l'image. À l'ajustement, la visionneuse
+  demande désormais au fournisseur l'aperçu réduit **à la taille affichée exacte,
+  en pixels de l'écran** (moyenne de surface, `Qt::SmoothTransformation`), et
+  l'affiche pixel pour pixel ; le zoom garde l'aperçu entier, avec mipmap. Même
+  règle pour l'original de la comparaison ; vérifié par `imageViewportQmlTests`.
+- **Netteté du rendu** : [etude-nettete-lr-v001](../raw/etude-nettete-lr-v001-20261024T123023Z.json)
+  compare IPR et LR recalés au pixel, tuile par tuile en luminance encodée sRGB,
+  sur trois bandes (fine x − G1, 1–2, 2–4). Avec le vert de RCD (rapport),
+  l'énergie fine des zones texturées ne vaut que **0,89 à 0,92** de celle de LR
+  aux ISO 800–3200, avec un peu plus d'énergie juste au-dessus : rendu plus doux,
+  grain plus gros. LR garde plus d'énergie à l'échelle du pixel et moins au-dessus :
+  la signature d'une interpolation plus nette, pas d'un débruitage, qui
+  retirerait d'abord l'échelle la plus fine.
+- **Variantes du vert** ([etude-dematricage-v007](../raw/etude-dematricage-v007-20261024T130012Z.json),
+  11 scènes) : direction propre sans attraction diagonale, identique à RCD ;
+  estimation laplacienne (différence de couleur), détail fin rendu (0,96–1,07
+  d'AHD) mais précision des contours moindre à bas ISO (−0,4 dB face à AHD sur le
+  60D) ; **mélange à parts égales** : détail fin 0,88–0,98 d'AHD, précision
+  toujours supérieure à AHD à bas ISO (ΔCPSNR 0 à +2,1 dB). Le mélange est retenu,
+  les autres variantes retirées.
+
+[etude-nettete-lr-v002](../raw/etude-nettete-lr-v002-20261024T130837Z.json), état livré, face à
+v001 (énergie IPR/LR, zones texturées, bande fine) :
+
+| Groupe | Scènes | RCD (v001) | Mélange (v002) | Aplats, bande fine (v002) |
+|---|---:|---:|---:|---:|
+| 60D ISO ≤ 400 | 15 | 1,00 | 1,04 | 1,09 |
+| 60D ISO 800–3200 | 4 | 0,89 | **0,97** | 0,97 |
+| 60D ISO ≥ 6400 | 2 | 0,86 | 0,93 | 1,05 |
+| R6 Mark III ISO ≤ 400 | 12 | 1,04 | 1,07 | 1,17 |
+| R6 Mark III ISO 800–3200 | 19 | 0,92 | **0,99** | 0,97 |
+| R6 Mark III ISO ≥ 6400 | 5 | 1,01 | 1,09 | 0,99 |
+| R7 ISO ≥ 6400 | 8 | 0,96 | 1,00 | 1,37 |
+
+Les bandes 1–2 et 2–4 restent à 0,97–1,03 partout en zones texturées.
+
+### 16. État livré — bruit et temps d'ouverture
+
+[etude-bruit-neutre-lr-v005](../raw/etude-bruit-neutre-lr-v005-20261024T132402Z.json), 65 scènes :
+
+| Groupe | Chroma HH | Chroma bande moy. | Luma HH | Luma bande moy. |
+|---|---:|---:|---:|---:|
+| 60D ISO ≤ 400 | 0,62 | 0,79 | 1,02 | 1,03 |
+| 60D ISO 800–3200 | 0,56 | 0,83 | 0,79 | 0,98 |
+| 60D ISO ≥ 6400 | 1,33 | 1,02 | 0,81 | 1,14 |
+| R6 Mark III ISO ≤ 400 | 0,71 | 0,80 | 1,11 | 1,05 |
+| R6 Mark III ISO 800–3200 | 0,70 | 0,90 | 0,79 | 1,02 |
+| R6 Mark III ISO ≥ 6400 | 0,68 | 0,82 | 0,84 | 1,00 |
+| R7 ISO ≥ 6400 | 1,25 | 0,98 | 1,16 | 1,27 |
+
+Le mélange du vert abaisse aussi le grain couleur (bande moyenne 0,86 de LR en
+médiane, contre 0,96). Luminance, bande moyenne : 1,03 en médiane, à ±5 % de LR
+sur le 60D et le R6 Mark III jusqu'à ISO 3200 et sur le R6 Mark III au-delà ;
+au-dessus restent le 60D à ISO ≥ 6400 (+14 %, deux scènes) et le R7 (+27 %).
+[latence-ouverture-v010](../raw/latence-ouverture-v010-20261024T134926328223Z.json) :
+`dcraw_process` 783 à 872 ms, import complet 1 941 à 2 199 ms.
+
 <a id="conclusion-actuelle"></a>
 
-## Conclusion actuelle et prochaines actions — 24 octobre 2026, après retour visuel
+## Conclusion actuelle et prochaines actions — 24 octobre 2026, après second retour visuel
 
 ### Décision proposée
 
-RCD avec la **médiane couleur guidée par la luminance**, à tous les ISO, remplace
-AHD à l'ouverture ; la visionneuse réduit l'aperçu avec mipmap. Face aux neutres
-LR (65 scènes) : grain couleur au niveau de LR ou en dessous (bande moyenne 0,96,
-HH 0,84), détail couleur des textures conservé, précision supérieure à AHD sur la
-mosaïque synthétique ; ouverture de 3,7–4,1 s à 1,9–2,2 s.
+RCD, son vert **mélangé à parts égales avec une estimation par différence de
+couleur**, puis la **médiane couleur guidée par la luminance**, à tous les ISO,
+remplacent AHD à l'ouverture ; la visionneuse affiche à l'ajustement un aperçu
+réduit à la taille exacte de l'écran. Face aux neutres LR (65 scènes) :
 
-**Reste ouvert : le grain de luminance visible**, 1,04 fois celui de LR en
-médiane et jusqu'à 1,28 sur le R7. Le dématriçage ne le change pas (RCD ≈ AHD
-dans cette bande). Deux explications restent possibles et ne sont pas tranchées
-par nos mesures : un lissage interne de Lightroom même à réduction de bruit 0,
-ou une meilleure décorrélation du bruit par son dématriçage. La décision de
-l'utilisateur est de ne pas reproduire un débruitage caché : l'amélioration
-passe par le débruitage de luminance réglable (candidat E, `patch_noise`), ou
-par une interpolation du vert plus robuste au bruit, à étudier ensuite.
+- netteté au niveau de LR (énergie fine des zones texturées 0,93 à 1,09 selon
+  le groupe, 0,97–0,99 aux ISO 800–3200 où l'utilisateur voyait du flou) ;
+- grain couleur sous LR (bande moyenne 0,86 en médiane), au-dessus seulement
+  pour le 60D à ISO ≥ 6400 en HH ;
+- grain de luminance à ±5 % de LR sur les boîtiers possédés jusqu'à ISO 3200 ;
+  +14 % pour le 60D à ISO ≥ 6400, +27 % pour le R7 (corpus définitif) ;
+- ouverture de 3,7–4,1 s à 1,9–2,2 s.
+
+Retour visuel de l'utilisateur sur cet état : nettement mieux sur 6V1A9602 en
+plein format, pas d'artefact au zoom, 6V1A9890 proche de LR une fois la
+réduction de bruit d'IPR désactivée. Le gain encore possible par le dématriçage
+sur le 60D et le R6 Mark III est de l'ordre de quelques pour cent ; l'écart de
+grain de luminance à haut ISO relève du débruitage réglable (`patch_noise`).
+**Proposition : figer cet état** après validation de l'utilisateur.
 
 ### À valider par l'utilisateur
 
 - Rendu à l'ouverture face à LR et à l'ancienne version, à plusieurs ISO :
   grain, fausses couleurs sur détail fin, moiré, couleurs saturées.
 - Détail couleur fin avec la médiane guidée (cheveux, tissus, petites touches).
-- Vue ajustée après le correctif mipmap, et comparaison à 100 %.
+- Vue ajustée (aperçu à la taille exacte) et zoom, sans artefact.
+- Bas ISO légèrement plus net que LR, grain fin des aplats +9 à +17 %.
 - Ressenti du temps d'ouverture.
 
 ### Limites du corpus et des mesures
