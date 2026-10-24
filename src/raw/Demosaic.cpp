@@ -16,6 +16,7 @@ constexpr int MaximumThreads = 8;
 constexpr int TileSize = 512;
 constexpr int TileMargin = 12;   // even: keeps the pattern; covers the 9-pixel stencils and the medians
 constexpr float Eps = 1e-5f;
+constexpr float FlatGradient = 0.5f, DetailGradient = 1.0f;   // in luminance noise sigmas
 
 // RCD on a padded tile, values ~[0, 1]: green from ratio-corrected directional
 // estimates, the direction decided per pixel and pulled toward the most decided
@@ -125,19 +126,57 @@ cv::Mat rcd(const cv::Mat &cfa, const Pattern &p)
     return rgb;
 }
 
-// 3x3 median on R - G and B - G, green unchanged.
-void chromaMedian(cv::Mat &rgb, int passes)
+// Robust sigma of the diagonal Haar coefficient: the finest noise band, little
+// affected by sparse edges; constant 2x2 cells (clipped) are skipped.
+float haarSigma(const cv::Mat &plane)
+{
+    std::vector<float> values;
+    for (int y = 0; y + 1 < plane.rows; y += 2) {
+        const float *a = plane.ptr<float>(y), *b = plane.ptr<float>(y + 1);
+        for (int x = 0; x + 1 < plane.cols; x += 2) {
+            if (a[x] == a[x + 1] && a[x] == b[x] && a[x] == b[x + 1]) continue;
+            values.push_back(0.5f * (a[x] - a[x + 1] - b[x] + b[x + 1]));
+        }
+    }
+    if (values.empty()) return 0.f;
+    const auto mid = values.begin() + std::ptrdiff_t(values.size() / 2);
+    std::nth_element(values.begin(), mid, values.end());
+    const float centre = *mid;
+    for (float &v : values) v = std::abs(v - centre);
+    std::nth_element(values.begin(), mid, values.end());
+    return *mid / 0.6745f;
+}
+
+// Weight of the median: 1 where the luminance gradient (after a 1-pixel blur) is
+// below FlatGradient noise sigmas, 0 above DetailGradient, linear between.
+cv::Mat flatWeight(const cv::Mat &luma)
+{
+    const float sigma = haarSigma(luma);
+    if (!(sigma > 0.f)) return cv::Mat(luma.size(), CV_32F, cv::Scalar(1.f));
+    cv::Mat smooth, gx, gy, gradient;
+    cv::GaussianBlur(luma, smooth, cv::Size(0, 0), 1.0, 1.0, cv::BORDER_REFLECT);
+    const cv::Mat dx = (cv::Mat_<float>(1, 3) << -0.5f, 0.f, 0.5f), dy = dx.t();
+    cv::filter2D(smooth, gx, CV_32F, dx, cv::Point(-1, -1), 0, cv::BORDER_REFLECT);
+    cv::filter2D(smooth, gy, CV_32F, dy, cv::Point(-1, -1), 0, cv::BORDER_REFLECT);
+    cv::magnitude(gx, gy, gradient);
+    cv::Mat weight = (DetailGradient * sigma - gradient) / ((DetailGradient - FlatGradient) * sigma);
+    return cv::min(cv::max(weight, 0.f), 1.f);
+}
+
+// One 3x3 median on R - G and B - G, green unchanged; optionally only where the
+// luminance is flat.
+void chromaMedian(cv::Mat &rgb, ChromaMedian mode)
 {
     std::vector<cv::Mat> c;
     cv::split(rgb, c);
+    cv::Mat weight;
+    if (mode == ChromaMedian::FlatOnly) weight = flatWeight(0.25f * (c[0] + 2.f * c[1] + c[2]));
     for (int k : {0, 2}) {
-        cv::Mat diff = c[size_t(k)] - c[1];
-        for (int n = 0; n < passes; ++n) {
-            cv::Mat median;
-            cv::medianBlur(diff, median, 3);   // not in place
-            diff = median;
-        }
-        c[size_t(k)] = cv::max(diff + c[1], 0.f);
+        const cv::Mat diff = c[size_t(k)] - c[1];
+        cv::Mat median;
+        cv::medianBlur(diff, median, 3);   // not in place
+        const cv::Mat result = mode == ChromaMedian::FlatOnly ? cv::Mat(median.mul(weight) + diff.mul(1.f - weight)) : median;
+        c[size_t(k)] = cv::max(result + c[1], 0.f);
     }
     cv::merge(c, rgb);
 }
@@ -151,7 +190,7 @@ int workerThreads()
 }
 
 bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
-                 int medianPasses, const std::function<bool()> &cancelled)
+                 ChromaMedian median, const std::function<bool()> &cancelled)
 {
     if (!image || width < 2 || height < 2) return false;
     const auto colour = [&](int y, int x) { return pattern[size_t(y & 1)][size_t(x & 1)]; };
@@ -169,7 +208,7 @@ bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
         // real neighbours where they exist, mirrored with the same parity at the border
         cv::copyMakeBorder(cfa(core), padded, TileMargin, TileMargin, TileMargin, TileMargin, cv::BORDER_REFLECT_101);
         cv::Mat rgb = rcd(padded, pattern);
-        if (medianPasses > 0) chromaMedian(rgb, medianPasses);
+        if (median != ChromaMedian::Off) chromaMedian(rgb, median);
         for (int y = 0; y < core.height; ++y) {
             const auto *s = rgb.ptr<cv::Vec3f>(y + TileMargin) + TileMargin;
             for (int x = 0; x < core.width; ++x) {

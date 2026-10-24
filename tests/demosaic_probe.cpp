@@ -59,7 +59,7 @@ struct Variant {
     int dcbIterations = 0;
     int dcbEnhance = 0;
     enum class Ours { None, OpenCvEdgeAware, Rcd } ours = Ours::None;
-    int oursMedianPasses = 0;   // IPR's 3x3 median on R-G, B-G after its interpolation
+    Demosaic::ChromaMedian oursMedian = Demosaic::ChromaMedian::Off;   // IPR's median after its interpolation
 };
 
 const std::vector<Variant> &variants()
@@ -80,8 +80,8 @@ const std::vector<Variant> &variants()
         {"AAHD", 12},
         {"OpenCV-EA", 0, 0, 0, 0, 0, Variant::Ours::OpenCvEdgeAware},
         {"RCD", 0, 0, 0, 0, 0, Variant::Ours::Rcd},
-        {"RCD-median1", 0, 0, 0, 0, 0, Variant::Ours::Rcd, 1},
-        {"RCD-median3", 0, 0, 0, 0, 0, Variant::Ours::Rcd, 3},
+        {"RCD-median1", 0, 0, 0, 0, 0, Variant::Ours::Rcd, Demosaic::ChromaMedian::Everywhere},
+        {"RCD-median-flat", 0, 0, 0, 0, 0, Variant::Ours::Rcd, Demosaic::ChromaMedian::FlatOnly},
     };
     return list;
 }
@@ -122,7 +122,7 @@ void openCvEdgeAware(void *context)
 
 
 // --- IPR's production interpolation (src/raw/Demosaic) ---------------------------
-int oursMedianPasses = 0;          // set by process() for the callback
+Demosaic::ChromaMedian oursMedian = Demosaic::ChromaMedian::Off;   // set by process() for the callback
 double oursMs = 0;                 // time of our interpolation, measured inside the callback
 
 void rcdInterpolate(void *context)
@@ -136,7 +136,7 @@ void rcdInterpolate(void *context)
             pattern[size_t(y)][size_t(x)] = k == 3 ? 1 : k;   // second green folded
         }
     const auto t0 = Clock::now();
-    Demosaic::interpolate(d.image, d.sizes.iwidth, d.sizes.iheight, pattern, oursMedianPasses);
+    Demosaic::interpolate(d.image, d.sizes.iwidth, d.sizes.iheight, pattern, oursMedian);
     oursMs += std::chrono::duration<double, std::milli>(Clock::now() - t0).count();
 }
 // LibRaw keeps its callbacks protected: a subclass sets the interpolation step.
@@ -159,7 +159,7 @@ cv::Mat process(StudyRaw &raw, const Variant &v, double *ms)
     p.fbdd_noiserd = v.fbdd;
     p.dcb_iterations = v.dcbIterations;
     p.dcb_enhance_fl = v.dcbEnhance;
-    oursMedianPasses = v.oursMedianPasses;
+    oursMedian = v.oursMedian;
     oursMs = 0;
     raw.setBayerInterpolation(v.ours == Variant::Ours::OpenCvEdgeAware ? openCvEdgeAware
                               : v.ours == Variant::Ours::Rcd           ? rcdInterpolate

@@ -19,10 +19,14 @@ using Pattern = std::array<std::array<int, 2>, 2>;
 // One pixel of LibRaw's image: four 16-bit channels.
 using Pixel = std::uint16_t[4];
 
-// Chroma median passes of the opening, at every ISO: one pass brings the colour
-// noise of the neutral below Lightroom's (0.6 to 1.1 times on 65 scenes) for
-// a small colour-accuracy cost at low ISO (1.07 times AHD's error).
-constexpr int ChromaMedianPasses = 1;
+// 3x3 median on R - G and B - G after the interpolation: off, everywhere, or only
+// where the luminance is flat at the scale of the tile's noise (colour detail of
+// hair and textures kept).
+enum class ChromaMedian { Off, Everywhere, FlatOnly };
+
+// Median of the opening: one pass at every ISO brings the colour noise of the
+// neutral below Lightroom's (0.6 to 1.1 times on 65 scenes).
+constexpr ChromaMedian OpeningMedian = ChromaMedian::Everywhere;
 
 // Worker threads: the host's, one left for the interface, at most 8 (the
 // demosaic and denoise studies gain nothing beyond).
@@ -33,7 +37,7 @@ int workerThreads();
 // interpolation, white-balanced); fills channels 0 to 2. Returns false when
 // cancelled; the image is then incomplete.
 bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
-                 int medianPasses, const std::function<bool()> &cancelled = {});
+                 ChromaMedian median, const std::function<bool()> &cancelled = {});
 
 } // namespace Demosaic
 

@@ -137,9 +137,9 @@ private:
 class RawProcessor : public LibRaw
 {
 public:
-    void useIprDemosaic(int medianPasses, std::function<bool()> cancelled)
+    void useIprDemosaic(Demosaic::ChromaMedian median, std::function<bool()> cancelled)
     {
-        m_medianPasses = medianPasses;
+        m_median = median;
         m_cancelled = std::move(cancelled);
         m_failed = false;
         imgdata.params.user_qual = 0;   // no LibRaw algorithm-specific step around the callback
@@ -160,14 +160,14 @@ private:
             }
         try {
             self->m_failed = !Demosaic::interpolate(d.image, d.sizes.iwidth, d.sizes.iheight, pattern,
-                                                    self->m_medianPasses, self->m_cancelled);
+                                                    self->m_median, self->m_cancelled);
         } catch (...) {
             // never let an exception cross LibRaw: the decode fails below instead
             self->m_failed = true;
         }
     }
 
-    int m_medianPasses = 0;
+    Demosaic::ChromaMedian m_median = Demosaic::ChromaMedian::Off;
     std::function<bool()> m_cancelled;
     bool m_failed = false;
 };
@@ -528,7 +528,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             qWarning().noquote() << normalizationReason;
         }
         timer.mark("black_wb_calibration");
-        raw.useIprDemosaic(Demosaic::ChromaMedianPasses, options.cancellationRequested);
+        raw.useIprDemosaic(Demosaic::OpeningMedian, options.cancellationRequested);
         result = raw.dcraw_process();
     }
     timer.mark("unpack_and_process");
