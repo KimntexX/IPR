@@ -19,9 +19,10 @@ using Pattern = std::array<std::array<int, 2>, 2>;
 // One pixel of LibRaw's image: four 16-bit channels.
 using Pixel = std::uint16_t[4];
 
-// Chroma median passes for an ISO speed: none below 800, where RCD keeps its
-// colour accuracy, one from 800, where colour noise dominates.
-int chromaMedianPasses(int iso);
+// Chroma median passes of the opening, at every ISO: one pass brings the colour
+// noise of the neutral below Lightroom's (0.6 to 1.1 times on 65 scenes) for
+// a small colour-accuracy cost at low ISO (1.07 times AHD's error).
+constexpr int ChromaMedianPasses = 1;
 
 // Worker threads: the host's, one left for the interface, at most 8 (the
 // demosaic and denoise studies gain nothing beyond).

@@ -12,7 +12,6 @@
 namespace Demosaic {
 namespace {
 
-constexpr int ChromaMedianIso = 800;
 constexpr int MaximumThreads = 8;
 constexpr int TileSize = 512;
 constexpr int TileMargin = 12;   // even: keeps the pattern; covers the 9-pixel stencils and the medians
@@ -144,11 +143,6 @@ void chromaMedian(cv::Mat &rgb, int passes)
 }
 
 } // namespace
-
-int chromaMedianPasses(int iso)
-{
-    return iso >= ChromaMedianIso ? 1 : 0;
-}
 
 int workerThreads()
 {

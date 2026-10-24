@@ -57,9 +57,6 @@ double greyEdge(int x, int, int) { return x < 300 ? 0.15 : 0.6; }
 
 int main()
 {
-    if (!check(Demosaic::chromaMedianPasses(100) == 0 && Demosaic::chromaMedianPasses(799) == 0 &&
-                   Demosaic::chromaMedianPasses(800) == 1 && Demosaic::chromaMedianPasses(32000) == 1,
-               "chroma median from ISO 800 only")) return 1;
     const int threads = Demosaic::workerThreads();
     if (!check(threads >= 1 && threads <= 8, "worker threads bounded to 1..8")) return 1;
 

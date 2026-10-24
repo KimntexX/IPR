@@ -528,8 +528,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             qWarning().noquote() << normalizationReason;
         }
         timer.mark("black_wb_calibration");
-        raw.useIprDemosaic(Demosaic::chromaMedianPasses(int(std::lround(raw.imgdata.other.iso_speed))),
-                           options.cancellationRequested);
+        raw.useIprDemosaic(Demosaic::ChromaMedianPasses, options.cancellationRequested);
         result = raw.dcraw_process();
     }
     timer.mark("unpack_and_process");
