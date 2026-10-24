@@ -38,7 +38,12 @@ def main():
     work.mkdir(parents=True, exist_ok=False)
     memory = json.loads(Path('docs/validation/raw/analyse-neutres-rec2020-v001-20261015T212901690091Z.json').read_text())
     scenes = {a['scene']: a for a in memory['audits']}
-    chosen = [scenes[n] for n in ('6V1A0081', '6V1A0043', '7Y6A7599')]
+    chosen = [dict(scenes[n]) for n in ('6V1A0081', '6V1A0043', '7Y6A7599')]
+    for a in chosen:   # the RAW may have moved between the two base roots
+        source = Path(a['source'])
+        if not source.is_file():
+            moved = Path('tests/image/base-hors-protocole') / source.name
+            a['source'] = str(moved) if moved.is_file() else a['source']
     exe = Path('build-windows-msvc/Release/openingLatencyProbe.exe').resolve()
     config = Path('config/raw-normalization.json').resolve()
     files = [exe, config, Path(__file__), Path('tests/opening_latency_probe.cpp'),
