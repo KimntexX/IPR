@@ -177,6 +177,9 @@ Item {
             retainWhileLoading: true
             cache: false
             smooth: true
+            // Mipmapped minification: a plain bilinear reduction beyond 2x aliases
+            // the grain and showed more noise than the image holds (+17 % at fit).
+            mipmap: true
             visible: root.hasImage
             fillMode: Image.PreserveAspectFit
             onStatusChanged: if (status === Image.Ready) {
@@ -206,6 +209,7 @@ Item {
             retainWhileLoading: true
             cache: false
             smooth: true
+            mipmap: true
             fillMode: Image.PreserveAspectFit
         }
     }

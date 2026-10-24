@@ -110,6 +110,8 @@ int main(int argc, char **argv)
     auto *canvas = viewport->findChild<QQuickItem *>("viewportImage");
     if (!check(canvas && near(number(viewport, "zoomScale"), .5) && viewport->property("fitMode").toBool()
             && near(canvas->width(), 800) && near(canvas->height(), 500), "initial image should fit")) return 1;
+    if (!check(canvas->property("mipmap").toBool() && canvas->property("smooth").toBool(),
+               "reduced previews are mipmapped, so the grain does not alias")) return 1;
     click(window, QPointF(400, 250));
     if (!check(near(number(viewport, "zoomScale"), 1), "click should zoom to actual preview size")) return 1;
     mouse(window, QEvent::MouseButtonPress, QPointF(400, 250), Qt::LeftButton, Qt::LeftButton);
@@ -164,6 +166,7 @@ int main(int argc, char **argv)
     auto *originalCanvas = visualItem(viewport, "originalViewportImage");
     if (!check(compare && originalCanvas && waitForComparison(viewport)
             && compare->property("enabled").toBool(), "comparison should wait for a matching origin preview")) return 1;
+    if (!check(originalCanvas->property("mipmap").toBool(), "the original preview is mipmapped like the edited one")) return 1;
     QMetaObject::invokeMethod(compare, "clicked");
     if (!check(viewport->property("showingComparison").toBool()
             && compare->property("checked").toBool(), "comparison button should show the split view")) return 1;
