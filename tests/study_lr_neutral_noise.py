@@ -47,6 +47,14 @@ def read_tiff(path):
     return bgr[..., 2::-1]
 
 
+def mid_sigma(plane):
+    """Robust sigma of the mid band G1 - G4: the visible grain, coarser than the Haar HH."""
+    p = plane.astype(np.float32)
+    band = cv2.GaussianBlur(p, (0, 0), 1.0, borderType=cv2.BORDER_REFLECT) -         cv2.GaussianBlur(p, (0, 0), 4.0, borderType=cv2.BORDER_REFLECT)
+    inner = band[8:-8, 8:-8]
+    return float(np.median(np.abs(inner - np.median(inner))) / .6744897501960817)
+
+
 def tiles(rgb):
     """Per tile: level, flatness, luma and chroma Haar noise, for unclipped tiles."""
     out = []
@@ -63,7 +71,8 @@ def tiles(rgb):
             smooth = blur(blur(Y))
             sy = haar_sigma(Y)
             co, cg = t[..., 0] - t[..., 2], t[..., 1] - (t[..., 0] + t[..., 2]) / 2
-            out.append((level, float(smooth.std()) / level, sy, float(np.hypot(haar_sigma(co), haar_sigma(cg)) / np.sqrt(2))))
+            out.append((level, float(smooth.std()) / level, sy, float(np.hypot(haar_sigma(co), haar_sigma(cg)) / np.sqrt(2)),
+                        mid_sigma(Y), float(np.hypot(mid_sigma(co), mid_sigma(cg)) / np.sqrt(2))))
     return np.array(out)
 
 
@@ -77,8 +86,17 @@ def profile(rgb):
         sel = keep[(keep[:, 0] >= lo) & (keep[:, 0] < hi)]
         if len(sel) >= 5:
             bins[f"{np.sqrt(lo * hi):.4f}"] = {"tiles": int(len(sel)), "luma": float(np.median(sel[:, 2])),
-                                               "chroma": float(np.median(sel[:, 3]))}
+                                               "chroma": float(np.median(sel[:, 3])),
+                                               "luma_mid": float(np.median(sel[:, 4])),
+                                               "chroma_mid": float(np.median(sel[:, 5]))}
     return bins
+
+
+def levels(rgb):
+    """Percentiles 10, 25, 50, 75 and 90 of the linear luminance, on a 1/16 sample:
+    a global brightness comparison that needs no registration."""
+    y = rgb[::4, ::4] @ WEIGHTS
+    return {str(q): float(np.percentile(y, q)) for q in (10, 25, 50, 75, 90)}
 
 
 def main(argv=None):
@@ -107,16 +125,23 @@ def main(argv=None):
         for raw in raws:
             reference = args.base / "neutre" / f"{raw.stem}.tif"
             pixels, metadata = server.render(raw, "neutral", 0)
-            ipr = profile(linear(pixels))
+            rgb = linear(pixels)
             del pixels
-            lr = profile(linear(read_tiff(reference)))
+            ipr, ipr_levels = profile(rgb), levels(rgb)
+            del rgb
+            rgb = linear(read_tiff(reference))
+            lr, lr_levels = profile(rgb), levels(rgb)
+            del rgb
             common = sorted(set(ipr) & set(lr))
-            ratios = {k: {"luma": ipr[k]["luma"] / lr[k]["luma"], "chroma": ipr[k]["chroma"] / lr[k]["chroma"]} for k in common}
+            ratios = {k: {f: ipr[k][f] / lr[k][f] for f in ("luma", "chroma", "luma_mid", "chroma_mid")} for k in common}
             scene = {"raw": raw.name, "raw_sha256": metadata["declaration"].get("source_sha256"),
                      "lr_neutral": reference.name, "lr_neutral_sha256": sha256(reference),
                      "ipr": ipr, "lr": lr, "ratio_by_level": ratios,
                      "median_luma_ratio": float(np.median([r["luma"] for r in ratios.values()])) if ratios else None,
-                     "median_chroma_ratio": float(np.median([r["chroma"] for r in ratios.values()])) if ratios else None}
+                     "median_chroma_ratio": float(np.median([r["chroma"] for r in ratios.values()])) if ratios else None,
+                     "median_luma_mid_ratio": float(np.median([r["luma_mid"] for r in ratios.values()])) if ratios else None,
+                     "median_chroma_mid_ratio": float(np.median([r["chroma_mid"] for r in ratios.values()])) if ratios else None,
+                     "luminance_percentiles": {"ipr": ipr_levels, "lr": lr_levels}}
             scenes.append(scene)
             print(f"{raw.name}: luma {scene['median_luma_ratio']}, chroma {scene['median_chroma_ratio']}", flush=True)
     finally:
@@ -125,7 +150,8 @@ def main(argv=None):
               "commit": git("rev-parse", "HEAD"), "local_changes": git("status", "--short").splitlines(),
               "render_server": {"path": str(server.executable), "sha256": server.sha256},
               "method": {"tile": TILE, "flat_fraction": FLAT_FRACTION, "levels": LEVELS.tolist(),
-                         "space": "linear sRGB from 16-bit sRGB encoding", "noise": "Haar HH MAD sigma; chroma = hypot(Co, Cg)/sqrt 2",
+                         "space": "linear sRGB from 16-bit sRGB encoding",
+                         "noise": "Haar HH and mid band (G1 - G4) MAD sigma; chroma = hypot(Co, Cg)/sqrt 2",
                          "registration": "none: flattest tiles of each engine, compared per luminance level"},
               "duration_seconds": round(time.monotonic() - start, 1), "python": platform.python_version(),
               "scenes": scenes}
