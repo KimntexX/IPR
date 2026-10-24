@@ -35,6 +35,7 @@
     "cameraProfileEngineTests": "cameraProfileEngineTests"
   },
   "python_suites": {
+    "study_sources": "test_study_sources.py",
     "opening_latency": "test_measure_opening_latency.py",
     "profile_rendering_integration": "test_verify_profile_rendering_integration.py",
     "r7_gain_study": "test_investigate_r7_gain.py",
@@ -148,6 +149,7 @@
     {"patterns": ["tests/analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis", "noise_analysis", "base_colorimetry_analysis"]},
     {"patterns": ["tests/test_analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis"]},
     {"patterns": ["tests/analyse_noise.py", "tests/test_analyse_noise.py"], "tests": [], "python": ["noise_analysis"]},
+    {"patterns": ["tests/study_sources.py", "tests/test_study_sources.py", "tests/study_demosaic.py", "tests/demosaic_probe.cpp", "tests/study_lr_neutral_noise.py"], "tests": [], "python": ["study_sources"]},
     {"patterns": ["tests/test_build_windows.py"], "tests": [], "python": ["selection"]}
   ]
 }

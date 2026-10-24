@@ -252,6 +252,9 @@ if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY
     target_link_libraries(tonalBaseProbe PRIVATE iprEngine)
     add_executable(rawNormalizationCorpusProbe EXCLUDE_FROM_ALL tests/raw_normalization_corpus_probe.cpp)
     target_link_libraries(rawNormalizationCorpusProbe PRIVATE iprEngine)
+    # Demosaicing study: LibRaw algorithms and IPR's RCD on the same RAW (manual, not in CTest).
+    add_executable(demosaicProbe EXCLUDE_FROM_ALL tests/demosaic_probe.cpp)
+    target_link_libraries(demosaicProbe PRIVATE iprEngine)
     add_executable(openingLatencyProbe EXCLUDE_FROM_ALL tests/opening_latency_probe.cpp)
     target_link_libraries(openingLatencyProbe PRIVATE iprEngine)
     add_executable(wbCameraProbe EXCLUDE_FROM_ALL tests/wb_camera_probe.cpp)
