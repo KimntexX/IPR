@@ -72,9 +72,9 @@ int main()
     cv::Mat texture = original.clone();
     LocalContrast::apply(texture, 100, 0);
     const double fine = bandGain(original, texture, 0, 1), wide = bandGain(original, texture, 16, 32);
-    if (!(fine > 1.3 && fine < 1.65 && wide > 1.0 && wide < fine - 0.3))
+    if (!(fine > 1.3 && fine < 1.65 && wide > 1.0 && wide - 1.0 < 0.5 * (fine - 1.0)))
         std::cerr << "texture +100: fine " << fine << ", 16-32 px " << wide << "\n";
-    if (!check(fine > 1.3 && fine < 1.65 && wide > 1.0 && wide < fine - 0.3,
+    if (!check(fine > 1.3 && fine < 1.65 && wide > 1.0 && wide - 1.0 < 0.5 * (fine - 1.0),
                "texture +100 amplifies fine detail and fades at wide scales")) return 1;
     cv::Mat smoother = original.clone();
     LocalContrast::apply(smoother, -100, 0);

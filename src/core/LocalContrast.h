@@ -5,8 +5,9 @@
 
 // Texture and clarity, following Lightroom's response measured by scale and by
 // amplitude (tests/study_effects_response.py, tests/study_effects_amplitude.py):
-// the logarithm of the luminance is split into difference-of-Gaussian bands from
-// 1 to 256 pixels; in each band, small variations are amplified (or reduced) by
+// the luminance is split into difference-of-Gaussian bands from 1 to 256 pixels,
+// in its cube root for texture and its logarithm for clarity (the domains where
+// Lightroom's response is best reproduced); in each band, small variations are amplified (or reduced) by
 // the gain Lightroom gives them at the slider value, large ones (edges) much less,
 // which avoids halos. Texture acts mostly up to 8-16 pixels, clarity at every
 // scale. Colours keep their channel ratios.

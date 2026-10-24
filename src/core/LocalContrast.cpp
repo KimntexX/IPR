@@ -17,16 +17,21 @@ using Bands = std::array<float, BandCount>;
 struct Row { int value; Bands detailGain; };   // k: extra gain of small variations, per band
 
 // Lightroom's response, fitted on its neutral -> state pairs of four scenes (6V1A0043,
-// 6V1A0327, 6V1A9947, _MG_7580), etude-amplitude-effets-v001-20261024T165011Z: each band d (log2
-// units) becomes d + k d / (1 + (|d| / A)^2). Small variations are amplified by
-// 1 + k, variations well above A (edges) are left as they are.
+// 6V1A0327, 6V1A9947, _MG_7580): each band d becomes d + k d / (1 + (|d| / A)^2).
+// Small variations are amplified by 1 + k, variations well above A (edges) are left
+// as they are. Texture acts on the cube root of the luminance, where Lightroom's
+// response is the same at every level (etude-amplitude-effets-v002-20261024T172402Z,
+// k then scaled band by band by the ratio of Lightroom's effect to IPR's rendered
+// one, measured before this calibration; result in etude-reponse-effets-v002);
+// clarity on its log2, where the band model explains it best
+// (etude-amplitude-effets-v001-20261024T165011Z).
 constexpr std::array<Row, 6> TextureTable{{
-    {-100, {-0.550f, -0.473f, -0.469f, -0.461f, -0.303f, -0.107f, -0.022f, -0.004f, -0.001f}},
-    {-50, {-0.333f, -0.285f, -0.283f, -0.279f, -0.183f, -0.065f, -0.013f, -0.002f, -0.000f}},
-    {-25, {-0.184f, -0.158f, -0.157f, -0.154f, -0.101f, -0.036f, -0.007f, -0.001f, -0.000f}},
-    {25, {0.226f, 0.199f, 0.193f, 0.191f, 0.126f, 0.045f, 0.009f, 0.002f, 0.000f}},
-    {50, {0.397f, 0.348f, 0.338f, 0.335f, 0.221f, 0.079f, 0.017f, 0.003f, 0.000f}},
-    {100, {0.624f, 0.547f, 0.531f, 0.527f, 0.349f, 0.124f, 0.026f, 0.005f, 0.001f}},
+    {-100, {-0.597f, -0.562f, -0.555f, -0.566f, -0.325f, -0.067f, -0.010f, -0.005f, 0.000f}},
+    {-50, {-0.360f, -0.337f, -0.333f, -0.339f, -0.195f, -0.040f, -0.006f, -0.003f, 0.000f}},
+    {-25, {-0.198f, -0.184f, -0.182f, -0.186f, -0.107f, -0.022f, -0.007f, -0.002f, 0.000f}},
+    {25, {0.238f, 0.234f, 0.233f, 0.225f, 0.129f, 0.027f, 0.009f, 0.002f, -0.000f}},
+    {50, {0.414f, 0.403f, 0.404f, 0.389f, 0.225f, 0.046f, 0.007f, 0.004f, -0.001f}},
+    {100, {0.643f, 0.619f, 0.622f, 0.601f, 0.348f, 0.071f, 0.011f, 0.006f, -0.001f}},
 }};
 constexpr std::array<Row, 6> ClarityTable{{
     {-100, {-0.100f, -0.109f, -0.119f, -0.138f, -0.151f, -0.146f, -0.117f, -0.063f, -0.018f}},
@@ -36,10 +41,11 @@ constexpr std::array<Row, 6> ClarityTable{{
     {50, {0.488f, 0.445f, 0.450f, 0.453f, 0.455f, 0.415f, 0.337f, 0.295f, 0.256f}},
     {100, {0.917f, 0.829f, 0.842f, 0.855f, 0.863f, 0.789f, 0.634f, 0.557f, 0.484f}},
 }};
-// A (log2 units) per band, by sign of the slider: Lightroom's negative clarity does
-// not depend on the amplitude (A at the top of the fitted range).
-constexpr Bands TextureReduce{0.90f, 0.90f, 0.68f, 0.52f, 0.60f, 0.90f, 1.77f, 4.00f, 4.00f};
-constexpr Bands TextureEnhance{0.90f, 0.78f, 0.68f, 0.52f, 0.60f, 0.90f, 1.77f, 4.00f, 4.00f};
+// A per band, in the units of the effect's domain, by sign of the slider:
+// Lightroom's negative clarity does not depend on the amplitude (A at the top of
+// the fitted range).
+constexpr Bands TextureReduce{0.040f, 0.040f, 0.040f, 0.030f, 0.035f, 0.060f, 0.118f, 0.068f, 0.400f};
+constexpr Bands TextureEnhance{0.040f, 0.035f, 0.035f, 0.030f, 0.035f, 0.060f, 0.103f, 0.052f, 0.400f};
 constexpr Bands ClarityReduce{1.03f, 3.05f, 4.00f, 4.00f, 4.00f, 4.00f, 4.00f, 4.00f, 4.00f};
 constexpr Bands ClarityEnhance{1.77f, 1.35f, 0.78f, 0.60f, 0.52f, 0.52f, 0.52f, 0.52f, 0.52f};
 
@@ -80,43 +86,48 @@ cv::Mat blurAtScale(const cv::Mat &plane, int factor)
     return result;
 }
 
-} // namespace
+enum class Domain { Log2, CubeRoot };
 
-void apply(cv::Mat &linearRgb, int texture, int clarity)
+float forward(Domain domain, float luminance)
 {
-    if ((texture == 0 && clarity == 0) || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
-    const Bands textureGain = detailGainAt(TextureTable, texture), clarityGain = detailGainAt(ClarityTable, clarity);
-    const Bands &textureA = texture < 0 ? TextureReduce : TextureEnhance;
-    const Bands &clarityA = clarity < 0 ? ClarityReduce : ClarityEnhance;
+    return domain == Domain::Log2 ? std::log2(luminance + LogFloor) : std::cbrt(luminance);
+}
 
-    cv::Mat luminance(linearRgb.size(), CV_32F), logLuminance(linearRgb.size(), CV_32F);
+float inverse(Domain domain, float value)
+{
+    return domain == Domain::Log2 ? std::exp2(value) - LogFloor : value * value * value;
+}
+
+// Bands of the luminance in the domain: G0 is the image, G1 sigma 1, then sigma
+// 2, 4, ... 256; each band d gains k d / (1 + (|d| / A)^2); colours keep their
+// channel ratios.
+void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &a)
+{
+    cv::Mat luminance(linearRgb.size(), CV_32F), value(linearRgb.size(), CV_32F);
     cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
         for (int y = rows.start; y < rows.end; ++y) {
             const auto *p = linearRgb.ptr<cv::Vec3f>(y);
-            float *l = luminance.ptr<float>(y), *g = logLuminance.ptr<float>(y);
+            float *l = luminance.ptr<float>(y), *v = value.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x) {
                 l[x] = WorkingColor::nonNegativeLuminance(p[x]);
-                g[x] = std::log2(l[x] + LogFloor);
+                v[x] = forward(domain, l[x]);
             }
         }
     });
-    // Bands of the log: G0 is the image, G1 sigma 1, then sigma 2, 4, ... 256.
     cv::Mat delta = cv::Mat::zeros(linearRgb.size(), CV_32F);
-    cv::Mat previous = logLuminance, current;
-    cv::GaussianBlur(logLuminance, current, cv::Size(0, 0), 1.0, 1.0, cv::BORDER_REFLECT);
+    cv::Mat previous = value, current;
+    cv::GaussianBlur(value, current, cv::Size(0, 0), 1.0, 1.0, cv::BORDER_REFLECT);
     for (int b = 0; b < BandCount; ++b) {
-        if (b > 0) current = blurAtScale(logLuminance, 1 << (b - 1));   // sigma 2, 4, ... 256
-        const float kt = textureGain[size_t(b)], kc = clarityGain[size_t(b)];
-        if (kt != 0.f || kc != 0.f) {
-            const float it = 1.f / (textureA[size_t(b)] * textureA[size_t(b)]);
-            const float ic = 1.f / (clarityA[size_t(b)] * clarityA[size_t(b)]);
+        if (b > 0) current = blurAtScale(value, 1 << (b - 1));   // sigma 2, 4, ... 256
+        const float gain = k[size_t(b)], inverseA2 = 1.f / (a[size_t(b)] * a[size_t(b)]);
+        if (gain != 0.f) {
             cv::parallel_for_(cv::Range(0, delta.rows), [&](const cv::Range &rows) {
                 for (int y = rows.start; y < rows.end; ++y) {
                     const float *p = previous.ptr<float>(y), *c = current.ptr<float>(y);
                     float *o = delta.ptr<float>(y);
                     for (int x = 0; x < delta.cols; ++x) {
-                        const float d = p[x] - c[x], d2 = d * d;
-                        o[x] += d * (kt / (1.f + d2 * it) + kc / (1.f + d2 * ic));
+                        const float d = p[x] - c[x];
+                        o[x] += gain * d / (1.f + d * d * inverseA2);
                     }
                 }
             });
@@ -126,13 +137,24 @@ void apply(cv::Mat &linearRgb, int texture, int clarity)
     cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
         for (int y = rows.start; y < rows.end; ++y) {
             auto *p = linearRgb.ptr<cv::Vec3f>(y);
-            const float *l = luminance.ptr<float>(y), *d = delta.ptr<float>(y);
-            for (int x = 0; x < linearRgb.cols; ++x) {
-                const float target = (l[x] + LogFloor) * std::exp2(d[x]) - LogFloor;
-                WorkingColor::scaleToLuminance(p[x], l[x], target);
-            }
+            const float *l = luminance.ptr<float>(y), *v = value.ptr<float>(y), *d = delta.ptr<float>(y);
+            for (int x = 0; x < linearRgb.cols; ++x)
+                WorkingColor::scaleToLuminance(p[x], l[x], std::max(0.f, inverse(domain, v[x] + d[x])));
         }
     });
+}
+
+} // namespace
+
+void apply(cv::Mat &linearRgb, int texture, int clarity)
+{
+    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
+    if (texture != 0)
+        applyBands(linearRgb, Domain::CubeRoot, detailGainAt(TextureTable, texture),
+                   texture < 0 ? TextureReduce : TextureEnhance);
+    if (clarity != 0)
+        applyBands(linearRgb, Domain::Log2, detailGainAt(ClarityTable, clarity),
+                   clarity < 0 ? ClarityReduce : ClarityEnhance);
 }
 
 } // namespace LocalContrast

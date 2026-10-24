@@ -86,7 +86,7 @@ def main(argv=None):
             value = str(int(r["value"]))
             params = fit["features"][feature]["fit"][value]
             k = [params[b]["k"] for b in bands]
-            a = [params[b]["A_ev"] for b in bands]
+            a = [params[b].get("A", params[b].get("A_ev")) for b in bands]   # v001 named it A_ev
             neutral, variant = linear(read_tiff(r["reference"])), linear(read_tiff(r["file"]))
             y0 = np.clip(neutral @ WEIGHTS, 0, None)
             valid = (y0 > 0.002) & (neutral.max(axis=2) < 0.98) & (variant.max(axis=2) < 0.98)
