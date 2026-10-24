@@ -85,6 +85,8 @@ set(IPR_ENGINE_SOURCES
     src/providers/imageprovider.cpp
     src/providers/ThumbnailProvider.h
     src/providers/ThumbnailProvider.cpp
+    src/raw/Demosaic.h
+    src/raw/Demosaic.cpp
     src/raw/RawBlackLevelEstimator.h
     src/raw/RawBlackLevelEstimator.cpp
     src/raw/RawDecoder.h
@@ -332,6 +334,7 @@ if(BUILD_TESTING)
             LABELS "unit;preferences;qml")
     endif()
     ipr_add_test(rawDecoderTests tests/raw_decoder_test.cpp)
+    ipr_add_test(demosaicTests tests/demosaic_test.cpp)
     ipr_add_test(imageImportTests tests/image_import_test.cpp)
     set_tests_properties(imageImportTests PROPERTIES LABELS "unit;import;pipeline")
     ipr_add_test(rawNormalizationTests tests/raw_normalization_test.cpp)
@@ -356,7 +359,7 @@ if(BUILD_TESTING)
     set_tests_properties(settingsQmlTests PROPERTIES LABELS "unit;settings;qml")
     set_tests_properties(uiPreferencesTests uiPreferencesQmlTests
         PROPERTIES LABELS "unit;preferences;qml")
-    set_tests_properties(rawDecoderTests rawBlackLevelEstimatorTests rawNormalizationTests
+    set_tests_properties(rawDecoderTests demosaicTests rawBlackLevelEstimatorTests rawNormalizationTests
         PROPERTIES LABELS "unit;raw")
     set_tests_properties(cameraProfileEngineTests PROPERTIES LABELS "unit;profiles")
 endif()

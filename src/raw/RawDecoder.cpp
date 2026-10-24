@@ -1,10 +1,12 @@
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
+#include "Demosaic.h"
 #include "RawBlackLevelEstimator.h"
 #include "RawNormalization.h"
 #include "CameraSignal.h"
 
 #include <QFileInfo>
+#include <QDir>
 #include <QBuffer>
 #include <QDebug>
 #include <QElapsedTimer>
@@ -18,6 +20,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <functional>
 #include <limits>
 #include <memory>
 #include <optional>
@@ -128,6 +131,58 @@ private:
     QElapsedTimer m_total;
     qint64 m_lastElapsed = 0;
 };
+
+// LibRaw with IPR's demosaic in place of its interpolation step (LibRaw keeps
+// its callbacks protected). Only Bayer mosaics reach the callback.
+class RawProcessor : public LibRaw
+{
+public:
+    void useIprDemosaic(int medianPasses, std::function<bool()> cancelled)
+    {
+        m_medianPasses = medianPasses;
+        m_cancelled = std::move(cancelled);
+        m_failed = false;
+        imgdata.params.user_qual = 0;   // no LibRaw algorithm-specific step around the callback
+        callbacks.interpolate_bayer_cb = &RawProcessor::interpolateBayer;
+    }
+    bool demosaicFailed() const { return m_failed; }
+
+private:
+    static void interpolateBayer(void *context)
+    {
+        auto *self = static_cast<RawProcessor *>(static_cast<LibRaw *>(context));
+        auto &d = self->imgdata;
+        Demosaic::Pattern pattern{};
+        for (int y = 0; y < 2; ++y)
+            for (int x = 0; x < 2; ++x) {
+                const int colour = self->FC(y, x);
+                pattern[size_t(y)][size_t(x)] = colour == 3 ? 1 : colour;   // second green folded
+            }
+        try {
+            self->m_failed = !Demosaic::interpolate(d.image, d.sizes.iwidth, d.sizes.iheight, pattern,
+                                                    self->m_medianPasses, self->m_cancelled);
+        } catch (...) {
+            // never let an exception cross LibRaw: the decode fails below instead
+            self->m_failed = true;
+        }
+    }
+
+    int m_medianPasses = 0;
+    std::function<bool()> m_cancelled;
+    bool m_failed = false;
+};
+
+// Opens a RAW by its wide path on Windows: the local 8-bit encoding cannot hold
+// every file name (accented folders such as tests/image/colorimétrie).
+int openRaw(LibRaw &raw, const QString &fileName)
+{
+#ifdef _WIN32
+    const std::wstring path = QDir::toNativeSeparators(fileName).toStdWString();
+    return raw.open_file(path.c_str());
+#else
+    return raw.open_file(QFile::encodeName(fileName).constData());
+#endif
+}
 
 // Black level read by IPR on every RAW after unpacking: measured on the
 // optical black pixels and compared with LibRaw's value, which is kept when it
@@ -290,12 +345,12 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                                              QString *error)
 {
     RawDecodeTimer timer(fileName);
-    LibRaw raw;
+    RawProcessor raw;
     raw.set_progress_handler([](void *context, enum LibRaw_progress, int, int) {
         const auto *options = static_cast<const Options *>(context);
         return options->cancellationRequested && options->cancellationRequested() ? 1 : 0;
     }, const_cast<Options *>(&options));
-    int result = raw.open_file(fileName.toLocal8Bit().constData());
+    int result = openRaw(raw, fileName);
     if (result != LIBRAW_SUCCESS) {
         if (error)
             *error = QString::fromLatin1(libraw_strerror(result));
@@ -473,9 +528,13 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             qWarning().noquote() << normalizationReason;
         }
         timer.mark("black_wb_calibration");
+        raw.useIprDemosaic(Demosaic::chromaMedianPasses(int(std::lround(raw.imgdata.other.iso_speed))),
+                           options.cancellationRequested);
         result = raw.dcraw_process();
     }
     timer.mark("unpack_and_process");
+    if (result == LIBRAW_SUCCESS && raw.demosaicFailed())
+        result = LIBRAW_CANCELLED_BY_CALLBACK;
     if (result != LIBRAW_SUCCESS) {
         if (error)
             *error = QString::fromLatin1(libraw_strerror(result));
@@ -601,7 +660,7 @@ QImage decodeEmbeddedThumbnailWithLibRaw(const QString &fileName,
     // Heap: a LibRaw instance is too large for 1 MiB worker-thread stacks.
     const auto owned = std::make_unique<LibRaw>();
     LibRaw &raw = *owned;
-    int result = raw.open_file(fileName.toLocal8Bit().constData());
+    int result = openRaw(raw, fileName);
     if (result != LIBRAW_SUCCESS) {
         if (error)
             *error = QString::fromLatin1(libraw_strerror(result));
@@ -688,9 +747,9 @@ void registerBuiltInHandlers()
     QString error;
     const FormatOptions format{decodeEmbeddedThumbnailWithLibRaw,
         QStringLiteral("libraw"), QString::fromLatin1(LibRaw::version()), [](const QString &path) {
-            LibRaw raw;
-            if (raw.open_file(path.toLocal8Bit().constData()) != LIBRAW_SUCCESS) return QSize{};
-            return QSize(raw.imgdata.sizes.raw_width, raw.imgdata.sizes.raw_height);
+            const auto raw = std::make_unique<LibRaw>();   // heap: too large for worker stacks
+            if (openRaw(*raw, path) != LIBRAW_SUCCESS) return QSize{};
+            return QSize(raw->imgdata.sizes.raw_width, raw->imgdata.sizes.raw_height);
         }};
     if (!addFormatHandler({QStringLiteral("cr2")}, decodeCr2, &error, format) ||
         !addFormatHandler({QStringLiteral("cr3")}, decodeCr3, &error, format) ||
