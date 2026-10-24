@@ -162,7 +162,7 @@ class GroupAnalysisTests(unittest.TestCase):
                 attrs = " ".join('crs:' + key + '=\"' + value + '\"' for key, value in fields.items())
                 return ('<root xmlns:crs=\"' + native.CRS + '\" ' + attrs + '/>').encode()
             write_tiff(base / "neutre/S.tif", pixels, xmp=xmp())
-            write_tiff(folder / "S-2.tif", pixels + 50, xmp=xmp(GrainAmount="+50", GrainSize="25", GrainFrequency="50"))
+            write_tiff(folder / "S-2.tif", pixels + 50, xmp=xmp(GrainAmount="+50", GrainSize="25", GrainFrequency="50", GrainSeed="2197388576"))
             records = inputs.base_records(base, ["effets"])
             self.assertEqual([(r["feature"], r["value"], Path(r["reference"]).name) for r in records], [("grain", 50, "S.tif")])
 

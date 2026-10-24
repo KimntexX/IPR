@@ -78,8 +78,9 @@ BASELINE = {
 }
 
 
-# Companion settings of the grain amount; the analysis ignores them when it pairs a
-# grain state with its neutral (tests/analysis/inputs.py).
+# Companion settings of the grain amount; the analysis ignores them, and the seed
+# Lightroom adds on export, when it pairs a grain state with its neutral
+# (tests/analysis/inputs.py).
 GRAIN_COMPANIONS = {"GrainSize": "25", "GrainFrequency": "50"}
 
 
