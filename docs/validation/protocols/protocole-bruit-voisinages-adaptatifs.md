@@ -488,3 +488,41 @@ avec le bruit n'est pas automatiquement une erreur ; elle indique une limite
 de détectabilité. D est un bruit différentiel après développement : ce montage
 ne simule pas une acquisition RAW, les interactions motif/dématriçage, ni le
 biais marginal d'une image unique. Aucun gain MSE de débruitage ne s'en déduit.
+
+## 15. Profil de bruit à partir des tuiles spectralement compatibles
+
+Étape demandée par l'utilisateur le 24 octobre 2026 : fiabiliser l'estimation du
+bruit d'E avant de renforcer le débruitage. `tests/study_noise_profile.py`
+utilise le probe natif avec l'entrée `--profile-pairs`, qui rend chaque paire
+en mémoire (RCD/FlatOnly, master Rec.2020 linéaire) et décrit **toutes** les
+tuiles 32 × 32 de la grille, sans débruiter ni écrire d'image.
+
+```powershell
+python tests/study_noise_profile.py --data-version N `
+  --parent docs/validation/raw/etude-spectrale-bruit-v001-20261024T195453Z.json
+```
+
+Règles fixées avant lecture des paires réservées :
+
+- **Entrées** : les huit paires R6 Mark III de la campagne spectrale parente,
+  avec leur partage ajustement/réserve ; empreintes vérifiées.
+- **Vérité** : par plan Y/Co/Cg et classe Y de l'image moyenne M, médiane du
+  sigma de D = (A − B)/√2 sur les tuiles calmes (gradient G2 de M < 3 sigmas HH
+  de D(Y)), au moins 8 tuiles ; en HH de Haar et en MAD de la bande G1 − G4.
+- **E** (référence) : quartile 25 % des sigmas HH de toutes les tuiles de la classe
+  de A, divisé par son biais ; classe vide recopiée depuis la plus proche ;
+  bande moyenne déduite de HH par le rapport spectral d'E.
+- **S** : tuiles de A dans l'enveloppe combinée gelée de la classe (parent) ;
+  médiane de leur sigma, au moins 16 tuiles, sinon **abstention** ; un facteur
+  par plan et par échelle, médiane vérité/estimation sur les paires
+  d'ajustement seulement.
+- **P** : comme S, avec une enveloppe combinée par plan, mise en commun sur
+  toutes les tuiles D d'ajustement de toutes les classes (médiane, 1,4826 MAD,
+  plancher 0,02, seuil au 95e percentile des scores d'ajustement).
+- **Score** : log2(estimation / vérité) sur les paires réservées, par plan,
+  classe, échelle et ISO. Aucun seuil n'est réajusté après lecture.
+
+Limites : un seul boîtier ; D est un résidu différentiel après développement,
+qui efface ce que les deux vues ont en commun (dont un motif fixe du capteur) ;
+tuiles corrélées ; les constantes d'E viennent de synthèses antérieures qui
+peuvent inclure ces paires.

@@ -65,6 +65,7 @@
     "noise_analysis": "test_analyse_noise.py",
     "noise_neighbourhood_study": "test_study_noise_neighbourhoods.py",
     "noise_spectral_study": "test_study_noise_spectral.py",
+    "noise_profile_study": "test_study_noise_profile.py",
     "noise_rebaseline_study": "test_summarise_noise_rebaseline.py",
     "noise_inventory": "test_inventory_noise_sources.py",
     "base_colorimetry_analysis": "test_analyse_base_colorimetrique.py"
@@ -162,6 +163,7 @@
     {"patterns": ["tests/inventory_noise_sources.py", "tests/preview_noise_sources.py", "tests/test_inventory_noise_sources.py"], "tests": [], "python": ["noise_inventory"]},
     {"patterns": ["tests/noise_impulse_filter.*", "tests/noise_impulse_test.cpp", "tests/study_noise_impulses.py"], "tests": ["noiseImpulseTests"], "python": ["noise_neighbourhood_study"]},
     {"patterns": ["tests/noise_spectral_signature.*", "tests/noise_spectral_test.cpp", "tests/study_noise_spectral.py", "tests/test_study_noise_spectral.py"], "tests": ["noiseSpectralTests"], "python": ["noise_spectral_study"]},
+    {"patterns": ["tests/study_noise_profile.py", "tests/test_study_noise_profile.py"], "tests": [], "python": ["noise_profile_study"]},
     {"patterns": ["tests/study_sources.py", "tests/test_study_sources.py", "tests/study_demosaic.py", "tests/demosaic_probe.cpp", "tests/study_lr_neutral_noise.py", "tests/study_lr_aligned.py"], "tests": [], "python": ["study_sources"]},
     {"patterns": ["tests/test_build_windows.py"], "tests": [], "python": ["selection"]}
   ]

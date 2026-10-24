@@ -3916,9 +3916,95 @@ stricts, versionnés et horodatés ; les images originales restent inchangées.
 Les durées de 160,7 s et 40,3 s mesurent les bancs, pas un débruitage utilisateur.
 Aucune modification du moteur de production ni publication GitHub.
 
+<a id="bruit-20261025-profil"></a>
+
+## 54. Profil de bruit à partir des tuiles compatibles — 25 octobre 2026
+
+Reprise par Claude de l'analyse de Codex, sur la procédure demandée par
+l'utilisateur : fiabiliser l'estimation du bruit d'E avant de renforcer le
+débruitage ; points 1 (profil à partir des tuiles spectralement compatibles,
+abstention plutôt que recopie) et 2 (vérification sur les paires réservées, par
+luminosité, échelle et canal, Cg à ISO 51200). Méthode et règles :
+[protocole, section 15](../protocols/protocole-bruit-voisinages-adaptatifs.md#15-profil-de-bruit-à-partir-des-tuiles-spectralement-compatibles).
+
+Preuves :
+[etude-profil-bruit-v001](../raw/etude-profil-bruit-v001-20261024T224344Z.json)
+(profils E et S) et
+[etude-profil-bruit-v002](../raw/etude-profil-bruit-v002-20261024T224800Z.json)
+(E, S et P, mêmes paires et mêmes rendus). Durée du banc 156 s. Le probe décrit
+toutes les tuiles de la grille, et non plus seulement les tuiles calmes : la
+sélection peut ainsi être jugée face aux textures réelles.
+
+Les enveloppes du parent ne couvrent que les classes 9 à 12, alors que leurs
+centres y varient de moins de 0,05, bien en deçà de leurs échelles : la signature
+sans dimension du bruit développé dépend peu de la luminosité. D'où le profil P,
+à enveloppe commune par plan, ajustée sur toutes les tuiles D d'ajustement.
+Facteurs d'échelle de P, ajustés sur les paires d'ajustement : 0,99 à 1,08.
+
+## 55. Vérification sur les paires réservées
+
+Écart médian |log2(estimation / vérité)| sur les 17 cases réservées (paire,
+plan, classe) qui ont une vérité ; P s'abstient dans 2 cases, S dans 7 :
+
+| Plan, échelle | E, 17 cases | P, 15 cases | E sur les cases de P |
+| --- | ---: | ---: | ---: |
+| Y, HH | 0,044 | 0,013 | 0,044 |
+| Y, bande moyenne | 0,060 | 0,010 | 0,060 |
+| Co, HH | 0,041 | 0,013 | 0,039 |
+| Co, bande moyenne | 0,123 | 0,011 | 0,123 |
+| Cg, HH | 0,055 | 0,014 | 0,038 |
+| Cg, bande moyenne | 0,132 | 0,008 | 0,132 |
+
+Erreur maximale hors ISO 100 : E 0,09 à 0,46, P 0,02 à 0,04 (moins de 3 %).
+
+- **Cg à ISO 51200** : E surestime la bande moyenne de 16 à 38 % (+0,21 à
+  +0,46) ; P, +0,024 en HH et −0,003 en bande moyenne. La cause est le rapport
+  spectral fixe d'E entre HH et la bande moyenne, commun aux ISO, que P remplace
+  par une mesure directe sur les tuiles compatibles.
+- **Ombres d'ISO 1600** (classes 6 à 8, Y de 0,003 à 0,018) : E sous-estime de
+  6 à 10 % (−0,08 à −0,12), P de 1 à 2 %. Ces classes sont hors des enveloppes du
+  parent : S s'y abstenait, P les couvre.
+- **ISO 100** : E et P surestiment Y d'environ 30 % (+0,28 à +0,47). D efface ce
+  que les deux vues ont en commun, dont un éventuel motif fixe du capteur qui
+  appartient pourtant au bruit d'une vue seule : à ce niveau, la vérité elle-même
+  est en cause. Sans enjeu pratique immédiat (pas de débruitage à ISO 100), à ne
+  pas compter comme une réussite ni comme un échec de P.
+- **Abstentions** de P : les classes de 9 tuiles seulement (ISO 100 et 51200,
+  classe 10), sous le minimum de 16 ; aucune recopie d'une autre classe.
+
+## 56. Vérifications et limites
+
+`tests/test_study_noise_profile.py` (6 tests) vérifie que l'enveloppe commune
+n'apprend que des tuiles D d'ajustement, qu'une texture hors enveloppe et une
+signature dégénérée sont exclues, que P s'abstient sous 16 tuiles, que la
+recopie d'E est tracée et que la vérité exige des tuiles calmes. Le probe
+compile en Release.
+
+Limites : un seul boîtier (R6 Mark III), quatre paires réservées ; 17 cases, non
+indépendantes ; D n'est pas le bruit marginal d'une vue unique ; la sélection
+d'une tuile reste une compatibilité avec une enveloppe, pas une probabilité de
+bruit. Aucune modification du débruiteur de production, aucune publication.
+
 <a id="conclusion-actuelle"></a>
 
-## Conclusion actuelle et prochaines actions — 24 octobre 2026, après diagnostic spectral
+## Conclusion actuelle et prochaines actions — 25 octobre 2026, après le profil P
+
+**L'estimation du bruit d'E est fiabilisée sur les paires R6 Mark III** : le profil
+P, construit sur les seules tuiles spectralement compatibles avec une enveloppe
+commune par plan, suit la vérité des paires réservées à 1 % près en médiane et à
+moins de 3 % au pire hors ISO 100, contre 4 à 13 % en médiane et jusqu'à 38 %
+pour E. Il corrige notamment Cg à ISO 51200 et les ombres d'ISO 1600, et
+s'abstient là où les données manquent, sans recopier une autre luminosité.
+
+Prochaine étape de la procédure (point 3) : rejouer E avec le profil P, sans
+changer sa force, pour isoler le bénéfice de l'estimation sur les textures, le
+bruit résiduel et les dérives lumineuses. Le point 4, la protection des petites
+formes, reste séparé : une signature calculée sur 32 × 32 pixels ne les protège
+pas. Avant toute intégration en production : contrôles de conservation du
+détail, généralisation à d'autres boîtiers et validation visuelle de
+l'utilisateur.
+
+## Conclusion du 24 octobre 2026, après diagnostic spectral — historique
 
 **Piste utile pour mieux estimer le bruit, mais pas un détecteur de pixels
 bruités validé.** La cohérence spectrale permet d'écarter des textures qui

@@ -1019,6 +1019,66 @@ QJsonObject spectralPair(const QString &rawA,const QString &rawB,bool inject=fal
         {"bin_counts",binCounts},{"tiles",records},{"injections",injections}};
 }
 
+// Profile study: every grid tile of a pair, so the tile selection can be judged
+// against the truth. Per tile: the Y bin of frame A (what a blind profile sees)
+// and of the mean M (truth bins), whether the tile is quiet (M gradient below 3
+// Haar sigma of D(Y), as pairTruth), then per plane the Haar HH sigma and the MAD
+// sigma of the G1 - G4 band of A and of D = (A - B)/sqrt(2), and the spectral
+// signature of A. Columns are listed once; values are a flat row per tile.
+QJsonObject profilePair(const QString &rawA, const QString &rawB)
+{
+    const cv::Mat a = renderMaster(rawA), b = renderMaster(rawB);
+    require(a.size() == b.size(), "profile pair geometry differs");
+    const Planes pa = split(a), pb = split(b);
+    Planes d;
+    for (int c = 0; c < 3; ++c) *d.all()[size_t(c)] = (*pa.all()[size_t(c)] - *pb.all()[size_t(c)]) / std::sqrt(2.);
+    const cv::Mat meanY = (pa.y + pb.y) * .5;
+    const double drift = (meanOf(pa.y) - meanOf(pb.y)) / std::max(meanOf(pa.y), 1e-12);
+    require(std::isfinite(drift) && std::abs(drift) <= .02, "profile pair exposure drift exceeds 2%");
+    cv::Mat smooth, dx, dy, gradient;
+    cv::GaussianBlur(meanY, smooth, cv::Size(0, 0), 2., 2., cv::BORDER_REFLECT);
+    cv::Sobel(smooth, dx, CV_32F, 1, 0, 3, 1. / 8.);
+    cv::Sobel(smooth, dy, CV_32F, 0, 1, 3, 1. / 8.);
+    cv::magnitude(dx, dy, gradient);
+    std::array<std::array<cv::Mat, 4>, 3> bandsA, bandsD;
+    for (int c = 0; c < 3; ++c) {
+        bandsA[size_t(c)] = bands(*pa.all()[size_t(c)]);
+        bandsD[size_t(c)] = bands(*d.all()[size_t(c)]);
+    }
+    const QStringList features{"log_fine_hh", "log_mid_hh", "spectral_flatness", "top8_power_fraction",
+                               "log_lh_hh", "log_hl_hh", "hh_corr_x", "hh_corr_y"};
+    QJsonArray columns{"x", "y", "bin_a", "bin_m", "quiet"};
+    for (const char *plane : {"y", "co", "cg"}) {
+        for (const char *name : {"hh_a", "hh_d", "mid_a", "mid_d", "valid"}) columns.append(QString(plane) + "_" + name);
+        for (const auto &name : features) columns.append(QString(plane) + "_" + name);
+    }
+    QJsonArray rows;
+    for (int y = 0; y + Tile <= a.rows; y += Tile)
+        for (int x = 0; x + Tile <= a.cols; x += Tile) {
+            const cv::Rect r(x, y, Tile, Tile);
+            const int binA = yBin(meanOf(pa.y(r)));
+            if (binA < 0) continue;
+            const double sigmaDY = std::max(1e-6, double(NoiseEstimation::haarSigma(d.y(r))));
+            QJsonArray row{x, y, binA, yBin(meanOf(meanY(r))), meanOf(gradient(r)) < 3. * sigmaDY ? 1 : 0};
+            for (int c = 0; c < 3; ++c) {
+                const cv::Mat &planeA = *pa.all()[size_t(c)], &planeD = *d.all()[size_t(c)];
+                row.append(double(NoiseEstimation::haarSigma(planeA(r))));
+                row.append(double(NoiseEstimation::haarSigma(planeD(r))));
+                row.append(madSigma(bandsA[size_t(c)][1](r)));
+                row.append(madSigma(bandsD[size_t(c)][1](r)));
+                const QJsonObject s = NoiseSpectralStudy::signature(planeA(r));
+                const bool valid = s.value("valid").toBool();
+                row.append(valid ? 1 : 0);
+                const QJsonObject f = s.value("features").toObject();
+                for (const auto &name : features) row.append(valid ? f.value(name).toDouble() : 0.);
+            }
+            rows.append(row);
+        }
+    return {{"a", QFileInfo(rawA).fileName()}, {"b", QFileInfo(rawB).fileName()},
+            {"a_sha256", sha256(rawA)}, {"b_sha256", sha256(rawB)}, {"mean_y_drift", drift},
+            {"columns", columns}, {"rows", rows}};
+}
+
 QJsonObject spectralScene(const QString &raw)
 {
     const auto loaded=TestRecipes::load(raw);
@@ -1069,6 +1129,20 @@ int main(int argc, char **argv)
                 {"feature_definition","Haar LH/HL/HH energy ratios; HH lag1 Pearson x/y; G1/G4 band energy ratios; Hann-windowed DFT excluding radius<=2, flatness geometric/mean power with relative 1e-12 floor, top8 power fraction"}};
             QFile file(arguments.at(2));require(file.open(QIODevice::WriteOnly|QIODevice::NewOnly),"cannot create spectral output");
             file.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
+            return 0;
+        }
+        if (argc >= 5 && arguments.at(1) == QStringLiteral("--profile-pairs")) {
+            require((argc - 3) % 2 == 0, "profile pair list must have even length");
+            require(!QFileInfo::exists(arguments.at(2)), "profile output exists");
+            QJsonArray records;
+            for (int i = 3; i < argc; i += 2) {
+                records.append(profilePair(arguments.at(i), arguments.at(i + 1)));
+                std::cout << arguments.at(i).toStdString() << std::endl;
+            }
+            QFile file(arguments.at(2));
+            require(file.open(QIODevice::WriteOnly | QIODevice::NewOnly), "cannot create profile output");
+            file.write(QJsonDocument(QJsonObject{{"pairs", records},
+                {"units", "Haar HH and MAD G1-G4 sigmas in linear Rec.2020 Y/Co/Cg plane units, 32x32 grid tiles"}}).toJson(QJsonDocument::Compact));
             return 0;
         }
         if (argc==3 && arguments.at(1)==QStringLiteral("--profile-controls")) {
