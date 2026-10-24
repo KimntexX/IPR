@@ -24,9 +24,6 @@ struct SharpenSettings
 void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings);
 void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings);
 
-// Deterministic monochrome grain, stronger in shadows, slider value in [0, 100].
-void addGrain(cv::Mat &linearRgb, int amount);
-
 }
 
 #endif // IPR_CORE_DETAILPROCESSING_H

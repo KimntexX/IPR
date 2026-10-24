@@ -8,7 +8,8 @@ est **validée dans un premier état, avec réserve** : son contraste local suit
 Lightroom échelle par échelle, mais sa composante tonale adaptée à chaque image
 n'est pas reproduite. Le [voile](#effets-20261024-voile) suit Lightroom en
 lumière linéaire et par ton, avec une réserve sur les scènes nocturnes et un
-excès à +100. Grain et flou restent à traiter ([conclusion](#conclusion-actuelle)).
+excès à +100. Le [grain](#effets-20261024-grain) reproduit celui de Lightroom.
+Le flou reste à traiter ([conclusion](#conclusion-actuelle)).
 
 Protocole : [protocole Effets](../protocols/protocole-effets.md). Branche :
 `patch_effects`. Les anciennes analyses Texture, Clarté et Voile du 2 octobre 2026
@@ -136,7 +137,37 @@ Explications testées en validation croisée par scène, sans succès :
 
 Aucune statistique globale du neutre ne prédit cette adaptation : un calcul de
 poids par image à l'ouverture n'a, en l'état, rien de fiable à calculer.
-Recherche bibliographique en cours pour d'autres familles d'opérateurs.
+
+### 6 bis. Pistes bibliographiques — 24 octobre 2026
+
+La formule de Lightroom n'est pas publique ; les descriptions connues (Schewe :
+hybride d'un masque flou à grand rayon et d'un contraste des tons moyens, Thomas
+Knoll) ne valent que pour de petites corrections. Pistes recensées, présentées à
+l'utilisateur et ordonnées par proximité avec la réserve :
+
+1. **Masquage non linéaire de Moroney** (HP, CIC 2000 ; brevets US 6 822 762 et
+   US 8 238 687 ; réimplémentation IPOL 2011) : masque = luminance inversée très
+   floutée, y = x^γ avec γ = 2^((128 − masque)/128). Éclaircit les régions
+   sombres et assombrit les claires, localement : le sens de la réserve. Un
+   développeur de RawTherapee décrit le même comportement adaptatif en imitant la
+   clarté (forum pixls.us).
+2. **Opérateur photographique de Reinhard** (2002) : clé de la scène et plus grand
+   voisinage sans bord fort par pixel ; version locale non testée.
+3. **Lissages préservant les bords** : moindres carrés pondérés (Farbman 2008),
+   filtre guidé, filtre guidé incrémental (RawTherapee/PhotoFlow) ; candidats pour
+   la dissymétrie des anneaux.
+4. **Filtre laplacien local** (Paris 2011, Aubry 2014) : déjà testé, 0,84.
+5. **Approches statistiques ou apprises** : grille de coefficients affines locaux
+   prédite en basse résolution (HDRNet, Gharbi 2017), tables 3D adaptées à l'image
+   (Zeng 2020), réglages tonals appris sur paires (Bychkovsky, Paris, Chan,
+   Durand 2011). Étape proposée : ajuster une grille affine locale sur chaque
+   paire Lightroom, puis rechercher par corrélation matricielle les
+   caractéristiques du neutre qui prédisent ses coefficients.
+6. **Tons foncés/Tons clairs de Photoshop** : courbes de puissance à travers des
+   masques de tons floutés (rétro-ingénierie communautaire), cousin de la piste 1.
+
+Décision de l'utilisateur : étudier la piste 1, puis directement la piste 5 si
+elle ne suffit pas.
 
 <a id="effets-20261024-voile"></a>
 
@@ -209,6 +240,59 @@ croisée du §8 donne l'estimation hors échantillon).
 - Mesures en luminance ; la saturation ajoutée par le voile suit les rapports
   de canaux de la loi par canal, non vérifiée séparément.
 
+<a id="effets-20261024-grain"></a>
+
+## Grain — 24 octobre 2026
+
+### 11. Ce que fait Lightroom
+
+Sur ses paires (6V1A0007, 6V1A0327 ; taille 25, rugosité 50), le grain de
+Lightroom s'ajoute aux valeurs encodées (gamma sRGB) : écart type 0,062 à 100,
+proportionnel à la valeur, identique à tous les tons sauf les plus sombres, où le
+noir l'écrête ; monochrome ; fin (corrélation 0,64 à 1 pixel, 0,13 à 2, nulle à 4 :
+un bruit blanc sous une gaussienne d'environ 0,75 pixel).
+
+### 12. État livré
+
+- `src/core/Grain` : bruit gaussien déterministe (le même pixel reçoit le même
+  grain à chaque rendu), flouté à 0,75 pixel, normalisé, ajouté aux valeurs
+  encodées de chaque canal. Remplace `DetailProcessing::addGrain` (bruit blanc d'un
+  pixel ajouté en lumière linéaire et renforcé dans les ombres), retiré sans
+  option de repli.
+- [etude-grain-v001](../raw/etude-grain-v001-20261024T205112Z.json), rendu IPR en
+  mémoire :
+
+| Scène | Valeur | Écart type Lightroom | Écart type IPR | Corrélation 1 px LR / IPR | 2 px LR / IPR |
+|---|---:|---:|---:|---|---|
+| 6V1A0007 | +25 | 0,0155 | 0,0155 | 0,65 / 0,63 | 0,13 / 0,17 |
+| 6V1A0007 | +50 | 0,0309 | 0,0311 | 0,65 / 0,63 | 0,13 / 0,17 |
+| 6V1A0007 | +100 | 0,0618 | 0,0621 | 0,65 / 0,63 | 0,13 / 0,17 |
+| 6V1A0327 | +100 | 0,0574 | 0,0595 | 0,64 / 0,63 | 0,13 / 0,17 |
+
+Par ton, IPR suit Lightroom à ±0,0003 hors des tons les plus sombres (< 0,05
+encodé), où Lightroom écrête davantage (0,023 à 0,035 contre 0,043 à 0,047).
+Réserves : deux scènes, taille et rugosité de Lightroom à leurs valeurs par
+défaut (IPR n'a pas ces réglages).
+
+<a id="effets-20261024-apercu"></a>
+
+## Échelle de l'aperçu — 24 octobre 2026
+
+Défaut d'affichage relevé pendant l'étude : l'aperçu interactif est calculé sur
+un proxy de 2048 pixels, alors que les rayons des effets sont définis en pixels
+de l'image entière. Sur un fichier de 6000 pixels (échelle 0,34), la texture
+agissait à l'écran sur 3 à 48 pixels de l'image, la clarté et le voile sur des
+structures trois fois trop grandes, et le grain paraissait trois fois plus
+gros. L'export et les mesures, en pleine résolution, n'étaient pas touchés.
+
+Correction : `ImageEditor` transmet l'échelle du proxy (`pixelScale`) à
+`LocalContrast`, `Dehaze`, `Grain` et au flou, qui convertissent leurs rayons ;
+une bande plus fine que le proxy disparaît, le grain y prend l'écart type que
+laisse la moyenne de blocs du grain réel. À l'échelle 1, le rendu est inchangé.
+Tests : sur un proxy au tiers ou au quart, l'effet correspond à la réduction de
+l'effet calculé en pleine résolution. Au zoom, l'aperçu reste le proxy agrandi :
+le rendu de la zone visible en pleine résolution est un futur chantier.
+
 <a id="conclusion-actuelle"></a>
 
 ## Conclusion actuelle et prochaines actions — 24 octobre 2026
@@ -217,8 +301,10 @@ croisée du §8 donne l'estimation hors échantillon).
 - Clarté : premier état validé avec la réserve du §6.
 - Voile : loi en IL ajustée sur Lightroom, réserve du §10 ; validation visuelle de
   l'utilisateur à venir.
-- Prochaines actions : recherche bibliographique sur la clarté, soumise à
-  l'utilisateur ; puis grain (statistiques face à Lightroom) et flou (IPR seul).
+- Grain : conforme à Lightroom (§12).
+- Aperçu : effets à l'échelle de l'image entière sur le proxy.
+- Prochaines actions : étude de la clarté (masquage non linéaire, grille affine
+  locale), puis flou (IPR seul).
 - Limites : quatre scènes pour la texture et le voile, vingt pour la clarté ;
   trois boîtiers Canon ; mesures en luminance (la chrominance suit les rapports de
   canaux) ; halo jugé sur un bord synthétique et sur les anneaux de Lightroom.

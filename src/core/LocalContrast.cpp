@@ -69,19 +69,24 @@ Bands detailGainAt(const std::array<Row, 6> &table, int value)
     return result;
 }
 
-// Gaussian blur of sigma 2 * factor, computed at 1/factor resolution (area
-// reduction, then sigma 2, then bilinear enlargement) for the large scales.
-cv::Mat blurAtScale(const cv::Mat &plane, int factor)
+// Gaussian blur of a sigma in pixels of this image; large sigmas at reduced
+// resolution (area reduction by a power of 2 leaving a sigma of 2 to 4, then
+// bilinear enlargement). A sigma far below a pixel leaves the plane: that band
+// is finer than this image can show.
+cv::Mat blurSigma(const cv::Mat &plane, double sigma)
 {
+    if (sigma < 0.25) return plane.clone();
+    int factor = 1;
+    while (sigma / (2 * factor) >= 2.0) factor *= 2;
     cv::Mat result;
-    if (factor <= 1) {
-        cv::GaussianBlur(plane, result, cv::Size(0, 0), 2.0 * factor, 2.0 * factor, cv::BORDER_REFLECT);
+    if (factor == 1) {
+        cv::GaussianBlur(plane, result, cv::Size(0, 0), sigma, sigma, cv::BORDER_REFLECT);
         return result;
     }
     cv::Mat small;
     cv::resize(plane, small, cv::Size(std::max(1, plane.cols / factor), std::max(1, plane.rows / factor)), 0, 0,
                cv::INTER_AREA);
-    cv::GaussianBlur(small, small, cv::Size(0, 0), 2.0, 2.0, cv::BORDER_REFLECT);
+    cv::GaussianBlur(small, small, cv::Size(0, 0), sigma / factor, sigma / factor, cv::BORDER_REFLECT);
     cv::resize(small, result, plane.size(), 0, 0, cv::INTER_LINEAR);
     return result;
 }
@@ -99,9 +104,9 @@ float inverse(Domain domain, float value)
 }
 
 // Bands of the luminance in the domain: G0 is the image, G1 sigma 1, then sigma
-// 2, 4, ... 256; each band d gains k d / (1 + (|d| / A)^2); colours keep their
+// 2, 4, ... 256 pixels of the full image; each band d gains k d / (1 + (|d| / A)^2); colours keep their
 // channel ratios.
-void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &a)
+void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &a, double pixelScale)
 {
     cv::Mat luminance(linearRgb.size(), CV_32F), value(linearRgb.size(), CV_32F);
     cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
@@ -116,9 +121,8 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
     });
     cv::Mat delta = cv::Mat::zeros(linearRgb.size(), CV_32F);
     cv::Mat previous = value, current;
-    cv::GaussianBlur(value, current, cv::Size(0, 0), 1.0, 1.0, cv::BORDER_REFLECT);
     for (int b = 0; b < BandCount; ++b) {
-        if (b > 0) current = blurAtScale(value, 1 << (b - 1));   // sigma 2, 4, ... 256
+        current = blurSigma(value, pixelScale * double(b == 0 ? 1 : 2 << (b - 1)));   // sigma 1, 2, 4, ... 256
         const float gain = k[size_t(b)], inverseA2 = 1.f / (a[size_t(b)] * a[size_t(b)]);
         if (gain != 0.f) {
             cv::parallel_for_(cv::Range(0, delta.rows), [&](const cv::Range &rows) {
@@ -146,15 +150,15 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
 
 } // namespace
 
-void apply(cv::Mat &linearRgb, int texture, int clarity)
+void apply(cv::Mat &linearRgb, int texture, int clarity, double pixelScale)
 {
     if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
     if (texture != 0)
         applyBands(linearRgb, Domain::CubeRoot, detailGainAt(TextureTable, texture),
-                   texture < 0 ? TextureReduce : TextureEnhance);
+                   texture < 0 ? TextureReduce : TextureEnhance, pixelScale);
     if (clarity != 0)
         applyBands(linearRgb, Domain::Log2, detailGainAt(ClarityTable, clarity),
-                   clarity < 0 ? ClarityReduce : ClarityEnhance);
+                   clarity < 0 ? ClarityReduce : ClarityEnhance, pixelScale);
 }
 
 } // namespace LocalContrast

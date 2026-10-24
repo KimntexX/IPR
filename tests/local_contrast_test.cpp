@@ -137,6 +137,34 @@ int main()
         }
     if (!check(finite && ratios, "colours keep their ratios and stay finite and nonnegative")) return 1;
 
+    // On the preview proxy, the effect is what the reduction leaves of the full image's.
+    {
+        const cv::Mat full = texturedGrey(768);
+        cv::Mat reduced;
+        cv::resize(full, reduced, cv::Size(256, 256), 0, 0, cv::INTER_AREA);
+        const auto logChange = [&](const cv::Mat &rgb) {
+            cv::Mat change(reduced.size(), CV_32F);
+            for (int y = 0; y < reduced.rows; ++y)
+                for (int x = 0; x < reduced.cols; ++x)
+                    change.at<float>(y, x) = std::log2(WorkingColor::nonNegativeLuminance(rgb.at<cv::Vec3f>(y, x)) + 1e-3f)
+                        - std::log2(WorkingColor::nonNegativeLuminance(reduced.at<cv::Vec3f>(y, x)) + 1e-3f);
+            return change;
+        };
+        for (const auto &[texture, clarity] : {std::pair{100, 0}, std::pair{0, 100}}) {
+            cv::Mat master = full.clone(), expected;
+            LocalContrast::apply(master, texture, clarity);
+            cv::resize(master, expected, reduced.size(), 0, 0, cv::INTER_AREA);
+            cv::Mat scaled = reduced.clone(), unscaled = reduced.clone();
+            LocalContrast::apply(scaled, texture, clarity, 1.0 / 3.0);
+            LocalContrast::apply(unscaled, texture, clarity);
+            const cv::Mat target = logChange(expected);
+            const double scaledError = cv::norm(logChange(scaled) - target) / cv::norm(target);
+            const double unscaledError = cv::norm(logChange(unscaled) - target) / cv::norm(target);
+            if (!check(scaledError < 0.35 && scaledError < 0.6 * unscaledError,
+                       "on a 1/3 proxy the effect matches the reduced full-resolution effect")) return 1;
+        }
+    }
+
     cv::Mat empty;
     LocalContrast::apply(empty, 50, 50);
     if (!check(empty.empty(), "an empty image is left alone")) return 1;

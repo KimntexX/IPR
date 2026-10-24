@@ -78,6 +78,17 @@ int main()
                 }
     if (!check(valid, "output stays finite and nonnegative")) return 1;
 
+    // On a 1/4 proxy, the haze is measured over the same full-image radii.
+    {
+        cv::Mat expected, reduced, proxy;
+        cv::resize(clearer, expected, cv::Size(128, 128), 0, 0, cv::INTER_AREA);
+        cv::resize(scene, reduced, cv::Size(128, 128), 0, 0, cv::INTER_AREA);
+        proxy = reduced.clone();
+        Dehaze::apply(proxy, 100, 0.25);
+        const double change = cv::norm(expected - reduced), error = cv::norm(proxy - expected);
+        if (!check(error < 0.25 * change, "on a 1/4 proxy the dehaze matches the reduced full-resolution one")) return 1;
+    }
+
     cv::Mat empty;
     Dehaze::apply(empty, 50);
     if (!check(empty.empty(), "an empty image is left alone")) return 1;

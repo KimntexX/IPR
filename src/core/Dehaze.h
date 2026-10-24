@@ -14,7 +14,9 @@
 namespace Dehaze {
 
 // Linear RGB image (CV_32FC3), in place; slider value in [-100, 100]. RGB stays nonnegative.
-void apply(cv::Mat &linearRgb, int amount);
+// pixelScale: pixels of this image per pixel of the full image (1 for the master,
+// below 1 for the preview proxy); radii are defined on the full image.
+void apply(cv::Mat &linearRgb, int amount, double pixelScale = 1.0);
 
 } // namespace Dehaze
 

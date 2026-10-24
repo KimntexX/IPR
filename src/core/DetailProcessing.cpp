@@ -328,25 +328,4 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings)
     }
 }
 
-
-void addGrain(cv::Mat &adjusted, int grain)
-{
-    if (grain <= 0) return;
-    const float amount = 0.06f * static_cast<float>(grain) / 100.0f;
-    for (int y = 0; y < adjusted.rows; ++y) {
-        cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < adjusted.cols; ++x) {
-            std::uint32_t hash = static_cast<std::uint32_t>(x) * 0x9e3779b9u + static_cast<std::uint32_t>(y) * 0x85ebca6bu;
-            hash ^= hash >> 16;
-            hash *= 0x7feb352du;
-            hash ^= hash >> 15;
-            const float noise = static_cast<float>(hash & 0xffffu) / 32767.5f - 1.0f;
-            const float luminance = WorkingColor::nonNegativeLuminance(row[x]);
-            const float shadowsWeight = 0.45f + 0.55f * (1.0f - std::clamp(luminance, 0.0f, 1.0f));
-            WorkingColor::scaleToLuminance(row[x], luminance,
-                                           std::max(0.0f, luminance + noise * amount * shadowsWeight));
-        }
-    }
-}
-
 }

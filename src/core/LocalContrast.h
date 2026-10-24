@@ -15,7 +15,9 @@
 namespace LocalContrast {
 
 // Linear RGB image (CV_32FC3), in place; slider values in [-100, 100].
-void apply(cv::Mat &linearRgb, int texture, int clarity);
+// pixelScale: pixels of this image per pixel of the full image (1 for the master,
+// below 1 for the preview proxy); radii are defined on the full image.
+void apply(cv::Mat &linearRgb, int texture, int clarity, double pixelScale = 1.0);
 
 } // namespace LocalContrast
 

@@ -11,9 +11,11 @@
 namespace Dehaze {
 namespace {
 
-constexpr int Reduction = 4;            // the law was fitted at 1/4 resolution
-constexpr double HazeSigma = 128.0 / Reduction;
-constexpr int DarkWindow = 15 / Reduction + 1;
+// The law was fitted at 1/4 of the full resolution: dark channel eroded over 15
+// pixels, haze smoothed at 128 pixels of the full image.
+constexpr double FittedReduction = 4.0;
+constexpr double HazeSigma = 128.0;
+constexpr double DarkWindow = 15.0;
 
 constexpr std::array<float, 13> ToneKnots{-10.f, -8.f, -6.f, -5.f, -4.f, -3.f, -2.5f, -2.f, -1.5f, -1.f, -0.5f, 0.f, 0.6f};
 constexpr std::array<float, 6> HazeKnots{0.f, 0.2f, 0.4f, 0.6f, 0.8f, 1.f};
@@ -174,14 +176,16 @@ float airlightOf(const cv::Mat &rgb)
 
 } // namespace
 
-void apply(cv::Mat &linearRgb, int amount)
+void apply(cv::Mat &linearRgb, int amount, double pixelScale)
 {
     if (amount == 0 || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
     const Law law = lawAt(amount);
     const float airlight = airlightOf(linearRgb);
-    // Smoothed haze h at 1/4 resolution, as fitted, then enlarged.
+    // Smoothed haze h at 1/4 of the full resolution, as fitted, then enlarged.
+    const int reduction = std::max(1, int(std::lround(FittedReduction * pixelScale)));
+    const double scale = pixelScale / reduction;   // pixels of the reduced image per full-image pixel
     cv::Mat small;
-    cv::resize(linearRgb, small, cv::Size(std::max(1, linearRgb.cols / Reduction), std::max(1, linearRgb.rows / Reduction)),
+    cv::resize(linearRgb, small, cv::Size(std::max(1, linearRgb.cols / reduction), std::max(1, linearRgb.rows / reduction)),
                0, 0, cv::INTER_AREA);
     cv::Mat dark(small.size(), CV_32F);
     for (int y = 0; y < small.rows; ++y) {
@@ -189,8 +193,8 @@ void apply(cv::Mat &linearRgb, int amount)
         float *d = dark.ptr<float>(y);
         for (int x = 0; x < small.cols; ++x) d[x] = std::max(0.f, std::min({row[x][0], row[x][1], row[x][2]}));
     }
-    cv::erode(dark, dark, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(DarkWindow, DarkWindow)));
-    cv::GaussianBlur(dark, dark, cv::Size(0, 0), HazeSigma, HazeSigma, cv::BORDER_REFLECT);
+    cv::erode(dark, dark, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(int(DarkWindow * scale) + 1, int(DarkWindow * scale) + 1)));
+    cv::GaussianBlur(dark, dark, cv::Size(0, 0), HazeSigma * scale, HazeSigma * scale, cv::BORDER_REFLECT);
     cv::Mat haze;
     cv::resize(dark, haze, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
     cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
