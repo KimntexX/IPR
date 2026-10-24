@@ -71,7 +71,7 @@ int main()
     }
     {
         auto image = mosaic(w, h, Rggb, gradient);
-        Demosaic::interpolate(raw(image), w, h, Rggb, Demosaic::ChromaMedian::Everywhere);
+        Demosaic::interpolate(raw(image), w, h, Rggb, Demosaic::ChromaMedian::FlatOnly);
         if (!check(maxError(image, w, h, gradient, 8) < 0.002, "a smooth gradient stays within 0.2 %")) return 1;
     }
     {

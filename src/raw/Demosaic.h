@@ -19,14 +19,13 @@ using Pattern = std::array<std::array<int, 2>, 2>;
 // One pixel of LibRaw's image: four 16-bit channels.
 using Pixel = std::uint16_t[4];
 
-// 3x3 median on R - G and B - G after the interpolation: off, everywhere, or only
-// where the luminance is flat at the scale of the tile's noise (colour detail of
-// hair and textures kept).
-enum class ChromaMedian { Off, Everywhere, FlatOnly };
+// 3x3 median on R - G and B - G after the interpolation, off or only where the
+// luminance is flat at the scale of the tile's noise: flat colour noise falls
+// below Lightroom's while hair and textures keep their colour detail.
+enum class ChromaMedian { Off, FlatOnly };
 
-// Median of the opening: one pass at every ISO brings the colour noise of the
-// neutral below Lightroom's (0.6 to 1.1 times on 65 scenes).
-constexpr ChromaMedian OpeningMedian = ChromaMedian::Everywhere;
+// Median of the opening, at every ISO.
+constexpr ChromaMedian OpeningMedian = ChromaMedian::FlatOnly;
 
 // Worker threads: the host's, one left for the interface, at most 8 (the
 // demosaic and denoise studies gain nothing beyond).

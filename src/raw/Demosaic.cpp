@@ -163,20 +163,17 @@ cv::Mat flatWeight(const cv::Mat &luma)
     return cv::min(cv::max(weight, 0.f), 1.f);
 }
 
-// One 3x3 median on R - G and B - G, green unchanged; optionally only where the
-// luminance is flat.
-void chromaMedian(cv::Mat &rgb, ChromaMedian mode)
+// One 3x3 median on R - G and B - G where the luminance is flat, green unchanged.
+void flatChromaMedian(cv::Mat &rgb)
 {
     std::vector<cv::Mat> c;
     cv::split(rgb, c);
-    cv::Mat weight;
-    if (mode == ChromaMedian::FlatOnly) weight = flatWeight(0.25f * (c[0] + 2.f * c[1] + c[2]));
+    const cv::Mat weight = flatWeight(0.25f * (c[0] + 2.f * c[1] + c[2]));
     for (int k : {0, 2}) {
         const cv::Mat diff = c[size_t(k)] - c[1];
         cv::Mat median;
         cv::medianBlur(diff, median, 3);   // not in place
-        const cv::Mat result = mode == ChromaMedian::FlatOnly ? cv::Mat(median.mul(weight) + diff.mul(1.f - weight)) : median;
-        c[size_t(k)] = cv::max(result + c[1], 0.f);
+        c[size_t(k)] = cv::max(median.mul(weight) + diff.mul(1.f - weight) + c[1], 0.f);
     }
     cv::merge(c, rgb);
 }
@@ -208,7 +205,7 @@ bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
         // real neighbours where they exist, mirrored with the same parity at the border
         cv::copyMakeBorder(cfa(core), padded, TileMargin, TileMargin, TileMargin, TileMargin, cv::BORDER_REFLECT_101);
         cv::Mat rgb = rcd(padded, pattern);
-        if (median != ChromaMedian::Off) chromaMedian(rgb, median);
+        if (median == ChromaMedian::FlatOnly) flatChromaMedian(rgb);
         for (int y = 0; y < core.height; ++y) {
             const auto *s = rgb.ptr<cv::Vec3f>(y + TileMargin) + TileMargin;
             for (int x = 0; x < core.width; ++x) {

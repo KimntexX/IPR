@@ -80,7 +80,6 @@ const std::vector<Variant> &variants()
         {"AAHD", 12},
         {"OpenCV-EA", 0, 0, 0, 0, 0, Variant::Ours::OpenCvEdgeAware},
         {"RCD", 0, 0, 0, 0, 0, Variant::Ours::Rcd},
-        {"RCD-median1", 0, 0, 0, 0, 0, Variant::Ours::Rcd, Demosaic::ChromaMedian::Everywhere},
         {"RCD-median-flat", 0, 0, 0, 0, 0, Variant::Ours::Rcd, Demosaic::ChromaMedian::FlatOnly},
     };
     return list;
