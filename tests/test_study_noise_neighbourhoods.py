@@ -1,8 +1,9 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
-from study_noise_neighbourhoods import main, sources
+from study_noise_neighbourhoods import main, pair_jobs, sources
 
 
 class NeighbourhoodStudyTests(unittest.TestCase):
@@ -41,6 +42,28 @@ class NeighbourhoodStudyTests(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 main(["--data-version", "1", "--probe", str(Path(directory) / "missing.exe"), "--output-dir", str(out)])
             self.assertFalse(out.exists())
+
+    def test_e_only_is_rejected_for_pair_calibration(self):
+        with self.assertRaises(SystemExit) as error:
+            main(['--data-version', '2', '--pairs-from', 'unused.json', '--candidate-e-only'])
+        self.assertEqual(error.exception.code, 2)
+
+    def test_requested_workers_are_bounded_by_available_memory(self):
+        with patch('study_noise_neighbourhoods.available_memory', return_value=8 * 1024 ** 3):
+            self.assertEqual(pair_jobs(4, 61), 1)
+        with patch('study_noise_neighbourhoods.available_memory', return_value=None):
+            self.assertEqual(pair_jobs(4, 61), 1)
+
+    def test_profile_study_is_rejected_for_pairs(self):
+        with self.assertRaises(SystemExit) as error:
+            main(['--data-version','11','--pairs-from','unused.json','--profile-study'])
+        self.assertEqual(error.exception.code,2)
+
+    def test_photographic_scopes_are_exclusive(self):
+        for scope in ('--candidate-e-only','--impulse-study'):
+            with self.assertRaises(SystemExit) as error:
+                main(['--data-version','11','--profile-study',scope])
+            self.assertEqual(error.exception.code,2)
 
 
 if __name__ == "__main__":

@@ -6,6 +6,8 @@
 //   noiseNeighbourhoodProbe OUTPUT.json CROPS_DIR RAW...
 #include "DetailProcessing.h"
 #include "NoiseEstimation.h"
+#include "noise_impulse_filter.h"
+#include "noise_spectral_signature.h"
 #include "TestRecipes.h"
 #include "WorkingColorSpace.h"
 
@@ -31,6 +33,7 @@
 #include <functional>
 #include <map>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -342,6 +345,10 @@ QJsonObject measure(const Planes &in, const Planes &out, const cv::Rect &inner)
     const cv::Mat removed = cv::abs(in.y - out.y);
     const double meanYi = meanOf(yi);
     return {
+        {"luma_hh_input_sigma", hhYi}, {"luma_hh_output_sigma", hhYo},
+        {"chroma_hh_input_sigma", hhCi}, {"chroma_hh_output_sigma", hhCo},
+        {"luma_midband_input_sigma", madSigma(bpYi)}, {"luma_midband_output_sigma", madSigma(bpYo)},
+        {"chroma_midband_input_sigma", midCi}, {"chroma_midband_output_sigma", midCo},
         {"luma_hh_ratio", hhYi > 0 ? hhYo / hhYi : 1.0},
         {"chroma_hh_ratio", hhCi > 0 ? hhCo / hhCi : 1.0},
         {"luma_midband_ratio", madSigma(bpYi) > 0 ? madSigma(bpYo) / madSigma(bpYi) : 1.0},
@@ -355,7 +362,7 @@ QJsonObject measure(const Planes &in, const Planes &out, const cv::Rect &inner)
 }
 
 // ---------------------------------------------------------------- zones and crops
-std::vector<Zone> selectZones(const Planes &full, const NoiseEstimation::Result &model)
+std::vector<Zone> selectZones(const Planes &full, const NoiseEstimation::Result &model, bool includeBrightFeatures)
 {
     cv::Mat smooth, gx, gy, gradient;
     cv::GaussianBlur(full.y, smooth, cv::Size(0, 0), 2.0, 2.0, cv::BORDER_REFLECT);
@@ -373,7 +380,6 @@ std::vector<Zone> selectZones(const Planes &full, const NoiseEstimation::Result 
             candidates.push_back({"", r, meanY, meanOf(gradient(r)) / sigma});
         }
     }
-    (void)span;
     std::sort(candidates.begin(), candidates.end(), [](const Zone &a, const Zone &b) { return a.structure < b.structure; });
     std::vector<Zone> chosen;
     const auto overlaps = [&](const cv::Rect &r) {
@@ -392,6 +398,24 @@ std::vector<Zone> selectZones(const Planes &full, const NoiseEstimation::Result 
     take("dark", 2, [](const Zone &z) { return z.meanY < 0.02; }, false);
     take("flat", 4, [](const Zone &z) { return z.meanY >= 0.02; }, false);
     take("detail", 4, [](const Zone &z) { return z.meanY >= 0.01; }, true);
+    // The ordinary grid excludes very dark skies. Add explicit bright-feature
+    // crops there: these are candidates, not certified stars or ground truth.
+    if (includeBrightFeatures && meanOf(full.y) < .02 && full.y.cols >= span && full.y.rows >= span) {
+        cv::Mat search = full.y.clone();
+        for (int i=0;i<2;++i) {
+            double maximum=0;
+            cv::Point point;
+            cv::minMaxLoc(search,nullptr,&maximum,nullptr,&point);
+            if (maximum < .002) break;
+            const int x=std::clamp(point.x-Inner/2,Margin,full.y.cols-Inner-Margin);
+            const int y=std::clamp(point.y-Inner/2,Margin,full.y.rows-Inner-Margin);
+            const cv::Rect r(x,y,Inner,Inner);
+            const double meanY=meanOf(full.y(r));
+            const double sigma=std::max(1e-6,double(NoiseEstimation::sigma(model.planes[0],float(meanY))));
+            chosen.push_back({"bright-feature",r,meanY,meanOf(gradient(r))/sigma});
+            search(r).setTo(-1);
+        }
+    }
     return chosen;
 }
 
@@ -530,16 +554,22 @@ struct NoiseProfile {
     }
 };
 
-// Spectral signature of the developed noise, measured on 61 exposure-matched pairs
-// (etude-bruit-paires-developpe-v001): band sigma / Haar HH sigma, stable from ISO 100
-// to 51200 on the R6 Mark III. Index: haar, fine, mid, coarse, pixel.
-constexpr std::array<double, 5> LumaSpectrum{1.0, 1.17, 0.52, 0.135, 1.5};
-constexpr std::array<double, 5> ChromaSpectrum{1.0, 1.43, 1.57, 0.54, 2.8};
+// RCD/FlatOnly developed-noise signature: matched pair/bin medians after excluding
+// mean exposure drift > 2%, 153 brightness-bin observations on R6 Mark III.
+// Source: synthese-bruit-rcd-v001-20261024T144750Z.json. These experimental
+// coefficients are not sensor constants or validation on other camera models.
+// Plane order: Y, Co, Cg; band order: Haar HH, fine, mid, coarse, pixel.
+constexpr std::array<std::array<double, 5>, 3> Spectra{{
+    {1.0, 1.144, 0.614, 0.156, 1.586},
+    {1.0, 1.301, 2.095, 0.947, 3.455},
+    {1.0, 1.406, 2.740, 1.251, 4.418}
+}};
+constexpr std::array<double, 3> ProfileBias{0.933, 0.874, 0.861};
 
 // Blind profile: only the Haar HH level is estimated on the image (q25 of the tile
 // noise divided by its bias, the band least affected by texture); the other bands
 // follow from the spectral signature.
-NoiseProfile profileFrom(const Planes &planes, double bias)
+NoiseProfile profileFrom(const Planes &planes)
 {
     std::vector<int> tileBins;
     for (int y = 0; y + Tile <= planes.y.rows; y += Tile)
@@ -557,7 +587,7 @@ NoiseProfile profileFrom(const Planes &planes, double bias)
         std::array<bool, BinCount> valid{};
         for (int bi = 0; bi < BinCount; ++bi)
             if (values[size_t(bi)].size() >= 8) {
-                haar[size_t(bi)] = quantileOf(values[size_t(bi)], 0.25) / bias;
+                haar[size_t(bi)] = quantileOf(values[size_t(bi)], 0.25) / ProfileBias[size_t(c)];
                 valid[size_t(bi)] = true;
             }
         for (int bi = 0; bi < BinCount; ++bi) {
@@ -567,11 +597,91 @@ NoiseProfile profileFrom(const Planes &planes, double bias)
                 if (bi + d < BinCount && valid[size_t(bi + d)]) { haar[size_t(bi)] = haar[size_t(bi + d)]; break; }
             }
         }
-        const auto &spectrum = c == 0 ? LumaSpectrum : ChromaSpectrum;
+        const auto &spectrum = Spectra[size_t(c)];
         for (int k = 0; k < 5; ++k)
             for (int bi = 0; bi < BinCount; ++bi) profile.sigma[size_t(c)][size_t(k)][size_t(bi)] = haar[size_t(bi)] * spectrum[size_t(k)];
     }
     return profile;
+}
+
+// G study: support is an auditable heuristic, never a calibrated probability.
+// No nearest-bin fill: interpolate measured support, fading toward missing bins.
+struct ProfileSupport {
+    std::array<std::array<bool, BinCount>, 3> valid{};
+    QJsonArray bins;
+    double at(int c, double y) const
+    {
+        if (!std::isfinite(y) || y < 1e-4 || y >= 1.) return 0.;
+        const double pos = std::clamp((std::log10(y)+4.)*4.-.5, 0., double(BinCount-1));
+        const int i = std::min(int(pos), BinCount-2);
+        const double t=pos-i;
+        return (valid[size_t(c)][size_t(i)]?1.-t:0.)+(valid[size_t(c)][size_t(i+1)]?t:0.);
+    }
+};
+
+ProfileSupport supportFrom(const Planes &planes)
+{
+    ProfileSupport out;
+    cv::Mat smooth, dx, dy, gradient;
+    cv::GaussianBlur(planes.y, smooth, cv::Size(0,0), 2., 2., cv::BORDER_REFLECT);
+    cv::Sobel(smooth, dx, CV_32F, 1, 0, 3, 1./8.);
+    cv::Sobel(smooth, dy, CV_32F, 0, 1, 3, 1./8.);
+    cv::magnitude(dx,dy,gradient);
+    std::array<int,BinCount> total{}, eligible{};
+    std::array<std::array<std::vector<double>,BinCount>,3> values;
+    for (int y=0;y+Tile<=planes.y.rows;y+=Tile)
+        for (int x=0;x+Tile<=planes.y.cols;x+=Tile) {
+            const cv::Rect r(x,y,Tile,Tile);
+            const int b=yBin(meanOf(planes.y(r)));
+            if (b<0) continue;
+            ++total[size_t(b)];
+            const double sigma=NoiseEstimation::haarSigma(planes.y(r));
+            // A zero/quantised HH estimate is not proof of a noiseless scene.
+            const double clipped=double(cv::countNonZero((planes.y(r)<=0.) | (planes.y(r)>=1.)))/r.area();
+            if (!std::isfinite(sigma) || sigma<=1e-7 || clipped>.01 || meanOf(gradient(r))>sigma) continue;
+            ++eligible[size_t(b)];
+            for (int c=0;c<3;++c)
+                values[size_t(c)][size_t(b)].push_back(NoiseEstimation::haarSigma((*planes.all()[size_t(c)])(r)));
+        }
+    for (int b=0;b<BinCount;++b) {
+        QJsonArray channels;
+        for (int c=0;c<3;++c) {
+            const auto &v=values[size_t(c)][size_t(b)];
+            const double q25=v.empty()?0.:quantileOf(v,.25), q75=v.empty()?0.:quantileOf(v,.75);
+            const bool valid=v.size()>=16 && std::isfinite(q25) && std::isfinite(q75) && q25>1e-7 && q75<=2.*q25;
+            out.valid[size_t(c)][size_t(b)]=valid;
+            channels.append(QJsonObject{{"q25_hh",q25},{"q75_hh",q75},{"supported",valid}});
+        }
+        out.bins.append(QJsonObject{{"bin",b},{"tiles",total[size_t(b)]},{"eligible_tiles",eligible[size_t(b)]},{"planes_y_co_cg",channels}});
+    }
+    return out;
+}
+
+struct GResult { Planes out; std::array<double,3> meanWeight{}; };
+GResult gateEstimate(const Planes &in, const Planes &estimate, const NoiseProfile &profile,
+                     const ProfileSupport &support, bool protectStructure)
+{
+    cv::Mat level, smooth, dx, dy, grad;
+    cv::GaussianBlur(in.y,level,cv::Size(0,0),4.,4.,cv::BORDER_REFLECT);
+    cv::GaussianBlur(in.y,smooth,cv::Size(0,0),2.,2.,cv::BORDER_REFLECT);
+    cv::Sobel(smooth,dx,CV_32F,1,0,3,1./8.);
+    cv::Sobel(smooth,dy,CV_32F,0,1,3,1./8.);
+    cv::magnitude(dx,dy,grad);
+    GResult result{{in.y.clone(),in.co.clone(),in.cg.clone()},{}};
+    for (int y=0;y<in.y.rows;++y) for (int x=0;x<in.y.cols;++x) {
+        const double value=level.at<float>(y,x);
+        const double sigma=profile.at(0,0,value);
+        const double ratio=grad.at<float>(y,x)/std::max(sigma,1e-7);
+        const double spatial=protectStructure?1./(1.+std::pow(ratio,4.)):1.;
+        for (int c=0;c<3;++c) {
+            const double w=support.at(c,value)*spatial;
+            const float original=in.all()[size_t(c)]->at<float>(y,x);
+            result.out.all()[size_t(c)]->at<float>(y,x)=w==0.?original:
+                float(original+w*(estimate.all()[size_t(c)]->at<float>(y,x)-original));
+            result.meanWeight[size_t(c)]+=w/double(in.y.total());
+        }
+    }
+    return result;
 }
 
 // Local Wiener shrinkage of a band: gain max(0, 1 - alpha sigma^2 / local energy).
@@ -680,7 +790,7 @@ Planes candidateE(const Input &in, const NoiseProfile &profile, const CandidateE
         cv::resize(plane, areaHalf, cv::Size(), 0.5, 0.5, cv::INTER_AREA);
         cv::resize(areaHalf, upLow, plane.size(), 0, 0, cv::INTER_LINEAR);
         const double eps = std::pow(profile.at(0, 4, meanOf(in.planes.y)), 2) * 4.0;
-        const cv::Mat smoothChroma = guided(guideY, up, 3, eps);
+        const cv::Mat smoothChroma = guided(guideY, up, 3, std::max(eps,1e-12));
         const cv::Mat fineResidual = plane - upLow;
         cv::Mat denoised = smoothChroma + wiener(fineResidual, sigmaOf(profile, c, 1, level), k.chromaFineAlpha, 2);
         // The median and the block weights bias the skewed chroma noise near black:
@@ -693,6 +803,64 @@ Planes candidateE(const Input &in, const NoiseProfile &profile, const CandidateE
     return out;
 }
 
+
+QJsonArray profileControls()
+{
+    ProfileSupport empty;
+    require(empty.at(0,.25)==0. && empty.at(0,-1.)==0. &&
+        empty.at(0,std::numeric_limits<double>::quiet_NaN())==0.,"invalid unsupported lookup");
+    ProfileSupport isolated;
+    isolated.valid[0][5]=true;
+    require(std::abs(isolated.at(0,std::pow(10.,5.5/4.-4.))-1.)<1e-12 &&
+        std::abs(isolated.at(0,std::pow(10.,6./4.-4.))-.5)<1e-12 &&
+        isolated.at(1,.25)==0.,"invalid support interpolation");
+    QJsonArray records;
+    for (const QString &scene : {QStringLiteral("flat"),QStringLiteral("edge"),QStringLiteral("single-point"),
+                                 QStringLiteral("star"),QStringLiteral("texture"),QStringLiteral("ramp")})
+        for (int seed : {733,947}) for (double sigma : {0.,.01}) {
+            Planes clean{cv::Mat(256,256,CV_32F),cv::Mat(256,256,CV_32F),cv::Mat(256,256,CV_32F)};
+            for (int y=0;y<256;++y) for (int x=0;x<256;++x) {
+                double v=.25;
+                if (scene=="edge") v=x>128?.7:.15;
+                if (scene=="single-point" && x==128 && y==128) v=.8;
+                if (scene=="star") v+=.55*std::exp(-((x-128.)*(x-128.)+(y-128.)*(y-128.))/(2.*.7*.7));
+                if (scene=="texture") v+=.07*std::sin(x*.9)*std::cos(y*.7);
+                if (scene=="ramp") v=.02+.9*x/255.;
+                clean.y.at<float>(y,x)=float(v);
+                clean.co.at<float>(y,x)=float(.2*(v-.25));
+                clean.cg.at<float>(y,x)=float(-.1*(v-.25));
+            }
+            Input input;
+            input.planes={clean.y.clone(),clean.co.clone(),clean.cg.clone()};
+            cv::RNG rng(seed);
+            if (sigma>0.) for (int c=0;c<3;++c) {
+                cv::Mat noise(256,256,CV_32F);
+                rng.fill(noise,cv::RNG::NORMAL,0.,sigma);
+                *input.planes.all()[size_t(c)]+=noise;
+            }
+            const auto profile=profileFrom(input.planes);
+            const auto support=supportFrom(input.planes);
+            const auto estimate=candidateE(input,profile,{1.,1.,2.});
+            for (bool structure : {false,true}) {
+                const auto gated=gateEstimate(input.planes,estimate,profile,support,structure);
+                QJsonArray mse, inputMse, maxChange, weights;
+                for (int c=0;c<3;++c) {
+                    const cv::Mat d=*gated.out.all()[size_t(c)]-*clean.all()[size_t(c)];
+                    const cv::Mat n=*input.planes.all()[size_t(c)]-*clean.all()[size_t(c)];
+                    double change=0.;
+                    cv::minMaxLoc(cv::abs(*gated.out.all()[size_t(c)]-*input.planes.all()[size_t(c)]),nullptr,&change);
+                    require(cv::checkRange(*gated.out.all()[size_t(c)]),"non-finite G control");
+                    if (sigma==0. && scene!="texture") require(change==0.,"G modified an unsupported clean control");
+                    mse.append(meanOf(d.mul(d))); inputMse.append(meanOf(n.mul(n))); maxChange.append(change);
+                    weights.append(gated.meanWeight[size_t(c)]);
+                }
+                records.append(QJsonObject{{"scene",scene},{"seed",seed},{"sigma",sigma},
+                    {"variant",structure?"G-structure":"G-support"},{"mse_y_co_cg",mse},
+                    {"input_mse_y_co_cg",inputMse},{"max_change_y_co_cg",maxChange},{"mean_weight_y_co_cg",weights}});
+            }
+        }
+    return records;
+}
 
 // Tiled E: independent 512x512 tiles with a 64-pixel margin (G16 support, guided
 // filter, half-resolution search), processed in parallel; memory stays bounded by
@@ -804,14 +972,122 @@ QJsonObject pairTruth(const QString &rawA, const QString &rawB)
             {"tile", Tile}, {"quiet_rule", "M gradient (Gaussian 2) < 3 Haar sigma of D(Y) in the tile"},
             {"bins", bins}};
 }
+
+QJsonObject spectralPair(const QString &rawA,const QString &rawB,bool inject=false)
+{
+    const cv::Mat a=renderMaster(rawA),b=renderMaster(rawB);
+    require(a.size()==b.size(),"spectral pair geometry differs");
+    const Planes pa=split(a),pb=split(b);
+    Planes difference;
+    for (int c=0;c<3;++c) *difference.all()[size_t(c)]=(*pa.all()[size_t(c)]-*pb.all()[size_t(c)])/std::sqrt(2.);
+    const cv::Mat meanY=(pa.y+pb.y)*.5;
+    const double drift=(meanOf(pa.y)-meanOf(pb.y))/std::max(meanOf(pa.y),1e-12);
+    require(std::isfinite(drift) && std::abs(drift)<=.02,"spectral pair exposure drift exceeds 2%");
+    cv::Mat smooth,dx,dy,gradient;
+    cv::GaussianBlur(meanY,smooth,cv::Size(0,0),2.,2.,cv::BORDER_REFLECT);
+    cv::Sobel(smooth,dx,CV_32F,1,0,3,1./8.);cv::Sobel(smooth,dy,CV_32F,0,1,3,1./8.);cv::magnitude(dx,dy,gradient);
+    std::array<std::vector<cv::Rect>,BinCount> candidates;
+    for (int y=0;y+Tile<=a.rows;y+=Tile) for (int x=0;x+Tile<=a.cols;x+=Tile) {
+        const cv::Rect r(x,y,Tile,Tile);const int bin=yBin(meanOf(meanY(r)));
+        if (bin<0) continue;
+        const double sigma=NoiseEstimation::haarSigma(difference.y(r));
+        if (sigma>1e-7 && meanOf(gradient(r))<3.*sigma) candidates[size_t(bin)].push_back(r);
+    }
+    QJsonArray records,binCounts,injections;
+    for (int bin=0;bin<BinCount;++bin) {
+        const auto &v=candidates[size_t(bin)];
+        const int count=std::min(32,int(v.size()));
+        binCounts.append(QJsonObject{{"bin",bin},{"eligible",int(v.size())},{"sampled",count}});
+        for (int i=0;i<count;++i) {
+            const cv::Rect r=v[size_t(i)*v.size()/size_t(count)];
+            if (inject && (i==0 || i==count/2)) for (int c=0;c<3;++c) {
+                for (const auto &record:NoiseSpectralStudy::injectedControls((*difference.all()[size_t(c)])(r))) {
+                    auto item=record.toObject();item.insert("plane",c);item.insert("bin",bin);
+                    item.insert("rect",QJsonArray{r.x,r.y,r.width,r.height});
+                    injections.append(item);
+                }
+            }
+            for (int c=0;c<3;++c) for (bool single : {false,true})
+                records.append(QJsonObject{{"bin",bin},{"plane",c},{"rect",QJsonArray{r.x,r.y,r.width,r.height}},
+                    {"kind",single?"single-a":"pair-difference"},{"mean_y",meanOf(meanY(r))},
+                    {"signature",NoiseSpectralStudy::signature((*((single?pa:difference).all()[size_t(c)]))(r))}});
+        }
+    }
+    return {{"a",QFileInfo(rawA).fileName()},{"b",QFileInfo(rawB).fileName()},
+        {"a_sha256",sha256(rawA)},{"b_sha256",sha256(rawB)},{"mean_y_drift",drift},
+        {"sampling","32 evenly spaced eligible grid tiles per Y bin, gradient G2(M)<3 HH(DY), D=(A-B)/sqrt(2)"},
+        {"bin_counts",binCounts},{"tiles",records},{"injections",injections}};
+}
+
+QJsonObject spectralScene(const QString &raw)
+{
+    const auto loaded=TestRecipes::load(raw);
+    const auto working=ImageEditor::renderLinear(loaded.image,TestRecipes::neutral(loaded));
+    require(!working.isNull(),"spectral scene render failed");
+    cv::Mat rgb;cv::cvtColor(working.linearRgba,rgb,cv::COLOR_RGBA2RGB);
+    const Planes planes=split(rgb);
+    const auto model=NoiseEstimation::estimate(planes.y,planes.co,planes.cg);
+    require(model.valid,"spectral scene has no valid zone-selection model");
+    QJsonArray records;
+    for (const auto &zone:selectZones(planes,model,true))
+        for (int yy=0;yy<Inner;yy+=64) for (int xx=0;xx<Inner;xx+=64) {
+            const cv::Rect r(zone.inner.x+xx,zone.inner.y+yy,Tile,Tile);
+            for (int c=0;c<3;++c) records.append(QJsonObject{
+                {"zone_kind",QString::fromStdString(zone.kind)},{"plane",c},{"bin",yBin(meanOf(planes.y(r)))},
+                {"mean_y",meanOf(planes.y(r))},{"rect",QJsonArray{r.x,r.y,r.width,r.height}},
+                {"signature",NoiseSpectralStudy::signature((*planes.all()[size_t(c)])(r))}});
+        }
+    return {{"raw",QFileInfo(raw).fileName()},{"raw_sha256",sha256(raw)},
+        {"camera",loaded.metadata.cameraModel},{"iso",loaded.metadata.iso},{"tiles",records}};
+}
 }
 
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
     // Unicode arguments (paths such as colorimétrie); argv is the ANSI code page on Windows.
-    const QStringList arguments = QCoreApplication::arguments();
+    QStringList arguments = QCoreApplication::arguments();
+    const bool impulseStudy = arguments.size() > 1 && arguments.at(1) == QStringLiteral("--impulse-study");
+    const bool profileStudy = arguments.size() > 1 && arguments.at(1) == QStringLiteral("--profile-study");
+    const bool eOnly = profileStudy || impulseStudy || (arguments.size() > 1 && arguments.at(1) == QStringLiteral("--e-only"));
+    if (eOnly) {
+        arguments.removeAt(1);
+        --argc;
+    }
     try {
+        if (argc>=4 && (arguments.at(1)=="--spectral-pairs" || arguments.at(1)=="--spectral-scenes" || arguments.at(1)=="--spectral-injection")) {
+            const bool pairs=arguments.at(1)!="--spectral-scenes";
+            require(!pairs || (argc-3)%2==0,"spectral pair list must have even length");
+            require(!QFileInfo::exists(arguments.at(2)),"spectral output exists");
+            QJsonArray records;
+            for (int i=3;i<argc;i+=pairs?2:1) {
+                records.append(pairs?spectralPair(arguments.at(i),arguments.at(i+1),arguments.at(1)=="--spectral-injection"):spectralScene(arguments.at(i)));
+                std::cout<<arguments.at(i).toStdString()<<std::endl;
+            }
+            const QJsonObject root{{pairs?"pairs":"scenes",records},{"controls",NoiseSpectralStudy::controls()},
+                {"units","dimensionless descriptors on 32x32 float linear Rec.2020 Y/Co/Cg; synthetic single-plane controls"},
+                {"feature_definition","Haar LH/HL/HH energy ratios; HH lag1 Pearson x/y; G1/G4 band energy ratios; Hann-windowed DFT excluding radius<=2, flatness geometric/mean power with relative 1e-12 floor, top8 power fraction"}};
+            QFile file(arguments.at(2));require(file.open(QIODevice::WriteOnly|QIODevice::NewOnly),"cannot create spectral output");
+            file.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
+            return 0;
+        }
+        if (argc==3 && arguments.at(1)==QStringLiteral("--profile-controls")) {
+            QFile file(arguments.at(2));
+            require(file.open(QIODevice::WriteOnly|QIODevice::NewOnly),"cannot create profile controls output");
+            const QJsonObject root{{"study","experimental profile-support controls"},{"cases",profileControls()}};
+            file.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
+            return 0;
+        }
+        if (argc == 3 && arguments.at(1) == QStringLiteral("--impulse-controls")) {
+            QFile file(arguments.at(2));
+            require(file.open(QIODevice::WriteOnly | QIODevice::NewOnly), "cannot create control output");
+            const QJsonObject root{{"study", "direction-supported impulse correction; experimental only"},
+                {"measured_at_utc", QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
+                {"limitations", "known synthetic sigma; independent Gaussian plus impulsive corruption, not RAW truth"},
+                {"cases", NoiseImpulseStudy::syntheticControls()}};
+            file.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
+            return 0;
+        }
         if (argc >= 2 && arguments.at(1) == QStringLiteral("--pairs")) {
             require(argc >= 5 && (argc - 3) % 2 == 0, "usage: noiseNeighbourhoodProbe --pairs OUTPUT.json A1 B1 [A2 B2 ...]");
             const QString output = arguments.at(2);
@@ -857,12 +1133,14 @@ int main(int argc, char **argv)
                 productionResults.emplace_back(name, split(denoised));
             }
 
-            const auto zones = selectZones(full, model);
+            const auto zones = selectZones(full, model, impulseStudy || profileStudy);
             // Blind scale-aware profile for candidate E; bias of q25 measured on the pair truth.
-            constexpr double ProfileBias = 0.87;
             const auto profileStart = Clock::now();
-            const NoiseProfile profile = profileFrom(full, ProfileBias);
+            const NoiseProfile profile = profileFrom(full);
             const double profileMs = std::chrono::duration<double, std::milli>(Clock::now() - profileStart).count();
+            const auto supportStart=Clock::now();
+            const ProfileSupport support=profileStudy?supportFrom(full):ProfileSupport{};
+            const double supportMs=std::chrono::duration<double,std::milli>(Clock::now()-supportStart).count();
             // Developed noise is spatially correlated: the model fits the finest (Haar)
             // scale, the per-pixel deviation of flat zones is larger. Measure the factor
             // per plane on the flat and dark zones, on the residual after a wide blur
@@ -920,37 +1198,76 @@ int main(int argc, char **argv)
                     variantMs[name] += std::chrono::duration<double, std::milli>(Clock::now() - t0).count();
                     return value;
                 };
-                for (float kappa : {0.5f, 1.5f, 3.0f}) {
-                    const QString name = QStringLiteral("A-kappa-%1").arg(double(kappa));
-                    const auto r = timed(name, [&] { return adaptive(in, kappa); });
-                    results.push_back({{name, "A", {{"kappa", double(kappa)}, {"radii", "3,5,9,17"}}}, r.out});
+                if (!eOnly) {
+                    for (float kappa : {0.5f, 1.5f, 3.0f}) {
+                        const QString name = QStringLiteral("A-kappa-%1").arg(double(kappa));
+                        const auto r = timed(name, [&] { return adaptive(in, kappa); });
+                        results.push_back({{name, "A", {{"kappa", double(kappa)}, {"radii", "3,5,9,17"}}}, r.out});
+                    }
+                    const AdaptiveResult guide = adaptive(in, 1.5f);
+                    BlockResult cForFusion;
+                    for (float h2 : {0.5f, 1.0f, 2.0f}) {
+                        const QString nameB = QStringLiteral("B-h2-%1").arg(double(h2));
+                        const auto b = timed(nameB, [&] { return blocks(in, h2, nullptr); });
+                        results.push_back({{nameB, "B", {{"h2", double(h2)}, {"patch", 5}, {"search", 17}}}, b.out});
+                        const QString nameC = QStringLiteral("C-h2-%1").arg(double(h2));
+                        const auto c = timed(nameC, [&] { return blocks(in, h2, &guide.radiusIndex); });
+                        results.push_back({{nameC, "C", {{"h2", double(h2)}, {"kappa", 1.5}, {"patch", 5}, {"search", 17}}}, c.out});
+                        if (h2 == 1.0f) cForFusion = c;
+                    }
+                    // A copy (shared pixel data): results keeps growing, a reference would dangle.
+                    const Planes production100 = results[1].second;
+                    results.push_back({{"D-confidence", "D", {{"from", "C-h2-1"}, {"n0", 4}, {"tau", 2}, {"weights", "neff, 0.7 production, 0.3 median"}}},
+                                       timed("D-confidence", [&] { return fuse(in, cForFusion.out, cForFusion.effectiveNeighbours, production100, true); })});
+                    results.push_back({{"D-fixed", "D", {{"from", "C-h2-1"}, {"weights", "1/3 each, no fallback"}}},
+                                       timed("D-fixed", [&] { return fuse(in, cForFusion.out, cForFusion.effectiveNeighbours, production100, false); })});
+                    results.push_back({{"D-robust", "D", {{"from", "C-h2-1"}, {"n0", 4}, {"weights", "neff, 0.7 median, 0.3 production"}}},
+                                       timed("D-robust", [&] { return fuseRobust(in, cForFusion.out, cForFusion.effectiveNeighbours, production100); })});
                 }
-                const AdaptiveResult guide = adaptive(in, 1.5f);
-                BlockResult cForFusion;
-                for (float h2 : {0.5f, 1.0f, 2.0f}) {
-                    const QString nameB = QStringLiteral("B-h2-%1").arg(double(h2));
-                    const auto b = timed(nameB, [&] { return blocks(in, h2, nullptr); });
-                    results.push_back({{nameB, "B", {{"h2", double(h2)}, {"patch", 5}, {"search", 17}}}, b.out});
-                    const QString nameC = QStringLiteral("C-h2-%1").arg(double(h2));
-                    const auto c = timed(nameC, [&] { return blocks(in, h2, &guide.radiusIndex); });
-                    results.push_back({{nameC, "C", {{"h2", double(h2)}, {"kappa", 1.5}, {"patch", 5}, {"search", 17}}}, c.out});
-                    if (h2 == 1.0f) cForFusion = c;
-                }
-                // A copy (shared pixel data): results keeps growing, a reference would dangle.
-                const Planes production100 = results[1].second;
-                results.push_back({{"D-confidence", "D", {{"from", "C-h2-1"}, {"n0", 4}, {"tau", 2}, {"weights", "neff, 0.7 production, 0.3 median"}}},
-                                   timed("D-confidence", [&] { return fuse(in, cForFusion.out, cForFusion.effectiveNeighbours, production100, true); })});
-                results.push_back({{"D-fixed", "D", {{"from", "C-h2-1"}, {"weights", "1/3 each, no fallback"}}},
-                                   timed("D-fixed", [&] { return fuse(in, cForFusion.out, cForFusion.effectiveNeighbours, production100, false); })});
                 for (const CandidateE &k : {CandidateE{1.0, 1.0, 2.0}, CandidateE{2.0, 1.0, 3.0}, CandidateE{2.0, 2.0, 4.0}}) {
                     const QString name = QStringLiteral("E-l%1-c%2-f%3").arg(k.lumaAlpha).arg(k.chromaH2).arg(k.chromaFineAlpha);
                     results.push_back({{name, "E", {{"luma_wiener_alpha", k.lumaAlpha}, {"chroma_h2", k.chromaH2},
-                                                     {"chroma_fine_alpha", k.chromaFineAlpha}, {"profile_bias", ProfileBias},
+                                                     {"chroma_fine_alpha", k.chromaFineAlpha},
+                                                     {"profile_bias_y_co_cg", QJsonArray{ProfileBias[0], ProfileBias[1], ProfileBias[2]}},
                                                      {"chroma", "half-res median 3 + joint blocks 3x3 in 9x9, guided upsampling r3"}}},
                                        timed(name, [&] { return candidateE(in, profile, k); })});
                 }
-                results.push_back({{"D-robust", "D", {{"from", "C-h2-1"}, {"n0", 4}, {"weights", "neff, 0.7 median, 0.3 production"}}},
-                                   timed("D-robust", [&] { return fuseRobust(in, cForFusion.out, cForFusion.effectiveNeighbours, production100); })});
+                if (profileStudy) {
+                    // E's default estimate is computed once above; only the gate is timed here.
+                    const Planes estimate=results[2].second;
+                    for (bool structure : {false,true}) {
+                        const QString name=structure?QStringLiteral("G-structure"):QStringLiteral("G-support");
+                        const auto gated=timed(name,[&]{return gateEstimate(in.planes,estimate,profile,support,structure);});
+                        results.push_back({{name,"G",{{"mean_weight_padded_y_co_cg",QJsonArray{
+                            gated.meanWeight[0],gated.meanWeight[1],gated.meanWeight[2]}},
+                            {"timing","gate only; add E and support profiling"}}},gated.out});
+                    }
+                }
+                if (impulseStudy) {
+                    cv::Mat level;
+                    cv::GaussianBlur(in.planes.y, level, cv::Size(0,0), 4., 4., cv::BORDER_REFLECT);
+                    const cv::Mat sigma = sigmaOf(profile, 0, 4, level);
+                    cv::Mat reliableSigma = sigma.clone();
+                    for (int y=0;y<level.rows;++y) for (int x=0;x<level.cols;++x)
+                        if (profile.at(0,4,level.at<float>(y,x)) <= 1e-7)
+                            reliableSigma.at<float>(y,x)=0;
+                    for (double threshold : {4.,6.,8.}) {
+                        const auto prefilterStart=Clock::now();
+                        const auto correction = NoiseImpulseStudy::correct(in.planes.y, reliableSigma, threshold);
+                        const double prefilterMs=std::chrono::duration<double,std::milli>(Clock::now()-prefilterStart).count();
+                        Input corrected = in;
+                        corrected.planes.y = correction.plane;
+                        const QString name = QStringLiteral("F-threshold-%1").arg(threshold);
+                        results.push_back({{name, "F", {{"threshold",threshold},
+                            {"sigma", "Y pixel band of original RCD profile"},
+                            {"changed_fraction", double(cv::countNonZero(correction.changed(inner))) / inner.area()},
+                            {"positive_sigma_fraction", double(cv::countNonZero(reliableSigma(inner)>0)) / inner.area()},
+                            {"prefilter_ms_padded_roi", prefilterMs},
+                            {"limitation", "a legitimate isolated point may also be removed"}}},
+                            timed(name, [&] {return candidateE(corrected, profile, CandidateE{1.,1.,2.});})});
+                        variantMs[name]+=prefilterMs;
+                    }
+                }
 
                 QJsonArray measures;
                 std::vector<QImage> tiles;
@@ -1003,7 +1320,8 @@ int main(int argc, char **argv)
             for (const auto &[name, ms] : variantMs) timings.insert(name, ms / (zonePixels / 1e6));
             {
                 const int defaultThreads = cv::getNumThreads();
-                for (int threads : {1, 8, 12, 16}) {
+                const std::vector<int> threadCounts = eOnly ? std::vector<int>{8} : std::vector<int>{1, 8, 12, 16};
+                for (int threads : threadCounts) {
                     cv::setNumThreads(threads);
                     const auto t0 = Clock::now();
                     const Planes out = candidateETiled(full, profile, CandidateE{1.0, 1.0, 2.0});
@@ -1015,6 +1333,7 @@ int main(int argc, char **argv)
                 timings.insert("default_threads", defaultThreads);
             }
             timings.insert("E-profile-full-image", profileMs / (master.total() / 1e6));
+            if (profileStudy) timings.insert("G-support-profile-full-image",supportMs/(master.total()/1e6));
             QJsonArray modelPlanes;
             for (const auto &p : model.planes)
                 modelPlanes.append(QJsonObject{{"slope", p.slope}, {"intercept", p.intercept}, {"affine", p.affine},
@@ -1023,6 +1342,7 @@ int main(int argc, char **argv)
                 {"raw", QFileInfo(raw).fileName()}, {"raw_sha256", sha256(raw)},
                 {"iso", loaded.metadata.iso}, {"camera", loaded.metadata.cameraModel},
                 {"blind_noise_profile", blindProfile(full)},
+                {"profile_support",support.bins},
                 {"width", master.cols}, {"height", master.rows},
                 {"input", "neutral linear Rec.2020 master before the denoiser (TestRecipes::neutral, renderWorkingImage)"},
                 {"noise_model", modelPlanes}, {"zones", zoneRecords},
@@ -1032,6 +1352,21 @@ int main(int argc, char **argv)
         }
         QJsonObject root{
             {"study", "adaptive-neighbourhood denoising candidates (protocole-bruit-voisinages-adaptatifs)"},
+            {"candidate_scope", profileStudy ? "reference, E and G gates; only E full-image timing at 8 threads" :
+                impulseStudy ? "reference, E and F; only E full-image timing at 8 threads" :
+                eOnly ? "reference and E; full-image timing at 8 threads" : "all candidates and thread scaling"},
+            {"impulse_study", impulseStudy},
+            {"profile_study",profileStudy},
+            {"profile_controls",profileStudy?profileControls():QJsonArray{}},
+            {"profile_support_rule","exploratory: Y G2 gradient/HH <= 1, <=1% Y outside (0,1), >=16 eligible 32px tiles, per-plane q75/q25 <=2 and q25>1e-7; interpolate binary support, fading toward missing bins, no nearest-bin fill. G-structure multiplies by 1/(1+(G2 gradient/Y HH)^4). Not a probability or RCD synthetic simulation; gating can make spatial seams and change means."},
+            {"noise_profile_calibration", QJsonObject{
+                {"source", "synthese-bruit-rcd-v001-20261024T144750Z.json"},
+                {"scope", "R6 Mark III pairs; transfer to R7 and 60D remains experimental"},
+                {"bias_y_co_cg", QJsonArray{ProfileBias[0], ProfileBias[1], ProfileBias[2]}},
+                {"spectra_y_co_cg", QJsonArray{
+                    QJsonArray{Spectra[0][0], Spectra[0][1], Spectra[0][2], Spectra[0][3], Spectra[0][4]},
+                    QJsonArray{Spectra[1][0], Spectra[1][1], Spectra[1][2], Spectra[1][3], Spectra[1][4]},
+                    QJsonArray{Spectra[2][0], Spectra[2][1], Spectra[2][2], Spectra[2][3], Spectra[2][4]}}}}},
             {"measured_at_utc", QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
             {"zone", QJsonObject{{"inner", Inner}, {"margin", Margin}}},
             {"machine", QJsonObject{{"cpu_threads", QThread::idealThreadCount()}, {"os", QSysInfo::prettyProductName()},

@@ -67,7 +67,7 @@ def sources(base, scenes):
     return raws
 
 
-PAIR_WORKER_BYTES = 3 * 1024 ** 3   # two 24 Mpx masters, planes and bands
+PAIR_WORKER_BYTES = 5 * 1024 ** 3   # two 32 Mpx masters, planes and bands; ~4 GiB observed + margin
 
 
 def audited_pairs(audit, root):
@@ -88,11 +88,9 @@ def audited_pairs(audit, root):
 
 
 def pair_jobs(requested, count):
-    if requested:
-        return max(1, requested)
     free = available_memory()
     by_memory = 1 if free is None else max(1, int((free - 2 * 1024 ** 3) // PAIR_WORKER_BYTES))
-    return max(1, min(by_memory, count, 4))
+    return max(1, min(by_memory, count, requested if requested > 0 else 4))
 
 
 def run_pairs(args, stamp):
@@ -142,12 +140,19 @@ def main(argv=None):
     parser.add_argument("--output-dir", type=Path, default=ROOT / "docs/validation/raw")
     parser.add_argument("--scene", action="append", default=[])
     parser.add_argument("--tuning", action="append", default=[])
+    parser.add_argument("--candidate-e-only", action="store_true", help="reference and E only; full-image timing at 8 threads")
+    parser.add_argument("--impulse-study", action="store_true", help="reference, E and experimental impulse prefilter F")
+    parser.add_argument("--profile-study", action="store_true", help="reference, E and experimental support/structure gates G")
     parser.add_argument("--timeout", type=int, default=3600, help="seconds per run of the probe")
     parser.add_argument("--pairs-from", type=Path, help="noise pair audit JSON (step A)")
     parser.add_argument("--pairs-root", type=Path, default=ROOT.parents[1] / "tests/image/colorimétrie"
                         if (ROOT.parents[1] / "tests/image/colorimétrie").is_dir() else ROOT / "tests/image/colorimétrie")
     parser.add_argument("--jobs", type=int, default=0, help="parallel probe processes (default: from free memory)")
     args = parser.parse_args(argv)
+    if sum((args.candidate_e_only,args.impulse_study,args.profile_study))>1:
+        parser.error("Select one photographic study scope")
+    if args.pairs_from and (args.candidate_e_only or args.impulse_study or args.profile_study):
+        parser.error("Photographic candidate flags do not apply to pair calibration")
     if not args.probe.is_file():
         raise SystemExit("Probe not built: " + str(args.probe))
     stamp = datetime.now(timezone.utc)
@@ -159,17 +164,26 @@ def main(argv=None):
         raise SystemExit("Exists, nothing overwritten: " + str(output))
     crops = args.crops or ROOT / f"build-patch_noise/voisinages-v{args.data_version:03d}"
     raws = sources(args.base or [ROOT / "tests/image/base"], args.scene)
+    source_signatures = {p: (p.stat().st_size,p.stat().st_mtime_ns) for p in raws}
     with tempfile.TemporaryDirectory() as tmp:
         probe_json = Path(tmp) / "probe.json"
         start = time.monotonic()
-        result = subprocess.run([str(args.probe), str(probe_json), str(crops), *map(str, raws)],
+        scope = ["--profile-study"] if args.profile_study else ["--impulse-study"] if args.impulse_study else ["--e-only"] if args.candidate_e_only else []
+        result = subprocess.run([str(args.probe), *scope, str(probe_json), str(crops), *map(str, raws)],
                                 env=runtime_env(args.probe), capture_output=True, text=True, timeout=args.timeout)
         duration = time.monotonic() - start
         if result.returncode != 0:
             raise SystemExit("Probe failed: " + result.stderr[-2000:])
         record = json.loads(probe_json.read_text(encoding="utf-8"))
+    for source,before in source_signatures.items():
+        if (source.stat().st_size,source.stat().st_mtime_ns) != before:
+            raise SystemExit("Source changed during study: " + str(source))
     record.update({
         "campaign_id": campaign,
+        "schema_version": 1, "data_version": args.data_version,
+        "measured_at_utc": stamp.isoformat(),
+        "runner_sha256": sha256(Path(__file__)),
+        "source_paths": [str(p) for p in raws],
         "protocol": "docs/validation/protocols/protocole-bruit-voisinages-adaptatifs.md",
         "runner": "tests/study_noise_neighbourhoods.py",
         "commit": git("rev-parse", "HEAD"),

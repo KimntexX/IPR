@@ -1,8 +1,54 @@
 # Réduction de bruit — rapport consolidé
 
-## Bilan actuel — 23 octobre 2026
+## Bilan actuel — 24 octobre 2026
 
-**Dernier résultat :** la [première comparaison photographique du prototype](#bruit-20261023-comparaison)
+**Dernière étude :** le [diagnostic spectral et directionnel](#bruit-20261024-spectral)
+utilise huit paires RCD, douze scènes et un complément de 2 508 injections.
+Il distingue mieux certaines textures d'un résidu de bruit, mais pas toutes
+les petites formes : en luminance, 16/24 étoiles à pic 10 σ restent compatibles
+avec le bruit. Piste retenue pour sélectionner les tuiles d'estimation, **pas
+pour corriger directement les pixels**. Aucun changement de production ;
+aucune nouvelle prise requise ([conclusion](#conclusion-actuelle)).
+
+**Étude précédente :** le [soutien du profil et l'abstention G](#bruit-20261024-soutien-profil)
+compare douze scènes (116 zones) et 48 contrôles synthétiques. G conserve mieux
+la texture lunaire, mais lisse encore une texture propre et introduit plus de
+1 % de dérive Y dans cinq zones. **G non admissible en production en l'état.**
+La prochaine piste porte sur la cohérence spectrale/directionnelle du bruit,
+pas sur un simple renforcement du filtre. Aucun nouveau fichier utilisateur
+n'est nécessaire à ce stade ([conclusion](#conclusion-actuelle)).
+
+**Étude précédente :** l'[extension du stock et la correction des impulsions](#bruit-20261024-stock-impulsions)
+inventorie 3 105 RAW lisibles dans Images et sur D/E, puis mesure dix nouvelles
+scènes et deux témoins. La correction locale F retire les impulsions ajoutées
+dans les contrôles, mais supprime aussi un détail légitime d'un pixel et dépasse
+le critère de dérive Y dans certaines ombres. **Pas d'intégration de F en
+production.** Priorité : confiance du profil aveugle, information de contexte
+et abstention sur les points ambigus. Les originaux restent inchangés.
+
+**Reprise précédente :** la [reprise sur RCD livré](#bruit-20261024-rcd)
+remesure 61 paires puis compare E sur huit scènes de trois boîtiers.
+RCD réduit surtout le bruit chromatique fin ; son spectre impose de revoir
+le profil d'E. Le profil recalibré atteint une médiane de bande moyenne
+chromatique de 0,118 de l'entrée, contre 0,626 pour la référence de production,
+mais seulement 22/32 zones planes passent le seuil 0,15. E reste expérimental,
+sans intégration en production. `dev` validée (`v0.1.40-alpha`, `3c98ea7`)
+est fusionnée dans `patch_noise` par `1b055cf`.
+
+**Résultat historique AHD :** le [candidat E corrigé](#bruit-20261023-candidat-e-v005)
+réduit les taches colorées à 0,09 de l'entrée (0,59 pour la production) sur
+65 scènes, sans dérive, en 4,2 s médian à 8 threads pour 32 Mpx (plafond
+accepté : 20,8 s). Ses paramètres restent **inchangés pour la reprise** :
+le dématriçage, qui fixe le bruit qu'il traite, a été livré sur `dev` depuis `patch_raw_decoder`
+([rapport Dématriçage](analyse-dematricage.md)). Points ouverts : validation
+visuelle, points isolés et grain du R7, paires 60D
+([conclusion](#conclusion-actuelle)).
+
+**Veille DFS :** les [approches DFS](#bruit-20261023-dfs) sont consignées
+comme pistes non testées, après l'étude des voisinages adaptatifs. DFS seul
+organise un parcours ; il ne définit ni le bruit ni sa correction.
+
+**Comparaison photographique :** la [première comparaison photographique du prototype](#bruit-20261023-comparaison)
 montre encore beaucoup de granulation colorée face au débruitage manuel Lightroom.
 À l'ouverture, le surplus n'est pas uniforme : le proxy chromatique haute fréquence
 augmente surtout sur 9890 (+40 % sur les zones retenues), pas dans les mêmes
@@ -32,6 +78,9 @@ Lecture rapide : [reprise du 22 octobre](#bruit-20261022-reprise),
 [approfondissement des modèles et du transfert](#bruit-20261022-transfert),
 [prototype intégré](#bruit-20261023-prototype),
 [comparaison des exports et pistes classiques/IA](#bruit-20261023-comparaison),
+[voisinages adaptatifs](#bruit-20261023-voisinages),
+[vérité par paires](#bruit-20261023-paires), [candidat E](#bruit-20261023-candidat-e),
+[dématriçage, déplacé](#bruit-20261023-dematricage),
 [conclusion actuelle et prochaines actions](#conclusion-actuelle).
 
 Les campagnes ci-dessous se lisent **de la plus ancienne à la plus récente**.
@@ -2775,9 +2824,9 @@ Références primaires consultées le 23 octobre 2026 :
   pour distinguer netteté, bruit manuel et réduction IA, pas pour déduire
   le fonctionnement interne d'un algorithme propriétaire.
 
-<a id="conclusion-actuelle"></a>
+<a id="conclusion-20261023-comparaison"></a>
 
-## Conclusion actuelle et prochaines actions — 23 octobre 2026, après comparaison
+## Conclusion du 23 octobre 2026, après comparaison — historique
 
 Le prototype n'est pas encore satisfaisant sur ces hauts ISO face au débruitage
 manuel Lightroom. Le bruit d'ouverture chromatique est aussi à examiner,
@@ -2864,3 +2913,1030 @@ Preuves : [v001](../raw/etude-voisinages-bruit-v001-20261023T093242Z.json),
 signal** (HH et bande moyenne, par plan), avec une confiance, à partir de zones
 planes validées, puis rejouer A à D sur cette estimation. Seuils d'acceptation
 à fixer avant la comparaison finale ; aucune intégration sans validation visuelle.
+
+<a id="bruit-20261023-paires"></a>
+
+## Étude des voisinages adaptatifs — 23 octobre 2026, étape 2 : vérité du bruit développé
+
+Étape A du protocole. Statut : mesure, sans modification de production.
+
+### 28. Banc
+
+Les 61 paires du dossier `colorimétrie` retenues par l'audit des paires
+(exposition, géométrie et niveaux décodeur identiques, paires noires exclues)
+sont rendues en mémoire au neutre, comme à l'étape 1. Pour chaque paire, la
+**vérité** est le bruit de D = (A − B)/√2, mesuré sur des tuiles de 32 pixels
+calmes (gradient du master moyen < 3 σ Haar de D). Il est comparé à
+l'**estimation aveugle** sur A seule (quantiles des tuiles) et au modèle affine
+de production, par niveau de luminance et par plan (Y, Co, Cg). Bandes : HH de
+Haar, fine x − G1, moyenne G1 − G4, large G4 − G16, pixel x − G16. 60 paires
+mesurables, 175 classes de niveau, ISO 100 à 51200 (R6 Mark III).
+Preuve : [etude-bruit-paires-developpe-v001](../raw/etude-bruit-paires-developpe-v001-20261023T095620Z.json).
+
+### 29. Constats
+
+1. **Signature spectrale stable.** Rapport médian de chaque bande au HH :
+   luminance fine 1,17, moyenne 0,53, large 0,14, pixel 1,50 ; chrominance
+   fine 1,41, moyenne 1,49, large 0,51, pixel 2,72. En chrominance, la bande
+   moyenne porte plus d'énergie que le HH : ce sont les taches colorées de
+   l'étape 1. La forme reste la même d'ISO 100 à 51200.
+2. **Le modèle affine de production sous-estime le bruit d'environ 20 %**
+   (rapport médian au HH vrai 0,80, quartiles 0,74 et 0,87).
+3. **L'estimation aveugle tient avec un seul niveau mesuré** : le quantile 25 %
+   des tuiles HH vaut 0,87 fois la vérité. Le profil aveugle retenu mesure donc
+   le HH sur l'image (q25 / 0,87) et en déduit les autres bandes par la
+   signature.
+
+<a id="bruit-20261023-candidat-e"></a>
+
+## Étude des voisinages adaptatifs — 23 octobre 2026, étape 3 : candidat E
+
+### 30. Candidat E
+
+Débruitage par bandes guidé par le profil spectral de l'étape 2 :
+
+- luminance : G16 + réduction de Wiener locale des bandes fine, moyenne et
+  large, gain max(0, 1 − α σ² / énergie locale), σ lu au niveau du pixel ;
+- chrominance : demi-résolution (INTER_AREA), médiane 3 × 3, blocs 3 × 3 guidés
+  par Y (recherche ±4), remontée bilinéaire puis filtre guidé de He par Y,
+  plus le résidu fin réduit par Wiener ;
+- traitement par tuiles de 512 pixels (marge 64) en parallèle sur les threads
+  de l'hôte ; temps mesuré sur l'image entière à 1 et 8 threads.
+
+### 31. Campagne v003 — 49 scènes, 60D, R6 Mark III et R7
+
+[etude-voisinages-bruit-v003](../raw/etude-voisinages-bruit-v003-20261023T103216Z.json),
+racines `base` et `base-hors-protocole`, ISO 100 à 32000. Médianes des zones
+(rapport sortie / entrée ; dérive relative de Y ; dérive chromatique en σ) :
+
+| Variante | Plat chroma bande moy. | Détail luma bande moy. | Détail chroma bande moy. | Dérive Y sombre (pire) |
+|---|---:|---:|---:|---:|
+| Référence 100 | 0,61 | 0,95 | 0,90 | −0,002 (+0,085) |
+| C (h² = 1) | 0,16 | 0,98 | 0,96 | 0,000 (+0,041) |
+| E (α 1, h² 1, fin 2) | **0,09** | 0,89 | 0,34 | −0,008 (**−0,19**) |
+
+- E retire les taches colorées sur les trois boîtiers (0,08 à 0,11), là où C
+  échoue sur R7 (0,68) faute d'estimation fiable du facteur de corrélation.
+- **Défaut 1 : E assombrit les ombres** : −16 % en médiane dans les zones
+  sombres R7, jusqu'à −19 %, et −9 % dans les plats R7.
+- **Défaut 2 : dominante chromatique** dans les ombres : 0,46 σ en médiane sur R7,
+  jusqu'à 2,1 σ sur R6 Mark III, contre 0,09 σ pour la référence.
+- Le recul de la chrominance des zones « détaillées » (0,34) correspond, sur les
+  planches contrôlées (IMG_8055 ISO 1250, _MG_7906 ISO 400), à des dégradés
+  lisses dont E retire les points rouges que la référence garde : c'est du bruit
+  retiré, pas une texture perdue sur ces zones.
+- Temps à 8 threads : médiane 7,0 s, maximum 20,8 s (6V1A0327, 32,3 Mpx) ;
+  1 thread : médiane 20,2 s. La campagne tournait seule, mais le poste était
+  chargé par ailleurs ; les reprises montrent une forte variance.
+
+### 32. Correctifs du défaut 1 et du défaut 2
+
+- **Défaut 1, cause** : σ était lu sur un flou G1 de la luminance bruitée. Près
+  du noir, le profil croît vite avec le niveau : un écart positif du bruit lève σ
+  et se trouve plus réduit qu'un écart négatif ; la moyenne baisse. **Correctif** :
+  σ lu sur G4, presque sans bruit (G1 reste le guide du filtre guidé).
+- **Défaut 2, cause** : la médiane et les poids des blocs biaisent un bruit
+  chromatique dissymétrique près du noir. **Correctif** : restituer la moyenne
+  G16 de chaque plan chromatique d'entrée (sortie + G16(entrée) − G16(sortie)),
+  échelle où le bruit n'a presque plus d'énergie.
+
+Contrôle sur les 8 scènes R7 (exécutions de mise au point, non versionnées) :
+
+| E sur R7 | v003 | σ sur G4 | + moyenne G16 chroma |
+|---|---:|---:|---:|
+| Dérive Y zones sombres | −16,1 % | +3,3 % | +3,3 % |
+| Dérive Y zones planes | −8,6 % | +1,1 % | +1,1 % |
+| Dérive chroma zones sombres | 0,46 σ | 0,43 σ | **0,004 σ** |
+| Plat chroma bande moyenne | 0,085 | 0,085 | 0,085 |
+
+Le bruit retiré est inchangé. Le seuil de latence accepté par l'utilisateur
+est le pire cas observé, **20,8 s à 8 threads** ; aucune variante ne doit le
+dépasser. La campagne complète du correctif est la v004 (voir plus bas).
+
+<a id="bruit-20261023-dfs"></a>
+
+## Veille DFS — 23 octobre 2026, après l'étude des voisinages
+
+Statut : revue bibliographique, sans essai ni modification de production.
+L'utilisateur ne visait pas une publication précise : sa question concernait
+initialement le parcours en profondeur. Les autres sens de DFS découverts
+pendant la recherche sont des pistes distinctes à conserver, pas des variantes
+déjà implémentées dans IPR.
+
+### DFS classique : un outil de parcours, pas un filtre
+
+DFS (*Depth-First Search*) explore une branche d'un graphe avant de revenir
+aux branches non visitées. Il utilise une pile explicite ou la récursion.
+Voir la [définition du NIST](https://xlinux.nist.gov/dads/HTML/depthfirst.html)
+et le [cours de Carnegie Mellon](https://www.cs.cmu.edu/~15210/algobook/graph-search/dfs.pdf).
+
+Pour IPR, un usage envisageable serait de parcourir les composantes d'un
+masque ou des régions de pixels reliés par un critère de similarité. Ce critère,
+l'estimation du bruit et la correction doivent toutefois être définis séparément :
+le parcours seul ne les fournit pas. Il ne garantit ni une visite par proximité
+croissante, ni que deux pixels successifs du parcours représentent le même signal.
+
+Sur un graphe à listes d'adjacence, le parcours coûte O(V + E) et demande
+O(V) de mémoire au pire. Une grille locale peut être représentée implicitement
+sans stocker toutes ses arêtes. Le DFS classique est séquentiel dans son ordre
+de découverte ; il n'est pas à lui seul une stratégie de parallélisation sur
+12 threads. Sur une grande image, préférer une pile explicite bornée à une
+récursion susceptible de déborder.
+
+### DFS Fused Lasso : piste classique de régularisation
+
+Madrid Padilla, Sharpnack, Scott et Tibshirani proposent de construire une
+chaîne à partir de l'ordre de découverte DFS, puis d'y résoudre un problème
+de débruitage par variation totale unidimensionnelle :
+
+\[
+\hat{x}=\arg\min_x\left[
+\tfrac12\sum_{i=1}^{n}(y_i-x_i)^2
++\lambda\sum_{i=1}^{n-1}|x_{i+1}-x_i|\right].
+\]
+
+Les indices désignent ici l'ordre de la chaîne, pas le balayage original de
+l'image. Le terme quadratique conserve la proximité aux observations ; la
+pénalité favorise des portions constantes. La construction est linéaire en
+taille du graphe et la résolution sur la chaîne linéaire en nombre de sommets.
+Ce n'est pas la solution exacte du fused lasso sur le graphe initial.
+Les garanties statistiques du papier sont conditionnées à ses hypothèses ;
+elles ne constituent pas une validation sur notre bruit photographique développé.
+
+Références : [publication JMLR](https://www.jmlr.org/beta/papers/v18/16-532.html),
+[texte des auteurs](https://stat.cmu.edu/~ryantibs/papers/tvdfs.pdf).
+
+Appréciation pour IPR, à vérifier expérimentalement : candidat pour les aplats
+et les taches chromatiques, avec un risque de paliers, de lissage des textures
+et de sensibilité au parcours. L'étudier sur Y et les plans chromatiques
+séparément, mesurer les contours et les dérives, et comparer au prototype ainsi
+qu'aux candidats de voisinages. Une extension pondérée selon le bruit estimé
+serait une adaptation à étudier, pas une propriété déjà démontrée ici.
+
+### Dynamic Filter Selection : piste neuronale distincte
+
+Dans MSFSNet, DFS signifie *Dynamic Filter Selection*. Le module utilise des
+filtres appris et une sélection fréquentielle à différentes échelles ; il ne
+s'agit pas du parcours de graphe précédent.
+
+Source primaire : Gao et Dang,
+[Exploring Richer and More Accurate Information via Frequency Selection for Image Restoration](https://arxiv.org/abs/2407.08950).
+Il s'agit d'une prépublication ; sa page signale un recouvrement de texte avec
+un autre article. Ne pas la présenter comme une méthode validée dans IPR.
+
+Conserver l'idée de sélectionner les informations selon leur fréquence et
+leur échelle dans la veille IA. Disponibilité, licence du code et des poids,
+coût CPU/GPU et transfert au bruit de nos images restent à auditer avant tout
+essai. Aucun modèle n'est téléchargé ni entraîné dans cette revue.
+
+<a id="conclusion-20261023-dfs"></a>
+
+## Conclusion du 23 octobre 2026, après veille DFS — historique
+
+Les constats et limites des campagnes précédentes restent inchangés : les
+nouvelles références bibliographiques ne constituent pas des mesures et ne
+justifient aucune correction immédiate de production. Aucun JSON de mesures
+n'est créé pour cette seule veille.
+
+Priorité : fiabiliser l'estimation du bruit par échelle et niveau de signal,
+puis rejouer les candidats de voisinages. DFS seul reste un outil éventuel de
+parcours des régions ; DFS Fused Lasso rejoint les candidats classiques à
+comparer, sans remplacer le multiscale à ce stade. Dynamic Filter Selection
+reste une piste IA séparée. Toute intégration demeure conditionnée aux mesures,
+au budget matériel et à la validation visuelle.
+
+<a id="bruit-20261023-dematricage"></a>
+
+## Dématriçage à l'ouverture — 23 octobre 2026, déplacé
+
+L'étude du dématriçage (modèles LibRaw, RCD et LMMSE écrits pour IPR, écart au
+neutre Lightroom) relève du décodeur : elle a été transférée le 24 octobre 2026
+sur `patch_raw_decoder`, avec sa sonde, ses lanceurs et ses preuves, et se
+poursuit dans le [rapport Dématriçage](analyse-dematricage.md). Les preuves
+`etude-dematricage-v001` à `v004` et `etude-bruit-neutre-lr-v001` restent aussi
+dans `docs/validation/raw/`. Le candidat E ci-dessous a été réglé sur le
+dématriçage AHD : sa signature spectrale sera remesurée avec le dématriçage
+retenu avant toute reprise.
+
+<a id="bruit-20261023-candidat-e-v005"></a>
+
+## Candidat E corrigé — 23 octobre 2026, campagnes v004 et v005
+
+### 33. Campagnes
+
+- [v004](../raw/etude-voisinages-bruit-v004-20261023T134630Z.json) : correctifs du
+  §32, 65 scènes (49 du corpus et 16 nouvelles du R6 Mark III à ISO 1600,
+  3200 et 16000, avec leurs neutres LR) ; une scène présente dans les deux
+  racines n'est prise qu'une fois, depuis `base`.
+- **Défaut 3** relevé par la v004 : les ombres du R7 s'éclaircissent encore de
+  3,3 % (jusqu'à 4,2 %). Près du noir, le bruit est dissymétrique et les bandes
+  réduites par Wiener n'ont plus une moyenne nulle. **Correctif** : restituer la
+  moyenne G16 de la luminance d'entrée, comme pour la chrominance ; sur dix
+  scènes R7 et R6 Mark III, la dérive tombe à −0,1 % au pire, aucun autre
+  rapport ne bouge.
+- [v005](../raw/etude-voisinages-bruit-v005-20261023T145137Z.json) : même corpus avec
+  ce correctif, poste au repos (les autres applications fermées).
+
+### 34. Résultats v005 — 65 scènes
+
+Médianes des zones (pire valeur entre parenthèses pour les dérives) ;
+rapports sortie / entrée ; dérive relative de Y ; dérive chromatique en σ.
+
+| Boîtier | Variante | Plat chroma bande moy. | Détail luma bande moy. | Détail chroma bande moy. | Dérive Y sombre | Dérive chroma sombre |
+|---|---|---:|---:|---:|---:|---:|
+| Tous (65) | Référence 100 | 0,59 | 0,92 | 0,88 | −0,003 (+0,085) | 0,075 (0,80) |
+| Tous (65) | **E** | **0,087** | 0,85 | 0,31 | **0,000 (−0,001)** | **0,009 (0,15)** |
+| 60D (21) | E | 0,084 | 0,91 | 0,35 | 0,000 (−0,001) | 0,008 (0,15) |
+| R6 Mark III (36) | E | 0,095 | 0,86 | 0,34 | 0,000 (+0,001) | 0,010 (0,10) |
+| R7 (8) | E | 0,085 | 0,65 | 0,16 | 0,000 (−0,001) | 0,004 (0,015) |
+| R7 (8) | Référence 100 | 0,62 | 0,75 | 0,79 | −0,003 (+0,085) | 0,092 (0,13) |
+
+Temps de E sur l'image entière, poste au repos : **médiane 4,2 s à 8 threads,
+maximum 5,7 s** (32,3 Mpx), soit 3,7 fois sous le plafond de 20,8 s ; 19,0 s en
+médiane sur un thread. Les maxima de 20 s de la v003 tenaient à la charge du
+poste, pas à la méthode.
+
+Sur le R7 (ISO ≥ 20000), E garde moins de bande moyenne en zone détaillée
+(0,65 contre 0,75) : à ce niveau de bruit, cette bande est surtout du bruit ;
+le jugement relève du contrôle visuel (§35).
+
+### 35. Contrôle visuel des planches
+
+Planches dérivées (`build-patch_noise/voisinages-v004`, non suivies), zones de
+détail où E retire le plus de chrominance :
+
+- le bruit coloré disparaît ; les aplats saturés gardent leur couleur (étiquette
+  rouge de 6V1A9890, ISO 25600) et les lettres restent nettes ;
+- **points isolés** sombres ou clairs subsistants sur les aplats : impulsions de
+  luminance que Wiener conserve, l'énergie locale y étant forte ;
+- **grain structuré « en vers »** dans la luminance du R7 à ISO 25600 : la bande
+  moyenne réduite garde une structure. Le curseur de luminance devra pouvoir le
+  doser ; à valider visuellement par l'utilisateur.
+
+### 36. Montée en charge du candidat E — 1, 8, 12 et 16 threads
+
+[etude-voisinages-bruit-v006](../raw/etude-voisinages-bruit-v006-20261023T154855Z.json),
+quatre scènes (6V1A0327, 6V1A9608, 7Y6A7298 de 32 Mpx ; IMG_4002 de 18 Mpx),
+poste au repos. Temps de E sur l'image entière de 32 Mpx : 18,7 à 26,9 s sur un
+thread ; 4,2 à 5,9 s à 8 ; 4,4 à 5,2 s à 12 ; 5,2 à 6,2 s à 16.
+
+**E plafonne à 8 threads** et ralentit à 16 : le calcul est borné par la
+mémoire, et les flous OpenCV parallèles s'imbriquent dans le parallélisme par
+tuiles. 8 threads sont donc à la fois la base et le plafond utile.
+
+<a id="conclusion-20261024-attente-rcd"></a>
+
+## Conclusion historique — 24 octobre 2026, avant livraison du dématriçage
+
+### État du candidat E
+
+E (bandes guidées par le profil spectral, chrominance à demi-résolution, trois
+correctifs de dérive) réduit la bande moyenne chromatique des zones planes à
+0,09 de l'entrée, contre 0,59 pour le débruitage de production, sur 65 scènes
+des trois boîtiers, sans dérive de luminosité ni de couleur ; 4,2 s médian à
+8 threads pour 32 Mpx, sous le plafond accepté de 20,8 s.
+
+Restent à juger visuellement : points isolés de luminance sur les aplats et
+grain structuré du R7 à ISO 25600 (§35).
+
+### Ordre de reprise
+
+Décision du 24 octobre 2026 : le dématriçage passe d'abord, sur
+`patch_raw_decoder` ([rapport Dématriçage](analyse-dematricage.md)). E est gelé
+dans son état v005 ; il sera repris après validation et livraison de la
+nouvelle ouverture, car il a été réglé sur un bruit dématricé par AHD.
+
+### Limites
+
+- Signature spectrale et vérité par paires mesurées avec AHD, sur le seul
+  R6 Mark III (60 paires) ; aucune paire 60D ni R7.
+- R7 représenté seulement à ISO ≥ 20000 (8 scènes) ; l'utilisateur ne possède plus
+  ce boîtier (24 octobre 2026) : aucune prise ni paire R7 supplémentaire.
+- Planches de contrôle seulement : aucune validation visuelle de l'utilisateur
+  sur un rendu complet.
+- Montée en charge mesurée sur un seul poste (20 threads logiques).
+
+### Besoins
+
+- Paires d'exposition identique pour le 60D et le R6 Mark III à ISO 400–1250,
+  dématricées avec le nouvel algorithme.
+- Validation visuelle de E sur rendu complet, avec le curseur de luminance.
+
+### Directives pour la reprise
+
+- Après fusion de la nouvelle ouverture dans `dev` : fusionner `dev` dans
+  `patch_noise`, remesurer la vérité par paires et la signature spectrale,
+  recalibrer le profil aveugle, rejouer v005 sur le corpus.
+- Fixer avant la comparaison finale les seuils d'acceptation : dérive |Y| ≤ 1 %,
+  dérive chromatique ≤ 0,1 σ, bande moyenne chromatique des zones planes ≤ 0,15,
+  latence ≤ 20,8 s à 8 threads sur 32 Mpx.
+- Intégration de E derrière une interface courte, hors d'`ImageEditor`, en
+  fonctions libres par tuiles ; threads issus de l'hôte et plafonnés à 8 ;
+  éviter l'imbrication des parallélismes ; supprimer le débruiteur remplacé et
+  ses tests spécifiques, sans option legacy.
+- Traiter les points isolés (impulsions de luminance) avant la validation.
+
+### Prochaines actions
+
+1. Validation et livraison de la nouvelle ouverture (rapport Dématriçage).
+2. Reprise de `patch_noise` selon les directives ci-dessus.
+
+<a id="bruit-20261024-rcd"></a>
+
+## Reprise sur RCD livré — 24 octobre 2026, après notification de CI verte
+
+### 37. Intégration et nouvelle mesure des paires
+
+Le tag annoté `v0.1.40-alpha` pointe sur
+`3c98ea7d3e073a1d8e26e0ff4c0143a24bdb9dec`. `dev` est fusionnée dans
+`patch_noise` par `1b055cfb3af1c4a0fdc85aae1b9e039c87451181`, sans modification
+du worktree principal ni publication. Le conflit des règles de sélection des
+tests a été résolu en conservant les règles Bruit et Dématriçage. Le rapport
+local a été préservé par autostash puis restauré.
+
+Les outils sont reconstruits avec l'ouverture de production RCD et sa médiane
+chromatique `FlatOnly`. Les trois tests natifs ciblés (`demosaicTests`,
+`noiseEstimationTests`, `detailProcessingTests`) passent.
+
+Nouvelle preuve : [paires développées v002](../raw/etude-bruit-paires-developpe-v002-20261024T142642Z.json),
+61 paires du même audit v005, une seule tâche pour contenir la mémoire,
+1 255 s de calcul. 60 paires présentent des classes mesurables, pour 180
+classes de luminance. Les masters sont rendus en mémoire ; aucun TIFF IPR
+n'est généré et aucune source n'est modifiée.
+
+La [synthèse RCD v001](../raw/synthese-bruit-rcd-v001-20261024T144750Z.json)
+apparie les SHA-256 des deux sources et les classes de luminance entre AHD et
+RCD. La lecture principale exclut les paires dont la dérive moyenne de Y
+dépasse 2 % : six exclusions de chaque côté. Elle porte sur 52 paires et
+153 classes communes, soit 2 295 observations plan/bande. Chaque classe a le
+même poids ; les classes d'une paire ne sont pas indépendantes.
+
+Rapport médian des proxies sigma RCD / AHD sur ces observations :
+
+| Plan | HH Haar | Fine | Moyenne | Large | Pixel |
+|---|---:|---:|---:|---:|---:|
+| Y | 0,875 | 0,849 | 1,000 | 0,983 | 0,914 |
+| Co | 0,464 | 0,449 | 0,717 | 0,934 | 0,636 |
+| Cg | 0,490 | 0,475 | 0,734 | 0,972 | 0,680 |
+
+Le proxy de bruit fin diminue donc d'environ 12,5 % en luminance et de
+51–54 % en chrominance, mais les moyennes fréquences chromatiques ne baissent
+que de 27–28 %. Les basses fréquences changent peu. La sensibilité sans
+exclusion d'exposition donne des médianes HH de 0,875 / 0,465 / 0,490 : le
+constat global n'est pas porté par le seul seuil d'exclusion.
+
+Ce sont des estimations robustes sur différence de prises développées,
+pas une vérité propre sans bruit ni des pourcentages de qualité visuelle.
+La sélection des tuiles calmes peut changer avec le dématriçage ; les valeurs
+nulles/non finies sont exclues des ratios. Un faible gradient ne garantit pas
+l'absence de dérive locale d'éclairage. Les mesures concernent uniquement les
+paires du R6 Mark III, ISO 100, 1600, 3200, 6400, 16000 et 51200 selon les
+métadonnées, pas les noms des dossiers.
+
+### 38. Profil spectral à recalibrer, sans modification de production
+
+La signature utilisée par E sous AHD n'est plus adaptée. Rapports médians
+bande / HH sous RCD :
+
+| Plan | Fine | Moyenne | Large | Pixel | Biais q25 HH / proxy des paires |
+|---|---:|---:|---:|---:|---:|
+| Y | 1,144 | 0,614 | 0,156 | 1,586 | 0,933 |
+| Co | 1,301 | 2,095 | 0,947 | 3,455 | 0,874 |
+| Cg | 1,406 | 2,740 | 1,251 | 4,418 | 0,861 |
+
+L'ancien profil chromatique partagé (moyenne 1,57 et large 0,54 fois HH)
+sous-estime désormais les bandes plus larges, surtout dans Cg. La sonde
+expérimentale sépare donc les trois signatures et biais. Ce sont des
+coefficients développés mesurés sur ce banc, pas des constantes universelles
+du capteur. Le biais de luminance à ISO 100 atteint 1,143 sur ce sous-groupe :
+la validité d'un biais global sur des images à faible bruit reste à vérifier.
+
+La première passe photographique conserve les anciens paramètres d'E :
+[voisinages v007](../raw/etude-voisinages-bruit-v007-20261024T144806Z.json).
+Huit scènes, trois boîtiers : R6 Mark III (6V1A0327, 0830, 9608, 9890),
+R7 (7Y6A7232, 7298), 60D (IMG_3064, 3089). Le mode `--candidate-e-only`
+compare les références de production à trois réglages E et mesure le filtre
+sur l'image entière à huit threads. Les sigmas d'entrée et de sortie sont
+aussi conservés, pour ne pas comparer seulement des ratios lorsque l'entrée
+change. Ce mode n'est pas une nouvelle implémentation de production.
+
+Une seconde passe sur ces mêmes scènes mesure l'effet du profil recalibré.
+Les paires de caractérisation sont distinctes de ces photos, mais restent
+limitées au R6 Mark III ; le transfert vers les deux autres boîtiers est un
+essai, pas une validation de caractérisation.
+
+### 39. Résultats photographiques après recalibrage
+
+Preuve : [voisinages v008](../raw/etude-voisinages-bruit-v008-20261024T145120Z.json).
+Les huit SHA-256 sources et les coordonnées des 76 zones sont identiques à
+v007. Le seul changement de filtre étudié est le profil spectral/biais par
+plan ; les trois intensités E gardent leurs paramètres de traitement.
+
+Pour `E-l1-c1-f2`, médiane par scène du ratio de bande moyenne chromatique
+sortie / entrée sur les quatre zones planes :
+
+| Scène | ISO | Ancien profil, RCD v007 | Profil RCD v008 | Référence production 100 |
+|---|---:|---:|---:|---:|
+| 6V1A0327 | 100 | 0,254 | 0,239 | 0,634 |
+| 6V1A0830 | 3200 | 0,195 | 0,177 | 0,604 |
+| 6V1A9608 | 16000 | 0,097 | 0,082 | 0,658 |
+| 6V1A9890 | 25600 | 0,129 | 0,136 | 0,584 |
+| 7Y6A7232 | 25600 | 0,122 | 0,134 | 0,582 |
+| 7Y6A7298 | 32000 | 0,108 | 0,109 | 0,596 |
+| IMG_3064 | 160 | 0,138 | 0,114 | 0,718 |
+| IMG_3089 | 3200 | 0,131 | 0,099 | 0,700 |
+
+Le recalibrage n'améliore donc pas tous les cas : le ratio augmente un peu sur
+9890 et les deux R7. Une variation de ce proxy n'est pas à elle seule une
+régression ou un gain perceptuel. Il ne faut pas choisir la force uniquement
+pour minimiser la variance d'une image.
+
+Lecture des seuils fixés avant cette comparaison :
+
+- **Dérive Y** : maximum absolu 0,002286, soit 0,229 %, sur les 76 zones,
+  sous le seuil 1 %.
+- **Dérive chromatique** : maximum 0,0747 sigma HH chromatique d'entrée,
+  sous le seuil 0,1. Cette normalisation est celle de la sonde, pas un Delta E.
+- **Bande moyenne chromatique plane** : médiane globale des 32 zones
+  0,1178, contre 0,6259 pour la référence 100. Cependant **22/32 seulement**
+  satisfont le seuil 0,15 ; le maximum vaut 0,370 sur 0327. Les zones sont
+  sélectionnées automatiquement, pas certifiées comme surfaces sans texture.
+- **Temps** : profil aveugle + filtre E entier à huit threads, entre
+  4,49 et 7,06 s selon la scène (18 à 32 Mpx), sous le plafond 20,8 s
+  sur ce poste. Ces temps excluent l'ouverture RAW, les autres retouches et
+  l'affichage. Ils ne prédisent pas la latence d'un portable à huit threads.
+
+Les variantes E plus fortes ramènent la médiane chromatique plane à 0,0995
+et 0,0835, mais cela ne justifie pas de les retenir : elles peuvent aussi
+retirer davantage de détail. Sur certaines zones détaillées très bruitées,
+la bande moyenne de luminance tombe à environ 0,24–0,32 de l'entrée et sa
+corrélation baisse. Sans image propre de référence, on ne peut pas répartir
+cette suppression entre bruit et texture réelle.
+
+### 40. Revue des planches et vérifications
+
+Planches dérivées locales : `build-patch_noise/voisinages-v008`, six colonnes
+dans l'ordre entrée / production 50 / production 100 / E-l1-c1-f2 /
+E-l2-c1-f3 / E-l2-c2-f4. Leur ordre exact et les zones sont dans le JSON.
+Examen effectué sur 9890 détail 6, IMG_3089 détail 6, R7 7232 plat 2,
+0327 plat 2 et 0830 plat 2 :
+
+- nette diminution des taches chromatiques par rapport à la référence ;
+- lettres de 9890 toujours lisibles, mais aspect plus lisse à contrôler ;
+- points isolés et grain structuré visibles dans certaines zones, notamment
+  le noir du R7 ; leur statut bruit/détail ne peut pas être décidé par un crop seul ;
+- les zones dites planes peuvent contenir une limite ou une texture :
+  ne pas forcer leur variance vers zéro pour satisfaire un seuil.
+
+Ces planches sont des crops 8 bits pour inspection, pas les données mesurées.
+Les mesures sont faites sur le master linéaire natif. Aucune comparaison IA
+ni nouvelle comparaison de fidélité à Lightroom n'est effectuée ici.
+
+Les 47 tests Python sélectionnés passent (voisinages, synthèse RCD, sélection
+de tests, estimation du niveau, plans, comparaison des exports), ainsi que
+les trois tests C++ ciblés. La sélection de tests inclut le nouvel analyseur
+de synthèse. Son appariement par empreinte, son exclusion de dérive, ses
+quartiles et son regroupement par ISO réel sont testés.
+
+<a id="conclusion-20261024-reprise-rcd"></a>
+
+## Conclusion historique — 24 octobre 2026, après reprise RCD
+
+Le changement de dématriçage justifiait bien une reprise : il diminue fortement
+le bruit chromatique fin et change les rapports entre fréquences et entre
+composantes. Les anciens coefficients d'E ne pouvaient pas être repris comme
+validés. Le nouveau profil par plan est désormais mesuré et expérimenté,
+mais E n'est **pas validé pour intégration en production** : seuil de bruit
+résiduel non atteint sur toutes les zones, détail et points isolés à examiner.
+
+Prochaines actions :
+
+1. Analyser les points isolés et le grain structuré de luminance avec un
+   critère robuste tenant compte du bruit estimé et des contours ; distinguer
+   le rejet d'une impulsion de la suppression d'un petit détail légitime.
+2. Vérifier la confiance du profil aveugle à bas ISO et les zones planes
+   automatiquement retenues avant toute augmentation générale de la force.
+3. Rejouer le corpus étendu après choix de la correction, puis proposer une
+   revue utilisateur du rendu complet et du dosage de luminance.
+4. Compléter à terme les paires 60D et R6 Mark III ISO 400–1250 ; aucune
+   nouvelle prise R7 n'est demandée. Les images actuelles suffisent pour les
+   prochaines études sur les résidus et les impulsions.
+
+Le débruiteur de production est inchangé dans cette reprise ; seul le
+dématriçage déjà validé est intégré depuis `dev`. Aucun TIFF supplémentaire
+n'est requis pour poursuivre, aucune photo n'est supprimée et aucune branche
+ni aucun tag n'est publié dans cette action. Les nouvelles preuves JSON
+restent séparées et les campagnes AHD demeurent historiques.
+
+<a id="bruit-20261024-stock-impulsions"></a>
+
+## Stock Images et cartes, puis étude des impulsions — 24 octobre 2026
+
+### 41. Inventaire en lecture seule et sélection
+
+À la demande de l'utilisateur, lecture des CR2/CR3 sous
+`C:/Users/victo/Pictures`, `D:/DCIM`, `D:/nigth`, `E:/DCIM` et `E:/image`.
+L'[inventaire v001](../raw/inventaire-corpus-bruit-v001-20261024T150950Z.json)
+contient 3 105 fichiers aux métadonnées lisibles : 2 541 dans Pictures et 564
+sur les cartes. Ce sont des fichiers, pas 3 105 prises uniques : les copies
+entre emplacements ne sont pas dédupliquées par contenu.
+
+Trois fichiers sont exclus sans suppression, dans `Pictures/RAW/Oliana` :
+`IMG_7039.CR2`, `IMG_7040.CR2`, `IMG_7041.CR2`. Leur début ne présente pas
+l'en-tête TIFF/CR2 attendu ; celui de 7039 commence par des zéros. Cela ne
+constitue ni une réparation ni un verdict sur la récupérabilité des images.
+
+Une planche d'aperçus embarqués est examinée pour sélectionner les sujets
+(`build-patch_noise/selection-bruit-v001.png`, dérivé non mesuré). Les prises
+ci-dessous sont lues **à leur emplacement d'origine**, sans copie dans base :
+
+| Scène | Boîtier / ISO | Emplacement | Intérêt observé sur l'aperçu |
+|---|---|---|---|
+| 6V1A0112 | R6 Mark III / 64000 | Pictures/RAW/05-08-26 | Croissant, ombres ; hors plage ISO caractérisée jusqu'à 51200 |
+| 6V1A0195 | R6 Mark III / 1000 | Pictures/Eclipse/12-08-26 | Ciel étoilé et faible signal |
+| 6V1A0513 | R6 Mark III / 400 | D:/DCIM/100EOSR6 | Roche, peau, texture à faible bruit |
+| 6V1A9273 | R6 Mark III / 1250 | Pictures/RAW/VA | Vêtement, sujet, aplats colorés |
+| 6V1A9426 | R6 Mark III / 1000 | D:/DCIM/100EOSR6 | Sol, mur et prises colorées |
+| 6V1A9997 | R6 Mark III / 640 | E:/DCIM/100CANON | Texture lunaire et bord lumineux sur fond sombre |
+| IMG_3171 | 60D / 12800 | Pictures/photo_alea | Étoiles et branches fines |
+| IMG_6281 | 60D / 6400 | Pictures/Escalade/Svanna | Bruit et textures en intérieur |
+| _MG_7711 | 60D / 800 | Pictures/Escalade/30_11_25 | Vêtement, roche et ombre |
+| _MG_7845 | 60D / 400 | Pictures/Escalade/30_11_25 | Texture de roche et vêtement |
+
+Ajouter deux témoins existants : 6V1A9890 (R6 Mark III / 25600) et 7Y6A7232
+(R7 / 25600). Les SHA-256 des fichiers mesurés sont dans les campagnes natives.
+Les nouvelles scènes sont utiles pour l'évaluation comportementale ; elles ne
+sont pas déclarées comme paires statiques ou références propres. Par exemple,
+8268/8269 ont des ouvertures différentes malgré leur proximité dans la série.
+Aucun nouveau TIFF Lightroom n'est nécessaire à cette étude, qui ne mesure
+pas une équivalence à son débruitage.
+
+### 42. Variante F et contrôles synthétiques
+
+F corrige la luminance avant E : médiane des huit voisins hors centre,
+écart du centre supérieur à 4/6/8 sigma de la bande pixel Y, au moins six
+voisins proches de la médiane, abstention lorsqu'une paire opposée soutient
+le centre. Les voisins sont toujours lus sur l'entrée, sans réinjection des
+corrections. Code limité à `tests/noise_impulse_filter.*` ; aucun traitement
+n'est ajouté au moteur ou à ImageEditor.
+
+Preuve : [impulsions v001](../raw/etude-impulsions-bruit-v001-20261024T192227Z.json),
+126 cas (sept scènes, deux graines, trois corruptions, trois seuils).
+Le sigma synthétique est connu, 0,01 ; ce contrôle oracle n'est pas une
+estimation de bruit RCD. La corruption mixte ajoute des impulsions de ±0,12
+à environ 1 % des pixels, en plus d'un bruit gaussien indépendant.
+
+Sur cette corruption, détection des impulsions ajoutées autour de 94 % aux
+seuils 4 et 6, 93,4 % au seuil 8. La médiane du ratio MSE corrigée / initiale
+vaut environ 0,464 au seuil 6. Le nombre de changements hors injection passe
+de 1 180 au seuil 4 à 91 au seuil 6 et 40 au seuil 8. Ces changements ne sont
+pas tous des faux positifs sémantiques : ils peuvent aussi retirer le bruit
+gaussien présent hors des impulsions ajoutées.
+
+En revanche, sur le contrôle **propre** contenant un vrai point d'un pixel,
+F remplace son centre de 0,8 par 0,25 aux trois seuils. C'est une perte de
+détail certaine. Les lignes fines, l'étoile étalée et la rampe HDR propre
+sont conservées dans ces contrôles ; une texture propre subit 81 changements
+au seuil 4, aucun aux seuils 6/8. Une moyenne MSE favorable ne compense donc
+pas l'échec sur un petit détail légitime. Ce critère seul ne permet pas une
+intégration automatique non conditionnée.
+
+### 43. Mesures photographiques et seconde passe nocturne
+
+[Voisinages v009](../raw/etude-voisinages-bruit-v009-20261024T192228Z.json) :
+12 scènes, 110 zones, 378 s de banc. Références production 50/100, trois
+réglages E et F à trois seuils sur la même entrée RCD/FlatOnly. F utilise
+E-l1-c1-f2 après son préfiltrage. La réduction supplémentaire du proxy HH Y
+est modeste sur la plupart des scènes ; sur le R7 témoin, sa médiane F6/E
+vaut environ 0,856. Cela ne mesure pas une meilleure fidélité à une image propre.
+
+F6 dépasse le critère de dérive de luminance dans certaines ombres :
+
+| Scène | Dérive Y maximale en valeur relative | Delta Y linéaire sur cette zone |
+|---|---:|---:|
+| 6V1A0112 | −8,28 % | −0,0006423 |
+| 6V1A9890 | −11,27 % | −0,0002899 |
+| 7Y6A7232 | −9,22 % | −0,0002497 |
+
+Ce sont des zones très sombres, pas une baisse de luminosité de l'image
+entière. Monter le seuil à 8 ne suffit pas : les maxima restent à −2,60 %,
+−7,18 % et −3,88 %. Un retrait asymétrique des excursions du bruit près du
+noir est une explication à examiner, **pas une cause démontrée ici**.
+Sans vérité propre, une baisse du niveau moyen peut aussi retirer une part
+du biais du bruit : ces chiffres ne prouvent pas une perte équivalente de
+signal physique. Ils dépassent néanmoins notre garde-fou conservateur de 1 %.
+
+[Voisinages v010](../raw/etude-voisinages-bruit-v010-20261024T193008Z.json) :
+quatre scènes nocturnes (0112, 0195, 9997, IMG_3171), 148 s. Ajout de zones
+`bright-feature` pour les images globalement très sombres, centrées sur des
+éléments lumineux ; ce ne sont pas des étoiles certifiées. Le sigma positif
+disponible est tracé et la correction s'abstient si le profil donne un niveau
+absent/nul, plutôt que de considérer le plancher numérique comme une mesure
+certaine. Sur deux zones de 0112, seuls 60–70 % des pixels ont un sigma positif.
+Cela ne constitue pas une confiance statistique certifiée du reste du profil.
+
+La sélection des zones et cette protection changent entre v009 et v010 :
+ne pas agréger leurs moyennes comme des essais strictement identiques.
+Le résultat de v009 sur les témoins n'est ni effacé ni requalifié par v010.
+
+Planches inspectées : v009, 0195 détail 6, 9890 sombre 0, IMG_3171 détail 6 ;
+v010, 0195 élément lumineux 10, 9997 élément lumineux 4, 0112 élément lumineux
+10. Les étoiles étalées inspectées restent visibles et le bord lunaire est
+conservé ; aucune garantie sur les plus petits points ne s'en déduit. La Lune
+paraît plus lisse sous E que dans l'entrée : le profil aveugle pourrait prendre
+une partie de la texture pour du bruit, ce qui reste à vérifier. Les points
+isolés et une partie du grain structuré persistent. Les planches sont des
+dérivés 8 bits ; les métriques viennent du master linéaire natif.
+
+Les temps de banc incluent de nombreux candidats et mesures. Ils ne sont
+pas des temps de débruitage de l'IHM. F n'a pas de mesure pleine image validée.
+
+### 44. Vérifications et périmètre
+
+50 tests Python sélectionnés et quatre tests C++ ciblés passent, dont le
+nouveau `noiseImpulseTests`. Le lecteur de métadonnées est testé sur des
+conteneurs synthétiques, sur le rejet d'en-têtes invalides et sur la lecture
+de l'ISO sans écrire dans la source. Les images mesurées restent à leur
+emplacement ; aucun original n'est copié, supprimé ou modifié. Aucune publication
+GitHub n'est réalisée. Les nouveaux lecteurs, contrôles et candidats restent
+des outils d'étude, pas un second moteur de production.
+
+## Conclusion intermédiaire — 24 octobre 2026, après étude du stock
+
+Le stock fournit déjà des cas pertinents à bas/moyen ISO, des scènes très
+bruitées et des éléments ponctuels réels. Il n'est pas nécessaire de demander
+de nouvelles prises pour poursuivre l'étude comportementale.
+
+F simple est **non admissible en automatique en l'état** : il sait retirer
+des impulsions synthétiques, mais peut supprimer un détail propre d'un pixel
+et dépasse le critère de dérive dans des ombres réelles. Il ne faut pas
+répondre à ces échecs en augmentant globalement la force ou en ajoutant une
+compensation lumineuse destinée seulement à faire passer les métriques.
+
+Ordre proposé :
+
+1. Mesurer la confiance du profil de bruit par niveau de signal et vérifier
+   les zones structurées, notamment la texture lunaire, avant de filtrer plus.
+2. Passer d'un verdict local binaire à une décision avec contexte et abstention :
+   voisinages plus larges, soutien spatial/couleur, cohérence des petites formes.
+   L'ambiguïté exacte entre point réel et impulsion ne disparaît pas sans
+   information supplémentaire ; ne pas annoncer une séparation garantie.
+3. Examiner la distribution des corrections près du noir, en distinguant
+   dérive d'apparence et biais physique du bruit. Les différences de paires
+   donnent des informations de variance/corrélation, mais ne suffisent pas à
+   identifier seules le biais marginal après les transformations non linéaires.
+4. Rejouer les contrôles propres et les scènes étoilées avant d'étendre au
+   corpus complet, puis soumettre un rendu complet à l'utilisateur.
+
+E reste également expérimental. Aucun changement du débruiteur de production
+n'est effectué à la suite de cette étude. Les paires physiques 60D et les
+paires R6 bas/moyen ISO restent à auditer dans le stock ou à compléter plus
+tard ; une série de photos ordinaires n'est pas automatiquement une paire de
+caractérisation valide. Ne demander de nouvelles prises qu'après cet audit.
+
+<a id="bruit-20261024-soutien-profil"></a>
+
+## 45. Soutien du profil et abstention G — 24 octobre 2026, campagne v011
+
+**Verdict : garde-fous instructifs, mais insuffisants ; pas d'intégration en
+production.** Cette campagne suit chronologiquement v010 et teste la première
+action de la conclusion intermédiaire précédente.
+
+Preuve canonique :
+[etude-voisinages-bruit-v011-20261024T194050Z.json](../raw/etude-voisinages-bruit-v011-20261024T194050Z.json).
+Début enregistré à 19:40:50 UTC, durée du banc 343 s. Les douze sources sont
+celles de l'étude du stock : R6 Mark III, R7 et 60D ; 116 zones, dont 47
+étiquetées planes, 19 sombres, 44 détails et six éléments lumineux. Ces
+étiquettes sont des sélections automatiques, pas une vérité de scène propre.
+Les classes de signal et les zones d'une même image ne sont pas indépendantes.
+
+Le code E remplit les classes manquantes depuis la classe valide la plus
+proche, sans tracer un degré de soutien. G n'en change pas l'estimation :
+il module son résultat pour isoler l'effet d'une abstention. Le
+[protocole, section 13](../protocols/protocole-bruit-voisinages-adaptatifs.md#13-soutien-du-profil-et-abstention--étude-g)
+et le champ `profile_support_rule` du JSON donnent tous les seuils.
+
+Pour chaque classe Y et chaque plan, le JSON conserve le nombre total de
+tuiles 32 × 32, les tuiles admissibles, q25/q75 HH et le verdict de soutien.
+Une tuile doit être peu structurée selon gradient G2/HH Y ≤ 1, non massivement
+écrêtée et avoir un HH mesurable. Une classe exige au moins 16 tuiles
+admissibles, q25 > 10⁻⁷ et q75 ≤ 2 q25. Ces seuils sont des choix
+exploratoires, **pas une confiance probabiliste calibrée**.
+
+- **G-support** interpole le soutien binaire entre classes ; une classe absente
+  contribue zéro, sans recopier la classe valide la plus proche.
+- **G-structure** ajoute le facteur local `1 / (1 + (gradient G2 / HH Y)⁴)`.
+- Les deux appliquent `entrée + poids × (E-l1-c1-f2 − entrée)` ; à poids nul,
+  l'entrée est restituée exactement. Les poids moyens tracés portent sur les
+  ROI rembourrées, les métriques sur leurs cœurs.
+
+Les calculs photographiques utilisent le master Rec.2020 linéaire RCD/FlatOnly
+en mémoire. Aucun TIFF IPR de mesure, aucun changement des originaux.
+Les coefficients spectraux restent ceux des paires R6 ; leur transfert aux
+autres boîtiers reste une hypothèse expérimentale.
+
+## 46. Résultats photographiques de v011
+
+Comparaison strictement interne à v011, sur les mêmes entrées et zones :
+
+| Mesure | E-l1-c1-f2 | G-support | G-structure |
+| --- | ---: | ---: | ---: |
+| Médiane chroma bande moyenne sortie/entrée, 47 zones planes | 0,1113 | 0,1143 | 0,1171 |
+| Zones planes avec ce ratio ≤ 0,15 | 34/47 | 28/47 | 28/47 |
+| Médiane HH Y sortie/entrée, zones de détail | 0,2488 | 0,2658 | 0,4134 |
+| Maximum absolu de dérive moyenne Y relative, 116 zones | 0,1808 % | 2,3004 % | 2,2774 % |
+| Zones dépassant 1 % de dérive Y | 0 | 5 | 5 |
+| Maximum de dérive chromatique normalisée par HH d'entrée | 0,8212 σ | 0,7614 σ | 1,0626 σ |
+
+Les ratios de bandes contiennent aussi du détail réel : plus faible n'est pas
+automatiquement meilleur. La médiane masque des échecs individuels. E ne
+devient pas validé par comparaison : six zones dépassent déjà 0,1 σ de dérive
+chromatique dans ce corpus étendu, contre dix pour G-support et seize pour
+G-structure. Une normalisation par un HH très faible peut amplifier le ratio ;
+les sigmas et mesures par zone restent disponibles dans le JSON.
+
+Sur **6V1A9997, la Lune**, seules les classes très sombres 0, 1 et 2 passent
+le soutien pour les trois plans. Dans les deux zones d'élément lumineux, les
+poids Y moyens rembourrés de G-support sont 0,407 et 0,239 : ils incluent du
+fond sombre et ne signifient pas que ces proportions de la surface lunaire
+sont corrigées. Les ratios HH Y passent respectivement de 0,4225/0,3686 sous E
+à 0,8807/1,0004 sous G-support. La texture paraît mieux conservée dans la
+planche `6V1A9997-4-bright-feature.png`, au prix d'une forte abstention.
+Sans référence propre, cela **ne prouve ni une meilleure estimation du bruit
+ni une surestimation du sigma lunaire par E**.
+
+Sur les ombres de **6V1A0112**, G-structure atteint −2,2774 % pour une moyenne
+Y de 0,007785, soit environ −0,000177 en Y linéaire absolu. Il s'agit d'une
+zone sombre, pas d'une baisse globale de l'exposition de l'image. Moduler
+spatialement un résultat qui conservait sa moyenne peut casser cette
+conservation ; le lissage du guide ne suffit pas à l'empêcher. Le seuil
+conservateur de 1 % reste dépassé sans compensation ajoutée pour le masquer.
+
+Planches inspectées : 0112 sombre 0, 0195 élément lumineux 10, 0513 détail 6
+et 9997 élément lumineux 4. Les points étalés inspectés restent visibles ;
+aucune garantie sur tous les petits points n'en découle. Les planches sont
+des dérivés sRGB 8 bits ; les mesures proviennent des plans linéaires natifs.
+
+## 47. Contrôles propres : le soutien seul ne distingue pas le bruit de la texture
+
+Les 48 enregistrements combinent six scènes, deux graines, deux niveaux de
+bruit (σ = 0 ou 0,01 indépendant dans Y/Co/Cg) et les deux variantes G.
+Les deux graines répètent les cas propres déterministes ; ce ne sont pas
+deux observations propres indépendantes.
+
+Sans bruit, les aplats, bords, points d'un pixel, étoiles étalées et rampes
+restent exactement inchangés, car le profil n'a pas de soutien. C'est un
+contrôle d'abstention, pas la preuve d'un détecteur universel de détails.
+
+**Contre-exemple bloquant :** la texture sinusoïdale propre reçoit un poids
+moyen d'environ 0,91. Elle présente un HH important et régulier, mais peu de
+gradient après G2 ; les critères la prennent donc pour un signal corrigeable.
+Le changement maximal atteint **0,033 en unités linéaires de plan**, sans aucun
+bruit ajouté. Le bruit gaussien ajouté à cette texture donne une MSE Y
+sortie/entrée d'environ **3,78** : la dégradation du détail dépasse le bruit
+retiré. La protection G-structure ne résout presque pas ce cas.
+
+En revanche, sur l'aplat gaussien, ce ratio de MSE Y est 0,0099. Ce bon cas
+n'annule pas le contre-exemple. Le bruit synthétique n'a ni la covariance
+spatiale RCD ni le spectre, la distribution et les transformations du bruit
+réel ; ne pas extrapoler ces gains aux photos.
+
+## 48. Vérifications et coût de l'étude G
+
+Le probe compile en Release ; 37 tests Python ciblés et quatre tests C++
+(impulsions, estimation, détail et dématriçage) passent. Les contrôles natifs
+vérifient aussi les sorties finies et l'identité des cas propres non texturés.
+Après ajout d'une entrée de relecture `--profile-controls` et d'assertions
+sur les classes absentes et leur interpolation, les 48 enregistrements sont
+reproduits exactement. Le binaire recompilé a une autre empreinte ; le JSON
+conserve celle du binaire réellement utilisé pour la campagne, sans réécriture.
+
+L'estimation du soutien ajoute 0,487 à 1,439 s par image sur cette machine.
+Le temps G par ROI ne mesure que la modulation ; il exclut E et ce profilage.
+Seul E est chronométré sur l'image entière. Les 343 s sont le temps du banc
+complet, pas la latence d'une commande utilisateur. Pas de validation de
+latence G en pleine image, ni d'intégration du candidat dans `src/`.
+
+## Conclusion intermédiaire — 24 octobre 2026, après étude G
+
+**La disponibilité et la régularité d'un profil ne prouvent pas qu'il décrit
+du bruit.** G explique comment préserver davantage certaines structures, mais
+ne résout pas la confusion avec une texture fine et peut introduire une dérive
+de moyenne. Ni F ni G ne sont admissibles automatiquement en production en
+l'état. E reste expérimental ; le corpus étendu expose aussi ses limites.
+
+La prochaine piste doit examiner la **cohérence spectrale et directionnelle** :
+comparer les sous-bandes et corrélations locales aux distributions réellement
+observées dans les paires RCD, plutôt qu'utiliser seulement HH et un gradient
+G2. Mesurer d'abord le pouvoir de séparation sur les textures propres, les
+points/étoiles et les paires existantes, puis appliquer une décision avec
+abstention. Ne pas confondre un indicateur heuristique avec une probabilité
+calibrée. Évaluer la conservation de moyenne dans la formulation du filtre,
+pas par une compensation finale destinée à effacer un échec.
+
+Le stock actuel suffit pour cette prochaine étape ; aucune nouvelle prise ni
+export Lightroom n'est demandé. Les caractérisations physiques 60D et bas ISO
+restent à consolider avant de parler de généralisation entre boîtiers.
+Les originaux et les anciennes mémoires JSON sont conservés. Aucun changement
+du débruiteur de production, aucune publication GitHub pour cette étude.
+
+<a id="bruit-20261024-spectral"></a>
+
+## 49. Rappel du modèle E — 24 octobre 2026
+
+E n'est ni un réseau neuronal ni un algorithme unique. C'est un assemblage
+expérimental de traitements classiques, dans les plans Y/Co/Cg du master
+Rec.2020 linéaire :
+
+1. **Profil du bruit** : estimer HH de Haar sur les tuiles 32 × 32 par classe
+   de luminosité ; retenir q25 et corriger son biais mesuré sur les paires.
+   Les rapports d'énergie entre bandes viennent des paires R6 Mark III RCD.
+   Les classes manquantes sont encore remplies depuis la plus proche valide.
+2. **Luminance : Wiener multiscalaire** sur les bandes `Y−G1`, `G1−G4`,
+   `G4−G16`, avec le fond G16. Le gain local d'une bande b est
+   `max(0, 1 − α σ_b² / moyenne_locale(b²))`. Il s'agit d'une atténuation de
+   type Wiener à énergie locale, pas d'une reconstruction bayésienne exacte.
+3. **Couleur :** sous-échantillonnage par aire à demi-résolution, médiane 3 × 3,
+   similarité de blocs 3 × 3 dans une recherche 9 × 9 guidée par Y, remontée
+   guidée à pleine résolution et atténuation Wiener du résidu fin.
+4. **Conservation de moyenne :** restaurer une composante G16 de la différence
+   entrée/sortie, séparément pour Y et les deux plans chromatiques.
+
+Haar sert ici principalement à **estimer** le bruit ; la décomposition
+multiscalaire de Y utilise des flous gaussiens. Ne pas présenter E comme un
+simple seuillage d'ondelettes Haar ou un équivalent d'un modèle IA entraîné.
+E-l1-c1-f2 correspond à α Y = 1, intensité des blocs chromatiques = 1,
+α du résidu chromatique fin = 2. Son défaut actuel reste la confusion possible
+entre une énergie de texture et une énergie de bruit.
+
+## 50. Diagnostic spectral et directionnel — campagne v001
+
+Preuve :
+[etude-spectrale-bruit-v001-20261024T195453Z.json](../raw/etude-spectrale-bruit-v001-20261024T195453Z.json).
+Début 19:54:53 UTC, durée 160,7 s pour tout le banc. Huit paires physiques
+R6 Mark III, dont quatre d'ajustement et quatre réservées, aux ISO 100, 1600,
+6400 et 51200. Les empreintes sont vérifiées ; aucun fichier ne participe
+aux deux ensembles. Chaque paire est développée en RCD/FlatOnly, puis
+`D = (A − B)/√2` fournit une référence différentielle dans les tuiles calmes.
+Ce n'est pas une vérité du bruit marginal complet d'une image unique après
+traitement non linéaire ; un mouvement résiduel ou une dérive peuvent subsister.
+
+Les douze scènes de v011 fournissent 5 568 signatures de tuiles de plans
+(116 zones × 16 tuiles × 3 plans), sans calculer de nouveau débruitage.
+Les 48 contrôles de plans scalaires croisent huit motifs, deux graines et
+trois états (propre, gaussien blanc, gaussien lissé). Ce ne sont pas des RAW
+synthétiques. Les mêmes bruits sont réutilisés entre motifs à graine donnée.
+
+Huit descripteurs mesurent rapports d'énergie Haar directionnels, corrélations
+HH horizontales/verticales, énergie entre échelles, platitude spectrale et
+concentration dans les huit pics DFT dominants. La DFT est fenêtrée par Hann,
+hors disque de rayon deux autour du continu. Le
+[protocole, section 14](../protocols/protocole-bruit-voisinages-adaptatifs.md#14-diagnostic-spectral-et-directionnel-avant-un-nouveau-filtre)
+fixe les formules et les seuils avant lecture des paires réservées.
+
+Chaque enveloppe de référence est définie par médianes/MAD des seuls résidus
+d'ajustement, par plan et classe Y, en regroupant les ISO. Son score est le
+maximum des écarts standardisés et son seuil le 95e percentile d'ajustement.
+Quatre familles : échelles, spectre, directions, combinaison. Les 48 enveloppes
+obtenues couvrent seulement les classes **9 à 12**, soit approximativement
+Y ∈ [0,0178 ; 0,1778[. Hors de ce domaine : **abstention**, pas « signal propre ».
+Ces scores sont des compatibilités avec une référence, pas des probabilités
+de pixel bruité. Les seuils ne sont pas réajustés sur les résultats suivants.
+
+## 51. Vérification hors ajustement et limites du premier diagnostic
+
+Chaque plan dispose de 506 tuiles D réservées ; 339 ont un modèle disponible,
+167 sont hors couverture. Les mêmes tuiles sont utilisées pour les quatre
+familles. Proportions compatibles, parmi les 339 mesurables :
+
+| Famille | Y | Co | Cg |
+| --- | ---: | ---: | ---: |
+| Échelles seules | 317/339 | 315/339 | 302/339 |
+| Spectre seul | 318/339 | 311/339 | 305/339 |
+| Directions seules | 329/339 | 327/339 | 308/339 |
+| Combinaison | 323/339 (95,3 %) | 315/339 (92,9 %) | 302/339 (89,1 %) |
+
+La combinaison n'est pas supérieure partout. À ISO 51200, seuls **49/73**
+résidus Cg mesurables sont compatibles avec l'enveloppe combinée. Le profil
+regroupant les ISO n'est donc pas suffisamment généralisé ; le nombre de
+paires physiques reste faible. Les comptes de tuiles ne sont pas autant
+d'observations indépendantes ni une validation sur d'autres capteurs.
+
+Dans les contrôles, les textures fines/grossières propres et le damier sont
+hors enveloppe combinée. Cela fournit une piste contre l'échec de G, mais
+**ne suffit pas** : les aplats corrompus par bruit gaussien blanc ou lissé sont
+eux aussi hors enveloppe, dans toutes les classes Y disponibles. Ces bruits
+ne reproduisent pas assez le domaine RCD ; le résultat n'est pas une séparation
+universelle texture/bruit. Les diagnostics multiples d'un même contrôle selon
+quatre classes ne sont pas quatre observations indépendantes.
+
+Le spectre seul accepte en outre une étoile propre dans **6/8 diagnostics**
+(deux graines identiques à bruit nul × quatre classes) et toutes les étoiles
+avec bruit blanc dans ces mêmes diagnostics. Une petite forme réelle peut
+donc avoir une signature compatible avec le bruit. La combinaison les rejette
+ici, sans que cela garantisse toutes les formes et toutes les amplitudes.
+
+Sur la Lune 9997, une seule des 96 tuiles Y est dans une classe couverte et
+elle est hors enveloppe ; **95 abstentions empêchent de conclure sur la texture
+lunaire à partir de ce banc spectral**. Les résultats photographiques R7/60D
+restent exploratoires, sans vérité propre ni calibration spécifique.
+
+Ce premier diagnostic justifie un contrôle avec des résidus RCD réels ajoutés
+à des motifs connus, plutôt que modifier les seuils pour accepter le bruit
+gaussien générique ou annoncer dès maintenant un meilleur débruiteur.
+
+## 52. Injections de résidus réservés — complément à enveloppes figées
+
+Preuve :
+[etude-injection-spectrale-bruit-v001-20261024T195952Z.json](../raw/etude-injection-spectrale-bruit-v001-20261024T195952Z.json).
+Début 19:59:52 UTC, durée 40,3 s. Le complément référence par empreinte la
+campagne précédente et copie exactement ses enveloppes : **aucun nouveau
+réglage sur ces résultats**. Il relit seulement les quatre paires réservées.
+Les identités, empreintes et dérives d'exposition sont identiques à la première
+mesure ; aucun RAW d'ajustement ne s'y retrouve.
+
+Dans chaque classe et plan, prendre jusqu'à deux tuiles D (première et médiane
+de l'échantillon). Ajouter un motif propre dont le pic absolu vaut 1, 3 ou 10
+écarts-types mesurés du résidu. Le bruit lui-même n'est pas remis à l'échelle.
+L'aplat « bruit seul » est compté une seule fois. Cela donne **2 508 signatures** :
+38 résidus par plan × trois plans × 22 états. Les états d'un même résidu sont
+appariés et ne sont pas indépendants. Le JSON conserve coordonnées, plan,
+classe Y, motif, amplitude, moyenne/écart-type du résidu et signatures.
+
+Sur Y, chaque état dispose de 38 résidus ; 24 ont un modèle, les 14 autres
+restent des abstentions. Compatibilités sur ces **mêmes 24 résidus** :
+
+| Motif ajouté ; pic relatif au σ du résidu | Échelles | Spectre | Directions | Combinaison |
+| --- | ---: | ---: | ---: | ---: |
+| Aucun, bruit seul | 20/24 | 23/24 | 23/24 | 22/24 |
+| Texture fine, 1 σ | 9/24 | 1/24 | 22/24 | 4/24 |
+| Texture fine, 3 σ | 0/24 | 0/24 | 3/24 | 0/24 |
+| Texture grossière, 3 σ | 0/24 | 0/24 | 18/24 | 0/24 |
+| Point d'un pixel, 3 σ | 22/24 | 18/24 | 23/24 | 21/24 |
+| Point d'un pixel, 10 σ | 18/24 | 0/24 | 16/24 | 1/24 |
+| Étoile étalée, 3 σ | 20/24 | 21/24 | 23/24 | 23/24 |
+| Étoile étalée, 10 σ | 15/24 | 15/24 | 23/24 | 16/24 |
+
+Pour le bruit seul, une compatibilité élevée est souhaitable. Pour un motif
+nettement structuré, une incompatibilité peut aider à écarter cette tuile de
+l'estimation. À faible amplitude, une compatibilité n'est pas automatiquement
+une erreur : le bruit peut masquer le motif. Ces diagnostics ne décident pas
+encore d'une correction, d'une MSE ou de la visibilité d'une étoile filtrée.
+
+Le spectre apporte donc une information utile face aux textures étendues,
+notamment là où les directions seules acceptent encore 18/24 textures
+grossières à 3 σ. **La moyenne sur une tuile 32 × 32 dilue toutefois les petites
+formes** : même un pic stellaire de 10 σ peut rester compatible. Le résultat
+ne permet pas de traiter automatiquement « tuile compatible = pixels bruités ».
+Le comportement dépend aussi du plan : à 10 σ, les étoiles sont compatibles
+dans 18/24 diagnostics Co mais 0/24 Cg pour la combinaison. Ne pas remplacer
+ces différences par un coefficient de débruitage commun arbitraire.
+
+Ce montage est une injection **après développement** dans un résidu
+différentiel. Il ne simule ni la réponse du capteur à la structure, ni son
+passage dans RCD, ni le bruit marginal non gaussien d'une vue unique. Les
+résultats sont plus proches du domaine que le gaussien générique, pas une
+validation physique complète du bruit d'acquisition.
+
+## 53. Vérifications et périmètre de l'étape spectrale
+
+Le module de signatures, ses contrôles et le lanceur restent dans `tests/`.
+Les en-têtes ont une garde standard. Le probe et `noiseSpectralTests` compilent
+en Release ; 42 tests Python ciblés et cinq tests C++ passent. Les contrôles
+vérifient notamment finitude, type/géométrie, invariance approximative à
+l'échelle, constance non mesurable, séparation ajustement/vérification,
+abstention hors couverture et identité du contrôle « bruit seul » injecté.
+Une entrée de très grande amplitude entraînant un débordement d'énergie est
+refusée explicitement ; ce garde-fou ajouté après mesure ne réécrit pas les
+empreintes des binaires de campagne.
+
+Les modèles du complément ont été comparés exactement à ceux du parent et
+les ensembles de SHA d'ajustement/réservés sont disjoints. Les JSON sont
+stricts, versionnés et horodatés ; les images originales restent inchangées.
+Les durées de 160,7 s et 40,3 s mesurent les bancs, pas un débruitage utilisateur.
+Aucune modification du moteur de production ni publication GitHub.
+
+<a id="conclusion-actuelle"></a>
+
+## Conclusion actuelle et prochaines actions — 24 octobre 2026, après diagnostic spectral
+
+**Piste utile pour mieux estimer le bruit, mais pas un détecteur de pixels
+bruités validé.** La cohérence spectrale permet d'écarter des textures qui
+trompaient le soutien G ; la combinaison conserve une bonne compatibilité
+Y avec les résidus réservés dans les plages couvertes. Les limites restent
+nettes : couverture Y étroite, Cg moins stable à ISO 51200, domaine gaussien
+générique rejeté et petites étoiles encore compatibles avec le bruit.
+
+La prochaine expérience doit employer ces descripteurs pour **sélectionner
+les tuiles servant au profil de bruit d'E**, puis vérifier les sigmas estimés
+contre les résidus réservés. Ce choix intervient avant le filtrage, pas comme
+un masque binaire appliqué directement à tous les pixels d'une tuile.
+Conserver les garde-fous de couverture et ajouter séparément une protection
+spatiale des petites formes ; ne pas confondre modèle de bruit et détecteur
+de sujet. Ne pas compenser artificiellement la luminosité pour masquer une
+dérive. L'extension de couverture doit rester conditionnée aux données mesurées.
+
+Une intégration en production demandera encore conservation des textures,
+points et moyennes, qualité et coût pleine image, puis revue visuelle.
+Le stock actuel suffit pour poursuivre ; aucun nouvel export Lightroom ni
+nouvelle prise n'est nécessaire pour cette prochaine expérience.
