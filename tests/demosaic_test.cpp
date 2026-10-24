@@ -65,19 +65,19 @@ int main()
     for (const Demosaic::Pattern &p : {Rggb, Demosaic::Pattern{{{2, 1}, {1, 0}}},
                                        Demosaic::Pattern{{{1, 0}, {2, 1}}}, Demosaic::Pattern{{{1, 2}, {0, 1}}}}) {
         auto image = mosaic(w, h, p, flat);
-        if (!check(Demosaic::interpolate(raw(image), w, h, p, Demosaic::ChromaMedian::Off), "interpolation completes")) return 1;
+        if (!check(Demosaic::interpolate(raw(image), w, h, p, Demosaic::ChromaMedian::Off, Demosaic::Green::Ratio, {}), "interpolation completes")) return 1;
         if (!check(maxError(image, w, h, flat, 0) < 2.0 / 65535.0,
                    "a uniform colour is reconstructed exactly, borders and tile seams included")) return 1;
     }
     {
         auto image = mosaic(w, h, Rggb, gradient);
-        Demosaic::interpolate(raw(image), w, h, Rggb, Demosaic::ChromaMedian::FlatOnly);
+        Demosaic::interpolate(raw(image), w, h, Rggb, Demosaic::ChromaMedian::FlatOnly, Demosaic::Green::Ratio, {});
         if (!check(maxError(image, w, h, gradient, 8) < 0.002, "a smooth gradient stays within 0.2 %")) return 1;
     }
     {
         // A grey step must not gain colour beyond the two pixels next to it.
         auto image = mosaic(w, h, Rggb, greyEdge);
-        Demosaic::interpolate(raw(image), w, h, Rggb, Demosaic::ChromaMedian::Off);
+        Demosaic::interpolate(raw(image), w, h, Rggb, Demosaic::ChromaMedian::Off, Demosaic::Green::Ratio, {});
         double worst = 0;
         for (int y = 8; y < h - 8; ++y)
             for (int x = 8; x < w - 8; ++x) {
@@ -89,10 +89,10 @@ int main()
     }
     {
         auto image = mosaic(w, h, Rggb, flat);
-        if (!check(!Demosaic::interpolate(raw(image), w, h, Rggb, Demosaic::ChromaMedian::Off, [] { return true; }),
+        if (!check(!Demosaic::interpolate(raw(image), w, h, Rggb, Demosaic::ChromaMedian::Off, Demosaic::Green::Ratio, [] { return true; }),
                    "cancellation is reported")) return 1;
-        if (!check(!Demosaic::interpolate(nullptr, w, h, Rggb, Demosaic::ChromaMedian::Off) &&
-                       !Demosaic::interpolate(raw(image), 1, 1, Rggb, Demosaic::ChromaMedian::Off),
+        if (!check(!Demosaic::interpolate(nullptr, w, h, Rggb, Demosaic::ChromaMedian::Off, Demosaic::Green::Ratio, {}) &&
+                       !Demosaic::interpolate(raw(image), 1, 1, Rggb, Demosaic::ChromaMedian::Off, Demosaic::Green::Ratio, {}),
                    "missing or degenerate images are refused")) return 1;
     }
     return 0;

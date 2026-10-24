@@ -18,10 +18,61 @@ constexpr int TileMargin = 12;   // even: keeps the pattern; covers the 9-pixel 
 constexpr float Eps = 1e-5f;
 constexpr float FlatGradient = 0.5f, DetailGradient = 1.0f;   // in luminance noise sigmas
 
+// Direction weight of a pixel (0 vertical, 1 horizontal): its own, or pulled toward
+// the mean of its diagonal neighbours when they are more decided.
+float direction(const cv::Mat &vh, int y, int x, Green green)
+{
+    const float own = vh.at<float>(y, x);
+    if (green == Green::RatioOwnDirection || green == Green::LaplacianOwnDirection) return own;
+    const float n = 0.25f * (vh.at<float>(y - 1, x - 1) + vh.at<float>(y - 1, x + 1) +
+                             vh.at<float>(y + 1, x - 1) + vh.at<float>(y + 1, x + 1));
+    return std::abs(0.5f - own) < std::abs(0.5f - n) ? n : own;
+}
+
+// Green at red and blue pixels: gradient-weighted directional estimates, the
+// neighbour green scaled by the low-pass ratio (RCD) or corrected by half the
+// same-colour difference toward the centre (Laplacian).
+void interpolateGreen(const cv::Mat &cfa, const cv::Mat &vh, const cv::Mat &lpf, const Pattern &p, Green green, cv::Mat &G)
+{
+    // weight of the Laplacian estimate against the ratio one
+    const float laplacian = green == Green::Laplacian || green == Green::LaplacianOwnDirection ? 1.f
+                          : green == Green::HalfLaplacian ? 0.5f : 0.f;
+    const int H = cfa.rows, W = cfa.cols;
+    const auto T = [&](int y, int x) { return cfa.at<float>(y, x); };
+    for (int y = 5; y < H - 5; ++y)
+        for (int x = 5; x < W - 5; ++x) {
+            if (p[size_t(y & 1)][size_t(x & 1)] == 1) continue;
+            const float L = lpf.at<float>(y, x);
+            const auto ratio = [&](int yy, int xx) {
+                const float l = lpf.at<float>(yy, xx);
+                return 1.f + (L - l) / (Eps + L + l);
+            };
+            const auto estimate = [&](int dy, int dx) {
+                const float neighbour = T(y + dy, x + dx);
+                const float byRatio = neighbour * ratio(y + 2 * dy, x + 2 * dx);
+                const float byLaplacian = neighbour + 0.5f * (T(y, x) - T(y + 2 * dy, x + 2 * dx));
+                return laplacian * byLaplacian + (1.f - laplacian) * byRatio;
+            };
+            const float nEst = estimate(-1, 0), sEst = estimate(1, 0), wEst = estimate(0, -1), eEst = estimate(0, 1);
+            const float nG = Eps + std::abs(T(y - 1, x) - T(y + 1, x)) + std::abs(T(y, x) - T(y - 2, x)) +
+                             std::abs(T(y - 1, x) - T(y - 3, x)) + std::abs(T(y - 2, x) - T(y - 4, x));
+            const float sG = Eps + std::abs(T(y + 1, x) - T(y - 1, x)) + std::abs(T(y, x) - T(y + 2, x)) +
+                             std::abs(T(y + 1, x) - T(y + 3, x)) + std::abs(T(y + 2, x) - T(y + 4, x));
+            const float wG = Eps + std::abs(T(y, x - 1) - T(y, x + 1)) + std::abs(T(y, x) - T(y, x - 2)) +
+                             std::abs(T(y, x - 1) - T(y, x - 3)) + std::abs(T(y, x - 2) - T(y, x - 4));
+            const float eG = Eps + std::abs(T(y, x + 1) - T(y, x - 1)) + std::abs(T(y, x) - T(y, x + 2)) +
+                             std::abs(T(y, x + 1) - T(y, x + 3)) + std::abs(T(y, x + 2) - T(y, x + 4));
+            const float vEst = (sG * nEst + nG * sEst) / (nG + sG);
+            const float hEst = (eG * wEst + wG * eEst) / (wG + eG);
+            const float d = direction(vh, y, x, green);
+            G.at<float>(y, x) = std::max(0.f, d * hEst + (1.f - d) * vEst);
+        }
+}
+
 // RCD on a padded tile, values ~[0, 1]: green from ratio-corrected directional
 // estimates, the direction decided per pixel and pulled toward the most decided
 // diagonal neighbour; red and blue from gradient-weighted colour differences.
-cv::Mat rcd(const cv::Mat &cfa, const Pattern &p)
+cv::Mat rcd(const cv::Mat &cfa, const Pattern &p, Green green)
 {
     const int H = cfa.rows, W = cfa.cols;
     const auto colour = [&](int y, int x) { return p[size_t(y & 1)][size_t(x & 1)]; };
@@ -47,36 +98,9 @@ cv::Mat rcd(const cv::Mat &cfa, const Pattern &p)
         for (int x = 1; x < W - 1; ++x)
             lpf.at<float>(y, x) = T(y, x) + 0.5f * (T(y - 1, x) + T(y + 1, x) + T(y, x - 1) + T(y, x + 1)) +
                                   0.25f * (T(y - 1, x - 1) + T(y - 1, x + 1) + T(y + 1, x - 1) + T(y + 1, x + 1));
-    const auto decided = [&](int y, int x) {
-        const float own = vh.at<float>(y, x);
-        const float n = 0.25f * (vh.at<float>(y - 1, x - 1) + vh.at<float>(y - 1, x + 1) +
-                                 vh.at<float>(y + 1, x - 1) + vh.at<float>(y + 1, x + 1));
-        return std::abs(0.5f - own) < std::abs(0.5f - n) ? n : own;
-    };
     // 3. Green at red and blue pixels.
-    for (int y = 5; y < H - 5; ++y)
-        for (int x = 5; x < W - 5; ++x) {
-            if (colour(y, x) == 1) continue;
-            const float L = lpf.at<float>(y, x);
-            const auto ratio = [&](int yy, int xx) {
-                const float l = lpf.at<float>(yy, xx);
-                return 1.f + (L - l) / (Eps + L + l);
-            };
-            const float nEst = T(y - 1, x) * ratio(y - 2, x), sEst = T(y + 1, x) * ratio(y + 2, x);
-            const float wEst = T(y, x - 1) * ratio(y, x - 2), eEst = T(y, x + 1) * ratio(y, x + 2);
-            const float nG = Eps + std::abs(T(y - 1, x) - T(y + 1, x)) + std::abs(T(y, x) - T(y - 2, x)) +
-                             std::abs(T(y - 1, x) - T(y - 3, x)) + std::abs(T(y - 2, x) - T(y - 4, x));
-            const float sG = Eps + std::abs(T(y + 1, x) - T(y - 1, x)) + std::abs(T(y, x) - T(y + 2, x)) +
-                             std::abs(T(y + 1, x) - T(y + 3, x)) + std::abs(T(y + 2, x) - T(y + 4, x));
-            const float wG = Eps + std::abs(T(y, x - 1) - T(y, x + 1)) + std::abs(T(y, x) - T(y, x - 2)) +
-                             std::abs(T(y, x - 1) - T(y, x - 3)) + std::abs(T(y, x - 2) - T(y, x - 4));
-            const float eG = Eps + std::abs(T(y, x + 1) - T(y, x - 1)) + std::abs(T(y, x) - T(y, x + 2)) +
-                             std::abs(T(y, x + 1) - T(y, x + 3)) + std::abs(T(y, x + 2) - T(y, x + 4));
-            const float vEst = (sG * nEst + nG * sEst) / (nG + sG);
-            const float hEst = (eG * wEst + wG * eEst) / (wG + eG);
-            const float d = decided(y, x);
-            G.at<float>(y, x) = std::max(0.f, d * hEst + (1.f - d) * vEst);
-        }
+    interpolateGreen(cfa, vh, lpf, p, green, G);
+    const auto decided = [&](int y, int x) { return direction(vh, y, x, green); };
     // 4. Red at blue pixels and blue at red pixels: diagonal colour differences.
     cv::Mat R(H, W, CV_32F, cv::Scalar(0.f)), B(H, W, CV_32F, cv::Scalar(0.f));
     for (int y = 0; y < H; ++y)
@@ -187,7 +211,7 @@ int workerThreads()
 }
 
 bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
-                 ChromaMedian median, const std::function<bool()> &cancelled)
+                 ChromaMedian median, Green green, const std::function<bool()> &cancelled)
 {
     if (!image || width < 2 || height < 2) return false;
     const auto colour = [&](int y, int x) { return pattern[size_t(y & 1)][size_t(x & 1)]; };
@@ -204,7 +228,7 @@ bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
         cv::Mat padded;
         // real neighbours where they exist, mirrored with the same parity at the border
         cv::copyMakeBorder(cfa(core), padded, TileMargin, TileMargin, TileMargin, TileMargin, cv::BORDER_REFLECT_101);
-        cv::Mat rgb = rcd(padded, pattern);
+        cv::Mat rgb = rcd(padded, pattern, green);
         if (median == ChromaMedian::FlatOnly) flatChromaMedian(rgb);
         for (int y = 0; y < core.height; ++y) {
             const auto *s = rgb.ptr<cv::Vec3f>(y + TileMargin) + TileMargin;

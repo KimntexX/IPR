@@ -24,6 +24,11 @@ using Pixel = std::uint16_t[4];
 // below Lightroom's while hair and textures keep their colour detail.
 enum class ChromaMedian { Off, FlatOnly };
 
+// Green estimators of RCD under study (sharpness at the pixel scale against
+// Lightroom): the published ratio correction, with or without the diagonal
+// pull of the direction, or a Laplacian (colour-difference) correction.
+enum class Green { Ratio, RatioOwnDirection, Laplacian, LaplacianOwnDirection, HalfLaplacian };
+
 // Median of the opening, at every ISO.
 constexpr ChromaMedian OpeningMedian = ChromaMedian::FlatOnly;
 
@@ -36,7 +41,7 @@ int workerThreads();
 // interpolation, white-balanced); fills channels 0 to 2. Returns false when
 // cancelled; the image is then incomplete.
 bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
-                 ChromaMedian median, const std::function<bool()> &cancelled = {});
+                 ChromaMedian median, Green green, const std::function<bool()> &cancelled);
 
 } // namespace Demosaic
 

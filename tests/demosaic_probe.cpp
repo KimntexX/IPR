@@ -60,6 +60,7 @@ struct Variant {
     int dcbEnhance = 0;
     enum class Ours { None, OpenCvEdgeAware, Rcd } ours = Ours::None;
     Demosaic::ChromaMedian oursMedian = Demosaic::ChromaMedian::Off;   // IPR's median after its interpolation
+    Demosaic::Green oursGreen = Demosaic::Green::Ratio;
 };
 
 const std::vector<Variant> &variants()
@@ -81,6 +82,10 @@ const std::vector<Variant> &variants()
         {"OpenCV-EA", 0, 0, 0, 0, 0, Variant::Ours::OpenCvEdgeAware},
         {"RCD", 0, 0, 0, 0, 0, Variant::Ours::Rcd},
         {"RCD-median-flat", 0, 0, 0, 0, 0, Variant::Ours::Rcd, Demosaic::ChromaMedian::FlatOnly},
+        {"RCD-own-direction", 0, 0, 0, 0, 0, Variant::Ours::Rcd, Demosaic::ChromaMedian::FlatOnly, Demosaic::Green::RatioOwnDirection},
+        {"RCD-laplacian", 0, 0, 0, 0, 0, Variant::Ours::Rcd, Demosaic::ChromaMedian::FlatOnly, Demosaic::Green::Laplacian},
+        {"RCD-laplacian-own", 0, 0, 0, 0, 0, Variant::Ours::Rcd, Demosaic::ChromaMedian::FlatOnly, Demosaic::Green::LaplacianOwnDirection},
+        {"RCD-half-laplacian", 0, 0, 0, 0, 0, Variant::Ours::Rcd, Demosaic::ChromaMedian::FlatOnly, Demosaic::Green::HalfLaplacian},
     };
     return list;
 }
@@ -122,6 +127,7 @@ void openCvEdgeAware(void *context)
 
 // --- IPR's production interpolation (src/raw/Demosaic) ---------------------------
 Demosaic::ChromaMedian oursMedian = Demosaic::ChromaMedian::Off;   // set by process() for the callback
+Demosaic::Green oursGreen = Demosaic::Green::Ratio;
 double oursMs = 0;                 // time of our interpolation, measured inside the callback
 
 void rcdInterpolate(void *context)
@@ -135,7 +141,7 @@ void rcdInterpolate(void *context)
             pattern[size_t(y)][size_t(x)] = k == 3 ? 1 : k;   // second green folded
         }
     const auto t0 = Clock::now();
-    Demosaic::interpolate(d.image, d.sizes.iwidth, d.sizes.iheight, pattern, oursMedian);
+    Demosaic::interpolate(d.image, d.sizes.iwidth, d.sizes.iheight, pattern, oursMedian, oursGreen, {});
     oursMs += std::chrono::duration<double, std::milli>(Clock::now() - t0).count();
 }
 // LibRaw keeps its callbacks protected: a subclass sets the interpolation step.
@@ -159,6 +165,7 @@ cv::Mat process(StudyRaw &raw, const Variant &v, double *ms)
     p.dcb_iterations = v.dcbIterations;
     p.dcb_enhance_fl = v.dcbEnhance;
     oursMedian = v.oursMedian;
+    oursGreen = v.oursGreen;
     oursMs = 0;
     raw.setBayerInterpolation(v.ours == Variant::Ours::OpenCvEdgeAware ? openCvEdgeAware
                               : v.ours == Variant::Ours::Rcd           ? rcdInterpolate

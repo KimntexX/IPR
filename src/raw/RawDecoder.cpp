@@ -160,7 +160,8 @@ private:
             }
         try {
             self->m_failed = !Demosaic::interpolate(d.image, d.sizes.iwidth, d.sizes.iheight, pattern,
-                                                    self->m_median, self->m_cancelled);
+                                                    self->m_median, Demosaic::Green::HalfLaplacian,
+                                                    self->m_cancelled);
         } catch (...) {
             // never let an exception cross LibRaw: the decode fails below instead
             self->m_failed = true;
