@@ -10,7 +10,7 @@ bruit couleur fin d'IPR passe de **1,28 à 0,64 fois celui de LR** en
 médiane, celui de la luminance de 1,03 à 0,79 ; `dcraw_process` descend de
 2,6 s à 0,8 à 1,0 s sur 32 Mpx. **Validation visuelle de l'utilisateur en attente**
 avant fusion dans `dev`. Points ouverts : R7 et 60D au-delà d'ISO 6400 restent
-au-dessus de LR, corpus R7 limité aux ISO ≥ 12800, choix de la médiane à
+au-dessus de LR, corpus R7 définitif limité aux ISO ≥ 12800 (boîtier plus disponible), choix de la médiane à
 confirmer à l'œil ([conclusion](#conclusion-actuelle)).
 
 Lecture rapide : [point de départ](#dematricage-20261023-depart),
@@ -316,7 +316,8 @@ fois le bruit couleur de LR.
 
 - Trois boîtiers Canon à matrice de Bayer ; aucun X-Trans (chemin LibRaw
   conservé, non mesuré), aucun autre fabricant.
-- R7 : aucune scène sous ISO 12800, ni dans le corpus ni dans le stock.
+- R7 : aucune scène sous ISO 12800, ni dans le corpus ni dans le stock. **L'utilisateur
+  ne possède plus ce boîtier (24 octobre 2026)** : ce corpus R7 est définitif.
 - Précision mesurée sur une vérité synthétique (regroupement 2 × 2 flouté),
   fiable à bas ISO seulement ; aucune référence sans bruit à ISO élevé.
 - Comparaison à Lightroom sur le HH des zones planes, sans recalage entre
@@ -329,7 +330,6 @@ fois le bruit couleur de LR.
 
 ### Besoins
 
-- Prises du R7 à ISO 100 à 6400, avec leurs neutres LR.
 - Neutres LR des 22 scènes ajoutées (ISO 400 à 1250, R7 12800) pour étendre
   la comparaison à LR.
 - Scènes à détail fin coloré (tissus, feuillages, textes, motifs répétitifs).
