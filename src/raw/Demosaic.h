@@ -6,8 +6,9 @@
 #include <functional>
 
 // Bayer demosaic of IPR: RCD (ratio-corrected demosaicing), written from the
-// published description (L. Sanz Rodriguez, 2017), with an optional 3x3 median
-// on R - G and B - G. It replaces only LibRaw's interpolation step: black level,
+// published description (L. Sanz Rodriguez, 2017), its green estimates blended
+// evenly with colour-difference (Laplacian) ones for the pixel-scale sharpness
+// of Lightroom's rendering, with an optional 3x3 median on R - G and B - G. It replaces only LibRaw's interpolation step: black level,
 // white balance and colour conversion stay upstream. The image is processed in
 // tiles on a bounded number of threads. Study and measurements:
 // docs/validation/analyses/analyse-dematricage.md.
@@ -24,11 +25,6 @@ using Pixel = std::uint16_t[4];
 // below Lightroom's while hair and textures keep their colour detail.
 enum class ChromaMedian { Off, FlatOnly };
 
-// Green estimators of RCD under study (sharpness at the pixel scale against
-// Lightroom): the published ratio correction, with or without the diagonal
-// pull of the direction, or a Laplacian (colour-difference) correction.
-enum class Green { Ratio, RatioOwnDirection, Laplacian, LaplacianOwnDirection, HalfLaplacian };
-
 // Median of the opening, at every ISO.
 constexpr ChromaMedian OpeningMedian = ChromaMedian::FlatOnly;
 
@@ -41,7 +37,7 @@ int workerThreads();
 // interpolation, white-balanced); fills channels 0 to 2. Returns false when
 // cancelled; the image is then incomplete.
 bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
-                 ChromaMedian median, Green green, const std::function<bool()> &cancelled);
+                 ChromaMedian median, const std::function<bool()> &cancelled);
 
 } // namespace Demosaic
 
