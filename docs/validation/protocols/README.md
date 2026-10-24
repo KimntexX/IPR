@@ -16,6 +16,9 @@ au pipeline Camera Neutral.
 
 Mesures transversales : [Performance d’ouverture et navigation](protocole-performance-ouverture.md).
 
+Acquisition spécialisée rattachée à RAW : [Mires et caractérisation couleur](protocole-mires-couleur.md)
+(matériel, éclairages, captures et données de référence ; campagne non exécutée).
+
 | Groupe | Protocole maintenu | Couverture / limites |
 | --- | --- | --- |
 | RAW / profils / base | [RAW et profils](protocole-raw-profils.md) | Base, DCP, WB, normalisation, restauration ; génération neutre/auto-WB seulement |
