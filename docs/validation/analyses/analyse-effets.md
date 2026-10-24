@@ -169,6 +169,49 @@ l'utilisateur et ordonnées par proximité avec la réserve :
 Décision de l'utilisateur : étudier la piste 1, puis directement la piste 5 si
 elle ne suffit pas.
 
+### 6 ter. Pistes 1 et 5 étudiées — 24 octobre 2026
+
+Même cible que le §6 : ce que le modèle par bandes d'IPR laisse de l'effet de
+Lightroom (changement du log2 de la luminance, 20 scènes, résolution réduite d'un
+facteur 4), part de la variance de l'effet de Lightroom inexpliquée, validation
+croisée par scène.
+
+**Piste 1, masquage non linéaire**
+([etude-clarte-masquage-v001](../raw/etude-clarte-masquage-v001-20261024T201353Z.json),
+`tests/study_clarity_masking.py`) : premier ordre du modèle de Moroney,
+L (α + β m), masque m flouté de 32 à 512 pixels en gamma 2,2 ou en log2. Le sens
+est le bon (à +100, il éclaircit les régions sombres et assombrit les claires),
+mais l'apport est négligeable : 0,73 → 0,73 à 0,75 pour les valeurs positives,
+0,67 à 0,70 → 0,65 pour les négatives. **Écartée.**
+
+**Piste 5, grille affine locale**
+([etude-clarte-grille-affine-v001](../raw/etude-clarte-grille-affine-v001-20261024T205100Z.json),
+`tests/study_clarity_affine_grid.py`) : le résidu de chaque scène est ajusté par
+Δ = a(x) L + b(x), a et b lissés (moindres carrés locaux pondérés, structure d'une
+grille bilatérale de coefficients affines comme HDRNet) ; puis a et b sont prédits
+d'une scène à l'autre par régression linéaire sur des caractéristiques du
+neutre (moyennes locales du niveau à 16, 64 et 256 pixels, écart type local à 64
+pixels, quantiles globaux 10, 50 et 90 %).
+
+| Valeur | Modèle par bandes seul | Grille propre à la scène (64 / 128 / 256 px) | Grille prédite du neutre (64 / 128 / 256 px) |
+|---|---:|---|---|
+| −100 | 0,67 | 0,27 / 0,35 / 0,43 | 1,61 / 1,14 / 0,84 |
+| −50 | 0,69 | 0,26 / 0,35 / 0,44 | 1,78 / 1,24 / 0,89 |
+| −25 | 0,70 | 0,26 / 0,35 / 0,44 | 1,89 / 1,31 / 0,92 |
+| +25 | 0,73 | 0,27 / 0,31 / 0,36 | 0,83 / 0,85 / 0,77 |
+| +50 | 0,73 | 0,28 / 0,32 / 0,37 | 0,84 / 0,87 / 0,79 |
+| +100 | 0,73 | 0,27 / 0,31 / 0,36 | 0,88 / 0,92 / 0,82 |
+
+Lecture : la composante adaptative de Lightroom **est** une transformation
+affine locale et lisse du log de la luminance, comme son voile : une grille propre
+à chaque scène en explique les deux tiers (0,73 → 0,27). Mais une combinaison
+linéaire des statistiques locales et globales du neutre ne la prédit pas (0,77 à
+1,89, pire que rien) : les coefficients dépendent du contenu de façon non
+linéaire. Pistes suivantes, à soumettre à l'utilisateur : prédicteurs non
+linéaires (tables par niveau et écart local, comme pour le voile), hypothèse
+d'une égalisation locale d'histogramme (CLAHE), dont la pente locale est l'inverse
+de la dynamique locale.
+
 <a id="effets-20261024-voile"></a>
 
 ## Voile — 24 octobre 2026
