@@ -1,5 +1,6 @@
 #include "imageeditor.h"
 
+#include "Dehaze.h"
 #include "DetailProcessing.h"
 #include "LocalContrast.h"
 #include "ColorAdjustments.h"
@@ -1471,7 +1472,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     }
 
     LocalContrast::apply(adjusted, settings.texture, settings.clarity);
-    DetailProcessing::dehaze(adjusted, settings.dehaze);
+    Dehaze::apply(adjusted, settings.dehaze);
     ToneCurve::apply(adjusted, settings.toneCurves);
 
     if (settings.blur > 0) {

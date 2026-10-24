@@ -6,8 +6,9 @@
 ±0,02 de 1 à 16 pixels à toutes les valeurs ; la [clarté](#effets-20261024-clarte)
 est **validée dans un premier état, avec réserve** : son contraste local suit
 Lightroom échelle par échelle, mais sa composante tonale adaptée à chaque image
-n'est pas reproduite. Voile, grain et flou restent à traiter
-([conclusion](#conclusion-actuelle)).
+n'est pas reproduite. Le [voile](#effets-20261024-voile) suit Lightroom en
+lumière linéaire et par ton, avec une réserve sur les scènes nocturnes et un
+excès à +100. Grain et flou restent à traiter ([conclusion](#conclusion-actuelle)).
 
 Protocole : [protocole Effets](../protocols/protocole-effets.md). Branche :
 `patch_effects`. Les anciennes analyses Texture, Clarté et Voile du 2 octobre 2026
@@ -137,16 +138,87 @@ Aucune statistique globale du neutre ne prédit cette adaptation : un calcul de
 poids par image à l'ouverture n'a, en l'état, rien de fiable à calculer.
 Recherche bibliographique en cours pour d'autres familles d'opérateurs.
 
+<a id="effets-20261024-voile"></a>
+
+## Voile — 24 octobre 2026
+
+### 7. Ce que fait Lightroom
+
+Sur ses propres paires, le voile de Lightroom est une transformation affine de
+chaque canal, lisse dans l'espace (a et b lissés à environ 128 pixels expliquent
+98 à 100 % de son changement) : c'est le modèle physique du voile,
+I = J t + A (1 − t), avec une transmission qui suit le canal sombre. Dans les
+ombres, il ne retranche pourtant pas le voile : hors brume (h < 0,2), +100 baisse
+tous les tons sombres d'environ 1,2 IL, de façon multiplicative ; la soustraction
+n'apparaît que sous la brume.
+
+### 8. Lois essayées
+
+`tests/study_dehaze_law.py`, quatre scènes, résolution réduite d'un facteur 4,
+validation croisée par scène :
+
+| Loi | Preuve | Part inexpliquée (validation croisée) | Défaut |
+|---|---|---|---|
+| a − 1 et b/A polynômes de degré 2 de h | [v001](../raw/etude-loi-voile-v001-20261024T185925Z.json) | 0,15 à 0,25 en lumière linéaire, 0,55 à −100 | extrapole à contresens près de h = 1 : −100 retire du voile |
+| Modèle physique, t = 1 − ω h, décalage | [v002](../raw/etude-loi-voile-v002-20261024T191121Z.json) | 0,09 à 0,22 en lumière linéaire | écrase les ombres au noir (jusqu'à −5 IL au 10e centile, contre −1 à −2,4 chez Lightroom) |
+| Gain en IL f(log2(y/A), h), table bilinéaire | [v003](../raw/etude-loi-voile-v003-20261024T194506Z.json) | 0,14 à 0,21 en IL pour les négatifs, 0,44 à 0,59 pour les positifs | réserve §10 |
+
+Le modèle physique, ajusté en lumière linéaire, ignore presque les ombres : y − A
+devient négatif dès que y < A (1 − t). La loi retenue est ajustée en IL, sur une
+grille de 13 niveaux × 6 valeurs de h, avec une pénalité de courbure ; le gain est
+borné au 1er–99e centile du changement observé chez Lightroom, ce qui contient le
+coin sombre et voilé, vide de données.
+
+### 9. État livré
+
+- `src/core/Dehaze` : A = max(0,10 ; 99e centile du max RGB), canal sombre érodé
+  à 1/4 de résolution, lissé à 128 pixels, h = canal sombre / A ; chaque canal
+  reçoit y 2^f(log2(y/A), h), table interpolée linéairement entre les valeurs
+  mesurées, nulle à 0. Multiplicatif, il ne rend jamais un canal négatif. Remplace
+  `DetailProcessing::dehaze`, retiré sans option de repli.
+- Test `dehazeTests` : paysage synthétique voilé sous un ciel à l'air ambiant ;
+  +100 augmente le contraste de détail et assombrit, −100 l'inverse.
+- Rendu IPR en mémoire contre Lightroom
+  ([etude-reponse-effets-v003](../raw/etude-reponse-effets-v003-20261024T195513Z.json)),
+  réponse tonale à ±100 (IL, niveaux 0,008 / 0,04 / 0,14 / 0,39 / 0,78) :
+
+| Scène | Valeur | Lightroom | IPR |
+|---|---:|---|---|
+| 6V1A0327 | −100 | +3,23 +1,97 +1,16 −0,00 | +3,06 +1,87 +1,17 −0,05 |
+| 6V1A0327 | +100 | −1,67 −1,00 −0,56 +0,01 | −1,55 −1,27 −0,81 +0,05 |
+| IMG_4345 | −100 | +1,75 +0,85 +0,60 | +1,71 +0,82 +0,42 |
+| IMG_4345 | +100 | −1,84 −1,97 −0,96 | −3,14 −2,05 −1,61 |
+| _MG_7580 | −100 | +3,85 +3,20 +2,21 +0,69 +0,24 | +3,34 +2,73 +2,05 +0,70 +0,24 |
+| _MG_7580 | +100 | −1,15 −1,92 −2,51 −2,36 −0,74 | −1,59 −1,63 −4,60 −1,80 −1,00 |
+| 6V1A0043 | −100 | +2,02 +0,86 +0,32 +0,01 −0,11 | +3,25 +1,65 +0,72 −0,16 −0,28 |
+| 6V1A0043 | +100 | −0,50 −0,21 −0,05 −0,00 +0,02 | −1,44 −1,00 +0,07 +0,04 +0,08 |
+
+Part du changement de luminance de Lightroom (IL) laissée inexpliquée par le rendu
+IPR, toutes scènes : 0,07 à −100, 0,09 à −50, 0,10 à −25, 0,25 à +25, 0,22 à +50,
+0,38 à +100 (même corpus que l'ajustement : mesure en échantillon, la validation
+croisée du §8 donne l'estimation hors échantillon).
+
+### 10. Réserve
+
+- Scène nocturne (6V1A0043, luminance médiane 0,001) : Lightroom n'y touche
+  presque pas les ombres profondes, IPR les déplace 2 à 3 fois plus. Avec quatre
+  scènes, la table mêle cette scène et les autres ; l'adaptation de Lightroom à
+  une image sombre n'est pas modélisée, comme pour la clarté (§6).
+- +100 dépasse Lightroom sur certains tons (IMG_4345 dans les noirs, _MG_7580
+  vers 0,14) : la table moyenne des scènes qui réagissent différemment.
+- Mesures en luminance ; la saturation ajoutée par le voile suit les rapports
+  de canaux de la loi par canal, non vérifiée séparément.
+
 <a id="conclusion-actuelle"></a>
 
 ## Conclusion actuelle et prochaines actions — 24 octobre 2026
 
 - Texture : conforme à Lightroom, validation visuelle de l'utilisateur en cours.
 - Clarté : premier état validé avec la réserve du §6.
-- Prochaines actions : correction du voile (négatif 3 à 4 fois trop faible,
-  positif faible aux grandes échelles et dans les ombres), puis grain (statistiques
-  face à Lightroom) et flou (IPR seul) ; recherche bibliographique sur la clarté,
-  soumise à l'utilisateur.
+- Voile : loi en IL ajustée sur Lightroom, réserve du §10 ; validation visuelle de
+  l'utilisateur à venir.
+- Prochaines actions : recherche bibliographique sur la clarté, soumise à
+  l'utilisateur ; puis grain (statistiques face à Lightroom) et flou (IPR seul).
 - Limites : quatre scènes pour la texture et le voile, vingt pour la clarté ;
   trois boîtiers Canon ; mesures en luminance (la chrominance suit les rapports de
   canaux) ; halo jugé sur un bord synthétique et sur les anneaux de Lightroom.

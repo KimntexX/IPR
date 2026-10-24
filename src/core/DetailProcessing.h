@@ -24,10 +24,6 @@ struct SharpenSettings
 void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings);
 void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings);
 
-// Dehaze from the dark channel and the 99th percentile airlight, slider value
-// in [-100, 100]; RGB stays nonnegative.
-void dehaze(cv::Mat &linearRgb, int amount);
-
 // Deterministic monochrome grain, stronger in shadows, slider value in [0, 100].
 void addGrain(cv::Mat &linearRgb, int amount);
 

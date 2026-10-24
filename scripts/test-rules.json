@@ -30,6 +30,7 @@
     "rawDecoderTests": "rawDecoderTests",
     "demosaicTests": "demosaicTests",
     "localContrastTests": "localContrastTests",
+    "dehazeTests": "dehazeTests",
     "rawNormalizationTests": "rawNormalizationTests",
     "editorRawDevelopmentTests": "editorRawDevelopmentTests",
     "rawBlackLevelEstimatorTests": "rawBlackLevelEstimatorTests",
@@ -117,6 +118,7 @@
     {"patterns": ["src/core/ToneRecovery*", "src/core/ToneStatistics.*"], "tests": ["toneRecoveryTests", "imageExportTests"]},
     {"patterns": ["tests/tone_recovery_test.cpp"], "tests": ["toneRecoveryTests"]},
     {"patterns": ["src/app/UiPreferences.*", "config/**"], "tests": ["uiPreferencesTests", "uiPreferencesQmlTests", "settingsQmlTests"]},
+    {"patterns": ["src/core/Dehaze.*", "tests/dehaze_test.cpp"], "tests": ["dehazeTests", "rec2020PipelineTests", "imageExportTests", "editorRawDevelopmentTests"]},
     {"patterns": ["src/core/LocalContrast.*", "tests/local_contrast_test.cpp"], "tests": ["localContrastTests", "rec2020PipelineTests", "imageExportTests", "editorRawDevelopmentTests"]},
     {"patterns": ["src/raw/Demosaic.*", "tests/demosaic_test.cpp"], "tests": ["demosaicTests", "rawDecoderTests", "editorRawDevelopmentTests", "imageExportTests", "imageImportTests"]},
     {"patterns": ["src/raw/RawDecoder.*"], "tests": ["demosaicTests", "rawDecoderTests", "rawNormalizationTests", "rawBlackLevelEstimatorTests", "cameraProfileEngineTests", "imageExportTests", "editorRawDevelopmentTests"]},
@@ -151,7 +153,7 @@
     {"patterns": ["tests/analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis", "noise_analysis", "base_colorimetry_analysis"]},
     {"patterns": ["tests/test_analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis"]},
     {"patterns": ["tests/analyse_noise.py", "tests/test_analyse_noise.py"], "tests": [], "python": ["noise_analysis"]},
-    {"patterns": ["tests/study_sources.py", "tests/test_study_sources.py", "tests/study_demosaic.py", "tests/demosaic_probe.cpp", "tests/study_lr_neutral_noise.py", "tests/study_lr_aligned.py", "tests/study_effects_response.py", "tests/study_effects_amplitude.py", "tests/study_effects_tone_protection.py", "tests/study_clarity_adaptation.py"], "tests": [], "python": ["study_sources"]},
+    {"patterns": ["tests/study_sources.py", "tests/test_study_sources.py", "tests/study_demosaic.py", "tests/demosaic_probe.cpp", "tests/study_lr_neutral_noise.py", "tests/study_lr_aligned.py", "tests/study_effects_response.py", "tests/study_effects_amplitude.py", "tests/study_effects_tone_protection.py", "tests/study_clarity_adaptation.py", "tests/study_dehaze_law.py"], "tests": [], "python": ["study_sources"]},
     {"patterns": ["tests/test_build_windows.py"], "tests": [], "python": ["selection"]}
   ]
 }

@@ -329,45 +329,6 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings)
 }
 
 
-void dehaze(cv::Mat &adjusted, int dehazeAmount)
-{
-    if (dehazeAmount == 0) return;
-    cv::Mat darkChannel(adjusted.rows, adjusted.cols, CV_32F);
-    std::vector<float> brightSamples;
-    const int sampleStep = std::max(
-        1, static_cast<int>(std::sqrt(static_cast<double>(adjusted.total()) / 8192.0)));
-    for (int y = 0; y < adjusted.rows; ++y) {
-        const cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-        float *darkRow = darkChannel.ptr<float>(y);
-        for (int x = 0; x < adjusted.cols; ++x) {
-            darkRow[x] = std::max(0.0f, std::min({row[x][0], row[x][1], row[x][2]}));
-            if (x % sampleStep == 0 && y % sampleStep == 0)
-                brightSamples.push_back(std::max({row[x][0], row[x][1], row[x][2], 0.0f}));
-        }
-    }
-    const int kernelSize = std::max(1, std::min(15, std::min(adjusted.cols, adjusted.rows) | 1));
-    cv::erode(darkChannel, darkChannel,
-              cv::getStructuringElement(cv::MORPH_RECT, cv::Size(kernelSize, kernelSize)));
-    const size_t percentile = (brightSamples.size() - 1) * 99 / 100;
-    std::nth_element(brightSamples.begin(), brightSamples.begin() + static_cast<std::ptrdiff_t>(percentile),
-                     brightSamples.end());
-    const float airlight = std::max(0.10f, brightSamples[percentile]);
-    const float amount = static_cast<float>(dehazeAmount) / 100.0f;
-    const cv::Vec3f airlightRgb(airlight, airlight, airlight);
-    for (int y = 0; y < adjusted.rows; ++y) {
-        cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-        const float *darkRow = darkChannel.ptr<float>(y);
-        for (int x = 0; x < adjusted.cols; ++x) {
-            const float haze = std::clamp(darkRow[x] / airlight, 0.0f, 1.0f);
-            const float transmission = std::clamp(1.0f - 0.85f * amount * haze, 0.12f, 2.0f);
-            row[x] = (row[x] - airlightRgb) / transmission + airlightRgb;
-            row[x][0] = std::max(0.0f, row[x][0]);
-            row[x][1] = std::max(0.0f, row[x][1]);
-            row[x][2] = std::max(0.0f, row[x][2]);
-        }
-    }
-}
-
 void addGrain(cv::Mat &adjusted, int grain)
 {
     if (grain <= 0) return;
