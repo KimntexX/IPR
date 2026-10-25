@@ -8,7 +8,7 @@ fitted in EV, shared by the scenes of a slider value:
 
     Y' = Y 2^f(log2(Y / A), h),  f clamped to Lightroom's 1st-99th percentile change,
     h = Gaussian(dark channel, 128 px) / A, clamped to [0, 1],
-    A = max(0.10, 99th percentile of max(R, G, B)), dark channel = min(R, G, B) eroded,
+    A = max(0.03, 99th percentile of the luminance), dark channel = min(R, G, B) eroded,
 
 f bilinear on a grid of log2(Y / A) and h, least squares in EV with a small
 second-difference penalty (it carries f across the empty, dark and hazy corner).
@@ -74,7 +74,9 @@ RATIO_SCALE = 1.0             # R0, EV
 def prepare(neutral, variant):
     n = cv2.resize(neutral, None, fx=1 / REDUCTION, fy=1 / REDUCTION, interpolation=cv2.INTER_AREA).astype(np.float32)
     v = cv2.resize(variant, None, fx=1 / REDUCTION, fy=1 / REDUCTION, interpolation=cv2.INTER_AREA).astype(np.float32)
-    airlight = max(0.10, float(np.quantile(n.max(axis=2), 0.99)))
+    # Of the luminance: saturated colours (red climbing holds) put max RGB far above the
+    # brightest tones and the law then lifted them (6V1A9539, etude-loi-voile-v008).
+    airlight = max(0.03, float(np.quantile(n @ WEIGHTS, 0.99)))
     dark = cv2.erode(n.min(axis=2), np.ones((ERODE, ERODE), np.uint8))
     hazy = dark >= np.quantile(dark, 1 - HAZIEST)
     colour = n[hazy].mean(axis=0).astype(np.float64)
@@ -267,7 +269,7 @@ def main(argv=None):
               "tone_knots_log2_of_airlight": TONE_KNOTS.tolist(), "haze_knots": HAZE_KNOTS.tolist(),
               "gain_ev_layout": "rows tone knots, columns haze knots", "smoothness": SMOOTHNESS,
               "reduction": REDUCTION, "haze_smoothing_native_px": 128, "dark_channel_window_native_px": 15,
-              "airlight": "max(0.10, 99th percentile of max RGB)",
+              "airlight": "max(0.03, 99th percentile of the luminance)",
               "airlight_colour": f"mean RGB of the {HAZIEST:.1%} brightest eroded dark channel, luminance 1",
               "airlight_colours": airlight_colours, "sample_stride": STRIDE,
               "unexplained_metric": "luminance: share of Lightroom's luminance change in EV; colour: share of "

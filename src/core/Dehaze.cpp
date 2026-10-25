@@ -25,14 +25,18 @@ constexpr float LogFloor = 1e-3f;        // soft floor of the log: deep shadows 
 // Detail gain in log2 around the base, uniform over scales as Lightroom's band
 // gains are: log2 G = c0 + ch h + cu u, u = log2 of the local mean (64 pixels)
 // over A, per slider value, bounded to the observed range. Fitted on Lightroom's
-// pairs with equal weight per scene (6V1A0043, 6V1A0327, IMG_4345, _MG_7580),
-// etude-detail-voile-v001-20261025T104351Z: error of the scene median log2 G,
-// leave-one-scene-out, 0.09 to 0.39 (0.13 to 1.27 for a constant gain).
+// pairs with equal weight per scene (6V1A0032, 6V1A0043, 6V1A0327, 6V1A0544, 6V1A9112, 6V1A9153, 6V1A9539, IMG_4345, IMG_6954, IMG_7953, _MG_7580),
+// etude-detail-voile-v003-20261025T124720Z: error of the scene median log2 G,
+// leave-one-scene-out, 0.06 to 0.54 (0.11 to 0.75 for a constant gain).
 struct DetailLaw { int value; float c0, ch, cu; };
 constexpr std::array<DetailLaw, 7> DetailLaws{{
-    {-100, -3.883f, 0.099f, -0.368f}, {-50, -1.335f, -0.115f, -0.144f}, {-25, -0.569f, -0.093f, -0.063f},
+    {-100, -2.584f, -1.532f, -0.134f},
+    {-50, -0.955f, -0.531f, -0.093f},
+    {-25, -0.428f, -0.231f, -0.049f},
     {0, 0.f, 0.f, 0.f},
-    {25, 0.339f, 0.085f, 0.039f}, {50, 0.707f, 0.208f, 0.083f}, {100, 1.228f, 1.247f, 0.147f},
+    {25, 0.213f, 0.298f, 0.022f},
+    {50, 0.415f, 0.686f, 0.042f},
+    {100, 0.698f, 2.006f, 0.079f},
 }};
 constexpr double DetailMeanSigma = 64.0;     // full-image pixels: the local mean of u
 constexpr float MinLog2Gain = -4.f, MaxLog2Gain = 2.5f;
@@ -55,100 +59,100 @@ using Table = std::array<std::array<float, HazeKnots.size()>, ToneKnots.size()>;
 // haze; kappa: saturation where haze is removed.
 struct Law { int value; float low, high, beta, kappa; Table gain; };
 
-// Pooled over 6V1A0043, 6V1A0327, IMG_4345 and _MG_7580, etude-loi-voile-v007-20261024T222843Z
-// (leave-one-scene-out unexplained share of the luminance change in EV 0.15 to 0.34, of the
-// colour change 0.43 to 0.47 below 0 and 0.74 to 0.84 above).
+// Pooled over 6V1A0032, 6V1A0043, 6V1A0327, 6V1A0544, 6V1A9112, 6V1A9153, 6V1A9539, IMG_4345, IMG_6954, IMG_7953, _MG_7580, etude-loi-voile-v009-20261025T123104Z
+// (leave-one-scene-out unexplained share of the luminance change in EV 0.07 to 0.29, of the
+// colour change 0.34 to 0.46 below 0 and 0.75 to 0.81 above).
 const std::array<Law, 6> Laws{{
-    {-100, -0.07f, 4.80f, 0.95f, 0.00f,
+    {-100, -0.05f, 5.78f, 0.90f, 0.00f,
         {{
-         {2.00f, 6.76f, 10.66f, 14.00f, 17.07f, 20.06f},
-         {3.09f, 6.12f, 8.94f, 11.68f, 14.35f, 17.01f},
-         {3.09f, 5.13f, 7.25f, 9.46f, 11.74f, 14.04f},
-         {2.62f, 4.11f, 5.65f, 7.43f, 9.33f, 11.27f},
-         {1.78f, 3.10f, 4.25f, 5.70f, 7.23f, 8.78f},
-         {1.14f, 2.42f, 3.31f, 4.35f, 5.47f, 6.62f},
-         {1.15f, 2.21f, 2.71f, 3.31f, 4.04f, 4.82f},
-         {1.00f, 1.75f, 2.09f, 2.46f, 2.90f, 3.38f},
-         {0.44f, 0.98f, 1.44f, 1.72f, 1.98f, 2.26f},
-         {0.10f, 0.45f, 0.83f, 1.03f, 1.21f, 1.38f},
-         {-0.07f, 0.07f, 0.26f, 0.46f, 0.56f, 0.66f},
-         {-0.16f, -0.20f, -0.16f, -0.06f, -0.03f, 0.00f},
-         {-0.23f, -0.39f, -0.52f, -0.59f, -0.63f, -0.67f}}}},
-    {-50, -0.04f, 2.35f, 0.55f, 0.00f,
+         {4.46f, 6.70f, 8.14f, 9.02f, 9.65f, 10.21f},
+         {3.50f, 5.88f, 6.59f, 7.21f, 7.83f, 8.43f},
+         {3.27f, 4.41f, 4.93f, 5.52f, 6.13f, 6.72f},
+         {2.75f, 3.55f, 3.75f, 4.14f, 4.64f, 5.16f},
+         {2.05f, 2.90f, 2.94f, 3.11f, 3.44f, 3.84f},
+         {1.51f, 2.26f, 2.31f, 2.37f, 2.55f, 2.80f},
+         {1.25f, 2.01f, 1.85f, 1.84f, 1.94f, 2.06f},
+         {1.04f, 1.59f, 1.49f, 1.50f, 1.53f, 1.55f},
+         {0.77f, 0.95f, 1.22f, 1.28f, 1.24f, 1.16f},
+         {0.41f, 0.54f, 0.79f, 1.00f, 0.93f, 0.81f},
+         {0.14f, 0.24f, 0.23f, 0.49f, 0.51f, 0.43f},
+         {-0.05f, -0.05f, -0.01f, 0.09f, 0.05f, 0.00f},
+         {-0.23f, -0.25f, -0.27f, -0.32f, -0.38f, -0.42f}}}},
+    {-50, -0.03f, 2.83f, 0.55f, 0.00f,
         {{
-         {0.81f, 2.94f, 4.89f, 6.66f, 8.30f, 9.91f},
-         {1.29f, 2.94f, 4.38f, 5.77f, 7.15f, 8.53f},
-         {1.65f, 2.73f, 3.79f, 4.88f, 6.03f, 7.19f},
-         {1.43f, 2.30f, 3.12f, 4.01f, 4.97f, 5.94f},
-         {0.93f, 1.77f, 2.45f, 3.22f, 4.02f, 4.81f},
-         {0.56f, 1.39f, 1.96f, 2.57f, 3.18f, 3.80f},
-         {0.60f, 1.30f, 1.65f, 2.03f, 2.46f, 2.91f},
-         {0.50f, 1.04f, 1.30f, 1.56f, 1.85f, 2.15f},
-         {0.17f, 0.56f, 0.91f, 1.13f, 1.31f, 1.50f},
-         {0.01f, 0.25f, 0.54f, 0.70f, 0.82f, 0.94f},
-         {-0.05f, 0.04f, 0.17f, 0.30f, 0.36f, 0.45f},
-         {-0.08f, -0.11f, -0.10f, -0.06f, -0.04f, -0.01f},
-         {-0.10f, -0.22f, -0.33f, -0.40f, -0.45f, -0.47f}}}},
-    {-25, -0.02f, 1.16f, 0.35f, 0.00f,
+         {1.72f, 3.09f, 4.18f, 4.98f, 5.63f, 6.23f},
+         {1.52f, 2.96f, 3.55f, 4.08f, 4.62f, 5.16f},
+         {1.64f, 2.34f, 2.77f, 3.21f, 3.67f, 4.13f},
+         {1.46f, 1.92f, 2.14f, 2.46f, 2.82f, 3.20f},
+         {1.06f, 1.60f, 1.70f, 1.87f, 2.13f, 2.42f},
+         {0.77f, 1.28f, 1.35f, 1.43f, 1.60f, 1.81f},
+         {0.66f, 1.16f, 1.08f, 1.12f, 1.23f, 1.37f},
+         {0.54f, 0.92f, 0.87f, 0.93f, 1.00f, 1.05f},
+         {0.37f, 0.50f, 0.73f, 0.83f, 0.83f, 0.80f},
+         {0.20f, 0.26f, 0.49f, 0.69f, 0.63f, 0.56f},
+         {0.06f, 0.12f, 0.12f, 0.31f, 0.32f, 0.29f},
+         {-0.04f, -0.02f, 0.00f, 0.04f, 0.01f, 0.00f},
+         {-0.11f, -0.12f, -0.14f, -0.20f, -0.26f, -0.30f}}}},
+    {-25, -0.02f, 1.38f, 0.35f, 0.00f,
         {{
-         {0.40f, 1.32f, 2.21f, 3.04f, 3.83f, 4.60f},
-         {0.58f, 1.36f, 2.05f, 2.70f, 3.36f, 4.01f},
-         {0.82f, 1.34f, 1.84f, 2.35f, 2.89f, 3.44f},
-         {0.73f, 1.19f, 1.57f, 1.99f, 2.44f, 2.90f},
-         {0.49f, 0.93f, 1.27f, 1.65f, 2.03f, 2.41f},
-         {0.27f, 0.72f, 1.04f, 1.35f, 1.65f, 1.96f},
-         {0.31f, 0.70f, 0.89f, 1.09f, 1.32f, 1.54f},
-         {0.25f, 0.57f, 0.71f, 0.86f, 1.01f, 1.17f},
-         {0.07f, 0.29f, 0.50f, 0.63f, 0.73f, 0.83f},
-         {-0.01f, 0.13f, 0.30f, 0.39f, 0.46f, 0.53f},
-         {-0.03f, 0.02f, 0.09f, 0.16f, 0.20f, 0.25f},
-         {-0.04f, -0.06f, -0.06f, -0.03f, -0.03f, -0.00f},
-         {-0.04f, -0.12f, -0.18f, -0.23f, -0.25f, -0.27f}}}},
-    {25, -0.71f, 0.01f, 0.00f, 1.34f,
+         {0.77f, 1.32f, 1.85f, 2.29f, 2.66f, 3.00f},
+         {0.70f, 1.37f, 1.68f, 1.95f, 2.23f, 2.51f},
+         {0.80f, 1.18f, 1.41f, 1.61f, 1.82f, 2.04f},
+         {0.73f, 1.01f, 1.13f, 1.27f, 1.44f, 1.61f},
+         {0.54f, 0.82f, 0.90f, 0.99f, 1.12f, 1.25f},
+         {0.38f, 0.67f, 0.72f, 0.77f, 0.86f, 0.97f},
+         {0.33f, 0.63f, 0.58f, 0.61f, 0.68f, 0.76f},
+         {0.27f, 0.50f, 0.47f, 0.51f, 0.56f, 0.60f},
+         {0.19f, 0.26f, 0.39f, 0.46f, 0.47f, 0.46f},
+         {0.10f, 0.13f, 0.26f, 0.39f, 0.36f, 0.32f},
+         {0.03f, 0.06f, 0.06f, 0.17f, 0.18f, 0.16f},
+         {-0.02f, -0.01f, 0.00f, 0.02f, 0.00f, 0.00f},
+         {-0.06f, -0.06f, -0.07f, -0.11f, -0.14f, -0.17f}}}},
+    {25, -0.81f, 0.01f, 0.00f, 1.08f,
         {{
-         {-0.18f, -1.28f, -2.25f, -3.13f, -3.97f, -4.80f},
-         {-0.17f, -1.05f, -1.88f, -2.66f, -3.40f, -4.14f},
-         {-0.25f, -0.91f, -1.55f, -2.19f, -2.84f, -3.49f},
-         {-0.25f, -0.76f, -1.24f, -1.77f, -2.32f, -2.88f},
-         {-0.18f, -0.60f, -0.96f, -1.40f, -1.86f, -2.33f},
-         {-0.08f, -0.47f, -0.77f, -1.11f, -1.47f, -1.84f},
-         {-0.10f, -0.42f, -0.64f, -0.88f, -1.15f, -1.43f},
-         {-0.09f, -0.35f, -0.51f, -0.68f, -0.88f, -1.09f},
-         {-0.00f, -0.17f, -0.34f, -0.50f, -0.65f, -0.81f},
-         {0.03f, -0.06f, -0.19f, -0.32f, -0.44f, -0.56f},
-         {0.03f, -0.00f, -0.06f, -0.15f, -0.24f, -0.31f},
-         {0.01f, 0.03f, 0.03f, 0.02f, -0.01f, -0.03f},
-         {-0.01f, 0.06f, 0.12f, 0.17f, 0.21f, 0.25f}}}},
-    {50, -1.60f, 0.02f, 0.00f, 3.36f,
+         {-0.24f, -1.18f, -1.73f, -2.12f, -2.44f, -2.75f},
+         {-0.20f, -0.90f, -1.29f, -1.65f, -1.97f, -2.28f},
+         {-0.26f, -0.70f, -0.95f, -1.24f, -1.54f, -1.83f},
+         {-0.27f, -0.60f, -0.74f, -0.93f, -1.17f, -1.42f},
+         {-0.20f, -0.51f, -0.60f, -0.72f, -0.89f, -1.08f},
+         {-0.13f, -0.41f, -0.49f, -0.57f, -0.69f, -0.84f},
+         {-0.10f, -0.39f, -0.41f, -0.47f, -0.57f, -0.69f},
+         {-0.10f, -0.29f, -0.33f, -0.41f, -0.51f, -0.61f},
+         {-0.10f, -0.13f, -0.27f, -0.38f, -0.47f, -0.55f},
+         {-0.05f, -0.05f, -0.16f, -0.33f, -0.40f, -0.46f},
+         {-0.00f, -0.03f, -0.02f, -0.15f, -0.25f, -0.30f},
+         {0.01f, 0.00f, 0.01f, -0.00f, -0.03f, -0.03f},
+         {0.01f, 0.02f, 0.05f, 0.11f, 0.18f, 0.24f}}}},
+    {50, -1.89f, 0.01f, 0.00f, 2.52f,
         {{
-         {-0.38f, -3.10f, -5.42f, -7.51f, -9.51f, -11.47f},
-         {-0.34f, -2.46f, -4.46f, -6.32f, -8.11f, -9.89f},
-         {-0.51f, -2.03f, -3.59f, -5.17f, -6.75f, -8.34f},
-         {-0.52f, -1.68f, -2.84f, -4.13f, -5.50f, -6.88f},
-         {-0.37f, -1.34f, -2.19f, -3.26f, -4.40f, -5.56f},
-         {-0.17f, -1.09f, -1.78f, -2.60f, -3.49f, -4.40f},
-         {-0.19f, -0.97f, -1.52f, -2.09f, -2.74f, -3.42f},
-         {-0.16f, -0.83f, -1.23f, -1.64f, -2.12f, -2.62f},
-         {0.03f, -0.39f, -0.83f, -1.20f, -1.58f, -1.96f},
-         {0.08f, -0.12f, -0.43f, -0.77f, -1.08f, -1.36f},
-         {0.06f, -0.00f, -0.13f, -0.35f, -0.59f, -0.75f},
-         {0.02f, 0.06f, 0.08f, 0.05f, -0.02f, -0.07f},
-         {-0.03f, 0.12f, 0.28f, 0.42f, 0.54f, 0.63f}}}},
-    {100, -4.25f, 0.04f, 0.00f, 10.48f,
+         {-0.54f, -3.00f, -4.35f, -5.25f, -6.02f, -6.76f},
+         {-0.41f, -2.11f, -3.09f, -4.01f, -4.84f, -5.63f},
+         {-0.55f, -1.51f, -2.18f, -2.96f, -3.75f, -4.53f},
+         {-0.54f, -1.31f, -1.69f, -2.21f, -2.85f, -3.51f},
+         {-0.42f, -1.15f, -1.40f, -1.71f, -2.16f, -2.68f},
+         {-0.25f, -0.93f, -1.15f, -1.37f, -1.70f, -2.09f},
+         {-0.19f, -0.88f, -0.95f, -1.13f, -1.41f, -1.73f},
+         {-0.18f, -0.68f, -0.77f, -0.99f, -1.25f, -1.53f},
+         {-0.18f, -0.29f, -0.65f, -0.92f, -1.15f, -1.38f},
+         {-0.10f, -0.10f, -0.37f, -0.78f, -0.98f, -1.16f},
+         {-0.01f, -0.05f, -0.04f, -0.35f, -0.62f, -0.76f},
+         {0.02f, 0.01f, 0.02f, 0.00f, -0.05f, -0.07f},
+         {0.01f, 0.04f, 0.12f, 0.29f, 0.46f, 0.63f}}}},
+    {100, -6.04f, 0.06f, 0.00f, 7.53f,
         {{
-         {-0.86f, -6.92f, -12.27f, -17.16f, -21.79f, -26.35f},
-         {-0.72f, -5.80f, -10.39f, -14.70f, -18.92f, -23.11f},
-         {-0.97f, -4.81f, -8.54f, -12.30f, -16.11f, -19.96f},
-         {-1.09f, -3.94f, -6.83f, -10.09f, -13.52f, -17.00f},
-         {-0.79f, -3.17f, -5.42f, -8.26f, -11.27f, -14.31f},
-         {-0.34f, -2.77f, -4.68f, -6.95f, -9.41f, -11.94f},
-         {-0.33f, -2.61f, -4.24f, -5.97f, -7.88f, -9.87f},
-         {-0.20f, -2.34f, -3.66f, -5.04f, -6.53f, -8.06f},
-         {0.28f, -1.11f, -2.71f, -4.02f, -5.20f, -6.36f},
-         {0.35f, -0.32f, -1.48f, -2.76f, -3.71f, -4.57f},
-         {0.21f, -0.00f, -0.42f, -1.19f, -1.98f, -2.55f},
-         {-0.00f, 0.18f, 0.33f, 0.30f, 0.12f, -0.20f},
-         {-0.24f, 0.40f, 1.07f, 1.66f, 2.07f, 2.31f}}}},
+         {-1.26f, -7.94f, -11.71f, -14.19f, -16.23f, -18.19f},
+         {-0.82f, -5.81f, -8.41f, -10.84f, -13.10f, -15.26f},
+         {-1.13f, -3.79f, -5.72f, -7.98f, -10.23f, -12.42f},
+         {-1.15f, -3.20f, -4.37f, -5.96f, -7.87f, -9.86f},
+         {-0.84f, -2.80f, -3.64f, -4.68f, -6.15f, -7.81f},
+         {-0.46f, -2.42f, -3.15f, -3.90f, -5.05f, -6.44f},
+         {-0.29f, -2.43f, -2.69f, -3.38f, -4.48f, -5.71f},
+         {-0.24f, -1.84f, -2.24f, -3.18f, -4.27f, -5.37f},
+         {-0.33f, -0.64f, -2.10f, -3.22f, -4.15f, -5.03f},
+         {-0.24f, -0.12f, -1.21f, -2.88f, -3.61f, -4.29f},
+         {-0.04f, -0.09f, -0.06f, -1.19f, -2.19f, -2.79f},
+         {0.02f, 0.00f, 0.09f, 0.15f, 0.05f, -0.22f},
+         {-0.06f, 0.08f, 0.44f, 1.18f, 1.91f, 2.50f}}}},
 }};
 
 // Law at a slider value: linear between the two measured values around it, zero at 0.
@@ -194,9 +198,12 @@ float gainAt(const Law &law, float tone, float haze)
     return std::clamp(g, law.low, law.high);
 }
 
-// Airlight of a reduced linear sRGB image: level A = max(0.10, 99th percentile of
-// max(R, G, B)), colour = mean of the haziest pixels (brightest eroded dark
-// channel, He et al. 2009) at luminance 1.
+float srgbLuminance(const cv::Vec3f &s) { return 0.2126f * s[0] + 0.7152f * s[1] + 0.0722f * s[2]; }
+
+// Airlight of a reduced linear sRGB image: level A = max(0.03, 99th percentile of
+// the luminance; max RGB put saturated colours far above the brightest tones),
+// colour = mean of the haziest pixels (brightest eroded dark channel, He et al.
+// 2009) at luminance 1.
 struct Airlight { float level; cv::Vec3f colour; };
 
 Airlight airlightOf(const cv::Mat &srgb, const cv::Mat &dark)
@@ -208,15 +215,15 @@ Airlight airlightOf(const cv::Mat &srgb, const cv::Mat &dark)
         const auto *row = srgb.ptr<cv::Vec3f>(y);
         const float *d = dark.ptr<float>(y);
         for (int x = 0; x < srgb.cols; ++x) {
-            maxima.push_back(std::max({row[x][0], row[x][1], row[x][2], 0.f}));
+            maxima.push_back(std::max(0.f, srgbLuminance(row[x])));
             darks.push_back(d[x]);
         }
     }
-    Airlight result{0.10f, cv::Vec3f(1.f, 1.f, 1.f)};
+    Airlight result{0.03f, cv::Vec3f(1.f, 1.f, 1.f)};
     if (maxima.empty()) return result;
     auto at = maxima.begin() + std::ptrdiff_t((maxima.size() - 1) * 99 / 100);
     std::nth_element(maxima.begin(), at, maxima.end());
-    result.level = std::max(0.10f, *at);
+    result.level = std::max(0.03f, *at);
     at = darks.begin() + std::ptrdiff_t(double(darks.size() - 1) * (1.0 - HaziestShare));
     std::nth_element(darks.begin(), at, darks.end());
     const float threshold = *at;
@@ -231,8 +238,6 @@ Airlight airlightOf(const cv::Mat &srgb, const cv::Mat &dark)
     if (luminance > 1e-9) result.colour = cv::Vec3f(sum / luminance);
     return result;
 }
-
-float srgbLuminance(const cv::Vec3f &s) { return 0.2126f * s[0] + 0.7152f * s[1] + 0.0722f * s[2]; }
 
 // Log ratios to green, taken from the airlight's (centre), d, gain
 // kappa h d / (1 + (d / R0)^2), luminance kept: the haze's cast is removed and

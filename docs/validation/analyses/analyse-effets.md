@@ -417,6 +417,58 @@ et 1,81 à +100, ombres −1,2 IL à +100 : le sens de la comparaison de l'utili
 (6V1A0043 : 1,53 contre 1,15) et reste en deçà sur la mer voilée (IMG_4345 : 2,4
 contre 3,6) ; quatre scènes ; validation visuelle de l'utilisateur à refaire.
 
+<a id="effets-20261025-voile-corpus"></a>
+
+### 10 quater. Voile sur onze scènes et air ambiant de luminance — 25 octobre 2026
+
+**Corpus** : l'utilisateur a exporté le voile ±25, ±50, ±100 de six scènes de plus,
+choisies pour combler les trous du corpus (6V1A0032 très sombre, 6V1A9112 sombre
+sans voile, 6V1A0544 à dynamique extrême, IMG_7953 très saturée, 6V1A9153 claire
+peu contrastée, IMG_6954 brumeuse), et de 6V1A9539 (intérieur sombre) : onze
+scènes en tout.
+
+**Retour de l'utilisateur** sur 6V1A9539 avec la loi du §10 ter : moins bon que
+Lightroom à −100 ; à +100 environ 3 % trop faible, mais visuellement proche.
+
+**Cause** à −100 : Lightroom relève les ombres (+2,2 IL) en gardant les tons
+clairs (−0,01 IL) ; IPR relevait aussi les tons clairs (+0,49 IL). L'air ambiant
+A, 99e centile du maximum RVB, était tiré par les prises rouges saturées (0,31
+contre 0,10 en luminance) : le mur clair passait pour un ton à relever.
+**A est désormais le 99e centile de la luminance** (plancher 0,03). En validation
+croisée sur onze scènes, le biais des tons clairs de 6V1A9539 passe de +0,81 à
+−0,06 IL à −100 et de −0,46 à +0,11 IL à +100, et la part inexpliquée de la
+luminance de 0,09 à 0,07 à −100.
+
+Preuves : [etude-loi-voile-v008](../raw/etude-loi-voile-v008-20261025T112001Z.json)
+et [etude-detail-voile-v002](../raw/etude-detail-voile-v002-20261025T113506Z.json)
+(onze scènes, ancien air ambiant),
+[etude-loi-voile-v009](../raw/etude-loi-voile-v009-20261025T123104Z.json) et
+[etude-detail-voile-v003](../raw/etude-detail-voile-v003-20261025T124720Z.json)
+(air ambiant de luminance, état livré). Validation croisée de la luminance :
+0,07 à 0,11 en négatif, 0,22 à 0,29 en positif (quatre scènes : 0,15 à 0,34).
+
+Rendu IPR en mémoire contre Lightroom
+([etude-reponse-effets-v006](../raw/etude-reponse-effets-v006-20261025T114101Z.json)
+ancien air ambiant,
+[etude-reponse-effets-v007](../raw/etude-reponse-effets-v007-20261025T125315Z.json)
+état livré), onze scènes :
+
+| | −100 | −50 | −25 | +25 | +50 | +100 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Luminance inexpliquée, v007 | 0,05 | 0,07 | 0,09 | 0,22 | 0,27 | 0,23 |
+| Erreur des gains par bande, v006 | 0,36 | 0,17 | 0,07 | 0,04 | 0,08 | 0,18 |
+| Erreur des gains par bande, v007 | 0,48 | 0,21 | 0,09 | 0,04 | 0,08 | 0,16 |
+
+6V1A9539, rendu livré (ombres / tons moyens / tons clairs, IL ; bande fine) :
+−100 Lightroom +2,22 / +0,81 / −0,01, 0,15 ; IPR +1,79 / +0,60 / −0,07, 0,18.
++100 Lightroom −1,51 / −0,60 / +0,02, 1,85 ; IPR −1,03 / −0,29 / +0,25, 1,78.
+
+**Réserves** : sur 6V1A9539, le voile reste un peu faible dans les ombres (−0,4 IL
+à −100, +0,5 IL à +100) et les tons clairs remontent légèrement à +100 ; le
+détail est juste. Sur l'ensemble, l'erreur des gains par bande à −100 remonte
+(0,36 → 0,48) avec l'air ambiant de luminance. Validation visuelle de
+l'utilisateur à refaire.
+
 <a id="effets-20261024-grain"></a>
 
 ## Grain — 24 octobre 2026

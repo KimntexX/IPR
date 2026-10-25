@@ -10,7 +10,8 @@ pixels). It is fitted per slider value as
 
     log2 G = c0 + ch h + cu u,
 
-h the haze (dark channel smoothed at 128 pixels over A), u = log2 of the local
+h the haze (dark channel smoothed at 128 pixels over A, A the 99th percentile
+of the luminance), u = log2 of the local
 mean luminance (64 pixels) over A, with equal weight per scene. Leave-one-scene-out
 error over the within-scene variance, against a constant and h alone. Images at
 1/4 resolution, log2(Y + 1e-3). Writes one immutable, versioned JSON.
@@ -47,7 +48,7 @@ def samples(neutral, variant):
     n = cv2.resize(neutral, None, fx=1 / REDUCTION, fy=1 / REDUCTION, interpolation=cv2.INTER_AREA).astype(np.float32)
     v = cv2.resize(variant, None, fx=1 / REDUCTION, fy=1 / REDUCTION, interpolation=cv2.INTER_AREA).astype(np.float32)
     ok = ((n.max(2) < .98) & (v.max(2) < .98) & ((n @ WEIGHTS) > 1e-4)).astype(np.float32)
-    airlight = max(.1, float(np.quantile(n.max(2), .99)))
+    airlight = max(.03, float(np.quantile(n @ WEIGHTS, .99)))   # as tests/study_dehaze_law.py
     dark = cv2.erode(n.min(2), np.ones((15 // REDUCTION + 1,) * 2, np.uint8))
     h = np.clip(cv2.GaussianBlur(dark, (0, 0), 128 / REDUCTION) / airlight, 0, 1)
     level = np.log2(n @ WEIGHTS + FLOOR).astype(np.float32)
