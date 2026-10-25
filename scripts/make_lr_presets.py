@@ -14,6 +14,7 @@ Usage: python scripts/make_lr_presets.py [--controls highlights shadows ...]
        python scripts/make_lr_presets.py --controls vibrance saturation
        python scripts/make_lr_presets.py --controls mixer   (24 mixer controls)
        python scripts/make_lr_presets.py --controls texture clarity dehaze grain
+       python scripts/make_lr_presets.py --controls grading   (66 colour grading states)
            (grain at Lightroom's default size 25 and roughness 50)
 """
 import argparse
@@ -57,6 +58,16 @@ for band, lr_band, band_label in MIXER_BANDS:
         LABELS[control] = f"Mélangeur {band_label} {component_label}"
         VALUES[control] = (-100, -50, -25, 25, 50, 100)
         PANELS[control] = ("IPR Mélangeur", "IPR-Melangeur-presets.zip")
+# Colour grading: per zone, Lightroom's hue and saturation fields (shadows and highlights
+# keep their split-toning names) and labels. States, wide by design (more comparison
+# points to place the breakpoints): a hue turn every 30 degrees at saturation 50, and
+# saturation 10 to 100 at an orange and a blue hue.
+GRADING_ZONES = (("shadows", "SplitToningShadowHue", "SplitToningShadowSaturation", "Ombres"),
+                 ("midtones", "ColorGradeMidtoneHue", "ColorGradeMidtoneSat", "Tons-moyens"),
+                 ("highlights", "SplitToningHighlightHue", "SplitToningHighlightSaturation", "Hautes-lumieres"))
+GRADING_STATES = ([(hue, 50) for hue in range(0, 360, 30)]
+                  + [(hue, saturation) for hue in (30, 210) for saturation in (10, 25, 50, 75, 100) if saturation != 50])
+GRADING = ("IPR Grading", "IPR-Grading-presets.zip")
 # Settings of the current Lightroom neutral references (6V1A0037, 11 October 2026).
 BASELINE = {
     "WhiteBalance": "As Shot", "CameraProfile": "Camera Neutral", "ConvertToGrayscale": "False",
@@ -88,9 +99,13 @@ def alt(tag, text):
     return f'   <crs:{tag}>\n    <rdf:Alt>\n     <rdf:li xml:lang="x-default">{text}</rdf:li>\n    </rdf:Alt>\n   </crs:{tag}>\n'
 
 
-def preset(group, control=None, value=None):
+def preset(group, control=None, value=None, grading=None):
     settings = dict(BASELINE)
-    if control is None:
+    if grading is not None:
+        (zone, hue_field, saturation_field, label), hue, saturation = grading
+        settings[hue_field], settings[saturation_field] = str(hue), str(saturation)
+        name = f"IPR Grading {label} T{hue:03d} S{saturation:03d}"
+    elif control is None:
         name = "IPR Neutre"
     else:
         settings[FIELDS[control]] = f"{value:+.2f}" if control == "exposure" else f"{value:+d}"
@@ -119,11 +134,14 @@ def preset(group, control=None, value=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--controls", nargs="+", default=["highlights"], choices=sorted(LABELS) + ["mixer"])
+    parser.add_argument("--controls", nargs="+", default=["highlights"], choices=sorted(LABELS) + ["mixer", "grading"])
     parser.add_argument("--out", type=Path, default=ROOT / "tests/image/lr-presets")
     args = parser.parse_args()
+    grading = "grading" in args.controls
+    if grading and len(args.controls) > 1:
+        sys.exit("Le grading a son propre panneau : --controls grading seul")
     args.controls = [c for control in args.controls for c in (MIXER if control == "mixer" else [control])]
-    panels = {PANELS.get(c, LUMIERES) for c in args.controls}
+    panels = {GRADING} if grading else {PANELS.get(c, LUMIERES) for c in args.controls}
     if len(panels) > 1:
         sys.exit("Un seul panneau par archive : " + ", ".join(sorted(g for g, _ in panels)))
     group, archive_name = panels.pop()
@@ -131,7 +149,11 @@ def main():
     if archive.exists() or folder.exists():
         sys.exit(f"Existe déjà, rien n'est écrasé : {archive if archive.exists() else folder}")
     folder.mkdir(parents=True)
-    presets = [preset(group)] + [preset(group, c, v) for c in args.controls for v in VALUES.get(c, DEFAULT_VALUES)]
+    if grading:
+        presets = [preset(group)] + [preset(group, grading=(zone, hue, saturation))
+                                     for zone in GRADING_ZONES for hue, saturation in GRADING_STATES]
+    else:
+        presets = [preset(group)] + [preset(group, c, v) for c in args.controls for v in VALUES.get(c, DEFAULT_VALUES)]
     files = []
     for name, text in presets:
         path = folder / f"{name.replace(' ', '_')}.xmp"
