@@ -98,11 +98,17 @@ inline const cv::Matx33d &srgbToProPhoto()
     return matrix;
 }
 
-// Relative saturation (max - min) / max of a linear sRGB colour in linear
-// ProPhoto RGB, clamped to [0, 1]; 0 when the maximum is not positive.
-inline double proPhotoSaturation(const cv::Vec3d &linearSrgb)
+// Relative saturation (max - min) / max of a working-space colour in linear
+// ProPhoto RGB, clamped to [0, 1]; 0 when the maximum is not positive. One matrix
+// from Rec.2020 (sRGB -> ProPhoto composed with Rec.2020 -> sRGB, computed once).
+inline const cv::Matx33d &toProPhoto()
 {
-    const cv::Vec3d p = srgbToProPhoto() * linearSrgb;
+    static const cv::Matx33d matrix = srgbToProPhoto() * toSrgb();
+    return matrix;
+}
+inline double proPhotoSaturation(const cv::Vec3d &rgb)
+{
+    const cv::Vec3d p = toProPhoto() * rgb;
     const double peak = std::max({p[0], p[1], p[2]});
     const double low = std::min({p[0], p[1], p[2]});
     return peak > 1e-6 ? std::clamp((peak - low) / peak, 0.0, 1.0) : 0.0;

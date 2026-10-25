@@ -154,15 +154,15 @@ cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
         return rgb;
     if (rgb[0] == rgb[1] && rgb[1] == rgb[2])
         return rgb; // exact grey identity, without matrix round trip
-    // The tables are measured in linear sRGB: unclipped round trip from the master.
-    const cv::Vec3d srgb = WorkingColor::toSrgb() * cv::Vec3d(rgb);
-    cv::Vec3d lab = WorkingColor::toOklab(srgb);
+    // The tables are measured in Oklab and ProPhoto saturation, both reached from the
+    // Rec.2020 master in one matrix, unclipped.
+    cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(rgb));
     const double chroma = std::hypot(lab[1], lab[2]);
     if (chroma < 1e-12) return rgb;
     double hue = std::atan2(lab[2], lab[1]) * DegreesPerRadian;
     if (hue < 0.0) hue += 360.0;
     Position position;
-    bracket(Model::Saturation, Model::SaturationCount, WorkingColor::proPhotoSaturation(srgb), position.s, position.ts);
+    bracket(Model::Saturation, Model::SaturationCount, WorkingColor::proPhotoSaturation(cv::Vec3d(rgb)), position.s, position.ts);
     bracket(Model::Lightness, Model::LightnessCount, lab[0], position.l, position.tl);
 
     Effect total;
@@ -186,7 +186,7 @@ cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
     const double a = lab[1] * gain, b = lab[2] * gain;
     lab[1] = a * std::cos(rotation) - b * std::sin(rotation);
     lab[2] = a * std::sin(rotation) + b * std::cos(rotation);
-    return cv::Vec3f(WorkingColor::fromSrgb() * WorkingColor::fromOklab(lab));
+    return cv::Vec3f(WorkingColor::oklabToWorking(lab));
 }
 
 cv::Vec3f trackColour(int band, int component, int value)
@@ -194,11 +194,11 @@ cv::Vec3f trackColour(int band, int component, int value)
     if (band < 0 || band >= int(BandCount) || component < 0 || component >= Model::ComponentCount)
         return {0.5f, 0.5f, 0.5f};
     const double hue = peakHues()[size_t(band)] / DegreesPerRadian;
-    const cv::Vec3d reference = WorkingColor::fromSrgb() * WorkingColor::fromOklab(
+    const cv::Vec3d reference = WorkingColor::oklabToWorking(
         {TrackLightness, TrackChroma * std::cos(hue), TrackChroma * std::sin(hue)});
     Parameters parameters;
     (component == 0 ? parameters.hue : component == 1 ? parameters.saturation : parameters.luminance)[size_t(band)] = value;
     const cv::Vec3f reached = apply(cv::Vec3f(reference), parameters);
-    return encodedInGamut(WorkingColor::toOklab(WorkingColor::toSrgb() * cv::Vec3d(reached)));
+    return encodedInGamut(WorkingColor::workingToOklab(cv::Vec3d(reached)));
 }
 }

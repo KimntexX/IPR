@@ -15,7 +15,7 @@ void apply(cv::Mat &linearRgb, int saturation, int vibrance);
 
 // One linear sRGB D65 pixel; amounts in [-1, 1], clamped. Zero amounts and
 // greys are returned unchanged.
-cv::Vec3f applyPixel(const cv::Vec3f &linearSrgb, double vibrance, double saturation);
+cv::Vec3f applyPixel(const cv::Vec3f &linearRgb, double vibrance, double saturation);
 }
 
 #endif // IPR_CORE_VIBRANCE_H

@@ -15,7 +15,7 @@ void check(bool ok, const char *message)
 
 double chroma(const cv::Vec3f &rgb)
 {
-    const cv::Vec3d lab = WorkingColor::toOklab(cv::Vec3d(rgb));
+    const cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(rgb));
     return std::hypot(lab[1], lab[2]);
 }
 
@@ -51,8 +51,8 @@ int main()
                 }
             }
             if (!grey) {
-                const cv::Vec3d before = WorkingColor::toOklab(cv::Vec3d(rgb));
-                const cv::Vec3d after = WorkingColor::toOklab(cv::Vec3d(Vibrance::applyPixel(rgb, 0, .5)));
+                const cv::Vec3d before = WorkingColor::workingToOklab(cv::Vec3d(rgb));
+                const cv::Vec3d after = WorkingColor::workingToOklab(cv::Vec3d(Vibrance::applyPixel(rgb, 0, .5)));
                 check(std::abs(after[0] - before[0]) < 2e-6, "Saturation alone preserves Oklab L");
             }
             const cv::Vec3f left = Vibrance::applyPixel(rgb, -1e-6, 0), right = Vibrance::applyPixel(rgb, 1e-6, 0);
@@ -63,26 +63,29 @@ int main()
 
         // Lightroom response: strongest on moderately saturated mid-tones, saturated
         // colours protected, near-total desaturation of weak colours at -100.
-        const cv::Vec3f weak(.24f, .20f, .17f), strong(.60f, .05f, .03f);
+        // Defined in linear sRGB, as measured; applyPixel works in the Rec.2020 working space.
+        const auto working = [](float r, float g, float b) { return cv::Vec3f(WorkingColor::fromSrgb() * cv::Vec3d(r, g, b)); };
+        const cv::Vec3f weak = working(.24f, .20f, .17f), strong = working(.60f, .05f, .03f);
         check(gain(weak, 1) > 1.5 && gain(weak, 1) < 4.5, "Vibrance +100 on a moderate colour");
         check(gain(strong, 1) < gain(weak, 1), "Saturated colours are boosted less");
         check(gain(weak, .25) - 1 < (gain(weak, 1) - 1) / 4, "Progressive positive response");
         check(gain(weak, -1) < .25, "Vibrance -100 nearly removes weak colours");
         check(gain(strong, -1) > gain(weak, -1), "Saturated colours keep more chroma at -100");
         // Lightroom turns blues towards cyan when boosting, back when reducing.
-        const cv::Vec3f blue(.06f, .14f, .45f);
+        const cv::Vec3f blue = working(.06f, .14f, .45f);
         const auto hue = [](const cv::Vec3f &rgb) {
-            const cv::Vec3d lab = WorkingColor::toOklab(cv::Vec3d(rgb));
+            const cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(rgb));
             return std::atan2(lab[2], lab[1]) * 180.0 / 3.14159265358979323846;
         };
         check(hue(Vibrance::applyPixel(blue, 1, 0)) < hue(blue) - 1, "Vibrance +100 turns blue towards cyan");
         check(hue(Vibrance::applyPixel(blue, -.5, 0)) > hue(blue), "Vibrance -50 turns blue away from cyan");
-        check(std::abs(hue(Vibrance::applyPixel(blue, 0, .5)) - hue(blue)) < 1e-6, "Saturation keeps the hue");
+        // Float rounding of the working-space round trip: about 1e-6 degree.
+        check(std::abs(hue(Vibrance::applyPixel(blue, 0, .5)) - hue(blue)) < 1e-5, "Saturation keeps the hue");
 
         // Image path: Rec.2020 greys exact, colours changed, unsupported inputs untouched.
         cv::Mat image(1, 2, CV_32FC3);
         image.at<cv::Vec3f>(0, 0) = {.3f, .3f, .3f};
-        image.at<cv::Vec3f>(0, 1) = WorkingColor::fromSrgb() * cv::Vec3d(weak);
+        image.at<cv::Vec3f>(0, 1) = weak;
         const cv::Mat original = image.clone();
         Vibrance::apply(image, 0, 50);
         check(image.at<cv::Vec3f>(0, 0) == original.at<cv::Vec3f>(0, 0), "Rec.2020 grey unchanged");
