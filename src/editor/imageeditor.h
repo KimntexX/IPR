@@ -284,11 +284,15 @@ private:
         std::shared_ptr<RawDecoder::DcpSource> dcpSource, QSize fullSize, bool imageIsProxy);
     DecodedImageCache::Entry retainedCurrentEntry() const;
     RawDecoder::Options developmentOptions() const;
+    // pixelScale: pixels of source per pixel of the full image (below 1 for the
+    // preview proxy), so effects keep their full-image radii.
     static ColorPipeline::WorkingImage renderWorkingImage(
-        const ColorPipeline::WorkingImage &source, const Settings &settings);
+        const ColorPipeline::WorkingImage &source, const Settings &settings,
+        double pixelScale = 1.0);
     static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
                                       const Settings &settings,
-                                      bool includeOriginal);
+                                      bool includeOriginal,
+                                      double pixelScale = 1.0);
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,

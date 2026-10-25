@@ -1,6 +1,9 @@
 #include "imageeditor.h"
 
+#include "Dehaze.h"
+#include "Grain.h"
 #include "DetailProcessing.h"
+#include "LocalContrast.h"
 #include "ColorAdjustments.h"
 #include "Contrast.h"
 #include "Histogram.h"
@@ -1376,7 +1379,7 @@ void attachToneStatistics(ColorPipeline::WorkingImage &image, ColorPipeline::Wor
 }
 
 ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
-    const ColorPipeline::WorkingImage &source, const Settings &settings)
+    const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale)
 {
     if (source.isNull() || source.colorSpace != ColorPipeline::workingColorSpace() ||
         source.linearRgba.type() != CV_32FC4 || !cv::checkRange(source.linearRgba, true))
@@ -1469,13 +1472,12 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
     }
 
-    DetailProcessing::applyTexture(adjusted, settings.texture);
-    DetailProcessing::applyClarity(adjusted, settings.clarity);
-    DetailProcessing::dehaze(adjusted, settings.dehaze);
+    LocalContrast::apply(adjusted, settings.texture, settings.clarity, pixelScale);
+    Dehaze::apply(adjusted, settings.dehaze, pixelScale);
     ToneCurve::apply(adjusted, settings.toneCurves);
 
     if (settings.blur > 0) {
-        const double sigma = static_cast<double>(settings.blur) / 2.0;
+        const double sigma = static_cast<double>(settings.blur) / 2.0 * pixelScale;
         cv::GaussianBlur(adjusted, adjusted, cv::Size(0, 0), sigma);
     }
 
@@ -1488,7 +1490,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                                               settings.sharpeningMasking});
     }
 
-    DetailProcessing::addGrain(adjusted, settings.grain);
+    Grain::apply(adjusted, settings.grain, pixelScale);
 
     const cv::Mat alpha = channels[3];
     cv::split(adjusted, channels);
@@ -1502,7 +1504,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
 
 ImageEditor::RenderResult ImageEditor::renderPreview(
     const ColorPipeline::WorkingImage &source, const Settings &settings,
-    bool includeOriginal)
+    bool includeOriginal, double pixelScale)
 {
     RenderResult result;
     if (includeOriginal) {
@@ -1515,7 +1517,7 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
             qWarning() << "Échec du rendu de l'origine :" << error;
     }
     const ColorPipeline::WorkingImage rendered =
-        renderWorkingImage(source, settings);
+        renderWorkingImage(source, settings, pixelScale);
     if (rendered.isNull())
         return result;
 
@@ -2039,17 +2041,21 @@ void ImageEditor::startRender()
     const ColorPipeline::WorkingImage &source =
         m_editProxy.isNull() ? m_original : m_editProxy;
     const ColorPipeline::WorkingImage sourceCopy = source;
+    const int fullExtent = std::max(m_fullSize.width(), m_fullSize.height());
+    const int sourceExtent = std::max(source.linearRgba.cols, source.linearRgba.rows);
+    const double pixelScale = fullExtent > 0 && sourceExtent > 0
+        ? std::min(1.0, double(sourceExtent) / double(fullExtent)) : 1.0;
     const Settings settings = m_settings;
     const bool includeOriginal = m_originalImageSource.isEmpty();
     m_activeRevision = m_requestedRevision;
     setBusy(true);
     auto *controller = &m_decodedImageCache;
     m_renderWatcher.setFuture(QtConcurrent::run(
-        [sourceCopy, settings, includeOriginal, controller] {
+        [sourceCopy, settings, includeOriginal, pixelScale, controller] {
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
             if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return renderPreview(sourceCopy, settings, includeOriginal);
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale);
         }));
 }
 

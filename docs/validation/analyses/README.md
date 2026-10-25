@@ -29,6 +29,7 @@ les mettre à jour en parallèle. Les futures conclusions restent dans le rappor
 - [Base colorimétrique](analyse-base-colorimetrique.md).
 - [Mélangeur de couleurs](analyse-color-mixer.md) : quatre campagnes regroupées.
 - [Bruit](analyse-bruit.md) : deux campagnes et correctif regroupés.
+- [Effets](analyse-effets.md) : texture, clarté (premier état, avec réserve), voile, grain, flou.
 - [Dématriçage](analyse-dematricage.md) : modèles LibRaw, RCD écrit pour IPR et
   intégré à l'ouverture, écart au neutre Lightroom.
 - [CSV et graphiques dérivés](../metrics/README.md).

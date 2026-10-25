@@ -58,6 +58,12 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorMixerModel.h
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
+    src/core/Dehaze.h
+    src/core/Dehaze.cpp
+    src/core/Grain.h
+    src/core/Grain.cpp
+    src/core/LocalContrast.h
+    src/core/LocalContrast.cpp
     src/core/ColorAdjustments.h
     src/core/ColorAdjustments.cpp
     src/core/Contrast.h
@@ -290,6 +296,9 @@ if(BUILD_TESTING)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
+    ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
+    ipr_add_test(dehazeTests tests/dehaze_test.cpp)
+    ipr_add_test(grainTests tests/grain_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
     set_tests_properties(toneRecoveryTests PROPERTIES LABELS "unit;pipeline;lighting")

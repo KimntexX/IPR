@@ -1,0 +1,296 @@
+{
+ "campaign_id": "etude-detail-voile-v003-20261025T124720Z",
+ "runner": "tests/study_dehaze_detail.py",
+ "commit": "1535ffc122114189608ee8656994d141db1f1c1b",
+ "local_changes": [
+  "M src/core/Dehaze.cpp",
+  " M src/core/Dehaze.h",
+  " M tests/study_dehaze_detail.py",
+  " M tests/study_dehaze_law.py",
+  "?? docs/validation/raw/etude-detail-voile-v002-20261025T113506Z.json",
+  "?? docs/validation/raw/etude-loi-voile-v008-20261025T112001Z.json",
+  "?? docs/validation/raw/etude-loi-voile-v009-20261025T123104Z.json",
+  "?? docs/validation/raw/etude-reponse-effets-v006-20261025T114101Z.json"
+ ],
+ "model": "log2 G = c0 + ch h + cu u, G local gain of log2 luminance detail below 16 px",
+ "reduction": 4,
+ "window_native_px": 64,
+ "detail_native_px": 16,
+ "log_floor": 0.001,
+ "u": "log2 of the local mean (64 px) over A, clamped to [-10, 0.6]",
+ "sample_stride": 9,
+ "duration_seconds": 320.3,
+ "python": "3.14.3",
+ "laws": {
+  "-100": {
+   "c0": -2.58383364771147,
+   "ch": -1.5315231872987802,
+   "cu": -0.1339668093311399,
+   "scene_median_log2_gain": {
+    "6V1A0032": -1.7317378520965576,
+    "6V1A0043": -0.5907115936279297,
+    "6V1A0327": -2.034329414367676,
+    "6V1A0544": -1.8180241584777832,
+    "6V1A9112": -1.7185757160186768,
+    "6V1A9153": -2.4989259243011475,
+    "6V1A9539": -2.762439727783203,
+    "_MG_7580": -2.728416919708252,
+    "IMG_4345": -3.7221016883850098,
+    "IMG_6954": -3.14365291595459,
+    "IMG_7953": -1.6403942108154297
+   },
+   "leave_one_out": {
+    "constant": {
+     "error_over_within_scene_variance": 2.8163308948299455,
+     "mean_abs_error_of_scene_median_log2": 0.7540233432742505
+    },
+    "haze": {
+     "error_over_within_scene_variance": 2.243306728730264,
+     "mean_abs_error_of_scene_median_log2": 0.5970978299135912
+    },
+    "haze_and_tone": {
+     "error_over_within_scene_variance": 2.1556295420123606,
+     "mean_abs_error_of_scene_median_log2": 0.5429479625836942
+    }
+   },
+   "scenes": [
+    "6V1A0032",
+    "6V1A0043",
+    "6V1A0327",
+    "6V1A0544",
+    "6V1A9112",
+    "6V1A9153",
+    "6V1A9539",
+    "IMG_4345",
+    "IMG_6954",
+    "IMG_7953",
+    "_MG_7580"
+   ]
+  },
+  "-50": {
+   "c0": -0.9550175393965624,
+   "ch": -0.5309316163145454,
+   "cu": -0.09282632812119385,
+   "scene_median_log2_gain": {
+    "6V1A0032": -0.5337088108062744,
+    "6V1A0043": -0.17069055140018463,
+    "6V1A0327": -0.7269693613052368,
+    "6V1A0544": -0.535531759262085,
+    "6V1A9112": -0.4934011399745941,
+    "6V1A9153": -0.9022821187973022,
+    "6V1A9539": -0.6760898232460022,
+    "_MG_7580": -0.7703469395637512,
+    "IMG_4345": -1.2504596710205078,
+    "IMG_6954": -1.1603634357452393,
+    "IMG_7953": -0.42850667238235474
+   },
+   "leave_one_out": {
+    "constant": {
+     "error_over_within_scene_variance": 2.3580830695137798,
+     "mean_abs_error_of_scene_median_log2": 0.2677846287286949
+    },
+    "haze": {
+     "error_over_within_scene_variance": 1.4113445369528659,
+     "mean_abs_error_of_scene_median_log2": 0.1922987167021904
+    },
+    "haze_and_tone": {
+     "error_over_within_scene_variance": 1.0612236172938532,
+     "mean_abs_error_of_scene_median_log2": 0.19110325315711388
+    }
+   },
+   "scenes": [
+    "6V1A0032",
+    "6V1A0043",
+    "6V1A0327",
+    "6V1A0544",
+    "6V1A9112",
+    "6V1A9153",
+    "6V1A9539",
+    "IMG_4345",
+    "IMG_6954",
+    "IMG_7953",
+    "_MG_7580"
+   ]
+  },
+  "-25": {
+   "c0": -0.42772253955273265,
+   "ch": -0.23070642182896411,
+   "cu": -0.04914151140521281,
+   "scene_median_log2_gain": {
+    "6V1A0032": -0.1762487143278122,
+    "6V1A0043": -0.07621018588542938,
+    "6V1A0327": -0.29173922538757324,
+    "6V1A0544": -0.19585134088993073,
+    "6V1A9112": -0.19081664085388184,
+    "6V1A9153": -0.4024813771247864,
+    "6V1A9539": -0.2524905204772949,
+    "_MG_7580": -0.33881187438964844,
+    "IMG_4345": -0.6010956168174744,
+    "IMG_6954": -0.5227073431015015,
+    "IMG_7953": -0.14255531132221222
+   },
+   "leave_one_out": {
+    "constant": {
+     "error_over_within_scene_variance": 2.335523524104841,
+     "mean_abs_error_of_scene_median_log2": 0.14036303788972218
+    },
+    "haze": {
+     "error_over_within_scene_variance": 1.3485474444934367,
+     "mean_abs_error_of_scene_median_log2": 0.09663062654195033
+    },
+    "haze_and_tone": {
+     "error_over_within_scene_variance": 0.9758874689718654,
+     "mean_abs_error_of_scene_median_log2": 0.09080439974419328
+    }
+   },
+   "scenes": [
+    "6V1A0032",
+    "6V1A0043",
+    "6V1A0327",
+    "6V1A0544",
+    "6V1A9112",
+    "6V1A9153",
+    "6V1A9539",
+    "IMG_4345",
+    "IMG_6954",
+    "IMG_7953",
+    "_MG_7580"
+   ]
+  },
+  "25": {
+   "c0": 0.21292672866826903,
+   "ch": 0.29803960161285004,
+   "cu": 0.02193562979343755,
+   "scene_median_log2_gain": {
+    "6V1A0032": 0.07322321087121964,
+    "6V1A0043": 0.026574771851301193,
+    "6V1A0327": 0.12754082679748535,
+    "6V1A0544": 0.059763796627521515,
+    "6V1A9112": 0.08729352056980133,
+    "6V1A9153": 0.2437722384929657,
+    "6V1A9539": 0.16916218400001526,
+    "_MG_7580": 0.18044672906398773,
+    "IMG_4345": 0.3682970404624939,
+    "IMG_6954": 0.35468822717666626,
+    "IMG_7953": 0.06393960118293762
+   },
+   "leave_one_out": {
+    "constant": {
+     "error_over_within_scene_variance": 2.667314126144101,
+     "mean_abs_error_of_scene_median_log2": 0.10508691813871375
+    },
+    "haze": {
+     "error_over_within_scene_variance": 1.3219327411913848,
+     "mean_abs_error_of_scene_median_log2": 0.06716109895563838
+    },
+    "haze_and_tone": {
+     "error_over_within_scene_variance": 1.1531192080203014,
+     "mean_abs_error_of_scene_median_log2": 0.05777365574062996
+    }
+   },
+   "scenes": [
+    "6V1A0032",
+    "6V1A0043",
+    "6V1A0327",
+    "6V1A0544",
+    "6V1A9112",
+    "6V1A9153",
+    "6V1A9539",
+    "IMG_4345",
+    "IMG_6954",
+    "IMG_7953",
+    "_MG_7580"
+   ]
+  },
+  "50": {
+   "c0": 0.41468136384104404,
+   "ch": 0.6860656409389081,
+   "cu": 0.04243003361485609,
+   "scene_median_log2_gain": {
+    "6V1A0032": 0.14599043130874634,
+    "6V1A0043": 0.05022331699728966,
+    "6V1A0327": 0.2461124062538147,
+    "6V1A0544": 0.11292408406734467,
+    "6V1A9112": 0.17222405970096588,
+    "6V1A9153": 0.48808762431144714,
+    "6V1A9539": 0.3055717945098877,
+    "_MG_7580": 0.3929940462112427,
+    "IMG_4345": 0.7917062640190125,
+    "IMG_6954": 0.7571942806243896,
+    "IMG_7953": 0.1274121254682541
+   },
+   "leave_one_out": {
+    "constant": {
+     "error_over_within_scene_variance": 2.840088664579741,
+     "mean_abs_error_of_scene_median_log2": 0.23092033203045223
+    },
+    "haze": {
+     "error_over_within_scene_variance": 1.3683718772547369,
+     "mean_abs_error_of_scene_median_log2": 0.14089213303965056
+    },
+    "haze_and_tone": {
+     "error_over_within_scene_variance": 1.2616731895743516,
+     "mean_abs_error_of_scene_median_log2": 0.13460688370115562
+    }
+   },
+   "scenes": [
+    "6V1A0032",
+    "6V1A0043",
+    "6V1A0327",
+    "6V1A0544",
+    "6V1A9112",
+    "6V1A9153",
+    "6V1A9539",
+    "IMG_4345",
+    "IMG_6954",
+    "IMG_7953",
+    "_MG_7580"
+   ]
+  },
+  "100": {
+   "c0": 0.6975030599122481,
+   "ch": 2.005773151151172,
+   "cu": 0.07911196834291978,
+   "scene_median_log2_gain": {
+    "6V1A0032": 0.2507743239402771,
+    "6V1A0043": 0.0967445895075798,
+    "6V1A0327": 0.431907594203949,
+    "6V1A0544": 0.18802917003631592,
+    "6V1A9112": 0.31099754571914673,
+    "6V1A9153": 0.8985415697097778,
+    "6V1A9539": 0.4638538658618927,
+    "_MG_7580": 0.6729081869125366,
+    "IMG_4345": 1.67743980884552,
+    "IMG_6954": 1.6553958654403687,
+    "IMG_7953": 0.11409394443035126
+   },
+   "leave_one_out": {
+    "constant": {
+     "error_over_within_scene_variance": 2.7066121344302942,
+     "mean_abs_error_of_scene_median_log2": 0.5061748631676356
+    },
+    "haze": {
+     "error_over_within_scene_variance": 1.1883220079843435,
+     "mean_abs_error_of_scene_median_log2": 0.295813646863775
+    },
+    "haze_and_tone": {
+     "error_over_within_scene_variance": 1.1805975578889079,
+     "mean_abs_error_of_scene_median_log2": 0.2966192809395855
+    }
+   },
+   "scenes": [
+    "6V1A0032",
+    "6V1A0043",
+    "6V1A0327",
+    "6V1A0544",
+    "6V1A9112",
+    "6V1A9153",
+    "6V1A9539",
+    "IMG_4345",
+    "IMG_6954",
+    "IMG_7953",
+    "_MG_7580"
+   ]
+  }
+ }
+}
