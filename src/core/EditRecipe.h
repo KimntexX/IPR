@@ -40,6 +40,8 @@ struct Settings
     std::array<int, ColorMixer::BandCount> mixerLuminance{};
     std::array<int, 3> gradingHue{};
     std::array<int, 3> gradingSaturation{};
+    int gradingBlending = 50;   // Lightroom's defaults (sidecar v7)
+    int gradingBalance = 0;
     bool automaticWhiteBalance = false;
     ToneCurve::Curves toneCurves;
 };

@@ -43,7 +43,7 @@ bool read(const QString &fileName, Settings *settings, UserImageMetadata *metada
     qint64 sourceSize = -1;
     qint64 sourceModified = -1;
     stream >> magic >> version >> sourceSize >> sourceModified;
-    if (magic != 0x49505231u || version < 1 || version > 6 || file.size() > 1024 * 1024 ||
+    if (magic != 0x49505231u || version < 1 || version > 7 || file.size() > 1024 * 1024 ||
         sourceSize != sourceInfo.size() ||
         sourceModified != sourceInfo.lastModified().toMSecsSinceEpoch())
         return false;
@@ -108,6 +108,10 @@ bool read(const QString &fileName, Settings *settings, UserImageMetadata *metada
         stream >> loadedRaw.lensProfile >> loadedRaw.lensProfileSha256 >> loadedRaw.lensProfileResolved
                >> loadedRaw.lensCorrectionEnabled >> loadedRaw.chromaticAberrationEnabled;
     }
+    if (version >= 7) {
+        readInt(stream, loaded.gradingBlending);
+        readInt(stream, loaded.gradingBalance);
+    }
     if (stream.status() != QDataStream::Ok)
         return false;
     *settings = std::move(loaded);
@@ -127,7 +131,7 @@ bool write(const QString &fileName, const Settings &settings, const UserImageMet
         return false;
     QDataStream stream(&file);
     stream.setVersion(QDataStream::Qt_6_4);
-    stream << quint32(0x49505231u) << quint16(6) << qint64(sourceInfo.size())
+    stream << quint32(0x49505231u) << quint16(7) << qint64(sourceInfo.size())
            << qint64(sourceInfo.lastModified().toMSecsSinceEpoch());
     stream << settings.brightness;
     writeInt(stream, settings.contrast); writeInt(stream, settings.blur); stream << settings.grayscale;
@@ -159,6 +163,8 @@ bool write(const QString &fileName, const Settings &settings, const UserImageMet
            << raw.normalizationEnabled << raw.engineVersion;
     stream << raw.lensProfile << raw.lensProfileSha256 << raw.lensProfileResolved
            << raw.lensCorrectionEnabled << raw.chromaticAberrationEnabled;
+    writeInt(stream, settings.gradingBlending);
+    writeInt(stream, settings.gradingBalance);
     return stream.status() == QDataStream::Ok && file.commit();
 }
 }

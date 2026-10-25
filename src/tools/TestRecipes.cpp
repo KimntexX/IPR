@@ -235,6 +235,7 @@ QJsonObject declaredSettings(const Settings &s)
     }
     result.insert("mixerHue", hue); result.insert("mixerSaturation", sat); result.insert("mixerLuminance", lum);
     result.insert("grading", grading); result.insert("toneCurves", curves);
+    result.insert("gradingBlending", s.gradingBlending); result.insert("gradingBalance", s.gradingBalance);
     return result;
 }
 

@@ -1259,6 +1259,24 @@ void ImageEditor::setColorGrading(int zone, int hue, int saturation)
     m_settings.gradingSaturation[index] = saturation;
     scheduleRender();
 }
+
+void ImageEditor::setColorGradingBlending(int blending)
+{
+    blending = qBound(0, blending, 100);
+    if (m_settings.gradingBlending == blending)
+        return;
+    m_settings.gradingBlending = blending;
+    scheduleRender();
+}
+
+void ImageEditor::setColorGradingBalance(int balance)
+{
+    balance = qBound(-100, balance, 100);
+    if (m_settings.gradingBalance == balance)
+        return;
+    m_settings.gradingBalance = balance;
+    scheduleRender();
+}
 void ImageEditor::setAutomaticWhiteBalance(bool enabled)
 {
     if (busy() || m_settings.automaticWhiteBalance == enabled)
@@ -1468,7 +1486,8 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
 
     PerceptualColour::apply(adjusted, {settings.saturation, settings.vibrance,
                                        {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
-                                       settings.gradingHue, settings.gradingSaturation});
+                                       settings.gradingHue, settings.gradingSaturation,
+                                       settings.gradingBlending, settings.gradingBalance});
 
     // Denoise before local-detail enhancement and sharpening. The operation
     // runs in linear RGB and keeps luminance and chrominance independent so

@@ -208,6 +208,9 @@ public:
     // Colour a mixer slider reaches at a value, for the UI tracks (ColorMixer::trackColour).
     Q_INVOKABLE QColor colorMixerTrackColor(int band, int component, int value) const;
     Q_INVOKABLE int colorGradingValue(int zone, int component) const;
+    // Colour grading blending [0, 100] (default 50) and balance [-100, 100] (default 0).
+    Q_INVOKABLE int colorGradingBlending() const { return m_settings.gradingBlending; }
+    Q_INVOKABLE int colorGradingBalance() const { return m_settings.gradingBalance; }
     // Colour a grading zone gives at a hue and saturation, for the UI wheel and track
     // (ColorGrading::displayColour).
     Q_INVOKABLE QColor colorGradingDisplayColor(int zone, int hue, int saturation) const;
@@ -239,6 +242,8 @@ public:
     Q_INVOKABLE void setColorMixer(int band, int hue, int saturation,
                                    int luminance);
     Q_INVOKABLE void setColorGrading(int zone, int hue, int saturation);
+    Q_INVOKABLE void setColorGradingBlending(int blending);
+    Q_INVOKABLE void setColorGradingBalance(int balance);
     Q_INVOKABLE void setAutomaticWhiteBalance(bool enabled);
     Q_INVOKABLE void setGrayscale(bool enabled);
     Q_INVOKABLE void setToneCurve(int channel, const QVariantList &points);

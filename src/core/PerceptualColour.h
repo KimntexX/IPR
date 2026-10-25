@@ -19,6 +19,8 @@ struct Parameters {
     ColorMixer::Parameters mixer;
     std::array<int, 3> gradingHue{};          // shadows, midtones, highlights, degrees
     std::array<int, 3> gradingSaturation{};   // [0, 100]
+    int gradingBlending = 50;                 // [0, 100]
+    int gradingBalance = 0;                   // [-100, 100]
 };
 
 // Linear Rec.2020 image (CV_32FC3), in place. No clipping: the output handles gamut.

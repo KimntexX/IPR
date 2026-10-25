@@ -78,6 +78,23 @@ int main()
         if (!check(std::abs(ratio - 0.5) < 0.05, "saturation 25 gives half the change of 50")) return 1;
     }
 
+    // Blending widens the shadows towards the midtones; a positive balance folds them back
+    // towards black (Lightroom: shadow peak at lightness 0.45 at blending 100, 0.20 at balance +50).
+    const auto shadowsAt = [&](int blending, int balance) {
+        cv::Mat out = ramp.clone();
+        PerceptualColour::Parameters p;
+        p.gradingHue[0] = 30;
+        p.gradingSaturation[0] = 50;
+        p.gradingBlending = blending;
+        p.gradingBalance = balance;
+        PerceptualColour::apply(out, p);
+        return changes(ramp, out);
+    };
+    const auto wide = shadowsAt(100, 0), narrow = shadowsAt(0, 0), folded = shadowsAt(50, 50), plain = shadowsAt(50, 0);
+    if (!check(chroma(wide[29]) > 2 * chroma(narrow[29]), "blending 100 carries the shadows into the midtones")) return 1;
+    if (!check(chroma(folded[24]) < 0.6 * chroma(plain[24]) && chroma(folded[6]) > 0.8 * chroma(plain[6]),
+               "a positive balance folds the shadows towards black")) return 1;
+
     // Hue is circular: 359 and 0 degrees give almost the same colour.
     const auto a = changes(ramp, graded(ramp, 1, 359, 50)), b = changes(ramp, graded(ramp, 1, 0, 50));
     if (!check(cv::norm(a[29] - b[29]) < 0.01 * chroma(b[29]) + 1e-4, "hue 359 and 0 degrees meet")) return 1;

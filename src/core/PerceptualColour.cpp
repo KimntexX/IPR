@@ -16,7 +16,8 @@ void apply(cv::Mat &linearRgb, const Parameters &parameters)
                                      [](int s) { return s != 0; });
     if ((!vibrance && !mixer && !grading) || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
     const double vibranceAmount = parameters.vibrance / 100.0, saturationAmount = parameters.saturation / 100.0;
-    const ColorGrading::Zones zones = ColorGrading::prepare(parameters.gradingHue, parameters.gradingSaturation);
+    const ColorGrading::Zones zones = ColorGrading::prepare(parameters.gradingHue, parameters.gradingSaturation,
+                                                            parameters.gradingBlending, parameters.gradingBalance);
     cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
         for (int y = rows.start; y < rows.end; ++y) {
             auto *row = linearRgb.ptr<cv::Vec3f>(y);

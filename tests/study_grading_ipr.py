@@ -8,7 +8,10 @@ pixel with Lightroom's: share of Lightroom's change left unexplained, and the
 chroma and lightness of the change at the zone's peak. Pixels with a channel above
 0.98 in a neutral or a state are left out. Writes one immutable, versioned JSON.
 
-Usage: python tests/study_grading_ipr.py --data-version N [--scene STEM ...]
+With --fusion, the states are those of grading/fusion (blending, balance and
+zone combinations), each rendered with its exact grading.
+
+Usage: python tests/study_grading_ipr.py --data-version N [--scene STEM ...] [--fusion]
 """
 import argparse
 import collections
@@ -47,9 +50,11 @@ def main(argv=None):
     parser.add_argument("--scene", action="append")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "docs/validation/raw")
     parser.add_argument("--server", type=Path)
+    parser.add_argument("--fusion", action="store_true", help="the blending and balance states of grading/fusion")
     args = parser.parse_args(argv)
     stamp = datetime.now(timezone.utc)
-    campaign = f"etude-grading-ipr-v{args.data_version:03d}-{stamp.strftime('%Y%m%dT%H%M%SZ')}"
+    campaign = (f"etude-grading-ipr{'-fusion' if args.fusion else ''}-v{args.data_version:03d}-"
+                f"{stamp.strftime('%Y%m%dT%H%M%SZ')}")
     output = args.output_dir / f"{campaign}.json"
     if output.exists():
         raise SystemExit("Exists, nothing overwritten: " + str(output))
@@ -64,6 +69,32 @@ def main(argv=None):
                 _, xmp = embedded_metadata(p)
                 lr[scene][(zone, int(xmp[hue_field]), int(xmp[saturation_field]))] = p
     neutral = {p.stem.split("-")[0]: p for p in (root / "neutre").glob("*.tif")}
+    fields = [(zone, h, sat) for zone, (h, sat) in ZONES.items()]
+
+    def states_of(scene):
+        if not args.fusion:
+            for zone_index, zone in enumerate(ZONES):
+                for hue, saturation in STATES:
+                    path = lr[scene].get((zone, hue, saturation))
+                    if path is not None:
+                        grading = {"hue": [0, 0, 0], "saturation": [0, 0, 0]}
+                        grading["hue"][zone_index], grading["saturation"][zone_index] = hue, saturation
+                        yield f"{zone} {hue}/{saturation}", grading, path
+            return
+        seen = set()
+        for path in sorted((root / "fusion").glob(scene + "*.tif")):
+            if path.stem.split("-")[0] != scene:
+                continue
+            _, xmp = embedded_metadata(path)
+            grading = {"hue": [int(xmp[h]) for _, h, _ in fields], "saturation": [int(xmp[s]) for _, _, s in fields],
+                       "blending": int(xmp["ColorGradeBlending"]), "balance": int(xmp["SplitToningBalance"])}
+            key = json.dumps(grading, sort_keys=True)
+            if key in seen:
+                continue
+            seen.add(key)
+            zones = "+".join(z for (z, _, _), sat in zip(fields, grading["saturation"]) if sat)
+            yield f"{zones} F{grading['blending']} B{grading['balance']:+d}", grading, path
+
     start = time.monotonic()
     rows = []
     with RenderServer(args.server or find_server(), timeout=300) as server:
@@ -73,31 +104,27 @@ def main(argv=None):
             lr0 = cv2.resize(lr0, None, fx=.5, fy=.5, interpolation=cv2.INTER_AREA)
             ipr0 = reduce_to(linear(server.render(raws[scene], "neutral", 0)[0]), shape)
             lab_lr0, lab_ipr0 = oklab(lr0), oklab(ipr0)
-            for zone_index, zone in enumerate(ZONES):
-                for hue, saturation in STATES:
-                    path = lr[scene].get((zone, hue, saturation))
-                    if path is None:
-                        continue
-                    lr1 = cv2.resize(linear(read_tiff(path)).astype(np.float32), None, fx=.5, fy=.5, interpolation=cv2.INTER_AREA)
-                    grading = {"hue": [0, 0, 0], "saturation": [0, 0, 0]}
-                    grading["hue"][zone_index], grading["saturation"][zone_index] = hue, saturation
-                    ipr1 = reduce_to(linear(server.render(raws[scene], "neutral", 0, grading=grading)[0]), shape)
-                    ok = (lr0.max(2) < .98) & (lr1.max(2) < .98) & (ipr0.max(2) < .98) & (ipr1.max(2) < .98)
-                    d_lr, d_ipr = (oklab(lr1) - lab_lr0)[ok], (oklab(ipr1) - lab_ipr0)[ok]
-                    unexplained = float(np.sum((d_lr - d_ipr) ** 2) / max(np.sum(d_lr ** 2), 1e-12))
-                    row = {"scene": scene, "zone": zone, "hue": hue, "saturation": saturation,
-                           "unexplained": unexplained,
-                           "lr_mean_change": d_lr.mean(0).tolist(), "ipr_mean_change": d_ipr.mean(0).tolist()}
-                    rows.append(row)
-                    print(f"{scene} {zone:10s} {hue:3d}/{saturation:3d}: unexplained {unexplained:.3f}", flush=True)
+            for label, grading, path in states_of(scene):
+                lr1 = cv2.resize(linear(read_tiff(path)).astype(np.float32), None, fx=.5, fy=.5, interpolation=cv2.INTER_AREA)
+                ipr1 = reduce_to(linear(server.render(raws[scene], "neutral", 0, grading=grading)[0]), shape)
+                ok = (lr0.max(2) < .98) & (lr1.max(2) < .98) & (ipr0.max(2) < .98) & (ipr1.max(2) < .98)
+                d_lr, d_ipr = (oklab(lr1) - lab_lr0)[ok], (oklab(ipr1) - lab_ipr0)[ok]
+                unexplained = float(np.sum((d_lr - d_ipr) ** 2) / max(np.sum(d_lr ** 2), 1e-12))
+                rows.append({"scene": scene, "state": label, "grading": grading, "unexplained": unexplained,
+                             "lr_mean_change": d_lr.mean(0).tolist(), "ipr_mean_change": d_ipr.mean(0).tolist()})
+                print(f"{scene} {label}: unexplained {unexplained:.3f}", flush=True)
     summary = {}
-    for zone in ZONES:
-        values = [r["unexplained"] for r in rows if r["zone"] == zone]
-        summary[zone] = {"median": float(np.median(values)), "p90": float(np.quantile(values, .9)), "states": len(values)}
+    groups = collections.defaultdict(list)
+    for r in rows:
+        zone, _, rest = r["state"].partition(" ")
+        groups[zone if not args.fusion else zone + (" balance" if "F50 " in r["state"] and not r["state"].endswith("B+0")
+                                                      else " blending")].append(r["unexplained"])
+    for group, values in sorted(groups.items()):
+        summary[group] = {"median": float(np.median(values)), "p90": float(np.quantile(values, .9)), "states": len(values)}
     record = {"campaign_id": campaign, "runner": "tests/study_grading_ipr.py",
               "commit": git("rev-parse", "HEAD"), "local_changes": git("status", "--short").splitlines(),
               "render_server": {"path": str(server.executable), "sha256": server.sha256},
-              "scenes": scenes, "states": STATES, "metric": "share of Lightroom's Oklab change left unexplained by IPR's",
+              "scenes": scenes, "states": "grading/fusion" if args.fusion else STATES, "metric": "share of Lightroom's Oklab change left unexplained by IPR's",
               "duration_seconds": round(time.monotonic() - start, 1), "python": platform.python_version(),
               "summary": summary, "rows": rows}
     output.write_text(json.dumps(record, ensure_ascii=False, indent=1), encoding="utf-8")

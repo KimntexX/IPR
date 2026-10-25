@@ -95,11 +95,56 @@ saturation déjà présente ; fusion (50) et balance (0) de Lightroom à leurs v
 défaut, combinaisons de zones non mesurées ; réglages de luminance par zone et global de
 Lightroom absents d'IPR.
 
+<a id="grading-20261025-fusion"></a>
+
+## Fusion et balance — 25 octobre 2026
+
+### 5. Exports
+
+Préréglages `IPR Grading fusion` (`scripts/make_lr_presets.py --controls grading-blend`),
+28 scènes, 2048 pixels : chaque zone seule à 30°/50 sur la fusion 0, 25, 75, 100 et la
+balance −100 à +100 ; ombres 210° + hautes lumières 30° sur la fusion et à balance ±50 ;
+les trois zones ensemble. Deux préréglages appliqués deux fois à la place du suivant ont
+été réexportés ; les doublons restants comptent une fois.
+
+### 6. Réponse de Lightroom
+
+`tests/study_grading_blend.py`, [etude-grading-fusion-v001-20261025T202111Z](../raw/etude-grading-fusion-v001-20261025T202111Z.json) : courbe de poids de la zone par
+état, à vecteur de changement fixé à celui de la campagne principale.
+
+- **Fusion** : à 0, les ombres et hautes lumières se resserrent (la queue des ombres
+  disparaît au-delà de L 0,5) ; à 100 elles s'élargissent vers le milieu et se renforcent
+  (pic 1,42 pour les ombres à L 0,45, 1,50 pour les hautes lumières) ; les tons moyens
+  bougent à peine.
+- **Balance** : vers le positif, les ombres se replient vers le noir (pic à L 0,10 à +100),
+  les tons moyens descendent (L 0,25), les hautes lumières s'étendent et se renforcent
+  (2,09) ; l'inverse vers le négatif.
+- Validation croisée par zone et par valeur : 0,04 à 0,10 de part inexpliquée, contre
+  jusqu'à 10 à 29 avec la courbe par défaut aux balances extrêmes.
+- **Additivité** : les trois zones ensemble 0,049 ; ombres + hautes lumières 0,067 à 0,122
+  (0,097 déjà aux réglages par défaut : deux zones opposées qui se chevauchent sont un peu
+  tempérées par Lightroom), contre 0,10 à 0,63 avec les courbes par défaut.
+
+### 7. État livré
+
+- `ColorGrading` : pour chaque zone, 5 courbes de fusion et 7 de balance, interpolées entre
+  les valeurs mesurées ; courbe = défaut + (fusion − défaut) + (balance − défaut), calculée
+  une fois par rendu. Réglages `gradingBlending` (0–100, 50) et `gradingBalance`
+  (−100–100, 0) dans la recette, le fichier annexe (version 7 ; les fichiers antérieurs
+  prennent les valeurs par défaut), `ImageEditor`, le serveur de rendu et l'interface
+  (curseurs Fusion et Balance du module Color grading).
+- Rendu IPR contre Lightroom ([etude-grading-ipr-fusion-v001-20261025T203247Z](../raw/etude-grading-ipr-fusion-v001-20261025T203247Z.json), 6 scènes, 228 états) : médiane
+  0,076 ; ombres 0,046 à 0,060, tons moyens 0,067 à 0,076, trois zones 0,043, ombres +
+  hautes lumières 0,081 à 0,086 ; point faible : hautes lumières à fusion 0 (0,47), zone
+  étroite où l'écart des neutres dans les tons clairs pèse le plus.
+
 <a id="conclusion-actuelle"></a>
 
 ## Conclusion actuelle et prochaines actions — 25 octobre 2026
 
 - Grading recalé sur Lightroom ; validation visuelle de l'utilisateur à faire.
+- Fusion et balance intégrées (§5 à §7).
 - Pistes : écart des neutres dans les hautes lumières, dépendance à la saturation du pixel
-  sur les scènes saturées, combinaisons de zones (fusion, balance).
-- Limites : états à une zone, fusion et balance par défaut ; trois boîtiers Canon.
+  sur les scènes saturées, tempérament de deux zones opposées qui se chevauchent.
+- Limites : fusion et balance combinées mesurées seulement sur ombres + hautes lumières ;
+  trois boîtiers Canon.

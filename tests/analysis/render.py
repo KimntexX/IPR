@@ -153,7 +153,8 @@ class RenderServer:
     def render(self, source, feature, value, mixer=None, grading=None):
         """Pixels (height, width, 3) uint16 and metadata shaped like native.inspect().
         mixer: optional {"hue": [8], "saturation": [8], "luminance": [8]} on top of the state.
-        grading: optional {"hue": [3], "saturation": [3]} (shadows, midtones, highlights)."""
+        grading: optional {"hue": [3], "saturation": [3]} (shadows, midtones, highlights), with optional
+        "blending" and "balance"."""
         request = {"op": "render", "source": str(source), "feature": feature, "value": value}
         if mixer is not None:
             request["mixer"] = mixer

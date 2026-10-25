@@ -28,6 +28,8 @@ ColumnLayout {
     }
 
     function reload() {
+        blendingControl.value = editor.colorGradingBlending()
+        balanceControl.value = editor.colorGradingBalance()
         root.refreshWheelColours()
         root.hue = Math.round(editor.colorGradingValue(zone, 0))
         intensityControl.value = editor.colorGradingValue(zone, 1)
@@ -232,6 +234,30 @@ ColumnLayout {
         adjustmentEnabled: root.editor.hasImage
         onValueChanged: gradingWheel.requestPaint()
         onValueEdited: root.commit()
+    }
+
+    // Shared by the three zones, as in Lightroom.
+    AdjustmentControl {
+        id: blendingControl
+        Layout.fillWidth: true
+        label: qsTr("Fusion")
+        valueText: Math.round(value)
+        minimumValue: 0
+        maximumValue: 100
+        resetValue: 50
+        adjustmentEnabled: root.editor.hasImage
+        onValueEdited: root.editor.setColorGradingBlending(Math.round(value))
+    }
+
+    AdjustmentControl {
+        id: balanceControl
+        Layout.fillWidth: true
+        label: qsTr("Balance")
+        valueText: Math.round(value)
+        minimumValue: -100
+        maximumValue: 100
+        adjustmentEnabled: root.editor.hasImage
+        onValueEdited: root.editor.setColorGradingBalance(Math.round(value))
     }
 
     Component.onCompleted: reload()

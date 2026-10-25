@@ -474,7 +474,7 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
     currentStream.setVersion(QDataStream::Qt_6_4);
     quint32 magic; quint16 savedVersion;
     currentStream >> magic >> savedVersion;
-    if (!check(magic == 0x49505231u && savedVersion == 6, "new sidecars must declare version 6")) return false;
+    if (!check(magic == 0x49505231u && savedVersion == 7, "new sidecars must declare version 7")) return false;
     currentSidecar.close();
     editor.resetAdjustments();
     for (int band = 0; band < 8; ++band)
@@ -483,7 +483,7 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                        "reset should neutralize all eight mixer bands"))
                 return false;
 
-    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5)}) {
+    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5), quint16(6)}) {
         const QString legacyPath = directory + QStringLiteral("/legacy-%1.png").arg(version);
         if (!QImage(sourcePath).save(legacyPath, "PNG"))
             return false;
@@ -510,6 +510,8 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
         stream << int(3) << QStringLiteral("green") << true << true << true;
         if (version >= 5)
             stream << QString() << QString() << QString() << QString() << false << QString();
+        if (version >= 6)
+            stream << QString() << QString() << false << false << false;
         if (stream.status() != QDataStream::Ok)
             return false;
         sidecar.close();
@@ -528,8 +530,9 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
         }
         if (!check(editor.colorGradingValue(2, 0) == 202 &&
                    editor.colorGradingValue(2, 1) == 6 &&
-                   editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == (version >= 2 ? 12 : 0),
-                   "legacy migration should preserve following fields and noise settings"))
+                   editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == (version >= 2 ? 12 : 0) &&
+                   editor.colorGradingBlending() == 50 && editor.colorGradingBalance() == 0,
+                   "legacy migration should preserve following fields, noise settings and default blending"))
             return false;
     }
     editor.resetAdjustments();
