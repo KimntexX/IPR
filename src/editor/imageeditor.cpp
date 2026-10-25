@@ -972,6 +972,12 @@ QColor ImageEditor::colorMixerTrackColor(int band, int component, int value) con
     return QColor::fromRgbF(colour[0], colour[1], colour[2]);
 }
 
+QColor ImageEditor::colorGradingDisplayColor(int zone, int hue, int saturation) const
+{
+    const cv::Vec3f colour = ColorGrading::displayColour(zone, hue, saturation);
+    return QColor::fromRgbF(colour[0], colour[1], colour[2]);
+}
+
 int ImageEditor::colorMixerValue(int band, int component) const
 {
     if (band < 0 || band >= static_cast<int>(m_settings.mixerHue.size()))

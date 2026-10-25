@@ -18,6 +18,11 @@ namespace ColorGrading {
 // highlights) hue in degrees and saturation in [0, 100].
 void apply(cv::Mat &linearRgb, const std::array<int, 3> &hue, const std::array<int, 3> &saturation);
 
+// Encoded sRGB colour showing what a zone does at a hue and saturation, for the UI
+// wheel and track: a light grey pushed along the zone's measured Oklab change (its
+// chroma enlarged to be read, proportional to the saturation), fitted to sRGB.
+cv::Vec3f displayColour(int zone, int hue, int saturation);
+
 } // namespace ColorGrading
 
 #endif // IPR_CORE_COLORGRADING_H

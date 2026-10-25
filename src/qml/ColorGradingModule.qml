@@ -13,8 +13,22 @@ ColumnLayout {
     readonly property var zoneNames: [qsTr("Ombres"), qsTr("Tons moyens"),
                                       qsTr("Hautes lumières")]
     readonly property var zoneIcons: ["☾", "◐", "☀"]
+    readonly property int wheelSectors: 72
+    readonly property int wheelRings: 7
+    // Colours of the wheel, from the engine (the zone's measured effect), per zone.
+    property var wheelColours: []
+
+    function refreshWheelColours() {
+        const colours = []
+        for (let ring = 0; ring < wheelRings; ++ring)
+            for (let sector = 0; sector < wheelSectors; ++sector)
+                colours.push(editor.colorGradingDisplayColor(zone, Math.round(sector * 360 / wheelSectors),
+                                                            Math.round((ring + 1) / wheelRings * 100)))
+        wheelColours = colours
+    }
 
     function reload() {
+        root.refreshWheelColours()
         root.hue = Math.round(editor.colorGradingValue(zone, 0))
         intensityControl.value = editor.colorGradingValue(zone, 1)
         gradingWheel.requestPaint()
@@ -132,18 +146,18 @@ ColumnLayout {
                 const centerY = height / 2
                 const outerRadius = Math.min(width, height) / 2 - 7
                 const innerRadius = 22
-                const sectors = 72
-                const rings = 7
+                const sectors = root.wheelSectors
+                const rings = root.wheelRings
+                if (root.wheelColours.length !== sectors * rings)
+                    return
 
                 for (let ring = 0; ring < rings; ++ring) {
                     const radius0 = innerRadius + ring * (outerRadius - innerRadius) / rings
                     const radius1 = innerRadius + (ring + 1) * (outerRadius - innerRadius) / rings + 0.7
-                    const saturation = 0.18 + (ring + 1) / rings * 0.72
-                    const lightness = 0.88 - ring / rings * 0.40
                     for (let sector = 0; sector < sectors; ++sector) {
                         const start = sector / sectors * 2 * Math.PI - Math.PI / 2
                         const end = (sector + 1) / sectors * 2 * Math.PI - Math.PI / 2
-                        context.fillStyle = Qt.hsla(sector / sectors, saturation, lightness, 1)
+                        context.fillStyle = root.wheelColours[ring * sectors + sector]
                         context.beginPath()
                         context.moveTo(centerX + Math.cos(start) * radius0,
                                        centerY + Math.sin(start) * radius0)
@@ -209,7 +223,7 @@ ColumnLayout {
 
     AdjustmentControl {
         id: intensityControl
-        trackColors: ["#8b8e94", Qt.hsla(root.hue / 360, 0.72, 0.55, 1)]
+        trackColors: ["#8b8e94", root.editor.colorGradingDisplayColor(root.zone, root.hue, 100)]
         Layout.fillWidth: true
         label: qsTr("Intensité")
         valueText: Math.round(value)

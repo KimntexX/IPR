@@ -169,6 +169,27 @@ inline cv::Vec3d oklabToWorking(const cv::Vec3d &p)
     return fromLms() * cv::Vec3d(l * l * l, m * m * m, s * s * s);
 }
 
+// Encoded sRGB in [0, 1] of an Oklab colour for display, its chroma reduced until it
+// fits the sRGB gamut (lightness kept).
+inline cv::Vec3f encodedInGamut(const cv::Vec3d &lab)
+{
+    const double lightness = std::clamp(lab[0], 0.0, 1.0);
+    cv::Vec3d srgb(lightness, lightness, lightness);
+    for (int step = 100; step >= 0; --step) {
+        const double scale = step / 100.0;
+        const cv::Vec3d candidate = fromOklab({lightness, lab[1] * scale, lab[2] * scale});
+        if (std::min({candidate[0], candidate[1], candidate[2]}) >= -1e-6 &&
+            std::max({candidate[0], candidate[1], candidate[2]}) <= 1.0 + 1e-6) {
+            srgb = candidate;
+            break;
+        }
+    }
+    cv::Vec3f encoded;
+    for (int c = 0; c < 3; ++c)
+        encoded[c] = float(std::clamp(srgbEncode(std::clamp(srgb[c], 0.0, 1.0)), 0.0, 1.0));
+    return encoded;
+}
+
 // In-place, preserves straight alpha bit-for-bit, including extended RGB.
 inline void transform(cv::Mat &image, const cv::Matx33d &matrix)
 {

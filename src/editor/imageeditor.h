@@ -208,6 +208,9 @@ public:
     // Colour a mixer slider reaches at a value, for the UI tracks (ColorMixer::trackColour).
     Q_INVOKABLE QColor colorMixerTrackColor(int band, int component, int value) const;
     Q_INVOKABLE int colorGradingValue(int zone, int component) const;
+    // Colour a grading zone gives at a hue and saturation, for the UI wheel and track
+    // (ColorGrading::displayColour).
+    Q_INVOKABLE QColor colorGradingDisplayColor(int zone, int hue, int saturation) const;
     Q_INVOKABLE double adjustmentValue(const QString &name) const;
     Q_INVOKABLE void setImageRating(int rating);
     Q_INVOKABLE void setImageColorLabel(const QString &colorLabel);

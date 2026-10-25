@@ -98,6 +98,21 @@ int main()
     if (!check(gap < 1e-9 && trip < 1e-6 && std::hypot(grey[1], grey[2]) < 1e-6,
                "working-space Oklab matches the sRGB one, keeps greys neutral and round-trips")) return 1;
 
+    // The UI colour follows the measured effect: grey at 0, stronger with saturation, and
+    // at 210 degrees the cyan-blue of Lightroom's change (an HSL wheel showed blue).
+    const auto displayed = [](int zone, int hue, int saturation) {
+        const cv::Vec3f e = ColorGrading::displayColour(zone, hue, saturation);
+        cv::Vec3d linear;
+        for (int c = 0; c < 3; ++c) linear[c] = WorkingColor::srgbDecode(double(e[c]));
+        return WorkingColor::toOklab(linear);
+    };
+    const cv::Vec3d shownGrey = displayed(1, 210, 0), half = displayed(1, 210, 50), full = displayed(1, 210, 100);
+    const double shownAngle = std::fmod(std::atan2(full[2], full[1]) * 180 / 3.14159265358979 + 360, 360);
+    const auto effect = changes(ramp, graded(ramp, 1, 210, 50))[29];
+    const double effectAngle = std::fmod(std::atan2(effect[2], effect[1]) * 180 / 3.14159265358979 + 360, 360);
+    if (!check(chroma(shownGrey) < 2e-3 && chroma(half) < chroma(full) && std::abs(shownAngle - effectAngle) < 6,
+               "the UI colour is grey at 0, grows with saturation and shows the effect's hue")) return 1;
+
     cv::Mat empty;
     ColorGrading::apply(empty, {30, 30, 30}, {50, 50, 50});
     if (!check(empty.empty(), "an empty image is left alone")) return 1;

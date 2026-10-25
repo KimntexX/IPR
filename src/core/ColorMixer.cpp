@@ -123,26 +123,6 @@ const std::array<double, BandCount> &peakHues()
     }();
     return peaks;
 }
-
-// Encoded sRGB of an Oklab colour, chroma reduced until it fits the gamut.
-cv::Vec3f encodedInGamut(const cv::Vec3d &lab)
-{
-    const double lightness = std::clamp(lab[0], 0.0, 1.0);
-    cv::Vec3d srgb(lightness, lightness, lightness);
-    for (int step = 100; step >= 0; --step) {
-        const double scale = step / 100.0;
-        const cv::Vec3d candidate = WorkingColor::fromOklab({lightness, lab[1] * scale, lab[2] * scale});
-        if (std::min({candidate[0], candidate[1], candidate[2]}) >= -1e-6 &&
-            std::max({candidate[0], candidate[1], candidate[2]}) <= 1.0 + 1e-6) {
-            srgb = candidate;
-            break;
-        }
-    }
-    cv::Vec3f encoded;
-    for (int c = 0; c < 3; ++c)
-        encoded[c] = float(std::clamp(WorkingColor::srgbEncode(std::clamp(srgb[c], 0.0, 1.0)), 0.0, 1.0));
-    return encoded;
-}
 }
 
 cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
@@ -199,6 +179,6 @@ cv::Vec3f trackColour(int band, int component, int value)
     Parameters parameters;
     (component == 0 ? parameters.hue : component == 1 ? parameters.saturation : parameters.luminance)[size_t(band)] = value;
     const cv::Vec3f reached = apply(cv::Vec3f(reference), parameters);
-    return encodedInGamut(WorkingColor::workingToOklab(cv::Vec3d(reached)));
+    return WorkingColor::encodedInGamut(WorkingColor::workingToOklab(cv::Vec3d(reached)));
 }
 }

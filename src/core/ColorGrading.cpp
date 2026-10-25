@@ -12,6 +12,8 @@ namespace {
 constexpr int Knots = 21;                        // lightness 0, 0.05, ... 1
 constexpr int Hues = 12;                         // 0, 30, ... 330 degrees
 constexpr std::array<float, 6> SaturationKnots{0.f, 10.f, 25.f, 50.f, 75.f, 100.f};
+constexpr double DisplayLightness = 0.72;       // the wheel's grey
+constexpr double DisplayChroma = 0.17;          // its chroma at saturation 100, readable
 
 // etude-grading-v001-20261025T173113Z, 28 scenes, R6 Mark III, R7 and 60D
 // (leave-one-scene-out unexplained share of Lightroom's change in Oklab: shadows
@@ -81,6 +83,16 @@ void apply(cv::Mat &linearRgb, const std::array<int, 3> &hue, const std::array<i
             }
         }
     });
+}
+
+cv::Vec3f displayColour(int zone, int hue, int saturation)
+{
+    if (zone < 0 || zone > 2) return {0.5f, 0.5f, 0.5f};
+    const cv::Vec3f change = changeOf(size_t(zone), hue, 50);
+    const double chroma = std::hypot(double(change[1]), double(change[2]));
+    if (chroma <= 0) return WorkingColor::encodedInGamut({DisplayLightness, 0, 0});
+    const double scale = DisplayChroma * std::clamp(saturation, 0, 100) / 100.0 / chroma;
+    return WorkingColor::encodedInGamut({DisplayLightness + change[0] * scale, change[1] * scale, change[2] * scale});
 }
 
 } // namespace ColorGrading
