@@ -1,10 +1,12 @@
 #include "imageeditor.h"
 #include "controlled_memory.h"
 #include "imageprovider.h"
+#include "Sidecar.h"
 
 #include <QEventLoop>
 #include <QDir>
 #include <QFileInfo>
+#include <QFile>
 #include <QGuiApplication>
 #include <QImage>
 #include <QKeyEvent>
@@ -79,6 +81,9 @@ int main(int argc, char **argv)
     QGuiApplication app(argc, argv);
     ImageProvider provider;
     ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
+    editor.copyAdjustments();
+    editor.pasteAdjustments();
+    if (!check(!editor.hasCopiedAdjustments(), "copy without an image must leave the clipboard empty")) return 1;
     QQmlEngine engine;
     QQmlComponent component(&engine,
         QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/Setting.qml")));
@@ -292,6 +297,21 @@ int main(int argc, char **argv)
                "test source should load in the editor"))
         return 1;
     rawSection->setProperty("expanded", true);
+    const QUrl firstUrl = QUrl::fromLocalFile(first);
+    const QUrl aliasUrl = QUrl::fromLocalFile(directory.path() + "/./first.png");
+    editor.setImageSelected(aliasUrl, true);
+    if (!check(editor.selectedImageCount() == 1 && editor.isImageSelected(firstUrl) &&
+               editor.isImageSelected(aliasUrl), "selection queries must resolve canonical path aliases")) return 1;
+    editor.setImageSelected(firstUrl, false);
+    if (!check(!editor.isImageSelected(aliasUrl), "canonical deselection must clear aliases too")) return 1;
+#ifndef Q_OS_WIN
+    const QUrl symbolicUrl = QUrl::fromLocalFile(directory.filePath("first-link.png"));
+    if (!check(QFile::link(first, symbolicUrl.toLocalFile()), "symbolic selection fixture must be created")) return 1;
+    editor.setImageSelected(symbolicUrl, true);
+    if (!check(editor.isImageSelected(firstUrl) && editor.isImageSelected(symbolicUrl),
+               "symbolic paths and original paths must share a selection identity")) return 1;
+    editor.clearImageSelection();
+#endif
     auto *profileStatus = root->findChild<QQuickItem *>("rawDevelopmentStatusLabel");
     auto *lightSection = root->findChild<QQuickItem *>("lightSection");
     for (int width : {232, 292, 332}) {
@@ -341,12 +361,55 @@ int main(int argc, char **argv)
         return 1;
     noiseSection->setProperty("expanded", false);
     sharpSection->setProperty("expanded", false);
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+    editor.setColorMixer(2, 12, 23, -34);
+    editor.setColorGrading(1, 150, 20);
+    const QVariantList copiedCurve{QVariantMap{{"x", 0.0}, {"y", 0.0}},
+                                  QVariantMap{{"x", .5}, {"y", .6}},
+                                  QVariantMap{{"x", 1.0}, {"y", 1.0}}};
+    editor.setToneCurve(ImageEditor::LuminanceCurve, copiedCurve);
+    const QVariantList normalizedCurve = editor.toneCurve(ImageEditor::LuminanceCurve);
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+    editor.copyAdjustments();
+    if (!check(editor.hasCopiedAdjustments(), "copy must retain a complete settings snapshot")) return 1;
+    editor.setDenoiseLuminance(7); // Editing the source must not change the snapshot.
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
     if (!check(awaitLoad(editor, QUrl::fromLocalFile(second)) &&
                noise->property("value").toInt() == 0 && sharp->property("value").toInt() == 0 &&
                radius->property("value").toDouble() == 1.0 &&
                !noiseSection->property("expanded").toBool(),
                "image changes should refresh hidden controls without expanding sections"))
         return 1;
+
+    editor.setImageRating(2);
+    editor.setImageColorLabel("blue");
+    editor.setImageFlagged(true);
+    const QString targetProfile = editor.selectedCameraProfile();
+    const bool targetCalibration = editor.rawNormalizationEnabled();
+    const bool targetOptics = editor.lensCorrectionEnabled();
+    const bool targetWhiteBalance = editor.automaticWhiteBalance();
+    editor.pasteAdjustments();
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+    if (!check(!editor.busy() && noise->property("value").toInt() == 43 &&
+               sharp->property("value").toInt() == 51 &&
+               std::abs(radius->property("value").toDouble() - 1.7) < .001 &&
+               editor.colorMixerValue(2, 2) == -34 && editor.colorGradingValue(1, 0) == 150 &&
+               editor.toneCurve(ImageEditor::LuminanceCurve) == normalizedCurve &&
+               editor.imageRating() == 2 && editor.imageColorLabel() == "blue" && editor.imageFlagged() &&
+               editor.selectedCameraProfile() == targetProfile &&
+               editor.rawNormalizationEnabled() == targetCalibration &&
+               editor.lensCorrectionEnabled() == targetOptics &&
+               editor.automaticWhiteBalance() == targetWhiteBalance,
+               "paste must restore the snapshot and UI while preserving target metadata and development")) return 1;
+    editor.saveCurrentAdjustments();
+    EditRecipe::Settings saved;
+    EditRecipe::UserImageMetadata savedMetadata;
+    if (!check(Sidecar::read(second, &saved, &savedMetadata) && saved.denoiseLuminance == 43 &&
+               savedMetadata.rating == 2 && savedMetadata.colorLabel == "blue" &&
+               editor.statusMessage().startsWith(QStringLiteral("Réglages enregistrés")),
+               "manual save must persist the latest recipe and metadata and report success")) return 1;
+    editor.resetAdjustments();
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
 
     // Main.qml permits a 260 px sidebar with 14 px margins on each side.
     QObject *dialog = root->findChild<QObject *>(QStringLiteral("exportDialog"));
@@ -386,6 +449,19 @@ int main(int argc, char **argv)
                review->property("dimensions").toString() == editor.imageDetails().value("dimensions").toString() &&
                !QFileInfo::exists(directory.filePath("dialog-choice.png")),
                "native destination acceptance must show accurate review without writing a file")) return 1;
+    settleLayout();
+    auto *confirmButton = review->findChild<QQuickItem *>("confirmExportButton");
+    auto *cancelButton = review->findChild<QQuickItem *>("cancelConfirmationButton");
+    if (!check(confirmButton && cancelButton &&
+               std::abs(confirmButton->y() - cancelButton->y()) < 0.5 &&
+               confirmButton->height() == cancelButton->height() &&
+               confirmButton->height() >= 36,
+               "confirmation buttons must share alignment and comfortable height")) return 1;
+    for (QObject *child : review->findChildren<QObject *>()) {
+        if (child->property("wrapMode").toInt() > 0 && child->property("lineHeight").isValid() &&
+            !check(child->property("lineHeight").toDouble() == 1.5,
+                   "wrapped confirmation text must use 1.5 line spacing")) return 1;
+    }
     QMetaObject::invokeMethod(review, "confirm");
     if (!completed) exportLoop.exec();
     QObject::disconnect(exportConnection);

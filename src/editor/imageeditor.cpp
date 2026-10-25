@@ -1,6 +1,9 @@
 #include "imageeditor.h"
 
+#include "Dehaze.h"
+#include "Grain.h"
 #include "DetailProcessing.h"
+#include "LocalContrast.h"
 #include "ColorAdjustments.h"
 #include "Contrast.h"
 #include "Histogram.h"
@@ -45,6 +48,14 @@
 #include <vector>
 
 namespace {
+
+QString selectionKey(const QUrl &url)
+{
+    if (!url.isLocalFile()) return {};
+    const QFileInfo info(url.toLocalFile());
+    const QString canonical = info.canonicalFilePath();
+    return canonical.isEmpty() ? info.absoluteFilePath() : canonical;
+}
 
 QString defaultNormalizationManifest()
 {
@@ -902,12 +913,7 @@ void ImageEditor::setImageFlagged(bool flagged)
 
 void ImageEditor::setImageSelected(const QUrl &fileUrl, bool selected)
 {
-    if (!fileUrl.isLocalFile())
-        return;
-    const QFileInfo fileInfo(fileUrl.toLocalFile());
-    const QString key = fileInfo.canonicalFilePath().isEmpty()
-                            ? fileInfo.absoluteFilePath()
-                            : fileInfo.canonicalFilePath();
+    const QString key = selectionKey(fileUrl);
     if (key.isEmpty())
         return;
     const bool changed = selected ? !m_selectedImageKeys.contains(key)
@@ -920,6 +926,12 @@ void ImageEditor::setImageSelected(const QUrl &fileUrl, bool selected)
         emit selectionChanged();
 }
 
+bool ImageEditor::isImageSelected(const QUrl &fileUrl) const
+{
+    const QString key = selectionKey(fileUrl);
+    return !key.isEmpty() && m_selectedImageKeys.contains(key);
+}
+
 void ImageEditor::clearImageSelection()
 {
     if (m_selectedImageKeys.isEmpty())
@@ -930,7 +942,8 @@ void ImageEditor::clearImageSelection()
 
 void ImageEditor::applyAdjustmentsToSelection()
 {
-    if (m_selectedImageKeys.isEmpty() || m_currentFile.isEmpty())
+    if (m_selectedImageKeys.isEmpty() || m_currentFile.isEmpty() ||
+        !hasImage() || busy() || embeddedPreview())
         return;
     int written = 0;
     for (const QString &fileName : std::as_const(m_selectedImageKeys)) {
@@ -950,6 +963,12 @@ void ImageEditor::applyAdjustmentsToSelection()
             ++written;
     }
     setStatusMessage(tr("Réglages appliqués à %n image(s).", nullptr, written));
+}
+
+QColor ImageEditor::colorMixerTrackColor(int band, int component, int value) const
+{
+    const cv::Vec3f colour = ColorMixer::trackColour(band, component, value);
+    return QColor::fromRgbF(colour[0], colour[1], colour[2]);
 }
 
 int ImageEditor::colorMixerValue(int band, int component) const
@@ -1253,6 +1272,36 @@ void ImageEditor::setAutomaticWhiteBalance(bool enabled)
     beginLoad(fileName, extension, enabled, false);
 }
 
+void ImageEditor::copyAdjustments()
+{
+    if (!hasImage() || busy() || embeddedPreview()) return;
+    m_copiedAdjustments = m_settings;
+    m_hasCopiedAdjustments = true;
+    emit copiedAdjustmentsChanged();
+    setStatusMessage(tr("Paramètres copiés. Ouvrez une autre image pour les coller."));
+}
+
+void ImageEditor::pasteAdjustments()
+{
+    if (!m_hasCopiedAdjustments || !hasImage() || busy() || embeddedPreview()) return;
+    // Transfer edits, not the target's camera development, optics or metadata.
+    const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
+    m_settings = m_copiedAdjustments;
+    m_settings.automaticWhiteBalance = automaticWhiteBalance;
+    emit toneCurvesReset();
+    emit adjustmentsReset(static_cast<int>(std::lround(
+        m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), 0);
+    scheduleRender();
+}
+
+void ImageEditor::saveCurrentAdjustments()
+{
+    if (!hasImage() || busy() || embeddedPreview()) return;
+    m_sidecarDebounce.stop();
+    if (saveCurrentSidecar())
+        setStatusMessage(tr("Réglages enregistrés : %1.ipr").arg(m_currentFile.toLocalFile()));
+}
+
 void ImageEditor::resetAdjustments()
 {
     if (m_original.isNull())
@@ -1330,7 +1379,7 @@ void attachToneStatistics(ColorPipeline::WorkingImage &image, ColorPipeline::Wor
 }
 
 ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
-    const ColorPipeline::WorkingImage &source, const Settings &settings)
+    const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale)
 {
     if (source.isNull() || source.colorSpace != ColorPipeline::workingColorSpace() ||
         source.linearRgba.type() != CV_32FC4 || !cv::checkRange(source.linearRgba, true))
@@ -1423,13 +1472,12 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
     }
 
-    DetailProcessing::applyTexture(adjusted, settings.texture);
-    DetailProcessing::applyClarity(adjusted, settings.clarity);
-    DetailProcessing::dehaze(adjusted, settings.dehaze);
+    LocalContrast::apply(adjusted, settings.texture, settings.clarity, pixelScale);
+    Dehaze::apply(adjusted, settings.dehaze, pixelScale);
     ToneCurve::apply(adjusted, settings.toneCurves);
 
     if (settings.blur > 0) {
-        const double sigma = static_cast<double>(settings.blur) / 2.0;
+        const double sigma = static_cast<double>(settings.blur) / 2.0 * pixelScale;
         cv::GaussianBlur(adjusted, adjusted, cv::Size(0, 0), sigma);
     }
 
@@ -1442,7 +1490,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                                               settings.sharpeningMasking});
     }
 
-    DetailProcessing::addGrain(adjusted, settings.grain);
+    Grain::apply(adjusted, settings.grain, pixelScale);
 
     const cv::Mat alpha = channels[3];
     cv::split(adjusted, channels);
@@ -1456,7 +1504,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
 
 ImageEditor::RenderResult ImageEditor::renderPreview(
     const ColorPipeline::WorkingImage &source, const Settings &settings,
-    bool includeOriginal)
+    bool includeOriginal, double pixelScale)
 {
     RenderResult result;
     if (includeOriginal) {
@@ -1469,7 +1517,7 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
             qWarning() << "Échec du rendu de l'origine :" << error;
     }
     const ColorPipeline::WorkingImage rendered =
-        renderWorkingImage(source, settings);
+        renderWorkingImage(source, settings, pixelScale);
     if (rendered.isNull())
         return result;
 
@@ -1963,15 +2011,19 @@ void ImageEditor::scheduleSidecarSave()
         m_sidecarDebounce.start();
 }
 
-void ImageEditor::saveCurrentSidecar()
+bool ImageEditor::saveCurrentSidecar()
 {
     if (m_original.isNull() || !m_currentFile.isLocalFile())
-        return;
-    if (m_currentFile != m_displayedFile) return;
-    if (m_loadWatcher.isRunning()) return;
+        return false;
+    if (m_currentFile != m_displayedFile) return false;
+    if (m_loadWatcher.isRunning()) return false;
     if (!Sidecar::write(m_currentFile.toLocalFile(), m_settings,
                  m_userImageMetadata.value(currentFileKey()), rawDevelopmentRecipe()))
+    {
         setStatusMessage(tr("Échec de sauvegarde des réglages .ipr : vérifiez les permissions du dossier."));
+        return false;
+    }
+    return true;
 }
 
 void ImageEditor::startRender()
@@ -1989,17 +2041,21 @@ void ImageEditor::startRender()
     const ColorPipeline::WorkingImage &source =
         m_editProxy.isNull() ? m_original : m_editProxy;
     const ColorPipeline::WorkingImage sourceCopy = source;
+    const int fullExtent = std::max(m_fullSize.width(), m_fullSize.height());
+    const int sourceExtent = std::max(source.linearRgba.cols, source.linearRgba.rows);
+    const double pixelScale = fullExtent > 0 && sourceExtent > 0
+        ? std::min(1.0, double(sourceExtent) / double(fullExtent)) : 1.0;
     const Settings settings = m_settings;
     const bool includeOriginal = m_originalImageSource.isEmpty();
     m_activeRevision = m_requestedRevision;
     setBusy(true);
     auto *controller = &m_decodedImageCache;
     m_renderWatcher.setFuture(QtConcurrent::run(
-        [sourceCopy, settings, includeOriginal, controller] {
+        [sourceCopy, settings, includeOriginal, pixelScale, controller] {
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
             if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return renderPreview(sourceCopy, settings, includeOriginal);
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale);
         }));
 }
 

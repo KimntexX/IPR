@@ -12,6 +12,7 @@
 #include "RawDecoder.h"
 
 #include <QAbstractListModel>
+#include <QColor>
 #include <QFutureWatcher>
 #include <QHash>
 #include <QImage>
@@ -89,6 +90,7 @@ class ImageEditor final : public QObject
     Q_PROPERTY(QVariantMap memoryCacheStatus READ memoryCacheStatus NOTIFY decodedImageCacheChanged)
     Q_PROPERTY(int selectedImageCount READ selectedImageCount NOTIFY selectionChanged)
     Q_PROPERTY(QStringList selectedImageUrls READ selectedImageUrls NOTIFY selectionChanged)
+    Q_PROPERTY(bool hasCopiedAdjustments READ hasCopiedAdjustments NOTIFY copiedAdjustmentsChanged)
     Q_PROPERTY(QVariantList cameraProfiles READ cameraProfiles NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(bool rawImage READ rawImage NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(bool rawProfileFastPathAvailable READ rawProfileFastPathAvailable NOTIFY rawDevelopmentChanged)
@@ -195,9 +197,16 @@ public:
     Q_INVOKABLE void setThumbnailWindow(int firstVisible, int lastVisible,
                                         int prefetchCount);
     Q_INVOKABLE void setImageSelected(const QUrl &fileUrl, bool selected);
+    Q_INVOKABLE bool isImageSelected(const QUrl &fileUrl) const;
     Q_INVOKABLE void clearImageSelection();
     Q_INVOKABLE void applyAdjustmentsToSelection();
+    bool hasCopiedAdjustments() const { return m_hasCopiedAdjustments; }
+    Q_INVOKABLE void copyAdjustments();
+    Q_INVOKABLE void pasteAdjustments();
+    Q_INVOKABLE void saveCurrentAdjustments();
     Q_INVOKABLE int colorMixerValue(int band, int component) const;
+    // Colour a mixer slider reaches at a value, for the UI tracks (ColorMixer::trackColour).
+    Q_INVOKABLE QColor colorMixerTrackColor(int band, int component, int value) const;
     Q_INVOKABLE int colorGradingValue(int zone, int component) const;
     Q_INVOKABLE double adjustmentValue(const QString &name) const;
     Q_INVOKABLE void setImageRating(int rating);
@@ -247,6 +256,7 @@ signals:
     void histogramChanged();
     void decodedImageCacheChanged();
     void selectionChanged();
+    void copiedAdjustmentsChanged();
     void toneCurveChanged(int channel);
     void toneCurvesReset();
     void adjustmentsReset(int temperatureKelvin, int tint);
@@ -274,11 +284,15 @@ private:
         std::shared_ptr<RawDecoder::DcpSource> dcpSource, QSize fullSize, bool imageIsProxy);
     DecodedImageCache::Entry retainedCurrentEntry() const;
     RawDecoder::Options developmentOptions() const;
+    // pixelScale: pixels of source per pixel of the full image (below 1 for the
+    // preview proxy), so effects keep their full-image radii.
     static ColorPipeline::WorkingImage renderWorkingImage(
-        const ColorPipeline::WorkingImage &source, const Settings &settings);
+        const ColorPipeline::WorkingImage &source, const Settings &settings,
+        double pixelScale = 1.0);
     static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
                                       const Settings &settings,
-                                      bool includeOriginal);
+                                      bool includeOriginal,
+                                      double pixelScale = 1.0);
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
@@ -294,7 +308,7 @@ private:
     void releaseCurrentImage();
     void scheduleRender();
     void scheduleSidecarSave();
-    void saveCurrentSidecar();
+    bool saveCurrentSidecar();
     void startRender();
     void startEmbeddedPreview(const QString &fileName);
     void restoreBeforeEmbeddedPreview();
@@ -339,6 +353,8 @@ private:
     ImageCacheController m_decodedImageCache;
     QString m_currentCacheKey;
     Settings m_settings;
+    Settings m_copiedAdjustments;
+    bool m_hasCopiedAdjustments = false;
     QString m_imageSource;
     QString m_originalImageSource;
     QString m_statusMessage = tr("Choisissez un dossier contenant des images.");

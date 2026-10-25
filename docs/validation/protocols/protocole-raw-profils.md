@@ -3,6 +3,11 @@
 Version 3 — 16 octobre 2026. Statut : recette courante ; fidélité absolue non
 certifiée. Appliquer le [socle commun](protocole-commun.md).
 
+Pour les nouvelles prises physiques et les banques avec mire, appliquer le
+[protocole spécialisé de mires couleur](protocole-mires-couleur.md). Il distingue
+caractérisation mesurée, références caméra de recherche et simple comparaison
+de rendu. Il n’annonce pas un analyseur MCP déjà disponible.
+
 ## Base d'ouverture
 
 Inventorier les RAW à la racine de `tests/image/base` à chaque campagne : le

@@ -58,6 +58,12 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorMixerModel.h
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
+    src/core/Dehaze.h
+    src/core/Dehaze.cpp
+    src/core/Grain.h
+    src/core/Grain.cpp
+    src/core/LocalContrast.h
+    src/core/LocalContrast.cpp
     src/core/ColorAdjustments.h
     src/core/ColorAdjustments.cpp
     src/core/Contrast.h
@@ -85,6 +91,8 @@ set(IPR_ENGINE_SOURCES
     src/providers/imageprovider.cpp
     src/providers/ThumbnailProvider.h
     src/providers/ThumbnailProvider.cpp
+    src/raw/Demosaic.h
+    src/raw/Demosaic.cpp
     src/raw/RawBlackLevelEstimator.h
     src/raw/RawBlackLevelEstimator.cpp
     src/raw/RawDecoder.h
@@ -113,6 +121,7 @@ set(IPR_QML_FILES
         src/qml/ProcessingStatus.qml
         src/qml/PanelResizeHandle.qml
         src/qml/ExportReviewDialog.qml
+        src/qml/ConfirmationFooter.qml
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
     src/qml/PreferenceButton.qml
@@ -249,6 +258,9 @@ if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY
     target_link_libraries(tonalBaseProbe PRIVATE iprEngine)
     add_executable(rawNormalizationCorpusProbe EXCLUDE_FROM_ALL tests/raw_normalization_corpus_probe.cpp)
     target_link_libraries(rawNormalizationCorpusProbe PRIVATE iprEngine)
+    # Demosaicing study: LibRaw algorithms and IPR's RCD on the same RAW (manual, not in CTest).
+    add_executable(demosaicProbe EXCLUDE_FROM_ALL tests/demosaic_probe.cpp)
+    target_link_libraries(demosaicProbe PRIVATE iprEngine)
     add_executable(openingLatencyProbe EXCLUDE_FROM_ALL tests/opening_latency_probe.cpp)
     target_link_libraries(openingLatencyProbe PRIVATE iprEngine)
     add_executable(wbCameraProbe EXCLUDE_FROM_ALL tests/wb_camera_probe.cpp)
@@ -284,6 +296,9 @@ if(BUILD_TESTING)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
+    ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
+    ipr_add_test(dehazeTests tests/dehaze_test.cpp)
+    ipr_add_test(grainTests tests/grain_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
     set_tests_properties(toneRecoveryTests PROPERTIES LABELS "unit;pipeline;lighting")
@@ -331,6 +346,7 @@ if(BUILD_TESTING)
             LABELS "unit;preferences;qml")
     endif()
     ipr_add_test(rawDecoderTests tests/raw_decoder_test.cpp)
+    ipr_add_test(demosaicTests tests/demosaic_test.cpp)
     ipr_add_test(imageImportTests tests/image_import_test.cpp)
     set_tests_properties(imageImportTests PROPERTIES LABELS "unit;import;pipeline")
     ipr_add_test(rawNormalizationTests tests/raw_normalization_test.cpp)
@@ -355,7 +371,7 @@ if(BUILD_TESTING)
     set_tests_properties(settingsQmlTests PROPERTIES LABELS "unit;settings;qml")
     set_tests_properties(uiPreferencesTests uiPreferencesQmlTests
         PROPERTIES LABELS "unit;preferences;qml")
-    set_tests_properties(rawDecoderTests rawBlackLevelEstimatorTests rawNormalizationTests
+    set_tests_properties(rawDecoderTests demosaicTests rawBlackLevelEstimatorTests rawNormalizationTests
         PROPERTIES LABELS "unit;raw")
     set_tests_properties(cameraProfileEngineTests PROPERTIES LABELS "unit;profiles")
 endif()

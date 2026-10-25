@@ -39,6 +39,14 @@ Item {
         && originalCanvas.sourceSize.height === previewHeight
     readonly property bool showingOriginal: originalHeld && comparisonReady
     readonly property bool showingComparison: comparisonEnabled && comparisonReady && !showingOriginal
+    // At fit the provider reduces the preview to the exact displayed size (area
+    // average): sharper than the mipmapped GPU minification, which blends two
+    // pre-reduced levels, and without the aliasing of a plain bilinear one.
+    readonly property bool exactFit: fitMode && fitScale < 1 && imageReady
+    // in device pixels: the reduction targets the screen's real pixels (Windows scaling)
+    readonly property real devicePixelRatio: Screen.devicePixelRatio > 0 ? Screen.devicePixelRatio : 1
+    readonly property size fitPixels: Qt.size(Math.round(previewWidth * fitScale * devicePixelRatio),
+                                              Math.round(previewHeight * fitScale * devicePixelRatio))
     readonly property real maxOffsetX: Math.max(0, (canvas.width - width) / 2)
     readonly property real maxOffsetY: Math.max(0, (canvas.height - height) / 2)
     readonly property real toolbarHeight: zoomToolbar.visible ? zoomToolbar.height + 12 : 0
@@ -177,13 +185,33 @@ Item {
             retainWhileLoading: true
             cache: false
             smooth: true
-            visible: root.hasImage
+            // Mipmapped minification out of fit: a plain bilinear reduction beyond 2x
+            // aliases the grain and showed more noise than the image holds.
+            mipmap: true
+            visible: root.hasImage && !fitCanvas.shown
             fillMode: Image.PreserveAspectFit
             onStatusChanged: if (status === Image.Ready) {
                 root.previewWidth = sourceSize.width
                 root.previewHeight = sourceSize.height
                 root.clampPan()
             }
+        }
+        Image {
+            id: fitCanvas
+            objectName: "fitViewportImage"
+            readonly property bool shown: root.exactFit && status === Image.Ready
+                && sourceSize.width === root.fitPixels.width && sourceSize.height === root.fitPixels.height
+            x: Math.round(canvas.x * root.devicePixelRatio) / root.devicePixelRatio
+            y: Math.round(canvas.y * root.devicePixelRatio) / root.devicePixelRatio
+            width: root.fitPixels.width / root.devicePixelRatio
+            height: root.fitPixels.height / root.devicePixelRatio
+            source: root.exactFit ? root.source : ""
+            sourceSize: root.fitPixels
+            asynchronous: true
+            retainWhileLoading: true
+            cache: false
+            smooth: false
+            visible: shown
         }
     }
 
@@ -206,7 +234,26 @@ Item {
             retainWhileLoading: true
             cache: false
             smooth: true
+            mipmap: true
+            visible: !fitOriginal.shown
             fillMode: Image.PreserveAspectFit
+        }
+        Image {
+            id: fitOriginal
+            objectName: "fitOriginalViewportImage"
+            readonly property bool shown: root.exactFit && status === Image.Ready
+                && sourceSize.width === root.fitPixels.width && sourceSize.height === root.fitPixels.height
+            x: Math.round(originalCanvas.x * root.devicePixelRatio) / root.devicePixelRatio
+            y: Math.round(originalCanvas.y * root.devicePixelRatio) / root.devicePixelRatio
+            width: root.fitPixels.width / root.devicePixelRatio
+            height: root.fitPixels.height / root.devicePixelRatio
+            source: root.exactFit && (root.showingComparison || root.showingOriginal) ? root.originalSource : ""
+            sourceSize: root.fitPixels
+            asynchronous: true
+            retainWhileLoading: true
+            cache: false
+            smooth: false
+            visible: shown
         }
     }
 
@@ -390,7 +437,7 @@ Item {
                     {name: "zoomInButton", label: "+", tip: qsTr("Agrandir — Ctrl +")},
                     {name: "actualSizeButton", label: "100 %", tip: qsTr("100 % de l'aperçu — Ctrl 1")},
                     {name: "fitImageButton", label: qsTr("Ajuster"), tip: qsTr("Adapter à la fenêtre — Ctrl 0")},
-                    {name: "compareImageButton", label: qsTr("Avant/après"), tip: qsTr("Origine à gauche / actuel à droite — Ctrl Maj C")}
+                    {name: "compareImageButton", label: qsTr("Avant/après"), tip: qsTr("Origine à gauche / actuel à droite — Ctrl Maj Y")}
                 ]
                 PreferenceButton {
                     id: zoomButton
@@ -457,7 +504,7 @@ Item {
         onActivated: root.actualSize()
     }
     Shortcut {
-        sequence: "Ctrl+Shift+C"
+        sequence: "Ctrl+Shift+Y"
         enabled: root.comparisonReady && root.visible
         onActivated: root.toggleComparison()
     }

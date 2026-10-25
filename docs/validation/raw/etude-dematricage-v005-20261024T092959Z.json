@@ -1,0 +1,2100 @@
+{
+ "crop_layout": "per variant, 2x: flat tile on top, detail tile below; camera RGB, no matrix",
+ "generated_utc": "2026-10-24T09:34:08Z",
+ "libraw_openmp": false,
+ "libraw_version": "0.22.2-Release",
+ "machine": "Windows 11 Version 26H2",
+ "opencv_threads": 8,
+ "probe": {
+  "sha256": "c72e1367e32b28c26eea17d0625f5f7b7124d18b23d23ec53738d5bdb2fec916"
+ },
+ "variant_order": [
+  "AHD",
+  "RCD",
+  "RCD-median1"
+ ],
+ "campaign_id": "etude-dematricage-v005-20261024T092959Z",
+ "runner": "tests/study_demosaic.py",
+ "commit": "5f2de4ac1147e2ae4e67d29e9ef3a65f6bf4655f",
+ "local_changes": [],
+ "jobs": 1,
+ "threads": "8",
+ "timing_note": "dcraw_process wall time with the other probe processes running",
+ "duration_seconds": 249.7,
+ "python": "3.14.3",
+ "crops_directory": "build-windows-msvc\\dematricage-v005",
+ "crops_status": "derived 8-bit montages, regenerable, not tracked",
+ "sources": [
+  "tests\\image\\base-hors-protocole"
+ ],
+ "scenes": [
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0005033532719509614,
+    "flat_chroma_mid": 0.001026227727830631,
+    "flat_luma_hh": 0.0007635160584729013
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A0133-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 400,
+   "raw": "6V1A0133.CR3",
+   "raw_sha256": "837eb81995f0d9131e4a0701318cc170fc83bdc575fd9e31c30e30f08d0a62f1",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.029395775141299294,
+     "chroma_flat_rmse": 0.0032606840825896237,
+     "chroma_rmse": 0.008779148738255664,
+     "cpsnr_db": 46.447549943835334,
+     "luma_edge_rmse": 0.008423460690909471,
+     "luma_rmse": 0.002739267625320164
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.026963565797599842,
+     "chroma_flat_rmse": 0.0021383739524489047,
+     "chroma_rmse": 0.007798369445852896,
+     "cpsnr_db": 47.62785850149224,
+     "luma_edge_rmse": 0.0069195501185442855,
+     "luma_rmse": 0.002224380048523554
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.03024039026843952,
+     "chroma_flat_rmse": 0.0023319485701755777,
+     "chroma_rmse": 0.008729540610067999,
+     "cpsnr_db": 47.00056970992413,
+     "luma_edge_rmse": 0.006953341322841988,
+     "luma_rmse": 0.002238506525653053
+    },
+    "fit": {
+     "gain": [
+      0.0001208504832230565,
+      6.094121354020937e-05,
+      0.00010401173815085964
+     ],
+     "offset": [
+      0.0037517941407394623,
+      -0.0030764069003401248,
+      -0.008699198356697616
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9750231816575545
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 78.91952126458915
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.8409690317038073,
+     "detail_luma_fine_ratio": 0.8758664367322203,
+     "flat_chroma_hh_ratio": 0.9146004525425747,
+     "flat_chroma_mid_ratio": 0.6131778416406471,
+     "flat_luma_hh_ratio": 0.6562247280162351,
+     "flat_luma_mid_ratio": 0.9007132132132132,
+     "ms_per_megapixel": 29.494472923833346,
+     "ours_ms_per_megapixel": 18.732423496957406,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 18.732423496957406
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.36614094881665565,
+     "detail_luma_fine_ratio": 0.865055389579481,
+     "flat_chroma_hh_ratio": 0.33332081283101084,
+     "flat_chroma_mid_ratio": 0.48366756625839036,
+     "flat_luma_hh_ratio": 0.5969114307342922,
+     "flat_luma_mid_ratio": 0.8962712712712713,
+     "ms_per_megapixel": 28.536953779196544,
+     "ours_ms_per_megapixel": 20.436278128406517,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 20.436278128406517
+     }
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.00036762180904532644,
+    "flat_chroma_mid": 0.0007986177374823523,
+    "flat_luma_hh": 0.0005005309986484943
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A0194-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 1000,
+   "raw": "6V1A0194.CR3",
+   "raw_sha256": "a2fdd628bd2b5e9e20d00c1dd01f1c996129c3bed0ceb0a22421dd08a0dceba9",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.003984020869353762,
+     "chroma_flat_rmse": 0.0031615256586302715,
+     "chroma_rmse": 0.003254630862307319,
+     "cpsnr_db": 53.972677554737665,
+     "luma_edge_rmse": 0.001564649809491863,
+     "luma_rmse": 0.0014375555678159176
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.0026946000042605473,
+     "chroma_flat_rmse": 0.001725326269780298,
+     "chroma_rmse": 0.0018472152001573474,
+     "cpsnr_db": 57.19265036831308,
+     "luma_edge_rmse": 0.0011918257053887544,
+     "luma_rmse": 0.0010778074139884874
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.0032265416975946976,
+     "chroma_flat_rmse": 0.0019882632659199923,
+     "chroma_rmse": 0.0021469844601041546,
+     "cpsnr_db": 56.53283577245709,
+     "luma_edge_rmse": 0.0012407902148346883,
+     "luma_rmse": 0.001099444504873353
+    },
+    "fit": {
+     "gain": [
+      0.00011474393577993489,
+      6.0907478071514354e-05,
+      0.00010140538895176492
+     ],
+     "offset": [
+      0.001649682285034762,
+      -0.0026504225115273378,
+      -0.005909843906813224
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9999817794216789
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 79.355936308005
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.7854650465329881,
+     "detail_luma_fine_ratio": 0.8123067741224793,
+     "flat_chroma_hh_ratio": 0.8267769815150862,
+     "flat_chroma_mid_ratio": 0.521034776398198,
+     "flat_luma_hh_ratio": 0.5845953525641026,
+     "flat_luma_mid_ratio": 0.8294634146341463,
+     "ms_per_megapixel": 23.903560908484987,
+     "ours_ms_per_megapixel": 16.645776802328893,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 16.645776802328893
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.3436896161115723,
+     "detail_luma_fine_ratio": 0.8052088445790144,
+     "flat_chroma_hh_ratio": 0.2857563591834204,
+     "flat_chroma_mid_ratio": 0.4014802818502103,
+     "flat_luma_hh_ratio": 0.5200330349768978,
+     "flat_luma_mid_ratio": 0.7920975609756098,
+     "ms_per_megapixel": 28.732197060595826,
+     "ours_ms_per_megapixel": 21.43800037673311,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 21.43800037673311
+     }
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.00029409910414818045,
+    "flat_chroma_mid": 0.0010616276509855481,
+    "flat_luma_hh": 0.0005090033415956264
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A9240-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 1250,
+   "raw": "6V1A9240.CR3",
+   "raw_sha256": "49d8a05f58b840c75769b56ababebf6b905573eb262d308edde18a0e796eab43",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.0060044128022950505,
+     "chroma_flat_rmse": 0.004347591904374699,
+     "chroma_rmse": 0.004530923047230075,
+     "cpsnr_db": 51.34254206817087,
+     "luma_edge_rmse": 0.0022757347933047446,
+     "luma_rmse": 0.0018683319215569091
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.0049230863895353616,
+     "chroma_flat_rmse": 0.0030040399691173007,
+     "chroma_rmse": 0.0032354225353392004,
+     "cpsnr_db": 53.66820984396301,
+     "luma_edge_rmse": 0.001790327158097663,
+     "luma_rmse": 0.0014460322380620643
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.005526059847840383,
+     "chroma_flat_rmse": 0.00328526639250571,
+     "chroma_rmse": 0.0035590391748504223,
+     "cpsnr_db": 53.11059239201533,
+     "luma_edge_rmse": 0.0018279696357772675,
+     "luma_rmse": 0.001480813317132992
+    },
+    "fit": {
+     "gain": [
+      0.00011534717846337971,
+      6.103075462951639e-05,
+      0.00010323551060389766
+     ],
+     "offset": [
+      0.0004896050660736355,
+      -0.004261119069524328,
+      -0.013530581212515276
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9900530516307975
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 81.97606521193747
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.8850337907295558,
+     "detail_luma_fine_ratio": 0.8310988048958218,
+     "flat_chroma_hh_ratio": 0.8181504315659679,
+     "flat_chroma_mid_ratio": 0.31038401785062614,
+     "flat_luma_hh_ratio": 0.5055772569444444,
+     "flat_luma_mid_ratio": 0.6943740020663097,
+     "ms_per_megapixel": 27.051933938446048,
+     "ours_ms_per_megapixel": 19.082284712531603,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 19.082284712531603
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.42012141538994824,
+     "detail_luma_fine_ratio": 0.8259419113227829,
+     "flat_chroma_hh_ratio": 0.28693786721739273,
+     "flat_chroma_mid_ratio": 0.24600133462625254,
+     "flat_luma_hh_ratio": 0.4597925646551724,
+     "flat_luma_mid_ratio": 0.6813186813186813,
+     "ms_per_megapixel": 29.822000265714244,
+     "ours_ms_per_megapixel": 21.298827199040133,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 21.298827199040133
+     }
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0002714601642914045,
+    "flat_chroma_mid": 0.0008443485064538344,
+    "flat_luma_hh": 0.0004439640257250741
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A9271-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 1250,
+   "raw": "6V1A9271.CR3",
+   "raw_sha256": "3a953bd24ec52d93c8cd0b28b81c90d970717a303967fb9beeee9bc4cc443f9d",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.006062445168464127,
+     "chroma_flat_rmse": 0.003736984451837179,
+     "chroma_rmse": 0.004032019073039931,
+     "cpsnr_db": 52.4829701402334,
+     "luma_edge_rmse": 0.0021283593570343186,
+     "luma_rmse": 0.001597870664757793
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.005142991551694812,
+     "chroma_flat_rmse": 0.0026674503777613413,
+     "chroma_rmse": 0.00300999807819508,
+     "cpsnr_db": 54.615428672673055,
+     "luma_edge_rmse": 0.0016685965426215732,
+     "luma_rmse": 0.0012409496824288511
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.006098776892942965,
+     "chroma_flat_rmse": 0.0029402493138691805,
+     "chroma_rmse": 0.0033936319621766546,
+     "cpsnr_db": 53.926089967388634,
+     "luma_edge_rmse": 0.0017176338453967091,
+     "luma_rmse": 0.001272568813985016
+    },
+    "fit": {
+     "gain": [
+      0.00011534147250739736,
+      6.102763104989867e-05,
+      0.00010318073611704195
+     ],
+     "offset": [
+      0.00046657006874470337,
+      -0.0033676098178718763,
+      -0.010914965603939548
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9998864622466519
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 79.44684539609807
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.003773196171209,
+     "detail_luma_fine_ratio": 0.9308130948700937,
+     "flat_chroma_hh_ratio": 0.8151942000063689,
+     "flat_chroma_mid_ratio": 0.34913901653284496,
+     "flat_luma_hh_ratio": 0.5151156459364126,
+     "flat_luma_mid_ratio": 0.7463365896980462,
+     "ms_per_megapixel": 27.242741421353124,
+     "ours_ms_per_megapixel": 17.529767630757938,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 17.529767630757938
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.684525191588143,
+     "detail_luma_fine_ratio": 0.9351069766532137,
+     "flat_chroma_hh_ratio": 0.29024129024129025,
+     "flat_chroma_mid_ratio": 0.2733724714231983,
+     "flat_luma_hh_ratio": 0.46529228265292283,
+     "flat_luma_mid_ratio": 0.7236196972926882,
+     "ms_per_megapixel": 32.77571856295865,
+     "ours_ms_per_megapixel": 24.988838483996478,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 24.988838483996478
+     }
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0002573267056201457,
+    "flat_chroma_mid": 0.0009253935914644053,
+    "flat_luma_hh": 0.00044679182206727204
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A9425-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 1000,
+   "raw": "6V1A9425.CR3",
+   "raw_sha256": "c65ce89c2bdf32387c8d49645d1a1aa4c5a9881b3f02e53f03d70c2abcf26964",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.0066317648803134056,
+     "chroma_flat_rmse": 0.0038491582419148463,
+     "chroma_rmse": 0.004215447215718212,
+     "cpsnr_db": 51.91344147001023,
+     "luma_edge_rmse": 0.0023799049960281137,
+     "luma_rmse": 0.0017780119325772306
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.005484261292198017,
+     "chroma_flat_rmse": 0.0023705106966343146,
+     "chroma_rmse": 0.0028454506051809945,
+     "cpsnr_db": 54.540283858575805,
+     "luma_edge_rmse": 0.0018491572974128892,
+     "luma_rmse": 0.00135678880476537
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.006467282670743376,
+     "chroma_flat_rmse": 0.002588537313456779,
+     "chroma_rmse": 0.003202853291081665,
+     "cpsnr_db": 53.95292747291705,
+     "luma_edge_rmse": 0.001876650244807421,
+     "luma_rmse": 0.0013838164526115452
+    },
+    "fit": {
+     "gain": [
+      0.00011491035616329655,
+      6.0995700350722865e-05,
+      0.00010344161330010368
+     ],
+     "offset": [
+      0.0015311013101934527,
+      -0.0034371134284748093,
+      -0.012277758459758394
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9995203153870553
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 79.58712442578945
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.9135542272574542,
+     "detail_luma_fine_ratio": 0.8884510265888688,
+     "flat_chroma_hh_ratio": 0.8234233199310742,
+     "flat_chroma_mid_ratio": 0.3357133685112686,
+     "flat_luma_hh_ratio": 0.5091145833333334,
+     "flat_luma_mid_ratio": 0.7772200772200772,
+     "ms_per_megapixel": 25.45103505733595,
+     "ours_ms_per_megapixel": 16.922853131610236,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 16.922853131610236
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.5045732188405917,
+     "detail_luma_fine_ratio": 0.8825862693411122,
+     "flat_chroma_hh_ratio": 0.29474106206698053,
+     "flat_chroma_mid_ratio": 0.26532763558286976,
+     "flat_luma_hh_ratio": 0.46320657169117646,
+     "flat_luma_mid_ratio": 0.7682689870744277,
+     "ms_per_megapixel": 27.461591700174964,
+     "ours_ms_per_megapixel": 20.033305040662363,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 20.033305040662363
+     }
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.00010746730708298284,
+    "flat_chroma_mid": 0.0006820263687639964,
+    "flat_luma_hh": 0.0001611843915052817
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A9623-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 800,
+   "raw": "6V1A9623.CR3",
+   "raw_sha256": "3d9737e34045d2ad6fd5c7d02621dd02139a7c548d46cd7b84f5d09e59b5133c",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.0027888178838010778,
+     "chroma_flat_rmse": 0.002782081281500738,
+     "chroma_rmse": 0.0027827520925420763,
+     "cpsnr_db": 54.834705550120226,
+     "luma_edge_rmse": 0.0014126018746619413,
+     "luma_rmse": 0.001411329017099622
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.0002270940418463772,
+     "chroma_flat_rmse": 0.0002034314479130602,
+     "chroma_rmse": 0.00020590695905688754,
+     "cpsnr_db": 59.84098012997859,
+     "luma_edge_rmse": 0.0010147979667228136,
+     "luma_rmse": 0.0010139345974684623
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.00020553342430187015,
+     "chroma_flat_rmse": 0.00019188030225792186,
+     "chroma_rmse": 0.0001932815590135536,
+     "cpsnr_db": 59.847845078719374,
+     "luma_edge_rmse": 0.001014274528611276,
+     "luma_rmse": 0.0010136396976299083
+    },
+    "fit": {
+     "gain": [
+      6.152518551520054e-05,
+      4.687596177403439e-05,
+      5.671412587525739e-05
+     ],
+     "offset": [
+      0.1105863940897614,
+      0.02606704305904215,
+      0.08546957845379141
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 1
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 72.07811676564249
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.1998079926943639,
+     "detail_luma_fine_ratio": 0.7425839327948897,
+     "flat_chroma_hh_ratio": 0.7498657292124408,
+     "flat_chroma_mid_ratio": 0.17787157431486297,
+     "flat_luma_hh_ratio": 0.47375274122807015,
+     "flat_luma_mid_ratio": 0.487821851078636,
+     "ms_per_megapixel": 24.39627218220625,
+     "ours_ms_per_megapixel": 16.84569749694272,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 16.84569749694272
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.08035789007699135,
+     "detail_luma_fine_ratio": 0.7414953077573594,
+     "flat_chroma_hh_ratio": 0.2631443696356068,
+     "flat_chroma_mid_ratio": 0.13839510348184014,
+     "flat_luma_hh_ratio": 0.40007102272727274,
+     "flat_luma_mid_ratio": 0.46313244690036265,
+     "ms_per_megapixel": 28.80113779470375,
+     "ours_ms_per_megapixel": 21.054086973432074,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 21.054086973432074
+     }
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.00026582942528579744,
+    "flat_chroma_mid": 0.0007502386709599251,
+    "flat_luma_hh": 0.00038741914496057735
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A9932-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 400,
+   "raw": "6V1A9932.CR3",
+   "raw_sha256": "0dbf07fec8b7659a0fe236980ca8a2e5c454aa97ded74c8c6010c7cec2f78319",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.0029058573167191713,
+     "chroma_flat_rmse": 0.0028619331547883597,
+     "chroma_rmse": 0.002866353484108727,
+     "cpsnr_db": 54.65951795063879,
+     "luma_edge_rmse": 0.0014359165761359044,
+     "luma_rmse": 0.0014238203939440585
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.0008054644536608964,
+     "chroma_flat_rmse": 0.0006640661235951806,
+     "chroma_rmse": 0.0006795230387806211,
+     "cpsnr_db": 59.369000515971436,
+     "luma_edge_rmse": 0.0010411902325394315,
+     "luma_rmse": 0.0010272247506180794
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.0008795896157521924,
+     "chroma_flat_rmse": 0.0007365122231039256,
+     "chroma_rmse": 0.0007520376220316057,
+     "cpsnr_db": 59.27127838392208,
+     "luma_edge_rmse": 0.0010429646078643844,
+     "luma_rmse": 0.0010289067356075425
+    },
+    "fit": {
+     "gain": [
+      0.0001144051047146902,
+      6.083735241067749e-05,
+      9.3121831916312e-05
+     ],
+     "offset": [
+      0.006302009245073339,
+      -0.002524841582060128,
+      0.006736375197337181
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 1
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 73.68955376579623
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.4353777913797549,
+     "detail_luma_fine_ratio": 0.7537366849196351,
+     "flat_chroma_hh_ratio": 0.8297562901248675,
+     "flat_chroma_mid_ratio": 0.3988865858151331,
+     "flat_luma_hh_ratio": 0.5294404871323529,
+     "flat_luma_mid_ratio": 0.7629940119760479,
+     "ms_per_megapixel": 23.764310290175874,
+     "ours_ms_per_megapixel": 16.540767326849984,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 16.540767326849984
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.1861241794963558,
+     "detail_luma_fine_ratio": 0.7494751689393545,
+     "flat_chroma_hh_ratio": 0.2872265276017536,
+     "flat_chroma_mid_ratio": 0.3096082492661193,
+     "flat_luma_hh_ratio": 0.4647484389183836,
+     "flat_luma_mid_ratio": 0.7267734018931868,
+     "ms_per_megapixel": 28.34922843281164,
+     "ours_ms_per_megapixel": 21.129947800997815,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 21.129947800997815
+     }
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.00022339867255350148,
+    "flat_chroma_mid": 0.0008634886006411135,
+    "flat_luma_hh": 0.0003930747376449732
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A9979-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 800,
+   "raw": "6V1A9979.CR3",
+   "raw_sha256": "c7460ba176ae7a52a48bbf1d0964d9b15cff667f1528b7733d038d21713b6357",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.003592239489413135,
+     "chroma_flat_rmse": 0.003425502978276655,
+     "chroma_rmse": 0.0034425351222818847,
+     "cpsnr_db": 53.03982467564792,
+     "luma_edge_rmse": 0.0017499848473284526,
+     "luma_rmse": 0.0017235590603742914
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.0010863575112109879,
+     "chroma_flat_rmse": 0.0005648391741761435,
+     "chroma_rmse": 0.000636499193864857,
+     "cpsnr_db": 57.890968434379,
+     "luma_edge_rmse": 0.0012616537759504187,
+     "luma_rmse": 0.0012397275854355654
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.0012179536514602299,
+     "chroma_flat_rmse": 0.0006272554475740003,
+     "chroma_rmse": 0.000708811624008289,
+     "cpsnr_db": 57.82735450066944,
+     "luma_edge_rmse": 0.0012628259261486378,
+     "luma_rmse": 0.0012409979187818821
+    },
+    "fit": {
+     "gain": [
+      0.00011701506909579396,
+      6.103009900808854e-05,
+      0.00010020033518658301
+     ],
+     "offset": [
+      0.0009677008081597617,
+      -0.0034382577692457107,
+      -0.009666725927820495
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 1
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 70.86962187698646
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.4711075583077149,
+     "detail_luma_fine_ratio": 0.7762158042051399,
+     "flat_chroma_hh_ratio": 0.8134692761435993,
+     "flat_chroma_mid_ratio": 0.28775439296353733,
+     "flat_luma_hh_ratio": 0.4965249717148861,
+     "flat_luma_mid_ratio": 0.6768056371109806,
+     "ms_per_megapixel": 25.390148147306057,
+     "ours_ms_per_megapixel": 17.20884752224567,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 17.20884752224567
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.23188989038072427,
+     "detail_luma_fine_ratio": 0.7713263417037391,
+     "flat_chroma_hh_ratio": 0.28574327495022006,
+     "flat_chroma_mid_ratio": 0.22585076470701781,
+     "flat_luma_hh_ratio": 0.4532808767739216,
+     "flat_luma_mid_ratio": 0.6669406928948913,
+     "ms_per_megapixel": 29.22383036094049,
+     "ours_ms_per_megapixel": 21.508266894189262,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 21.508266894189262
+     }
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.010861753533733077,
+    "flat_chroma_mid": 0.021065395460736762,
+    "flat_luma_hh": 0.023205206074301096
+   },
+   "camera": "EOS R7",
+   "crop": "7Y6A6988-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4660,
+   "iso": 12800,
+   "raw": "7Y6A6988.CR3",
+   "raw_sha256": "b1db8e3c4a4eeb6125342f6f2726154ee1ca121a447999b9cf9c270c0fb2a507",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.03536598361314267,
+     "chroma_flat_rmse": 0.02644079748144213,
+     "chroma_rmse": 0.0274478842043693,
+     "cpsnr_db": 36.333633191171934,
+     "luma_edge_rmse": 0.011757863934603702,
+     "luma_rmse": 0.008715443967831598
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.033379776548849716,
+     "chroma_flat_rmse": 0.02567289691910756,
+     "chroma_rmse": 0.026530585613870665,
+     "cpsnr_db": 36.802372153139984,
+     "luma_edge_rmse": 0.00954830482602873,
+     "luma_rmse": 0.007470194730819513
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.03750914434421533,
+     "chroma_flat_rmse": 0.028551792088084584,
+     "chroma_rmse": 0.02955367825412551,
+     "cpsnr_db": 35.94928002472167,
+     "luma_edge_rmse": 0.009948051489700502,
+     "luma_rmse": 0.007896072117872724
+    },
+    "fit": {
+     "gain": [
+      0.00012194740027253218,
+      6.959094477459188e-05,
+      0.00010519073050352128
+     ],
+     "offset": [
+      -0.2467534479215128,
+      -0.14194757661253302,
+      -0.2134770840704204
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9995917093147304
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 81.3348045071752
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.9848569441627713,
+     "detail_luma_fine_ratio": 0.8721672582413165,
+     "flat_chroma_hh_ratio": 1.2403791782894424,
+     "flat_chroma_mid_ratio": 1.0124883676683913,
+     "flat_luma_hh_ratio": 0.77073698290951,
+     "flat_luma_mid_ratio": 1.0041364264417132,
+     "ms_per_megapixel": 24.204831767522577,
+     "ours_ms_per_megapixel": 16.712596296132425,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 16.712596296132425
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.4715136185322577,
+     "detail_luma_fine_ratio": 0.8890058856746271,
+     "flat_chroma_hh_ratio": 0.5301782559519914,
+     "flat_chroma_mid_ratio": 0.8323461839966426,
+     "flat_luma_hh_ratio": 0.7441476662461014,
+     "flat_luma_mid_ratio": 1.0423079421851866,
+     "ms_per_megapixel": 29.22356864740498,
+     "ours_ms_per_megapixel": 21.261027658559847,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 21.261027658559847
+     }
+    }
+   },
+   "width": 6984
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.00701304538944547,
+    "flat_chroma_mid": 0.012977427082913643,
+    "flat_luma_hh": 0.014328642895347195
+   },
+   "camera": "EOS R7",
+   "crop": "7Y6A7126-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4660,
+   "iso": 12800,
+   "raw": "7Y6A7126.CR3",
+   "raw_sha256": "b1c9c1d8bd0bfaa33e34fa3458563f87f688a28349b43e9acd3d9f30d22e7fdf",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.05571471692496721,
+     "chroma_flat_rmse": 0.037493568512180706,
+     "chroma_rmse": 0.03965531737777483,
+     "cpsnr_db": 33.179889024824284,
+     "luma_edge_rmse": 0.018133251290196013,
+     "luma_rmse": 0.012276198794454091
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.0527656748871909,
+     "chroma_flat_rmse": 0.036782737336874004,
+     "chroma_rmse": 0.038646034361880875,
+     "cpsnr_db": 33.570974941002895,
+     "luma_edge_rmse": 0.014771838798683101,
+     "luma_rmse": 0.010634836208471077
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.0606259269823438,
+     "chroma_flat_rmse": 0.04089632590227238,
+     "chroma_rmse": 0.04323424955699082,
+     "cpsnr_db": 32.69989513253546,
+     "luma_edge_rmse": 0.015303049980047417,
+     "luma_rmse": 0.011214438829604085
+    },
+    "fit": {
+     "gain": [
+      0.00012186921605627653,
+      6.960714219127771e-05,
+      0.00010501249702472039
+     ],
+     "offset": [
+      -0.24809537542913204,
+      -0.14226142449635373,
+      -0.21383165596963172
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9441365672118737
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 91.93339835012218
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.9869747751298984,
+     "detail_luma_fine_ratio": 0.8636517001592503,
+     "flat_chroma_hh_ratio": 1.2079973980854497,
+     "flat_chroma_mid_ratio": 1.008429245308295,
+     "flat_luma_hh_ratio": 0.78615430994235,
+     "flat_luma_mid_ratio": 0.9991663379355686,
+     "ms_per_megapixel": 24.783238450609364,
+     "ours_ms_per_megapixel": 16.32391511683357,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 16.32391511683357
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.4977785306026849,
+     "detail_luma_fine_ratio": 0.8785673660116907,
+     "flat_chroma_hh_ratio": 0.5016732303000512,
+     "flat_chroma_mid_ratio": 0.8234413250008715,
+     "flat_luma_hh_ratio": 0.7532600497457927,
+     "flat_luma_mid_ratio": 1.0407274198132803,
+     "ms_per_megapixel": 28.57412282642361,
+     "ours_ms_per_megapixel": 20.192819639249002,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 20.192819639249002
+     }
+    }
+   },
+   "width": 6984
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.002663872522986138,
+    "flat_chroma_mid": 0.004782659685814972,
+    "flat_luma_hh": 0.004962870949193051
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_3065-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 400,
+   "raw": "IMG_3065.CR2",
+   "raw_sha256": "a226ada1279644e270f6898dea2aeeec3b95be9db89e56b6e3c29181c5762450",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.009247542835182471,
+     "chroma_flat_rmse": 0.009225279619413898,
+     "chroma_rmse": 0.009227559476101753,
+     "cpsnr_db": 46.05389349002564,
+     "luma_edge_rmse": 0.0026455223423379804,
+     "luma_rmse": 0.0026456614515949343
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.008958540137299196,
+     "chroma_flat_rmse": 0.009024141499761008,
+     "chroma_rmse": 0.009017452795507964,
+     "cpsnr_db": 46.38223508677834,
+     "luma_edge_rmse": 0.0022904639045418958,
+     "luma_rmse": 0.002347818044028696
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.010865596814236895,
+     "chroma_flat_rmse": 0.010097322991237697,
+     "chroma_rmse": 0.010178575595530778,
+     "cpsnr_db": 45.57327376209423,
+     "luma_edge_rmse": 0.002268428354122708,
+     "luma_rmse": 0.002413365905887776
+    },
+    "fit": {
+     "gain": [
+      0.00016780811753835226,
+      9.772753492299184e-05,
+      0.00018123815147049382
+     ],
+     "offset": [
+      -0.3436395219979017,
+      -0.20013659675958606,
+      -0.371022783475921
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 1
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 79.84262026596627
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.0197097889730102,
+     "detail_luma_fine_ratio": 0.8927347626292795,
+     "flat_chroma_hh_ratio": 1.2202934974760922,
+     "flat_chroma_mid_ratio": 0.9799200812702303,
+     "flat_luma_hh_ratio": 0.7997020311295117,
+     "flat_luma_mid_ratio": 0.981500419751202,
+     "ms_per_megapixel": 25.649543655708896,
+     "ours_ms_per_megapixel": 17.73230983286762,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 17.73230983286762
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.48701261279143077,
+     "detail_luma_fine_ratio": 0.8951312989827869,
+     "flat_chroma_hh_ratio": 0.4614528282452123,
+     "flat_chroma_mid_ratio": 0.7913852149138125,
+     "flat_luma_hh_ratio": 0.7313878394753724,
+     "flat_luma_mid_ratio": 0.9849360329465559,
+     "ms_per_megapixel": 30.417490208509253,
+     "ours_ms_per_megapixel": 21.38382443952539,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 21.38382443952539
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.001883334456062741,
+    "flat_chroma_mid": 0.003260081900412105,
+    "flat_luma_hh": 0.0031049645680511677
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_3068-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 500,
+   "raw": "IMG_3068.CR2",
+   "raw_sha256": "952b77c84a0fb305bdb4b2f3291e8ede9bf336153aafb85d6337854dc8fdf79e",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.013709841839997378,
+     "chroma_flat_rmse": 0.014877715918955274,
+     "chroma_rmse": 0.01476364733517636,
+     "cpsnr_db": 42.0033827513537,
+     "luma_edge_rmse": 0.003918163795630069,
+     "luma_rmse": 0.00412603510203721
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.013510769543109978,
+     "chroma_flat_rmse": 0.014664316918276053,
+     "chroma_rmse": 0.014551656468343537,
+     "cpsnr_db": 42.24250372459808,
+     "luma_edge_rmse": 0.0034446424142972284,
+     "luma_rmse": 0.0037194112532935807
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.015873783858487842,
+     "chroma_flat_rmse": 0.016425177207470228,
+     "chroma_rmse": 0.0163701814941199,
+     "cpsnr_db": 41.417142854441025,
+     "luma_edge_rmse": 0.0033812444376796085,
+     "luma_rmse": 0.003848265354844712
+    },
+    "fit": {
+     "gain": [
+      0.00019783963795380903,
+      9.770158316589579e-05,
+      0.00015346743826056246
+     ],
+     "offset": [
+      -0.4050333380681577,
+      -0.200082381520949,
+      -0.3142786923718544
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 1
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 80.44573702777312
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.0034773251711597,
+     "detail_luma_fine_ratio": 0.8560387972463617,
+     "flat_chroma_hh_ratio": 1.175032231307498,
+     "flat_chroma_mid_ratio": 0.9709129697323322,
+     "flat_luma_hh_ratio": 0.8124416693205018,
+     "flat_luma_mid_ratio": 0.9762776578099084,
+     "ms_per_megapixel": 26.542043253927027,
+     "ours_ms_per_megapixel": 18.166728154831194,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 18.166728154831194
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.4697730928905022,
+     "detail_luma_fine_ratio": 0.8303009655650917,
+     "flat_chroma_hh_ratio": 0.44383479635330814,
+     "flat_chroma_mid_ratio": 0.7764570255325585,
+     "flat_luma_hh_ratio": 0.7433025992835848,
+     "flat_luma_mid_ratio": 0.9758062463410289,
+     "ms_per_megapixel": 27.635128565758595,
+     "ours_ms_per_megapixel": 19.930450670509565,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 19.930450670509565
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.002440421381555194,
+    "flat_chroma_mid": 0.004240142539132516,
+    "flat_luma_hh": 0.003905264071131566
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_3069-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 800,
+   "raw": "IMG_3069.CR2",
+   "raw_sha256": "98f2d34e1acbffe18aa64307507e22841ffa988ead2efaebb71256710ec6ec73",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.01623747239702233,
+     "chroma_flat_rmse": 0.017979002075482402,
+     "chroma_rmse": 0.01780835417027842,
+     "cpsnr_db": 40.36338774619522,
+     "luma_edge_rmse": 0.004691012027118384,
+     "luma_rmse": 0.004988581311435511
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.0160478099606872,
+     "chroma_flat_rmse": 0.01774198852859438,
+     "chroma_rmse": 0.01757587123537997,
+     "cpsnr_db": 40.59098476878975,
+     "luma_edge_rmse": 0.004121956266316845,
+     "luma_rmse": 0.004499590505899829
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.01858962800692393,
+     "chroma_flat_rmse": 0.01979214389005942,
+     "chroma_rmse": 0.019672283835666188,
+     "cpsnr_db": 39.78126799428811,
+     "luma_edge_rmse": 0.00408849440327917,
+     "luma_rmse": 0.004670010063831822
+    },
+    "fit": {
+     "gain": [
+      0.00019775254647472372,
+      9.769749946993992e-05,
+      0.00015328038116274242
+     ],
+     "offset": [
+      -0.40481003760616413,
+      -0.20006611516115808,
+      -0.3138075706839946
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 1
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 81.92598134666626
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.004527930180855,
+     "detail_luma_fine_ratio": 0.8508533555413567,
+     "flat_chroma_hh_ratio": 1.1809161073681778,
+     "flat_chroma_mid_ratio": 0.970761170144709,
+     "flat_luma_hh_ratio": 0.8228672190205936,
+     "flat_luma_mid_ratio": 0.9783814676995521,
+     "ms_per_megapixel": 21.626208786281346,
+     "ours_ms_per_megapixel": 14.4408783528808,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 14.4408783528808
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.4622622557360719,
+     "detail_luma_fine_ratio": 0.8285450453093278,
+     "flat_chroma_hh_ratio": 0.4461234503080147,
+     "flat_chroma_mid_ratio": 0.7716185378759038,
+     "flat_luma_hh_ratio": 0.7565953010985487,
+     "flat_luma_mid_ratio": 0.9825263534036089,
+     "ms_per_megapixel": 27.661283233576,
+     "ours_ms_per_megapixel": 20.274345983468784,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 20.274345983468784
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0011000286558542189,
+    "flat_chroma_mid": 0.001884365883732478,
+    "flat_luma_hh": 0.0019653433115063464
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_6062-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 640,
+   "raw": "IMG_6062.CR2",
+   "raw_sha256": "46902a6c8e7493bb8dbc1fc4d093004f7e83d241c3f1407eee30aa237cf1a5cc",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.02747010162638246,
+     "chroma_flat_rmse": 0.01178619798143118,
+     "chroma_rmse": 0.014144843574713373,
+     "cpsnr_db": 42.19199044722573,
+     "luma_edge_rmse": 0.009016948657846564,
+     "luma_rmse": 0.00459463514979844
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.023980858064777347,
+     "chroma_flat_rmse": 0.010985226917498299,
+     "chroma_rmse": 0.012876933396866888,
+     "cpsnr_db": 43.33517149644224,
+     "luma_edge_rmse": 0.006242389576732583,
+     "luma_rmse": 0.0034591623893373163
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.029439388933046665,
+     "chroma_flat_rmse": 0.012256845748862997,
+     "chroma_rmse": 0.014879560591993723,
+     "cpsnr_db": 42.45280130588078,
+     "luma_edge_rmse": 0.006259919209074847,
+     "luma_rmse": 0.0035166450841993607
+    },
+    "fit": {
+     "gain": [
+      0.0001925605002472563,
+      9.774385227945087e-05,
+      0.00016365920348462715
+     ],
+     "offset": [
+      -0.39417709644536036,
+      -0.20020876766300075,
+      -0.3348810521234057
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9970416867557601
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 81.24982796632668
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.058211826361921,
+     "detail_luma_fine_ratio": 0.9018658897446771,
+     "flat_chroma_hh_ratio": 1.153058027887615,
+     "flat_chroma_mid_ratio": 0.9629828982638748,
+     "flat_luma_hh_ratio": 0.8113224184675317,
+     "flat_luma_mid_ratio": 0.9853188187017626,
+     "ms_per_megapixel": 23.054160417959693,
+     "ours_ms_per_megapixel": 15.822569574857068,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 15.822569574857068
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.5099554672343216,
+     "detail_luma_fine_ratio": 0.9047547175729117,
+     "flat_chroma_hh_ratio": 0.44034243021975134,
+     "flat_chroma_mid_ratio": 0.7612680744849873,
+     "flat_luma_hh_ratio": 0.7560645942460057,
+     "flat_luma_mid_ratio": 1.020600431519394,
+     "ms_per_megapixel": 25.388096868054834,
+     "ours_ms_per_megapixel": 17.991736612228554,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 17.991736612228554
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.001320600567635472,
+    "flat_chroma_mid": 0.0022527453847908815,
+    "flat_luma_hh": 0.0018578911927826234
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_8000-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 1250,
+   "raw": "IMG_8000.CR2",
+   "raw_sha256": "07bf74e2c152385a3a400fa78dbab9ca874f800a62cabe0338993327b85c301b",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.0746820546479838,
+     "chroma_flat_rmse": 0.05001926319318382,
+     "chroma_rmse": 0.053018880320648845,
+     "cpsnr_db": 30.889945603366797,
+     "luma_edge_rmse": 0.02150500060477826,
+     "luma_rmse": 0.014629079490891293
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.07345154165261798,
+     "chroma_flat_rmse": 0.04928961581860078,
+     "chroma_rmse": 0.05222551776645048,
+     "cpsnr_db": 31.111506347197494,
+     "luma_edge_rmse": 0.019059157896762494,
+     "luma_rmse": 0.013333773254279585
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.08147164537559078,
+     "chroma_flat_rmse": 0.05490958938099414,
+     "chroma_rmse": 0.0581301806906273,
+     "cpsnr_db": 30.298925342824326,
+     "luma_edge_rmse": 0.01957071629361971,
+     "luma_rmse": 0.013944437815203227
+    },
+    "fit": {
+     "gain": [
+      0.00019649618322607423,
+      9.752687643638849e-05,
+      0.0001498559128946115
+     ],
+     "offset": [
+      -0.40225458401740916,
+      -0.19971691723728457,
+      -0.3065443233412958
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 1
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 88.25481161535845
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.994757422627114,
+     "detail_luma_fine_ratio": 0.8562154341197525,
+     "flat_chroma_hh_ratio": 1.1312907239317422,
+     "flat_chroma_mid_ratio": 0.9574276526264914,
+     "flat_luma_hh_ratio": 0.8342481238211176,
+     "flat_luma_mid_ratio": 0.9747390730219597,
+     "ms_per_megapixel": 22.99778331837195,
+     "ours_ms_per_megapixel": 14.795367610432299,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 14.795367610432299
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.45089471303195244,
+     "detail_luma_fine_ratio": 0.8296441706086521,
+     "flat_chroma_hh_ratio": 0.42269972972985886,
+     "flat_chroma_mid_ratio": 0.7555716625443634,
+     "flat_luma_hh_ratio": 0.7638900086879664,
+     "flat_luma_mid_ratio": 0.966201801517067,
+     "ms_per_megapixel": 26.160888777011507,
+     "ours_ms_per_megapixel": 18.38219200644982,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 18.38219200644982
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.001541172479416725,
+    "flat_chroma_mid": 0.002681623227491124,
+    "flat_luma_hh": 0.0023244900160846755
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_8023-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 1000,
+   "raw": "IMG_8023.CR2",
+   "raw_sha256": "8fda931d1fda44319470876b6ca6d235df708b7b9f9a4fcad59131d1e573a1d6",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.046538166648390764,
+     "chroma_flat_rmse": 0.020665312178201434,
+     "chroma_rmse": 0.024225350288526154,
+     "cpsnr_db": 37.742484013771275,
+     "luma_edge_rmse": 0.013418889688644528,
+     "luma_rmse": 0.006881857018858336
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.04319948573817571,
+     "chroma_flat_rmse": 0.020301730987180768,
+     "chroma_rmse": 0.02336245478943803,
+     "cpsnr_db": 38.24782018203876,
+     "luma_edge_rmse": 0.010367698977367177,
+     "luma_rmse": 0.00582566937122568
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.056005603980084744,
+     "chroma_flat_rmse": 0.02323929023667801,
+     "chroma_rmse": 0.027905576567237304,
+     "cpsnr_db": 37.15529143376961,
+     "luma_edge_rmse": 0.0100685079570414,
+     "luma_rmse": 0.005873998655643589
+    },
+    "fit": {
+     "gain": [
+      0.0001973929337129308,
+      9.770568123650717e-05,
+      0.00015393258856813449
+     ],
+     "offset": [
+      -0.40383021594160623,
+      -0.20009510893878082,
+      -0.31532429258419437
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.989394956461052
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 82.6884068394373
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.009630255193152,
+     "detail_luma_fine_ratio": 0.869672431611636,
+     "flat_chroma_hh_ratio": 1.1211008648269942,
+     "flat_chroma_mid_ratio": 0.9668100440716838,
+     "flat_luma_hh_ratio": 0.844416466790207,
+     "flat_luma_mid_ratio": 0.9796247385450488,
+     "ms_per_megapixel": 24.158566655390135,
+     "ours_ms_per_megapixel": 16.20298597181933,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 16.20298597181933
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.5250418568913401,
+     "detail_luma_fine_ratio": 0.8492518104543346,
+     "flat_chroma_hh_ratio": 0.4276487509135486,
+     "flat_chroma_mid_ratio": 0.7717623255781091,
+     "flat_luma_hh_ratio": 0.7726063847055875,
+     "flat_luma_mid_ratio": 0.9766631131539963,
+     "ms_per_megapixel": 26.622838036179015,
+     "ours_ms_per_megapixel": 18.50869780054394,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 18.50869780054394
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0018663745818092172,
+    "flat_chroma_mid": 0.0032838751555726298,
+    "flat_luma_hh": 0.0030399252521806155
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_8471-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 1250,
+   "raw": "IMG_8471.CR2",
+   "raw_sha256": "5f19e30b499acc63402d8f647e7491b18a7741f132347d581c3f3cdebc0cce0a",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.05307477269090232,
+     "chroma_flat_rmse": 0.02106546926440434,
+     "chroma_rmse": 0.026184583359604337,
+     "cpsnr_db": 37.01488959199666,
+     "luma_edge_rmse": 0.01573147287308478,
+     "luma_rmse": 0.007476714337455519
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.04996139556556329,
+     "chroma_flat_rmse": 0.020793695738862746,
+     "chroma_rmse": 0.025351925993309616,
+     "cpsnr_db": 37.437791719276824,
+     "luma_edge_rmse": 0.012817757975172846,
+     "luma_rmse": 0.006501702217456741
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.05817382003991683,
+     "chroma_flat_rmse": 0.02306598162311211,
+     "chroma_rmse": 0.028683375421618456,
+     "cpsnr_db": 36.58794316578494,
+     "luma_edge_rmse": 0.012899759564918487,
+     "luma_rmse": 0.006714666559806342
+    },
+    "fit": {
+     "gain": [
+      0.000165538377278162,
+      9.771353091462536e-05,
+      0.00018410726579887052
+     ],
+     "offset": [
+      -0.33868558792712594,
+      -0.20001855933003512,
+      -0.37663544751780687
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9999109864477421
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 84.23151004277089
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.058641150647209,
+     "detail_luma_fine_ratio": 0.9168975536925217,
+     "flat_chroma_hh_ratio": 1.2023270805451889,
+     "flat_chroma_mid_ratio": 0.965687979292631,
+     "flat_luma_hh_ratio": 0.8138905089358779,
+     "flat_luma_mid_ratio": 0.9762810793184968,
+     "ms_per_megapixel": 22.62049682436938,
+     "ours_ms_per_megapixel": 14.910902095747506,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 14.910902095747506
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.6599248959190811,
+     "detail_luma_fine_ratio": 0.9006984817841529,
+     "flat_chroma_hh_ratio": 0.4537187761873255,
+     "flat_chroma_mid_ratio": 0.7658903266831757,
+     "flat_luma_hh_ratio": 0.7470229144289295,
+     "flat_luma_mid_ratio": 0.9810031252280885,
+     "ms_per_megapixel": 26.993048951682287,
+     "ours_ms_per_megapixel": 18.96355483279215,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 18.96355483279215
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0005118390341586896,
+    "flat_chroma_mid": 0.0008347914687076858,
+    "flat_luma_hh": 0.0006249524843502788
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_8705-demosaic.png",
+   "detail_tiles": 2,
+   "flat_tiles": 2,
+   "height": 3464,
+   "iso": 1000,
+   "raw": "IMG_8705.CR2",
+   "raw_sha256": "f655c2a2a3373891b75764ae3900eecb254aeb3a28315eef5e8d0f0a5c3a0dc1",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 1.0244909613516806,
+     "chroma_flat_rmse": 0.7060713046873698,
+     "chroma_rmse": 0.7439176718111764,
+     "cpsnr_db": 8.110715757216635,
+     "luma_edge_rmse": 0.29431290934997234,
+     "luma_rmse": 0.19041422627022284
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.9589251922695182,
+     "chroma_flat_rmse": 0.704586981895749,
+     "chroma_rmse": 0.733878372289422,
+     "cpsnr_db": 8.252797755219522,
+     "luma_edge_rmse": 0.27123503848209013,
+     "luma_rmse": 0.18343304126421373
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 1.0230320892927207,
+     "chroma_flat_rmse": 0.7632883951174098,
+     "chroma_rmse": 0.7929791962838848,
+     "cpsnr_db": 7.608907397805666,
+     "luma_edge_rmse": 0.2876194469325193,
+     "luma_rmse": 0.1929777127629529
+    },
+    "fit": {
+     "gain": [
+      0.00013926290527074272,
+      9.762897433461706e-05,
+      0.0002014371338673744
+     ],
+     "offset": [
+      -0.28486419861263607,
+      -0.19986269222127234,
+      -0.41176836722036564
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9999209754997411
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 83.44983342700844
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.025573309167812,
+     "detail_luma_fine_ratio": 0.8720516244507287,
+     "flat_chroma_hh_ratio": 1.1657454912027692,
+     "flat_chroma_mid_ratio": 0.9527889840909669,
+     "flat_luma_hh_ratio": 0.8926826450770287,
+     "flat_luma_mid_ratio": 0.9336635517319267,
+     "ms_per_megapixel": 32.864480529339836,
+     "ours_ms_per_megapixel": 20.92420595915765,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 20.92420595915765
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.5847902332893169,
+     "detail_luma_fine_ratio": 0.8627663495971866,
+     "flat_chroma_hh_ratio": 0.4364640148087213,
+     "flat_chroma_mid_ratio": 0.7013960271528297,
+     "flat_luma_hh_ratio": 0.8048778545311989,
+     "flat_luma_mid_ratio": 0.9124230825041091,
+     "ms_per_megapixel": 30.383133419105995,
+     "ours_ms_per_megapixel": 19.013444598053866,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 19.013444598053866
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0017730614447964838,
+    "flat_chroma_mid": 0.0030843498222557506,
+    "flat_luma_hh": 0.0033396827105330574
+   },
+   "camera": "EOS 60D",
+   "crop": "_MG_7705-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 800,
+   "raw": "_MG_7705.CR2",
+   "raw_sha256": "f80d5c1766123bed9d51eec27a081e745a001b9af3dd2d66f12e1241efcc09c0",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.030258171452536526,
+     "chroma_flat_rmse": 0.012693458243745948,
+     "chroma_rmse": 0.015053365049277442,
+     "cpsnr_db": 41.652032709390866,
+     "luma_edge_rmse": 0.009820763993582322,
+     "luma_rmse": 0.004654120808006115
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.028434635597116543,
+     "chroma_flat_rmse": 0.012276111527271559,
+     "chroma_rmse": 0.01441519777354502,
+     "cpsnr_db": 42.22470453963488,
+     "luma_edge_rmse": 0.007785009988133693,
+     "luma_rmse": 0.003878245565979284
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.03123537632559436,
+     "chroma_flat_rmse": 0.013549415888208124,
+     "chroma_rmse": 0.01588497852448189,
+     "cpsnr_db": 41.52857568115739,
+     "luma_edge_rmse": 0.007929505400944647,
+     "luma_rmse": 0.004000219102554116
+    },
+    "fit": {
+     "gain": [
+      0.0002131729692441398,
+      9.773483618566633e-05,
+      0.0001413013533053799
+     ],
+     "offset": [
+      -0.436472158557345,
+      -0.2001235982102532,
+      -0.28936126628670406
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9856521696664899
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 80.82423330696223
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.0199581017880635,
+     "detail_luma_fine_ratio": 0.8472430247806987,
+     "flat_chroma_hh_ratio": 1.1666666666666667,
+     "flat_chroma_mid_ratio": 0.9665204489175397,
+     "flat_luma_hh_ratio": 0.8056487405427152,
+     "flat_luma_mid_ratio": 0.9937512767194465,
+     "ms_per_megapixel": 22.575668178787158,
+     "ours_ms_per_megapixel": 15.381852600660787,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 15.381852600660787
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.45418766922480114,
+     "detail_luma_fine_ratio": 0.8358112498022096,
+     "flat_chroma_hh_ratio": 0.44816060804286206,
+     "flat_chroma_mid_ratio": 0.7694992219770501,
+     "flat_luma_hh_ratio": 0.7660273402307299,
+     "flat_luma_mid_ratio": 1.0224562114002227,
+     "ms_per_megapixel": 26.887187198386123,
+     "ours_ms_per_megapixel": 19.253919925983343,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 19.253919925983343
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.002307517714991757,
+    "flat_chroma_mid": 0.003915270438363943,
+    "flat_luma_hh": 0.004057954027530792
+   },
+   "camera": "EOS 60D",
+   "crop": "_MG_7742-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 640,
+   "raw": "_MG_7742.CR2",
+   "raw_sha256": "b3b710b0f977187caddecf731f347490dea12ca0c4841f99ccb68b410898818a",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.025049025440447695,
+     "chroma_flat_rmse": 0.01569005906230037,
+     "chroma_rmse": 0.016850788407050933,
+     "cpsnr_db": 40.7316073242804,
+     "luma_edge_rmse": 0.00785927587953938,
+     "luma_rmse": 0.005021093136878086
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.023337408490810934,
+     "chroma_flat_rmse": 0.015272628128162165,
+     "chroma_rmse": 0.01625116011616654,
+     "cpsnr_db": 41.212911052747245,
+     "luma_edge_rmse": 0.0061562374100731215,
+     "luma_rmse": 0.004279794818633369
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.026284037182731715,
+     "chroma_flat_rmse": 0.016927481787183913,
+     "chroma_rmse": 0.0180718771959591,
+     "cpsnr_db": 40.44383865419596,
+     "luma_edge_rmse": 0.006239021487479238,
+     "luma_rmse": 0.004426948205839035
+    },
+    "fit": {
+     "gain": [
+      0.00021315245126955344,
+      9.77182215681174e-05,
+      0.00014130982693393956
+     ],
+     "offset": [
+      -0.43621936873634265,
+      -0.20008326956070674,
+      -0.2892662985176668
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 1
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 90.0731575970514
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 0.9974147399262978,
+     "detail_luma_fine_ratio": 0.8471242459008419,
+     "flat_chroma_hh_ratio": 1.140412913582449,
+     "flat_chroma_mid_ratio": 0.9668789037248642,
+     "flat_luma_hh_ratio": 0.8160140442436103,
+     "flat_luma_mid_ratio": 0.9866410715064787,
+     "ms_per_megapixel": 22.643454995547103,
+     "ours_ms_per_megapixel": 15.191389126406348,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 15.191389126406348
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.45838965852619945,
+     "detail_luma_fine_ratio": 0.840649332421119,
+     "flat_chroma_hh_ratio": 0.4364909449956651,
+     "flat_chroma_mid_ratio": 0.7675647545615282,
+     "flat_luma_hh_ratio": 0.7586240764177496,
+     "flat_luma_mid_ratio": 1.0006594614398243,
+     "ms_per_megapixel": 25.176700780389137,
+     "ours_ms_per_megapixel": 18.01280796247313,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 18.01280796247313
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0016712511111578296,
+    "flat_chroma_mid": 0.0034959025797002665,
+    "flat_luma_hh": 0.003254843297227389
+   },
+   "camera": "EOS 60D",
+   "crop": "_MG_7768-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 500,
+   "raw": "_MG_7768.CR2",
+   "raw_sha256": "2cb62bfdc870fb10db306e6681dba37355f41ae3347297dba0aaf9d757d9eed2",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.038817353131469653,
+     "chroma_flat_rmse": 0.015716376216576584,
+     "chroma_rmse": 0.0191841176966178,
+     "cpsnr_db": 39.631153250562775,
+     "luma_edge_rmse": 0.012831178339322798,
+     "luma_rmse": 0.006188103713169205
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.0336368311137811,
+     "chroma_flat_rmse": 0.014643966085655935,
+     "chroma_rmse": 0.01739367735033823,
+     "cpsnr_db": 40.876406482159105,
+     "luma_edge_rmse": 0.008753302654425402,
+     "luma_rmse": 0.004588740892900668
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.04143154993049478,
+     "chroma_flat_rmse": 0.017117751276561097,
+     "chroma_rmse": 0.020731059699010866,
+     "cpsnr_db": 39.84339514258538,
+     "luma_edge_rmse": 0.008587264936504281,
+     "luma_rmse": 0.00459882108735662
+    },
+    "fit": {
+     "gain": [
+      0.0002118190540998768,
+      9.768076372351873e-05,
+      0.0001412548089794692
+     ],
+     "offset": [
+      -0.4328846890061824,
+      -0.20000603147411689,
+      -0.28918334241890037
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9971078364778869
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 82.17046339434202
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.0528606961722107,
+     "detail_luma_fine_ratio": 0.8848238223792665,
+     "flat_chroma_hh_ratio": 1.1910264916239361,
+     "flat_chroma_mid_ratio": 0.9848392353685582,
+     "flat_luma_hh_ratio": 0.7994395778979434,
+     "flat_luma_mid_ratio": 0.9966787003610108,
+     "ms_per_megapixel": 23.75141844538386,
+     "ours_ms_per_megapixel": 16.090670181037137,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 16.090670181037137
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.5565118360241794,
+     "detail_luma_fine_ratio": 0.8798920800264761,
+     "flat_chroma_hh_ratio": 0.46944689025854475,
+     "flat_chroma_mid_ratio": 0.8217678365194374,
+     "flat_luma_hh_ratio": 0.7451657880457242,
+     "flat_luma_mid_ratio": 1.0026875234776553,
+     "ms_per_megapixel": 26.149440213525974,
+     "ours_ms_per_megapixel": 18.559264601552254,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 18.559264601552254
+     }
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0015411738601766576,
+    "flat_chroma_mid": 0.002734051027326252,
+    "flat_luma_hh": 0.003071031011944793
+   },
+   "camera": "EOS 60D",
+   "crop": "_MG_7798-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 400,
+   "raw": "_MG_7798.CR2",
+   "raw_sha256": "49ea40009926e4d06db64149809d204b865e09d99a6c348e08cbffd2075ad302",
+   "repeatable": true,
+   "synthetic": {
+    "AHD": {
+     "chroma_edge_rmse": 0.03266430762093689,
+     "chroma_flat_rmse": 0.011762960787937428,
+     "chroma_rmse": 0.015030394697837209,
+     "cpsnr_db": 41.66359507626841,
+     "luma_edge_rmse": 0.010909799906908144,
+     "luma_rmse": 0.004894275492194475
+    },
+    "RCD": {
+     "chroma_edge_rmse": 0.028883054167189032,
+     "chroma_flat_rmse": 0.01093905262212587,
+     "chroma_rmse": 0.013675922580805872,
+     "cpsnr_db": 42.79085127593386,
+     "luma_edge_rmse": 0.007871088117206004,
+     "luma_rmse": 0.0037260710534619042
+    },
+    "RCD-median1": {
+     "chroma_edge_rmse": 0.03456345996973262,
+     "chroma_flat_rmse": 0.012383147104835828,
+     "chroma_rmse": 0.01585916258442476,
+     "cpsnr_db": 41.86189726269148,
+     "luma_edge_rmse": 0.008088546497820544,
+     "luma_rmse": 0.003826592619065715
+    },
+    "fit": {
+     "gain": [
+      0.0002131713142198339,
+      9.77379078340902e-05,
+      0.00014145176090734534
+     ],
+     "offset": [
+      -0.4364938243657667,
+      -0.20018016295814323,
+      -0.2897339502799079
+     ]
+    },
+    "truth_blur_sigma": 0.6,
+    "valid_fraction": 0.9953237917908638
+   },
+   "variants": {
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 81.77462501098795
+    },
+    "RCD": {
+     "detail_chroma_fine_ratio": 1.048783336753396,
+     "detail_luma_fine_ratio": 0.8626324445762491,
+     "flat_chroma_hh_ratio": 1.180363345935464,
+     "flat_chroma_mid_ratio": 0.9681317425906285,
+     "flat_luma_hh_ratio": 0.7942406676890333,
+     "flat_luma_mid_ratio": 0.9888339404170986,
+     "ms_per_megapixel": 23.307682557694545,
+     "ours_ms_per_megapixel": 14.801283349005045,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 14.801283349005045
+     }
+    },
+    "RCD-median1": {
+     "detail_chroma_fine_ratio": 0.5326317794651172,
+     "detail_luma_fine_ratio": 0.8514794586205469,
+     "flat_chroma_hh_ratio": 0.4529206701997631,
+     "flat_chroma_mid_ratio": 0.7672007480925178,
+     "flat_luma_hh_ratio": 0.7427451869462384,
+     "flat_luma_mid_ratio": 1.020202577929926,
+     "ms_per_megapixel": 27.380968236590473,
+     "ours_ms_per_megapixel": 19.531859748382438,
+     "ours_ms_per_megapixel_by_threads": {
+      "8": 19.531859748382438
+     }
+    }
+   },
+   "width": 5202
+  }
+ ]
+}

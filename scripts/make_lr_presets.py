@@ -13,6 +13,8 @@ Usage: python scripts/make_lr_presets.py [--controls highlights shadows ...]
            [--out tests/image/lr-presets]
        python scripts/make_lr_presets.py --controls vibrance saturation
        python scripts/make_lr_presets.py --controls mixer   (24 mixer controls)
+       python scripts/make_lr_presets.py --controls texture clarity dehaze grain
+           (grain at Lightroom's default size 25 and roughness 50)
 """
 import argparse
 import sys
@@ -23,16 +25,21 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 FIELDS = {"exposure": "Exposure2012", "contrast": "Contrast2012", "highlights": "Highlights2012",
           "shadows": "Shadows2012", "whites": "Whites2012", "blacks": "Blacks2012",
-          "vibrance": "Vibrance", "saturation": "Saturation"}
+          "vibrance": "Vibrance", "saturation": "Saturation",
+          "texture": "Texture", "clarity": "Clarity2012", "dehaze": "Dehaze", "grain": "GrainAmount"}
 LABELS = {"exposure": "Exposition", "contrast": "Contraste", "highlights": "HL", "shadows": "Ombres",
-          "whites": "Blancs", "blacks": "Noirs", "vibrance": "Vibrance", "saturation": "Saturation"}
+          "whites": "Blancs", "blacks": "Noirs", "vibrance": "Vibrance", "saturation": "Saturation",
+          "texture": "Texture", "clarity": "Clarte", "dehaze": "Voile", "grain": "Grain"}
 # Same states as iprGenerateTests (src/tools/TestRecipes.cpp), neutral excepted.
 VALUES = {"exposure": (-1.0, -0.5, 0.5, 1.0), "vibrance": (-100, -50, -25, 25, 50, 100),
-          "saturation": (-100, -50, -25, 25, 50, 100)}
+          "saturation": (-100, -50, -25, 25, 50, 100), "texture": (-100, -50, -25, 25, 50, 100),
+          "clarity": (-100, -50, -25, 25, 50, 100), "dehaze": (-100, -50, -25, 25, 50, 100),
+          "grain": (25, 50, 100)}
 DEFAULT_VALUES = (-100, -75, -50, -25, 25, 50, 75, 100)
 # Lightroom preset group and archive per panel.
 PANELS = {"vibrance": ("IPR Couleur", "IPR-Couleur-presets.zip"),
-          "saturation": ("IPR Couleur", "IPR-Couleur-presets.zip")}
+          "saturation": ("IPR Couleur", "IPR-Couleur-presets.zip"),
+          **{c: ("IPR Effets", "IPR-Effets-presets.zip") for c in ("texture", "clarity", "dehaze", "grain")}}
 LUMIERES = ("IPR Lumières complet", "IPR-Lumieres-complet-presets.zip")
 BANDS = ("Red", "Orange", "Yellow", "Green", "Aqua", "Blue", "Purple", "Magenta")
 # Colour mixer: IPR band and component names (TestRecipes), Lightroom field parts, labels.
@@ -71,6 +78,12 @@ BASELINE = {
 }
 
 
+# Companion settings of the grain amount; the analysis ignores them, and the seed
+# Lightroom adds on export, when it pairs a grain state with its neutral
+# (tests/analysis/inputs.py).
+GRAIN_COMPANIONS = {"GrainSize": "25", "GrainFrequency": "50"}
+
+
 def alt(tag, text):
     return f'   <crs:{tag}>\n    <rdf:Alt>\n     <rdf:li xml:lang="x-default">{text}</rdf:li>\n    </rdf:Alt>\n   </crs:{tag}>\n'
 
@@ -81,6 +94,8 @@ def preset(group, control=None, value=None):
         name = "IPR Neutre"
     else:
         settings[FIELDS[control]] = f"{value:+.2f}" if control == "exposure" else f"{value:+d}"
+        if control == "grain":   # Lightroom's defaults, set so that every grain state is explicit
+            settings.update(GRAIN_COMPANIONS)
         name = f"IPR {LABELS[control]} {value:+g}"
     attributes = "".join(f'   crs:{k}="{v}"\n' for k, v in settings.items())
     return name, (
