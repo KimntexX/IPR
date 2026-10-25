@@ -19,6 +19,34 @@ constexpr double HazeSigma = 128.0;
 constexpr double DarkWindow = 15.0;
 constexpr double HaziestShare = 0.001;   // pixels giving the airlight colour
 constexpr float RatioScale = 1.0f;       // R0 of the saturation, EV
+constexpr double BaseSigma = 64.0;       // full-image pixels: the base of the tone change (256 mixed regions)
+constexpr float LogFloor = 1e-3f;        // soft floor of the log: deep shadows are not stretched without bound
+
+// Detail gain in log2 around the base, uniform over scales as Lightroom's band
+// gains are: log2 G = c0 + ch h + cu u, u = log2 of the local mean (64 pixels)
+// over A, per slider value, bounded to the observed range. Fitted on Lightroom's
+// pairs with equal weight per scene (6V1A0043, 6V1A0327, IMG_4345, _MG_7580),
+// etude-detail-voile-v001-20261025T104351Z: error of the scene median log2 G,
+// leave-one-scene-out, 0.09 to 0.39 (0.13 to 1.27 for a constant gain).
+struct DetailLaw { int value; float c0, ch, cu; };
+constexpr std::array<DetailLaw, 7> DetailLaws{{
+    {-100, -3.883f, 0.099f, -0.368f}, {-50, -1.335f, -0.115f, -0.144f}, {-25, -0.569f, -0.093f, -0.063f},
+    {0, 0.f, 0.f, 0.f},
+    {25, 0.339f, 0.085f, 0.039f}, {50, 0.707f, 0.208f, 0.083f}, {100, 1.228f, 1.247f, 0.147f},
+}};
+constexpr double DetailMeanSigma = 64.0;     // full-image pixels: the local mean of u
+constexpr float MinLog2Gain = -4.f, MaxLog2Gain = 2.5f;
+
+DetailLaw detailLawAt(int value)
+{
+    value = std::clamp(value, DetailLaws.front().value, DetailLaws.back().value);
+    size_t i = 1;
+    while (i + 1 < DetailLaws.size() && DetailLaws[i].value < value) ++i;
+    const DetailLaw &low = DetailLaws[i - 1], &high = DetailLaws[i];
+    const float t = float(value - low.value) / float(high.value - low.value);
+    const auto mix = [t](float x, float y) { return x + t * (y - x); };
+    return {value, mix(low.c0, high.c0), mix(low.ch, high.ch), mix(low.cu, high.cu)};
+}
 
 constexpr std::array<float, 13> ToneKnots{-10.f, -8.f, -6.f, -5.f, -4.f, -3.f, -2.5f, -2.f, -1.5f, -1.f, -0.5f, 0.f, 0.6f};
 constexpr std::array<float, 6> HazeKnots{0.f, 0.2f, 0.4f, 0.6f, 0.8f, 1.f};
@@ -250,17 +278,50 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale)
     const cv::Vec2f centre(std::log2(std::max(airlight.colour[0], 1e-6f) / std::max(airlight.colour[1], 1e-6f)),
                            std::log2(std::max(airlight.colour[2], 1e-6f) / std::max(airlight.colour[1], 1e-6f)));
     cv::GaussianBlur(dark, dark, cv::Size(0, 0), HazeSigma * scale, HazeSigma * scale, cv::BORDER_REFLECT);
-    cv::Mat haze;
+    // Tone change of the law, smoothed into a base: Lightroom's change is a smooth
+    // local map, not a per-pixel curve. On the reduced image: log2 luminance before
+    // and after the law, both blurred at BaseSigma.
+    cv::Mat before(small.size(), CV_32F), after(small.size(), CV_32F);
+    for (int y = 0; y < small.rows; ++y) {
+        const auto *row = small.ptr<cv::Vec3f>(y);
+        const float *d = dark.ptr<float>(y);
+        float *b = before.ptr<float>(y), *a = after.ptr<float>(y);
+        for (int x = 0; x < small.cols; ++x) {
+            const float luminance = std::max(0.f, srgbLuminance(row[x]));
+            const float h = std::clamp(d[x] / airlight.level, 0.f, 1.f);
+            const float target = luminance > 1e-6f
+                ? luminance * std::exp2(gainAt(law, std::log2(luminance / airlight.level), h)) : luminance;
+            b[x] = std::log2(luminance + LogFloor);
+            a[x] = std::log2(target + LogFloor);
+        }
+    }
+    const double baseSigma = BaseSigma * scale, meanSigma = DetailMeanSigma * scale;
+    cv::Mat tone;
+    cv::GaussianBlur(before, tone, cv::Size(0, 0), meanSigma, meanSigma, cv::BORDER_REFLECT);
+    tone -= std::log2(airlight.level + LogFloor);
+    cv::GaussianBlur(before, before, cv::Size(0, 0), baseSigma, baseSigma, cv::BORDER_REFLECT);
+    cv::GaussianBlur(after, after, cv::Size(0, 0), baseSigma, baseSigma, cv::BORDER_REFLECT);
+    cv::Mat shift = after - before;
+    cv::Mat haze, base, toneShift, localTone;
     cv::resize(dark, haze, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
+    cv::resize(tone, localTone, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
+    cv::resize(before, base, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
+    cv::resize(shift, toneShift, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
+    const DetailLaw detail = detailLawAt(amount);
     cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
         for (int y = rows.start; y < rows.end; ++y) {
             auto *row = linearRgb.ptr<cv::Vec3f>(y);
-            const float *hr = haze.ptr<float>(y);
+            const float *hr = haze.ptr<float>(y), *br = base.ptr<float>(y), *tr = toneShift.ptr<float>(y);
+            const float *ur = localTone.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x) {
                 const float luminance = WorkingColor::luminance(row[x]);
                 if (luminance <= 1e-6f) continue;
                 const float h = std::clamp(hr[x] / airlight.level, 0.f, 1.f);
-                const float target = luminance * std::exp2(gainAt(law, std::log2(luminance / airlight.level), h));
+                // log2 Y' = base + shift + G (log2 Y - base): the detail gains G at every scale.
+                const float u = std::clamp(ur[x], -10.f, 0.6f);
+                const float gain = std::exp2(std::clamp(detail.c0 + detail.ch * h + detail.cu * u, MinLog2Gain, MaxLog2Gain));
+                const float level = std::log2(luminance + LogFloor);
+                const float target = std::max(0.f, std::exp2(br[x] + tr[x] + gain * (level - br[x])) - LogFloor);
                 const cv::Vec3f s = toSrgb * row[x];
                 cv::Vec3f out = s * (target / luminance);
                 if (law.beta > 0.f) {

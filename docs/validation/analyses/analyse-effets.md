@@ -369,6 +369,54 @@ n'est pas reproduite (6V1A0327 à +100 : R/G +0,86 à +0,97 chez Lightroom, envi
 0 chez IPR) ; pas d'export Lightroom de 6V1A9539 au voile pour juger son rendu ;
 quatre scènes.
 
+<a id="effets-20261025-voile-detail"></a>
+
+### 10 ter. Reprise du voile : contraste local — 25 octobre 2026
+
+**Retour de l'utilisateur** (6V1A9539, côte à côte avec Lightroom) : la couleur est
+meilleure, mais à +100 l'image paraît lissée au lieu d'être exacerbée, et à −100
+le voile n'est pas assez poussé (Lightroom noie l'image et adoucit même les
+contours).
+
+**Cause** : la loi appliquait un gain à chaque pixel selon son propre ton, ce qui
+revient à une courbe de tons modulée par le voile ; elle changeait surtout les
+échelles moyennes. Lightroom change le contraste de toutes les échelles presque
+également : ses gains par bande sont presque constants de 1 à 256 pixels
+([etude-reponse-effets-v004](../raw/etude-reponse-effets-v004-20261025T095336Z.json) :
+bande fine 1,92 contre 1,21 pour IPR sur _MG_7580 à +100, 0,12 contre 0,47 à −100).
+
+**Pistes écartées** (prototypes hors dépôt) : affine local linéaire avec tables
+du ton et de la pente sur la moyenne locale (gains par bande faux d'une scène à
+l'autre) ; affine pivotant autour de l'air ambiant (le pivot mesuré n'est pas A :
+proche de 0 dans les ombres, de −0,3 A à +1,3 A dans les tons moyens) ; gain du
+détail fonction du changement de ton local (corrélations faibles).
+
+**Loi du détail** ([etude-detail-voile-v001](../raw/etude-detail-voile-v001-20261025T104351Z.json),
+`tests/study_dehaze_detail.py`) : le gain local G du détail de log2 Y est presque
+constant par scène et par valeur, et suit d'abord le voile local h et le ton local
+u : log2 G = c0 + ch h + cu u. En validation croisée, l'erreur sur la médiane par
+scène de log2 G tombe de 1,27 (gain constant) à 1,09 à −100, et de 0,68 à 0,39 à
++100. À −100, les zones claires sont voilées plus fort (G ≈ 0,07 près de l'air
+ambiant) ; à +100, les zones claires et voilées gagnent plus de ×3.
+
+**État livré** (`src/core/Dehaze`) : le changement de ton de la loi v007 est lissé
+en un fond à 64 pixels ; autour, log2 Y gagne G à toutes les échelles, puis la loi
+de couleur du §10 bis s'applique. Un fond à 256 pixels mêlait des régions
+différentes (zone voilée et moitié claire du test synthétique) et éclaircissait
+toute une région amplifiée ; une limite d'amplitude empêchait de voiler assez.
+
+Rendu IPR en mémoire contre Lightroom
+([etude-reponse-effets-v005](../raw/etude-reponse-effets-v005-20261025T103019Z.json)),
+erreur médiane |log2| des gains par bande : −100 0,57 → 0,42, −50 0,15 → 0,13,
+−25 0,06 → 0,05, +25 0,06 → 0,05, +50 0,12 → 0,14, +100 0,23 → 0,29 ; part du
+changement de luminance inexpliquée : 0,06 à 0,08 en négatif, 0,17 à 0,24 en
+positif (avant 0,14). Sur 6V1A9539 (sans export Lightroom), bande fine 0,17 à −100
+et 1,81 à +100, ombres −1,2 IL à +100 : le sens de la comparaison de l'utilisateur.
+
+**Réserves** : à +100 le détail dépasse Lightroom sur la scène nocturne
+(6V1A0043 : 1,53 contre 1,15) et reste en deçà sur la mer voilée (IMG_4345 : 2,4
+contre 3,6) ; quatre scènes ; validation visuelle de l'utilisateur à refaire.
+
 <a id="effets-20261024-grain"></a>
 
 ## Grain — 24 octobre 2026
