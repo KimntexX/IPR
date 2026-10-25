@@ -9,6 +9,7 @@
 #include "ToneCurve.h"
 #include "DecodedImageCache.h"
 #include "ImageCacheController.h"
+#include "RenderStageCache.h"
 #include "RawDecoder.h"
 
 #include <QAbstractListModel>
@@ -293,14 +294,18 @@ private:
     DecodedImageCache::Entry retainedCurrentEntry() const;
     RawDecoder::Options developmentOptions() const;
     // pixelScale: pixels of source per pixel of the full image (below 1 for the
-    // preview proxy), so effects keep their full-image radii.
+    // preview proxy), so effects keep their full-image radii. With a cache (the
+    // preview), the render resumes from the stages it kept; same pixels as without.
     static ColorPipeline::WorkingImage renderWorkingImage(
         const ColorPipeline::WorkingImage &source, const Settings &settings,
-        double pixelScale = 1.0);
+        double pixelScale = 1.0, RenderStageCache *cache = nullptr);
+    static bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
+                            int referenceTemperature, cv::Mat &adjusted);
     static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
                                       const Settings &settings,
                                       bool includeOriginal,
-                                      double pixelScale = 1.0);
+                                      double pixelScale = 1.0,
+                                      RenderStageCache *cache = nullptr);
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
@@ -359,6 +364,8 @@ private:
     QHash<QString, UserImageMetadata> m_userImageMetadata;
     QSet<QString> m_selectedImageKeys;
     ImageCacheController m_decodedImageCache;
+    // Preview only; cleared with the image it belongs to.
+    RenderStageCache m_renderStageCache;
     QString m_currentCacheKey;
     Settings m_settings;
     Settings m_copiedAdjustments;
