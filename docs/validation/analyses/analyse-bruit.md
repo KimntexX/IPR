@@ -4067,6 +4067,45 @@ Prochaines actions, dans l'ordre :
    validation visuelle de l'utilisateur. Les planches v012 sont dans
    `build-patch_noise/voisinages-v012` (dérivés sRGB 8 bits non suivis).
 
+<a id="passation-20261025"></a>
+
+## Passation à Codex — 25 octobre 2026
+
+Claude a repris l'analyse le 24 octobre au soir, à la demande de l'utilisateur,
+puis la rend à Codex. Rien n'est publié ; commits locaux sur `patch_noise` :
+
+| Commit | Contenu |
+| --- | --- |
+| b56a4ce | Travail de Codex du 24 octobre, commité tel quel pour l'historique |
+| 161c2b7 | Points 1 et 2 : profil P, enveloppe commune par plan, vérification sur les paires réservées (§54 à 56) |
+| 46f6db8 | Point 3 : rejeu d'E avec P à force inchangée, campagne v012 ; contrôle Q (§57 et 58) |
+
+**Où en est l'analyse.** P est juste sur les paires R6 Mark III réservées (1 %
+en médiane, moins de 3 % au pire hors ISO 100) et corrige Cg à ISO 51200 et les
+ombres d'ISO 1600. Sur les photographies, il dépasse E jusqu'à 1,7 fois sur
+6V1A9273 et 6V1A9426 : contamination probable par des textures faibles que
+l'enveloppe accepte. Ses abstentions laissent du bruit (6V1A0513, Lune 9997).
+Aucune intégration en production.
+
+**Outils ajoutés.**
+
+- Probe `--profile-pairs SORTIE A B [...]` : toutes les tuiles 32 × 32 d'une
+  paire, sigmas HH et G1 − G4 de A et de D, signature spectrale de A.
+- `tests/study_noise_profile.py --data-version N --parent SPECTRAL.json` :
+  profils E, S, P et Q contre la vérité des paires ; tests
+  `tests/test_study_noise_profile.py`.
+- Probe et `tests/study_noise_neighbourhoods.py --estimate-study` : variante
+  E-P-l1-c1-f2 (profil P calculé dans le probe, `pooledProfileFrom`).
+- Lancer depuis la racine du worktree : les chemins de la campagne parente sont
+  relatifs à elle. Arguments de v012 : `--base` et `--scene` de v011.
+
+**Prochaine étape proposée.** Mesurer la contamination : dans les tuiles A des
+paires réservées, ajouter des textures faibles connues (1 σ, motifs du §52) à
+une part croissante des tuiles (par exemple 0, 10, 25, 50 %) et suivre l'erreur
+de P face à la vérité D, qui ne change pas. Selon le résultat, durcir la
+sélection (seuil, cohérence entre plans, rapport HH/bande moyenne) ou borner P
+par une estimation tirée d'E. Puis le point 4, protection des petites formes.
+
 ## Conclusion du 25 octobre 2026, après le profil P — historique
 
 **L'estimation du bruit d'E est fiabilisée sur les paires R6 Mark III** : le profil
