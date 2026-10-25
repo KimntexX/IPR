@@ -40,6 +40,7 @@ constexpr std::array<DetailLaw, 7> DetailLaws{{
 }};
 constexpr double DetailMeanSigma = 64.0;     // full-image pixels: the local mean of u
 constexpr float MinLog2Gain = -4.f, MaxLog2Gain = 2.5f;
+constexpr float HighlightRange = 0.5f;   // EV below the airlight where highlights are kept
 
 DetailLaw detailLawAt(int value)
 {
@@ -326,7 +327,14 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale)
                 const float u = std::clamp(ur[x], -10.f, 0.6f);
                 const float gain = std::exp2(std::clamp(detail.c0 + detail.ch * h + detail.cu * u, MinLog2Gain, MaxLog2Gain));
                 const float level = std::log2(luminance + LogFloor);
-                const float target = std::max(0.f, std::exp2(br[x] + tr[x] + gain * (level - br[x])) - LogFloor);
+                // Removing haze, Lightroom keeps its highlights: a pixel brighter than its base
+                // gains less as it nears the airlight (from 0.5 EV below it), else the brightest
+                // tones rose 0.5 EV (6V1A9539) and turned white (IMG_7953).
+                const float deviation = level - br[x];
+                const float own = std::log2(luminance / airlight.level);
+                const float detailGain = amount > 0 && deviation > 0.f
+                    ? 1.f + (gain - 1.f) * std::clamp(-own / HighlightRange, 0.f, 1.f) : gain;
+                const float target = std::max(0.f, std::exp2(br[x] + tr[x] + detailGain * deviation) - LogFloor);
                 const cv::Vec3f s = toSrgb * row[x];
                 cv::Vec3f out = s * (target / luminance);
                 if (law.beta > 0.f) {

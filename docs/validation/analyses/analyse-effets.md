@@ -469,6 +469,49 @@ détail est juste. Sur l'ensemble, l'erreur des gains par bande à −100 remont
 (0,36 → 0,48) avec l'air ambiant de luminance. Validation visuelle de
 l'utilisateur à refaire.
 
+<a id="effets-20261025-voile-hautes-lumieres"></a>
+
+### 10 quinquies. Hautes lumières à +100 — 25 octobre 2026
+
+**Retour de l'utilisateur** (6V1A9539, IMG_7953) : comportement en miroir ; à −100
+le voile n'est pas assez fort, à +100 l'image tend vers les blancs au lieu du
+jaune/orange de Lightroom.
+
+**Mesure par tranche de tons** (rendu IPR contre Lightroom, quantiles 0–50, 50–80,
+80–95, 95–99 et 99–100 % du neutre) : à +100, le gain du détail poussait vers le
+haut les pixels plus clairs que leur fond, jusqu'à +0,50 IL sur le 1 % le plus clair
+de 6V1A9539 (Lightroom +0,09) ; IMG_7953 brûlait vers le blanc. La couleur de l'air
+ambiant n'est pas en cause : un air ambiant gris explique moins bien le changement
+de couleur de Lightroom sur onze scènes (0,47 contre 0,34 à −100).
+
+**Correction** : en retirant le voile, un pixel plus clair que son fond ne gagne plus
+de contraste vers le haut quand il approche l'air ambiant (atténuation sur les
+0,5 IL sous A, totale au-dessus). Sur le ton local plutôt que sur le pixel, la
+protection bloquait aussi le contraste des zones voilées (test synthétique).
+Émulation sur onze scènes : erreur de ton du 1 % le plus clair à +100 de 0,27 à
+0,04 IL ; un ton appliqué pixel par pixel n'apportait rien de plus.
+
+Rendu livré ([etude-reponse-effets-v008](../raw/etude-reponse-effets-v008-20261025T141829Z.json)) :
+
+| Tranche de tons | 0–50 % | 50–80 % | 80–95 % | 95–99 % | 99–100 % |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 6V1A9539 +100, Lightroom | −1,26 | −0,64 | −0,15 | −0,00 | +0,09 |
+| 6V1A9539 +100, IPR | −0,97 | −0,26 | −0,08 | −0,06 | −0,16 |
+| IMG_7953 +100, Lightroom | −0,21 | −0,05 | −0,04 | −0,02 | +0,00 |
+| IMG_7953 +100, IPR | −1,00 | −0,09 | −0,18 | −0,07 | −0,05 |
+| 6V1A9539 −100, Lightroom | +2,18 | +0,86 | +0,27 | +0,03 | −0,22 |
+| 6V1A9539 −100, IPR | +1,96 | +0,63 | +0,20 | −0,01 | −0,34 |
+
+Onze scènes : luminance inexpliquée 0,05 à 0,09 en négatif, 0,22 à 0,27 en positif ;
+erreur des gains par bande 0,48 à −100, 0,20 à +100.
+
+**Réserve, composante propre à chaque scène** : Lightroom dose son changement de ton
+selon la scène. Il assombrit fortement les tons moyens de 6V1A9539 à +100 (−0,64 IL)
+mais à peine les ombres d'IMG_7953 (−0,21 IL), et relève davantage les ombres à
+−100 (+2,2 et +4,5 IL contre +2,0 et +3,5). Une loi commune aux scènes ne peut pas
+faire les deux ; comme pour la clarté (§6), cette adaptation n'est pas modélisée.
+Les hautes lumières sont maintenant un peu sombres à +100 (−0,16 contre +0,09 IL).
+
 <a id="effets-20261024-grain"></a>
 
 ## Grain — 24 octobre 2026
