@@ -10,11 +10,12 @@
 // Saturation scales the Oklab chroma uniformly.
 // No clipping here: the shared output handles gamut.
 namespace Vibrance {
-// Linear Rec.2020 image (CV_32FC3), in place; slider values in [-100, 100].
-void apply(cv::Mat &linearRgb, int saturation, int vibrance);
+// One Oklab colour, in place, given the linear ProPhoto saturation of its pixel;
+// amounts in [-1, 1], clamped. Zero amounts and greys are left unchanged. The image
+// loop is PerceptualColour's, shared with the mixer and the grading.
+void adjust(cv::Vec3d &lab, double proPhotoSaturation, double vibrance, double saturation);
 
-// One linear sRGB D65 pixel; amounts in [-1, 1], clamped. Zero amounts and
-// greys are returned unchanged.
+// One linear Rec.2020 pixel: adjust() with its conversions.
 cv::Vec3f applyPixel(const cv::Vec3f &linearRgb, double vibrance, double saturation);
 }
 

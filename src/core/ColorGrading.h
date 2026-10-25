@@ -14,9 +14,14 @@
 // Study: docs/validation/analyses/analyse-grading.md.
 namespace ColorGrading {
 
-// Linear Rec.2020 RGB image (CV_32FC3), in place; per zone (shadows, midtones,
-// highlights) hue in degrees and saturation in [0, 100].
-void apply(cv::Mat &linearRgb, const std::array<int, 3> &hue, const std::array<int, 3> &saturation);
+// Change of each zone at full weight, from its hue in degrees and saturation in
+// [0, 100] (shadows, midtones, highlights); computed once per render.
+struct Zones { std::array<cv::Vec3f, 3> change{}; std::array<bool, 3> active{}; };
+Zones prepare(const std::array<int, 3> &hue, const std::array<int, 3> &saturation);
+
+// One Oklab colour, in place: each active zone adds its change weighted by the
+// colour's lightness. The image loop is PerceptualColour's.
+void adjust(cv::Vec3d &lab, const Zones &zones);
 
 // Encoded sRGB colour showing what a zone does at a hue and saturation, for the UI
 // wheel and track: a light grey pushed along the zone's measured Oklab change (its

@@ -1,4 +1,5 @@
 #include "ColorGrading.h"
+#include "PerceptualColour.h"
 #include "WorkingColorSpace.h"
 
 #include <cmath>
@@ -41,10 +42,10 @@ double chroma(const cv::Vec3d &d) { return std::hypot(d[1], d[2]); }
 cv::Mat graded(const cv::Mat &ramp, int zone, int hue, int saturation)
 {
     cv::Mat out = ramp.clone();
-    std::array<int, 3> h{}, s{};
-    h[size_t(zone)] = hue;
-    s[size_t(zone)] = saturation;
-    ColorGrading::apply(out, h, s);
+    PerceptualColour::Parameters p;
+    p.gradingHue[size_t(zone)] = hue;
+    p.gradingSaturation[size_t(zone)] = saturation;
+    PerceptualColour::apply(out, p);
     return out;
 }
 
@@ -55,7 +56,9 @@ int main()
     const cv::Mat ramp = greyRamp();
 
     cv::Mat same = ramp.clone();
-    ColorGrading::apply(same, {200, 30, 120}, {0, 0, 0});
+    PerceptualColour::Parameters hueOnly;
+    hueOnly.gradingHue = {200, 30, 120};
+    PerceptualColour::apply(same, hueOnly);
     if (!check(cv::norm(same, ramp, cv::NORM_INF) == 0, "zero saturation leaves the image unchanged at any hue")) return 1;
 
     // Each zone acts where Lightroom's does: peak index on the ramp (lightness 0.02 + 0.02 i).
@@ -114,7 +117,10 @@ int main()
                "the UI colour is grey at 0, grows with saturation and shows the effect's hue")) return 1;
 
     cv::Mat empty;
-    ColorGrading::apply(empty, {30, 30, 30}, {50, 50, 50});
+    PerceptualColour::Parameters strongAll;
+    strongAll.gradingHue = {30, 30, 30};
+    strongAll.gradingSaturation = {50, 50, 50};
+    PerceptualColour::apply(empty, strongAll);
     if (!check(empty.empty(), "an empty image is left alone")) return 1;
     return 0;
 }

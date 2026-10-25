@@ -1,3 +1,4 @@
+#include "PerceptualColour.h"
 #include "Vibrance.h"
 #include "WorkingColorSpace.h"
 
@@ -87,13 +88,13 @@ int main()
         image.at<cv::Vec3f>(0, 0) = {.3f, .3f, .3f};
         image.at<cv::Vec3f>(0, 1) = weak;
         const cv::Mat original = image.clone();
-        Vibrance::apply(image, 0, 50);
+        PerceptualColour::apply(image, {0, 50, {}, {}, {}});
         check(image.at<cv::Vec3f>(0, 0) == original.at<cv::Vec3f>(0, 0), "Rec.2020 grey unchanged");
         check(cv::norm(image.at<cv::Vec3f>(0, 1) - original.at<cv::Vec3f>(0, 1)) > 1e-3, "Rec.2020 colour changed");
         cv::Mat empty;
-        Vibrance::apply(empty, 50, 50);
+        PerceptualColour::apply(empty, {50, 50, {}, {}, {}});
         cv::Mat wrong(1, 1, CV_32FC4, cv::Scalar(.1, .2, .3, 1));
-        Vibrance::apply(wrong, 50, 50);
+        PerceptualColour::apply(wrong, {50, 50, {}, {}, {}});
         check(wrong.at<cv::Vec4f>(0, 0) == cv::Vec4f(.1f, .2f, .3f, 1.f), "Unsupported type untouched");
     } catch (const std::exception &error) {
         std::cerr << error.what() << '\n';

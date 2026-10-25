@@ -18,8 +18,16 @@ struct Parameters {
     std::array<int, BandCount> luminance{};
 };
 
-// Input/output: linear Rec.2020 D65 RGB, slider values in [-100, 100]
-// (clamped). Zero settings and greys are returned unchanged; no clipping.
+// True when a slider is not at zero.
+bool active(const Parameters &parameters);
+
+// One Oklab colour, in place, given the linear ProPhoto saturation of its pixel;
+// slider values in [-100, 100] (clamped). Greys are left unchanged; no clipping.
+// The image loop is PerceptualColour's.
+void adjust(cv::Vec3d &lab, double proPhotoSaturation, const Parameters &parameters);
+
+// Input/output: linear Rec.2020 D65 RGB: adjust() with its conversions. Zero
+// settings and greys are returned unchanged.
 cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters);
 
 // Encoded sRGB colour (channels in [0, 1]) that one slider (component 0 hue,

@@ -68,6 +68,8 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorAdjustments.cpp
     src/core/ColorGrading.h
     src/core/ColorGrading.cpp
+    src/core/PerceptualColour.h
+    src/core/PerceptualColour.cpp
     src/core/Contrast.h
     src/core/Contrast.cpp
     src/core/Histogram.h

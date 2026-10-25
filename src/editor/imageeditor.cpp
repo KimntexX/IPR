@@ -6,13 +6,13 @@
 #include "LocalContrast.h"
 #include "ColorAdjustments.h"
 #include "ColorGrading.h"
+#include "PerceptualColour.h"
 #include "Contrast.h"
 #include "Histogram.h"
 #include "ImageExporter.h"
 #include "Sidecar.h"
 #include "ToneCurve.h"
 #include "ToneRecovery.h"
-#include "Vibrance.h"
 #include "RawDecoder.h"
 #include "RawNormalization.h"
 #include "CameraProfileEngine.h"
@@ -1466,9 +1466,9 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         ToneRecovery::apply(adjusted, tones, source.toneStatistics ? *source.toneStatistics
                                                                    : ToneRecovery::measure(source.linearRgba));
 
-    Vibrance::apply(adjusted, settings.saturation, settings.vibrance);
-    ColorAdjustments::applyMixer(adjusted, {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance});
-    ColorGrading::apply(adjusted, settings.gradingHue, settings.gradingSaturation);
+    PerceptualColour::apply(adjusted, {settings.saturation, settings.vibrance,
+                                       {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
+                                       settings.gradingHue, settings.gradingSaturation});
 
     // Denoise before local-detail enhancement and sharpening. The operation
     // runs in linear RGB and keeps luminance and chrominance independent so

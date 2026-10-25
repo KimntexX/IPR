@@ -125,24 +125,22 @@ const std::array<double, BandCount> &peakHues()
 }
 }
 
-cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
+bool active(const Parameters &parameters)
 {
-    const auto active = [](const std::array<int, BandCount> &values) {
+    const auto any = [](const std::array<int, BandCount> &values) {
         return std::any_of(values.cbegin(), values.cend(), [](int v) { return v != 0; });
     };
-    if (!active(parameters.hue) && !active(parameters.saturation) && !active(parameters.luminance))
-        return rgb;
-    if (rgb[0] == rgb[1] && rgb[1] == rgb[2])
-        return rgb; // exact grey identity, without matrix round trip
-    // The tables are measured in Oklab and ProPhoto saturation, both reached from the
-    // Rec.2020 master in one matrix, unclipped.
-    cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(rgb));
+    return any(parameters.hue) || any(parameters.saturation) || any(parameters.luminance);
+}
+
+void adjust(cv::Vec3d &lab, double proPhotoSaturation, const Parameters &parameters)
+{
     const double chroma = std::hypot(lab[1], lab[2]);
-    if (chroma < 1e-12) return rgb;
+    if (chroma < 1e-12) return;
     double hue = std::atan2(lab[2], lab[1]) * DegreesPerRadian;
     if (hue < 0.0) hue += 360.0;
     Position position;
-    bracket(Model::Saturation, Model::SaturationCount, WorkingColor::proPhotoSaturation(cv::Vec3d(rgb)), position.s, position.ts);
+    bracket(Model::Saturation, Model::SaturationCount, proPhotoSaturation, position.s, position.ts);
     bracket(Model::Lightness, Model::LightnessCount, lab[0], position.l, position.tl);
 
     Effect total;
@@ -166,6 +164,15 @@ cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
     const double a = lab[1] * gain, b = lab[2] * gain;
     lab[1] = a * std::cos(rotation) - b * std::sin(rotation);
     lab[2] = a * std::sin(rotation) + b * std::cos(rotation);
+}
+
+cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
+{
+    if (!active(parameters) || (rgb[0] == rgb[1] && rgb[1] == rgb[2]))
+        return rgb; // zero settings / exact grey identity, without matrix round trip
+    cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(rgb));
+    if (std::hypot(lab[1], lab[2]) < 1e-12) return rgb;
+    adjust(lab, WorkingColor::proPhotoSaturation(cv::Vec3d(rgb)), parameters);
     return cv::Vec3f(WorkingColor::oklabToWorking(lab));
 }
 

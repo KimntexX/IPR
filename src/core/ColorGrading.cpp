@@ -1,8 +1,6 @@
 #include "ColorGrading.h"
 #include "WorkingColorSpace.h"
 
-#include <opencv2/core.hpp>
-
 #include <algorithm>
 #include <cmath>
 
@@ -63,26 +61,22 @@ cv::Vec3f changeOf(size_t zone, int hue, int saturation)
 
 } // namespace
 
-void apply(cv::Mat &linearRgb, const std::array<int, 3> &hue, const std::array<int, 3> &saturation)
+Zones prepare(const std::array<int, 3> &hue, const std::array<int, 3> &saturation)
 {
-    if (linearRgb.empty() || linearRgb.type() != CV_32FC3
-        || std::all_of(saturation.cbegin(), saturation.cend(), [](int s) { return s == 0; }))
-        return;
-    std::array<cv::Vec3f, 3> change{};
+    Zones zones;
     for (size_t zone = 0; zone < 3; ++zone)
-        if (saturation[zone] != 0) change[zone] = changeOf(zone, hue[zone], saturation[zone]);
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
-            auto *row = linearRgb.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < linearRgb.cols; ++x) {
-                cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(row[x]));
-                const float lightness = float(lab[0]);
-                for (size_t zone = 0; zone < 3; ++zone)
-                    if (saturation[zone] != 0) lab += cv::Vec3d(change[zone]) * double(curveAt(zone, lightness));
-                row[x] = cv::Vec3f(WorkingColor::oklabToWorking(lab));
-            }
+        if (saturation[zone] != 0) {
+            zones.change[zone] = changeOf(zone, hue[zone], saturation[zone]);
+            zones.active[zone] = true;
         }
-    });
+    return zones;
+}
+
+void adjust(cv::Vec3d &lab, const Zones &zones)
+{
+    const float lightness = float(lab[0]);
+    for (size_t zone = 0; zone < 3; ++zone)
+        if (zones.active[zone]) lab += cv::Vec3d(zones.change[zone]) * double(curveAt(zone, lightness));
 }
 
 cv::Vec3f displayColour(int zone, int hue, int saturation)
