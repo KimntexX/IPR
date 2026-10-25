@@ -129,6 +129,40 @@ inline cv::Vec3d fromOklab(const cv::Vec3d &p)
             -.0041960863 * l * l * l - .7034186147 * m * m * m + 1.7076147010 * s * s * s};
 }
 
+// Oklab from and to the linear Rec.2020 working space in one matrix: Ottosson's
+// linear sRGB -> LMS matrix composed with toSrgb(), computed once. His published
+// XYZ -> LMS matrix maps white 1e-4 off (1, 1, 1), so greys would gain a tint; the
+// sRGB one, refitted on white, keeps them neutral. Same Oklab as toOklab() at every
+// colour, out-of-gamut ones included.
+inline const cv::Matx33d &toLms()
+{
+    static const cv::Matx33d matrix = cv::Matx33d(
+        .4122214708, .5363325363, .0514459929,
+        .2119034982, .6806995451, .1073969566,
+        .0883024619, .2817188376, .6299787005) * toSrgb();
+    return matrix;
+}
+inline const cv::Matx33d &fromLms()
+{
+    static const cv::Matx33d matrix = toLms().inv();
+    return matrix;
+}
+inline cv::Vec3d workingToOklab(const cv::Vec3d &rgb)
+{
+    const cv::Vec3d lms = toLms() * rgb;
+    const double l = std::cbrt(lms[0]), m = std::cbrt(lms[1]), s = std::cbrt(lms[2]);
+    return {.2104542553 * l + .7936177850 * m - .0040720468 * s,
+            1.9779984951 * l - 2.4285922050 * m + .4505937099 * s,
+            .0259040371 * l + .7827717662 * m - .8086757660 * s};
+}
+inline cv::Vec3d oklabToWorking(const cv::Vec3d &p)
+{
+    const double l = p[0] + .3963377774 * p[1] + .2158037573 * p[2];
+    const double m = p[0] - .1055613458 * p[1] - .0638541728 * p[2];
+    const double s = p[0] - .0894841775 * p[1] - 1.2914855480 * p[2];
+    return fromLms() * cv::Vec3d(l * l * l, m * m * m, s * s * s);
+}
+
 // In-place, preserves straight alpha bit-for-bit, including extended RGB.
 inline void transform(cv::Mat &image, const cv::Matx33d &matrix)
 {

@@ -40,3 +40,19 @@ roues/champs de saisie, restauration et aperçu/export. L'[analyseur natif/JSON]
 `tests/analyse_grading.py` mesure zones tonales et teinte/chroma ; circularité
 359°/0°, supports LR et tolérances restent à contrôler.
 Rapport unique Grading à créer ; socle pour mémoire et nettoyage.
+
+## 2. Campagne du 25 octobre 2026 — réponse de Lightroom
+
+Version 2. Corpus large d'office : toutes les RAW de la racine de `base` (28 scènes,
+trois boîtiers). Préréglages `IPR Grading` (`scripts/make_lr_presets.py --controls
+grading`) : par zone, teinte tous les 30° à saturation 50, puis saturation 10, 25, 50,
+75 et 100 à 30° et 210° (20 états par zone) ; fusion 50, balance 0, luminances à 0.
+Exports TIFF 16 bits réduits à 2048 pixels de grand côté dans `grading/shadows`,
+`grading/midtones`, `grading/highlights`, avec le neutre de même géométrie dans
+`grading/neutre` (le grading agit pixel par pixel).
+
+- `tests/study_grading_response.py --data-version N` : modèle w(L) c(état) en Oklab par
+  zone, validation croisée par scène, pic des zones contre la clé de chaque image.
+- `tests/study_grading_ipr.py --data-version N [--scene ...]` : rendu IPR en mémoire
+  (`iprRenderServer`, grading quelconque) contre Lightroom, même géométrie, part de
+  l'effet de Lightroom inexpliquée.

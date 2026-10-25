@@ -66,6 +66,8 @@ set(IPR_ENGINE_SOURCES
     src/core/LocalContrast.cpp
     src/core/ColorAdjustments.h
     src/core/ColorAdjustments.cpp
+    src/core/ColorGrading.h
+    src/core/ColorGrading.cpp
     src/core/Contrast.h
     src/core/Contrast.cpp
     src/core/Histogram.h
@@ -299,6 +301,7 @@ if(BUILD_TESTING)
     ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
     ipr_add_test(dehazeTests tests/dehaze_test.cpp)
     ipr_add_test(grainTests tests/grain_test.cpp)
+    ipr_add_test(colorGradingTests tests/color_grading_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
     set_tests_properties(toneRecoveryTests PROPERTIES LABELS "unit;pipeline;lighting")

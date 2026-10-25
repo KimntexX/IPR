@@ -150,12 +150,15 @@ class RenderServer:
     def states(self, base, group):
         return self._request({"op": "list", "base": str(base), "group": group})["states"]
 
-    def render(self, source, feature, value, mixer=None):
+    def render(self, source, feature, value, mixer=None, grading=None):
         """Pixels (height, width, 3) uint16 and metadata shaped like native.inspect().
-        mixer: optional {"hue": [8], "saturation": [8], "luminance": [8]} on top of the state."""
+        mixer: optional {"hue": [8], "saturation": [8], "luminance": [8]} on top of the state.
+        grading: optional {"hue": [3], "saturation": [3]} (shadows, midtones, highlights)."""
         request = {"op": "render", "source": str(source), "feature": feature, "value": value}
         if mixer is not None:
             request["mixer"] = mixer
+        if grading is not None:
+            request["grading"] = grading
         header = self._request(request)
         width, height = header["width"], header["height"]
         if header["channels"] != 3 or header["dtype"] != "<u2" or header["bytes"] != width * height * 6:

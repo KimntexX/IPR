@@ -5,18 +5,13 @@
 
 #include <opencv2/core.hpp>
 
-#include <array>
-
 // Colour adjustments on a linear Rec.2020 RGB image (CV_32FC3), in place.
 namespace ColorAdjustments {
 // Replaces each pixel by its luminance.
 void toGrayscale(cv::Mat &linearRgb);
 
-// Colour mixer (eight hue bands), then colour grading of shadows, midtones
-// and highlights weighted by the luminance before mixing.
-void applyMixerAndGrading(cv::Mat &linearRgb, const ColorMixer::Parameters &mixer,
-                          const std::array<int, 3> &gradingHue,
-                          const std::array<int, 3> &gradingSaturation);
+// Colour mixer (eight hue bands).
+void applyMixer(cv::Mat &linearRgb, const ColorMixer::Parameters &mixer);
 }
 
 #endif // IPR_CORE_COLORADJUSTMENTS_H

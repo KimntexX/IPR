@@ -26,6 +26,8 @@
 //   {"op":"render","source":FILE,"feature":F,"value":V}  -> header + pixels
 //     optional "mixer":{"hue":[8],"saturation":[8],"luminance":[8]} sets the
 //     colour mixer sliders on top of the state (combined-slider checks)
+//     optional "grading":{"hue":[3],"saturation":[3]} sets the colour grading of
+//     shadows, midtones and highlights on top of the state (any hue/saturation pair)
 //   {"op":"quit"}
 // An error answers {"ok":false,"error":...} and the server keeps serving.
 // Diagnostics go to stderr; stdout carries only the protocol.
@@ -111,6 +113,20 @@ void render(Masters &masters, const QJsonObject &request)
         set("hue", settings.mixerHue);
         set("saturation", settings.mixerSaturation);
         set("luminance", settings.mixerLuminance);
+    }
+    if (request.contains("grading")) {
+        const QJsonObject grading = request.value("grading").toObject();
+        const auto set = [&](const char *key, auto &target, int low, int high) {
+            const QJsonArray values = grading.value(key).toArray();
+            require(values.size() == int(target.size()), QString("grading.%1 needs 3 values").arg(key));
+            for (int i = 0; i < values.size(); ++i) {
+                const int v = values.at(i).toInt();
+                require(v >= low && v <= high, QString("grading.%1 out of range").arg(key));
+                target.at(size_t(i)) = v;
+            }
+        };
+        set("hue", settings.gradingHue, 0, 359);
+        set("saturation", settings.gradingSaturation, 0, 100);
     }
     QString error;
     const QImage image = ImageEditor::renderSrgb16(master.image, settings, &error);
