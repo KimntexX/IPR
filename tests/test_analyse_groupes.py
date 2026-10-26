@@ -68,7 +68,7 @@ def fixture_record(root, feature="saturation", value=50):
     write_tiff(changed, pixels + np.array([500, 0, -500]))
     settings = {key: 0 for key in audit.ZERO_IPR}
     settings.update(temperature=5200, mixerHue=[0] * 8, mixerSaturation=[0] * 8,
-                    mixerLuminance=[0] * 8, grading=[{"hue": 0, "saturation": 0} for _ in range(3)],
+                    mixerLuminance=[0] * 8, grading=[{"hue": 0, "saturation": 0, "luminance": 0} for _ in range(4)],
                     toneCurves=[[], [], [], []], sharpeningRadius=1, sharpeningMasking=0)
     variant = copy.deepcopy(settings)
     variant[feature] = value
