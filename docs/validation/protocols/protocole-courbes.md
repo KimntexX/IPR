@@ -37,3 +37,21 @@ via `tests/analyse_courbes.py` : classes fixes de Y et points déclarés.
 Points arbitraires, rampes/continuité et HDR restent complémentaires.
 Rapport unique Courbes à créer avec la campagne.
 La réussite d'un export ne remplace pas ces critères.
+
+## 2. Campagne Lightroom — 26 octobre 2026
+
+Corpus large d'office : les 28 RAW de la racine de `base`, comme le grading.
+Préréglages `IPR Courbes` (`scripts/make_lr_presets.py --controls curves`, 36 états),
+courbes par points de Lightroom en coordonnées 0–255, une seule courbe modifiée par
+état, toutes les courbes écrites :
+
+- courbe RVB composite : point milieu (128) à −64, −32, −16, +16, +32, +64 ; points
+  des quarts (64 et 192) à ±32 ; extrémités déplacées (noir relevé à 32, blanc
+  abaissé à 223, coupe des noirs à 32, coupe des blancs à 223) ; S doux, S fort,
+  S inverse ; une courbe à quatre points intérieurs ;
+- courbes rouge, vert et bleu : point milieu à −64, −32, +32, +64 ; quart bas relevé
+  (64 → 96), quart haut abaissé (192 → 160).
+
+Exports TIFF 16 bits réduits à 2048 pixels de grand côté dans `courbes`, neutre de la
+même géométrie repris de `grading/neutre`. La courbe paramétrique de Lightroom (Hautes
+lumières, Clairs, Sombres, Ombres) n'existe pas dans IPR et n'est pas exportée.
