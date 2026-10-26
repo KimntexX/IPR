@@ -12,8 +12,8 @@ ColumnLayout {
     property int zone: 0
     property int hue: 0
     readonly property var zoneNames: [qsTr("Ombres"), qsTr("Tons moyens"),
-                                      qsTr("Hautes lumières")]
-    readonly property var zoneShortNames: [qsTr("Ombres"), qsTr("Moyens"), qsTr("Hautes")]
+                                      qsTr("Hautes lumières"), qsTr("Global")]
+    readonly property var zoneShortNames: [qsTr("Ombres"), qsTr("Moyens"), qsTr("Hautes"), qsTr("Global")]
     // Hue scale at full intensity, from the engine (the zone's measured effect).
     property var hueTrack: []
     // Bumped on every grading change, so the zone swatches follow the engine.
@@ -45,6 +45,7 @@ ColumnLayout {
         root.hue = Math.round(editor.colorGradingValue(zone, 0))
         hueControl.value = root.hue
         intensityControl.value = editor.colorGradingValue(zone, 1)
+        luminanceControl.value = editor.colorGradingValue(zone, 2)
         root.revision++
         wheelMarks.requestPaint()
     }
@@ -67,6 +68,7 @@ ColumnLayout {
         root.hue = 0
         hueControl.value = 0
         intensityControl.value = 0
+        luminanceControl.value = 0
         root.commit()
     }
 
@@ -358,7 +360,24 @@ ColumnLayout {
         onValueEdited: root.commit()
     }
 
-    // Shared by the three zones, as in Lightroom.
+    // Lightens or darkens the zone, with the chroma Lightroom gives it.
+    AdjustmentControl {
+        id: luminanceControl
+        trackColors: ["#15181d", "#8b8e94", "#f2f4f7"]
+        trackThickness: 6
+        Layout.fillWidth: true
+        label: qsTr("Luminance")
+        valueText: Math.round(value)
+        minimumValue: -100
+        maximumValue: 100
+        adjustmentEnabled: root.editor.hasImage
+        onValueEdited: {
+            root.editor.setColorGradingLuminance(root.zone, Math.round(value))
+            root.revision++
+        }
+    }
+
+    // Shared by the three zones, as in Lightroom; the global wheel ignores them.
     AdjustmentControl {
         id: blendingControl
         Layout.fillWidth: true

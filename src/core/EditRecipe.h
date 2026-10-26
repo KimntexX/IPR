@@ -38,8 +38,10 @@ struct Settings
     std::array<int, ColorMixer::BandCount> mixerHue{};
     std::array<int, ColorMixer::BandCount> mixerSaturation{};
     std::array<int, ColorMixer::BandCount> mixerLuminance{};
-    std::array<int, 3> gradingHue{};
-    std::array<int, 3> gradingSaturation{};
+    // Shadows, midtones, highlights and the global wheel (global and luminances: sidecar v8).
+    std::array<int, 4> gradingHue{};
+    std::array<int, 4> gradingSaturation{};
+    std::array<int, 4> gradingLuminance{};
     int gradingBlending = 50;   // Lightroom's defaults (sidecar v7)
     int gradingBalance = 0;
     bool automaticWhiteBalance = false;

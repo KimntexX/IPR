@@ -243,6 +243,7 @@ public:
     Q_INVOKABLE void setColorMixer(int band, int hue, int saturation,
                                    int luminance);
     Q_INVOKABLE void setColorGrading(int zone, int hue, int saturation);
+    Q_INVOKABLE void setColorGradingLuminance(int zone, int luminance);
     Q_INVOKABLE void setColorGradingBlending(int blending);
     Q_INVOKABLE void setColorGradingBalance(int balance);
     Q_INVOKABLE void setAutomaticWhiteBalance(bool enabled);

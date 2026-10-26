@@ -9,9 +9,11 @@ chroma and lightness of the change at the zone's peak. Pixels with a channel abo
 0.98 in a neutral or a state are left out. Writes one immutable, versioned JSON.
 
 With --fusion, the states are those of grading/fusion (blending, balance and
-zone combinations), each rendered with its exact grading.
+zone combinations); with --luminance, those of grading/luminance (each zone's and
+the global wheel's luminance, the global wheel's colour, luminance with a colour);
+each rendered with its exact grading.
 
-Usage: python tests/study_grading_ipr.py --data-version N [--scene STEM ...] [--fusion]
+Usage: python tests/study_grading_ipr.py --data-version N [--scene STEM ...] [--fusion | --luminance]
 """
 import argparse
 import collections
@@ -29,6 +31,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tests"))
 from analysis.native import embedded_metadata  # noqa: E402
 from analysis.render import RenderServer, find_server  # noqa: E402
+from study_grading_luminance import ZONES as LUMINANCE_ZONES  # noqa: E402
 from study_grading_response import ZONES, oklab  # noqa: E402
 from study_lr_neutral_noise import linear, read_tiff  # noqa: E402
 from study_sources import git, sources  # noqa: E402
@@ -51,9 +54,13 @@ def main(argv=None):
     parser.add_argument("--output-dir", type=Path, default=ROOT / "docs/validation/raw")
     parser.add_argument("--server", type=Path)
     parser.add_argument("--fusion", action="store_true", help="the blending and balance states of grading/fusion")
+    parser.add_argument("--luminance", action="store_true", help="the luminance and global states of grading/luminance")
     args = parser.parse_args(argv)
+    if args.fusion and args.luminance:
+        raise SystemExit("--fusion or --luminance, not both")
+    mode = "-fusion" if args.fusion else "-luminance" if args.luminance else ""
     stamp = datetime.now(timezone.utc)
-    campaign = (f"etude-grading-ipr{'-fusion' if args.fusion else ''}-v{args.data_version:03d}-"
+    campaign = (f"etude-grading-ipr{mode}-v{args.data_version:03d}-"
                 f"{stamp.strftime('%Y%m%dT%H%M%SZ')}")
     output = args.output_dir / f"{campaign}.json"
     if output.exists():
@@ -72,6 +79,27 @@ def main(argv=None):
     fields = [(zone, h, sat) for zone, (h, sat) in ZONES.items()]
 
     def states_of(scene):
+        if args.luminance:
+            seen = set()
+            for path in sorted((root / "luminance").glob(scene + "*.tif")):
+                if path.stem.split("-")[0] != scene:
+                    continue
+                _, xmp = embedded_metadata(path)
+                grading = {"hue": [int(xmp.get(h, 0)) for _, _, h, _ in LUMINANCE_ZONES],
+                           "saturation": [int(xmp.get(s, 0)) for _, _, _, s in LUMINANCE_ZONES],
+                           "luminance": [int(xmp.get(lum, 0)) for _, lum, _, _ in LUMINANCE_ZONES]}
+                key = json.dumps(grading, sort_keys=True)
+                if key in seen:
+                    continue
+                seen.add(key)
+                z = next(i for i in range(4) if grading["saturation"][i] or grading["luminance"][i])
+                parts = [LUMINANCE_ZONES[z][0]]
+                if grading["luminance"][z]:
+                    parts.append(f"L{grading['luminance'][z]:+d}")
+                if grading["saturation"][z]:
+                    parts.append(f"T{grading['hue'][z]:03d}/S{grading['saturation'][z]:03d}")
+                yield " ".join(parts), grading, path
+            return
         if not args.fusion:
             for zone_index, zone in enumerate(ZONES):
                 for hue, saturation in STATES:
@@ -117,14 +145,18 @@ def main(argv=None):
     groups = collections.defaultdict(list)
     for r in rows:
         zone, _, rest = r["state"].partition(" ")
-        groups[zone if not args.fusion else zone + (" balance" if "F50 " in r["state"] and not r["state"].endswith("B+0")
-                                                      else " blending")].append(r["unexplained"])
+        if args.luminance:
+            kind = ("luminance+colour" if "L" in rest and "T" in rest else "luminance" if "L" in rest else "colour")
+            groups[f"{zone} {kind}"].append(r["unexplained"])
+        else:
+            groups[zone if not args.fusion else zone + (" balance" if "F50 " in r["state"] and not r["state"].endswith("B+0")
+                                                          else " blending")].append(r["unexplained"])
     for group, values in sorted(groups.items()):
         summary[group] = {"median": float(np.median(values)), "p90": float(np.quantile(values, .9)), "states": len(values)}
     record = {"campaign_id": campaign, "runner": "tests/study_grading_ipr.py",
               "commit": git("rev-parse", "HEAD"), "local_changes": git("status", "--short").splitlines(),
               "render_server": {"path": str(server.executable), "sha256": server.sha256},
-              "scenes": scenes, "states": "grading/fusion" if args.fusion else STATES, "metric": "share of Lightroom's Oklab change left unexplained by IPR's",
+              "scenes": scenes, "states": "grading/fusion" if args.fusion else "grading/luminance" if args.luminance else STATES, "metric": "share of Lightroom's Oklab change left unexplained by IPR's",
               "duration_seconds": round(time.monotonic() - start, 1), "python": platform.python_version(),
               "summary": summary, "rows": rows}
     output.write_text(json.dumps(record, ensure_ascii=False, indent=1), encoding="utf-8")

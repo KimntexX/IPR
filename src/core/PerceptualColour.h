@@ -17,8 +17,9 @@ struct Parameters {
     int saturation = 0;                       // [-100, 100]
     int vibrance = 0;                         // [-100, 100]
     ColorMixer::Parameters mixer;
-    std::array<int, 3> gradingHue{};          // shadows, midtones, highlights, degrees
-    std::array<int, 3> gradingSaturation{};   // [0, 100]
+    std::array<int, 4> gradingHue{};          // shadows, midtones, highlights, global; degrees
+    std::array<int, 4> gradingSaturation{};   // [0, 100]
+    std::array<int, 4> gradingLuminance{};    // [-100, 100]
     int gradingBlending = 50;                 // [0, 100]
     int gradingBalance = 0;                   // [-100, 100]
 };

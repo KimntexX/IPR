@@ -995,8 +995,9 @@ int ImageEditor::colorGradingValue(int zone, int component) const
 {
     if (zone < 0 || zone >= static_cast<int>(m_settings.gradingHue.size()))
         return 0;
-    return component == 0 ? m_settings.gradingHue[static_cast<size_t>(zone)]
-                          : m_settings.gradingSaturation[static_cast<size_t>(zone)];
+    const size_t index = static_cast<size_t>(zone);
+    return component == 0 ? m_settings.gradingHue[index]
+         : component == 1 ? m_settings.gradingSaturation[index] : m_settings.gradingLuminance[index];
 }
 
 double ImageEditor::adjustmentValue(const QString &name) const
@@ -1260,6 +1261,18 @@ void ImageEditor::setColorGrading(int zone, int hue, int saturation)
     scheduleRender();
 }
 
+void ImageEditor::setColorGradingLuminance(int zone, int luminance)
+{
+    if (zone < 0 || zone >= static_cast<int>(m_settings.gradingLuminance.size()))
+        return;
+    luminance = qBound(-100, luminance, 100);
+    int &target = m_settings.gradingLuminance[static_cast<size_t>(zone)];
+    if (target == luminance)
+        return;
+    target = luminance;
+    scheduleRender();
+}
+
 void ImageEditor::setColorGradingBlending(int blending)
 {
     blending = qBound(0, blending, 100);
@@ -1417,6 +1430,7 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
     keys[0] = key;
     stream << qint32(s.saturation) << qint32(s.vibrance) << qint32(s.gradingBlending) << qint32(s.gradingBalance);
     ints(s.mixerHue); ints(s.mixerSaturation); ints(s.mixerLuminance); ints(s.gradingHue); ints(s.gradingSaturation);
+    ints(s.gradingLuminance);
     keys[1] = key;
     stream << qint32(s.denoiseLuminance) << qint32(s.denoiseChrominance);
     keys[2] = key;
@@ -1456,6 +1470,8 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         std::all_of(settings.mixerLuminance.cbegin(), settings.mixerLuminance.cend(),
                     [](int value) { return value == 0; }) &&
         std::all_of(settings.gradingSaturation.cbegin(), settings.gradingSaturation.cend(),
+                    [](int value) { return value == 0; }) &&
+        std::all_of(settings.gradingLuminance.cbegin(), settings.gradingLuminance.cend(),
                     [](int value) { return value == 0; }) && !hasToneCurves)
         return source;
 
@@ -1475,7 +1491,8 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         PerceptualColour::apply(adjusted, {settings.saturation, settings.vibrance,
                                            {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
                                            settings.gradingHue, settings.gradingSaturation,
-                                           settings.gradingBlending, settings.gradingBalance});
+                                           settings.gradingLuminance, settings.gradingBlending,
+                                           settings.gradingBalance});
         reached(1, adjusted);
     }
     // Denoise before local-detail enhancement and sharpening. The operation

@@ -22,7 +22,7 @@ QImage GradingWheelProvider::requestImage(const QString &id, QSize *size, const 
     if (requestedSize.isValid()) diameter = std::min(requestedSize.width(), requestedSize.height());
     QImage wheel(std::clamp(diameter, 1, 1024), std::clamp(diameter, 1, 1024), QImage::Format_ARGB32);
     wheel.fill(Qt::transparent);
-    if (zoneOk && diameterOk && zone >= 0 && zone < 3) {
+    if (zoneOk && diameterOk && zone >= 0 && zone < 4) {
         const double centre = wheel.width() / 2.0;
         const double radius = centre - 0.5;
         constexpr double pi = 3.14159265358979323846;

@@ -8,7 +8,8 @@ couleur et son effet de clarté, et la force est proportionnelle à la saturatio
 le rendu réel, la part de l'effet de Lightroom laissée inexpliquée vaut, en médiane,
 0,075 dans les ombres, 0,071 dans les tons moyens et 0,129 dans les hautes lumières.
 L'ancienne implémentation, jamais calée sur Lightroom, était à 14,7, 0,76 et 0,99.
-Validation visuelle de l'utilisateur à venir ([conclusion](#conclusion-actuelle)).
+Fusion, balance, luminance des zones et roue Global suivent aussi Lightroom (médiane 0,076 et
+0,017). Validation visuelle de l'utilisateur à venir ([conclusion](#conclusion-actuelle)).
 
 Protocole : [protocole Grading](../protocols/protocole-grading.md), section 2. Branche :
 `patch_color`.
@@ -138,12 +139,62 @@ les trois zones ensemble. Deux préréglages appliqués deux fois à la place du
   hautes lumières 0,081 à 0,086 ; point faible : hautes lumières à fusion 0 (0,47), zone
   étroite où l'écart des neutres dans les tons clairs pèse le plus.
 
+<a id="grading-20261026-luminance"></a>
+
+## Luminance et roue Global — 26 octobre 2026
+
+### 8. Exports
+
+Préréglages `IPR Grading luminance` (`scripts/make_lr_presets.py --controls grading-luminance`,
+58 états), 28 scènes, 2048 pixels, neutre de `grading/neutre` : luminance seule de chaque
+zone et de la roue Global à −100, −50, −25, −10, +10, +25, +50, +100 ; luminance ±50 avec
+une couleur (30°, saturation 50) ; roue Global : teinte tous les 30° à saturation 50,
+saturation 25, 75, 100 à 30° et 210°. 1 596 exports lisibles : **Global T090 S050** jamais
+appliqué (aucune scène), **Global L−100** absent de 7 scènes (7Y6A7599, IMG_3135,
+IMG_4002, IMG_4173, IMG_4345, IMG_6248, IMG_6954), remplacé par un second « Global L−50
+T030 S050 », compté une fois.
+
+### 9. Réponse de Lightroom
+
+`tests/study_grading_luminance.py`, [etude-grading-luminance-v001-20261026T135833Z](../raw/etude-grading-luminance-v001-20261026T135833Z.json). Luminance : décalage de
+clarté g(L) et gain de chroma h(L) de la clarté Oklab du neutre, validation croisée par scène.
+
+| Réglage | Comportement | Part inexpliquée (décalage seul) |
+| --- | --- | ---: |
+| Luminance des ombres | positive : relève surtout le noir (+0,17 à L 0 pour +50) et désature ; négative : assombrit vers L 0,30 | 0,001 à 0,016 (0,009 à 0,025) |
+| Luminance des tons moyens | décalage centré sur L 0,60, proportionnel à la valeur | 0,034 (0,039) |
+| Luminance des hautes lumières | vers L 0,85 à 0,95, chroma dans le même sens | 0,008 à 0,016 (0,026 à 0,043) |
+| Luminance Global | décalage centré sur L 0,60–0,65 | 0,005 (0,008) |
+| Couleur de la roue Global | w(L) c comme les zones : faible au noir (0,20 à L 0,1), maximale vers L 0,65, 0,54 à L 0,9 ; force 0,50 / 1 / 1,49 / 1,97 à 25 / 50 / 75 / 100 | 0,023 |
+
+Luminance et couleur ensemble : effets additifs (0,012 à 0,055) ; la couleur pondérée par
+la clarté après décalage fait un peu mieux (0,009 à 0,065, meilleure sur cinq états sur huit).
+
+### 10. État livré
+
+- `ColorGrading` : quatre zones (ombres, tons moyens, hautes lumières, Global). Par zone,
+  tables de g et h aux huit valeurs mesurées, interpolées ; les luminances s'additionnent,
+  puis chaque couleur est pondérée par la clarté décalée. La roue Global a sa courbe propre ;
+  fusion et balance ne s'appliquent qu'aux trois zones. Teinte 90° de la roue Global
+  interpolée entre 60° et 120°.
+- Réglages `gradingHue`, `gradingSaturation` (quatre valeurs) et `gradingLuminance` dans la
+  recette, le fichier annexe (version 8 ; les fichiers antérieurs prennent 0), `ImageEditor`
+  (`setColorGradingLuminance`), le serveur de rendu, le cache des étapes et l'interface
+  (onglet Global, barre Luminance).
+- Rendu IPR contre Lightroom ([etude-grading-ipr-luminance-v001-20261026T141801Z](../raw/etude-grading-ipr-luminance-v001-20261026T141801Z.json), 6 scènes, 342 états) : médiane
+  **0,017** ; luminance seule 0,001 à 0,017 selon la zone, couleur Global 0,018, luminance
+  avec couleur 0,018 à 0,088. Points faibles : IMG_7953 (scène saturée, écart des neutres
+  dans les tons clairs : hautes lumières +100 à 0,72) et tons moyens −50 avec couleur
+  (médiane 0,13).
+- Réserve : fusion et balance combinées à la luminance non exportées ; la luminance n'en
+  dépend pas dans le modèle.
+
 <a id="conclusion-actuelle"></a>
 
 ## Conclusion actuelle et prochaines actions — 25 octobre 2026
 
 - Grading recalé sur Lightroom ; validation visuelle de l'utilisateur à faire.
-- Fusion et balance intégrées (§5 à §7).
+- Fusion et balance intégrées (§5 à §7) ; luminance et roue Global intégrées (§8 à §10).
 - Pistes : écart des neutres dans les hautes lumières, dépendance à la saturation du pixel
   sur les scènes saturées, tempérament de deux zones opposées qui se chevauchent.
 - Limites : fusion et balance combinées mesurées seulement sur ombres + hautes lumières ;

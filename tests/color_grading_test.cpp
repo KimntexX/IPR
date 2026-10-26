@@ -134,6 +134,35 @@ int main()
     if (!check(chroma(shownGrey) < 2e-3 && chroma(half) < chroma(full) && std::abs(shownAngle - effectAngle) < 6,
                "the UI colour is grey at 0, grows with saturation and shows the effect's hue")) return 1;
 
+    // Luminance: shadows +50 lifts the darks, highlights -50 darkens the lights, each
+    // barely touching the other end; it acts with no colour, and its colour follows.
+    const auto luminanceOf = [&](int zone, int value) {
+        PerceptualColour::Parameters p;
+        p.gradingLuminance[size_t(zone)] = value;
+        cv::Mat image = ramp.clone();
+        PerceptualColour::apply(image, p);
+        return changes(ramp, image);
+    };
+    const auto lifted = luminanceOf(0, 50), darkened = luminanceOf(2, -50);
+    if (!check(lifted[3][0] > 0.02 && std::abs(lifted[44][0]) < 0.01 && darkened[44][0] < -0.02 &&
+               std::abs(darkened[3][0]) < 0.01,
+               "shadow luminance lifts the darks, highlight luminance darkens the lights")) return 1;
+
+    // The global wheel colours every tone, most around L 0.65, and ignores blending.
+    const auto globalAt = [&](int blending) {
+        PerceptualColour::Parameters p;
+        p.gradingHue[3] = 30;
+        p.gradingSaturation[3] = 50;
+        p.gradingBlending = blending;
+        cv::Mat image = ramp.clone();
+        PerceptualColour::apply(image, p);
+        return changes(ramp, image);
+    };
+    const auto global = globalAt(50), globalNarrow = globalAt(0);
+    if (!check(chroma(global[10]) > 0.01 && chroma(global[25]) > chroma(global[10]) &&
+               cv::norm(global[25] - globalNarrow[25]) < 1e-9,
+               "the global wheel colours every tone and ignores blending")) return 1;
+
     // The QML wheel: each pixel the colour of its hue and intensity, hue 0 at the top,
     // full intensity at 90 % of the radius, transparent outside the wheel.
     GradingWheelProvider wheels;

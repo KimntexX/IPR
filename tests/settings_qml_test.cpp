@@ -368,6 +368,8 @@ int main(int argc, char **argv)
     editor.setColorGrading(1, 150, 20);
     editor.setColorGradingBlending(80);
     editor.setColorGradingBalance(-30);
+    editor.setColorGrading(3, 60, 15);
+    editor.setColorGradingLuminance(2, -40);
     const QVariantList copiedCurve{QVariantMap{{"x", 0.0}, {"y", 0.0}},
                                   QVariantMap{{"x", .5}, {"y", .6}},
                                   QVariantMap{{"x", 1.0}, {"y", 1.0}}};
@@ -399,6 +401,7 @@ int main(int argc, char **argv)
                std::abs(radius->property("value").toDouble() - 1.7) < .001 &&
                editor.colorMixerValue(2, 2) == -34 && editor.colorGradingValue(1, 0) == 150 &&
                editor.colorGradingBlending() == 80 && editor.colorGradingBalance() == -30 &&
+               editor.colorGradingValue(3, 0) == 60 && editor.colorGradingValue(2, 2) == -40 &&
                editor.toneCurve(ImageEditor::LuminanceCurve) == normalizedCurve &&
                editor.imageRating() == 2 && editor.imageColorLabel() == "blue" && editor.imageFlagged() &&
                editor.selectedCameraProfile() == targetProfile &&
@@ -411,6 +414,7 @@ int main(int argc, char **argv)
     EditRecipe::UserImageMetadata savedMetadata;
     if (!check(Sidecar::read(second, &saved, &savedMetadata) && saved.denoiseLuminance == 43 &&
                saved.gradingBlending == 80 && saved.gradingBalance == -30 &&
+               saved.gradingSaturation[3] == 15 && saved.gradingLuminance[2] == -40 &&
                savedMetadata.rating == 2 && savedMetadata.colorLabel == "blue" &&
                editor.statusMessage().startsWith(QStringLiteral("Réglages enregistrés")),
                "manual save must persist the latest recipe and metadata and report success")) return 1;
