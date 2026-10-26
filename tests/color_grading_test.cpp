@@ -1,4 +1,5 @@
 #include "ColorGrading.h"
+#include "GradingWheelProvider.h"
 #include "PerceptualColour.h"
 #include "WorkingColorSpace.h"
 
@@ -132,6 +133,25 @@ int main()
     const double effectAngle = std::fmod(std::atan2(effect[2], effect[1]) * 180 / 3.14159265358979 + 360, 360);
     if (!check(chroma(shownGrey) < 2e-3 && chroma(half) < chroma(full) && std::abs(shownAngle - effectAngle) < 6,
                "the UI colour is grey at 0, grows with saturation and shows the effect's hue")) return 1;
+
+    // The QML wheel: each pixel the colour of its hue and intensity, hue 0 at the top,
+    // full intensity at 90 % of the radius, transparent outside the wheel.
+    GradingWheelProvider wheels;
+    QSize wheelSize;
+    const QImage wheel = wheels.requestImage(QStringLiteral("2/200"), &wheelSize, QSize());
+    const auto shown = [](int zone, int hue, int saturation) {
+        const cv::Vec3f e = ColorGrading::displayColour(zone, hue, saturation);
+        return qRgb(int(std::lround(e[0] * 255)), int(std::lround(e[1] * 255)), int(std::lround(e[2] * 255)));
+    };
+    const auto near = [](QRgb a, QRgb b) {
+        return std::abs(qRed(a) - qRed(b)) <= 2 && std::abs(qGreen(a) - qGreen(b)) <= 2 && std::abs(qBlue(a) - qBlue(b)) <= 2;
+    };
+    const QRgb top = wheel.pixel(100, 100 - 85), right = wheel.pixel(100 + 85, 100), centre = wheel.pixel(100, 100);
+    if (!check(wheelSize == QSize(200, 200) && qAlpha(wheel.pixel(2, 2)) == 0 && qAlpha(centre) == 255 &&
+               near(centre, shown(2, 0, 0)) && near(top, shown(2, 0, 94)) && near(right, shown(2, 90, 95)),
+               "the wheel image shows each hue and intensity where the pointer sets them")) return 1;
+    if (!check(qAlpha(wheels.requestImage(QStringLiteral("7/50"), nullptr, QSize()).pixel(25, 25)) == 0,
+               "an unknown zone gives an empty wheel")) return 1;
 
     cv::Mat empty;
     PerceptualColour::Parameters strongAll;

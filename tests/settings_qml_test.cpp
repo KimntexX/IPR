@@ -1,6 +1,7 @@
 #include "imageeditor.h"
 #include "controlled_memory.h"
 #include "imageprovider.h"
+#include "GradingWheelProvider.h"
 #include "Sidecar.h"
 
 #include <QEventLoop>
@@ -85,6 +86,7 @@ int main(int argc, char **argv)
     editor.pasteAdjustments();
     if (!check(!editor.hasCopiedAdjustments(), "copy without an image must leave the clipboard empty")) return 1;
     QQmlEngine engine;
+    engine.addImageProvider(QStringLiteral("gradingwheel"), new GradingWheelProvider);
     QQmlComponent component(&engine,
         QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/Setting.qml")));
     QScopedPointer<QObject> root(component.createWithInitialProperties(

@@ -97,6 +97,8 @@ set(IPR_ENGINE_SOURCES
     src/providers/imageprovider.cpp
     src/providers/ThumbnailProvider.h
     src/providers/ThumbnailProvider.cpp
+    src/providers/GradingWheelProvider.h
+    src/providers/GradingWheelProvider.cpp
     src/raw/Demosaic.h
     src/raw/Demosaic.cpp
     src/raw/RawBlackLevelEstimator.h

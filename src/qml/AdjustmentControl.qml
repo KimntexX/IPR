@@ -43,6 +43,8 @@ ColumnLayout {
     }
     // UI hints only: these colours do not describe an output colour transform.
     property var trackColors: []
+    // Track thickness in pixels; coloured scales (grading hue and intensity) are thicker.
+    property real trackThickness: 3
     readonly property bool hasColorTrack: trackColors.length >= 2
     // Only bipolar controls have a neutral centre. Positive-only quantities
     // (quality, noise, radius...) keep their minimum as the visual origin.
@@ -218,7 +220,7 @@ ColumnLayout {
             x: controlSlider.leftPadding + controlSlider.handle.width / 2
             y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
             width: Math.max(0, controlSlider.availableWidth - controlSlider.handle.width)
-            height: 3
+            height: control.trackThickness
             radius: height / 2
             color: controlSlider.palette.mid
 

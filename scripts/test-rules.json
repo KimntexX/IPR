@@ -124,6 +124,7 @@
     {"patterns": ["src/app/UiPreferences.*", "config/**"], "tests": ["uiPreferencesTests", "uiPreferencesQmlTests", "settingsQmlTests"]},
     {"patterns": ["src/core/Dehaze.*", "tests/dehaze_test.cpp"], "tests": ["dehazeTests", "rec2020PipelineTests", "imageExportTests", "editorRawDevelopmentTests"]},
     {"patterns": ["src/core/ColorGrading.*", "tests/color_grading_test.cpp"], "tests": ["colorGradingTests", "rec2020PipelineTests", "imageExportTests", "settingsQmlTests"]},
+    {"patterns": ["src/providers/GradingWheelProvider.*", "src/qml/ColorGradingModule.qml", "src/qml/AdjustmentControl.qml"], "tests": ["colorGradingTests", "settingsQmlTests", "colorMixerQmlTests"]},
     {"patterns": ["src/core/Grain.*", "tests/grain_test.cpp"], "tests": ["grainTests", "rec2020PipelineTests", "imageExportTests", "editorRawDevelopmentTests"]},
     {"patterns": ["src/core/LocalContrast.*", "tests/local_contrast_test.cpp"], "tests": ["localContrastTests", "rec2020PipelineTests", "imageExportTests", "editorRawDevelopmentTests"]},
     {"patterns": ["src/raw/Demosaic.*", "tests/demosaic_test.cpp"], "tests": ["demosaicTests", "rawDecoderTests", "editorRawDevelopmentTests", "imageExportTests", "imageImportTests"]},
