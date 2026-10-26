@@ -56,3 +56,18 @@ Exports TIFF 16 bits réduits à 2048 pixels de grand côté dans `grading/shado
 - `tests/study_grading_ipr.py --data-version N [--scene ...]` : rendu IPR en mémoire
   (`iprRenderServer`, grading quelconque) contre Lightroom, même géométrie, part de
   l'effet de Lightroom inexpliquée.
+
+## 3. Fusion et balance, puis luminance et roue Global
+
+Mêmes corpus (28 scènes), format d'export et neutre (`grading/neutre`) que la section 2.
+
+- **Fusion et balance** (25 octobre 2026) : préréglages `IPR Grading fusion`
+  (`--controls grading-blend`, 38 états), exports dans `grading/fusion` ;
+  `tests/study_grading_blend.py` (courbes de zone par valeur, additivité) et
+  `tests/study_grading_ipr.py --fusion`.
+- **Luminance et roue Global** (26 octobre 2026) : préréglages `IPR Grading luminance`
+  (`--controls grading-luminance`, 58 états), exports dans `grading/luminance`.
+  Luminance seule de chaque zone et de la roue Global à −100, −50, −25, −10, +10, +25,
+  +50 et +100 ; luminance −50 / +50 avec une couleur (30°, saturation 50) pour leur
+  interaction ; roue Global : teinte tous les 30° à saturation 50, saturation 25, 75 et
+  100 à 30° et 210°. Fusion 50, balance 0.

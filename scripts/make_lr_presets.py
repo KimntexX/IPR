@@ -16,6 +16,7 @@ Usage: python scripts/make_lr_presets.py [--controls highlights shadows ...]
        python scripts/make_lr_presets.py --controls texture clarity dehaze grain
        python scripts/make_lr_presets.py --controls grading   (61 colour grading states)
        python scripts/make_lr_presets.py --controls grading-blend   (38 blending and balance states)
+       python scripts/make_lr_presets.py --controls grading-luminance   (58 luminance and global states)
            (grain at Lightroom's default size 25 and roughness 50)
 """
 import argparse
@@ -82,6 +83,23 @@ GRADING_BLEND_STATES = (
     + [(f"Ombres-HL B{v:+04d}", {"shadows": (210, 50), "highlights": (30, 50)}, 50, v) for v in (-50, 50)]
     + [("Trois-zones F050", {"shadows": (210, 50), "midtones": (120, 50), "highlights": (30, 50)}, 50, 0)])
 GRADING_BLEND = ("IPR Grading fusion", "IPR-Grading-fusion-presets.zip")
+# Luminance of each zone and of the global wheel, alone at intermediate values, then at
+# -50 / +50 with a colour (30 degrees, saturation 50) for their interaction; the global
+# wheel's colour: a hue turn at saturation 50, saturation 25 to 100 at 30 and 210 degrees.
+# Each state: (label, {Lightroom field: value}).
+LUMINANCE_FIELDS = (("Ombres", "ColorGradeShadowLum", "SplitToningShadowHue", "SplitToningShadowSaturation"),
+                    ("Tons-moyens", "ColorGradeMidtoneLum", "ColorGradeMidtoneHue", "ColorGradeMidtoneSat"),
+                    ("Hautes-lumieres", "ColorGradeHighlightLum", "SplitToningHighlightHue",
+                     "SplitToningHighlightSaturation"),
+                    ("Global", "ColorGradeGlobalLum", "ColorGradeGlobalHue", "ColorGradeGlobalSat"))
+GRADING_LUMINANCE_STATES = (
+    [(f"{label} L{v:+04d}", {lum: v}) for label, lum, _, _ in LUMINANCE_FIELDS
+     for v in (-100, -50, -25, -10, 10, 25, 50, 100)]
+    + [(f"{label} L{v:+04d} T030 S050", {lum: v, hue: 30, sat: 50}) for label, lum, hue, sat in LUMINANCE_FIELDS
+       for v in (-50, 50)]
+    + [(f"Global T{h:03d} S{s:03d}", {"ColorGradeGlobalHue": h, "ColorGradeGlobalSat": s})
+       for h, s in [(h, 50) for h in range(0, 360, 30)] + [(h, s) for h in (30, 210) for s in (25, 75, 100)]])
+GRADING_LUMINANCE = ("IPR Grading luminance", "IPR-Grading-luminance-presets.zip")
 # Settings of the current Lightroom neutral references (6V1A0037, 11 October 2026).
 BASELINE = {
     "WhiteBalance": "As Shot", "CameraProfile": "Camera Neutral", "ConvertToGrayscale": "False",
@@ -113,9 +131,13 @@ def alt(tag, text):
     return f'   <crs:{tag}>\n    <rdf:Alt>\n     <rdf:li xml:lang="x-default">{text}</rdf:li>\n    </rdf:Alt>\n   </crs:{tag}>\n'
 
 
-def preset(group, control=None, value=None, grading=None, blend=None):
+def preset(group, control=None, value=None, grading=None, blend=None, fields=None):
     settings = dict(BASELINE)
-    if blend is not None:
+    if fields is not None:
+        label, values = fields
+        settings.update({field: f"{v:+d}" if field.endswith("Lum") else str(v) for field, v in values.items()})
+        name = f"IPR Grading {label}"
+    elif blend is not None:
         label, zones, blending, balance = blend
         fields = {zone: (hue_field, saturation_field) for zone, hue_field, saturation_field, _ in GRADING_ZONES}
         for zone, (hue, saturation) in zones.items():
@@ -155,15 +177,17 @@ def preset(group, control=None, value=None, grading=None, blend=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--controls", nargs="+", default=["highlights"], choices=sorted(LABELS) + ["mixer", "grading", "grading-blend"])
+    parser.add_argument("--controls", nargs="+", default=["highlights"], choices=sorted(LABELS) + ["mixer", "grading", "grading-blend", "grading-luminance"])
     parser.add_argument("--out", type=Path, default=ROOT / "tests/image/lr-presets")
     args = parser.parse_args()
     grading = "grading" in args.controls
     blend = "grading-blend" in args.controls
-    if (grading or blend) and len(args.controls) > 1:
-        sys.exit("Le grading a son propre panneau : --controls grading ou grading-blend seul")
+    luminance = "grading-luminance" in args.controls
+    if (grading or blend or luminance) and len(args.controls) > 1:
+        sys.exit("Le grading a son propre panneau : --controls grading, grading-blend ou grading-luminance seul")
     args.controls = [c for control in args.controls for c in (MIXER if control == "mixer" else [control])]
-    panels = {GRADING} if grading else {GRADING_BLEND} if blend else {PANELS.get(c, LUMIERES) for c in args.controls}
+    panels = ({GRADING} if grading else {GRADING_BLEND} if blend else {GRADING_LUMINANCE} if luminance
+              else {PANELS.get(c, LUMIERES) for c in args.controls})
     if len(panels) > 1:
         sys.exit("Un seul panneau par archive : " + ", ".join(sorted(g for g, _ in panels)))
     group, archive_name = panels.pop()
@@ -171,7 +195,9 @@ def main():
     if archive.exists() or folder.exists():
         sys.exit(f"Existe déjà, rien n'est écrasé : {archive if archive.exists() else folder}")
     folder.mkdir(parents=True)
-    if blend:   # the neutral is the grading campaign's (grading/neutre)
+    if luminance:   # the neutral is the grading campaign's (grading/neutre)
+        presets = [preset(group, fields=state) for state in GRADING_LUMINANCE_STATES]
+    elif blend:   # the neutral is the grading campaign's (grading/neutre)
         presets = [preset(group, blend=state) for state in GRADING_BLEND_STATES]
     elif grading:
         presets = [preset(group)] + [preset(group, grading=(zone, hue, saturation))
