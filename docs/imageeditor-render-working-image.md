@@ -45,21 +45,20 @@ chaque module ignore ses réglages neutres.
 
 | Étape | Traitement | Module ou fonction |
 | --- | --- | --- |
-| 1 | Séparation alpha, tampon RGB | cadenceur (`cv::split`, `cv::merge`) |
+| 1 | Tampon RGB (l'alpha est repris à la fin) | cadenceur (`cv::cvtColor`) |
 | 2 | Exposition et balance des RAW avec DCP | `CameraProfileEngine::renderFromCameraSignal` |
 | 3 | Niveaux de gris | `ColorAdjustments::toGrayscale` |
 | 4 | Exposition des sources sans signal caméra | cadenceur (gain `2^EV`) |
 | 5 | Contraste | `Contrast::apply` |
 | 6 | Température et nuance sans DCP | `ColorPipeline::applyTemperatureTint` |
 | 7 | Ombres, noirs, hautes lumières, blancs | `ToneRecovery::apply` |
-| 8 | Saturation, vibrance | `Vibrance::apply` |
-| 9 | Mélangeur, étalonnage | `ColorAdjustments::applyMixerAndGrading` |
+| 8–9 | Saturation et vibrance, mélangeur, color grading (une seule étape en Oklab) | `PerceptualColour::apply` (`Vibrance`, `ColorMixer`, `ColorGrading`) |
 | 10 | Bruit | `DetailProcessing::reduceNoise` |
-| 11 | Texture, clarté, voile | `DetailProcessing::applyTexture`, `applyClarity`, `dehaze` |
+| 11 | Texture et clarté, puis voile | `LocalContrast::apply`, `Dehaze::apply` |
 | 12 | Courbes | `ToneCurve::apply` |
 | 13 | Flou | cadenceur (`cv::GaussianBlur`) |
 | 14 | Netteté | `DetailProcessing::sharpen` |
-| 15 | Grain | `DetailProcessing::addGrain` |
+| 15 | Grain | `Grain::apply` |
 | 16 | Reconstruction RGBA | cadenceur |
 
 L'aperçu calcule ensuite son histogramme avec `Histogram::compute`.
@@ -145,11 +144,20 @@ et [rapport Lumières](validation/analyses/analyse-validation-lumieres-base-2026
 
 ### Vibrance et saturation
 
-Après les réglages tonals, `Vibrance::apply` (`src/core/Vibrance.cpp`) passe le
-master Rec.2020 linéaire en RGB linéaire sRGB D65 (matrices `WorkingColor`, sans
-écrêtage), agit en Oklab puis revient en Rec.2020. Les gris, le zéro des deux
-curseurs et les entrées vides ou d'un autre type restent inchangés. Les deux
-réglages sont bornés à `[-100, +100]`.
+Après les réglages tonals, `PerceptualColour::apply` (`src/core/PerceptualColour.cpp`)
+passe chaque pixel du master Rec.2020 linéaire en Oklab une seule fois
+(`WorkingColor::workingToOklab`, une matrice directe, neutre sur les gris), y
+applique dans l'ordre saturation et vibrance (`Vibrance::adjust`), le mélangeur
+(`ColorMixer::adjust`) et le color grading (`ColorGrading::adjust`), puis revient en
+Rec.2020, sans écrêtage. Vibrance et mélangeur laissent les gris exacts inchangés ;
+le zéro de tous les curseurs et les entrées vides ou d'un autre type ne touchent pas
+le tampon. Saturation et vibrance sont bornées à `[-100, +100]`.
+
+- **Mélangeur** : tables de réponse Lightroom par bande, composante et valeur
+  ([rapport mélangeur](validation/analyses/analyse-color-mixer.md)).
+- **Color grading** : ombres, tons moyens, hautes lumières et roue Global, avec
+  fusion, balance et luminance, calés sur Lightroom
+  ([rapport grading](validation/analyses/analyse-grading.md)).
 
 - **Saturation** multiplie la chroma Oklab par `1 + s/100` et conserve L.
   Mesurée sur 49 scènes, elle suit LR à moins de 0,05 de variation de chroma.
@@ -186,33 +194,27 @@ Les [équations et constantes](architecture/denoising-sharpening.md) et
 le [correctif/tests](validation/analyses/correctif-bruit-2026-10-05.md)
 précisent les limites ; les anciens exports bruit ne valident pas cette version.
 
-Les effets sont appliqués en RGB linéaire après vibrance/saturation :
+Les effets sont appliqués en RGB linéaire après la couleur perceptuelle, calés sur
+la réponse de Lightroom mesurée par échelle et par amplitude
+([rapport Effets](validation/analyses/analyse-effets.md)). Leurs rayons sont définis
+sur l'image entière : l'aperçu les réduit par `pixelScale`.
 
-- **Texture** utilise une séparation locale à petit rayon (`sigma = 1,2`) et
-  augmente ou diminue les micro-variations de luminance, sans modifier
-  directement les rapports RGB.
-- **Clarté** emploie la même famille de contraste local à un rayon plus large
-  (`sigma = 8`), avec un masque qui protège les ombres profondes et les hautes
-  lumières afin de limiter les halos.
-- **Correction du voile** combine deux modèles physiques classiques de
-  dévoilement atmosphérique :
-  1. le **Dark Channel Prior** (He, Sun & Tang, 2009) estime la carte de voile
-     locale à partir du minimum RGB érodé sur un voisinage, puis la lumière
-     atmosphérique `A` à partir du 99ᵉ percentile des pixels les plus
-     lumineux échantillonnés dans l'image ;
-  2. la **loi de diffusion atmosphérique de Koschmieder** (`I = J·t + A·(1-t)`)
-     est inversée (`J = (I - A) / t + A`) pour restituer la radiance « sans
-     voile » `J` à partir de l'image observée `I`, d'une transmission `t`
-     bornée et de `A`.
-  Une valeur positive restaure le contraste perdu dans le voile ; une valeur
-  négative en ajoute en réduisant artificiellement `t`. Ce modèle global est
-  volontairement borné : il ne remplace pas un algorithme de profondeur ou une
-  sélection locale, et l'estimation de `A`/`t` reste une approximation globale
-  par image plutôt qu'une carte de profondeur réelle.
-- **Grain** est une perturbation monochrome déterministe, ajoutée après le flou
-  pour rester nette. Son amplitude est plus marquée dans les ombres et les
-  coordonnées de l'image servent de graine : l'aperçu et l'export ne
-  scintillent pas entre deux rendus.
+- **Texture et clarté** (`LocalContrast`) : la luminance est découpée en bandes de
+  différences de gaussiennes de 1 à 256 pixels, en racine cubique pour la texture et
+  en logarithme pour la clarté ; dans chaque bande, les petites variations reçoivent
+  le gain de Lightroom à la valeur du curseur, les grandes (les bords) beaucoup
+  moins, ce qui évite les halos. Les couleurs gardent leurs rapports de canaux.
+- **Correction du voile** (`Dehaze`) : la luminance gagne un nombre d'IL fonction de
+  son rapport à l'air ambiant `A` (99ᵉ centile de la luminance) et du voile local
+  (canal sombre lissé), lissé en une base locale ; autour de la base, le détail reçoit
+  un gain à toutes les échelles ; la couleur suit la loi mesurée sur Lightroom
+  (ajouter du voile ajoute de la lumière de la couleur de l'air ambiant, en retirer
+  ôte sa dominante). Les pixels plus clairs que leur fond près de `A` ne gagnent pas
+  de contraste vers le haut.
+- **Grain** (`Grain`) : bruit monochrome déterministe, fin, de même écart-type à tous
+  les tons, ajouté aux valeurs encodées pour l'affichage, comme celui de Lightroom
+  (taille 25, rugosité 50) ; ajouté après le flou pour rester net, il ne scintille
+  pas entre deux rendus.
 
 Texture, clarté et correction du voile acceptent `[-100, +100]`. Le grain est
 intentionnellement limité à `[0, 100]`.
