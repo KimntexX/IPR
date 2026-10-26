@@ -98,11 +98,17 @@ inline const cv::Matx33d &srgbToProPhoto()
     return matrix;
 }
 
-// Relative saturation (max - min) / max of a linear sRGB colour in linear
-// ProPhoto RGB, clamped to [0, 1]; 0 when the maximum is not positive.
-inline double proPhotoSaturation(const cv::Vec3d &linearSrgb)
+// Relative saturation (max - min) / max of a working-space colour in linear
+// ProPhoto RGB, clamped to [0, 1]; 0 when the maximum is not positive. One matrix
+// from Rec.2020 (sRGB -> ProPhoto composed with Rec.2020 -> sRGB, computed once).
+inline const cv::Matx33d &toProPhoto()
 {
-    const cv::Vec3d p = srgbToProPhoto() * linearSrgb;
+    static const cv::Matx33d matrix = srgbToProPhoto() * toSrgb();
+    return matrix;
+}
+inline double proPhotoSaturation(const cv::Vec3d &rgb)
+{
+    const cv::Vec3d p = toProPhoto() * rgb;
     const double peak = std::max({p[0], p[1], p[2]});
     const double low = std::min({p[0], p[1], p[2]});
     return peak > 1e-6 ? std::clamp((peak - low) / peak, 0.0, 1.0) : 0.0;
@@ -127,6 +133,61 @@ inline cv::Vec3d fromOklab(const cv::Vec3d &p)
     return {4.0767416621 * l * l * l - 3.3077115913 * m * m * m + .2309699292 * s * s * s,
             -1.2684380046 * l * l * l + 2.6097574011 * m * m * m - .3413193965 * s * s * s,
             -.0041960863 * l * l * l - .7034186147 * m * m * m + 1.7076147010 * s * s * s};
+}
+
+// Oklab from and to the linear Rec.2020 working space in one matrix: Ottosson's
+// linear sRGB -> LMS matrix composed with toSrgb(), computed once. His published
+// XYZ -> LMS matrix maps white 1e-4 off (1, 1, 1), so greys would gain a tint; the
+// sRGB one, refitted on white, keeps them neutral. Same Oklab as toOklab() at every
+// colour, out-of-gamut ones included.
+inline const cv::Matx33d &toLms()
+{
+    static const cv::Matx33d matrix = cv::Matx33d(
+        .4122214708, .5363325363, .0514459929,
+        .2119034982, .6806995451, .1073969566,
+        .0883024619, .2817188376, .6299787005) * toSrgb();
+    return matrix;
+}
+inline const cv::Matx33d &fromLms()
+{
+    static const cv::Matx33d matrix = toLms().inv();
+    return matrix;
+}
+inline cv::Vec3d workingToOklab(const cv::Vec3d &rgb)
+{
+    const cv::Vec3d lms = toLms() * rgb;
+    const double l = std::cbrt(lms[0]), m = std::cbrt(lms[1]), s = std::cbrt(lms[2]);
+    return {.2104542553 * l + .7936177850 * m - .0040720468 * s,
+            1.9779984951 * l - 2.4285922050 * m + .4505937099 * s,
+            .0259040371 * l + .7827717662 * m - .8086757660 * s};
+}
+inline cv::Vec3d oklabToWorking(const cv::Vec3d &p)
+{
+    const double l = p[0] + .3963377774 * p[1] + .2158037573 * p[2];
+    const double m = p[0] - .1055613458 * p[1] - .0638541728 * p[2];
+    const double s = p[0] - .0894841775 * p[1] - 1.2914855480 * p[2];
+    return fromLms() * cv::Vec3d(l * l * l, m * m * m, s * s * s);
+}
+
+// Encoded sRGB in [0, 1] of an Oklab colour for display, its chroma reduced until it
+// fits the sRGB gamut (lightness kept).
+inline cv::Vec3f encodedInGamut(const cv::Vec3d &lab)
+{
+    const double lightness = std::clamp(lab[0], 0.0, 1.0);
+    cv::Vec3d srgb(lightness, lightness, lightness);
+    for (int step = 100; step >= 0; --step) {
+        const double scale = step / 100.0;
+        const cv::Vec3d candidate = fromOklab({lightness, lab[1] * scale, lab[2] * scale});
+        if (std::min({candidate[0], candidate[1], candidate[2]}) >= -1e-6 &&
+            std::max({candidate[0], candidate[1], candidate[2]}) <= 1.0 + 1e-6) {
+            srgb = candidate;
+            break;
+        }
+    }
+    cv::Vec3f encoded;
+    for (int c = 0; c < 3; ++c)
+        encoded[c] = float(std::clamp(srgbEncode(std::clamp(srgb[c], 0.0, 1.0)), 0.0, 1.0));
+    return encoded;
 }
 
 // In-place, preserves straight alpha bit-for-bit, including extended RGB.

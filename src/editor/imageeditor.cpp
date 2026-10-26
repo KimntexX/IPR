@@ -5,13 +5,14 @@
 #include "DetailProcessing.h"
 #include "LocalContrast.h"
 #include "ColorAdjustments.h"
+#include "ColorGrading.h"
+#include "PerceptualColour.h"
 #include "Contrast.h"
 #include "Histogram.h"
 #include "ImageExporter.h"
 #include "Sidecar.h"
 #include "ToneCurve.h"
 #include "ToneRecovery.h"
-#include "Vibrance.h"
 #include "RawDecoder.h"
 #include "RawNormalization.h"
 #include "CameraProfileEngine.h"
@@ -971,6 +972,12 @@ QColor ImageEditor::colorMixerTrackColor(int band, int component, int value) con
     return QColor::fromRgbF(colour[0], colour[1], colour[2]);
 }
 
+QColor ImageEditor::colorGradingDisplayColor(int zone, int hue, int saturation) const
+{
+    const cv::Vec3f colour = ColorGrading::displayColour(zone, hue, saturation);
+    return QColor::fromRgbF(colour[0], colour[1], colour[2]);
+}
+
 int ImageEditor::colorMixerValue(int band, int component) const
 {
     if (band < 0 || band >= static_cast<int>(m_settings.mixerHue.size()))
@@ -988,8 +995,9 @@ int ImageEditor::colorGradingValue(int zone, int component) const
 {
     if (zone < 0 || zone >= static_cast<int>(m_settings.gradingHue.size()))
         return 0;
-    return component == 0 ? m_settings.gradingHue[static_cast<size_t>(zone)]
-                          : m_settings.gradingSaturation[static_cast<size_t>(zone)];
+    const size_t index = static_cast<size_t>(zone);
+    return component == 0 ? m_settings.gradingHue[index]
+         : component == 1 ? m_settings.gradingSaturation[index] : m_settings.gradingLuminance[index];
 }
 
 double ImageEditor::adjustmentValue(const QString &name) const
@@ -1252,6 +1260,36 @@ void ImageEditor::setColorGrading(int zone, int hue, int saturation)
     m_settings.gradingSaturation[index] = saturation;
     scheduleRender();
 }
+
+void ImageEditor::setColorGradingLuminance(int zone, int luminance)
+{
+    if (zone < 0 || zone >= static_cast<int>(m_settings.gradingLuminance.size()))
+        return;
+    luminance = qBound(-100, luminance, 100);
+    int &target = m_settings.gradingLuminance[static_cast<size_t>(zone)];
+    if (target == luminance)
+        return;
+    target = luminance;
+    scheduleRender();
+}
+
+void ImageEditor::setColorGradingBlending(int blending)
+{
+    blending = qBound(0, blending, 100);
+    if (m_settings.gradingBlending == blending)
+        return;
+    m_settings.gradingBlending = blending;
+    scheduleRender();
+}
+
+void ImageEditor::setColorGradingBalance(int balance)
+{
+    balance = qBound(-100, balance, 100);
+    if (m_settings.gradingBalance == balance)
+        return;
+    m_settings.gradingBalance = balance;
+    scheduleRender();
+}
 void ImageEditor::setAutomaticWhiteBalance(bool enabled)
 {
     if (busy() || m_settings.automaticWhiteBalance == enabled)
@@ -1378,8 +1416,35 @@ void attachToneStatistics(ColorPipeline::WorkingImage &image, ColorPipeline::Wor
 }
 }
 
+namespace {
+// Keys of the cached stages, in pipeline order: each one appends its stage's
+// settings to the previous key, so equal keys mean equal input to the next stage.
+RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
+{
+    RenderStageCache::Keys keys;
+    QByteArray key;
+    QDataStream stream(&key, QIODevice::WriteOnly);
+    const auto ints = [&stream](const auto &values) { for (int value : values) stream << qint32(value); };
+    stream << s.grayscale << s.brightness << qint32(s.contrast) << qint32(s.temperature) << qint32(s.tint)
+           << qint32(s.shadows) << qint32(s.blacks) << qint32(s.highlights) << qint32(s.whites);
+    keys[0] = key;
+    stream << qint32(s.saturation) << qint32(s.vibrance) << qint32(s.gradingBlending) << qint32(s.gradingBalance);
+    ints(s.mixerHue); ints(s.mixerSaturation); ints(s.mixerLuminance); ints(s.gradingHue); ints(s.gradingSaturation);
+    ints(s.gradingLuminance);
+    keys[1] = key;
+    stream << qint32(s.denoiseLuminance) << qint32(s.denoiseChrominance);
+    keys[2] = key;
+    stream << qint32(s.texture) << qint32(s.clarity);
+    keys[3] = key;
+    stream << qint32(s.dehaze);
+    keys[4] = key;
+    return keys;
+}
+}
+
 ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
-    const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale)
+    const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale,
+    RenderStageCache *cache)
 {
     if (source.isNull() || source.colorSpace != ColorPipeline::workingColorSpace() ||
         source.linearRgba.type() != CV_32FC4 || !cv::checkRange(source.linearRgba, true))
@@ -1405,14 +1470,82 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         std::all_of(settings.mixerLuminance.cbegin(), settings.mixerLuminance.cend(),
                     [](int value) { return value == 0; }) &&
         std::all_of(settings.gradingSaturation.cbegin(), settings.gradingSaturation.cend(),
+                    [](int value) { return value == 0; }) &&
+        std::all_of(settings.gradingLuminance.cbegin(), settings.gradingLuminance.cend(),
                     [](int value) { return value == 0; }) && !hasToneCurves)
         return source;
 
-    std::vector<cv::Mat> channels;
-    cv::split(source.linearRgba, channels);
-    cv::Mat adjusted;
-    cv::merge(std::vector<cv::Mat>{channels[0], channels[1], channels[2]}, adjusted);
+    // Each costly stage runs only past the cached output it resumes from, then
+    // hands its output to the cache when asked to keep it.
+    RenderStageCache::Start start;
+    if (cache) start = cache->begin(source.linearRgba, pixelScale, stageKeys(settings));
+    const auto runs = [&start](int stage) { return start.stage < stage; };
+    const auto reached = [&](int stage, const cv::Mat &rgb) { if (cache) cache->store(start, stage, rgb); };
+    cv::Mat adjusted = start.rgb;
+    if (runs(0)) {
+        cv::cvtColor(source.linearRgba, adjusted, cv::COLOR_RGBA2RGB);
+        if (!renderTones(source, settings, referenceTemperature, adjusted)) return {};
+        reached(0, adjusted);
+    }
+    if (runs(1)) {
+        PerceptualColour::apply(adjusted, {settings.saturation, settings.vibrance,
+                                           {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
+                                           settings.gradingHue, settings.gradingSaturation,
+                                           settings.gradingLuminance, settings.gradingBlending,
+                                           settings.gradingBalance});
+        reached(1, adjusted);
+    }
+    // Denoise before local-detail enhancement and sharpening. The operation
+    // runs in linear RGB and keeps luminance and chrominance independent so
+    // coloured speckles can be removed without flattening edge detail.
+    if (runs(2)) {
+        if (settings.denoiseLuminance != 0 || settings.denoiseChrominance != 0)
+            DetailProcessing::reduceNoise(adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
+        reached(2, adjusted);
+    }
+    if (runs(3)) {
+        LocalContrast::apply(adjusted, settings.texture, settings.clarity, pixelScale);
+        reached(3, adjusted);
+    }
+    if (runs(4)) {
+        Dehaze::apply(adjusted, settings.dehaze, pixelScale);
+        reached(4, adjusted);
+    }
+    ToneCurve::apply(adjusted, settings.toneCurves);
 
+    if (settings.blur > 0) {
+        const double sigma = static_cast<double>(settings.blur) / 2.0 * pixelScale;
+        cv::GaussianBlur(adjusted, adjusted, cv::Size(0, 0), sigma);
+    }
+
+    // Capture/output sharpening follows denoise and all contrast operations.
+    // Its adaptive mask suppresses low-contrast noise and the local bound
+    // limits the bright/dark halos produced by a naive unsharp mask.
+    if (settings.sharpeningAmount > 0) {
+        DetailProcessing::sharpen(adjusted, {settings.sharpeningAmount,
+                                              settings.sharpeningRadius,
+                                              settings.sharpeningMasking});
+    }
+
+    Grain::apply(adjusted, settings.grain, pixelScale);
+
+    std::vector<cv::Mat> channels;
+    cv::split(adjusted, channels);
+    cv::Mat alpha;
+    cv::extractChannel(source.linearRgba, alpha, 3);
+    channels.push_back(alpha);
+    cv::Mat rgbaOutput;
+    cv::merge(channels, rgbaOutput);
+
+    return {rgbaOutput, source.colorSpace, source.sourceProfile,
+            source.referenceWhiteBalanceKelvin};
+}
+
+// Camera-signal development, grayscale, exposure, contrast, white balance and
+// the four tone controls, in place on the source's RGB.
+bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
+                              int referenceTemperature, cv::Mat &adjusted)
+{
     const bool whiteBalanceEdit = settings.temperature != referenceTemperature || settings.tint != 0;
     // RAW with a DCP: exposure and white balance act on the scene-linear camera
     // signal before the profile tone curve, so highlights keep its shoulder.
@@ -1423,7 +1556,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             !CameraProfileEngine::renderFromCameraSignal(*source.dcpContext,
                 settings.temperature, settings.tint, settings.brightness, adjusted, &error)) {
             qWarning() << "Échec du rendu capteur avant DCP :" << error;
-            return {};
+            return false;
         }
     }
 
@@ -1446,7 +1579,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             source.referenceWhiteBalanceKelvin.value_or(5200.0),
             settings.tint, &colorError)) {
         qWarning() << "Échec de la balance température/nuance :" << colorError;
-        return {};
+        return false;
     }
 
     // Shadows, Blacks, Highlights and Whites, weighted by the statistics
@@ -1458,53 +1591,12 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     if (!ToneRecovery::identity(tones))
         ToneRecovery::apply(adjusted, tones, source.toneStatistics ? *source.toneStatistics
                                                                    : ToneRecovery::measure(source.linearRgba));
-
-    Vibrance::apply(adjusted, settings.saturation, settings.vibrance);
-    ColorAdjustments::applyMixerAndGrading(adjusted,
-        {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
-        settings.gradingHue, settings.gradingSaturation);
-
-    // Denoise before local-detail enhancement and sharpening. The operation
-    // runs in linear RGB and keeps luminance and chrominance independent so
-    // coloured speckles can be removed without flattening edge detail.
-    if (settings.denoiseLuminance != 0 || settings.denoiseChrominance != 0) {
-        DetailProcessing::reduceNoise(
-            adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
-    }
-
-    LocalContrast::apply(adjusted, settings.texture, settings.clarity, pixelScale);
-    Dehaze::apply(adjusted, settings.dehaze, pixelScale);
-    ToneCurve::apply(adjusted, settings.toneCurves);
-
-    if (settings.blur > 0) {
-        const double sigma = static_cast<double>(settings.blur) / 2.0 * pixelScale;
-        cv::GaussianBlur(adjusted, adjusted, cv::Size(0, 0), sigma);
-    }
-
-    // Capture/output sharpening follows denoise and all contrast operations.
-    // Its adaptive mask suppresses low-contrast noise and the local bound
-    // limits the bright/dark halos produced by a naive unsharp mask.
-    if (settings.sharpeningAmount > 0) {
-        DetailProcessing::sharpen(adjusted, {settings.sharpeningAmount,
-                                              settings.sharpeningRadius,
-                                              settings.sharpeningMasking});
-    }
-
-    Grain::apply(adjusted, settings.grain, pixelScale);
-
-    const cv::Mat alpha = channels[3];
-    cv::split(adjusted, channels);
-    channels.push_back(alpha);
-    cv::Mat rgbaOutput;
-    cv::merge(channels, rgbaOutput);
-
-    return {rgbaOutput, source.colorSpace, source.sourceProfile,
-            source.referenceWhiteBalanceKelvin};
+    return true;
 }
 
 ImageEditor::RenderResult ImageEditor::renderPreview(
     const ColorPipeline::WorkingImage &source, const Settings &settings,
-    bool includeOriginal, double pixelScale)
+    bool includeOriginal, double pixelScale, RenderStageCache *cache)
 {
     RenderResult result;
     if (includeOriginal) {
@@ -1517,7 +1609,7 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
             qWarning() << "Échec du rendu de l'origine :" << error;
     }
     const ColorPipeline::WorkingImage rendered =
-        renderWorkingImage(source, settings, pixelScale);
+        renderWorkingImage(source, settings, pixelScale, cache);
     if (rendered.isNull())
         return result;
 
@@ -1618,9 +1710,9 @@ DecodedImageCache::Entry ImageEditor::retainedCurrentEntry() const
 ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
     const ColorPipeline::WorkingImage &source)
 {
-    // Interactive preview rendering (every slider drag) re-applies the whole
-    // tonal/color/effects pipeline from scratch on the next render, so its
-    // cost scales directly with pixel count. Camera RAW files routinely
+    // Interactive preview rendering (every slider drag) re-applies the
+    // pipeline from the last cached stage before the edited one
+    // (RenderStageCache), so its cost scales directly with pixel count. Camera RAW files routinely
     // exceed 24-50 Mpx while the on-screen preview (Main.qml's "canvas"
     // Image, fitted inside the editor pane) is at most a few Mpx, so editing
     // on a capped-resolution proxy removes most of that redundant work
@@ -1921,6 +2013,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         : QSize(loaded.image.linearRgba.cols, loaded.image.linearRgba.rows);
     m_original = std::move(loaded.image);
     m_editProxy = std::move(loaded.editProxy);
+    m_renderStageCache.clear();
     m_displayedFile = m_currentFile;
     // Refresh comparison without blanking the displayed pair while rendering.
     m_originalImageSource.clear();
@@ -1968,6 +2061,7 @@ void ImageEditor::releaseCurrentImage()
     // pixels and is safe while background workers retain their own cv::Mat.
     m_original = {};
     m_editProxy = {};
+    m_renderStageCache.clear();
     m_sourceMetadata = {};
     m_importProvenance = {};
     m_importCapabilities = {};
@@ -2050,12 +2144,13 @@ void ImageEditor::startRender()
     m_activeRevision = m_requestedRevision;
     setBusy(true);
     auto *controller = &m_decodedImageCache;
+    auto *stages = &m_renderStageCache;
     m_renderWatcher.setFuture(QtConcurrent::run(
-        [sourceCopy, settings, includeOriginal, pixelScale, controller] {
+        [sourceCopy, settings, includeOriginal, pixelScale, controller, stages] {
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
             if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale);
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, stages);
         }));
 }
 

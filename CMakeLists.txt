@@ -41,6 +41,8 @@ set(IPR_ENGINE_SOURCES
     src/cache/SystemMemory.cpp
     src/cache/ImageCacheController.h
     src/cache/ImageCacheController.cpp
+    src/cache/RenderStageCache.h
+    src/cache/RenderStageCache.cpp
     src/core/ColorPipeline.h
     src/core/ImageMetadata.h
     src/core/ImageImporter.h
@@ -66,6 +68,10 @@ set(IPR_ENGINE_SOURCES
     src/core/LocalContrast.cpp
     src/core/ColorAdjustments.h
     src/core/ColorAdjustments.cpp
+    src/core/ColorGrading.h
+    src/core/ColorGrading.cpp
+    src/core/PerceptualColour.h
+    src/core/PerceptualColour.cpp
     src/core/Contrast.h
     src/core/Contrast.cpp
     src/core/Histogram.h
@@ -91,6 +97,8 @@ set(IPR_ENGINE_SOURCES
     src/providers/imageprovider.cpp
     src/providers/ThumbnailProvider.h
     src/providers/ThumbnailProvider.cpp
+    src/providers/GradingWheelProvider.h
+    src/providers/GradingWheelProvider.cpp
     src/raw/Demosaic.h
     src/raw/Demosaic.cpp
     src/raw/RawBlackLevelEstimator.h
@@ -293,12 +301,15 @@ if(BUILD_TESTING)
     ipr_add_test(colorPipelineTests tests/color_pipeline_test.cpp)
     ipr_add_test(rec2020PipelineTests tests/rec2020_pipeline_test.cpp)
     set_tests_properties(rec2020PipelineTests PROPERTIES LABELS "unit;pipeline;colour" TIMEOUT 60)
+    ipr_add_test(renderStageCacheTests tests/render_stage_cache_test.cpp)
+    set_tests_properties(renderStageCacheTests PROPERTIES LABELS "unit;pipeline;cache" TIMEOUT 120)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
     ipr_add_test(dehazeTests tests/dehaze_test.cpp)
     ipr_add_test(grainTests tests/grain_test.cpp)
+    ipr_add_test(colorGradingTests tests/color_grading_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
     set_tests_properties(toneRecoveryTests PROPERTIES LABELS "unit;pipeline;lighting")

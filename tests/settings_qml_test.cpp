@@ -1,6 +1,7 @@
 #include "imageeditor.h"
 #include "controlled_memory.h"
 #include "imageprovider.h"
+#include "GradingWheelProvider.h"
 #include "Sidecar.h"
 
 #include <QEventLoop>
@@ -85,6 +86,7 @@ int main(int argc, char **argv)
     editor.pasteAdjustments();
     if (!check(!editor.hasCopiedAdjustments(), "copy without an image must leave the clipboard empty")) return 1;
     QQmlEngine engine;
+    engine.addImageProvider(QStringLiteral("gradingwheel"), new GradingWheelProvider);
     QQmlComponent component(&engine,
         QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/Setting.qml")));
     QScopedPointer<QObject> root(component.createWithInitialProperties(
@@ -364,6 +366,10 @@ int main(int argc, char **argv)
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
     editor.setColorMixer(2, 12, 23, -34);
     editor.setColorGrading(1, 150, 20);
+    editor.setColorGradingBlending(80);
+    editor.setColorGradingBalance(-30);
+    editor.setColorGrading(3, 60, 15);
+    editor.setColorGradingLuminance(2, -40);
     const QVariantList copiedCurve{QVariantMap{{"x", 0.0}, {"y", 0.0}},
                                   QVariantMap{{"x", .5}, {"y", .6}},
                                   QVariantMap{{"x", 1.0}, {"y", 1.0}}};
@@ -394,6 +400,8 @@ int main(int argc, char **argv)
                sharp->property("value").toInt() == 51 &&
                std::abs(radius->property("value").toDouble() - 1.7) < .001 &&
                editor.colorMixerValue(2, 2) == -34 && editor.colorGradingValue(1, 0) == 150 &&
+               editor.colorGradingBlending() == 80 && editor.colorGradingBalance() == -30 &&
+               editor.colorGradingValue(3, 0) == 60 && editor.colorGradingValue(2, 2) == -40 &&
                editor.toneCurve(ImageEditor::LuminanceCurve) == normalizedCurve &&
                editor.imageRating() == 2 && editor.imageColorLabel() == "blue" && editor.imageFlagged() &&
                editor.selectedCameraProfile() == targetProfile &&
@@ -405,6 +413,8 @@ int main(int argc, char **argv)
     EditRecipe::Settings saved;
     EditRecipe::UserImageMetadata savedMetadata;
     if (!check(Sidecar::read(second, &saved, &savedMetadata) && saved.denoiseLuminance == 43 &&
+               saved.gradingBlending == 80 && saved.gradingBalance == -30 &&
+               saved.gradingSaturation[3] == 15 && saved.gradingLuminance[2] == -40 &&
                savedMetadata.rating == 2 && savedMetadata.colorLabel == "blue" &&
                editor.statusMessage().startsWith(QStringLiteral("Réglages enregistrés")),
                "manual save must persist the latest recipe and metadata and report success")) return 1;

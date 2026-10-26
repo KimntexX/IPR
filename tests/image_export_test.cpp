@@ -456,6 +456,9 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
     editor.setColorMixer(1, 27, -43, 18);
     editor.setColorMixer(6, -31, 17, 42);
     editor.setColorMixer(7, 51, -22, -63);
+    editor.setColorGrading(3, 120, 40);
+    editor.setColorGradingLuminance(0, 25);
+    editor.setColorGradingLuminance(3, -35);
     // Loading another image flushes the pending save of the source sidecar.
     const QUrl other = QUrl::fromLocalFile(directory + QStringLiteral("/input.png"));
     if (!awaitLoad(editor, other) || !awaitLoad(editor, QUrl::fromLocalFile(sourcePath)))
@@ -468,13 +471,17 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                editor.colorMixerValue(6, 2) == 42 && editor.colorMixerValue(7, 0) == 51 &&
                editor.colorMixerValue(7, 1) == -22 && editor.colorMixerValue(7, 2) == -63,
                "violet and magenta must roundtrip independently")) return false;
+    if (!check(editor.colorGradingValue(3, 0) == 120 && editor.colorGradingValue(3, 1) == 40 &&
+               editor.colorGradingValue(0, 2) == 25 && editor.colorGradingValue(3, 2) == -35 &&
+               editor.colorGradingValue(1, 2) == 0,
+               "the global wheel and the luminances must roundtrip")) return false;
     QFile currentSidecar(sourcePath + QStringLiteral(".ipr"));
     if (!currentSidecar.open(QIODevice::ReadOnly)) return false;
     QDataStream currentStream(&currentSidecar);
     currentStream.setVersion(QDataStream::Qt_6_4);
     quint32 magic; quint16 savedVersion;
     currentStream >> magic >> savedVersion;
-    if (!check(magic == 0x49505231u && savedVersion == 6, "new sidecars must declare version 6")) return false;
+    if (!check(magic == 0x49505231u && savedVersion == 8, "new sidecars must declare version 8")) return false;
     currentSidecar.close();
     editor.resetAdjustments();
     for (int band = 0; band < 8; ++band)
@@ -483,7 +490,7 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                        "reset should neutralize all eight mixer bands"))
                 return false;
 
-    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5)}) {
+    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5), quint16(6), quint16(7)}) {
         const QString legacyPath = directory + QStringLiteral("/legacy-%1.png").arg(version);
         if (!QImage(sourcePath).save(legacyPath, "PNG"))
             return false;
@@ -510,6 +517,10 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
         stream << int(3) << QStringLiteral("green") << true << true << true;
         if (version >= 5)
             stream << QString() << QString() << QString() << QString() << false << QString();
+        if (version >= 6)
+            stream << QString() << QString() << false << false << false;
+        if (version >= 7)
+            stream << qint32(80) << qint32(-30);
         if (stream.status() != QDataStream::Ok)
             return false;
         sidecar.close();
@@ -528,8 +539,12 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
         }
         if (!check(editor.colorGradingValue(2, 0) == 202 &&
                    editor.colorGradingValue(2, 1) == 6 &&
-                   editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == (version >= 2 ? 12 : 0),
-                   "legacy migration should preserve following fields and noise settings"))
+                   editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == (version >= 2 ? 12 : 0) &&
+                   editor.colorGradingBlending() == (version >= 7 ? 80 : 50) &&
+                   editor.colorGradingBalance() == (version >= 7 ? -30 : 0) &&
+                   editor.colorGradingValue(3, 1) == 0 && editor.colorGradingValue(0, 2) == 0 &&
+                   editor.colorGradingValue(3, 2) == 0,
+                   "legacy migration should preserve following fields, noise settings and default grading"))
             return false;
     }
     editor.resetAdjustments();

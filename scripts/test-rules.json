@@ -16,6 +16,7 @@
     "editorLifecycleTests": "editorLifecycleTests",
     "colorPipelineTests": "colorPipelineTests",
     "rec2020PipelineTests": "rec2020PipelineTests",
+    "renderStageCacheTests": "renderStageCacheTests",
     "detailProcessingTests": "detailProcessingTests",
     "imageExportTests": "imageExportTests",
     "toneRecoveryTests": "toneRecoveryTests",
@@ -32,6 +33,7 @@
     "localContrastTests": "localContrastTests",
     "dehazeTests": "dehazeTests",
     "grainTests": "grainTests",
+    "colorGradingTests": "colorGradingTests",
     "rawNormalizationTests": "rawNormalizationTests",
     "editorRawDevelopmentTests": "editorRawDevelopmentTests",
     "rawBlackLevelEstimatorTests": "rawBlackLevelEstimatorTests",
@@ -97,6 +99,7 @@
     {"patterns": ["tests/investigate_wb_adaptation.py", "tests/test_investigate_wb_adaptation.py"], "tests": [], "python": ["wb_adaptation"]},
     {"patterns": ["tests/analysis/**", "tests/analyse_groupes.py", "tests/analyse_couleur.py", "tests/analyse_raw.py", "tests/analyse_lumiere.py", "tests/analyse_courbes.py", "tests/analyse_melangeur.py", "tests/analyse_grading.py", "tests/analyse_effets.py", "tests/analyse_bruit.py", "tests/analyse_nettete.py", "tests/analyse_optique.py", "tests/test_analyse_groupes.py", "tests/analyse_temperature.py", "tests/analyse_tint.py", "tests/analyse_vibrance.py", "tests/analyse_saturation.py", "tests/analyse_texture.py", "tests/analyse_clarity.py", "tests/analyse_dehaze.py"], "tests": [], "python": ["group_analysis", "wb_comparison", "wb_adaptation"]},
     {"patterns": ["src/editor/imageeditor.cpp", "tests/editor_lifecycle_test.cpp"], "tests": ["editorLifecycleTests"]},
+    {"patterns": ["src/cache/RenderStageCache.*", "tests/render_stage_cache_test.cpp", "src/editor/imageeditor.cpp"], "tests": ["renderStageCacheTests", "rec2020PipelineTests", "editorRawDevelopmentTests", "imageExportTests"]},
     {"patterns": ["scripts/export_documentation_metrics.py", "scripts/check_documentation.py", "scripts/consolidate_reports.py", "tests/test_documentation_metrics.py"], "tests": [], "python": ["documentation_metrics"]},
     {"patterns": ["tests/compare_profile_exports.py"], "tests": [], "python": ["base_colorimetry_analysis"]},
     {"patterns": ["src/qml/RawDevelopmentModule.qml", "tests/editor_raw_development_test.cpp", "src/editor/imageeditor.cpp"], "tests": ["editorRawDevelopmentTests", "settingsQmlTests", "rawDecoderTests", "cameraProfileEngineTests"]},
@@ -120,6 +123,8 @@
     {"patterns": ["tests/tone_recovery_test.cpp"], "tests": ["toneRecoveryTests"]},
     {"patterns": ["src/app/UiPreferences.*", "config/**"], "tests": ["uiPreferencesTests", "uiPreferencesQmlTests", "settingsQmlTests"]},
     {"patterns": ["src/core/Dehaze.*", "tests/dehaze_test.cpp"], "tests": ["dehazeTests", "rec2020PipelineTests", "imageExportTests", "editorRawDevelopmentTests"]},
+    {"patterns": ["src/core/ColorGrading.*", "tests/color_grading_test.cpp"], "tests": ["colorGradingTests", "rec2020PipelineTests", "imageExportTests", "settingsQmlTests"]},
+    {"patterns": ["src/providers/GradingWheelProvider.*", "src/qml/ColorGradingModule.qml", "src/qml/AdjustmentControl.qml"], "tests": ["colorGradingTests", "settingsQmlTests", "colorMixerQmlTests"]},
     {"patterns": ["src/core/Grain.*", "tests/grain_test.cpp"], "tests": ["grainTests", "rec2020PipelineTests", "imageExportTests", "editorRawDevelopmentTests"]},
     {"patterns": ["src/core/LocalContrast.*", "tests/local_contrast_test.cpp"], "tests": ["localContrastTests", "rec2020PipelineTests", "imageExportTests", "editorRawDevelopmentTests"]},
     {"patterns": ["src/raw/Demosaic.*", "tests/demosaic_test.cpp"], "tests": ["demosaicTests", "rawDecoderTests", "editorRawDevelopmentTests", "imageExportTests", "imageImportTests"]},
@@ -155,7 +160,7 @@
     {"patterns": ["tests/analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis", "noise_analysis", "base_colorimetry_analysis"]},
     {"patterns": ["tests/test_analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis"]},
     {"patterns": ["tests/analyse_noise.py", "tests/test_analyse_noise.py"], "tests": [], "python": ["noise_analysis"]},
-    {"patterns": ["tests/study_sources.py", "tests/test_study_sources.py", "tests/study_demosaic.py", "tests/demosaic_probe.cpp", "tests/study_lr_neutral_noise.py", "tests/study_lr_aligned.py", "tests/study_effects_response.py", "tests/study_effects_amplitude.py", "tests/study_effects_tone_protection.py", "tests/study_clarity_adaptation.py", "tests/study_dehaze_law.py", "tests/study_dehaze_detail.py", "tests/study_clarity_masking.py", "tests/study_clarity_affine_grid.py", "tests/study_clarity_clahe.py", "tests/study_grain.py"], "tests": [], "python": ["study_sources"]},
+    {"patterns": ["tests/study_sources.py", "tests/test_study_sources.py", "tests/study_demosaic.py", "tests/demosaic_probe.cpp", "tests/study_lr_neutral_noise.py", "tests/study_lr_aligned.py", "tests/study_effects_response.py", "tests/study_effects_amplitude.py", "tests/study_effects_tone_protection.py", "tests/study_clarity_adaptation.py", "tests/study_dehaze_law.py", "tests/study_dehaze_detail.py", "tests/study_grading_response.py", "tests/study_grading_blend.py", "tests/study_grading_luminance.py", "tests/study_grading_ipr.py", "tests/study_clarity_masking.py", "tests/study_clarity_affine_grid.py", "tests/study_clarity_clahe.py", "tests/study_grain.py"], "tests": [], "python": ["study_sources"]},
     {"patterns": ["tests/test_build_windows.py"], "tests": [], "python": ["selection"]}
   ]
 }

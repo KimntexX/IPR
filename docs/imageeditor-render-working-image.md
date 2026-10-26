@@ -66,10 +66,11 @@ L'aperçu calcule ensuite son histogramme avec `Histogram::compute`.
 
 ### Séparation alpha et tampon RGB
 
-La fonction sépare les quatre canaux de `source.linearRgba`, puis fusionne
-uniquement R, G et B dans `adjusted`. L'alpha d'origine est conservé à part et
-n'est modifié par aucun réglage. La source, passée par référence constante,
-n'est pas modifiée.
+La fonction copie R, G et B de `source.linearRgba` dans `adjusted`
+(`cv::cvtColor`, `COLOR_RGBA2RGB`), sauf si l'aperçu reprend une étape gardée
+en cache (voir [Cache des étapes de l'aperçu](#cache-des-étapes-de-laperçu)).
+L'alpha d'origine n'est modifié par aucun réglage. La source, passée par
+référence constante, n'est pas modifiée.
 
 ### Exposition
 
@@ -286,7 +287,7 @@ Pour `blur > 0`, un flou gaussien est appliqué au tampon RGB avec `sigma = blur
 
 ### Reconstruction RGBA et retour
 
-Les canaux RGB traités sont séparés, puis l'alpha source est ajouté et les quatre canaux sont fusionnés dans un nouveau tampon. Le retour contient :
+Les canaux RGB traités sont séparés, puis l'alpha source (`cv::extractChannel`) est ajouté et les quatre canaux sont fusionnés dans un nouveau tampon. Le retour contient :
 
 ```cpp
 return {rgbaOutput, source.colorSpace, source.sourceProfile,
@@ -334,12 +335,51 @@ tolérance maximale d'un code face à la formule analytique.
 
 ### Proxy d'édition pour l'aperçu interactif
 
-`renderWorkingImage()` recalcule l'intégralité du pipeline à chaque modification de réglage ; son coût est donc proportionnel au nombre de pixels traités. Pour l'aperçu, `ImageEditor::startRender()` ne part pas de l'image source pleine résolution (`m_original`) mais d'un second tampon, `m_editProxy`, produit par `ImageEditor::buildEditProxy()` :
+Sans cache, `renderWorkingImage()` recalcule l'intégralité du pipeline à chaque modification de réglage ; son coût est donc proportionnel au nombre de pixels traités. Pour l'aperçu, `ImageEditor::startRender()` ne part pas de l'image source pleine résolution (`m_original`) mais d'un second tampon, `m_editProxy`, produit par `ImageEditor::buildEditProxy()` :
 
 - si le plus grand côté de l'image source ne dépasse pas 2048 px, le proxy est une copie superficielle de la source (aucun redimensionnement, aucune allocation supplémentaire) ;
 - sinon, l'image est réduite par `cv::resize(..., cv::INTER_AREA)` jusqu'à ce que son plus grand côté atteigne 2048 px, en conservant son espace colorimétrique, sa provenance et sa température de référence.
 
 Le proxy est calculé une seule fois par chargement d'image (dans `loadFromDisk()`, donc déjà hors du thread UI) et réutilisé pour tous les rendus d'aperçu suivants, jusqu'au prochain chargement. L'export (`exportImage()`/`writeImage()`) continue d'utiliser `m_original` sans aucune dégradation : seule la réactivité de l'aperçu est affectée, pas la qualité du résultat final. L'histogramme affiché à l'écran est calculé sur ce même proxy ; sa forme reste représentative de l'image, mais ses comptages exacts (en particulier les pixels en butée à 0 ou 255) peuvent légèrement différer de ceux d'un calcul en pleine résolution, par effet de moyennage du redimensionnement.
+
+### Cache des étapes de l'aperçu
+
+Ajout du 25 octobre 2026. L'aperçu passe à `renderWorkingImage()` un
+`RenderStageCache` (`src/cache/RenderStageCache`), possédé par `ImageEditor`
+et vidé à chaque changement ou libération de l'image. L'export n'en reçoit
+jamais.
+
+- Cinq étapes coûteuses peuvent être gardées, dans l'ordre du pipeline :
+  tons (signal capteur, noir et blanc, exposition, contraste, balance, ombres,
+  noirs, hautes lumières, blancs), couleur perceptuelle, réduction du bruit,
+  texture et clarté, voile.
+- La clé d'une étape contient ses réglages et ceux de toutes les étapes
+  précédentes ; une entrée appartient à une source (adresse du tampon du
+  proxy, retenu par le cache) et à un `pixelScale`.
+- Le rendu reprend après la dernière étape dont la clé n'a pas changé, sur
+  une copie privée de sa sortie, puis exécute la suite.
+- L'étape éditée est la première dont la clé diffère du rendu précédent. Le
+  cache garde au plus deux sorties : celle qui la précède, pour les rendus
+  suivants du même glissement, et celle des tons. Cela représente environ
+  34 Mo chacune sur le proxy de 2048 px.
+- Les pixels sont identiques au bit près avec ou sans cache
+  (`renderStageCacheTests`, 18 éditions successives sur toutes les étapes).
+
+Rendu complet de l'aperçu sur 6V1A0327 (proxy 1365 × 2048, réglages actifs
+sur toutes les étapes), moyenne de cinq rendus d'un même glissement :
+
+| Curseur glissé | Sans cache | Avec cache |
+| --- | ---: | ---: |
+| Exposition | 1136 ms | 1139 ms |
+| Color grading | 1150 ms | 863 ms |
+| Réduction du bruit | 1129 ms | 811 ms |
+| Clarté | 1145 ms | 757 ms |
+| Voile | 1143 ms | 664 ms |
+| Netteté | 1118 ms | 454 ms |
+
+Le reste incompressible est dominé par la conversion de sortie
+`ColorPipeline::toSrgb` (environ 250 ms : correspondance de gamut et
+quantification) et par l'histogramme.
 
 ### Comparaison origine / actuel et zoom d'affichage
 
