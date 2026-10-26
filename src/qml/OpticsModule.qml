@@ -46,13 +46,9 @@ ColumnLayout {
         ToolTip.visible: hovered
         ToolTip.text: qsTr("Recalage chromatique latéral rouge/bleu selon le LCP. Ne traite pas les franges longitudinales.")
     }
-    Label {
+    SectionNote {
         objectName: "opticalDevelopmentStatusLabel"
         text: root.editor.opticalDevelopmentStatus
-        color: root.secondaryTextColor
-        font.pixelSize: 11
         wrapMode: Text.WrapAnywhere
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
     }
 }

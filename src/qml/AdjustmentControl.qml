@@ -43,8 +43,8 @@ ColumnLayout {
     }
     // UI hints only: these colours do not describe an output colour transform.
     property var trackColors: []
-    // Track thickness in pixels; coloured scales (grading hue and intensity) are thicker.
-    property real trackThickness: 3
+    // Track thickness in pixels, the same for every slider of the settings.
+    property real trackThickness: 6
     readonly property bool hasColorTrack: trackColors.length >= 2
     // Only bipolar controls have a neutral centre. Positive-only quantities
     // (quality, noise, radius...) keep their minimum as the visual origin.
@@ -204,8 +204,8 @@ ColumnLayout {
 
         Layout.fillWidth: true
         Layout.minimumWidth: 0
-        Layout.preferredHeight: 14
-        implicitHeight: 14
+        Layout.preferredHeight: 16
+        implicitHeight: 16
         leftPadding: 5
         rightPadding: 5
         from: control.minimumValue
@@ -279,8 +279,8 @@ ColumnLayout {
             x: controlSlider.leftPadding + controlSlider.visualPosition *
                (controlSlider.availableWidth - width)
             y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
-            width: 10
-            height: 10
+            width: 12
+            height: 12
             radius: width / 2
             color: control.textColor
             opacity: controlSlider.enabled ? 1 : 0.4

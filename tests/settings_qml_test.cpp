@@ -109,11 +109,11 @@ int main(int argc, char **argv)
 
     const QStringList names{
         "rawDevelopmentSection", "opticsSection", "lightSection", "curveSection", "colorSection", "mixerSection",
-        "gradingSection", "effectsSection", "denoiseSection", "sharpeningSection",
+        "pointColorSection", "gradingSection", "effectsSection", "denoiseSection", "sharpeningSection",
         "exportSection"};
     for (const QString &name : names) {
         auto *section = root->findChild<QQuickItem *>(name);
-        if (!check(section != nullptr, "all eleven independent settings sections should exist"))
+        if (!check(section != nullptr, "all twelve independent settings sections should exist"))
             return 1;
         auto *body = section->property("body").value<QQuickItem *>();
         auto *header = section->findChild<QQuickItem *>(QStringLiteral("sectionToggle"));
