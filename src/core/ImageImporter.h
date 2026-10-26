@@ -39,6 +39,9 @@ struct Result
 };
 
 Result load(const QString &fileName, const RawDecoder::Options &options = {});
+// The reference white balance load() gives the image, read from its metadata only
+// (RAW as-shot, or a temperature written in a raster's text); none when unknown.
+std::optional<double> referenceWhiteBalanceKelvin(const QString &fileName);
 // Rebuild derived descriptors and validate the exact same master contract.
 // Failure clears image/retained buffers/capabilities, never substitutes a profile.
 bool complete(Result &result);

@@ -51,6 +51,9 @@ Rectangle {
                 visible: ribbon.editor.selectedImageCount > 0
                 text: qsTr("Appliquer à %1").arg(ribbon.editor.selectedImageCount)
                 enabled: ribbon.editor.hasImage && !ribbon.editor.busy && !ribbon.editor.embeddedPreview
+                         && !ribbon.editor.batchApplying && !ribbon.editor.batchExporting
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Copier les réglages de l'image ouverte dans les images sélectionnées")
                 onClicked: ribbon.editor.applyAdjustmentsToSelection()
             }
             PreferenceButton {

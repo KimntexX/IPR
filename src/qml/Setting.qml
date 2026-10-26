@@ -9,7 +9,7 @@ Item {
     required property var editor
     property var preferences: null
     property var resetAction: null
-    readonly property bool exportDialogVisible: exportDialog.visible || exportReview.visible
+    readonly property bool exportDialogVisible: exportDialog.visible || exportReview.visible || batchExportDialog.visible
     property bool preferencesReady: false
     property bool restoringPreferences: false
     property int activeCurve: 0
@@ -839,6 +839,58 @@ Item {
                         border.color: exportButton.palette.mid
                     }
                 }
+
+                // Each selected image with its own recipe, into one folder.
+                PreferenceButton {
+                    id: batchExportButton
+                    objectName: "batchExportButton"
+
+                    visible: editor.selectedImageCount > 0 && !editor.batchExporting
+                    text: qsTr("Exporter la sélection (%1)…").arg(editor.selectedImageCount)
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 28
+                    enabled: !editor.batchApplying
+                    onClicked: batchExportDialog.open()
+
+                    contentItem: Text {
+                        text: batchExportButton.text
+                        color: root.textColor
+                        opacity: batchExportButton.enabled ? 1 : 0.45
+                        font.pixelSize: 12
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    background: Rectangle {
+                        radius: 3
+                        color: batchExportButton.down || batchExportButton.hovered ? batchExportButton.palette.mid : batchExportButton.palette.button
+                        border.width: 1
+                        border.color: batchExportButton.palette.mid
+                    }
+                }
+
+                RowLayout {
+                    objectName: "batchExportProgress"
+                    Layout.fillWidth: true
+                    visible: editor.batchExporting
+
+                    ProgressBar {
+                        Layout.fillWidth: true
+                        from: 0
+                        to: Math.max(1, editor.batchExportTotal)
+                        value: editor.batchExportDone
+                    }
+                    Label {
+                        text: qsTr("%1 / %2").arg(editor.batchExportDone).arg(editor.batchExportTotal)
+                        color: root.secondaryTextColor
+                        font.pixelSize: 11
+                    }
+                    PreferenceButton {
+                        objectName: "batchExportCancel"
+                        text: qsTr("Annuler")
+                        onClicked: editor.cancelBatchExport()
+                    }
+                }
             }
 
         }
@@ -870,6 +922,13 @@ Item {
             exportReview.dimensions = editor.imageDetails.dimensions || ""
             exportReview.open()
         }
+    }
+
+    FolderDialog {
+        id: batchExportDialog
+        objectName: "batchExportDialog"
+        title: qsTr("Exporter la sélection dans…")
+        onAccepted: editor.exportSelection(selectedFolder, formatBox.currentText, Math.round(qualitySlider.value))
     }
 
     ExportReviewDialog {
