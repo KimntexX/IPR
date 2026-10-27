@@ -1,7 +1,7 @@
 # Protocole — Couleur du point
 
 Version 2 — 28 octobre 2026. Statut : **campagne exécutée (1 848 exports), moteur
-calé, comparaison IPR en cours**.
+calé, comparaison IPR v002 faite**. Résultats : [analyse](../analyses/analyse-couleur-point.md).
 Appliquer le [socle commun](protocole-commun.md). Comparaison en boîte noire sur
 des exports Lightroom, jamais par rétro-ingénierie.
 
