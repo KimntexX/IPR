@@ -15,6 +15,7 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Roadmap décodeurs RAW](roadmap-decodeurs-raw.md) : indépendance de LibRaw, formats CR3/CR2/DNG/Sony/Nikon, corpus minimal par boîtier, tests automatisés et agents IA (ADR-0018).
 - [Roadmap couche image sans OpenCV](roadmap-couche-image-sans-opencv.md) : usage mesuré, paliers, tolérances et retrait immédiat d'`imgcodecs`.
 - [Roadmap Lumières](roadmap-lumieres.md) : état des six réglages, plan A en cours, plan B adaptatif tracé, points reportés.
+- [Fonctions de Lightroom](roadmap-fonctions-lightroom.md) : chaque fonction du panneau Modifier, son état dans IPR, sa planification et l'ordre proposé.
 - [Travail, affichage ICC et export](gestion-couleurs-affichage.md) : séparation cible, distincte du code actuel.
 - [Intégration Rec.2020 linéaire](integration-rec2020.md) : master porté, audit initial, contrats et qualification restant à compléter.
 - [Recette RAW et changement de profil](../decisions/ADR-0006-restauration-raw-et-retouche-profil.md) : sidecar v5, tampon pré-DCP et réinitialisations distinctes.

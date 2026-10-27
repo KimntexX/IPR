@@ -116,7 +116,7 @@ int main(int argc, char **argv)
         preferences.setSectionExpanded("export", true);
         preferences.setValue("selection/toneCurveChannel", 3);
         preferences.setValue("selection/mixerBand", 7);
-        preferences.setValue("selection/gradingZone", 2);
+        preferences.setValue("selection/gradingZone", 3);
         preferences.setValue("export/format", "TIFF");
         preferences.setValue("export/quality", 83);
         QScopedPointer<QObject> root(component.createWithInitialProperties({
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
         if (!check(!light->property("expanded").toBool() && noise->property("expanded").toBool() &&
                    exportGroup->property("expanded").toBool() &&
                    root->property("activeCurve").toInt() == 3 &&
-                   mixer->property("band").toInt() == 7 && grading->property("zone").toInt() == 2 &&
+                   mixer->property("band").toInt() == 7 && grading->property("zone").toInt() == 3 &&
                    format->property("currentText").toString() == "TIFF" &&
                    quality->property("value").toInt() == 83,
                    "stored state should override QML defaults without startup writes")) return 1;

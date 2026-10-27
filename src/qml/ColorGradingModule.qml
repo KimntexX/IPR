@@ -330,7 +330,6 @@ ColumnLayout {
     AdjustmentControl {
         id: hueControl
         trackColors: root.hueTrack
-        trackThickness: 6
         Layout.fillWidth: true
         label: qsTr("Teinte")
         valueText: Math.round(value) + "°"
@@ -349,7 +348,6 @@ ColumnLayout {
         id: intensityControl
         trackColors: [root.editor.colorGradingDisplayColor(root.zone, root.hue, 0),
                       root.editor.colorGradingDisplayColor(root.zone, root.hue, 100)]
-        trackThickness: 6
         Layout.fillWidth: true
         label: qsTr("Intensité")
         valueText: Math.round(value)
@@ -364,7 +362,6 @@ ColumnLayout {
     AdjustmentControl {
         id: luminanceControl
         trackColors: ["#15181d", "#8b8e94", "#f2f4f7"]
-        trackThickness: 6
         Layout.fillWidth: true
         label: qsTr("Luminance")
         valueText: Math.round(value)

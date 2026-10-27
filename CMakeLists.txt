@@ -149,6 +149,8 @@ set(IPR_QML_FILES
     src/qml/ToneCurveModule.qml
     src/qml/ColorMixerModule.qml
     src/qml/ColorGradingModule.qml
+    src/qml/PointColorModule.qml
+    src/qml/SectionNote.qml
     src/qml/ImageInfoPanel.qml
     src/qml/ThumbnailRibbon.qml
 )
