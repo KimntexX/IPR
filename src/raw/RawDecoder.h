@@ -11,6 +11,7 @@
 #include <QStringList>
 #include <functional>
 #include <memory>
+#include <optional>
 
 namespace RawDecoder {
 
@@ -66,6 +67,8 @@ struct FormatOptions
     QString decoderId;
     QString decoderVersion;
     std::function<QSize(const QString &)> dimensions;
+    // The camera's as-shot white balance in kelvins, read without decoding the pixels.
+    std::function<std::optional<double>(const QString &)> asShotWhiteBalanceKelvin;
 };
 
 bool registerFormatHandler(const QStringList &extensions,
@@ -74,6 +77,8 @@ bool registerFormatHandler(const QStringList &extensions,
 QStringList supportedExtensions();
 QString backendVersion();
 QSize sourceDimensions(const QString &fileName);
+// Same value as the decoded image's referenceWhiteBalanceKelvin, from the metadata only.
+std::optional<double> asShotWhiteBalanceKelvin(const QString &fileName);
 ColorPipeline::WorkingImage decode(const QString &fileName,
                                    const Options &options = {},
                                    ImageMetadata *metadata = nullptr,

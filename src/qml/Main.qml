@@ -83,6 +83,7 @@ ApplicationWindow {
             Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.saveAction }
             ActionMenuItem { action: fileActions.exportAction }
+            ActionMenuItem { action: fileActions.exportSelectionAction }
             ActionMenuItem { action: fileActions.duplicateAction }
             Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.quitAction }
