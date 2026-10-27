@@ -44,7 +44,7 @@ ColumnLayout {
     // UI hints only: these colours do not describe an output colour transform.
     property var trackColors: []
     // Track thickness in pixels, the same for every slider of the settings.
-    property real trackThickness: 6
+    property real trackThickness: 5
     readonly property bool hasColorTrack: trackColors.length >= 2
     // Only bipolar controls have a neutral centre. Positive-only quantities
     // (quality, noise, radius...) keep their minimum as the visual origin.
