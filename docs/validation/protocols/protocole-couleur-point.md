@@ -68,7 +68,9 @@ photo et vérifier que la gamme affiche 0 avant de lancer les exports.
 | 2 — généralité | les 5 autres | `reduced` : S −100 aux gammes 0 à 100 ; T, S, L +50 (8) | 1 120 |
 
 Exporter selon le socle commun (TIFF sRGB 16 bits), à la géométrie du neutre
-`grading/neutre`, dans `tests/image/base/couleur-point/` (sous-dossier par source). Une source
+`grading/neutre`, dans le seul dossier `tests/image/base/couleur-point/`, nommés
+`<scène>-<numéro>.tif` comme les exports du grading : l'étude lit l'état dans les
+réglages de chaque TIFF, pas dans son nom. Une source
 s'applique à toutes les scènes : son voisinage est mesuré sur toutes les
 couleurs du corpus, pas seulement près du pixel prélevé.
 
