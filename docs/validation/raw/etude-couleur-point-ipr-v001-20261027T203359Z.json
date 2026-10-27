@@ -1,0 +1,8611 @@
+{
+ "campaign_id": "etude-couleur-point-ipr-v001-20261027T203359Z",
+ "runner": "tests/study_point_color_ipr.py",
+ "commit": "74eb38e3e303223ead3fce6884a53f984e57ef04",
+ "local_changes": [],
+ "render_server": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\build-windows-msvc\\Release\\iprRenderServer.exe",
+  "sha256": "c09dfb9f820ad4a9dd03777c3b0f50bd50804efa74ef4e76f38d911319976d7f"
+ },
+ "study": "etude-couleur-point-v002-20261027T202305Z.json",
+ "scenes": [
+  "6V1A0007",
+  "6V1A0327",
+  "6V1A9539",
+  "6V1A0043",
+  "IMG_7953",
+  "6V1A9141",
+  "IMG_7958",
+  "7Y6A7599",
+  "IMG_6954",
+  "IMG_4002"
+ ],
+ "metric": "share of Lightroom's Oklab change left unexplained by IPR's",
+ "duration_seconds": 3577.0,
+ "python": "3.14.3",
+ "summary": {
+  "hue": {
+   "median": 0.49845936282050074,
+   "p90": 0.7871496069756477,
+   "states": 110,
+   "ipr_over_lr_rms": 0.6522885340450162
+  },
+  "luminance": {
+   "median": 0.22448884436702077,
+   "p90": 0.6292427768196229,
+   "states": 105,
+   "ipr_over_lr_rms": 0.7745149707432283
+  },
+  "range": {
+   "median": 0.5167010395016434,
+   "p90": 1.2179704279860761,
+   "states": 240,
+   "ipr_over_lr_rms": 0.7438869667611929
+  },
+  "saturation": {
+   "median": 0.4274042414452486,
+   "p90": 0.9981855473597449,
+   "states": 160,
+   "ipr_over_lr_rms": 0.7278627594867935
+  },
+  "source 0.0691": {
+   "median": 0.5503190198726932,
+   "p90": 1.0664723392288595,
+   "states": 80,
+   "ipr_over_lr_rms": 0.8521284005518409
+  },
+  "source 0.5481": {
+   "median": 0.3792585753570969,
+   "p90": 0.76321881125559,
+   "states": 255,
+   "ipr_over_lr_rms": 0.6693013606608957
+  },
+  "source 0.7629": {
+   "median": 0.3182214457142971,
+   "p90": 0.6111285375239809,
+   "states": 80,
+   "ipr_over_lr_rms": 0.71637251504944
+  },
+  "source 0.9282": {
+   "median": 0.3063322680515137,
+   "p90": 0.7957985439512415,
+   "states": 80,
+   "ipr_over_lr_rms": 0.8134324754715262
+  },
+  "source 1.4559": {
+   "median": 0.7651936039323932,
+   "p90": 3.2414954170371053,
+   "states": 80,
+   "ipr_over_lr_rms": 1.243378484444801
+  },
+  "source 3.9090": {
+   "median": 0.8443776215480328,
+   "p90": 1.000282629977273,
+   "states": 80,
+   "ipr_over_lr_rms": 0.2952247885949094
+  },
+  "variance": {
+   "median": 0.7924221514691505,
+   "p90": 0.9278233970686722,
+   "states": 40,
+   "ipr_over_lr_rms": 0.46582400381886735
+  }
+ },
+ "rows": [
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.3731322969275023,
+   "lr_change_rms": 0.0003529803238449321,
+   "ipr_change_rms": 0.0002109034994213905
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.519755835723752,
+   "lr_change_rms": 0.00027648390217461003,
+   "ipr_change_rms": 0.00011729746548426524
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.3356252580343844,
+   "lr_change_rms": 0.00038623471420664755,
+   "ipr_change_rms": 0.00021418947000486935
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.19258565762320218,
+   "lr_change_rms": 0.0004891808404695097,
+   "ipr_change_rms": 0.00033036802658280843
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.19915630284237212,
+   "lr_change_rms": 0.0005612242171988654,
+   "ipr_change_rms": 0.0003689780178425194
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.1553777944014129,
+   "lr_change_rms": 0.0005948860021452448,
+   "ipr_change_rms": 0.00042397713997665497
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.3576004270360679,
+   "lr_change_rms": 0.0003762373431799445,
+   "ipr_change_rms": 0.00028301429089725946
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.15067689708367699,
+   "lr_change_rms": 0.003124094196179667,
+   "ipr_change_rms": 0.0021960441643418074
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+100 G50",
+   "kind": "luminance",
+   "unexplained": 0.1569009042702873,
+   "lr_change_rms": 0.006214071849121256,
+   "ipr_change_rms": 0.004328065705578927
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.26510953524535696,
+   "lr_change_rms": 0.00030098506603071636,
+   "ipr_change_rms": 0.0003226845960954342
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-25 G50",
+   "kind": "luminance",
+   "unexplained": 0.14431515725275054,
+   "lr_change_rms": 0.001417737077210099,
+   "ipr_change_rms": 0.0010055291837588196
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-50 G50",
+   "kind": "luminance",
+   "unexplained": 0.14011133166888626,
+   "lr_change_rms": 0.0025770973692006527,
+   "ipr_change_rms": 0.0018378518466070591
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-100 G50",
+   "kind": "luminance",
+   "unexplained": 0.13538735754795916,
+   "lr_change_rms": 0.004364604658192139,
+   "ipr_change_rms": 0.0031357216866759316
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+25 G50",
+   "kind": "saturation",
+   "unexplained": 0.24664783963588172,
+   "lr_change_rms": 0.0004364634050751754,
+   "ipr_change_rms": 0.0002975734156325472
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.2466955364147124,
+   "lr_change_rms": 0.000806667006194607,
+   "ipr_change_rms": 0.0005649101668096073
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+100 G50",
+   "kind": "saturation",
+   "unexplained": 0.2902747350328179,
+   "lr_change_rms": 0.0014088412103548708,
+   "ipr_change_rms": 0.0009757073952864141
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-25 G50",
+   "kind": "saturation",
+   "unexplained": 0.2354285315347576,
+   "lr_change_rms": 0.0003429888044776838,
+   "ipr_change_rms": 0.00023859074592197643
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-50 G50",
+   "kind": "saturation",
+   "unexplained": 0.21176429675135042,
+   "lr_change_rms": 0.0005609864534420571,
+   "ipr_change_rms": 0.0004020319865492512
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.1838693681810962,
+   "lr_change_rms": 0.0008321783277709951,
+   "ipr_change_rms": 0.0006566027583043201
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.29450045539107694,
+   "lr_change_rms": 0.00046569264054939263,
+   "ipr_change_rms": 0.00034102256929156643
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.8151484248365313,
+   "lr_change_rms": 0.00016608632626566666,
+   "ipr_change_rms": 0.00023610628137108968
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.2500295287292617,
+   "lr_change_rms": 0.0006271920005582507,
+   "ipr_change_rms": 0.0004685383548146729
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.18970839424458996,
+   "lr_change_rms": 0.0009261288121366962,
+   "ipr_change_rms": 0.0006919899669885965
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.19048193638245123,
+   "lr_change_rms": 0.0010164685298036976,
+   "ipr_change_rms": 0.0007436980817042531
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+25 G50",
+   "kind": "hue",
+   "unexplained": 0.401079947850897,
+   "lr_change_rms": 0.0004436048193582747,
+   "ipr_change_rms": 0.00029660061540275604
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.3573577705108776,
+   "lr_change_rms": 0.0008257044050815858,
+   "ipr_change_rms": 0.0005677394139869322
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+100 G50",
+   "kind": "hue",
+   "unexplained": 0.22890514587813954,
+   "lr_change_rms": 0.0014085504029901447,
+   "ipr_change_rms": 0.0010317370610909828
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-25 G50",
+   "kind": "hue",
+   "unexplained": 0.4143007758415938,
+   "lr_change_rms": 0.0004681024116146011,
+   "ipr_change_rms": 0.000297807909338817
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-50 G50",
+   "kind": "hue",
+   "unexplained": 0.42371278142104263,
+   "lr_change_rms": 0.0009480562019928189,
+   "ipr_change_rms": 0.0005708014526212155
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-100 G50",
+   "kind": "hue",
+   "unexplained": 0.4749142078219273,
+   "lr_change_rms": 0.00195202870180534,
+   "ipr_change_rms": 0.0009985677411133683
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+50 G50",
+   "kind": "variance",
+   "unexplained": 0.6917544042050241,
+   "lr_change_rms": 0.0006048018485574331,
+   "ipr_change_rms": 0.00026369499926109436
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.6614030702591553,
+   "lr_change_rms": 0.00023656808637569679,
+   "ipr_change_rms": 0.0003512724177428339
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+100 G50",
+   "kind": "variance",
+   "unexplained": 0.7271073304715528,
+   "lr_change_rms": 0.0011932442095541423,
+   "ipr_change_rms": 0.0005216127402282007
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-50 G50",
+   "kind": "variance",
+   "unexplained": 0.44700333092084504,
+   "lr_change_rms": 0.0004110181866056161,
+   "ipr_change_rms": 0.00022958127440272504
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-100 G50",
+   "kind": "variance",
+   "unexplained": 0.4550597960964396,
+   "lr_change_rms": 0.0008299695030944588,
+   "ipr_change_rms": 0.00044416412686333243
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.32655990303079097,
+   "lr_change_rms": 0.000637365057866389,
+   "ipr_change_rms": 0.0004466538349151861
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.4548174342408223,
+   "lr_change_rms": 0.00035374994367370655,
+   "ipr_change_rms": 0.0002492244940163923
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.5323347851682428,
+   "lr_change_rms": 0.0002459761872380213,
+   "ipr_change_rms": 0.00012560644352721195
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.45093753275253434,
+   "lr_change_rms": 0.00032019574767717945,
+   "ipr_change_rms": 0.00019687500851742765
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.425216974071595,
+   "lr_change_rms": 0.00039474015933084147,
+   "ipr_change_rms": 0.000289692230561967
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.4307096904410873,
+   "lr_change_rms": 0.00042367266915361483,
+   "ipr_change_rms": 0.0003149874827208714
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.4416795181727434,
+   "lr_change_rms": 0.00045211605556812233,
+   "ipr_change_rms": 0.0003563765011848448
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.5471321886654035,
+   "lr_change_rms": 0.00032715059952192864,
+   "ipr_change_rms": 0.0004936321946597018
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.6112070476109982,
+   "lr_change_rms": 0.0002673257933332159,
+   "ipr_change_rms": 0.0002135214743233768
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.27157550152741416,
+   "lr_change_rms": 0.0439415512051778,
+   "ipr_change_rms": 0.021702951878599313
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.7934164081338836,
+   "lr_change_rms": 0.016372906759223576,
+   "ipr_change_rms": 0.0044614166454362445
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.8571068751964478,
+   "lr_change_rms": 0.0038945517298713313,
+   "ipr_change_rms": 0.0008105946115714675
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.8655043507640904,
+   "lr_change_rms": 0.0088667624503614,
+   "ipr_change_rms": 0.0016567960595242296
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.7662208483521269,
+   "lr_change_rms": 0.015760140179429057,
+   "ipr_change_rms": 0.005618500073074722
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.7683601949178421,
+   "lr_change_rms": 0.01819434700658093,
+   "ipr_change_rms": 0.006394753644696026
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.7600963261281298,
+   "lr_change_rms": 0.02082791947514974,
+   "ipr_change_rms": 0.00800044326492474
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.4418832329891859,
+   "lr_change_rms": 0.01015548839864074,
+   "ipr_change_rms": 0.004391855628784973
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.1442307348315308,
+   "lr_change_rms": 0.003588743046613319,
+   "ipr_change_rms": 0.0024940585703061126
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.4779561119022758,
+   "lr_change_rms": 0.00035940077942110763,
+   "ipr_change_rms": 0.000525482366015145
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.22922243506198262,
+   "lr_change_rms": 0.0008531548174425078,
+   "ipr_change_rms": 0.0005992684529460191
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.29528195692624054,
+   "lr_change_rms": 0.0004976288254337616,
+   "ipr_change_rms": 0.00036652334720700425
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.24813248024019177,
+   "lr_change_rms": 0.00070110052351067,
+   "ipr_change_rms": 0.0005033436169244687
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.17433020689303524,
+   "lr_change_rms": 0.0009348872214423309,
+   "ipr_change_rms": 0.0007080097399122742
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.18289054368201185,
+   "lr_change_rms": 0.0010256505426624555,
+   "ipr_change_rms": 0.000740691555957502
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.17971924008023007,
+   "lr_change_rms": 0.0011101830105877696,
+   "ipr_change_rms": 0.000793571514782889
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.31859822537479615,
+   "lr_change_rms": 0.000887557847538907,
+   "ipr_change_rms": 0.0006172558635140134
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.46389273307273343,
+   "lr_change_rms": 0.00039013798205604286,
+   "ipr_change_rms": 0.0005665821969668207
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 1.4545650587702232,
+   "lr_change_rms": 0.0002344172174795751,
+   "ipr_change_rms": 0.00041836727316412
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.2440713480863028,
+   "lr_change_rms": 0.0008993125406537811,
+   "ipr_change_rms": 0.0005797975908841406
+  },
+  {
+   "scene": "6V1A0007",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.6973909777605918,
+   "lr_change_rms": 0.0006661624472169861,
+   "ipr_change_rms": 0.0011092624567254383
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.16966907358329525,
+   "lr_change_rms": 0.00656254361884383,
+   "ipr_change_rms": 0.006824282185396026
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 6.908234618063891,
+   "lr_change_rms": 0.0009937444487190972,
+   "ipr_change_rms": 0.002770984864315731
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 1.1420123044509196,
+   "lr_change_rms": 0.0029356679184642707,
+   "ipr_change_rms": 0.005132484382487967
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.2441423768110299,
+   "lr_change_rms": 0.006335269966049394,
+   "ipr_change_rms": 0.007811998979925731
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.1266149277527913,
+   "lr_change_rms": 0.008774793044740655,
+   "ipr_change_rms": 0.008244181311088974
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.11008198368142288,
+   "lr_change_rms": 0.009973453029137366,
+   "ipr_change_rms": 0.008912963085337995
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.7538326760347142,
+   "lr_change_rms": 0.005271899968447387,
+   "ipr_change_rms": 0.006524143236474071
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.09466318566123726,
+   "lr_change_rms": 0.03347067530499202,
+   "ipr_change_rms": 0.027682736397177127
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+100 G50",
+   "kind": "luminance",
+   "unexplained": 0.09599626293171153,
+   "lr_change_rms": 0.06598146416217733,
+   "ipr_change_rms": 0.0543890403552828
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.22476779550323697,
+   "lr_change_rms": 0.005551828749780805,
+   "ipr_change_rms": 0.003957667379697249
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-25 G50",
+   "kind": "luminance",
+   "unexplained": 0.09302437485421859,
+   "lr_change_rms": 0.0153655355482938,
+   "ipr_change_rms": 0.012732975073588107
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-50 G50",
+   "kind": "luminance",
+   "unexplained": 0.09289341528735626,
+   "lr_change_rms": 0.028090285838134867,
+   "ipr_change_rms": 0.023301987975575433
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-100 G50",
+   "kind": "luminance",
+   "unexplained": 0.09273472866545318,
+   "lr_change_rms": 0.04795265618989435,
+   "ipr_change_rms": 0.039838445323274047
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+25 G50",
+   "kind": "saturation",
+   "unexplained": 0.49761001845990527,
+   "lr_change_rms": 0.008281652495480457,
+   "ipr_change_rms": 0.0044039142433304574
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.5172849887382964,
+   "lr_change_rms": 0.017021656987778147,
+   "ipr_change_rms": 0.008787398519015173
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+100 G50",
+   "kind": "saturation",
+   "unexplained": 0.36940555709229084,
+   "lr_change_rms": 0.024287779148116157,
+   "ipr_change_rms": 0.01601455686021464
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-25 G50",
+   "kind": "saturation",
+   "unexplained": 0.46935654652236053,
+   "lr_change_rms": 0.006181443183933429,
+   "ipr_change_rms": 0.0034620985983636284
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-50 G50",
+   "kind": "saturation",
+   "unexplained": 0.4608251770241913,
+   "lr_change_rms": 0.01020504261177834,
+   "ipr_change_rms": 0.005816024491988273
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.4358788340067057,
+   "lr_change_rms": 0.015155047013132888,
+   "ipr_change_rms": 0.0094541678249567
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.28984152552762815,
+   "lr_change_rms": 0.007214196470845026,
+   "ipr_change_rms": 0.005430515673371715
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.36374101285047417,
+   "lr_change_rms": 0.0028297303767524998,
+   "ipr_change_rms": 0.0031644418592420027
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.3809712155351391,
+   "lr_change_rms": 0.0104300110950651,
+   "ipr_change_rms": 0.007395562931068563
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.4703244243472675,
+   "lr_change_rms": 0.01743633138690166,
+   "ipr_change_rms": 0.010133094901778036
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.4623170180487409,
+   "lr_change_rms": 0.01957805134625617,
+   "ipr_change_rms": 0.011162934884399503
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+25 G50",
+   "kind": "hue",
+   "unexplained": 0.49628697529972127,
+   "lr_change_rms": 0.007563545427560567,
+   "ipr_change_rms": 0.004252182805071978
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.49314509220718883,
+   "lr_change_rms": 0.014608477764705583,
+   "ipr_change_rms": 0.008126030009758527
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+100 G50",
+   "kind": "hue",
+   "unexplained": 0.4488507688418864,
+   "lr_change_rms": 0.025894533152607146,
+   "ipr_change_rms": 0.0147348868723153
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-25 G50",
+   "kind": "hue",
+   "unexplained": 0.5232342808162476,
+   "lr_change_rms": 0.007981585536058839,
+   "ipr_change_rms": 0.004285242081835123
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-50 G50",
+   "kind": "hue",
+   "unexplained": 0.5521828731423386,
+   "lr_change_rms": 0.016411592470658314,
+   "ipr_change_rms": 0.008224612980968382
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-100 G50",
+   "kind": "hue",
+   "unexplained": 0.5402620537722028,
+   "lr_change_rms": 0.03127518857642706,
+   "ipr_change_rms": 0.014404852742840793
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+50 G50",
+   "kind": "variance",
+   "unexplained": 0.8023609643320357,
+   "lr_change_rms": 0.01139886396588239,
+   "ipr_change_rms": 0.0027458966640776473
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.21360304480693673,
+   "lr_change_rms": 0.004100025128273559,
+   "ipr_change_rms": 0.0034599972384568986
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+100 G50",
+   "kind": "variance",
+   "unexplained": 0.7923528314951942,
+   "lr_change_rms": 0.019738917565509332,
+   "ipr_change_rms": 0.005753016385217849
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-50 G50",
+   "kind": "variance",
+   "unexplained": 0.7465676289583506,
+   "lr_change_rms": 0.007472278079434347,
+   "ipr_change_rms": 0.002304601951598292
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-100 G50",
+   "kind": "variance",
+   "unexplained": 0.746936543906371,
+   "lr_change_rms": 0.014227978223467785,
+   "ipr_change_rms": 0.00447990203289493
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.08709685033706924,
+   "lr_change_rms": 0.018822209341900903,
+   "ipr_change_rms": 0.016065941961313075
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.46224631677557887,
+   "lr_change_rms": 0.013663685076455687,
+   "ipr_change_rms": 0.013977488570097023
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.3504188401632007,
+   "lr_change_rms": 0.017395970877434726,
+   "ipr_change_rms": 0.012028230681722514
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.3447453555136498,
+   "lr_change_rms": 0.018663511467962905,
+   "ipr_change_rms": 0.013076965685564802
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.3326487272268797,
+   "lr_change_rms": 0.01906175681603678,
+   "ipr_change_rms": 0.014240280757769196
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.33184176865121506,
+   "lr_change_rms": 0.01922486718410691,
+   "ipr_change_rms": 0.014445736610984939
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.3309190634175563,
+   "lr_change_rms": 0.01942359763167434,
+   "ipr_change_rms": 0.014835739290693992
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.1970113227243062,
+   "lr_change_rms": 0.005113954079207749,
+   "ipr_change_rms": 0.004034179671940725
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.43705283839780457,
+   "lr_change_rms": 0.015745354134184923,
+   "ipr_change_rms": 0.011615893322665553
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.22189816696889691,
+   "lr_change_rms": 0.020666369286253455,
+   "ipr_change_rms": 0.011529124620271248
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 1.0484596877405972,
+   "lr_change_rms": 0.011592357800600039,
+   "ipr_change_rms": 0.0047294560710864535
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.7229594079542038,
+   "lr_change_rms": 0.01579725176816337,
+   "ipr_change_rms": 0.004448592391545862
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.6856613823806595,
+   "lr_change_rms": 0.01747468871788776,
+   "ipr_change_rms": 0.006132046724624152
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.662669609020915,
+   "lr_change_rms": 0.01876871380077264,
+   "ipr_change_rms": 0.007512681340803312
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.6635912184359825,
+   "lr_change_rms": 0.01935828924141359,
+   "ipr_change_rms": 0.007820140246311067
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.6618162978277989,
+   "lr_change_rms": 0.01980751224692776,
+   "ipr_change_rms": 0.008166814079734058
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.4685403167943081,
+   "lr_change_rms": 0.013846425996023305,
+   "ipr_change_rms": 0.006354850543380597
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.07643168000415844,
+   "lr_change_rms": 0.03544598736574823,
+   "ipr_change_rms": 0.028204799955992194
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.22707159550109715,
+   "lr_change_rms": 0.006062637489705551,
+   "ipr_change_rms": 0.004460935021136866
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.27672859851512915,
+   "lr_change_rms": 0.014638887098469396,
+   "ipr_change_rms": 0.00969492713829554
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.3178446660537981,
+   "lr_change_rms": 0.0087314148871543,
+   "ipr_change_rms": 0.006589361636672754
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.26101662906875206,
+   "lr_change_rms": 0.011328983262251556,
+   "ipr_change_rms": 0.008480313942812071
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.23269178459398218,
+   "lr_change_rms": 0.013462367621545608,
+   "ipr_change_rms": 0.010088380771252101
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.23587758122932892,
+   "lr_change_rms": 0.014341349859144606,
+   "ipr_change_rms": 0.010540298489702083
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.23295526478357248,
+   "lr_change_rms": 0.015077759236424133,
+   "ipr_change_rms": 0.01122245104671951
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.35540741449714686,
+   "lr_change_rms": 0.01420398595039339,
+   "ipr_change_rms": 0.008853520511249283
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.2052372098069607,
+   "lr_change_rms": 0.006749053679868893,
+   "ipr_change_rms": 0.005094873464244472
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.6630741595930189,
+   "lr_change_rms": 0.00393580117731758,
+   "ipr_change_rms": 0.0036135603710610135
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.12622510826678573,
+   "lr_change_rms": 0.016293716633508894,
+   "ipr_change_rms": 0.01773554299787974
+  },
+  {
+   "scene": "6V1A0327",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.30746171867312827,
+   "lr_change_rms": 0.01064378412777859,
+   "ipr_change_rms": 0.007968340174478722
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.6073087462792298,
+   "lr_change_rms": 0.004377754520035887,
+   "ipr_change_rms": 0.0012577696643915927
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.8336115463939533,
+   "lr_change_rms": 0.0011043187850822622,
+   "ipr_change_rms": 0.0001610918280095167
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.7203148581935636,
+   "lr_change_rms": 0.0024436016093120428,
+   "ipr_change_rms": 0.0005934198868294625
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.44749627690440985,
+   "lr_change_rms": 0.00433342463774329,
+   "ipr_change_rms": 0.0019243666255359033
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.43738860869406204,
+   "lr_change_rms": 0.005604189826347952,
+   "ipr_change_rms": 0.002582674409259464
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.3245334643940386,
+   "lr_change_rms": 0.006205662491996892,
+   "ipr_change_rms": 0.003577062002787274
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.5839252193096939,
+   "lr_change_rms": 0.0039135482628196465,
+   "ipr_change_rms": 0.0013741269848955608
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.04265075954134881,
+   "lr_change_rms": 0.029057695671717423,
+   "ipr_change_rms": 0.025125968845933638
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+100 G50",
+   "kind": "luminance",
+   "unexplained": 0.044229653235303874,
+   "lr_change_rms": 0.05763706461211381,
+   "ipr_change_rms": 0.04928115829469107
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.13426553326009513,
+   "lr_change_rms": 0.006718746131097281,
+   "ipr_change_rms": 0.006457900872677637
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-25 G50",
+   "kind": "luminance",
+   "unexplained": 0.042043512448471626,
+   "lr_change_rms": 0.013234088889170858,
+   "ipr_change_rms": 0.011593282026872752
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-50 G50",
+   "kind": "luminance",
+   "unexplained": 0.04167782190833226,
+   "lr_change_rms": 0.024099834330472376,
+   "ipr_change_rms": 0.021233428981537912
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-100 G50",
+   "kind": "luminance",
+   "unexplained": 0.04141554061123944,
+   "lr_change_rms": 0.04088716339875735,
+   "ipr_change_rms": 0.03634715797820205
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+25 G50",
+   "kind": "saturation",
+   "unexplained": 0.21684725892876158,
+   "lr_change_rms": 0.007246063558817391,
+   "ipr_change_rms": 0.005027906522213607
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.214739722466473,
+   "lr_change_rms": 0.014447511746467226,
+   "ipr_change_rms": 0.009913708714130333
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+100 G50",
+   "kind": "saturation",
+   "unexplained": 0.2154669552578857,
+   "lr_change_rms": 0.022544902374989725,
+   "ipr_change_rms": 0.017338667487678445
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-25 G50",
+   "kind": "saturation",
+   "unexplained": 0.190639434383578,
+   "lr_change_rms": 0.0053263169373521935,
+   "ipr_change_rms": 0.004010413285572375
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-50 G50",
+   "kind": "saturation",
+   "unexplained": 0.18707494056309562,
+   "lr_change_rms": 0.008763365652866823,
+   "ipr_change_rms": 0.0067606345146794125
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.17610309962076603,
+   "lr_change_rms": 0.012964897801785,
+   "ipr_change_rms": 0.011044267251757903
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.209058705256107,
+   "lr_change_rms": 0.0081002187014448,
+   "ipr_change_rms": 0.005905464789375309
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.39945169149490756,
+   "lr_change_rms": 0.0036835974209471233,
+   "ipr_change_rms": 0.004129431782211348
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.17730719957332722,
+   "lr_change_rms": 0.010827989766314555,
+   "ipr_change_rms": 0.008460398336978902
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.18229003148339534,
+   "lr_change_rms": 0.013785454641275669,
+   "ipr_change_rms": 0.011731749280068073
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.1946306424088414,
+   "lr_change_rms": 0.014563033256248177,
+   "ipr_change_rms": 0.012712954316739177
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+25 G50",
+   "kind": "hue",
+   "unexplained": 0.3235839096297634,
+   "lr_change_rms": 0.006761438537370169,
+   "ipr_change_rms": 0.004881650715911568
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.28141601417918116,
+   "lr_change_rms": 0.012565945149345682,
+   "ipr_change_rms": 0.009291934914512892
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+100 G50",
+   "kind": "hue",
+   "unexplained": 0.17201655346489583,
+   "lr_change_rms": 0.021863989031333884,
+   "ipr_change_rms": 0.01686361598446545
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-25 G50",
+   "kind": "hue",
+   "unexplained": 0.3512813876152084,
+   "lr_change_rms": 0.007281259287791787,
+   "ipr_change_rms": 0.0049665944946311776
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-50 G50",
+   "kind": "hue",
+   "unexplained": 0.3739611890324226,
+   "lr_change_rms": 0.015012685672619461,
+   "ipr_change_rms": 0.009528588103374539
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-100 G50",
+   "kind": "hue",
+   "unexplained": 0.42822779050811666,
+   "lr_change_rms": 0.031089875918172055,
+   "ipr_change_rms": 0.016696221162824983
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+50 G50",
+   "kind": "variance",
+   "unexplained": 0.8664120351911974,
+   "lr_change_rms": 0.008305821439115641,
+   "ipr_change_rms": 0.003460228679661908
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.23588522781749274,
+   "lr_change_rms": 0.005173251952917381,
+   "ipr_change_rms": 0.005711032796401576
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+100 G50",
+   "kind": "variance",
+   "unexplained": 0.8875356098208426,
+   "lr_change_rms": 0.017294067918906305,
+   "ipr_change_rms": 0.0072206759282377655
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-50 G50",
+   "kind": "variance",
+   "unexplained": 0.48251473044267246,
+   "lr_change_rms": 0.004199091758587224,
+   "ipr_change_rms": 0.0030021958629113713
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-100 G50",
+   "kind": "variance",
+   "unexplained": 0.4599084960224098,
+   "lr_change_rms": 0.008397868290862946,
+   "ipr_change_rms": 0.005817900402381536
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.28857899501875545,
+   "lr_change_rms": 0.00876141932021898,
+   "ipr_change_rms": 0.010263584038438432
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 2.451905365281972,
+   "lr_change_rms": 0.004790122333730547,
+   "ipr_change_rms": 0.00867577835396188
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 18.732370667635422,
+   "lr_change_rms": 0.0017730594801832757,
+   "ipr_change_rms": 0.007651485836551355
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 5.877389988859361,
+   "lr_change_rms": 0.0034296541374854808,
+   "ipr_change_rms": 0.009476823029755818
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.4736656206124583,
+   "lr_change_rms": 0.009305162789540876,
+   "ipr_change_rms": 0.01098756511418622
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.3142973220751929,
+   "lr_change_rms": 0.013108793750024874,
+   "ipr_change_rms": 0.01133209041972367
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.3230248718549527,
+   "lr_change_rms": 0.01623535215607109,
+   "ipr_change_rms": 0.011781264974609778
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.2436894048699117,
+   "lr_change_rms": 0.006345533714837137,
+   "ipr_change_rms": 0.0075593434725335865
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.274364643797151,
+   "lr_change_rms": 0.0077932870616331945,
+   "ipr_change_rms": 0.005405190418209557
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.4442106708703902,
+   "lr_change_rms": 0.0001501674204113111,
+   "ipr_change_rms": 6.255408264545474e-05
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.8709732372095661,
+   "lr_change_rms": 0.00021730698486027356,
+   "ipr_change_rms": 3.8853082557149026e-05
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.999723224779599,
+   "lr_change_rms": 3.5684047094932405e-05,
+   "ipr_change_rms": 6.838264493653824e-07
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.9697298433135169,
+   "lr_change_rms": 0.00010003544898063879,
+   "ipr_change_rms": 6.440956784579617e-06
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.830363266581291,
+   "lr_change_rms": 0.00021874484027970708,
+   "ipr_change_rms": 5.7679928494058136e-05
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.7813607991357907,
+   "lr_change_rms": 0.00023269814374310334,
+   "ipr_change_rms": 9.111330342825987e-05
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.7752993830948791,
+   "lr_change_rms": 0.0002471145166723413,
+   "ipr_change_rms": 0.000153075387541399
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.5718945124874711,
+   "lr_change_rms": 0.0001142815148258482,
+   "ipr_change_rms": 3.637849343093273e-05
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.03874013735299594,
+   "lr_change_rms": 0.036653037681048765,
+   "ipr_change_rms": 0.031524920358881756
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.2433997026630581,
+   "lr_change_rms": 0.006719725469452942,
+   "ipr_change_rms": 0.007977562669158453
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.2042757772921431,
+   "lr_change_rms": 0.018012986844896325,
+   "ipr_change_rms": 0.012145782089513203
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.1672373591185898,
+   "lr_change_rms": 0.011188504965378114,
+   "ipr_change_rms": 0.008493334858396378
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.1550842082404379,
+   "lr_change_rms": 0.013944483318447394,
+   "ipr_change_rms": 0.010600776967170633
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.14621565653109075,
+   "lr_change_rms": 0.0156142039045942,
+   "ipr_change_rms": 0.0127032062813188
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.15344686746340563,
+   "lr_change_rms": 0.01619274231473938,
+   "ipr_change_rms": 0.013156836674020357
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.1687743409658861,
+   "lr_change_rms": 0.016675500873309386,
+   "ipr_change_rms": 0.013866843741526042
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.2024455449922081,
+   "lr_change_rms": 0.014238722173860121,
+   "ipr_change_rms": 0.011235844129438037
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.2501339544382467,
+   "lr_change_rms": 0.007015390299987188,
+   "ipr_change_rms": 0.008423229617838037
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.6614556825301852,
+   "lr_change_rms": 0.004477883939415277,
+   "ipr_change_rms": 0.006281852844884538
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.49589734160086896,
+   "lr_change_rms": 0.008291494208699039,
+   "ipr_change_rms": 0.002766086494047072
+  },
+  {
+   "scene": "6V1A9539",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.24284845515755268,
+   "lr_change_rms": 0.012482934474522124,
+   "ipr_change_rms": 0.017024791290113275
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.25209147327233794,
+   "lr_change_rms": 0.0017783827192544017,
+   "ipr_change_rms": 0.0014777198000207868
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.3847070533812384,
+   "lr_change_rms": 0.0018513251760475635,
+   "ipr_change_rms": 0.0009001861040531068
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.1316216987105102,
+   "lr_change_rms": 0.003307829226283719,
+   "ipr_change_rms": 0.0027996024246859266
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.08101870812372995,
+   "lr_change_rms": 0.005054230912803491,
+   "ipr_change_rms": 0.0048622539004583645
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.0800409850035026,
+   "lr_change_rms": 0.0058602286983946055,
+   "ipr_change_rms": 0.005577450735044923
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.07859544198167366,
+   "lr_change_rms": 0.006526651619780349,
+   "ipr_change_rms": 0.006291327012702959
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.6173771583400709,
+   "lr_change_rms": 0.0031836064388484336,
+   "ipr_change_rms": 0.003920543253422592
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.217243429299479,
+   "lr_change_rms": 0.0035933148137338253,
+   "ipr_change_rms": 0.002681711387650132
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+100 G50",
+   "kind": "luminance",
+   "unexplained": 0.2170661519129229,
+   "lr_change_rms": 0.007092422545601002,
+   "ipr_change_rms": 0.00519636420057693
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.3320093899019624,
+   "lr_change_rms": 0.0069013291046980865,
+   "ipr_change_rms": 0.005462217300651247
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-25 G50",
+   "kind": "luminance",
+   "unexplained": 0.22048161800423569,
+   "lr_change_rms": 0.0016231781519426328,
+   "ipr_change_rms": 0.0012571757788628955
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-50 G50",
+   "kind": "luminance",
+   "unexplained": 0.22091521024841532,
+   "lr_change_rms": 0.002951160798289141,
+   "ipr_change_rms": 0.002313798930944893
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-100 G50",
+   "kind": "luminance",
+   "unexplained": 0.22315159729273604,
+   "lr_change_rms": 0.0049930025628940715,
+   "ipr_change_rms": 0.003994015395402582
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+25 G50",
+   "kind": "saturation",
+   "unexplained": 0.4955861487532998,
+   "lr_change_rms": 0.0010376801286090492,
+   "ipr_change_rms": 0.0006116802631160973
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.5075956927656875,
+   "lr_change_rms": 0.0020413544351977706,
+   "ipr_change_rms": 0.0011498105998806601
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+100 G50",
+   "kind": "saturation",
+   "unexplained": 0.5262805836720412,
+   "lr_change_rms": 0.003499022545811753,
+   "ipr_change_rms": 0.0019244930813639648
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-25 G50",
+   "kind": "saturation",
+   "unexplained": 0.4970996260250731,
+   "lr_change_rms": 0.0008041314792687505,
+   "ipr_change_rms": 0.0005382062932248336
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-50 G50",
+   "kind": "saturation",
+   "unexplained": 0.5011451903881327,
+   "lr_change_rms": 0.0013383402541822745,
+   "ipr_change_rms": 0.0009359032002563574
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.5236455329318201,
+   "lr_change_rms": 0.0020063185225553987,
+   "ipr_change_rms": 0.0016146323151303066
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.5857923453380921,
+   "lr_change_rms": 0.0007703103773892841,
+   "ipr_change_rms": 0.0003701024615115835
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.6575910876325263,
+   "lr_change_rms": 0.015445504596869785,
+   "ipr_change_rms": 0.006034083328583712
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.5023384196819363,
+   "lr_change_rms": 0.0012459773441968532,
+   "ipr_change_rms": 0.0006736312233046089
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.6117034785011345,
+   "lr_change_rms": 0.0023411464253994476,
+   "ipr_change_rms": 0.0020291387452325373
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.7678108789669086,
+   "lr_change_rms": 0.0027080282157731336,
+   "ipr_change_rms": 0.0026469951794935295
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+25 G50",
+   "kind": "hue",
+   "unexplained": 0.7079497839961008,
+   "lr_change_rms": 0.0008324752525315368,
+   "ipr_change_rms": 0.0006461798222624742
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.688401919703133,
+   "lr_change_rms": 0.001624169123316899,
+   "ipr_change_rms": 0.001235894109064729
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+100 G50",
+   "kind": "hue",
+   "unexplained": 0.6529146189044162,
+   "lr_change_rms": 0.003069321350205792,
+   "ipr_change_rms": 0.0022549461816171058
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-25 G50",
+   "kind": "hue",
+   "unexplained": 0.7233961775788683,
+   "lr_change_rms": 0.0008597552897206624,
+   "ipr_change_rms": 0.0006528123586886348
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-50 G50",
+   "kind": "hue",
+   "unexplained": 0.709435948312522,
+   "lr_change_rms": 0.0017077906602217263,
+   "ipr_change_rms": 0.0012576410567281741
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-100 G50",
+   "kind": "hue",
+   "unexplained": 0.6369642815262516,
+   "lr_change_rms": 0.0030794938573582235,
+   "ipr_change_rms": 0.0022243745597576407
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+50 G50",
+   "kind": "variance",
+   "unexplained": 0.9993100601846628,
+   "lr_change_rms": 0.0013387506851414693,
+   "ipr_change_rms": 0.0010620018881970943
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.532189365774589,
+   "lr_change_rms": 0.017266858037979168,
+   "ipr_change_rms": 0.007822599992562773
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+100 G50",
+   "kind": "variance",
+   "unexplained": 1.0503053803486724,
+   "lr_change_rms": 0.0024673476942776817,
+   "ipr_change_rms": 0.0021345646492088397
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-50 G50",
+   "kind": "variance",
+   "unexplained": 1.0152902934570656,
+   "lr_change_rms": 0.0011229547155533809,
+   "ipr_change_rms": 0.0010132675869478525
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-100 G50",
+   "kind": "variance",
+   "unexplained": 0.9978788156117331,
+   "lr_change_rms": 0.002231404202898497,
+   "ipr_change_rms": 0.001976684141535907
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.34636835215895,
+   "lr_change_rms": 0.006554524829450916,
+   "ipr_change_rms": 0.006460688411205751
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.543200065275071,
+   "lr_change_rms": 0.005652046532795094,
+   "ipr_change_rms": 0.005023792620483693
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.4989225001192457,
+   "lr_change_rms": 0.005412011532248624,
+   "ipr_change_rms": 0.003274496461841274
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.45371199593858264,
+   "lr_change_rms": 0.006512826592820834,
+   "ipr_change_rms": 0.0047119574492988205
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.4499680976199749,
+   "lr_change_rms": 0.007488701653938286,
+   "ipr_change_rms": 0.006038783080289154
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.4509801431024032,
+   "lr_change_rms": 0.007864174514686507,
+   "ipr_change_rms": 0.006391861031758429
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.4532145042653874,
+   "lr_change_rms": 0.00821064588638681,
+   "ipr_change_rms": 0.0067836609269024545
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.262115342948804,
+   "lr_change_rms": 0.018286304892080024,
+   "ipr_change_rms": 0.010922167063931064
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.9638618369257826,
+   "lr_change_rms": 0.004019987498890508,
+   "ipr_change_rms": 0.005037031060910155
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.16205860666784136,
+   "lr_change_rms": 0.0037532313827495275,
+   "ipr_change_rms": 0.0025576156122705963
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.7652336455479125,
+   "lr_change_rms": 0.005334607407494067,
+   "ipr_change_rms": 0.0016475621015991802
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.8085260705693714,
+   "lr_change_rms": 0.003226684281144518,
+   "ipr_change_rms": 0.0008546601027848049
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.7672039728025835,
+   "lr_change_rms": 0.0039007849101737463,
+   "ipr_change_rms": 0.001344397382899918
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.7435645385047138,
+   "lr_change_rms": 0.0045018521701258914,
+   "ipr_change_rms": 0.0018409892367634922
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.7416109165892125,
+   "lr_change_rms": 0.00469786323737223,
+   "ipr_change_rms": 0.0019860081507563246
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.7399637402321148,
+   "lr_change_rms": 0.0048897020776067935,
+   "ipr_change_rms": 0.0021694135131260857
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.23501705616392274,
+   "lr_change_rms": 0.002562463878005493,
+   "ipr_change_rms": 0.0015325934945367848
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.25416573174936846,
+   "lr_change_rms": 0.0038293714863683313,
+   "ipr_change_rms": 0.002862571024491445
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.2387422566981495,
+   "lr_change_rms": 0.018731219043504596,
+   "ipr_change_rms": 0.011498967626135845
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.3849712489506492,
+   "lr_change_rms": 0.00173615171605737,
+   "ipr_change_rms": 0.0013354946913433417
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.4863849104046982,
+   "lr_change_rms": 0.0006315365893299137,
+   "ipr_change_rms": 0.0003677227350721561
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.4154407080145473,
+   "lr_change_rms": 0.0011873982526448303,
+   "ipr_change_rms": 0.0007208762777571965
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.4835782479443956,
+   "lr_change_rms": 0.001989373557618147,
+   "ipr_change_rms": 0.0020133524821605987
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.5803201993107099,
+   "lr_change_rms": 0.0023402965918606247,
+   "ipr_change_rms": 0.002534010659909127
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.7171609145483981,
+   "lr_change_rms": 0.002747235136292191,
+   "ipr_change_rms": 0.0033343957255654016
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.6795286151253336,
+   "lr_change_rms": 0.001541416477108465,
+   "ipr_change_rms": 0.0015323290466412503
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.18578434520889678,
+   "lr_change_rms": 0.018991037154193917,
+   "ipr_change_rms": 0.012550656992491707
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.624463079386909,
+   "lr_change_rms": 0.012372634651189911,
+   "ipr_change_rms": 0.009360278916027788
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.10610572755512747,
+   "lr_change_rms": 0.005725782564803854,
+   "ipr_change_rms": 0.004832204320913695
+  },
+  {
+   "scene": "6V1A0043",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.2869251253190422,
+   "lr_change_rms": 0.01962318217848905,
+   "ipr_change_rms": 0.013216767814966323
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.3970853484847703,
+   "lr_change_rms": 0.017171931199455086,
+   "ipr_change_rms": 0.012858354192978797
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.5720063377684125,
+   "lr_change_rms": 0.016028062702855624,
+   "ipr_change_rms": 0.016687456752686302
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.3116014509094239,
+   "lr_change_rms": 0.023162176405930306,
+   "ipr_change_rms": 0.020434181495552206
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.24034874030441908,
+   "lr_change_rms": 0.027508103138800182,
+   "ipr_change_rms": 0.02340993842066388
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.22274442140548037,
+   "lr_change_rms": 0.029486188130393803,
+   "ipr_change_rms": 0.024013557792308324
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.21496014650612638,
+   "lr_change_rms": 0.0304111596244661,
+   "ipr_change_rms": 0.024707994939667133
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.4228550019742923,
+   "lr_change_rms": 0.02552618630492456,
+   "ipr_change_rms": 0.020896282831534746
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+25 G50",
+   "kind": "luminance",
+   "unexplained": 0.3525479441375734,
+   "lr_change_rms": 0.014511479027822995,
+   "ipr_change_rms": 0.009103374319399107
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.3485564815826046,
+   "lr_change_rms": 0.026860461395007144,
+   "ipr_change_rms": 0.01745358974674715
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+100 G50",
+   "kind": "luminance",
+   "unexplained": 0.304519131635298,
+   "lr_change_rms": 0.04470341324559365,
+   "ipr_change_rms": 0.03274697392114068
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 1.7824972555400784,
+   "lr_change_rms": 0.0007553223253719107,
+   "ipr_change_rms": 0.0008843804246320059
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-25 G50",
+   "kind": "luminance",
+   "unexplained": 0.35145554521295613,
+   "lr_change_rms": 0.013127632889262202,
+   "ipr_change_rms": 0.008172031897391538
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-50 G50",
+   "kind": "luminance",
+   "unexplained": 0.3465329720845753,
+   "lr_change_rms": 0.023916500209027726,
+   "ipr_change_rms": 0.015077728740720442
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-100 G50",
+   "kind": "luminance",
+   "unexplained": 0.338768432083401,
+   "lr_change_rms": 0.04058973864962222,
+   "ipr_change_rms": 0.026126556995237638
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+25 G50",
+   "kind": "saturation",
+   "unexplained": 0.47929508398073917,
+   "lr_change_rms": 0.009606100321557995,
+   "ipr_change_rms": 0.004983740425077168
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.44773964225325796,
+   "lr_change_rms": 0.014732313381476847,
+   "ipr_change_rms": 0.009414814240596469
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+100 G50",
+   "kind": "saturation",
+   "unexplained": 0.5324374823530444,
+   "lr_change_rms": 0.01926452012195015,
+   "ipr_change_rms": 0.015429597696646412
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-25 G50",
+   "kind": "saturation",
+   "unexplained": 0.42959150881890223,
+   "lr_change_rms": 0.007135187532703982,
+   "ipr_change_rms": 0.004096884247868401
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-50 G50",
+   "kind": "saturation",
+   "unexplained": 0.41365660941244936,
+   "lr_change_rms": 0.011702896130735087,
+   "ipr_change_rms": 0.006996167900299784
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.3792585753570969,
+   "lr_change_rms": 0.01725418778092271,
+   "ipr_change_rms": 0.011685142426409013
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.4055859450270294,
+   "lr_change_rms": 0.0025076023771595933,
+   "ipr_change_rms": 0.002329506265409481
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.2177370172622752,
+   "lr_change_rms": 0.0002454578699712402,
+   "ipr_change_rms": 0.0001277381867924764
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.7162910210172089,
+   "lr_change_rms": 0.009193226934775922,
+   "ipr_change_rms": 0.005576500095204643
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.3573008622284502,
+   "lr_change_rms": 0.020199943317664143,
+   "ipr_change_rms": 0.01308500522521585
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.3240306825775953,
+   "lr_change_rms": 0.022979020792313745,
+   "ipr_change_rms": 0.015407595910203903
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+25 G50",
+   "kind": "hue",
+   "unexplained": 0.5041777661812833,
+   "lr_change_rms": 0.008463182477069876,
+   "ipr_change_rms": 0.004927886298440991
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.5035806240677413,
+   "lr_change_rms": 0.01646791886813003,
+   "ipr_change_rms": 0.009432215273712434
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+100 G50",
+   "kind": "hue",
+   "unexplained": 0.4681085762631105,
+   "lr_change_rms": 0.02983455429411073,
+   "ipr_change_rms": 0.01718432692894039
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-25 G50",
+   "kind": "hue",
+   "unexplained": 0.5167310595366763,
+   "lr_change_rms": 0.00891002791605759,
+   "ipr_change_rms": 0.005017363515073013
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-50 G50",
+   "kind": "hue",
+   "unexplained": 0.5331787129192703,
+   "lr_change_rms": 0.018331022964470294,
+   "ipr_change_rms": 0.00973133983374861
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-100 G50",
+   "kind": "hue",
+   "unexplained": 0.5820049593339671,
+   "lr_change_rms": 0.038905645856950145,
+   "ipr_change_rms": 0.017368317233158587
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+50 G50",
+   "kind": "variance",
+   "unexplained": 0.8061175488864942,
+   "lr_change_rms": 0.009428173175531622,
+   "ipr_change_rms": 0.005145948509673867
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 1.3241337094089156,
+   "lr_change_rms": 0.00048537459762343366,
+   "ipr_change_rms": 0.00036406510980306915
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+100 G50",
+   "kind": "variance",
+   "unexplained": 0.866710362024451,
+   "lr_change_rms": 0.018857772340052557,
+   "ipr_change_rms": 0.011162966746221152
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-50 G50",
+   "kind": "variance",
+   "unexplained": 0.7392048695199993,
+   "lr_change_rms": 0.006091685660426198,
+   "ipr_change_rms": 0.003244383244196846
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-100 G50",
+   "kind": "variance",
+   "unexplained": 0.7325231735646264,
+   "lr_change_rms": 0.011857886696601042,
+   "ipr_change_rms": 0.006151703980525713
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.47045023840155675,
+   "lr_change_rms": 0.010879602195139811,
+   "ipr_change_rms": 0.011795610796736142
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.6622327003566981,
+   "lr_change_rms": 0.0067686227263400595,
+   "ipr_change_rms": 0.006916075114249122
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.8865880710791745,
+   "lr_change_rms": 0.002251840403426027,
+   "ipr_change_rms": 0.003421675072443166
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.694367320398498,
+   "lr_change_rms": 0.005952174880140576,
+   "ipr_change_rms": 0.005883684031935902
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.5728475116259392,
+   "lr_change_rms": 0.009031886779095262,
+   "ipr_change_rms": 0.008844174134749071
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.5645400122966645,
+   "lr_change_rms": 0.009868770868954416,
+   "ipr_change_rms": 0.009691941731304174
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.5567221937591122,
+   "lr_change_rms": 0.01073480784865883,
+   "ipr_change_rms": 0.010599403758157891
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 2.222752790157495,
+   "lr_change_rms": 0.0009313133224752929,
+   "ipr_change_rms": 0.0013018312739894863
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.5919128135826065,
+   "lr_change_rms": 0.00826516379557236,
+   "ipr_change_rms": 0.007031123391353973
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 1.0000089896257542,
+   "lr_change_rms": 5.0131333831582866e-05,
+   "ipr_change_rms": 6.00011907010321e-08
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 1.0000089245482582,
+   "lr_change_rms": 5.014800019651876e-05,
+   "ipr_change_rms": 5.988211042189228e-08
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.0000088295287888,
+   "lr_change_rms": 5.010835930467866e-05,
+   "ipr_change_rms": 5.973788724833594e-08
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 1.0000088295246157,
+   "lr_change_rms": 5.010837114594885e-05,
+   "ipr_change_rms": 5.973788724833594e-08
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 1.0000086887446054,
+   "lr_change_rms": 5.0147222224653575e-05,
+   "ipr_change_rms": 6.019476552723944e-08
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 1.000008800025692,
+   "lr_change_rms": 5.015346913304182e-05,
+   "ipr_change_rms": 6.301551027373885e-08
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 1.0000102037877423,
+   "lr_change_rms": 5.015885934870909e-05,
+   "ipr_change_rms": 8.777733954674214e-08
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 1.0000088719612041,
+   "lr_change_rms": 5.012069352670806e-05,
+   "ipr_change_rms": 5.980243355886943e-08
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.4105285339814071,
+   "lr_change_rms": 0.021682499650023782,
+   "ipr_change_rms": 0.01639349698495804
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 3.00889051910064,
+   "lr_change_rms": 0.0010155043741767917,
+   "ipr_change_rms": 0.0017433555374360274
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.47604889055415983,
+   "lr_change_rms": 0.012728574303710414,
+   "ipr_change_rms": 0.008524339453860136
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 5.028236540892307,
+   "lr_change_rms": 0.0014140254620152448,
+   "ipr_change_rms": 0.0033797977519483308
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.776919455106749,
+   "lr_change_rms": 0.006541501723935602,
+   "ipr_change_rms": 0.00597486748234816
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.4115232380431317,
+   "lr_change_rms": 0.014025467405868706,
+   "ipr_change_rms": 0.010176243080133818
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.37412706213092145,
+   "lr_change_rms": 0.016834084691999693,
+   "ipr_change_rms": 0.011217910700945072
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.33286435625521243,
+   "lr_change_rms": 0.019695586114782473,
+   "ipr_change_rms": 0.013112673068164887
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.5026769266937012,
+   "lr_change_rms": 0.013260227333728815,
+   "ipr_change_rms": 0.008358852201772462
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 4.283400499046197,
+   "lr_change_rms": 0.0011017387635599396,
+   "ipr_change_rms": 0.0023521139770179634
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 2.903377779727509,
+   "lr_change_rms": 0.0005618608589862289,
+   "ipr_change_rms": 0.0009513538495680566
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.5695220011198213,
+   "lr_change_rms": 0.030515892849949492,
+   "ipr_change_rms": 0.0271029494903064
+  },
+  {
+   "scene": "IMG_7953",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 3.6830996332968806,
+   "lr_change_rms": 0.0010129464524525995,
+   "ipr_change_rms": 0.0019661509911022257
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.2339654230023071,
+   "lr_change_rms": 0.0007530726548738605,
+   "ipr_change_rms": 0.0005523601285722502
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.110518207665852,
+   "lr_change_rms": 0.0002615729130036736,
+   "ipr_change_rms": 0.0003634553328173309
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.25320574639412663,
+   "lr_change_rms": 0.0005003345769259405,
+   "ipr_change_rms": 0.0004562187385950743
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.17676667156704826,
+   "lr_change_rms": 0.0007516305454210081,
+   "ipr_change_rms": 0.0006166955123743278
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.2589815380055931,
+   "lr_change_rms": 0.0010117115859801663,
+   "ipr_change_rms": 0.0006729050832483523
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.20414096642039353,
+   "lr_change_rms": 0.001120079419687087,
+   "ipr_change_rms": 0.0008133296120208399
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.45209548231337954,
+   "lr_change_rms": 0.0006835628772204575,
+   "ipr_change_rms": 0.0005320289034449521
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.04569000951129016,
+   "lr_change_rms": 0.012124741062967962,
+   "ipr_change_rms": 0.011028837116461222
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+100 G50",
+   "kind": "luminance",
+   "unexplained": 0.0453828819013145,
+   "lr_change_rms": 0.02401863343092908,
+   "ipr_change_rms": 0.02168307092483413
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.8231444277767582,
+   "lr_change_rms": 0.00028993306458930486,
+   "ipr_change_rms": 0.0003592294852163304
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-25 G50",
+   "kind": "luminance",
+   "unexplained": 0.04717699274873105,
+   "lr_change_rms": 0.00548799311784613,
+   "ipr_change_rms": 0.005056898971246687
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-50 G50",
+   "kind": "luminance",
+   "unexplained": 0.0474585688531973,
+   "lr_change_rms": 0.009999422917120583,
+   "ipr_change_rms": 0.009245833404109506
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-100 G50",
+   "kind": "luminance",
+   "unexplained": 0.04839687313626769,
+   "lr_change_rms": 0.01696482672369343,
+   "ipr_change_rms": 0.015782955130114382
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+25 G50",
+   "kind": "saturation",
+   "unexplained": 0.26579703936918914,
+   "lr_change_rms": 0.0012431271651246441,
+   "ipr_change_rms": 0.0010373333027087163
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.26926708339593375,
+   "lr_change_rms": 0.0025093088651023205,
+   "ipr_change_rms": 0.002070076356453792
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+100 G50",
+   "kind": "saturation",
+   "unexplained": 0.27599287256534905,
+   "lr_change_rms": 0.005011588977010514,
+   "ipr_change_rms": 0.003814134801127931
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-25 G50",
+   "kind": "saturation",
+   "unexplained": 0.26865785026605216,
+   "lr_change_rms": 0.0009743991184275755,
+   "ipr_change_rms": 0.000810887832446624
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-50 G50",
+   "kind": "saturation",
+   "unexplained": 0.2619775949090019,
+   "lr_change_rms": 0.00161939663659878,
+   "ipr_change_rms": 0.0013586619507954395
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.26137569350584405,
+   "lr_change_rms": 0.0024306527315226182,
+   "ipr_change_rms": 0.0021970968851091235
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.5652534441592991,
+   "lr_change_rms": 0.0012420185544033304,
+   "ipr_change_rms": 0.0013014373027995388
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.947111184579154,
+   "lr_change_rms": 0.00013574116216072142,
+   "ipr_change_rms": 0.00012904746590518393
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.3221737874764878,
+   "lr_change_rms": 0.0018487843709924631,
+   "ipr_change_rms": 0.0017057223893307953
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.2502771867567956,
+   "lr_change_rms": 0.0026571484604275475,
+   "ipr_change_rms": 0.0022944843416188103
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.246079932972489,
+   "lr_change_rms": 0.002868842643045919,
+   "ipr_change_rms": 0.0024286490936415513
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+25 G50",
+   "kind": "hue",
+   "unexplained": 0.3682260185229819,
+   "lr_change_rms": 0.001386431295740683,
+   "ipr_change_rms": 0.0009943214395043288
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.3462941990610424,
+   "lr_change_rms": 0.0026644350440022274,
+   "ipr_change_rms": 0.0019013214487327444
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+100 G50",
+   "kind": "hue",
+   "unexplained": 0.24115576342492334,
+   "lr_change_rms": 0.00463437279335842,
+   "ipr_change_rms": 0.003448684949311811
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-25 G50",
+   "kind": "hue",
+   "unexplained": 0.3970344441519639,
+   "lr_change_rms": 0.0014268505265484514,
+   "ipr_change_rms": 0.0010005688302333253
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-50 G50",
+   "kind": "hue",
+   "unexplained": 0.4307464504178123,
+   "lr_change_rms": 0.0028988821573339737,
+   "ipr_change_rms": 0.001919476115942746
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-100 G50",
+   "kind": "hue",
+   "unexplained": 0.4787220753549411,
+   "lr_change_rms": 0.00574106928869223,
+   "ipr_change_rms": 0.0033607206958802638
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+50 G50",
+   "kind": "variance",
+   "unexplained": 0.8126799606898765,
+   "lr_change_rms": 0.0018059830951416829,
+   "ipr_change_rms": 0.0006869625275404456
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 1.2200711245002842,
+   "lr_change_rms": 0.0001911226442405105,
+   "ipr_change_rms": 0.0002495700683383162
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+100 G50",
+   "kind": "variance",
+   "unexplained": 0.8056674219511383,
+   "lr_change_rms": 0.003525179394229848,
+   "ipr_change_rms": 0.0013672413111987139
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-50 G50",
+   "kind": "variance",
+   "unexplained": 0.7085618776511257,
+   "lr_change_rms": 0.0013274406788930122,
+   "ipr_change_rms": 0.0006162216622634849
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-100 G50",
+   "kind": "variance",
+   "unexplained": 0.7234821967474643,
+   "lr_change_rms": 0.002755381498762029,
+   "ipr_change_rms": 0.0012132702359853081
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.22448884436702077,
+   "lr_change_rms": 0.002741474978603688,
+   "ipr_change_rms": 0.00200389644115851
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.4659070143181529,
+   "lr_change_rms": 0.0008949449513302745,
+   "ipr_change_rms": 0.0007030271217338648
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.6571407714656424,
+   "lr_change_rms": 0.00032127051924157564,
+   "ipr_change_rms": 0.0002611177801634396
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.5439158459862741,
+   "lr_change_rms": 0.0005612463621387502,
+   "ipr_change_rms": 0.000423950874389624
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.47180072463642286,
+   "lr_change_rms": 0.0008960531068637025,
+   "ipr_change_rms": 0.0008372677312441735
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.45886759171656966,
+   "lr_change_rms": 0.001017542134043457,
+   "ipr_change_rms": 0.0009425689287031654
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.4852982690485037,
+   "lr_change_rms": 0.0011532177381644916,
+   "ipr_change_rms": 0.0011685637282302886
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 1.4525686419200856,
+   "lr_change_rms": 0.00028043835130079584,
+   "ipr_change_rms": 0.0004615038001043111
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.5046170852293723,
+   "lr_change_rms": 0.0008551055272224842,
+   "ipr_change_rms": 0.0006325800213133017
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.03465633156893455,
+   "lr_change_rms": 0.08559546672091382,
+   "ipr_change_rms": 0.07959093411234129
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.709405993972347,
+   "lr_change_rms": 0.11189467423944843,
+   "ipr_change_rms": 0.05336220316000055
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.7295971159232693,
+   "lr_change_rms": 0.10054718496186625,
+   "ipr_change_rms": 0.04718350862649677
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.729187238406529,
+   "lr_change_rms": 0.10055403870953217,
+   "ipr_change_rms": 0.047470948332083845
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.7289968935025666,
+   "lr_change_rms": 0.1005597010660445,
+   "ipr_change_rms": 0.047624310021623574
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.7289556059492155,
+   "lr_change_rms": 0.10056189332364796,
+   "ipr_change_rms": 0.04765886271008498
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.7289158230875369,
+   "lr_change_rms": 0.10056408871222172,
+   "ipr_change_rms": 0.04769325494533447
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.05741641664037953,
+   "lr_change_rms": 0.057513737869261915,
+   "ipr_change_rms": 0.045462995626803546
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.08039909246890914,
+   "lr_change_rms": 0.012464042273368883,
+   "ipr_change_rms": 0.009500602732568595
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 1.2554353998297807,
+   "lr_change_rms": 0.00034067477512441746,
+   "ipr_change_rms": 0.0005343710219776413
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.2694080706419028,
+   "lr_change_rms": 0.002536399032978096,
+   "ipr_change_rms": 0.0017873079417767604
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.41859722038042707,
+   "lr_change_rms": 0.0012597441437269788,
+   "ipr_change_rms": 0.0010053873585628202
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.2862455197885457,
+   "lr_change_rms": 0.0018775609604377813,
+   "ipr_change_rms": 0.0014969825520984676
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.23362400566074817,
+   "lr_change_rms": 0.0024551107626708452,
+   "ipr_change_rms": 0.002006094230564214
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.23082898409190827,
+   "lr_change_rms": 0.002692683885359028,
+   "ipr_change_rms": 0.0021234792523676174
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.22793992813643382,
+   "lr_change_rms": 0.0029120309528109724,
+   "ipr_change_rms": 0.002265535202825537
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.348341461698591,
+   "lr_change_rms": 0.0026775295405403283,
+   "ipr_change_rms": 0.001692223939969574
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 1.2997291886772562,
+   "lr_change_rms": 0.0003906438054844223,
+   "ipr_change_rms": 0.0006302531210450685
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 1.8451539218959405,
+   "lr_change_rms": 0.0002139713863747561,
+   "ipr_change_rms": 0.00036339539865660916
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.21674770096679055,
+   "lr_change_rms": 0.00202705079620143,
+   "ipr_change_rms": 0.0014136385743710974
+  },
+  {
+   "scene": "6V1A9141",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 1.57872429251666,
+   "lr_change_rms": 0.0008216339104242696,
+   "ipr_change_rms": 0.0016422258057279793
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.37666004381914053,
+   "lr_change_rms": 0.017574406951967308,
+   "ipr_change_rms": 0.012060867452781954
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.2880882193337511,
+   "lr_change_rms": 0.013202460204017247,
+   "ipr_change_rms": 0.010913266624034667
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.26497592381546625,
+   "lr_change_rms": 0.018903550038994413,
+   "ipr_change_rms": 0.013460591085292342
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.2485086677421062,
+   "lr_change_rms": 0.022041399366061566,
+   "ipr_change_rms": 0.016079540313211717
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.25645966169605994,
+   "lr_change_rms": 0.023354194296177196,
+   "ipr_change_rms": 0.016651279997794956
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.2566075983230285,
+   "lr_change_rms": 0.024173104321091238,
+   "ipr_change_rms": 0.017339418284778446
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.4218783019140334,
+   "lr_change_rms": 0.021805802686107323,
+   "ipr_change_rms": 0.014024246864577919
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+25 G50",
+   "kind": "luminance",
+   "unexplained": 0.2786829516187012,
+   "lr_change_rms": 0.020141455787349827,
+   "ipr_change_rms": 0.013449489485648315
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.2780424791214614,
+   "lr_change_rms": 0.039356339753500814,
+   "ipr_change_rms": 0.026253605057572016
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+100 G50",
+   "kind": "luminance",
+   "unexplained": 0.2559766670640817,
+   "lr_change_rms": 0.06766744413482571,
+   "ipr_change_rms": 0.04971265673660451
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 1.6905087485429813,
+   "lr_change_rms": 0.0011143957974677067,
+   "ipr_change_rms": 0.001315878612019538
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-25 G50",
+   "kind": "luminance",
+   "unexplained": 0.27899060304032935,
+   "lr_change_rms": 0.01836299654900449,
+   "ipr_change_rms": 0.012059196873796068
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-50 G50",
+   "kind": "luminance",
+   "unexplained": 0.27577332341409083,
+   "lr_change_rms": 0.03356150595140583,
+   "ipr_change_rms": 0.022104376214770953
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-100 G50",
+   "kind": "luminance",
+   "unexplained": 0.2709039993597578,
+   "lr_change_rms": 0.0572833263687387,
+   "ipr_change_rms": 0.037890858267057105
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+25 G50",
+   "kind": "saturation",
+   "unexplained": 0.4641649225394426,
+   "lr_change_rms": 0.012110921137867632,
+   "ipr_change_rms": 0.00598284594483128
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.4102407305649688,
+   "lr_change_rms": 0.020372758556147116,
+   "ipr_change_rms": 0.011794515390389643
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+100 G50",
+   "kind": "saturation",
+   "unexplained": 0.3634921072439502,
+   "lr_change_rms": 0.024161081619614885,
+   "ipr_change_rms": 0.02081257809561683
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-25 G50",
+   "kind": "saturation",
+   "unexplained": 0.4080801249724479,
+   "lr_change_rms": 0.008637116781111072,
+   "ipr_change_rms": 0.004779658187287283
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-50 G50",
+   "kind": "saturation",
+   "unexplained": 0.39366399704262883,
+   "lr_change_rms": 0.014122226132208439,
+   "ipr_change_rms": 0.008068174968720122
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.3577883278532291,
+   "lr_change_rms": 0.020753575426920454,
+   "ipr_change_rms": 0.013213987247930098
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.5944398280530337,
+   "lr_change_rms": 0.01086393997735808,
+   "ipr_change_rms": 0.005178823703303657
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 5.635023393748168,
+   "lr_change_rms": 0.0002499847209935309,
+   "ipr_change_rms": 0.0005681549230346644
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.5246665594596079,
+   "lr_change_rms": 0.015887752384550063,
+   "ipr_change_rms": 0.007922137154935734
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.3550550446619583,
+   "lr_change_rms": 0.02258226585174634,
+   "ipr_change_rms": 0.014146631702077656
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.3322489348155949,
+   "lr_change_rms": 0.024105439278201603,
+   "ipr_change_rms": 0.015812238560190855
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+25 G50",
+   "kind": "hue",
+   "unexplained": 0.4790205620462959,
+   "lr_change_rms": 0.010898479391616572,
+   "ipr_change_rms": 0.005798636443513109
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.4822019911709025,
+   "lr_change_rms": 0.021074782378158186,
+   "ipr_change_rms": 0.011064957271619928
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+100 G50",
+   "kind": "hue",
+   "unexplained": 0.39699212897298675,
+   "lr_change_rms": 0.03551138413372452,
+   "ipr_change_rms": 0.020015335420462823
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-25 G50",
+   "kind": "hue",
+   "unexplained": 0.5006317503412803,
+   "lr_change_rms": 0.011602686595767334,
+   "ipr_change_rms": 0.005864638717294907
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-50 G50",
+   "kind": "hue",
+   "unexplained": 0.5285561039228261,
+   "lr_change_rms": 0.024012723081440215,
+   "ipr_change_rms": 0.011282413605439688
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-100 G50",
+   "kind": "hue",
+   "unexplained": 0.5977171864978491,
+   "lr_change_rms": 0.05154213894192552,
+   "ipr_change_rms": 0.019851406501554206
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+50 G50",
+   "kind": "variance",
+   "unexplained": 0.7908251163617264,
+   "lr_change_rms": 0.008250137294097135,
+   "ipr_change_rms": 0.005371517919155829
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 2.6521718385010606,
+   "lr_change_rms": 0.0006379643052928611,
+   "ipr_change_rms": 0.0009643011583903273
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+100 G50",
+   "kind": "variance",
+   "unexplained": 0.8473616669296792,
+   "lr_change_rms": 0.017020710798612688,
+   "ipr_change_rms": 0.01232325146489045
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-50 G50",
+   "kind": "variance",
+   "unexplained": 0.7723820395808421,
+   "lr_change_rms": 0.0052043637701504565,
+   "ipr_change_rms": 0.003275947242797474
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-100 G50",
+   "kind": "variance",
+   "unexplained": 0.7563307096886122,
+   "lr_change_rms": 0.010066392297270015,
+   "ipr_change_rms": 0.006179219004211439
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.41279385080089004,
+   "lr_change_rms": 0.013424736493246592,
+   "ipr_change_rms": 0.014835423037741309
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.6653433320214267,
+   "lr_change_rms": 0.0080475580911432,
+   "ipr_change_rms": 0.008050649115084761
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.3811604763429381,
+   "lr_change_rms": 0.0030435999134915096,
+   "ipr_change_rms": 0.004013232566825603
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.7725689594744003,
+   "lr_change_rms": 0.00668837968203791,
+   "ipr_change_rms": 0.006743862560607296
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.6659077903888869,
+   "lr_change_rms": 0.010127223027654569,
+   "ipr_change_rms": 0.010012409081393635
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.6568350448885271,
+   "lr_change_rms": 0.01104559250934745,
+   "ipr_change_rms": 0.01083892588952668
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.6432913407817372,
+   "lr_change_rms": 0.011800690539480648,
+   "ipr_change_rms": 0.011687837618132328
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 2.113087210220898,
+   "lr_change_rms": 0.0012108881069136316,
+   "ipr_change_rms": 0.0017018265927566472
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.6066549679420087,
+   "lr_change_rms": 0.009484647172076498,
+   "ipr_change_rms": 0.007658427191416444
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 1.0100396112915695,
+   "lr_change_rms": 5.088168337913935e-05,
+   "ipr_change_rms": 6.264666632400041e-06
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 1.0003167893364753,
+   "lr_change_rms": 8.219349658570346e-05,
+   "ipr_change_rms": 2.0430968920343816e-06
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.0000121099922634,
+   "lr_change_rms": 3.341670362868012e-05,
+   "ipr_change_rms": 6.237339718352709e-08
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 1.0000101594735982,
+   "lr_change_rms": 3.37129870031118e-05,
+   "ipr_change_rms": 1.1896478830777869e-07
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 1.0008801227614317,
+   "lr_change_rms": 8.424487864888378e-05,
+   "ipr_change_rms": 3.1465985741640734e-06
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.9967347852504289,
+   "lr_change_rms": 9.356034623821879e-05,
+   "ipr_change_rms": 5.575857710537847e-06
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.9824515811413643,
+   "lr_change_rms": 0.0001029661784037103,
+   "ipr_change_rms": 1.5751673814876097e-05
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 1.0016789463221747,
+   "lr_change_rms": 5.1834167535104386e-05,
+   "ipr_change_rms": 2.5251683500461054e-06
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.34213338890097794,
+   "lr_change_rms": 0.03415783528791416,
+   "ipr_change_rms": 0.01969195519121189
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 2.3471636363208046,
+   "lr_change_rms": 0.0013444656877503703,
+   "ipr_change_rms": 0.0020584952339061584
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.49554429671276373,
+   "lr_change_rms": 0.018406986025202292,
+   "ipr_change_rms": 0.00844830449663454
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.7134250268868855,
+   "lr_change_rms": 0.008528972798502578,
+   "ipr_change_rms": 0.0030898899637376107
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.6045641730840785,
+   "lr_change_rms": 0.012717316309437503,
+   "ipr_change_rms": 0.005306965006763457
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.39488794791283915,
+   "lr_change_rms": 0.017164017860896226,
+   "ipr_change_rms": 0.010012018564141897
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.3824563137793947,
+   "lr_change_rms": 0.01892666421308407,
+   "ipr_change_rms": 0.011013431234324791
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.3466341673335259,
+   "lr_change_rms": 0.020522108460267783,
+   "ipr_change_rms": 0.012791567814328058
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.5190482619356114,
+   "lr_change_rms": 0.01741613110274558,
+   "ipr_change_rms": 0.008105171366458021
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 2.866495560037224,
+   "lr_change_rms": 0.0014567663526657757,
+   "ipr_change_rms": 0.002542872637037943
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 2.663634116055535,
+   "lr_change_rms": 0.0007846711624928668,
+   "ipr_change_rms": 0.0012777509633990856
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.2976392820954356,
+   "lr_change_rms": 0.03215586832683768,
+   "ipr_change_rms": 0.021853366103766342
+  },
+  {
+   "scene": "IMG_7958",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 2.583299341025587,
+   "lr_change_rms": 0.002434749015741462,
+   "ipr_change_rms": 0.0040111466527647235
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.7941630852330973,
+   "lr_change_rms": 0.016153992216760792,
+   "ipr_change_rms": 0.016996827710515874
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.16762122267441476,
+   "lr_change_rms": 0.03909645279351978,
+   "ipr_change_rms": 0.029414601841918634
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.14857767086437498,
+   "lr_change_rms": 0.042279719395590616,
+   "ipr_change_rms": 0.03333321919629827
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.14315284762400304,
+   "lr_change_rms": 0.04450142229927808,
+   "ipr_change_rms": 0.036977607535852934
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.13757757062755865,
+   "lr_change_rms": 0.04565930158828122,
+   "ipr_change_rms": 0.03766130682954545
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.13842552953649123,
+   "lr_change_rms": 0.046299363782867635,
+   "ipr_change_rms": 0.03855102752848498
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.3010630851936034,
+   "lr_change_rms": 0.03135253326222128,
+   "ipr_change_rms": 0.03540130625969148
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+25 G50",
+   "kind": "luminance",
+   "unexplained": 0.3042345108833767,
+   "lr_change_rms": 0.01557580097492315,
+   "ipr_change_rms": 0.009320348470300882
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.31382342210368264,
+   "lr_change_rms": 0.03054761516694001,
+   "ipr_change_rms": 0.017897932742264366
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+100 G50",
+   "kind": "luminance",
+   "unexplained": 0.2985433589589613,
+   "lr_change_rms": 0.05478244969875557,
+   "ipr_change_rms": 0.033666452973065135
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.7569204868201297,
+   "lr_change_rms": 0.004146018498995031,
+   "ipr_change_rms": 0.0022386722432095243
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-25 G50",
+   "kind": "luminance",
+   "unexplained": 0.2975968342223108,
+   "lr_change_rms": 0.01405794418467018,
+   "ipr_change_rms": 0.008548409841156806
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-50 G50",
+   "kind": "luminance",
+   "unexplained": 0.29027465162203553,
+   "lr_change_rms": 0.02552664420632785,
+   "ipr_change_rms": 0.01581471412608311
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-100 G50",
+   "kind": "luminance",
+   "unexplained": 0.2793802195574382,
+   "lr_change_rms": 0.04313297818129126,
+   "ipr_change_rms": 0.02752769759001596
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+25 G50",
+   "kind": "saturation",
+   "unexplained": 0.5556330539021705,
+   "lr_change_rms": 0.00761834765223822,
+   "ipr_change_rms": 0.003275402612163096
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.5626409605731446,
+   "lr_change_rms": 0.014547153383623671,
+   "ipr_change_rms": 0.006173385606268977
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+100 G50",
+   "kind": "saturation",
+   "unexplained": 0.5494477187461053,
+   "lr_change_rms": 0.02245267366068483,
+   "ipr_change_rms": 0.010483610462699312
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-25 G50",
+   "kind": "saturation",
+   "unexplained": 0.4982371818553012,
+   "lr_change_rms": 0.006074585782404935,
+   "ipr_change_rms": 0.0029373333490640393
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-50 G50",
+   "kind": "saturation",
+   "unexplained": 0.4734854120380767,
+   "lr_change_rms": 0.010114934744439334,
+   "ipr_change_rms": 0.005161145643881248
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.4224641077168859,
+   "lr_change_rms": 0.015136992165877739,
+   "ipr_change_rms": 0.00897256003249783
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.8680295329208391,
+   "lr_change_rms": 0.003951551479082318,
+   "ipr_change_rms": 0.0010064116699376481
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.8176445442733261,
+   "lr_change_rms": 0.0029250859676331446,
+   "ipr_change_rms": 0.0015815208315325027
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.7059791954428905,
+   "lr_change_rms": 0.008172871800676345,
+   "ipr_change_rms": 0.0027563681590503618
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.4024811268050725,
+   "lr_change_rms": 0.018081569336445877,
+   "ipr_change_rms": 0.010800888801077917
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.35029033096553286,
+   "lr_change_rms": 0.021656451984881506,
+   "ipr_change_rms": 0.014075477939546803
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+25 G50",
+   "kind": "hue",
+   "unexplained": 0.5019659122551142,
+   "lr_change_rms": 0.007094368718877577,
+   "ipr_change_rms": 0.0036644779852859207
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.49438628760297204,
+   "lr_change_rms": 0.013709490893734392,
+   "ipr_change_rms": 0.007010352882060971
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+100 G50",
+   "kind": "hue",
+   "unexplained": 0.4622380824233579,
+   "lr_change_rms": 0.025158081834601404,
+   "ipr_change_rms": 0.012819210613287719
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-25 G50",
+   "kind": "hue",
+   "unexplained": 0.5252210194101903,
+   "lr_change_rms": 0.007479857612423428,
+   "ipr_change_rms": 0.0037342869237617232
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-50 G50",
+   "kind": "hue",
+   "unexplained": 0.5401021475929859,
+   "lr_change_rms": 0.0152337257099906,
+   "ipr_change_rms": 0.007217724336722869
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-100 G50",
+   "kind": "hue",
+   "unexplained": 0.568656438626918,
+   "lr_change_rms": 0.030622870754259363,
+   "ipr_change_rms": 0.012810088184755751
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+50 G50",
+   "kind": "variance",
+   "unexplained": 0.8112299280120618,
+   "lr_change_rms": 0.008324800151955606,
+   "ipr_change_rms": 0.00355694273478773
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.7734667210446567,
+   "lr_change_rms": 0.005425049672790623,
+   "ipr_change_rms": 0.002252248008451051
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+100 G50",
+   "kind": "variance",
+   "unexplained": 0.8335273009263474,
+   "lr_change_rms": 0.016134025227488958,
+   "ipr_change_rms": 0.007562080968768315
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-50 G50",
+   "kind": "variance",
+   "unexplained": 0.6793728092867828,
+   "lr_change_rms": 0.005667966591410055,
+   "ipr_change_rms": 0.0027965902428497722
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-100 G50",
+   "kind": "variance",
+   "unexplained": 0.6708665943482078,
+   "lr_change_rms": 0.01130043646821595,
+   "ipr_change_rms": 0.005553049840841766
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.2997864486350995,
+   "lr_change_rms": 0.01705448491070678,
+   "ipr_change_rms": 0.016294880774442577
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.6951141003558629,
+   "lr_change_rms": 0.012139985241986007,
+   "ipr_change_rms": 0.010179931334003632
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.7776819013833409,
+   "lr_change_rms": 0.0069916270826229235,
+   "ipr_change_rms": 0.006811256233228916
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.6680944336642474,
+   "lr_change_rms": 0.01013061310016714,
+   "ipr_change_rms": 0.009317871172356683
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.5895868000142095,
+   "lr_change_rms": 0.013724662593989967,
+   "ipr_change_rms": 0.011970859661276064
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.5703329946793453,
+   "lr_change_rms": 0.01531847565864103,
+   "ipr_change_rms": 0.012717668745421188
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.5658833973453598,
+   "lr_change_rms": 0.016714326688444237,
+   "ipr_change_rms": 0.0135497304786273
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.6749300351469006,
+   "lr_change_rms": 0.0073385979996575534,
+   "ipr_change_rms": 0.003410195144982017
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.594901082192891,
+   "lr_change_rms": 0.011071196080502577,
+   "ipr_change_rms": 0.008899458963650811
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.43359439693879887,
+   "lr_change_rms": 0.003947061859004088,
+   "ipr_change_rms": 0.002760084625879056
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.9175164637323118,
+   "lr_change_rms": 0.005435020861824339,
+   "ipr_change_rms": 0.0016785887286765648
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.9066881314507712,
+   "lr_change_rms": 0.0029624379177619255,
+   "ipr_change_rms": 0.0009314327458233919
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.906521219445439,
+   "lr_change_rms": 0.003977727404873555,
+   "ipr_change_rms": 0.0013244920633426961
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.9101410086477111,
+   "lr_change_rms": 0.0049472389374422615,
+   "ipr_change_rms": 0.0018169135914902327
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.9120672225190468,
+   "lr_change_rms": 0.0053610941695976565,
+   "ipr_change_rms": 0.0019726760969265905
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.9133357122575805,
+   "lr_change_rms": 0.005838130427862671,
+   "ipr_change_rms": 0.0021595547794331675
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.6471220794141165,
+   "lr_change_rms": 0.0027021422036745068,
+   "ipr_change_rms": 0.001331896488509165
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.5291437106304002,
+   "lr_change_rms": 0.022166848199509388,
+   "ipr_change_rms": 0.00938833496504403
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.6693327643969772,
+   "lr_change_rms": 0.00908412761505772,
+   "ipr_change_rms": 0.003878103055285716
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.6702078174830965,
+   "lr_change_rms": 0.009789016240937832,
+   "ipr_change_rms": 0.003588358469469947
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.036282410248406,
+   "lr_change_rms": 0.0019100883807514591,
+   "ipr_change_rms": 0.0007636025166705184
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.8787310065595036,
+   "lr_change_rms": 0.0047575272219622195,
+   "ipr_change_rms": 0.0016029009517537925
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.5588286196037844,
+   "lr_change_rms": 0.010585597623243907,
+   "ipr_change_rms": 0.005276990371427581
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.4949911419204688,
+   "lr_change_rms": 0.012877330998777194,
+   "ipr_change_rms": 0.006703586052318896
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.39455709387175747,
+   "lr_change_rms": 0.015809363916737193,
+   "ipr_change_rms": 0.009583283988292505
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.56053150781124,
+   "lr_change_rms": 0.008824675921537824,
+   "ipr_change_rms": 0.004055089756449599
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.5936683721089401,
+   "lr_change_rms": 0.010476432023387732,
+   "ipr_change_rms": 0.0048705590840416296
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.8417254501203834,
+   "lr_change_rms": 0.004225332896861421,
+   "ipr_change_rms": 0.0028242797679254657
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.21881326192744124,
+   "lr_change_rms": 0.05785392272381786,
+   "ipr_change_rms": 0.05741869158228505
+  },
+  {
+   "scene": "7Y6A7599",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.669056627286156,
+   "lr_change_rms": 0.008862592056627039,
+   "ipr_change_rms": 0.00570877716040869
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.33837635748549366,
+   "lr_change_rms": 0.00228470216702867,
+   "ipr_change_rms": 0.0013864923843984432
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.9986466287696955,
+   "lr_change_rms": 0.000135933621454449,
+   "ipr_change_rms": 4.2742289447107306e-06
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.8681261950750976,
+   "lr_change_rms": 0.0006522147628885189,
+   "ipr_change_rms": 0.00015960760104041753
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.276758362688646,
+   "lr_change_rms": 0.0023086512279304385,
+   "ipr_change_rms": 0.0019479951727622877
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.3133857873216673,
+   "lr_change_rms": 0.004018269805499398,
+   "ipr_change_rms": 0.0023978509413466217
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.2364339624380369,
+   "lr_change_rms": 0.004690338663691856,
+   "ipr_change_rms": 0.0033277668797193323
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.5051839903202989,
+   "lr_change_rms": 0.0024595192359141696,
+   "ipr_change_rms": 0.0014416675195823834
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+25 G50",
+   "kind": "luminance",
+   "unexplained": 0.05256994155648302,
+   "lr_change_rms": 0.01697209897164241,
+   "ipr_change_rms": 0.015466326566207325
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.054058602393084396,
+   "lr_change_rms": 0.03365088753308882,
+   "ipr_change_rms": 0.030129088259489976
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+100 G50",
+   "kind": "luminance",
+   "unexplained": 0.052664288020125294,
+   "lr_change_rms": 0.06629931008475469,
+   "ipr_change_rms": 0.059321928616463744
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.23179997514538347,
+   "lr_change_rms": 0.002502503163887847,
+   "ipr_change_rms": 0.002513615600584647
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-25 G50",
+   "kind": "luminance",
+   "unexplained": 0.058465028568207913,
+   "lr_change_rms": 0.015467098583944258,
+   "ipr_change_rms": 0.013815167968977518
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-50 G50",
+   "kind": "luminance",
+   "unexplained": 0.05952308439467162,
+   "lr_change_rms": 0.028310596353970065,
+   "ipr_change_rms": 0.025259174223614584
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-100 G50",
+   "kind": "luminance",
+   "unexplained": 0.06170658537217962,
+   "lr_change_rms": 0.04840935318460533,
+   "ipr_change_rms": 0.043117709558120644
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+25 G50",
+   "kind": "saturation",
+   "unexplained": 0.18249547530698407,
+   "lr_change_rms": 0.004158817201401125,
+   "ipr_change_rms": 0.0034721376998513393
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.18633347211860854,
+   "lr_change_rms": 0.008614110844677936,
+   "ipr_change_rms": 0.007033802803245739
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+100 G50",
+   "kind": "saturation",
+   "unexplained": 0.21282204371878435,
+   "lr_change_rms": 0.018263123732101753,
+   "ipr_change_rms": 0.013262865226733736
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-25 G50",
+   "kind": "saturation",
+   "unexplained": 0.1928415247975625,
+   "lr_change_rms": 0.0032139129664003944,
+   "ipr_change_rms": 0.0026423417424143716
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-50 G50",
+   "kind": "saturation",
+   "unexplained": 0.19310562169287965,
+   "lr_change_rms": 0.005339592697596373,
+   "ipr_change_rms": 0.004385859248536606
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.19109585376961055,
+   "lr_change_rms": 0.007991301286874367,
+   "ipr_change_rms": 0.006977404617468251
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.2491854491685723,
+   "lr_change_rms": 0.006102883142266593,
+   "ipr_change_rms": 0.00541541340506365
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 4.076184128832865,
+   "lr_change_rms": 0.00024559127529367314,
+   "ipr_change_rms": 0.0005665871147971479
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.20044223905531228,
+   "lr_change_rms": 0.007383523015382427,
+   "ipr_change_rms": 0.006271898310914498
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.1899063360920345,
+   "lr_change_rms": 0.008195060258976981,
+   "ipr_change_rms": 0.007132279374059535
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.18933305059844338,
+   "lr_change_rms": 0.008347951406690817,
+   "ipr_change_rms": 0.007298034284963543
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+25 G50",
+   "kind": "hue",
+   "unexplained": 0.3654266349075961,
+   "lr_change_rms": 0.004673498427484091,
+   "ipr_change_rms": 0.003294291131950369
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.3268669303528137,
+   "lr_change_rms": 0.008707367088604472,
+   "ipr_change_rms": 0.006288306064432572
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+100 G50",
+   "kind": "hue",
+   "unexplained": 0.16455905262398618,
+   "lr_change_rms": 0.014451247595405274,
+   "ipr_change_rms": 0.011359379834989781
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-25 G50",
+   "kind": "hue",
+   "unexplained": 0.3707581247834219,
+   "lr_change_rms": 0.004892289772305142,
+   "ipr_change_rms": 0.003319137357365352
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-50 G50",
+   "kind": "hue",
+   "unexplained": 0.39696892853874594,
+   "lr_change_rms": 0.009989879601816565,
+   "ipr_change_rms": 0.006360901441943139
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-100 G50",
+   "kind": "hue",
+   "unexplained": 0.4717145204491888,
+   "lr_change_rms": 0.02070462902418714,
+   "ipr_change_rms": 0.011092480043414227
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+50 G50",
+   "kind": "variance",
+   "unexplained": 0.7997061324039592,
+   "lr_change_rms": 0.0048333955571338025,
+   "ipr_change_rms": 0.0018676021958891405
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 1.0518616534106013,
+   "lr_change_rms": 0.0011229409099252467,
+   "ipr_change_rms": 0.0018851373242750411
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+100 G50",
+   "kind": "variance",
+   "unexplained": 0.7924914714431067,
+   "lr_change_rms": 0.00911949809668238,
+   "ipr_change_rms": 0.0036119378256582015
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-50 G50",
+   "kind": "variance",
+   "unexplained": 0.6915408339388229,
+   "lr_change_rms": 0.004035376783771044,
+   "ipr_change_rms": 0.0018862567930779928
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-100 G50",
+   "kind": "variance",
+   "unexplained": 0.7007506043845882,
+   "lr_change_rms": 0.0086056505146226,
+   "ipr_change_rms": 0.0037244000420004995
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.245697639745256,
+   "lr_change_rms": 0.004088793300485547,
+   "ipr_change_rms": 0.0040410358227593104
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.4754830754249506,
+   "lr_change_rms": 0.0011900933267116577,
+   "ipr_change_rms": 0.0009531740174854604
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.9610639325354532,
+   "lr_change_rms": 0.0002671098157123027,
+   "ipr_change_rms": 4.285860461688407e-05
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.7698759213410442,
+   "lr_change_rms": 0.0006092592373190785,
+   "ipr_change_rms": 0.00021754966234950314
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.6144375997363672,
+   "lr_change_rms": 0.0012044964056300823,
+   "ipr_change_rms": 0.0013385535000699138
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.6262135593408726,
+   "lr_change_rms": 0.0014120823611621374,
+   "ipr_change_rms": 0.0016120200054597585
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.751694007129669,
+   "lr_change_rms": 0.001636657926872292,
+   "ipr_change_rms": 0.002109908308073049
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.4022464385409207,
+   "lr_change_rms": 0.002452553725055873,
+   "ipr_change_rms": 0.0031530335037162826
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.5140198666822647,
+   "lr_change_rms": 0.0013290048486833317,
+   "ipr_change_rms": 0.0009887169471174244
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.6964670449423238,
+   "lr_change_rms": 0.007848577469063084,
+   "ipr_change_rms": 0.0016401130932595495
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.8978205520760656,
+   "lr_change_rms": 0.0014669788246094956,
+   "ipr_change_rms": 0.00018514436389263772
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.0000563182771127,
+   "lr_change_rms": 0.0001219509115708104,
+   "ipr_change_rms": 8.470212658241785e-08
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.9999952062874496,
+   "lr_change_rms": 0.00034727154638933375,
+   "ipr_change_rms": 9.465739448308253e-08
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.8590163886407581,
+   "lr_change_rms": 0.0014920529428040226,
+   "ipr_change_rms": 0.0002758783763443435
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.8316483678996176,
+   "lr_change_rms": 0.001865062524458553,
+   "ipr_change_rms": 0.00040534076955183335
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.7680539397597458,
+   "lr_change_rms": 0.0023682247698082943,
+   "ipr_change_rms": 0.0007578550658663708
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.7810856244040099,
+   "lr_change_rms": 0.0011100874820925855,
+   "ipr_change_rms": 0.000196844938566087
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.10931419842924782,
+   "lr_change_rms": 0.0373054655742791,
+   "ipr_change_rms": 0.026926414526989566
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.28759905504277633,
+   "lr_change_rms": 0.0031620709003233978,
+   "ipr_change_rms": 0.003571702026839475
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.22262687347847424,
+   "lr_change_rms": 0.00934801318781046,
+   "ipr_change_rms": 0.006182018751109675
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.3124510522365789,
+   "lr_change_rms": 0.006867392501970923,
+   "ipr_change_rms": 0.004195369450981223
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.21926273766423818,
+   "lr_change_rms": 0.007998088281243914,
+   "ipr_change_rms": 0.005498319331884117
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.1816872079374,
+   "lr_change_rms": 0.008650723127821388,
+   "ipr_change_rms": 0.006469327770693679
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.17761725994861438,
+   "lr_change_rms": 0.008889722002162403,
+   "ipr_change_rms": 0.006724092777205833
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.17307043762828475,
+   "lr_change_rms": 0.009067728457453223,
+   "ipr_change_rms": 0.006978259432472019
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.32793646286994155,
+   "lr_change_rms": 0.009061064290075074,
+   "ipr_change_rms": 0.00565964032563302
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.26943094687205077,
+   "lr_change_rms": 0.003723887610537335,
+   "ipr_change_rms": 0.004004586782030349
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.7808322763793718,
+   "lr_change_rms": 0.0019458997231264418,
+   "ipr_change_rms": 0.0024898982115912596
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.22355529873417435,
+   "lr_change_rms": 0.008514699558504346,
+   "ipr_change_rms": 0.005709446951525514
+  },
+  {
+   "scene": "IMG_6954",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.29541522892855715,
+   "lr_change_rms": 0.008331983923867498,
+   "ipr_change_rms": 0.010396221512670554
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.5260018362269226,
+   "lr_change_rms": 0.00270492440521104,
+   "ipr_change_rms": 0.0025778500338362923
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 2.094018096203903,
+   "lr_change_rms": 0.00010529629388793123,
+   "ipr_change_rms": 0.00012986361109734997
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.8105176724145378,
+   "lr_change_rms": 0.0008998849819240454,
+   "ipr_change_rms": 0.0007697593545744203
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.6765170490234708,
+   "lr_change_rms": 0.002674917084403852,
+   "ipr_change_rms": 0.0032866965454072428
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.34940912100954147,
+   "lr_change_rms": 0.004432542374050292,
+   "ipr_change_rms": 0.0037346466572130746
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.34653793490641976,
+   "lr_change_rms": 0.005053327789780832,
+   "ipr_change_rms": 0.004686056134524293
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.6429860188450617,
+   "lr_change_rms": 0.0030332188658161044,
+   "ipr_change_rms": 0.002572427348591094
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+25 G50",
+   "kind": "luminance",
+   "unexplained": 0.15253704488693348,
+   "lr_change_rms": 0.020710913354969766,
+   "ipr_change_rms": 0.016661873234748787
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.15760818714140973,
+   "lr_change_rms": 0.04113827258286953,
+   "ipr_change_rms": 0.03237684093985621
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L+100 G50",
+   "kind": "luminance",
+   "unexplained": 0.15674792230802864,
+   "lr_change_rms": 0.07550146993940877,
+   "ipr_change_rms": 0.06143813719779487
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 2.3333484927076196,
+   "lr_change_rms": 0.0005670230795724284,
+   "ipr_change_rms": 0.0009171628538385424
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-25 G50",
+   "kind": "luminance",
+   "unexplained": 0.15605061774045428,
+   "lr_change_rms": 0.018894649117150112,
+   "ipr_change_rms": 0.014965713834374108
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-50 G50",
+   "kind": "luminance",
+   "unexplained": 0.15523292504015004,
+   "lr_change_rms": 0.034524928090481855,
+   "ipr_change_rms": 0.027426790966336104
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "L-100 G50",
+   "kind": "luminance",
+   "unexplained": 0.1543681923890738,
+   "lr_change_rms": 0.058914273206734015,
+   "ipr_change_rms": 0.04699839634407018
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+25 G50",
+   "kind": "saturation",
+   "unexplained": 0.32692553141544517,
+   "lr_change_rms": 0.004723016590751545,
+   "ipr_change_rms": 0.0035891335384760532
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.33835712497204196,
+   "lr_change_rms": 0.00979342962673284,
+   "ipr_change_rms": 0.007210537537654015
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S+100 G50",
+   "kind": "saturation",
+   "unexplained": 0.3456768414895264,
+   "lr_change_rms": 0.020277517277648205,
+   "ipr_change_rms": 0.013433773441734069
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-25 G50",
+   "kind": "saturation",
+   "unexplained": 0.3150975242599067,
+   "lr_change_rms": 0.003645408174619728,
+   "ipr_change_rms": 0.0027806208573015138
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-50 G50",
+   "kind": "saturation",
+   "unexplained": 0.3121328160531258,
+   "lr_change_rms": 0.006066236710116754,
+   "ipr_change_rms": 0.004644621172532709
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.3045784802614842,
+   "lr_change_rms": 0.009089594262213037,
+   "ipr_change_rms": 0.007470075597985865
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.5136462432795347,
+   "lr_change_rms": 0.006251861383210247,
+   "ipr_change_rms": 0.0048961219348381746
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 6.530650692630249,
+   "lr_change_rms": 7.168479973825071e-05,
+   "ipr_change_rms": 0.00017252745552871692
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.3647524882855685,
+   "lr_change_rms": 0.007900790519624005,
+   "ipr_change_rms": 0.006252786456411599
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.29064402283130286,
+   "lr_change_rms": 0.009545176528168171,
+   "ipr_change_rms": 0.007765539165624718
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.281233440951385,
+   "lr_change_rms": 0.009894708679803469,
+   "ipr_change_rms": 0.008099926895531323
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+25 G50",
+   "kind": "hue",
+   "unexplained": 0.45264147283405504,
+   "lr_change_rms": 0.005382935237151217,
+   "ipr_change_rms": 0.0034379088414149086
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.4145743974467489,
+   "lr_change_rms": 0.009927572478267433,
+   "ipr_change_rms": 0.00656643578526693
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T+100 G50",
+   "kind": "hue",
+   "unexplained": 0.2772420008470935,
+   "lr_change_rms": 0.01658177269180438,
+   "ipr_change_rms": 0.011887138578738231
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-25 G50",
+   "kind": "hue",
+   "unexplained": 0.4547651433039384,
+   "lr_change_rms": 0.005604362156951869,
+   "ipr_change_rms": 0.003465040395211351
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-50 G50",
+   "kind": "hue",
+   "unexplained": 0.47394239189598697,
+   "lr_change_rms": 0.011413776960821994,
+   "ipr_change_rms": 0.006647145549808207
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "T-100 G50",
+   "kind": "hue",
+   "unexplained": 0.5236879983646388,
+   "lr_change_rms": 0.02332587970926473,
+   "ipr_change_rms": 0.011623361570919468
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+50 G50",
+   "kind": "variance",
+   "unexplained": 0.9162755089807295,
+   "lr_change_rms": 0.007732137651389674,
+   "ipr_change_rms": 0.0018337571860941946
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 4.602768045899479,
+   "lr_change_rms": 0.00023895653901605571,
+   "ipr_change_rms": 0.0005122402241442876
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V+100 G50",
+   "kind": "variance",
+   "unexplained": 0.9200394616749987,
+   "lr_change_rms": 0.01460205822836111,
+   "ipr_change_rms": 0.003658927417943255
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-50 G50",
+   "kind": "variance",
+   "unexplained": 0.8119753038348231,
+   "lr_change_rms": 0.005402257289707501,
+   "ipr_change_rms": 0.001687393096089821
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "state": "V-100 G50",
+   "kind": "variance",
+   "unexplained": 0.8186843661048983,
+   "lr_change_rms": 0.011486745337802225,
+   "ipr_change_rms": 0.0033247709906656315
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.9229497309886533,
+   "lr_change_rms": 0.005227489906784601,
+   "ipr_change_rms": 0.0046041539199817095
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 1.0281410939030196,
+   "lr_change_rms": 0.0022034369417208433,
+   "ipr_change_rms": 0.0014459459523360333
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.0326335954420902,
+   "lr_change_rms": 0.0008505123814885746,
+   "ipr_change_rms": 0.0003086385175806852
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 1.052325513388444,
+   "lr_change_rms": 0.0014358078542881156,
+   "ipr_change_rms": 0.0007148610040592034
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 1.1937937717925882,
+   "lr_change_rms": 0.002120788774347214,
+   "ipr_change_rms": 0.001873185214370125
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 1.206391549069857,
+   "lr_change_rms": 0.00236972650014644,
+   "ipr_change_rms": 0.0021758157372572715
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 1.3011571679015685,
+   "lr_change_rms": 0.002625850180022293,
+   "ipr_change_rms": 0.0027096815632127493
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 3.1524498304020976,
+   "lr_change_rms": 0.0006642983929981968,
+   "ipr_change_rms": 0.0012525840522416426
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 1.0076218492109197,
+   "lr_change_rms": 0.0021016638594218338,
+   "ipr_change_rms": 0.0014336823672070997
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.9839694273384909,
+   "lr_change_rms": 0.0006125305157840938,
+   "ipr_change_rms": 6.372306956627059e-05
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.9979829760947604,
+   "lr_change_rms": 0.00017739997064431247,
+   "ipr_change_rms": 1.7046828718825753e-05
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 1.0000020523463287,
+   "lr_change_rms": 5.11998311161481e-05,
+   "ipr_change_rms": 7.82483818569907e-08
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 1.000278834492917,
+   "lr_change_rms": 7.425942093275639e-05,
+   "ipr_change_rms": 1.7087662932362545e-06
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 1.0024901803886634,
+   "lr_change_rms": 0.00018171979298302893,
+   "ipr_change_rms": 2.5203217794678026e-05
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 1.0029823799658322,
+   "lr_change_rms": 0.00021415099660083249,
+   "ipr_change_rms": 3.6692076652202266e-05
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 1.0111543872830702,
+   "lr_change_rms": 0.0002545906551562819,
+   "ipr_change_rms": 6.826249893117322e-05
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.9969048661903374,
+   "lr_change_rms": 0.00011535619406661461,
+   "ipr_change_rms": 1.7641345145877305e-05
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.18617297930266422,
+   "lr_change_rms": 0.03901382633624145,
+   "ipr_change_rms": 0.02777154041893222
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 3.0834378449258715,
+   "lr_change_rms": 0.00078763986804149,
+   "ipr_change_rms": 0.0015374460165901707
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S+50 G50",
+   "kind": "saturation",
+   "unexplained": 0.3515366522159813,
+   "lr_change_rms": 0.009059175451664129,
+   "ipr_change_rms": 0.006033888094613319
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G0",
+   "kind": "range",
+   "unexplained": 0.5113459302929207,
+   "lr_change_rms": 0.005892003326972341,
+   "ipr_change_rms": 0.003714407396964674
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G25",
+   "kind": "range",
+   "unexplained": 0.37342303580401587,
+   "lr_change_rms": 0.007356893152680728,
+   "ipr_change_rms": 0.00512718421458985
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G50",
+   "kind": "saturation",
+   "unexplained": 0.30216103484552537,
+   "lr_change_rms": 0.008454142082173346,
+   "ipr_change_rms": 0.006475473660432372
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G75",
+   "kind": "range",
+   "unexplained": 0.2883166246397275,
+   "lr_change_rms": 0.008846662834680111,
+   "ipr_change_rms": 0.006852496988945789
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 0.27838719767368275,
+   "lr_change_rms": 0.009170700791584488,
+   "ipr_change_rms": 0.007274460956277204
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 0.4256562194667787,
+   "lr_change_rms": 0.009259170993561341,
+   "ipr_change_rms": 0.005576528107236683
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "S-100 G100",
+   "kind": "range",
+   "unexplained": 3.308503247745352,
+   "lr_change_rms": 0.0009078115502882048,
+   "ipr_change_rms": 0.001895538973116538
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "T+50 G50",
+   "kind": "hue",
+   "unexplained": 3.234050102513966,
+   "lr_change_rms": 0.00048269101822859,
+   "ipr_change_rms": 0.0009448965323715931
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 0.3795501341114301,
+   "lr_change_rms": 0.010087071483349015,
+   "ipr_change_rms": 0.01101586372053443
+  },
+  {
+   "scene": "IMG_4002",
+   "source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "state": "L+50 G50",
+   "kind": "luminance",
+   "unexplained": 3.9147959324844672,
+   "lr_change_rms": 0.00195558615393635,
+   "ipr_change_rms": 0.004563044336323548
+  }
+ ]
+}
