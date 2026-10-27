@@ -87,10 +87,12 @@ l'export au neutre de la même scène, en Oklab, pixels écrêtés exclus.
 - **Généralité** (phase 2) : demi-largeurs selon la teinte, la chroma et la
   clarté de la source ; une loi par couleur source si la forme varie.
 
-L'étude `tests/study_point_color.py` est à écrire sur les premiers exports :
-leur codage réel décide de la lecture des états. Elle produira un JSON versionné
-et horodaté sous `docs/validation/raw/`, puis la comparaison IPR passera par le
-serveur de rendu en mémoire, une fois les réglages portés par la recette.
+`python tests/study_point_color.py --data-version N` fait ces mesures (source
+estimée en Oklab, profils et demi-largeurs par gamme, réponses à w = 1, demi-largeur
+par scène) et écrit un JSON versionné et horodaté sous `docs/validation/raw/`.
+Les exports sans point ou sans neutre de même scène sont listés, pas mesurés.
+La comparaison IPR passera ensuite par le serveur de rendu en mémoire, une fois
+les réglages portés par la recette.
 
 ## 5. Hors campagne pour l'instant
 
