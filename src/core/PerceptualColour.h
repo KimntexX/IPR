@@ -2,21 +2,23 @@
 #define IPR_CORE_PERCEPTUALCOLOUR_H
 
 #include "ColorMixer.h"
+#include "PointColor.h"
 
 #include <opencv2/core.hpp>
 
 #include <array>
 
-// The perceptual colour stage: saturation and vibrance, the colour mixer and the
-// colour grading, in this order, in Oklab. Each pixel goes to Oklab once and back
+// The perceptual colour stage: saturation and vibrance, the colour mixer, the
+// point colour and the colour grading, in this order, in Oklab. Each pixel goes to Oklab once and back
 // once, instead of once per adjustment; the adjustments themselves (Vibrance,
-// ColorMixer, ColorGrading) work on one Oklab colour.
+// ColorMixer, PointColor, ColorGrading) work on one Oklab colour.
 namespace PerceptualColour {
 
 struct Parameters {
     int saturation = 0;                       // [-100, 100]
     int vibrance = 0;                         // [-100, 100]
     ColorMixer::Parameters mixer;
+    PointColor::Parameters pointColor;
     std::array<int, 4> gradingHue{};          // shadows, midtones, highlights, global; degrees
     std::array<int, 4> gradingSaturation{};   // [0, 100]
     std::array<int, 4> gradingLuminance{};    // [-100, 100]

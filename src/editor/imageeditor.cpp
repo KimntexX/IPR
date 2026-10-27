@@ -1490,7 +1490,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     if (runs(1)) {
         PerceptualColour::apply(adjusted, {settings.saturation, settings.vibrance,
                                            {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
-                                           settings.gradingHue, settings.gradingSaturation,
+                                           PointColor::Parameters{}, settings.gradingHue, settings.gradingSaturation,
                                            settings.gradingLuminance, settings.gradingBlending,
                                            settings.gradingBalance});
         reached(1, adjusted);
