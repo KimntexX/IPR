@@ -99,6 +99,11 @@ Item {
         exportDialog.open()
     }
 
+    // Format and quality are those of the Export section.
+    function openBatchExportDialog() {
+        batchExportDialog.open()
+    }
+
     function restorePreferences() {
         if (!preferences)
             return
