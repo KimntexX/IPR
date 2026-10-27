@@ -96,20 +96,10 @@ ColumnLayout {
                     background: Rectangle {
                         radius: width / 2
                         color: root.bandColors[swatchButton.index]
-                        border.width: root.band === swatchButton.index ? 3 : 1
+                        // One ring: thin, or thicker and light on the selected band.
+                        border.width: root.band === swatchButton.index ? 2 : 1
                         border.color: root.band === swatchButton.index ? swatchButton.palette.text : swatchButton.palette.mid
                         opacity: swatchButton.enabled ? 1 : 0.35
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: parent.width - 9
-                            height: width
-                            radius: width / 2
-                            color: "transparent"
-                            border.width: 1
-                            border.color: "#ffffff"
-                            opacity: root.band === swatchButton.index ? 0.65 : 0.18
-                        }
                     }
                 }
             }
