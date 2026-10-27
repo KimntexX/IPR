@@ -532,6 +532,21 @@ Item {
             }
 
             SettingsSection {
+                objectName: "pointColorSection"
+                stateKey: "pointColor"
+                preferences: root.preferences
+                textColor: root.textColor
+                title: qsTr("Couleur du point")
+
+                PointColorModule {
+                    Layout.fillWidth: true
+                    editor: root.editor
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                }
+            }
+
+            SettingsSection {
                 objectName: "gradingSection"
                 stateKey: "grading"
                 preferences: root.preferences

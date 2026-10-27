@@ -249,12 +249,7 @@ ColumnLayout {
         }
     }
 
-    Label {
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
-        color: "#aeb8c8"
-        wrapMode: Text.WordWrap
-        font.pixelSize: 12
+    SectionNote {
         text: qsTr("Double-cliquez pour ajouter une poignée, faites-la glisser pour modifier la courbe et utilisez le clic droit pour supprimer une poignée.")
     }
 
@@ -297,32 +292,52 @@ ColumnLayout {
                 module.activeCurveRequested(requestedChannel)
             }
         }
-        Item { Layout.fillWidth: true }
         Label {
             Layout.fillWidth: true
             Layout.minimumWidth: 0
+            horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
-            color: module.activeCurve === 0 ? module.textColor : module.curveColor(module.activeCurve)
+            color: module.textColor
+            font.pixelSize: 12
             text: module.curveName(module.activeCurve)
         }
-    }
-
-    ColumnLayout {
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
         PreferenceButton {
-            text: qsTr("Réinitialiser cette courbe")
-            Layout.fillWidth: true
-            Layout.minimumWidth: 0
+            id: resetCurveButton
+            objectName: "resetCurveButton"
+            Layout.preferredWidth: 21
+            Layout.preferredHeight: 21
+            text: "↺"
+            font.pixelSize: 14
+            padding: 0
+            hoverEnabled: true
             enabled: module.editor.hasImage
+            Accessible.name: qsTr("Réinitialiser cette courbe")
+            ToolTip.visible: hovered
+            ToolTip.text: qsTr("Réinitialiser cette courbe")
             onClicked: module.editor.resetToneCurve(module.activeCurve)
+            background: Rectangle {
+                radius: 3
+                color: resetCurveButton.hovered ? resetCurveButton.palette.mid : "transparent"
+            }
         }
         PreferenceButton {
-            text: qsTr("Réinitialiser les 4 courbes")
-            Layout.fillWidth: true
-            Layout.minimumWidth: 0
+            id: resetCurvesButton
+            objectName: "resetCurvesButton"
+            Layout.preferredHeight: 21
+            text: qsTr("Toutes")
+            font.pixelSize: 11
+            hoverEnabled: true
             enabled: module.editor.hasImage
+            Accessible.name: qsTr("Réinitialiser les 4 courbes")
+            ToolTip.visible: hovered
+            ToolTip.text: qsTr("Réinitialiser les 4 courbes")
             onClicked: module.editor.resetToneCurves()
+            background: Rectangle {
+                radius: 3
+                color: resetCurvesButton.hovered ? resetCurvesButton.palette.mid : "transparent"
+                border.width: 1
+                border.color: resetCurvesButton.palette.mid
+            }
         }
     }
 }
