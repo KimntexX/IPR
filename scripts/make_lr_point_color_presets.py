@@ -18,8 +18,9 @@ writes the states over the IPR neutral baseline of make_lr_presets.py:
 Import the .zip from Lightroom's Presets panel; never overwrites a file.
 
 Usage: python scripts/make_lr_point_color_presets.py --samples model1.xmp [model2.xmp ...]
-           [--labels Orange ...] [--states complete|reduced] [--out tests/image/lr-presets]
-       (label: --labels, else the preset name, else the file name)
+           [--labels Orange ...] [--states complete|reduced ...] [--out tests/image/lr-presets]
+       (label: --labels, else the preset name, else the file name; --states: one for all
+       models or one per model)
 """
 import argparse
 import re
@@ -117,11 +118,14 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--samples", type=Path, nargs="+", required=True)
     parser.add_argument("--labels", nargs="+")
-    parser.add_argument("--states", choices=sorted(STATES), default="complete")
+    parser.add_argument("--states", choices=sorted(STATES), nargs="+", default=["complete"])
     parser.add_argument("--out", type=Path, default=ROOT / "tests/image/lr-presets")
     args = parser.parse_args(argv)
     if args.labels and len(args.labels) != len(args.samples):
         sys.exit("Un nom par modèle : --labels doit suivre --samples")
+    if len(args.states) not in (1, len(args.samples)):
+        sys.exit("--states : une série pour tous les modèles ou une par modèle")
+    states = args.states * len(args.samples) if len(args.states) == 1 else args.states
     models = [read_model(path, args.labels[i] if args.labels else None) for i, path in enumerate(args.samples)]
     if len({m.label for m in models}) != len(models):
         sys.exit("Deux modèles portent le même nom : renommez un préréglage modèle")
@@ -131,8 +135,8 @@ def main(argv=None):
         sys.exit(f"Existe déjà, rien n'est écrasé : {archive if archive.exists() else folder}")
     folder.mkdir(parents=True)
     files = []
-    for model in models:
-        for sliders in STATES[args.states]:
+    for model, series in zip(models, states):
+        for sliders in STATES[series]:
             name, text = point_preset(group, model, sliders)
             path = folder / f"{name.replace(' ', '_')}.xmp"
             path.write_text(text, encoding="utf-8")

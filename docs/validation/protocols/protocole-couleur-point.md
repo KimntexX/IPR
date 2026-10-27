@@ -27,7 +27,8 @@ amplitudes maximales et forme de f sont à remplacer par les valeurs mesurées.
 ## 2. Préréglages modèles, dans Lightroom
 
 Lightroom écrit chaque point dans le sidecar ou le préréglage : un texte de
-`crs:PointColors` de 19 nombres (3 pour la source, puis teinte, saturation,
+`crs:PointColors` de 19 nombres (3 pour la source, la première étant sa teinte
+en radians, puis teinte, saturation,
 luminance et gamme divisées par 100, puis trois trapèzes de 4 valeurs pour les
 sous-gammes de teinte, de saturation et de luminance) et la variance, divisée
 par 100, dans `crs:ColorVariance`. Relevé sur le modèle du 27 octobre
@@ -42,16 +43,19 @@ sans point porte des −1. Pour chaque couleur source :
    préréglage `PC <couleur>` avec la seule case **Couleur du point** cochée
    (clic droit, **Afficher dans l'Explorateur**).
 
-Couleurs sources proposées : orange de peau (6V1A0327), vert de feuillage, bleu
-de ciel, rouge saturé, prélevées sur des plages unies. Le générateur refuse un
+Modèles du 27 octobre : 6V1A0327 (teinte source 31°), 6V1A9539 (44°), 6V1A0064
+(53°), 6V1A0032 (83°), 6V1A9112 (4°) et 6V1A9141 (224°). Le générateur refuse un
 modèle dont une valeur repère manque ou apparaît deux fois.
 
 ## 3. Génération et exports
 
 ```text
-python scripts/make_lr_point_color_presets.py --samples tests/image/base/6V1A0327.xmp --labels Orange
-    [--states complete|reduced]
+python scripts/make_lr_point_color_presets.py --samples <les 6 sidecars> --labels <scènes>
+    --states complete reduced reduced reduced reduced reduced
 ```
+
+Une série d'états par modèle, ou une seule pour tous ; une seule archive de
+66 préréglages, nommés `IPR Point <scène source> <état>`.
 
 L'archive `tests/image/lr-presets/IPR-Couleur-point-presets.zip` s'importe dans
 le panneau Préréglages ; chaque préréglage pose la base neutre IPR puis un état.
@@ -60,8 +64,8 @@ photo et vérifier que la gamme affiche 0 avant de lancer les exports.
 
 | Phase | Sources | États (`--states`) | Exports sur 28 scènes |
 | --- | --- | --- | --- |
-| 1 — forme | 1 (orange) | `complete` : T, S, L à ±25/50/100 ; V ±50/100 ; S −100 aux gammes 0/25/75/100 (26) | 728 |
-| 2 — généralité | 3 autres | `reduced` : S −100 aux gammes 0 à 100 ; T, S, L +50 (8) | 672 |
+| 1 — forme | 6V1A0327 | `complete` : T, S, L à ±25/50/100 ; V ±50/100 ; S −100 aux gammes 0/25/75/100 (26) | 728 |
+| 2 — généralité | les 5 autres | `reduced` : S −100 aux gammes 0 à 100 ; T, S, L +50 (8) | 1 120 |
 
 Exporter selon le socle commun (TIFF sRGB 16 bits), à la géométrie du neutre
 `grading/neutre`, dans `tests/image/base/couleur-point/` (sous-dossier par source). Une source

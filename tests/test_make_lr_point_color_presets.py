@@ -73,6 +73,18 @@ class PointColorPresetTests(unittest.TestCase):
             with self.assertRaises(SystemExit):   # nothing overwritten
                 main(["--samples", samples[0], "--out", str(folder / "out")])
 
+    def test_states_per_model(self):
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            samples = [str(model_file(folder / "a.xmp")), str(model_file(folder / "b.xmp"))]
+            main(["--samples", *samples, "--labels", "A", "B", "--states", "complete", "reduced",
+                  "--out", str(folder / "out")])
+            names = list((folder / "out" / "IPR Couleur point").iterdir())
+            self.assertEqual(len(names), len(STATES["complete"]) + len(STATES["reduced"]))
+            with self.assertRaises(SystemExit):
+                main(["--samples", *samples, "--states", "complete", "reduced", "complete",
+                      "--out", str(folder / "other")])
+
     def test_complete_states(self):
         self.assertEqual(len(STATES["complete"]), 26)
 
