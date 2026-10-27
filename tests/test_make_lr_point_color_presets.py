@@ -6,60 +6,68 @@ import zipfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from make_lr_point_color_presets import CRS, RDF, STATES, main, read_models  # noqa: E402
+from make_lr_point_color_presets import CRS, RDF, STATES, main, read_model  # noqa: E402
 
-# An item in an encoding of our own: the generator must not depend on Lightroom's.
-ITEM = ("Src = 0.402000, 0.551000, 0.613000, Hue = 0.110000, Sat = +0.220000, Lum = 0.330000, "
-        "Var = 0.440000, Range = 0.660000, Extra = 0.250000, 0.750000")
+# Layout of a Lightroom sidecar: source, shifts, range, three sub-ranges; variance apart.
+POINT = ("0.548111, 0.502314, 0.161747, 0.110000, 0.220000, 0.330000, 0.660000, 0.000000, 0.333333, "
+         "0.666667, 1.000000, 0.000000, 0.322314, 0.682314, 1.000000, 0.000000, 0.258857, 0.618857, 1.000000")
 
 
-def model_preset(path, name="PC Orange", item=ITEM):
+def seq(tag, item):
+    return f"<crs:{tag}><rdf:Seq><rdf:li>{item}</rdf:li></rdf:Seq></crs:{tag}>"
+
+
+def model_file(path, name=None, point=POINT, variance="0.440000"):
+    named = f'<crs:Name><rdf:Alt><rdf:li xml:lang="x-default">{name}</rdf:li></rdf:Alt></crs:Name>' if name else ""
     path.write_text(
         '<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="' + RDF + '">'
-        '<rdf:Description rdf:about="" xmlns:crs="' + CRS + '">'
-        f'<crs:Name><rdf:Alt><rdf:li xml:lang="x-default">{name}</rdf:li></rdf:Alt></crs:Name>'
-        f'<crs:PointColors><rdf:Seq><rdf:li>{item}</rdf:li></rdf:Seq></crs:PointColors>'
-        '</rdf:Description></rdf:RDF></x:xmpmeta>', encoding="utf-8")
+        '<rdf:Description rdf:about="" xmlns:crs="' + CRS + '">' + named + seq("PointColors", point)
+        + (seq("ColorVariance", variance) if variance else "") + '</rdf:Description></rdf:RDF></x:xmpmeta>',
+        encoding="utf-8")
     return path
 
 
 class PointColorPresetTests(unittest.TestCase):
-    def test_markers_are_replaced_and_the_source_kept(self):
+    def test_markers_are_replaced_and_the_rest_kept(self):
         with tempfile.TemporaryDirectory() as directory:
-            model = read_models(model_preset(Path(directory) / "m.xmp"))
-            self.assertEqual(model.label, "PC-Orange")
-            self.assertEqual(model.item_for({"hue": -50, "range": 25}),
-                             "Src = 0.402000, 0.551000, 0.613000, Hue = -0.500000, Sat = +0.000000, "
-                             "Lum = 0.000000, Var = 0.000000, Range = 0.250000, Extra = 0.250000, 0.750000")
+            model = read_model(model_file(Path(directory) / "6V1A0327.xmp"))
+            self.assertEqual(model.label, "6V1A0327")
+            items = model.items_for({"hue": -50, "variance": 100, "range": 25})
+            self.assertEqual(items["PointColors"], POINT.replace("0.110000", "-0.500000").replace(
+                "0.220000", "0.000000").replace("0.330000", "0.000000").replace("0.660000", "0.250000"))
+            self.assertEqual(items["ColorVariance"], "1.000000")
 
-    def test_markers_on_the_slider_scale(self):
+    def test_label_from_the_option_or_the_preset_name(self):
         with tempfile.TemporaryDirectory() as directory:
-            item = "S 0.4 0.5, H 11, S 22, L 33, V 44, R 66"
-            model = read_models(model_preset(Path(directory) / "m.xmp", item=item))
-            self.assertEqual(model.item_for({"saturation": -100}), "S 0.4 0.5, H 0, S -100, L 0, V 0, R 50")
+            path = model_file(Path(directory) / "m.xmp", name="PC Orange")
+            self.assertEqual(read_model(path).label, "PC-Orange")
+            self.assertEqual(read_model(path, "Peau claire").label, "Peau-claire")
+
+    def test_variance_in_the_point_item_and_slider_scale(self):
+        with tempfile.TemporaryDirectory() as directory:
+            model = read_model(model_file(Path(directory) / "m.xmp", point="S 0.4 0.5, H 11, S 22, L 33, V 44, R 66",
+                                          variance=None))
+            self.assertEqual(model.items_for({"saturation": -100}), {"PointColors": "S 0.4 0.5, H 0, S -100, L 0, V 0, R 50"})
 
     def test_a_missing_or_ambiguous_marker_is_refused(self):
         with tempfile.TemporaryDirectory() as directory:
-            for item in ("Hue = 0.11, Sat = 0.22, Lum = 0.33, Var = 0.44",
-                         "Hue = 0.11, Sat = 0.22, Lum = 0.33, Var = 0.44, Range = 0.66, Src = 0.11"):
+            for point, variance in ((POINT, None), (POINT, "0.110000"), (POINT.replace("0.660000", "0.500000"), "0.44")):
                 with self.assertRaises(ValueError):
-                    read_models(model_preset(Path(directory) / "m.xmp", item=item))
+                    read_model(model_file(Path(directory) / "m.xmp", point=point, variance=variance))
 
     def test_archive_of_valid_presets(self):
         with tempfile.TemporaryDirectory() as directory:
             folder = Path(directory)
-            samples = [str(model_preset(folder / "a.xmp")), str(model_preset(folder / "b.xmp", "PC Ciel"))]
-            main(["--samples", *samples, "--states", "reduced", "--out", str(folder / "out")])
-            archive = folder / "out" / "IPR-Couleur-point-presets.zip"
-            with zipfile.ZipFile(archive) as z:
+            samples = [str(model_file(folder / "a.xmp")), str(model_file(folder / "b.xmp"))]
+            main(["--samples", *samples, "--labels", "Orange", "Ciel", "--states", "reduced", "--out", str(folder / "out")])
+            with zipfile.ZipFile(folder / "out" / "IPR-Couleur-point-presets.zip") as z:
                 names = z.namelist()
                 self.assertEqual(len(names), 2 * len(STATES["reduced"]))
-                self.assertIn("IPR Couleur point/IPR_Point_PC-Ciel_S-100_G000.xmp", names)
-                root = ET.fromstring(z.read("IPR Couleur point/IPR_Point_PC-Ciel_S-100_G000.xmp"))
-            items = [li.text for e in root.iter(f"{{{CRS}}}PointColors") for li in e.iter(f"{{{RDF}}}li")]
-            self.assertEqual(len(items), 1)
-            self.assertIn("Sat = -1.000000", items[0])
-            self.assertIn("Range = 0.000000", items[0])
+                root = ET.fromstring(z.read("IPR Couleur point/IPR_Point_Ciel_S-100_G000.xmp"))
+            point = [li.text for e in root.iter(f"{{{CRS}}}PointColors") for li in e.iter(f"{{{RDF}}}li")]
+            variance = [li.text for e in root.iter(f"{{{CRS}}}ColorVariance") for li in e.iter(f"{{{RDF}}}li")]
+            self.assertEqual(point[0].split(", ")[3:7], ["0.000000", "-1.000000", "0.000000", "0.000000"])
+            self.assertEqual(variance, ["0.000000"])
             description = next(root.iter(f"{{{RDF}}}Description"))
             self.assertEqual(description.get(f"{{{CRS}}}CameraProfile"), "Camera Neutral")
             with self.assertRaises(SystemExit):   # nothing overwritten

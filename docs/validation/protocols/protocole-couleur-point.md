@@ -26,17 +26,21 @@ amplitudes maximales et forme de f sont à remplacer par les valeurs mesurées.
 
 ## 2. Préréglages modèles, dans Lightroom
 
-Lightroom enregistre chaque point comme un texte de `crs:PointColors` dont IPR ne
-suppose pas le codage. Pour chaque couleur source :
+Lightroom écrit chaque point dans le sidecar ou le préréglage : un texte de
+`crs:PointColors` de 19 nombres (3 pour la source, puis teinte, saturation,
+luminance et gamme divisées par 100, puis trois trapèzes de 4 valeurs pour les
+sous-gammes de teinte, de saturation et de luminance) et la variance, divisée
+par 100, dans `crs:ColorVariance`. Relevé sur le modèle du 27 octobre
+(6V1A0327) ; IPR ne décode pas la source et la recopie telle quelle. Un sidecar
+sans point porte des −1. Pour chaque couleur source :
 
 1. Ouvrir une photo de la base, panneau Couleur, onglet **Couleur du point**,
    prélever la couleur à la pipette.
 2. Régler les valeurs repères : teinte **+11**, saturation **+22**, luminance
    **+33**, variance **+44**, gamme **66**. Ne pas déplier les sous-gammes.
-3. Créer un préréglage nommé `PC <couleur>` (par exemple `PC Orange`) avec la
-   seule case **Couleur du point** cochée, puis réinitialiser la photo.
-4. Clic droit sur le préréglage, **Afficher dans l'Explorateur**, et transmettre
-   le fichier `.xmp`.
+3. Transmettre le sidecar `.xmp` de la photo (métadonnées enregistrées), ou un
+   préréglage `PC <couleur>` avec la seule case **Couleur du point** cochée
+   (clic droit, **Afficher dans l'Explorateur**).
 
 Couleurs sources proposées : orange de peau (6V1A0327), vert de feuillage, bleu
 de ciel, rouge saturé, prélevées sur des plages unies. Le générateur refuse un
@@ -45,11 +49,14 @@ modèle dont une valeur repère manque ou apparaît deux fois.
 ## 3. Génération et exports
 
 ```text
-python scripts/make_lr_point_color_presets.py --samples PC_Orange.xmp [--states complete|reduced]
+python scripts/make_lr_point_color_presets.py --samples tests/image/base/6V1A0327.xmp --labels Orange
+    [--states complete|reduced]
 ```
 
 L'archive `tests/image/lr-presets/IPR-Couleur-point-presets.zip` s'importe dans
 le panneau Préréglages ; chaque préréglage pose la base neutre IPR puis un état.
+Les sous-gammes du modèle sont recopiées : après import, appliquer `G000` à une
+photo et vérifier que la gamme affiche 0 avant de lancer les exports.
 
 | Phase | Sources | États (`--states`) | Exports sur 28 scènes |
 | --- | --- | --- | --- |
