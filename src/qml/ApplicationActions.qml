@@ -15,6 +15,7 @@ Item {
     property alias openFolderAction: openFolder
     property alias saveAction: save
     property alias exportAction: exportPhoto
+    property alias exportSelectionAction: exportSelection
     property alias duplicateAction: duplicate
     property alias resetAction: reset
     property alias copyAction: copyEdits
@@ -57,6 +58,14 @@ Item {
         shortcut: root.commandModifier + "+E"
         enabled: root.photoReady
         onTriggered: root.settings.openExportDialog()
+    }
+    Action {
+        id: exportSelection
+        objectName: "exportSelectionAction"
+        text: qsTr("Exporter la sélection (%1)…").arg(root.editor.selectedImageCount)
+        enabled: root.editor.selectedImageCount > 0 && !root.editor.batchExporting
+                 && !root.editor.batchApplying && !root.blocked
+        onTriggered: root.settings.openBatchExportDialog()
     }
     Action {
         id: duplicate

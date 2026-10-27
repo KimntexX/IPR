@@ -749,6 +749,10 @@ void registerBuiltInHandlers()
             const auto raw = std::make_unique<LibRaw>();   // heap: too large for worker stacks
             if (openRaw(*raw, path) != LIBRAW_SUCCESS) return QSize{};
             return QSize(raw->imgdata.sizes.raw_width, raw->imgdata.sizes.raw_height);
+        }, [](const QString &path) -> std::optional<double> {
+            const auto raw = std::make_unique<LibRaw>();
+            if (openRaw(*raw, path) != LIBRAW_SUCCESS) return std::nullopt;
+            return estimateWhiteBalanceKelvin(*raw);
         }};
     if (!addFormatHandler({QStringLiteral("cr2")}, decodeCr2, &error, format) ||
         !addFormatHandler({QStringLiteral("cr3")}, decodeCr3, &error, format) ||
@@ -848,6 +852,22 @@ QSize sourceDimensions(const QString &fileName)
         }
     }
     return dimensions ? dimensions(fileName) : QSize{};
+}
+
+std::optional<double> asShotWhiteBalanceKelvin(const QString &fileName)
+{
+    ensureBuiltInHandlers();
+    std::function<std::optional<double>(const QString &)> read;
+    {
+        auto &store = registry();
+        QMutexLocker lock(&store.mutex);
+        for (const auto &handler : store.handlers) {
+            if (handler.extensions.contains(QFileInfo(fileName).suffix().toLower())) {
+                read = handler.options.asShotWhiteBalanceKelvin; break;
+            }
+        }
+    }
+    return read ? read(fileName) : std::nullopt;
 }
 
 ColorPipeline::WorkingImage decode(const QString &fileName,

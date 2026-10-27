@@ -310,6 +310,32 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         }
     });
 
+    connect(&m_batchApplyWatcher, &QFutureWatcher<BatchResult>::finished, this, [this] {
+        BatchResult result;
+        try { result = m_batchApplyWatcher.result(); }
+        catch (...) { result.failed.append(tr("traitement interrompu")); }
+        finishBatch(result, tr("Réglages appliqués à %n image(s).", nullptr, result.written));
+        m_batchApplying = false;
+        emit batchApplyChanged();
+    });
+    connect(&m_batchExportWatcher, &QFutureWatcher<BatchResult>::progressValueChanged, this, [this](int done) {
+        m_batchExportDone = done;
+        setStatusMessage(tr("Export par lot : %1 / %2…").arg(done).arg(m_batchExportTotal));
+        emit batchExportChanged();
+    });
+    connect(&m_batchExportWatcher, &QFutureWatcher<BatchResult>::finished, this, [this] {
+        BatchResult result;
+        try { result = m_batchExportWatcher.result(); }
+        catch (...) { result.failed.append(tr("traitement interrompu")); }
+        finishBatch(result, result.cancelled
+            ? tr("Export par lot annulé : %n image(s) exportée(s).", nullptr, result.written)
+            : tr("Export par lot terminé : %n image(s) exportée(s).", nullptr, result.written));
+        m_batchExportCancel.reset();
+        m_batchExporting = false;
+        emit batchExportChanged();
+        if (!busy()) schedulePrefetch();
+    });
+
     connect(&m_exportWatcher, &QFutureWatcher<ExportResult>::finished, this, [this] {
         ExportResult result;
         try { result = m_exportWatcher.result(); }
@@ -375,6 +401,11 @@ ImageEditor::~ImageEditor()
         m_renderWatcher.waitForFinished();
     if (m_exportWatcher.future().isStarted())
         m_exportWatcher.waitForFinished();
+    if (m_batchExportCancel) m_batchExportCancel->store(true);
+    if (m_batchExportWatcher.future().isStarted())
+        m_batchExportWatcher.waitForFinished();
+    if (m_batchApplyWatcher.future().isStarted())
+        m_batchApplyWatcher.waitForFinished();
 }
 
 QAbstractItemModel *ImageEditor::imageModel()
@@ -941,29 +972,170 @@ void ImageEditor::clearImageSelection()
     emit selectionChanged();
 }
 
+bool ImageEditor::asShotWhiteBalance() const
+{
+    return m_settings.tint == 0 && m_settings.temperature ==
+        static_cast<int>(std::lround(m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
+}
+
 void ImageEditor::applyAdjustmentsToSelection()
 {
     if (m_selectedImageKeys.isEmpty() || m_currentFile.isEmpty() ||
-        !hasImage() || busy() || embeddedPreview())
+        !hasImage() || busy() || embeddedPreview() || batchApplying() || batchExporting())
         return;
-    int written = 0;
+    // The open image already holds these settings: save them now, the others in the background.
+    QStringList targets;
+    bool current = false;
     for (const QString &fileName : std::as_const(m_selectedImageKeys)) {
-        Settings targetSettings;
+        if (fileName == currentFileKey()) current = true;
+        else targets.append(fileName);
+    }
+    targets.sort();
+    if (current) {
+        m_sidecarDebounce.stop();
+        if (!saveCurrentSidecar()) current = false;
+    }
+    QHash<QString, UserImageMetadata> annotations;
+    for (const QString &fileName : std::as_const(targets))
+        annotations.insert(fileName, m_userImageMetadata.value(fileName));
+    setStatusMessage(tr("Application des réglages à %n image(s)…", nullptr, int(targets.size()) + int(current)));
+    m_batchApplyWatcher.setFuture(QtConcurrent::run(
+        [targets, settings = m_settings, asShot = asShotWhiteBalance(), annotations, current] {
+            BatchResult result = applyToFiles(targets, settings, asShot, annotations);
+            result.written += int(current);
+            return result;
+        }));
+    m_batchApplying = true;
+    emit batchApplyChanged();
+}
+
+ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, const Settings &settings, bool asShot,
+                                                   const QHash<QString, UserImageMetadata> &annotations)
+{
+    BatchResult result;
+    for (const QString &fileName : files) {
+        Settings target;
         UserImageMetadata targetMetadata;
         RawDevelopment targetRaw;
-        if (!Sidecar::read(fileName, &targetSettings, &targetMetadata, &targetRaw))
-            targetMetadata = m_userImageMetadata.value(fileName);
-        if (QFileInfo(fileName).canonicalFilePath() == currentFileKey()) {
-            targetRaw = rawDevelopmentRecipe();
-            targetSettings.automaticWhiteBalance = m_settings.automaticWhiteBalance;
-        }
+        const bool hasSidecar = Sidecar::read(fileName, &target, &targetMetadata, &targetRaw);
+        if (!hasSidecar) targetMetadata = annotations.value(fileName);
         // Retouches can be copied across cameras; RAW profiles cannot.
-        Settings copied = m_settings;
-        copied.automaticWhiteBalance = targetSettings.automaticWhiteBalance;
+        Settings copied = settings;
+        copied.automaticWhiteBalance = target.automaticWhiteBalance;
+        if (target.automaticWhiteBalance) {
+            copied.temperature = target.temperature;
+            copied.tint = target.tint;
+        } else if (asShot) {
+            copied.temperature = static_cast<int>(std::lround(
+                ImageImport::referenceWhiteBalanceKelvin(fileName).value_or(5200.0)));
+            copied.tint = 0;
+        }
         if (Sidecar::write(fileName, copied, targetMetadata, targetRaw))
-            ++written;
+            ++result.written;
+        else
+            result.failed.append(QFileInfo(fileName).fileName());
     }
-    setStatusMessage(tr("Réglages appliqués à %n image(s).", nullptr, written));
+    return result;
+}
+
+void ImageEditor::finishBatch(const BatchResult &result, const QString &done)
+{
+    if (result.failed.isEmpty()) {
+        setStatusMessage(done);
+        return;
+    }
+    QStringList shown = result.failed.mid(0, 3);
+    if (result.failed.size() > 3) shown.append(QStringLiteral("…"));
+    setStatusMessage(done + QLatin1Char(' ') +
+                     tr("Échec pour %n image(s) : %1", nullptr, int(result.failed.size())).arg(shown.join(QStringLiteral(", "))));
+}
+
+void ImageEditor::exportSelection(const QUrl &folder, const QString &format, int quality)
+{
+    const QString folderPath = ImageExporter::localPath(folder);
+    if (m_selectedImageKeys.isEmpty() || folderPath.isEmpty() || !QFileInfo(folderPath).isDir()) {
+        setStatusMessage(tr("Choisissez un dossier local pour l'export par lot."));
+        return;
+    }
+    if (!ImageExporter::supports(format)) {
+        setStatusMessage(tr("Format d'export non pris en charge : %1").arg(format));
+        return;
+    }
+    if (batchExporting() || batchApplying() || m_exportWatcher.isRunning()) {
+        setStatusMessage(tr("Un export est déjà en cours."));
+        return;
+    }
+    // Each image is exported with its saved recipe: the open one's must be on disk.
+    if (hasImage() && m_selectedImageKeys.contains(currentFileKey())) {
+        m_sidecarDebounce.stop();
+        saveCurrentSidecar();
+    }
+    QStringList files(m_selectedImageKeys.cbegin(), m_selectedImageKeys.cend());
+    files.sort();
+    m_batchExportDone = 0;
+    m_batchExportTotal = int(files.size());
+    m_batchExportCancel = std::make_shared<std::atomic_bool>(false);
+    cancelPrefetch();
+    setStatusMessage(tr("Export par lot : 0 / %1…").arg(m_batchExportTotal));
+    m_batchExportWatcher.setFuture(QtConcurrent::run(&ImageEditor::exportFiles, files, folderPath,
+        ImageExporter::normalizedFormat(format), quality, &m_decodedImageCache, m_batchExportCancel));
+    m_batchExporting = true;
+    emit batchExportChanged();
+}
+
+void ImageEditor::cancelBatchExport()
+{
+    if (m_batchExportCancel) m_batchExportCancel->store(true);
+}
+
+void ImageEditor::exportFiles(QPromise<BatchResult> &promise, const QStringList &files, const QString &folder,
+                              const QString &format, int quality, ImageCacheController *controller,
+                              ImageCacheController::CancelToken cancel)
+{
+    BatchResult result;
+    promise.setProgressRange(0, int(files.size()));
+    const QString suffix = ImageExporter::suffix(format);
+    for (int index = 0; index < files.size(); ++index) {
+        if (cancel->load()) { result.cancelled = true; break; }
+        const QString &fileName = files.at(index);
+        const QString name = QFileInfo(fileName).fileName();
+        bool automaticWhiteBalance = false;
+        QString key;
+        RawDecoder::Options options = optionsForFile(fileName, &automaticWhiteBalance, &key);
+        if (key.isEmpty()) {
+            // A pinned profile changed since it was saved: never export with a substitute.
+            result.failed.append(tr("%1 (profil enregistré modifié)").arg(name));
+            promise.setProgressValue(index + 1);
+            continue;
+        }
+        options.cancellationRequested = [cancel] { return cancel->load(); };
+        const auto admission = controller->acquire({}, SystemMemory::estimateDecodePeak(fileName), false, cancel).result();
+        if (!admission.reservation) {
+            if (cancel->load()) { result.cancelled = true; break; }
+            result.failed.append(tr("%1 (%2)").arg(name, admission.error));
+            promise.setProgressValue(index + 1);
+            continue;
+        }
+        const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
+        LoadResult loaded = loadFromDisk(fileName, automaticWhiteBalance, options);
+        if (cancel->load()) { result.cancelled = true; break; }
+        Settings settings;
+        UserImageMetadata metadata;
+        if (!Sidecar::read(fileName, &settings, &metadata))
+            settings.temperature = static_cast<int>(std::lround(
+                loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));
+        const QString base = QFileInfo(fileName).completeBaseName().isEmpty()
+            ? QStringLiteral("image") : QFileInfo(fileName).completeBaseName();
+        const QString target = ImageExporter::availablePath(
+            QDir(folder).filePath(base + QStringLiteral("-IPR.") + suffix));
+        const ExportResult written = loaded.image.isNull()
+            ? ExportResult{false, loaded.error}
+            : writeImage(loaded.image, settings, target, format, quality);
+        if (written.success) ++result.written;
+        else result.failed.append(tr("%1 (%2)").arg(name, written.message));
+        promise.setProgressValue(index + 1);
+    }
+    promise.addResult(result);
 }
 
 QColor ImageEditor::colorMixerTrackColor(int band, int component, int value) const
@@ -1314,6 +1486,7 @@ void ImageEditor::copyAdjustments()
 {
     if (!hasImage() || busy() || embeddedPreview()) return;
     m_copiedAdjustments = m_settings;
+    m_copiedAsShot = asShotWhiteBalance();
     m_hasCopiedAdjustments = true;
     emit copiedAdjustmentsChanged();
     setStatusMessage(tr("Paramètres copiés. Ouvrez une autre image pour les coller."));
@@ -1326,6 +1499,11 @@ void ImageEditor::pasteAdjustments()
     const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
     m_settings = m_copiedAdjustments;
     m_settings.automaticWhiteBalance = automaticWhiteBalance;
+    if (m_copiedAsShot) {   // the target's own as-shot white balance
+        m_settings.temperature = static_cast<int>(std::lround(
+            m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
+        m_settings.tint = 0;
+    }
     emit toneCurvesReset();
     emit adjustmentsReset(static_cast<int>(std::lround(
         m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), 0);
@@ -1370,7 +1548,7 @@ void ImageEditor::exportImage(const QUrl &target, const QString &format, int qua
         setStatusMessage(tr("La destination d'export doit être un fichier local."));
         return;
     }
-    if (m_exportWatcher.isRunning()) {
+    if (m_exportWatcher.isRunning() || batchExporting()) {
         setStatusMessage(tr("Un export est déjà en cours."));
         return;
     }
