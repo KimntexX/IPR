@@ -142,7 +142,8 @@ void render(Masters &masters, const QJsonObject &request)
         scalar("balance", settings.gradingBalance, -100, 100);
     }
     if (request.contains("pointColor")) {
-        // Points in picking order: {"source": [L, a, b] in Oklab, "hue", "saturation", "luminance",
+        // Points in picking order: {"source": [hue, saturation, value] as Lightroom writes it (HSV of
+        // linear ProPhoto, hue in radians), "hue", "saturation", "luminance",
         // "variance" in [-100, 100], "range" in [0, 100] (50 when absent)}.
         const QJsonArray points = request.value("pointColor").toArray();
         require(points.size() <= int(PointColor::MaxPoints), "pointColor holds at most 8 points");
@@ -151,7 +152,7 @@ void render(Masters &masters, const QJsonObject &request)
             const QJsonObject p = points.at(i).toObject();
             PointColor::Point &point = settings.pointColor.points[size_t(i)];
             const QJsonArray source = p.value("source").toArray();
-            require(source.size() == 3, "pointColor.source needs Oklab L, a, b");
+            require(source.size() == 3, "pointColor.source needs hue, saturation and value");
             for (int c = 0; c < 3; ++c) point.source[c] = source.at(c).toDouble();
             const auto slider = [&](const char *key, int &target, int low, int fallback) {
                 const int v = p.contains(key) ? p.value(key).toInt() : fallback;

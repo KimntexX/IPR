@@ -42,7 +42,12 @@ void apply(cv::Mat &linearRgb, const Parameters &parameters)
                         ColorMixer::adjust(lab, after, parameters.mixer);
                     }
                 }
-                if (chromatic && point) PointColor::adjust(lab, parameters.pointColor);
+                if (chromatic && point) {
+                    // The point colour works in the HSV of linear ProPhoto, from the working colour.
+                    cv::Vec3d working = WorkingColor::oklabToWorking(lab);
+                    PointColor::adjust(working, parameters.pointColor);
+                    lab = WorkingColor::workingToOklab(working);
+                }
                 if (grading) ColorGrading::adjust(lab, zones);
                 if (chromatic || grading) row[x] = cv::Vec3f(WorkingColor::oklabToWorking(lab));
             }

@@ -155,7 +155,8 @@ class RenderServer:
         mixer: optional {"hue": [8], "saturation": [8], "luminance": [8]} on top of the state.
         grading: optional {"hue": [3 or 4], "saturation": [3 or 4]} (shadows, midtones, highlights, global),
         with optional "luminance" [3 or 4], "blending" and "balance".
-        point_color: optional list of up to 8 points in picking order, each {"source": [L, a, b] Oklab}
+        point_color: optional list of up to 8 points in picking order, each {"source": [hue, saturation, value]}
+        as Lightroom writes it (HSV of linear ProPhoto, hue in radians)
         with optional "hue", "saturation", "luminance", "variance" (0) and "range" (50)."""
         request = {"op": "render", "source": str(source), "feature": feature, "value": value}
         if mixer is not None:

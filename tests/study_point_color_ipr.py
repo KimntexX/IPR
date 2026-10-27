@@ -1,19 +1,18 @@
 """IPR's point colour against Lightroom's, state by state, rendered in memory.
 
 For each scene and export of couleur-point, IPR renders the neutral and the state
-with iprRenderServer (pointColor override): the source in Oklab estimated by the
-latest point colour study for that Lightroom source, the sliders of the export.
+with iprRenderServer (pointColor override): the source and sliders of the export,
+as Lightroom wrote them.
 Both are reduced by area to the geometry of Lightroom's 2048-pixel export and then
 by 2, as the study. The change in Oklab against the neutral of the same engine is
 compared pixel to pixel with Lightroom's: share of Lightroom's change left
 unexplained. Pixels with a channel above 0.98 in a neutral or a state are left
 out. Writes one immutable, versioned JSON.
 
-Usage: python tests/study_point_color_ipr.py --data-version N [--scene STEM ...] [--study JSON]
+Usage: python tests/study_point_color_ipr.py --data-version N [--scene STEM ...]
 """
 import argparse
 import collections
-import glob
 import json
 import platform
 import sys
@@ -52,7 +51,6 @@ def main(argv=None):
     parser.add_argument("--data-version", type=int, required=True)
     parser.add_argument("--scene", nargs="+", default=list(DEFAULT_SCENES))
     parser.add_argument("--base", type=Path, default=ROOT / "tests/image/base")
-    parser.add_argument("--study", type=Path)
     parser.add_argument("--server", type=Path)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "docs/validation/raw")
     args = parser.parse_args(argv)
@@ -61,9 +59,6 @@ def main(argv=None):
     output = args.output_dir / f"{campaign}.json"
     if output.exists():
         raise SystemExit("Exists, nothing overwritten: " + str(output))
-    study_path = args.study or Path(sorted(glob.glob(str(args.output_dir / "etude-couleur-point-v*.json")))[-1])
-    study = json.loads(study_path.read_text(encoding="utf-8"))["sources"]
-    oklab_sources = {tuple(s["lightroom_source"]): s["oklab_source"] for s in study.values()}
     raws = {p.stem: p for p in sources(args.base, args.scene)}
     exports = collections.defaultdict(list)
     for p in sorted((args.base / "couleur-point").glob("*.tif")):
@@ -83,13 +78,13 @@ def main(argv=None):
             seen = set()
             for path in exports[scene]:
                 state = point_state(embedded_xmp(path))
-                if state is None or tuple(state["source"]) not in oklab_sources:
+                if state is None:
                     continue
                 key = (state["source"], state_label(state))
                 if key in seen:
                     continue
                 seen.add(key)
-                point = {"source": oklab_sources[tuple(state["source"])], "hue": state["hue"],
+                point = {"source": list(state["source"]), "hue": state["hue"],
                          "saturation": state["saturation"], "luminance": state["luminance"],
                          "variance": state["variance"], "range": state["range"]}
                 lr1 = cv2.resize(linear(read_tiff(path)).astype(np.float32), None, fx=.5, fy=.5,
@@ -117,7 +112,7 @@ def main(argv=None):
     record = {"campaign_id": campaign, "runner": "tests/study_point_color_ipr.py",
               "commit": git("rev-parse", "HEAD"), "local_changes": git("status", "--short").splitlines(),
               "render_server": {"path": str(server.executable), "sha256": server.sha256},
-              "study": study_path.name, "scenes": args.scene,
+              "scenes": args.scene,
               "metric": "share of Lightroom's Oklab change left unexplained by IPR's",
               "duration_seconds": round(time.monotonic() - start, 1), "python": platform.python_version(),
               "summary": summary, "rows": rows}

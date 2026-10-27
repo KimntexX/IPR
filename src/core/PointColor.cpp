@@ -7,31 +7,37 @@
 
 namespace PointColor {
 namespace {
-constexpr double DegreesPerRadian = 180.0 / 3.14159265358979323846;
-// Below this Oklab chroma a colour has no reliable hue: it fades to grey identity.
-constexpr double NearGreyChroma = 0.02;
+constexpr double Pi = 3.14159265358979323846;
+// Below this saturation a colour has no reliable hue: it fades to grey identity.
+constexpr double NearGreySaturation = 0.02;
+// Lightroom centres its luminance sub-range on the value encoded with this gamma.
+constexpr double ValueGamma = 1.0 / 2.2;
 
-// Measured on Lightroom exports (docs/validation/raw/etude-couleur-point-v002-*.json).
-// Neighbourhood: distance where the weight falls to 0.5, per range slider value,
-// median of six sources over 28 scenes.
+// Measured on Lightroom exports (docs/validation/raw/etude-couleur-point-tsv-v001-*.json).
+// Neighbourhood: a trapezoid per axis, 1 within the plateau, linear to 0 over the
+// ramp; median of six sources over 28 scenes, per range slider value.
 constexpr double Ranges[] = {0, 25, 50, 75, 100};
-constexpr double HueHalfWidth[] = {27.2, 32.6, 38.6, 40.2, 41.6};          // degrees
-constexpr double ChromaHalfWidth[] = {0.450, 0.592, 0.926, 0.986, 1.148};  // natural log of the chroma ratio
-constexpr double LightnessHalfWidth[] = {0.158, 0.211, 0.258, 0.279, 0.302}; // Oklab L
-// Change of the source colour itself (weight 1) per slider value, source 6V1A0327.
+constexpr double HuePlateau[] = {0.1613, 0.1812, 0.2086, 0.2139, 0.2254};    // radians
+constexpr double HueRamp[] = {0.4909, 0.5292, 0.5645, 0.5558, 0.5465};
+constexpr double SaturationPlateau[] = {0.0740, 0.1238, 0.1895, 0.2289, 0.2679};
+constexpr double SaturationRamp[] = {0.2329, 0.3105, 0.4052, 0.3818, 0.3548};
+constexpr double ValuePlateau[] = {0.0836, 0.1235, 0.1568, 0.1843, 0.1986};  // on value^(1/2.2)
+constexpr double ValueRamp[] = {0.2583, 0.2930, 0.4081, 0.4095, 0.4017};
+// Change of the source colour itself (weight 1) per slider value, source 6V1A0327;
+// the hue turn is the same on all six sources.
 constexpr double Shifts[] = {0, 25, 50, 100};
-constexpr double HueRotationUp[] = {0, 14.95, 28.68, 52.68};               // degrees
-constexpr double HueRotationDown[] = {0, -15.07, -29.04, -51.45};
-constexpr double ChromaGainUp[] = {0, 0.248, 0.459, 0.758};                // log chroma; -100 keeps ~48 %
-constexpr double ChromaGainDown[] = {0, -0.229, -0.407, -0.729};
-constexpr double LightnessGainUp[] = {0, 0.0762, 0.1444, 0.270};           // log lightness
-constexpr double LightnessGainDown[] = {0, -0.0722, -0.1353, -0.2405};
-// Variance: gain of the deviation from the source, in hue and in log chroma.
+constexpr double HueTurnUp[] = {0, 0.1528, 0.3052, 0.6104};                     // radians
+constexpr double HueTurnDown[] = {0, -0.1531, -0.3065, -0.6124};
+constexpr double SaturationGainUp[] = {0, 0.2091, 0.3825, 0.6299};              // log saturation
+constexpr double SaturationGainDown[] = {0, -0.1995, -0.3580, -0.6420};         // -100 keeps 52.6 %
+constexpr double ValueGainUp[] = {0, 0.2224, 0.4208, 0.7870};                   // log value
+constexpr double ValueGainDown[] = {0, -0.2097, -0.3922, -0.6955};
+// Variance: gain of the deviation from the source, in hue and in saturation.
 constexpr double Variances[] = {0, 50, 100};
-constexpr double HueSpreadUp[] = {0, 0.478, 0.915};
-constexpr double HueSpreadDown[] = {0, -0.508, -1.0};                       // -100 gathers the hues on the source
-constexpr double ChromaSpreadUp[] = {0, 0.341, 0.742};
-constexpr double ChromaSpreadDown[] = {0, -0.221, -0.429};
+constexpr double HueSpreadUp[] = {0, 0.4055, 0.8115};
+constexpr double HueSpreadDown[] = {0, -0.3994, -0.7975};
+constexpr double SaturationSpreadUp[] = {0, 0.3315, 0.6642};
+constexpr double SaturationSpreadDown[] = {0, -0.2437, -0.4877};
 
 // Piecewise linear over measured points, constant beyond the last one.
 template <size_t N>
@@ -50,25 +56,29 @@ double response(const double (&at)[N], const double (&up)[N], const double (&dow
     return value >= 0.0 ? interpolate(at, up, value) : interpolate(at, down, -value);
 }
 
-// Smoothstep falloff: 1 at 0, 0.5 at 0.5, 0 from 1 on; a flat top and no long tail, as measured.
-double falloff(double t)
+double trapezoid(double distance, double plateau, double ramp)
 {
-    if (t >= 1.0) return 0.0;
-    return 1.0 - t * t * (3.0 - 2.0 * t);
+    return std::clamp(1.0 - (std::abs(distance) - plateau) / ramp, 0.0, 1.0);
 }
 
-double hueDegrees(const cv::Vec3d &lab) { return std::atan2(lab[2], lab[1]) * DegreesPerRadian; }
-
-// Signed hue difference in (-180, 180].
+// Signed hue difference in (-pi, pi].
 double hueDifference(double hue, double reference)
 {
-    double d = std::fmod(hue - reference, 360.0);
-    if (d > 180.0) d -= 360.0;
-    if (d <= -180.0) d += 360.0;
+    double d = std::fmod(hue - reference, 2.0 * Pi);
+    if (d > Pi) d -= 2.0 * Pi;
+    if (d <= -Pi) d += 2.0 * Pi;
     return d;
 }
 
+double encodedValue(double value) { return std::pow(std::max(value, 0.0), ValueGamma); }
+
 int clampSlider(int value, int low = -100) { return std::clamp(value, low, 100); }
+
+const cv::Matx33d &fromProPhoto()
+{
+    static const cv::Matx33d matrix = WorkingColor::toProPhoto().inv();
+    return matrix;
+}
 } // namespace
 
 bool active(const Parameters &parameters)
@@ -79,64 +89,94 @@ bool active(const Parameters &parameters)
     });
 }
 
-double weight(const cv::Vec3d &lab, const Point &point)
+Hsv toHsv(const cv::Vec3d &workingRgb)
 {
-    const double chroma = std::hypot(lab[1], lab[2]);
-    if (!(chroma >= 1e-12) || !std::isfinite(lab[0])) return 0.0;
-    const double range = clampSlider(point.range, 0);
-    // Half-widths at weight 0.5; the falloff reaches 0 at twice that distance.
-    const auto along = [range](const double (&halfWidths)[5], double distance) {
-        return falloff(std::abs(distance) / (2.0 * interpolate(Ranges, halfWidths, range)));
-    };
-    const double sourceChroma = std::hypot(point.source[1], point.source[2]);
-    // A grey source has no hue: only its chroma and lightness select.
-    const double hue = sourceChroma >= NearGreyChroma
-        ? along(HueHalfWidth, hueDifference(hueDegrees(lab), hueDegrees(point.source))) : 1.0;
-    const double saturation = along(ChromaHalfWidth, std::log(chroma / std::max(sourceChroma, 1e-6)));
-    const double lightness = along(LightnessHalfWidth, lab[0] - point.source[0]);
-    return hue * saturation * lightness * std::min(1.0, chroma / NearGreyChroma);
+    const cv::Vec3d p = WorkingColor::toProPhoto() * workingRgb;
+    const double high = std::max({p[0], p[1], p[2]}), low = std::min({p[0], p[1], p[2]});
+    const double delta = high - low;
+    if (!(high > 1e-12) || !(delta > 1e-12)) return {0.0, 0.0, std::max(high, 0.0)};
+    double sector;
+    if (high == p[0]) sector = std::fmod((p[1] - p[2]) / delta + 6.0, 6.0);
+    else if (high == p[1]) sector = (p[2] - p[0]) / delta + 2.0;
+    else sector = (p[0] - p[1]) / delta + 4.0;
+    return {sector * Pi / 3.0, delta / high, high};
 }
 
-void adjust(cv::Vec3d &lab, const Parameters &parameters)
+cv::Vec3d fromHsv(const Hsv &hsv)
+{
+    const double value = hsv[2], saturation = std::max(hsv[1], 0.0);
+    const double sector = std::fmod(std::fmod(hsv[0], 2.0 * Pi) + 2.0 * Pi, 2.0 * Pi) * 3.0 / Pi;
+    const int index = std::min(int(sector), 5);
+    const double f = sector - index;
+    const double low = value * (1.0 - saturation), falling = value * (1.0 - saturation * f),
+                 rising = value * (1.0 - saturation * (1.0 - f));
+    cv::Vec3d p;
+    switch (index) {
+    case 0: p = {value, rising, low}; break;
+    case 1: p = {falling, value, low}; break;
+    case 2: p = {low, value, rising}; break;
+    case 3: p = {low, falling, value}; break;
+    case 4: p = {rising, low, value}; break;
+    default: p = {value, low, falling}; break;
+    }
+    return fromProPhoto() * p;
+}
+
+double weight(const Hsv &colour, const Point &point)
+{
+    if (!(colour[1] > 0.0) || !std::isfinite(colour[0]) || !std::isfinite(colour[2])) return 0.0;
+    const double range = clampSlider(point.range, 0);
+    const auto along = [range](const double (&plateaus)[5], const double (&ramps)[5], double distance) {
+        return trapezoid(distance, interpolate(Ranges, plateaus, range), interpolate(Ranges, ramps, range));
+    };
+    // A grey source has no hue: only its saturation and value select.
+    const double hue = point.source[1] >= NearGreySaturation
+        ? along(HuePlateau, HueRamp, hueDifference(colour[0], point.source[0])) : 1.0;
+    const double saturation = along(SaturationPlateau, SaturationRamp, colour[1] - point.source[1]);
+    const double value = along(ValuePlateau, ValueRamp, encodedValue(colour[2]) - encodedValue(point.source[2]));
+    return hue * saturation * value * std::min(1.0, colour[1] / NearGreySaturation);
+}
+
+void adjust(cv::Vec3d &workingRgb, const Parameters &parameters)
 {
     const size_t count = std::min(parameters.count, MaxPoints);
-    if (count == 0 || std::hypot(lab[1], lab[2]) < 1e-12) return;
+    if (count == 0) return;
+    Hsv colour = toHsv(workingRgb);
+    if (!(colour[1] > 0.0)) return;
     // Overlapping points share their reach: weights of the original colour summing
     // above 1 scale every point down.
     double total = 0.0;
-    for (size_t i = 0; i < count; ++i) total += weight(lab, parameters.points[i]);
+    for (size_t i = 0; i < count; ++i) total += weight(colour, parameters.points[i]);
+    if (total <= 0.0) return;
     const double share = 1.0 / std::max(1.0, total);
     // Each point acts on the colour the previous ones produced: the order matters.
     for (size_t i = 0; i < count; ++i) {
         const Point &point = parameters.points[i];
-        const double w = weight(lab, point) * share;
+        const double w = weight(colour, point) * share;
         if (w <= 0.0) continue;
         const double variance = clampSlider(point.variance);
-        const double chroma = std::hypot(lab[1], lab[2]);
-        const double sourceChroma = std::max(std::hypot(point.source[1], point.source[2]), 1e-6);
-        double rotation = w * response(Shifts, HueRotationUp, HueRotationDown, clampSlider(point.hueShift));
-        // Variance scales the deviation from the source, in hue and in log chroma.
-        if (sourceChroma >= NearGreyChroma)
-            rotation += w * response(Variances, HueSpreadUp, HueSpreadDown, variance)
-                        * hueDifference(hueDegrees(lab), hueDegrees(point.source));
-        const double logGain = w * response(Variances, ChromaSpreadUp, ChromaSpreadDown, variance)
-                                   * std::log(chroma / sourceChroma)
-                               + w * response(Shifts, ChromaGainUp, ChromaGainDown, clampSlider(point.saturationShift));
-        lab[0] *= std::exp(w * response(Shifts, LightnessGainUp, LightnessGainDown, clampSlider(point.luminanceShift)));
-        const double gain = std::exp(logGain);
-        const double angle = rotation / DegreesPerRadian;
-        const double a = lab[1] * gain, b = lab[2] * gain;
-        lab[1] = a * std::cos(angle) - b * std::sin(angle);
-        lab[2] = a * std::sin(angle) + b * std::cos(angle);
+        // Variance scales the deviation from the source, in hue and in saturation.
+        double hue = colour[0] + w * response(Shifts, HueTurnUp, HueTurnDown, clampSlider(point.hueShift));
+        if (point.source[1] >= NearGreySaturation)
+            hue += w * response(Variances, HueSpreadUp, HueSpreadDown, variance)
+                   * hueDifference(colour[0], point.source[0]);
+        double saturation = colour[1] + w * response(Variances, SaturationSpreadUp, SaturationSpreadDown, variance)
+                                            * (colour[1] - point.source[1]);
+        saturation = std::max(0.0, saturation)
+                     * std::exp(w * response(Shifts, SaturationGainUp, SaturationGainDown, clampSlider(point.saturationShift)));
+        const double value = colour[2]
+                             * std::exp(w * response(Shifts, ValueGainUp, ValueGainDown, clampSlider(point.luminanceShift)));
+        colour = {std::fmod(std::fmod(hue, 2.0 * Pi) + 2.0 * Pi, 2.0 * Pi), saturation, value};
     }
+    workingRgb = fromHsv(colour);
 }
 
 cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
 {
     if (!active(parameters) || (rgb[0] == rgb[1] && rgb[1] == rgb[2]))
         return rgb; // zero settings / exact grey identity, without matrix round trip
-    cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(rgb));
-    adjust(lab, parameters);
-    return cv::Vec3f(WorkingColor::oklabToWorking(lab));
+    cv::Vec3d working(rgb);
+    adjust(working, parameters);
+    return cv::Vec3f(working);
 }
 } // namespace PointColor

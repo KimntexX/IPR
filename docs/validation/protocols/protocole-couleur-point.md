@@ -1,34 +1,41 @@
 # Protocole — Couleur du point
 
-Version 1 — 27 octobre 2026. Statut : **préparation, campagne non exécutée**.
+Version 2 — 28 octobre 2026. Statut : **campagne exécutée (1 848 exports), moteur
+calé, comparaison IPR en cours**.
 Appliquer le [socle commun](protocole-commun.md). Comparaison en boîte noire sur
 des exports Lightroom, jamais par rétro-ingénierie.
 
-## 1. Modèle à caler
+## 1. Modèle calé
 
 Le moteur `PointColor` (`src/core/PointColor.h/.cpp`) agit dans l'étape couleur
-perceptuelle, après le mélangeur et avant le color grading. Chaque point porte sa
-couleur source en Oklab, ses changements de teinte, saturation et luminance
-(−100 à +100), sa variance (−100 à +100) et sa gamme (0 à 100, 50 par défaut).
+perceptuelle, après le mélangeur et avant le color grading, dans le **TSV du
+ProPhoto linéaire** (teinte en radians, saturation (max − min)/max, valeur max) :
+les exports montrent que Lightroom y travaille. Chaque point porte sa source dans
+ce codage, celui que Lightroom écrit, ses changements de teinte, saturation et
+luminance (−100 à +100), sa variance (−100 à +100) et sa gamme (0 à 100, 50 par
+défaut).
 
-- **Voisinage** : poids w = f(Δteinte) · f(Δln chroma) · f(Δclarté), f lisse,
-  1 à la source et 0 au-delà d'une demi-largeur qui croît avec la gamme ; les
-  gris sont exclus.
-- **Effets** : rotation de teinte, gain de chroma (−100 rend la source grise),
-  gain de clarté, pondérés par w. La variance resserre (−) ou écarte (+) les
-  teintes et chromas du voisinage autour de la source.
+- **Voisinage** : w = T(Δteinte) · T(Δsaturation) · T(Δvaleur^(1/2,2)), chaque T
+  un trapèze (plateau puis rampe linéaire) qui s'élargit avec la gamme ; les gris
+  s'effacent.
+- **Effets**, pondérés par w : rotation de teinte (0,61 rad à ±100, identique sur
+  les six sources), gain de saturation **à valeur constante** (−100 garde 52,6 %),
+  gain de valeur pour la luminance. La variance resserre (−) ou écarte (+) les
+  teintes et saturations du voisinage autour de la source.
 - **Plusieurs points** : ils agissent dans l'ordre de prélèvement, et des
   voisinages qui se recouvrent se partagent leur portée (comportement décrit par
   Adobe).
 
-Toutes les constantes (`Calibration`) sont **provisoires** : demi-largeurs,
-amplitudes maximales et forme de f sont à remplacer par les valeurs mesurées.
+Historique : une première version en Oklab (demi-largeurs médianes, comparaison
+`etude-couleur-point-ipr-v001`) ne faisait qu'environ 70 % du changement de
+Lightroom, et 30 % sur le bleu de 9141 : Lightroom désature vers le gris de même
+valeur maximale, ce qui éclaircit un bleu.
 
 ## 2. Préréglages modèles, dans Lightroom
 
 Lightroom écrit chaque point dans le sidecar ou le préréglage : un texte de
-`crs:PointColors` de 19 nombres (3 pour la source, la première étant sa teinte
-en radians, puis teinte, saturation,
+`crs:PointColors` de 19 nombres (3 pour la source : teinte en radians, saturation
+et valeur du TSV ProPhoto linéaire, d'après les pixels prélevés ; puis teinte, saturation,
 luminance et gamme divisées par 100, puis trois trapèzes de 4 valeurs pour les
 sous-gammes de teinte, de saturation et de luminance) et la variance, divisée
 par 100, dans `crs:ColorVariance`. Relevé sur le modèle du 27 octobre
@@ -94,7 +101,9 @@ estimée en Oklab, profils et demi-largeurs par gamme, réponses à w = 1, demi-
 par scène) et écrit un JSON versionné et horodaté sous `docs/validation/raw/`.
 Les exports sans point ou sans neutre de même scène sont listés, pas mesurés.
 La comparaison IPR passe par le serveur de rendu en mémoire : la requête
-`pointColor` y pose les points (source en Oklab, celle estimée par l'étude).
+`pointColor` y pose les points, avec la source et les curseurs écrits par
+Lightroom dans chaque export. Étude dans cet espace : `tests/study_point_color_hsv.py`
+(trapèzes et réponses, `etude-couleur-point-tsv-v001`).
 
 ## 5. Hors campagne pour l'instant
 
