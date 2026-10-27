@@ -101,7 +101,8 @@ bool shifts()
 
     point = orange();
     point.saturationShift = -100;
-    ok &= check(chromaOf(adjusted(Orange, single(point))) < 1e-9, "saturation -100 makes the source grey");
+    const double kept = chromaOf(adjusted(Orange, single(point))) / chromaOf(Orange);
+    ok &= check(kept > 0.45 && kept < 0.52, "saturation -100 keeps about half the source chroma, as Lightroom");
     point.saturationShift = 100;
     ok &= check(chromaOf(adjusted(Orange, single(point))) > chromaOf(Orange) * 1.5, "saturation +100 adds chroma");
 
@@ -184,7 +185,7 @@ bool perceptualStage()
     image.at<cv::Vec3f>(0, 1) = cv::Vec3f(0.3f, 0.3f, 0.3f);
     PerceptualColour::apply(image, parameters);
     const cv::Vec3d out = WorkingColor::workingToOklab(cv::Vec3d(image.at<cv::Vec3f>(0, 0)));
-    bool ok = check(chromaOf(out) < 1e-4, "the perceptual stage applies the point colour");
+    bool ok = check(std::abs(chromaOf(out) / chromaOf(Orange) - 0.482) < 0.01, "the perceptual stage applies the point colour");
     ok &= check(image.at<cv::Vec3f>(0, 1) == cv::Vec3f(0.3f, 0.3f, 0.3f), "the stage leaves greys");
     return ok;
 }

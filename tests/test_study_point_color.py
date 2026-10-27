@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from study_point_color import (axes, change_of, crossing, desaturation_weight, estimate_source, neighbourhood,
+from study_point_color import (amplitude, axes, change_of, crossing, desaturation_weight, estimate_source, neighbourhood,
                                point_state, profile, single_slider, slope)
 
 CRS = "http://ns.adobe.com/camera-raw-settings/1.0/"
@@ -59,6 +59,14 @@ class PointColorStudyTests(unittest.TestCase):
         self.assertAlmostEqual(low, 20.0, delta=2.5)
         self.assertAlmostEqual(high, 20.0, delta=2.5)
         self.assertAlmostEqual(report["hue"]["reach_0_05"][1], 38.0, delta=3.0)
+
+    def test_amplitude_of_a_partial_desaturation(self):
+        lab0, w = synthetic()
+        lab1 = lab0.copy()
+        lab1[:, 1:] *= (1 - 0.5 * w)[:, None]   # Lightroom's -100 stops short of grey
+        peak = amplitude(desaturation_weight(lab0, lab1))
+        self.assertAlmostEqual(peak, 0.5, delta=0.01)
+        self.assertIsNone(amplitude(np.full(5, np.nan)))
 
     def test_greys_and_clipped_pixels_have_no_weight(self):
         lab0 = np.array([[0.5, 0.001, 0.0], [0.5, 0.1, 0.0]])

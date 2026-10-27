@@ -11,26 +11,50 @@ constexpr double DegreesPerRadian = 180.0 / 3.14159265358979323846;
 // Below this Oklab chroma a colour has no reliable hue: it fades to grey identity.
 constexpr double NearGreyChroma = 0.02;
 
-// Provisional neighbourhood and response, to be replaced by the values fitted
-// on the Lightroom campaign. Half-widths at range 0 and 100, linear between.
-struct Calibration {
-    double hueHalfWidth[2] = {12.0, 60.0};        // degrees
-    double chromaHalfWidth[2] = {0.35, 1.2};      // natural log of the chroma ratio
-    double lightnessHalfWidth[2] = {0.08, 0.40};  // Oklab L
-    double maxHueDegrees = 30.0;                  // hue shift ±100
-    double maxLogChroma = 0.7;                    // saturation +100; -100 reaches grey
-    double maxLogLightness = 0.35;                // luminance ±100
-    double maxVariance = 0.6;                     // variance ±100 scales deviations by 1 ± 0.6
-};
-constexpr Calibration Model;
+// Measured on Lightroom exports (docs/validation/raw/etude-couleur-point-v002-*.json).
+// Neighbourhood: distance where the weight falls to 0.5, per range slider value,
+// median of six sources over 28 scenes.
+constexpr double Ranges[] = {0, 25, 50, 75, 100};
+constexpr double HueHalfWidth[] = {27.2, 32.6, 38.6, 40.2, 41.6};          // degrees
+constexpr double ChromaHalfWidth[] = {0.450, 0.592, 0.926, 0.986, 1.148};  // natural log of the chroma ratio
+constexpr double LightnessHalfWidth[] = {0.158, 0.211, 0.258, 0.279, 0.302}; // Oklab L
+// Change of the source colour itself (weight 1) per slider value, source 6V1A0327.
+constexpr double Shifts[] = {0, 25, 50, 100};
+constexpr double HueRotationUp[] = {0, 14.95, 28.68, 52.68};               // degrees
+constexpr double HueRotationDown[] = {0, -15.07, -29.04, -51.45};
+constexpr double ChromaGainUp[] = {0, 0.248, 0.459, 0.758};                // log chroma; -100 keeps ~48 %
+constexpr double ChromaGainDown[] = {0, -0.229, -0.407, -0.729};
+constexpr double LightnessGainUp[] = {0, 0.0762, 0.1444, 0.270};           // log lightness
+constexpr double LightnessGainDown[] = {0, -0.0722, -0.1353, -0.2405};
+// Variance: gain of the deviation from the source, in hue and in log chroma.
+constexpr double Variances[] = {0, 50, 100};
+constexpr double HueSpreadUp[] = {0, 0.478, 0.915};
+constexpr double HueSpreadDown[] = {0, -0.508, -1.0};                       // -100 gathers the hues on the source
+constexpr double ChromaSpreadUp[] = {0, 0.341, 0.742};
+constexpr double ChromaSpreadDown[] = {0, -0.221, -0.429};
 
-double lerp(const double (&ends)[2], double t) { return ends[0] + (ends[1] - ends[0]) * t; }
+// Piecewise linear over measured points, constant beyond the last one.
+template <size_t N>
+double interpolate(const double (&at)[N], const double (&values)[N], double x)
+{
+    if (x <= at[0]) return values[0];
+    for (size_t i = 1; i < N; ++i)
+        if (x <= at[i]) return values[i - 1] + (values[i] - values[i - 1]) * (x - at[i - 1]) / (at[i] - at[i - 1]);
+    return values[N - 1];
+}
 
-// Smooth falloff: 1 at 0, 0 from 1 on, zero slope at both ends.
+// Response of a slider value, from the values measured on its side.
+template <size_t N>
+double response(const double (&at)[N], const double (&up)[N], const double (&down)[N], double value)
+{
+    return value >= 0.0 ? interpolate(at, up, value) : interpolate(at, down, -value);
+}
+
+// Smoothstep falloff: 1 at 0, 0.5 at 0.5, 0 from 1 on; a flat top and no long tail, as measured.
 double falloff(double t)
 {
-    const double u = 1.0 - t * t;
-    return u > 0.0 ? u * u : 0.0;
+    if (t >= 1.0) return 0.0;
+    return 1.0 - t * t * (3.0 - 2.0 * t);
 }
 
 double hueDegrees(const cv::Vec3d &lab) { return std::atan2(lab[2], lab[1]) * DegreesPerRadian; }
@@ -59,15 +83,17 @@ double weight(const cv::Vec3d &lab, const Point &point)
 {
     const double chroma = std::hypot(lab[1], lab[2]);
     if (!(chroma >= 1e-12) || !std::isfinite(lab[0])) return 0.0;
-    const double r = clampSlider(point.range, 0) / 100.0;
+    const double range = clampSlider(point.range, 0);
+    // Half-widths at weight 0.5; the falloff reaches 0 at twice that distance.
+    const auto along = [range](const double (&halfWidths)[5], double distance) {
+        return falloff(std::abs(distance) / (2.0 * interpolate(Ranges, halfWidths, range)));
+    };
     const double sourceChroma = std::hypot(point.source[1], point.source[2]);
     // A grey source has no hue: only its chroma and lightness select.
     const double hue = sourceChroma >= NearGreyChroma
-        ? falloff(std::abs(hueDifference(hueDegrees(lab), hueDegrees(point.source))) / lerp(Model.hueHalfWidth, r))
-        : 1.0;
-    const double logRatio = std::log(chroma / std::max(sourceChroma, 1e-6));
-    const double saturation = falloff(std::abs(logRatio) / lerp(Model.chromaHalfWidth, r));
-    const double lightness = falloff(std::abs(lab[0] - point.source[0]) / lerp(Model.lightnessHalfWidth, r));
+        ? along(HueHalfWidth, hueDifference(hueDegrees(lab), hueDegrees(point.source))) : 1.0;
+    const double saturation = along(ChromaHalfWidth, std::log(chroma / std::max(sourceChroma, 1e-6)));
+    const double lightness = along(LightnessHalfWidth, lab[0] - point.source[0]);
     return hue * saturation * lightness * std::min(1.0, chroma / NearGreyChroma);
 }
 
@@ -85,20 +111,19 @@ void adjust(cv::Vec3d &lab, const Parameters &parameters)
         const Point &point = parameters.points[i];
         const double w = weight(lab, point) * share;
         if (w <= 0.0) continue;
-        const double hueShift = clampSlider(point.hueShift) / 100.0;
-        const double saturationShift = clampSlider(point.saturationShift) / 100.0;
-        const double luminanceShift = clampSlider(point.luminanceShift) / 100.0;
-        const double variance = clampSlider(point.variance) / 100.0 * Model.maxVariance * w;
+        const double variance = clampSlider(point.variance);
         const double chroma = std::hypot(lab[1], lab[2]);
         const double sourceChroma = std::max(std::hypot(point.source[1], point.source[2]), 1e-6);
+        double rotation = w * response(Shifts, HueRotationUp, HueRotationDown, clampSlider(point.hueShift));
         // Variance scales the deviation from the source, in hue and in log chroma.
-        double rotation = w * hueShift * Model.maxHueDegrees;
         if (sourceChroma >= NearGreyChroma)
-            rotation += variance * hueDifference(hueDegrees(lab), hueDegrees(point.source));
-        double gain = std::exp(variance * std::log(chroma / sourceChroma));
-        gain *= saturationShift < 0.0 ? std::max(0.0, 1.0 + w * saturationShift)
-                                      : std::exp(w * saturationShift * Model.maxLogChroma);
-        lab[0] *= std::exp(w * luminanceShift * Model.maxLogLightness);
+            rotation += w * response(Variances, HueSpreadUp, HueSpreadDown, variance)
+                        * hueDifference(hueDegrees(lab), hueDegrees(point.source));
+        const double logGain = w * response(Variances, ChromaSpreadUp, ChromaSpreadDown, variance)
+                                   * std::log(chroma / sourceChroma)
+                               + w * response(Shifts, ChromaGainUp, ChromaGainDown, clampSlider(point.saturationShift));
+        lab[0] *= std::exp(w * response(Shifts, LightnessGainUp, LightnessGainDown, clampSlider(point.luminanceShift)));
+        const double gain = std::exp(logGain);
         const double angle = rotation / DegreesPerRadian;
         const double a = lab[1] * gain, b = lab[2] * gain;
         lab[1] = a * std::cos(angle) - b * std::sin(angle);

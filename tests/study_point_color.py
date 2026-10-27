@@ -5,8 +5,10 @@ embeds: crs:PointColors and crs:ColorVariance) against the neutral of the same
 geometry (grading/neutre), in Oklab, reduced by 2 as the grading study:
 
 - Neighbourhood: saturation -100 removes the chroma in proportion to a pixel's
-  weight, so w = 1 - C/C0 (neutral chroma C0 above 0.02). The source is the median
-  Oklab colour of the pixels at w >= 0.9 at range 50. Per range, profiles of w
+  weight, up to an amplitude A at the source (Lightroom does not reach grey):
+  w = (1 - C/C0) / A, neutral chroma C0 above 0.02, A the 99.5th percentile of
+  1 - C/C0 at range 50 over all scenes. The source is the median Oklab colour of
+  the pixels at w >= 0.9 at range 50. Per range, profiles of w
   along the hue difference, the log chroma ratio and the lightness difference to
   the source, each taken near the source on the other two axes, and the distances
   where the profile falls to 0.5 and to 0.05 on each side.
@@ -42,7 +44,7 @@ from study_sources import git  # noqa: E402
 
 CRS = "http://ns.adobe.com/camera-raw-settings/1.0/"
 RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-STRIDE = 8
+STRIDE = 12
 GREY = 0.02
 CLIP = 0.98
 # Tolerances near the source on the axes a profile does not follow.
@@ -96,6 +98,12 @@ def desaturation_weight(lab0, lab1):
     C0, C1 = np.hypot(lab0[:, 1], lab0[:, 2]), np.hypot(lab1[:, 1], lab1[:, 2])
     w = np.clip(1.0 - C1 / np.maximum(C0, 1e-6), 0.0, 1.0)
     return np.where(C0 > GREY, w, np.nan)
+
+
+def amplitude(loss):
+    """Chroma share removed at the source: a high percentile of the loss, robust to a few outliers."""
+    finite = loss[np.isfinite(loss)]
+    return float(np.percentile(finite, 99.5)) if finite.size >= MIN_PIXELS else None
 
 
 def estimate_source(lab0, w, level=0.9):
@@ -225,25 +233,29 @@ def main(argv=None):
     for source, states in sorted(exports.items()):
         label = "/".join(f"{v:.4f}" for v in source)
         reference = states.get((0, -100, 0, 0, 50), {})
-        weights = {scene: desaturation_weight(neutrals[scene][2], lab1) for scene, lab1 in reference.items()}
-        if not weights:
+        losses = {scene: desaturation_weight(neutrals[scene][2], lab1) for scene, lab1 in reference.items()}
+        peak = amplitude(np.concatenate(list(losses.values()))) if losses else None
+        if not peak:
             print(f"{label}: no saturation -100 at range 50, skipped", flush=True)
             continue
+        weights = {scene: np.clip(loss / peak, 0.0, 1.0) for scene, loss in losses.items()}
         all_lab0 = np.concatenate([neutrals[s][2] for s in weights])
         all_w = np.concatenate(list(weights.values()))
         oklab_source = estimate_source(all_lab0, all_w)
         if oklab_source is None:
             print(f"{label}: weight never reaches 0.9, skipped", flush=True)
             continue
-        record = {"lightroom_source": list(source), "oklab_source": oklab_source.round(5).tolist(),
+        record = {"lightroom_source": list(source), "saturation_minus_100_amplitude": round(peak, 4),
+                  "oklab_source": oklab_source.round(5).tolist(),
                   "oklab_source_lch": [round(float(v), 4) for v in lch(oklab_source)],
                   "scenes": sorted(weights), "ranges": {}, "responses": {}, "per_scene_hue_half_width": {}}
         for (hue, sat, lum, var, rng), scenes in sorted(states.items()):
             if (hue, sat, lum, var) != (0, -100, 0, 0):
                 continue
             lab0 = np.concatenate([neutrals[s][2] for s in scenes])
-            w = np.concatenate([desaturation_weight(neutrals[s][2], scenes[s]) for s in scenes])
-            record["ranges"][str(rng)] = {"scenes": len(scenes), **neighbourhood(lab0, w, oklab_source)}
+            w = np.concatenate([desaturation_weight(neutrals[s][2], scenes[s]) for s in scenes]) / peak
+            record["ranges"][str(rng)] = {"scenes": len(scenes), "amplitude": amplitude(w * peak),
+                                          **neighbourhood(lab0, np.clip(w, 0.0, 1.0), oklab_source)}
             print(f"{label} range {rng}: hue half-width {record['ranges'][str(rng)]['hue']['half_width_0_5']}",
                   flush=True)
         for scene, w in weights.items():
@@ -266,7 +278,8 @@ def main(argv=None):
 
     result = {"campaign_id": campaign, "runner": "tests/study_point_color.py",
               "commit": git("rev-parse", "HEAD"), "local_changes": git("status", "--short").splitlines(),
-              "model": "w = 1 - C/C0 under saturation -100; responses as change at w = 1 (least squares through 0)",
+              "model": "w = (1 - C/C0) / A under saturation -100, A its amplitude at the source; "
+                       "responses as change at w = 1 (least squares through 0)",
               "units": {"hue": "degrees", "chroma": "natural log of the chroma ratio", "lightness": "Oklab L",
                         "hue_response": "degrees", "saturation_response": "log chroma gain",
                         "luminance_response": "log lightness gain"},

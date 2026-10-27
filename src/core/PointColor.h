@@ -9,9 +9,8 @@
 // hue, saturation and luminance of the colours near it in Oklab. The range
 // widens or narrows that neighbourhood; the variance spreads or gathers the
 // colours inside it. Points act in the order they were picked, and overlapping
-// points share their reach. The neighbourhood and the response are provisional
-// (Calibration in PointColor.cpp) until fitted on Lightroom exports
-// (docs/validation/protocols/protocole-couleur-point.md).
+// points share their reach. Neighbourhood and responses are fitted on Lightroom
+// exports (PointColor.cpp, docs/validation/protocols/protocole-couleur-point.md).
 namespace PointColor {
 inline constexpr size_t MaxPoints = 8;
 
