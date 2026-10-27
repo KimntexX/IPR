@@ -141,6 +141,30 @@ void render(Masters &masters, const QJsonObject &request)
         scalar("blending", settings.gradingBlending, 0, 100);
         scalar("balance", settings.gradingBalance, -100, 100);
     }
+    if (request.contains("pointColor")) {
+        // Points in picking order: {"source": [L, a, b] in Oklab, "hue", "saturation", "luminance",
+        // "variance" in [-100, 100], "range" in [0, 100] (50 when absent)}.
+        const QJsonArray points = request.value("pointColor").toArray();
+        require(points.size() <= int(PointColor::MaxPoints), "pointColor holds at most 8 points");
+        settings.pointColor.count = size_t(points.size());
+        for (int i = 0; i < points.size(); ++i) {
+            const QJsonObject p = points.at(i).toObject();
+            PointColor::Point &point = settings.pointColor.points[size_t(i)];
+            const QJsonArray source = p.value("source").toArray();
+            require(source.size() == 3, "pointColor.source needs Oklab L, a, b");
+            for (int c = 0; c < 3; ++c) point.source[c] = source.at(c).toDouble();
+            const auto slider = [&](const char *key, int &target, int low, int fallback) {
+                const int v = p.contains(key) ? p.value(key).toInt() : fallback;
+                require(v >= low && v <= 100, QString("pointColor.%1 out of range").arg(key));
+                target = v;
+            };
+            slider("hue", point.hueShift, -100, 0);
+            slider("saturation", point.saturationShift, -100, 0);
+            slider("luminance", point.luminanceShift, -100, 0);
+            slider("variance", point.variance, -100, 0);
+            slider("range", point.range, 0, 50);
+        }
+    }
     QString error;
     const QImage image = ImageEditor::renderSrgb16(master.image, settings, &error);
     require(!image.isNull() && image.format() == QImage::Format_RGBA64, "Render failed: " + error);

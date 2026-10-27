@@ -1,6 +1,7 @@
 #include "imageeditor.h"
 #include "RenderStageCache.h"
 #include "ToneRecovery.h"
+#include "WorkingColorSpace.h"
 
 #include <QCoreApplication>
 #include <QElapsedTimer>
@@ -99,6 +100,16 @@ public:
         for (int v : {10, 0}) edits.push_back([v](auto &s) { s.contrast = v; });
         for (int v : {30, 40}) edits.push_back([v](auto &s) { s.denoiseLuminance = v; });
         edits.push_back([](auto &s) { s.dehaze = 0; });
+        // A point colour on a colour of the scene, then another shift: the cache key holds the points.
+        const cv::Vec4f picked = source.linearRgba.at<cv::Vec4f>(400, 600);
+        const cv::Vec3d oklab = WorkingColor::workingToOklab({picked[0], picked[1], picked[2]});
+        edits.push_back([oklab](auto &s) {
+            s.pointColor.count = 1;
+            s.pointColor.points[0].source = oklab;
+            s.pointColor.points[0].saturationShift = -60;
+        });
+        edits.push_back([](auto &s) { s.pointColor.points[0].saturationShift = -40; });
+        edits.push_back([](auto &s) { s.pointColor.points[0].range = 80; });
 
         RenderStageCache cache;
         double plain = 0, cached = 0;

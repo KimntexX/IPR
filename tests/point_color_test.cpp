@@ -1,6 +1,12 @@
 #include "PerceptualColour.h"
 #include "PointColor.h"
+#include "Sidecar.h"
 #include "WorkingColorSpace.h"
+
+#include <QDataStream>
+#include <QFile>
+#include <QFileInfo>
+#include <QTemporaryDir>
 
 #include <cmath>
 #include <iostream>
@@ -182,6 +188,46 @@ bool perceptualStage()
     ok &= check(image.at<cv::Vec3f>(0, 1) == cv::Vec3f(0.3f, 0.3f, 0.3f), "the stage leaves greys");
     return ok;
 }
+bool sidecar()
+{
+    QTemporaryDir directory;
+    const QString source = directory.filePath(QStringLiteral("photo.png"));
+    QFile file(source);
+    if (!directory.isValid() || !file.open(QIODevice::WriteOnly) || file.write("x") != 1) return false;
+    file.close();
+    EditRecipe::Settings settings;
+    settings.pointColor = single(orange());
+    settings.pointColor.points[0].hueShift = -37;
+    settings.pointColor.points[0].variance = 44;
+    settings.pointColor.points[0].range = 66;
+    settings.pointColor.points[1].source = lch(0.4, 0.08, 250.0);
+    settings.pointColor.points[1].luminanceShift = 12;
+    settings.pointColor.count = 2;
+    EditRecipe::Settings loaded;
+    EditRecipe::UserImageMetadata metadata;
+    bool ok = check(Sidecar::write(source, settings, {}, {}) && Sidecar::read(source, &loaded, &metadata),
+                    "the sidecar is written and read");
+    const PointColor::Point &first = loaded.pointColor.points[0], &second = loaded.pointColor.points[1];
+    ok &= check(loaded.pointColor.count == 2 && first.source == Orange && first.hueShift == -37 &&
+                first.variance == 44 && first.range == 66 && second.source == lch(0.4, 0.08, 250.0) &&
+                second.luminanceShift == 12 && second.range == 50,
+                "the points round trip through the sidecar");
+
+    // A point count beyond the maximum makes the sidecar invalid.
+    QFile saved(Sidecar::path(source));
+    if (!saved.open(QIODevice::ReadWrite)) return false;
+    QByteArray bytes = saved.readAll();
+    const qsizetype at = bytes.size() - 2 * (3 * 8 + 5 * 4) - 4;
+    QDataStream patch(&bytes, QIODevice::WriteOnly);
+    patch.setVersion(QDataStream::Qt_6_4);
+    patch.device()->seek(at);
+    patch << qint32(9);
+    saved.seek(0);
+    saved.write(bytes);
+    saved.close();
+    ok &= check(!Sidecar::read(source, &loaded, &metadata), "too many points are refused");
+    return ok;
+}
 } // namespace
 
 int main()
@@ -193,6 +239,7 @@ int main()
     ok &= overlap();
     ok &= robustness();
     ok &= perceptualStage();
+    ok &= sidecar();
     if (ok) std::cout << "pointColorTests passed\n";
     return ok ? 0 : 1;
 }

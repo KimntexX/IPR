@@ -1609,6 +1609,13 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
     stream << qint32(s.saturation) << qint32(s.vibrance) << qint32(s.gradingBlending) << qint32(s.gradingBalance);
     ints(s.mixerHue); ints(s.mixerSaturation); ints(s.mixerLuminance); ints(s.gradingHue); ints(s.gradingSaturation);
     ints(s.gradingLuminance);
+    const size_t points = std::min(s.pointColor.count, PointColor::MaxPoints);
+    stream << qint32(points);
+    for (size_t i = 0; i < points; ++i) {
+        const PointColor::Point &p = s.pointColor.points[i];
+        stream << p.source[0] << p.source[1] << p.source[2] << qint32(p.hueShift) << qint32(p.saturationShift)
+               << qint32(p.luminanceShift) << qint32(p.variance) << qint32(p.range);
+    }
     keys[1] = key;
     stream << qint32(s.denoiseLuminance) << qint32(s.denoiseChrominance);
     keys[2] = key;
@@ -1650,7 +1657,8 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         std::all_of(settings.gradingSaturation.cbegin(), settings.gradingSaturation.cend(),
                     [](int value) { return value == 0; }) &&
         std::all_of(settings.gradingLuminance.cbegin(), settings.gradingLuminance.cend(),
-                    [](int value) { return value == 0; }) && !hasToneCurves)
+                    [](int value) { return value == 0; }) && !PointColor::active(settings.pointColor) &&
+        !hasToneCurves)
         return source;
 
     // Each costly stage runs only past the cached output it resumes from, then
@@ -1668,7 +1676,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     if (runs(1)) {
         PerceptualColour::apply(adjusted, {settings.saturation, settings.vibrance,
                                            {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
-                                           PointColor::Parameters{}, settings.gradingHue, settings.gradingSaturation,
+                                           settings.pointColor, settings.gradingHue, settings.gradingSaturation,
                                            settings.gradingLuminance, settings.gradingBlending,
                                            settings.gradingBalance});
         reached(1, adjusted);

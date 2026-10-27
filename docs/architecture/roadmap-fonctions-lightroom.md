@@ -24,7 +24,7 @@ des exports Lightroom, jamais par rétro-ingénierie.
 | Couleur | Vibrance, saturation | Fait, validé le 22 octobre | — |
 | Couleur | Mélangeur TSL 8 bandes | Fait, calé sur LR | Revue du magenta |
 | Couleur | Mélangeur noir et blanc | Absent | Non planifié |
-| Couleur | Couleur du point | Interface désactivée (IHM-CONN-011) ; moteur provisoire `PointColor`, non raccordé | [Protocole](../validation/protocols/protocole-couleur-point.md) : modèles LR à enregistrer, préréglages générés |
+| Couleur | Couleur du point | Interface désactivée (IHM-CONN-011) ; moteur provisoire `PointColor`, porté par la recette et le `.ipr`, sans commande d'édition | [Protocole](../validation/protocols/protocole-couleur-point.md) : modèles LR à enregistrer, préréglages générés |
 | Couleur | Color grading (3 zones, global, fusion, balance, luminance) | Fait, validé le 26 octobre | — |
 | Effets | Texture, clarté, correction du voile | Fait, validé le 25 octobre (réserves) | — |
 | Effets | Vignettage après recadrage (quantité, milieu, rondeur, contour progressif, hautes lumières, style) | Absent | Non planifié ; dépend du recadrage |

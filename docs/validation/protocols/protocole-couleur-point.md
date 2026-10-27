@@ -93,8 +93,8 @@ l'export au neutre de la même scène, en Oklab, pixels écrêtés exclus.
 estimée en Oklab, profils et demi-largeurs par gamme, réponses à w = 1, demi-largeur
 par scène) et écrit un JSON versionné et horodaté sous `docs/validation/raw/`.
 Les exports sans point ou sans neutre de même scène sont listés, pas mesurés.
-La comparaison IPR passera ensuite par le serveur de rendu en mémoire, une fois
-les réglages portés par la recette.
+La comparaison IPR passe par le serveur de rendu en mémoire : la requête
+`pointColor` y pose les points (source en Oklab, celle estimée par l'étude).
 
 ## 5. Hors campagne pour l'instant
 
