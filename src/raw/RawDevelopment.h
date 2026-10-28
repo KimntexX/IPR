@@ -16,9 +16,8 @@
 // 0, the white adjusted to the data unless IPR calibrated it, as-shot multipliers
 // scaled so the smallest is 1, values truncated to the 16-bit grid, both greens
 // merged, IPR's RCD and median (interpolated values bounded at 0), output on the
-// 16-bit grid. Policy B keeps the values below the black through RCD and the
-// median, without the 16-bit grid, and clips them at 0 only on output (mode B,
-// under evaluation by the bench).
+// 16-bit grid. Policy B keeps the values below the black through RCD, the median
+// and the output, without the 16-bit grid (mode B, under evaluation by the bench).
 namespace RawDevelopment {
 
 enum class Policy {
@@ -33,8 +32,8 @@ enum class Stage {
     NormalizedCfa,          // divided by the effective white (CV_32FC1), before the gains; A clips at 0 first
     PreDemosaicCfa,         // the mosaic RCD reads (CV_32FC1, white 1)
     PostDemosaicCameraRgb,  // RCD before the median (CV_32FC3)
-    PreOutputCameraRgb,     // after the median, before the output's bound and grid (CV_32FC3)
-    PostMedianCameraRgb     // the development's output (CV_32FC3)
+    PreOutputCameraRgb,     // after the median, before A's output bound and grid; B: the output (CV_32FC3)
+    PostMedianCameraRgb     // the development's output (CV_32FC3); A: counts k as float(k) * float(1 / 65535)
 };
 
 struct Context
@@ -79,7 +78,8 @@ struct Result
 Result develop(const RawInput::Input &input, const Options &options);
 
 // The image turned as the decoder's orientation code (RawInput::Input::orientation).
-cv::Mat orient(const cv::Mat &image, int orientation);
+// Flips in place: the result shares the image's buffer unless it is transposed.
+cv::Mat orient(cv::Mat image, int orientation);
 
 } // namespace RawDevelopment
 
