@@ -107,6 +107,10 @@ set(IPR_ENGINE_SOURCES
     src/raw/RawBlackLevelEstimator.cpp
     src/raw/RawDecoder.h
     src/raw/RawDecoder.cpp
+    src/raw/RawInput.h
+    src/raw/RawInput.cpp
+    src/raw/LibRawInput.h
+    src/raw/LibRawInput.cpp
     src/raw/RawNormalization.h
     src/raw/RawNormalization.cpp
     src/raw/CameraCharacterization.h
@@ -329,6 +333,8 @@ if(BUILD_TESTING)
     ipr_add_test(colorMixerMathTests tests/color_mixer_math_test.cpp)
     ipr_add_test(pointColorTests tests/point_color_test.cpp)
     ipr_add_test(toneCurveTests tests/tone_curve_test.cpp)
+    ipr_add_test(rawInputTests tests/raw_input_test.cpp)
+    set_tests_properties(rawInputTests PROPERTIES LABELS "unit;raw")
     set_tests_properties(toneCurveTests PROPERTIES LABELS "unit;pipeline;curves")
     set_tests_properties(pointColorTests PROPERTIES LABELS "unit;pipeline;colour")
     add_executable(colorMixerNeutralProbe tests/color_mixer_neutral_probe.cpp)
