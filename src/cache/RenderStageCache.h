@@ -34,6 +34,9 @@ public:
     Start begin(const cv::Mat &source, double pixelScale, const Keys &keys);
     // Ignored when the cache was cleared or rebound since begin().
     void store(const Start &start, int stage, const cv::Mat &rgb);
+    // Copy of a kept stage output for this source, scale and key; empty otherwise.
+    // Reads only: the keep policy of the renders is left as it is.
+    cv::Mat peek(const cv::Mat &source, double pixelScale, int stage, const QByteArray &key) const;
     void clear();
     int count() const;
 

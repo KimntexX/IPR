@@ -481,7 +481,7 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
     currentStream.setVersion(QDataStream::Qt_6_4);
     quint32 magic; quint16 savedVersion;
     currentStream >> magic >> savedVersion;
-    if (!check(magic == 0x49505231u && savedVersion == 8, "new sidecars must declare version 8")) return false;
+    if (!check(magic == 0x49505231u && savedVersion == 9, "new sidecars must declare version 9")) return false;
     currentSidecar.close();
     editor.resetAdjustments();
     for (int band = 0; band < 8; ++band)
@@ -490,7 +490,8 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                        "reset should neutralize all eight mixer bands"))
                 return false;
 
-    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5), quint16(6), quint16(7)}) {
+    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5), quint16(6), quint16(7),
+                            quint16(8)}) {
         const QString legacyPath = directory + QStringLiteral("/legacy-%1.png").arg(version);
         if (!QImage(sourcePath).save(legacyPath, "PNG"))
             return false;
@@ -521,6 +522,8 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
             stream << QString() << QString() << false << false << false;
         if (version >= 7)
             stream << qint32(80) << qint32(-30);
+        if (version >= 8)
+            stream << qint32(0) << qint32(0) << qint32(0) << qint32(0) << qint32(0) << qint32(0);
         if (stream.status() != QDataStream::Ok)
             return false;
         sidecar.close();

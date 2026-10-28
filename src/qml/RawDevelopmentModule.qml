@@ -77,24 +77,14 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.minimumWidth: 0
     }
-    Label {
+    SectionNote {
         text: qsTr("Profils DCP/LCP et réglages enregistrés par image dans le fichier .ipr. Camera Neutral et calibration actifs par défaut pour les boîtiers et modes compatibles. Configuration de calibration mise à jour automatiquement. Nouveaux ISO et hautes lumières à vérifier visuellement ; un boîtier ou mode inconnu ne reçoit pas une règle d'un autre appareil.")
-        color: root.secondaryTextColor
-        font.pixelSize: 11
-        wrapMode: Text.WordWrap
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
     }
-    Label {
+    SectionNote {
         objectName: "rawProfileProcessingLabel"
         text: root.editor.rawProfileFastPathAvailable
               ? qsTr("Changement de DCP sans redécodage RAW disponible.")
               : qsTr("Un redécodage peut être nécessaire (balance des blancs, calibration ou tampon indisponible).")
         visible: root.editor.rawImage
-        color: root.secondaryTextColor
-        font.pixelSize: 10
-        wrapMode: Text.WordWrap
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
     }
 }

@@ -58,6 +58,8 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorMixer.h
     src/core/ColorMixer.cpp
     src/core/ColorMixerModel.h
+    src/core/PointColor.h
+    src/core/PointColor.cpp
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
     src/core/Dehaze.h
@@ -149,6 +151,8 @@ set(IPR_QML_FILES
     src/qml/ToneCurveModule.qml
     src/qml/ColorMixerModule.qml
     src/qml/ColorGradingModule.qml
+    src/qml/PointColorModule.qml
+    src/qml/SectionNote.qml
     src/qml/ImageInfoPanel.qml
     src/qml/ThumbnailRibbon.qml
 )
@@ -311,6 +315,8 @@ if(BUILD_TESTING)
     ipr_add_test(grainTests tests/grain_test.cpp)
     ipr_add_test(colorGradingTests tests/color_grading_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
+    ipr_add_test(editorBatchTests tests/batch_test.cpp)
+    set_tests_properties(editorBatchTests PROPERTIES LABELS "unit;export;batch" TIMEOUT 180)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
     set_tests_properties(toneRecoveryTests PROPERTIES LABELS "unit;pipeline;lighting")
     add_executable(testImageGeneratorTests tests/test_image_generator_test.cpp)
@@ -321,6 +327,8 @@ if(BUILD_TESTING)
     set_tests_properties(testImageGeneratorTests PROPERTIES
         LABELS "unit;export;generator" TIMEOUT 120)
     ipr_add_test(colorMixerMathTests tests/color_mixer_math_test.cpp)
+    ipr_add_test(pointColorTests tests/point_color_test.cpp)
+    set_tests_properties(pointColorTests PROPERTIES LABELS "unit;pipeline;colour")
     add_executable(colorMixerNeutralProbe tests/color_mixer_neutral_probe.cpp)
     target_link_libraries(colorMixerNeutralProbe PRIVATE iprEngine)
     add_test(NAME colorMixerNeutralTests COMMAND colorMixerNeutralProbe)

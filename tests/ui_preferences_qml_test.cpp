@@ -116,7 +116,7 @@ int main(int argc, char **argv)
         preferences.setSectionExpanded("export", true);
         preferences.setValue("selection/toneCurveChannel", 3);
         preferences.setValue("selection/mixerBand", 7);
-        preferences.setValue("selection/gradingZone", 2);
+        preferences.setValue("selection/gradingZone", 3);
         preferences.setValue("export/format", "TIFF");
         preferences.setValue("export/quality", 83);
         QScopedPointer<QObject> root(component.createWithInitialProperties({
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
         if (!check(!light->property("expanded").toBool() && noise->property("expanded").toBool() &&
                    exportGroup->property("expanded").toBool() &&
                    root->property("activeCurve").toInt() == 3 &&
-                   mixer->property("band").toInt() == 7 && grading->property("zone").toInt() == 2 &&
+                   mixer->property("band").toInt() == 7 && grading->property("zone").toInt() == 3 &&
                    format->property("currentText").toString() == "TIFF" &&
                    quality->property("value").toInt() == 83,
                    "stored state should override QML defaults without startup writes")) return 1;
@@ -601,6 +601,15 @@ int main(int argc, char **argv)
         settleEditor(editor);
         if (!check(editor.imageDetails().value("name").toString() == "02.png" && editor.selectedImageCount() == 1,
                    "normal clicking must still open the target without clearing batch selection")) return 1;
+        // Then another image opens: the guarded items of the next menu must not follow their actions.
+        rightClick(firstThumbnail);
+        QObject *exportSelection = photoMenu->findChild<QObject *>("contextExportSelection");
+        if (!check(photoMenu->property("visible").toBool() && exportSelection &&
+                   exportSelection->property("visible").toBool() && exportSelection->property("enabled").toBool() &&
+                   exportSelection->property("text").toString().contains("(1)"),
+                   "right-clicking a thumbnail must offer the export of the batch selection")) return 1;
+        QMetaObject::invokeMethod(photoMenu, "close");
+        QCoreApplication::processEvents();
         editor.loadImage(firstUrl);
         settleEditor(editor);
         editor.clearImageSelection();
@@ -609,6 +618,7 @@ int main(int argc, char **argv)
                    photoMenu->property("targetName").toString() == "02.png" &&
                    !photoMenu->findChild<QObject *>("contextResetAdjustments")->property("enabled").toBool() &&
                    !photoMenu->findChild<QObject *>("contextExportImage")->property("enabled").toBool() &&
+                   !photoMenu->findChild<QObject *>("contextExportSelection")->property("visible").toBool() &&
                    editor.imageDetails().value("name").toString() == "01.png",
                    "another thumbnail's context must not silently open it or mutate the current photo")) return 1;
         QMetaObject::invokeMethod(photoMenu, "close");
