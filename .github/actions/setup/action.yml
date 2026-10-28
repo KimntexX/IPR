@@ -16,13 +16,20 @@ runs:
     # (over an hour, October 2026): keep the downloaded packages between runs. The
     # key follows the runner image, so packages renew with it; an older cache still
     # serves whatever has not changed.
+    # ImageOS and ImageVersion are the runner's environment, not the env context.
+    - if: runner.os == 'Linux'
+      id: apt-image
+      shell: bash
+      run: |
+        echo "os=${ImageOS:-linux}" >> "$GITHUB_OUTPUT"
+        echo "version=${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
     - if: runner.os == 'Linux'
       id: apt-cache
       uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       with:
         path: ~/apt-archives
-        key: apt-${{ env.ImageOS }}-${{ env.ImageVersion }}-${{ hashFiles('.github/actions/setup/action.yml') }}
-        restore-keys: apt-${{ env.ImageOS }}-
+        key: apt-${{ steps.apt-image.outputs.os }}-${{ steps.apt-image.outputs.version }}-${{ hashFiles('.github/actions/setup/action.yml') }}
+        restore-keys: apt-${{ steps.apt-image.outputs.os }}-
     - if: runner.os == 'Linux'
       shell: bash
       run: |
