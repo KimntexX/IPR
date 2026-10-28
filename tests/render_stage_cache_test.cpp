@@ -143,6 +143,24 @@ public:
         const auto rendered = ImageEditor::renderWorkingImage(other, settings, pixelScale, &cache);
         check(cv::norm(rendered.linearRgba, expected.linearRgba, cv::NORM_INF) == 0, "new source renders from scratch");
     }
+
+    // The range overlay must never write into the source: a point without shift
+    // leaves the pipeline neutral, which hands back the source buffer itself.
+    static void overlayKeepsSource()
+    {
+        const auto source = scene(64, 48);
+        const cv::Mat before = source.linearRgba.clone();
+        ImageEditor::Settings settings;
+        settings.temperature = 5200;
+        settings.pointColor.count = 1;
+        settings.pointColor.points[0].source = PointColor::toHsv({0.3, 0.2, 0.1});
+        RenderStageCache cache;
+        const auto overlaid = ImageEditor::renderPreview(source, settings, false, 1.0, &cache, 0);
+        check(!overlaid.preview.isNull(), "overlay preview renders");
+        check(cv::norm(source.linearRgba, before, cv::NORM_INF) == 0, "the overlay leaves the source untouched");
+        const auto plain = ImageEditor::renderPreview(source, settings, false, 1.0, &cache, -1);
+        check(plain.preview != overlaid.preview, "without the overlay the preview keeps its colours");
+    }
 };
 
 int main(int argc, char **argv)
@@ -151,6 +169,7 @@ int main(int argc, char **argv)
     try {
         policy();
         IprTestImageGenerator::exercise();
+        IprTestImageGenerator::overlayKeepsSource();
     } catch (const std::exception &error) {
         std::cerr << "FAIL: " << error.what() << '\n';
         return 1;

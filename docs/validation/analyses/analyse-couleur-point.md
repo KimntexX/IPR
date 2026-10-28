@@ -85,6 +85,15 @@ IPR 1,22–1,26. Le gain de l'écart de teinte croît comme le poids (gain/poids
 (étalement en saturation ou en valeur) : à étudier. Mémoires :
 `etude-couleur-point-tsv-v002`, `etude-couleur-point-ipr-v003`.
 
+## Retour utilisateur du 28 octobre 2026
+
+Le changement de teinte d'IPR ne rend pas exactement comme Lightroom, mais
+l'utilisateur le préfère nettement (plus de latitude créative) : il est conservé
+tel quel, sans recalage supplémentaire de la teinte. Deux défauts signalés et
+corrigés : la visualisation des plages désaturait l'image de travail elle-même
+quand le pipeline était neutre (point sans changement), et le curseur ne signalait
+pas la pipette (croix, plus une pipette dessinée près du pointeur).
+
 ## Limites et suite
 
 - Réponses des curseurs mesurées sur 0327 seule (sauf teinte, identique partout) ;

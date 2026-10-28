@@ -331,6 +331,28 @@ Item {
         onClicked: (mouse) => root.contextMenuRequested(mouse.x, mouse.y)
     }
 
+    // Eyedropper beside the pointer while picking, whatever the system cursor shows.
+    Canvas {
+        objectName: "pickingIndicator"
+        x: interaction.mouseX + 4
+        y: interaction.mouseY - height - 4
+        width: 20
+        height: 20
+        visible: root.picking && interaction.containsMouse
+        onPaint: {
+            const c = getContext("2d")
+            c.reset()
+            c.lineCap = "round"
+            for (const pass of [{ colour: "#000000", width: 4 }, { colour: "#ffffff", width: 2 }]) {
+                c.strokeStyle = pass.colour
+                c.lineWidth = pass.width
+                c.beginPath(); c.moveTo(2, 18); c.lineTo(12, 8); c.stroke()
+                c.beginPath(); c.moveTo(11, 5); c.lineTo(15, 9); c.stroke()
+                c.beginPath(); c.arc(15.5, 4.5, 2.5, 0, 2 * Math.PI); c.stroke()
+            }
+        }
+    }
+
     Item {
         id: divider
         objectName: "comparisonDivider"

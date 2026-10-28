@@ -136,7 +136,12 @@ int main(int argc, char **argv)
     PickReceiver receiver;
     QObject::connect(viewport, SIGNAL(pointPicked(double,double)), &receiver, SLOT(picked(double,double)));
     QObject::connect(viewport, SIGNAL(pickingCancelled()), &receiver, SLOT(cancelled()));
+    auto *viewportArea = viewport->findChild<QQuickItem *>("viewportMouseArea");
+    auto *indicator = viewport->findChild<QQuickItem *>("pickingIndicator");
     viewport->setProperty("picking", true);
+    mouse(window, QEvent::MouseMove, QPointF(210, 380), Qt::NoButton, Qt::NoButton);
+    if (!check(viewportArea && viewportArea->cursor().shape() == Qt::CrossCursor && indicator && indicator->isVisible(),
+               "picking shows a cross cursor and an eyedropper beside the pointer")) return 1;
     click(window, QPointF(200, 375));
     viewport->forceActiveFocus();
     key(window, Qt::Key_Escape, Qt::NoModifier, QString());

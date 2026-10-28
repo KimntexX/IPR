@@ -1907,8 +1907,11 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
             if (!renderTones(source, settings, reference, tones)) tones.release();
         }
         const cv::Mat weights = PerceptualColour::pointWeights(tones, perceptualParameters(settings), overlayPoint);
-        if (!weights.empty() && weights.size() == rendered.linearRgba.size())
+        if (!weights.empty() && weights.size() == rendered.linearRgba.size()) {
+            // A neutral pipeline hands back the source buffer itself: overlay a copy.
+            rendered.linearRgba = rendered.linearRgba.clone();
             ColorAdjustments::showWeights(rendered.linearRgba, weights);
+        }
     }
 
     QString error;
