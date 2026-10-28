@@ -39,7 +39,6 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tests"))
-from study_grading_response import load, oklab  # noqa: E402
 from study_sources import git  # noqa: E402
 
 CRS = "http://ns.adobe.com/camera-raw-settings/1.0/"
@@ -194,6 +193,8 @@ def main(argv=None):
     parser.add_argument("--base", type=Path, default=ROOT / "tests/image/base")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "docs/validation/raw")
     args = parser.parse_args(argv)
+    # Image loading needs OpenCV; the measuring functions above do not (CI runs their tests without it).
+    from study_grading_response import load, oklab
     stamp = datetime.now(timezone.utc)
     campaign = f"etude-couleur-point-v{args.data_version:03d}-{stamp.strftime('%Y%m%dT%H%M%SZ')}"
     output = args.output_dir / f"{campaign}.json"
