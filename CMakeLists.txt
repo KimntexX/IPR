@@ -328,6 +328,8 @@ if(BUILD_TESTING)
         LABELS "unit;export;generator" TIMEOUT 120)
     ipr_add_test(colorMixerMathTests tests/color_mixer_math_test.cpp)
     ipr_add_test(pointColorTests tests/point_color_test.cpp)
+    ipr_add_test(toneCurveTests tests/tone_curve_test.cpp)
+    set_tests_properties(toneCurveTests PROPERTIES LABELS "unit;pipeline;curves")
     set_tests_properties(pointColorTests PROPERTIES LABELS "unit;pipeline;colour")
     add_executable(colorMixerNeutralProbe tests/color_mixer_neutral_probe.cpp)
     target_link_libraries(colorMixerNeutralProbe PRIVATE iprEngine)
@@ -348,6 +350,12 @@ if(BUILD_TESTING)
     set_tests_properties(imageViewportQmlTests PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic"
         LABELS "unit;viewport;qml")
+    ipr_add_test(toneCurveQmlTests tests/tone_curve_qml_test.cpp)
+    target_compile_definitions(toneCurveQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(toneCurveQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic"
+        LABELS "unit;curves;qml")
     ipr_add_test(uiPreferencesTests tests/ui_preferences_test.cpp)
     ipr_add_test(uiPreferencesQmlTests tests/ui_preferences_qml_test.cpp)
     qt_add_resources(uiPreferencesQmlTests ipr_ui_test_qml

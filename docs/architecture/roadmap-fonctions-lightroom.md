@@ -16,7 +16,7 @@ des exports Lightroom, jamais par rétro-ingénierie.
 | Général | Noir et blanc | Fait : niveaux de gris | Mélangeur N&B absent (voir Couleur) |
 | Général | HDR (édition en haute gamme dynamique) | Absent ; le moteur garde des valeurs > 1 | Non planifié |
 | Lumière | Exposition, contraste, hautes lumières, ombres, blancs, noirs | Fait ; ombres, noirs, hautes lumières et blancs validés | Exposition et contraste : comparaison LR aux valeurs intermédiaires à faire |
-| Lumière | Courbe par points (RVB, rouge, vert, bleu) | Fait, non validé | Campagne LR prête (`IPR Courbes`, 36 états, `patch_curves`) |
+| Lumière | Courbe par points (RVB, rouge, vert, bleu) | Fait, calé sur LR le 28 octobre (`patch_curves`) : spline naturelle sur ProPhoto encodé, par canal | [Analyse](../validation/analyses/analyse-courbes.md) ; extrémités déplaçables (noir relevé, blancs coupés) |
 | Lumière | Courbe paramétrique (hautes lumières, clairs, sombres, ombres, séparateurs) | Absent | Non planifié |
 | Lumière | Outil de réglage ciblé sur l'image | Absent | Non planifié |
 | Couleur | Balance des blancs : température, nuance, telle quelle, automatique | Fait, validé (avant la base Rec.2020 : revalidation courte) | — |

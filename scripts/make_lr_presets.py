@@ -17,6 +17,7 @@ Usage: python scripts/make_lr_presets.py [--controls highlights shadows ...]
        python scripts/make_lr_presets.py --controls grading   (61 colour grading states)
        python scripts/make_lr_presets.py --controls grading-blend   (38 blending and balance states)
        python scripts/make_lr_presets.py --controls grading-luminance   (58 luminance and global states)
+       python scripts/make_lr_presets.py --controls curves   (36 point curve states)
            (grain at Lightroom's default size 25 and roughness 50)
 """
 import argparse
@@ -100,6 +101,36 @@ GRADING_LUMINANCE_STATES = (
     + [(f"Global T{h:03d} S{s:03d}", {"ColorGradeGlobalHue": h, "ColorGradeGlobalSat": s})
        for h, s in [(h, 50) for h in range(0, 360, 30)] + [(h, s) for h in (30, 210) for s in (25, 75, 100)]])
 GRADING_LUMINANCE = ("IPR Grading luminance", "IPR-Grading-luminance-presets.zip")
+# Point curves, in Lightroom's 0-255 coordinates: the composite RGB curve and each
+# channel's, one curve changed per state, the others linear. Composite: the midpoint
+# at six heights, the quarter points, the ends moved, S and inverse S, a four-point
+# curve; each channel: its midpoint at four heights and its quarter points. Each
+# state: (label, {curve field: points}).
+CURVE_FIELDS = (("RVB", "ToneCurvePV2012"), ("Rouge", "ToneCurvePV2012Red"),
+                ("Vert", "ToneCurvePV2012Green"), ("Bleu", "ToneCurvePV2012Blue"))
+LINEAR = ((0, 0), (255, 255))
+
+
+def _through(*points):
+    return ((0, 0),) + points + ((255, 255),)
+
+
+CURVE_STATES = (
+    [(f"RVB M{d:+03d}", {"ToneCurvePV2012": _through((128, 128 + d))}) for d in (-64, -32, -16, 16, 32, 64)]
+    + [(f"RVB Q{x:03d}{d:+03d}", {"ToneCurvePV2012": _through((x, x + d))}) for x in (64, 192) for d in (-32, 32)]
+    + [("RVB noir+32", {"ToneCurvePV2012": ((0, 32), (255, 255))}),
+       ("RVB blanc-32", {"ToneCurvePV2012": ((0, 0), (255, 223))}),
+       ("RVB coupe-noirs32", {"ToneCurvePV2012": ((32, 0), (255, 255))}),
+       ("RVB coupe-blancs32", {"ToneCurvePV2012": ((0, 0), (223, 255))}),
+       ("RVB S-doux", {"ToneCurvePV2012": _through((64, 48), (192, 208))}),
+       ("RVB S-fort", {"ToneCurvePV2012": _through((64, 32), (192, 224))}),
+       ("RVB S-inverse", {"ToneCurvePV2012": _through((64, 80), (192, 176))}),
+       ("RVB quatre-points", {"ToneCurvePV2012": _through((32, 40), (96, 128), (160, 168), (224, 240))})]
+    + [(f"{label} M{d:+03d}", {field: _through((128, 128 + d))})
+       for label, field in CURVE_FIELDS[1:] for d in (-64, -32, 32, 64)]
+    + [(f"{label} Q064+32", {field: _through((64, 96))}) for label, field in CURVE_FIELDS[1:]]
+    + [(f"{label} Q192-32", {field: _through((192, 160))}) for label, field in CURVE_FIELDS[1:]])
+CURVES = ("IPR Courbes", "IPR-Courbes-presets.zip")
 # Settings of the current Lightroom neutral references (6V1A0037, 11 October 2026).
 BASELINE = {
     "WhiteBalance": "As Shot", "CameraProfile": "Camera Neutral", "ConvertToGrayscale": "False",
@@ -131,9 +162,21 @@ def alt(tag, text):
     return f'   <crs:{tag}>\n    <rdf:Alt>\n     <rdf:li xml:lang="x-default">{text}</rdf:li>\n    </rdf:Alt>\n   </crs:{tag}>\n'
 
 
-def preset(group, control=None, value=None, grading=None, blend=None, fields=None):
+def seq(tag, points):
+    items = "".join(f"     <rdf:li>{x}, {y}</rdf:li>\n" for x, y in points)
+    return f"   <crs:{tag}>\n    <rdf:Seq>\n{items}    </rdf:Seq>\n   </crs:{tag}>\n"
+
+
+def preset(group, control=None, value=None, grading=None, blend=None, fields=None, curves=None):
     settings = dict(BASELINE)
-    if fields is not None:
+    curve_elements = ""
+    if curves is not None:
+        label, changed = curves
+        # Every point curve explicit, so a preset gives the same state whatever came before.
+        settings["ToneCurveName2012"] = "Custom"
+        curve_elements = "".join(seq(field, changed.get(field, LINEAR)) for _, field in CURVE_FIELDS)
+        name = f"IPR Courbes {label}"
+    elif fields is not None:
         label, values = fields
         settings.update({field: f"{v:+d}" if field.endswith("Lum") else str(v) for field, v in values.items()})
         name = f"IPR Grading {label}"
@@ -172,22 +215,25 @@ def preset(group, control=None, value=None, grading=None, blend=None, fields=Non
         + attributes +
         '   crs:HasSettings="True">\n'
         + alt("Name", name) + alt("ShortName", "") + alt("SortName", "") + alt("Group", group) + alt("Description", "")
+        + curve_elements
         + '  </rdf:Description>\n </rdf:RDF>\n</x:xmpmeta>\n')
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--controls", nargs="+", default=["highlights"], choices=sorted(LABELS) + ["mixer", "grading", "grading-blend", "grading-luminance"])
+    parser.add_argument("--controls", nargs="+", default=["highlights"], choices=sorted(LABELS) + ["mixer", "grading", "grading-blend", "grading-luminance", "curves"])
     parser.add_argument("--out", type=Path, default=ROOT / "tests/image/lr-presets")
     args = parser.parse_args()
     grading = "grading" in args.controls
     blend = "grading-blend" in args.controls
     luminance = "grading-luminance" in args.controls
-    if (grading or blend or luminance) and len(args.controls) > 1:
-        sys.exit("Le grading a son propre panneau : --controls grading, grading-blend ou grading-luminance seul")
+    curves = "curves" in args.controls
+    if (grading or blend or luminance or curves) and len(args.controls) > 1:
+        sys.exit("Grading et courbes ont leur propre panneau : --controls grading, grading-blend, "
+                 "grading-luminance ou curves seul")
     args.controls = [c for control in args.controls for c in (MIXER if control == "mixer" else [control])]
     panels = ({GRADING} if grading else {GRADING_BLEND} if blend else {GRADING_LUMINANCE} if luminance
-              else {PANELS.get(c, LUMIERES) for c in args.controls})
+              else {CURVES} if curves else {PANELS.get(c, LUMIERES) for c in args.controls})
     if len(panels) > 1:
         sys.exit("Un seul panneau par archive : " + ", ".join(sorted(g for g, _ in panels)))
     group, archive_name = panels.pop()
@@ -195,7 +241,9 @@ def main():
     if archive.exists() or folder.exists():
         sys.exit(f"Existe déjà, rien n'est écrasé : {archive if archive.exists() else folder}")
     folder.mkdir(parents=True)
-    if luminance:   # the neutral is the grading campaign's (grading/neutre)
+    if curves:   # the neutral is the grading campaign's (grading/neutre), same geometry
+        presets = [preset(group, curves=state) for state in CURVE_STATES]
+    elif luminance:   # the neutral is the grading campaign's (grading/neutre)
         presets = [preset(group, fields=state) for state in GRADING_LUMINANCE_STATES]
     elif blend:   # the neutral is the grading campaign's (grading/neutre)
         presets = [preset(group, blend=state) for state in GRADING_BLEND_STATES]

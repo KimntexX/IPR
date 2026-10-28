@@ -798,6 +798,18 @@ QVariantList ImageEditor::toneCurve(int channel) const
     return points;
 }
 
+double ImageEditor::toneCurveValue(const QVariantList &points, double x) const
+{
+    QVector<ToneCurvePoint> curve;
+    curve.reserve(points.size());
+    for (const QVariant &value : points) {
+        const QVariantMap point = value.toMap();
+        curve.append({point.value(QStringLiteral("x")).toFloat(), point.value(QStringLiteral("y")).toFloat()});
+    }
+    std::sort(curve.begin(), curve.end(), [](const ToneCurvePoint &a, const ToneCurvePoint &b) { return a.x < b.x; });
+    return curve.isEmpty() ? x : ToneCurve::evaluate(curve, float(x));
+}
+
 void ImageEditor::setToneCurve(int channel, const QVariantList &points)
 {
     if (channel < LuminanceCurve || channel > BlueCurve)
@@ -811,8 +823,7 @@ void ImageEditor::setToneCurve(int channel, const QVariantList &points)
         bool yOk = false;
         const float x = point.value(QStringLiteral("x")).toFloat(&xOk);
         const float y = point.value(QStringLiteral("y")).toFloat(&yOk);
-        if (!xOk || !yOk || !std::isfinite(x) || !std::isfinite(y) ||
-            x <= 0.0f || x >= 1.0f)
+        if (!xOk || !yOk || !std::isfinite(x) || !std::isfinite(y) || x < 0.0f || x > 1.0f)
             continue;
         normalized.append({x, std::clamp(y, 0.0f, 1.0f)});
     }
@@ -821,14 +832,16 @@ void ImageEditor::setToneCurve(int channel, const QVariantList &points)
                   return left.x < right.x;
               });
 
+    // The end points are the curve's own (raised black, clipped whites); fewer
+    // than two points is the identity.
     QVector<ToneCurvePoint> curve;
-    curve.reserve(normalized.size() + 2);
-    curve.append({0.0f, 0.0f});
+    curve.reserve(normalized.size());
     for (const ToneCurvePoint &point : normalized) {
-        if (point.x - curve.constLast().x >= 0.001f)
+        if (curve.isEmpty() || point.x - curve.constLast().x >= 0.001f)
             curve.append(point);
     }
-    curve.append({1.0f, 1.0f});
+    if (curve.size() < 2)
+        curve = {{0.0f, 0.0f}, {1.0f, 1.0f}};
 
     m_settings.toneCurves[static_cast<size_t>(channel)] = std::move(curve);
     emit toneCurveChanged(channel);
