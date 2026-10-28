@@ -92,7 +92,7 @@ private:
             require(Demosaic::interpolate(mosaic,pattern,Demosaic::OpeningMedian,Demosaic::Range::NonNegative,rgb,&before,{}),"Reference RCD failed");
             self->writer->save("post_demosaic_camera_rgb",before,"linear_camera_white_1",*self->input);
             self->writer->save("pre_output_camera_rgb",rgb,"linear_camera_white_1",*self->input);
-            rgb.forEach<cv::Vec3f>([](cv::Vec3f &v,const int *){for(int c=0;c<3;++c)v[c]=float(std::clamp(std::lround(v[c]*65535.f),0L,65535L))/65535.f;});
+            rgb.forEach<cv::Vec3f>([](cv::Vec3f &v,const int *){for(int c=0;c<3;++c)v[c]=float(std::clamp(std::lround(v[c]*65535.f),0L,65535L))*float(1.0/65535.0);});
             self->writer->save("post_median_camera_rgb",rgb,"linear_camera_grid_1_65535",*self->input);
             for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)d.image[size_t(y)*rgb.cols+x][c]=std::uint16_t(std::lround(rgb.at<cv::Vec3f>(y,x)[c]*65535.f));
         }catch(...){self->failed=true;}
@@ -147,10 +147,10 @@ int main(int argc,char **argv){
             require(raw->dcraw_process()==LIBRAW_SUCCESS&&!raw->failed,"Reference processing failed");
             int error=0;std::unique_ptr<libraw_processed_image_t,void(*)(libraw_processed_image_t *)> memory(raw->dcraw_make_mem_image(&error),LibRaw::dcraw_clear_mem);
             require(memory&&error==LIBRAW_SUCCESS&&memory->bits==16&&memory->colors==3,"Invalid reference output");
-            // Canonical I2 representation: divide each integer in float. OpenCV's
-            // convertTo reciprocal multiplication can differ by one float ulp.
+            // F1 I2 output representation: the reciprocal product historically
+            // delivered to the DCP by OpenCV. Pre-RCD still uses division.
             cv::Mat integers(memory->height,memory->width,CV_16UC3,memory->data),rgb(memory->height,memory->width,CV_32FC3);
-            for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)rgb.at<cv::Vec3f>(y,x)[c]=float(integers.at<cv::Vec<std::uint16_t,3>>(y,x)[c])/65535.f;
+            for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)rgb.at<cv::Vec3f>(y,x)[c]=float(integers.at<cv::Vec<std::uint16_t,3>>(y,x)[c])*float(1.0/65535.0);
             writer.save("pre_dcp_camera_rgb",rgb,"linear_camera_grid_1_65535",input);
         }
         writer.pixels.close();require(hash(source)==sourceHash,"Source changed during capture");

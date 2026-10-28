@@ -73,16 +73,22 @@ class SignedMeasurementTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             measure_pair(data)
 
-    def test_output_bound_mean_shift(self):
-        before = np.array([-2, -1, 0, 1], dtype='<f4').reshape(2, 2, 1)
-        result = output_effect(before, np.clip(before, 0, 1), 'signed')
-        self.assertEqual(result['mean_shift'], [.75])
-        self.assertEqual(result['lower_clipped_fraction'], [.5])
+    def test_signed_output_preserves_negative_and_above_white(self):
+        before = np.array([-2, -1, 0, 2], dtype='<f4').reshape(2, 2, 1)
+        result = output_effect(before, before.copy(), 'signed')
+        self.assertEqual(result['mean_shift'], [0.])
+        self.assertEqual(result['negative_input_fraction'], [.5])
+        self.assertEqual(result['above_one_input_fraction'], [.25])
 
     def test_output_bound_identity_required(self):
         before = np.zeros((2, 2, 1), dtype='<f4')
         with self.assertRaises(ValueError):
             output_effect(before, before+1, 'signed')
+
+    def test_reintroduced_signed_bound_fails(self):
+        before = np.array([-2, -1, 0, 2], dtype='<f4').reshape(2, 2, 1)
+        with self.assertRaises(ValueError):
+            output_effect(before, np.clip(before, 0, 1), 'signed')
 
     def test_source_mismatch_rejected(self):
         data = self.fixture()

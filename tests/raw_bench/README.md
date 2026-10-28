@@ -79,9 +79,13 @@ de production. Cela ne teste pas le choix des règles de calibration par C3.
 Unités I2 confirmées : DN u16 après unpack, DN f32 signés après noir,
 normalisé f32 après borne basse/diviseur, pré-RCD f32 sur grille1/65535,
 RGB f32 avant médiane et RGB f32 sur grille1/65535 après médiane. Les
-post-médiane entiers de l'oracle sont normalisés par division float explicite :
-un `convertTo` à réciproque peut changer un ulp sans changer aucun compte.
-La tentative initiale concernée reste conservée ; aucune tolérance élargie.
+post-médiane entiers de l'oracle sont maintenant normalisés par produit
+réciproque float, représentation F1 historiquement reçue par le DCP.
+Le premier C2 utilisait une division float explicite à cette frontière ;
+la tentative et sa correction historiques restent conservées. Un ulp de
+représentation n'est pas un compte16 différent, mais une parité f32 ne se
+déclare pas en masquant cet écart : aucune tolérance élargie. Pré-RCD garde
+la division float, conformément au contrat de cette autre frontière.
 
 `compare_noise_baseline.py --parity RESULTAT_C2.json --baseline CAPTURES_BRUIT.json`
 compare les deux noirs calibrés aux anciens buffers de production conservés.
@@ -145,14 +149,17 @@ et vérifie sources, outils, contrats et paramètres A/B. Elle produit un gel
 puis un JSON de mesures, jamais un PASS de parité pour B ou une validation
 de qualité de débruitage. Statut/logs/partiel sous le build `signed/<UTC>`.
 
-Le moteur courant du banc utilise C4 corrigé `ee8f26d` : l'entrée CFA reste
-signée pendant RCD et la médiane en B. `pre_output_camera_rgb` observe la
-médiane avant borne et grille finales ; ce stage est obligatoire, avec les
+Le moteur courant du banc utilise F1 : l'entrée CFA reste signée pendant
+RCD et la médiane en B, puis sort sans borne ni grille16. `pre_output_camera_rgb`
+observe la médiane avant la grille A ; ce stage est obligatoire, avec les
 six autres étapes I2 et la caméra finale. La sortie B doit être exactement
-le bornage `[0,1]` de cette capture. L'ancien pilote `42f99b6` reste une preuve
-historique avec bornes internes, pas l'implémentation à reconstruire.
-`--previous-study JSON_X4` contrôle l'invariance A sur les frontières communes
-du précédent pilote ; il ne fabrique pas une capture pré-borne historique.
+identique à cette capture, négatifs et valeurs >1 compris. Les anciens
+pilotes C4 restent des preuves historiques, pas des modes à reconstruire.
+`--previous-study JSON_X4_CORRIGE` contrôle l'invariance A sur les six
+frontières avant sortie du précédent pilote corrigé. F1 représente sa grille
+A finale par produit réciproque (entrée historique DCP), plus par division :
+l'invariance du rendu entier est contrôlée dans le banc de production, sans
+élargir les tolérances ni prétendre identiques deux représentations distinctes.
 La variance de paires ne capture pas les composantes communes aux deux
 prises ; moyenne, dérive, covariance, zéros et négatifs sont gardés séparés.
 Pour les DN, `at_or_above_one_fraction` n'est pas une fraction au blanc.
@@ -176,11 +183,21 @@ Pour B, compiler la sonde contre F1 avec
 Un oracle pré-F1 refuse cette commande, jamais de substitution silencieuse.
 `float_campaign.py --help` décrit le contrôle des six paires existantes :
 finitude du master/caméra et négatifs témoins avant DCP, budgets, provenance.
+`--module-study` exige aussi la comparaison exacte module→entréeDCP sur les
+quatre noirs sans rotation ; les scènes tournées à ROI différents restent
+explicitement hors de cette égalité géométrique.
 Un succès ne valide ni le prolongement signé des tables/courbes DCP ni une
 amélioration du débruitage. La quantification intermédiaire doit être vérifiée
 avec l'audit du chemin et les captures de module, pas seulement la présence
 de valeurs négatives en sortie. Aucun candidat F1 n'est supposé validé par
 les contrôles de la seule référence.
+
+`iprRawFloatContract` teste la frontière publique `fromLinearSrgb` : signal
+fini négatif/>1 accepté et non modifié, NaN/±Inf refusés. Le défaut initial
+F1 et son correctif `0adefe7` ont deux preuves distinctes. `float_witnesses.py`
+vérifie trois boîtiers en A/B avec/sans DCP après ce garde, sans rejouer
+inutilement les 60 succès de la campagne F1 complète. Les outils ne modifient
+ni les règles du DCP ni le placement du débruitage en production.
 
 ## Limites du corpus et références
 

@@ -2,7 +2,7 @@ from unittest.mock import patch
 import copy
 import unittest
 import numpy as np
-from float_qualification import qualify_inlet
+from float_qualification import compare_module_inlet, qualify_inlet
 
 
 class FloatInletTest(unittest.TestCase):
@@ -43,3 +43,30 @@ class FloatInletTest(unittest.TestCase):
         value = self.fixture(); value[0]['full_camera']['negative_fraction'] = [0.]*3
         with self.assertRaises(ValueError):
             self.run_check(value)
+
+    def module_fixture(self, orientation=0):
+        decoder, ds = self.fixture()
+        decoder['mode'] = 'signed'
+        module = dict(source=copy.deepcopy(decoder['source']), engine_revision='fixture', mode='signed',
+                      metadata=dict(orientation_flip=orientation))
+        ms = {('pre_output_camera_rgb', key[1]): value for key, value in copy.deepcopy(ds).items()}
+        for desc, values in ds.values():
+            desc.update(shape=list(values.shape))
+        for desc, values in ms.values():
+            desc.update(shape=list(values.shape))
+        return (decoder, ds), (module, ms)
+
+    def test_exact_signed_transfer(self):
+        with patch('float_qualification.load_capture', side_effect=self.module_fixture()):
+            self.assertEqual(compare_module_inlet('decoder', 'module')['verdict'], 'pass_exact_module_to_decoder_inlet')
+
+    def test_quantized_or_clipped_transfer_fails(self):
+        decoder, module = self.module_fixture()
+        decoder[1][('pre_dcp_camera_rgb', (0, 0))][1][0, 0, 0] = 0
+        with patch('float_qualification.load_capture', side_effect=[decoder, module]):
+            with self.assertRaises(ValueError):
+                compare_module_inlet('decoder', 'module')
+
+    def test_rotated_sparse_rois_not_falsely_compared(self):
+        with patch('float_qualification.load_capture', side_effect=self.module_fixture(5)):
+            self.assertEqual(compare_module_inlet('decoder', 'module')['verdict'], 'not_compared_rotated_sparse_ROIs')

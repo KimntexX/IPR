@@ -72,7 +72,7 @@ def main():
                       engine_source=str(args.engine_source.resolve()), engine_sources=engine_sources,
                       tool=dict(path=str(tool), sha256=tool_hash), sources=sources,
                       conditions='As-shot gains, sensor orientation, three fixed256 ROIs, explicit previously applied black/white per frame; no DCP, optics or denoising; no coefficient fitted.',
-                      policy_scope='Corrected C4 ee8f26d: signed CFA through RCD and median, bounded only at development output. PreOutputCameraRgb observes median before bound/grid. Production decoder remains A.',
+                      policy_scope='F1: signed CFA through RCD and median, unbounded signed float output. PreOutputCameraRgb equals the signed output. A uses the reciprocal product grid historically delivered to DCP. Production default remains A.',
                       interpretation='Mean of black frames relative to applied black is a bias proxy, not independently measured ideal zero. Pair variance excludes common fixed pattern/scene; movement/drift not corrected. CFA phases distinct. No clean-reference or visual-success verdict.'))
     env = dict(os.environ); env['OMP_NUM_THREADS'] = '8'
     env['PATH'] = os.pathsep.join([str(d) for d in args.runtime_dir] + [env.get('PATH', '')])
@@ -117,11 +117,12 @@ def main():
                     old = matching[0]['captures']['parity'][shot]
                     if sha256(Path(old['path'])) != old['sha256']:
                         raise ValueError('Previous A capture changed')
-                    # The prior C4 had no PreOutput. All its seven observable
-                    # boundaries must remain exactly unchanged in A.
+                    # Raw input and pre-output processing remain exact; F1 A
+                    # intentionally changed final float representation to the
+                    # product historically received by DCP, not division.
                     common = ('unpacked_cfa', 'black_subtracted_cfa', 'normalized_cfa',
                               'pre_demosaic_cfa', 'post_demosaic_camera_rgb',
-                              'post_median_camera_rgb', 'pre_dcp_camera_rgb')
+                              'pre_output_camera_rgb')
                     check = compare_captures(old['path'], provenance['parity'][shot]['path'], common)
                     if check['verdict'] != 'pass':
                         raise ValueError('A changed against previous C4')

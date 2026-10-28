@@ -28,7 +28,13 @@ add_test(NAME rawBenchFloatInlet COMMAND "${Python3_EXECUTABLE}" -m unittest dis
 find_package(OpenCV REQUIRED COMPONENTS core imgproc)
 get_filename_component(IPR_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
-set(IPR_RAW_ENGINE_REVISION "${IPR_BENCH_REVISION}" CACHE STRING "Revision of the captured engine")
+set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
+if(NOT IPR_RAW_ENGINE_REVISION)
+    if(NOT IPR_RAW_SOURCE_ROOT STREQUAL IPR_ROOT)
+        message(FATAL_ERROR "An archived engine needs an explicit IPR_RAW_ENGINE_REVISION")
+    endif()
+    set(IPR_RAW_ENGINE_REVISION "${IPR_BENCH_REVISION}")
+endif()
 add_executable(iprRawDevelopmentCapture development_capture.cpp
     "${IPR_RAW_SOURCE_ROOT}/src/raw/RawInput.cpp" "${IPR_RAW_SOURCE_ROOT}/src/raw/LibRawInput.cpp"
     "${IPR_RAW_SOURCE_ROOT}/src/raw/RawDevelopment.cpp" "${IPR_RAW_SOURCE_ROOT}/src/raw/Demosaic.cpp")

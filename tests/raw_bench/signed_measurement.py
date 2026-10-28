@@ -12,13 +12,13 @@ def output_effect(before, after, policy):
         raise ValueError('Invalid output-bound samples')
     if policy not in ('parity', 'signed'):
         raise ValueError('Unknown output policy')
-    if policy == 'signed' and not np.array_equal(y, np.clip(x, 0., 1.)):
-        raise ValueError('Signed output is not the declared clipping of PreOutput')
+    if policy == 'signed' and (x.dtype != y.dtype or x.tobytes() != y.tobytes()):
+        raise ValueError('F1 signed output must preserve PreOutput exactly, without bound/grid')
     return dict(before=moments(x), after=moments(y),
                 mean_shift=(y.astype(float)-x.astype(float)).mean(axis=(0, 1)).tolist(),
-                lower_clipped_fraction=(x < 0).mean(axis=(0, 1)).tolist(),
-                upper_clipped_fraction=(x > 1).mean(axis=(0, 1)).tolist(),
-                operation='clip_0_1' if policy == 'signed' else 'round_16bit_grid_and_clip_0_1')
+                negative_input_fraction=(x < 0).mean(axis=(0, 1)).tolist(),
+                above_one_input_fraction=(x > 1).mean(axis=(0, 1)).tolist(),
+                operation='identity_unbounded_float' if policy == 'signed' else 'round_16bit_grid_and_clip_0_1')
 
 
 def moments(values):

@@ -14,6 +14,12 @@ def full_equal(a,b):
     return a['shape']==b['shape'] and a['dtype']==b['dtype'] and a['sha256']==b['sha256']
 
 
+def resolve_paths(arguments):
+    for name,value in vars(arguments).items():
+        if isinstance(value,Path):setattr(arguments,name,value.resolve())
+    return arguments
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('inventory','manifest','adobe-camera-root','reference-source','candidate-source','cmake','qt-dir','vcpkg','opencv-dir','opencv-bin'):
@@ -21,7 +27,7 @@ def main():
     p.add_argument('--reference-revision',required=True);p.add_argument('--candidate-revision',required=True)
     p.add_argument('--capture-camera',action='store_true',help='Also compare the actual DCP camera inlet, requiring exact full-buffer equality in A')
     p.add_argument('--candidate-signed-api',action='store_true',help='Compile candidate against F1 signedDevelopment API (A remains selected)')
-    a=p.parse_args();root=Path(__file__).resolve().parents[2];start=datetime.now(timezone.utc);stamp=start.strftime('%Y%m%dT%H%M%SZ')
+    a=resolve_paths(p.parse_args());root=Path(__file__).resolve().parents[2];start=datetime.now(timezone.utc);stamp=start.strftime('%Y%m%dT%H%M%SZ')
     work=root/'build-patch_raw_bench/production'/stamp;work.mkdir(parents=True,exist_ok=False)
     state_path=work/'status.json'
     def status(**kw):

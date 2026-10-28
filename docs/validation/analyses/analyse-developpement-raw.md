@@ -4,7 +4,7 @@
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
-trente-deux tests Python passent via quatre groupes CTest. C4 corrigé est
+trente-sept tests Python passent via quatre groupes CTest. F1 et son garde sont
 intégré localement après clôture des mesures C3/X4 figées.
 Le banc ne modifie pas le moteur ; la parité C3 du pipeline complet est
 validée sur le corpus figé, pas une amélioration de bruit ou un gain de vitesse.
@@ -19,7 +19,9 @@ DCP, métadonnées et budget par ouverture. Aucun C4 fusionné dans ses sources.
 Le premier X4 (§§7–8) portait sur le C4 à bornes internes. Claude a corrigé
 ces bornes dans `ee8f26d` ; le nouveau X4 est terminé (§§10–11), avec capture
 après médiane avant borne finale et invariance A sur les douze fichiers.
-La borne de sortie conserve cependant un biais positif ; B n'est pas déployé.
+Cette campagne C4 est historique : F1 a depuis supprimé la borne de sortie B.
+Qualification F1 terminée (§§14–16) ; B n'est pas activé par défaut et le
+débruitage n'est pas encore déplacé. Les rendus DCP restent inchangés.
 
 Le plan commun local est `PLAN-SEPARATION-LIBRAW.md` dans le dépôt principal,
 hors Git ; propositions I2/I3 et revue I1 y sont consignées pour Claude.
@@ -551,6 +553,148 @@ la qualifier séparément, avec et sans optiques, pas la déduire des mesures
 optiques désactivées. Toute règle de rendu proposée par F2 reste à valider
 avec l'utilisateur, sans harmonisation des espaces couleur à ce stade.
 
+## 14. F1 : contrat flottant et campagnes figées — 28 octobre 2026
+
+Claude livre F1 `7474aad` : RGB32 de bout en bout dans le décodeur, plus
+d'aller-retour entier16 sur le chemin IPR. Le repli LibRaw convertit sa
+sortie entière une fois ; il n'est pas devenu un développement signé.
+`Options::signedDevelopment` sélectionne B sur le chemin Bayer Canon IPR,
+mais reste faux par défaut. B ne borne plus ni sous zéro ni au-dessus de un
+en sortie de `develop()` : la sortie est exactement `PreOutputCameraRgb`.
+En A, la grille de sortie est représentée par `float(k)*float(1/65535)`,
+le produit historiquement reçu par le DCP, et non par la division float.
+Pré-RCD reste sur sa représentation par division, inchangée.
+
+Le banc est adapté à ce contrat courant : l'ancien test de borne B est
+remplacé par une identité exacte pré-sortie/sortie, avec témoins négatifs
+et supérieurs à un. Les tests ne conservent pas un ancien comportement
+comme mode de compatibilité. Les anciennes preuves JSON restent intactes.
+La comparaison A avec C4 est exacte sur les six frontières avant sortie ;
+ses représentations finales f32 ayant changé volontairement, la vérité
+de non-régression est vérifiée par l'entrée DCP et le master entiers dans
+la campagne de production, sans élargir la tolérance.
+
+Toutes les campagnes utilisent des archives immuables. Un premier lancement
+a échoué à la configuration du banc, avant décodage, car un chemin relatif
+était transmis à CMake : [mémoire de l'échec](../raw/echec-banc-raw-production-v001-20261028T163124Z.json).
+Les arguments de chemin sont désormais résolus avant configuration, avec
+un test dédié. Cette erreur d'outillage n'est pas un échec du moteur F1.
+
+Gels et résultats :
+
+- A production : [gel](../raw/gel-banc-raw-production-v001-20261028T163154Z.json),
+  [résultat](../raw/banc-raw-production-v001-20261028T164747Z.json).
+- B module, six paires : [gel](../raw/gel-banc-raw-signe-v001-20261028T163415Z.json),
+  [résultat](../raw/banc-raw-signe-v001-20261028T163515Z.json).
+- B décodeur complet : [gel](../raw/gel-banc-raw-flottant-signe-v001-20261028T163906Z.json),
+  [résultat](../raw/banc-raw-flottant-signe-v001-20261028T164123Z.json).
+
+## 15. Qualification F1 terminée et garde de finitude — 28 octobre 2026
+
+**A : 60/60 cas passent** sur 30 RAW (28 base et deux noirs), Camera Neutral
+et sans DCP, R6 Mark III/R7/60D. Images entières Rec.2020, métadonnées
+auditées et ROI exactement identiques à `ee8f26d`. Pour les 30 cas avec
+DCP, l'entrée caméra effectivement retenue est aussi comparée par hash
+plein cadre et ROI : 30/30 identiques. Aucune tolérance non nulle ajoutée.
+
+| Mesure sur les 60 cas A | Référence ee8f26d | F1 7474aad |
+| --- | ---: | ---: |
+| Décodage médian | 2681 ms | 2632 ms |
+| Décodage maximal | 7986 ms | 7582 ms |
+| Pic mémoire processus médian | 1624 Mio | 1440 Mio |
+| Pic mémoire processus maximal | 1824 Mio | 1824 Mio |
+
+Les budgets 20,8 s, huit workers RCD et OpenCV1 sont respectés. Une mesure
+par cas, caches OS non purgés, chevauchement de contrôles de module/B et
+de compilations : pas de gain de vitesse causal revendiqué. Le pic mémoire
+reste un pic processus, pas une preuve du plafond système de 80 %. Un
+instantané système pendant la campagne indiquait 55 % utilisés et 7,09 Gio
+disponibles sur 15,77 Gio ; il ne prouve pas une borne pendant toute la campagne.
+
+**B module :** les six paires / 24 développements passent les contrôles de
+contrat. Sortie B bit-identique à la pré-sortie, négatifs transmis sans borne.
+Les douze invariances A pré-sortie passent ; les tableaux de variance restent
+des mesures exploratoires, pas un verdict de meilleur débruitage.
+
+**B via le décodeur : 12/12 fichiers passent.** Caméra avant DCP et master
+finis, budgets respectés. Dans les quatre noirs, environ 50–52 % de valeurs
+par canal restent négatives sur le tampon caméra plein cadre. Les quatre
+prises noires ne sont pas tournées : leurs trois ROI sont comparées
+bit pour bit entre `PreOutputCameraRgb` du module et entrée DCP effective,
+soit 12 ROI RGB exactement identiques. Ce contrôle est plus fort que la
+seule présence de négatifs pour déceler une quantification ou borne
+réintroduite à cette frontière. Les huit autres prises sont tournées :
+les ROI capteur/affichage étant géométriquement différentes, elles ne sont
+pas prétendues identiques. Pic processus B médian/maximal environ 1810 Mio,
+temps médian/maximal 5675/7190 ms ; mêmes réserves de mesure concurrente.
+
+### Défaut de frontière publique détecté puis corrigé par Claude
+
+Le test natif `iprRawFloatContract` sur `7474aad` confirme qu'une entrée
+flottante valide peut être signée et supérieure à un, mais que NaN/±Inf
+étaient acceptés par `fromLinearSrgb`, produisant un master non fini :
+[preuve d'échec initial](../raw/contrat-entree-flottante-v001-20261028T164212Z.json).
+Claude ajoute le garde dans `0adefe7`, sans borner le signal fini. Le même
+test sur une archive distincte de ce commit passe 4/4 :
+[preuve corrigée](../raw/contrat-entree-flottante-v001-20261028T164640Z.json).
+Les deux résultats sont conservés ; les essais sur RAW réels ne remplacent
+pas ce contrôle d'entrée malformée. Aucun fichier moteur édité par Codex.
+
+Pour ne pas réexécuter inutilement les 60 succès de F1, le garde est aussi
+contrôlé sur trois témoins ciblés : 9153 R6 III, 7Y6A7599 R7 et IMG_3135 60D,
+en A/B avec/sans DCP, soit 12 décodages.
+[Gel](../raw/gel-banc-raw-flottant-temoins-v001-20261028T164745Z.json) et
+[résultat](../raw/banc-raw-flottant-temoins-v001-20261028T164912Z.json).
+Tous passent : les six A rejoignent exactement les images entières et
+métadonnées C3 ; les six B sont finis. Le dépassement supérieur à un de
+9153 est conservé dans l'entrée DCP. Le test de contrat positif confirme
+également que le garde ne borne pas arbitrairement le signal étendu.
+
+**Portée du verdict :** transition F1 techniquement qualifiée sur les
+témoins cités, avec le garde de finitude validé séparément et par régression
+ciblée. Pas de promotion de B par défaut, de validation visuelle du bruit,
+de règle DCP F2 appliquée ni de généralisation à tous les formats/boîtiers.
+Replis LibRaw, optiques actives, annulation, fichiers corrompus et variantes
+de compression non identifiées restent hors de cette campagne. Rien à
+faire générer dans Lightroom pour clôturer cette qualification technique.
+
+## 16. Suite bruit proposée et fin de campagne — 28 octobre 2026
+
+Le point d'insertion proposé reste le RGB caméra signé après RCD/médiane,
+avant LCP puis DCP/retouches, quelle que soit la position du panneau ou
+l'ordre des gestes. Une source pré-LCP immuable est nécessaire pour rejouer
+le curseur depuis l'original, sans rouvrir ni débruiter cumulativement.
+Le contexte DCP actuel retient une source après LCP : il ne suffit pas, à
+lui seul, à placer le bruit avant les optiques quand celles-ci sont actives.
+Prévoir un étage de préparation/rendu caméra avec identité de source et
+cache borné, distinct du décodage et du rendu créatif du profil.
+
+Il ne faut pas simplement déplacer l'appel existant à `DetailProcessing` :
+il utilise la luminance du master, borne certaines luminances/RGB à zéro
+et se trouve actuellement après tons/couleurs. Ces hypothèses ne sont pas
+automatiquement valides en RGB caméra signé. Le raccordement devra définir
+les coordonnées de traitement, le modèle de bruit et son transport par les
+gains WB/RCD/médiane, les corrélations, les bornes justifiées et les clés de
+cache. Les corrélations d'un RCD non linéaire ne sont pas garanties par une
+simple propagation matricielle constante. Force zéro doit être une identité
+exacte ; les traitements doivent vivre dans un module, pas dans le cadenceur.
+
+Ce déplacement et l'adaptation du débruitage ne sont **pas implémentés par
+F1**. La prochaine étape utile est un premier raccordement expérimental
+pré-DCP avec ses tests de signal et de structure, puis un contrôle visuel
+ciblé ; pas une nouvelle campagne de réglage des poids d'un estimateur
+après avoir perdu le signe. L'harmonisation des domaines couleur et les
+prolongements de tables/courbes F2 restent différés à validation utilisateur.
+
+37 tests Python / quatre groupes CTest passent ; les quatre cas du contrat
+natif passent sur le garde. Les résultats immuables distinguent bien les
+commits mesurés (`7474aad` / `0adefe7`) du futur commit du banc. Les fusions
+réalisées sont locales à `patch_raw_bench` uniquement ; aucune publication,
+fusion dans `dev` ou création de tag. Sources des autres agents préservées.
+Après sauvegarde/commit final, la fin de mes calculs sera signalée dans le
+journal commun ; Claude a confirmé sa fin de travail et prend en charge
+la mise en veille demandée par l'utilisateur, après mon signal explicite.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
@@ -565,20 +709,16 @@ avec l'utilisateur, sans harmonisation des espaces couleur à ce stade.
 - C3 intégré localement, campagne complète terminée : 60/60 cas passent.
   Reprendre ces preuves sans relancer un succès. Cette couverture de X1/X2/X3
   ne vaut pas qualification des replis, de tous les formats ou du plafond RAM.
-- X4 terminé depuis un snapshot C4 séparé, six paires, sans modification des
-  sources C3. Réserve des bornes internes signalée à Claude ; ne pas qualifier
-  le mode B d'entièrement signé ni le promouvoir sans nouvelles vérifications.
-- La réserve précédente concerne `42f99b6` : corrigée par Claude dans `ee8f26d`,
-  nouveau X4 terminé avec capture pré-borne et invariance A. Ne pas confondre
-  les deux campagnes ni reprendre le verdict historique comme validation B.
-- B est signé jusqu'à la pré-sortie, puis borné : la sortie ne conserve donc
-  pas toute la distribution pour un éventuel débruitage aval. Direction (a)
-  validée : sortie flottante signée et débruitage avant le DCP non linéaire,
-  intégration et qualification à faire ; production A inchangée à cette décision.
+- Les X4 pré-F1 restent conservés comme historique : bornes internes corrigées
+  dans `ee8f26d`, borne finale ensuite retirée en F1. Leurs restrictions ne
+  décrivent pas le candidat actuel ; ne pas mélanger les versions des preuves.
+- F1 supprime la borne de sortie B : négatifs transmis au DCP confirmés,
+  invariance A validée, garde NaN/Inf corrigé et contrôlé. A reste le défaut.
+  L'adaptation et le déplacement du débruitage avant LCP/DCP restent à implémenter.
 - Harmonisation des domaines couleur entre modules demandée mais différée ;
   ne pas la mélanger à la transition RAW ni changer le master Rec.2020 ici.
-- F1 : banc prêt, sonde d'entrée DCP validée sur cinq témoins A de référence,
-  32 tests passent ; qualification du candidat attend son commit figé.
-  F2 relu, réserves mathématiques transmises, aucun nouveau rendu activé.
+- F1 : 60 cas A, 12 fichiers B, 12 témoins ciblés du garde et contrat natif
+  clos ; 37 tests Python passent. F2 relu, réserves transmises, aucun nouveau
+  rendu activé. Fin/veille coordonnées au journal commun, pas de push/dev/tag.
 - L'étude de bruit est suspendue comme demandé ; ses preuves sur `patch_noise`
   ne sont pas promues en validation du développement flottant.

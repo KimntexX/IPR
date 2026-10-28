@@ -3,6 +3,31 @@ import numpy as np
 from capture import load_capture
 
 
+def compare_module_inlet(decoder_capture, module_capture):
+    decoder, ds = load_capture(decoder_capture); module, ms = load_capture(module_capture)
+    if (decoder['source']['sha256'] != module['source']['sha256'] or
+            decoder['engine_revision'] != module['engine_revision'] or
+            decoder['mode'] != 'signed' or module['mode'] != 'signed'):
+        raise ValueError('Module/decoder source, revision or policy mismatch')
+    if module['metadata']['orientation_flip'] != 0:
+        return dict(verdict='not_compared_rotated_sparse_ROIs', reason='Sensor/display ROIs are different locations after rotation; no fabricated comparison')
+    dk = {origin for stage, origin in ds if stage == 'pre_dcp_camera_rgb'}
+    mk = {origin for stage, origin in ms if stage == 'pre_output_camera_rgb'}
+    if len(dk) != 3 or dk != mk:
+        raise ValueError('Module/decoder inlet ROI geometry mismatch')
+    rows = []
+    for origin in sorted(dk):
+        dd, actual = ds[('pre_dcp_camera_rgb', origin)]
+        md, expected = ms[('pre_output_camera_rgb', origin)]
+        if any(dd[k] != md[k] for k in ('shape', 'dtype', 'unit', 'layout')):
+            raise ValueError('Module/decoder domain mismatch')
+        if (not np.isfinite(actual).all() or not np.isfinite(expected).all() or
+                actual.tobytes() != expected.tobytes()):
+            raise ValueError('Signed module output changed before DCP inlet')
+        rows.append(dict(origin_yx=list(origin), bitwise_equal=True, values=int(actual.size)))
+    return dict(verdict='pass_exact_module_to_decoder_inlet', orientation_flip=0, rois=rows)
+
+
 def qualify_inlet(path, require_negatives=False):
     manifest, stages = load_capture(path)
     summary = manifest.get('full_camera')
