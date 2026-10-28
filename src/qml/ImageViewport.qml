@@ -18,6 +18,10 @@ Item {
     property color textColor: "#edf2f8"
     property color panelColor: "#2a3039"
     signal contextMenuRequested(real x, real y)
+    // Point colour eyedropper: a click reports its place in [0, 1] of the image.
+    property bool picking: false
+    signal pointPicked(real x, real y)
+    signal pickingCancelled()
     property real previewWidth: 0
     property real previewHeight: 0
     property bool fitMode: true
@@ -134,13 +138,21 @@ Item {
             comparisonPosition = Math.max(0, Math.min(1, x / width))
     }
 
-    onImageKeyChanged: resetView()
+    onImageKeyChanged: {
+        resetView()
+        if (picking) pickingCancelled()
+    }
     onHasImageChanged: if (!hasImage) resetView()
     onWidthChanged: clampPan()
     onHeightChanged: clampPan()
     onActiveFocusChanged: if (!activeFocus) originalHeld = false
     onVisibleChanged: if (!visible) originalHeld = false
     Keys.onPressed: (event) => {
+        if (picking && event.key === Qt.Key_Escape) {
+            pickingCancelled()
+            event.accepted = true
+            return
+        }
         if (hasImage && (event.key === Qt.Key_Menu ||
                 (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier))) {
             contextMenuRequested(width / 2, height / 2)
@@ -265,7 +277,7 @@ Item {
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
         preventStealing: true
-        cursorShape: root.canPan
+        cursorShape: root.picking ? Qt.CrossCursor : root.canPan
             ? (pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor) : Qt.PointingHandCursor
         property real pressX: 0
         property real pressY: 0
@@ -294,8 +306,16 @@ Item {
             }
         }
         onClicked: (mouse) => {
-            if (!dragged)
-                root.toggleZoom(mouse.x, mouse.y)
+            if (dragged)
+                return
+            if (root.picking) {
+                const x = (mouse.x - root.imageLeft) / (root.previewWidth * root.zoomScale)
+                const y = (mouse.y - root.imageTop) / (root.previewHeight * root.zoomScale)
+                if (x >= 0 && x <= 1 && y >= 0 && y <= 1)
+                    root.pointPicked(x, y)
+                return
+            }
+            root.toggleZoom(mouse.x, mouse.y)
         }
         onWheel: (wheel) => {
             wheel.accepted = root.handleWheel(wheel.angleDelta.x, wheel.angleDelta.y,

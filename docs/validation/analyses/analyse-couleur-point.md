@@ -69,5 +69,5 @@ rapport. Mémoires : `etude-couleur-point-ipr-v001`, `-v002`.
   source.
 - Non mesurés : sous-gammes dépliées, deux points qui se recouvrent, visualisation
   des plages ; pas de validation visuelle utilisateur.
-- IHM : commandes `ImageEditor` (pipette, ajout, réglage, retrait) et raccordement
-  de `PointColorModule` restent à faire (IHM-CONN-011).
+- IHM raccordée le 28 octobre (pipette, pastilles, curseurs ; IHM-CONN-011) ; la
+  visualisation des plages reste à faire.

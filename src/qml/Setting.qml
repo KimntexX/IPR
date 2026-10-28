@@ -9,6 +9,8 @@ Item {
     required property var editor
     property var preferences: null
     property var resetAction: null
+    // The preview picks a point colour while true (Main connects the viewport).
+    property bool pointColorPicking: false
     readonly property bool exportDialogVisible: exportDialog.visible || exportReview.visible || batchExportDialog.visible
     property bool preferencesReady: false
     property bool restoringPreferences: false
@@ -544,8 +546,12 @@ Item {
                 title: qsTr("Couleur du point")
 
                 PointColorModule {
+                    id: pointColorModule
+                    objectName: "pointColorModule"
                     Layout.fillWidth: true
                     editor: root.editor
+                    picking: root.pointColorPicking
+                    onPickingToggled: root.pointColorPicking = !root.pointColorPicking
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                 }

@@ -55,4 +55,23 @@ void apply(cv::Mat &linearRgb, const Parameters &parameters)
     });
 }
 
+std::optional<cv::Vec3d> colourBeforePointColour(const cv::Mat &linearRgb, double x, double y, int radius,
+                                                 const Parameters &parameters)
+{
+    if (linearRgb.empty() || linearRgb.type() != CV_32FC3 || !(x >= 0.0 && x <= 1.0 && y >= 0.0 && y <= 1.0))
+        return std::nullopt;
+    const int cx = std::min(int(x * linearRgb.cols), linearRgb.cols - 1);
+    const int cy = std::min(int(y * linearRgb.rows), linearRgb.rows - 1);
+    const cv::Rect area = cv::Rect(cx - radius, cy - radius, 2 * radius + 1, 2 * radius + 1)
+                          & cv::Rect(0, 0, linearRgb.cols, linearRgb.rows);
+    const cv::Scalar mean = cv::mean(linearRgb(area));
+    cv::Mat colour(1, 1, CV_32FC3, cv::Scalar(mean[0], mean[1], mean[2]));
+    Parameters before = parameters;   // the stages ahead of the point colour only
+    before.pointColor = {};
+    before.gradingSaturation = {};
+    before.gradingLuminance = {};
+    apply(colour, before);
+    return cv::Vec3d(colour.at<cv::Vec3f>(0, 0));
+}
+
 } // namespace PerceptualColour

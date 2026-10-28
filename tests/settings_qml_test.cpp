@@ -370,6 +370,24 @@ int main(int argc, char **argv)
     editor.setColorGradingBalance(-30);
     editor.setColorGrading(3, 60, 15);
     editor.setColorGradingLuminance(2, -40);
+    // Point colour: a picked point becomes a selected swatch; removal keeps a valid selection.
+    auto *pointModule = root->findChild<QQuickItem *>("pointColorModule");
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+    if (!check(pointModule && editor.addPointColorAt(0.5, 0.5) && editor.addPointColorAt(0.2, 0.7),
+               "the eyedropper command must add points on a loaded image")) return 1;
+    settleLayout();
+    if (!check(editor.pointColors().size() == 2 && pointModule->property("selected").toInt() == 1 &&
+               visualItemNamed(pointModule, QStringLiteral("pointColorSwatch1")) != nullptr,
+               "each point must show a swatch and the newest must be selected")) return 1;
+    editor.setPointColorValue(0, 1, -60);
+    editor.setPointColorValue(0, 4, 140);
+    editor.removePointColor(1);
+    settleLayout();
+    const QVariantMap kept = editor.pointColors().value(0).toMap();
+    if (!check(editor.pointColors().size() == 1 && pointModule->property("selected").toInt() == 0 &&
+               kept.value("saturation").toInt() == -60 && kept.value("range").toInt() == 100 &&
+               !editor.addPointColorAt(1.5, 0.5),
+               "slider values must be clamped and a removal must keep the selection valid")) return 1;
     const QVariantList copiedCurve{QVariantMap{{"x", 0.0}, {"y", 0.0}},
                                   QVariantMap{{"x", .5}, {"y", .6}},
                                   QVariantMap{{"x", 1.0}, {"y", 1.0}}};
@@ -396,6 +414,9 @@ int main(int argc, char **argv)
     const bool targetWhiteBalance = editor.automaticWhiteBalance();
     editor.pasteAdjustments();
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+    if (!check(editor.pointColors().size() == 1 &&
+               editor.pointColors().value(0).toMap().value("saturation").toInt() == -60,
+               "pasting a recipe must bring its point colours")) return 1;
     if (!check(!editor.busy() && noise->property("value").toInt() == 43 &&
                sharp->property("value").toInt() == 51 &&
                std::abs(radius->property("value").toDouble() - 1.7) < .001 &&

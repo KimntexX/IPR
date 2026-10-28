@@ -48,6 +48,13 @@ void policy()
     check(start.stage == -1 && start.keep[0] && !start.keep[1] && !start.keep[4], "first render keeps the tones");
     for (int stage = 0; stage < RenderStageCache::StageCount; ++stage) cache.store(start, stage, rgb);
     check(cache.count() == 1, "only the requested output is stored");
+    // peek() reads a kept output without touching the keep policy (the point colour eyedropper).
+    const cv::Mat peeked = cache.peek(source, 0.5, 0, keys[0]);
+    check(!peeked.empty() && peeked.data != rgb.data && cv::norm(peeked, rgb, cv::NORM_INF) == 0,
+          "peek returns a private copy of a kept output");
+    check(cache.peek(source, 0.5, 0, "other").empty() && cache.peek(source, 0.25, 0, keys[0]).empty() &&
+          cache.peek(source, 0.5, 1, keys[1]).empty() && cache.peek(source, 0.5, 7, keys[0]).empty(),
+          "peek needs the same source, scale, stage and key");
 
     auto dehaze = keys;
     dehaze[4] = "abcdX";

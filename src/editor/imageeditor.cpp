@@ -6,7 +6,6 @@
 #include "LocalContrast.h"
 #include "ColorAdjustments.h"
 #include "ColorGrading.h"
-#include "PerceptualColour.h"
 #include "Contrast.h"
 #include "Histogram.h"
 #include "ImageExporter.h"
@@ -49,6 +48,9 @@
 #include <vector>
 
 namespace {
+
+// Keys of the cached render stages, defined with the render below.
+RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s);
 
 QString selectionKey(const QUrl &url)
 {
@@ -1150,6 +1152,73 @@ QColor ImageEditor::colorGradingDisplayColor(int zone, int hue, int saturation) 
     return QColor::fromRgbF(colour[0], colour[1], colour[2]);
 }
 
+QVariantList ImageEditor::pointColors() const
+{
+    QVariantList points;
+    const size_t count = std::min(m_settings.pointColor.count, PointColor::MaxPoints);
+    for (size_t i = 0; i < count; ++i) {
+        const PointColor::Point &p = m_settings.pointColor.points[i];
+        const cv::Vec3f swatch = WorkingColor::encodedInGamut(WorkingColor::workingToOklab(PointColor::fromHsv(p.source)));
+        points.append(QVariantMap{{"colour", QColor::fromRgbF(swatch[0], swatch[1], swatch[2])},
+                                  {"hue", p.hueShift}, {"saturation", p.saturationShift},
+                                  {"luminance", p.luminanceShift}, {"variance", p.variance}, {"range", p.range}});
+    }
+    return points;
+}
+
+bool ImageEditor::addPointColorAt(qreal x, qreal y)
+{
+    const ColorPipeline::WorkingImage &source = previewSource();
+    if (source.isNull() || m_settings.pointColor.count >= PointColor::MaxPoints)
+        return false;
+    // The colour entering the point colour: the tones' output the preview keeps,
+    // or rendered here when it was not kept, then saturation, vibrance and mixer.
+    const double pixelScale = previewPixelScale();
+    cv::Mat tones = m_renderStageCache.peek(source.linearRgba, pixelScale, 0, stageKeys(m_settings)[0]);
+    if (tones.empty()) {
+        cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
+        const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
+        if (!renderTones(source, m_settings, reference, tones))
+            return false;
+    }
+    const auto colour = PerceptualColour::colourBeforePointColour(tones, x, y, 2, perceptualParameters(m_settings));
+    if (!colour)
+        return false;
+    PointColor::Point point;
+    point.source = PointColor::toHsv(*colour);
+    m_settings.pointColor.points[m_settings.pointColor.count++] = point;
+    emit pointColorsChanged();
+    scheduleSidecarSave();
+    return true;
+}
+
+void ImageEditor::setPointColorValue(int index, int component, int value)
+{
+    if (index < 0 || index >= int(std::min(m_settings.pointColor.count, PointColor::MaxPoints)) ||
+        component < 0 || component > 4)
+        return;
+    PointColor::Point &point = m_settings.pointColor.points[size_t(index)];
+    int &target = component == 0 ? point.hueShift : component == 1 ? point.saturationShift
+                  : component == 2 ? point.luminanceShift : component == 3 ? point.variance : point.range;
+    value = qBound(component == 4 ? 0 : -100, value, 100);
+    if (target == value)
+        return;
+    target = value;
+    emit pointColorsChanged();
+    scheduleRender();
+}
+
+void ImageEditor::removePointColor(int index)
+{
+    PointColor::Parameters &points = m_settings.pointColor;
+    if (index < 0 || index >= int(std::min(points.count, PointColor::MaxPoints)))
+        return;
+    std::move(points.points.begin() + index + 1, points.points.begin() + points.count, points.points.begin() + index);
+    points.points[--points.count] = {};
+    emit pointColorsChanged();
+    scheduleRender();
+}
+
 int ImageEditor::colorMixerValue(int band, int component) const
 {
     if (band < 0 || band >= static_cast<int>(m_settings.mixerHue.size()))
@@ -1469,6 +1538,7 @@ void ImageEditor::setAutomaticWhiteBalance(bool enabled)
     m_settings.automaticWhiteBalance = enabled;
     emit rawDevelopmentChanged();
     emit adjustmentsReset(m_settings.temperature, m_settings.tint);
+    emit pointColorsChanged();
     scheduleSidecarSave();
 
     if (m_original.isNull() || !m_currentFile.isLocalFile())
@@ -1507,6 +1577,7 @@ void ImageEditor::pasteAdjustments()
     emit toneCurvesReset();
     emit adjustmentsReset(static_cast<int>(std::lround(
         m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), 0);
+    emit pointColorsChanged();
     scheduleRender();
 }
 
@@ -1529,6 +1600,7 @@ void ImageEditor::resetAdjustments()
         m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
     emit toneCurvesReset();
     emit adjustmentsReset(m_settings.temperature, m_settings.tint);
+    emit pointColorsChanged();
     emit rawDevelopmentChanged();
     scheduleRender();
 }
@@ -1674,11 +1746,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         reached(0, adjusted);
     }
     if (runs(1)) {
-        PerceptualColour::apply(adjusted, {settings.saturation, settings.vibrance,
-                                           {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
-                                           settings.pointColor, settings.gradingHue, settings.gradingSaturation,
-                                           settings.gradingLuminance, settings.gradingBlending,
-                                           settings.gradingBalance});
+        PerceptualColour::apply(adjusted, perceptualParameters(settings));
         reached(1, adjusted);
     }
     // Denoise before local-detail enhancement and sharpening. The operation
@@ -1729,6 +1797,27 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
 
 // Camera-signal development, grayscale, exposure, contrast, white balance and
 // the four tone controls, in place on the source's RGB.
+PerceptualColour::Parameters ImageEditor::perceptualParameters(const Settings &settings)
+{
+    return {settings.saturation, settings.vibrance,
+            {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
+            settings.pointColor, settings.gradingHue, settings.gradingSaturation,
+            settings.gradingLuminance, settings.gradingBlending, settings.gradingBalance};
+}
+
+const ColorPipeline::WorkingImage &ImageEditor::previewSource() const
+{
+    return m_editProxy.isNull() ? m_original : m_editProxy;
+}
+
+double ImageEditor::previewPixelScale() const
+{
+    const ColorPipeline::WorkingImage &source = previewSource();
+    const int fullExtent = std::max(m_fullSize.width(), m_fullSize.height());
+    const int sourceExtent = std::max(source.linearRgba.cols, source.linearRgba.rows);
+    return fullExtent > 0 && sourceExtent > 0 ? std::min(1.0, double(sourceExtent) / double(fullExtent)) : 1.0;
+}
+
 bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
                               int referenceTemperature, cv::Mat &adjusted)
 {
@@ -2161,6 +2250,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
             restoreBeforeEmbeddedPreview();
             emit rawDevelopmentChanged();
             emit adjustmentsReset(m_settings.temperature, m_settings.tint);
+            emit pointColorsChanged();
             if (!m_pendingLoadIsFreshOpen) scheduleRender();
         }
         setStatusMessage(tr("Échec du développement de « %1 » : %2")
@@ -2217,6 +2307,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
             m_userImageMetadata.insert(currentFileKey(), std::move(metadata));
         }
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
+        emit pointColorsChanged();
     }
     if (m_pendingLoadIsFreshOpen) emit hasImageChanged();
     // Freeze only after restoring the incoming image's settings (not old WB).
@@ -2318,13 +2409,8 @@ void ImageEditor::startRender()
     // Use the capped-resolution edit proxy for the interactive preview (see
     // buildEditProxy()); m_original is reserved for exportImage()/writeImage()
     // so exports are never affected by this optimization.
-    const ColorPipeline::WorkingImage &source =
-        m_editProxy.isNull() ? m_original : m_editProxy;
-    const ColorPipeline::WorkingImage sourceCopy = source;
-    const int fullExtent = std::max(m_fullSize.width(), m_fullSize.height());
-    const int sourceExtent = std::max(source.linearRgba.cols, source.linearRgba.rows);
-    const double pixelScale = fullExtent > 0 && sourceExtent > 0
-        ? std::min(1.0, double(sourceExtent) / double(fullExtent)) : 1.0;
+    const ColorPipeline::WorkingImage sourceCopy = previewSource();
+    const double pixelScale = previewPixelScale();
     const Settings settings = m_settings;
     const bool includeOriginal = m_originalImageSource.isEmpty();
     m_activeRevision = m_requestedRevision;

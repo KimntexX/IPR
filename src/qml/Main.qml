@@ -190,6 +190,12 @@ ApplicationWindow {
                 textColor: uiPreferences.theme.text
                 panelColor: uiPreferences.theme.panel
                 visible: imageEditor.hasImage
+                picking: settingsView.pointColorPicking
+                onPointPicked: (x, y) => {
+                    imageEditor.addPointColorAt(x, y)
+                    settingsView.pointColorPicking = false
+                }
+                onPickingCancelled: settingsView.pointColorPicking = false
                 onContextMenuRequested: (x, y) => {
                     photoMenu.targetName = imageEditor.imageDetails.name || ""
                     photoMenu.targetUrl = ""
