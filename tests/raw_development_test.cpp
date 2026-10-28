@@ -129,6 +129,34 @@ int main()
         ok &= check(worst <= 1.0 && onGrid, "a uniform colour is reproduced on the 16-bit grid");
     }
     {
+        // Policy B: the values below the black reach the demosaic, without the 16-bit grid.
+        RawInput::Input input = sample();
+        for (int y = 16; y < 24; ++y)
+            for (int x = 16; x < 24; ++x) input.mosaic.at<std::uint16_t>(y, x) = 1900;   // below the black
+        auto options = calibrated();
+        options.policy = RawDevelopment::Policy::Signed;
+        cv::Mat preDemosaic;
+        RawDevelopment::Policy observed = RawDevelopment::Policy::LibRawParity;
+        options.observer = [&](const RawDevelopment::Capture &c) {
+            observed = c.context.policy;
+            if (c.stage == RawDevelopment::Stage::PreDemosaicCfa) preDemosaic = c.pixels.clone();
+        };
+        const auto signedResult = RawDevelopment::develop(input, options);
+        ok &= check(observed == RawDevelopment::Policy::Signed, "the captures name the policy");
+        ok &= check(std::abs(preDemosaic.at<float>(17, 17) - float(-148.0 * (1611.0 / 1024.0) / 9174.0)) < 1e-7f,
+                    "B keeps the signed value, scaled without the grid");
+        ok &= check(std::abs(counts(preDemosaic, 0, 0) - 952.f * float(2076.0 / 1024.0 * 65535.0 / 9174.0)) < 0.02f,
+                    "B scales as A before the truncation");
+        double low = 0.0, high = 0.0;
+        cv::minMaxLoc(signedResult.cameraRgb.reshape(1), &low, &high);
+        ok &= check(cv::checkRange(signedResult.cameraRgb) && low >= 0.0 && high <= 1.0, "B's output lies in [0, 1]");
+        const auto parityResult = RawDevelopment::develop(sample(), calibrated());
+        options.observer = {};
+        const auto uniform = RawDevelopment::develop(sample(), options);
+        ok &= check(cv::norm(parityResult.cameraRgb, uniform.cameraRgb, cv::NORM_INF) < 2.0 / 65535.0,
+                    "away from the black, B differs from A by the grid only");
+    }
+    {
         auto options = calibrated();
         options.cancelled = [] { return true; };
         const auto result = RawDevelopment::develop(sample(), options);

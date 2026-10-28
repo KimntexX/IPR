@@ -44,7 +44,9 @@ void interpolateGreen(const cv::Mat &cfa, const cv::Mat &vh, const cv::Mat &lpf,
             const float L = lpf.at<float>(y, x);
             const auto ratio = [&](int yy, int xx) {
                 const float l = lpf.at<float>(yy, xx);
-                return 1.f + (L - l) / (Eps + L + l);
+                // Absolute values: the same ratio on a positive mosaic, bounded to [0, 2]
+                // where the low-pass is near or below 0 (signed shadows).
+                return 1.f + (L - l) / (Eps + std::abs(L) + std::abs(l));
             };
             const auto estimate = [&](int dy, int dx) {
                 const float neighbour = T(y + dy, x + dx);
