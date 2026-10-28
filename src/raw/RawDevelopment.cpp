@@ -6,6 +6,10 @@
 
 namespace RawDevelopment {
 namespace {
+// A count of the 16-bit grid as a value, white 1: the product OpenCV's u16 to f32
+// conversion gives, which the profile stage has always received.
+constexpr float GridStep = float(1.0 / 65535.0);
+
 // The colour read by RCD at a site: the second green of the cell is a green.
 int demosaicColour(int colour) { return colour == RawInput::Green2 ? RawInput::Green : colour; }
 } // namespace
@@ -94,25 +98,24 @@ Result develop(const RawInput::Input &input, const Options &options)
     mosaic.release();
     if (options.observer) observe(Stage::PostDemosaicCameraRgb, beforeMedian, false);
     observe(Stage::PreOutputCameraRgb, result.cameraRgb, false);
-    // A: on the 16-bit grid, as LibRaw's image after the interpolation. B: clipped to
-    // [0, 1] only, the range of the decoder's 16-bit output.
-    result.cameraRgb.forEach<cv::Vec3f>([parity](cv::Vec3f &pixel, const int *) {
-        for (int c = 0; c < 3; ++c)
-            pixel[c] = parity ? float(std::clamp(std::lround(pixel[c] * 65535.f), 0L, 65535L)) / 65535.f
-                              : std::clamp(pixel[c], 0.f, 1.f);
-    });
+    // A: on the 16-bit grid, as LibRaw's image after the interpolation. B: unbounded,
+    // the values below the black reach the profile stage.
+    if (parity)
+        result.cameraRgb.forEach<cv::Vec3f>([](cv::Vec3f &pixel, const int *) {
+            for (int c = 0; c < 3; ++c)
+                pixel[c] = float(std::clamp(std::lround(pixel[c] * 65535.f), 0L, 65535L)) * GridStep;
+        });
     observe(Stage::PostMedianCameraRgb, result.cameraRgb, false);
     return result;
 }
 
-cv::Mat orient(const cv::Mat &image, int orientation)
+cv::Mat orient(cv::Mat image, int orientation)
 {
     // LibRaw's flip bits: 2 the rows, 1 the columns, then 4 transposes.
-    cv::Mat out = image.clone();
-    if (orientation & 2) cv::flip(out, out, 0);
-    if (orientation & 1) cv::flip(out, out, 1);
-    if (orientation & 4) cv::transpose(out, out);
-    return out;
+    if (orientation & 2) cv::flip(image, image, 0);
+    if (orientation & 1) cv::flip(image, image, 1);
+    if (orientation & 4) cv::transpose(image, image);
+    return image;
 }
 
 } // namespace RawDevelopment

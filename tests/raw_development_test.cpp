@@ -153,7 +153,9 @@ int main()
         cv::minMaxLoc(preOutput(cv::Rect(18, 18, 4, 4)).reshape(1), nullptr, &high);
         ok &= check(high < 0.0, "B keeps every colour signed through RCD below the black");
         cv::minMaxLoc(signedResult.cameraRgb.reshape(1), &low, &high);
-        ok &= check(cv::checkRange(signedResult.cameraRgb) && low >= 0.0 && high <= 1.0, "B's output lies in [0, 1]");
+        ok &= check(cv::checkRange(signedResult.cameraRgb) && low < 0.0 &&
+                        cv::norm(signedResult.cameraRgb, preOutput, cv::NORM_INF) == 0,
+                    "B's output is finite, signed and unbounded");
         const auto parityResult = RawDevelopment::develop(sample(), calibrated());
         options.observer = {};
         const auto uniform = RawDevelopment::develop(sample(), options);
@@ -168,12 +170,12 @@ int main()
     }
     {
         const cv::Mat image = (cv::Mat_<float>(2, 3) << 1, 2, 3, 4, 5, 6);
-        ok &= check(same(RawDevelopment::orient(image, 0), image), "code 0 keeps the image");
-        ok &= check(same(RawDevelopment::orient(image, 3), cv::Mat((cv::Mat_<float>(2, 3) << 6, 5, 4, 3, 2, 1))),
+        ok &= check(same(RawDevelopment::orient(image.clone(), 0), image), "code 0 keeps the image");
+        ok &= check(same(RawDevelopment::orient(image.clone(), 3), cv::Mat((cv::Mat_<float>(2, 3) << 6, 5, 4, 3, 2, 1))),
                     "code 3 turns by 180 degrees");
-        ok &= check(same(RawDevelopment::orient(image, 6), cv::Mat((cv::Mat_<float>(3, 2) << 4, 1, 5, 2, 6, 3))),
+        ok &= check(same(RawDevelopment::orient(image.clone(), 6), cv::Mat((cv::Mat_<float>(3, 2) << 4, 1, 5, 2, 6, 3))),
                     "code 6 turns clockwise");
-        ok &= check(same(RawDevelopment::orient(image, 5), cv::Mat((cv::Mat_<float>(3, 2) << 3, 6, 2, 5, 1, 4))),
+        ok &= check(same(RawDevelopment::orient(image.clone(), 5), cv::Mat((cv::Mat_<float>(3, 2) << 3, 6, 2, 5, 1, 4))),
                     "code 5 turns anticlockwise");
     }
     if (ok) std::cout << "rawDevelopmentTests passed\n";

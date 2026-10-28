@@ -281,27 +281,30 @@ bool developedByIpr(const LibRaw &raw, const Options &options)
            QString::fromLocal8Bit(d.idata.make).trimmed().compare(QStringLiteral("Canon"), Qt::CaseInsensitive) == 0;
 }
 
-// Camera RGB to linear sRGB as LibRaw's output stage: single-precision products
-// summed in channel order, truncated, clipped to the 16-bit range.
-cv::Mat cameraToSrgb16(const cv::Mat &camera16, const cv::Matx33d &matrix)
+// Camera RGB (CV_32FC3, white 1) to linear sRGB in place. Policy A as LibRaw's
+// output stage: on the 16-bit counts, single-precision products summed in channel
+// order, truncated, clipped to the 16-bit range. Policy B: the plain product.
+void cameraToSrgb(cv::Mat &rgb, const cv::Matx33d &matrix, bool libRawGrid)
 {
     float m[3][3];
     for (int r = 0; r < 3; ++r)
         for (int k = 0; k < 3; ++k) m[r][k] = float(matrix(r, k));
-    cv::Mat srgb(camera16.size(), CV_16UC3);
-    cv::parallel_for_(cv::Range(0, camera16.rows), [&](const cv::Range &rows) {
+    constexpr float gridStep = float(1.0 / 65535.0);   // as OpenCV's u16 to f32 conversion
+    cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
         for (int y = rows.start; y < rows.end; ++y) {
-            const auto *in = camera16.ptr<cv::Vec3w>(y);
-            auto *out = srgb.ptr<cv::Vec3w>(y);
-            for (int x = 0; x < camera16.cols; ++x)
+            auto *row = rgb.ptr<cv::Vec3f>(y);
+            for (int x = 0; x < rgb.cols; ++x) {
+                cv::Vec3f in = row[x];
+                if (libRawGrid)
+                    for (int k = 0; k < 3; ++k) in[k] = float(std::lround(in[k] * 65535.f));
                 for (int r = 0; r < 3; ++r) {
                     float sum = 0.f;
-                    for (int k = 0; k < 3; ++k) sum += m[r][k] * float(in[x][k]);
-                    out[x][r] = std::uint16_t(std::clamp(int(sum), 0, 65535));
+                    for (int k = 0; k < 3; ++k) sum += m[r][k] * in[k];
+                    row[x][r] = libRawGrid ? float(std::clamp(int(sum), 0, 65535)) * gridStep : sum;
                 }
+            }
         }
     });
-    return srgb;
 }
 
 std::optional<double> estimateWhiteBalanceKelvin(const LibRaw &raw)
@@ -510,7 +513,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
 
     std::optional<double> sourceWhiteBalanceKelvin;
     CameraProfileEngine::DcpRenderOptions dcpOptions;
-    cv::Mat decoded;   // CV_16UC3, oriented: camera RGB with a DCP, linear sRGB without
+    cv::Mat decoded;   // CV_32FC3, white 1, oriented: camera RGB with a DCP, linear sRGB without
     std::array<double, 4> appliedMultipliers{};   // white balance applied, per LibRaw colour
     if (metadata) {
         metadata->rawNormalizationApplied = false;
@@ -587,18 +590,14 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                 development.adjustWhiteThreshold = calibration ? 0.0 : double(raw.imgdata.params.adjust_maximum_thr);
                 development.median = Demosaic::OpeningMedian;
                 development.cancelled = options.cancellationRequested;
+                if (options.signedDevelopment) development.policy = RawDevelopment::Policy::Signed;
                 RawDevelopment::Result developed;
                 try {
                     developed = RawDevelopment::develop(input, development);
                     if (!developed.cameraRgb.empty()) {
-                        // Already on the 16-bit grid: the conversion is exact.
-                        cv::Mat camera16;
-                        developed.cameraRgb.convertTo(camera16, CV_16UC3, 65535.0);
-                        developed.cameraRgb.release();
-                        decoded = RawDevelopment::orient(camera16, input.orientation);
-                        camera16.release();
+                        decoded = RawDevelopment::orient(std::move(developed.cameraRgb), input.orientation);
                         if (profiles.dcpPath.isEmpty())
-                            decoded = cameraToSrgb16(decoded, input.cameraToSrgb);
+                            cameraToSrgb(decoded, input.cameraToSrgb, !options.signedDevelopment);
                     }
                 } catch (const std::exception &exception) {
                     decoded.release();
@@ -621,9 +620,9 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         }
     }
     timer.mark("unpack_and_process");
-    std::unique_ptr<libraw_processed_image_t, void (*)(libraw_processed_image_t *)> processed(
-        nullptr, &LibRaw::dcraw_clear_mem);
     if (decoded.empty()) {
+        std::unique_ptr<libraw_processed_image_t, void (*)(libraw_processed_image_t *)> processed(
+            nullptr, &LibRaw::dcraw_clear_mem);
         if (result == LIBRAW_SUCCESS && raw.demosaicFailed())
             result = LIBRAW_CANCELLED_BY_CALLBACK;
         if (result != LIBRAW_SUCCESS) {
@@ -643,7 +642,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             }
             return {};
         }
-        decoded = cv::Mat(int(processed->height), int(processed->width), CV_16UC3, processed->data);
+        cv::Mat(int(processed->height), int(processed->width), CV_16UC3, processed->data)
+            .convertTo(decoded, CV_32FC3, 1.0 / 65535.0);
         // scale_colors updates pre_mul to the multipliers actually used, auto WB included.
         for (int c = 0; c < 4; ++c) appliedMultipliers[size_t(c)] = raw.imgdata.color.pre_mul[c];
     }
@@ -651,13 +651,11 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
     ColorPipeline::WorkingImage image;
     if (profiles.dcpPath.isEmpty()) {
         if (profiles.lcpPath.isEmpty()) {
-            image = ColorPipeline::fromLinearRgb16(
-                reinterpret_cast<const quint16 *>(decoded.ptr()), decoded.cols, decoded.rows, error);
+            image = ColorPipeline::fromLinearSrgb(decoded, error);
         } else {
             // Lateral CA refers to the decoder's red/blue planes. Apply it
             // before changing primaries, then enter the master exactly once.
-            cv::Mat rgb;
-            decoded.convertTo(rgb, CV_32FC3, 1.0 / 65535.0);
+            cv::Mat rgb = std::move(decoded);
             if (CameraProfileEngine::applyLcp(profiles.lcpPath, rgb, capture,
                                                error, opticalOptions, &opticalApplied)) {
                 WorkingColor::transform(rgb, WorkingColor::fromSrgb());
@@ -668,10 +666,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             }
         }
     } else {
-        cv::Mat cameraRgb;
-        decoded.convertTo(cameraRgb, CV_32FC3, 1.0 / 65535.0);
-        decoded.release();
-        processed.reset();
+        cv::Mat cameraRgb = std::move(decoded);
         if (!profiles.lcpPath.isEmpty() &&
             !CameraProfileEngine::applyLcp(profiles.lcpPath, cameraRgb, capture,
                                             error, opticalOptions, &opticalApplied))

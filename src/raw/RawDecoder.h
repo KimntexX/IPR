@@ -45,6 +45,9 @@ struct Options
     bool useNormalizationEnvironment = true;
     bool listDcpProfiles = false;
     bool preferCameraNeutral = false;
+    // Development policy B (values below the black kept, RawDevelopment::Policy::Signed)
+    // for the comparison bench; the application keeps policy A, LibRaw's.
+    bool signedDevelopment = false;
     std::shared_ptr<DcpSource> retainedDcpSource;
     std::function<bool()> cancellationRequested;
 };
