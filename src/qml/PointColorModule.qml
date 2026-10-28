@@ -56,6 +56,11 @@ ColumnLayout {
         reload()
         updateOverlay()
     }
+    // A reset (or another image) unticks the range overlay.
+    Connections {
+        target: root.editor
+        function onAdjustmentsReset() { overlayBox.checked = false }
+    }
 
     Layout.fillWidth: true
     Layout.minimumWidth: 0

@@ -336,6 +336,41 @@ int main(int argc, char **argv)
     }
     panel->setWidth(320);
     editor.setBrightness(0);
+    // Point colour: a picked point becomes a selected swatch; removal keeps a valid selection.
+    auto *pointModule = root->findChild<QQuickItem *>("pointColorModule");
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+    if (!check(pointModule && editor.addPointColorAt(0.5, 0.5) && editor.addPointColorAt(0.2, 0.7),
+               "the eyedropper command must add points on a loaded image")) return 1;
+    settleLayout();
+    if (!check(editor.pointColors().size() == 2 && pointModule->property("selected").toInt() == 1 &&
+               visualItemNamed(pointModule, QStringLiteral("pointColorSwatch1")) != nullptr,
+               "each point must show a swatch and the newest must be selected")) return 1;
+    editor.setPointColorValue(0, 1, -60);
+    editor.setPointColorValue(0, 4, 140);
+    editor.removePointColor(1);
+    settleLayout();
+    const QVariantMap kept = editor.pointColors().value(0).toMap();
+    if (!check(editor.pointColors().size() == 1 && pointModule->property("selected").toInt() == 0 &&
+               kept.value("saturation").toInt() == -60 && kept.value("range").toInt() == 100 &&
+               !editor.addPointColorAt(1.5, 0.5),
+               "slider values must be clamped and a removal must keep the selection valid")) return 1;
+    auto *overlayBox = visualItemNamed(pointModule, QStringLiteral("pointColorRangeOverlay"));
+    if (!check(overlayBox && overlayBox->property("enabled").toBool(), "the range overlay needs a selected point")) return 1;
+    overlayBox->setProperty("checked", true);
+    settleLayout();
+    if (!check(editor.pointColorOverlay() == 0, "ticking the overlay shows the selected point's range")) return 1;
+    overlayBox->setProperty("checked", false);
+    settleLayout();
+    if (!check(editor.pointColorOverlay() == -1, "unticking the overlay removes it")) return 1;
+    overlayBox->setProperty("checked", true);
+    settleLayout();
+    editor.resetAdjustments();
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+    if (!check(!overlayBox->property("checked").toBool() && editor.pointColorOverlay() == -1 &&
+               editor.pointColors().isEmpty(), "resetting the adjustments unticks the range overlay")) return 1;
+    // The point the later copy and paste carry.
+    if (!check(editor.addPointColorAt(0.5, 0.5), "a point is picked again after the reset")) return 1;
+    editor.setPointColorValue(0, 1, -60);
     noiseSection->setProperty("expanded", true);
     sharpSection->setProperty("expanded", true);
     exportSection->setProperty("expanded", true);
@@ -370,32 +405,6 @@ int main(int argc, char **argv)
     editor.setColorGradingBalance(-30);
     editor.setColorGrading(3, 60, 15);
     editor.setColorGradingLuminance(2, -40);
-    // Point colour: a picked point becomes a selected swatch; removal keeps a valid selection.
-    auto *pointModule = root->findChild<QQuickItem *>("pointColorModule");
-    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
-    if (!check(pointModule && editor.addPointColorAt(0.5, 0.5) && editor.addPointColorAt(0.2, 0.7),
-               "the eyedropper command must add points on a loaded image")) return 1;
-    settleLayout();
-    if (!check(editor.pointColors().size() == 2 && pointModule->property("selected").toInt() == 1 &&
-               visualItemNamed(pointModule, QStringLiteral("pointColorSwatch1")) != nullptr,
-               "each point must show a swatch and the newest must be selected")) return 1;
-    editor.setPointColorValue(0, 1, -60);
-    editor.setPointColorValue(0, 4, 140);
-    editor.removePointColor(1);
-    settleLayout();
-    const QVariantMap kept = editor.pointColors().value(0).toMap();
-    if (!check(editor.pointColors().size() == 1 && pointModule->property("selected").toInt() == 0 &&
-               kept.value("saturation").toInt() == -60 && kept.value("range").toInt() == 100 &&
-               !editor.addPointColorAt(1.5, 0.5),
-               "slider values must be clamped and a removal must keep the selection valid")) return 1;
-    auto *overlayBox = visualItemNamed(pointModule, QStringLiteral("pointColorRangeOverlay"));
-    if (!check(overlayBox && overlayBox->property("enabled").toBool(), "the range overlay needs a selected point")) return 1;
-    overlayBox->setProperty("checked", true);
-    settleLayout();
-    if (!check(editor.pointColorOverlay() == 0, "ticking the overlay shows the selected point's range")) return 1;
-    overlayBox->setProperty("checked", false);
-    settleLayout();
-    if (!check(editor.pointColorOverlay() == -1, "unticking the overlay removes it")) return 1;
     const QVariantList copiedCurve{QVariantMap{{"x", 0.0}, {"y", 0.0}},
                                   QVariantMap{{"x", .5}, {"y", .6}},
                                   QVariantMap{{"x", 1.0}, {"y", 1.0}}};
