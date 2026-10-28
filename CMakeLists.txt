@@ -350,6 +350,12 @@ if(BUILD_TESTING)
     set_tests_properties(imageViewportQmlTests PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic"
         LABELS "unit;viewport;qml")
+    ipr_add_test(toneCurveQmlTests tests/tone_curve_qml_test.cpp)
+    target_compile_definitions(toneCurveQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(toneCurveQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic"
+        LABELS "unit;curves;qml")
     ipr_add_test(uiPreferencesTests tests/ui_preferences_test.cpp)
     ipr_add_test(uiPreferencesQmlTests tests/ui_preferences_qml_test.cpp)
     qt_add_resources(uiPreferencesQmlTests ipr_ui_test_qml

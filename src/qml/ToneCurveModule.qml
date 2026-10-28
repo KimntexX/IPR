@@ -166,9 +166,13 @@ ColumnLayout {
             }
         }
 
+        // Over the drawing itself, so that mouse and point coordinates agree; a drag
+        // is kept from the settings scroll view.
         MouseArea {
-            anchors.fill: parent
+            objectName: "toneCurveMouseArea"
+            anchors.fill: toneCanvas
             hoverEnabled: true
+            preventStealing: true
             enabled: module.editor.hasImage
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             property int draggedIndex: -1
@@ -178,7 +182,7 @@ ColumnLayout {
 
             function nearestPoint(mouse) {
                 let nearest = -1
-                let distance = 11
+                let distance = 14
                 for (let index = 0; index < module.curvePoints.length; ++index) {
                     const point = module.curvePoints[index]
                     const dx = toneCanvas.curveX(point) - mouse.x
