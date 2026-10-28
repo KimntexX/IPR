@@ -1,8 +1,9 @@
 #ifndef IPR_RAW_DEMOSAIC_H
 #define IPR_RAW_DEMOSAIC_H
 
+#include <opencv2/core.hpp>
+
 #include <array>
-#include <cstdint>
 #include <functional>
 
 // Bayer demosaic of IPR: RCD (ratio-corrected demosaicing), written from the
@@ -17,9 +18,6 @@ namespace Demosaic {
 // Colour (0 red, 1 green, 2 blue) of the 2x2 Bayer cell, by row then column.
 using Pattern = std::array<std::array<int, 2>, 2>;
 
-// One pixel of LibRaw's image: four 16-bit channels.
-using Pixel = std::uint16_t[4];
-
 // 3x3 median on R - G and B - G after the interpolation, off or only where the
 // luminance is flat at the scale of the tile's noise: flat colour noise falls
 // below Lightroom's while hair and textures keep their colour detail.
@@ -32,12 +30,13 @@ constexpr ChromaMedian OpeningMedian = ChromaMedian::FlatOnly;
 // demosaic and denoise studies gain nothing beyond).
 int workerThreads();
 
-// Interpolates in place a width x height image of four 16-bit channels in which
-// only the pattern's colour of each pixel is set (LibRaw's layout before
-// interpolation, white-balanced); fills channels 0 to 2. Returns false when
-// cancelled; the image is then incomplete.
-bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
-                 ChromaMedian median, const std::function<bool()> &cancelled);
+// Interpolates a white-balanced Bayer mosaic (CV_32FC1, white 1, the pattern's
+// colour at each site) into camera RGB (CV_32FC3, same size). The median works
+// tile by tile; beforeMedian, when given, receives the interpolation before it
+// (the development's intermediate capture). Returns false when cancelled or on
+// an invalid mosaic; the outputs are then incomplete.
+bool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian median, cv::Mat &rgb,
+                 cv::Mat *beforeMedian, const std::function<bool()> &cancelled);
 
 } // namespace Demosaic
 
