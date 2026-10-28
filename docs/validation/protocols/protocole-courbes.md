@@ -35,7 +35,7 @@ hors [0,1] dans des tests moteur séparés : le TIFF SDR ne certifie pas le HDR.
 Génération et [analyseur natif/JSON](../tools/analyseurs-groupes.md) disponibles
 via `tests/analyse_courbes.py` : classes fixes de Y et points déclarés.
 Points arbitraires, rampes/continuité et HDR restent complémentaires.
-Rapport unique Courbes à créer avec la campagne.
+Rapport : [analyse des courbes](../analyses/analyse-courbes.md).
 La réussite d'un export ne remplace pas ces critères.
 
 ## 2. Campagne Lightroom — 26 octobre 2026

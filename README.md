@@ -113,6 +113,16 @@ et le [rapport Lumières](docs/validation/analyses/analyse-validation-lumieres-b
 Qt et OpenCV ne remplacent pas un décodeur RAW. Sans LibRaw, les formats rendus
 restent utilisables, mais le backend RAW actuel n'est pas disponible.
 
+**LibRaw est un décodeur de secours, appelé à être remplacé petit à petit.** IPR
+mesure déjà lui-même ce qui dépend du boîtier (niveaux de noir et de blanc,
+dématriçage RCD, profils couleur). Il remplacera aussi le décodage, format par
+format et pour tous les formats possibles, par ses propres décodeurs : écrits à
+partir de documentation publique, sans reprise du code de LibRaw, et validés
+automatiquement contre sa sortie brute (`unpack()`), valeur pour valeur, sur un
+corpus de fichiers. Les procédures et automatisations de cette validation sont
+publiées pour que chacun puisse les rejouer et ajouter un format ou un boîtier.
+LibRaw reste en secours pour les formats non encore couverts.
+
 ### Windows
 
 Depuis WSL ou Git Bash, application fermée :
