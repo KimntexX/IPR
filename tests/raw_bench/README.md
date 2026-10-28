@@ -64,8 +64,11 @@ Les deux chemins partagent les niveaux natifs de LibRaw, WB telle quelle et
 repère capteur sans orientation. Le candidat émet les six étapes I2 ; la
 référence capture les frontières réellement observables, sans inventer une
 sortie LibRaw signée ou normalisée intermédiaire. Les cinq frontières communes
-sont comparées exactement sur trois ROI256 : unpack, avant RCD, après RCD,
-après médiane et caméra finale. Le DCP est absent de cette sonde.
+sont comparées exactement sur trois ROI256 dans le premier banc C2 : unpack,
+avant RCD, après RCD, après médiane et caméra finale. Le banc courant ajoute
+la sixième frontière commune avant borne de sortie, avec C4 corrigé.
+Le candidat émet maintenant sept étapes I2, plus la caméra finale du banc.
+Le DCP est absent de cette sonde.
 
 Options `--black R,G,B,G2` et `--white DN` : niveaux explicites identiques
 pour les deux chemins, le blanc explicite désactive son ajustement automatique.
@@ -90,6 +93,69 @@ Le comparateur indique les étapes hors du périmètre explicitement demandé.
 Un PASS limité aux cinq frontières ne vaut pas PASS de sa liste globale
 par défaut, qui inclut le rendu Rec.2020. Les erreurs interrompent la campagne
 au premier fichier non conforme et produisent un verdict de portée explicite.
+
+## Comparaison de production C3 et mesure des ressources
+
+`production_campaign.py --help` décrit les entrées explicites du banc de
+bout en bout. Le programme construit deux `iprProductionRawCapture` dans
+des sous-builds propres : référence extraite d'un commit `dev` figé et
+candidat C3 dans ce worktree. Aucun moteur d'un autre build n'est réutilisé.
+La sonde appelle directement l'API publique `RawDecoder::decode`.
+
+Les30 sources de l'inventaire contrôlé sont lues avec Camera Neutral puis
+sans profil ; la recherche utilise un dossier explicitement vide et un DCP
+absolu figé si demandé. WB boîtier, corrections optiques désactivées et
+manifeste de calibration explicitement commun aux moteurs. La comparaison
+exige même géométrie/type/hash de **toute** l'image linéaire Rec.2020,
+mêmes métadonnées auditées et égalité exacte des trois ROI diagnostiques.
+Une différence hors ROI échoue donc aussi.
+
+Le timer natif couvre seulement `decode`, pas les hashes ni la sérialisation.
+Pic mémoire : peak working set du processus relevé immédiatement après
+decode (RSS maximale sur les plateformes POSIX). Processus neuf par cas,
+ordre référence/candidat alterné ; le cache disque OS n'est pas purgé.
+OpenCV1, OMP8, maximum8 workers RCD. Budget de temps annoncé :20,8s par
+ouverture ; le pic mémoire est mesuré, pas assimilé à la RAM totale du
+système ou à une preuve du contrôleur80 %. Pas de gain de vitesse statistique
+sur une seule ouverture par cas, ni couverture automatique de tous les replis.
+
+Les fichiers `status.json`, logs de configuration/build et `partial.json`
+en cas d'erreur vivent sous `build-patch_raw_bench/production/<UTC>/`.
+Le gel et le résultat canonique sont horodatés dans `docs/validation/raw/`.
+La campagne s'arrête au premier écart de parité, sans modifier les sources,
+le profil, la calibration ou les tolérances pour le faire disparaître.
+
+## Pilote signé X4 (C4)
+
+La sonde de module courante requiert l'interface C4 `Policy`. Pendant le
+gel C3, compiler depuis une archive immuable C4 avec
+`-DIPR_RAW_SOURCE_ROOT=CHEMIN_ARCHIVE_C4` et
+`-DIPR_RAW_ENGINE_REVISION=COMMIT_C4_COMPLET`, dans un sous-build séparé.
+Ne pas reconstruire le moteur C3 ni fusionner des sources pendant sa mesure.
+Les révisions outil et moteur sont distinctes dans les captures.
+
+```text
+iprRawDevelopmentCapture --input image.CR3 --output B.json --path candidate --mode signed
+python tests/raw_bench/signed_campaign.py --baseline CAPTURES_BRUIT.json --tool EXE_C4 --engine-source ARCHIVE_C4 --engine-revision COMMIT_C4_COMPLET --runtime-dir DLL_QT --runtime-dir DLL_LIBRAW --runtime-dir DLL_OPENCV
+```
+
+`signed` n'est pas accepté sur le chemin oracle LibRaw. La campagne mesure
+les six paires historiques1600/51200 avec les niveaux effectivement appliqués
+et vérifie sources, outils, contrats et paramètres A/B. Elle produit un gel
+puis un JSON de mesures, jamais un PASS de parité pour B ou une validation
+de qualité de débruitage. Statut/logs/partiel sous le build `signed/<UTC>`.
+
+Le moteur courant du banc utilise C4 corrigé `ee8f26d` : l'entrée CFA reste
+signée pendant RCD et la médiane en B. `pre_output_camera_rgb` observe la
+médiane avant borne et grille finales ; ce stage est obligatoire, avec les
+six autres étapes I2 et la caméra finale. La sortie B doit être exactement
+le bornage `[0,1]` de cette capture. L'ancien pilote `42f99b6` reste une preuve
+historique avec bornes internes, pas l'implémentation à reconstruire.
+`--previous-study JSON_X4` contrôle l'invariance A sur les frontières communes
+du précédent pilote ; il ne fabrique pas une capture pré-borne historique.
+La variance de paires ne capture pas les composantes communes aux deux
+prises ; moyenne, dérive, covariance, zéros et négatifs sont gardés séparés.
+Pour les DN, `at_or_above_one_fraction` n'est pas une fraction au blanc.
 
 ## Priorité bruit et limites
 

@@ -32,12 +32,13 @@ const char *name(RawDevelopment::Stage s){
     case RawDevelopment::Stage::NormalizedCfa:return "normalized_cfa";
     case RawDevelopment::Stage::PreDemosaicCfa:return "pre_demosaic_cfa";
     case RawDevelopment::Stage::PostDemosaicCameraRgb:return "post_demosaic_camera_rgb";
+    case RawDevelopment::Stage::PreOutputCameraRgb:return "pre_output_camera_rgb";
     case RawDevelopment::Stage::PostMedianCameraRgb:return "post_median_camera_rgb";
     }throw std::runtime_error("Unknown capture stage");
 }
-const char *unit(RawDevelopment::Stage s){
+const char *unit(RawDevelopment::Stage s,RawDevelopment::Policy policy){
     if(s==RawDevelopment::Stage::UnpackedCfa||s==RawDevelopment::Stage::BlackSubtractedCfa)return "DN";
-    if(s==RawDevelopment::Stage::PreDemosaicCfa||s==RawDevelopment::Stage::PostMedianCameraRgb)return "linear_camera_grid_1_65535";
+    if(policy==RawDevelopment::Policy::LibRawParity&&(s==RawDevelopment::Stage::PreDemosaicCfa||s==RawDevelopment::Stage::PostMedianCameraRgb))return "linear_camera_grid_1_65535";
     return "linear_camera_white_1";
 }
 
@@ -88,8 +89,9 @@ private:
             for(int y=0;y<mosaic.rows;++y)for(int x=0;x<mosaic.cols;++x)mosaic.at<float>(y,x)=d.image[size_t(y)*mosaic.cols+x][pattern[size_t(y&1)][size_t(x&1)]]/65535.f;
             self->writer->save("pre_demosaic_cfa",mosaic,"linear_camera_grid_1_65535",*self->input);
             cv::Mat rgb,before;
-            require(Demosaic::interpolate(mosaic,pattern,Demosaic::OpeningMedian,rgb,&before,{}),"Reference RCD failed");
+            require(Demosaic::interpolate(mosaic,pattern,Demosaic::OpeningMedian,Demosaic::Range::NonNegative,rgb,&before,{}),"Reference RCD failed");
             self->writer->save("post_demosaic_camera_rgb",before,"linear_camera_white_1",*self->input);
+            self->writer->save("pre_output_camera_rgb",rgb,"linear_camera_white_1",*self->input);
             rgb.forEach<cv::Vec3f>([](cv::Vec3f &v,const int *){for(int c=0;c<3;++c)v[c]=float(std::clamp(std::lround(v[c]*65535.f),0L,65535L))/65535.f;});
             self->writer->save("post_median_camera_rgb",rgb,"linear_camera_grid_1_65535",*self->input);
             for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)d.image[size_t(y)*rgb.cols+x][c]=std::uint16_t(std::lround(rgb.at<cv::Vec3f>(y,x)[c]*65535.f));
@@ -101,13 +103,15 @@ private:
 int main(int argc,char **argv){
     QCoreApplication app(argc,argv);QCommandLineParser parser;parser.addHelpOption();
     for(auto key:{"input","output","path"})parser.addOption(QCommandLineOption(key,key,"value"));
-    parser.addOption(QCommandLineOption("mode","Only parity mode is implemented","mode","parity"));
+    parser.addOption(QCommandLineOption("mode","parity (A) or signed (B, candidate only)","mode","parity"));
     parser.addOption(QCommandLineOption("black","Explicit DN levels R,G,B,G2 for both paths","levels"));
     parser.addOption(QCommandLineOption("white","Explicit white DN for both paths, disables automatic adjustment","DN"));
     parser.process(app);
     try{
         const auto source=QFileInfo(parser.value("input")).absoluteFilePath(),output=QFileInfo(parser.value("output")).absoluteFilePath(),path=parser.value("path");
-        require(parser.isSet("input")&&parser.isSet("output")&&(path=="reference"||path=="candidate")&&parser.value("mode")=="parity","Need input/output/path and parity mode");
+        const auto mode=parser.value("mode");
+        require(parser.isSet("input")&&parser.isSet("output")&&(path=="reference"||path=="candidate")&&(mode=="parity"||(mode=="signed"&&path=="candidate")),"Need input/output/path and parity or candidate signed mode");
+        cv::setNumThreads(1);
         const auto sourceHash=hash(source);auto raw=std::make_unique<Reference>();
 #ifdef _WIN32
         require(raw->open_file(source.toStdWString().c_str())==LIBRAW_SUCCESS,"RAW open failed");
@@ -132,10 +136,12 @@ int main(int argc,char **argv){
         Writer writer(output);QJsonObject applied;
         if(path=="candidate"){
             RawDevelopment::Options options;options.adjustWhiteThreshold=raw->imgdata.params.adjust_maximum_thr;
-            options.observer=[&](const RawDevelopment::Capture &c){writer.save(name(c.stage),c.pixels,unit(c.stage),input);
-                applied=QJsonObject{{"black",four(c.context.black)},{"white",c.context.white},{"divisor",c.context.divisor},{"gains",four(c.context.gains)},{"policy",c.context.policy}};};
+            options.policy=mode=="signed"?RawDevelopment::Policy::Signed:RawDevelopment::Policy::LibRawParity;
+            options.observer=[&](const RawDevelopment::Capture &c){writer.save(name(c.stage),c.pixels,unit(c.stage,c.context.policy),input);
+                applied=QJsonObject{{"black",four(c.context.black)},{"white",c.context.white},{"divisor",c.context.divisor},{"gains",four(c.context.gains)},
+                    {"policy",c.context.policy==RawDevelopment::Policy::Signed?"signed":"parity"}};};
             auto result=RawDevelopment::develop(input,options);require(!result.cameraRgb.empty(),"Candidate development failed");
-            writer.save("pre_dcp_camera_rgb",result.cameraRgb,"linear_camera_grid_1_65535",input);
+            writer.save("pre_dcp_camera_rgb",result.cameraRgb,mode=="signed"?"linear_camera_white_1":"linear_camera_grid_1_65535",input);
         }else{
             writer.save("unpacked_cfa",input.mosaic,"DN",input);raw->writer=&writer;raw->input=&input;raw->instrument();
             require(raw->dcraw_process()==LIBRAW_SUCCESS&&!raw->failed,"Reference processing failed");
@@ -148,8 +154,8 @@ int main(int argc,char **argv){
             writer.save("pre_dcp_camera_rgb",rgb,"linear_camera_grid_1_65535",input);
         }
         writer.pixels.close();require(hash(source)==sourceHash,"Source changed during capture");
-        QJsonObject manifest{{"schema_version",1},{"mode","parity"},{"path",path},{"measured_at_utc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
-            {"source",QJsonObject{{"path",source},{"sha256",sourceHash}}},{"engine_revision",IPR_BENCH_REVISION},{"tool_revision",IPR_BENCH_REVISION},
+        QJsonObject manifest{{"schema_version",1},{"mode",mode},{"path",path},{"measured_at_utc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
+            {"source",QJsonObject{{"path",source},{"sha256",sourceHash}}},{"engine_revision",IPR_RAW_ENGINE_REVISION},{"tool_revision",IPR_BENCH_REVISION},
             {"scope",parser.isSet("black")||parser.isSet("white")?"C2_module_explicit_levels_not_calibration_selection_or_DCP":"C2_module_native_decoder_levels_not_IPR_calibration_or_DCP"},{"libraw_version",LibRaw::version()},
             {"applied",applied},{"metadata",QJsonObject{{"model",input.model},{"iso",input.iso},{"orientation_flip",input.orientation}}},
             {"pixels",QJsonObject{{"path",QFileInfo(writer.pixels.fileName()).fileName()},{"sha256",hash(writer.pixels.fileName())}}},{"stages",writer.stages}};

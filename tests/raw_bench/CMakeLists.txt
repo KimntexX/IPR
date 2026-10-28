@@ -16,14 +16,21 @@ include(CTest)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 add_test(NAME rawBenchCaptureContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_capture.py)
+add_test(NAME rawBenchProductionContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_production_campaign.py)
+add_test(NAME rawBenchSignedMeasurement COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p "test_signed*.py")
 
 # C2 module bench: compile the committed development sources in this worktree,
 # never link an engine or CMake cache from another agent's build.
 find_package(OpenCV REQUIRED COMPONENTS core imgproc)
 get_filename_component(IPR_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
+set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
+set(IPR_RAW_ENGINE_REVISION "${IPR_BENCH_REVISION}" CACHE STRING "Revision of the captured engine")
 add_executable(iprRawDevelopmentCapture development_capture.cpp
-    "${IPR_ROOT}/src/raw/RawInput.cpp" "${IPR_ROOT}/src/raw/LibRawInput.cpp"
-    "${IPR_ROOT}/src/raw/RawDevelopment.cpp" "${IPR_ROOT}/src/raw/Demosaic.cpp")
-target_include_directories(iprRawDevelopmentCapture PRIVATE "${IPR_ROOT}/src/raw" "${LIBRAW_INCLUDE_DIR}" ${OpenCV_INCLUDE_DIRS})
+    "${IPR_RAW_SOURCE_ROOT}/src/raw/RawInput.cpp" "${IPR_RAW_SOURCE_ROOT}/src/raw/LibRawInput.cpp"
+    "${IPR_RAW_SOURCE_ROOT}/src/raw/RawDevelopment.cpp" "${IPR_RAW_SOURCE_ROOT}/src/raw/Demosaic.cpp")
+target_include_directories(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_ROOT}/src/raw" "${LIBRAW_INCLUDE_DIR}" ${OpenCV_INCLUDE_DIRS})
 target_link_libraries(iprRawDevelopmentCapture PRIVATE Qt6::Core "${LIBRAW_LIBRARY}" ${OpenCV_LIBS})
-target_compile_definitions(iprRawDevelopmentCapture PRIVATE IPR_WITH_LIBRAW=1 IPR_BENCH_REVISION="${IPR_BENCH_REVISION}")
+target_compile_definitions(iprRawDevelopmentCapture PRIVATE IPR_WITH_LIBRAW=1
+    IPR_BENCH_REVISION="${IPR_BENCH_REVISION}" IPR_RAW_ENGINE_REVISION="${IPR_RAW_ENGINE_REVISION}")

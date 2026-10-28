@@ -11,7 +11,7 @@ import numpy as np
 
 from capture import compare_captures,load_capture,sha256
 
-COMMON=('unpacked_cfa','pre_demosaic_cfa','post_demosaic_camera_rgb','post_median_camera_rgb','pre_dcp_camera_rgb')
+COMMON=('unpacked_cfa','pre_demosaic_cfa','post_demosaic_camera_rgb','pre_output_camera_rgb','post_median_camera_rgb','pre_dcp_camera_rgb')
 CANDIDATE=COMMON+('black_subtracted_cfa','normalized_cfa')
 
 
