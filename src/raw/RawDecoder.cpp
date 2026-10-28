@@ -1,7 +1,9 @@
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
 #include "Demosaic.h"
+#include "LibRawInput.h"
 #include "RawBlackLevelEstimator.h"
+#include "RawDevelopment.h"
 #include "RawNormalization.h"
 #include "CameraSignal.h"
 
@@ -269,6 +271,39 @@ bool readBlackLevel(LibRaw &raw, const QString &fileName)
     return true;
 }
 
+// IPR develops the Bayer mosaics of the formats its comparison bench covers
+// (Canon CR2 and CR3, as-shot white balance); LibRaw develops the others.
+bool developedByIpr(const LibRaw &raw, const Options &options)
+{
+    const auto &d = raw.imgdata;
+    return !options.automaticWhiteBalance && d.rawdata.raw_image && d.idata.filters >= 1000 &&
+           d.sizes.pixel_aspect == 1.0 &&
+           QString::fromLocal8Bit(d.idata.make).trimmed().compare(QStringLiteral("Canon"), Qt::CaseInsensitive) == 0;
+}
+
+// Camera RGB to linear sRGB as LibRaw's output stage: single-precision products
+// summed in channel order, truncated, clipped to the 16-bit range.
+cv::Mat cameraToSrgb16(const cv::Mat &camera16, const cv::Matx33d &matrix)
+{
+    float m[3][3];
+    for (int r = 0; r < 3; ++r)
+        for (int k = 0; k < 3; ++k) m[r][k] = float(matrix(r, k));
+    cv::Mat srgb(camera16.size(), CV_16UC3);
+    cv::parallel_for_(cv::Range(0, camera16.rows), [&](const cv::Range &rows) {
+        for (int y = rows.start; y < rows.end; ++y) {
+            const auto *in = camera16.ptr<cv::Vec3w>(y);
+            auto *out = srgb.ptr<cv::Vec3w>(y);
+            for (int x = 0; x < camera16.cols; ++x)
+                for (int r = 0; r < 3; ++r) {
+                    float sum = 0.f;
+                    for (int k = 0; k < 3; ++k) sum += m[r][k] * float(in[x][k]);
+                    out[x][r] = std::uint16_t(std::clamp(int(sum), 0, 65535));
+                }
+        }
+    });
+    return srgb;
+}
+
 std::optional<double> estimateWhiteBalanceKelvin(const LibRaw &raw)
 {
     const auto &color = raw.imgdata.color;
@@ -475,6 +510,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
 
     std::optional<double> sourceWhiteBalanceKelvin;
     CameraProfileEngine::DcpRenderOptions dcpOptions;
+    cv::Mat decoded;   // CV_16UC3, oriented: camera RGB with a DCP, linear sRGB without
+    std::array<double, 4> appliedMultipliers{};   // white balance applied, per LibRaw colour
     if (metadata) {
         metadata->rawNormalizationApplied = false;
         metadata->normalizationWhiteLevel = 0;
@@ -543,45 +580,84 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             qWarning().noquote() << normalizationReason;
         }
         timer.mark("black_wb_calibration");
-        raw.useIprDemosaic(Demosaic::OpeningMedian, options.cancellationRequested);
-        result = raw.dcraw_process();
+        if (developedByIpr(raw, options)) {
+            const RawInput::Input input = LibRawInput::read(raw);
+            if (RawInput::valid(input)) {
+                RawDevelopment::Options development;
+                development.adjustWhiteThreshold = calibration ? 0.0 : double(raw.imgdata.params.adjust_maximum_thr);
+                development.median = Demosaic::OpeningMedian;
+                development.cancelled = options.cancellationRequested;
+                RawDevelopment::Result developed;
+                try {
+                    developed = RawDevelopment::develop(input, development);
+                    if (!developed.cameraRgb.empty()) {
+                        // Already on the 16-bit grid: the conversion is exact.
+                        cv::Mat camera16;
+                        developed.cameraRgb.convertTo(camera16, CV_16UC3, 65535.0);
+                        developed.cameraRgb.release();
+                        decoded = RawDevelopment::orient(camera16, input.orientation);
+                        camera16.release();
+                        if (profiles.dcpPath.isEmpty())
+                            decoded = cameraToSrgb16(decoded, input.cameraToSrgb);
+                    }
+                } catch (const std::exception &exception) {
+                    decoded.release();
+                    developed.error = QString::fromLocal8Bit(exception.what());
+                }
+                if (decoded.empty()) {
+                    if (error)
+                        *error = options.cancellationRequested && options.cancellationRequested()
+                                     ? QString::fromLatin1(libraw_strerror(LIBRAW_CANCELLED_BY_CALLBACK))
+                                     : developed.error;
+                    return {};
+                }
+                for (int c = 0; c < 4; ++c) appliedMultipliers[size_t(c)] = developed.gains[size_t(c)];
+                timer.mark("ipr_development");
+            }
+        }
+        if (decoded.empty()) {
+            raw.useIprDemosaic(Demosaic::OpeningMedian, options.cancellationRequested);
+            result = raw.dcraw_process();
+        }
     }
     timer.mark("unpack_and_process");
-    if (result == LIBRAW_SUCCESS && raw.demosaicFailed())
-        result = LIBRAW_CANCELLED_BY_CALLBACK;
-    if (result != LIBRAW_SUCCESS) {
-        if (error)
-            *error = QString::fromLatin1(libraw_strerror(result));
-        return {};
-    }
-
-    libraw_processed_image_t *processed = raw.dcraw_make_mem_image(&result);
-    timer.mark("make_memory_image");
-    if (!processed || result != LIBRAW_SUCCESS ||
-        processed->type != LIBRAW_IMAGE_BITMAP || processed->bits != 16 ||
-        processed->colors != 3) {
-        if (error) {
-            *error = result == LIBRAW_SUCCESS
-                         ? QStringLiteral("LibRaw n'a pas fourni une image RGB 16 bits.")
-                         : QString::fromLatin1(libraw_strerror(result));
+    std::unique_ptr<libraw_processed_image_t, void (*)(libraw_processed_image_t *)> processed(
+        nullptr, &LibRaw::dcraw_clear_mem);
+    if (decoded.empty()) {
+        if (result == LIBRAW_SUCCESS && raw.demosaicFailed())
+            result = LIBRAW_CANCELLED_BY_CALLBACK;
+        if (result != LIBRAW_SUCCESS) {
+            if (error)
+                *error = QString::fromLatin1(libraw_strerror(result));
+            return {};
         }
-        if (processed)
-            LibRaw::dcraw_clear_mem(processed);
-        return {};
+        processed.reset(raw.dcraw_make_mem_image(&result));
+        timer.mark("make_memory_image");
+        if (!processed || result != LIBRAW_SUCCESS ||
+            processed->type != LIBRAW_IMAGE_BITMAP || processed->bits != 16 ||
+            processed->colors != 3) {
+            if (error) {
+                *error = result == LIBRAW_SUCCESS
+                             ? QStringLiteral("LibRaw n'a pas fourni une image RGB 16 bits.")
+                             : QString::fromLatin1(libraw_strerror(result));
+            }
+            return {};
+        }
+        decoded = cv::Mat(int(processed->height), int(processed->width), CV_16UC3, processed->data);
+        // scale_colors updates pre_mul to the multipliers actually used, auto WB included.
+        for (int c = 0; c < 4; ++c) appliedMultipliers[size_t(c)] = raw.imgdata.color.pre_mul[c];
     }
 
     ColorPipeline::WorkingImage image;
     if (profiles.dcpPath.isEmpty()) {
         if (profiles.lcpPath.isEmpty()) {
             image = ColorPipeline::fromLinearRgb16(
-                reinterpret_cast<const quint16 *>(processed->data), processed->width,
-                processed->height, error);
+                reinterpret_cast<const quint16 *>(decoded.ptr()), decoded.cols, decoded.rows, error);
         } else {
             // Lateral CA refers to the decoder's red/blue planes. Apply it
             // before changing primaries, then enter the master exactly once.
-            cv::Mat rgb16(int(processed->height), int(processed->width), CV_16UC3, processed->data);
             cv::Mat rgb;
-            rgb16.convertTo(rgb, CV_32FC3, 1.0 / 65535.0);
+            decoded.convertTo(rgb, CV_32FC3, 1.0 / 65535.0);
             if (CameraProfileEngine::applyLcp(profiles.lcpPath, rgb, capture,
                                                error, opticalOptions, &opticalApplied)) {
                 WorkingColor::transform(rgb, WorkingColor::fromSrgb());
@@ -592,10 +668,10 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             }
         }
     } else {
-        cv::Mat rgb16(int(processed->height), int(processed->width), CV_16UC3,
-                      processed->data);
         cv::Mat cameraRgb;
-        rgb16.convertTo(cameraRgb, CV_32FC3, 1.0 / 65535.0);
+        decoded.convertTo(cameraRgb, CV_32FC3, 1.0 / 65535.0);
+        decoded.release();
+        processed.reset();
         if (!profiles.lcpPath.isEmpty() &&
             !CameraProfileEngine::applyLcp(profiles.lcpPath, cameraRgb, capture,
                                             error, opticalOptions, &opticalApplied))
@@ -612,12 +688,10 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             signal.cameraModel = sourceMetadata.cameraModel;
             signal.whiteBalanceKelvin = sourceWhiteBalanceKelvin;
             signal.whiteBalanceApplied = true;
-            // scale_colors updates pre_mul to the multipliers actually used,
-            // including auto WB. Ratios remove the common scaling factor.
-            const auto &color = raw.imgdata.color;
+            // Ratios of the applied multipliers remove their common scaling factor.
             for (int c = 0; c < 3; ++c)
-                if (color.pre_mul[c] > 0 && std::isfinite(color.pre_mul[c]))
-                    signal.cameraNeutral[c] = color.pre_mul[1] / color.pre_mul[c];
+                if (appliedMultipliers[size_t(c)] > 0 && std::isfinite(appliedMultipliers[size_t(c)]))
+                    signal.cameraNeutral[c] = appliedMultipliers[1] / appliedMultipliers[size_t(c)];
             image = CameraSignal::render(std::move(signal), profiles.dcpPath, dcpOptions, error);
         }
         // Calibration changes the LibRaw white level upstream: never reuse this
@@ -649,7 +723,6 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         image.referenceWhiteBalanceKelvin = sourceWhiteBalanceKelvin;
     }
     timer.mark("color_and_lens_profiles");
-    LibRaw::dcraw_clear_mem(processed);
     return image;
 }
 
