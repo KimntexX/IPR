@@ -74,4 +74,28 @@ std::optional<cv::Vec3d> colourBeforePointColour(const cv::Mat &linearRgb, doubl
     return cv::Vec3d(colour.at<cv::Vec3f>(0, 0));
 }
 
+cv::Mat pointWeights(const cv::Mat &linearRgb, const Parameters &parameters, int point)
+{
+    if (linearRgb.empty() || linearRgb.type() != CV_32FC3 || point < 0 ||
+        point >= int(std::min(parameters.pointColor.count, PointColor::MaxPoints)))
+        return {};
+    cv::Mat colours = linearRgb.clone();
+    Parameters before = parameters;   // the stages ahead of the point colour only
+    before.pointColor = {};
+    before.gradingSaturation = {};
+    before.gradingLuminance = {};
+    apply(colours, before);
+    const PointColor::Point &selected = parameters.pointColor.points[size_t(point)];
+    cv::Mat weights(colours.size(), CV_32FC1);
+    cv::parallel_for_(cv::Range(0, colours.rows), [&](const cv::Range &rows) {
+        for (int y = rows.start; y < rows.end; ++y) {
+            const auto *in = colours.ptr<cv::Vec3f>(y);
+            auto *out = weights.ptr<float>(y);
+            for (int x = 0; x < colours.cols; ++x)
+                out[x] = float(PointColor::weight(PointColor::toHsv(cv::Vec3d(in[x])), selected));
+        }
+    });
+    return weights;
+}
+
 } // namespace PerceptualColour

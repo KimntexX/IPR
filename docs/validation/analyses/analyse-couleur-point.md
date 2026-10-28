@@ -69,5 +69,5 @@ rapport. Mémoires : `etude-couleur-point-ipr-v001`, `-v002`.
   source.
 - Non mesurés : sous-gammes dépliées, deux points qui se recouvrent, visualisation
   des plages ; pas de validation visuelle utilisateur.
-- IHM raccordée le 28 octobre (pipette, pastilles, curseurs ; IHM-CONN-011) ; la
-  visualisation des plages reste à faire.
+- IHM raccordée le 28 octobre (pipette, pastilles, curseurs, visualisation des
+  plages ; IHM-CONN-011).

@@ -37,6 +37,11 @@ void apply(cv::Mat &linearRgb, const Parameters &parameters);
 std::optional<cv::Vec3d> colourBeforePointColour(const cv::Mat &linearRgb, double x, double y, int radius,
                                                  const Parameters &parameters);
 
+// Weight (CV_32FC1, [0, 1]) of every pixel of the stage's input in the
+// neighbourhood of one point, as the point colour sees it (after saturation,
+// vibrance and the mixer): the range overlay. Empty for an invalid point or input.
+cv::Mat pointWeights(const cv::Mat &linearRgb, const Parameters &parameters, int point);
+
 } // namespace PerceptualColour
 
 #endif // IPR_CORE_PERCEPTUALCOLOUR_H

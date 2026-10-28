@@ -1,3 +1,4 @@
+#include "ColorAdjustments.h"
 #include "PerceptualColour.h"
 #include "PointColor.h"
 #include "Sidecar.h"
@@ -212,6 +213,31 @@ bool perceptualStage()
     return ok;
 }
 
+bool overlay()
+{
+    PerceptualColour::Parameters parameters;
+    parameters.pointColor = single(orange());
+    cv::Mat image(1, 2, CV_32FC3);
+    image.at<cv::Vec3f>(0, 0) = cv::Vec3f(PointColor::fromHsv(Orange));
+    image.at<cv::Vec3f>(0, 1) = cv::Vec3f(PointColor::fromHsv({4.0, 0.6, 0.5}));
+    const cv::Mat weights = PerceptualColour::pointWeights(image, parameters, 0);
+    bool ok = check(!weights.empty() && std::abs(weights.at<float>(0, 0) - 1.0f) < 1e-4f &&
+                    weights.at<float>(0, 1) == 0.0f, "the overlay weighs the source 1 and a far colour 0");
+    ok &= check(PerceptualColour::pointWeights(image, parameters, 1).empty() &&
+                PerceptualColour::pointWeights(image, parameters, -1).empty(), "an invalid point gives no weights");
+    cv::Mat rgba(1, 2, CV_32FC4);
+    rgba.at<cv::Vec4f>(0, 0) = {0.6f, 0.3f, 0.1f, 1.0f};
+    rgba.at<cv::Vec4f>(0, 1) = {0.6f, 0.3f, 0.1f, 0.5f};
+    cv::Mat w(1, 2, CV_32FC1);
+    w.at<float>(0, 0) = 1.0f;
+    w.at<float>(0, 1) = 0.0f;
+    ColorAdjustments::showWeights(rgba, w);
+    const cv::Vec4f kept = rgba.at<cv::Vec4f>(0, 0), grey = rgba.at<cv::Vec4f>(0, 1);
+    ok &= check(cv::norm(kept - cv::Vec4f(0.6f, 0.3f, 0.1f, 1.0f)) < 1e-6 && grey[0] == grey[1] && grey[1] == grey[2] &&
+                grey[3] == 0.5f, "weight 1 keeps the colour, weight 0 shows its luminance, alpha kept");
+    return ok;
+}
+
 bool sidecar()
 {
     QTemporaryDir directory;
@@ -265,6 +291,7 @@ int main()
     ok &= overlap();
     ok &= robustness();
     ok &= perceptualStage();
+    ok &= overlay();
     ok &= sidecar();
     if (ok) std::cout << "pointColorTests passed\n";
     return ok ? 0 : 1;

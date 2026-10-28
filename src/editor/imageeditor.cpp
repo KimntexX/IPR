@@ -1208,6 +1208,16 @@ void ImageEditor::setPointColorValue(int index, int component, int value)
     scheduleRender();
 }
 
+void ImageEditor::setPointColorOverlay(int index)
+{
+    index = index >= 0 && index < int(std::min(m_settings.pointColor.count, PointColor::MaxPoints)) ? index : -1;
+    if (m_pointColorOverlay == index)
+        return;
+    m_pointColorOverlay = index;
+    emit pointColorOverlayChanged();
+    scheduleRender();
+}
+
 void ImageEditor::removePointColor(int index)
 {
     PointColor::Parameters &points = m_settings.pointColor;
@@ -1871,7 +1881,7 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
 
 ImageEditor::RenderResult ImageEditor::renderPreview(
     const ColorPipeline::WorkingImage &source, const Settings &settings,
-    bool includeOriginal, double pixelScale, RenderStageCache *cache)
+    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint)
 {
     RenderResult result;
     if (includeOriginal) {
@@ -1883,10 +1893,23 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
         if (result.originalPreview.isNull())
             qWarning() << "Échec du rendu de l'origine :" << error;
     }
-    const ColorPipeline::WorkingImage rendered =
+    ColorPipeline::WorkingImage rendered =
         renderWorkingImage(source, settings, pixelScale, cache);
     if (rendered.isNull())
         return result;
+    if (overlayPoint >= 0) {
+        // Weights on the colour entering the point colour: the tones' output the
+        // render just kept, or rendered here.
+        cv::Mat tones = cache ? cache->peek(source.linearRgba, pixelScale, 0, stageKeys(settings)[0]) : cv::Mat();
+        if (tones.empty()) {
+            cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
+            const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
+            if (!renderTones(source, settings, reference, tones)) tones.release();
+        }
+        const cv::Mat weights = PerceptualColour::pointWeights(tones, perceptualParameters(settings), overlayPoint);
+        if (!weights.empty() && weights.size() == rendered.linearRgba.size())
+            ColorAdjustments::showWeights(rendered.linearRgba, weights);
+    }
 
     QString error;
     result.preview = ColorPipeline::toSrgb(
@@ -2412,17 +2435,20 @@ void ImageEditor::startRender()
     const ColorPipeline::WorkingImage sourceCopy = previewSource();
     const double pixelScale = previewPixelScale();
     const Settings settings = m_settings;
+    // A point removed or replaced since the overlay was asked shows nothing.
+    const int overlay = m_pointColorOverlay < int(std::min(settings.pointColor.count, PointColor::MaxPoints))
+        ? m_pointColorOverlay : -1;
     const bool includeOriginal = m_originalImageSource.isEmpty();
     m_activeRevision = m_requestedRevision;
     setBusy(true);
     auto *controller = &m_decodedImageCache;
     auto *stages = &m_renderStageCache;
     m_renderWatcher.setFuture(QtConcurrent::run(
-        [sourceCopy, settings, includeOriginal, pixelScale, controller, stages] {
+        [sourceCopy, settings, includeOriginal, pixelScale, controller, stages, overlay] {
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
             if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, stages);
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, stages, overlay);
         }));
 }
 

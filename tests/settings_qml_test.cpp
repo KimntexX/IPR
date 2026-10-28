@@ -388,6 +388,14 @@ int main(int argc, char **argv)
                kept.value("saturation").toInt() == -60 && kept.value("range").toInt() == 100 &&
                !editor.addPointColorAt(1.5, 0.5),
                "slider values must be clamped and a removal must keep the selection valid")) return 1;
+    auto *overlayBox = visualItemNamed(pointModule, QStringLiteral("pointColorRangeOverlay"));
+    if (!check(overlayBox && overlayBox->property("enabled").toBool(), "the range overlay needs a selected point")) return 1;
+    overlayBox->setProperty("checked", true);
+    settleLayout();
+    if (!check(editor.pointColorOverlay() == 0, "ticking the overlay shows the selected point's range")) return 1;
+    overlayBox->setProperty("checked", false);
+    settleLayout();
+    if (!check(editor.pointColorOverlay() == -1, "unticking the overlay removes it")) return 1;
     const QVariantList copiedCurve{QVariantMap{{"x", 0.0}, {"y", 0.0}},
                                   QVariantMap{{"x", .5}, {"y", .6}},
                                   QVariantMap{{"x", 1.0}, {"y", 1.0}}};

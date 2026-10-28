@@ -31,6 +31,11 @@ ColumnLayout {
         reloading = false
     }
 
+    // The preview shows the selected point's range while the box is ticked.
+    function updateOverlay() {
+        editor.pointColorOverlay = overlayBox.checked && hasPoint ? selected : -1
+    }
+
     function commit(component, value) {
         if (!reloading && hasPoint)
             editor.setPointColorValue(selected, component, Math.round(value))
@@ -45,8 +50,12 @@ ColumnLayout {
             selected = points.length - 1
         knownCount = points.length
         reload()
+        updateOverlay()
     }
-    onSelectedChanged: reload()
+    onSelectedChanged: {
+        reload()
+        updateOverlay()
+    }
 
     Layout.fillWidth: true
     Layout.minimumWidth: 0
@@ -235,14 +244,16 @@ ColumnLayout {
     }
 
     PreferenceCheckBox {
+        id: overlayBox
         objectName: "pointColorRangeOverlay"
         Layout.fillWidth: true
         Layout.minimumWidth: 0
         text: qsTr("Visualisation des plages")
-        enabled: false
+        enabled: root.hasPoint
+        onCheckedChanged: root.updateOverlay()
     }
 
     SectionNote {
-        text: qsTr("Moteur calé sur Lightroom. La visualisation des plages viendra ensuite.")
+        text: qsTr("La visualisation montre en couleur ce que touche la couleur sélectionnée, le reste en gris (aperçu seulement).")
     }
 }
