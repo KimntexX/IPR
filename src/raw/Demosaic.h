@@ -26,6 +26,10 @@ enum class ChromaMedian { Off, FlatOnly };
 // Median of the opening, at every ISO.
 constexpr ChromaMedian OpeningMedian = ChromaMedian::FlatOnly;
 
+// Lower bound of the interpolated values: 0, or none for a signed mosaic (values
+// below the black kept through RCD and the median).
+enum class Range { NonNegative, Signed };
+
 // Worker threads: the host's, one left for the interface, at most 8 (the
 // demosaic and denoise studies gain nothing beyond).
 int workerThreads();
@@ -35,7 +39,7 @@ int workerThreads();
 // tile by tile; beforeMedian, when given, receives the interpolation before it
 // (the development's intermediate capture). Returns false when cancelled or on
 // an invalid mosaic; the outputs are then incomplete.
-bool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian median, cv::Mat &rgb,
+bool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian median, Range range, cv::Mat &rgb,
                  cv::Mat *beforeMedian, const std::function<bool()> &cancelled);
 
 } // namespace Demosaic

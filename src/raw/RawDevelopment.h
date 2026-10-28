@@ -11,21 +11,30 @@
 #include <functional>
 
 // IPR's development of a Bayer RAW, from a RawInput to linear camera RGB: black,
-// white, white balance, demosaic. It reproduces LibRaw's dcraw_process() exactly
-// (parity mode A of PLAN-SEPARATION-LIBRAW): black subtracted and clipped at 0,
-// the white adjusted to the data unless IPR calibrated it, as-shot multipliers
+// white, white balance, demosaic. Policy A reproduces LibRaw's dcraw_process()
+// exactly (parity mode of PLAN-SEPARATION-LIBRAW): black subtracted and clipped at
+// 0, the white adjusted to the data unless IPR calibrated it, as-shot multipliers
 // scaled so the smallest is 1, values truncated to the 16-bit grid, both greens
-// merged, IPR's RCD and median, output on the 16-bit grid.
+// merged, IPR's RCD and median (interpolated values bounded at 0), output on the
+// 16-bit grid. Policy B keeps the values below the black through RCD and the
+// median, without the 16-bit grid, and clips them at 0 only on output (mode B,
+// under evaluation by the bench).
 namespace RawDevelopment {
+
+enum class Policy {
+    LibRawParity,   // A
+    Signed          // B
+};
 
 // Intermediate stages the comparison bench observes (interface I2).
 enum class Stage {
     UnpackedCfa,            // sensor counts (CV_16UC1)
     BlackSubtractedCfa,     // counts minus black, signed, before the lower bound (CV_32FC1)
-    NormalizedCfa,          // after the lower bound, divided by the effective white (CV_32FC1), before the gains
+    NormalizedCfa,          // divided by the effective white (CV_32FC1), before the gains; A clips at 0 first
     PreDemosaicCfa,         // the mosaic RCD reads (CV_32FC1, white 1)
     PostDemosaicCameraRgb,  // RCD before the median (CV_32FC3)
-    PostMedianCameraRgb     // after the median, the development's output (CV_32FC3)
+    PreOutputCameraRgb,     // after the median, before the output's bound and grid (CV_32FC3)
+    PostMedianCameraRgb     // the development's output (CV_32FC3)
 };
 
 struct Context
@@ -35,7 +44,7 @@ struct Context
     double white = 0.0;              // effective white, counts (after the data adjustment)
     double divisor = 0.0;            // counts dividing the black-subtracted values
     std::array<double, 4> gains{};   // white-balance gains applied, smallest 1
-    const char *policy = "A: black clipped at 0, gains truncated to the 16-bit grid, output on the 16-bit grid";
+    Policy policy = Policy::LibRawParity;
 };
 
 struct Capture
@@ -52,6 +61,7 @@ struct Options
     // LibRaw lowers the white to the data maximum when it lies above this share of
     // it; 0 keeps the white as given (IPR's calibration sets it).
     double adjustWhiteThreshold = 0.75;
+    Policy policy = Policy::LibRawParity;
     Demosaic::ChromaMedian median = Demosaic::OpeningMedian;
     std::function<bool()> cancelled;
     // The comparison bench's observer: called once per stage, after it, on the

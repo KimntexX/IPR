@@ -78,7 +78,8 @@ int main()
         ok &= check(stages == std::vector<RawDevelopment::Stage>{
                                   RawDevelopment::Stage::UnpackedCfa, RawDevelopment::Stage::BlackSubtractedCfa,
                                   RawDevelopment::Stage::NormalizedCfa, RawDevelopment::Stage::PreDemosaicCfa,
-                                  RawDevelopment::Stage::PostDemosaicCameraRgb, RawDevelopment::Stage::PostMedianCameraRgb},
+                                  RawDevelopment::Stage::PostDemosaicCameraRgb, RawDevelopment::Stage::PreOutputCameraRgb,
+                                  RawDevelopment::Stage::PostMedianCameraRgb},
                     "each stage is observed once, in order");
         ok &= check(std::abs(result.gains[2] - 1611.0 / 1024.0) < 1e-12 && result.gains[1] == 1.0,
                     "the gains are the multipliers over the smallest");
@@ -127,6 +128,37 @@ int main()
         ok &= check(result.cameraRgb.type() == CV_32FC3 && result.cameraRgb.size() == cv::Size(48, 40),
                     "the output is camera RGB at the mosaic's size");
         ok &= check(worst <= 1.0 && onGrid, "a uniform colour is reproduced on the 16-bit grid");
+    }
+    {
+        // Policy B: the values below the black reach the demosaic, without the 16-bit grid.
+        RawInput::Input input = sample();
+        for (int y = 16; y < 24; ++y)
+            for (int x = 16; x < 24; ++x) input.mosaic.at<std::uint16_t>(y, x) = 1900;   // below the black
+        auto options = calibrated();
+        options.policy = RawDevelopment::Policy::Signed;
+        cv::Mat preDemosaic, preOutput;
+        RawDevelopment::Policy observed = RawDevelopment::Policy::LibRawParity;
+        options.observer = [&](const RawDevelopment::Capture &c) {
+            observed = c.context.policy;
+            if (c.stage == RawDevelopment::Stage::PreDemosaicCfa) preDemosaic = c.pixels.clone();
+            if (c.stage == RawDevelopment::Stage::PreOutputCameraRgb) preOutput = c.pixels.clone();
+        };
+        const auto signedResult = RawDevelopment::develop(input, options);
+        ok &= check(observed == RawDevelopment::Policy::Signed, "the captures name the policy");
+        ok &= check(std::abs(preDemosaic.at<float>(17, 17) - float(-148.0 * (1611.0 / 1024.0) / 9174.0)) < 1e-7f,
+                    "B keeps the signed value, scaled without the grid");
+        ok &= check(std::abs(counts(preDemosaic, 0, 0) - 952.f * float(2076.0 / 1024.0 * 65535.0 / 9174.0)) < 0.02f,
+                    "B scales as A before the truncation");
+        double low = 0.0, high = 0.0;
+        cv::minMaxLoc(preOutput(cv::Rect(18, 18, 4, 4)).reshape(1), nullptr, &high);
+        ok &= check(high < 0.0, "B keeps every colour signed through RCD below the black");
+        cv::minMaxLoc(signedResult.cameraRgb.reshape(1), &low, &high);
+        ok &= check(cv::checkRange(signedResult.cameraRgb) && low >= 0.0 && high <= 1.0, "B's output lies in [0, 1]");
+        const auto parityResult = RawDevelopment::develop(sample(), calibrated());
+        options.observer = {};
+        const auto uniform = RawDevelopment::develop(sample(), options);
+        ok &= check(cv::norm(parityResult.cameraRgb, uniform.cameraRgb, cv::NORM_INF) < 2.0 / 65535.0,
+                    "away from the black, B differs from A by the grid only");
     }
     {
         auto options = calibrated();

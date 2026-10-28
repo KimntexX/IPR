@@ -53,16 +53,16 @@ int main()
     cv::Mat rgb, before;
     for (const Demosaic::Pattern &p : {Rggb, Demosaic::Pattern{{{2, 1}, {1, 0}}},
                                        Demosaic::Pattern{{{1, 0}, {2, 1}}}, Demosaic::Pattern{{{1, 2}, {0, 1}}}}) {
-        if (!check(Demosaic::interpolate(mosaic(w, h, p, flat), p, Demosaic::ChromaMedian::Off, rgb, nullptr, {}),
+        if (!check(Demosaic::interpolate(mosaic(w, h, p, flat), p, Demosaic::ChromaMedian::Off, Demosaic::Range::NonNegative, rgb, nullptr, {}),
                    "interpolation completes")) return 1;
         if (!check(rgb.size() == cv::Size(w, h) && rgb.type() == CV_32FC3 && maxError(rgb, flat, 0) < 2.0 / 65535.0,
                    "a uniform colour is reconstructed exactly, borders and tile seams included")) return 1;
     }
-    Demosaic::interpolate(mosaic(w, h, Rggb, gradient), Rggb, Demosaic::ChromaMedian::FlatOnly, rgb, nullptr, {});
+    Demosaic::interpolate(mosaic(w, h, Rggb, gradient), Rggb, Demosaic::ChromaMedian::FlatOnly, Demosaic::Range::NonNegative, rgb, nullptr, {});
     if (!check(maxError(rgb, gradient, 8) < 0.002, "a smooth gradient stays within 0.2 %")) return 1;
     {
         // A grey step must not gain colour beyond the two pixels next to it.
-        Demosaic::interpolate(mosaic(w, h, Rggb, greyEdge), Rggb, Demosaic::ChromaMedian::Off, rgb, nullptr, {});
+        Demosaic::interpolate(mosaic(w, h, Rggb, greyEdge), Rggb, Demosaic::ChromaMedian::Off, Demosaic::Range::NonNegative, rgb, nullptr, {});
         double worst = 0;
         for (int y = 8; y < h - 8; ++y)
             for (int x = 8; x < w - 8; ++x) {
@@ -73,15 +73,27 @@ int main()
         if (!check(worst < 1e-3, "no false colour away from a grey edge")) return 1;
     }
     // The interpolation before the median, for the development's captures.
-    Demosaic::interpolate(mosaic(w, h, Rggb, noisy), Rggb, Demosaic::ChromaMedian::Off, rgb, &before, {});
+    Demosaic::interpolate(mosaic(w, h, Rggb, noisy), Rggb, Demosaic::ChromaMedian::Off, Demosaic::Range::NonNegative, rgb, &before, {});
     if (!check(cv::norm(rgb, before, cv::NORM_INF) == 0, "without median the capture before it is the output")) return 1;
-    Demosaic::interpolate(mosaic(w, h, Rggb, noisy), Rggb, Demosaic::ChromaMedian::FlatOnly, rgb, &before, {});
+    Demosaic::interpolate(mosaic(w, h, Rggb, noisy), Rggb, Demosaic::ChromaMedian::FlatOnly, Demosaic::Range::NonNegative, rgb, &before, {});
     if (!check(cv::norm(rgb, before, cv::NORM_INF) > 0, "the median changes the output, not the capture before it")) return 1;
-    if (!check(!Demosaic::interpolate(mosaic(w, h, Rggb, flat), Rggb, Demosaic::ChromaMedian::Off, rgb, nullptr,
+    {
+        // A signed mosaic keeps its negative values through RCD and the median; the
+        // non-negative range bounds the interpolated ones at 0.
+        cv::Mat dark(h, w, CV_32FC1, cv::Scalar(-0.01f));
+        Demosaic::interpolate(dark, Rggb, Demosaic::ChromaMedian::FlatOnly, Demosaic::Range::Signed, rgb, nullptr, {});
+        double low = 0, high = 0;
+        cv::minMaxLoc(rgb.reshape(1), &low, &high);
+        if (!check(std::abs(low + 0.01) < 1e-6 && std::abs(high + 0.01) < 1e-6, "a signed uniform mosaic stays signed")) return 1;
+        Demosaic::interpolate(dark, Rggb, Demosaic::ChromaMedian::FlatOnly, Demosaic::Range::NonNegative, rgb, nullptr, {});
+        if (!check(rgb.at<cv::Vec3f>(100, 100)[1] == 0.f || rgb.at<cv::Vec3f>(100, 101)[1] == 0.f,
+                   "the non-negative range bounds the interpolated values")) return 1;
+    }
+    if (!check(!Demosaic::interpolate(mosaic(w, h, Rggb, flat), Rggb, Demosaic::ChromaMedian::Off, Demosaic::Range::NonNegative, rgb, nullptr,
                                       [] { return true; }), "cancellation is reported")) return 1;
-    if (!check(!Demosaic::interpolate(cv::Mat(), Rggb, Demosaic::ChromaMedian::Off, rgb, nullptr, {}) &&
-                   !Demosaic::interpolate(cv::Mat(1, 1, CV_32FC1), Rggb, Demosaic::ChromaMedian::Off, rgb, nullptr, {}) &&
-                   !Demosaic::interpolate(cv::Mat(8, 8, CV_16UC1), Rggb, Demosaic::ChromaMedian::Off, rgb, nullptr, {}),
+    if (!check(!Demosaic::interpolate(cv::Mat(), Rggb, Demosaic::ChromaMedian::Off, Demosaic::Range::NonNegative, rgb, nullptr, {}) &&
+                   !Demosaic::interpolate(cv::Mat(1, 1, CV_32FC1), Rggb, Demosaic::ChromaMedian::Off, Demosaic::Range::NonNegative, rgb, nullptr, {}) &&
+                   !Demosaic::interpolate(cv::Mat(8, 8, CV_16UC1), Rggb, Demosaic::ChromaMedian::Off, Demosaic::Range::NonNegative, rgb, nullptr, {}),
                "missing, degenerate or 16-bit mosaics are refused")) return 1;
     return 0;
 }
