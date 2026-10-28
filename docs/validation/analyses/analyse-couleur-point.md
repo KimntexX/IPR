@@ -60,6 +60,31 @@ Par source (v002) : 0064 0,12 ; 9539 0,15 ; 0327 0,17 ; 9112 0,40 ; 0032 0,46 ;
 Lightroom ne change presque rien, un faible changement d'IPR pèse lourd dans ce
 rapport. Mémoires : `etude-couleur-point-ipr-v001`, `-v002`.
 
+## Correctifs du 28 octobre 2026 (comparaison v003)
+
+Lightroom écrit sa source dans son propre espace, avant le rendu que portent les
+exports : l'étude TSV v002 ajuste le centre du voisinage (décalage croissant avec
+la teinte, jusqu'à 0,2 rad pour le bleu ; valeur décalée pour les sources sombres)
+et les trapèzes autour de lui. La variance agit aussi sur l'écart de valeur
+(environ +0,17 à +100, −0,05 à −100). La comparaison utilise ces centres et
+ajoute une part non expliquée **poolée** (sommes de carrés sur les exports d'un
+groupe), que les scènes où Lightroom ne change presque rien ne dominent plus.
+
+| v003 | Poolée | Médiane | Amplitude IPR/LR |
+| --- | --- | --- | --- |
+| Gamme | 0,06 | 0,23 | 1,06 |
+| Saturation | 0,07 | 0,17 | 1,03 |
+| Luminance | 0,10 | 0,14 | 1,04 |
+| Teinte | 0,12 | 0,15 | 1,01 |
+| Variance | 0,49 | 0,36 | 1,15 |
+
+Par source (poolée) : 9141 bleu 0,006 ; 0064, 0327, 9539, 0032 de 0,13 à 0,16 ;
+9112 rouge 0,23. Variance : V−50/−100 0,28, V+50/+100 0,55–0,60 avec une amplitude
+IPR 1,22–1,26. Le gain de l'écart de teinte croît comme le poids (gain/poids
+0,8–0,9 de 0,1 à 0,9), le surplus de la variance positive vient donc d'ailleurs
+(étalement en saturation ou en valeur) : à étudier. Mémoires :
+`etude-couleur-point-tsv-v002`, `etude-couleur-point-ipr-v003`.
+
 ## Limites et suite
 
 - Réponses des curseurs mesurées sur 0327 seule (sauf teinte, identique partout) ;
