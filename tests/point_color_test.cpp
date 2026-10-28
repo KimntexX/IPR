@@ -140,6 +140,11 @@ bool variance()
     const double spread = hueDifference(adjusted(neighbour, single(point))[0], Orange[0]);
     bool ok = check(gathered > 0.0 && gathered < 0.05, "negative variance gathers the hues toward the source");
     ok &= check(spread > 0.15, "positive variance spreads the hues");
+    const PointColor::Hsv lighter{Orange[0], Orange[1], 0.25};
+    point.variance = 100;
+    ok &= check(adjusted(lighter, single(point))[2] > 0.25, "positive variance spreads the values too");
+    point.variance = -100;
+    ok &= check(adjusted(lighter, single(point))[2] < 0.25, "negative variance gathers the values");
     ok &= check(std::abs(hueDifference(adjusted(Orange, single(point))[0], Orange[0])) < 1e-9,
                 "the source itself does not move");
     return ok;

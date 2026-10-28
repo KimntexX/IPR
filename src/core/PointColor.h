@@ -9,14 +9,17 @@
 // hue, saturation and value of the colours near it, in the HSV of linear ProPhoto
 // RGB, where Lightroom's exports show it acts (saturation at constant value). The
 // range widens the neighbourhood; the variance spreads or gathers the colours
-// inside it. Points act in the order they were picked, and overlapping points
-// share their reach. Neighbourhood and responses are fitted on Lightroom exports
-// (PointColor.cpp, docs/validation/protocols/protocole-couleur-point.md).
+// inside it (hue, saturation and value). Points act in the order they were
+// picked, and overlapping points share their reach. Neighbourhood and responses
+// are fitted on Lightroom exports (PointColor.cpp,
+// docs/validation/protocols/protocole-couleur-point.md).
 namespace PointColor {
 inline constexpr size_t MaxPoints = 8;
 
 // Hue (radians, hexcone, [0, 2 pi)), saturation (max - min) / max and value max of
-// a linear ProPhoto RGB colour: the three numbers Lightroom writes for a source.
+// a linear ProPhoto RGB colour of the rendered image. Lightroom writes a source in
+// the same form but in its own space, ahead of its rendering: its numbers are near,
+// not equal (the studies fit the offset).
 using Hsv = cv::Vec3d;
 
 struct Point {

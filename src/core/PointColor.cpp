@@ -13,16 +13,17 @@ constexpr double NearGreySaturation = 0.02;
 // Lightroom centres its luminance sub-range on the value encoded with this gamma.
 constexpr double ValueGamma = 1.0 / 2.2;
 
-// Measured on Lightroom exports (docs/validation/raw/etude-couleur-point-tsv-v001-*.json).
-// Neighbourhood: a trapezoid per axis, 1 within the plateau, linear to 0 over the
-// ramp; median of six sources over 28 scenes, per range slider value.
+// Measured on Lightroom exports (docs/validation/raw/etude-couleur-point-tsv-v002-*.json).
+// Neighbourhood: a trapezoid per axis around the picked colour, 1 within the
+// plateau, linear to 0 over the ramp; median of six sources over 28 scenes, per
+// range slider value.
 constexpr double Ranges[] = {0, 25, 50, 75, 100};
-constexpr double HuePlateau[] = {0.1613, 0.1812, 0.2086, 0.2139, 0.2254};    // radians
-constexpr double HueRamp[] = {0.4909, 0.5292, 0.5645, 0.5558, 0.5465};
-constexpr double SaturationPlateau[] = {0.0740, 0.1238, 0.1895, 0.2289, 0.2679};
-constexpr double SaturationRamp[] = {0.2329, 0.3105, 0.4052, 0.3818, 0.3548};
-constexpr double ValuePlateau[] = {0.0836, 0.1235, 0.1568, 0.1843, 0.1986};  // on value^(1/2.2)
-constexpr double ValueRamp[] = {0.2583, 0.2930, 0.4081, 0.4095, 0.4017};
+constexpr double HuePlateau[] = {0.1643, 0.1896, 0.2369, 0.2544, 0.2659};    // radians
+constexpr double HueRamp[] = {0.4635, 0.5048, 0.5343, 0.5340, 0.5304};
+constexpr double SaturationPlateau[] = {0.0965, 0.1260, 0.1673, 0.2067, 0.2445};
+constexpr double SaturationRamp[] = {0.2135, 0.2729, 0.3698, 0.3496, 0.3261};
+constexpr double ValuePlateau[] = {0.1349, 0.1675, 0.1987, 0.2122, 0.2269};  // on value^(1/2.2)
+constexpr double ValueRamp[] = {0.2339, 0.2314, 0.2923, 0.2996, 0.2909};
 // Change of the source colour itself (weight 1) per slider value, source 6V1A0327;
 // the hue turn is the same on all six sources.
 constexpr double Shifts[] = {0, 25, 50, 100};
@@ -32,12 +33,14 @@ constexpr double SaturationGainUp[] = {0, 0.2091, 0.3825, 0.6299};              
 constexpr double SaturationGainDown[] = {0, -0.1995, -0.3580, -0.6420};         // -100 keeps 52.6 %
 constexpr double ValueGainUp[] = {0, 0.2224, 0.4208, 0.7870};                   // log value
 constexpr double ValueGainDown[] = {0, -0.2097, -0.3922, -0.6955};
-// Variance: gain of the deviation from the source, in hue and in saturation.
+// Variance: gain of the deviation from the source, in hue, saturation and value^(1/2.2).
 constexpr double Variances[] = {0, 50, 100};
-constexpr double HueSpreadUp[] = {0, 0.4055, 0.8115};
-constexpr double HueSpreadDown[] = {0, -0.3994, -0.7975};
-constexpr double SaturationSpreadUp[] = {0, 0.3315, 0.6642};
-constexpr double SaturationSpreadDown[] = {0, -0.2437, -0.4877};
+constexpr double HueSpreadUp[] = {0, 0.4337, 0.8685};
+constexpr double HueSpreadDown[] = {0, -0.4272, -0.8530};
+constexpr double SaturationSpreadUp[] = {0, 0.3358, 0.6727};
+constexpr double SaturationSpreadDown[] = {0, -0.2470, -0.4943};
+constexpr double ValueSpreadUp[] = {0, 0.0826, 0.1662};
+constexpr double ValueSpreadDown[] = {0, -0.0250, -0.0498};
 
 // Piecewise linear over measured points, constant beyond the last one.
 template <size_t N>
@@ -155,7 +158,7 @@ void adjust(cv::Vec3d &workingRgb, const Parameters &parameters)
         const double w = weight(colour, point) * share;
         if (w <= 0.0) continue;
         const double variance = clampSlider(point.variance);
-        // Variance scales the deviation from the source, in hue and in saturation.
+        // Variance scales the deviation from the source, in hue, saturation and value.
         double hue = colour[0] + w * response(Shifts, HueTurnUp, HueTurnDown, clampSlider(point.hueShift));
         if (point.source[1] >= NearGreySaturation)
             hue += w * response(Variances, HueSpreadUp, HueSpreadDown, variance)
@@ -164,7 +167,10 @@ void adjust(cv::Vec3d &workingRgb, const Parameters &parameters)
                                             * (colour[1] - point.source[1]);
         saturation = std::max(0.0, saturation)
                      * std::exp(w * response(Shifts, SaturationGainUp, SaturationGainDown, clampSlider(point.saturationShift)));
-        const double value = colour[2]
+        const double sourceValue = encodedValue(point.source[2]);
+        const double spreadValue = sourceValue + (1.0 + w * response(Variances, ValueSpreadUp, ValueSpreadDown, variance))
+                                                     * (encodedValue(colour[2]) - sourceValue);
+        const double value = std::pow(std::max(spreadValue, 0.0), 1.0 / ValueGamma)
                              * std::exp(w * response(Shifts, ValueGainUp, ValueGainDown, clampSlider(point.luminanceShift)));
         colour = {std::fmod(std::fmod(hue, 2.0 * Pi) + 2.0 * Pi, 2.0 * Pi), saturation, value};
     }

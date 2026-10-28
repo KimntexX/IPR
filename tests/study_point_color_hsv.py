@@ -10,12 +10,14 @@ in that space. Exports of couleur-point against the neutral of the same geometry
   1 - S/S0 at range 50 over all scenes (S0 above 0.05).
 - Neighbourhood per source and range: w = k T_h(dH) T_s(dS) T_v(dV), each T a
   symmetric trapezoid (1 on a plateau of half-width p, linear to 0 over a ramp r),
-  dH the hue difference (radians), dS = S - S_source, dV = V^(1/2.2) - V_source^(1/2.2)
-  (Lightroom's luminance sub-range is centred there). Least squares on a fixed
-  random sample, RMS residual and leave-one-scene-out RMS.
+  dH the hue difference (radians), dS = S - S_centre, dV = V^(1/2.2) - V_centre^(1/2.2)
+  (Lightroom's luminance sub-range is centred there). The centre is Lightroom's
+  source plus three fitted offsets: Lightroom writes its source in its own space,
+  ahead of the rendering the exports carry. Least squares on a fixed random sample,
+  RMS residual and leave-one-scene-out RMS.
 - Responses at range 50, change at w = 1 by least squares through the origin:
   hue shift (radians), log saturation gain, log value gain; variance as the gain of
-  the hue deviation and of the saturation deviation from the source.
+  the hue, saturation and V^(1/2.2) deviations from the centre fitted at range 50.
 - Source check: the median HSV of the pixels at w >= 0.9 against Lightroom's numbers.
 
 Pixels with a channel above 0.98 in the neutral or the state are left out; a
@@ -81,13 +83,15 @@ def trapezoid(d, plateau, ramp):
 
 
 def predict(d, p):
-    k, ph, rh, ps, rs, pv, rv = p
-    return k * trapezoid(d[0], ph, rh) * trapezoid(d[1], ps, rs) * trapezoid(d[2], pv, rv)
+    """p: scale, centre offsets (hue, saturation, encoded value), then plateau and ramp per axis."""
+    k, oh, os_, ov, ph, rh, ps, rs, pv, rv = p
+    return (k * trapezoid(hue_difference(d[0], oh), ph, rh) * trapezoid(d[1] - os_, ps, rs)
+            * trapezoid(d[2] - ov, pv, rv))
 
 
 def fit(d, w, start):
-    lower = [0.5, 0.0, 0.01, 0.0, 0.01, 0.0, 0.01]
-    upper = [1.5, 3.0, 3.0, 1.0, 2.0, 1.0, 2.0]
+    lower = [0.5, -0.5, -0.4, -0.4, 0.0, 0.01, 0.0, 0.01, 0.0, 0.01]
+    upper = [1.5, 0.5, 0.4, 0.4, 3.0, 3.0, 1.0, 2.0, 1.0, 2.0]
     return least_squares(lambda p: predict(d, p) - w, np.clip(start, lower, upper), bounds=(lower, upper),
                          x_scale="jac").x
 
@@ -166,7 +170,7 @@ def main(argv=None):
             d, w, scene_of = d[:, ok], w[ok], scene_of[ok]
             pick = rng.choice(len(w), size=min(SAMPLE, len(w)), replace=False)
             d, w, scene_of = d[:, pick], w[pick], scene_of[pick]
-            parameters = fit(d, w, [1.0, 0.3, 0.5, 0.18, 0.55, 0.18, 0.55])
+            parameters = fit(d, w, [1.0, 0.0, 0.0, 0.0, 0.2, 0.55, 0.19, 0.4, 0.16, 0.4])
             held = []
             for scene in names[::4]:
                 test = scene_of == scene
@@ -176,12 +180,20 @@ def main(argv=None):
                 held.append(rms(d[:, test], w[test], p))
             record["ranges"][str(range_)] = {
                 "scenes": len(names), "scale": round(float(parameters[0]), 4),
-                "hue_plateau_ramp": [round(float(v), 4) for v in parameters[1:3]],
-                "saturation_plateau_ramp": [round(float(v), 4) for v in parameters[3:5]],
-                "value_plateau_ramp": [round(float(v), 4) for v in parameters[5:7]],
+                "centre_offsets": [round(float(v), 4) for v in parameters[1:4]],
+                "hue_plateau_ramp": [round(float(v), 4) for v in parameters[4:6]],
+                "saturation_plateau_ramp": [round(float(v), 4) for v in parameters[6:8]],
+                "value_plateau_ramp": [round(float(v), 4) for v in parameters[8:10]],
                 "rms": round(rms(d, w, parameters), 5),
                 "held_out_rms_median": round(float(np.median(held)), 5) if held else None}
             print(f"{label} G{range_}: {record['ranges'][str(range_)]}", flush=True)
+        # The neighbourhood's centre, in IPR's HSV of the rendered image: from the range 50 fit.
+        centre = list(source)
+        if "50" in record["ranges"]:
+            oh, os_, ov = record["ranges"]["50"]["centre_offsets"]
+            encoded = max(source[2], 0.0) ** (1 / 2.2) + ov
+            centre = [float((source[0] + oh) % (2 * np.pi)), source[1] + os_, max(encoded, 0.0) ** 2.2]
+        record["centre_hsv"] = [round(v, 5) for v in centre]
         for key, scenes in sorted(states.items()):
             moved = single_slider(dict(zip(("hue", "saturation", "luminance", "variance", "range"), key)))
             if moved is None or moved == ("saturation", -100):
@@ -204,12 +216,16 @@ def main(argv=None):
                 entry["log_value"] = slope(w, np.log(np.maximum(v1, 1e-6) / np.maximum(v0, 1e-6)))
                 entry["log_saturation"] = slope(w, np.where(chromatic, np.log(np.maximum(s1, 1e-6) / s0), np.nan))
             else:
-                dh0, dh1 = hue_difference(h0, source[0]), hue_difference(h1, source[0])
-                ds0, ds1 = s0 - source[1], s1 - source[1]
+                dh0, dh1 = hue_difference(h0, centre[0]), hue_difference(h1, centre[0])
+                ds0, ds1 = s0 - centre[1], s1 - centre[1]
+                ec = max(centre[2], 0) ** (1 / 2.2)
+                dv0, dv1 = np.maximum(v0, 0) ** (1 / 2.2) - ec, np.maximum(v1, 0) ** (1 / 2.2) - ec
                 okh = chromatic & (np.abs(dh0) > 0.03)
                 oks = chromatic & (np.abs(ds0) > 0.03)
+                okv = chromatic & (np.abs(dv0) > 0.03)
                 entry["hue_deviation_gain"] = slope(w, np.where(okh, dh1 / np.where(okh, dh0, 1.0) - 1.0, np.nan))
                 entry["saturation_deviation_gain"] = slope(w, np.where(oks, ds1 / np.where(oks, ds0, 1.0) - 1.0, np.nan))
+                entry["value_deviation_gain"] = slope(w, np.where(okv, dv1 / np.where(okv, dv0, 1.0) - 1.0, np.nan))
             record["responses"].setdefault(component, {})[str(value)] = entry
         results[label] = record
         print(f"{label}: core HSV {record['core_pixels_hsv_median']}; responses {record['responses']}", flush=True)
@@ -217,7 +233,7 @@ def main(argv=None):
     out = {"campaign_id": campaign, "runner": "tests/study_point_color_hsv.py",
            "commit": git("rev-parse", "HEAD"), "local_changes": git("status", "--short").splitlines(),
            "space": "HSV of linear ProPhoto RGB (D50, Bradford from sRGB D65); hue in radians",
-           "model": "w = k T_h(dH) T_s(dS) T_v(dV), symmetric trapezoids; dV on V^(1/2.2)",
+           "model": "w = k T_h(dH) T_s(dS) T_v(dV), symmetric trapezoids around a fitted centre; dV on V^(1/2.2)",
            "sample_stride": STRIDE, "sample_pixels": SAMPLE, "seed": 20261028,
            "duration_seconds": round(time.monotonic() - start, 1), "python": platform.python_version(),
            "sources": results}
