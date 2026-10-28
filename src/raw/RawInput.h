@@ -19,7 +19,8 @@ enum Colour { Red = 0, Green = 1, Blue = 2, Green2 = 3 };
 
 struct Input
 {
-    cv::Mat mosaic;                                // CV_16UC1, visible area only, sensor counts
+    cv::Mat mosaic;                                // CV_16UC1, visible area only, sensor counts (owned copy)
+    cv::Point origin;                              // the visible area's top-left corner in the sensor frame (margins)
     std::array<std::array<int, 2>, 2> pattern{};  // Colour of each site of the 2x2 cell, row then column
     std::array<double, 4> black{};                 // per Colour, counts (IPR's optical black reading applied)
     bool spatialBlack = false;                     // the decoder declares a black varying across the cell grid

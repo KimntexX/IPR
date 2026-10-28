@@ -15,7 +15,8 @@ RawInput::Input read(const LibRaw &raw)
         return input;
     const auto &s = d.sizes;
     const cv::Mat sensor(int(s.raw_height), int(s.raw_width), CV_16UC1, d.rawdata.raw_image, size_t(s.raw_pitch));
-    input.mosaic = sensor(cv::Rect(int(s.left_margin), int(s.top_margin), int(s.width), int(s.height))).clone();
+    input.origin = cv::Point(int(s.left_margin), int(s.top_margin));
+    input.mosaic = sensor(cv::Rect(input.origin, cv::Size(int(s.width), int(s.height)))).clone();
     // Colour of each site of the visible 2x2 cell, as LibRaw's FC(): 3 is the cell's second green.
     for (int y = 0; y < 2; ++y)
         for (int x = 0; x < 2; ++x)

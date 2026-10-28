@@ -21,6 +21,7 @@ Result develop(const RawInput::Input &input, const Options &options)
     const auto &pattern = input.pattern;
     const auto colourAt = [&](int y, int x) { return pattern[size_t(y & 1)][size_t(x & 1)]; };
     Context context;
+    context.origin = input.origin;
     context.black = input.black;
     context.white = input.white;
     const auto observe = [&](Stage stage, const cv::Mat &pixels, bool mosaic) {

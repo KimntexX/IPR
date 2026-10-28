@@ -20,6 +20,7 @@ RawInput::Input sample(int width = 48, int height = 40)
     input.black = {2048, 2048, 2048, 2048};
     input.white = 11222;
     input.asShotMultipliers = {2076, 1024, 1611, 1024};
+    input.origin = cv::Point(36, 12);
     input.mosaic = cv::Mat(height, width, CV_16UC1);
     const std::uint16_t counts[4] = {3000, 5000, 3838, 5000};   // per RawInput::Colour
     for (int y = 0; y < height; ++y)
@@ -60,6 +61,7 @@ int main()
         std::vector<RawDevelopment::Stage> stages;
         cv::Mat signedCounts, normalized, preDemosaic;
         double divisor = 0.0;
+        cv::Point origin;
         auto options = calibrated();
         options.observer = [&](const RawDevelopment::Capture &c) {
             stages.push_back(c.stage);
@@ -68,6 +70,7 @@ int main()
             if (c.stage == RawDevelopment::Stage::PreDemosaicCfa) {
                 preDemosaic = c.pixels.clone();
                 divisor = c.context.divisor;
+                origin = c.context.origin;
             }
         };
         const auto result = RawDevelopment::develop(input, options);
@@ -80,6 +83,7 @@ int main()
         ok &= check(std::abs(result.gains[2] - 1611.0 / 1024.0) < 1e-12 && result.gains[1] == 1.0,
                     "the gains are the multipliers over the smallest");
         ok &= check(divisor == 9174.0, "the calibrated white keeps the divisor white - black");
+        ok &= check(origin == cv::Point(36, 12), "the captures carry the visible area's origin");
         ok &= check(counts(preDemosaic, 1, 1) == 20117.f && counts(preDemosaic, 1, 3) == 55687.f &&
                         counts(preDemosaic, 1, 5) == 61576.f && counts(preDemosaic, 1, 7) == 65535.f,
                     "the scaled counts match LibRaw's, the top clipped");
