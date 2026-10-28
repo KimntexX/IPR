@@ -18,6 +18,9 @@ Usage: python scripts/make_lr_presets.py [--controls highlights shadows ...]
        python scripts/make_lr_presets.py --controls grading-blend   (38 blending and balance states)
        python scripts/make_lr_presets.py --controls grading-luminance   (58 luminance and global states)
        python scripts/make_lr_presets.py --controls curves   (36 point curve states)
+       python scripts/make_lr_presets.py --controls exposure-contrast   (20 intermediate states)
+       python scripts/make_lr_presets.py --controls white-balance   (15 temperature and tint states)
+       python scripts/make_lr_presets.py --controls sharpening   (16 states on a full-resolution centre crop)
            (grain at Lightroom's default size 25 and roughness 50)
 """
 import argparse
@@ -131,8 +134,39 @@ CURVE_STATES = (
     + [(f"{label} Q064+32", {field: _through((64, 96))}) for label, field in CURVE_FIELDS[1:]]
     + [(f"{label} Q192-32", {field: _through((192, 160))}) for label, field in CURVE_FIELDS[1:]])
 CURVES = ("IPR Courbes", "IPR-Courbes-presets.zip")
+# Campaigns of the beta validation: (group, archive, states), each state (label, {field: value}).
+# Exposure and contrast at intermediate values; neutral: grading/neutre.
+EXPOSURE_CONTRAST = [(f"Exposition {v:+.2f}", {"Exposure2012": f"{v:+.2f}"})
+                     for v in (-2.0, -1.5, -1.0, -0.5, -0.25, 0.25, 0.5, 1.0, 1.5, 2.0)] +                     [(f"Contraste {v:+d}", {"Contrast2012": f"{v:+d}"}) for v in (-100, -75, -50, -25, -10, 10, 25, 50, 75, 100)]
+# White balance as the colour protocol: manual anchor 5200 K / tint 0 (not Lightroom's As Shot);
+# temperature at tint 0, tint at 5200 K.
+WHITE_BALANCE = [(f"Temperature {k}", {"WhiteBalance": "Custom", "Temperature": str(k), "Tint": "0"})
+                 for k in (2800, 3500, 4300, 5200, 6000, 7500, 10000)] +                 [(f"Nuance {t:+d}", {"WhiteBalance": "Custom", "Temperature": "5200", "Tint": f"{t:+d}"})
+                 for t in (-100, -50, -25, -10, 10, 25, 50, 100)]
+# Sharpening on the centre sixteenth of the frame, exported at full resolution (a 2048-pixel
+# export would wash the sharpening out); the neutral is the same crop at amount 0. Lightroom's
+# defaults: radius 1.0, detail 25, masking 0.
+SHARPENING_CROP = {"HasCrop": "True", "CropTop": "0.375", "CropLeft": "0.375", "CropBottom": "0.625",
+                   "CropRight": "0.625", "CropAngle": "0", "CropConstrainToWarp": "0"}
+
+
+def _sharpening(amount, radius=1.0, detail=25, masking=0):
+    return {**SHARPENING_CROP, "Sharpness": str(amount), "SharpenRadius": f"{radius:+.1f}",
+            "SharpenDetail": str(detail), "SharpenEdgeMasking": str(masking)}
+
+
+SHARPENING = ([("Nettete neutre", _sharpening(0))]
+              + [(f"Nettete gain {a}", _sharpening(a)) for a in (25, 50, 75, 100, 150)]
+              + [(f"Nettete rayon {r:.1f}", _sharpening(75, radius=r)) for r in (0.5, 1.5, 2.0, 3.0)]
+              + [(f"Nettete detail {d}", _sharpening(75, detail=d)) for d in (0, 50, 100)]
+              + [(f"Nettete masquage {m}", _sharpening(75, masking=m)) for m in (25, 50, 75)])
+CAMPAIGNS = {"exposure-contrast": ("IPR Exposition contraste", "IPR-Exposition-contraste-presets.zip", EXPOSURE_CONTRAST),
+             "white-balance": ("IPR Balance blancs", "IPR-Balance-blancs-presets.zip", WHITE_BALANCE),
+             "sharpening": ("IPR Nettete", "IPR-Nettete-presets.zip", SHARPENING)}
 # Settings of the current Lightroom neutral references (6V1A0037, 11 October 2026).
 BASELINE = {
+    # No crop unless a campaign sets one: the sharpening crop must not stay on the photo.
+    "HasCrop": "False",
     "WhiteBalance": "As Shot", "CameraProfile": "Camera Neutral", "ConvertToGrayscale": "False",
     "HDREditMode": "0", "Texture": "0", "Clarity2012": "0", "Dehaze": "0", "Vibrance": "0", "Saturation": "0",
     "ParametricShadows": "0", "ParametricDarks": "0", "ParametricLights": "0", "ParametricHighlights": "0",
@@ -167,10 +201,14 @@ def seq(tag, points):
     return f"   <crs:{tag}>\n    <rdf:Seq>\n{items}    </rdf:Seq>\n   </crs:{tag}>\n"
 
 
-def preset(group, control=None, value=None, grading=None, blend=None, fields=None, curves=None):
+def preset(group, control=None, value=None, grading=None, blend=None, fields=None, curves=None, campaign=None):
     settings = dict(BASELINE)
     curve_elements = ""
-    if curves is not None:
+    if campaign is not None:
+        label, values = campaign
+        settings.update(values)
+        name = f"IPR {label}"
+    elif curves is not None:
         label, changed = curves
         # Every point curve explicit, so a preset gives the same state whatever came before.
         settings["ToneCurveName2012"] = "Custom"
@@ -221,18 +259,19 @@ def preset(group, control=None, value=None, grading=None, blend=None, fields=Non
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--controls", nargs="+", default=["highlights"], choices=sorted(LABELS) + ["mixer", "grading", "grading-blend", "grading-luminance", "curves"])
+    parser.add_argument("--controls", nargs="+", default=["highlights"], choices=sorted(LABELS) + ["mixer", "grading", "grading-blend", "grading-luminance", "curves"] + sorted(CAMPAIGNS))
     parser.add_argument("--out", type=Path, default=ROOT / "tests/image/lr-presets")
     args = parser.parse_args()
     grading = "grading" in args.controls
     blend = "grading-blend" in args.controls
     luminance = "grading-luminance" in args.controls
     curves = "curves" in args.controls
-    if (grading or blend or luminance or curves) and len(args.controls) > 1:
+    campaign = next((c for c in args.controls if c in CAMPAIGNS), None)
+    if (grading or blend or luminance or curves or campaign) and len(args.controls) > 1:
         sys.exit("Grading et courbes ont leur propre panneau : --controls grading, grading-blend, "
                  "grading-luminance ou curves seul")
     args.controls = [c for control in args.controls for c in (MIXER if control == "mixer" else [control])]
-    panels = ({GRADING} if grading else {GRADING_BLEND} if blend else {GRADING_LUMINANCE} if luminance
+    panels = ({CAMPAIGNS[campaign][:2]} if campaign else {GRADING} if grading else {GRADING_BLEND} if blend else {GRADING_LUMINANCE} if luminance
               else {CURVES} if curves else {PANELS.get(c, LUMIERES) for c in args.controls})
     if len(panels) > 1:
         sys.exit("Un seul panneau par archive : " + ", ".join(sorted(g for g, _ in panels)))
@@ -241,7 +280,9 @@ def main():
     if archive.exists() or folder.exists():
         sys.exit(f"Existe déjà, rien n'est écrasé : {archive if archive.exists() else folder}")
     folder.mkdir(parents=True)
-    if curves:   # the neutral is the grading campaign's (grading/neutre), same geometry
+    if campaign:
+        presets = [preset(group, campaign=state) for state in CAMPAIGNS[campaign][2]]
+    elif curves:   # the neutral is the grading campaign's (grading/neutre), same geometry
         presets = [preset(group, curves=state) for state in CURVE_STATES]
     elif luminance:   # the neutral is the grading campaign's (grading/neutre)
         presets = [preset(group, fields=state) for state in GRADING_LUMINANCE_STATES]
