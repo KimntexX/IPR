@@ -118,6 +118,16 @@ int main(int argc, char **argv)
                    ColorPipeline::fromLinearSrgb(cv::Mat(1, 1, CV_16UC3), &error).isNull(),
                "RAW input keeps its provenance; integer input is refused"))
         return 1;
+    for (const float bad : {std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::infinity(),
+                            -std::numeric_limits<float>::infinity()}) {
+        const cv::Mat malformed(1, 2, CV_32FC3, cv::Scalar(0.5f, bad, 0.25f));
+        if (!check(ColorPipeline::fromLinearSrgb(malformed, &error).isNull(),
+                   "NaN and infinite RAW samples are refused"))
+            return 1;
+    }
+    if (!check(!ColorPipeline::fromLinearSrgb(cv::Mat(1, 1, CV_32FC3, cv::Scalar(1.3f, -0.2f, 0.f)), &error).isNull(),
+               "values above 1 and below 0 stay accepted"))
+        return 1;
 
     cv::Mat neutralRgb(1, 1, CV_32FC3, cv::Scalar(0.25f, 0.5f, 0.75f));
     WorkingColor::transform(neutralRgb, WorkingColor::fromSrgb());
