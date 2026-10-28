@@ -147,7 +147,8 @@ WorkingImage fromSourceImage(const QImage &source, QString *error)
 WorkingImage fromLinearSrgb(const cv::Mat &rgb, QString *error)
 {
     WorkingImage result;
-    if (rgb.empty() || rgb.type() != CV_32FC3) {
+    // Extended range (negative, above 1) is kept; NaN and infinities are refused.
+    if (rgb.empty() || rgb.type() != CV_32FC3 || !cv::checkRange(rgb)) {
         if (error)
             *error = QStringLiteral("Les données RAW RGB linéaires sont invalides.");
         return result;
