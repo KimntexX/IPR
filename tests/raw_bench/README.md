@@ -61,9 +61,9 @@ python tests/raw_bench/parity.py --input image.CR3 --runtime-dir DLL_QT --runtim
 ```
 
 Les deux chemins partagent les niveaux natifs de LibRaw, WB telle quelle et
-repère capteur sans orientation. Le candidat émet les six étapes I2 ; la
+repère capteur sans orientation. Le candidat émet les sept étapes I2 ; la
 référence capture les frontières réellement observables, sans inventer une
-sortie LibRaw signée ou normalisée intermédiaire. Les cinq frontières communes
+sortie LibRaw signée ou normalisée intermédiaire. Les cinq frontières du banc initial
 sont comparées exactement sur trois ROI256 dans le premier banc C2 : unpack,
 avant RCD, après RCD, après médiane et caméra finale. Le banc courant ajoute
 la sixième frontière commune avant borne de sortie, avec C4 corrigé.
@@ -90,7 +90,7 @@ finale avant DCP ; les comptes16 récupérés doivent rester identiques. Un PASS
 des frontières entières n'est pas une déclaration de bit-parité du f32 final.
 
 Le comparateur indique les étapes hors du périmètre explicitement demandé.
-Un PASS limité aux cinq frontières ne vaut pas PASS de sa liste globale
+Un PASS limité aux frontières caméra ne vaut pas PASS de sa liste globale
 par défaut, qui inclut le rendu Rec.2020. Les erreurs interrompent la campagne
 au premier fichier non conforme et produisent un verdict de portée explicite.
 
