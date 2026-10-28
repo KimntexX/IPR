@@ -84,7 +84,8 @@ Result develop(const RawInput::Input &input, const Options &options)
     for (int y = 0; y < 2; ++y)
         for (int x = 0; x < 2; ++x) bayer[size_t(y)][size_t(x)] = demosaicColour(pattern[size_t(y)][size_t(x)]);
     cv::Mat beforeMedian;
-    if (!Demosaic::interpolate(mosaic, bayer, options.median, result.cameraRgb,
+    const Demosaic::Range range = parity ? Demosaic::Range::NonNegative : Demosaic::Range::Signed;
+    if (!Demosaic::interpolate(mosaic, bayer, options.median, range, result.cameraRgb,
                                options.observer ? &beforeMedian : nullptr, options.cancelled)) {
         result.cameraRgb.release();
         result.error = QStringLiteral("Dématriçage annulé ou impossible.");
@@ -92,6 +93,7 @@ Result develop(const RawInput::Input &input, const Options &options)
     }
     mosaic.release();
     if (options.observer) observe(Stage::PostDemosaicCameraRgb, beforeMedian, false);
+    observe(Stage::PreOutputCameraRgb, result.cameraRgb, false);
     // A: on the 16-bit grid, as LibRaw's image after the interpolation. B: clipped to
     // [0, 1] only, the range of the decoder's 16-bit output.
     result.cameraRgb.forEach<cv::Vec3f>([parity](cv::Vec3f &pixel, const int *) {

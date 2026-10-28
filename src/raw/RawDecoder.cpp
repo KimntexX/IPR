@@ -169,7 +169,7 @@ private:
                 for (int x = 0; x < width; ++x)
                     row[x] = d.image[size_t(y) * size_t(width) + size_t(x)][pattern[size_t(y & 1)][size_t(x & 1)]] / 65535.f;
             }
-            self->m_failed = !Demosaic::interpolate(mosaic, pattern, self->m_median, rgb, nullptr, self->m_cancelled);
+            self->m_failed = !Demosaic::interpolate(mosaic, pattern, self->m_median, Demosaic::Range::NonNegative, rgb, nullptr, self->m_cancelled);
             if (!self->m_failed)
                 for (int y = 0; y < height; ++y) {
                     const auto *row = rgb.ptr<cv::Vec3f>(y);

@@ -141,7 +141,7 @@ void rcdInterpolate(void *context)
     for (int y = 0; y < height; ++y)
         for (int x = 0; x < width; ++x)
             mosaic.at<float>(y, x) = d.image[size_t(y) * size_t(width) + size_t(x)][pattern[size_t(y & 1)][size_t(x & 1)]] / 65535.f;
-    if (Demosaic::interpolate(mosaic, pattern, oursMedian, rgb, nullptr, {}))
+    if (Demosaic::interpolate(mosaic, pattern, oursMedian, Demosaic::Range::NonNegative, rgb, nullptr, {}))
         for (int y = 0; y < height; ++y)
             for (int x = 0; x < width; ++x)
                 for (int c = 0; c < 3; ++c)

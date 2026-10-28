@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <atomic>
 #include <cmath>
+#include <limits>
 #include <thread>
 #include <vector>
 
@@ -34,7 +35,7 @@ float direction(const cv::Mat &vh, int y, int x)
 // neighbour green corrected by half the same-colour difference toward the centre
 // (Laplacian). The ratio alone was softer than Lightroom at ISO 800 to 3200
 // (0.89 to 0.92 of its fine-band energy), the Laplacian alone less accurate.
-void interpolateGreen(const cv::Mat &cfa, const cv::Mat &vh, const cv::Mat &lpf, const Pattern &p, cv::Mat &G)
+void interpolateGreen(const cv::Mat &cfa, const cv::Mat &vh, const cv::Mat &lpf, const Pattern &p, float floor, cv::Mat &G)
 {
     const int H = cfa.rows, W = cfa.cols;
     const auto T = [&](int y, int x) { return cfa.at<float>(y, x); };
@@ -66,14 +67,15 @@ void interpolateGreen(const cv::Mat &cfa, const cv::Mat &vh, const cv::Mat &lpf,
             const float vEst = (sG * nEst + nG * sEst) / (nG + sG);
             const float hEst = (eG * wEst + wG * eEst) / (wG + eG);
             const float d = direction(vh, y, x);
-            G.at<float>(y, x) = std::max(0.f, d * hEst + (1.f - d) * vEst);
+            G.at<float>(y, x) = std::max(floor, d * hEst + (1.f - d) * vEst);
         }
 }
 
 // RCD on a padded tile, values ~[0, 1]: green from ratio-corrected directional
 // estimates, the direction decided per pixel and pulled toward the most decided
 // diagonal neighbour; red and blue from gradient-weighted colour differences.
-cv::Mat rcd(const cv::Mat &cfa, const Pattern &p)
+// Interpolated values are bounded below by floor (0, or -inf to keep them signed).
+cv::Mat rcd(const cv::Mat &cfa, const Pattern &p, float floor)
 {
     const int H = cfa.rows, W = cfa.cols;
     const auto colour = [&](int y, int x) { return p[size_t(y & 1)][size_t(x & 1)]; };
@@ -100,7 +102,7 @@ cv::Mat rcd(const cv::Mat &cfa, const Pattern &p)
             lpf.at<float>(y, x) = T(y, x) + 0.5f * (T(y - 1, x) + T(y + 1, x) + T(y, x - 1) + T(y, x + 1)) +
                                   0.25f * (T(y - 1, x - 1) + T(y - 1, x + 1) + T(y + 1, x - 1) + T(y + 1, x + 1));
     // 3. Green at red and blue pixels.
-    interpolateGreen(cfa, vh, lpf, p, G);
+    interpolateGreen(cfa, vh, lpf, p, floor, G);
     const auto decided = [&](int y, int x) { return direction(vh, y, x); };
     // 4. Red at blue pixels and blue at red pixels: diagonal colour differences.
     cv::Mat R(H, W, CV_32F, cv::Scalar(0.f)), B(H, W, CV_32F, cv::Scalar(0.f));
@@ -127,7 +129,7 @@ cv::Mat rcd(const cv::Mat &cfa, const Pattern &p)
             const float estP = (se * diff(y - 1, x - 1) + nw * diff(y + 1, x + 1)) / (nw + se);
             const float estQ = (sw * diff(y - 1, x + 1) + ne * diff(y + 1, x - 1)) / (ne + sw);
             const float pq = pS / (pS + qS);
-            target.at<float>(y, x) = std::max(0.f, G.at<float>(y, x) + pq * estQ + (1.f - pq) * estP);
+            target.at<float>(y, x) = std::max(floor, G.at<float>(y, x) + pq * estQ + (1.f - pq) * estP);
         }
     // 5. Red and blue at green pixels: cardinal colour differences, direction of step 1.
     for (int y = 8; y < H - 8; ++y)
@@ -143,7 +145,7 @@ cv::Mat rcd(const cv::Mat &cfa, const Pattern &p)
                 const auto diff = [&](int yy, int xx) { return plane->at<float>(yy, xx) - g(yy, xx); };
                 const float v = (gs * diff(y - 1, x) + gn * diff(y + 1, x)) / (gn + gs);
                 const float h = (ge * diff(y, x - 1) + gw * diff(y, x + 1)) / (gw + ge);
-                plane->at<float>(y, x) = std::max(0.f, g(y, x) + d * h + (1.f - d) * v);
+                plane->at<float>(y, x) = std::max(floor, g(y, x) + d * h + (1.f - d) * v);
             }
         }
     cv::Mat rgb;
@@ -188,8 +190,9 @@ cv::Mat flatWeight(const cv::Mat &luma)
     return cv::min(cv::max(weight, 0.f), 1.f);
 }
 
-// One 3x3 median on R - G and B - G where the luminance is flat, green unchanged.
-void flatChromaMedian(cv::Mat &rgb)
+// One 3x3 median on R - G and B - G where the luminance is flat, green unchanged;
+// red and blue bounded below by floor.
+void flatChromaMedian(cv::Mat &rgb, float floor)
 {
     std::vector<cv::Mat> c;
     cv::split(rgb, c);
@@ -198,7 +201,7 @@ void flatChromaMedian(cv::Mat &rgb)
         const cv::Mat diff = c[size_t(k)] - c[1];
         cv::Mat median;
         cv::medianBlur(diff, median, 3);   // not in place
-        c[size_t(k)] = cv::max(median.mul(weight) + diff.mul(1.f - weight) + c[1], 0.f);
+        c[size_t(k)] = cv::max(median.mul(weight) + diff.mul(1.f - weight) + c[1], floor);
     }
     cv::merge(c, rgb);
 }
@@ -211,10 +214,11 @@ int workerThreads()
     return std::clamp(host - 1, 1, MaximumThreads);
 }
 
-bool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian median, cv::Mat &rgb,
+bool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian median, Range range, cv::Mat &rgb,
                  cv::Mat *beforeMedian, const std::function<bool()> &cancelled)
 {
     if (mosaic.type() != CV_32FC1 || mosaic.cols < 2 || mosaic.rows < 2) return false;
+    const float floor = range == Range::NonNegative ? 0.f : -std::numeric_limits<float>::infinity();
     const int width = mosaic.cols, height = mosaic.rows;
     rgb.create(height, width, CV_32FC3);
     if (beforeMedian) beforeMedian->create(height, width, CV_32FC3);
@@ -226,10 +230,10 @@ bool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian med
         cv::Mat padded;
         // real neighbours where they exist, mirrored with the same parity at the border
         cv::copyMakeBorder(mosaic(core), padded, TileMargin, TileMargin, TileMargin, TileMargin, cv::BORDER_REFLECT_101);
-        cv::Mat tile = rcd(padded, pattern);
+        cv::Mat tile = rcd(padded, pattern, floor);
         const cv::Rect inner(TileMargin, TileMargin, core.width, core.height);
         if (beforeMedian) tile(inner).copyTo((*beforeMedian)(core));
-        if (median == ChromaMedian::FlatOnly) flatChromaMedian(tile);
+        if (median == ChromaMedian::FlatOnly) flatChromaMedian(tile, floor);
         tile(inner).copyTo(rgb(core));
     };
     // Tile by tile from a shared counter on a bounded pool, the calling thread
