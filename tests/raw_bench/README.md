@@ -157,7 +157,32 @@ La variance de paires ne capture pas les composantes communes aux deux
 prises ; moyenne, dérive, covariance, zéros et négatifs sont gardés séparés.
 Pour les DN, `at_or_above_one_fraction` n'est pas une fraction au blanc.
 
-## Priorité bruit et limites
+## Qualification de la sortie flottante F1
+
+La sonde de production accepte `--capture-camera` avec un DCP explicite :
+entrée réellement retenue par `CameraSignal`, trois ROI et statistiques/hash
+plein cadre, pas RGB reconstitué depuis Rec.2020. `float_qualification.py`
+vérifie le contrat et, sur les noirs témoins seulement, les négatifs conservés.
+Le chemin sans DCP n'expose pas ce contexte : ne pas fabriquer son entrée.
+
+`production_campaign.py --capture-camera --candidate-signed-api ...` compare
+A de bout en bout et exige aussi l'égalité exacte des entrées DCP. Référence
+figée `ee8f26d`, candidat F1 figé ; même manifeste/profil/source et optiques
+désactivées. `--candidate-signed-api` compile l'API mais **ne sélectionne pas B**
+dans cette campagne d'invariance A.
+
+Pour B, compiler la sonde contre F1 avec
+`-DIPR_BENCH_SIGNED_DEVELOPMENT=ON` puis employer `--development signed`.
+Un oracle pré-F1 refuse cette commande, jamais de substitution silencieuse.
+`float_campaign.py --help` décrit le contrôle des six paires existantes :
+finitude du master/caméra et négatifs témoins avant DCP, budgets, provenance.
+Un succès ne valide ni le prolongement signé des tables/courbes DCP ni une
+amélioration du débruitage. La quantification intermédiaire doit être vérifiée
+avec l'audit du chemin et les captures de module, pas seulement la présence
+de valeurs négatives en sortie. Aucun candidat F1 n'est supposé validé par
+les contrôles de la seule référence.
+
+## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,
 normalisé, entiers16 représentés en f32 avant RCD et caméra après médiane.

@@ -4,7 +4,7 @@
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
-vingt-six tests Python passent via trois groupes CTest. C4 corrigé est
+trente-deux tests Python passent via quatre groupes CTest. C4 corrigé est
 intégré localement après clôture des mesures C3/X4 figées.
 Le banc ne modifie pas le moteur ; la parité C3 du pipeline complet est
 validée sur le corpus figé, pas une amélioration de bruit ou un gain de vitesse.
@@ -390,6 +390,167 @@ Codex ; pas de push, de fusion vers `dev` ni de tag. Les anciennes preuves
 et captures restent intactes. Vingt-six tests Python / trois groupes CTest
 passent ; l'essai interrompu du lanceur reste explicitement séparé.
 
+## 12. Direction validée : sortie flottante signée — 28 octobre 2026
+
+L'utilisateur confirme l'option **(a)** : sortir le développement RAW en
+flottants signés, plutôt que conserver une sortie entière qui détruit les
+valeurs sous le noir avant leur exploitation. Cette validation porte sur
+la direction d'architecture, pas sur une activation de B déjà livrée ou
+un bénéfice visuel de débruitage démontré. Claude prend en charge le moteur ;
+le banc qualifiera les frontières, la non-régression et les ressources.
+
+Chemin cible : RAW → développement flottant signé → débruitage dans un
+domaine linéaire adapté → rendu DCP → master Rec.2020 linéaire → affichage
+ou export. Conserver l'accès aux frontières CFA et RGB caméra : selon la
+méthode, le débruitage pourra intervenir avant ou après RCD. Le choix (a)
+n'impose pas de placer tous les algorithmes dans le décodeur comme en (b).
+Les valeurs négatives doivent rester disponibles jusqu'au débruitage,
+avant les traitements non linéaires du DCP ; supprimer aussi les allers-retours
+entier16/flottant devenus inutiles, sans ajouter un chemin legacy permanent.
+
+Lecture du code au moment de la décision : `CameraSignal::validate` accepte
+déjà des RGB caméra `CV_32FC3` négatifs et finis. Le chemin DCP purement
+matriciel conserve la plage étendue. En revanche, `applyHueSatMap` borne
+son entrée à `[0,1]`, `applyCurve` borne son abscisse, et le mode de courbe
+préservant la teinte utilise aussi une entrée bornée. Une entrée flottante
+ne garantit donc pas une conservation des négatifs dans tout le DCP.
+Auditer et expliciter ces frontières : il ne s'agit ni de faire passer
+aveuglément un signal signé dans une table HSV, ni de lever toutes les
+bornes sans définir le comportement mathématique attendu.
+
+Avant activation : vérifier conservation des négatifs et absence de
+quantification aux frontières linéaires, valeurs finies et comportement
+près de zéro ; contrôler séparément matrices, tables et courbes du DCP,
+chemin sans profil, orientation et corrections optiques ; rejouer les
+témoins R6 III, R7 et 60D. Distinguer l'invariance des étapes inchangées
+des écarts intentionnels dus au retrait du bornage. Mesurer temps et pic
+mémoire réels, notamment les copies et buffers retenus par le cache.
+Un RGB24 Mpx passe théoriquement de 144 à 288 Mo en passant de trois
+entiers16 à trois flottants32, soit +144 Mo pour ce tampon isolé ; le coût
+net du pipeline dépend des conversions et allocations effectivement retirées.
+Pas de nouveaux TIFF Lightroom nécessaires pour cette qualification technique.
+
+**Chantier ultérieur demandé par l'utilisateur : harmonisation des domaines
+couleur entre modules.** Recenser les fonctions utilisant sRGB, Oklab,
+ProPhoto et les autres domaines, puis définir des contrats et conversions
+cohérents autour du master Rec.2020 existant. Distinguer espace de travail,
+espace de calcul auxiliaire et rendu d'affichage : imposer un unique domaine
+numérique à toutes les méthodes n'est pas décidé ici. Les domaines internes
+nécessaires à certaines méthodes ou aux tables DCP devront être justifiés
+et leurs conversions explicites. Ce travail reste **différé**, sans changement
+de modèle colorimétrique ni recalage des réglages pendant la transition RAW.
+
+Décision et points de vigilance transmis dans le journal commun
+`PLAN-SEPARATION-LIBRAW.md`. Aucun changement moteur, nouveau calcul,
+push, fusion vers `dev` ou tag dans cette mise à jour documentaire.
+
+## 13. Préparation F1, placement bruit et relecture F2 — 28 octobre 2026
+
+L'utilisateur demande à Claude et Codex de lancer ensemble la transition
+flottante et annonce son absence jusqu'à 23 h. Répartition maintenue : F1
+moteur et inventaire F2 chez Claude ; qualification, captures et proposition
+de raccordement du bruit chez Codex. Pas de publication ou fusion vers `dev`.
+
+### Placement du débruitage proposé
+
+Pour un premier raccordement, traiter le **RGB caméra linéaire signé après
+RCD et la médiane actuels, avant LCP puis avant DCP et retouches**. LCP
+rééchantillonne le signal et peut amplifier le bruit par vignettage ; placer
+le débruitage avant évite d'avoir à retrouver sa loi après ces opérations.
+Garder aussi une frontière CFA accessible pour les futurs algorithmes,
+sans déplacer la médiane ni changer RCD en même temps que F1.
+
+Le modèle doit tenir compte des gains WB déjà appliqués et des corrélations
+introduites par RCD/médiane. Un coefficient de variance CFA ne devient pas
+une variance RGB indépendante par simple copie. Conserver une source caméra
+signée, non débruitée et immuable ; chaque modification du curseur repart
+de cette source, force zéro = identité exacte. Le changement de DCP et les
+retouches aval ne doivent pas déclencher un nouveau décodage. Les besoins
+de cache borné, annulation, prévisualisation et export à pleine définition
+seront spécifiés au raccordement, derrière un module, pas calculés dans
+`ImageEditor`. Le débruitage actuel après les tons/couleurs dans le cadenceur
+n'est pas annoncé déplacé : cela reste un chantier distinct de F1.
+
+La remarque utilisateur transmise par Claude est intégrée : l'utilisateur
+peut régler le bruit tôt, même si son panneau apparaît actuellement en bas.
+L'ordre des gestes n'est pas l'ordre du calcul ; le débruitage doit rester
+en tête de développement quel que soit le moment où le curseur est modifié.
+Remonter le panneau est une amélioration IHM séparée, sans intervention
+sur `patch_ui` ou les réglages photographiques pendant cette préparation.
+
+### Banc F1 préparé et sonde d'entrée DCP vérifiée
+
+`iprProductionRawCapture --capture-camera` lit le tampon réellement retenu
+dans `image.dcpContext->cameraRgb`, pas une reconstruction depuis Rec.2020.
+Il capture trois ROI RGB32 et, sur tout le tampon, hash, forme, finitude,
+moyennes, minima/maxima et fractions de négatifs/zéros. Temps de décodage
+et pic mémoire sont relevés avant ces diagnostics. Sans DCP, ce contexte
+n'existe pas : la sonde refuse de prétendre capturer une entrée absente.
+La sortie Rec.2020 sans DCP reste contrôlable séparément.
+
+[Gel de contrôle de la sonde](../raw/gel-banc-raw-entree-dcp-reference-v001-20261028T162257Z.json)
+et [résultat canonique](../raw/banc-raw-entree-dcp-reference-v001-20261028T162354Z.json) :
+cinq témoins A de la référence figée `ee8f26d` passent (0043 R6 III,
+7Y6A7599 R7, IMG_3135 60D, noirs 0003/9950). Images entières et métadonnées
+rejoignent les témoins C3 exactement ; les entrées caméra sont finies et
+non négatives en A. **C'est une validation de la sonde de référence, pas
+du candidat F1 ni de sa politique B.** Le binaire de référence a ensuite
+été reconstruit pour ajouter la déclaration de capacité F1 et son refus
+explicite de B ; les captures/empreintes du contrôle restent historiques.
+
+Le lanceur de production accepte maintenant `--capture-camera` pour exiger
+l'égalité exacte plein cadre et ROI de l'entrée DCP, en plus du master et
+des métadonnées. F1 A sera comparé à `ee8f26d` sur 30 RAW avec/sans DCP.
+La nouvelle API annoncée par Claude est `Options::signedDevelopment` ;
+le moteur reste en A par défaut. La sonde l'active seulement si compilée
+explicitement avec cette capacité contre un moteur F1. Le binaire oracle
+antérieur refuse `--development signed`, sans sortir une image A à sa place ;
+ce refus a été vérifié après compilation. Ce drapeau ne conserve pas un
+ancien moteur dans la production : il distingue les capacités des deux
+exécutables de comparaison, provenant de commits différents.
+
+`float_campaign.py` prépare le contrôle B sur les six paires existantes,
+sans nouveau TIFF : entrée DCP effectivement signée sur les noirs témoins,
+finitude caméra/master, sources et paramètres tracés, temps et pic mémoire.
+Des négatifs ne sont pas exigés sur toute photo éclairée. Leur présence ne
+prouve pas seule l'absence de toute quantification intermédiaire : compléter
+par l'audit du chemin F1 et les captures de module avant/après développement.
+La représentation A annoncée est `float(k) * float(1/65535)`, identique au
+produit historiquement reçu par le DCP ; ne pas masquer un changement de
+représentation de l'étape I2 par un élargissement des tolérances.
+
+Trente-deux tests Python / quatre groupes CTest passent. Une collision
+avec les macros Windows `min/max` dans mon nouveau code de statistiques
+a été corrigée avant le contrôle de la sonde. Aucun fichier moteur de
+Claude modifié. À ce stade aucun commit F1 figé n'est livré au journal :
+pas de qualification F1 revendiquée, ni d'attente active d'un commit absent.
+
+### Relecture de l'inventaire F2 de Claude
+
+L'inventaire est cohérent avec le code : matrices DCP étendues ; bornes
+dans HueSatMap/LookTable et courbes ; chemin sans DCP distinct ; pas de borne
+explicite repérée dans LCP. L'existence de négatifs créés par la matrice
+en A signifie qu'une extension de ces fonctions changerait déjà certains
+rendus actuels. **Aucun changement de rendu F2 pendant F1.**
+
+La proposition de résidu transmis est un candidat colorimétrique à tester,
+pas une loi de bruit ni une transformation automatiquement neutre. Pour
+une courbe scalaire, prolonger sous zéro par `f(0) + f'(0) * x` utilise
+la pente du premier segment ; gérer aussi `f(0)` non nul. Pour HSV/LUT,
+les canaux sont couplés : ajouter un résidu signé composante par composante
+ne garantit pas la continuité de la dérivée. Vérifier continuité, frontières
+entre canaux/secteurs, neutralité et variations de teinte ; ne pas généraliser
+sans contrôle la règle scalaire à une LUT multidimensionnelle.
+
+Le traitement des valeurs supérieures à un constitue un problème séparé,
+non résolu par un résidu uniquement négatif. Après débruitage, des négatifs
+peuvent aussi représenter du bruit résiduel ou une incertitude du noir, pas
+uniquement une couleur hors gamut. Enfin, une interpolation LCP sans borne
+peut néanmoins changer variance/covariance et comportement aux bords :
+la qualifier séparément, avec et sans optiques, pas la déduire des mesures
+optiques désactivées. Toute règle de rendu proposée par F2 reste à valider
+avec l'utilisateur, sans harmonisation des espaces couleur à ce stade.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
@@ -411,7 +572,13 @@ passent ; l'essai interrompu du lanceur reste explicitement séparé.
   nouveau X4 terminé avec capture pré-borne et invariance A. Ne pas confondre
   les deux campagnes ni reprendre le verdict historique comme validation B.
 - B est signé jusqu'à la pré-sortie, puis borné : la sortie ne conserve donc
-  pas toute la distribution pour un éventuel débruitage aval. Revue visuelle
-  A/B et choix de la frontière de traitement restent à faire, production A inchangée.
+  pas toute la distribution pour un éventuel débruitage aval. Direction (a)
+  validée : sortie flottante signée et débruitage avant le DCP non linéaire,
+  intégration et qualification à faire ; production A inchangée à cette décision.
+- Harmonisation des domaines couleur entre modules demandée mais différée ;
+  ne pas la mélanger à la transition RAW ni changer le master Rec.2020 ici.
+- F1 : banc prêt, sonde d'entrée DCP validée sur cinq témoins A de référence,
+  32 tests passent ; qualification du candidat attend son commit figé.
+  F2 relu, réserves mathématiques transmises, aucun nouveau rendu activé.
 - L'étude de bruit est suspendue comme demandé ; ses preuves sur `patch_noise`
   ne sont pas promues en validation du développement flottant.
