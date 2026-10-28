@@ -45,6 +45,17 @@ void RenderStageCache::store(const Start &start, int stage, const cv::Mat &rgb)
     m_entries[size_t(stage)] = Entry{start.keys[size_t(stage)], std::move(copy)};
 }
 
+cv::Mat RenderStageCache::peek(const cv::Mat &source, double pixelScale, int stage, const QByteArray &key) const
+{
+    if (stage < 0 || stage >= StageCount) return {};
+    std::lock_guard lock(m_mutex);
+    const auto &entry = m_entries[size_t(stage)];
+    if (source.data != m_source.data || source.size != m_source.size || pixelScale != m_pixelScale ||
+        !entry || entry->key != key)
+        return {};
+    return entry->rgb.clone();
+}
+
 void RenderStageCache::clear()
 {
     std::lock_guard lock(m_mutex);

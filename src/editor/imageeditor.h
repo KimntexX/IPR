@@ -9,6 +9,7 @@
 #include "ToneCurve.h"
 #include "DecodedImageCache.h"
 #include "ImageCacheController.h"
+#include "PerceptualColour.h"
 #include "RenderStageCache.h"
 #include "RawDecoder.h"
 
@@ -97,6 +98,11 @@ class ImageEditor final : public QObject
     Q_PROPERTY(int batchExportDone READ batchExportDone NOTIFY batchExportChanged)
     Q_PROPERTY(int batchExportTotal READ batchExportTotal NOTIFY batchExportChanged)
     Q_PROPERTY(bool hasCopiedAdjustments READ hasCopiedAdjustments NOTIFY copiedAdjustmentsChanged)
+    // Point colour: the picked points in picking order, each {colour (sRGB swatch of
+    // its source), hue, saturation, luminance, variance, range}.
+    Q_PROPERTY(QVariantList pointColors READ pointColors NOTIFY pointColorsChanged)
+    // Range overlay of one point in the preview (-1: none); never saved nor exported.
+    Q_PROPERTY(int pointColorOverlay READ pointColorOverlay WRITE setPointColorOverlay NOTIFY pointColorOverlayChanged)
     Q_PROPERTY(QVariantList cameraProfiles READ cameraProfiles NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(bool rawImage READ rawImage NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(bool rawProfileFastPathAvailable READ rawProfileFastPathAvailable NOTIFY rawDevelopmentChanged)
@@ -231,6 +237,15 @@ public:
     // Colour a grading zone gives at a hue and saturation, for the UI wheel and track
     // (ColorGrading::displayColour).
     Q_INVOKABLE QColor colorGradingDisplayColor(int zone, int hue, int saturation) const;
+    QVariantList pointColors() const;
+    // Picks the colour at (x, y), in [0, 1] of the preview, as the point colour sees
+    // it, and adds a point on it; false without image, outside it or at eight points.
+    Q_INVOKABLE bool addPointColorAt(qreal x, qreal y);
+    // component: 0 hue, 1 saturation, 2 luminance, 3 variance ([-100, 100]), 4 range ([0, 100]).
+    Q_INVOKABLE void setPointColorValue(int index, int component, int value);
+    Q_INVOKABLE void removePointColor(int index);
+    int pointColorOverlay() const { return m_pointColorOverlay; }
+    void setPointColorOverlay(int index);
     Q_INVOKABLE double adjustmentValue(const QString &name) const;
     Q_INVOKABLE void setImageRating(int rating);
     Q_INVOKABLE void setImageColorLabel(const QString &colorLabel);
@@ -288,6 +303,8 @@ signals:
     void toneCurveChanged(int channel);
     void toneCurvesReset();
     void adjustmentsReset(int temperatureKelvin, int tint);
+    void pointColorsChanged();
+    void pointColorOverlayChanged();
 
 private:
     // Offline test exporter: reuse the pipeline without loading/saving sidecars.
@@ -320,11 +337,18 @@ private:
         double pixelScale = 1.0, RenderStageCache *cache = nullptr);
     static bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
                             int referenceTemperature, cv::Mat &adjusted);
+    static PerceptualColour::Parameters perceptualParameters(const Settings &settings);
+    // The preview's source (edit proxy, or the image) and its pixel scale.
+    const ColorPipeline::WorkingImage &previewSource() const;
+    double previewPixelScale() const;
+    // overlayPoint: a point colour whose range the preview shows (colour where it
+    // acts, grey elsewhere), -1 for none.
     static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
                                       const Settings &settings,
                                       bool includeOriginal,
                                       double pixelScale = 1.0,
-                                      RenderStageCache *cache = nullptr);
+                                      RenderStageCache *cache = nullptr,
+                                      int overlayPoint = -1);
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
@@ -387,6 +411,7 @@ private:
     RenderStageCache m_renderStageCache;
     QString m_currentCacheKey;
     Settings m_settings;
+    int m_pointColorOverlay = -1;
     Settings m_copiedAdjustments;
     bool m_hasCopiedAdjustments = false;
     QString m_imageSource;

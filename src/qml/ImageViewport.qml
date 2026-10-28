@@ -18,6 +18,10 @@ Item {
     property color textColor: "#edf2f8"
     property color panelColor: "#2a3039"
     signal contextMenuRequested(real x, real y)
+    // Point colour eyedropper: a click reports its place in [0, 1] of the image.
+    property bool picking: false
+    signal pointPicked(real x, real y)
+    signal pickingCancelled()
     property real previewWidth: 0
     property real previewHeight: 0
     property bool fitMode: true
@@ -134,13 +138,21 @@ Item {
             comparisonPosition = Math.max(0, Math.min(1, x / width))
     }
 
-    onImageKeyChanged: resetView()
+    onImageKeyChanged: {
+        resetView()
+        if (picking) pickingCancelled()
+    }
     onHasImageChanged: if (!hasImage) resetView()
     onWidthChanged: clampPan()
     onHeightChanged: clampPan()
     onActiveFocusChanged: if (!activeFocus) originalHeld = false
     onVisibleChanged: if (!visible) originalHeld = false
     Keys.onPressed: (event) => {
+        if (picking && event.key === Qt.Key_Escape) {
+            pickingCancelled()
+            event.accepted = true
+            return
+        }
         if (hasImage && (event.key === Qt.Key_Menu ||
                 (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier))) {
             contextMenuRequested(width / 2, height / 2)
@@ -265,7 +277,7 @@ Item {
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
         preventStealing: true
-        cursorShape: root.canPan
+        cursorShape: root.picking ? Qt.CrossCursor : root.canPan
             ? (pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor) : Qt.PointingHandCursor
         property real pressX: 0
         property real pressY: 0
@@ -294,8 +306,16 @@ Item {
             }
         }
         onClicked: (mouse) => {
-            if (!dragged)
-                root.toggleZoom(mouse.x, mouse.y)
+            if (dragged)
+                return
+            if (root.picking) {
+                const x = (mouse.x - root.imageLeft) / (root.previewWidth * root.zoomScale)
+                const y = (mouse.y - root.imageTop) / (root.previewHeight * root.zoomScale)
+                if (x >= 0 && x <= 1 && y >= 0 && y <= 1)
+                    root.pointPicked(x, y)
+                return
+            }
+            root.toggleZoom(mouse.x, mouse.y)
         }
         onWheel: (wheel) => {
             wheel.accepted = root.handleWheel(wheel.angleDelta.x, wheel.angleDelta.y,
@@ -309,6 +329,28 @@ Item {
         acceptedButtons: Qt.RightButton
         enabled: root.hasImage
         onClicked: (mouse) => root.contextMenuRequested(mouse.x, mouse.y)
+    }
+
+    // Eyedropper beside the pointer while picking, whatever the system cursor shows.
+    Canvas {
+        objectName: "pickingIndicator"
+        x: interaction.mouseX + 4
+        y: interaction.mouseY - height - 4
+        width: 20
+        height: 20
+        visible: root.picking && interaction.containsMouse
+        onPaint: {
+            const c = getContext("2d")
+            c.reset()
+            c.lineCap = "round"
+            for (const pass of [{ colour: "#000000", width: 4 }, { colour: "#ffffff", width: 2 }]) {
+                c.strokeStyle = pass.colour
+                c.lineWidth = pass.width
+                c.beginPath(); c.moveTo(2, 18); c.lineTo(12, 8); c.stroke()
+                c.beginPath(); c.moveTo(11, 5); c.lineTo(15, 9); c.stroke()
+                c.beginPath(); c.arc(15.5, 4.5, 2.5, 0, 2 * Math.PI); c.stroke()
+            }
+        }
     }
 
     Item {

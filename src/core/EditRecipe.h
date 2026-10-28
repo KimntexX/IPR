@@ -2,6 +2,7 @@
 #define IPR_CORE_EDITRECIPE_H
 
 #include "ColorMixer.h"
+#include "PointColor.h"
 #include "ToneCurve.h"
 
 #include <QString>
@@ -44,6 +45,7 @@ struct Settings
     std::array<int, 4> gradingLuminance{};
     int gradingBlending = 50;   // Lightroom's defaults (sidecar v7)
     int gradingBalance = 0;
+    PointColor::Parameters pointColor;   // picked colours, in picking order (sidecar v9)
     bool automaticWhiteBalance = false;
     ToneCurve::Curves toneCurves;
 };

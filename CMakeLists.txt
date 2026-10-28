@@ -58,6 +58,8 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorMixer.h
     src/core/ColorMixer.cpp
     src/core/ColorMixerModel.h
+    src/core/PointColor.h
+    src/core/PointColor.cpp
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
     src/core/Dehaze.h
@@ -325,6 +327,8 @@ if(BUILD_TESTING)
     set_tests_properties(testImageGeneratorTests PROPERTIES
         LABELS "unit;export;generator" TIMEOUT 120)
     ipr_add_test(colorMixerMathTests tests/color_mixer_math_test.cpp)
+    ipr_add_test(pointColorTests tests/point_color_test.cpp)
+    set_tests_properties(pointColorTests PROPERTIES LABELS "unit;pipeline;colour")
     add_executable(colorMixerNeutralProbe tests/color_mixer_neutral_probe.cpp)
     target_link_libraries(colorMixerNeutralProbe PRIVATE iprEngine)
     add_test(NAME colorMixerNeutralTests COMMAND colorMixerNeutralProbe)

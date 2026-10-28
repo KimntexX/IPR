@@ -48,6 +48,13 @@ void policy()
     check(start.stage == -1 && start.keep[0] && !start.keep[1] && !start.keep[4], "first render keeps the tones");
     for (int stage = 0; stage < RenderStageCache::StageCount; ++stage) cache.store(start, stage, rgb);
     check(cache.count() == 1, "only the requested output is stored");
+    // peek() reads a kept output without touching the keep policy (the point colour eyedropper).
+    const cv::Mat peeked = cache.peek(source, 0.5, 0, keys[0]);
+    check(!peeked.empty() && peeked.data != rgb.data && cv::norm(peeked, rgb, cv::NORM_INF) == 0,
+          "peek returns a private copy of a kept output");
+    check(cache.peek(source, 0.5, 0, "other").empty() && cache.peek(source, 0.25, 0, keys[0]).empty() &&
+          cache.peek(source, 0.5, 1, keys[1]).empty() && cache.peek(source, 0.5, 7, keys[0]).empty(),
+          "peek needs the same source, scale, stage and key");
 
     auto dehaze = keys;
     dehaze[4] = "abcdX";
@@ -99,6 +106,16 @@ public:
         for (int v : {10, 0}) edits.push_back([v](auto &s) { s.contrast = v; });
         for (int v : {30, 40}) edits.push_back([v](auto &s) { s.denoiseLuminance = v; });
         edits.push_back([](auto &s) { s.dehaze = 0; });
+        // A point colour on a colour of the scene, then another shift: the cache key holds the points.
+        const cv::Vec4f picked = source.linearRgba.at<cv::Vec4f>(400, 600);
+        const PointColor::Hsv hsv = PointColor::toHsv({picked[0], picked[1], picked[2]});
+        edits.push_back([hsv](auto &s) {
+            s.pointColor.count = 1;
+            s.pointColor.points[0].source = hsv;
+            s.pointColor.points[0].saturationShift = -60;
+        });
+        edits.push_back([](auto &s) { s.pointColor.points[0].saturationShift = -40; });
+        edits.push_back([](auto &s) { s.pointColor.points[0].range = 80; });
 
         RenderStageCache cache;
         double plain = 0, cached = 0;
@@ -126,6 +143,24 @@ public:
         const auto rendered = ImageEditor::renderWorkingImage(other, settings, pixelScale, &cache);
         check(cv::norm(rendered.linearRgba, expected.linearRgba, cv::NORM_INF) == 0, "new source renders from scratch");
     }
+
+    // The range overlay must never write into the source: a point without shift
+    // leaves the pipeline neutral, which hands back the source buffer itself.
+    static void overlayKeepsSource()
+    {
+        const auto source = scene(64, 48);
+        const cv::Mat before = source.linearRgba.clone();
+        ImageEditor::Settings settings;
+        settings.temperature = 5200;
+        settings.pointColor.count = 1;
+        settings.pointColor.points[0].source = PointColor::toHsv({0.3, 0.2, 0.1});
+        RenderStageCache cache;
+        const auto overlaid = ImageEditor::renderPreview(source, settings, false, 1.0, &cache, 0);
+        check(!overlaid.preview.isNull(), "overlay preview renders");
+        check(cv::norm(source.linearRgba, before, cv::NORM_INF) == 0, "the overlay leaves the source untouched");
+        const auto plain = ImageEditor::renderPreview(source, settings, false, 1.0, &cache, -1);
+        check(plain.preview != overlaid.preview, "without the overlay the preview keeps its colours");
+    }
 };
 
 int main(int argc, char **argv)
@@ -134,6 +169,7 @@ int main(int argc, char **argv)
     try {
         policy();
         IprTestImageGenerator::exercise();
+        IprTestImageGenerator::overlayKeepsSource();
     } catch (const std::exception &error) {
         std::cerr << "FAIL: " << error.what() << '\n';
         return 1;
