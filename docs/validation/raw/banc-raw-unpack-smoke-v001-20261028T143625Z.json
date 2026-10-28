@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "campaign_id": "raw-unpack-smoke-20261028T143623Z",
+  "measured_at_utc": "2026-10-28T14:36:25.209294+00:00",
+  "records": [
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+      "source_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143623Z\\0-6V1A0007.json",
+      "capture_sha256": "4ad3a1c8054da438be5a50caea9ecdb3e2445521bd9e61a2b4a99899cd60b544",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143623Z\\1-IMG_3135.json",
+      "capture_sha256": "dddbdd213644a2d885841088470ceb8debffa0455c54dad4ba38cebb61266150",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    }
+  ],
+  "rawpy_version": "0.27.1",
+  "rawpy_libraw_version": [
+    0,
+    22,
+    1
+  ],
+  "tool_sha256": "468030059c6fd47d70a689ec19b8d9817c7bb854970565d29725e67ff1ee0adb",
+  "verdict": "pass",
+  "limitations": "Native LibRaw unpack vs rawpy LibRaw unpack readback on explicit ROIs only. Shared decoder family, not independent ground truth. No candidate-development comparison, signed-mode validation, performance qualification or complete format coverage."
+}
