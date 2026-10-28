@@ -209,16 +209,13 @@ int workerThreads()
     return std::clamp(host - 1, 1, MaximumThreads);
 }
 
-bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
-                 ChromaMedian median, const std::function<bool()> &cancelled)
+bool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian median, cv::Mat &rgb,
+                 cv::Mat *beforeMedian, const std::function<bool()> &cancelled)
 {
-    if (!image || width < 2 || height < 2) return false;
-    const auto colour = [&](int y, int x) { return pattern[size_t(y & 1)][size_t(x & 1)]; };
-    cv::Mat cfa(height, width, CV_32F);
-    for (int y = 0; y < height; ++y) {
-        float *o = cfa.ptr<float>(y);
-        for (int x = 0; x < width; ++x) o[x] = image[size_t(y) * size_t(width) + size_t(x)][colour(y, x)] / 65535.f;
-    }
+    if (mosaic.type() != CV_32FC1 || mosaic.cols < 2 || mosaic.rows < 2) return false;
+    const int width = mosaic.cols, height = mosaic.rows;
+    rgb.create(height, width, CV_32FC3);
+    if (beforeMedian) beforeMedian->create(height, width, CV_32FC3);
     std::vector<cv::Rect> tiles;
     for (int y = 0; y < height; y += TileSize)
         for (int x = 0; x < width; x += TileSize)
@@ -226,17 +223,12 @@ bool interpolate(Pixel *image, int width, int height, const Pattern &pattern,
     const auto processTile = [&](const cv::Rect &core) {
         cv::Mat padded;
         // real neighbours where they exist, mirrored with the same parity at the border
-        cv::copyMakeBorder(cfa(core), padded, TileMargin, TileMargin, TileMargin, TileMargin, cv::BORDER_REFLECT_101);
-        cv::Mat rgb = rcd(padded, pattern);
-        if (median == ChromaMedian::FlatOnly) flatChromaMedian(rgb);
-        for (int y = 0; y < core.height; ++y) {
-            const auto *s = rgb.ptr<cv::Vec3f>(y + TileMargin) + TileMargin;
-            for (int x = 0; x < core.width; ++x) {
-                auto &px = image[size_t(core.y + y) * size_t(width) + size_t(core.x + x)];
-                for (int c = 0; c < 3; ++c)
-                    px[c] = std::uint16_t(std::clamp(std::lround(s[x][c] * 65535.f), 0L, 65535L));
-            }
-        }
+        cv::copyMakeBorder(mosaic(core), padded, TileMargin, TileMargin, TileMargin, TileMargin, cv::BORDER_REFLECT_101);
+        cv::Mat tile = rcd(padded, pattern);
+        const cv::Rect inner(TileMargin, TileMargin, core.width, core.height);
+        if (beforeMedian) tile(inner).copyTo((*beforeMedian)(core));
+        if (median == ChromaMedian::FlatOnly) flatChromaMedian(tile);
+        tile(inner).copyTo(rgb(core));
     };
     // Tile by tile from a shared counter on a bounded pool, the calling thread
     // included; every thread is joined on every path, exceptions included. Only

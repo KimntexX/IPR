@@ -135,7 +135,18 @@ void rcdInterpolate(void *context)
             pattern[size_t(y)][size_t(x)] = k == 3 ? 1 : k;   // second green folded
         }
     const auto t0 = Clock::now();
-    Demosaic::interpolate(d.image, d.sizes.iwidth, d.sizes.iheight, pattern, oursMedian, {});
+    // LibRaw's image to the float mosaic and back, as RawDecoder's callback.
+    const int width = d.sizes.iwidth, height = d.sizes.iheight;
+    cv::Mat mosaic(height, width, CV_32FC1), rgb;
+    for (int y = 0; y < height; ++y)
+        for (int x = 0; x < width; ++x)
+            mosaic.at<float>(y, x) = d.image[size_t(y) * size_t(width) + size_t(x)][pattern[size_t(y & 1)][size_t(x & 1)]] / 65535.f;
+    if (Demosaic::interpolate(mosaic, pattern, oursMedian, rgb, nullptr, {}))
+        for (int y = 0; y < height; ++y)
+            for (int x = 0; x < width; ++x)
+                for (int c = 0; c < 3; ++c)
+                    d.image[size_t(y) * size_t(width) + size_t(x)][c] =
+                        std::uint16_t(std::clamp(std::lround(rgb.at<cv::Vec3f>(y, x)[c] * 65535.f), 0L, 65535L));
     oursMs += std::chrono::duration<double, std::milli>(Clock::now() - t0).count();
 }
 // LibRaw keeps its callbacks protected: a subclass sets the interpolation step.

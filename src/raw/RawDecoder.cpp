@@ -159,8 +159,23 @@ private:
                 pattern[size_t(y)][size_t(x)] = colour == 3 ? 1 : colour;   // second green folded
             }
         try {
-            self->m_failed = !Demosaic::interpolate(d.image, d.sizes.iwidth, d.sizes.iheight, pattern,
-                                                    self->m_median, self->m_cancelled);
+            // LibRaw's image: four 16-bit channels per pixel, only the site's colour set.
+            const int width = d.sizes.iwidth, height = d.sizes.iheight;
+            cv::Mat mosaic(height, width, CV_32FC1), rgb;
+            for (int y = 0; y < height; ++y) {
+                float *row = mosaic.ptr<float>(y);
+                for (int x = 0; x < width; ++x)
+                    row[x] = d.image[size_t(y) * size_t(width) + size_t(x)][pattern[size_t(y & 1)][size_t(x & 1)]] / 65535.f;
+            }
+            self->m_failed = !Demosaic::interpolate(mosaic, pattern, self->m_median, rgb, nullptr, self->m_cancelled);
+            if (!self->m_failed)
+                for (int y = 0; y < height; ++y) {
+                    const auto *row = rgb.ptr<cv::Vec3f>(y);
+                    for (int x = 0; x < width; ++x)
+                        for (int c = 0; c < 3; ++c)
+                            d.image[size_t(y) * size_t(width) + size_t(x)][c] =
+                                std::uint16_t(std::clamp(std::lround(row[x][c] * 65535.f), 0L, 65535L));
+                }
         } catch (...) {
             // never let an exception cross LibRaw: the decode fails below instead
             self->m_failed = true;
