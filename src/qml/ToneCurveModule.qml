@@ -52,7 +52,8 @@ ColumnLayout {
 
     Rectangle {
         Layout.fillWidth: true
-        Layout.preferredHeight: 196
+        // Taller than wide: more room for the output scale.
+        Layout.preferredHeight: Math.round(width * 1.25)
         color: "#171b21"
         border.color: "#3d4654"
         radius: 4
@@ -173,7 +174,7 @@ ColumnLayout {
             property int draggedIndex: -1
             ToolTip.visible: containsMouse && pressedButtons === Qt.NoButton
             ToolTip.delay: 900
-            ToolTip.text: qsTr("Fond monochrome : luminance de l’aperçu sRGB, repère visuel après rendu (pas le signal linéaire d’entrée des courbes).")
+            ToolTip.text: qsTr("Fond monochrome : luminance de l’aperçu sRGB, sur une échelle proche de celle des courbes.")
 
             function nearestPoint(mouse) {
                 let nearest = -1
@@ -191,17 +192,16 @@ ColumnLayout {
                 return nearest
             }
 
+            // Every point moves, the end points too (raised black, clipped whites, as
+            // Lightroom); a point stays between its neighbours.
             function updateDraggedPoint(mouse) {
-                if (draggedIndex <= 0 ||
-                    draggedIndex >= module.curvePoints.length - 1)
+                if (draggedIndex < 0 || draggedIndex >= module.curvePoints.length)
                     return
                 const points = module.curvePoints.slice()
-                const previous = points[draggedIndex - 1]
-                const next = points[draggedIndex + 1]
+                const low = draggedIndex > 0 ? points[draggedIndex - 1].x + 0.001 : 0
+                const high = draggedIndex < points.length - 1 ? points[draggedIndex + 1].x - 0.001 : 1
                 points[draggedIndex] = {
-                    "x": Math.max(previous.x + 0.001,
-                                  Math.min(next.x - 0.001,
-                                           toneCanvas.normalizedX(mouse.x))),
+                    "x": Math.max(low, Math.min(high, toneCanvas.normalizedX(mouse.x))),
                     "y": toneCanvas.normalizedY(mouse.y)
                 }
                 module.curvePointsEdited(points)
@@ -250,7 +250,7 @@ ColumnLayout {
     }
 
     SectionNote {
-        text: qsTr("Double-cliquez pour ajouter une poignée, faites-la glisser pour modifier la courbe et utilisez le clic droit pour supprimer une poignée.")
+        text: qsTr("Double-cliquez pour ajouter une poignée, faites-la glisser pour modifier la courbe et utilisez le clic droit pour supprimer une poignée. Les extrémités se déplacent aussi : noir relevé ou blancs coupés.")
     }
 
     RowLayout {

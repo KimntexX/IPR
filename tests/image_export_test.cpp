@@ -243,6 +243,24 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
                    quadraticImage.pixelColor(0, 0).red() > 118,
                "one raised internal point should brighten the image"))
         return false;
+
+    // End points move as in Lightroom: a raised black and clipped whites are kept.
+    const QVariantList clipped{
+        QVariantMap{{QStringLiteral("x"), 0.0}, {QStringLiteral("y"), 0.25}},
+        QVariantMap{{QStringLiteral("x"), 0.8}, {QStringLiteral("y"), 1.0}},
+    };
+    editor.setToneCurve(ImageEditor::LuminanceCurve, clipped);
+    const QVariantList kept = editor.toneCurve(ImageEditor::LuminanceCurve);
+    const QString clippedPath = directory + QStringLiteral("/clipped-tone.png");
+    const QString clippedStatus = awaitExport(editor, QUrl::fromLocalFile(clippedPath), QStringLiteral("PNG"));
+    const QColor clippedPixel = QImage(clippedPath).pixelColor(0, 0);
+    editor.resetToneCurve(ImageEditor::LuminanceCurve);
+    if (!check(kept.size() == 2 && std::abs(kept.at(0).toMap().value("y").toDouble() - 0.25) < 1e-6 &&
+                   std::abs(kept.at(1).toMap().value("x").toDouble() - 0.8) < 1e-6 &&
+                   clippedStatus.startsWith(QStringLiteral("Image exportée")) &&
+                   clippedPixel.red() > original.red() && clippedPixel.blue() > original.blue(),
+               "moved end points should be kept and brighten the image"))
+        return false;
     return true;
 }
 

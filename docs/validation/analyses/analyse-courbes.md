@@ -55,7 +55,6 @@ hautes lumières). Rendu en mémoire (`tests/study_curves_ipr.py`), 10 scènes,
 
 - Une seule courbe modifiée par état : l'ordre RVB puis canal et l'interaction
   avec les autres réglages ne sont pas mesurés.
-- L'IHM garde les extrémités en (0, 0) et (1, 1) ; Lightroom permet de les
-  déplacer (noir relevé, blancs coupés), ce que le moteur et le serveur de rendu
-  acceptent déjà.
+- Les extrémités se déplacent dans l'IHM comme dans Lightroom (noir relevé,
+  blancs coupés) depuis le 28 octobre ; le graphique est plus haut que large.
 - La courbe paramétrique de Lightroom n'existe pas dans IPR.
