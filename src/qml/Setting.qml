@@ -32,50 +32,16 @@ Item {
     implicitHeight: 720
 
     function curveName(channel) {
-        return [qsTr("Luminance"), qsTr("Rouge"), qsTr("Vert"), qsTr("Bleu")][channel]
+        return [qsTr("RVB"), qsTr("Rouge"), qsTr("Vert"), qsTr("Bleu")][channel]
     }
 
     function curveColor(channel) {
         return ["#edf2f8", "#f07178", "#98c379", "#61afef"][channel]
     }
 
+    // Drawn as the engine evaluates it (natural spline, as Lightroom).
     function evaluateCurve(points, sample) {
-        if (points.length === 0)
-            return sample
-
-        const weights = []
-        for (let index = 0; index < points.length; ++index) {
-            let weight = 1
-            for (let other = 0; other < points.length; ++other) {
-                if (index !== other)
-                    weight /= points[index].x - points[other].x
-            }
-            weights.push(weight)
-        }
-
-        if (sample <= 1) {
-            let numerator = 0
-            let denominator = 0
-            for (let index = 0; index < points.length; ++index) {
-                const distance = sample - points[index].x
-                if (Math.abs(distance) < 0.000000001)
-                    return points[index].y
-                const term = weights[index] / distance
-                numerator += term * points[index].y
-                denominator += term
-            }
-            return numerator / denominator
-        }
-
-        const endpoint = points.length - 1
-        let derivative = 0
-        for (let index = 0; index < endpoint; ++index) {
-            derivative += weights[index] / weights[endpoint] *
-                    (points[index].y - points[endpoint].y) /
-                    (points[endpoint].x - points[index].x)
-        }
-        return points[endpoint].y +
-                (sample - points[endpoint].x) * derivative
+        return editor.toneCurveValue(points, sample)
     }
 
     function reloadCurve() {

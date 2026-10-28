@@ -14,8 +14,8 @@ ColumnLayout {
     required property var evaluateCurve
     property color textColor: "#edf2f8"
     property color secondaryTextColor: "#d7dfeb"
-    // Display reference only: these are the current sRGB preview counts,
-    // not the linear Rec.2020 signal entering the tone-curve operation.
+    // Display reference: the current sRGB preview counts. The curves act on ProPhoto
+    // encoded with the same sRGB transfer, so the two scales nearly match.
     property var histogram: []
     readonly property var luminanceHistogram: histogram && histogram.length === 4 &&
         histogram[0].length === 256 ? histogram[0] : []

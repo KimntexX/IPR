@@ -189,22 +189,32 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
             if (!check(pixel.red() > original.red() &&
                            pixel.green() > original.green() &&
                            pixel.blue() > original.blue(),
-                       "luminance curve should brighten all RGB channels"))
+                       "the RGB curve should brighten all RGB channels"))
                 return false;
         } else {
             const int changed = channel - ImageEditor::RedCurve;
             QImage sample(1,1,QImage::Format_RGBA8888);
             sample.setPixelColor(0,0,original); sample.setColorSpace(QColorSpace(QColorSpace::SRgb));
             auto expectedMaster = ColorPipeline::fromSourceImage(sample);
-            auto &v = expectedMaster.linearRgba.at<cv::Vec4f>(0,0)[changed];
-            // Interpolating (0,0), (.6,.9), (1,1) gives this quadratic.
-            v += 1.25f * v * (1.f - v);
+            cv::Vec4f &master = expectedMaster.linearRgba.at<cv::Vec4f>(0,0);
+            // The channel of linear ProPhoto, sRGB-encoded, through the natural spline of
+            // (0,0), (.6,.9), (1,1): second derivative -3.75 at the middle point, 0 at the ends.
+            const auto spline = [](double x) {
+                const double m = -3.75;
+                if (x <= 0.6) { const double h = 0.6; return m * x * x * x / (6 * h) + (0.9 / h - m * h / 6) * x; }
+                const double h = 0.4, t = x - 0.6;
+                return m * (1.0 - x) * (1.0 - x) * (1.0 - x) / (6 * h) + (0.9 / h - m * h / 6) * (1.0 - x) + (1.0 / h) * t;
+            };
+            cv::Vec3d proPhoto = WorkingColor::toProPhoto() * cv::Vec3d(master[0], master[1], master[2]);
+            proPhoto[changed] = WorkingColor::srgbDecode(spline(WorkingColor::srgbEncode(proPhoto[changed])));
+            const cv::Vec3d rgb = WorkingColor::toProPhoto().inv() * proPhoto;
+            master = cv::Vec4f(float(rgb[0]), float(rgb[1]), float(rgb[2]), master[3]);
             const auto expected = ColorPipeline::toSrgb(expectedMaster,
                 ColorPipeline::OutputFormat::Preview8Bit).pixelColor(0,0);
             if (!check(std::abs(pixel.red()-expected.red()) <= 2 &&
                        std::abs(pixel.green()-expected.green()) <= 2 &&
                        std::abs(pixel.blue()-expected.blue()) <= 2,
-                       "RGB curve must edit a Rec.2020 channel before the sRGB output matrix"))
+                       "a channel curve must edit encoded ProPhoto, as Lightroom, with a natural spline"))
                 return false;
         }
         editor.resetToneCurve(channel);
@@ -231,7 +241,7 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
     if (!check(quadraticStatus.startsWith(QStringLiteral("Image exportée")) &&
                    !quadraticImage.isNull() &&
                    quadraticImage.pixelColor(0, 0).red() > 118,
-               "one internal point should produce a quadratic tone curve"))
+               "one raised internal point should brighten the image"))
         return false;
     return true;
 }

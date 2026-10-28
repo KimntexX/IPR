@@ -798,6 +798,18 @@ QVariantList ImageEditor::toneCurve(int channel) const
     return points;
 }
 
+double ImageEditor::toneCurveValue(const QVariantList &points, double x) const
+{
+    QVector<ToneCurvePoint> curve;
+    curve.reserve(points.size());
+    for (const QVariant &value : points) {
+        const QVariantMap point = value.toMap();
+        curve.append({point.value(QStringLiteral("x")).toFloat(), point.value(QStringLiteral("y")).toFloat()});
+    }
+    std::sort(curve.begin(), curve.end(), [](const ToneCurvePoint &a, const ToneCurvePoint &b) { return a.x < b.x; });
+    return curve.isEmpty() ? x : ToneCurve::evaluate(curve, float(x));
+}
+
 void ImageEditor::setToneCurve(int channel, const QVariantList &points)
 {
     if (channel < LuminanceCurve || channel > BlueCurve)

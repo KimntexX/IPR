@@ -141,6 +141,21 @@ void render(Masters &masters, const QJsonObject &request)
         scalar("blending", settings.gradingBlending, 0, 100);
         scalar("balance", settings.gradingBalance, -100, 100);
     }
+    if (request.contains("toneCurves")) {
+        // RGB, red, green and blue curves, each a list of [x, y] in [0, 1] (empty: identity).
+        const QJsonArray curves = request.value("toneCurves").toArray();
+        require(curves.size() == 4, "toneCurves needs the RGB, red, green and blue curves");
+        for (int c = 0; c < 4; ++c) {
+            QVector<ToneCurve::Point> curve;
+            for (const QJsonValue &point : curves.at(c).toArray()) {
+                const QJsonArray xy = point.toArray();
+                require(xy.size() == 2, "toneCurves points are [x, y]");
+                curve.append({float(xy.at(0).toDouble()), float(xy.at(1).toDouble())});
+            }
+            std::sort(curve.begin(), curve.end(), [](const auto &a, const auto &b) { return a.x < b.x; });
+            settings.toneCurves[size_t(c)] = curve;
+        }
+    }
     if (request.contains("pointColor")) {
         // Points in picking order: {"source": [hue, saturation, value] as Lightroom writes it (HSV of
         // linear ProPhoto, hue in radians), "hue", "saturation", "luminance",

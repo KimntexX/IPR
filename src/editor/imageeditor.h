@@ -204,6 +204,8 @@ public:
     Q_INVOKABLE QUrl defaultExportFile(const QString &format,
                                      const QUrl &previousTarget = QUrl()) const;
     Q_INVOKABLE QVariantList toneCurve(int channel) const;
+    // A curve's value at x for points {x, y}, as the engine evaluates it (UI drawing).
+    Q_INVOKABLE double toneCurveValue(const QVariantList &points, double x) const;
     Q_INVOKABLE QString thumbnailSource(const QUrl &fileUrl) const;
 
     Q_INVOKABLE void openFolder(const QUrl &folder);

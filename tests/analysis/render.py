@@ -150,13 +150,14 @@ class RenderServer:
     def states(self, base, group):
         return self._request({"op": "list", "base": str(base), "group": group})["states"]
 
-    def render(self, source, feature, value, mixer=None, grading=None, point_color=None):
+    def render(self, source, feature, value, mixer=None, grading=None, point_color=None, tone_curves=None):
         """Pixels (height, width, 3) uint16 and metadata shaped like native.inspect().
         mixer: optional {"hue": [8], "saturation": [8], "luminance": [8]} on top of the state.
         grading: optional {"hue": [3 or 4], "saturation": [3 or 4]} (shadows, midtones, highlights, global),
         with optional "luminance" [3 or 4], "blending" and "balance".
         point_color: optional list of up to 8 points in picking order, each {"source": [hue, saturation, value]}
         as Lightroom writes it (HSV of linear ProPhoto, hue in radians)
+        tone_curves: optional [rgb, red, green, blue], each a list of [x, y] in [0, 1]
         with optional "hue", "saturation", "luminance", "variance" (0) and "range" (50)."""
         request = {"op": "render", "source": str(source), "feature": feature, "value": value}
         if mixer is not None:
@@ -165,6 +166,8 @@ class RenderServer:
             request["grading"] = grading
         if point_color is not None:
             request["pointColor"] = point_color
+        if tone_curves is not None:
+            request["toneCurves"] = tone_curves
         header = self._request(request)
         width, height = header["width"], header["height"]
         if header["channels"] != 3 or header["dtype"] != "<u2" or header["bytes"] != width * height * 6:
