@@ -237,7 +237,17 @@ Il conserve81 régions par source, sépare les25 positions initiales des56
 positions de contrôle et compare un modèle global à une interpolation de
 variance par niveau de signal. `--replay` réanalyse une preuve existante sans
 redécoder les images. MAD, autocorrélation et heuristique d'aplat ne sont pas
-une vérité physique du bruit ; le module de débruitage n'est pas changé.
+une vérité physique du bruit ; cette sonde ne change pas le filtre.
+
+`qualify_signal_denoise.py --help` compare le candidat conditionnel aux masques
+figés de `loi-force-bruit-v001-20261029T185322Z.json`. Il contrôle les empreintes
+RAW/TIFF et celles des masques, puis exige le même témoin B0. Trois scènes de
+développement sont mesurées en mémoire ; les25 autres sont déclarées réservées
+pour un contrôle ultérieur du candidat figé (réserve prospective, pas un corpus
+jamais observé). Les sources et l'exécutable sont hachés dans la nouvelle preuve.
+Le watchdog termine un serveur bloqué ; un échec arrête la campagne et reste
+consigné. Les dispersions haute fréquence incluent des textures réelles : leur
+baisse n'est ni une vérité bruit seul ni une validation visuelle.
 
 ## Limites du corpus et références
 

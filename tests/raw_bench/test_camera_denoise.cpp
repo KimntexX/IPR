@@ -107,8 +107,10 @@ int main(int argc,char **argv)
     }
     {
         cv::Mat image(16, 19, CV_32FC3, cv::Scalar(-.02f, .4f, 1.3f)); const auto original = image.clone();
+        const auto sourceAlias=image;
         check(apply(image, {100, 100}, {}), "constant extended field accepted");
         check(bits(image, original), "no measured noise leaves constants exact");
+        check(image.data!=sourceAlias.data&&bits(sourceAlias,original),"nonzero abstention detaches immutable source for downstream optics");
         cv::Mat tiny(1, 1, CV_32FC3, cv::Scalar(-.1f, .2f, 2.f)); const auto before = tiny.clone();
         check(apply(tiny, {100, 100}, {}) && bits(tiny, before), "single pixel identity");
     }
@@ -189,6 +191,7 @@ int main(int argc,char **argv)
         double error=0;
         for(int y=0;y<shifted.rows;++y)for(int x=0;x<shifted.cols;++x)
             for(int c=0;c<3;++c)error=std::max(error,double(std::abs(shifted.at<cv::Vec3f>(y,x)[c]-regular.at<cv::Vec3f>(y,x)[c]-offset[c])));
+        std::cout<<"DC translation error "<<error<<'\n';
         check(error<3e-6, "DC translation does not change the noise model appreciably");
     }
     {
@@ -208,6 +211,26 @@ int main(int argc,char **argv)
         for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x)
             error=std::max(error,double(std::abs(axes(image.at<cv::Vec3f>(y,x))[0]-.25f)));
         check(error<5e-7,"coarse chroma scales do not smooth camera intensity");
+    }
+    {
+        cv::Mat image(192,576,CV_32FC3);cv::RNG random(0x914c);
+        const std::array<float,3> levels{.04f,.25f,.7f},sigmas{.003f,.012f,.04f};
+        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
+            const int band=x/192;
+            for(int c=0;c<3;++c)image.at<cv::Vec3f>(y,x)[c]=levels[size_t(band)]+float(random.gaussian(sigmas[size_t(band)]));
+        }
+        const auto before=image.clone();
+        check(apply(image,{100,100},{}),"signal-dependent noisy bands complete");
+        for(int band=0;band<3;++band) {
+            const cv::Rect roi(band*192+64,32,64,128);
+            const auto a=variance(before(roi)),b=variance(image(roi));
+            std::cout<<"heteroscedastic band "<<band<<" variance ratio "<<b[0]/a[0]<<'\n';
+            check(b[0]<.5*a[0]&&b[1]<.5*a[1]&&b[2]<.5*a[2],"known flat signal denoised in every brightness band");
+        }
+        cv::Mat clean(192,576,CV_32FC3);
+        for(int y=0;y<clean.rows;++y)for(int x=0;x<clean.cols;++x)clean.at<cv::Vec3f>(y,x)=cv::Vec3f::all(levels[size_t(x/192)]);
+        const auto truth=clean.clone();
+        check(apply(clean,{100,100},{})&&cv::norm(clean,truth,cv::NORM_INF)<1e-6,"clean brightness steps not learned as noise");
     }
     {
         auto regular=field(128,128), amplified=regular.clone();
