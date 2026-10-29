@@ -695,10 +695,76 @@ Après sauvegarde/commit final, la fin de mes calculs sera signalée dans le
 journal commun ; Claude a confirmé sa fin de travail et prend en charge
 la mise en veille demandée par l'utilisateur, après mon signal explicite.
 
+## 17. 29 octobre — premier module expérimental avant profil (N2)
+
+L'utilisateur autorise un branchement **désactivé par défaut**, commandé par
+une case du panneau bruit existant. N1 (Claude) porte la source caméra,
+le raccordement et l'IHM ; N2 (Codex) porte `CameraDenoise` et ses tests.
+Les règles de bornage DCP ne sont pas modifiées (D0 reporté).
+
+Le premier module travaille sur le RGB caméra flottant, après RCD/médiane,
+sans borne basse ou haute. Après compensation des gains WB, trois échelles
+d'ondelettes à trous B3-spline séparent l'intensité caméra et deux axes
+opposants. Cette intensité n'est pas la luminance photométrique Rec.2020.
+Le bruit et les corrélations sont estimés sur les coefficients des régions
+les plus calmes, puis un retrait Wiener local protège les structures communes.
+Une région fortement périodique n'est pas un témoin sûr : abstention plutôt
+que calibration sur ce motif. La correction conserve les moyennes globales.
+
+Il s'agit d'un **estimateur empirique post-dématriçage**, pas du modèle physique
+capteur `a·signal+b` qualifié par boîtier. ISO n'impose aucune force inventée.
+Les champs CFA/diviseur initialement envisagés dans I4 ont été retirés car
+non consommés par ce modèle ; l'interface transmise à N1 conserve gains,
+ISO et échelle du proxy. Les structures faibles restent une limite à mesurer.
+
+Les forces séparées valent 0 à 100. Deux forces nulles conservent exactement
+le tampon ; erreur ou annulation laisse l'entrée intacte ; la source partagée
+n'est jamais modifiée. Au plus huit threads, tous rejoints ; seul le thread
+appelant invoque l'annulation. Le traitement par tuiles possède un halo pris
+dans les voisins réels et ne change pas les réglages globaux OpenCV.
+
+Le premier jalon `d52d153` passe 47 contrôles synthétiques ; après raccordement
+de N1 `dd2ef6d`, le jalon local `816e512` en passe 50, dont gains WB,
+annulation atomique, négatifs/>1, axes indépendants, déterminisme et témoins
+propres. Les cinq suites CTest du banc passent. La preuve initiale immuable est
+[camera-denoise-n2-v001-20261029T123023Z.json](../raw/camera-denoise-n2-v001-20261029T123023Z.json).
+
+Sur cette machine, le module seul, sur champ synthétique à force 100/100 :
+
+| Définition | Temps | Pic mémoire du processus |
+| --- | ---: | ---: |
+| 2048 × 1365 | 188,809 ms | 124 583 936 octets |
+| 6000 × 4000 | 1 318,21 ms | 621 584 384 octets |
+
+La qualification finale N2 inclut aussi la compilation complète de `iprEngine`
+et le succès de `cameraProfileEngineTests`, sans retouche des fichiers N1.
+La preuve actualisée est
+[camera-denoise-n2-v001-20261029T123736Z.json](../raw/camera-denoise-n2-v001-20261029T123736Z.json) :
+50 contrôles natifs, cinq suites du banc et test moteur passent ; second relevé
+181,675 ms / 127 369 216 octets à 2,8 Mpx et 1 234,65 ms / 621 015 040 octets
+à 24 Mpx. Ces deux relevés sont des observations, pas une étude de dispersion.
+Le lanceur `tests/raw_bench/qualify_camera_denoise.py` conserve commandes,
+sorties, sources et empreintes des exécutables dans un nouveau JSON immuable.
+
+Ces nombres n'incluent ni décodage, ni DCP, ni caches de l'IHM ; ils ne
+qualifient pas le plafond global de RAM. La réduction de variance d'un champ
+synthétique n'est pas une preuve de conservation des détails naturels ou de
+similarité Lightroom. Aucun nouveau rendu n'est déclaré validé visuellement.
+
+**N3 reste ouvert.** N1 livré retient encore une source après LCP lorsque
+l'optique est active, et le sélectionneur B signé n'est pas raccordé hors
+du décodeur dans ce jalon. Ces deux frontières sont signalées au journal
+pour N1b, domaine de Claude. Il faudra séparer : case décochée = A inchangé ;
+B sans filtrage = témoin de développement ; B filtré = effet du module.
+L'identité à force zéro est relative au signal fourni, pas une preuve A=B.
+Proxy et pleine définition doivent être qualifiés séparément, leur filtrage
+ne commute pas exactement avec la réduction d'image.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
-  ou fichier attribué à Claude modifié. Aucun push, fusion vers `dev` ou tag.
+  attribué à Claude retouché directement ; seuls les fichiers N2 convenus sont
+  développés ici. Aucun push, fusion vers `dev` ou tag.
 - X1/X2 : observateur C2 raccordé, parité de module exacte sur30
   sources ; témoins bruit historiques rejoints aux frontières entières. Les profils, calibration automatique,
   orientation et calibration du pipeline complet rejoignent C3 sur le corpus ;
@@ -714,11 +780,13 @@ la mise en veille demandée par l'utilisateur, après mon signal explicite.
   décrivent pas le candidat actuel ; ne pas mélanger les versions des preuves.
 - F1 supprime la borne de sortie B : négatifs transmis au DCP confirmés,
   invariance A validée, garde NaN/Inf corrigé et contrôlé. A reste le défaut.
-  L'adaptation et le déplacement du débruitage avant LCP/DCP restent à implémenter.
+  Le premier module N2 et le raccordement N1 sont intégrés localement ; source
+  signée pré-LCP et qualification commune N3 restent à terminer.
 - Harmonisation des domaines couleur entre modules demandée mais différée ;
   ne pas la mélanger à la transition RAW ni changer le master Rec.2020 ici.
 - F1 : 60 cas A, 12 fichiers B, 12 témoins ciblés du garde et contrat natif
   clos ; 37 tests Python passent. F2 relu, réserves transmises, aucun nouveau
   rendu activé. Fin/veille coordonnées au journal commun, pas de push/dev/tag.
-- L'étude de bruit est suspendue comme demandé ; ses preuves sur `patch_noise`
-  ne sont pas promues en validation du développement flottant.
+- L'étude historique sur `patch_noise` ne vaut pas validation du nouveau module
+  N2. Le branchement expérimental avant profil est maintenant autorisé, sans
+  activation par défaut ni promotion de ses essais synthétiques en preuve visuelle.

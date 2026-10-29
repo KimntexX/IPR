@@ -199,6 +199,25 @@ vérifie trois boîtiers en A/B avec/sans DCP après ce garde, sans rejouer
 inutilement les 60 succès de la campagne F1 complète. Les outils ne modifient
 ni les règles du DCP ni le placement du débruitage en production.
 
+## Module expérimental de débruitage caméra (N2)
+
+La cible `cameraDenoiseTests` du banc compile le module de ce worktree.
+CTest `cameraDenoiseContract` vérifie le contrat signé, les forces séparées,
+l'identité, les gains WB, l'annulation et les ressources sur signaux synthétiques.
+Pour une mesure locale du module seul :
+
+```powershell
+./build-patch_raw_bench/Release/cameraDenoiseTests.exe --benchmark 6000 4000
+```
+
+Le pic mémoire concerne tout ce processus synthétique, pas l'application ;
+aucune image de mesure n'est écrite. Le modèle empirique multiscalaire ne
+remplace pas une calibration physique capteur. La source signée pré-LCP,
+l'IHM, le proxy et les scènes réelles relèvent de N3, pas de ce test natif.
+`qualify_camera_denoise.py --help` décrit le lanceur des preuves : module,
+test des profils, CTest et dossiers DLL explicites ; chaque exécution écrit
+un nouveau JSON horodaté sans écraser les preuves précédentes.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,
