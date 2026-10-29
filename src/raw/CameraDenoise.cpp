@@ -1,6 +1,7 @@
 #include "CameraDenoise.h"
 
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <cmath>
 #include <cstddef>
@@ -42,13 +43,11 @@ bool validContext(const Context &c)
     if (!std::isfinite(c.iso) || c.iso < 0 ||
         !std::isfinite(c.pixelScale) || c.pixelScale <= 0 || c.pixelScale > 1)
         return false;
-    for (double gain : c.gains) if (!std::isfinite(gain) || gain <= 0) return false;
     return true;
 }
 
-cv::Vec3f opponent(const cv::Vec3f &rgb, const cv::Vec3f &inverseGains)
+cv::Vec3f opponent(const cv::Vec3f &x)
 {
-    const cv::Vec3f x = rgb.mul(inverseGains);
     return {.25f * x[0] + .5f * x[1] + .25f * x[2],
             .5f * x[0] - .5f * x[2], x[1] - .5f * x[0] - .5f * x[2]};
 }
@@ -100,15 +99,14 @@ bool pyramid(cv::Mat current, Pyramid &out, const std::array<int, Levels> &steps
     return true;
 }
 
-cv::Mat patch(const cv::Mat &source, const cv::Rect &core, int margin,
-              const cv::Vec3f &inverseGains)
+cv::Mat patch(const cv::Mat &source, const cv::Rect &core, int margin)
 {
     cv::Mat out(core.height + 2 * margin, core.width + 2 * margin, CV_32FC3);
     for (int y = 0; y < out.rows; ++y) {
         const auto *in = source.ptr<cv::Vec3f>(reflect(core.y + y - margin, source.rows));
         auto *row = out.ptr<cv::Vec3f>(y);
         for (int x = 0; x < out.cols; ++x)
-            row[x] = opponent(in[reflect(core.x + x - margin, source.cols)], inverseGains);
+            row[x] = opponent(in[reflect(core.x + x - margin, source.cols)]);
     }
     return out;
 }
@@ -147,7 +145,7 @@ bool coherent(const PatchNoise &item, int channel, int width, int height, int la
     return correlation(true) > .9 && correlation(false) > .9;
 }
 
-bool estimate(const cv::Mat &source, const cv::Vec3f &inverseGains,
+bool estimate(const cv::Mat &source,
               const std::array<int, Levels> &steps, int margin,
               std::array<Noise, Levels> &models, const std::function<bool()> &stop)
 {
@@ -159,7 +157,7 @@ bool estimate(const cv::Mat &source, const cv::Vec3f &inverseGains,
     for (auto origin : origins) {
         if (stop()) return false;
         Pyramid p;
-        if (!pyramid(patch(source, {origin.first, origin.second, width, height}, margin, inverseGains), p, steps, stop)) return false;
+        if (!pyramid(patch(source, {origin.first, origin.second, width, height}, margin), p, steps, stop)) return false;
         for (int level = 0; level < Levels; ++level) {
             if (steps[std::size_t(level)] == 0) break;
             const auto &d = p.detail[std::size_t(level)];
@@ -245,12 +243,12 @@ bool boxMean(const cv::Mat &source, cv::Mat &out, int radius, const std::functio
 }
 
 bool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margin,
-          const cv::Vec3f &inverseGains, const std::array<int, Levels> &steps,
+          const std::array<int, Levels> &steps,
           const std::array<Noise, Levels> &models, const cv::Vec3f &strength,
           int radius, const std::function<bool()> &stop)
 {
     Pyramid p;
-    if (!pyramid(patch(source, core, margin, inverseGains), p, steps, stop)) return false;
+    if (!pyramid(patch(source, core, margin), p, steps, stop)) return false;
     for (int y = 0; y < core.height; ++y)
         std::fill_n(delta.ptr<cv::Vec3f>(core.y + y) + core.x, core.width, cv::Vec3f{});
     for (int level = 0; level < Levels; ++level) {
@@ -315,13 +313,6 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
     try {
         const auto stop = [&] { return cancelled && cancelled(); };
         if (stop() || !validContext(context) || !cv::checkRange(cameraRgb)) return false;
-        const cv::Vec3f gains(float(context.gains[0]), float(.5 * context.gains[1] + .5 * context.gains[3]), float(context.gains[2]));
-        cv::Vec3f inverseGains;
-        for (int c = 0; c < 3; ++c) {
-            if (!std::isfinite(gains[c]) || gains[c] <= 0) return false;
-            inverseGains[c] = 1.f / gains[c];
-            if (!std::isfinite(inverseGains[c])) return false;
-        }
         std::array<int, Levels> steps{};
         const int activeLevels = settings.chrominance > 0 ? Levels : LuminanceLevels;
         for (int i = 0; i < activeLevels; ++i) steps[std::size_t(i)] = std::max(1, int(std::lround((1 << i) * context.pixelScale)));
@@ -329,10 +320,18 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
         int margin = radius;
         for (int step : steps) margin += 2 * step;
         std::array<Noise, Levels> models;
-        if (!estimate(cameraRgb, inverseGains, steps, margin, models, stop)) return false;
+        if (!estimate(cameraRgb, steps, margin, models, stop)) return false;
         bool measured = false;
         for (const auto &m : models) for (int c = 0; c < 3; ++c) if (m.sigma[c] > 0) measured = true;
-        if (!measured) return true;
+        if (!measured) {
+            // A nonzero request must detach even when no noise was measured:
+            // downstream optics may otherwise mutate the shared source.
+            if (stop()) return false;
+            auto unchanged = cameraRgb.clone();
+            if (stop()) return false;
+            cameraRgb = std::move(unchanged);
+            return true;
+        }
         cv::Mat delta(cameraRgb.size(), CV_32FC3);
         std::vector<cv::Rect> tiles;
         for (int y = 0; y < cameraRgb.rows; y += TileSize) for (int x = 0; x < cameraRgb.cols; x += TileSize)
@@ -347,7 +346,7 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
                     return false;
                 };
                 for (std::size_t i; (i = next.fetch_add(1)) < tiles.size();) {
-                    if (halt() || !tile(cameraRgb, delta, tiles[i], margin, inverseGains, steps, models, strength, radius, halt)) {
+                    if (halt() || !tile(cameraRgb, delta, tiles[i], margin, steps, models, strength, radius, halt)) {
                         stopped.store(true); return;
                     }
                 }
@@ -382,7 +381,7 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
             for (int x = 0; x < delta.cols; ++x) {
                 cv::Vec3f d = out[x];
                 for (int c = 0; c < 3; ++c) d[c] *= d[c] > 0 ? plus[c] : minus[c];
-                out[x] = in[x] + cv::Vec3f(d[0] + d[1] - .5f * d[2], d[0] + .5f * d[2], d[0] - d[1] - .5f * d[2]).mul(gains);
+                out[x] = in[x] + cv::Vec3f(d[0] + d[1] - .5f * d[2], d[0] + .5f * d[2], d[0] - d[1] - .5f * d[2]);
             }
         }
         if (stop() || !cv::checkRange(delta)) return false;

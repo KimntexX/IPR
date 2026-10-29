@@ -498,12 +498,8 @@ int main(int argc, char **argv)
         lensSource.referenceWhiteBalanceKelvin = lens.sourceKelvin;
         lensSource.dcpContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(lens);
         cv::Mat expectedCamera = lens.preLensCameraRgb;
-        CameraDenoise::Context denoiseContext;
-        denoiseContext.gains = {1.0 / lens.cameraNeutral[0], 1.0, 1.0 / lens.cameraNeutral[2], 1.0};
-        const double smallestGain = *std::min_element(denoiseContext.gains.cbegin(), denoiseContext.gains.cend());
-        for (double &gain : denoiseContext.gains) gain /= smallestGain;
         auto expectedContext = lens;
-        if (!CameraDenoise::apply(expectedCamera, {40, 0}, denoiseContext) ||
+        if (!CameraDenoise::apply(expectedCamera, {40, 0}, {}) ||
             !CameraProfileEngine::applyLcp(lcpPath, expectedCamera, lens.capture, &lensError, lens.lensOptions))
             return 1;
         expectedContext.cameraRgb = expectedCamera;

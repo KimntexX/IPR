@@ -203,7 +203,7 @@ ni les règles du DCP ni le placement du débruitage en production.
 
 La cible `cameraDenoiseTests` du banc compile le module de ce worktree.
 CTest `cameraDenoiseContract` vérifie le contrat signé, les forces séparées,
-l'identité, les gains WB, l'annulation et les ressources sur signaux synthétiques.
+l'identité, les axes RGB déjà balancés, l'annulation et les ressources sur signaux synthétiques.
 Pour une mesure locale du module seul :
 
 ```powershell
@@ -217,6 +217,9 @@ l'IHM, le proxy et les scènes réelles relèvent de N3, pas de ce test natif.
 `qualify_camera_denoise.py --help` décrit le lanceur des preuves : module,
 test des profils, CTest et dossiers DLL explicites ; chaque exécution écrit
 un nouveau JSON horodaté sans écraser les preuves précédentes.
+`--module-only` omet explicitement le test profil si un raccordement moteur
+reste à faire ; il refuse `--profile-tool` dans ce mode afin de ne pas utiliser
+un ancien binaire. La preuve distingue ce contrôle d'une intégration réussie.
 `camera_denoise_witnesses.py --help` décrit le smoke réel N3 sur trois boîtiers :
 A/B0/B50/B100 et replays, en mémoire, un serveur fermé par scène avec watchdog.
 Les écarts de rendu sRGB qu'il mesure ne prouvent pas la qualité du débruitage.
@@ -229,8 +232,30 @@ N3 convenues avec Claude, après filtrage et rendu de l'image entière. Il
 distingue moyenne RGB, luma encodée pondérée et chroma R−G/B−G. Le mode
 `--reference-proof` exige l'exécutable exact d'une preuve historique, sans
 conserver d'implémentation legacy dans le module. Aucun TIFF n'est écrit.
-Le prototype courant utilise cinq échelles chroma et trois pour l'intensité ;
+Le prototype courant V1 utilise cinq échelles chroma et trois pour l'intensité,
+directement dans le RGB caméra déjà balancé, sans annuler les gains de BdB ;
 les gains de métriques ne valent pas validation visuelle.
+
+N2b(a) : `signal_noise_survey.py --help` pilote `--signal-survey` de la sonde.
+Il conserve81 régions par source, sépare les25 positions initiales des56
+positions de contrôle et compare un modèle global à une interpolation de
+variance par niveau de signal. `--replay` réanalyse une preuve existante sans
+redécoder les images. MAD, autocorrélation et heuristique d'aplat ne sont pas
+une vérité physique du bruit ; cette sonde ne change pas le filtre.
+
+`qualify_signal_denoise.py --help` compare le candidat conditionnel aux masques
+figés de `loi-force-bruit-v001-20261029T185322Z.json`. Il contrôle les empreintes
+RAW/TIFF et celles des masques, puis exige le même témoin B0. Trois scènes de
+développement sont mesurées en mémoire ; les25 autres sont déclarées réservées
+pour un contrôle ultérieur du candidat figé (réserve prospective, pas un corpus
+jamais observé). Les sources et l'exécutable sont hachés dans la nouvelle preuve.
+Le watchdog termine un serveur bloqué ; un échec arrête la campagne et reste
+consigné. Les dispersions haute fréquence incluent des textures réelles : leur
+baisse n'est ni une vérité bruit seul ni une validation visuelle.
+Le candidat conditionnel est conservé en `0941dc4` ; V1 est d'abord isolé
+sans ce candidat. Le lanceur peut qualifier une comparaison ultérieure, mais
+son nom n'établit pas que le binaire fourni contient un modèle conditionnel :
+vérifier les sources embarquées et l'identité d'exécutable de chaque preuve.
 
 ## Limites du corpus et références
 

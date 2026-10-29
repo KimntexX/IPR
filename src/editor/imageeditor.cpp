@@ -53,21 +53,6 @@ namespace {
 // Keys of the cached render stages, defined with the render below.
 RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s);
 
-// What the camera-signal denoise knows of the source: the white-balance gains
-// applied (inverse of the camera neutral, smallest 1) and the preview's scale.
-CameraDenoise::Context cameraDenoiseContext(const CameraProfileEngine::DcpWorkingContext &camera, double pixelScale)
-{
-    CameraDenoise::Context context;
-    for (int c = 0; c < 3; ++c)
-        if (camera.cameraNeutral[c] > 0.0) context.gains[size_t(c)] = 1.0 / camera.cameraNeutral[c];
-    context.gains[3] = context.gains[1];
-    const double smallest = *std::min_element(context.gains.cbegin(), context.gains.cend());
-    if (smallest > 0.0)
-        for (double &gain : context.gains) gain /= smallest;
-    context.pixelScale = pixelScale;
-    return context;
-}
-
 QString selectionKey(const QUrl &url)
 {
     if (!url.isLocalFile()) return {};
@@ -1899,8 +1884,9 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
             denoised = *source.dcpContext;
             const bool preLens = !source.dcpContext->preLensCameraRgb.empty();
             denoised.cameraRgb = preLens ? source.dcpContext->preLensCameraRgb : source.dcpContext->cameraRgb;
-            if (!CameraDenoise::apply(denoised.cameraRgb, cameraDenoise,
-                                      cameraDenoiseContext(*source.dcpContext, pixelScale)) ||
+            CameraDenoise::Context denoiseContext;
+            denoiseContext.pixelScale = pixelScale;
+            if (!CameraDenoise::apply(denoised.cameraRgb, cameraDenoise, denoiseContext) ||
                 (preLens && !CameraProfileEngine::applyLcp(denoised.lcpPath, denoised.cameraRgb, denoised.capture,
                                                            &error, denoised.lensOptions))) {
                 qWarning() << "Échec du débruitage du signal caméra :" << error;
