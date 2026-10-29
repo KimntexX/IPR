@@ -32,6 +32,9 @@ struct Settings
     int grain = 0;      // grain monochrome déterministe
     int denoiseLuminance = 0;
     int denoiseChrominance = 0;
+    // Experimental: the sliders act on the camera signal before the profiles. A session
+    // switch of the editor, not stored in the sidecar.
+    bool denoiseBeforeProfile = false;
     int sharpeningAmount = 0;
     float sharpeningRadius = 1.0f;
     int sharpeningMasking = 0;

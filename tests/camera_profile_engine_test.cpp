@@ -26,6 +26,14 @@ public:
         settings.brightness = ev;
         return ImageEditor::renderWorkingImage(source, settings);
     }
+    static ColorPipeline::WorkingImage denoised(const ColorPipeline::WorkingImage &source, int temperature,
+                                                 int luminance, bool beforeProfile) {
+        ImageEditor::Settings settings;
+        settings.temperature = temperature;
+        settings.denoiseLuminance = luminance;
+        settings.denoiseBeforeProfile = beforeProfile;
+        return ImageEditor::renderWorkingImage(source, settings);
+    }
     static ColorPipeline::WorkingImage proxy(const ColorPipeline::WorkingImage &source) {
         return ImageEditor::buildEditProxy(source);
     }
@@ -376,6 +384,25 @@ int main(int argc, char **argv)
     const auto editorNeutral = IprTestImageGenerator::render(editorSource, 5200, 0);
     if (!check(editorNeutral.linearRgba.data == editorSource.linearRgba.data,
                "editor neutral is the untouched source, not a WB round trip")) return 1;
+    // Experimental camera-signal denoise: off, or at strength 0, the render is
+    // unchanged; on, the camera signal goes through the profile again, from the
+    // retained source, which it never mutates.
+    if (!check(IprTestImageGenerator::denoised(editorSource, 5200, 0, true).linearRgba.data ==
+                   editorSource.linearRgba.data,
+               "camera denoise at strength 0 is the untouched source")) return 1;
+    {
+        const auto before = IprTestImageGenerator::denoised(editorSource, 5200, 40, true);
+        cv::Mat neutralRgba;
+        std::vector<cv::Mat> neutralChannels;
+        cv::split(neutralExpected, neutralChannels);
+        neutralChannels.push_back(cv::Mat(neutralExpected.size(), CV_32FC1, cv::Scalar(1)));
+        cv::merge(neutralChannels, neutralRgba);
+        if (!check(!before.isNull() && cv::checkRange(before.linearRgba) &&
+                       before.linearRgba.size() == neutralRgba.size() &&
+                       cv::norm(wb.cameraRgb, untouched, cv::NORM_INF) == 0 &&
+                       cv::norm(editorSource.dcpContext->cameraRgb, untouched, cv::NORM_INF) == 0,
+                   "camera denoise renders through the profile without touching the retained signal")) return 1;
+    }
     // Exposure scales the scene-linear camera signal before the DCP tone curve,
     // like WB: never a multiplication of the already rendered master.
     if (!CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 1.0, rendered, &wbError)) return 1;

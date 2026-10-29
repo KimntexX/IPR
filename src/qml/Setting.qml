@@ -147,6 +147,7 @@ Item {
             grainSlider.value = editor.adjustmentValue("grain")
             denoiseLuminanceSlider.value = editor.adjustmentValue("denoiseLuminance")
             denoiseChrominanceSlider.value = editor.adjustmentValue("denoiseChrominance")
+            denoiseBeforeProfileCheck.checked = editor.adjustmentValue("denoiseBeforeProfile") > 0
             sharpeningAmountSlider.value = editor.adjustmentValue("sharpeningAmount")
             sharpeningRadiusSlider.value = editor.adjustmentValue("sharpeningRadius")
             sharpeningMaskingSlider.value = editor.adjustmentValue("sharpeningMasking")
@@ -626,6 +627,16 @@ Item {
                 preferences: root.preferences
                 textColor: root.textColor
                 title: qsTr("Réduction du bruit")
+
+                PreferenceCheckBox {
+                    id: denoiseBeforeProfileCheck
+                    objectName: "denoiseBeforeProfileCheck"
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    text: qsTr("Avant le profil (expérimental)")
+                    enabled: editor.hasImage
+                    onToggled: editor.setDenoiseBeforeProfile(checked)
+                }
 
                 AdjustmentControl {
                     textColor: root.textColor

@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "CameraDenoise.h"
 
 #include "Dehaze.h"
 #include "Grain.h"
@@ -51,6 +52,21 @@ namespace {
 
 // Keys of the cached render stages, defined with the render below.
 RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s);
+
+// What the camera-signal denoise knows of the source: the white-balance gains
+// applied (inverse of the camera neutral, smallest 1) and the preview's scale.
+CameraDenoise::Context cameraDenoiseContext(const CameraProfileEngine::DcpWorkingContext &camera, double pixelScale)
+{
+    CameraDenoise::Context context;
+    for (int c = 0; c < 3; ++c)
+        if (camera.cameraNeutral[c] > 0.0) context.gains[size_t(c)] = 1.0 / camera.cameraNeutral[c];
+    context.gains[3] = context.gains[1];
+    const double smallest = *std::min_element(context.gains.cbegin(), context.gains.cend());
+    if (smallest > 0.0)
+        for (double &gain : context.gains) gain /= smallest;
+    context.pixelScale = pixelScale;
+    return context;
+}
 
 QString selectionKey(const QUrl &url)
 {
@@ -1191,7 +1207,7 @@ bool ImageEditor::addPointColorAt(qreal x, qreal y)
     if (tones.empty()) {
         cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
         const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
-        if (!renderTones(source, m_settings, reference, tones))
+        if (!renderTones(source, m_settings, reference, previewPixelScale(), tones))
             return false;
     }
     const auto colour = PerceptualColour::colourBeforePointColour(tones, x, y, 2, perceptualParameters(m_settings));
@@ -1283,6 +1299,7 @@ double ImageEditor::adjustmentValue(const QString &name) const
     if (name == QStringLiteral("grain")) return m_settings.grain;
     if (name == QStringLiteral("denoiseLuminance")) return m_settings.denoiseLuminance;
     if (name == QStringLiteral("denoiseChrominance")) return m_settings.denoiseChrominance;
+    if (name == QStringLiteral("denoiseBeforeProfile")) return m_settings.denoiseBeforeProfile ? 1.0 : 0.0;
     if (name == QStringLiteral("sharpeningAmount")) return m_settings.sharpeningAmount;
     if (name == QStringLiteral("sharpeningRadius")) return m_settings.sharpeningRadius;
     if (name == QStringLiteral("sharpeningMasking")) return m_settings.sharpeningMasking;
@@ -1465,6 +1482,15 @@ void ImageEditor::setDenoiseChrominance(int value)
     scheduleRender();
 }
 
+void ImageEditor::setDenoiseBeforeProfile(bool enabled)
+{
+    m_denoiseBeforeProfile = enabled;
+    if (m_settings.denoiseBeforeProfile == enabled)
+        return;
+    m_settings.denoiseBeforeProfile = enabled;
+    scheduleRender();
+}
+
 void ImageEditor::setSharpeningAmount(int value)
 {
     value = qBound(0, value, 200);
@@ -1592,6 +1618,7 @@ void ImageEditor::pasteAdjustments()
     const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
     m_settings = m_copiedAdjustments;
     m_settings.automaticWhiteBalance = automaticWhiteBalance;
+    m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
     if (m_copiedAsShot) {   // the target's own as-shot white balance
         m_settings.temperature = static_cast<int>(std::lround(
             m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
@@ -1619,6 +1646,7 @@ void ImageEditor::resetAdjustments()
     const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
     m_settings = {};
     m_settings.automaticWhiteBalance = automaticWhiteBalance;
+    m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
     m_settings.temperature = static_cast<int>(std::lround(
         m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
     emit toneCurvesReset();
@@ -1700,6 +1728,8 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
     const auto ints = [&stream](const auto &values) { for (int value : values) stream << qint32(value); };
     stream << s.grayscale << s.brightness << qint32(s.contrast) << qint32(s.temperature) << qint32(s.tint)
            << qint32(s.shadows) << qint32(s.blacks) << qint32(s.highlights) << qint32(s.whites);
+    if (s.denoiseBeforeProfile)   // the camera-signal denoise belongs to the first stage then
+        stream << qint32(s.denoiseLuminance) << qint32(s.denoiseChrominance);
     keys[0] = key;
     stream << qint32(s.saturation) << qint32(s.vibrance) << qint32(s.gradingBlending) << qint32(s.gradingBalance);
     ints(s.mixerHue); ints(s.mixerSaturation); ints(s.mixerLuminance); ints(s.gradingHue); ints(s.gradingSaturation);
@@ -1765,7 +1795,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     cv::Mat adjusted = start.rgb;
     if (runs(0)) {
         cv::cvtColor(source.linearRgba, adjusted, cv::COLOR_RGBA2RGB);
-        if (!renderTones(source, settings, referenceTemperature, adjusted)) return {};
+        if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted)) return {};
         reached(0, adjusted);
     }
     if (runs(1)) {
@@ -1776,7 +1806,8 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     // runs in linear RGB and keeps luminance and chrominance independent so
     // coloured speckles can be removed without flattening edge detail.
     if (runs(2)) {
-        if (settings.denoiseLuminance != 0 || settings.denoiseChrominance != 0)
+        if ((settings.denoiseLuminance != 0 || settings.denoiseChrominance != 0) &&
+            !(settings.denoiseBeforeProfile && source.dcpContext))
             DetailProcessing::reduceNoise(adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
         reached(2, adjusted);
     }
@@ -1842,16 +1873,33 @@ double ImageEditor::previewPixelScale() const
 }
 
 bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
-                              int referenceTemperature, cv::Mat &adjusted)
+                              int referenceTemperature, double pixelScale, cv::Mat &adjusted)
 {
     const bool whiteBalanceEdit = settings.temperature != referenceTemperature || settings.tint != 0;
     // RAW with a DCP: exposure and white balance act on the scene-linear camera
     // signal before the profile tone curve, so highlights keep its shoulder.
     const bool sceneExposure = source.dcpContext && settings.brightness != 0.0f;
-    if (source.dcpContext && (whiteBalanceEdit || sceneExposure)) {
+    // Experimental: the denoise sliders act on the camera signal, before the profile.
+    const CameraDenoise::Settings cameraDenoise{settings.denoiseLuminance, settings.denoiseChrominance};
+    const bool denoiseCamera = source.dcpContext && settings.denoiseBeforeProfile &&
+                               !CameraDenoise::identity(cameraDenoise);
+    if (source.dcpContext && (whiteBalanceEdit || sceneExposure || denoiseCamera)) {
         QString error;
-        if (source.dcpContext->cameraRgb.size() != adjusted.size() ||
-            !CameraProfileEngine::renderFromCameraSignal(*source.dcpContext,
+        const CameraProfileEngine::DcpWorkingContext *camera = source.dcpContext.get();
+        CameraProfileEngine::DcpWorkingContext denoised;
+        if (denoiseCamera) {
+            // From the retained source each time: never denoised twice.
+            denoised = *source.dcpContext;
+            denoised.cameraRgb = source.dcpContext->cameraRgb.clone();
+            if (!CameraDenoise::apply(denoised.cameraRgb, cameraDenoise,
+                                      cameraDenoiseContext(*source.dcpContext, pixelScale))) {
+                qWarning() << "Échec du débruitage du signal caméra.";
+                return false;
+            }
+            camera = &denoised;
+        }
+        if (camera->cameraRgb.size() != adjusted.size() ||
+            !CameraProfileEngine::renderFromCameraSignal(*camera,
                 settings.temperature, settings.tint, settings.brightness, adjusted, &error)) {
             qWarning() << "Échec du rendu capteur avant DCP :" << error;
             return false;
@@ -1917,7 +1965,7 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
         if (tones.empty()) {
             cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
             const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
-            if (!renderTones(source, settings, reference, tones)) tones.release();
+            if (!renderTones(source, settings, reference, pixelScale, tones)) tones.release();
         }
         const cv::Mat weights = PerceptualColour::pointWeights(tones, perceptualParameters(settings), overlayPoint);
         if (!weights.empty() && weights.size() == rendered.linearRgba.size()) {
@@ -2345,6 +2393,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
             m_settings = std::move(persisted);
             m_userImageMetadata.insert(currentFileKey(), std::move(metadata));
         }
+        m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
         emit pointColorsChanged();
     }
