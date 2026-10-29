@@ -2,12 +2,12 @@
 
 ## Bilan actuel — 29 octobre 2026
 
-Dernier jalon (§§28–29) : régression sombre de(a)+V1 confirmée sur28 scènes,
-audit des σ et du domaine terminé sur quatre sources. Le plancher sombre
-figé en `fcd95a2` restaure la réduction des noirs sur les trois témoins sans
-perdre le gain clair ; 65 contrôles natifs, sept suites et raccordement
-optique réussis. **Pas de promotion :28 scènes et visuel restent à vérifier.**
-Les gains de BdB restent appliqués, les forces et bornes DCP inchangées.
+Dernier jalon (§30) : candidat(c1) préparé séparément au-dessus du plancher
+sombre. Protection chroma indépendante de la texture achromatique ;70 contrôles
+natifs, sept suites et test optique passent. **Qualification synthétique
+seulement, pas de promotion.** Claude mesure encore le plancher sur les28 scènes
+et le corpus élargi ; ses exécutables figés ne sont pas modifiés ici. Les forces,
+estimations de bruit et bornes DCP restent inchangées dans(c1).
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1476,6 +1476,89 @@ changement(c) des taches basse fréquence, des forces ou du DCP dans ce lot.
 Les requêtes CR3 chaudes pleines définition prennent8,2–8,9 s en luminance
 et12,6–13,9 s en couleur, rendu compris ; pas un budget de proxy interactif.
 
+## 30. 29 octobre — candidat(c1), ne pas protéger du bruit couleur avec la texture I
+
+### Cible et hypothèse distincte du plancher sombre
+
+Claude lance la chaîne de nuit sur des exécutables copiés/hachés :28 scènes
+puis76 RAW hors protocole, versions V1/(a)+V1/plancher. Ce travail reste
+indépendant de(c1), préparé ici sur la même base `fcd95a2`. Aucun rendu RAW
+concurrent ni benchmark24 Mpx ajouté par Codex pendant cette chaîne.
+
+Le filtre utilisait le maximum entre protection individuelle et protection
+jointe des trois axes I/Co/Cg pour chaque canal. Une texture forte en I pouvait
+donc protéger un coefficient Co/Cg contenant seulement du bruit. L'information
+« la structure est réelle » ne suffit pas à prouver qu'elle est colorée ; les
+murs à relief réel mais teinte approximativement uniforme sont le cas visé.
+Cette hypothèse n'est pas une affirmation que toute variation de chroma du
+mur serait du bruit ni que les filaments visibles ont une cause unique.
+
+### Contrôle négatif puis changement limité
+
+Avant modification du filtre, un nouveau témoin définit une vérité connue :
+texture I achromatique, avec du bruit Co/Cg additif fin et des champs colorés
+simulés corrélés par flou gaussien sigma3/6 px. La scène contient des plages
+stationnaires pour l'estimation et une région texturée pour l'évaluation.
+Le plancher de base garde0,997698 de l'erreur quadratique chroma initiale dans
+cette région. Le nouveau test exigeait moins de0,5 **avant** le changement :
+il échoue comme prévu dans
+`../raw/camera-denoise-n2-v001-20261029T214914Z.json` (69/70 contrôles).
+Cette preuve négative est conservée, pas effacée ou renommée en succès.
+
+Dans(c1), I garde exactement la formule de protection jointe3D. Pour Co/Cg,
+la protection partagée utilise seulement leurs énergies normalisées et leurs
+espérances locales déjà disponibles :
+
+```text
+E_chroma = E_Co + E_Cg
+N_chroma = N_Co + N_Cg
+protection_chroma = clamp(1 - N_chroma / max(E_chroma, N_chroma), 0, 1)
+protection_finale_c = max(protection_individuelle_c, protection_chroma)
+```
+
+Si l'espérance est nulle, cette protection partagée vaut0 ; les autres gardes
+de support restent actifs. L'espérance de la somme d'énergies est additive
+même lorsque Co/Cg sont corrélés : c'est un contrôle de second moment, **pas
+une probabilité chi-deux ni une hypothèse d'indépendance des canaux**. La
+covariance3D estimée reste utilisée par la protection I ; le veto chroma
+utilise les deux énergies marginales, sans nouvelle inversion de matrice.
+
+Pas de nouveau flou, médiane, échelle, σ, plancher, seuil de noir ou force.
+La loi des curseurs(b) ne change pas. L'intensité caméra est conservée en
+couleur seule, pas nécessairement la luma sRGB après les non-linéarités DCP.
+La version en cours de mesure par Claude n'est pas modifiée.
+
+### Qualification disponible et limites
+
+Preuve `../raw/camera-denoise-n2-v001-20261029T215306Z.json` :70 contrôles
+natifs, sept suites et test moteur optique réussis. Dans le témoin :
+
+- Erreur quadratique chroma restante :0,331894 de l'entrée, contre0,997698
+  avant(c1) ; il s'agit d'une MSE, pas d'un écart-type ni d'une note visuelle.
+- Partie basse fréquence après passe-bas sigma4 : MSE0,433354 de celle de
+  l'entrée. Cette métrique n'était pas mesurée dans le contrôle négatif ; ne
+  pas inventer de comparaison avant/après pour ce seul indicateur.
+- Texture I de l'entrée conservée à moins de5e-7 en couleur seule.
+- Contrôle distinct de vrais détails couleur : contraste du contour0,079467
+  pour0,08 attendu ; ligne couleur d'un pixel0,049973 pour0,05 attendu.
+  Cela couvre des détails forts, **pas les textures colorées faibles** proches
+  du bruit, ni toutes les fréquences, teintes, expositions ou boîtiers.
+- Annulation, finitude, alias de source, bornes de force, répétabilité, DC,
+  modèle sombre et témoins synthétiques précédents restent contrôlés.
+
+Lanceur utilisé avec `--skip-benchmarks` : aucune mesure de performance n'est
+annoncée et aucun ancien temps n'est attribué à(c1). Compilation séquentielle
+et petits tests seulement pendant la chaîne de Claude. Une relecture de la
+[publication Guided Image Filtering](https://people.csail.mit.edu/kaiming/eccv10/index.html)
+rappelle le rôle du guidage et du transfert de structure ;(c1) n'en implémente
+ni ne copie l'algorithme, c'est une variante IPR du veto énergétique existant.
+
+**Décision : candidat séparé pour la prochaine mesure de Claude**, sans
+publication ni promotion. Vérifier masques fixes, métriques HP ET basses
+fréquences, points isolés, vraies prises colorées, détails de faible contraste,
+aperçu et pleine définition. Une amélioration synthétique ne prouve pas la
+disparition des taches réelles. Ne pas mélanger(c1) et(b) avant ce bilan.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -1503,3 +1586,7 @@ et12,6–13,9 s en couleur, rendu compris ; pas un budget de proxy interactif.
 - DCP et force inchangés ; harmonisation des domaines couleur différée.
   Mesures par scène et versions dans les JSON ; revue visuelle, ressources
   applicatives et validation multi-boîtiers restent des qualifications distinctes.
+- Candidat(c1) prêt au niveau synthétique (§30) : la texture I ne bloque plus
+  la correction de chroma par le veto partagé.70 contrôles/sept suites/optique
+  passent, pas encore de rendu réel ; comparaison à confier à Claude après
+  sa chaîne figée du plancher sombre. Pas de modification(b) ni de promotion.

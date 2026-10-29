@@ -220,6 +220,9 @@ un nouveau JSON horodaté sans écraser les preuves précédentes.
 `--module-only` omet explicitement le test profil si un raccordement moteur
 reste à faire ; il refuse `--profile-tool` dans ce mode afin de ne pas utiliser
 un ancien binaire. La preuve distingue ce contrôle d'une intégration réussie.
+`--skip-benchmarks` conserve les contrats et CTest, mais omet les allocations
+et chronométrages synthétiques2,8/24 Mpx pendant une autre campagne ; la
+preuve écrit explicitement `benchmarks=not_run`. Ne pas en tirer un budget temps/RAM.
 `camera_denoise_witnesses.py --help` décrit le smoke réel N3 sur trois boîtiers :
 A/B0/B50/B100 et replays, en mémoire, un serveur fermé par scène avec watchdog.
 Les écarts de rendu sRGB qu'il mesure ne prouvent pas la qualité du débruitage.

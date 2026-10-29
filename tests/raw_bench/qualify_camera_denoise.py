@@ -19,6 +19,8 @@ def main():
     parser.add_argument('--profile-tool', type=Path)
     parser.add_argument('--module-only', action='store_true',
                         help='Qualify module and bench suites only; engine integration is explicitly pending.')
+    parser.add_argument('--skip-benchmarks', action='store_true',
+                        help='Skip timing/large synthetic allocations, e.g. during another agent campaign.')
     parser.add_argument('--ctest', type=Path, required=True)
     parser.add_argument('--runtime-dir', type=Path, action='append', required=True)
     args = parser.parse_args()
@@ -39,6 +41,7 @@ def main():
                 tools={str(p.resolve()): sha256(p.resolve()) for p in
                        (args.module_tool, args.profile_tool) if p is not None},
                 engine_integration='pending' if args.module_only else 'tested_below',
+                benchmarks='not_run' if args.skip_benchmarks else 'requested',
                 commands=[], limits=[
                     'Synthetic and profile integration only; real-scene N3 remains open.',
                     'Noise is empirical post-RCD, not a calibrated CFA a*signal+b model.',
@@ -47,8 +50,9 @@ def main():
                     'This evidence does not prove that N1 supplies signed pre-LCP input.',
                     'No Lightroom equivalence or visual validation is claimed.'])
     module = str(args.module_tool.resolve())
-    commands = [[module], [module, '--benchmark', '2048', '1365'],
-                [module, '--benchmark', '6000', '4000']]
+    commands = [[module]]
+    if not args.skip_benchmarks:
+        commands.extend([[module, '--benchmark', '2048', '1365'], [module, '--benchmark', '6000', '4000']])
     if not args.module_only:
         commands.append([str(args.profile_tool.resolve())])
     commands.append([str(args.ctest.resolve()), '--test-dir', str(args.module_tool.resolve().parents[1]),
