@@ -633,7 +633,7 @@ Item {
                     objectName: "denoiseBeforeProfileCheck"
                     Layout.fillWidth: true
                     Layout.minimumWidth: 0
-                    text: qsTr("Avant le profil (expérimental)")
+                    text: qsTr("Signal RAW signé, avant les profils (expérimental)")
                     enabled: editor.hasImage
                     onToggled: editor.setDenoiseBeforeProfile(checked)
                 }

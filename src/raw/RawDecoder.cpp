@@ -713,6 +713,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             options.retainedDcpSource->lensCorrectionEnabled = options.lensCorrectionEnabled;
             options.retainedDcpSource->chromaticAberrationEnabled = options.chromaticAberrationEnabled;
             options.retainedDcpSource->preLensSignal = options.retainPreLensSignal;
+            options.retainedDcpSource->signedDevelopment = options.signedDevelopment;
             if (metadata)
                 options.retainedDcpSource->metadata = *metadata;
         }

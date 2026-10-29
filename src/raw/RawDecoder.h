@@ -29,7 +29,8 @@ struct DcpSource
     bool automaticWhiteBalance = false;
     bool lensCorrectionEnabled = true;
     bool chromaticAberrationEnabled = true;
-    bool preLensSignal = false;   // decoded with Options::retainPreLensSignal
+    bool preLensSignal = false;       // decoded with Options::retainPreLensSignal
+    bool signedDevelopment = false;   // decoded with Options::signedDevelopment
 };
 
 struct Options

@@ -30,6 +30,9 @@
 //     shadows, midtones and highlights on top of the state (any hue/saturation pair),
 //     a fourth value for the global wheel, optional "luminance":[3 or 4], and
 //     optional "blending" [0, 100] and "balance" [-100, 100]
+//     optional "cameraDenoise":{"luminance":L,"chrominance":C} in [0, 100]: the
+//     editor's experimental denoise (signed development, before the profiles);
+//     {"luminance":0,"chrominance":0} renders the signed development alone
 //   {"op":"quit"}
 // An error answers {"ok":false,"error":...} and the server keeps serving.
 // Diagnostics go to stderr; stdout carries only the protocol.
@@ -103,8 +106,22 @@ void render(Masters &masters, const QJsonObject &request)
                                                 [&](const Feature &known) { return known.name == feature; }),
             "Unknown feature: " + feature);
     require(feature == "neutral" || eligible(feature, source), "RAW source required for " + feature);
-    const LoadResult &master = masters.get(source, feature == "neutral" ? Decode{} : decodeFor(feature, value));
+    Decode decode = feature == "neutral" ? Decode{} : decodeFor(feature, value);
+    const bool cameraDenoise = request.contains("cameraDenoise");
+    decode.signedCameraSignal = cameraDenoise;
+    const LoadResult &master = masters.get(source, decode);
     Settings settings = settingsFor(master, feature, value);
+    if (cameraDenoise) {
+        const QJsonObject denoise = request.value("cameraDenoise").toObject();
+        const auto strength = [&](const char *key, int &target) {
+            const int v = denoise.value(key).toInt();
+            require(v >= 0 && v <= 100, QString("cameraDenoise.%1 out of range").arg(key));
+            target = v;
+        };
+        strength("luminance", settings.denoiseLuminance);
+        strength("chrominance", settings.denoiseChrominance);
+        settings.denoiseBeforeProfile = true;
+    }
     if (request.contains("mixer")) {
         const QJsonObject mixer = request.value("mixer").toObject();
         const auto set = [&](const char *key, auto &target) {

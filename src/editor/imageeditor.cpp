@@ -1488,11 +1488,9 @@ void ImageEditor::setDenoiseBeforeProfile(bool enabled)
         return;
     m_denoiseBeforeProfile = enabled;
     m_settings.denoiseBeforeProfile = enabled;
-    // A lens-corrected RAW keeps its signal before the corrections only when asked:
-    // decode again to keep or release it.
-    const bool lensApplied = m_sourceMetadata.lensGeometryApplied || m_sourceMetadata.lensVignettingApplied ||
-                             m_sourceMetadata.chromaticAberrationApplied;
-    if (rawImage() && lensApplied && !busy())
+    // A RAW is decoded again: signed development and the signal before the lens
+    // corrections with the experiment, the application's development without.
+    if (rawImage() && !busy())
         reloadRawDevelopment();
     else
         scheduleRender();
@@ -2058,6 +2056,9 @@ RawDecoder::Options ImageEditor::developmentOptions() const
     options.useNormalizationEnvironment = false;
     options.listDcpProfiles = true;
     options.preferCameraNeutral = true;
+    // Experimental camera-signal denoise: the signed development (values below the
+    // black kept) and the signal before the lens corrections.
+    options.signedDevelopment = m_denoiseBeforeProfile;
     options.retainPreLensSignal = m_denoiseBeforeProfile;
     return options;
 }
@@ -2134,7 +2135,7 @@ QString ImageEditor::cacheKeyForFile(const QString &fileName,
                                      const QString &profile, const QString &manifest,
                                      const QString &lensProfile, bool lensResolved,
                                      bool lensCorrection, bool chromaticAberration,
-                                     bool preLensSignal)
+                                     bool cameraSignalExperiment)
 {
     const QFileInfo fileInfo(fileName);
     if (!fileInfo.exists() || !fileInfo.isFile())
@@ -2155,7 +2156,7 @@ QString ImageEditor::cacheKeyForFile(const QString &fileName,
         + QStringLiteral("|lcp=%1|resolved=%2|lens=%3|ca=%4")
             .arg(lensProfile + resourceDigest(lensProfile)).arg(lensResolved)
             .arg(lensCorrection).arg(chromaticAberration)
-        + (preLensSignal ? QStringLiteral("|prelens") : QString());
+        + (cameraSignalExperiment ? QStringLiteral("|signed-prelens") : QString());
 }
 
 ImageEditor::RawDevelopment ImageEditor::rawDevelopmentRecipe() const
@@ -2273,6 +2274,7 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
         m_dcpSource->lensCorrectionEnabled == m_lensCorrectionEnabled &&
         m_dcpSource->chromaticAberrationEnabled == m_chromaticAberrationEnabled &&
         m_dcpSource->preLensSignal == m_denoiseBeforeProfile &&
+        m_dcpSource->signedDevelopment == m_denoiseBeforeProfile &&
         m_dcpSource->metadata.lcpPath == options.lcpProfileOverride &&
         m_dcpSource->metadata.lcpSha256 == resourceDigest(options.lcpProfileOverride) &&
         (m_cameraProfile.isEmpty() || !options.dcpProfileOverride.isEmpty());
@@ -2566,7 +2568,8 @@ RawDecoder::Options ImageEditor::optionsForFile(const QString &path, bool *autom
     }
     *key = cacheKeyForFile(path, options.automaticWhiteBalance, options.dcpProfileOverride,
         options.normalizationManifest, options.lcpProfileOverride, raw.lensProfileResolved,
-        options.lensCorrectionEnabled, options.chromaticAberrationEnabled, options.retainPreLensSignal);
+        options.lensCorrectionEnabled, options.chromaticAberrationEnabled,
+        options.retainPreLensSignal && options.signedDevelopment);
     return options;
 }
 
