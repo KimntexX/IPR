@@ -1,5 +1,6 @@
 #include "CameraDenoise.h"
 #include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
 #include <array>
 #include <chrono>
 #include <cmath>
@@ -189,6 +190,24 @@ int main(int argc,char **argv)
         for(int y=0;y<shifted.rows;++y)for(int x=0;x<shifted.cols;++x)
             for(int c=0;c<3;++c)error=std::max(error,double(std::abs(shifted.at<cv::Vec3f>(y,x)[c]-regular.at<cv::Vec3f>(y,x)[c]-offset[c])));
         check(error<3e-6, "DC translation does not change the noise model appreciably");
+    }
+    {
+        cv::Mat chroma(256,256,CV_32F);cv::RNG random(0x145a);
+        random.fill(chroma,cv::RNG::NORMAL,0.,.08);
+        cv::GaussianBlur(chroma,chroma,{},6);
+        cv::Mat image(chroma.size(),CV_32FC3);
+        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
+            const float co=chroma.at<float>(y,x);
+            image.at<cv::Vec3f>(y,x)={.25f+co,.25f,.25f-co};
+        }
+        const auto before=variance(image);
+        check(apply(image,{0,100},{}),"broad synthetic chroma field completes");
+        const auto after=variance(image);
+        check(after[0]<before[0]&&after[2]<before[2],"broad chroma reduced on known flat truth");
+        double error=0;
+        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x)
+            error=std::max(error,double(std::abs(axes(image.at<cv::Vec3f>(y,x))[0]-.25f)));
+        check(error<5e-7,"coarse chroma scales do not smooth camera intensity");
     }
     {
         auto regular=field(128,128), amplified=regular.clone();

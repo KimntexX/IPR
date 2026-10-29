@@ -31,6 +31,8 @@ bool identity(const Settings &settings);
 // Input: finite CV_32FC3, white 1, signed/extended range. Camera intensity is an
 // opponent-axis proxy, not photometric Rec.2020 luminance. Noise is measured per
 // scale after RCD/median; this is NOT a calibrated sensor a*signal+b model.
+// Three intensity scales; five chroma scales when chroma is enabled. Chroma-only
+// preserves camera intensity, NOT rendered Y or the mean of encoded RGB.
 // Zero forces preserve the buffer exactly, without scanning pixels/using Context.
 // Invalid shape/type/settings fail even on that path. Nonzero forces validate
 // finitude/Context. Success publishes a NEW buffer, never edits aliased source

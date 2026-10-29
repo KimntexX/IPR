@@ -10,7 +10,10 @@
 
 namespace CameraDenoise {
 namespace {
-constexpr int Levels = 3;
+constexpr int Levels = 5;
+// Camera colour fluctuations may span wider regions than fine intensity noise.
+// These extra scales do not turn into extra luminance smoothing.
+constexpr int LuminanceLevels = 3;
 constexpr int TileSize = 256;
 constexpr float MadNormal = 0.67448975f;
 constexpr float Kernel[5] = {.0625f, .25f, .375f, .25f, .0625f};
@@ -82,6 +85,7 @@ bool pyramid(cv::Mat current, Pyramid &out, const std::array<int, Levels> &steps
              const std::function<bool()> &stop)
 {
     for (int level = 0; level < Levels; ++level) {
+        if (steps[std::size_t(level)] == 0) break;
         cv::Mat base;
         if (!blur(current, base, steps[std::size_t(level)], stop)) return false;
         auto &detail = out.detail[std::size_t(level)]; detail.create(current.size(), CV_32FC3);
@@ -157,6 +161,7 @@ bool estimate(const cv::Mat &source, const cv::Vec3f &inverseGains,
         Pyramid p;
         if (!pyramid(patch(source, {origin.first, origin.second, width, height}, margin, inverseGains), p, steps, stop)) return false;
         for (int level = 0; level < Levels; ++level) {
+            if (steps[std::size_t(level)] == 0) break;
             const auto &d = p.detail[std::size_t(level)];
             if (!cv::checkRange(d)) return false;
             PatchNoise item;
@@ -273,7 +278,7 @@ bool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margi
             const auto *e = local.ptr<cv::Vec4f>(margin + y) + margin;
             for (int x = 0; x < core.width; ++x) {
                 const float shared = std::clamp(1.f - model.expectedJointEnergy / std::max(e[x][3], model.expectedJointEnergy), 0.f, 1.f);
-                for (int c = 0; c < 3; ++c) if (strength[c] > 0 && model.sigma[c] > 0) {
+                for (int c = 0; c < 3; ++c) if ((c != 0 || level < LuminanceLevels) && strength[c] > 0 && model.sigma[c] > 0) {
                     const float individual = std::clamp(1.f - 1.f / std::max(e[x][c], 1.f), 0.f, 1.f);
                     out[x][c] -= strength[c] * (1.f - std::max(individual, shared)) * d[x][c];
                 }
@@ -318,7 +323,8 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
             if (!std::isfinite(inverseGains[c])) return false;
         }
         std::array<int, Levels> steps{};
-        for (int i = 0; i < Levels; ++i) steps[std::size_t(i)] = std::max(1, int(std::lround((1 << i) * context.pixelScale)));
+        const int activeLevels = settings.chrominance > 0 ? Levels : LuminanceLevels;
+        for (int i = 0; i < activeLevels; ++i) steps[std::size_t(i)] = std::max(1, int(std::lround((1 << i) * context.pixelScale)));
         const int radius = std::max(1, int(std::lround(3 * context.pixelScale)));
         int margin = radius;
         for (int step : steps) margin += 2 * step;
