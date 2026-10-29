@@ -21,6 +21,7 @@ Usage: python scripts/make_lr_presets.py [--controls highlights shadows ...]
        python scripts/make_lr_presets.py --controls exposure-contrast   (20 intermediate states)
        python scripts/make_lr_presets.py --controls white-balance   (15 temperature and tint states)
        python scripts/make_lr_presets.py --controls sharpening   (16 states on a full-resolution centre crop)
+       python scripts/make_lr_presets.py --controls noise   (11 states on a full-resolution centre crop)
            (grain at Lightroom's default size 25 and roughness 50)
 """
 import argparse
@@ -160,9 +161,29 @@ SHARPENING = ([("Nettete neutre", _sharpening(0))]
               + [(f"Nettete rayon {r:.1f}", _sharpening(75, radius=r)) for r in (0.5, 1.5, 2.0, 3.0)]
               + [(f"Nettete detail {d}", _sharpening(75, detail=d)) for d in (0, 50, 100)]
               + [(f"Nettete masquage {m}", _sharpening(75, masking=m)) for m in (25, 50, 75)])
+# Noise reduction on the centre quarter of the frame (half of each side), exported at full
+# resolution like the sharpening; Lightroom's detail, contrast and smoothness at their defaults.
+# "Bruit defaut RAW" is what Lightroom applies to a RAW untouched: colour 25 and sharpening 40.
+NOISE_CROP = {"HasCrop": "True", "CropTop": "0.25", "CropLeft": "0.25", "CropBottom": "0.75",
+              "CropRight": "0.75", "CropAngle": "0", "CropConstrainToWarp": "0"}
+
+
+def _noise(luminance, colour, sharpness=0):
+    return {**NOISE_CROP, "LuminanceSmoothing": str(luminance), "LuminanceNoiseReductionDetail": "50",
+            "LuminanceNoiseReductionContrast": "0", "ColorNoiseReduction": str(colour),
+            "ColorNoiseReductionDetail": "50", "ColorNoiseReductionSmoothness": "50",
+            "Sharpness": str(sharpness), "SharpenRadius": "+1.0", "SharpenDetail": "25", "SharpenEdgeMasking": "0"}
+
+
+NOISE = ([("Bruit neutre", _noise(0, 0))]
+         + [(f"Bruit luminance {v}", _noise(v, 0)) for v in (25, 50, 75, 100)]
+         + [(f"Bruit couleur {v}", _noise(0, v)) for v in (25, 50, 100)]
+         + [("Bruit luminance 50 couleur 25", _noise(50, 25)), ("Bruit luminance 100 couleur 100", _noise(100, 100)),
+            ("Bruit defaut RAW", _noise(0, 25, sharpness=40))])
 CAMPAIGNS = {"exposure-contrast": ("IPR Exposition contraste", "IPR-Exposition-contraste-presets.zip", EXPOSURE_CONTRAST),
              "white-balance": ("IPR Balance blancs", "IPR-Balance-blancs-presets.zip", WHITE_BALANCE),
-             "sharpening": ("IPR Nettete", "IPR-Nettete-presets.zip", SHARPENING)}
+             "sharpening": ("IPR Nettete", "IPR-Nettete-presets.zip", SHARPENING),
+             "noise": ("IPR Bruit", "IPR-Bruit-presets.zip", NOISE)}
 # Settings of the current Lightroom neutral references (6V1A0037, 11 October 2026).
 BASELINE = {
     # No crop unless a campaign sets one: the sharpening crop must not stay on the photo.
