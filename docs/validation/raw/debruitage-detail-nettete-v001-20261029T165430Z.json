@@ -1,0 +1,407 @@
+{
+ "schema": "ipr-camera-denoise-detail-v001",
+ "created_utc": "20261029T165430Z",
+ "author": "Claude",
+ "engine_commit": "9ed4117 + render server options denoise/sharpening (this commit)",
+ "render": "iprRenderServer neutral, full definition, Camera Neutral, optics off; crops 420 px of the oriented render",
+ "masks": "FIXED per scene, computed once on B0 (8-bit sRGB): dark = luma<25 and gradient below its 90th percentile; bright_flat = luma>120 and gradient below its median; edges = gradient at or above its 90th percentile (Gaussian 1.5 then Sobel)",
+ "metrics": "8-bit sRGB (16-bit/257); luma Rec.709; noise = std of (x - Gaussian sigma 2) inside the mask; chroma = R-G, B-G; blotch = std of Gaussian sigma 2 chroma inside the mask",
+ "states": {
+  "A": "current denoise (after tones and colours)",
+  "B": "camera-signal denoise before the profiles (signed development)",
+  "s40": "sharpening amount 40, radius 1.0, masking 0"
+ },
+ "results": {
+  "7Y6A7599.CR3": {
+   "crop": [
+    2940,
+    2940,
+    420,
+    420
+   ],
+   "mask_pixels": {
+    "dark": 73421,
+    "bright_flat": 27251,
+    "edges": 17640
+   },
+   "states": {
+    "A0": {
+     "dark": {
+      "luma": 10.07,
+      "luma_noise": 8.87,
+      "chroma_noise": 11.66,
+      "chroma_blotch": 11.45
+     },
+     "bright_flat": {
+      "luma": 173.22,
+      "luma_noise": 12.45,
+      "chroma_noise": 22.63,
+      "chroma_blotch": 17.94
+     },
+     "edges": {
+      "luma": 68.52,
+      "luma_noise": 21.87,
+      "chroma_noise": 22.28,
+      "chroma_blotch": 27.57
+     }
+    },
+    "B0": {
+     "dark": {
+      "luma": 8.14,
+      "luma_noise": 8.8,
+      "chroma_noise": 13.09,
+      "chroma_blotch": 12.59
+     },
+     "bright_flat": {
+      "luma": 173.23,
+      "luma_noise": 12.44,
+      "chroma_noise": 22.24,
+      "chroma_blotch": 17.93
+     },
+     "edges": {
+      "luma": 67.92,
+      "luma_noise": 22.35,
+      "chroma_noise": 23.88,
+      "chroma_blotch": 28.04
+     }
+    },
+    "A-50-25": {
+     "dark": {
+      "luma": 19.49,
+      "luma_noise": 3.46,
+      "chroma_noise": 8.69,
+      "chroma_blotch": 11.42
+     },
+     "bright_flat": {
+      "luma": 173.55,
+      "luma_noise": 9.67,
+      "chroma_noise": 20.31,
+      "chroma_blotch": 17.74
+     },
+     "edges": {
+      "luma": 73.41,
+      "luma_noise": 15.83,
+      "chroma_noise": 20.9,
+      "chroma_blotch": 26.81
+     }
+    },
+    "B-50-25": {
+     "dark": {
+      "luma": 9.19,
+      "luma_noise": 5.9,
+      "chroma_noise": 10.5,
+      "chroma_blotch": 11.34
+     },
+     "bright_flat": {
+      "luma": 173.56,
+      "luma_noise": 9.98,
+      "chroma_noise": 19.49,
+      "chroma_blotch": 17.11
+     },
+     "edges": {
+      "luma": 67.59,
+      "luma_noise": 15.48,
+      "chroma_noise": 21.01,
+      "chroma_blotch": 27.9
+     }
+    },
+    "A-50-25-s40": {
+     "dark": {
+      "luma": 19.21,
+      "luma_noise": 3.89,
+      "chroma_noise": 8.7,
+      "chroma_blotch": 11.48
+     },
+     "bright_flat": {
+      "luma": 173.52,
+      "luma_noise": 11.95,
+      "chroma_noise": 19.89,
+      "chroma_blotch": 17.71
+     },
+     "edges": {
+      "luma": 72.36,
+      "luma_noise": 20.39,
+      "chroma_noise": 20.84,
+      "chroma_blotch": 26.44
+     }
+    },
+    "B-50-25-s40": {
+     "dark": {
+      "luma": 8.99,
+      "luma_noise": 6.33,
+      "chroma_noise": 10.53,
+      "chroma_blotch": 11.32
+     },
+     "bright_flat": {
+      "luma": 173.51,
+      "luma_noise": 12.32,
+      "chroma_noise": 18.9,
+      "chroma_blotch": 17.07
+     },
+     "edges": {
+      "luma": 66.85,
+      "luma_noise": 18.8,
+      "chroma_noise": 20.99,
+      "chroma_blotch": 27.52
+     }
+    },
+    "A-100-100": {
+     "dark": {
+      "luma": 25.96,
+      "luma_noise": 1.79,
+      "chroma_noise": 3.97,
+      "chroma_blotch": 10.37
+     },
+     "bright_flat": {
+      "luma": 174.13,
+      "luma_noise": 4.26,
+      "chroma_noise": 12.9,
+      "chroma_blotch": 15.94
+     },
+     "edges": {
+      "luma": 76.88,
+      "luma_noise": 11.34,
+      "chroma_noise": 13.79,
+      "chroma_blotch": 25.12
+     }
+    },
+    "B-100-100": {
+     "dark": {
+      "luma": 11.78,
+      "luma_noise": 0.92,
+      "chroma_noise": 1.2,
+      "chroma_blotch": 5.66
+     },
+     "bright_flat": {
+      "luma": 173.84,
+      "luma_noise": 7.34,
+      "chroma_noise": 14.67,
+      "chroma_blotch": 13.83
+     },
+     "edges": {
+      "luma": 67.39,
+      "luma_noise": 8.51,
+      "chroma_noise": 11.06,
+      "chroma_blotch": 24.83
+     }
+    },
+    "B-100-100-s40": {
+     "dark": {
+      "luma": 11.78,
+      "luma_noise": 0.92,
+      "chroma_noise": 1.2,
+      "chroma_blotch": 5.65
+     },
+     "bright_flat": {
+      "luma": 173.83,
+      "luma_noise": 9.05,
+      "chroma_noise": 14.19,
+      "chroma_blotch": 13.81
+     },
+     "edges": {
+      "luma": 67.16,
+      "luma_noise": 10.35,
+      "chroma_noise": 10.87,
+      "chroma_blotch": 24.7
+     }
+    }
+   }
+  },
+  "6V1A9613.CR3": {
+   "crop": [
+    0,
+    3360,
+    420,
+    420
+   ],
+   "mask_pixels": {
+    "dark": 55607,
+    "bright_flat": 31669,
+    "edges": 17640
+   },
+   "states": {
+    "A0": {
+     "dark": {
+      "luma": 14.49,
+      "luma_noise": 6.67,
+      "chroma_noise": 8.63,
+      "chroma_blotch": 8.57
+     },
+     "bright_flat": {
+      "luma": 163.51,
+      "luma_noise": 7.9,
+      "chroma_noise": 11.99,
+      "chroma_blotch": 8.49
+     },
+     "edges": {
+      "luma": 80.01,
+      "luma_noise": 12.84,
+      "chroma_noise": 14.0,
+      "chroma_blotch": 19.08
+     }
+    },
+    "B0": {
+     "dark": {
+      "luma": 14.3,
+      "luma_noise": 6.8,
+      "chroma_noise": 8.8,
+      "chroma_blotch": 8.74
+     },
+     "bright_flat": {
+      "luma": 163.52,
+      "luma_noise": 7.9,
+      "chroma_noise": 11.92,
+      "chroma_blotch": 8.48
+     },
+     "edges": {
+      "luma": 80.0,
+      "luma_noise": 12.88,
+      "chroma_noise": 14.05,
+      "chroma_blotch": 19.09
+     }
+    },
+    "A-50-25": {
+     "dark": {
+      "luma": 20.48,
+      "luma_noise": 2.71,
+      "chroma_noise": 6.43,
+      "chroma_blotch": 8.21
+     },
+     "bright_flat": {
+      "luma": 163.55,
+      "luma_noise": 6.0,
+      "chroma_noise": 11.11,
+      "chroma_blotch": 8.32
+     },
+     "edges": {
+      "luma": 81.62,
+      "luma_noise": 9.14,
+      "chroma_noise": 13.23,
+      "chroma_blotch": 18.69
+     }
+    },
+    "B-50-25": {
+     "dark": {
+      "luma": 15.4,
+      "luma_noise": 5.83,
+      "chroma_noise": 8.03,
+      "chroma_blotch": 8.31
+     },
+     "bright_flat": {
+      "luma": 163.53,
+      "luma_noise": 7.69,
+      "chroma_noise": 11.65,
+      "chroma_blotch": 8.37
+     },
+     "edges": {
+      "luma": 80.01,
+      "luma_noise": 11.82,
+      "chroma_noise": 13.56,
+      "chroma_blotch": 18.89
+     }
+    },
+    "A-50-25-s40": {
+     "dark": {
+      "luma": 20.39,
+      "luma_noise": 2.88,
+      "chroma_noise": 6.43,
+      "chroma_blotch": 8.23
+     },
+     "bright_flat": {
+      "luma": 163.56,
+      "luma_noise": 7.44,
+      "chroma_noise": 10.96,
+      "chroma_blotch": 8.3
+     },
+     "edges": {
+      "luma": 81.33,
+      "luma_noise": 11.43,
+      "chroma_noise": 13.18,
+      "chroma_blotch": 18.59
+     }
+    },
+    "B-50-25-s40": {
+     "dark": {
+      "luma": 15.2,
+      "luma_noise": 6.26,
+      "chroma_noise": 8.06,
+      "chroma_blotch": 8.28
+     },
+     "bright_flat": {
+      "luma": 163.51,
+      "luma_noise": 9.61,
+      "chroma_noise": 11.39,
+      "chroma_blotch": 8.34
+     },
+     "edges": {
+      "luma": 79.55,
+      "luma_noise": 14.53,
+      "chroma_noise": 13.44,
+      "chroma_blotch": 18.74
+     }
+    },
+    "A-100-100": {
+     "dark": {
+      "luma": 25.01,
+      "luma_noise": 1.11,
+      "chroma_noise": 2.71,
+      "chroma_blotch": 7.08
+     },
+     "bright_flat": {
+      "luma": 163.58,
+      "luma_noise": 2.49,
+      "chroma_noise": 7.64,
+      "chroma_blotch": 7.54
+     },
+     "edges": {
+      "luma": 82.82,
+      "luma_noise": 5.95,
+      "chroma_noise": 8.91,
+      "chroma_blotch": 17.76
+     }
+    },
+    "B-100-100": {
+     "dark": {
+      "luma": 16.37,
+      "luma_noise": 4.84,
+      "chroma_noise": 5.35,
+      "chroma_blotch": 6.38
+     },
+     "bright_flat": {
+      "luma": 163.55,
+      "luma_noise": 7.46,
+      "chroma_noise": 11.19,
+      "chroma_blotch": 8.07
+     },
+     "edges": {
+      "luma": 79.98,
+      "luma_noise": 10.73,
+      "chroma_noise": 12.17,
+      "chroma_blotch": 18.29
+     }
+    },
+    "B-100-100-s40": {
+     "dark": {
+      "luma": 16.27,
+      "luma_noise": 5.15,
+      "chroma_noise": 5.38,
+      "chroma_blotch": 6.37
+     },
+     "bright_flat": {
+      "luma": 163.54,
+      "luma_noise": 9.32,
+      "chroma_noise": 10.93,
+      "chroma_blotch": 8.05
+     },
+     "edges": {
+      "luma": 79.6,
+      "luma_noise": 13.2,
+      "chroma_noise": 12.04,
+      "chroma_blotch": 18.16
+     }
+    }
+   }
+  }
+ },
+ "script_sha256": "030b2c195d0135f1cfe8c84046e7d1ef60bbba9c094d8c861fa5dd14b6d6c11b"
+}
