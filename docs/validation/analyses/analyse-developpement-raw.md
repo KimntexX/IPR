@@ -805,6 +805,104 @@ Signalement transmis à Claude ; son fichier de test n'est pas retouché ici.
 N3 complet reste ouvert : correction de ce test, cas optiques, proxy/100 %,
 ressources de l'application et revue visuelle. Aucun changement DCP D0.
 
+## 19. 29 octobre — audit de la prétendue fuite et échelles chroma élargies
+
+Après fusion de N2 dans la branche moteur, Claude livre `7ef1e59` : source
+transmise sans copie préalable inutile, test optique composé avec le vrai
+algorithme. Ce correctif est intégré localement (`4884215`). Le test moteur
+qui échouait au §18 passe désormais ; ne pas conserver cette réserve comme
+un défaut courant. La revue N3 relève ensuite des taches de couleur persistantes
+et une hausse de 17,2 à 19,0 d'un indicateur nommé initialement « bruit lum. ».
+Les deux pistes sont examinées séparément, sans modifier les bornes DCP.
+
+### 19.1. Intensité caméra, luminance linéaire et moyenne RGB : trois mesures différentes
+
+L'axe conservé par le filtre couleur est
+`I = 0,25·R/gR + 0,5·G/gG + 0,25·B/gB`. Préserver I n'impose pas de préserver
+Y après matrice, tables et courbe du profil. Sur neuf recadrages caméra fixes
+(trois positions diagonales par scène, 768 px traités, centre 420 px mesuré),
+la variation RMS de I est de l'ordre de 10⁻⁸ ou moins, mais celle de Y après
+DCP atteint 0,0059 sur le R7. Ce constat établit la non-équivalence des axes,
+pas une dégradation perceptuelle. Ces recadrages ne sont pas ceux de Claude
+et l'estimation locale diffère du filtrage de l'image entière.
+Preuve : [étude trois échelles](../raw/camera-denoise-leakage-v001-20261029T125644Z.json).
+
+Une projection expérimentale du delta couleur dans le plan tangent de Y du
+profil est évaluée dans le banc uniquement : gradient par différences finies,
+correction le long de la direction neutre, amplitude limitée et abstention
+lorsque le gradient est inexploitable. Elle réduit la variation Y linéaire,
+mais ne la supprime pas à travers les non-linéarités et ne garantit pas la
+luma sRGB. Elle **n'est pas intégrée au module** ; aucun accès aux profils
+ni nouveau calcul DCP n'est ajouté dans `CameraDenoise`.
+
+Claude précise ensuite ses coordonnées exactes et son indicateur : moyenne
+arithmétique des RGB sRGB 8 bits, non luminance pondérée. Le rejeu sur l'image
+entière puis recadrage reproduit strictement son constat R7 :
+
+| R7, ROI (2940,2940), 420 × 420 | B0 | B couleur 50, trois échelles |
+| --- | ---: | ---: |
+| Écart-type passe-haut σ2 de la moyenne RGB | 17,1883 | 18,9956 |
+| Écart-type passe-haut σ2 de la luma Rec.709 encodée | 17,3704 | 17,1449 |
+| Moyenne des écarts-types passe-haut R−G et B−G | 20,4166 | 15,7404 |
+| Moyenne des écarts-types passe-bas R−G et B−G | 33,6610 | 31,9632 |
+
+La luma pondérée baisse ici de 1,30 %, au lieu d'augmenter de 10,5 % comme la
+moyenne RGB. Cette dernière est sensible à la chroma ; son augmentation ne
+suffit donc pas à conclure « bruit de luminance accru ». La luma encodée
+n'est pas non plus Y linéaire ni une vérité physique du bruit. Claude a
+confirmé au journal le renommage de l'indicateur et retiré cette conclusion.
+Preuve : [rejeu exact du prototype initial](../raw/camera-denoise-exact-roi-v001-20261029T130540Z.json).
+L'exécutable initial est identifié par son empreinte déjà conservée au §18,
+pas présenté comme une compilation des nouvelles sources cinq échelles.
+
+### 19.2. Cinq échelles chroma, trois échelles d'intensité
+
+Le prototype ajoute les pas 8 et 16 aux pas 1,2,4 pour les seuls axes couleur.
+L'intensité reste traitée aux trois échelles initiales. Sans force couleur,
+les deux échelles supplémentaires ne sont pas calculées. Le halo suit le
+support total ; `pixelScale` adapte toujours les pas pour le proxy. Aucun
+renforcement arbitraire du curseur ni nouvelle option de compatibilité.
+Les campagnes ont été lancées avant le commit de ce prototype : la révision
+Git enregistrée est la base `4884215`, complétée par les sources et empreintes
+embarquées dans les preuves. Ne pas identifier la variante par cette seule
+révision de base. Les comparaisons exactes partagent les mêmes RAW, ROI et
+empreintes de pixels B0 sur les trois scènes.
+
+Sur les neuf recadrages d'étude, la dispersion chroma lissée diminue jusqu'à
+8,2 % face aux trois échelles, avec variation du passe-haut de luma inférieure
+à 0,12 %. Sur le rejeu exact plein cadre, les gains sont plus modestes :
+
+| ROI exacte | Chroma fine, 3 → 5 échelles | Chroma lissée, 3 → 5 échelles | Luma pondérée HP, 3 → 5 |
+| --- | ---: | ---: | ---: |
+| 7599 | 15,7404 → 15,5090 | 31,9632 → 31,3917 | 17,1449 → 17,1794 |
+| 7958 | 9,1470 → 9,1469 | 30,1434 → 30,1393 | 14,9689 → 14,9690 |
+| 9539 | 4,3346 → 4,3305 | 18,3383 → 18,3114 | 4,3733 → 4,3730 |
+
+Le R7 gagne environ 1,47 % sur l'indicateur chroma fine et 1,79 % sur la chroma
+lissée ; l'effet est presque nul sur les deux autres ROI. Ces statistiques
+incluent structures et gradients de scène : elles ne mesurent ni une vérité
+bruit ni le détail perdu. Les taches de couleur ne sont pas déclarées résolues.
+Preuves : [recadrages cinq échelles](../raw/camera-denoise-leakage-v001-20261029T125945Z.json)
+et [rejeu exact cinq échelles](../raw/camera-denoise-exact-roi-v001-20261029T130751Z.json).
+
+Les 53 contrôles natifs passent, dont un champ chroma corrélé à basse fréquence
+sur vérité constante connue ; le test moteur LCP corrigé et les cinq suites du
+banc passent. Sur champ synthétique 24 Mpx à force100/100 : 3,83 s et pic
+processus 673 423 360 octets, contre 1,23 s / 621 015 040 octets au premier
+relevé trois échelles. Deux relevés cinq échelles donnent 3,27 et 3,83 s :
+ce n'est pas une étude de dispersion ni un budget IHM. Le coût supplémentaire
+doit être considéré face au faible gain constaté sur les ROI exactes.
+Preuves : [essai intermédiaire](../raw/camera-denoise-n2-v001-20261029T130222Z.json)
+et [contrat final 53 contrôles](../raw/camera-denoise-n2-v001-20261029T130408Z.json).
+
+**Décision de prototype :** cinq échelles chroma disponibles dans le seul
+chemin expérimental, toujours désactivé par défaut ; pas de projection profil,
+pas de changement DCP. Cette étape n'est pas une déclaration de qualité stable.
+Avant d'augmenter la force automatiquement pour compenser l'écart A/B, il faut
+tenir compte de la différence de signal de départ, vérifier les textures et
+présenter les forces disponibles à l'utilisateur. Ne pas compenser un biais
+d'indicateur par un poids ajusté à une seule scène.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
@@ -827,7 +925,8 @@ ressources de l'application et revue visuelle. Aucun changement DCP D0.
   invariance A validée, garde NaN/Inf corrigé et contrôlé. A reste le défaut.
   Le premier module N2 et le raccordement N1 sont intégrés localement ; source
   signée pré-LCP raccordée en N1b, qualification commune N3 partielle (§18),
-  dont témoin optique encore à corriger avant déclaration d'intégration validée.
+  test optique corrigé et qualifié (§19). Revue visuelle et ressources globales
+  restent distinctes de ces contrats de module et de raccordement.
 - Harmonisation des domaines couleur entre modules demandée mais différée ;
   ne pas la mélanger à la transition RAW ni changer le master Rec.2020 ici.
 - F1 : 60 cas A, 12 fichiers B, 12 témoins ciblés du garde et contrat natif
@@ -836,3 +935,7 @@ ressources de l'application et revue visuelle. Aucun changement DCP D0.
 - L'étude historique sur `patch_noise` ne vaut pas validation du nouveau module
   N2. Le branchement expérimental avant profil est maintenant autorisé, sans
   activation par défaut ni promotion de ses essais synthétiques en preuve visuelle.
+- Prototype actuel : cinq échelles couleur / trois intensité ; 53 contrôles
+  natifs et test moteur passent. La prétendue hausse de bruit de luminance
+  du R7 provenait d'une moyenne RGB : luma pondérée stable ou en baisse dans
+  le témoin exact. Gain chroma modeste et coût supérieur ; visuel encore attendu.

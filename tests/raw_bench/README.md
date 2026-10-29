@@ -221,6 +221,17 @@ un nouveau JSON horodaté sans écraser les preuves précédentes.
 A/B0/B50/B100 et replays, en mémoire, un serveur fermé par scène avec watchdog.
 Les écarts de rendu sRGB qu'il mesure ne prouvent pas la qualité du débruitage.
 
+Études de couplage avant/après profil : `run_denoise_leakage.py --help` pilote
+`cameraDenoiseLeakageProbe` (cible du sous-projet `production`) sur des régions
+caméra fixes. La projection tangentielle de Y y est une expérience, pas du
+code de production. `camera_denoise_exact_roi.py --help` mesure les régions
+N3 convenues avec Claude, après filtrage et rendu de l'image entière. Il
+distingue moyenne RGB, luma encodée pondérée et chroma R−G/B−G. Le mode
+`--reference-proof` exige l'exécutable exact d'une preuve historique, sans
+conserver d'implémentation legacy dans le module. Aucun TIFF n'est écrit.
+Le prototype courant utilise cinq échelles chroma et trois pour l'intensité ;
+les gains de métriques ne valent pas validation visuelle.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,
