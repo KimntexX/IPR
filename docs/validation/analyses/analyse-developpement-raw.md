@@ -1026,6 +1026,46 @@ suivantes, sans traitement médian aveugle ni confusion entre détail ponctuel
 et impulsion. Cette clarification ne modifie ni le prototype disponible ni
 les bornes DCP. Les gardes de détail restent obligatoires dès N2b(b).
 
+## 22. 29 octobre — audit des anciennes références Lightroom à 100/100
+
+Claude retrouve les neutres et les exports100/100 de9608 et9890 et observe
+un lissage nettement plus fort dans Lightroom. Avant d'utiliser ces mesures
+pour étalonner les curseurs, Codex audite les XMP des quatre TIFF, sans
+décoder les pixels. Les noms, dimensions, empreintes, réglages et différences
+sont conservés dans
+[audit-noise-lr-settings-v001-20261029T171447Z.json](../raw/audit-noise-lr-settings-v001-20261029T171447Z.json).
+
+Les deux paires présentent la même différence de réglages :
+
+| Déclaration XMP | Neutre LR | LR100/100 |
+| --- | ---: | ---: |
+| LuminanceSmoothing | 0 | 100 |
+| ColorNoiseReduction | 0 | 100 |
+| Sharpness | 0 | 0 |
+| LensProfileEnable | 0 | 1 |
+| AutoLateralCA | 0 | 1 |
+
+Camera Neutral, balance As Shot5200/+5 et identité du profil restent cohérents,
+mais **l'optique n'est pas constante** entre les états LR. Le changement de
+géométrie, le rééchantillonnage des canaux et le vignettage peuvent contribuer
+aux mesures ; une translation par corrélation de phase ne corrige pas une
+éventuelle déformation optique. Les déclarations ne quantifient toutefois pas
+l'amplitude effective des corrections. Cet audit ne réfute pas le lissage
+visible : il empêche d'attribuer tous les facteurs d'atténuation au seul bruit.
+
+Ces références restent des repères visuels de rendu fort, **pas des paires
+contrôlées permettant de calibrer un multiplicateur de force**. Privilégier
+la campagne à réglages constants déjà demandée, après audit, sans nouvelle
+demande redondante à l'utilisateur sur cette seule découverte.
+
+Dans CameraDenoise, force100 applique déjà la totalité du delta calculé par
+le retrait Wiener. Si σ est sous-estimé ou la protection structurelle élevée,
+ce delta reste petit. Le multiplier au-delà de1 est une extrapolation pouvant
+créer des artefacts, pas une garantie de traitement plus pertinent. Il faut
+séparer estimation du bruit, protection des détails et loi du curseur ; ne
+pas prendre une surface « plastique » comme vérité de détail. Aucun changement
+du filtre n'est apporté sur la base de ces comparaisons confondues.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
@@ -1070,3 +1110,6 @@ les bornes DCP. Les gardes de détail restent obligatoires dès N2b(b).
   n'est pas promu sur leurs dispersions ; réglage sur ces zones suspendu,
   références LR attendues. Ne pas interpréter les valeurs du §20 comme du
   bruit seul ni lisser la matière pour améliorer un indicateur.
+- Les anciennes paires LR9608/9890 changent aussi les réglages optiques (§22).
+  Elles ne permettent pas d'isoler une échelle de force du débruitage ; attendre
+  des états contrôlés avant calibration, sans perdre leurs observations visuelles.
