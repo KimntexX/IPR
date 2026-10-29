@@ -829,7 +829,8 @@ Preuve : [étude trois échelles](../raw/camera-denoise-leakage-v001-20261029T12
 
 Une projection expérimentale du delta couleur dans le plan tangent de Y du
 profil est évaluée dans le banc uniquement : gradient par différences finies,
-correction le long de la direction neutre, amplitude limitée et abstention
+correction le long de l'axe I (direction des gains, pas un gris scène caractérisé),
+amplitude limitée et abstention
 lorsque le gradient est inexploitable. Elle réduit la variation Y linéaire,
 mais ne la supprime pas à travers les non-linéarités et ne garantit pas la
 luma sRGB. Elle **n'est pas intégrée au module** ; aucun accès aux profils

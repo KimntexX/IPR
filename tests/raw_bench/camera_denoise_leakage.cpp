@@ -78,7 +78,8 @@ QJsonObject measures(const cv::Mat &working,const cv::Rect &roi)
 }
 // STUDY ONLY: finite differences of the actual profile, not a production DCP hook.
 // Project chroma correction onto the tangent plane of rendered linear Y, along
-// the camera's neutral direction. Clipped/ill-conditioned derivatives abstain.
+// the pure opponent-intensity direction (gains), not a characterized scene gray.
+// Clipped/ill-conditioned derivatives abstain.
 cv::Mat projected(const CameraProfileEngine::DcpWorkingContext &context,const cv::Mat &source,
                   const cv::Mat &filtered,const cv::Vec3f &gains,QJsonObject &diagnostic)
 {
