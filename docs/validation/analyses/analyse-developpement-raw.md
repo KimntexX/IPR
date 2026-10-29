@@ -3,9 +3,10 @@
 ## Bilan actuel — 29 octobre 2026
 
 Dernier jalon (§27) : V1 confirmé sur28 scènes par Claude ; combinaison(a)+V1
-codée, 61 contrôles natifs et raccordement optique réussis. Sa comparaison
-réelle à V1 est en cours ; **pas de promotion**. Les gains de BdB restent
-appliqués, les forces et bornes DCP inchangées.
+figée en `15a4cc2`, 61 contrôles natifs, sept suites et raccordement optique
+réussis. Trois scènes réelles comparées : gain dans certaines plages mais
+résidu sombre accru sur7599 à100/100 ; **candidat d'essai, pas de promotion**.
+Les gains de BdB restent appliqués, les forces et bornes DCP inchangées.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1308,8 +1309,54 @@ réutilise **B-V1**, pas l'ancien B aux axes compensés. Le lanceur exige le
 SHA de la référence commune, ceux des sources et des masques, puis les mêmes
 métriques B0 ; un écart arrête la campagne. Les25 autres scènes restent une
 réserve prospective pour un candidat figé, pas un corpus jamais observé.
-Les résultats de cette combinaison restent à analyser avant tout raccordement
-de production ou réglage de force ; les dispersions incluent toujours la matière.
+### Résultats de la combinaison figée `15a4cc2`
+
+`../raw/camera-denoise-n2b-v001-20261029T202044Z.json` conserve15 rendus en
+mémoire. Les trois neutres B0 et les empreintes des masques concordent avec
+B-V1. Le SHA du module et celui du serveur rejoignent le candidat final :
+pas de changement d'algorithme entre mesures et jalon. Les sources et le
+binaire sont identifiés dans la preuve ; aucun TIFF de mesure généré.
+
+Comparaison à B-V1, mêmes masques et même état :
+
+| Scène / masque / état lum-col | Luma HP V1 → (a)+V1 | Chroma HP V1 → (a)+V1 |
+| --- | ---: | ---: |
+| 7599 clair,100-0 | 6,699 →3,495 | 14,164 →12,198 |
+| 7599 clair,100-100 | 6,534 →3,138 | 11,661 →6,288 |
+| 7599 noir,100-100 | 1,237 →2,389 | 1,524 →3,307 |
+| 9539 moyen,100-0 | 3,916 →1,812 | 4,462 →4,452 |
+| 9539 moyen,100-100 | 3,882 →1,693 | 3,282 →1,718 |
+
+Unités : écart-type haute fréquence, luma Rec.709 pondérée et différences
+R−G/B−G, sur RGB encodé échelonné0–255. Ce ne sont ni des mesures de bruit
+capteur seul ni une vérité propre. Le masque de contours9539 baisse aussi
+de5,187 à4,057 en luma à100-0 : examiner visuellement la conservation des
+détails avant de l'interpréter comme du bruit retiré. Le60D7958 change peu
+(clair100-100 : luma1,188→1,223, chroma1,415→1,452).
+
+La réduction plus forte du masque clair de7599 ne réintroduit pas la hausse
+de chroma à luminance100 observée avant V1. En revanche, le noir7599 à100/100
+est sensiblement moins réduit qu'avec V1 seul, et couleur100 seule y laisse
+5,112 au lieu de4,224. Il n'y a donc **pas de domination uniforme** de V1
+par(a)+V1. Ne pas augmenter arbitrairement la force pour masquer ces écarts.
+Les taches basse fréquence ne sont pas qualifiées par le seul HP sigma2 ;
+leur traitement(c) reste séparé.
+
+Requêtes chaudes pleines images CR3 :8,2–9,2 s en luminance,12,6–14,1 s en
+chroma, rendu compris ; ouvertures froides32–36,5 s. Sur60D :4,7/7,4 s.
+Qualification finale `../raw/camera-denoise-n2-v001-20261029T202504Z.json` :
+61 contrôles natifs, **sept suites CTest** et test moteur optique réussis.
+Ce second enregistrement inclut la nouvelle suite de référence, sans changement
+de module. Mesures synthétiques finales :730 ms sur2,8 Mpx,5402 ms sur24 Mpx,
+pic731951104 octets ; elles n'établissent pas la latence réelle du proxy IHM.
+
+**Décision :** jalon disponible pour intégration expérimentale et revue,
+pas remplacement validé. Réserve25 scènes non rejouée sur cette combinaison ;
+faire la qualification du candidat figé sans ajuster ses seuils au fil des
+résultats. Contrôle visuel ciblé :7599 noir et mur clair,9539 contours et
+matière ; conserver V1 comme référence de campagne historique, pas comme
+double chemin legacy dans le code. Ni nouvelle image LR ni changement DCP
+nécessaires pour cette comparaison. Aucun push/dev/tag.
 
 ## Conclusion actuelle et fiche de reprise
 
@@ -1367,3 +1414,7 @@ de production ou réglage de force ; les dispersions incluent toujours la matiè
   attendus de Claude ; ne pas annoncer ce jalon livré ni validé visuellement.
 - Orientation(b) actée (§25) : une commande globale et deux réglages avancés,
   loi de traduction C++ à qualifier, pas de copie imposée de Lightroom.
+- V1 seul confirmé par Claude sur28 scènes ;(a)+V1 figé en15a4cc2 et mesuré
+  sur trois scènes (§27), bénéfices locaux et réserves sur le noir7599. Pas
+  de promotion automatique ; prochaine qualification sur candidat figé,
+  puis(c) taches basse fréquence et(b) loi maître, sans mélanger leurs effets.
