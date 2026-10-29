@@ -1206,7 +1206,8 @@ Aucune nouvelle image ni action utilisateur nécessaire à ce stade.
 
 Orientation transmise par Claude et retenue : une seule barre principale
 **« Réduction du bruit »**, avec un sous-menu **« Avancé »** replié pour
-affiner séparément luminance et couleur. Lightroom reste un repère de réponse
+affiner séparément luminance et couleur. La commande sera à **0 par défaut**.
+Lightroom reste un repère de réponse
 et de rendu, pas une cible à recopier. Cette décision ne modifie ni(a), ni V1,
 ni les bornes DCP, et ne vaut pas implémentation de l'interface.
 
@@ -1225,6 +1226,42 @@ sur des champs de bruit connus. La baisse d'un indicateur sur une photo
 texturée ne suffit pas à valider cette loi. Le panneau et le sous-menu seront
 pris en charge dans le chantier IHM dédié ; aucune modification moteur ou
 QML supplémentaire n'est faite pour cette seule orientation.
+
+## 26. 29 octobre — force souhaitée et comparaison signé/non signé à isoler
+
+Retour utilisateur transmis par Claude : viser un lissage de luminance de
+l'ordre du rendu LR70–75, sans rechercher le flou et la perte de texture
+observés au-delà. Ce repère visuel ne fixe pas un coefficient numérique
+IPR, ni une équivalence entre positions des curseurs. La conservation des
+contours et de la matière fait partie de l'objectif. Aucun nouveau poids
+de la future commande globale n'est fixé avant comparaison.
+
+Autre observation : sur7599 le débruitage paraît meilleur avec la BdB
+automatique ; des points rouges/verts restent avec la BdB boîtier et le
+développement signé. L'inspection de `RawDecoder::developedByIpr` confirme
+que la BdB automatique exclut le développement IPR : elle passe par
+`dcraw_process`, sa sortie bitmap16 bits, puis sa conversion en flottants.
+Elle modifie aussi les gains, et peut modifier la résolution de la calibration
+dont le contexte contient `cameraWhiteBalance`. Cette observation n'isole
+donc pas le seul rôle des valeurs négatives. Le magenta/vert après rendu
+reste une hypothèse, pas une causalité établie pour tous les points.
+
+Claude prend en charge l'essai A non signé + CameraDenoise contre B signé,
+avec **la même BdB boîtier**, sur7599/9539, après sa campagne V1. Préserver
+neutres A0/B0 et états traités, paramètres, calibration réellement résolue,
+masques fixes, identité de l'exécutable et des sources. Attention : A/B
+changent aussi la grille numérique, les bornes avant RCD et son traitement
+signé ; une différence A/B seule ne prouvera pas que le DCP est la cause.
+
+Pour isoler spécifiquement la frontière après débruitage, une sonde distincte
+peut reprendre **le même tampon B traité** et comparer son rendu direct à un
+rendu où seuls les négatifs ont été remplacés par0, juste avant les mêmes
+étapes optiques/profil. Consigner aussi les valeurs négatives par canal et
+niveau de signal avant/après filtre, et les pixels concernés après rendu.
+Cette sonde introduit un biais de noir : elle n'est ni une correction approuvée,
+ni une justification pour borner en amont du débruitage. Ne pas changer le
+filtre ou la force au milieu de cette comparaison. Aucun nouvel essai n'est
+lancé ici en parallèle de la campagne confiée à Claude.
 
 ## Conclusion actuelle et fiche de reprise
 
