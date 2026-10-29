@@ -904,6 +904,91 @@ tenir compte de la différence de signal de départ, vérifier les textures et
 présenter les forces disponibles à l'utilisateur. Ne pas compenser un biais
 d'indicateur par un poids ajusté à une seule scène.
 
+## 20. 29 octobre — N2b(a), couverture du niveau de signal avant modification du filtre
+
+Le retour utilisateur reconnaît une nette amélioration sur 7599, mais signale
+points rouges/verts à luminance100, pixels roses à couleur100, grain dans les
+aplats clairs et perte de détails. La campagne N2b distingue estimation du
+bruit, impulsions, grandes taches et protection des détails. Claude prend
+l'interaction avec la netteté et la page visuelle v2 ; Codex commence par
+mesurer la couverture de l'estimateur. Le filtre n'est pas modifié à ce jalon.
+
+Le dernier essai D-gris négatif a été abandonné par Claude. Les essais de
+bornage sont conservés dans `essais-bornes-dcp-v001-20261029T133401Z.json` :
+masques variables et essai D1+D2 combiné déclarés ; ils ne qualifient ni D2
+isolé ni des comparaisons à population constante. Aucun correctif de bornage
+n'est introduit pour répondre aux défauts visuels du bruit.
+
+### 20.1. Dispositif et séparation des observations
+
+Pour 7599 (R7), 7958 (60D), 9539 et 9613 (R6 III, cette dernière dans
+`base-hors-protocole`), la sonde charge le signal caméra signé, balance boîtier,
+Camera Neutral et calibration actuels, sans correction optique. Aucun TIFF
+n'est écrit. Une grille9×9 mesure81 régions64px : les25 positions de la grille
+initiale5×5 sont réservées à l'ajustement ; les56 autres positions servent au
+contrôle spatial. Ce n'est pas une séparation de scènes ou de boîtiers.
+
+La mesure indépendante utilise les coefficients B3 à trous aux cinq échelles
+dans les axes I/Co/Cg, après compensation WB, et le MAD centré/0,67448975.
+Elle conserve coordonnées, intensité médiane, dérive entre quadrants,
+autocorrélations horizontales/verticales et rejets de motifs cohérents.
+Il s'agit de **dispersion de coefficients**, susceptible d'inclure des textures,
+pas d'une vérité de bruit propre. La porte « candidat plat » (dérive des
+quadrants ≤3σI fin) reste une heuristique ; elle ne certifie pas les textures
+faibles. La sonde ne prétend pas reproduire bit à bit les calculs du module.
+Preuve : [cartographie initiale](../raw/camera-denoise-signal-survey-v001-20261029T165726Z.json).
+
+### 20.2. Biais de couverture observé
+
+Le quart global des témoins les plus calmes favorise les signaux bas.
+Sur9613, les intensités des régions retenues à l'échelle fine vont d'environ
+−0,00019 à0,02658, tandis que le groupe clair d'ajustement couvre0,119–0,163.
+Son σI conditionnel médian vaut0,01089 contre0,00275 globalement, soit environ
+quatre fois plus. Les autres axes présentent aussi une hausse ; cette
+différence étaye la piste d'une sous-représentation des régions claires,
+sans démontrer que toute leur dispersion est du bruit.
+
+Trois groupes de signal, définis sur les seules positions d'ajustement,
+fournissent des nœuds (signal médian des témoins retenus, variance par axe).
+Un candidat interpole les **variances**, puis prend leur racine. Il s'abstient
+hors de l'intervalle des nœuds et n'invente aucune extrapolation par ISO.
+Les positions de contrôle ne servent pas à ajuster ces nœuds. Le rejeu utilise
+le JSON initial, sans redécoder les RAW ni recalculer les observations.
+Preuve : [interpolation et contrôle spatial](../raw/camera-denoise-signal-survey-v001-20261029T170256Z.json).
+
+À l'échelle fine, écart relatif médian de σI prédit aux MAD observés sur
+les mêmes candidats plats de contrôle couverts par l'interpolation :
+
+| Source | Régions comparées / candidates | Global | Conditionnel |
+| --- | ---: | ---: | ---: |
+| 7599 | 28 / 55 | 30,8 % | 1,5 % |
+| 7958 | 32 / 34 | 3,0 % | 2,8 % |
+| 9539 | 39 / 48 | 33,8 % | 2,0 % |
+| 9613 | 37 / 54 | 60,8 % | 2,9 % |
+
+Les abstentions sont explicites :27,2,9 et17 régions à cette échelle.
+Les deux prédictions sont comparées sur la même population ; les régions
+non couvertes ne sont pas présentées comme corrigées. Les gains ne sont
+pas universels : sur7958, certaines échelles plus grossières se dégradent
+dans ce contrôle. Il ne faut pas promouvoir automatiquement ce candidat.
+
+### 20.3. État du chantier
+
+Six tests du réducteur de données vérifient la séparation ajustement/contrôle,
+les bandes, l'interpolation de variance et l'abstention. Ces résultats valident
+une direction pour N2b(a), **pas un nouveau débruitage en production**. La
+covariance conditionnelle, le raccord spatial et la protection des structures
+restent à qualifier avant substitution du modèle global. Une covariance
+spatiale par axe n'est pas une covariance entre I/Co/Cg : ne pas les confondre.
+
+N2b(b) reste à traiter séparément : un point isolé peut être un reflet ou un
+détail réel ; pas de médiane aveugle ni de correction implicite d'un axe dont
+le curseur est nul. Les contrôles de détails commencent dès cette étape,
+sans attendre une surcorrection. Pas de nouvelle extension des grandes
+échelles avant mesure de sa nécessité, pas de changement DCP ou d'activation
+par défaut. Les nouvelles ROI et masques fixes de Claude serviront au rejeu
+du futur filtre, pas à réinterpréter rétroactivement cette cartographie.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
@@ -940,3 +1025,7 @@ d'indicateur par un poids ajusté à une seule scène.
   natifs et test moteur passent. La prétendue hausse de bruit de luminance
   du R7 provenait d'une moyenne RGB : luma pondérée stable ou en baisse dans
   le témoin exact. Gain chroma modeste et coût supérieur ; visuel encore attendu.
+- Retour visuel reçu : amélioration reconnue, défauts résiduels ci-dessus.
+  N2b lancé ; cartographie par niveau de signal terminée sur quatre scènes,
+  biais de couverture observé et candidat numérique évalué, sans remplacement
+  du filtre. Impulsions, covariance conditionnelle et détails restent ouverts.

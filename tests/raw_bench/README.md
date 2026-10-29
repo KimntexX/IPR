@@ -232,6 +232,13 @@ conserver d'implémentation legacy dans le module. Aucun TIFF n'est écrit.
 Le prototype courant utilise cinq échelles chroma et trois pour l'intensité ;
 les gains de métriques ne valent pas validation visuelle.
 
+N2b(a) : `signal_noise_survey.py --help` pilote `--signal-survey` de la sonde.
+Il conserve81 régions par source, sépare les25 positions initiales des56
+positions de contrôle et compare un modèle global à une interpolation de
+variance par niveau de signal. `--replay` réanalyse une preuve existante sans
+redécoder les images. MAD, autocorrélation et heuristique d'aplat ne sont pas
+une vérité physique du bruit ; le module de débruitage n'est pas changé.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,
