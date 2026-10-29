@@ -989,6 +989,43 @@ sans attendre une surcorrection. Pas de nouvelle extension des grandes
 par défaut. Les nouvelles ROI et masques fixes de Claude serviront au rejeu
 du futur filtre, pas à réinterpréter rétroactivement cette cartographie.
 
+## 21. 29 octobre — correction d'interprétation : le grain des murs est réel
+
+L'utilisateur précise que les murs d'escalade comportent du sable, de la colle
+et une peinture granuleuse. Les régions appelées « aplats clairs » de7599 et
+9613 mêlent donc texture réelle et bruit. Leur passe-haut plus élevé dans B
+peut traduire en partie du détail conservé, et non une insuffisance du filtre.
+La conclusion « B ne fait presque rien sur9613 » doit être limitée aux
+mesures et ne vaut pas diagnostic de bruit sur ces régions.
+
+**Conséquence : le réglage de N2b(a) et son raccord au filtre sont suspendus
+sur cette base.** Le §20 et ses JSON gardent leurs valeurs numériques : ils
+mesurent des dispersions de coefficients, pas une vérité de bruit. Une meilleure
+prédiction du MAD sur les positions de contrôle ne justifie pas de supprimer
+ce qui fait précisément la texture de la matière. Aucun coefficient ni
+renforcement de force n'est intégré pour rendre le mur plus lisse.
+
+Une photographie rapprochée décrite par l'utilisateur indique un grain fin,
+serré, peu contrasté et approximativement achromatique. Cela fournit un
+indice local en faveur d'un traitement du résidu coloré, sans garantir une
+chroma fine nulle à chaque pixel : éclairage, reflets, contours et dématriçage
+peuvent aussi produire des différences colorées. Pas de règle universelle
+« toute variation de couleur du mur est du bruit ».
+
+Claude prépare les références Lightroom « IPR Bruit » de7599 et9613 : onze
+états, quart central à pleine résolution, recette suivie sur
+`patch_validation_presets` (`186693b`). Ce sont des **comparaisons de rendu**,
+pas une référence propre indépendante. Auditer profil, WB, corrections,
+netteté et cadrage ; sélectionner les ROI dans le quart central commun après
+orientation, sans redimensionnement qui changerait le grain. Distinguer
+peinture texturée, surface réellement lisse, contours et noirs, avec masques
+fixes. Les comparaisons sont en attente de ces exports.
+
+En attendant, les points isolés et l'examen du noir de9613 sont les cibles
+suivantes, sans traitement médian aveugle ni confusion entre détail ponctuel
+et impulsion. Cette clarification ne modifie ni le prototype disponible ni
+les bornes DCP. Les gardes de détail restent obligatoires dès N2b(b).
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
@@ -1029,3 +1066,7 @@ du futur filtre, pas à réinterpréter rétroactivement cette cartographie.
   N2b lancé ; cartographie par niveau de signal terminée sur quatre scènes,
   biais de couverture observé et candidat numérique évalué, sans remplacement
   du filtre. Impulsions, covariance conditionnelle et détails restent ouverts.
+- Précision matière reçue (§21) : les murs sont texturés. Le modèle conditionnel
+  n'est pas promu sur leurs dispersions ; réglage sur ces zones suspendu,
+  références LR attendues. Ne pas interpréter les valeurs du §20 comme du
+  bruit seul ni lisser la matière pour améliorer un indicateur.
