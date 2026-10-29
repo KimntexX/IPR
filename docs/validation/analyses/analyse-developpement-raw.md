@@ -1202,6 +1202,30 @@ sans confondre changement d'axes, loi des curseurs et adaptation au signal.
 Les temps13–14 s du §23 concernaient la pleine définition, non l'aperçu.
 Aucune nouvelle image ni action utilisateur nécessaire à ce stade.
 
+## 25. 29 octobre — orientation utilisateur pour la commande globale (b)
+
+Orientation transmise par Claude et retenue : une seule barre principale
+**« Réduction du bruit »**, avec un sous-menu **« Avancé »** replié pour
+affiner séparément luminance et couleur. Lightroom reste un repère de réponse
+et de rendu, pas une cible à recopier. Cette décision ne modifie ni(a), ni V1,
+ni les bornes DCP, et ne vaut pas implémentation de l'interface.
+
+Le contrat `CameraDenoise::Settings{luminance, chrominance}` reste inchangé.
+La future commande globale sera traduite en ces deux forces par une loi en
+C++, pas par des calculs photographiques dans le QML. Aucune pondération,
+proportion fixe ou nouvelle courbe de force n'est choisie ici ; les mesures
+contrôlées et le contrôle visuel doivent guider ce choix après qualification
+des axes balancés. Définir aussi explicitement comment les réglages avancés
+interagissent avec un nouveau déplacement du curseur principal, afin d'éviter
+des valeurs masquées ou des corrections appliquées deux fois.
+
+Avant raccordement IHM : tests des bornes0–100, finitude, déterminisme,
+identité lorsque les deux forces effectives valent0, et réponse progressive
+sur des champs de bruit connus. La baisse d'un indicateur sur une photo
+texturée ne suffit pas à valider cette loi. Le panneau et le sous-menu seront
+pris en charge dans le chantier IHM dédié ; aucune modification moteur ou
+QML supplémentaire n'est faite pour cette seule orientation.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
@@ -1256,3 +1280,5 @@ Aucune nouvelle image ni action utilisateur nécessaire à ce stade.
 - V1 codé et qualifié au niveau module (§24), sans(a), source caméra déjà
   balancée et contrat gains retiré. Raccordement moteur et contrôle réel
   attendus de Claude ; ne pas annoncer ce jalon livré ni validé visuellement.
+- Orientation(b) actée (§25) : une commande globale et deux réglages avancés,
+  loi de traduction C++ à qualifier, pas de copie imposée de Lightroom.
