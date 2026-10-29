@@ -2,11 +2,10 @@
 
 ## Bilan actuel — 29 octobre 2026
 
-Dernier jalon (§24) : axes caméra déjà balancés, 56 contrôles natifs et six
-suites passent ; raccordement moteur encore à faire par Claude. Le prototype
-conditionnel du §23 reste un candidat historique non promu (`0941dc4`).
-**Pas de validation visuelle ni de promotion**. La comparaison réelle des axes
-reste à qualifier ; curseurs et bornes DCP inchangés.
+Dernier jalon (§27) : V1 confirmé sur28 scènes par Claude ; combinaison(a)+V1
+codée, 61 contrôles natifs et raccordement optique réussis. Sa comparaison
+réelle à V1 est en cours ; **pas de promotion**. Les gains de BdB restent
+appliqués, les forces et bornes DCP inchangées.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1262,6 +1261,55 @@ Cette sonde introduit un biais de noir : elle n'est ni une correction approuvée
 ni une justification pour borner en amont du débruitage. Ne pas changer le
 filtre ou la force au milieu de cette comparaison. Aucun nouvel essai n'est
 lancé ici en parallèle de la campagne confiée à Claude.
+
+## 27. 29 octobre — V1 confirmé, sondes BdB et combinaison(a)+V1
+
+### Référence V1 et relecture des sondes de chemins
+
+Claude livre `75d8701` :
+`../raw/loi-force-bruit-b-v1-v001-20261029T200937Z.json` reprend les28 scènes
+et masques de la campagne initiale, un seul exécutable haché et un témoin0/0
+inchangé. La hausse médiane de chroma HP à luminance100 passe de×1,27 à×0,99
+dans les noirs ; la couleur seule agit davantage, sans bénéfice majeur dans
+les aplats clairs. Cela soutient les axes balancés, pas encore le modèle(a).
+
+Les sondes `8fd363f`,
+`../raw/essai-debruitage-chemins-bdb-v001-20261029T201816Z.json`, comparent7599
+et9539. Le chemin non signé réduit certains points noirs de7599 mais relève
+la luma moyenne du masque sombre de12,6 à18,5 à100/100 ; ce n'est pas une
+amélioration sans contrepartie. La BdB automatique livre une image plus sombre
+et froide et désactive la calibration concernée : les observations ne démontrent
+pas un meilleur débruitage. L'identité de l'exécutable autoWB est déclarée
+« not recorded » ; ce volet reste une sonde de diagnostic, pas une qualification
+reproductible du chemin. Aucun abandon du signal signé ni nouvelle borne DCP.
+
+### Candidat conditionnel dans les axes balancés
+
+Le raccordement moteur de Claude `dec3c6f` est intégré localement au banc.
+Le modèle conditionnel du §23 est ensuite réintroduit **sans annulation de BdB** :
+mêmes témoins admissibles, trois plages si support suffisant, covariance
+interpolée et abstention hors domaine. La physique capteur n'est pas recalibrée.
+`Context::gains` reste supprimé ; la luminance seule ajoute un delta commun
+R/G/B. Le garde d'alias et l'intégrité de la source sont conservés.
+Ce lot ne change ni les forces, ni les taches basse fréquence(c), ni la
+future loi maître(b). L'ordre convenu est(a)+V1, puis(c), puis(b).
+
+Première preuve native :
+`../raw/camera-denoise-n2-v001-20261029T202017Z.json`, 61 contrôles natifs,
+test moteur optique et six suites réussis. Trois nouveaux tests Python
+vérifient en plus le rattachement de la référence V1 à la bonne campagne
+figée ; ils sont désormais déclarés dans une septième suite CTest.
+Mesures initiales du module :718 ms sur2,8 Mpx et5340 ms sur24 Mpx,
+pic733028352 octets sur le champ synthétique. Pas une mesure de l'aperçu
+interactif, ni une campagne répétée de performance.
+
+La comparaison réelle emploie les mêmes7599/9539/7958 de développement et
+réutilise **B-V1**, pas l'ancien B aux axes compensés. Le lanceur exige le
+SHA de la référence commune, ceux des sources et des masques, puis les mêmes
+métriques B0 ; un écart arrête la campagne. Les25 autres scènes restent une
+réserve prospective pour un candidat figé, pas un corpus jamais observé.
+Les résultats de cette combinaison restent à analyser avant tout raccordement
+de production ou réglage de force ; les dispersions incluent toujours la matière.
 
 ## Conclusion actuelle et fiche de reprise
 
