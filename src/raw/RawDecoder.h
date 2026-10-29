@@ -29,6 +29,8 @@ struct DcpSource
     bool automaticWhiteBalance = false;
     bool lensCorrectionEnabled = true;
     bool chromaticAberrationEnabled = true;
+    bool preLensSignal = false;       // decoded with Options::retainPreLensSignal
+    bool signedDevelopment = false;   // decoded with Options::signedDevelopment
 };
 
 struct Options
@@ -48,6 +50,9 @@ struct Options
     // Development policy B (values below the black kept, RawDevelopment::Policy::Signed)
     // for the comparison bench; the application keeps policy A, LibRaw's.
     bool signedDevelopment = false;
+    // Keep the camera signal before the lens corrections in the DCP context (the
+    // editor's experimental camera-signal denoise): one more camera buffer.
+    bool retainPreLensSignal = false;
     std::shared_ptr<DcpSource> retainedDcpSource;
     std::function<bool()> cancellationRequested;
 };
