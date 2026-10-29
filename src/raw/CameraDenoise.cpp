@@ -36,16 +36,11 @@ int reflect(int x, int length)
 
 bool validContext(const Context &c)
 {
-    if (!std::isfinite(c.iso) || c.iso < 0 || !std::isfinite(c.divisor) || c.divisor <= 0 ||
+    if (!std::isfinite(c.iso) || c.iso < 0 ||
         !std::isfinite(c.pixelScale) || c.pixelScale <= 0 || c.pixelScale > 1)
         return false;
     for (double gain : c.gains) if (!std::isfinite(gain) || gain <= 0) return false;
-    std::array<int, 4> sites{};
-    for (const auto &row : c.pattern) for (int colour : row) {
-        if (colour < 0 || colour > 3) return false;
-        ++sites[std::size_t(colour)];
-    }
-    return sites[0] == 1 && sites[2] == 1 && sites[1] + sites[3] == 2;
+    return true;
 }
 
 cv::Vec3f opponent(const cv::Vec3f &rgb, const cv::Vec3f &inverseGains)
@@ -301,12 +296,17 @@ int workerThreads()
     return int(std::max(1u, std::min(8u, host > 1 ? host - 1 : 1)));
 }
 
+bool identity(const Settings &settings)
+{
+    return settings.luminance == 0 && settings.chrominance == 0;
+}
+
 bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
            const std::function<bool()> &cancelled)
 {
     if (cameraRgb.empty() || cameraRgb.dims != 2 || cameraRgb.type() != CV_32FC3 ||
         settings.luminance < 0 || settings.luminance > 100 || settings.chrominance < 0 || settings.chrominance > 100) return false;
-    if (settings.luminance == 0 && settings.chrominance == 0) return true;
+    if (identity(settings)) return true;
     try {
         const auto stop = [&] { return cancelled && cancelled(); };
         if (stop() || !validContext(context) || !cv::checkRange(cameraRgb)) return false;

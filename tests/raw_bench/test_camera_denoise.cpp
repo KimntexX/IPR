@@ -94,9 +94,10 @@ int main(int argc,char **argv)
         }catch(const std::exception &e){std::cerr<<e.what()<<'\n';return 2;}
     }
     check(workerThreads() >= 1 && workerThreads() <= 8, "bounded worker pool");
+    check(identity({}) && !identity({1,0}) && !identity({0,1}), "identity helper matches both controls");
     {
         auto image = field(); const auto original = image.clone(); auto *pointer = image.data;
-        Context unused; unused.divisor = 0; unused.gains[0] = std::numeric_limits<double>::quiet_NaN();
+        Context unused; unused.gains[0] = std::numeric_limits<double>::quiet_NaN();
         check(apply(image, {}, unused, []() -> bool { throw std::runtime_error("zero must not call"); }), "zero forces bypass Context/callback");
         check(image.data == pointer && bits(image, original), "zero forces bitwise identity and same allocation");
         cv::Mat empty, wrong(2, 2, CV_16UC3);
@@ -157,11 +158,11 @@ int main(int argc,char **argv)
         for (int kind = 0; kind < 6; ++kind) {
             auto image = original.clone(); Context context;
             if (kind==0) context.gains[0]=0;
-            if (kind==1) context.divisor=0;
+            if (kind==1) context.gains[1]=std::numeric_limits<double>::infinity();
             if (kind==2) context.pixelScale=0;
             if (kind==3) context.pixelScale=1.2;
             if (kind==4) context.iso=-1;
-            if (kind==5) context.pattern={{{1,1},{1,1}}};
+            if (kind==5) context.iso=std::numeric_limits<double>::quiet_NaN();
             check(!apply(image,{50,50},context) && bits(image,original), "invalid Context rejected atomically");
         }
         auto image=original.clone();
@@ -188,6 +189,18 @@ int main(int argc,char **argv)
         for(int y=0;y<shifted.rows;++y)for(int x=0;x<shifted.cols;++x)
             for(int c=0;c<3;++c)error=std::max(error,double(std::abs(shifted.at<cv::Vec3f>(y,x)[c]-regular.at<cv::Vec3f>(y,x)[c]-offset[c])));
         check(error<3e-6, "DC translation does not change the noise model appreciably");
+    }
+    {
+        auto regular=field(128,128), amplified=regular.clone();
+        Context context; context.gains={2,1,3,1};
+        const cv::Vec3f gains(2,1,3);
+        for(int y=0;y<amplified.rows;++y)for(int x=0;x<amplified.cols;++x)
+            amplified.at<cv::Vec3f>(y,x)=amplified.at<cv::Vec3f>(y,x).mul(gains);
+        check(apply(regular,{70,70},{})&&apply(amplified,{70,70},context), "unequal white-balance gains accepted");
+        double error=0;
+        for(int y=0;y<amplified.rows;++y)for(int x=0;x<amplified.cols;++x)
+            for(int c=0;c<3;++c)error=std::max(error,double(std::abs(amplified.at<cv::Vec3f>(y,x)[c]/gains[c]-regular.at<cv::Vec3f>(y,x)[c])));
+        check(error<3e-6,"noise model equivariant to the declared WB gains");
     }
     {
         const auto original=field(520,300); auto image=original.clone();

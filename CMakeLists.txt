@@ -113,6 +113,8 @@ set(IPR_ENGINE_SOURCES
     src/raw/LibRawInput.cpp
     src/raw/RawDevelopment.h
     src/raw/RawDevelopment.cpp
+    src/raw/CameraDenoise.h
+    src/raw/CameraDenoise.cpp
     src/raw/RawNormalization.h
     src/raw/RawNormalization.cpp
     src/raw/CameraCharacterization.h

@@ -19,14 +19,14 @@ struct Context
 {
     std::array<double, 4> gains{1, 1, 1, 1}; // Actually applied WB, R/G/B/G2.
     double iso = 0;                        // 0 unknown; NOT a noise-strength formula.
-    std::array<std::array<int, 2>, 2> pattern{{{0, 1}, {3, 2}}}; // Sensor coordinates.
-    double divisor = 1;                    // DN denominator after black subtraction.
     double pixelScale = 1;                 // Input/full-resolution extent, in (0, 1].
 };
 
 // At most eight threads INCLUDING the caller. OpenCV's global thread settings
 // are not changed. Only the caller invokes cancellation; all workers are joined.
 int workerThreads();
+
+bool identity(const Settings &settings);
 
 // Input: finite CV_32FC3, white 1, signed/extended range. Camera intensity is an
 // opponent-axis proxy, not photometric Rec.2020 luminance. Noise is measured per
