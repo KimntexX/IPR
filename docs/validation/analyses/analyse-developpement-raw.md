@@ -760,6 +760,51 @@ L'identité à force zéro est relative au signal fourni, pas une preuve A=B.
 Proxy et pleine définition doivent être qualifiés séparément, leur filtrage
 ne commute pas exactement avec la réduction d'image.
 
+## 18. 29 octobre — raccordement signé pré-LCP et témoins réels (N3 partiel)
+
+Claude livre `a9434b5` et `67be313` : la case demande désormais B signé et
+la rétention du signal pré-LCP ; l'identité du cache distingue A/B. Les
+corrections optiques sont rejouées après le filtre. Ces commits sont fusionnés
+localement dans `67dfbf7`, puis moteur et RenderServer recompilés.
+Les réserves d'architecture du §17 sont donc traitées dans le code candidat,
+sans que cela transforme les premiers tests N2 en qualification de ce jalon.
+
+Un contrôle en mémoire produit 18 rendus : A, B sans filtre, B50, B100,
+rejeu B100 et retour A sur `6V1A9153.CR3` (R6 Mark III), `IMG_3135.CR2`
+(60D) et `7Y6A7599.CR3` (R7). Les trois témoins passent : sorties disponibles,
+filtre effectif, B100 déterministe et retour A identique à son premier rendu.
+Cela contrôle l'absence de contamination cumulative dans cette séquence,
+**pas l'invariance A contre une ancienne version**, ni la qualité du débruitage.
+Preuve canonique :
+[camera-denoise-n3-v001-20261029T124016Z.json](../raw/camera-denoise-n3-v001-20261029T124016Z.json).
+Le lanceur `camera_denoise_witnesses.py` ferme son serveur par scène et utilise
+un watchdog de 180 s ; aucun TIFF n'est écrit. Calibration active, Camera
+Neutral propre à chaque boîtier, corrections optiques désactivées selon les
+déclarations : ce contrôle réel ne valide donc pas la réapplication LCP.
+
+Différences B100 moins B0 dans les échantillons sRGB 16 bits finaux :
+
+| Source | Écart moyen R / G / B | Écart absolu moyen R / G / B |
+| --- | ---: | ---: |
+| 9153 | +73 / +71 / +62 | 368 / 389 / 360 |
+| 3135 | +67 / +81 / +43 | 488 / 545 / 468 |
+| 7599 | −67 / −33 / −749 | 2169 / 2055 / 2712 |
+
+Ce ne sont **pas** des mesures de bruit capteur. La conservation DC du module
+caméra n'implique pas celle du rendu après DCP non linéaire et bornes : le R7
+montre notamment un déplacement moyen du bleu à contrôler visuellement.
+Les temps de requête B50/B100 sont environ 4,3 à 8,7 s ici (rendu/export
+en mémoire compris), distincts du benchmark du module seul au §17.
+
+**Test de raccordement optique non résolu :** `cameraProfileEngineTests`
+passe sur N1 initial, mais échoue après N1b au témoin
+« camera denoise before the lens corrections applies them again, source untouched ».
+Ce test attend encore le rendu sans filtre à force40, hypothèse du bouchon
+identité. La référence doit explicitement composer filtre, LCP puis DCP.
+Signalement transmis à Claude ; son fichier de test n'est pas retouché ici.
+N3 complet reste ouvert : correction de ce test, cas optiques, proxy/100 %,
+ressources de l'application et revue visuelle. Aucun changement DCP D0.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
@@ -781,7 +826,8 @@ ne commute pas exactement avec la réduction d'image.
 - F1 supprime la borne de sortie B : négatifs transmis au DCP confirmés,
   invariance A validée, garde NaN/Inf corrigé et contrôlé. A reste le défaut.
   Le premier module N2 et le raccordement N1 sont intégrés localement ; source
-  signée pré-LCP et qualification commune N3 restent à terminer.
+  signée pré-LCP raccordée en N1b, qualification commune N3 partielle (§18),
+  dont témoin optique encore à corriger avant déclaration d'intégration validée.
 - Harmonisation des domaines couleur entre modules demandée mais différée ;
   ne pas la mélanger à la transition RAW ni changer le master Rec.2020 ici.
 - F1 : 60 cas A, 12 fichiers B, 12 témoins ciblés du garde et contrat natif

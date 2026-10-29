@@ -217,6 +217,9 @@ l'IHM, le proxy et les scènes réelles relèvent de N3, pas de ce test natif.
 `qualify_camera_denoise.py --help` décrit le lanceur des preuves : module,
 test des profils, CTest et dossiers DLL explicites ; chaque exécution écrit
 un nouveau JSON horodaté sans écraser les preuves précédentes.
+`camera_denoise_witnesses.py --help` décrit le smoke réel N3 sur trois boîtiers :
+A/B0/B50/B100 et replays, en mémoire, un serveur fermé par scène avec watchdog.
+Les écarts de rendu sRGB qu'il mesure ne prouvent pas la qualité du débruitage.
 
 ## Limites du corpus et références
 
