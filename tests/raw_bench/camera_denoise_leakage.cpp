@@ -224,6 +224,7 @@ int main(int argc,char **argv)
                     {"sigma",QJsonArray{node.second[0],node.second[1],node.second[2]}}});
                 modelJson.append(QJsonObject{{"level",m.level},{"candidates",m.candidates},
                     {"flat_candidates",m.flatCandidates},{"supported",m.supported},
+                    {"dark_floor_applied",m.darkFloorApplied},
                     {"low",m.low},{"high",m.high},{"global_signal",m.globalSignal},
                     {"global_sigma",sigma},{"nodes",nodes}});
             };

@@ -217,7 +217,15 @@ int main(int argc,char **argv)
             for(int c=0;c<3;++c)image.at<cv::Vec3f>(y,x)[c]=levels[size_t(band)]+float(random.gaussian(sigmas[size_t(band)]));
         }
         const auto before=image.clone();
-        check(apply(image,{100,100},{}),"signal-dependent noisy bands complete");
+        Context context; int bandModels=0; bool lowFloor=true;
+        context.noiseModelObserver=[&](const NoiseModelSummary &m) {
+            if(m.nodes.size()>1) {
+                ++bandModels;
+                for(int c=0;c<3;++c)lowFloor=lowFloor&&m.nodes.front().second[c]+1e-8f>=m.globalSigma[c];
+            }
+        };
+        check(apply(image,{100,100},context),"signal-dependent noisy bands complete");
+        check(bandModels==5&&lowFloor,"darkest witnessed knot never falls below the pooled variance floor");
         for(int band=0;band<3;++band) {
             const cv::Rect roi(band*192+64,32,64,128);
             const auto a=variance(before(roi)),b=variance(image(roi));

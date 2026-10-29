@@ -34,6 +34,11 @@ class VariantBaselineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Unknown variant schema'):
             module.variant_baseline(Path('reference.json'), self.variant(schema='unknown'))
 
+    def test_other_named_variant_does_not_silently_use_B_V1(self):
+        with patch.object(module, 'sha256', return_value='expected'):
+            with self.assertRaises(KeyError):
+                module.variant_baseline(Path('reference.json'), self.variant(), 'B_a_V1')
+
 
 if __name__ == '__main__':
     unittest.main()

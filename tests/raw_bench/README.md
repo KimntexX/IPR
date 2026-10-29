@@ -255,9 +255,9 @@ figés de `loi-force-bruit-v001-20261029T185322Z.json`. L'argument obligatoire
 pour comparer directement à B-V1 ; l'empreinte de sa référence commune doit
 correspondre, sinon le programme refuse la comparaison. Il contrôle les empreintes
 RAW/TIFF et celles des masques, puis exige le même témoin B0. Trois scènes de
-développement sont mesurées en mémoire ; les25 autres sont déclarées réservées
-pour un contrôle ultérieur du candidat figé (réserve prospective, pas un corpus
-jamais observé). Les sources et l'exécutable sont hachés dans la nouvelle preuve.
+développement sont mesurées en mémoire. Les28 ont maintenant servi à la
+campagne de Claude sur(a)+V1 : aucun jeu intact n'est revendiqué pour les
+prochains candidats. Les sources et l'exécutable sont hachés dans la nouvelle preuve.
 Le watchdog termine un serveur bloqué ; un échec arrête la campagne et reste
 consigné. Les dispersions haute fréquence incluent des textures réelles : leur
 baisse n'est ni une vérité bruit seul ni une validation visuelle.
@@ -266,6 +266,10 @@ Le premier candidat conditionnel est conservé en `0941dc4`, V1 seul en
 conditionnel ; ni les forces ni les bornes DCP ne sont modifiées.
 Le nom du lanceur n'établit pas que le binaire fourni contient ce modèle :
 vérifier les sources embarquées et l'identité d'exécutable de chaque preuve.
+`--prior-reference` peut joindre la campagne figée B_a_V1 pour distinguer
+le gain du plancher sombre de celui des axes V1. Le garde-fou actuel relève
+les variances du premier nœud vers le global si nécessaire, pas celles des
+autres nœuds ; ce n'est pas une calibration physique ni une extension du domaine.
 
 ## Limites du corpus et références
 

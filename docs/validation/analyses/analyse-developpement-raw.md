@@ -2,10 +2,10 @@
 
 ## Bilan actuel — 29 octobre 2026
 
-Dernier jalon (§27) : V1 confirmé sur28 scènes par Claude ; combinaison(a)+V1
-figée en `15a4cc2`, 61 contrôles natifs, sept suites et raccordement optique
-réussis. Trois scènes réelles comparées : gain dans certaines plages mais
-résidu sombre accru sur7599 à100/100 ; **candidat d'essai, pas de promotion**.
+Dernier jalon (§§28–29) : régression sombre de(a)+V1 confirmée sur28 scènes,
+audit des σ et du domaine terminé sur quatre sources. Plancher de variance
+au nœud sombre en essai, 65 contrôles natifs, sept suites et raccordement
+optique réussis ; comparaison réelle en cours, **pas de promotion**.
 Les gains de BdB restent appliqués, les forces et bornes DCP inchangées.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
@@ -1404,6 +1404,45 @@ les forces, le domaine couvert et le DCP inchangés. Ce garde-fou est un
 compromis empirique par rapport à V1, pas une extrapolation validée du bruit
 capteur. Il devra améliorer le noir sans effacer la matière ni annuler les
 gains clairs ; aucune promotion avant mesure et revue.
+
+## 29. 29 octobre — essai du plancher de variance au nœud sombre
+
+Un seul modèle de filtre reste compilé : le candidat conditionnel balancé
+avec garde-fou sombre. Ce n'est pas un retour à un second filtre global ni
+une option legacy. Le global est une estimation statistique de secours issue
+des mêmes25 positions non rejetées comme cohérentes, avec le quart le plus
+calme ; ses niveaux mélangés ne constituent pas une vérité de bruit physique.
+
+Avec au moins deux nœuds conditionnels distincts, pour chaque axe c du
+premier nœud : variance(c)=max(variance_sombre(c),variance_globale(c)). Les
+covariances hors diagonale sont redimensionnées pour conserver la corrélation
+des témoins sombres, sans importer la corrélation d'une autre population de
+signal. Une variance initialement nulle reçoit un terme diagonal, sans
+inventer de corrélation. La régularisation de covariance reste inchangée.
+Le raccord vers le deuxième nœud utilise l'interpolation continue existante ;
+les autres nœuds ne sont pas relevés. La table128 positions conserve son
+approximation numérique, et le domaine couvert/les abstentions ne changent pas.
+
+Ni σ=valeur fixe, ni seuil de noir en sRGB, ni amplification de curseur ne
+sont ajoutés. Le seul nœud d'un modèle sans bandes distinctes reste inchangé.
+Une absence de témoins admissibles ne provoque pas un repli global hors
+domaine : elle reste une abstention. Le risque de lisser trop les vrais
+détails sombres reste à examiner ; le plancher restaure un niveau empirique
+V1, pas nécessairement le σ réel du capteur.
+
+Preuve des contrats `../raw/camera-denoise-n2-v001-20261029T213441Z.json` :
+65 contrôles natifs, sept suites CTest et test optique réussis. Le nouveau
+témoin synthétique vérifie le plancher sur les cinq échelles tout en gardant
+le contrôle de réduction du bruit aux trois luminosités et les escaliers
+propres. L'observateur reste sans effet binaire sur la sortie, avec callback
+sur le thread appelant uniquement et échec atomique sur exception.
+
+La comparaison réelle réutilise les masques, sources et neutres de référence
+sur7599/9539/7958, contre B-V1 et contre B_a_V1 de `dd674b0`, sans regénérer
+les anciens états. `--prior-reference` vérifie le même SHA de campagne avant
+d'utiliser cette seconde référence. Ces scènes ne sont plus des données
+réservées ; la prochaine campagne devra être déclarée comme réévaluation,
+pas comme validation sur un jeu intact. Résultats à analyser avant promotion.
 
 ## Conclusion actuelle et fiche de reprise
 
