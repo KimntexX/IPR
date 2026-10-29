@@ -667,6 +667,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         }
     } else {
         cv::Mat cameraRgb = std::move(decoded);
+        cv::Mat preLens;
+        if (options.retainPreLensSignal && !profiles.lcpPath.isEmpty()) preLens = cameraRgb.clone();
         if (!profiles.lcpPath.isEmpty() &&
             !CameraProfileEngine::applyLcp(profiles.lcpPath, cameraRgb, capture,
                                             error, opticalOptions, &opticalApplied))
@@ -688,6 +690,15 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                 if (appliedMultipliers[size_t(c)] > 0 && std::isfinite(appliedMultipliers[size_t(c)]))
                     signal.cameraNeutral[c] = appliedMultipliers[1] / appliedMultipliers[size_t(c)];
             image = CameraSignal::render(std::move(signal), profiles.dcpPath, dcpOptions, error);
+            if (!image.isNull() && !preLens.empty() &&
+                (opticalApplied.geometry || opticalApplied.vignetting || opticalApplied.chromaticAberration)) {
+                auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*image.dcpContext);
+                context->preLensCameraRgb = std::move(preLens);
+                context->lcpPath = profiles.lcpPath;
+                context->capture = capture;
+                context->lensOptions = opticalOptions;
+                image.dcpContext = std::move(context);
+            }
         }
         // Calibration changes the LibRaw white level upstream: never reuse this
         // buffer for a profile-independent fast path when a manifest is active.
@@ -701,6 +712,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             options.retainedDcpSource->automaticWhiteBalance = options.automaticWhiteBalance;
             options.retainedDcpSource->lensCorrectionEnabled = options.lensCorrectionEnabled;
             options.retainedDcpSource->chromaticAberrationEnabled = options.chromaticAberrationEnabled;
+            options.retainedDcpSource->preLensSignal = options.retainPreLensSignal;
             if (metadata)
                 options.retainedDcpSource->metadata = *metadata;
         }
@@ -883,6 +895,14 @@ ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString 
     if (image.isNull()) return {};
     // A source without applied-WB context cannot promise pre-DCP WB editing.
     if (!source.workingContext) image.dcpContext.reset();
+    else if (!source.workingContext->preLensCameraRgb.empty()) {
+        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*image.dcpContext);
+        context->preLensCameraRgb = source.workingContext->preLensCameraRgb;
+        context->lcpPath = source.workingContext->lcpPath;
+        context->capture = source.workingContext->capture;
+        context->lensOptions = source.workingContext->lensOptions;
+        image.dcpContext = std::move(context);
+    }
     if (metadata) {
         *metadata = source.metadata;
         metadata->dcpProfile = QFileInfo(path).completeBaseName();

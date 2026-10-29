@@ -467,6 +467,49 @@ int main(int argc, char **argv)
                           "</rdf:Description></rdf:RDF>");
     if (!check(writeFile(lcpPath, lcp), "synthetic LCP should be written"))
         return 1;
+    {
+        // Experimental camera denoise with the signal kept before the lens corrections:
+        // it starts from that signal and applies the corrections again, so a neutral
+        // denoise renders the corrected image, never the uncorrected one.
+        CameraProfileEngine::DcpWorkingContext lens = wb;
+        lens.preLensCameraRgb = cv::Mat(20, 30, CV_32FC3);
+        for (int y = 0; y < 20; ++y)
+            for (int x = 0; x < 30; ++x)
+                lens.preLensCameraRgb.at<cv::Vec3f>(y, x) = cv::Vec3f(.05f + .01f * x, .1f + .005f * y, .2f);
+        lens.lcpPath = lcpPath;
+        lens.capture.focalLengthMm = 24;
+        lens.capture.focusDistanceM = 2;
+        lens.capture.aperture = 4;
+        lens.cameraRgb = lens.preLensCameraRgb.clone();
+        QString lensError;
+        if (!CameraProfileEngine::applyLcp(lcpPath, lens.cameraRgb, lens.capture, &lensError, lens.lensOptions)) return 1;
+        const cv::Mat preLensUntouched = lens.preLensCameraRgb.clone();
+        cv::Mat corrected, uncorrected;
+        auto uncorrectedContext = lens;
+        uncorrectedContext.cameraRgb = lens.preLensCameraRgb;
+        if (!CameraProfileEngine::renderFromCameraSignal(lens, 5200, 0, 0.0, corrected, &lensError) ||
+            !CameraProfileEngine::renderFromCameraSignal(uncorrectedContext, 5200, 0, 0.0, uncorrected, &lensError))
+            return 1;
+        ColorPipeline::WorkingImage lensSource;
+        std::vector<cv::Mat> lensChannels;
+        cv::split(corrected, lensChannels);
+        lensChannels.push_back(cv::Mat(corrected.size(), CV_32FC1, cv::Scalar(1)));
+        cv::merge(lensChannels, lensSource.linearRgba);
+        lensSource.referenceWhiteBalanceKelvin = lens.sourceKelvin;
+        lensSource.dcpContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(lens);
+        const auto denoisedLens = IprTestImageGenerator::denoised(lensSource, 5200, 40, true);
+        cv::Mat renderedRgb;
+        if (!denoisedLens.isNull()) {
+            std::vector<cv::Mat> renderedChannels;
+            cv::split(denoisedLens.linearRgba, renderedChannels);
+            renderedChannels.resize(3);
+            cv::merge(renderedChannels, renderedRgb);
+        }
+        if (!check(!renderedRgb.empty() && cv::norm(renderedRgb, corrected, cv::NORM_INF) < 1e-6 &&
+                       cv::norm(corrected, uncorrected, cv::NORM_INF) > 1e-3 &&
+                       cv::norm(lens.preLensCameraRgb, preLensUntouched, cv::NORM_INF) == 0,
+                   "camera denoise before the lens corrections applies them again, source untouched")) return 1;
+    }
 
     const CameraProfileEngine::Selection selection =
         CameraProfileEngine::findProfiles(

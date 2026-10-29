@@ -358,7 +358,8 @@ private:
                                    bool automaticWhiteBalance,
                                    const QString &profile = {}, const QString &manifest = {},
                                    const QString &lensProfile = {}, bool lensResolved = false,
-                                   bool lensCorrection = true, bool chromaticAberration = true);
+                                   bool lensCorrection = true, bool chromaticAberration = true,
+                                   bool preLensSignal = false);
     void reloadRawDevelopment();
     RawDevelopment rawDevelopmentRecipe() const;
     void beginLoad(const QString &fileName, const QString &extension,
