@@ -26,7 +26,16 @@ add_test(NAME rawBenchFloatInlet COMMAND "${Python3_EXECUTABLE}" -m unittest dis
 # C2 module bench: compile the committed development sources in this worktree,
 # never link an engine or CMake cache from another agent's build.
 find_package(OpenCV REQUIRED COMPONENTS core imgproc)
+find_package(Threads REQUIRED)
 get_filename_component(IPR_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
+add_executable(cameraDenoiseTests test_camera_denoise.cpp "${IPR_ROOT}/src/raw/CameraDenoise.cpp")
+target_include_directories(cameraDenoiseTests PRIVATE "${IPR_ROOT}/src/raw" ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(cameraDenoiseTests PRIVATE ${OpenCV_LIBS} Threads::Threads)
+if(WIN32)
+    target_link_libraries(cameraDenoiseTests PRIVATE Psapi)
+endif()
+add_test(NAME cameraDenoiseContract COMMAND cameraDenoiseTests)
+set_tests_properties(cameraDenoiseContract PROPERTIES TIMEOUT 120)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)
