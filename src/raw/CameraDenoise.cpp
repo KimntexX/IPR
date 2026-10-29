@@ -216,11 +216,32 @@ Knot fit(std::vector<const PatchNoise *> items)
     return result;
 }
 
+bool floorDarkCovariance(Knot &dark, const Knot &pooled)
+{
+    cv::Vec3d scale(1,1,1); bool changed=false;
+    for(int c=0;c<3;++c) {
+        const double original=dark.covariance(c,c);
+        const double floor=std::max(original,double(pooled.covariance(c,c)));
+        if(original>0)scale[c]=std::sqrt(floor/original);
+        changed=changed||floor>original;
+    }
+    // Keep the dark witnesses' correlation, not a mixture of different signal
+    // populations' correlations. Zero-variance axes have zero cross terms.
+    for(int c=0;c<3;++c) {
+        for(int k=0;k<c;++k)
+            dark.covariance(c,k)=dark.covariance(k,c)=float(double(dark.covariance(c,k))*scale[c]*scale[k]);
+        dark.covariance(c,c)=std::max(dark.covariance(c,c),pooled.covariance(c,c));
+    }
+    return changed;
+}
+
 bool estimate(const cv::Mat &source,
               const std::array<int, Levels> &steps, int margin,
-              std::array<NoiseCurve, Levels> &models, const std::function<bool()> &stop)
+              std::array<NoiseCurve, Levels> &models, const std::function<bool()> &stop,
+              const std::function<void(const NoiseModelSummary &)> &observer)
 {
     std::array<std::vector<PatchNoise>, Levels> patches;
+    std::array<std::vector<PatchNoise>, Levels> allPatches;
     const int width = std::min(64, source.cols), height = std::min(64, source.rows);
     std::set<std::pair<int, int>> origins;
     for (int y = 0; y < 5; ++y) for (int x = 0; x < 5; ++x)
@@ -265,12 +286,29 @@ bool estimate(const cv::Mat &source,
             item.signalUncertainty=signalUncertainty;
             bool structured = false;
             for (int c = 0; c < 3; ++c) structured = structured || coherent(item, c, width, height, 2 * steps[std::size_t(level)]);
+            if (!structured) allPatches[std::size_t(level)].push_back(item);
             if (flat && !structured) patches[std::size_t(level)].push_back(std::move(item));
         }
     }
     for (int level = 0; level < Levels; ++level) {
+        if (steps[std::size_t(level)] == 0) break;
         auto &items = patches[std::size_t(level)];
-        if(items.size()<3)continue; // No qualified support: do not borrow another signal level.
+        NoiseModelSummary summary; summary.level = level;
+        summary.flatCandidates = int(items.size());
+        const auto &all = allPatches[std::size_t(level)];
+        summary.candidates = int(all.size());
+        std::vector<const PatchNoise *> globalGroup;
+        for (const auto &item : all) globalGroup.push_back(&item);
+        Knot global;
+        if (!globalGroup.empty()) {
+            global = fit(std::move(globalGroup));
+            summary.globalSignal=global.signal;
+            for (int c=0;c<3;++c) summary.globalSigma[c]=std::sqrt(global.covariance(c,c));
+        }
+        if(items.size()<3) {
+            if (observer) observer(summary);
+            continue; // No qualified support: do not borrow another signal level.
+        }
         std::sort(items.begin(),items.end(),[](const auto &a,const auto &b){return a.signal<b.signal;});
         std::vector<float> uncertainties;
         for(const auto &item:items)uncertainties.push_back(item.signalUncertainty);
@@ -286,6 +324,8 @@ bool estimate(const cv::Mat &source,
                 knots.back().covariance=(knots.back().covariance+knot.covariance)*.5f;
             else knots.push_back(knot);
         }
+        if(knots.size()>1 && !all.empty())
+            summary.darkFloorApplied=floorDarkCovariance(knots.front(),global);
         auto &curve=models[std::size_t(level)];
         curve.low=items.front().signal-uncertainty;curve.high=items.back().signal+uncertainty;
         if(!std::isfinite(curve.low)||!std::isfinite(curve.high)||!(curve.high>curve.low))return false;
@@ -301,6 +341,15 @@ bool estimate(const cv::Mat &source,
         }
         curve.valid=true;
         curve.constant=knots.size()==1;
+        if (observer) {
+            summary.supported=true; summary.low=curve.low; summary.high=curve.high;
+            for (const auto &knot : knots) {
+                cv::Vec3f sigma;
+                for(int c=0;c<3;++c)sigma[c]=std::sqrt(knot.covariance(c,c));
+                summary.nodes.emplace_back(knot.signal,sigma);
+            }
+            observer(summary);
+        }
     }
     return true;
 }
@@ -425,7 +474,7 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
         int margin = radius;
         for (int step : steps) margin += 2 * step;
         std::array<NoiseCurve, Levels> models;
-        if (!estimate(cameraRgb, steps, margin, models, stop)) return false;
+        if (!estimate(cameraRgb, steps, margin, models, stop, context.noiseModelObserver)) return false;
         bool measured = false;
         for (const auto &curve : models) if(curve.valid)
             for(const auto &m:curve.values)for(int c=0;c<3;++c)if(m.sigma[c]>0)measured=true;
