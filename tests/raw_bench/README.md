@@ -232,7 +232,7 @@ N3 convenues avec Claude, après filtrage et rendu de l'image entière. Il
 distingue moyenne RGB, luma encodée pondérée et chroma R−G/B−G. Le mode
 `--reference-proof` exige l'exécutable exact d'une preuve historique, sans
 conserver d'implémentation legacy dans le module. Aucun TIFF n'est écrit.
-Le prototype courant V1 utilise cinq échelles chroma et trois pour l'intensité,
+Le prototype courant(a)+V1 utilise cinq échelles chroma et trois pour l'intensité,
 directement dans le RGB caméra déjà balancé, sans annuler les gains de BdB ;
 les gains de métriques ne valent pas validation visuelle.
 
@@ -244,7 +244,10 @@ redécoder les images. MAD, autocorrélation et heuristique d'aplat ne sont pas
 une vérité physique du bruit ; cette sonde ne change pas le filtre.
 
 `qualify_signal_denoise.py --help` compare le candidat conditionnel aux masques
-figés de `loi-force-bruit-v001-20261029T185322Z.json`. Il contrôle les empreintes
+figés de `loi-force-bruit-v001-20261029T185322Z.json`. L'argument obligatoire
+`--variant-reference` fournit `loi-force-bruit-b-v1-v001-20261029T200937Z.json`
+pour comparer directement à B-V1 ; l'empreinte de sa référence commune doit
+correspondre, sinon le programme refuse la comparaison. Il contrôle les empreintes
 RAW/TIFF et celles des masques, puis exige le même témoin B0. Trois scènes de
 développement sont mesurées en mémoire ; les25 autres sont déclarées réservées
 pour un contrôle ultérieur du candidat figé (réserve prospective, pas un corpus
@@ -252,9 +255,10 @@ jamais observé). Les sources et l'exécutable sont hachés dans la nouvelle pre
 Le watchdog termine un serveur bloqué ; un échec arrête la campagne et reste
 consigné. Les dispersions haute fréquence incluent des textures réelles : leur
 baisse n'est ni une vérité bruit seul ni une validation visuelle.
-Le candidat conditionnel est conservé en `0941dc4` ; V1 est d'abord isolé
-sans ce candidat. Le lanceur peut qualifier une comparaison ultérieure, mais
-son nom n'établit pas que le binaire fourni contient un modèle conditionnel :
+Le premier candidat conditionnel est conservé en `0941dc4`, V1 seul en
+`0ba4335`. Leur combinaison conserve les axes balancés et le modèle empirique
+conditionnel ; ni les forces ni les bornes DCP ne sont modifiées.
+Le nom du lanceur n'établit pas que le binaire fourni contient ce modèle :
 vérifier les sources embarquées et l'identité d'exécutable de chaque preuve.
 
 ## Limites du corpus et références

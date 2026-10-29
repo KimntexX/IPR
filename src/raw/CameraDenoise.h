@@ -30,7 +30,8 @@ bool identity(const Settings &settings);
 // ALREADY applied. Do not undo WB: both estimation and correction operate in
 // these balanced camera axes. Camera intensity is an
 // opponent-axis proxy, not photometric Rec.2020 luminance. Noise is measured per
-// scale after RCD/median; this is NOT a calibrated sensor a*signal+b model.
+// scale and witnessed signal range after RCD/median, with conditional covariance;
+// this is NOT a calibrated sensor a*signal+b model. Unsupported signals abstain.
 // Three intensity scales; five chroma scales when chroma is enabled. Chroma-only
 // preserves camera intensity, NOT rendered Y or the mean of encoded RGB.
 // Intensity-only adds the SAME delta to R/G/B, preserving their differences

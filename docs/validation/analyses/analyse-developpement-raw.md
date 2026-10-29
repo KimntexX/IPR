@@ -2,11 +2,10 @@
 
 ## Bilan actuel — 29 octobre 2026
 
-Dernier jalon (§24) : axes caméra déjà balancés, 56 contrôles natifs et six
-suites passent ; raccordement moteur encore à faire par Claude. Le prototype
-conditionnel du §23 reste un candidat historique non promu (`0941dc4`).
-**Pas de validation visuelle ni de promotion**. La comparaison réelle des axes
-reste à qualifier ; curseurs et bornes DCP inchangés.
+Dernier jalon (§27) : V1 confirmé sur28 scènes par Claude ; combinaison(a)+V1
+codée, 61 contrôles natifs et raccordement optique réussis. Sa comparaison
+réelle à V1 est en cours ; **pas de promotion**. Les gains de BdB restent
+appliqués, les forces et bornes DCP inchangées.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1202,6 +1201,116 @@ sans confondre changement d'axes, loi des curseurs et adaptation au signal.
 Les temps13–14 s du §23 concernaient la pleine définition, non l'aperçu.
 Aucune nouvelle image ni action utilisateur nécessaire à ce stade.
 
+## 25. 29 octobre — orientation utilisateur pour la commande globale (b)
+
+Orientation transmise par Claude et retenue : une seule barre principale
+**« Réduction du bruit »**, avec un sous-menu **« Avancé »** replié pour
+affiner séparément luminance et couleur. La commande sera à **0 par défaut**.
+Lightroom reste un repère de réponse
+et de rendu, pas une cible à recopier. Cette décision ne modifie ni(a), ni V1,
+ni les bornes DCP, et ne vaut pas implémentation de l'interface.
+
+Le contrat `CameraDenoise::Settings{luminance, chrominance}` reste inchangé.
+La future commande globale sera traduite en ces deux forces par une loi en
+C++, pas par des calculs photographiques dans le QML. Aucune pondération,
+proportion fixe ou nouvelle courbe de force n'est choisie ici ; les mesures
+contrôlées et le contrôle visuel doivent guider ce choix après qualification
+des axes balancés. Définir aussi explicitement comment les réglages avancés
+interagissent avec un nouveau déplacement du curseur principal, afin d'éviter
+des valeurs masquées ou des corrections appliquées deux fois.
+
+Avant raccordement IHM : tests des bornes0–100, finitude, déterminisme,
+identité lorsque les deux forces effectives valent0, et réponse progressive
+sur des champs de bruit connus. La baisse d'un indicateur sur une photo
+texturée ne suffit pas à valider cette loi. Le panneau et le sous-menu seront
+pris en charge dans le chantier IHM dédié ; aucune modification moteur ou
+QML supplémentaire n'est faite pour cette seule orientation.
+
+## 26. 29 octobre — force souhaitée et comparaison signé/non signé à isoler
+
+Retour utilisateur transmis par Claude : viser un lissage de luminance de
+l'ordre du rendu LR70–75, sans rechercher le flou et la perte de texture
+observés au-delà. Ce repère visuel ne fixe pas un coefficient numérique
+IPR, ni une équivalence entre positions des curseurs. La conservation des
+contours et de la matière fait partie de l'objectif. Aucun nouveau poids
+de la future commande globale n'est fixé avant comparaison.
+
+Autre observation : sur7599 le débruitage paraît meilleur avec la BdB
+automatique ; des points rouges/verts restent avec la BdB boîtier et le
+développement signé. L'inspection de `RawDecoder::developedByIpr` confirme
+que la BdB automatique exclut le développement IPR : elle passe par
+`dcraw_process`, sa sortie bitmap16 bits, puis sa conversion en flottants.
+Elle modifie aussi les gains, et peut modifier la résolution de la calibration
+dont le contexte contient `cameraWhiteBalance`. Cette observation n'isole
+donc pas le seul rôle des valeurs négatives. Le magenta/vert après rendu
+reste une hypothèse, pas une causalité établie pour tous les points.
+
+Claude prend en charge l'essai A non signé + CameraDenoise contre B signé,
+avec **la même BdB boîtier**, sur7599/9539, après sa campagne V1. Préserver
+neutres A0/B0 et états traités, paramètres, calibration réellement résolue,
+masques fixes, identité de l'exécutable et des sources. Attention : A/B
+changent aussi la grille numérique, les bornes avant RCD et son traitement
+signé ; une différence A/B seule ne prouvera pas que le DCP est la cause.
+
+Pour isoler spécifiquement la frontière après débruitage, une sonde distincte
+peut reprendre **le même tampon B traité** et comparer son rendu direct à un
+rendu où seuls les négatifs ont été remplacés par0, juste avant les mêmes
+étapes optiques/profil. Consigner aussi les valeurs négatives par canal et
+niveau de signal avant/après filtre, et les pixels concernés après rendu.
+Cette sonde introduit un biais de noir : elle n'est ni une correction approuvée,
+ni une justification pour borner en amont du débruitage. Ne pas changer le
+filtre ou la force au milieu de cette comparaison. Aucun nouvel essai n'est
+lancé ici en parallèle de la campagne confiée à Claude.
+
+## 27. 29 octobre — V1 confirmé, sondes BdB et combinaison(a)+V1
+
+### Référence V1 et relecture des sondes de chemins
+
+Claude livre `75d8701` :
+`../raw/loi-force-bruit-b-v1-v001-20261029T200937Z.json` reprend les28 scènes
+et masques de la campagne initiale, un seul exécutable haché et un témoin0/0
+inchangé. La hausse médiane de chroma HP à luminance100 passe de×1,27 à×0,99
+dans les noirs ; la couleur seule agit davantage, sans bénéfice majeur dans
+les aplats clairs. Cela soutient les axes balancés, pas encore le modèle(a).
+
+Les sondes `8fd363f`,
+`../raw/essai-debruitage-chemins-bdb-v001-20261029T201816Z.json`, comparent7599
+et9539. Le chemin non signé réduit certains points noirs de7599 mais relève
+la luma moyenne du masque sombre de12,6 à18,5 à100/100 ; ce n'est pas une
+amélioration sans contrepartie. La BdB automatique livre une image plus sombre
+et froide et désactive la calibration concernée : les observations ne démontrent
+pas un meilleur débruitage. L'identité de l'exécutable autoWB est déclarée
+« not recorded » ; ce volet reste une sonde de diagnostic, pas une qualification
+reproductible du chemin. Aucun abandon du signal signé ni nouvelle borne DCP.
+
+### Candidat conditionnel dans les axes balancés
+
+Le raccordement moteur de Claude `dec3c6f` est intégré localement au banc.
+Le modèle conditionnel du §23 est ensuite réintroduit **sans annulation de BdB** :
+mêmes témoins admissibles, trois plages si support suffisant, covariance
+interpolée et abstention hors domaine. La physique capteur n'est pas recalibrée.
+`Context::gains` reste supprimé ; la luminance seule ajoute un delta commun
+R/G/B. Le garde d'alias et l'intégrité de la source sont conservés.
+Ce lot ne change ni les forces, ni les taches basse fréquence(c), ni la
+future loi maître(b). L'ordre convenu est(a)+V1, puis(c), puis(b).
+
+Première preuve native :
+`../raw/camera-denoise-n2-v001-20261029T202017Z.json`, 61 contrôles natifs,
+test moteur optique et six suites réussis. Trois nouveaux tests Python
+vérifient en plus le rattachement de la référence V1 à la bonne campagne
+figée ; ils sont désormais déclarés dans une septième suite CTest.
+Mesures initiales du module :718 ms sur2,8 Mpx et5340 ms sur24 Mpx,
+pic733028352 octets sur le champ synthétique. Pas une mesure de l'aperçu
+interactif, ni une campagne répétée de performance.
+
+La comparaison réelle emploie les mêmes7599/9539/7958 de développement et
+réutilise **B-V1**, pas l'ancien B aux axes compensés. Le lanceur exige le
+SHA de la référence commune, ceux des sources et des masques, puis les mêmes
+métriques B0 ; un écart arrête la campagne. Les25 autres scènes restent une
+réserve prospective pour un candidat figé, pas un corpus jamais observé.
+Les résultats de cette combinaison restent à analyser avant tout raccordement
+de production ou réglage de force ; les dispersions incluent toujours la matière.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
@@ -1256,3 +1365,5 @@ Aucune nouvelle image ni action utilisateur nécessaire à ce stade.
 - V1 codé et qualifié au niveau module (§24), sans(a), source caméra déjà
   balancée et contrat gains retiré. Raccordement moteur et contrôle réel
   attendus de Claude ; ne pas annoncer ce jalon livré ni validé visuellement.
+- Orientation(b) actée (§25) : une commande globale et deux réglages avancés,
+  loi de traduction C++ à qualifier, pas de copie imposée de Lightroom.
