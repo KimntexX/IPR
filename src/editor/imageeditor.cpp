@@ -1895,9 +1895,10 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
         if (denoiseCamera) {
             // From the retained source each time: never denoised twice.
             // Before the lens corrections when the decode kept that signal, then them again.
+            // CameraDenoise publishes a new buffer and never writes the retained one.
             denoised = *source.dcpContext;
             const bool preLens = !source.dcpContext->preLensCameraRgb.empty();
-            denoised.cameraRgb = (preLens ? source.dcpContext->preLensCameraRgb : source.dcpContext->cameraRgb).clone();
+            denoised.cameraRgb = preLens ? source.dcpContext->preLensCameraRgb : source.dcpContext->cameraRgb;
             if (!CameraDenoise::apply(denoised.cameraRgb, cameraDenoise,
                                       cameraDenoiseContext(*source.dcpContext, pixelScale)) ||
                 (preLens && !CameraProfileEngine::applyLcp(denoised.lcpPath, denoised.cameraRgb, denoised.capture,

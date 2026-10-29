@@ -1,4 +1,5 @@
 #include "CameraProfileEngine.h"
+#include "CameraDenoise.h"
 #include "CameraSignal.h"
 #include "imageeditor.h"
 
@@ -469,8 +470,7 @@ int main(int argc, char **argv)
         return 1;
     {
         // Experimental camera denoise with the signal kept before the lens corrections:
-        // it starts from that signal and applies the corrections again, so a neutral
-        // denoise renders the corrected image, never the uncorrected one.
+        // it denoises that signal, then applies the corrections again before the profile.
         CameraProfileEngine::DcpWorkingContext lens = wb;
         lens.preLensCameraRgb = cv::Mat(20, 30, CV_32FC3);
         for (int y = 0; y < 20; ++y)
@@ -497,6 +497,18 @@ int main(int argc, char **argv)
         cv::merge(lensChannels, lensSource.linearRgba);
         lensSource.referenceWhiteBalanceKelvin = lens.sourceKelvin;
         lensSource.dcpContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(lens);
+        cv::Mat expectedCamera = lens.preLensCameraRgb;
+        CameraDenoise::Context denoiseContext;
+        denoiseContext.gains = {1.0 / lens.cameraNeutral[0], 1.0, 1.0 / lens.cameraNeutral[2], 1.0};
+        const double smallestGain = *std::min_element(denoiseContext.gains.cbegin(), denoiseContext.gains.cend());
+        for (double &gain : denoiseContext.gains) gain /= smallestGain;
+        auto expectedContext = lens;
+        if (!CameraDenoise::apply(expectedCamera, {40, 0}, denoiseContext) ||
+            !CameraProfileEngine::applyLcp(lcpPath, expectedCamera, lens.capture, &lensError, lens.lensOptions))
+            return 1;
+        expectedContext.cameraRgb = expectedCamera;
+        cv::Mat expected;
+        if (!CameraProfileEngine::renderFromCameraSignal(expectedContext, 5200, 0, 0.0, expected, &lensError)) return 1;
         const auto denoisedLens = IprTestImageGenerator::denoised(lensSource, 5200, 40, true);
         cv::Mat renderedRgb;
         if (!denoisedLens.isNull()) {
@@ -505,7 +517,7 @@ int main(int argc, char **argv)
             renderedChannels.resize(3);
             cv::merge(renderedChannels, renderedRgb);
         }
-        if (!check(!renderedRgb.empty() && cv::norm(renderedRgb, corrected, cv::NORM_INF) < 1e-6 &&
+        if (!check(!renderedRgb.empty() && cv::norm(renderedRgb, expected, cv::NORM_INF) < 1e-6 &&
                        cv::norm(corrected, uncorrected, cv::NORM_INF) > 1e-3 &&
                        cv::norm(lens.preLensCameraRgb, preLensUntouched, cv::NORM_INF) == 0,
                    "camera denoise before the lens corrections applies them again, source untouched")) return 1;
