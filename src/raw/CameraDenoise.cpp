@@ -218,9 +218,11 @@ Knot fit(std::vector<const PatchNoise *> items)
 
 bool estimate(const cv::Mat &source,
               const std::array<int, Levels> &steps, int margin,
-              std::array<NoiseCurve, Levels> &models, const std::function<bool()> &stop)
+              std::array<NoiseCurve, Levels> &models, const std::function<bool()> &stop,
+              const std::function<void(const NoiseModelSummary &)> &observer)
 {
     std::array<std::vector<PatchNoise>, Levels> patches;
+    std::array<std::vector<PatchNoise>, Levels> allPatches;
     const int width = std::min(64, source.cols), height = std::min(64, source.rows);
     std::set<std::pair<int, int>> origins;
     for (int y = 0; y < 5; ++y) for (int x = 0; x < 5; ++x)
@@ -265,12 +267,30 @@ bool estimate(const cv::Mat &source,
             item.signalUncertainty=signalUncertainty;
             bool structured = false;
             for (int c = 0; c < 3; ++c) structured = structured || coherent(item, c, width, height, 2 * steps[std::size_t(level)]);
+            if (observer && !structured) allPatches[std::size_t(level)].push_back(item);
             if (flat && !structured) patches[std::size_t(level)].push_back(std::move(item));
         }
     }
     for (int level = 0; level < Levels; ++level) {
+        if (steps[std::size_t(level)] == 0) break;
         auto &items = patches[std::size_t(level)];
-        if(items.size()<3)continue; // No qualified support: do not borrow another signal level.
+        NoiseModelSummary summary; summary.level = level;
+        summary.flatCandidates = int(items.size());
+        if (observer) {
+            const auto &all = allPatches[std::size_t(level)];
+            summary.candidates = int(all.size());
+            std::vector<const PatchNoise *> group;
+            for (const auto &item : all) group.push_back(&item);
+            if (!group.empty()) {
+                const auto global = fit(std::move(group));
+                summary.globalSignal=global.signal;
+                for (int c=0;c<3;++c) summary.globalSigma[c]=std::sqrt(global.covariance(c,c));
+            }
+        }
+        if(items.size()<3) {
+            if (observer) observer(summary);
+            continue; // No qualified support: do not borrow another signal level.
+        }
         std::sort(items.begin(),items.end(),[](const auto &a,const auto &b){return a.signal<b.signal;});
         std::vector<float> uncertainties;
         for(const auto &item:items)uncertainties.push_back(item.signalUncertainty);
@@ -301,6 +321,15 @@ bool estimate(const cv::Mat &source,
         }
         curve.valid=true;
         curve.constant=knots.size()==1;
+        if (observer) {
+            summary.supported=true; summary.low=curve.low; summary.high=curve.high;
+            for (const auto &knot : knots) {
+                cv::Vec3f sigma;
+                for(int c=0;c<3;++c)sigma[c]=std::sqrt(knot.covariance(c,c));
+                summary.nodes.emplace_back(knot.signal,sigma);
+            }
+            observer(summary);
+        }
     }
     return true;
 }
@@ -425,7 +454,7 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
         int margin = radius;
         for (int step : steps) margin += 2 * step;
         std::array<NoiseCurve, Levels> models;
-        if (!estimate(cameraRgb, steps, margin, models, stop)) return false;
+        if (!estimate(cameraRgb, steps, margin, models, stop, context.noiseModelObserver)) return false;
         bool measured = false;
         for (const auto &curve : models) if(curve.valid)
             for(const auto &m:curve.values)for(int c=0;c<3;++c)if(m.sigma[c]>0)measured=true;

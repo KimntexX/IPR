@@ -104,7 +104,8 @@ def main():
                 revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),
                 sources={name: dict(sha256=sha256(root/name), text=(root/name).read_text(encoding='utf-8')) for name in names},
                 scenes=[], limits=['No production filtering change, no TIFF output.',
-                                   'Post-RCD signed camera coefficients, WB gains compensated, intensity proxy not rendered Y.',
+                                   'Post-RCD signed camera coefficients, already white-balanced axes; intensity proxy not rendered Y.',
+                                   'Production observer reports actual models; survey coefficient filtering is independently computed.',
                                    'Bands trained on 25 original positions, 56 other spatial positions reported separately.',
                                    'Flat-candidate gate and MAD cannot certify that weak texture is noise.',
                                    'Not a sensor-calibrated a*signal+b model, no cross-camera ISO extrapolation.'])
@@ -117,6 +118,7 @@ def main():
         data['replay']=dict(path=str(a.replay),sha256=sha256(a.replay))
         for old in previous['scenes']:
             data['scenes'].append(dict(measurements=old['measurements'],summary=summarize(old['measurements']['patches'])))
+        data['limits'].append('Replay preserves original axes and data: read provenance in the replayed source; no reinterpretation as balanced measurements.')
         inputs=[]
     for relative in inputs:
         command = [str(a.tool.resolve()), '--input', str((a.image_root/relative).resolve()),

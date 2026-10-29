@@ -242,6 +242,12 @@ positions de contrôle et compare un modèle global à une interpolation de
 variance par niveau de signal. `--replay` réanalyse une preuve existante sans
 redécoder les images. MAD, autocorrélation et heuristique d'aplat ne sont pas
 une vérité physique du bruit ; cette sonde ne change pas le filtre.
+La sonde actuelle travaille dans les axes caméra déjà balancés de V1 et
+observe les modèles effectivement utilisés via `Context::noiseModelObserver`.
+Elle rapporte support, nœuds conditionnels, estimation globale et couverture
+du guide sur les81 ROI. La sortie filtrée servant à l'observation est jetée.
+Les preuves anciennes compensant la BdB gardent leurs axes historiques,
+y compris lors d'un `--replay` ; ne pas les assimiler à ces nouvelles mesures.
 
 `qualify_signal_denoise.py --help` compare le candidat conditionnel aux masques
 figés de `loi-force-bruit-v001-20261029T185322Z.json`. L'argument obligatoire

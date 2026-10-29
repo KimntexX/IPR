@@ -259,6 +259,21 @@ int main(int argc,char **argv)
         cv::Mat parent=field(150,140), before=parent.clone(), roi=parent(cv::Rect(3,5,128,120));
         check(apply(roi,{50,50},{}) && bits(parent,before), "strided ROI source/parent untouched");
     }
+    {
+        const auto original=field(128,128); auto plain=original.clone(), observed=original.clone();
+        Context context; int count=0; bool wrongThread=false, invalid=false;
+        const auto caller=std::this_thread::get_id();
+        context.noiseModelObserver=[&](const NoiseModelSummary &s) {
+            ++count; wrongThread=wrongThread||std::this_thread::get_id()!=caller;
+            invalid=invalid||s.flatCandidates>s.candidates||s.level<0||s.level>=5;
+            if(s.supported)invalid=invalid||!(s.low<s.high)||s.nodes.empty();
+        };
+        check(apply(plain,{100,100},{})&&apply(observed,{100,100},context),"noise model observation completes");
+        check(bits(plain,observed)&&count==5&&!wrongThread&&!invalid,"observer is caller-only and leaves render bit-identical");
+        context.noiseModelObserver=[](const NoiseModelSummary &){throw std::runtime_error("observer failed");};
+        auto image=original.clone();
+        check(!apply(image,{100,100},context)&&bits(image,original),"observer exception leaves input unchanged");
+    }
     std::cout << checks << " checks, " << failures << " failures\n";
     return failures ? 1 : 0;
 }

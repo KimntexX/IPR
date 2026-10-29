@@ -1358,6 +1358,53 @@ matière ; conserver V1 comme référence de campagne historique, pas comme
 double chemin legacy dans le code. Ni nouvelle image LR ni changement DCP
 nécessaires pour cette comparaison. Aucun push/dev/tag.
 
+## 28. 29 octobre — régression sombre sur28 scènes et audit du modèle réel
+
+Claude livre `dd674b0`,
+`../raw/loi-force-bruit-b-a-v1-v001-20261029T212226Z.json` : combinaison(a)+V1
+mesurée sans réglage sur les28 scènes. À100/100,10 scènes sur25 sont moins
+réduites de plus de3 % en luma dans le noir,11 en chroma. Les25 scènes
+initialement déclarées réservées ont donc maintenant été consommées par cet
+essai ; ne plus les décrire comme un jeu intact pour le prochain candidat.
+La piste reste utile sur le mur, mais pas promue : points isolés colorés
+visibles sur7599, et résidus basse fréquence distincts des points.
+
+Avant repli, ajout d'un observateur optionnel du modèle réel dans Context :
+appel seulement sur le thread appelant avant filtrage, aucune modification
+des pixels quand il est absent.64 contrôles natifs passent, dont identité
+binaire avec/sans observateur et annulation atomique sur exception du callback.
+La sonde `camera_denoise_leakage` est réparée après suppression des gains V1 :
+son analyse s'effectue maintenant dans le RGB caméra déjà balancé, pas dans
+les anciens axes capteur. Les anciennes preuves gardent leurs axes historiques.
+Preuve des contrats de cette instrumentation :
+`../raw/camera-denoise-n2-v001-20261029T213232Z.json`,64 contrôles natifs,
+sept suites et test optique réussis ; aucun repli encore appliqué.
+
+Audit `../raw/camera-denoise-signal-survey-v001-20261029T212749Z.json` :
+modèles effectivement estimés sur l'image entière et81 ROI par source,
+7599/7958/9539/9613. Le filtre est exécuté pour observer les modèles ; sa
+sortie est jetée, aucune image exportée. Sur7599,23 témoins plats sur25 ;
+au premier niveau, σ intensité sombre0,01258 contre global0,01692 et σ Co
+0,00300 contre0,00381. Le modèle global est centré vers le signal0,08191,
+le sombre vers0,02991 : **la différence ne prouve pas une sous-estimation
+physique**, car le signal diffère et le global mélange des niveaux.
+
+Sur les12 ROI les plus sombres de la grille (49152 pixels sondés par
+échelle), aucun guide n'est sous la borne basse, sur chacune des quatre
+scènes ;18 pixels sont au-dessus de la borne haute sur7599. Ce n'est pas
+un masque sombre plein cadre, mais cela ne soutient pas l'abstention sous
+le noir comme explication principale de cette régression. Les20 modèles
+de l'audit ont un support admissible. Les écarts sombre/global apparaissent
+aussi aux échelles chroma plus larges, sans les confondre avec une preuve
+sur les taches après rendu.
+
+Prochain essai : plancher de variance au premier nœud, raccordé par
+l'interpolation existante vers le nœud suivant. Garder les autres nœuds,
+les forces, le domaine couvert et le DCP inchangés. Ce garde-fou est un
+compromis empirique par rapport à V1, pas une extrapolation validée du bruit
+capteur. Il devra améliorer le noir sans effacer la matière ni annuler les
+gains clairs ; aucune promotion avant mesure et revue.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
