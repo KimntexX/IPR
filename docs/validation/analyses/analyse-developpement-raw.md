@@ -2,11 +2,11 @@
 
 ## Bilan actuel — 29 octobre 2026
 
-Dernier jalon (§23) : prototype N2b(a) conditionnel au signal, 59 contrôles
-natifs et six suites passent ; trois scènes réelles mesurées avec les masques
-LR figés. Résultats mitigés, **pas de validation visuelle ni de promotion**.
-La correction des axes balancés proposée par Claude reste une expérience
-distincte à qualifier ; curseurs et bornes DCP inchangés.
+Dernier jalon (§24) : axes caméra déjà balancés, 56 contrôles natifs et six
+suites passent ; raccordement moteur encore à faire par Claude. Le prototype
+conditionnel du §23 reste un candidat historique non promu (`0941dc4`).
+**Pas de validation visuelle ni de promotion**. La comparaison réelle des axes
+reste à qualifier ; curseurs et bornes DCP inchangés.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1158,6 +1158,50 @@ prochaine piste cohérente ; remplacer seulement le delta de luminance rend
 les axes incohérents. Qualifier cette piste séparément avant toute hausse
 de force ou traitement des points isolés.
 
+## 24. 29 octobre — V1, correction des axes caméra déjà balancés
+
+Le diagnostic `ef43917` de Claude distingue deux choses : l'entrée contient
+déjà les gains de BdB, tandis que le module les annulait pour travailler dans
+des unités proches du capteur. Une correction d'intensité commune dans ces
+unités redevenait proportionnelle aux gains après reconstruction : elle n'était
+donc plus neutre dans le RGB caméra fourni au DCP. Cela explique un mécanisme
+possible des points colorés, sans prouver que toutes leurs causes sont levées.
+
+Après accord au journal, V1 est isolé sur le modèle de `7e367b0` **sans le
+candidat conditionnel(a)**. Celui-ci reste conservé dans `0941dc4` et ses JSON ;
+pas de double implémentation ni d'option legacy. L'estimation et la correction
+opèrent maintenant toutes deux sur le RGB caméra déjà balancé. Le delta de
+luminance est identique dans R/G/B ; la couleur seule conserve l'intensité
+caméra0,25R+0,5G+0,25B. Ce ne sont pas des garanties sur la luma/chroma sRGB
+après DCP, courbes et bornes. L'ISO n'introduit aucune loi de force.
+
+`Context::gains`, sa validation et le test d'équivariance à une compensation
+BdB ont été supprimés. Un nouveau témoin applique des gains2/1/3 au champ
+avant le filtre, exige une correction effective, puis contrôle deltaR=deltaG=
+deltaB en intensité seule et deltaI=0 en couleur seule. L'écart admissible est
+5e-7. L'abstention détache toujours la source pour les optiques en aval.
+
+Preuve `../raw/camera-denoise-n2-v001-20261029T192417Z.json` : **56 contrôles
+natifs et six suites réussis**. Mesure du module synthétique :465 ms sur2,8 Mpx,
+3223 ms sur24 Mpx, pic685129728 octets du processus, huit threads maximum.
+Ces différences ne prouvent pas un gain de vitesse de V1 : le modèle(a) est
+aussi retiré et aucune campagne chronométrique répétée n'est faite.
+
+**Raccordement en attente :** Claude retire le remplissage du champ supprimé
+dans `imageeditor.cpp` et dans son test optique lors de l'intégration de ce
+jalon. Ces fichiers moteur qui lui sont attribués ne sont pas retouchés ici.
+Le test profil complet n'est donc pas annoncé réussi sur ce nouveau contrat ;
+le lanceur utilise explicitement `--module-only`, refuse un ancien outil profil
+et écrit `engine_integration=pending`. Aucun ancien binaire ne remplace cette
+qualification manquante.
+
+La campagne réelle V1 avec les masques LR figés est confiée à Claude après ce
+raccordement. Son essai exploratoire donne une piste favorable, pas encore une
+preuve sur ce code. Ensuite seulement rejouer(a)+V1 dans un jalon distinct,
+sans confondre changement d'axes, loi des curseurs et adaptation au signal.
+Les temps13–14 s du §23 concernaient la pleine définition, non l'aperçu.
+Aucune nouvelle image ni action utilisateur nécessaire à ce stade.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
@@ -1209,3 +1253,6 @@ de force ou traitement des points isolés.
   conditionnel a ses contrats validés mais ses résultats réels sont mitigés ;
   aucun verdict de qualité ni de livraison. Prochaine étape : axes caméra
   déjà balancés, puis contrôle figé sur la réserve avant réglage des forces.
+- V1 codé et qualifié au niveau module (§24), sans(a), source caméra déjà
+  balancée et contrat gains retiré. Raccordement moteur et contrôle réel
+  attendus de Claude ; ne pas annoncer ce jalon livré ni validé visuellement.

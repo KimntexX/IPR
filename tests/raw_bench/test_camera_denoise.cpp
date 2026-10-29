@@ -98,7 +98,7 @@ int main(int argc,char **argv)
     check(identity({}) && !identity({1,0}) && !identity({0,1}), "identity helper matches both controls");
     {
         auto image = field(); const auto original = image.clone(); auto *pointer = image.data;
-        Context unused; unused.gains[0] = std::numeric_limits<double>::quiet_NaN();
+        Context unused; unused.iso = std::numeric_limits<double>::quiet_NaN();
         check(apply(image, {}, unused, []() -> bool { throw std::runtime_error("zero must not call"); }), "zero forces bypass Context/callback");
         check(image.data == pointer && bits(image, original), "zero forces bitwise identity and same allocation");
         cv::Mat empty, wrong(2, 2, CV_16UC3);
@@ -107,10 +107,10 @@ int main(int argc,char **argv)
     }
     {
         cv::Mat image(16, 19, CV_32FC3, cv::Scalar(-.02f, .4f, 1.3f)); const auto original = image.clone();
-        const auto sourceAlias=image;
+        const auto sourceAlias = image;
         check(apply(image, {100, 100}, {}), "constant extended field accepted");
         check(bits(image, original), "no measured noise leaves constants exact");
-        check(image.data!=sourceAlias.data&&bits(sourceAlias,original),"nonzero abstention detaches immutable source for downstream optics");
+        check(image.data != sourceAlias.data && bits(sourceAlias, original), "nonzero abstention detaches immutable source for downstream optics");
         cv::Mat tiny(1, 1, CV_32FC3, cv::Scalar(-.1f, .2f, 2.f)); const auto before = tiny.clone();
         check(apply(tiny, {100, 100}, {}) && bits(tiny, before), "single pixel identity");
     }
@@ -158,14 +158,12 @@ int main(int argc,char **argv)
             const auto before = image.clone();
             check(!apply(image, {50,50}, {}) && bits(image,before), "nonfinite rejected atomically");
         }
-        for (int kind = 0; kind < 6; ++kind) {
+        for (int kind = 0; kind < 4; ++kind) {
             auto image = original.clone(); Context context;
-            if (kind==0) context.gains[0]=0;
-            if (kind==1) context.gains[1]=std::numeric_limits<double>::infinity();
-            if (kind==2) context.pixelScale=0;
-            if (kind==3) context.pixelScale=1.2;
-            if (kind==4) context.iso=-1;
-            if (kind==5) context.iso=std::numeric_limits<double>::quiet_NaN();
+            if (kind==0) context.pixelScale=0;
+            if (kind==1) context.pixelScale=1.2;
+            if (kind==2) context.iso=-1;
+            if (kind==3) context.iso=std::numeric_limits<double>::quiet_NaN();
             check(!apply(image,{50,50},context) && bits(image,original), "invalid Context rejected atomically");
         }
         auto image=original.clone();
@@ -191,7 +189,6 @@ int main(int argc,char **argv)
         double error=0;
         for(int y=0;y<shifted.rows;++y)for(int x=0;x<shifted.cols;++x)
             for(int c=0;c<3;++c)error=std::max(error,double(std::abs(shifted.at<cv::Vec3f>(y,x)[c]-regular.at<cv::Vec3f>(y,x)[c]-offset[c])));
-        std::cout<<"DC translation error "<<error<<'\n';
         check(error<3e-6, "DC translation does not change the noise model appreciably");
     }
     {
@@ -213,36 +210,24 @@ int main(int argc,char **argv)
         check(error<5e-7,"coarse chroma scales do not smooth camera intensity");
     }
     {
-        cv::Mat image(192,576,CV_32FC3);cv::RNG random(0x914c);
-        const std::array<float,3> levels{.04f,.25f,.7f},sigmas{.003f,.012f,.04f};
-        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
-            const int band=x/192;
-            for(int c=0;c<3;++c)image.at<cv::Vec3f>(y,x)[c]=levels[size_t(band)]+float(random.gaussian(sigmas[size_t(band)]));
-        }
-        const auto before=image.clone();
-        check(apply(image,{100,100},{}),"signal-dependent noisy bands complete");
-        for(int band=0;band<3;++band) {
-            const cv::Rect roi(band*192+64,32,64,128);
-            const auto a=variance(before(roi)),b=variance(image(roi));
-            std::cout<<"heteroscedastic band "<<band<<" variance ratio "<<b[0]/a[0]<<'\n';
-            check(b[0]<.5*a[0]&&b[1]<.5*a[1]&&b[2]<.5*a[2],"known flat signal denoised in every brightness band");
-        }
-        cv::Mat clean(192,576,CV_32FC3);
-        for(int y=0;y<clean.rows;++y)for(int x=0;x<clean.cols;++x)clean.at<cv::Vec3f>(y,x)=cv::Vec3f::all(levels[size_t(x/192)]);
-        const auto truth=clean.clone();
-        check(apply(clean,{100,100},{})&&cv::norm(clean,truth,cv::NORM_INF)<1e-6,"clean brightness steps not learned as noise");
-    }
-    {
-        auto regular=field(128,128), amplified=regular.clone();
-        Context context; context.gains={2,1,3,1};
+        auto original=field(128,128);
         const cv::Vec3f gains(2,1,3);
-        for(int y=0;y<amplified.rows;++y)for(int x=0;x<amplified.cols;++x)
-            amplified.at<cv::Vec3f>(y,x)=amplified.at<cv::Vec3f>(y,x).mul(gains);
-        check(apply(regular,{70,70},{})&&apply(amplified,{70,70},context), "unequal white-balance gains accepted");
-        double error=0;
-        for(int y=0;y<amplified.rows;++y)for(int x=0;x<amplified.cols;++x)
-            for(int c=0;c<3;++c)error=std::max(error,double(std::abs(amplified.at<cv::Vec3f>(y,x)[c]/gains[c]-regular.at<cv::Vec3f>(y,x)[c])));
-        check(error<3e-6,"noise model equivariant to the declared WB gains");
+        for(int y=0;y<original.rows;++y)for(int x=0;x<original.cols;++x)
+            original.at<cv::Vec3f>(y,x)=original.at<cv::Vec3f>(y,x).mul(gains);
+        for (bool chromaOnly : {false, true}) {
+            auto image=original.clone();
+            check(apply(image,chromaOnly?Settings{0,100}:Settings{100,0},{}),"already balanced unequal channels accepted");
+            double error=0, movement=0;
+            for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
+                const auto delta=image.at<cv::Vec3f>(y,x)-original.at<cv::Vec3f>(y,x);
+                const float invariant=chromaOnly ? .25f*delta[0]+.5f*delta[1]+.25f*delta[2] :
+                    std::max(std::abs(delta[0]-delta[1]),std::abs(delta[2]-delta[1]));
+                error=std::max(error,double(std::abs(invariant)));
+                movement=std::max(movement,double(cv::norm(delta)));
+            }
+            check(movement>1e-5,"balanced axis test performs a real correction");
+            check(error<5e-7,chromaOnly?"chroma preserves balanced camera intensity":"luma delta neutral in already balanced RGB");
+        }
     }
     {
         const auto original=field(520,300); auto image=original.clone();
