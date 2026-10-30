@@ -5,7 +5,7 @@
 // Only the mechanically generated diagnostic target includes this interface.
 // The actual engine source and public Context are not changed.
 namespace IprNoiseBench {
-enum class Operation { Bypass, PooledBlind, CapturePooled, FrozenPooled, ExternalCovariance, Zero };
+enum class Operation { Bypass, PooledBlind, CapturePooled, FrozenPooled, ExternalCovariance, ExternalCap, ExternalFallback, Zero };
 using Covariances = std::array<std::array<float,9>,5>;
 void operation(Operation value);
 Operation operation();

@@ -604,6 +604,23 @@ un budget non nul : diagnostic de protection du détail, pas cas physique
 sans bruit. `audit_population_filter.py <preuve>` recalcule les critères et
 expose les régressions par motif/ISO, sans promotion automatique.
 
+`study_local_budget.py --help` rejoue exactement ces64cas et profils : contrôle
+apparié, pas nouvelles données. Le hook généré permet un plafond diagonal des
+sigmas conservant les128échantillons conditionnels, ou le remplacement du seul
+pooled de secours. Le filtre, les supports et les corrélations conditionnelles
+ne changent pas.640parités avec les sorties antérieures sont exigées, ainsi
+que tous les critères précédents et un veto supplémentaire de perte de gain
+bruité>.02. `audit_local_budget.py <preuve>` vérifie entrées, mesures historiques
+et critères, sans confondre cette ablation avec une réserve indépendante.
+
+Threads : `CameraDenoise::workerThreads()` est déjà adaptatif à l'indication
+matérielle (`max(1,min(8,host-1))`, avec repli1), caller inclus ; le nombre de
+tuiles réduit encore les workers réellement démarrés. Le protocole conserve
+ce plafond et consigne les indications CPU du processus. Ce n'est pas une
+mesure des cœurs inoccupés, ni un quota global entre plusieurs jobs. Étudier
+un budget CPU partagé et la latence pleine image avant de relever le plafond ;
+ne pas conclure sur une petite fenêtre d'une seule tuile.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

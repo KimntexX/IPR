@@ -2,7 +2,16 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§52) : budget multi-noirs confronté au filtre réel sur64cas.
+Dernier jalon (§53) : ablation de routage sur les64entrées du§52,640parités
+avec les anciennes sorties. Plafond diagonal local : détail préservé mais
+aucun gain médian de MSE ; remplacement du seul secours : entrées bruitées
+quasiment inchangées et stress propre encore en échec. Aucune variante promue.
+La simple conservation des courbes conditionnelles ne suffit pas : prochaine
+cible = budget réellement dépendant du signal local. Audit des threads :
+adaptation matérielle déjà présente, plafond8 et réserve d'un thread logique ;
+aucun changement de parallélisme de production pendant cette étude.
+
+Jalon précédent (§52) : budget multi-noirs confronté au filtre réel sur64cas.
 Erreur RGB médiane réduite de28% (spectral) ou34% (banque simple) sur le
 rejeu de noirs réels avec signal simulé ; aucune régression MSE sur ces cas.
 Cependant, échec du veto de détail sur le stress propre à budget non nul.
@@ -4132,6 +4141,92 @@ le stress propre séparé et les échecs figés, sans optimiser aveuglément
 la MSE ni relancer le spectral comme solution supposée supérieure. Pas
 de changement de coefficients ou de rendu de production à ce jalon.
 
+## 53. Conserver le routage local et auditer le budget CPU — 30 octobre 2026
+
+[Gel de l'ablation](../raw/local-budget-freeze-v001-20261030T225231Z.json),
+[mesures complètes](../raw/local-budget-v001-20261030T225231Z.json),
+[premier audit](../raw/local-budget-audit-v001-20261030T225809Z.json),
+[audit avec compte des sorties modifiées](../raw/local-budget-audit-v001-20261030T225831Z.json).
+Durée332,90s, étude seulement ; aucun fichier moteur modifié.
+
+### 53.1. Protocole apparié, pas nouveau jeu indépendant
+
+L'utilisateur demande la prochaine piste et l'adaptation du nombre de threads
+à la machine. Rejouer exactement les64cas, profils et graines du§52 pour
+isoler le raccordement : vérification des empreintes CFA/RGB, des résultats
+courant/profil constant/modèle nul.640parités passent ; l'audit vérifie aussi
+l'égalité des métriques historiques. Même filtre, commande100/100, domaines
+séparés et budget externe constant par ROI. Aucune nouvelle donnée physique.
+
+Deux nouvelles opérations dans le seul artefact instrumenté :
+
+- **Plafond diagonal** : chaque sigma courant, pooled ou conditionnel, est
+  limité par le sigma externe de la même échelle/canal. Les128échantillons,
+  corrélations, supports, transitions et portes structurelles sont conservés.
+  Jamais de hausse de sigma ; les corrélations externes ne sont pas injectées.
+- **Secours seul** : remplacer le pooled par le budget externe sans modifier
+  les valeurs ou supports conditionnels. Contrôle de routage, pas un modèle
+  complet de variance dépendant du signal.
+
+Tous les critères du§52 restent en vigueur. Ajouter avant calcul un veto :
+aucune perte de gain projeté sur entrée bruitée>0,02 par cas face au courant.
+Pas de modification de seuil ou de coefficient après lecture des résultats.
+
+### 53.2. Résultat négatif utile : ne pas confondre protection et progrès
+
+| Rejeu réel | Budget | Ratio médian MSE RGB | Pire ratio MSE | Perte maximale de gain bruité | Stress propre |
+| --- | --- | ---: | ---: | ---: | --- |
+| Plafond diagonal | Spectral |1,00160|1,01742|0,00090|Passe|
+| Plafond diagonal | Banque |1,00000|1,01152|0,00051|Passe|
+| Secours seul | Spectral |1,00000|1,00000|0,00000|Échec|
+| Secours seul | Banque |1,00000|1,00000|0,00000|Échec|
+
+Le plafond passe les critères de détail/couleur, mais échoue au gain médian
+d'erreur. Dans le domaine interne également, ratio médian1 ; pires ratios
+1,00735(spectral)/1,00226(banque). Il protège le stress propre sans apporter
+le bénéfice de bruit recherché. Ne pas l'annoncer comme amélioration stable.
+
+Le remplacement du secours ne change pas les sorties bruitées du rejeu réel,
+malgré un stress propre encore atténué (pire perte de gain0,39250). Le domaine
+interne est lui aussi pratiquement inchangé. Cela est compatible avec un
+routage conditionnel dominant sur ces entrées ; **son occupation exacte n'est
+pas mesurée**, donc pas d'explication exclusive prouvée. Le résultat ne
+permet pas de conclure que le secours est inutile sur toutes les photos.
+
+Aucune des huit combinaisons route/domaine/budget ne passe tous les critères.
+Les seuils et les anciennes preuves sont conservés. Le budget du§51 n'est
+pas réfuté ; ces deux modes de raccordement ne le rendent pas exploitable
+avec un bénéfice démontré. Étape à étudier : prédire les covariances en fonction
+du signal local lui-même, plutôt que plafonner le modèle courant ou agir
+uniquement hors support. Préserver des témoins à routage/force identiques
+et un contrôle de détail bruité ; ne pas recycler cette grille comme validation
+indépendante ni déduire un meilleur rendu de la seule baisse de MSE.
+
+### 53.3. Threads : adaptation existante et extension à prévoir
+
+`CameraDenoise::workerThreads()` interroge déjà `hardware_concurrency()` et
+renvoie `max(1,min(8,host>1 ? host-1 : 1))` : au plus8threads **caller inclus**,
+un thread logique réservé quand l'indication matérielle est supérieure à1,
+repli1 si elle est inconnue. `apply()` réduit encore ce budget au nombre de
+tuiles. Aucun besoin de garder huit workers sur une petite machine.
+
+La campagne consigne20threads logiques visibles par Python et son indication
+de disponibilité au processus ; la sonde native annonce un **budget** de8.
+Il ne faut pas confondre ce budget et les workers réellement actifs : sur
+une fenêtre256×256, le filtre n'a qu'une tuile à distribuer. Ces332,90s de
+campagne ne mesurent donc pas l'accélération multithread d'une image entière.
+L'indication matérielle n'est ni la charge CPU instantanée ni une garantie
+sur les ressources laissées libres par les autres applications.
+
+L'adaptation demandée est donc déjà partielle. Pour l'étendre proprement :
+budget CPU partagé entre aperçu/export/préchargement, priorité à l'interactif,
+nombre de workers borné par les tâches et la mémoire, gestion des sous-appels
+parallèles pour éviter la surallocation. Comparer ensuite1/2/4/8workers et
+plus sur des images entières, vérifier parité, annulation, fin des threads,
+latence et mémoire avant de relever le plafond. Le plafond8 est conservé
+dans cette étude pour ne pas mélanger modification mathématique et ressources.
+Pas de nouveau contrôleur ni de réglage de production annoncé comme livré.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -4266,3 +4361,9 @@ de changement de coefficients ou de rendu de production à ce jalon.
   La banque simple bat le spectral en MSE, pas preuve de meilleur détail.
   Suite : raccordement local conservant l'adaptation aux structures, gains
   bruités et stress propre séparés ; aucun nouveau seuil après échec.
+- Routage conservé (§53) :64cas appariés,640parités. Plafond diagonal sans
+  bénéfice MSE médian, secours seul pratiquement neutre sur bruité ; aucune
+  variante promue. Suite : budget dépendant du signal local, pas simple cap.
+  Adaptation des workers déjà présente (host-1, plafond8, puis nombre de tuiles) ;
+  contrôle CPU partagé et montée au-delà de8 restent à qualifier sur pleine
+  image. Aucun moteur/parallélisme de production modifié.

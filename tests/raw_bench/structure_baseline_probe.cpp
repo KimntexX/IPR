@@ -143,6 +143,14 @@ int main(int argc, char **argv)
             IprNoiseBench::operation(Operation::ExternalCovariance);
             result.insert("external_covariance_noisy",run(observed,truth));
             result.insert("external_covariance_clean_stress",run(truth,truth));
+            if (parsed.object().value("routing_ablation").toBool(false)) {
+                IprNoiseBench::operation(Operation::ExternalCap);
+                result.insert("external_cap_noisy",run(observed,truth));
+                result.insert("external_cap_clean_stress",run(truth,truth));
+                IprNoiseBench::operation(Operation::ExternalFallback);
+                result.insert("external_fallback_noisy",run(observed,truth));
+                result.insert("external_fallback_clean_stress",run(truth,truth));
+            }
         }
         IprNoiseBench::operation(Operation::Zero);
         result.insert("zero_model_clean", run(truth,truth));

@@ -37,6 +37,30 @@ HOOK = '''        // GENERATED BENCH HOOK: the original filtering implementation
                     if (!fromCovariance(covariance, models[std::size_t(i)].pooled)) return false;
                     models[std::size_t(i)].pooledValid = true;
                 }
+            } else if (benchOperation == IprNoiseBench::Operation::ExternalCap ||
+                       benchOperation == IprNoiseBench::Operation::ExternalFallback) {
+                const auto &covariances = IprNoiseBench::covariances();
+                for (int i = 0; i < activeLevels; ++i) {
+                    auto &curve = models[std::size_t(i)];
+                    cv::Matx33f covariance;
+                    std::copy(covariances[std::size_t(i)].begin(), covariances[std::size_t(i)].end(), covariance.val);
+                    Noise external;
+                    if (!fromCovariance(covariance, external)) return false;
+                    if (benchOperation == IprNoiseBench::Operation::ExternalFallback) {
+                        curve.pooled = external;
+                        curve.pooledValid = true;
+                    } else {
+                        // Congruent diagonal attenuation: keep the correlation,
+                        // support, conditional routing and all structural gates.
+                        // This is a ceiling, never an increase of estimated noise.
+                        const auto cap = [&](Noise &noise) {
+                            for (int c = 0; c < 3; ++c)
+                                noise.sigma[c] = std::min(noise.sigma[c], external.sigma[c]);
+                        };
+                        if (curve.pooledValid) cap(curve.pooled);
+                        if (curve.valid) for (auto &noise : curve.values) cap(noise);
+                    }
+                }
             } else if (benchOperation == IprNoiseBench::Operation::Zero) {
                 models = {};
             }
