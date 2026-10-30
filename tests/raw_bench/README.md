@@ -466,6 +466,56 @@ physique. Pas de débruitage ou DCP dans cette épreuve. Rapport §45.
 Tests : `cfaTransportProbe --self-test` et `python -m unittest discover
 -s tests/raw_bench -p test_cfa_signal_transport.py` (six tests).
 
+`study_signal_filter.py --help` poursuit la propagation à filtre inchangé :
+80 cas issus du CFA signé, deux ISO, deux niveaux, aplats, textures fine et
+grossière, contours achromatiques/colorés, deux noirs et deux graines de
+contrôle. Le profil de signal est estimé sur le résidu d'un aplat simulé
+indépendant à même niveau et sur l'autre noir. Le profil noir seul emploie
+le même autre noir sans terme de signal. Le hook généré est celui déjà
+qualifié, sans nouvelle implémentation du filtre.
+
+`structureBaselineProbe` et `structureOracleProbe` conservent la comparaison
+de chaque sortie noisy/clean par empreinte. Le champ facultatif
+`read_reference` ajoute la capture du modèle noir et ses deux stress ; sans
+ce champ, les anciennes recettes restent identiques. Les mesures incluent
+MSE/biais séparés sur I/Co/Cg (axes caméra, pas luminance d'affichage).
+Le modèle courant, son pooled aveugle, le profil noir seul et le profil
+dépendant du signal sont comparés à 100/100 ; un modèle estimé sur le
+bruit exact du cas est un diagnostic privilégié, pas un candidat exploitable.
+Les stress propres avec budget non nul ne sont pas des situations sans
+bruit réalistes. Le résumé expose aussi le pire cas, pas uniquement la médiane.
+Cinq tests dans `test_signal_filter.py`, CTest `signalFilterContract`.
+
+`--distribution scaled_poisson` remplace le tirage gaussien par un Poisson
+centré/mis à l'échelle de même variance a·signal. C'est une épreuve de
+sensibilité à l'asymétrie, pas une estimation de gain physique en électrons.
+`signal_noise_draws.py` est testé sur les moments, le signal nul et l'identité
+du flux gaussien historique de ce banc ; quatre tests.
+
+`--external-covariance` ajoute une substitution directe de cinq covariances
+B3 calculées sur quatre graines de calibration et sur l'autre noir, puis
+contrôle 40 cas (première graine de contrôle, sans sélection par résultat).
+Ni MAD ni choix des tuiles calmes pour cette variante. `fromCovariance`
+et le corps du filtre restent ceux du module. Le profil est une moyenne de
+covariances empiriques sur résidus simulés, pas un oracle physique exact.
+La sonde refuse profil tronqué, asymétrique/non fini ou non PSD ; aucun
+écrêtage spectral ne rend valide une matrice refusée. `signal_noise_covariance.py`
+vérifie les trois premiers plans contre le transport précédent, les deux
+plans supplémentaires et le signal constant ; trois tests.
+`--covariance-draws 1` contrôle l'attribution du gain : même réalisation
+de référence que le MAD, sans avantage de moyennage de quatre réalisations.
+Le mode à quatre reste la préparation de profil initiale ; aucune valeur
+intermédiaire ni recherche du nombre donnant le meilleur score.
+
+`audit_signal_filter.py <preuves...>` vérifie grille, parités, finitude,
+budget de threads, profils et identité des entrées/sorties de référence des
+cas rejoués. Les variantes partielles gardent leurs nombres et graines
+explicites. Il conserve les avertissements de métadonnées des preuves
+historiques et produit un nouvel audit JSON sans réécrire les campagnes.
+Les résumés ne déclarent jamais automatiquement une promotion de production.
+CTest `signalFilterAuditContract`, `signalDistributionContract` et
+`signalCovarianceContract` complètent les contrôles.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

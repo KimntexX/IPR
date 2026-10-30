@@ -28,6 +28,15 @@ HOOK = '''        // GENERATED BENCH HOOK: the original filtering implementation
                 }
             } else if (benchOperation == IprNoiseBench::Operation::PooledBlind) {
                 for (auto &model : models) model.valid = false;
+            } else if (benchOperation == IprNoiseBench::Operation::ExternalCovariance) {
+                const auto &covariances = IprNoiseBench::covariances();
+                for (int i = 0; i < activeLevels; ++i) {
+                    cv::Matx33f covariance;
+                    std::copy(covariances[std::size_t(i)].begin(), covariances[std::size_t(i)].end(), covariance.val);
+                    models[std::size_t(i)] = {};
+                    if (!fromCovariance(covariance, models[std::size_t(i)].pooled)) return false;
+                    models[std::size_t(i)].pooledValid = true;
+                }
             } else if (benchOperation == IprNoiseBench::Operation::Zero) {
                 models = {};
             }

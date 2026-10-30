@@ -91,6 +91,18 @@ set_tests_properties(cfaTransportSignedContract PROPERTIES TIMEOUT 30)
 add_test(NAME cfaSignalTransportContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_cfa_signal_transport.py)
 set_tests_properties(cfaSignalTransportContract PROPERTIES TIMEOUT 30)
+add_test(NAME signalFilterContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_signal_filter.py)
+set_tests_properties(signalFilterContract PROPERTIES TIMEOUT 30)
+add_test(NAME signalDistributionContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_signal_noise_draws.py)
+set_tests_properties(signalDistributionContract PROPERTIES TIMEOUT 30)
+add_test(NAME signalFilterAuditContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_signal_filter_audit.py)
+set_tests_properties(signalFilterAuditContract PROPERTIES TIMEOUT 30)
+add_test(NAME signalCovarianceContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_signal_noise_covariance.py)
+set_tests_properties(signalCovarianceContract PROPERTIES TIMEOUT 30)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)
