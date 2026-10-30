@@ -2,12 +2,11 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§35) : sur les cellules complètes de7599, IPR s'assombrit au
-lieu de monter comme dans le masque fin ; Lightroom s'assombrit également.
-9153 varie peu ;3135 n'a aucune cellule admissible. Les+3 niveaux ne suffisent
-donc pas à établir une surexposition du filtre. **Pas de compensation des noirs
-ni de nouveau filtre validé.** Reprendre la piste CFA plutôt qu'ajuster le DC
-sur ces seuls masques ; D0 reste à Claude.
+Dernier jalon (§36) :179 sources historiques retrouvées par empreinte,
+partitions préservées et pilote signé sur six sources de développement terminé.
+Les négatifs traversent RCD/médiane sans borne de sortie. La rafale éclairée
+bouge : sa différence non recalée n'est pas une vérité de bruit CFA.
+**Aucun nouveau filtre ni coefficient de calibration validé.** D0 reste à Claude.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -2102,6 +2101,147 @@ D0 est suivi par Claude : les preuves actuelles sont pré-D0 et ne doivent
 pas servir à déclarer son futur rendu équivalent. Aucun changement moteur,
 force, DCP, profil ou IHM, aucune intégration ni publication dans cette étape.
 
+## 36. Pont vers le CFA : corpus et contrat signé — 30 octobre 2026
+
+### 36.1. Relecture pour ne pas refaire l'ancien chantier
+
+Avant de décoder un pixel, relecture du rapport `analyse-bruit.md` de la
+branche `patch_noise`, notamment§439–471, et de ses JSON. Ce rapport reste
+historique, pas un deuxième rapport courant à alimenter. Il existe déjà des
+partitions de rafale, des PTC, des références noires répétées, des études
+de transport CFA/RCD/DCP et d'injection de signal : ne pas relancer ces
+travaux comme une étude nouvelle ou une validation indépendante.
+
+Les anciens transports utilisaient un chemin d'ouverture différent, avec
+les limites de bornage documentées. Le nouveau point à préparer est un
+prototype dans le **chemin signé extrait**, pas une nouvelle recherche de
+seuils sur l'ancien développement. Les quatre preuves historiques utilisées
+sont identifiées par chemin et SHA256 dans le nouvel inventaire ; aucune
+modification dans le worktree ou les fichiers de l'autre branche.
+
+### 36.2. Disponibilité et partitions conservées
+
+[Inventaire canonique](../raw/cfa-corpus-inventory-v001-20261030T122935Z.json) :
+vérification du système de fichiers et des empreintes, sans décodage de pixels.
+Métadonnées héritées des preuves authentifiées, pas réextraites ni inventées.
+
+| Ensemble historique | Fichiers disponibles / attendus | Rôle conservé |
+| --- | ---: | --- |
+| Rafale9819–9860 | 42 / 42 | 14 développement,14 validation déjà utilisée historiquement,14 scellées |
+| Bouchons fermés confirmés | 65 / 65 | 31 développement,34 contrôle déjà mesuré ; six ISO |
+| Rafales pièce sombre surD: | 72 / 72 | 26 groupes éclairés déjà mesurés, **pas des noirs** |
+
+Les179 empreintes correspondent. Les ISO des65 noirs sont1600,3200,6400,
+12800,25600,51200 ; la rafale42 est àISO4000,1/200s, R6 Mark III.
+Les14 dernières9847–9860 restent **scellées** : métadonnées historiques et
+empreintes seulement, aucun pixel ouvert dans cette étape. Contrôle et
+validation historiques ne sont pas renommés en jeux réservés neufs.
+
+Douze autres fichiers du dossier `protocole/blacks` ne figurent pas dans les
+parents sélectionnés :9785–9794 et9801–9802. Leur présence et leur taille
+sont consignées ; rôle et qualification restent à rapprocher des anciennes
+prises, pas déduits du nom du dossier. Aucun fichier déplacé, supprimé ou copié.
+
+Une première exécution de l'inventaire a échoué lors de la lecture Git du
+worktree tiers (`dubious ownership`), après les contrôles de fichiers mais
+avant création du JSON. L'outil consulte maintenant la référence de branche
+depuis notre propre dépôt ; aucune exception globale `safe.directory` ajoutée.
+L'inventaire réussi ci-dessus est la première preuve canonique produite.
+
+### 36.3. Pilote fixé avant pixels : six développements, pas une calibration
+
+[Gel avant captures](../raw/cfa-signed-pilot-freeze-v001-20261030T123141Z.json) :
+9819/9820 (éclairé,ISO4000),0003/0004 (noirs,ISO1600),9950/9951 (noirs,ISO51200).
+Ces six sources sont dans les partitions de **développement**, non réservées.
+Le sélecteur refuse d'y faire entrer une source manquante, divergente ou
+appartenant à validation/contrôle/scellé. Cinq tests de cette sélection passent.
+
+Outil existant `iprRawDevelopmentCapture` reconstruit depuis les sources de
+notre worktree. PolitiqueSigned, noir expérimental fixé à2048DN dans les
+quatre couleurs, blanc16383DN ; diviseur14335. Les gains appliqués sont
+R=1,892578125, G=1, B=1,6923828125, G2=1 dans les six captures. Ce choix
+explicite évite de confondre une sélection de noir avec le transport testé ;
+**ce n'est pas la calibration de production**, ni une estimation nouvelle de
+ces niveaux ou un audit DCP. Aucun réglage moteur n'est modifié.
+
+Trois ROI256×256 fixes de l'outil existant, orientation capteur. Huit frontières
+par source : CFA décompressé, noir soustrait, normalisé, avantRCD, RGB aprèsRCD,
+avant sortie, après médiane/sortie, entrée caméra pré-DCP. Les quatre phases
+R/G1/G2/B restent distinctes et suivent le motif et l'origine déclarés.
+
+[Résultats](../raw/cfa-signed-pilot-v001-20261030T123141Z.json) : six captures,
+trois paires,180 lignes de mesures. Manifestes, binaires, RAW, politiques,
+géométries, unités et contextes de paire contrôlés. Sur chaque source et
+chaque ROI, `PreOutputCameraRgb`, `PostMedianCameraRgb` et la capture finale
+`pre_dcp_camera_rgb` sont **identiques au bit près**. Aucune borne ni grille
+16bits réintroduite entre ces captures. Les pixels diagnostiques restent
+dans le build du banc ; JSON, recette et empreintes font autorité sur les mesures.
+
+### 36.4. Négatifs et corrélations observées
+
+Étendues sur les deux vues, trois ROI et couleurs/phases :
+
+| Paire | Négatifs CFA après noir | Négatifs RGB pré-DCP | Corrélation différentielle CFA x/y | Corrélation différentielle RGB x/y |
+| --- | --- | --- | --- | --- |
+| ÉclairéISO4000 | 0–2,03 % | 0–1,50 % | 0,084 à0,544 | 0,479 à0,793 |
+| NoirISO1600 | 46,16–48,82 % | 50,09–52,89 % | −0,008 à0,033 | 0,320 à0,535 |
+| NoirISO51200 | 49,44–51,93 % | 50,48–53,72 % | −0,010 à0,029 | 0,329 à0,549 |
+
+La différence de paire est divisée par√2 ; moyenne, covariance, fractions
+signées et corrélations sont conservées, pas seulement unσ agrégé. La fraction
+CFA n'est pas exactement50 % : quantification, offset réel du noir et
+distribution ne sont pas contraints à une gaussienne centrée par ce choix2048.
+Pas de nouveau niveau de noir ajusté pour obtenir50 %.
+
+Les pas de voisinage diffèrent : CFA séparé par phase = deux pixels capteur,
+RGB = un pixel. On ne compare donc pas directement les mêmes distances
+physiques. Les corrélations RGB des noirs sont cohérentes avec un transport
+adaptatif créant des dépendances ; elles ne quantifient pas à elles seules
+un effet causal de RCD ou de la médiane. Les noirs CFA de ce petit pilote
+ne prouvent pas que tous les RAW/ISO sont blancs et indépendants.
+
+### 36.5. La rafale éclairée ne fournit pas une vérité temporelle immédiate
+
+Le fort résidu corrélé de9819/9820 ne doit pas être nommé automatiquement
+« bruit CFA corrélé ». L'ancien audit de mouvement§440 de `patch_noise`
+documente une transformation réelle de la rafale : rotation jusqu'à−0,427°,
+échelle1,00458 et translation de modèle−5,18 pixels sur prévisualisation
+largeur800. Ce ne sont pas des déplacements locaux garantis ; parallaxe et
+résidu de recalage restent possibles. Le pilote actuel ne recale pas les vues.
+
+Différencier deux mosaïques non recalées peut donc conserver de la texture
+déplacée ou une variation d'éclairage. Une moyenne leave-one-out n'annule
+pas ce problème, ni le motif fixe commun. Interpoler un recalage directement
+sur une mosaïque mélangerait en plus les phases si le traitement n'est pas
+défini dans leur repère. **Ne pas utiliser cette paire comme oracle de bruit
+physique ou référence propre pour retenir une VST.** Le développement signé
+n'a pas, à lui seul, résolu les limites de la référence.
+
+### 36.6. Direction préparée, sans nouvelle demande de photos
+
+Le corpus existe ; inutile de demander immédiatement de nouvelles prises.
+Premier prototype recommandé : utiliser les résidus des **noirs de
+développement** avec un signal mosaïque synthétique connu, motifs et phases
+explicites, puis comparer traitement avantRCD à référence actuelle aprèsRCD.
+La cible propre est alors connue et ne dépend pas d'un recalage de scène.
+Conserver motif fixe, dérive et bruit temporel comme composantes distinctes.
+
+Ce témoin au bruit de lecture ne suffit pas pour une scène éclairée : il
+manquera la contribution photonique et sa dépendance au signal. Les lois
+PTC historiques déjà figées pourront servir de candidats, avec leurs limites,
+sans réajustement sur les résultats du filtre. Un traitement simple dans le
+domaine CFA à variance constante précédera toute VST, pour isoler le bénéfice
+du placement de celui d'une transformation statistique. Contrôles obligatoires :
+biais du signal, détails chromatiques, faibles contrastes, bruit de ligne,
+valeurs sous zéro, ressources ; pas seulementσ ou moyenne du masque sombre.
+
+La validation sur vraie photo éclairée exigera ensuite des références de
+rafale dont recalage et incertitude sont qualifiés, idéalement autre scène
+ou séance ; les179 fichiers déjà examinés ne constituent pas un nouveau
+jeu indépendant. Pour la réserve finale, toute ouverture devra rester tracée
+et ne servira pas à choisir itérativement les poids. **Aucun débruiteur CFA,
+VST, modèlea·signal+b nouveau ni coefficient de production livré ici.**
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -2151,3 +2291,9 @@ force, DCP, profil ou IHM, aucune intégration ni publication dans cette étape.
   toutes les223 cellules sélectionnées, LR également ;9153 varie peu et3135
   n'a pas de cellule admissible. Pas de compensation DC justifiée. Reprendre
   l'inventaire CFA/rafales plutôt que retoucher les seuils de ce diagnostic.
+- Inventaire/pilote CFA terminé (§36) :179 empreintes conformes, partitions
+  conservées ; six sources de développement testées en module signé à niveaux
+  explicites,180 mesures et sortie flottante exacte. Réserve finale fermée.
+  Mouvement de la rafale éclairée déjà connu : pas d'oracle temporel non recalé.
+  Prochaine cible : signal CFA connu avec bruit de lecture réel, avant toute
+  VST ; aucun nouveau filtre ou coefficient de production validé.

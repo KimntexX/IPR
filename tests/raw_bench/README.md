@@ -325,6 +325,17 @@ cellules (neutre,75/0/0,100/100/0), avec vérification des empreintes, sans
 nouveau rendu IPR. Ces cellules issues du même RAW ne sont pas une référence
 indépendante. Neuf tests masques/coordonnées sont disponibles.
 
+Pont vers le CFA : `inventory_cfa_corpus.py --help` authentifie les sources
+des anciens JSON `patch_noise` sans décoder les pixels ; partitions conservées,
+réserve42 scellée aux14 dernières. `pilot_signed_cfa.py --help` refuse une
+sélection non développement ou incomplète, écrit le gel avant captures puis
+pilote six développements signés à niveaux DN explicites (2048/16383).
+Trois ROI fixes, phases distinctes, moments/différences/corrélations et
+invariance des trois dernières captures ; binaires diagnostiques dans le build.
+Ce n'est pas la calibration de production ni un débruiteur CFA. La paire
+éclairée n'est pas recalée et ne doit pas devenir un oracle de bruit.
+Cinq tests : `python -m unittest discover -s tests/raw_bench -p test_cfa_corpus.py`.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,
