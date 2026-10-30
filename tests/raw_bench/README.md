@@ -591,6 +591,19 @@ jamais l'autre. `audit_spectral_budget.py <preuve>` recalcule mesures/critères
 à partir des covariances par réalisation, contrôle la grille et les effectifs.
 Rapport§§50–51, aucun moteur ou rendu photographique modifié.
 
+`study_population_filter.py --help` confronte ce budget au filtre courant à
+100/100, sans modifier le moteur. La covariance moyenne sur la ROI exacte
+96×96 est injectée dans les cinq plans du filtre instrumenté ; la parité
+avec le binaire non instrumenté est contrôlée pour chaque entrée. Le profil
+reste constant, il ne s'agit pas encore d'un budget variant pixel par pixel.
+Un témoin « banque de trois noirs » emploie les mêmes32 graines que le modèle
+spectral. Les deux domaines restent séparés ;64cas avec détails faibles
+luma/chroma et bord courbe. Les critères MSE, couleur et gain sur signal propre
+sont figés avant calcul, sans retouche après échec. Le stress propre conserve
+un budget non nul : diagnostic de protection du détail, pas cas physique
+sans bruit. `audit_population_filter.py <preuve>` recalcule les critères et
+expose les régressions par motif/ISO, sans promotion automatique.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

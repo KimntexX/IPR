@@ -124,6 +124,12 @@ set_tests_properties(spectralBudgetContract PROPERTIES TIMEOUT 30)
 add_test(NAME spectralBudgetAuditContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_spectral_budget_audit.py)
 set_tests_properties(spectralBudgetAuditContract PROPERTIES TIMEOUT 30)
+add_test(NAME populationFilterContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_population_filter.py)
+set_tests_properties(populationFilterContract PROPERTIES TIMEOUT 30)
+add_test(NAME populationFilterAuditContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_population_filter_audit.py)
+set_tests_properties(populationFilterAuditContract PROPERTIES TIMEOUT 30)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)

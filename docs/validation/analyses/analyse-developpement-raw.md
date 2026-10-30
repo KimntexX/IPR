@@ -2,7 +2,16 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§§50–51) : biais du champ noir figé mis en évidence, puis
+Dernier jalon (§52) : budget multi-noirs confronté au filtre réel sur64cas.
+Erreur RGB médiane réduite de28% (spectral) ou34% (banque simple) sur le
+rejeu de noirs réels avec signal simulé ; aucune régression MSE sur ces cas.
+Cependant, échec du veto de détail sur le stress propre à budget non nul.
+Ce stress n'est pas une perte de détail photo mesurée : la substitution
+globale supprime aussi le routage conditionnel. Pas de promotion ; prochaine
+cible = raccordement local conservant l'adaptation aux structures, pas
+complexification spectrale ni nouvelle recherche de seuil après échec.
+
+Jalon précédent (§§50–51) : biais du champ noir figé mis en évidence, puis
 budget statistique multi-noirs passant les critères fixés dans deux domaines
 séparés. Sur le rejeu fondé sur quatre noirs réels (terme de signal simulé),
 erreur médiane de covariance d'environ4,1 % sur les trois premières bandes,
@@ -4002,6 +4011,127 @@ graines disjointes, fournisseur de lecture appelé par réalisation, lots borné
 non-mélange des domaines, absence de recouvrement des sources et refus d'un
 critère enregistré incohérent. Production inchangée, pas de push/dev/tag.
 
+## 52. Budget multi-noirs dans le filtre réel : gain d'erreur, veto de détail — 30 octobre 2026
+
+[Protocole figé avant calcul](../raw/population-filter-freeze-v001-20261030T223846Z.json),
+[mesures complètes](../raw/population-filter-v001-20261030T223846Z.json),
+[premier audit](../raw/population-filter-audit-v001-20261030T224548Z.json),
+[audit complété des gains sur entrées bruitées](../raw/population-filter-audit-v001-20261030T224629Z.json).
+Durée de campagne416,06s. Aucun moteur ni fichier photographique modifié.
+
+### 52.1. Question, témoins et critères avant mesure
+
+Après le budget attendu positif du§51, tester son utilité dans le filtre
+réel, pas seulement sa justesse face à une covariance.64cas : deux ISO,
+deux domaines séparés (interne spectral/rejeu réel), deux distributions
+de signal (gaussienne/Poisson redimensionnée), quatre motifs et deux graines
+de contrôle. Motifs nouveaux : aplat, structure faible achromatique,
+structure faible colorée, bord courbe. Graines170001–170032 pour calibration,
+190001–190002 pour contrôle et151001 pour guide. Pas d'ajustement des
+coefficients ou de sélection des motifs après leurs scores.
+
+Même filtre et commande100/100, ROI exacte(y144,x144,96×96), cinq plansB3.
+Le guide moyen31×31 provient d'un tirage observé distinct, jamais du signal
+propre. Deux profils de covariance moyens comparés :
+
+- modèle spectral du§51, lecture gaussienne indépendante par tirage ;
+- banque simple des trois noirs physiques de calibration par ISO, tuile
+  centrale parcourue cycliquement avec les mêmes32 graines de signal.
+
+La vérité synthétique reste le signal propre **après** RCD/médiane : ce
+test ne mesure donc pas la perte de détail déjà causée par le dématriçage.
+Le profil est constant sur la ROI, pas encore variable par pixel. Le hook
+`ExternalCovariance` remplace les nœuds conditionnels par un profil pooled :
+calcul du filtre et force identiques, **routage spatial du modèle différent**.
+Cette confusion potentielle est conservée, pas attribuée arbitrairement
+à la qualité du modèle de bruit.
+
+Critères conservateurs figés par domaine/candidat : ratio d'erreurRGB
+médian<1, percentile95≤1,10 et pire≤1,25 ; pire ratio d'erreur chroma≤1,25 ;
+perte de gain sur stress propre≤0,02 face au courant ; excès de biais moyen
+opposé≤0,10fois le RMS d'erreurRGB de l'entrée. Seuils d'ingénierie pour
+ce banc, pas intervalles de confiance ni normes de qualité photographique.
+
+### 52.2. Résultats séparés et comparateur simple
+
+| Domaine | Budget | Ratio médian MSE RGB au courant | Pire ratio RGB | Ratio médian MSE chroma | Veto détail propre |
+| --- | --- | ---: | ---: | ---: | --- |
+| Simulation interne | Spectral |0,645|0,727|0,764|Échec|
+| Simulation interne | Banque simple |0,596|0,659|0,722|Échec|
+| Rejeu de noirs réels | Spectral |0,720|0,758|0,810|Échec|
+| Rejeu de noirs réels | Banque simple |0,663|0,711|0,770|Échec|
+
+Tous les autres critères passent dans les deux domaines. Le gain mesuré
+est une baisse d'erreur face au signal synthétique connu, **pas un pourcentage
+de bruit visible supprimé**. La banque simple a une erreurRGB plus basse
+que le spectral sur les64cas, avec environ8,2% d'écart médian spectral/banque
+dans chaque domaine. Cela ne démontre ni un meilleur rendu perceptuel de la
+banque ni une covariance plus juste : un filtre plus fort peut améliorer
+la MSE en supprimant du détail. La FFT n'est pas justifiée comme complication
+indispensable par cette épreuve.
+
+Autre différence à ne pas masquer : la banque conserve l'amplitude spatiale
+des résidus noirs, tandis que le modèle spectral la normalise au terme
+temporel b. Ce témoin compare deux recettes de budget, **pas la seule forme
+spectrale à amplitude identique**. Il ne permet donc pas d'attribuer l'écart
+de MSE à la FFT ou à la seule non-gaussianité du bruit réel.
+
+256parités pixel à pixel original/instrumenté et128identités à modèle nul
+passent. Les profils et les32covariances de calibration par profil sont
+conservés avec chaque cas. L'audit recalcule leur moyenne, les critères,
+la grille, les identités et les résultats par motif/ISO ; aucune moyenne
+favorable d'un domaine ne masque l'autre.
+
+### 52.3. Pourquoi le stress propre bloque, sans exagérer la régression
+
+Le stress applique au signal propre un budget dérivé d'une entrée bruitée.
+Le courant, lui, réestime son bruit sur cette entrée propre. Cette dissymétrie
+est volontaire, figée et sévère : elle teste la protection du signal face à
+un budget non nul, **pas une situation physique de bruit réellement nul**.
+Le gain propre courant est voisin de1 ; sous profil spectral il descend
+vers0,607 sur la structure luma et0,130–0,165 sur la structure colorée.
+Pire perte de gain0,8705. Veto échoué, sans relâchement après résultat.
+
+Il serait faux d'en déduire87% de détails perdus sur les photos bruitées.
+Sur le rejeu réel, gains médians sur les entrées effectivement bruitées :
+
+| ISO | Motif | Courant | Spectral | Banque simple |
+| --- | --- | ---: | ---: | ---: |
+|1600|Structure luma faible|0,771|0,770|0,762|
+|1600|Structure couleur faible|0,349|0,341|0,340|
+|1600|Bord courbe|1,013|1,008|1,008|
+|51200|Structure luma faible|0,733|0,727|0,724|
+|51200|Structure couleur faible|0,530|0,508|0,491|
+|51200|Bord courbe|0,959|0,955|0,954|
+
+Le filtre courant atténue donc déjà fortement les détails colorés faibles
+de ces cas. Le budget externe conserve une partie de ce défaut, avec une
+perte supplémentaire modeste mais réelle sur ce banc. Le gain supérieur
+en MSE ne résout pas à lui seul l'objectif « mieux protéger les structures ».
+Les gains bruités restent des projections descriptives sur peu de tirages,
+pas une probabilité universelle de conservation d'un détail.
+
+### 52.4. Décision, biais et prochaine cible
+
+Pas de promotion de la substitution globale. Ne pas rejeter pour autant le
+budget statistique qualifié au§51 : un bon budget n'est pas un filtre
+protecteur du détail, et son insertion pooled supprime ici l'adaptation
+conditionnelle. Le stress propre n'est pas un oracle de qualité photo.
+
+Biais restants inchangés : étude adaptative, une séance R6III, deux noirs
+physiques de contrôle réutilisés par ISO, loi de signal commune au générateur
+et au prédicteur, un seul réglage100/100 et une ROI. Pas de nouveaux boîtiers,
+pas de DCP/LCP ni de validation visuelle. La réserve finale reste fermée.
+Les416s sont un temps de campagne multi-variantes, pas une latence de
+débruitage pleine image ; aucun plafond RAM production qualifié ici.
+
+Prochaine cible utile : conserver le routage local/conditionnel du filtre
+en y raccordant le budget, avec un témoin qui isole ce seul changement.
+Mesurer le compromis résidu/détail sur les **entrées bruitées**, conserver
+le stress propre séparé et les échecs figés, sans optimiser aveuglément
+la MSE ni relancer le spectral comme solution supposée supérieure. Pas
+de changement de coefficients ou de rendu de production à ce jalon.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -4129,3 +4259,10 @@ critère enregistré incohérent. Production inchangée, pas de push/dev/tag.
   photo qualifié. Guide spatial modestement meilleur en médiane, plus mauvais
   sur certains extrêmes ; pas d'imposition globale. Contrôles déjà examinés,
   hypothèses et effectifs physiques limités, réserves finales fermées.
+- Qualification dans le filtre réel (§52) :64cas,256parités et128identités.
+  MSE médiane du rejeu réel0,720fois le courant (spectral),0,663fois (banque),
+  mais veto de détail sur stress propre échoué pour les deux. Ni validation
+  photo ni réfutation du budget ; substitution pooled et routage confondus.
+  La banque simple bat le spectral en MSE, pas preuve de meilleur détail.
+  Suite : raccordement local conservant l'adaptation aux structures, gains
+  bruités et stress propre séparés ; aucun nouveau seuil après échec.
