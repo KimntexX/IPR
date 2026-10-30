@@ -284,6 +284,14 @@ une preuve que le filtre les corrige tous, ni une mesure de bruit physique.
 Les77 contrôles natifs sont positifs ; les22 scènes signalées par Claude et
 le coût des buffers supplémentaires restent à qualifier avant promotion.
 
+L'esquisse `CameraDenoise::settingsFromAmount` convertit une barre entière
+0..100 en `Settings` : L=M, C=arrondi(100*(1-(1-M/100)^6)). Elle est testée
+sur les101 états mais n'est pas raccordée à l'éditeur. Défaut0 ; entrées
+invalides refusées sans modifier la sortie. Les réglages avancés contournent
+ce remappage pour éviter une double loi. La cible visuelle LR70–75 vers
+barre80–90 n'est pas encore qualifiée ; les valeurs LR ne sont pas les forces
+internes IPR. La preuve synthétique ne vaut pas étalonnage perceptuel.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

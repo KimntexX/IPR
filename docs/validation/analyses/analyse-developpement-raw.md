@@ -2,12 +2,11 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§31) : repli global préparé au-dessus du candidat(c1), après
-les abstentions signalées par Claude sur la campagne du plancher sombre.
-77 contrôles natifs, sept suites et test optique passent. **Qualification
-synthétique seulement, pas de promotion.** Les22 scènes signalées restent à
-mesurer avec ce candidat ; la campagne réelle de(c1) est menée par Claude.
-Forces et bornes DCP inchangées ; coût du repli encore à mesurer.
+Dernier jalon (§32) : esquisse C++ de commande maître, non raccordée à l'IHM.
+82 contrôles natifs et sept suites passent. Claude a mesuré(c1) sur104 RAW :
+gain chroma limité, sans résoudre le résidu à70/25. Le repli global (§31)
+est en cours de mesure chez lui. **Pas de promotion.** Le calage visuel de la
+barre maître reste à faire ; filtre, forces avancées et bornes DCP inchangés.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1628,6 +1627,88 @@ Mesurer ressources et latence avant promotion. Aucun rendu RAW concurrent
 n'est lancé ici pendant sa campagne ; force, DCP, commande maître(b) et
 paramètres de profil inchangés. Pas de push, fusion versdev ou tag.
 
+## 32. Esquisse de la commande maître(b) — 30 octobre 2026
+
+### 32.1. Retour réel sur(c1) et décision
+
+Claude rapporte la campagne(c1), commit de preuve `a6b7a80`, au journal
+commun : témoin0/0 identique sur104 sources, aucun cas pire de plus de5 %
+que le plancher pour les mesures suivies, gain chroma limité sur les contours
+et certains noirs. Le résidu noir de7599 à70/25 reste proche :11,09 contre
+11,10 en chroma. Cela soutient de clore(c) avec(c1) comme amélioration limitée,
+pas comme suppression des taches. Le rôle de la faible force couleur25
+reste à traiter dans(b). Ce constat ne garantit pas la préservation de tous
+les détails invisibles aux masques suivis.
+
+Claude mesure maintenant le repli `0050858` dans un exécutable séparé
+`b2e2b50`. Aucun rendu RAW concurrent lancé par Codex. La présente esquisse
+ne modifie ni ce binaire ni le calcul d'`apply()`.
+
+### 32.2. Loi candidate, contrat et interface envisagée
+
+Fonction pure C++ `CameraDenoise::settingsFromAmount(int, Settings&)`, sans
+changement du contrat `Settings{luminance, chrominance}`. Pour une barre M
+entière entre0 et100, t=M/100 :
+
+\[
+L=M,\qquad C=\operatorname{arrondi}\{100[1-(1-t)^6]\}.
+\]
+
+| Barre maître M | Luminance interne | Couleur interne |
+| ---: | ---: | ---: |
+| 0 | 0 | 0 |
+| 10 | 10 | 47 |
+| 25 | 25 | 82 |
+| 50 | 50 | 98 |
+| 75 | 75 | 100 |
+| 85 | 85 | 100 |
+| 100 | 100 | 100 |
+
+L'exposant6 est une **hypothèse ergonomique IPR**, non un coefficient déduit
+d'un capteur ou ajusté à Lightroom. La chroma monte rapidement sans saut
+dans la loi continue ; la quantification entière crée volontairement un
+plateau à100 dès M=59. La partie haute de la barre affine alors surtout
+la luminance. Monotonie des paramètres ne signifie pas monotonie de chaque
+métrique rendue après DCP. La perception et la protection des détails restent
+à contrôler, notamment sur des couleurs fines et peu contrastées.
+
+Défaut M=0 : identité exacte. Entrées hors0..100 refusées sans modifier la
+sortie. Aucun facteur supérieur à1 ajouté dans le filtre. Aucun accès à
+l'image, allocation ou thread dans le remappage ; coût du filtrage inchangé
+à couple(L,C) identique. Le coût applicatif d'une interaction reste à mesurer.
+
+Raccordement futur proposé à Claude, **non implémenté ici** : une barre
+« Réduction du bruit », défaut0, plus un sous-menu avancé affichant les
+deux forces effectives. Une modification avancée passe directement ces
+valeurs à `apply()` : ne pas appliquer le remappage une seconde fois.
+Afficher un état personnalisé plutôt que déduire un M fictif d'un couple
+arbitraire ; seuls les couples effectivement issus de la loi ont un M connu.
+Le réglage reste de session tant que le contrat de persistance n'est pas changé.
+
+### 32.3. Cible visuelle et qualification restante
+
+Le repère utilisateur reste **le lissage luminance LR70–75 vers M80–90**, pas
+une correspondance numérique L=LR. L=M est ici une référence simple, **pas
+une preuve d'atteinte de cette cible**. Si L=100 reste insuffisant, un
+remappage dans0..100 ne pourra pas inventer la force manquante : réexaminer
+le filtre et sa protection avant de modifier la courbe ou dépasser son domaine.
+Ne pas changer le modèle d'estimation pour obtenir une préférence de curseur.
+
+[Preuve du module](../raw/camera-denoise-n2-v001-20261030T041640Z.json) :82
+contrôles natifs et sept suites CTest passent. Les cinq nouveaux contrôles
+vérifient les101 états contre une expression indépendante, bornes, monotonie,
+points d'ancrage, identité et refus atomique des entiers invalides extrêmes.
+Les précédents témoins du filtre gardent leurs résultats. Pas de nouveau
+test d'intégration moteur annoncé : la preuve porte explicitement le statut
+`engine_integration=pending`, benchmarks non exécutés. Aucun caller modifié.
+
+Après qualification du repli, figer ce socle et comparer M=0,10,25,50,75,85,100
+aux forces avancées correspondantes sur quelques scènes représentatives,
+avec masques fixes, puis revue visuelle. Vérifier M=0 identique au témoin,
+absence de double loi, plateau chroma et détails réels. Garder les références
+LR75 de luminance comme repère, pas comme vérité propre ni cible de clonage.
+Ne pas mélanger effet du repli et effet de la barre dans une seule comparaison.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -1655,10 +1736,12 @@ paramètres de profil inchangés. Pas de push, fusion versdev ou tag.
 - DCP et force inchangés ; harmonisation des domaines couleur différée.
   Mesures par scène et versions dans les JSON ; revue visuelle, ressources
   applicatives et validation multi-boîtiers restent des qualifications distinctes.
-- Candidat(c1) prêt au niveau synthétique (§30) : la texture I ne bloque plus
-  la correction de chroma par le veto partagé.70 contrôles/sept suites/optique
-  passent, pas encore de rendu réel ; comparaison à confier à Claude après
-  sa chaîne figée du plancher sombre. Pas de modification(b) ni de promotion.
+- Candidat(c1) qualifié au niveau synthétique (§30), puis mesuré par Claude
+  (§32) : la texture I ne bloque plus la chroma par le veto partagé, mais
+  le bénéfice réel est limité et le résidu à70/25 persiste. Pas de promotion.
 - Repli global préparé au-dessus de(c1) (§31) :77 contrôles, sept suites et
   intégration optique passent. Qualification réelle des22 scènes et coût
   supplémentaire attendus ; aucune conclusion de correction réelle anticipée.
+- Retour(c1) reçu et commande maître esquissée (§32) : fonction C++ testée
+  mais non raccordée ;82 contrôles et sept suites passent. Aucun calage LR
+  ou visuel revendiqué. Attendre le bilan du repli avant comparaison de force.
