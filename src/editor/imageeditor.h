@@ -270,6 +270,9 @@ public:
     Q_INVOKABLE void setGrain(int value);
     Q_INVOKABLE void setDenoiseLuminance(int value);
     Q_INVOKABLE void setDenoiseChrominance(int value);
+    // Single noise reduction control: one amount in [0, 100] sets both strengths.
+    Q_INVOKABLE void setDenoiseAmount(int value);
+    Q_INVOKABLE void setDenoiseBeforeProfile(bool enabled);
     Q_INVOKABLE void setSharpeningAmount(int value);
     Q_INVOKABLE void setSharpeningRadius(float value);
     Q_INVOKABLE void setSharpeningMasking(int value);
@@ -338,7 +341,7 @@ private:
         const ColorPipeline::WorkingImage &source, const Settings &settings,
         double pixelScale = 1.0, RenderStageCache *cache = nullptr);
     static bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
-                            int referenceTemperature, cv::Mat &adjusted);
+                            int referenceTemperature, double pixelScale, cv::Mat &adjusted);
     static PerceptualColour::Parameters perceptualParameters(const Settings &settings);
     // The preview's source (edit proxy, or the image) and its pixel scale.
     const ColorPipeline::WorkingImage &previewSource() const;
@@ -357,7 +360,8 @@ private:
                                    bool automaticWhiteBalance,
                                    const QString &profile = {}, const QString &manifest = {},
                                    const QString &lensProfile = {}, bool lensResolved = false,
-                                   bool lensCorrection = true, bool chromaticAberration = true);
+                                   bool lensCorrection = true, bool chromaticAberration = true,
+                                   bool cameraSignalExperiment = false);
     void reloadRawDevelopment();
     RawDevelopment rawDevelopmentRecipe() const;
     void beginLoad(const QString &fileName, const QString &extension,
@@ -395,6 +399,7 @@ private:
     QString m_cameraProfile;
     QString m_normalizationManifest;
     bool m_rawNormalizationEnabled = true;
+    bool m_denoiseBeforeProfile = false;   // experimental session switch, kept across images
     QString m_rawDevelopmentWarning;
     QString m_profileSha256;
     QString m_manifestSha256;

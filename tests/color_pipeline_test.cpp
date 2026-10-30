@@ -103,20 +103,30 @@ int main(int argc, char **argv)
                "profile conversion should preserve neutral gray"))
         return 1;
 
-    const quint16 rawPixel[] = {32768, 16384, 8192};
-    const ColorPipeline::WorkingImage raw =
-        ColorPipeline::fromLinearRgb16(rawPixel, 1, 1, &error);
-    if (!check(!raw.isNull(), "16-bit RAW RGB should convert to working space"))
+    // A negative sample (below the black, signed development) keeps its extended range.
+    const cv::Mat rawPixel(1, 1, CV_32FC3, cv::Scalar(0.5f, 0.25f, -0.01f));
+    const ColorPipeline::WorkingImage raw = ColorPipeline::fromLinearSrgb(rawPixel, &error);
+    if (!check(!raw.isNull(), "RAW linear RGB should convert to working space"))
         return 1;
     const cv::Vec4f rawLinear = raw.linearRgba.at<cv::Vec4f>(0, 0);
-    const cv::Vec3f expectedRaw(WorkingColor::fromSrgb() *
-        cv::Vec3d(32768./65535., 16384./65535., 8192./65535.));
+    const cv::Vec3f expectedRaw(WorkingColor::fromSrgb() * cv::Vec3d(0.5, 0.25, -0.01));
     if (!check(cv::norm(cv::Vec3f(rawLinear[0], rawLinear[1], rawLinear[2]) - expectedRaw) < 1e-6 &&
                    raw.colorSpace == ColorPipeline::workingColorSpace(),
-               "LibRaw linear sRGB samples must be converted, not relabelled Rec.2020"))
+               "RAW linear sRGB samples must be converted, not relabelled Rec.2020"))
         return 1;
-    if (!check(raw.sourceProfile.contains(QStringLiteral("LibRaw")),
-               "RAW input should retain its decoder provenance"))
+    if (!check(raw.sourceProfile.contains(QStringLiteral("RAW")) &&
+                   ColorPipeline::fromLinearSrgb(cv::Mat(1, 1, CV_16UC3), &error).isNull(),
+               "RAW input keeps its provenance; integer input is refused"))
+        return 1;
+    for (const float bad : {std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::infinity(),
+                            -std::numeric_limits<float>::infinity()}) {
+        const cv::Mat malformed(1, 2, CV_32FC3, cv::Scalar(0.5f, bad, 0.25f));
+        if (!check(ColorPipeline::fromLinearSrgb(malformed, &error).isNull(),
+                   "NaN and infinite RAW samples are refused"))
+            return 1;
+    }
+    if (!check(!ColorPipeline::fromLinearSrgb(cv::Mat(1, 1, CV_32FC3, cv::Scalar(1.3f, -0.2f, 0.f)), &error).isNull(),
+               "values above 1 and below 0 stay accepted"))
         return 1;
 
     cv::Mat neutralRgb(1, 1, CV_32FC3, cv::Scalar(0.25f, 0.5f, 0.75f));

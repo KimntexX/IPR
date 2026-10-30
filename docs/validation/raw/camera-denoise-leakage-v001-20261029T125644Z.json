@@ -1,0 +1,538 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261029T125644Z",
+  "label": "n2-three-scales",
+  "tool_sha256": "34385134e8f625aff1042bf1a9acf119eb7c9cc19356957ebc50101f4e16f96a",
+  "revision": "488421570da20fdd18d9e1737aea0bab541f8b96",
+  "sources": {
+    "src/raw/CameraDenoise.h": {
+      "sha256": "66f87111d4f2d6174b1835551ee37c9d314ec33313f9a1961b2bdcf885bb7a67",
+      "text": "#ifndef IPR_RAW_CAMERADENOISE_H\n#define IPR_RAW_CAMERADENOISE_H\n\n#include <opencv2/core.hpp>\n#include <array>\n#include <functional>\n\n// Experimental, profile-independent denoising of signed camera RGB, after the\n// opening's RCD/median and BEFORE optical corrections and nonlinear DCP rendering.\nnamespace CameraDenoise {\n\nstruct Settings\n{\n    int luminance = 0;\n    int chrominance = 0;\n};\n\nstruct Context\n{\n    std::array<double, 4> gains{1, 1, 1, 1}; // Actually applied WB, R/G/B/G2.\n    double iso = 0;                        // 0 unknown; NOT a noise-strength formula.\n    double pixelScale = 1;                 // Input/full-resolution extent, in (0, 1].\n};\n\n// At most eight threads INCLUDING the caller. OpenCV's global thread settings\n// are not changed. Only the caller invokes cancellation; all workers are joined.\nint workerThreads();\n\nbool identity(const Settings &settings);\n\n// Input: finite CV_32FC3, white 1, signed/extended range. Camera intensity is an\n// opponent-axis proxy, not photometric Rec.2020 luminance. Noise is measured per\n// scale after RCD/median; this is NOT a calibrated sensor a*signal+b model.\n// Zero forces preserve the buffer exactly, without scanning pixels/using Context.\n// Invalid shape/type/settings fail even on that path. Nonzero forces validate\n// finitude/Context. Success publishes a NEW buffer, never edits aliased source\n// pixels; on failure/cancellation the input is unchanged. No lower/upper clamp.\nbool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,\n           const std::function<bool()> &cancelled = {});\n\n} // namespace CameraDenoise\n\n#endif // IPR_RAW_CAMERADENOISE_H\n"
+    },
+    "src/raw/CameraDenoise.cpp": {
+      "sha256": "f078620f34ba0ceacf2646585e04f2c95ef36312c1bf853fa173624edf00a9de",
+      "text": "#include \"CameraDenoise.h\"\n\n#include <algorithm>\n#include <atomic>\n#include <cmath>\n#include <cstddef>\n#include <set>\n#include <thread>\n#include <vector>\n\nnamespace CameraDenoise {\nnamespace {\nconstexpr int Levels = 3;\nconstexpr int TileSize = 256;\nconstexpr float MadNormal = 0.67448975f;\nconstexpr float Kernel[5] = {.0625f, .25f, .375f, .25f, .0625f};\n\nstruct Noise\n{\n    cv::Vec3f sigma{};\n    cv::Matx33f inverseCorrelation = cv::Matx33f::eye();\n    float expectedJointEnergy = 0;\n};\n\nstruct Pyramid\n{\n    std::array<cv::Mat, Levels> detail;\n};\n\nint reflect(int x, int length)\n{\n    if (length == 1) return 0;\n    while (x < 0 || x >= length) x = x < 0 ? -x : 2 * length - 2 - x;\n    return x;\n}\n\nbool validContext(const Context &c)\n{\n    if (!std::isfinite(c.iso) || c.iso < 0 ||\n        !std::isfinite(c.pixelScale) || c.pixelScale <= 0 || c.pixelScale > 1)\n        return false;\n    for (double gain : c.gains) if (!std::isfinite(gain) || gain <= 0) return false;\n    return true;\n}\n\ncv::Vec3f opponent(const cv::Vec3f &rgb, const cv::Vec3f &inverseGains)\n{\n    const cv::Vec3f x = rgb.mul(inverseGains);\n    return {.25f * x[0] + .5f * x[1] + .25f * x[2],\n            .5f * x[0] - .5f * x[2], x[1] - .5f * x[0] - .5f * x[2]};\n}\n\n// All filtering loops are local to this translation unit; no nested OpenCV pool.\nbool blur(const cv::Mat &source, cv::Mat &output, int step,\n          const std::function<bool()> &stop)\n{\n    cv::Mat horizontal(source.size(), CV_32FC3);\n    output.create(source.size(), CV_32FC3);\n    for (int y = 0; y < source.rows; ++y) {\n        if ((y & 15) == 0 && stop()) return false;\n        const auto *in = source.ptr<cv::Vec3f>(y);\n        auto *out = horizontal.ptr<cv::Vec3f>(y);\n        for (int x = 0; x < source.cols; ++x) {\n            cv::Vec3f value{};\n            for (int k = -2; k <= 2; ++k) value += in[reflect(x + k * step, source.cols)] * Kernel[k + 2];\n            out[x] = value;\n        }\n    }\n    for (int y = 0; y < source.rows; ++y) {\n        if ((y & 15) == 0 && stop()) return false;\n        auto *out = output.ptr<cv::Vec3f>(y);\n        for (int x = 0; x < source.cols; ++x) {\n            cv::Vec3f value{};\n            for (int k = -2; k <= 2; ++k) value += horizontal.ptr<cv::Vec3f>(reflect(y + k * step, source.rows))[x] * Kernel[k + 2];\n            out[x] = value;\n        }\n    }\n    return true;\n}\n\nbool pyramid(cv::Mat current, Pyramid &out, const std::array<int, Levels> &steps,\n             const std::function<bool()> &stop)\n{\n    for (int level = 0; level < Levels; ++level) {\n        cv::Mat base;\n        if (!blur(current, base, steps[std::size_t(level)], stop)) return false;\n        auto &detail = out.detail[std::size_t(level)]; detail.create(current.size(), CV_32FC3);\n        for (int y = 0; y < current.rows; ++y) {\n            if ((y & 15) == 0 && stop()) return false;\n            const auto *a = current.ptr<cv::Vec3f>(y), *b = base.ptr<cv::Vec3f>(y);\n            auto *d = detail.ptr<cv::Vec3f>(y);\n            for (int x = 0; x < current.cols; ++x) d[x] = a[x] - b[x];\n        }\n        current = std::move(base);\n    }\n    return true;\n}\n\ncv::Mat patch(const cv::Mat &source, const cv::Rect &core, int margin,\n              const cv::Vec3f &inverseGains)\n{\n    cv::Mat out(core.height + 2 * margin, core.width + 2 * margin, CV_32FC3);\n    for (int y = 0; y < out.rows; ++y) {\n        const auto *in = source.ptr<cv::Vec3f>(reflect(core.y + y - margin, source.rows));\n        auto *row = out.ptr<cv::Vec3f>(y);\n        for (int x = 0; x < out.cols; ++x)\n            row[x] = opponent(in[reflect(core.x + x - margin, source.cols)], inverseGains);\n    }\n    return out;\n}\n\nfloat median(std::vector<float> values)\n{\n    if (values.empty()) return 0;\n    const auto middle = values.begin() + std::ptrdiff_t(values.size() / 2);\n    std::nth_element(values.begin(), middle, values.end());\n    const float upper = *middle;\n    return values.size() % 2 ? upper : .5f * upper + .5f * *std::max_element(values.begin(), middle);\n}\n\nstruct PatchNoise\n{\n    cv::Vec3f center{}, sigma{};\n    std::vector<cv::Vec3f> samples;\n    double score = 0;\n};\n\nbool coherent(const PatchNoise &item, int channel, int width, int height, int lag)\n{\n    if (lag >= width || lag >= height || item.sigma[channel] <= 0) return false;\n    const auto correlation = [&](bool horizontal) {\n        double ab = 0, aa = 0, bb = 0;\n        for (int y = 0; y < height - (horizontal ? 0 : lag); ++y)\n            for (int x = 0; x < width - (horizontal ? lag : 0); ++x) {\n                const double a = item.samples[std::size_t(y * width + x)][channel] - item.center[channel];\n                const double b = item.samples[std::size_t((y + (horizontal ? 0 : lag)) * width + x + (horizontal ? lag : 0))][channel] - item.center[channel];\n                ab += a * b; aa += a * a; bb += b * b;\n            }\n        return aa > 0 && bb > 0 ? std::abs(ab / std::sqrt(aa * bb)) : 0.;\n    };\n    // A highly repeating pattern is not a safe noise witness. Lag follows the\n    // wavelet scale; no claim of separating every weak texture from sensor noise.\n    return correlation(true) > .9 && correlation(false) > .9;\n}\n\nbool estimate(const cv::Mat &source, const cv::Vec3f &inverseGains,\n              const std::array<int, Levels> &steps, int margin,\n              std::array<Noise, Levels> &models, const std::function<bool()> &stop)\n{\n    std::array<std::vector<PatchNoise>, Levels> patches;\n    const int width = std::min(64, source.cols), height = std::min(64, source.rows);\n    std::set<std::pair<int, int>> origins;\n    for (int y = 0; y < 5; ++y) for (int x = 0; x < 5; ++x)\n        origins.emplace((source.cols - width) * x / 4, (source.rows - height) * y / 4);\n    for (auto origin : origins) {\n        if (stop()) return false;\n        Pyramid p;\n        if (!pyramid(patch(source, {origin.first, origin.second, width, height}, margin, inverseGains), p, steps, stop)) return false;\n        for (int level = 0; level < Levels; ++level) {\n            const auto &d = p.detail[std::size_t(level)];\n            if (!cv::checkRange(d)) return false;\n            PatchNoise item;\n            std::array<std::vector<float>, 3> samples;\n            for (int y = margin; y < margin + height; ++y) for (int x = margin; x < margin + width; ++x) {\n                const auto v = d.at<cv::Vec3f>(y, x); item.samples.push_back(v);\n                for (int c = 0; c < 3; ++c) samples[std::size_t(c)].push_back(v[c]);\n            }\n            for (int c = 0; c < 3; ++c) {\n                auto &v = samples[std::size_t(c)];\n                item.center[c] = median(v);\n                for (float &value : v) value = std::abs(value - item.center[c]);\n                item.sigma[c] = median(v) / MadNormal;\n                item.score += double(item.sigma[c]) * item.sigma[c];\n            }\n            if (!std::isfinite(item.score)) return false;\n            bool structured = false;\n            for (int c = 0; c < 3; ++c) structured = structured || coherent(item, c, width, height, 2 * steps[std::size_t(level)]);\n            if (!structured) patches[std::size_t(level)].push_back(std::move(item));\n        }\n    }\n    for (int level = 0; level < Levels; ++level) {\n        auto &items = patches[std::size_t(level)];\n        if (items.empty()) continue; // Abstain at this scale rather than fit texture.\n        std::sort(items.begin(), items.end(), [](const PatchNoise &a, const PatchNoise &b) { return a.score < b.score; });\n        const std::size_t retained = std::max(std::size_t(1), (items.size() + 3) / 4);\n        auto &model = models[std::size_t(level)];\n        for (int c = 0; c < 3; ++c) {\n            std::vector<float> sigmas;\n            for (std::size_t i = 0; i < retained; ++i) sigmas.push_back(items[i].sigma[c]);\n            model.sigma[c] = median(sigmas);\n        }\n        cv::Matx33d sums = cv::Matx33d::zeros();\n        for (std::size_t i = 0; i < retained; ++i) for (auto v : items[i].samples) {\n            cv::Vec3d z{};\n            for (int c = 0; c < 3; ++c) if (model.sigma[c] > 0)\n                z[c] = std::clamp((double(v[c]) - items[i].center[c]) / model.sigma[c], -3., 3.);\n            for (int c = 0; c < 3; ++c) for (int k = 0; k < 3; ++k) sums(c, k) += z[c] * z[k];\n        }\n        cv::Matx33f correlation = cv::Matx33f::zeros(), regularized = cv::Matx33f::eye();\n        for (int c = 0; c < 3; ++c) {\n            correlation(c, c) = model.sigma[c] > 0 ? 1.f : 0.f;\n            for (int k = 0; k < c; ++k) {\n                const double denominator = std::sqrt(sums(c, c) * sums(k, k));\n                const float rho = denominator > 0 ? float(std::clamp(sums(c, k) / denominator, -.95, .95)) : 0.f;\n                correlation(c, k) = correlation(k, c) = rho;\n                // Shrink toward diagonal: stable even with strongly correlated channels.\n                regularized(c, k) = regularized(k, c) = .25f * rho;\n            }\n        }\n        bool invertible = false;\n        model.inverseCorrelation = regularized.inv(cv::DECOMP_CHOLESKY, &invertible);\n        if (!invertible) return false;\n        for (int c = 0; c < 3; ++c) for (int k = 0; k < 3; ++k)\n            model.expectedJointEnergy += model.inverseCorrelation(c, k) * correlation(k, c);\n    }\n    return true;\n}\n\nbool boxMean(const cv::Mat &source, cv::Mat &out, int radius, const std::function<bool()> &stop)\n{\n    cv::Mat horizontal(source.size(), source.type()); out.create(source.size(), source.type());\n    const float scale = 1.f / float(2 * radius + 1);\n    for (int y = 0; y < source.rows; ++y) {\n        if ((y & 15) == 0 && stop()) return false;\n        for (int x = 0; x < source.cols; ++x) {\n            cv::Vec4f sum{};\n            for (int k = -radius; k <= radius; ++k) sum += source.at<cv::Vec4f>(y, reflect(x + k, source.cols));\n            horizontal.at<cv::Vec4f>(y, x) = sum * scale;\n        }\n    }\n    for (int y = 0; y < source.rows; ++y) {\n        if ((y & 15) == 0 && stop()) return false;\n        for (int x = 0; x < source.cols; ++x) {\n            cv::Vec4f sum{};\n            for (int k = -radius; k <= radius; ++k) sum += horizontal.at<cv::Vec4f>(reflect(y + k, source.rows), x);\n            out.at<cv::Vec4f>(y, x) = sum * scale;\n        }\n    }\n    return true;\n}\n\nbool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margin,\n          const cv::Vec3f &inverseGains, const std::array<int, Levels> &steps,\n          const std::array<Noise, Levels> &models, const cv::Vec3f &strength,\n          int radius, const std::function<bool()> &stop)\n{\n    Pyramid p;\n    if (!pyramid(patch(source, core, margin, inverseGains), p, steps, stop)) return false;\n    for (int y = 0; y < core.height; ++y)\n        std::fill_n(delta.ptr<cv::Vec3f>(core.y + y) + core.x, core.width, cv::Vec3f{});\n    for (int level = 0; level < Levels; ++level) {\n        const auto &model = models[std::size_t(level)];\n        if (model.expectedJointEnergy <= 0) continue;\n        const auto &detail = p.detail[std::size_t(level)];\n        cv::Mat energy(detail.size(), CV_32FC4);\n        for (int y = 0; y < detail.rows; ++y) {\n            if ((y & 15) == 0 && stop()) return false;\n            const auto *d = detail.ptr<cv::Vec3f>(y); auto *e = energy.ptr<cv::Vec4f>(y);\n            for (int x = 0; x < detail.cols; ++x) {\n                cv::Vec3f z{};\n                for (int c = 0; c < 3; ++c) if (model.sigma[c] > 0)\n                    z[c] = float(std::clamp(double(d[x][c]) / model.sigma[c], -1e6, 1e6));\n                const auto joint = model.inverseCorrelation * z;\n                e[x] = {z[0] * z[0], z[1] * z[1], z[2] * z[2], std::max(0.f, z.dot(joint))};\n            }\n        }\n        cv::Mat local;\n        if (!boxMean(energy, local, radius, stop)) return false;\n        for (int y = 0; y < core.height; ++y) {\n            if ((y & 15) == 0 && stop()) return false;\n            auto *out = delta.ptr<cv::Vec3f>(core.y + y) + core.x;\n            const auto *d = detail.ptr<cv::Vec3f>(margin + y) + margin;\n            const auto *e = local.ptr<cv::Vec4f>(margin + y) + margin;\n            for (int x = 0; x < core.width; ++x) {\n                const float shared = std::clamp(1.f - model.expectedJointEnergy / std::max(e[x][3], model.expectedJointEnergy), 0.f, 1.f);\n                for (int c = 0; c < 3; ++c) if (strength[c] > 0 && model.sigma[c] > 0) {\n                    const float individual = std::clamp(1.f - 1.f / std::max(e[x][c], 1.f), 0.f, 1.f);\n                    out[x][c] -= strength[c] * (1.f - std::max(individual, shared)) * d[x][c];\n                }\n            }\n        }\n    }\n    return true;\n}\n\nstruct JoinAll\n{\n    std::vector<std::thread> &threads;\n    ~JoinAll() { for (auto &thread : threads) if (thread.joinable()) thread.join(); }\n};\n} // namespace\n\nint workerThreads()\n{\n    const unsigned host = std::thread::hardware_concurrency();\n    return int(std::max(1u, std::min(8u, host > 1 ? host - 1 : 1)));\n}\n\nbool identity(const Settings &settings)\n{\n    return settings.luminance == 0 && settings.chrominance == 0;\n}\n\nbool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,\n           const std::function<bool()> &cancelled)\n{\n    if (cameraRgb.empty() || cameraRgb.dims != 2 || cameraRgb.type() != CV_32FC3 ||\n        settings.luminance < 0 || settings.luminance > 100 || settings.chrominance < 0 || settings.chrominance > 100) return false;\n    if (identity(settings)) return true;\n    try {\n        const auto stop = [&] { return cancelled && cancelled(); };\n        if (stop() || !validContext(context) || !cv::checkRange(cameraRgb)) return false;\n        const cv::Vec3f gains(float(context.gains[0]), float(.5 * context.gains[1] + .5 * context.gains[3]), float(context.gains[2]));\n        cv::Vec3f inverseGains;\n        for (int c = 0; c < 3; ++c) {\n            if (!std::isfinite(gains[c]) || gains[c] <= 0) return false;\n            inverseGains[c] = 1.f / gains[c];\n            if (!std::isfinite(inverseGains[c])) return false;\n        }\n        std::array<int, Levels> steps{};\n        for (int i = 0; i < Levels; ++i) steps[std::size_t(i)] = std::max(1, int(std::lround((1 << i) * context.pixelScale)));\n        const int radius = std::max(1, int(std::lround(3 * context.pixelScale)));\n        int margin = radius;\n        for (int step : steps) margin += 2 * step;\n        std::array<Noise, Levels> models;\n        if (!estimate(cameraRgb, inverseGains, steps, margin, models, stop)) return false;\n        bool measured = false;\n        for (const auto &m : models) for (int c = 0; c < 3; ++c) if (m.sigma[c] > 0) measured = true;\n        if (!measured) return true;\n        cv::Mat delta(cameraRgb.size(), CV_32FC3);\n        std::vector<cv::Rect> tiles;\n        for (int y = 0; y < cameraRgb.rows; y += TileSize) for (int x = 0; x < cameraRgb.cols; x += TileSize)\n            tiles.emplace_back(x, y, std::min(TileSize, cameraRgb.cols - x), std::min(TileSize, cameraRgb.rows - y));\n        std::atomic<std::size_t> next{0}; std::atomic<bool> stopped{false};\n        const cv::Vec3f strength(settings.luminance / 100.f, settings.chrominance / 100.f, settings.chrominance / 100.f);\n        const auto work = [&](bool caller) {\n            try {\n                const auto halt = [&] {\n                    if (stopped.load()) return true;\n                    if (caller && stop()) { stopped.store(true); return true; }\n                    return false;\n                };\n                for (std::size_t i; (i = next.fetch_add(1)) < tiles.size();) {\n                    if (halt() || !tile(cameraRgb, delta, tiles[i], margin, inverseGains, steps, models, strength, radius, halt)) {\n                        stopped.store(true); return;\n                    }\n                }\n            } catch (...) { stopped.store(true); }\n        };\n        std::vector<std::thread> pool; JoinAll join{pool};\n        const int workers = std::min(workerThreads(), int(tiles.size()));\n        pool.reserve(std::size_t(workers));\n        try { for (int i = 1; i < workers; ++i) pool.emplace_back(work, false); }\n        catch (...) { stopped.store(true); throw; }\n        work(true);\n        for (auto &thread : pool) if (thread.joinable()) thread.join();\n        if (stopped.load() || stop() || !cv::checkRange(delta)) return false;\n        // Balance signed corrections per opponent axis, moving corrections toward\n        // zero, not adding an offset to unchanged areas. Preserve DC without clamps.\n        cv::Vec3d positive{}, negative{};\n        for (int y = 0; y < delta.rows; ++y) {\n            if ((y & 15) == 0 && stop()) return false;\n            const auto *d = delta.ptr<cv::Vec3f>(y);\n            for (int x = 0; x < delta.cols; ++x) for (int c = 0; c < 3; ++c) {\n                positive[c] += std::max(0., double(d[x][c])); negative[c] += std::max(0., -double(d[x][c]));\n            }\n        }\n        cv::Vec3f plus, minus;\n        for (int c = 0; c < 3; ++c) {\n            plus[c] = positive[c] > 0 ? float(std::min(1., negative[c] / positive[c])) : 1.f;\n            minus[c] = negative[c] > 0 ? float(std::min(1., positive[c] / negative[c])) : 1.f;\n        }\n        for (int y = 0; y < delta.rows; ++y) {\n            if ((y & 15) == 0 && stop()) return false;\n            const auto *in = cameraRgb.ptr<cv::Vec3f>(y); auto *out = delta.ptr<cv::Vec3f>(y);\n            for (int x = 0; x < delta.cols; ++x) {\n                cv::Vec3f d = out[x];\n                for (int c = 0; c < 3; ++c) d[c] *= d[c] > 0 ? plus[c] : minus[c];\n                out[x] = in[x] + cv::Vec3f(d[0] + d[1] - .5f * d[2], d[0] + .5f * d[2], d[0] - d[1] - .5f * d[2]).mul(gains);\n            }\n        }\n        if (stop() || !cv::checkRange(delta)) return false;\n        cameraRgb = std::move(delta);\n        return true;\n    } catch (...) { return false; }\n}\n} // namespace CameraDenoise\n"
+    },
+    "tests/raw_bench/camera_denoise_leakage.cpp": {
+      "sha256": "0e15280eefde17cf0106fc892144f65bee1bb909665db75755d39a33391ae68b",
+      "text": "#include \"CameraDenoise.h\"\n#include \"CameraProfileEngine.h\"\n#include \"RawDecoder.h\"\n#include \"WorkingColorSpace.h\"\n#include <QCoreApplication>\n#include <QCommandLineParser>\n#include <QCryptographicHash>\n#include <QDateTime>\n#include <QFile>\n#include <QJsonArray>\n#include <QJsonDocument>\n#include <QJsonObject>\n#include <opencv2/imgproc.hpp>\n#include <algorithm>\n#include <cmath>\n#include <iostream>\n#include <stdexcept>\n\nnamespace {\nvoid require(bool ok, const char *message) { if (!ok) throw std::runtime_error(message); }\nQString hash(const QString &path)\n{\n    QFile f(path); require(f.open(QIODevice::ReadOnly), \"Cannot hash source\");\n    QCryptographicHash h(QCryptographicHash::Sha256); require(h.addData(&f), \"Hash read failed\");\n    return QString::fromLatin1(h.result().toHex());\n}\ncv::Mat render(CameraProfileEngine::DcpWorkingContext context, const cv::Mat &camera)\n{\n    context.cameraRgb = camera;\n    cv::Mat out; QString error;\n    if (!CameraProfileEngine::renderFromCameraSignal(context, int(std::lround(context.sourceKelvin)), 0, 0, out, &error))\n        throw std::runtime_error(error.toStdString());\n    require(out.type() == CV_32FC3 && cv::checkRange(out), \"Invalid profile output\");\n    return out;\n}\ncv::Mat intensity(const cv::Mat &camera, const cv::Vec3f &gains)\n{\n    cv::Mat out(camera.size(), CV_32F);\n    for (int y=0; y<out.rows; ++y) for (int x=0; x<out.cols; ++x) {\n        const auto v=camera.at<cv::Vec3f>(y,x);\n        out.at<float>(y,x)=.25f*v[0]/gains[0]+.5f*v[1]/gains[1]+.25f*v[2]/gains[2];\n    }\n    return out;\n}\ncv::Mat luminance(const cv::Mat &working)\n{\n    cv::Mat out(working.size(),CV_32F);\n    for(int y=0;y<out.rows;++y)for(int x=0;x<out.cols;++x)\n        out.at<float>(y,x)=WorkingColor::luminance(working.at<cv::Vec3f>(y,x));\n    return out;\n}\ndouble stddev(const cv::Mat &m)\n{\n    cv::Scalar mean,sigma; cv::meanStdDev(m,mean,sigma); return sigma[0];\n}\ndouble rms(const cv::Mat &m) { return cv::norm(m,cv::NORM_L2)/std::sqrt(double(m.total())); }\nQJsonObject measures(const cv::Mat &working,const cv::Rect &roi)\n{\n    cv::Mat display(working.size(),CV_32FC3);\n    for(int y=0;y<working.rows;++y)for(int x=0;x<working.cols;++x) {\n        auto v=WorkingColor::toSrgb()*cv::Vec3d(working.at<cv::Vec3f>(y,x));\n        auto &out=display.at<cv::Vec3f>(y,x);\n        for(int c=0;c<3;++c) out[c]=float(std::lround(255*std::clamp(WorkingColor::srgbEncode(v[c]),0.,1.)));\n    }\n    cv::Mat y(display.size(),CV_32F),co(y.size(),CV_32F),cg(y.size(),CV_32F);\n    for(int row=0;row<y.rows;++row)for(int x=0;x<y.cols;++x) {\n        const auto v=display.at<cv::Vec3f>(row,x);\n        y.at<float>(row,x)=.2126f*v[0]+.7152f*v[1]+.0722f*v[2];\n        co.at<float>(row,x)=.5f*(v[0]-v[2]); cg.at<float>(row,x)=v[1]-.5f*(v[0]+v[2]);\n    }\n    cv::Mat by,bco,bcg; cv::GaussianBlur(y,by,{},2); cv::GaussianBlur(co,bco,{},2); cv::GaussianBlur(cg,bcg,{},2);\n    const auto yy=luminance(working);cv::Mat sy;cv::GaussianBlur(yy,sy,{},2);\n    const cv::Mat hpY=y-by,hpCo=co-bco,hpCg=cg-bcg,hpLinear=yy-sy;\n    return {{\"display_y_mean\",cv::mean(y(roi))[0]}, {\"display_y_highpass_sigma2_std\",stddev(hpY(roi))},\n            {\"display_chroma_highpass_sigma2_rms_std\",std::hypot(stddev(hpCo(roi)),stddev(hpCg(roi)))},\n            {\"display_chroma_lowpass_sigma2_rms_std\",std::hypot(stddev(bco(roi)),stddev(bcg(roi)))},\n            {\"linear_rec2020_y_mean\",cv::mean(yy(roi))[0]}, {\"linear_rec2020_y_highpass_sigma2_std\",stddev(hpLinear(roi))}};\n}\n// STUDY ONLY: finite differences of the actual profile, not a production DCP hook.\n// Project chroma correction onto the tangent plane of rendered linear Y, along\n// the camera's neutral direction. Clipped/ill-conditioned derivatives abstain.\ncv::Mat projected(const CameraProfileEngine::DcpWorkingContext &context,const cv::Mat &source,\n                  const cv::Mat &filtered,const cv::Vec3f &gains,QJsonObject &diagnostic)\n{\n    constexpr float epsilon=.0002f;\n    cv::Mat gradient(source.size(),CV_32FC3);\n    for(int c=0;c<3;++c) {\n        auto plus=source.clone(),minus=source.clone();\n        for(int y=0;y<source.rows;++y)for(int x=0;x<source.cols;++x) {\n            plus.at<cv::Vec3f>(y,x)[c]+=epsilon*gains[c];\n            minus.at<cv::Vec3f>(y,x)[c]-=epsilon*gains[c];\n        }\n        const auto yp=luminance(render(context,plus)),ym=luminance(render(context,minus));\n        for(int y=0;y<source.rows;++y)for(int x=0;x<source.cols;++x)\n            gradient.at<cv::Vec3f>(y,x)[c]=(yp.at<float>(y,x)-ym.at<float>(y,x))/(2*epsilon*gains[c]);\n    }\n    auto out=filtered.clone(); double abstained=0,limited=0;\n    for(int y=0;y<source.rows;++y)for(int x=0;x<source.cols;++x) {\n        const auto g=gradient.at<cv::Vec3f>(y,x),d=filtered.at<cv::Vec3f>(y,x)-source.at<cv::Vec3f>(y,x);\n        const double denominator=g.dot(gains);\n        if(!std::isfinite(denominator)||denominator<=1e-6) {out.at<cv::Vec3f>(y,x)=source.at<cv::Vec3f>(y,x);++abstained;continue;}\n        const double shift=g.dot(d)/denominator;\n        const double bound=std::max({std::abs(d[0]/gains[0]),std::abs(d[1]/gains[1]),std::abs(d[2]/gains[2])});\n        const double bounded=std::clamp(shift,-bound,bound); limited+=bounded!=shift;\n        out.at<cv::Vec3f>(y,x)-=gains*float(bounded);\n    }\n    diagnostic={{\"abstained_fraction\",abstained/source.total()},{\"limited_fraction\",limited/source.total()},\n                {\"finite_difference_epsilon_unbalanced_camera\",epsilon}};\n    return out;\n}\n}\n\nint main(int argc,char **argv)\n{\n    QCoreApplication app(argc,argv);QCommandLineParser p;p.addHelpOption();\n    for(const auto *key:{\"input\",\"manifest\",\"profile-root\",\"label\"})p.addOption(QCommandLineOption(key,key,\"value\"));\n    p.process(app);\n    try {\n        for(const auto *key:{\"input\",\"manifest\",\"profile-root\",\"label\"})require(p.isSet(key),\"Missing argument\");\n        cv::setNumThreads(1);\n        RawDecoder::Options options;options.automaticWhiteBalance=false;options.signedDevelopment=true;\n        options.retainPreLensSignal=true;options.preferCameraNeutral=true;\n        options.automaticLcpSelection=false;options.lensCorrectionEnabled=false;options.chromaticAberrationEnabled=false;\n        options.useNormalizationEnvironment=false;options.normalizationManifest=p.value(\"manifest\");\n        options.profileDirectories={p.value(\"profile-root\")};\n        ImageMetadata meta;QString error;\n        auto loaded=RawDecoder::decode(p.value(\"input\"),options,&meta,&error);\n        if(loaded.isNull()||!loaded.dcpContext)throw std::runtime_error(error.toStdString());\n        auto full=*loaded.dcpContext;loaded={};\n        CameraDenoise::Context context;\n        for(int c=0;c<3;++c) {require(full.cameraNeutral[c]>0,\"Missing actual gains\");context.gains[size_t(c)]=1/full.cameraNeutral[c];}\n        context.gains[3]=context.gains[1];\n        const double minimum=*std::min_element(context.gains.begin(),context.gains.end());\n        for(auto &v:context.gains)v/=minimum;\n        const cv::Vec3f gains(float(context.gains[0]),float(context.gains[1]),float(context.gains[2]));\n        QJsonArray patches;\n        for(double position:{.25,.5,.75}) {\n            const int side=std::min({768,full.cameraRgb.cols,full.cameraRgb.rows});\n            const cv::Rect area(int((full.cameraRgb.cols-side)*position),int((full.cameraRgb.rows-side)*position),side,side);\n            const int margin=(side-420)/2; const cv::Rect roi(margin,margin,std::min(420,side),std::min(420,side));\n            auto source=full.cameraRgb(area).clone();auto filtered=source;\n            require(CameraDenoise::apply(filtered,{0,50},context),\"Filter failed\");\n            const auto baseline=render(full,source),rendered=render(full,filtered);\n            QJsonObject projection;const auto candidate=projected(full,source,filtered,gains,projection);\n            const auto constrained=render(full,candidate);\n            const auto inputI=intensity(source,gains),outputI=intensity(filtered,gains);\n            const auto baselineY=luminance(baseline),filteredY=luminance(rendered),constrainedY=luminance(constrained);\n            const cv::Mat deltaI=outputI-inputI,deltaY=filteredY-baselineY,deltaProjected=constrainedY-baselineY;\n            patches.append(QJsonObject{{\"camera_roi\",QJsonArray{area.x,area.y,area.width,area.height}},\n                {\"measurement_roi_within_camera_roi\",QJsonArray{roi.x,roi.y,roi.width,roi.height}},\n                {\"B0\",measures(baseline,roi)},{\"chroma50\",measures(rendered,roi)},{\"projected_chroma50\",measures(constrained,roi)},\n                {\"camera_intensity_delta_rms\",rms(deltaI(roi))},{\"rendered_linear_y_delta_rms\",rms(deltaY(roi))},\n                {\"projected_linear_y_delta_rms\",rms(deltaProjected(roi))},{\"projection\",projection}});\n        }\n        const QJsonObject result{{\"created_utc\",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n            {\"engine_revision\",IPR_ENGINE_REVISION},{\"label\",p.value(\"label\")},{\"source\",p.value(\"input\")},\n            {\"source_sha256\",hash(p.value(\"input\"))},{\"manifest_sha256\",hash(p.value(\"manifest\"))},\n            {\"profile\",full.profilePath},{\"profile_sha256\",hash(full.profilePath)},\n            {\"camera_denoise_source_sha256\",hash(QStringLiteral(IPR_SOURCE_ROOT_PATH \"/src/raw/CameraDenoise.cpp\"))},\n            {\"patches\",patches}};\n        std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\\n';return 0;\n    } catch(const std::exception &e) {std::cerr<<e.what()<<'\\n';return 1;}\n}\n"
+    },
+    "tests/raw_bench/run_denoise_leakage.py": {
+      "sha256": "6fb9b0af520f6c0c1c71cdfadbd4aab22c19a1f48b98a4274a599086b7be69df",
+      "text": "\"\"\"Run camera-axis/profile leakage witnesses; canonical JSON, no TIFF outputs.\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nimport sys\n\n\ndef sha256(path):\n    return hashlib.sha256(path.read_bytes()).hexdigest()\n\n\ndef main():\n    p = argparse.ArgumentParser(description=__doc__)\n    p.add_argument('--tool', type=Path, required=True)\n    p.add_argument('--base', type=Path, required=True)\n    p.add_argument('--label', required=True)\n    p.add_argument('--profile-root', type=Path, required=True)\n    p.add_argument('--runtime-dir', type=Path, action='append', required=True)\n    a = p.parse_args()\n    root = Path(__file__).resolve().parents[2]\n    stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n    env = os.environ.copy()\n    env['PATH'] = os.pathsep.join(str(p.resolve()) for p in a.runtime_dir) + os.pathsep + env.get('PATH', '')\n    paths = ['src/raw/CameraDenoise.h', 'src/raw/CameraDenoise.cpp',\n             'tests/raw_bench/camera_denoise_leakage.cpp', 'tests/raw_bench/run_denoise_leakage.py',\n             'tests/raw_bench/production/CMakeLists.txt']\n    proof = dict(schema_version=1, created_utc=stamp, label=a.label,\n                 tool_sha256=sha256(a.tool),\n                 revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),\n                 sources={name: dict(sha256=sha256(root/name), text=(root/name).read_text(encoding='utf-8')) for name in paths},\n                 scenes=[], limits=[\n                     'Camera patches, not the full-frame filter estimates or Claude original ROIs.',\n                     'Three fixed diagonal 768px patches, central 420px measured; optics off.',\n                     'No clean truth: highpass/lowpass statistics include real structure.',\n                     'Projection is a finite-difference study, not a production profile API.',\n                     'No claim that preserving linear Y preserves clipped sRGB luma.',\n                     'No profile bounds or GUI changes.'])\n    failed = False\n    for name in ('7Y6A7599.CR3', 'IMG_7958.CR2', '6V1A9539.CR3'):\n        command = [str(a.tool.resolve()), '--input', str((a.base/name).resolve()),\n                   '--manifest', str(root/'config/raw-normalization.json'),\n                   '--profile-root', str(a.profile_root.resolve()), '--label', a.label]\n        try:\n            result = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True,\n                                    encoding='utf-8', errors='replace', timeout=180)\n            record = dict(argv=command, returncode=result.returncode, stderr=result.stderr)\n            if result.returncode == 0:\n                record['measurements'] = json.loads(result.stdout)\n            else:\n                record['stdout'] = result.stdout\n                failed = True\n        except subprocess.TimeoutExpired:\n            record = dict(argv=command, error='timeout', timeout_seconds=180)\n            failed = True\n        proof['scenes'].append(record)\n        print(name, 'failed' if failed else 'measured', flush=True)\n        if failed:\n            break\n    proof['verdict'] = 'fail' if failed else 'measured_not_quality_validation'\n    output = root/'docs/validation/raw'/f'camera-denoise-leakage-v001-{stamp}.json'\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(proof, handle, ensure_ascii=False, indent=2, allow_nan=False)\n    print(output, proof['verdict'], flush=True)\n    return int(failed)\n\n\nif __name__ == '__main__':\n    sys.exit(main())\n"
+    },
+    "tests/raw_bench/production/CMakeLists.txt": {
+      "sha256": "1d0845ce2456d47c3a52e0e0b2ce8cc6d8e03599b5d53c74584cebde48c0dab6",
+      "text": "cmake_minimum_required(VERSION 3.21)\nproject(IPRProductionRawBench LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nif(NOT IPR_ENGINE_SOURCE OR NOT IPR_ENGINE_REVISION)\n    message(FATAL_ERROR \"Explicit immutable engine source and revision are required\")\nendif()\nset(BUILD_TESTING OFF CACHE BOOL \"\" FORCE)\nset(IPR_DEPLOY_MODE system CACHE STRING \"\" FORCE)\nadd_subdirectory(\"${IPR_ENGINE_SOURCE}\" engine EXCLUDE_FROM_ALL)\nadd_executable(iprProductionRawCapture ../production_capture.cpp)\ntarget_link_libraries(iprProductionRawCapture PRIVATE iprEngine)\ntarget_compile_definitions(iprProductionRawCapture PRIVATE IPR_ENGINE_REVISION=\"${IPR_ENGINE_REVISION}\")\nadd_executable(cameraDenoiseLeakageProbe ../camera_denoise_leakage.cpp)\ntarget_link_libraries(cameraDenoiseLeakageProbe PRIVATE iprEngine)\ntarget_compile_definitions(cameraDenoiseLeakageProbe PRIVATE IPR_ENGINE_REVISION=\"${IPR_ENGINE_REVISION}\"\n    IPR_SOURCE_ROOT_PATH=\"${IPR_ENGINE_SOURCE}\")\noption(IPR_BENCH_SIGNED_DEVELOPMENT \"Enable the F1 signedDevelopment API; off for immutable pre-F1 reference\" OFF)\nif(IPR_BENCH_SIGNED_DEVELOPMENT)\n    target_compile_definitions(iprProductionRawCapture PRIVATE IPR_BENCH_SIGNED_DEVELOPMENT=1)\n    add_executable(iprRawFloatContract ../float_contract.cpp)\n    target_link_libraries(iprRawFloatContract PRIVATE iprEngine)\n    target_compile_definitions(iprRawFloatContract PRIVATE IPR_ENGINE_REVISION=\"${IPR_ENGINE_REVISION}\")\nendif()\nif(WIN32)\n    target_link_libraries(iprProductionRawCapture PRIVATE Psapi)\nendif()\n"
+    }
+  },
+  "scenes": [
+    {
+      "argv": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\denoise-study\\Release\\cameraDenoiseLeakageProbe.exe",
+        "--input",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "--manifest",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\config\\raw-normalization.json",
+        "--profile-root",
+        "C:\\ProgramData\\Adobe\\CameraRaw",
+        "--label",
+        "n2-three-scales"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "measurements": {
+        "camera_denoise_source_sha256": "f078620f34ba0ceacf2646585e04f2c95ef36312c1bf853fa173624edf00a9de",
+        "created_utc": "2026-10-29T12:57:24.398Z",
+        "engine_revision": "488421570da20fdd18d9e1737aea0bab541f8b96",
+        "label": "n2-three-scales",
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "patches": [
+          {
+            "B0": {
+              "display_chroma_highpass_sigma2_rms_std": 18.08930740565226,
+              "display_chroma_lowpass_sigma2_rms_std": 14.461808214771525,
+              "display_y_highpass_sigma2_std": 11.511818039415092,
+              "display_y_mean": 188.178310020516,
+              "linear_rec2020_y_highpass_sigma2_std": 0.06245142538017386,
+              "linear_rec2020_y_mean": 0.5166337957220097
+            },
+            "camera_intensity_delta_rms": 8.951104132661293e-09,
+            "camera_roi": [
+              1554,
+              973,
+              768,
+              768
+            ],
+            "chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 18.53932575428922,
+              "display_chroma_lowpass_sigma2_rms_std": 12.191423695423484,
+              "display_y_highpass_sigma2_std": 10.96928752587662,
+              "display_y_mean": 188.34696335074582,
+              "linear_rec2020_y_highpass_sigma2_std": 0.059488526457791596,
+              "linear_rec2020_y_mean": 0.5166615762022617
+            },
+            "measurement_roi_within_camera_roi": [
+              174,
+              174,
+              420,
+              420
+            ],
+            "projected_chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 19.13916450029773,
+              "display_chroma_lowpass_sigma2_rms_std": 11.743553818710005,
+              "display_y_highpass_sigma2_std": 11.509292412368977,
+              "display_y_mean": 188.33537022264096,
+              "linear_rec2020_y_highpass_sigma2_std": 0.062191320063003125,
+              "linear_rec2020_y_mean": 0.5168453233982193
+            },
+            "projected_linear_y_delta_rms": 0.0029542443922519566,
+            "projection": {
+              "abstained_fraction": 0.00034417046440972225,
+              "finite_difference_epsilon_unbalanced_camera": 0.00019999999494757503,
+              "limited_fraction": 0.0934414333767361
+            },
+            "rendered_linear_y_delta_rms": 0.00590207356656675
+          },
+          {
+            "B0": {
+              "display_chroma_highpass_sigma2_rms_std": 24.809373004861154,
+              "display_chroma_lowpass_sigma2_rms_std": 30.286284722176593,
+              "display_y_highpass_sigma2_std": 13.631417371042023,
+              "display_y_mean": 161.7916914627,
+              "linear_rec2020_y_highpass_sigma2_std": 0.05113914862433792,
+              "linear_rec2020_y_mean": 0.4571956694893162
+            },
+            "camera_intensity_delta_rms": 8.607953282019112e-09,
+            "camera_roi": [
+              3108,
+              1946,
+              768,
+              768
+            ],
+            "chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 23.84913174018503,
+              "display_chroma_lowpass_sigma2_rms_std": 29.803583506660377,
+              "display_y_highpass_sigma2_std": 13.517213620236529,
+              "display_y_mean": 161.67925690907268,
+              "linear_rec2020_y_highpass_sigma2_std": 0.05037524823321434,
+              "linear_rec2020_y_mean": 0.45682163713471924
+            },
+            "measurement_roi_within_camera_roi": [
+              174,
+              174,
+              420,
+              420
+            ],
+            "projected_chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 23.919518477728566,
+              "display_chroma_lowpass_sigma2_rms_std": 29.71105624945516,
+              "display_y_highpass_sigma2_std": 13.657128501334187,
+              "display_y_mean": 162.04311614557898,
+              "linear_rec2020_y_highpass_sigma2_std": 0.05101549135483314,
+              "linear_rec2020_y_mean": 0.45715008060754364
+            },
+            "projected_linear_y_delta_rms": 0.0008701227662870957,
+            "projection": {
+              "abstained_fraction": 0.035466512044270836,
+              "finite_difference_epsilon_unbalanced_camera": 0.00019999999494757503,
+              "limited_fraction": 0.2073889838324653
+            },
+            "rendered_linear_y_delta_rms": 0.0019320995960278283
+          },
+          {
+            "B0": {
+              "display_chroma_highpass_sigma2_rms_std": 23.83741126504904,
+              "display_chroma_lowpass_sigma2_rms_std": 27.7374374846316,
+              "display_y_highpass_sigma2_std": 22.49677124025124,
+              "display_y_mean": 83.02849492732528,
+              "linear_rec2020_y_highpass_sigma2_std": 0.04871780593183089,
+              "linear_rec2020_y_mean": 0.136021878669142
+            },
+            "camera_intensity_delta_rms": 2.923142422297603e-09,
+            "camera_roi": [
+              4662,
+              2919,
+              768,
+              768
+            ],
+            "chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 20.323302561328372,
+              "display_chroma_lowpass_sigma2_rms_std": 26.3701006951853,
+              "display_y_highpass_sigma2_std": 22.310709241751177,
+              "display_y_mean": 82.93058221898754,
+              "linear_rec2020_y_highpass_sigma2_std": 0.04842094268592597,
+              "linear_rec2020_y_mean": 0.13491252470308518
+            },
+            "measurement_roi_within_camera_roi": [
+              174,
+              174,
+              420,
+              420
+            ],
+            "projected_chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 20.119028348150156,
+              "display_chroma_lowpass_sigma2_rms_std": 26.092844592092113,
+              "display_y_highpass_sigma2_std": 22.181388218972693,
+              "display_y_mean": 83.77551912343117,
+              "linear_rec2020_y_highpass_sigma2_std": 0.04876829993990156,
+              "linear_rec2020_y_mean": 0.1361954966075159
+            },
+            "projected_linear_y_delta_rms": 0.0010764404917123383,
+            "projection": {
+              "abstained_fraction": 0.037724812825520836,
+              "finite_difference_epsilon_unbalanced_camera": 0.00019999999494757503,
+              "limited_fraction": 0.0977664523654514
+            },
+            "rendered_linear_y_delta_rms": 0.0026628918277587514
+          }
+        ],
+        "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R7/Canon EOS R7 Camera Neutral.dcp",
+        "profile_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+      }
+    },
+    {
+      "argv": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\denoise-study\\Release\\cameraDenoiseLeakageProbe.exe",
+        "--input",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+        "--manifest",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\config\\raw-normalization.json",
+        "--profile-root",
+        "C:\\ProgramData\\Adobe\\CameraRaw",
+        "--label",
+        "n2-three-scales"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "measurements": {
+        "camera_denoise_source_sha256": "f078620f34ba0ceacf2646585e04f2c95ef36312c1bf853fa173624edf00a9de",
+        "created_utc": "2026-10-29T12:57:59.552Z",
+        "engine_revision": "488421570da20fdd18d9e1737aea0bab541f8b96",
+        "label": "n2-three-scales",
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "patches": [
+          {
+            "B0": {
+              "display_chroma_highpass_sigma2_rms_std": 7.599656900761186,
+              "display_chroma_lowpass_sigma2_rms_std": 20.475086536112006,
+              "display_y_highpass_sigma2_std": 14.296547976169872,
+              "display_y_mean": 99.38461478430263,
+              "linear_rec2020_y_highpass_sigma2_std": 0.03634081936938595,
+              "linear_rec2020_y_mean": 0.18905479029034009
+            },
+            "camera_intensity_delta_rms": 4.887471504365794e-09,
+            "camera_roi": [
+              1108,
+              674,
+              768,
+              768
+            ],
+            "chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 7.333014762548139,
+              "display_chroma_lowpass_sigma2_rms_std": 19.912655303562897,
+              "display_y_highpass_sigma2_std": 14.267614462338905,
+              "display_y_mean": 99.44422876694372,
+              "linear_rec2020_y_highpass_sigma2_std": 0.03629903196764181,
+              "linear_rec2020_y_mean": 0.1889173687085419
+            },
+            "measurement_roi_within_camera_roi": [
+              174,
+              174,
+              420,
+              420
+            ],
+            "projected_chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 7.347077291647076,
+              "display_chroma_lowpass_sigma2_rms_std": 19.898263864633105,
+              "display_y_highpass_sigma2_std": 14.274564901948398,
+              "display_y_mean": 99.46245821707915,
+              "linear_rec2020_y_highpass_sigma2_std": 0.03634079708374134,
+              "linear_rec2020_y_mean": 0.18907015737255692
+            },
+            "projected_linear_y_delta_rms": 5.751269015726119e-05,
+            "projection": {
+              "abstained_fraction": 1.1867947048611111e-05,
+              "finite_difference_epsilon_unbalanced_camera": 0.00019999999494757503,
+              "limited_fraction": 0.0009223090277777778
+            },
+            "rendered_linear_y_delta_rms": 0.0004040214723312695
+          },
+          {
+            "B0": {
+              "display_chroma_highpass_sigma2_rms_std": 6.318592729108387,
+              "display_chroma_lowpass_sigma2_rms_std": 28.23421853156821,
+              "display_y_highpass_sigma2_std": 8.065280954003862,
+              "display_y_mean": 54.546342521285865,
+              "linear_rec2020_y_highpass_sigma2_std": 0.03703778616608572,
+              "linear_rec2020_y_mean": 0.15636738741763917
+            },
+            "camera_intensity_delta_rms": 9.158712526775221e-09,
+            "camera_roi": [
+              2217,
+              1348,
+              768,
+              768
+            ],
+            "chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 6.250837229311314,
+              "display_chroma_lowpass_sigma2_rms_std": 28.229343588396276,
+              "display_y_highpass_sigma2_std": 8.066735671476549,
+              "display_y_mean": 54.52933673835902,
+              "linear_rec2020_y_highpass_sigma2_std": 0.03703763518955296,
+              "linear_rec2020_y_mean": 0.1563613662826378
+            },
+            "measurement_roi_within_camera_roi": [
+              174,
+              174,
+              420,
+              420
+            ],
+            "projected_chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 6.251157354386389,
+              "display_chroma_lowpass_sigma2_rms_std": 28.223762612072345,
+              "display_y_highpass_sigma2_std": 8.061265271732328,
+              "display_y_mean": 54.562178982650344,
+              "linear_rec2020_y_highpass_sigma2_std": 0.037037738655888386,
+              "linear_rec2020_y_mean": 0.15637158186716513
+            },
+            "projected_linear_y_delta_rms": 1.219615767754608e-05,
+            "projection": {
+              "abstained_fraction": 0.0009189181857638889,
+              "finite_difference_epsilon_unbalanced_camera": 0.00019999999494757503,
+              "limited_fraction": 0.16353861490885416
+            },
+            "rendered_linear_y_delta_rms": 3.2813938688293794e-05
+          },
+          {
+            "B0": {
+              "display_chroma_highpass_sigma2_rms_std": 1.6288776047446438,
+              "display_chroma_lowpass_sigma2_rms_std": 1.3277589291894398,
+              "display_y_highpass_sigma2_std": 1.4321748834470753,
+              "display_y_mean": 2.25811527512106,
+              "linear_rec2020_y_highpass_sigma2_std": 0.0004270953347647014,
+              "linear_rec2020_y_mean": 0.0006871408129828214
+            },
+            "camera_intensity_delta_rms": 3.7273044923125515e-11,
+            "camera_roi": [
+              3325,
+              2022,
+              768,
+              768
+            ],
+            "chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 1.2824188939554642,
+              "display_chroma_lowpass_sigma2_rms_std": 1.10037780528193,
+              "display_y_highpass_sigma2_std": 1.4520466462770967,
+              "display_y_mean": 2.1778048811430564,
+              "linear_rec2020_y_highpass_sigma2_std": 0.00043522681075605174,
+              "linear_rec2020_y_mean": 0.0006610937194157421
+            },
+            "measurement_roi_within_camera_roi": [
+              174,
+              174,
+              420,
+              420
+            ],
+            "projected_chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 1.2626925821600579,
+              "display_chroma_lowpass_sigma2_rms_std": 1.1296175767393535,
+              "display_y_highpass_sigma2_std": 1.4416041554096986,
+              "display_y_mean": 2.2895249749152433,
+              "linear_rec2020_y_highpass_sigma2_std": 0.0004316013993964729,
+              "linear_rec2020_y_mean": 0.0006952366052317897
+            },
+            "projected_linear_y_delta_rms": 2.0300228051171255e-05,
+            "projection": {
+              "abstained_fraction": 0.0251312255859375,
+              "finite_difference_epsilon_unbalanced_camera": 0.00019999999494757503,
+              "limited_fraction": 0.07030232747395833
+            },
+            "rendered_linear_y_delta_rms": 5.327335420129134e-05
+          }
+        ],
+        "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS 60D/Canon EOS 60D Camera Neutral.dcp",
+        "profile_sha256": "9e60085ae947ce8658e7682fe1a62797e8c4d9176f624f96a22829123875fe9d",
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+        "source_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1"
+      }
+    },
+    {
+      "argv": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\denoise-study\\Release\\cameraDenoiseLeakageProbe.exe",
+        "--input",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+        "--manifest",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\config\\raw-normalization.json",
+        "--profile-root",
+        "C:\\ProgramData\\Adobe\\CameraRaw",
+        "--label",
+        "n2-three-scales"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "measurements": {
+        "camera_denoise_source_sha256": "f078620f34ba0ceacf2646585e04f2c95ef36312c1bf853fa173624edf00a9de",
+        "created_utc": "2026-10-29T12:58:38.229Z",
+        "engine_revision": "488421570da20fdd18d9e1737aea0bab541f8b96",
+        "label": "n2-three-scales",
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "patches": [
+          {
+            "B0": {
+              "display_chroma_highpass_sigma2_rms_std": 4.14395079619142,
+              "display_chroma_lowpass_sigma2_rms_std": 8.943653450228627,
+              "display_y_highpass_sigma2_std": 5.025474567542019,
+              "display_y_mean": 32.404024179038885,
+              "linear_rec2020_y_highpass_sigma2_std": 0.005331471832259077,
+              "linear_rec2020_y_mean": 0.01986229093003371
+            },
+            "camera_intensity_delta_rms": 9.078768555964361e-10,
+            "camera_roi": [
+              967,
+              1547,
+              768,
+              768
+            ],
+            "chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 3.791846185527422,
+              "display_chroma_lowpass_sigma2_rms_std": 8.862092915395527,
+              "display_y_highpass_sigma2_std": 4.998624846747247,
+              "display_y_mean": 32.38826388712069,
+              "linear_rec2020_y_highpass_sigma2_std": 0.005315168112325928,
+              "linear_rec2020_y_mean": 0.01983204393746715
+            },
+            "measurement_roi_within_camera_roi": [
+              174,
+              174,
+              420,
+              420
+            ],
+            "projected_chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 3.793440587958779,
+              "display_chroma_lowpass_sigma2_rms_std": 8.857844173321096,
+              "display_y_highpass_sigma2_std": 5.007378127283831,
+              "display_y_mean": 32.43131095086028,
+              "linear_rec2020_y_highpass_sigma2_std": 0.005332795508135306,
+              "linear_rec2020_y_mean": 0.019866242093546413
+            },
+            "projected_linear_y_delta_rms": 3.534674049703144e-05,
+            "projection": {
+              "abstained_fraction": 0.00020514594184027778,
+              "finite_difference_epsilon_unbalanced_camera": 0.00019999999494757503,
+              "limited_fraction": 0.0077667236328125
+            },
+            "rendered_linear_y_delta_rms": 0.00011380786556943107
+          },
+          {
+            "B0": {
+              "display_chroma_highpass_sigma2_rms_std": 3.4936444390432504,
+              "display_chroma_lowpass_sigma2_rms_std": 11.886911423293606,
+              "display_y_highpass_sigma2_std": 3.8041209410620898,
+              "display_y_mean": 21.81150654583933,
+              "linear_rec2020_y_highpass_sigma2_std": 0.004435395451049159,
+              "linear_rec2020_y_mean": 0.015711730320750666
+            },
+            "camera_intensity_delta_rms": 8.174718624557635e-10,
+            "camera_roi": [
+              1935,
+              3095,
+              768,
+              768
+            ],
+            "chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 3.225513113274283,
+              "display_chroma_lowpass_sigma2_rms_std": 11.84466043106839,
+              "display_y_highpass_sigma2_std": 3.7820087961390514,
+              "display_y_mean": 21.794396457746117,
+              "linear_rec2020_y_highpass_sigma2_std": 0.004433085148398006,
+              "linear_rec2020_y_mean": 0.015695160788453823
+            },
+            "measurement_roi_within_camera_roi": [
+              174,
+              174,
+              420,
+              420
+            ],
+            "projected_chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 3.2446512996527077,
+              "display_chroma_lowpass_sigma2_rms_std": 11.837306164597882,
+              "display_y_highpass_sigma2_std": 3.7742830504892515,
+              "display_y_mean": 21.83482972059593,
+              "linear_rec2020_y_highpass_sigma2_std": 0.004435894769296715,
+              "linear_rec2020_y_mean": 0.015715459326142923
+            },
+            "projected_linear_y_delta_rms": 1.851159549258562e-05,
+            "projection": {
+              "abstained_fraction": 0.0050201416015625,
+              "finite_difference_epsilon_unbalanced_camera": 0.00019999999494757503,
+              "limited_fraction": 0.005482991536458333
+            },
+            "rendered_linear_y_delta_rms": 8.228845217470012e-05
+          },
+          {
+            "B0": {
+              "display_chroma_highpass_sigma2_rms_std": 3.998233952654152,
+              "display_chroma_lowpass_sigma2_rms_std": 14.40766912122571,
+              "display_y_highpass_sigma2_std": 5.015434304603534,
+              "display_y_mean": 23.54639098590092,
+              "linear_rec2020_y_highpass_sigma2_std": 0.007893567177392584,
+              "linear_rec2020_y_mean": 0.022069542903982085
+            },
+            "camera_intensity_delta_rms": 9.670972914182713e-10,
+            "camera_roi": [
+              2903,
+              4643,
+              768,
+              768
+            ],
+            "chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 3.7742996022753794,
+              "display_chroma_lowpass_sigma2_rms_std": 14.366540601092138,
+              "display_y_highpass_sigma2_std": 4.995603505626864,
+              "display_y_mean": 23.509043488684966,
+              "linear_rec2020_y_highpass_sigma2_std": 0.007876673250375957,
+              "linear_rec2020_y_mean": 0.022045241132962214
+            },
+            "measurement_roi_within_camera_roi": [
+              174,
+              174,
+              420,
+              420
+            ],
+            "projected_chroma50": {
+              "display_chroma_highpass_sigma2_rms_std": 3.776496937869802,
+              "display_chroma_lowpass_sigma2_rms_std": 14.362309542296561,
+              "display_y_highpass_sigma2_std": 5.018850201990858,
+              "display_y_mean": 23.582870735211166,
+              "linear_rec2020_y_highpass_sigma2_std": 0.00789348405080503,
+              "linear_rec2020_y_mean": 0.022078825261372066
+            },
+            "projected_linear_y_delta_rms": 4.843696021077369e-05,
+            "projection": {
+              "abstained_fraction": 0.0003323025173611111,
+              "finite_difference_epsilon_unbalanced_camera": 0.00019999999494757503,
+              "limited_fraction": 0.009519788953993056
+            },
+            "rendered_linear_y_delta_rms": 9.774135163228305e-05
+          }
+        ],
+        "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+        "source_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf"
+      }
+    }
+  ],
+  "limits": [
+    "Camera patches, not the full-frame filter estimates or Claude original ROIs.",
+    "Three fixed diagonal 768px patches, central 420px measured; optics off.",
+    "No clean truth: highpass/lowpass statistics include real structure.",
+    "Projection is a finite-difference study, not a production profile API.",
+    "No claim that preserving linear Y preserves clipped sRGB luma.",
+    "No profile bounds or GUI changes."
+  ],
+  "verdict": "measured_not_quality_validation"
+}

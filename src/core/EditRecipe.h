@@ -32,6 +32,10 @@ struct Settings
     int grain = 0;      // grain monochrome déterministe
     int denoiseLuminance = 0;
     int denoiseChrominance = 0;
+    // Experimental: a RAW is developed signed (values below the black kept) and the
+    // sliders act on its camera signal before the lens and colour profiles. A session
+    // switch of the editor, not stored in the sidecar.
+    bool denoiseBeforeProfile = false;
     int sharpeningAmount = 0;
     float sharpeningRadius = 1.0f;
     int sharpeningMasking = 0;

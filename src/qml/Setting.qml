@@ -50,6 +50,16 @@ Item {
             toneCurveModuleInstance.requestPaint()
     }
 
+    // A custom pair keeps the slider on its luminance, labelled as custom.
+    // Showing it must not send the amount back: that would replace the pair.
+    function reloadDenoiseAmount() {
+        const amount = editor.adjustmentValue("denoiseAmount")
+        denoiseAmountSlider.custom = amount < 0
+        denoiseAmountSlider.syncing = true
+        denoiseAmountSlider.value = amount < 0 ? editor.adjustmentValue("denoiseLuminance") : amount
+        denoiseAmountSlider.syncing = false
+    }
+
     function commitCurve() {
         editor.setToneCurve(activeCurve, curvePoints)
     }
@@ -147,6 +157,8 @@ Item {
             grainSlider.value = editor.adjustmentValue("grain")
             denoiseLuminanceSlider.value = editor.adjustmentValue("denoiseLuminance")
             denoiseChrominanceSlider.value = editor.adjustmentValue("denoiseChrominance")
+            root.reloadDenoiseAmount()
+            denoiseBeforeProfileCheck.checked = editor.adjustmentValue("denoiseBeforeProfile") > 0
             sharpeningAmountSlider.value = editor.adjustmentValue("sharpeningAmount")
             sharpeningRadiusSlider.value = editor.adjustmentValue("sharpeningRadius")
             sharpeningMaskingSlider.value = editor.adjustmentValue("sharpeningMasking")
@@ -627,33 +639,78 @@ Item {
                 textColor: root.textColor
                 title: qsTr("Réduction du bruit")
 
+                PreferenceCheckBox {
+                    id: denoiseBeforeProfileCheck
+                    objectName: "denoiseBeforeProfileCheck"
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    text: qsTr("Signal RAW signé, avant les profils (expérimental)")
+                    enabled: editor.hasImage
+                    onToggled: editor.setDenoiseBeforeProfile(checked)
+                }
+
+                // One amount drives both strengths through the engine's law;
+                // the advanced controls set them apart, shown as a custom pair.
                 AdjustmentControl {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
-                    id: denoiseLuminanceSlider
-                    label: qsTr("Bruit de luminance")
-                    valueText: Math.round(value)
+                    id: denoiseAmountSlider
+                    property bool custom: false
+                    property bool syncing: false
+                    label: qsTr("Réduction du bruit")
+                    valueText: custom ? qsTr("Perso.") : Math.round(value)
                     minimumValue: 0
                     maximumValue: 100
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
-                        if (editor)
-                            editor.setDenoiseLuminance(Math.round(value))
+                        if (editor && !syncing) {
+                            editor.setDenoiseAmount(Math.round(value))
+                            denoiseLuminanceSlider.value = editor.adjustmentValue("denoiseLuminance")
+                            denoiseChrominanceSlider.value = editor.adjustmentValue("denoiseChrominance")
+                            root.reloadDenoiseAmount()
+                        }
                     }
                 }
 
-                AdjustmentControl {
+                SettingsSection {
+                    objectName: "denoiseAdvancedSection"
+                    stateKey: "denoiseAdvanced"
+                    preferences: root.preferences
                     textColor: root.textColor
-                    secondaryTextColor: root.secondaryTextColor
-                    id: denoiseChrominanceSlider
-                    label: qsTr("Bruit de couleur")
-                    valueText: Math.round(value)
-                    minimumValue: 0
-                    maximumValue: 100
-                    adjustmentEnabled: editor.hasImage
-                    onValueEdited: function(value) {
-                        if (editor)
-                            editor.setDenoiseChrominance(Math.round(value))
+                    title: qsTr("Avancé")
+
+                    AdjustmentControl {
+                        textColor: root.textColor
+                        secondaryTextColor: root.secondaryTextColor
+                        id: denoiseLuminanceSlider
+                        label: qsTr("Bruit de luminance")
+                        valueText: Math.round(value)
+                        minimumValue: 0
+                        maximumValue: 100
+                        adjustmentEnabled: editor.hasImage
+                        onValueEdited: function(value) {
+                            if (editor) {
+                                editor.setDenoiseLuminance(Math.round(value))
+                                root.reloadDenoiseAmount()
+                            }
+                        }
+                    }
+
+                    AdjustmentControl {
+                        textColor: root.textColor
+                        secondaryTextColor: root.secondaryTextColor
+                        id: denoiseChrominanceSlider
+                        label: qsTr("Bruit de couleur")
+                        valueText: Math.round(value)
+                        minimumValue: 0
+                        maximumValue: 100
+                        adjustmentEnabled: editor.hasImage
+                        onValueEdited: function(value) {
+                            if (editor) {
+                                editor.setDenoiseChrominance(Math.round(value))
+                                root.reloadDenoiseAmount()
+                            }
+                        }
                     }
                 }
             }

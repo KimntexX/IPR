@@ -1,4 +1,5 @@
 #include "CameraProfileEngine.h"
+#include "CameraDenoise.h"
 #include "CameraSignal.h"
 #include "imageeditor.h"
 
@@ -24,6 +25,14 @@ public:
         settings.temperature = temperature;
         settings.tint = tint;
         settings.brightness = ev;
+        return ImageEditor::renderWorkingImage(source, settings);
+    }
+    static ColorPipeline::WorkingImage denoised(const ColorPipeline::WorkingImage &source, int temperature,
+                                                 int luminance, bool beforeProfile) {
+        ImageEditor::Settings settings;
+        settings.temperature = temperature;
+        settings.denoiseLuminance = luminance;
+        settings.denoiseBeforeProfile = beforeProfile;
         return ImageEditor::renderWorkingImage(source, settings);
     }
     static ColorPipeline::WorkingImage proxy(const ColorPipeline::WorkingImage &source) {
@@ -376,6 +385,25 @@ int main(int argc, char **argv)
     const auto editorNeutral = IprTestImageGenerator::render(editorSource, 5200, 0);
     if (!check(editorNeutral.linearRgba.data == editorSource.linearRgba.data,
                "editor neutral is the untouched source, not a WB round trip")) return 1;
+    // Experimental camera-signal denoise: off, or at strength 0, the render is
+    // unchanged; on, the camera signal goes through the profile again, from the
+    // retained source, which it never mutates.
+    if (!check(IprTestImageGenerator::denoised(editorSource, 5200, 0, true).linearRgba.data ==
+                   editorSource.linearRgba.data,
+               "camera denoise at strength 0 is the untouched source")) return 1;
+    {
+        const auto before = IprTestImageGenerator::denoised(editorSource, 5200, 40, true);
+        cv::Mat neutralRgba;
+        std::vector<cv::Mat> neutralChannels;
+        cv::split(neutralExpected, neutralChannels);
+        neutralChannels.push_back(cv::Mat(neutralExpected.size(), CV_32FC1, cv::Scalar(1)));
+        cv::merge(neutralChannels, neutralRgba);
+        if (!check(!before.isNull() && cv::checkRange(before.linearRgba) &&
+                       before.linearRgba.size() == neutralRgba.size() &&
+                       cv::norm(wb.cameraRgb, untouched, cv::NORM_INF) == 0 &&
+                       cv::norm(editorSource.dcpContext->cameraRgb, untouched, cv::NORM_INF) == 0,
+                   "camera denoise renders through the profile without touching the retained signal")) return 1;
+    }
     // Exposure scales the scene-linear camera signal before the DCP tone curve,
     // like WB: never a multiplication of the already rendered master.
     if (!CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 1.0, rendered, &wbError)) return 1;
@@ -440,6 +468,56 @@ int main(int argc, char **argv)
                           "</rdf:Description></rdf:RDF>");
     if (!check(writeFile(lcpPath, lcp), "synthetic LCP should be written"))
         return 1;
+    {
+        // Experimental camera denoise with the signal kept before the lens corrections:
+        // it denoises that signal, then applies the corrections again before the profile.
+        CameraProfileEngine::DcpWorkingContext lens = wb;
+        lens.preLensCameraRgb = cv::Mat(20, 30, CV_32FC3);
+        for (int y = 0; y < 20; ++y)
+            for (int x = 0; x < 30; ++x)
+                lens.preLensCameraRgb.at<cv::Vec3f>(y, x) = cv::Vec3f(.05f + .01f * x, .1f + .005f * y, .2f);
+        lens.lcpPath = lcpPath;
+        lens.capture.focalLengthMm = 24;
+        lens.capture.focusDistanceM = 2;
+        lens.capture.aperture = 4;
+        lens.cameraRgb = lens.preLensCameraRgb.clone();
+        QString lensError;
+        if (!CameraProfileEngine::applyLcp(lcpPath, lens.cameraRgb, lens.capture, &lensError, lens.lensOptions)) return 1;
+        const cv::Mat preLensUntouched = lens.preLensCameraRgb.clone();
+        cv::Mat corrected, uncorrected;
+        auto uncorrectedContext = lens;
+        uncorrectedContext.cameraRgb = lens.preLensCameraRgb;
+        if (!CameraProfileEngine::renderFromCameraSignal(lens, 5200, 0, 0.0, corrected, &lensError) ||
+            !CameraProfileEngine::renderFromCameraSignal(uncorrectedContext, 5200, 0, 0.0, uncorrected, &lensError))
+            return 1;
+        ColorPipeline::WorkingImage lensSource;
+        std::vector<cv::Mat> lensChannels;
+        cv::split(corrected, lensChannels);
+        lensChannels.push_back(cv::Mat(corrected.size(), CV_32FC1, cv::Scalar(1)));
+        cv::merge(lensChannels, lensSource.linearRgba);
+        lensSource.referenceWhiteBalanceKelvin = lens.sourceKelvin;
+        lensSource.dcpContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(lens);
+        cv::Mat expectedCamera = lens.preLensCameraRgb;
+        auto expectedContext = lens;
+        if (!CameraDenoise::apply(expectedCamera, {40, 0}, {}) ||
+            !CameraProfileEngine::applyLcp(lcpPath, expectedCamera, lens.capture, &lensError, lens.lensOptions))
+            return 1;
+        expectedContext.cameraRgb = expectedCamera;
+        cv::Mat expected;
+        if (!CameraProfileEngine::renderFromCameraSignal(expectedContext, 5200, 0, 0.0, expected, &lensError)) return 1;
+        const auto denoisedLens = IprTestImageGenerator::denoised(lensSource, 5200, 40, true);
+        cv::Mat renderedRgb;
+        if (!denoisedLens.isNull()) {
+            std::vector<cv::Mat> renderedChannels;
+            cv::split(denoisedLens.linearRgba, renderedChannels);
+            renderedChannels.resize(3);
+            cv::merge(renderedChannels, renderedRgb);
+        }
+        if (!check(!renderedRgb.empty() && cv::norm(renderedRgb, expected, cv::NORM_INF) < 1e-6 &&
+                       cv::norm(corrected, uncorrected, cv::NORM_INF) > 1e-3 &&
+                       cv::norm(lens.preLensCameraRgb, preLensUntouched, cv::NORM_INF) == 0,
+                   "camera denoise before the lens corrections applies them again, source untouched")) return 1;
+    }
 
     const CameraProfileEngine::Selection selection =
         CameraProfileEngine::findProfiles(

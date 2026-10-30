@@ -1,0 +1,307 @@
+# Banc de séparation du développement RAW
+
+Périmètre actuel : capture après `unpack()`, comparateur et sonde de module
+raccordée à l'observateur C2 de `RawDevelopment`. La sélection de calibration
+de production, le rendu DCP et les replis C3 restent à qualifier séparément.
+Aucun PASS global n'est possible avec les seules frontières communes du module.
+
+## Construction isolée
+
+Configurer `tests/raw_bench` comme source CMake et `build-patch_raw_bench`
+comme build, avec Qt6 Core, LibRaw et Python/NumPy. Aucun moteur de l'autre
+worktree n'est lié et aucun cache CMake n'est réutilisé. Exemples Windows :
+
+```powershell
+cmake -S tests/raw_bench -B build-patch_raw_bench -DQt6_DIR=C:/Qt/6.11.2/msvc2022_64/lib/cmake/Qt6 -DLIBRAW_INCLUDE_DIR=C:/dev/vcpkg/installed/x64-windows/include -DLIBRAW_LIBRARY=C:/dev/vcpkg/installed/x64-windows/lib/manual-link/raw.lib
+cmake --build build-patch_raw_bench --config Release
+ctest --test-dir build-patch_raw_bench -C Release --output-on-failure
+```
+
+Choisir explicitement `Python3_EXECUTABLE` si nécessaire. Les DLL Qt/LibRaw
+doivent être dans le PATH du processus de capture. Pas de déploiement ou
+modification globale du PATH utilisateur.
+
+## Capturer et comparer
+
+```text
+iprRawUnpackCapture --input image.CR3 --output capture.json --mode parity
+iprRawUnpackCapture --input image.CR2 --output capture.json --roi 100,100,256,256
+python tests/raw_bench/capture.py reference.json candidat.json --output comparaison.json
+```
+
+Sans ROI : trois carrés256 à20/50/80 % de largeur, mi-hauteur, origine paire.
+`--full` capture explicitement toute la mosaïque visible. Le repère est celui
+du capteur, avant orientation. Les pixels DN u16 sont little-endian, rangées
+contiguës, avec SHA256 et contexte CFA. Les sorties existantes sont refusées.
+Une erreur peut laisser un binaire incomplet : sans manifeste final valide,
+il ne constitue pas une capture utilisable et ne doit pas être réutilisé.
+
+Le comparateur exige par défaut `unpacked_cfa`, `pre_demosaic_cfa`,
+`post_median_camera_rgb`, `working_rec2020`. Une comparaison volontairement
+limitée à la mosaïque utilise `--require-stage unpacked_cfa` : ce PASS reste
+strictement limité à cette frontière. Étapes ou ROI manquantes, contexte
+différent, pixels altérés et NaN/Inf ne passent pas silencieusement.
+
+Le fichier facultatif `--tolerances` mappe un nom d'étape sur `atol`/`rtol`.
+La valeur par défaut est zéro ; les frontières u16 interdisent une tolérance
+non nulle. Toute tolérance flottante devra être justifiée et convenue avant
+la campagne. `--purpose measurement` mesure les différences attendues du
+mode signé et donne `measured_not_parity`, jamais un PASS de parité A.
+
+## Sonde C2 et campagne de parité ciblée
+
+La configuration CMake utilise aussi OpenCV core/imgproc pour construire
+`iprRawDevelopmentCapture`, avec les sources moteur commitées de ce worktree.
+Elle ne lie pas un moteur compilé chez Claude.
+
+```text
+iprRawDevelopmentCapture --input image.CR3 --output reference.json --path reference --mode parity
+iprRawDevelopmentCapture --input image.CR3 --output candidate.json --path candidate --mode parity
+python tests/raw_bench/parity.py --input image.CR3 --runtime-dir DLL_QT --runtime-dir DLL_LIBRAW --runtime-dir DLL_OPENCV
+```
+
+Les deux chemins partagent les niveaux natifs de LibRaw, WB telle quelle et
+repère capteur sans orientation. Le candidat émet les sept étapes I2 ; la
+référence capture les frontières réellement observables, sans inventer une
+sortie LibRaw signée ou normalisée intermédiaire. Les cinq frontières du banc initial
+sont comparées exactement sur trois ROI256 dans le premier banc C2 : unpack,
+avant RCD, après RCD, après médiane et caméra finale. Le banc courant ajoute
+la sixième frontière commune avant borne de sortie, avec C4 corrigé.
+Le candidat émet maintenant sept étapes I2, plus la caméra finale du banc.
+Le DCP est absent de cette sonde.
+
+Options `--black R,G,B,G2` et `--white DN` : niveaux explicites identiques
+pour les deux chemins, le blanc explicite désactive son ajustement automatique.
+`parity.py --calibration-captures capture-production.json` peut reprendre ces
+valeurs pour les sources identifiées par SHA256 dans une campagne de captures
+de production. Cela ne teste pas le choix des règles de calibration par C3.
+
+Unités I2 confirmées : DN u16 après unpack, DN f32 signés après noir,
+normalisé f32 après borne basse/diviseur, pré-RCD f32 sur grille1/65535,
+RGB f32 avant médiane et RGB f32 sur grille1/65535 après médiane. Les
+post-médiane entiers de l'oracle sont maintenant normalisés par produit
+réciproque float, représentation F1 historiquement reçue par le DCP.
+Le premier C2 utilisait une division float explicite à cette frontière ;
+la tentative et sa correction historiques restent conservées. Un ulp de
+représentation n'est pas un compte16 différent, mais une parité f32 ne se
+déclare pas en masquant cet écart : aucune tolérance élargie. Pré-RCD garde
+la division float, conformément au contrat de cette autre frontière.
+
+`compare_noise_baseline.py --parity RESULTAT_C2.json --baseline CAPTURES_BRUIT.json`
+compare les deux noirs calibrés aux anciens buffers de production conservés.
+Il sépare égalité stricte avant RCD/après médiane et représentation flottante
+finale avant DCP ; les comptes16 récupérés doivent rester identiques. Un PASS
+des frontières entières n'est pas une déclaration de bit-parité du f32 final.
+
+Le comparateur indique les étapes hors du périmètre explicitement demandé.
+Un PASS limité aux frontières caméra ne vaut pas PASS de sa liste globale
+par défaut, qui inclut le rendu Rec.2020. Les erreurs interrompent la campagne
+au premier fichier non conforme et produisent un verdict de portée explicite.
+
+## Comparaison de production C3 et mesure des ressources
+
+`production_campaign.py --help` décrit les entrées explicites du banc de
+bout en bout. Le programme construit deux `iprProductionRawCapture` dans
+des sous-builds propres : référence extraite d'un commit `dev` figé et
+candidat C3 dans ce worktree. Aucun moteur d'un autre build n'est réutilisé.
+La sonde appelle directement l'API publique `RawDecoder::decode`.
+
+Les30 sources de l'inventaire contrôlé sont lues avec Camera Neutral puis
+sans profil ; la recherche utilise un dossier explicitement vide et un DCP
+absolu figé si demandé. WB boîtier, corrections optiques désactivées et
+manifeste de calibration explicitement commun aux moteurs. La comparaison
+exige même géométrie/type/hash de **toute** l'image linéaire Rec.2020,
+mêmes métadonnées auditées et égalité exacte des trois ROI diagnostiques.
+Une différence hors ROI échoue donc aussi.
+
+Le timer natif couvre seulement `decode`, pas les hashes ni la sérialisation.
+Pic mémoire : peak working set du processus relevé immédiatement après
+decode (RSS maximale sur les plateformes POSIX). Processus neuf par cas,
+ordre référence/candidat alterné ; le cache disque OS n'est pas purgé.
+OpenCV1, OMP8, maximum8 workers RCD. Budget de temps annoncé :20,8s par
+ouverture ; le pic mémoire est mesuré, pas assimilé à la RAM totale du
+système ou à une preuve du contrôleur80 %. Pas de gain de vitesse statistique
+sur une seule ouverture par cas, ni couverture automatique de tous les replis.
+
+Les fichiers `status.json`, logs de configuration/build et `partial.json`
+en cas d'erreur vivent sous `build-patch_raw_bench/production/<UTC>/`.
+Le gel et le résultat canonique sont horodatés dans `docs/validation/raw/`.
+La campagne s'arrête au premier écart de parité, sans modifier les sources,
+le profil, la calibration ou les tolérances pour le faire disparaître.
+
+## Pilote signé X4 (C4)
+
+La sonde de module courante requiert l'interface C4 `Policy`. Pendant le
+gel C3, compiler depuis une archive immuable C4 avec
+`-DIPR_RAW_SOURCE_ROOT=CHEMIN_ARCHIVE_C4` et
+`-DIPR_RAW_ENGINE_REVISION=COMMIT_C4_COMPLET`, dans un sous-build séparé.
+Ne pas reconstruire le moteur C3 ni fusionner des sources pendant sa mesure.
+Les révisions outil et moteur sont distinctes dans les captures.
+
+```text
+iprRawDevelopmentCapture --input image.CR3 --output B.json --path candidate --mode signed
+python tests/raw_bench/signed_campaign.py --baseline CAPTURES_BRUIT.json --tool EXE_C4 --engine-source ARCHIVE_C4 --engine-revision COMMIT_C4_COMPLET --runtime-dir DLL_QT --runtime-dir DLL_LIBRAW --runtime-dir DLL_OPENCV
+```
+
+`signed` n'est pas accepté sur le chemin oracle LibRaw. La campagne mesure
+les six paires historiques1600/51200 avec les niveaux effectivement appliqués
+et vérifie sources, outils, contrats et paramètres A/B. Elle produit un gel
+puis un JSON de mesures, jamais un PASS de parité pour B ou une validation
+de qualité de débruitage. Statut/logs/partiel sous le build `signed/<UTC>`.
+
+Le moteur courant du banc utilise F1 : l'entrée CFA reste signée pendant
+RCD et la médiane en B, puis sort sans borne ni grille16. `pre_output_camera_rgb`
+observe la médiane avant la grille A ; ce stage est obligatoire, avec les
+six autres étapes I2 et la caméra finale. La sortie B doit être exactement
+identique à cette capture, négatifs et valeurs >1 compris. Les anciens
+pilotes C4 restent des preuves historiques, pas des modes à reconstruire.
+`--previous-study JSON_X4_CORRIGE` contrôle l'invariance A sur les six
+frontières avant sortie du précédent pilote corrigé. F1 représente sa grille
+A finale par produit réciproque (entrée historique DCP), plus par division :
+l'invariance du rendu entier est contrôlée dans le banc de production, sans
+élargir les tolérances ni prétendre identiques deux représentations distinctes.
+La variance de paires ne capture pas les composantes communes aux deux
+prises ; moyenne, dérive, covariance, zéros et négatifs sont gardés séparés.
+Pour les DN, `at_or_above_one_fraction` n'est pas une fraction au blanc.
+
+## Qualification de la sortie flottante F1
+
+La sonde de production accepte `--capture-camera` avec un DCP explicite :
+entrée réellement retenue par `CameraSignal`, trois ROI et statistiques/hash
+plein cadre, pas RGB reconstitué depuis Rec.2020. `float_qualification.py`
+vérifie le contrat et, sur les noirs témoins seulement, les négatifs conservés.
+Le chemin sans DCP n'expose pas ce contexte : ne pas fabriquer son entrée.
+
+`production_campaign.py --capture-camera --candidate-signed-api ...` compare
+A de bout en bout et exige aussi l'égalité exacte des entrées DCP. Référence
+figée `ee8f26d`, candidat F1 figé ; même manifeste/profil/source et optiques
+désactivées. `--candidate-signed-api` compile l'API mais **ne sélectionne pas B**
+dans cette campagne d'invariance A.
+
+Pour B, compiler la sonde contre F1 avec
+`-DIPR_BENCH_SIGNED_DEVELOPMENT=ON` puis employer `--development signed`.
+Un oracle pré-F1 refuse cette commande, jamais de substitution silencieuse.
+`float_campaign.py --help` décrit le contrôle des six paires existantes :
+finitude du master/caméra et négatifs témoins avant DCP, budgets, provenance.
+`--module-study` exige aussi la comparaison exacte module→entréeDCP sur les
+quatre noirs sans rotation ; les scènes tournées à ROI différents restent
+explicitement hors de cette égalité géométrique.
+Un succès ne valide ni le prolongement signé des tables/courbes DCP ni une
+amélioration du débruitage. La quantification intermédiaire doit être vérifiée
+avec l'audit du chemin et les captures de module, pas seulement la présence
+de valeurs négatives en sortie. Aucun candidat F1 n'est supposé validé par
+les contrôles de la seule référence.
+
+`iprRawFloatContract` teste la frontière publique `fromLinearSrgb` : signal
+fini négatif/>1 accepté et non modifié, NaN/±Inf refusés. Le défaut initial
+F1 et son correctif `0adefe7` ont deux preuves distinctes. `float_witnesses.py`
+vérifie trois boîtiers en A/B avec/sans DCP après ce garde, sans rejouer
+inutilement les 60 succès de la campagne F1 complète. Les outils ne modifient
+ni les règles du DCP ni le placement du débruitage en production.
+
+## Module expérimental de débruitage caméra (N2)
+
+La cible `cameraDenoiseTests` du banc compile le module de ce worktree.
+CTest `cameraDenoiseContract` vérifie le contrat signé, les forces séparées,
+l'identité, les axes RGB déjà balancés, l'annulation et les ressources sur signaux synthétiques.
+Pour une mesure locale du module seul :
+
+```powershell
+./build-patch_raw_bench/Release/cameraDenoiseTests.exe --benchmark 6000 4000
+```
+
+Le pic mémoire concerne tout ce processus synthétique, pas l'application ;
+aucune image de mesure n'est écrite. Le modèle empirique multiscalaire ne
+remplace pas une calibration physique capteur. La source signée pré-LCP,
+l'IHM, le proxy et les scènes réelles relèvent de N3, pas de ce test natif.
+`qualify_camera_denoise.py --help` décrit le lanceur des preuves : module,
+test des profils, CTest et dossiers DLL explicites ; chaque exécution écrit
+un nouveau JSON horodaté sans écraser les preuves précédentes.
+`--module-only` omet explicitement le test profil si un raccordement moteur
+reste à faire ; il refuse `--profile-tool` dans ce mode afin de ne pas utiliser
+un ancien binaire. La preuve distingue ce contrôle d'une intégration réussie.
+`--skip-benchmarks` conserve les contrats et CTest, mais omet les allocations
+et chronométrages synthétiques2,8/24 Mpx pendant une autre campagne ; la
+preuve écrit explicitement `benchmarks=not_run`. Ne pas en tirer un budget temps/RAM.
+`camera_denoise_witnesses.py --help` décrit le smoke réel N3 sur trois boîtiers :
+A/B0/B50/B100 et replays, en mémoire, un serveur fermé par scène avec watchdog.
+Les écarts de rendu sRGB qu'il mesure ne prouvent pas la qualité du débruitage.
+
+Études de couplage avant/après profil : `run_denoise_leakage.py --help` pilote
+`cameraDenoiseLeakageProbe` (cible du sous-projet `production`) sur des régions
+caméra fixes. La projection tangentielle de Y y est une expérience, pas du
+code de production. `camera_denoise_exact_roi.py --help` mesure les régions
+N3 convenues avec Claude, après filtrage et rendu de l'image entière. Il
+distingue moyenne RGB, luma encodée pondérée et chroma R−G/B−G. Le mode
+`--reference-proof` exige l'exécutable exact d'une preuve historique, sans
+conserver d'implémentation legacy dans le module. Aucun TIFF n'est écrit.
+Le prototype courant(a)+V1 utilise cinq échelles chroma et trois pour l'intensité,
+directement dans le RGB caméra déjà balancé, sans annuler les gains de BdB ;
+les gains de métriques ne valent pas validation visuelle.
+
+N2b(a) : `signal_noise_survey.py --help` pilote `--signal-survey` de la sonde.
+Il conserve81 régions par source, sépare les25 positions initiales des56
+positions de contrôle et compare un modèle global à une interpolation de
+variance par niveau de signal. `--replay` réanalyse une preuve existante sans
+redécoder les images. MAD, autocorrélation et heuristique d'aplat ne sont pas
+une vérité physique du bruit ; cette sonde ne change pas le filtre.
+La sonde actuelle travaille dans les axes caméra déjà balancés de V1 et
+observe les modèles effectivement utilisés via `Context::noiseModelObserver`.
+Elle rapporte support, nœuds conditionnels, estimation globale et couverture
+du guide sur les81 ROI. La sortie filtrée servant à l'observation est jetée.
+Les preuves anciennes compensant la BdB gardent leurs axes historiques,
+y compris lors d'un `--replay` ; ne pas les assimiler à ces nouvelles mesures.
+
+`qualify_signal_denoise.py --help` compare le candidat conditionnel aux masques
+figés de `loi-force-bruit-v001-20261029T185322Z.json`. L'argument obligatoire
+`--variant-reference` fournit `loi-force-bruit-b-v1-v001-20261029T200937Z.json`
+pour comparer directement à B-V1 ; l'empreinte de sa référence commune doit
+correspondre, sinon le programme refuse la comparaison. Il contrôle les empreintes
+RAW/TIFF et celles des masques, puis exige le même témoin B0. Trois scènes de
+développement sont mesurées en mémoire. Les28 ont maintenant servi à la
+campagne de Claude sur(a)+V1 : aucun jeu intact n'est revendiqué pour les
+prochains candidats. Les sources et l'exécutable sont hachés dans la nouvelle preuve.
+Le watchdog termine un serveur bloqué ; un échec arrête la campagne et reste
+consigné. Les dispersions haute fréquence incluent des textures réelles : leur
+baisse n'est ni une vérité bruit seul ni une validation visuelle.
+Le premier candidat conditionnel est conservé en `0941dc4`, V1 seul en
+`0ba4335`. Leur combinaison conserve les axes balancés et le modèle empirique
+conditionnel ; ni les forces ni les bornes DCP ne sont modifiées.
+Le nom du lanceur n'établit pas que le binaire fourni contient ce modèle :
+vérifier les sources embarquées et l'identité d'exécutable de chaque preuve.
+`--prior-reference` peut joindre la campagne figée B_a_V1 pour distinguer
+le gain du plancher sombre de celui des axes V1. Le garde-fou actuel relève
+les variances du premier nœud vers le global si nécessaire, pas celles des
+autres nœuds ; ce n'est pas une calibration physique ni une extension du domaine.
+
+Le candidat courant ajoute un repli sur covariance/σ globaux V1 lorsque le
+modèle conditionnel manque ou que le guide est hors domaine. Le raccord est
+extérieur au domaine conditionnel ; les statistiques locales des deux modèles
+restent séparées. Sans témoins admissibles, l'abstention reste nécessaire.
+L'observateur distingue `supported` et `globalFallbackAvailable` ; les ROI de
+la sonde comptent les pixels susceptibles d'utiliser le repli. Ce n'est pas
+une preuve que le filtre les corrige tous, ni une mesure de bruit physique.
+Les77 contrôles natifs sont positifs ; les22 scènes signalées par Claude et
+le coût des buffers supplémentaires restent à qualifier avant promotion.
+
+L'esquisse `CameraDenoise::settingsFromAmount` convertit une barre entière
+0..100 en `Settings` : L=M, C=arrondi(100*(1-(1-M/100)^6)). Elle est testée
+sur les101 états mais n'est pas raccordée à l'éditeur. Défaut0 ; entrées
+invalides refusées sans modifier la sortie. Les réglages avancés contournent
+ce remappage pour éviter une double loi. La cible visuelle LR70–75 vers
+barre80–90 n'est pas encore qualifiée ; les valeurs LR ne sont pas les forces
+internes IPR. La preuve synthétique ne vaut pas étalonnage perceptuel.
+
+## Limites du corpus et références
+
+I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,
+normalisé, entiers16 représentés en f32 avant RCD et caméra après médiane.
+Les deux verts sont distincts ; l'ordre couleur R/G/B/G2 n'est pas l'ordre
+spatial des phases R/G1/G2/B. Ne pas les confondre dans les gains ou noirs.
+
+`smoke.py` vérifie une lecture native contre rawpy sur les mêmes ROI. Les
+deux reposent sur LibRaw : c'est un contrôle de lecture/sérialisation, pas
+une vérité physique indépendante ou une validation de tous les formats.
+Les références JSON canoniques vivent dans `docs/validation/raw/` ; les
+pixels diagnostiques restent dans le build propre au banc. Ne pas supprimer
+les RAW, références ou données des autres agents.

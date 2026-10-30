@@ -51,9 +51,8 @@ enum class OutputFormat
 };
 
 WorkingImage fromSourceImage(const QImage &source, QString *error = nullptr);
-// LibRaw's linear sRGB 16-bit output -> Rec.2020 master.
-WorkingImage fromLinearRgb16(const quint16 *data, int width, int height,
-                             QString *error = nullptr);
+// A RAW decoder's linear sRGB (CV_32FC3, white 1, finite, extended range kept) -> Rec.2020 master.
+WorkingImage fromLinearSrgb(const cv::Mat &rgb, QString *error = nullptr);
 // Output-only derivative: returned pixels AND tag are linear sRGB, not a master.
 WorkingImage mapToSrgbGamut(const WorkingImage &source,
                             QString *error = nullptr);
