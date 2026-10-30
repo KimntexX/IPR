@@ -270,6 +270,8 @@ public:
     Q_INVOKABLE void setGrain(int value);
     Q_INVOKABLE void setDenoiseLuminance(int value);
     Q_INVOKABLE void setDenoiseChrominance(int value);
+    // Single noise reduction control: one amount in [0, 100] sets both strengths.
+    Q_INVOKABLE void setDenoiseAmount(int value);
     Q_INVOKABLE void setDenoiseBeforeProfile(bool enabled);
     Q_INVOKABLE void setSharpeningAmount(int value);
     Q_INVOKABLE void setSharpeningRadius(float value);
