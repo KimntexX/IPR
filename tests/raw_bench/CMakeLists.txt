@@ -46,6 +46,12 @@ target_include_directories(cfaDenoisePrototype PRIVATE "${IPR_ROOT}/src/raw" ${O
 target_link_libraries(cfaDenoisePrototype PRIVATE Qt6::Core ${OpenCV_LIBS} Threads::Threads)
 add_test(NAME cfaDenoisePrototypeContract COMMAND cfaDenoisePrototype --self-test)
 set_tests_properties(cfaDenoisePrototypeContract PROPERTIES TIMEOUT 30)
+add_executable(denoiseTonalGainProbe tonal_gain_probe.cpp "${IPR_ROOT}/src/raw/CameraDenoise.cpp"
+    "${IPR_ROOT}/src/core/Contrast.cpp" "${IPR_ROOT}/src/core/ToneRecovery.cpp" "${IPR_ROOT}/src/core/ToneStatistics.cpp")
+target_include_directories(denoiseTonalGainProbe PRIVATE "${IPR_ROOT}/src/raw" "${IPR_ROOT}/src/core" ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(denoiseTonalGainProbe PRIVATE Qt6::Core ${OpenCV_LIBS} Threads::Threads)
+add_test(NAME denoiseTonalGainContract COMMAND denoiseTonalGainProbe)
+set_tests_properties(denoiseTonalGainContract PROPERTIES TIMEOUT 30)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)

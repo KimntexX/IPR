@@ -2,11 +2,12 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§38) : premier préfiltre CFA testé sur32 cas à signal connu
-et bruit réel de noirs. Wiener local simple non retenu : erreur médiane
-supérieure au traitement courant et perte de détails. La combinaison réduit
-plus l'erreur mais ne passe pas la protection des motifs propres. Cible
-identifiée : protection des structures faibles, pas renforcement aveugle.
+Dernier jalon (§39) : faisabilité du débruitage conscient des retouches tonales.
+Une sonde sur gris distingue amplification du bruit et éclaircissement ; une
+réutilisation du résidu maximal reproduit cinq forces globales sur un petit
+témoin synthétique. Aucun gain photo, cache applicatif ou poids local validé.
+Le préfiltre CFA simple (§38) reste non retenu ; protéger les structures
+faibles demeure nécessaire, même si la retouche rend le bruit plus visible.
 **Étude de banc seulement, aucun changement de production.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
@@ -2493,6 +2494,126 @@ de patches sont enregistrés, au plus huit threads via les modules existants,
 OpenCV limité à un thread dans le banc. Aucun fichier de production, DCP,
 profil ou IHM modifié ; pas de push, fusion versdev ou tag.
 
+## 39. Gain tonal aval : faisabilité, coût et garde-fous — 30 octobre 2026
+
+### 39.1. Demande et périmètre
+
+Livraison signalée par Claude : `dev b19b4c3`, `v0.1.63-alpha`. La nouvelle
+piste demandée par l'utilisateur est d'adapter la force locale au bruit rendu
+plus visible après exposition, contraste et ombres. L'estimation physique
+du bruit reste dans le signal caméra : éclaircir n'ajoute pas de bruit capteur
+et multiplier signal et bruit ne restaure pas le rapport signal/bruit.
+
+Inspection du chemin livré : le filtre caméra précède LCP et DCP ; avec DCP,
+l'exposition intervient avant la courbe du profil, puis viennent contraste
+et récupération des tons. Les statistiques tonales sont celles de la source
+neutre partagée avec le master, pas des statistiques réestimées sur chaque
+retouche. Les réglages tonals et le débruitage appartiennent actuellement à
+la même première clé de cache : une retouche de cette étape peut **déjà**
+relancer le filtre. Le coût existant doit être distingué du coût de l'adaptation.
+Les modules de calcul utilisés ici sont identiques à ceux de `b19b4c3` ;
+cela ne revendique pas l'alignement de toute l'application du banc sur dev.
+
+### 39.2. Mesure : éclaircissement et amplification ne sont pas interchangeables
+
+Preuve canonique :
+[`camera-denoise-tonal-gain-v002-20261030T132023Z.json`](../raw/camera-denoise-tonal-gain-v002-20261030T132023Z.json).
+La v001 est conservée ; la v002 ajoute l'écart-type effectivement tiré au
+contrôle gaussien. L'écart apparent de 2,9 % de la v001 venait essentiellement
+de l'échantillon aléatoire fini, pas d'un défaut de propagation démontré.
+
+Sonde native : six recettes, 64 gris logarithmiques Rec.2020 linéaire,
+modules actuels de contraste/ombres, statistiques typiques. Exposition
+appliquée APRÈS profil à la manière d'un chemin raster, **sans DCP** : ces
+facteurs ne sont donc pas les facteurs réels du chemin RAW. Dérivée par
+différences centrées ; encodage sRGB et borne d'affichage, luma Rec.709.
+Quatre niveaux contrôlés avec 2 048 échantillons gaussiens achromatiques
+antithétiques, écart-type nominal de 0,5 % du signal.
+
+Exemple au gris d'entrée Y=0,009876 :
+
+| Recette | Y sortie / Y entrée | Dérivée linéaire | Amplification de σ affiché par rapport au neutre |
+| --- | ---: | ---: | ---: |
+| Neutre | 1,000 | 1,000 | 1,000 |
+| Exposition +2 EV | 4,000 | 4,000 | 1,782 |
+| Exposition +3 EV | 8,000 | 8,000 | 2,378 |
+| Contraste +50 | 0,405 | 0,470 | 0,797 |
+| Ombres +100 | 3,806 | 2,435 | 1,117 |
+| +2 EV et ombres +100 | 8,824 | 4,812 | 1,351 |
+
+Pour les contrôles non écrêtés, σ mesuré / (dérivée × σ réellement tiré)
+reste entre 0,999596 et 1,000123. Ce résultat vérifie seulement une
+approximation locale dans ce témoin à faible bruit. Les contrôles écrêtés
+ont une dérivée nulle et un rapport indéfini : une variance faible par
+saturation n'est pas un bon débruitage ni une information préservée.
+
+La quantité utile est la sensibilité locale `σ_sortie ≈ |T′(Y)| σ_entrée`,
+pas le rapport `T(Y)/Y`. Pour le vrai RGB caméra, il faudra le Jacobien du
+rendu et sa covariance : `Σ_sortie ≈ J Σ_caméra Jᵀ`. Cette propagation ne
+donne pas à elle seule une loi de force optimale. La chroma ne doit pas
+recevoir aveuglément le même facteur que la luminance. Profil, BdB, tables,
+bords de gamut et bornes nécessitent une qualification dans la vraie chaîne.
+
+### 39.3. Réutiliser le travail du filtre : un témoin positif limité
+
+Sur une image caméra synthétique 128×128, bruit gaussien, le résidu du filtre
+à 100/100 est décomposé dans ses axes I/Co/Cg puis pondéré par les réglages
+issus de la barre maître 1,25,50,85,100. Le résultat est comparé au filtre
+réel exécuté séparément à chacune de ces forces. Écart absolu maximal :
+**3,73×10⁻⁹** en RGB caméra. Il n'y a ni cache implémenté, ni bit-exactitude
+revendiquée, ni essai photo, ni qualification de poids spatiaux.
+
+Cette quasi-linéarité est plausible pour des forces globales positives qui
+conservent les cinq échelles actives : les estimations et portes structurelles
+ne dépendent pas de la force. Elle ne garantit rien pour le réglage avancé
+couleur=0, qui peut changer les échelles actives. À zéro, garder une identité
+stricte et ne pas calculer inutilement le résultat maximal.
+
+**Attention au passage du global au local** : un résidu de moyenne globale
+nulle ne garde pas nécessairement cette moyenne après pondération spatiale.
+La sélection des poids sur un signal bruité peut ajouter un biais, modifier
+les noirs ou produire des halos. Le témoin ne valide pas ce passage.
+
+### 39.4. Architecture proposée, pas intégrée
+
+- Conserver une source caméra immuable et son estimation de bruit ; ne pas
+  réestimer σ à partir de l'image éclaircie ou déjà filtrée.
+- Qualifier d'abord la réutilisation globale du résidu sur des photos, tailles,
+  proxies et forces distincts. Une séparation de cache avant LCP/DCP pourrait
+  ensuite éviter le filtre lourd à chaque déplacement tonal ; rendu aval et
+  mélange O(N) restent nécessaires. Annuler les rendus périmés et temporiser
+  les mises à jour, sans filtrage itératif de l'aperçu précédent.
+- Identifier exactement source décodée/calibrée, dimensions, pixelScale,
+  contexte et version du filtre/échelles. Les réglages qui changent cette
+  source invalident le cache ; ne pas utiliser seulement le nom du fichier.
+- Admettre ce cache dans le contrôleur mémoire borné existant, avec réservation
+  du pic et éviction. Un résidu RGB f32 de 32 MP vaut environ 384 Mo, contre
+  environ 34 Mo pour un aperçu 2048×1365. Pas de collection illimitée par force.
+- Étudier un guide déterministe et lissé pour le gain tonal, sans boucle de
+  rétroaction. L'exposition RAW avant courbe doit être incluse dans le vrai
+  opérateur ; ne pas transposer les nombres de la sonde raster au RAW.
+- Proposer initialement une adaptation explicite et désactivable, pas un
+  renforcement caché. La barre maître reste le budget de force : zéro identité,
+  maximum 100 et état avancé personnalisé conservés. À 100, il n'existe pas
+  de marge de renforcement dans l'interpolation actuelle : il faudrait améliorer
+  l'algorithme, pas dépasser la borne ou gonfler artificiellement σ.
+
+### 39.5. Épreuve suivante et décision
+
+Piste pertinente **à étudier**, pas prête pour intégration. Qualifier d'abord
+le résidu réutilisable globalement puis la propagation dans le vrai DCP.
+Comparer ensuite, à recette finale identique, force fixe et adaptation sur
+scènes sombres éclaircies, témoins à signal connu et texture faible propre
+du §38. Masques gelés indépendants, détail, halos, moyenne des noirs,
+monotonie, latence et pic mémoire sont nécessaires ; aucune baisse de bruit
+visible ne justifie seule de lisser les murs ou d'inventer une calibration.
+
+Pas de nouveau RAW ni de réserve décodés, aucun TIFF généré. Cible native
+`denoiseTonalGainProbe`, lanceur `study_tonal_noise_gain.py`, calcul bref
+terminé. Aucun fichier moteur, IHM, profil ou réglage livré modifié ; aucune
+fusion dev, publication ou création de tag. La protection structurelle reste
+une cible complémentaire : le gain tonal ne résout pas la confusion texture/bruit.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -2557,3 +2678,8 @@ profil ou IHM modifié ; pas de push, fusion versdev ou tag.
   insuffisante ; post courant meilleur en MSE médiane. Faible texture propre
   aussi atténuée par le post courant : cible structurelle, pas hausse aveugle
   deσ. Aucun nouveau filtre intégré ni qualification photo/ressources complète.
+- Gain tonal étudié au niveau faisabilité (§39) : dérivée du rendu distincte
+  du rapport d'éclaircissement ; résidu maximal réutilisable sur un petit témoin
+  global seulement. Ni adaptation locale, ni cache production, ni gain photo
+  validés. Prochaine qualification : réutilisation sur corpus puis vrai DCP,
+  avec garde-fous de détail, biais, force maître et ressources.

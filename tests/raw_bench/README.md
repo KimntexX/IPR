@@ -356,6 +356,17 @@ mesure ; résultat négatif ne déclenche pas d'ajustement de fenêtre/force.
 `python -m unittest discover -s tests/raw_bench -p test_cfa_prototype.py`
 vérifie quatre contrôles de la décision. Ce code n'est lié qu'au banc.
 
+`denoiseTonalGainProbe` et `study_tonal_noise_gain.py --help` étudient la
+sensibilité du rendu tonal et la réutilisation globale du résidu maximal.
+Six recettes sur gris Rec.2020, sans DCP, statistiques typiques : ce n'est
+pas le placement de l'exposition RAW avant la courbe. Contrôle gaussien
+avec σ nominal et réellement tiré, dérivée locale et écrêtage explicite.
+Cinq forces maître sont aussi confrontées au vrai filtre sur un petit
+témoin synthétique ; cela ne qualifie ni un cache applicatif ni des poids
+spatiaux. Résultats JSON versionnés, pas de RAW/TIFF écrit ni filtre modifié.
+`ctest -R denoiseTonalGainContract` vérifie la finitude des transferts et
+la reconstruction globale dans ce témoin. Voir rapport évolutif §39.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,
