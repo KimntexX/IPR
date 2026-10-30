@@ -40,29 +40,48 @@ def metrics(im, masks):
             for name,mask in masks.items() if mask.sum()>=2000}
 
 
+def variant_baseline(reference_path, variant_path, variant='B_V1'):
+    """Reject a variant tied to another frozen reference, not just another name."""
+    data=json.loads(variant_path.read_text(encoding='utf-8'))
+    if data['schema']!='ipr-noise-strength-law-variant-v001':
+        raise ValueError('Unknown variant schema')
+    if data['reference']['sha256']!=sha256(reference_path):
+        raise ValueError('Variant uses a different frozen reference')
+    return data['measures'][variant]
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--server',type=Path,required=True)
     p.add_argument('--reference',type=Path,required=True)
+    p.add_argument('--variant-reference',type=Path,required=True,
+                   help='Frozen B-V1 campaign tied to --reference; no duplicate baseline rendering.')
+    p.add_argument('--prior-reference',type=Path,
+                   help='Optional frozen B_a_V1 campaign, also tied to --reference.')
     p.add_argument('--image-root',type=Path,required=True)
     p.add_argument('--runtime-dir',type=Path,action='append',required=True)
     a=p.parse_args();stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     os.environ['PATH']=os.pathsep.join(str(d.resolve()) for d in a.runtime_dir)+os.pathsep+os.environ.get('PATH','')
     reference=json.loads(a.reference.read_text(encoding='utf-8'))
     if reference['schema']!='ipr-noise-strength-law-v001':raise ValueError('Unknown reference schema')
+    baseline=variant_baseline(a.reference,a.variant_reference)
+    prior=variant_baseline(a.reference,a.prior_reference,'B_a_V1') if a.prior_reference else None
     development=['7Y6A7599','6V1A9539','IMG_7958']
     proof=dict(schema_version=1,created_utc=stamp,study='N2b_signal_covariance_candidate',
                reference=dict(path=str(a.reference),sha256=sha256(a.reference)),
+               baseline_reference=dict(path=str(a.variant_reference),sha256=sha256(a.variant_reference),variant='B_V1'),
                engine_base_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                executable_sha256=sha256(a.server),manifest_sha256=sha256(ROOT/'config/raw-normalization.json'),
                sources={n:dict(sha256=sha256(ROOT/n),text=(ROOT/n).read_text(encoding='utf-8')) for n in
                         ['src/raw/CameraDenoise.cpp','src/raw/CameraDenoise.h','tests/raw_bench/qualify_signal_denoise.py']},
-               development_scenes=development,reserved_for_frozen_followup=sorted(set(reference['scenes'])-set(development)),
-               limits=['Reserve is prospective only; this corpus already had earlier studies.',
+               development_scenes=development,not_retested_this_run=sorted(set(reference['scenes'])-set(development)),
+               limits=['All 28 scenes have already been measured in an earlier candidate campaign; no intact holdout is claimed.',
                        'Highpass includes real structure; lower is not necessarily better.',
                        'Noise estimate and covariance changed, not slider law, DCP or output bounds.',
                        'This is not a clean-noise oracle or visual validation.'],scenes=[])
     failed=False
+    if prior is not None:
+        proof['prior_reference']=dict(path=str(a.prior_reference),sha256=sha256(a.prior_reference),variant='B_a_V1')
     for name in development:
         old=reference['scenes'][name]
         raw=a.image_root/Path(old['raw']['file']).name
@@ -94,9 +113,11 @@ def main():
                     result=metrics(selected,fixed);del selected
                     key=f'{lum}/{col}/0'
                     item['states'][key]=dict(metrics=result,metadata=metadata,request_wall_seconds=elapsed,
-                        baseline_B=old['measures']['B'][key])
+                        baseline_B_V1=baseline[name][key])
+                    if prior is not None:
+                        item['states'][key]['prior_B_a_V1']=prior[name][key]
                     if lum==0 and col==0:
-                        item['B0_metrics_match']=result==old['measures']['B'][key]
+                        item['B0_metrics_match']=result==baseline[name][key]
                         if not item['B0_metrics_match']:raise ValueError('B0 control metrics differ')
                     print(name,key,elapsed,flush=True)
                 finally:

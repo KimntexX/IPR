@@ -26,9 +26,23 @@ struct Noise
     float expectedJointEnergy = 0;
 };
 
+constexpr int CurveSamples = 128;
+struct NoiseCurve
+{
+    std::array<Noise, CurveSamples> values;
+    Noise pooled;
+    float low = 0, high = 0;
+    float transition = 0;
+    bool valid = false;
+    bool pooledValid = false;
+    bool constant = true;
+};
+using Energy = cv::Vec<float, 8>; // Three energies, joint, three expectations, joint expectation.
+
 struct Pyramid
 {
     std::array<cv::Mat, Levels> detail;
+    cv::Mat signal; // Smoothed intensity guide; never the noisy detail itself.
 };
 
 int reflect(int x, int length)
@@ -87,12 +101,16 @@ bool pyramid(cv::Mat current, Pyramid &out, const std::array<int, Levels> &steps
         if (steps[std::size_t(level)] == 0) break;
         cv::Mat base;
         if (!blur(current, base, steps[std::size_t(level)], stop)) return false;
+        if (level == 0) out.signal.create(base.size(), CV_32F);
         auto &detail = out.detail[std::size_t(level)]; detail.create(current.size(), CV_32FC3);
         for (int y = 0; y < current.rows; ++y) {
             if ((y & 15) == 0 && stop()) return false;
             const auto *a = current.ptr<cv::Vec3f>(y), *b = base.ptr<cv::Vec3f>(y);
             auto *d = detail.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < current.cols; ++x) d[x] = a[x] - b[x];
+            for (int x = 0; x < current.cols; ++x) {
+                d[x] = a[x] - b[x];
+                if (level == 0) out.signal.at<float>(y,x) = b[x][0];
+            }
         }
         current = std::move(base);
     }
@@ -125,6 +143,8 @@ struct PatchNoise
     cv::Vec3f center{}, sigma{};
     std::vector<cv::Vec3f> samples;
     double score = 0;
+    float signal = 0;
+    float signalUncertainty = 0;
 };
 
 bool coherent(const PatchNoise &item, int channel, int width, int height, int lag)
@@ -145,24 +165,110 @@ bool coherent(const PatchNoise &item, int channel, int width, int height, int la
     return correlation(true) > .9 && correlation(false) > .9;
 }
 
+bool fromCovariance(const cv::Matx33f &covariance, Noise &model)
+{
+    cv::Matx33f correlation = cv::Matx33f::zeros(), regularized = cv::Matx33f::eye();
+    for (int c = 0; c < 3; ++c) {
+        model.sigma[c] = std::sqrt(std::max(0.f, covariance(c,c)));
+        if (!std::isfinite(model.sigma[c])) return false;
+        correlation(c,c) = model.sigma[c] > 0 ? 1.f : 0.f;
+        for (int k = 0; k < c; ++k) {
+            const double denominator = double(model.sigma[c]) * model.sigma[k];
+            const float rho = denominator > 0 ? float(std::clamp(double(covariance(c,k))/denominator,-.95,.95)) : 0.f;
+            correlation(c,k) = correlation(k,c) = rho;
+            regularized(c,k) = regularized(k,c) = .25f*rho;
+        }
+    }
+    bool invertible = false;
+    model.inverseCorrelation = regularized.inv(cv::DECOMP_CHOLESKY, &invertible);
+    if (!invertible) return false;
+    model.expectedJointEnergy = 0;
+    for (int c=0;c<3;++c) for (int k=0;k<3;++k)
+        model.expectedJointEnergy += model.inverseCorrelation(c,k)*correlation(k,c);
+    return std::isfinite(model.expectedJointEnergy);
+}
+
+struct Knot { float signal = 0; cv::Matx33f covariance = cv::Matx33f::zeros(); };
+
+Knot fit(std::vector<const PatchNoise *> items)
+{
+    std::sort(items.begin(),items.end(),[](const auto *a,const auto *b){return a->score<b->score;});
+    const std::size_t retained=std::max(std::size_t(1),(items.size()+3)/4);
+    cv::Vec3f sigma; std::vector<float> signals;
+    for(std::size_t i=0;i<retained;++i)signals.push_back(items[i]->signal);
+    Knot result; result.signal=median(signals);
+    for(int c=0;c<3;++c) {
+        std::vector<float> values;
+        for(std::size_t i=0;i<retained;++i)values.push_back(items[i]->sigma[c]);
+        sigma[c]=median(values);
+    }
+    cv::Matx33d sums=cv::Matx33d::zeros();
+    for(std::size_t i=0;i<retained;++i)for(auto v:items[i]->samples) {
+        cv::Vec3d z{};
+        for(int c=0;c<3;++c)if(sigma[c]>0)z[c]=std::clamp((double(v[c])-items[i]->center[c])/sigma[c],-3.,3.);
+        for(int c=0;c<3;++c)for(int k=0;k<3;++k)sums(c,k)+=z[c]*z[k];
+    }
+    for(int c=0;c<3;++c) {
+        result.covariance(c,c)=sigma[c]*sigma[c];
+        for(int k=0;k<c;++k) {
+            const double denominator=std::sqrt(sums(c,c)*sums(k,k));
+            const float rho=denominator>0?float(std::clamp(sums(c,k)/denominator,-.95,.95)):0.f;
+            result.covariance(c,k)=result.covariance(k,c)=rho*sigma[c]*sigma[k];
+        }
+    }
+    return result;
+}
+
+bool floorDarkCovariance(Knot &dark, const Knot &pooled)
+{
+    cv::Vec3d scale(1,1,1); bool changed=false;
+    for(int c=0;c<3;++c) {
+        const double original=dark.covariance(c,c);
+        const double floor=std::max(original,double(pooled.covariance(c,c)));
+        if(original>0)scale[c]=std::sqrt(floor/original);
+        changed=changed||floor>original;
+    }
+    // Keep the dark witnesses' correlation, not a mixture of different signal
+    // populations' correlations. Zero-variance axes have zero cross terms.
+    for(int c=0;c<3;++c) {
+        for(int k=0;k<c;++k)
+            dark.covariance(c,k)=dark.covariance(k,c)=float(double(dark.covariance(c,k))*scale[c]*scale[k]);
+        dark.covariance(c,c)=std::max(dark.covariance(c,c),pooled.covariance(c,c));
+    }
+    return changed;
+}
+
 bool estimate(const cv::Mat &source,
               const std::array<int, Levels> &steps, int margin,
-              std::array<Noise, Levels> &models, const std::function<bool()> &stop)
+              std::array<NoiseCurve, Levels> &models, const std::function<bool()> &stop,
+              const std::function<void(const NoiseModelSummary &)> &observer)
 {
     std::array<std::vector<PatchNoise>, Levels> patches;
+    std::array<std::vector<PatchNoise>, Levels> allPatches;
     const int width = std::min(64, source.cols), height = std::min(64, source.rows);
     std::set<std::pair<int, int>> origins;
     for (int y = 0; y < 5; ++y) for (int x = 0; x < 5; ++x)
         origins.emplace((source.cols - width) * x / 4, (source.rows - height) * y / 4);
     for (auto origin : origins) {
         if (stop()) return false;
+        const auto input=patch(source,{origin.first,origin.second,width,height},margin);
+        std::vector<float> signals; std::array<std::vector<float>,4> quarters;
+        for(int y=0;y<height;++y)for(int x=0;x<width;++x) {
+            const float v=input.at<cv::Vec3f>(margin+y,margin+x)[0]; signals.push_back(v);
+            const int quadrant=(x>=width/2)+2*(y>=height/2);
+            quarters[std::size_t(quadrant)].push_back(v);
+        }
+        const float signal=median(signals);
+        float low=signal,high=signal;
+        for(const auto &q:quarters)if(!q.empty()){const float v=median(q);low=std::min(low,v);high=std::max(high,v);}
         Pyramid p;
-        if (!pyramid(patch(source, {origin.first, origin.second, width, height}, margin), p, steps, stop)) return false;
+        if (!pyramid(input, p, steps, stop)) return false;
+        bool flat=true; float signalUncertainty=0;
         for (int level = 0; level < Levels; ++level) {
             if (steps[std::size_t(level)] == 0) break;
             const auto &d = p.detail[std::size_t(level)];
             if (!cv::checkRange(d)) return false;
-            PatchNoise item;
+            PatchNoise item; item.signal=signal;
             std::array<std::vector<float>, 3> samples;
             for (int y = margin; y < margin + height; ++y) for (int x = margin; x < margin + width; ++x) {
                 const auto v = d.at<cv::Vec3f>(y, x); item.samples.push_back(v);
@@ -176,47 +282,123 @@ bool estimate(const cv::Mat &source,
                 item.score += double(item.sigma[c]) * item.sigma[c];
             }
             if (!std::isfinite(item.score)) return false;
+            if(level==0) {
+                signalUncertainty=3*item.sigma[0]+1e-7f*std::max(1.f,std::abs(signal));
+                flat=high-low<=signalUncertainty;
+            }
+            item.signalUncertainty=signalUncertainty;
             bool structured = false;
             for (int c = 0; c < 3; ++c) structured = structured || coherent(item, c, width, height, 2 * steps[std::size_t(level)]);
-            if (!structured) patches[std::size_t(level)].push_back(std::move(item));
+            if (!structured) allPatches[std::size_t(level)].push_back(item);
+            if (flat && !structured) patches[std::size_t(level)].push_back(std::move(item));
         }
     }
     for (int level = 0; level < Levels; ++level) {
+        if (steps[std::size_t(level)] == 0) break;
         auto &items = patches[std::size_t(level)];
-        if (items.empty()) continue; // Abstain at this scale rather than fit texture.
-        std::sort(items.begin(), items.end(), [](const PatchNoise &a, const PatchNoise &b) { return a.score < b.score; });
-        const std::size_t retained = std::max(std::size_t(1), (items.size() + 3) / 4);
-        auto &model = models[std::size_t(level)];
-        for (int c = 0; c < 3; ++c) {
-            std::vector<float> sigmas;
-            for (std::size_t i = 0; i < retained; ++i) sigmas.push_back(items[i].sigma[c]);
-            model.sigma[c] = median(sigmas);
+        NoiseModelSummary summary; summary.level = level;
+        summary.flatCandidates = int(items.size());
+        const auto &all = allPatches[std::size_t(level)];
+        summary.candidates = int(all.size());
+        std::vector<const PatchNoise *> globalGroup;
+        for (const auto &item : all) globalGroup.push_back(&item);
+        Knot global;
+        if (!globalGroup.empty()) {
+            global = fit(std::move(globalGroup));
+            summary.globalSignal=global.signal;
+            for (int c=0;c<3;++c) summary.globalSigma[c]=std::sqrt(global.covariance(c,c));
         }
-        cv::Matx33d sums = cv::Matx33d::zeros();
-        for (std::size_t i = 0; i < retained; ++i) for (auto v : items[i].samples) {
-            cv::Vec3d z{};
-            for (int c = 0; c < 3; ++c) if (model.sigma[c] > 0)
-                z[c] = std::clamp((double(v[c]) - items[i].center[c]) / model.sigma[c], -3., 3.);
-            for (int c = 0; c < 3; ++c) for (int k = 0; k < 3; ++k) sums(c, k) += z[c] * z[k];
+        auto &curve=models[std::size_t(level)];
+        curve.pooledValid=!all.empty()&&fromCovariance(global.covariance,curve.pooled);
+        summary.globalFallbackAvailable=curve.pooledValid;
+        if(items.size()<3) {
+            if (observer) observer(summary);
+            continue; // No conditional support: use the pooled model if available.
         }
-        cv::Matx33f correlation = cv::Matx33f::zeros(), regularized = cv::Matx33f::eye();
-        for (int c = 0; c < 3; ++c) {
-            correlation(c, c) = model.sigma[c] > 0 ? 1.f : 0.f;
-            for (int k = 0; k < c; ++k) {
-                const double denominator = std::sqrt(sums(c, c) * sums(k, k));
-                const float rho = denominator > 0 ? float(std::clamp(sums(c, k) / denominator, -.95, .95)) : 0.f;
-                correlation(c, k) = correlation(k, c) = rho;
-                // Shrink toward diagonal: stable even with strongly correlated channels.
-                regularized(c, k) = regularized(k, c) = .25f * rho;
+        std::sort(items.begin(),items.end(),[](const auto &a,const auto &b){return a.signal<b.signal;});
+        std::vector<float> uncertainties;
+        for(const auto &item:items)uncertainties.push_back(item.signalUncertainty);
+        const float uncertainty=median(uncertainties);
+        const int bands=items.size()>=9 && items.back().signal-items.front().signal>uncertainty?3:1;
+        std::vector<Knot> knots;
+        for(int band=0;band<bands;++band) {
+            std::vector<const PatchNoise *> group;
+            for(std::size_t i=items.size()*std::size_t(band)/std::size_t(bands);
+                i<items.size()*std::size_t(band+1)/std::size_t(bands);++i)group.push_back(&items[i]);
+            const auto knot=fit(std::move(group));
+            if(!knots.empty() && knot.signal-knots.back().signal<=1e-7f*std::max(1.f,std::abs(knot.signal)))
+                knots.back().covariance=(knots.back().covariance+knot.covariance)*.5f;
+            else knots.push_back(knot);
+        }
+        if(knots.size()>1 && !all.empty())
+            summary.darkFloorApplied=floorDarkCovariance(knots.front(),global);
+        curve.low=items.front().signal-uncertainty;curve.high=items.back().signal+uncertainty;
+        curve.transition=uncertainty;
+        if(!std::isfinite(curve.low)||!std::isfinite(curve.high)||!(curve.high>curve.low))return false;
+        for(int i=0;i<CurveSamples;++i) {
+            const float signal=curve.low+(curve.high-curve.low)*(float(i)/(CurveSamples-1));
+            cv::Matx33f covariance=knots.front().covariance;
+            if(signal>=knots.back().signal)covariance=knots.back().covariance;
+            else for(std::size_t k=1;k<knots.size();++k)if(signal>=knots[k-1].signal&&signal<knots[k].signal) {
+                const float t=(signal-knots[k-1].signal)/(knots[k].signal-knots[k-1].signal);
+                covariance=knots[k-1].covariance*(1-t)+knots[k].covariance*t;break;
             }
+            if(!fromCovariance(covariance,curve.values[std::size_t(i)]))return false;
         }
-        bool invertible = false;
-        model.inverseCorrelation = regularized.inv(cv::DECOMP_CHOLESKY, &invertible);
-        if (!invertible) return false;
-        for (int c = 0; c < 3; ++c) for (int k = 0; k < 3; ++k)
-            model.expectedJointEnergy += model.inverseCorrelation(c, k) * correlation(k, c);
+        curve.valid=true;
+        curve.constant=knots.size()==1;
+        if (observer) {
+            summary.supported=true; summary.low=curve.low; summary.high=curve.high;
+            for (const auto &knot : knots) {
+                cv::Vec3f sigma;
+                for(int c=0;c<3;++c)sigma[c]=std::sqrt(knot.covariance(c,c));
+                summary.nodes.emplace_back(knot.signal,sigma);
+            }
+            observer(summary);
+        }
     }
     return true;
+}
+
+void accumulateEnergy(Energy &result,const Noise &model,const cv::Vec3f &detail,float weight)
+{
+    if(weight<=0)return;
+    cv::Vec3f z{};
+    for(int c=0;c<3;++c)if(model.sigma[c]>0) {
+        z[c]=float(std::clamp(double(detail[c])/model.sigma[c],-1e6,1e6));
+        result[c]+=weight*z[c]*z[c];result[c+4]+=weight;
+    }
+    result[3]+=weight*std::max(0.f,z.dot(model.inverseCorrelation*z));
+    result[7]+=weight*model.expectedJointEnergy;
+}
+
+Energy energyAt(const NoiseCurve &curve,float signal,const cv::Vec3f &detail)
+{
+    Energy result{};
+    if(!std::isfinite(signal))return result;
+    if(!curve.valid) {
+        if(curve.pooledValid)accumulateEnergy(result,curve.pooled,detail,1);
+        return result;
+    }
+    if(signal<curve.low || signal>curve.high) {
+        if(!curve.pooledValid)return result;
+        // Transition only OUTSIDE the conditional range, in its already
+        // measured intensity-uncertainty units; no hard jump at the boundary.
+        const double distance=signal<curve.low?double(curve.low)-signal:double(signal)-curve.high;
+        const float t=curve.transition>0?float(std::clamp(distance/double(curve.transition),0.,1.)):1.f;
+        accumulateEnergy(result,curve.values[signal<curve.low?0:CurveSamples-1],detail,1-t);
+        accumulateEnergy(result,curve.pooled,detail,t);
+        return result;
+    }
+    const float position=curve.constant?0.f:std::clamp((signal-curve.low)/(curve.high-curve.low)*(CurveSamples-1),0.f,float(CurveSamples-1));
+    const int lower=int(position),upper=std::min(lower+1,CurveSamples-1);
+    const float t=curve.constant?0.f:position-lower;
+    for(int side=0;side<2;++side) {
+        const float weight=side?t:1-t;
+        if(weight<=0)continue;
+        accumulateEnergy(result,curve.values[std::size_t(side?upper:lower)],detail,weight);
+    }
+    return result;
 }
 
 bool boxMean(const cv::Mat &source, cv::Mat &out, int radius, const std::function<bool()> &stop)
@@ -226,17 +408,17 @@ bool boxMean(const cv::Mat &source, cv::Mat &out, int radius, const std::functio
     for (int y = 0; y < source.rows; ++y) {
         if ((y & 15) == 0 && stop()) return false;
         for (int x = 0; x < source.cols; ++x) {
-            cv::Vec4f sum{};
-            for (int k = -radius; k <= radius; ++k) sum += source.at<cv::Vec4f>(y, reflect(x + k, source.cols));
-            horizontal.at<cv::Vec4f>(y, x) = sum * scale;
+            Energy sum{};
+            for (int k = -radius; k <= radius; ++k) sum += source.at<Energy>(y, reflect(x + k, source.cols));
+            horizontal.at<Energy>(y, x) = sum * scale;
         }
     }
     for (int y = 0; y < source.rows; ++y) {
         if ((y & 15) == 0 && stop()) return false;
         for (int x = 0; x < source.cols; ++x) {
-            cv::Vec4f sum{};
-            for (int k = -radius; k <= radius; ++k) sum += horizontal.at<cv::Vec4f>(reflect(y + k, source.rows), x);
-            out.at<cv::Vec4f>(y, x) = sum * scale;
+            Energy sum{};
+            for (int k = -radius; k <= radius; ++k) sum += horizontal.at<Energy>(reflect(y + k, source.rows), x);
+            out.at<Energy>(y, x) = sum * scale;
         }
     }
     return true;
@@ -244,7 +426,7 @@ bool boxMean(const cv::Mat &source, cv::Mat &out, int radius, const std::functio
 
 bool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margin,
           const std::array<int, Levels> &steps,
-          const std::array<Noise, Levels> &models, const cv::Vec3f &strength,
+          const std::array<NoiseCurve, Levels> &models, const cv::Vec3f &strength,
           int radius, const std::function<bool()> &stop)
 {
     Pyramid p;
@@ -253,32 +435,53 @@ bool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margi
         std::fill_n(delta.ptr<cv::Vec3f>(core.y + y) + core.x, core.width, cv::Vec3f{});
     for (int level = 0; level < Levels; ++level) {
         const auto &model = models[std::size_t(level)];
-        if (model.expectedJointEnergy <= 0) continue;
+        if (!model.valid && !model.pooledValid) continue;
         const auto &detail = p.detail[std::size_t(level)];
-        cv::Mat energy(detail.size(), CV_32FC4);
+        cv::Mat energy(detail.size(), CV_32FC(8)),fallbackEnergy;
         for (int y = 0; y < detail.rows; ++y) {
             if ((y & 15) == 0 && stop()) return false;
-            const auto *d = detail.ptr<cv::Vec3f>(y); auto *e = energy.ptr<cv::Vec4f>(y);
+            const auto *d = detail.ptr<cv::Vec3f>(y); auto *e = energy.ptr<Energy>(y);
             for (int x = 0; x < detail.cols; ++x) {
-                cv::Vec3f z{};
-                for (int c = 0; c < 3; ++c) if (model.sigma[c] > 0)
-                    z[c] = float(std::clamp(double(d[x][c]) / model.sigma[c], -1e6, 1e6));
-                const auto joint = model.inverseCorrelation * z;
-                e[x] = {z[0] * z[0], z[1] * z[1], z[2] * z[2], std::max(0.f, z.dot(joint))};
+                const float signal=p.signal.at<float>(y,x);
+                const bool fallback=model.valid&&model.pooledValid&&(signal<model.low||signal>model.high);
+                const auto sample=energyAt(model,signal,d[x]);
+                if(fallback) {
+                    // Do not let normalized pooled energies alter the local
+                    // decisions of already-supported conditional pixels.
+                    if(fallbackEnergy.empty())fallbackEnergy=cv::Mat::zeros(detail.size(),CV_32FC(8));
+                    fallbackEnergy.at<Energy>(y,x)=sample;
+                    e[x]=Energy{};
+                } else e[x]=sample;
             }
         }
-        cv::Mat local;
+        cv::Mat local,fallbackLocal;
         if (!boxMean(energy, local, radius, stop)) return false;
+        if(!fallbackEnergy.empty()&&!boxMean(fallbackEnergy,fallbackLocal,radius,stop))return false;
         for (int y = 0; y < core.height; ++y) {
             if ((y & 15) == 0 && stop()) return false;
             auto *out = delta.ptr<cv::Vec3f>(core.y + y) + core.x;
             const auto *d = detail.ptr<cv::Vec3f>(margin + y) + margin;
-            const auto *e = local.ptr<cv::Vec4f>(margin + y) + margin;
+            const auto *e = local.ptr<Energy>(margin + y) + margin;
+            const auto *current=energy.ptr<Energy>(margin+y)+margin;
+            const auto *pooled=fallbackLocal.empty()?nullptr:fallbackLocal.ptr<Energy>(margin+y)+margin;
+            const auto *pooledCurrent=fallbackEnergy.empty()?nullptr:fallbackEnergy.ptr<Energy>(margin+y)+margin;
             for (int x = 0; x < core.width; ++x) {
-                const float shared = std::clamp(1.f - model.expectedJointEnergy / std::max(e[x][3], model.expectedJointEnergy), 0.f, 1.f);
-                for (int c = 0; c < 3; ++c) if ((c != 0 || level < LuminanceLevels) && strength[c] > 0 && model.sigma[c] > 0) {
-                    const float individual = std::clamp(1.f - 1.f / std::max(e[x][c], 1.f), 0.f, 1.f);
-                    out[x][c] -= strength[c] * (1.f - std::max(individual, shared)) * d[x][c];
+                const float signal=p.signal.at<float>(margin+y,margin+x);
+                const bool usePooled=pooled&&pooledCurrent&&(signal<model.low||signal>model.high);
+                const auto &stats=usePooled?pooled[x]:e[x];
+                const auto &pixel=usePooled?pooledCurrent[x]:current[x];
+                const float shared = stats[7]>0?std::clamp(1.f-stats[7]/std::max(stats[3],stats[7]),0.f,1.f):0.f;
+                // A real achromatic texture is not evidence of a real colour
+                // feature. Chroma protection uses only its two normalized
+                // energies; their expected sum is valid even when correlated.
+                // This is a second-moment gate, not a chi-square probability.
+                const float chromaExpected=stats[5]+stats[6];
+                const float chromaObserved=stats[1]+stats[2];
+                const float chromaShared=chromaExpected>0?
+                    std::clamp(1.f-chromaExpected/std::max(chromaObserved,chromaExpected),0.f,1.f):0.f;
+                for (int c = 0; c < 3; ++c) if ((c != 0 || level < LuminanceLevels) && strength[c] > 0 && pixel[c+4] > 0 && stats[c+4]>0) {
+                    const float individual = std::clamp(1.f-stats[c+4]/std::max(stats[c],stats[c+4]),0.f,1.f);
+                    out[x][c] -= strength[c] * (1.f - std::max(individual, c==0?shared:chromaShared)) * d[x][c];
                 }
             }
         }
@@ -319,17 +522,20 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
         const int radius = std::max(1, int(std::lround(3 * context.pixelScale)));
         int margin = radius;
         for (int step : steps) margin += 2 * step;
-        std::array<Noise, Levels> models;
-        if (!estimate(cameraRgb, steps, margin, models, stop)) return false;
+        std::array<NoiseCurve, Levels> models;
+        if (!estimate(cameraRgb, steps, margin, models, stop, context.noiseModelObserver)) return false;
         bool measured = false;
-        for (const auto &m : models) for (int c = 0; c < 3; ++c) if (m.sigma[c] > 0) measured = true;
+        for (const auto &curve : models) {
+            if(curve.valid)for(const auto &m:curve.values)for(int c=0;c<3;++c)if(m.sigma[c]>0)measured=true;
+            if(curve.pooledValid)for(int c=0;c<3;++c)if(curve.pooled.sigma[c]>0)measured=true;
+        }
         if (!measured) {
-            // A nonzero request must detach even when no noise was measured:
-            // downstream optics may otherwise mutate the shared source.
-            if (stop()) return false;
-            auto unchanged = cameraRgb.clone();
-            if (stop()) return false;
-            cameraRgb = std::move(unchanged);
+            // Nonzero requests must detach even on abstention: the caller may
+            // apply optical corrections in place to the returned camera buffer.
+            if(stop())return false;
+            auto unchanged=cameraRgb.clone();
+            if(stop())return false;
+            cameraRgb=std::move(unchanged);
             return true;
         }
         cv::Mat delta(cameraRgb.size(), CV_32FC3);

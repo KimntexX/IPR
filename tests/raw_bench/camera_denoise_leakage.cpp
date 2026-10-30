@@ -40,7 +40,7 @@ int reflected(int x,int size)
     while(x<0||x>=size)x=x<0?-x:2*size-2-x;
     return x;
 }
-QJsonArray signalSurvey(const cv::Mat &camera,const cv::Vec3f &gains)
+QJsonArray signalSurvey(const cv::Mat &camera,const std::vector<CameraDenoise::NoiseModelSummary> &models)
 {
     // Independent coefficient survey, not a second production denoiser.
     constexpr int width=64,halo=65;
@@ -53,7 +53,6 @@ QJsonArray signalSurvey(const cv::Mat &camera,const cv::Vec3f &gains)
         std::array<std::vector<float>,4> quarters;
         for(int y=0;y<current.rows;++y)for(int x=0;x<current.cols;++x) {
             auto rgb=camera.at<cv::Vec3f>(reflected(oy+y-halo,camera.rows),reflected(ox+x-halo,camera.cols));
-            for(int c=0;c<3;++c)rgb[c]/=gains[c];
             const cv::Vec3f v(.25f*rgb[0]+.5f*rgb[1]+.25f*rgb[2],.5f*(rgb[0]-rgb[2]),rgb[1]-.5f*(rgb[0]+rgb[2]));
             current.at<cv::Vec3f>(y,x)=v;
             if(x>=halo&&x<halo+width&&y>=halo&&y<halo+width) {
@@ -63,13 +62,15 @@ QJsonArray signalSurvey(const cv::Mat &camera,const cv::Vec3f &gains)
         }
         float low=median(quarters[0]),high=low;
         for(const auto &q:quarters){const float m=median(q);low=std::min(low,m);high=std::max(high,m);}
-        QJsonArray levels;
+        QJsonArray levels; std::vector<float> guide;
         for(int level=0;level<5;++level) {
             const int step=1<<level;
             cv::Mat kernel=cv::Mat::zeros(1,4*step+1,CV_32F);
             for(int k=0;k<5;++k)kernel.at<float>(0,k*step)=std::array<float,5>{1.f/16,4.f/16,6.f/16,4.f/16,1.f/16}[size_t(k)];
             cv::Mat base;cv::sepFilter2D(current,base,-1,kernel,kernel,{-1,-1},0,cv::BORDER_REFLECT_101);
             const cv::Mat detail=current-base;
+            if(level==0)for(int y=halo;y<halo+width;++y)for(int x=halo;x<halo+width;++x)
+                guide.push_back(base.at<cv::Vec3f>(y,x)[0]);
             QJsonArray sigma,correlationX,correlationY;bool rejected=false;
             for(int c=0;c<3;++c) {
                 std::vector<float> values;
@@ -93,9 +94,18 @@ QJsonArray signalSurvey(const cv::Mat &camera,const cv::Vec3f &gains)
                 {"correlation_y",correlationY},{"coherent_rejected",rejected}});
             current=std::move(base);
         }
+        QJsonArray coverage;
+        for(const auto &model:models) {
+            int below=0,above=0;
+            if(model.supported)for(float v:guide){below+=v<model.low;above+=v>model.high;}
+            coverage.append(QJsonObject{{"level",model.level},{"supported",model.supported},
+                {"below",below},{"above",above},{"pixels",int(guide.size())},
+                {"global_fallback_pixels",model.globalFallbackAvailable?
+                    (model.supported?below+above:int(guide.size())):0}});
+        }
         records.append(QJsonObject{{"roi",QJsonArray{ox,oy,width,width}},
             {"training_original_5x5",gx%2==0&&gy%2==0},{"signal_I_median",median(intensities)},
-            {"quadrant_signal_drift",double(high-low)},{"levels",levels}});
+            {"quadrant_signal_drift",double(high-low)},{"levels",levels},{"model_coverage",coverage}});
     }
     return records;
 }
@@ -108,12 +118,12 @@ cv::Mat render(CameraProfileEngine::DcpWorkingContext context, const cv::Mat &ca
     require(out.type() == CV_32FC3 && cv::checkRange(out), "Invalid profile output");
     return out;
 }
-cv::Mat intensity(const cv::Mat &camera, const cv::Vec3f &gains)
+cv::Mat intensity(const cv::Mat &camera)
 {
     cv::Mat out(camera.size(), CV_32F);
     for (int y=0; y<out.rows; ++y) for (int x=0; x<out.cols; ++x) {
         const auto v=camera.at<cv::Vec3f>(y,x);
-        out.at<float>(y,x)=.25f*v[0]/gains[0]+.5f*v[1]/gains[1]+.25f*v[2]/gains[2];
+        out.at<float>(y,x)=.25f*v[0]+.5f*v[1]+.25f*v[2];
     }
     return out;
 }
@@ -153,7 +163,7 @@ QJsonObject measures(const cv::Mat &working,const cv::Rect &roi)
 }
 // STUDY ONLY: finite differences of the actual profile, not a production DCP hook.
 // Project chroma correction onto the tangent plane of rendered linear Y, along
-// the pure opponent-intensity direction (gains), not a characterized scene gray.
+// the balanced opponent-intensity direction (1,1,1), not a characterized scene gray.
 // Clipped/ill-conditioned derivatives abstain.
 cv::Mat projected(const CameraProfileEngine::DcpWorkingContext &context,const cv::Mat &source,
                   const cv::Mat &filtered,const cv::Vec3f &gains,QJsonObject &diagnostic)
@@ -181,7 +191,7 @@ cv::Mat projected(const CameraProfileEngine::DcpWorkingContext &context,const cv
         out.at<cv::Vec3f>(y,x)-=gains*float(bounded);
     }
     diagnostic={{"abstained_fraction",abstained/source.total()},{"limited_fraction",limited/source.total()},
-                {"finite_difference_epsilon_unbalanced_camera",epsilon}};
+                {"finite_difference_epsilon_balanced_camera",epsilon}};
     return out;
 }
 }
@@ -190,7 +200,7 @@ int main(int argc,char **argv)
 {
     QCoreApplication app(argc,argv);QCommandLineParser p;p.addHelpOption();
     for(const auto *key:{"input","manifest","profile-root","label"})p.addOption(QCommandLineOption(key,key,"value"));
-    p.addOption(QCommandLineOption("signal-survey","Survey coefficient MAD versus camera intensity; no filtering"));
+    p.addOption(QCommandLineOption("signal-survey","Survey balanced coefficient MAD and actual full-frame models; no image export"));
     p.process(app);
     try {
         for(const auto *key:{"input","manifest","profile-root","label"})require(p.isSet(key),"Missing argument");
@@ -205,16 +215,30 @@ int main(int argc,char **argv)
         if(loaded.isNull()||!loaded.dcpContext)throw std::runtime_error(error.toStdString());
         auto full=*loaded.dcpContext;loaded={};
         CameraDenoise::Context context;
-        for(int c=0;c<3;++c) {require(full.cameraNeutral[c]>0,"Missing actual gains");context.gains[size_t(c)]=1/full.cameraNeutral[c];}
-        context.gains[3]=context.gains[1];
-        const double minimum=*std::min_element(context.gains.begin(),context.gains.end());
-        for(auto &v:context.gains)v/=minimum;
-        const cv::Vec3f gains(float(context.gains[0]),float(context.gains[1]),float(context.gains[2]));
+        // V1: source is already white-balanced; never compensate these axes.
+        const cv::Vec3f gains(1,1,1); // Neutral direction for the projection study only.
         if(p.isSet("signal-survey")) {
+            QJsonArray modelJson; std::vector<CameraDenoise::NoiseModelSummary> models;
+            context.noiseModelObserver=[&](const CameraDenoise::NoiseModelSummary &m) {
+                models.push_back(m); QJsonArray sigma,nodes;
+                for(int c=0;c<3;++c)sigma.append(m.globalSigma[c]);
+                for(const auto &node:m.nodes)nodes.append(QJsonObject{{"signal",node.first},
+                    {"sigma",QJsonArray{node.second[0],node.second[1],node.second[2]}}});
+                modelJson.append(QJsonObject{{"level",m.level},{"candidates",m.candidates},
+                    {"flat_candidates",m.flatCandidates},{"supported",m.supported},
+                    {"dark_floor_applied",m.darkFloorApplied},
+                    {"global_fallback_available",m.globalFallbackAvailable},
+                    {"low",m.low},{"high",m.high},{"global_signal",m.globalSignal},
+                    {"global_sigma",sigma},{"nodes",nodes}});
+            };
+            auto filtered=full.cameraRgb;
+            require(CameraDenoise::apply(filtered,{100,100},context),"Model observation failed");
+            filtered.release();
             const QJsonObject result{{"created_utc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
                 {"label",p.value("label")},{"source",p.value("input")},{"source_sha256",hash(p.value("input"))},
                 {"manifest_sha256",hash(p.value("manifest"))},{"profile_sha256",hash(full.profilePath)},
-                {"engine_base_revision",IPR_ENGINE_REVISION},{"patches",signalSurvey(full.cameraRgb,gains)}};
+                {"engine_base_revision",IPR_ENGINE_REVISION},{"camera_axes","already_white_balanced"},
+                {"production_models",modelJson},{"patches",signalSurvey(full.cameraRgb,models)}};
             std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\n';return 0;
         }
         QJsonArray patches;
@@ -228,7 +252,7 @@ int main(int argc,char **argv)
             const auto baseline=render(full,source),rendered=render(full,filtered);
             QJsonObject projection;const auto candidate=projected(full,source,filtered,gains,projection);
             const auto constrained=render(full,candidate);
-            const auto inputI=intensity(source,gains),outputI=intensity(filtered,gains);
+            const auto inputI=intensity(source),outputI=intensity(filtered);
             const auto baselineY=luminance(baseline),filteredY=luminance(rendered),constrainedY=luminance(constrained);
             const cv::Mat deltaI=outputI-inputI,deltaY=filteredY-baselineY,deltaProjected=constrainedY-baselineY;
             patches.append(QJsonObject{{"camera_roi",QJsonArray{area.x,area.y,area.width,area.height}},

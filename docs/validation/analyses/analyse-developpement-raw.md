@@ -1,12 +1,13 @@
 # Séparation du développement RAW — rapport évolutif
 
-## Bilan actuel — 29 octobre 2026
+## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§24) : axes caméra déjà balancés, 56 contrôles natifs et six
-suites passent ; raccordement moteur encore à faire par Claude. Le prototype
-conditionnel du §23 reste un candidat historique non promu (`0941dc4`).
-**Pas de validation visuelle ni de promotion**. La comparaison réelle des axes
-reste à qualifier ; curseurs et bornes DCP inchangés.
+Dernier jalon (§31) : repli global préparé au-dessus du candidat(c1), après
+les abstentions signalées par Claude sur la campagne du plancher sombre.
+77 contrôles natifs, sept suites et test optique passent. **Qualification
+synthétique seulement, pas de promotion.** Les22 scènes signalées restent à
+mesurer avec ce candidat ; la campagne réelle de(c1) est menée par Claude.
+Forces et bornes DCP inchangées ; coût du repli encore à mesurer.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1202,57 +1203,462 @@ sans confondre changement d'axes, loi des curseurs et adaptation au signal.
 Les temps13–14 s du §23 concernaient la pleine définition, non l'aperçu.
 Aucune nouvelle image ni action utilisateur nécessaire à ce stade.
 
+## 25. 29 octobre — orientation utilisateur pour la commande globale (b)
+
+Orientation transmise par Claude et retenue : une seule barre principale
+**« Réduction du bruit »**, avec un sous-menu **« Avancé »** replié pour
+affiner séparément luminance et couleur. La commande sera à **0 par défaut**.
+Lightroom reste un repère de réponse
+et de rendu, pas une cible à recopier. Cette décision ne modifie ni(a), ni V1,
+ni les bornes DCP, et ne vaut pas implémentation de l'interface.
+
+Le contrat `CameraDenoise::Settings{luminance, chrominance}` reste inchangé.
+La future commande globale sera traduite en ces deux forces par une loi en
+C++, pas par des calculs photographiques dans le QML. Aucune pondération,
+proportion fixe ou nouvelle courbe de force n'est choisie ici ; les mesures
+contrôlées et le contrôle visuel doivent guider ce choix après qualification
+des axes balancés. Définir aussi explicitement comment les réglages avancés
+interagissent avec un nouveau déplacement du curseur principal, afin d'éviter
+des valeurs masquées ou des corrections appliquées deux fois.
+
+Avant raccordement IHM : tests des bornes0–100, finitude, déterminisme,
+identité lorsque les deux forces effectives valent0, et réponse progressive
+sur des champs de bruit connus. La baisse d'un indicateur sur une photo
+texturée ne suffit pas à valider cette loi. Le panneau et le sous-menu seront
+pris en charge dans le chantier IHM dédié ; aucune modification moteur ou
+QML supplémentaire n'est faite pour cette seule orientation.
+
+## 26. 29 octobre — force souhaitée et comparaison signé/non signé à isoler
+
+Retour utilisateur transmis par Claude : viser un lissage de luminance de
+l'ordre du rendu LR70–75, sans rechercher le flou et la perte de texture
+observés au-delà. Ce repère visuel ne fixe pas un coefficient numérique
+IPR, ni une équivalence entre positions des curseurs. La conservation des
+contours et de la matière fait partie de l'objectif. Aucun nouveau poids
+de la future commande globale n'est fixé avant comparaison.
+
+Autre observation : sur7599 le débruitage paraît meilleur avec la BdB
+automatique ; des points rouges/verts restent avec la BdB boîtier et le
+développement signé. L'inspection de `RawDecoder::developedByIpr` confirme
+que la BdB automatique exclut le développement IPR : elle passe par
+`dcraw_process`, sa sortie bitmap16 bits, puis sa conversion en flottants.
+Elle modifie aussi les gains, et peut modifier la résolution de la calibration
+dont le contexte contient `cameraWhiteBalance`. Cette observation n'isole
+donc pas le seul rôle des valeurs négatives. Le magenta/vert après rendu
+reste une hypothèse, pas une causalité établie pour tous les points.
+
+Claude prend en charge l'essai A non signé + CameraDenoise contre B signé,
+avec **la même BdB boîtier**, sur7599/9539, après sa campagne V1. Préserver
+neutres A0/B0 et états traités, paramètres, calibration réellement résolue,
+masques fixes, identité de l'exécutable et des sources. Attention : A/B
+changent aussi la grille numérique, les bornes avant RCD et son traitement
+signé ; une différence A/B seule ne prouvera pas que le DCP est la cause.
+
+Pour isoler spécifiquement la frontière après débruitage, une sonde distincte
+peut reprendre **le même tampon B traité** et comparer son rendu direct à un
+rendu où seuls les négatifs ont été remplacés par0, juste avant les mêmes
+étapes optiques/profil. Consigner aussi les valeurs négatives par canal et
+niveau de signal avant/après filtre, et les pixels concernés après rendu.
+Cette sonde introduit un biais de noir : elle n'est ni une correction approuvée,
+ni une justification pour borner en amont du débruitage. Ne pas changer le
+filtre ou la force au milieu de cette comparaison. Aucun nouvel essai n'est
+lancé ici en parallèle de la campagne confiée à Claude.
+
+## 27. 29 octobre — V1 confirmé, sondes BdB et combinaison(a)+V1
+
+### Référence V1 et relecture des sondes de chemins
+
+Claude livre `75d8701` :
+`../raw/loi-force-bruit-b-v1-v001-20261029T200937Z.json` reprend les28 scènes
+et masques de la campagne initiale, un seul exécutable haché et un témoin0/0
+inchangé. La hausse médiane de chroma HP à luminance100 passe de×1,27 à×0,99
+dans les noirs ; la couleur seule agit davantage, sans bénéfice majeur dans
+les aplats clairs. Cela soutient les axes balancés, pas encore le modèle(a).
+
+Les sondes `8fd363f`,
+`../raw/essai-debruitage-chemins-bdb-v001-20261029T201816Z.json`, comparent7599
+et9539. Le chemin non signé réduit certains points noirs de7599 mais relève
+la luma moyenne du masque sombre de12,6 à18,5 à100/100 ; ce n'est pas une
+amélioration sans contrepartie. La BdB automatique livre une image plus sombre
+et froide et désactive la calibration concernée : les observations ne démontrent
+pas un meilleur débruitage. L'identité de l'exécutable autoWB est déclarée
+« not recorded » ; ce volet reste une sonde de diagnostic, pas une qualification
+reproductible du chemin. Aucun abandon du signal signé ni nouvelle borne DCP.
+
+### Candidat conditionnel dans les axes balancés
+
+Le raccordement moteur de Claude `dec3c6f` est intégré localement au banc.
+Le modèle conditionnel du §23 est ensuite réintroduit **sans annulation de BdB** :
+mêmes témoins admissibles, trois plages si support suffisant, covariance
+interpolée et abstention hors domaine. La physique capteur n'est pas recalibrée.
+`Context::gains` reste supprimé ; la luminance seule ajoute un delta commun
+R/G/B. Le garde d'alias et l'intégrité de la source sont conservés.
+Ce lot ne change ni les forces, ni les taches basse fréquence(c), ni la
+future loi maître(b). L'ordre convenu est(a)+V1, puis(c), puis(b).
+
+Première preuve native :
+`../raw/camera-denoise-n2-v001-20261029T202017Z.json`, 61 contrôles natifs,
+test moteur optique et six suites réussis. Trois nouveaux tests Python
+vérifient en plus le rattachement de la référence V1 à la bonne campagne
+figée ; ils sont désormais déclarés dans une septième suite CTest.
+Mesures initiales du module :718 ms sur2,8 Mpx et5340 ms sur24 Mpx,
+pic733028352 octets sur le champ synthétique. Pas une mesure de l'aperçu
+interactif, ni une campagne répétée de performance.
+
+La comparaison réelle emploie les mêmes7599/9539/7958 de développement et
+réutilise **B-V1**, pas l'ancien B aux axes compensés. Le lanceur exige le
+SHA de la référence commune, ceux des sources et des masques, puis les mêmes
+métriques B0 ; un écart arrête la campagne. Les25 autres scènes restent une
+réserve prospective pour un candidat figé, pas un corpus jamais observé.
+### Résultats de la combinaison figée `15a4cc2`
+
+`../raw/camera-denoise-n2b-v001-20261029T202044Z.json` conserve15 rendus en
+mémoire. Les trois neutres B0 et les empreintes des masques concordent avec
+B-V1. Le SHA du module et celui du serveur rejoignent le candidat final :
+pas de changement d'algorithme entre mesures et jalon. Les sources et le
+binaire sont identifiés dans la preuve ; aucun TIFF de mesure généré.
+
+Comparaison à B-V1, mêmes masques et même état :
+
+| Scène / masque / état lum-col | Luma HP V1 → (a)+V1 | Chroma HP V1 → (a)+V1 |
+| --- | ---: | ---: |
+| 7599 clair,100-0 | 6,699 →3,495 | 14,164 →12,198 |
+| 7599 clair,100-100 | 6,534 →3,138 | 11,661 →6,288 |
+| 7599 noir,100-100 | 1,237 →2,389 | 1,524 →3,307 |
+| 9539 moyen,100-0 | 3,916 →1,812 | 4,462 →4,452 |
+| 9539 moyen,100-100 | 3,882 →1,693 | 3,282 →1,718 |
+
+Unités : écart-type haute fréquence, luma Rec.709 pondérée et différences
+R−G/B−G, sur RGB encodé échelonné0–255. Ce ne sont ni des mesures de bruit
+capteur seul ni une vérité propre. Le masque de contours9539 baisse aussi
+de5,187 à4,057 en luma à100-0 : examiner visuellement la conservation des
+détails avant de l'interpréter comme du bruit retiré. Le60D7958 change peu
+(clair100-100 : luma1,188→1,223, chroma1,415→1,452).
+
+La réduction plus forte du masque clair de7599 ne réintroduit pas la hausse
+de chroma à luminance100 observée avant V1. En revanche, le noir7599 à100/100
+est sensiblement moins réduit qu'avec V1 seul, et couleur100 seule y laisse
+5,112 au lieu de4,224. Il n'y a donc **pas de domination uniforme** de V1
+par(a)+V1. Ne pas augmenter arbitrairement la force pour masquer ces écarts.
+Les taches basse fréquence ne sont pas qualifiées par le seul HP sigma2 ;
+leur traitement(c) reste séparé.
+
+Requêtes chaudes pleines images CR3 :8,2–9,2 s en luminance,12,6–14,1 s en
+chroma, rendu compris ; ouvertures froides32–36,5 s. Sur60D :4,7/7,4 s.
+Qualification finale `../raw/camera-denoise-n2-v001-20261029T202504Z.json` :
+61 contrôles natifs, **sept suites CTest** et test moteur optique réussis.
+Ce second enregistrement inclut la nouvelle suite de référence, sans changement
+de module. Mesures synthétiques finales :730 ms sur2,8 Mpx,5402 ms sur24 Mpx,
+pic731951104 octets ; elles n'établissent pas la latence réelle du proxy IHM.
+
+**Décision :** jalon disponible pour intégration expérimentale et revue,
+pas remplacement validé. Réserve25 scènes non rejouée sur cette combinaison ;
+faire la qualification du candidat figé sans ajuster ses seuils au fil des
+résultats. Contrôle visuel ciblé :7599 noir et mur clair,9539 contours et
+matière ; conserver V1 comme référence de campagne historique, pas comme
+double chemin legacy dans le code. Ni nouvelle image LR ni changement DCP
+nécessaires pour cette comparaison. Aucun push/dev/tag.
+
+## 28. 29 octobre — régression sombre sur28 scènes et audit du modèle réel
+
+Claude livre `dd674b0`,
+`../raw/loi-force-bruit-b-a-v1-v001-20261029T212226Z.json` : combinaison(a)+V1
+mesurée sans réglage sur les28 scènes. À100/100,10 scènes sur25 sont moins
+réduites de plus de3 % en luma dans le noir,11 en chroma. Les25 scènes
+initialement déclarées réservées ont donc maintenant été consommées par cet
+essai ; ne plus les décrire comme un jeu intact pour le prochain candidat.
+La piste reste utile sur le mur, mais pas promue : points isolés colorés
+visibles sur7599, et résidus basse fréquence distincts des points.
+
+Avant repli, ajout d'un observateur optionnel du modèle réel dans Context :
+appel seulement sur le thread appelant avant filtrage, aucune modification
+des pixels quand il est absent.64 contrôles natifs passent, dont identité
+binaire avec/sans observateur et annulation atomique sur exception du callback.
+La sonde `camera_denoise_leakage` est réparée après suppression des gains V1 :
+son analyse s'effectue maintenant dans le RGB caméra déjà balancé, pas dans
+les anciens axes capteur. Les anciennes preuves gardent leurs axes historiques.
+Preuve des contrats de cette instrumentation :
+`../raw/camera-denoise-n2-v001-20261029T213232Z.json`,64 contrôles natifs,
+sept suites et test optique réussis ; aucun repli encore appliqué.
+
+Audit `../raw/camera-denoise-signal-survey-v001-20261029T212749Z.json` :
+modèles effectivement estimés sur l'image entière et81 ROI par source,
+7599/7958/9539/9613. Le filtre est exécuté pour observer les modèles ; sa
+sortie est jetée, aucune image exportée. Sur7599,23 témoins plats sur25 ;
+au premier niveau, σ intensité sombre0,01258 contre global0,01692 et σ Co
+0,00300 contre0,00381. Le modèle global est centré vers le signal0,08191,
+le sombre vers0,02991 : **la différence ne prouve pas une sous-estimation
+physique**, car le signal diffère et le global mélange des niveaux.
+
+Sur les12 ROI les plus sombres de la grille (49152 pixels sondés par
+échelle), aucun guide n'est sous la borne basse, sur chacune des quatre
+scènes ;18 pixels sont au-dessus de la borne haute sur7599. Ce n'est pas
+un masque sombre plein cadre, mais cela ne soutient pas l'abstention sous
+le noir comme explication principale de cette régression. Les20 modèles
+de l'audit ont un support admissible. Les écarts sombre/global apparaissent
+aussi aux échelles chroma plus larges, sans les confondre avec une preuve
+sur les taches après rendu.
+
+Prochain essai : plancher de variance au premier nœud, raccordé par
+l'interpolation existante vers le nœud suivant. Garder les autres nœuds,
+les forces, le domaine couvert et le DCP inchangés. Ce garde-fou est un
+compromis empirique par rapport à V1, pas une extrapolation validée du bruit
+capteur. Il devra améliorer le noir sans effacer la matière ni annuler les
+gains clairs ; aucune promotion avant mesure et revue.
+
+## 29. 29 octobre — essai du plancher de variance au nœud sombre
+
+Un seul modèle de filtre reste compilé : le candidat conditionnel balancé
+avec garde-fou sombre. Ce n'est pas un retour à un second filtre global ni
+une option legacy. Le global est une estimation statistique de secours issue
+des mêmes25 positions non rejetées comme cohérentes, avec le quart le plus
+calme ; ses niveaux mélangés ne constituent pas une vérité de bruit physique.
+
+Avec au moins deux nœuds conditionnels distincts, pour chaque axe c du
+premier nœud : variance(c)=max(variance_sombre(c),variance_globale(c)). Les
+covariances hors diagonale sont redimensionnées pour conserver la corrélation
+des témoins sombres, sans importer la corrélation d'une autre population de
+signal. Une variance initialement nulle reçoit un terme diagonal, sans
+inventer de corrélation. La régularisation de covariance reste inchangée.
+Le raccord vers le deuxième nœud utilise l'interpolation continue existante ;
+les autres nœuds ne sont pas relevés. La table128 positions conserve son
+approximation numérique, et le domaine couvert/les abstentions ne changent pas.
+
+Ni σ=valeur fixe, ni seuil de noir en sRGB, ni amplification de curseur ne
+sont ajoutés. Le seul nœud d'un modèle sans bandes distinctes reste inchangé.
+Une absence de témoins admissibles ne provoque pas un repli global hors
+domaine : elle reste une abstention. Le risque de lisser trop les vrais
+détails sombres reste à examiner ; le plancher restaure un niveau empirique
+V1, pas nécessairement le σ réel du capteur.
+
+Preuve des contrats `../raw/camera-denoise-n2-v001-20261029T213441Z.json` :
+65 contrôles natifs, sept suites CTest et test optique réussis. Le nouveau
+témoin synthétique vérifie le plancher sur les cinq échelles tout en gardant
+le contrôle de réduction du bruit aux trois luminosités et les escaliers
+propres. L'observateur reste sans effet binaire sur la sortie, avec callback
+sur le thread appelant uniquement et échec atomique sur exception.
+
+La comparaison réelle réutilise les masques, sources et neutres de référence
+sur7599/9539/7958, contre B-V1 et contre B_a_V1 de `dd674b0`, sans regénérer
+les anciens états. `--prior-reference` vérifie le même SHA de campagne avant
+d'utiliser cette seconde référence. Ces scènes ne sont plus des données
+réservées ; la prochaine campagne devra être déclarée comme réévaluation,
+pas comme validation sur un jeu intact.
+
+### Résultat du candidat figé `fcd95a2`
+
+Preuve `../raw/camera-denoise-n2b-v001-20261029T213552Z.json` :15 rendus,
+trois scènes, SHA du module final et de l'exécutable, masques et neutres B0
+concordants. Même définition HP/unités que le §27 ; données par scène, état
+et masque préservées. Aucun seuil modifié après lecture de cette campagne.
+
+| Masque / état lum-col | V1 seul luma/chroma | (a)+V1 avant plancher | Avec plancher |
+| --- | ---: | ---: | ---: |
+| 7599 noir100-100 | 1,237 /1,524 | 2,389 /3,307 | 1,010 /1,456 |
+| 7599 noir0-100 | 10,710 /4,224 | 10,715 /5,112 | 10,715 /4,236 |
+| 7599 clair100-100 | 6,534 /11,661 | 3,138 /6,288 | 3,074 /6,218 |
+| 9539 noir100-100 | 1,428 /1,056 | 1,027 /0,859 | 0,721 /0,620 |
+
+Le garde-fou corrige la régression de dispersion sombre du témoin7599,
+sans annuler le gain dans le masque clair. Le60D reste presque inchangé.
+La moyenne de luma dans le noir7599 à100/100 vaut12,866, contre12,631 en
+V1 et12,500 avant plancher : ne pas assimiler ce résultat à une identité
+de luminosité après DCP, même si le filtre conserve le DC caméra. Le masque
+clair garde202,515 contre202,544 avant plancher. Les nœuds clairs ne sont
+pas modifiés, mais l'interpolation des nœuds, les voisinages et le rendu
+peuvent changer des pixels de ces masques ; pas d'identité régionale promise.
+
+La suppression des points isolés ne découle pas de ces seules dispersions,
+et les textures peuvent être lissées. **Décision : candidat d'essai transmis
+à Claude, campagne28 scènes et contrôle visuel avant intégration validée.**
+Ne pas qualifier cette campagne future de nouveau jeu réservé. Aucun
+changement(c) des taches basse fréquence, des forces ou du DCP dans ce lot.
+Les requêtes CR3 chaudes pleines définition prennent8,2–8,9 s en luminance
+et12,6–13,9 s en couleur, rendu compris ; pas un budget de proxy interactif.
+
+## 30. 29 octobre — candidat(c1), ne pas protéger du bruit couleur avec la texture I
+
+### Cible et hypothèse distincte du plancher sombre
+
+Claude lance la chaîne de nuit sur des exécutables copiés/hachés :28 scènes
+puis76 RAW hors protocole, versions V1/(a)+V1/plancher. Ce travail reste
+indépendant de(c1), préparé ici sur la même base `fcd95a2`. Aucun rendu RAW
+concurrent ni benchmark24 Mpx ajouté par Codex pendant cette chaîne.
+
+Le filtre utilisait le maximum entre protection individuelle et protection
+jointe des trois axes I/Co/Cg pour chaque canal. Une texture forte en I pouvait
+donc protéger un coefficient Co/Cg contenant seulement du bruit. L'information
+« la structure est réelle » ne suffit pas à prouver qu'elle est colorée ; les
+murs à relief réel mais teinte approximativement uniforme sont le cas visé.
+Cette hypothèse n'est pas une affirmation que toute variation de chroma du
+mur serait du bruit ni que les filaments visibles ont une cause unique.
+
+### Contrôle négatif puis changement limité
+
+Avant modification du filtre, un nouveau témoin définit une vérité connue :
+texture I achromatique, avec du bruit Co/Cg additif fin et des champs colorés
+simulés corrélés par flou gaussien sigma3/6 px. La scène contient des plages
+stationnaires pour l'estimation et une région texturée pour l'évaluation.
+Le plancher de base garde0,997698 de l'erreur quadratique chroma initiale dans
+cette région. Le nouveau test exigeait moins de0,5 **avant** le changement :
+il échoue comme prévu dans
+`../raw/camera-denoise-n2-v001-20261029T214914Z.json` (69/70 contrôles).
+Cette preuve négative est conservée, pas effacée ou renommée en succès.
+
+Dans(c1), I garde exactement la formule de protection jointe3D. Pour Co/Cg,
+la protection partagée utilise seulement leurs énergies normalisées et leurs
+espérances locales déjà disponibles :
+
+```text
+E_chroma = E_Co + E_Cg
+N_chroma = N_Co + N_Cg
+protection_chroma = clamp(1 - N_chroma / max(E_chroma, N_chroma), 0, 1)
+protection_finale_c = max(protection_individuelle_c, protection_chroma)
+```
+
+Si l'espérance est nulle, cette protection partagée vaut0 ; les autres gardes
+de support restent actifs. L'espérance de la somme d'énergies est additive
+même lorsque Co/Cg sont corrélés : c'est un contrôle de second moment, **pas
+une probabilité chi-deux ni une hypothèse d'indépendance des canaux**. La
+covariance3D estimée reste utilisée par la protection I ; le veto chroma
+utilise les deux énergies marginales, sans nouvelle inversion de matrice.
+
+Pas de nouveau flou, médiane, échelle, σ, plancher, seuil de noir ou force.
+La loi des curseurs(b) ne change pas. L'intensité caméra est conservée en
+couleur seule, pas nécessairement la luma sRGB après les non-linéarités DCP.
+La version en cours de mesure par Claude n'est pas modifiée.
+
+### Qualification disponible et limites
+
+Preuve `../raw/camera-denoise-n2-v001-20261029T215306Z.json` :70 contrôles
+natifs, sept suites et test moteur optique réussis. Dans le témoin :
+
+- Erreur quadratique chroma restante :0,331894 de l'entrée, contre0,997698
+  avant(c1) ; il s'agit d'une MSE, pas d'un écart-type ni d'une note visuelle.
+- Partie basse fréquence après passe-bas sigma4 : MSE0,433354 de celle de
+  l'entrée. Cette métrique n'était pas mesurée dans le contrôle négatif ; ne
+  pas inventer de comparaison avant/après pour ce seul indicateur.
+- Texture I de l'entrée conservée à moins de5e-7 en couleur seule.
+- Contrôle distinct de vrais détails couleur : contraste du contour0,079467
+  pour0,08 attendu ; ligne couleur d'un pixel0,049973 pour0,05 attendu.
+  Cela couvre des détails forts, **pas les textures colorées faibles** proches
+  du bruit, ni toutes les fréquences, teintes, expositions ou boîtiers.
+- Annulation, finitude, alias de source, bornes de force, répétabilité, DC,
+  modèle sombre et témoins synthétiques précédents restent contrôlés.
+
+Lanceur utilisé avec `--skip-benchmarks` : aucune mesure de performance n'est
+annoncée et aucun ancien temps n'est attribué à(c1). Compilation séquentielle
+et petits tests seulement pendant la chaîne de Claude. Une relecture de la
+[publication Guided Image Filtering](https://people.csail.mit.edu/kaiming/eccv10/index.html)
+rappelle le rôle du guidage et du transfert de structure ;(c1) n'en implémente
+ni ne copie l'algorithme, c'est une variante IPR du veto énergétique existant.
+
+**Décision : candidat séparé pour la prochaine mesure de Claude**, sans
+publication ni promotion. Vérifier masques fixes, métriques HP ET basses
+fréquences, points isolés, vraies prises colorées, détails de faible contraste,
+aperçu et pleine définition. Une amélioration synthétique ne prouve pas la
+disparition des taches réelles. Ne pas mélanger(c1) et(b) avant ce bilan.
+
+## 31. Repli global hors support conditionnel — 30 octobre 2026
+
+### 31.1. Résultat réel déclencheur et contrôles négatifs
+
+Claude a terminé la campagne du plancher sombre, preuves intégrées localement
+depuis `d3279aa` :
+[28 références](../raw/loi-force-bruit-b-plancher-v001-20261030T021115Z.json) et
+[76 RAW hors protocole](../raw/debruitage-versions-hors-protocole-v001-20261030T021115Z.json).
+Le plancher améliore notamment7599/9539 et préserve les témoins0/0 des104
+sources. Il ne résout pas l'abstention de certaines bandes où V1 débruite :
+neuf références et treize scènes supplémentaires. Le sondage limité de§28
+ne permettait donc pas d'écarter cette cause sur tout le corpus.
+
+Références signalées :6V1A0007,6V1A0043,6V1A0064,6V1A9141,6V1A9153,
+IMG_3135,IMG_6248,_MG_7580,_MG_7840. Parmi les autres :_MG_7906 etIMG_8023.
+La liste exhaustive et les mesures restent dans les preuves et le journal
+commun ; ne pas conclure que tous les états de ces scènes sont inchangés.
+
+Deux cas synthétiques reproduisent un défaut de support : rampe sans témoins
+plats admissibles et petite plage sombre hors domaine entre les positions
+d'estimation. Avant correction, leur MSE chroma restante vaut1,0 ;
+[preuve négative](../raw/camera-denoise-n2-v001-20261030T021542Z.json).
+Ces constructions isolent des mécanismes possibles, sans établir la cause
+individuelle des22 scènes réelles. Bruit additif simulé, pas oracle CFA physique.
+
+### 31.2. Politique du candidat
+
+- Dans le support conditionnel : mêmes nœuds et même interpolation.
+- Sans modèle conditionnel : covariance etσ globaux de V1, si disponibles.
+- Hors domaine : transition extérieure du modèle de bord vers le global,
+  sur l'incertitude d'intensité déjà estimée ; pas de seuil de signal ajouté.
+- Sans témoins globaux admissibles : abstention conservée. Unσ nul valide
+  n'est pas remplacé arbitrairement par un bruit inventé.
+
+Le global utilise les témoins non cohérents et leur quart silencieux comme
+V1, sans la sélection supplémentaire d'aplats conditionnels. Ce n'est ni une
+nouvelle calibration physique ni un second filtre legacy. L'observateur
+distingue `supported` et `globalFallbackAvailable`.
+
+Les énergies locales conditionnelles et de repli sont calculées séparément
+pour ne pas mélanger leurs normalisations dans le veto des pixels supportés.
+Le rééquilibrage DC final reste global : **pas de promesse d'identité pixel
+par pixel dans les régions déjà supportées**, ni de preuve d'absence de
+raccord visible. Les tuiles mixtes nécessitent deux buffers supplémentaires
+et un calcul local supplémentaire ; temps et mémoire restent à qualifier.
+
+### 31.3. Qualification et limites
+
+[Preuve finale](../raw/camera-denoise-n2-v001-20261030T022403Z.json) :77 contrôles
+natifs, sept suites CTest et intégration optique réussis, benchmarks non lancés.
+La MSE chroma restante passe de1 à0,0292 sur la rampe et0,0418 dans la plage
+sombre hors support. Les contrôles(c1) de texture achromatique, bord coloré
+et ligne fine forte restent satisfaits. Ces ratios ne mesurent pas un gain
+visuel ni le comportement de textures colorées faibles.
+
+Une [preuve intermédiaire](../raw/camera-denoise-n2-v001-20261030T022318Z.json)
+conserve l'échec d'une assertion trop large : un damier cohérent ne rejette
+pas nécessairement les témoins de toutes les échelles, les coefficients
+grossiers nuls pouvant être admissibles. L'assertion a été corrigée par
+échelle : aucun repli inventé là où tous les témoins sont rejetés. Le filtre
+n'a pas été modifié pour contourner cette assertion.
+
+**Décision : candidat séparé au-dessus de(c1), à mesurer par Claude.**
+Comparer(c1) seul à(c1)+repli sur les22 scènes, puis contrôler7599, les murs,
+les détails colorés, les transitions, l'aperçu et la pleine définition.
+Mesurer ressources et latence avant promotion. Aucun rendu RAW concurrent
+n'est lancé ici pendant sa campagne ; force, DCP, commande maître(b) et
+paramètres de profil inchangés. Pas de push, fusion versdev ou tag.
+
 ## Conclusion actuelle et fiche de reprise
 
-- Branche/worktree : `patch_raw_bench`, build isolé ; aucun fichier moteur
-  attribué à Claude retouché directement ; seuls les fichiers N2 convenus sont
-  développés ici. Aucun push, fusion vers `dev` ou tag.
-- X1/X2 : observateur C2 raccordé, parité de module exacte sur30
-  sources ; témoins bruit historiques rejoints aux frontières entières. Les profils, calibration automatique,
-  orientation et calibration du pipeline complet rejoignent C3 sur le corpus ;
-  replis et performance répétée restent à qualifier séparément.
-- I2 accepté par Claude au journal, unités confirmées et prises en compte.
-  I3 implémenté avec portée de comparaison explicite et huit tests.
-- Contrôle de lecture étendu terminé :30 fichiers,90 ROI, aucun écart.
-- C3 intégré localement, campagne complète terminée : 60/60 cas passent.
-  Reprendre ces preuves sans relancer un succès. Cette couverture de X1/X2/X3
-  ne vaut pas qualification des replis, de tous les formats ou du plafond RAM.
-- Les X4 pré-F1 restent conservés comme historique : bornes internes corrigées
-  dans `ee8f26d`, borne finale ensuite retirée en F1. Leurs restrictions ne
-  décrivent pas le candidat actuel ; ne pas mélanger les versions des preuves.
-- F1 supprime la borne de sortie B : négatifs transmis au DCP confirmés,
-  invariance A validée, garde NaN/Inf corrigé et contrôlé. A reste le défaut.
-  Le premier module N2 et le raccordement N1 sont intégrés localement ; source
-  signée pré-LCP raccordée en N1b, qualification commune N3 partielle (§18),
-  test optique corrigé et qualifié (§19). Revue visuelle et ressources globales
-  restent distinctes de ces contrats de module et de raccordement.
-- Harmonisation des domaines couleur entre modules demandée mais différée ;
-  ne pas la mélanger à la transition RAW ni changer le master Rec.2020 ici.
-- F1 : 60 cas A, 12 fichiers B, 12 témoins ciblés du garde et contrat natif
-  clos ; 37 tests Python passent. F2 relu, réserves transmises, aucun nouveau
-  rendu activé. Fin/veille coordonnées au journal commun, pas de push/dev/tag.
-- L'étude historique sur `patch_noise` ne vaut pas validation du nouveau module
-  N2. Le branchement expérimental avant profil est maintenant autorisé, sans
-  activation par défaut ni promotion de ses essais synthétiques en preuve visuelle.
-- Prototype actuel : cinq échelles couleur / trois intensité ; 53 contrôles
-  natifs et test moteur passent. La prétendue hausse de bruit de luminance
-  du R7 provenait d'une moyenne RGB : luma pondérée stable ou en baisse dans
-  le témoin exact. Gain chroma modeste et coût supérieur ; visuel encore attendu.
-- Retour visuel reçu : amélioration reconnue, défauts résiduels ci-dessus.
-  N2b lancé ; cartographie par niveau de signal terminée sur quatre scènes,
-  biais de couverture observé et candidat numérique évalué, sans remplacement
-  du filtre. Impulsions, covariance conditionnelle et détails restent ouverts.
-- Précision matière reçue (§21) : les murs sont texturés. Le modèle conditionnel
-  n'est pas promu sur leurs dispersions ; réglage sur ces zones suspendu,
-  références LR attendues. Ne pas interpréter les valeurs du §20 comme du
-  bruit seul ni lisser la matière pour améliorer un indicateur.
-- Les anciennes paires LR9608/9890 changent aussi les réglages optiques (§22).
-  Elles ne permettent pas d'isoler une échelle de force du débruitage ; attendre
-  des états contrôlés avant calibration, sans perdre leurs observations visuelles.
-- Les références contrôlées sont maintenant reçues (§23). Le candidat
-  conditionnel a ses contrats validés mais ses résultats réels sont mitigés ;
-  aucun verdict de qualité ni de livraison. Prochaine étape : axes caméra
-  déjà balancés, puis contrôle figé sur la réserve avant réglage des forces.
-- V1 codé et qualifié au niveau module (§24), sans(a), source caméra déjà
-  balancée et contrat gains retiré. Raccordement moteur et contrôle réel
-  attendus de Claude ; ne pas annoncer ce jalon livré ni validé visuellement.
+- Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
+  fichiers moteur attribués à Claude, pas de push/dev/tag.
+- Socle RAW clos sur son périmètre : X1/X2 exacts sur30 sources, C3 à60/60,
+  F1 flottant et garde de finitude qualifiés (§§1–16). Les preuves X4 pré-F1
+  restent historiques ; ne pas les interpréter comme limites du signal actuel.
+- Le prototype signé pré-LCP/DCP reste expérimental et désactivé par défaut.
+  V1 à axes déjà balancés est intégré par Claude et mesuré sur28 scènes (§27).
+- Le premier(a)+V1 améliore certaines plages mais régresse dans les noirs :
+  pas de promotion après la campagne28 scènes (§28). Cette campagne a consommé
+  les25 scènes auparavant réservées ; aucun jeu intact n'est revendiqué ensuite.
+- L'audit du modèle réel confirme des σ sombres inférieurs au global, sans
+  démontrer une sous-estimation physique. L'abstention basse n'explique pas le
+  sondage des quatre scènes. Le plancher sombre fcd95a2 (§29) restaure le noir
+  sur les trois témoins et garde le gain clair. La campagne28+76 de Claude
+  confirme des gains mais révèle des abstentions sur22 scènes (§31).
+- Les murs ont une matière réelle ; ne pas confondre baisse de HP et bruit
+  retiré. Employer les références LR contrôlées, pas les anciennes paires
+  optiquement confondues (§§21–23). Pas de retour au non signé justifié par
+  les sondes BdB automatique, qui changent aussi rendu et calibration (§27).
+- Suite convenue : corriger/qualifier(a)+V1, puis(c) taches basse fréquence et
+  points isolés, puis(b) commande globale à0 avec réglages avancés (§§25–29).
+  LR70–75 est un repère de lissage, pas une cible d'imitation ni de flou.
+- DCP et force inchangés ; harmonisation des domaines couleur différée.
+  Mesures par scène et versions dans les JSON ; revue visuelle, ressources
+  applicatives et validation multi-boîtiers restent des qualifications distinctes.
+- Candidat(c1) prêt au niveau synthétique (§30) : la texture I ne bloque plus
+  la correction de chroma par le veto partagé.70 contrôles/sept suites/optique
+  passent, pas encore de rendu réel ; comparaison à confier à Claude après
+  sa chaîne figée du plancher sombre. Pas de modification(b) ni de promotion.
+- Repli global préparé au-dessus de(c1) (§31) :77 contrôles, sept suites et
+  intégration optique passent. Qualification réelle des22 scènes et coût
+  supplémentaire attendus ; aucune conclusion de correction réelle anticipée.

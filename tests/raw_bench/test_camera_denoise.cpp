@@ -177,7 +177,12 @@ int main(int argc,char **argv)
             checker.at<cv::Vec3f>(y,x)={v,v,v};
         }
         const auto before=checker.clone();
-        check(apply(checker,{100,100},{}) && cv::norm(checker,before,cv::NORM_INF)<1e-6, "clean coherent checkerboard not classified as noise");
+        Context noWitness; int inventedFallback=0,rejectedLevels=0;
+        noWitness.noiseModelObserver=[&](const NoiseModelSummary &m){
+            if(m.candidates==0){++rejectedLevels;inventedFallback+=m.globalFallbackAvailable;}
+        };
+        check(apply(checker,{100,100},noWitness) && cv::norm(checker,before,cv::NORM_INF)<1e-6, "clean coherent checkerboard not classified as noise");
+        check(rejectedLevels>0&&inventedFallback==0,"no global fallback is invented on scales where every witness is rejected");
         cv::Mat edge(128,128,CV_32FC3,cv::Scalar(.2f,.3f,.4f));
         for(int y=0;y<edge.rows;++y)edge.at<cv::Vec3f>(y,64)={.5f,.6f,.7f};
         const auto clean=edge.clone();
@@ -210,6 +215,34 @@ int main(int argc,char **argv)
         check(error<5e-7,"coarse chroma scales do not smooth camera intensity");
     }
     {
+        cv::Mat image(192,576,CV_32FC3);cv::RNG random(0x914c);
+        const std::array<float,3> levels{.04f,.25f,.7f},sigmas{.003f,.012f,.04f};
+        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
+            const int band=x/192;
+            for(int c=0;c<3;++c)image.at<cv::Vec3f>(y,x)[c]=levels[size_t(band)]+float(random.gaussian(sigmas[size_t(band)]));
+        }
+        const auto before=image.clone();
+        Context context; int bandModels=0; bool lowFloor=true;
+        context.noiseModelObserver=[&](const NoiseModelSummary &m) {
+            if(m.nodes.size()>1) {
+                ++bandModels;
+                for(int c=0;c<3;++c)lowFloor=lowFloor&&m.nodes.front().second[c]+1e-8f>=m.globalSigma[c];
+            }
+        };
+        check(apply(image,{100,100},context),"signal-dependent noisy bands complete");
+        check(bandModels==5&&lowFloor,"darkest witnessed knot never falls below the pooled variance floor");
+        for(int band=0;band<3;++band) {
+            const cv::Rect roi(band*192+64,32,64,128);
+            const auto a=variance(before(roi)),b=variance(image(roi));
+            std::cout<<"heteroscedastic band "<<band<<" variance ratio "<<b[0]/a[0]<<'\n';
+            check(b[0]<.5*a[0]&&b[1]<.5*a[1]&&b[2]<.5*a[2],"known flat signal denoised in every brightness band");
+        }
+        cv::Mat clean(192,576,CV_32FC3);
+        for(int y=0;y<clean.rows;++y)for(int x=0;x<clean.cols;++x)clean.at<cv::Vec3f>(y,x)=cv::Vec3f::all(levels[size_t(x/192)]);
+        const auto truth=clean.clone();
+        check(apply(clean,{100,100},{})&&cv::norm(clean,truth,cv::NORM_INF)<1e-6,"clean brightness steps not learned as noise");
+    }
+    {
         auto original=field(128,128);
         const cv::Vec3f gains(2,1,3);
         for(int y=0;y<original.rows;++y)for(int x=0;x<original.cols;++x)
@@ -238,6 +271,128 @@ int main(int argc,char **argv)
         image=original.clone(); check(apply(image,{50,50},preview) && cv::checkRange(image), "preview support accepted");
         cv::Mat parent=field(150,140), before=parent.clone(), roi=parent(cv::Rect(3,5,128,120));
         check(apply(roi,{50,50},{}) && bits(parent,before), "strided ROI source/parent untouched");
+    }
+    {
+        const auto original=field(128,128); auto plain=original.clone(), observed=original.clone();
+        Context context; int count=0; bool wrongThread=false, invalid=false;
+        const auto caller=std::this_thread::get_id();
+        context.noiseModelObserver=[&](const NoiseModelSummary &s) {
+            ++count; wrongThread=wrongThread||std::this_thread::get_id()!=caller;
+            invalid=invalid||s.flatCandidates>s.candidates||s.level<0||s.level>=5;
+            if(s.supported)invalid=invalid||!(s.low<s.high)||s.nodes.empty();
+        };
+        check(apply(plain,{100,100},{})&&apply(observed,{100,100},context),"noise model observation completes");
+        check(bits(plain,observed)&&count==5&&!wrongThread&&!invalid,"observer is caller-only and leaves render bit-identical");
+        context.noiseModelObserver=[](const NoiseModelSummary &){throw std::runtime_error("observer failed");};
+        auto image=original.clone();
+        check(!apply(image,{100,100},context)&&bits(image,original),"observer exception leaves input unchanged");
+    }
+    {
+        // Known achromatic texture: chroma contains ONLY additive simulated
+        // fine noise and 3/6-pixel-correlated blotches, not a colour detail.
+        constexpr int size=512;
+        cv::Mat co(size,size,CV_32F),cg(size,size,CV_32F);cv::RNG random(0x91f6);
+        random.fill(co,cv::RNG::NORMAL,0.,.04);random.fill(cg,cv::RNG::NORMAL,0.,.04);
+        cv::GaussianBlur(co,co,{},3);cv::GaussianBlur(cg,cg,{},6);
+        cv::Mat image(size,size,CV_32FC3);
+        for(int y=0;y<size;++y)for(int x=0;x<size;++x) {
+            float intensity=x<171?.06f:(x<341?.15f:.4f);
+            intensity+=float(random.gaussian(.0005));
+            if(x>=176&&x<336&&y>=128&&y<384)intensity+=float(random.gaussian(.04));
+            const float a=co.at<float>(y,x)+float(random.gaussian(.001));
+            const float b=cg.at<float>(y,x)+float(random.gaussian(.001));
+            image.at<cv::Vec3f>(y,x)={intensity+a-.5f*b,intensity+.5f*b,intensity-a-.5f*b};
+        }
+        const auto before=image.clone();
+        check(apply(image,{0,100},{}),"chroma blotches on known achromatic texture complete");
+        double input=0,output=0,intensityError=0;
+        for(int y=208;y<304;++y)for(int x=224;x<288;++x) {
+            const auto a=axes(before.at<cv::Vec3f>(y,x)),b=axes(image.at<cv::Vec3f>(y,x));
+            input+=double(a[1])*a[1]+double(a[2])*a[2];
+            output+=double(b[1])*b[1]+double(b[2])*b[2];
+            intensityError=std::max(intensityError,double(std::abs(a[0]-b[0])));
+        }
+        std::cout<<"achromatic_texture_chroma_mse_ratio "<<output/input<<'\n';
+        cv::Mat inputChroma(size,size,CV_32FC2),outputChroma(size,size,CV_32FC2);
+        for(int y=0;y<size;++y)for(int x=0;x<size;++x) {
+            const auto a=axes(before.at<cv::Vec3f>(y,x)),b=axes(image.at<cv::Vec3f>(y,x));
+            inputChroma.at<cv::Vec2f>(y,x)={a[1],a[2]};
+            outputChroma.at<cv::Vec2f>(y,x)={b[1],b[2]};
+        }
+        cv::GaussianBlur(inputChroma,inputChroma,{},4);
+        cv::GaussianBlur(outputChroma,outputChroma,{},4);
+        double lowBefore=0,lowAfter=0;
+        for(int y=208;y<304;++y)for(int x=224;x<288;++x) {
+            const auto a=inputChroma.at<cv::Vec2f>(y,x),b=outputChroma.at<cv::Vec2f>(y,x);
+            lowBefore+=double(a[0])*a[0]+double(a[1])*a[1];
+            lowAfter+=double(b[0])*b[0]+double(b[1])*b[1];
+        }
+        std::cout<<"achromatic_texture_chroma_lowpass_sigma4_mse_ratio "<<lowAfter/lowBefore<<'\n';
+        check(output<.5*input,"achromatic luminance texture must not shield simulated chroma noise");
+        check(intensityError<5e-7,"chroma blotch reduction preserves actual camera intensity texture");
+    }
+    {
+        // Genuine isoluminant colour features, surrounded by stationary noise
+        // witnesses. Protect hue edges and a one-pixel colour line.
+        cv::Mat image(256,512,CV_32FC3);cv::RNG random(0x741a);
+        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
+            const float intensity=x<171?.06f:(x<341?.15f:.4f);
+            const float co=(x<256?.04f:-.04f)+float(random.gaussian(.001));
+            const float cg=(x==400?.05f:0.f)+float(random.gaussian(.001));
+            image.at<cv::Vec3f>(y,x)={intensity+co-.5f*cg,intensity+.5f*cg,intensity-co-.5f*cg};
+        }
+        check(apply(image,{0,100},{}),"genuine colour edge and fine line complete");
+        double contrast=0,line=0;
+        for(int y=64;y<192;++y) {
+            contrast+=axes(image.at<cv::Vec3f>(y,255))[1]-axes(image.at<cv::Vec3f>(y,256))[1];
+            line+=axes(image.at<cv::Vec3f>(y,400))[2]-.5*(axes(image.at<cv::Vec3f>(y,399))[2]+axes(image.at<cv::Vec3f>(y,401))[2]);
+        }
+        contrast/=128;line/=128;
+        std::cout<<"genuine_colour_edge_contrast "<<contrast<<" fine_line "<<line<<'\n';
+        check(contrast>.072&&line>.045,"retain at least 90 percent of true chromatic edge and fine-line contrast");
+    }
+    {
+        cv::Mat image(384,384,CV_32FC3);cv::RNG random(0x29a0);
+        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
+            const float i=.05f+.0012f*x+.0013f*y+float(random.gaussian(.001));
+            const float co=float(random.gaussian(.004)),cg=float(random.gaussian(.004));
+            image.at<cv::Vec3f>(y,x)={i+co-.5f*cg,i+.5f*cg,i-co-.5f*cg};
+        }
+        const auto before=image.clone();Context context;int unsupported=0;
+        context.noiseModelObserver=[&](const NoiseModelSummary &m){unsupported+=!m.supported&&m.candidates>0&&m.globalFallbackAvailable;};
+        check(apply(image,{0,100},context),"pooled fallback on a noisy smooth ramp completes");
+        check(unsupported==5,"ramp has no flat conditional support on every scale");
+        double input=0,output=0;
+        for(int y=128;y<256;++y)for(int x=128;x<256;++x) {
+            const auto a=axes(before.at<cv::Vec3f>(y,x)),b=axes(image.at<cv::Vec3f>(y,x));
+            input+=double(a[1])*a[1]+double(a[2])*a[2];
+            output+=double(b[1])*b[1]+double(b[2])*b[2];
+        }
+        std::cout<<"unsupported_ramp_chroma_mse_ratio "<<output/input<<'\n';
+        check(output<.8*input,"missing conditional model uses the existing pooled witnesses");
+    }
+    {
+        cv::Mat image(512,512,CV_32FC3);cv::RNG random(0x29a1);
+        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
+            // The dark region is between the 5x5 witness cores; the pooled
+            // simulated read noise is identical in the dark and in the surround.
+            const bool dark=x>=182&&x<218&&y>=182&&y<218;
+            const float i=(dark?.01f:.2f)+float(random.gaussian(.0008));
+            const float co=float(random.gaussian(.004)),cg=float(random.gaussian(.004));
+            image.at<cv::Vec3f>(y,x)={i+co-.5f*cg,i+.5f*cg,i-co-.5f*cg};
+        }
+        const auto before=image.clone();Context context;int aboveDark=0;
+        context.noiseModelObserver=[&](const NoiseModelSummary &m){aboveDark+=m.supported&&m.low>.1f&&m.globalFallbackAvailable;};
+        check(apply(image,{0,100},context),"pooled fallback outside witnessed signal range completes");
+        check(aboveDark==5,"dark patch lies below every conditional support range");
+        double input=0,output=0;
+        for(int y=190;y<210;++y)for(int x=190;x<210;++x) {
+            const auto a=axes(before.at<cv::Vec3f>(y,x)),b=axes(image.at<cv::Vec3f>(y,x));
+            input+=double(a[1])*a[1]+double(a[2])*a[2];
+            output+=double(b[1])*b[1]+double(b[2])*b[2];
+        }
+        std::cout<<"unwitnessed_dark_patch_chroma_mse_ratio "<<output/input<<'\n';
+        check(output<.8*input,"out-of-domain dark patch does not silently receive zero denoise");
     }
     std::cout << checks << " checks, " << failures << " failures\n";
     return failures ? 1 : 0;

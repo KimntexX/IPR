@@ -24,6 +24,8 @@ add_test(NAME rawBenchFloatInlet COMMAND "${Python3_EXECUTABLE}" -m unittest dis
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_float_qualification.py)
 add_test(NAME rawBenchSignalSurvey COMMAND "${Python3_EXECUTABLE}" -m unittest discover
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_signal_noise_survey.py)
+add_test(NAME rawBenchSignalDenoiseReference COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_signal_denoise.py)
 
 # C2 module bench: compile the committed development sources in this worktree,
 # never link an engine or CMake cache from another agent's build.
