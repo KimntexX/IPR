@@ -166,6 +166,23 @@ class GroupAnalysisTests(unittest.TestCase):
             records = inputs.base_records(base, ["effets"])
             self.assertEqual([(r["feature"], r["value"], Path(r["reference"]).name) for r in records], [("grain", 50, "S.tif")])
 
+    def test_neutral_exported_at_two_sizes_pairs_with_the_variant_size(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory).resolve()
+            folder = base / "lumiere/exposure"
+            folder.mkdir(parents=True)
+            (base / "neutre").mkdir()
+            def xmp(exposure="0.00"):
+                fields = {"Exposure2012": exposure, "WhiteBalance": "As Shot", "CameraProfile": "Camera Neutral"}
+                attrs = " ".join('crs:' + key + '=\"' + value + '\"' for key, value in fields.items())
+                return ('<root xmlns:crs=\"' + native.CRS + '\" ' + attrs + '/>').encode()
+            write_tiff(base / "neutre/S.tif", np.full((8, 12, 3), 25000, dtype=np.uint16), xmp=xmp())
+            write_tiff(base / "neutre/S-2.tif", np.full((4, 6, 3), 25000, dtype=np.uint16), xmp=xmp())
+            write_tiff(folder / "S-2.tif", np.full((8, 12, 3), 30000, dtype=np.uint16), xmp=xmp("+1.00"))
+            records = inputs.base_records(base, ["lumiere"])
+            self.assertEqual([(r["feature"], r["value"], Path(r["reference"]).name) for r in records],
+                             [("exposure", 1, "S.tif")])
+
     def test_float_radius_declaration_tolerance_does_not_hide_wrong_state(self):
         record = {"feature": "sharpening-radius", "value": .3,
                   "settings": {"sharpeningRadius": .30000001192092896, "sharpeningAmount": 50},
