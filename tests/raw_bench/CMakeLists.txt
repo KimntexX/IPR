@@ -58,6 +58,9 @@ target_link_libraries(weakStructureProbe PRIVATE Qt6::Core ${OpenCV_LIBS} Thread
 add_test(NAME weakStructureSummaryContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_weak_structure.py)
 set_tests_properties(weakStructureSummaryContract PROPERTIES TIMEOUT 30)
+add_test(NAME structurePredictionContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_structure_prediction.py)
+set_tests_properties(structurePredictionContract PROPERTIES TIMEOUT 30)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)

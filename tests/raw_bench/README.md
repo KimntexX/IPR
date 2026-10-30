@@ -378,6 +378,24 @@ le découpage en tuiles/DC global. Gel JSON avant calcul, sources incluses.
 Trois tests Python : `python -m unittest discover -s tests/raw_bench -p test_weak_structure.py`.
 Rapport évolutif §40, aucune réserve de RAW lue ni export écrit.
 
+`study_structure_prediction.py --pilot-proof <pilote signé>` reprend seulement
+les quatre noirs de développement déjà capturés à1600/51200ISO. Prédiction
+I depuis16 voisins à retards4/8, ajustement et contrôle en quadrants disjoints.
+Comparateur ordinaire et correction de covariance avec le bruit cible depuis
+l'autre noir, pas de vérité acceptée par la fonction d'ajustement.68cas,
+signal périodique connu + résidu réel postRCD ajouté (pas simulation du CFA).
+`--matched-noise` est un contrôle non physique à σI d'ajustement0,002, fixé
+au niveau du§40, pour ne pas confondre ISO et rapport signal/bruit.
+
+`audit_structure_residual.py --pilot-proof <pilote> --prediction-proof <json>`
+(argument parent répétable) rejoue les poids enregistrés, sans réajustement.
+Audit de la variance résiduelle compensée et de la formule utilisant seulement
+la forme de corrélation du noir. Les poids parents ont encore utilisé
+l'amplitude du prior : ne pas annoncer une chaîne entièrement indépendante
+de cette amplitude. Les variances négatives restent explicites. Pas de filtre
+ou seuil intégré, ni score photo. Six tests : `python -m unittest discover
+-s tests/raw_bench -p test_structure_prediction.py`. Voir rapport§41.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

@@ -2,12 +2,12 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§40) : retour à la protection des structures faibles. Sur32
-motifs sans bruit, le filtre attribue une puissance au bruit et atténue le
-détail. Un entourage uniforme propre restaure le gain1 sur quatre contrôles
-à motif local inchangé : priorité à la contamination des témoins d'estimation.
-Le gain tonal (§39) reste différé, non bloquant pour l'ouverture ; le préfiltre
-CFA simple (§38) reste non retenu. Aucun nouveau filtre n'est intégré.
+Dernier jalon (§41) : prévisibilité spatiale et variance résiduelle. La
+prédiction reconnaît les motifs réguliers à rapport signal/bruit suffisant ;
+elle n'est pas un détecteur universel. Une compensation du résidu estime
+bien le bruit injecté dans ce banc, avec un prior externe encore privilégié.
+La contamination des témoins (§40) reste la cible ; aucun filtre ou seuil
+nouveau n'est intégré. Gain tonal différé, préfiltre CFA simple non retenu.
 **Étude de banc seulement, aucun changement de production.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
@@ -2725,6 +2725,156 @@ Les calculs sont courts et terminés ; preuves JSON immuables et sources
 de banc conservées. Aucun besoin de nouvelles photos ni d'intervention
 de Claude pour ce jalon.
 
+## 41. Prédiction spatiale hors ajustement et variance résiduelle — 30 octobre 2026
+
+### 41.1. Question, données et gel
+
+Suite du§40 : peut-on reconnaître la composante prévisible d'une structure
+faible, et estimer le bruit dans le résidu plutôt que dans la texture ?
+Il s'agit d'une étude de certification de témoins, **pas d'un nouveau filtre**.
+Les anciens modèles de faible rang ne sont pas rejoués : ici un prédicteur
+linéaire local est ajusté et évalué dans deux régions séparées, avec un contrôle
+explicite de la covariance du bruit du pixel cible et de ses voisins.
+
+Preuves canoniques :
+[`gel initial`](../raw/structure-prediction-freeze-v001-20261030T134050Z.json),
+[`prédiction`](../raw/structure-prediction-v001-20261030T134050Z.json),
+[`gel à bruit égal`](../raw/structure-prediction-matched-freeze-v001-20261030T134222Z.json),
+[`contrôle à bruit égal`](../raw/structure-prediction-matched-v001-20261030T134222Z.json).
+
+Seules les captures signées déjà authentifiées des quatre noirs de
+développement du§36 sont relues :0003/0004 à1600ISO et9950/9951 à51200ISO,
+crop central256² avant DCP. Capture/provenance et binaire sont vérifiés,
+partitions conservées, pas de RAW nouvellement décodé ni réserve consultée.
+L'intensité est `I=0,25R+0,5G+0,25B`, pas une luminance photométrique.
+Les niveaux noirs2048, blanc16383 et gains du pilote restent explicites :
+pas de nouvelle calibration de production.
+
+Seize voisins : huit directions, distances4 et8pixels. Ajustement sur
+`[16,112)²`, contrôle sur `[144,240)²` ; aucune empreinte de voisinage commune,
+ce que vérifie un test. Cela ne rend pas indépendants des motifs fixes ou
+des corrélations longue portée. Prior spatial : quadrant d'ajustement de
+l'AUTRE noir de développement ; deux directions par paire.
+
+Deux prédicteurs partagent le même système régularisé :
+
+`A = Cov(X,X) + 0,01 Cov(NX,NX) + ε Id`.
+
+Le membre droit ordinaire est `Cov(X,Y)` ; celui corrigé est
+`Cov(X,Y) − Cov(NX,NY)`. Le second retire la prévisibilité du bruit de la
+cible, sans soustraire la covariance d'observation au dénominateur. Le plancher
+numérique relatif est10⁻⁸ de la variance moyenne des voisins. Les fonctions
+d'ajustement n'acceptent ni vérité connue ni pixels de contrôle.
+
+Par direction : un aplat et16 motifs (quatre orientations, périodes16/32,
+amplitudes0,0015/0,003, phase0,37, moyenne0,03), soit68 cas au total.
+Le résidu réel du noir, non recentré comme image, est ajouté au signal
+synthétique. Les covariances sont centrées comme statistiques, pas une
+correction de DC du signal. Ce rejeu **ne reproduit pas** le bruit photonique
+ou la dépendance au signal du CFA/RCD. Quatre prises, pas68 photos indépendantes.
+
+### 41.2. Prévisibilité : limite de rapport signal/bruit, pas loi par ISO
+
+Au niveau réel du pilote, σI du bruit de contrôle vaut environ0,000404 à1600,
+contre0,0114–0,0116 à51200. Le rapport variance du motif / variance du bruit
+va de3,44 à27,55 dans le premier cas, mais de0,0042 à0,0344 dans le second.
+Il serait faux d'attribuer directement l'écart de prédiction au boîtier/ISO.
+
+| Rejeu | Variante | Gain médian du signal prédit,1600 | Gain médian,51200 |
+| --- | --- | ---: | ---: |
+| Bruit du pilote | Ordinaire | 0,985 | 0,146 |
+| Bruit du pilote | Covariance cible corrigée | 0,984 | 0,085 |
+| Bruit égal,σ d'ajustement0,002 | Ordinaire | 0,730 | 0,733 |
+| Bruit égal,σ d'ajustement0,002 | Covariance cible corrigée | 0,721 | 0,714 |
+
+Le contrôle à bruit égal est gelé après la première mesure. Le niveau0,002
+reprend celui du§40, pas un niveau choisi pour faire gagner une variante.
+Chaque résidu et son prior sont multipliés par un facteur issu de LEUR quadrant
+d'ajustement ; facteurs conservés par cas. C'est un contrôle diagnostique
+non physique, pas une photographie à un autre ISO.
+
+Les scores de covariance prédictive corrigée des textures et des aplats se
+séparent dans ce petit banc à1600, mais se recouvrent à51200 au bruit réel.
+À bruit égal, les deux distributions ISO deviennent proches. La correction
+du membre droit ne domine pas la régression ordinaire ; ne pas la promouvoir.
+Les quelques millièmes de variance de bruit présents dans la prédiction ne
+sont **pas** une mesure de débruitage final : aucune image filtrée n'est proposée.
+La bonne réponse sur des sinusoïdes ne garantit ni un détail unique ni un mur.
+
+### 41.3. Rejeu des poids gelés : estimer le bruit dans le résidu
+
+Premier audit conservé :
+[`v001`](../raw/structure-residual-v001-20261030T134436Z.json).
+La v002 ajoute une formule utilisant seulement la forme normalisée de la
+covariance du prior ; ni poids ni prédictions ne sont réajustés :
+[`gel v002`](../raw/structure-residual-freeze-v002-20261030T134552Z.json),
+[`audit v002`](../raw/structure-residual-v002-20261030T134552Z.json).
+Les MSE rejouées doivent retrouver celles enregistrées dans les deux parents.
+272 observations méthode/cas, pas272 acquisitions indépendantes.
+
+Pour `r=Y−wᵀX`, la compensation soustractive est :
+
+`σ² ≈ Var(r) − wᵀ Cov(NX,NX) w + 2 wᵀ Cov(NX,NY)`.
+
+Elle utilise l'amplitude du prior. En normalisant les covariances du prior
+par sa variance cible, on obtient `Cxx` et `cxy`, et une seconde possibilité :
+
+`σ² ≈ Var(r) / [1 + wᵀ Cxx w − 2 wᵀ cxy]`.
+
+La seconde formule de résidu n'utilise plus l'amplitude du prior. **Toute la
+chaîne n'en est pas indépendante** : les poids gelés ont encore été ajustés
+avec cette amplitude dans la régularisation, et la variante corrigée dans
+son membre droit. L'information privilégiée externe n'a donc pas disparu.
+
+Le résidu contient aussi l'erreur de prédiction du signal et un terme croisé
+signal/bruit. Pas de garantie universelle d'absence de biais. Les termes
+oracle utilisant le bruit de contrôle réellement injecté sont conservés pour
+le diagnostic seulement ; ils ne servent pas au calcul opérationnel proposé.
+Les estimations négatives ou les dénominateurs invalides restent explicites,
+sans borne silencieuse ; aucun cas de ce type dans ce petit rejeu.
+
+Pour la variante ordinaire, formule à forme normalisée :
+
+| Source du bruit | σ estimé / σ injecté, min–médiane–max |
+| --- | ---: |
+|1600, amplitude du pilote | 0,994 – 1,003 – 1,017 |
+|51200, amplitude du pilote | 0,999 – 1,004 – 1,013 |
+|1600, normalisé0,002 | 0,998 – 1,012 – 1,033 |
+|51200, normalisé0,002 | 0,999 – 1,011 – 1,031 |
+
+À1600 non normalisé, la dispersion brute de l'observation atteint jusqu'à
+5,37fois le σ du bruit parce qu'elle contient le signal. Le σ du résidu
+ordinaire non compensé est encore surestimé jusqu'à12,3 % ; la géométrie
+du prédicteur transmet elle-même du bruit et justifie la compensation.
+La dispersion brute n'est **pas** le MAD multi-échelle de production :
+ce tableau n'est pas une victoire mesurée sur l'estimateur livré.
+
+À51200, bien estimer le bruit ne signifie pas récupérer le faible détail :
+sa variance est très petite devant le bruit, donc l'estimation peut rester
+juste tout en ne prédisant presque aucune structure. Ne pas confondre ces
+deux objectifs, ni recommencer à optimiser uniquement un estimateur interne.
+
+### 41.4. Décision et épreuve suivante
+
+**Piste utile pour désengager l'estimation de la texture régulière**, pas
+encore de témoin certifié ni d'amélioration de rendu intégrable. Aucun seuil
+de détection n'est choisi dans les écarts observés. Les deux noirs par ISO
+et les motifs sont désormais des données de développement consultées.
+
+Prochaine étape bornée : ajuster le prédicteur sans amplitude de bruit externe,
+garder séparée la forme de corrélation, puis éprouver des détails uniques,
+contours, textures irrégulières et perturbations de ce prior. Un estimateur
+qui ne marche qu'avec le niveau exact d'un autre noir ne résout pas l'ouverture
+d'une photo seule. Comparer ensuite au MAD multi-échelle ACTUEL et au filtre
+réel à force identique ; il faudra conserver les structures propres sans
+abandonner les vrais aplats bruités. Pas de nouveau balayage de forces.
+
+Six contrats Python passent : séparation des empreintes, prédiction propre
+calculable, non-fuite du contrôle, non-finitude, compensation scalaire et
+invariance de la formule normalisée à l'amplitude du prior. Calculs courts,
+pas de budget pleine image qualifié. Aucun moteur/profil/IHM modifié ;
+aucun export, push, fusion dev, tag ou nouvelle photo demandés.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -2799,3 +2949,9 @@ de Claude pour ce jalon.
   conservés avec un entourage propre uniforme. Travailler sur l'acceptation
   des témoins et la prévisibilité spatiale, sans confondre corrélation bruit
   RCD et structure. Aucun nouveau filtre ni seuil promu ; gain tonal différé.
+- Prédiction spatiale étudiée (§41) : la structure périodique est reconnue
+  quand le rapport signal/bruit le permet ; le correctif de covariance cible
+  ne domine pas. Compensation de variance résiduelle encourageante, prior
+  encore privilégié. Suite : retirer son amplitude de l'ajustement, tester
+  détails non périodiques et confronter au MAD courant, sans confondre
+  exactitude du bruit estimé et préservation réelle du détail.
