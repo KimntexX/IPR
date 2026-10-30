@@ -1,0 +1,4254 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "signal-filter-audit-v001-20261030T211527Z",
+  "measured_at_utc": "2026-10-30T21:15:27.020821+00:00",
+  "tool_sha256": "42ed15a84ebe122dc9b24d798d14dd5e2ae314fd5678ab905cb89b900ac27daf",
+  "note": "Audit and interpretation of existing pixel campaigns, not new independent validation.",
+  "campaigns": [
+    {
+      "path": "docs\\validation\\raw\\signal-filter-v001-20261030T210129Z.json",
+      "sha256": "2a866965847103708ee2b3fda466df7219b6592dfeda98bacc507689eb1483f2",
+      "freeze_sha256": "011bbd9e5a592c2f5ca9863dbc048a721ff1d840ab2406bd3d312d92959fb696",
+      "distribution": "gaussian",
+      "metadata_clarifications": [],
+      "rationale": "Structured distribution field and frozen normalized_draws calls identify the executed distribution; prose corrections do not change measurements.",
+      "seconds": 220.7652439000085,
+      "contracts": {
+        "pixel_parities": 160,
+        "zero_identities": 80
+      },
+      "per_level_summary": [
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "color_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.14003596951914332
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.14003596951914332
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.051137295757152,
+              "worst_mse_ratio_to_actual": 5.234947949002629,
+              "median_mse_to_input": 0.7072756597105267
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0029412259246384,
+              "worst_mse_ratio_to_actual": 1.103898151647754,
+              "median_mse_to_input": 0.14098124341117285
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.002388796138018,
+              "worst_mse_ratio_to_actual": 1.0092649271464524,
+              "median_mse_to_input": 0.14071389057031708
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "flat",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12248138180138413
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12248138180138413
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.716875677902334,
+              "worst_mse_ratio_to_actual": 5.951058640905971,
+              "median_mse_to_input": 0.6990078561101627
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0114026267036693,
+              "worst_mse_ratio_to_actual": 1.0877512654264505,
+              "median_mse_to_input": 0.12315118115925378
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9999989495403842,
+              "worst_mse_ratio_to_actual": 1.0000247962886675,
+              "median_mse_to_input": 0.12248124255320314
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "irregular_coarse",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.19021535759793542
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 0.9984053604963901,
+              "worst_mse_ratio_to_actual": 0.9999586192671698,
+              "median_mse_to_input": 0.19020386033911488
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.8147596093328504,
+              "worst_mse_ratio_to_actual": 3.913113366327148,
+              "median_mse_to_input": 0.7270904844123898
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9975698310688277,
+              "worst_mse_ratio_to_actual": 1.034660613385489,
+              "median_mse_to_input": 0.1896957047958493
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9747221020231569,
+              "worst_mse_ratio_to_actual": 0.9838889331280529,
+              "median_mse_to_input": 0.18628859156682853
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "irregular_fine",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.25757694012690713
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.25757694012690713
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 2.912248809744332,
+              "worst_mse_ratio_to_actual": 3.0120197065761403,
+              "median_mse_to_input": 0.7499844895515124
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0811179239821254,
+              "worst_mse_ratio_to_actual": 1.1177660853198792,
+              "median_mse_to_input": 0.2774511703070752
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0410945723996838,
+              "worst_mse_ratio_to_actual": 1.0680833102788259,
+              "median_mse_to_input": 0.2657875540872408
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "novel_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.16134511195558077
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.16134511195558077
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.343639712977668,
+              "worst_mse_ratio_to_actual": 4.504468288147158,
+              "median_mse_to_input": 0.7019266561644942
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.8393536236835712,
+              "worst_mse_ratio_to_actual": 0.8964554404297697,
+              "median_mse_to_input": 0.13555906209256116
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0004529139845924,
+              "worst_mse_ratio_to_actual": 1.0044258894303153,
+              "median_mse_to_input": 0.1618142004382458
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "color_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12357258365047007
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12357258365047007
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 7.7416452020248165,
+              "worst_mse_ratio_to_actual": 7.954654115416869,
+              "median_mse_to_input": 0.9570571505318937
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0016572913321422,
+              "worst_mse_ratio_to_actual": 1.0852375533793495,
+              "median_mse_to_input": 0.12552293436044365
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0025529952813708,
+              "worst_mse_ratio_to_actual": 1.0258391471424828,
+              "median_mse_to_input": 0.12402989421165775
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "flat",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11257119482757567
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11257119482757567
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 8.491745887439263,
+              "worst_mse_ratio_to_actual": 8.714938443166094,
+              "median_mse_to_input": 0.9562519338063247
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.004005482807177,
+              "worst_mse_ratio_to_actual": 1.10045730890868,
+              "median_mse_to_input": 0.11464250988130695
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11257119482757567
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "irregular_coarse",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1481019831675472
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1481019831675472
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 6.475632370275774,
+              "worst_mse_ratio_to_actual": 6.812403398679109,
+              "median_mse_to_input": 0.9585579408192852
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0047198506020232,
+              "worst_mse_ratio_to_actual": 1.0981978380616269,
+              "median_mse_to_input": 0.14927307900849004
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0186114003120266,
+              "worst_mse_ratio_to_actual": 1.0252957750323664,
+              "median_mse_to_input": 0.15023007361602525
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "irregular_fine",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.18375434016097159
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.18375434016097159
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.226080929258922,
+              "worst_mse_ratio_to_actual": 5.4059699564033705,
+              "median_mse_to_input": 0.9604750249693337
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.1050291302591027,
+              "worst_mse_ratio_to_actual": 1.1753368497959655,
+              "median_mse_to_input": 0.2048739108910305
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.080794555008013,
+              "worst_mse_ratio_to_actual": 1.0942575364191407,
+              "median_mse_to_input": 0.19689399990516812
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "novel_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12165943464294379
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12165943464294379
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 7.858782689939143,
+              "worst_mse_ratio_to_actual": 7.930769472522825,
+              "median_mse_to_input": 0.9563993307542793
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9527199348916604,
+              "worst_mse_ratio_to_actual": 1.0587419361705215,
+              "median_mse_to_input": 0.11878263779536558
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0032016220023399,
+              "worst_mse_ratio_to_actual": 1.0102087540441846,
+              "median_mse_to_input": 0.12253180612604811
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "color_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12646885598337793
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12646885598337793
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.166913330371685,
+              "worst_mse_ratio_to_actual": 3.55300260451756,
+              "median_mse_to_input": 0.4038962416448215
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9825879904812274,
+              "worst_mse_ratio_to_actual": 1.0545342020083441,
+              "median_mse_to_input": 0.12189639272486943
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0018833653179124,
+              "worst_mse_ratio_to_actual": 1.004892942201752,
+              "median_mse_to_input": 0.12704470378576674
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "flat",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12459667436931537
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12459667436931537
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.215054694144256,
+              "worst_mse_ratio_to_actual": 3.5079759878820007,
+              "median_mse_to_input": 0.4036038233914152
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9937397414190168,
+              "worst_mse_ratio_to_actual": 1.0580241438770246,
+              "median_mse_to_input": 0.12156367734130195
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9999997959439527,
+              "worst_mse_ratio_to_actual": 0.9999998185869986,
+              "median_mse_to_input": 0.12459664895712445
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "irregular_coarse",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12758393285862307
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12758393285862307
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.1476236296298086,
+              "worst_mse_ratio_to_actual": 3.5615392935358448,
+              "median_mse_to_input": 0.4052114353641696
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9844800474568065,
+              "worst_mse_ratio_to_actual": 1.0612595262092452,
+              "median_mse_to_input": 0.12309258268274242
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.996532091475735,
+              "worst_mse_ratio_to_actual": 1.000753497462007,
+              "median_mse_to_input": 0.127411709197309
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "irregular_fine",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12793170296539852
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12793170296539852
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.144862423635609,
+              "worst_mse_ratio_to_actual": 3.574344716956773,
+              "median_mse_to_input": 0.404157239981418
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.989274218613384,
+              "worst_mse_ratio_to_actual": 1.0684658116260375,
+              "median_mse_to_input": 0.12283414318152738
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0041482303654854,
+              "worst_mse_ratio_to_actual": 1.0132811305282614,
+              "median_mse_to_input": 0.12758331254354305
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "novel_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12689069716318907
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12689069716318907
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.1555430867551584,
+              "worst_mse_ratio_to_actual": 3.5066066432071623,
+              "median_mse_to_input": 0.4038231380472913
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9847837610525867,
+              "worst_mse_ratio_to_actual": 1.0390533052967035,
+              "median_mse_to_input": 0.12189219125334727
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9998560536350704,
+              "worst_mse_ratio_to_actual": 1.0027924074857744,
+              "median_mse_to_input": 0.12704714142192314
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "color_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1194836318059255
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1194836318059255
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.6254823565640155,
+              "worst_mse_ratio_to_actual": 6.164869252809869,
+              "median_mse_to_input": 0.6731161969404433
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.031289028512576,
+              "worst_mse_ratio_to_actual": 1.071805199784948,
+              "median_mse_to_input": 0.12303158811495332
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0003900505010077,
+              "worst_mse_ratio_to_actual": 1.0014462832373965,
+              "median_mse_to_input": 0.11906159896338392
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "flat",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11877430250102836
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11877430250102836
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.656522490228692,
+              "worst_mse_ratio_to_actual": 6.182097982005211,
+              "median_mse_to_input": 0.6729559116117847
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0343472901541673,
+              "worst_mse_ratio_to_actual": 1.073409473273373,
+              "median_mse_to_input": 0.12280218080189416
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9999989986699998,
+              "worst_mse_ratio_to_actual": 1.0000001411578483,
+              "median_mse_to_input": 0.11877429828786691
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "irregular_coarse",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12235474528909465
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12235474528909465
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.492784017174035,
+              "worst_mse_ratio_to_actual": 6.145796624846456,
+              "median_mse_to_input": 0.6733661802870647
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0110392371495922,
+              "worst_mse_ratio_to_actual": 1.0685527986788623,
+              "median_mse_to_input": 0.1235263738054855
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9908571695894428,
+              "worst_mse_ratio_to_actual": 0.9993475135457589,
+              "median_mse_to_input": 0.11933547527508129
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "irregular_fine",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11936794404991394
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11936794404991394
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.634002385581696,
+              "worst_mse_ratio_to_actual": 6.115209182179351,
+              "median_mse_to_input": 0.6731776076142367
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0301669502346575,
+              "worst_mse_ratio_to_actual": 1.0831405915657315,
+              "median_mse_to_input": 0.12369319717204648
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0129401390744086,
+              "worst_mse_ratio_to_actual": 1.0382479832309224,
+              "median_mse_to_input": 0.12110698935102368
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "novel_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1198151133115965
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1198151133115965
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.610269020586785,
+              "worst_mse_ratio_to_actual": 6.102198507662346,
+              "median_mse_to_input": 0.6730116120824707
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0200698087371654,
+              "worst_mse_ratio_to_actual": 1.0748021734504225,
+              "median_mse_to_input": 0.12283126603755141
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0017775066245296,
+              "worst_mse_ratio_to_actual": 1.0024999891401816,
+              "median_mse_to_input": 0.11946727548877176
+            }
+          }
+        }
+      ],
+      "aggregate": [
+        {
+          "iso": 1600,
+          "pattern": "flat",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 7.089356066168918,
+              "min_mse_ratio_to_actual": 5.223872680914618,
+              "max_mse_ratio_to_actual": 8.714938443166094,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                8.68903864398238,
+                4.282479593179285,
+                4.311171166342012
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.004005482807177,
+              "min_mse_ratio_to_actual": 0.9323426819696927,
+              "max_mse_ratio_to_actual": 1.10045730890868,
+              "strictly_better_cases": 3,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.999283179240964,
+                1.0032369347440135,
+                1.04616613811212
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 0.9999927342824165,
+              "max_mse_ratio_to_actual": 1.0000247962886675,
+              "strictly_better_cases": 2,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "irregular_fine",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 0.992968484812613,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 1,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.090517997255024,
+              "min_mse_ratio_to_actual": 2.8655480857482347,
+              "max_mse_ratio_to_actual": 5.4059699564033705,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                4.05795296178891,
+                4.18864254151743,
+                4.509247510637692
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.100689381052598,
+              "min_mse_ratio_to_actual": 1.0567535106851405,
+              "max_mse_ratio_to_actual": 1.1753368497959655,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.09342031759097,
+                1.1064012943244128,
+                1.1078122746760521
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0680020278559046,
+              "min_mse_ratio_to_actual": 1.011559808393948,
+              "max_mse_ratio_to_actual": 1.0942575364191407,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0808830770106292,
+                1.025375045175918,
+                1.0094304312273294
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "irregular_coarse",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 0.9999485801680764,
+              "min_mse_ratio_to_actual": 0.9921269045399784,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 5,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9999355513565418,
+                0.9999971351764504,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.163556182662589,
+              "min_mse_ratio_to_actual": 3.685671098680479,
+              "max_mse_ratio_to_actual": 6.812403398679109,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.329866253566328,
+                4.354143458230794,
+                4.3186539115752405
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0041816199436642,
+              "min_mse_ratio_to_actual": 0.9656918560362515,
+              "max_mse_ratio_to_actual": 1.0981978380616269,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.983109622902333,
+                1.0671550651316684,
+                1.1001542400092634
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9962929797510842,
+              "min_mse_ratio_to_actual": 0.9582227425775465,
+              "max_mse_ratio_to_actual": 1.0252957750323664,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9696008736785868,
+                1.0442612791187913,
+                1.0598664970648337
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "novel_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 6.005795444591861,
+              "min_mse_ratio_to_actual": 4.274200759221171,
+              "max_mse_ratio_to_actual": 7.930769472522825,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                7.088021550743553,
+                3.951120044596245,
+                4.012540648196602
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.902457256331076,
+              "min_mse_ratio_to_actual": 0.8108376527460801,
+              "max_mse_ratio_to_actual": 1.0587419361705215,
+              "strictly_better_cases": 7,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.8798824260433646,
+                0.9448266849575941,
+                0.9247412778404347
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0019739095691609,
+              "min_mse_ratio_to_actual": 0.9973209569208669,
+              "max_mse_ratio_to_actual": 1.0102087540441846,
+              "strictly_better_cases": 2,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0000006505485572,
+                1.0093541347537072,
+                1.0078131799957002
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "color_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 6.362799255720531,
+              "min_mse_ratio_to_actual": 4.803671877477651,
+              "max_mse_ratio_to_actual": 7.954654115416869,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                8.487377129856675,
+                3.144960254550272,
+                3.807193793503918
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0016572913321422,
+              "min_mse_ratio_to_actual": 0.9665550663442694,
+              "max_mse_ratio_to_actual": 1.103898151647754,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9982124040308282,
+                1.0079371666154202,
+                1.0322412604681315
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.002388796138018,
+              "min_mse_ratio_to_actual": 1.0004738866104759,
+              "max_mse_ratio_to_actual": 1.0258391471424828,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0004827854178449,
+                1.0076188323937667,
+                1.0026999294727685
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "flat",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.3442019463819355,
+              "min_mse_ratio_to_actual": 3.092911070135272,
+              "max_mse_ratio_to_actual": 6.182097982005211,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.249904578236656,
+                2.778177885410285,
+                2.9301912367835543
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0176080305548352,
+              "min_mse_ratio_to_actual": 0.9221442550144102,
+              "max_mse_ratio_to_actual": 1.073409473273373,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0217933802302266,
+                1.02898501276201,
+                1.0109690484415104
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9999997926984705,
+              "min_mse_ratio_to_actual": 0.9999974299683766,
+              "max_mse_ratio_to_actual": 1.0000001411578483,
+              "strictly_better_cases": 7,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9999996522383129,
+                0.999999959767871,
+                1.0000000030801417
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "irregular_fine",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.40243870990675,
+              "min_mse_ratio_to_actual": 3.085350311070491,
+              "max_mse_ratio_to_actual": 6.115209182179351,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.366572240814122,
+                2.7056414592786915,
+                2.948057099247587
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.005083474247612,
+              "min_mse_ratio_to_actual": 0.9325294156301821,
+              "max_mse_ratio_to_actual": 1.0831405915657315,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0099145937600893,
+                1.024802025696881,
+                1.0096924418699875
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0110431511080769,
+              "min_mse_ratio_to_actual": 0.983185590883316,
+              "max_mse_ratio_to_actual": 1.0382479832309224,
+              "strictly_better_cases": 3,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0139677598563404,
+                0.9981840591634948,
+                0.9955021035251227
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "irregular_coarse",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.349249597962372,
+              "min_mse_ratio_to_actual": 3.052138188831465,
+              "max_mse_ratio_to_actual": 6.145796624846456,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.247772049361052,
+                2.728000608816365,
+                2.895159815797094
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.002730546414553,
+              "min_mse_ratio_to_actual": 0.928802660567248,
+              "max_mse_ratio_to_actual": 1.0685527986788623,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0051592541382153,
+                1.0262747821708602,
+                1.009475676959277
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.996532091475735,
+              "min_mse_ratio_to_actual": 0.965939028395176,
+              "max_mse_ratio_to_actual": 1.000753497462007,
+              "strictly_better_cases": 7,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9957963428578278,
+                0.9986243188747164,
+                0.9995713529797827
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "novel_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.3198314899135974,
+              "min_mse_ratio_to_actual": 3.041009343021318,
+              "max_mse_ratio_to_actual": 6.102198507662346,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.226709202903028,
+                2.6966306010562295,
+                2.9480684911750648
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.008043180180513,
+              "min_mse_ratio_to_actual": 0.914820583763501,
+              "max_mse_ratio_to_actual": 1.0748021734504225,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0151741290740257,
+                1.0131294389028542,
+                1.0025494890977829
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.000671653539652,
+              "min_mse_ratio_to_actual": 0.9922830839015029,
+              "max_mse_ratio_to_actual": 1.0027924074857744,
+              "strictly_better_cases": 3,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0009653013125916,
+                0.999975518453966,
+                1.0003027269466316
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "color_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.371642481543879,
+              "min_mse_ratio_to_actual": 3.060784228846941,
+              "max_mse_ratio_to_actual": 6.164869252809869,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.306438735202359,
+                2.716025522824723,
+                2.9302349159628127
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0099437765991144,
+              "min_mse_ratio_to_actual": 0.9337976050273389,
+              "max_mse_ratio_to_actual": 1.071805199784948,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0117902993855536,
+                1.0206079758069981,
+                1.01059880506267
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0003900505010077,
+              "min_mse_ratio_to_actual": 0.9925989257981568,
+              "max_mse_ratio_to_actual": 1.004892942201752,
+              "strictly_better_cases": 3,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9996863283503439,
+                1.0013542754000981,
+                1.0030990729328502
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "docs\\validation\\raw\\signal-filter-v001-20261030T210633Z.json",
+      "sha256": "2df03c25dac8b280ac8a28bb6c2d1507fd002241af3a09b9ffeb6dfada19fb6d",
+      "freeze_sha256": "281bd7d9440f43b7e539af64bda7e1fe16a7333986ebb01c35f062209297974e",
+      "distribution": "scaled_poisson",
+      "metadata_clarifications": [
+        {
+          "field": "protocol.reference",
+          "original": "Other real dark, independent Gaussian seed 513, flat at same latent CFA level, residual relative to clean RCD plus .03.",
+          "corrected": "Other real dark, independent scaled-Poisson seed 513, flat at same latent CFA level, residual relative to clean RCD plus .03."
+        },
+        {
+          "field": "limits[1]",
+          "original": "Moment-matched Gaussian signal term, not full physical sensor distribution; ISO1600 level .03 extrapolates fit.",
+          "corrected": "Moment-matched scaled-Poisson signal term, not full physical sensor distribution; ISO1600 level .03 extrapolates fit."
+        }
+      ],
+      "rationale": "Structured distribution field and frozen normalized_draws calls identify the executed distribution; prose corrections do not change measurements.",
+      "seconds": 220.4394150999724,
+      "contracts": {
+        "pixel_parities": 160,
+        "zero_identities": 80
+      },
+      "per_level_summary": [
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "color_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.14105666964008604
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.141054817548812
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.038216519696113,
+              "worst_mse_ratio_to_actual": 5.147207272445753,
+              "median_mse_to_input": 0.7069720516579805
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.014296056447836,
+              "worst_mse_ratio_to_actual": 1.0291626126498774,
+              "median_mse_to_input": 0.14169262204294014
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0062282135450324,
+              "worst_mse_ratio_to_actual": 1.0103740659015497,
+              "median_mse_to_input": 0.14177691758013342
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "flat",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12975752123648174
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12975752123648174
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.4118829103087975,
+              "worst_mse_ratio_to_actual": 5.9368707155899125,
+              "median_mse_to_input": 0.7024678173896027
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9875756788592198,
+              "worst_mse_ratio_to_actual": 1.0238049891002212,
+              "median_mse_to_input": 0.12977716065539607
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9999982232901821,
+              "worst_mse_ratio_to_actual": 1.0000085080049061,
+              "median_mse_to_input": 0.1297572732702086
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "irregular_coarse",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.19564044249875207
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 0.9977992919524874,
+              "worst_mse_ratio_to_actual": 0.9999231244298523,
+              "median_mse_to_input": 0.19519599281845101
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.7287416602373558,
+              "worst_mse_ratio_to_actual": 3.8648452687874753,
+              "median_mse_to_input": 0.7286762777766365
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9767606464707888,
+              "worst_mse_ratio_to_actual": 1.0422945616873274,
+              "median_mse_to_input": 0.19606879436629723
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9661765013922321,
+              "worst_mse_ratio_to_actual": 1.001084294224222,
+              "median_mse_to_input": 0.1913965056623425
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "irregular_fine",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.2592568018359432
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 0.9999988029312783,
+              "worst_mse_ratio_to_actual": 1.0000034859361713,
+              "median_mse_to_input": 0.2592569457301843
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 2.891747705475452,
+              "worst_mse_ratio_to_actual": 2.9626375042148485,
+              "median_mse_to_input": 0.7497005608557248
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0646840079462208,
+              "worst_mse_ratio_to_actual": 1.1006533977213766,
+              "median_mse_to_input": 0.2771222287974855
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0222319005015648,
+              "worst_mse_ratio_to_actual": 1.0461108795090803,
+              "median_mse_to_input": 0.26531528265051607
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "novel_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.16940348459053975
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.16940348459053975
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.160707060466969,
+              "worst_mse_ratio_to_actual": 4.326797406429394,
+              "median_mse_to_input": 0.7039327596314343
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.790088098728645,
+              "worst_mse_ratio_to_actual": 0.825864580643892,
+              "median_mse_to_input": 0.1342467502698459
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0044062561609342,
+              "worst_mse_ratio_to_actual": 1.0114175174499342,
+              "median_mse_to_input": 0.169757078374159
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "color_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1258832056240365
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1258832056240365
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 7.604987329739928,
+              "worst_mse_ratio_to_actual": 8.049690420462236,
+              "median_mse_to_input": 0.9570382695046933
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9669946086139569,
+              "worst_mse_ratio_to_actual": 1.0059014140410427,
+              "median_mse_to_input": 0.12290446505374594
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0073346820134712,
+              "worst_mse_ratio_to_actual": 1.0102704113421968,
+              "median_mse_to_input": 0.12705205219421145
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "flat",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11622959803745411
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11622959803745411
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 8.226015517980963,
+              "worst_mse_ratio_to_actual": 9.048034836023858,
+              "median_mse_to_input": 0.9559944916747196
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9493686029646988,
+              "worst_mse_ratio_to_actual": 0.9902185302215131,
+              "median_mse_to_input": 0.11210726055116338
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11622959803745411
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "irregular_coarse",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1496373230101753
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1496373230101753
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 6.413428679153482,
+              "worst_mse_ratio_to_actual": 7.134534187559376,
+              "median_mse_to_input": 0.9590052542065058
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.009089063785575,
+              "worst_mse_ratio_to_actual": 1.0912877370937188,
+              "median_mse_to_input": 0.14918590546892815
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0192682912710045,
+              "worst_mse_ratio_to_actual": 1.0558181139814988,
+              "median_mse_to_input": 0.15249911679079609
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "irregular_fine",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.18277717886272282
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.18277717886272282
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.25333361992926,
+              "worst_mse_ratio_to_actual": 5.424569928655747,
+              "median_mse_to_input": 0.9602414409541522
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0836667815393317,
+              "worst_mse_ratio_to_actual": 1.1167926376931905,
+              "median_mse_to_input": 0.1980642832088409
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0809301435467913,
+              "worst_mse_ratio_to_actual": 1.0953054218935145,
+              "median_mse_to_input": 0.19636976272489237
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "novel_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12474729409994577
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12474729409994577
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 7.672319554217704,
+              "worst_mse_ratio_to_actual": 7.904408146344399,
+              "median_mse_to_input": 0.9564594055026161
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.921444906527175,
+              "worst_mse_ratio_to_actual": 0.9904625028563485,
+              "median_mse_to_input": 0.11704398935241733
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.999437581379772,
+              "worst_mse_ratio_to_actual": 1.0021363694331702,
+              "median_mse_to_input": 0.1246787309270152
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "color_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12241485725011726
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12241485725011726
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.24419049516112,
+              "worst_mse_ratio_to_actual": 3.371280707257957,
+              "median_mse_to_input": 0.3949061549521396
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9748227936472025,
+              "worst_mse_ratio_to_actual": 1.0889838309314466,
+              "median_mse_to_input": 0.11865410862242401
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0024957714704863,
+              "worst_mse_ratio_to_actual": 1.007082544704651,
+              "median_mse_to_input": 0.12268710284920867
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "flat",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12778816752017824
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12778816752017824
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.1209243726624725,
+              "worst_mse_ratio_to_actual": 3.3517966605398324,
+              "median_mse_to_input": 0.3999009281049142
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9981389289603633,
+              "worst_mse_ratio_to_actual": 1.0203758108660537,
+              "median_mse_to_input": 0.12561004240344453
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0000001146008968,
+              "worst_mse_ratio_to_actual": 1.0000002272172814,
+              "median_mse_to_input": 0.12778816664660064
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "irregular_coarse",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1255365971105264
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1255365971105264
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.2559261591569895,
+              "worst_mse_ratio_to_actual": 3.348631313142245,
+              "median_mse_to_input": 0.408950964998544
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9833939122523545,
+              "worst_mse_ratio_to_actual": 1.073481867402172,
+              "median_mse_to_input": 0.13040032740104623
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0014966754962789,
+              "worst_mse_ratio_to_actual": 1.0038303069067402,
+              "median_mse_to_input": 0.1259414676975827
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "irregular_fine",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12223990328029352
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12223990328029352
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.2384559468121523,
+              "worst_mse_ratio_to_actual": 3.456127393181918,
+              "median_mse_to_input": 0.3954049309126282
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9855183965899487,
+              "worst_mse_ratio_to_actual": 0.9965562257398419,
+              "median_mse_to_input": 0.1191150817713223
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.010311204092317,
+              "worst_mse_ratio_to_actual": 1.0173610650325986,
+              "median_mse_to_input": 0.12416089229231678
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "novel_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1334497153247754
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1334497153247754
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.029978253917098,
+              "worst_mse_ratio_to_actual": 3.1046314302978333,
+              "median_mse_to_input": 0.4000116586833019
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9540762820882528,
+              "worst_mse_ratio_to_actual": 0.9930569905916784,
+              "median_mse_to_input": 0.12719896489230734
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9986833973386986,
+              "worst_mse_ratio_to_actual": 1.0016030919287744,
+              "median_mse_to_input": 0.13355108727626552
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "color_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12058840795679371
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12058840795679371
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.56197006047387,
+              "worst_mse_ratio_to_actual": 5.848809104321329,
+              "median_mse_to_input": 0.6701322728763656
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0035165653699334,
+              "worst_mse_ratio_to_actual": 1.0705980131143993,
+              "median_mse_to_input": 0.12156508876533745
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.001471059436291,
+              "worst_mse_ratio_to_actual": 1.0031288994327283,
+              "median_mse_to_input": 0.12076645057087232
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "flat",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12207526333791252
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12207526333791252
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.471669357151743,
+              "worst_mse_ratio_to_actual": 5.730569000144111,
+              "median_mse_to_input": 0.6686399123705534
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9902223193988573,
+              "worst_mse_ratio_to_actual": 1.0528824351569857,
+              "median_mse_to_input": 0.1196326245887267
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.999999212866511,
+              "worst_mse_ratio_to_actual": 0.9999994280906207,
+              "median_mse_to_input": 0.12207516718295364
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "irregular_coarse",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11240032533405672
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11240032533405672
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.936635270389864,
+              "worst_mse_ratio_to_actual": 6.510801200357841,
+              "median_mse_to_input": 0.6668849766373316
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0101860517126235,
+              "worst_mse_ratio_to_actual": 1.0388418314616765,
+              "median_mse_to_input": 0.1144108460349419
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0024845933737112,
+              "worst_mse_ratio_to_actual": 1.0063102566163638,
+              "median_mse_to_input": 0.1126801736463772
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "irregular_fine",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11158549150234094
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11158549150234094
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.964728636278765,
+              "worst_mse_ratio_to_actual": 6.08668281616578,
+              "median_mse_to_input": 0.6655978417246926
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0268241879799067,
+              "worst_mse_ratio_to_actual": 1.0892344088224102,
+              "median_mse_to_input": 0.11387324654010472
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0028484764938628,
+              "worst_mse_ratio_to_actual": 1.0231282411637552,
+              "median_mse_to_input": 0.11147283113488483
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "novel_edge",
+          "cases": 4,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1187439764584449
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1187439764584449
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.599465921680169,
+              "worst_mse_ratio_to_actual": 5.952060158346542,
+              "median_mse_to_input": 0.6712674567545666
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9694306128455731,
+              "worst_mse_ratio_to_actual": 1.067638645123646,
+              "median_mse_to_input": 0.11882408442710153
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.999480085263711,
+              "worst_mse_ratio_to_actual": 1.0017685515971857,
+              "median_mse_to_input": 0.11861333108869004
+            }
+          }
+        }
+      ],
+      "aggregate": [
+        {
+          "iso": 1600,
+          "pattern": "flat",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 6.8366781066637135,
+              "min_mse_ratio_to_actual": 5.0408336039215556,
+              "max_mse_ratio_to_actual": 9.048034836023858,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                8.105967150761689,
+                4.174954044022199,
+                3.93520165846995
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9702131916759009,
+              "min_mse_ratio_to_actual": 0.9396743051852945,
+              "max_mse_ratio_to_actual": 1.0238049891002212,
+              "strictly_better_cases": 7,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.95352376106701,
+                0.9852869789318317,
+                0.9886340561653552
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 0.9999868010438233,
+              "max_mse_ratio_to_actual": 1.0000085080049061,
+              "strictly_better_cases": 2,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "irregular_fine",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 0.9889647039016195,
+              "max_mse_ratio_to_actual": 1.0000034859361713,
+              "strictly_better_cases": 2,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.047736927126474,
+              "min_mse_ratio_to_actual": 2.8143924239819653,
+              "max_mse_ratio_to_actual": 5.424569928655747,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                3.98052437627609,
+                4.341581030670982,
+                4.342401744092209
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0748978970504541,
+              "min_mse_ratio_to_actual": 1.050330953632283,
+              "max_mse_ratio_to_actual": 1.1167926376931905,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0885155169495002,
+                1.0611828481327161,
+                1.0827636299365895
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0484753905797666,
+              "min_mse_ratio_to_actual": 1.0186504174213586,
+              "max_mse_ratio_to_actual": 1.0953054218935145,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0546749141163032,
+                1.0241036783747344,
+                1.0221035146394972
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "irregular_coarse",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 0.9999615622149262,
+              "min_mse_ratio_to_actual": 0.9823814428750531,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9999527664982644,
+                0.9999998206923,
+                1.000001969857371
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.031628032809876,
+              "min_mse_ratio_to_actual": 3.4679825249382894,
+              "max_mse_ratio_to_actual": 7.134534187559376,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.286919690184693,
+                4.165459997703252,
+                4.089056978424399
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9941440811269289,
+              "min_mse_ratio_to_actual": 0.9298958489164628,
+              "max_mse_ratio_to_actual": 1.0912877370937188,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9906327910400907,
+                1.0692493558466256,
+                1.0699151721954658
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0066313133860303,
+              "min_mse_ratio_to_actual": 0.9420566161733199,
+              "max_mse_ratio_to_actual": 1.0558181139814988,
+              "strictly_better_cases": 3,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9877668301605352,
+                1.0401665957369324,
+                1.0379369767009272
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "novel_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.807381551726038,
+              "min_mse_ratio_to_actual": 4.1120641698655485,
+              "max_mse_ratio_to_actual": 7.904408146344399,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                6.751608083571696,
+                3.9606780306031495,
+                3.677917992495327
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.8660120422117817,
+              "min_mse_ratio_to_actual": 0.7704108841462637,
+              "max_mse_ratio_to_actual": 0.9904625028563485,
+              "strictly_better_cases": 8,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.8279335291950616,
+                0.912770652774434,
+                0.9221510282604306
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0020237965890577,
+              "min_mse_ratio_to_actual": 0.9965432028197144,
+              "max_mse_ratio_to_actual": 1.0114175174499342,
+              "strictly_better_cases": 2,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0001499934985825,
+                1.0004761111216343,
+                1.0043601822679133
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "color_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 0.9999736296945266,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 1,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 6.167682271933803,
+              "min_mse_ratio_to_actual": 4.988200461970568,
+              "max_mse_ratio_to_actual": 8.049690420462236,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                7.86590531668535,
+                3.215278810928506,
+                3.59038671050353
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9887446210507237,
+              "min_mse_ratio_to_actual": 0.9480163972658948,
+              "max_mse_ratio_to_actual": 1.0291626126498774,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9877601083579945,
+                0.9856237900317387,
+                1.0259056456998534
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0073346820134712,
+              "min_mse_ratio_to_actual": 0.9998819036063743,
+              "max_mse_ratio_to_actual": 1.0103740659015497,
+              "strictly_better_cases": 1,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0009388586765635,
+                1.011421980501507,
+                1.019404322821455
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "flat",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.313372388387848,
+              "min_mse_ratio_to_actual": 3.0190585812093564,
+              "max_mse_ratio_to_actual": 5.730569000144111,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.267760735607749,
+                2.653060256061977,
+                2.4991362929934082
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9948842975381165,
+              "min_mse_ratio_to_actual": 0.953069004926879,
+              "max_mse_ratio_to_actual": 1.0528824351569857,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.011097763155806,
+                1.0116712337585616,
+                0.9763969877157475
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9999995931361543,
+              "min_mse_ratio_to_actual": 0.9999984312587304,
+              "max_mse_ratio_to_actual": 1.0000002272172814,
+              "strictly_better_cases": 5,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9999994793751135,
+                0.999999942956419,
+                0.9999998156240044
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "irregular_fine",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.34042916589762,
+              "min_mse_ratio_to_actual": 3.0021180640458462,
+              "max_mse_ratio_to_actual": 6.08668281616578,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.387082619989515,
+                2.7327500346864015,
+                2.742891365453376
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9855183965899487,
+              "min_mse_ratio_to_actual": 0.9352487505416224,
+              "max_mse_ratio_to_actual": 1.0892344088224102,
+              "strictly_better_cases": 6,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.992584244830415,
+                0.9970326087454169,
+                0.9488853687917194
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0039681241636687,
+              "min_mse_ratio_to_actual": 0.9902833503295915,
+              "max_mse_ratio_to_actual": 1.0231282411637552,
+              "strictly_better_cases": 2,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0072056429645975,
+                0.9966086506086913,
+                1.0063260690027849
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "irregular_coarse",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.289008670813824,
+              "min_mse_ratio_to_actual": 2.755188718961181,
+              "max_mse_ratio_to_actual": 6.510801200357841,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.3782712218471005,
+                2.733545368531416,
+                2.7050572415367604
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0012912310024062,
+              "min_mse_ratio_to_actual": 0.9354472721243537,
+              "max_mse_ratio_to_actual": 1.073481867402172,
+              "strictly_better_cases": 4,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9962040296930578,
+                1.0195980498394555,
+                0.9993111564141027
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.00243847164633,
+              "min_mse_ratio_to_actual": 0.9916682022841617,
+              "max_mse_ratio_to_actual": 1.0063102566163638,
+              "strictly_better_cases": 2,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0015473785859168,
+                0.9990201343243518,
+                0.9955044044804959
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "novel_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 0.9999679053017921,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 1,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.245750405121598,
+              "min_mse_ratio_to_actual": 2.8136359801501984,
+              "max_mse_ratio_to_actual": 5.952060158346542,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.3111988649958475,
+                2.470184466555839,
+                2.60783772773585
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9603049302502775,
+              "min_mse_ratio_to_actual": 0.8892044493525095,
+              "max_mse_ratio_to_actual": 1.067638645123646,
+              "strictly_better_cases": 7,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9524730679089,
+                0.9582076595718445,
+                0.9548108234564895
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.999480085263711,
+              "min_mse_ratio_to_actual": 0.9961709501923994,
+              "max_mse_ratio_to_actual": 1.0017685515971857,
+              "strictly_better_cases": 6,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9997529969195311,
+                0.9999856050407754,
+                0.9999930166915141
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "color_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.3036986817783935,
+              "min_mse_ratio_to_actual": 3.158707454834257,
+              "max_mse_ratio_to_actual": 5.848809104321329,
+              "strictly_better_cases": 0,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                5.4841044161090995,
+                2.673238992249983,
+                2.6013154768079523
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9858094173531871,
+              "min_mse_ratio_to_actual": 0.952693498298036,
+              "max_mse_ratio_to_actual": 1.0889838309314466,
+              "strictly_better_cases": 5,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                0.9944432900097893,
+                0.974710983728361,
+                0.9599553187735961
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.001471059436291,
+              "min_mse_ratio_to_actual": 0.9922846426630292,
+              "max_mse_ratio_to_actual": 1.007082544704651,
+              "strictly_better_cases": 2,
+              "cases": 8,
+              "median_opponent_mse_ratio": [
+                1.0007078615931837,
+                1.0009626604478976,
+                1.0028254661815983
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "docs\\validation\\raw\\signal-filter-v001-20261030T211312Z.json",
+      "sha256": "b3cf45c95cc5f11f84a210707bd2c2c84c7fb969c364d7ae1dd32168713545b6",
+      "freeze_sha256": "83ddd413fe89652a15e3cbfb985347ba615345c738545d54789432afef565233",
+      "distribution": "gaussian",
+      "metadata_clarifications": [],
+      "rationale": "Structured distribution field and frozen normalized_draws calls identify the executed distribution; prose corrections do not change measurements.",
+      "seconds": 125.167807299993,
+      "contracts": {
+        "pixel_parities": 80,
+        "zero_identities": 40
+      },
+      "per_level_summary": [
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "color_edge",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.14003596951914332
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.14003596951914332
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.051137295757152,
+              "worst_mse_ratio_to_actual": 5.058311218286433,
+              "median_mse_to_input": 0.7073344272208201
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0352266089960116,
+              "worst_mse_ratio_to_actual": 1.103898151647754,
+              "median_mse_to_input": 0.14503100206263297
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.004869406878464,
+              "worst_mse_ratio_to_actual": 1.0092649271464524,
+              "median_mse_to_input": 0.14071389057031708
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7187589247877608,
+              "worst_mse_ratio_to_actual": 0.7415807617320255,
+              "median_mse_to_input": 0.10067272090443474
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "flat",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12248138180138413
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12248138180138413
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.716875677902334,
+              "worst_mse_ratio_to_actual": 5.898796807707598,
+              "median_mse_to_input": 0.6993869576041771
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0354131106513857,
+              "worst_mse_ratio_to_actual": 1.0877512654264505,
+              "median_mse_to_input": 0.12705585485866194
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9999989495403842,
+              "worst_mse_ratio_to_actual": 1.0000012871478086,
+              "median_mse_to_input": 0.12248124255320314
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.6654023749506491,
+              "worst_mse_ratio_to_actual": 0.6759032438156207,
+              "median_mse_to_input": 0.08154695813016946
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "irregular_coarse",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1915658246002233
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 0.9945090246090043,
+              "worst_mse_ratio_to_actual": 0.9968911446780302,
+              "median_mse_to_input": 0.1904983730862714
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.7993922325038136,
+              "worst_mse_ratio_to_actual": 3.913113366327148,
+              "median_mse_to_input": 0.7270904844123898
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0001762347108702,
+              "worst_mse_ratio_to_actual": 1.034660613385489,
+              "median_mse_to_input": 0.19182495693046658
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9622966092014383,
+              "worst_mse_ratio_to_actual": 0.9663704758253302,
+              "median_mse_to_input": 0.18431651879963826
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.737761501543122,
+              "worst_mse_ratio_to_actual": 0.7511255196394485,
+              "median_mse_to_input": 0.14141723060285255
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "irregular_fine",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.2553488747544427
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 0.9964842424063065,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.25447180481981135
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 2.9387838961621875,
+              "worst_mse_ratio_to_actual": 3.0120197065761403,
+              "median_mse_to_input": 0.7499844895515124
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0872597980025098,
+              "worst_mse_ratio_to_actual": 1.1177660853198792,
+              "median_mse_to_input": 0.2774511703070752
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0410945723996838,
+              "worst_mse_ratio_to_actual": 1.0504088199586827,
+              "median_mse_to_input": 0.2657875540872408
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.9403268574224946,
+              "worst_mse_ratio_to_actual": 0.9474356905586065,
+              "median_mse_to_input": 0.240069600645603
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.003,
+          "pattern": "novel_edge",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.15989852463433285
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.15989852463433285
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.393221810611422,
+              "worst_mse_ratio_to_actual": 4.504468288147158,
+              "median_mse_to_input": 0.7019266561644942
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.8536465465879248,
+              "worst_mse_ratio_to_actual": 0.8964554404297697,
+              "median_mse_to_input": 0.1367057873021231
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9995025465338954,
+              "worst_mse_ratio_to_actual": 1.001684136146924,
+              "median_mse_to_input": 0.1598296315977625
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.5688035315189648,
+              "worst_mse_ratio_to_actual": 0.5799028935533816,
+              "median_mse_to_input": 0.09100502504333857
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "color_edge",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12238677557527064
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12238677557527064
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 7.822207048299826,
+              "worst_mse_ratio_to_actual": 7.954654115416869,
+              "median_mse_to_input": 0.9570571505318937
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.031360110493097,
+              "worst_mse_ratio_to_actual": 1.0852375533793495,
+              "median_mse_to_input": 0.12633774066181291
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0136345920500798,
+              "worst_mse_ratio_to_actual": 1.0258391471424828,
+              "median_mse_to_input": 0.12402989421165775
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7092120865181014,
+              "worst_mse_ratio_to_actual": 0.7211358125676455,
+              "median_mse_to_input": 0.08682316710066118
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "flat",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11141631432467011
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11141631432467011
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 8.584693669896634,
+              "worst_mse_ratio_to_actual": 8.714938443166094,
+              "median_mse_to_input": 0.9562519338063247
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0351510529706247,
+              "worst_mse_ratio_to_actual": 1.10045730890868,
+              "median_mse_to_input": 0.11544452714728615
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11141631432467011
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.6673599354024558,
+              "worst_mse_ratio_to_actual": 0.6848759915142167,
+              "median_mse_to_input": 0.07438477389609591
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "irregular_coarse",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.14451942326893785
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.14451942326893785
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 6.637372316415788,
+              "worst_mse_ratio_to_actual": 6.812403398679109,
+              "median_mse_to_input": 0.9585579408192852
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0423045162842517,
+              "worst_mse_ratio_to_actual": 1.0981978380616269,
+              "median_mse_to_input": 0.15084760936461267
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0244918314978384,
+              "worst_mse_ratio_to_actual": 1.0252957750323664,
+              "median_mse_to_input": 0.14805588535140338
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.751280510276283,
+              "worst_mse_ratio_to_actual": 0.7768733618314462,
+              "median_mse_to_input": 0.10867277964031481
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "irregular_fine",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1801941662102961
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1801941662102961
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.331265141793033,
+              "worst_mse_ratio_to_actual": 5.4059699564033705,
+              "median_mse_to_input": 0.9604750249693337
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.1304040577091494,
+              "worst_mse_ratio_to_actual": 1.1753368497959655,
+              "median_mse_to_input": 0.20357922903641812
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.080794555008013,
+              "worst_mse_ratio_to_actual": 1.0864554866489982,
+              "median_mse_to_input": 0.19473863875293368
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.9260238750383669,
+              "worst_mse_ratio_to_actual": 0.9395076358036151,
+              "median_mse_to_input": 0.16683019390130766
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "level": 0.03,
+          "pattern": "novel_edge",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.121041675006285
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.121041675006285
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 7.901520128430606,
+              "worst_mse_ratio_to_actual": 7.930769472522825,
+              "median_mse_to_input": 0.9563993307542793
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9836005042014518,
+              "worst_mse_ratio_to_actual": 1.0587419361705215,
+              "median_mse_to_input": 0.11909236336684585
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0055007730618333,
+              "worst_mse_ratio_to_actual": 1.0102087540441846,
+              "median_mse_to_input": 0.12170973524918843
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.6446381775845089,
+              "worst_mse_ratio_to_actual": 0.6714355995751435,
+              "median_mse_to_input": 0.07804082020404682
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "color_edge",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12646885598337793
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12646885598337793
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.166913330371685,
+              "worst_mse_ratio_to_actual": 3.220275387606428,
+              "median_mse_to_input": 0.40055293725188346
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9798024108088011,
+              "worst_mse_ratio_to_actual": 1.0258072165902634,
+              "median_mse_to_input": 0.12394641567635403
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0045514034440917,
+              "worst_mse_ratio_to_actual": 1.004892942201752,
+              "median_mse_to_input": 0.12704470378576674
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7129648929782006,
+              "worst_mse_ratio_to_actual": 0.7758414398279669,
+              "median_mse_to_input": 0.0902114884484024
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "flat",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12459667436931537
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12459667436931537
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.212842870442764,
+              "worst_mse_ratio_to_actual": 3.332774670750256,
+              "median_mse_to_input": 0.40009075440079067
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9900841994457175,
+              "worst_mse_ratio_to_actual": 1.0580241438770246,
+              "median_mse_to_input": 0.12323726088589601
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9999997959439527,
+              "worst_mse_ratio_to_actual": 0.9999998028038206,
+              "median_mse_to_input": 0.12459664895712445
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7198558411917879,
+              "worst_mse_ratio_to_actual": 0.7994806233319727,
+              "median_mse_to_input": 0.08954639036003778
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "irregular_coarse",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12758393285862307
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12758393285862307
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.1476236296298086,
+              "worst_mse_ratio_to_actual": 3.200656247129376,
+              "median_mse_to_input": 0.40162345152792966
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.976280142672932,
+              "worst_mse_ratio_to_actual": 1.023757624778616,
+              "median_mse_to_input": 0.12459100799080995
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9986616312351918,
+              "worst_mse_ratio_to_actual": 1.000753497462007,
+              "median_mse_to_input": 0.127411709197309
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7106946103989775,
+              "worst_mse_ratio_to_actual": 0.7747648433526887,
+              "median_mse_to_input": 0.0907182158930179
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "irregular_fine",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1280579121519228
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1280579121519228
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.1328010595119,
+              "worst_mse_ratio_to_actual": 3.180251807953309,
+              "median_mse_to_input": 0.40122032109055883
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9750794755001904,
+              "worst_mse_ratio_to_actual": 1.0176295353701987,
+              "median_mse_to_input": 0.12490283186072926
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9966361215978029,
+              "worst_mse_ratio_to_actual": 1.0100866523122898,
+              "median_mse_to_input": 0.12761570084495666
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7120353215108626,
+              "worst_mse_ratio_to_actual": 0.7722863180435371,
+              "median_mse_to_input": 0.09123300185126827
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.03,
+          "pattern": "novel_edge",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12689069716318907
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12689069716318907
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 3.1555430867551584,
+              "worst_mse_ratio_to_actual": 3.2453001471241874,
+              "median_mse_to_input": 0.4003481260739164
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.9746622637619977,
+              "worst_mse_ratio_to_actual": 1.0345039437604944,
+              "median_mse_to_input": 0.12363494758776322
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0012412050270156,
+              "worst_mse_ratio_to_actual": 1.0027924074857744,
+              "median_mse_to_input": 0.12704714142192314
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7085310738027624,
+              "worst_mse_ratio_to_actual": 0.7826229937018934,
+              "median_mse_to_input": 0.08985570085883526
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "color_edge",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1194836318059255
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1194836318059255
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.6254823565640155,
+              "worst_mse_ratio_to_actual": 5.789049865085661,
+              "median_mse_to_input": 0.6716401905225083
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0329427681964567,
+              "worst_mse_ratio_to_actual": 1.071805199784948,
+              "median_mse_to_input": 0.12329789876993619
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9965721269594308,
+              "worst_mse_ratio_to_actual": 1.0005453281207048,
+              "median_mse_to_input": 0.11906159896338392
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7214538545196769,
+              "worst_mse_ratio_to_actual": 0.7797380731473278,
+              "median_mse_to_input": 0.08601917434984843
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "flat",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11877430250102836
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11877430250102836
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.656522490228692,
+              "worst_mse_ratio_to_actual": 5.8101982918286454,
+              "median_mse_to_input": 0.6714041213753248
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0360474894806213,
+              "worst_mse_ratio_to_actual": 1.073409473273373,
+              "median_mse_to_input": 0.12294753328623334
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9999999687353522,
+              "worst_mse_ratio_to_actual": 1.0000001411578483,
+              "median_mse_to_input": 0.11877429828786691
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7229711459468298,
+              "worst_mse_ratio_to_actual": 0.7802030125967593,
+              "median_mse_to_input": 0.08570452092438305
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "irregular_coarse",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12235474528909465
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.12235474528909465
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.492784017174035,
+              "worst_mse_ratio_to_actual": 5.603941152265925,
+              "median_mse_to_input": 0.6718305295887794
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0110392371495922,
+              "worst_mse_ratio_to_actual": 1.040375006248694,
+              "median_mse_to_input": 0.12364272693217881
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9751624655246866,
+              "worst_mse_ratio_to_actual": 0.9843859026541971,
+              "median_mse_to_input": 0.11933547527508129
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.706205979855257,
+              "worst_mse_ratio_to_actual": 0.7571102388335003,
+              "median_mse_to_input": 0.08629881682240229
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "irregular_fine",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11936794404991394
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.11936794404991394
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.634002385581696,
+              "worst_mse_ratio_to_actual": 5.847323496374847,
+              "median_mse_to_input": 0.6716174744340115
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0378390023453783,
+              "worst_mse_ratio_to_actual": 1.0831405915657315,
+              "median_mse_to_input": 0.12369319717204648
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.015378704440936,
+              "worst_mse_ratio_to_actual": 1.0382479832309224,
+              "median_mse_to_input": 0.12110698935102368
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.726600484486605,
+              "worst_mse_ratio_to_actual": 0.7890048067482591,
+              "median_mse_to_input": 0.0864689940147958
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "level": 0.1,
+          "pattern": "novel_edge",
+          "cases": 2,
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1198151133115965
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "worst_mse_ratio_to_actual": 1.0,
+              "median_mse_to_input": 0.1198151133115965
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.610269020586785,
+              "worst_mse_ratio_to_actual": 5.808247705528061,
+              "median_mse_to_input": 0.6714247133310922
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.028192295025477,
+              "worst_mse_ratio_to_actual": 1.0748021734504225,
+              "median_mse_to_input": 0.12301162435674537
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9972584473865709,
+              "worst_mse_ratio_to_actual": 1.0022338108716389,
+              "median_mse_to_input": 0.11946727548877176
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7177875674510028,
+              "worst_mse_ratio_to_actual": 0.7816983024082462,
+              "median_mse_to_input": 0.08575313173741791
+            }
+          }
+        }
+      ],
+      "aggregate": [
+        {
+          "iso": 1600,
+          "pattern": "flat",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 7.176622852167385,
+              "min_mse_ratio_to_actual": 5.534954548097071,
+              "max_mse_ratio_to_actual": 8.714938443166094,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                8.37758558235443,
+                4.462519902344075,
+                4.636425531591584
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0354131106513857,
+              "min_mse_ratio_to_actual": 0.9698447970325695,
+              "max_mse_ratio_to_actual": 1.10045730890868,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.021931223924717,
+                1.042710753285269,
+                1.0574676501602407
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 0.9999966119329597,
+              "max_mse_ratio_to_actual": 1.0000012871478086,
+              "strictly_better_cases": 1,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                0.9999998071464229,
+                0.9999992249849352
+              ]
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.6654023749506491,
+              "min_mse_ratio_to_actual": 0.6498438792906948,
+              "max_mse_ratio_to_actual": 0.6848759915142167,
+              "strictly_better_cases": 4,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.5958826086614115,
+                0.8122184043479037,
+                0.778546058068385
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "irregular_fine",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 0.992968484812613,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 1,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.134290016879417,
+              "min_mse_ratio_to_actual": 2.8655480857482347,
+              "max_mse_ratio_to_actual": 5.4059699564033705,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                4.066302567243277,
+                4.368559378309197,
+                4.756674811047542
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.1016186754711061,
+              "min_mse_ratio_to_actual": 1.0567535106851405,
+              "max_mse_ratio_to_actual": 1.1753368497959655,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.089932082766712,
+                1.1510679715942305,
+                1.153217898253639
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.062771221662855,
+              "min_mse_ratio_to_actual": 1.0317803248406847,
+              "max_mse_ratio_to_actual": 1.0864554866489982,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.061986057396613,
+                1.0446414318481982,
+                1.0748475447067372
+              ]
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.9363628300449989,
+              "min_mse_ratio_to_actual": 0.9125401142731187,
+              "max_mse_ratio_to_actual": 0.9474356905586065,
+              "strictly_better_cases": 4,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.9438970670526114,
+                0.887636484259309,
+                0.841161821050681
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "irregular_coarse",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 0.9984455723390151,
+              "min_mse_ratio_to_actual": 0.9921269045399784,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.9985925723421495,
+                0.9998732140008995,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 5.187727300239807,
+              "min_mse_ratio_to_actual": 3.685671098680479,
+              "max_mse_ratio_to_actual": 6.812403398679109,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                5.3029736703335395,
+                4.366880309303189,
+                4.590848767745427
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0105359039461828,
+              "min_mse_ratio_to_actual": 0.9656918560362515,
+              "max_mse_ratio_to_actual": 1.0981978380616269,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.9861182079647324,
+                1.0895868434534224,
+                1.126120554551207
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9950291818943204,
+              "min_mse_ratio_to_actual": 0.9582227425775465,
+              "max_mse_ratio_to_actual": 1.0252957750323664,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.9721745027944014,
+                1.0116792322498291,
+                1.0691612100989865
+              ]
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7384065891802841,
+              "min_mse_ratio_to_actual": 0.7243974834467956,
+              "max_mse_ratio_to_actual": 0.7768733618314462,
+              "strictly_better_cases": 4,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.7050848142109538,
+                0.8604290686236009,
+                0.8268763329415637
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "novel_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 6.188369536242773,
+              "min_mse_ratio_to_actual": 4.281975333075687,
+              "max_mse_ratio_to_actual": 7.930769472522825,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                7.033602082308548,
+                4.130924198647987,
+                4.212416641771138
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 0.902457256331076,
+              "min_mse_ratio_to_actual": 0.8108376527460801,
+              "max_mse_ratio_to_actual": 1.0587419361705215,
+              "strictly_better_cases": 3,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.8798824260433646,
+                0.9448266849575941,
+                0.9576422648265841
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.001238464113203,
+              "min_mse_ratio_to_actual": 0.9973209569208669,
+              "max_mse_ratio_to_actual": 1.0102087540441846,
+              "strictly_better_cases": 1,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.000003474324028,
+                1.0042326350653719,
+                1.0049632282067118
+              ]
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.598871824573628,
+              "min_mse_ratio_to_actual": 0.557704169484548,
+              "max_mse_ratio_to_actual": 0.6714355995751435,
+              "strictly_better_cases": 4,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.5352281837957071,
+                0.7417509316859527,
+                0.7193033170892456
+              ]
+            }
+          }
+        },
+        {
+          "iso": 1600,
+          "pattern": "color_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 6.374035599734608,
+              "min_mse_ratio_to_actual": 5.043963373227871,
+              "max_mse_ratio_to_actual": 7.954654115416869,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                8.091610486216112,
+                3.2572911366415678,
+                4.007146263646607
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.031360110493097,
+              "min_mse_ratio_to_actual": 0.9665550663442694,
+              "max_mse_ratio_to_actual": 1.103898151647754,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.020754897999649,
+                1.0107694959087838,
+                1.0474880032225773
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0053474820520645,
+              "min_mse_ratio_to_actual": 1.0004738866104759,
+              "max_mse_ratio_to_actual": 1.0258391471424828,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0073022365972524,
+                1.005032740036768,
+                1.0026999294727685
+              ]
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7092120865181014,
+              "min_mse_ratio_to_actual": 0.6959370878434963,
+              "max_mse_ratio_to_actual": 0.7415807617320255,
+              "strictly_better_cases": 4,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.6130643004056355,
+                0.8962477379633282,
+                0.825022378724209
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "flat",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.417810679689498,
+              "min_mse_ratio_to_actual": 3.092911070135272,
+              "max_mse_ratio_to_actual": 5.8101982918286454,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                5.490876819554664,
+                2.778177885410285,
+                2.7918160400504535
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.028354824782447,
+              "min_mse_ratio_to_actual": 0.9221442550144102,
+              "max_mse_ratio_to_actual": 1.073409473273373,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0332963448064834,
+                1.0270062081848348,
+                1.0022049416919088
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.9999997995583384,
+              "min_mse_ratio_to_actual": 0.9999997890840848,
+              "max_mse_ratio_to_actual": 1.0000001411578483,
+              "strictly_better_cases": 3,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.999999689363376,
+                0.999999975319265,
+                1.000000061911018
+              ]
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7229711459468298,
+              "min_mse_ratio_to_actual": 0.6402310590516032,
+              "max_mse_ratio_to_actual": 0.7994806233319727,
+              "strictly_better_cases": 4,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.6677370222841632,
+                0.8232174951700686,
+                0.8028418793353926
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "irregular_fine",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.300466541370927,
+              "min_mse_ratio_to_actual": 3.085350311070491,
+              "max_mse_ratio_to_actual": 5.847323496374847,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                5.336021435837137,
+                2.6770529774360394,
+                2.8031588748400766
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.005083474247612,
+              "min_mse_ratio_to_actual": 0.9325294156301821,
+              "max_mse_ratio_to_actual": 1.0831405915657315,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0099145937600893,
+                0.9907652963952556,
+                1.0075778682297714
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.0012980389816195,
+              "min_mse_ratio_to_actual": 0.983185590883316,
+              "max_mse_ratio_to_actual": 1.0382479832309224,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0099628668213332,
+                0.9941903980883755,
+                1.0015942138307796
+              ]
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.718241240134244,
+              "min_mse_ratio_to_actual": 0.6517843249781881,
+              "max_mse_ratio_to_actual": 0.7890048067482591,
+              "strictly_better_cases": 4,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.6678080990862094,
+                0.7939246703718424,
+                0.8046341729380708
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "irregular_coarse",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.29114156460576,
+              "min_mse_ratio_to_actual": 3.094591012130241,
+              "max_mse_ratio_to_actual": 5.603941152265925,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                5.309233185370673,
+                2.7006275107685207,
+                2.7587774341400406
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.002730546414553,
+              "min_mse_ratio_to_actual": 0.928802660567248,
+              "max_mse_ratio_to_actual": 1.040375006248694,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0051592541382153,
+                0.9975766826493463,
+                0.9973071795265591
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 0.990477833831287,
+              "min_mse_ratio_to_actual": 0.965939028395176,
+              "max_mse_ratio_to_actual": 1.000753497462007,
+              "strictly_better_cases": 3,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.9911440833884932,
+                0.9950392073090701,
+                0.9947851398113824
+              ]
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.706205979855257,
+              "min_mse_ratio_to_actual": 0.6466243774452664,
+              "max_mse_ratio_to_actual": 0.7747648433526887,
+              "strictly_better_cases": 4,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.6497088853871036,
+                0.7990504559577445,
+                0.798735014404591
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "novel_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.3287952413848485,
+              "min_mse_ratio_to_actual": 3.0657860263861294,
+              "max_mse_ratio_to_actual": 5.808247705528061,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                5.390081507467988,
+                2.6960468904648467,
+                2.7870485707918777
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.008043180180513,
+              "min_mse_ratio_to_actual": 0.914820583763501,
+              "max_mse_ratio_to_actual": 1.0748021734504225,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0151741290740257,
+                0.9968394098449622,
+                0.9978710983722978
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.000961906719948,
+              "min_mse_ratio_to_actual": 0.9922830839015029,
+              "max_mse_ratio_to_actual": 1.0027924074857744,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.001266041370847,
+                0.998990526808168,
+                1.00064320669484
+              ]
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7177875674510028,
+              "min_mse_ratio_to_actual": 0.6344391539036315,
+              "max_mse_ratio_to_actual": 0.7826229937018934,
+              "strictly_better_cases": 4,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.6609070316173022,
+                0.7991622662750558,
+                0.7942195104595592
+              ]
+            }
+          }
+        },
+        {
+          "iso": 51200,
+          "pattern": "color_edge",
+          "variants": {
+            "actual": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "blind_pooled": {
+              "median_mse_ratio_to_actual": 1.0,
+              "min_mse_ratio_to_actual": 1.0,
+              "max_mse_ratio_to_actual": 1.0,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            "read_only": {
+              "median_mse_ratio_to_actual": 4.341095117824399,
+              "min_mse_ratio_to_actual": 3.1135512731369426,
+              "max_mse_ratio_to_actual": 5.789049865085661,
+              "strictly_better_cases": 0,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                5.394106632699284,
+                2.716025522824723,
+                2.7407756510930916
+              ]
+            },
+            "signal_profile": {
+              "median_mse_ratio_to_actual": 1.0099437765991144,
+              "min_mse_ratio_to_actual": 0.9337976050273389,
+              "max_mse_ratio_to_actual": 1.071805199784948,
+              "strictly_better_cases": 2,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0117902993855536,
+                1.0074927146313668,
+                0.9907507798395428
+              ]
+            },
+            "same_noise_diagnostic": {
+              "median_mse_ratio_to_actual": 1.002377596403568,
+              "min_mse_ratio_to_actual": 0.9925989257981568,
+              "max_mse_ratio_to_actual": 1.004892942201752,
+              "strictly_better_cases": 1,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                1.0005441332891225,
+                1.003456416192495,
+                0.9999851307856391
+              ]
+            },
+            "external_covariance": {
+              "median_mse_ratio_to_actual": 0.7195055378599966,
+              "min_mse_ratio_to_actual": 0.6500883461284342,
+              "max_mse_ratio_to_actual": 0.7797380731473278,
+              "strictly_better_cases": 4,
+              "cases": 4,
+              "median_opponent_mse_ratio": [
+                0.6639598158912883,
+                0.8074257142918941,
+                0.7950314445893831
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "repeated_gaussian_input_and_baseline_parities": 40,
+  "decision": "Audit only; no automatic promotion, threshold tuning or physical sensor qualification."
+}

@@ -2,13 +2,14 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§45) : propagation simulée de la loi CFA figée dans le RCD
-signé, la médiane et trois plans B3. Sur les aplats, le profil au niveau de
-signal correspondant prédit les écarts-types à environ ±3 %, contre une
-forte sous-estimation avec les noirs seuls. La texture fine révèle jusqu'à
-11,3 % de sous-estimation chroma après médiane. Résultat encourageant mais
-limité à quatre noirs réutilisés et un bruit de signal gaussien simulé ;
-ni qualification physique générale, ni amélioration de rendu démontrée.
+Dernier jalon (§47) : résultat positif au banc à filtre inchangé. L'injection
+directe de covariances mesurées sur simulations de calibration améliore les
+80 cas de contrôle, en RGB et sur chacun des axes I/Co/Cg, avec deux
+distributions de bruit. Baisse médiane d'erreur par groupe d'environ6–42 %.
+La réestimation robuste de ces profils ne donnait pas ce bénéfice (§46).
+Les textures les plus faibles restent fortement atténuées : ni résolution
+complète de la protection des détails, ni validation photographique générale.
+Quatre noirs réutilisés, deux ISO ; aucun changement de production.
 **Étude de banc seulement, aucun changement de production.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
@@ -3434,6 +3435,241 @@ ni présenter une meilleure prédiction de variance comme un meilleur rendu.
 Six tests Python et le contrat natif signé passent ; cinq suites ciblées
 passent. Aucun moteur, profil ou IHM modifié ; pas de push, dev ou tag.
 
+## 46. Modèle dépendant du signal à filtre identique — 30 octobre 2026
+
+Campagnes successives, conservées sans réécriture :
+
+- [Gaussien, 21:01 UTC](../raw/signal-filter-v001-20261030T210129Z.json),
+  [protocole figé](../raw/signal-filter-freeze-v001-20261030T210129Z.json).
+- [Poisson mis à l'échelle, 21:06 UTC](../raw/signal-filter-v001-20261030T210633Z.json),
+  [protocole figé](../raw/signal-filter-freeze-v001-20261030T210633Z.json).
+- [Premier audit des deux campagnes](../raw/signal-filter-audit-v001-20261030T211032Z.json).
+
+### 46.1. Question, comparaison et contrôles
+
+Une bonne prédiction de variance (§45) ne démontre pas une amélioration du
+filtre. Cette épreuve emploie le même `CameraDenoise.cpp`, la même force
+100/100 et le même bruit CFA propagé par RCD signé/médiane. Quatre noirs,
+deux ISO et deux niveaux déjà décrits ; ajouter au témoin plat les textures
+fine/grossière et les contours achromatiques/colorés. Deux graines de contrôle
+par prise : 80 cas par campagne, ROI de mesure x/y=144, côté96 dans 256².
+Le signal propre de référence est lui aussi passé dans RCD/médiane.
+
+Les modèles comparés sont : courant conditionnel ; pooled aveugle courant ;
+pooled estimé sur l'autre noir ; pooled estimé sur un résidu d'aplat indépendant
+au même niveau de signal et sur l'autre noir. Un pooled estimé sur le bruit
+exact du cas reste un diagnostic privilégié, pas un profil déployable.
+Le profil externe est ici **encore estimé par le MAD/covariance robustes du
+module** : il ne faut pas le confondre avec une injection des moments vrais.
+
+Le hook unique d'instrumentation est placé après l'estimation ; le corps du
+filtre reste inchangé. Chaque campagne vérifie 160 empreintes de sorties
+original/bypass et 80 identités à modèle nul. Les observateurs continuent de
+décrire le modèle avant substitution ; ils ne prouvent pas le profil appliqué.
+MSE RGB, MSE/biais I/Co/Cg, projection du signal et empreintes sont conservés.
+Ces axes caméra ne sont pas la luminance d'affichage. Les stress propres
+avec un budget non nul ne représentent pas un cas réel à bruit nul.
+
+La seconde campagne remplace seulement la distribution du terme de signal :
+`a·(Poisson(signal_DN/a) − signal_DN/a)`. Même moyenne nulle et variance
+`a·signal_DN` que le gaussien ; cela **n'identifie pas a à un gain physique
+capteur calibré**. Quatre tests contrôlent moments, asymétrie, signal nul et
+identité du flux gaussien précédent. Les réalisations ne sont pas identiques
+entre distributions ; leurs ratios ne constituent pas un essai causal sur
+les mêmes pixels. Durées : 220,77 s puis 220,44 s sur fenêtres seulement.
+
+Correction explicite de métadonnées : le gel de la seconde campagne contient
+encore deux libellés rédigés « Gaussian ». Le champ structuré `distribution`,
+les appels `normalized_draws` et son source figé identifient bien
+`scaled_poisson`. L'audit fournit les libellés corrigés, sans modifier le gel
+ou les mesures ni prétendre à une nouvelle exécution.
+
+### 46.2. Résultats et contre-exemples
+
+Ratios médians de MSE RGB du profil externe au courant, réunissant les deux
+niveaux et quatre cas par niveau ; inférieur à1 = meilleur :
+
+| ISO / contenu | Gaussien | Poisson mis à l'échelle |
+| --- | ---: | ---: |
+| 1600, aplat | 1,004 | 0,970 |
+| 1600, texture fine | 1,101 | 1,075 |
+| 1600, texture grossière | 1,004 | 0,994 |
+| 1600, contour achromatique | 0,902 | 0,866 |
+| 1600, contour coloré | 1,002 | 0,989 |
+| 51200, aplat | 1,018 | 0,995 |
+| 51200, texture fine | 1,005 | 0,985 |
+| 51200, texture grossière | 1,003 | 1,001 |
+| 51200, contour achromatique | 1,008 | 0,960 |
+| 51200, contour coloré | 1,010 | 0,986 |
+
+À1600, les huit cas de texture fine régressent en gaussien, jusqu'à+17,5 %
+de MSE ; le groupe régresse également avec Poisson. Le gain sur les contours
+achromatiques est réel dans ce banc, mais ne compense pas ces contre-exemples.
+Le profil noir seul laisse nettement trop de bruit aux niveaux éclairés
+(rapports médians par cellule d'environ2,9 à8,5 en gaussien).
+
+Les modèles courant et pooled aveugle donnent ici des résultats presque
+identiques (écart maximal de ratio MSE inférieur à0,8 % en gaussien).
+Les fenêtres ont surtout un niveau de signal dominant : ce résultat ne valide
+pas un remplacement du routage conditionnel sur une image entière.
+
+### 46.3. Décision intermédiaire, avant injection des covariances
+
+**Ne pas remplacer globalement le modèle courant par ce pooled externe.**
+Les grands gains du banc à bruit de lecture seul (§43) ne se transfèrent
+pas à tous les cas comportant le terme de signal. Cela n'annule pas la
+contamination par texture démontrée sur d'autres témoins, et ne démontre
+pas non plus que la propagation physique serait inutile.
+
+Ambiguïté restante : le profil externe utilise encore l'estimateur robuste.
+La prochaine épreuve doit injecter les covariances empiriques de cinq plans
+B3, calculées sur plusieurs simulations de calibration indépendantes, sans
+réestimer leur amplitude par MAD. Même filtre, mêmes cas et même force,
+contrôle explicite de PSD et parité des pixels avant comparaison. Pas de
+nouvelle loi de force ni de recherche de seuils sur ces quatre noirs.
+
+Revue de l'historique effectuée avant toute nouvelle piste : `patch_noise`
+§§177–194 et249–250/273–274 ont déjà exploré NLM, guidage, faible rang et
+Wiener. Ne pas les redécouvrir sous un autre nom ni relancer une chaîne de
+micro-variantes sur les mêmes quatre photos. Ce jalon teste une différence
+précise : le terme CFA de bruit dépendant du signal manquait aux ablations.
+Aucun changement de production ou nouveau filtre promu.
+
+## 47. Injection directe des covariances : piste positive au banc — 30 octobre 2026
+
+Suite chronologique du §46, sans changer le filtre ni sa force :
+
+Banc et contrôles locaux : commit `d00d507` sur `patch_raw_bench`. Les gels
+conservent les sources exacts exécutés avant leur commit, pas seulement le
+SHA du parent Git.
+
+- [Gaussien, 21:13 UTC](../raw/signal-filter-v001-20261030T211312Z.json),
+  [gel](../raw/signal-filter-freeze-v001-20261030T211312Z.json).
+- [Poisson mis à l'échelle, 21:15 UTC](../raw/signal-filter-v001-20261030T211541Z.json),
+  [gel](../raw/signal-filter-freeze-v001-20261030T211541Z.json).
+- [Audit strict des quatre campagnes](../raw/signal-filter-audit-v001-20261030T212013Z.json)
+  après le [premier audit à quatre](../raw/signal-filter-audit-v001-20261030T211810Z.json)
+  après le premier [audit à trois campagnes](../raw/signal-filter-audit-v001-20261030T211527Z.json).
+
+### 47.1. Ce qui change, ce qui reste contrôlé
+
+Le §46 laissait une ambiguïté : son profil « bruit connu » était encore
+réestimé par MAD et sélection du quart des témoins les plus calmes. Cette
+fois, quatre graines de calibration produisent les résidus d'un aplat au
+niveau considéré, sur l'autre noir. Leur covariance centrée moyenne est
+calculée directement sur **cinq plans B3**, en I/Co/Cg, puis injectée au
+même point après estimation. Pas de réestimation MAD de son amplitude.
+
+Le module utilise toujours son `fromCovariance`, sa régularisation de
+corrélation, ses énergies locales, la force100/100 et sa correction DC.
+Le seul nouveau chemin est dans la copie générée du banc ; aucune source
+moteur ou interface de production modifiée. Les covariances empiriques ne
+sont pas une vérité physique exacte : bruit de lecture réel réutilisé,
+terme de signal simulé, référence aplatie et mesure spatiale finie. Les deux
+plans B3 supplémentaires ont aussi un nombre effectif de mesures plus faible
+que le nombre de pixels, à cause de la corrélation spatiale.
+
+Contrôle fixé avant calcul : première des deux graines de contrôle du §46,
+deux prises, deux niveaux, cinq contenus, deux ISO, soit40 cas par distribution.
+Tous leurs hashes d'entrée et sorties du filtre de référence correspondent
+aux cas précédents : il s'agit d'un rejeu apparié, pas de40 nouvelles scènes.
+Chaque campagne ajoute80 parités original/bypass et40 identités modèle nul.
+Durées125,17 s et125,74 s, toujours sur fenêtres, pas budget applicatif.
+
+Les matrices doivent être finies, symétriques et positives semi-définies,
+avec tolérance numérique déclarée ; une matrice non PSD est refusée, jamais
+rendue valide par projection. Contrôles natifs effectués : covariance nulle
+= identité exacte, covariance négative = échec explicite. Trois tests
+vérifient les cinq plans, le témoin constant signé et la concordance exacte
+des trois premiers plans Python avec l'épreuve du §45. Le calcul reste en
+float64 côté Python, distinct de l'arrondi float32 du module.
+
+### 47.2. Résultat confirmé dans les deux distributions
+
+Rapports médians de MSE RGB au filtre courant, par groupe (quatre cas chacun) :
+
+| ISO / contenu | Covariance directe, gaussien | Covariance directe, Poisson |
+| --- | ---: | ---: |
+| 1600, aplat | 0,665 | 0,671 |
+| 1600, texture fine | 0,936 | 0,930 |
+| 1600, texture grossière | 0,738 | 0,740 |
+| 1600, contour achromatique | 0,599 | 0,578 |
+| 1600, contour coloré | 0,709 | 0,713 |
+| 51200, aplat | 0,723 | 0,687 |
+| 51200, texture fine | 0,718 | 0,693 |
+| 51200, texture grossière | 0,706 | 0,685 |
+| 51200, contour achromatique | 0,718 | 0,692 |
+| 51200, contour coloré | 0,720 | 0,685 |
+
+Les80/80 cas améliorent la MSE RGB **et chacune des trois MSE I/Co/Cg**.
+Ce gain porte sur une erreur quadratique à la référence propre, pas sur un
+pourcentage de bruit visuel ou de détails restitués. À1600, les rapports
+σI du profil empirique au MAD de référence sont environ0,985–1,30 selon
+niveau/prise/plan ; cela ne prouve pas que toute la différence de rendu vient
+de la variance I : les autres variances et corrélations changent également.
+Pas d'attribution causale à un coefficient isolé sans ablation supplémentaire.
+
+La restitution des textures les plus faibles n'est pas résolue. Exemple
+gaussien, prise0 à1600/niveau0,003 : projection du signal bruité fin0,280
+avec le courant,0,362 avec covariance directe ; grossier0,637→0,800.
+Ce sont des réalisations particulières avec un terme croisé bruit/signal,
+pas des espérances établies. Les stress propres au budget non nul restent
+fortement lissés (gain fin environ0,05–0,10) ; ne pas les présenter comme une
+mesure de fidélité d'une image sans bruit ni comme une absence de perte.
+Sur le contour coloré de ce même témoin, projection0,931→0,921 malgré la
+MSE meilleure : l'amélioration globale n'exclut pas une légère atténuation
+supplémentaire d'un détail.
+
+### 47.3. Attribution : une seule calibration, sans avantage du moyennage
+
+Dernier contrôle ciblé, [21:21 UTC](../raw/signal-filter-v001-20261030T212101Z.json)
+et [gel](../raw/signal-filter-freeze-v001-20261030T212101Z.json) : comparer
+le profil MAD de référence à la covariance directe de **la même unique
+réalisation** de référence, au lieu de la moyenne de quatre. Les autres
+paramètres restent figés. Cela sépare le changement de méthode d'estimation
+du gain éventuel dû au nombre de simulations. Durée123,66 s.
+
+Le gain persiste sur40/40 cas, en RGB et sur chaque axe I/Co/Cg. À1600,
+rapports médians0,677 sur l'aplat,0,942 sur la texture fine et0,607 sur le
+contour achromatique ; à51200, rapports médians par groupe0,716–0,734.
+Pire ratio RGB de ce contrôle0,962. Le moyennage de quatre réalisations ne
+suffit donc pas à expliquer le gain du §47.2. Ne pas attribuer davantage
+l'effet au seul MAD, à la sélection des témoins calmes, à une variance
+isolée ou aux corrélations : cette décomposition n'a pas été effectuée.
+
+[Audit final des cinq campagnes](../raw/signal-filter-audit-v001-20261030T212327Z.json) :
+80 rejeux gaussiens et40 Poisson vérifiés par empreintes d'entrée et de
+sortie de référence. Les audits précédents restent conservés. Aucun ancien
+JSON ni résultat intermédiaire négatif supprimé ou corrigé silencieusement.
+
+### 47.4. Conclusion, arrêt de cette campagne et suite utile
+
+**Piste retenue pour qualification, pas pour intégration immédiate :** un
+budget de covariance propagé indépendamment du contenu apporte un gain
+reproductible à filtre identique. Le réestimer ensuite par le MAD courant
+peut perdre ce bénéfice. L'échec intermédiaire du §46 ne réfutait donc pas
+le modèle dépendant du signal ; il concernait cette façon de le convertir
+en paramètres du filtre. Aucun coefficient ajusté aux réponses de contrôle.
+
+Cette conclusion suffit à clore l'épreuve, plutôt que multiplier les
+micro-variantes sur les mêmes noirs. Les280 évaluations cumulées des cinq
+campagnes réutilisent160 observations simulées distinctes, dont120 rejeux
+pour les variantes directes ; elles reposent sur **quatre acquisitions réelles**,
+pas280 validations indépendantes. Pas d'intervalle de confiance généralisant
+le gain à toutes les photos, tous les ISO ou tous les boîtiers.
+
+Prochaine qualification distincte : préparer un budget par contexte caméra
+(loi caractérisée, ISO, noir/blanc et gains BdB), vérifier son transfert sur
+signaux colorés et niveaux locaux variés, puis un rendu sur des scènes RAW
+réelles avec comparateurs fixes. Contrôler détails, biais, chroma, optiques,
+DCP, ressources et rendu final avant toute promotion. La latence d'un modèle
+simulé par image ou précalculé/cache n'est pas encore qualifiée ; ne pas
+présenter ces profils d'aplats comme un profil universel déployable.
+
+Les réserves finales restent fermées jusqu'à un candidat/protocole figé.
+Aucun nouvel export utilisateur demandé pour conclure ce banc. Production
+inchangée ; neuf suites ciblées passent, pas de push, fusion dev ou tag.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -3536,3 +3772,11 @@ passent. Aucun moteur, profil ou IHM modifié ; pas de push, dev ou tag.
   sur texture après médiane. Pas de nouveau filtre ni qualification physique.
   Suite : isoler le bénéfice réel à filtre/force identiques et protéger les
   structures, avant toute proposition d'interface moteur.
+- Comparaison réaliste à filtre identique (§46) puis injection directe (§47) :
+  le pooled externe réestimé par MAD n'est pas un remplacement global retenu.
+  Les covariances empiriques injectées directement améliorent80/80 contrôles
+  RGB et I/Co/Cg dans deux distributions, sans régler de coefficient sur les
+  réponses. Piste positive à qualifier sur contextes/RAW réels, pas candidat
+  de production validé ; détails très faibles encore atténués. Campagne close,
+  pas de nouvelle variante aveugle ni de réexploration NLM/Wiener sans différence
+  de protocole justifiée. Réserves fermées, aucun calcul actif à la clôture.
