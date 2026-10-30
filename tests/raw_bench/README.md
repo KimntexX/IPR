@@ -516,6 +516,42 @@ Les résumés ne déclarent jamais automatiquement une promotion de production.
 CTest `signalFilterAuditContract`, `signalDistributionContract` et
 `signalCovarianceContract` complètent les contrôles.
 
+`camera_noise_budget.py` prépare le budget de recherche par caméra/ISO exacts
+et normalisation signée : noir/blanc, diviseur et quatre gains R/G/B/G2.
+Les deux verts restent distincts ; aucune interpolation ISO ni emprunt d'un
+autre boîtier. La loi temporelle caractérisée reste exploratoire et le résidu
+noir réel n'est pas remplacé par un second terme b synthétique.
+La moyenne locale provient du seul RGB caméra observé (guide moyen31×31),
+jamais de sa variance/MAD ni de la référence propre. Un signal latent estimé
+négatif reçoit le plancher physique du bruit de lecture pour le calcul de
+variance ; aucun pixel signé n'est borné. Cette règle reste un modèle de
+recherche, pas une gestion des bornes du DCP.
+
+`study_context_transfer.py --bridge-proof <json> --pilot-proof <json>
+--transport-tool <cfaTransportProbe.exe> --runtime-dir <dll-dir>` compare
+144 cas : deux ISO, trois contextes (métadonnées et témoins synthétiques de
+BdB/normalisation), deux distributions, six contenus et deux noirs. Trois
+zones gauche/transition/droite, cinq plans B3 ; trois graines de contrôle
+distinctes de celle du guide et de celles de calibration. Chaque budget
+utilise un aplat simulé indépendant au niveau/couleur estimés et l'autre noir.
+Les métadonnées et sources figées précèdent le calcul ; toutes les phases
+gardent leurs drapeaux d'extrapolation. `audit_context_transfer.py <preuve>`
+contrôle complétude, finitude, covariances et normalisation affine sans
+recalculer les pixels. Il expose les erreurs par contexte/contenu/zone/plan,
+sans transformer une moyenne en validation universelle.
+
+La version2 mesure chaque covariance de profil sur la même fenêtre que son
+contrôle : le support des grandes bandes près d'un bord n'est pas celui du
+centre. La géométrie fait aussi partie de la clé du profil. L'auditeur accepte
+`--baseline <preuve-v001>` pour vérifier l'identité des entrées, guides et
+covariances de contrôle ; seules les prédictions changent dans ce rejeu.
+
+Le modèle est actuellement caractérisé pour le R6 Mark III seulement ; les
+témoins BdB/noir/diviseur ne qualifient aucun autre boîtier, mode, compression,
+température capteur ou durée d'exposition. Aucun filtre, cache/IHM de production
+ou rendu DCP modifié. Contrats : `cameraNoiseBudgetContract` et
+`contextTransferAuditContract`.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

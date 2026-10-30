@@ -103,6 +103,12 @@ set_tests_properties(signalFilterAuditContract PROPERTIES TIMEOUT 30)
 add_test(NAME signalCovarianceContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_signal_noise_covariance.py)
 set_tests_properties(signalCovarianceContract PROPERTIES TIMEOUT 30)
+add_test(NAME cameraNoiseBudgetContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_camera_noise_budget.py)
+set_tests_properties(cameraNoiseBudgetContract PROPERTIES TIMEOUT 30)
+add_test(NAME contextTransferAuditContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_context_transfer_audit.py)
+set_tests_properties(contextTransferAuditContract PROPERTIES TIMEOUT 30)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)
