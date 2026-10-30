@@ -507,6 +507,15 @@ bool identity(const Settings &settings)
     return settings.luminance == 0 && settings.chrominance == 0;
 }
 
+bool settingsFromAmount(int amount, Settings &settings)
+{
+    if(amount<0 || amount>100)return false;
+    const double remaining=1.-double(amount)/100.;
+    const double squared=remaining*remaining;
+    settings={amount,int(std::lround(100.*(1.-squared*squared*squared)))};
+    return true;
+}
+
 bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
            const std::function<bool()> &cancelled)
 {

@@ -46,6 +46,13 @@ int workerThreads();
 
 bool identity(const Settings &settings);
 
+// Experimental master-control proposal, not wired to the editor. Amount is an
+// integer in [0,100]; invalid input leaves settings unchanged and returns false.
+// L=amount; C=round(100*(1-(1-amount/100)^6)). Default zero is exact identity.
+// This is an ergonomic mapping, NOT a Lightroom-equivalent strength calibration.
+// Advanced controls pass Settings directly to apply; do not map them again.
+bool settingsFromAmount(int amount, Settings &settings);
+
 // Input: finite CV_32FC3, white 1, signed/extended range, with white balance
 // ALREADY applied. Do not undo WB: both estimation and correction operate in
 // these balanced camera axes. Camera intensity is an

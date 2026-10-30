@@ -97,6 +97,34 @@ int main(int argc,char **argv)
     check(workerThreads() >= 1 && workerThreads() <= 8, "bounded worker pool");
     check(identity({}) && !identity({1,0}) && !identity({0,1}), "identity helper matches both controls");
     {
+        Settings mapped{42,43},previous{};
+        bool tableValid=true;
+        for(int amount=0;amount<=100;++amount) {
+            tableValid= settingsFromAmount(amount,mapped) && tableValid;
+            tableValid=tableValid && mapped.luminance==amount &&
+                mapped.chrominance>=amount && mapped.chrominance<=100 &&
+                mapped.chrominance>=previous.chrominance;
+            // Independent reference, including integer quantization.
+            const int expected=int(std::lround(100.*(1.-std::pow(1.-double(amount)/100.,6))));
+            tableValid=tableValid && mapped.chrominance==expected;
+            previous=mapped;
+        }
+        check(tableValid,"master law is bounded, monotone and matches all 101 candidate states");
+        check(settingsFromAmount(0,mapped)&&identity(mapped),"master zero is exact identity");
+        check(settingsFromAmount(100,mapped)&&mapped.luminance==100&&mapped.chrominance==100,
+              "master maximum reaches both existing maxima without extrapolation");
+        check(settingsFromAmount(10,mapped)&&mapped.luminance==10&&mapped.chrominance==47&&
+              settingsFromAmount(25,mapped)&&mapped.luminance==25&&mapped.chrominance==82&&
+              settingsFromAmount(50,mapped)&&mapped.luminance==50&&mapped.chrominance==98,
+              "master candidate increases colour correction at small amounts");
+        const Settings saved=mapped;
+        check(!settingsFromAmount(-1,mapped)&&!settingsFromAmount(101,mapped)&&
+              !settingsFromAmount(std::numeric_limits<int>::min(),mapped)&&
+              !settingsFromAmount(std::numeric_limits<int>::max(),mapped)&&
+              mapped.luminance==saved.luminance&&mapped.chrominance==saved.chrominance,
+              "invalid master amount is rejected atomically, including integer extremes");
+    }
+    {
         auto image = field(); const auto original = image.clone(); auto *pointer = image.data;
         Context unused; unused.iso = std::numeric_limits<double>::quiet_NaN();
         check(apply(image, {}, unused, []() -> bool { throw std::runtime_error("zero must not call"); }), "zero forces bypass Context/callback");
