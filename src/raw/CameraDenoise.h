@@ -55,6 +55,8 @@ bool identity(const Settings &settings);
 // variance floor; the existing interpolation fades it toward the next knot.
 // Three intensity scales; five chroma scales when chroma is enabled. Chroma-only
 // preserves camera intensity, NOT rendered Y or the mean of encoded RGB.
+// Chroma structure protection uses Co/Cg only: achromatic luminance texture
+// must not act as a veto on colour-noise correction. Intensity keeps its 3D gate.
 // Intensity-only adds the SAME delta to R/G/B, preserving their differences
 // before DCP (not necessarily encoded/rendered chroma after nonlinear mapping).
 // Zero forces preserve the buffer exactly, without scanning pixels/using Context.

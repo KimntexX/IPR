@@ -282,6 +282,70 @@ int main(int argc,char **argv)
         auto image=original.clone();
         check(!apply(image,{100,100},context)&&bits(image,original),"observer exception leaves input unchanged");
     }
+    {
+        // Known achromatic texture: chroma contains ONLY additive simulated
+        // fine noise and 3/6-pixel-correlated blotches, not a colour detail.
+        constexpr int size=512;
+        cv::Mat co(size,size,CV_32F),cg(size,size,CV_32F);cv::RNG random(0x91f6);
+        random.fill(co,cv::RNG::NORMAL,0.,.04);random.fill(cg,cv::RNG::NORMAL,0.,.04);
+        cv::GaussianBlur(co,co,{},3);cv::GaussianBlur(cg,cg,{},6);
+        cv::Mat image(size,size,CV_32FC3);
+        for(int y=0;y<size;++y)for(int x=0;x<size;++x) {
+            float intensity=x<171?.06f:(x<341?.15f:.4f);
+            intensity+=float(random.gaussian(.0005));
+            if(x>=176&&x<336&&y>=128&&y<384)intensity+=float(random.gaussian(.04));
+            const float a=co.at<float>(y,x)+float(random.gaussian(.001));
+            const float b=cg.at<float>(y,x)+float(random.gaussian(.001));
+            image.at<cv::Vec3f>(y,x)={intensity+a-.5f*b,intensity+.5f*b,intensity-a-.5f*b};
+        }
+        const auto before=image.clone();
+        check(apply(image,{0,100},{}),"chroma blotches on known achromatic texture complete");
+        double input=0,output=0,intensityError=0;
+        for(int y=208;y<304;++y)for(int x=224;x<288;++x) {
+            const auto a=axes(before.at<cv::Vec3f>(y,x)),b=axes(image.at<cv::Vec3f>(y,x));
+            input+=double(a[1])*a[1]+double(a[2])*a[2];
+            output+=double(b[1])*b[1]+double(b[2])*b[2];
+            intensityError=std::max(intensityError,double(std::abs(a[0]-b[0])));
+        }
+        std::cout<<"achromatic_texture_chroma_mse_ratio "<<output/input<<'\n';
+        cv::Mat inputChroma(size,size,CV_32FC2),outputChroma(size,size,CV_32FC2);
+        for(int y=0;y<size;++y)for(int x=0;x<size;++x) {
+            const auto a=axes(before.at<cv::Vec3f>(y,x)),b=axes(image.at<cv::Vec3f>(y,x));
+            inputChroma.at<cv::Vec2f>(y,x)={a[1],a[2]};
+            outputChroma.at<cv::Vec2f>(y,x)={b[1],b[2]};
+        }
+        cv::GaussianBlur(inputChroma,inputChroma,{},4);
+        cv::GaussianBlur(outputChroma,outputChroma,{},4);
+        double lowBefore=0,lowAfter=0;
+        for(int y=208;y<304;++y)for(int x=224;x<288;++x) {
+            const auto a=inputChroma.at<cv::Vec2f>(y,x),b=outputChroma.at<cv::Vec2f>(y,x);
+            lowBefore+=double(a[0])*a[0]+double(a[1])*a[1];
+            lowAfter+=double(b[0])*b[0]+double(b[1])*b[1];
+        }
+        std::cout<<"achromatic_texture_chroma_lowpass_sigma4_mse_ratio "<<lowAfter/lowBefore<<'\n';
+        check(output<.5*input,"achromatic luminance texture must not shield simulated chroma noise");
+        check(intensityError<5e-7,"chroma blotch reduction preserves actual camera intensity texture");
+    }
+    {
+        // Genuine isoluminant colour features, surrounded by stationary noise
+        // witnesses. Protect hue edges and a one-pixel colour line.
+        cv::Mat image(256,512,CV_32FC3);cv::RNG random(0x741a);
+        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
+            const float intensity=x<171?.06f:(x<341?.15f:.4f);
+            const float co=(x<256?.04f:-.04f)+float(random.gaussian(.001));
+            const float cg=(x==400?.05f:0.f)+float(random.gaussian(.001));
+            image.at<cv::Vec3f>(y,x)={intensity+co-.5f*cg,intensity+.5f*cg,intensity-co-.5f*cg};
+        }
+        check(apply(image,{0,100},{}),"genuine colour edge and fine line complete");
+        double contrast=0,line=0;
+        for(int y=64;y<192;++y) {
+            contrast+=axes(image.at<cv::Vec3f>(y,255))[1]-axes(image.at<cv::Vec3f>(y,256))[1];
+            line+=axes(image.at<cv::Vec3f>(y,400))[2]-.5*(axes(image.at<cv::Vec3f>(y,399))[2]+axes(image.at<cv::Vec3f>(y,401))[2]);
+        }
+        contrast/=128;line/=128;
+        std::cout<<"genuine_colour_edge_contrast "<<contrast<<" fine_line "<<line<<'\n';
+        check(contrast>.072&&line>.045,"retain at least 90 percent of true chromatic edge and fine-line contrast");
+    }
     std::cout << checks << " checks, " << failures << " failures\n";
     return failures ? 1 : 0;
 }

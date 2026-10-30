@@ -430,9 +430,17 @@ bool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margi
             const auto *current=energy.ptr<Energy>(margin+y)+margin;
             for (int x = 0; x < core.width; ++x) {
                 const float shared = e[x][7]>0?std::clamp(1.f-e[x][7]/std::max(e[x][3],e[x][7]),0.f,1.f):0.f;
+                // A real achromatic texture is not evidence of a real colour
+                // feature. Chroma protection uses only its two normalized
+                // energies; their expected sum is valid even when correlated.
+                // This is a second-moment gate, not a chi-square probability.
+                const float chromaExpected=e[x][5]+e[x][6];
+                const float chromaObserved=e[x][1]+e[x][2];
+                const float chromaShared=chromaExpected>0?
+                    std::clamp(1.f-chromaExpected/std::max(chromaObserved,chromaExpected),0.f,1.f):0.f;
                 for (int c = 0; c < 3; ++c) if ((c != 0 || level < LuminanceLevels) && strength[c] > 0 && current[x][c+4] > 0 && e[x][c+4]>0) {
                     const float individual = std::clamp(1.f-e[x][c+4]/std::max(e[x][c],e[x][c+4]),0.f,1.f);
-                    out[x][c] -= strength[c] * (1.f - std::max(individual, shared)) * d[x][c];
+                    out[x][c] -= strength[c] * (1.f - std::max(individual, c==0?shared:chromaShared)) * d[x][c];
                 }
             }
         }
