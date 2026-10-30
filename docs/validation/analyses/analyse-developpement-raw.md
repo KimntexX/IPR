@@ -2,12 +2,12 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§41) : prévisibilité spatiale et variance résiduelle. La
-prédiction reconnaît les motifs réguliers à rapport signal/bruit suffisant ;
-elle n'est pas un détecteur universel. Une compensation du résidu estime
-bien le bruit injecté dans ce banc, avec un prior externe encore privilégié.
-La contamination des témoins (§40) reste la cible ; aucun filtre ou seuil
-nouveau n'est intégré. Gain tonal différé, préfiltre CFA simple non retenu.
+Dernier jalon (§42) : amplitude externe retirée de l'ajustement, mais l'épreuve
+de détails non périodiques ne permet pas de retenir le nouvel estimateur.
+La texture fine irrégulière reste confondue avec le bruit ; les échellesB3
+exigent aussi une forme de corrélation correcte. Le filtre actuel conserve
+déjà les contours et petites formes propres de ces témoins. Ne pas le
+remplacer sur la seule réussite des sinusoïdes du§41. Production inchangée.
 **Étude de banc seulement, aucun changement de production.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
@@ -2875,6 +2875,161 @@ invariance de la formule normalisée à l'amplitude du prior. Calculs courts,
 pas de budget pleine image qualifié. Aucun moteur/profil/IHM modifié ;
 aucun export, push, fusion dev, tag ou nouvelle photo demandés.
 
+## 42. Épreuve sans amplitude externe : détails uniques et prior imparfait — 30 octobre 2026
+
+### 42.1. Hypothèse et protocole figé
+
+Suite autorisée du§41 : supprimer l'amplitude de bruit externe du prédicteur,
+éprouver des détails non périodiques et une forme de bruit inexacte, puis
+confronter au module actuel. Un bon σ sur des sinusoïdes ne suffit pas.
+
+Preuves :
+[`gel`](../raw/structure-amplitude-free-freeze-v001-20261030T135620Z.json),
+[`mesures`](../raw/structure-amplitude-free-v001-20261030T135620Z.json).
+Le même ensemble de quatre captures de noirs de développement authentifiées
+est réutilisé, aucun RAW ou jeu réservé décodé. Les niveaux explicites du
+pilote et son absence de calibration de production restent ceux du§36.
+
+Le prédicteur utilise uniquement `Cov(X,X)` et `Cov(X,Y)` de l'observation
+d'ajustement : ridge fixé à `10⁻⁴ trace(CovXX)/16`, plancher numérique10⁻²⁰.
+La fonction d'ajustement ne reçoit ni prior, ni vérité, ni contrôle. La
+formule du résidu utilise la forme normalisée de corrélation : l'amplitude
+externe n'entre désormais dans AUCUNE de ces deux étapes. Les facteurs de
+normalisation des bruits du banc ne sont pas des paramètres du prédicteur.
+La forme externe du bruit, elle, reste nécessaire.
+
+Huit cas prévus : aplat, produit sinusoïdal sentinelle, textures irrégulières
+fines/grossières, contour absent de l'ajustement, ligne unique2px, petite
+tache gaussienneσ2px et contour présent dans les deux régions. Textures
+gaussiennes aléatoires lissées par noyauxσ0,8/3, graines74042/74043 fixes,
+amplitude RMS0,0015 ; détails uniques d'amplitude0,003. La tache n'est pas
+un pixel impulsionnel. Ajustement et contrôle conservent les empreintes
+disjointes du§41 ; les motifs uniques sont volontairement absents de
+l'ajustement, ce qu'un contrat vérifie.
+
+Deux directions par paire de noirs, deux ISO, amplitude du pilote et contrôle
+à σ d'ajustement0,002 : **64 cas**, pas64 acquisitions indépendantes. Chaque
+cas est analysé en intensité caméra et dans ses trois plansB3 de luminance
+(pas des plans couleur). Noyau actuel `[1,4,6,4,1]/16`, pas1/2/4, réflexion101.
+Le calcul Python f64 reproduit le support mathématique, pas les arrondis
+du C++ f32 au bit près. Les références de forme sont l'autre noir du même
+ISO, sa rotation90°, un noir de l'autre ISO et une covariance blanche.
+
+La covariance blanche est ici une indépendance supposée des COEFFICIENTS
+du plan analysé (`Cxx=Id,cxy=0`), **pas** un bruit caméra blanc propagé à
+travers B3. C'est délibérément une référence inadéquate aux échelles corrélées.
+256 observations cas/plan et1 024 évaluations de forme, pas autant de photos.
+
+### 42.2. Comparateur réel et unités
+
+La sonde `structureBaselineProbe`, liée au `CameraDenoise.cpp` figé du banc,
+reçoit les pixels f32 en mémoire via stdin JSON/base64. Pas de fichier pixel
+ni TIFF. Pour chaque cas, elle applique réellement100/100 à l'observation
+et au témoin propre, soit128 exécutions du module. Les entrées sont
+achromatiques, RGB équilibré signé avant LCP/DCP ; aucune qualification
+de chroma ou de rendu DCP n'en découle.
+
+Mesures au contrôle96² : MSE et gain du motif. L'observateur conserve les
+modèles, témoins et nœuds ; son σI global n'est pas le modèle conditionnel
+effectivement routé en chaque pixel. Le comparer à l'écart-type du bruit
+connu est descriptif, pas une preuve que le MAD doit être corrigé par un
+facteur uniforme. Le bruit réel de noir contient aussi queues de distribution
+et motifs fixes ; MAD gaussien et écart-type ne sont pas interchangeables.
+
+Le bruit injecté est le résidu de noir postRCD ajouté au signal synthétique
+puis arrondi en f32. Cela n'est toujours pas une génération CFA dépendante
+du signal. Les empreintes des pixels reçus par la sonde et les contextes
+de capture parents sont conservés dans les preuves.
+
+### 42.3. Résultat : succès sur motifs réguliers, échec comme estimateur général
+
+À1600ISO, amplitude du pilote, médiane des deux directions ; ratio σ estimé
+au σ réellement injecté, forme de bruit du même ISO :
+
+| Motif | Ratio σ au premier planB3 | Ratio σ au troisième planB3 | Gain du témoin propre, filtre actuel100/100 |
+| --- | ---: | ---: | ---: |
+| Aplat | 1,000 | 1,021 | — |
+| Sinusoïde | 1,021 | 1,021 | 0,377 |
+| Texture irrégulière fine | 2,733 | 5,835 | 0,232 |
+| Texture irrégulière grossière | 1,053 | 2,439 | 0,704 |
+| Contour nouveau | 1,090 | 3,198 | 1,000 |
+| Ligne unique | 1,098 | 1,424 | 1,000 |
+| Petite tache | 1,002 | 1,144 | 1,000 |
+| Contour déjà rencontré | 1,027 | 1,023 | 1,000 |
+
+Retirer l'amplitude externe n'a donc pas détruit la réussite sur la
+sinusoïde, mais celle-ci ne se généralise pas à la texture irrégulière.
+La partie imprévisible du signal reste dans l'erreur de prédiction et est
+interprétée comme du bruit. Le changement de contenu entre ajustement et
+contrôle explique aussi la différence entre contour nouveau et déjà rencontré.
+Le modèle global ne sait pas certifier une nouvelle structure locale.
+
+Le filtre actuel conserve les petites formes propres de ce banc. Sur la
+ligne bruitée à1600, son gain observé est0,945–0,957 ; sur la tache bruitée,
+0,886–0,899. Ces valeurs ne sont ni une moyenne photographique ni une
+qualité visuelle qualifiée. Elles empêchent néanmoins de présenter le
+problème comme une destruction systématique de tout petit détail.
+
+Pour la texture fine, au premier planB3, le σ global observé du module vaut
+environ2,679fois l'écart-type du bruit injecté, contre2,733 pour le candidat.
+Le candidat ne démontre donc pas de sortie de cette confusion à cette échelle.
+Ces deux statistiques ne sont pas identiques par construction ; ne pas
+transformer leur proximité en preuve d'équivalence de rendu.
+
+À51200 au bruit du pilote, le ratio maximal candidat au premier planB3
+n'est que1,007 ; après égalisation à0,002, il atteint1,142 (1,132 sur le
+résidu1600 égalisé). Comme au§41, une bonne estimation à très fort bruit
+peut seulement masquer la petite puissance du détail : pas une meilleure
+préservation ni une propriété favorable de cet ISO.
+
+### 42.4. Sensibilité à la forme de corrélation
+
+Sur l'aplat1600, au troisième planB3, ratio médian σ estimé / σ injecté :
+forme correspondante1,021 ; forme tournée1,009 ; autre ISO1,033 ; hypothèse
+de coefficients blancs0,439. Au premier plan, le blanc vaut0,999 contre1,000
+avec la forme correspondante. Il serait donc trompeur de conclure à la
+robustesse au prior à partir du seul plan fin.
+
+La géométrie du prédicteur et les filtresB3 corrèlent le bruit ; ignorer cette
+propagation peut sous-estimer fortement son niveau. Rotation et transfert
+entre les deux ISO changent moins ces cas, mais quatre captures d'un seul
+boîtier ne qualifient ni l'invariance au boîtier, ni la BdB, ni le dématriçage,
+ni la dépendance au signal. Aucun profil universel n'est revendiqué.
+
+### 42.5. Décision et suite bornée
+
+**Ne pas substituer cet estimateur au modèle de production et ne pas
+l'utiliser comme veto universel de texture.** Aucun seuil, retard ou ridge
+n'est retouché pour sauver les cas défavorables. Le résultat ne réfute pas
+toute prédiction locale, mais ferme le remplacement général par ce modèle
+ajusté dans une autre région et à voisins4/8.
+
+Deux enseignements guident la suite :
+
+- La bonne estimation du bruit doit être confrontée à des détails irréguliers,
+  pas seulement aux motifs prédictibles. Garder ces sentinelles dans les
+  prochaines épreuves ; la précision moyenne de σ ne sera plus un critère seul.
+- Une référence de bruit physiquement ancrée et sa propagation jusqu'aux
+  plansB3 pourraient empêcher de gonfler σ avec la texture. Comparer un
+  modèle de bruit externe connu à l'estimation aveugle, à force inchangée,
+  afin de déterminer si le facteur limitant est l'estimation ou le filtrage.
+  Le signed RAW actuel rend cette question plus pertinente que les anciens
+  essais réalisés avant suppression des bornes. Ne pas recopier directement
+  le σ des noirs sur toute luminosité : photons, gains et covariance aprèsRCD
+  restent à caractériser. Tout raccord d'injection dans le moteur sera
+  contractualisé avec Claude avant code ; aucun raccord n'est réalisé ici.
+
+Cette dernière comparaison est une borne expérimentale/oracle, pas une
+solution déployable avec une vérité inconnue ni une demande de nouvelles
+photos. Réutiliser d'abord le corpus de développement déjà authentifié.
+Le gain tonal reste différé ; la production conserve son comportement.
+
+Les six contrats spécifiques couvrent l'invariance d'amplitude de la forme,
+l'absence de fuite du contrôle, le rejet non fini, les motifs uniques absents
+de l'ajustement, les plans constants et les priors/dénominateurs invalides.
+Campagne terminée en25,3s, pas budget pleine image ni latence IHM qualifiés.
+Aucun fichier moteur/profil/IHM modifié, pas de push, fusion dev ou tag.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -2955,3 +3110,9 @@ aucun export, push, fusion dev, tag ou nouvelle photo demandés.
   encore privilégié. Suite : retirer son amplitude de l'ajustement, tester
   détails non périodiques et confronter au MAD courant, sans confondre
   exactitude du bruit estimé et préservation réelle du détail.
+- Épreuve sans amplitude externe terminée (§42) :64cas, bruit réel de noirs
+  et détails non périodiques, comparateur réel100/100. Estimateur non retenu
+  comme remplacement général : texture fine encore contaminante et forte
+  dépendance à la corrélation aux grandes échelles. Préparer une comparaison
+  à modèle de bruit connu pour isoler estimation et filtrage, sans promettre
+  un oracle exploitable ni intégrer de nouveau veto de texture.

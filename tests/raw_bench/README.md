@@ -396,6 +396,21 @@ de cette amplitude. Les variances négatives restent explicites. Pas de filtre
 ou seuil intégré, ni score photo. Six tests : `python -m unittest discover
 -s tests/raw_bench -p test_structure_prediction.py`. Voir rapport§41.
 
+`study_structure_amplitude_free.py --help` ajuste les16 voisins avec seulement
+la covariance OBSERVÉE et un ridge relatif fixé ; aucune amplitude du noir
+n'entre dans l'ajustement ni dans la formule résiduelle normalisée.64cas,
+textures irrégulières et détails absents de l'ajustement, quatre formes de
+prior, pixelI et trois échellesB3. La forme externe du bruit reste requise.
+`white_shape` signifie explicitement coefficients supposés indépendants :
+ce n'est pas la propagation d'un bruit caméra blanc à travers B3.
+
+La cible CMake `structureBaselineProbe` reçoit le RGB observé/propre en JSON
+base64 f32 par stdin, sans fichiers pixels ni TIFF. Elle exécute le vrai module
+100/100 sur les deux entrées, retourne ses résumés de modèles et ses mesures
+au contrôle. Les σ globaux observés ne sont pas le routage conditionnel exact
+par pixel. Six tests : `python -m unittest discover -s tests/raw_bench
+-p test_structure_amplitude_free.py`. Résultat et limites au rapport§42.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

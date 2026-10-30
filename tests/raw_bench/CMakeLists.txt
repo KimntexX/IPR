@@ -61,6 +61,12 @@ set_tests_properties(weakStructureSummaryContract PROPERTIES TIMEOUT 30)
 add_test(NAME structurePredictionContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_structure_prediction.py)
 set_tests_properties(structurePredictionContract PROPERTIES TIMEOUT 30)
+add_executable(structureBaselineProbe structure_baseline_probe.cpp "${IPR_ROOT}/src/raw/CameraDenoise.cpp")
+target_include_directories(structureBaselineProbe PRIVATE "${IPR_ROOT}/src/raw" ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(structureBaselineProbe PRIVATE Qt6::Core ${OpenCV_LIBS} Threads::Threads)
+add_test(NAME structureAmplitudeFreeContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_structure_amplitude_free.py)
+set_tests_properties(structureAmplitudeFreeContract PROPERTIES TIMEOUT 30)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)
