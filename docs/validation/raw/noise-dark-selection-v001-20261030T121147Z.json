@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261030T121147Z",
+  "study": "dark_mask_selection_bias_negative_control",
+  "revision": "0166857972a7e5c743c78696de0f0d29e8725ff1",
+  "source": {
+    "sha256": "a9f47b6b2f16c92638d35a498126141687e7f027d0a567dec4b922d3dda1cc2e",
+    "text": "\"\"\"Negative control: a perfect denoiser can raise means inside noise-selected dark masks.\"\"\"\nfrom datetime import datetime, timezone\nimport hashlib\nimport json\nfrom pathlib import Path\nimport subprocess\nimport numpy as np\n\n\ndef selected_mean_change(noisy, truth, mask):\n    if noisy.shape != truth.shape or mask.shape != truth.shape or not mask.any():\n        raise ValueError('Matching arrays and nonempty mask required')\n    before = noisy[mask]\n    after = truth[mask]  # Oracle: exact known clean signal, no image algorithm.\n    delta = after-before\n    return dict(pixels=int(mask.sum()), mean_before=float(before.mean()),\n                oracle_mean_after=float(after.mean()), oracle_mean_change=float(delta.mean()),\n                change_standard_error=float(delta.std(ddof=1)/np.sqrt(delta.size)) if delta.size > 1 else 0.)\n\n\ndef main():\n    root = Path(__file__).resolve().parents[2]\n    rng = np.random.default_rng(20261030)\n    half = rng.normal(0., .01, size=(2, 131072))\n    noise = np.stack((half[0], -half[0]), axis=1).ravel()\n    independent = np.stack((half[1], -half[1]), axis=1).ravel()\n    truth = np.full(noise.shape, .01)\n    noisy = truth+noise\n    rows = []\n    for rho in (0., .5, 1.):\n        reference = truth+rho*noise+np.sqrt(1-rho*rho)*independent\n        row = selected_mean_change(noisy, truth, reference < .01)\n        row.update(reference_noise_correlation=rho, mask_definition='reference < truth mean')\n        rows.append(row)\n    control = selected_mean_change(noisy, truth, truth < .015)\n    assert abs(control['oracle_mean_change']) < 1e-15\n    assert abs(rows[0]['oracle_mean_change']) < 5*rows[0]['change_standard_error']\n    assert rows[2]['oracle_mean_change'] > rows[1]['oracle_mean_change'] > rows[0]['oracle_mean_change']\n    stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n    source = Path(__file__)\n    proof = dict(schema_version=1, created_utc=stamp, study='dark_mask_selection_bias_negative_control',\n                 revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),\n                 source=dict(sha256=hashlib.sha256(source.read_bytes()).hexdigest(), text=source.read_text(encoding='utf-8')),\n                 samples=int(noise.size), seed=20261030, truth_mean=.01, sigma=.01,\n                 correlated_masks=rows, clean_signal_mask=control,\n                 verdict='mechanism_demonstrated_not_real_scene_attribution',\n                 limits=['Scalar independent Gaussian model, not a Canon CFA or Lightroom simulation.',\n                         'Oracle is perfect denoising to known truth, not an implementable filter.',\n                         'No DCP, clipping, quantization or mean balancing in this experiment.',\n                         'Does not quantify how much of the real mask shift is selection bias.',\n                         'Frozen masks remain useful for same-pixel comparison but not proof of photometric bias.'])\n    output = root/'docs/validation/raw'/f'noise-dark-selection-v001-{stamp}.json'\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(proof, handle, ensure_ascii=False, indent=2, allow_nan=False)\n    print(output)\n    print(json.dumps(rows))\n    print(json.dumps(control))\n\n\nif __name__ == '__main__':\n    main()\n"
+  },
+  "samples": 262144,
+  "seed": 20261030,
+  "truth_mean": 0.01,
+  "sigma": 0.01,
+  "correlated_masks": [
+    {
+      "pixels": 131072,
+      "mean_before": 0.010055170883219562,
+      "oracle_mean_after": 0.01,
+      "oracle_mean_change": -5.51708832195627e-05,
+      "change_standard_error": 2.7656543596359817e-05,
+      "reference_noise_correlation": 0.0,
+      "mask_definition": "reference < truth mean"
+    },
+    {
+      "pixels": 131072,
+      "mean_before": 0.006034839971372443,
+      "oracle_mean_after": 0.01,
+      "oracle_mean_change": 0.0039651600286275575,
+      "change_standard_error": 2.5395936704665524e-05,
+      "reference_noise_correlation": 0.5,
+      "mask_definition": "reference < truth mean"
+    },
+    {
+      "pixels": 131072,
+      "mean_before": 0.0020137103803968145,
+      "oracle_mean_after": 0.01,
+      "oracle_mean_change": 0.007986289619603185,
+      "change_standard_error": 1.668217192554898e-05,
+      "reference_noise_correlation": 1.0,
+      "mask_definition": "reference < truth mean"
+    }
+  ],
+  "clean_signal_mask": {
+    "pixels": 262144,
+    "mean_before": 0.009999999999999998,
+    "oracle_mean_after": 0.01,
+    "oracle_mean_change": 1.4688080700981602e-19,
+    "change_standard_error": 1.9556389090582565e-05
+  },
+  "verdict": "mechanism_demonstrated_not_real_scene_attribution",
+  "limits": [
+    "Scalar independent Gaussian model, not a Canon CFA or Lightroom simulation.",
+    "Oracle is perfect denoising to known truth, not an implementable filter.",
+    "No DCP, clipping, quantization or mean balancing in this experiment.",
+    "Does not quantify how much of the real mask shift is selection bias.",
+    "Frozen masks remain useful for same-pixel comparison but not proof of photometric bias."
+  ]
+}

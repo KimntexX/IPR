@@ -2,11 +2,12 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§33) : reprise de l'étude algorithmique après le retour visuel
-positif sur `d4779e5`. Premières sondes du DC et contrôle négatif VST réalisés
-sur le banc, sans intégration. Le repli est mesuré et intégré localement par
-Claude ;(c) clos avec(c1). La commande maître est prise en charge par Claude,
-comme D0. **Aucun nouveau filtre de cette étude n'est validé.**
+Dernier jalon (§34) : hausses des noirs reproduites sur les trois masques
+Lightroom exacts. La moyenne monte déjà localement en caméra, pas globalement ;
+l'arrondi final n'est pas la cause principale. Un contrôle montre qu'un masque
+sélectionné sur le bruit peut faire monter sa moyenne même avec un oracle
+parfait. Attribution de ce biais sur les photos réelles encore ouverte.
+**Pas de correction automatique ni de nouveau filtre validé.** D0 reste à Claude.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1858,6 +1859,145 @@ correspondant si nécessaire et toujours avant intégration/distribution.
 débruiteur.** DC global confirmé, défaut local des noirs pas encore expliqué ;
 VST naïve rejetée comme raccourci. Aucun moteur, profil, DCP ou IHM modifié.
 
+## 34. Moyennes sur les masques noirs exacts — 30 octobre 2026
+
+### 34.1. Contrat de comparaison et contrôles
+
+Suite directe de§33, sans changer le moteur ni répéter une recherche de
+paramètres. Le lanceur `audit_dark_mean.py` reprend les trois scènes ciblées
+de la preuve `loi-force-bruit-v001-20261029T185322Z.json`. Empreintes RAW et
+TIFF Lightroom neutre, compte de pixels et SHA256 du masque `packbits`
+doivent correspondre exactement ; sinon la campagne s'arrête en conservant
+son échec. Les masques sont recalculés dans le même crop Lightroom, puis
+reportés par translation entière dans le repère caméra. Pas de redimensionnement.
+
+| Scène | Pixels noirs vérifiés | Origine caméra du crop commun | Début SHA256 du masque |
+| --- | ---: | --- | --- |
+| 7Y6A7599 | 3303068 | 12/12 | ee5902f3 |
+| 6V1A9153 | 670766 | 0/0 | 02ff739f |
+| IMG_3135 | 23926 | 10/4 | 5a988309 |
+
+Le filtre100/100 s'applique à l'image entière **avant** sélection du masque :
+modèle, contexte spatial et rééquilibrage DC inchangés. Le rendu DCP de ce
+socle étant pointwise et sans optiques, les pixels sélectionnés sont ensuite
+regroupés en une ligne pour limiter la mémoire du diagnostic. Contrôle sur
+une vraie région16×16 : erreur de rendu due à cette disposition **nulle**
+sur les trois scènes. Cela ne qualifie pas un tel regroupement pour LCP ou
+un opérateur spatial. Fichiers temporaires de masque dans le build, supprimés
+à la sortie ; empreintes et recette conservées, aucun exportTIFF IPR.
+
+[Preuve canonique](../raw/camera-denoise-fixed-dark-mean-v001-20261030T120856Z.json) :
+trois scènes mesurées, mêmes pixels que la référence, source moteur0166857,
+DCP inchangé dans ce worktree. Le moteur évolutif D0 de Claude n'est pas utilisé.
+La sonde compile ; six tests du constructeur de masque passent (fixture figée,
+translation, formats invalides, compte/hash erronés et débordements de crop).
+
+### 34.2. Hausse reproduite et localisation dans la chaîne
+
+Luma affichée = somme pondérée Rec.709 des canaux sRGB encodés,
+bornés0..255 puis arrondis individuellement. Encodage signé = même transfert
+sRGB sans borne finale, prolongé linéairement sous zéro. Unités linéaires
+de travail : blanc nominal1 ; ce ne sont pas des DN capteur.
+
+| Scène | Y Rec.2020 avant → après | Luma encodée signée avant → après | Luma affichée avant → après | Hausse affichée |
+| --- | --- | --- | --- | ---: |
+| 7599 | 0,004535 → 0,005350 | 9,294 → 12,934 | 9,465 → 12,935 | +3,470 |
+| 9153 | 0,005925 → 0,007742 | 16,219 → 19,676 | 16,220 → 19,676 | +3,457 |
+| IMG_3135 | 0,013196 → 0,015266 | 29,961 → 32,690 | 29,961 → 32,688 | +2,728 |
+
+Les ordres de grandeur signalés par Claude sont donc reproduits. La hausse
+existe avant l'arrondi et la borne d'affichage. Sur7599, la variation du
+biais de borne finale vaut environ−0,185 niveau, et celle de l'arrondi+0,016 :
+elles **atténuent globalement** la hausse, elles ne la créent pas. Ce constat
+ne dit rien des bornes internes du DCP, qui précèdent les mesures rendues.
+
+**Les trois moyennes RGB du masque augmentent déjà avant DCP :**
+
+| Scène | ΔR caméra | ΔG caméra | ΔB caméra |
+| --- | ---: | ---: | ---: |
+| 7599 | +0,008142 | +0,007285 | +0,005802 |
+| 9153 | +0,002083 | +0,001758 | +0,001626 |
+| IMG_3135 | +0,002895 | +0,002043 | +0,001283 |
+
+En revanche, sur l'image entière, le plus grand écart par canal est inférieur
+à4×10⁻¹⁰,2×10⁻¹¹ et4×10⁻¹² respectivement. Le bilan DC global du module
+est satisfait. Il ne garantit pas le bilan d'un sous-ensemble de pixels :
+les corrections positives et négatives s'équilibrent ailleurs dans l'image.
+Le filtre spatial, son adaptation et son rééquilibrage global peuvent y
+contribuer ; aucune ablation de ces composants n'a été faite ici.
+
+### 34.3. Témoin contrefactuel : imposer les moyennes locales ne suffit pas
+
+Diagnostic seulement : aux pixels filtrés du masque, ajouter les trois
+constantes ramenant leurs moyennes caméra aux valeurs initiales, puis rendre
+le même DCP. Cela ne modifie ni le module ni une image de production ; ce
+n'est pas une proposition de correction et ce n'est pas l'ablation du DC.
+
+| Scène | Luma affichée avant | Après filtre | Après égalisation des moyennes caméra |
+| --- | ---: | ---: | ---: |
+| 7599 | 9,465 | 12,935 | 4,100 |
+| 9153 | 16,220 | 19,676 | 16,303 |
+| IMG_3135 | 29,961 | 32,688 | 29,934 |
+
+Sur9153 et3135, ce témoin réduit fortement l'écart. Sur7599 il produit au
+contraire un assombrissement important. Une égalité de moyennes caméra ne
+conserve pas la distribution ni son rendu non linéaire. **Ne pas appliquer
+de compensation locale ou de retrait constant fondé sur ce tableau.**
+
+### 34.4. Le masque lui-même peut produire une hausse avec un oracle parfait
+
+Le masque est figé, donc la comparaison porte bien sur les mêmes pixels.
+Mais il a été choisi sur un rendu Lightroom du **même RAW**, pas sur une
+vérité propre ou une capture indépendante. Le seuil de noir peut sélectionner
+des excursions négatives partagées avec la source. Les retirer peut relever
+la moyenne du masque, sans relever la moyenne de la scène véritable.
+
+[Contrôle synthétique dédié](../raw/noise-dark-selection-v001-20261030T121147Z.json) :
+262144 valeurs d'une plage uniforme de vérité0,01, bruit gaussienσ0,01.
+Un oracle remplace chaque observation par sa vérité exacte, sans DCP, borne,
+quantification, voisinage ni rééquilibrage DC. Masque = référence<0,01 ;
+on varie seulement la corrélation du bruit entre référence et observation.
+
+| Corrélation du bruit de référence | Moyenne observée dans le masque | Moyenne de l'oracle | Hausse |
+| ---: | ---: | ---: | ---: |
+| 0 | 0,010055 | 0,010000 | −0,000055 |
+| 0,5 | 0,006035 | 0,010000 | +0,003965 |
+| 1 | 0,002014 | 0,010000 | +0,007986 |
+
+Avec un masque défini par la vérité (tous les pixels), la variation est
+nulle à la précision numérique. Le cas indépendant est compatible avec
+zéro à cinq erreurs-types marginales ; les cas corrélés montrent une hausse
+sans aucun défaut de débruitage. Pas de simulation de Canon/Lightroom ici,
+ni d'estimation de la part de ce phénomène dans les trois images réelles.
+
+**Conclusion limitée :** les+3 niveaux sont réels pour ces masques, mais ne
+prouvent pas à eux seuls une surexposition algorithmique. Les masques figés
+restent utiles pour mesurer le bruit et comparer des variantes ; ils ne
+constituent pas une vérité photométrique indépendante. Inversement, ce
+contrôle n'innocente pas le filtre sur la photo réelle.
+
+### 34.5. Décision et prochaine épreuve
+
+Pas de changement du débruiteur, des forces, de la calibration ou de D0.
+La question n'est plus seulement « où apparaît la hausse ? » : elle apparaît
+déjà dans le signal caméra sélectionné. Il faut distinguer **sélection par
+le bruit, redistribution spatiale et effet du rendu** avant de corriger.
+
+Prochaine épreuve bornée, sans nouvelle photo requise au départ : définir des
+zones géométriques fixes ou de grandes cellules à partir de la structure
+basse fréquence, inclure tous leurs pixels (pas uniquement ceux sous25),
+puis répéter les moments sur le même socle. Un masque lissé du même RAW
+réduit le couplage au bruit fin mais n'est pas indépendant : conserver cette
+limite. Pour une attribution photométrique, exploiter ensuite une rafale
+avec référence multi-images excluant la prise testée et une validation
+d'alignement ; l'écart-type temporel et les offsets fixes doivent rester séparés.
+Les rafales disponibles sont à inventorier avant d'en demander de nouvelles.
+
+En parallèle futur : ablation du rééquilibrage global dans un prototype
+isolé du banc, jamais en changeant silencieusement le moteur de Claude.
+La comparaison CFA/VST reste l'étape algorithmique suivante, mais aucune
+VST n'est retenue sur la seule baisse des niveaux du masque sombre.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -1897,6 +2037,9 @@ VST naïve rejetée comme raccourci. Aucun moteur, profil, DCP ou IHM modifié.
   pas équivalence universelle ; texture à faible bruit à valider visuellement.
 - Nouveau chantier algorithmique (§33), étude seulement : repli intégré
   localement par Claude, retour visuel positif ; première sonde confirme DC
-  caméra global mais pas les+3 niveaux des masques noirs. Reprendre ces
-  masques exacts avant toute correction. CFA/VST et auto-similarité cadrés,
+  caméra global ; les+3 niveaux sont maintenant reproduits et localisés
+  sur les masques exacts (§34), sans attribution causale complète. Un masque
+  bruité peut lui-même créer une hausse après débruitage parfait : comparer
+  des régions géométriques/références indépendantes avant correction.
+  CFA/VST et auto-similarité cadrés,
   réutilisation tierce non juridiquement qualifiée. Aucun nouveau filtre promu.

@@ -303,6 +303,18 @@ après borne/encodage et d'aller-retour VST naïf (contrôle négatif, pas inver
 non biaisée). Tests : `python -m unittest discover -s tests/raw_bench
 -p test_noise_domain.py`. Aucun de ces contrôles ne qualifie un filtre CFA.
 
+`audit_dark_mean.py --help` reconstruit les masques sombres figés de la preuve
+de force, vérifie RAW/TIFF, compte et hash `packbits`, puis utilise
+`cameraDenoiseLeakageProbe --mean-audit --dark-mask <fichier>` sur trois scènes.
+Le masque temporaire est en uint8 0/1, à la taille caméra et sans interpolation.
+Le filtrage précède la sélection ; le DCP pointwise est ensuite mesuré sur
+les seuls pixels sélectionnés. Pas d'optiques ni de filtre spatial au rendu.
+Le témoin à moyennes caméra égalisées est un diagnostic, pas un correctif.
+Six tests : `python -m unittest discover -s tests/raw_bench -p test_dark_mean.py`.
+`study_dark_selection.py` produit un contrôle d'oracle montrant le biais d'un
+masque sélectionné sur un bruit corrélé ; ne pas en déduire une attribution
+quantitative du défaut réel. Aucun de ces outils ne change la production.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

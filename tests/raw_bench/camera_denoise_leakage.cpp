@@ -159,6 +159,37 @@ QJsonObject cameraMoments(const cv::Mat &camera)
     return {{"mean_rgb",means},{"negative_fraction_rgb",negatives},
             {"positive_part_mean_rgb",positive}};
 }
+cv::Mat selectPixels(const cv::Mat &camera,const cv::Mat &mask)
+{
+    require(mask.size()==camera.size()&&mask.type()==CV_8UC1,"Mask shape mismatch");
+    const int count=cv::countNonZero(mask);require(count>0,"Empty dark mask");
+    cv::Mat selected(1,count,CV_32FC3);int at=0;
+    for(int y=0;y<mask.rows;++y)for(int x=0;x<mask.cols;++x)
+        if(mask.at<unsigned char>(y,x))selected.at<cv::Vec3f>(0,at++)=camera.at<cv::Vec3f>(y,x);
+    return selected;
+}
+QJsonObject renderedMoments(const cv::Mat &working)
+{
+    double linear=0,signedEncoded=0,clippedEncoded=0,roundedEncoded=0;
+    cv::Vec3d below{},above{};const cv::Vec3d weights(.2126,.7152,.0722);
+    for(int y=0;y<working.rows;++y)for(int x=0;x<working.cols;++x) {
+        const auto value=working.at<cv::Vec3f>(y,x);
+        linear+=WorkingColor::luminance(value);
+        const auto srgb=WorkingColor::toSrgb()*cv::Vec3d(value);
+        for(int c=0;c<3;++c) {
+            const double encoded=WorkingColor::srgbEncode(srgb[c])*255;
+            const double clipped=std::clamp(encoded,0.,255.);
+            signedEncoded+=weights[c]*encoded;clippedEncoded+=weights[c]*clipped;
+            roundedEncoded+=weights[c]*std::lround(clipped);
+            below[c]+=srgb[c]<0;above[c]+=srgb[c]>1;
+        }
+    }
+    const double n=double(working.total());
+    return {{"linear_rec2020_y_mean",linear/n},{"signed_encoded_y_mean_255",signedEncoded/n},
+        {"clipped_encoded_y_mean_255",clippedEncoded/n},{"rounded_encoded_y_mean_255",roundedEncoded/n},
+        {"srgb_below_zero_fraction",QJsonArray{below[0]/n,below[1]/n,below[2]/n}},
+        {"srgb_above_one_fraction",QJsonArray{above[0]/n,above[1]/n,above[2]/n}}};
+}
 QJsonObject measures(const cv::Mat &working,const cv::Rect &roi)
 {
     cv::Mat display(working.size(),CV_32FC3);
@@ -222,6 +253,7 @@ int main(int argc,char **argv)
     for(const auto *key:{"input","manifest","profile-root","label"})p.addOption(QCommandLineOption(key,key,"value"));
     p.addOption(QCommandLineOption("signal-survey","Survey balanced coefficient MAD and actual full-frame models; no image export"));
     p.addOption(QCommandLineOption("mean-audit","Audit full-frame 100/100 filtering, local/global camera means and rendered patch means"));
+    p.addOption(QCommandLineOption("dark-mask","Bench-only full camera-size uint8 mask, bytes 0/1","path"));
     p.process(app);
     try {
         for(const auto *key:{"input","manifest","profile-root","label"})require(p.isSet(key),"Missing argument");
@@ -242,6 +274,38 @@ int main(int argc,char **argv)
         if(p.isSet("mean-audit")) {
             auto filtered=full.cameraRgb;
             require(CameraDenoise::apply(filtered,{100,100},context),"Full-frame mean audit failed");
+            if(p.isSet("dark-mask")) {
+                QFile file(p.value("dark-mask"));require(file.open(QIODevice::ReadOnly),"Cannot open dark mask");
+                auto bytes=file.readAll();require(std::size_t(bytes.size())==full.cameraRgb.total(),"Invalid mask byte count");
+                require(std::all_of(bytes.begin(),bytes.end(),[](char v){return v==0||v==1;}),"Mask must contain only 0/1");
+                cv::Mat mask(full.cameraRgb.size(),CV_8UC1,bytes.data());
+                const auto source=selectPixels(full.cameraRgb,mask),candidate=selectPixels(filtered,mask);
+                const cv::Scalar shift=cv::mean(source)-cv::mean(candidate);
+                auto matched=candidate.clone();
+                for(int x=0;x<matched.cols;++x)for(int c=0;c<3;++c)matched.at<cv::Vec3f>(0,x)[c]+=float(shift[c]);
+                // DCP rendering is pointwise here (no LCP/spatial operation).
+                // Check that changing row layout does not change a real patch.
+                const auto check=full.cameraRgb(cv::Rect(0,0,16,16)).clone();
+                const auto direct=render(full,check),packed=render(full,check.reshape(3,1));
+                const double layoutError=cv::norm(direct.reshape(3,1),packed,cv::NORM_INF);
+                require(layoutError<=1e-6,"DCP packing changes rendering");
+                const QJsonObject result{{"created_utc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
+                    {"label",p.value("label")},{"source",p.value("input")},{"source_sha256",hash(p.value("input"))},
+                    {"manifest_sha256",hash(p.value("manifest"))},{"profile_sha256",hash(full.profilePath)},
+                    {"engine_base_revision",IPR_ENGINE_REVISION},{"mask_sha256",hash(p.value("dark-mask"))},
+                    {"mask_pixels",source.cols},{"camera_size",QJsonArray{full.cameraRgb.cols,full.cameraRgb.rows}},
+                    {"layout_check_max_abs",layoutError},
+                    {"B0_camera_global",cameraMoments(full.cameraRgb)},
+                    {"B100_camera_global",cameraMoments(filtered)},
+                    {"B0_camera_dark",cameraMoments(source)},{"B100_camera_dark",cameraMoments(candidate)},
+                    {"B100_mean_matched_camera_dark",cameraMoments(matched)},
+                    {"B0_rendered_dark",renderedMoments(render(full,source))},
+                    {"B100_rendered_dark",renderedMoments(render(full,candidate))},
+                    {"B100_mean_matched_rendered_dark",renderedMoments(render(full,matched))},
+                    {"mean_matching_shift_rgb",QJsonArray{shift[0],shift[1],shift[2]}},
+                    {"limits","Full-frame filter; fixed external dark mask; pointwise DCP; mean-matching is a diagnostic counterfactual, not a proposed correction; unchanged DCP; optics off"}};
+                std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\n';return 0;
+            }
             QJsonArray records;
             std::vector<cv::Rect> areas;
             for(double position:{.25,.5,.75}) {
