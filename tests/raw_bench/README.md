@@ -367,6 +367,17 @@ spatiaux. Résultats JSON versionnés, pas de RAW/TIFF écrit ni filtre modifié
 `ctest -R denoiseTonalGainContract` vérifie la finitude des transferts et
 la reconstruction globale dans ce témoin. Voir rapport évolutif §39.
 
+`weakStructureProbe` et `study_weak_structure.py --help` observent les modèles
+du filtre courant sur32 motifs propres/bruités : orientation, fréquence,
+phase et amplitude figées. Aucun nouveau filtre. Bruit gaussien corrélé
+binomial synthétique achromatique, pas bruit physique RCD. L'option
+`--layout-control` garde le même motif central et sa marge80px, ajoute un
+entourage uniforme distant et compare les estimations et gains sur96px.
+Ce contrôle propre n'établit pas le comportement en bruit réel et change aussi
+le découpage en tuiles/DC global. Gel JSON avant calcul, sources incluses.
+Trois tests Python : `python -m unittest discover -s tests/raw_bench -p test_weak_structure.py`.
+Rapport évolutif §40, aucune réserve de RAW lue ni export écrit.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

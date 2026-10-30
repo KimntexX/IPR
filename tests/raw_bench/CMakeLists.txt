@@ -52,6 +52,12 @@ target_include_directories(denoiseTonalGainProbe PRIVATE "${IPR_ROOT}/src/raw" "
 target_link_libraries(denoiseTonalGainProbe PRIVATE Qt6::Core ${OpenCV_LIBS} Threads::Threads)
 add_test(NAME denoiseTonalGainContract COMMAND denoiseTonalGainProbe)
 set_tests_properties(denoiseTonalGainContract PROPERTIES TIMEOUT 30)
+add_executable(weakStructureProbe weak_structure_probe.cpp "${IPR_ROOT}/src/raw/CameraDenoise.cpp")
+target_include_directories(weakStructureProbe PRIVATE "${IPR_ROOT}/src/raw" ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(weakStructureProbe PRIVATE Qt6::Core ${OpenCV_LIBS} Threads::Threads)
+add_test(NAME weakStructureSummaryContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_weak_structure.py)
+set_tests_properties(weakStructureSummaryContract PROPERTIES TIMEOUT 30)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)

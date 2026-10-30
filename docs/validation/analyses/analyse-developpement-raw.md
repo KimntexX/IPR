@@ -2,12 +2,12 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§39) : faisabilité du débruitage conscient des retouches tonales.
-Une sonde sur gris distingue amplification du bruit et éclaircissement ; une
-réutilisation du résidu maximal reproduit cinq forces globales sur un petit
-témoin synthétique. Aucun gain photo, cache applicatif ou poids local validé.
-Le préfiltre CFA simple (§38) reste non retenu ; protéger les structures
-faibles demeure nécessaire, même si la retouche rend le bruit plus visible.
+Dernier jalon (§40) : retour à la protection des structures faibles. Sur32
+motifs sans bruit, le filtre attribue une puissance au bruit et atténue le
+détail. Un entourage uniforme propre restaure le gain1 sur quatre contrôles
+à motif local inchangé : priorité à la contamination des témoins d'estimation.
+Le gain tonal (§39) reste différé, non bloquant pour l'ouverture ; le préfiltre
+CFA simple (§38) reste non retenu. Aucun nouveau filtre n'est intégré.
 **Étude de banc seulement, aucun changement de production.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
@@ -2614,6 +2614,117 @@ terminé. Aucun fichier moteur, IHM, profil ou réglage livré modifié ; aucune
 fusion dev, publication ou création de tag. La protection structurelle reste
 une cible complémentaire : le gain tonal ne résout pas la confusion texture/bruit.
 
+## 40. Structures faibles : contamination des témoins d'estimation — 30 octobre 2026
+
+### 40.1. Priorité et non-répétition
+
+À la demande de l'utilisateur, reporter l'adaptation au gain tonal : ni
+correction du décodage ni prérequis à la chaîne d'ouverture, mais optimisation
+future de rendu et de réactivité. Priorité au détail faible. Avant tout
+nouveau modèle, les anciens essais `patch_noise` sont relus : les§249–250
+(rang collaboratif/SVD) et§273–274 (covariance de groupe/Wiener) ont déjà
+montré un compromis défavorable entre petites formes et bruit/contours.
+Ils ne sont pas relancés sous un nouveau nom.
+
+Question ciblée : le filtre actuel attribue-t-il du bruit à des structures
+dont on sait qu'elles sont propres ? Puis, la même structure locale reçoit-elle
+le même traitement lorsque seuls les témoins distants changent ? Pas de
+nouveau réglage, de filtre alternatif ou de seuil optimisé sur ces réponses.
+
+### 40.2. Premier diagnostic figé
+
+Preuves :
+[`gel`](../raw/weak-structure-estimator-freeze-v001-20261030T132918Z.json),
+[`mesures`](../raw/weak-structure-estimator-v001-20261030T132918Z.json).
+Trente-deux cas : horizontal, vertical, diagonal, produit sinusoïdal ;
+périodes16/32, phases0/0,73, amplitudes0,0015/0,003, moyenne0,03.
+RGB caméra synthétique équilibré,256² ; ROI centrale128². États propres
+barre0/25/100 et bruités0/100. Observer les résumés du vrai module : témoins,
+support, σI global, nœuds conditionnels, chaque échelle.
+
+Bruit ajouté : une même réalisation gaussienne achromatique, noyau binomial
+séparable3, σ échantillonnal0,002. **Ce n'est pas le bruit physique du capteur
+ou la covariance issue de RCD**, ni un essai indépendant par cas. Pas de CFA,
+DCP, photo, RAW réservé ou référence LR relu. Le diagnostic propre ne dépend
+pas de la validité de ce modèle de bruit synthétique.
+
+| Motif | Cas | Cas propres avec σI estimé non nul | Gain du motif propre à100, min–max |
+| --- | ---: | ---: | ---: |
+| Horizontal | 8 | 8 | 0,662–0,675 |
+| Vertical | 8 | 8 | 0,662–0,675 |
+| Diagonal | 8 | 8 | 0,184–0,664 |
+| Produit | 8 | 8 | 0,356–0,771 |
+
+Sur les32 cas, à25 le gain propre va de0,796 à0,943 ; zéro conserve exactement
+la source. Un aplat propre reste identique. Sur l'aplat bruité, l'erreurRGB
+passe de3,919×10⁻⁶ à3,961×10⁻⁷ à100 : diminuer toute la force pour conserver
+le détail sacrifierait une efficacité réelle, même dans ce témoin limité.
+Une MSE basse sur les cas bruités ne suffit donc pas à valider le traitement.
+
+Le σI estimé est ici contaminé par construction : il n'existe aucun bruit
+dans les entrées propres. Cela ne prouve pas que l'étage d'estimation explique
+seul toute l'atténuation, ni qu'une dispersion analogue est une texture sur
+une photo. Le mode observateur n'injecte pas un modèle oracle dans le filtre.
+
+### 40.3. Contrôle de contexte, sans changement du détail local
+
+Après ce premier constat, un second protocole est figé avant calcul :
+[`gel de contexte`](../raw/weak-structure-context-freeze-v001-20261030T133137Z.json),
+[`mesures de contexte`](../raw/weak-structure-context-v001-20261030T133137Z.json).
+Pour chaque motif, période16, phase0, amplitude0,0015 ; comparer sa version
+256² à la même image entourée de256px propres constants, soit768².
+ROI centrale96², avec80px de même signal de chaque côté, au-delà de la marge
+maximale65 du filtre. Le code vérifie l'identité des pixels locaux.
+Les régions distantes d'estimation, le découpage en tuiles et le bilanDC global
+changent : ce n'est pas l'isolation d'une unique fonction interne.
+
+| Motif propre | Gain original | Gain avec entourage uniforme propre |
+| --- | ---: | ---: |
+| Horizontal | 0,6743 | 1,0000 |
+| Vertical | 0,6743 | 1,0000 |
+| Diagonal | 0,1840 | 1,0000 |
+| Produit | 0,3580 | 1,0000 |
+
+Avec l'entourage uniforme, les σI globaux et les nœuds sont nuls à toutes
+les échelles ; le détail est conservé. Sur les motifs pleins, plusieurs
+échelles reçoivent des σI non nuls. Exemple horizontal :25/25 candidats aux
+deux premières échelles, σI≈0,000117 et0,000395, alors que la source est propre.
+Le noyau de lissage seul n'impose donc pas la perte constatée ; le modèle
+estimé et son contexte font partie du problème. **Ne pas généraliser cette
+réponse à une photo bruitée**, où un entourage uniforme contient aussi du bruit.
+
+### 40.4. Lecture du mécanisme et prochaine intervention
+
+Le rejet actuel de témoins cohérents demande une corrélation absolue>0,9
+dans les DEUX axes, à un seul retard lié à l'échelle. Une structure périodique
+propre peut manquer ce critère selon sa période et son orientation ; les
+résumés ci-dessus confirment que de tels témoins sont effectivement admis.
+Les deux orientations cardinales donnent des résultats proches ; le défaut
+n'est pas une simple inversion x/y. Les différences diagonales ne doivent
+pas être corrigées par des poids de teinte ou par un réglage de DCP.
+
+Prochaine piste bornée : **séparer structure spatialement prévisible et
+dispersion résiduelle avant d'accepter un témoin de bruit**. Évaluer la
+prédiction hors des positions d'ajustement, dans plusieurs directions/retards
+fixés avant mesure ; comparer aux corrélations attendues du bruit réel après
+RCD, pas seulement à du bruit blanc. Le but n'est ni de garder toute
+autocorrélation comme détail, ni de remplacer simplement le ET par un OU
+au seuil choisi sur ces32 motifs. Risque inverse : sous-estimer le bruit,
+s'abstenir partout et ne plus débruiter les vrais aplats.
+
+Critères nécessaires avant promotion : témoins propres conservés, bruit
+plat réellement diminué, contrôles de petits détails uniques/contours, noirs
+et sources à bruit connu déjà authentifiées. Les références du §38 restent
+des cas de développement ; ne pas les appeler validation intacte. Pas de
+balayage opportuniste de seuils ni de reprise d'un modèle déjà rejeté sans
+différence structurelle explicite.
+
+Cette étape ferme un diagnostic, pas l'étude de protection. Aucun fichier
+moteur/profil/IHM modifié, aucune publication, fusion dev ou création de tag.
+Les calculs sont courts et terminés ; preuves JSON immuables et sources
+de banc conservées. Aucun besoin de nouvelles photos ni d'intervention
+de Claude pour ce jalon.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -2683,3 +2794,8 @@ une cible complémentaire : le gain tonal ne résout pas la confusion texture/br
   global seulement. Ni adaptation locale, ni cache production, ni gain photo
   validés. Prochaine qualification : réutilisation sur corpus puis vrai DCP,
   avec garde-fous de détail, biais, force maître et ressources.
+- Priorité utilisateur revenue aux structures faibles (§40) :32 motifs propres
+  contaminent l'estimation ; quatre contrôles à signal local identique sont
+  conservés avec un entourage propre uniforme. Travailler sur l'acceptation
+  des témoins et la prévisibilité spatiale, sans confondre corrélation bruit
+  RCD et structure. Aucun nouveau filtre ni seuil promu ; gain tonal différé.
