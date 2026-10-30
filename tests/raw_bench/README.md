@@ -292,6 +292,17 @@ ce remappage pour éviter une double loi. La cible visuelle LR70–75 vers
 barre80–90 n'est pas encore qualifiée ; les valeurs LR ne sont pas les forces
 internes IPR. La preuve synthétique ne vaut pas étalonnage perceptuel.
 
+Étude des moyennes et domaines : `run_denoise_leakage.py --mean-audit
+--scene 7Y6A7599.CR3` utilise le même exécutable avec `--mean-audit`.
+Filtre pleine image100/100, moments caméra globaux, puis rendu de rectangles
+fixes indépendants : ils ne remplacent pas les masques Lightroom figés.
+`--profile-root` doit désigner les profils réellement installés, pas un
+répertoire vide. Pas d'exportTIFF ni de changement de filtre/DCP.
+`study_noise_domain.py` produit des contrôles JSON gaussiens de moyenne
+après borne/encodage et d'aller-retour VST naïf (contrôle négatif, pas inverse
+non biaisée). Tests : `python -m unittest discover -s tests/raw_bench
+-p test_noise_domain.py`. Aucun de ces contrôles ne qualifie un filtre CFA.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

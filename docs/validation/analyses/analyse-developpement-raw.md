@@ -2,11 +2,11 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§32) : esquisse C++ de commande maître, non raccordée à l'IHM.
-82 contrôles natifs et sept suites passent. Claude a mesuré(c1) sur104 RAW :
-gain chroma limité, sans résoudre le résidu à70/25. Le repli global (§31)
-est en cours de mesure chez lui. **Pas de promotion.** Le calage visuel de la
-barre maître reste à faire ; filtre, forces avancées et bornes DCP inchangés.
+Dernier jalon (§33) : reprise de l'étude algorithmique après le retour visuel
+positif sur `d4779e5`. Premières sondes du DC et contrôle négatif VST réalisés
+sur le banc, sans intégration. Le repli est mesuré et intégré localement par
+Claude ;(c) clos avec(c1). La commande maître est prise en charge par Claude,
+comme D0. **Aucun nouveau filtre de cette étude n'est validé.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1709,6 +1709,155 @@ absence de double loi, plateau chroma et détails réels. Garder les référence
 LR75 de luminance comme repère, pas comme vérité propre ni cible de clonage.
 Ne pas mélanger effet du repli et effet de la barre dans une seule comparaison.
 
+## 33. Nouvelle étude algorithmique : domaine RAW et biais des noirs — 30 octobre 2026
+
+### 33.1. Point de départ figé et absence de retour en arrière
+
+L'utilisateur préfère visuellement `d4779e5` à V1, à zoom/cadrage identiques.
+Claude a mesuré le repli (§31), preuve `45032c4`, et l'a intégré localement :
+témoin0/0 identique à(c1) sur104 sources, gain sur plusieurs abstentions,
+temps de campagne76 RAW augmenté d'environ7 % (rendu complet, pas module seul).
+Les études(c1), plancher et repli ne sont pas relancées à l'identique ici.
+
+Nouvelle demande : **étude et prototypes de banc seulement**, pas intégration.
+Claude garde le raccordement de la barre maître et D0. Notre référence filtre
+est celle de `47f406a` : même CameraDenoise que le repli intégré, plus fonction
+de remappage non appelée par cette sonde ; le reste du moteur n'est pas déclaré
+identique à la tête évolutive de Claude. Source, binaire, RAW, manifeste et DCP
+sont identifiés dans les preuves. Ne pas attribuer un changement D0 à ce filtre.
+
+Budget de sélection demandé : au plus huit threads adaptatifs,20,8 s à huit
+threads, poste16 Go déjà chargé. Aucune nouvelle preuve de respect de ces
+budgets n'est annoncée dans cette première étape.
+
+### 33.2. Moyenne des noirs : première séparation des domaines
+
+Défaut remonté par Claude : moyenne du masque sombre augmentée d'environ
+3,4 niveaux sur7599,3,5 sur9153,2,7 surIMG_3135 à100/100. Ce sont des
+mesures de rendu, non des DN capteur. Le module conserve le DC **global**
+des axes caméra ; cela ne garantit ni le DC d'un masque local, ni celui du
+rendu après tables, courbe, bornes et encodage. Le rééquilibrage DC peut
+redistribuer spatialement les corrections : il n'est pas innocenté localement.
+
+Une nouvelle option de la sonde, `--mean-audit`, filtre l'image entière à
+100/100, puis mesure quatre rectangles fixes de7599 : trois positions
+diagonales et le témoin2940/2940/420/420 déclaré auparavant. Aucun filtrage
+indépendant par rectangle : modèle de bruit et rééquilibrage restent globaux.
+Optiques désactivées, signal signé, DCP inchangé.
+
+[Preuve réelle](../raw/camera-denoise-mean-audit-v001-20261030T115937Z.json) :
+6984×4660, RGB caméra déjà balancé, profil d'empreinte49241c29… Les écarts
+globaux après-avant sont R=−3,34×10⁻¹⁰, G=−1,05×10⁻¹⁰, B=−2,06×10⁻¹⁰.
+La dérive de plusieurs niveaux ne vient donc pas d'un gain de DC global
+caméra sur cette source et ce calcul.
+
+| Rectangle caméra x/y/largeur/hauteur | Luma encodée avant | Après100/100 | Y Rec.2020 avant | Après |
+| --- | ---: | ---: | ---: | ---: |
+| 1641/1060/420/420 | 186,964 | 188,175 | 0,50964 | 0,51115 |
+| 3282/2120/420/420 | 161,792 | 162,223 | 0,45720 | 0,45600 |
+| 4923/3180/420/420 | 64,871 | 63,739 | 0,10282 | 0,09582 |
+| 2940/2940/420/420 | 62,856 | 58,599 | 0,12874 | 0,12275 |
+
+La luma encodée est pondérée Rec.709 sur sRGB borné/arrondi8 bits. **Ces
+rectangles ne sont pas les masques noirs figés Lightroom** : pas de
+contradiction démontrée avec les+3,4 de Claude, ni de reproduction de cette
+valeur. Dans le dernier rectangle la moyenne caméra change aussi localement,
+de sorte que le DCP seul ne peut être accusé. Étape suivante nécessaire :
+reprendre exactement son masque, puis comparer mêmes pixels avant/après
+filtre, après rendu linéaire et après encodage, et ablater le rééquilibrage
+DC dans un prototype séparé. Ne pas soustraire arbitrairement3 niveaux.
+
+Une [tentative préalable](../raw/camera-denoise-mean-audit-v001-20261030T115857Z.json)
+échoue avec la racine locale `profiles/` vide de DCP ; conservée, sans résultat
+numérique. La tentative réussie pointe vers le répertoire Camera réellement
+installé. Aucun fichier de profil copié, modifié ou redistribué.
+
+### 33.3. Contrôles de non-linéarité et prototype VST négatif
+
+[Contrôles synthétiques](../raw/noise-domain-controls-v001-20261030T120039Z.json) :
+65536 échantillons gaussiens antithétiques, graine fixée, oracle réduisant le
+bruit autour d'une moyenne connue. Ce n'est pas un débruiteur d'image.
+
+À moyenne0 etσ0,01, réduire le bruit résiduel à20 % diminue la moyenne après
+borne basse de0,004010 à0,000802 et la moyenne encodée de9,81 à2,62 niveaux.
+À moyenne0,02, le même contrôle conserve la moyenne signée mais fait monter
+la moyenne encodée de36,76 à38,62. Borne basse et concavité peuvent donc
+agir en sens opposés. Le signe observé dépend de la distribution et du rendu ;
+ce contrôle n'identifie pas la cause réelle du défaut7599.
+
+Prototype négatif original du banc : racine de type Anscombe généralisée,
+a=0,001,b=10⁻⁵, puis **inverse algébrique naïf**, sans filtre. La racine
+bornée rend identiques les observations sous−0,010375. Sur le témoin gaussien
+centré deσ0,01 :15,04 % des échantillons perdent cette information et la
+moyenne reconstruite monte à0,000790. Cet exemple ne simule pas un vrai
+capteur Poisson-gaussien ; il démontre le danger d'une inverse naïve pour
+des données signées. Six tests unitaires des formules et des limites passent.
+
+Les [travaux de Mäkitalo/Foi](https://webpages.tuni.fi/foi/papers/ICASSP2012-Makitalo-Foi-GenAnscombe.pdf)
+étudient précisément l'importance d'une inverse non biaisée de la VST en
+régime Poisson-gaussien. La simple inversion de la racine n'est pas cette
+inverse statistique. Toute piste VST devra mesurer biais et variance aux
+faibles signaux et incertitude sura,b, pas seulement une baisse du grain.
+
+### 33.4. Pistes retenues et critères pour ne pas refaire les mêmes études
+
+1. **DC et masques exacts, priorité immédiate.** Rejouer7599/9153/IMG_3135 sur
+   les masques figés, conserver moyennes caméra locales/globales, fractions
+   négatives et moyennes de rendu. Les rectangles ci-dessus ne suffisent pas.
+   Le modèle et les paramètres de force restent figés ; D0 séparé.
+2. **CFA avant dématriçage.** Observer la mosaïque noire soustraite et
+   normalisée parI2 ; traiter les quatre phases R/G1/G2/B avec leur origine
+   et sans mélanger des couleurs adjacentes. Mesurera·signal+b par phase sur
+   les rafales et les noirs, puis corrélations ligne/colonne et points aberrants.
+   Le CFA peut conserver du bruit fixe, de ligne ou de compression : il n'est
+   **pas garanti blanc/indépendant**. Comparer sans VST puis avec VST qualifiée,
+   même dématriçage RCD/médiane derrière. Ce domaine n'avait pas été qualifié
+   par nos variantes post-RCD ; ce n'est pas un nouveau seuil du même filtre.
+3. **Auto-similarité contre Wiener local.** Comparer, sur ROI avec halo,
+   une moyenne pondérée de patchs à la référence multi-échelle actuelle,
+   sans recopier d'implémentation tierce. Rechercher sur des régions comparables
+   en signal/couleur ; bruit corrélé et patchs recouvrants invalident une
+   correction de distance supposant naïvement des échantillons indépendants.
+   La redondance spatiale peut aider ; une texture unique ou du mouvement
+   dans une rafale ne doit pas devenir un faux voisin.
+4. **Faible bruit et résidus nommés.** IMG_7961/0032/9940/7423 : ne pas assimiler
+   texture inchangée à échec ; chercher une référence de rafale indépendante
+   ou une injection connue, pas viser un HP égal àLR. Garder3135/_MG_7840
+   (noirs sous V1),5975/6062 (aplats),7599/9539 et détails colorés faibles
+   comme sentinelles. Aucun de ces témoins n'est désormais un jeu réservé.
+
+Les [travaux Unprocessing](https://people.csail.mit.edu/tfxue/papers/cvpr2019_unprocess.pdf)
+appuient la nécessité de modéliser le bruit et le traitement photométrique
+qui suit. Ils ne prouvent ni qu'un filtre CFA sera meilleur dansIPR, ni que
+la covariance post-RCD se propage par une simple matrice : RCD est adaptatif.
+
+Avant toute sélection, fixer jeux de développement et de contrôle par scène
+ou séance, pas deux crops d'une même prise. Les104 RAW déjà utilisés ne
+redeviennent pas réservés. Mesurer erreur face à référence si disponible,
+chroma basse/haute fréquence, détails et contrastes, points isolés, DC,
+temps/mémoire à définition identique ; aucun score unique ni nouveau seuil
+adopté sur une seule scène. Le bénéfice visuel est requis pour une promotion.
+
+### 33.5. Réutilisation : alerte licence, pas de validation juridique
+
+La page [NLM IPOL](https://www.ipol.im/pub/art/2011/bcm_nlm/) signale des
+fichiers potentiellement liés à des brevets et une licenceGPL pour le reste.
+Le [logiciel officiel BM3D](https://webpages.tuni.fi/foi/GCF-BM3D/) est réservé
+aux usages non lucratifs d'éducation et de recherche ; les
+[paquets VST/inverse associés](https://webpages.tuni.fi/foi/invansc/) portent
+également une licence limitée. **Publication et téléchargement ne valent pas
+liberté d'intégration.** Aucun de ces codes n'a été téléchargé ou compilé ici.
+
+Cette recherche n'est pas une vérification d'expiration des brevets par pays.
+Une réimplémentation originale ne supprime pas à elle seule un éventuel droit
+de brevet. Pistes bibliographiques retenues, mais aucune qualifiée de
+« libre de droits » ; vérifier le périmètre juridique avant le prototype
+correspondant si nécessaire et toujours avant intégration/distribution.
+
+**Bilan de cette étape : deux sondes/prototypes de diagnostic, pas nouveau
+débruiteur.** DC global confirmé, défaut local des noirs pas encore expliqué ;
+VST naïve rejetée comme raccourci. Aucun moteur, profil, DCP ou IHM modifié.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -1740,8 +1889,14 @@ Ne pas mélanger effet du repli et effet de la barre dans une seule comparaison.
   (§32) : la texture I ne bloque plus la chroma par le veto partagé, mais
   le bénéfice réel est limité et le résidu à70/25 persiste. Pas de promotion.
 - Repli global préparé au-dessus de(c1) (§31) :77 contrôles, sept suites et
-  intégration optique passent. Qualification réelle des22 scènes et coût
-  supplémentaire attendus ; aucune conclusion de correction réelle anticipée.
+  intégration optique passent. Mesuré ensuite par Claude et intégré localement
+  dans d4779e5 (§33), avec limites résiduelles et coût de campagne documentés.
 - Retour(c1) reçu et commande maître esquissée (§32) : fonction C++ testée
-  mais non raccordée ;82 contrôles et sept suites passent. Aucun calage LR
-  ou visuel revendiqué. Attendre le bilan du repli avant comparaison de force.
+  ici sans caller ;82 contrôles et sept suites passent. Claude prend son
+  raccordement en charge. Repère LR85–90 pour les scènes bruitées seulement,
+  pas équivalence universelle ; texture à faible bruit à valider visuellement.
+- Nouveau chantier algorithmique (§33), étude seulement : repli intégré
+  localement par Claude, retour visuel positif ; première sonde confirme DC
+  caméra global mais pas les+3 niveaux des masques noirs. Reprendre ces
+  masques exacts avant toute correction. CFA/VST et auto-similarité cadrés,
+  réutilisation tierce non juridiquement qualifiée. Aucun nouveau filtre promu.

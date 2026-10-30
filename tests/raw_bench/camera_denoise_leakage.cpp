@@ -139,6 +139,26 @@ double stddev(const cv::Mat &m)
     cv::Scalar mean,sigma; cv::meanStdDev(m,mean,sigma); return sigma[0];
 }
 double rms(const cv::Mat &m) { return cv::norm(m,cv::NORM_L2)/std::sqrt(double(m.total())); }
+QJsonObject cameraMoments(const cv::Mat &camera)
+{
+    require(!camera.empty()&&camera.type()==CV_32FC3,"Invalid camera moments input");
+    const auto mean=cv::mean(camera);
+    cv::Vec3d negative{},positivePart{};
+    for(int y=0;y<camera.rows;++y)for(int x=0;x<camera.cols;++x) {
+        const auto v=camera.at<cv::Vec3f>(y,x);
+        for(int c=0;c<3;++c) {
+            negative[c]+=v[c]<0;
+            positivePart[c]+=std::max(0.,double(v[c]));
+        }
+    }
+    QJsonArray means,negatives,positive;
+    for(int c=0;c<3;++c) {
+        means.append(mean[c]);negatives.append(negative[c]/double(camera.total()));
+        positive.append(positivePart[c]/double(camera.total()));
+    }
+    return {{"mean_rgb",means},{"negative_fraction_rgb",negatives},
+            {"positive_part_mean_rgb",positive}};
+}
 QJsonObject measures(const cv::Mat &working,const cv::Rect &roi)
 {
     cv::Mat display(working.size(),CV_32FC3);
@@ -201,6 +221,7 @@ int main(int argc,char **argv)
     QCoreApplication app(argc,argv);QCommandLineParser p;p.addHelpOption();
     for(const auto *key:{"input","manifest","profile-root","label"})p.addOption(QCommandLineOption(key,key,"value"));
     p.addOption(QCommandLineOption("signal-survey","Survey balanced coefficient MAD and actual full-frame models; no image export"));
+    p.addOption(QCommandLineOption("mean-audit","Audit full-frame 100/100 filtering, local/global camera means and rendered patch means"));
     p.process(app);
     try {
         for(const auto *key:{"input","manifest","profile-root","label"})require(p.isSet(key),"Missing argument");
@@ -217,6 +238,39 @@ int main(int argc,char **argv)
         CameraDenoise::Context context;
         // V1: source is already white-balanced; never compensate these axes.
         const cv::Vec3f gains(1,1,1); // Neutral direction for the projection study only.
+        require(!(p.isSet("signal-survey")&&p.isSet("mean-audit")),"Choose a single study mode");
+        if(p.isSet("mean-audit")) {
+            auto filtered=full.cameraRgb;
+            require(CameraDenoise::apply(filtered,{100,100},context),"Full-frame mean audit failed");
+            QJsonArray records;
+            std::vector<cv::Rect> areas;
+            for(double position:{.25,.5,.75}) {
+                const int side=std::min({420,full.cameraRgb.cols,full.cameraRgb.rows});
+                areas.emplace_back(int((full.cameraRgb.cols-side)*position),
+                    int((full.cameraRgb.rows-side)*position),side,side);
+            }
+            // Declared independent witness, not Claude's frozen full dark mask.
+            if(full.cameraRgb.cols>=3360&&full.cameraRgb.rows>=3360&&
+               p.value("input").contains("7Y6A7599"))areas.emplace_back(2940,2940,420,420);
+            for(const auto &area:areas) {
+                const auto sourcePatch=full.cameraRgb(area),filteredPatch=filtered(area);
+                const auto baseline=render(full,sourcePatch),candidate=render(full,filteredPatch);
+                const cv::Rect local(0,0,area.width,area.height);
+                records.append(QJsonObject{{"camera_roi",QJsonArray{area.x,area.y,area.width,area.height}},
+                    {"B0_camera",cameraMoments(sourcePatch)},{"B100_camera",cameraMoments(filteredPatch)},
+                    {"B0_rendered",measures(baseline,local)},{"B100_rendered",measures(candidate,local)}});
+            }
+            const QJsonObject result{{"created_utc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
+                {"label",p.value("label")},{"source",p.value("input")},
+                {"source_sha256",hash(p.value("input"))},{"manifest_sha256",hash(p.value("manifest"))},
+                {"profile_sha256",hash(full.profilePath)},{"engine_base_revision",IPR_ENGINE_REVISION},
+                {"camera_size",QJsonArray{full.cameraRgb.cols,full.cameraRgb.rows}},
+                {"B0_camera_global",cameraMoments(full.cameraRgb)},
+                {"B100_camera_global",cameraMoments(filtered)},
+                {"patches",records},{"settings",QJsonArray{100,100}},
+                {"limits","Full-frame noise model; independent rectangular witnesses, not frozen dark masks; optics off; unchanged DCP; no CFA oracle"}};
+            std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\n';return 0;
+        }
         if(p.isSet("signal-survey")) {
             QJsonArray modelJson; std::vector<CameraDenoise::NoiseModelSummary> models;
             context.noiseModelObserver=[&](const CameraDenoise::NoiseModelSummary &m) {

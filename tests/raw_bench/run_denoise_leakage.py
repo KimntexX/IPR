@@ -20,6 +20,10 @@ def main():
     p.add_argument('--label', required=True)
     p.add_argument('--profile-root', type=Path, required=True)
     p.add_argument('--runtime-dir', type=Path, action='append', required=True)
+    p.add_argument('--mean-audit', action='store_true',
+                   help='Full-frame 100/100 mean audit; no projection experiment.')
+    p.add_argument('--scene', action='append',
+                   help='Source basename under --base; repeat for a targeted study.')
     a = p.parse_args()
     root = Path(__file__).resolve().parents[2]
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
@@ -32,6 +36,7 @@ def main():
                  tool_sha256=sha256(a.tool),
                  revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),
                  sources={name: dict(sha256=sha256(root/name), text=(root/name).read_text(encoding='utf-8')) for name in paths},
+                 mode='mean_audit' if a.mean_audit else 'chroma_leakage',
                  scenes=[], limits=[
                      'Camera patches, not the full-frame filter estimates or Claude original ROIs.',
                      'Three fixed diagonal 768px patches, central 420px measured; optics off.',
@@ -40,10 +45,21 @@ def main():
                      'No claim that preserving linear Y preserves clipped sRGB luma.',
                      'No profile bounds or GUI changes.'])
     failed = False
-    for name in ('7Y6A7599.CR3', 'IMG_7958.CR2', '6V1A9539.CR3'):
+    names = a.scene or ('7Y6A7599.CR3', 'IMG_7958.CR2', '6V1A9539.CR3')
+    if any(Path(name).name != name for name in names):
+        p.error('--scene expects basenames only')
+    if a.mean_audit:
+        proof['limits'] = [
+            'Full-frame 100/100 filter, but only fixed rectangular rendered witnesses.',
+            'Witnesses are not the frozen Lightroom dark masks; no LR comparison claimed.',
+            'Global camera DC does not imply local DC or rendered mean invariance.',
+            'Optics off and DCP unchanged; no CFA oracle or quality verdict.']
+    for name in names:
         command = [str(a.tool.resolve()), '--input', str((a.base/name).resolve()),
                    '--manifest', str(root/'config/raw-normalization.json'),
                    '--profile-root', str(a.profile_root.resolve()), '--label', a.label]
+        if a.mean_audit:
+            command.append('--mean-audit')
         try:
             result = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True,
                                     encoding='utf-8', errors='replace', timeout=180)
@@ -61,7 +77,8 @@ def main():
         if failed:
             break
     proof['verdict'] = 'fail' if failed else 'measured_not_quality_validation'
-    output = root/'docs/validation/raw'/f'camera-denoise-leakage-v001-{stamp}.json'
+    study = 'mean-audit' if a.mean_audit else 'leakage'
+    output = root/'docs/validation/raw'/f'camera-denoise-{study}-v001-{stamp}.json'
     with output.open('x', encoding='utf-8') as handle:
         json.dump(proof, handle, ensure_ascii=False, indent=2, allow_nan=False)
     print(output, proof['verdict'], flush=True)
