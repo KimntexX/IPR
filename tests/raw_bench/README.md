@@ -432,6 +432,21 @@ La preuve canonique conserve l'empreinte des octets originaux et le source
 généré ; le SHA de son commentaire d'en-tête porte sur le texte normaliséLF,
 pas sur les octetsCRLF du fichier d'origine. Résultats et limites au rapport§43.
 
+`audit_signal_noise_bridge.py --history-root ../patch_noise --pilot-proof <json>`
+audite la loi CFA historique figée sans la réajuster ni décoder de nouveaux
+RAW. Filiation des JSON,48couples moyenne/écart-type sur les captures de noirs
+actuelles,24pentes/72ancrages locaux et312moments ; transfert historique conservé
+séparément avec ses durées et extrapolations. Les deux verts restent distincts.
+Le résultat est un catalogue de RECHERCHE sous `docs/validation/raw/`, pas une
+bibliothèque installée ou un fichier de configuration du moteur.
+
+Normalisation testée : `X=g*(DN-B_runtime)/D`, `A=g*a/D`,
+`B=g²*(b+a*(B_runtime-B_reference))/D²`. Les coefficients sont CFA AVANT RCD,
+pas des σ RGB/B3 ; un modèle de variance ne se convertit pas comme une moyenne.
+Les exemples de gains/noirs/diviseur sont ceux du pilote signé, pas ceux de
+toutes les photos ou boîtiers. Cinq tests : `python -m unittest discover
+-s tests/raw_bench -p test_signal_noise_bridge.py`. Rapport§44.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

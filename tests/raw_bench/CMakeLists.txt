@@ -80,6 +80,9 @@ target_link_libraries(structureOracleProbe PRIVATE Qt6::Core ${OpenCV_LIBS} Thre
 add_test(NAME noiseModelAblationContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_noise_model_ablation.py)
 set_tests_properties(noiseModelAblationContract PROPERTIES TIMEOUT 30)
+add_test(NAME signalNoiseBridgeContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_signal_noise_bridge.py)
+set_tests_properties(signalNoiseBridgeContract PROPERTIES TIMEOUT 30)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)

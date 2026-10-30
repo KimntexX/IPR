@@ -2,12 +2,12 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§43) : comparaison à filtre/force identiques, modèle aveugle
-contre modèle estimé sur bruit seul. À1600ISO dans le banc, ce dernier réduit
-fortement l'erreur sur les textures irrégulières ; l'autre noir de la paire
-confirme le résultat. Mais certains contours régressent et le gain disparaît
-au bruit réel51200. Priorité étayée : éviter de gonfler le modèle avec la
-texture, sans imposer un profil constant partout. Aucune intégration.
+Dernier jalon (§44) : audit de la loi CFA dépendante du signal déjà étudiée
+dans l'historique.24pentes et72ancrages locaux conservés sans réajustement ;
+48couples moyenne/écart-type des noirs correspondent aux captures signées.
+La conversion de variance vers le CFA équilibré est vérifiée, pas encore
+sa propagation RCD/B3. Les expériences sur bruit noir seul restent des
+ablations : ne pas transporter ce budget aux tons éclairés. Production inchangée.
 **Étude de banc seulement, aucun changement de production.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
@@ -3179,6 +3179,167 @@ parités ; ce n'est pas un budget de rendu applicatif. Aucun filtre de
 production, profil, interface publique ou IHM modifié, pas de publication,
 fusion dev ou tag. Pas de nouvelle photo requise pour cette comparaison.
 
+## 44. Audit de la caractérisation CFA dépendante du signal — 30 octobre 2026
+
+### 44.1. Réutiliser le travail existant, pas réajuster les mêmes données
+
+Suite autorisée du§43. L'audit retrouve dans le rapport historique
+`patch_noise`,§§455–458, une loi CFA déjà ancrée sur des noirs répétés,
+ainsi qu'un transfert sur une autre séance déjà inspectée. Ces études ne
+sont pas relancées sous un nouveau nom. Le nouveau travail vérifie leur
+filiation, les unités et la compatibilité avec les captures signées actuelles.
+
+Preuve canonique :
+[`gel v002`](../raw/signal-noise-bridge-freeze-v002-20261030T143445Z.json),
+[`audit v002`](../raw/signal-noise-bridge-v002-20261030T143445Z.json).
+La v001 est conservée ; la v002 renforce les gardes de boîtier et de périmètre
+ISO/phases, sans modifier les paramètres historiques. Sources parentes et
+mesures utiles sont conservées avec leur provenance dans le nouvel audit.
+
+Pas de nouveau RAW décodé, pas de référence réservée ouverte. Les pixels
+relus sont seulement les quatre captures de noirs de développement déjà
+qualifiées aux§§36–43. Les autres résultats sont repris des JSON canoniques,
+pas d'une nouvelle vérification de disponibilité de chaque RAW de la carte.
+
+### 44.2. Données et domaines réellement couverts
+
+Un boîtier : **Canon EOS R6 Mark III**. La préparation repose sur26 groupes
+éclairés,72 prises,312 moments (trois régions×quatre phases par groupe), et
+31 noirs de développement. Les groupes de contrôle de noirs restent séparés
+et ne réajustent pas les références.24pentes (six ISO×quatre phases) et
+72ancrages de noir locaux (trois régions par pente), pas72 nouveaux noirs.
+Toutes les scènes d'ajustement ont une durée1/200s.
+
+La loi conservée est `v_i=b_i+a·s_i` en DN : `s_i` est la moyenne brute moins
+le noir moyen local de développement, `b_i` sa variance temporelle centrée,
+et `a` une pente commune par ISO/phase. L'interception n'est pas libre.
+Les deux vertsG1/G2 sont distincts ; l'ordre spatialR/G1/G2/B n'est pas
+l'ordre des indices couleurR/G/B/G2. Pas de conversion en électrons.
+
+| ISO | Groupes d'ajustement | Signal rouge ajusté,DN au-dessus du noir | Signal rouge du transfert historique,DN | Mesures rouges de transfert à1/200s |
+| --- | ---: | ---: | ---: | ---: |
+|1600 |5 |0,77–29,81 |70,46–10 301,16 |3 |
+|3200 |5 |1,53–54,89 |67,74–10 851,00 |3 |
+|6400 |5 |2,97–120,92 |71,03–5 355,93 |6 |
+|12800 |5 |6,81–234,67 |— |0 |
+|25600 |1 |343,96–449,26 |— |0 |
+|51200 |5 |24,58–941,32 |498,67–8 707,51 |0 |
+
+Les autres phases ont leurs domaines séparés dans le JSON. Les petits
+domaines d'ajustement, surtout aux faibles ISO, ne couvrent pas à eux seuls
+les tons moyens et clairs. Le transfert historique apporte toutefois des
+mesures plus lumineuses :464 mesures au total sur42 paires déjà étudiées,
+dont48 mesures sur seulement quatre paires à la durée commune1/200s.
+Il ne s'agit ni de464 acquisitions indépendantes ni d'une validation neuve.
+
+Ne pas étendre les extrema de ce transfert en un domaine continu certifié.
+Les autres durées restent des diagnostics confondus avec niveau de signal
+et conditions de prise de vue. À25600, un seul groupe ne permet pas le
+contrôle hors groupe. ISO100/4000/16000, autres boîtiers et interpolations
+non étudiées restent sans modèle qualifié dans ce catalogue.
+
+### 44.3. Compatibilité avec le chemin signé : ce qui est effectivement vérifié
+
+Les mêmes quatre sources noires sont identifiées parSHA256 entre les
+anciennes lecturesrawpy et les captures du développement actuel. Trois ROI
+de256² par source, quatre phases :48couples moyenne/écart-type, **écarts
+strictement nuls sur les deux statistiques**. Taille visible4639×6959,
+origines des régions, blanc16383, motif CFA et valeurs DN entières concordent.
+Cela confirme l'échelle brute de ces témoins ; ce n'est pas une nouvelle
+parité de tous les pixels historiques ni une qualification des72 scènes.
+
+Les références de noir du modèle sont MESURÉES, pas déduites des anciennes
+valeurs de noir déclarées par LibRaw. Le traitement signé change la gestion
+après soustraction/normalisation, pas ces statistiques brutes contrôlées.
+Le socle de loi CFA peut donc être repris comme hypothèse de recherche sans
+repartir d'un nouvel ajustement. Cela ne valide pas sa propagation dans RCD.
+
+Chaque point d'ajustement du JSON de loi est également rattaché à sa scène,
+sa phase/ROI et son ancrage noir :312cohérences de moments vérifiées.
+La filiation du transfert aux mêmes paramètres figés est contrôlée, sans
+rechoisir les points ni améliorer rétrospectivement les erreurs publiées.
+
+### 44.4. Contrat mathématique de normalisation, avant RCD
+
+Avec le diviseurD et le gain de phaseg du contexte explicite :
+
+`X = g·(DN − B_runtime)/D`.
+
+Le modèle est ancré sur `s=E[DN]−B_reference`, pas forcément sur le même
+noir que le runtime. Sa conversion donne :
+
+`Var(X) = A·E[X] + B`,
+
+`A = g·a/D`,
+
+`B = g²·[b + a·(B_runtime − B_reference)]/D²`.
+
+Le carré du gain/diviseur porte sur la variance ; exprimé en fonction du
+signal déjà équilibréX, le coefficientA ne porte plus qu'un seul facteurg.
+Omettre la différence d'origine des noirs décale le modèle. Les contrôles
+incluent une moyenne normalisée négative admissible : pas de borne à0.
+Le modèle concerne l'espérance latente du signal, pas une substitution
+directe de chaque pixel bruité dans une formule de variance.
+
+Vingt-quatre témoins de normalisation (deux ISO capturés×quatre phases×trois
+ROI) donnent chacun trois contrôles : ancrage noir et deux bornes du domaine,
+soit72égalités entre calcul direct et coefficients normalisés. Gains,
+noirs2048 et diviseur14335 sont ceux du PILOTE, pas une valeur générale
+à coder pour toutes les photos. Les paramètres DN des autres ISO restent
+dans leur domaine brut ; aucun contexte de normalisation non mesuré n'est inventé.
+
+Ces coefficients sont **CFA avant dématriçage**, pas le RGB caméra de
+`CameraDenoise`, et encore moins unσB3 après courbes/couleur. Les quatre
+phases, RCD adaptatif, médiane, gains et corrélations doivent être transportés
+ou mesurés avant tout branchement. Aucun coefficient n'est installé dans
+`config`, dans un profil DCP ou dans une bibliothèque du moteur.
+
+### 44.5. Pourquoi le noir seul ne décrit pas une zone éclairée
+
+Exemple de calcul, PAS mesure sur photo : pour une espérance CFA équilibrée
+de0,03, la loi figée prévoit à1600 un rapportσtotal/σnoir de4,45–4,56 en
+rouge,6,15–6,29 sur les verts et4,54–4,58 en bleu selon la ROI. Ce point
+est hors du domaine d'ajustement1600 ; les mesures historiques de transfert
+plus lumineux constituent seulement un appui diagnostique, pas une validation
+continue de cette évaluation. À51200, les mêmes calculs sont dans le domaine
+ajusté : environ1,29–1,52 selon phase et ROI.
+
+Ce ne sont pas des rapports de bruit RGB ou affiché aprèsRCD/DCP. Ils
+illustrent surtout pourquoi les§§38–43 sont explicitement des ablations
+à bruit de lecture seul : leur signal moyen0,03 ne les transforme pas en
+photos physiquement bruitées avec le terme dépendant du signal attendu.
+Ne pas transporter directement le profil noir du§43 aux zones éclairées.
+
+Autre distinction : `b_i` est une variance TEMPORELLE centrée, tandis que
+le résidu d'une image noire peut porter une structure spatiale commune.
+Les JSON historiques en gardent des diagnostics, sans l'identifier sûrement
+comme bruit fixe capteur. Une simulation qui reprend un vrai résidu noir
+ne doit pas lui ajouter une seconde fois le bruit de lectureb ; il faut
+traiter séparément le terme de signal et les composantes communes.
+
+### 44.6. Décision et étape suivante
+
+**Base de recherche réutilisable, pas profil de production qualifié.** Le
+catalogue conserve par boîtier/ISO/phase les pentes, ancrages locaux, domaines,
+preuves et limites. Pas de moyenne globale des troisb_i, pas d'extrapolation
+ISO ou de déduction d'un rendement électronique. La variance seule ne décrit
+pas la corrélation ni les queues du bruit qui affectent le filtre.
+
+La prochaine épreuve peut maintenant porter sur la propagation du terme
+dépendant du signal : modèle figé, scènes synthétiques à signal connu,
+bruit appliqué dans le CFA avant le RCD signé/médiane actuels, puis moments
+et covariances des trois plansB3. Comparer lecture seule et terme de signal
+sans compter deux foisb, conserver la distinction entre source brute et
+composante commune, et séparer simulation contrôlée et vérité physique.
+Le tout reste sur le banc, sans étendre à toute photo un profil calibré sur
+quelques prises. Les données actuelles suffisent à préparer cette épreuve ;
+aucune nouvelle prise ni export utilisateur demandé à ce jalon.
+
+Cinq tests vérifient transport affine/origine noire, gain simple surA et
+quadratique surB, moyenne signée, indices des verts et contexte invalide.
+Aucun paramètre réajusté, aucune production/profil/IHM modifiés ; aucun
+push, fusion dev ou tag. Les réserves restent fermées.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -3271,3 +3432,8 @@ fusion dev ou tag. Pas de nouvelle photo requise pour cette comparaison.
   régressions de contours. Estimation mieux ancrée prioritaire, mais pas
   de remplacement global prêt. Suite : caractérisation dépendante du signal
   et qualification de propagation/routage avant toute interface de production.
+- Audit CFA dépendant du signal terminé (§44) sans nouveau fit :24pentes,
+  72ancrages locaux et312moments historiques conservés ;48couples de moments
+  noirs identiques dans le chemin signé. Normalisation avec décalage de noir
+  vérifiée, pas transportRGB/B3. Préparer la propagation avantRCD du terme
+  de signal, sans doubler le bruit noir ni confondre modèle temporel et FPN.
