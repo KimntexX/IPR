@@ -2,13 +2,14 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§47) : résultat positif au banc à filtre inchangé. L'injection
-directe de covariances mesurées sur simulations de calibration améliore les
-80 cas de contrôle, en RGB et sur chacun des axes I/Co/Cg, avec deux
-distributions de bruit. Baisse médiane d'erreur par groupe d'environ6–42 %.
-La réestimation robuste de ces profils ne donnait pas ce bénéfice (§46).
-Les textures les plus faibles restent fortement atténuées : ni résolution
-complète de la protection des détails, ni validation photographique générale.
+Dernier jalon (§§48–49) : préparation du budget par contexte caméra au banc,
+sans estimation MAD de la texture, et144 cas de transfert vers couleurs,
+niveaux et contours. Le rejeu à géométrie identique confirme des erreurs
+médianes de covariance d'environ6–9 % sur les trois premières bandes, mais
+25–29 % sur les deux grandes bandes, avec contre-exemples plus sévères.
+Préparation fonctionnelle, transfert non qualifié globalement : l'aplat local
+ne suffit pas à garantir les grandes échelles et les transitions. Les gains
+du §47 restent vrais sur leur banc, sans devenir une validation photographique.
 Quatre noirs réutilisés, deux ISO ; aucun changement de production.
 **Étude de banc seulement, aucun changement de production.**
 
@@ -3670,6 +3671,162 @@ Les réserves finales restent fermées jusqu'à un candidat/protocole figé.
 Aucun nouvel export utilisateur demandé pour conclure ce banc. Production
 inchangée ; neuf suites ciblées passent, pas de push, fusion dev ou tag.
 
+## 48. Préparation du budget par contexte caméra — 30 octobre 2026
+
+Points1 et2 autorisés après le §47, **sur le banc seulement**.
+`camera_noise_budget.py` sélectionne le catalogue par identité explicite du
+boîtier et ISO exact. Il lit modèle/ISO et normalisation dans les captures
+authentifiées, non dans le seul nom d'un fichier. L'alias `EOS R6 Mark III`
+correspond explicitement à `Canon EOS R6 Mark III` ; aucun emprunt R7/R6,
+ISO voisin ou interpolation implicite. Le catalogue reste celui du §44,
+exploratoire, pour le R6 Mark III ; transport mesuré à1600 et51200 seulement.
+
+### 48.1. Contrat des unités et des frontières
+
+Contexte : empreinte du catalogue, boîtier, ISO, région capteur caractérisée,
+noir par phase, blanc, diviseur et gains R/G/B/G2, étape signée après
+RCD/médiane avant LCP/DCP. Pour chaque phase :
+
+`signal_DN = moyenne_caméra·D/g + B_runtime − B_reference`
+
+`variance_caméra = (b + a·max(signal_DN, 0))·g²/D²`.
+
+Pour le domaine latent positif, cette expression rejoint `A·X+B` du §44.
+Le plancher porte sur l'espérance physique utilisée pour la variance,
+**pas sur les pixels signés**. Les signaux latents négatifs et les sorties
+du domaine d'ajustement restent explicitement signalés. Dans les simulations,
+le résidu noir réel fournit le bruit de lecture ; b n'est pas ajouté une
+seconde fois comme bruit synthétique.
+
+La couleur/niveau locaux viennent uniquement d'un guide moyen31×31 du
+RGB caméra observé, puis de la moyenne de la zone. Pas de MAD, variance
+de texture ou référence propre pour préparer le budget. Un aplat simulé
+indépendant à cette moyenne/couleur, avec l'autre noir, sert à propager
+le budget dans RCD signé/médiane/B3. C'est encore une préparation empirique
+coûteuse de recherche, pas une table analytique ou un profil prêt à déployer.
+
+L'identité d'un profil inclut contexte, couleur/niveau exacts, référence
+noire, binaire de transport, graines, distribution, recette et géométrie
+de mesure. Pas de quantification ou réutilisation approchée silencieuse.
+Cette empreinte prépare un contrat de réutilisation ; **aucun cache de
+production ni raccordement IHM n'est ajouté**.
+
+Dix tests couvrent sélection stricte, deux verts, gains au carré/diviseur
+inverse au carré, origine du noir, variance affine, conservation signée,
+identité des profils/géométrie, séparation des graines et absence de mutation
+des métadonnées. Les témoins BdB (R×1,2/B×0,8), noir+4 DN et diviseur10000
+testent les transformations ; ce ne sont pas des calibrations physiques de
+nouveaux boîtiers, modes RAW, compressions ou durées d'exposition. La sélection
+de ces modes/durées et de la température capteur reste à contractualiser
+avant une utilisation réelle. Aucun autre boîtier déclaré compatible.
+
+## 49. Transfert vers niveaux locaux, couleurs et contours — 30 octobre 2026
+
+### 49.1. Première campagne, puis contrôle de géométrie
+
+[Première mesure](../raw/context-transfer-v001-20261030T214522Z.json),
+[gel avant calcul](../raw/context-transfer-freeze-v001-20261030T214522Z.json),
+[audit](../raw/context-transfer-audit-v001-20261030T214938Z.json).
+Durée227,41 s. 144 cas : deux ISO, trois contextes, deux distributions,
+six contenus et deux prises noires. Les trois fenêtres64² sont à gauche,
+sur la transition, et à droite ; cinq plans B3, soit2160 comparaisons de
+covariances. Les répétitions restent fondées sur quatre noirs réutilisés.
+
+Contenus : neutre, aplat chaud/froid, saut de luminosité, transition de
+couleur et texture colorée fine. Une graine produit le guide observé,
+trois autres mesurent le résidu de contrôle ; les quatre graines de
+calibration sont distinctes, sur l'autre noir. La référence propre n'est
+utilisée que pour noter les erreurs et le guide, jamais pour préparer le profil.
+
+Premier diagnostic : erreurs médianes de covariance d'environ5–10 % sur
+les trois premières bandes selon contenu/zone, et environ20–30 % sur
+les deux bandes les plus larges. Les écarts-types extrêmes dépassent ces
+médianes. Ce passage ne suffit pas à attribuer l'écart à la couleur :
+le profil était mesuré au centre128², tandis que les contrôles64² proches
+des bords voient une autre géométrie aux grandes échelles.
+
+Un contrôle a donc été figé **sans retoucher graines, guide, loi ou seuils** :
+[gel v002](../raw/context-transfer-freeze-v002-20261030T215015Z.json).
+Les profils sont mesurés exactement aux mêmes fenêtres que les contrôles,
+et cette géométrie entre désormais dans leur identité. Le premier passage
+reste conservé comme diagnostic, pas une validation silencieusement corrigée.
+
+### 49.2. Rejeu apparié et résultats
+
+[Mesure v002](../raw/context-transfer-v002-20261030T215015Z.json),
+[audit du rejeu](../raw/context-transfer-audit-v001-20261030T215449Z.json),
+[audit final avec synthèses](../raw/context-transfer-audit-v001-20261030T215553Z.json).
+Durée226,98 s. 576 identités d'entrée (guide et trois contrôles de chaque cas)
+et2160 covariances de contrôle sont exactement conservées entre les deux
+campagnes ; seules les prédictions changent. Les72 témoins de normalisation
+affine, répartis sur six contextes et quatre phases, concordent avec le
+calcul direct de variance. Aucun paramètre ajusté en voyant les réponses.
+
+Erreurs relatives de covariance en norme de Frobenius, médianes sur prises,
+ISO, contextes, distributions et zones, avec poids égal par comparaison :
+
+| Contenu | Plans B3 0–2 | Plans B3 3–4 |
+| --- | ---: | ---: |
+| Aplat neutre | 7,4 % | 28,5 % |
+| Aplat chaud | 7,3 % | 25,5 % |
+| Aplat froid | 6,6 % | 28,7 % |
+| Saut de luminosité | 9,3 % | 25,9 % |
+| Transition colorée | 7,7 % | 26,6 % |
+| Texture colorée fine | 6,4 % | 26,5 % |
+
+Le changement de géométrie ne supprime donc pas l'écart des grandes bandes.
+Leur erreur est aussi présente sur les aplats : elle ne démontre pas un
+défaut exclusivement lié à la couleur ou aux contours. Les fenêtres64²
+ne fournissent que peu d'informations spatialement indépendantes à ces
+échelles ; les mêmes résidus noirs sont réutilisés. Les moyennes de quatre
+calibrations/trois contrôles ne donnent pas une référence de précision
+arbitraire. Les covariances individuelles avant moyenne ne sont pas conservées
+dans cette campagne : une analyse d'incertitude plus complète devra les mesurer.
+
+Les médianes cachent des contre-exemples. Sur le saut de luminosité, à1600,
+témoin BdB, gaussien, prise1, zone de transition, premier plan : σCo prédit
+=0,670 fois le mesuré. Sur les grandes bandes, le rapport de σ atteint
+1,825 sur l'aplat neutre. Ne pas convertir une médiane de covariance en
+précision garantie par axe ou pixel. Les percentiles95, maxima et rapports
+par axe/zone/plan figurent dans l'audit ; ce sont des statistiques descriptives,
+pas des intervalles de confiance sur de nouvelles photos.
+
+Le guide observé diffère au maximum de0,00264 de son témoin propre sur un
+canal de la moyenne locale, en unités caméra. Il est réellement aveugle
+mais pas exact. 256 des1728 entrées de phase des profils préparés sont hors
+domaine du fit historique ; les drapeaux sont conservés, pas masqués par
+l'ancien transfert exploratoire. Aucun signal latent négatif rencontré
+dans ces scènes simulées ; son traitement signé/plancher est testé au niveau
+unitaire seulement, pas qualifié ici sur une scène réelle proche du noir.
+
+### 49.3. Bilan des deux points et prochaine qualification
+
+**Point1 réalisé au banc :** sélection et conversion par contexte, guide
+observé, clés de profils et refus explicites fonctionnent sur leur périmètre.
+Ce n'est pas une caractérisation automatique de tout nouveau boîtier : six
+ISO discrets du catalogue R6 Mark III, dont deux transportés ici ; les autres
+ISO/boîtiers sont refusés au lieu d'être interpolés silencieusement.
+
+**Point2 mesuré, pas validé globalement :** transfert encourageant sur les
+bandes fines et aplats colorés, mais trop d'incertitude/écarts aux grandes
+échelles et un contre-exemple net au passage sombre/clair. Ne pas brancher
+ce profil d'aplat local comme budget universel de production. Cette campagne
+ne rejoue pas le débruitage ni le DCP : elle qualifie la prédiction du bruit,
+pas le gain de rendu du §47 sur de nouvelles photos.
+
+Suite utile avant les RAW réels : distinguer la variabilité de mesure des
+grandes bandes d'un biais de modèle (covariances par réalisation, références
+plus nombreuses/support plus large), puis vérifier une propagation qui garde
+les transitions spatiales plutôt que de les remplacer par un seul aplat.
+Ne pas régler le guide ou gonfler σ pour absorber ces erreurs. Le corpus
+actuel suffit à préparer ces contrôles ; aucune nouvelle prise demandée.
+
+288 évaluations =144 cas rejoués, pas288 validations indépendantes ; les deux
+campagnes reposent toujours sur quatre noirs. Les réserves finales restent
+fermées. Dix tests du budget et trois de l'audit passent ; huit suites ciblées
+passent. Aucun moteur/profil/IHM modifié, aucun cache applicatif ou budget de
+latence certifié, pas de push/dev/tag. Calculs clos.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -3780,3 +3937,10 @@ inchangée ; neuf suites ciblées passent, pas de push, fusion dev ou tag.
   de production validé ; détails très faibles encore atténués. Campagne close,
   pas de nouvelle variante aveugle ni de réexploration NLM/Wiener sans différence
   de protocole justifiée. Réserves fermées, aucun calcul actif à la clôture.
+- Budget par contexte et transfert préparés/mesurés (§§48–49). Refus des
+  contextes inconnus,72 témoins de variance normalisée ; guide observé sans
+  MAD de texture.144 cas rejoués à géométrie identique,576 identités et2160
+  covariances de contrôle conservées. Grandes bandes encore imprécises,
+  contre-exemple σCo0,670 au saut tonal : pas de promotion globale.
+  Suite : mesurer leur incertitude puis conserver la structure spatiale des
+  transitions dans le budget, avant une revue sur RAW réels. Réserves fermées.
