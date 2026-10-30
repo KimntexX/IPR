@@ -109,6 +109,21 @@ set_tests_properties(cameraNoiseBudgetContract PROPERTIES TIMEOUT 30)
 add_test(NAME contextTransferAuditContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_context_transfer_audit.py)
 set_tests_properties(contextTransferAuditContract PROPERTIES TIMEOUT 30)
+add_test(NAME spatialBudgetContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_spatial_budget.py)
+set_tests_properties(spatialBudgetContract PROPERTIES TIMEOUT 30)
+add_test(NAME transportBatchParity COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/transport_batch_contract.py"
+    --tool $<TARGET_FILE:cfaTransportProbe>)
+set_tests_properties(transportBatchParity PROPERTIES TIMEOUT 60)
+add_test(NAME spectralReadModelContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_spectral_read_model.py)
+set_tests_properties(spectralReadModelContract PROPERTIES TIMEOUT 30)
+add_test(NAME spectralBudgetContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_spectral_budget.py)
+set_tests_properties(spectralBudgetContract PROPERTIES TIMEOUT 30)
+add_test(NAME spectralBudgetAuditContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_spectral_budget_audit.py)
+set_tests_properties(spectralBudgetAuditContract PROPERTIES TIMEOUT 30)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)

@@ -552,6 +552,45 @@ température capteur ou durée d'exposition. Aucun filtre, cache/IHM de producti
 ou rendu DCP modifié. Contrats : `cameraNoiseBudgetContract` et
 `contextTransferAuditContract`.
 
+`study_spatial_budget.py --help` fige une épreuve de réplication et de biais :
+quatre nouveaux noirs de développement pour le transport (déjà utilisés par
+la caractérisation, donc pas un holdout physique), quatre motifs nouveaux,
+deux ISO et deux distributions,32 réalisations de calibration/contrôle par cas.
+Les covariances par réalisation sont conservées. Les candidats sont l'aplat
+local et le guide spatial31×31 observé ; le guide propre et le même résidu
+noir sont uniquement des diagnostics privilégiés, pas des candidats déployables.
+
+`transport_batch.py` transporte au plus huit fenêtres dans un sous-processus,
+sans parallélisme imbriqué, avec délai maximal60s et libération par
+`subprocess.run`. La sonde partage la même fonction scalaire ; `transportBatchParity`
+et les empreintes de la campagne vérifient les sorties pixel à pixel.
+
+La séparation « commun/variable » est CONDITIONNELLE à un unique résidu
+noir réutilisé entre simulations. La composante commune n'est pas une preuve
+de FPN du capteur : elle contient aussi cette réalisation de bruit de lecture
+figée et le biais moyen non linéaire. L'écart-type Monte-Carlo ne mesure pas
+l'incertitude de caractérisation, de boîtier, de session ou de scène réelle.
+`audit_spatial_budget.py <preuve>` applique les critères figés avant calcul,
+expose les erreurs par motif/ISO/distribution et garde les biais restants.
+Pas de retouche des seuils après échec ; six tests dans `test_spatial_budget.py`.
+
+`spectral_read_model.py` forme une densité spectrale croisée4×4 à partir de
+trois noirs physiques par ISO et trois tuiles chacun. Shape stationnaire
+gaussienne, constante par phase retirée, amplitudes b temporelles du catalogue ;
+pas d'identification du FPN ou des pixels chauds. Neuf tuiles ne sont pas neuf
+acquisitions indépendantes. Seul l'arrondi négatif des valeurs propres dans
+une tolérance déclarée est corrigé ; le reste échoue.
+
+`study_spectral_budget.py --help` distingue strictement simulation interne
+et rejeu fondé sur les deux noirs de contrôle réels par ISO (signal simulé).
+32 tirages indépendants de lecture gaussienne dans le premier domaine ;
+deux photos réutilisées dans le second. Les anciens contrôles ont été vus,
+pas de déclaration d'indépendance physique. Les mêmes critères figés sont
+appliqués séparément par domaine ; un score interne favorable ne masque
+jamais l'autre. `audit_spectral_budget.py <preuve>` recalcule mesures/critères
+à partir des covariances par réalisation, contrôle la grille et les effectifs.
+Rapport§§50–51, aucun moteur ou rendu photographique modifié.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

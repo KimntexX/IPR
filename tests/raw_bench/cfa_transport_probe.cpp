@@ -30,6 +30,24 @@ QJsonObject transport(const cv::Mat &mosaic, const Demosaic::Pattern &pattern)
     return {{"before_median",pixels(before)}, {"after_median",pixels(after)},
         {"shape",QJsonArray{256,256,3}}, {"dtype","f32_le"}, {"workers",Demosaic::workerThreads()}};
 }
+
+QJsonObject request(const QJsonObject &object)
+{
+    const auto bytes=QByteArray::fromBase64(object.value("cfa").toString().toLatin1(),QByteArray::AbortOnBase64DecodingErrors);
+    require(bytes.size()==256*256*4,"Wrong CFA size");
+    cv::Mat input(256,256,CV_32F);
+    std::memcpy(input.data,bytes.constData(),std::size_t(bytes.size()));
+    require(cv::checkRange(input),"Nonfinite CFA");
+    const auto value=object.value("pattern").toArray();
+    require(value.size()==2 && value[0].toArray().size()==2 && value[1].toArray().size()==2,"Wrong pattern");
+    Demosaic::Pattern pattern;
+    for (int y=0;y<2;++y) for(int x=0;x<2;++x) {
+        const int colour=value[y].toArray()[x].toInt(-1);
+        require(colour>=0 && colour<=2,"Unknown CFA colour");
+        pattern[std::size_t(y)][std::size_t(x)]=colour;
+    }
+    return transport(input,pattern);
+}
 }
 
 int main(int argc,char **argv)
@@ -56,20 +74,18 @@ int main(int argc,char **argv)
         QJsonParseError error;
         const auto document=QJsonDocument::fromJson(QByteArray::fromStdString(line),&error);
         require(error.error==QJsonParseError::NoError && document.isObject(),"Invalid JSON");
-        const auto bytes=QByteArray::fromBase64(document.object().value("cfa").toString().toLatin1(),QByteArray::AbortOnBase64DecodingErrors);
-        require(bytes.size()==256*256*4,"Wrong CFA size");
-        cv::Mat input(256,256,CV_32F);
-        std::memcpy(input.data,bytes.constData(),std::size_t(bytes.size()));
-        require(cv::checkRange(input),"Nonfinite CFA");
-        const auto value=document.object().value("pattern").toArray();
-        require(value.size()==2 && value[0].toArray().size()==2 && value[1].toArray().size()==2,"Wrong pattern");
-        Demosaic::Pattern pattern;
-        for (int y=0;y<2;++y) for(int x=0;x<2;++x) {
-            const int colour=value[y].toArray()[x].toInt(-1);
-            require(colour>=0 && colour<=2,"Unknown CFA colour");
-            pattern[std::size_t(y)][std::size_t(x)]=colour;
+        if(document.object().contains("batch")) {
+            const auto batch=document.object().value("batch").toArray();
+            require(!batch.isEmpty()&&batch.size()<=8,"Batch must have 1..8 inputs");
+            QJsonArray output;
+            for(const auto &item:batch) {
+                require(item.isObject(),"Invalid batch item");
+                output.append(request(item.toObject()));
+            }
+            std::cout<<QJsonDocument(output).toJson(QJsonDocument::Compact).constData()<<'\n';
+        } else {
+            std::cout<<QJsonDocument(request(document.object())).toJson(QJsonDocument::Compact).constData()<<'\n';
         }
-        std::cout<<QJsonDocument(transport(input,pattern)).toJson(QJsonDocument::Compact).constData()<<'\n';
     } catch(const std::exception &e) { std::cerr<<e.what()<<'\n';return 1; }
     return 0;
 }
