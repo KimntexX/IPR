@@ -315,6 +315,16 @@ Six tests : `python -m unittest discover -s tests/raw_bench -p test_dark_mean.py
 masque sélectionné sur un bruit corrélé ; ne pas en déduire une attribution
 quantitative du défaut réel. Aucun de ces outils ne change la production.
 
+`audit_dark_mean.py --coarse-cells` remplace la sélection pixel par pixel par
+des cellules complètes128×128 de moyenneLR<25, en incluant tous leurs pixels.
+Le masque fin est vérifié pour la provenance seulement ; les mesures portent
+sur l'union des cellules et sur chaque rectangle. Sans cellule admissible,
+la scène est marquée non mesurée, sans changer la taille ni le seuil.
+`compare_coarse_lr.py --help` relit les références LR existantes sur ces mêmes
+cellules (neutre,75/0/0,100/100/0), avec vérification des empreintes, sans
+nouveau rendu IPR. Ces cellules issues du même RAW ne sont pas une référence
+indépendante. Neuf tests masques/coordonnées sont disponibles.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

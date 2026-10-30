@@ -47,6 +47,25 @@ def frozen_dark_mask(reference, scene):
     return mask, checksum
 
 
+def coarse_dark_cells(reference, scene):
+    area=scene['masks']['common_area']
+    x,y=area['lr_origin_xy'];width,height=area['size_wh']
+    ix,iy=area['ipr_origin_xy']
+    ipr_width,ipr_height=scene['alignment']['ipr_size_wh']
+    mask=np.zeros((ipr_height,ipr_width),np.uint8)
+    cells=[]
+    for row in range(0,height-127,128):
+        for col in range(0,width-127,128):
+            bgr=reference[y+row:y+row+128,x+col:x+col+128,:3].astype(np.float32)/257.
+            luma=.2126*bgr[...,2]+.7152*bgr[...,1]+.0722*bgr[...,0]
+            mean=float(luma.mean())
+            if mean<25:
+                rect=[ix+col,iy+row,128,128]
+                mask[rect[1]:rect[1]+128,rect[0]:rect[0]+128]=1
+                cells.append(dict(camera_roi=rect,lr_mean_luma=mean))
+    return mask,cells
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--tool', type=Path, required=True)
@@ -54,6 +73,7 @@ def main():
     p.add_argument('--profile-root', type=Path, required=True)
     p.add_argument('--reference-proof', type=Path, required=True)
     p.add_argument('--runtime-dir', type=Path, action='append', required=True)
+    p.add_argument('--coarse-cells', action='store_true', help='All pixels of fixed 128px cells with Lightroom mean luma <25; no pixel threshold.')
     args = p.parse_args()
     root = Path(__file__).resolve().parents[2]
     reference = json.loads(args.reference_proof.read_text(encoding='utf-8'))
@@ -64,7 +84,7 @@ def main():
     names = ['tests/raw_bench/audit_dark_mean.py', 'tests/raw_bench/camera_denoise_leakage.cpp',
              'src/raw/CameraDenoise.h', 'src/raw/CameraDenoise.cpp',
              'src/profiles/CameraProfileEngine.cpp', 'src/core/WorkingColorSpace.h']
-    proof = dict(schema_version=1, created_utc=stamp, study='fixed_dark_mask_mean_audit',
+    proof = dict(schema_version=1, created_utc=stamp, study='coarse_dark_cells_mean_audit' if args.coarse_cells else 'fixed_dark_mask_mean_audit',
                  revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),
                  reference_proof_sha256=sha256(args.reference_proof), tool_sha256=sha256(args.tool),
                  sources={v: dict(sha256=sha256(root/v)) for v in names},
@@ -86,7 +106,20 @@ def main():
                 proof['scenes'].append(record)
                 if sha256(lr) != scene['lr_neutral']['sha256'] or sha256(raw) != scene['raw']['sha256']:
                     raise ValueError(f'{name}: RAW/LR hash mismatch')
-                mask, packed_hash = frozen_dark_mask(cv2.imread(str(lr), cv2.IMREAD_UNCHANGED), scene)
+                reference_image=cv2.imread(str(lr), cv2.IMREAD_UNCHANGED)
+                mask, packed_hash = frozen_dark_mask(reference_image, scene)
+                rectangles_path=None
+                if args.coarse_cells:
+                    mask, cells=coarse_dark_cells(reference_image, scene)
+                    if not cells:
+                        record.update(status='no_complete_128px_dark_cells',mask_packed_sha256=packed_hash)
+                        del reference_image,mask
+                        print(name,'no complete dark cells; no retuning',flush=True)
+                        continue
+                    rectangles_path=Path(scratch)/f'{name}-cells.json'
+                    rectangles_path.write_text(json.dumps([c['camera_roi'] for c in cells]),encoding='utf-8')
+                    record.update(cells=cells, cell_selection='Complete nonoverlapping 128x128 cells from common-area origin; LR mean luma<25; all cell pixels; partial edge cells excluded')
+                del reference_image
                 mask_path = Path(scratch)/f'{name}.bin'
                 mask.tofile(mask_path)
                 record.update(mask_packed_sha256=packed_hash, mask_bytes_sha256=sha256(mask_path),
@@ -96,6 +129,8 @@ def main():
                            '--manifest', str(root/'config/raw-normalization.json'),
                            '--profile-root', str(args.profile_root.resolve()), '--label', 'fixed-dark-mean',
                            '--mean-audit', '--dark-mask', str(mask_path)]
+                if rectangles_path is not None:
+                    command.extend(['--cell-rects',str(rectangles_path)])
                 result = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True,
                                         encoding='utf-8', errors='replace', timeout=180)
                 record.update(argv=command, returncode=result.returncode, stderr=result.stderr)
@@ -110,7 +145,10 @@ def main():
         proof['error'] = f'{type(exc).__name__}: {exc}'
         failed = True
     proof['verdict'] = 'fail' if failed else 'measured_not_quality_validation'
-    output = root/'docs/validation/raw'/f'camera-denoise-fixed-dark-mean-v001-{stamp}.json'
+    study='coarse-dark-cells' if args.coarse_cells else 'fixed-dark-mean'
+    if args.coarse_cells:
+        proof['limits'][0]='Coarse cells selected from mean Lightroom luma of the same RAW, not statistically independent; fine mask verified but not used for measurement.'
+    output = root/'docs/validation/raw'/f'camera-denoise-{study}-v001-{stamp}.json'
     with output.open('x', encoding='utf-8') as handle:
         json.dump(proof, handle, ensure_ascii=False, indent=2, allow_nan=False)
     print(output, proof['verdict'], proof.get('error', ''), flush=True)

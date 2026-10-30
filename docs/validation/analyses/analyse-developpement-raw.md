@@ -2,12 +2,12 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§34) : hausses des noirs reproduites sur les trois masques
-Lightroom exacts. La moyenne monte déjà localement en caméra, pas globalement ;
-l'arrondi final n'est pas la cause principale. Un contrôle montre qu'un masque
-sélectionné sur le bruit peut faire monter sa moyenne même avec un oracle
-parfait. Attribution de ce biais sur les photos réelles encore ouverte.
-**Pas de correction automatique ni de nouveau filtre validé.** D0 reste à Claude.
+Dernier jalon (§35) : sur les cellules complètes de7599, IPR s'assombrit au
+lieu de monter comme dans le masque fin ; Lightroom s'assombrit également.
+9153 varie peu ;3135 n'a aucune cellule admissible. Les+3 niveaux ne suffisent
+donc pas à établir une surexposition du filtre. **Pas de compensation des noirs
+ni de nouveau filtre validé.** Reprendre la piste CFA plutôt qu'ajuster le DC
+sur ces seuls masques ; D0 reste à Claude.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1998,6 +1998,110 @@ isolé du banc, jamais en changeant silencieusement le moteur de Claude.
 La comparaison CFA/VST reste l'étape algorithmique suivante, mais aucune
 VST n'est retenue sur la seule baisse des niveaux du masque sombre.
 
+## 35. Cellules complètes et contrôle Lightroom — 30 octobre 2026
+
+### 35.1. Épreuve fixée avant mesure
+
+Même source moteur, même filtre pleine image100/100, mêmes trois RAW et
+même référence de provenance qu'en§34. Nouvelle sélection : grille128×128
+ancrée à l'origine du crop commun Lightroom. Une cellule complète est retenue
+si sa **moyenne Lightroom neutre** est inférieure à25 niveaux. Tous ses
+pixels sont alors inclus, même ceux individuellement au-dessus de25.
+Pas de sélection sur les résultats IPR, pas de filtre de gradient, pas de
+recherche de taille/seuil après lecture des résultats. Cellules partielles
+du bord exclues ; une scène sans cellule ne déclenche pas de retouche du protocole.
+
+Le masque fin historique est d'abord reconstruit et vérifié par empreinte,
+mais il ne sert plus à la mesure. Dans cette preuve, son empreinte reste
+le champ `mask_packed_sha256` de provenance ; les octets du **nouveau** masque
+union des cellules ont leur propre `mask_bytes_sha256`, vérifié côté natif.
+Le filtrage reste plein cadre, puis les moments et le rendu pointwise sont
+mesurés sur l'union et sur chaque cellule. Disposition vérifiée avec erreur0.
+Neuf tests de sélection/coordonnées passent ; sonde C++ compilée avec succès.
+
+[Preuve IPR par cellule](../raw/camera-denoise-coarse-dark-cells-v001-20261030T121723Z.json) :
+223 cellules pour7599, une pour9153, **aucune pourIMG_3135**. Cette dernière
+n'est pas mesurée par cette sélection ; ne pas inventer un résultat nul.
+Les coordonnées, moyennes Lightroom de sélection, moments caméra/rendu et
+résultats de chaque cellule sont conservés, pas seulement la moyenne finale.
+
+### 35.2. La hausse disparaît, mais la couverture change
+
+| Scène | Cellules / pixels | Luma affichée IPR avant → après | Variation | Variation dans l'ancien masque fin |
+| --- | --- | --- | ---: | ---: |
+| 7599 | 223 / 3653632 | 20,012 → 11,633 | −8,378 | +3,470 |
+| 9153 | 1 / 16384 | 23,875 → 24,093 | +0,218 | +3,457 |
+| IMG_3135 | 0 / 0 | non mesurée | — | +2,728 |
+
+Sur7599, les223 cellules s'assombrissent toutes : variations−9,853 à−5,260,
+médiane−8,580. La moyenne agrégée n'annule donc pas des hausses opposées.
+Sur9153, une seule cellule à6528/0 est admissible : couverture très faible,
+aucune généralisation à l'image entière. Les cellules ne recouvrent pas
+exactement les pixels du masque fin ; la différence des deux tableaux n'est
+**pas** une quantification causale du seul biais de seuil.
+
+Dans les cellules de7599, ΔRGB caméra vaut environ+0,0000864 /+0,0000096
+/−0,0000580, contre+0,008142 /+0,007285 /+0,005802 dans le masque fin.
+Le DC local caméra varie donc bien moins. Pourtant la moyenne Y Rec.2020
+rendue passe de0,013174 à0,004570, et la luma encodée signée de19,602 à11,632.
+La baisse existe déjà avant la borne finale et l'arrondi ; ce n'est pas
+seulement un effet de gamma d'affichage. Les distributions changent sous un
+rendu DCP non linéaire : leurs moyennes caméra ne suffisent pas à prédire
+la moyenne rendue. Cela n'isole pas les tables, la courbe ou les bornes internes.
+
+### 35.3. Même géométrie sur les exports Lightroom existants
+
+Sans nouveau rendu IPR, `compare_coarse_lr.py` relit les TIFF neutres,75/0/0
+et100/100/0 de la preuve historique, vérifie leurs empreintes puis mesure
+les mêmes coordonnées translatées, sans redimensionnement. Toutes les
+références demandées sont présentes et leurs empreintes correspondent.
+[Preuve Lightroom](../raw/camera-denoise-coarse-lr-means-v001-20261030T122059Z.json).
+
+| Scène | LR neutre | LR75/0/0 | LR100/100/0 | IPR neutre | IPR100/100 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 7599 | 19,330 | 15,307 | 9,371 | 20,012 | 11,633 |
+| 9153 | 23,806 | 23,741 | 23,674 | 23,875 | 24,093 |
+
+Unités0..255 : LR conserve les valeurs TIFF16bits/257, IPR est borné et
+arrondi par canal en8bits. Cette différence est explicitée, pas assimilée
+à une différence de signal linéaire. Les couples100/100 n'ont pas une force
+équivalente garantie. L'objectif n'est pas de régler IPR pour copier ces
+valeurs de moyenne ni d'effacer toutes les textures comme un export LR fort.
+
+LR s'assombrit également sur ces mêmes cellules de7599 : environ−4,023
+niveaux à75/0/0 et−9,958 à100/100/0. Ce comportement n'est donc pas propre
+au filtre IPR. LR n'est toutefois ni un oracle propre ni une preuve que
+l'assombrissement absolu d'IPR soit optimal. Sur9153, les écarts sont petits,
+avec les limites de couverture d'une seule cellule.
+
+### 35.4. Interprétation et décision pour éviter une fausse correction
+
+L'hypothèse d'une **hausse systématique des noirs** ne résiste pas à ce
+changement d'observation : elle dépend fortement des pixels retenus. Le
+contrôle d'oracle de§34 expliquait un mécanisme possible de sélection ; la
+mesure réelle ici est cohérente avec cette réserve, sans en attribuer
+quantitativement toutes les causes. Les cellules restent choisies sur le
+même RAW, donc pas statistiquement indépendantes ni une vérité photométrique.
+
+**Ne pas corriger le DC sur la base des+3 niveaux du masque fin.** Une telle
+compensation pourrait assombrir davantage des régions déjà assombries.
+Ne pas non plus ajouter un gain pour annuler automatiquement les−8 niveaux
+des cellules : LR présente un comportement comparable, et le signal propre
+reste inconnu. Le rééquilibrage DC global n'a pas été ablaté ; aucune
+conclusion de responsabilité ou d'innocence de ce composant seul.
+
+Cette branche de diagnostic peut être mise en attente faute de référence
+indépendante, sans multiplier les seuils/cellules pour obtenir un résultat
+préféré. La prochaine cible algorithmique utile reste **la mesure CFA et
+la comparaison avant/après dématriçage**, en commençant par inventorier les
+rafales disponibles. Une référence multi-images doit exclure la prise testée,
+contrôler mouvement/alignement et distinguer bruit temporel et motif fixe.
+Pas besoin de nouvelles photos avant cet inventaire.
+
+D0 est suivi par Claude : les preuves actuelles sont pré-D0 et ne doivent
+pas servir à déclarer son futur rendu équivalent. Aucun changement moteur,
+force, DCP, profil ou IHM, aucune intégration ni publication dans cette étape.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -2043,3 +2147,7 @@ VST n'est retenue sur la seule baisse des niveaux du masque sombre.
   des régions géométriques/références indépendantes avant correction.
   CFA/VST et auto-similarité cadrés,
   réutilisation tierce non juridiquement qualifiée. Aucun nouveau filtre promu.
+- Cellules complètes et références LR mesurées (§35) :7599 s'assombrit dans
+  toutes les223 cellules sélectionnées, LR également ;9153 varie peu et3135
+  n'a pas de cellule admissible. Pas de compensation DC justifiée. Reprendre
+  l'inventaire CFA/rafales plutôt que retoucher les seuils de ce diagnostic.

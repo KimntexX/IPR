@@ -254,6 +254,7 @@ int main(int argc,char **argv)
     p.addOption(QCommandLineOption("signal-survey","Survey balanced coefficient MAD and actual full-frame models; no image export"));
     p.addOption(QCommandLineOption("mean-audit","Audit full-frame 100/100 filtering, local/global camera means and rendered patch means"));
     p.addOption(QCommandLineOption("dark-mask","Bench-only full camera-size uint8 mask, bytes 0/1","path"));
+    p.addOption(QCommandLineOption("cell-rects","Bench-only JSON array of camera rectangles","path"));
     p.process(app);
     try {
         for(const auto *key:{"input","manifest","profile-root","label"})require(p.isSet(key),"Missing argument");
@@ -289,6 +290,24 @@ int main(int argc,char **argv)
                 const auto direct=render(full,check),packed=render(full,check.reshape(3,1));
                 const double layoutError=cv::norm(direct.reshape(3,1),packed,cv::NORM_INF);
                 require(layoutError<=1e-6,"DCP packing changes rendering");
+                QJsonArray cells;
+                if(p.isSet("cell-rects")) {
+                    QFile rectangles(p.value("cell-rects"));require(rectangles.open(QIODevice::ReadOnly),"Cannot open cell rectangles");
+                    const auto document=QJsonDocument::fromJson(rectangles.readAll());
+                    require(document.isArray()&&document.array().size()<=4096,"Invalid cell array");
+                    for(const auto &item:document.array()) {
+                        require(item.isArray()&&item.toArray().size()==4,"Invalid cell rectangle");
+                        const auto a=item.toArray();const int x=a[0].toInt(-1),y=a[1].toInt(-1),w=a[2].toInt(-1),h=a[3].toInt(-1);
+                        require(x>=0&&y>=0&&w>0&&h>0&&x<full.cameraRgb.cols&&y<full.cameraRgb.rows&&
+                            w<=full.cameraRgb.cols-x&&h<=full.cameraRgb.rows-y,"Cell outside camera image");
+                        const cv::Rect cell(x,y,w,h);
+                        cells.append(QJsonObject{{"camera_roi",a},
+                            {"B0_camera",cameraMoments(full.cameraRgb(cell))},
+                            {"B100_camera",cameraMoments(filtered(cell))},
+                            {"B0_rendered",renderedMoments(render(full,full.cameraRgb(cell)))},
+                            {"B100_rendered",renderedMoments(render(full,filtered(cell)))}});
+                    }
+                }
                 const QJsonObject result{{"created_utc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
                     {"label",p.value("label")},{"source",p.value("input")},{"source_sha256",hash(p.value("input"))},
                     {"manifest_sha256",hash(p.value("manifest"))},{"profile_sha256",hash(full.profilePath)},
@@ -303,6 +322,7 @@ int main(int argc,char **argv)
                     {"B100_rendered_dark",renderedMoments(render(full,candidate))},
                     {"B100_mean_matched_rendered_dark",renderedMoments(render(full,matched))},
                     {"mean_matching_shift_rgb",QJsonArray{shift[0],shift[1],shift[2]}},
+                    {"cells",cells},
                     {"limits","Full-frame filter; fixed external dark mask; pointwise DCP; mean-matching is a diagnostic counterfactual, not a proposed correction; unchanged DCP; optics off"}};
                 std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\n';return 0;
             }
