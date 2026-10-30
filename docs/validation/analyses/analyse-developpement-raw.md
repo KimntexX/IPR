@@ -2,12 +2,12 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§42) : amplitude externe retirée de l'ajustement, mais l'épreuve
-de détails non périodiques ne permet pas de retenir le nouvel estimateur.
-La texture fine irrégulière reste confondue avec le bruit ; les échellesB3
-exigent aussi une forme de corrélation correcte. Le filtre actuel conserve
-déjà les contours et petites formes propres de ces témoins. Ne pas le
-remplacer sur la seule réussite des sinusoïdes du§41. Production inchangée.
+Dernier jalon (§43) : comparaison à filtre/force identiques, modèle aveugle
+contre modèle estimé sur bruit seul. À1600ISO dans le banc, ce dernier réduit
+fortement l'erreur sur les textures irrégulières ; l'autre noir de la paire
+confirme le résultat. Mais certains contours régressent et le gain disparaît
+au bruit réel51200. Priorité étayée : éviter de gonfler le modèle avec la
+texture, sans imposer un profil constant partout. Aucune intégration.
 **Étude de banc seulement, aucun changement de production.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
@@ -3030,6 +3030,155 @@ de l'ajustement, les plans constants et les priors/dénominateurs invalides.
 Campagne terminée en25,3s, pas budget pleine image ni latence IHM qualifiés.
 Aucun fichier moteur/profil/IHM modifié, pas de push, fusion dev ou tag.
 
+## 43. Même filtre, même force : modèle aveugle contre modèle de bruit seul — 30 octobre 2026
+
+### 43.1. Contrat et parité de la sonde
+
+Comparaison autorisée par l'utilisateur après le§42. Le contrat est écrit
+au journal partagé AVANT code : aucun fichier moteur ou interface publique
+modifié. Une génération mécanique produit, dans le build du banc seulement,
+`CameraDenoise.cpp` courant avec un hook unique après `estimate()` et avant
+la recherche de bruit mesuré. Le filtrage qui suit est inchangé. Le marqueur
+est unique et le générateur échoue si cette frontière change ; pas de copie
+de filtre maintenue manuellement ni de seconde implémentation de production.
+
+Preuves :
+[`gel de comparaison`](../raw/noise-model-ablation-freeze-v001-20261030T141237Z.json),
+[`mesures`](../raw/noise-model-ablation-v001-20261030T141237Z.json).
+Les octets des sources, le source généré complet, les outils et les réglages
+sont identifiés. Le SHA du commentaire d'en-tête généré concerne le texte
+normaliséUTF-8/LF ; l'autre SHA canonique concerne les octets du fichier
+d'origine, dont les fins de ligneCRLF. Ces empreintes ne sont pas censées
+être égales. Aucun fichier de Claude n'est édité dans ce raccord privé.
+
+La sonde instrumentée et la sonde liée au module ORIGINAL partagent le même
+code de mesure. Contrôles terminés :
+
+- 64/64 paires de payloads observé/propre identiques aux entrées du§42 ;
+- 128/128 empreintesSHA256 de sorties complètes identiques en mode aveugle
+  entre les deux modules,64 bruitées et64 propres ;
+- 64/64 identités exactes du témoin propre avec un modèle explicitement nul,
+  malgré la force100/100. Il s'agit d'un contrat, pas du réglage utilisateur0.
+
+Les paramètres ne sont pas retouchés : force100/100, même image, même code
+de filtrage, mêmes marges/portes/bilanDC. La comparaison reste entièrement
+en mémoire, sans exportTIFF. Les images sources de développement et les
+limites du rejeu postRCD achromatique du§42 restent les mêmes.
+
+### 43.2. Ce que signifie ici « bruit connu »
+
+Le bruit réellement ajouté est disponible parce que le signal synthétique
+est connu. La sonde applique le MÊME estimateur MAD/covariance à une entrée
+constante0,03 plus ce bruit seul (`observé−propre+0,03`, arrondisf32 conservés),
+puis fige ses modèles globaux dans le filtre de l'observation complète.
+Ce modèle est débarrassé de la texture synthétique, mais reste une estimation
+robuste : **pas la covariance physique exacte, ni un optimum mathématique**.
+
+Quatre voies sont comparées :
+
+1. Modèle actuel complet, routage conditionnel conservé.
+2. Modèle actuel limité au global (`pooled`) : contrôle de l'effet du routage.
+3. Modèle global capturé sur le même bruit seul : référence privilégiée.
+4. Modèle global capturé sur l'AUTRE noir de la même paire : approximation
+   indépendante de la réalisation injectée, même facteur d'échelle du banc,
+   sans normalisation à la variance de la réponse attendue.
+
+Comparer3 à2 isole mieux la contamination du modèle que comparer seulement3
+à1, qui change aussi son routage. L'indépendance de réalisation de4 ne signifie
+pas indépendance de séance ou de motif fixe du capteur.
+
+Les témoins propres reçoivent aussi le même modèle externe NON NUL que les
+observations bruitées : c'est un stress de transfert du détail à budget fixé,
+pas un cas réellement sans bruit qui devrait recevoir ce prior. Le contrat
+de modèle nul reste distinct. Les résumés de l'observateur sont émis AVANT
+le hook ; le modèle effectivement rejoué est le global du run de capture
+nommé dans les mesures, pas le résumé aveugle du run après substitution.
+
+### 43.3. Résultat1600 : contamination de l'estimation effectivement limitante
+
+Au bruit du pilote1600, médianes des deux directions ; erreurRGB au signal
+connu, ratio au module actuel complet. Un ratio<1 signifie une erreur moindre :
+
+| Motif | Modèle du même bruit seul / actuel | Modèle de l'autre noir / actuel | Gain propre actuel | Gain propre au budget du même bruit |
+| --- | ---: | ---: | ---: | ---: |
+| Aplat | 0,983 | 0,981 | — | — |
+| Texture irrégulière fine | 0,107 | 0,107 | 0,232 | 0,945 |
+| Texture irrégulière grossière | 0,265 | 0,265 | 0,704 | 0,927 |
+| Sinusoïde | 0,312 | 0,311 | 0,377 | 0,838 |
+| Contour nouveau | 1,040 | 1,038 | 1,000 | 0,993 |
+| Ligne unique | 1,024 | 1,022 | 1,000 | 0,948 |
+| Petite tache | 0,985 | 0,982 | 1,000 | 0,859 |
+| Contour déjà rencontré | 1,130 | 1,127 | 1,000 | 0,993 |
+
+Sur la texture fine, le gain d'erreur n'est pas expliqué par le seul passage
+au global : modèle aveugle global / actuel≈0,998, puis modèle du bruit seul /
+aveugle global≈0,107. Pour la texture grossière, ces rapports valent1,098
+puis0,241 ; pour la sinusoïde1,444 puis0,216. Le routage actuel protège donc
+déjà certains cas mieux que le global aveugle, sans éliminer la contamination.
+
+Exemple texture fine, première direction1600 : σI global aveugle par échelle
+commence à0,000839,0,000583,0,000319. Sur le même bruit seul :0,000237,
+0,000107,0,0000507 ; sur l'autre noir :0,000235,0,000106,0,0000513.
+La proximité des deux profils de bruit seul est mesurée, pas obtenue par
+recalage sur la réponse attendue. Les différences de modèle peuvent donc
+expliquer une part importante de la perte de texture dans ce banc.
+
+**Point concret : le filtre actuel est capable de bien mieux conserver ces
+textures si son modèle n'absorbe pas leur énergie.** Le prior externe réduit
+l'erreur fine d'environ89 % dans ces deux cas1600, mais ce n'est pas un gain
+mesuré sur des photos ni une preuve de meilleure esthétique. Il ne justifie
+pas de supprimer le routage conditionnel ni de réduire toute force globalement.
+
+### 43.4. Limites : contours, fort bruit et égalisation
+
+Les contours et la ligne peuvent régresser, jusqu'à environ13 % de MSE
+relative sur le contour déjà rencontré. Le modèle constant de bruit seul
+n'est donc pas un remplacement universel. Une petite variation absolue dans
+un cas déjà bien traité peut produire un ratio non négligeable ; conserver
+les MSE absolues par cas dans le JSON, pas seulement ces rapports.
+
+Au bruit réel du pilote51200, le modèle du même bruit seul / actuel vaut
+environ1,039 pour la texture fine,1,034 pour la grossière et1,029 pour la
+sinusoïde. Le détail y est très faible devant le bruit : un modèle moins
+contaminé n'assure pas une amélioration du filtre dans ce régime. Ne pas
+confondre résolution d'un biais d'estimation et récupération d'information.
+
+À amplitude égale0,002, les résultats sont mixtes : modèle du même bruit seul /
+actuel, texture fine1,057 sur le résidu1600 contre0,897 sur celui51200 ;
+texture grossière0,927 contre0,842. Le contour déjà rencontré régresse
+d'environ5–6 % dans les deux cas. Cela confirme la nécessité de qualifier
+la forme du bruit et le compromis de filtrage, pas de choisir un coefficient
+ISO qui reproduirait une seule ligne du tableau.
+
+Les quatre noirs, les motifs et leurs deux directions sont déjà du
+développement. L'autre noir n'est pas une nouvelle validation indépendante.
+Le profil ne modélise ni le bruit photonique à toutes luminosités, ni tous
+les gainsBdB, ni la covariance d'un nouveau boîtier aprèsRCD. Le transporter
+tel quel à une photo claire ou à un autre appareil serait injustifié.
+
+### 43.5. Décision et suite
+
+La comparaison confirme la priorité : **empêcher la texture de gonfler le
+modèle de bruit**, plutôt que remplacer d'abord tout le filtre. Ne pas
+intégrer le modèle global de ces noirs dans la production. Les voies de
+bruit seul restent une borne expérimentale, pas une option utilisateur.
+
+Prochaine préparation utile : un modèle de bruit caractérisé et dépendant
+du signal, puis sa propagation/qualification jusqu'aux coefficients du
+débruitage. Utiliser d'abord les prises noires/éclairées de développement
+déjà disponibles et auditer ce qu'elles permettent effectivement ; ne pas
+inventer les paramètres manquants. Garder les contrôles de textures, contours,
+noirs et routage conditionnel. L'objectif n'est pas seulement unσ exact,
+mais une amélioration sur l'image à force identique sans sacrifier les cas
+actuellement conservés. Toute interface moteur déployable sera séparément
+convenue avec Claude ; aucun changement moteur n'est demandé par ce jalon.
+
+Quatre contrats Python du générateur/payloads/réducteur passent. Campagne
+terminée en127,4s,832 appels au module en incluant captures, témoins et
+parités ; ce n'est pas un budget de rendu applicatif. Aucun filtre de
+production, profil, interface publique ou IHM modifié, pas de publication,
+fusion dev ou tag. Pas de nouvelle photo requise pour cette comparaison.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -3116,3 +3265,9 @@ Aucun fichier moteur/profil/IHM modifié, pas de push, fusion dev ou tag.
   dépendance à la corrélation aux grandes échelles. Préparer une comparaison
   à modèle de bruit connu pour isoler estimation et filtrage, sans promettre
   un oracle exploitable ni intégrer de nouveau veto de texture.
+- Comparaison à filtre/force identiques terminée (§43), parité instrumentée
+  contrôlée sur128 sorties. Modèle bruit seul : forte amélioration des textures
+  à1600, confirmée avec l'autre noir ; pas de gain au fort bruit51200 et
+  régressions de contours. Estimation mieux ancrée prioritaire, mais pas
+  de remplacement global prêt. Suite : caractérisation dépendante du signal
+  et qualification de propagation/routage avant toute interface de production.

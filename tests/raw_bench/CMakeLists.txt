@@ -67,6 +67,19 @@ target_link_libraries(structureBaselineProbe PRIVATE Qt6::Core ${OpenCV_LIBS} Th
 add_test(NAME structureAmplitudeFreeContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_structure_amplitude_free.py)
 set_tests_properties(structureAmplitudeFreeContract PROPERTIES TIMEOUT 30)
+set(IPR_ORACLE_SOURCE "${CMAKE_CURRENT_BINARY_DIR}/oracle-generated/CameraDenoiseOracle.cpp")
+add_custom_command(OUTPUT "${IPR_ORACLE_SOURCE}"
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/generate_noise_oracle.py"
+        --source "${IPR_ROOT}/src/raw/CameraDenoise.cpp" --output "${IPR_ORACLE_SOURCE}"
+    DEPENDS "${IPR_ROOT}/src/raw/CameraDenoise.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/generate_noise_oracle.py"
+    VERBATIM)
+add_executable(structureOracleProbe structure_baseline_probe.cpp noise_bench_control.cpp "${IPR_ORACLE_SOURCE}")
+target_compile_definitions(structureOracleProbe PRIVATE IPR_BENCH_ORACLE=1)
+target_include_directories(structureOracleProbe PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}" "${IPR_ROOT}/src/raw" ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(structureOracleProbe PRIVATE Qt6::Core ${OpenCV_LIBS} Threads::Threads)
+add_test(NAME noiseModelAblationContract COMMAND "${Python3_EXECUTABLE}" -m unittest discover
+    -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_noise_model_ablation.py)
+set_tests_properties(noiseModelAblationContract PROPERTIES TIMEOUT 30)
 set(IPR_RAW_SOURCE_ROOT "${IPR_ROOT}" CACHE PATH "Frozen engine source for module capture")
 set(IPR_RAW_ENGINE_REVISION "" CACHE STRING "Explicit revision of an archived engine; empty uses worktree HEAD")
 if(NOT IPR_RAW_ENGINE_REVISION)

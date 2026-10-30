@@ -411,6 +411,27 @@ au contrôle. Les σ globaux observés ne sont pas le routage conditionnel exact
 par pixel. Six tests : `python -m unittest discover -s tests/raw_bench
 -p test_structure_amplitude_free.py`. Résultat et limites au rapport§42.
 
+`study_noise_model_ablation.py --help` reprend exactement les64 entrées de
+l'épreuve précédente. Le générateur `generate_noise_oracle.py` produit dans
+`oracle-generated/` du build le source moteur courant plus UN hook après
+estimation ; la source moteur n'est pas éditée. La cible `structureOracleProbe`
+partage le même code de sonde que `structureBaselineProbe`, sans second filtre
+maintenu. Le marqueur unique est vérifié avant génération ; toute dérive échoue.
+
+Comparaison100/100 : modèle normal, même modèle limité au pooled, puis pooled
+estimé sur bruit seul connu ou sur l'autre noir. Le dernier n'est pas normalisé
+à l'amplitude de la réponse attendue. Les sorties aveugles instrumentées doivent
+être identiques pixel à pixel aux sorties du module original ; le modèle nul
+doit préserver exactement le témoin propre. L'observateur est appelé AVANT
+le hook : ses résumés ne décrivent pas le modèle externe appliqué ; celui-ci
+provient du run de capture de bruit seul correspondant. Les témoins propres
+au prior non nul sont des stress de transfert, pas des entrées réellement
+sans bruit qui devraient recevoir ce même prior. Quatre tests de contrat :
+`python -m unittest discover -s tests/raw_bench -p test_noise_model_ablation.py`.
+La preuve canonique conserve l'empreinte des octets originaux et le source
+généré ; le SHA de son commentaire d'en-tête porte sur le texte normaliséLF,
+pas sur les octetsCRLF du fichier d'origine. Résultats et limites au rapport§43.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,
