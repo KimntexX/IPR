@@ -2,12 +2,12 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§37) : piste Jensen vérifiée sur les populations déjà mesurées,
-sans refaire le débruitage. Dans le masque fin, la hausse dépend surtout du
-déplacement des moyennes caméra ; l'effet de distribution du rendu complet
-la réduit en luma encodée. Une concavité scalaire n'explique donc pas seule
-ce constat. Claude a raccordé la barre et confirmé D0 sans changer le code DCP.
-**Pas de nouveau filtre ni de compensation photométrique validé.**
+Dernier jalon (§38) : premier préfiltre CFA testé sur32 cas à signal connu
+et bruit réel de noirs. Wiener local simple non retenu : erreur médiane
+supérieure au traitement courant et perte de détails. La combinaison réduit
+plus l'erreur mais ne passe pas la protection des motifs propres. Cible
+identifiée : protection des structures faibles, pas renforcement aveugle.
+**Étude de banc seulement, aucun changement de production.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -2347,6 +2347,152 @@ images pour choisir un correctif. Une attribution composant par composant
 demanderait une ablation séparée, seulement si un défaut photométrique est
 confirmé par une référence indépendante. Aucun moteur, profil ou IHM modifié.
 
+## 38. Premier prototype CFA à signal connu — 30 octobre 2026
+
+### 38.1. Gel, entrées et ce que l'étude peut montrer
+
+À la demande de l'utilisateur, premier prototype de filtrage **avant** RCD,
+pas une nouvelle PTC ou un rejeu du transport historique. Pas d'intervention
+de Claude nécessaire à cette étape : ses fichiers et le moteur restent
+inchangés ; seules les interfaces existantes de RCD et CameraDenoise sont
+appelées dans un exécutable de banc.
+
+[Gel avant mesures](../raw/cfa-denoise-prototype-freeze-v001-20261030T125927Z.json),
+[résultats canoniques](../raw/cfa-denoise-prototype-v001-20261030T125927Z.json).
+Réutilisation des captures authentifiées§36, pas de nouvelle lecture RAW :
+noirs de développement0003/0004 àISO1600 et9950/9951 àISO51200. ROI centrale
+256×256 parmi les trois ROI déjà définies. Les14 vues scellées restent fermées.
+Sources, recette, binaire, parents et empreintes sont conservés ; le gel
+inclut le texte du prototype et les sources des modules appelés.
+
+Signal synthétique RGB caméra équilibré connu, échantillonné selon le vrai
+motif Bayer du crop ; G1/G2 restent séparés au filtrage. Résidu noir soustrait
+2048DN, divisé par14335 et multiplié par les gains déclarés (§36), **ajouté
+sans recentrage ni permutation**. Les offsets, valeurs extrêmes et structures
+fixes du résidu sont donc conservés, pas masqués par une simulation iid.
+
+Deux niveaux moyens0,005 et0,03, quatre motifs : aplat, texture achromatique
+sinusoïdale faible, bord chromatique et ligne achromatique de deux pixels.
+Deux ISO, deux directions de paire :32 cas. La variance de bruit est estimée
+sur **l'autre prise noire de développement**, jamais sur la vérité synthétique.
+Ce prior externe est privilégié par rapport à l'estimation aveugle du traitement
+courant : comparer ces méthodes ne permet pas d'isoler le seul placement.
+
+Limites importantes : bruit de lecture seulement, pas de contribution
+photonique ni de VST ; offsets d'un noir expérimental, pas une calibration
+physique nouvelle ; petits crops, une scène synthétique par motif, un boîtier,
+pas de validation indépendante. Le vraiRGB synthétique reste la cible
+mathématique de l'injection, pas une vérité radiométrique du boîtier.
+
+### 38.2. Préfiltre original et branches comparées
+
+Le prototype `cfa_denoise_prototype.cpp` implémente un Wiener scalaire local
+par phase, fenêtre3×3 dans le plan de phase (pas de mélange R/G1/G2/B).
+Moyenne locale m, variance locale échantillonnale v=9/8(E[x²]−m²), variance
+du noir externeσ² :
+
+\[
+\widehat{x}=m+\max(0,1-\sigma^2/v)(x-m),
+\]
+
+avec gain nul si v≤σ², identité de la phase siσ²=0. La variance numérique
+est ramenée au minimum0 ; **le signal n'est pas borné**. Calcul local en
+double, sortie flottante32bits signée, bord réfléchi. Les corrélations du
+noir réel limitent l'interprétation d'une variance locale supposée iid.
+
+Référence mathématique de la famille locale :
+[documentation officielle du filtre Wiener SciPy](https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.wiener.html),
+qui renvoie à Jae S. Lim,1990. Aucun code tiers repris, aucune dépendance SciPy
+ajoutée, aucune affirmation de liberté de brevet ou d'identité avec cette
+implémentation. Le prototype est original et limité au banc.
+
+Quatre branches figées : RCD/médiane seuls ; préfiltre CFA puis RCD ;
+RCD puis CameraDenoise100/100 ; préfiltre CFA puis RCD puis CameraDenoise100/100.
+Toujours RCD signé et médiane actuelle. Chaque branche est aussi appliquée
+au motif **sans résidu**, avec le même réglage et, pour le CFA, la même
+variance externe. Ce dernier est un test de réponse structurelle sous prior
+non nul, pas une prétention que le signal propre possède ce bruit.
+
+Mesures sur96×96 centrés, marge80 pixels, pour éloigner les bords : MSE
+contre RGB vrai, erreur contre RCD propre, biaisRGB, erreurs sur intensité
+caméra/chroma et gain projeté sur le motif. L'intensité caméra n'est pas Y
+Rec.2020. RCD propre permet de séparer les artefacts intrinsèques de
+dématriçage ; les erreurs ne sont pas toutes du bruit supprimable.
+
+### 38.3. Critère exploratoire fixé avant les résultats
+
+Poursuivre le préfiltre **inchangé** seulement si les trois conditions sont
+remplies : médiane des MSE pré/post<1 ; au moins la moitié des cas améliorés ;
+gain de chaque motif propre structuré≥95 % du gain de RCD propre. Ce filtre
+de décision conservateur est un critère de poursuite du prototype, pas un
+seuil de conformité universel ou un réglage de force produit.
+
+Cinq contrôles natifs passent : variance nulle=identité, constante signée,
+phases non mélangées, translation du signal et refus d'une variance négative.
+Le test CTest ajouté passe, ainsi que quatre tests Python de la décision
+(bruit/détail, rejet de perte de détail, cas dégradé et gestion des aplats).
+Les huit suites CTest locales du banc passent ensuite, sans lancer la
+suite complète de l'application ni modifier ses exécutables.
+Compilation initiale corrigée pour un includeQDir manquant et une déclaration
+C++ ambiguë, avant toute mesure ; pas de tentative numérique déguisée en succès.
+
+### 38.4. Résultats : le préfiltre simple ne bat pas le traitement courant
+
+Médianes de MSE RGB contre la vérité, rapportées à RCD seul (plus bas=meilleur) :
+
+| ISO | CFA Wiener seul | Post courant100/100 | CFA+post |
+| ---: | ---: | ---: | ---: |
+| 1600 | 0,434 | 0,354 | 0,295 |
+| 51200 | 0,284 | 0,138 | 0,095 |
+
+Les rapports appariés pré/post donnent des médianes1,272 et2,046 ; ce ne
+sont pas des rapports des médianes du tableau. Le préfiltre n'est meilleur
+que dans4/16 cas àISO1600, et0/16 àISO51200. À1600 il gagne notamment sur
+la texture faible (rapport médian0,520), mais pas sur aplats, bords ou lignes.
+Ce succès partiel ne suffit pas à le sélectionner.
+
+Plus petit gain de motif propre, rapporté au RCD propre :
+
+| ISO | CFA seul | Post courant | CFA+post |
+| ---: | ---: | ---: | ---: |
+| 1600 | 0,749 | 0,523 | 0,290 |
+| 51200 | 0,322 | 0,523 | 0,322 |
+
+Le préfiltre atténue la texture faible et, àISO51200, surtout la ligne fine.
+Le bord chromatique reste bien mieux conservé (gain minimal0,982 àISO51200).
+La combinaison abaisse davantage l'erreur totale mais ne franchit pas la
+protection des motifs propres. **Écran de poursuite négatif aux deux ISO.**
+
+Le traitement courant conserve les bords/lignes propres de ce banc, mais
+réduit la projection de texture sinusoïdale à environ52,3 %. Sa variance
+est estimée dans le contenu : le cas est compatible avec une confusion
+texture/bruit. Ce n'est pas une nouvelle régression de production, puisque
+le code n'a pas changé, ni une mesure de perte sur les murs réels. Le cas
+propre reste une sentinelle explicite pour l'étude suivante.
+
+### 38.5. Décision et coopération
+
+**Ne pas intégrer ce Wiener CFA ni sa combinaison.** L'étude ne réfute pas
+le domaine CFA, seulement cette première méthode locale à fenêtre/prior fixés.
+Ne pas chercher a posteriori une fenêtre ou une force qui gagne sur ces32
+motifs. Les motifs et prises désormais consultés sont du développement,
+pas un nouveau jeu de validation.
+
+La prochaine question utile est la protection des structures faibles :
+distinguer signal spatial cohérent et bruit avant de décider la force de
+retrait, avec témoins propres obligatoires. Une variante devra apporter un
+mécanisme différent (guidage/prédiction structurelle qualifiée, par exemple),
+pas simplement augmenterσ. Comparer ensuite à une baseline de prior comparable
+pour ne pas confondre calibration externe et placement avant/aprèsRCD.
+
+Pas de besoin de raccordement moteur pour ce premier jalon ; Claude reçoit
+les résultats au journal. Si un point d'injection ou un observateur moteur
+devient indispensable, demander un contrat séparé avant de modifier ses fichiers.
+Pas de revue visuelle de photo ni budget20,8s/16Go qualifié : seuls des temps
+de patches sont enregistrés, au plus huit threads via les modules existants,
+OpenCV limité à un thread dans le banc. Aucun fichier de production, DCP,
+profil ou IHM modifié ; pas de push, fusion versdev ou tag.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -2406,3 +2552,8 @@ confirmé par une référence indépendante. Aucun moteur, profil ou IHM modifi�
   mais le terme de distribution du F complet atténue les hausses des masques
   fins en luma encodée ; pas d'explication simple par concavité seule.
   D0 confirmé sans changement du code DCP. Pas de compensation photométrique.
+- Premier préfiltre CFA testé (§38),32cas à signal connu et résidu noir réel :
+  Wiener local simple et combinaison non retenus, protection de détail
+  insuffisante ; post courant meilleur en MSE médiane. Faible texture propre
+  aussi atténuée par le post courant : cible structurelle, pas hausse aveugle
+  deσ. Aucun nouveau filtre intégré ni qualification photo/ressources complète.

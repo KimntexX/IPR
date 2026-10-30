@@ -344,6 +344,18 @@ de l'écart E[F(X)]−F(E[X]). F est toute la chaîne DCP/rendu, pas une courbe
 scalaire garantie concave. Aucune attribution causale d'un composant seul.
 Cinq tests : `python -m unittest discover -s tests/raw_bench -p test_jensen.py`.
 
+`cfaDenoisePrototype` (cible CMake du banc) et `run_cfa_prototype.py --help`
+testent un préfiltre Wiener original3×3 par phase sur un signalRGB connu
+et les résidus des captures de noirs de développement du pilote signé.
+Gel avant mesure, variance prise sur l'autre noir,32cas, quatre branches
+et témoins propres, ROI centrale96/256. Ni VST, ni bruit photonique, ni DCP.
+Le prior noir externe est privilégié face au post aveugle : pas d'isolation
+causale du placement seul. Les critères de poursuite sont enregistrés avant
+mesure ; résultat négatif ne déclenche pas d'ajustement de fenêtre/force.
+`ctest -R cfaDenoisePrototypeContract` vérifie les cinq contrats natifs ;
+`python -m unittest discover -s tests/raw_bench -p test_cfa_prototype.py`
+vérifie quatre contrôles de la décision. Ce code n'est lié qu'au banc.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,
