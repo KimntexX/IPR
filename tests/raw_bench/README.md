@@ -447,6 +447,25 @@ Les exemples de gains/noirs/diviseur sont ceux du pilote signé, pas ceux de
 toutes les photos ou boîtiers. Cinq tests : `python -m unittest discover
 -s tests/raw_bench -p test_signal_noise_bridge.py`. Rapport§44.
 
+`study_cfa_signal_transport.py --bridge-proof <json> --pilot-proof <json>
+--tool <cfaTransportProbe.exe> --runtime-dir <dll-dir>` (répéter le dernier
+argument si nécessaire) propage le budget figé dans le RCD signé courant,
+avant/après médiane, puis mesure les covariances I/Co/Cg au pixel et sur B3.
+La cible `cfaTransportProbe` transporte uniquement des fenêtres CFA 256×256
+par stdin/stdout base64 float32 ; aucun fichier de pixels ou moteur modifié.
+
+Le résidu noir réel est centré sur le noir de référence figé ; seul le terme
+gaussien de variance a·signal est ajouté, jamais b une seconde fois. Deux ISO,
+deux niveaux positifs chacun, aplats et texture fine bornée ; graines de
+préparation et contrôle distinctes et inversion des deux noirs. 100 transports
+bruités, dix témoins propres, 128 comparaisons et 34 diagnostics de paires.
+Comparer profils noir seul, aplat au même niveau et covariance affine depuis
+le niveau bas ; matrices invalides signalées, jamais corrigées par projection.
+Les simulations ne sont pas des prises indépendantes ni une qualification
+physique. Pas de débruitage ou DCP dans cette épreuve. Rapport §45.
+Tests : `cfaTransportProbe --self-test` et `python -m unittest discover
+-s tests/raw_bench -p test_cfa_signal_transport.py` (six tests).
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

@@ -2,12 +2,13 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§44) : audit de la loi CFA dépendante du signal déjà étudiée
-dans l'historique.24pentes et72ancrages locaux conservés sans réajustement ;
-48couples moyenne/écart-type des noirs correspondent aux captures signées.
-La conversion de variance vers le CFA équilibré est vérifiée, pas encore
-sa propagation RCD/B3. Les expériences sur bruit noir seul restent des
-ablations : ne pas transporter ce budget aux tons éclairés. Production inchangée.
+Dernier jalon (§45) : propagation simulée de la loi CFA figée dans le RCD
+signé, la médiane et trois plans B3. Sur les aplats, le profil au niveau de
+signal correspondant prédit les écarts-types à environ ±3 %, contre une
+forte sous-estimation avec les noirs seuls. La texture fine révèle jusqu'à
+11,3 % de sous-estimation chroma après médiane. Résultat encourageant mais
+limité à quatre noirs réutilisés et un bruit de signal gaussien simulé ;
+ni qualification physique générale, ni amélioration de rendu démontrée.
 **Étude de banc seulement, aucun changement de production.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
@@ -3340,6 +3341,99 @@ quadratique surB, moyenne signée, indices des verts et contexte invalide.
 Aucun paramètre réajusté, aucune production/profil/IHM modifiés ; aucun
 push, fusion dev ou tag. Les réserves restent fermées.
 
+## 45. Propagation du budget CFA dans RCD signé et B3 — 30 octobre 2026
+
+Preuves : [mesures complètes](../raw/cfa-signal-transport-v001-20261030T205623Z.json)
+et [protocole figé avant calcul](../raw/cfa-signal-transport-freeze-v001-20261030T205623Z.json).
+La sonde lie le `Demosaic.cpp` courant sans le modifier. Aucun débruitage,
+DCP, TIFF de mesure ou accès à la réserve finale. Durée de campagne : 9,59 s
+pour de petites fenêtres, pas une mesure de latence applicative.
+
+### 45.1. Méthode et séparation des informations
+
+Quatre noirs de développement déjà qualifiés, deux à ISO 1600 et deux à
+ISO 51200 ; fenêtre CFA centrale 256×256, contrôle intérieur 128×128.
+Le résidu réel est centré sur le noir moyen de développement figé, par phase
+R/G1/G2/B, et non recentré pour chaque prise. Il garde donc sa structure
+spatiale et les écarts entre prises. Ce centrage simule une calibration locale,
+sans remplacer le noir du décodeur de production.
+
+Au résidu noir s'ajoute seulement un terme gaussien indépendant de variance
+`a·signal_DN`, puis les gains/diviseur du pilote. **Ne pas rajouter b** : le
+résidu réel contient déjà le bruit de lecture. La loi décrit des seconds
+moments ; elle ne fournit pas un modèle physique complet de photons/électrons.
+La variance réalisée du terme ajouté représente 94,4–105,1 % de son espérance
+sur les fenêtres mesurées, sans ajustement a posteriori.
+
+Signaux CFA équilibrés : 0,003/0,03 à ISO 1600 et 0,03/0,1 à ISO 51200,
+plus le noir. Chaque niveau positif a un aplat et une texture irrégulière fine
+bornée, de moyenne voisine du même niveau. Son écart-type est 0,000471 au
+niveau 0,003, puis 0,000941 aux autres niveaux. Le niveau 0,03 à ISO 1600
+est hors domaine d'ajustement historique ; les autres niveaux restent dans
+ce domaine, phase par phase. Cela ne valide pas leur réalisme photographique.
+
+Quatre graines préparent les profils sur un noir, quatre autres contrôlent
+sur l'autre noir ; les rôles sont ensuite inversés. Chaque prise reçoit un
+tirage indépendant. Les répétitions réutilisent cependant le même résidu
+noir : elles ne créent pas de nouvelles acquisitions réelles indépendantes.
+
+100 transports bruités et dix témoins propres, 128 comparaisons de modèles,
+34 diagnostics par différence de paires. Le résidu de sortie est rapporté
+au RCD du signal propre correspondant, avant et après médiane. Covariances
+3×3 et moyennes des axes I/Co/Cg conservées, au pixel et sur trois plans B3.
+B3 Python en float64 : mêmes noyaux/supports, pas parité bit à bit avec C++.
+Les différences de paires suppriment le commun ; elles ne sont pas une
+vérité sur tout le bruit visible d'une seule image.
+
+### 45.2. Résultats sans modification du filtre
+
+Trois prédictions : profil du noir seul ; profil d'aplat au même niveau ;
+extrapolation affine de covariance à partir du noir et du premier niveau
+positif. Les deux dernières sont préparées sur les seules graines de
+calibration de l'autre prise, jamais sur le résidu du cas contrôlé.
+
+Après médiane, erreur relative de covariance (norme de Frobenius), médiane
+sur niveaux, plans et inversions des deux prises :
+
+| ISO et signal contrôlé | Noir seul | Aplat au même niveau | Affine depuis le niveau bas |
+| --- | ---: | ---: | ---: |
+| 1600, aplat | 85,7 % | 1,84 % | 1,93 % |
+| 1600, texture fine | 86,0 % | 3,40 % | 4,41 % |
+| 51200, aplat | 61,9 % | 2,11 % | 3,85 % |
+| 51200, texture fine | 61,9 % | 2,11 % | 3,83 % |
+
+Le profil au niveau correspondant donne, sur les aplats après médiane,
+des rapports σ prédit/mesuré de 0,978–1,029 à ISO 1600 et 0,976–1,027 à
+ISO 51200. Sur la texture fine à ISO 1600/niveau 0,003, le premier plan B3
+descend à 0,887 en Co et 0,898 en Cg : l'aplat ne représente pas exactement
+la propagation non linéaire de la médiane sur une texture. Avant médiane,
+les rapports de cette famille restent entre 0,977 et 1,026.
+
+L'extrapolation affine n'est pas exacte non plus : son minimum après
+médiane vaut 0,887 sur la texture à ISO 1600 et 0,950 à ISO 51200. Toutes
+les matrices prédites restent positives semi-définies dans ce banc, sans
+projection ni correction forcée. Cette propriété n'est pas garantie pour
+une autre extrapolation. Dans les noirs après médiane, 48,7–56,2 % des
+valeurs par canal restent négatives : pas de borne silencieuse à zéro.
+
+### 45.3. Décision et prochaine épreuve bornée
+
+La propagation dépendante du signal est une piste concrète pour éviter
+que la texture serve d'estimateur de bruit. Le profil noir seul ne convient
+pas aux tons éclairés. Un profil d'aplat simulé n'est toutefois pas encore
+un modèle universel : quatre noirs réutilisés, deux ISO, deux niveaux et
+une seule texture achromatique ne qualifient ni les contours, ni les scènes
+colorées, ni un autre boîtier. Une petite erreur globale de covariance peut
+masquer une erreur relative chroma plus grande, d'où les axes séparés.
+
+Prochaine étape : comparer à filtre et force identiques les modèles courant,
+noir seul et dépendant du signal sur ces mêmes entrées, mesurer erreur au
+signal propre et rétention des textures, puis étendre aux contours/couleurs
+avec protocole figé avant calcul. Ne pas optimiser des seuils sur ce banc
+ni présenter une meilleure prédiction de variance comme un meilleur rendu.
+Six tests Python et le contrat natif signé passent ; cinq suites ciblées
+passent. Aucun moteur, profil ou IHM modifié ; pas de push, dev ou tag.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -3437,3 +3531,8 @@ push, fusion dev ou tag. Les réserves restent fermées.
   noirs identiques dans le chemin signé. Normalisation avec décalage de noir
   vérifiée, pas transportRGB/B3. Préparer la propagation avantRCD du terme
   de signal, sans doubler le bruit noir ni confondre modèle temporel et FPN.
+- Propagation simulée terminée (§45) : 100 cas bruités, 128 comparaisons,
+  profil d'aplat dépendant du signal encourageant ; limite chroma de 11,3 %
+  sur texture après médiane. Pas de nouveau filtre ni qualification physique.
+  Suite : isoler le bénéfice réel à filtre/force identiques et protéger les
+  structures, avant toute proposition d'interface moteur.
