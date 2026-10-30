@@ -1,13 +1,13 @@
 # Séparation du développement RAW — rapport évolutif
 
-## Bilan actuel — 29 octobre 2026
+## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§30) : candidat(c1) préparé séparément au-dessus du plancher
-sombre. Protection chroma indépendante de la texture achromatique ;70 contrôles
-natifs, sept suites et test optique passent. **Qualification synthétique
-seulement, pas de promotion.** Claude mesure encore le plancher sur les28 scènes
-et le corpus élargi ; ses exécutables figés ne sont pas modifiés ici. Les forces,
-estimations de bruit et bornes DCP restent inchangées dans(c1).
+Dernier jalon (§31) : repli global préparé au-dessus du candidat(c1), après
+les abstentions signalées par Claude sur la campagne du plancher sombre.
+77 contrôles natifs, sept suites et test optique passent. **Qualification
+synthétique seulement, pas de promotion.** Les22 scènes signalées restent à
+mesurer avec ce candidat ; la campagne réelle de(c1) est menée par Claude.
+Forces et bornes DCP inchangées ; coût du repli encore à mesurer.
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -1559,6 +1559,75 @@ fréquences, points isolés, vraies prises colorées, détails de faible contras
 aperçu et pleine définition. Une amélioration synthétique ne prouve pas la
 disparition des taches réelles. Ne pas mélanger(c1) et(b) avant ce bilan.
 
+## 31. Repli global hors support conditionnel — 30 octobre 2026
+
+### 31.1. Résultat réel déclencheur et contrôles négatifs
+
+Claude a terminé la campagne du plancher sombre, preuves intégrées localement
+depuis `d3279aa` :
+[28 références](../raw/loi-force-bruit-b-plancher-v001-20261030T021115Z.json) et
+[76 RAW hors protocole](../raw/debruitage-versions-hors-protocole-v001-20261030T021115Z.json).
+Le plancher améliore notamment7599/9539 et préserve les témoins0/0 des104
+sources. Il ne résout pas l'abstention de certaines bandes où V1 débruite :
+neuf références et treize scènes supplémentaires. Le sondage limité de§28
+ne permettait donc pas d'écarter cette cause sur tout le corpus.
+
+Références signalées :6V1A0007,6V1A0043,6V1A0064,6V1A9141,6V1A9153,
+IMG_3135,IMG_6248,_MG_7580,_MG_7840. Parmi les autres :_MG_7906 etIMG_8023.
+La liste exhaustive et les mesures restent dans les preuves et le journal
+commun ; ne pas conclure que tous les états de ces scènes sont inchangés.
+
+Deux cas synthétiques reproduisent un défaut de support : rampe sans témoins
+plats admissibles et petite plage sombre hors domaine entre les positions
+d'estimation. Avant correction, leur MSE chroma restante vaut1,0 ;
+[preuve négative](../raw/camera-denoise-n2-v001-20261030T021542Z.json).
+Ces constructions isolent des mécanismes possibles, sans établir la cause
+individuelle des22 scènes réelles. Bruit additif simulé, pas oracle CFA physique.
+
+### 31.2. Politique du candidat
+
+- Dans le support conditionnel : mêmes nœuds et même interpolation.
+- Sans modèle conditionnel : covariance etσ globaux de V1, si disponibles.
+- Hors domaine : transition extérieure du modèle de bord vers le global,
+  sur l'incertitude d'intensité déjà estimée ; pas de seuil de signal ajouté.
+- Sans témoins globaux admissibles : abstention conservée. Unσ nul valide
+  n'est pas remplacé arbitrairement par un bruit inventé.
+
+Le global utilise les témoins non cohérents et leur quart silencieux comme
+V1, sans la sélection supplémentaire d'aplats conditionnels. Ce n'est ni une
+nouvelle calibration physique ni un second filtre legacy. L'observateur
+distingue `supported` et `globalFallbackAvailable`.
+
+Les énergies locales conditionnelles et de repli sont calculées séparément
+pour ne pas mélanger leurs normalisations dans le veto des pixels supportés.
+Le rééquilibrage DC final reste global : **pas de promesse d'identité pixel
+par pixel dans les régions déjà supportées**, ni de preuve d'absence de
+raccord visible. Les tuiles mixtes nécessitent deux buffers supplémentaires
+et un calcul local supplémentaire ; temps et mémoire restent à qualifier.
+
+### 31.3. Qualification et limites
+
+[Preuve finale](../raw/camera-denoise-n2-v001-20261030T022403Z.json) :77 contrôles
+natifs, sept suites CTest et intégration optique réussis, benchmarks non lancés.
+La MSE chroma restante passe de1 à0,0292 sur la rampe et0,0418 dans la plage
+sombre hors support. Les contrôles(c1) de texture achromatique, bord coloré
+et ligne fine forte restent satisfaits. Ces ratios ne mesurent pas un gain
+visuel ni le comportement de textures colorées faibles.
+
+Une [preuve intermédiaire](../raw/camera-denoise-n2-v001-20261030T022318Z.json)
+conserve l'échec d'une assertion trop large : un damier cohérent ne rejette
+pas nécessairement les témoins de toutes les échelles, les coefficients
+grossiers nuls pouvant être admissibles. L'assertion a été corrigée par
+échelle : aucun repli inventé là où tous les témoins sont rejetés. Le filtre
+n'a pas été modifié pour contourner cette assertion.
+
+**Décision : candidat séparé au-dessus de(c1), à mesurer par Claude.**
+Comparer(c1) seul à(c1)+repli sur les22 scènes, puis contrôler7599, les murs,
+les détails colorés, les transitions, l'aperçu et la pleine définition.
+Mesurer ressources et latence avant promotion. Aucun rendu RAW concurrent
+n'est lancé ici pendant sa campagne ; force, DCP, commande maître(b) et
+paramètres de profil inchangés. Pas de push, fusion versdev ou tag.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -1574,8 +1643,8 @@ disparition des taches réelles. Ne pas mélanger(c1) et(b) avant ce bilan.
 - L'audit du modèle réel confirme des σ sombres inférieurs au global, sans
   démontrer une sous-estimation physique. L'abstention basse n'explique pas le
   sondage des quatre scènes. Le plancher sombre fcd95a2 (§29) restaure le noir
-  sur les trois témoins et garde le gain clair, avec65 contrôles natifs, sept
-  suites et test optique réussis ;28 scènes et visuel encore attendus.
+  sur les trois témoins et garde le gain clair. La campagne28+76 de Claude
+  confirme des gains mais révèle des abstentions sur22 scènes (§31).
 - Les murs ont une matière réelle ; ne pas confondre baisse de HP et bruit
   retiré. Employer les références LR contrôlées, pas les anciennes paires
   optiquement confondues (§§21–23). Pas de retour au non signé justifié par
@@ -1590,3 +1659,6 @@ disparition des taches réelles. Ne pas mélanger(c1) et(b) avant ce bilan.
   la correction de chroma par le veto partagé.70 contrôles/sept suites/optique
   passent, pas encore de rendu réel ; comparaison à confier à Claude après
   sa chaîne figée du plancher sombre. Pas de modification(b) ni de promotion.
+- Repli global préparé au-dessus de(c1) (§31) :77 contrôles, sept suites et
+  intégration optique passent. Qualification réelle des22 scènes et coût
+  supplémentaire attendus ; aucune conclusion de correction réelle anticipée.

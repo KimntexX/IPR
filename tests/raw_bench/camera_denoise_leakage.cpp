@@ -99,7 +99,9 @@ QJsonArray signalSurvey(const cv::Mat &camera,const std::vector<CameraDenoise::N
             int below=0,above=0;
             if(model.supported)for(float v:guide){below+=v<model.low;above+=v>model.high;}
             coverage.append(QJsonObject{{"level",model.level},{"supported",model.supported},
-                {"below",below},{"above",above},{"pixels",int(guide.size())}});
+                {"below",below},{"above",above},{"pixels",int(guide.size())},
+                {"global_fallback_pixels",model.globalFallbackAvailable?
+                    (model.supported?below+above:int(guide.size())):0}});
         }
         records.append(QJsonObject{{"roi",QJsonArray{ox,oy,width,width}},
             {"training_original_5x5",gx%2==0&&gy%2==0},{"signal_I_median",median(intensities)},
@@ -225,6 +227,7 @@ int main(int argc,char **argv)
                 modelJson.append(QJsonObject{{"level",m.level},{"candidates",m.candidates},
                     {"flat_candidates",m.flatCandidates},{"supported",m.supported},
                     {"dark_floor_applied",m.darkFloorApplied},
+                    {"global_fallback_available",m.globalFallbackAvailable},
                     {"low",m.low},{"high",m.high},{"global_signal",m.globalSignal},
                     {"global_sigma",sigma},{"nodes",nodes}});
             };
