@@ -16,6 +16,7 @@
 #include <cmath>
 #include <cstddef>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -255,6 +256,7 @@ int main(int argc,char **argv)
     p.addOption(QCommandLineOption("mean-audit","Audit full-frame 100/100 filtering, local/global camera means and rendered patch means"));
     p.addOption(QCommandLineOption("dark-mask","Bench-only full camera-size uint8 mask, bytes 0/1","path"));
     p.addOption(QCommandLineOption("cell-rects","Bench-only JSON array of camera rectangles","path"));
+    p.addOption(QCommandLineOption("jensen-proof","Existing mean proof; evaluate F(mean) without filtering again; repeatable","path"));
     p.process(app);
     try {
         for(const auto *key:{"input","manifest","profile-root","label"})require(p.isSet(key),"Missing argument");
@@ -271,6 +273,51 @@ int main(int argc,char **argv)
         CameraDenoise::Context context;
         // V1: source is already white-balanced; never compensate these axes.
         const cv::Vec3f gains(1,1,1); // Neutral direction for the projection study only.
+        if(p.isSet("jensen-proof")) {
+            QJsonArray populations;
+            const auto sourceHash=hash(p.value("input")),profileHash=hash(full.profilePath),manifestHash=hash(p.value("manifest"));
+            for(const auto &path:p.values("jensen-proof")) {
+                QFile proofFile(path);require(proofFile.open(QIODevice::ReadOnly),"Cannot open Jensen parent");
+                const auto document=QJsonDocument::fromJson(proofFile.readAll());require(document.isObject(),"Invalid Jensen parent");
+                const auto parent=document.object();
+                const auto sources=parent.value("sources").toObject();
+                require(sources.value("src/profiles/CameraProfileEngine.cpp").toObject().value("sha256").toString()==
+                    hash(QStringLiteral(IPR_SOURCE_ROOT_PATH "/src/profiles/CameraProfileEngine.cpp")),"DCP implementation changed since parent");
+                for(const auto &entry:parent.value("scenes").toArray()) {
+                    const auto measured=entry.toObject().value("measurements").toObject();
+                    if(measured.isEmpty()||measured.value("source_sha256").toString()!=sourceHash)continue;
+                    require(measured.value("profile_sha256").toString()==profileHash&&
+                        measured.value("manifest_sha256").toString()==manifestHash,"Parent profile/calibration differs");
+                    QJsonObject states;
+                    for(const auto *state:{"B0","B100"}) {
+                        const auto camera=measured.value(QString(state)+"_camera_dark").toObject();
+                        const auto mean=camera.value("mean_rgb").toArray();require(mean.size()==3,"Missing camera mean");
+                        cv::Mat constant(1,1,CV_32FC3);
+                        for(int c=0;c<3;++c) {
+                            const double value=mean[c].toDouble(std::numeric_limits<double>::quiet_NaN());
+                            require(std::isfinite(value),"Nonfinite mean");constant.at<cv::Vec3f>(0,0)[c]=float(value);
+                        }
+                        const auto fMean=renderedMoments(render(full,constant));
+                        const auto meanF=measured.value(QString(state)+"_rendered_dark").toObject();
+                        require(!meanF.isEmpty(),"Missing rendered mean");
+                        QJsonObject gap;
+                        for(const auto *metric:{"linear_rec2020_y_mean","signed_encoded_y_mean_255",
+                                               "clipped_encoded_y_mean_255","rounded_encoded_y_mean_255"}) {
+                            require(meanF.contains(metric)&&fMean.contains(metric),"Missing Jensen metric");
+                            gap.insert(metric,meanF.value(metric).toDouble()-fMean.value(metric).toDouble());
+                        }
+                        states.insert(state,QJsonObject{{"camera_mean_rgb",mean},{"F_of_mean",fMean},{"mean_of_F",meanF},{"gap_mean_F_minus_F_mean",gap}});
+                    }
+                    populations.append(QJsonObject{{"parent",path},{"parent_sha256",hash(path)},
+                        {"parent_study",parent.value("study")},{"states",states}});
+                }
+            }
+            require(!populations.isEmpty(),"No matching populations in parents");
+            const QJsonObject result{{"source_sha256",sourceHash},{"profile_sha256",profileHash},
+                {"manifest_sha256",manifestHash},{"populations",populations},
+                {"limits","F is the complete fixed DCP/render chain, not a globally concave scalar curve; no new denoising; camera means quantized to float for actual renderer; gaps are descriptive, not causal ablations"}};
+            std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\n';return 0;
+        }
         require(!(p.isSet("signal-survey")&&p.isSet("mean-audit")),"Choose a single study mode");
         if(p.isSet("mean-audit")) {
             auto filtered=full.cameraRgb;

@@ -2,11 +2,12 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§36) :179 sources historiques retrouvées par empreinte,
-partitions préservées et pilote signé sur six sources de développement terminé.
-Les négatifs traversent RCD/médiane sans borne de sortie. La rafale éclairée
-bouge : sa différence non recalée n'est pas une vérité de bruit CFA.
-**Aucun nouveau filtre ni coefficient de calibration validé.** D0 reste à Claude.
+Dernier jalon (§37) : piste Jensen vérifiée sur les populations déjà mesurées,
+sans refaire le débruitage. Dans le masque fin, la hausse dépend surtout du
+déplacement des moyennes caméra ; l'effet de distribution du rendu complet
+la réduit en luma encodée. Une concavité scalaire n'explique donc pas seule
+ce constat. Claude a raccordé la barre et confirmé D0 sans changer le code DCP.
+**Pas de nouveau filtre ni de compensation photométrique validé.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
 comparateur et les captures après `unpack()` et via l'observateur C2 existent ;
@@ -2242,6 +2243,110 @@ jeu indépendant. Pour la réserve finale, toute ouverture devra rester tracée
 et ne servira pas à choisir itérativement les poids. **Aucun débruiteur CFA,
 VST, modèlea·signal+b nouveau ni coefficient de production livré ici.**
 
+## 37. Vérification de la piste Jensen avec le DCP réel — 30 octobre 2026
+
+### 37.1. Retour Claude et périmètre
+
+Claude a raccordé la barre unique dans `e01fc59`, après fusion de l'esquisse
+`47f406a`, et confirmé la décision D0 par la preuve `115beee`. D0 garde les
+bornes actuelles ; il **ne crée pas un nouveau rendu**. Comparaison Git entre
+notre tête et ce jalon : aucun écart dans `CameraProfileEngine.cpp/.h` ni
+`WorkingColorSpace.h`. Les profils et manifestes sont vérifiés séparément
+par empreinte dans l'épreuve ci-dessous ; cette concordance de trois fichiers
+ne vaut pas équivalence de l'application entière ou de tous ses réglages.
+
+Suggestion de Claude : une courbe concave peut assombrir la moyenne d'un
+signal bruité ; réduire sa variance pourrait donc relever la moyenne rendue.
+Le mécanisme est mathématiquement possible, et le contrôle scalaire§33 en
+donnait déjà un exemple. Il faut toutefois l'évaluer dans le rendu réel,
+qui compose matrices, tables, courbe, bornes et encodage et n'est pas garanti
+concave sur tout le domaine des RGB signés.
+
+### 37.2. Décomposition mesurée sans relancer le filtre
+
+Pour chacune des cinq populations de§34–35, conserver les moyennes caméra
+et rendues déjà mesurées. Décoder seulement pour retrouver le contexte du
+profil, vérifier RAW/manifeste/DCP et l'empreinte de son implémentation, puis
+évaluer le rendu sur un unique pixel portant la moyenne caméra. Aucun
+débruitage, nouveau masque ou accès à la réserve finale.
+
+Noter X le vecteur RGB caméra des pixels retenus, μ sa moyenne, F le rendu
+pointwise fixé et G=E[F(X)]−F(μ) son écart de distribution. L'identité
+comptable est :
+
+\[
+\Delta E[F(X)] = \underbrace{F(\mu_1)-F(\mu_0)}_{\text{déplacement de moyenne}}
+ + \underbrace{G_1-G_0}_{\text{changement d'écart de distribution}}.
+\]
+
+F(μ) est évalué dans le moteur flottant32bits réel ; G est un **écart de
+Jensen descriptif**, pas une estimation de courbure, une variance ou une
+ablation causale des composants. L'effet de distribution mêle variance,
+covariance, queues et autres changements de forme ; ce n'est pas seulement
+½F″σ². Les deux termes peuvent se compenser : ne pas en tirer des pourcentages
+d'explication causale.
+
+[Preuve canonique](../raw/camera-denoise-jensen-v001-20261030T123902Z.json) :
+trois sources, cinq populations, DCP/configurations/parents authentifiés.
+Les décompositions sont conservées en Y Rec.2020 linéaire, encodage signé
+et encodage borné avant arrondi. Sonde compilée, cinq tests de calcul passent
+(déplacement seul, écarts positifs/négatifs, compensation et refus des NaN).
+
+### 37.3. Résultats en luma encodée bornée, non arrondie
+
+| Population | Variation observée | Terme déplacement de moyenne | Terme changement de distribution |
+| --- | ---: | ---: | ---: |
+| 7599, masque fin | +3,454 | +9,321 | −5,867 |
+| 7599, cellules complètes | −8,389 | +0,086 | −8,475 |
+| 9153, masque fin | +3,457 | +3,816 | −0,359 |
+| 9153, cellule complète | +0,219 | +0,235 | −0,016 |
+| IMG_3135, masque fin | +2,729 | +2,860 | −0,131 |
+
+Les valeurs diffèrent très légèrement du tableau affiché8bits de§34–35
+parce qu'ici l'arrondi final est retiré. Dans les **trois masques fins**, le
+déplacement de moyenne caméra rendu par F porte la hausse ; le changement
+de distribution du rendu complet la réduit, plutôt que de la créer.
+
+Sur7599 fin, G passe de+6,938 à+1,071 niveaux. Sur ses cellules complètes,
+de+9,403 à+0,928 : le rendu moyen bruité est ici **au-dessus** du rendu de
+la moyenne, à l'inverse d'un modèle scalaire globalement concave. Cela ne
+permet pas de déclarer la courbe du profil convexe : le F mesuré comprend
+toute la chaîne et un signal multicanal, avec bornes. Une concavité de la
+courbe peut intervenir tout en étant dominée par d'autres effets.
+
+### 37.4. Avant encodage : effets déjà présents au DCP linéaire
+
+En Y Rec.2020 sur7599 fin, ΔE[F]=+0,000815 se décompose en+0,002918 de
+déplacement et−0,002103 de distribution. Sur ses cellules,−0,008604 vaut
+environ+0,000029−0,008633. Ce phénomène ne vient donc pas uniquement du
+transfert sRGB de sortie.
+
+Pour9153 fin, la distribution augmente légèrement Y linéaire (+0,000103),
+mais réduit la hausse après encodage (−0,359 niveau). Le signe peut changer
+selon la frontière observée ; il faut nommer le domaine et les pixels, pas
+simplement « luminance ». Aucun point intermédiaire entre les tables et la
+courbe n'est mesuré ici.
+
+### 37.5. Réponse à l'hypothèse et décision
+
+**Accord sur le mécanisme général, attribution simple non retenue pour les
+hausses observées.** Sur ce F complet et ces populations, la diminution
+d'un écart négatif de courbe concave n'est pas le moteur de la hausse des
+masques fins en luma encodée. Leur sélection et le déplacement local des
+moyennes caméra restent déterminants ; la causalité entre filtrage spatial,
+rééquilibrage global et sélection bruitée n'est pas décomposée par cette identité.
+
+Cela n'implique pas que le débruiteur surexpose la scène : le contrôle
+d'oracle et les cellules de§34–35 restent nécessaires pour l'interprétation.
+Pas de correction de gain/DC ni de retouche du DCP justifiée par ce seul
+bilan. Aucun désaccord avec D0, qui conserve précisément le rendu testé.
+
+Reprendre la piste de prototype CFA au signal connu de§36. Ne pas relancer
+les campagnes de force ou une grille de courbures sur les mêmes trois
+images pour choisir un correctif. Une attribution composant par composant
+demanderait une ablation séparée, seulement si un défaut photométrique est
+confirmé par une référence indépendante. Aucun moteur, profil ou IHM modifié.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -2297,3 +2402,7 @@ VST, modèlea·signal+b nouveau ni coefficient de production livré ici.**
   Mouvement de la rafale éclairée déjà connu : pas d'oracle temporel non recalé.
   Prochaine cible : signal CFA connu avec bruit de lecture réel, avant toute
   VST ; aucun nouveau filtre ou coefficient de production validé.
+- Piste Jensen vérifiée (§37) sans nouveau débruitage : possible en général,
+  mais le terme de distribution du F complet atténue les hausses des masques
+  fins en luma encodée ; pas d'explication simple par concavité seule.
+  D0 confirmé sans changement du code DCP. Pas de compensation photométrique.
