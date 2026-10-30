@@ -274,6 +274,16 @@ le gain du plancher sombre de celui des axes V1. Le garde-fou actuel relève
 les variances du premier nœud vers le global si nécessaire, pas celles des
 autres nœuds ; ce n'est pas une calibration physique ni une extension du domaine.
 
+Le candidat courant ajoute un repli sur covariance/σ globaux V1 lorsque le
+modèle conditionnel manque ou que le guide est hors domaine. Le raccord est
+extérieur au domaine conditionnel ; les statistiques locales des deux modèles
+restent séparées. Sans témoins admissibles, l'abstention reste nécessaire.
+L'observateur distingue `supported` et `globalFallbackAvailable` ; les ROI de
+la sonde comptent les pixels susceptibles d'utiliser le repli. Ce n'est pas
+une preuve que le filtre les corrige tous, ni une mesure de bruit physique.
+Les77 contrôles natifs sont positifs ; les22 scènes signalées par Claude et
+le coût des buffers supplémentaires restent à qualifier avant promotion.
+
 ## Limites du corpus et références
 
 I2 doit préserver les valeurs signées avant borne et distinguer DN bruts,

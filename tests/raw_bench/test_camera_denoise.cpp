@@ -177,7 +177,12 @@ int main(int argc,char **argv)
             checker.at<cv::Vec3f>(y,x)={v,v,v};
         }
         const auto before=checker.clone();
-        check(apply(checker,{100,100},{}) && cv::norm(checker,before,cv::NORM_INF)<1e-6, "clean coherent checkerboard not classified as noise");
+        Context noWitness; int inventedFallback=0,rejectedLevels=0;
+        noWitness.noiseModelObserver=[&](const NoiseModelSummary &m){
+            if(m.candidates==0){++rejectedLevels;inventedFallback+=m.globalFallbackAvailable;}
+        };
+        check(apply(checker,{100,100},noWitness) && cv::norm(checker,before,cv::NORM_INF)<1e-6, "clean coherent checkerboard not classified as noise");
+        check(rejectedLevels>0&&inventedFallback==0,"no global fallback is invented on scales where every witness is rejected");
         cv::Mat edge(128,128,CV_32FC3,cv::Scalar(.2f,.3f,.4f));
         for(int y=0;y<edge.rows;++y)edge.at<cv::Vec3f>(y,64)={.5f,.6f,.7f};
         const auto clean=edge.clone();
@@ -345,6 +350,49 @@ int main(int argc,char **argv)
         contrast/=128;line/=128;
         std::cout<<"genuine_colour_edge_contrast "<<contrast<<" fine_line "<<line<<'\n';
         check(contrast>.072&&line>.045,"retain at least 90 percent of true chromatic edge and fine-line contrast");
+    }
+    {
+        cv::Mat image(384,384,CV_32FC3);cv::RNG random(0x29a0);
+        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
+            const float i=.05f+.0012f*x+.0013f*y+float(random.gaussian(.001));
+            const float co=float(random.gaussian(.004)),cg=float(random.gaussian(.004));
+            image.at<cv::Vec3f>(y,x)={i+co-.5f*cg,i+.5f*cg,i-co-.5f*cg};
+        }
+        const auto before=image.clone();Context context;int unsupported=0;
+        context.noiseModelObserver=[&](const NoiseModelSummary &m){unsupported+=!m.supported&&m.candidates>0&&m.globalFallbackAvailable;};
+        check(apply(image,{0,100},context),"pooled fallback on a noisy smooth ramp completes");
+        check(unsupported==5,"ramp has no flat conditional support on every scale");
+        double input=0,output=0;
+        for(int y=128;y<256;++y)for(int x=128;x<256;++x) {
+            const auto a=axes(before.at<cv::Vec3f>(y,x)),b=axes(image.at<cv::Vec3f>(y,x));
+            input+=double(a[1])*a[1]+double(a[2])*a[2];
+            output+=double(b[1])*b[1]+double(b[2])*b[2];
+        }
+        std::cout<<"unsupported_ramp_chroma_mse_ratio "<<output/input<<'\n';
+        check(output<.8*input,"missing conditional model uses the existing pooled witnesses");
+    }
+    {
+        cv::Mat image(512,512,CV_32FC3);cv::RNG random(0x29a1);
+        for(int y=0;y<image.rows;++y)for(int x=0;x<image.cols;++x) {
+            // The dark region is between the 5x5 witness cores; the pooled
+            // simulated read noise is identical in the dark and in the surround.
+            const bool dark=x>=182&&x<218&&y>=182&&y<218;
+            const float i=(dark?.01f:.2f)+float(random.gaussian(.0008));
+            const float co=float(random.gaussian(.004)),cg=float(random.gaussian(.004));
+            image.at<cv::Vec3f>(y,x)={i+co-.5f*cg,i+.5f*cg,i-co-.5f*cg};
+        }
+        const auto before=image.clone();Context context;int aboveDark=0;
+        context.noiseModelObserver=[&](const NoiseModelSummary &m){aboveDark+=m.supported&&m.low>.1f&&m.globalFallbackAvailable;};
+        check(apply(image,{0,100},context),"pooled fallback outside witnessed signal range completes");
+        check(aboveDark==5,"dark patch lies below every conditional support range");
+        double input=0,output=0;
+        for(int y=190;y<210;++y)for(int x=190;x<210;++x) {
+            const auto a=axes(before.at<cv::Vec3f>(y,x)),b=axes(image.at<cv::Vec3f>(y,x));
+            input+=double(a[1])*a[1]+double(a[2])*a[2];
+            output+=double(b[1])*b[1]+double(b[2])*b[2];
+        }
+        std::cout<<"unwitnessed_dark_patch_chroma_mse_ratio "<<output/input<<'\n';
+        check(output<.8*input,"out-of-domain dark patch does not silently receive zero denoise");
     }
     std::cout << checks << " checks, " << failures << " failures\n";
     return failures ? 1 : 0;

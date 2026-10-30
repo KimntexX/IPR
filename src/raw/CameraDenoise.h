@@ -25,6 +25,7 @@ struct NoiseModelSummary
     int flatCandidates = 0;
     bool supported = false;
     bool darkFloorApplied = false;
+    bool globalFallbackAvailable = false;
     float low = 0, high = 0, globalSignal = 0;
     cv::Vec3f globalSigma{};
     std::vector<std::pair<float, cv::Vec3f>> nodes;
@@ -50,7 +51,10 @@ bool identity(const Settings &settings);
 // these balanced camera axes. Camera intensity is an
 // opponent-axis proxy, not photometric Rec.2020 luminance. Noise is measured per
 // scale and witnessed signal range after RCD/median, with conditional covariance;
-// this is NOT a calibrated sensor a*signal+b model. Unsupported signals abstain.
+// this is NOT a calibrated sensor a*signal+b model. Unsupported signals fall
+// back to the pooled model when available; without any usable witness, abstain.
+// Outside a conditional range, a short exterior transition joins its boundary
+// to the pooled model, without changing the conditional knots inside the range.
 // With multiple witnessed bands, the darkest knot has an empirical pooled-
 // variance floor; the existing interpolation fades it toward the next knot.
 // Three intensity scales; five chroma scales when chroma is enabled. Chroma-only

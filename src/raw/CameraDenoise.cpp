@@ -30,8 +30,11 @@ constexpr int CurveSamples = 128;
 struct NoiseCurve
 {
     std::array<Noise, CurveSamples> values;
+    Noise pooled;
     float low = 0, high = 0;
+    float transition = 0;
     bool valid = false;
+    bool pooledValid = false;
     bool constant = true;
 };
 using Energy = cv::Vec<float, 8>; // Three energies, joint, three expectations, joint expectation.
@@ -305,9 +308,12 @@ bool estimate(const cv::Mat &source,
             summary.globalSignal=global.signal;
             for (int c=0;c<3;++c) summary.globalSigma[c]=std::sqrt(global.covariance(c,c));
         }
+        auto &curve=models[std::size_t(level)];
+        curve.pooledValid=!all.empty()&&fromCovariance(global.covariance,curve.pooled);
+        summary.globalFallbackAvailable=curve.pooledValid;
         if(items.size()<3) {
             if (observer) observer(summary);
-            continue; // No qualified support: do not borrow another signal level.
+            continue; // No conditional support: use the pooled model if available.
         }
         std::sort(items.begin(),items.end(),[](const auto &a,const auto &b){return a.signal<b.signal;});
         std::vector<float> uncertainties;
@@ -326,8 +332,8 @@ bool estimate(const cv::Mat &source,
         }
         if(knots.size()>1 && !all.empty())
             summary.darkFloorApplied=floorDarkCovariance(knots.front(),global);
-        auto &curve=models[std::size_t(level)];
         curve.low=items.front().signal-uncertainty;curve.high=items.back().signal+uncertainty;
+        curve.transition=uncertainty;
         if(!std::isfinite(curve.low)||!std::isfinite(curve.high)||!(curve.high>curve.low))return false;
         for(int i=0;i<CurveSamples;++i) {
             const float signal=curve.low+(curve.high-curve.low)*(float(i)/(CurveSamples-1));
@@ -354,24 +360,43 @@ bool estimate(const cv::Mat &source,
     return true;
 }
 
+void accumulateEnergy(Energy &result,const Noise &model,const cv::Vec3f &detail,float weight)
+{
+    if(weight<=0)return;
+    cv::Vec3f z{};
+    for(int c=0;c<3;++c)if(model.sigma[c]>0) {
+        z[c]=float(std::clamp(double(detail[c])/model.sigma[c],-1e6,1e6));
+        result[c]+=weight*z[c]*z[c];result[c+4]+=weight;
+    }
+    result[3]+=weight*std::max(0.f,z.dot(model.inverseCorrelation*z));
+    result[7]+=weight*model.expectedJointEnergy;
+}
+
 Energy energyAt(const NoiseCurve &curve,float signal,const cv::Vec3f &detail)
 {
     Energy result{};
-    if(!curve.valid || !std::isfinite(signal) || signal<curve.low || signal>curve.high)return result;
+    if(!std::isfinite(signal))return result;
+    if(!curve.valid) {
+        if(curve.pooledValid)accumulateEnergy(result,curve.pooled,detail,1);
+        return result;
+    }
+    if(signal<curve.low || signal>curve.high) {
+        if(!curve.pooledValid)return result;
+        // Transition only OUTSIDE the conditional range, in its already
+        // measured intensity-uncertainty units; no hard jump at the boundary.
+        const double distance=signal<curve.low?double(curve.low)-signal:double(signal)-curve.high;
+        const float t=curve.transition>0?float(std::clamp(distance/double(curve.transition),0.,1.)):1.f;
+        accumulateEnergy(result,curve.values[signal<curve.low?0:CurveSamples-1],detail,1-t);
+        accumulateEnergy(result,curve.pooled,detail,t);
+        return result;
+    }
     const float position=curve.constant?0.f:std::clamp((signal-curve.low)/(curve.high-curve.low)*(CurveSamples-1),0.f,float(CurveSamples-1));
     const int lower=int(position),upper=std::min(lower+1,CurveSamples-1);
     const float t=curve.constant?0.f:position-lower;
     for(int side=0;side<2;++side) {
         const float weight=side?t:1-t;
         if(weight<=0)continue;
-        const auto &model=curve.values[std::size_t(side?upper:lower)];
-        cv::Vec3f z{};
-        for(int c=0;c<3;++c)if(model.sigma[c]>0) {
-            z[c]=float(std::clamp(double(detail[c])/model.sigma[c],-1e6,1e6));
-            result[c]+=weight*z[c]*z[c];result[c+4]+=weight;
-        }
-        result[3]+=weight*std::max(0.f,z.dot(model.inverseCorrelation*z));
-        result[7]+=weight*model.expectedJointEnergy;
+        accumulateEnergy(result,curve.values[std::size_t(side?upper:lower)],detail,weight);
     }
     return result;
 }
@@ -410,36 +435,52 @@ bool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margi
         std::fill_n(delta.ptr<cv::Vec3f>(core.y + y) + core.x, core.width, cv::Vec3f{});
     for (int level = 0; level < Levels; ++level) {
         const auto &model = models[std::size_t(level)];
-        if (!model.valid) continue;
+        if (!model.valid && !model.pooledValid) continue;
         const auto &detail = p.detail[std::size_t(level)];
-        cv::Mat energy(detail.size(), CV_32FC(8));
+        cv::Mat energy(detail.size(), CV_32FC(8)),fallbackEnergy;
         for (int y = 0; y < detail.rows; ++y) {
             if ((y & 15) == 0 && stop()) return false;
             const auto *d = detail.ptr<cv::Vec3f>(y); auto *e = energy.ptr<Energy>(y);
             for (int x = 0; x < detail.cols; ++x) {
-                e[x] = energyAt(model,p.signal.at<float>(y,x),d[x]);
+                const float signal=p.signal.at<float>(y,x);
+                const bool fallback=model.valid&&model.pooledValid&&(signal<model.low||signal>model.high);
+                const auto sample=energyAt(model,signal,d[x]);
+                if(fallback) {
+                    // Do not let normalized pooled energies alter the local
+                    // decisions of already-supported conditional pixels.
+                    if(fallbackEnergy.empty())fallbackEnergy=cv::Mat::zeros(detail.size(),CV_32FC(8));
+                    fallbackEnergy.at<Energy>(y,x)=sample;
+                    e[x]=Energy{};
+                } else e[x]=sample;
             }
         }
-        cv::Mat local;
+        cv::Mat local,fallbackLocal;
         if (!boxMean(energy, local, radius, stop)) return false;
+        if(!fallbackEnergy.empty()&&!boxMean(fallbackEnergy,fallbackLocal,radius,stop))return false;
         for (int y = 0; y < core.height; ++y) {
             if ((y & 15) == 0 && stop()) return false;
             auto *out = delta.ptr<cv::Vec3f>(core.y + y) + core.x;
             const auto *d = detail.ptr<cv::Vec3f>(margin + y) + margin;
             const auto *e = local.ptr<Energy>(margin + y) + margin;
             const auto *current=energy.ptr<Energy>(margin+y)+margin;
+            const auto *pooled=fallbackLocal.empty()?nullptr:fallbackLocal.ptr<Energy>(margin+y)+margin;
+            const auto *pooledCurrent=fallbackEnergy.empty()?nullptr:fallbackEnergy.ptr<Energy>(margin+y)+margin;
             for (int x = 0; x < core.width; ++x) {
-                const float shared = e[x][7]>0?std::clamp(1.f-e[x][7]/std::max(e[x][3],e[x][7]),0.f,1.f):0.f;
+                const float signal=p.signal.at<float>(margin+y,margin+x);
+                const bool usePooled=pooled&&pooledCurrent&&(signal<model.low||signal>model.high);
+                const auto &stats=usePooled?pooled[x]:e[x];
+                const auto &pixel=usePooled?pooledCurrent[x]:current[x];
+                const float shared = stats[7]>0?std::clamp(1.f-stats[7]/std::max(stats[3],stats[7]),0.f,1.f):0.f;
                 // A real achromatic texture is not evidence of a real colour
                 // feature. Chroma protection uses only its two normalized
                 // energies; their expected sum is valid even when correlated.
                 // This is a second-moment gate, not a chi-square probability.
-                const float chromaExpected=e[x][5]+e[x][6];
-                const float chromaObserved=e[x][1]+e[x][2];
+                const float chromaExpected=stats[5]+stats[6];
+                const float chromaObserved=stats[1]+stats[2];
                 const float chromaShared=chromaExpected>0?
                     std::clamp(1.f-chromaExpected/std::max(chromaObserved,chromaExpected),0.f,1.f):0.f;
-                for (int c = 0; c < 3; ++c) if ((c != 0 || level < LuminanceLevels) && strength[c] > 0 && current[x][c+4] > 0 && e[x][c+4]>0) {
-                    const float individual = std::clamp(1.f-e[x][c+4]/std::max(e[x][c],e[x][c+4]),0.f,1.f);
+                for (int c = 0; c < 3; ++c) if ((c != 0 || level < LuminanceLevels) && strength[c] > 0 && pixel[c+4] > 0 && stats[c+4]>0) {
+                    const float individual = std::clamp(1.f-stats[c+4]/std::max(stats[c],stats[c+4]),0.f,1.f);
                     out[x][c] -= strength[c] * (1.f - std::max(individual, c==0?shared:chromaShared)) * d[x][c];
                 }
             }
@@ -484,8 +525,10 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
         std::array<NoiseCurve, Levels> models;
         if (!estimate(cameraRgb, steps, margin, models, stop, context.noiseModelObserver)) return false;
         bool measured = false;
-        for (const auto &curve : models) if(curve.valid)
-            for(const auto &m:curve.values)for(int c=0;c<3;++c)if(m.sigma[c]>0)measured=true;
+        for (const auto &curve : models) {
+            if(curve.valid)for(const auto &m:curve.values)for(int c=0;c<3;++c)if(m.sigma[c]>0)measured=true;
+            if(curve.pooledValid)for(int c=0;c<3;++c)if(curve.pooled.sigma[c]>0)measured=true;
+        }
         if (!measured) {
             // Nonzero requests must detach even on abstention: the caller may
             // apply optical corrections in place to the returned camera buffer.
