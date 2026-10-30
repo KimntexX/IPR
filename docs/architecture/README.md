@@ -24,6 +24,7 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Étude d’autonomie des profils caméra](references/etude-autonomie-profils-camera.md) : données DCP, droits, corpus externes et raccordement proposé à la passerelle MCP d’analyse.
 - [CI et build multiplateforme](ci-et-build-multiplateforme.md) : matrice Windows/macOS/Linux, prérequis, packaging et feuille de route GitHub.
 - [Réduction de bruit et netteté](denoising-sharpening.md) : algorithmes, ordre de pipeline, limites IA/GPU et validation attendue.
+- [Empilement et panorama](empilement-et-panorama.md) : plan multi-images, ancre utilisateur, alignement ciel/sol, recadrage automatique et dossier tampon disque ; non implémenté.
 - [Arborescence des sources](../../src/README.md) : domaines C++/QML et bibliothèque interne `iprEngine`.
 - [Préférences de l’interface](ui-preferences.md) : INI utilisateur, géométrie, sections, couleurs et schéma extensible.
 - [Build Windows autonome](build-windows-standalone.md) : configuration portable, dépendances et restrictions sur les profils tiers.

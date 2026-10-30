@@ -1,0 +1,134 @@
+{
+ "schema": "ipr-dcp-bounds-trials-v001",
+ "created_utc": "20261029T133401Z",
+ "author": "Claude",
+ "engine_base_commit": "9ed4117 (patch_raw_decoder), trial code applied locally and reverted, never committed",
+ "corpus": "tests/image/base, neutral render in memory (iprRenderServer), full definition, Camera Neutral, optics off",
+ "measure": {
+  "space": "rendered sRGB 16-bit divided by 257 (8-bit scale, float)",
+  "dark_mask": "luma Rec.709 < 25, computed PER STATE (not a fixed mask shared across states)",
+  "fields": "dark share, mean luma of dark pixels, share of channels < 0.5/255 in dark pixels, mean R-G and B-G of dark pixels",
+  "caveat": "the share of channels at 0 does not prove a clip: in such dark pixels 0/255 is plain black"
+ },
+ "trials": [
+  {
+   "name": "D-grey at DCP table input",
+   "rule": "pixel with a ProPhoto channel < 0 moved toward the grey of its ProPhoto Y until min = 0; grey (Y,Y,Y) if Y <= 0; only with signed development",
+   "result": "no visible change on 7Y6A7599 B-col100 (crops n3_dgrey); hypothesis that table-input clipping makes the pink grain rejected",
+   "values_7599_crop_x2940_y2940_420": {
+    "B0": {
+     "luma": 62.3,
+     "chroma_hp": 20.24
+    },
+    "B-col100": {
+     "luma": 61.3,
+     "chroma_hp": 15.91
+    }
+   }
+  },
+  {
+   "name": "D1+D2 (part below 0 around HSV tables, then tone curve first-segment slope)",
+   "rule": "server option only; not separated into D1 and D2",
+   "result": "negligible",
+   "dark_pixels": {
+    "7Y6A7599": {
+     "A": [
+      9.97,
+      9.97
+     ],
+     "B0": [
+      8.55,
+      8.84
+     ],
+     "B-col100": [
+      7.18,
+      7.29
+     ]
+    },
+    "IMG_7958": {
+     "A": [
+      3.84,
+      3.84
+     ],
+     "B0": [
+      3.74,
+      3.76
+     ],
+     "B-col100": [
+      3.64,
+      3.65
+     ]
+    },
+    "IMG_8473": {
+     "A": [
+      8.2,
+      8.2
+     ],
+     "B0": [
+      8.16,
+      8.18
+     ],
+     "B-col100": [
+      8.11,
+      8.12
+     ]
+    },
+    "IMG_4002": {
+     "A": [
+      6.56,
+      6.56
+     ],
+     "B0": [
+      6.54,
+      6.54
+     ],
+     "B-col100": [
+      6.49,
+      6.5
+     ]
+    }
+   },
+   "dark_pixels_note": "mean luma of dark pixels [without, with] the trial"
+  },
+  {
+   "name": "sRGB output mapping with signed luminance",
+   "rule": "mapRgbToSrgbGamut without the per-channel max(0) pre-clamp: signed luminance kept, chroma scaled toward it, black if luminance <= 0",
+   "result": "no measurable change",
+   "dark_pixels": {
+    "7Y6A7599": {
+     "B0": {
+      "luma": 8.54,
+      "zero_rgb": [
+       0.38,
+       0.41,
+       0.47
+      ]
+     },
+     "B-col100": {
+      "luma": 7.17,
+      "zero_rgb": [
+       0.44,
+       0.3,
+       0.58
+      ]
+     }
+    },
+    "IMG_7958": {
+     "B0": {
+      "luma": 3.73
+     },
+     "B-col100": {
+      "luma": 3.64
+     }
+    }
+   }
+  }
+ ],
+ "conclusion": "D0 kept; the pink residual grain of B-col100 on 7599 is not explained by the tested bounds; to be judged visually by the user",
+ "scripts": {
+  "d12_witness.py": "d7f125986e4bc98becd32e589a4e702d906e88ed12d61b11f70eb1dc14b4e7d3",
+  "out_witness.py": "432eee4b7f48493087c540032f8aaa7eb76b08c0f8be2688a9f71de20a065391",
+  "n3_dgrey.py": "8b560641db35d0f9dc5cfa628f766b45d90eb1e504c455766380892b28182af5",
+  "n3_review2.py": "247d6d9c73ad3a1978c40fb69f6880361b590ec1415d869f43891087963b834a"
+ }
+}

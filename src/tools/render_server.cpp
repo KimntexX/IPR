@@ -30,6 +30,13 @@
 //     shadows, midtones and highlights on top of the state (any hue/saturation pair),
 //     a fourth value for the global wheel, optional "luminance":[3 or 4], and
 //     optional "blending" [0, 100] and "balance" [-100, 100]
+//     optional "cameraDenoise":{"luminance":L,"chrominance":C} in [0, 100]: the
+//     editor's experimental denoise (signed development, before the profiles);
+//     {"luminance":0,"chrominance":0} renders the signed development alone
+//     optional "denoise":{"luminance":L,"chrominance":C} in [0, 100]: the editor's
+//     current denoise (after the tones and colours), both sliders at once
+//     optional "sharpening":{"amount":A in [0, 200],"radius":R in [0.5, 3],"masking":M
+//     in [0, 100]} on top of the state
 //   {"op":"quit"}
 // An error answers {"ok":false,"error":...} and the server keeps serving.
 // Diagnostics go to stderr; stdout carries only the protocol.
@@ -103,8 +110,45 @@ void render(Masters &masters, const QJsonObject &request)
                                                 [&](const Feature &known) { return known.name == feature; }),
             "Unknown feature: " + feature);
     require(feature == "neutral" || eligible(feature, source), "RAW source required for " + feature);
-    const LoadResult &master = masters.get(source, feature == "neutral" ? Decode{} : decodeFor(feature, value));
+    Decode decode = feature == "neutral" ? Decode{} : decodeFor(feature, value);
+    const bool cameraDenoise = request.contains("cameraDenoise");
+    decode.signedCameraSignal = cameraDenoise;
+    const LoadResult &master = masters.get(source, decode);
     Settings settings = settingsFor(master, feature, value);
+    if (cameraDenoise) {
+        const QJsonObject denoise = request.value("cameraDenoise").toObject();
+        const auto strength = [&](const char *key, int &target) {
+            const int v = denoise.value(key).toInt();
+            require(v >= 0 && v <= 100, QString("cameraDenoise.%1 out of range").arg(key));
+            target = v;
+        };
+        strength("luminance", settings.denoiseLuminance);
+        strength("chrominance", settings.denoiseChrominance);
+        settings.denoiseBeforeProfile = true;
+    }
+    if (request.contains("denoise")) {
+        require(!cameraDenoise, "denoise and cameraDenoise are exclusive");
+        const QJsonObject denoise = request.value("denoise").toObject();
+        const auto strength = [&](const char *key, int &target) {
+            const int v = denoise.value(key).toInt();
+            require(v >= 0 && v <= 100, QString("denoise.%1 out of range").arg(key));
+            target = v;
+        };
+        strength("luminance", settings.denoiseLuminance);
+        strength("chrominance", settings.denoiseChrominance);
+    }
+    if (request.contains("sharpening")) {
+        const QJsonObject sharpening = request.value("sharpening").toObject();
+        const int amount = sharpening.value("amount").toInt();
+        const double radius = sharpening.value("radius").toDouble(1.0);
+        const int masking = sharpening.value("masking").toInt();
+        require(amount >= 0 && amount <= 200, "sharpening.amount out of range");
+        require(radius >= 0.5 && radius <= 3.0, "sharpening.radius out of range");
+        require(masking >= 0 && masking <= 100, "sharpening.masking out of range");
+        settings.sharpeningAmount = amount;
+        settings.sharpeningRadius = float(radius);
+        settings.sharpeningMasking = masking;
+    }
     if (request.contains("mixer")) {
         const QJsonObject mixer = request.value("mixer").toObject();
         const auto set = [&](const char *key, auto &target) {

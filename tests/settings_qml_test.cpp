@@ -392,6 +392,36 @@ int main(int argc, char **argv)
                editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == 43,
                "folding sections should retain controls, adjustments and export options"))
         return 1;
+    // Single noise reduction slider: the engine's law sets both strengths; an
+    // advanced edit leaves a custom pair that the slider shows without replacing.
+    QObject *noiseAmount = controlWithLabel(noiseSection, QStringLiteral("Réduction du bruit"));
+    QObject *noiseColor = controlWithLabel(noiseSection, QStringLiteral("Bruit de couleur"));
+    if (!check(noiseAmount && noiseColor, "the noise section should hold the single slider and the advanced ones"))
+        return 1;
+    noiseAmount->setProperty("value", 25);
+    if (!check(editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == 25 &&
+               editor.adjustmentValue(QStringLiteral("denoiseChrominance")) == 82 &&
+               noise->property("value").toInt() == 25 && noiseColor->property("value").toInt() == 82 &&
+               editor.adjustmentValue(QStringLiteral("denoiseAmount")) == 25 &&
+               !noiseAmount->property("custom").toBool(),
+               "the single slider should set both strengths and show them in the advanced controls"))
+        return 1;
+    noise->setProperty("value", 30);
+    if (!check(editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == 30 &&
+               editor.adjustmentValue(QStringLiteral("denoiseChrominance")) == 82 &&
+               editor.adjustmentValue(QStringLiteral("denoiseAmount")) == -1 &&
+               noiseAmount->property("custom").toBool() &&
+               noiseAmount->property("valueText").toString() == QStringLiteral("Perso.") &&
+               noiseAmount->property("value").toInt() == 30,
+               "an advanced edit should keep its custom pair and mark the single slider as custom"))
+        return 1;
+    noiseAmount->setProperty("value", 0);
+    if (!check(editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == 0 &&
+               editor.adjustmentValue(QStringLiteral("denoiseChrominance")) == 0 &&
+               !noiseAmount->property("custom").toBool(),
+               "the single slider at zero should return both strengths to neutral"))
+        return 1;
+    noise->setProperty("value", 43);
     format->setProperty("currentIndex", 0); // JPEG
     if (!check(quality->property("visible").toBool(),
                "JPEG quality should reappear for JPEG"))

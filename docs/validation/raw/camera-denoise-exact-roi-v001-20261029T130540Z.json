@@ -1,0 +1,947 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261029T130540Z",
+  "label": "n2-three-scales-exact-roi",
+  "server_sha256": "f6c70aef697c523d9697c9f714b56b290e5c2db93d82303cd5e368f4e268fa51",
+  "reference": {
+    "path": "docs\\validation\\raw\\camera-denoise-n3-v001-20261029T124016Z.json",
+    "sha256": "efb0e87a4f08c090a8bf3fdf0a596e6a2d96647c537486043dfa74fea4cd0d8c"
+  },
+  "sources": {
+    "tests/raw_bench/camera_denoise_exact_roi.py": {
+      "sha256": "4de9638c57da9719aaa91c8392d2b1e8b15c13c01d95b409f2e7473c813f4e64",
+      "text": "\"\"\"Replay Claude's exact display ROIs, separating mean RGB from weighted luma.\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport sys\nimport threading\nimport time\n\nimport cv2\nimport numpy as np\n\nROOT = Path(__file__).resolve().parents[2]\nsys.path.insert(0, str(ROOT))\nfrom tests.analysis.render import RenderServer\n\n\ndef sha256(path):\n    return hashlib.sha256(path.read_bytes()).hexdigest()\n\n\ndef measure(image):\n    rgb = np.rint(image.astype(np.float64)/257.)\n    mean_rgb = rgb.mean(axis=2)\n    weighted = rgb @ np.array([.2126, .7152, .0722])\n    chroma = np.stack([rgb[..., 0]-rgb[..., 1], rgb[..., 2]-rgb[..., 1]], axis=2)\n    blurred = cv2.GaussianBlur(chroma, (0, 0), 2)\n    hp = chroma-blurred\n    hp_std = hp.std(axis=(0, 1))\n    lp_std = blurred.std(axis=(0, 1))\n    return dict(mean_rgb_mean=float(mean_rgb.mean()),\n                mean_rgb_hp_std=float((mean_rgb-cv2.GaussianBlur(mean_rgb, (0, 0), 2)).std()),\n                rec709_encoded_luma_hp_std=float((weighted-cv2.GaussianBlur(weighted, (0, 0), 2)).std()),\n                chroma_rg_bg_hp_std=hp_std.tolist(), chroma_rg_bg_lp_std=lp_std.tolist(),\n                chroma_hp_std_mean=float(hp_std.mean()), chroma_lp_std_mean=float(lp_std.mean()))\n\n\ndef main():\n    p = argparse.ArgumentParser(description=__doc__)\n    p.add_argument('--server', type=Path, required=True)\n    p.add_argument('--base', type=Path, required=True)\n    p.add_argument('--label', required=True)\n    p.add_argument('--reference-proof', type=Path)\n    p.add_argument('--runtime-dir', type=Path, action='append', required=True)\n    a = p.parse_args()\n    os.environ['PATH'] = os.pathsep.join(str(d.resolve()) for d in a.runtime_dir) + os.pathsep + os.environ.get('PATH', '')\n    stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n    executable_hash = sha256(a.server)\n    reference = None\n    if a.reference_proof:\n        old = json.loads(a.reference_proof.read_text(encoding='utf-8'))\n        if old.get('server_sha256') != executable_hash:\n            raise ValueError('Reference executable is not the one in the immutable evidence')\n        reference = dict(path=str(a.reference_proof), sha256=sha256(a.reference_proof))\n    names = ('tests/raw_bench/camera_denoise_exact_roi.py', 'tests/analysis/render.py')\n    if reference is None:\n        names += ('src/raw/CameraDenoise.cpp', 'src/raw/CameraDenoise.h')\n    proof = dict(schema_version=1, created_utc=stamp, label=a.label, server_sha256=executable_hash,\n                 reference=reference, sources={n: dict(sha256=sha256(ROOT/n), text=(ROOT/n).read_text(encoding='utf-8')) for n in names},\n                 scenes=[], limits=['Crop is measured AFTER full-frame denoising/rendering.',\n                                    'Mean RGB is not physical luminance; encoded Rec709 luma is not linear Y.',\n                                    'Gaussian highpass/lowpass includes actual texture and scene gradients.',\n                                    'No clean truth or visual validation; optics disabled.'])\n    failed = False\n    for name, x, y in (('7Y6A7599.CR3', 2940, 2940), ('IMG_7958.CR2', 3150, 1470), ('6V1A9539.CR3', 2100, 2940)):\n        source = (a.base/name).resolve()\n        scene = dict(source=str(source), source_sha256=sha256(source), roi=[x, y, 420, 420], states={})\n        proof['scenes'].append(scene)\n        server = RenderServer(a.server.resolve(), timeout=10)\n        try:\n            for label, force in (('B0', dict(luminance=0, chrominance=0)),\n                                 ('Bcol50', dict(luminance=0, chrominance=50))):\n                guard = threading.Timer(180, server.process.kill)\n                guard.start()\n                try:\n                    start = time.monotonic()\n                    pixels, metadata = server.render(source, 'neutral', 0, camera_denoise=force)\n                    elapsed = time.monotonic()-start\n                    if y+420>pixels.shape[0] or x+420>pixels.shape[1]:\n                        raise ValueError('ROI outside actual oriented render')\n                    roi = pixels[y:y+420, x:x+420].copy()\n                    del pixels\n                    scene['states'][label] = dict(metadata=metadata, metrics=measure(roi), request_wall_seconds=elapsed)\n                    print(name, label, scene['states'][label]['metrics'], flush=True)\n                finally:\n                    guard.cancel()\n                    guard.join()\n        except Exception as exc:\n            scene['error'] = repr(exc)\n            failed = True\n        finally:\n            server.close()\n        if failed:\n            break\n    proof['verdict'] = 'fail' if failed else 'measured_not_quality_validation'\n    output = ROOT/'docs/validation/raw'/f'camera-denoise-exact-roi-v001-{stamp}.json'\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(proof, handle, ensure_ascii=False, indent=2, allow_nan=False)\n    print(output, proof['verdict'], flush=True)\n    return int(failed)\n\n\nif __name__ == '__main__':\n    sys.exit(main())\n"
+    },
+    "tests/analysis/render.py": {
+      "sha256": "b5203c28d10f3d467ee6872e9fa2fe15cd61bfd530159e7ea7953f12bfdee704",
+      "text": "\"\"\"IPR states rendered in memory by iprRenderServer: no IPR TIFF is written.\n\nThe server renders through the TIFF export path and sends its 16-bit sRGB\nsamples on a pipe; the pixels are the ones the TIFF would contain.\n\"\"\"\nimport base64\nimport hashlib\nimport io\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\n\nimport numpy as np\nfrom PIL import ImageCms\n\nfrom .native import sha256\n\nROOT = Path(__file__).resolve().parents[2]\nEXECUTABLE = \"iprRenderServer.exe\" if os.name == \"nt\" else \"iprRenderServer\"\n# Estimated peak of one server and its client for a 32 MP source: master\n# (16 B/px), render (31 B/px), 16-bit buffers on both sides and the cached\n# references (about 75 B/px in all). To be confirmed by measurement.\nPER_WORKER_BYTES = 5 * 1024 ** 3 // 2\nRESERVE_BYTES = 2 * 1024 ** 3\n\n\ndef available_memory():\n    \"\"\"Available physical memory in bytes, None when unknown.\"\"\"\n    if os.name == \"nt\":\n        import ctypes\n\n        class Status(ctypes.Structure):\n            _fields_ = [(\"length\", ctypes.c_ulong), (\"load\", ctypes.c_ulong)] + [\n                (name, ctypes.c_ulonglong) for name in (\"total\", \"available\", \"total_page\", \"available_page\",\n                                                        \"total_virtual\", \"available_virtual\", \"extended\")]\n        status = Status()\n        status.length = ctypes.sizeof(Status)\n        return status.available if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status)) else None\n    try:\n        for line in Path(\"/proc/meminfo\").read_text().splitlines():\n            if line.startswith(\"MemAvailable:\"):\n                return int(line.split()[1]) * 1024\n    except OSError:\n        pass\n    return None\n\n\ndef worker_count(available=None, limit=4):\n    \"\"\"Parallel servers that fit in free memory, keeping a reserve; at least one.\"\"\"\n    available = available_memory() if available is None else available\n    if available is None:\n        return 1\n    by_memory = (available - RESERVE_BYTES) // PER_WORKER_BYTES\n    by_cores = max(1, (os.cpu_count() or 2) // 2)\n    return int(max(1, min(by_memory, by_cores, limit)))\n\n\ndef find_server():\n    \"\"\"IPR_RENDER_SERVER_BIN, else the Release build of the working tree.\"\"\"\n    explicit = os.environ.get(\"IPR_RENDER_SERVER_BIN\")\n    candidates = [Path(explicit)] if explicit else [\n        ROOT / \"build-windows-msvc/Release\" / EXECUTABLE, ROOT / \"build\" / EXECUTABLE]\n    for candidate in candidates:\n        if candidate.is_file():\n            return candidate.resolve()\n    raise ValueError(\"iprRenderServer not found; build it or set IPR_RENDER_SERVER_BIN\")\n\n\ndef runtime_env(executable):\n    \"\"\"Qt, OpenCV, libtiff and LibRaw runtime folders from the build's CMake cache.\"\"\"\n    env = dict(os.environ)\n    cache_path = next((p / \"CMakeCache.txt\" for p in Path(executable).parents if (p / \"CMakeCache.txt\").is_file()), None)\n    if cache_path is None:\n        return env\n    cache = {}\n    for line in cache_path.read_text(encoding=\"utf-8\", errors=\"replace\").splitlines():\n        if line and line[0] not in \"#/\" and \":\" in line and \"=\" in line:\n            key, value = line.split(\":\", 1)[0], line.split(\"=\", 1)[1]\n            cache[key] = value\n    folders = []\n    if cache.get(\"Qt6_DIR\"):\n        qt = Path(cache[\"Qt6_DIR\"]).parents[2]\n        folders.append(qt / \"bin\")\n        env.setdefault(\"QT_PLUGIN_PATH\", str(qt / \"plugins\"))\n    if cache.get(\"OpenCV_DIR\"):\n        folders.append(Path(cache[\"OpenCV_DIR\"]).parent / \"bin\")\n    for key in (\"TIFF_LIBRARY_RELEASE\", \"LIBRAW_LIBRARY\"):\n        if cache.get(key):\n            library = Path(cache[key]).parent\n            if library.name == \"manual-link\":\n                library = library.parent\n            folders.append(library.parent / \"bin\")\n    existing = [str(f) for f in dict.fromkeys(folders) if f.is_dir()]\n    env[\"PATH\"] = os.pathsep.join(existing + [env.get(\"PATH\", \"\")])\n    return env\n\n\nclass RenderServer:\n    \"\"\"One server process; closed (and killed if needed) on exit.\"\"\"\n\n    def __init__(self, executable=None, timeout=60):\n        self.executable = Path(executable) if executable else find_server()\n        self.timeout = timeout\n        self.sha256 = sha256(self.executable)\n        self.process = subprocess.Popen([str(self.executable)], stdin=subprocess.PIPE, stdout=subprocess.PIPE,\n                                        env=runtime_env(self.executable), bufsize=0)\n\n    def __enter__(self):\n        return self\n\n    def __exit__(self, *_):\n        self.close()\n\n    def close(self):\n        if self.process.poll() is None:\n            try:\n                self.process.stdin.write(b'{\"op\":\"quit\"}\\n')\n                self.process.stdin.flush()\n                self.process.wait(timeout=self.timeout)\n            except (OSError, subprocess.TimeoutExpired):\n                self.process.kill()\n                self.process.wait()\n        for stream in (self.process.stdin, self.process.stdout):\n            stream.close()\n\n    def _request(self, payload):\n        if self.process.poll() is not None:\n            raise ValueError(\"iprRenderServer exited with code \" + str(self.process.returncode))\n        self.process.stdin.write(json.dumps(payload).encode(\"utf-8\") + b\"\\n\")\n        self.process.stdin.flush()\n        line = self.process.stdout.readline()\n        if not line:\n            raise ValueError(\"iprRenderServer closed its output\")\n        header = json.loads(line)\n        if not header.get(\"ok\"):\n            raise ValueError(\"iprRenderServer: \" + str(header.get(\"error\")))\n        return header\n\n    def _read(self, size):\n        buffer = bytearray(size)\n        view, received = memoryview(buffer), 0\n        while received < size:\n            count = self.process.stdout.readinto(view[received:])\n            if not count:\n                raise ValueError(\"Truncated render from iprRenderServer\")\n            received += count\n        return buffer\n\n    def states(self, base, group):\n        return self._request({\"op\": \"list\", \"base\": str(base), \"group\": group})[\"states\"]\n\n    def render(self, source, feature, value, mixer=None, grading=None, point_color=None, tone_curves=None,\n               camera_denoise=None):\n        \"\"\"Pixels (height, width, 3) uint16 and metadata shaped like native.inspect().\n        mixer: optional {\"hue\": [8], \"saturation\": [8], \"luminance\": [8]} on top of the state.\n        grading: optional {\"hue\": [3 or 4], \"saturation\": [3 or 4]} (shadows, midtones, highlights, global),\n        with optional \"luminance\" [3 or 4], \"blending\" and \"balance\".\n        point_color: optional list of up to 8 points in picking order, each {\"source\": [hue, saturation, value]}\n        as Lightroom writes it (HSV of linear ProPhoto, hue in radians)\n        tone_curves: optional [rgb, red, green, blue], each a list of [x, y] in [0, 1]\n        with optional \"hue\", \"saturation\", \"luminance\", \"variance\" (0) and \"range\" (50).\n        camera_denoise: optional {\"luminance\": L, \"chrominance\": C} in [0, 100], the editor's experimental\n        denoise on the signed camera signal before the profiles (0, 0: the signed development alone).\"\"\"\n        request = {\"op\": \"render\", \"source\": str(source), \"feature\": feature, \"value\": value}\n        if mixer is not None:\n            request[\"mixer\"] = mixer\n        if grading is not None:\n            request[\"grading\"] = grading\n        if point_color is not None:\n            request[\"pointColor\"] = point_color\n        if tone_curves is not None:\n            request[\"toneCurves\"] = tone_curves\n        if camera_denoise is not None:\n            request[\"cameraDenoise\"] = camera_denoise\n        header = self._request(request)\n        width, height = header[\"width\"], header[\"height\"]\n        if header[\"channels\"] != 3 or header[\"dtype\"] != \"<u2\" or header[\"bytes\"] != width * height * 6:\n            raise ValueError(\"Unexpected render layout from iprRenderServer\")\n        data = self._read(header[\"bytes\"])\n        pixels = np.frombuffer(data, dtype=\"<u2\").reshape(height, width, 3)\n        icc = base64.b64decode(header[\"icc_base64\"])\n        if not icc:\n            raise ValueError(\"Render without ICC profile\")\n        description = ImageCms.getProfileDescription(ImageCms.ImageCmsProfile(io.BytesIO(icc))).strip()\n        if \"srgb\" not in description.lower():\n            raise ValueError(\"Expected sRGB render, got \" + description)\n        metadata = {\"path\": None, \"render\": {\"source\": str(source), \"feature\": feature, \"value\": value},\n                    \"sha256\": hashlib.sha256(data).hexdigest(), \"sha256_scope\": \"uint16 RGB samples, row-major\",\n                    \"bytes\": len(data), \"dimensions\": [width, height], \"bits\": [16, 16, 16], \"channels\": 3,\n                    \"orientation\": 1, \"compression\": 1, \"icc\": description,\n                    \"icc_sha256\": hashlib.sha256(icc).hexdigest(), \"xmp_settings\": {},\n                    \"declaration\": header[\"declaration\"]}\n        return pixels, metadata\n\n"
+    }
+  },
+  "scenes": [
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "roi": [
+        2940,
+        2940,
+        420,
+        420
+      ],
+      "states": {
+        "B0": {
+          "metadata": {
+            "path": null,
+            "render": {
+              "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+              "feature": "neutral",
+              "value": 0
+            },
+            "sha256": "a1bed6ef943f939908d02fbabfab19cb8be21face1a641c2515d7005a808e72f",
+            "sha256_scope": "uint16 RGB samples, row-major",
+            "bytes": 195272640,
+            "dimensions": [
+              6984,
+              4660
+            ],
+            "bits": [
+              16,
+              16,
+              16
+            ],
+            "channels": 3,
+            "orientation": 1,
+            "compression": 1,
+            "icc": "sRGB",
+            "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+            "xmp_settings": {},
+            "declaration": {
+              "chromatic_aberration_applied": false,
+              "created_at_utc": "2026-10-29T13:06:14.363Z",
+              "dcp_profile": "Canon EOS R7 Camera Neutral",
+              "executable_sha256": "f6c70aef697c523d9697c9f714b56b290e5c2db93d82303cd5e368f4e268fa51",
+              "feature": "neutral",
+              "group": "neutral",
+              "ipr_test_schema": 1,
+              "lcp_profile": "Canon (SIGMA 70-200mm F2.8 DG OS HSM S018) - RAW",
+              "lcp_sha256": "d856486fc4691a9fc2fe010c2eb570dccb0594bd3427f3484f88029d4337c7e7",
+              "lens_geometry_applied": false,
+              "lens_vignetting_applied": false,
+              "qt_version": "6.11.2",
+              "raw_normalization": true,
+              "reference": "state:neutral:0",
+              "scene": "7Y6A7599",
+              "settings": {
+                "automaticWhiteBalance": false,
+                "blacks": 0,
+                "blur": 0,
+                "clarity": 0,
+                "contrast": 0,
+                "dehaze": 0,
+                "denoiseChrominance": 0,
+                "denoiseLuminance": 0,
+                "exposure": 0,
+                "grading": [
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  }
+                ],
+                "gradingBalance": 0,
+                "gradingBlending": 50,
+                "grain": 0,
+                "grayscale": false,
+                "highlights": 0,
+                "mixerHue": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerLuminance": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerSaturation": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturation": 0,
+                "shadows": 0,
+                "sharpeningAmount": 0,
+                "sharpeningMasking": 0,
+                "sharpeningRadius": 1,
+                "temperature": 5314,
+                "texture": 0,
+                "tint": 0,
+                "toneCurves": [
+                  [],
+                  [],
+                  [],
+                  []
+                ],
+                "vibrance": 0,
+                "whites": 0
+              },
+              "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+              "value": 0
+            }
+          },
+          "metrics": {
+            "mean_rgb_mean": 57.78732804232804,
+            "mean_rgb_hp_std": 17.188257338091205,
+            "rec709_encoded_luma_hp_std": 17.370416128842994,
+            "chroma_rg_bg_hp_std": [
+              19.726121555832137,
+              21.1070799183135
+            ],
+            "chroma_rg_bg_lp_std": [
+              27.07029255983355,
+              40.25170407747449
+            ],
+            "chroma_hp_std_mean": 20.41660073707282,
+            "chroma_lp_std_mean": 33.66099831865402
+          },
+          "request_wall_seconds": 34.210476199979894
+        },
+        "Bcol50": {
+          "metadata": {
+            "path": null,
+            "render": {
+              "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+              "feature": "neutral",
+              "value": 0
+            },
+            "sha256": "d799f95521a8c4cfab2a6ee112d8e5aedb961144b278d7daa9a60e9e59a41b4b",
+            "sha256_scope": "uint16 RGB samples, row-major",
+            "bytes": 195272640,
+            "dimensions": [
+              6984,
+              4660
+            ],
+            "bits": [
+              16,
+              16,
+              16
+            ],
+            "channels": 3,
+            "orientation": 1,
+            "compression": 1,
+            "icc": "sRGB",
+            "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+            "xmp_settings": {},
+            "declaration": {
+              "chromatic_aberration_applied": false,
+              "created_at_utc": "2026-10-29T13:06:21.923Z",
+              "dcp_profile": "Canon EOS R7 Camera Neutral",
+              "executable_sha256": "f6c70aef697c523d9697c9f714b56b290e5c2db93d82303cd5e368f4e268fa51",
+              "feature": "neutral",
+              "group": "neutral",
+              "ipr_test_schema": 1,
+              "lcp_profile": "Canon (SIGMA 70-200mm F2.8 DG OS HSM S018) - RAW",
+              "lcp_sha256": "d856486fc4691a9fc2fe010c2eb570dccb0594bd3427f3484f88029d4337c7e7",
+              "lens_geometry_applied": false,
+              "lens_vignetting_applied": false,
+              "qt_version": "6.11.2",
+              "raw_normalization": true,
+              "reference": "state:neutral:0",
+              "scene": "7Y6A7599",
+              "settings": {
+                "automaticWhiteBalance": false,
+                "blacks": 0,
+                "blur": 0,
+                "clarity": 0,
+                "contrast": 0,
+                "dehaze": 0,
+                "denoiseChrominance": 50,
+                "denoiseLuminance": 0,
+                "exposure": 0,
+                "grading": [
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  }
+                ],
+                "gradingBalance": 0,
+                "gradingBlending": 50,
+                "grain": 0,
+                "grayscale": false,
+                "highlights": 0,
+                "mixerHue": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerLuminance": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerSaturation": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturation": 0,
+                "shadows": 0,
+                "sharpeningAmount": 0,
+                "sharpeningMasking": 0,
+                "sharpeningRadius": 1,
+                "temperature": 5314,
+                "texture": 0,
+                "tint": 0,
+                "toneCurves": [
+                  [],
+                  [],
+                  [],
+                  []
+                ],
+                "vibrance": 0,
+                "whites": 0
+              },
+              "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+              "value": 0
+            }
+          },
+          "metrics": {
+            "mean_rgb_mean": 57.30883597883599,
+            "mean_rgb_hp_std": 18.995567923135162,
+            "rec709_encoded_luma_hp_std": 17.14487738506686,
+            "chroma_rg_bg_hp_std": [
+              13.520042958097042,
+              17.960786691486817
+            ],
+            "chroma_rg_bg_lp_std": [
+              24.091680037019163,
+              39.83465931390839
+            ],
+            "chroma_hp_std_mean": 15.74041482479193,
+            "chroma_lp_std_mean": 31.963169675463774
+          },
+          "request_wall_seconds": 7.5494388999650255
+        }
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+      "source_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+      "roi": [
+        3150,
+        1470,
+        420,
+        420
+      ],
+      "states": {
+        "B0": {
+          "metadata": {
+            "path": null,
+            "render": {
+              "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+              "feature": "neutral",
+              "value": 0
+            },
+            "sha256": "efdc13b87ac45cc4e2ffcaedc4ec22b2773ff1fd3fc38f5e206195b76b32bd96",
+            "sha256_scope": "uint16 RGB samples, row-major",
+            "bytes": 108118368,
+            "dimensions": [
+              5202,
+              3464
+            ],
+            "bits": [
+              16,
+              16,
+              16
+            ],
+            "channels": 3,
+            "orientation": 1,
+            "compression": 1,
+            "icc": "sRGB",
+            "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+            "xmp_settings": {},
+            "declaration": {
+              "chromatic_aberration_applied": false,
+              "created_at_utc": "2026-10-29T13:06:54.664Z",
+              "dcp_profile": "Canon EOS 60D Camera Neutral",
+              "executable_sha256": "f6c70aef697c523d9697c9f714b56b290e5c2db93d82303cd5e368f4e268fa51",
+              "feature": "neutral",
+              "group": "neutral",
+              "ipr_test_schema": 1,
+              "lcp_profile": "Canon (SIGMA 70-200mm F2.8 DG OS HSM S018) - RAW",
+              "lcp_sha256": "d856486fc4691a9fc2fe010c2eb570dccb0594bd3427f3484f88029d4337c7e7",
+              "lens_geometry_applied": false,
+              "lens_vignetting_applied": false,
+              "qt_version": "6.11.2",
+              "raw_normalization": true,
+              "reference": "state:neutral:0",
+              "scene": "IMG_7958",
+              "settings": {
+                "automaticWhiteBalance": false,
+                "blacks": 0,
+                "blur": 0,
+                "clarity": 0,
+                "contrast": 0,
+                "dehaze": 0,
+                "denoiseChrominance": 0,
+                "denoiseLuminance": 0,
+                "exposure": 0,
+                "grading": [
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  }
+                ],
+                "gradingBalance": 0,
+                "gradingBlending": 50,
+                "grain": 0,
+                "grayscale": false,
+                "highlights": 0,
+                "mixerHue": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerLuminance": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerSaturation": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturation": 0,
+                "shadows": 0,
+                "sharpeningAmount": 0,
+                "sharpeningMasking": 0,
+                "sharpeningRadius": 1,
+                "temperature": 4810,
+                "texture": 0,
+                "tint": 0,
+                "toneCurves": [
+                  [],
+                  [],
+                  [],
+                  []
+                ],
+                "vibrance": 0,
+                "whites": 0
+              },
+              "source_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+              "value": 0
+            }
+          },
+          "metrics": {
+            "mean_rgb_mean": 60.83399848828421,
+            "mean_rgb_hp_std": 13.848589254402892,
+            "rec709_encoded_luma_hp_std": 14.968158815912178,
+            "chroma_rg_bg_hp_std": [
+              8.597640687472845,
+              9.759198600681616
+            ],
+            "chroma_rg_bg_lp_std": [
+              23.212045758827948,
+              37.07664754640957
+            ],
+            "chroma_hp_std_mean": 9.17841964407723,
+            "chroma_lp_std_mean": 30.144346652618758
+          },
+          "request_wall_seconds": 32.561723400023766
+        },
+        "Bcol50": {
+          "metadata": {
+            "path": null,
+            "render": {
+              "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+              "feature": "neutral",
+              "value": 0
+            },
+            "sha256": "b4de02c04faf466e189016a2952e23013b0fb779d7f4bcee5ff471764a338a37",
+            "sha256_scope": "uint16 RGB samples, row-major",
+            "bytes": 108118368,
+            "dimensions": [
+              5202,
+              3464
+            ],
+            "bits": [
+              16,
+              16,
+              16
+            ],
+            "channels": 3,
+            "orientation": 1,
+            "compression": 1,
+            "icc": "sRGB",
+            "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+            "xmp_settings": {},
+            "declaration": {
+              "chromatic_aberration_applied": false,
+              "created_at_utc": "2026-10-29T13:06:58.677Z",
+              "dcp_profile": "Canon EOS 60D Camera Neutral",
+              "executable_sha256": "f6c70aef697c523d9697c9f714b56b290e5c2db93d82303cd5e368f4e268fa51",
+              "feature": "neutral",
+              "group": "neutral",
+              "ipr_test_schema": 1,
+              "lcp_profile": "Canon (SIGMA 70-200mm F2.8 DG OS HSM S018) - RAW",
+              "lcp_sha256": "d856486fc4691a9fc2fe010c2eb570dccb0594bd3427f3484f88029d4337c7e7",
+              "lens_geometry_applied": false,
+              "lens_vignetting_applied": false,
+              "qt_version": "6.11.2",
+              "raw_normalization": true,
+              "reference": "state:neutral:0",
+              "scene": "IMG_7958",
+              "settings": {
+                "automaticWhiteBalance": false,
+                "blacks": 0,
+                "blur": 0,
+                "clarity": 0,
+                "contrast": 0,
+                "dehaze": 0,
+                "denoiseChrominance": 50,
+                "denoiseLuminance": 0,
+                "exposure": 0,
+                "grading": [
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  }
+                ],
+                "gradingBalance": 0,
+                "gradingBlending": 50,
+                "grain": 0,
+                "grayscale": false,
+                "highlights": 0,
+                "mixerHue": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerLuminance": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerSaturation": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturation": 0,
+                "shadows": 0,
+                "sharpeningAmount": 0,
+                "sharpeningMasking": 0,
+                "sharpeningRadius": 1,
+                "temperature": 4810,
+                "texture": 0,
+                "tint": 0,
+                "toneCurves": [
+                  [],
+                  [],
+                  [],
+                  []
+                ],
+                "vibrance": 0,
+                "whites": 0
+              },
+              "source_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+              "value": 0
+            }
+          },
+          "metrics": {
+            "mean_rgb_mean": 60.818970143613,
+            "mean_rgb_hp_std": 13.86168680748789,
+            "rec709_encoded_luma_hp_std": 14.9688659584966,
+            "chroma_rg_bg_hp_std": [
+              8.552843657979755,
+              9.741249746644256
+            ],
+            "chroma_rg_bg_lp_std": [
+              23.20785477826702,
+              37.07891266872783
+            ],
+            "chroma_hp_std_mean": 9.147046702312005,
+            "chroma_lp_std_mean": 30.143383723497426
+          },
+          "request_wall_seconds": 3.9915132999885827
+        }
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+      "source_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf",
+      "roi": [
+        2100,
+        2940,
+        420,
+        420
+      ],
+      "states": {
+        "B0": {
+          "metadata": {
+            "path": null,
+            "render": {
+              "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+              "feature": "neutral",
+              "value": 0
+            },
+            "sha256": "9a51ca072afa941e74c39ac0f8dd1a5856a1eb5c9469d6a7268fa7abaab57ea2",
+            "sha256_scope": "uint16 RGB samples, row-major",
+            "bytes": 193696806,
+            "dimensions": [
+              4639,
+              6959
+            ],
+            "bits": [
+              16,
+              16,
+              16
+            ],
+            "channels": 3,
+            "orientation": 1,
+            "compression": 1,
+            "icc": "sRGB",
+            "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+            "xmp_settings": {},
+            "declaration": {
+              "chromatic_aberration_applied": false,
+              "created_at_utc": "2026-10-29T13:07:33.999Z",
+              "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+              "executable_sha256": "f6c70aef697c523d9697c9f714b56b290e5c2db93d82303cd5e368f4e268fa51",
+              "feature": "neutral",
+              "group": "neutral",
+              "ipr_test_schema": 1,
+              "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+              "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+              "lens_geometry_applied": false,
+              "lens_vignetting_applied": false,
+              "qt_version": "6.11.2",
+              "raw_normalization": true,
+              "reference": "state:neutral:0",
+              "scene": "6V1A9539",
+              "settings": {
+                "automaticWhiteBalance": false,
+                "blacks": 0,
+                "blur": 0,
+                "clarity": 0,
+                "contrast": 0,
+                "dehaze": 0,
+                "denoiseChrominance": 0,
+                "denoiseLuminance": 0,
+                "exposure": 0,
+                "grading": [
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  }
+                ],
+                "gradingBalance": 0,
+                "gradingBlending": 50,
+                "grain": 0,
+                "grayscale": false,
+                "highlights": 0,
+                "mixerHue": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerLuminance": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerSaturation": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturation": 0,
+                "shadows": 0,
+                "sharpeningAmount": 0,
+                "sharpeningMasking": 0,
+                "sharpeningRadius": 1,
+                "temperature": 4924,
+                "texture": 0,
+                "tint": 0,
+                "toneCurves": [
+                  [],
+                  [],
+                  [],
+                  []
+                ],
+                "vibrance": 0,
+                "whites": 0
+              },
+              "source_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf",
+              "value": 0
+            }
+          },
+          "metrics": {
+            "mean_rgb_mean": 47.13219009826153,
+            "mean_rgb_hp_std": 4.527273802550108,
+            "rec709_encoded_luma_hp_std": 4.40501825189409,
+            "chroma_rg_bg_hp_std": [
+              4.72350149663308,
+              4.676665233797676
+            ],
+            "chroma_rg_bg_lp_std": [
+              18.99773817649747,
+              17.779214821246214
+            ],
+            "chroma_hp_std_mean": 4.700083365215378,
+            "chroma_lp_std_mean": 18.388476498871842
+          },
+          "request_wall_seconds": 35.306760300009046
+        },
+        "Bcol50": {
+          "metadata": {
+            "path": null,
+            "render": {
+              "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+              "feature": "neutral",
+              "value": 0
+            },
+            "sha256": "7be3ff494fc853b9bf21a56d99d1c4dc9ca526f97b660d044383f25feee4c004",
+            "sha256_scope": "uint16 RGB samples, row-major",
+            "bytes": 193696806,
+            "dimensions": [
+              4639,
+              6959
+            ],
+            "bits": [
+              16,
+              16,
+              16
+            ],
+            "channels": 3,
+            "orientation": 1,
+            "compression": 1,
+            "icc": "sRGB",
+            "icc_sha256": "ef087eece0b3a8ca7b79e56b8e82578bea636870a4bd547c44c25722605ff838",
+            "xmp_settings": {},
+            "declaration": {
+              "chromatic_aberration_applied": false,
+              "created_at_utc": "2026-10-29T13:07:41.611Z",
+              "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+              "executable_sha256": "f6c70aef697c523d9697c9f714b56b290e5c2db93d82303cd5e368f4e268fa51",
+              "feature": "neutral",
+              "group": "neutral",
+              "ipr_test_schema": 1,
+              "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+              "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+              "lens_geometry_applied": false,
+              "lens_vignetting_applied": false,
+              "qt_version": "6.11.2",
+              "raw_normalization": true,
+              "reference": "state:neutral:0",
+              "scene": "6V1A9539",
+              "settings": {
+                "automaticWhiteBalance": false,
+                "blacks": 0,
+                "blur": 0,
+                "clarity": 0,
+                "contrast": 0,
+                "dehaze": 0,
+                "denoiseChrominance": 50,
+                "denoiseLuminance": 0,
+                "exposure": 0,
+                "grading": [
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  },
+                  {
+                    "hue": 0,
+                    "luminance": 0,
+                    "saturation": 0
+                  }
+                ],
+                "gradingBalance": 0,
+                "gradingBlending": 50,
+                "grain": 0,
+                "grayscale": false,
+                "highlights": 0,
+                "mixerHue": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerLuminance": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "mixerSaturation": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturation": 0,
+                "shadows": 0,
+                "sharpeningAmount": 0,
+                "sharpeningMasking": 0,
+                "sharpeningRadius": 1,
+                "temperature": 4924,
+                "texture": 0,
+                "tint": 0,
+                "toneCurves": [
+                  [],
+                  [],
+                  [],
+                  []
+                ],
+                "vibrance": 0,
+                "whites": 0
+              },
+              "source_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf",
+              "value": 0
+            }
+          },
+          "metrics": {
+            "mean_rgb_mean": 47.131179138322,
+            "mean_rgb_hp_std": 4.644002212548513,
+            "rec709_encoded_luma_hp_std": 4.3732926233107525,
+            "chroma_rg_bg_hp_std": [
+              4.322443447845525,
+              4.346790805422187
+            ],
+            "chroma_rg_bg_lp_std": [
+              18.920983575892144,
+              17.755517968692452
+            ],
+            "chroma_hp_std_mean": 4.334617126633856,
+            "chroma_lp_std_mean": 18.338250772292298
+          },
+          "request_wall_seconds": 7.589370700006839
+        }
+      }
+    }
+  ],
+  "limits": [
+    "Crop is measured AFTER full-frame denoising/rendering.",
+    "Mean RGB is not physical luminance; encoded Rec709 luma is not linear Y.",
+    "Gaussian highpass/lowpass includes actual texture and scene gradients.",
+    "No clean truth or visual validation; optics disabled."
+  ],
+  "verdict": "measured_not_quality_validation"
+}

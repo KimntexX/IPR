@@ -1,0 +1,1245 @@
+{
+  "schema_version": 1,
+  "campaign_id": "raw-production-freeze-20261028T163154Z",
+  "measured_at_utc": "2026-10-28T16:31:54.240296+00:00",
+  "inventory": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\banc-raw-unpack-smoke-v001-20261028T143905Z.json",
+    "sha256": "bda8600b39600d938fe0b4bfba78dfc01a27b48903f3e8768debf0eb1adfc925"
+  },
+  "inputs": [
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7580.CR2",
+      "source_sha256": "020b83b4beff9137bd9f6d409991d7b1006f0422183c31656e5a185f31dde417",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\0-_MG_7580.json",
+      "capture_sha256": "0bd4c4fc2ab8ac87dc03bf70c935e61046ac2d4129f4ee92491033b35affdf35",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7840.CR2",
+      "source_sha256": "b37c4176e160c9c1bdd0518b4a3115bde53b44e7012f0574d138f935f472935b",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\1-_MG_7840.json",
+      "capture_sha256": "52b599095b8927f8545d890bc78c8e99b57f5b4ce3b203ed7648cd354973a1e9",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+      "source_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\2-6V1A0007.json",
+      "capture_sha256": "6024d7f757859af6a30bb03055fe8ecd6bc54c7fcb0a7b02be18791545e89289",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0032.CR3",
+      "source_sha256": "f32a27f60fff34a35215b18be688c2300e371ce27c5e4977cb70567a9e6e702d",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\3-6V1A0032.json",
+      "capture_sha256": "1922862d02361d6b32c7c4499b64dd78b63891ab98c49987eb1d7f144eadb29f",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+      "source_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\4-6V1A0043.json",
+      "capture_sha256": "a6daeb4c6680904f1fe8b34dad5cae9f929f5532e0e5c7e5c8f62dff8dc610bd",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0064.CR3",
+      "source_sha256": "af350c1ad03079873dc5ebcbe5ef4b23d14c921e6aeb151d5eced2ad9a7928ed",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\5-6V1A0064.json",
+      "capture_sha256": "383c1bd409fcd370da606118f4d81b38a1131637cba435a6f80eac68990399d8",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0327.CR3",
+      "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\6-6V1A0327.json",
+      "capture_sha256": "2a8a7e5064b49cd21d516f132d1be0eb2deb96476e40f3e094a31ec036e6ccea",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0524.CR3",
+      "source_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\7-6V1A0524.json",
+      "capture_sha256": "67eb70587873524a0cb5c0e0425094867df2ce8b558a3d27d540f720e438ee0f",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0544.CR3",
+      "source_sha256": "cac52efb3491f413403db11fd4cdbc299b1c257c8a0f13420ec83140df30c33a",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\8-6V1A0544.json",
+      "capture_sha256": "1a7d5777cb49f79a052d53044aae65a06684a2b0611f4abe8667b8c9104097bc",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9112.CR3",
+      "source_sha256": "80094389b8281933fd9ee0f16d9aa6245b77f9e6652578d78a1fed2575e6007b",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\9-6V1A9112.json",
+      "capture_sha256": "e34167dd91739214785c30a2aaed8b3c7b2783ca5c6a5dceedbc408e374a6f7c",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9141.CR3",
+      "source_sha256": "5e4046a021c570ffbfecfb174cf4dba685fb8b105787f3f904394cd3505effcf",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\10-6V1A9141.json",
+      "capture_sha256": "cbe9a57ca090272a34b8135ab881c17dc71a18edd3b8814d7a912b8e4e14ecd0",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+      "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\11-6V1A9153.json",
+      "capture_sha256": "17e3b4dfa0204331a6664d6c1c122bcc897427877eaa79a7197969143c36f714",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+      "source_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\12-6V1A9539.json",
+      "capture_sha256": "244186c1ca990a22807d3d231287b32568d2f8f1fb66253e464937b01520313b",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9940.CR3",
+      "source_sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\13-6V1A9940.json",
+      "capture_sha256": "5b6ad87659d3d09442e89b67b31866d3f7fc9865474f670d2f5c827de1fa0e9f",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9947.CR3",
+      "source_sha256": "ee34e67577716b937e726df6f8f07362bcc34ee4dfd5653e06b1dddb68ff9df4",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\14-6V1A9947.json",
+      "capture_sha256": "4050e97f8fe2a943eadf4dbf6dd4bbd15252f1f9ce8ff6675959d9147453d9c8",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\15-7Y6A7599.json",
+      "capture_sha256": "850c81a44d06b358897738df1a18c917af22c8238f0a92e349b192989c8e3bd8",
+      "model": "EOS R7",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2202,
+            1268
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2202,
+            3364
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2202,
+            5458
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\16-IMG_3135.json",
+      "capture_sha256": "905196419bd72fd7804e49ee706fa13b87cc7c78d5d8b771901c52ed51a61130",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4002.CR2",
+      "source_sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\17-IMG_4002.json",
+      "capture_sha256": "8ca5ceb32def09c3b59fbcecaaaa485f27c64b0afbaf3c7c13dd9962ba83e8c8",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4173.CR2",
+      "source_sha256": "6e5e0f451b39abab76d45a4d17131af5b69af3890bb4b70fa1cd4983aea4d390",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\18-IMG_4173.json",
+      "capture_sha256": "1fcd91996f083625f9af16d6826f14ab8ebb9ef4c9681ae349275695f16957d6",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4345.CR2",
+      "source_sha256": "47c4d5a394e2e98335f686e14e0e26e1f1a00cb1e21e935caf7f438854a1cb5e",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\19-IMG_4345.json",
+      "capture_sha256": "6ea799a32c7279483bd461b506cc9d071e82921c0764fc7a81a9365fdd459d9c",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6248.CR2",
+      "source_sha256": "9434f32e572b6d2a50379a159ab547789d6ecc1656eb2f93bab55ba6933adcd8",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\20-IMG_6248.json",
+      "capture_sha256": "2ed301d280f398ed00c27ad9daf512b328eea18c691234644233e7b0cb14a3a7",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6954.CR2",
+      "source_sha256": "3d80e31cad494d129c7f110e5e62ee2c8372d627d8a2bbbad5ab9034e4650577",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\21-IMG_6954.json",
+      "capture_sha256": "524c7a1e89377fda129a9f6c801f82a99870000ffa324968a4d6cf912b9de3ff",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6979.CR2",
+      "source_sha256": "1eba7c273b609d1f9cebe68cdbf1c03a065f835094789b30dbbc6302a442a7fb",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\22-IMG_6979.json",
+      "capture_sha256": "48f744a9844e786e1c2acb916f1f23f5dd058436c628fc467519bd8b4f068632",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7423.CR2",
+      "source_sha256": "8eea727fdd9cd4b2766292cbccf172a841d5e22aa595e1378e2503c59dd5226c",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\23-IMG_7423.json",
+      "capture_sha256": "e68fc528503012c71f2f7bd53aca11d35b2dc41f74d6c122b25d97a760e1cb79",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7953.CR2",
+      "source_sha256": "966d5bc82bbbebc89b5364002539300b853828574ad1ff968620661a75a21a16",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\24-IMG_7953.json",
+      "capture_sha256": "345f834381e89877f7cdeebc7e5340035c27601c017cc382d8f8b4c6eb64c0d8",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+      "source_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\25-IMG_7958.json",
+      "capture_sha256": "f915a727458a19e4f4e1c8602bbe0ebdea3ff336d7c38163f4776fef5d4d259a",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7961.CR2",
+      "source_sha256": "a949888b39903a441da32f88118be50ce1300cfe5cdd4dcabbc3b2d365fe7aa9",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\26-IMG_7961.json",
+      "capture_sha256": "c8709d77c13deeb32947cf51ffec63262c8ee8276deef89aaabd0751fdc1f72a",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_8473.CR2",
+      "source_sha256": "d1acde3f2969bf6fd3b5d77f6b3c82d60371e08f9b2feabbccce7b7b5cd8840e",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\27-IMG_8473.json",
+      "capture_sha256": "14882b904baf392478e72c65591927a53261110828e15743f402335e530126bb",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "source_sha256": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\28-6V1A0003.json",
+      "capture_sha256": "7fca26b97a151b47d85fb2468020dee6c592c3f7b26e5b3f07eb42ed2a742346",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "source_sha256": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\29-6V1A9950.json",
+      "capture_sha256": "39ffef11c3907c4061d3efe64c044a336b8dad929f4ef5d60f6027e7b88ba528",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    }
+  ],
+  "profiles": {
+    "EOS 60D": {
+      "path": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS 60D\\Canon EOS 60D Camera Neutral.dcp",
+      "sha256": "9e60085ae947ce8658e7682fe1a62797e8c4d9176f624f96a22829123875fe9d"
+    },
+    "EOS R6 Mark III": {
+      "path": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+      "sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701"
+    },
+    "EOS R7": {
+      "path": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R7\\Canon EOS R7 Camera Neutral.dcp",
+      "sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39"
+    }
+  },
+  "manifest": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\config\\raw-normalization.json",
+    "sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c"
+  },
+  "reference_revision": "ee8f26d4af6e2b3c4edaf71ca62951c13f0187c2",
+  "candidate_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+  "engine_sources": {
+    "reference": {
+      "src\\app\\main.cpp": "3f6d7f0be149b451cf2556345b4e78dae30ffd7a5033150017031420d5129784",
+      "src\\app\\UiPreferences.cpp": "860835075e6e8fe0d0454e1f574e58e82d016bca895006b126cfeb3d671c51e7",
+      "src\\app\\UiPreferences.h": "e161f7b0c0f70b8269e10589de89cf3c8b223fdd4f7fd0b438dff508b6331649",
+      "src\\cache\\DecodedImageCache.cpp": "6a6b0d79c8a76d20174d0c7271e8c00030c4770e17d43e354f78dbdc42f1f66c",
+      "src\\cache\\DecodedImageCache.h": "daa1aca18c9c8b0b86299c3cc02f4825cf76e1838ccca37f87ca5d9016f1d880",
+      "src\\cache\\ImageCacheController.cpp": "35ad92e1b537f92b045377a8007f868c7a9f707b7b69da8383c38c0a481ec04d",
+      "src\\cache\\ImageCacheController.h": "1e56e35b090c15009037a9b2b677a4b7d4a9036bd371f5e04fb8d8b17a79f741",
+      "src\\cache\\RenderStageCache.cpp": "8651f8b8c09b210b0ca085c5a6662fd69736d2601153db44e0007071a55e1b14",
+      "src\\cache\\RenderStageCache.h": "5d1a98ff86ed86d0a62d1087beb4fcfa83b83f752ada42b614c58ed5e16ddba6",
+      "src\\cache\\SystemMemory.cpp": "b27d9c5547014dc661cfd445330c2528b29c2ed8d9e58ea13691abe546bb82dd",
+      "src\\cache\\SystemMemory.h": "dea93bcaa70a4ff29d73485f3a0ec6c773808b6f4253503941799094c0a2c409",
+      "src\\core\\ColorAdjustments.cpp": "0408a8328b78799122f5689db50d9f0b0a40d1a9cb09638ba488ef7a557beb82",
+      "src\\core\\ColorAdjustments.h": "1046f1c4b5d1e608aabef7620fba3ba57936313c2f25f0b894ca006a41a2ebd2",
+      "src\\core\\ColorGrading.cpp": "fb7c665383a064b11e664bbb59adbc4b92377c13b4f6f181f541b9fc1efd9331",
+      "src\\core\\ColorGrading.h": "9028270008a44fad1a6ff0ab6a034d1f62ae1596ee1e710cd3a5c1e4e5e2e929",
+      "src\\core\\ColorMixer.cpp": "5ac9d81d521fae9e2a049e3e35c0a69d13eb9b6cb4bd9b5e5f0a01d4314f719e",
+      "src\\core\\ColorMixer.h": "9500a4cbe3b97fe1ddcefc8d771a155f46b65b795da089806cd41f5d694c3faf",
+      "src\\core\\ColorMixerModel.h": "d6d97de885476d147641a01828c12bbd00ceb83717bfe7e51a76895b2ecbd68f",
+      "src\\core\\ColorPipeline.cpp": "cfb1d95384d9bde45a7f880a71ceeb405c4b37958eee991a94342f87108f4878",
+      "src\\core\\ColorPipeline.h": "a089cbefc6fc97d63a70e0af281de88a4caea1750d8d91fc2987274633674961",
+      "src\\core\\Contrast.cpp": "8438dda1beeec6ca2f0fe9fcab397579c9b466a993a6d15e774c9c3b7f65cc92",
+      "src\\core\\Contrast.h": "b87450e3f7ff770d7e37849b6f3d463afa4aee41e7152823a4da34d959a4d458",
+      "src\\core\\Dehaze.cpp": "8cdc6770f7d04fc30abb5c59cf549875445803478ab4d56e1a0d3602e9961028",
+      "src\\core\\Dehaze.h": "b2ed5d75389f4c0009fccd15b4d0a5370accb4e193639b85a4f7f0f2194dad1d",
+      "src\\core\\DetailProcessing.cpp": "78aa94397b49002b18758ce7f042a05cbbdedb93dc3d569923439b2dfd3209e9",
+      "src\\core\\DetailProcessing.h": "a04e80ea42d7a63377983313feb82c19cca4bcdaea01339f26af12e564a30023",
+      "src\\core\\EditRecipe.h": "69ae01c2f42ca55288cd1256d4ab8a3e753d0fe8d5578845947f67a690fc86db",
+      "src\\core\\Grain.cpp": "9113512bf063f11d0e25edb33671e5fdc5d6ae9213d4a5caf294ea9ef6de874f",
+      "src\\core\\Grain.h": "492e75f01ef6a593a868e538f6585f766a42264d967280a3ed9e55a3baf46cc0",
+      "src\\core\\Histogram.cpp": "b063a0b7efe7ececc13a5cb3c9ae57787bfbd940d6c5693d819ff4e7a510da95",
+      "src\\core\\Histogram.h": "50bb95626105445653c84f3834742dcf8516c9cd1868c307fef91d2de0aab13d",
+      "src\\core\\ImageExporter.cpp": "f4beef4c251cccb4533bf260a27b3f828aca3513d4b1cd738831015a76fd3e1a",
+      "src\\core\\ImageExporter.h": "e4fb72a9fa824a56e391301ec55ad24a58127081dd354520d83c98f29dc511c3",
+      "src\\core\\ImageImporter.cpp": "d5e4ef061369b63ce5256cf38921f9cdfa24bcfa4fb0f9e470974177d2acaa7d",
+      "src\\core\\ImageImporter.h": "59870a5baa2b08d5964464fc92d1a953509ade8defa7103a05f18a9402724e97",
+      "src\\core\\ImageMath.h": "c3e16295d0a484057a1007f348f908e3a5450bf68a6a72b56fa86cd0ac27cf2f",
+      "src\\core\\ImageMetadata.h": "35e5a1b065b0f6f8f05b0961228d241afbeef0420517786f9929f0c33e613a9c",
+      "src\\core\\LocalContrast.cpp": "a5a96284bb633f27af7e0b19f4050cce2a4ccfc63ccdcca6568006d32f8daa92",
+      "src\\core\\LocalContrast.h": "fc23fbb343f6de6a7df4f753b861895c915b39bde823089e7b390727c64ca637",
+      "src\\core\\PerceptualColour.cpp": "808efbef5aa94f4b1bdd83bcaca7b9190de54e984ae75f5444f395753fa94c7a",
+      "src\\core\\PerceptualColour.h": "951467a6d087265ccff4db9086adc5f287ff8cd241c286a469b8ebbba699b2d6",
+      "src\\core\\PointColor.cpp": "31726a63de279ed7519a7d740e81c0640f1628b76261ebcf51c0f2e311676658",
+      "src\\core\\PointColor.h": "4da2b8e046b995afd468fa87056b4626fc99d10acc78816542d76e8d3a50641b",
+      "src\\core\\Sidecar.cpp": "2462883d89ecbedbbb60472d2bde9c2831dd8243d89e1d5dcd5073e4694845d3",
+      "src\\core\\Sidecar.h": "570b95e87f4e9b5b5d34daa8b3018e53773e8ca9bf4a916592e075e9de36537b",
+      "src\\core\\ToneCurve.cpp": "b53a31e0c7d2d414a4c309980cb051a0c63377c35cb536dddf87bcc754f1048b",
+      "src\\core\\ToneCurve.h": "2f46a98e36e20ff11f59d29561af394f0899d76347e960d0d6619c7bb0f73cdf",
+      "src\\core\\ToneRecovery.cpp": "a62de198fc39b77ec12219761700368bbb31bad746bd2380187df93e076507cf",
+      "src\\core\\ToneRecovery.h": "7e2b3b2aa5f9297b52c0727ec60905a9f58d4d7fa0dea9f8b8b07edddf5a6618",
+      "src\\core\\ToneRecoveryHighlights.h": "39812d16cee3e826578cf7c73ec6bfe81d472251171d88a3cd53a9192f09aa0c",
+      "src\\core\\ToneRecoveryModel.h": "5e5e656e70d1364d6039fa865d1de8a1f7d0165ba0ea1067a26e9d6f05141872",
+      "src\\core\\ToneStatistics.cpp": "4ce59e5eea5330c2273de3736f1cb4602d294ee4169fd6e0287bb8eb3f5a3533",
+      "src\\core\\ToneStatistics.h": "2b72e6345c342629b22d5ba9955dac07dcede664d0542a12056ce35148781325",
+      "src\\core\\Vibrance.cpp": "0d7e03638484891a7af4796ca3c2514749a792243276703d5b9b67c1edce58b9",
+      "src\\core\\Vibrance.h": "eff62b0810ba26f4fa30c22f99fcbe151fa90244038f215fc83bba8827865dd1",
+      "src\\core\\VibranceModel.h": "8f660786204d024e03c561c6935b050772c194a98bb81b9f9f1e8c87cf34bbfb",
+      "src\\core\\WorkingColorSpace.h": "55e437b8eb894bcc5438ff3f8ed55699ec1480adb17668a149f3f1c5a15775fb",
+      "src\\editor\\imageeditor.cpp": "95c4144ac68f695850336bccbf175fd8e63ca6a86359438d4c71b8a191426c81",
+      "src\\editor\\imageeditor.h": "ace3108b7f3e25d828566d0fa15562fffba2b6f954aa3c2a13c59ec7608c1ba0",
+      "src\\profiles\\CameraProfileEngine.cpp": "25fdd3c7f2d716448280c8c73c81f2aff2c90455742681b44a1db32be39e889a",
+      "src\\profiles\\CameraProfileEngine.h": "978c5337ff09e28d151c010b4433b48b3da2d9aae686f35b56b9611bb472e846",
+      "src\\profiles\\PreparedProfileCache.cpp": "21f5958a307f5feffc6cd189a556f87fd10ae103ebe31ee05fc523a54ab2bdad",
+      "src\\profiles\\PreparedProfileCache.h": "29b9c41c8935b49c887c7a6d2a113550d9d41388530e138522e51d3f67611e07",
+      "src\\providers\\GradingWheelProvider.cpp": "fe3205359bd8615ee55f2ea436f28cf75e1f094d30dfb78cb35a339e6b1e4122",
+      "src\\providers\\GradingWheelProvider.h": "7ab6736cefad26e4c39025191766d9c25bc3538b89cfcd6395d7441dc3269a05",
+      "src\\providers\\imageprovider.cpp": "6faa75d9fac6663f6ed66da4d4d9ea3d959a984c344d3d95579efa7c840f278e",
+      "src\\providers\\imageprovider.h": "3d6679f125eae296effe0b8c6d0f0defecb7724cc785e2a5188fe40605d43f40",
+      "src\\providers\\ThumbnailProvider.cpp": "a4da92b5ea1e43c949aaaebbf14a9271c83da4cfa5e40f63467922c8c12428a4",
+      "src\\providers\\ThumbnailProvider.h": "e8becb12edb63230a9f17f8bcd7eb417db2688b35923badcc2d82de988ca9647",
+      "src\\raw\\CameraCharacterization.cpp": "a0c719c7f4eee79572ab20d211433d8f522cac8fea136d293da758cb071aab5c",
+      "src\\raw\\CameraCharacterization.h": "041419949cf8f77d853b9fc4f6eaf16f79779b41c20913e85786d8f42f5ae87a",
+      "src\\raw\\CameraSignal.cpp": "08a83c79d8baa2b11f3a6fb13ce67eb711fe21770ecbf099a535601f5a2d3d58",
+      "src\\raw\\CameraSignal.h": "890674f71b482012ccd782f74b1b347d3e439540a99bf2777ab361a0d67efd27",
+      "src\\raw\\Demosaic.cpp": "51530300dbfa93c61b4c94e6c820dda7e1239b3cba12ca51d57adae2b0a5b68a",
+      "src\\raw\\Demosaic.h": "52d2f42281b6584765eb1644ebb5a05f5327d508e8d96ee8567d71288a9218dc",
+      "src\\raw\\LibRawInput.cpp": "84d4bbffc6346177d710bccb515284d570593d9c83164aa000731cb3fd489c6f",
+      "src\\raw\\LibRawInput.h": "5f0e418d689c22a4c556a7e2365ecddbfbafedc44a630953a67d6f4b243c16ed",
+      "src\\raw\\RawBlackLevelEstimator.cpp": "8e9d6eae3c33636d64683d0372048db4fe6c637c811c390853aa1bdd8419404d",
+      "src\\raw\\RawBlackLevelEstimator.h": "1ea58b1c6e0f06679ac2be7ac212972ad959dfe0f2daea16c6e7b0d7d25583a0",
+      "src\\raw\\RawDecoder.cpp": "1e426f3b3f25f6b75d44711a4deb26408ffddda82e78ce5186a1f151474b5d02",
+      "src\\raw\\RawDecoder.h": "38ace06fb0396976f3171aeae7f0aea4b7c23469d2b4e9895ec5ef5091be1144",
+      "src\\raw\\RawDevelopment.cpp": "64af5c360f7d92b71adc5f2d9dbb17f1a5332f9dce4e6a551f21265b678b8b42",
+      "src\\raw\\RawDevelopment.h": "2c92293e21dc1404b61d4fe26b755bf27ca21de9073f2cdffba4b3f602820f03",
+      "src\\raw\\RawInput.cpp": "2b11cc5e64dd9b2f3c4e0663523da86567c458835765ee857d7c14d8aef1bb8b",
+      "src\\raw\\RawInput.h": "8525277ebdbba28396378f3564f22b87dd4e2e3046a39703a16f1d7d97a754a7",
+      "src\\raw\\RawNormalization.cpp": "e56195e1c142d7c9508a6c62fd8eab4db542eb6aca6273f0585560299c041967",
+      "src\\raw\\RawNormalization.h": "cc6506fa6a660ef89cf494037a3141e1ab31acdcd7e8c9b8335f0f03f4a0b870",
+      "src\\tools\\generate_test_images.cpp": "406a2b4a1dd733a2f5dba9babd6cd77cb0e4a9160d65f20549b51920deca09e9",
+      "src\\tools\\render_server.cpp": "80031f5eb5100caa66a34e99297452001d02f472c361d30026a6a4f2e21f37d8",
+      "src\\tools\\TestRecipes.cpp": "cd21493d9ddda38ea768f5e7339d2617e8461406ae552aa5decc8ea0a681b577",
+      "src\\tools\\TestRecipes.h": "dc727585b015742fd585c5cbc657923e8b7df7ac564e3bc4b71f44fd5a17f907"
+    },
+    "candidate": {
+      "src\\app\\main.cpp": "3f6d7f0be149b451cf2556345b4e78dae30ffd7a5033150017031420d5129784",
+      "src\\app\\UiPreferences.cpp": "860835075e6e8fe0d0454e1f574e58e82d016bca895006b126cfeb3d671c51e7",
+      "src\\app\\UiPreferences.h": "e161f7b0c0f70b8269e10589de89cf3c8b223fdd4f7fd0b438dff508b6331649",
+      "src\\cache\\DecodedImageCache.cpp": "6a6b0d79c8a76d20174d0c7271e8c00030c4770e17d43e354f78dbdc42f1f66c",
+      "src\\cache\\DecodedImageCache.h": "daa1aca18c9c8b0b86299c3cc02f4825cf76e1838ccca37f87ca5d9016f1d880",
+      "src\\cache\\ImageCacheController.cpp": "35ad92e1b537f92b045377a8007f868c7a9f707b7b69da8383c38c0a481ec04d",
+      "src\\cache\\ImageCacheController.h": "1e56e35b090c15009037a9b2b677a4b7d4a9036bd371f5e04fb8d8b17a79f741",
+      "src\\cache\\RenderStageCache.cpp": "8651f8b8c09b210b0ca085c5a6662fd69736d2601153db44e0007071a55e1b14",
+      "src\\cache\\RenderStageCache.h": "5d1a98ff86ed86d0a62d1087beb4fcfa83b83f752ada42b614c58ed5e16ddba6",
+      "src\\cache\\SystemMemory.cpp": "b27d9c5547014dc661cfd445330c2528b29c2ed8d9e58ea13691abe546bb82dd",
+      "src\\cache\\SystemMemory.h": "dea93bcaa70a4ff29d73485f3a0ec6c773808b6f4253503941799094c0a2c409",
+      "src\\core\\ColorAdjustments.cpp": "0408a8328b78799122f5689db50d9f0b0a40d1a9cb09638ba488ef7a557beb82",
+      "src\\core\\ColorAdjustments.h": "1046f1c4b5d1e608aabef7620fba3ba57936313c2f25f0b894ca006a41a2ebd2",
+      "src\\core\\ColorGrading.cpp": "fb7c665383a064b11e664bbb59adbc4b92377c13b4f6f181f541b9fc1efd9331",
+      "src\\core\\ColorGrading.h": "9028270008a44fad1a6ff0ab6a034d1f62ae1596ee1e710cd3a5c1e4e5e2e929",
+      "src\\core\\ColorMixer.cpp": "5ac9d81d521fae9e2a049e3e35c0a69d13eb9b6cb4bd9b5e5f0a01d4314f719e",
+      "src\\core\\ColorMixer.h": "9500a4cbe3b97fe1ddcefc8d771a155f46b65b795da089806cd41f5d694c3faf",
+      "src\\core\\ColorMixerModel.h": "d6d97de885476d147641a01828c12bbd00ceb83717bfe7e51a76895b2ecbd68f",
+      "src\\core\\ColorPipeline.cpp": "0fc43f54984dfc42969d80846ff939e3337a1aead274f7109dcd7a6f5fb331bf",
+      "src\\core\\ColorPipeline.h": "0fd5af0f21a361e2ba1eb894d8a7107c27e801bebe8dbc62b1ae91c80473a803",
+      "src\\core\\Contrast.cpp": "8438dda1beeec6ca2f0fe9fcab397579c9b466a993a6d15e774c9c3b7f65cc92",
+      "src\\core\\Contrast.h": "b87450e3f7ff770d7e37849b6f3d463afa4aee41e7152823a4da34d959a4d458",
+      "src\\core\\Dehaze.cpp": "8cdc6770f7d04fc30abb5c59cf549875445803478ab4d56e1a0d3602e9961028",
+      "src\\core\\Dehaze.h": "b2ed5d75389f4c0009fccd15b4d0a5370accb4e193639b85a4f7f0f2194dad1d",
+      "src\\core\\DetailProcessing.cpp": "78aa94397b49002b18758ce7f042a05cbbdedb93dc3d569923439b2dfd3209e9",
+      "src\\core\\DetailProcessing.h": "a04e80ea42d7a63377983313feb82c19cca4bcdaea01339f26af12e564a30023",
+      "src\\core\\EditRecipe.h": "69ae01c2f42ca55288cd1256d4ab8a3e753d0fe8d5578845947f67a690fc86db",
+      "src\\core\\Grain.cpp": "9113512bf063f11d0e25edb33671e5fdc5d6ae9213d4a5caf294ea9ef6de874f",
+      "src\\core\\Grain.h": "492e75f01ef6a593a868e538f6585f766a42264d967280a3ed9e55a3baf46cc0",
+      "src\\core\\Histogram.cpp": "b063a0b7efe7ececc13a5cb3c9ae57787bfbd940d6c5693d819ff4e7a510da95",
+      "src\\core\\Histogram.h": "50bb95626105445653c84f3834742dcf8516c9cd1868c307fef91d2de0aab13d",
+      "src\\core\\ImageExporter.cpp": "f4beef4c251cccb4533bf260a27b3f828aca3513d4b1cd738831015a76fd3e1a",
+      "src\\core\\ImageExporter.h": "e4fb72a9fa824a56e391301ec55ad24a58127081dd354520d83c98f29dc511c3",
+      "src\\core\\ImageImporter.cpp": "d5e4ef061369b63ce5256cf38921f9cdfa24bcfa4fb0f9e470974177d2acaa7d",
+      "src\\core\\ImageImporter.h": "59870a5baa2b08d5964464fc92d1a953509ade8defa7103a05f18a9402724e97",
+      "src\\core\\ImageMath.h": "c3e16295d0a484057a1007f348f908e3a5450bf68a6a72b56fa86cd0ac27cf2f",
+      "src\\core\\ImageMetadata.h": "35e5a1b065b0f6f8f05b0961228d241afbeef0420517786f9929f0c33e613a9c",
+      "src\\core\\LocalContrast.cpp": "a5a96284bb633f27af7e0b19f4050cce2a4ccfc63ccdcca6568006d32f8daa92",
+      "src\\core\\LocalContrast.h": "fc23fbb343f6de6a7df4f753b861895c915b39bde823089e7b390727c64ca637",
+      "src\\core\\PerceptualColour.cpp": "808efbef5aa94f4b1bdd83bcaca7b9190de54e984ae75f5444f395753fa94c7a",
+      "src\\core\\PerceptualColour.h": "951467a6d087265ccff4db9086adc5f287ff8cd241c286a469b8ebbba699b2d6",
+      "src\\core\\PointColor.cpp": "31726a63de279ed7519a7d740e81c0640f1628b76261ebcf51c0f2e311676658",
+      "src\\core\\PointColor.h": "4da2b8e046b995afd468fa87056b4626fc99d10acc78816542d76e8d3a50641b",
+      "src\\core\\Sidecar.cpp": "2462883d89ecbedbbb60472d2bde9c2831dd8243d89e1d5dcd5073e4694845d3",
+      "src\\core\\Sidecar.h": "570b95e87f4e9b5b5d34daa8b3018e53773e8ca9bf4a916592e075e9de36537b",
+      "src\\core\\ToneCurve.cpp": "b53a31e0c7d2d414a4c309980cb051a0c63377c35cb536dddf87bcc754f1048b",
+      "src\\core\\ToneCurve.h": "2f46a98e36e20ff11f59d29561af394f0899d76347e960d0d6619c7bb0f73cdf",
+      "src\\core\\ToneRecovery.cpp": "a62de198fc39b77ec12219761700368bbb31bad746bd2380187df93e076507cf",
+      "src\\core\\ToneRecovery.h": "7e2b3b2aa5f9297b52c0727ec60905a9f58d4d7fa0dea9f8b8b07edddf5a6618",
+      "src\\core\\ToneRecoveryHighlights.h": "39812d16cee3e826578cf7c73ec6bfe81d472251171d88a3cd53a9192f09aa0c",
+      "src\\core\\ToneRecoveryModel.h": "5e5e656e70d1364d6039fa865d1de8a1f7d0165ba0ea1067a26e9d6f05141872",
+      "src\\core\\ToneStatistics.cpp": "4ce59e5eea5330c2273de3736f1cb4602d294ee4169fd6e0287bb8eb3f5a3533",
+      "src\\core\\ToneStatistics.h": "2b72e6345c342629b22d5ba9955dac07dcede664d0542a12056ce35148781325",
+      "src\\core\\Vibrance.cpp": "0d7e03638484891a7af4796ca3c2514749a792243276703d5b9b67c1edce58b9",
+      "src\\core\\Vibrance.h": "eff62b0810ba26f4fa30c22f99fcbe151fa90244038f215fc83bba8827865dd1",
+      "src\\core\\VibranceModel.h": "8f660786204d024e03c561c6935b050772c194a98bb81b9f9f1e8c87cf34bbfb",
+      "src\\core\\WorkingColorSpace.h": "55e437b8eb894bcc5438ff3f8ed55699ec1480adb17668a149f3f1c5a15775fb",
+      "src\\editor\\imageeditor.cpp": "95c4144ac68f695850336bccbf175fd8e63ca6a86359438d4c71b8a191426c81",
+      "src\\editor\\imageeditor.h": "ace3108b7f3e25d828566d0fa15562fffba2b6f954aa3c2a13c59ec7608c1ba0",
+      "src\\profiles\\CameraProfileEngine.cpp": "25fdd3c7f2d716448280c8c73c81f2aff2c90455742681b44a1db32be39e889a",
+      "src\\profiles\\CameraProfileEngine.h": "978c5337ff09e28d151c010b4433b48b3da2d9aae686f35b56b9611bb472e846",
+      "src\\profiles\\PreparedProfileCache.cpp": "21f5958a307f5feffc6cd189a556f87fd10ae103ebe31ee05fc523a54ab2bdad",
+      "src\\profiles\\PreparedProfileCache.h": "29b9c41c8935b49c887c7a6d2a113550d9d41388530e138522e51d3f67611e07",
+      "src\\providers\\GradingWheelProvider.cpp": "fe3205359bd8615ee55f2ea436f28cf75e1f094d30dfb78cb35a339e6b1e4122",
+      "src\\providers\\GradingWheelProvider.h": "7ab6736cefad26e4c39025191766d9c25bc3538b89cfcd6395d7441dc3269a05",
+      "src\\providers\\imageprovider.cpp": "6faa75d9fac6663f6ed66da4d4d9ea3d959a984c344d3d95579efa7c840f278e",
+      "src\\providers\\imageprovider.h": "3d6679f125eae296effe0b8c6d0f0defecb7724cc785e2a5188fe40605d43f40",
+      "src\\providers\\ThumbnailProvider.cpp": "a4da92b5ea1e43c949aaaebbf14a9271c83da4cfa5e40f63467922c8c12428a4",
+      "src\\providers\\ThumbnailProvider.h": "e8becb12edb63230a9f17f8bcd7eb417db2688b35923badcc2d82de988ca9647",
+      "src\\raw\\CameraCharacterization.cpp": "a0c719c7f4eee79572ab20d211433d8f522cac8fea136d293da758cb071aab5c",
+      "src\\raw\\CameraCharacterization.h": "041419949cf8f77d853b9fc4f6eaf16f79779b41c20913e85786d8f42f5ae87a",
+      "src\\raw\\CameraSignal.cpp": "08a83c79d8baa2b11f3a6fb13ce67eb711fe21770ecbf099a535601f5a2d3d58",
+      "src\\raw\\CameraSignal.h": "890674f71b482012ccd782f74b1b347d3e439540a99bf2777ab361a0d67efd27",
+      "src\\raw\\Demosaic.cpp": "51530300dbfa93c61b4c94e6c820dda7e1239b3cba12ca51d57adae2b0a5b68a",
+      "src\\raw\\Demosaic.h": "52d2f42281b6584765eb1644ebb5a05f5327d508e8d96ee8567d71288a9218dc",
+      "src\\raw\\LibRawInput.cpp": "84d4bbffc6346177d710bccb515284d570593d9c83164aa000731cb3fd489c6f",
+      "src\\raw\\LibRawInput.h": "5f0e418d689c22a4c556a7e2365ecddbfbafedc44a630953a67d6f4b243c16ed",
+      "src\\raw\\RawBlackLevelEstimator.cpp": "8e9d6eae3c33636d64683d0372048db4fe6c637c811c390853aa1bdd8419404d",
+      "src\\raw\\RawBlackLevelEstimator.h": "1ea58b1c6e0f06679ac2be7ac212972ad959dfe0f2daea16c6e7b0d7d25583a0",
+      "src\\raw\\RawDecoder.cpp": "af624523caeb0f9e3166fbf77a7d6fb882e193f1b262d4b2a57260b9be492f4e",
+      "src\\raw\\RawDecoder.h": "94a230dcc5d329a8e147579497d40a5634039a679e7ea4a71447418d7125798c",
+      "src\\raw\\RawDevelopment.cpp": "0c75872fb2eea5a26ccd51789a64870a9e12269a79aee91b8397497f5f045f75",
+      "src\\raw\\RawDevelopment.h": "19ec47d02307be84eddad7e268b739fabbd5794eb128ec063506e8a915c941dc",
+      "src\\raw\\RawInput.cpp": "2b11cc5e64dd9b2f3c4e0663523da86567c458835765ee857d7c14d8aef1bb8b",
+      "src\\raw\\RawInput.h": "8525277ebdbba28396378f3564f22b87dd4e2e3046a39703a16f1d7d97a754a7",
+      "src\\raw\\RawNormalization.cpp": "e56195e1c142d7c9508a6c62fd8eab4db542eb6aca6273f0585560299c041967",
+      "src\\raw\\RawNormalization.h": "cc6506fa6a660ef89cf494037a3141e1ab31acdcd7e8c9b8335f0f03f4a0b870",
+      "src\\tools\\generate_test_images.cpp": "406a2b4a1dd733a2f5dba9babd6cd77cb0e4a9160d65f20549b51920deca09e9",
+      "src\\tools\\render_server.cpp": "80031f5eb5100caa66a34e99297452001d02f472c361d30026a6a4f2e21f37d8",
+      "src\\tools\\TestRecipes.cpp": "cd21493d9ddda38ea768f5e7339d2617e8461406ae552aa5decc8ea0a681b577",
+      "src\\tools\\TestRecipes.h": "dc727585b015742fd585c5cbc657923e8b7df7ac564e3bc4b71f44fd5a17f907"
+    }
+  },
+  "decode_budget_ms": 20800,
+  "capture_camera": true,
+  "candidate_signed_api": true,
+  "scope": "30 RAWs, two modes(CameraNeutral DCP and no profile), A/as-shot, optics off; fullRGBA row hashes plus3 diagnostic256 ROIs and optional actual camera inlet. Fresh process per image/mode/engine, alternating engine order; OS cache not flushed. Budget applies native decode only, peak working set measured before serialization, maximum8 RCD workers, OpenCV1 and OMP8. Hash mismatch fails even if ROIs match. No signed-mode quality or automatic-WB/fallback/optics certification.",
+  "source": "\"\"\"Build isolated RAW engines and compare full A images and optional DCP inlets.\"\"\"\nimport argparse\nfrom datetime import datetime,timezone\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nfrom capture import compare_captures,load_capture,sha256\n\n\ndef full_equal(a,b):\n    return a['shape']==b['shape'] and a['dtype']==b['dtype'] and a['sha256']==b['sha256']\n\n\ndef resolve_paths(arguments):\n    for name,value in vars(arguments).items():\n        if isinstance(value,Path):setattr(arguments,name,value.resolve())\n    return arguments\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__)\n    for name in ('inventory','manifest','adobe-camera-root','reference-source','candidate-source','cmake','qt-dir','vcpkg','opencv-dir','opencv-bin'):\n        p.add_argument('--'+name,type=Path,required=True)\n    p.add_argument('--reference-revision',required=True);p.add_argument('--candidate-revision',required=True)\n    p.add_argument('--capture-camera',action='store_true',help='Also compare the actual DCP camera inlet, requiring exact full-buffer equality in A')\n    p.add_argument('--candidate-signed-api',action='store_true',help='Compile candidate against F1 signedDevelopment API (A remains selected)')\n    a=resolve_paths(p.parse_args());root=Path(__file__).resolve().parents[2];start=datetime.now(timezone.utc);stamp=start.strftime('%Y%m%dT%H%M%SZ')\n    work=root/'build-patch_raw_bench/production'/stamp;work.mkdir(parents=True,exist_ok=False)\n    state_path=work/'status.json'\n    def status(**kw):\n        payload=dict(started_at_utc=start.isoformat(),updated_at_utc=datetime.now(timezone.utc).isoformat(),**kw)\n        temp=state_path.with_suffix('.tmp');temp.write_text(json.dumps(payload,indent=2),encoding='utf-8');temp.replace(state_path)\n    records=[]\n    try:\n        inventory=json.loads(a.inventory.read_text(encoding='utf-8'));inputs=inventory['records']\n        if len(inputs)!=30 or len({r['source_sha256'] for r in inputs})!=30:raise ValueError('Need frozen30 distinct RAWs')\n        profiles={}\n        for row in inputs:\n            source=Path(row['source'])\n            if sha256(source)!=row['source_sha256']:raise ValueError('Inventory source changed')\n            model=row['model'];camera='Canon '+model\n            profile=a.adobe_camera_root/camera/(camera+' Camera Neutral.dcp')\n            if not profile.is_file():raise ValueError('Missing explicit Camera Neutral profile: '+str(profile))\n            profiles[model]=dict(path=str(profile),sha256=sha256(profile))\n        config_hash=sha256(a.manifest);engine_hashes={}\n        for label,source in (('reference',a.reference_source),('candidate',a.candidate_source)):\n            engine_hashes[label]={str(f.relative_to(source)):sha256(f) for f in (source/'src').rglob('*') if f.is_file() and f.suffix in ('.cpp','.h')}\n        policy=dict(schema_version=1,campaign_id='raw-production-freeze-'+stamp,measured_at_utc=start.isoformat(),\n            inventory=dict(path=str(a.inventory),sha256=sha256(a.inventory)),inputs=inputs,profiles=profiles,\n            manifest=dict(path=str(a.manifest),sha256=config_hash),reference_revision=a.reference_revision,candidate_revision=a.candidate_revision,\n            engine_sources=engine_hashes,decode_budget_ms=20800,\n            capture_camera=a.capture_camera,\n            candidate_signed_api=a.candidate_signed_api,\n            scope='30 RAWs, two modes(CameraNeutral DCP and no profile), A/as-shot, optics off; fullRGBA row hashes plus3 diagnostic256 ROIs and optional actual camera inlet. Fresh process per image/mode/engine, alternating engine order; OS cache not flushed. Budget applies native decode only, peak working set measured before serialization, maximum8 RCD workers, OpenCV1 and OMP8. Hash mismatch fails even if ROIs match. No signed-mode quality or automatic-WB/fallback/optics certification.',\n            source=Path(__file__).read_text(encoding='utf-8'),source_sha256=sha256(Path(__file__)))\n        freeze=root/'docs/validation/raw'/f'gel-banc-raw-production-v001-{stamp}.json'\n        with freeze.open('x',encoding='utf-8') as h:json.dump(policy,h,ensure_ascii=False,indent=2,allow_nan=False)\n        print('FROZEN',freeze,flush=True)\n        env=dict(os.environ);env['OMP_NUM_THREADS']='8';env['PATH']=os.pathsep.join([str(a.qt_dir.parents[2]/'bin'),str(a.vcpkg/'bin'),str(a.opencv_bin),env.get('PATH','')])\n        tools={}\n        for label,source,revision in (('reference',a.reference_source,a.reference_revision),('candidate',a.candidate_source,a.candidate_revision)):\n            build=work/label\n            commands=[[str(a.cmake),'-S',str(root/'tests/raw_bench/production'),'-B',str(build),\n                '-DIPR_ENGINE_SOURCE='+str(source),'-DIPR_ENGINE_REVISION='+revision,'-DQt6_DIR='+str(a.qt_dir),\n                '-DIPR_BENCH_SIGNED_DEVELOPMENT='+('ON' if label=='candidate' and a.candidate_signed_api else 'OFF'),\n                '-DOpenCV_DIR='+str(a.opencv_dir),'-DCMAKE_PREFIX_PATH='+str(a.vcpkg),\n                '-DLIBRAW_INCLUDE_DIR='+str(a.vcpkg/'include'),'-DLIBRAW_LIBRARY='+str(a.vcpkg/'lib/manual-link/raw.lib')],\n                [str(a.cmake),'--build',str(build),'--config','Release','--target','iprProductionRawCapture','--parallel','2']]\n            for index,command in enumerate(commands):\n                status(status='running',phase=f'{label}-'+('configure' if index==0 else 'build'))\n                with (work/f'{label}-{index}.log').open('x',encoding='utf-8') as log:\n                    subprocess.run(command,cwd=root,env=env,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=1800)\n            exe=build/'Release/iprProductionRawCapture.exe';tools[label]=dict(path=str(exe),sha256=sha256(exe))\n            print('BUILT',label,flush=True)\n        empty=work/'empty-profiles';empty.mkdir()\n        for index,item in enumerate(inputs):\n            source=Path(item['source']);profile=profiles[item['model']]\n            for mode in ('dcp','matrix'):\n                status(status='running',phase='decode',source=source.name,mode=mode,completed=len(records))\n                outputs={};captures={}\n                order=('reference','candidate') if index%2==0 else ('candidate','reference')\n                for label in order:\n                    out=work/f'{index:02}-{source.stem}-{mode}-{label}.json'\n                    command=[tools[label]['path'],'--input',str(source),'--output',str(out),'--profile-root',str(empty),'--manifest',str(a.manifest)]\n                    if mode=='dcp':command+=['--profile',profile['path']]\n                    if mode=='dcp' and a.capture_camera:command+=['--capture-camera']\n                    with (work/f'{index:02}-{mode}-{label}.log').open('x',encoding='utf-8') as log:\n                        subprocess.run(command,cwd=work,env=env,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=240)\n                    manifest,_=load_capture(out);outputs[label]=manifest;captures[label]=dict(path=str(out),sha256=sha256(out))\n                ref,can=outputs['reference'],outputs['candidate']\n                stages=('working_rec2020','pre_dcp_camera_rgb') if mode=='dcp' and a.capture_camera else ('working_rec2020',)\n                comparison=compare_captures(captures['reference']['path'],captures['candidate']['path'],stages)\n                whole=full_equal(ref['full_image'],can['full_image']);metadata=ref['metadata']==can['metadata']\n                camera_equal=full_equal(ref['full_camera'],can['full_camera']) if mode=='dcp' and a.capture_camera else None\n                budget=all(o['decode_ms']<=20800 and o['rcd_workers']<=8 and o['opencv_threads']<=1 for o in outputs.values())\n                records.append(dict(source=item,mode=mode,captures=captures,full_image_equal=whole,metadata_equal=metadata,roi_comparison=comparison,\n                    measurements={label:dict(decode_ms=o['decode_ms'],peak_working_set_bytes=o['decode_peak_working_set_bytes'],rcd_workers=o['rcd_workers'],opencv_threads=o['opencv_threads']) for label,o in outputs.items()},\n                    full_images={label:o['full_image'] for label,o in outputs.items()},metadata={label:o['metadata'] for label,o in outputs.items()},\n                    full_cameras={label:o.get('full_camera') for label,o in outputs.items()},camera_inlet_equal=camera_equal,\n                    parity_pass=whole and metadata and camera_equal is not False and comparison['verdict']=='pass',decode_budget_pass=budget))\n                print(index+1,'/',len(inputs),source.name,mode,'parity',records[-1]['parity_pass'],'budget',budget,flush=True)\n                if not records[-1]['parity_pass']:raise ValueError('Full-frame/metadata/ROI parity failure; stopped at first mismatch')\n        if config_hash!=sha256(a.manifest) or any(sha256(Path(v['path']))!=v['sha256'] for v in profiles.values()):raise ValueError('Configuration changed')\n        for label,source in (('reference',a.reference_source),('candidate',a.candidate_source)):\n            if any(sha256(source/path)!=digest for path,digest in engine_hashes[label].items()):raise ValueError('Engine source changed')\n        if any(sha256(Path(t['path']))!=t['sha256'] for t in tools.values()):raise ValueError('Engine tool changed')\n        final=('pass_scoped_F1_A' if a.capture_camera else 'pass_scoped_production_A') if len(records)==60 and all(r['parity_pass'] and r['decode_budget_pass'] for r in records) else 'fail'\n        result=dict(schema_version=1,campaign_id='raw-production-'+stamp,measured_at_utc=datetime.now(timezone.utc).isoformat(),\n            freeze=dict(path=str(freeze),sha256=sha256(freeze)),tools=tools,records=records,verdict=final,\n            limitations='No C4/signed mode or all-format generalization. Full-image equality uses bytes hash, finite output required; ROI stats diagnostic only. Single sequential run per engine/mode/source, warm OS caches possible and build warming; no rigorous speedup confidence. Peak working set is per process, not whole-system RAM ceiling. No complete fallback, optics or cancellation campaign.')\n        out=root/'docs/validation/raw'/f'banc-raw-production-v001-{datetime.now(timezone.utc).strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n        with out.open('x',encoding='utf-8') as h:json.dump(result,h,ensure_ascii=False,indent=2,allow_nan=False)\n        status(status='succeeded' if final.startswith('pass_scoped_') else 'failed',phase='complete',result=str(out),completed=len(records))\n        print('RESULT',out,final,flush=True);return 0 if final.startswith('pass_scoped_') else 1\n    except Exception as error:\n        status(status='failed',phase='error',error=str(error),completed=len(records))\n        with (work/'partial.json').open('x',encoding='utf-8') as h:json.dump(dict(error=str(error),records=records),h,ensure_ascii=False,indent=2,allow_nan=False)\n        raise\n\n\nif __name__=='__main__':raise SystemExit(main())\n",
+  "source_sha256": "4fe9de97f219233b3be343d81ca5658b4433d969cf73ac91496bc0e502664ac8"
+}
