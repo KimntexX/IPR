@@ -2,15 +2,16 @@
 
 ## Bilan actuel — 30 octobre 2026
 
-Dernier jalon (§§48–49) : préparation du budget par contexte caméra au banc,
-sans estimation MAD de la texture, et144 cas de transfert vers couleurs,
-niveaux et contours. Le rejeu à géométrie identique confirme des erreurs
-médianes de covariance d'environ6–9 % sur les trois premières bandes, mais
-25–29 % sur les deux grandes bandes, avec contre-exemples plus sévères.
-Préparation fonctionnelle, transfert non qualifié globalement : l'aplat local
-ne suffit pas à garantir les grandes échelles et les transitions. Les gains
-du §47 restent vrais sur leur banc, sans devenir une validation photographique.
-Quatre noirs réutilisés, deux ISO ; aucun changement de production.
+Dernier jalon (§§50–51) : biais du champ noir figé mis en évidence, puis
+budget statistique multi-noirs passant les critères fixés dans deux domaines
+séparés. Sur le rejeu fondé sur quatre noirs réels (terme de signal simulé),
+erreur médiane de covariance d'environ4,1 % sur les trois premières bandes,
+9,3 % sur les deux grandes ; rapportsσ0,823–1,205. Piste de budget attendu
+retenue au banc, pas moteur de débruitage validé sur photos. Le guide spatial
+seul échouait ; son apport avec le budget statistique reste modeste.
+Six noirs de calibration/quatre de contrôle, même boîtier/séance, contrôles
+déjà examinés : pas de validation physique indépendante ni de généralisation.
+Aucun changement de production.
 **Étude de banc seulement, aucun changement de production.**
 
 Socle X1/X2 préparé sur `patch_raw_bench` depuis `dev` (`6e614ca`). Le
@@ -3827,6 +3828,180 @@ fermées. Dix tests du budget et trois de l'audit passent ; huit suites ciblées
 passent. Aucun moteur/profil/IHM modifié, aucun cache applicatif ou budget de
 latence certifié, pas de push/dev/tag. Calculs clos.
 
+## 50. Audit des biais et réplication du guide spatial — 30 octobre 2026
+
+Suite autonome demandée par l'utilisateur, sans production. [Gel avant calcul](../raw/spatial-budget-freeze-v001-20261030T220813Z.json),
+[mesures par réalisation](../raw/spatial-budget-v001-20261030T220813Z.json),
+[audit et critères](../raw/spatial-budget-audit-v001-20261030T221518Z.json).
+
+### 50.1. Biais reconnus, sans effacer les précédents
+
+- Les mêmes quatre noirs et motifs ont servi à de nombreuses décisions.
+  Les gains du §47 ne constituent pas une validation indépendante du moteur.
+- La loi empirique a/b génère le bruit de signal et sert au prédicteur :
+  cela vérifie la propagation et ses hypothèses, pas la vérité du capteur.
+- Une grande bande B3 voit un support jusqu'à125 pixels. Une fenêtre64²
+  ne contient pas autant d'informations indépendantes que son nombre de pixels.
+- Réutiliser le même résidu noir dans tous les tirages ajoute une réalisation
+  de bruit de lecture figée, pas32 acquisitions indépendantes. L'incertitude
+  Monte-Carlo du seul terme variable ne décrit pas celle de cette réalisation.
+- Une meilleure MSE ou covariance moyenne ne garantit pas la restitution des
+  textures ou la fidélité après DCP. Les axes et cas extrêmes restent suivis.
+
+Correction de lecture des §§48–49 : leurs gros écarts mesurés restent vrais,
+mais ne prouvent pas un biais systématique du modèle de grande échelle.
+Le conditionnement sur un champ noir et le petit support de mesure peuvent
+contribuer. La non-promotion était justifiée ; incriminer uniquement le guide,
+la couleur ou la loi de signal ne l'aurait pas été.
+
+### 50.2. Réplication fixée et données encore utilisées
+
+Nouvelles graines :32 calibration/32 contrôle, guide séparé ; nouveaux
+aplats, diagonales de luminance/couleur et rampe courbe, aux niveaux dans
+le domaine caractérisé. Quatre nouveaux noirs pour le **transport** :0005,
+0006,9952,9953, sélectionnés par rôle développement et ordre des noms avant
+mesure, avec SHA distincts des anciennes références. Ils ont déjà participé
+à la caractérisation et viennent de la même séance/R6 Mark III : pas de
+holdout physique vierge. Les réserves finales restent fermées.
+
+32 cas, deux ISO, deux distributions et deux prises. Comparaison àplat local,
+guide spatial observé31×31 et guide propre privilégié. Sur les aplats seulement,
+un diagnostic réutilise aussi le même noir de contrôle. Ces diagnostics ne
+sont jamais sélectionnés comme solutions déployables. Les covariances par
+réalisation et leur séparation commun/variable conditionnelle sont conservées.
+La partie commune n'identifie pas le FPN du capteur.
+
+Le transport par lots bornés à huit fenêtres conserve le même RCD signé :
+16 parités scalaire/lot vérifiées dans la campagne, sans parallélisme imbriqué.
+Durée403,22 s, fenêtres256² ; pas une qualification de latence applicative.
+
+### 50.3. Résultat : guide spatial non promu
+
+Critères fixés : erreur médiane de covariance sur plats≤15 %, tous les
+rapportsσ entre0,8 et1,25, médiane des transitions meilleure que l'aplat.
+Deux critères passent, celui des extrêmes échoue. Aucun seuil n'est retouché.
+Le guide spatial améliore peu certaines moyennes et garde des contre-exemples,
+y compris avec le guide propre privilégié. Il n'est pas retenu comme nouvelle
+piste stable de rendu.
+
+Diagnostic utile : sur les aplats, covariance médiane à3,08 % avec le même
+noir privilégié, contre7,57 % avec un autre noir ; rapportsσ respectivement
+0,888–1,132 et0,744–1,246. Le terme variable conditionnel est prédit à environ
+3–4 % d'erreur médiane, la composante commune conditionnelle à environ17–19 %.
+L'identité du champ noir importe donc dans ce banc. Cela ne valide ni un
+modèle de bruit fixe physique, ni une soustraction de ce champ à une photo.
+
+**Piste suivante figée :** prédire un budget statistique de lecture à partir
+de plusieurs noirs, plutôt que transporter le hasard d'un seul champ.
+La simulation interne et le rejeu de résidus réels doivent rester séparés ;
+une réussite du modèle sur son propre générateur ne suffira pas à qualifier
+le boîtier. Pas de réouverture des réserves, pas de modification de production.
+
+## 51. Budget statistique de lecture multi-noirs : piste stable au banc — 30 octobre 2026
+
+[Gel avant mesure](../raw/spectral-budget-freeze-v001-20261030T222031Z.json),
+[données par réalisation](../raw/spectral-budget-v001-20261030T222031Z.json),
+[premier audit](../raw/spectral-budget-audit-v001-20261030T223006Z.json),
+[audit final recomputant les scores/critères](../raw/spectral-budget-audit-v001-20261030T223115Z.json).
+Durée409,60 s sur fenêtres, pas qualification de latence de l'application.
+
+### 51.1. Ce qui change dans le modèle et dans la cible du test
+
+La cible devient un **budget attendu sur un ensemble de réalisations**, et
+non la covariance conditionnelle d'un champ noir particulier. Les anciens
+échecs ne sont pas effacés : changer cette cible ne « répare » pas le critère
+du §50 sur les mêmes données. Le modèle, les graines et le conditionnement
+changent ; ne pas attribuer causalement toute la différence au seul spectre.
+
+Par ISO, trois acquisitions noires de calibration : anciennes références
+0003/0004 plus0007 à1600 ;9950/9951 plus9954 à51200. Trois fenêtres par
+photo, soit neuf tuiles, **pas neuf acquisitions indépendantes**. Identités
+SHA distinctes des contrôles0005/0006 et9952/9953. Ces données restent toutes
+de développement et de la même séance/R6 Mark III ; pas d'ouverture de la
+réserve finale. Les contrôles ont déjà été vus au §50, ce que le gel déclare.
+
+Le modèle calcule une densité spectrale croisée4×4 des phases R/G1/G2/B,
+après retrait du seul constant spatial par phase/prise. Les corrélations
+spatiales et entre phases sont ainsi représentées sous une hypothèse
+stationnaire. Les amplitudes sont normalisées aux b temporels du catalogue,
+pas ajustées aux réponses de contrôle. Une racine spectrale hermitienne
+transforme un bruit gaussien réel indépendant en mosaïque corrélée ; le
+terme de signal indépendant a·signal s'ajoute, puis RCD signé/médiane/B3.
+
+Hypothèses et limites : gaussien stationnaire pour la lecture, grille
+périodique128² par phase, drift constant retiré, pas de modèle physique de
+pixels chauds ni de FPN identifié. La forme provient de structures spatiales
+de noirs, l'amplitude d'une variance temporelle : ce lien reste à qualifier
+physiquement. Seules les valeurs propres négatives d'arrondi dans la tolérance
+1e-10 du maximum spectral sont ramenées à zéro, avec nombre/tolérance sauvés ;
+un spectre véritablement non PSD est refusé. Ce n'est pas une projection
+destinée à faire passer un modèle statistiquement invalide.
+
+### 51.2. Deux domaines, jamais fusionnés pour déclarer un succès
+
+- **Simulation spectrale interne** : le bruit de lecture et le terme de
+  signal varient tous deux à chaque réalisation. Le générateur partage les
+  hypothèses du prédicteur : test de cohérence/stabilité, pas vérité capteur.
+- **Rejeu fondé sur des noirs réels** : alternance des deux noirs physiques
+  de contrôle par ISO, avec nouveaux tirages de bruit de signal. Ni32
+  acquisitions réelles par cas, ni photo éclairée indépendante. Le guide
+  observé reste séparé des graines de calibration/contrôle.
+
+32 cas au total, nouvelles graines110001…110032 et130001…130032, guide101001.
+Les niveaux nominaux des motifs sont dans le domaine du fit, vérifiés
+phase par phase. Même contexte explicite, mêmes nouveaux motifs et mêmes
+seuils d'ingénierie que précédemment ; aucune correction après lecture des scores.
+
+Les trois critères passent **séparément dans chaque domaine** : plats en
+médiane≤15 %, tous les rapportsσ entre0,8 et1,25, médiane des transitions
+meilleure avec le guide spatial qu'avec l'aplat local. L'audit recalcule
+chaque comparaison depuis les32 covariances de calibration/contrôle et
+refuse un désaccord avec les critères sauvés. Un test vérifie qu'un succès
+interne ne peut masquer un échec du rejeu réel.
+
+| Domaine / guide spatial observé | Erreur médiane, bandes0–2 | Bandes3–4 | Rapportsσ, tous axes/cas |
+| --- | ---: | ---: | ---: |
+| Simulation spectrale interne | 2,16 % | 8,83 % | 0,864–1,111 |
+| Rejeu fondé sur noirs réels | 4,14 % | 9,26 % | 0,823–1,205 |
+
+Sur les seules transitions du rejeu réel, médiane5,71 % avec le guide spatial
+contre6,17 % avec l'aplat local. L'apport spatial est **modeste et non dominant** :
+percentile95 d'erreur27,56 % contre24,59 %, maximum33,47 % contre31,56 %.
+Aux grandes échelles, médiane9,26 % contre9,03 % pour l'aplat. Ne pas présenter
+le guide comme meilleur partout, ni ces pourcentages comme un gain de bruit
+visuel ou de détail. Aucun débruitage final n'est appliqué dans cette étude.
+
+### 51.3. Décision et biais résiduels
+
+**Piste retenue : un budget statistique de covariance multi-noirs, propagé
+indépendamment de la variance de texture**, plutôt qu'une référence faite
+d'une seule réalisation noire figée. Il franchit les critères du banc sous
+les hypothèses et sur la population simulée déclarées. Cela ne démontre pas
+que la FFT/simulation gaussienne soit indispensable : un témoin apparié avec
+simple banque de plusieurs noirs n'a pas encore été comparé. Pas d'affirmation
+de supériorité universelle du modèle spectral.
+
+Pas de sélection d'une méthode privilégiée à signal propre, pas d'ISO ou de
+boîtier emprunté, pas de seuil retouché après échec. Les limites restantes
+sont explicites : adaptation de l'étude à des résultats antérieurs, même
+loi génératrice/prédictrice pour le signal, contrôles physiques déjà vus,
+six noirs de calibration/quatre de contrôle seulement et une seule séance.
+Les32 tirages et neuf tuiles par ISO ne multiplient pas ce nombre de prises.
+Ne pas déclarer l'analyse « sans biais » ou indépendante de caractérisation.
+
+Suite avant production : confronter ce budget au filtre réel avec mesures
+de détail/couleur/biais, puis à des RAW photographiques et références fixes.
+Qualifier aussi coût, interpolation/caches et domaines caméra/ISO. Garder la
+comparaison àplat/guide spatial et les cas extrêmes, sans imposer le guide
+spatial comme vainqueur global. Le positif au banc justifie cette qualification,
+pas une intégration silencieuse ni une revendication de rendu proche de LR.
+
+Tests du modèle spectral : champs réels/déterministes, amplitude attendue,
+corrélations entre phases, refus de données dégénérées. Tests du banc/audit :
+graines disjointes, fournisseur de lecture appelé par réalisation, lots bornés,
+non-mélange des domaines, absence de recouvrement des sources et refus d'un
+critère enregistré incohérent. Production inchangée, pas de push/dev/tag.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
@@ -3944,3 +4119,13 @@ latence certifié, pas de push/dev/tag. Calculs clos.
   contre-exemple σCo0,670 au saut tonal : pas de promotion globale.
   Suite : mesurer leur incertitude puis conserver la structure spatiale des
   transitions dans le budget, avant une revue sur RAW réels. Réserves fermées.
+- Audit des biais et réplication (§50) : nouveau guide spatial non promu,
+  échec du critère des extrêmes malgré32+32 réalisations. La réalisation de
+  lecture figée explique une partie du problème du banc ; ce n'est pas une
+  identification du FPN physique. Quatre noirs nouveaux au transport mais
+  déjà dans caractérisation ; pas de fausse réserve indépendante.
+- Piste statistique multi-noirs (§51) : deux domaines séparés passent les
+  critères fixés. Budget de covariance attendu stable sur ce banc, pas rendu
+  photo qualifié. Guide spatial modestement meilleur en médiane, plus mauvais
+  sur certains extrêmes ; pas d'imposition globale. Contrôles déjà examinés,
+  hypothèses et effectifs physiques limités, réserves finales fermées.
