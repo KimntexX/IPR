@@ -11,6 +11,8 @@ n'est qualifié par cette décision, aucune nouvelle campagne lancée.
 
 Préparation B4 engagée ensuite (§55) : inventaire léger et étude des modèles,
 sans inférence ni changement du moteur ; les essais alpha gardent la priorité.
+Précision suivante (§56) : propres poids sur architecture éprouvée, besoins de
+prises appariées et rafales lunaires candidates ; pas d'entraînement lancé.
 
 Dernier jalon (§53) : ablation de routage sur les64entrées du§52,640parités
 avec les anciennes sorties. Plafond diagonal local : détail préservé mais
@@ -4318,6 +4320,22 @@ téléchargé, paquet installé, entraînement ou inférence lancé, pas d'uploa
 de photos/code/inventaire matériel pendant les recherches publiques.
 Prochaine porte : artefacts/droits et protocole gelés, puis pilote sur petits
 buffers après libération du budget des tests alpha. Aucun push/fusion/tag.
+
+## 56. Corpus pour nos propres poids et rafales lunaires — 31 octobre 2026
+
+L'utilisateur retient une architecture éprouvée avec nos propres poids et propose
+un SSD de 500 Go à préparer lui-même. Le
+[JSON de besoins v001](../raw/besoins-corpus-b4-v001-20261031T134511Z.json) conserve
+l'audit de métadonnées historiques, les tailles de fichiers et le repérage de D:.
+La [section9 du cadrage B4](../../architecture/restauration-neuronale.md#9-orientation-retenue-et-besoins-dimages--31-octobre-2026)
+porte la recette proposée : trois scènes pilotes, 192 RAW, avant extension.
+
+Sur D:, 115 CR3 récents candidats lunaires, trépied confirmé par l'utilisateur ;
+premier aperçu embarqué vérifié, pas de dématriçage ni de métrique. Le trépied
+ne fait pas de leur moyenne une référence propre. Ne pas mélanger ces noms
+Canon réutilisés avec les homonymes de base. Aucun fichier copié/supprimé,
+aucune action SSD, aucun téléchargement ou entraînement. SIDD et CC0 de
+raw.pixls.us envisagés sous audit, pas de corpus externe approuvé en bloc.
 
 ## Conclusion actuelle et fiche de reprise
 

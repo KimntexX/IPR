@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/restauration-neuronale.md; sha256: 67858c65819a90ed151f7919afd4ac2be4d464b3b59a5daf2cacbcd421594ae5 -->
+<!-- translation-source: docs/architecture/restauration-neuronale.md; sha256: 56eacc01494ce4c887c0ab20d32adca370310f2ec68bec09cf68685200af1c07 -->
 *[Français](restauration-neuronale.md) | [English](restauration-neuronale_en.md)*
 
 # B4 — preparation study for local neural restoration
@@ -9,6 +9,10 @@
 study during alpha qualification. The classic engine is unchanged; no training,
 weight download or inference has started. Alpha tests take priority and must not
 share machine load with a second benchmark.
+
+Subsequent user direction (§9): proven architecture, prioritizing **weights
+trained for IPR and signed camera data**; existing RGB models remain comparators,
+not a mandatory target.
 
 This reference expands [beta package B4](roadmap-beta_en.md). Local observations
 and limitations are preserved in the
@@ -213,3 +217,110 @@ finish and release the host budget. Select the first checkpoint and authorize
 acquisition before download; redistribution is not approved. This work delivers
 proposed contracts, inventory and bench protocol, **not a demonstrated performant
 model**.
+
+## 9. Selected direction and image requirements — 31 October 2026
+
+The user selects a **proven architecture with our own weights** and controlled
+color contract. Signed pre-LCP/DCP camera RGB becomes the priority; existing RGB
+weights remain optional comparators, not a prerequisite to our training. Factual
+details are preserved in the [v001 requirements JSON](../validation/raw/besoins-corpus-b4-v001-20261031T134511Z.json).
+
+### What is actually missing
+
+- Multiple **different scenes with noisy data and comparable clean references**,
+  not simply more isolated photographs. The historical verified inventory covers
+  one 42-frame ISO 4000 burst plus capped-lens dark/dark-room captures, all from
+  the R6 Mark III; it is not a diverse supervised dataset.
+- Weak textures: fine textiles, stationary hair or a wig, rough paper, wood;
+  strong colors: orange/red, blue, green and gray. Retain the real luminance
+  sand texture on climbing panels.
+- Separate sessions and stable lighting, with independent scenes reserved before
+  tuning. Existing dark frames are useful; **do not retake them all** before
+  auditing unclassified series.
+- Qualify the 60D later. Do not automatically transfer R6 Mark III ISO settings,
+  noise, weights or conclusions.
+
+### First requested capture: three pilot scenes
+
+Start with only three static arrangements:
+
+1. Fine fabric, stationary hair strands and a sharp-edged object, in soft light.
+2. Orange/red, blue and green objects with a gray patch, without clipped channels.
+3. Matte gray area, low-contrast detail and a dark object with readable shadows.
+
+For **each scene**, tripod-mounted R6 Mark III, full-resolution RAW rather than
+C-RAW for the first package, fixed shutter mode, aperture and manual focus.
+Fixed WB, no Auto ISO or automatic exposure compensation. Disable long-exposure
+noise reduction and record other camera noise settings. Do not move camera,
+subject or lighting between series. Avoid screens, flickering LEDs, foliage,
+people and moving fabric.
+
+- **Reference: 16 frames at ISO 100**, or 400 if that provides a more stable
+  sequence; lengthen exposure for correct brightness without clipping.
+- **Noise: 16 frames at each of ISO 3200, 12800 and 51200.** Shorten shutter time
+  as ISO increases to preserve comparable brightness; do not leave every exposure
+  parameter unchanged at once.
+- Same framing, aperture and lighting. Check blacks, grays and colors, without
+  trying to expose the entire scene to the right. Record shutter times and
+  verify stability between reference and noisy captures.
+
+This is **64 RAW files per scene, 192 in total**. Reference frames are not noisy
+training inputs. After alignment/inspection, aggregation reduces temporal noise
+without automatically removing FPN, hot pixels or lighting changes. Low-ISO
+references and high-ISO images need measured radiometric matching; changing ISO
+does not make their pixels identical. Do not produce LR TIFFs.
+
+Audit this package before taking more. If acceptable, a starting proposal is
+**12 scenes total: 8 development / 2 validation / 2 sealed test**, or 768 RAW files
+with this recipe. The three pilots stay in development; all ISO settings and
+crops from a scene stay together. This prepares an initial study, not a guarantee
+of a general-purpose model: training from scratch may need much more diversity.
+
+### Lunar bursts on SD card D:
+
+The user confirms tripod capture. Read-only listing found 115 CR3 files in
+`D:/DCIM/101EOSR6`, from `6V1A0016.CR3` through `6V1A0130.CR3`, grouped by write
+time on 30 October around 22:44, 22:46 and 22:47. These are not EXIF-proven burst
+boundaries. The first embedded preview shows the Moon; other files/settings
+still need auditing.
+
+Proposed use: exploratory craters, halos, dark sky and false-detail checks,
+initially outside training. A tripod does not eliminate lunar drift, turbulence
+or vibration. Do not declare an average “clean” without alignment/checks; do not
+select only views favoring the network. This already-previewed series is not
+described as a sealed blind test.
+
+### Public datasets: complements, not replacements for Canon captures
+
+| Source | Potential contribution | Preparation decision |
+| --- | --- | --- |
+| [SIDD](https://abdokamel.github.io/sidd/) | Noisy/reference pairs, RAW and sRGB; declared MIT license | First public candidate, begin with a subset; smartphone/normalized RAW do not qualify Canon negatives |
+| [raw.pixls.us](https://raw.pixls.us/) | Scene/format diversity | Individually verified CC0 files only; not paired clean truth, label synthesized noise |
+| [RENOIR](https://ani.stat.fsu.edu/~abarbu/Renoir.html) | Includes Canon T3i/S90 data | Potential interest, image reuse rights not established here: not selected for training yet |
+| [ELD](https://github.com/Vandermode/ELD) | Noise modeling and low-light comparison | MIT code but dataset described for evaluation: do not treat it as unrestricted training data |
+| [FiveK](https://data.csail.mit.edu/graphics/fivek/) | Diverse RAWs and expert edits | Research licenses restrict commercial-purpose use; not selected as an unrestricted foundation |
+| [HDR+](https://hdrplusdata.org/dataset.html) | Smartphone bursts and merged results, declared CC-BY-SA | Possible later B7 study; no full download or assumed automatic rights over our weights |
+
+The [FiveK license](https://data.csail.mit.edu/graphics/fivek/legal/LicenseAdobeMIT.txt)
+is a research license despite MIT in the dataset name, not the MIT software
+license. Future acquisitions must track image rights separately from code and
+weight rights. Nothing was downloaded.
+
+### 500 GB SSD: proposed organization, no disk operation
+
+At the median 38,026,452-byte size of the 14 base CR3 files, 192 new RAW files
+occupy about **7.3 GB**, 768 about **29.2 GB**; future sizes vary, excluding copies
+and caches. The 115 lunar candidates occupy about 2.62 GB. A nominal 500 GB SSD
+helps substantially, but is no reason to materialize every full-frame tensor:
+one 32 MP float32 RGB already occupies 384 MB.
+
+After user mounting, keep training data separate from `base` and disposable
+exports, identifying camera/session/scene/series and source hashes. Canon names
+repeat: never copy lunar frames into `base` over an existing namesake. Backed-up
+immutable sources, on-demand crops and bounded regenerable cache; proposed
+initial cache budget 100 GB, reassessed after measurement, with free-space margin.
+A compute SSD is not a backup. Do not apply analysis-TIFF cleanup to training RAW
+sources needed for reproducibility.
+
+Formatting, volume selection and corpus relocation still need user decisions.
+This preparation performs no formatting, copying, deletion or partitioning.

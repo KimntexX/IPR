@@ -9,6 +9,10 @@ l'étude pendant la qualification alpha. Le moteur classique reste inchangé ;
 aucun entraînement, poids téléchargé ou inférence lancé. Les essais alpha ont
 priorité et ne doivent pas subir la charge d'un second benchmark.
 
+Orientation utilisateur précisée ensuite (§9) : architecture éprouvée,
+**poids entraînés pour IPR et signal caméra signé** en priorité ; les modèles
+RGB existants restent des comparateurs, pas une cible imposée.
+
 Cette référence précise le [lot B4 du plan bêta](roadmap-beta.md). Les faits
 locaux et limites sont conservés dans le
 [JSON de préparation v001](../validation/raw/preparation-b4-v001-20261031T132231Z.json),
@@ -224,3 +228,115 @@ fin des campagnes alpha et libération du budget machine. Choisir le premier
 checkpoint et autoriser son acquisition avant téléchargement ; aucun choix
 de redistribution n'est acquis. Le présent travail livre les contrats proposés,
 l'inventaire et le protocole du banc, **pas un modèle performant démontré**.
+
+## 9. Orientation retenue et besoins d'images — 31 octobre 2026
+
+L'utilisateur retient une **architecture éprouvée avec nos propres poids** et
+un contrat de couleur maîtrisé. La cible prioritaire devient le RGB caméra
+signé pré-LCP/DCP ; les poids RGB existants restent des comparateurs facultatifs,
+pas un passage obligé avant notre apprentissage. Le détail factuel de cet audit
+est conservé dans le [JSON de besoins v001](../validation/raw/besoins-corpus-b4-v001-20261031T134511Z.json).
+
+### Ce qui manque réellement
+
+- Plusieurs **scènes différentes avec bruit et référence propre comparable**,
+  pas simplement davantage de photos isolées. L'inventaire historique vérifié
+  couvre une rafale de 42 images à ISO 4000 et des noirs/prises en pièce sombre,
+  tous du R6 Mark III ; il ne constitue pas un jeu supervisé diversifié.
+- Des textures faibles : tissus fins, cheveux immobiles ou perruque, papier
+  granuleux, bois ; et des couleurs franches : orange/rouge, bleu, verts et gris.
+  Sur les panneaux d'escalade, conserver le vrai grain de sable en luminance.
+- Des scènes réparties sur plusieurs séances et éclairages stables, avec des
+  scènes indépendantes réservées avant réglage. Les noirs existants sont utiles ;
+  **ne pas les refaire tous** avant d'avoir audité les séries non classées.
+- La qualification du 60D viendra ensuite. Ne pas transférer automatiquement
+  les niveaux ISO, le bruit, les poids ou les conclusions du R6 Mark III.
+
+### Première acquisition demandée : trois scènes pilotes
+
+Commencer seulement par trois installations fixes :
+
+1. Tissu fin + mèches immobiles + objet à bord net, éclairage doux.
+2. Objets orange/rouge, bleu et vert + plage grise, sans canaux saturés.
+3. Aplat gris mat + détail peu contrasté + objet sombre, avec ombres lisibles.
+
+Pour **chaque scène**, R6 Mark III sur trépied, RAW pleine définition non C-RAW
+pour le premier lot, mode d'obturation constant, ouverture et mise au point
+manuelles fixes. BdB fixe, pas d'Auto ISO ni de correction automatique d'exposition.
+Désactiver la réduction de bruit longue pose ; enregistrer les autres réglages
+de bruit boîtier. Ne pas déplacer caméra, sujet ou éclairage entre séries.
+Éviter écran, LED à scintillement, feuillage, personnes et tissus qui bougent.
+
+- **Référence : 16 vues à ISO 100**, ou 400 si cela permet une séquence plus
+  stable ; allonger le temps de pose pour exposer correctement sans écrêtage.
+- **Bruit : 16 vues à chacun des ISO 3200, 12800 et 51200**. Raccourcir le temps
+  de pose quand l'ISO augmente pour garder une luminosité comparable ; ne pas
+  conserver simultanément tous les paramètres d'exposition inchangés.
+- Même cadrage, ouverture et éclairage. Contrôler les noirs, gris et couleurs,
+  sans chercher à exposer toute la scène à droite. Noter les temps de pose et
+  vérifier la stabilité entre la référence et les prises bruitées.
+
+Cela fait **64 RAW par scène, 192 RAW au total**. Les 16 vues de référence ne
+sont pas les entrées bruitées d'entraînement. Après alignement et contrôle,
+leur agrégation réduit le bruit temporel sans supprimer automatiquement FPN,
+pixels chauds ou variations d'éclairage. Référence basse sensibilité et vues à
+haute sensibilité nécessitent un raccord radiométrique mesuré ; elles ne sont
+pas égales pixel à pixel par simple changement d'ISO. Ne produire aucun TIFF LR.
+
+Faire auditer ce lot avant d'en prendre davantage. Si recevable, proposition
+de départ : **12 scènes au total, réparties 8 développement / 2 validation /
+2 test fermé**, soit 768 RAW avec cette recette. Les trois pilotes restent en
+développement ; toutes les sensibilités et tous les crops d'une scène restent
+dans le même groupe. Ce nombre prépare une première étude, pas une garantie de
+modèle généraliste : l'entraînement depuis zéro peut demander bien plus de diversité.
+
+### Rafales lunaires sur la carte D:
+
+L'utilisateur confirme une prise sur trépied. Lecture seule : 115 CR3 dans
+`D:/DCIM/101EOSR6`, de `6V1A0016.CR3` à `6V1A0130.CR3`, regroupés par dates
+d'écriture le 30 octobre vers 22 h 44, 22 h 46 et 22 h 47. Ces groupes ne sont
+pas encore des limites de rafales prouvées par EXIF. Le premier aperçu embarqué
+montre la Lune ; les autres fichiers et paramètres restent à auditer.
+
+Usage proposé : contrôle exploratoire des cratères, halos, ciel sombre et faux
+détails, hors apprentissage dans un premier temps. Trépied ne supprime ni dérive
+lunaire, ni turbulence, ni vibrations. Pas de moyenne déclarée « propre » sans
+recalage/contrôle ; ne pas sélectionner uniquement les vues qui favorisent le réseau.
+La série déjà prévisualisée n'est pas présentée comme un test aveugle scellé.
+
+### Banques publiques : compléments, pas substitution des Canon
+
+| Source | Apport possible | Décision de préparation |
+| --- | --- | --- |
+| [SIDD](https://abdokamel.github.io/sidd/) | Paires bruit/référence, données RAW et sRGB ; licence MIT déclarée | Premier candidat public, commencer par un sous-ensemble ; smartphone et RAW normalisé ne qualifient pas nos négatifs Canon |
+| [raw.pixls.us](https://raw.pixls.us/) | Diversité de scènes et de formats | Seulement fichiers dont CC0 est vérifié individuellement ; pas de vérité propre appariée, bruit synthétique à déclarer |
+| [RENOIR](https://ani.stat.fsu.edu/~abarbu/Renoir.html) | Données incluant Canon T3i et S90 | Intérêt à étudier, droits de réutilisation des images non établis ici : pas retenu pour entraînement à ce stade |
+| [ELD](https://github.com/Vandermode/ELD) | Modélisation du bruit et comparaison basse lumière | Code MIT, mais jeu annoncé pour évaluation : ne pas l'assimiler à un corpus d'entraînement libre |
+| [FiveK](https://data.csail.mit.edu/graphics/fivek/) | Diversité RAW, retouches expertes | Licences de recherche limitant les usages commerciaux ; pas retenu comme base sans restriction |
+| [HDR+](https://hdrplusdata.org/dataset.html) | Rafales smartphone et résultats fusionnés, CC-BY-SA déclaré | Étude ultérieure possible pour B7 ; pas de téléchargement complet, ni de droits sur nos poids supposés automatiquement |
+
+La [licence FiveK](https://data.csail.mit.edu/graphics/fivek/legal/LicenseAdobeMIT.txt)
+est une licence de recherche malgré le nom MIT dans le jeu ; ce n'est pas la
+licence logicielle MIT. Chaque acquisition future doit tracer les droits des
+images séparément de ceux du code et des poids. Aucun téléchargement effectué.
+
+### SSD de 500 Go : organisation proposée, aucune opération disque
+
+À la médiane de 38 026 452 octets des 14 CR3 de base, 192 nouveaux RAW occupent
+environ **7,3 Go**, 768 environ **29,2 Go** ; tailles futures variables, hors
+copies et caches. Les 115 candidats lunaires représentent environ 2,62 Go.
+Un SSD annoncé 500 Go est une aide substantielle, pas une raison de matérialiser
+tous les tenseurs pleine image : un RGB float32 de 32 Mpx occupe déjà 384 Mo.
+
+Après montage par l'utilisateur, garder un corpus d'apprentissage distinct de
+`base` et de ses exports jetables, avec identité boîtier/séance/scène/série et
+empreinte des sources. Les noms Canon se répètent : ne jamais copier les vues
+lunaires dans `base` en écrasant un homonyme. Sources immuables sauvegardées,
+crops calculés à la demande, cache régénérable borné ; budget initial proposé
+de 100 Go pour ce cache avec réévaluation après mesure, et marge disque libre.
+Le SSD de calcul ne remplace pas une sauvegarde. Ne pas appliquer la purge des
+TIFF d'analyse aux RAW d'entraînement nécessaires à la reproductibilité.
+
+Le formatage, le choix du volume et le déplacement de corpus restent à décider
+avec l'utilisateur. Aucune action de formatage, copie, suppression ou partition
+n'est exécutée par cette préparation.
