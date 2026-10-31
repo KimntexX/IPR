@@ -175,6 +175,31 @@ int main()
     passed &= check(cv::norm(component(colorEdgeFiltered), component(colorEdge), cv::NORM_INF) < 2e-7,
                     "color-border processing must preserve per-pixel Y");
 
+    // Luminance grain on a saturated colour must stay grain, not become
+    // saturation speckle: the colour denoise works on chroma relative to Y.
+    cv::Mat grain(256, 256, CV_32FC3);
+    {
+        cv::RNG rng(9);
+        const cv::Vec3f orange(.40f, .20f, .05f);
+        for (int y = 0; y < grain.rows; ++y)
+            for (int x = 0; x < grain.cols; ++x)
+                grain.at<cv::Vec3f>(y, x) = orange * std::max(.05f, 1.f + static_cast<float>(rng.gaussian(.25)));
+    }
+    auto grainFiltered = grain.clone();
+    DetailProcessing::reduceNoise(grainFiltered, {0, 100});
+    const auto relativeChromaSpread = [&](const cv::Mat &image) {
+        cv::Mat ratio;
+        cv::divide(component(image, 1), component(image, 0), ratio);
+        cv::Scalar mean, deviation;
+        cv::meanStdDev(ratio, mean, deviation);
+        return deviation[0] / std::abs(mean[0]);
+    };
+    std::cout << "luminance_grain_relative_chroma_spread=" << relativeChromaSpread(grainFiltered) << '\n';
+    passed &= check(relativeChromaSpread(grainFiltered) < .01,
+                    "luminance grain must keep its hue and saturation after colour denoise");
+    passed &= check(cv::norm(component(grainFiltered), component(grain), cv::NORM_INF) < 2e-6,
+                    "colour denoise must leave luminance grain untouched");
+
     // Coloured HDR noise must not be clipped to SDR by reconstruction.
     auto hdr = noisy(2.f, .02f, true);
     DetailProcessing::reduceNoise(hdr, {100, 100});
