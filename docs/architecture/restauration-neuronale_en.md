@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/restauration-neuronale.md; sha256: 7a7cd32af6b9068500e24d9fabda4aea6c7a3aa9d8cf22a6bda6b45cfe6f5fa7 -->
+<!-- translation-source: docs/architecture/restauration-neuronale.md; sha256: cf0f87b516950f4a826ae7404d5936f19b65916bcf3c5b4370f9db17d0f3903a -->
 *[Français](restauration-neuronale.md) | [English](restauration-neuronale_en.md)*
 
 # B4 — preparation study for local neural restoration
@@ -9,6 +9,9 @@
 The user authorizes initial tests and PyTorch installation in an isolated
 environment. The classic engine is unchanged; alpha tests retain priority.
 Sections 1 through 9 record scoping before neural installation/calculation.
+
+Subsequent audit (§11): settings of 115 lunar CR3 files checked, three previews
+measured and historical movement evidence reused. No clean reference created.
 
 Subsequent user direction (§9): proven architecture, prioritizing **weights
 trained for IPR and signed camera data**; existing RGB models remain comparators,
@@ -355,3 +358,67 @@ large-scale training.
 [executable lab](../scholar/references/reseaux-exemples.py) explain fundamentals,
 manual gradients, CNN/U-Net, data and qualification. The lab is separate from the
 bench: teaching demonstration, not another validation campaign.
+
+## 11. Audit of available bursts — 31 October 2026
+
+The user authorizes this audit while preparing new scenes. Dedicated tool on
+`patch_neural_restoration`, commit `1aec51c`, seven synthetic reader tests passed.
+Measurements are preserved in the
+[v001 lunar JSON](../validation/raw/moon-audit-v001-20261031T194552Z.json).
+Bounded CMT1/CMT2 reading, not full MakerNotes/CTMD interpretation. Sequential
+processing, one OpenCV thread; no production change.
+
+### Confirmed lunar settings
+
+All 115 files in `D:/DCIM/101EOSR6` identify Canon EOS R6 Mark III, 200 mm,
+`70-200mm F2.8 DG OS HSM | Sports 018`, orientation1. Tripod use is the user's
+statement, not an EXIF measurement.
+
+| Files | Count | ISO | Shutter | Aperture |
+| --- | --- | --- | --- | --- |
+| `6V1A0016.CR3` through `6V1A0049.CR3` | 34 | 1600 | 1/200 s | f/5.6 |
+| `6V1A0050.CR3` through `6V1A0130.CR3` | 81 | 1000 | 1/200 s | f/9 |
+
+Capture timestamps confirm 30 October around22:44–22:47. The second range
+contains two time groups; matching settings do not establish one continuous
+burst. Do not average all 115 together: gain/aperture differ, and framing moved
+between the previews.
+
+Embedded JPEGs from0016/0073/0130 measure6960×4640 pixels. The detected bright
+region is about300 pixels across: useful local lunar detail, not 115 scenes or
+diverse texture/color examples. Encoded medians in that region are159/75/78.
+The first preview has about1.17% of region channels at255, the other two0%.
+This is **not RAW clipping diagnosis**: the JPEG curve, balance and processing
+can saturate a channel.
+
+The Laplacian proxy varies but is not used to rank sharpness: exposure and
+processing change it too. The selection box uses JPEG coordinates, not a
+certified sensor ROI. Full RAW hashes were retained for the three selected
+views; others have metadata-block hashes and size/date only, not whole-file hashes.
+
+**Decision:** candidate for exploratory detail/halo checks, initially outside
+training. Later RAW qualification must cover saturation, registration per
+subseries, coverage, turbulence and texture stability. No “clean” average or
+supervised target created from the JPEGs.
+
+### Reuse of the historical 42-frame burst
+
+This bench rereads no development/validation/sealed pixels. It reuses the
+27 October movement JSON, retaining its path/hash in the new evidence. That
+audit covered only the first14 development frames, using an 800-pixel-wide CFA
+preview. It reported up to5.19 preview pixels of global translation,0.427°
+absolute rotation and scale1–1.00458. Do not translate those values into native
+RAW displacements without the original bench's exact conventions.
+
+These results rule out a naive mean as texture truth. They do not rule out a
+registered reference: global affine fit, parallax and local movement still need
+checks on authorized pixels. The holdout remains sealed; previously examined
+images do not become a new untouched test.
+
+### Next
+
+Audit the first new capture package before expanding, retaining scene/session/
+settings and independent groups. For existing sources, freeze the RAW domain
+and registration treatment before constructing an averaged target. No training
+or weight adjustment from preview metrics. No RAW copied, exported, deleted
+or modified.

@@ -15,6 +15,9 @@ Précision suivante (§56) : propres poids sur architecture éprouvée, besoins 
 prises appariées et rafales lunaires candidates ; pas d'entraînement lancé.
 Premier banc technique (§57) :14 contrôles synthétiques passés sur petit U-Net
 CPU, sans gain photo ni mise à jour du moteur revendiqués.
+Audit suivant (§58) :115 métadonnées CR3 lunaires, deux groupes d'exposition,
+trois JPEG embarqués et preuves de mouvement anciennes réutilisées ; pas de
+référence propre créée, réserve fermée.
 
 Dernier jalon (§53) : ablation de routage sur les64entrées du§52,640parités
 avec les anciennes sorties. Plafond diagonal local : détail préservé mais
@@ -4353,6 +4356,26 @@ Canon/détail/couleur/raccords, ni latence pleine image qualifiés. Aucun RAW,
 réserve ou TIFF LR lu par le banc ; aucun poids préentraîné acquis, aucun poids
 entraîné sauvegardé. Le moteur reste inchangé. Le cours13 et ses TP pédagogiques
 sont fournis séparément. Pas de publication, fusion ou tag.
+
+## 58. Rafales lunaires et faisabilité des références — 31 octobre 2026
+
+[Preuve canonique](../raw/moon-audit-v001-20261031T194552Z.json), outil `1aec51c`
+sur `patch_neural_restoration`, sept tests de lecteur réussis. Les115 CR3 de
+D:/DCIM/101EOSR6 déclarent R6 Mark III à200mm :34 vues ISO1600/f5,6 et81 vues
+ISO1000/f9, toutes au1/200s. Ne pas les fusionner sans séparation/raccord.
+
+Trois JPEG embarqués mesurés, pas le signal RAW : changement du cadre/niveaux,
+zone lunaire d'environ300pixels. Les canaux encodés à255 du premier aperçu
+ne prouvent pas une saturation capteur. Pas de classement de netteté sur
+Laplacien confondu avec exposition. Série conservée comme candidate de contrôle
+de détail/halos, pas cible propre ou données d'apprentissage qualifiées.
+
+Réutilisation de l'audit de mouvement du27 octobre sur les14 vues de développement :
+jusqu'à5,19px à800px de large,0,427° et échelle1,00458. Pas de nouveau calcul
+sur la rafale42 ni de pixels de réserve consultés. Moyenne brute non recevable
+comme vérité ; un futur recalage reste une possibilité à qualifier. Détails et
+limites dans la [section11 de B4](../../architecture/restauration-neuronale.md).
+Aucune source modifiée, pas d'entraînement, de push/fusion/tag.
 
 ## Conclusion actuelle et fiche de reprise
 

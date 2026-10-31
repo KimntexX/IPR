@@ -10,6 +10,9 @@ environnement isolé. Le moteur classique reste inchangé ; les essais alpha
 gardent la priorité. Les sections 1 à 9 retracent le cadrage préalable, avant
 installation et calcul neuronal.
 
+Audit suivant (§11) : réglages des 115 CR3 lunaires vérifiés, trois aperçus
+mesurés et mouvement historique réutilisé. Aucune référence propre constituée.
+
 Orientation utilisateur précisée ensuite (§9) : architecture éprouvée,
 **poids entraînés pour IPR et signal caméra signé** en priorité ; les modèles
 RGB existants restent des comparateurs, pas une cible imposée.
@@ -372,3 +375,69 @@ Le [cours 13](../scholar/cours-13-reseaux-neuronaux-de-zero.pdf), avec
 [TP exécutable](../scholar/references/reseaux-exemples.py), explique les bases,
 gradients à la main, CNN/U-Net, données et qualification. Le TP reste séparé
 du banc : démonstration pédagogique, pas nouvelle campagne de validation.
+
+## 11. Audit des rafales disponibles — 31 octobre 2026
+
+L'utilisateur autorise l'audit pendant la préparation de nouvelles scènes.
+Outil dédié sur `patch_neural_restoration`, commit `1aec51c`, sept tests de
+lecteur synthétique réussis. Mesure conservée dans le
+[JSON lunaire v001](../validation/raw/moon-audit-v001-20261031T194552Z.json).
+Lecture bornée des CMT1/CMT2, pas interprétation complète des MakerNotes/CTMD.
+Traitement séquentiel, un thread OpenCV ; aucune modification de production.
+
+### Ce qui est confirmé pour la Lune
+
+Les 115 fichiers de `D:/DCIM/101EOSR6` déclarent Canon EOS R6 Mark III,
+200 mm, objectif `70-200mm F2.8 DG OS HSM | Sports 018`, orientation1.
+Le trépied reste une information fournie par l'utilisateur, pas une mesure EXIF.
+
+| Fichiers | Nombre | ISO | Temps de pose | Ouverture |
+| --- | --- | --- | --- | --- |
+| `6V1A0016.CR3` à `6V1A0049.CR3` | 34 | 1600 | 1/200 s | f/5,6 |
+| `6V1A0050.CR3` à `6V1A0130.CR3` | 81 | 1000 | 1/200 s | f/9 |
+
+Les horodatages de prise confirment le 30 octobre vers22h44–22h47.
+La seconde plage comprend deux groupes horaires ; l'égalité des paramètres
+ne prouve pas la continuité d'une rafale. Ne pas moyenner les 115 images en bloc :
+gain et ouverture diffèrent, et le cadre s'est déplacé entre les aperçus.
+
+Les JPEG embarqués de0016/0073/0130 font6960×4640 pixels. La zone lumineuse
+détectée mesure environ300 pixels de côté : intérêt local sur la Lune, pas
+115 scènes ni des exemples variés de textures et couleurs. Les niveaux médians
+encodés de cette zone sont159/75/78. Le premier aperçu contient environ1,17%
+de canaux à255 dans cette zone ; les deux autres0%. Ce n'est **pas un diagnostic
+d'écrêtage RAW** : courbe, balance et traitement JPEG peuvent saturer un canal.
+
+Le proxy Laplacien varie entre les vues, mais n'est pas utilisé pour classer
+leur netteté : exposition et traitement changent aussi sa valeur. La boîte de
+sélection est en coordonnées JPEG, pas un ROI capteur certifié. Les empreintes
+RAW complètes sont conservées pour ces trois vues ; les autres ont seulement
+les empreintes des blocs de métadonnées et leur taille/date, pas un hash complet.
+
+**Décision :** série candidate aux tests exploratoires de détails et halos,
+hors apprentissage pour l'instant. À qualifier ensuite en RAW : saturation,
+alignement par sous-série, couverture, turbulence et stabilité des textures.
+Ni moyenne « propre » ni référence supervisée créée à partir des JPEG.
+
+### Réutilisation de la rafale historique de 42 vues
+
+Le banc ne relit aucun pixel des groupes développement/validation/réserve.
+Il réutilise le JSON de mouvement du27 octobre, dont le chemin et l'empreinte
+sont conservés dans la nouvelle preuve. L'audit ancien portait seulement sur
+les14 premières vues de développement, avec aperçu CFA de800 pixels de large.
+Il rapportait jusqu'à5,19 pixels de translation globale,0,427° de rotation
+absolue et une échelle entre1 et1,00458. Ne pas convertir ces valeurs en
+déplacements RAW natifs sans reprendre les conventions exactes de l'ancien banc.
+
+Ces résultats interdisent une moyenne naïve comme vérité de texture. Ils ne
+réfutent pas une référence après recalage : affine globale, parallaxe et mouvement
+local doivent encore être contrôlés sur les pixels autorisés. La réserve reste
+fermée. Les anciennes images examinées ne deviennent pas un nouveau test vierge.
+
+### Suite retenue
+
+Auditer le premier lot de nouvelles prises avant extension, en conservant
+scène/séance/réglages et groupes indépendants. Pour les sources existantes,
+geler d'abord le domaine RAW et le traitement d'alignement avant toute cible
+de moyenne ; pas de reprise d'un entraînement ni de modification des poids
+sur la base de métriques d'aperçu. Aucun RAW copié, exporté, supprimé ou modifié.
