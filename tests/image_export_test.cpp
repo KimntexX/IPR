@@ -1072,10 +1072,10 @@ bool verifyHistogramValues(ImageEditor &editor, const QString &directory)
 
 bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
 {
-    // Black, deep shadow, shadow, pivot (0.32 linear ~ sRGB 153), highlight,
+    // Black, deep shadow, shadow, pivot (0.225 linear ~ sRGB 130), highlight,
     // white and an orange: per-channel perceptual S curve with fixed endpoints.
-    const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(105, 105, 105),
-        QColor(153, 153, 153), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
+    const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(95, 95, 95),
+        QColor(130, 130, 130), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
     QImage input(int(colors.size()), 1, QImage::Format_RGBA8888);
     for (int x = 0; x < colors.size(); ++x) input.setPixelColor(x, 0, colors[x]);
     input.setColorSpace(QColorSpace(QColorSpace::SRgb));
