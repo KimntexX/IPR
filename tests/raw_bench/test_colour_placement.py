@@ -39,7 +39,7 @@ class ColourPlacementTests(unittest.TestCase):
         self.assertFalse(any(r['flat'] for r in masks))
         self.assertTrue(all(r['metrics'] is None for r in aggregate([], [])))
 
-    def test_chroma_variation_is_detected_without_luma_change(self):
+    def test_chroma_variation_is_detected(self):
         rgb = np.full((64, 64, 3), .01, dtype=np.float32)
         masks = choose_tiles(rgb)
         reference = measure(rgb, masks)

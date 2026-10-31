@@ -133,10 +133,14 @@ public:
         }
         static_assert(Q_BYTE_ORDER==Q_LITTLE_ENDIAN,"Little endian wire format required");
         const auto declaration=TestRecipes::declaration(*master_,settings,source,"bruit","neutral",0,"own neutral");
+        const QString profilePath = master_->image.dcpContext->profilePath;
+        const QString manifestPath = ImageEditor::defaultCalibrationManifest();
         send({{"ok",true},{"width",image.width()},{"height",image.height()},{"channels",3},
               {"dtype","<u2"},{"bytes",qint64(pixels.size()*2)},{"signed",signedMode},
               {"placement",placement},{"strength",strength},{"camera_source",cameraSurvey_},
               {"camera_filtered",preSurvey},{"profile_output",profileSurvey},
+              {"profile_path",profilePath},{"profile_sha256",TestRecipes::sha256(profilePath)},
+              {"manifest_path",manifestPath},{"manifest_sha256",TestRecipes::sha256(manifestPath)},
               {"declaration",declaration},{"elapsed_ms",double(timer.elapsed())}}, pixels);
     }
 

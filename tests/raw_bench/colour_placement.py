@@ -223,6 +223,9 @@ def request(server, raw, signed, placement, strength, identity=False):
         if header['dtype'] != '<u2' or header['bytes'] != h*w*6:
             raise ValueError('Unexpected native layout')
         payload = server._read(header['bytes'])
+        for resource in ('profile', 'manifest'):
+            if sha256(header[resource+'_path']) != header[resource+'_sha256']:
+                raise ValueError(f'Changed {resource} resource')
         return np.frombuffer(payload, dtype='<u2').reshape(h, w, 3), header
     finally:
         watchdog.cancel()
@@ -271,8 +274,11 @@ def scene_campaign(record, tool, production, outdir):
         pixels, header = request(server, raw, True, 'post', 0)
         masks = choose_tiles(linear(pixels)); del pixels
         evidence['masks']['ipr'] = masks
+        resources = {name: (header[name+'_path'], header[name+'_sha256']) for name in ('profile', 'manifest')}
         for signed in (True, False):
             pixels, header = request(server, raw, signed, 'post', 0)
+            if any((header[name+'_path'], header[name+'_sha256']) != value for name, value in resources.items()):
+                raise ValueError('Profile/calibration differs between development policies')
             neutral_hash = hashlib.sha256(pixels).hexdigest()
             neutral = measure(linear(pixels), masks)
             # Force an actual identity pre-profile rerender to detect a changed
@@ -380,7 +386,7 @@ def main():
         for record in selected:
             memory = available_memory()
             if memory is not None and memory < 5*1024**3:
-                raise RuntimeError('Less than 5 GiB available: campaign stopped, no paging-heavy run')
+                raise RuntimeError(f'Only {memory/1024**3:.3f} GiB available, minimum 5: campaign stopped')
             status(phase='measuring', scene=record['scene'], completed=completed, freeze=str(freeze_path))
             completed.append(scene_campaign(record, a.tool, a.production, a.output_dir))
             # No source/config drift accepted between scenes.
@@ -397,6 +403,9 @@ def main():
         status(phase='complete', index=str(output), completed=completed)
     except BaseException as error:
         status(phase='failed', error=str(error), completed=completed)
+        write_immutable(a.output_dir/f'colour-placement-failure-v001-{stamp}.json',
+                        dict(schema_version=1, created_utc=now(), error=str(error), scenes=completed,
+                             campaign=stamp, verdict='incomplete_not_a_quality_result'))
         raise
 
 
