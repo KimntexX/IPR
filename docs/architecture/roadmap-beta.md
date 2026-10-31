@@ -4,7 +4,8 @@
 
 Date de cadrage : 31 octobre 2026. Statut : **plan proposé, non implémenté**.
 Périmètre demandé par l'utilisateur : géométrie, suppression d'objets,
-calques/filtres, réseaux neuronaux pour bruit/netteté et pour formes/objets.
+calques/filtres, réseaux neuronaux pour bruit/netteté et pour formes/objets,
+empilement, panoramas horizontaux/verticaux et fusion HDR.
 « Formes » signifie formes géométriques dans l'image, confirmé par l'utilisateur ;
 ce chantier ne concerne pas l'identification des formats de fichiers.
 
@@ -45,6 +46,9 @@ arrêtés au moment des validations ; ce plan ne crée aucun tag.
 | B4 | Restauration neuronale : bruit puis netteté | B0, contrat RAW et gestion des ressources | Bénéfice visuel/détail qualifié sur machine de référence |
 | B5 | Détection de formes et segmentation d'objets | B0 ; raccordements B1/B2 | Sélections et propositions corrigibles, erreurs mesurées |
 | B6 | Suppression assistée par détection | B3 + B5 | Sélection assistée sans modification automatique non confirmée |
+| B7 | Empilement multi-images avec référence utilisateur | B0, contrat multi-source et tampon disque | Recalage, recadrage valide et bénéfice sans destruction de détail |
+| B8 | Panorama horizontal/vertical, puis multirangée | Socle multi-source de B7, coordonnées de B1 | Géométrie, raccords, couverture et ressources qualifiés |
+| B9 | Fusion HDR d'expositions, puis panorama HDR | Socle multi-source de B7 ; B8 pour le panorama HDR | Expositions, saturation, mouvements et rendu dynamique maîtrisés |
 
 B4 n'a pas besoin d'attendre les calques pour une première étude indépendante,
 mais l'intégration doit respecter le même système de tâches, d'historique et de
@@ -71,6 +75,9 @@ Définir les contrats moteur avant leurs raccordements QML :
   paramètres ; un résultat asynchrone obsolète ne remplace pas l'image courante ;
 - services de progression, annulation, file de tâches et réservation RAM/VRAM ;
   utiliser les contrôleurs existants plutôt que multiplier les budgets isolés ;
+- recette multi-source et actifs sur disque pour B7/B8/B9 : référence, identités
+  des entrées, alignements, exposition, masques de validité et recadrage ;
+  prévoir le dossier tampon dès le socle, pas comme extension tardive ;
 - protocole d'export : résolution complète, limites d'alpha, même ordre de
   composition qu'à l'aperçu et absence de résultat provisoire exporté par erreur.
 
@@ -304,3 +311,47 @@ ou l'entraînement d'un réseau. Pour le premier développement, créer la branc
 de socle depuis `dev` à jour et isoler son worktree ; ne pas coder le moteur sur
 `patch_documentation`. La branche exacte et les raccordements sont arrêtés au
 démarrage de ce lot, sans dupliquer une branche existante.
+
+## 12. B7/B8/B9 — empilement, panorama et HDR
+
+Ajout demandé le 31 octobre 2026. Reprendre le
+[plan d'empilement et panorama](empilement-et-panorama.md) comme référence
+détaillée, sans créer un second moteur multi-images par fonction. Les trois
+modes sont distincts : horizontal/vertical décrit un panorama, pas le HDR.
+Un panorama HDR combine les deux opérations et vient après leur qualification séparée.
+
+- **B7 — empilement :** commencer par l'antibruit à exposition constante,
+  puis qualifier séparément l'empilement de netteté. Choix d'image de référence
+  et d'ancre/région par l'utilisateur, recalage sous-pixel, confiance et exclusion
+  des mouvements ; recadrage automatique proposé sur la couverture commune.
+  Un point seul n'impose pas une rotation ou une perspective : compléter les
+  correspondances et signaler les échecs. Ciel et sol peuvent nécessiter des
+  alignements distincts, à qualifier dans une évolution dédiée.
+- **B8 — panorama :** un moteur pour horizontal et vertical, une rangée d'abord,
+  puis multirangée. Utiliser l'union des vues, non leur intersection ; projection,
+  compensation des écarts d'exposition, raccords et zones transparentes explicites.
+- **B9 — HDR :** aligner des prises d'une même scène à expositions différentes,
+  gérer saturations et objets mobiles sans fantômes. Distinguer fusion visuelle
+  d'expositions et reconstruction radiométrique HDR. Pour cette dernière,
+  qualifier une entrée avant les courbes non linéaires du profil ; un buffer
+  Rec.2020 à transfert linéaire n'est pas nécessairement scene-linear.
+  Séparer résultat HDR flottant et rendu SDR à dynamique comprimée ; ne pas
+  assimiler la fusion à l'export HDR écran/fichier, qui demande un contrat propre.
+
+Tous utilisent un **dossier tampon disque dédié par tâche**, avec tuiles,
+budgets partagés RAM/disque, progression, annulation et nettoyage des seuls
+temporaires possédés. Garder une recette persistante indépendante du tampon,
+les sources intactes et une publication atomique de la nouvelle image éditable.
+
+Qualification : déplacements connus, détails fins, sujets mobiles, bords,
+expositions extrêmes, couleurs, halos, raccords, disque plein, annulation et
+relecture après suppression du tampon. Établir un protocole et un rapport
+évolutif par famille avec preuves JSON ; les rafales existantes ne valident
+pas à elles seules le HDR ou les panoramas. Aucun nouvel export utilisateur
+n'est demandé ni corpus déclaré complet à ce stade.
+
+L'ordre interne est socle multi-source → empilement simple → panorama et HDR
+qualifiés séparément → panorama HDR. Les numéros B7/B8/B9 ne signifient pas
+qu'il faut attendre la fin de tous les réseaux : ces lots dépendent du socle B0,
+pas de l'entraînement neuronal. Branches proposées, à vérifier au lancement :
+`patch_stacking`, `patch_panorama`, `patch_hdr`. Rien n'est implémenté par ce plan.

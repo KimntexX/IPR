@@ -1,11 +1,12 @@
-<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: 2f1735bd2b4059f69bec6d029d5bbc64f6cf6cb0f19f523fe6a6411a351477ff -->
+<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: 7a652d0890092fef8686c78e2e5318f110962e63d15411649f915bb69bf02068 -->
 *[Français](roadmap-beta.md) | [English](roadmap-beta_en.md)*
 
 # Beta action plan — editing panels and neural processing
 
 Planning date: 31 October 2026. Status: **proposed plan, not implemented**.
 User-requested scope: geometry, object removal, layers/filters, neural networks
-for noise/sharpening and for shapes/objects. “Shapes” means geometric shapes
+for noise/sharpening and for shapes/objects, stacking, horizontal/vertical
+panoramas and HDR merging. “Shapes” means geometric shapes
 within the image, as confirmed by the user; this does not concern file-format
 identification.
 
@@ -46,6 +47,9 @@ this plan creates no tag.
 | B4 | Neural restoration: noise first, then sharpening | B0, RAW contract, resource management | Qualified visual/detail benefit on reference machine |
 | B5 | Shape detection and object segmentation | B0; B1/B2 connections | Correctable selections/proposals; measured errors |
 | B6 | Detection-assisted removal | B3 + B5 | Assisted selection without unconfirmed automatic edits |
+| B7 | Multi-image stacking with user-selected reference | B0, multi-source contract and disk staging | Registration, valid crop and benefit without detail destruction |
+| B8 | Horizontal/vertical panorama, then multi-row | B7 multi-source foundation, B1 coordinates | Qualified geometry, seams, coverage and resources |
+| B9 | HDR exposure merging, then HDR panorama | B7 multi-source foundation; B8 for HDR panorama | Controlled exposures, saturation, motion and dynamic-range rendering |
 
 B4 need not wait for layers for an independent initial study, but integration
 must respect the same task, history and provenance system. B5 can be prepared
@@ -55,6 +59,10 @@ no training or parallel implementation.
 ## 3. B0 — shared foundation before panels
 
 Define engine contracts before QML connections:
+
+Include a multi-source recipe and disk assets for B7/B8/B9: reference, input
+identities, alignments, exposure, validity masks and crop. Plan disk staging
+in the foundation rather than adding it as a late extension.
 
 - immutable source, non-destructive recipe, undoable commands and session
   restoration; canceled/failed operations must not publish partial results;
@@ -297,3 +305,44 @@ in parallel. For initial development, create the foundation branch from current
 `dev` in an isolated worktree; do not implement the engine on
 `patch_documentation`. Choose the exact branch and connections when that package
 starts, without duplicating an existing branch.
+
+## 12. B7/B8/B9 — stacking, panorama and HDR
+
+Added at the user's request on 31 October 2026. Reuse the
+[stacking and panorama plan (French)](empilement-et-panorama.md) as the detailed
+reference, without introducing separate multi-image engines for each function.
+These are distinct modes: horizontal/vertical describes a panorama, not HDR.
+An HDR panorama combines both operations after their separate qualification.
+
+- **B7 — stacking:** start with constant-exposure noise reduction, then qualify
+  focus stacking separately. User-selected reference image and anchor/region,
+  subpixel alignment, confidence and motion rejection; proposed automatic crop
+  to common coverage. One point alone cannot determine rotation or perspective:
+  add correspondences and report failures. Sky and ground may require separate
+  alignments, to be qualified in a dedicated extension.
+- **B8 — panorama:** one engine for horizontal and vertical, single-row first,
+  then multi-row. Use the union of views rather than their intersection; make
+  projection, exposure compensation, seams and transparent areas explicit.
+- **B9 — HDR:** align differently exposed captures of one scene, handle clipping
+  and moving objects without ghosts. Distinguish visual exposure fusion from
+  radiometric HDR reconstruction. For the latter, qualify input before nonlinear
+  profile curves; a linear-transfer Rec.2020 buffer is not necessarily scene-linear.
+  Separate floating HDR output from tone-mapped SDR rendering; merging is not
+  equivalent to HDR display/file export, which needs its own contract.
+
+All modes use a **dedicated per-task disk staging directory**, with tiles, shared
+RAM/disk budgets, progress, cancellation and cleanup restricted to owned
+temporary files. Keep a persistent recipe independent of staging, intact sources
+and atomic publication of the new editable image.
+
+Qualification: known displacements, fine detail, moving subjects, boundaries,
+extreme exposures, colors, halos, seams, full disk, cancellation and reopening
+after staging removal. Establish one evolving protocol and report per family
+with JSON evidence; existing bursts alone do not qualify HDR or panoramas.
+No new user exports are requested and no corpus is declared complete at this stage.
+
+Internal order: multi-source foundation → simple stacking → separately qualified
+panorama and HDR → HDR panorama. B7/B8/B9 numbering does not require waiting for
+all neural networks: these packages depend on B0, not neural training. Proposed
+branches, to check when starting: `patch_stacking`, `patch_panorama`, `patch_hdr`.
+This plan implements none of these features.
