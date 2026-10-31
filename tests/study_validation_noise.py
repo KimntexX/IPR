@@ -40,7 +40,7 @@ TILE = 64
 FLAT_FRACTION, TEXTURED_FRACTION = 0.15, 0.20
 MAX_TILES = 400
 WEIGHTS = np.array([.2126, .7152, .0722], dtype=np.float32)
-MEASURES = ("luma", "chroma", "luma_mid", "chroma_mid", "fine", "mid", "chroma_edges")
+MEASURES = ("luma", "chroma", "luma_mid", "chroma_mid", "chroma_relative", "fine", "mid", "chroma_edges")
 NO_SHARPENING = {"amount": 0, "radius": 1.0, "masking": 0}
 
 
@@ -88,6 +88,9 @@ def measure(rgb, positions):
         out.setdefault("chroma", []).append(float(np.hypot(haar_sigma(co), haar_sigma(cg)) / np.sqrt(2)))
         out.setdefault("luma_mid", []).append(mid_sigma(Y))
         out.setdefault("chroma_mid", []).append(float(np.hypot(mid_sigma(co), mid_sigma(cg)) / np.sqrt(2)))
+        # Hue and saturation noise: chroma relative to luminance, blind to grey luminance grain.
+        y = np.maximum(Y, 1e-4)
+        out.setdefault("chroma_relative", []).append(float(np.hypot(haar_sigma(co / y), haar_sigma(cg / y)) / np.sqrt(2)))
     for y0, x0 in positions["textured"]:
         Y = rgb[y0:y0 + TILE, x0:x0 + TILE] @ WEIGHTS
         g1 = cv2.GaussianBlur(Y, (0, 0), 1.0, borderType=cv2.BORDER_REFLECT)
@@ -189,7 +192,8 @@ def main(argv=None):
               "render_server": {"path": str(server.executable), "sha256": server.sha256},
               "method": {"tile": TILE, "flat_fraction": FLAT_FRACTION, "textured_fraction": TEXTURED_FRACTION,
                          "max_tiles": MAX_TILES, "space": "linear sRGB from 16-bit sRGB encoding, full definition",
-                         "noise": "Haar HH and mid band (G1 - G4) MAD sigma; chroma = hypot(Co, Cg)/sqrt 2",
+                         "noise": "Haar HH and mid band (G1 - G4) MAD sigma; chroma = hypot(Co, Cg)/sqrt 2; "
+                                  "chroma_relative = the same on Co/Y and Cg/Y (hue and saturation noise)",
                          "detail": "RMS of Y - G1 (fine) and G1 - G4 (mid) on the most structured tiles",
                          "chroma_edges": "RMS gradient of the G1-smoothed chroma on the most structured tiles",
                          "factor": "median per-tile ratio state / own neutral, tiles chosen on each engine's neutral",
