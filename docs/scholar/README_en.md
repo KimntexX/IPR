@@ -20,6 +20,7 @@ Formatting: follow the [common LaTeX conventions](../AGENTS.md) (12 pt, 1.5 line
 | [cours-10-filtre-haar-ondelettes.tex](cours-10-filtre-haar-ondelettes.tex) | Haar 1D/2D, multi-scale, MAD, noise, corrected exercises, and IPR application; [PDF](cours-10-filtre-haar-ondelettes.pdf) |
 | [cours-11-architecture-images.tex](cours-11-architecture-images.tex) | Complete image architecture: physics, sampling, binary, memory, compression, formats, RAW, color, metadata, Canon/Sony/Nikon, and exercises; [PDF](cours-11-architecture-images.pdf) |
 | `moteur-graphique-ipr.tex` | pipeline, concurrency, persistence, and constant registry |
+| [Course 13, French source](cours-13-reseaux-neuronaux-de-zero.tex) | Neural-network fundamentals through manual gradients, XOR, CNNs and a complete U-Net lab; [French PDF](cours-13-reseaux-neuronaux-de-zero.pdf). English course translation not yet available. |
 
 ## Windows Compilation
 
@@ -32,6 +33,29 @@ powershell -ExecutionPolicy Bypass -File .\build.ps1
 PDFs are produced at the root of `scholar/`, alongside their `.tex` sources. LaTeX auxiliary files are ignored by Git; `-Clean` only removes known generated artifacts, including PDFs.
 
 The script uses `pdflatex` and `bibtex`, without dependency on `latexmk` or Perl.
+BibTeX runs only when an auxiliary file declares a bibliography database.
+Course13 uses manual references and does not require it.
+
+## Course 13 — neural networks from scratch (French)
+
+Beginner course with explained mathematics, manually differentiated linear/XOR
+examples, then a PyTorch U-Net and end-to-end project methodology. Ten solved
+exercises. [Executable examples](references/reseaux-exemples.py) read no photos
+and write no files:
+
+```powershell
+python docs/scholar/references/reseaux-exemples.py
+python docs/scholar/references/reseaux-exemples.py --torch
+```
+
+Default: standard library only. `--torch`: isolated PyTorch environment, two CPU
+threads, tiny synthetic optimization without saved weights. This does not
+qualify photographic denoising. To build this course alone, run twice from
+`docs/scholar/`:
+
+```powershell
+pdflatex -interaction=nonstopmode -halt-on-error cours-13-reseaux-neuronaux-de-zero.tex
+```
 
 Values described as "empirical" are intentionally separated from standardized constants: they must be validated by the IPR corpus before any modification.
 

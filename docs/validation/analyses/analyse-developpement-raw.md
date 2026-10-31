@@ -13,6 +13,8 @@ Préparation B4 engagée ensuite (§55) : inventaire léger et étude des modèl
 sans inférence ni changement du moteur ; les essais alpha gardent la priorité.
 Précision suivante (§56) : propres poids sur architecture éprouvée, besoins de
 prises appariées et rafales lunaires candidates ; pas d'entraînement lancé.
+Premier banc technique (§57) :14 contrôles synthétiques passés sur petit U-Net
+CPU, sans gain photo ni mise à jour du moteur revendiqués.
 
 Dernier jalon (§53) : ablation de routage sur les64entrées du§52,640parités
 avec les anciennes sorties. Plafond diagonal local : détail préservé mais
@@ -4336,6 +4338,21 @@ ne fait pas de leur moyenne une référence propre. Ne pas mélanger ces noms
 Canon réutilisés avec les homonymes de base. Aucun fichier copié/supprimé,
 aucune action SSD, aucun téléchargement ou entraînement. SIDD et CC0 de
 raw.pixls.us envisagés sous audit, pas de corpus externe approuvé en bloc.
+
+## 57. Premier contrat neuronal synthétique — 31 octobre 2026
+
+Autorisation utilisateur de démarrer les tests et d'installer PyTorch. Worktree
+isolé `patch_neural_restoration`, commit `b6ad93d`, PyTorch2.9.1+cpu et
+NumPy2.3.5 dans `.venv-neural`, sans toucher au Python des tests alpha.
+[JSON canonique](../raw/neural-contracts-v001-20261031T190924Z.json) :14 tests
+réussis,29 995 paramètres,1,36s interne,2 threads intra-op/1 inter-op.
+
+Contrats et gradients seulement. Un mini-ajustement sur un patch artificiel
+n'est pas une campagne d'apprentissage photographique. Ni GPU/ONNX, ni bruit
+Canon/détail/couleur/raccords, ni latence pleine image qualifiés. Aucun RAW,
+réserve ou TIFF LR lu par le banc ; aucun poids préentraîné acquis, aucun poids
+entraîné sauvegardé. Le moteur reste inchangé. Le cours13 et ses TP pédagogiques
+sont fournis séparément. Pas de publication, fusion ou tag.
 
 ## Conclusion actuelle et fiche de reprise
 

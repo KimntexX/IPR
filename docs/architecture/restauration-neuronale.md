@@ -4,10 +4,11 @@
 
 ## État du 31 octobre 2026
 
-**Préparation, pas intégration ni résultat de débruitage.** L'utilisateur autorise
-l'étude pendant la qualification alpha. Le moteur classique reste inchangé ;
-aucun entraînement, poids téléchargé ou inférence lancé. Les essais alpha ont
-priorité et ne doivent pas subir la charge d'un second benchmark.
+**Premier banc synthétique passé (§10), pas intégration ni résultat photo.**
+L'utilisateur autorise les premiers tests et l'installation de PyTorch dans un
+environnement isolé. Le moteur classique reste inchangé ; les essais alpha
+gardent la priorité. Les sections 1 à 9 retracent le cadrage préalable, avant
+installation et calcul neuronal.
 
 Orientation utilisateur précisée ensuite (§9) : architecture éprouvée,
 **poids entraînés pour IPR et signal caméra signé** en priorité ; les modèles
@@ -18,8 +19,8 @@ locaux et limites sont conservés dans le
 [JSON de préparation v001](../validation/raw/preparation-b4-v001-20261031T132231Z.json),
 pas dans un nouveau rapport de campagne concurrent. Le
 [rapport RAW évolutif](../validation/analyses/analyse-developpement-raw.md)
-reste le suivi des résultats existants. Documentation sur `patch_documentation` ;
-branche locale de prototype `patch_neural_restoration` créée depuis `dev`
+reste le suivi des résultats existants. Au cadrage initial : documentation sur
+`patch_documentation`, branche locale de prototype `patch_neural_restoration` depuis `dev`
 `b19b4c3`, sans worktree, implémentation ni publication à cette étape.
 
 ## 1. Conclusion de cadrage
@@ -340,3 +341,34 @@ TIFF d'analyse aux RAW d'entraînement nécessaires à la reproductibilité.
 Le formatage, le choix du volume et le déplacement de corpus restent à décider
 avec l'utilisateur. Aucune action de formatage, copie, suppression ou partition
 n'est exécutée par cette préparation.
+
+## 10. Premier banc synthétique et cours — 31 octobre 2026
+
+Sur `patch_neural_restoration`, worktree dédié et environnement `.venv-neural`,
+PyTorch **2.9.1+cpu** et NumPy **2.3.5** installés ; Python 3.14.3. Paquets acquis
+depuis les index officiels PyTorch/PyPI, pas de poids préentraînés. Le Python
+global et les dépendances alpha n'ont pas été modifiés. Aucun calcul GPU lancé.
+
+Le commit local `b6ad93d` livre un petit U-Net résiduel à deux réductions,
+largeur 8, **29 995 paramètres**, et un banc CPU. Entrées RGB caméra/sigma par
+canal en NCHW float32 ; corps aléatoire et tête nulle au départ. C'est un témoin
+de contrat, pas une architecture ou des poids sélectionnés pour la production.
+
+[Preuve JSON](../validation/raw/neural-contracts-v001-20261031T190924Z.json) :
+**14 tests réussis**, zéro échec/erreur/skip, environ 1,36 s pour la suite interne,
+deux threads intra-op et un inter-op. Contrôles des tailles paires/impaires,
+plage étendue à l'identité, force 0 sans appel réseau, source inchangée,
+entrées/sorties invalides, annulation avant/après et gradients. Un test fait
+16 petits pas Adam sur un seul patch artificiel : vérification du câblage,
+**pas apprentissage photographique ni généralisation**. Aucun poids sauvegardé.
+
+Ce temps n'est pas la latence d'une photo. Pas de CUDA, ONNX, tuilage pleine
+image, pic RAM/VRAM, bruit Canon ou qualité photo qualifiés. La prochaine porte
+est le gel de l'adaptateur/dataset et un essai sur références recevables, pas
+une intégration ou un nouvel entraînement massif automatique.
+
+Le [cours 13](../scholar/cours-13-reseaux-neuronaux-de-zero.pdf), avec
+[source LaTeX](../scholar/cours-13-reseaux-neuronaux-de-zero.tex) et
+[TP exécutable](../scholar/references/reseaux-exemples.py), explique les bases,
+gradients à la main, CNN/U-Net, données et qualification. Le TP reste séparé
+du banc : démonstration pédagogique, pas nouvelle campagne de validation.

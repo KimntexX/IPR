@@ -1,14 +1,14 @@
-<!-- translation-source: docs/architecture/restauration-neuronale.md; sha256: 56eacc01494ce4c887c0ab20d32adca370310f2ec68bec09cf68685200af1c07 -->
+<!-- translation-source: docs/architecture/restauration-neuronale.md; sha256: 7a7cd32af6b9068500e24d9fabda4aea6c7a3aa9d8cf22a6bda6b45cfe6f5fa7 -->
 *[Français](restauration-neuronale.md) | [English](restauration-neuronale_en.md)*
 
 # B4 — preparation study for local neural restoration
 
 ## State on 31 October 2026
 
-**Preparation, not integration or a denoising result.** The user authorizes this
-study during alpha qualification. The classic engine is unchanged; no training,
-weight download or inference has started. Alpha tests take priority and must not
-share machine load with a second benchmark.
+**First synthetic bench passed (§10), not integration or a photo result.**
+The user authorizes initial tests and PyTorch installation in an isolated
+environment. The classic engine is unchanged; alpha tests retain priority.
+Sections 1 through 9 record scoping before neural installation/calculation.
 
 Subsequent user direction (§9): proven architecture, prioritizing **weights
 trained for IPR and signed camera data**; existing RGB models remain comparators,
@@ -19,8 +19,8 @@ and limitations are preserved in the
 [v001 preparation JSON](../validation/raw/preparation-b4-v001-20261031T132231Z.json),
 not a competing campaign report. The
 [evolving RAW report (French)](../validation/analyses/analyse-developpement-raw.md)
-continues tracking existing results. Documentation is on `patch_documentation`;
-local prototype branch `patch_neural_restoration` was created from `dev`
+continues tracking existing results. At initial scoping, documentation was on
+`patch_documentation`; local prototype branch `patch_neural_restoration` came from `dev`
 `b19b4c3`, without a worktree, implementation or publication at this stage.
 
 ## 1. Scoping conclusion
@@ -324,3 +324,34 @@ sources needed for reproducibility.
 
 Formatting, volume selection and corpus relocation still need user decisions.
 This preparation performs no formatting, copying, deletion or partitioning.
+
+## 10. First synthetic bench and course — 31 October 2026
+
+Dedicated `patch_neural_restoration` worktree and `.venv-neural` environment:
+PyTorch **2.9.1+cpu**, NumPy **2.3.5**, Python 3.14.3. Packages came from official
+PyTorch/PyPI indexes, not pretrained weights. Global Python and alpha dependencies
+were unchanged. No GPU calculation.
+
+Local commit `b6ad93d` provides a two-level width-8 residual U-Net with
+**29,995 parameters** and CPU bench. Camera RGB/per-channel sigma inputs use
+NCHW float32; random body, initially zero head. This is a contract witness,
+not a production architecture or weight selection.
+
+[JSON evidence](../validation/raw/neural-contracts-v001-20261031T190924Z.json):
+**14 tests passed**, no failures/errors/skips, about 1.36 s for the internal suite,
+two intra-op threads and one inter-op thread. Checks cover odd/even dimensions,
+identity extended range, zero bypass, immutable source, invalid inputs/outputs,
+before/after cancellation and gradients. One test performs 16 small Adam steps
+on one artificial patch: wiring verification, **not photographic training or
+generalization**. No weights saved.
+
+This time is not photo latency. CUDA, ONNX, full-frame tiling, peak RAM/VRAM,
+Canon noise and photographic quality are not qualified. Next gate: freeze
+adapter/dataset and test admissible references, not automatic integration or
+large-scale training.
+
+[French course13](../scholar/cours-13-reseaux-neuronaux-de-zero.pdf), its
+[LaTeX source](../scholar/cours-13-reseaux-neuronaux-de-zero.tex) and
+[executable lab](../scholar/references/reseaux-exemples.py) explain fundamentals,
+manual gradients, CNN/U-Net, data and qualification. The lab is separate from the
+bench: teaching demonstration, not another validation campaign.
