@@ -22,8 +22,8 @@ Préparation suivante (§59) :14 tests de données et un pilote8/4/4 synthétiqu
 sans bénéfice de débruitage utile démontré ; pas de photo utilisée pour apprendre.
 Nouvelle demande ciblée (§60) : comparer le placement du débruitage couleur
 signé/non signé du jalon de Claude. Banc compilé et références auditées,
-mais campagne arrêtée avant le premier rendu par le garde-fou mémoire ;
-aucune conclusion photographique disponible.
+premiers arrêts mémoire puis provenance Qt corrigés ; identité native à zéro
+vérifiée sur 7599 et campagne relancée, sans conclusion photographique disponible.
 
 Dernier jalon (§53) : ablation de routage sur les64entrées du§52,640parités
 avec les anciennes sorties. Plafond diagonal local : détail préservé mais
@@ -4454,6 +4454,31 @@ mesuré, aucune variante promue, aucun TIFF IPR écrit. Libérer de la mémoire
 puis créer un nouveau gel avec les outils courants ; ne pas écraser ce témoin.
 Même après calcul, texture réelle et bruit restent mêlés sans vérité propre ;
 une baisse de chroma ne sera pas assimilée automatiquement à une amélioration.
+
+### Reprise et correction du banc — 31 octobre, après 22 h 48 Paris
+
+Après libération de mémoire par l'utilisateur, une seconde tentative a terminé
+l'audit et commencé 7599, mais s'est arrêtée sur une erreur de traçabilité :
+le vérificateur Python traitait le chemin Qt `:/config/raw-normalization.json`
+comme un chemin Windows. Ce n'est pas un défaut du décodage ni du filtre.
+Le [gel de cette tentative](../raw/colour-placement-freeze-v001-20261031T214845Z.json)
+et sa [preuve d'arrêt](../raw/colour-placement-failure-v001-20261031T214845Z.json)
+sont conservés ; aucune scène comparative complète n'a été livrée.
+
+Correctif local du banc `80beb79` : le serveur transmet explicitement le type
+de ressource et les octets du manifeste embarqué ; Python vérifie leur SHA256
+sans accès fichier fictif. Les ressources sur disque restent vérifiées comme
+fichiers. Deux tests de non-régression ajoutés, soit huit tests ciblés passés.
+Sur un vrai rendu signé neutre 7599 (6984×4660), le contrôle natif passe et
+le SHA256 du manifeste embarqué correspond exactement au fichier du moteur
+figé. Cela valide ce contrôle de provenance, pas la qualité du débruitage.
+
+Contrôle suivant : [quatre identités natives](../raw/colour-placement-identity-v001-20261031T221824Z.json)
+passent sur 7599, modes signé et non signé, placements pré-DCP et hybride,
+avec rerendu caméra effectif à force zéro. Les images sont exactement égales
+au neutre post-tons de leur mode. Ce témoin ne qualifie pas encore les forces
+non nulles ni les 27 autres scènes. Campagne complète relancée à 23 h 18 Paris,
+PID local 4008, mêmes filtres et protocole ; résultats encore attendus.
 
 ## Conclusion actuelle et fiche de reprise
 
