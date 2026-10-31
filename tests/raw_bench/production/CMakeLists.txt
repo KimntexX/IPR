@@ -20,6 +20,10 @@ add_executable(cameraDenoiseRenderServer "${IPR_ENGINE_SOURCE}/src/tools/render_
     "${IPR_ENGINE_SOURCE}/src/tools/TestRecipes.cpp")
 target_include_directories(cameraDenoiseRenderServer PRIVATE "${IPR_ENGINE_SOURCE}/src/tools")
 target_link_libraries(cameraDenoiseRenderServer PRIVATE iprEngine)
+add_executable(colourPlacementServer ../colour_placement_server.cpp
+    "${IPR_ENGINE_SOURCE}/src/tools/TestRecipes.cpp")
+target_include_directories(colourPlacementServer PRIVATE "${IPR_ENGINE_SOURCE}/src/tools")
+target_link_libraries(colourPlacementServer PRIVATE iprEngine)
 option(IPR_BENCH_SIGNED_DEVELOPMENT "Enable the F1 signedDevelopment API; off for immutable pre-F1 reference" OFF)
 if(IPR_BENCH_SIGNED_DEVELOPMENT)
     target_compile_definitions(iprProductionRawCapture PRIVATE IPR_BENCH_SIGNED_DEVELOPMENT=1)
