@@ -82,6 +82,19 @@
   fonctions, paramètres, variables, includes, fichiers, tests et documentation
   qui ne servent plus.
 
+## Validations partielles et issues GitHub — règle du 31 octobre 2026
+
+- Toute fonctionnalité ou donnée validée seulement en partie (par exemple le
+  bruit, ou l'export DNG lu par Lightroom mais non vérifié dans Photoshop et
+  DxO) reçoit une issue GitHub pour la traçabilité. L'issue décrit ce qui est
+  validé, ce qui ne l'est pas et les vérifications restantes ; la matrice de
+  validation renvoie vers elle.
+- L'issue est close par la PR qui achève la validation. Si une PR ne la valide
+  qu'en partie, mettre l'issue à jour : cocher ce qui est fait et garder ce qui
+  reste ouvert.
+- Ouvrir une issue est autorisé sans accord préalable dans ce cadre ; les
+  fusions, publications et tags restent soumis à l'autorisation habituelle.
+
 ## Branches Git — règle du 10 octobre 2026
 
 - `dev` est la branche d'intégration maintenue à jour après chaque validation.
