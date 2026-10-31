@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-31T13:22:31Z",
+  "study": "B4 local neural restoration preparation; inventory and literature, not an inference benchmark",
+  "revision": "2421714",
+  "production_reference": "b19b4c3935c1953366d7130b146fc5cdda010204",
+  "implementation_branch": "patch_neural_restoration",
+  "implementation_branch_base": "b19b4c3935c1953366d7130b146fc5cdda010204",
+  "documentation_branch": "patch_documentation",
+  "source_date": "2026-10-31",
+  "observations": {
+    "collection": "Sequential read-only local commands; not an atomic machine snapshot",
+    "cpu": {
+      "model": "12th Gen Intel(R) Core(TM) i7-12700K",
+      "logical_processors_environment": 20,
+      "source": "HKLM/HARDWARE/DESCRIPTION/System/CentralProcessor/0 and NUMBER_OF_PROCESSORS",
+      "effective_affinity_or_container_budget_qualified": false
+    },
+    "memory": {
+      "physical_total_bytes": 16933507072,
+      "physical_available_bytes_at_query": 6062133248,
+      "source": "kernel32.GlobalMemoryStatusEx via ctypes; success",
+      "available_is_not_reserved_for_ipr": true
+    },
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 3060",
+      "reported_memory_mib": 12288,
+      "driver_version": "610.88",
+      "source": "nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader",
+      "cuda_runtime_or_onnx_provider_tested": false,
+      "free_memory_or_peak_measured": false
+    },
+    "os": {
+      "family": "Windows",
+      "release": "11",
+      "version": "10.0.26300",
+      "architecture": "AMD64",
+      "source": "Python platform"
+    },
+    "concurrent_processes_observed": {
+      "iprRenderServer": 2,
+      "python": 5,
+      "purpose_not_inferred_from_name": true,
+      "no_process_stopped": true
+    },
+    "file_inventory": {
+      "root": "tests/image (main worktree; not duplicated into documentation worktree)",
+      "method": "Read-only filename/extension inventory; no RAW decoding, content hashing or camera reidentification",
+      "groups": [
+        {"directory": "base", "recursive": true, "cr3": 14, "cr2": 14, "tif": 9072, "tiff": 39},
+        {"directory": "base-hors-protocole", "recursive": true, "cr3": 47, "cr2": 29},
+        {"directory": "colorimétrie/rafale", "recursive": true, "cr3": 42},
+        {"directory": "colorimétrie/protocole", "recursive": true, "cr3": 241},
+        {"directory": "colorimétrie/protocole/blacks", "recursive": true, "cr3": 77}
+      ],
+      "groups_overlap": true,
+      "counts_are_files_not_independent_scenes": true,
+      "tiff_authorship_or_settings_audited": false
+    }
+  },
+  "historical_partitions": {
+    "source": "docs/validation/raw/cfa-corpus-inventory-v001-20261030T122935Z.json",
+    "counts_copied_from_historical_inventory_not_revalidated": {
+      "burst42:development:available_hash_match": 14,
+      "burst42:validation:available_hash_match": 14,
+      "burst42:sealed:available_hash_match": 14,
+      "confirmed_dark:development:available_hash_match": 31,
+      "confirmed_dark:historical_control_already_measured:available_hash_match": 34,
+      "illuminated_dark_room:historical_group_already_measured:available_hash_match": 72
+    },
+    "sealed_pixels_accessed": false,
+    "new_independent_holdout_claimed": false
+  },
+  "production_contract": {
+    "camera_input": "finite CV_32FC3, RGB camera, WB already applied, white 1, negative and above-one values allowed",
+    "camera_input_source": "src/raw/CameraDenoise.h",
+    "placement": "after RCD/median, before LCP and nonlinear DCP on retained pre-lens path",
+    "master": "CV_32FC4 straight-alpha RGBA, linear-transfer Rec.2020 D65, extended range",
+    "master_source": "src/core/ColorPipeline.h",
+    "cpu_worker_policy": "current CameraDenoise: at most 8 including caller, bounded by host and tiles; not a neural runtime budget"
+  },
+  "candidates": [
+    {
+      "id": "nafnet-sidd-width32",
+      "role": "First rendered-RGB real-noise candidate; not a signed-camera model",
+      "source": "https://github.com/megvii-research/NAFNet",
+      "config": "https://raw.githubusercontent.com/megvii-research/NAFNet/main/options/test/SIDD/NAFNet-width32.yml",
+      "declared_code_license": "MIT with BasicSR Apache-2.0 notices in repository LICENSE",
+      "license_source": "https://raw.githubusercontent.com/megvii-research/NAFNet/main/LICENSE",
+      "weight_redistribution_clearance": "not established for a pinned artifact by this study",
+      "exact_parameters": null,
+      "weight_bytes": null,
+      "tile_caveat": "Spatial pooling; ordinary tiled inference is not assumed equivalent to whole-image inference; NAFNetLocal is a separate configuration"
+    },
+    {
+      "id": "drunet-color",
+      "role": "RGB denoiser with noise-map conditioning; Gaussian-noise comparator, not validated Canon noise model",
+      "source": "https://github.com/cszn/DPIR",
+      "config": "https://raw.githubusercontent.com/cszn/DPIR/master/main_dpir_denoising.py",
+      "declared_code_license": "MIT",
+      "license_source": "https://raw.githubusercontent.com/cszn/DPIR/master/LICENSE",
+      "weight_redistribution_clearance": "not established for a pinned artifact by this study",
+      "exact_parameters": null,
+      "weight_bytes": null,
+      "input": "3 RGB channels plus normalized noise-level channel in official color example"
+    },
+    {
+      "id": "restormer-real-denoising",
+      "role": "Second RGB real-noise candidate; transformer comparison, not a guaranteed quality or speed winner",
+      "source": "https://github.com/swz30/Restormer",
+      "config": "https://raw.githubusercontent.com/swz30/Restormer/main/Denoising/Options/RealDenoising_Restormer.yml",
+      "declared_code_license": "MIT",
+      "license_source": "https://raw.githubusercontent.com/swz30/Restormer/main/LICENSE.md",
+      "weight_redistribution_clearance": "not established for a pinned artifact by this study",
+      "exact_parameters": null,
+      "weight_bytes": null,
+      "tile_caveat": "Attention includes spatial reductions; tiled result is not assumed equivalent to full frame"
+    },
+    {
+      "id": "sid",
+      "role": "RAW-domain design reference only; Sony/Fuji weights not proposed as drop-in Canon restoration",
+      "source": "https://github.com/cchen156/Learning-to-See-in-the-Dark",
+      "declared_code_license": "MIT stated in README",
+      "weight_redistribution_clearance": "not assessed; not selected for pilot",
+      "exact_parameters": null,
+      "weight_bytes": null
+    }
+  ],
+  "runtime_proposal_not_selection": {
+    "reference": "isolated author-framework environment, fixed versions, no execution of downloaded repository scripts during preparation",
+    "deployment_candidate": "ONNX Runtime C++ CPU/CUDA first on reference host; export/operator/numerical parity still to test",
+    "alternative": "ncnn C++ CPU/Vulkan if operator conversion and package constraints warrant",
+    "onnx_license": "https://github.com/microsoft/onnxruntime/blob/main/LICENSE",
+    "onnx_providers": "https://onnxruntime.ai/docs/execution-providers/",
+    "ncnn_license": "https://raw.githubusercontent.com/Tencent/ncnn/master/LICENSE.txt",
+    "directml_status_source": "https://onnxruntime.ai/docs/execution-providers/DirectML-ExecutionProvider.html"
+  },
+  "performed": {
+    "literature_review": true,
+    "local_branch_created": true,
+    "weight_download": false,
+    "package_installation": false,
+    "training": false,
+    "inference": false,
+    "image_pixel_analysis": false,
+    "performance_benchmark": false,
+    "production_changes": false,
+    "push_merge_tag": false
+  },
+  "limitations": [
+    "No exact model artifact or source revision pinned yet; upstream URLs can change.",
+    "Licenses listed are source declarations, not legal approval of redistributed weights and datasets.",
+    "No inference latency, peak memory, CUDA availability, model parameter count or exported graph size measured.",
+    "No blanket compatibility between pretrained encoded-RGB models and signed camera or extended Rec.2020 signals.",
+    "Corpus filenames/counts do not establish settings, independent scenes, ground truth or an untouched qualification set.",
+    "No local image, source code or host inventory uploaded in web research; web requests were generic public model/runtime documentation queries."
+  ]
+}

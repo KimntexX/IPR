@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: 7a652d0890092fef8686c78e2e5318f110962e63d15411649f915bb69bf02068 -->
+<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: f8528293b5456c54e01fdfcbc38560a7af02a4e140102f54ee75379f1cc263dd -->
 *[Français](roadmap-beta.md) | [English](roadmap-beta_en.md)*
 
 # Beta action plan — editing panels and neural processing
@@ -156,6 +156,11 @@ credible replacement. Check halos, repetition, seams and color.
 ## 7. B4 — Noise and Sharpening neural networks
 
 ### B4a: define model and data scope
+
+The [31 October B4 preparation study](restauration-neuronale_en.md) specifies
+candidate models, observed hardware, RGB/RAW boundaries and bench gates.
+Study authorized alongside alpha testing, without concurrent heavy inference;
+no model or runtime is qualified yet.
 
 Distinguish denoising, sharpening and deblurring. No single network is mandated:
 qualify denoising first, then sharpening, then their order or a joint model

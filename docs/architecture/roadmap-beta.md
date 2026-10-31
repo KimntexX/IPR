@@ -158,6 +158,11 @@ un remplacement crédible. Contrôler halos, répétitions, raccords et couleur.
 
 ### Étape B4a : cadrage du modèle et des données
 
+La [préparation B4 du 31 octobre](restauration-neuronale.md) précise la sélection
+de modèles, le matériel observé, les frontières RGB/RAW et les portes du banc.
+Étude autorisée en parallèle des tests alpha, sans inférence lourde concurrente ;
+aucun modèle ni runtime n'est encore qualifié.
+
 Distinguer débruitage, accentuation et restauration de flou. Aucun réseau unique
 n'est imposé : qualifier d'abord le débruitage, puis la netteté, puis leur ordre
 ou un modèle conjoint si un bénéfice est démontré. La netteté ne récupère pas

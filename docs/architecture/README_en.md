@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/README.md; sha256: 05c468aff1d51eb26a27056fccea07b311c847f11f0acc3d862bde08b711deef -->
+<!-- translation-source: docs/architecture/README.md; sha256: e79fbd1e363536faad4823a3e3c4b3b9edd1b8b47c98f41e64bd02120cedccf1 -->
 *[Français](README.md) | [English](README_en.md)*
 
 # Architecture
@@ -26,6 +26,7 @@ This area contains reference documents that describe components, data contracts,
 - [Camera-profile autonomy study](references/etude-autonomie-profils-camera.md): DCP data/rights, external corpora and proposed MCP analysis bridge.
 - [CI and Multiplatform Build](ci-et-build-multiplateforme.md): Windows/macOS/Linux matrix, prerequisites, packaging, and GitHub roadmap.
 - [Denoising and Sharpening](denoising-sharpening_en.md): algorithms, pipeline order, AI/GPU limits, and expected validation.
+- [Neural B4 preparation](restauration-neuronale_en.md): local models, RGB/RAW contracts, host inventory and proposed bench; no qualified inference.
 - [Stacking and panorama](empilement-et-panorama.md): multi-image plan, user anchor, sky/ground alignment, automatic crop and disk scratch directory; not implemented.
 - [Source Tree](../../src/README.md): C++/QML domains and internal `iprEngine` library.
 - [UI Preferences](ui-preferences.md): user INI, geometry, sections, colors, and extensible schema.

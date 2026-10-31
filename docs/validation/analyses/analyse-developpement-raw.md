@@ -9,6 +9,9 @@ de base reste accessible aux machines moins adaptées ; le mode avancé pourra
 y être limité ou indisponible. Aucun modèle neuronal ni profil matériel
 n'est qualifié par cette décision, aucune nouvelle campagne lancée.
 
+Préparation B4 engagée ensuite (§55) : inventaire léger et étude des modèles,
+sans inférence ni changement du moteur ; les essais alpha gardent la priorité.
+
 Dernier jalon (§53) : ablation de routage sur les64entrées du§52,640parités
 avec les anciennes sorties. Plafond diagonal local : détail préservé mais
 aucun gain médian de MSE ; remplacement du seul secours : entrées bruitées
@@ -4293,6 +4296,28 @@ l'application ou empêcher le retour au moteur de base.
 
 Cette décision clôt la séquence de recherches actuelle. Elle n'autorise ni
 push/fusion/tag, ni changement du moteur, ni lancement d'un entraînement.
+
+## 55. Préparation B4 pendant la qualification alpha — 31 octobre 2026
+
+À la demande de l'utilisateur, cadrage documentaire et inventaire matériel sans
+nouveau décodage. Le [JSON v001](../raw/preparation-b4-v001-20261031T132231Z.json)
+conserve observations et limites ; la
+[référence B4](../../architecture/restauration-neuronale.md) décrit les modèles,
+contrats et portes du banc. i7-12700K,20 threads annoncés, environ15,77 Gio de RAM
+et RTX3060 de12 Gio observés : pas de qualification de latence ou de CUDA.
+
+NAFNet SIDD largeur32 et DRUNet proposés comme premiers témoins RGB, Restormer
+ensuite. Aucun de ces poids n'est déclaré compatible avec le RGB caméra signé
+avant DCP. Réserve historique14/14/14 conservée, pas de nouvelle réserve
+indépendante revendiquée. Les comparaisons devront distinguer perte de
+l'adaptateur RGB, filtrage neuronal et effet des tuiles.
+
+Branche locale `patch_neural_restoration` créée à `dev b19b4c3`, sans worktree
+ni implémentation. Documentation sur `patch_documentation`. Aucun poids
+téléchargé, paquet installé, entraînement ou inférence lancé, pas d'upload
+de photos/code/inventaire matériel pendant les recherches publiques.
+Prochaine porte : artefacts/droits et protocole gelés, puis pilote sur petits
+buffers après libération du budget des tests alpha. Aucun push/fusion/tag.
 
 ## Conclusion actuelle et fiche de reprise
 
