@@ -94,12 +94,16 @@ def validate_splits(records):
         role=row['split'];digest=row['content_sha256']
         if role not in ('train','validation','test'):
             raise ValueError('unknown partition role')
-        if len(digest)!=64 or any(c not in '0123456789abcdef' for c in digest):
-            raise ValueError('invalid SHA-256')
+        hashes=[digest]
+        if 'target_sha256' in row:
+            hashes.append(row['target_sha256'])
+        if any(not isinstance(h,str) or len(h)!=64 or
+               any(c not in '0123456789abcdef' for c in h) for h in hashes):
+            raise ValueError('invalid source/reference SHA-256')
         if row['id'] in ids:
             raise ValueError('duplicate example ID')
         ids.add(row['id'])
-        for mapping,key in ((scene_roles,row['scene_group']),(hash_roles,digest)):
+        for mapping,key in [(scene_roles,row['scene_group'])]+[(hash_roles,h) for h in hashes]:
             if key in mapping and mapping[key]!=role:
                 raise ValueError('cross-split scene/content leakage')
             mapping[key]=role

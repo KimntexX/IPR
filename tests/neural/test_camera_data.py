@@ -83,6 +83,11 @@ class CameraDataTests(unittest.TestCase):
         rows=self.rows();rows[1]['content_sha256']='a'*64
         with self.assertRaises(ValueError):validate_splits(rows)
 
+    def test_shared_reference_across_roles(self):
+        rows=self.rows()
+        for row in rows:row['target_sha256']='c'*64
+        with self.assertRaises(ValueError):validate_splits(rows)
+
     def test_bad_manifest(self):
         for key,value in (('id','a'),('split','holdout'),('scene_group',''),('content_sha256','zz')):
             rows=self.rows();rows[1][key]=value
