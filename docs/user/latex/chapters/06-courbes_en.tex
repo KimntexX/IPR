@@ -1,0 +1,27 @@
+% translation-source: docs/user/latex/chapters/06-courbes.tex; sha256: c9120e88bac82ef65f76b3799e02874eb224ebbb0f5c048893e981b5bf2a188e
+\chapter{Tone curve}
+\section{Choose a channel}
+Select luminance or the red, green or blue channel using the module buttons.
+The diagonal represents the reference mapping. Editing a channel can introduce
+a color cast even if its curve resembles the luminance curve.
+
+\section{Manipulate points}
+Double-click the graph to add a handle, drag it to change the curve, and
+right-click an interior handle to remove it. Endpoints do not behave like
+interior points. Avoid accumulating closely spaced points: a simpler curve
+is easier to control.
+
+Use reset for the current curve or all curves as appropriate. Double-clicking
+this graph \emph{adds a point}: it is not the sliders' reset gesture.
+No dedicated keyboard shortcut for adding/removing points is declared.
+
+\section{Monochrome background}
+The gray silhouette shows the current preview's luminance and stays monochrome
+when an RGB curve is selected. It is a post-render reference, not the exact
+histogram of the linear signal entering the curves.
+
+\paragraph{Example.}
+For gentle contrast, start with two widely spaced interior points, lower
+the dark region slightly and raise the bright region slightly. Compare using
+\touche{Ctrl + Shift + Y}; watch transitions rather than seeking a perfect
+geometric shape.

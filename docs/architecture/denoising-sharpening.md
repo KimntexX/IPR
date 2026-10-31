@@ -2,8 +2,39 @@
 
 # Réduction de bruit et netteté
 
-**État :** débruitage CPU corrigé, fonctionnement/progressivité photographiques confirmés ; qualité/calibration à poursuivre ; netteté non validée.  
-**Relecture du modèle courant :** 22 octobre 2026, master Rec.2020 dans `dev`.
+**État au 31 octobre 2026 :** moteur classique conservé, prototype caméra signé
+intégré dans `dev` mais expérimental ; études incrémentales suspendues sur
+décision utilisateur. Réseaux bruit/netteté prévus pour la bêta, non implémentés.
+Netteté non déclarée validée par cette revue documentaire.
+
+## Chemins courants et portée
+
+Le panneau expose une commande globale0–100 et des forces avancées luminance/
+couleur. La commande utilise `CameraDenoise::settingsFromAmount` : L=montant,
+C=arrondi(100×(1−(1−montant/100)^6)). Une combinaison indépendante est affichée
+comme personnalisée, pas comme un montant global exact.
+
+Sans mode expérimental, `DetailProcessing::reduceNoise` traite le master.
+Avec le mode expérimental et un contexte caméra DCP compatible, le signal
+caméra est développé en flottant signé puis débruité par `CameraDenoise` avant
+LCP et DCP ; le débruitage classique est évité sur ce chemin. La netteté reste
+un traitement ultérieur. La case est un état de session, désactivé par défaut,
+pas une preuve que tout format ou toute balance dispose du contexte nécessaire.
+
+Le filtre caméra utilise des covariances conditionnelles par niveau de signal,
+trois échelles d'intensité et cinq de couleur. Les corrections préservent le
+signal signé ; leur résultat rendu après DCP n'est pas une garantie de neutralité
+chromatique. Budget de workers : min(8,host−1), minimum1, caller inclus, réduit
+par nombre de tuiles ; pas un contrôleur global de charge entre traitements.
+
+Les variantes de recherche à covariance externe n'ont pas été intégrées.
+Voir le [rapport RAW, état courant et §54](../validation/analyses/analyse-developpement-raw.md)
+et le [plan bêta](roadmap-beta.md). Stabiliser signifie conserver le moteur et
+ses limites connues, pas certifier un rendu universel ni lancer un entraînement.
+
+## Référence du chemin classique et campagnes historiques
+
+**Relecture antérieure :** 22 octobre 2026, master Rec.2020 dans `dev`.
 Les campagnes photographiques ci-dessous datent des 4–5 octobre ; elles ne
 constituent pas une nouvelle qualification du master courant.
 

@@ -260,6 +260,15 @@ facultative et le neutre caméra normalisé à G=1 accompagnent ce tampon. Un
 neutre absent est représenté explicitement par trois zéros. Il ne s'agit ni
 du master Rec.2020 ni d'une mosaïque CFA ; les coordonnées sRGB sont refusées.
 
+\paragraph{Actualisation du 31 octobre 2026.}
+Dans \texttt{dev} (\texttt{b19b4c3}), LibRaw assure encore la lecture,
+la décompression et les métadonnées. \texttt{RawDevelopment} développe les
+Bayer Canon éligibles avec RCD et médiane ; les autres chemins gardent le repli
+LibRaw. Le décodeur livre un RGB caméra float32 sans aller-retour u16.
+Le mode signé, expérimental et désactivé par défaut, permet le débruitage
+caméra avant LCP/DCP. Les variantes de recherche ultérieures n'ont pas été
+intégrées. Les premiers lots décrits autour de ce paragraphe sont historiques.
+
 \texttt{CameraSignal::render()} consomme le tampon pour le conserver comme
 source immuable des retouches WB et travaille sur une copie unique. Il vérifie
 la compatibilité DCP, applique le gain composé et le profil une fois, puis

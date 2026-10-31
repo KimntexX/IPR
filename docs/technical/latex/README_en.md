@@ -2,6 +2,14 @@
 
 # IPR Technical Documentation (LaTeX)
 
+**Synchronization notice, 31 October 2026:** the existing English technical
+chapters have not all been reconciled with `dev` `b19b4c3`. In particular,
+the old sRGB master, exact-photo calibration guards and fixed camera-buffer
+description in the English architecture chapter are obsolete. Use the
+[French sources](README.md) and current ADRs for these contracts until that
+translation batch is completed. This notice does not mean every French
+chapter has received an exhaustive new review.
+
 The main source is `ipr-documentation-technique.tex`. Chapters are separated in `chapters/` and the bibliography in `references.bib`.
 
 Formatting: follow the [common LaTeX conventions](../../AGENTS.md) (12 pt, 1.5 line spacing, chapters on a new page, and uniformly spaced paragraphs).

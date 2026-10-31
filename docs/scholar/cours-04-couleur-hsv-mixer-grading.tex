@@ -12,6 +12,11 @@ cours 12, \emph{Vibrance et saturation}, en détaille la mesure, la construction
 et la validation.
 
 \section{Mélangeur de couleur}
+Cette section conserve le modèle initial à huit bandes pour expliquer les
+pondérations et la conservation de luminance. Le moteur courant a évolué
+vers des tables de réponse ; consulter le rapport unique du mélangeur pour
+ses mesures. Les équations ci-dessous ne sont pas une description exhaustive
+de l'implémentation actuelle.
 Le module \texttt{ColorMixer} convertit temporairement un pixel RGB linéaire en HSV, représentation courante des manipulations créatives de couleur~\cite{gonzalezWoods}. Les huit centres sont $0,30,60,120,180,240,270,300$ degrés : rouge, orange, jaune, vert, cyan, bleu, violet, magenta. Pour un centre $h_i$, la pondération circulaire est
 \begin{equation}
 w_i(h)=\max\left(0,1-\frac{|\delta(h,h_i)|}{a_i(h)}\right).

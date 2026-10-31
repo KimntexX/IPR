@@ -1,3 +1,5 @@
+*[Français](ADR-0007-calibration-raw-par-defaut.md) | [English](ADR-0007-calibration-raw-par-defaut_en.md)*
+
 # ADR-0007 — Calibration RAW active par défaut
 
 **Date :** 15 octobre 2026. **Statut :** décision acceptée par l'utilisateur,

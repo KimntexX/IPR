@@ -1,3 +1,5 @@
+*[Français](ADR-0006-restauration-raw-et-retouche-profil.md) | [English](ADR-0006-restauration-raw-et-retouche-profil_en.md)*
+
 # ADR-0006 — Recette RAW par image et changement de profil comme retouche
 
 - **Date :** 8 octobre 2026

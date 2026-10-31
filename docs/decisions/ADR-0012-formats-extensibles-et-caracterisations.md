@@ -1,3 +1,5 @@
+*[Français](ADR-0012-formats-extensibles-et-caracterisations.md) | [English](ADR-0012-formats-extensibles-et-caracterisations_en.md)*
+
 # ADR-0012 — Formats extensibles et stockage des caractérisations
 
 Date : 16 octobre 2026. Statut : décision de structure acceptée sur demande
@@ -118,6 +120,12 @@ tests, pas placer des valeurs non utilisées dans le catalogue actuel. Les
 corrections propres à l'objectif restent séparées (LCP ou autre modèle optique).
 
 ## Transition et validation
+
+**Actualisation du31octobre2026 :** le rôle LibRaw indiqué au deuxième lot
+ci-dessous décrit l'intégration initiale. `RawDevelopment` prend maintenant
+en charge le développement flottant des Bayer Canon éligibles ; lecture,
+décompression et métadonnées restent LibRaw. Voir l'ADR-0018 et le rapport
+de séparation RAW. Aucun nouveau codec ou boîtier n'est qualifié par ce constat.
 
 1. **Implémenté :** registre décodeur/vignette, identité de décodeur, module de
    sélection générique et catalogue schéma 4, sans parseur legacy schéma 3.

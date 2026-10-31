@@ -1,3 +1,5 @@
+*[Français](import-images.md) | [English](import-images_en.md)*
+
 # Import commun des images
 
 État relu le 22 octobre 2026 : contrat intégré dans `dev` (`a15f703`).

@@ -1,23 +1,27 @@
+*[Français](README.md) | [English](README_en.md)*
+
 # Livre utilisateur IPR
 
-Manuel français de la version alpha, relu contre les sources de `dev`
-(`a15f703`) le **22 octobre 2026**. L'interface issue de `patch_ui` y est
-intégrée ; les ajouts non fusionnés de cette branche ne sont pas présumés livrés. Il décrit l’utilisation,
+Manuel français de la version alpha, réconcilié avec les sources de `dev`
+(`b19b4c3`) le **31 octobre 2026**. Les branches non intégrées ne sont pas
+présumées livrées. Il décrit l’utilisation,
 pas les algorithmes de la [documentation technique](../technical/latex/README.md).
 
-**État de livraison au 22 octobre 2026 :** les ajouts du 20 octobre
-(copier/coller, sauvegarde manuelle et `Ctrl+clic`) sont validés par l'utilisateur
-et publiés sur `patch_ui`. Ils ne sont pas encore intégrés dans `dev` au contrôle
-de cette reprise. La branche est maintenant synchronisée avec `dev` ; sa nouvelle
-CI doit être validée avant intégration. Le
-[bilan IHM](../architecture/suivi-raccordements-ihm.md#état-actuel--22-octobre-2026)
-distingue la livraison précédente, les ajouts publiés et les raccordements restants.
-La duplication physique `Ctrl+D` reste indisponible ; `Ctrl+S` est fonctionnel.
+**État vérifié dans les sources au 31 octobre 2026 :** copier/coller,
+sauvegarde manuelle et `Ctrl+clic` sont raccordés dans `dev`, ainsi que
+l'application et l'export par lot. La duplication physique `Ctrl+D` reste
+indisponible dans cette référence ; `Ctrl+S` est fonctionnel. Le panneau Bruit
+expose une commande globale et ses contrôles avancés, avec une case expérimentale
+pour le signal RAW signé. Cette relecture n'est pas une nouvelle validation
+photographique. Voir le [bilan IHM](../architecture/suivi-raccordements-ihm.md)
+et la [feuille de route bêta](../architecture/roadmap-beta.md).
 
 - [Source principale LaTeX](latex/ipr-livre-utilisateur.tex).
+- [Source anglaise](latex/ipr-livre-utilisateur_en.tex).
 - [Chapitres par famille](latex/chapters/).
 - Compilation : `powershell -ExecutionPolicy Bypass -File docs/user/latex/compile.ps1`
-  depuis la racine du worktree. Sur Linux/macOS, lancer trois passes de
+  depuis la racine du worktree (les deux langues ; `-Language fr` ou `en`
+  pour une seule). Sur Linux/macOS, lancer trois passes de
   `pdflatex -interaction=nonstopmode -halt-on-error -output-directory=build ipr-livre-utilisateur.tex`
   depuis `docs/user/latex`, après création du dossier `build`.
 - PDF local : `docs/user/latex/build/ipr-livre-utilisateur.pdf`. Ce dossier généré
@@ -58,7 +62,7 @@ utilisateur. Ne pas inventer de raccourcis issus d’autres logiciels.
 
 Mise en page : 12 pt, interligne 1,5, chapitres sur une nouvelle page,
 conformément aux [conventions documentaires](../AGENTS.md).
-La traduction anglaise relève du chantier documentaire dédié.
+La version anglaise est maintenue sur le chantier documentaire dédié.
 
 Référence pour les conventions de clavier et la correspondance Ctrl/Command :
 [QKeySequence — documentation officielle Qt](https://doc.qt.io/qt-6/qkeysequence.html).

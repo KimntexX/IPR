@@ -16,6 +16,7 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Roadmap couche image sans OpenCV](roadmap-couche-image-sans-opencv.md) : usage mesuré, paliers, tolérances et retrait immédiat d'`imgcodecs`.
 - [Roadmap Lumières](roadmap-lumieres.md) : état des six réglages, plan B intégré, campagnes Rec.2020 et réserve HL du 21 octobre.
 - [Fonctions de Lightroom](roadmap-fonctions-lightroom.md) : chaque fonction du panneau Modifier, son état dans IPR, sa planification et l'ordre proposé.
+- [Plan d'action bêta](roadmap-beta.md) : géométrie, calques/filtres, suppression d'objets et réseaux locaux bruit/netteté/formes/objets ; cible non implémentée.
 - [Travail, affichage ICC et export](gestion-couleurs-affichage.md) : séparation cible, distincte du code actuel.
 - [Intégration Rec.2020 linéaire](integration-rec2020.md) : master porté, audit initial, contrats et qualification restant à compléter.
 - [Recette RAW et changement de profil](../decisions/ADR-0006-restauration-raw-et-retouche-profil.md) : choix RAW introduits en v5 et conservés en v6 avec l'optique, tampon pré-DCP et réinitialisations distinctes.

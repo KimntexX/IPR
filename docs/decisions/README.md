@@ -39,8 +39,9 @@ remplacé seulement s'il manque ou dévie (20 octobre 2026).
 pour les analyses, TIFF IPR réservés à la revue visuelle (20 octobre 2026).
 
 [ADR-0018](ADR-0018-independance-decodage-raw-et-couche-image.md) : décodeurs RAW
-puis couche image propres à IPR, après les fonctions de base ; révise le rapport
-de dépendances du 1er octobre (20 octobre 2026).
+puis couche image propres à IPR ; direction initiale du20octobre révisée
+le31octobre : développement flottant intégré, décompression Canon à qualifier,
+LibRaw conservé pour les autres marques.
 
 [ADR-0013](ADR-0013-contrat-import-commun.md) : frontière d'import commune aux
 RAW et aux images développées, métadonnées indépendantes et contrôles partagés.

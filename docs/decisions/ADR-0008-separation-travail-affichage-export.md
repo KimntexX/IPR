@@ -1,3 +1,5 @@
+*[Français](ADR-0008-separation-travail-affichage-export.md) | [English](ADR-0008-separation-travail-affichage-export_en.md)*
+
 # ADR-0008 — Séparer espace de travail, affichage ICC et export
 
 **Date :** 15 octobre 2026. **Statut :** directive acceptée par l'utilisateur,
