@@ -40,7 +40,7 @@ TILE = 64
 FLAT_FRACTION, TEXTURED_FRACTION = 0.15, 0.20
 MAX_TILES = 400
 WEIGHTS = np.array([.2126, .7152, .0722], dtype=np.float32)
-MEASURES = ("luma", "chroma", "luma_mid", "chroma_mid", "fine", "mid")
+MEASURES = ("luma", "chroma", "luma_mid", "chroma_mid", "fine", "mid", "chroma_edges")
 NO_SHARPENING = {"amount": 0, "radius": 1.0, "masking": 0}
 
 
@@ -94,6 +94,14 @@ def measure(rgb, positions):
         g4 = cv2.GaussianBlur(Y, (0, 0), 4.0, borderType=cv2.BORDER_REFLECT)
         out.setdefault("fine", []).append(float(np.sqrt(np.mean((Y - g1)[8:-8, 8:-8] ** 2))))
         out.setdefault("mid", []).append(float(np.sqrt(np.mean((g1 - g4)[8:-8, 8:-8] ** 2))))
+        # Colour structure of the textured tiles (G1-smoothed chroma gradient): what
+        # the colour noise reduction must keep, and loses when colour bleeds over edges.
+        t = rgb[y0:y0 + TILE, x0:x0 + TILE]
+        edges = 0.0
+        for c in (t[..., 0] - t[..., 2], t[..., 1] - (t[..., 0] + t[..., 2]) / 2):
+            c1 = cv2.GaussianBlur(c, (0, 0), 1.0, borderType=cv2.BORDER_REFLECT)
+            edges += float(np.mean((cv2.Sobel(c1, cv2.CV_32F, 1, 0) ** 2 + cv2.Sobel(c1, cv2.CV_32F, 0, 1) ** 2)[8:-8, 8:-8]))
+        out.setdefault("chroma_edges", []).append(float(np.sqrt(edges)))
     return {k: np.array(v) for k, v in out.items()}
 
 
@@ -107,6 +115,7 @@ def main(argv=None):
     parser.add_argument("--data-version", type=int, required=True)
     parser.add_argument("--scene", nargs="+")
     parser.add_argument("--path", nargs="+", choices=("current", "camera"), default=["current", "camera"])
+    parser.add_argument("--state", nargs="+", help="Lightroom states to keep, as L<luminance>C<colour>S<sharpening>")
     parser.add_argument("--base", type=Path, default=ROOT / "tests/image/base")
     parser.add_argument("--server", type=Path)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "docs/validation/raw")
@@ -147,6 +156,8 @@ def main(argv=None):
                 del rgb
             for (lum, col, sharp), path_lr in sorted(states.items()):
                 sharpening = dict(sharp)
+                if args.state and f"L{lum}C{col}S{sharpening['amount']}" not in args.state:
+                    continue
                 lr = factors(measure(linear(read_tiff(path_lr)), lr_tiles), lr_neutral)
                 row = {"scene": scene, "lr_file": path_lr.name, "lr_sha256": sha256(path_lr),
                        "luminance": lum, "colour": col, "sharpening": sharpening, "lr": lr, "ipr": {}}
@@ -180,6 +191,7 @@ def main(argv=None):
                          "max_tiles": MAX_TILES, "space": "linear sRGB from 16-bit sRGB encoding, full definition",
                          "noise": "Haar HH and mid band (G1 - G4) MAD sigma; chroma = hypot(Co, Cg)/sqrt 2",
                          "detail": "RMS of Y - G1 (fine) and G1 - G4 (mid) on the most structured tiles",
+                         "chroma_edges": "RMS gradient of the G1-smoothed chroma on the most structured tiles",
                          "factor": "median per-tile ratio state / own neutral, tiles chosen on each engine's neutral",
                          "paths": {"current": "denoise after the tones", "camera": "camera-signal denoise before the profiles"},
                          "unmatched": "Lightroom's luminance detail/contrast and colour detail/smoothness stay at their defaults; "
