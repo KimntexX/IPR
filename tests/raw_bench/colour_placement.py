@@ -4,6 +4,7 @@ Runs one native server at a time. Per request watchdog kills a stuck server;
 immutable per-scene JSON is preserved on failure. No TIFF or RAW is written.
 """
 import argparse
+import base64
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -211,6 +212,24 @@ def audit(base, wanted=None):
     return all_records
 
 
+def verify_resources(header):
+    for resource in ('profile', 'manifest'):
+        path = header[resource+'_path']
+        if resource == 'manifest' and header.get('manifest_kind') == 'qt_resource':
+            if not path.startswith(':/'):
+                raise ValueError('Qt resource declaration without Qt path')
+            payload = base64.b64decode(header['manifest_base64'], validate=True)
+            if not payload:
+                raise ValueError('Empty embedded manifest')
+            digest = hashlib.sha256(payload).hexdigest()
+        else:
+            if path.startswith(':/'):
+                raise ValueError('Qt resource requires explicit bytes and kind')
+            digest = sha256(path)
+        if digest != header[resource+'_sha256']:
+            raise ValueError(f'Changed {resource} resource')
+
+
 def request(server, raw, signed, placement, strength, identity=False):
     # RenderServer's blocking pipe reader needs an external per-request watchdog.
     watchdog = threading.Timer(900, server.process.kill)
@@ -223,9 +242,7 @@ def request(server, raw, signed, placement, strength, identity=False):
         if header['dtype'] != '<u2' or header['bytes'] != h*w*6:
             raise ValueError('Unexpected native layout')
         payload = server._read(header['bytes'])
-        for resource in ('profile', 'manifest'):
-            if sha256(header[resource+'_path']) != header[resource+'_sha256']:
-                raise ValueError(f'Changed {resource} resource')
+        verify_resources(header)
         return np.frombuffer(payload, dtype='<u2').reshape(h, w, 3), header
     finally:
         watchdog.cancel()
@@ -358,6 +375,7 @@ def main():
         paths = [Path(__file__), Path(__file__).with_name('colour_placement_server.cpp'),
                  ROOT/'tests/raw_bench/production/CMakeLists.txt']
         engine_files = sorted(p for p in (a.engine_source/'src').rglob('*') if p.suffix in ('.cpp', '.h'))
+        engine_files += [a.engine_source/'config/raw-normalization.json', a.engine_source/'CMakeLists.txt']
         freeze = dict(schema_version=1, created_utc=stamp, inventory=inventory,
             engine_revision=subprocess.check_output(['git', '-C', str(a.engine_source), 'rev-parse', 'HEAD'], text=True).strip(),
             engine_sources={str(p.relative_to(a.engine_source)):sha256(p) for p in engine_files},
