@@ -13,6 +13,10 @@ installation et calcul neuronal.
 Audit suivant (§11) : réglages des 115 CR3 lunaires vérifiés, trois aperçus
 mesurés et mouvement historique réutilisé. Aucune référence propre constituée.
 
+Préparation en attendant les nouvelles prises (§12) : contrat de normalisation,
+masques et partitions testé, puis épreuve multi-scènes synthétique exécutée.
+Pas de gain photographique ni de poids utilisables revendiqués.
+
 Orientation utilisateur précisée ensuite (§9) : architecture éprouvée,
 **poids entraînés pour IPR et signal caméra signé** en priorité ; les modèles
 RGB existants restent des comparateurs, pas une cible imposée.
@@ -441,3 +445,61 @@ scène/séance/réglages et groupes indépendants. Pour les sources existantes,
 geler d'abord le domaine RAW et le traitement d'alignement avant toute cible
 de moyenne ; pas de reprise d'un entraînement ni de modification des poids
 sur la base de métriques d'aperçu. Aucun RAW copié, exporté, supprimé ou modifié.
+
+## 12. Chaîne de données et pilote synthétique — 31 octobre 2026
+
+L'utilisateur annonce les nouvelles prises pour le lendemain et autorise la
+préparation en attendant. Sur `patch_neural_restoration`, commits `cbe1770`
+et `041af0b`, sans raccordement au moteur. Le contrat de banc impose :
+
+- même facteur scalaire positif explicite pour entrée, référence et sigma ;
+  aucune plage déduite automatiquement, aucun gamma/clamp/changement de BdB ;
+- source inchangée, négatifs et valeurs étendues conservés. L'inversion de
+  l'échelle reste soumise aux arrondis float32, pas une identité binaire
+  générale. Rejet des débordements et sous-débordements détruisant une valeur ;
+- masque booléen de validité N1HW, perte calculée sur les seuls canaux valides,
+  masque vide et valeurs non finies rejetés. Exclure des pixels ne doit pas
+  diminuer artificiellement la perte en gardant l'ancien dénominateur ;
+- toutes les variantes d'une scène dans le même groupe, et refus d'un contenu
+  source ou d'une référence identique partagé entre apprentissage/validation/test.
+  Cette protection dépend encore d'identités de scène honnêtement attribuées.
+
+Les **14 tests de données** passent. Un premier passage avait13 tests ; le
+contrôle supplémentaire concerne le partage d'une cible propre. Les preuves
+restent distinctes : [premier passage](../validation/raw/neural-data-pilot-v001-20261031T204455Z.json)
+et [rejeu avec garde-fou](../validation/raw/neural-data-pilot-v001-20261031T204714Z.json).
+Même architecture, graines,64 étapes Adam et taux0,001 ; aucun réglage choisi
+selon la validation ou le test, aucune sélection de checkpoint. Les mesures
+par scène et pertes du rejeu sont identiques au premier passage.
+
+Le pilote porte sur **8/4/4 scènes artificielles**, au sens de16 graines d'un
+même générateur, pas16 scènes photographiques indépendantes. Ramps, faibles
+motifs et zones étendues signées,32×48 pixels, deux threads intra-op CPU.
+Bruit gaussien à variance dépendante du signal ; sigma calculé depuis la cible
+propre : conditionnement idéal, pas estimation de bruit exploitable sur Canon.
+
+| Groupe | MSE moyenne entrée | MSE moyenne sortie |
+| --- | --- | --- |
+| Apprentissage,8 cas | 0,000788827 | 0,000788840 |
+| Validation,4 cas | 0,000784167 | 0,000784299 |
+| Test synthétique,4 cas | 0,000718287 | 0,000718276 |
+
+**Verdict :** plomberie et contrôles opérationnels, sortie quasi identitaire,
+aucun bénéfice de débruitage utile démontré. Ne pas régler le réseau en boucle
+sur ces16 cas pour obtenir une baisse décorative. Le temps interne d'environ
+1,73s du dernier rejeu n'est pas une latence photo ou un budget mémoire qualifié.
+Aucun poids sauvegardé, aucun RAW/réserve/référence LR lu, pas de GPU/ONNX.
+
+### Premier contrôle à la réception des prises
+
+Avant tout apprentissage : identités sans collision, intégrité et boîtier/mode
+RAW, ISO/temps/ouverture, stabilité du cadrage et de l'éclairage, absence de
+référence saturée, mise au point comparable et qualité du recalage. Vérifier
+les unités du signal pré-LCP/DCP et les masques dans ce signal, pas dans le JPEG.
+Beige accepté : il n'est pas nécessaire que l'aplat soit gris neutre. La trame
+du tissu reste du détail à protéger, pas du bruit à effacer.
+
+Fixer les tolérances et les groupes avant d'examiner les sorties du réseau.
+Si les prises sont recevables, construire une première référence avec carte
+de validité et provenance, puis qualifier l'apprentissage réel. Sinon, indiquer
+les fichiers et raisons à corriger, sans les intégrer silencieusement.

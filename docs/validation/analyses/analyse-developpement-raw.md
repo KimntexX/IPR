@@ -18,6 +18,8 @@ CPU, sans gain photo ni mise à jour du moteur revendiqués.
 Audit suivant (§58) :115 métadonnées CR3 lunaires, deux groupes d'exposition,
 trois JPEG embarqués et preuves de mouvement anciennes réutilisées ; pas de
 référence propre créée, réserve fermée.
+Préparation suivante (§59) :14 tests de données et un pilote8/4/4 synthétique,
+sans bénéfice de débruitage utile démontré ; pas de photo utilisée pour apprendre.
 
 Dernier jalon (§53) : ablation de routage sur les64entrées du§52,640parités
 avec les anciennes sorties. Plafond diagonal local : détail préservé mais
@@ -4376,6 +4378,26 @@ sur la rafale42 ni de pixels de réserve consultés. Moyenne brute non recevable
 comme vérité ; un futur recalage reste une possibilité à qualifier. Détails et
 limites dans la [section11 de B4](../../architecture/restauration-neuronale.md).
 Aucune source modifiée, pas d'entraînement, de push/fusion/tag.
+
+## 59. Normalisation, masques et partitions neuronales — 31 octobre 2026
+
+En attendant les nouvelles prises, contrats du banc sur `patch_neural_restoration`
+(`cbe1770`, puis garde-fou `041af0b`). Échelle commune explicite aux trois buffers,
+conservation du signal signé aux arrondis float32 près, masques de validité et
+refus des scènes/sources/références partagées entre groupes.14 tests passent.
+
+Pilote artificiel fixé avant résultats :8 apprentissage,4 validation,4 test,
+64 étapes Adam à0,001, pas de sélection de checkpoint. Les sorties restent
+quasi identitaires, aucun gain utile démontré ; ne pas transformer ce banc
+technique en optimisation sur16 graines. Sigma est calculé depuis la cible
+synthétique, pas depuis un modèle Canon qualifié.
+
+Preuves : [initiale](../raw/neural-data-pilot-v001-20261031T204455Z.json) et
+[rejeu du garde-fou](../raw/neural-data-pilot-v001-20261031T204714Z.json), pertes
+et métriques identiques. Aucun RAW, réserve ou TIFF LR lu ; aucun poids conservé.
+Le prochain jalon est la réception/qualification du corpus et des références,
+pas une intégration moteur. La [section12 B4](../../architecture/restauration-neuronale.md)
+décrit les contrôles et limites. Aucun push/fusion/tag.
 
 ## Conclusion actuelle et fiche de reprise
 

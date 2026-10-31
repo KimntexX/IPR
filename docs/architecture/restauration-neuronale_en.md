@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/restauration-neuronale.md; sha256: cf0f87b516950f4a826ae7404d5936f19b65916bcf3c5b4370f9db17d0f3903a -->
+<!-- translation-source: docs/architecture/restauration-neuronale.md; sha256: 38a1ddbb948aeead0261db67b67bbb5121d285dec8456ac00859839d88c4ca70 -->
 *[Français](restauration-neuronale.md) | [English](restauration-neuronale_en.md)*
 
 # B4 — preparation study for local neural restoration
@@ -12,6 +12,10 @@ Sections 1 through 9 record scoping before neural installation/calculation.
 
 Subsequent audit (§11): settings of 115 lunar CR3 files checked, three previews
 measured and historical movement evidence reused. No clean reference created.
+
+While awaiting new captures (§12), normalization/mask/partition contracts were
+tested and a multi-scene synthetic pipeline run. No photographic benefit or
+usable weights claimed.
 
 Subsequent user direction (§9): proven architecture, prioritizing **weights
 trained for IPR and signed camera data**; existing RGB models remain comparators,
@@ -422,3 +426,58 @@ settings and independent groups. For existing sources, freeze the RAW domain
 and registration treatment before constructing an averaged target. No training
 or weight adjustment from preview metrics. No RAW copied, exported, deleted
 or modified.
+
+## 12. Data pipeline and synthetic pilot — 31 October 2026
+
+The user announces new captures for the next day and authorizes preparation.
+On `patch_neural_restoration`, commits `cbe1770` and `041af0b`, with no engine
+connection. The bench contract requires:
+
+- one explicit positive scalar shared by input, reference and sigma; no inferred
+  per-image range, gamma, clamp or white-balance change;
+- immutable source and preserved negative/extended values. Inverse scaling is
+  subject to float32 roundoff, not general bitwise identity. Reject overflow and
+  underflow destroying a nonzero value;
+- Boolean N1HW validity mask; loss over valid channels only, rejecting empty
+  masks and nonfinite buffers. Masking pixels must not artificially lower loss
+  by retaining the original denominator;
+- all variants of one scene in one group; reject identical source or reference
+  content shared across train/validation/test. This still depends on honestly
+  assigned scene identities.
+
+**14 data tests pass.** The first run had13; the additional check covers shared
+clean targets. Evidence remains separate: [first run](../validation/raw/neural-data-pilot-v001-20261031T204455Z.json)
+and [guarded replay](../validation/raw/neural-data-pilot-v001-20261031T204714Z.json).
+Same architecture, seeds,64 Adam steps and learning rate0.001; no settings chosen
+from validation/test and no checkpoint selection. Per-scene metrics and losses
+are identical across both runs.
+
+The pilot uses **8/4/4 artificial scenes**, meaning16 seeds of one generator,
+not16 independent photographic scenes. Ramps, weak patterns and signed extended
+patches,32×48 pixels, two CPU intra-op threads. Gaussian signal-dependent
+variance; sigma computed from clean targets: ideal conditioning, not a usable
+Canon noise estimate.
+
+| Group | Mean input MSE | Mean output MSE |
+| --- | --- | --- |
+| Train,8 cases | 0.000788827 | 0.000788840 |
+| Validation,4 cases | 0.000784167 | 0.000784299 |
+| Synthetic test,4 cases | 0.000718287 | 0.000718276 |
+
+**Verdict:** operational plumbing/checks, near-identity output, no demonstrated
+useful denoising benefit. Do not repeatedly tune on these16 cases for a cosmetic
+improvement. The latest internal1.73-second run is not photo latency or qualified
+memory budget. No weights saved, no RAW/sealed/LR-reference pixels read, no GPU/ONNX.
+
+### First checks when captures arrive
+
+Before learning: noncolliding identities, integrity and camera/RAW mode,
+ISO/shutter/aperture, framing/lighting stability, unclipped reference, comparable
+focus and registration quality. Verify pre-LCP/DCP signal units and masks in that
+signal, not the JPEG. Beige is accepted; a neutral-gray flat area is unnecessary.
+Fabric weave is detail to protect, not noise to erase.
+
+Fix tolerances and partitions before looking at network outputs. If admissible,
+construct an initial reference with validity/provenance, then qualify real
+training. Otherwise identify files and reasons to correct without silently
+including them.
