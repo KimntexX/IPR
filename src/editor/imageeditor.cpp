@@ -1738,8 +1738,8 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
     const auto ints = [&stream](const auto &values) { for (int value : values) stream << qint32(value); };
     stream << s.grayscale << s.brightness << qint32(s.contrast) << qint32(s.temperature) << qint32(s.tint)
            << qint32(s.shadows) << qint32(s.blacks) << qint32(s.highlights) << qint32(s.whites);
-    if (s.denoiseBeforeProfile)   // the camera-signal denoise belongs to the first stage then
-        stream << qint32(s.denoiseLuminance) << qint32(s.denoiseChrominance);
+    if (s.denoiseBeforeProfile)   // the camera-signal luminance denoise belongs to the first stage then
+        stream << qint32(s.denoiseLuminance);
     keys[0] = key;
     stream << qint32(s.saturation) << qint32(s.vibrance) << qint32(s.gradingBlending) << qint32(s.gradingBalance);
     ints(s.mixerHue); ints(s.mixerSaturation); ints(s.mixerLuminance); ints(s.gradingHue); ints(s.gradingSaturation);
@@ -1815,10 +1815,12 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     // Denoise before local-detail enhancement and sharpening. The operation
     // runs in linear RGB and keeps luminance and chrominance independent so
     // coloured speckles can be removed without flattening edge detail.
+    // With the camera-signal denoise, luminance was denoised before the profile;
+    // colour noise is removed here on both paths.
     if (runs(2)) {
-        if ((settings.denoiseLuminance != 0 || settings.denoiseChrominance != 0) &&
-            !(settings.denoiseBeforeProfile && source.dcpContext))
-            DetailProcessing::reduceNoise(adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
+        const bool cameraLuminance = settings.denoiseBeforeProfile && source.dcpContext;
+        DetailProcessing::reduceNoise(adjusted, {cameraLuminance ? 0 : settings.denoiseLuminance,
+                                                 settings.denoiseChrominance}, pixelScale);
         reached(2, adjusted);
     }
     if (runs(3)) {
@@ -1889,8 +1891,9 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
     // RAW with a DCP: exposure and white balance act on the scene-linear camera
     // signal before the profile tone curve, so highlights keep its shoulder.
     const bool sceneExposure = source.dcpContext && settings.brightness != 0.0f;
-    // Experimental: the denoise sliders act on the camera signal, before the profile.
-    const CameraDenoise::Settings cameraDenoise{settings.denoiseLuminance, settings.denoiseChrominance};
+    // Experimental: the luminance denoise acts on the camera signal, before the
+    // profile; colour noise is removed after the tones (reduceNoise).
+    const CameraDenoise::Settings cameraDenoise{settings.denoiseLuminance, 0};
     const bool denoiseCamera = source.dcpContext && settings.denoiseBeforeProfile &&
                                !CameraDenoise::identity(cameraDenoise);
     if (source.dcpContext && (whiteBalanceEdit || sceneExposure || denoiseCamera)) {

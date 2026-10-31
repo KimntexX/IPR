@@ -22,9 +22,15 @@ constexpr float kLumaThresholdAtMaximum = 2.55f;
 constexpr float kMediumThresholdRatio = 0.52f;
 // Colour noise: chroma smoothed by a guided filter on log luminance. Fitted on
 // Lightroom's colour states of six base scenes (2026-10-31).
-constexpr int kChromaRadiusAtZero = 2, kChromaRadiusAtMaximum = 8;
+// Radius in full-resolution pixels: colour blotches of high ISOs span 10 to 20 px.
+constexpr double kChromaRadiusAtZero = 2.0, kChromaRadiusAtMaximum = 24.0;
 constexpr float kChromaGuideNoise = 3.0f;        // guided filter eps, in guide noise units
-constexpr float kChromaEdgeLow = 2.0f, kChromaEdgeHigh = 5.0f;  // in noise units of the level
+// Guide smoothing and colour-edge scale, in full-resolution pixels: a finer guide
+// copies the luminance noise of high ISOs into the colour.
+constexpr double kChromaGuideSigma = 2.0, kChromaEdgeSigma = 4.0;
+// Luminance below which colour is denoised as absolute chroma, not relative.
+constexpr double kChromaLumaFloor = 1e-3;
+constexpr float kChromaEdgeLow = 3.0f, kChromaEdgeHigh = 8.0f;  // in noise units of the level
 
 float luminanceOf(const cv::Vec3f &rgb)
 {
@@ -265,18 +271,28 @@ cv::Mat levelMedian(const cv::Mat &value, const cv::Mat &level)
     return result;
 }
 
-// Colour noise: each chroma plane is smoothed by a guided filter on log
-// luminance, so colour stays inside luminance edges; the radius and the weight
-// grow with the amount (weight 1 - (1 - s)^4: most of the fine colour noise goes
-// from the first settings, as in Lightroom). Colour edges that luminance does
-// not show are kept where the smoothed chroma gradient stands well above its
-// typical value at that brightness.
-void denoiseChrominance(const cv::Mat &luma, cv::Mat *chromaOrange, cv::Mat *chromaGreen, int amount)
+// Colour noise. A 5 x 5 median first removes isolated colour dots, which an
+// edge-aware filter would keep as structure. Each chroma plane is then smoothed
+// by a guided filter on smoothed log luminance, so colour stays inside
+// luminance edges. Weight 1 - (1 - s)^8: nearly all the colour noise goes by
+// 25, as in Lightroom; the radius follows the weight. Colour edges
+// that luminance does not show are kept, over the whole filter window, where
+// the smoothed chroma gradient stands well above its typical value at that
+// brightness.
+void denoiseChrominance(const cv::Mat &luma, cv::Mat *chromaOrange, cv::Mat *chromaGreen, int amount,
+                        double pixelScale)
 {
     const float strength = static_cast<float>(std::clamp(amount, 0, 100)) / 100.0f;
-    const float weight = 1.0f - std::pow(1.0f - strength, 4.0f);
-    const int radius = static_cast<int>(std::lround(
-        kChromaRadiusAtZero + (kChromaRadiusAtMaximum - kChromaRadiusAtZero) * strength));
+    const float weight = 1.0f - std::pow(1.0f - strength, 8.0f);
+    const int radius = std::max(1, static_cast<int>(std::lround(
+        (kChromaRadiusAtZero + (kChromaRadiusAtMaximum - kChromaRadiusAtZero) * weight) * pixelScale)));
+    const auto scaled = [pixelScale](double sigma) { return std::max(0.8, sigma * pixelScale); };
+
+    for (cv::Mat *plane : {chromaOrange, chromaGreen}) {
+        cv::Mat median;
+        cv::medianBlur(*plane, median, pixelScale >= 0.6 ? 5 : 3);
+        cv::addWeighted(*plane, 1.0 - weight, median, weight, 0.0, *plane);
+    }
 
     cv::Mat logLuma(luma.rows, luma.cols, CV_32F);
     for (int y = 0; y < luma.rows; ++y) {
@@ -285,16 +301,19 @@ void denoiseChrominance(const cv::Mat &luma, cv::Mat *chromaOrange, cv::Mat *chr
         for (int x = 0; x < luma.cols; ++x)
             target[x] = std::log2(std::max(source[x], 1e-5f));
     }
-    cv::Mat guide, level;
-    cv::GaussianBlur(logLuma, guide, cv::Size(), kFineSigma, kFineSigma, cv::BORDER_REPLICATE);
+    cv::Mat fineGuide, guide, level;
+    cv::GaussianBlur(logLuma, fineGuide, cv::Size(), kFineSigma, kFineSigma, cv::BORDER_REPLICATE);
+    const double guideSigma = scaled(kChromaGuideSigma);
+    cv::GaussianBlur(logLuma, guide, cv::Size(), guideSigma, guideSigma, cv::BORDER_REPLICATE);
     cv::GaussianBlur(guide, level, cv::Size(), 4.0, 4.0, cv::BORDER_REPLICATE);
-    const float guideNoise = kChromaGuideNoise * estimateDenoiseSigma(guide);
+    const float guideNoise = kChromaGuideNoise * estimateDenoiseSigma(fineGuide);
     const float eps = guideNoise * guideNoise + 1e-12f;
 
     cv::Mat gradient = cv::Mat::zeros(luma.rows, luma.cols, CV_32F);
+    const double edgeSigma = scaled(kChromaEdgeSigma);
     for (const cv::Mat *plane : {chromaOrange, chromaGreen}) {
         cv::Mat smooth, gx, gy;
-        cv::GaussianBlur(*plane, smooth, cv::Size(), kCoarseSigma, kCoarseSigma, cv::BORDER_REPLICATE);
+        cv::GaussianBlur(*plane, smooth, cv::Size(), edgeSigma, edgeSigma, cv::BORDER_REPLICATE);
         cv::Sobel(smooth, gx, CV_32F, 1, 0);
         cv::Sobel(smooth, gy, CV_32F, 0, 1);
         gradient += gx.mul(gx) + gy.mul(gy);
@@ -377,7 +396,7 @@ void mergeLumaChroma(const cv::Mat &luma, const cv::Mat &chromaOrange,
 
 }
 
-void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings)
+void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pixelScale)
 {
     if (linearRgb.empty() || linearRgb.type() != CV_32FC3 ||
         (settings.luminance <= 0 && settings.chrominance <= 0))
@@ -386,10 +405,21 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings)
     cv::Mat luma, chromaOrange, chromaGreen;
     splitLumaChroma(linearRgb, &luma, &chromaOrange, &chromaGreen);
 
-    // Chroma is smoothed against the luminance before its own denoise: the guide
-    // keeps the colour edges the photo shows.
-    if (settings.chrominance > 0)
-        denoiseChrominance(luma, &chromaOrange, &chromaGreen, settings.chrominance);
+    // Colour is denoised relative to luminance (Co/Y, Cg/Y), then rebuilt on the
+    // final luminance: absolute chroma on a noisy luminance would turn the
+    // luminance grain into saturation speckle. The guide is the luminance before
+    // its own denoise: it keeps the colour edges the photo shows.
+    const auto clampedLuma = [](const cv::Mat &plane) {
+        cv::Mat bounded;
+        cv::max(plane, kChromaLumaFloor, bounded);
+        return bounded;
+    };
+    if (settings.chrominance > 0) {
+        const cv::Mat divisor = clampedLuma(luma);
+        cv::divide(chromaOrange, divisor, chromaOrange);
+        cv::divide(chromaGreen, divisor, chromaGreen);
+        denoiseChrominance(luma, &chromaOrange, &chromaGreen, settings.chrominance, pixelScale);
+    }
     if (settings.luminance > 0) {
         const float lumaSigma = estimateDenoiseSigma(luma);
         cv::Mat lumaGuide;
@@ -397,6 +427,11 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings)
                          cv::BORDER_REPLICATE);
         luma = denoiseLuminance(luma, structureProtection(lumaGuide, lumaSigma),
                                 lumaSigma, settings.luminance);
+    }
+    if (settings.chrominance > 0) {
+        const cv::Mat factor = clampedLuma(luma);
+        chromaOrange = chromaOrange.mul(factor);
+        chromaGreen = chromaGreen.mul(factor);
     }
     mergeLumaChroma(luma, chromaOrange, chromaGreen, &linearRgb);
 }
