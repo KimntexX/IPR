@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QSaveFile>
 
+#include <algorithm>
 #include <cmath>
 
 namespace Sidecar {
@@ -43,7 +44,7 @@ bool read(const QString &fileName, Settings *settings, UserImageMetadata *metada
     qint64 sourceSize = -1;
     qint64 sourceModified = -1;
     stream >> magic >> version >> sourceSize >> sourceModified;
-    if (magic != 0x49505231u || version < 1 || version > 6 || file.size() > 1024 * 1024 ||
+    if (magic != 0x49505231u || version < 1 || version > 9 || file.size() > 1024 * 1024 ||
         sourceSize != sourceInfo.size() ||
         sourceModified != sourceInfo.lastModified().toMSecsSinceEpoch())
         return false;
@@ -79,7 +80,7 @@ bool read(const QString &fileName, Settings *settings, UserImageMetadata *metada
         readInt(stream, loaded.mixerHue[index]); readInt(stream, loaded.mixerSaturation[index]);
         readInt(stream, loaded.mixerLuminance[index]);
     }
-    for (size_t index = 0; index < loaded.gradingHue.size(); ++index) {
+    for (size_t index = 0; index < 3; ++index) {   // the zones; the global wheel follows in v8
         readInt(stream, loaded.gradingHue[index]); readInt(stream, loaded.gradingSaturation[index]);
     }
     stream >> loaded.automaticWhiteBalance;
@@ -108,6 +109,33 @@ bool read(const QString &fileName, Settings *settings, UserImageMetadata *metada
         stream >> loadedRaw.lensProfile >> loadedRaw.lensProfileSha256 >> loadedRaw.lensProfileResolved
                >> loadedRaw.lensCorrectionEnabled >> loadedRaw.chromaticAberrationEnabled;
     }
+    if (version >= 7) {
+        readInt(stream, loaded.gradingBlending);
+        readInt(stream, loaded.gradingBalance);
+    }
+    if (version >= 8) {
+        readInt(stream, loaded.gradingHue[3]);
+        readInt(stream, loaded.gradingSaturation[3]);
+        for (int &luminance : loaded.gradingLuminance) readInt(stream, luminance);
+    }
+    if (version >= 9) {
+        qint32 count = 0;
+        stream >> count;
+        if (count < 0 || count > qint32(PointColor::MaxPoints))
+            return false;
+        loaded.pointColor.count = size_t(count);
+        for (qint32 index = 0; index < count; ++index) {
+            PointColor::Point &point = loaded.pointColor.points[size_t(index)];
+            stream >> point.source[0] >> point.source[1] >> point.source[2];
+            readInt(stream, point.hueShift); readInt(stream, point.saturationShift);
+            readInt(stream, point.luminanceShift); readInt(stream, point.variance); readInt(stream, point.range);
+            const auto within = [](int value, int low) { return value >= low && value <= 100; };
+            if (!std::isfinite(point.source[0]) || !std::isfinite(point.source[1]) || !std::isfinite(point.source[2]) ||
+                !within(point.hueShift, -100) || !within(point.saturationShift, -100) ||
+                !within(point.luminanceShift, -100) || !within(point.variance, -100) || !within(point.range, 0))
+                return false;
+        }
+    }
     if (stream.status() != QDataStream::Ok)
         return false;
     *settings = std::move(loaded);
@@ -127,7 +155,7 @@ bool write(const QString &fileName, const Settings &settings, const UserImageMet
         return false;
     QDataStream stream(&file);
     stream.setVersion(QDataStream::Qt_6_4);
-    stream << quint32(0x49505231u) << quint16(6) << qint64(sourceInfo.size())
+    stream << quint32(0x49505231u) << quint16(9) << qint64(sourceInfo.size())
            << qint64(sourceInfo.lastModified().toMSecsSinceEpoch());
     stream << settings.brightness;
     writeInt(stream, settings.contrast); writeInt(stream, settings.blur); stream << settings.grayscale;
@@ -144,7 +172,7 @@ bool write(const QString &fileName, const Settings &settings, const UserImageMet
         writeInt(stream, settings.mixerHue[index]); writeInt(stream, settings.mixerSaturation[index]);
         writeInt(stream, settings.mixerLuminance[index]);
     }
-    for (size_t index = 0; index < settings.gradingHue.size(); ++index) {
+    for (size_t index = 0; index < 3; ++index) {
         writeInt(stream, settings.gradingHue[index]); writeInt(stream, settings.gradingSaturation[index]);
     }
     stream << settings.automaticWhiteBalance;
@@ -159,6 +187,19 @@ bool write(const QString &fileName, const Settings &settings, const UserImageMet
            << raw.normalizationEnabled << raw.engineVersion;
     stream << raw.lensProfile << raw.lensProfileSha256 << raw.lensProfileResolved
            << raw.lensCorrectionEnabled << raw.chromaticAberrationEnabled;
+    writeInt(stream, settings.gradingBlending);
+    writeInt(stream, settings.gradingBalance);
+    writeInt(stream, settings.gradingHue[3]);
+    writeInt(stream, settings.gradingSaturation[3]);
+    for (int luminance : settings.gradingLuminance) writeInt(stream, luminance);
+    const size_t points = std::min(settings.pointColor.count, PointColor::MaxPoints);
+    writeInt(stream, int(points));
+    for (size_t index = 0; index < points; ++index) {
+        const PointColor::Point &point = settings.pointColor.points[index];
+        stream << point.source[0] << point.source[1] << point.source[2];
+        writeInt(stream, point.hueShift); writeInt(stream, point.saturationShift);
+        writeInt(stream, point.luminanceShift); writeInt(stream, point.variance); writeInt(stream, point.range);
+    }
     return stream.status() == QDataStream::Ok && file.commit();
 }
 }

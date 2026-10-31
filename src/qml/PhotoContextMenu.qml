@@ -32,31 +32,47 @@ Basic.Menu {
     ActionMenuItem { action: root.actions.openImageAction }
     Basic.MenuSeparator { }
     ActionMenuItem {
+        command: root.actions.copyAction
+        enabled: root.currentPhoto && root.actions.copyAction.enabled
+    }
+    ActionMenuItem {
+        command: root.actions.pasteAction
+        enabled: root.currentPhoto && root.actions.pasteAction.enabled
+    }
+    Basic.MenuSeparator { }
+    ActionMenuItem {
         objectName: "contextSaveAdjustments"
-        action: root.actions.saveAction
+        command: root.actions.saveAction
         enabled: root.currentPhoto && root.actions.saveAction.enabled
     }
     ActionMenuItem {
         objectName: "contextExportImage"
-        action: root.actions.exportAction
+        command: root.actions.exportAction
         enabled: root.currentPhoto && root.actions.exportAction.enabled
     }
     ActionMenuItem {
+        objectName: "contextExportSelection"
+        action: root.actions.exportSelectionAction
+        visible: root.editor.selectedImageCount > 0
+        implicitHeight: visible ? 32 : 0
+        height: implicitHeight
+    }
+    ActionMenuItem {
         objectName: "contextDuplicateImage"
-        action: root.actions.duplicateAction
+        command: root.actions.duplicateAction
         enabled: root.currentPhoto && root.actions.duplicateAction.enabled
     }
     ActionMenuItem {
         objectName: "contextResetAdjustments"
-        action: root.actions.resetAction
+        command: root.actions.resetAction
         enabled: root.currentPhoto && root.actions.resetAction.enabled
     }
     ActionMenuItem {
         text: root.currentPhoto
-              ? qsTr("Enregistrer et dupliquer : raccordement moteur requis")
+              ? qsTr("Dupliquer : raccordement moteur requis")
               : qsTr("Ouvrir cette image pour agir sur ses retouches")
         enabled: false
-        visible: !root.currentPhoto || !root.actions.manualSaveAvailable || !root.actions.duplicationAvailable
+        visible: !root.currentPhoto || !root.actions.duplicationAvailable
         font.pixelSize: 10
     }
 }

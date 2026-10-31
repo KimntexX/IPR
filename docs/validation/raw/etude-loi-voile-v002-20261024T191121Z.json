@@ -1,0 +1,98 @@
+{
+ "campaign_id": "etude-loi-voile-v002-20261024T191121Z",
+ "runner": "tests/study_dehaze_law.py",
+ "commit": "8054613cf22c61ceef3fc456912327f7b2542356",
+ "local_changes": [
+  "M CMakeLists.txt",
+  " M scripts/test-rules.json",
+  " M src/core/DetailProcessing.cpp",
+  " M src/core/DetailProcessing.h",
+  " M src/editor/imageeditor.cpp",
+  "?? docs/validation/raw/etude-loi-voile-v001-20261024T185925Z.json",
+  "?? src/core/Dehaze.cpp",
+  "?? src/core/Dehaze.h",
+  "?? tests/dehaze_test.cpp",
+  "?? tests/study_dehaze_law.py"
+ ],
+ "model": "haze model, t = clamp(1 - omega h, 0.1, 1); removal (y - A)/t + A, addition t y + (1 - t) A; plus offset c A",
+ "reduction": 4,
+ "haze_smoothing_native_px": 128,
+ "dark_channel_window_native_px": 15,
+ "airlight": "max(0.10, 99th percentile of max RGB)",
+ "sample_stride": 5,
+ "omega_grid": [
+  0.0,
+  1.5,
+  61
+ ],
+ "duration_seconds": 311.2,
+ "python": "3.14.3",
+ "laws": {
+  "-100": {
+   "omega": 1.5,
+   "offset_of_airlight": 0.09755237366391592,
+   "leave_one_out_unexplained": 0.20070953142012127,
+   "scenes": [
+    "6V1A0043",
+    "6V1A0327",
+    "IMG_4345",
+    "_MG_7580"
+   ]
+  },
+  "-50": {
+   "omega": 0.925,
+   "offset_of_airlight": 0.023974904673709163,
+   "leave_one_out_unexplained": 0.21926661261287406,
+   "scenes": [
+    "6V1A0043",
+    "6V1A0327",
+    "IMG_4345",
+    "_MG_7580"
+   ]
+  },
+  "-25": {
+   "omega": 0.47500000000000003,
+   "offset_of_airlight": 0.008766940862380774,
+   "leave_one_out_unexplained": 0.19675496910834994,
+   "scenes": [
+    "6V1A0043",
+    "6V1A0327",
+    "IMG_4345",
+    "_MG_7580"
+   ]
+  },
+  "25": {
+   "omega": 0.30000000000000004,
+   "offset_of_airlight": -0.001575842878169221,
+   "leave_one_out_unexplained": 0.13437940529797493,
+   "scenes": [
+    "6V1A0043",
+    "6V1A0327",
+    "IMG_4345",
+    "_MG_7580"
+   ]
+  },
+  "50": {
+   "omega": 0.55,
+   "offset_of_airlight": -0.0019035005123166908,
+   "leave_one_out_unexplained": 0.12671734475580357,
+   "scenes": [
+    "6V1A0043",
+    "6V1A0327",
+    "IMG_4345",
+    "_MG_7580"
+   ]
+  },
+  "100": {
+   "omega": 0.875,
+   "offset_of_airlight": -0.007132706578964277,
+   "leave_one_out_unexplained": 0.08703594157485564,
+   "scenes": [
+    "6V1A0043",
+    "6V1A0327",
+    "IMG_4345",
+    "_MG_7580"
+   ]
+  }
+ }
+}

@@ -12,11 +12,44 @@ runs:
         python-version: '3.14'
     - shell: bash
       run: python -m pip install 'numpy>=2.2,<3' 'Pillow>=11,<13' 'PyYAML>=6,<7'
+    # The Azure Ubuntu mirror sometimes serves the ~180 MB of packages at 40 kB/s
+    # (over an hour, October 2026): keep the downloaded packages between runs. The
+    # key follows the runner image, so packages renew with it; an older cache still
+    # serves whatever has not changed.
+    # ImageOS and ImageVersion are the runner's environment, not the env context.
+    - if: runner.os == 'Linux'
+      id: apt-image
+      shell: bash
+      run: |
+        echo "os=${ImageOS:-linux}" >> "$GITHUB_OUTPUT"
+        echo "version=${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
+    - if: runner.os == 'Linux'
+      id: apt-cache
+      uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        path: ~/apt-archives
+        key: apt-${{ steps.apt-image.outputs.os }}-${{ steps.apt-image.outputs.version }}-${{ hashFiles('.github/actions/setup/action.yml') }}
+        restore-keys: apt-${{ steps.apt-image.outputs.os }}-
     - if: runner.os == 'Linux'
       shell: bash
       run: |
-        sudo apt-get update
-        sudo apt-get install -y ninja-build libopencv-dev libraw-dev libtiff-dev libgl1-mesa-dev libxkbcommon-dev libxcb-cursor0 libxcb-xinerama0 libxcb-icccm4 libxcb-keysyms1 libxcb-image0 libxcb-render-util0 libegl1
+        mkdir -p ~/apt-archives/partial
+        # Short timeouts and retries: a stalled mirror connection is dropped and retried.
+        apt_options=(-o Dir::Cache::Archives="$HOME/apt-archives" -o Acquire::http::Timeout=30 -o Acquire::Retries=5)
+        sudo apt-get update -o Acquire::http::Timeout=30 -o Acquire::Retries=5
+        sudo apt-get install -y --no-install-recommends "${apt_options[@]}" \
+          ninja-build libopencv-dev libraw-dev libtiff-dev libgl1-mesa-dev libxkbcommon-dev libxcb-cursor0 \
+          libxcb-xinerama0 libxcb-icccm4 libxcb-keysyms1 libxcb-image0 libxcb-render-util0 libegl1
+        # Packages no longer in the archive (an older image's cache) are dropped; apt
+        # leaves its lock and partial downloads owned by root: the cache keeps packages only.
+        sudo apt-get autoclean "${apt_options[@]}"
+        sudo rm -rf ~/apt-archives/partial ~/apt-archives/lock
+        sudo chown -R "$(id -u):$(id -g)" ~/apt-archives
+    - if: runner.os == 'Linux' && steps.apt-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        path: ~/apt-archives
+        key: ${{ steps.apt-cache.outputs.cache-primary-key }}
     # Ubuntu 24.04 ships Qt 6.4.2, below the Qt 6.8 minimum: Linux always uses the SDK.
     - if: runner.os == 'Windows' || runner.os == 'Linux' || (runner.os == 'macOS' && inputs.mode == 'standalone')
       uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1

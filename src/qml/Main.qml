@@ -83,6 +83,7 @@ ApplicationWindow {
             Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.saveAction }
             ActionMenuItem { action: fileActions.exportAction }
+            ActionMenuItem { action: fileActions.exportSelectionAction }
             ActionMenuItem { action: fileActions.duplicateAction }
             Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.quitAction }
@@ -91,6 +92,9 @@ ApplicationWindow {
             palette: root.palette
             title: qsTr("Édition")
             width: 440
+            ActionMenuItem { action: fileActions.copyAction }
+            ActionMenuItem { action: fileActions.pasteAction }
+            Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.resetAction }
         }
 
@@ -186,6 +190,12 @@ ApplicationWindow {
                 textColor: uiPreferences.theme.text
                 panelColor: uiPreferences.theme.panel
                 visible: imageEditor.hasImage
+                picking: settingsView.pointColorPicking
+                onPointPicked: (x, y) => {
+                    imageEditor.addPointColorAt(x, y)
+                    settingsView.pointColorPicking = false
+                }
+                onPickingCancelled: settingsView.pointColorPicking = false
                 onContextMenuRequested: (x, y) => {
                     photoMenu.targetName = imageEditor.imageDetails.name || ""
                     photoMenu.targetUrl = ""
@@ -452,6 +462,17 @@ ApplicationWindow {
         modal: true
         palette: root.palette
         title: qsTr("Réinitialiser les retouches ?")
+        padding: 14
+        background: Rectangle { color: root.palette.window; border.color: root.palette.mid; radius: 6 }
+        header: Label {
+            text: resetDialog.title
+            padding: 14
+            font.bold: true
+            font.pixelSize: 16
+            color: root.palette.text
+            wrapMode: Text.WordWrap
+            lineHeight: 1.5
+        }
         standardButtons: Dialog.NoButton
         function confirm() {
             if (!imageEditor.hasImage || imageEditor.busy || imageKey !== canvas.imageKey) return
@@ -462,16 +483,14 @@ ApplicationWindow {
             text: qsTr("Les retouches de l’image ouverte seront remises à leur référence. Le fichier source, la notation et les choix de profil/calibration sont conservés. Cette action n’a pas d’annulation dans l’interface actuelle.")
             color: uiPreferences.theme.text
             wrapMode: Text.WordWrap
+            lineHeight: 1.5
         }
-        footer: RowLayout {
-            Item { Layout.fillWidth: true }
-            PreferenceButton { text: qsTr("Annuler"); onClicked: resetDialog.close() }
-            PreferenceButton {
-                objectName: "confirmResetAdjustmentsButton"
-                text: qsTr("Réinitialiser")
-                enabled: imageEditor.hasImage && !imageEditor.busy && resetDialog.imageKey === canvas.imageKey
-                onClicked: resetDialog.confirm()
-            }
+        footer: ConfirmationFooter {
+            confirmObjectName: "confirmResetAdjustmentsButton"
+            confirmText: qsTr("Réinitialiser")
+            confirmEnabled: imageEditor.hasImage && !imageEditor.busy && resetDialog.imageKey === canvas.imageKey
+            onCancelled: resetDialog.close()
+            onConfirmed: resetDialog.confirm()
         }
     }
 }

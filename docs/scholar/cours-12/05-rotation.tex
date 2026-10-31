@@ -1,0 +1,67 @@
+\chapter{La rotation de teinte}
+
+\section{Un défaut que la mesure de chroma ne voyait pas}
+Les premières versions du modèle reproduisaient le gain de chroma de
+Lightroom à quelques centièmes près, et pourtant l'œil trouvait la vibrance
+d'\IPR{} « moins forte ». Les couleurs ne basculaient pas vers leurs teintes
+voisines : le bleu devait tendre vers le cyan. Une mesure qui ne regarde que la
+chroma ne peut pas voir ce défaut, puisqu'une rotation conserve la chroma.
+
+\resultat{Une métrique ne valide que ce qu'elle mesure. L'œil a révélé une
+dimension, la teinte, que l'indicateur choisi ignorait.}
+
+\section{D'où vient la rotation ?}
+Augmenter la saturation dans un espace RGB revient à éloigner le pixel du gris
+le long d'une droite de cet espace. Or les droites d'un espace RGB ne sont pas
+des lignes de teinte constante pour la vision : en Oklab, leur teinte dérive.
+C'est le même phénomène qui fait virer au violet les bleus saturés dans
+d'autres espaces perceptuels, ou qui rend les oranges plus jaunes quand on les
+pousse.
+
+Les rotations mesurées sont cohérentes avec une vibrance calculée dans un
+espace RGB de type ProPhoto : les bleus partent vers le cyan, les oranges vers
+le jaune, les verts ne bougent presque pas. Cela reste une interprétation : ce
+qui compte pour le modèle, c'est la rotation mesurée, quelle qu'en soit la
+cause.
+
+\section{La table de rotation}
+La rotation est mesurée et stockée exactement comme les gains : pour chaque
+valeur du curseur et chaque cellule (saturation, clarté, teinte), la médiane
+de $\Delta h$ sur les scènes. Trois précautions la distinguent :
+\begin{itemize}
+\item $\Delta h$ est ramené à $]-180^\circ,180^\circ]$ avant toute médiane :
+une teinte passant de $359^\circ$ à $1^\circ$ a tourné de $+2^\circ$, pas de
+$-358^\circ$ ;
+\item le repli des cellules vides conserve la teinte (chapitre 4) ;
+\item entre les valeurs du curseur, l'angle est interpolé linéairement, en
+degrés, avec zéro à zéro.
+\end{itemize}
+
+Dans le module, la rotation s'applique avec la matrice de rotation plane de
+l'équation~\eqref{eq:transformation}, après le gain de chroma. Comme gain et
+rotation commutent, l'ordre n'a pas d'importance.
+
+\section{Ce que la rotation a corrigé}
+Rotation médiane mesurée sur le rendu d'\IPR{} avant et après l'ajout de la
+table, comparée à Lightroom, à $+100$ :
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Famille & Lightroom & \IPR{} avant & \IPR{} après\\
+\midrule
+rouge & $+1{,}35^\circ$ & $0^\circ$ & $+1{,}44^\circ$\\
+orange & $+3{,}31^\circ$ & $0^\circ$ & $+3{,}30^\circ$\\
+jaune-orangé & $+4{,}61^\circ$ & $0^\circ$ & $+4{,}82^\circ$\\
+jaune & $+1{,}48^\circ$ & $0^\circ$ & $+1{,}58^\circ$\\
+cyan & $-3{,}62^\circ$ & $0^\circ$ & $-4{,}67^\circ$\\
+bleu-cyan & $-7{,}67^\circ$ & $0^\circ$ & $-4{,}55^\circ$\\
+bleu & $-5{,}13^\circ$ & $0^\circ$ & $-5{,}10^\circ$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+À $+50$ et $-50$, l'écart de rotation reste inférieur à $0{,}6^\circ$ pour toutes
+les familles. Le bleu-cyan à $+100$ reste en retrait ; le chapitre 6 montre
+qu'il s'agit surtout d'un grand ciel bleu saturé, sur lequel Lightroom pousse
+plus fort que son comportement médian.

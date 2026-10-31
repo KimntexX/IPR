@@ -142,6 +142,8 @@ LoadResult load(const QString &path, const Decode &decode)
     options.normalizationManifest = ImageEditor::defaultCalibrationManifest();
     options.lensCorrectionEnabled = decode.lensCorrection;
     options.chromaticAberrationEnabled = decode.chromaticAberration;
+    options.signedDevelopment = decode.signedCameraSignal;
+    options.retainPreLensSignal = decode.signedCameraSignal;
     LoadResult result = ImageEditor::loadFromDisk(path, decode.automaticWhiteBalance, options);
     require(!result.image.isNull(), "Decode failed for " + path + ": " + result.error);
     result.editProxy = {};
@@ -226,8 +228,9 @@ QJsonObject declaredSettings(const Settings &s)
     for (int i = 0; i < ColorMixer::BandCount; ++i) {
         hue.append(s.mixerHue.at(i)); sat.append(s.mixerSaturation.at(i)); lum.append(s.mixerLuminance.at(i));
     }
-    for (int i = 0; i < 3; ++i)
-        grading.append(QJsonObject{{"hue", s.gradingHue.at(i)}, {"saturation", s.gradingSaturation.at(i)}});
+    for (int i = 0; i < 4; ++i)
+        grading.append(QJsonObject{{"hue", s.gradingHue.at(i)}, {"saturation", s.gradingSaturation.at(i)},
+                                   {"luminance", s.gradingLuminance.at(i)}});
     for (const auto &curve : s.toneCurves) {
         QJsonArray points;
         for (const auto &point : curve) points.append(QJsonArray{point.x, point.y});
@@ -235,6 +238,7 @@ QJsonObject declaredSettings(const Settings &s)
     }
     result.insert("mixerHue", hue); result.insert("mixerSaturation", sat); result.insert("mixerLuminance", lum);
     result.insert("grading", grading); result.insert("toneCurves", curves);
+    result.insert("gradingBlending", s.gradingBlending); result.insert("gradingBalance", s.gradingBalance);
     return result;
 }
 

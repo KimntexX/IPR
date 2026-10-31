@@ -1,0 +1,51 @@
+{
+  "cases": [
+    {
+      "case": "finite_negative_and_above_one",
+      "error": "",
+      "extended_range": true,
+      "finite_output": true,
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "case": "reject_NaN",
+      "empty_output": true,
+      "error": "Les données RAW RGB linéaires sont invalides.",
+      "pass": true,
+      "returned_nonfinite_image": false
+    },
+    {
+      "case": "reject_positive_infinity",
+      "empty_output": true,
+      "error": "Les données RAW RGB linéaires sont invalides.",
+      "pass": true,
+      "returned_nonfinite_image": false
+    },
+    {
+      "case": "reject_negative_infinity",
+      "empty_output": true,
+      "error": "Les données RAW RGB linéaires sont invalides.",
+      "pass": true,
+      "returned_nonfinite_image": false
+    }
+  ],
+  "engine_revision": "0adefe76e109e0cdb5e76a39d269d30d6b5f627b",
+  "measured_at_utc": "2026-10-28T16:46:40.134Z",
+  "schema_version": 1,
+  "scope": "Public float input boundary only; valid extended signal and malformed NaN/Inf, not visual DCP behavior",
+  "verdict": "pass_float_contract",
+  "audit": {
+    "executable_sha256": "a2e17198b09921255371cf4f193ea0e4355b69bcb26fb71a4061f1d0299e91d0",
+    "native_capture": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-contract-20261028T164640Z.json",
+      "sha256": "160646776d923f1b82587342ebdb80afaea77f64b1a2c319fc4cd45aac453ef2"
+    },
+    "source_sha256": "720c42e6346540e5aea321b064a626b09c73c9557dd4e570235e152e51785314",
+    "source": "#include \"ColorPipeline.h\"\n#include <QCoreApplication>\n#include <QDateTime>\n#include <QFile>\n#include <QJsonArray>\n#include <QJsonDocument>\n#include <QJsonObject>\n#include <opencv2/core.hpp>\n#include <cmath>\n#include <iostream>\n#include <limits>\n\nint main(int argc, char **argv)\n{\n    QCoreApplication app(argc, argv);\n    if (argc != 2) { std::cerr << \"Need output JSON path\\n\"; return 2; }\n    QJsonArray rows;\n    bool passed = true;\n    const auto record = [&](const char *name, bool ok, const QJsonObject &details) {\n        QJsonObject item = details; item.insert(\"case\", name); item.insert(\"pass\", ok);\n        rows.append(item); passed = passed && ok;\n    };\n    {\n        cv::Mat input(2, 2, CV_32FC3, cv::Scalar(-0.2f, 0.1f, 1.4f));\n        const cv::Mat original = input.clone();\n        QString error;\n        const auto image = ColorPipeline::fromLinearSrgb(input, &error);\n        const bool valid = !image.isNull() && image.linearRgba.type() == CV_32FC4 &&\n                           cv::checkRange(image.linearRgba, true);\n        bool extended = false;\n        if (valid) {\n            const auto p = image.linearRgba.at<cv::Vec4f>(0, 0);\n            extended = (p[0] < 0 || p[1] < 0 || p[2] < 0) &&\n                       (p[0] > 1 || p[1] > 1 || p[2] > 1) && p[3] == 1.f;\n        }\n        const bool unchanged = cv::norm(original, input, cv::NORM_INF) == 0;\n        record(\"finite_negative_and_above_one\", valid && extended && unchanged && error.isEmpty(),\n               QJsonObject{{\"finite_output\", valid}, {\"extended_range\", extended}, {\"input_unchanged\", unchanged}, {\"error\", error}});\n    }\n    for (int kind = 0; kind < 3; ++kind) {\n        cv::Mat input(2, 2, CV_32FC3, cv::Scalar(0.1f, 0.2f, 0.3f));\n        input.at<cv::Vec3f>(0, 0)[0] = kind == 0 ? std::numeric_limits<float>::quiet_NaN()\n            : (kind == 1 ? std::numeric_limits<float>::infinity() : -std::numeric_limits<float>::infinity());\n        QString error;\n        const auto image = ColorPipeline::fromLinearSrgb(input, &error);\n        const bool empty = image.isNull();\n        const bool nonfinite = !empty && !cv::checkRange(image.linearRgba, true);\n        record(kind == 0 ? \"reject_NaN\" : (kind == 1 ? \"reject_positive_infinity\" : \"reject_negative_infinity\"),\n               empty && !error.isEmpty(), QJsonObject{{\"empty_output\", empty}, {\"returned_nonfinite_image\", nonfinite}, {\"error\", error}});\n    }\n    QJsonObject result{{\"schema_version\", 1}, {\"engine_revision\", IPR_ENGINE_REVISION},\n        {\"measured_at_utc\", QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n        {\"scope\", \"Public float input boundary only; valid extended signal and malformed NaN/Inf, not visual DCP behavior\"},\n        {\"cases\", rows}, {\"verdict\", passed ? \"pass_float_contract\" : \"fail_float_contract\"}};\n    QFile output(QString::fromLocal8Bit(argv[1]));\n    if (!output.open(QIODevice::WriteOnly | QIODevice::NewOnly)) { std::cerr << \"Output exists or inaccessible\\n\"; return 2; }\n    const auto bytes = QJsonDocument(result).toJson();\n    if (output.write(bytes) != bytes.size()) return 2;\n    std::cout << (passed ? \"pass_float_contract\" : \"fail_float_contract\") << '\\n';\n    return passed ? 0 : 1;\n}\n",
+    "engine_archive_sha256": "b033d1f1adf1d1617484d4c2753b4fcdcbf6ce230df9f5719548ba90e18a388e",
+    "exit_code": 0,
+    "stdout": "pass_float_contract\n",
+    "stderr": ""
+  }
+}

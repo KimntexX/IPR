@@ -41,6 +41,8 @@ set(IPR_ENGINE_SOURCES
     src/cache/SystemMemory.cpp
     src/cache/ImageCacheController.h
     src/cache/ImageCacheController.cpp
+    src/cache/RenderStageCache.h
+    src/cache/RenderStageCache.cpp
     src/core/ColorPipeline.h
     src/core/ImageMetadata.h
     src/core/ImageImporter.h
@@ -55,10 +57,23 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorPipeline.cpp
     src/core/ColorMixer.h
     src/core/ColorMixer.cpp
+    src/core/ColorMixerModel.h
+    src/core/PointColor.h
+    src/core/PointColor.cpp
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
+    src/core/Dehaze.h
+    src/core/Dehaze.cpp
+    src/core/Grain.h
+    src/core/Grain.cpp
+    src/core/LocalContrast.h
+    src/core/LocalContrast.cpp
     src/core/ColorAdjustments.h
     src/core/ColorAdjustments.cpp
+    src/core/ColorGrading.h
+    src/core/ColorGrading.cpp
+    src/core/PerceptualColour.h
+    src/core/PerceptualColour.cpp
     src/core/Contrast.h
     src/core/Contrast.cpp
     src/core/Histogram.h
@@ -71,6 +86,9 @@ set(IPR_ENGINE_SOURCES
     src/core/ToneRecoveryModel.h
     src/core/ToneStatistics.h
     src/core/ToneStatistics.cpp
+    src/core/Vibrance.h
+    src/core/Vibrance.cpp
+    src/core/VibranceModel.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
     src/profiles/CameraProfileEngine.h
@@ -81,10 +99,22 @@ set(IPR_ENGINE_SOURCES
     src/providers/imageprovider.cpp
     src/providers/ThumbnailProvider.h
     src/providers/ThumbnailProvider.cpp
+    src/providers/GradingWheelProvider.h
+    src/providers/GradingWheelProvider.cpp
+    src/raw/Demosaic.h
+    src/raw/Demosaic.cpp
     src/raw/RawBlackLevelEstimator.h
     src/raw/RawBlackLevelEstimator.cpp
     src/raw/RawDecoder.h
     src/raw/RawDecoder.cpp
+    src/raw/RawInput.h
+    src/raw/RawInput.cpp
+    src/raw/LibRawInput.h
+    src/raw/LibRawInput.cpp
+    src/raw/RawDevelopment.h
+    src/raw/RawDevelopment.cpp
+    src/raw/CameraDenoise.h
+    src/raw/CameraDenoise.cpp
     src/raw/RawNormalization.h
     src/raw/RawNormalization.cpp
     src/raw/CameraCharacterization.h
@@ -109,6 +139,7 @@ set(IPR_QML_FILES
         src/qml/ProcessingStatus.qml
         src/qml/PanelResizeHandle.qml
         src/qml/ExportReviewDialog.qml
+        src/qml/ConfirmationFooter.qml
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
     src/qml/PreferenceButton.qml
@@ -128,6 +159,8 @@ set(IPR_QML_FILES
     src/qml/ToneCurveModule.qml
     src/qml/ColorMixerModule.qml
     src/qml/ColorGradingModule.qml
+    src/qml/PointColorModule.qml
+    src/qml/SectionNote.qml
     src/qml/ImageInfoPanel.qml
     src/qml/ThumbnailRibbon.qml
 )
@@ -245,6 +278,9 @@ if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY
     target_link_libraries(tonalBaseProbe PRIVATE iprEngine)
     add_executable(rawNormalizationCorpusProbe EXCLUDE_FROM_ALL tests/raw_normalization_corpus_probe.cpp)
     target_link_libraries(rawNormalizationCorpusProbe PRIVATE iprEngine)
+    # Demosaicing study: LibRaw algorithms and IPR's RCD on the same RAW (manual, not in CTest).
+    add_executable(demosaicProbe EXCLUDE_FROM_ALL tests/demosaic_probe.cpp)
+    target_link_libraries(demosaicProbe PRIVATE iprEngine)
     add_executable(openingLatencyProbe EXCLUDE_FROM_ALL tests/opening_latency_probe.cpp)
     target_link_libraries(openingLatencyProbe PRIVATE iprEngine)
     add_executable(wbCameraProbe EXCLUDE_FROM_ALL tests/wb_camera_probe.cpp)
@@ -277,8 +313,18 @@ if(BUILD_TESTING)
     ipr_add_test(colorPipelineTests tests/color_pipeline_test.cpp)
     ipr_add_test(rec2020PipelineTests tests/rec2020_pipeline_test.cpp)
     set_tests_properties(rec2020PipelineTests PROPERTIES LABELS "unit;pipeline;colour" TIMEOUT 60)
+    ipr_add_test(renderStageCacheTests tests/render_stage_cache_test.cpp)
+    set_tests_properties(renderStageCacheTests PROPERTIES LABELS "unit;pipeline;cache" TIMEOUT 120)
+    ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
+    set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
+    ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
+    ipr_add_test(dehazeTests tests/dehaze_test.cpp)
+    ipr_add_test(grainTests tests/grain_test.cpp)
+    ipr_add_test(colorGradingTests tests/color_grading_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
+    ipr_add_test(editorBatchTests tests/batch_test.cpp)
+    set_tests_properties(editorBatchTests PROPERTIES LABELS "unit;export;batch" TIMEOUT 180)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
     set_tests_properties(toneRecoveryTests PROPERTIES LABELS "unit;pipeline;lighting")
     add_executable(testImageGeneratorTests tests/test_image_generator_test.cpp)
@@ -289,6 +335,13 @@ if(BUILD_TESTING)
     set_tests_properties(testImageGeneratorTests PROPERTIES
         LABELS "unit;export;generator" TIMEOUT 120)
     ipr_add_test(colorMixerMathTests tests/color_mixer_math_test.cpp)
+    ipr_add_test(pointColorTests tests/point_color_test.cpp)
+    ipr_add_test(toneCurveTests tests/tone_curve_test.cpp)
+    ipr_add_test(rawInputTests tests/raw_input_test.cpp)
+    ipr_add_test(rawDevelopmentTests tests/raw_development_test.cpp)
+    set_tests_properties(rawInputTests rawDevelopmentTests PROPERTIES LABELS "unit;raw")
+    set_tests_properties(toneCurveTests PROPERTIES LABELS "unit;pipeline;curves")
+    set_tests_properties(pointColorTests PROPERTIES LABELS "unit;pipeline;colour")
     add_executable(colorMixerNeutralProbe tests/color_mixer_neutral_probe.cpp)
     target_link_libraries(colorMixerNeutralProbe PRIVATE iprEngine)
     add_test(NAME colorMixerNeutralTests COMMAND colorMixerNeutralProbe)
@@ -308,6 +361,12 @@ if(BUILD_TESTING)
     set_tests_properties(imageViewportQmlTests PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic"
         LABELS "unit;viewport;qml")
+    ipr_add_test(toneCurveQmlTests tests/tone_curve_qml_test.cpp)
+    target_compile_definitions(toneCurveQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(toneCurveQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic"
+        LABELS "unit;curves;qml")
     ipr_add_test(uiPreferencesTests tests/ui_preferences_test.cpp)
     ipr_add_test(uiPreferencesQmlTests tests/ui_preferences_qml_test.cpp)
     qt_add_resources(uiPreferencesQmlTests ipr_ui_test_qml
@@ -325,6 +384,7 @@ if(BUILD_TESTING)
             LABELS "unit;preferences;qml")
     endif()
     ipr_add_test(rawDecoderTests tests/raw_decoder_test.cpp)
+    ipr_add_test(demosaicTests tests/demosaic_test.cpp)
     ipr_add_test(imageImportTests tests/image_import_test.cpp)
     set_tests_properties(imageImportTests PROPERTIES LABELS "unit;import;pipeline")
     ipr_add_test(rawNormalizationTests tests/raw_normalization_test.cpp)
@@ -349,7 +409,7 @@ if(BUILD_TESTING)
     set_tests_properties(settingsQmlTests PROPERTIES LABELS "unit;settings;qml")
     set_tests_properties(uiPreferencesTests uiPreferencesQmlTests
         PROPERTIES LABELS "unit;preferences;qml")
-    set_tests_properties(rawDecoderTests rawBlackLevelEstimatorTests rawNormalizationTests
+    set_tests_properties(rawDecoderTests demosaicTests rawBlackLevelEstimatorTests rawNormalizationTests
         PROPERTIES LABELS "unit;raw")
     set_tests_properties(cameraProfileEngineTests PROPERTIES LABELS "unit;profiles")
 endif()

@@ -28,6 +28,11 @@ Couleur du 14 octobre est `8abcd12` ; il ne désigne pas la tête courante de
 `patch_color`. Vérifier les références Git avant chaque reprise, sans déduire
 une livraison des travaux récents de ce seul repère historique.
 
+Le 21 octobre 2026, `patch_color` reprend le travail Couleur après fusion de
+`dev` à jour. L'ancienne branche locale `patch_couleur`, au nom non uniforme et
+entièrement contenue dans `dev`, est abandonnée et supprimée avec l'accord de
+l'utilisateur ; elle n'est plus à maintenir.
+
 Une branche de groupe est conservée après livraison. Les commits de fusion
 matérialisent les validations dans le graphe Git ; les tags identifient les états
 figés. `main` reste distinct et sa mise à jour nécessite une livraison explicite.

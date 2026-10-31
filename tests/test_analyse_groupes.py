@@ -68,7 +68,7 @@ def fixture_record(root, feature="saturation", value=50):
     write_tiff(changed, pixels + np.array([500, 0, -500]))
     settings = {key: 0 for key in audit.ZERO_IPR}
     settings.update(temperature=5200, mixerHue=[0] * 8, mixerSaturation=[0] * 8,
-                    mixerLuminance=[0] * 8, grading=[{"hue": 0, "saturation": 0} for _ in range(3)],
+                    mixerLuminance=[0] * 8, grading=[{"hue": 0, "saturation": 0, "luminance": 0} for _ in range(4)],
                     toneCurves=[[], [], [], []], sharpeningRadius=1, sharpeningMasking=0)
     variant = copy.deepcopy(settings)
     variant[feature] = value
@@ -128,6 +128,43 @@ class GroupAnalysisTests(unittest.TestCase):
             write_tiff(folder / "S-duplicate.tif", pixels + 1, xmp=xmp(0))
             with self.assertRaises(ValueError):
                 inputs.base_records(base, ["couleur"])
+
+    def test_mixer_components_share_the_band_folder(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory).resolve()
+            folder = base / "color-mixer/red"
+            folder.mkdir(parents=True)
+            (base / "neutre").mkdir()
+            pixels = np.full((8, 8, 3), 25000, dtype=np.uint16)
+            def xmp(**changed):
+                fields = {key: "0" for key in ("HueAdjustmentRed", "SaturationAdjustmentRed", "LuminanceAdjustmentRed")}
+                fields.update(changed, WhiteBalance="As Shot", CameraProfile="Camera Neutral")
+                attrs = " ".join('crs:' + key + '=\"' + value + '\"' for key, value in fields.items())
+                return ('<root xmlns:crs=\"' + native.CRS + '\" ' + attrs + '/>').encode()
+            write_tiff(base / "neutre/S.tif", pixels, xmp=xmp())
+            write_tiff(folder / "S-2.tif", pixels + 50, xmp=xmp(HueAdjustmentRed="+50"))
+            write_tiff(folder / "S-3.tif", pixels + 25, xmp=xmp(SaturationAdjustmentRed="-25"))
+            records = inputs.base_records(base, ["melangeur"])
+            self.assertEqual(sorted((r["feature"], r["value"]) for r in records),
+                             [("mixer-red-hue", 50), ("mixer-red-saturation", -25)])
+            self.assertTrue(all(Path(r["reference"]).name == "S.tif" for r in records))
+
+    def test_grain_size_and_roughness_do_not_break_the_neutral_pairing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory).resolve()
+            folder = base / "effets/grain"
+            folder.mkdir(parents=True)
+            (base / "neutre").mkdir()
+            pixels = np.full((8, 8, 3), 25000, dtype=np.uint16)
+            def xmp(**changed):
+                fields = {"GrainAmount": "0", "Texture": "0", "WhiteBalance": "As Shot", "CameraProfile": "Camera Neutral"}
+                fields.update(changed)
+                attrs = " ".join('crs:' + key + '=\"' + value + '\"' for key, value in fields.items())
+                return ('<root xmlns:crs=\"' + native.CRS + '\" ' + attrs + '/>').encode()
+            write_tiff(base / "neutre/S.tif", pixels, xmp=xmp())
+            write_tiff(folder / "S-2.tif", pixels + 50, xmp=xmp(GrainAmount="+50", GrainSize="25", GrainFrequency="50", GrainSeed="2197388576"))
+            records = inputs.base_records(base, ["effets"])
+            self.assertEqual([(r["feature"], r["value"], Path(r["reference"]).name) for r in records], [("grain", 50, "S.tif")])
 
     def test_float_radius_declaration_tolerance_does_not_hide_wrong_state(self):
         record = {"feature": "sharpening-radius", "value": .3,

@@ -116,7 +116,7 @@ int main(int argc, char **argv)
         preferences.setSectionExpanded("export", true);
         preferences.setValue("selection/toneCurveChannel", 3);
         preferences.setValue("selection/mixerBand", 7);
-        preferences.setValue("selection/gradingZone", 2);
+        preferences.setValue("selection/gradingZone", 3);
         preferences.setValue("export/format", "TIFF");
         preferences.setValue("export/quality", 83);
         QScopedPointer<QObject> root(component.createWithInitialProperties({
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
         if (!check(!light->property("expanded").toBool() && noise->property("expanded").toBool() &&
                    exportGroup->property("expanded").toBool() &&
                    root->property("activeCurve").toInt() == 3 &&
-                   mixer->property("band").toInt() == 7 && grading->property("zone").toInt() == 2 &&
+                   mixer->property("band").toInt() == 7 && grading->property("zone").toInt() == 3 &&
                    format->property("currentText").toString() == "TIFF" &&
                    quality->property("value").toInt() == 83,
                    "stored state should override QML defaults without startup writes")) return 1;
@@ -398,12 +398,29 @@ int main(int argc, char **argv)
         auto *resetConfirmation = root->findChild<QObject *>("resetAdjustmentsDialog");
         if (!check(resetConfirmation && resetConfirmation->property("visible").toBool() && editor.adjustmentValue("brightness") == 1,
                    "reset shortcut must ask before changing the current recipe")) return 1;
+        if (!check(captureReview(window, "reset-confirmation"), "confirmation capture should save when requested")) return 1;
         QMetaObject::invokeMethod(resetConfirmation, "close");
         QCoreApplication::processEvents();
         shortcut(Qt::Key_R, Qt::ControlModifier | Qt::ShiftModifier, "R");
         QMetaObject::invokeMethod(resetConfirmation, "confirm");
         settleEditor(editor);
         if (!check(editor.adjustmentValue("brightness") == 0, "confirmed reset must update the engine")) return 1;
+        if (!check(!root->findChild<QObject *>("pasteAdjustmentsAction")->property("enabled").toBool(),
+                   "paste must be unavailable before copying a recipe")) return 1;
+        editor.setBrightness(.75f);
+        settleEditor(editor);
+        shortcut(Qt::Key_C, Qt::ControlModifier | Qt::ShiftModifier, "C");
+        if (!check(editor.hasCopiedAdjustments(), "copy shortcut must capture current edits")) return 1;
+        editor.resetAdjustments();
+        settleEditor(editor);
+        shortcut(Qt::Key_V, Qt::ControlModifier | Qt::ShiftModifier, "V");
+        settleEditor(editor);
+        if (!check(editor.adjustmentValue("brightness") == .75,
+                   "paste shortcut must restore copied edits")) return 1;
+        shortcut(Qt::Key_S, Qt::ControlModifier, "s");
+        if (!check(QFileInfo::exists(first + ".ipr"), "save shortcut must persist edits")) return 1;
+        editor.resetAdjustments();
+        settleEditor(editor);
         shortcut(Qt::Key_E, Qt::ControlModifier, "e");
         auto *exportChooser = root->findChild<QObject *>("exportDialog");
         if (!check(exportChooser->property("visible").toBool(), "Ctrl E must open the existing export flow")) return 1;
@@ -555,11 +572,53 @@ int main(int argc, char **argv)
         QMetaObject::invokeMethod(photoMenu, "close");
         QCoreApplication::processEvents();
         auto *otherThumbnail = visualItem(qobject_cast<QQuickWindow *>(window)->contentItem(), "thumbnail_1");
+        const auto controlClick = [&](QQuickItem *item) {
+            const QPointF point = item->mapToItem(nullptr, QPointF(item->width() / 2, item->height() / 2));
+            for (QEvent::Type type : {QEvent::MouseButtonPress, QEvent::MouseButtonRelease}) {
+                QMouseEvent event(type, point, QPointF(window->mapToGlobal(point.toPoint())), Qt::LeftButton,
+                    type == QEvent::MouseButtonPress ? Qt::LeftButton : Qt::NoButton, Qt::ControlModifier);
+                QCoreApplication::sendEvent(window, &event);
+            }
+            QCoreApplication::processEvents();
+        };
+        controlClick(firstThumbnail);
+        controlClick(otherThumbnail);
+        if (!check(editor.selectedImageCount() == 2 &&
+                   firstThumbnail->property("batchSelected").toBool() && otherThumbnail->property("batchSelected").toBool() &&
+                   editor.imageDetails().value("name").toString() == "01.png" && !editor.busy(),
+                   "Ctrl click must add thumbnails without opening or rendering another image")) return 1;
+        controlClick(firstThumbnail);
+        if (!check(editor.selectedImageCount() == 1 && !firstThumbnail->property("batchSelected").toBool() &&
+                   otherThumbnail->property("batchSelected").toBool(),
+                   "a second Ctrl click must deselect only its target")) return 1;
+        const QPointF normalPoint = otherThumbnail->mapToItem(nullptr,
+            QPointF(otherThumbnail->width() / 2, otherThumbnail->height() / 2));
+        for (QEvent::Type type : {QEvent::MouseButtonPress, QEvent::MouseButtonRelease}) {
+            QMouseEvent event(type, normalPoint, QPointF(window->mapToGlobal(normalPoint.toPoint())), Qt::LeftButton,
+                type == QEvent::MouseButtonPress ? Qt::LeftButton : Qt::NoButton, Qt::NoModifier);
+            QCoreApplication::sendEvent(window, &event);
+        }
+        settleEditor(editor);
+        if (!check(editor.imageDetails().value("name").toString() == "02.png" && editor.selectedImageCount() == 1,
+                   "normal clicking must still open the target without clearing batch selection")) return 1;
+        // Then another image opens: the guarded items of the next menu must not follow their actions.
+        rightClick(firstThumbnail);
+        QObject *exportSelection = photoMenu->findChild<QObject *>("contextExportSelection");
+        if (!check(photoMenu->property("visible").toBool() && exportSelection &&
+                   exportSelection->property("visible").toBool() && exportSelection->property("enabled").toBool() &&
+                   exportSelection->property("text").toString().contains("(1)"),
+                   "right-clicking a thumbnail must offer the export of the batch selection")) return 1;
+        QMetaObject::invokeMethod(photoMenu, "close");
+        QCoreApplication::processEvents();
+        editor.loadImage(firstUrl);
+        settleEditor(editor);
+        editor.clearImageSelection();
         rightClick(otherThumbnail);
         if (!check(photoMenu->property("visible").toBool() && !photoMenu->property("currentPhoto").toBool() &&
                    photoMenu->property("targetName").toString() == "02.png" &&
                    !photoMenu->findChild<QObject *>("contextResetAdjustments")->property("enabled").toBool() &&
                    !photoMenu->findChild<QObject *>("contextExportImage")->property("enabled").toBool() &&
+                   !photoMenu->findChild<QObject *>("contextExportSelection")->property("visible").toBool() &&
                    editor.imageDetails().value("name").toString() == "01.png",
                    "another thumbnail's context must not silently open it or mutate the current photo")) return 1;
         QMetaObject::invokeMethod(photoMenu, "close");

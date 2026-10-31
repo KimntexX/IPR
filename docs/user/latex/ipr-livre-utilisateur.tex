@@ -20,7 +20,8 @@
 \usepackage{array,longtable,booktabs}
 \usepackage{etoolbox}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
-\AtBeginEnvironment{longtable}{\setlength{\parskip}{0pt}}
+% Table rows already form unbroken units; allow pagination between them.
+\AtBeginEnvironment{longtable}{\setlength{\parskip}{0pt}\interlinepenalty=0}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{hyperref}

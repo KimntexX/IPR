@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "campaign_id": "raw-parity-freeze-20261028T151829Z",
+  "measured_at_utc": "2026-10-28T15:18:29.995846+00:00",
+  "inputs": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+      "sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165"
+    }
+  ],
+  "required_stages": [
+    "unpacked_cfa",
+    "pre_demosaic_cfa",
+    "post_demosaic_camera_rgb",
+    "post_median_camera_rgb",
+    "pre_dcp_camera_rgb"
+  ],
+  "candidate_required_stages": [
+    "unpacked_cfa",
+    "pre_demosaic_cfa",
+    "post_demosaic_camera_rgb",
+    "post_median_camera_rgb",
+    "pre_dcp_camera_rgb",
+    "black_subtracted_cfa",
+    "normalized_cfa"
+  ],
+  "tolerances": "Exactly zero, no floating tolerance approved",
+  "mode": "parity",
+  "scope": "C2 module with native LibRaw levels and WB, before orientation, no IPR black/calibration selection or DCP; no visual or signed-mode validation",
+  "tool_sha256": "e52a038566fc605babb13ecf22950b0000210b7bc19b94e262eb71aa33c8a2b8",
+  "source": "\"\"\"C2 parity on explicitly observable boundaries; never certifies missing DCP.\"\"\"\nfrom datetime import datetime,timezone\nimport argparse\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nimport numpy as np\n\nfrom capture import compare_captures,load_capture,sha256\n\nCOMMON=('unpacked_cfa','pre_demosaic_cfa','post_demosaic_camera_rgb','post_median_camera_rgb','pre_dcp_camera_rgb')\nCANDIDATE=COMMON+('black_subtracted_cfa','normalized_cfa')\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--input',action='append',type=Path,required=True)\n    p.add_argument('--runtime-dir',type=Path,action='append',required=True);args=p.parse_args()\n    root=Path(__file__).resolve().parents[2];start=datetime.now(timezone.utc);stamp=start.strftime('%Y%m%dT%H%M%SZ')\n    tool=root/'build-patch_raw_bench/Release/iprRawDevelopmentCapture.exe';tool_hash=sha256(tool)\n    work=root/'build-patch_raw_bench/parity'/stamp;work.mkdir(parents=True,exist_ok=False)\n    env=dict(os.environ);env['PATH']=os.pathsep.join([str(d) for d in args.runtime_dir]+[env.get('PATH','')])\n    freeze=root/'docs/validation/raw'/f'gel-banc-raw-parite-v001-{stamp}.json'\n    identities=[dict(path=str(s.resolve()),sha256=sha256(s)) for s in args.input]\n    if len({i['path'] for i in identities})!=len(identities):raise ValueError('Duplicate inputs')\n    policy=dict(schema_version=1,campaign_id='raw-parity-freeze-'+stamp,measured_at_utc=start.isoformat(),inputs=identities,required_stages=list(COMMON),\n        candidate_required_stages=list(CANDIDATE),tolerances='Exactly zero, no floating tolerance approved',\n        mode='parity',scope='C2 module with native LibRaw levels and WB, before orientation, no IPR black/calibration selection or DCP; no visual or signed-mode validation',\n        tool_sha256=tool_hash,source=Path(__file__).read_text(encoding='utf-8'),source_sha256=sha256(Path(__file__)))\n    with freeze.open('x',encoding='utf-8') as f:json.dump(policy,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print('FROZEN',freeze,flush=True);records=[]\n    for index,item in enumerate(identities):\n        source=Path(item['path']);captures={}\n        if sha256(source)!=item['sha256']:raise ValueError('Source changed before capture')\n        for kind in ('reference','candidate'):\n            out=work/f'{index:03}-{source.stem}-{kind}.json'\n            subprocess.run([str(tool),'--input',str(source),'--output',str(out),'--path',kind,'--mode','parity'],env=env,check=True,timeout=240)\n            captures[kind]=out\n        result=compare_captures(captures['reference'],captures['candidate'],COMMON)\n        manifest,stages=load_capture(captures['candidate']);present={key[0] for key in stages}\n        if set(CANDIDATE)-present:raise ValueError('Candidate observer did not emit all expected stages')\n        if any(not np.isfinite(values).all() for _,values in stages.values()):raise ValueError('Nonfinite candidate observer capture')\n        out=work/f'{index:03}-comparison.json'\n        with out.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n        records.append(dict(source=item,captures={k:dict(path=str(v),sha256=sha256(v)) for k,v in captures.items()},comparison=dict(path=str(out),sha256=sha256(out)),\n            verdict=result['verdict'],max_abs=max(r.get('max_abs',float('inf')) for r in result['stages']),\n            observed_candidate_stages=sorted(present),iso=manifest['metadata']['iso'],model=manifest['metadata']['model'],\n            negative_before_clipping=[dict(origin_yx=list(key[1]),fraction=float(np.mean(values<0))) for key,(_,values) in stages.items() if key[0]=='black_subtracted_cfa']))\n        print(index+1,'/',len(identities),source.name,result['verdict'],'max',records[-1]['max_abs'],flush=True)\n        if result['verdict']!='pass':break\n    if sha256(tool)!=tool_hash:raise ValueError('Tool changed during parity campaign')\n    now=datetime.now(timezone.utc);out=root/'docs/validation/raw'/f'banc-raw-parite-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,campaign_id='raw-parity-'+stamp,measured_at_utc=now.isoformat(),started_at_utc=start.isoformat(),completed_at_utc=now.isoformat(),freeze=dict(path=str(freeze),sha256=sha256(freeze)),records=records,\n        verdict='pass_scoped_C2' if len(records)==len(identities) and all(r['verdict']=='pass' for r in records) else 'fail',\n        revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),\n        sources={n:dict(sha256=sha256(root/n),source=(root/n).read_text(encoding='utf-8')) for n in ('tests/raw_bench/parity.py','tests/raw_bench/development_capture.cpp','tests/raw_bench/capture.py','src/raw/RawDevelopment.cpp','src/raw/Demosaic.cpp','src/raw/LibRawInput.cpp')},\n        limitations='Only fixed3 ROIs256 per stage, not full frame parity. Reference/candidate share current IPR RCD and input adapter. LibRaw native black/white, not IPR calibrated production levels. Candidate signed and normalized stages observed but no independent LibRaw boundary for them; not falsely reconstructed. No DCP, orientation, optics, automatic WB/fallbacks, private-corpus CI or performance qualification. Original production code unchanged in this bench.')\n    with out.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print('RESULT',out,flush=True)\n    return 0 if result['verdict']=='pass_scoped_C2' else 1\n\n\nif __name__=='__main__':raise SystemExit(main())\n",
+  "source_sha256": "2f75114bdf366051776a123dad9fe1cbd054327b795be7a76a1dd9547040b391"
+}

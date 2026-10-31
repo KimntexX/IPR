@@ -1,26 +1,17 @@
 #ifndef IPR_CORE_COLORADJUSTMENTS_H
 #define IPR_CORE_COLORADJUSTMENTS_H
 
-#include "ColorMixer.h"
-
 #include <opencv2/core.hpp>
-
-#include <array>
 
 // Colour adjustments on a linear Rec.2020 RGB image (CV_32FC3), in place.
 namespace ColorAdjustments {
 // Replaces each pixel by its luminance.
 void toGrayscale(cv::Mat &linearRgb);
 
-// Uniform saturation and vibrance (priority to weakly saturated colours),
-// slider values in [-100, 100].
-void applySaturationVibrance(cv::Mat &linearRgb, int saturation, int vibrance);
-
-// Colour mixer (eight hue bands), then colour grading of shadows, midtones
-// and highlights weighted by the luminance before mixing.
-void applyMixerAndGrading(cv::Mat &linearRgb, const ColorMixer::Parameters &mixer,
-                          const std::array<int, 3> &gradingHue,
-                          const std::array<int, 3> &gradingSaturation);
+// Keeps each pixel's colour in proportion to its weight (CV_32FC1, [0, 1]) and
+// shows the rest as its luminance: the point colour range overlay. Linear RGBA
+// (CV_32FC4), alpha kept; nothing done when the sizes differ.
+void showWeights(cv::Mat &linearRgba, const cv::Mat &weights);
 }
 
 #endif // IPR_CORE_COLORADJUSTMENTS_H

@@ -1,0 +1,924 @@
+{
+  "schema_version": 1,
+  "inventory_version": 1,
+  "research_date": "2026-10-20",
+  "observed_at_utc": "2026-10-20T08:05:57.2033676Z",
+  "source": "https://raw.pixls.us/json/getrepository.php?set=all",
+  "scope": "Canon; model label starts with EOS; aliases not deduplicated",
+  "total_eos_entries": 227,
+  "total_model_labels": 110,
+  "total_cc0_entries": 221,
+  "proposed_native_sample_count": 27,
+  "proposed_total_declared_mb": 668.16,
+  "limitations": [
+    "Metadata inventory only; no images downloaded or decoded",
+    "Modes and remarks are publisher declarations, not verified capabilities",
+    "Publisher checksums not checked against file bytes",
+    "No physical colour ground truth established"
+  ],
+  "models": [
+    {
+      "model": "EOS 1000D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 100D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 10D",
+      "entries": 3,
+      "cc0_entries": 3
+    },
+    {
+      "model": "EOS 1100D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 1200D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 1300D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 2000D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 200D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 200D Mark II",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 20D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 250D",
+      "entries": 8,
+      "cc0_entries": 8
+    },
+    {
+      "model": "EOS 300D",
+      "entries": 2,
+      "cc0_entries": 2
+    },
+    {
+      "model": "EOS 30D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 350D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 4000D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 400D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 40D",
+      "entries": 2,
+      "cc0_entries": 2
+    },
+    {
+      "model": "EOS 450D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 500D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 50D",
+      "entries": 3,
+      "cc0_entries": 3
+    },
+    {
+      "model": "EOS 550D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 5D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 5D Mark II",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS 5D Mark III",
+      "entries": 11,
+      "cc0_entries": 11
+    },
+    {
+      "model": "EOS 5D Mark IV",
+      "entries": 5,
+      "cc0_entries": 5
+    },
+    {
+      "model": "EOS 5DS",
+      "entries": 3,
+      "cc0_entries": 3
+    },
+    {
+      "model": "EOS 5DS R",
+      "entries": 3,
+      "cc0_entries": 3
+    },
+    {
+      "model": "EOS 600D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 60D",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS 650D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 6D",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS 6D Mark II",
+      "entries": 3,
+      "cc0_entries": 3
+    },
+    {
+      "model": "EOS 700D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 70D",
+      "entries": 3,
+      "cc0_entries": 3
+    },
+    {
+      "model": "EOS 750D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 760D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 77D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 7D",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS 7D Mark II",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS 800D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS 80D",
+      "entries": 3,
+      "cc0_entries": 3
+    },
+    {
+      "model": "EOS 850D",
+      "entries": 2,
+      "cc0_entries": 2
+    },
+    {
+      "model": "EOS 90D",
+      "entries": 2,
+      "cc0_entries": 2
+    },
+    {
+      "model": "EOS D2000C",
+      "entries": 1,
+      "cc0_entries": 0
+    },
+    {
+      "model": "EOS D30",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS D60",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Digital Rebel",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Digital Rebel XS",
+      "entries": 1,
+      "cc0_entries": 0
+    },
+    {
+      "model": "EOS Digital Rebel XSi",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Digital Rebel XT",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Digital Rebel XTi",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Kiss Digital N",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Kiss F",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Kiss M",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Kiss X3",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Kiss X4",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Kiss X80",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Kiss X9",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS M",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS M10",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS M100",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS M2",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS M200",
+      "entries": 2,
+      "cc0_entries": 2
+    },
+    {
+      "model": "EOS M3",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS M5",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS M50",
+      "entries": 3,
+      "cc0_entries": 3
+    },
+    {
+      "model": "EOS M50 Mark II",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS M6",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS M6 Mark II",
+      "entries": 8,
+      "cc0_entries": 8
+    },
+    {
+      "model": "EOS R",
+      "entries": 8,
+      "cc0_entries": 8
+    },
+    {
+      "model": "EOS R10",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS R100",
+      "entries": 2,
+      "cc0_entries": 2
+    },
+    {
+      "model": "EOS R3",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS R5",
+      "entries": 8,
+      "cc0_entries": 8
+    },
+    {
+      "model": "EOS R5 Mark II",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS R50",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS R50 V",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS R6",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS R6 Mark II",
+      "entries": 8,
+      "cc0_entries": 8
+    },
+    {
+      "model": "EOS R6 Mark III",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS R7",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS R8",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS Rebel SL1",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel SL2",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel SL3",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T100",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T1i",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T2i",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T3",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T3i",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T4i",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T5",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T5i",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T6",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T6i",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T6s",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T7",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS Rebel T7i",
+      "entries": 2,
+      "cc0_entries": 2
+    },
+    {
+      "model": "EOS RP",
+      "entries": 4,
+      "cc0_entries": 4
+    },
+    {
+      "model": "EOS-1D",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS-1D Mark II",
+      "entries": 1,
+      "cc0_entries": 0
+    },
+    {
+      "model": "EOS-1D Mark II N",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS-1D Mark III",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS-1D Mark IV",
+      "entries": 3,
+      "cc0_entries": 3
+    },
+    {
+      "model": "EOS-1D X",
+      "entries": 2,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS-1D X Mark II",
+      "entries": 3,
+      "cc0_entries": 3
+    },
+    {
+      "model": "EOS-1D X Mark III",
+      "entries": 2,
+      "cc0_entries": 2
+    },
+    {
+      "model": "EOS-1Ds",
+      "entries": 1,
+      "cc0_entries": 1
+    },
+    {
+      "model": "EOS-1Ds Mark II",
+      "entries": 1,
+      "cc0_entries": 0
+    },
+    {
+      "model": "EOS-1Ds Mark III",
+      "entries": 1,
+      "cc0_entries": 0
+    }
+  ],
+  "proposed_samples": [
+    {
+      "id": 981,
+      "model": "EOS 5D Mark IV",
+      "mode_declared": "sRAW2 (sRAW) (3:2)",
+      "remark_declared": "sRAW",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/981/nice/Canon - EOS 5D Mark IV - sRAW2 (sRAW) (3:2).CR2",
+      "publisher_sha256": "25d928f9e9a65525ac796bdff13e93b7b36b627568d7a17338e12dc44424078a",
+      "size_mb_declared": 14.51,
+      "uploaded_date": "2017-01-26",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 982,
+      "model": "EOS 5D Mark IV",
+      "mode_declared": "sRAW1 (mRAW) (3:2)",
+      "remark_declared": "mRAW",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/982/nice/Canon - EOS 5D Mark IV - sRAW1 (mRAW) (3:2).CR2",
+      "publisher_sha256": "3ea2d03556747afcafa24f13fee69106f383dfaf3a2f436f8331f14518f20037",
+      "size_mb_declared": 21.13,
+      "uploaded_date": "2017-01-26",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 983,
+      "model": "EOS 5D Mark IV",
+      "mode_declared": "RAW (3:2)",
+      "remark_declared": "RAW without DPR (Dual Pixel RAW)",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/983/nice/Canon - EOS 5D Mark IV - RAW (3:2).CR2",
+      "publisher_sha256": "02b23f9cc6dc4c99fb39aa4d1f65ac227804d06461ac1bd0f842aa2f3beb8fe4",
+      "size_mb_declared": 32.33,
+      "uploaded_date": "2017-01-26",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 1064,
+      "model": "EOS 7D Mark II",
+      "mode_declared": "RAW (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/1064/nice/Canon - EOS 7D Mark II - RAW (3:2).cr2",
+      "publisher_sha256": "b9f71c56adb6e2861e6653efb312fb5cc88ba4aa17fa809c6a18b8db044360c3",
+      "size_mb_declared": 21.06,
+      "uploaded_date": "2017-02-05",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 1065,
+      "model": "EOS 7D Mark II",
+      "mode_declared": "sRAW1 (mRAW) (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/1065/nice/Canon - EOS 7D Mark II - sRAW1 (mRAW) (3:2).cr2",
+      "publisher_sha256": "fca673cdec6a65c8fbafc5fd6416e2c9adbc214b86ea2a0db2daea958b70ffd6",
+      "size_mb_declared": 14.09,
+      "uploaded_date": "2017-02-05",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 1066,
+      "model": "EOS 7D Mark II",
+      "mode_declared": "sRAW2 (sRAW) (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/1066/nice/Canon - EOS 7D Mark II - sRAW2 (sRAW) (3:2).cr2",
+      "publisher_sha256": "2d86d7af6168af36ac666e462c0bac325884f88c1cb78eebfd4c9c11dcacc116",
+      "size_mb_declared": 9.4,
+      "uploaded_date": "2017-02-05",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 1294,
+      "model": "EOS 80D",
+      "mode_declared": "RAW (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/1294/nice/Canon - EOS 80D - RAW (3:2).CR2",
+      "publisher_sha256": "8f28465cee09844ffad95dbd3ec91923717a329c5ec4f3f405f5b4fce83aaea3",
+      "size_mb_declared": 34.8,
+      "uploaded_date": "2017-04-03",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 1295,
+      "model": "EOS 80D",
+      "mode_declared": "sRAW1 (mRAW) (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/1295/nice/Canon - EOS 80D - sRAW1 (mRAW) (3:2).CR2",
+      "publisher_sha256": "181cf35881cf967d025948694bc06d5e3e194ec371df3263ed26ec34909ffedb",
+      "size_mb_declared": 28.14,
+      "uploaded_date": "2017-04-03",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 1296,
+      "model": "EOS 80D",
+      "mode_declared": "sRAW2 (sRAW) (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/1296/nice/Canon - EOS 80D - sRAW2 (sRAW) (3:2).CR2",
+      "publisher_sha256": "f9c5404b57248c21e9b269721aa0d721c3b1281c94ebdee3c50bf32db42613a8",
+      "size_mb_declared": 19.28,
+      "uploaded_date": "2017-04-03",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 1623,
+      "model": "EOS 6D Mark II",
+      "mode_declared": "sRAW2 (sRAW) (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/1623/nice/Canon - EOS 6D Mark II - sRAW2 (sRAW) (3:2).CR2",
+      "publisher_sha256": "a4bf9842c2222b2eeb95ec71065f9d981c9b5be619b96db7f121e395968a119b",
+      "size_mb_declared": 19.6,
+      "uploaded_date": "2017-08-05",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 1624,
+      "model": "EOS 6D Mark II",
+      "mode_declared": "sRAW1 (mRAW) (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/1624/nice/Canon - EOS 6D Mark II - sRAW1 (mRAW) (3:2).CR2",
+      "publisher_sha256": "c34f6dc459901b44a837cf30eacee19fef548ce5a66c4611d68ed3fae8997498",
+      "size_mb_declared": 27.63,
+      "uploaded_date": "2017-08-05",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 1625,
+      "model": "EOS 6D Mark II",
+      "mode_declared": "RAW (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/1625/nice/Canon - EOS 6D Mark II - RAW (3:2).CR2",
+      "publisher_sha256": "712815b910fa473f7aaeb97c0804292d996b16dd6b974a3ab9a7195a2e41d90c",
+      "size_mb_declared": 36.14,
+      "uploaded_date": "2017-08-05",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 2935,
+      "model": "EOS M5",
+      "mode_declared": "RAW (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/2935/nice/Canon - EOS M5 - RAW (3:2).CR2",
+      "publisher_sha256": "5af02dbad6cd90eeac2b0b1c0be0aeb9a5d2841c6dd984ee415ede9f2566667d",
+      "size_mb_declared": 37.76,
+      "uploaded_date": "2019-01-04",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 3713,
+      "model": "EOS M6 Mark II",
+      "mode_declared": "RAW (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/3713/nice/Canon - EOS M6 Mark II - RAW (3:2).CR3",
+      "publisher_sha256": "48be4fbcc36e4f9bf31dd63ba7f97aa906a39b29f6b2caa679506c4cdb20f5a7",
+      "size_mb_declared": 46.16,
+      "uploaded_date": "2020-01-31",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 3714,
+      "model": "EOS M6 Mark II",
+      "mode_declared": "C-RAW (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/3714/nice/Canon - EOS M6 Mark II - C-RAW (3:2).CR3",
+      "publisher_sha256": "94635c6f91e7d743cee6881cc2519992ae9f9031fd86b49e5d0f16edf5961b55",
+      "size_mb_declared": 30.12,
+      "uploaded_date": "2020-01-31",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 4649,
+      "model": "EOS 90D",
+      "mode_declared": "3:2",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/4649/nice/Canon - EOS 90D - 3:2.CR3",
+      "publisher_sha256": "e47981d90142291a2bd7ba5a3dea51a25fff72ad3dad83dd2d2698f3ef5f59a8",
+      "size_mb_declared": 33.75,
+      "uploaded_date": "2021-05-12",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 4650,
+      "model": "EOS 90D",
+      "mode_declared": "3:2",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/4650/nice/Canon - EOS 90D - 3:2.CR3",
+      "publisher_sha256": "c8c918b2d1a53e64d7d5009ebac89a920dbba5f766c2f396bb4ec95312b21034",
+      "size_mb_declared": 18.61,
+      "uploaded_date": "2021-05-12",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 4654,
+      "model": "EOS-1D X Mark III",
+      "mode_declared": "3:2",
+      "remark_declared": "CRAW",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/4654/nice/Canon - EOS-1D X Mark III - 3:2.CR3",
+      "publisher_sha256": "e5755d1414a2dd51fb0120b272058f00b0199861646070c00304d927eb119560",
+      "size_mb_declared": 9.7,
+      "uploaded_date": "2021-05-14",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 4655,
+      "model": "EOS-1D X Mark III",
+      "mode_declared": "3:2",
+      "remark_declared": "RAW",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/4655/nice/Canon - EOS-1D X Mark III - 3:2.CR3",
+      "publisher_sha256": "8f38b9de90eaebefcd54022fcbfdf38e05fb86831c4c976c8ac05c599e63535b",
+      "size_mb_declared": 20.3,
+      "uploaded_date": "2021-05-14",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 4660,
+      "model": "EOS R6",
+      "mode_declared": "3:2",
+      "remark_declared": "CRAW",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/4660/nice/Canon - EOS R6 - 3:2.CR3",
+      "publisher_sha256": "4775df76433b1e5844bc7a42b95d93efc8438c0a4cd9681e120e23fe3e3007e8",
+      "size_mb_declared": 10.69,
+      "uploaded_date": "2021-05-14",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 4662,
+      "model": "EOS R6",
+      "mode_declared": "3:2",
+      "remark_declared": "RAW",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/4662/nice/Canon - EOS R6 - 3:2.CR3",
+      "publisher_sha256": "81fab349ae9080fd0172583b7fd5ea36806e95ffa434909d2ccc6527dde34ee6",
+      "size_mb_declared": 21.84,
+      "uploaded_date": "2021-05-14",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 4694,
+      "model": "EOS R5",
+      "mode_declared": "3:2",
+      "remark_declared": "RAW no dualpixel",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/4694/nice/Canon - EOS R5 - 3:2.CR3",
+      "publisher_sha256": "21430c36387efe65bd09ac0fcd724bfd959d93dd391ec811a1b741c8663becb5",
+      "size_mb_declared": 38.75,
+      "uploaded_date": "2021-05-19",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 4698,
+      "model": "EOS R5",
+      "mode_declared": "3:2",
+      "remark_declared": "CRAW no dualpixel",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/4698/nice/Canon - EOS R5 - 3:2.CR3",
+      "publisher_sha256": "2deae46b816e56ba91ae7a3892ca121290e12d5b22afb11f5b05a3d8f09f759f",
+      "size_mb_declared": 16.04,
+      "uploaded_date": "2021-05-19",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 5633,
+      "model": "EOS R7",
+      "mode_declared": "3:2",
+      "remark_declared": "RAW",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/5633/nice/Canon - EOS R7 - 3:2.CR3",
+      "publisher_sha256": "887439cb1a45becd6a5c85fe75ae10e6c520a9f13a8b9ed077c6cf5d7c37700c",
+      "size_mb_declared": 30.82,
+      "uploaded_date": "2022-06-26",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 5634,
+      "model": "EOS R7",
+      "mode_declared": "3:2",
+      "remark_declared": "cRaw",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/5634/nice/Canon - EOS R7 - 3:2.CR3",
+      "publisher_sha256": "10a18e3f01ca9cd93408496d3853388ef140830548bfeed4237e40f967eb9d5c",
+      "size_mb_declared": 12.88,
+      "uploaded_date": "2022-06-26",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 5871,
+      "model": "EOS R10",
+      "mode_declared": "3:2",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/5871/nice/Canon - EOS R10 - 3:2.CR3",
+      "publisher_sha256": "5d2e076d38e7835d4c4f13dc2030a913cc573a31d7199b60777d23a25ccc3ef9",
+      "size_mb_declared": 29.57,
+      "uploaded_date": "2022-08-20",
+      "image_downloaded": false,
+      "content_verified": false
+    },
+    {
+      "id": 8185,
+      "model": "EOS R10",
+      "mode_declared": "RAW (3:2)",
+      "remark_declared": "",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_url": "https://raw.pixls.us/getfile.php/8185/nice/Canon - EOS R10 - RAW (3:2).CR3",
+      "publisher_sha256": "2dc0bbdf04c93ca62c914604f644c735286037912d6fba609d0cb78d00acd097",
+      "size_mb_declared": 33.06,
+      "uploaded_date": "2025-06-29",
+      "image_downloaded": false,
+      "content_verified": false
+    }
+  ]
+}

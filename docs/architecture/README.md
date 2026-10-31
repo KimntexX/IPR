@@ -12,14 +12,19 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Graphe du chemin RAW → DCP → rendu](chemin-ouverture-raw.md) : code actuel, refus de calibration et architecture cible sans liste de photos.
 - [Formats extensibles et stockage des caractérisations](../decisions/ADR-0012-formats-extensibles-et-caracterisations.md) : point d'entrée des futurs adaptateurs, DCP/JSON/SQLite, premier lot et transition restante.
 - [Roadmap ouverture RAW](roadmap-ouverture-raw.md) : HL, contextes multi-boîtiers, caches et corpus R5/6D Mark II prévu.
+- [Roadmap décodeurs RAW](roadmap-decodeurs-raw.md) : indépendance de LibRaw, formats CR3/CR2/DNG/Sony/Nikon, corpus minimal par boîtier, tests automatisés et agents IA (ADR-0018).
+- [Roadmap couche image sans OpenCV](roadmap-couche-image-sans-opencv.md) : usage mesuré, paliers, tolérances et retrait immédiat d'`imgcodecs`.
 - [Roadmap Lumières](roadmap-lumieres.md) : état des six réglages, plan B intégré, campagnes Rec.2020 et réserve HL du 21 octobre.
+- [Fonctions de Lightroom](roadmap-fonctions-lightroom.md) : chaque fonction du panneau Modifier, son état dans IPR, sa planification et l'ordre proposé.
 - [Travail, affichage ICC et export](gestion-couleurs-affichage.md) : séparation cible, distincte du code actuel.
 - [Intégration Rec.2020 linéaire](integration-rec2020.md) : master porté, audit initial, contrats et qualification restant à compléter.
 - [Recette RAW et changement de profil](../decisions/ADR-0006-restauration-raw-et-retouche-profil.md) : choix RAW introduits en v5 et conservés en v6 avec l'optique, tampon pré-DCP et réinitialisations distinctes.
 - [Guide détaillé du moteur CPU](../scholar/moteur-graphique-ipr.tex) : explication des constantes, asynchronisme et sidecars.
 - [Références architecture et profils](references/) : licences des dépendances, création de DCP et note d'utilisation des profils Adobe.
+- [Étude d’autonomie des profils caméra](references/etude-autonomie-profils-camera.md) : données DCP, droits, corpus externes et raccordement proposé à la passerelle MCP d’analyse.
 - [CI et build multiplateforme](ci-et-build-multiplateforme.md) : matrice Windows/macOS/Linux, prérequis, packaging et feuille de route GitHub.
 - [Réduction de bruit et netteté](denoising-sharpening.md) : algorithmes, ordre de pipeline, limites IA/GPU et validation attendue.
+- [Empilement et panorama](empilement-et-panorama.md) : plan multi-images, ancre utilisateur, alignement ciel/sol, recadrage automatique et dossier tampon disque ; non implémenté.
 - [Arborescence des sources](../../src/README.md) : domaines C++/QML et bibliothèque interne `iprEngine`.
 - [Préférences de l’interface](ui-preferences.md) : INI utilisateur, géométrie, sections, couleurs et schéma extensible.
 - [Build Windows autonome](build-windows-standalone.md) : configuration portable, dépendances et restrictions sur les profils tiers.

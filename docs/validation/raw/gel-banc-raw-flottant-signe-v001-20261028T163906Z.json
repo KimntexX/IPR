@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-28T16:39:06.857087+00:00",
+  "inputs": [
+    {
+      "iso": 1600,
+      "role": "black",
+      "shots": [
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+          "sha256": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e",
+          "black": [
+            2048,
+            2048,
+            2048,
+            2048
+          ],
+          "white": 14351
+        },
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0004.CR3",
+          "sha256": "6df877e9085f8d939cfd99fdc4dbc10f5b8e7bb1f97d9ad6a06835432ae34742",
+          "black": [
+            2048,
+            2048,
+            2048,
+            2048
+          ],
+          "white": 14351
+        }
+      ]
+    },
+    {
+      "iso": 1600,
+      "role": "near_black_scene",
+      "shots": [
+        {
+          "path": "D:\\DCIM\\100EOSR6\\6V1A9916.CR3",
+          "sha256": "696352225700fc4505c3c415ca004da113071083583ec2dd83b018e6c4503aee",
+          "black": [
+            2048,
+            2048,
+            2048,
+            2048
+          ],
+          "white": 14351
+        },
+        {
+          "path": "D:\\DCIM\\100EOSR6\\6V1A9917.CR3",
+          "sha256": "f033e4fefed8fcc94c9711d36b7f7a3b76ababcf504a8817ea00735310cdcac1",
+          "black": [
+            2048,
+            2048,
+            2048,
+            2048
+          ],
+          "white": 14351
+        }
+      ]
+    },
+    {
+      "iso": 1600,
+      "role": "illuminated_scene",
+      "shots": [
+        {
+          "path": "D:\\DCIM\\100EOSR6\\6V1A9861.CR3",
+          "sha256": "2cb1c583cffd0dc7719a341376b3d20cc3eb47a2faa510bdd70da21214f66b28",
+          "black": [
+            2048,
+            2048,
+            2048,
+            2048
+          ],
+          "white": 14351
+        },
+        {
+          "path": "D:\\DCIM\\100EOSR6\\6V1A9862.CR3",
+          "sha256": "68a9f256c213cf2c4845e89ab1718d5b8d163dc38008218d8eb43768a2cb0406",
+          "black": [
+            2048,
+            2048,
+            2048,
+            2048
+          ],
+          "white": 14351
+        }
+      ]
+    },
+    {
+      "iso": 51200,
+      "role": "black",
+      "shots": [
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+          "sha256": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16",
+          "black": [
+            2042,
+            2043,
+            2041,
+            2043
+          ],
+          "white": 14351
+        },
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9951.CR3",
+          "sha256": "05043c4ec89b26b4b7fbfbf11f6903e540d10918e45819bc68e261394183f47c",
+          "black": [
+            2043,
+            2042,
+            2041,
+            2043
+          ],
+          "white": 14351
+        }
+      ]
+    },
+    {
+      "iso": 51200,
+      "role": "near_black_scene",
+      "shots": [
+        {
+          "path": "D:\\DCIM\\100EOSR6\\6V1A9905.CR3",
+          "sha256": "f1a14c6075d8be503b818fdfda981e976b07c6065cce717b8166e8d0fd6987c3",
+          "black": [
+            2044,
+            2044,
+            2043,
+            2044
+          ],
+          "white": 14351
+        },
+        {
+          "path": "D:\\DCIM\\100EOSR6\\6V1A9906.CR3",
+          "sha256": "c8744f5f903619f9d9cfbf1d30bc4865683039c50d1c3db73792f247a8a0b9ae",
+          "black": [
+            2044,
+            2043,
+            2042,
+            2044
+          ],
+          "white": 14351
+        }
+      ]
+    },
+    {
+      "iso": 51200,
+      "role": "illuminated_scene",
+      "shots": [
+        {
+          "path": "D:\\DCIM\\100EOSR6\\6V1A9876.CR3",
+          "sha256": "7267e862f05bf82802acd65da32bba2361a189db695890ae809d69447cd2964c",
+          "black": [
+            2045,
+            2047,
+            2044,
+            2045
+          ],
+          "white": 14351
+        },
+        {
+          "path": "D:\\DCIM\\100EOSR6\\6V1A9877.CR3",
+          "sha256": "1b7613917913ac71fd02c7d023083ec1597dcb7e49cdd6a271415a7a741de61f",
+          "black": [
+            2046,
+            2045,
+            2044,
+            2046
+          ],
+          "white": 14351
+        }
+      ]
+    }
+  ],
+  "parents": {
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\sonde-etapes-ouverture-bruit-v001-20261028T104746Z.json": "0a330fcc140d2dbed2991600d4cd9d2e77da5066906bcf579acecd3ce85f1524",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\gel-banc-raw-production-v001-20261028T163154Z.json": "079d81eac8726112bf2d42a85cfa77356b02f5dac9720829c1aada0b599d0be9",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\banc-raw-signe-v001-20261028T163515Z.json": "4deae867e67ae317df5b2b95000663933158417e29e339f62573689caa4b38e1"
+  },
+  "profile": {
+    "path": "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera\\Canon EOS R6 Mark III\\Canon EOS R6 Mark III Camera Neutral.dcp",
+    "sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701"
+  },
+  "manifest": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\config\\raw-normalization.json",
+    "sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c"
+  },
+  "tool": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\production\\20261028T163154Z\\candidate\\Release\\iprProductionRawCapture.exe",
+    "sha256": "02cdaa939e9817cbb8852c179daa0bf85629a4741f9705ea8b6fe4b469b0f797"
+  },
+  "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+  "engine_source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\f1-snapshot\\source",
+  "engine_hashes": {
+    "src\\app\\main.cpp": "3f6d7f0be149b451cf2556345b4e78dae30ffd7a5033150017031420d5129784",
+    "src\\app\\UiPreferences.cpp": "860835075e6e8fe0d0454e1f574e58e82d016bca895006b126cfeb3d671c51e7",
+    "src\\app\\UiPreferences.h": "e161f7b0c0f70b8269e10589de89cf3c8b223fdd4f7fd0b438dff508b6331649",
+    "src\\cache\\DecodedImageCache.cpp": "6a6b0d79c8a76d20174d0c7271e8c00030c4770e17d43e354f78dbdc42f1f66c",
+    "src\\cache\\DecodedImageCache.h": "daa1aca18c9c8b0b86299c3cc02f4825cf76e1838ccca37f87ca5d9016f1d880",
+    "src\\cache\\ImageCacheController.cpp": "35ad92e1b537f92b045377a8007f868c7a9f707b7b69da8383c38c0a481ec04d",
+    "src\\cache\\ImageCacheController.h": "1e56e35b090c15009037a9b2b677a4b7d4a9036bd371f5e04fb8d8b17a79f741",
+    "src\\cache\\RenderStageCache.cpp": "8651f8b8c09b210b0ca085c5a6662fd69736d2601153db44e0007071a55e1b14",
+    "src\\cache\\RenderStageCache.h": "5d1a98ff86ed86d0a62d1087beb4fcfa83b83f752ada42b614c58ed5e16ddba6",
+    "src\\cache\\SystemMemory.cpp": "b27d9c5547014dc661cfd445330c2528b29c2ed8d9e58ea13691abe546bb82dd",
+    "src\\cache\\SystemMemory.h": "dea93bcaa70a4ff29d73485f3a0ec6c773808b6f4253503941799094c0a2c409",
+    "src\\core\\ColorAdjustments.cpp": "0408a8328b78799122f5689db50d9f0b0a40d1a9cb09638ba488ef7a557beb82",
+    "src\\core\\ColorAdjustments.h": "1046f1c4b5d1e608aabef7620fba3ba57936313c2f25f0b894ca006a41a2ebd2",
+    "src\\core\\ColorGrading.cpp": "fb7c665383a064b11e664bbb59adbc4b92377c13b4f6f181f541b9fc1efd9331",
+    "src\\core\\ColorGrading.h": "9028270008a44fad1a6ff0ab6a034d1f62ae1596ee1e710cd3a5c1e4e5e2e929",
+    "src\\core\\ColorMixer.cpp": "5ac9d81d521fae9e2a049e3e35c0a69d13eb9b6cb4bd9b5e5f0a01d4314f719e",
+    "src\\core\\ColorMixer.h": "9500a4cbe3b97fe1ddcefc8d771a155f46b65b795da089806cd41f5d694c3faf",
+    "src\\core\\ColorMixerModel.h": "d6d97de885476d147641a01828c12bbd00ceb83717bfe7e51a76895b2ecbd68f",
+    "src\\core\\ColorPipeline.cpp": "0fc43f54984dfc42969d80846ff939e3337a1aead274f7109dcd7a6f5fb331bf",
+    "src\\core\\ColorPipeline.h": "0fd5af0f21a361e2ba1eb894d8a7107c27e801bebe8dbc62b1ae91c80473a803",
+    "src\\core\\Contrast.cpp": "8438dda1beeec6ca2f0fe9fcab397579c9b466a993a6d15e774c9c3b7f65cc92",
+    "src\\core\\Contrast.h": "b87450e3f7ff770d7e37849b6f3d463afa4aee41e7152823a4da34d959a4d458",
+    "src\\core\\Dehaze.cpp": "8cdc6770f7d04fc30abb5c59cf549875445803478ab4d56e1a0d3602e9961028",
+    "src\\core\\Dehaze.h": "b2ed5d75389f4c0009fccd15b4d0a5370accb4e193639b85a4f7f0f2194dad1d",
+    "src\\core\\DetailProcessing.cpp": "78aa94397b49002b18758ce7f042a05cbbdedb93dc3d569923439b2dfd3209e9",
+    "src\\core\\DetailProcessing.h": "a04e80ea42d7a63377983313feb82c19cca4bcdaea01339f26af12e564a30023",
+    "src\\core\\EditRecipe.h": "69ae01c2f42ca55288cd1256d4ab8a3e753d0fe8d5578845947f67a690fc86db",
+    "src\\core\\Grain.cpp": "9113512bf063f11d0e25edb33671e5fdc5d6ae9213d4a5caf294ea9ef6de874f",
+    "src\\core\\Grain.h": "492e75f01ef6a593a868e538f6585f766a42264d967280a3ed9e55a3baf46cc0",
+    "src\\core\\Histogram.cpp": "b063a0b7efe7ececc13a5cb3c9ae57787bfbd940d6c5693d819ff4e7a510da95",
+    "src\\core\\Histogram.h": "50bb95626105445653c84f3834742dcf8516c9cd1868c307fef91d2de0aab13d",
+    "src\\core\\ImageExporter.cpp": "f4beef4c251cccb4533bf260a27b3f828aca3513d4b1cd738831015a76fd3e1a",
+    "src\\core\\ImageExporter.h": "e4fb72a9fa824a56e391301ec55ad24a58127081dd354520d83c98f29dc511c3",
+    "src\\core\\ImageImporter.cpp": "d5e4ef061369b63ce5256cf38921f9cdfa24bcfa4fb0f9e470974177d2acaa7d",
+    "src\\core\\ImageImporter.h": "59870a5baa2b08d5964464fc92d1a953509ade8defa7103a05f18a9402724e97",
+    "src\\core\\ImageMath.h": "c3e16295d0a484057a1007f348f908e3a5450bf68a6a72b56fa86cd0ac27cf2f",
+    "src\\core\\ImageMetadata.h": "35e5a1b065b0f6f8f05b0961228d241afbeef0420517786f9929f0c33e613a9c",
+    "src\\core\\LocalContrast.cpp": "a5a96284bb633f27af7e0b19f4050cce2a4ccfc63ccdcca6568006d32f8daa92",
+    "src\\core\\LocalContrast.h": "fc23fbb343f6de6a7df4f753b861895c915b39bde823089e7b390727c64ca637",
+    "src\\core\\PerceptualColour.cpp": "808efbef5aa94f4b1bdd83bcaca7b9190de54e984ae75f5444f395753fa94c7a",
+    "src\\core\\PerceptualColour.h": "951467a6d087265ccff4db9086adc5f287ff8cd241c286a469b8ebbba699b2d6",
+    "src\\core\\PointColor.cpp": "31726a63de279ed7519a7d740e81c0640f1628b76261ebcf51c0f2e311676658",
+    "src\\core\\PointColor.h": "4da2b8e046b995afd468fa87056b4626fc99d10acc78816542d76e8d3a50641b",
+    "src\\core\\Sidecar.cpp": "2462883d89ecbedbbb60472d2bde9c2831dd8243d89e1d5dcd5073e4694845d3",
+    "src\\core\\Sidecar.h": "570b95e87f4e9b5b5d34daa8b3018e53773e8ca9bf4a916592e075e9de36537b",
+    "src\\core\\ToneCurve.cpp": "b53a31e0c7d2d414a4c309980cb051a0c63377c35cb536dddf87bcc754f1048b",
+    "src\\core\\ToneCurve.h": "2f46a98e36e20ff11f59d29561af394f0899d76347e960d0d6619c7bb0f73cdf",
+    "src\\core\\ToneRecovery.cpp": "a62de198fc39b77ec12219761700368bbb31bad746bd2380187df93e076507cf",
+    "src\\core\\ToneRecovery.h": "7e2b3b2aa5f9297b52c0727ec60905a9f58d4d7fa0dea9f8b8b07edddf5a6618",
+    "src\\core\\ToneRecoveryHighlights.h": "39812d16cee3e826578cf7c73ec6bfe81d472251171d88a3cd53a9192f09aa0c",
+    "src\\core\\ToneRecoveryModel.h": "5e5e656e70d1364d6039fa865d1de8a1f7d0165ba0ea1067a26e9d6f05141872",
+    "src\\core\\ToneStatistics.cpp": "4ce59e5eea5330c2273de3736f1cb4602d294ee4169fd6e0287bb8eb3f5a3533",
+    "src\\core\\ToneStatistics.h": "2b72e6345c342629b22d5ba9955dac07dcede664d0542a12056ce35148781325",
+    "src\\core\\Vibrance.cpp": "0d7e03638484891a7af4796ca3c2514749a792243276703d5b9b67c1edce58b9",
+    "src\\core\\Vibrance.h": "eff62b0810ba26f4fa30c22f99fcbe151fa90244038f215fc83bba8827865dd1",
+    "src\\core\\VibranceModel.h": "8f660786204d024e03c561c6935b050772c194a98bb81b9f9f1e8c87cf34bbfb",
+    "src\\core\\WorkingColorSpace.h": "55e437b8eb894bcc5438ff3f8ed55699ec1480adb17668a149f3f1c5a15775fb",
+    "src\\editor\\imageeditor.cpp": "95c4144ac68f695850336bccbf175fd8e63ca6a86359438d4c71b8a191426c81",
+    "src\\editor\\imageeditor.h": "ace3108b7f3e25d828566d0fa15562fffba2b6f954aa3c2a13c59ec7608c1ba0",
+    "src\\profiles\\CameraProfileEngine.cpp": "25fdd3c7f2d716448280c8c73c81f2aff2c90455742681b44a1db32be39e889a",
+    "src\\profiles\\CameraProfileEngine.h": "978c5337ff09e28d151c010b4433b48b3da2d9aae686f35b56b9611bb472e846",
+    "src\\profiles\\PreparedProfileCache.cpp": "21f5958a307f5feffc6cd189a556f87fd10ae103ebe31ee05fc523a54ab2bdad",
+    "src\\profiles\\PreparedProfileCache.h": "29b9c41c8935b49c887c7a6d2a113550d9d41388530e138522e51d3f67611e07",
+    "src\\providers\\GradingWheelProvider.cpp": "fe3205359bd8615ee55f2ea436f28cf75e1f094d30dfb78cb35a339e6b1e4122",
+    "src\\providers\\GradingWheelProvider.h": "7ab6736cefad26e4c39025191766d9c25bc3538b89cfcd6395d7441dc3269a05",
+    "src\\providers\\imageprovider.cpp": "6faa75d9fac6663f6ed66da4d4d9ea3d959a984c344d3d95579efa7c840f278e",
+    "src\\providers\\imageprovider.h": "3d6679f125eae296effe0b8c6d0f0defecb7724cc785e2a5188fe40605d43f40",
+    "src\\providers\\ThumbnailProvider.cpp": "a4da92b5ea1e43c949aaaebbf14a9271c83da4cfa5e40f63467922c8c12428a4",
+    "src\\providers\\ThumbnailProvider.h": "e8becb12edb63230a9f17f8bcd7eb417db2688b35923badcc2d82de988ca9647",
+    "src\\raw\\CameraCharacterization.cpp": "a0c719c7f4eee79572ab20d211433d8f522cac8fea136d293da758cb071aab5c",
+    "src\\raw\\CameraCharacterization.h": "041419949cf8f77d853b9fc4f6eaf16f79779b41c20913e85786d8f42f5ae87a",
+    "src\\raw\\CameraSignal.cpp": "08a83c79d8baa2b11f3a6fb13ce67eb711fe21770ecbf099a535601f5a2d3d58",
+    "src\\raw\\CameraSignal.h": "890674f71b482012ccd782f74b1b347d3e439540a99bf2777ab361a0d67efd27",
+    "src\\raw\\Demosaic.cpp": "51530300dbfa93c61b4c94e6c820dda7e1239b3cba12ca51d57adae2b0a5b68a",
+    "src\\raw\\Demosaic.h": "52d2f42281b6584765eb1644ebb5a05f5327d508e8d96ee8567d71288a9218dc",
+    "src\\raw\\LibRawInput.cpp": "84d4bbffc6346177d710bccb515284d570593d9c83164aa000731cb3fd489c6f",
+    "src\\raw\\LibRawInput.h": "5f0e418d689c22a4c556a7e2365ecddbfbafedc44a630953a67d6f4b243c16ed",
+    "src\\raw\\RawBlackLevelEstimator.cpp": "8e9d6eae3c33636d64683d0372048db4fe6c637c811c390853aa1bdd8419404d",
+    "src\\raw\\RawBlackLevelEstimator.h": "1ea58b1c6e0f06679ac2be7ac212972ad959dfe0f2daea16c6e7b0d7d25583a0",
+    "src\\raw\\RawDecoder.cpp": "af624523caeb0f9e3166fbf77a7d6fb882e193f1b262d4b2a57260b9be492f4e",
+    "src\\raw\\RawDecoder.h": "94a230dcc5d329a8e147579497d40a5634039a679e7ea4a71447418d7125798c",
+    "src\\raw\\RawDevelopment.cpp": "0c75872fb2eea5a26ccd51789a64870a9e12269a79aee91b8397497f5f045f75",
+    "src\\raw\\RawDevelopment.h": "19ec47d02307be84eddad7e268b739fabbd5794eb128ec063506e8a915c941dc",
+    "src\\raw\\RawInput.cpp": "2b11cc5e64dd9b2f3c4e0663523da86567c458835765ee857d7c14d8aef1bb8b",
+    "src\\raw\\RawInput.h": "8525277ebdbba28396378f3564f22b87dd4e2e3046a39703a16f1d7d97a754a7",
+    "src\\raw\\RawNormalization.cpp": "e56195e1c142d7c9508a6c62fd8eab4db542eb6aca6273f0585560299c041967",
+    "src\\raw\\RawNormalization.h": "cc6506fa6a660ef89cf494037a3141e1ab31acdcd7e8c9b8335f0f03f4a0b870",
+    "src\\tools\\generate_test_images.cpp": "406a2b4a1dd733a2f5dba9babd6cd77cb0e4a9160d65f20549b51920deca09e9",
+    "src\\tools\\render_server.cpp": "80031f5eb5100caa66a34e99297452001d02f472c361d30026a6a4f2e21f37d8",
+    "src\\tools\\TestRecipes.cpp": "cd21493d9ddda38ea768f5e7339d2617e8461406ae552aa5decc8ea0a681b577",
+    "src\\tools\\TestRecipes.h": "dc727585b015742fd585c5cbc657923e8b7df7ac564e3bc4b71f44fd5a17f907"
+  },
+  "sources": {
+    "tests/raw_bench/float_campaign.py": {
+      "sha256": "d558158f8c399946a2ef679c4fd90f29434d9f3f49ed1e4cc7e912e9633098d6",
+      "text": "\"\"\"F1 signed decoder inlet qualification on existing pairs; requires F1 tool/API.\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nimport numpy as np\nfrom capture import load_capture, sha256\nfrom float_qualification import compare_module_inlet, qualify_inlet\nfrom signed_campaign import select_inputs\n\n\ndef save(path, data, exclusive=True):\n    with path.open('x' if exclusive else 'w', encoding='utf-8') as handle:\n        json.dump(data, handle, ensure_ascii=False, indent=2, allow_nan=False)\n\n\ndef main():\n    parser = argparse.ArgumentParser(description=__doc__)\n    for arg in ('baseline', 'production-freeze', 'manifest', 'tool', 'engine-source'):\n        parser.add_argument('--'+arg, type=Path, required=True)\n    parser.add_argument('--engine-revision', required=True)\n    parser.add_argument('--module-study', type=Path, required=True, help='F1 signed module study for exact black-witness inlet comparison')\n    parser.add_argument('--runtime-dir', action='append', type=Path, required=True)\n    args = parser.parse_args(); root = Path(__file__).resolve().parents[2]\n    started = datetime.now(timezone.utc); stamp = started.strftime('%Y%m%dT%H%M%SZ')\n    work = root/'build-patch_raw_bench/float-signed'/stamp; work.mkdir(parents=True)\n    baseline = json.loads(args.baseline.read_text(encoding='utf-8'))\n    inputs = select_inputs(baseline)\n    module_study = json.loads(args.module_study.read_text(encoding='utf-8'))\n    production = json.loads(args.production_freeze.read_text(encoding='utf-8'))\n    profile = production['profiles']['EOS R6 Mark III']\n    if sha256(args.manifest) != production['manifest']['sha256'] or sha256(Path(profile['path'])) != profile['sha256']:\n        raise ValueError('Changed profile/calibration')\n    tool_hash = sha256(args.tool)\n    files = ['tests/raw_bench/float_campaign.py', 'tests/raw_bench/float_qualification.py',\n             'tests/raw_bench/capture.py', 'tests/raw_bench/production_capture.cpp', 'tests/raw_bench/signed_campaign.py']\n    sources = {p: dict(sha256=sha256(root/p), text=(root/p).read_text(encoding='utf-8')) for p in files}\n    engine_hashes = {str(p.relative_to(args.engine_source)): sha256(p)\n                     for p in (args.engine_source/'src').rglob('*') if p.is_file() and p.suffix in ('.h', '.cpp')}\n    if not (args.engine_source/'src/raw/RawDecoder.cpp').is_file() or not engine_hashes:\n        raise ValueError('Missing frozen engine source tree')\n    freeze = root/'docs/validation/raw'/f'gel-banc-raw-flottant-signe-v001-{stamp}.json'\n    save(freeze, dict(schema_version=1, started_at_utc=started.isoformat(), inputs=inputs,\n                      parents={str(p.resolve()): sha256(p) for p in (args.baseline, args.production_freeze, args.module_study)},\n                      profile=profile, manifest=dict(path=str(args.manifest.resolve()), sha256=sha256(args.manifest)),\n                      tool=dict(path=str(args.tool.resolve()), sha256=tool_hash), engine_revision=args.engine_revision,\n                      engine_source=str(args.engine_source.resolve()), engine_hashes=engine_hashes, sources=sources,\n                      conditions='signedDevelopment requested, WB as-shot, optics off, actual pre-DCP inlet retained; existing six noise pairs, full-frame stats and three256 ROIs. Native decode budget20.8s, 8 RCD workers, OpenCV1/OMP8.',\n                      limitations='No nonlinear DCP range modification, no optics/fallback/no-profile inlet coverage, no visual or denoising benefit claim. Negative presence alone does not prove absence of every intermediate quantization.'))\n    env = dict(os.environ); env['OMP_NUM_THREADS'] = '8'\n    env['PATH'] = os.pathsep.join([str(d) for d in args.runtime_dir]+[env.get('PATH', '')])\n    empty = work/'empty-profiles'; empty.mkdir(); records = []\n\n    def status(**values):\n        save(work/'status.json', dict(started_at_utc=started.isoformat(),\n                                      updated_at_utc=datetime.now(timezone.utc).isoformat(), **values), False)\n\n    print('FROZEN', freeze, flush=True)\n    try:\n        for index, pair in enumerate(inputs):\n            for shot, item in enumerate(pair['shots']):\n                source = Path(item['path'])\n                status(status='running', phase='decode', completed=len(records), source=source.name, role=pair['role'])\n                out = work/f'{index:02}-{shot}-{source.stem}.json'\n                with (work/f'{index:02}-{shot}.log').open('x', encoding='utf-8') as log:\n                    subprocess.run([str(args.tool.resolve()), '--input', str(source), '--output', str(out),\n                                    '--manifest', str(args.manifest.resolve()), '--profile', profile['path'],\n                                    '--profile-root', str(empty), '--capture-camera', '--development', 'signed'],\n                                   cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT, check=True, timeout=240)\n                manifest, stages = load_capture(out)\n                if (manifest['mode'] != 'signed' or manifest['engine_revision'] != args.engine_revision or\n                        manifest['source']['sha256'] != item['sha256'] or manifest['metadata']['iso'] != pair['iso'] or\n                        not manifest.get('capabilities', {}).get('signed_development')):\n                    raise ValueError('Wrong source/engine/policy/capability')\n                inlet = qualify_inlet(out, require_negatives=pair['role'] == 'black')\n                matched = [r for r in module_study['records'] if r['iso'] == pair['iso'] and r['role'] == pair['role']]\n                if len(matched) != 1:\n                    raise ValueError('Module pair missing or ambiguous')\n                module = matched[0]['captures']['signed'][shot]\n                if sha256(Path(module['path'])) != module['sha256']:\n                    raise ValueError('Module capture changed')\n                transfer = compare_module_inlet(out, module['path'])\n                if pair['role'] == 'black' and transfer['verdict'] != 'pass_exact_module_to_decoder_inlet':\n                    raise ValueError('Black witness lacks exact module/inlet comparison')\n                if not all(np.isfinite(values).all() for _, values in stages.values()):\n                    raise ValueError('Nonfinite camera/master capture')\n                budget = manifest['decode_ms'] <= 20800 and manifest['rcd_workers'] <= 8 and manifest['opencv_threads'] <= 1\n                records.append(dict(iso=pair['iso'], role=pair['role'], source=item,\n                                    capture=dict(path=str(out), sha256=sha256(out)), inlet=inlet, module_to_inlet=transfer,\n                                    metadata=manifest['metadata'], decode_ms=manifest['decode_ms'],\n                                    peak_bytes=manifest['decode_peak_working_set_bytes'], resource_budget_pass=budget))\n                print(len(records), '/12', source.name, 'inlet pass', 'budget', budget, flush=True)\n        if sha256(args.tool) != tool_hash or any(sha256(root/p) != v['sha256'] for p, v in sources.items()):\n            raise ValueError('Bench sources/tool changed')\n        if any(sha256(args.engine_source/p) != digest for p, digest in engine_hashes.items()):\n            raise ValueError('Engine sources changed')\n        if sha256(args.manifest) != production['manifest']['sha256'] or sha256(Path(profile['path'])) != profile['sha256']:\n            raise ValueError('Profile/calibration changed')\n        verdict = 'pass_scoped_F1_signed_inlet' if all(r['resource_budget_pass'] for r in records) else 'fail_resource_budget'\n        result = root/'docs/validation/raw'/f'banc-raw-flottant-signe-v001-{datetime.now(timezone.utc).strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n        save(result, dict(schema_version=1, measured_at_utc=datetime.now(timezone.utc).isoformat(),\n                          freeze=dict(path=str(freeze), sha256=sha256(freeze)), records=records, verdict=verdict,\n                          limitations='F1 signed inlet only, not A invariance, clean noise truth, visual quality or fully signed DCP processing. Peak memory is measured, not a system80% ceiling proof.'))\n        status(status='succeeded' if verdict.startswith('pass') else 'failed', phase='complete', completed=len(records), result=str(result))\n        print('RESULT', result, verdict, flush=True)\n    except Exception as error:\n        save(work/'partial.json', dict(error=str(error), records=records))\n        status(status='failed', phase='error', completed=len(records), error=str(error))\n        raise\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    "tests/raw_bench/float_qualification.py": {
+      "sha256": "4d050e17833a100f8e764bac4d3f571b47c6bc1aee2c7e32fadc8d22b51a65ae",
+      "text": "\"\"\"F1 pre-DCP signed inlet checks. These do not qualify nonlinear DCP handling.\"\"\"\nimport numpy as np\nfrom capture import load_capture\n\n\ndef compare_module_inlet(decoder_capture, module_capture):\n    decoder, ds = load_capture(decoder_capture); module, ms = load_capture(module_capture)\n    if (decoder['source']['sha256'] != module['source']['sha256'] or\n            decoder['engine_revision'] != module['engine_revision'] or\n            decoder['mode'] != 'signed' or module['mode'] != 'signed'):\n        raise ValueError('Module/decoder source, revision or policy mismatch')\n    if module['metadata']['orientation_flip'] != 0:\n        return dict(verdict='not_compared_rotated_sparse_ROIs', reason='Sensor/display ROIs are different locations after rotation; no fabricated comparison')\n    dk = {origin for stage, origin in ds if stage == 'pre_dcp_camera_rgb'}\n    mk = {origin for stage, origin in ms if stage == 'pre_output_camera_rgb'}\n    if len(dk) != 3 or dk != mk:\n        raise ValueError('Module/decoder inlet ROI geometry mismatch')\n    rows = []\n    for origin in sorted(dk):\n        dd, actual = ds[('pre_dcp_camera_rgb', origin)]\n        md, expected = ms[('pre_output_camera_rgb', origin)]\n        if any(dd[k] != md[k] for k in ('shape', 'dtype', 'unit', 'layout')):\n            raise ValueError('Module/decoder domain mismatch')\n        if (not np.isfinite(actual).all() or not np.isfinite(expected).all() or\n                actual.tobytes() != expected.tobytes()):\n            raise ValueError('Signed module output changed before DCP inlet')\n        rows.append(dict(origin_yx=list(origin), bitwise_equal=True, values=int(actual.size)))\n    return dict(verdict='pass_exact_module_to_decoder_inlet', orientation_flip=0, rois=rows)\n\n\ndef qualify_inlet(path, require_negatives=False):\n    manifest, stages = load_capture(path)\n    summary = manifest.get('full_camera')\n    if not summary or summary.get('dtype') != 'f32' or summary.get('finite') is not True:\n        raise ValueError('Missing finite float32 camera inlet evidence')\n    shape = summary.get('shape', [])\n    if len(shape) != 3 or shape[-1] != 3 or any(type(v) != int or v <= 0 for v in shape):\n        raise ValueError('Invalid inlet geometry')\n    if summary.get('unit') != 'linear_camera_white_1' or summary.get('orientation') != 'display':\n        raise ValueError('Wrong camera inlet domain')\n    negatives = np.asarray(summary.get('negative_fraction'), dtype=float)\n    minima = np.asarray(summary.get('minimum'), dtype=float)\n    if negatives.shape != (3,) or minima.shape != (3,) or not np.isfinite([negatives, minima]).all():\n        raise ValueError('Incomplete inlet statistics')\n    if np.any(negatives < 0) or np.any(negatives > 1) or np.any((negatives > 0) != (minima < 0)):\n        raise ValueError('Inconsistent signed inlet statistics')\n    roi = [(key, desc, values) for key, (desc, values) in stages.items() if key[0] == 'pre_dcp_camera_rgb']\n    if len(roi) != 3:\n        raise ValueError('Expected three observed inlet ROIs')\n    rows = []\n    for key, desc, values in roi:\n        if (desc['dtype'] != 'f32' or desc['layout'] != 'rgb' or values.shape[-1] != 3 or\n                desc['unit'] != summary['unit'] or desc['orientation'] != summary['orientation'] or\n                not np.isfinite(values).all()):\n            raise ValueError('Invalid inlet ROI contract')\n        rows.append(dict(origin_yx=list(key[1]), minimum=values.min(axis=(0, 1)).tolist(),\n                         negative_fraction=np.mean(values < 0, axis=(0, 1)).tolist()))\n    # Negative presence is required only on black witnesses, never on every\n    # normally illuminated photo. Lack of negatives is not a generic failure.\n    if require_negatives and (not np.all(negatives > 0) or\n                              not all(all(v < 0 for v in row['minimum']) for row in rows)):\n        raise ValueError('Signed black witness lost negative values at DCP inlet')\n    return dict(verdict='pass_scoped_float_inlet', source=manifest['source'],\n                engine_revision=manifest['engine_revision'], full_camera=summary, rois=rows,\n                negative_witness_required=require_negatives,\n                limitations='Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone.')\n"
+    },
+    "tests/raw_bench/capture.py": {
+      "sha256": "e14d237a4ac86f7ac6a938cf6efc4efe98d200e6538d15e399d7f25c91c08425",
+      "text": "\"\"\"Versioned RAW bench captures and fail-closed stage comparisons (I3).\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport hashlib\nimport json\nfrom pathlib import Path\n\nimport numpy as np\n\nDTYPES={'u16':np.dtype('<u2'),'f32':np.dtype('<f4'),'f64':np.dtype('<f8')}\nREQUIRED=('unpacked_cfa','pre_demosaic_cfa','post_median_camera_rgb','working_rec2020')\n\n\ndef sha256(path):\n    h=hashlib.sha256()\n    with Path(path).open('rb') as f:\n        for block in iter(lambda:f.read(1024*1024),b''):h.update(block)\n    return h.hexdigest()\n\n\ndef load_capture(path):\n    path=Path(path);manifest=json.loads(path.read_text(encoding='utf-8'))\n    if manifest.get('schema_version')!=1 or not manifest.get('stages') or not manifest.get('source',{}).get('sha256'):\n        raise ValueError('Missing capture contract or unsupported schema')\n    pixels=Path(manifest['pixels']['path'])\n    if not pixels.is_absolute():pixels=path.parent/pixels\n    if sha256(pixels)!=manifest['pixels']['sha256']:raise ValueError('Capture pixel hash mismatch')\n    size=pixels.stat().st_size;stages={};extents=[]\n    with pixels.open('rb') as handle:\n        for stage in manifest['stages']:\n            shape=stage['shape'];dtype=DTYPES[stage['dtype']]\n            if len(shape)!=3 or any(type(n)!=int or n<=0 for n in shape):raise ValueError('Invalid stage shape')\n            offset=stage['offset_bytes'];count=int(np.prod(shape,dtype=object));nbytes=count*dtype.itemsize\n            if type(offset)!=int or offset<0 or offset%dtype.itemsize or offset+nbytes>size:raise ValueError('Invalid stage extent')\n            if stage['stride_bytes']!=shape[1]*shape[2]*dtype.itemsize:raise ValueError('Capture must be packed')\n            if any(offset<end and offset+nbytes>start for start,end in extents):raise ValueError('Overlapping stage extents')\n            extents.append((offset,offset+nbytes))\n            key=(stage['stage'],tuple(stage['origin_yx']))\n            if key in stages:raise ValueError('Duplicate stage/ROI')\n            for required in ('unit','layout','orientation','context'):\n                if required not in stage:raise ValueError('Incomplete stage descriptor')\n            handle.seek(offset);array=np.frombuffer(handle.read(nbytes),dtype=dtype).reshape(shape)\n            stages[key]=(stage,array)\n    return manifest,stages\n\n\ndef compare_captures(reference,candidate,required=REQUIRED,tolerances=None,purpose='parity'):\n    if purpose not in ('parity','measurement'):raise ValueError('Unknown comparison purpose')\n    tolerances=tolerances or {}\n    a,aa=load_capture(reference);b,bb=load_capture(candidate)\n    if a['source']['sha256']!=b['source']['sha256']:raise ValueError('Different RAW sources')\n    if purpose=='parity' and (a['mode']!='parity' or b['mode']!='parity'):raise ValueError('Signed mode cannot certify parity')\n    rows=[];missing=[];contract=[]\n    for name in required:\n        left={k for k in aa if k[0]==name};right={k for k in bb if k[0]==name}\n        if not left or not right or left!=right:missing.append(name)\n    for key in sorted(set(aa)|set(bb)):\n        if key[0] not in required:continue\n        if key not in aa or key not in bb:\n            missing.append(str(key));continue\n        sa,x=aa[key];sb,y=bb[key]\n        fields=('shape','dtype','origin_yx','layout','orientation','unit','context')\n        mismatch=[f for f in fields if sa[f]!=sb[f]]\n        if mismatch:\n            contract.append(dict(stage=key[0],origin_yx=list(key[1]),fields=mismatch));continue\n        finite=bool(np.isfinite(x).all() and np.isfinite(y).all())\n        row=dict(stage=key[0],origin_yx=list(key[1]),finite=finite,bitwise_equal=x.tobytes()==y.tobytes())\n        if finite:\n            tol=tolerances.get(key[0],{'atol':0.,'rtol':0.});atol=float(tol['atol']);rtol=float(tol['rtol'])\n            if not np.isfinite([atol,rtol]).all() or min(atol,rtol)<0:raise ValueError('Invalid tolerances')\n            if sa['dtype']=='u16' and (atol or rtol):raise ValueError('Integer boundaries require exact equality')\n            delta=x.astype(float)-y.astype(float);absolute=abs(delta)\n            row.update(max_abs=float(absolute.max()),mae=float(absolute.mean()),rmse=float(np.sqrt(np.mean(delta**2))),\n                unequal_values=int(np.count_nonzero(x!=y)),outside_tolerance=int(np.count_nonzero(absolute>atol+rtol*abs(x.astype(float)))),tolerance=tol,\n                reference_negative_fraction=float(np.mean(x<0)),candidate_negative_fraction=float(np.mean(y<0)),\n                reference_zero_fraction=float(np.mean(x==0)),candidate_zero_fraction=float(np.mean(y==0)),\n                reference_mean=x.mean(axis=(0,1),dtype=float).tolist(),candidate_mean=y.mean(axis=(0,1),dtype=float).tolist(),\n                reference_variance=x.var(axis=(0,1),dtype=float).tolist(),candidate_variance=y.var(axis=(0,1),dtype=float).tolist(),\n                reference_covariance=np.atleast_2d(np.cov(x.astype(float).reshape(-1,x.shape[-1]),rowvar=False)).tolist(),\n                candidate_covariance=np.atleast_2d(np.cov(y.astype(float).reshape(-1,y.shape[-1]),rowvar=False)).tolist())\n        rows.append(row)\n    valid=not missing and not contract and all(r['finite'] for r in rows)\n    passed=valid and all(r['outside_tolerance']==0 for r in rows)\n    return dict(schema_version=1,measured_at_utc=datetime.now(timezone.utc).isoformat(),purpose=purpose,\n        reference=dict(path=str(reference),sha256=sha256(reference)),candidate=dict(path=str(candidate),sha256=sha256(candidate)),\n        required_stages=list(required),uncompared_reference_stages=sorted({k[0] for k in aa if k[0] not in required}),\n        uncompared_candidate_stages=sorted({k[0] for k in bb if k[0] not in required}),\n        missing=missing,contract_mismatches=contract,stages=rows,\n        verdict=('pass' if passed else 'fail') if purpose=='parity' else ('measured_not_parity' if valid else 'invalid_measurement'))\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__);p.add_argument('reference',type=Path);p.add_argument('candidate',type=Path)\n    p.add_argument('--output',type=Path,required=True);p.add_argument('--require-stage',action='append');p.add_argument('--tolerances',type=Path)\n    p.add_argument('--purpose',choices=('parity','measurement'),default='parity');args=p.parse_args()\n    result=compare_captures(args.reference,args.candidate,args.require_stage or REQUIRED,\n        json.loads(args.tolerances.read_text(encoding='utf-8')) if args.tolerances else None,args.purpose)\n    with args.output.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print(result['verdict'])\n    return 0 if result['verdict'] in ('pass','measured_not_parity') else 1\n\n\nif __name__=='__main__':raise SystemExit(main())\n"
+    },
+    "tests/raw_bench/production_capture.cpp": {
+      "sha256": "27608fa7d8771b32488e3e865b3a65ee20ff4f0e16b5fb02a29afa1dddc6c8bf",
+      "text": "#include \"RawDecoder.h\"\n#include \"Demosaic.h\"\n#include \"CameraProfileEngine.h\"\n#include <QCoreApplication>\n#include <QCommandLineParser>\n#include <QCommandLineOption>\n#include <QCryptographicHash>\n#include <QDateTime>\n#include <QElapsedTimer>\n#include <QFile>\n#include <QFileInfo>\n#include <QDir>\n#include <QJsonObject>\n#include <QJsonArray>\n#include <QJsonDocument>\n#include <opencv2/core.hpp>\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <iostream>\n#include <stdexcept>\n#ifdef _WIN32\n#include <windows.h>\n#include <psapi.h>\n#else\n#include <sys/resource.h>\n#endif\n\nnamespace {\nvoid require(bool v,const char *message){if(!v)throw std::runtime_error(message);}\nQString hash(const QString &path){QFile f(path);require(f.open(QIODevice::ReadOnly),\"Cannot hash file\");QCryptographicHash h(QCryptographicHash::Sha256);require(h.addData(&f),\"File hash failed\");return QString::fromLatin1(h.result().toHex());}\nquint64 peakBytes(){\n#ifdef _WIN32\n    PROCESS_MEMORY_COUNTERS info{};info.cb=sizeof(info);\n    require(GetProcessMemoryInfo(GetCurrentProcess(),&info,sizeof(info))!=0,\"Cannot measure memory peak\");return quint64(info.PeakWorkingSetSize);\n#else\n    struct rusage info{};require(getrusage(RUSAGE_SELF,&info)==0,\"Cannot measure memory peak\");\n#ifdef __APPLE__\n    return quint64(info.ru_maxrss);\n#else\n    return quint64(info.ru_maxrss)*1024;\n#endif\n#endif\n}\nQString imageHash(const cv::Mat &m){\n    QCryptographicHash h(QCryptographicHash::Sha256);for(int y=0;y<m.rows;++y)h.addData(QByteArrayView(reinterpret_cast<const char *>(m.ptr(y)),qsizetype(m.cols*m.elemSize())));\n    return QString::fromLatin1(h.result().toHex());\n}\nQJsonObject cameraSummary(const cv::Mat &m){\n    require(m.type()==CV_32FC3&&cv::checkRange(m),\"Invalid pre-DCP camera image\");\n    std::array<double,3> sums{},negative{},zero{},minimum{},maximum{};\n    for(int c=0;c<3;++c)minimum[size_t(c)]=maximum[size_t(c)]=m.at<cv::Vec3f>(0,0)[c];\n    for(int y=0;y<m.rows;++y){\n        const auto *row=m.ptr<cv::Vec3f>(y);\n        for(int x=0;x<m.cols;++x)for(int c=0;c<3;++c){\n            const double v=row[x][c];const auto k=size_t(c);\n            sums[k]+=v;negative[k]+=v<0;zero[k]+=v==0;\n            minimum[k]=(std::min)(minimum[k],v);maximum[k]=(std::max)(maximum[k],v);\n        }\n    }\n    const double count=double(m.total());QJsonArray means,negatives,zeros,lows,highs;\n    for(int c=0;c<3;++c){const auto k=size_t(c);means.append(sums[k]/count);negatives.append(negative[k]/count);zeros.append(zero[k]/count);lows.append(minimum[k]);highs.append(maximum[k]);}\n    return QJsonObject{{\"shape\",QJsonArray{m.rows,m.cols,3}},{\"dtype\",\"f32\"},{\"sha256\",imageHash(m)},\n        {\"finite\",true},{\"unit\",\"linear_camera_white_1\"},{\"orientation\",\"display\"},\n        {\"mean\",means},{\"negative_fraction\",negatives},{\"zero_fraction\",zeros},{\"minimum\",lows},{\"maximum\",highs}};\n}\n}\n\nint main(int argc,char **argv){\n    QCoreApplication app(argc,argv);app.setApplicationName(\"iprRawBench\");QCommandLineParser p;p.addHelpOption();\n    for(auto key:{\"input\",\"output\",\"profile-root\",\"profile\",\"manifest\"})p.addOption(QCommandLineOption(key,key,\"path\"));\n    p.addOption(QCommandLineOption(\"capture-camera\",\"Capture the retained, actually used pre-DCP camera buffer; requires an explicit DCP\"));\n    p.addOption(QCommandLineOption(\"development\",\"Requested development policy: parity or signed (F1 engine required)\",\"policy\",\"parity\"));\n    p.process(app);\n    try{\n        require(p.isSet(\"input\")&&p.isSet(\"output\")&&p.isSet(\"profile-root\")&&p.isSet(\"manifest\"),\"Need input, output, explicit profile-root and manifest\");\n        const auto source=QFileInfo(p.value(\"input\")).absoluteFilePath(),output=QFileInfo(p.value(\"output\")).absoluteFilePath();\n        const auto mode=p.value(\"development\");\n        require(mode==\"parity\"||mode==\"signed\",\"Unknown development policy\");\n        require(!QFile::exists(output)&&!QFile::exists(output+\".bin\"),\"Output exists\");\n        const auto sourceHash=hash(source),manifestHash=hash(p.value(\"manifest\"));\n        const auto profile=p.value(\"profile\");const auto profileHash=profile.isEmpty()?QString():hash(profile);\n        require(!p.isSet(\"capture-camera\")||!profile.isEmpty(),\"Camera inlet capture requires explicit DCP; no fabricated no-profile inlet\");\n        cv::setNumThreads(1);\n        RawDecoder::Options options;options.automaticWhiteBalance=false;options.profileDirectories=QStringList{p.value(\"profile-root\")};\n        options.dcpProfileOverride=profile;options.preferCameraNeutral=false;options.automaticLcpSelection=false;\n        options.lensCorrectionEnabled=false;options.chromaticAberrationEnabled=false;options.useNormalizationEnvironment=false;options.normalizationManifest=p.value(\"manifest\");\n        bool signedCapability=false;\n#ifdef IPR_BENCH_SIGNED_DEVELOPMENT\n        signedCapability=true;\n        options.signedDevelopment=mode==\"signed\";\n#else\n        require(mode!=\"signed\",\"This immutable reference predates the F1 signedDevelopment API; refusing to substitute A\");\n#endif\n        QString error;ImageMetadata metadata;QElapsedTimer timer;timer.start();\n        auto image=RawDecoder::decode(source,options,&metadata,&error);\n        const double elapsed=double(timer.nsecsElapsed())/1e6;const auto memory=peakBytes();\n        if(image.isNull())throw std::runtime_error((\"Decode failed: \"+error).toStdString());\n        require(image.linearRgba.type()==CV_32FC4&&cv::checkRange(image.linearRgba),\"Invalid working image\");\n        require(metadata.lensGeometryApplied==false&&metadata.lensVignettingApplied==false&&metadata.chromaticAberrationApplied==false,\"Unexpected optics\");\n        if(profile.isEmpty())require(metadata.dcpProfile.isEmpty()&&!image.dcpContext,\"Unexpected implicit DCP\");\n        else require(image.dcpContext&&hash(image.dcpContext->profilePath)==profileHash,\"Requested DCP not applied\");\n        QJsonObject full{{\"shape\",QJsonArray{image.linearRgba.rows,image.linearRgba.cols,4}},{\"dtype\",\"f32\"},{\"sha256\",imageHash(image.linearRgba)}};\n        QJsonObject camera;\n        if(p.isSet(\"capture-camera\")){\n            require(image.dcpContext&&!image.dcpContext->cameraRgb.empty(),\"Missing retained pre-DCP camera buffer\");\n            camera=cameraSummary(image.dcpContext->cameraRgb);\n            camera.insert(\"scope\",\"Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output\");\n        }\n        QFile binary(output+\".bin\");require(binary.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Cannot create pixels\");QJsonArray stages;\n        const quint16 endian=1;require(*reinterpret_cast<const unsigned char *>(&endian)==1,\"Float binary requires little-endian host\");\n        for(double f:{.2,.5,.8}){\n            const auto &m=image.linearRgba;const int x=(int(m.cols*f)-128)/2*2,y=(m.rows/2-128)/2*2;\n            require(x>=0&&y>=0&&x+256<=m.cols&&y+256<=m.rows,\"Image too small\");\n            const auto offset=binary.pos();for(int yy=0;yy<256;++yy){const char *row=reinterpret_cast<const char *>(m.ptr<float>(y+yy)+x*4);require(binary.write(row,256*4*4)==256*4*4,\"Incomplete capture\");}\n            QJsonObject context{{\"profile_sha256\",profileHash},{\"calibration_applied\",metadata.rawNormalizationApplied},{\"white\",int(metadata.normalizationWhiteLevel)},\n                {\"baseline_ev\",metadata.normalizationBaselineExposureEv},{\"profile_compensation_ev\",metadata.profileExposureCompensationEv}};\n            stages.append(QJsonObject{{\"stage\",\"working_rec2020\"},{\"dtype\",\"f32\"},{\"shape\",QJsonArray{256,256,4}},{\"offset_bytes\",double(offset)},\n                {\"stride_bytes\",256*4*4},{\"origin_yx\",QJsonArray{y,x}},{\"orientation\",\"display\"},{\"unit\",\"linear_rec2020_d65\"},{\"layout\",\"rgba\"},{\"context\",context}});\n        }\n        if(p.isSet(\"capture-camera\"))for(double f:{.2,.5,.8}){\n            const auto &m=image.dcpContext->cameraRgb;\n            const int x=(int(m.cols*f)-128)/2*2,y=(m.rows/2-128)/2*2;\n            require(x>=0&&y>=0&&x+256<=m.cols&&y+256<=m.rows,\"Camera image too small\");\n            const auto offset=binary.pos();\n            for(int yy=0;yy<256;++yy){const char *row=reinterpret_cast<const char *>(m.ptr<float>(y+yy)+x*3);require(binary.write(row,256*3*4)==256*3*4,\"Incomplete camera capture\");}\n            stages.append(QJsonObject{{\"stage\",\"pre_dcp_camera_rgb\"},{\"dtype\",\"f32\"},{\"shape\",QJsonArray{256,256,3}},{\"offset_bytes\",double(offset)},\n                {\"stride_bytes\",256*3*4},{\"origin_yx\",QJsonArray{y,x}},{\"orientation\",\"display\"},{\"unit\",\"linear_camera_white_1\"},{\"layout\",\"rgb\"},\n                {\"context\",QJsonObject{{\"profile_sha256\",profileHash},{\"calibration_applied\",metadata.rawNormalizationApplied},\n                    {\"white\",int(metadata.normalizationWhiteLevel)},{\"optics_applied\",false}}}});\n        }\n        binary.close();require(hash(source)==sourceHash&&hash(p.value(\"manifest\"))==manifestHash,\"Input changed during measurement\");\n        QJsonObject data{{\"schema_version\",1},{\"mode\",mode},{\"capabilities\",QJsonObject{{\"signed_development\",signedCapability}}},\n            {\"engine_revision\",IPR_ENGINE_REVISION},{\"measured_at_utc\",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n            {\"source\",QJsonObject{{\"path\",source},{\"sha256\",sourceHash}}},{\"pixels\",QJsonObject{{\"path\",QFileInfo(binary.fileName()).fileName()},{\"sha256\",hash(binary.fileName())}}},\n            {\"stages\",stages},{\"full_image\",full},{\"decode_ms\",elapsed},{\"decode_peak_working_set_bytes\",double(memory)},{\"rcd_workers\",Demosaic::workerThreads()},{\"opencv_threads\",cv::getNumThreads()},\n            {\"manifest_sha256\",manifestHash},{\"profile_sha256\",profileHash},{\"metadata\",QJsonObject{{\"model\",metadata.cameraModel},{\"iso\",metadata.iso},{\"format\",metadata.format},\n                {\"profile\",metadata.dcpProfile},{\"normalization_applied\",metadata.rawNormalizationApplied},{\"white\",int(metadata.normalizationWhiteLevel)},\n                {\"baseline_ev\",metadata.normalizationBaselineExposureEv},{\"profile_compensation_ev\",metadata.profileExposureCompensationEv},{\"black_estimated\",metadata.opticalBlackLevelEstimated},\n                {\"white_balance_kelvin\",image.referenceWhiteBalanceKelvin.value_or(0.)},{\"development_warning\",metadata.developmentWarning}}}};\n        if(!camera.isEmpty())data.insert(\"full_camera\",camera);\n        QFile out(output);require(out.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Cannot create manifest\");auto bytes=QJsonDocument(data).toJson();require(out.write(bytes)==bytes.size(),\"Incomplete manifest\");\n        std::cout<<\"decode_ms=\"<<elapsed<<\" peak_bytes=\"<<memory<<\" revision=\"<<IPR_ENGINE_REVISION<<'\\n';\n    }catch(const std::exception &e){std::cerr<<e.what()<<'\\n';return 1;}return 0;\n}\n"
+    },
+    "tests/raw_bench/signed_campaign.py": {
+      "sha256": "7e97b7be5eadbc9742d0c92c92c63d906055c6a38f478607ff71c92b4b7763e3",
+      "text": "\"\"\"X4 A/B pilot on frozen historical pairs; no fitted coefficients or TIFFs.\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\n\nfrom capture import compare_captures, load_capture, sha256\nfrom signed_measurement import measure_pair\n\n\ndef save(path, value, exclusive=True):\n    with path.open('x' if exclusive else 'w', encoding='utf-8') as handle:\n        json.dump(value, handle, ensure_ascii=False, indent=2, allow_nan=False)\n\n\ndef select_inputs(baseline):\n    expected = {(iso, role) for iso in (1600, 51200)\n                for role in ('black', 'near_black_scene', 'illuminated_scene')}\n    selected = [r for r in baseline['records'] if (r['iso'], r['role']) in expected]\n    if len(selected) != 6 or {(r['iso'], r['role']) for r in selected} != expected:\n        raise ValueError('Need exactly the six previously measured pairs')\n    inputs = []\n    for pair in selected:\n        if len(pair['paths']) != 2 or len(set(pair['paths'])) != 2:\n            raise ValueError('Invalid pair')\n        shots = []\n        for name in pair['paths']:\n            source = Path(name); historical_record = baseline['native'][name]['record']\n            if sha256(source) != historical_record['source_sha256']:\n                raise ValueError('Missing/changed historical source: ' + name)\n            shots.append(dict(path=str(source), sha256=historical_record['source_sha256'],\n                              black=historical_record['applied_black_dn'], white=historical_record['white_before_process']))\n        inputs.append(dict(iso=pair['iso'], role=pair['role'], shots=shots))\n    return inputs\n\n\ndef main():\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--baseline', type=Path, required=True)\n    parser.add_argument('--tool', type=Path, required=True)\n    parser.add_argument('--engine-source', type=Path, required=True)\n    parser.add_argument('--engine-revision', required=True)\n    parser.add_argument('--previous-study', type=Path, help='Previous immutable X4, exact A check on shared boundaries')\n    parser.add_argument('--runtime-dir', type=Path, action='append', required=True)\n    args = parser.parse_args()\n    root = Path(__file__).resolve().parents[2]\n    started = datetime.now(timezone.utc); stamp = started.strftime('%Y%m%dT%H%M%SZ')\n    work = root/'build-patch_raw_bench/signed'/stamp\n    work.mkdir(parents=True, exist_ok=False)\n    tool = args.tool.resolve()\n    baseline_hash = sha256(args.baseline)\n    baseline = json.loads(args.baseline.read_text(encoding='utf-8'))\n    previous_hash = sha256(args.previous_study) if args.previous_study else None\n    previous = json.loads(args.previous_study.read_text(encoding='utf-8')) if args.previous_study else None\n    inputs = select_inputs(baseline)\n    revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()\n    files = ['tests/raw_bench/signed_campaign.py', 'tests/raw_bench/signed_measurement.py',\n             'tests/raw_bench/development_capture.cpp', 'tests/raw_bench/capture.py']\n    sources = {p: dict(sha256=sha256(root/p), text=(root/p).read_text(encoding='utf-8')) for p in files}\n    engine_files = ['src/raw/RawInput.cpp', 'src/raw/RawInput.h', 'src/raw/LibRawInput.cpp', 'src/raw/LibRawInput.h', 'src/raw/RawDevelopment.cpp',\n                    'src/raw/RawDevelopment.h', 'src/raw/Demosaic.cpp', 'src/raw/Demosaic.h']\n    engine_sources = {p: dict(sha256=sha256(args.engine_source/p), text=(args.engine_source/p).read_text(encoding='utf-8'))\n                      for p in engine_files}\n    tool_hash = sha256(tool)\n    freeze = root/'docs/validation/raw'/f'gel-banc-raw-signe-v001-{stamp}.json'\n    save(freeze, dict(schema_version=1, started_at_utc=started.isoformat(), inputs=inputs,\n                      baseline=dict(path=str(args.baseline.resolve()), sha256=baseline_hash),\n                      bench_revision=revision, engine_revision=args.engine_revision,\n                      previous_study=dict(path=str(args.previous_study.resolve()), sha256=previous_hash) if previous else None,\n                      engine_source=str(args.engine_source.resolve()), engine_sources=engine_sources,\n                      tool=dict(path=str(tool), sha256=tool_hash), sources=sources,\n                      conditions='As-shot gains, sensor orientation, three fixed256 ROIs, explicit previously applied black/white per frame; no DCP, optics or denoising; no coefficient fitted.',\n                      policy_scope='F1: signed CFA through RCD and median, unbounded signed float output. PreOutputCameraRgb equals the signed output. A uses the reciprocal product grid historically delivered to DCP. Production default remains A.',\n                      interpretation='Mean of black frames relative to applied black is a bias proxy, not independently measured ideal zero. Pair variance excludes common fixed pattern/scene; movement/drift not corrected. CFA phases distinct. No clean-reference or visual-success verdict.'))\n    env = dict(os.environ); env['OMP_NUM_THREADS'] = '8'\n    env['PATH'] = os.pathsep.join([str(d) for d in args.runtime_dir] + [env.get('PATH', '')])\n    rows = []\n\n    def status(**values):\n        save(work/'status.json', dict(started_at_utc=started.isoformat(), updated_at_utc=datetime.now(timezone.utc).isoformat(), **values), False)\n\n    print('FROZEN', freeze, flush=True)\n    try:\n        for index, pair in enumerate(inputs):\n            captures = {'parity': [], 'signed': []}; provenance = {'parity': [], 'signed': []}\n            for shot, item in enumerate(pair['shots']):\n                for mode in ('parity', 'signed'):\n                    status(status='running', phase='capture', completed_pairs=len(rows),\n                           iso=pair['iso'], role=pair['role'], shot=shot, mode=mode)\n                    if sha256(Path(item['path'])) != item['sha256']:\n                        raise ValueError('Source changed before capture')\n                    out = work/f'{index:02}-{shot}-{mode}.json'\n                    command = [str(tool), '--input', item['path'], '--output', str(out),\n                               '--path', 'candidate', '--mode', mode, '--black',\n                               ','.join(str(v) for v in item['black']), '--white', str(item['white'])]\n                    with (work/f'{index:02}-{shot}-{mode}.log').open('x', encoding='utf-8') as log:\n                        subprocess.run(command, cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT,\n                                       check=True, timeout=240)\n                    capture = load_capture(out); manifest = capture[0]\n                    if manifest['source']['sha256'] != item['sha256'] or manifest['metadata']['iso'] != pair['iso']:\n                        raise ValueError('Capture source/ISO mismatch')\n                    if manifest['engine_revision'] != args.engine_revision:\n                        raise ValueError('Capture engine revision mismatch')\n                    captures[mode].append(capture)\n                    provenance[mode].append(dict(path=str(out), sha256=sha256(out), applied=manifest['applied']))\n                for key in ('black', 'white', 'divisor', 'gains'):\n                    if captures['parity'][shot][0]['applied'][key] != captures['signed'][shot][0]['applied'][key]:\n                        raise ValueError('A/B development parameters differ: ' + key)\n            invariance = []\n            if previous:\n                matching = [r for r in previous['records'] if r['iso'] == pair['iso'] and r['role'] == pair['role']]\n                if len(matching) != 1:\n                    raise ValueError('Previous study pair missing/ambiguous')\n                for shot in range(2):\n                    old = matching[0]['captures']['parity'][shot]\n                    if sha256(Path(old['path'])) != old['sha256']:\n                        raise ValueError('Previous A capture changed')\n                    # Raw input and pre-output processing remain exact; F1 A\n                    # intentionally changed final float representation to the\n                    # product historically received by DCP, not division.\n                    common = ('unpacked_cfa', 'black_subtracted_cfa', 'normalized_cfa',\n                              'pre_demosaic_cfa', 'post_demosaic_camera_rgb',\n                              'pre_output_camera_rgb')\n                    check = compare_captures(old['path'], provenance['parity'][shot]['path'], common)\n                    if check['verdict'] != 'pass':\n                        raise ValueError('A changed against previous C4')\n                    invariance.append(check)\n            result = measure_pair(captures)\n            rows.append(dict(iso=pair['iso'], role=pair['role'], inputs=pair['shots'],\n                             captures=provenance, previous_A_invariance=invariance, measurements=result))\n            print(len(rows), '/6', pair['iso'], pair['role'], 'measured', flush=True)\n        if sha256(tool) != tool_hash or sha256(args.baseline) != baseline_hash:\n            raise ValueError('Tool or baseline changed during campaign')\n        if previous and sha256(args.previous_study) != previous_hash:\n            raise ValueError('Previous study changed during campaign')\n        if any(sha256(root/p) != info['sha256'] for p, info in sources.items()):\n            raise ValueError('Study sources changed during campaign')\n        if any(sha256(args.engine_source/p) != info['sha256'] for p, info in engine_sources.items()):\n            raise ValueError('Engine sources changed during campaign')\n        finished = datetime.now(timezone.utc)\n        out = root/'docs/validation/raw'/f'banc-raw-signe-v001-{finished.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n        save(out, dict(schema_version=1, campaign_id='raw-signed-'+stamp,\n                       started_at_utc=started.isoformat(), measured_at_utc=finished.isoformat(),\n                       completed_at_utc=finished.isoformat(), freeze=dict(path=str(freeze), sha256=sha256(freeze)),\n                       records=rows, verdict='measured_not_validated',\n                       limitations='Small exploratory corpus, no reserved frames opened, no DCP/raster output or visual success claim; internal lower bounds documented in freeze. Variance is not a denoising quality score; less variance can mean clipping. No claim of recovery of all information or optimal black levels.'))\n        status(status='succeeded', phase='complete', completed_pairs=len(rows), result=str(out))\n        print('RESULT', out, flush=True)\n    except Exception as error:\n        save(work/'partial.json', dict(error=str(error), records=rows))\n        status(status='failed', phase='error', completed_pairs=len(rows), error=str(error))\n        raise\n\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  },
+  "conditions": "signedDevelopment requested, WB as-shot, optics off, actual pre-DCP inlet retained; existing six noise pairs, full-frame stats and three256 ROIs. Native decode budget20.8s, 8 RCD workers, OpenCV1/OMP8.",
+  "limitations": "No nonlinear DCP range modification, no optics/fallback/no-profile inlet coverage, no visual or denoising benefit claim. Negative presence alone does not prove absence of every intermediate quantization."
+}

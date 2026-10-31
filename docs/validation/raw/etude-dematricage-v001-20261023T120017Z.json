@@ -1,0 +1,4402 @@
+{
+ "crop_layout": "per variant, 2x: flat tile on top, detail tile below; camera RGB, no matrix",
+ "generated_utc": "2026-10-23T12:41:50Z",
+ "libraw_openmp": false,
+ "libraw_version": "0.22.2-Release",
+ "machine": "Windows 11 Version 26H2",
+ "opencv_threads": 20,
+ "probe": {
+  "sha256": "91b7d930199ee462e6f6dfe247867a73333468558774b0c1d9c20c5225b45ffd"
+ },
+ "variant_order": [
+  "AHD",
+  "linear",
+  "VNG",
+  "PPG",
+  "AHD-median1",
+  "AHD-median3",
+  "AHD-fbdd1",
+  "AHD-fbdd2",
+  "DCB",
+  "DCB-i2-enhance",
+  "DCB-fbdd1",
+  "DHT",
+  "AAHD",
+  "OpenCV-EA"
+ ],
+ "campaign_id": "etude-dematricage-v001-20261023T120017Z",
+ "runner": "tests/study_demosaic.py",
+ "commit": "50e7dd39008e1861747637d1cf237b6679cb342f",
+ "local_changes": [
+  "M CMakeLists.txt",
+  " M docs/validation/analyses/analyse-bruit.md",
+  " M tests/noise_neighbourhood_probe.cpp",
+  "?? docs/validation/raw/etude-voisinages-bruit-v003-20261023T103216Z.json",
+  "?? tests/demosaic_probe.cpp",
+  "?? tests/study_demosaic.py"
+ ],
+ "jobs": 1,
+ "timing_note": "dcraw_process wall time with the other probe processes running",
+ "duration_seconds": 2492.7,
+ "python": "3.14.3",
+ "crops_directory": "build-patch_noise\\dematricage-v001",
+ "crops_status": "derived 8-bit montages, regenerable, not tracked",
+ "sources": [
+  "..\\..\\tests\\image\\base",
+  "..\\..\\tests\\image\\base-hors-protocole"
+ ],
+ "scenes": [
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0007069819257594645,
+    "flat_chroma_mid": 0.0013179243096958894,
+    "flat_luma_hh": 0.0015185497468337417
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A0007-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 100,
+   "raw": "6V1A0007.CR3",
+   "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.023976552910836113,
+     "chroma_flat_rmse": 0.010505806621138073,
+     "chroma_rmse": 0.01254348363697253,
+     "cpsnr_db": 43.331050236823295,
+     "luma_edge_rmse": 0.006767475650660177,
+     "luma_rmse": 0.0038591724689932203
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.024639514630830577,
+     "chroma_flat_rmse": 0.010662477599795474,
+     "chroma_rmse": 0.01278980118076704,
+     "cpsnr_db": 43.24201587611283,
+     "luma_edge_rmse": 0.006745477733269622,
+     "luma_rmse": 0.003743625191929042
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.025611289406043538,
+     "chroma_flat_rmse": 0.010674259533002464,
+     "chroma_rmse": 0.012990094293516765,
+     "cpsnr_db": 43.307937880299086,
+     "luma_edge_rmse": 0.006751066581030551,
+     "luma_rmse": 0.0036650043755913505
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.02691850507482209,
+     "chroma_flat_rmse": 0.01073960929391477,
+     "chroma_rmse": 0.01330201510746748,
+     "cpsnr_db": 43.11026785629523,
+     "luma_edge_rmse": 0.006974262178204025,
+     "luma_rmse": 0.0037394032507962523
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.029145711791204763,
+     "chroma_flat_rmse": 0.011136388718758735,
+     "chroma_rmse": 0.01404889530596481,
+     "cpsnr_db": 42.97374078936627,
+     "luma_edge_rmse": 0.005983677114531554,
+     "luma_rmse": 0.003552089053116003
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.030678605696564512,
+     "chroma_flat_rmse": 0.011139182273917152,
+     "chroma_rmse": 0.014377059408896659,
+     "cpsnr_db": 42.92208886007618,
+     "luma_edge_rmse": 0.005781325360071245,
+     "luma_rmse": 0.0034777154531670613
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.023862180986820476,
+     "chroma_flat_rmse": 0.01046836495260251,
+     "chroma_rmse": 0.012493192190488176,
+     "cpsnr_db": 43.483931399003325,
+     "luma_edge_rmse": 0.006149647621640697,
+     "luma_rmse": 0.0034898117207371533
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.02485063496701433,
+     "chroma_flat_rmse": 0.01046137998308294,
+     "chroma_rmse": 0.012681365776970623,
+     "cpsnr_db": 43.503768481221584,
+     "luma_edge_rmse": 0.006323717909909259,
+     "luma_rmse": 0.0035000761474050296
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.02502961596805276,
+     "chroma_flat_rmse": 0.010534918191727664,
+     "chroma_rmse": 0.012771360150072903,
+     "cpsnr_db": 43.502915206708515,
+     "luma_edge_rmse": 0.006105235947619405,
+     "luma_rmse": 0.003421510787368529
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.025002772700895858,
+     "chroma_flat_rmse": 0.010722996111276951,
+     "chroma_rmse": 0.012906034454075925,
+     "cpsnr_db": 43.08304236099646,
+     "luma_edge_rmse": 0.006900838379354254,
+     "luma_rmse": 0.0038750693980679797
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.02763244748113652,
+     "chroma_flat_rmse": 0.011708254452676266,
+     "chroma_rmse": 0.014157223527381068,
+     "cpsnr_db": 42.4994167620035,
+     "luma_edge_rmse": 0.0071653449039525636,
+     "luma_rmse": 0.003929287959403761
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.02469966368730272,
+     "chroma_flat_rmse": 0.010573137528165051,
+     "chroma_rmse": 0.0127347447579673,
+     "cpsnr_db": 43.24433779394566,
+     "luma_edge_rmse": 0.0067899278174090244,
+     "luma_rmse": 0.003763166244892763
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.027044179899544944,
+     "chroma_flat_rmse": 0.010906496488676054,
+     "chroma_rmse": 0.013449034110823557,
+     "cpsnr_db": 42.80899705628507,
+     "luma_edge_rmse": 0.008136414254721796,
+     "luma_rmse": 0.0040949547178274915
+    },
+    "fit": {
+     "gain": [
+      0.00013000357564864213,
+      6.92340904634538e-05,
+      0.00011725712539854526
+     ],
+     "offset": [
+      0.0020543286940816886,
+      -0.003115157122922675,
+      -0.012584613066959396
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.027316826651247603,
+     "chroma_flat_rmse": 0.011439813184981726,
+     "chroma_rmse": 0.013895602819291182,
+     "cpsnr_db": 42.48625072602423,
+     "luma_edge_rmse": 0.008372007979951605,
+     "luma_rmse": 0.004186920709698654
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.9587603108475845,
+     "detail_luma_fine_ratio": 1.0104662216799933,
+     "flat_chroma_hh_ratio": 0.8170493216134013,
+     "flat_chroma_mid_ratio": 0.8773661134282286,
+     "flat_luma_hh_ratio": 1.2757639786675186,
+     "flat_luma_mid_ratio": 1.0202713975863411,
+     "ms_per_megapixel": 171.26785250139852
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 89.88792825009206
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.845901117702044,
+     "detail_luma_fine_ratio": 0.9622746931464551,
+     "flat_chroma_hh_ratio": 0.5812539367034973,
+     "flat_chroma_mid_ratio": 0.7138475641316119,
+     "flat_luma_hh_ratio": 0.747460987773179,
+     "flat_luma_mid_ratio": 0.9441618595663663,
+     "ms_per_megapixel": 502.7404592309075
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.8033599649563227,
+     "detail_luma_fine_ratio": 0.9667115944389922,
+     "flat_chroma_hh_ratio": 0.5859259686281963,
+     "flat_chroma_mid_ratio": 0.7173608733255414,
+     "flat_luma_hh_ratio": 0.7452683915428426,
+     "flat_luma_mid_ratio": 0.9444350042480884,
+     "ms_per_megapixel": 511.3893617843135
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.6103632713614129,
+     "detail_luma_fine_ratio": 1.0043388875621522,
+     "flat_chroma_hh_ratio": 0.5039060785181119,
+     "flat_chroma_mid_ratio": 0.8149647992932594,
+     "flat_luma_hh_ratio": 0.9795848397026964,
+     "flat_luma_mid_ratio": 0.9917819619265578,
+     "ms_per_megapixel": 335.24612377965593
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.5157981731746154,
+     "detail_luma_fine_ratio": 1.0062521758600667,
+     "flat_chroma_hh_ratio": 0.34098630818045367,
+     "flat_chroma_mid_ratio": 0.6601480524133695,
+     "flat_luma_hh_ratio": 0.9749485854234613,
+     "flat_luma_mid_ratio": 0.991556859705459,
+     "ms_per_megapixel": 626.3231805691211
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.0327582882431938,
+     "detail_luma_fine_ratio": 0.9691914456897152,
+     "flat_chroma_hh_ratio": 1.1828253146033103,
+     "flat_chroma_mid_ratio": 1.0875495498706802,
+     "flat_luma_hh_ratio": 0.7301671680937935,
+     "flat_luma_mid_ratio": 0.954894460971809,
+     "ms_per_megapixel": 133.95989090289902
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.8590392345589558,
+     "detail_luma_fine_ratio": 0.9361991972399444,
+     "flat_chroma_hh_ratio": 0.7317151905883534,
+     "flat_chroma_mid_ratio": 0.8034366745983895,
+     "flat_luma_hh_ratio": 0.5741875116401776,
+     "flat_luma_mid_ratio": 0.9110613702045673,
+     "ms_per_megapixel": 391.80183590637006
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.8379757802920994,
+     "detail_luma_fine_ratio": 0.9749855765529117,
+     "flat_chroma_hh_ratio": 0.8286607753933033,
+     "flat_chroma_mid_ratio": 0.7181939891197343,
+     "flat_luma_hh_ratio": 0.963462097808603,
+     "flat_luma_mid_ratio": 0.9564734004113626,
+     "ms_per_megapixel": 476.6603709510832
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.0290426077495147,
+     "detail_luma_fine_ratio": 1.0242166671264283,
+     "flat_chroma_hh_ratio": 1.2055275154566774,
+     "flat_chroma_mid_ratio": 0.9183059610611511,
+     "flat_luma_hh_ratio": 1.2016989010423147,
+     "flat_luma_mid_ratio": 1.003816359079517,
+     "ms_per_megapixel": 116.05352336062785
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 2.0641093076994044,
+     "detail_luma_fine_ratio": 0.7648190708470228,
+     "flat_chroma_hh_ratio": 1.6108517609271926,
+     "flat_chroma_mid_ratio": 1.0271848251626094,
+     "flat_luma_hh_ratio": 0.4646990402429495,
+     "flat_luma_mid_ratio": 0.856032125768968,
+     "ms_per_megapixel": 12.16345198794863
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0111209601749667,
+     "detail_luma_fine_ratio": 0.9917311573826982,
+     "flat_chroma_hh_ratio": 0.9095059853039672,
+     "flat_chroma_mid_ratio": 1.0161708866895038,
+     "flat_luma_hh_ratio": 1.000007456059222,
+     "flat_luma_mid_ratio": 0.9630721316945664,
+     "ms_per_megapixel": 38.55482676363801
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 1.1818183573968088,
+     "detail_luma_fine_ratio": 0.9420552385373127,
+     "flat_chroma_hh_ratio": 0.767320574319451,
+     "flat_chroma_mid_ratio": 0.7909076708074859,
+     "flat_luma_hh_ratio": 1.0673142494873524,
+     "flat_luma_mid_ratio": 0.9856407871406564,
+     "ms_per_megapixel": 176.3027285023998
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.9562239167597413,
+     "detail_luma_fine_ratio": 0.7180081593684372,
+     "flat_chroma_hh_ratio": 1.419352739683676,
+     "flat_chroma_mid_ratio": 1.0041105621241062,
+     "flat_luma_hh_ratio": 0.4148343397854288,
+     "flat_luma_mid_ratio": 0.8314775463946734,
+     "ms_per_megapixel": 38.37527604869231
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0021859861444681883,
+    "flat_chroma_mid": 0.00382844963455483,
+    "flat_luma_hh": 0.0047509027644991875
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A0524-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 400,
+   "raw": "6V1A0524.CR3",
+   "raw_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.010109982904867107,
+     "chroma_flat_rmse": 0.007979344303375232,
+     "chroma_rmse": 0.008218164793895468,
+     "cpsnr_db": 46.927481810720685,
+     "luma_edge_rmse": 0.0030835362537996536,
+     "luma_rmse": 0.0025447224288287066
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.01025093947010928,
+     "chroma_flat_rmse": 0.00800252063721973,
+     "chroma_rmse": 0.008255877270933035,
+     "cpsnr_db": 47.02170619831921,
+     "luma_edge_rmse": 0.002987675673086063,
+     "luma_rmse": 0.002355822027115552
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.01037540184742816,
+     "chroma_flat_rmse": 0.007830129704927111,
+     "chroma_rmse": 0.008121681157344547,
+     "cpsnr_db": 47.22711337206797,
+     "luma_edge_rmse": 0.0031236498324643093,
+     "luma_rmse": 0.0022687376133062797
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.010540603058237714,
+     "chroma_flat_rmse": 0.007835638387972618,
+     "chroma_rmse": 0.008147769116770108,
+     "cpsnr_db": 47.19033500638248,
+     "luma_edge_rmse": 0.003199157696362058,
+     "luma_rmse": 0.0022818757104063007
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.010261005323593878,
+     "chroma_flat_rmse": 0.007936413620571889,
+     "chroma_rmse": 0.00819953109551577,
+     "cpsnr_db": 47.052340175112796,
+     "luma_edge_rmse": 0.002987899542501179,
+     "luma_rmse": 0.00235710444378685
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.010282258290215866,
+     "chroma_flat_rmse": 0.007885600410430644,
+     "chroma_rmse": 0.008157993286334748,
+     "cpsnr_db": 47.08542219830457,
+     "luma_edge_rmse": 0.002983877616974342,
+     "luma_rmse": 0.0023527332618747117
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.010600480593519273,
+     "chroma_flat_rmse": 0.00799541415331663,
+     "chroma_rmse": 0.008293897944460327,
+     "cpsnr_db": 47.0230705650086,
+     "luma_edge_rmse": 0.0032197093422936087,
+     "luma_rmse": 0.002297756479932587
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.010689197270882673,
+     "chroma_flat_rmse": 0.007738705734744713,
+     "chroma_rmse": 0.00808360167761564,
+     "cpsnr_db": 47.22001237091382,
+     "luma_edge_rmse": 0.003361453431364932,
+     "luma_rmse": 0.002264564713167892
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.00986890666218263,
+     "chroma_flat_rmse": 0.007687774074669114,
+     "chroma_rmse": 0.00793380358315531,
+     "cpsnr_db": 47.4341722056877,
+     "luma_edge_rmse": 0.0027775897790962897,
+     "luma_rmse": 0.0021954190870522756
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.010222451621532036,
+     "chroma_flat_rmse": 0.007956314033467131,
+     "chroma_rmse": 0.00821203863176063,
+     "cpsnr_db": 46.90102315486363,
+     "luma_edge_rmse": 0.0030806469591631597,
+     "luma_rmse": 0.0024861038825950018
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.012590935186495027,
+     "chroma_flat_rmse": 0.007804587103738057,
+     "chroma_rmse": 0.008408884479929418,
+     "cpsnr_db": 47.010688853072075,
+     "luma_edge_rmse": 0.0038267297597836605,
+     "luma_rmse": 0.002240860932805279
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.010330687245259606,
+     "chroma_flat_rmse": 0.007997570044269544,
+     "chroma_rmse": 0.008261536454039738,
+     "cpsnr_db": 47.003290247211744,
+     "luma_edge_rmse": 0.0030173396955235805,
+     "luma_rmse": 0.002335304161218749
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.01027469257718937,
+     "chroma_flat_rmse": 0.0077212730737609,
+     "chroma_rmse": 0.008014362831272093,
+     "cpsnr_db": 47.24691174972584,
+     "luma_edge_rmse": 0.0029741228949317455,
+     "luma_rmse": 0.002301183438813646
+    },
+    "fit": {
+     "gain": [
+      0.00013022585946870842,
+      6.888176134033106e-05,
+      0.00011649828487573628
+     ],
+     "offset": [
+      0.000800322012743858,
+      -0.004524890377712866,
+      -0.014295759666170896
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.012412099686795536,
+     "chroma_flat_rmse": 0.007750635572415665,
+     "chroma_rmse": 0.00833699944076636,
+     "cpsnr_db": 47.04316356303457,
+     "luma_edge_rmse": 0.00416180020753853,
+     "luma_rmse": 0.0022582461149561494
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.933116563660047,
+     "detail_luma_fine_ratio": 1.0174470833784361,
+     "flat_chroma_hh_ratio": 0.8540239061624881,
+     "flat_chroma_mid_ratio": 0.8717524081770929,
+     "flat_luma_hh_ratio": 1.2921602496271951,
+     "flat_luma_mid_ratio": 1.0173043081535553,
+     "ms_per_megapixel": 178.17601081145344
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 83.54004660252374
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.8114977678273093,
+     "detail_luma_fine_ratio": 0.9756141025231942,
+     "flat_chroma_hh_ratio": 0.565948464252259,
+     "flat_chroma_mid_ratio": 0.7085411030297081,
+     "flat_luma_hh_ratio": 0.7592228823224365,
+     "flat_luma_mid_ratio": 0.9485327168817825,
+     "ms_per_megapixel": 350.7418609680121
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.8123640932729325,
+     "detail_luma_fine_ratio": 0.9767745463856659,
+     "flat_chroma_hh_ratio": 0.5680679610700756,
+     "flat_chroma_mid_ratio": 0.7135339819526,
+     "flat_luma_hh_ratio": 0.7594310613473751,
+     "flat_luma_mid_ratio": 0.9514451696191638,
+     "ms_per_megapixel": 410.84146942515923
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.5767356691074337,
+     "detail_luma_fine_ratio": 1.0017724348133037,
+     "flat_chroma_hh_ratio": 0.4855396408014015,
+     "flat_chroma_mid_ratio": 0.7995085532038273,
+     "flat_luma_hh_ratio": 0.9775120067652259,
+     "flat_luma_mid_ratio": 0.9935584853410392,
+     "ms_per_megapixel": 211.15470432692626
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.4653280537080047,
+     "detail_luma_fine_ratio": 1.0025742137697533,
+     "flat_chroma_hh_ratio": 0.327382234663294,
+     "flat_chroma_mid_ratio": 0.6458287227068309,
+     "flat_luma_hh_ratio": 0.9763159071544184,
+     "flat_luma_mid_ratio": 0.9940149274750035,
+     "ms_per_megapixel": 418.76050036674326
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.2259113374730315,
+     "detail_luma_fine_ratio": 0.9372022091871228,
+     "flat_chroma_hh_ratio": 1.2223913240368744,
+     "flat_chroma_mid_ratio": 1.1452664613238797,
+     "flat_luma_hh_ratio": 0.7394366783697178,
+     "flat_luma_mid_ratio": 0.9610207421757575,
+     "ms_per_megapixel": 117.24815018374645
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 1.0352002892643477,
+     "detail_luma_fine_ratio": 0.917829048120397,
+     "flat_chroma_hh_ratio": 0.7330122156901838,
+     "flat_chroma_mid_ratio": 0.8400662478041812,
+     "flat_luma_hh_ratio": 0.5899596463082172,
+     "flat_luma_mid_ratio": 0.9190923369982956,
+     "ms_per_megapixel": 383.79777826589464
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.7721724110452763,
+     "detail_luma_fine_ratio": 0.9560569796284336,
+     "flat_chroma_hh_ratio": 0.8599769372942273,
+     "flat_chroma_mid_ratio": 0.8044718389219654,
+     "flat_luma_hh_ratio": 0.9743166957199703,
+     "flat_luma_mid_ratio": 0.9559219061481504,
+     "ms_per_megapixel": 418.0069938788769
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.042411296860372,
+     "detail_luma_fine_ratio": 1.0188090832055472,
+     "flat_chroma_hh_ratio": 1.211092068537623,
+     "flat_chroma_mid_ratio": 0.9620776162992248,
+     "flat_luma_hh_ratio": 1.2329488394743477,
+     "flat_luma_mid_ratio": 1.0124223602484472,
+     "ms_per_megapixel": 122.61036457152527
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 2.3771108492588473,
+     "detail_luma_fine_ratio": 0.7365858481775841,
+     "flat_chroma_hh_ratio": 1.6537937057636798,
+     "flat_chroma_mid_ratio": 1.1287511857815966,
+     "flat_luma_hh_ratio": 0.4728972945305556,
+     "flat_luma_mid_ratio": 0.8554959879463191,
+     "ms_per_megapixel": 11.513486701479218
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.049550421088913,
+     "detail_luma_fine_ratio": 0.9910729113586867,
+     "flat_chroma_hh_ratio": 0.9375514924196199,
+     "flat_chroma_mid_ratio": 1.069637412758442,
+     "flat_luma_hh_ratio": 1.0048969881379246,
+     "flat_luma_mid_ratio": 0.9689697633055138,
+     "ms_per_megapixel": 18.688774868079136
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 1.016406624507177,
+     "detail_luma_fine_ratio": 0.9467735253515775,
+     "flat_chroma_hh_ratio": 0.7924922788372781,
+     "flat_chroma_mid_ratio": 0.8785199797943696,
+     "flat_luma_hh_ratio": 1.1029025715307184,
+     "flat_luma_mid_ratio": 0.9857634595461685,
+     "ms_per_megapixel": 83.58230749556088
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 2.340044459719429,
+     "detail_luma_fine_ratio": 0.703321870411065,
+     "flat_chroma_hh_ratio": 1.4943880851058555,
+     "flat_chroma_mid_ratio": 1.110610628130255,
+     "flat_luma_hh_ratio": 0.42696040123754525,
+     "flat_luma_mid_ratio": 0.8358316000860647,
+     "ms_per_megapixel": 14.523374226418582
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0006815175875090063,
+    "flat_chroma_mid": 0.0012643618703860543,
+    "flat_luma_hh": 0.0009784544818103313
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A0830-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 3200,
+   "raw": "6V1A0830.CR3",
+   "raw_sha256": "821d87c5eeac4dd063aebbe9210f1a61de8dbdd25f2e6b694fe926422754c8d5",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.18292140502805676,
+     "chroma_flat_rmse": 0.15876186593698152,
+     "chroma_rmse": 0.16135015844092537,
+     "cpsnr_db": 17.901274722759297,
+     "luma_edge_rmse": 0.08552997755679707,
+     "luma_rmse": 0.07711614217984092
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.18304939257044986,
+     "chroma_flat_rmse": 0.1588202146003751,
+     "chroma_rmse": 0.16141637311121865,
+     "cpsnr_db": 17.900523033185753,
+     "luma_edge_rmse": 0.08553691094489078,
+     "luma_rmse": 0.07711036565395589
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.18279636938872512,
+     "chroma_flat_rmse": 0.15867107903648672,
+     "chroma_rmse": 0.1612555664863113,
+     "cpsnr_db": 17.905071906649553,
+     "luma_edge_rmse": 0.08612505000385172,
+     "luma_rmse": 0.07712199945101313
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.18353580879900053,
+     "chroma_flat_rmse": 0.15869362200828924,
+     "chroma_rmse": 0.1613597911444881,
+     "cpsnr_db": 17.899499079217758,
+     "luma_edge_rmse": 0.08649494329842373,
+     "luma_rmse": 0.07717907050769121
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.18334091221448176,
+     "chroma_flat_rmse": 0.15887815526091742,
+     "chroma_rmse": 0.1615008547443975,
+     "cpsnr_db": 17.89589007356763,
+     "luma_edge_rmse": 0.08562026568742141,
+     "luma_rmse": 0.07715299165045299
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.18351799204654115,
+     "chroma_flat_rmse": 0.1589379908281568,
+     "chroma_rmse": 0.16157399061471286,
+     "cpsnr_db": 17.892135986752432,
+     "luma_edge_rmse": 0.0856482083496123,
+     "luma_rmse": 0.07718600738871792
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.18277761405921944,
+     "chroma_flat_rmse": 0.1587619995016057,
+     "chroma_rmse": 0.16133392053706153,
+     "cpsnr_db": 17.89938416215059,
+     "luma_edge_rmse": 0.0861010351320786,
+     "luma_rmse": 0.0771694018149664
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.18264577788743774,
+     "chroma_flat_rmse": 0.15866500528634017,
+     "chroma_rmse": 0.16123306161978,
+     "cpsnr_db": 17.902961509403013,
+     "luma_edge_rmse": 0.0866998401171438,
+     "luma_rmse": 0.07718464693723232
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.1824157738492268,
+     "chroma_flat_rmse": 0.15873855316355642,
+     "chroma_rmse": 0.16127204914979643,
+     "cpsnr_db": 17.9028398853523,
+     "luma_edge_rmse": 0.08562513006969615,
+     "luma_rmse": 0.07711351928409799
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.18314328686882442,
+     "chroma_flat_rmse": 0.15877081874424837,
+     "chroma_rmse": 0.16138334316570002,
+     "cpsnr_db": 17.900418228319165,
+     "luma_edge_rmse": 0.08554802397580923,
+     "luma_rmse": 0.07711733067701759
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.18764490321218114,
+     "chroma_flat_rmse": 0.15869609110423716,
+     "chroma_rmse": 0.1618356353354894,
+     "cpsnr_db": 17.883075904457918,
+     "luma_edge_rmse": 0.08771898794210675,
+     "luma_rmse": 0.07729110056490064
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.18303120642093004,
+     "chroma_flat_rmse": 0.15887369686707076,
+     "chroma_rmse": 0.1614616452763775,
+     "cpsnr_db": 17.899639954542486,
+     "luma_edge_rmse": 0.08558726187533762,
+     "luma_rmse": 0.077114720630019
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.1836864850683315,
+     "chroma_flat_rmse": 0.15866645391652984,
+     "chroma_rmse": 0.16135296450567543,
+     "cpsnr_db": 17.903106102260427,
+     "luma_edge_rmse": 0.08602007448948676,
+     "luma_rmse": 0.07709952166426423
+    },
+    "fit": {
+     "gain": [
+      0.00011370101690987515,
+      6.106326196288808e-05,
+      9.975212766835545e-05
+     ],
+     "offset": [
+      0.0045254556763216205,
+      -0.003838691041124502,
+      -0.003782388219293188
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.18640644935065961,
+     "chroma_flat_rmse": 0.1586899940076192,
+     "chroma_rmse": 0.16168653662464302,
+     "cpsnr_db": 17.882228187982847,
+     "luma_edge_rmse": 0.0886883830879644,
+     "luma_rmse": 0.0773998599867239
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.8837648422712727,
+     "detail_luma_fine_ratio": 1.0917202150659682,
+     "flat_chroma_hh_ratio": 0.7165935572732471,
+     "flat_chroma_mid_ratio": 0.9877063803561581,
+     "flat_luma_hh_ratio": 1.3130328336752315,
+     "flat_luma_mid_ratio": 1.0144601015893822,
+     "ms_per_megapixel": 176.36248787705875
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 81.41892024796734
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6981211231036412,
+     "detail_luma_fine_ratio": 0.8851630733015093,
+     "flat_chroma_hh_ratio": 0.6024742027661191,
+     "flat_chroma_mid_ratio": 0.7082692857950877,
+     "flat_luma_hh_ratio": 0.7119777086480565,
+     "flat_luma_mid_ratio": 0.9485453755970472,
+     "ms_per_megapixel": 343.8703010931424
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.7107551961925842,
+     "detail_luma_fine_ratio": 0.8886568519696337,
+     "flat_chroma_hh_ratio": 0.5990575494830211,
+     "flat_chroma_mid_ratio": 0.7089278711438569,
+     "flat_luma_hh_ratio": 0.7104428054256383,
+     "flat_luma_mid_ratio": 0.9501556356487549,
+     "ms_per_megapixel": 401.6326681194733
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.49537613324649554,
+     "detail_luma_fine_ratio": 1.0006451644802878,
+     "flat_chroma_hh_ratio": 0.5212192294810877,
+     "flat_chroma_mid_ratio": 0.854223805459486,
+     "flat_luma_hh_ratio": 0.9710042068265713,
+     "flat_luma_mid_ratio": 0.9900493317029979,
+     "ms_per_megapixel": 199.69361084869928
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.35156281873873346,
+     "detail_luma_fine_ratio": 1.0021295248333835,
+     "flat_chroma_hh_ratio": 0.34451675178828034,
+     "flat_chroma_mid_ratio": 0.6992284542187226,
+     "flat_luma_hh_ratio": 0.9647810376957706,
+     "flat_luma_mid_ratio": 0.9938236701317907,
+     "ms_per_megapixel": 395.11163544947664
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.1135023649557525,
+     "detail_luma_fine_ratio": 0.8754159846631167,
+     "flat_chroma_hh_ratio": 0.9249971354686614,
+     "flat_chroma_mid_ratio": 0.9412235824156784,
+     "flat_luma_hh_ratio": 0.7412706410767547,
+     "flat_luma_mid_ratio": 0.9112295695845631,
+     "ms_per_megapixel": 112.01416816341309
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.7930422510973011,
+     "detail_luma_fine_ratio": 0.7898839885968986,
+     "flat_chroma_hh_ratio": 0.5966361895161116,
+     "flat_chroma_mid_ratio": 0.6981033960076386,
+     "flat_luma_hh_ratio": 0.5666666742902937,
+     "flat_luma_mid_ratio": 0.8935411619509073,
+     "ms_per_megapixel": 377.3512341757458
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.7046252290859714,
+     "detail_luma_fine_ratio": 0.9230094362609071,
+     "flat_chroma_hh_ratio": 0.7661188463587215,
+     "flat_chroma_mid_ratio": 0.6282416140318591,
+     "flat_luma_hh_ratio": 0.8482417461292131,
+     "flat_luma_mid_ratio": 0.9010904830569574,
+     "ms_per_megapixel": 404.44668974045965
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.0256606519532336,
+     "detail_luma_fine_ratio": 1.1027704117364692,
+     "flat_chroma_hh_ratio": 1.5975111166076477,
+     "flat_chroma_mid_ratio": 0.9813147545565248,
+     "flat_luma_hh_ratio": 1.477778219938538,
+     "flat_luma_mid_ratio": 1.0359417449783994,
+     "ms_per_megapixel": 123.15934109930548
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.4683673815286193,
+     "detail_luma_fine_ratio": 0.6252680302957168,
+     "flat_chroma_hh_ratio": 1.3654954257798797,
+     "flat_chroma_mid_ratio": 0.8234085153496029,
+     "flat_luma_hh_ratio": 0.5457183085769559,
+     "flat_luma_mid_ratio": 0.8694041236214639,
+     "ms_per_megapixel": 12.267913183865303
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0339918656113871,
+     "detail_luma_fine_ratio": 0.9855242973238768,
+     "flat_chroma_hh_ratio": 0.8135624899699272,
+     "flat_chroma_mid_ratio": 0.8855142756706513,
+     "flat_luma_hh_ratio": 1.1637001436928072,
+     "flat_luma_mid_ratio": 0.9255736586198072,
+     "ms_per_megapixel": 18.79074867140556
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.6869900126635404,
+     "detail_luma_fine_ratio": 0.9652786822861766,
+     "flat_chroma_hh_ratio": 0.596760137569533,
+     "flat_chroma_mid_ratio": 0.6384879390502155,
+     "flat_luma_hh_ratio": 1.055709687051777,
+     "flat_luma_mid_ratio": 0.9695709695709696,
+     "ms_per_megapixel": 79.83757047599433
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.4010241699022368,
+     "detail_luma_fine_ratio": 0.5892052282727439,
+     "flat_chroma_hh_ratio": 1.1186193337683115,
+     "flat_chroma_mid_ratio": 0.799153819429846,
+     "flat_luma_hh_ratio": 0.3746475739376015,
+     "flat_luma_mid_ratio": 0.8055415617128463,
+     "ms_per_megapixel": 14.429197144324622
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0004920578794553876,
+    "flat_chroma_mid": 0.0009016638512607854,
+    "flat_luma_hh": 0.0009105753269977868
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A9141-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 100,
+   "raw": "6V1A9141.CR3",
+   "raw_sha256": "5e4046a021c570ffbfecfb174cf4dba685fb8b105787f3f904394cd3505effcf",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.027216987106134436,
+     "chroma_flat_rmse": 0.008238253134549286,
+     "chroma_rmse": 0.0115951656759402,
+     "cpsnr_db": 43.56021658927834,
+     "luma_edge_rmse": 0.009777473281465958,
+     "luma_rmse": 0.004239188573523175
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.028849600004500323,
+     "chroma_flat_rmse": 0.008382462048311456,
+     "chroma_rmse": 0.012069151580219862,
+     "cpsnr_db": 43.300412573701564,
+     "luma_edge_rmse": 0.0101961488805933,
+     "luma_rmse": 0.004260115534446848
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.027377968725796925,
+     "chroma_flat_rmse": 0.007799207666734957,
+     "chroma_rmse": 0.011356626864461565,
+     "cpsnr_db": 43.391269476988214,
+     "luma_edge_rmse": 0.011238281552918516,
+     "luma_rmse": 0.00444520671875495
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.028199831425104026,
+     "chroma_flat_rmse": 0.00786059065755816,
+     "chroma_rmse": 0.011591316198722605,
+     "cpsnr_db": 43.27539716579254,
+     "luma_edge_rmse": 0.011314501900436001,
+     "luma_rmse": 0.004461229217868123
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.026623879497045366,
+     "chroma_flat_rmse": 0.00781644358541546,
+     "chroma_rmse": 0.011188667036718726,
+     "cpsnr_db": 43.49231979352085,
+     "luma_edge_rmse": 0.01067252704063627,
+     "luma_rmse": 0.004413183969374331
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.02617304324321671,
+     "chroma_flat_rmse": 0.0075629700910392,
+     "chroma_rmse": 0.010923303713139631,
+     "cpsnr_db": 43.581452963281066,
+     "luma_edge_rmse": 0.010721517947264007,
+     "luma_rmse": 0.004428360768306415
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.030396384721752018,
+     "chroma_flat_rmse": 0.008294764809434635,
+     "chroma_rmse": 0.012386036457484715,
+     "cpsnr_db": 42.985303274907494,
+     "luma_edge_rmse": 0.011331242453771847,
+     "luma_rmse": 0.004486428755213031
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.028372870730693573,
+     "chroma_flat_rmse": 0.007686355032946218,
+     "chroma_rmse": 0.011527636186089367,
+     "cpsnr_db": 43.063418355438536,
+     "luma_edge_rmse": 0.012484464986660825,
+     "luma_rmse": 0.004760135284340109
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.025860757497820058,
+     "chroma_flat_rmse": 0.007345221059229096,
+     "chroma_rmse": 0.010713810375148783,
+     "cpsnr_db": 44.27751535734867,
+     "luma_edge_rmse": 0.008908743061691196,
+     "luma_rmse": 0.0037331545654454997
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.028027372671017337,
+     "chroma_flat_rmse": 0.008054219307077302,
+     "chroma_rmse": 0.011669439718910464,
+     "cpsnr_db": 43.50365636235203,
+     "luma_edge_rmse": 0.009799246036200509,
+     "luma_rmse": 0.004180443269027631
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.03758009211336233,
+     "chroma_flat_rmse": 0.008506020142610286,
+     "chroma_rmse": 0.014315329971106829,
+     "cpsnr_db": 41.58477044729303,
+     "luma_edge_rmse": 0.014169048344813855,
+     "luma_rmse": 0.005172260498018928
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.02955402103163392,
+     "chroma_flat_rmse": 0.008099402491138347,
+     "chroma_rmse": 0.012063635982429837,
+     "cpsnr_db": 43.240291493928716,
+     "luma_edge_rmse": 0.010521752128699654,
+     "luma_rmse": 0.0042986340581769355
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.02757980008552341,
+     "chroma_flat_rmse": 0.0073913308480811615,
+     "chroma_rmse": 0.0111574037238923,
+     "cpsnr_db": 44.00605897068992,
+     "luma_edge_rmse": 0.009173087631907639,
+     "luma_rmse": 0.0037915108317601682
+    },
+    "fit": {
+     "gain": [
+      0.00010558108585650369,
+      6.065816727223916e-05,
+      0.00010480297592932804
+     ],
+     "offset": [
+      0.001851991509603596,
+      -0.0019605425648653017,
+      -0.008109684427980234
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.0368118016075218,
+     "chroma_flat_rmse": 0.008309601160395533,
+     "chroma_rmse": 0.014010619495964225,
+     "cpsnr_db": 41.72029778153938,
+     "luma_edge_rmse": 0.014065835039519485,
+     "luma_rmse": 0.005070567506019872
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.9681251258223005,
+     "detail_luma_fine_ratio": 1.0238149310143985,
+     "flat_chroma_hh_ratio": 0.7674414513589991,
+     "flat_chroma_mid_ratio": 0.9026186027993018,
+     "flat_luma_hh_ratio": 1.2930410214871022,
+     "flat_luma_mid_ratio": 1.0142168902323823,
+     "ms_per_megapixel": 176.17120335995628
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 79.1708656259412
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.80441585957458,
+     "detail_luma_fine_ratio": 0.9145776602680319,
+     "flat_chroma_hh_ratio": 0.5771426363587819,
+     "flat_chroma_mid_ratio": 0.6978049571721784,
+     "flat_luma_hh_ratio": 0.7169845993041598,
+     "flat_luma_mid_ratio": 0.922219098491238,
+     "ms_per_megapixel": 336.0007485100193
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.8152128357052854,
+     "detail_luma_fine_ratio": 0.9145642290207058,
+     "flat_chroma_hh_ratio": 0.5778071768667771,
+     "flat_chroma_mid_ratio": 0.697246604655225,
+     "flat_luma_hh_ratio": 0.7125898866474866,
+     "flat_luma_mid_ratio": 0.9232141135640605,
+     "ms_per_megapixel": 397.06004135143047
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.6696635729258831,
+     "detail_luma_fine_ratio": 1.0010943410468527,
+     "flat_chroma_hh_ratio": 0.5056706552392015,
+     "flat_chroma_mid_ratio": 0.8250958785718144,
+     "flat_luma_hh_ratio": 0.9698808463586673,
+     "flat_luma_mid_ratio": 0.9909971354521894,
+     "ms_per_megapixel": 202.18050162375937
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.5609044855006159,
+     "detail_luma_fine_ratio": 1.00653550720995,
+     "flat_chroma_hh_ratio": 0.33713526647209663,
+     "flat_chroma_mid_ratio": 0.6668521061064845,
+     "flat_luma_hh_ratio": 0.9698006977512689,
+     "flat_luma_mid_ratio": 0.9903588392983117,
+     "ms_per_megapixel": 403.4257002668387
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 0.9873880775721442,
+     "detail_luma_fine_ratio": 0.9181260786093198,
+     "flat_chroma_hh_ratio": 1.0693919772204137,
+     "flat_chroma_mid_ratio": 1.024150921924647,
+     "flat_luma_hh_ratio": 0.7454107454849986,
+     "flat_luma_mid_ratio": 0.9445380578691445,
+     "ms_per_megapixel": 111.77663301273022
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.8616566808448249,
+     "detail_luma_fine_ratio": 0.8466370635094087,
+     "flat_chroma_hh_ratio": 0.6357997157629042,
+     "flat_chroma_mid_ratio": 0.7345774345774345,
+     "flat_luma_hh_ratio": 0.5658967021205004,
+     "flat_luma_mid_ratio": 0.8868722707423581,
+     "ms_per_megapixel": 367.7662015758794
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.7827734879650214,
+     "detail_luma_fine_ratio": 0.9408285118516048,
+     "flat_chroma_hh_ratio": 0.8034693133071211,
+     "flat_chroma_mid_ratio": 0.6801788877054512,
+     "flat_luma_hh_ratio": 0.9335344000076079,
+     "flat_luma_mid_ratio": 0.9373240411685974,
+     "ms_per_megapixel": 398.80831592029455
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 0.9760666056898263,
+     "detail_luma_fine_ratio": 1.0339038108288356,
+     "flat_chroma_hh_ratio": 1.430267418134128,
+     "flat_chroma_mid_ratio": 0.9085822900130298,
+     "flat_luma_hh_ratio": 1.2590033568945371,
+     "flat_luma_mid_ratio": 1.001909018950505,
+     "ms_per_megapixel": 119.99441436323943
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.521458589820007,
+     "detail_luma_fine_ratio": 0.7034397193932884,
+     "flat_chroma_hh_ratio": 1.4825811328820149,
+     "flat_chroma_mid_ratio": 0.9419412820233029,
+     "flat_luma_hh_ratio": 0.48502994325652127,
+     "flat_luma_mid_ratio": 0.8576712460370833,
+     "ms_per_megapixel": 11.42117129179714
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 0.9411883579092742,
+     "detail_luma_fine_ratio": 0.9833604549698274,
+     "flat_chroma_hh_ratio": 0.8150402097881297,
+     "flat_chroma_mid_ratio": 0.9617293083291764,
+     "flat_luma_hh_ratio": 1.0530870722719856,
+     "flat_luma_mid_ratio": 0.9531214477333697,
+     "ms_per_megapixel": 18.483712116553953
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.806379264568802,
+     "detail_luma_fine_ratio": 0.9339162433781698,
+     "flat_chroma_hh_ratio": 0.6954225941511688,
+     "flat_chroma_mid_ratio": 0.7286256222977923,
+     "flat_luma_hh_ratio": 1.0740851964353113,
+     "flat_luma_mid_ratio": 0.9783006652676697,
+     "ms_per_megapixel": 79.55613578883691
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.4254431551642683,
+     "detail_luma_fine_ratio": 0.6689309690075603,
+     "flat_chroma_hh_ratio": 1.2677282258040932,
+     "flat_chroma_mid_ratio": 0.9183738270855341,
+     "flat_luma_hh_ratio": 0.41285596349303816,
+     "flat_luma_mid_ratio": 0.8241852101595863,
+     "ms_per_megapixel": 13.969045003251113
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0022990666329860687,
+    "flat_chroma_mid": 0.0038819499396676926,
+    "flat_luma_hh": 0.0031757077667862177
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A9608-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 16000,
+   "raw": "6V1A9608.CR3",
+   "raw_sha256": "aceefe524cf5224beb5077e834a0453f9a7ad80ec31a5860b0be9da23501bb96",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.034366136161324085,
+     "chroma_flat_rmse": 0.027618298022070508,
+     "chroma_rmse": 0.02836498725959,
+     "cpsnr_db": 35.804661740204516,
+     "luma_edge_rmse": 0.012435585147895995,
+     "luma_rmse": 0.010113333407111093
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.0350142618554091,
+     "chroma_flat_rmse": 0.02820666555311204,
+     "chroma_rmse": 0.028959101602634364,
+     "cpsnr_db": 35.95740499395848,
+     "luma_edge_rmse": 0.011508504079968973,
+     "luma_rmse": 0.008958290523781411
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.03404238584625358,
+     "chroma_flat_rmse": 0.027228270703168588,
+     "chroma_rmse": 0.027984019070902692,
+     "cpsnr_db": 36.406889113183226,
+     "luma_edge_rmse": 0.010570703584846292,
+     "luma_rmse": 0.00836303667394701
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.03407948502589067,
+     "chroma_flat_rmse": 0.027001020841246684,
+     "chroma_rmse": 0.027789673612534836,
+     "cpsnr_db": 36.43697884593675,
+     "luma_edge_rmse": 0.01059781513635024,
+     "luma_rmse": 0.008377420733492295
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.03425119175800102,
+     "chroma_flat_rmse": 0.02727568803546497,
+     "chroma_rmse": 0.02805096528519893,
+     "cpsnr_db": 36.1604189370654,
+     "luma_edge_rmse": 0.011368411758223746,
+     "luma_rmse": 0.008885308941503618
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.03408337054987414,
+     "chroma_flat_rmse": 0.026847927206783088,
+     "chroma_rmse": 0.027656326916727553,
+     "cpsnr_db": 36.2518218210368,
+     "luma_edge_rmse": 0.011294454139733187,
+     "luma_rmse": 0.008850840340686688
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.03512090861838781,
+     "chroma_flat_rmse": 0.028576186010778992,
+     "chroma_rmse": 0.029296117342025346,
+     "cpsnr_db": 36.049531299442314,
+     "luma_edge_rmse": 0.010227155175396936,
+     "luma_rmse": 0.008283832343744447
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.0333990407489521,
+     "chroma_flat_rmse": 0.027018234900293783,
+     "chroma_rmse": 0.02772208521673076,
+     "cpsnr_db": 36.50039304262476,
+     "luma_edge_rmse": 0.009911056524840024,
+     "luma_rmse": 0.008052702995291679
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.03309812508506506,
+     "chroma_flat_rmse": 0.026690609171498007,
+     "chroma_rmse": 0.02739847411770749,
+     "cpsnr_db": 36.55022747817535,
+     "luma_edge_rmse": 0.009983020873402797,
+     "luma_rmse": 0.008115895436820227
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.03590423854790882,
+     "chroma_flat_rmse": 0.028769862690797923,
+     "chroma_rmse": 0.029560437820859663,
+     "cpsnr_db": 35.44938631991228,
+     "luma_edge_rmse": 0.012225101851510111,
+     "luma_rmse": 0.009837316486176249
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.03524964586370938,
+     "chroma_flat_rmse": 0.02816887278087095,
+     "chroma_rmse": 0.02895453101591813,
+     "cpsnr_db": 36.41303329633307,
+     "luma_edge_rmse": 0.009484282175891923,
+     "luma_rmse": 0.007612443076619583
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.03536732257814143,
+     "chroma_flat_rmse": 0.028706267005461517,
+     "chroma_rmse": 0.02943985519360984,
+     "cpsnr_db": 35.8592804133143,
+     "luma_edge_rmse": 0.011110325517972587,
+     "luma_rmse": 0.0088227592421909
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.033250091538024565,
+     "chroma_flat_rmse": 0.026905279941266593,
+     "chroma_rmse": 0.02760506583122349,
+     "cpsnr_db": 36.2324480641293,
+     "luma_edge_rmse": 0.011123579395656146,
+     "luma_rmse": 0.008979336581338988
+    },
+    "fit": {
+     "gain": [
+      9.895810412873235e-05,
+      5.6872296754562316e-05,
+      7.814071388860117e-05
+     ],
+     "offset": [
+      0.04385162210041987,
+      0.009041194672094636,
+      0.04801115152708866
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.03484385521434767,
+     "chroma_flat_rmse": 0.027947901255746907,
+     "chroma_rmse": 0.028711692200921003,
+     "cpsnr_db": 36.50002003236027,
+     "luma_edge_rmse": 0.009206872321042434,
+     "luma_rmse": 0.007392977516550178
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.8669150043073568,
+     "detail_luma_fine_ratio": 1.145604019302672,
+     "flat_chroma_hh_ratio": 0.8368105635870954,
+     "flat_chroma_mid_ratio": 0.8483400444437019,
+     "flat_luma_hh_ratio": 1.4851219686753592,
+     "flat_luma_mid_ratio": 1.0247419830445998,
+     "ms_per_megapixel": 179.9437446583399
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 81.1472833475633
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6087479911946508,
+     "detail_luma_fine_ratio": 0.8333624878680649,
+     "flat_chroma_hh_ratio": 0.5184602723273717,
+     "flat_chroma_mid_ratio": 0.6847283893715073,
+     "flat_luma_hh_ratio": 0.742953133007336,
+     "flat_luma_mid_ratio": 0.9418980905308822,
+     "ms_per_megapixel": 340.20101291706385
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.6550388217019699,
+     "detail_luma_fine_ratio": 0.8440896600430186,
+     "flat_chroma_hh_ratio": 0.5248467168810607,
+     "flat_chroma_mid_ratio": 0.6937628681710192,
+     "flat_luma_hh_ratio": 0.7439883817598489,
+     "flat_luma_mid_ratio": 0.9448109412711183,
+     "ms_per_megapixel": 412.8062958353583
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.4862482813277502,
+     "detail_luma_fine_ratio": 0.9973192066436412,
+     "flat_chroma_hh_ratio": 0.4727662499276495,
+     "flat_chroma_mid_ratio": 0.7921234809570417,
+     "flat_luma_hh_ratio": 0.9763784503135112,
+     "flat_luma_mid_ratio": 0.9779503883738411,
+     "ms_per_megapixel": 201.76221387976838
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.3469328808716251,
+     "detail_luma_fine_ratio": 0.9984892836123984,
+     "flat_chroma_hh_ratio": 0.31613546891812183,
+     "flat_chroma_mid_ratio": 0.6427396712223071,
+     "flat_luma_hh_ratio": 0.9790997990428568,
+     "flat_luma_mid_ratio": 0.9762347188264059,
+     "ms_per_megapixel": 400.4069938045339
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.1103160238458885,
+     "detail_luma_fine_ratio": 0.8502651168354246,
+     "flat_chroma_hh_ratio": 1.1234740381729582,
+     "flat_chroma_mid_ratio": 1.0892377359263783,
+     "flat_luma_hh_ratio": 0.8092187713441427,
+     "flat_luma_mid_ratio": 0.9612733993084536,
+     "ms_per_megapixel": 117.5885574489029
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6858492135848127,
+     "detail_luma_fine_ratio": 0.7242250628407103,
+     "flat_chroma_hh_ratio": 0.5925045088029205,
+     "flat_chroma_mid_ratio": 0.7765777080062793,
+     "flat_luma_hh_ratio": 0.6465263360457281,
+     "flat_luma_mid_ratio": 0.9110086319025659,
+     "ms_per_megapixel": 374.356847164532
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.6899486805152176,
+     "detail_luma_fine_ratio": 0.9057235759538267,
+     "flat_chroma_hh_ratio": 0.8645273859553099,
+     "flat_chroma_mid_ratio": 0.8280982304218802,
+     "flat_luma_hh_ratio": 0.985737704797628,
+     "flat_luma_mid_ratio": 0.945573811070887,
+     "ms_per_megapixel": 401.98544729746345
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.0380507064126092,
+     "detail_luma_fine_ratio": 1.1539829015519871,
+     "flat_chroma_hh_ratio": 1.4577617976968125,
+     "flat_chroma_mid_ratio": 0.9726705804067838,
+     "flat_luma_hh_ratio": 1.512181232941171,
+     "flat_luma_mid_ratio": 1.0556389902023886,
+     "ms_per_megapixel": 122.14637757114075
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.3595335257900703,
+     "detail_luma_fine_ratio": 0.5579594190609212,
+     "flat_chroma_hh_ratio": 1.4729014939103051,
+     "flat_chroma_mid_ratio": 1.0840156414025157,
+     "flat_luma_hh_ratio": 0.5263153543371288,
+     "flat_luma_mid_ratio": 0.8647598698586898,
+     "ms_per_megapixel": 10.731850684207979
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0664479946256766,
+     "detail_luma_fine_ratio": 0.975046357124752,
+     "flat_chroma_hh_ratio": 0.8756166668728391,
+     "flat_chroma_mid_ratio": 1.0319195085941346,
+     "flat_luma_hh_ratio": 1.0994476034608225,
+     "flat_luma_mid_ratio": 0.9676772616136919,
+     "ms_per_megapixel": 17.43815847949501
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.6949203105791374,
+     "detail_luma_fine_ratio": 1.0029949875103443,
+     "flat_chroma_hh_ratio": 0.7322580377253869,
+     "flat_chroma_mid_ratio": 0.8599048729151363,
+     "flat_luma_hh_ratio": 1.2794362177810386,
+     "flat_luma_mid_ratio": 1.0211640211640212,
+     "ms_per_megapixel": 78.24000463900268
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.3034552702398683,
+     "detail_luma_fine_ratio": 0.5159212244449669,
+     "flat_chroma_hh_ratio": 1.3874746707326857,
+     "flat_chroma_mid_ratio": 1.075633914010483,
+     "flat_luma_hh_ratio": 0.4610266598644306,
+     "flat_luma_mid_ratio": 0.8490801886792453,
+     "ms_per_megapixel": 13.465355747786571
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0006985011277720332,
+    "flat_chroma_mid": 0.0012475165992069457,
+    "flat_luma_hh": 0.0009416926186531782
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A9616-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 1600,
+   "raw": "6V1A9616.CR3",
+   "raw_sha256": "fade2f141ad716d3d8a9acba8a79fd39a75d277b406e7ec633f7c9a0d368229b",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.017396240843087853,
+     "chroma_flat_rmse": 0.009340944489396414,
+     "chroma_rmse": 0.010444901051092394,
+     "cpsnr_db": 44.55301384099766,
+     "luma_edge_rmse": 0.00575340332589887,
+     "luma_rmse": 0.003593318046259069
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.017756949995653137,
+     "chroma_flat_rmse": 0.009425223018225787,
+     "chroma_rmse": 0.01057369922216726,
+     "cpsnr_db": 44.60509531456542,
+     "luma_edge_rmse": 0.005634087966224766,
+     "luma_rmse": 0.003372229685172278
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.01738012623816121,
+     "chroma_flat_rmse": 0.009024570233073336,
+     "chroma_rmse": 0.010189112635377414,
+     "cpsnr_db": 44.90079689622454,
+     "luma_edge_rmse": 0.0057715913911590136,
+     "luma_rmse": 0.0032823036411845016
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.0174184557493623,
+     "chroma_flat_rmse": 0.009025164219414995,
+     "chroma_rmse": 0.010196220923645126,
+     "cpsnr_db": 44.91279683546978,
+     "luma_edge_rmse": 0.005705904852281387,
+     "luma_rmse": 0.003270617883237243
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.017623664074278095,
+     "chroma_flat_rmse": 0.009083373193407797,
+     "chroma_rmse": 0.010278101964938745,
+     "cpsnr_db": 44.723979479343456,
+     "luma_edge_rmse": 0.005637570000399161,
+     "luma_rmse": 0.003397948160906887
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.017657631255719956,
+     "chroma_flat_rmse": 0.008919822396519776,
+     "chroma_rmse": 0.010154560375274386,
+     "cpsnr_db": 44.785889729215796,
+     "luma_edge_rmse": 0.005633651040407933,
+     "luma_rmse": 0.0033982739334244743
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.017630575466963394,
+     "chroma_flat_rmse": 0.009293855561403438,
+     "chroma_rmse": 0.010447003651771196,
+     "cpsnr_db": 44.76504545150074,
+     "luma_edge_rmse": 0.005469134280810535,
+     "luma_rmse": 0.003205341501721135
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.01719082362976999,
+     "chroma_flat_rmse": 0.00883762912435375,
+     "chroma_rmse": 0.01000768589881563,
+     "cpsnr_db": 45.00106497170948,
+     "luma_edge_rmse": 0.005748672170716939,
+     "luma_rmse": 0.00322429221622579
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.016917712288867476,
+     "chroma_flat_rmse": 0.008712757231982792,
+     "chroma_rmse": 0.009861021601906453,
+     "cpsnr_db": 45.26240081442606,
+     "luma_edge_rmse": 0.005192471722000262,
+     "luma_rmse": 0.00303986503466194
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.017876301694734382,
+     "chroma_flat_rmse": 0.00959747703102059,
+     "chroma_rmse": 0.010732140971230602,
+     "cpsnr_db": 44.17092000461632,
+     "luma_edge_rmse": 0.005800390195229246,
+     "luma_rmse": 0.003619872733156023
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.018876540979713502,
+     "chroma_flat_rmse": 0.009211238701490772,
+     "chroma_rmse": 0.010600905737318722,
+     "cpsnr_db": 44.697206152420264,
+     "luma_edge_rmse": 0.006112691045296577,
+     "luma_rmse": 0.0031509185831391
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.01769628999862738,
+     "chroma_flat_rmse": 0.009331816105268086,
+     "chroma_rmse": 0.010488596563032667,
+     "cpsnr_db": 44.65157573140942,
+     "luma_edge_rmse": 0.005577115996111649,
+     "luma_rmse": 0.0033147238597362617
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.017307174796399136,
+     "chroma_flat_rmse": 0.008726373450743516,
+     "chroma_rmse": 0.00994006713042608,
+     "cpsnr_db": 44.98950235514351,
+     "luma_edge_rmse": 0.0057348252905548135,
+     "luma_rmse": 0.003233170234022383
+    },
+    "fit": {
+     "gain": [
+      0.00011231258964098464,
+      6.063130807427323e-05,
+      9.983690328266695e-05
+     ],
+     "offset": [
+      0.008292397843432475,
+      -0.00224753559826332,
+      -0.003480495231223566
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.018402337365334177,
+     "chroma_flat_rmse": 0.009094596937875059,
+     "chroma_rmse": 0.010424380234758739,
+     "cpsnr_db": 44.78328952541603,
+     "luma_edge_rmse": 0.006437530052426004,
+     "luma_rmse": 0.0031397381573180956
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.881848067457201,
+     "detail_luma_fine_ratio": 1.102354888099361,
+     "flat_chroma_hh_ratio": 0.7500400416046745,
+     "flat_chroma_mid_ratio": 0.9460895451986764,
+     "flat_luma_hh_ratio": 1.323360463055062,
+     "flat_luma_mid_ratio": 1.0123822158723679,
+     "ms_per_megapixel": 173.80301975655706
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 81.29414482962616
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6505338000799612,
+     "detail_luma_fine_ratio": 0.8196218234062213,
+     "flat_chroma_hh_ratio": 0.5741914651239232,
+     "flat_chroma_mid_ratio": 0.6990557071087357,
+     "flat_luma_hh_ratio": 0.7232560522374114,
+     "flat_luma_mid_ratio": 0.9427150488119358,
+     "ms_per_megapixel": 338.4104681622886
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.6490040308111686,
+     "detail_luma_fine_ratio": 0.819550783805572,
+     "flat_chroma_hh_ratio": 0.5787523369674004,
+     "flat_chroma_mid_ratio": 0.7015389955256325,
+     "flat_luma_hh_ratio": 0.7241183879718938,
+     "flat_luma_mid_ratio": 0.9418604651162791,
+     "ms_per_megapixel": 391.9423255745374
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.5104036046749413,
+     "detail_luma_fine_ratio": 1.0006527003187684,
+     "flat_chroma_hh_ratio": 0.5000084287086074,
+     "flat_chroma_mid_ratio": 0.837622927735597,
+     "flat_luma_hh_ratio": 0.9744514782964838,
+     "flat_luma_mid_ratio": 0.9967981470127392,
+     "ms_per_megapixel": 202.34527976677117
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.3598724270677846,
+     "detail_luma_fine_ratio": 1.0024616444590118,
+     "flat_chroma_hh_ratio": 0.3307836607766241,
+     "flat_chroma_mid_ratio": 0.6861219804228951,
+     "flat_luma_hh_ratio": 0.9691718919893052,
+     "flat_luma_mid_ratio": 1.0001446340757882,
+     "ms_per_megapixel": 402.148856290382
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 0.9785774457397193,
+     "detail_luma_fine_ratio": 0.8727609718238588,
+     "flat_chroma_hh_ratio": 0.9539961447787003,
+     "flat_chroma_mid_ratio": 0.9783021582733813,
+     "flat_luma_hh_ratio": 0.7620608923167423,
+     "flat_luma_mid_ratio": 0.9516225223644975,
+     "ms_per_megapixel": 112.78991249860879
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6431812740725867,
+     "detail_luma_fine_ratio": 0.722403453152865,
+     "flat_chroma_hh_ratio": 0.5992096043728935,
+     "flat_chroma_mid_ratio": 0.7195041505257332,
+     "flat_luma_hh_ratio": 0.5880038980036864,
+     "flat_luma_mid_ratio": 0.9009941227960486,
+     "ms_per_megapixel": 367.0918177143303
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.6482816525119562,
+     "detail_luma_fine_ratio": 0.8867765739756338,
+     "flat_chroma_hh_ratio": 0.8128219679290105,
+     "flat_chroma_mid_ratio": 0.6680892303706139,
+     "flat_luma_hh_ratio": 0.8880716064488077,
+     "flat_luma_mid_ratio": 0.9373092439922821,
+     "ms_per_megapixel": 396.5192549432127
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.065185570066878,
+     "detail_luma_fine_ratio": 1.165687173652465,
+     "flat_chroma_hh_ratio": 1.5564926339642895,
+     "flat_chroma_mid_ratio": 0.9800904601111299,
+     "flat_luma_hh_ratio": 1.4628085487359619,
+     "flat_luma_mid_ratio": 1.0423551513598908,
+     "ms_per_megapixel": 118.98384529892559
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.2987531281532732,
+     "detail_luma_fine_ratio": 0.5585420961716694,
+     "flat_chroma_hh_ratio": 1.3882444819861066,
+     "flat_chroma_mid_ratio": 0.8888207918522727,
+     "flat_luma_hh_ratio": 0.5566469666216133,
+     "flat_luma_mid_ratio": 0.87853928801004,
+     "ms_per_megapixel": 10.641777954769166
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 0.9775517708057342,
+     "detail_luma_fine_ratio": 0.9675881563303633,
+     "flat_chroma_hh_ratio": 0.7718698654548625,
+     "flat_chroma_mid_ratio": 0.9400092693258947,
+     "flat_luma_hh_ratio": 1.14179070677766,
+     "flat_luma_mid_ratio": 0.9584341757190298,
+     "ms_per_megapixel": 17.509007350384497
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.6121114571841431,
+     "detail_luma_fine_ratio": 0.9333808051551392,
+     "flat_chroma_hh_ratio": 0.6267673497799467,
+     "flat_chroma_mid_ratio": 0.7081315121404208,
+     "flat_luma_hh_ratio": 1.1160061533841608,
+     "flat_luma_mid_ratio": 0.991916197918421,
+     "ms_per_megapixel": 78.82549286847818
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.2110697443097977,
+     "detail_luma_fine_ratio": 0.5036038570642526,
+     "flat_chroma_hh_ratio": 1.1722626095342246,
+     "flat_chroma_mid_ratio": 0.8585957472371725,
+     "flat_luma_hh_ratio": 0.3979827660680006,
+     "flat_luma_mid_ratio": 0.8516013526954447,
+     "ms_per_megapixel": 13.835326742558678
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0029183714650571346,
+    "flat_chroma_mid": 0.004916165363709073,
+    "flat_luma_hh": 0.003746953560039401
+   },
+   "camera": "EOS R6 Mark III",
+   "crop": "6V1A9890-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4639,
+   "iso": 25600,
+   "raw": "6V1A9890.CR3",
+   "raw_sha256": "a57c06cb4498dc9385a4d4305bdff769bb2fdb2c5865a0c324ccefabebc0981d",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.046597594453899494,
+     "chroma_flat_rmse": 0.03342626015589276,
+     "chroma_rmse": 0.034961087322381054,
+     "cpsnr_db": 33.70789161701369,
+     "luma_edge_rmse": 0.01711830244306851,
+     "luma_rmse": 0.01286451572693583
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.04763881090704638,
+     "chroma_flat_rmse": 0.034209578187800994,
+     "chroma_rmse": 0.03577363827880839,
+     "cpsnr_db": 33.87051823128355,
+     "luma_edge_rmse": 0.015519723603578112,
+     "luma_rmse": 0.011357626446932032
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.04563613024087608,
+     "chroma_flat_rmse": 0.03247963232848606,
+     "chroma_rmse": 0.03401868789620757,
+     "cpsnr_db": 34.30992499220545,
+     "luma_edge_rmse": 0.01494075147798739,
+     "luma_rmse": 0.010805466891143384
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.04570653856363323,
+     "chroma_flat_rmse": 0.032460715701652064,
+     "chroma_rmse": 0.03401184286059672,
+     "cpsnr_db": 34.35767240109843,
+     "luma_edge_rmse": 0.014741452492569524,
+     "luma_rmse": 0.010730527709735455
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.046247022490859345,
+     "chroma_flat_rmse": 0.03303298304368017,
+     "chroma_rmse": 0.03457603531414589,
+     "cpsnr_db": 34.085535022106654,
+     "luma_edge_rmse": 0.015295329994638495,
+     "luma_rmse": 0.011218689200065635
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.04556554094149447,
+     "chroma_flat_rmse": 0.03243109040921857,
+     "chroma_rmse": 0.03396752725892913,
+     "cpsnr_db": 34.193001863706904,
+     "luma_edge_rmse": 0.015206271855917228,
+     "luma_rmse": 0.011163951008288878
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.04823711534285002,
+     "chroma_flat_rmse": 0.03476763187125969,
+     "chroma_rmse": 0.03633352882760849,
+     "cpsnr_db": 33.901715025660664,
+     "luma_edge_rmse": 0.014587585538875788,
+     "luma_rmse": 0.010731049441089926
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.045329202408939034,
+     "chroma_flat_rmse": 0.03232687294653111,
+     "chroma_rmse": 0.033846371097757594,
+     "cpsnr_db": 34.35327868492905,
+     "luma_edge_rmse": 0.01457712586072951,
+     "luma_rmse": 0.010549676932126592
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.04516964257220011,
+     "chroma_flat_rmse": 0.032382823263671805,
+     "chroma_rmse": 0.0338732762154654,
+     "cpsnr_db": 34.372572395701944,
+     "luma_edge_rmse": 0.014362727929254792,
+     "luma_rmse": 0.01056749158434653
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.04820491315617673,
+     "chroma_flat_rmse": 0.03476634427026613,
+     "chroma_rmse": 0.03632816305571028,
+     "cpsnr_db": 33.416993701669135,
+     "luma_edge_rmse": 0.01667961806236565,
+     "luma_rmse": 0.012490990367842202
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.047835664236439646,
+     "chroma_flat_rmse": 0.03411143204832764,
+     "chroma_rmse": 0.03571536244588808,
+     "cpsnr_db": 34.22054368622648,
+     "luma_edge_rmse": 0.014030046078311787,
+     "luma_rmse": 0.010062897825882332
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.04852497511923842,
+     "chroma_flat_rmse": 0.03497897536168499,
+     "chroma_rmse": 0.03655368223311356,
+     "cpsnr_db": 33.7403839318501,
+     "luma_edge_rmse": 0.015299561742733343,
+     "luma_rmse": 0.011257141719827047
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.04558673167369558,
+     "chroma_flat_rmse": 0.03268206437862135,
+     "chroma_rmse": 0.03418624882984992,
+     "cpsnr_db": 34.05078538191949,
+     "luma_edge_rmse": 0.015696564195610604,
+     "luma_rmse": 0.011656373923324932
+    },
+    "fit": {
+     "gain": [
+      9.989495828500261e-05,
+      5.917330011807092e-05,
+      7.953548609598922e-05
+     ],
+     "offset": [
+      0.03897136650989687,
+      0.0019008538205241233,
+      0.04483231205113431
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.04743930356817859,
+     "chroma_flat_rmse": 0.033896012792985424,
+     "chroma_rmse": 0.03547725076465864,
+     "cpsnr_db": 34.280880933735105,
+     "luma_edge_rmse": 0.013922132812806725,
+     "luma_rmse": 0.009882729618188767
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.8548503667166014,
+     "detail_luma_fine_ratio": 1.1653988350311795,
+     "flat_chroma_hh_ratio": 0.8075402326600989,
+     "flat_chroma_mid_ratio": 0.8371085302408793,
+     "flat_luma_hh_ratio": 1.5898516080605116,
+     "flat_luma_mid_ratio": 1.034008347503478,
+     "ms_per_megapixel": 177.783129784804
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 81.28869920549955
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.5721464551385352,
+     "detail_luma_fine_ratio": 0.8184455106635967,
+     "flat_chroma_hh_ratio": 0.49048868319286054,
+     "flat_chroma_mid_ratio": 0.6709001883492005,
+     "flat_luma_hh_ratio": 0.7513241849771531,
+     "flat_luma_mid_ratio": 0.9280836399953214,
+     "ms_per_megapixel": 339.3953919921633
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.6362816683608513,
+     "detail_luma_fine_ratio": 0.8331792821053413,
+     "flat_chroma_hh_ratio": 0.5087100625564455,
+     "flat_chroma_mid_ratio": 0.6807719586684956,
+     "flat_luma_hh_ratio": 0.7544218704641997,
+     "flat_luma_mid_ratio": 0.9309841657957526,
+     "ms_per_megapixel": 396.2864994273576
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.4702967808104978,
+     "detail_luma_fine_ratio": 0.9941369502128564,
+     "flat_chroma_hh_ratio": 0.4689914508748816,
+     "flat_chroma_mid_ratio": 0.7889148927075317,
+     "flat_luma_hh_ratio": 0.9569448312232934,
+     "flat_luma_mid_ratio": 0.9520264140001685,
+     "ms_per_megapixel": 201.30388004436173
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.3158080868062157,
+     "detail_luma_fine_ratio": 0.9940215391476721,
+     "flat_chroma_hh_ratio": 0.3168682799452064,
+     "flat_chroma_mid_ratio": 0.6347292405053387,
+     "flat_luma_hh_ratio": 0.9568152564045351,
+     "flat_luma_mid_ratio": 0.9329473493757916,
+     "ms_per_megapixel": 401.19768108101897
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.104476927635677,
+     "detail_luma_fine_ratio": 0.844898437251835,
+     "flat_chroma_hh_ratio": 1.1275545989776352,
+     "flat_chroma_mid_ratio": 1.0912297491284435,
+     "flat_luma_hh_ratio": 0.8003007974139569,
+     "flat_luma_mid_ratio": 0.9620713428973489,
+     "ms_per_megapixel": 115.27283831412275
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6315570471876965,
+     "detail_luma_fine_ratio": 0.7051576003223005,
+     "flat_chroma_hh_ratio": 0.562204814308619,
+     "flat_chroma_mid_ratio": 0.754700187604481,
+     "flat_luma_hh_ratio": 0.6538117111154009,
+     "flat_luma_mid_ratio": 0.8949931980555001,
+     "ms_per_megapixel": 373.4680767012751
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.6640705060185328,
+     "detail_luma_fine_ratio": 0.8968391142453657,
+     "flat_chroma_hh_ratio": 0.8380176761102591,
+     "flat_chroma_mid_ratio": 0.8296630105149789,
+     "flat_luma_hh_ratio": 1.0213810361403421,
+     "flat_luma_mid_ratio": 0.9459349285199653,
+     "ms_per_megapixel": 401.54915615903343
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.0541441768401285,
+     "detail_luma_fine_ratio": 1.1780308729846518,
+     "flat_chroma_hh_ratio": 1.4214670199718988,
+     "flat_chroma_mid_ratio": 0.9613399710313524,
+     "flat_luma_hh_ratio": 1.559973726315525,
+     "flat_luma_mid_ratio": 1.049799021652573,
+     "ms_per_megapixel": 121.43640200241609
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.3327796143626127,
+     "detail_luma_fine_ratio": 0.5417863867208264,
+     "flat_chroma_hh_ratio": 1.4234218092551014,
+     "flat_chroma_mid_ratio": 1.0881371476747101,
+     "flat_luma_hh_ratio": 0.5363004645924363,
+     "flat_luma_mid_ratio": 0.8762221240467913,
+     "ms_per_megapixel": 10.695060196294616
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0760933529416676,
+     "detail_luma_fine_ratio": 0.9726765595904152,
+     "flat_chroma_hh_ratio": 0.8985002021985397,
+     "flat_chroma_mid_ratio": 1.0328163802725365,
+     "flat_luma_hh_ratio": 1.0987487296478204,
+     "flat_luma_mid_ratio": 0.9728194500980645,
+     "ms_per_megapixel": 19.158380959570394
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.6684417298862567,
+     "detail_luma_fine_ratio": 1.0137823034309803,
+     "flat_chroma_hh_ratio": 0.7296512532401066,
+     "flat_chroma_mid_ratio": 0.8649630769557801,
+     "flat_luma_hh_ratio": 1.3597340858262683,
+     "flat_luma_mid_ratio": 1.046608444658254,
+     "ms_per_megapixel": 77.9930589046471
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.2810550556988562,
+     "detail_luma_fine_ratio": 0.5001687972065381,
+     "flat_chroma_hh_ratio": 1.343978496287894,
+     "flat_chroma_mid_ratio": 1.0834929015230719,
+     "flat_luma_hh_ratio": 0.47416114005336246,
+     "flat_luma_mid_ratio": 0.8671865162009008,
+     "ms_per_megapixel": 13.65093134266757
+    }
+   },
+   "width": 6959
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.012377651408314705,
+    "flat_chroma_mid": 0.025699194037445923,
+    "flat_luma_hh": 0.027020402252674103
+   },
+   "camera": "EOS R7",
+   "crop": "7Y6A7003-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4660,
+   "iso": 20000,
+   "raw": "7Y6A7003.CR3",
+   "raw_sha256": "59fb28d2d31050a9166896bd4036d6a15a91e634478db3d687d5435e048dd400",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.09420126900318368,
+     "chroma_flat_rmse": 0.07419750455130682,
+     "chroma_rmse": 0.07642709116381359,
+     "cpsnr_db": 27.14999320334389,
+     "luma_edge_rmse": 0.0336015670863145,
+     "luma_rmse": 0.02724572702870016
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.09364378154867554,
+     "chroma_flat_rmse": 0.073393332985661,
+     "chroma_rmse": 0.07565582823765862,
+     "cpsnr_db": 27.38786454454185,
+     "luma_edge_rmse": 0.031491840000304756,
+     "luma_rmse": 0.025078728623284145
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.09362330142310107,
+     "chroma_flat_rmse": 0.07315641070507956,
+     "chroma_rmse": 0.07544642181335817,
+     "cpsnr_db": 27.53769652494696,
+     "luma_edge_rmse": 0.030105258332561002,
+     "luma_rmse": 0.02417940778172788
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.09739979076927498,
+     "chroma_flat_rmse": 0.07575220307519993,
+     "chroma_rmse": 0.0781798060040088,
+     "cpsnr_db": 27.171811217867944,
+     "luma_edge_rmse": 0.03238494646772134,
+     "luma_rmse": 0.02568316850092683
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.09386978503191643,
+     "chroma_flat_rmse": 0.07291617456293191,
+     "chroma_rmse": 0.07526736590123524,
+     "cpsnr_db": 27.334828799009216,
+     "luma_edge_rmse": 0.03173570662524835,
+     "luma_rmse": 0.02546964509392125
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.0944254814754728,
+     "chroma_flat_rmse": 0.07290310082426452,
+     "chroma_rmse": 0.07532523826746668,
+     "cpsnr_db": 27.293341040089388,
+     "luma_edge_rmse": 0.031901130948231,
+     "luma_rmse": 0.025654514682275163
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.09242599790898551,
+     "chroma_flat_rmse": 0.0734594129939297,
+     "chroma_rmse": 0.07556421756880995,
+     "cpsnr_db": 27.57199480365937,
+     "luma_edge_rmse": 0.028225638429294424,
+     "luma_rmse": 0.02312746099674185
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.09123210186993573,
+     "chroma_flat_rmse": 0.07179414042765354,
+     "chroma_rmse": 0.07396160564034764,
+     "cpsnr_db": 27.69878319567926,
+     "luma_edge_rmse": 0.028221219896406306,
+     "luma_rmse": 0.0231958539262355
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.09080817671968705,
+     "chroma_flat_rmse": 0.07121679791334092,
+     "chroma_rmse": 0.0734049769994257,
+     "cpsnr_db": 27.71611578995305,
+     "luma_edge_rmse": 0.029859460870086434,
+     "luma_rmse": 0.02388672356080845
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.09491649532158565,
+     "chroma_flat_rmse": 0.07456272133653963,
+     "chroma_rmse": 0.07683422718769685,
+     "cpsnr_db": 27.204260450453127,
+     "luma_edge_rmse": 0.03261246351509061,
+     "luma_rmse": 0.02629002624209212
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.09058149564083419,
+     "chroma_flat_rmse": 0.0712545624030499,
+     "chroma_rmse": 0.07341004994122706,
+     "cpsnr_db": 28.0785948786004,
+     "luma_edge_rmse": 0.02633521790720818,
+     "luma_rmse": 0.021261790800411268
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.09445938851562957,
+     "chroma_flat_rmse": 0.07503531446089452,
+     "chroma_rmse": 0.07719144494189974,
+     "cpsnr_db": 27.279827835169552,
+     "luma_edge_rmse": 0.03057875471664264,
+     "luma_rmse": 0.024629682379661205
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.08977942073847997,
+     "chroma_flat_rmse": 0.07051249087281743,
+     "chroma_rmse": 0.07266292067723319,
+     "cpsnr_db": 27.70238291301125,
+     "luma_edge_rmse": 0.03010970571586776,
+     "luma_rmse": 0.024164172076369998
+    },
+    "fit": {
+     "gain": [
+      0.00011565475677827289,
+      6.856187838581146e-05,
+      9.93900382700806e-05
+     ],
+     "offset": [
+      -0.2202464710254503,
+      -0.13637909572449713,
+      -0.1899821380218392
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.08958654292456439,
+     "chroma_flat_rmse": 0.07045528710049984,
+     "chroma_rmse": 0.07258919399843282,
+     "cpsnr_db": 28.192294004367863,
+     "luma_edge_rmse": 0.025720462597605468,
+     "luma_rmse": 0.020535196933216083
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.9723089848108973,
+     "detail_luma_fine_ratio": 1.044066665694031,
+     "flat_chroma_hh_ratio": 1.0133526958146466,
+     "flat_chroma_mid_ratio": 0.9330385794371876,
+     "flat_luma_hh_ratio": 1.1774687506590265,
+     "flat_luma_mid_ratio": 1.0062882274420737,
+     "ms_per_megapixel": 185.5209731378651
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 82.63945425227007
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6671074415143272,
+     "detail_luma_fine_ratio": 0.8211412563533684,
+     "flat_chroma_hh_ratio": 0.6219084832551721,
+     "flat_chroma_mid_ratio": 0.7615054548046717,
+     "flat_luma_hh_ratio": 0.7394799559249059,
+     "flat_luma_mid_ratio": 0.9770651586606304,
+     "ms_per_megapixel": 344.82843372220503
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.7001424882297609,
+     "detail_luma_fine_ratio": 0.8758128018567919,
+     "flat_chroma_hh_ratio": 0.7573722149999371,
+     "flat_chroma_mid_ratio": 0.7094296353639754,
+     "flat_luma_hh_ratio": 0.783810187425706,
+     "flat_luma_mid_ratio": 0.9929605088230571,
+     "ms_per_megapixel": 406.55839650654593
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.4908421237029595,
+     "detail_luma_fine_ratio": 1.0165632094837136,
+     "flat_chroma_hh_ratio": 0.5222484584746361,
+     "flat_chroma_mid_ratio": 0.8314764122325712,
+     "flat_luma_hh_ratio": 1.0025954622430027,
+     "flat_luma_mid_ratio": 1.0193317045054604,
+     "ms_per_megapixel": 204.40983130048326
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.3501497991009812,
+     "detail_luma_fine_ratio": 1.0201433274738922,
+     "flat_chroma_hh_ratio": 0.374467650664199,
+     "flat_chroma_mid_ratio": 0.694654773753674,
+     "flat_luma_hh_ratio": 1.0055107552776794,
+     "flat_luma_mid_ratio": 1.0370544697467774,
+     "ms_per_megapixel": 403.5044694433383
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.0805115535238095,
+     "detail_luma_fine_ratio": 0.8593343075522322,
+     "flat_chroma_hh_ratio": 1.1434574480031732,
+     "flat_chroma_mid_ratio": 1.114230111794403,
+     "flat_luma_hh_ratio": 0.7895345538214751,
+     "flat_luma_mid_ratio": 0.9683281966988562,
+     "ms_per_megapixel": 115.87862385636821
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.755055685093018,
+     "detail_luma_fine_ratio": 0.709058775740102,
+     "flat_chroma_hh_ratio": 0.7803427480583598,
+     "flat_chroma_mid_ratio": 0.8717211667024315,
+     "flat_luma_hh_ratio": 0.6137958411482375,
+     "flat_luma_mid_ratio": 0.9522369179448205,
+     "ms_per_megapixel": 374.32438154162304
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.6973798073185032,
+     "detail_luma_fine_ratio": 0.9374537396007419,
+     "flat_chroma_hh_ratio": 0.9145731494537233,
+     "flat_chroma_mid_ratio": 0.8581962692105991,
+     "flat_luma_hh_ratio": 0.9846707345025844,
+     "flat_luma_mid_ratio": 0.9763660023286077,
+     "ms_per_megapixel": 399.5160120741954
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.1063289586554654,
+     "detail_luma_fine_ratio": 0.97583138518727,
+     "flat_chroma_hh_ratio": 1.1893844464584986,
+     "flat_chroma_mid_ratio": 0.9968311018391928,
+     "flat_luma_hh_ratio": 1.1169529577679063,
+     "flat_luma_mid_ratio": 0.9854914046983083,
+     "ms_per_megapixel": 125.71142992689606
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.4222734925985172,
+     "detail_luma_fine_ratio": 0.5382393196742825,
+     "flat_chroma_hh_ratio": 1.7365523952511153,
+     "flat_chroma_mid_ratio": 1.134293986117674,
+     "flat_luma_hh_ratio": 0.4760556960987819,
+     "flat_luma_mid_ratio": 0.8690136856027044,
+     "ms_per_megapixel": 11.007923076166739
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0248131506816713,
+     "detail_luma_fine_ratio": 0.9656863036374296,
+     "flat_chroma_hh_ratio": 0.8865203089685103,
+     "flat_chroma_mid_ratio": 1.0823746499368234,
+     "flat_luma_hh_ratio": 1.0472119624958345,
+     "flat_luma_mid_ratio": 0.9729226334461117,
+     "ms_per_megapixel": 17.58500730056192
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.6877917709395586,
+     "detail_luma_fine_ratio": 0.9259547349445787,
+     "flat_chroma_hh_ratio": 0.8038927145712348,
+     "flat_chroma_mid_ratio": 0.9172815967038718,
+     "flat_luma_hh_ratio": 1.054362347419014,
+     "flat_luma_mid_ratio": 0.9683322799437772,
+     "ms_per_megapixel": 78.56774712525012
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.3384370320256493,
+     "detail_luma_fine_ratio": 0.4881851391503103,
+     "flat_chroma_hh_ratio": 1.6230371839758921,
+     "flat_chroma_mid_ratio": 1.1132745350535092,
+     "flat_luma_hh_ratio": 0.42846285637747694,
+     "flat_luma_mid_ratio": 0.8450001361989595,
+     "ms_per_megapixel": 13.941003716649705
+    }
+   },
+   "width": 6984
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.017626188695430756,
+    "flat_chroma_mid": 0.036783000002798105,
+    "flat_luma_hh": 0.0394122377038002
+   },
+   "camera": "EOS R7",
+   "crop": "7Y6A7298-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 4660,
+   "iso": 32000,
+   "raw": "7Y6A7298.CR3",
+   "raw_sha256": "9147913687cfd5801acf9d706ab4b032a3c5f549242fe69344c04d396546be33",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.12128086809559792,
+     "chroma_flat_rmse": 0.08944417145127502,
+     "chroma_rmse": 0.09317298751219098,
+     "cpsnr_db": 25.474896086677926,
+     "luma_edge_rmse": 0.04394383158083839,
+     "luma_rmse": 0.03319042195601411
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.12043141349163691,
+     "chroma_flat_rmse": 0.0884832446577428,
+     "chroma_rmse": 0.09223201179688299,
+     "cpsnr_db": 25.697125586060373,
+     "luma_edge_rmse": 0.0410053256525074,
+     "luma_rmse": 0.030797448938996167
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.11981491621333636,
+     "chroma_flat_rmse": 0.08838385908619523,
+     "chroma_rmse": 0.0920647422916386,
+     "cpsnr_db": 25.83431041883189,
+     "luma_edge_rmse": 0.03923952835273546,
+     "luma_rmse": 0.029718513895256177
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.12046654811216265,
+     "chroma_flat_rmse": 0.08832981151967595,
+     "chroma_rmse": 0.09210443914904638,
+     "cpsnr_db": 25.54699532870332,
+     "luma_edge_rmse": 0.04354077124825896,
+     "luma_rmse": 0.0321462776739258
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.11953177713610277,
+     "chroma_flat_rmse": 0.0877348510832439,
+     "chroma_rmse": 0.09146768583829945,
+     "cpsnr_db": 25.62185892363424,
+     "luma_edge_rmse": 0.041634012368609294,
+     "luma_rmse": 0.03151598420882486
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.11976252815223433,
+     "chroma_flat_rmse": 0.08787365469228267,
+     "chroma_rmse": 0.09161791941765512,
+     "cpsnr_db": 25.561072218336854,
+     "luma_edge_rmse": 0.04193884686408295,
+     "luma_rmse": 0.03182758526814754
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.11936627598186346,
+     "chroma_flat_rmse": 0.08829911656284037,
+     "chroma_rmse": 0.09193243326558567,
+     "cpsnr_db": 25.898294762605207,
+     "luma_edge_rmse": 0.037019118932579094,
+     "luma_rmse": 0.028401589799397855
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.1170762712078716,
+     "chroma_flat_rmse": 0.08662717711220164,
+     "chroma_rmse": 0.09018776888241227,
+     "cpsnr_db": 26.003105948661766,
+     "luma_edge_rmse": 0.037066682448734865,
+     "luma_rmse": 0.028524088653359054
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.1163291345408514,
+     "chroma_flat_rmse": 0.08595692092016814,
+     "chroma_rmse": 0.0895108874962815,
+     "cpsnr_db": 26.019967013425585,
+     "luma_edge_rmse": 0.03905335035818731,
+     "luma_rmse": 0.02947428311087763
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.12165809413990436,
+     "chroma_flat_rmse": 0.09121806976904005,
+     "chroma_rmse": 0.09475471131904746,
+     "cpsnr_db": 25.439505328254008,
+     "luma_edge_rmse": 0.04259878075862532,
+     "luma_rmse": 0.03242130587343295
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.11618522335910134,
+     "chroma_flat_rmse": 0.08541018353936351,
+     "chroma_rmse": 0.08902033305579675,
+     "cpsnr_db": 26.450888945609314,
+     "luma_edge_rmse": 0.03401366025631784,
+     "luma_rmse": 0.025975090587114832
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.12179832395182098,
+     "chroma_flat_rmse": 0.09022171330126548,
+     "chroma_rmse": 0.09391214493827131,
+     "cpsnr_db": 25.60490200398355,
+     "luma_edge_rmse": 0.03985589747788694,
+     "luma_rmse": 0.030162755840117336
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.11457573718925952,
+     "chroma_flat_rmse": 0.08467791884770594,
+     "chroma_rmse": 0.0881760401564217,
+     "cpsnr_db": 26.059213580681813,
+     "luma_edge_rmse": 0.03882984100029898,
+     "luma_rmse": 0.029383267832658922
+    },
+    "fit": {
+     "gain": [
+      0.00011492289942449108,
+      6.857171256674735e-05,
+      0.00010093641565889353
+     ],
+     "offset": [
+      -0.21697768168951798,
+      -0.1360793224789984,
+      -0.19500849755436864
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.11477187098538515,
+     "chroma_flat_rmse": 0.0843432188256505,
+     "chroma_rmse": 0.08791331233635258,
+     "cpsnr_db": 26.581361912980803,
+     "luma_edge_rmse": 0.03290471483663512,
+     "luma_rmse": 0.024963116992730253
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.980522542740976,
+     "detail_luma_fine_ratio": 1.0392126788805063,
+     "flat_chroma_hh_ratio": 1.0278371457427893,
+     "flat_chroma_mid_ratio": 0.9357610316471889,
+     "flat_luma_hh_ratio": 1.1522895710738132,
+     "flat_luma_mid_ratio": 1.0083018913803794,
+     "ms_per_megapixel": 191.69427729353174
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 82.8658208338864
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6619330305794519,
+     "detail_luma_fine_ratio": 0.8041199556086349,
+     "flat_chroma_hh_ratio": 0.6315775102041785,
+     "flat_chroma_mid_ratio": 0.7647681232884014,
+     "flat_luma_hh_ratio": 0.732667238556652,
+     "flat_luma_mid_ratio": 0.96643909641672,
+     "ms_per_megapixel": 342.2006493075528
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.6780067585607262,
+     "detail_luma_fine_ratio": 0.8593814960875257,
+     "flat_chroma_hh_ratio": 0.7712323817218026,
+     "flat_chroma_mid_ratio": 0.5890676493912577,
+     "flat_luma_hh_ratio": 0.774825343865564,
+     "flat_luma_mid_ratio": 1.0019104282088371,
+     "ms_per_megapixel": 411.5032459232384
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.4927105237105109,
+     "detail_luma_fine_ratio": 1.0214199867586469,
+     "flat_chroma_hh_ratio": 0.5252317035961241,
+     "flat_chroma_mid_ratio": 0.8360652482361085,
+     "flat_luma_hh_ratio": 1.004203682262605,
+     "flat_luma_mid_ratio": 1.0224403352355318,
+     "ms_per_megapixel": 203.78506174751365
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.3469283262726852,
+     "detail_luma_fine_ratio": 1.0251445569301196,
+     "flat_chroma_hh_ratio": 0.3855726445334589,
+     "flat_chroma_mid_ratio": 0.70110024846109,
+     "flat_luma_hh_ratio": 1.00655182900291,
+     "flat_luma_mid_ratio": 1.0452457001023183,
+     "ms_per_megapixel": 400.7883930897846
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.045638880329933,
+     "detail_luma_fine_ratio": 0.8620050041322335,
+     "flat_chroma_hh_ratio": 1.1266934368953112,
+     "flat_chroma_mid_ratio": 1.1076895931505217,
+     "flat_luma_hh_ratio": 0.8036653399176662,
+     "flat_luma_mid_ratio": 0.9617552747558459,
+     "ms_per_megapixel": 117.15539258341568
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.724711720224493,
+     "detail_luma_fine_ratio": 0.6965512745506973,
+     "flat_chroma_hh_ratio": 0.7855321093450834,
+     "flat_chroma_mid_ratio": 0.8802156630290534,
+     "flat_luma_hh_ratio": 0.6212046706087992,
+     "flat_luma_mid_ratio": 0.938537194419018,
+     "ms_per_megapixel": 379.195232880551
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.682531220417313,
+     "detail_luma_fine_ratio": 0.9319475838183529,
+     "flat_chroma_hh_ratio": 0.9130774224742799,
+     "flat_chroma_mid_ratio": 0.854518265472605,
+     "flat_luma_hh_ratio": 0.9648171868129614,
+     "flat_luma_mid_ratio": 0.9691504650141105,
+     "ms_per_megapixel": 406.17437957514176
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.0514519347861584,
+     "detail_luma_fine_ratio": 0.9563849148081138,
+     "flat_chroma_hh_ratio": 1.1551757994198764,
+     "flat_chroma_mid_ratio": 0.991657388957123,
+     "flat_luma_hh_ratio": 1.0868476465423205,
+     "flat_luma_mid_ratio": 0.974396200483792,
+     "ms_per_megapixel": 127.13325737799212
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.406725976841078,
+     "detail_luma_fine_ratio": 0.5317393423338012,
+     "flat_chroma_hh_ratio": 1.7474695128394802,
+     "flat_chroma_mid_ratio": 1.1323947250874973,
+     "flat_luma_hh_ratio": 0.4739896680813963,
+     "flat_luma_mid_ratio": 0.8539972925348077,
+     "ms_per_megapixel": 11.209570372992346
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0046984555343867,
+     "detail_luma_fine_ratio": 0.9636269066338107,
+     "flat_chroma_hh_ratio": 0.8816588572610036,
+     "flat_chroma_mid_ratio": 1.0825230988582775,
+     "flat_luma_hh_ratio": 1.0494814393452143,
+     "flat_luma_mid_ratio": 0.9669145213696575,
+     "ms_per_megapixel": 17.736933346115464
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.6717168312634834,
+     "detail_luma_fine_ratio": 0.9109967866069367,
+     "flat_chroma_hh_ratio": 0.8064997432985042,
+     "flat_chroma_mid_ratio": 0.9173186646250353,
+     "flat_luma_hh_ratio": 1.0358512715660404,
+     "flat_luma_mid_ratio": 0.9550091070650021,
+     "ms_per_megapixel": 81.88361871893574
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.3185890975521728,
+     "detail_luma_fine_ratio": 0.4787234801370401,
+     "flat_chroma_hh_ratio": 1.6502680560495235,
+     "flat_chroma_mid_ratio": 1.111187451525355,
+     "flat_luma_hh_ratio": 0.4293006652027275,
+     "flat_luma_mid_ratio": 0.8239171595781304,
+     "ms_per_megapixel": 14.27315163045883
+    }
+   },
+   "width": 6984
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0011877063661813736,
+    "flat_chroma_mid": 0.002057448283577955,
+    "flat_luma_hh": 0.002036060905084014
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_3064-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 160,
+   "raw": "IMG_3064.CR2",
+   "raw_sha256": "819fb97a603e37319a7b3929b9db1f501a5c09fca79e0df80fad28ad3f574cf6",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.017430337846294903,
+     "chroma_flat_rmse": 0.02156467136467892,
+     "chroma_rmse": 0.021186324636175643,
+     "cpsnr_db": 38.67134203326249,
+     "luma_edge_rmse": 0.0053558117558955756,
+     "luma_rmse": 0.006698381310535318
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.017524751116444543,
+     "chroma_flat_rmse": 0.0216835191689455,
+     "chroma_rmse": 0.021302951157510245,
+     "cpsnr_db": 38.83159855284019,
+     "luma_edge_rmse": 0.004972524258977329,
+     "luma_rmse": 0.005955521600469838
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.01822706205481023,
+     "chroma_flat_rmse": 0.02150196707575202,
+     "chroma_rmse": 0.02119625077405842,
+     "cpsnr_db": 38.97231396225242,
+     "luma_edge_rmse": 0.0049965704312496945,
+     "luma_rmse": 0.005751148483915818
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.018833148843465847,
+     "chroma_flat_rmse": 0.02160635342403415,
+     "chroma_rmse": 0.02134439118254849,
+     "cpsnr_db": 38.911575463248134,
+     "luma_edge_rmse": 0.005119309778758677,
+     "luma_rmse": 0.00578978781133784
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.018534077255765172,
+     "chroma_flat_rmse": 0.021703653148309732,
+     "chroma_rmse": 0.021406846751091457,
+     "cpsnr_db": 38.837738517347844,
+     "luma_edge_rmse": 0.004875377180343669,
+     "luma_rmse": 0.005896005755551181
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.019218464309542587,
+     "chroma_flat_rmse": 0.02172278237000478,
+     "chroma_rmse": 0.02148470769817208,
+     "cpsnr_db": 38.83278339948701,
+     "luma_edge_rmse": 0.0048749525255588596,
+     "luma_rmse": 0.0058742538293871166
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.017448143818117864,
+     "chroma_flat_rmse": 0.021747326982185976,
+     "chroma_rmse": 0.021355096056130465,
+     "cpsnr_db": 38.89554865188359,
+     "luma_edge_rmse": 0.004665145067628026,
+     "luma_rmse": 0.005635777981844717
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.017985241707075512,
+     "chroma_flat_rmse": 0.021224544305236636,
+     "chroma_rmse": 0.02092219870225881,
+     "cpsnr_db": 39.050054255483325,
+     "luma_edge_rmse": 0.00478985782634811,
+     "luma_rmse": 0.005620203237076901
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.01727637251511279,
+     "chroma_flat_rmse": 0.021108849228925416,
+     "chroma_rmse": 0.02075630585308785,
+     "cpsnr_db": 39.15251608633507,
+     "luma_edge_rmse": 0.004696240592003922,
+     "luma_rmse": 0.005587308869327322
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.018104746024412366,
+     "chroma_flat_rmse": 0.022297289120084603,
+     "chroma_rmse": 0.02191289196179096,
+     "cpsnr_db": 38.42394229998188,
+     "luma_edge_rmse": 0.005345130052190174,
+     "luma_rmse": 0.006562446108089413
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.020211041940397197,
+     "chroma_flat_rmse": 0.02213111614592201,
+     "chroma_rmse": 0.02194606196365751,
+     "cpsnr_db": 38.77404541778992,
+     "luma_edge_rmse": 0.005185203225295738,
+     "luma_rmse": 0.005696338966659167
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.017636459643021855,
+     "chroma_flat_rmse": 0.022009042784106248,
+     "chroma_rmse": 0.02161031692692468,
+     "cpsnr_db": 38.72052620115656,
+     "luma_edge_rmse": 0.00494724993831629,
+     "luma_rmse": 0.005938485404419081
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.01870438668897903,
+     "chroma_flat_rmse": 0.021391790551365517,
+     "chroma_rmse": 0.021137594683981527,
+     "cpsnr_db": 38.833975425405626,
+     "luma_edge_rmse": 0.005738002584627852,
+     "luma_rmse": 0.006178073136404587
+    },
+    "fit": {
+     "gain": [
+      0.00019753636111281676,
+      9.765501028314734e-05,
+      0.0001528081822613333
+     ],
+     "offset": [
+      -0.40437982568547287,
+      -0.19992369354074863,
+      -0.31259289739036283
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.019914855630264496,
+     "chroma_flat_rmse": 0.02194994445231482,
+     "chroma_rmse": 0.021754362020282705,
+     "cpsnr_db": 38.8198145250075,
+     "luma_edge_rmse": 0.006002355795729702,
+     "luma_rmse": 0.0056971651200765135
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.8600182131422427,
+     "detail_luma_fine_ratio": 1.1249009485003645,
+     "flat_chroma_hh_ratio": 0.8631463453316843,
+     "flat_chroma_mid_ratio": 0.8608916277278158,
+     "flat_luma_hh_ratio": 1.3719597619234065,
+     "flat_luma_mid_ratio": 1.0198077420467282,
+     "ms_per_megapixel": 177.39276641689597
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 79.96241674680107
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6892068956804621,
+     "detail_luma_fine_ratio": 0.8796801602481304,
+     "flat_chroma_hh_ratio": 0.5184089741067537,
+     "flat_chroma_mid_ratio": 0.7054709083685218,
+     "flat_luma_hh_ratio": 0.7613912502930315,
+     "flat_luma_mid_ratio": 0.9407650991998245,
+     "ms_per_megapixel": 333.58181100180866
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.7346969850465789,
+     "detail_luma_fine_ratio": 0.8920643298820005,
+     "flat_chroma_hh_ratio": 0.5205115609120695,
+     "flat_chroma_mid_ratio": 0.7108798766170918,
+     "flat_luma_hh_ratio": 0.7634094894381556,
+     "flat_luma_mid_ratio": 0.9450117585576169,
+     "ms_per_megapixel": 385.9803655193907
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.5507586679625295,
+     "detail_luma_fine_ratio": 0.9967245455327424,
+     "flat_chroma_hh_ratio": 0.4743837282096175,
+     "flat_chroma_mid_ratio": 0.8091488820504077,
+     "flat_luma_hh_ratio": 0.9733795528151392,
+     "flat_luma_mid_ratio": 0.9803941006069017,
+     "ms_per_megapixel": 194.8357156112456
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.4533987041616716,
+     "detail_luma_fine_ratio": 0.9987323818820966,
+     "flat_chroma_hh_ratio": 0.32404670000376234,
+     "flat_chroma_mid_ratio": 0.6712047732669487,
+     "flat_luma_hh_ratio": 0.9771402027817826,
+     "flat_luma_mid_ratio": 0.9770686947176987,
+     "ms_per_megapixel": 386.49548983203294
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.1276156044903223,
+     "detail_luma_fine_ratio": 0.8828464639013691,
+     "flat_chroma_hh_ratio": 1.1861550282479432,
+     "flat_chroma_mid_ratio": 1.1173074264562741,
+     "flat_luma_hh_ratio": 0.7718577284792234,
+     "flat_luma_mid_ratio": 0.9660435602812554,
+     "ms_per_megapixel": 110.31886274864969
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.7837468471792862,
+     "detail_luma_fine_ratio": 0.786917110718369,
+     "flat_chroma_hh_ratio": 0.65215676980477,
+     "flat_chroma_mid_ratio": 0.812102002905695,
+     "flat_luma_hh_ratio": 0.6189774513397411,
+     "flat_luma_mid_ratio": 0.9143713530674139,
+     "ms_per_megapixel": 368.0224362987055
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.7656836250724685,
+     "detail_luma_fine_ratio": 0.9466763037688487,
+     "flat_chroma_hh_ratio": 0.8513612161056155,
+     "flat_chroma_mid_ratio": 0.8432330142323192,
+     "flat_luma_hh_ratio": 1.0144322020983298,
+     "flat_luma_mid_ratio": 0.9587173661422387,
+     "ms_per_megapixel": 389.93176811547875
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.0470617195501744,
+     "detail_luma_fine_ratio": 1.1082809276230337,
+     "flat_chroma_hh_ratio": 1.459377582805469,
+     "flat_chroma_mid_ratio": 0.9669578787179021,
+     "flat_luma_hh_ratio": 1.3183155880052622,
+     "flat_luma_mid_ratio": 1.0171447466313963,
+     "ms_per_megapixel": 116.46329511744017
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.4326112712899963,
+     "detail_luma_fine_ratio": 0.6258237305638619,
+     "flat_chroma_hh_ratio": 1.5444970134042066,
+     "flat_chroma_mid_ratio": 1.1147589842862704,
+     "flat_luma_hh_ratio": 0.4917264956735851,
+     "flat_luma_mid_ratio": 0.8671713091432788,
+     "ms_per_megapixel": 10.358547032452432
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0738431631876018,
+     "detail_luma_fine_ratio": 0.983218041524929,
+     "flat_chroma_hh_ratio": 0.871630663034037,
+     "flat_chroma_mid_ratio": 1.060526201774099,
+     "flat_luma_hh_ratio": 1.0381306828246033,
+     "flat_luma_mid_ratio": 0.9723734588499772,
+     "ms_per_megapixel": 17.566219645490765
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.7754422851522748,
+     "detail_luma_fine_ratio": 1.0032122709415687,
+     "flat_chroma_hh_ratio": 0.7847995496042414,
+     "flat_chroma_mid_ratio": 0.8965628276494152,
+     "flat_luma_hh_ratio": 1.1885979032147962,
+     "flat_luma_mid_ratio": 1.0092732653732324,
+     "ms_per_megapixel": 78.08532404040726
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.3693455207918785,
+     "detail_luma_fine_ratio": 0.5896930437206332,
+     "flat_chroma_hh_ratio": 1.4468878648715953,
+     "flat_chroma_mid_ratio": 1.1038191620940134,
+     "flat_luma_hh_ratio": 0.4490207662017238,
+     "flat_luma_mid_ratio": 0.8516602332208324,
+     "ms_per_megapixel": 13.701838340734112
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.003806335385888815,
+    "flat_chroma_mid": 0.006695017715663359,
+    "flat_luma_hh": 0.006207201164215803
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_3089-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 3200,
+   "raw": "IMG_3089.CR2",
+   "raw_sha256": "361876644cba47907b1157a1c956db174f48fffd187003f667c9a725b56e8297",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.09222186361344355,
+     "chroma_flat_rmse": 0.07762393381166478,
+     "chroma_rmse": 0.07921233102748884,
+     "cpsnr_db": 26.388513161700256,
+     "luma_edge_rmse": 0.03835002754920635,
+     "luma_rmse": 0.030696065582593406
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.09531593198012807,
+     "chroma_flat_rmse": 0.07996115883619553,
+     "chroma_rmse": 0.08163455303970692,
+     "cpsnr_db": 26.48120390736566,
+     "luma_edge_rmse": 0.03603667058526404,
+     "luma_rmse": 0.027950004502838424
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.08961321227281331,
+     "chroma_flat_rmse": 0.07455233417247277,
+     "chroma_rmse": 0.07620022016505631,
+     "cpsnr_db": 27.056774114955996,
+     "luma_edge_rmse": 0.034551190234094066,
+     "luma_rmse": 0.026350341958073686
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.08749488050272923,
+     "chroma_flat_rmse": 0.07258035395100489,
+     "chroma_rmse": 0.07421446818429873,
+     "cpsnr_db": 26.969994932187433,
+     "luma_edge_rmse": 0.03546067710882633,
+     "luma_rmse": 0.02783341773576307
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.09117832696781708,
+     "chroma_flat_rmse": 0.07589760586141227,
+     "chroma_rmse": 0.07756909332349368,
+     "cpsnr_db": 26.797571316447982,
+     "luma_edge_rmse": 0.03542938132386133,
+     "luma_rmse": 0.027456932904530797
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.08941938321479413,
+     "chroma_flat_rmse": 0.07414165759463957,
+     "chroma_rmse": 0.07581594349099469,
+     "cpsnr_db": 26.93062031634526,
+     "luma_edge_rmse": 0.0351736825189706,
+     "luma_rmse": 0.02729401239413069
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.09690792051017495,
+     "chroma_flat_rmse": 0.08198207242897865,
+     "chroma_rmse": 0.08360226021337895,
+     "cpsnr_db": 26.51301854926536,
+     "luma_edge_rmse": 0.0341201438903118,
+     "luma_rmse": 0.02623264442695371
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.08921443037869897,
+     "chroma_flat_rmse": 0.07460644842178094,
+     "chroma_rmse": 0.07620084611691726,
+     "cpsnr_db": 27.105253290145278,
+     "luma_edge_rmse": 0.03357758790490448,
+     "luma_rmse": 0.025530484209131583
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.08951038900860349,
+     "chroma_flat_rmse": 0.07497900828496876,
+     "chroma_rmse": 0.07656378844095253,
+     "cpsnr_db": 26.981555341414797,
+     "luma_edge_rmse": 0.03462836871200504,
+     "luma_rmse": 0.02668248928868422
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.09287874855349616,
+     "chroma_flat_rmse": 0.07850835215536958,
+     "chroma_rmse": 0.0800688588505894,
+     "cpsnr_db": 26.37536956309308,
+     "luma_edge_rmse": 0.03742044579948693,
+     "luma_rmse": 0.029920757858183728
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.0954658593796598,
+     "chroma_flat_rmse": 0.0801332380607689,
+     "chroma_rmse": 0.0818037598203419,
+     "cpsnr_db": 26.899155206463593,
+     "luma_edge_rmse": 0.03307362428500554,
+     "luma_rmse": 0.02440762041885676
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.0969523644289549,
+     "chroma_flat_rmse": 0.08212095450419343,
+     "chroma_rmse": 0.08372995066146216,
+     "cpsnr_db": 26.353243030880794,
+     "luma_edge_rmse": 0.03540274801378141,
+     "luma_rmse": 0.027563078357794545
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.09071533595571925,
+     "chroma_flat_rmse": 0.07566669869598142,
+     "chroma_rmse": 0.07731120083545712,
+     "cpsnr_db": 26.665617830475465,
+     "luma_edge_rmse": 0.03641397042754997,
+     "luma_rmse": 0.02882019794795582
+    },
+    "fit": {
+     "gain": [
+      0.00014791518791563228,
+      9.083976818424065e-05,
+      0.00010455461477402081
+     ],
+     "offset": [
+      -0.28328210534443066,
+      -0.18163578145845535,
+      -0.19805004721358213
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.09479297445459857,
+     "chroma_flat_rmse": 0.0795984661274817,
+     "chroma_rmse": 0.08125364367566532,
+     "cpsnr_db": 26.95807160998315,
+     "luma_edge_rmse": 0.0331264496681877,
+     "luma_rmse": 0.02401849666373302
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.9149368561337673,
+     "detail_luma_fine_ratio": 1.109818503371896,
+     "flat_chroma_hh_ratio": 0.9172283198711342,
+     "flat_chroma_mid_ratio": 0.8881661144075285,
+     "flat_luma_hh_ratio": 1.3518348982821065,
+     "flat_luma_mid_ratio": 1.0174215914666043,
+     "ms_per_megapixel": 188.96381232835478
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 80.51185900253321
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.55774657511571,
+     "detail_luma_fine_ratio": 0.8048054877292322,
+     "flat_chroma_hh_ratio": 0.5003763791392736,
+     "flat_chroma_mid_ratio": 0.6821249871858076,
+     "flat_luma_hh_ratio": 0.7464967866317884,
+     "flat_luma_mid_ratio": 0.9423663073841598,
+     "ms_per_megapixel": 337.69728932645376
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.6909327679074005,
+     "detail_luma_fine_ratio": 0.8817619514959498,
+     "flat_chroma_hh_ratio": 0.69774297851518,
+     "flat_chroma_mid_ratio": 0.7173636808035673,
+     "flat_luma_hh_ratio": 0.7855471009016477,
+     "flat_luma_mid_ratio": 0.9705111637590639,
+     "ms_per_megapixel": 406.87008705125845
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.4700927411606916,
+     "detail_luma_fine_ratio": 0.9990582540340264,
+     "flat_chroma_hh_ratio": 0.4764966431973154,
+     "flat_chroma_mid_ratio": 0.7955767389717123,
+     "flat_luma_hh_ratio": 0.983691734228996,
+     "flat_luma_mid_ratio": 0.9852047907062631,
+     "ms_per_megapixel": 200.88615100072542
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.31044177166802067,
+     "detail_luma_fine_ratio": 1.0000787778386997,
+     "flat_chroma_hh_ratio": 0.32633061456729223,
+     "flat_chroma_mid_ratio": 0.6453760885984073,
+     "flat_luma_hh_ratio": 0.9794323024087457,
+     "flat_luma_mid_ratio": 0.9890161359045831,
+     "ms_per_megapixel": 401.2959296610914
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.1153860774544104,
+     "detail_luma_fine_ratio": 0.8400255693340042,
+     "flat_chroma_hh_ratio": 1.1806885417960977,
+     "flat_chroma_mid_ratio": 1.1107006622569768,
+     "flat_luma_hh_ratio": 0.7823326218709301,
+     "flat_luma_mid_ratio": 0.9608330641503771,
+     "ms_per_megapixel": 116.4731176852392
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6428356548315691,
+     "detail_luma_fine_ratio": 0.6841755259404373,
+     "flat_chroma_hh_ratio": 0.6290220813195857,
+     "flat_chroma_mid_ratio": 0.7856646901237445,
+     "flat_luma_hh_ratio": 0.6242307842690772,
+     "flat_luma_mid_ratio": 0.9112220131977816,
+     "ms_per_megapixel": 373.9003774085824
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.6260240582278259,
+     "detail_luma_fine_ratio": 0.9343942679118052,
+     "flat_chroma_hh_ratio": 0.8216341782867981,
+     "flat_chroma_mid_ratio": 0.8298416294310096,
+     "flat_luma_hh_ratio": 1.0269790442665192,
+     "flat_luma_mid_ratio": 0.9570920522020767,
+     "ms_per_megapixel": 404.5992703108504
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 0.9294963713331803,
+     "detail_luma_fine_ratio": 1.046198383644864,
+     "flat_chroma_hh_ratio": 1.2382371608551859,
+     "flat_chroma_mid_ratio": 0.9573414811511124,
+     "flat_luma_hh_ratio": 1.2980068866606542,
+     "flat_luma_mid_ratio": 1.0056572623546245,
+     "ms_per_megapixel": 127.08892720245277
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.352778724055739,
+     "detail_luma_fine_ratio": 0.5290276122049922,
+     "flat_chroma_hh_ratio": 1.5648896726832326,
+     "flat_chroma_mid_ratio": 1.1119272828563542,
+     "flat_luma_hh_ratio": 0.5009187785694927,
+     "flat_luma_mid_ratio": 0.8568691028382519,
+     "ms_per_megapixel": 10.231896952051663
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0860505010213264,
+     "detail_luma_fine_ratio": 0.9626695262834228,
+     "flat_chroma_hh_ratio": 0.8894739344379204,
+     "flat_chroma_mid_ratio": 1.056213394373621,
+     "flat_luma_hh_ratio": 1.0548753225792122,
+     "flat_luma_mid_ratio": 0.9670193779100309,
+     "ms_per_megapixel": 17.396577795180928
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.6712633520444475,
+     "detail_luma_fine_ratio": 0.9927309633748136,
+     "flat_chroma_hh_ratio": 0.7722249976074149,
+     "flat_chroma_mid_ratio": 0.8830296023926856,
+     "flat_luma_hh_ratio": 1.2241486652938594,
+     "flat_luma_mid_ratio": 1.0096854689320203,
+     "ms_per_megapixel": 77.16211920623884
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.2975172079160742,
+     "detail_luma_fine_ratio": 0.48546925306627514,
+     "flat_chroma_hh_ratio": 1.4791506920056035,
+     "flat_chroma_mid_ratio": 1.1045480559229859,
+     "flat_luma_hh_ratio": 0.44761018151807674,
+     "flat_luma_mid_ratio": 0.8390217745304774,
+     "ms_per_megapixel": 13.728575703251458
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0007663554861210287,
+    "flat_chroma_mid": 0.0013461767290591134,
+    "flat_luma_hh": 0.001535544404760003
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_4002-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 100,
+   "raw": "IMG_4002.CR2",
+   "raw_sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.3971140786988005,
+     "chroma_flat_rmse": 0.11073441967912319,
+     "chroma_rmse": 0.16504638914315578,
+     "cpsnr_db": 19.9817960296282,
+     "luma_edge_rmse": 0.1426999024503331,
+     "luma_rmse": 0.06149479401178551
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.39628996719622056,
+     "chroma_flat_rmse": 0.11058727027007545,
+     "chroma_rmse": 0.16475363031805665,
+     "cpsnr_db": 19.986391118708184,
+     "luma_edge_rmse": 0.14271130815785574,
+     "luma_rmse": 0.06146534178900631
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.39796977427694097,
+     "chroma_flat_rmse": 0.1107855688457757,
+     "chroma_rmse": 0.16528926626900256,
+     "cpsnr_db": 19.96975033615218,
+     "luma_edge_rmse": 0.14312840458843962,
+     "luma_rmse": 0.06156679882301498
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.4010180360901213,
+     "chroma_flat_rmse": 0.11103711979874667,
+     "chroma_rmse": 0.16619693859403184,
+     "cpsnr_db": 19.957376175694034,
+     "luma_edge_rmse": 0.14265526509827914,
+     "luma_rmse": 0.06145911784917019
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.39767559344139136,
+     "chroma_flat_rmse": 0.11059924366642852,
+     "chroma_rmse": 0.16510431429621975,
+     "cpsnr_db": 19.977017594894676,
+     "luma_edge_rmse": 0.14269538147660685,
+     "luma_rmse": 0.06148169045899876
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.39865781741862555,
+     "chroma_flat_rmse": 0.11062233420328293,
+     "chroma_rmse": 0.16536193924668097,
+     "cpsnr_db": 19.968206912154752,
+     "luma_edge_rmse": 0.14275092372807707,
+     "luma_rmse": 0.06151317993435542
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.39529856599892993,
+     "chroma_flat_rmse": 0.11051979044720726,
+     "chroma_rmse": 0.1644674817450865,
+     "cpsnr_db": 19.995154509401882,
+     "luma_edge_rmse": 0.14260016348143376,
+     "luma_rmse": 0.061404774401814986
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.39689113338276827,
+     "chroma_flat_rmse": 0.11067598886523106,
+     "chroma_rmse": 0.16495597890378652,
+     "cpsnr_db": 19.97909320723159,
+     "luma_edge_rmse": 0.1430500326026693,
+     "luma_rmse": 0.06152505763343776
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.3955289434857226,
+     "chroma_flat_rmse": 0.11058857572091288,
+     "chroma_rmse": 0.16456596956477523,
+     "cpsnr_db": 19.99833183698074,
+     "luma_edge_rmse": 0.14253490891994894,
+     "luma_rmse": 0.06135951505668499
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.3965491933830574,
+     "chroma_flat_rmse": 0.11068047761882067,
+     "chroma_rmse": 0.16487396673929997,
+     "cpsnr_db": 19.980166449892913,
+     "luma_edge_rmse": 0.1429099749253312,
+     "luma_rmse": 0.061549348979768916
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.3938461735774717,
+     "chroma_flat_rmse": 0.11083103837440418,
+     "chroma_rmse": 0.1642964201658333,
+     "cpsnr_db": 19.97626673694801,
+     "luma_edge_rmse": 0.14351169792248336,
+     "luma_rmse": 0.06170548827418093
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.39587976446579776,
+     "chroma_flat_rmse": 0.11064547467718916,
+     "chroma_rmse": 0.16468710810600287,
+     "cpsnr_db": 19.98785797286268,
+     "luma_edge_rmse": 0.1426811666583185,
+     "luma_rmse": 0.06145603653264869
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.39680489234454935,
+     "chroma_flat_rmse": 0.11055512902625432,
+     "chroma_rmse": 0.16486188552202186,
+     "cpsnr_db": 19.974556093938606,
+     "luma_edge_rmse": 0.14341950887472055,
+     "luma_rmse": 0.061659476962587945
+    },
+    "fit": {
+     "gain": [
+      0.00018751139711846858,
+      9.769598061462565e-05,
+      0.0001629401015785687
+     ],
+     "offset": [
+      -0.3832089666834257,
+      -0.20007567245264096,
+      -0.3336121712351904
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.39341750444938384,
+     "chroma_flat_rmse": 0.11076662766119677,
+     "chroma_rmse": 0.16415162109554282,
+     "cpsnr_db": 19.976087886352218,
+     "luma_edge_rmse": 0.14394665514931437,
+     "luma_rmse": 0.06180648274179569
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.9359483485587596,
+     "detail_luma_fine_ratio": 1.0479633420350054,
+     "flat_chroma_hh_ratio": 0.881425696505262,
+     "flat_chroma_mid_ratio": 0.8759423145133528,
+     "flat_luma_hh_ratio": 1.305251076358716,
+     "flat_luma_mid_ratio": 1.0196848662513742,
+     "ms_per_megapixel": 180.4704543819973
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 79.44756990782545
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.7624277630296677,
+     "detail_luma_fine_ratio": 0.9263657246780208,
+     "flat_chroma_hh_ratio": 0.5440718851034553,
+     "flat_chroma_mid_ratio": 0.7048012268352055,
+     "flat_luma_hh_ratio": 0.7689229517833981,
+     "flat_luma_mid_ratio": 0.9522671648491694,
+     "ms_per_megapixel": 328.85885402931723
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.7874677085788243,
+     "detail_luma_fine_ratio": 0.9511793228051904,
+     "flat_chroma_hh_ratio": 0.745810324456751,
+     "flat_chroma_mid_ratio": 0.6969181014551424,
+     "flat_luma_hh_ratio": 0.8157445741473393,
+     "flat_luma_mid_ratio": 0.9869488744697518,
+     "ms_per_megapixel": 390.9763565798551
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.5521889328154543,
+     "detail_luma_fine_ratio": 1.001969750490391,
+     "flat_chroma_hh_ratio": 0.4804690524580413,
+     "flat_chroma_mid_ratio": 0.7994893276056269,
+     "flat_luma_hh_ratio": 0.9796924560496265,
+     "flat_luma_mid_ratio": 0.9944746052305233,
+     "ms_per_megapixel": 191.24939621730138
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.44990631230253764,
+     "detail_luma_fine_ratio": 1.004200819700502,
+     "flat_chroma_hh_ratio": 0.3293548029021605,
+     "flat_chroma_mid_ratio": 0.647992459224533,
+     "flat_luma_hh_ratio": 0.9786549037420742,
+     "flat_luma_mid_ratio": 0.9998840080200169,
+     "ms_per_megapixel": 374.81426467702505
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.1791879593271077,
+     "detail_luma_fine_ratio": 0.8924112239598151,
+     "flat_chroma_hh_ratio": 1.2200822913270015,
+     "flat_chroma_mid_ratio": 1.131690879398559,
+     "flat_luma_hh_ratio": 0.7579407216748184,
+     "flat_luma_mid_ratio": 0.9638236412010642,
+     "ms_per_megapixel": 107.899869520783
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.9194731287840856,
+     "detail_luma_fine_ratio": 0.8434115018282444,
+     "flat_chroma_hh_ratio": 0.7091645750824209,
+     "flat_chroma_mid_ratio": 0.8304230806738426,
+     "flat_luma_hh_ratio": 0.601429000783565,
+     "flat_luma_mid_ratio": 0.9227018652409017,
+     "ms_per_megapixel": 359.68098963535965
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.7363444137240245,
+     "detail_luma_fine_ratio": 0.9602965747954574,
+     "flat_chroma_hh_ratio": 0.8280826047558278,
+     "flat_chroma_mid_ratio": 0.8278487941316098,
+     "flat_luma_hh_ratio": 1.014039446769164,
+     "flat_luma_mid_ratio": 0.9667652938824471,
+     "ms_per_megapixel": 371.676215090483
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 0.9690078854607863,
+     "detail_luma_fine_ratio": 1.0210211072068847,
+     "flat_chroma_hh_ratio": 1.060514700618892,
+     "flat_chroma_mid_ratio": 0.9470785000399341,
+     "flat_luma_hh_ratio": 1.2301245344169263,
+     "flat_luma_mid_ratio": 1.002184904550484,
+     "ms_per_megapixel": 118.2251141637654
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.6056681802480754,
+     "detail_luma_fine_ratio": 0.6902560681528411,
+     "flat_chroma_hh_ratio": 1.6476895203356288,
+     "flat_chroma_mid_ratio": 1.133170820807734,
+     "flat_luma_hh_ratio": 0.4782610474415532,
+     "flat_luma_mid_ratio": 0.8539684866251375,
+     "ms_per_megapixel": 10.75755971455285
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0710079366297376,
+     "detail_luma_fine_ratio": 0.9844889739088106,
+     "flat_chroma_hh_ratio": 0.9107057675098813,
+     "flat_chroma_mid_ratio": 1.0713911525705517,
+     "flat_luma_hh_ratio": 1.0153743434517015,
+     "flat_luma_mid_ratio": 0.9681014912085466,
+     "ms_per_megapixel": 17.191080797667976
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.8146152478434538,
+     "detail_luma_fine_ratio": 0.9671220437033757,
+     "flat_chroma_hh_ratio": 0.7954568331079147,
+     "flat_chroma_mid_ratio": 0.8839563901223485,
+     "flat_luma_hh_ratio": 1.130520077905924,
+     "flat_luma_mid_ratio": 0.9924020447251924,
+     "ms_per_megapixel": 78.6578687536238
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.5353731999044289,
+     "detail_luma_fine_ratio": 0.6648843115335287,
+     "flat_chroma_hh_ratio": 1.5405496541842605,
+     "flat_chroma_mid_ratio": 1.12176043117514,
+     "flat_luma_hh_ratio": 0.43539968139740404,
+     "flat_luma_mid_ratio": 0.8392728609277608,
+     "ms_per_megapixel": 14.209903723297044
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0005090179620310664,
+    "flat_chroma_mid": 0.0008961885771938525,
+    "flat_luma_hh": 0.0009162310161627829
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_5383-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 100,
+   "raw": "IMG_5383.CR2",
+   "raw_sha256": "4a31077c95ed477da8f92c3c12dc74f118babd03437e0684b1843f823e850f72",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.1440570703603622,
+     "chroma_flat_rmse": 0.27141332490223724,
+     "chroma_rmse": 0.26127884215902564,
+     "cpsnr_db": 13.083915719030355,
+     "luma_edge_rmse": 0.09178980190421428,
+     "luma_rmse": 0.14902583682462278
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.144006572007525,
+     "chroma_flat_rmse": 0.271409303851686,
+     "chroma_rmse": 0.2612722510554908,
+     "cpsnr_db": 13.083963059970031,
+     "luma_edge_rmse": 0.09179780918924912,
+     "luma_rmse": 0.14902431119402115
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.14448867003153254,
+     "chroma_flat_rmse": 0.27141293858844606,
+     "chroma_rmse": 0.26130279597515504,
+     "cpsnr_db": 13.083564484781544,
+     "luma_edge_rmse": 0.0918726200064949,
+     "luma_rmse": 0.1490282790850219
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.1448928787092259,
+     "chroma_flat_rmse": 0.27141934556819447,
+     "chroma_rmse": 0.26133160634664815,
+     "cpsnr_db": 13.083494974357068,
+     "luma_edge_rmse": 0.09181142568635242,
+     "luma_rmse": 0.14902524557791927
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.14431717634593882,
+     "chroma_flat_rmse": 0.27141005819547526,
+     "chroma_rmse": 0.26129043975116384,
+     "cpsnr_db": 13.083864817159142,
+     "luma_edge_rmse": 0.09178558251954733,
+     "luma_rmse": 0.14902344488757502
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.14454069040289372,
+     "chroma_flat_rmse": 0.27141048797196654,
+     "chroma_rmse": 0.26130344559837054,
+     "cpsnr_db": 13.083768563405203,
+     "luma_edge_rmse": 0.09178504277777627,
+     "luma_rmse": 0.14902337532967208
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.14387798234834268,
+     "chroma_flat_rmse": 0.2714095939400757,
+     "chroma_rmse": 0.2612652935524883,
+     "cpsnr_db": 13.084022909439083,
+     "luma_edge_rmse": 0.09180027573598293,
+     "luma_rmse": 0.14902320313242198
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.1444226981496036,
+     "chroma_flat_rmse": 0.27141127920008673,
+     "chroma_rmse": 0.2612975271257733,
+     "cpsnr_db": 13.083608380524778,
+     "luma_edge_rmse": 0.09187149449292402,
+     "luma_rmse": 0.14902745195610026
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.14389297152342065,
+     "chroma_flat_rmse": 0.27140738176992757,
+     "chroma_rmse": 0.26126407219008807,
+     "cpsnr_db": 13.084179839587868,
+     "luma_edge_rmse": 0.091743188825,
+     "luma_rmse": 0.14901935757852855
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.14409616246960333,
+     "chroma_flat_rmse": 0.27141168832582113,
+     "chroma_rmse": 0.26127951491723933,
+     "cpsnr_db": 13.083871148236412,
+     "luma_edge_rmse": 0.09181146226118717,
+     "luma_rmse": 0.1490263427933441
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.1448679283892092,
+     "chroma_flat_rmse": 0.271419329913381,
+     "chroma_rmse": 0.26133018046844564,
+     "cpsnr_db": 13.082936953596727,
+     "luma_edge_rmse": 0.09201901783708921,
+     "luma_rmse": 0.14903866134968027
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.14396677921633497,
+     "chroma_flat_rmse": 0.27141167026690416,
+     "chroma_rmse": 0.26127222104954023,
+     "cpsnr_db": 13.083990287484093,
+     "luma_edge_rmse": 0.09178492892671805,
+     "luma_rmse": 0.14902311856705047
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.1442893974111114,
+     "chroma_flat_rmse": 0.2714087920875659,
+     "chroma_rmse": 0.26128769351925646,
+     "cpsnr_db": 13.083709894008884,
+     "luma_edge_rmse": 0.0918718922677698,
+     "luma_rmse": 0.14902937099434374
+    },
+    "fit": {
+     "gain": [
+      0.0001976538209094638,
+      9.775010118195121e-05,
+      0.00015373823835035537
+     ],
+     "offset": [
+      -0.40453035606038057,
+      -0.2002245953266745,
+      -0.3146628188550903
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.14477440259752106,
+     "chroma_flat_rmse": 0.27141750450443697,
+     "chroma_rmse": 0.2613231899311789,
+     "cpsnr_db": 13.082872013732347,
+     "luma_edge_rmse": 0.09212368042676079,
+     "luma_rmse": 0.14904542122133377
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.9303760633438525,
+     "detail_luma_fine_ratio": 1.01561134947218,
+     "flat_chroma_hh_ratio": 0.8579280517147984,
+     "flat_chroma_mid_ratio": 0.8648466981525748,
+     "flat_luma_hh_ratio": 1.3869971273615405,
+     "flat_luma_mid_ratio": 1.0265625960297462,
+     "ms_per_megapixel": 173.78736793363362
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 79.34583696268889
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.8725411340480581,
+     "detail_luma_fine_ratio": 0.9822740200904411,
+     "flat_chroma_hh_ratio": 0.5204638548803822,
+     "flat_chroma_mid_ratio": 0.6895763458786452,
+     "flat_luma_hh_ratio": 0.7584179249368029,
+     "flat_luma_mid_ratio": 0.9519556096900799,
+     "ms_per_megapixel": 338.85890508447187
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.8219573511198999,
+     "detail_luma_fine_ratio": 0.9976480377316045,
+     "flat_chroma_hh_ratio": 0.7312517540233266,
+     "flat_chroma_mid_ratio": 0.7021193599764077,
+     "flat_luma_hh_ratio": 0.8122888271434255,
+     "flat_luma_mid_ratio": 0.9909926166523813,
+     "ms_per_megapixel": 400.89265498347146
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.572790786108036,
+     "detail_luma_fine_ratio": 1.0054368923148607,
+     "flat_chroma_hh_ratio": 0.48583015789602635,
+     "flat_chroma_mid_ratio": 0.7977997857146872,
+     "flat_luma_hh_ratio": 0.9819250826390611,
+     "flat_luma_mid_ratio": 0.9823401865252488,
+     "ms_per_megapixel": 189.25555369093252
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.47335607398990964,
+     "detail_luma_fine_ratio": 1.0086006212400045,
+     "flat_chroma_hh_ratio": 0.3315482126503584,
+     "flat_chroma_mid_ratio": 0.646094249505638,
+     "flat_luma_hh_ratio": 0.9818762770662807,
+     "flat_luma_mid_ratio": 0.9883820619916466,
+     "ms_per_megapixel": 374.3570657670304
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.1609564009594144,
+     "detail_luma_fine_ratio": 0.9686011982902455,
+     "flat_chroma_hh_ratio": 1.1961949526583744,
+     "flat_chroma_mid_ratio": 1.1159279948636185,
+     "flat_luma_hh_ratio": 0.7724496728981034,
+     "flat_luma_mid_ratio": 0.9607825446233892,
+     "ms_per_megapixel": 109.86330648276154
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 1.031446273105019,
+     "detail_luma_fine_ratio": 0.9560736075461838,
+     "flat_chroma_hh_ratio": 0.6666631217279357,
+     "flat_chroma_mid_ratio": 0.8022609833770126,
+     "flat_luma_hh_ratio": 0.6196110231759916,
+     "flat_luma_mid_ratio": 0.9206877426511371,
+     "ms_per_megapixel": 370.59638747044346
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.763922909581051,
+     "detail_luma_fine_ratio": 0.9790140617572484,
+     "flat_chroma_hh_ratio": 0.7953102937406927,
+     "flat_chroma_mid_ratio": 0.8191593391991175,
+     "flat_luma_hh_ratio": 1.048047371454084,
+     "flat_luma_mid_ratio": 0.963136869276627,
+     "ms_per_megapixel": 395.29532854214006
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 0.9485397917240364,
+     "detail_luma_fine_ratio": 1.0091069098248626,
+     "flat_chroma_hh_ratio": 1.0591797198046287,
+     "flat_chroma_mid_ratio": 0.9293128219919187,
+     "flat_luma_hh_ratio": 1.29197026390376,
+     "flat_luma_mid_ratio": 1.0057615312001562,
+     "ms_per_megapixel": 114.35572168458924
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 2.279989766025829,
+     "detail_luma_fine_ratio": 0.8517732546643035,
+     "flat_chroma_hh_ratio": 1.5944402248354066,
+     "flat_chroma_mid_ratio": 1.1179989988626804,
+     "flat_luma_hh_ratio": 0.49211367958051133,
+     "flat_luma_mid_ratio": 0.8537306626684998,
+     "ms_per_megapixel": 10.793120739669323
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0666847473182548,
+     "detail_luma_fine_ratio": 0.9955634114366676,
+     "flat_chroma_hh_ratio": 0.9251298543981865,
+     "flat_chroma_mid_ratio": 1.0566826801881624,
+     "flat_luma_hh_ratio": 1.0405431444826991,
+     "flat_luma_mid_ratio": 0.971220202459998,
+     "ms_per_megapixel": 17.547501271939286
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 1.0351178718183505,
+     "detail_luma_fine_ratio": 0.99263010150905,
+     "flat_chroma_hh_ratio": 0.774723508688596,
+     "flat_chroma_mid_ratio": 0.8786537939151227,
+     "flat_luma_hh_ratio": 1.1929267562387966,
+     "flat_luma_mid_ratio": 1.0018231927072292,
+     "ms_per_megapixel": 78.74800329949485
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 2.23527021530006,
+     "detail_luma_fine_ratio": 0.8363826273103755,
+     "flat_chroma_hh_ratio": 1.4939739615023453,
+     "flat_chroma_mid_ratio": 1.1061103506611152,
+     "flat_luma_hh_ratio": 0.44342708401329006,
+     "flat_luma_mid_ratio": 0.8368905394723104,
+     "ms_per_megapixel": 14.21835002170954
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.00810474157333374,
+    "flat_chroma_mid": 0.014112615409694485,
+    "flat_luma_hh": 0.014128106646239758
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_6302-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 6400,
+   "raw": "IMG_6302.CR2",
+   "raw_sha256": "e9a05d228ad49e635cf085a30a2b778a93404636aaf7cc2b02c7782df7ff9673",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.09110806205540234,
+     "chroma_flat_rmse": 0.06128372253909293,
+     "chroma_rmse": 0.06489992874191298,
+     "cpsnr_db": 28.995118247533508,
+     "luma_edge_rmse": 0.030789093179842752,
+     "luma_rmse": 0.020708561328055243
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.09036248051029483,
+     "chroma_flat_rmse": 0.060623940825306366,
+     "chroma_rmse": 0.0642344114690484,
+     "cpsnr_db": 29.083736109477194,
+     "luma_edge_rmse": 0.0305189120730761,
+     "luma_rmse": 0.019960848117414602
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.09171399124525481,
+     "chroma_flat_rmse": 0.06065003043894724,
+     "chroma_rmse": 0.06444851940350833,
+     "cpsnr_db": 29.204146706362486,
+     "luma_edge_rmse": 0.03004325669014832,
+     "luma_rmse": 0.01932229195515315
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.09429960789188181,
+     "chroma_flat_rmse": 0.061527653891292645,
+     "chroma_rmse": 0.06556187676379133,
+     "cpsnr_db": 29.13320039687047,
+     "luma_edge_rmse": 0.02994001041518026,
+     "luma_rmse": 0.019300781187319243
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.09173176720890523,
+     "chroma_flat_rmse": 0.06054432636617201,
+     "chroma_rmse": 0.06436159161003503,
+     "cpsnr_db": 29.051216767201478,
+     "luma_edge_rmse": 0.03051222391575319,
+     "luma_rmse": 0.020063248457395794
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.09254364608442238,
+     "chroma_flat_rmse": 0.060452943763550336,
+     "chroma_rmse": 0.06440099352341797,
+     "cpsnr_db": 29.041792636410445,
+     "luma_edge_rmse": 0.030544471649033615,
+     "luma_rmse": 0.02009302305530694
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.08957893807953665,
+     "chroma_flat_rmse": 0.0610510099625848,
+     "chroma_rmse": 0.06448760310246644,
+     "cpsnr_db": 29.126725044412666,
+     "luma_edge_rmse": 0.02962715647540983,
+     "luma_rmse": 0.019355872684468256
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.09055331515748113,
+     "chroma_flat_rmse": 0.06040405751064544,
+     "chroma_rmse": 0.06407484373160326,
+     "cpsnr_db": 29.244612003376393,
+     "luma_edge_rmse": 0.029594671240244536,
+     "luma_rmse": 0.019083112447114525
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.08928957313185326,
+     "chroma_flat_rmse": 0.059751049387872165,
+     "chroma_rmse": 0.06334179406862832,
+     "cpsnr_db": 29.27201223610537,
+     "luma_edge_rmse": 0.02974999631456721,
+     "luma_rmse": 0.01935858659294918
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.09231082038152541,
+     "chroma_flat_rmse": 0.06184915464319582,
+     "chroma_rmse": 0.06554984831656102,
+     "cpsnr_db": 28.945659823272454,
+     "luma_edge_rmse": 0.030933447401964582,
+     "luma_rmse": 0.020567020658357766
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.09017973624973442,
+     "chroma_flat_rmse": 0.059920923129960356,
+     "chroma_rmse": 0.06361218624982035,
+     "cpsnr_db": 29.285020091676166,
+     "luma_edge_rmse": 0.030238192440505747,
+     "luma_rmse": 0.018957442683625206
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.09025209062385749,
+     "chroma_flat_rmse": 0.06128380028072914,
+     "chroma_rmse": 0.06477980911267096,
+     "cpsnr_db": 29.04314162696801,
+     "luma_edge_rmse": 0.030162571490973147,
+     "luma_rmse": 0.01975572394999214
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.08908395261474637,
+     "chroma_flat_rmse": 0.05961691503446036,
+     "chroma_rmse": 0.06319886644944964,
+     "cpsnr_db": 29.200175849764385,
+     "luma_edge_rmse": 0.03053767003440831,
+     "luma_rmse": 0.019839231127524306
+    },
+    "fit": {
+     "gain": [
+      0.00017447980874788838,
+      9.688048740854989e-05,
+      0.00016414230117917395
+     ],
+     "offset": [
+      -0.3337485540589107,
+      -0.19545960592447312,
+      -0.32626009499529895
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.08962814036301876,
+     "chroma_flat_rmse": 0.05961644905669934,
+     "chroma_rmse": 0.06327567235457299,
+     "cpsnr_db": 29.31621938165787,
+     "luma_edge_rmse": 0.0306860544978918,
+     "luma_rmse": 0.018904866865560328
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.9007753865915279,
+     "detail_luma_fine_ratio": 1.1048684557119013,
+     "flat_chroma_hh_ratio": 0.9088251181726922,
+     "flat_chroma_mid_ratio": 0.890281016722435,
+     "flat_luma_hh_ratio": 1.2955593793297355,
+     "flat_luma_mid_ratio": 1.008062597072287,
+     "ms_per_megapixel": 183.78363424797533
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 82.20371028907873
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.5896598155935837,
+     "detail_luma_fine_ratio": 0.8280778676204215,
+     "flat_chroma_hh_ratio": 0.5396915389318772,
+     "flat_chroma_mid_ratio": 0.7046834257613771,
+     "flat_luma_hh_ratio": 0.7625366962088862,
+     "flat_luma_mid_ratio": 0.9468562940044125,
+     "ms_per_megapixel": 342.5979126876943
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.6869380503601419,
+     "detail_luma_fine_ratio": 0.863827693988791,
+     "flat_chroma_hh_ratio": 0.7017015943182144,
+     "flat_chroma_mid_ratio": 0.7483167209842472,
+     "flat_luma_hh_ratio": 0.7955742218582882,
+     "flat_luma_mid_ratio": 0.9642044055803204,
+     "ms_per_megapixel": 405.83767968084754
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.47616447851855,
+     "detail_luma_fine_ratio": 0.9991392967608688,
+     "flat_chroma_hh_ratio": 0.4786743482418599,
+     "flat_chroma_mid_ratio": 0.7976113168289994,
+     "flat_luma_hh_ratio": 0.9858961803860675,
+     "flat_luma_mid_ratio": 0.9977756674359528,
+     "ms_per_megapixel": 204.13416340135657
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.32108239995305166,
+     "detail_luma_fine_ratio": 1.000224604958621,
+     "flat_chroma_hh_ratio": 0.32629231763970007,
+     "flat_chroma_mid_ratio": 0.6492833243065397,
+     "flat_luma_hh_ratio": 0.9855686911933377,
+     "flat_luma_mid_ratio": 1.0047032687366204,
+     "ms_per_megapixel": 404.10941275029234
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.1215579984825657,
+     "detail_luma_fine_ratio": 0.8496717158885678,
+     "flat_chroma_hh_ratio": 1.1865998609979564,
+     "flat_chroma_mid_ratio": 1.1147874121620314,
+     "flat_luma_hh_ratio": 0.7806113738928263,
+     "flat_luma_mid_ratio": 0.9744096852924544,
+     "ms_per_megapixel": 116.23668792336932
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6800928171813692,
+     "detail_luma_fine_ratio": 0.7108845353110929,
+     "flat_chroma_hh_ratio": 0.6800338056871066,
+     "flat_chroma_mid_ratio": 0.8165617736395324,
+     "flat_luma_hh_ratio": 0.6263796291610836,
+     "flat_luma_mid_ratio": 0.9258630944532832,
+     "ms_per_megapixel": 380.77146336504074
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.6540927350018394,
+     "detail_luma_fine_ratio": 0.9364442457555416,
+     "flat_chroma_hh_ratio": 0.8272467550982668,
+     "flat_chroma_mid_ratio": 0.83766211902911,
+     "flat_luma_hh_ratio": 1.037450956071361,
+     "flat_luma_mid_ratio": 0.9701702648564434,
+     "ms_per_megapixel": 407.33317950193253
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.000967209814832,
+     "detail_luma_fine_ratio": 1.0566518639981894,
+     "flat_chroma_hh_ratio": 1.2129623547292632,
+     "flat_chroma_mid_ratio": 0.9586359813323045,
+     "flat_luma_hh_ratio": 1.2419975451323284,
+     "flat_luma_mid_ratio": 0.9961399813242416,
+     "ms_per_megapixel": 123.95833055859667
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.397289370041957,
+     "detail_luma_fine_ratio": 0.5555682262297122,
+     "flat_chroma_hh_ratio": 1.625732972064148,
+     "flat_chroma_mid_ratio": 1.1298233370484234,
+     "flat_luma_hh_ratio": 0.4971514363451039,
+     "flat_luma_mid_ratio": 0.8698103857631401,
+     "ms_per_megapixel": 10.71978999904993
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.080121854209013,
+     "detail_luma_fine_ratio": 0.9673429608435218,
+     "flat_chroma_hh_ratio": 0.9090089174743571,
+     "flat_chroma_mid_ratio": 1.0612260717047184,
+     "flat_luma_hh_ratio": 1.0525250832013107,
+     "flat_luma_mid_ratio": 0.9732976045188332,
+     "ms_per_megapixel": 17.858810077488407
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.6838976104677712,
+     "detail_luma_fine_ratio": 0.9835875679238771,
+     "flat_chroma_hh_ratio": 0.7810382914785837,
+     "flat_chroma_mid_ratio": 0.8842466670680621,
+     "flat_luma_hh_ratio": 1.1759531811799626,
+     "flat_luma_mid_ratio": 0.9920446117186636,
+     "ms_per_megapixel": 79.10043925191324
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.3396985015848488,
+     "detail_luma_fine_ratio": 0.5154014279199731,
+     "flat_chroma_hh_ratio": 1.5334386727440328,
+     "flat_chroma_mid_ratio": 1.119116413493715,
+     "flat_luma_hh_ratio": 0.45000310516759034,
+     "flat_luma_mid_ratio": 0.8602839710326737,
+     "ms_per_megapixel": 13.697898214667836
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0013489017728716135,
+    "flat_chroma_mid": 0.00229179776315781,
+    "flat_luma_hh": 0.0017334931762889028
+   },
+   "camera": "EOS 60D",
+   "crop": "IMG_8055-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 1250,
+   "raw": "IMG_8055.CR2",
+   "raw_sha256": "c302e7051b181e75b079e77994560cc4e564df4c3ac0ffac805f82c7f689bd3d",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.1594555658560509,
+     "chroma_flat_rmse": 0.07905967795148677,
+     "chroma_rmse": 0.09023392981525806,
+     "cpsnr_db": 26.14405691308395,
+     "luma_edge_rmse": 0.05147146659404237,
+     "luma_rmse": 0.027419846004072896
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.16079438781121266,
+     "chroma_flat_rmse": 0.08005282543789864,
+     "chroma_rmse": 0.09125181128797805,
+     "cpsnr_db": 26.20519689798751,
+     "luma_edge_rmse": 0.0464921973736398,
+     "luma_rmse": 0.0252651013668872
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.1577353372985961,
+     "chroma_flat_rmse": 0.07820440094999698,
+     "chroma_rmse": 0.08925860187295888,
+     "cpsnr_db": 26.477460209900286,
+     "luma_edge_rmse": 0.044178320444610245,
+     "luma_rmse": 0.02405316250292273
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.15848074126047068,
+     "chroma_flat_rmse": 0.07861764612001763,
+     "chroma_rmse": 0.08971490390915313,
+     "cpsnr_db": 26.412940541393162,
+     "luma_edge_rmse": 0.04510168760269836,
+     "luma_rmse": 0.024414393962705866
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.15904683106138132,
+     "chroma_flat_rmse": 0.07931743557595601,
+     "chroma_rmse": 0.09036655797484247,
+     "cpsnr_db": 26.270087576383926,
+     "luma_edge_rmse": 0.046133469884804774,
+     "luma_rmse": 0.025104564682627412
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.15778400854268443,
+     "chroma_flat_rmse": 0.07864867128178225,
+     "chroma_rmse": 0.08961820978993515,
+     "cpsnr_db": 26.326222596968872,
+     "luma_edge_rmse": 0.04594550175877499,
+     "luma_rmse": 0.025017279994495458
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.16213665507634925,
+     "chroma_flat_rmse": 0.08061281966347987,
+     "chroma_rmse": 0.09192796589696013,
+     "cpsnr_db": 26.233068956460865,
+     "luma_edge_rmse": 0.043532471001121564,
+     "luma_rmse": 0.024011569185666142
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.1564801998241514,
+     "chroma_flat_rmse": 0.07754178677653979,
+     "chroma_rmse": 0.08851650850836391,
+     "cpsnr_db": 26.517087030165918,
+     "luma_edge_rmse": 0.042880521633972137,
+     "luma_rmse": 0.023616684686486315
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.15672736360143394,
+     "chroma_flat_rmse": 0.07814879691199061,
+     "chroma_rmse": 0.08903927138679338,
+     "cpsnr_db": 26.475405513601096,
+     "luma_edge_rmse": 0.044701633498868604,
+     "luma_rmse": 0.024239574105678854
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.16435577505819002,
+     "chroma_flat_rmse": 0.08468943892172398,
+     "chroma_rmse": 0.09554905647456141,
+     "cpsnr_db": 25.671483901397863,
+     "luma_edge_rmse": 0.050729708515083245,
+     "luma_rmse": 0.028294807721919765
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.15931524633731767,
+     "chroma_flat_rmse": 0.07948556123524239,
+     "chroma_rmse": 0.09054617572517627,
+     "cpsnr_db": 26.528572040153804,
+     "luma_edge_rmse": 0.04045548839596866,
+     "luma_rmse": 0.02250661501326824
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.1634959305051844,
+     "chroma_flat_rmse": 0.08145197767200323,
+     "chroma_rmse": 0.09282778901392481,
+     "cpsnr_db": 26.082904976039032,
+     "luma_edge_rmse": 0.04593282730456714,
+     "luma_rmse": 0.02509933900990695
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.15661895024038172,
+     "chroma_flat_rmse": 0.07813530271390096,
+     "chroma_rmse": 0.08900977276600203,
+     "cpsnr_db": 26.34564140687219,
+     "luma_edge_rmse": 0.046683904804452246,
+     "luma_rmse": 0.025710891719112137
+    },
+    "fit": {
+     "gain": [
+      0.0001954252438069001,
+      9.754727315176354e-05,
+      0.00015262548494334352
+     ],
+     "offset": [
+      -0.3994728176763204,
+      -0.19961917846408697,
+      -0.3121675695192245
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.1584351115063445,
+     "chroma_flat_rmse": 0.07915114349758422,
+     "chroma_rmse": 0.09012881392186713,
+     "cpsnr_db": 26.577626978388107,
+     "luma_edge_rmse": 0.039630197832218446,
+     "luma_rmse": 0.02208892143561111
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.8989240771963184,
+     "detail_luma_fine_ratio": 1.1250528471235883,
+     "flat_chroma_hh_ratio": 0.9645584511873081,
+     "flat_chroma_mid_ratio": 0.8942970937010487,
+     "flat_luma_hh_ratio": 1.335649466018917,
+     "flat_luma_mid_ratio": 1.0027202720849024,
+     "ms_per_megapixel": 184.2075751642866
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 81.57216912486138
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.5863043406883498,
+     "detail_luma_fine_ratio": 0.8169585491890093,
+     "flat_chroma_hh_ratio": 0.4877545545769583,
+     "flat_chroma_mid_ratio": 0.6724174742808731,
+     "flat_luma_hh_ratio": 0.7364872819534214,
+     "flat_luma_mid_ratio": 0.9304410832352142,
+     "ms_per_megapixel": 340.0784517946108
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.6761255982207776,
+     "detail_luma_fine_ratio": 0.8512735259783185,
+     "flat_chroma_hh_ratio": 0.6432748021800022,
+     "flat_chroma_mid_ratio": 0.7373330703382743,
+     "flat_luma_hh_ratio": 0.7620812427833462,
+     "flat_luma_mid_ratio": 0.9406063810674258,
+     "ms_per_megapixel": 399.50443758085584
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.47545561222658694,
+     "detail_luma_fine_ratio": 0.9988367122693602,
+     "flat_chroma_hh_ratio": 0.46351048530186956,
+     "flat_chroma_mid_ratio": 0.7883476793804196,
+     "flat_luma_hh_ratio": 0.9743288125878521,
+     "flat_luma_mid_ratio": 0.9698309215135883,
+     "ms_per_megapixel": 201.80219146482122
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.32244700108259233,
+     "detail_luma_fine_ratio": 0.9987598549185424,
+     "flat_chroma_hh_ratio": 0.30858401008103586,
+     "flat_chroma_mid_ratio": 0.6362536721137261,
+     "flat_luma_hh_ratio": 0.972366184020577,
+     "flat_luma_mid_ratio": 0.965521013871055,
+     "ms_per_megapixel": 399.71509558856826
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.1190964612535943,
+     "detail_luma_fine_ratio": 0.8376884618364957,
+     "flat_chroma_hh_ratio": 1.1355578478207313,
+     "flat_chroma_mid_ratio": 1.0927022503470565,
+     "flat_luma_hh_ratio": 0.8005287645132623,
+     "flat_luma_mid_ratio": 0.9642026769958268,
+     "ms_per_megapixel": 115.99443676397335
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6661568020778177,
+     "detail_luma_fine_ratio": 0.697446388219073,
+     "flat_chroma_hh_ratio": 0.5742586025193884,
+     "flat_chroma_mid_ratio": 0.7596832019336311,
+     "flat_luma_hh_ratio": 0.6333807101201795,
+     "flat_luma_mid_ratio": 0.8982474413549497,
+     "ms_per_megapixel": 384.0774067177928
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.655492266144037,
+     "detail_luma_fine_ratio": 0.9448438941640949,
+     "flat_chroma_hh_ratio": 0.8644861269334515,
+     "flat_chroma_mid_ratio": 0.8411973327160008,
+     "flat_luma_hh_ratio": 1.1003960839493063,
+     "flat_luma_mid_ratio": 0.9581769917451642,
+     "ms_per_megapixel": 405.15981151324814
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 1.0538210416404998,
+     "detail_luma_fine_ratio": 1.0763679963854236,
+     "flat_chroma_hh_ratio": 1.727275685324016,
+     "flat_chroma_mid_ratio": 0.9958946944083542,
+     "flat_luma_hh_ratio": 1.4108326028959581,
+     "flat_luma_mid_ratio": 1.0299334374301619,
+     "ms_per_megapixel": 130.8114639688235
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.3718469511144815,
+     "detail_luma_fine_ratio": 0.5320190613173802,
+     "flat_chroma_hh_ratio": 1.4563329665456166,
+     "flat_chroma_mid_ratio": 1.1008945793171956,
+     "flat_luma_hh_ratio": 0.5272726079330937,
+     "flat_luma_mid_ratio": 0.8723049642691345,
+     "ms_per_megapixel": 11.773374159698747
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0789794331955376,
+     "detail_luma_fine_ratio": 0.969274011551501,
+     "flat_chroma_hh_ratio": 0.8431365060697078,
+     "flat_chroma_mid_ratio": 1.0429085219337348,
+     "flat_luma_hh_ratio": 1.0915195994778497,
+     "flat_luma_mid_ratio": 0.9725709683797604,
+     "ms_per_megapixel": 18.043047042663463
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.6840288357840487,
+     "detail_luma_fine_ratio": 0.9886157879541367,
+     "flat_chroma_hh_ratio": 0.7566212878077546,
+     "flat_chroma_mid_ratio": 0.8803619188639755,
+     "flat_luma_hh_ratio": 1.2869551222205549,
+     "flat_luma_mid_ratio": 1.0263806539366203,
+     "ms_per_megapixel": 78.87706185132205
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.3122021569166045,
+     "detail_luma_fine_ratio": 0.48645632146454065,
+     "flat_chroma_hh_ratio": 1.3764963220311677,
+     "flat_chroma_mid_ratio": 1.091830342650443,
+     "flat_luma_hh_ratio": 0.4675843156862306,
+     "flat_luma_mid_ratio": 0.8553594134050369,
+     "ms_per_megapixel": 14.292629722268838
+    }
+   },
+   "width": 5202
+  },
+  {
+   "ahd_absolute": {
+    "flat_chroma_hh": 0.0014620150905102491,
+    "flat_chroma_mid": 0.002523539677604735,
+    "flat_luma_hh": 0.0026695190463215113
+   },
+   "camera": "EOS 60D",
+   "crop": "_MG_7906-demosaic.png",
+   "detail_tiles": 20,
+   "flat_tiles": 40,
+   "height": 3464,
+   "iso": 400,
+   "raw": "_MG_7906.CR2",
+   "raw_sha256": "9ee01584bb023802bba258edb565ec7616eb0899b4ce81d3a1573738384aeddd",
+   "repeatable": true,
+   "synthetic": {
+    "AAHD": {
+     "chroma_edge_rmse": 0.03874370281824071,
+     "chroma_flat_rmse": 0.028996854461062406,
+     "chroma_rmse": 0.030119362776391715,
+     "cpsnr_db": 35.506418204318436,
+     "luma_edge_rmse": 0.012977530084239424,
+     "luma_rmse": 0.009934833371110523
+    },
+    "AHD": {
+     "chroma_edge_rmse": 0.03900283504949616,
+     "chroma_flat_rmse": 0.029162019761311806,
+     "chroma_rmse": 0.030295894686377396,
+     "cpsnr_db": 35.670829512578464,
+     "luma_edge_rmse": 0.011906715960340599,
+     "luma_rmse": 0.008882554811970488
+    },
+    "AHD-fbdd1": {
+     "chroma_edge_rmse": 0.038479927046681496,
+     "chroma_flat_rmse": 0.028503246441099292,
+     "chroma_rmse": 0.029658031292870157,
+     "cpsnr_db": 35.950416082588575,
+     "luma_edge_rmse": 0.01138364469117302,
+     "luma_rmse": 0.008449463784303375
+    },
+    "AHD-fbdd2": {
+     "chroma_edge_rmse": 0.039368926201167775,
+     "chroma_flat_rmse": 0.028928315884273328,
+     "chroma_rmse": 0.030141554607818765,
+     "cpsnr_db": 35.7805962149825,
+     "luma_edge_rmse": 0.011972619611214553,
+     "luma_rmse": 0.008748857654141738
+    },
+    "AHD-median1": {
+     "chroma_edge_rmse": 0.03880344424246643,
+     "chroma_flat_rmse": 0.028826547182844917,
+     "chroma_rmse": 0.029979720112254454,
+     "cpsnr_db": 35.73007409546848,
+     "luma_edge_rmse": 0.011799360498511026,
+     "luma_rmse": 0.00885359005319466
+    },
+    "AHD-median3": {
+     "chroma_edge_rmse": 0.038588757562476574,
+     "chroma_flat_rmse": 0.028554981048146973,
+     "chroma_rmse": 0.029716948000802948,
+     "cpsnr_db": 35.78672943501417,
+     "luma_edge_rmse": 0.011738037092028359,
+     "luma_rmse": 0.008827218248552022
+    },
+    "DCB": {
+     "chroma_edge_rmse": 0.03916993305845659,
+     "chroma_flat_rmse": 0.02937241338425287,
+     "chroma_rmse": 0.03049969847620051,
+     "cpsnr_db": 35.73447697567379,
+     "luma_edge_rmse": 0.010927173441309243,
+     "luma_rmse": 0.00833097241527265
+    },
+    "DCB-fbdd1": {
+     "chroma_edge_rmse": 0.03799434227420921,
+     "chroma_flat_rmse": 0.028201694556776836,
+     "chroma_rmse": 0.02933403680455533,
+     "cpsnr_db": 36.01540262278636,
+     "luma_edge_rmse": 0.010896345935852904,
+     "luma_rmse": 0.008224801933422926
+    },
+    "DCB-i2-enhance": {
+     "chroma_edge_rmse": 0.03784301346439784,
+     "chroma_flat_rmse": 0.028258380910337322,
+     "chroma_rmse": 0.029363432105926825,
+     "cpsnr_db": 36.01506807157815,
+     "luma_edge_rmse": 0.011290473155907282,
+     "luma_rmse": 0.00842863566696644
+    },
+    "DHT": {
+     "chroma_edge_rmse": 0.038729682625542106,
+     "chroma_flat_rmse": 0.02895334525141965,
+     "chroma_rmse": 0.030079875124683058,
+     "cpsnr_db": 35.582365342711505,
+     "luma_edge_rmse": 0.01247099201169947,
+     "luma_rmse": 0.009539517108707506
+    },
+    "OpenCV-EA": {
+     "chroma_edge_rmse": 0.03940541469556017,
+     "chroma_flat_rmse": 0.028791232233644208,
+     "chroma_rmse": 0.03002807054055066,
+     "cpsnr_db": 36.06830202310835,
+     "luma_edge_rmse": 0.01062238524874186,
+     "luma_rmse": 0.007778881168978817
+    },
+    "PPG": {
+     "chroma_edge_rmse": 0.0395411139090573,
+     "chroma_flat_rmse": 0.029617825018156664,
+     "chroma_rmse": 0.030760198964130077,
+     "cpsnr_db": 35.572276531108365,
+     "luma_edge_rmse": 0.011709308227006412,
+     "luma_rmse": 0.00877459687998921
+    },
+    "VNG": {
+     "chroma_edge_rmse": 0.03809662247520675,
+     "chroma_flat_rmse": 0.02831434367027994,
+     "chroma_rmse": 0.029444770712249987,
+     "cpsnr_db": 35.87362865225204,
+     "luma_edge_rmse": 0.011758866791583545,
+     "luma_rmse": 0.008826570689971018
+    },
+    "fit": {
+     "gain": [
+      0.0002112083683368481,
+      9.752348045623318e-05,
+      0.00014055143523262543
+     ],
+     "offset": [
+      -0.431558655092341,
+      -0.19955515992799877,
+      -0.28744267914642535
+     ]
+    },
+    "linear": {
+     "chroma_edge_rmse": 0.039097501689523695,
+     "chroma_flat_rmse": 0.02860721847827651,
+     "chroma_rmse": 0.02982876230117256,
+     "cpsnr_db": 36.135048567149184,
+     "luma_edge_rmse": 0.010487316584114044,
+     "luma_rmse": 0.007605159690845447
+    }
+   },
+   "variants": {
+    "AAHD": {
+     "detail_chroma_fine_ratio": 0.8888644231475871,
+     "detail_luma_fine_ratio": 1.1156055851662874,
+     "flat_chroma_hh_ratio": 0.8913475370460058,
+     "flat_chroma_mid_ratio": 0.8847025863776338,
+     "flat_luma_hh_ratio": 1.313816097657322,
+     "flat_luma_mid_ratio": 1.017274472168906,
+     "ms_per_megapixel": 187.5899070174644
+    },
+    "AHD": {
+     "detail_chroma_fine_ratio": 1,
+     "detail_luma_fine_ratio": 1,
+     "flat_chroma_hh_ratio": 1,
+     "flat_chroma_mid_ratio": 1,
+     "flat_luma_hh_ratio": 1,
+     "flat_luma_mid_ratio": 1,
+     "ms_per_megapixel": 79.97307728507333
+    },
+    "AHD-fbdd1": {
+     "detail_chroma_fine_ratio": 0.6268388392374111,
+     "detail_luma_fine_ratio": 0.8369197992935689,
+     "flat_chroma_hh_ratio": 0.5361460080141773,
+     "flat_chroma_mid_ratio": 0.7067952693686566,
+     "flat_luma_hh_ratio": 0.73305474677635,
+     "flat_luma_mid_ratio": 0.9516315130366263,
+     "ms_per_megapixel": 344.01271206757394
+    },
+    "AHD-fbdd2": {
+     "detail_chroma_fine_ratio": 0.7123775535010095,
+     "detail_luma_fine_ratio": 0.9005177303686062,
+     "flat_chroma_hh_ratio": 0.5835008527415233,
+     "flat_chroma_mid_ratio": 0.7301423290741335,
+     "flat_luma_hh_ratio": 0.742582288408431,
+     "flat_luma_mid_ratio": 0.9579222243653467,
+     "ms_per_megapixel": 406.4563238690395
+    },
+    "AHD-median1": {
+     "detail_chroma_fine_ratio": 0.47507474234515507,
+     "detail_luma_fine_ratio": 1.0009048451145572,
+     "flat_chroma_hh_ratio": 0.4761881735872806,
+     "flat_chroma_mid_ratio": 0.8023601914480217,
+     "flat_luma_hh_ratio": 0.993285978851991,
+     "flat_luma_mid_ratio": 1.0029676300050223,
+     "ms_per_megapixel": 204.65920462284447
+    },
+    "AHD-median3": {
+     "detail_chroma_fine_ratio": 0.3187049410052666,
+     "detail_luma_fine_ratio": 1.0011764303181059,
+     "flat_chroma_hh_ratio": 0.324167039313944,
+     "flat_chroma_mid_ratio": 0.6554714547505907,
+     "flat_luma_hh_ratio": 0.9890111103098866,
+     "flat_luma_mid_ratio": 1.013916310593782,
+     "ms_per_megapixel": 404.9255571449247
+    },
+    "DCB": {
+     "detail_chroma_fine_ratio": 1.1377213588690367,
+     "detail_luma_fine_ratio": 0.8371338205178674,
+     "flat_chroma_hh_ratio": 1.162570344755938,
+     "flat_chroma_mid_ratio": 1.1161949627566243,
+     "flat_luma_hh_ratio": 0.7794092015619,
+     "flat_luma_mid_ratio": 0.9650588287660055,
+     "ms_per_megapixel": 119.63608995651876
+    },
+    "DCB-fbdd1": {
+     "detail_chroma_fine_ratio": 0.7337284354981795,
+     "detail_luma_fine_ratio": 0.7047703805473253,
+     "flat_chroma_hh_ratio": 0.6659851066261235,
+     "flat_chroma_mid_ratio": 0.8170518870204423,
+     "flat_luma_hh_ratio": 0.6046060945874896,
+     "flat_luma_mid_ratio": 0.9232283607043854,
+     "ms_per_megapixel": 376.47865162004666
+    },
+    "DCB-i2-enhance": {
+     "detail_chroma_fine_ratio": 0.6409672894970944,
+     "detail_luma_fine_ratio": 0.9416896208755454,
+     "flat_chroma_hh_ratio": 0.8139158430804597,
+     "flat_chroma_mid_ratio": 0.8225591060305305,
+     "flat_luma_hh_ratio": 1.0491795465159282,
+     "flat_luma_mid_ratio": 0.9693914237155182,
+     "ms_per_megapixel": 408.02321211507746
+    },
+    "DHT": {
+     "detail_chroma_fine_ratio": 0.9047385122044861,
+     "detail_luma_fine_ratio": 1.0446105893046214,
+     "flat_chroma_hh_ratio": 1.1934845744324518,
+     "flat_chroma_mid_ratio": 0.9448044146846477,
+     "flat_luma_hh_ratio": 1.2592954283319684,
+     "flat_luma_mid_ratio": 0.9996301042313434,
+     "ms_per_megapixel": 124.85972596256724
+    },
+    "OpenCV-EA": {
+     "callback_applied": true,
+     "detail_chroma_fine_ratio": 1.435101051430153,
+     "detail_luma_fine_ratio": 0.5299522740848572,
+     "flat_chroma_hh_ratio": 1.6035152790413547,
+     "flat_chroma_mid_ratio": 1.1201520859215846,
+     "flat_luma_hh_ratio": 0.4906006380987306,
+     "flat_luma_mid_ratio": 0.86186426968821,
+     "ms_per_megapixel": 10.400229126654963
+    },
+    "PPG": {
+     "detail_chroma_fine_ratio": 1.0815128066801087,
+     "detail_luma_fine_ratio": 0.9645644558814761,
+     "flat_chroma_hh_ratio": 0.8790150741958918,
+     "flat_chroma_mid_ratio": 1.0668452935758055,
+     "flat_luma_hh_ratio": 1.040949789680201,
+     "flat_luma_mid_ratio": 0.968453175158857,
+     "ms_per_megapixel": 18.16526864334467
+    },
+    "VNG": {
+     "detail_chroma_fine_ratio": 0.6874069123284784,
+     "detail_luma_fine_ratio": 0.9680269329937217,
+     "flat_chroma_hh_ratio": 0.7636750746856089,
+     "flat_chroma_mid_ratio": 0.8801746420636047,
+     "flat_luma_hh_ratio": 1.1599184561366316,
+     "flat_luma_mid_ratio": 0.9881596376849132,
+     "ms_per_megapixel": 79.34406113122239
+    },
+    "linear": {
+     "detail_chroma_fine_ratio": 1.3693579603375727,
+     "detail_luma_fine_ratio": 0.48618684168328113,
+     "flat_chroma_hh_ratio": 1.5046903929741113,
+     "flat_chroma_mid_ratio": 1.1064031394822578,
+     "flat_luma_hh_ratio": 0.4440200737862564,
+     "flat_luma_mid_ratio": 0.8451534889241681,
+     "ms_per_megapixel": 13.907729350853685
+    }
+   },
+   "width": 5202
+  }
+ ]
+}

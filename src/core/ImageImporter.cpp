@@ -105,6 +105,17 @@ std::optional<double> readMetadataNumber(const QImage &image,
 }
 
 namespace ImageImport {
+std::optional<double> referenceWhiteBalanceKelvin(const QString &fileName)
+{
+    if (RawDecoder::supportedExtensions().contains(QFileInfo(fileName).suffix().toLower()))
+        return RawDecoder::asShotWhiteBalanceKelvin(fileName);
+    QImageReader reader(fileName);
+    QImage keys(1, 1, QImage::Format_RGB32);   // carries the text keys only (a null image keeps none)
+    for (const QString &key : reader.textKeys())
+        keys.setText(key, reader.text(key));
+    return readWhiteBalanceKelvin(keys);
+}
+
 Result load(const QString &fileName, const RawDecoder::Options &rawOptions)
 {
     Result result;
