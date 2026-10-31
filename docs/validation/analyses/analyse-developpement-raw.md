@@ -20,6 +20,10 @@ trois JPEG embarqués et preuves de mouvement anciennes réutilisées ; pas de
 référence propre créée, réserve fermée.
 Préparation suivante (§59) :14 tests de données et un pilote8/4/4 synthétique,
 sans bénéfice de débruitage utile démontré ; pas de photo utilisée pour apprendre.
+Nouvelle demande ciblée (§60) : comparer le placement du débruitage couleur
+signé/non signé du jalon de Claude. Banc compilé et références auditées,
+mais campagne arrêtée avant le premier rendu par le garde-fou mémoire ;
+aucune conclusion photographique disponible.
 
 Dernier jalon (§53) : ablation de routage sur les64entrées du§52,640parités
 avec les anciennes sorties. Plafond diagonal local : détail préservé mais
@@ -4398,6 +4402,58 @@ et métriques identiques. Aucun RAW, réserve ou TIFF LR lu ; aucun poids conser
 Le prochain jalon est la réception/qualification du corpus et des références,
 pas une intégration moteur. La [section12 B4](../../architecture/restauration-neuronale.md)
 décrit les contrôles et limites. Aucun push/fusion/tag.
+
+## 60. Placement du débruitage couleur signé/non signé — 31 octobre 2026
+
+Étude ciblée demandée par l'utilisateur et Claude après le changement local
+`e88c5b1` de `patch_validation_presets`. Elle ne reprend pas la recherche
+incrémentale de modèles suspendue au §54 : les filtres et leurs paramètres
+restent inchangés, seul leur placement est comparé. Le développement signé
+est la cible déclarée pour les futurs boîtiers ; cela ne vaut pas validation.
+
+Le banc de `patch_raw_bench` (`be72812`, puis compléments de provenance)
+compile un moteur figé en worktree détaché `raw_color_engine_e88c5b1`.
+Aucun fichier moteur de Claude n'est modifié. Trois variantes prévues :
+
+- Après les tons : chemin courant de Claude.
+- Avant DCP : chroma seule de `CameraDenoise`, sans débruitage postérieur.
+- Hybride exploratoire : chroma caméra dans les ombres, puis filtre post-tons.
+
+Pour l'hybride, poids pré-DCP fixé avant résultats : guide caméra
+I = 0,25 R + 0,5 G + 0,25 B, lissé à sigma 4 pixels ; poids 1 sous 0,002,
+transition smoothstep jusqu'à 0,02, puis 0. Le post-traitement garde la même
+force. Il cumule deux filtres et ne représente donc pas une force perceptuelle
+égale, ni un optimum. Pas de réglage des seuils après observation des résultats.
+
+Les deux politiques de développement sont testées à couleur 25, 50 et 100,
+luminance et netteté à zéro, optiques désactivées, pleine définition.
+Masques IPR fixés sur son neutre signé et réutilisés dans les deux modes ;
+Lightroom conserve ses propres masques, sans comparaison pixel à pixel entre
+logiciels. Tuiles 64×64, statistiques sur intérieur 40×40 ; bins de Y linéaire
+sRGB [0 ; 0,0003[, [0,0003 ; 0,003[, [0,003 ; 0,03[, [0,03 ; 0,3[,
+[0,3 ; 0,8[. Les noirs nuls restent admissibles. Les fractions de valeurs
+négatives avant et après DCP servent au diagnostic, pas à démontrer seules
+qu'une information a été correctement conservée ou restaurée.
+
+Avant les variantes, le banc exige l'identité à zéro (dont un vrai rerendu
+caméra sans correction), la parité exacte du chemin post-tons contre le
+serveur de production figé à 0 et 50, puis vérifie que le neutre retenu reste
+inchangé. Ces contrôles sont implémentés mais **pas encore exécutés sur RAW**.
+Six tests synthétiques du choix de masques et des dénominateurs passent.
+
+Audit terminé : 28 RAW, 28 neutres Lightroom et 84 états couleur seule,
+Camera Neutral, sans optique, sans retouche lumière/couleur ni netteté,
+dimensions et balance des blancs appariées à leur neutre. Les identités,
+XMP, empreintes et protocole sont dans le
+[gel initial](../raw/colour-placement-freeze-v001-20261031T212937Z.json).
+Ce gel décrit la première tentative, pas les compléments ultérieurs du banc.
+
+Tentative du 31 octobre à 22 h 29 Paris : arrêt avant la première scène,
+RAM disponible inférieure au minimum fixé de 5 Gio. Aucun rendu comparatif
+mesuré, aucune variante promue, aucun TIFF IPR écrit. Libérer de la mémoire
+puis créer un nouveau gel avec les outils courants ; ne pas écraser ce témoin.
+Même après calcul, texture réelle et bruit restent mêlés sans vérité propre ;
+une baisse de chroma ne sera pas assimilée automatiquement à une amélioration.
 
 ## Conclusion actuelle et fiche de reprise
 
