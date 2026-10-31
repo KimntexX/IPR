@@ -51,6 +51,14 @@ des exports Lightroom, jamais par rétro-ingénierie.
 
 ## Ordre proposé
 
+Complément du31octobre2026 : le [plan d'action bêta](roadmap-beta.md) cadre
+les futurs panneaux géométrie, calques/filtres, suppression et assistance
+neuronale. Les mentions « non planifié » de l'inventaire du26octobre restent
+historiques pour ces familles ; le plan ne signifie pas qu'elles sont livrées.
+La recherche incrémentale sur le bruit est suspendue : moteur actuel conservé,
+piste neuronale prévue pour la bêta. Les autres statuts de validation ne sont
+pas réévalués par ce cadrage.
+
 1. **Passage en beta** : la règle demande de valider toutes les fonctions de réglage déjà
    présentes. Restent les courbes (exports prêts), la netteté, l'exposition et le contraste
    comparés à LR, le bruit (étude en cours), la décision sur la taille et la rugosité du grain,
