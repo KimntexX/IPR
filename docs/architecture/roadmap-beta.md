@@ -265,3 +265,42 @@ ressources qualifiés, limites annoncées et validation utilisateur. La bêta
 n'est pas `v1` : la stabilité complète reste conditionnée à la validation des
 panneaux sur les boîtiers cibles possédés par l'utilisateur. Aucun calendrier
 ferme ni sélection de modèle n'est engagé par ce cadrage.
+
+## 11. Premier lot de préparation — B0, 31 octobre 2026
+
+La préparation peut commencer en alpha ; elle ne constitue pas le passage en
+bêta. Référence de travail : `dev` à `b19b4c3`. Aucun changement de moteur n'est
+livré par cette section. Le nettoyage local est tracé dans le
+[compte rendu dédié](../reports/storage/workspace-cleanup-2026-10-31/README.md).
+
+### Existant vérifié et écarts à qualifier
+
+- `EditRecipe::Settings` et `RawDevelopment` portent déjà les réglages et la
+  recette RAW : les étendre plutôt que créer une seconde recette pour les panneaux.
+- `Sidecar::write` utilise déjà `QSaveFile`. La lecture accepte les versions1 à9 ;
+  l'en-tête mentionne encore la version6. Auditer et retirer les compatibilités
+  remplacées selon la règle de prototypage, avec leurs tests, dans un lot moteur
+  dédié. Ne pas confondre cette dette de code avec une raison d'effacer les JSON
+  de preuves ou de modifier silencieusement les fichiers utilisateur.
+- Le basculement expérimental `denoiseBeforeProfile` est explicitement de session,
+  non persisté. Définir si une future recette bêta doit le conserver avant de
+  promettre une restauration identique ; le comportement alpha n'est pas changé ici.
+- Des annulations existent déjà pour le préchargement et l'export par lot.
+  Elles ne démontrent pas un contrat d'annulation commun à tous les traitements,
+  ni un historique annuler/refaire complet : ces deux points restent à auditer.
+
+### Séquence concrète et critères de clôture
+
+| Étape | Travail préparatoire | Preuve attendue avant intégration |
+| --- | --- | --- |
+| B0.1 | Inventorier commandes, persistance, tâches et caches à partir du code ; préciser propriétaire et durée de vie | Tableau existant/manquant, tests existants repérés, aucune nouvelle implémentation concurrente |
+| B0.2 | Rédiger l'ADR recette/historique et stockage des actifs ; décider les coordonnées et l'alpha | Contrat relu avec les chantiers moteur/IHM, schéma et erreurs définis |
+| B0.3 | Définir les interfaces de tâche : état, progression, annulation, révision source/recette, publication atomique | Tests déterministes avec tâche obsolète, annulation et fermeture, sans attente infinie |
+| B0.4 | Implémenter le socle par modules, puis raccorder l'IHM | Rendu sans nouvelle opération inchangé, sauvegarde/relecture et annuler/refaire qualifiés |
+| B0.5 | Clore les validations alpha restantes et faire valider le jalon | Matrice et JSON référencés, limites connues, accord utilisateur avant tag bêta |
+
+Commencer par B0.1, puis B0.2/B0.3 ; ne pas lancer en parallèle les cinq panneaux
+ou l'entraînement d'un réseau. Pour le premier développement, créer la branche
+de socle depuis `dev` à jour et isoler son worktree ; ne pas coder le moteur sur
+`patch_documentation`. La branche exacte et les raccordements sont arrêtés au
+démarrage de ce lot, sans dupliquer une branche existante.

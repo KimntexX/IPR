@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: f876f4fac3ed48584105ba44e5e508c4ae6a4a47a5ebc0339d383b18135630c4 -->
+<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: 2f1735bd2b4059f69bec6d029d5bbc64f6cf6cb0f19f523fe6a6411a351477ff -->
 *[Français](roadmap-beta.md) | [English](roadmap-beta_en.md)*
 
 # Beta action plan — editing panels and neural processing
@@ -260,3 +260,40 @@ A package is complete only with qualified persistence/undo, preview/export,
 errors/resources, stated limits and user validation. Beta is not `v1`:
 full stability still requires panel validation on target cameras owned by
 the user. This plan commits to no firm schedule or model selection.
+
+## 11. First preparation package — B0, 31 October 2026
+
+Preparation may start during alpha; it is not entry into beta. Working reference:
+`dev` at `b19b4c3`. This section delivers no engine change. Local cleanup is
+recorded in the [dedicated report](../reports/storage/workspace-cleanup-2026-10-31/README_en.md).
+
+### Verified existing components and gaps to qualify
+
+- `EditRecipe::Settings` and `RawDevelopment` already carry adjustments and the
+  RAW recipe: extend them rather than introduce a second recipe for new panels.
+- `Sidecar::write` already uses `QSaveFile`. Reading accepts versions1 through9;
+  the header still mentions version6. Audit and remove replaced compatibility
+  paths and their tests under the prototyping rule, in a dedicated engine package.
+  This code debt is not a reason to erase JSON evidence or silently change users' files.
+- The experimental `denoiseBeforeProfile` switch is explicitly session-only,
+  not persisted. Decide whether a future beta recipe must retain it before
+  promising identical restoration; alpha behaviour is unchanged here.
+- Cancellation already exists for prefetch and batch export. This does not
+  establish a shared cancellation contract for every operation or complete
+  undo/redo history: both still require an audit.
+
+### Concrete sequence and completion criteria
+
+| Step | Preparation work | Evidence required before integration |
+| --- | --- | --- |
+| B0.1 | Inventory commands, persistence, tasks and caches from code; identify ownership and lifetime | Existing/missing table, existing tests located, no competing implementation |
+| B0.2 | Write the recipe/history and asset-storage ADR; decide coordinates and alpha | Contract reviewed with engine/UI workstreams, schema and errors defined |
+| B0.3 | Define task interfaces: state, progress, cancellation, source/recipe revision, atomic publication | Deterministic stale-task, cancellation and closing tests, without unbounded waits |
+| B0.4 | Implement the modular foundation, then connect the UI | Unchanged rendering without new operations; qualified persistence and undo/redo |
+| B0.5 | Close remaining alpha validations and obtain milestone approval | Referenced matrix and JSON, known limits, user approval before a beta tag |
+
+Start with B0.1, then B0.2/B0.3; do not start all five panels or train a network
+in parallel. For initial development, create the foundation branch from current
+`dev` in an isolated worktree; do not implement the engine on
+`patch_documentation`. Choose the exact branch and connections when that package
+starts, without duplicating an existing branch.
