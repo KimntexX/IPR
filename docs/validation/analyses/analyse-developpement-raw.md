@@ -1,6 +1,13 @@
 # Séparation du développement RAW — rapport évolutif
 
-## Bilan actuel — 30 octobre 2026
+## Bilan actuel — 31 octobre 2026
+
+**Décision utilisateur (§54) : stabiliser le débruitage actuel et suspendre
+les pistes algorithmiques incrémentales.** Préparer une voie neuronale locale
+pour la bêta, à qualifier d'abord sur la machine de l'utilisateur. Le moteur
+de base reste accessible aux machines moins adaptées ; le mode avancé pourra
+y être limité ou indisponible. Aucun modèle neuronal ni profil matériel
+n'est qualifié par cette décision, aucune nouvelle campagne lancée.
 
 Dernier jalon (§53) : ablation de routage sur les64entrées du§52,640parités
 avec les anciennes sorties. Plafond diagonal local : détail préservé mais
@@ -4227,10 +4234,75 @@ latence et mémoire avant de relever le plafond. Le plafond8 est conservé
 dans cette étude pour ne pas mélanger modification mathématique et ressources.
 Pas de nouveau contrôleur ni de réglage de production annoncé comme livré.
 
+## 54. Stabilisation et orientation neuronale pour la bêta — 31 octobre 2026
+
+### 54.1. Décision validée par l'utilisateur
+
+Après les résultats du§53, l'utilisateur valide l'arrêt des essais
+incrémentaux et le maintien du débruitage actuel. Les variantes de banc non
+retenues ne sont pas intégrées. Conserver les preuves JSON, les limites et
+les outils utiles ; cette stabilisation n'est ni une nouvelle livraison,
+ni un tag, ni une validation générale de tous les boîtiers.
+
+La voie privilégiée pour la prochaine amélioration importante devient un
+débruitage neuronal local, prévu pour la bêta. Objectif : meilleur compromis
+bruit/détail, pas reproduction exacte de Lightroom. Le choix de cette piste
+ne garantit pas une faible perte d'information : suppression de texture,
+hallucination de détail, dérive couleur et robustesse restent à mesurer.
+Le budget physique étudié reste une connaissance réutilisable, sans campagne
+supplémentaire automatique dans l'immédiat.
+
+### 54.2. Machine de référence et capacités dégradées assumées
+
+L'utilisateur choisit sa machine comme première cible de qualification.
+Les machines moins adaptées peuvent avoir moins de capacités dans le mode
+avancé, mais doivent conserver l'accès au moteur de base. Ne pas imposer
+la qualification du neuronal sur toutes les configurations avant ce premier
+jalon ; ne pas déclarer pour autant les autres configurations compatibles.
+
+Lors de la future qualification, figer un inventaire CPU, threads accessibles,
+RAM, GPU/VRAM si utilisé, OS, pilotes, backend et version du modèle. Les20threads
+logiques observés au§53 ne constituent pas à eux seuls un profil matériel
+complet, ni une preuve de capacité GPU ou de mémoire suffisante.
+
+Prévoir une détection de capacités avant lancement et un budget de ressources.
+Sur matériel plus limité : traitement plus lent ou par tuiles si qualifié,
+limitations explicites du mode avancé, voire désactivation avec explication.
+Le débruitage de base reste utilisable sans dépendre de la disponibilité du
+backend neuronal. Pas de substitution silencieuse par un autre rendu, de
+changement implicite de résolution/couleur, ni de prétention que tous les
+matériels produiront les mêmes résultats sans vérification. Prévoir annulation
+et libération mémoire ; une insuffisance de ressources ne doit pas bloquer
+l'application ou empêcher le retour au moteur de base.
+
+### 54.3. Préparation de la bêta, sans implémentation anticipée
+
+1. Définir domaine d'entrée/sortie, emplacement dans la chaîne RAW et traitement
+   des valeurs signées, afin de conserver couleur et normalisation cohérentes.
+2. Choisir architecture, poids et backend après examen de leurs licences,
+   provenance et coûts ; aucun modèle ou téléchargement décidé ici.
+3. Constituer une réserve de qualification non consommée par le réglage des
+   poids ou des seuils. La grille actuelle reste un banc de développement,
+   pas un test indépendant réutilisable comme tel.
+4. Comparer au moteur courant à cadrage/rendu identiques : détail faible,
+   texture réelle, couleur, biais dans les noirs, artefacts et cohérence entre
+   tuiles. Combiner mesures et validation visuelle utilisateur.
+5. Qualifier sur la machine de référence latence, pic mémoire, annulation et
+   réactivité ; définir ensuite les capacités minimales et les limitations
+   annoncées sur les autres configurations, sans délai chiffré promis ici.
+
+Cette décision clôt la séquence de recherches actuelle. Elle n'autorise ni
+push/fusion/tag, ni changement du moteur, ni lancement d'un entraînement.
+
 ## Conclusion actuelle et fiche de reprise
 
 - Travail local dans `patch_raw_bench`, builds isolés ; pas de modification des
   fichiers moteur attribués à Claude, pas de push/dev/tag.
+- Décision du31octobre (§54), prioritaire sur les anciennes fiches de suite :
+  études incrémentales suspendues, moteur actuel conservé, voie neuronale locale
+  à préparer pour la bêta. Première qualification sur la machine utilisateur ;
+  capacités avancées potentiellement limitées ailleurs, moteur de base maintenu.
+  Aucun réseau/modèle/backend ni minimum matériel encore qualifié.
 - Socle RAW clos sur son périmètre : X1/X2 exacts sur30 sources, C3 à60/60,
   F1 flottant et garde de finitude qualifiés (§§1–16). Les preuves X4 pré-F1
   restent historiques ; ne pas les interpréter comme limites du signal actuel.
