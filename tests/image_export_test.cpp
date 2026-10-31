@@ -670,9 +670,10 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     TIFF *tiff = TIFFOpen(expectedPath.toUtf8().constData(), "r");
 #endif
     if (!check(tiff != nullptr, "DNG IFD should open")) return false;
-    uint32_t count = 0, profileBytes = 0;
+    uint32_t count = 0, profileBytes = 0, subfileType = 1;
     float *matrix = nullptr;
     void *profile = nullptr;
+    const bool mainImage = TIFFGetField(tiff, TIFFTAG_SUBFILETYPE, &subfileType) == 1 && subfileType == 0;
     const bool hasMatrix = TIFFGetField(tiff, TIFFTAG_COLORMATRIX1, &count, &matrix) == 1 && count == 9;
     const bool hasIcc = TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profileBytes, &profile) == 1;
     const QColorSpace embedded = hasIcc ? QColorSpace::fromIccProfile(
@@ -681,6 +682,7 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     bool consistent = hasMatrix && embedded == QColorSpace(QColorSpace::SRgbLinear);
     if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.val[i]) < 1e-6;
     TIFFClose(tiff);
+    if (!check(mainImage, "DNG main IFD needs NewSubfileType 0 for Adobe readers")) return false;
     if (!check(consistent, "DNG linear samples need linear ICC and XYZ-to-stored-RGB matrix")) return false;
 
 #ifdef IPR_WITH_LIBRAW
