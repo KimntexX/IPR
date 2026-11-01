@@ -1895,7 +1895,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     if (settings.sharpeningAmount > 0) {
         DetailProcessing::sharpen(adjusted, {settings.sharpeningAmount,
                                               settings.sharpeningRadius,
-                                              settings.sharpeningMasking});
+                                              settings.sharpeningMasking}, pixelScale);
     }
 
     Grain::apply(adjusted, settings.grain, pixelScale);

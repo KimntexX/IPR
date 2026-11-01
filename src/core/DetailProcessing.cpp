@@ -446,14 +446,14 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pix
     mergeLumaChroma(luma, chromaOrange, chromaGreen, &linearRgb);
 }
 
-void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings)
+void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelScale)
 {
     if (linearRgb.empty() || linearRgb.type() != CV_32FC3 || settings.amount <= 0)
         return;
 
     const cv::Mat luma = extractLuminance(linearRgb);
     cv::Mat localBase;
-    const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0);
+    const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale;
     cv::GaussianBlur(luma, localBase, cv::Size(0, 0), radius, radius,
                      cv::BORDER_REPLICATE);
     cv::Mat localMinimum, localMaximum;
