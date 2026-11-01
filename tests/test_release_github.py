@@ -78,6 +78,44 @@ class MainGateTests(unittest.TestCase):
 
 
 class ReleaseTests(unittest.TestCase):
+    def test_optional_release_prefix_only_changes_version_parsing(self):
+        for version in ('0.1.83-alpha', '0.2.1-beta', '1.0.0', '0.1.85-alpha+main'):
+            for prefix in ('v', 'release-v'):
+                tag = prefix + version
+                with self.subTest(tag=tag):
+                    self.assertEqual(release.version_from_tag(tag), version)
+                    with patch.object(policy, 'api', return_value={'object': {'sha': MAIN, 'type': 'commit'}}) as api:
+                        self.assertEqual(release.existing_tag_commit(REPO, tag), MAIN)
+                        self.assertEqual(api.call_args.args[0],
+                            'repos/' + REPO + '/git/ref/tags/' + release.quote(tag, safe=''))
+        for tag in ('release-release-v0.1.83-alpha', 'release-0.1.83-alpha',
+                    'release-v0.1.83', 'release-v0.1.83-alpha/other',
+                    'release-v0.1.83-alpha\n', 'Release-v0.1.83-alpha',
+                    'release-v0.1.83-alpha --force', 'release-v0.1.83-alpha?x=1'):
+            with self.subTest(invalid_tag=tag), patch.object(policy, 'api') as api, self.assertRaises(ValueError):
+                release.existing_tag_commit(REPO, tag)
+            api.assert_not_called()
+
+    def test_prefixed_plan_keeps_exact_main_target_and_version_checks(self):
+        plan = dict(PLAN, tag='release-v0.1.83-alpha', version='0.1.83-alpha')
+        with patch.dict(os.environ, GITHUB_REPOSITORY=REPO), patch.object(policy, 'authorize_main', return_value=APPROVAL), patch.object(policy, 'git', return_value='license'), patch.object(release, 'existing_tag_commit', return_value=MAIN) as tag:
+            release.validate_plan(plan)
+            tag.assert_called_with(REPO, 'release-v0.1.83-alpha')
+            with patch.object(release, 'existing_tag_commit', return_value=DEV), self.assertRaises(ValueError):
+                release.validate_plan(plan)
+            with self.assertRaises(ValueError):
+                release.validate_plan(dict(plan, version='0.1.84-alpha'))
+
+    def test_planner_preserves_prefixed_tag_but_builds_numeric_release_label(self):
+        env = dict(GITHUB_REPOSITORY=REPO, GITHUB_EVENT_NAME='workflow_dispatch', GITHUB_REF='refs/heads/main')
+        with patch.dict(os.environ, env), patch.object(policy, 'verify_publication_environment', return_value=APPROVAL), patch.object(policy, 'git', side_effect=lambda *args: MAIN if args[0] == 'rev-parse' else 'license'), patch.object(policy, 'authorize_main', return_value=APPROVAL), patch.object(release, 'existing_tag_commit', return_value=MAIN) as tag:
+            plan = release.make_plan('release-v0.1.85-alpha')
+        self.assertEqual(plan['tag'], 'release-v0.1.85-alpha')
+        self.assertEqual(plan['version'], '0.1.85-alpha')
+        self.assertEqual(plan['build_sha'], DEV)
+        self.assertEqual(plan['main_sha'], MAIN)
+        tag.assert_called_once_with(REPO, 'release-v0.1.85-alpha')
+
     def test_existing_annotated_tag_is_resolved_without_writes(self):
         with patch.object(policy, 'api', side_effect=[{'object': {'sha': DEV, 'type': 'tag'}}, {'object': {'sha': MAIN, 'type': 'commit'}}]) as api:
             self.assertEqual(release.existing_tag_commit(REPO, PLAN['tag']), MAIN)
