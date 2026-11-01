@@ -33,9 +33,12 @@ des sources retenues, pas la reproductibilité bit à bit entre compilateurs.
 Pour une GitHub Release, lancer `release.yml` sur main avec un **tag existant
 sur le SHA main promu**. Ne pas déplacer un tag de validation dev : les
 archives source automatiques GitHub doivent elles aussi pointer vers main,
-sans y réintroduire les tests et analyses. La nomenclature de ce tag de
-release reste à confirmer avant la première publication. Le workflow ne crée
-aucun tag. Une licence `LICENSE` doit exister dans le commit dev testé.
+sans y réintroduire les tests et analyses. La nomenclature retenue pour main
+est `release-v0.1.X-alpha`, distincte du tag de validation dev `v0.1.X-alpha`.
+Le script accepte le préfixe facultatif `release-` : il conserve le tag complet
+pour GitHub et ne le retire que pour calculer la version des paquets.
+Le workflow ne crée aucun tag. Une licence `LICENSE` doit exister dans le
+commit dev testé.
 
 Par défaut, `publish=false` produit uniquement les artefacts vérifiés du run.
 Avec `publish=true`, le job de publication est placé dans l'environnement
