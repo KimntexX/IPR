@@ -22,8 +22,10 @@ bool valid(const Input &input)
     if (!std::isfinite(input.white) || !(input.white > blackest) ||
         std::any_of(input.black.cbegin(), input.black.cend(), [](double b) { return !std::isfinite(b) || b < 0.0; }))
         return false;
-    for (int c : {Red, Green, Blue})
-        if (!(input.asShotMultipliers[size_t(c)] > 0.0) || !std::isfinite(input.asShotMultipliers[size_t(c)]))
+    // Development normalizes by the smallest of all four gains, even when
+    // both green sites use Green rather than Green2 in the pattern.
+    for (double gain : input.asShotMultipliers)
+        if (!(gain > 0.0) || !std::isfinite(gain))
             return false;
     return true;
 }
