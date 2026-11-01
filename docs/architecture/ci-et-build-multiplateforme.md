@@ -62,6 +62,13 @@ Qt 6.8.3 dans les deux modes, et aucune archive système Ubuntu 24.04 n'est prod
 Les paquets Debian 13, Fedora et Arch utilisent leurs dépôts natifs (Qt ≥ 6.8).
 macOS : runners `macos-15` arm64 et `macos-15-intel` x64 ; Homebrew pour les
 dépendances tierces et Qt système, SDK Qt officiel 6.8.3 pour le standalone.
+`github_build.py` fixe `Qt6_DIR` sur le SDK choisi et les chemins LibRaw/TIFF
+sur leurs préfixes de formule Homebrew (`opt/libraw`, `opt/libtiff`). Le
+`CMAKE_PREFIX_PATH` n'ajoute pas le préfixe global Homebrew : ses en-têtes Qt
+peuvent sinon masquer ceux du SDK standalone. Les bibliothèques Homebrew ne
+sont ni désinstallées ni déliées ; le mode système garde son Qt Homebrew.
+Ce raccordement est testé hors ligne ; la compilation et le smoke sur les
+deux architectures macOS restent à qualifier dans la CI production.
 Le minimum macOS effectif dépend des bouteilles Homebrew : ne pas annoncer
 macOS 12 sur la seule base du support de Qt. Les versions installées figurent
 dans les journaux ; Homebrew et Arch sont évolutifs, pas hermétiques.
