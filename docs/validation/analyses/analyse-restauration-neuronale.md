@@ -603,3 +603,77 @@ qualification produit. Garder ISO12800 exclu du contrôle jusqu'à preuve
 complémentaire, sans choisir la seconde référence pour obtenir un succès.
 Pas de nouvelle photo demandée à ce stade ; aucun changement moteur,
 publication Git ou calcul actif à la clôture de cette étape.
+
+## 1er novembre 2026 — premier pilote photographique figé : résultat négatif
+
+Campagne `neural-reserved-photo-pilot-v001-20261101T220513Z`, orchestration
+locale `50afa23`. Requalification des deux compositions avec exactement le
+même protocole courant, sans nouvelle décompression : **342 découpes
+d'apprentissage et 186 de contrôle**. Les 186 couples d'empreintes de pixels
+entrée/cible et leurs identités sont **strictement identiques** au contrôle
+qualifié précédent. Aucun exemple de la nouvelle composition n'entre dans
+l'optimiseur ; aucune partition de test indépendante n'est inventée.
+
+Le contrôle de provenance initial a arrêté le lancement avant calcul :
+l'identifiant embarqué du premier moteur précédait le commit d'ajout du
+banc d'extraction. Il ne désignait donc pas son fichier C++ d'extraction.
+La vérification distingue désormais ces deux identités : sources de
+production et calibration identiques entre les moteurs ; source historique
+de l'extracteur vérifiée par l'empreinte canonique du commit `bd1fced`.
+Sa seule différence avec l'actuelle est le nettoyage d'includes déjà relu
+(`algorithm` retiré, `QCommandLineOption` explicité), sans changement de
+corps de calcul. Toute autre différence est refusée. Sept tests de
+provenance/partition et le test synthétique de bout en bout passent.
+Ce correctif du banc ne modifie ni les captures ni les seuils photographiques.
+
+Configuration reprise du gel initial, sans recherche : petit U-Net résiduel
+à deux niveaux, largeur 8, six canaux d'entrée caméra/sigma, échelle commune
+2, graine 71, Adam à 0,001, lot 4, **256 pas**, seul état final évalué.
+Calcul CPU : 4 threads internes et 1 inter-opération, sur 20 processeurs
+logiques disponibles. Environ **7,64 s** d'entraînement et évaluation,
+**18,91 s** pour l'orchestration complète. Ces temps sur découpes ne
+prédisent pas la latence d'un traitement pleine image ou d'un modèle produit.
+
+| Partition / ISO | Découpes | Rapport MSE sortie / entrée |
+| --- | ---: | ---: |
+| Apprentissage ISO 12800 | 198 | 1,01308 |
+| Apprentissage ISO 51200 | 144 | 0,99586 |
+| Apprentissage, total pondéré | 342 | 0,99893 |
+| Contrôle ISO 1600 | 54 | 1,03120 |
+| Contrôle ISO 3200 | 60 | 1,08318 |
+| Contrôle ISO 6400 | 72 | 1,02938 |
+| Contrôle, total pondéré | 186 | 1,04192 |
+
+Rapports pondérés par le nombre de pixels-canaux valides, et non moyenne
+des rapports par découpe. Valeur inférieure à 1 = erreur plus faible par
+rapport à la référence moyennée ; supérieure à 1 = erreur accrue. Le modèle
+ne gagne qu'environ **0,11 %** en MSE globale d'apprentissage et **dégrade
+le contrôle d'environ 4,19 %**. La pire découpe de contrôle atteint un
+rapport de 1,586. Aucune équivalence perceptuelle, Lightroom ou amélioration
+de bruit visible ne se déduit de ces chiffres.
+
+Mémoire canonique :
+[premier pilote à contrôle réservé](../raw/neural-reserved-photo-pilot-v001-20261101T220513Z.json).
+Elle conserve les 48 descripteurs de captures, gels parents, contrats,
+configurations, décisions et 528 identités de découpes, la suite des pertes,
+les métriques par découpe et les empreintes du jeu et des poids. Les buffers,
+le jeu `dataset.npz` et les poids `pilot-weights.pt` restent dans le build
+dédié ; aucun fichier de modèle n'est intégré en production ou publié.
+
+**Conclusion actuelle : pas de gain de débruitage démontré par ce pilote.**
+Ne pas régler largeur, durée, force ou sélection d'état final en fonction
+de cette scène de contrôle pour transformer cet échec en succès apparent.
+Le faible apprentissage global et l'écart de couverture ISO empêchent
+d'attribuer le résultat uniquement à la généralisation. Il ne réfute pas
+non plus l'intérêt d'un réseau neuronal avec des données et un entraînement
+adéquats : il ne qualifie que cet essai très court sur deux compositions
+apparentées, sans ISO commun entre apprentissage et contrôle.
+
+Prochain diagnostic recommandé, **sur l'apprentissage seulement** : vérifier
+la capacité à apprendre un problème contrôlé et distinguer sous-apprentissage,
+bruit des cibles et biais des paires avant toute nouvelle campagne de
+transfert. Conserver ce premier contrôle comme résultat historique ; si
+ses résultats pilotent ensuite des choix de modèle, il ne pourra plus être
+présenté comme un test final vierge. Pas de nouvelle photo demandée à ce
+stade, pas de variante relancée automatiquement, aucune modification moteur,
+aucune publication Git et aucun calcul encore actif.
