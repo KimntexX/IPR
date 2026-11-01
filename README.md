@@ -228,7 +228,9 @@ Les CI vérifient les branches de travail ; les archives téléchargeables sont
 réservées à `dev` et `main`, sur un commit validé, en modes standalone et
 bibliothèques système. Voir le [contrat CI/CD](docs/architecture/ci-et-build-multiplateforme.md).
 
-L'inventaire et les textes des licences des dépendances sont dans
-[licenses/](licenses/README.md). Aucune licence du code IPR n'a encore été
-choisie à la racine ; les licences des dépendances ne déterminent pas
-automatiquement celle du projet.
+IPR est distribué sous la **GNU Affero General Public License, version 3 ou
+ultérieure** (AGPL-3.0-or-later), texte dans [LICENSE](LICENSE) : chacun peut
+l'utiliser, l'étudier, le modifier et le redistribuer, et toute version modifiée
+distribuée ou proposée comme service en ligne doit publier son code source sous
+la même licence. L'inventaire et les textes des licences des dépendances sont
+dans [licenses/](licenses/README.md).

@@ -257,6 +257,7 @@ install(FILES packaging/profiles-index.json DESTINATION "${IPR_DATA_DESTINATION}
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/dcp")
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/lcp")
 install(DIRECTORY licenses/ DESTINATION "${IPR_DATA_DESTINATION}/licenses")
+install(FILES LICENSE DESTINATION "${IPR_DATA_DESTINATION}/licenses" RENAME IPR-AGPL-3.0.txt)
 install(FILES packaging/README.md DESTINATION "${IPR_DATA_DESTINATION}")
 qt_finalize_executable(appIPR)
 include(cmake/Deployment.cmake)
