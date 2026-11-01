@@ -477,6 +477,26 @@ int main(int argc, char **argv)
         !check(cv::norm(brighterOnce, rendered, cv::NORM_INF) == 0 &&
                cv::norm(wb.cameraRgb, untouched, cv::NORM_INF) == 0,
                "exposure edits never accumulate nor mutate the camera source")) return 1;
+    {
+        // A local exposure (LocalValues) acts on the camera signal as the global one does.
+        cv::Mat local(wb.cameraRgb.size(), CV_32FC1, cv::Scalar(0)), zone(wb.cameraRgb.size(), CV_8UC1, cv::Scalar(0));
+        for (int y = 0; y < local.rows; ++y)
+            for (int x = 0; x < local.cols; ++x)
+                if ((x + y) % 2 == 0) { local.at<float>(y, x) = 1.0f; zone.at<uchar>(y, x) = 255; }
+        cv::Mat outside;
+        cv::bitwise_not(zone, outside);
+        cv::Mat locallyBrighter, unchanged;
+        if (!check(CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, locallyBrighter, &wbError, local) &&
+                       cv::norm(locallyBrighter, rendered, cv::NORM_INF, zone) < 1e-5 &&
+                       cv::norm(locallyBrighter, coldNeutral, cv::NORM_INF, outside) == 0,
+                   "a local +1 EV renders as a global +1 EV inside its zone, nothing outside")) return 1;
+        if (!check(CameraProfileEngine::renderFromCameraSignal(
+                       wb, 2000, 0, 0.0, unchanged, &wbError, cv::Mat(local.size(), CV_32FC1, cv::Scalar(0))) &&
+                       cv::norm(unchanged, coldNeutral, cv::NORM_INF) == 0 &&
+                       !CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, unchanged, &wbError,
+                                                                     cv::Mat(local.rows + 1, local.cols, CV_32FC1)),
+                   "a map of zeros changes nothing; a map of another size is refused")) return 1;
+    }
     auto large = editorSource;
     cv::repeat(editorSource.linearRgba, 1, 800, large.linearRgba);
     auto largeContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(wb);

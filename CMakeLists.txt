@@ -56,6 +56,9 @@ set(IPR_ENGINE_SOURCES
     src/core/ImageExporter.h
     src/core/ImageExporter.cpp
     src/core/EditRecipe.h
+    src/core/Exposure.h
+    src/core/Exposure.cpp
+    src/core/LocalValues.h
     src/core/RecipeCodec.h
     src/core/RecipeCodec.cpp
     src/core/EditHistory.h
@@ -352,6 +355,7 @@ if(BUILD_TESTING)
     set_tests_properties(editorBatchTests PROPERTIES LABELS "unit;export;batch" TIMEOUT 180)
     ipr_add_test(sidecarTests tests/sidecar_test.cpp)
     ipr_add_test(editHistoryTests tests/edit_history_test.cpp)
+    ipr_add_test(localValuesTests tests/local_values_test.cpp)
     ipr_add_test(editorHistoryTests tests/editor_history_test.cpp)
     set_tests_properties(editorHistoryTests PROPERTIES LABELS "unit;history" TIMEOUT 120)
     ipr_add_test(folderRefreshTests tests/folder_refresh_test.cpp)

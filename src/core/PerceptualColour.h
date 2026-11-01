@@ -2,6 +2,7 @@
 #define IPR_CORE_PERCEPTUALCOLOUR_H
 
 #include "ColorMixer.h"
+#include "LocalValues.h"
 #include "PointColor.h"
 
 #include <opencv2/core.hpp>
@@ -28,7 +29,9 @@ struct Parameters {
 };
 
 // Linear Rec.2020 image (CV_32FC3), in place. No clipping: the output handles gamut.
-void apply(cv::Mat &linearRgb, const Parameters &parameters);
+// local: per-pixel saturation and vibrance added to the global ones (LocalValues);
+// maps that do not fit the image are ignored.
+void apply(cv::Mat &linearRgb, const Parameters &parameters, const LocalValues::Maps &local = {});
 
 // The colour the point colour sees at a place of the stage's input (the tones'
 // output, CV_32FC3): the mean over a square of the given radius around (x, y), in

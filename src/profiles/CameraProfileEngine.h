@@ -60,8 +60,11 @@ bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tin
 // Scene-referred source edits: white balance gains and exposure scale the
 // linear camera signal, then the DCP (tables and tone curve) is applied.
 // Exposure therefore precedes the profile tone curve, as in camera RAW editors.
+// localExposureEv: per-pixel EV added to exposureEv on the camera signal
+// (LocalValues), empty for none; a map that does not fit the signal is an error.
 bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
-                            double exposureEv, cv::Mat &linearRgb, QString *error = nullptr);
+                            double exposureEv, cv::Mat &linearRgb, QString *error = nullptr,
+                            const cv::Mat &localExposureEv = {});
 
 struct LcpApplied
 {

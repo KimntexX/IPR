@@ -1,4 +1,5 @@
 #include "CameraProfileEngine.h"
+#include "LocalValues.h"
 #include "WorkingColorSpace.h"
 
 #include <QDir>
@@ -1828,7 +1829,8 @@ bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tin
 }
 
 bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
-                            double exposureEv, cv::Mat &linearRgb, QString *error)
+                            double exposureEv, cv::Mat &linearRgb, QString *error,
+                            const cv::Mat &localExposureEv)
 {
     if (source.cameraRgb.empty() || source.cameraRgb.type() != CV_32FC3) {
         if (error) *error = QStringLiteral("Source capteur DCP absente.");
@@ -1847,6 +1849,21 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
     cv::Mat rgb;
     cv::transform(source.cameraRgb, rgb, cv::Matx33f(
         float(gains[0]),0,0, 0,float(gains[1]),0, 0,0,float(gains[2])));
+    if (!localExposureEv.empty()) {
+        if (!LocalValues::fits(localExposureEv, rgb.size())) {
+            if (error) *error = QStringLiteral("Carte d'exposition locale incompatible avec le signal capteur.");
+            return false;
+        }
+        // Scene-linear like the global exposure, before the profile's tone curve.
+        cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
+            for (int y = rows.start; y < rows.end; ++y) {
+                auto *row = rgb.ptr<cv::Vec3f>(y);
+                const float *local = localExposureEv.ptr<float>(y);
+                for (int x = 0; x < rgb.cols; ++x)
+                    if (local[x] != 0.0f) row[x] *= static_cast<float>(std::exp2(double(local[x])));
+            }
+        });
+    }
     const double kelvin = temperature == int(std::lround(source.sourceKelvin)) && tint == 0
         ? source.sourceKelvin : double(temperature);
     if (!profile->apply(rgb, kelvin, error, source.options)) return false;

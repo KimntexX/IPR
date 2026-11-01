@@ -13,8 +13,10 @@
 // change left unexplained against 24.2 % before. Lightroom's pivot depends on
 // the image; this fixed one favours the low-pivot scenes.
 namespace Contrast {
-// Slider value in [-100, 100]; linear Rec.2020 RGB (CV_32FC3), in place.
-void apply(cv::Mat &linearRgb, int contrast);
+// Slider value in [-100, 100]; linear Rec.2020 RGB (CV_32FC3), in place. local:
+// per-pixel values added to it (LocalValues), the sum kept within [-100, 100];
+// empty for none. A map that does not fit the image is ignored.
+void apply(cv::Mat &linearRgb, int contrast, const cv::Mat &local = {});
 }
 
 #endif // IPR_CORE_CONTRAST_H

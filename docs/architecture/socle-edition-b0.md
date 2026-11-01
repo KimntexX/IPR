@@ -157,4 +157,18 @@ Choix techniques : [ADR-0021](../decisions/ADR-0021-socle-edition-beta.md).
    développement RAW (profil, objectif) n'entre pas encore dans l'historique.
    Raccordement IHM : IHM-CONN-005 du
    [suivi des raccordements](suivi-raccordements-ihm.md).
-4. **Cartes de valeurs locales** : à venir.
+4. **Cartes de valeurs locales** (`src/core/LocalValues.h`) : par réglage, un
+   flottant par pixel du rendu, dans les unités du curseur global ; le module
+   applique en chaque pixel la valeur globale plus la valeur locale. Sans carte,
+   le chemin global est inchangé au bit près.
+   - 4a, fait : exposition (signal caméra avant DCP, et module `Exposure` sans
+     DCP), contraste (somme bornée à [-100, 100]), saturation et vibrance.
+     Sans carte, rendu identique à l'octet à celui de `d8d922d` : 203 rendus
+     sur 203 (29 RAW de la racine de base, états neutre, exposition +1 et -0,5,
+     contraste +50 et -50, saturation -50, vibrance +50), serveur de rendu en
+     mémoire, 2 novembre 2026.
+   - 4b, à venir : ombres, noirs, hautes lumières, blancs (courbes aujourd'hui
+     tabulées pour une seule valeur) et balance des blancs.
+   - 4c, à venir : traitements de voisinage (clarté, voile, bruit, netteté).
+   - Le passage des cartes dans la chaîne de rendu, avec leurs clés de cache,
+     se fait avec les masques (B2), seuls producteurs de cartes.

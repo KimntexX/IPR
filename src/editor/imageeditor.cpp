@@ -2,6 +2,7 @@
 #include "CameraDenoise.h"
 
 #include "Dehaze.h"
+#include "Exposure.h"
 #include "Grain.h"
 #include "DetailProcessing.h"
 #include "LocalContrast.h"
@@ -2099,13 +2100,9 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
 
     if (settings.grayscale) ColorAdjustments::toGrayscale(adjusted);
 
-    // One brightness unit is one EV in linear light. Sources without a camera
-    // signal (rendered rasters, RAW without DCP) have no profile curve to precede.
-    if (settings.brightness != 0.0f && !sceneExposure) {
-        const float exposureFactor = static_cast<float>(
-            std::exp2(static_cast<double>(settings.brightness)));
-        adjusted *= exposureFactor;
-    }
+    // Sources without a camera signal (rendered rasters, RAW without DCP) have
+    // no profile curve to precede.
+    if (!sceneExposure) Exposure::apply(adjusted, settings.brightness);
 
     Contrast::apply(adjusted, settings.contrast);
 
