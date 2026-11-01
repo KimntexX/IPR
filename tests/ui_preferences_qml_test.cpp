@@ -608,6 +608,11 @@ int main(int argc, char **argv)
                    exportSelection->property("visible").toBool() && exportSelection->property("enabled").toBool() &&
                    exportSelection->property("text").toString().contains("(1)"),
                    "right-clicking a thumbnail must offer the export of the batch selection")) return 1;
+        QObject *applySelection = photoMenu->findChild<QObject *>("contextApplySelection");
+        if (!check(applySelection && applySelection->property("visible").toBool() &&
+                   applySelection->property("enabled").toBool() &&
+                   applySelection->property("text").toString().contains("(1)"),
+                   "right-clicking a thumbnail must offer to apply the open image's settings to the selection")) return 1;
         QMetaObject::invokeMethod(photoMenu, "close");
         QCoreApplication::processEvents();
         editor.loadImage(firstUrl);
@@ -619,6 +624,7 @@ int main(int argc, char **argv)
                    !photoMenu->findChild<QObject *>("contextResetAdjustments")->property("enabled").toBool() &&
                    !photoMenu->findChild<QObject *>("contextExportImage")->property("enabled").toBool() &&
                    !photoMenu->findChild<QObject *>("contextExportSelection")->property("visible").toBool() &&
+                   !photoMenu->findChild<QObject *>("contextApplySelection")->property("visible").toBool() &&
                    editor.imageDetails().value("name").toString() == "01.png",
                    "another thumbnail's context must not silently open it or mutate the current photo")) return 1;
         QMetaObject::invokeMethod(photoMenu, "close");
