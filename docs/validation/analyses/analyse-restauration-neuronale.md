@@ -475,3 +475,68 @@ bilan externe distinguera explicitement l'admission de paires de contrôle.
 Même si elle réussit, cette étape ne lance pas automatiquement de réseau.
 Le résultat final et les diagnostics seront conservés dans un nouveau JSON
 canonique au nom de la campagne ; aucune ancienne preuve n'est remplacée.
+
+### Résultat : rafales stables, contrôle principal bloqué par le déplacement
+
+La campagne est terminée : **29/29 extractions**, environ 199 s pour
+l'extraction et les deux qualifications. Aucune erreur du moteur ou de
+calibration. Les neuf fenêtres de chaque référence ISO 100 ont une fraction
+stable et valide de 100 % dans le support intérieur mesuré ; cela ne fait
+pas de leur moyenne une vérité parfaitement propre.
+
+Le contrôle principal produit **0 découpe** : toutes les prises bruitées
+dépassent la limite de déplacement de 12 pixels caméra. Leurs corrélations
+ECC sont pourtant d'environ 0,993 à 0,997, au-dessus du seuil 0,97.
+Les translations estimées sont d'environ 93 pixels horizontalement à ISO
+1600, puis 129–130 aux autres ISO, avec environ −13 à −16 verticalement.
+Le motif de rejet est ici la portée géométrique du banc, **pas une
+corrélation insuffisante ni une instabilité démontrée des rafales**.
+
+La seconde référence admet **243 découpes à ISO 1600**, sur trois prises
+déplacées d'environ 4 pixels horizontalement. Les autres ISO restent
+rejetés par des déplacements d'environ 40 pixels, malgré une corrélation
+supérieure à 0,997. Ces découpes diagnostiques ne remplacent pas le contrôle
+principal après observation des résultats. Aucun entraînement n'est lancé.
+
+Preuve : [qualification des deux références](../raw/neural-control-pairs-v001-20261101T213657Z.json).
+Le protocole initial et son résultat restent conservés sans modification.
+
+### Audit suivant : translation, rotation rigide et transformation affine
+
+Même signal immuable : 2 références × 12 prises × 3 modèles = **72 cas**,
+environ 14,7 s. Fenêtres d'ajustement radiométrique et de contrôle distinctes,
+seuils radiométriques et locaux inchangés. Seule la référence est interpolée,
+jamais l'entrée bruitée ; supports transformés et érodés pour exclure les
+voisins invalides d'interpolation. Les deux séries ISO100 restent séparées.
+
+L'audit **mesure au-delà de 12 pixels sans promouvoir de paires**. Il
+diagnostique l'explication du rejet, sans modifier silencieusement le gel.
+
+| Référence et modèle diagnostique | ISO 1600 | ISO 3200 | ISO 6400 | ISO 12800 |
+| --- | ---: | ---: | ---: | ---: |
+| Principale, translation | 2/4 | 2/4 | 2/4 | 1/4 |
+| Principale, rigide | 1/4 | 1/4 | 1/4 | 0/4 |
+| Principale, affine | 1/4 | 1/4 | 1/4 | 0/4 |
+| Secondaire, translation | 4/4 | 4/4 | 4/4 | 3/4 |
+| Secondaire, rigide | 4/4 | 4/4 | 4/4 | 3/4, 3/4, 4/4 |
+| Secondaire, affine | 4/4 | 4/4 | 4/4 | 3/4 |
+
+Chaque cellule indique le nombre de fenêtres de contrôle cohérentes pour
+chacune des trois prises, sauf la cellule détaillée. Les 72 lois
+radiométriques restent dans les bornes initiales. Un score global meilleur
+ne suffit donc pas : rotation et affine ne rendent pas le contrôle
+principal localement meilleur.
+
+Preuve : [audit géométrique v001](../raw/neural-geometry-audit-v001-20261101T214408Z.json).
+Six tests synthétiques réussissent : coordonnées globales/locales, support
+interpolé, déplacement supérieur à la limite initiale, retour à l'origine
+du proxy recadré et refus des entrées invalides.
+
+**Conclusion actuelle : aucune nouvelle photo demandée à ce stade.**
+Avant le pilote neuronal, préparer une version explicite du protocole
+géométrique : support commun valide plutôt que portée fixe de 12 pixels,
+garde de recouvrement, contrôles locaux et première référence conservée.
+Ne pas simplement augmenter le seuil ou choisir la seconde référence parce
+qu'elle passe mieux. ISO12800 reste insuffisant sur le contrôle principal
+dans ce diagnostic. Aucun gain photographique du réseau revendiqué,
+aucune modification moteur, aucun calcul actif à la clôture de cet audit.
