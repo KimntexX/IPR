@@ -15,6 +15,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(IPR_ENABLE_LIBRAW "Enable CR2/CR3/DNG decoding through LibRaw" ON)
 option(IPR_BUILD_RAW_BENCHMARK "Build the command-line RAW loading benchmark" OFF)
+# Analysis tools (test image generator, in-memory render server): development
+# only. The production profile builds IPR with them and the tests OFF.
+option(IPR_BUILD_TOOLS "Build the analysis tools of src/tools" ON)
 
 find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Quick Concurrent)
 find_package(TIFF REQUIRED)
@@ -223,13 +226,18 @@ target_compile_definitions(appIPR PRIVATE IPR_RELEASE_LABEL="${IPR_RELEASE_LABEL
 # Console tools, intentionally independent of the QML application/sidecar
 # lifecycle: TIFF exports for visual review and in-memory renders for analysis,
 # from the same test recipes.
-add_library(iprTestRecipes STATIC src/tools/TestRecipes.cpp)
-target_include_directories(iprTestRecipes PUBLIC src/tools)
-target_link_libraries(iprTestRecipes PUBLIC iprEngine)
-add_executable(iprGenerateTests src/tools/generate_test_images.cpp src/tools/ParallelJobs.cpp)
-target_link_libraries(iprGenerateTests PRIVATE iprTestRecipes)
-add_executable(iprRenderServer src/tools/render_server.cpp)
-target_link_libraries(iprRenderServer PRIVATE iprTestRecipes)
+if(IPR_BUILD_TOOLS)
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/tools/TestRecipes.cpp")
+        message(FATAL_ERROR "IPR_BUILD_TOOLS=ON needs src/tools, absent from this tree (main carries production code only): configure with -DIPR_BUILD_TOOLS=OFF")
+    endif()
+    add_library(iprTestRecipes STATIC src/tools/TestRecipes.cpp)
+    target_include_directories(iprTestRecipes PUBLIC src/tools)
+    target_link_libraries(iprTestRecipes PUBLIC iprEngine)
+    add_executable(iprGenerateTests src/tools/generate_test_images.cpp src/tools/ParallelJobs.cpp)
+    target_link_libraries(iprGenerateTests PRIVATE iprTestRecipes)
+    add_executable(iprRenderServer src/tools/render_server.cpp)
+    target_link_libraries(iprRenderServer PRIVATE iprTestRecipes)
+endif()
 
 set_target_properties(appIPR PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER org.ipr.ImageProcessingRoom
@@ -251,7 +259,9 @@ else()
     set(IPR_TOOL_DESTINATION "${CMAKE_INSTALL_BINDIR}")
     set(IPR_DATA_DESTINATION "${CMAKE_INSTALL_DATADIR}/IPR")
 endif()
-install(TARGETS iprGenerateTests RUNTIME DESTINATION "${IPR_TOOL_DESTINATION}")
+if(IPR_BUILD_TOOLS)
+    install(TARGETS iprGenerateTests RUNTIME DESTINATION "${IPR_TOOL_DESTINATION}")
+endif()
 install(FILES config/ipr-ui.ini config/raw-normalization.json DESTINATION "${IPR_DATA_DESTINATION}/config")
 install(FILES packaging/profiles-index.json DESTINATION "${IPR_DATA_DESTINATION}/profiles" RENAME index.json)
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/dcp")
@@ -269,6 +279,13 @@ if(IPR_BUILD_RAW_BENCHMARK AND IPR_ENABLE_LIBRAW AND
 endif()
 
 include(CTest)
+# The tests exercise the tools and live under tests/: both must be present.
+if(BUILD_TESTING AND NOT IPR_BUILD_TOOLS)
+    message(FATAL_ERROR "BUILD_TESTING=ON needs IPR_BUILD_TOOLS=ON (the tests use the analysis tools)")
+endif()
+if(BUILD_TESTING AND NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+    message(FATAL_ERROR "BUILD_TESTING=ON needs tests/, absent from this tree (main carries production code only): configure with -DBUILD_TESTING=OFF")
+endif()
 if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY)
     add_executable(editorLifecycleTests tests/editor_lifecycle_test.cpp)
     target_link_libraries(editorLifecycleTests PRIVATE iprEngine)

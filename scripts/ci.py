@@ -176,8 +176,10 @@ def deploy_macos(stage, env):
     qt_root = Path(env['QT_ROOT_DIR'])
     # One deployment pass, from the bundle's parent. Scan only project imports;
     # deploying the whole Homebrew Qt tree pulled unrelated missing frameworks.
-    completed = run([qt_root / 'bin/macdeployqt', 'appIPR.app',
-                     '-executable=appIPR.app/Contents/MacOS/iprGenerateTests',
+    # The generator is in development archives only (production: IPR_BUILD_TOOLS=OFF).
+    generator = bundle / 'Contents/MacOS/iprGenerateTests'
+    tools = ['-executable=appIPR.app/Contents/MacOS/iprGenerateTests'] if generator.is_file() else []
+    completed = run([qt_root / 'bin/macdeployqt', 'appIPR.app', *tools,
                      '-qmldir=' + str(ROOT / 'src/qml'),
                      '-libpath=' + str(qt_root / 'lib'), '-always-overwrite'],
                     cwd=stage, env=env, capture_output=True, text=True)
@@ -326,6 +328,8 @@ def main(argv=None):
     parser.add_argument('--verify-package-only', action='store_true',
                         help='Exercise deployment/smoke but create no archive; for CI packaging tests')
     parser.add_argument('--mode', choices=('system', 'standalone'), default='system')
+    parser.add_argument('--profile', choices=('ci', 'production'), default='ci',
+                        help='production: no tests and no analysis tools, as published on main')
     parser.add_argument('--build-dir', type=Path, default=ROOT / 'build-ci')
     parser.add_argument('--output-dir', type=Path, default=ROOT / 'dist')
     parser.add_argument('--version', default='0.1.0-alpha')
@@ -341,6 +345,8 @@ def main(argv=None):
         parser.error('--windows-installer requires Windows standalone all/package')
     if args.verify_package_only and (args.native or args.action not in ('all', 'package')):
         parser.error('Packaging verification requires all/package without native distro archives')
+    if args.profile == 'production' and (args.action in ('test', 'python') or args.test_plan):
+        parser.error('The production profile builds and packages without tests')
     if args.test_plan and args.action in ('all', 'package'):
         parser.error('Delivery packaging may not use a targeted test plan')
     plan = load_test_plan(args.test_plan)
@@ -350,7 +356,9 @@ def main(argv=None):
     env = runtime_environment(args.qt_root, args.runtime_dir)
     if args.qt_root: env['QT_ROOT_DIR'] = str(args.qt_root.resolve())
     if args.action in ('build', 'all'):
-        command = ['cmake', '-S', ROOT, '-B', build, '-DBUILD_TESTING=ON', '-DIPR_ENABLE_LIBRAW=ON',
+        testing = 'OFF' if args.profile == 'production' else 'ON'
+        command = ['cmake', '-S', ROOT, '-B', build, '-DBUILD_TESTING=' + testing, '-DIPR_BUILD_TOOLS=' + testing,
+                   '-DIPR_ENABLE_LIBRAW=ON',
                    '-DCMAKE_BUILD_TYPE=Release', '-DIPR_DEPLOY_MODE=' + args.mode,
                    '-DIPR_RELEASE_LABEL=' + label, '-DIPR_RELEASE_VERSION=' + numeric,
                    '-DCMAKE_INSTALL_LIBDIR=lib', '-DCMAKE_INSTALL_BINDIR=bin', '-DCMAKE_INSTALL_DATADIR=share']
@@ -365,11 +373,12 @@ def main(argv=None):
                 raise ValueError('A native build requires selected targets')
             command += ['--target'] + plan['targets']
         run(command, cwd=ROOT, env=env)
-    if args.action in ('test', 'all'):
+    testing = args.profile != 'production'
+    if args.action in ('test', 'all') and testing:
         test_dir = build / 'test-results'
         test_dir.mkdir(parents=True, exist_ok=True)
         run_native_tests(build, test_dir, plan, env)
-    if args.action in ('test', 'python', 'all'):
+    if args.action in ('test', 'python', 'all') and testing:
         # Full native integrations exercise generator/render server -> group
         # analyser on a tiny temporary fixture. Python-only scopes do not use a
         # stale binary.
