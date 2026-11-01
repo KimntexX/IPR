@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <vector>
 
 namespace {
@@ -45,6 +46,22 @@ bool same(const cv::Mat &a, const cv::Mat &b) { return a.size() == b.size() && c
 int main()
 {
     bool ok = true;
+    {
+        for (double gain : {0.0, -1.0, std::numeric_limits<double>::quiet_NaN(),
+                            std::numeric_limits<double>::infinity()}) {
+            auto input = sample();
+            input.asShotMultipliers[RawInput::Green2] = gain;
+            ok &= check(!RawInput::valid(input), "invalid second-green gain is rejected");
+            const auto result = RawDevelopment::develop(input, calibrated());
+            ok &= check(result.cameraRgb.empty() && !result.error.isEmpty(),
+                        "invalid gain fails before developing pixels");
+        }
+        auto input = sample();
+        input.pattern[1][0] = RawInput::Green;
+        ok &= check(RawInput::valid(input), "Bayer with identically labelled greens is valid");
+        input.asShotMultipliers[RawInput::Green2] = 0.0;
+        ok &= check(!RawInput::valid(input), "unused second-green gain still participates in normalization");
+    }
     {
         RawInput::Input input = sample();
         input.spatialBlack = true;

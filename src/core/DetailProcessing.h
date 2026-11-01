@@ -23,7 +23,8 @@ struct SharpenSettings
 // needed to keep RGB nonnegative without independently lifting its luminance.
 // pixelScale: pixels of this image per pixel of the full image (1 for the master).
 void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pixelScale = 1.0);
-void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings);
+// The sharpening radius is in pixels of the full image.
+void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelScale = 1.0);
 
 }
 

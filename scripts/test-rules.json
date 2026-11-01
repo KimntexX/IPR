@@ -4,6 +4,7 @@
   "full_patterns": ["CMakeLists.txt", "CMakePresets.json", "cmake/**", "packaging/**", ".github/**", "scripts/**", "src/editor/imageeditor.h", "src/core/ColorPipeline.h", "src/core/WorkingColorSpace.h"],
   "ignored_patterns": ["docs/**", "README.md", "licenses/**", "tests/image/**", ".gitignore", "CMakeLists.txt.user"],
   "targets": {
+    "parallelJobsTests": "parallelJobsTests",
     "imageCacheControllerTests": "imageCacheControllerTests",
     "editorImageCacheTests": "editorImageCacheTests",
     "thumbnailProviderTests": "thumbnailProviderTests",
@@ -21,6 +22,7 @@
     "imageExportTests": "imageExportTests",
     "editorBatchTests": "editorBatchTests",
     "folderRefreshTests": "folderRefreshTests",
+    "sidecarTests": "sidecarTests",
     "toneRecoveryTests": "toneRecoveryTests",
     "testImageGeneratorTests": "testImageGeneratorTests",
     "colorMixerMathTests": "colorMixerMathTests",
@@ -42,6 +44,7 @@
     "cameraProfileEngineTests": "cameraProfileEngineTests"
   },
   "python_suites": {
+    "audit_raw_render_parity": "test_audit_raw_render_parity.py",
     "study_sources": "test_study_sources.py",
     "windows_installer": "test_windows_installer.py",
     "opening_latency": "test_measure_opening_latency.py",
@@ -71,6 +74,8 @@
     "base_colorimetry_analysis": "test_analyse_base_colorimetrique.py"
   },
   "rules": [
+    {"patterns": ["tests/audit_raw_render_parity.py", "tests/test_audit_raw_render_parity.py"], "tests": [], "python": ["audit_raw_render_parity"]},
+    {"patterns": ["src/tools/ParallelJobs.*", "src/tools/generate_test_images.cpp", "tests/parallel_jobs_test.cpp"], "tests": ["parallelJobsTests", "testImageGeneratorTests"]},
     {"patterns": ["src/cache/ImageCacheController.*", "src/cache/SystemMemory.*", "tests/image_cache_controller_test.cpp", "tests/editor_image_cache_test.cpp", "tests/controlled_memory.h"], "tests": ["imageCacheControllerTests", "editorImageCacheTests", "editorLifecycleTests", "editorRawDevelopmentTests", "imageExportTests", "imageImportTests", "rawDecoderTests", "settingsQmlTests"]},
     {"patterns": ["tests/opening_latency_probe.cpp", "tests/measure_opening_latency.py", "tests/test_measure_opening_latency.py"], "tests": ["imageExportTests", "editorLifecycleTests", "imageImportTests"], "python": ["opening_latency"]},
     {"patterns": ["src/profiles/PreparedProfileCache.*", "tests/prepared_profile_cache_test.cpp"], "tests": ["preparedProfileCacheTests", "cameraProfileEngineTests", "editorRawDevelopmentTests", "rawDecoderTests", "imageImportTests", "imageExportTests"], "python": ["profile_rendering_integration"]},
@@ -106,6 +111,7 @@
     {"patterns": ["src/editor/imageeditor.cpp", "tests/editor_lifecycle_test.cpp"], "tests": ["editorLifecycleTests"]},
     {"patterns": ["tests/batch_test.cpp", "src/editor/imageeditor.cpp", "src/core/ImageImporter.*", "src/raw/RawDecoder.*", "src/qml/ThumbnailRibbon.qml", "src/qml/Setting.qml"], "tests": ["editorBatchTests", "imageExportTests", "settingsQmlTests"]},
     {"patterns": ["tests/folder_refresh_test.cpp", "src/editor/imageeditor.*"], "tests": ["folderRefreshTests"]},
+    {"patterns": ["tests/sidecar_test.cpp", "src/core/Sidecar.*", "src/core/ToneCurve.*", "src/core/EditRecipe.h"], "tests": ["sidecarTests"]},
     {"patterns": ["src/cache/RenderStageCache.*", "tests/render_stage_cache_test.cpp", "src/editor/imageeditor.cpp"], "tests": ["renderStageCacheTests", "rec2020PipelineTests", "editorRawDevelopmentTests", "imageExportTests"]},
     {"patterns": ["scripts/export_documentation_metrics.py", "scripts/check_documentation.py", "scripts/consolidate_reports.py", "tests/test_documentation_metrics.py"], "tests": [], "python": ["documentation_metrics"]},
     {"patterns": ["tests/compare_profile_exports.py"], "tests": [], "python": ["base_colorimetry_analysis"]},

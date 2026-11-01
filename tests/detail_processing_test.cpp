@@ -1,6 +1,8 @@
 #include "DetailProcessing.h"
 #include "WorkingColorSpace.h"
 
+#include <opencv2/imgproc.hpp>
+
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -231,6 +233,50 @@ int main()
             passed &= check(std::abs(cv::mean(component(tiny))[0] / cv::mean(component(tinyOriginal))[0] - 1.) < .05,
                             "tiny images must keep their mean luminance");
         }
+    }
+
+    // The preview sharpens the reduced image: with its radius scaled to the
+    // reduction, it must approach the export sharpened then reduced. Chart: a
+    // slightly noisy flat field, isolated lines 3 to 24 px wide and a hard edge
+    // (audit C-01).
+    {
+        cv::Mat chart(1200, 1200, CV_32FC3);
+        cv::RNG rng(41);
+        rng.fill(chart, cv::RNG::NORMAL, cv::Scalar(.1, .1, .1), cv::Scalar(.002, .002, .002));
+        int x = 120;
+        for (int width : {3, 6, 12, 24}) {
+            chart.colRange(x, x + width) += cv::Scalar(.35f, .3f, .25f);
+            x += 180;
+        }
+        chart.colRange(1020, 1200) += cv::Scalar(.5f, .5f, .5f);
+        for (const float radius : {0.5f, 1.0f, 2.0f}) {
+            for (const int reduction : {2, 3}) {
+                const DetailProcessing::SharpenSettings settings{100, radius, 0};
+                const cv::Size reduced(chart.cols / reduction, chart.rows / reduction);
+                auto full = chart.clone();
+                DetailProcessing::sharpen(full, settings);
+                cv::Mat reference, proxy;
+                cv::resize(full, reference, reduced, 0, 0, cv::INTER_AREA);
+                cv::resize(chart, proxy, reduced, 0, 0, cv::INTER_AREA);
+                const auto distance = [&](const cv::Mat &image) {
+                    return cv::norm(image, reference, cv::NORM_L1) / double(image.total());
+                };
+                auto unscaled = proxy.clone(), scaled = proxy.clone();
+                DetailProcessing::sharpen(unscaled, settings);
+                DetailProcessing::sharpen(scaled, settings, 1.0 / reduction);
+                const double before = distance(unscaled), after = distance(scaled), none = distance(proxy);
+                std::cout << "preview_sharpening radius=" << radius << " reduction=" << reduction
+                          << " unscaled=" << before << " scaled=" << after << " unsharpened=" << none << '\n';
+                passed &= check(after < before, "a scaled radius must bring the preview closer to the export");
+                passed &= check(after <= none, "the preview's sharpening must never move it away from the export");
+            }
+        }
+        const DetailProcessing::SharpenSettings settings{100, 1.0f, 0};
+        auto full = chart.clone();
+        DetailProcessing::sharpen(full, settings);
+        auto identity = chart.clone();
+        DetailProcessing::sharpen(identity, settings, 1.0);
+        passed &= check(cv::norm(identity, full, cv::NORM_INF) == 0., "full resolution is unchanged");
     }
 
     // Coloured HDR noise must not be clipped to SDR by reconstruction.

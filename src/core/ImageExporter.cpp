@@ -135,7 +135,15 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
         }
     }
 
+    // The directory is written at the flush: a full disk shows here, not at TIFFClose.
+    const bool flushed = TIFFFlush(tiff) == 1;
     TIFFClose(tiff);
+    if (!flushed) {
+        QFile::remove(fileName);
+        if (error)
+            *error = QStringLiteral("Impossible de terminer l'écriture du DNG.");
+        return false;
+    }
     return true;
 }
 }

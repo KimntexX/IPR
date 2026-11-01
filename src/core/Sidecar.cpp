@@ -22,6 +22,48 @@ void readInt(QDataStream &stream, int &target)
 }
 
 void writeInt(QDataStream &stream, int value) { stream << qint32(value); }
+
+// Values within the ranges of the editor's controls, so a damaged or hand-edited
+// file cannot reach the render outside them. Non-finite values reject the file.
+bool bound(Settings &s, UserImageMetadata &metadata)
+{
+    if (!std::isfinite(s.brightness) || !std::isfinite(s.sharpeningRadius))
+        return false;
+    const auto within = [](int &value, int low, int high) { value = std::clamp(value, low, high); };
+    s.brightness = std::clamp(s.brightness, -5.0f, 5.0f);
+    within(s.contrast, -100, 100);
+    within(s.blur, 0, 20);
+    for (int *value : {&s.shadows, &s.blacks, &s.highlights, &s.whites, &s.vibrance, &s.saturation,
+                       &s.texture, &s.clarity, &s.dehaze})
+        within(*value, -100, 100);
+    within(s.temperature, 2000, 50000);
+    within(s.tint, -150, 150);
+    within(s.grain, 0, 100);
+    within(s.denoiseLuminance, 0, 100);
+    within(s.denoiseChrominance, 0, 100);
+    within(s.sharpeningAmount, 0, 200);
+    s.sharpeningRadius = std::clamp(s.sharpeningRadius, 0.3f, 3.0f);
+    within(s.sharpeningMasking, 0, 100);
+    for (auto *band : {&s.mixerHue, &s.mixerSaturation, &s.mixerLuminance})
+        for (int &value : *band) within(value, -100, 100);
+    for (int &luminance : s.gradingLuminance) within(luminance, -100, 100);
+    for (int &hue : s.gradingHue) within(hue, 0, 359);
+    for (int &saturation : s.gradingSaturation) within(saturation, 0, 100);
+    within(s.gradingBlending, 0, 100);
+    within(s.gradingBalance, -100, 100);
+    for (size_t index = 0; index < s.pointColor.count; ++index) {
+        PointColor::Point &point = s.pointColor.points[index];
+        if (!std::isfinite(point.source[0]) || !std::isfinite(point.source[1]) || !std::isfinite(point.source[2]))
+            return false;
+        for (int *value : {&point.hueShift, &point.saturationShift, &point.luminanceShift, &point.variance})
+            within(*value, -100, 100);
+        within(point.range, 0, 100);
+    }
+    for (QVector<ToneCurve::Point> &curve : s.toneCurves)
+        if (!curve.isEmpty()) curve = ToneCurve::normalized(std::move(curve));   // empty is the identity too
+    within(metadata.rating, 0, 5);
+    return true;
+}
 }
 
 QString path(const QString &fileName)
@@ -62,13 +104,6 @@ bool read(const QString &fileName, Settings *settings, UserImageMetadata *metada
         readInt(stream, loaded.sharpeningAmount);
         stream >> loaded.sharpeningRadius;
         readInt(stream, loaded.sharpeningMasking);
-        if (loaded.denoiseLuminance < 0 || loaded.denoiseLuminance > 100 ||
-            loaded.denoiseChrominance < 0 || loaded.denoiseChrominance > 100 ||
-            loaded.sharpeningAmount < 0 || loaded.sharpeningAmount > 200 ||
-            !std::isfinite(loaded.sharpeningRadius) ||
-            loaded.sharpeningRadius < 0.3f || loaded.sharpeningRadius > 3.0f ||
-            loaded.sharpeningMasking < 0 || loaded.sharpeningMasking > 100)
-            return false;
     }
     const size_t storedMixerBands = version >= 4 ? 8 : (version == 3 ? 7 : 6);
     for (size_t storedIndex = 0; storedIndex < storedMixerBands; ++storedIndex) {
@@ -92,8 +127,6 @@ bool read(const QString &fileName, Settings *settings, UserImageMetadata *metada
         for (qint32 index = 0; index < count; ++index) {
             ToneCurve::Point point;
             stream >> point.x >> point.y;
-            if (!std::isfinite(point.x) || !std::isfinite(point.y))
-                return false;
             curve.append(point);
         }
     }
@@ -129,14 +162,9 @@ bool read(const QString &fileName, Settings *settings, UserImageMetadata *metada
             stream >> point.source[0] >> point.source[1] >> point.source[2];
             readInt(stream, point.hueShift); readInt(stream, point.saturationShift);
             readInt(stream, point.luminanceShift); readInt(stream, point.variance); readInt(stream, point.range);
-            const auto within = [](int value, int low) { return value >= low && value <= 100; };
-            if (!std::isfinite(point.source[0]) || !std::isfinite(point.source[1]) || !std::isfinite(point.source[2]) ||
-                !within(point.hueShift, -100) || !within(point.saturationShift, -100) ||
-                !within(point.luminanceShift, -100) || !within(point.variance, -100) || !within(point.range, 0))
-                return false;
         }
     }
-    if (stream.status() != QDataStream::Ok)
+    if (stream.status() != QDataStream::Ok || !bound(loaded, loadedMetadata))
         return false;
     *settings = std::move(loaded);
     *metadata = std::move(loadedMetadata);
