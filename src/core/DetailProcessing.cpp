@@ -30,6 +30,10 @@ constexpr float kChromaGuideNoise = 3.0f;        // guided filter eps, in guide 
 constexpr double kChromaGuideSigma = 2.0, kChromaEdgeSigma = 4.0;
 // Luminance below which colour is denoised as absolute chroma, not relative.
 constexpr double kChromaLumaFloor = 1e-3;
+constexpr float kChromaLogFloor = 1e-5f;  // log2 guide floor, linear Y
+// Brightness level for the colour-edge reference, in pixels of the processed
+// image (not scaled with the preview): only bins the guide into 1 EV levels.
+constexpr double kChromaLevelSigma = 4.0;
 constexpr float kChromaEdgeLow = 3.0f, kChromaEdgeHigh = 8.0f;  // in noise units of the level
 
 float luminanceOf(const cv::Vec3f &rgb)
@@ -271,14 +275,41 @@ cv::Mat levelMedian(const cv::Mat &value, const cv::Mat &level)
     return result;
 }
 
+// Colour edges that luminance does not show: 1 where the smoothed chroma
+// gradient stands well above its typical value at that brightness, dilated over
+// the filter window so the window does not reach across the edge either.
+cv::Mat colourEdgeProtection(const cv::Mat &chromaOrange, const cv::Mat &chromaGreen,
+                             const cv::Mat &level, double edgeSigma, int radius)
+{
+    cv::Mat gradient = cv::Mat::zeros(chromaOrange.rows, chromaOrange.cols, CV_32F);
+    for (const cv::Mat *plane : {&chromaOrange, &chromaGreen}) {
+        cv::Mat smooth, gx, gy;
+        cv::GaussianBlur(*plane, smooth, cv::Size(), edgeSigma, edgeSigma, cv::BORDER_REPLICATE);
+        cv::Sobel(smooth, gx, CV_32F, 1, 0);
+        cv::Sobel(smooth, gy, CV_32F, 0, 1);
+        gradient += gx.mul(gx) + gy.mul(gy);
+    }
+    cv::sqrt(gradient, gradient);
+    const cv::Mat typical = levelMedian(gradient, level);
+    cv::Mat protection(gradient.rows, gradient.cols, CV_32F);
+    for (int y = 0; y < gradient.rows; ++y) {
+        const float *edge = gradient.ptr<float>(y);
+        const float *noise = typical.ptr<float>(y);
+        float *target = protection.ptr<float>(y);
+        for (int x = 0; x < gradient.cols; ++x)
+            target[x] = noise[x] > 0.0f ? smoothStep(kChromaEdgeLow, kChromaEdgeHigh, edge[x] / noise[x]) : 0.0f;
+    }
+    cv::dilate(protection, protection, cv::getStructuringElement(
+        cv::MORPH_RECT, cv::Size(2 * radius + 1, 2 * radius + 1)));
+    return protection;
+}
+
 // Colour noise. A 5 x 5 median first removes isolated colour dots, which an
 // edge-aware filter would keep as structure. Each chroma plane is then smoothed
 // by a guided filter on smoothed log luminance, so colour stays inside
 // luminance edges. Weight 1 - (1 - s)^8: nearly all the colour noise goes by
-// 25, as in Lightroom; the radius follows the weight. Colour edges
-// that luminance does not show are kept, over the whole filter window, where
-// the smoothed chroma gradient stands well above its typical value at that
-// brightness.
+// 25, as in Lightroom; the radius follows the weight. Colour edges that
+// luminance does not show are kept (colourEdgeProtection).
 void denoiseChrominance(const cv::Mat &luma, cv::Mat *chromaOrange, cv::Mat *chromaGreen, int amount,
                         double pixelScale)
 {
@@ -299,38 +330,17 @@ void denoiseChrominance(const cv::Mat &luma, cv::Mat *chromaOrange, cv::Mat *chr
         const float *source = luma.ptr<float>(y);
         float *target = logLuma.ptr<float>(y);
         for (int x = 0; x < luma.cols; ++x)
-            target[x] = std::log2(std::max(source[x], 1e-5f));
+            target[x] = std::log2(std::max(source[x], kChromaLogFloor));
     }
     cv::Mat fineGuide, guide, level;
     cv::GaussianBlur(logLuma, fineGuide, cv::Size(), kFineSigma, kFineSigma, cv::BORDER_REPLICATE);
     const double guideSigma = scaled(kChromaGuideSigma);
     cv::GaussianBlur(logLuma, guide, cv::Size(), guideSigma, guideSigma, cv::BORDER_REPLICATE);
-    cv::GaussianBlur(guide, level, cv::Size(), 4.0, 4.0, cv::BORDER_REPLICATE);
+    cv::GaussianBlur(guide, level, cv::Size(), kChromaLevelSigma, kChromaLevelSigma, cv::BORDER_REPLICATE);
     const float guideNoise = kChromaGuideNoise * estimateDenoiseSigma(fineGuide);
     const float eps = guideNoise * guideNoise + 1e-12f;
-
-    cv::Mat gradient = cv::Mat::zeros(luma.rows, luma.cols, CV_32F);
-    const double edgeSigma = scaled(kChromaEdgeSigma);
-    for (const cv::Mat *plane : {chromaOrange, chromaGreen}) {
-        cv::Mat smooth, gx, gy;
-        cv::GaussianBlur(*plane, smooth, cv::Size(), edgeSigma, edgeSigma, cv::BORDER_REPLICATE);
-        cv::Sobel(smooth, gx, CV_32F, 1, 0);
-        cv::Sobel(smooth, gy, CV_32F, 0, 1);
-        gradient += gx.mul(gx) + gy.mul(gy);
-    }
-    cv::sqrt(gradient, gradient);
-    const cv::Mat typical = levelMedian(gradient, level);
-    cv::Mat colourEdge(luma.rows, luma.cols, CV_32F);
-    for (int y = 0; y < luma.rows; ++y) {
-        const float *edge = gradient.ptr<float>(y);
-        const float *noise = typical.ptr<float>(y);
-        float *target = colourEdge.ptr<float>(y);
-        for (int x = 0; x < luma.cols; ++x)
-            target[x] = noise[x] > 0.0f ? smoothStep(kChromaEdgeLow, kChromaEdgeHigh, edge[x] / noise[x]) : 0.0f;
-    }
-    // The filter window must not reach across a colour edge either.
-    cv::dilate(colourEdge, colourEdge, cv::getStructuringElement(
-        cv::MORPH_RECT, cv::Size(2 * radius + 1, 2 * radius + 1)));
+    const cv::Mat colourEdge = colourEdgeProtection(*chromaOrange, *chromaGreen, level,
+                                                    scaled(kChromaEdgeSigma), radius);
 
     for (cv::Mat *plane : {chromaOrange, chromaGreen}) {
         const cv::Mat smoothed = guidedFilter(guide, *plane, radius, eps);
