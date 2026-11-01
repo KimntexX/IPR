@@ -3,7 +3,7 @@ from copy import deepcopy
 import unittest
 
 from qualify_photo_pairs import overlap_protocol
-from run_reserved_photo_pilot import select_inputs,validation_identities,coverage
+from run_reserved_photo_pilot import select_inputs,validation_identities,coverage,extractor_body
 
 
 class ReservedPilotTests(unittest.TestCase):
@@ -54,6 +54,13 @@ class ReservedPilotTests(unittest.TestCase):
     def test_iso_coverage_does_not_invent_shared_levels(self):
         result=coverage([dict(split='train',iso=12800),dict(split='validation',iso=1600)])
         self.assertEqual(result,dict(train={'12800':1},validation={'1600':1},test={}))
+
+    def test_extractor_audit_allows_only_reviewed_include_cleanup(self):
+        old=b'#include <algorithm>\nvoid capture() {}\n'
+        current=b'#include <QCommandLineOption>\r\nvoid capture() {}\r\n'
+        self.assertEqual(extractor_body(old),extractor_body(current))
+        self.assertNotEqual(extractor_body(old),extractor_body(current+b'change_pixels();\n'))
+        self.assertNotEqual(extractor_body(old),extractor_body(b'#include <Other>\nvoid capture() {}\n'))
 
 
 if __name__=='__main__':unittest.main()

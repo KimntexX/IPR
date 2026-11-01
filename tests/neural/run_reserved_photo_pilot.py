@@ -54,15 +54,35 @@ def coverage(examples):
         for role in ('train','validation','test')}
 
 
-def verify_engines(root,captures):
+def extractor_body(source):
+    """Only the two reviewed include-only cleanup lines may differ."""
+    allowed={'#include <algorithm>','#include <QCommandLineOption>'}
+    return '\n'.join(line for line in source.decode('utf-8').splitlines() if line not in allowed)
+
+
+def verify_engines(root,captures,training_parent,control_parent):
     revisions=sorted({c['engine_revision'] for c in captures})
     for revision in revisions[1:]:
-        # Different build stamps are allowed only when all photographed pipeline
-        # source, calibration and extraction logic are byte-identical in Git.
+        # The embedded stamp describes the configured engine, not necessarily
+        # the later commit in which the bench extractor was first added.
         subprocess.run(['git','diff','--exit-code',revisions[0],revision,'--','src',
-            'config/raw-normalization.json','tests/neural/capture_camera.cpp'],
+            'config/raw-normalization.json'],
             cwd=root,check=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=30)
-    return dict(revisions=revisions,production_and_extractor_source_diff='empty')
+    old_source=subprocess.check_output(['git','show',training_parent['extractor_source_revision']+
+                                      ':tests/neural/capture_camera.cpp'],cwd=root,timeout=30)
+    import hashlib
+    if hashlib.sha256(old_source).hexdigest()!=training_parent['extractor_cpp_sha256']:
+        raise ValueError('Recorded training extractor source hash mismatch')
+    new_source=(root/'tests/neural/capture_camera.cpp').read_bytes()
+    if digest(root/'tests/neural/capture_camera.cpp')!=control_parent['freeze']['tool_sources']['capture_camera.cpp']:
+        raise ValueError('Control extractor source changed since acquisition')
+    if extractor_body(old_source)!=extractor_body(new_source):
+        raise ValueError('Extraction calculations differ; captures cannot be pooled')
+    return dict(revisions=revisions,production_source_diff='empty',
+        training_extractor_revision=training_parent['extractor_source_revision'],
+        training_extractor_sha256=training_parent['extractor_cpp_sha256'],
+        control_extractor_sha256=digest(root/'tests/neural/capture_camera.cpp'),
+        extractor_calculation_diff='empty after the reviewed QCommandLineOption/algorithm include-only cleanup')
 
 
 def run(args):
@@ -70,7 +90,7 @@ def run(args):
     old=json.loads(args.training_parent.read_text(encoding='utf-8'))
     control=json.loads(args.control_parent.read_text(encoding='utf-8'))
     captures,roles,protocol=select_inputs(old,control)
-    compatibility=verify_engines(root,captures)
+    compatibility=verify_engines(root,captures,old,control)
     if not args.trainer.is_file():raise ValueError('Missing isolated PyTorch interpreter')
     now=datetime.now(timezone.utc)
     campaign='neural-reserved-photo-pilot-v001-'+now.strftime('%Y%m%dT%H%M%SZ')
