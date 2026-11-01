@@ -15,6 +15,7 @@
 
 #include <QAbstractListModel>
 #include <QColor>
+#include <QFileSystemWatcher>
 #include <QFutureWatcher>
 #include <QPromise>
 #include <QHash>
@@ -56,13 +57,23 @@ public:
     int count() const;
     QStringList localFiles(int first, int last) const;
 
+signals:
+    // Images that left the folder outside IPR (deleted, moved or renamed).
+    void entriesRemoved(const QStringList &localFiles);
+
 private:
     struct Entry
     {
         QString fileName;
         QUrl fileUrl;
     };
+    static QList<Entry> listFolder(const QString &path);
+    void refresh();
+
     QList<Entry> m_entries;
+    QString m_folderPath;
+    QFileSystemWatcher m_watcher;
+    QTimer m_refreshTimer;
 };
 
 class ImageEditor final : public QObject

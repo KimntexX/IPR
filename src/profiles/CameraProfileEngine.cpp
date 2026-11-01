@@ -439,27 +439,45 @@ public:
         colorMatrix2 = matrixFromTag(bytes, 50722);
         forwardMatrix1 = matrixFromTag(bytes, 50964);
         forwardMatrix2 = matrixFromTag(bytes, 50965);
-        illuminant1 = numericValues(bytes, 50778).value(0, 0.0);
-        illuminant2 = numericValues(bytes, 50779).value(0, 0.0);
-        QVector<double> mapDimensions = numericValues(bytes, 50937);
-        if (mapDimensions.size() == 3 &&
-            !loadHueSatMap(bytes, mapDimensions, 50938, &hueSatMap1, error))
-            return false;
-        if (mapDimensions.size() == 3 &&
-            !loadHueSatMap(bytes, mapDimensions, 50939, &hueSatMap2, error))
-            return false;
-        mapDimensions = numericValues(bytes, 50981);
-        if (mapDimensions.size() == 3 &&
-            !loadHueSatMap(bytes, mapDimensions, 50982, &lookTable, error))
-            return false;
-        hueSatEncoding = int(numericValues(bytes, 51107).value(0, 0.0));
-        lookTableEncoding = int(numericValues(bytes, 51108).value(0, 0.0));
-        if ((hueSatEncoding != 0 && hueSatEncoding != 1) ||
-            (lookTableEncoding != 0 && lookTableEncoding != 1)) {
+        // Optional means absent, not present with malformed numeric data.
+        // Validate the numeric domain before any floating-to-integer cast.
+        const auto enumeration = [&](quint16 tag, int maximum, double &target) {
+            target = 0.0;
+            if (!tags.contains(tag)) return true;
+            const auto values = numericValues(bytes, tag);
+            if (values.size() != 1 || values[0] < 0 || values[0] > maximum ||
+                std::floor(values[0]) != values[0]) return false;
+            target = values[0];
+            return true;
+        };
+        double hueEncoding = 0, lookEncoding = 0;
+        if (!enumeration(50778, 65535, illuminant1) ||
+            !enumeration(50779, 65535, illuminant2) ||
+            !enumeration(51107, 1, hueEncoding) || !enumeration(51108, 1, lookEncoding)) {
             if (error)
-                *error = QStringLiteral("Encodage de table DCP non pris en charge.");
+                *error = QStringLiteral("Énumération DCP invalide ou non prise en charge.");
             return false;
         }
+        hueSatEncoding = int(hueEncoding);
+        lookTableEncoding = int(lookEncoding);
+        const auto dimensions = [&](quint16 tag, bool hasData, QVector<double> &values) {
+            values = numericValues(bytes, tag);
+            return tags.contains(tag) ? values.size() == 3 : !hasData;
+        };
+        QVector<double> mapDimensions;
+        if (!dimensions(50937, tags.contains(50938) || tags.contains(50939), mapDimensions)) {
+            if (error) *error = QStringLiteral("Dimensions de table DCP absentes ou invalides.");
+            return false;
+        }
+        if (mapDimensions.size() == 3 &&
+            (!loadHueSatMap(bytes, mapDimensions, 50938, &hueSatMap1, error) ||
+             !loadHueSatMap(bytes, mapDimensions, 50939, &hueSatMap2, error))) return false;
+        if (!dimensions(50981, tags.contains(50982), mapDimensions)) {
+            if (error) *error = QStringLiteral("Dimensions de table DCP absentes ou invalides.");
+            return false;
+        }
+        if (mapDimensions.size() == 3 &&
+            !loadHueSatMap(bytes, mapDimensions, 50982, &lookTable, error)) return false;
         toneCurve = numericValues(bytes, 50940);
         if (!validateToneCurve(error))
             return false;
@@ -707,19 +725,20 @@ private:
     bool loadHueSatMap(const QByteArray &bytes, const QVector<double> &dimensions,
                        quint16 dataTag, HueSatTable *table, QString *error)
     {
-        if (dimensions[0] < 1 || dimensions[1] < 2 || dimensions[2] < 1 ||
+        if (std::any_of(dimensions.cbegin(), dimensions.cend(),
+                        [](double value) { return std::floor(value) != value; }) ||
+            dimensions[0] < 1 || dimensions[1] < 2 || dimensions[2] < 1 ||
             dimensions[0] > 360 || dimensions[1] > 64 || dimensions[2] > 64) {
             if (error)
                 *error = QStringLiteral("Dimensions de table DCP invalides.");
             return false;
         }
+        if (!tags.contains(dataTag)) return true;
         QVector<double> values = numericValues(bytes, dataTag);
         const qsizetype expected = qsizetype(dimensions[0]) *
                                    qsizetype(dimensions[1]) *
                                    qsizetype(dimensions[2]) * 3;
         if (values.size() != expected) {
-            if (values.isEmpty())
-                return true;
             if (error)
                 *error = QStringLiteral("Données de table DCP tronquées.");
             return false;

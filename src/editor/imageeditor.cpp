@@ -126,6 +126,12 @@ QString formatExposureTime(double seconds)
 ImageListModel::ImageListModel(QObject *parent)
     : QAbstractListModel(parent)
 {
+    // Images added, removed or renamed outside IPR reach the filmstrip. One copy
+    // fires several notifications: they are coalesced into one listing.
+    m_refreshTimer.setSingleShot(true);
+    m_refreshTimer.setInterval(300);
+    connect(&m_watcher, &QFileSystemWatcher::directoryChanged, &m_refreshTimer, qOverload<>(&QTimer::start));
+    connect(&m_refreshTimer, &QTimer::timeout, this, &ImageListModel::refresh);
 }
 
 int ImageListModel::rowCount(const QModelIndex &parent) const
@@ -171,18 +177,57 @@ QStringList ImageEditor::imageFileFilters() const
     return {tr("Images (%1)").arg(supportedImagePatterns().join(QLatin1Char(' ')))};
 }
 
+QList<ImageListModel::Entry> ImageListModel::listFolder(const QString &path)
+{
+    QList<Entry> entries;
+    if (path.isEmpty())
+        return entries;
+    const QFileInfoList files = QDir(path).entryInfoList(
+        supportedImagePatterns(), QDir::Files | QDir::Readable | QDir::NoSymLinks, QDir::Name | QDir::IgnoreCase);
+    for (const QFileInfo &file : files)
+        entries.append({file.fileName(), QUrl::fromLocalFile(file.absoluteFilePath())});
+    return entries;
+}
+
 void ImageListModel::setFolder(const QUrl &folder)
 {
     beginResetModel();
-    m_entries.clear();
-
-    const QDir directory(folder.toLocalFile());
-    const QFileInfoList files = directory.entryInfoList(
-        supportedImagePatterns(), QDir::Files | QDir::Readable | QDir::NoSymLinks, QDir::Name | QDir::IgnoreCase);
-    for (const QFileInfo &file : files)
-        m_entries.append({file.fileName(), QUrl::fromLocalFile(file.absoluteFilePath())});
-
+    m_refreshTimer.stop();
+    if (!m_watcher.directories().isEmpty())
+        m_watcher.removePaths(m_watcher.directories());
+    m_folderPath = folder.toLocalFile();
+    m_entries = listFolder(m_folderPath);
+    if (!m_folderPath.isEmpty())
+        m_watcher.addPath(m_folderPath);
     endResetModel();
+}
+
+// Rows change in place, so the filmstrip keeps its position and thumbnails.
+void ImageListModel::refresh()
+{
+    const QList<Entry> current = listFolder(m_folderPath);
+    QSet<QString> present;
+    for (const Entry &entry : current)
+        present.insert(entry.fileName);
+    QStringList removed;
+    for (int row = int(m_entries.size()) - 1; row >= 0; --row) {
+        if (present.contains(m_entries.at(row).fileName))
+            continue;
+        removed.prepend(m_entries.at(row).fileUrl.toLocalFile());
+        beginRemoveRows({}, row, row);
+        m_entries.removeAt(row);
+        endRemoveRows();
+    }
+    // The remaining entries keep the listing's order: each new one goes in its place.
+    for (int row = 0; row < int(current.size()); ++row) {
+        if (row < int(m_entries.size()) && m_entries.at(row).fileName == current.at(row).fileName)
+            continue;
+        beginInsertRows({}, row, row);
+        m_entries.insert(row, current.at(row));
+        endInsertRows();
+    }
+    if (!removed.isEmpty())
+        emit entriesRemoved(removed);
 }
 
 int ImageListModel::count() const
@@ -239,6 +284,24 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     m_prefetchTimer.setSingleShot(true);
     m_prefetchTimer.setInterval(250);
     connect(&m_prefetchTimer, &QTimer::timeout, this, &ImageEditor::startPrefetch);
+    connect(&m_imageModel, &ImageListModel::entriesRemoved, this, [this](const QStringList &files) {
+        bool deselected = false;
+        for (const QString &file : files) {
+            // Selection keys are canonical (selectionKey); a removed file no longer
+            // resolves, its folder still does (a symbolic link, macOS's /var).
+            const QFileInfo info(file);
+            const QString folder = QFileInfo(info.absolutePath()).canonicalFilePath();
+            const QString key = folder.isEmpty() ? info.absoluteFilePath() : QDir(folder).filePath(info.fileName());
+            deselected = m_selectedImageKeys.remove(key) || deselected;
+            // The pixels stay on screen; saving its settings will fail until it comes back.
+            if (m_displayedFile.isLocalFile() &&
+                QFileInfo(m_displayedFile.toLocalFile()).absoluteFilePath() == QFileInfo(file).absoluteFilePath())
+                setStatusMessage(tr("« %1 » a été supprimée, déplacée ou renommée hors d'IPR.")
+                                     .arg(QFileInfo(file).fileName()));
+        }
+        if (deselected)
+            emit selectionChanged();
+    });
     connect(&m_decodedImageCache, &ImageCacheController::changed, this, [this] {
         emit decodedImageCacheChanged();
         const auto stats = m_decodedImageCache.statistics();
@@ -816,35 +879,19 @@ void ImageEditor::setToneCurve(int channel, const QVariantList &points)
     if (channel < LuminanceCurve || channel > BlueCurve)
         return;
 
-    QVector<ToneCurvePoint> normalized;
-    normalized.reserve(points.size() + 2);
+    QVector<ToneCurvePoint> received;
+    received.reserve(points.size());
     for (const QVariant &value : points) {
         const QVariantMap point = value.toMap();
         bool xOk = false;
         bool yOk = false;
         const float x = point.value(QStringLiteral("x")).toFloat(&xOk);
         const float y = point.value(QStringLiteral("y")).toFloat(&yOk);
-        if (!xOk || !yOk || !std::isfinite(x) || !std::isfinite(y) || x < 0.0f || x > 1.0f)
-            continue;
-        normalized.append({x, std::clamp(y, 0.0f, 1.0f)});
+        if (xOk && yOk)
+            received.append({x, y});
     }
-    std::sort(normalized.begin(), normalized.end(),
-              [](const ToneCurvePoint &left, const ToneCurvePoint &right) {
-                  return left.x < right.x;
-              });
-
-    // The end points are the curve's own (raised black, clipped whites); fewer
-    // than two points is the identity.
-    QVector<ToneCurvePoint> curve;
-    curve.reserve(normalized.size());
-    for (const ToneCurvePoint &point : normalized) {
-        if (curve.isEmpty() || point.x - curve.constLast().x >= 0.001f)
-            curve.append(point);
-    }
-    if (curve.size() < 2)
-        curve = {{0.0f, 0.0f}, {1.0f, 1.0f}};
-
-    m_settings.toneCurves[static_cast<size_t>(channel)] = std::move(curve);
+    // The end points are the curve's own (raised black, clipped whites).
+    m_settings.toneCurves[static_cast<size_t>(channel)] = ToneCurve::normalized(std::move(received));
     emit toneCurveChanged(channel);
     scheduleRender();
 }
@@ -1034,7 +1081,11 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
         UserImageMetadata targetMetadata;
         RawDevelopment targetRaw;
         const bool hasSidecar = Sidecar::read(fileName, &target, &targetMetadata, &targetRaw);
-        if (!hasSidecar) targetMetadata = annotations.value(fileName);
+        if (!hasSidecar) {
+            targetMetadata = annotations.value(fileName);
+            // The development the target gets when opened without a sidecar.
+            targetRaw.normalizationEnabled = true;
+        }
         // Retouches can be copied across cameras; RAW profiles cannot.
         Settings copied = settings;
         copied.automaticWhiteBalance = target.automaticWhiteBalance;
@@ -1738,8 +1789,8 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
     const auto ints = [&stream](const auto &values) { for (int value : values) stream << qint32(value); };
     stream << s.grayscale << s.brightness << qint32(s.contrast) << qint32(s.temperature) << qint32(s.tint)
            << qint32(s.shadows) << qint32(s.blacks) << qint32(s.highlights) << qint32(s.whites);
-    if (s.denoiseBeforeProfile)   // the camera-signal denoise belongs to the first stage then
-        stream << qint32(s.denoiseLuminance) << qint32(s.denoiseChrominance);
+    if (s.denoiseBeforeProfile)   // the camera-signal luminance denoise belongs to the first stage then
+        stream << qint32(s.denoiseLuminance);
     keys[0] = key;
     stream << qint32(s.saturation) << qint32(s.vibrance) << qint32(s.gradingBlending) << qint32(s.gradingBalance);
     ints(s.mixerHue); ints(s.mixerSaturation); ints(s.mixerLuminance); ints(s.gradingHue); ints(s.gradingSaturation);
@@ -1815,10 +1866,12 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     // Denoise before local-detail enhancement and sharpening. The operation
     // runs in linear RGB and keeps luminance and chrominance independent so
     // coloured speckles can be removed without flattening edge detail.
+    // With the camera-signal denoise, luminance was denoised before the profile;
+    // colour noise is removed here on both paths.
     if (runs(2)) {
-        if ((settings.denoiseLuminance != 0 || settings.denoiseChrominance != 0) &&
-            !(settings.denoiseBeforeProfile && source.dcpContext))
-            DetailProcessing::reduceNoise(adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
+        const bool cameraLuminance = settings.denoiseBeforeProfile && source.dcpContext;
+        DetailProcessing::reduceNoise(adjusted, {cameraLuminance ? 0 : settings.denoiseLuminance,
+                                                 settings.denoiseChrominance}, pixelScale);
         reached(2, adjusted);
     }
     if (runs(3)) {
@@ -1842,7 +1895,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     if (settings.sharpeningAmount > 0) {
         DetailProcessing::sharpen(adjusted, {settings.sharpeningAmount,
                                               settings.sharpeningRadius,
-                                              settings.sharpeningMasking});
+                                              settings.sharpeningMasking}, pixelScale);
     }
 
     Grain::apply(adjusted, settings.grain, pixelScale);
@@ -1889,8 +1942,9 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
     // RAW with a DCP: exposure and white balance act on the scene-linear camera
     // signal before the profile tone curve, so highlights keep its shoulder.
     const bool sceneExposure = source.dcpContext && settings.brightness != 0.0f;
-    // Experimental: the denoise sliders act on the camera signal, before the profile.
-    const CameraDenoise::Settings cameraDenoise{settings.denoiseLuminance, settings.denoiseChrominance};
+    // Experimental: the luminance denoise acts on the camera signal, before the
+    // profile; colour noise is removed after the tones (reduceNoise).
+    const CameraDenoise::Settings cameraDenoise{settings.denoiseLuminance, 0};
     const bool denoiseCamera = source.dcpContext && settings.denoiseBeforeProfile &&
                                !CameraDenoise::identity(cameraDenoise);
     if (source.dcpContext && (whiteBalanceEdit || sceneExposure || denoiseCamera)) {

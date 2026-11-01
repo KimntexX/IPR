@@ -1,0 +1,139 @@
+name: Publish verified production release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag pointing to the exact promoted main commit (never creates a tag)
+        required: true
+        type: string
+      publish:
+        description: Publish the verified bytes to GitHub Releases after the release environment approval
+        default: false
+        required: true
+        type: boolean
+permissions:
+  contents: read
+concurrency:
+  group: release-${{ inputs.tag }}
+  cancel-in-progress: false
+jobs:
+  approval:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      build_sha: ${{ steps.plan.outputs.build_sha }}
+      main_sha: ${{ steps.plan.outputs.main_sha }}
+      version: ${{ steps.plan.outputs.version }}
+      matrix: ${{ steps.plan.outputs.package_matrix }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IPR_RELEASE_TAG: ${{ inputs.tag }}
+        run: python scripts/release_github.py --action plan --tag "$IPR_RELEASE_TAG" --output ci-logs/release-plan.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-plan-${{ github.run_id }}
+          path: ci-logs/release-plan.json
+          if-no-files-found: error
+          retention-days: 30
+  archives:
+    needs: approval
+    permissions:
+      contents: read
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.approval.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    env:
+      GH_TOKEN: ${{ github.token }}
+      IPR_VERSION: ${{ needs.approval.outputs.version }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.approval.outputs.build_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          mode: ${{ matrix.mode }}
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: release-plan-${{ github.run_id }}
+          path: .release-inputs/
+      - name: Build and verify the pinned dev source in production mode
+        shell: bash
+        env:
+          IPR_MODE: ${{ matrix.mode }}
+        run: |
+          installer=()
+          if [[ "$RUNNER_OS" == Windows && "$IPR_MODE" == standalone ]]; then
+            installer+=(--windows-installer)
+          fi
+          python scripts/github_build.py --action all --profile production --mode "$IPR_MODE" --version "$IPR_VERSION" "${installer[@]}"
+      - name: Bind the built artifacts to both CI gates and their checksums
+        shell: bash
+        env:
+          IPR_RUNNER: ${{ matrix.os }}
+          IPR_MODE: ${{ matrix.mode }}
+        run: |
+          python scripts/release_github.py --action inventory --plan .release-inputs/release-plan.json --directory dist --build build-ci --runner "$IPR_RUNNER" --mode "$IPR_MODE" --output "dist/release-inventory-$IPR_RUNNER-$IPR_MODE.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-bundle-${{ matrix.os }}-${{ matrix.mode }}
+          path: |
+            dist/*.zip
+            dist/*-setup.exe
+            dist/*.tar.gz
+            dist/*.sha256
+            dist/release-inventory-*.json
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: test-logs-release-${{ matrix.os }}-${{ matrix.mode }}
+          path: |
+            build-ci/CMakeFiles/CMakeConfigureLog.yaml
+            ci-logs/
+          retention-days: 14
+  publish:
+    if: inputs.publish && github.ref == 'refs/heads/main'
+    needs: [approval, archives]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    # The owner must configure required reviewers and main-only deployments
+    # for this environment before enabling public releases.
+    environment: release
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.approval.outputs.main_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: release-plan-${{ github.run_id }}
+          path: .release-inputs/
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: release-bundle-*
+          merge-multiple: true
+          path: .release-downloads/
+      - name: Recheck both gates and publish the same downloaded bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/release_github.py --action publish --plan .release-inputs/release-plan.json --directory .release-downloads

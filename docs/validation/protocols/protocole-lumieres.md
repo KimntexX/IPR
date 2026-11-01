@@ -72,3 +72,10 @@ Tests synthétiques ciblés : `toneRecoveryTests`, `colorPipelineTests`,
 `imageExportTests`, via le lanceur Windows qui prépare Qt.
 Rapport unique : [analyse Lumières](../analyses/analyse-validation-lumieres-base-2026-10-02.md).
 Contrat de mémoire, recette IHM et suppression : socle commun.
+
+## Campagne de validation bêta — exposition et contraste (28 octobre 2026)
+
+Préréglages `IPR Exposition contraste` (`scripts/make_lr_presets.py --controls exposure-contrast`,
+20 états) : exposition à ±0,25, ±0,5, ±1, ±1,5, ±2 EV ; contraste à ±10, ±25, ±50, ±75, ±100.
+Les 28 RAW de la racine de `base` ; exports TIFF 16 bits sRGB réduits à 2048 pixels de grand
+côté dans `exposition-contraste`, neutre de même géométrie repris de `grading/neutre`.

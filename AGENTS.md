@@ -82,6 +82,43 @@
   fonctions, paramètres, variables, includes, fichiers, tests et documentation
   qui ne servent plus.
 
+## Structure et testabilité du code — règle du 31 octobre 2026
+
+- Appliquer ces principes à tous les langages du projet et à tous les agents :
+  concevoir des fonctions à responsabilité claire, avec des dépendances et des
+  contrats explicites ; séparer calculs, entrées/sorties et orchestration.
+- Prévoir les tests dès la conception, y compris les cas limites pertinents :
+  données absentes ou invalides, erreurs, annulation et libération des ressources.
+  Avant une refactorisation, protéger le comportement attendu par des tests.
+- Relire en priorité les fonctions ajoutées ou modifiées : complexité des
+  branchements, lisibilité, couverture des comportements et qualité des assertions.
+  Suivre le cycle conception, code et tests, mesures disponibles, puis revue.
+- Si des mesures de complexité, de couverture ou de CRAP sont disponibles,
+  les utiliser comme indicateurs de risque, pas comme objectifs de conception ni
+  comme preuve de correction. Ne pas inventer de score ou assimiler une couverture
+  non mesurée à une couverture nulle. Aucune installation d'outil, campagne
+  exhaustive ou barrière CI chiffrée n'est imposée par cette règle.
+- Ne pas découper artificiellement les fonctions pour améliorer un score et ne
+  pas ajouter d'abstractions sans bénéfice concret. Préserver la cohérence et les
+  performances des boucles de traitement d'image ; vérifier toute modification
+  photographique avec les preuves numériques et visuelles adaptées.
+- Une ligne exécutée n'est pas nécessairement un comportement vérifié : ces
+  indicateurs ne remplacent ni la revue du code, ni les contrôles de ressources
+  et de concurrence, ni la validation visuelle de l'application par l'utilisateur.
+
+## Validations partielles et issues GitHub — règle du 31 octobre 2026
+
+- Toute fonctionnalité ou donnée validée seulement en partie (par exemple le
+  bruit, ou l'export DNG lu par Lightroom mais non vérifié dans Photoshop et
+  DxO) reçoit une issue GitHub pour la traçabilité. L'issue décrit ce qui est
+  validé, ce qui ne l'est pas et les vérifications restantes ; la matrice de
+  validation renvoie vers elle.
+- L'issue est close par la PR qui achève la validation. Si une PR ne la valide
+  qu'en partie, mettre l'issue à jour : cocher ce qui est fait et garder ce qui
+  reste ouvert.
+- Ouvrir une issue est autorisé sans accord préalable dans ce cadre ; les
+  fusions, publications et tags restent soumis à l'autorisation habituelle.
+
 ## Branches Git — règle du 10 octobre 2026
 
 - `dev` est la branche d'intégration maintenue à jour après chaque validation.
@@ -103,6 +140,31 @@
 La procédure détaillée est dans
 [Gestion des branches Git](docs/architecture/gestion-branches-git.md).
 Les travaux sous `docs/` suivent également les règles de [docs/AGENTS.md](docs/AGENTS.md).
+
+## Branche main et releases — règle du 1er novembre 2026
+
+- `main` porte seulement le code de production et la documentation. Les tests,
+  bancs, outils d'analyse (`src/tools`), mesures JSON, analyses, protocoles et
+  rapports restent sur `dev`. La frontière est la liste blanche versionnée
+  [packaging/main-allowlist.txt](packaging/main-allowlist.txt) : tout nouveau
+  fichier y est classé sur `dev` avant de pouvoir être promu.
+- `dev` n'est pas fusionnée dans `main`. Un commit de `dev` testé (CI complète
+  verte) est promu par instantané : `scripts/promote_main.py` construit, sur la
+  branche durable `main_promotion` issue de `main`, un commit contenant ses
+  chemins `[main]` et `release-manifest.json` (commit source, empreintes
+  SHA-256), sans `dev` comme parent ; une PR `main_promotion` → `main` le
+  publie. Exception approuvée à la fusion directe : l'historique de `main` reste
+  léger, celui de `dev` intact. Ne jamais corriger à la main un fichier promu :
+  corriger sur `dev`, requalifier, promouvoir de nouveau.
+- La release est construite depuis le commit de `dev` testé, en profil
+  production (`scripts/ci.py --profile production` : tests et outils OFF), et
+  ce même artefact est publié. Deux barrières : CI de production verte sur le
+  commit exact de `main`, et CI complète verte du commit de `dev` lié.
+- Les liens de la documentation vers des chemins restés sur `dev` sont dirigés
+  vers le commit source ; `docs/release/validation-summary.md` résume la
+  validation pour `main`.
+- Promotion, PR, fusion, tag et release restent soumis à l'autorisation de
+  l'utilisateur.
 
 ## Chantier IHM isolé — règle du 18 octobre 2026
 

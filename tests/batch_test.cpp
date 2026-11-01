@@ -112,6 +112,13 @@ int main(int argc, char **argv)
                "the edits reach a target")) return 1;
     if (!check(warmSaved.temperature == 6000 && warmSaved.tint == 0,
                "an as-shot white balance stays the target's own")) return 1;
+    {
+        EditRecipe::Settings settings;
+        EditRecipe::UserImageMetadata metadata;
+        EditRecipe::RawDevelopment raw;
+        if (!check(Sidecar::read(warm, &settings, &metadata, &raw) && raw.normalizationEnabled,
+                   "a target without a sidecar keeps the development it gets when opened")) return 1;
+    }
     if (!check(Sidecar::read(annotated, &annotatedSaved, &annotatedAfter) && annotatedSaved.contrast == 37 &&
                annotatedAfter.rating == 4 && annotatedAfter.colorLabel == QStringLiteral("green"),
                "a target keeps its annotations")) return 1;

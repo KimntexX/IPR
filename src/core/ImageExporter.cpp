@@ -72,7 +72,9 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
     const QByteArray iccProfile =
         QColorSpace(QColorSpace::SRgbLinear).iccProfile();
 
+    // NewSubfileType 0 marks the main image; Adobe readers reject an IFD without it.
     bool configured =
+        TIFFSetField(tiff, TIFFTAG_SUBFILETYPE, 0) == 1 &&
         TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH,
                      static_cast<uint32_t>(gamutMapped.linearRgba.cols)) == 1 &&
         TIFFSetField(tiff, TIFFTAG_IMAGELENGTH,
@@ -133,7 +135,15 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
         }
     }
 
+    // The directory is written at the flush: a full disk shows here, not at TIFFClose.
+    const bool flushed = TIFFFlush(tiff) == 1;
     TIFFClose(tiff);
+    if (!flushed) {
+        QFile::remove(fileName);
+        if (error)
+            *error = QStringLiteral("Impossible de terminer l'écriture du DNG.");
+        return false;
+    }
     return true;
 }
 }

@@ -227,6 +227,27 @@ bool writeFile(const QString &path, const QByteArray &contents)
            file.write(contents) == contents.size();
 }
 
+// Synthetic little-endian DCP entries; never edits an installed camera profile.
+bool replaceEntry(QByteArray &bytes, quint16 tag, quint16 type, quint32 count, quint32 value)
+{
+    const auto u16 = [&](int offset) {
+        return quint16(uchar(bytes[offset])) | quint16(uchar(bytes[offset + 1]) << 8);
+    };
+    const int entries = u16(8);
+    for (int i = 0; i < entries; ++i) {
+        const int offset = 10 + i * 12;
+        if (u16(offset) != tag) continue;
+        QByteArray replacement;
+        appendU16(replacement, tag);
+        appendU16(replacement, type);
+        appendU32(replacement, count);
+        appendU32(replacement, value);
+        bytes.replace(offset, 12, replacement);
+        return true;
+    }
+    return false;
+}
+
 }
 
 int main(int argc, char **argv)
@@ -245,6 +266,38 @@ int main(int argc, char **argv)
     const QString dcpPath = QDir(dcpDirectory).filePath("R6.dcp");
     if (!check(writeFile(dcpPath, makeDcp()), "synthetic DCP should be written"))
         return 1;
+    {
+        const QString invalidPath = QDir(dcpDirectory).filePath("malformed.dcp");
+        const cv::Mat input(2, 2, CV_32FC3, cv::Scalar(.15f, .2f, .05f));
+        const auto rejected = [&](const QByteArray &bytes) {
+            QString error;
+            auto pixels = input.clone();
+            return writeFile(invalidPath, bytes) &&
+                !CameraProfileEngine::applyDcp(invalidPath, pixels, 5200, &error) &&
+                !error.isEmpty() && cv::norm(input, pixels, cv::NORM_INF) == 0;
+        };
+        for (quint16 tag : {quint16(50938), quint16(50982)}) {
+            auto bytes = makeDcp();
+            if (!replaceEntry(bytes, tag, 11, 6, 0xffffff00u) ||
+                !check(rejected(bytes), "present truncated table is not silently omitted")) return 1;
+            bytes = makeDcp();
+            if (!replaceEntry(bytes, tag, 11, 0, 0) ||
+                !check(rejected(bytes), "present empty table is rejected")) return 1;
+        }
+        auto bytes = makeDcp();
+        if (!replaceEntry(bytes, 50937, 4, 3, 0xffffff00u) ||
+            !check(rejected(bytes), "invalid dimensions do not silently disable tables")) return 1;
+        for (float value : {.5f, 1.e30f, -1.f, std::numeric_limits<float>::infinity(),
+                            std::numeric_limits<float>::quiet_NaN()}) {
+            quint32 bits = 0;
+            std::memcpy(&bits, &value, sizeof(bits));
+            for (quint16 tag : {quint16(51107), quint16(51108), quint16(50778)}) {
+                bytes = makeDcp(false, true);
+                if (!replaceEntry(bytes, tag, 11, 1, bits) ||
+                    !check(rejected(bytes), "invalid enumeration rejected before integer conversion")) return 1;
+            }
+        }
+    }
     {
         CameraProfileEngine::configurePreparedProfileCache(64ULL*1024*1024,16);
         const cv::Mat input(2,2,CV_32FC3,cv::Scalar(.15f,.2f,.05f));

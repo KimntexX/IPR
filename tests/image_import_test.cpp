@@ -6,6 +6,7 @@
 #include <QTemporaryDir>
 #include <cmath>
 #include <iostream>
+#include <utility>
 #include <limits>
 
 int main(int argc, char **argv)
@@ -69,6 +70,21 @@ int main(int argc, char **argv)
         const auto result=ImageImport::load(path);
         if (!check(!result.image.isNull() && result.image.linearRgba.cols==3 && result.image.linearRgba.rows==7,
                    "JPEG EXIF orientation is applied exactly at import")) return 1;
+    }
+    // A field answers only for its own name: the lens never stands for the camera.
+    for (const auto &[keys, camera] : std::initializer_list<std::pair<QList<QPair<QString, QString>>, QString>>{
+             {{{"LensModel", "RF24-105mm"}, {"Model", "EOS R6m3"}}, "EOS R6m3"},
+             {{{"LensModel", "RF24-105mm"}}, ""},
+             {{{"Exif.Photo.LensModel", "RF24-105mm"}, {"Exif.Image.Model", "EOS R7"}}, "EOS R7"}}) {
+        QImage tagged(2, 2, QImage::Format_RGB32);
+        tagged.fill(Qt::gray);
+        for (const auto &[key, value] : keys) tagged.setText(key, value);
+        const auto path = dir.filePath("keys.png");
+        QFile::remove(path);
+        if (!tagged.save(path)) return 1;
+        const auto result = ImageImport::load(path);
+        if (!check(result.metadata.cameraModel == camera && result.metadata.lensModel == "RF24-105mm",
+                   "camera and lens fields are read from their own keys")) return 1;
     }
     QImage alpha(2,1,QImage::Format_RGBA64);
     alpha.setColorSpace(QColorSpace(QColorSpace::SRgb));
