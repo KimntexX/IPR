@@ -9,12 +9,20 @@ if(IPR_DEPLOY_MODE STREQUAL "standalone")
         if(IPR_BUILD_TOOLS)
             set(ipr_deploy_tools "ADDITIONAL_EXECUTABLES \"${CMAKE_INSTALL_BINDIR}/$<TARGET_FILE_NAME:iprGenerateTests>\"")
         endif()
+        # The headless platform, as on Windows (--include-plugins qoffscreen):
+        # the package's smoke test and command-line runs need it. "plugins" is
+        # Qt's default QT_DEPLOY_PLUGINS_DIR on Linux.
+        if(NOT TARGET Qt6::QOffscreenIntegrationPlugin)
+            message(FATAL_ERROR "The standalone Linux package needs Qt's offscreen platform plugin")
+        endif()
+        install(FILES "$<TARGET_FILE:Qt6::QOffscreenIntegrationPlugin>" DESTINATION plugins/platforms)
+        # CONTENT is expanded twice: \\\${...} reaches the deploy script as ${...}.
         qt_generate_deploy_script(TARGET appIPR OUTPUT_SCRIPT ipr_deploy CONTENT "
             qt_deploy_qml_imports(TARGET appIPR PLUGINS_FOUND ipr_qml_plugins)
             qt_deploy_runtime_dependencies(
                 EXECUTABLE \"$<TARGET_FILE:appIPR>\"
                 ${ipr_deploy_tools}
-                ADDITIONAL_MODULES \${ipr_qml_plugins}
+                ADDITIONAL_MODULES \\\${ipr_qml_plugins} \"$<TARGET_FILE:Qt6::QOffscreenIntegrationPlugin>\"
                 GENERATE_QT_CONF
                 PRE_EXCLUDE_REGEXES \"^ld-linux\" \"^lib(c|m|dl|rt|pthread|resolv)\\.so\"
                 POST_EXCLUDE_REGEXES \"/ld-linux[^/]*$\" \"/lib(c|m|dl|rt|pthread|resolv)\\.so[^/]*$\"

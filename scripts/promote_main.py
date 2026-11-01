@@ -234,7 +234,7 @@ def verify(promoted):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument('--source', required=True, help='tested dev commit')
+    parser.add_argument('--source', help='tested dev commit (required unless --verify)')
     parser.add_argument('--parent', default='main', help='commit the promotion follows (default main)')
     parser.add_argument('--branch', default='main_promotion', help='branch set to the promotion with --write')
     parser.add_argument('--label', default='', help='release label, for the commit message')
@@ -249,6 +249,8 @@ def main(argv=None):
             print(problem, file=sys.stderr)
         print('Promotion verified.' if not problems else f'{len(problems)} problem(s).')
         return 1 if problems else 0
+    if not args.source:
+        parser.error('--source is required to plan or write a promotion')
     if args.write and not args.ci_run_id:
         parser.error('--write needs --ci-run-id: only a commit whose full CI passed is promoted')
     commit = git('rev-parse', '--verify', args.source + '^{commit}').decode().strip()
