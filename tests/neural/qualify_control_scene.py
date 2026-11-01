@@ -62,7 +62,7 @@ def extract(entry,work,tool,profile,manifest,env,identities):
             captured['manifest_sha256']!=identities['manifest'] or
             not captured['calibration_applied'] or captured['iso']!=entry['iso']):
         raise ValueError('Extraction identity, ISO or calibration mismatch')
-    captured.update(group=entry['group'],scene='control_indoor',descriptor=str(descriptor),
+    captured.update(group=entry['group'],scene=entry.get('scene','control_indoor'),descriptor=str(descriptor),
                     descriptor_sha256=digest(descriptor))
     return captured
 

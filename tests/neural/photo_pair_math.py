@@ -116,11 +116,20 @@ def reference_tile(frames,shifts,gains,protocol):
     half=stack[::2].mean(axis=0)-stack[1::2].mean(axis=0)
     valid=stable&np.all(usable,axis=0)
     valid[:16]=False;valid[-16:]=False;valid[:,:16]=False;valid[:,-16:]=False
+    temporal_variance=stack.var(axis=0,ddof=1)
+    temporal_std=(np.sqrt(temporal_variance[valid].mean(axis=0)).tolist() if valid.any() else None)
+    mean_std=(np.sqrt(temporal_variance[valid].mean(axis=0)/len(frames)).tolist() if valid.any() else None)
+    half_rmse=(np.sqrt(np.mean(half[valid]**2,axis=0)).tolist() if valid.any() else None)
     return mean,valid,dict(reference_count=len(frames),stable_fraction=float(stable[16:-16,16:-16].mean()),
         valid_fraction=float(valid[16:-16,16:-16].mean()),
         lowpass_temporal_std_median=float(np.median(deviation[16:-16,16:-16])),
         half_mean_rmse=float(np.sqrt(np.mean(half[16:-16,16:-16]**2))),
-        negative_reference_fraction=float((mean<0).mean()))
+        negative_reference_fraction=float((mean<0).mean()),
+        valid_pixels=int(valid.sum()),temporal_std_valid_rgb=temporal_std,
+        mean_noise_std_if_independent_valid_rgb=mean_std,
+        half_difference_rmse_valid_rgb=half_rmse,
+        half_counts=[len(stack[::2]),len(stack[1::2])],
+        uncertainty='Temporal dispersion includes motion/illumination; mean-noise formula assumes independent stationary frames and excludes common fixed-pattern noise.')
 
 
 def affine_fit(reference_tiles,noisy_tiles,masks,fit_rois):
