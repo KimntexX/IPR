@@ -147,6 +147,7 @@ class Promotion(unittest.TestCase):
         promote.main(['--source', self.dev, '--parent', self.main, '--write', '--ci-run-id', '42'])
         promoted = git(self.root, 'rev-parse', 'main_promotion')
         self.assertEqual(promote.verify(promoted), [])
+        self.assertEqual(promote.main(['--verify', promoted]), 0)
         # A file edited on main, or added there, breaks the correspondence.
         git(self.root, 'checkout', '-q', 'main_promotion')
         self.write('src/core/a.cpp', 'int b;\n')

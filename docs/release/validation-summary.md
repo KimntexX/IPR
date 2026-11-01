@@ -1,6 +1,6 @@
 # Résumé de validation de la release
 
-État au 1er novembre 2026, version `v0.1.80-alpha`. Ce résumé dit ce qui est
+État au 1er novembre 2026, version `v0.1.86-alpha`. Ce résumé dit ce qui est
 validé dans IPR et dans quelles limites. Les mesures, analyses et preuves
 complètes restent sur la branche `dev`, au commit dont cette version est issue
 (voir `release-manifest.json` à la racine) ; les liens ci-dessous y mènent.
