@@ -779,3 +779,87 @@ La scène de contrôle a déjà servi à un premier pilote : elle n'est pas un
 test final vierge ; un futur jeu final indépendant restera nécessaire.
 Pas de nouveau calcul lancé après ce diagnostic, de changement moteur,
 de push, de fusion ou de tag.
+
+## 1er novembre 2026 — transfert du modèle figé à 2048 pas : échec du contrôle
+
+Campagne `neural-reserved-transfer-v001-20261101T222029Z`, banc `84f7d7d`.
+Un seul état évalué : `real_training_long` à 2048 pas, empreinte vérifiée
+contre le diagnostic train-only, force **100** fixée avant mesure. Aucun
+optimiseur, réentraînement, recherche de force ou sélection de checkpoint.
+Les 186 découpes de contrôle restent celles de la première référence
+ISO100 ; pas de substitution de référence ou de modification des masques.
+
+Les seuils de structure sont les quartiles 25 % et 75 % du module du
+gradient vert caméra lissé des **cibles d'apprentissage uniquement** :
+environ 0,00074636 et 0,00344116, en unités caméra par pixel. Les gradients
+de contrôle ne choisissent donc pas leurs propres catégories après rendu.
+Une mesure centrale exclut 24 pixels sur chaque bord de découpe pour
+réduire l'effet du contexte limité des convolutions. Les indicateurs de
+structure requièrent aussi un voisinage 5×5 entièrement valide.
+
+### Erreur de reconstruction et couleur
+
+| ISO de contrôle | Rapport MSE complète | Rapport MSE au centre | Rapport d'erreur opposée couleur au centre |
+| --- | ---: | ---: | ---: |
+| 1600 | 2,02684 | 1,84831 | 12,11289 |
+| 3200 | 0,99396 | 0,92860 | 3,51251 |
+| 6400 | 0,59007 | 0,53095 | 1,72353 |
+| Total pondéré | 1,31050 | 1,20773 | 5,94242 |
+
+Ratios sortie / entrée relativement à la même cible, pondérés par le
+nombre de pixels valides. L'erreur totale augmente donc de **31,05 %**,
+et de **20,77 %** au centre. Un gain MSE est présent à ISO6400, et
+faiblement à ISO3200, mais il ne valide ni la couleur ni les détails.
+Sur l'ensemble des découpes, le rapport d'erreur opposée couleur vaut
+6,74003 ; l'exclusion des bords ne fait pas disparaître le défaut.
+
+« Couleur » désigne ici les axes **R−G et B−G du RGB caméra balancé**,
+pas une chrominance perceptuelle ou un ΔE. Les écarts moyens centraux de
+sortie par rapport aux cibles sont environ (−0,00287 ; −0,00766 ; +0,00696)
+dans les trois canaux caméra. Ils ne permettent pas de déduire directement
+une dominante d'affichage sans développement par le profil et rendu écran.
+
+### Structures : le lissage seul ne suffit pas
+
+Sur les fenêtres de structure forte, le gain de projection des gradients
+sur ceux de la référence passe de **0,72309 à l'entrée à 0,32687 en sortie**.
+Pour les structures faibles : 0,25944 à 0,08379. Cela signale une
+atténuation de la structure corrélée à la référence, sans permettre de
+chiffrer un pourcentage absolu de « détails perdus » : l'entrée n'est déjà
+pas à un gain de 1 et les références restent bruitées/imparfaitement calées.
+
+En parallèle, l'erreur quadratique de gradient baisse sur les structures
+fortes (rapport 0,49676) et faibles (0,18395). **Une réduction de l'erreur
+haute fréquence peut donc coexister ici avec une perte de structure
+corrélée**. Ne pas confondre cette baisse avec une conservation des détails
+ou avec une amélioration photographique visuellement validée.
+
+Preuve complète :
+[transfert du modèle figé v001](../raw/neural-reserved-transfer-v001-20261101T222029Z.json).
+Elle conserve le gel avant inférence, les empreintes des poids et données,
+les définitions des métriques et empreintes des outils, les sommes par découpe,
+les dénominateurs et les agrégations par ISO. Calcul d'inférence et métriques
+environ **1,55 s** sur les découpes, CPU quatre threads ; pas une mesure de
+traitement pleine définition. Aucune interpolation ou modification des
+entrées, aucune saturation artificielle du signal signé.
+
+Huit tests ciblés passent : identité, absence de faux gain à erreur nulle,
+détection de l'aplatissement des gradients, biais couleur signé, voisinages
+invalides, pondération des pixels, régions vides et refus de poids ou
+checkpoint différents. La force zéro reste une identité exacte.
+
+**Conclusion actuelle : ne pas retenir ces poids pour la production ni
+comme candidat de validation visuelle dans IPR.** L'apprentissage prolongé
+réduit l'erreur sur le train, mais ne résout pas le transfert au corpus de
+contrôle et amplifie les défauts de couleur ; prolonger encore les pas
+n'est pas une justification suffisante. Le changement simultané de scène,
+d'éclairage et d'ISO empêche d'en attribuer une cause unique avec ce seul test.
+
+Suite recommandée : travailler sur la diversité et la représentativité du
+jeu d'apprentissage et sur le modèle de bruit conditionnel, notamment aux
+faibles niveaux de bruit, plutôt que chercher une force qui passe sur cette
+scène. Inventorier d'abord les données déjà présentes ; aucune nouvelle
+prise demandée à ce stade. Cette composition a désormais été consultée
+deux fois : ne pas la déclarer test final vierge dans une campagne future.
+Aucun nouveau calcul lancé après ce contrôle, aucun changement moteur,
+publication, fusion ou tag.
