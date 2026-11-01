@@ -94,6 +94,7 @@ ApplicationWindow {
             width: 440
             ActionMenuItem { action: fileActions.copyAction }
             ActionMenuItem { action: fileActions.pasteAction }
+            ActionMenuItem { action: fileActions.applySelectionAction }
             Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.resetAction }
         }
