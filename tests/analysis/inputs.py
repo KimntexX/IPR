@@ -4,10 +4,17 @@ import json
 import math
 from pathlib import Path
 
+from PIL import Image
+
 from .catalog import group_for, bounds_for
 from .native import local_path, read_json, sha256, embedded_metadata
 from .catalog import GROUPS
 from .audit import field_for, finite_number
+
+
+def image_size(path):
+    with Image.open(path) as image:
+        return image.size
 
 
 def feature_folder(feature):
@@ -108,6 +115,8 @@ def base_records(base, groups):
                     if all(xmp.get(k) == baseline.get(k) for k in (xmp.keys() | baseline.keys()) - ignored):
                         matches.append(candidate)
                 unique = {sha256(p): p for p in matches}
+                if len(unique) > 1:   # a neutral exported at several sizes: the variant's own size
+                    unique = {d: p for d, p in unique.items() if image_size(p) == image_size(path)}
                 if len(unique) > 1:
                     raise ValueError("Ambiguous LR reference: " + str(path))
                 record = {"scene": scene, "engine": "LR", "feature": feature, "value": value,

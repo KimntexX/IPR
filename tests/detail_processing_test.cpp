@@ -175,6 +175,64 @@ int main()
     passed &= check(cv::norm(component(colorEdgeFiltered), component(colorEdge), cv::NORM_INF) < 2e-7,
                     "color-border processing must preserve per-pixel Y");
 
+    // Luminance grain on a saturated colour must stay grain, not become
+    // saturation speckle: the colour denoise works on chroma relative to Y.
+    cv::Mat grain(256, 256, CV_32FC3);
+    {
+        cv::RNG rng(9);
+        const cv::Vec3f orange(.40f, .20f, .05f);
+        for (int y = 0; y < grain.rows; ++y)
+            for (int x = 0; x < grain.cols; ++x)
+                grain.at<cv::Vec3f>(y, x) = orange * std::max(.05f, 1.f + static_cast<float>(rng.gaussian(.25)));
+    }
+    auto grainFiltered = grain.clone();
+    DetailProcessing::reduceNoise(grainFiltered, {0, 100});
+    const auto relativeChromaSpread = [&](const cv::Mat &image) {
+        cv::Mat ratio;
+        cv::divide(component(image, 1), component(image, 0), ratio);
+        cv::Scalar mean, deviation;
+        cv::meanStdDev(ratio, mean, deviation);
+        return deviation[0] / std::abs(mean[0]);
+    };
+    std::cout << "luminance_grain_relative_chroma_spread=" << relativeChromaSpread(grainFiltered) << '\n';
+    passed &= check(relativeChromaSpread(grainFiltered) < .01,
+                    "luminance grain must keep its hue and saturation after colour denoise");
+    passed &= check(cv::norm(component(grainFiltered), component(grain), cv::NORM_INF) < 2e-6,
+                    "colour denoise must leave luminance grain untouched");
+
+    // Colour denoise strength follows the setting, at full and preview scales
+    // (the preview uses a 3 x 3 median and scaled filters).
+    for (const double scale : {1.0, 0.25}) {
+        double previousChroma = 1.;
+        for (int value : {1, 10, 25, 50, 100}) {
+            auto filtered = original.clone();
+            DetailProcessing::reduceNoise(filtered, {0, value}, scale);
+            const double ratio = chromaSigma(filtered) / chromaSigma(original);
+            std::cout << "chroma scale=" << scale << " amount=" << value << " sigma_ratio=" << ratio << '\n';
+            passed &= check(ratio <= previousChroma + .003, "colour denoise should progress with the setting");
+            if (value == 1)
+                passed &= check(ratio > .7, "colour denoise at 1 must stay gentle");
+            if (value == 100)
+                passed &= check(ratio < .3, "colour denoise at 100 should remove flat-field colour noise");
+            passed &= check(cv::norm(component(filtered), component(original), cv::NORM_INF) < 2e-7,
+                            "colour denoise must preserve per-pixel Y at every scale");
+            previousChroma = ratio;
+        }
+    }
+
+    // Images smaller than the filters must stay finite and keep their luminance.
+    for (const cv::Size size : {cv::Size(1, 1), cv::Size(2, 3), cv::Size(7, 5)}) {
+        for (const double scale : {1.0, 0.25}) {
+            cv::Mat tiny = noisy(.05f, .005f, true)(cv::Rect(cv::Point(), size)).clone();
+            const auto tinyOriginal = tiny.clone();
+            DetailProcessing::reduceNoise(tiny, {100, 100}, scale);
+            passed &= check(tiny.size() == size && cv::checkRange(tiny, true, nullptr, 0., 10.),
+                            "tiny images must stay finite and nonnegative");
+            passed &= check(std::abs(cv::mean(component(tiny))[0] / cv::mean(component(tinyOriginal))[0] - 1.) < .05,
+                            "tiny images must keep their mean luminance");
+        }
+    }
+
     // Coloured HDR noise must not be clipped to SDR by reconstruction.
     auto hdr = noisy(2.f, .02f, true);
     DetailProcessing::reduceNoise(hdr, {100, 100});
