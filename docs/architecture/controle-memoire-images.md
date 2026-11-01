@@ -1,3 +1,5 @@
+*[Français](controle-memoire-images.md) | [English](controle-memoire-images_en.md)*
+
 # Contrôle mémoire et navigation
 
 Décision : [ADR-0015](../decisions/ADR-0015-controle-memoire-et-prechargement.md).

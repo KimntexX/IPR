@@ -17,6 +17,9 @@ Ce fichier est le point d'entrée unique de la documentation versionnée. Il dis
 
 ## Règles de gouvernance
 
+Relecture courante : [audit documentaire du 22 octobre 2026](reports/documentation-audit-2026-10-22.md).
+La traduction globale reste conditionnée à la vérification du socle français.
+
 Mise en forme des documents : [conventions LaTeX communes](AGENTS.md).
 
 Cours de fond : [architecture des images numériques — PDF](scholar/cours-11-architecture-images.pdf)

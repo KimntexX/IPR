@@ -1,3 +1,5 @@
+*[Français](ADR-0005-melangeur-huit-bandes-luminance-bornee.md) | [English](ADR-0005-melangeur-huit-bandes-luminance-bornee_en.md)*
+
 # ADR-0005 — Mélangeur huit bandes et luminance sélective bornée
 
 - **Date :** 4 octobre 2026
@@ -5,6 +7,13 @@
 - **Complète :** ADR-0001 (sidecar), ADR-0002 (rendu), ADR-0004 (préférences)
 
 ## Contexte
+
+**Lecture au 31 octobre 2026 :** cette décision conserve le modèle initial
+du4octobre et ses migrations. Le mélangeur courant a évolué vers les tables
+de réponse décrites dans le [rapport unique](../validation/analyses/analyse-color-mixer.md).
+Le master et ses coefficients de luminance relèvent maintenant de l'ADR-0009.
+Les anciens commutateurs de comparaison cités à la fin ne sont pas une recette
+CLI actuelle : utiliser le [guide des analyseurs](../validation/tools/analyseurs-groupes.md).
 
 La campagne HSL a montré une attribution des gris à H=0, des gains de luminance
 positive de plus de ×20 dans certaines zones sombres et un couplage saturation/Y.

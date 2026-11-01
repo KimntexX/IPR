@@ -1,0 +1,53 @@
+% translation-source: docs/user/latex/chapters/02-navigation-comparaison.tex; sha256: 1f9404cd44ced347dbc88730edc212d7639d19454714d8714ef40131b766c876
+\chapter{Navigation, zoom and comparison}
+\label{chap:navigation}
+\section{Move between images}
+Click a thumbnail to open its photo. Its outline and bold name identify the
+image actually open, independently of multiple-selection checkboxes. When the
+filmstrip is collapsed, previous and next buttons appear at the bottom right
+of the image area. Hovering shows the destination name; navigation stops at
+the folder boundaries.
+
+The centered button above the filmstrip collapses it. When hidden, this button
+returns to the bottom of the view and reopens it. Its state is remembered.
+Arrow keys are not global shortcuts for changing photos.
+
+\section{Examine details}
+Click the photo to switch from fit-to-view to a magnified view, then click
+again without moving the mouse to return to fit-to-view. When the image
+extends beyond the view, hold the left mouse button and drag to inspect it.
+Clicking an empty margin does not trigger zoom.
+
+\paragraph{Keyboard and wheel.}
+\touche{Ctrl + +} zooms in; \touche{Ctrl + $-$} zooms out.
+\touche{Ctrl + 0} fits the view and \touche{Ctrl + 1} displays at 100\,\%.
+\touche{Ctrl + wheel} zooms around the pointer. Without Ctrl, the wheel pans
+the magnified image; \touche{Shift + vertical wheel} pans horizontally.
+The corresponding buttons remain available above the photo.
+
+\attention{100\,\% means one preview pixel per view unit; the interactive
+preview may be smaller than the full-resolution source. Export is rebuilt
+independently at its intended resolution.}
+
+\section{Show a split comparison}
+Click \emph{Before/after} or use \touche{Ctrl + Shift + Y} when both previews
+are ready. The original is on the left and the current state on the right.
+Drag the divider to set their widths. Both sides share zoom and pan.
+
+\section{Temporarily view the original}
+Focus the image view, then hold \touche{Space}. Releasing returns to the
+previous presentation, including split comparison if active. The \emph{Original}
+button has the same effect while held down. This does not apply to typing in
+a numeric field. Changing photos resets the view and comparison.
+
+\attention{The original is the development reference exposed by IPR, not the
+raw sensor mosaic or necessarily the camera JPEG. Changing the development
+profile may change this reference.}
+
+\section{Photo context menu}
+Right-click the view to open photo actions: export, adjustment reset and file
+commands. Right-clicking does not zoom. With the view focused,
+\touche{Shift + F10} or the Menu key also opens this menu.
+Reset requires confirmation; there is no general undo.
+Save is connected; Duplicate remains disabled until its engine connection
+is available in this reference version.

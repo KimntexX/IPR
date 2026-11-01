@@ -1,0 +1,89 @@
+% translation-source: docs/user/latex/ipr-livre-utilisateur.tex; sha256: 643edb649e1bf306fdf6c94ec84157cb40745454fdc78cfd448ce31c3809dcc1
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{0 pt}
+\setlength{\parskip}{0.5\baselineskip}
+\setlength{\emergencystretch}{3em}
+% Keep the short instructional paragraphs together, as in the French edition.
+\interlinepenalty=10000
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\raggedbottom
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{array,longtable,booktabs}
+\usepackage{etoolbox}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\AtBeginEnvironment{longtable}{\setlength{\parskip}{0 pt}\interlinepenalty=0}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black,
+ pdftitle={IPR -- User guide},pdfauthor={IPR project},pageanchor=false}
+\newcommand{\touche}[1]{\textsf{#1}}
+\newcommand{\chemin}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\attention}[1]{\par\noindent\textbf{Remember.} #1\par}
+\newcommand{\gestesreglages}{\paragraph{Gestures and keyboard.}
+Click the slider to focus it, then use arrow keys to advance by that setting's
+declared step. The numeric field accepts direct input confirmed with
+\touche{Enter}. Double-clicking the name or slider, or clicking its reset arrow,
+restores its reference. Right-clicking the name or slider also exposes reset
+and numeric input. Double-clicking the curve graph has a different function.}
+\begin{document}
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\Huge\bfseries IPR\par}
+\vspace{0.5cm}
+{\LARGE User guide\par}
+\vspace{1cm}
+{\large Open, develop, compare and export your photos\par}
+\vfill
+English edition -- alpha prototype\par
+Interface integrated into \texttt{dev} (\texttt{b19b4c3})\par
+Reconciled reference: 31 October 2026\par
+\vfill
+\begin{minipage}{0.88\textwidth}
+This book describes available commands, their gestures and limitations.
+It does not certify rendering for every camera or describe future functions.
+Reserved chapters are intentionally empty.
+\end{minipage}
+\end{titlepage}
+\pagenumbering{roman}
+\hypersetup{pageanchor=true}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+\part{Getting started with IPR}
+\input{chapters/01-demarrage_en}
+\input{chapters/02-navigation-comparaison_en}
+\input{chapters/03-informations-selection_en}
+\part{Integrated adjustment families}
+\input{chapters/04-raw-profils_en}
+\input{chapters/05-lumiere_en}
+\input{chapters/06-courbes_en}
+\input{chapters/07-couleur_en}
+\input{chapters/08-melangeur_en}
+\input{chapters/09-grading_en}
+\input{chapters/10-effets_en}
+\input{chapters/11-bruit_en}
+\input{chapters/12-nettete_en}
+\input{chapters/13-optique_en}
+\part{Customize and deliver}
+\input{chapters/14-preferences_en}
+\input{chapters/15-export_en}
+\input{chapters/16-depannage_en}
+\part{Reserved families}
+\input{chapters/17-recadrage-geometrie_en}
+\input{chapters/18-masques-retouche_en}
+\input{chapters/19-ia_en}
+\appendix
+\input{chapters/20-raccourcis_en}
+\input{chapters/21-glossaire_en}
+\end{document}

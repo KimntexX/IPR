@@ -1,0 +1,40 @@
+% translation-source: docs/user/latex/chapters/11-bruit.tex; sha256: e174c4361e3f9d35ac2f47cd6819d91abd76e188c2fea467f445ef9deb83be27
+\chapter{Noise reduction}
+\section{Master control and advanced settings}
+The \emph{Noise reduction} slider spans 0 to 100, with zero as reference.
+It controls luminance and color together, with a different progression for
+each component. Its scale is not equivalent to Lightroom's. Open
+\emph{Advanced} to adjust the two components independently. A custom pair
+may display \emph{Custom} on the master control.
+
+\section{Separate two components}
+\emph{Luminance noise} targets brightness fluctuations; \emph{Color noise}
+targets unwanted chromatic variations. Both controls span0 to 100 and default
+to zero. Their presence does not mean the engine uses AI equivalent to another
+application's.
+
+\section{Experimental RAW path}
+\emph{Signed RAW signal, before profiles (experimental)} is off by default.
+For a compatible RAW and camera context, it selects denoising before optical
+corrections and DCP rendering. Changing this may require re-decoding.
+Without a compatible context, the classic path remains active; the checkbox
+alone therefore does not establish the effective processing path.
+This is session state, not an option guaranteed to persist in the sidecar.
+Do not confuse strengths with this path selection. The current prototype
+is not neural. Stabilization does not mean it perfectly preserves all details;
+the neural approach is planned for beta and is not available in this version.
+
+\section{How to use it}
+First correct the useful exposure and examine a fairly uniform dark region,
+then a textured region. Gradually increase color reduction if colored blotches
+are visible. Then adjust luminance while checking hair, fabric and fine detail.
+Return to fit-to-view to assess the overall impression.
+
+\paragraph{Example.}
+For a high-ISO photo, do not judge only the dark background. Also compare
+texture and a sharp edge. Use \touche{Ctrl + 1}, remembering the preview's
+resolution, then inspect a full-resolution export before a final detail decision.
+
+\attention{Stronger noise reduction may remove real detail. A Lightroom
+reference made with AI denoising is not an equal-algorithm comparison.}
+\gestesreglages

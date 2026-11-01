@@ -1,0 +1,1971 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-31T12:44:38.093009+00:00",
+  "counts": {
+    "missing": 147,
+    "present_unverified": 42,
+    "source_changed": 0,
+    "wrong_source": 0,
+    "source_hash_matches": 51
+  },
+  "scopes": {
+    "live_reference": {
+      "missing": 59,
+      "present_unverified": 32,
+      "source_changed": 0,
+      "wrong_source": 0,
+      "source_hash_matches": 51
+    },
+    "learning_material": {
+      "missing": 29,
+      "present_unverified": 2,
+      "source_changed": 0,
+      "wrong_source": 0,
+      "source_hash_matches": 0
+    },
+    "analysis_report": {
+      "missing": 30,
+      "present_unverified": 1,
+      "source_changed": 0,
+      "wrong_source": 0,
+      "source_hash_matches": 0
+    },
+    "historical_record": {
+      "missing": 29,
+      "present_unverified": 7,
+      "source_changed": 0,
+      "wrong_source": 0,
+      "source_hash_matches": 0
+    }
+  },
+  "records": [
+    {
+      "source": "docs/architecture/build-windows-standalone.md",
+      "source_sha256": "6f291b135ee1412ad5af0dd2220ac52c838463b072d7b5eb726f078b59728cf7",
+      "bytes": 3400,
+      "english": "docs/architecture/build-windows-standalone_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/architecture/chemin-ouverture-raw.md",
+      "source_sha256": "13efab9c74f0620cdf6a4b626ed6df86ef36b3e4ba215feaccd18f7e452a3672",
+      "bytes": 5680,
+      "english": "docs/architecture/chemin-ouverture-raw_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/ci-et-build-multiplateforme.md",
+      "source_sha256": "19afbca06a8c227ab2cc2c6137b177a0d0876999bcc012adb0528a93c292a973",
+      "bytes": 22359,
+      "english": "docs/architecture/ci-et-build-multiplateforme_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/architecture/controle-memoire-images.md",
+      "source_sha256": "29931dff185ce05893900d161c6c3891a59cb914bfd92d28b9d49147058c7a88",
+      "bytes": 3683,
+      "english": "docs/architecture/controle-memoire-images_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/architecture/denoising-sharpening.md",
+      "source_sha256": "b534d6cdedf74f41d7c8e1ab6ab0e950ecbc99be3744c7cb8d34934bdfd65412",
+      "bytes": 12814,
+      "english": "docs/architecture/denoising-sharpening_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/architecture/empilement-et-panorama.md",
+      "source_sha256": "3063bcc8746f3b956728c9eb850cf102b7716e38381532c9d9c0123b2f3aad0e",
+      "bytes": 14028,
+      "english": "docs/architecture/empilement-et-panorama_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/gestion-branches-git.md",
+      "source_sha256": "8772d155e8996cc2ab2089e36f52b80d315191dd8dcbaa2f25342103ff23cc99",
+      "bytes": 6943,
+      "english": "docs/architecture/gestion-branches-git_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/architecture/gestion-couleurs-affichage.md",
+      "source_sha256": "a741d181855e56fde6a60514c823315572cafdd150f0ff37f5f4b0e066ee7227",
+      "bytes": 8731,
+      "english": "docs/architecture/gestion-couleurs-affichage_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/import-images.md",
+      "source_sha256": "b436673e6ea15141dbf10efece09e08802a188c02dd478faac5c4fb922626c48",
+      "bytes": 4699,
+      "english": "docs/architecture/import-images_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/architecture/integration-rec2020.md",
+      "source_sha256": "d51487bf8ac0d02cb2d104e80c700dc80c2ec178d894aad19fc53b8c311ee2d9",
+      "bytes": 20834,
+      "english": "docs/architecture/integration-rec2020_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/README.md",
+      "source_sha256": "05c468aff1d51eb26a27056fccea07b311c847f11f0acc3d862bde08b711deef",
+      "bytes": 4745,
+      "english": "docs/architecture/README_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/architecture/references/etude-autonomie-profils-camera.md",
+      "source_sha256": "f4a59d8aee86817512c601bd830c5062581c146b582a4062d056827a3f2dc460",
+      "bytes": 38092,
+      "english": "docs/architecture/references/etude-autonomie-profils-camera_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/references/guide-creation-profils-dcp-2026-10-01.md",
+      "source_sha256": "a1f1bdb11b1c041bcf817474ce82d7992171db5fa172f4c2a82d869dcc121792",
+      "bytes": 9876,
+      "english": "docs/architecture/references/guide-creation-profils-dcp-2026-10-01_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/architecture/references/note-utilisation-profils-adobe-camera-raw-2026-10-01.md",
+      "source_sha256": "d02bafe1c3e4ab61c026b8ee68a68f1ddd1abe0a42913beb7366970bda80937d",
+      "bytes": 2930,
+      "english": "docs/architecture/references/note-utilisation-profils-adobe-camera-raw-2026-10-01_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/architecture/references/rapport-dependances-opencv-libraw-2026-10-01.md",
+      "source_sha256": "104181ff3ec31b83e240876c78afd4c37695cc1eb30e4222b69aa606c03cb422",
+      "bytes": 6528,
+      "english": "docs/architecture/references/rapport-dependances-opencv-libraw-2026-10-01_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/architecture/references/README.md",
+      "source_sha256": "719e3110fb15c21cf3fcdc880d1768408ba4c11c946684b34c1613cd88c1243e",
+      "bytes": 623,
+      "english": "docs/architecture/references/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/architecture/roadmap-beta.md",
+      "source_sha256": "f876f4fac3ed48584105ba44e5e508c4ae6a4a47a5ebc0339d383b18135630c4",
+      "bytes": 16868,
+      "english": "docs/architecture/roadmap-beta_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/architecture/roadmap-couche-image-sans-opencv.md",
+      "source_sha256": "147557050c3e5aef8a29bc2e2792939e13a095997e39108cf14c39c90734f936",
+      "bytes": 3266,
+      "english": "docs/architecture/roadmap-couche-image-sans-opencv_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/roadmap-decodeurs-raw.md",
+      "source_sha256": "fd06fc180e1cb79e4841a090be8cda2a87d50198ebc426cc9fd61d07b659964b",
+      "bytes": 18362,
+      "english": "docs/architecture/roadmap-decodeurs-raw_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/roadmap-fonctions-lightroom.md",
+      "source_sha256": "2be3ce4c7a3952f0e248c9cab8b2f5cb505fda5612eca06c177112702812efab",
+      "bytes": 6690,
+      "english": "docs/architecture/roadmap-fonctions-lightroom_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/roadmap-lumieres.md",
+      "source_sha256": "ffc90aaa85d9f303c808e322e7dcac954435a13882f8161f4b5b921f43b6acec",
+      "bytes": 10806,
+      "english": "docs/architecture/roadmap-lumieres_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/roadmap-ouverture-raw.md",
+      "source_sha256": "73f3ebdc683f60ee3a075853538933f286b6942a64a0ace5a8c9ca8e0872dc7e",
+      "bytes": 10862,
+      "english": "docs/architecture/roadmap-ouverture-raw_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/suivi-raccordements-ihm.md",
+      "source_sha256": "ad5387e5813be085cc28925a6007558f5b3ac9a4d47231a9f76a6e36cc205cef",
+      "bytes": 47538,
+      "english": "docs/architecture/suivi-raccordements-ihm_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/architecture/tests-cibles-et-build-windows.md",
+      "source_sha256": "c9fea788279446a5710fc50702dcf2bb25c0ae1d8cf9dbeb2b7daac1a7b65cba",
+      "bytes": 11000,
+      "english": "docs/architecture/tests-cibles-et-build-windows_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/architecture/ui-preferences.md",
+      "source_sha256": "bde06f6be290950c9c5a06dd7fa48b1195229318f49b542cc33a1eb4f9a1479d",
+      "bytes": 9836,
+      "english": "docs/architecture/ui-preferences_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/camera-profile-engine.md",
+      "source_sha256": "3647e2cd17260d526676be7203e8d96ce72fbbf3e1ecff152666bb13cedd97ee",
+      "bytes": 40732,
+      "english": "docs/camera-profile-engine_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/decisions/ADR-0001-sidecar-ipr.md",
+      "source_sha256": "b500eb144c560a7bbd3022b2e30ba287d26751236329a71108446c5cb8b367a1",
+      "bytes": 2490,
+      "english": "docs/decisions/ADR-0001-sidecar-ipr_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0002-pipeline-lineaire-et-calibration.md",
+      "source_sha256": "fcf897948567b6215c263992467174f8d916469a198439ce0a16e694a003190f",
+      "bytes": 2230,
+      "english": "docs/decisions/ADR-0002-pipeline-lineaire-et-calibration_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0003-profils-dcp-lcp-locaux.md",
+      "source_sha256": "2577d6f698de04912a0ab2deded79b887fd9a0fbefa86f38347391a789223b4c",
+      "bytes": 1576,
+      "english": "docs/decisions/ADR-0003-profils-dcp-lcp-locaux_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0004-preferences-ihm-ini.md",
+      "source_sha256": "2312501c004afe02cd94a102d7705156d3f8544a961bead4a32a43dfaf133426",
+      "bytes": 2647,
+      "english": "docs/decisions/ADR-0004-preferences-ihm-ini_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0005-melangeur-huit-bandes-luminance-bornee.md",
+      "source_sha256": "98f3a51f8d49c697b2a9c0ad0f5478465f51bc450e81aaea80ac0d4972340237",
+      "bytes": 5055,
+      "english": "docs/decisions/ADR-0005-melangeur-huit-bandes-luminance-bornee_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0006-restauration-raw-et-retouche-profil.md",
+      "source_sha256": "54ed910b0603ba9126e4caad9dbf105df5f87c64b1d0fb8072eee4f8aa3f0e77",
+      "bytes": 5094,
+      "english": "docs/decisions/ADR-0006-restauration-raw-et-retouche-profil_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0007-calibration-raw-par-defaut.md",
+      "source_sha256": "943fb1981f9e8d81a442c17e6d736d37a229db9e22163b28d65e07b73c15aa16",
+      "bytes": 3394,
+      "english": "docs/decisions/ADR-0007-calibration-raw-par-defaut_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0008-separation-travail-affichage-export.md",
+      "source_sha256": "f6de40392a7533f9fce68e92f57aebbbf5e9c5253c5b95664cc784d619e8a328",
+      "bytes": 4153,
+      "english": "docs/decisions/ADR-0008-separation-travail-affichage-export_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0009-espace-travail-rec2020-lineaire.md",
+      "source_sha256": "4d813a015cac905e0b29cbddf234fc7ea833177b3a5e1a22bbd78763db7ae61a",
+      "bytes": 2612,
+      "english": "docs/decisions/ADR-0009-espace-travail-rec2020-lineaire_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0010-compensation-rendu-par-profil-dcp.md",
+      "source_sha256": "c30e47af8f918912941167d7dab3e1130b6988ab4c232b77a7e2bec3a32b33f0",
+      "bytes": 6239,
+      "english": "docs/decisions/ADR-0010-compensation-rendu-par-profil-dcp_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0011-regles-raw-par-mode-et-configuration-vivante.md",
+      "source_sha256": "20e325bfc78c22beedceb77b5f4f366d223491695b8ae726d9ec9efb8ae71611",
+      "bytes": 6329,
+      "english": "docs/decisions/ADR-0011-regles-raw-par-mode-et-configuration-vivante_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0012-formats-extensibles-et-caracterisations.md",
+      "source_sha256": "e738cdb49b7b12a9625eeea43984d526928b7c1292837057a9c4f24e6a470e70",
+      "bytes": 10636,
+      "english": "docs/decisions/ADR-0012-formats-extensibles-et-caracterisations_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0013-contrat-import-commun.md",
+      "source_sha256": "3a3bda468e1fba0790a728603f0f521e3539b02c3c87c23ad4e59b437057f20d",
+      "bytes": 2415,
+      "english": "docs/decisions/ADR-0013-contrat-import-commun_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0014-cache-profils-prepares.md",
+      "source_sha256": "8b1f0e96c7d229391785ad73c935839ddbc97e7ff02e3112a7fd31951d78bf57",
+      "bytes": 4416,
+      "english": "docs/decisions/ADR-0014-cache-profils-prepares_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0015-controle-memoire-et-prechargement.md",
+      "source_sha256": "3d6b1704d57a7babc6f6e12dfcc2f1bcea34f753fd5dfe6f4a801f3e3c01309e",
+      "bytes": 7940,
+      "english": "docs/decisions/ADR-0015-controle-memoire-et-prechargement_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0016-minimum-qt-6-8.md",
+      "source_sha256": "579ea67632257309ab8f3246ed5496988f07213ea46d1ee0fc247f3b23097619",
+      "bytes": 2400,
+      "english": "docs/decisions/ADR-0016-minimum-qt-6-8_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0017-imageeditor-cadenceur-modules.md",
+      "source_sha256": "1a051e9dfc6bca8d30f7a5343570bf1000b3ae1da3a01f2d720d8b96a86bb489",
+      "bytes": 4587,
+      "english": "docs/decisions/ADR-0017-imageeditor-cadenceur-modules_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0018-independance-decodage-raw-et-couche-image.md",
+      "source_sha256": "8de5e5ba8d13d66bf45fb940e6af0362ae2716b291057f83b946b0b2cf996e9a",
+      "bytes": 7554,
+      "english": "docs/decisions/ADR-0018-independance-decodage-raw-et-couche-image_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0019-analyses-ipr-en-memoire.md",
+      "source_sha256": "bdf937250717f01009ebfdc75881f56d993bfb11b79c93d39539b6c1fe902529",
+      "bytes": 4538,
+      "english": "docs/decisions/ADR-0019-analyses-ipr-en-memoire_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/ADR-0020-lecture-permanente-des-noirs.md",
+      "source_sha256": "40ad3d560d47a439e3249f43ff9f69658a5a9525a641053a6cabb6ebefadda89",
+      "bytes": 2742,
+      "english": "docs/decisions/ADR-0020-lecture-permanente-des-noirs_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/decisions/README.md",
+      "source_sha256": "bdb672d6b468dddaeb3a3b4a93a1bb2e6959342676b51ee79c3156945c1b3107",
+      "bytes": 4087,
+      "english": "docs/decisions/README_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/imageeditor-render-working-image.md",
+      "source_sha256": "54d0d6af9bf484325f74427ccd05599ff26aefe7bbcd3bea81ca5330e0112df2",
+      "bytes": 40703,
+      "english": "docs/imageeditor-render-working-image_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/INDEX.md",
+      "source_sha256": "48270444927d63bd9b65c5c9614317c879da92ffe3939dc4af08b95522e203b0",
+      "bytes": 3037,
+      "english": "docs/INDEX_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/installation-opencv-windows.md",
+      "source_sha256": "3ee41dc48a0c101c3a4c7bfbf568bcb3c046610f22aa96939e24cf4b50d38706",
+      "bytes": 11452,
+      "english": "docs/installation-opencv-windows_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/README.md",
+      "source_sha256": "004cce5c596b2d2a7422a793ebd6f52b0c6214261677d3706cdeb44081b365d2",
+      "bytes": 188,
+      "english": "docs/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/reports/archive/exports/export-codex-2026-10-01.md",
+      "source_sha256": "1e41bfb9974b0c1cade17f13028932d63e4bee923e82b8b3ab4e9e130848dcbf",
+      "bytes": 9955,
+      "english": "docs/reports/archive/exports/export-codex-2026-10-01_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/exports/README.md",
+      "source_sha256": "e0ca6690106dcaa30c0081351dd4e5323b4fd2f4776a52e3234e7bb09065f89f",
+      "bytes": 150,
+      "english": "docs/reports/archive/exports/README_en.md",
+      "scope": "historical_record",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/reports/archive/README.md",
+      "source_sha256": "9f7d76b756a0a2419f2e02940d635db6c1bdac0c1cdd8268ad53bd39a9b6760b",
+      "bytes": 444,
+      "english": "docs/reports/archive/README_en.md",
+      "scope": "historical_record",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-actions-architecture-2026-09-26-14-38-34.md",
+      "source_sha256": "aeebe9dc5eeea25b1169ca27294bbd8b35205c856808511aeec35a3bd2569fc9",
+      "bytes": 11896,
+      "english": "docs/reports/archive/technical/rapport-actions-architecture-2026-09-26-14-38-34_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-comparaison-cr2-cr3-correctif-balance-blancs-2026-09-27-13-47-36.md",
+      "source_sha256": "6e78d7d938191908b6ba9675051b405ff42bc34f8ec627c67f7b280d8d1e5de2",
+      "bytes": 5572,
+      "english": "docs/reports/archive/technical/rapport-comparaison-cr2-cr3-correctif-balance-blancs-2026-09-27-13-47-36_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-diagnostic-cr3-profils-adobe-2026-09-27-19-52-30.md",
+      "source_sha256": "00ba98d342f46d861d8aac42e1e50f3ec3f8cc48d9e843cd6485dae694593ee0",
+      "bytes": 6149,
+      "english": "docs/reports/archive/technical/rapport-diagnostic-cr3-profils-adobe-2026-09-27-19-52-30_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-effets-2026-09-30.md",
+      "source_sha256": "e5a5e4d29a761a033eafe65a67f7a848b17af83ad026c746059a95205d6fb7ff",
+      "bytes": 1852,
+      "english": "docs/reports/archive/technical/rapport-effets-2026-09-30_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-gestion-couleurs-2026-09-30.md",
+      "source_sha256": "322ca6d6c7fad9e82459317129806d550d0260deea327b1b532da034ae1b23fd",
+      "bytes": 2005,
+      "english": "docs/reports/archive/technical/rapport-gestion-couleurs-2026-09-30_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-licences-et-architecture-raw-2026-09-27-14-30-21.md",
+      "source_sha256": "4ebebe28a95056ea10958623ec6034157f6eb0e6313e39e9ce301d1808bb890a",
+      "bytes": 10102,
+      "english": "docs/reports/archive/technical/rapport-licences-et-architecture-raw-2026-09-27-14-30-21_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-moteur-profils-dcp-lcp-2026-09-27-15-58-19.md",
+      "source_sha256": "2d37585480f040a697a250448bffe51f19e4671bf235dcbc4d7c44458732dfa9",
+      "bytes": 9201,
+      "english": "docs/reports/archive/technical/rapport-moteur-profils-dcp-lcp-2026-09-27-15-58-19_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-optimisation-performance-2026-10-01.md",
+      "source_sha256": "e178ffa0241cb5a6541f9a4303539b684c8043b9355c4d1ea9e7db54f32ac5e0",
+      "bytes": 15453,
+      "english": "docs/reports/archive/technical/rapport-optimisation-performance-2026-10-01_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-ouverture-cr3-6V1A9933-2-2026-09-30.md",
+      "source_sha256": "1c44d7bf5fc4a2a6edb47de2a7553c1c04f1948f27d9c72a41c376deb48a2ec4",
+      "bytes": 3726,
+      "english": "docs/reports/archive/technical/rapport-ouverture-cr3-6V1A9933-2-2026-09-30_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-pipeline-couleur-2026-09-26-15-08-14.md",
+      "source_sha256": "8ea7fa258af439f1972061a9377c4c17972d16b8752eca59555f1c9be582acf7",
+      "bytes": 7869,
+      "english": "docs/reports/archive/technical/rapport-pipeline-couleur-2026-09-26-15-08-14_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/rapport-support-dng-comparaison-wsl-2026-09-27-20-24-14.md",
+      "source_sha256": "6881dfe065ed1abaf455d15b68a4c71e1f8e2f1b72eab43deeea6fad365b36f8",
+      "bytes": 5620,
+      "english": "docs/reports/archive/technical/rapport-support-dng-comparaison-wsl-2026-09-27-20-24-14_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/archive/technical/README.md",
+      "source_sha256": "21c2ebb1f10b2b84a2bca5b147a3b08228875a2e7a9c0de03964063a5e0f326c",
+      "bytes": 1112,
+      "english": "docs/reports/archive/technical/README_en.md",
+      "scope": "historical_record",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/reports/documentation-audit-2026-10-22.md",
+      "source_sha256": "f5ec939a5d1953a60aa56da343d79735aece663c6789f791101bf72fa4533f75",
+      "bytes": 11357,
+      "english": "docs/reports/documentation-audit-2026-10-22_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/documentation-audit-2026-10-31.md",
+      "source_sha256": "5b8954c4cb521ea6024d088857868bd6fb8974e46faab333d8039a26bdf5059d",
+      "bytes": 6202,
+      "english": "docs/reports/documentation-audit-2026-10-31_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/reports/migration-registry.md",
+      "source_sha256": "00dd68afeb337582a2677baa796d3269529fc5e1a8a0a6f14e15cb4d975733fb",
+      "bytes": 1940,
+      "english": "docs/reports/migration-registry_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/README.md",
+      "source_sha256": "a0adc85d11a1d6838e391d61ac395625264ea52094fd5c90bae2fd9ae02a226a",
+      "bytes": 1872,
+      "english": "docs/reports/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/reports/sessions/documentation-inventory-2026-10-11.md",
+      "source_sha256": "c039702fd27fa3f6c757f179cf278e52498e9254bcd7fbabf18f1244e71bcbc2",
+      "bytes": 4730,
+      "english": "docs/reports/sessions/documentation-inventory-2026-10-11_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/rapport-session-2026-09-25-11-53-15.md",
+      "source_sha256": "dff191fdcbe47f22b9b4c6d53f2d5cfdf814e2ea96b6d561bbdab889e6004eca",
+      "bytes": 14456,
+      "english": "docs/reports/sessions/rapport-session-2026-09-25-11-53-15_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/rapport-session-2026-09-27.md",
+      "source_sha256": "87b54260c41f07da42d7587d1959eef766f1d10d82360c4e8a44b02b0dfa49d8",
+      "bytes": 17946,
+      "english": "docs/reports/sessions/rapport-session-2026-09-27_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/rapport-session-2026-09-28.md",
+      "source_sha256": "0395baad3b0cdef4b22ef16e1941cf5304bc81a28dd0d94ac692ceb362ad7230",
+      "bytes": 9872,
+      "english": "docs/reports/sessions/rapport-session-2026-09-28_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/rapport-session-2026-09-29.md",
+      "source_sha256": "d70f3d573d00b25fee67bc053d84db8aec24433c9eef1ec1bb541606d9c2008b",
+      "bytes": 11135,
+      "english": "docs/reports/sessions/rapport-session-2026-09-29_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/rapport-session-2026-09-30.md",
+      "source_sha256": "303eb5a57b69fb1385e4b5cb2b0fb425e76377cb60f347d148e3fc8b3eda3f7e",
+      "bytes": 1774,
+      "english": "docs/reports/sessions/rapport-session-2026-09-30_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/rapport-session-2026-10-01.md",
+      "source_sha256": "775b42d0627d4145620edca0cddcf53a28729a094b30de678a730ac1e53a371e",
+      "bytes": 19362,
+      "english": "docs/reports/sessions/rapport-session-2026-10-01_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/rapport-session-2026-10-02.md",
+      "source_sha256": "5f9912c323d4bc24d5a838247088093dd3d2f6da43838e5651ee954d4e9c6771",
+      "bytes": 4067,
+      "english": "docs/reports/sessions/rapport-session-2026-10-02_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/README.md",
+      "source_sha256": "9cb029c7388569f1026393907c12ccdd7c44995d76e03896c024c10b498d0821",
+      "bytes": 1359,
+      "english": "docs/reports/sessions/README_en.md",
+      "scope": "historical_record",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/reports/sessions/session-2026-10-03.md",
+      "source_sha256": "ddc71549bb1bd7f6147489357bc48a5a3af0f370c2d2d6f852417120e718d56e",
+      "bytes": 5605,
+      "english": "docs/reports/sessions/session-2026-10-03_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/session-2026-10-04.md",
+      "source_sha256": "0722d4d6e732b33418b379da4dd255e9cfb90cdf4b2f4706fce8994ec78efb48",
+      "bytes": 23618,
+      "english": "docs/reports/sessions/session-2026-10-04_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/session-2026-10-05.md",
+      "source_sha256": "f54c9c1b2204668b6d5c54e0f53a1f79b2b209c217c2f14c5ba946a035c97fa4",
+      "bytes": 7821,
+      "english": "docs/reports/sessions/session-2026-10-05_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/session-2026-10-08.md",
+      "source_sha256": "4258a845e86703ca25b1e581ea09bb9f98159bd31aed93d455ee49c8fa91b08c",
+      "bytes": 15143,
+      "english": "docs/reports/sessions/session-2026-10-08_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/session-2026-10-12.md",
+      "source_sha256": "125c66f930a006b6129f53be09e6549ce2a9e3cd58c2b12ef874b8df46e21428",
+      "bytes": 9521,
+      "english": "docs/reports/sessions/session-2026-10-12_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/session-2026-10-14.md",
+      "source_sha256": "d7bf327f8d41651dad73e9561f2c241af77b5688e7527d746ca5e6a41e0d09ae",
+      "bytes": 4924,
+      "english": "docs/reports/sessions/session-2026-10-14_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/session-2026-10-17.md",
+      "source_sha256": "413c3ea5753d2417d70a280fd86887589bf61d52fa38fec69f69a067b53bacaa",
+      "bytes": 4354,
+      "english": "docs/reports/sessions/session-2026-10-17_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/session-2026-10-18.md",
+      "source_sha256": "824c983ac2606467926a292f00bc05030e7f03796172abfe226ff464894504f0",
+      "bytes": 1953,
+      "english": "docs/reports/sessions/session-2026-10-18_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/sessions/tri-travaux-locaux-2026-10-12.md",
+      "source_sha256": "12cb3bfe1cf3100aea259b0dd4507ed23cf48f2a983e47e742f925349864cb46",
+      "bytes": 14753,
+      "english": "docs/reports/sessions/tri-travaux-locaux-2026-10-12_en.md",
+      "scope": "historical_record",
+      "status": "missing"
+    },
+    {
+      "source": "docs/reports/storage/build-cleanup-2026-10-10/README.md",
+      "source_sha256": "d3bf2de00812cc4d9442931b52ce91dbdd2433a89dbaf47addef7add1d8f8054",
+      "bytes": 2803,
+      "english": "docs/reports/storage/build-cleanup-2026-10-10/README_en.md",
+      "scope": "historical_record",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/reports/storage/cleanup-2026-10-09/README.md",
+      "source_sha256": "c06f8c7e134e5fa57435275afd2e37bb19a3a02098a124775291612c07932044",
+      "bytes": 4719,
+      "english": "docs/reports/storage/cleanup-2026-10-09/README_en.md",
+      "scope": "historical_record",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/reports/storage/lightroom-cleanup-2026-10-09/README.md",
+      "source_sha256": "f699b134dfb9d0598ec17d5c02a84e4f2b4543c5edd8d7a1067971bb4b2ea5ff",
+      "bytes": 2897,
+      "english": "docs/reports/storage/lightroom-cleanup-2026-10-09/README_en.md",
+      "scope": "historical_record",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/scholar/cours-01-espace-lineaire-colorimetrie.tex",
+      "source_sha256": "d230e8a3bb6d81eee4eba9c997b762f6a0839da5e8dfa95da6b4dee3d22e365c",
+      "bytes": 3243,
+      "english": "docs/scholar/cours-01-espace-lineaire-colorimetrie_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-02-exposition-tonalite.tex",
+      "source_sha256": "6ec0858ea294d99d94d7afc4acc2fd25b66194554402a8c03607acf83b36b35b",
+      "bytes": 3370,
+      "english": "docs/scholar/cours-02-exposition-tonalite_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-03-balance-blancs-adaptation.tex",
+      "source_sha256": "7ea2a98f58d4609f38fbfb60193c9d7b43fdd6ae27a66207b87d23bb3f133869",
+      "bytes": 3192,
+      "english": "docs/scholar/cours-03-balance-blancs-adaptation_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-04-couleur-hsv-mixer-grading.tex",
+      "source_sha256": "3ed57ff77f33c51d6687e3a0e269744d36f9a1363541ec558f802148244e87a9",
+      "bytes": 4782,
+      "english": "docs/scholar/cours-04-couleur-hsv-mixer-grading_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-05-contraste-local-gaussien.tex",
+      "source_sha256": "285be1e8d32036fd3e9b69c00c05f4e1446f71bbd4c968364a92d597c1945291",
+      "bytes": 2319,
+      "english": "docs/scholar/cours-05-contraste-local-gaussien_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-06-voile-atmospherique.tex",
+      "source_sha256": "e40def50aa9ae37aa171a1dea2ef65c2551ede2c24fd4f678857d822f640e7ac",
+      "bytes": 2501,
+      "english": "docs/scholar/cours-06-voile-atmospherique_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-07-courbes-interpolation.tex",
+      "source_sha256": "31140457a4dba6b2ee2f836ebe25b2b03027f93b0664bd39dfbfd26b45b5890f",
+      "bytes": 2137,
+      "english": "docs/scholar/cours-07-courbes-interpolation_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-08-bruit-grain-signal.tex",
+      "source_sha256": "6a9bccd2a56516d06ea54eb0b6b6abc7090d36476987e0db5d12d01a9c99f0b7",
+      "bytes": 4712,
+      "english": "docs/scholar/cours-08-bruit-grain-signal_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-09-raw-profils-appareil.tex",
+      "source_sha256": "f5aaadff94ca916447301fa312cd96cedbdde6dbc12c2668177796d6f4cbb857",
+      "bytes": 2775,
+      "english": "docs/scholar/cours-09-raw-profils-appareil_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-10-filtre-haar-ondelettes.tex",
+      "source_sha256": "09928bc5f52e4e741c81407e07310443fcc0e376fc9a832b41aedd49d60fc2e0",
+      "bytes": 22876,
+      "english": "docs/scholar/cours-10-filtre-haar-ondelettes_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-11/01-lumiere-et-echantillons.tex",
+      "source_sha256": "f1caef2316a00dededd7eed6d06f5099925035b9e236495519aea6403d3f7345",
+      "bytes": 13508,
+      "english": "docs/scholar/cours-11/01-lumiere-et-echantillons_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-11/02-octets-memoire-conteneurs.tex",
+      "source_sha256": "666bb8cabb2bbdb5f19063562027e4f37f4ea18ed7ec1797cb9aaa2757e057f6",
+      "bytes": 10867,
+      "english": "docs/scholar/cours-11/02-octets-memoire-conteneurs_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-11/03-compression.tex",
+      "source_sha256": "c24bfac0d039c2b6a6ff8a3178a58957864aa74ee54475e7e63f6162885771ef",
+      "bytes": 10138,
+      "english": "docs/scholar/cours-11/03-compression_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-11/04-formats.tex",
+      "source_sha256": "45e8abf53abdd0ff1ce0829c2b38ba6ace959c2ba0b2751e5ddce426016bbf7a",
+      "bytes": 13717,
+      "english": "docs/scholar/cours-11/04-formats_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-11/05-raw-couleur-metadonnees.tex",
+      "source_sha256": "96ca5c5f2f8f890c9156fd198437d2d0fb78e647ccebf69c18d09c3cb91ebf4f",
+      "bytes": 20275,
+      "english": "docs/scholar/cours-11/05-raw-couleur-metadonnees_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-11/06-constructeurs.tex",
+      "source_sha256": "50d2e947fba49a1436db351c632c786e8a406260e4494f8d45c33cd22917578a",
+      "bytes": 11957,
+      "english": "docs/scholar/cours-11/06-constructeurs_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-11/07-architecture-tp-glossaire.tex",
+      "source_sha256": "0ef0e83c988f1f2d8036009dfaec45cbcfb4c09e481494eaafa774a05576353b",
+      "bytes": 25868,
+      "english": "docs/scholar/cours-11/07-architecture-tp-glossaire_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-11-architecture-images.tex",
+      "source_sha256": "88b4ebbb387675f5ff6081358f9f8afb95800fce3e0ded31ecb3481e4a9b7bfb",
+      "bytes": 3157,
+      "english": "docs/scholar/cours-11-architecture-images_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-12/01-probleme.tex",
+      "source_sha256": "6464020b400896f6eed7773e9ff0a6ada4d9db899a20c8428c3a34e9b975544b",
+      "bytes": 2896,
+      "english": "docs/scholar/cours-12/01-probleme_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-12/02-espaces.tex",
+      "source_sha256": "37e5feebeb82b5345bfcde8c903471135011cca7dc1e99052a2a05f4e3e320d0",
+      "bytes": 4764,
+      "english": "docs/scholar/cours-12/02-espaces_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-12/03-mesure.tex",
+      "source_sha256": "6083094af0cca51af8960f025a30c0c613de96ac7907804da1c5b0970f0d1b6f",
+      "bytes": 7990,
+      "english": "docs/scholar/cours-12/03-mesure_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-12/04-modele.tex",
+      "source_sha256": "d404695f71fe68c89c934c676d7cd0c2b1be3566207ccddb96ee8c4e04cb1351",
+      "bytes": 7173,
+      "english": "docs/scholar/cours-12/04-modele_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-12/05-rotation.tex",
+      "source_sha256": "68867e912ed9789e4358bf12cf3a1d8f97a513aeb1c121180cccd63fc0ae1fbe",
+      "bytes": 3281,
+      "english": "docs/scholar/cours-12/05-rotation_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-12/06-validation.tex",
+      "source_sha256": "1346fa8f978ed66843b3f1f129a0302681fff062d07a49c1a842625c28a9af0f",
+      "bytes": 5746,
+      "english": "docs/scholar/cours-12/06-validation_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-12/07-implementation-exercices.tex",
+      "source_sha256": "e20e3cf0e737f51821d50fbf2eb777484f16f447a44cf027aa03324ad1e0a13d",
+      "bytes": 7054,
+      "english": "docs/scholar/cours-12/07-implementation-exercices_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/cours-12-vibrance-saturation-oklab.tex",
+      "source_sha256": "6eeb95ccfb02655790d91c2b589e69298c22767342e0a396deb6c0c68ebbbad1",
+      "bytes": 3351,
+      "english": "docs/scholar/cours-12-vibrance-saturation-oklab_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/moteur-graphique-ipr.tex",
+      "source_sha256": "25b4b9935368766e2f2b5af8ac0349cd9e76e09885fb6cb65ca789689eeac49b",
+      "bytes": 9744,
+      "english": "docs/scholar/moteur-graphique-ipr_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/preamble.tex",
+      "source_sha256": "294bda7a21211b49c4d27f943bb375682ceace8dbc214d5b8e748617a2f45d07",
+      "bytes": 1272,
+      "english": "docs/scholar/preamble_en.tex",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/README.md",
+      "source_sha256": "677764787bd6893a74fd6e42fd877be2e26991dc0f1a3a4389650c2ba23796d8",
+      "bytes": 5444,
+      "english": "docs/scholar/README_en.md",
+      "scope": "learning_material",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/scholar/references/modeles-gestion-lumieres-2026-10-02.md",
+      "source_sha256": "205fa433771034a49014a0349bc55962ec050b8c126bd04447f4e90b706b0473",
+      "bytes": 20100,
+      "english": "docs/scholar/references/modeles-gestion-lumieres-2026-10-02_en.md",
+      "scope": "learning_material",
+      "status": "missing"
+    },
+    {
+      "source": "docs/scholar/references/README.md",
+      "source_sha256": "b55b7f4c1f990440eeaafe0d6642c878b869073ad1b9e5a89de2f9090ee6cbed",
+      "bytes": 264,
+      "english": "docs/scholar/references/README_en.md",
+      "scope": "learning_material",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/specifications/README.md",
+      "source_sha256": "05597260e6bb7c2a9a6ed6499d4cd9a8bb0bee389a16d4307eef8faf9d7ec0b9",
+      "bytes": 729,
+      "english": "docs/specifications/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/specifications/reglages-photographiques.md",
+      "source_sha256": "1aa9df170a7c1da06cbb766b236d470d2428a31b1f05ceb678285cd4a294f770",
+      "bytes": 13091,
+      "english": "docs/specifications/reglages-photographiques_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/specifications/zoom-image.md",
+      "source_sha256": "90870b952e3715fcc6f598e243a1dd4f2ec1b7af120069178707ccefbbffd58a",
+      "bytes": 9888,
+      "english": "docs/specifications/zoom-image_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/technical/latex/chapters/01-projet.tex",
+      "source_sha256": "9bdcd39e44b75848cd4c8fae0e4c01a9be62be0b3e7157465cd9c972d3be4d71",
+      "bytes": 3333,
+      "english": "docs/technical/latex/chapters/01-projet_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/chapters/02-architecture.tex",
+      "source_sha256": "0a20c1625be282aa127b2128323c4ca2da29c170d752f60ab9142ee530b07024",
+      "bytes": 25626,
+      "english": "docs/technical/latex/chapters/02-architecture_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/chapters/03-parcours-utilisateur.tex",
+      "source_sha256": "f6cff22d01edeb3399e97b6e1e4034773cf218e73f0a631a4b948b71bb4ce6c6",
+      "bytes": 2641,
+      "english": "docs/technical/latex/chapters/03-parcours-utilisateur_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/chapters/04-diagrammes-classes.tex",
+      "source_sha256": "d21ef6e24526c0b47457fff95dcac16ecb284f209d39980154d92fdeaaf523ac",
+      "bytes": 5292,
+      "english": "docs/technical/latex/chapters/04-diagrammes-classes_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/chapters/05-sequences.tex",
+      "source_sha256": "a608f86979f10836f0e6dc7290b32c7c4215a4476314309bfe0507e4c33039f0",
+      "bytes": 4087,
+      "english": "docs/technical/latex/chapters/05-sequences_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/chapters/06-reglages-existants.tex",
+      "source_sha256": "204eb22c181906409b3a15bc05029a5bb191e2fa924a82927b185cf1c09e4647",
+      "bytes": 13062,
+      "english": "docs/technical/latex/chapters/06-reglages-existants_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/chapters/07-recadrage-geometrie.tex",
+      "source_sha256": "487bbed90d0487c581d326ca824d7bfb983f5ebe490eaac025adb295876adfa2",
+      "bytes": 186,
+      "english": "docs/technical/latex/chapters/07-recadrage-geometrie_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/chapters/08-masques-retouche.tex",
+      "source_sha256": "3a971daa8040e563d3bd3f84d02164de83013761ba672ff4b6acec521940eee3",
+      "bytes": 175,
+      "english": "docs/technical/latex/chapters/08-masques-retouche_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/chapters/09-ia.tex",
+      "source_sha256": "8170dffbad2a31c8b8ecf499dca1af3ee7948b7a212b610640d4f9e14b8678be",
+      "bytes": 178,
+      "english": "docs/technical/latex/chapters/09-ia_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/chapters/10-qualite-evolutions.tex",
+      "source_sha256": "b6085f099661da8bd212de2494cad3487d5b38dfee97de5c2b8717e1f5c8acd2",
+      "bytes": 5079,
+      "english": "docs/technical/latex/chapters/10-qualite-evolutions_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/chapters/11-glossaire.tex",
+      "source_sha256": "54d6c2cb6b002977ae19f40305e19d3cc7b27e0dbad6fe7592e1c4657e65508a",
+      "bytes": 2445,
+      "english": "docs/technical/latex/chapters/11-glossaire_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/ipr-documentation-technique.tex",
+      "source_sha256": "afe22513a2453a12b364c3119e6d159fcf337b36a789d8316df6cc1063ed03e7",
+      "bytes": 3274,
+      "english": "docs/technical/latex/ipr-documentation-technique_en.tex",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/technical/latex/README.md",
+      "source_sha256": "8d82514aa00520dd4757c552e6646dbd50e81bb1c46972a6edcdec0ca9c449ee",
+      "bytes": 2504,
+      "english": "docs/technical/latex/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/templates/adr-template.md",
+      "source_sha256": "21f60ada9e909965bd0fe883b2ea69028bdf52701a0a4b9cbd5d6d9087e13a8c",
+      "bytes": 592,
+      "english": "docs/templates/adr-template_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/templates/session-template.md",
+      "source_sha256": "61068b20f1586c5123e7ad53e00ed669781d1a8c22e09b7d43ad6306356d57ab",
+      "bytes": 429,
+      "english": "docs/templates/session-template_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/templates/validation-protocol-template.md",
+      "source_sha256": "d2678110b5f75c9716ea5cfe4585bc106ef3956bcade8d651fea37162c923a87",
+      "bytes": 1314,
+      "english": "docs/templates/validation-protocol-template_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/traitement-image-qt-cpp.md",
+      "source_sha256": "23881f6f3a7ccfdec8b8c07a4fe1cfd46a765804b68710c3ac6a5ae27b47c76b",
+      "bytes": 17986,
+      "english": "docs/traitement-image-qt-cpp_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/user/latex/chapters/01-demarrage.tex",
+      "source_sha256": "ef75f3d3a176fe7470c6c9d457e2df8fe9be18791e8a567cf18dab62e7f221d6",
+      "bytes": 3795,
+      "english": "docs/user/latex/chapters/01-demarrage_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/02-navigation-comparaison.tex",
+      "source_sha256": "1f9404cd44ced347dbc88730edc212d7639d19454714d8714ef40131b766c876",
+      "bytes": 3286,
+      "english": "docs/user/latex/chapters/02-navigation-comparaison_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/03-informations-selection.tex",
+      "source_sha256": "39b56e1796ec0072ef85770a0332f7682ffb714403d31ec3dcf1a67055be0473",
+      "bytes": 4344,
+      "english": "docs/user/latex/chapters/03-informations-selection_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/04-raw-profils.tex",
+      "source_sha256": "a0c0905dd992d79083ed2f7d606aa1c18b4a5e64831463414261424d5e8d6b39",
+      "bytes": 2367,
+      "english": "docs/user/latex/chapters/04-raw-profils_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/05-lumiere.tex",
+      "source_sha256": "20046c985a406213c2f06ec61857c03dcac1c7cd28fcd7f27adae0d8386db34a",
+      "bytes": 2550,
+      "english": "docs/user/latex/chapters/05-lumiere_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/06-courbes.tex",
+      "source_sha256": "c9120e88bac82ef65f76b3799e02874eb224ebbb0f5c048893e981b5bf2a188e",
+      "bytes": 1631,
+      "english": "docs/user/latex/chapters/06-courbes_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/07-couleur.tex",
+      "source_sha256": "26daf42a5ca80611cc543e8d13bc3576ca31df4a090b8ca9af27366d4c953719",
+      "bytes": 1841,
+      "english": "docs/user/latex/chapters/07-couleur_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/08-melangeur.tex",
+      "source_sha256": "73c6252c6105f9fddd2f61610821a5a019c6de748efd8f530aa1fd1402108b9f",
+      "bytes": 1361,
+      "english": "docs/user/latex/chapters/08-melangeur_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/09-grading.tex",
+      "source_sha256": "9d1d80ab978ab206b1b2a0df2674872b7f4b71a1c8c6de39f41a0e42038bbe46",
+      "bytes": 1746,
+      "english": "docs/user/latex/chapters/09-grading_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/10-effets.tex",
+      "source_sha256": "631ea3a63b0b3d80150e1fbea4a21e8e3cbb4900e4f11c5a37a7ef55d7ce884c",
+      "bytes": 1475,
+      "english": "docs/user/latex/chapters/10-effets_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/11-bruit.tex",
+      "source_sha256": "e174c4361e3f9d35ac2f47cd6819d91abd76e188c2fea467f445ef9deb83be27",
+      "bytes": 2550,
+      "english": "docs/user/latex/chapters/11-bruit_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/12-nettete.tex",
+      "source_sha256": "4089066b3eb0e45781a918a83160335b8cd25bd7d327ec73434782d92cdf6150",
+      "bytes": 1022,
+      "english": "docs/user/latex/chapters/12-nettete_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/13-optique.tex",
+      "source_sha256": "84aac22621b44c67d2987f3626ac197ff72abbc0a7f619306cc4845b444eaf15",
+      "bytes": 1384,
+      "english": "docs/user/latex/chapters/13-optique_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/14-preferences.tex",
+      "source_sha256": "3f3bf1410806eecfe6057b8598cd3c1d21193c3dbe336d576d0170b216f54920",
+      "bytes": 2664,
+      "english": "docs/user/latex/chapters/14-preferences_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/15-export.tex",
+      "source_sha256": "998176f47aaec2bc3beb8d847db896979f9cff794a16e3b1b814f220eba394e1",
+      "bytes": 3238,
+      "english": "docs/user/latex/chapters/15-export_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/16-depannage.tex",
+      "source_sha256": "cbf3419c9b5a3f8fab807eacd480befd6b0240f42f1f53c0d66a95c7a6dc7021",
+      "bytes": 2029,
+      "english": "docs/user/latex/chapters/16-depannage_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/17-recadrage-geometrie.tex",
+      "source_sha256": "4da6db7b88fb9552aeb74476f21d57b193c80420d0c1b78ea4b2895c0a201473",
+      "bytes": 147,
+      "english": "docs/user/latex/chapters/17-recadrage-geometrie_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/18-masques-retouche.tex",
+      "source_sha256": "1d35dc690b04420b861a0621db46d1b32ea4c0b93fd3aa64339fc36a55aa260b",
+      "bytes": 139,
+      "english": "docs/user/latex/chapters/18-masques-retouche_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/19-ia.tex",
+      "source_sha256": "96ec7b220158329f783bbb88902773ddd1221a29af2081597f414c18f520cac8",
+      "bytes": 158,
+      "english": "docs/user/latex/chapters/19-ia_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/20-raccourcis.tex",
+      "source_sha256": "ae205368010d05744162b645e238ef02e6b649ba7c1698d025402d242d3bdf69",
+      "bytes": 4856,
+      "english": "docs/user/latex/chapters/20-raccourcis_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/chapters/21-glossaire.tex",
+      "source_sha256": "40ef1adef14fe31a681927ede9ec0e334daefa79c85ba7e25322e6b697e901a1",
+      "bytes": 1838,
+      "english": "docs/user/latex/chapters/21-glossaire_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/latex/ipr-livre-utilisateur.tex",
+      "source_sha256": "643edb649e1bf306fdf6c94ec84157cb40745454fdc78cfd448ce31c3809dcc1",
+      "bytes": 3460,
+      "english": "docs/user/latex/ipr-livre-utilisateur_en.tex",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/user/README.md",
+      "source_sha256": "4633daebaf91c4e7f5d26bf1eddd9e027720afbe4ca44887ed885cf8da4f8c1a",
+      "bytes": 3902,
+      "english": "docs/user/README_en.md",
+      "scope": "live_reference",
+      "status": "source_hash_matches"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-base-colorimetrique.md",
+      "source_sha256": "17bda01b0fb90220c156653498fec2f8420eda8e8f55c1710c5009c15feb9782",
+      "bytes": 354823,
+      "english": "docs/validation/analyses/analyse-base-colorimetrique_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-blancs-hautes-lumieres-2026-10-02.md",
+      "source_sha256": "62e51ac5117961f4fda92fc224a549d361a86b2041f06e340b067492924d415a",
+      "bytes": 10500,
+      "english": "docs/validation/analyses/analyse-blancs-hautes-lumieres-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-bruit-2026-10-04.md",
+      "source_sha256": "42f39d184aa926a65ab2d054d6607ec426fe46ec2ebe0f328566cc154dd6d4b5",
+      "bytes": 258,
+      "english": "docs/validation/analyses/analyse-bruit-2026-10-04_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-bruit-v2-2026-10-05.md",
+      "source_sha256": "a551d480d54ffa3cd24fdb07fb469f5584db19db66a6fc0a6add404fe6dda3d6",
+      "bytes": 258,
+      "english": "docs/validation/analyses/analyse-bruit-v2-2026-10-05_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-bruit.md",
+      "source_sha256": "09bfb021bba3109c9ae8ec44764263ef24e1908d06237f33784d20a0e27ef6c6",
+      "bytes": 44270,
+      "english": "docs/validation/analyses/analyse-bruit_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-clarte-2026-10-02.md",
+      "source_sha256": "ef06f7a9f801fdc57d6a25721d4589f3b4564d5551de641be08499b3b7e6bc97",
+      "bytes": 2015,
+      "english": "docs/validation/analyses/analyse-clarte-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-color-mixer-corpus-etendu-2026-10-04.md",
+      "source_sha256": "14b7a7d649917e4e8193218ac6a4502b17f261d81f8495bfc192853c9a801e58",
+      "bytes": 267,
+      "english": "docs/validation/analyses/analyse-color-mixer-corpus-etendu-2026-10-04_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-color-mixer-huit-bandes-2026-10-04.md",
+      "source_sha256": "e2fe5c964575fee1d3f8165486774471acbebe93ca6e93789b9e1ea377418d7a",
+      "bytes": 267,
+      "english": "docs/validation/analyses/analyse-color-mixer-huit-bandes-2026-10-04_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-color-mixer-intermediaires-2026-10-04.md",
+      "source_sha256": "6eb1f089cafa8e003a38cf6e68136e4ce5a43b2b2616058b4a7d9ecfc0ef3a63",
+      "bytes": 267,
+      "english": "docs/validation/analyses/analyse-color-mixer-intermediaires-2026-10-04_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-color-mixer-red-yellow-green-2026-10-04.md",
+      "source_sha256": "458bc878bd7dbecfb693ece8a62ba1f5141966113737437d2871230d239eab95",
+      "bytes": 267,
+      "english": "docs/validation/analyses/analyse-color-mixer-red-yellow-green-2026-10-04_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-color-mixer.md",
+      "source_sha256": "ace250ba891d5b75eb48ede085a31ddc794ae6762ce729f4fcd4161ab1c9bbef",
+      "bytes": 67543,
+      "english": "docs/validation/analyses/analyse-color-mixer_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-contraste-2026-10-02.md",
+      "source_sha256": "6e7a05621db417a53b913e23d35f1e6e9a0380e481ecf90b23ef1f20f66f0258",
+      "bytes": 5699,
+      "english": "docs/validation/analyses/analyse-contraste-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-correction-voile-2026-10-02.md",
+      "source_sha256": "628c1f563259d47a682057d22be41007d457afbf66b94132370110d567d9604f",
+      "bytes": 2153,
+      "english": "docs/validation/analyses/analyse-correction-voile-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-couleur-point.md",
+      "source_sha256": "90185d3546dcdcef0224ebf6382faad19382f456300abbf6e2697fa3a2a7c084",
+      "bytes": 5595,
+      "english": "docs/validation/analyses/analyse-couleur-point_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-couleur.md",
+      "source_sha256": "0cf3d7ad50cde950fad112df87c5a32e4244e32bb1f3ae1a96a2437c2e71160f",
+      "bytes": 90942,
+      "english": "docs/validation/analyses/analyse-couleur_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-courbes.md",
+      "source_sha256": "c311697bf9809f80d782a91e6d306131d8a181515e4989956ccee4ed56cfde1c",
+      "bytes": 3243,
+      "english": "docs/validation/analyses/analyse-courbes_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-dematricage.md",
+      "source_sha256": "64b54644612c99fe4b910f77984a3cf92c6ab0a653111a410c40db8a0c7b85be",
+      "bytes": 30788,
+      "english": "docs/validation/analyses/analyse-dematricage_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-developpement-raw.md",
+      "source_sha256": "a3b96461453a0eddc4d70112279adfae9ac2372897be935e6be38a3b0bd5150d",
+      "bytes": 274446,
+      "english": "docs/validation/analyses/analyse-developpement-raw_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-effets.md",
+      "source_sha256": "df7c1f7d54cd3fee6f0e895445d735513cc0041a0a9007c6ba3b9ef262b0e67b",
+      "bytes": 35252,
+      "english": "docs/validation/analyses/analyse-effets_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-grading.md",
+      "source_sha256": "e31feca04f38ec4a4c615722260b7c77c80d89d329ce13beffc706d0d6b83701",
+      "bytes": 13026,
+      "english": "docs/validation/analyses/analyse-grading_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-noirs-ombres-2026-10-02.md",
+      "source_sha256": "abbc67267d40ca146a2c70e051c1c37a2ed8d13e346c893d33f1cc8e4bfa6312",
+      "bytes": 13501,
+      "english": "docs/validation/analyses/analyse-noirs-ombres-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-nuance-2026-10-02.md",
+      "source_sha256": "5002281a444fc6b5884ae4ff3edfaa1fb41570336e0807704b7ee95fceff8e20",
+      "bytes": 3589,
+      "english": "docs/validation/analyses/analyse-nuance-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-performance-ouverture.md",
+      "source_sha256": "352a0fc051ecf47d6be7c16188d0ceb6a45b4e67c7294ec683b305a57137d69a",
+      "bytes": 26611,
+      "english": "docs/validation/analyses/analyse-performance-ouverture_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-saturation-2026-10-02.md",
+      "source_sha256": "c80b1eb10034cfbc00335cc9166fa704ece159579ea850ff33b3d46caad192fa",
+      "bytes": 1970,
+      "english": "docs/validation/analyses/analyse-saturation-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-temperature-2026-10-02.md",
+      "source_sha256": "e55bb4d2a725da42eea556b6d0e24db9e209dc0ac4884bfef5217425e8e62738",
+      "bytes": 6796,
+      "english": "docs/validation/analyses/analyse-temperature-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-texture-2026-10-02.md",
+      "source_sha256": "eae479ddc878d2a3beaac9d524a5d4a7d8262945603cc38612b888322cc41240",
+      "bytes": 2208,
+      "english": "docs/validation/analyses/analyse-texture-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md",
+      "source_sha256": "91f6ac11d9ceb22ee54159c32ea7f52b1affe2d5d6f15efa977fe9163320ad11",
+      "bytes": 74570,
+      "english": "docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/analyse-vibrance-2026-10-02.md",
+      "source_sha256": "2d10486ac3a83a551a09a12bf668a5bb71b384491ded3f3b13a3d2112b4bec4d",
+      "bytes": 2197,
+      "english": "docs/validation/analyses/analyse-vibrance-2026-10-02_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/correctif-bruit-2026-10-05.md",
+      "source_sha256": "ab74bb5975d8136055819de86160e276d5e48614fed0fc35ceb95507667836bf",
+      "bytes": 258,
+      "english": "docs/validation/analyses/correctif-bruit-2026-10-05_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/diagnostic-export-dng-lightroom-2026-10-03.md",
+      "source_sha256": "703b8e86ec40f67117dbafc822d2db0076657391afebff83608a0857f2b48b2a",
+      "bytes": 5079,
+      "english": "docs/validation/analyses/diagnostic-export-dng-lightroom-2026-10-03_en.md",
+      "scope": "analysis_report",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/analyses/README.md",
+      "source_sha256": "f13936d1b679dd125d13953a8275e764b7020f5d4c8d810b57930c86667a5ec1",
+      "bytes": 4928,
+      "english": "docs/validation/analyses/README_en.md",
+      "scope": "analysis_report",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/validation/data/README.md",
+      "source_sha256": "fc9a06dfe46b3d731981789cd6c973c01a9d70a40257cb7288925a676ef8172a",
+      "bytes": 4472,
+      "english": "docs/validation/data/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/validation/matrice-validation.md",
+      "source_sha256": "a898fa48dd5fde1aeaa9135455598db18f257662d703d77e57f4712f7ca28c87",
+      "bytes": 24157,
+      "english": "docs/validation/matrice-validation_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/metrics/README.md",
+      "source_sha256": "fbd2171fa6825beada9a13c1fe6c3c3f428b8ed1abd35f799fadcbecc7f77dbf",
+      "bytes": 8494,
+      "english": "docs/validation/metrics/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/validation/procedure-tests-autonomes.md",
+      "source_sha256": "055b2cf980b490fbb53fa3c95b3f2455d1e6f5f0f3757cb420a2cbcba5435022",
+      "bytes": 7414,
+      "english": "docs/validation/procedure-tests-autonomes_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-base-colorimetrique-v1.md",
+      "source_sha256": "2a57085bc2a903bc44a488cffeebbc676d7a99037dc5137dada6525ad7ab9fdb",
+      "bytes": 23651,
+      "english": "docs/validation/protocols/protocole-base-colorimetrique-v1_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-blancs-canon.md",
+      "source_sha256": "6fd6339290e095e6f2aa0e40f9112e24cd17fbd92f0d23814cc3a8c45cbbf238",
+      "bytes": 9001,
+      "english": "docs/validation/protocols/protocole-blancs-canon_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-bruit-v2.md",
+      "source_sha256": "84f197625d03d269775395fa184526cba0b09852963c6a5e794ec58677b439b7",
+      "bytes": 544,
+      "english": "docs/validation/protocols/protocole-bruit-v2_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-bruit.md",
+      "source_sha256": "eb9cd783dd54195ea44abbda4985f07c74a4c5bd0b740bf4b10c87aa445f55d2",
+      "bytes": 5215,
+      "english": "docs/validation/protocols/protocole-bruit_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-color-mixer-intermediaires-2026-10-04.md",
+      "source_sha256": "7c7945a793955b3276b548458e09c076ecd17b838c3d6d4a87a6ee7db2bf0f6b",
+      "bytes": 566,
+      "english": "docs/validation/protocols/protocole-color-mixer-intermediaires-2026-10-04_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-commun.md",
+      "source_sha256": "50667eac08639e54d3a09b9aa86f5bece6c082acc377b1ae370df5ddc1d2c6d4",
+      "bytes": 7962,
+      "english": "docs/validation/protocols/protocole-commun_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-couleur-point.md",
+      "source_sha256": "4f31be37e957ed481ef5805a80c8bafefdc60471609d870dd13793374dc920a5",
+      "bytes": 6482,
+      "english": "docs/validation/protocols/protocole-couleur-point_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-couleur.md",
+      "source_sha256": "75da2fbe5cae2fd8ffd1635194d9bca122552624a10acc15182a9216f5e6189f",
+      "bytes": 8123,
+      "english": "docs/validation/protocols/protocole-couleur_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-courbes.md",
+      "source_sha256": "52d0591936a8e91f0a920aa8530bfeaff14b0ff840450d0030763152717e0d5f",
+      "bytes": 3239,
+      "english": "docs/validation/protocols/protocole-courbes_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-effets.md",
+      "source_sha256": "ec620adfa07b04c2cbfe99c507dd59aca95e268f2587ac48706988eee6985cd9",
+      "bytes": 3074,
+      "english": "docs/validation/protocols/protocole-effets_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-grading.md",
+      "source_sha256": "6f3c79df6e57de52bbf2f3f156baee4292e508d0cb300978818f7b2bae684c54",
+      "bytes": 4272,
+      "english": "docs/validation/protocols/protocole-grading_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-ihm-persistance-export.md",
+      "source_sha256": "5882cc8e4e3cce323c5b607928333c0ce3eb52cd47db90f6359846d3e418bfbf",
+      "bytes": 3524,
+      "english": "docs/validation/protocols/protocole-ihm-persistance-export_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-lumieres.md",
+      "source_sha256": "6a2cbeb32b8c328d844ef5a8d1d4d19659935e432b02a6a4932e4f6c1da3526c",
+      "bytes": 4818,
+      "english": "docs/validation/protocols/protocole-lumieres_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-melangeur.md",
+      "source_sha256": "d0b53b95b6ad9c7a02a1fcfc122c31dbb33552da817758c0d0531b2d6560c0b5",
+      "bytes": 4052,
+      "english": "docs/validation/protocols/protocole-melangeur_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-mires-couleur.md",
+      "source_sha256": "e2438cb54f51d2d0e842b207261285630efdf1b67f640142910c055b9464df11",
+      "bytes": 23005,
+      "english": "docs/validation/protocols/protocole-mires-couleur_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-nettete.md",
+      "source_sha256": "46155f62c4cb65a036611180380021f2c16346b2b20b26b1137889e5243da311",
+      "bytes": 2532,
+      "english": "docs/validation/protocols/protocole-nettete_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-optique.md",
+      "source_sha256": "875efd9f5995ac9cb4dc5bdf1dfb4fcf4b8c44f6abdd7a4eff1ae6d2a72e668b",
+      "bytes": 2056,
+      "english": "docs/validation/protocols/protocole-optique_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-performance-ouverture.md",
+      "source_sha256": "7a5bcd4fcc1aef168dda435791da2716b269c7e4c1d37b86085a0270e1f690f3",
+      "bytes": 6302,
+      "english": "docs/validation/protocols/protocole-performance-ouverture_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-raw-profils.md",
+      "source_sha256": "fb3034a035272cac6321290ce825382f755cd7b5fdcf799dba87721e8b0bb15e",
+      "bytes": 20259,
+      "english": "docs/validation/protocols/protocole-raw-profils_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-validation-bruit-2026-10-04.md",
+      "source_sha256": "8b99468a2bae5764ad4073184728872d6a2ec4d7791106c49e7d69ec1cb3cb69",
+      "bytes": 537,
+      "english": "docs/validation/protocols/protocole-validation-bruit-2026-10-04_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-validation-clarte-2026-10-02.md",
+      "source_sha256": "a378aba9014674eddc0a47ff72f98b8139d64b11a799269093eeb771bdfbba49",
+      "bytes": 540,
+      "english": "docs/validation/protocols/protocole-validation-clarte-2026-10-02_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-validation-color-mixer-2026-10-04.md",
+      "source_sha256": "86725569de12a5db12718febf25b4c4aef7229cdcdb4b6a3e44858ea908a3ed3",
+      "bytes": 546,
+      "english": "docs/validation/protocols/protocole-validation-color-mixer-2026-10-04_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-validation-correction-voile-2026-10-02.md",
+      "source_sha256": "b8a76d4c093f9dc548c4f0b6ba93cb6175d8189c8f054d2a973a770deb49c1e6",
+      "bytes": 538,
+      "english": "docs/validation/protocols/protocole-validation-correction-voile-2026-10-02_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-validation-nuance-2026-10-02.md",
+      "source_sha256": "1b6d00b345367ee3f6ee0964ab65201726caaa1c333b1110bc7f33403d8cb58e",
+      "bytes": 540,
+      "english": "docs/validation/protocols/protocole-validation-nuance-2026-10-02_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-validation-saturation-2026-10-02.md",
+      "source_sha256": "975c41862d0632cb027a85d7bb52f2796b22261794c395d8f4eb718996313b87",
+      "bytes": 544,
+      "english": "docs/validation/protocols/protocole-validation-saturation-2026-10-02_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-validation-temperature-2026-10-02.md",
+      "source_sha256": "d1be0f9a15671a43498513126dfe6ea54808d4204011dcc8a5596f5ad97d2d2a",
+      "bytes": 546,
+      "english": "docs/validation/protocols/protocole-validation-temperature-2026-10-02_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-validation-texture-2026-10-02.md",
+      "source_sha256": "bbe25234e7546395b51b6e8bb3a9fe2ae179b0fadd771cde7d44f32076ff0c0d",
+      "bytes": 540,
+      "english": "docs/validation/protocols/protocole-validation-texture-2026-10-02_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/protocole-validation-vibrance-2026-10-02.md",
+      "source_sha256": "f830e5352ed9ff3ea65cfb510be6e56602c4da2ce8a47fcbdada474837b4e8a8",
+      "bytes": 542,
+      "english": "docs/validation/protocols/protocole-validation-vibrance-2026-10-02_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/protocols/README.md",
+      "source_sha256": "8e3fc1c3fb5fa8238d19c27f5ab59a153c7a0446baca9a2701971cd327904093",
+      "bytes": 4184,
+      "english": "docs/validation/protocols/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/validation/raw/README.md",
+      "source_sha256": "102076a85851660977f6a2c421d6a014d631a70d7bf773b2186d1c39eb682bef",
+      "bytes": 319,
+      "english": "docs/validation/raw/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/validation/README.md",
+      "source_sha256": "627541962fc697183572aab0b2d8c4932b9ebd609a00e009e2caf1986ee0dca7",
+      "bytes": 2318,
+      "english": "docs/validation/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "docs/validation/tools/analyseurs-groupes.md",
+      "source_sha256": "5739e2e54ee7e4cd8ab1c2fb373243f6af73ca23bfb68d580f221a3e3aad6df8",
+      "bytes": 31814,
+      "english": "docs/validation/tools/analyseurs-groupes_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/tools/generateur-images-tests.md",
+      "source_sha256": "5c372db24e22f625f7a67a2a5b3c04e92b8863e79c3b3b98916c04e1f3c00023",
+      "bytes": 10455,
+      "english": "docs/validation/tools/generateur-images-tests_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "docs/validation/tools/README.md",
+      "source_sha256": "e82276122c85a2863692542c8d1630a836c2f36834eb7207ad0f2b976594bfa3",
+      "bytes": 586,
+      "english": "docs/validation/tools/README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "licenses/README.md",
+      "source_sha256": "b8cfbb753c0447e6b329440553b1a5f715db00f1cfa8130726c87b52efb6e464",
+      "bytes": 6404,
+      "english": "licenses/README_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "packaging/README.md",
+      "source_sha256": "0d8f84d74ef6b067333e5f048c16af1e1fa29ac5c352425dc1b9998fed4f3d46",
+      "bytes": 1874,
+      "english": "packaging/README_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "README.md",
+      "source_sha256": "72710b9ff6de5df642b3d0e443fc118c4ede269c8e12a6cc4a68a77e884446e2",
+      "bytes": 12860,
+      "english": "README_en.md",
+      "scope": "live_reference",
+      "status": "present_unverified"
+    },
+    {
+      "source": "src/README.md",
+      "source_sha256": "2a7c241b85af69d14e116bf74cdf1a1c36c5321c40325af4eb241bbf48c9674d",
+      "bytes": 998,
+      "english": "src/README_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "tests/corpus/raw-black-level/README.md",
+      "source_sha256": "c11b00286020333e5a4146f7d76881c48ded5f693a52a76e0eb1d9a1c99b220f",
+      "bytes": 4536,
+      "english": "tests/corpus/raw-black-level/README_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    },
+    {
+      "source": "tests/raw_bench/README.md",
+      "source_sha256": "586e21fe6beed1a69c48b454d79bfc330b44c1c93cb0d8e7775e855d7e4ee1ef",
+      "bytes": 19571,
+      "english": "tests/raw_bench/README_en.md",
+      "scope": "live_reference",
+      "status": "missing"
+    }
+  ],
+  "source_hash_policy": "SHA-256 of UTF-8 text without BOM, with LF-normalized newlines; not a binary evidence hash.",
+  "limits": [
+    "Filename pairing is a convention, not language detection.",
+    "A matching source hash does not prove translation accuracy, current production behavior, link anchors or PDF compilation.",
+    "Historical reports keep their dates and verdicts; JSON analysis evidence is not translated.",
+    "AGENTS.md instructions and generated build trees are excluded, not declared translated."
+  ],
+  "revision": "a9a5d4df811c6deaede674c2fc304364af03709c"
+}
