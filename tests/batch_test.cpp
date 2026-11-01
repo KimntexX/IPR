@@ -82,15 +82,13 @@ int main(int argc, char **argv)
     editor.setImageRating(4);
     editor.setImageColorLabel(QStringLiteral("green"));
     editor.saveCurrentAdjustments();
-    EditRecipe::Settings annotatedBefore;
-    EditRecipe::UserImageMetadata annotatedMetadata;
-    if (!check(Sidecar::read(annotated, &annotatedBefore, &annotatedMetadata) && annotatedMetadata.rating == 4,
+    if (!check(Sidecar::read(annotated) && Sidecar::read(annotated)->metadata.rating == 4,
                "target annotations saved")) return 1;
     // A target whose sidecar cannot be written.
     {
-        EditRecipe::Settings neutral;
-        neutral.temperature = 5000;
-        if (!check(Sidecar::write(locked, neutral, {}, {}), "locked sidecar written")) return 1;
+        Sidecar::Document neutral;
+        neutral.settings.temperature = 5000;
+        if (!check(Sidecar::write(locked, neutral), "locked sidecar written")) return 1;
         QFile::setPermissions(locked + QStringLiteral(".ipr"), QFileDevice::ReadOwner);
     }
 
@@ -106,23 +104,19 @@ int main(int argc, char **argv)
     if (!check(waitFor([&] { return !editor.batchApplying() &&
                                     editor.statusMessage().contains(QStringLiteral("appliqués")); }),
                "the batch application runs in the background and ends")) return 1;
-    EditRecipe::Settings warmSaved, annotatedSaved, sourceSaved;
-    EditRecipe::UserImageMetadata annotatedAfter, ignored;
-    if (!check(Sidecar::read(warm, &warmSaved, &ignored) && warmSaved.contrast == 37 && warmSaved.gradingSaturation[3] == 20,
+    const auto warmSaved = Sidecar::read(warm);
+    if (!check(warmSaved && warmSaved->settings.contrast == 37 && warmSaved->settings.gradingSaturation[3] == 20,
                "the edits reach a target")) return 1;
-    if (!check(warmSaved.temperature == 6000 && warmSaved.tint == 0,
+    if (!check(warmSaved->settings.temperature == 6000 && warmSaved->settings.tint == 0,
                "an as-shot white balance stays the target's own")) return 1;
-    {
-        EditRecipe::Settings settings;
-        EditRecipe::UserImageMetadata metadata;
-        EditRecipe::RawDevelopment raw;
-        if (!check(Sidecar::read(warm, &settings, &metadata, &raw) && raw.normalizationEnabled,
-                   "a target without a sidecar keeps the development it gets when opened")) return 1;
-    }
-    if (!check(Sidecar::read(annotated, &annotatedSaved, &annotatedAfter) && annotatedSaved.contrast == 37 &&
-               annotatedAfter.rating == 4 && annotatedAfter.colorLabel == QStringLiteral("green"),
+    if (!check(warmSaved->raw.normalizationEnabled,
+               "a target without a sidecar keeps the development it gets when opened")) return 1;
+    const auto annotatedSaved = Sidecar::read(annotated);
+    if (!check(annotatedSaved && annotatedSaved->settings.contrast == 37 && annotatedSaved->metadata.rating == 4 &&
+               annotatedSaved->metadata.colorLabel == QStringLiteral("green"),
                "a target keeps its annotations")) return 1;
-    if (!check(Sidecar::read(source, &sourceSaved, &ignored) && sourceSaved.contrast == 37 && sourceSaved.temperature == 4500,
+    const auto sourceSaved = Sidecar::read(source);
+    if (!check(sourceSaved && sourceSaved->settings.contrast == 37 && sourceSaved->settings.temperature == 4500,
                "the open image is saved with its own settings")) return 1;
     if (!check(editor.statusMessage().contains(QStringLiteral("locked.png")),
                "a failed target is named in the status")) return 1;
@@ -134,8 +128,8 @@ int main(int argc, char **argv)
     editor.setImageSelected(QUrl::fromLocalFile(warm), true);
     waitFor([&] { return !editor.busy(); });
     editor.applyAdjustmentsToSelection();
-    if (!check(waitFor([&] { return !editor.batchApplying(); }) && Sidecar::read(warm, &warmSaved, &ignored) &&
-               warmSaved.temperature == 5100, "a custom white balance is copied")) return 1;
+    if (!check(waitFor([&] { return !editor.batchApplying(); }) && Sidecar::read(warm) &&
+               Sidecar::read(warm)->settings.temperature == 5100, "a custom white balance is copied")) return 1;
 
     // Copy and paste: as shot stays as shot on the target.
     editor.setTemperature(4500);

@@ -111,8 +111,10 @@ depuis `patch_light` :
 - Plus aucun chemin propre à Qt < 6.8 : le contournement de conversion RGBA64
   vers flottant, propre à Qt 6.4.2, est supprimé. Qt 6.8.3 convertit exactement.
 
-La version de flux `QDataStream::Qt_6_4` des sidecars `.ipr` (ADR-0001) est un
-**format de fichier**, pas un minimum de compilation : elle reste inchangée.
+La version de flux `QDataStream::Qt_6_4` des anciens sidecars `.ipr` binaires
+(ADR-0001) est un **format de fichier**, pas un minimum de compilation : elle
+reste celle de leur lecture. Les sidecars courants sont des documents CBOR
+(ADR-0021).
 
 ## Orientation de compatibilité Qt ≥ 6.8 — 15 octobre 2026
 

@@ -6,7 +6,7 @@ An ADR records a choice that influences compatibility, rendering, data, or maint
 
 | ADR | Decision | Status |
 | --- | --- | --- |
-| [ADR-0001](ADR-0001-sidecar-ipr.md) | Non-destructive `.ipr` persistence | Accepted |
+| [ADR-0001](ADR-0001-sidecar-ipr.md) | Non-destructive `.ipr` persistence | Superseded by ADR-0021 (CBOR format) |
 | [ADR-0002](ADR-0002-pipeline-lineaire-et-calibration.md) | Linear pipeline and rendering calibration | Accepted, to be revalidated on pipeline change |
 | [ADR-0003](ADR-0003-profils-dcp-lcp-locaux.md) | Local DCP/LCP library | Accepted under license constraints |
 | [ADR-0004](ADR-0004-preferences-ihm-ini.md) | Global UI preferences in user INI | Accepted |

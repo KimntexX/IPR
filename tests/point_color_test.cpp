@@ -4,9 +4,7 @@
 #include "Sidecar.h"
 #include "WorkingColorSpace.h"
 
-#include <QDataStream>
 #include <QFile>
-#include <QFileInfo>
 #include <QTemporaryDir>
 
 #include <cmath>
@@ -245,7 +243,8 @@ bool sidecar()
     QFile file(source);
     if (!directory.isValid() || !file.open(QIODevice::WriteOnly) || file.write("x") != 1) return false;
     file.close();
-    EditRecipe::Settings settings;
+    Sidecar::Document document;
+    EditRecipe::Settings &settings = document.settings;
     settings.pointColor = single(orange());
     settings.pointColor.points[0].hueShift = -37;
     settings.pointColor.points[0].variance = 44;
@@ -253,31 +252,15 @@ bool sidecar()
     settings.pointColor.points[1].source = {3.908962, 0.586369, 0.432142};
     settings.pointColor.points[1].luminanceShift = 12;
     settings.pointColor.count = 2;
-    EditRecipe::Settings loaded;
-    EditRecipe::UserImageMetadata metadata;
-    bool ok = check(Sidecar::write(source, settings, {}, {}) && Sidecar::read(source, &loaded, &metadata),
-                    "the sidecar is written and read");
+    const auto read = Sidecar::write(source, document) ? Sidecar::read(source) : std::nullopt;
+    if (!check(bool(read), "the sidecar is written and read")) return false;
+    const EditRecipe::Settings &loaded = read->settings;
     const PointColor::Point &first = loaded.pointColor.points[0], &second = loaded.pointColor.points[1];
-    ok &= check(loaded.pointColor.count == 2 && first.source == Orange && first.hueShift == -37 &&
+    return check(loaded.pointColor.count == 2 && first.source == Orange && first.hueShift == -37 &&
                 first.variance == 44 && first.range == 66 &&
                 second.source == PointColor::Hsv(3.908962, 0.586369, 0.432142) &&
                 second.luminanceShift == 12 && second.range == 50,
                 "the points round trip through the sidecar");
-
-    // A point count beyond the maximum makes the sidecar invalid.
-    QFile saved(Sidecar::path(source));
-    if (!saved.open(QIODevice::ReadWrite)) return false;
-    QByteArray bytes = saved.readAll();
-    const qsizetype at = bytes.size() - 2 * (3 * 8 + 5 * 4) - 4;
-    QDataStream patch(&bytes, QIODevice::WriteOnly);
-    patch.setVersion(QDataStream::Qt_6_4);
-    patch.device()->seek(at);
-    patch << qint32(9);
-    saved.seek(0);
-    saved.write(bytes);
-    saved.close();
-    ok &= check(!Sidecar::read(source, &loaded, &metadata), "too many points are refused");
-    return ok;
 }
 } // namespace
 

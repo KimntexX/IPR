@@ -320,7 +320,9 @@ public:
             recipe.lensProfileResolved = true;
             recipe.lensCorrectionEnabled = false;
             recipe.chromaticAberrationEnabled = false;
-            if (!Sidecar::write(paths[i], {}, {}, recipe))
+            Sidecar::Document document;
+            document.raw = recipe;
+            if (!Sidecar::write(paths[i], document))
                 return {{"error", "Cannot seed private sidecar"}};
         }
         ImageProvider provider;

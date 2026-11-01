@@ -119,7 +119,7 @@
     {"patterns": ["src/editor/imageeditor.cpp", "tests/editor_lifecycle_test.cpp"], "tests": ["editorLifecycleTests"]},
     {"patterns": ["tests/batch_test.cpp", "src/editor/imageeditor.cpp", "src/core/ImageImporter.*", "src/raw/RawDecoder.*", "src/qml/ThumbnailRibbon.qml", "src/qml/Setting.qml"], "tests": ["editorBatchTests", "imageExportTests", "settingsQmlTests"]},
     {"patterns": ["tests/folder_refresh_test.cpp", "src/editor/imageeditor.*"], "tests": ["folderRefreshTests"]},
-    {"patterns": ["tests/sidecar_test.cpp", "src/core/Sidecar.*", "src/core/ToneCurve.*", "src/core/EditRecipe.h"], "tests": ["sidecarTests"]},
+    {"patterns": ["tests/sidecar_test.cpp", "src/core/Sidecar.*", "src/core/ToneCurve.*", "src/core/EditRecipe.h"], "tests": ["sidecarTests", "pointColorTests", "editorBatchTests", "settingsQmlTests", "imageExportTests"]},
     {"patterns": ["src/cache/RenderStageCache.*", "tests/render_stage_cache_test.cpp", "src/editor/imageeditor.cpp"], "tests": ["renderStageCacheTests", "rec2020PipelineTests", "editorRawDevelopmentTests", "imageExportTests"]},
     {"patterns": ["scripts/export_documentation_metrics.py", "scripts/check_documentation.py", "scripts/consolidate_reports.py", "tests/test_documentation_metrics.py"], "tests": [], "python": ["documentation_metrics"]},
     {"patterns": ["tests/compare_profile_exports.py"], "tests": [], "python": ["base_colorimetry_analysis"]},

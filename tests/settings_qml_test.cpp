@@ -478,12 +478,11 @@ int main(int argc, char **argv)
                editor.automaticWhiteBalance() == targetWhiteBalance,
                "paste must restore the snapshot and UI while preserving target metadata and development")) return 1;
     editor.saveCurrentAdjustments();
-    EditRecipe::Settings saved;
-    EditRecipe::UserImageMetadata savedMetadata;
-    if (!check(Sidecar::read(second, &saved, &savedMetadata) && saved.denoiseLuminance == 43 &&
-               saved.gradingBlending == 80 && saved.gradingBalance == -30 &&
-               saved.gradingSaturation[3] == 15 && saved.gradingLuminance[2] == -40 &&
-               savedMetadata.rating == 2 && savedMetadata.colorLabel == "blue" &&
+    const auto saved = Sidecar::read(second);
+    if (!check(saved && saved->settings.denoiseLuminance == 43 &&
+               saved->settings.gradingBlending == 80 && saved->settings.gradingBalance == -30 &&
+               saved->settings.gradingSaturation[3] == 15 && saved->settings.gradingLuminance[2] == -40 &&
+               saved->metadata.rating == 2 && saved->metadata.colorLabel == "blue" &&
                editor.statusMessage().startsWith(QStringLiteral("Réglages enregistrés")),
                "manual save must persist the latest recipe and metadata and report success")) return 1;
     editor.resetAdjustments();

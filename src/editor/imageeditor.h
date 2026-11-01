@@ -411,6 +411,7 @@ private:
     QString m_normalizationManifest;
     bool m_rawNormalizationEnabled = true;
     bool m_denoiseBeforeProfile = false;   // experimental session switch, kept across images
+    bool m_sidecarReadOnly = false;        // the open image's .ipr comes from a newer IPR
     QString m_rawDevelopmentWarning;
     QString m_profileSha256;
     QString m_manifestSha256;

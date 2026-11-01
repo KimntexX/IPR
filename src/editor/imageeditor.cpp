@@ -1077,27 +1077,27 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
 {
     BatchResult result;
     for (const QString &fileName : files) {
-        Settings target;
-        UserImageMetadata targetMetadata;
-        RawDevelopment targetRaw;
-        const bool hasSidecar = Sidecar::read(fileName, &target, &targetMetadata, &targetRaw);
-        if (!hasSidecar) {
-            targetMetadata = annotations.value(fileName);
+        Sidecar::Document target;
+        if (std::optional<Sidecar::Document> saved = Sidecar::read(fileName)) {
+            target = std::move(*saved);
+        } else {
+            target.metadata = annotations.value(fileName);
             // The development the target gets when opened without a sidecar.
-            targetRaw.normalizationEnabled = true;
+            target.raw.normalizationEnabled = true;
         }
         // Retouches can be copied across cameras; RAW profiles cannot.
         Settings copied = settings;
-        copied.automaticWhiteBalance = target.automaticWhiteBalance;
-        if (target.automaticWhiteBalance) {
-            copied.temperature = target.temperature;
-            copied.tint = target.tint;
+        copied.automaticWhiteBalance = target.settings.automaticWhiteBalance;
+        if (target.settings.automaticWhiteBalance) {
+            copied.temperature = target.settings.temperature;
+            copied.tint = target.settings.tint;
         } else if (asShot) {
             copied.temperature = static_cast<int>(std::lround(
                 ImageImport::referenceWhiteBalanceKelvin(fileName).value_or(5200.0)));
             copied.tint = 0;
         }
-        if (Sidecar::write(fileName, copied, targetMetadata, targetRaw))
+        target.settings = std::move(copied);
+        if (Sidecar::write(fileName, target))
             ++result.written;
         else
             result.failed.append(QFileInfo(fileName).fileName());
@@ -1187,8 +1187,9 @@ void ImageEditor::exportFiles(QPromise<BatchResult> &promise, const QStringList 
         LoadResult loaded = loadFromDisk(fileName, automaticWhiteBalance, options);
         if (cancel->load()) { result.cancelled = true; break; }
         Settings settings;
-        UserImageMetadata metadata;
-        if (!Sidecar::read(fileName, &settings, &metadata))
+        if (std::optional<Sidecar::Document> saved = Sidecar::read(fileName))
+            settings = std::move(saved->settings);
+        else
             settings.temperature = static_cast<int>(std::lround(
                 loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));
         const QString base = QFileInfo(fileName).completeBaseName().isEmpty()
@@ -2260,9 +2261,6 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
         // eviction can release only the cache reference, never these pixels.
         if (!m_currentCacheKey.isEmpty() && !m_original.isNull())
             m_decodedImageCache.insert(m_currentCacheKey, retainedCurrentEntry());
-        Settings persisted;
-        UserImageMetadata metadata;
-        RawDevelopment raw;
         m_cameraProfile.clear();
         m_profileSha256.clear();
         m_normalizationManifest.clear();
@@ -2274,8 +2272,9 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
         m_lensProfileResolved = false;
         m_lensCorrectionEnabled = true;
         m_chromaticAberrationEnabled = true;
-        if (Sidecar::read(fileName, &persisted, &metadata, &raw)) {
-            automaticWhiteBalance = persisted.automaticWhiteBalance;
+        if (const std::optional<Sidecar::Document> saved = Sidecar::read(fileName)) {
+            const RawDevelopment &raw = saved->raw;
+            automaticWhiteBalance = saved->settings.automaticWhiteBalance;
             m_cameraProfile = relocateResource(raw.profile, raw.profileSha256, "profiles");
             m_profileSha256 = raw.profileSha256;
             m_normalizationManifest = relocateResource(raw.manifest, raw.manifestSha256, "config");
@@ -2469,11 +2468,11 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         m_settings = {};
         m_settings.temperature = static_cast<int>(std::lround(
             m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
-        UserImageMetadata metadata;
-        Settings persisted;
-        if (Sidecar::read(m_currentFile.toLocalFile(), &persisted, &metadata)) {
-            m_settings = std::move(persisted);
-            m_userImageMetadata.insert(currentFileKey(), std::move(metadata));
+        m_sidecarReadOnly = false;
+        if (std::optional<Sidecar::Document> saved = Sidecar::read(m_currentFile.toLocalFile())) {
+            m_settings = std::move(saved->settings);
+            m_userImageMetadata.insert(currentFileKey(), std::move(saved->metadata));
+            m_sidecarReadOnly = saved->format == Sidecar::Format::Newer;
         }
         m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
@@ -2492,6 +2491,9 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
     setStatusMessage(loaded.memoryPressure
         ? tr("Image prête : %1 — ouverte sous pression mémoire : RAM occupée par d'autres applications, "
              "Windows peut ralentir en utilisant le fichier d'échange.").arg(readyName)
+        : m_sidecarReadOnly
+        ? tr("Image prête : %1 — réglages enregistrés par une version plus récente d'IPR, "
+             "ouverts en lecture seule.").arg(readyName)
         : tr("Image prête : %1").arg(readyName));
     scheduleRender();
 }
@@ -2559,8 +2561,13 @@ bool ImageEditor::saveCurrentSidecar()
         return false;
     if (m_currentFile != m_displayedFile) return false;
     if (m_loadWatcher.isRunning()) return false;
-    if (!Sidecar::write(m_currentFile.toLocalFile(), m_settings,
-                 m_userImageMetadata.value(currentFileKey()), rawDevelopmentRecipe()))
+    if (m_sidecarReadOnly) {
+        setStatusMessage(tr("Réglages enregistrés par une version plus récente d'IPR : "
+                            "ouverts en lecture seule, non sauvegardés."));
+        return false;
+    }
+    if (!Sidecar::write(m_currentFile.toLocalFile(),
+                        {m_settings, m_userImageMetadata.value(currentFileKey()), rawDevelopmentRecipe()}))
     {
         setStatusMessage(tr("Échec de sauvegarde des réglages .ipr : vérifiez les permissions du dossier."));
         return false;
@@ -2602,12 +2609,11 @@ void ImageEditor::startRender()
 
 RawDecoder::Options ImageEditor::optionsForFile(const QString &path, bool *automaticWhiteBalance, QString *key)
 {
-    Settings settings;
-    UserImageMetadata metadata;
-    RawDevelopment raw;
-    const bool saved = Sidecar::read(path, &settings, &metadata, &raw);
+    const std::optional<Sidecar::Document> document = Sidecar::read(path);
+    const bool saved = document.has_value();
+    const RawDevelopment raw = saved ? document->raw : RawDevelopment{};
     RawDecoder::Options options;
-    options.automaticWhiteBalance = saved && settings.automaticWhiteBalance;
+    options.automaticWhiteBalance = saved && document->settings.automaticWhiteBalance;
     *automaticWhiteBalance = options.automaticWhiteBalance;
     options.preferCameraNeutral = true;
     options.listDcpProfiles = true;

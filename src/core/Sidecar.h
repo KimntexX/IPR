@@ -5,15 +5,34 @@
 
 #include <QString>
 
-// The .ipr sidecar beside an image (format version 6): settings, user metadata
-// and RAW development recipe, tied to the source file's size and date. Older
-// versions are read; mixer bands of versions 1-3 keep their hue identity.
+#include <optional>
+
+// The .ipr sidecar beside an image (ADR-0021): a self-described CBOR document
+// whose named sections are the header ("ipr": format, writer, identity of the
+// photo), the settings, the user metadata and the RAW development recipe.
+// Unknown sections and fields are skipped, missing fields take their default.
+// The former binary sidecars (versions 1 to 9) are read and converted; the first
+// save rewrites them at the current format. A file of a newer format is read but
+// never overwritten.
 namespace Sidecar {
+inline constexpr int FormatVersion = 10;
+
+// Where a sidecar stands against this IPR.
+enum class Format { Current, Older, Newer };
+
+struct Document
+{
+    EditRecipe::Settings settings;
+    EditRecipe::UserImageMetadata metadata;
+    EditRecipe::RawDevelopment raw;
+    Format format = Format::Current;   // set by read(); write() always writes the current format
+};
+
 QString path(const QString &fileName);
-bool read(const QString &fileName, EditRecipe::Settings *settings,
-          EditRecipe::UserImageMetadata *metadata, EditRecipe::RawDevelopment *raw = nullptr);
-bool write(const QString &fileName, const EditRecipe::Settings &settings,
-           const EditRecipe::UserImageMetadata &metadata, const EditRecipe::RawDevelopment &raw);
+// No document when the sidecar is absent, damaged or tied to another state of the photo.
+std::optional<Document> read(const QString &fileName);
+// False when writing fails or when the existing sidecar has a newer format.
+bool write(const QString &fileName, const Document &document);
 }
 
 #endif // IPR_CORE_SIDECAR_H
