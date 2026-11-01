@@ -91,6 +91,31 @@ boîtier, qui remplacera la case expérimentale.
   un `.ipr` de référence de chaque version publiée et vérifie qu'il se lit, se
   convertit et se rend à l'identique.
 
+### Choix techniques (B0.3, validés le 1er novembre 2026)
+
+- **Format :** le `.ipr` devient un document **CBOR** (format binaire standard,
+  lu et écrit par Qt avec `QCborValue`) : ses clés nommées sont les sections ;
+  une conversion JSON lisible sert au débogage.
+- **Historique :** un **instantané complet de la recette** par étape, compressé
+  dans le fichier ; annuler recharge l'instantané précédent. Les actifs de
+  `.ipr-data` sont référencés, jamais copiés.
+- **Tâches longues :** un **exécuteur commun** (état, progression, annulation,
+  révision qui écarte un résultat obsolète, priorités interactive, premier plan
+  et fond), réservant la mémoire par le contrôleur actuel ; les mécanismes
+  actuels y migrent un à un. Sa robustesse est jugée à la mise en place.
+- **Valeurs locales :** chaque module reçoit, en plus de sa valeur globale, une
+  **carte de valeurs** facultative ; sans masque, il garde son chemin actuel,
+  identique au bit près.
+- **Masques :** stockés **vectoriellement** (traits, dégradés, en coordonnées
+  normalisées de l'image redressée), rastérisés à la résolution du rendu et mis
+  en cache ; les masques issus d'un modèle sont des images dans `.ipr-data`.
+- **Géométrie :** une **seule matrice** pour rotation, perspective, échelle et
+  miroir, appliquée en une passe (bicubique à l'aperçu, Lanczos à l'export) ; le
+  recadrage est une découpe finale.
+- **Ordre de travail :** exécuteur de tâches, recette CBOR avec conversion des
+  versions 1 à 9, historique, cartes de valeurs locales ; chaque étape avec ses
+  tests écrits d'abord.
+
 ## Conséquences
 
 - **Bénéfices :** recette légère et lisible, retouches jamais perdues avec le
