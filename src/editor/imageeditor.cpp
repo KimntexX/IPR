@@ -1034,7 +1034,11 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
         UserImageMetadata targetMetadata;
         RawDevelopment targetRaw;
         const bool hasSidecar = Sidecar::read(fileName, &target, &targetMetadata, &targetRaw);
-        if (!hasSidecar) targetMetadata = annotations.value(fileName);
+        if (!hasSidecar) {
+            targetMetadata = annotations.value(fileName);
+            // The development the target gets when opened without a sidecar.
+            targetRaw.normalizationEnabled = true;
+        }
         // Retouches can be copied across cameras; RAW profiles cannot.
         Settings copied = settings;
         copied.automaticWhiteBalance = target.automaticWhiteBalance;
