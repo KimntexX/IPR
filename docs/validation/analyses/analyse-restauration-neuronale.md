@@ -392,3 +392,52 @@ contourner l'échec du protocole figé ; elle demanderait une étude distincte.
 État logiciel : 52 tests ciblés réussis après correction (38 précédents,
 13 contrôles de paires et 1 test synthétique d'apprentissage de bout en
 bout). Aucune intégration ou publication Git ; production inchangée.
+
+## 1er novembre 2026 — acquisition de la nouvelle composition de contrôle
+
+À la demande de l'utilisateur, récupération de **66 CR3**, de `6V1A0301`
+à `6V1A0366`, depuis `D:/DCIM/101EOSR6`, dans le corpus partagé
+`tests/image/colorimétrie/neural-validation`. Volume : **2 742 941 352 octets**.
+Copie exclusive sans écrasement ; les 66 empreintes SHA-256 des copies sont
+identiques à celles des sources. Aucun original supprimé ou modifié.
+
+| Groupe chronologique | Fichiers | ISO | Temps | Nombre |
+| --- | --- | ---: | ---: | ---: |
+| 1 | 0301–0309 | 100 | 0,8 s | 9 |
+| 2 | 0310–0319 | 1600 | 1/10 s | 10 |
+| 3 | 0320–0327 | 100 | 0,8 s | 8 |
+| 4 | 0328–0339 | 3200 | 1/40 s | 12 |
+| 5 | 0340–0351 | 6400 | 1/80 s | 12 |
+| 6 | 0352–0366 | 12800 | 1/160 s | 15 |
+
+Boîtier déclaré : Canon EOS R6 Mark III ; ouverture f/5,6 et focale 24 mm
+constantes. Inspection des JPEG intégrés : nouvel agencement des mêmes
+types de matières, éclairage plus chaud ; cette composition entière est
+réservée à la **validation**, tous ISO confondus, sans ajout à l'apprentissage.
+Cela reste une scène de contrôle apparentée, pas un test produit indépendant
+sur de nouvelles familles de matières ou un autre boîtier.
+
+Le dépistage sur aperçus de 800 px au maximum ne rencontre aucun échec
+de recalage intra-groupe. Corrélation ECC minimale selon groupe : environ
+0,999919 à 0,999990 ; translation maximale d'environ 0,058 pixel d'aperçu.
+Ces résultats sont encourageants, mais **ne qualifient ni la stabilité
+locale RAW, ni l'absence d'écrêtage, ni les cibles propres du réseau**.
+
+Les deux séries ISO 100 sont conservées séparément : leur niveau gris moyen
+encodé diffère d'environ 1,5 %, sans cause établie. Ne pas les réunir comme
+référence de 17 prises avant contrôle RAW. ISO 1600 est également plus
+exposé : le produit ISO × temps vaut 160 contre 80 pour les autres groupes.
+Une adaptation radiométrique reste possible dans le protocole, sans
+prétendre que la lumière réelle ou le traitement JPEG sont identiques.
+
+Mémoires canoniques :
+
+- [Inventaire et stabilité des aperçus](../raw/neural-capture-series-v001-20261101T212959Z.json).
+- [Acquisition et 66 couples d'empreintes](../raw/neural-corpus-import-v001-20261101T213020Z.json).
+
+Quatre tests ciblés vérifient la copie, le refus d'écrasement, le refus d'un
+inventaire périmé et la détection d'une empreinte divergente. Les copies
+partielles restent visibles en cas d'erreur ; aucun nettoyage automatique.
+Prochaine action : qualification des références et des paires dans le signal
+caméra signé IPR, avec les mêmes critères qu'au passage corrigé précédent.
+**Aucun nouvel entraînement photographique ni changement moteur à ce stade.**

@@ -1,0 +1,551 @@
+{
+  "schema": "ipr.neural.corpus-import.v1",
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-corpus-import-v001-20261101T213020Z",
+  "metadata_completion": "Campaign identifier and data version added before first publication; copy records and source tool hash unchanged. Acquisition tool preserved in local commit ff530aa; use recorded tool_sha256 as identity.",
+  "measured_at_utc": "2026-11-01T21:30:20.870220+00:00",
+  "git_sha": "aefbea5c24c2e67469a00a83a9814558109a8eb3",
+  "tool_sha256": "f83a5e80284809bb2e461dd210c8e17f8ceb5fa080ceacae4e3e8b8008fedc8b",
+  "audit": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\series-0301-0366-v001\\audit.json",
+    "sha256": "de4798b509a94a216ac713c1e688b4e55bc04b257978e2c2f4a99e6311ba8511"
+  },
+  "partition": "validation",
+  "status": "copied_and_hash_verified",
+  "records": [
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0301.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0301.CR3",
+      "bytes": 34313940,
+      "source_mtime_ns": 1793571299000000000,
+      "source_sha256": "675f0d79ca0e6255680d1ec50471c2323d51668658d07fe0cf46790c26796681",
+      "destination_sha256": "675f0d79ca0e6255680d1ec50471c2323d51668658d07fe0cf46790c26796681"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0302.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0302.CR3",
+      "bytes": 34280148,
+      "source_mtime_ns": 1793571301000000000,
+      "source_sha256": "1ce77e02f3113803838257cd59fa3adc382f1e9e6057a149df00ebf352288ed7",
+      "destination_sha256": "1ce77e02f3113803838257cd59fa3adc382f1e9e6057a149df00ebf352288ed7"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0303.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0303.CR3",
+      "bytes": 34274004,
+      "source_mtime_ns": 1793571303000000000,
+      "source_sha256": "f9b9d24c50105bbd0335092014428e60ff3c0cde355606fe6e3f4f62a2fe99e2",
+      "destination_sha256": "f9b9d24c50105bbd0335092014428e60ff3c0cde355606fe6e3f4f62a2fe99e2"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0304.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0304.CR3",
+      "bytes": 34266324,
+      "source_mtime_ns": 1793571305000000000,
+      "source_sha256": "70c03a9f95618551b2e416023bf3cd93de5a2f24efce958fa76964f872ca1356",
+      "destination_sha256": "70c03a9f95618551b2e416023bf3cd93de5a2f24efce958fa76964f872ca1356"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0305.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0305.CR3",
+      "bytes": 34260692,
+      "source_mtime_ns": 1793571307000000000,
+      "source_sha256": "3a83c9070cf00ae338df1323cff09681b4027dd1320ac4422ea1a303dde5bc60",
+      "destination_sha256": "3a83c9070cf00ae338df1323cff09681b4027dd1320ac4422ea1a303dde5bc60"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0306.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0306.CR3",
+      "bytes": 34266324,
+      "source_mtime_ns": 1793571310000000000,
+      "source_sha256": "f77c43037c22838c00be6b61a56421293e48c7901bfe099164fc0e9c864467cf",
+      "destination_sha256": "f77c43037c22838c00be6b61a56421293e48c7901bfe099164fc0e9c864467cf"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0307.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0307.CR3",
+      "bytes": 34267348,
+      "source_mtime_ns": 1793571312000000000,
+      "source_sha256": "02bc8e05734085d210a3b0762209134e186426a4dda55d4b177e529e7d2760d8",
+      "destination_sha256": "02bc8e05734085d210a3b0762209134e186426a4dda55d4b177e529e7d2760d8"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0308.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0308.CR3",
+      "bytes": 34265812,
+      "source_mtime_ns": 1793571315000000000,
+      "source_sha256": "bc8c1ec3a5094212877566de87546c41b887fe077b61ca2b12c5d0679f9ff49b",
+      "destination_sha256": "bc8c1ec3a5094212877566de87546c41b887fe077b61ca2b12c5d0679f9ff49b"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0309.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0309.CR3",
+      "bytes": 34269396,
+      "source_mtime_ns": 1793571318000000000,
+      "source_sha256": "79dcee4c1e03d14ca1e41e6f63043b4dfb11d3f41b5df776b07b019f007f622b",
+      "destination_sha256": "79dcee4c1e03d14ca1e41e6f63043b4dfb11d3f41b5df776b07b019f007f622b"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0310.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0310.CR3",
+      "bytes": 42677972,
+      "source_mtime_ns": 1793571433000000000,
+      "source_sha256": "f43df04c8982fe6751d51c1606b8a2505ab235e064d2668a17fc35afd418c3b2",
+      "destination_sha256": "f43df04c8982fe6751d51c1606b8a2505ab235e064d2668a17fc35afd418c3b2"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0311.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0311.CR3",
+      "bytes": 42662612,
+      "source_mtime_ns": 1793571435000000000,
+      "source_sha256": "78b54b863cbc1a7ea5af3bd960a4893b9ab07a199d1668330e5765379d2358ec",
+      "destination_sha256": "78b54b863cbc1a7ea5af3bd960a4893b9ab07a199d1668330e5765379d2358ec"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0312.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0312.CR3",
+      "bytes": 42650836,
+      "source_mtime_ns": 1793571437000000000,
+      "source_sha256": "4734b9a67f0d6800b3c0a4537f4e08b8fec9509380e81812e4c23ba06eb298d3",
+      "destination_sha256": "4734b9a67f0d6800b3c0a4537f4e08b8fec9509380e81812e4c23ba06eb298d3"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0313.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0313.CR3",
+      "bytes": 42639060,
+      "source_mtime_ns": 1793571439000000000,
+      "source_sha256": "1892ec7589ddfc4370c9eba9453dce64159eafdd66902e24a66d66c17a050ab3",
+      "destination_sha256": "1892ec7589ddfc4370c9eba9453dce64159eafdd66902e24a66d66c17a050ab3"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0314.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0314.CR3",
+      "bytes": 42640596,
+      "source_mtime_ns": 1793571441000000000,
+      "source_sha256": "964fef883761dfd0c62487d9f2e55d76e0902374b82cb0e9c6d70468e47e154b",
+      "destination_sha256": "964fef883761dfd0c62487d9f2e55d76e0902374b82cb0e9c6d70468e47e154b"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0315.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0315.CR3",
+      "bytes": 42641108,
+      "source_mtime_ns": 1793571443000000000,
+      "source_sha256": "8e5b927d4c4b32ce4462417d884ff86fa83f862f391cff9bd152cdeb9ed9d97f",
+      "destination_sha256": "8e5b927d4c4b32ce4462417d884ff86fa83f862f391cff9bd152cdeb9ed9d97f"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0316.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0316.CR3",
+      "bytes": 42645716,
+      "source_mtime_ns": 1793571446000000000,
+      "source_sha256": "971273adc0ac08c4e10d0c3e899c690d167a1feecd27f049c2a8ef00694fd460",
+      "destination_sha256": "971273adc0ac08c4e10d0c3e899c690d167a1feecd27f049c2a8ef00694fd460"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0317.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0317.CR3",
+      "bytes": 42635988,
+      "source_mtime_ns": 1793571448000000000,
+      "source_sha256": "2bf7553e67ffe1bc74abab901ad6449c88a337898810259cab47ae8f15643b94",
+      "destination_sha256": "2bf7553e67ffe1bc74abab901ad6449c88a337898810259cab47ae8f15643b94"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0318.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0318.CR3",
+      "bytes": 42637012,
+      "source_mtime_ns": 1793571450000000000,
+      "source_sha256": "17708eb483107417a78606a5bc2c08bef6b9fbae3958c9b4bf6c81f796d44b42",
+      "destination_sha256": "17708eb483107417a78606a5bc2c08bef6b9fbae3958c9b4bf6c81f796d44b42"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0319.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0319.CR3",
+      "bytes": 42637012,
+      "source_mtime_ns": 1793571452000000000,
+      "source_sha256": "50f333ca134f18e383efa19bb510dd14dee38caa13b326b2eeb66e4942d09f3b",
+      "destination_sha256": "50f333ca134f18e383efa19bb510dd14dee38caa13b326b2eeb66e4942d09f3b"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0320.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0320.CR3",
+      "bytes": 34328276,
+      "source_mtime_ns": 1793571542000000000,
+      "source_sha256": "6d7c40d7b3c0d5bd2d7c7b238a89dd320fb77f239a8dc7717570cfef9d9c1098",
+      "destination_sha256": "6d7c40d7b3c0d5bd2d7c7b238a89dd320fb77f239a8dc7717570cfef9d9c1098"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0321.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0321.CR3",
+      "bytes": 34281684,
+      "source_mtime_ns": 1793571544000000000,
+      "source_sha256": "5b4a73c34446a2b5966b5b5c21c7ad978c318fad53f047900206978f3b63c2dc",
+      "destination_sha256": "5b4a73c34446a2b5966b5b5c21c7ad978c318fad53f047900206978f3b63c2dc"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0322.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0322.CR3",
+      "bytes": 34284244,
+      "source_mtime_ns": 1793571546000000000,
+      "source_sha256": "3ecf70892a4ba0e868b96ce9f400afe6392df2dd35a38b1529d476d9b5ec935a",
+      "destination_sha256": "3ecf70892a4ba0e868b96ce9f400afe6392df2dd35a38b1529d476d9b5ec935a"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0323.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0323.CR3",
+      "bytes": 34288340,
+      "source_mtime_ns": 1793571548000000000,
+      "source_sha256": "2bf17651c253486a8da1e55d44fae668b948e61481e7fa79102dcd0e078b680c",
+      "destination_sha256": "2bf17651c253486a8da1e55d44fae668b948e61481e7fa79102dcd0e078b680c"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0324.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0324.CR3",
+      "bytes": 34283220,
+      "source_mtime_ns": 1793571551000000000,
+      "source_sha256": "51fdca4e3fa0d939a6f3ff2ab5efacf420b018bcf2afcb65859b75890e8dde94",
+      "destination_sha256": "51fdca4e3fa0d939a6f3ff2ab5efacf420b018bcf2afcb65859b75890e8dde94"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0325.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0325.CR3",
+      "bytes": 34285268,
+      "source_mtime_ns": 1793571553000000000,
+      "source_sha256": "715e1d743e73c49adcaad96e6d9203e9554cc703f7c68db188f3cfb57bc790f7",
+      "destination_sha256": "715e1d743e73c49adcaad96e6d9203e9554cc703f7c68db188f3cfb57bc790f7"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0326.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0326.CR3",
+      "bytes": 34284244,
+      "source_mtime_ns": 1793571556000000000,
+      "source_sha256": "3bd2c00a4e7ac9dd8a6affa4bfe85e87e02e67714c2839aed46016155af3ca87",
+      "destination_sha256": "3bd2c00a4e7ac9dd8a6affa4bfe85e87e02e67714c2839aed46016155af3ca87"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0327.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0327.CR3",
+      "bytes": 34289876,
+      "source_mtime_ns": 1793571558000000000,
+      "source_sha256": "5383bab08605295608168f11a5a89e98e83d9f80342117b104b79e91286186fc",
+      "destination_sha256": "5383bab08605295608168f11a5a89e98e83d9f80342117b104b79e91286186fc"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0328.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0328.CR3",
+      "bytes": 41855700,
+      "source_mtime_ns": 1793571636000000000,
+      "source_sha256": "137ac2eeb1c4448fd1d170ab84938ccc31d4fc71775ac79650f8e5ca1a46352a",
+      "destination_sha256": "137ac2eeb1c4448fd1d170ab84938ccc31d4fc71775ac79650f8e5ca1a46352a"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0329.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0329.CR3",
+      "bytes": 41836244,
+      "source_mtime_ns": 1793571638000000000,
+      "source_sha256": "b59ea5d3801ede024c8735ae35c33edff1b5f1aef18e5cc1bfd46ab7a5db2c82",
+      "destination_sha256": "b59ea5d3801ede024c8735ae35c33edff1b5f1aef18e5cc1bfd46ab7a5db2c82"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0330.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0330.CR3",
+      "bytes": 41829588,
+      "source_mtime_ns": 1793571640000000000,
+      "source_sha256": "65eab8b0489014a316515f558c3866ef984b5dc0efa136132eef229775c37d51",
+      "destination_sha256": "65eab8b0489014a316515f558c3866ef984b5dc0efa136132eef229775c37d51"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0331.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0331.CR3",
+      "bytes": 41830100,
+      "source_mtime_ns": 1793571643000000000,
+      "source_sha256": "175e14a94ba40460e2b4e8724d15cc2ee163596356c90c1760fda875017f1601",
+      "destination_sha256": "175e14a94ba40460e2b4e8724d15cc2ee163596356c90c1760fda875017f1601"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0332.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0332.CR3",
+      "bytes": 41823956,
+      "source_mtime_ns": 1793571645000000000,
+      "source_sha256": "1a169d40eaad6e367da16671686bcdac695c3a82ec132d16be0444b60519c7bd",
+      "destination_sha256": "1a169d40eaad6e367da16671686bcdac695c3a82ec132d16be0444b60519c7bd"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0333.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0333.CR3",
+      "bytes": 41838804,
+      "source_mtime_ns": 1793571648000000000,
+      "source_sha256": "7cc577b09ec6dabafaf62b0e47c1e34495572fa111d83d17d9c02b65860e1829",
+      "destination_sha256": "7cc577b09ec6dabafaf62b0e47c1e34495572fa111d83d17d9c02b65860e1829"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0334.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0334.CR3",
+      "bytes": 41829588,
+      "source_mtime_ns": 1793571650000000000,
+      "source_sha256": "8a60dbc2c6d1a9a3f60cf5ae306f7613c1623ea2cd226c15ac2466f779c67a56",
+      "destination_sha256": "8a60dbc2c6d1a9a3f60cf5ae306f7613c1623ea2cd226c15ac2466f779c67a56"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0335.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0335.CR3",
+      "bytes": 41809108,
+      "source_mtime_ns": 1793571653000000000,
+      "source_sha256": "0eb82a3924a187f22bb15ea21c2e8adbef37aa0e77dbb7e3e421e2242d9aca38",
+      "destination_sha256": "0eb82a3924a187f22bb15ea21c2e8adbef37aa0e77dbb7e3e421e2242d9aca38"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0336.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0336.CR3",
+      "bytes": 41830100,
+      "source_mtime_ns": 1793571655000000000,
+      "source_sha256": "0d9972287f97bfd2524aeea3d1df88cb2c0cdf1144dc7170d223c98789ef4bd0",
+      "destination_sha256": "0d9972287f97bfd2524aeea3d1df88cb2c0cdf1144dc7170d223c98789ef4bd0"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0337.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0337.CR3",
+      "bytes": 41832660,
+      "source_mtime_ns": 1793571657000000000,
+      "source_sha256": "a3ef4861bf78c8cd088458f4172c10b5247a1dc581c5909795ff5bf97a26f10a",
+      "destination_sha256": "a3ef4861bf78c8cd088458f4172c10b5247a1dc581c5909795ff5bf97a26f10a"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0338.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0338.CR3",
+      "bytes": 41828564,
+      "source_mtime_ns": 1793571659000000000,
+      "source_sha256": "ab52671d1b8f643933b39a5f1dcb24204d9a1117c43a3006042ea60bf1a97ccc",
+      "destination_sha256": "ab52671d1b8f643933b39a5f1dcb24204d9a1117c43a3006042ea60bf1a97ccc"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0339.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0339.CR3",
+      "bytes": 41833684,
+      "source_mtime_ns": 1793571662000000000,
+      "source_sha256": "a996b45ae83dfaf7932d59ad29e5582544e4554b976b1bc80d688753d46e0028",
+      "destination_sha256": "a996b45ae83dfaf7932d59ad29e5582544e4554b976b1bc80d688753d46e0028"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0340.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0340.CR3",
+      "bytes": 43707092,
+      "source_mtime_ns": 1793571673000000000,
+      "source_sha256": "5e3495995f64745113ac36191de237222407a27caaebb8a255dfc765782141d0",
+      "destination_sha256": "5e3495995f64745113ac36191de237222407a27caaebb8a255dfc765782141d0"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0341.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0341.CR3",
+      "bytes": 43694292,
+      "source_mtime_ns": 1793571676000000000,
+      "source_sha256": "f5661a60cd027b58e45724179a17d31463fb4cb109686b4a03d8dd1f5efb241f",
+      "destination_sha256": "f5661a60cd027b58e45724179a17d31463fb4cb109686b4a03d8dd1f5efb241f"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0342.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0342.CR3",
+      "bytes": 43700948,
+      "source_mtime_ns": 1793571678000000000,
+      "source_sha256": "ce9cb3b1ba77942fe868e018bc572302f6468abc9842482a0055272a462f71c5",
+      "destination_sha256": "ce9cb3b1ba77942fe868e018bc572302f6468abc9842482a0055272a462f71c5"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0343.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0343.CR3",
+      "bytes": 43697364,
+      "source_mtime_ns": 1793571681000000000,
+      "source_sha256": "c84fabddc9df02c47461b9bb429ecbaf82e925a206918949df8ed7267ba813aa",
+      "destination_sha256": "c84fabddc9df02c47461b9bb429ecbaf82e925a206918949df8ed7267ba813aa"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0344.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0344.CR3",
+      "bytes": 43694804,
+      "source_mtime_ns": 1793571683000000000,
+      "source_sha256": "4460e0d080f357a2141d227505c19b0e98b853cc61f6b5c1c4b01c310f8c3907",
+      "destination_sha256": "4460e0d080f357a2141d227505c19b0e98b853cc61f6b5c1c4b01c310f8c3907"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0345.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0345.CR3",
+      "bytes": 43698900,
+      "source_mtime_ns": 1793571686000000000,
+      "source_sha256": "6372182da9e654fda3fd4d05602d6ab7bb3c73c8e9f90cf7069eacc88c4bcfae",
+      "destination_sha256": "6372182da9e654fda3fd4d05602d6ab7bb3c73c8e9f90cf7069eacc88c4bcfae"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0346.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0346.CR3",
+      "bytes": 43698900,
+      "source_mtime_ns": 1793571689000000000,
+      "source_sha256": "e463662afd8095b952482265b298988f8a98bf3b49d2e401896ca6aa8fb7160f",
+      "destination_sha256": "e463662afd8095b952482265b298988f8a98bf3b49d2e401896ca6aa8fb7160f"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0347.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0347.CR3",
+      "bytes": 43696852,
+      "source_mtime_ns": 1793571691000000000,
+      "source_sha256": "990ed30a91ea535bec41d32480eee091abca8c6b1ca4ef78d29390cee8c57da3",
+      "destination_sha256": "990ed30a91ea535bec41d32480eee091abca8c6b1ca4ef78d29390cee8c57da3"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0348.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0348.CR3",
+      "bytes": 43699924,
+      "source_mtime_ns": 1793571694000000000,
+      "source_sha256": "c66ef284f02378ebad8fed071ef83be2fe1e3c143be851ad2125ca99cfe0d662",
+      "destination_sha256": "c66ef284f02378ebad8fed071ef83be2fe1e3c143be851ad2125ca99cfe0d662"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0349.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0349.CR3",
+      "bytes": 43708116,
+      "source_mtime_ns": 1793571698000000000,
+      "source_sha256": "3addede3e5c31b53812b1c0a1fa97b19295592d636597dfd09df31b4aaef80a5",
+      "destination_sha256": "3addede3e5c31b53812b1c0a1fa97b19295592d636597dfd09df31b4aaef80a5"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0350.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0350.CR3",
+      "bytes": 43699412,
+      "source_mtime_ns": 1793571700000000000,
+      "source_sha256": "04a8da8c6405090192e9fd0caeca4bfe1392beddf408b728728bc11078e05e1e",
+      "destination_sha256": "04a8da8c6405090192e9fd0caeca4bfe1392beddf408b728728bc11078e05e1e"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0351.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0351.CR3",
+      "bytes": 43699412,
+      "source_mtime_ns": 1793571703000000000,
+      "source_sha256": "d94639581d092055d30fa7d22b3630d75238731d07430725ba0d2c6c490366d6",
+      "destination_sha256": "d94639581d092055d30fa7d22b3630d75238731d07430725ba0d2c6c490366d6"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0352.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0352.CR3",
+      "bytes": 47156948,
+      "source_mtime_ns": 1793571739000000000,
+      "source_sha256": "aa7142720285f8bab50621b87a36b0cbfe8467ed0ccff3152ab9ba294ad06007",
+      "destination_sha256": "aa7142720285f8bab50621b87a36b0cbfe8467ed0ccff3152ab9ba294ad06007"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0353.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0353.CR3",
+      "bytes": 47155412,
+      "source_mtime_ns": 1793571741000000000,
+      "source_sha256": "fb903710d9fc363c12f15c44a8767553e1dea883e8bc9f019c0d4602c9c82105",
+      "destination_sha256": "fb903710d9fc363c12f15c44a8767553e1dea883e8bc9f019c0d4602c9c82105"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0354.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0354.CR3",
+      "bytes": 47145684,
+      "source_mtime_ns": 1793571743000000000,
+      "source_sha256": "1cf6133addbaec7516b1f944d05675c37cc8cf80ef59793e13ab654c586caf23",
+      "destination_sha256": "1cf6133addbaec7516b1f944d05675c37cc8cf80ef59793e13ab654c586caf23"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0355.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0355.CR3",
+      "bytes": 47156948,
+      "source_mtime_ns": 1793571746000000000,
+      "source_sha256": "f8b7b56ffd7f6fcae70026c7ef60e3dfd2fd21187676ee1dd09054531b97a7b9",
+      "destination_sha256": "f8b7b56ffd7f6fcae70026c7ef60e3dfd2fd21187676ee1dd09054531b97a7b9"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0356.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0356.CR3",
+      "bytes": 47167188,
+      "source_mtime_ns": 1793571748000000000,
+      "source_sha256": "b6ce6671479927f7d5fc23f9d12007c36e4d9eb02fd6accfff7ebca566ae767c",
+      "destination_sha256": "b6ce6671479927f7d5fc23f9d12007c36e4d9eb02fd6accfff7ebca566ae767c"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0357.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0357.CR3",
+      "bytes": 47158996,
+      "source_mtime_ns": 1793571751000000000,
+      "source_sha256": "e704a043a8e0b12fd9df952c8969b240a3e2f9afd38a333d40283af5821046e5",
+      "destination_sha256": "e704a043a8e0b12fd9df952c8969b240a3e2f9afd38a333d40283af5821046e5"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0358.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0358.CR3",
+      "bytes": 47161044,
+      "source_mtime_ns": 1793571753000000000,
+      "source_sha256": "5486198ade22c6ac762800180a15a10cece2aa646254f5af634f53e90f5024ae",
+      "destination_sha256": "5486198ade22c6ac762800180a15a10cece2aa646254f5af634f53e90f5024ae"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0359.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0359.CR3",
+      "bytes": 47133908,
+      "source_mtime_ns": 1793571755000000000,
+      "source_sha256": "fc26cc354590a68216491d373aab51f08faae17871e446f00c065de62f386d5b",
+      "destination_sha256": "fc26cc354590a68216491d373aab51f08faae17871e446f00c065de62f386d5b"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0360.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0360.CR3",
+      "bytes": 47143636,
+      "source_mtime_ns": 1793571758000000000,
+      "source_sha256": "fa1dac14a26b24717430fb77d5a6835c0df51dbbdb435b045c82dc027ee3a658",
+      "destination_sha256": "fa1dac14a26b24717430fb77d5a6835c0df51dbbdb435b045c82dc027ee3a658"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0361.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0361.CR3",
+      "bytes": 47158484,
+      "source_mtime_ns": 1793571760000000000,
+      "source_sha256": "5159abf8d374f15754a257cfbf88581855e007ab6b46fa675ea1d04d9bd1262d",
+      "destination_sha256": "5159abf8d374f15754a257cfbf88581855e007ab6b46fa675ea1d04d9bd1262d"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0362.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0362.CR3",
+      "bytes": 47147732,
+      "source_mtime_ns": 1793571763000000000,
+      "source_sha256": "522755c4ce62313741342e12da846979c16b0ed76f5f0be0d04e3a812fc4272c",
+      "destination_sha256": "522755c4ce62313741342e12da846979c16b0ed76f5f0be0d04e3a812fc4272c"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0363.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0363.CR3",
+      "bytes": 47157460,
+      "source_mtime_ns": 1793571765000000000,
+      "source_sha256": "fd05446302532e894bcf5687b2ecd393b86ae05251f249fa9d22295d84aa82fe",
+      "destination_sha256": "fd05446302532e894bcf5687b2ecd393b86ae05251f249fa9d22295d84aa82fe"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0364.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0364.CR3",
+      "bytes": 47148756,
+      "source_mtime_ns": 1793571768000000000,
+      "source_sha256": "905e2506de05c710c4a888ec7578062d1b51d86c8ad02deedc813f91316fe55a",
+      "destination_sha256": "905e2506de05c710c4a888ec7578062d1b51d86c8ad02deedc813f91316fe55a"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0365.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0365.CR3",
+      "bytes": 47158996,
+      "source_mtime_ns": 1793571770000000000,
+      "source_sha256": "46280a1aa8938f13510ea26a1988a45a18c451e07f096fc2ebc1b5c37b2f39e7",
+      "destination_sha256": "46280a1aa8938f13510ea26a1988a45a18c451e07f096fc2ebc1b5c37b2f39e7"
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0366.CR3",
+      "destination": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\neural-validation\\6V1A0366.CR3",
+      "bytes": 47158996,
+      "source_mtime_ns": 1793571772000000000,
+      "source_sha256": "60462938d32746baf73ae3c94c1d188ce0dbe096ecc12d82dfd99882caf57c43",
+      "destination_sha256": "60462938d32746baf73ae3c94c1d188ce0dbe096ecc12d82dfd99882caf57c43"
+    }
+  ],
+  "limits": [
+    "Copy integrity and inventory only, not RAW pair equivalence or neural validation.",
+    "All ISO variants of this composition stay outside training.",
+    "No originals removed, renamed or modified; failed partial copies are not deleted."
+  ]
+}

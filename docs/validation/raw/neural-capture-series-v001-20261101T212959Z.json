@@ -1,0 +1,5455 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-capture-series-v001-20261101T212959Z",
+  "measured_at_utc": "2026-11-01T21:29:59.560897+00:00",
+  "study": "bounded_static_metadata_and_jpeg_stability",
+  "revision": "aefbea5c24c2e67469a00a83a9814558109a8eb3",
+  "tool_sha256": "dd41a59f45745a845fde1d44061c5a2b51259d63a68bd374ed99168c6cda0305",
+  "metadata_tool_sha256": "faa80d4aa481cc42f8bc11fc0eaaa8836b579e57dc5b5bfc8b8bd6670900ce64",
+  "source_range": {
+    "folder": "D:\\DCIM\\101EOSR6",
+    "first": "6V1A0301",
+    "last": "6V1A0366"
+  },
+  "versions": {
+    "rawpy": "0.27.1",
+    "libraw": [
+      0,
+      22,
+      1
+    ],
+    "numpy": "2.4.2",
+    "opencv": "5.0.0"
+  },
+  "groups": [
+    {
+      "id": 1,
+      "model": "Canon EOS R6 Mark III",
+      "iso": 100,
+      "exposure_s": 0.8,
+      "aperture": 5.6,
+      "focal_mm": 24.0,
+      "records": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "preview_evidence": [
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0301.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.37102991342544556,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3921568691730499,
+            0.7960784435272217
+          ],
+          "laplacian_std": 0.0672442615032196,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999999913436842,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "translation_pixels": 0.0,
+            "rotation_degrees": 0.0
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0302.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.37066373229026794,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3921568691730499,
+            0.7960784435272217
+          ],
+          "laplacian_std": 0.06709879636764526,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999895125547724,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.2504335245466791e-05,
+                -0.014773172326385975
+              ],
+              [
+                -1.2504335245466791e-05,
+                1.0,
+                -0.014627892524003983
+              ]
+            ],
+            "translation_pixels": 0.020789945498108864,
+            "rotation_degrees": -0.0007164456183090806
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0303.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3706035315990448,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3921568691730499,
+            0.7960784435272217
+          ],
+          "laplacian_std": 0.0670742616057396,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999881973001611,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.1401094525353983e-05,
+                0.007620993535965681
+              ],
+              [
+                -1.1401094525353983e-05,
+                1.0,
+                -0.01854844205081463
+              ]
+            ],
+            "translation_pixels": 0.020053036510944366,
+            "rotation_degrees": -0.0006532345432788134
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0304.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3705630302429199,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3921568691730499,
+            0.7960784435272217
+          ],
+          "laplacian_std": 0.0670766830444336,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999898124507177,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.0688174370443448e-05,
+                0.006386540364474058
+              ],
+              [
+                -1.0688174370443448e-05,
+                1.0,
+                -0.0010326699120923877
+              ]
+            ],
+            "translation_pixels": 0.006469490472227335,
+            "rotation_degrees": -0.0006123872590251267
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0305.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3705531060695648,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3921568691730499,
+            0.7960784435272217
+          ],
+          "laplacian_std": 0.06707992404699326,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999897609570183,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.1810449905169662e-05,
+                0.005128483287990093
+              ],
+              [
+                -1.1810449905169662e-05,
+                1.0,
+                0.00761898048222065
+              ]
+            ],
+            "translation_pixels": 0.009184236638247967,
+            "rotation_degrees": -0.0006766889127902687
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0306.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.37054482102394104,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3921568691730499,
+            0.7960784435272217
+          ],
+          "laplacian_std": 0.06710489094257355,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999885970406996,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.1172039194207173e-05,
+                0.00968171562999487
+              ],
+              [
+                -1.1172039194207173e-05,
+                1.0,
+                0.013342964462935925
+              ]
+            ],
+            "translation_pixels": 0.016485458239912987,
+            "rotation_degrees": -0.0006401106365956366
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0307.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3705328106880188,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3921568691730499,
+            0.7960784435272217
+          ],
+          "laplacian_std": 0.0670822262763977,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999866308914461,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.1812894626928028e-05,
+                -0.0071410369127988815
+              ],
+              [
+                -1.1812894626928028e-05,
+                1.0,
+                0.024154601618647575
+              ]
+            ],
+            "translation_pixels": 0.025188075378537178,
+            "rotation_degrees": -0.0006768289604224265
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0308.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3705095052719116,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3921568691730499,
+            0.7960784435272217
+          ],
+          "laplacian_std": 0.06708701699972153,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999730202740498,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.758679900376592e-05,
+                0.026255948469042778
+              ],
+              [
+                -1.758679900376592e-05,
+                1.0,
+                0.04269000142812729
+              ]
+            ],
+            "translation_pixels": 0.05011796951293945,
+            "rotation_degrees": -0.0010076493490487337
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0309.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.37052121758461,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3921568691730499,
+            0.7960784435272217
+          ],
+          "laplacian_std": 0.06709383428096771,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999759043134201,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.8526594431023113e-05,
+                0.007171354256570339
+              ],
+              [
+                -1.8526594431023113e-05,
+                1.0,
+                0.04553672671318054
+              ]
+            ],
+            "translation_pixels": 0.04609795659780502,
+            "rotation_degrees": -0.0010614956263452768
+          }
+        }
+      ],
+      "summary": {
+        "count": 9,
+        "first": "6V1A0301.CR3",
+        "last": "6V1A0309.CR3",
+        "alignment_failures": 0,
+        "minimum_ecc": 0.9999730202740498,
+        "maximum_translation_preview_pixels": 0.05011796951293945,
+        "maximum_absolute_rotation_degrees": 0.0010614956263452768,
+        "minimum_mean_gray": 0.3705095052719116,
+        "maximum_mean_gray": 0.37102991342544556
+      }
+    },
+    {
+      "id": 2,
+      "model": "Canon EOS R6 Mark III",
+      "iso": 1600,
+      "exposure_s": 0.1,
+      "aperture": 5.6,
+      "focal_mm": 24.0,
+      "records": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "preview_evidence": [
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0310.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.4969722628593445,
+          "gray_percentiles": [
+            0.0313725508749485,
+            0.5529412031173706,
+            0.9137254953384399
+          ],
+          "laplacian_std": 0.07873934507369995,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999999999314767,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "translation_pixels": 0.0,
+            "rotation_degrees": 0.0
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0311.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.49700358510017395,
+          "gray_percentiles": [
+            0.0313725508749485,
+            0.5529412031173706,
+            0.9137254953384399
+          ],
+          "laplacian_std": 0.07869832217693329,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999884870344098,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.0919264241238125e-05,
+                -0.008671331219375134
+              ],
+              [
+                -1.0919264241238125e-05,
+                1.0,
+                -0.003335956484079361
+              ]
+            ],
+            "translation_pixels": 0.009290887974202633,
+            "rotation_degrees": -0.0006256276974454522
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0312.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.49701806902885437,
+          "gray_percentiles": [
+            0.0313725508749485,
+            0.5529412031173706,
+            0.9137254953384399
+          ],
+          "laplacian_std": 0.07870835810899734,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.999987817082493,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                9.76461888058111e-06,
+                -0.017850488424301147
+              ],
+              [
+                -9.76461888058111e-06,
+                1.0,
+                -0.0020942650735378265
+              ]
+            ],
+            "translation_pixels": 0.0179729200899601,
+            "rotation_degrees": -0.0005594714311882854
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0313.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.4970056414604187,
+          "gray_percentiles": [
+            0.0313725508749485,
+            0.5529412031173706,
+            0.9137254953384399
+          ],
+          "laplacian_std": 0.07865683734416962,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999869545028426,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                8.801170224614907e-06,
+                -0.025196213275194168
+              ],
+              [
+                -8.801170224614907e-06,
+                1.0,
+                0.003348201746121049
+              ]
+            ],
+            "translation_pixels": 0.02541770227253437,
+            "rotation_degrees": -0.000504269904922694
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0314.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.4970144033432007,
+          "gray_percentiles": [
+            0.0313725508749485,
+            0.5529412031173706,
+            0.9137254953384399
+          ],
+          "laplacian_std": 0.07862365990877151,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999871711429364,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.1139443813590333e-05,
+                -0.017387529835104942
+              ],
+              [
+                -1.1139443813590333e-05,
+                1.0,
+                -0.01043393649160862
+              ]
+            ],
+            "translation_pixels": 0.020277900621294975,
+            "rotation_degrees": -0.0006382431020028889
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0315.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.4970155358314514,
+          "gray_percentiles": [
+            0.0313725508749485,
+            0.5529412031173706,
+            0.9137254953384399
+          ],
+          "laplacian_std": 0.07866609841585159,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999886120800291,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.2400807463563979e-05,
+                -0.010734261013567448
+              ],
+              [
+                -1.2400807463563979e-05,
+                1.0,
+                0.003200995270162821
+              ]
+            ],
+            "translation_pixels": 0.011201371438801289,
+            "rotation_degrees": -0.0007105139084160328
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0316.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.4969947040081024,
+          "gray_percentiles": [
+            0.0313725508749485,
+            0.5529412031173706,
+            0.9137254953384399
+          ],
+          "laplacian_std": 0.07863160222768784,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999879095902031,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                7.59380827730638e-06,
+                -0.014507821761071682
+              ],
+              [
+                -7.59380827730638e-06,
+                1.0,
+                -0.006050169002264738
+              ]
+            ],
+            "translation_pixels": 0.015718825161457062,
+            "rotation_degrees": -0.00043509312672540545
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0317.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.49700069427490234,
+          "gray_percentiles": [
+            0.0313725508749485,
+            0.5529412031173706,
+            0.9137254953384399
+          ],
+          "laplacian_std": 0.07862570881843567,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999877428514126,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.498273599689128e-06,
+                -0.014692479744553566
+              ],
+              [
+                -3.498273599689128e-06,
+                1.0,
+                -0.007980244234204292
+              ]
+            ],
+            "translation_pixels": 0.016719846054911613,
+            "rotation_degrees": -0.00020043630502186716
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0318.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.4970158338546753,
+          "gray_percentiles": [
+            0.0313725508749485,
+            0.5529412031173706,
+            0.9137254953384399
+          ],
+          "laplacian_std": 0.07866138964891434,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.999988928358069,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                5.906900241825497e-06,
+                -0.004294246900826693
+              ],
+              [
+                -5.906900241825497e-06,
+                1.0,
+                -0.0003032330423593521
+              ]
+            ],
+            "translation_pixels": 0.00430493988096714,
+            "rotation_degrees": -0.00033844044082798064
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0319.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.49704283475875854,
+          "gray_percentiles": [
+            0.0313725508749485,
+            0.5529412031173706,
+            0.9137254953384399
+          ],
+          "laplacian_std": 0.07862867414951324,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999881171022539,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                9.18234945856966e-06,
+                -0.015232177451252937
+              ],
+              [
+                -9.18234945856966e-06,
+                1.0,
+                0.002506014658138156
+              ]
+            ],
+            "translation_pixels": 0.015436947345733643,
+            "rotation_degrees": -0.0005261098267510533
+          }
+        }
+      ],
+      "summary": {
+        "count": 10,
+        "first": "6V1A0310.CR3",
+        "last": "6V1A0319.CR3",
+        "alignment_failures": 0,
+        "minimum_ecc": 0.9999869545028426,
+        "maximum_translation_preview_pixels": 0.02541770227253437,
+        "maximum_absolute_rotation_degrees": 0.0007105139084160328,
+        "minimum_mean_gray": 0.4969722628593445,
+        "maximum_mean_gray": 0.49704283475875854
+      }
+    },
+    {
+      "id": 3,
+      "model": "Canon EOS R6 Mark III",
+      "iso": 100,
+      "exposure_s": 0.8,
+      "aperture": 5.6,
+      "focal_mm": 24.0,
+      "records": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "preview_evidence": [
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0320.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.36485347151756287,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3843137323856354,
+            0.7882353067398071
+          ],
+          "laplacian_std": 0.06690192967653275,
+          "alignment": {
+            "status": "measured",
+            "ecc": 1.0000000067168227,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "translation_pixels": 0.0,
+            "rotation_degrees": 0.0
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0321.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.36487293243408203,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3843137323856354,
+            0.7882353067398071
+          ],
+          "laplacian_std": 0.06683038920164108,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999911191400607,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                2.478384658388677e-06,
+                0.01940182037651539
+              ],
+              [
+                -2.478384658388677e-06,
+                1.0,
+                0.0009813049109652638
+              ]
+            ],
+            "translation_pixels": 0.0194266214966774,
+            "rotation_degrees": -0.00014200097939465195
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0322.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.36488059163093567,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3843137323856354,
+            0.7882353067398071
+          ],
+          "laplacian_std": 0.06684225797653198,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999923213105095,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -4.3178724240533484e-07,
+                0.01305606123059988
+              ],
+              [
+                4.3178724240533484e-07,
+                1.0,
+                -0.007271759677678347
+              ]
+            ],
+            "translation_pixels": 0.014944538474082947,
+            "rotation_degrees": 2.473958556947764e-05
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0323.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3648575246334076,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3843137323856354,
+            0.7882353067398071
+          ],
+          "laplacian_std": 0.06682770699262619,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999897712177819,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.1630691005848348e-06,
+                0.02131999097764492
+              ],
+              [
+                -1.1630691005848348e-06,
+                1.0,
+                -0.016497911885380745
+              ]
+            ],
+            "translation_pixels": 0.02695780247449875,
+            "rotation_degrees": -6.663894600933418e-05
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0324.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3648456633090973,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3843137323856354,
+            0.7882353067398071
+          ],
+          "laplacian_std": 0.06683112680912018,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999906207546478,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.1616632441000547e-06,
+                0.019421525299549103
+              ],
+              [
+                -3.1616632441000547e-06,
+                1.0,
+                -0.010127010755240917
+              ]
+            ],
+            "translation_pixels": 0.02190324105322361,
+            "rotation_degrees": -0.0001811499532777816
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0325.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3648635447025299,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3843137323856354,
+            0.7882353067398071
+          ],
+          "laplacian_std": 0.06684355437755585,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999895767540485,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.8481663346392452e-06,
+                0.022967971861362457
+              ],
+              [
+                -1.8481663346392452e-06,
+                1.0,
+                -0.013878940604627132
+              ]
+            ],
+            "translation_pixels": 0.026835661381483078,
+            "rotation_degrees": -0.00010589212615741417
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0326.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.36485666036605835,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3843137323856354,
+            0.7882353067398071
+          ],
+          "laplacian_std": 0.06683839857578278,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999897721268943,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -4.102732020783151e-07,
+                0.022258590906858444
+              ],
+              [
+                4.102732020783151e-07,
+                1.0,
+                -0.01569439098238945
+              ]
+            ],
+            "translation_pixels": 0.027235247194767,
+            "rotation_degrees": 2.350692193431314e-05
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0327.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.36487823724746704,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.3843137323856354,
+            0.7882353067398071
+          ],
+          "laplacian_std": 0.06682099401950836,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999913482247226,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.998191009988659e-06,
+                0.010797962546348572
+              ],
+              [
+                -1.998191009988659e-06,
+                1.0,
+                -0.019190967082977295
+              ]
+            ],
+            "translation_pixels": 0.02202020026743412,
+            "rotation_degrees": -0.0001144879061030224
+          }
+        }
+      ],
+      "summary": {
+        "count": 8,
+        "first": "6V1A0320.CR3",
+        "last": "6V1A0327.CR3",
+        "alignment_failures": 0,
+        "minimum_ecc": 0.9999895767540485,
+        "maximum_translation_preview_pixels": 0.027235247194767,
+        "maximum_absolute_rotation_degrees": 0.0001811499532777816,
+        "minimum_mean_gray": 0.3648456633090973,
+        "maximum_mean_gray": 0.36488059163093567
+      }
+    },
+    {
+      "id": 4,
+      "model": "Canon EOS R6 Mark III",
+      "iso": 3200,
+      "exposure_s": 0.025,
+      "aperture": 5.6,
+      "focal_mm": 24.0,
+      "records": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38
+      ],
+      "preview_evidence": [
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0328.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.38263681530952454,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.06678526103496552,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999999922160271,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "translation_pixels": 0.0,
+            "rotation_degrees": 0.0
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0329.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.382315456867218,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.06663082540035248,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999716872530102,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                4.044750312459655e-05,
+                -0.021376557648181915
+              ],
+              [
+                -4.044750312459655e-05,
+                1.0,
+                -0.0028367626946419477
+              ]
+            ],
+            "translation_pixels": 0.02156396023929119,
+            "rotation_degrees": -0.002317471196874976
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0330.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3824165165424347,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.066644087433815,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999721779780107,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                9.56759959080955e-06,
+                -0.00893737468868494
+              ],
+              [
+                -9.56759959080955e-06,
+                1.0,
+                -0.019235149025917053
+              ]
+            ],
+            "translation_pixels": 0.0212100837379694,
+            "rotation_degrees": -0.0005481830448843539
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0331.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3824528157711029,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.06661177426576614,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999710739402078,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.3726257697708206e-06,
+                0.016804547980427742
+              ],
+              [
+                -3.3726257697708206e-06,
+                1.0,
+                -0.019437428563833237
+              ]
+            ],
+            "translation_pixels": 0.025694482028484344,
+            "rotation_degrees": -0.00019323721062391996
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0332.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.38252148032188416,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.06661727279424667,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999698360755043,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -1.6818881704239175e-05,
+                0.016409100964665413
+              ],
+              [
+                1.6818881704239175e-05,
+                1.0,
+                -0.039425354450941086
+              ]
+            ],
+            "translation_pixels": 0.04270382970571518,
+            "rotation_degrees": 0.0009636508766561747
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0333.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3824330270290375,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.06666441261768341,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999703172574103,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -1.2565633369376883e-05,
+                0.005586674436926842
+              ],
+              [
+                1.2565633369376883e-05,
+                1.0,
+                -0.03905967250466347
+              ]
+            ],
+            "translation_pixels": 0.039457179605960846,
+            "rotation_degrees": 0.0007199576939456165
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0334.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3824276626110077,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.06660907715559006,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999702602270988,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -2.2796693883719854e-05,
+                0.000712083070538938
+              ],
+              [
+                2.2796693883719854e-05,
+                1.0,
+                -0.04176701232790947
+              ]
+            ],
+            "translation_pixels": 0.04177308455109596,
+            "rotation_degrees": 0.0013061542995274067
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0335.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3824397623538971,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.0665576308965683,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999697492295202,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -2.5090985218412243e-05,
+                0.0027197781018912792
+              ],
+              [
+                2.5090985218412243e-05,
+                1.0,
+                -0.041182514280080795
+              ]
+            ],
+            "translation_pixels": 0.041272226721048355,
+            "rotation_degrees": 0.001437607454136014
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0336.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3823908865451813,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.06662984937429428,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999711967301507,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -4.040304702357389e-05,
+                0.01355590857565403
+              ],
+              [
+                4.040304702357389e-05,
+                1.0,
+                -0.03484570235013962
+              ]
+            ],
+            "translation_pixels": 0.03738964721560478,
+            "rotation_degrees": 0.002314924029633403
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0337.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.38239505887031555,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.06659215688705444,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999713322952977,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -2.411660534562543e-05,
+                0.011091317050158978
+              ],
+              [
+                2.411660534562543e-05,
+                1.0,
+                -0.031587328761816025
+              ]
+            ],
+            "translation_pixels": 0.03347800299525261,
+            "rotation_degrees": 0.0013817796716466546
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0338.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3824089467525482,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.800000011920929
+          ],
+          "laplacian_std": 0.06662216782569885,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999716819695721,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -1.4492062291537877e-05,
+                0.00790166575461626
+              ],
+              [
+                1.4492062291537877e-05,
+                1.0,
+                -0.02837674878537655
+              ]
+            ],
+            "translation_pixels": 0.02945634350180626,
+            "rotation_degrees": 0.0008303339709527791
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0339.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.38247597217559814,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.4156862795352936,
+            0.8039215803146362
+          ],
+          "laplacian_std": 0.06666691601276398,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999724640956625,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -9.517532816971652e-06,
+                -0.004287762567400932
+              ],
+              [
+                9.517532816971652e-06,
+                1.0,
+                -0.02630971558392048
+              ]
+            ],
+            "translation_pixels": 0.026656819507479668,
+            "rotation_degrees": 0.0005453144549392164
+          }
+        }
+      ],
+      "summary": {
+        "count": 12,
+        "first": "6V1A0328.CR3",
+        "last": "6V1A0339.CR3",
+        "alignment_failures": 0,
+        "minimum_ecc": 0.9999697492295202,
+        "maximum_translation_preview_pixels": 0.04270382970571518,
+        "maximum_absolute_rotation_degrees": 0.002317471196874976,
+        "minimum_mean_gray": 0.382315456867218,
+        "maximum_mean_gray": 0.38263681530952454
+      }
+    },
+    {
+      "id": 5,
+      "model": "Canon EOS R6 Mark III",
+      "iso": 6400,
+      "exposure_s": 0.0125,
+      "aperture": 5.6,
+      "focal_mm": 24.0,
+      "records": [
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50
+      ],
+      "preview_evidence": [
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0340.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.35106751322746277,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.05728929117321968,
+          "alignment": {
+            "status": "measured",
+            "ecc": 1.0000000103109385,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "translation_pixels": 0.0,
+            "rotation_degrees": 0.0
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0341.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.35078468918800354,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.05726649984717369,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999481445566173,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                6.218334601726383e-05,
+                -0.02426745556294918
+              ],
+              [
+                -6.218334601726383e-05,
+                1.0,
+                -0.00487678125500679
+              ]
+            ],
+            "translation_pixels": 0.024752624332904816,
+            "rotation_degrees": -0.003562843194231391
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0342.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3508957028388977,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.05724475160241127,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999513174060406,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                4.711364454124123e-05,
+                -0.002211896935477853
+              ],
+              [
+                -4.711364454124123e-05,
+                1.0,
+                -0.00962615106254816
+              ]
+            ],
+            "translation_pixels": 0.009877007454633713,
+            "rotation_degrees": -0.0026994128711521626
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0343.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.35089051723480225,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.05724293738603592,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999495339458616,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                2.7828613383462653e-05,
+                0.006017435807734728
+              ],
+              [
+                -2.7828613383462653e-05,
+                1.0,
+                -0.021900571882724762
+              ]
+            ],
+            "translation_pixels": 0.022712212055921555,
+            "rotation_degrees": -0.0015944619663059711
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0344.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3508091866970062,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.05726778879761696,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999481646311089,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                1.6215512005146593e-05,
+                0.005588809959590435
+              ],
+              [
+                -1.6215512005146593e-05,
+                1.0,
+                -0.024171773344278336
+              ]
+            ],
+            "translation_pixels": 0.0248094629496336,
+            "rotation_degrees": -0.0009290803573094308
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0345.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.35096386075019836,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.057250700891017914,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999518535820696,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.26016015606001e-05,
+                0.007141078356653452
+              ],
+              [
+                -3.26016015606001e-05,
+                1.0,
+                -0.012968775816261768
+              ]
+            ],
+            "translation_pixels": 0.014804868958890438,
+            "rotation_degrees": -0.0018679341301321983
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0346.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.35090428590774536,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.057262904942035675,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999488241449616,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                5.690211764886044e-05,
+                -0.017886022105813026
+              ],
+              [
+                -5.690211764886044e-05,
+                1.0,
+                -0.012377441860735416
+              ]
+            ],
+            "translation_pixels": 0.02175111137330532,
+            "rotation_degrees": -0.0032602509018033743
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0347.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.35102131962776184,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.057222869247198105,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999514710003146,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.832781658275053e-05,
+                -0.00823954213410616
+              ],
+              [
+                -3.832781658275053e-05,
+                1.0,
+                -0.01935216225683689
+              ]
+            ],
+            "translation_pixels": 0.021033216267824173,
+            "rotation_degrees": -0.0021960220765322447
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0348.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.35069340467453003,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.057160571217536926,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999447883138072,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                2.6548459572950378e-05,
+                0.009412078186869621
+              ],
+              [
+                -2.6548459572950378e-05,
+                1.0,
+                -0.026982506737113
+              ]
+            ],
+            "translation_pixels": 0.028576964512467384,
+            "rotation_degrees": -0.0015211146092042327
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0349.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.35110029578208923,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.057313401252031326,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999498822093736,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -3.8844041228003334e-07,
+                0.014427782036364079
+              ],
+              [
+                3.8844041228003334e-07,
+                1.0,
+                -0.037364326417446136
+              ]
+            ],
+            "translation_pixels": 0.04005313664674759,
+            "rotation_degrees": 2.225599564553704e-05
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0350.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3509441614151001,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.057258378714323044,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999378932827394,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.873903551721014e-05,
+                -0.0009219323983415961
+              ],
+              [
+                -3.873903551721014e-05,
+                1.0,
+                -0.057777777314186096
+              ]
+            ],
+            "translation_pixels": 0.05778513103723526,
+            "rotation_degrees": -0.0022195831406861544
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0351.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3511148691177368,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.37254902720451355,
+            0.772549033164978
+          ],
+          "laplacian_std": 0.0572754330933094,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.99994430455573,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                2.986680920002982e-05,
+                0.004343027714639902
+              ],
+              [
+                -2.986680920002982e-05,
+                1.0,
+                -0.049148522317409515
+              ]
+            ],
+            "translation_pixels": 0.049340035766363144,
+            "rotation_degrees": -0.0017112420173361897
+          }
+        }
+      ],
+      "summary": {
+        "count": 12,
+        "first": "6V1A0340.CR3",
+        "last": "6V1A0351.CR3",
+        "alignment_failures": 0,
+        "minimum_ecc": 0.9999378932827394,
+        "maximum_translation_preview_pixels": 0.05778513103723526,
+        "maximum_absolute_rotation_degrees": 0.003562843194231391,
+        "minimum_mean_gray": 0.35069340467453003,
+        "maximum_mean_gray": 0.3511148691177368
+      }
+    },
+    {
+      "id": 6,
+      "model": "Canon EOS R6 Mark III",
+      "iso": 12800,
+      "exposure_s": 0.00625,
+      "aperture": 5.6,
+      "focal_mm": 24.0,
+      "records": [
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65
+      ],
+      "preview_evidence": [
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0352.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3918497562408447,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06155472993850708,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999999937497889,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "translation_pixels": 0.0,
+            "rotation_degrees": 0.0
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0353.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.39228537678718567,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06156088039278984,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.999920800021943,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.683760587591678e-05,
+                0.01060447283089161
+              ],
+              [
+                -3.683760587591678e-05,
+                1.0,
+                -0.0035955398343503475
+              ]
+            ],
+            "translation_pixels": 0.011197444051504135,
+            "rotation_degrees": -0.0021106391213834286
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0354.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3917505145072937,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.061404984444379807,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999234772353937,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                2.7592845071922056e-05,
+                0.0038328764494508505
+              ],
+              [
+                -2.7592845071922056e-05,
+                1.0,
+                -0.019316721707582474
+              ]
+            ],
+            "translation_pixels": 0.019693315029144287,
+            "rotation_degrees": -0.0015809534816071391
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0355.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3920869529247284,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06148938089609146,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999237503716123,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.652339364634827e-05,
+                0.004378131590783596
+              ],
+              [
+                -3.652339364634827e-05,
+                1.0,
+                -0.014246804639697075
+              ]
+            ],
+            "translation_pixels": 0.014904343523085117,
+            "rotation_degrees": -0.002092636190354824
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0356.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.39232000708580017,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06167658418416977,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999186097662113,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                4.6199089410947636e-05,
+                -0.003859299700707197
+              ],
+              [
+                -4.6199089410947636e-05,
+                1.0,
+                -0.006710147485136986
+              ]
+            ],
+            "translation_pixels": 0.007740818429738283,
+            "rotation_degrees": -0.0026470127049833536
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0357.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.39201000332832336,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.061481039971113205,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999254491985363,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                6.112905248301104e-05,
+                -0.014791721478104591
+              ],
+              [
+                -6.112905248301104e-05,
+                1.0,
+                0.003088180674239993
+              ]
+            ],
+            "translation_pixels": 0.015110654756426811,
+            "rotation_degrees": -0.0035024364478886127
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0358.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3919296860694885,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06154363602399826,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999241676199339,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.846771505777724e-05,
+                -0.010876967571675777
+              ],
+              [
+                -3.846771505777724e-05,
+                1.0,
+                -0.012012490071356297
+              ]
+            ],
+            "translation_pixels": 0.01620519533753395,
+            "rotation_degrees": -0.002204037504270673
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0359.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.39214447140693665,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06152211129665375,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999218926791872,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.895162444678135e-05,
+                0.005549976602196693
+              ],
+              [
+                -3.895162444678135e-05,
+                1.0,
+                -0.017180634662508965
+              ]
+            ],
+            "translation_pixels": 0.018054818734526634,
+            "rotation_degrees": -0.0022317636758089066
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0360.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3919214606285095,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06142963096499443,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999248022895941,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.5214379749959335e-05,
+                -0.006866520270705223
+              ],
+              [
+                -3.5214379749959335e-05,
+                1.0,
+                -0.018465902656316757
+              ]
+            ],
+            "translation_pixels": 0.019701234996318817,
+            "rotation_degrees": -0.002017635153606534
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0361.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.39217737317085266,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06158673018217087,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999203050842648,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                6.756347283953801e-05,
+                0.005434692371636629
+              ],
+              [
+                -6.756347283953801e-05,
+                1.0,
+                -0.0022133260499686003
+              ]
+            ],
+            "translation_pixels": 0.005868108011782169,
+            "rotation_degrees": -0.003871101653203368
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0362.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.392242968082428,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.061407946050167084,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999229922989828,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                4.542949318420142e-05,
+                -0.003133816411718726
+              ],
+              [
+                -4.542949318420142e-05,
+                1.0,
+                -0.015823516994714737
+              ]
+            ],
+            "translation_pixels": 0.016130855306982994,
+            "rotation_degrees": -0.0026029180735349655
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0363.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.39181220531463623,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.061434730887413025,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999209247092509,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                4.967512722942047e-05,
+                0.004711640998721123
+              ],
+              [
+                -4.967512722942047e-05,
+                1.0,
+                -0.022769181057810783
+              ]
+            ],
+            "translation_pixels": 0.02325156331062317,
+            "rotation_degrees": -0.0028461748734116554
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0364.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3921988010406494,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06152670085430145,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999210224720511,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.0055556635488756e-05,
+                0.0029077131766825914
+              ],
+              [
+                -3.0055556635488756e-05,
+                1.0,
+                -0.02617635205388069
+              ]
+            ],
+            "translation_pixels": 0.026337353512644768,
+            "rotation_degrees": -0.0017220564186573029
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0365.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3920239210128784,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06145372614264488,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.9999227724190318,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                2.3526719814981334e-05,
+                0.007125845178961754
+              ],
+              [
+                -2.3526719814981334e-05,
+                1.0,
+                -0.021020226180553436
+              ]
+            ],
+            "translation_pixels": 0.02219521440565586,
+            "rotation_degrees": -0.0013479816261678934
+          }
+        },
+        {
+          "path": "D:\\DCIM\\101EOSR6\\6V1A0366.CR3",
+          "preview_size_wh": [
+            800,
+            533
+          ],
+          "original_jpeg_size_wh": [
+            6960,
+            4640
+          ],
+          "gray_mean": 0.3921494781970978,
+          "gray_percentiles": [
+            0.01568627543747425,
+            0.42352941632270813,
+            0.8274509906768799
+          ],
+          "laplacian_std": 0.06148001551628113,
+          "alignment": {
+            "status": "measured",
+            "ecc": 0.999924932447387,
+            "reference_to_frame_preview_affine": [
+              [
+                1.0,
+                3.5553559428080916e-05,
+                -0.0027267453260719776
+              ],
+              [
+                -3.5553559428080916e-05,
+                1.0,
+                -0.009344075806438923
+              ]
+            ],
+            "translation_pixels": 0.009733801707625389,
+            "rotation_degrees": -0.0020370688289403915
+          }
+        }
+      ],
+      "summary": {
+        "count": 15,
+        "first": "6V1A0352.CR3",
+        "last": "6V1A0366.CR3",
+        "alignment_failures": 0,
+        "minimum_ecc": 0.9999186097662113,
+        "maximum_translation_preview_pixels": 0.026337353512644768,
+        "maximum_absolute_rotation_degrees": 0.003871101653203368,
+        "minimum_mean_gray": 0.3917505145072937,
+        "maximum_mean_gray": 0.39232000708580017
+      }
+    }
+  ],
+  "records": [
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0301.CR3",
+      "bytes": 34313940,
+      "mtime_ns": 1793571299000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "c67c7c2fe69f528cd2c2a1b56da4805feba1bdc0200a80d1a3bab886012793c0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:14:56"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "33f862017f8ba4ca1bfa0e50f16d74e7a48be257c88770a748bc2cc5bb49559a",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:14:56",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:14:56",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:14:56",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "675f0d79ca0e6255680d1ec50471c2323d51668658d07fe0cf46790c26796681"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0302.CR3",
+      "bytes": 34280148,
+      "mtime_ns": 1793571301000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "0b2b1b7d0d9293f90a5635a119bbfc89123cebd5415bcdb2ed9827196d043e30",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:14:57"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "d9404966bc0d83eed8550bfee99d3b67ff4d75c8913e88684bec2c58796ff92a",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:14:57",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:14:57",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:14:57",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0303.CR3",
+      "bytes": 34274004,
+      "mtime_ns": 1793571303000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "817d9595963c84991cee52098db1f6a435b77cd22d963757b44c783e66336fd5",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:14:58"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "f50658f065769ce52789ff8a9197658365394df3c1bb3ecfe6acbd33fd5363cc",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:14:58",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:14:58",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:14:58",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0304.CR3",
+      "bytes": 34266324,
+      "mtime_ns": 1793571305000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "817d9595963c84991cee52098db1f6a435b77cd22d963757b44c783e66336fd5",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:14:58"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "a96436ad54469a7d54097037ddfee3f9f1732f471e0233b7fce839d3e3687c21",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:14:58",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:14:58",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:14:58",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0305.CR3",
+      "bytes": 34260692,
+      "mtime_ns": 1793571307000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d871e62b08f5af0dcb9aebcc6a28fc9429cea396ce078305e54ca15b2cc935ff",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:14:59"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "2abbe554da7d2b1a74829056214e551cea0b7a34da871593f707ff3e7015e918",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:14:59",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:14:59",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:14:59",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "3a83c9070cf00ae338df1323cff09681b4027dd1320ac4422ea1a303dde5bc60"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0306.CR3",
+      "bytes": 34266324,
+      "mtime_ns": 1793571310000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "229b7bd9995f2b77412322bc5b0dafd919dea3a9f418ae48e336e2702290d650",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:15:00"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "2f4c3dbd7028a4ff3ee390ac323f67a2e701217a2061982ee160b45fd87bc605",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:15:00",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:15:00",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:15:00",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0307.CR3",
+      "bytes": 34267348,
+      "mtime_ns": 1793571312000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "386e91c4148c97935458f56875c91aea770e21cb76cfc7645fba79a55e46526d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:15:01"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "5b3c88a2f14a829934b11f8429e5eb4e2473d8916f5a4ab63893794e9f36bcdf",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:15:01",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:15:01",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:15:01",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0308.CR3",
+      "bytes": 34265812,
+      "mtime_ns": 1793571315000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "902842b5b341a33ba07fd16dd29a1a7a33cc33e33430a2a1f362fd9a04e33cd0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:15:02"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "0193b732bccd5e0555bb1cf157812b552633c231086ab8d8efbe56092a794f58",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:15:02",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:15:02",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:15:02",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0309.CR3",
+      "bytes": 34269396,
+      "mtime_ns": 1793571318000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "ae510a51fb3d4f8d8633c0230cffb363f93a98e90d0c40295f24521e9dbee22d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:15:03"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "5b0b1eb4d971f6ea605d9de2e1cc84ca798ce9243238cc84e84015eb89fdc010",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:15:03",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:15:03",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:15:03",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "79dcee4c1e03d14ca1e41e6f63043b4dfb11d3f41b5df776b07b019f007f622b"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0310.CR3",
+      "bytes": 42677972,
+      "mtime_ns": 1793571433000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "e862e2c3bf012b8bca025dd4d0e7b00daabf065c716a48a4139aab588ab4cb63",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:17:10"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "564dfbaa92993b705d00e4cd53c41cc394b61cf253df81f83dc4e12f600e42ae",
+          "fields": {
+            "exposure_s": 0.1,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:11:01 23:17:10",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:17:10",
+        "exposure_s": 0.1,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:11:01 23:17:10",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "f43df04c8982fe6751d51c1606b8a2505ab235e064d2668a17fc35afd418c3b2"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0311.CR3",
+      "bytes": 42662612,
+      "mtime_ns": 1793571435000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "6af22fa6c11bcdb7594f0536dbcbaca07b5c192b545547dd6770f2c73cb6dd35",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:17:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "e7b29e4b9c1e5ae83a46b6e56b4b5e032bb0c379a17d3571e0090b36cc4d8435",
+          "fields": {
+            "exposure_s": 0.1,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:11:01 23:17:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:17:11",
+        "exposure_s": 0.1,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:11:01 23:17:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0312.CR3",
+      "bytes": 42650836,
+      "mtime_ns": 1793571437000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "6af22fa6c11bcdb7594f0536dbcbaca07b5c192b545547dd6770f2c73cb6dd35",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:17:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "1882652d521bfe5a784ec002f2cf78a7547564dd9a532bc277f551e41c78724f",
+          "fields": {
+            "exposure_s": 0.1,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:11:01 23:17:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:17:11",
+        "exposure_s": 0.1,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:11:01 23:17:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0313.CR3",
+      "bytes": 42639060,
+      "mtime_ns": 1793571439000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "6af22fa6c11bcdb7594f0536dbcbaca07b5c192b545547dd6770f2c73cb6dd35",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:17:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "87dae0f7cab50cfae2dc62134354252babaa1e9e29e5ce3a56b910e9b34afe81",
+          "fields": {
+            "exposure_s": 0.1,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:11:01 23:17:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:17:11",
+        "exposure_s": 0.1,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:11:01 23:17:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0314.CR3",
+      "bytes": 42640596,
+      "mtime_ns": 1793571441000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "6af22fa6c11bcdb7594f0536dbcbaca07b5c192b545547dd6770f2c73cb6dd35",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:17:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "8db11241c961114c2f27e767f26cab89ef3793ead6e6e62d693ab809d8373018",
+          "fields": {
+            "exposure_s": 0.1,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:11:01 23:17:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:17:11",
+        "exposure_s": 0.1,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:11:01 23:17:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0315.CR3",
+      "bytes": 42641108,
+      "mtime_ns": 1793571443000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "6af22fa6c11bcdb7594f0536dbcbaca07b5c192b545547dd6770f2c73cb6dd35",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:17:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "619b63027216b2db58d3b3bb8d95500f76d3f88b72a727869922f03277c3847e",
+          "fields": {
+            "exposure_s": 0.1,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:11:01 23:17:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:17:11",
+        "exposure_s": 0.1,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:11:01 23:17:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "8e5b927d4c4b32ce4462417d884ff86fa83f862f391cff9bd152cdeb9ed9d97f"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0316.CR3",
+      "bytes": 42645716,
+      "mtime_ns": 1793571446000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2ebe74fa13cd45c9b309e583b470960b1e5003f9b1ff462fc297508a8e553228",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:17:12"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "efef842480e91589514a7a3a7f77bda6bad2bffd75600d35dd4abd797ba89e17",
+          "fields": {
+            "exposure_s": 0.1,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:11:01 23:17:12",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:17:12",
+        "exposure_s": 0.1,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:11:01 23:17:12",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0317.CR3",
+      "bytes": 42635988,
+      "mtime_ns": 1793571448000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2ebe74fa13cd45c9b309e583b470960b1e5003f9b1ff462fc297508a8e553228",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:17:12"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "de4b3b2bc48f38c4701af05375714143df145c3dcea0565a0f4df3684cebe519",
+          "fields": {
+            "exposure_s": 0.1,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:11:01 23:17:12",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:17:12",
+        "exposure_s": 0.1,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:11:01 23:17:12",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0318.CR3",
+      "bytes": 42637012,
+      "mtime_ns": 1793571450000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2ebe74fa13cd45c9b309e583b470960b1e5003f9b1ff462fc297508a8e553228",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:17:12"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "5ad1ff406c278fbe244da28a619ea19970656efb61861c59fdf55b3302d1cf50",
+          "fields": {
+            "exposure_s": 0.1,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:11:01 23:17:12",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:17:12",
+        "exposure_s": 0.1,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:11:01 23:17:12",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0319.CR3",
+      "bytes": 42637012,
+      "mtime_ns": 1793571452000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2ebe74fa13cd45c9b309e583b470960b1e5003f9b1ff462fc297508a8e553228",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:17:12"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "a2e0d798863fbbcf4b8c32ecdf58dde526a67d039870d27c6d7bf79a52e1cb6f",
+          "fields": {
+            "exposure_s": 0.1,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:11:01 23:17:12",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:17:12",
+        "exposure_s": 0.1,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:11:01 23:17:12",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "50f333ca134f18e383efa19bb510dd14dee38caa13b326b2eeb66e4942d09f3b"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0320.CR3",
+      "bytes": 34328276,
+      "mtime_ns": 1793571542000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "e8ce0ca053a8f668b7c71bd2f1e1422e94d40d56399ab9723a9addc1be650b06",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:18:59"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "7ad776ea6a2c968178706835f18820a3e2d230dc6d1d43a3b3599c0dc274f5fd",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:18:59",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:18:59",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:18:59",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "6d7c40d7b3c0d5bd2d7c7b238a89dd320fb77f239a8dc7717570cfef9d9c1098"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0321.CR3",
+      "bytes": 34281684,
+      "mtime_ns": 1793571544000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "18c1915743616f909d4d23b9ed0d5f076e5b0795b43e21f2ffe6bef0da061492",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:19:00"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "10a41aa268432a7c832943be0f829641d1c814f126e31d0ff6f0ab6f233734b9",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:19:00",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:19:00",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:19:00",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0322.CR3",
+      "bytes": 34284244,
+      "mtime_ns": 1793571546000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "40a1335a26e0c979283a3db29186a6c1fb217dff2dcba2eb50f4fcbc9cbdeee0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:19:01"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "d6f1761c9c18231957bbfebcf1531abe6ae6ef388f68ca613ab65634c07e4f6c",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:19:01",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:19:01",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:19:01",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0323.CR3",
+      "bytes": 34288340,
+      "mtime_ns": 1793571548000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "cc130c0a9a2a1d0d91e4ce849857947588a6df65a7635d035b0b7cba44c6c34c",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:19:02"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "08b834bc7e995b0a882d2f51704db64d48d7348fc5411b4948954b95e7ec5632",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:19:02",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:19:02",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:19:02",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0324.CR3",
+      "bytes": 34283220,
+      "mtime_ns": 1793571551000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "cc130c0a9a2a1d0d91e4ce849857947588a6df65a7635d035b0b7cba44c6c34c",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:19:02"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "161e89003ef85dbccf1f9eb599cf92c02fb0ac264aa356ffa7649d122a7aade2",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:19:02",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:19:02",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:19:02",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "51fdca4e3fa0d939a6f3ff2ab5efacf420b018bcf2afcb65859b75890e8dde94"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0325.CR3",
+      "bytes": 34285268,
+      "mtime_ns": 1793571553000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1942ee8d7fa9292fec10b22c947fa013804e48fc4bbee3efc48c8849fbb75e4c",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:19:03"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "f860009d8c3d92bf183915b236758237da652900af5d26f8ec832a43ae5ad528",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:19:03",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:19:03",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:19:03",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0326.CR3",
+      "bytes": 34284244,
+      "mtime_ns": 1793571556000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "57062fa702e394eee09c03870ff92012900cb87e88ed2d77fd65bf22af1ec852",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:19:04"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "47e34fe6875db6e05d522850bde51746c03b88582a2aa7c774a89981509e0c27",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:19:04",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:19:04",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:19:04",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0327.CR3",
+      "bytes": 34289876,
+      "mtime_ns": 1793571558000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "79e6412d17768710cf8047edb8d2449ab6c54cc140340fed82fe6aa37d748b45",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:19:05"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "6982c993a7af803b6118e0e6a2b817496dee7b3c015a6ad568dd5a01f4a652c0",
+          "fields": {
+            "exposure_s": 0.8,
+            "aperture": 5.6,
+            "iso": 100,
+            "datetime_original": "2026:11:01 23:19:05",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:19:05",
+        "exposure_s": 0.8,
+        "aperture": 5.6,
+        "iso": 100,
+        "datetime_original": "2026:11:01 23:19:05",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "5383bab08605295608168f11a5a89e98e83d9f80342117b104b79e91286186fc"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0328.CR3",
+      "bytes": 41855700,
+      "mtime_ns": 1793571636000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "4e64bd1d81620f2fffbf57cdbc922d9c2d3c4a6a2404e4f04b91e9235183899f",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:33"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "181c6497997a6f04d3da9bca2435750ded5c78081fe98bea8dde4883df0e700b",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:33",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:33",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:33",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "137ac2eeb1c4448fd1d170ab84938ccc31d4fc71775ac79650f8e5ca1a46352a"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0329.CR3",
+      "bytes": 41836244,
+      "mtime_ns": 1793571638000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "4e64bd1d81620f2fffbf57cdbc922d9c2d3c4a6a2404e4f04b91e9235183899f",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:33"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "428832e26bee03151ff25d05d55b76a9e9890fa62bcf96c660c790db0f32dae8",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:33",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:33",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:33",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0330.CR3",
+      "bytes": 41829588,
+      "mtime_ns": 1793571640000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "4e64bd1d81620f2fffbf57cdbc922d9c2d3c4a6a2404e4f04b91e9235183899f",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:33"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "edfafef81945ed6c45f2d0fe30df09e22898361b678af1f7eda82d281d5ab980",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:33",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:33",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:33",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0331.CR3",
+      "bytes": 41830100,
+      "mtime_ns": 1793571643000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "4e64bd1d81620f2fffbf57cdbc922d9c2d3c4a6a2404e4f04b91e9235183899f",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:33"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "073ba7c4d4144dcc22d9eb047d7b06d54acc425246384446e0c7d159412757e5",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:33",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:33",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:33",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0332.CR3",
+      "bytes": 41823956,
+      "mtime_ns": 1793571645000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "4e64bd1d81620f2fffbf57cdbc922d9c2d3c4a6a2404e4f04b91e9235183899f",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:33"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "5e3f52cf3657cfcdfde6ef833c3772cac133a49b5de6043adf8c6df1cc5507ca",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:33",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:33",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:33",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0333.CR3",
+      "bytes": 41838804,
+      "mtime_ns": 1793571648000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "80103e707045f42478fdad2517097f6715c3d8d0d514b43affb60f9420a546bb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:34"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "49e2d37ad9470e429cc53d924c4fff787787135e4d3d65160a88c282e7bbae8b",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:34",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:34",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:34",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0334.CR3",
+      "bytes": 41829588,
+      "mtime_ns": 1793571650000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "80103e707045f42478fdad2517097f6715c3d8d0d514b43affb60f9420a546bb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:34"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "fcab1cb0816407a6449b4cfa7d1333962b2ff9f219a5448d98d7d0855a00516b",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:34",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:34",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:34",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "8a60dbc2c6d1a9a3f60cf5ae306f7613c1623ea2cd226c15ac2466f779c67a56"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0335.CR3",
+      "bytes": 41809108,
+      "mtime_ns": 1793571653000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "80103e707045f42478fdad2517097f6715c3d8d0d514b43affb60f9420a546bb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:34"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "b71841b4350a718563577aca085e13d174d7af2774e87ba1d963b30a0991ed95",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:34",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:34",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:34",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0336.CR3",
+      "bytes": 41830100,
+      "mtime_ns": 1793571655000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "80103e707045f42478fdad2517097f6715c3d8d0d514b43affb60f9420a546bb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:34"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "02c6dbcbfbeb74757fe9b729b7e78e06de8982670256b942309f0636f42152b8",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:34",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:34",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:34",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0337.CR3",
+      "bytes": 41832660,
+      "mtime_ns": 1793571657000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "80103e707045f42478fdad2517097f6715c3d8d0d514b43affb60f9420a546bb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:34"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "15438faee92e3190afb3cc0471a6436b86cae2180f81a7f891eaaf53bbea3ba3",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:34",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:34",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:34",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0338.CR3",
+      "bytes": 41828564,
+      "mtime_ns": 1793571659000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "80103e707045f42478fdad2517097f6715c3d8d0d514b43affb60f9420a546bb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:34"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "3d3b6aa2903de5461055db794cddbce6a59379cdd0767e9186e703984897133b",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:34",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:34",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:34",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0339.CR3",
+      "bytes": 41833684,
+      "mtime_ns": 1793571662000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "80103e707045f42478fdad2517097f6715c3d8d0d514b43affb60f9420a546bb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:20:34"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "8eec52f86658741077f53379645258120803f06851fc11d68713cd37382c704a",
+          "fields": {
+            "exposure_s": 0.025,
+            "aperture": 5.6,
+            "iso": 3200,
+            "datetime_original": "2026:11:01 23:20:34",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:20:34",
+        "exposure_s": 0.025,
+        "aperture": 5.6,
+        "iso": 3200,
+        "datetime_original": "2026:11:01 23:20:34",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "a996b45ae83dfaf7932d59ad29e5582544e4554b976b1bc80d688753d46e0028"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0340.CR3",
+      "bytes": 43707092,
+      "mtime_ns": 1793571673000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "442c7b84b33410740799f17359c8683226a10b14a4d2db158e9e98aa10eabf50",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:10"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "76ef3d27fda8f69a97f2392e857d8b3d1c369c158620c8179d9f13af34f3d497",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:10",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:10",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:10",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "5e3495995f64745113ac36191de237222407a27caaebb8a255dfc765782141d0"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0341.CR3",
+      "bytes": 43694292,
+      "mtime_ns": 1793571676000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "442c7b84b33410740799f17359c8683226a10b14a4d2db158e9e98aa10eabf50",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:10"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "099d66c5e1f4f6ede4b298afc272e122d1ab49c468a7e9124ffd156bc998ab12",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:10",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:10",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:10",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0342.CR3",
+      "bytes": 43700948,
+      "mtime_ns": 1793571678000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "0d62e2afa466ec534f2125e19274b3120920ceca296975936b164c540051dd79",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "4f4877a18804363c77892c0fbe5916529523935ab254d7f6ef36a98bffcbbecb",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:11",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0343.CR3",
+      "bytes": 43697364,
+      "mtime_ns": 1793571681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "0d62e2afa466ec534f2125e19274b3120920ceca296975936b164c540051dd79",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "3f0b043c75422d76d61d452aaa130f592d2768b5720498a7d687e3a0ef3ca452",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:11",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0344.CR3",
+      "bytes": 43694804,
+      "mtime_ns": 1793571683000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "0d62e2afa466ec534f2125e19274b3120920ceca296975936b164c540051dd79",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "c8d30c67c373d942a9c593aa7d07453416218b99873a073e166e8dffb7dac3f4",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:11",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0345.CR3",
+      "bytes": 43698900,
+      "mtime_ns": 1793571686000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "0d62e2afa466ec534f2125e19274b3120920ceca296975936b164c540051dd79",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "6a2b5f2e78a6236b88c6d34b55a3496f91e6a903a8c6a77cafc9447caacb24d6",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:11",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0346.CR3",
+      "bytes": 43698900,
+      "mtime_ns": 1793571689000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "0d62e2afa466ec534f2125e19274b3120920ceca296975936b164c540051dd79",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "984a61421c3fac28573a410aec1f88bdee09a26454465f7285ef6b513f98e000",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:11",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "e463662afd8095b952482265b298988f8a98bf3b49d2e401896ca6aa8fb7160f"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0347.CR3",
+      "bytes": 43696852,
+      "mtime_ns": 1793571691000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "0d62e2afa466ec534f2125e19274b3120920ceca296975936b164c540051dd79",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "abac011d8659a3636f1a4da6271ce39461c4bdd2ece0482a4848e64103f93bac",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:11",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0348.CR3",
+      "bytes": 43699924,
+      "mtime_ns": 1793571694000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "0d62e2afa466ec534f2125e19274b3120920ceca296975936b164c540051dd79",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:11"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "3a9d95b4ba3ddcf921aba2076b341b0aaa9d0adadc6d087b8bf67875e2b791a3",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:11",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:11",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:11",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0349.CR3",
+      "bytes": 43708116,
+      "mtime_ns": 1793571698000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "feb4e3e5c332374ca3a3974d5c9bc32021983a47163159da04b795b3e521d14e",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:34"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "5897a6b6048c2882272699d1a1c852d2ff65a61587e96e7a46e2ad73fb4afb33",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:34",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:34",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:34",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0350.CR3",
+      "bytes": 43699412,
+      "mtime_ns": 1793571700000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "264fab42f8c726bcc25fe7385fa83188bd383acb50814dba4024f01f3fa9a241",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:35"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "a6b480022fd91698bda673a64a4ecdd1ff25d5666513bc71bd502e56f3bbc1a4",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:35",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:35",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:35",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0351.CR3",
+      "bytes": 43699412,
+      "mtime_ns": 1793571703000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "264fab42f8c726bcc25fe7385fa83188bd383acb50814dba4024f01f3fa9a241",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:21:35"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "7bad78e23bfdd98207e13769e19c969f963a22850b68d6b304b048ee66820f89",
+          "fields": {
+            "exposure_s": 0.0125,
+            "aperture": 5.6,
+            "iso": 6400,
+            "datetime_original": "2026:11:01 23:21:35",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:21:35",
+        "exposure_s": 0.0125,
+        "aperture": 5.6,
+        "iso": 6400,
+        "datetime_original": "2026:11:01 23:21:35",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "d94639581d092055d30fa7d22b3630d75238731d07430725ba0d2c6c490366d6"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0352.CR3",
+      "bytes": 47156948,
+      "mtime_ns": 1793571739000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "e24f907aa2710b9a0ddb29d2fb98926cf2aadaeb932eee47185ffa9203f0fbcb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "76046644857e6748d61fee9eaf5efe09a944de9e34023c9a03ff0ed03ea1a73d",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:16",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:16",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:16",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "aa7142720285f8bab50621b87a36b0cbfe8467ed0ccff3152ab9ba294ad06007"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0353.CR3",
+      "bytes": 47155412,
+      "mtime_ns": 1793571741000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "e24f907aa2710b9a0ddb29d2fb98926cf2aadaeb932eee47185ffa9203f0fbcb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "e069a96bb3585ec0374a572cbe0d296822c78a5c281e8af1c2c253e07c779a5e",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:16",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:16",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:16",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0354.CR3",
+      "bytes": 47145684,
+      "mtime_ns": 1793571743000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "e24f907aa2710b9a0ddb29d2fb98926cf2aadaeb932eee47185ffa9203f0fbcb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "5006a6b708052f7b9ad69910743d2010f7832974c2f0a4f0986797af28d95f20",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:16",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:16",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:16",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0355.CR3",
+      "bytes": 47156948,
+      "mtime_ns": 1793571746000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "e24f907aa2710b9a0ddb29d2fb98926cf2aadaeb932eee47185ffa9203f0fbcb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "1f9be30efef6abd27bd5cce296508d1d9bad333ba93758b396e0a1886ae3c7fc",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:16",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:16",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:16",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0356.CR3",
+      "bytes": 47167188,
+      "mtime_ns": 1793571748000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "e24f907aa2710b9a0ddb29d2fb98926cf2aadaeb932eee47185ffa9203f0fbcb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "63861ac2da67dba049982cf3bf666b5c7aab0980dd4cbca4733b89fb95fb236e",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:16",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:16",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:16",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0357.CR3",
+      "bytes": 47158996,
+      "mtime_ns": 1793571751000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "e24f907aa2710b9a0ddb29d2fb98926cf2aadaeb932eee47185ffa9203f0fbcb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "d9a7ea6c6a06839df53132062cf910e480eb743055b1c7d8b5f5fe6ce207af17",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:16",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:16",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:16",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0358.CR3",
+      "bytes": 47161044,
+      "mtime_ns": 1793571753000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "e24f907aa2710b9a0ddb29d2fb98926cf2aadaeb932eee47185ffa9203f0fbcb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "52de793e061450e0e330e00b638f300bebebd63aed56754809ac320cd95101e6",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:16",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:16",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:16",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0359.CR3",
+      "bytes": 47133908,
+      "mtime_ns": 1793571755000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "e24f907aa2710b9a0ddb29d2fb98926cf2aadaeb932eee47185ffa9203f0fbcb",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "eeb07651583155b51c7d7e97992df41061b0d144ce06cea180202e4525caa65b",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:16",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:16",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:16",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "fc26cc354590a68216491d373aab51f08faae17871e446f00c065de62f386d5b"
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0360.CR3",
+      "bytes": 47143636,
+      "mtime_ns": 1793571758000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2fad64f1ce7d14eb91ec0d7e4737a056ae59f9b293e5f9226d06fb8e8ba60040",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "47325c9915b7b789ef2443395aff6ae2e0173bce4cf667043309438d4333dbc4",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:17",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:17",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:17",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0361.CR3",
+      "bytes": 47158484,
+      "mtime_ns": 1793571760000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2fad64f1ce7d14eb91ec0d7e4737a056ae59f9b293e5f9226d06fb8e8ba60040",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "927f351299479cfd752d211976a51fdaa1c7052cc4d36d56ac5de186bce080bb",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:17",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:17",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:17",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0362.CR3",
+      "bytes": 47147732,
+      "mtime_ns": 1793571763000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2fad64f1ce7d14eb91ec0d7e4737a056ae59f9b293e5f9226d06fb8e8ba60040",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "3b509c54193f4855117fdc7873874ac0bd93a12e1db1f1cb8220aab0dd2495b4",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:17",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:17",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:17",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0363.CR3",
+      "bytes": 47157460,
+      "mtime_ns": 1793571765000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2fad64f1ce7d14eb91ec0d7e4737a056ae59f9b293e5f9226d06fb8e8ba60040",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "b2710a2e4a3f7013fa6deb5dcecd781b10331b2091d35880a737f02958683944",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:17",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:17",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:17",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0364.CR3",
+      "bytes": 47148756,
+      "mtime_ns": 1793571768000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2fad64f1ce7d14eb91ec0d7e4737a056ae59f9b293e5f9226d06fb8e8ba60040",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "653337a4cc0eca63cc8cee705b75c8c229f0c374a92f3eb9e16e655cdbcd4f64",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:17",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:17",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:17",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0365.CR3",
+      "bytes": 47158996,
+      "mtime_ns": 1793571770000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2fad64f1ce7d14eb91ec0d7e4737a056ae59f9b293e5f9226d06fb8e8ba60040",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "1b711f3623dcc68471bb64ad5a12d27320cf0cd2783017d3e0534a564e89b2ee",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:17",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:17",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:17",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": null
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0366.CR3",
+      "bytes": 47158996,
+      "mtime_ns": 1793571772000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "2fad64f1ce7d14eb91ec0d7e4737a056ae59f9b293e5f9226d06fb8e8ba60040",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:11:01 23:22:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "089836879c0d7e17c72bc1cfff9b4faa6b461faeaccdd3b9d5e01fb724e2dc43",
+          "fields": {
+            "exposure_s": 0.00625,
+            "aperture": 5.6,
+            "iso": 12800,
+            "datetime_original": "2026:11:01 23:22:17",
+            "focal_mm": 24.0,
+            "lens": "RF24-105mm F2.8 L IS USM Z"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:11:01 23:22:17",
+        "exposure_s": 0.00625,
+        "aperture": 5.6,
+        "iso": 12800,
+        "datetime_original": "2026:11:01 23:22:17",
+        "focal_mm": 24.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      },
+      "complete_basic": true,
+      "source_full_sha256": "60462938d32746baf73ae3c94c1d188ce0dbe096ecc12d82dfd99882caf57c43"
+    }
+  ],
+  "limits": [
+    "Group boundaries follow consecutive identical basic metadata, not a verified scene identity.",
+    "ECC Euclidean alignment is measured on processed embedded JPEGs at maximum 800px.",
+    "Local motion, RAW clipping, RAW noise, focus changes and usable clean references remain unqualified.",
+    "JPEG encoded gray values are not linear radiometry or calibrated luminance.",
+    "Only selected first/middle/last files have full-file SHA-256; all files have static-block hashes.",
+    "Sources unchanged; no RAW decoding development, reference averaging or training."
+  ]
+}

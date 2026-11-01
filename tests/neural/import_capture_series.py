@@ -53,8 +53,10 @@ def run(audit_path, destination, evidence):
     if shutil.disk_usage(shared).free < sum(r['bytes'] for r in records) + 2*2**30:
         raise ValueError('Insufficient free space including 2 GiB reserve')
     destination.mkdir(parents=True, exist_ok=False)
-    result = dict(schema='ipr.neural.corpus-import.v1', schema_version=1,
-        measured_at_utc=datetime.now(timezone.utc).isoformat(),
+    measured_at = datetime.now(timezone.utc)
+    result = dict(schema='ipr.neural.corpus-import.v1', schema_version=1, data_version=1,
+        campaign_id='neural-corpus-import-v001-'+measured_at.strftime('%Y%m%dT%H%M%SZ'),
+        measured_at_utc=measured_at.isoformat(),
         git_sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),
         tool_sha256=digest(__file__), audit=dict(path=str(audit_path.resolve()),sha256=digest(audit_path)),
         partition='validation', status='incomplete', records=[],
