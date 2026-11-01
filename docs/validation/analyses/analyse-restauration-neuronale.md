@@ -1021,3 +1021,28 @@ photos demandées avant leur qualification.** Ordre proposé :
 Aucun de ces candidats n'est automatiquement autorisé ou qualifié pour
 l'apprentissage par le seul inventaire. Aucun changement moteur, aucune
 suppression ou copie de RAW, aucun calcul actif à la clôture de l'audit.
+
+## 1er novembre 2026, 22:49 UTC — qualification de la rafale ISO4000 lancée
+
+Campagne `neural-same-iso-burst-v001-20261101T224914Z`, banc local
+`47f7bf9`, après 33 tests ciblés réussis. Les 42 RAW `6V1A9819` à
+`6V1A9860` sont lus dans le signal caméra signé d'IPR, sans optique ni
+débruitage. Le premier développement a confirmé la calibration requise.
+
+La répartition est figée avant mesure : positions chronologiques impaires
+pour les 21 prises de référence, positions paires pour les 21 sources.
+Aucune source ne participe à sa cible. Toutes les prises conservent leur
+ISO4000 réel ; aucun gain ou décalage radiométrique n'est ajusté. Les
+contrôles existants de recouvrement, réciprocité, stabilité temporelle et
+cohérence locale sont maintenus, avec au moins huit références recalées.
+
+La dispersion temporelle et la différence des deux demi-moyennes seront
+consignées sur les pixels valides. L'incertitude de moyenne calculée en
+`1/sqrt(N)` est conditionnelle à l'indépendance des prises : elle ne mesure
+pas le bruit fixe commun et ne transforme pas la moyenne en vérité propre.
+
+**État courant : calcul en cours, aucun résultat d'admission acquis.**
+Il s'agit uniquement de qualifier des paires candidates d'apprentissage ;
+aucun entraînement, changement de partition du contrôle, changement moteur
+ou publication. La campagne conservera sa mémoire JSON sous
+`docs/validation/raw/` à sa clôture, y compris en cas d'échec.
