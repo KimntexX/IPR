@@ -15,6 +15,8 @@ jobs:
     name: Promotion verification
     if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.verify.outputs.production_matrix }}
     permissions:
       contents: read
       actions: read
@@ -24,6 +26,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Verify the projection and the pinned complete dev CI
+        id: verify
         env:
           GH_TOKEN: ${{ github.token }}
         run: python scripts/delivery_policy.py --check-promotion "$GITHUB_SHA"
@@ -40,12 +43,7 @@ jobs:
     needs: promotion
     strategy:
       fail-fast: false
-      matrix:
-        os: [windows-2022, ubuntu-24.04, macos-15, macos-15-intel]
-        mode: [system, standalone]
-        exclude:
-          - os: ubuntu-24.04
-            mode: system
+      matrix: ${{ fromJSON(needs.promotion.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 120
     steps:

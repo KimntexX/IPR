@@ -160,11 +160,10 @@ class ScopeTests(unittest.TestCase):
         self.assertFalse(any('qt6-base-dev' in step.get('run', '') for step in setup['runs']['steps']))
         for workflow in ('ci', 'delivery'):
             jobs = load(f'.github/workflows/{workflow}.yml')['jobs']
-            # Locate the packaging matrix without coupling the test to its job name.
-            matrix = next(value['strategy']['matrix'] for value in jobs.values()
-                          if isinstance(value.get('strategy', {}).get('matrix'), dict)
-                          and 'mode' in value['strategy']['matrix'])
-            self.assertIn({'os': 'ubuntu-24.04', 'mode': 'system'}, matrix['exclude'])
+            job = jobs['packaging-check' if workflow == 'ci' else 'archives']
+            self.assertIn('fromJSON', job['strategy']['matrix'])
+        from delivery_policy import PACKAGE_MATRIX
+        self.assertNotIn(('ubuntu-24.04', 'system'), PACKAGE_MATRIX)
         distro_matrix = load('.github/workflows/linux-distributions.yml')['jobs']
         images = [entry['image'] for value in distro_matrix.values()
                   for entry in value.get('strategy', {}).get('matrix', {}).get('include', [])]
