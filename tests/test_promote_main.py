@@ -107,7 +107,7 @@ class Promotion(unittest.TestCase):
         target.write_bytes(text.encode('utf-8'))
 
     def test_snapshot_without_dev_ancestry(self):
-        self.assertEqual(promote.main(['--source', self.dev, '--parent', self.main, '--write']), 0)
+        self.assertEqual(promote.main(['--source', self.dev, '--parent', self.main, '--write', '--ci-run-id', '42']), 0)
         promoted = git(self.root, 'rev-parse', 'main_promotion')
         self.assertEqual(git(self.root, 'log', '--format=%P', '-1', promoted), self.main)
         files = set(git(self.root, 'ls-tree', '-r', '--name-only', promoted).splitlines())
@@ -121,7 +121,10 @@ class Promotion(unittest.TestCase):
         records = {r['path']: r for r in manifest['files']}
         source = (self.root / 'src/core/a.cpp').read_bytes()
         self.assertEqual(records['src/core/a.cpp']['sha256'], hashlib.sha256(source).hexdigest())
-        self.assertTrue(records['docs/user/guide.md']['links_to_dev'])
+        self.assertEqual(records['docs/user/guide.md']['derived'], 'links_to_dev')
+        self.assertEqual(manifest['source']['ci'], {'run_id': '42', 'workflow': 'CI native full tests'})
+        self.assertEqual(manifest['production_profile']['IPR_BUILD_TOOLS'], 'OFF')
+        self.assertEqual(manifest['closure_sha256'], promote.closure(manifest['files']))
         self.assertEqual(records['docs/user/guide.md']['sha256'],
                          hashlib.sha256((guide + '\n').encode('utf-8')).hexdigest())
         # The working tree and the dev branch are untouched.
@@ -133,8 +136,26 @@ class Promotion(unittest.TestCase):
         git(self.root, 'add', '-A')
         git(self.root, 'commit', '-q', '-m', 'unclassified')
         source = git(self.root, 'rev-parse', 'HEAD')
-        self.assertEqual(promote.main(['--source', source, '--parent', self.main, '--write']), 1)
+        self.assertEqual(promote.main(['--source', source, '--parent', self.main, '--write', '--ci-run-id', '42']), 1)
         self.assertNotIn('main_promotion', git(self.root, 'branch', '--list', 'main_promotion'))
+
+    def test_write_needs_the_ci_run(self):
+        with self.assertRaises(SystemExit):
+            promote.main(['--source', self.dev, '--parent', self.main, '--write'])
+
+    def test_verify(self):
+        promote.main(['--source', self.dev, '--parent', self.main, '--write', '--ci-run-id', '42'])
+        promoted = git(self.root, 'rev-parse', 'main_promotion')
+        self.assertEqual(promote.verify(promoted), [])
+        # A file edited on main, or added there, breaks the correspondence.
+        git(self.root, 'checkout', '-q', 'main_promotion')
+        self.write('src/core/a.cpp', 'int b;\n')
+        self.write('extra.txt', 'x\n')
+        git(self.root, 'add', '-A')
+        git(self.root, 'commit', '-q', '-m', 'edited on main')
+        problems = promote.verify(git(self.root, 'rev-parse', 'HEAD'))
+        self.assertIn('File differs from the manifest: src/core/a.cpp', problems)
+        self.assertIn('File not in the manifest: extra.txt', problems)
 
     def test_dry_run_writes_nothing(self):
         self.assertEqual(promote.main(['--source', self.dev, '--parent', self.main]), 0)

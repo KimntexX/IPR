@@ -27,6 +27,9 @@ ROOT = Path(__file__).resolve().parents[1]
 ALLOWLIST = 'packaging/main-allowlist.txt'
 MANIFEST = 'release-manifest.json'
 REPOSITORY = 'https://github.com/KimntexX/IPR'
+POLICY = 'main-production-and-docs/2026-11-01'
+# The configuration main is built and released with (scripts/ci.py --profile production).
+PRODUCTION_PROFILE = {'command': 'scripts/ci.py --profile production', 'BUILD_TESTING': 'OFF', 'IPR_BUILD_TOOLS': 'OFF'}
 
 
 def parse_allowlist(text):
@@ -111,7 +114,13 @@ def write_blob(data):
     return git('hash-object', '-w', '--stdin', input=data).decode().strip()
 
 
-def plan(commit, allowlist_text):
+def closure(files):
+    """SHA-256 over the sorted (mode, SHA-256, path) of the promoted files."""
+    lines = ''.join(f"{f['mode']} {f['sha256']} {f['path']}\n" for f in sorted(files, key=lambda f: f['path']))
+    return hashlib.sha256(lines.encode('utf-8')).hexdigest()
+
+
+def plan(commit, allowlist_text, ci=None):
     """Classification, rewritten documents and manifest of a promotion."""
     sections = parse_allowlist(allowlist_text)
     entries = tree_entries(commit)
@@ -137,17 +146,22 @@ def plan(commit, allowlist_text):
             rewritten = rewrite_document(text, path, dev_paths, main_folders, commit)
             if rewritten != text:
                 data = rewritten.encode('utf-8')
+                # Derived file: its bytes differ from dev's by these links only.
                 record['source_sha256'] = record['sha256']
                 record['sha256'] = hashlib.sha256(data).hexdigest()
-                record['links_to_dev'] = True
+                record['derived'] = 'links_to_dev'
         blobs[path] = (mode, data, blob if 'source_sha256' not in record else None)
         files.append(record)
     allowlist_sha = hashlib.sha256(allowlist_text.encode('utf-8')).hexdigest()
+    # The manifest itself is not listed: it describes the other files.
     manifest = {
         'schema': 1,
-        'source': {'repository': REPOSITORY, 'commit': commit},
+        'policy': POLICY,
+        'source': {'repository': REPOSITORY, 'commit': commit, 'ci': ci or {}},
         'allowlist': {'path': ALLOWLIST, 'sha256': allowlist_sha},
+        'production_profile': PRODUCTION_PROFILE,
         'excluded_files': len(dev_paths),
+        'closure_sha256': closure(files),
         'files': files,
     }
     return groups, blobs, manifest
@@ -189,19 +203,60 @@ def commit_promotion(commit, parent, blobs, manifest, message):
     return git('commit-tree', tree, '-p', parent, '-m', message).decode().strip()
 
 
+def verify(promoted):
+    """Problems of a promoted commit against its own manifest and its dev
+    source: missing, extra or changed files, derived files not reproduced."""
+    manifest = json.loads(git('show', f'{promoted}:{MANIFEST}'))
+    commit = manifest['source']['commit']
+    allowlist_text = git('show', f'{commit}:{ALLOWLIST}').decode('utf-8')
+    groups, blobs, expected = plan(commit, allowlist_text, manifest['source'].get('ci'))
+    problems = [f'{title}: {path}' for title, key in (('Unclassified on dev', 'unclassified'),
+                                                       ('In both sections on dev', 'ambiguous'))
+                for path in groups[key]]
+    for key in ('schema', 'policy', 'source', 'allowlist', 'production_profile', 'excluded_files',
+                'closure_sha256', 'files'):
+        if manifest.get(key) != expected.get(key):
+            problems.append(f'Manifest field differs from its dev source: {key}')
+    entries = tree_entries(promoted)
+    listed = {f['path']: f for f in manifest['files']}
+    for path in sorted(set(entries) - set(listed) - {MANIFEST}):
+        problems.append(f'File not in the manifest: {path}')
+    contents = read_blobs({blob for path, (mode, blob) in entries.items() if path in listed})
+    for path, record in sorted(listed.items()):
+        if path not in entries:
+            problems.append(f'Missing file: {path}')
+            continue
+        mode, blob = entries[path]
+        if mode != record['mode'] or hashlib.sha256(contents[blob]).hexdigest() != record['sha256']:
+            problems.append(f'File differs from the manifest: {path}')
+    return problems
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--source', required=True, help='tested dev commit')
     parser.add_argument('--parent', default='main', help='commit the promotion follows (default main)')
     parser.add_argument('--branch', default='main_promotion', help='branch set to the promotion with --write')
     parser.add_argument('--label', default='', help='release label, for the commit message')
+    parser.add_argument('--ci-run-id', help='GitHub Actions run of the full dev CI (required with --write)')
+    parser.add_argument('--ci-workflow', default='CI native full tests', help='name of that workflow')
     parser.add_argument('--write', action='store_true', help='create the commit and move --branch to it')
+    parser.add_argument('--verify', metavar='COMMIT', help='check a promoted commit against its dev source')
     args = parser.parse_args(argv)
+    if args.verify:
+        problems = verify(args.verify)
+        for problem in problems:
+            print(problem, file=sys.stderr)
+        print('Promotion verified.' if not problems else f'{len(problems)} problem(s).')
+        return 1 if problems else 0
+    if args.write and not args.ci_run_id:
+        parser.error('--write needs --ci-run-id: only a commit whose full CI passed is promoted')
     commit = git('rev-parse', '--verify', args.source + '^{commit}').decode().strip()
     parent = git('rev-parse', '--verify', args.parent + '^{commit}').decode().strip()
     allowlist_text = git('show', f'{commit}:{ALLOWLIST}').decode('utf-8')
-    groups, blobs, manifest = plan(commit, allowlist_text)
-    linked = sum(1 for f in manifest['files'] if f.get('links_to_dev'))
+    ci = {'run_id': args.ci_run_id, 'workflow': args.ci_workflow} if args.ci_run_id else {}
+    groups, blobs, manifest = plan(commit, allowlist_text, ci)
+    linked = sum(1 for f in manifest['files'] if f.get('derived'))
     print(f'Source {commit}: {len(groups["main"])} files to main ({linked} documents linked to dev), '
           f'{len(groups["dev"])} kept on dev.')
     problems = [('Unclassified', groups['unclassified']), ('In both sections', groups['ambiguous'])]
