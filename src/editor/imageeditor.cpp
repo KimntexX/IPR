@@ -287,7 +287,12 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     connect(&m_imageModel, &ImageListModel::entriesRemoved, this, [this](const QStringList &files) {
         bool deselected = false;
         for (const QString &file : files) {
-            deselected = m_selectedImageKeys.remove(QFileInfo(file).absoluteFilePath()) || deselected;
+            // Selection keys are canonical (selectionKey); a removed file no longer
+            // resolves, its folder still does (a symbolic link, macOS's /var).
+            const QFileInfo info(file);
+            const QString folder = QFileInfo(info.absolutePath()).canonicalFilePath();
+            const QString key = folder.isEmpty() ? info.absoluteFilePath() : QDir(folder).filePath(info.fileName());
+            deselected = m_selectedImageKeys.remove(key) || deselected;
             // The pixels stay on screen; saving its settings will fail until it comes back.
             if (m_displayedFile.isLocalFile() &&
                 QFileInfo(m_displayedFile.toLocalFile()).absoluteFilePath() == QFileInfo(file).absoluteFilePath())
