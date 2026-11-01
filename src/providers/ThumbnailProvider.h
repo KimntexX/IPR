@@ -10,6 +10,7 @@
 #include <QThreadPool>
 
 #include <functional>
+#include <atomic>
 
 // The thumbnail cache is intentionally a viewport cache, rather than a
 // global LRU: setActiveFiles() evicts each image that leaves the visible
@@ -47,6 +48,7 @@ private:
     mutable QMutex m_mutex;
     QSet<QString> m_activeFiles;
     QHash<QString, CachedThumbnail> m_cache;
+    std::atomic_bool m_stopping{false};
     QThreadPool m_pool;
 };
 
