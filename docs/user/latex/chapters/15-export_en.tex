@@ -1,0 +1,50 @@
+% translation-source: docs/user/latex/chapters/15-export.tex; sha256: 998176f47aaec2bc3beb8d847db896979f9cff794a16e3b1b814f220eba394e1
+\chapter{Export an image}
+\label{chap:export}
+\section{Choose a format}
+Open Export and select a format. JPEG Quality appears only for JPEG;
+it spans 1 to 100, with 92 as reference.
+\begin{longtable}{@{}L{2cm}L{4.6cm}L{7cm}@{}}
+\toprule Format & Current encoding & Use and limits\\\midrule\endhead
+JPEG & sRGB,8 bit & Everyday copy; lossy compression, adjustable quality.\\
+PNG & sRGB,16 bit & High-bit-depth rendered image; no JPEG Quality control.\\
+TIFF & sRGB,16 bit & Comparison reference or high-bit-depth rendered exchange.\\
+DNG & Linear RGB,16 bit, sRGB primaries & Contains developed rendering, not the original RAW mosaic.\\
+\bottomrule
+\end{longtable}
+These describe the current exporter, not every theoretical format capability.
+This panel offers no user-selectable output gamut or resizing control.
+
+\section{Destination and confirmation}
+\begin{enumerate}
+\item Wait for development, then click \emph{Choose destination…}.
+\item Check name, folder and type in the native dialog. The panel's format
+is initially selected; changing type also changes the requested format.
+\item In \emph{Review export}, check format, encoding, full-resolution
+dimensions and requested destination.
+\item Click \emph{Export}, or \emph{Cancel} to return without writing.
+\item Read the final message for the actual published file or error.
+\end{enumerate}
+\section{Export a selection}
+\emph{Export selection} processes selected images using their respective
+recipes at full resolution, one after another. Names are made unique without
+replacing existing files. Watch progress and named failures; cancellation
+between images does not imply immediate interruption of native development
+already running.
+The extension follows the format. If a name exists, the exporter adds an
+available number instead of overwriting. The final path may therefore differ
+from the requested name in the summary.
+
+\attention{The summary does not reserve the final name. Another process may
+create a file between selection and writing; the exporter still protects
+against collisions.}
+
+\section{Gestures and controls}
+\touche{Tab} navigates dialog controls and \touche{Enter} confirms active input.
+Explicitly use Export to start writing. \touche{Ctrl + E}, the File menu and
+the photo's right-click menu open the same destination and summary workflow.
+Do not confuse export with automatic sidecar saving.
+
+For reproducible testing, export a neutral reference and an edited state
+with identical profile, white balance, optical corrections and format.
+Record settings: an IPR TIFF alone is not a complete, reliable recipe record.
