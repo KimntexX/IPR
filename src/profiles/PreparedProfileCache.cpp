@@ -5,6 +5,7 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QWaitCondition>
+#include <QScopeGuard>
 #include <algorithm>
 #include <list>
 
@@ -71,6 +72,14 @@ std::shared_ptr<const void> acquire(const QString &path, const QByteArray &kind,
     const auto generation = s.generation;
     const auto pending = std::make_shared<Pending>();
     s.pending.insert(key, pending);
+    // Complete every published single-flight request, including if retaining
+    // the parsed object in the optional cache fails with an allocation error.
+    const auto complete = qScopeGuard([&] {
+        if (!lock.isLocked()) lock.relock();
+        pending->done = true;
+        s.pending.remove(key);
+        pending->ready.wakeAll();
+    });
     ++s.stats.preparations;
     lock.unlock();
     Loaded profile;
@@ -83,6 +92,8 @@ std::shared_ptr<const void> acquire(const QString &path, const QByteArray &kind,
     if (!profile.data && failure.isEmpty()) failure = QStringLiteral("Profil invalide.");
     if (!failure.isEmpty()) profile = {};
     lock.relock();
+    pending->profile = profile;
+    pending->error = failure;
     if (generation == s.generation && profile.data && profile.accountedBytes > 0 &&
         profile.accountedBytes <= s.stats.budgetBytes && s.stats.entryLimit > 0) {
         while (!s.lru.empty() && (int(s.lru.size()) >= s.stats.entryLimit ||
@@ -91,12 +102,20 @@ std::shared_ptr<const void> acquire(const QString &path, const QByteArray &kind,
             s.stats.retainedBytes -= old.profile.accountedBytes;
             s.index.remove(old.key);s.lru.pop_back();++s.stats.evictions;
         }
-        s.lru.push_front({key, profile});s.index.insert(key, s.lru.begin());
-        s.stats.retainedBytes += profile.accountedBytes;
+        try {
+            s.lru.push_front({key, profile});
+            try {
+                s.index.insert(key, s.lru.begin());
+            } catch (...) {
+                s.lru.pop_front();
+                throw;
+            }
+            s.stats.retainedBytes += profile.accountedBytes;
+        } catch (...) {
+            // A successfully prepared object is still usable without retention.
+        }
         s.stats.entries = int(s.lru.size());
     }
-    pending->profile = profile;pending->error = failure;pending->done = true;
-    s.pending.remove(key);pending->ready.wakeAll();
     if (error) *error = failure;
     return profile.data;
 }
