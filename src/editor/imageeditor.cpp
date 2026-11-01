@@ -126,6 +126,12 @@ QString formatExposureTime(double seconds)
 ImageListModel::ImageListModel(QObject *parent)
     : QAbstractListModel(parent)
 {
+    // Images added, removed or renamed outside IPR reach the filmstrip. One copy
+    // fires several notifications: they are coalesced into one listing.
+    m_refreshTimer.setSingleShot(true);
+    m_refreshTimer.setInterval(300);
+    connect(&m_watcher, &QFileSystemWatcher::directoryChanged, &m_refreshTimer, qOverload<>(&QTimer::start));
+    connect(&m_refreshTimer, &QTimer::timeout, this, &ImageListModel::refresh);
 }
 
 int ImageListModel::rowCount(const QModelIndex &parent) const
@@ -171,18 +177,57 @@ QStringList ImageEditor::imageFileFilters() const
     return {tr("Images (%1)").arg(supportedImagePatterns().join(QLatin1Char(' ')))};
 }
 
+QList<ImageListModel::Entry> ImageListModel::listFolder(const QString &path)
+{
+    QList<Entry> entries;
+    if (path.isEmpty())
+        return entries;
+    const QFileInfoList files = QDir(path).entryInfoList(
+        supportedImagePatterns(), QDir::Files | QDir::Readable | QDir::NoSymLinks, QDir::Name | QDir::IgnoreCase);
+    for (const QFileInfo &file : files)
+        entries.append({file.fileName(), QUrl::fromLocalFile(file.absoluteFilePath())});
+    return entries;
+}
+
 void ImageListModel::setFolder(const QUrl &folder)
 {
     beginResetModel();
-    m_entries.clear();
-
-    const QDir directory(folder.toLocalFile());
-    const QFileInfoList files = directory.entryInfoList(
-        supportedImagePatterns(), QDir::Files | QDir::Readable | QDir::NoSymLinks, QDir::Name | QDir::IgnoreCase);
-    for (const QFileInfo &file : files)
-        m_entries.append({file.fileName(), QUrl::fromLocalFile(file.absoluteFilePath())});
-
+    m_refreshTimer.stop();
+    if (!m_watcher.directories().isEmpty())
+        m_watcher.removePaths(m_watcher.directories());
+    m_folderPath = folder.toLocalFile();
+    m_entries = listFolder(m_folderPath);
+    if (!m_folderPath.isEmpty())
+        m_watcher.addPath(m_folderPath);
     endResetModel();
+}
+
+// Rows change in place, so the filmstrip keeps its position and thumbnails.
+void ImageListModel::refresh()
+{
+    const QList<Entry> current = listFolder(m_folderPath);
+    QSet<QString> present;
+    for (const Entry &entry : current)
+        present.insert(entry.fileName);
+    QStringList removed;
+    for (int row = int(m_entries.size()) - 1; row >= 0; --row) {
+        if (present.contains(m_entries.at(row).fileName))
+            continue;
+        removed.prepend(m_entries.at(row).fileUrl.toLocalFile());
+        beginRemoveRows({}, row, row);
+        m_entries.removeAt(row);
+        endRemoveRows();
+    }
+    // The remaining entries keep the listing's order: each new one goes in its place.
+    for (int row = 0; row < int(current.size()); ++row) {
+        if (row < int(m_entries.size()) && m_entries.at(row).fileName == current.at(row).fileName)
+            continue;
+        beginInsertRows({}, row, row);
+        m_entries.insert(row, current.at(row));
+        endInsertRows();
+    }
+    if (!removed.isEmpty())
+        emit entriesRemoved(removed);
 }
 
 int ImageListModel::count() const
@@ -239,6 +284,19 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     m_prefetchTimer.setSingleShot(true);
     m_prefetchTimer.setInterval(250);
     connect(&m_prefetchTimer, &QTimer::timeout, this, &ImageEditor::startPrefetch);
+    connect(&m_imageModel, &ImageListModel::entriesRemoved, this, [this](const QStringList &files) {
+        bool deselected = false;
+        for (const QString &file : files) {
+            deselected = m_selectedImageKeys.remove(QFileInfo(file).absoluteFilePath()) || deselected;
+            // The pixels stay on screen; saving its settings will fail until it comes back.
+            if (m_displayedFile.isLocalFile() &&
+                QFileInfo(m_displayedFile.toLocalFile()).absoluteFilePath() == QFileInfo(file).absoluteFilePath())
+                setStatusMessage(tr("« %1 » a été supprimée, déplacée ou renommée hors d'IPR.")
+                                     .arg(QFileInfo(file).fileName()));
+        }
+        if (deselected)
+            emit selectionChanged();
+    });
     connect(&m_decodedImageCache, &ImageCacheController::changed, this, [this] {
         emit decodedImageCacheChanged();
         const auto stats = m_decodedImageCache.statistics();
