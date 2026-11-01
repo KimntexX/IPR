@@ -8,7 +8,7 @@ develop RAW files, adjust rendering and export an image without modifying the or
 
 The project is under active development. **Available feature does not mean fully
 validated quality**: results and limitations are tracked in the
-[validation matrix](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/matrice-validation.md).
+[validation matrix](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/matrice-validation.md).
 
 ## Interface overview
 
@@ -95,8 +95,8 @@ Upcoming developments include manual cropping and geometry,
 masks and local adjustments, AI integration and batch export.
 These should not be interpreted as already delivered features.
 
-For the precise status, see the [validation matrix](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/matrice-validation.md)
-and the [Light report](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md).
+For the precise status, see the [validation matrix](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/matrice-validation.md)
+and the [Light report](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md).
 
 ## Build
 
@@ -191,10 +191,10 @@ this does not constitute dedicated HDR tone mapping.
 | [Rendering engine](docs/imageeditor-render-working-image.md) | Transformations, math and asynchronicity |
 | [LaTeX technical manual](docs/technical/latex/README.md) | Technical documentation and diagrams |
 | [Scholar course](docs/scholar/README.md) | Mathematical and physical foundations |
-| [Self-contained tests](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/procedure-tests-autonomes.md) | Image generation, audits and analyses |
+| [Self-contained tests](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/procedure-tests-autonomes.md) | Image generation, audits and analyses |
 
 The build also produces `iprGenerateTests.exe`, which generates validation
-variants without writing sidecars. See the [test image generator guide](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/tools/generateur-images-tests.md)
+variants without writing sidecars. See the [test image generator guide](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/tools/generateur-images-tests.md)
 and `scripts/generate-test-images.ps1`.
 
 From PowerShell: `./scripts/generate-test-images.ps1 couleur` (or `all`).
@@ -205,7 +205,7 @@ or auxiliary files. Images are removed manually after analysis.
 Each feature set has an evolving analysis report. **Versioned, timestamped
 JSON files are the source of truth for measurements**; CSVs and
 charts are derived from them. Images are temporary and their deletion remains
-up to the user. See the [test memory contract](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/data/README.md).
+up to the user. See the [test memory contract](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/data/README.md).
 
 ## Licenses
 

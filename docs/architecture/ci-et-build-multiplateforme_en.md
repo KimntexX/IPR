@@ -11,7 +11,7 @@ CD (*continuous delivery*) is the second step: for a validated version tag, it p
 
 ## Current State and Gaps to Address
 
-**October 8, 2026 update:** Local Windows packaging now exists with Qt deployment, third-party DLLs, profiles/configuration, and SHA-256 inventory. Its offscreen startup without a development PATH is verified. This provides neither installer, nor clean machine certification, nor active GitHub workflow. The counters and proposals below describe the initial plan; consult the [current matrix](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/matrice-validation.md) and the [standalone ZIP contract](build-windows-standalone.md) for the delivered state.
+**October 8, 2026 update:** Local Windows packaging now exists with Qt deployment, third-party DLLs, profiles/configuration, and SHA-256 inventory. Its offscreen startup without a development PATH is verified. This provides neither installer, nor clean machine certification, nor active GitHub workflow. The counters and proposals below describe the initial plan; consult the [current matrix](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/matrice-validation.md) and the [standalone ZIP contract](build-windows-standalone.md) for the delivered state.
 
 The project is already portable in principle: CMake 3.21+, C++17, Qt 6.4+, OpenCV, LibTIFF, and optional LibRaw. However, the following gaps must be resolved before declaring multiplatform support:
 

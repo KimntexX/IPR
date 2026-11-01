@@ -4,7 +4,7 @@ Date : 17 octobre 2026. Statut : accepté par l’utilisateur, intégration loca
 
 ## Contexte
 
-La [mesure d’ouverture](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/analyses/analyse-performance-ouverture.md)
+La [mesure d’ouverture](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-performance-ouverture.md)
 identifie des entrées de 937–944 Mio, incompatibles avec l’ancien budget fixe
 de l’éditeur à 256 Mio. Le témoin à 3 Gio accélère les retours, mais imposer
 ce budget sans connaître la pression mémoire serait dangereux.
