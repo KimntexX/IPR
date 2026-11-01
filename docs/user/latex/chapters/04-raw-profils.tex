@@ -1,0 +1,40 @@
+\chapter{Développement RAW et profil}
+\section{Choisir le rendu de départ}
+Le groupe \emph{Développement RAW / Profil} permet de choisir un profil DCP
+compatible avec la photo. Les propositions dépendent du boîtier, des profils
+disponibles et du build. Vérifier la description du profil effectivement utilisé,
+pas seulement le nom demandé dans une liste.
+
+Un profil appareil définit un rendu de départ : il peut changer les couleurs,
+le contraste et la luminosité apparente avant les retouches. Deux logiciels
+ne produisent pas nécessairement les mêmes pixels avec un intitulé similaire.
+Ce groupe n’applique pas un DCP d’appareil à un JPEG comme s’il s’agissait d’un RAW.
+
+\section{Changer de profil}
+Choisir une entrée dans la liste, attendre le calcul puis comparer le rendu.
+Le moteur peut éviter un redécodage complet lorsqu’un tampon compatible est
+disponible ; l’interface indique cette capacité. Elle ne garantit pas que
+tous les changements de développement sont instantanés.
+Les commandes susceptibles de modifier le développement sont désactivées
+pendant certains traitements.
+
+\section{Balance automatique et calibration}
+La case \emph{Balance des blancs automatique} se trouve ici, une seule fois.
+Les réglages manuels de température et de nuance restent dans \emph{Couleur}.
+Ne pas confondre balance automatique, température de prise de vue et profil DCP.
+
+La calibration RAW est une option avancée des préférences, accessibles avec
+\touche{Ctrl + virgule}, onglet \emph{Avancé · RAW}. Sur les boîtiers et modes
+compatibles, le moteur dispose d’une calibration par défaut. Vérifier son état
+appliqué dans la description : une case activée n’assure pas qu’un fichier
+inconnu possède une caractérisation disponible.
+
+\attention{Le choix avancé concerne l’image ouverte et son compagnon,
+pas une nouvelle préférence globale pour toutes les prochaines photos.
+Ne changer le manifeste de calibration que dans un protocole maîtrisé.}
+
+\paragraph{Exemple.}
+Pour comparer deux profils, garder les retouches identiques, désactiver les
+corrections non nécessaires au test, changer uniquement le profil et examiner
+les tons de peau, les couleurs vives et les hautes lumières. Noter la balance
+des blancs choisie pour rendre la comparaison reproductible.

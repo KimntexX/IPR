@@ -9,7 +9,7 @@
 La campagne HSL a montré une attribution des gris à H=0, des gains de luminance
 positive de plus de ×20 dans certaines zones sombres et un couplage saturation/Y.
 Le dernier cercle utilisé pour « violet » pilotait en réalité le magenta à 300°.
-Voir [le corpus étendu](../validation/analyses/analyse-color-mixer-corpus-etendu-2026-10-04.md).
+Voir [le corpus étendu](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/analyses/analyse-color-mixer-corpus-etendu-2026-10-04.md).
 
 ## Décision
 

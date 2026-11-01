@@ -1,0 +1,101 @@
+# Paths of a dev commit published on main (rule of 1 November 2026: main
+# carries production code and documentation; tests and analytic tracking stay
+# on dev). scripts/promote_main.py copies the [main] paths of a tested dev
+# commit to main, without dev as a parent, and refuses any path that matches
+# no section or both: a new file is classified here before it can be promoted.
+#
+# Patterns: "*" within one path segment, "**" across segments, "?" one
+# character. A pattern ending with "/" covers the whole folder.
+
+[main]
+# Build, packaging, runtime data and licences
+.gitignore
+CMakeLists.txt
+LICENSE
+vcpkg.json
+cmake/
+config/ipr-ui.ini
+config/raw-normalization.json
+packaging/
+licenses/
+# Public profile index and empty folders only, never DCP or LCP files
+profiles/index.json
+profiles/dcp/.gitkeep
+profiles/lcp/.gitkeep
+# Production code (the analysis tools of src/tools stay on dev)
+src/README.md
+src/app/
+src/cache/
+src/core/
+src/editor/
+src/profiles/
+src/providers/
+src/qml/
+src/raw/
+# Build, packaging, delivery and promotion scripts
+scripts/build-windows.ps1
+scripts/build-windows.sh
+scripts/build_windows.py
+scripts/ci.py
+scripts/ci_documents.py
+scripts/delivery_policy.py
+scripts/github_build.py
+scripts/package-windows.ps1
+scripts/promote_main.py
+scripts/release_github.py
+scripts/smoke-windows-standalone.ps1
+scripts/smoke_package.py
+scripts/windows_installer.py
+.github/
+# Documentation, without the analytic tracking
+README.md
+README_en.md
+AGENTS.md
+docs/.gitignore
+docs/AGENTS.md
+docs/INDEX.md
+docs/INDEX_en.md
+docs/README.md
+docs/README_en.md
+docs/architecture/
+docs/asset/
+docs/build-documentation.ps1
+docs/camera-profile-engine.md
+docs/decisions/
+docs/imageeditor-render-working-image.md
+docs/installation-opencv-windows.md
+docs/release/
+docs/scholar/
+docs/specifications/
+docs/technical/
+docs/templates/
+docs/traitement-image-qt-cpp.md
+docs/user/
+
+[dev]
+# Tests, benches, probes and their data
+tests/
+# Analytic tracking: measurements, analyses, protocols, metrics, reports
+docs/validation/
+docs/reports/
+# Analysis tools and scripts
+src/tools/
+scripts/analyse_*.py
+scripts/audit_camera_levels.py
+scripts/build_highlights_references.py
+scripts/build_mixer_model.py
+scripts/build_vibrance_model.py
+scripts/ci_scope.py
+scripts/cleanup-analysed-lighting.ps1
+scripts/compare_lumieres_visual.py
+scripts/evaluate_highlights_ipr.py
+scripts/export_documentation_metrics.py
+scripts/fit_*.py
+scripts/generate-test-images.ps1
+scripts/git_network.py
+scripts/make_lr_*.py
+scripts/prepare_lr_xmp_batch.py
+scripts/summarize_*.py
+scripts/test-rules.json
+# Personal IDE settings
+CMakeLists.txt.user

@@ -1,22 +1,24 @@
+*[Français](denoising-sharpening.md) | [English](denoising-sharpening_en.md)*
+
 # Réduction de bruit et netteté
 
 **État :** débruitage CPU corrigé, fonctionnement/progressivité photographiques confirmés ; qualité/calibration à poursuivre ; netteté non validée.  
 **Date de consolidation :** 5 octobre 2026.
 
-La [campagne photographique du 4 octobre](../validation/analyses/analyse-bruit-2026-10-04.md)
+La [campagne photographique du 4 octobre](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/analyses/analyse-bruit-2026-10-04.md)
 mesure 80 variantes retenues et dix neutres. Elle confirme l'activité des réglages mais relève
 des plateaux à faible bruit et un bruit couleur résiduel important à haut ISO.
 La sonde CPU identifie un seuil d'activation non nul, une protection de structure
 pilotée par le bruit et un biais sombre possible à la reconstruction RGB.
 Les mesures du 4 octobre restent une référence de l'ancienne version.
-Les [corrections désormais appliquées](../validation/analyses/correctif-bruit-2026-10-05.md)
-sont testées synthétiquement. La [revalidation v2](../validation/analyses/analyse-bruit-v2-2026-10-05.md)
+Les [corrections désormais appliquées](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/analyses/correctif-bruit-2026-10-05.md)
+sont testées synthétiquement. La [revalidation v2](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/analyses/analyse-bruit-v2-2026-10-05.md)
 couvre douze scènes, 24 neutres et 145 variantes : les 24 séries IPR standards
 sont progressives, et le biais sombre diminue. Le bruit couleur à haut ISO
 reste modérément réduit ; la qualité globale, le couplage des composantes et
 l'aperçu/export restent à valider. Aucun recalibrage supplémentaire ni
 changement de netteté n'a été appliqué pendant cette analyse.
-Le [protocole](../validation/protocols/protocole-validation-bruit-2026-10-04.md)
+Le [protocole](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/protocols/protocole-validation-bruit-2026-10-04.md)
 distingue mesures au neutre, séries diagnostiques et comparaison IA séparée.
 
 ## Décision

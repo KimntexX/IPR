@@ -2,14 +2,13 @@
 
 #include <algorithm>
 #include <cmath>
-#include <cstring>
 #include <utility>
 
 namespace ColorPipeline {
 
 namespace {
 
-bool convertSourceToLinearSrgb(QImage &image, QString *error)
+bool convertSourceToWorking(QImage &image, QString *error)
 {
     if (image.isNull()) {
         if (error)
@@ -20,22 +19,42 @@ bool convertSourceToLinearSrgb(QImage &image, QString *error)
     if (!image.colorSpace().isValid())
         image.setColorSpace(QColorSpace(QColorSpace::SRgb));
 
-    QImage highPrecision = image.convertToFormat(QImage::Format_RGBA64);
+    QImage highPrecision = image.convertToFormat(QImage::Format_RGBA32FPx4);
     if (highPrecision.isNull()) {
         if (error)
-            *error = QStringLiteral("Impossible de convertir l'image en RGBA 16 bits.");
+            *error = QStringLiteral("Impossible de convertir l'image en RGBA flottant.");
         return false;
     }
 
-    const QColorSpace linearSrgb(QColorSpace::SRgbLinear);
-    QImage converted = highPrecision.convertedToColorSpace(linearSrgb);
+    const QColorSpace working = workingColorSpace();
+    const bool srgb = image.colorSpace() == QColorSpace(QColorSpace::SRgb);
+    const bool linearSrgb = image.colorSpace() == QColorSpace(QColorSpace::SRgbLinear);
+    if (srgb || linearSrgb || image.colorSpace() == working) {
+        cv::Mat rgb(highPrecision.height(), highPrecision.width(), CV_32FC4,
+                    highPrecision.bits(), highPrecision.bytesPerLine());
+        if (srgb) {
+            for (int y = 0; y < rgb.rows; ++y) {
+                auto *row = rgb.ptr<cv::Vec4f>(y);
+                for (int x = 0; x < rgb.cols; ++x) for (int c = 0; c < 3; ++c) {
+                    const double v = std::abs(double(row[x][c]));
+                    const double decoded = WorkingColor::srgbDecode(v);
+                    row[x][c] = float(std::copysign(decoded, row[x][c]));
+                }
+            }
+        }
+        if (srgb || linearSrgb) WorkingColor::transform(rgb, WorkingColor::fromSrgb());
+        highPrecision.setColorSpace(working);
+        image = std::move(highPrecision);
+        return true;
+    }
+    QImage converted = highPrecision.convertedToColorSpace(working);
     if (converted.isNull()) {
         if (error)
-            *error = QStringLiteral("Impossible de convertir l'image vers sRGB linéaire.");
+            *error = QStringLiteral("Impossible de convertir l'image vers Rec.2020 linéaire.");
         return false;
     }
 
-    converted.setColorSpace(linearSrgb);
+    converted.setColorSpace(working);
     image = std::move(converted);
     return true;
 }
@@ -74,25 +93,23 @@ QImage toEncodedSrgbRgba64(const cv::Mat &linearRgba)
     // Encode before quantization. Qt's integer color-space LUT loses low
     // linear16 codes; this buffer is already in sRGB primaries, so only
     // the analytic sRGB transfer is needed. Alpha is straight and linear.
-    cv::Mat rgba16(linearRgba.rows, linearRgba.cols, CV_16UC4);
+    // RGBA64 stores each pixel as four 16-bit halfwords in R, G, B, A order.
+    QImage image(linearRgba.cols, linearRgba.rows, QImage::Format_RGBA64);
+    if (image.isNull())
+        return image;   // allocation failed: the caller reports it
     for (int y = 0; y < linearRgba.rows; ++y) {
         const cv::Vec4f *source = linearRgba.ptr<cv::Vec4f>(y);
-        cv::Vec<quint16, 4> *destination = rgba16.ptr<cv::Vec<quint16, 4>>(y);
+        auto *destination = reinterpret_cast<quint16 *>(image.scanLine(y));
         for (int x = 0; x < linearRgba.cols; ++x) {
             for (int channel = 0; channel < 3; ++channel) {
                 const double linear = std::clamp(double(source[x][channel]), 0.0, 1.0);
-                const double encoded = linear <= 0.0031308
-                    ? 12.92 * linear : 1.055 * std::pow(linear, 1.0 / 2.4) - 0.055;
-                destination[x][channel] = static_cast<quint16>(std::lround(encoded * 65535.0));
+                const double encoded = WorkingColor::srgbEncode(linear);
+                destination[4 * x + channel] = static_cast<quint16>(std::lround(encoded * 65535.0));
             }
-            destination[x][3] = static_cast<quint16>(std::lround(
+            destination[4 * x + 3] = static_cast<quint16>(std::lround(
                 std::clamp(source[x][3], 0.0f, 1.0f) * 65535.0f));
         }
     }
-
-    QImage image(rgba16.cols, rgba16.rows, QImage::Format_RGBA64);
-    for (int y = 0; y < rgba16.rows; ++y)
-        std::memcpy(image.scanLine(y), rgba16.ptr(y), rgba16.cols * 8);
     image.setColorSpace(QColorSpace(QColorSpace::SRgb));
     return image;
 }
@@ -110,42 +127,45 @@ WorkingImage fromSourceImage(const QImage &source, QString *error)
         sourceProfile = QStringLiteral("Profil ICC embarqué");
 
     QImage linear = source;
-    if (!convertSourceToLinearSrgb(linear, error))
+    if (!convertSourceToWorking(linear, error))
         return result;
 
-    cv::Mat rgba16(linear.height(), linear.width(), CV_16UC4,
+    cv::Mat rgbaFloat(linear.height(), linear.width(), CV_32FC4,
                    const_cast<uchar *>(linear.constBits()), linear.bytesPerLine());
-    rgba16.convertTo(result.linearRgba, CV_32FC4, 1.0 / 65535.0);
-    result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+    result.linearRgba = rgbaFloat.clone();
+    if (!cv::checkRange(result.linearRgba, true)) {
+        if (error) *error = QStringLiteral("L'image source contient des valeurs non finies.");
+        return {};
+    }
+    result.colorSpace = workingColorSpace();
     result.sourceProfile = sourceProfile;
     return result;
 }
 
-WorkingImage fromLinearRgb16(const quint16 *data, int width, int height,
-                             QString *error)
+WorkingImage fromLinearSrgb(const cv::Mat &rgb, QString *error)
 {
     WorkingImage result;
-    if (!data || width <= 0 || height <= 0) {
+    // Extended range (negative, above 1) is kept; NaN and infinities are refused.
+    if (rgb.empty() || rgb.type() != CV_32FC3 || !cv::checkRange(rgb)) {
         if (error)
-            *error = QStringLiteral("Les données RAW 16 bits sont invalides.");
+            *error = QStringLiteral("Les données RAW RGB linéaires sont invalides.");
         return result;
     }
 
-    cv::Mat rgb16(height, width, CV_16UC3, const_cast<quint16 *>(data));
-    cv::Mat rgbFloat;
-    rgb16.convertTo(rgbFloat, CV_32FC3, 1.0 / 65535.0);
     std::vector<cv::Mat> channels;
-    cv::split(rgbFloat, channels);
-    channels.push_back(cv::Mat(height, width, CV_32FC1, cv::Scalar(1.0f)));
+    cv::split(rgb, channels);
+    channels.push_back(cv::Mat(rgb.size(), CV_32FC1, cv::Scalar(1.0f)));
     cv::merge(channels, result.linearRgba);
-    result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
-    result.sourceProfile = QStringLiteral("LibRaw — RGB linéaire");
+    WorkingColor::transform(result.linearRgba, WorkingColor::fromSrgb());
+    result.colorSpace = workingColorSpace();
+    result.sourceProfile = QStringLiteral("RAW — sRGB linéaire");
     return result;
 }
 
 WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
 {
-    if (source.isNull() || source.linearRgba.type() != CV_32FC4 ||
+    if (source.isNull() || source.colorSpace != workingColorSpace() ||
+        source.linearRgba.type() != CV_32FC4 ||
         !cv::checkRange(source.linearRgba, true)) {
         if (error)
             *error = QStringLiteral(
@@ -155,6 +175,13 @@ WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
 
     WorkingImage result = source;
     result.linearRgba = source.linearRgba.clone();
+    WorkingColor::transform(result.linearRgba, WorkingColor::toSrgb());
+    if (!cv::checkRange(result.linearRgba, true)) {
+        if (error) *error = QStringLiteral("La conversion de sortie a produit des valeurs non finies.");
+        return {};
+    }
+    result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+    result.dcpContext.reset(); // This is an output derivative, not a reeditable source.
     for (int y = 0; y < result.linearRgba.rows; ++y) {
         cv::Vec4f *row = result.linearRgba.ptr<cv::Vec4f>(y);
         for (int x = 0; x < result.linearRgba.cols; ++x) {
@@ -304,8 +331,11 @@ bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
         std::abs(static_cast<double>(temperature) - referenceTemperature) < 1e-6)
         return true;
 
-    const cv::Matx33d adaptation =
-        temperatureAdaptationMatrix(temperature, referenceTemperature);
+    // The empirical tint/cold axes were calibrated in sRGB. Conjugate the
+    // complete control matrix once; all pixel arithmetic stays in Rec.2020.
+    const cv::Matx33d tintMatrix(magentaGain, 0, 0, 0, greenGain, 0, 0, 0, magentaGain);
+    const cv::Matx33d adaptation = WorkingColor::fromSrgb() * tintMatrix *
+        temperatureAdaptationMatrix(temperature, referenceTemperature) * WorkingColor::toSrgb();
     const cv::Matx33f adaptationF(
         static_cast<float>(adaptation(0, 0)), static_cast<float>(adaptation(0, 1)),
         static_cast<float>(adaptation(0, 2)),
@@ -318,9 +348,7 @@ bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
         cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
         for (int x = 0; x < linearRgb.cols; ++x) {
             const cv::Vec3f adapted = adaptationF * row[x];
-            row[x][0] = adapted[0] * magentaGain;
-            row[x][1] = adapted[1] * greenGain;
-            row[x][2] = adapted[2] * magentaGain;
+            row[x] = adapted;
         }
     }
     return true;
@@ -334,15 +362,14 @@ QImage toSrgb(const WorkingImage &source, OutputFormat outputFormat, QString *er
         return {};
     }
 
-    const QColorSpace linearSrgb(QColorSpace::SRgbLinear);
     if (source.linearRgba.type() != CV_32FC4) {
         if (error)
             *error = QStringLiteral("L'image de travail doit être en RGBA flottant 32 bits.");
         return {};
     }
-    if (source.colorSpace != linearSrgb) {
+    if (source.colorSpace != workingColorSpace()) {
         if (error)
-            *error = QStringLiteral("L'image de travail n'est pas en sRGB linéaire.");
+            *error = QStringLiteral("L'image de travail n'est pas en Rec.2020 linéaire.");
         return {};
     }
     if (!cv::checkRange(source.linearRgba, true)) {

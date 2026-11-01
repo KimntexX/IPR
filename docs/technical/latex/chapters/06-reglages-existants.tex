@@ -63,7 +63,11 @@ Les couleurs peu saturées reçoivent donc l'essentiel de l'effet. Les contrôle
 
 \subsection{Mélangeur de couleur}
 
-Le module C++ \texttt{ColorMixer} agit dans une représentation HSV du RGB linéaire sur huit bandes : rouge, orange, jaune, vert, cyan, bleu, violet et magenta. Les centres sont $0,30,60,120,180,240,270,300$ degrés. Pour une teinte d'origine $h$, l'influence d'une bande centrée en $h_i$ est triangulaire :
+Le module C++ \texttt{ColorMixer} agit dans une représentation HSV du RGB linéaire
+sur huit bandes : rouge, orange, jaune, vert, cyan, bleu, violet et magenta.
+Les centres, en degrés, sont :
+\[0,\;30,\;60,\;120,\;180,\;240,\;270,\;300.\]
+Pour une teinte d'origine $h$, l'influence d'une bande centrée en $h_i$ est triangulaire :
 \begin{equation}
   w_i(h)=\max\left(0,1-\frac{|\delta_i(h)|}{a_i(h)}\right),
 \end{equation}

@@ -1,0 +1,1919 @@
+{
+ "schema": 1,
+ "policy": "main-production-and-docs/2026-11-01",
+ "source": {
+  "repository": "https://github.com/KimntexX/IPR",
+  "commit": "b874a68e613f465c2d6402dfd6c2832f9e723a40",
+  "ci": {
+   "run_id": "41318343422",
+   "workflow": "CI native full tests"
+  }
+ },
+ "allowlist": {
+  "path": "packaging/main-allowlist.txt",
+  "sha256": "40346cdc88d51c013c60c5960ec4d91a6f92354f0e4c38eed15d58573c3d6500"
+ },
+ "production_profile": {
+  "command": "scripts/ci.py --profile production",
+  "BUILD_TESTING": "OFF",
+  "IPR_BUILD_TOOLS": "OFF"
+ },
+ "excluded_files": 902,
+ "closure_sha256": "d0e139609ff5d939a3be9da983e7540ab6e8e53ed6a8a3fa0960d933d426e564",
+ "files": [
+  {
+   "path": ".github/actions/setup/action.yml",
+   "mode": "100644",
+   "sha256": "0d0376caf959e5b392125cf8265304b02ecff2e2f8c5c0edac28612cdbbb2236"
+  },
+  {
+   "path": ".github/workflows/ci.yml",
+   "mode": "100644",
+   "sha256": "ebd10bc1cffc2bf7d8226b1bcd3d0c1489919552f284078268079a0896b14bda"
+  },
+  {
+   "path": ".github/workflows/delivery.yml",
+   "mode": "100644",
+   "sha256": "6a70effe1e245fee1f1b7d5a1a8b1dd9ea2194166190c1d672337fd910002e78"
+  },
+  {
+   "path": ".github/workflows/linux-distributions.yml",
+   "mode": "100644",
+   "sha256": "46348a23445bafa3d2919114538f6308a955adf72751523597a64cb93144a6e0"
+  },
+  {
+   "path": ".github/workflows/main.yml",
+   "mode": "100644",
+   "sha256": "70be7411cece9e3c08ef02a03ff4cdf4bbe24d2447ff3456e27d24e0a40e5511"
+  },
+  {
+   "path": ".github/workflows/release.yml",
+   "mode": "100644",
+   "sha256": "98691726f7a5fca3d4021bd775f07ba47bb77600c24b32307a20288b2b49056f"
+  },
+  {
+   "path": ".gitignore",
+   "mode": "100644",
+   "sha256": "e1c46dde41a875e17d0d090f86618502f5cf761b580c1586a1177486790c634e"
+  },
+  {
+   "path": "AGENTS.md",
+   "mode": "100644",
+   "sha256": "ad5e3de2b2ebc9d933f1ecc44b22db8e3ae84be635e782023ffd019f2e78736a"
+  },
+  {
+   "path": "CMakeLists.txt",
+   "mode": "100644",
+   "sha256": "368fe84c57d9e42987c8c18e44dd491e1dc12789ab1241d6f2ba9e3df6e01d5f"
+  },
+  {
+   "path": "LICENSE",
+   "mode": "100644",
+   "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
+  },
+  {
+   "path": "README.md",
+   "mode": "100644",
+   "sha256": "7b4b5faebaf32a436cf1d0ea2cbdb3ad53704b9c8c2c0ec8a517692590ba5593",
+   "source_sha256": "4411d13bc7b7702014d62646bfc76b3d877a49e5d8788bc79308cd723d8a700f",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "README_en.md",
+   "mode": "100644",
+   "sha256": "faa036785d1c57a3c644e03e2b50ab7e104a242e24f41d5bb3535e1aa725b82e",
+   "source_sha256": "de7cdc17784abb0d94f1b702ec8cce497ada920f6e6b7a00cecf194fc22d1b99",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "cmake/Deployment.cmake",
+   "mode": "100644",
+   "sha256": "82025019edee1ca4ea83e6364fc1c6f78097ec22c18693e3e5dfb88b0d08f4f9"
+  },
+  {
+   "path": "config/ipr-ui.ini",
+   "mode": "100644",
+   "sha256": "b8d44d5c031fe5bfcdcec1761ccaca9c3f5ce7df185d927ef8dda00c36848400"
+  },
+  {
+   "path": "config/raw-normalization.json",
+   "mode": "100644",
+   "sha256": "97e2a9eb4041e7d160a626079b747c8240dcea7b2c44b6bd428d69e5e2b6faaa"
+  },
+  {
+   "path": "docs/.gitignore",
+   "mode": "100644",
+   "sha256": "c9810141e56923114bb25126288eac7531cb0bbe6db343f803637638f19d97bf"
+  },
+  {
+   "path": "docs/AGENTS.md",
+   "mode": "100644",
+   "sha256": "11212286c1f90387a0b67aa019e146292aa7a8f7efca951e66fe77477fa5390e",
+   "source_sha256": "6857f4fb6c69de8f14f45de71779999de748eabee24b8e11a7618ce4a481f291",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/INDEX.md",
+   "mode": "100644",
+   "sha256": "ecc05ba344bcddac498cf3901564e5d39a2a277f7cd5c6e933e1dc305baf7121",
+   "source_sha256": "32bee0a84a0619f754d0922dd92bcc15102a88e0a43d2e1d19777ac40052336d",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/INDEX_en.md",
+   "mode": "100644",
+   "sha256": "97b09de2837d69efe33f0344bbad47450f1d187c8f22fdffe539479f28ab6225",
+   "source_sha256": "ccefe7beb2300de95c6d6e6abe966037d8491ddb7b7db173655d0077225ae9d3",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/README.md",
+   "mode": "100644",
+   "sha256": "004cce5c596b2d2a7422a793ebd6f52b0c6214261677d3706cdeb44081b365d2"
+  },
+  {
+   "path": "docs/README_en.md",
+   "mode": "100644",
+   "sha256": "ba08bb947b0f595c2984b54dbb1446bbc6740a983e14ebf797c4b22df04d171d"
+  },
+  {
+   "path": "docs/architecture/README.md",
+   "mode": "100644",
+   "sha256": "1215965db3bdf2991586e379fdfcb80825050d5e1af08d2b02938f02de50cf89",
+   "source_sha256": "fc128fe6e0b13a1b44fd51096fca63bb065f58d0ebf6508464044d8c8c94a011",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/README_en.md",
+   "mode": "100644",
+   "sha256": "f9c2dee289bddec12ec069db48ccda21cd59e66fd364f95ed37e565f3b8ea5d7",
+   "source_sha256": "af775f532b7480904a26a7e32ec1e22a1ab1a19d97e97453b30e132f723a5fc0",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/build-windows-standalone.md",
+   "mode": "100644",
+   "sha256": "62a4f90544c520dbd07fddbe9e0fb181e7320165a4f965032b438c4b9192c5a7"
+  },
+  {
+   "path": "docs/architecture/build-windows-standalone_en.md",
+   "mode": "100644",
+   "sha256": "2a71bcc95e8b5cbd9e183d8e1c984831d5c2062a5b2990e82e80200aed7db46c"
+  },
+  {
+   "path": "docs/architecture/chemin-ouverture-raw.md",
+   "mode": "100644",
+   "sha256": "13efab9c74f0620cdf6a4b626ed6df86ef36b3e4ba215feaccd18f7e452a3672"
+  },
+  {
+   "path": "docs/architecture/ci-et-build-multiplateforme.md",
+   "mode": "100644",
+   "sha256": "0c28dfbdb1b64d551676aa12d98d364b34b1e1425884f80c2c7554254aa8fefd",
+   "source_sha256": "ca82ea5e161b50d2d076f86e8d92cfc10b212967461022e105ebba2616575927",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/ci-et-build-multiplateforme_en.md",
+   "mode": "100644",
+   "sha256": "bed464b2d3aa92d9c5a48171700dc802e8ecfd25bc98608950fd5a064ec8d0e7",
+   "source_sha256": "85718c00d763c18e34be3e84ddac599fb93797cdeab18cb0ebb5ccc7945dbdfa",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/controle-memoire-images.md",
+   "mode": "100644",
+   "sha256": "28574f1640d122882e0d35be11e0d70152acf4b0f45666345c9dcb3e75075a33",
+   "source_sha256": "1db8992f0d54270d4e8edd959384fdc454579bb492100b34c22ad39630ab2bba",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/denoising-sharpening.md",
+   "mode": "100644",
+   "sha256": "8e78955500de4534a64298e07ac2e55bb639a8fff0a7cf1d3e4199590b731771",
+   "source_sha256": "0b015ab8352f757b82c7e8c1d561170ceefa0a0f175f9b74ef02ce9e39b04934",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/denoising-sharpening_en.md",
+   "mode": "100644",
+   "sha256": "37d96b7f1c8fb86c243b6d04491c45708d92616524b518786e9c22c7f9e90e3d",
+   "source_sha256": "6b4d4c55c0f7f7514bdd906f86c43a1427d755cbfcf602c50155df5a0dd9d565",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/diagrams/chemin-ouverture-raw.svg",
+   "mode": "100644",
+   "sha256": "8c484e63814ff63281e7a4fdc78e53bd5049b39d33cab2b8a55efa739d23f187"
+  },
+  {
+   "path": "docs/architecture/diagrams/import-commun.svg",
+   "mode": "100644",
+   "sha256": "c82b951e2c55531e6bdc9bfd0b58e77771fa33463e18bd3f7cc457b683d719af"
+  },
+  {
+   "path": "docs/architecture/empilement-et-panorama.md",
+   "mode": "100644",
+   "sha256": "3063bcc8746f3b956728c9eb850cf102b7716e38381532c9d9c0123b2f3aad0e"
+  },
+  {
+   "path": "docs/architecture/gestion-branches-git.md",
+   "mode": "100644",
+   "sha256": "1c5d456217e2d78b8d2fee2818fe4290f5034888c5037b4611a1e58b67eb4cdf"
+  },
+  {
+   "path": "docs/architecture/gestion-branches-git_en.md",
+   "mode": "100644",
+   "sha256": "3a01a9b4ad4385f22485b7937b18664e750b64e69acb7f0f8ec1b01f02cefcc0"
+  },
+  {
+   "path": "docs/architecture/gestion-couleurs-affichage.md",
+   "mode": "100644",
+   "sha256": "e091bcdadc8214d4ceedb4cf782b5403b7dd425327a9b6a17dbf28f6879c1070",
+   "source_sha256": "07e743585b311bfa45a7277212af52d34bbd9b2c4bcde212bdd3d94c0c8a908f",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/graphe-git-local.md",
+   "mode": "100644",
+   "sha256": "8b4e69229e7843960ba8ddf1308d2251993726b9250e3fafaea1690edd7f0b5e"
+  },
+  {
+   "path": "docs/architecture/import-images.md",
+   "mode": "100644",
+   "sha256": "a350a4b36f32d1fee726230d47e3ec761bc4a1abc8e53b3daf8858faa7ea8c92"
+  },
+  {
+   "path": "docs/architecture/integration-rec2020.md",
+   "mode": "100644",
+   "sha256": "0b57f33e4531b4581b358aa15e82c31e38fec9073f167e9207b44aa440b8a08f",
+   "source_sha256": "ac2f8acf15f3ed8dbe6ef0e279cc55fca42ad55f62ce9583d5217368e0a31ef0",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/references/README.md",
+   "mode": "100644",
+   "sha256": "719e3110fb15c21cf3fcdc880d1768408ba4c11c946684b34c1613cd88c1243e"
+  },
+  {
+   "path": "docs/architecture/references/README_en.md",
+   "mode": "100644",
+   "sha256": "f20384e742e2c5f82613122237171598f4071e37a043a5ec555b25053f70bec1"
+  },
+  {
+   "path": "docs/architecture/references/etude-autonomie-profils-camera.md",
+   "mode": "100644",
+   "sha256": "b3439f06359cd03fc34719ee349b15ffef5a2c5193f9a0339c846ce8c82e847b",
+   "source_sha256": "f4a59d8aee86817512c601bd830c5062581c146b582a4062d056827a3f2dc460",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/references/guide-creation-profils-dcp-2026-10-01.md",
+   "mode": "100644",
+   "sha256": "a1f1bdb11b1c041bcf817474ce82d7992171db5fa172f4c2a82d869dcc121792"
+  },
+  {
+   "path": "docs/architecture/references/guide-creation-profils-dcp-2026-10-01_en.md",
+   "mode": "100644",
+   "sha256": "5215f1eedf713df77694f0fe19b8ff8bdbfd868de6167354ed7a9ca233b21165"
+  },
+  {
+   "path": "docs/architecture/references/note-utilisation-profils-adobe-camera-raw-2026-10-01.md",
+   "mode": "100644",
+   "sha256": "d02bafe1c3e4ab61c026b8ee68a68f1ddd1abe0a42913beb7366970bda80937d"
+  },
+  {
+   "path": "docs/architecture/references/note-utilisation-profils-adobe-camera-raw-2026-10-01_en.md",
+   "mode": "100644",
+   "sha256": "9ff720ee3faa2e4b2e251b3d7e09fcb27bce17226f0ab7fc472cae6bd4581b46"
+  },
+  {
+   "path": "docs/architecture/references/rapport-dependances-opencv-libraw-2026-10-01.md",
+   "mode": "100644",
+   "sha256": "104181ff3ec31b83e240876c78afd4c37695cc1eb30e4222b69aa606c03cb422"
+  },
+  {
+   "path": "docs/architecture/references/rapport-dependances-opencv-libraw-2026-10-01_en.md",
+   "mode": "100644",
+   "sha256": "2f84e9fd02b19f8ca4481e09b3793ebb36e73db292fd32b0fac079314a09f187"
+  },
+  {
+   "path": "docs/architecture/roadmap-couche-image-sans-opencv.md",
+   "mode": "100644",
+   "sha256": "147557050c3e5aef8a29bc2e2792939e13a095997e39108cf14c39c90734f936"
+  },
+  {
+   "path": "docs/architecture/roadmap-decodeurs-raw.md",
+   "mode": "100644",
+   "sha256": "1b418d542ea7b1cd15db2525b2583af139c930fc45d2b2ce3c91eb25dfbb498d"
+  },
+  {
+   "path": "docs/architecture/roadmap-fonctions-lightroom.md",
+   "mode": "100644",
+   "sha256": "7da0954baa84f9f3ff7b672da4b7631119fe75ac26ee79df717fb894337d6bca",
+   "source_sha256": "9255ada428d4f1d8847442d85da67acaed7cf5ca9739db41ecffc7acc3f28308",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/roadmap-lumieres.md",
+   "mode": "100644",
+   "sha256": "b972f6ee5b15fb60f7918f1b81daf19452e6f9e1dec6bd944d620c578532dbeb",
+   "source_sha256": "ffc90aaa85d9f303c808e322e7dcac954435a13882f8161f4b5b921f43b6acec",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/roadmap-ouverture-raw.md",
+   "mode": "100644",
+   "sha256": "a6358e3b092c8f9961bcdb4390a8abbcc2f3373a5c2003e8dfcbc07242b26f97",
+   "source_sha256": "aeab879bc596b1687cd13718bfd76149067467e496c41859335e003fa92ec219",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/suivi-raccordements-ihm.md",
+   "mode": "100644",
+   "sha256": "a6a945027d73ee87744a6b09c920fb0acd9f60d88c10631476b0ca190e039ccc",
+   "source_sha256": "ad5387e5813be085cc28925a6007558f5b3ac9a4d47231a9f76a6e36cc205cef",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/tests-cibles-et-build-windows.md",
+   "mode": "100644",
+   "sha256": "f5d655268bb2c99ad64d9bc6596c8a61690c201be86c3130da49643ed8d5c58f",
+   "source_sha256": "67db9129608ab0e3e5e1b23de2a745705ac91deb6cd381d4ab52e5dbace2f963",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/tests-cibles-et-build-windows_en.md",
+   "mode": "100644",
+   "sha256": "b4cdd0a4d901ec2ad50c5bc6b806a2b3b01e283ceab554fe973e319c2a0c7d36",
+   "source_sha256": "7fbd11ab64eb425a221243939f5195a5797f2405c2747462cfeea24ea5968a81",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/ui-preferences.md",
+   "mode": "100644",
+   "sha256": "0ca7449f638ed7d7a2804e74d5b06fb9408fa5d9c337f0f65c63849984e66993",
+   "source_sha256": "1927858ba5a4313885cb1869e9d9621b9ff562674e8ddecc17e9ec38276d2674",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/architecture/ui-preferences_en.md",
+   "mode": "100644",
+   "sha256": "b3746090fc57852257865ddebe8f0bc065fbb5f0a918572bf7166248595fe051",
+   "source_sha256": "5b795862baca8b6c5f2712525448d8b885f57da6dce1719cae44da21ef9ab213",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/asset/ipr-interface.png",
+   "mode": "100644",
+   "sha256": "cdd8301de20249e8e2e9c94aecb6b6cabed930be915280625b37179f590a41e6"
+  },
+  {
+   "path": "docs/build-documentation.ps1",
+   "mode": "100644",
+   "sha256": "fe8c20c40db1dfe697c6cdd43af60ae237e1a20d5af532b7c3bde26ed2f099de"
+  },
+  {
+   "path": "docs/camera-profile-engine.md",
+   "mode": "100644",
+   "sha256": "88e916def0f9e29e27293c123b35a3e98015213a7f7dc807daf22738e2a7c8c5",
+   "source_sha256": "6a7be215fca828f35f00cac34cecd82c9854de3bba1f24e4dab297c49e67bcbd",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0001-sidecar-ipr.md",
+   "mode": "100644",
+   "sha256": "50e8927ffd9220dab21b634417ddf3b4be6f7763c0c9eb049c4bfbd1aa3eb72b",
+   "source_sha256": "01f7741fb2ead8cbbbfe5faf6a2d94e3da0ca605b991d395f4dbc349b44679b9",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0002-pipeline-lineaire-et-calibration.md",
+   "mode": "100644",
+   "sha256": "f9391892f00e2b66cec16d157aa4131637c23cd2a392f808822441342299fecc",
+   "source_sha256": "b9ff5c37769b97f0b544048c08b8be0dc333fc793f5e726866268f610934c91b",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0003-profils-dcp-lcp-locaux.md",
+   "mode": "100644",
+   "sha256": "7feeb502c072bf492e14e0e67db3cdb97c232c276b586d7ac63ad6cf744466a8"
+  },
+  {
+   "path": "docs/decisions/ADR-0004-preferences-ihm-ini.md",
+   "mode": "100644",
+   "sha256": "dab3b17b929862fee507568d8ee6dad49f8d3858a376d5e3d82a3e7554cad5fe"
+  },
+  {
+   "path": "docs/decisions/ADR-0005-melangeur-huit-bandes-luminance-bornee.md",
+   "mode": "100644",
+   "sha256": "6f28eaba13caf6f6bccf3ce867ed2325f695dbbdc0c5396719d76818851db94f",
+   "source_sha256": "452e69c866eb83b61a3ca3d178f38c7cb284ea7e1f4d2a696feb364002dee529",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0006-restauration-raw-et-retouche-profil.md",
+   "mode": "100644",
+   "sha256": "81017f273823ea820651fd6a8631851f9df5dce98d8848f2f4680c2b42767b2a"
+  },
+  {
+   "path": "docs/decisions/ADR-0007-calibration-raw-par-defaut.md",
+   "mode": "100644",
+   "sha256": "58e0302f35f9eaed6f49a6816d1989a05df231e7db072544852cd5b223699233",
+   "source_sha256": "20e68507aeeaa612fa781faeb6f371f337475ebfc4136d8bc13445d7f3e7582b",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0008-separation-travail-affichage-export.md",
+   "mode": "100644",
+   "sha256": "2769b3ee0154c9d81919987ccc741fb819ff5cbc16b1572e673f7bbbbbcc66a3",
+   "source_sha256": "882b1539a80419e43b5a9f6ac888dc604cd259107a80a4194ad7768fc4737480",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0009-espace-travail-rec2020-lineaire.md",
+   "mode": "100644",
+   "sha256": "3977c7c8fc9cf56ed708f3c39274bd1a200f4667fd4fa52114d204819e03839d",
+   "source_sha256": "c1fd18c56f962c3662336604d23a203a0425f42d8e25beca73afbf570f66fcd4",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0010-compensation-rendu-par-profil-dcp.md",
+   "mode": "100644",
+   "sha256": "f77c476c39fc2ddf66f747d7253df5e33a8bee457a28a6536ff1fe0d4540a89d",
+   "source_sha256": "32a7428ed40cdf6b1335a8a8269fbdf7509ea4880b7e366490cd57a53773f380",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0011-regles-raw-par-mode-et-configuration-vivante.md",
+   "mode": "100644",
+   "sha256": "b7cdbfa368a617a1e214aadccbb4de4868063e8c17f2bdf9eb6490206fe63f21",
+   "source_sha256": "67b16a765a4d450811b87f899f681f1423242191208b4be8ddde7cf31ba03011",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0012-formats-extensibles-et-caracterisations.md",
+   "mode": "100644",
+   "sha256": "87efb28263205b9fd3b491d04352351d1fd12d089be6143fc5e1f8d9e09d4072"
+  },
+  {
+   "path": "docs/decisions/ADR-0013-contrat-import-commun.md",
+   "mode": "100644",
+   "sha256": "17aef05b0e98c468a939ae0041aa19285d39890333b16733b748a61e47190da9"
+  },
+  {
+   "path": "docs/decisions/ADR-0014-cache-profils-prepares.md",
+   "mode": "100644",
+   "sha256": "23d9d8c04856d64585d705cebe74797c2e9b14d045c27438f0f573f2582ca8d4"
+  },
+  {
+   "path": "docs/decisions/ADR-0015-controle-memoire-et-prechargement.md",
+   "mode": "100644",
+   "sha256": "c6855a7b3c0e31c03da38bae0ca1dacbb0d5c00a0040e6e02597c7e742756522",
+   "source_sha256": "348eef478664c40fd9f7b36976e66fd66d1f2334bedd233e7c33614b32730087",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0016-minimum-qt-6-8.md",
+   "mode": "100644",
+   "sha256": "f76b20613a54d29f1fbd552ff633d3b88c31dc7ef4d1d4313a50a190dfdb2aef"
+  },
+  {
+   "path": "docs/decisions/ADR-0017-imageeditor-cadenceur-modules.md",
+   "mode": "100644",
+   "sha256": "ff846935afaa5db3065b3258c44ca3a34d97c2f7c1b4ebef4dc4872b112cbe24"
+  },
+  {
+   "path": "docs/decisions/ADR-0018-independance-decodage-raw-et-couche-image.md",
+   "mode": "100644",
+   "sha256": "2fd271495075ae5c7d041c23857b28e2f354edf899e636a67118c546d4ef7f75"
+  },
+  {
+   "path": "docs/decisions/ADR-0019-analyses-ipr-en-memoire.md",
+   "mode": "100644",
+   "sha256": "57c90f99d37ef5d6984b37e7f890f7287de0794ac7152109b80d86ae29874a3e",
+   "source_sha256": "36b9985061b2528ea9fa48d5c9fa483e1c3c1992c3c25d4c64cd9c8d6b9236cf",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/decisions/ADR-0020-lecture-permanente-des-noirs.md",
+   "mode": "100644",
+   "sha256": "9c63b1dff95760d8a3a65f829965551af10590d1875dc717e05f7cc823998a29"
+  },
+  {
+   "path": "docs/decisions/README.md",
+   "mode": "100644",
+   "sha256": "73afe8d8a3129cc4f982da0b1856a7e90f9371a3a35d47df6a0c77929ab2789b"
+  },
+  {
+   "path": "docs/decisions/README_en.md",
+   "mode": "100644",
+   "sha256": "fdf8bf1d73094c222c196f2a92b7d28953179744f77b9b384362b77b2d90df35"
+  },
+  {
+   "path": "docs/imageeditor-render-working-image.md",
+   "mode": "100644",
+   "sha256": "0fe7a9bcc8dbae2982c7bf218fff7a77b8e3e67d8c443a826901496344bfffac",
+   "source_sha256": "8d2e3cd4a81315c9be608a79408e1990ca6ee52427cc3274f7e5ff8bdf412c12",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/installation-opencv-windows.md",
+   "mode": "100644",
+   "sha256": "3ee41dc48a0c101c3a4c7bfbf568bcb3c046610f22aa96939e24cf4b50d38706"
+  },
+  {
+   "path": "docs/release/validation-summary.md",
+   "mode": "100644",
+   "sha256": "d6bd8bf541619446064d3d82e646447dfd0fe5fa1fd1940ad916a4c3e294f708",
+   "source_sha256": "b3e0e454f6edfb8de30657f3fc7a9fa0e3b003701817bd4ce53b778b5b46d6bd",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/scholar/.gitignore",
+   "mode": "100644",
+   "sha256": "181314065df2f2fdaf920b1a8b5311daa216a2d6489a06ada5b49cc514d89417"
+  },
+  {
+   "path": "docs/scholar/README.md",
+   "mode": "100644",
+   "sha256": "677764787bd6893a74fd6e42fd877be2e26991dc0f1a3a4389650c2ba23796d8"
+  },
+  {
+   "path": "docs/scholar/README_en.md",
+   "mode": "100644",
+   "sha256": "7847975285d1ba51eb314fac4993c984fd1d32fe65122dd45739cf80ac96d8e3"
+  },
+  {
+   "path": "docs/scholar/build.ps1",
+   "mode": "100644",
+   "sha256": "482b9a8a9fdb4ea83b954e87d5bc6d7c937ee52f1f7f3daf9f0002aa1194e241"
+  },
+  {
+   "path": "docs/scholar/cours-01-espace-lineaire-colorimetrie.pdf",
+   "mode": "100644",
+   "sha256": "97944ed53e37086e769e88c04788c4f9dd9ea14f008f99519ebc7e5991a5cb4c"
+  },
+  {
+   "path": "docs/scholar/cours-01-espace-lineaire-colorimetrie.tex",
+   "mode": "100644",
+   "sha256": "d5ba37c6ac476789380f40a068a2104fcde99e7bf9334cff8e0680d9e84fea8b"
+  },
+  {
+   "path": "docs/scholar/cours-02-exposition-tonalite.pdf",
+   "mode": "100644",
+   "sha256": "64d0de4c0a7261582ab2a8b660f7d1da8be948d81ab1e1d605bfa5e9700e39d7"
+  },
+  {
+   "path": "docs/scholar/cours-02-exposition-tonalite.tex",
+   "mode": "100644",
+   "sha256": "651c8e2bf9b75b6004c5bad412c9c12e8b0c901090730b8fc76c0bb1c4d5a592"
+  },
+  {
+   "path": "docs/scholar/cours-03-balance-blancs-adaptation.pdf",
+   "mode": "100644",
+   "sha256": "9e693754daef4f1cb07b9f8f82b5cf55f6e65b370f94ce660d425cc83bd10b6e"
+  },
+  {
+   "path": "docs/scholar/cours-03-balance-blancs-adaptation.tex",
+   "mode": "100644",
+   "sha256": "2db4f4990e13b722f4d17672aaaf156997b91142348c5bc5170105056e52e909"
+  },
+  {
+   "path": "docs/scholar/cours-04-couleur-hsv-mixer-grading.pdf",
+   "mode": "100644",
+   "sha256": "7eef6bef9b06bf4b34e701d0bc6ba448cca2f9ae8b4bde513d8c0d1ab5d61722"
+  },
+  {
+   "path": "docs/scholar/cours-04-couleur-hsv-mixer-grading.tex",
+   "mode": "100644",
+   "sha256": "900e7e510c2ae2a19c0cc97f827c7e6179f5db7efdcbd47a7fb4e33c5b19584b"
+  },
+  {
+   "path": "docs/scholar/cours-05-contraste-local-gaussien.pdf",
+   "mode": "100644",
+   "sha256": "c70d1bec591d1475a7ad40693e1724687d8d5b41cf2edd8ab47f1786134d49b5"
+  },
+  {
+   "path": "docs/scholar/cours-05-contraste-local-gaussien.tex",
+   "mode": "100644",
+   "sha256": "285be1e8d32036fd3e9b69c00c05f4e1446f71bbd4c968364a92d597c1945291"
+  },
+  {
+   "path": "docs/scholar/cours-06-voile-atmospherique.pdf",
+   "mode": "100644",
+   "sha256": "6f09985c3454cee1df6941939cd6424ddbe753aa04808319d0bb13aed236b9dd"
+  },
+  {
+   "path": "docs/scholar/cours-06-voile-atmospherique.tex",
+   "mode": "100644",
+   "sha256": "e40def50aa9ae37aa171a1dea2ef65c2551ede2c24fd4f678857d822f640e7ac"
+  },
+  {
+   "path": "docs/scholar/cours-07-courbes-interpolation.pdf",
+   "mode": "100644",
+   "sha256": "333994b155e38f366f075ec6db03b9458526152fbdf8a9e5dd5b79770bdb5060"
+  },
+  {
+   "path": "docs/scholar/cours-07-courbes-interpolation.tex",
+   "mode": "100644",
+   "sha256": "31140457a4dba6b2ee2f836ebe25b2b03027f93b0664bd39dfbfd26b45b5890f"
+  },
+  {
+   "path": "docs/scholar/cours-08-bruit-grain-signal.pdf",
+   "mode": "100644",
+   "sha256": "b61dbb097e8afad6aeb0e2de8758664b562d6012ed702f2df3f723869d15a524"
+  },
+  {
+   "path": "docs/scholar/cours-08-bruit-grain-signal.tex",
+   "mode": "100644",
+   "sha256": "7d4a435e700970077a6beec1bbbe25b9ad2435fab7ee5aec54b6cd9bf8f2c27b"
+  },
+  {
+   "path": "docs/scholar/cours-09-raw-profils-appareil.pdf",
+   "mode": "100644",
+   "sha256": "7998ac55fbe7ba9cdf1abd2bfee8fe502e71cc014eec0e9805c5e73571aee455"
+  },
+  {
+   "path": "docs/scholar/cours-09-raw-profils-appareil.tex",
+   "mode": "100644",
+   "sha256": "49cb4daef8effe7ecb247eb3b3c1b055630866c26f54468f66539eeead9ae16f"
+  },
+  {
+   "path": "docs/scholar/cours-10-filtre-haar-ondelettes.pdf",
+   "mode": "100644",
+   "sha256": "a3d1b85380c8a57043a6e0af8996157b296b1caedd2672a5938b9aa5a5cbc721"
+  },
+  {
+   "path": "docs/scholar/cours-10-filtre-haar-ondelettes.tex",
+   "mode": "100644",
+   "sha256": "09928bc5f52e4e741c81407e07310443fcc0e376fc9a832b41aedd49d60fc2e0"
+  },
+  {
+   "path": "docs/scholar/cours-11-architecture-images.pdf",
+   "mode": "100644",
+   "sha256": "a17c0cb8edeee60462d3d78e6d3533dd5c75558b253e45594a44a667c062ade2"
+  },
+  {
+   "path": "docs/scholar/cours-11-architecture-images.tex",
+   "mode": "100644",
+   "sha256": "88b4ebbb387675f5ff6081358f9f8afb95800fce3e0ded31ecb3481e4a9b7bfb"
+  },
+  {
+   "path": "docs/scholar/cours-11/01-lumiere-et-echantillons.tex",
+   "mode": "100644",
+   "sha256": "f1caef2316a00dededd7eed6d06f5099925035b9e236495519aea6403d3f7345"
+  },
+  {
+   "path": "docs/scholar/cours-11/02-octets-memoire-conteneurs.tex",
+   "mode": "100644",
+   "sha256": "666bb8cabb2bbdb5f19063562027e4f37f4ea18ed7ec1797cb9aaa2757e057f6"
+  },
+  {
+   "path": "docs/scholar/cours-11/03-compression.tex",
+   "mode": "100644",
+   "sha256": "c24bfac0d039c2b6a6ff8a3178a58957864aa74ee54475e7e63f6162885771ef"
+  },
+  {
+   "path": "docs/scholar/cours-11/04-formats.tex",
+   "mode": "100644",
+   "sha256": "15a15cfff6842fad51bfd7d66f5d653b08c76455082ff8cf6c6514331c87ca2a"
+  },
+  {
+   "path": "docs/scholar/cours-11/05-raw-couleur-metadonnees.tex",
+   "mode": "100644",
+   "sha256": "96ca5c5f2f8f890c9156fd198437d2d0fb78e647ccebf69c18d09c3cb91ebf4f"
+  },
+  {
+   "path": "docs/scholar/cours-11/06-constructeurs.tex",
+   "mode": "100644",
+   "sha256": "50d2e947fba49a1436db351c632c786e8a406260e4494f8d45c33cd22917578a"
+  },
+  {
+   "path": "docs/scholar/cours-11/07-architecture-tp-glossaire.tex",
+   "mode": "100644",
+   "sha256": "0ef0e83c988f1f2d8036009dfaec45cbcfb4c09e481494eaafa774a05576353b"
+  },
+  {
+   "path": "docs/scholar/cours-12-vibrance-saturation-oklab.pdf",
+   "mode": "100644",
+   "sha256": "fd8547de62fddbe538300e83785ab2f11ebd56d69c473e15e208dbd55b96b419"
+  },
+  {
+   "path": "docs/scholar/cours-12-vibrance-saturation-oklab.tex",
+   "mode": "100644",
+   "sha256": "6eeb95ccfb02655790d91c2b589e69298c22767342e0a396deb6c0c68ebbbad1"
+  },
+  {
+   "path": "docs/scholar/cours-12/01-probleme.tex",
+   "mode": "100644",
+   "sha256": "6464020b400896f6eed7773e9ff0a6ada4d9db899a20c8428c3a34e9b975544b"
+  },
+  {
+   "path": "docs/scholar/cours-12/02-espaces.tex",
+   "mode": "100644",
+   "sha256": "37e5feebeb82b5345bfcde8c903471135011cca7dc1e99052a2a05f4e3e320d0"
+  },
+  {
+   "path": "docs/scholar/cours-12/03-mesure.tex",
+   "mode": "100644",
+   "sha256": "6083094af0cca51af8960f025a30c0c613de96ac7907804da1c5b0970f0d1b6f"
+  },
+  {
+   "path": "docs/scholar/cours-12/04-modele.tex",
+   "mode": "100644",
+   "sha256": "d404695f71fe68c89c934c676d7cd0c2b1be3566207ccddb96ee8c4e04cb1351"
+  },
+  {
+   "path": "docs/scholar/cours-12/05-rotation.tex",
+   "mode": "100644",
+   "sha256": "68867e912ed9789e4358bf12cf3a1d8f97a513aeb1c121180cccd63fc0ae1fbe"
+  },
+  {
+   "path": "docs/scholar/cours-12/06-validation.tex",
+   "mode": "100644",
+   "sha256": "1346fa8f978ed66843b3f1f129a0302681fff062d07a49c1a842625c28a9af0f"
+  },
+  {
+   "path": "docs/scholar/cours-12/07-implementation-exercices.tex",
+   "mode": "100644",
+   "sha256": "e20e3cf0e737f51821d50fbf2eb777484f16f447a44cf027aa03324ad1e0a13d"
+  },
+  {
+   "path": "docs/scholar/moteur-graphique-ipr.pdf",
+   "mode": "100644",
+   "sha256": "0eb70aa53e53206945b45d3d92396d27e6a7c137f37ade9f876021a732d57cf2"
+  },
+  {
+   "path": "docs/scholar/moteur-graphique-ipr.tex",
+   "mode": "100644",
+   "sha256": "ad78bf6c6fefcf9064e0c08dc1256722688982a292d840d3b6aef1a5f3b63bfc"
+  },
+  {
+   "path": "docs/scholar/preamble.tex",
+   "mode": "100644",
+   "sha256": "dbe469a6bc551596945bd099c63746f2ef9999e63f241ec5b210fc1f1eab925d"
+  },
+  {
+   "path": "docs/scholar/references-haar.bib",
+   "mode": "100644",
+   "sha256": "360060deca3449ef2afea313196bc5ab9e957a2f645c3ee8c5fa5fce0600af34"
+  },
+  {
+   "path": "docs/scholar/references-images.bib",
+   "mode": "100644",
+   "sha256": "d0128eb46488d2a5f419dea6d96b7273266caf6e52323f687914bd3d4df4a1a1"
+  },
+  {
+   "path": "docs/scholar/references-vibrance.bib",
+   "mode": "100644",
+   "sha256": "0ff75520fdc83229e47aea8370fd9a486c70ae62a17aa721f3d16522da64d5d3"
+  },
+  {
+   "path": "docs/scholar/references.bib",
+   "mode": "100644",
+   "sha256": "9e8fbeb73653ffef2fda8e1cd30477081f0e9753d078e2dd68470f68ffbd1d83"
+  },
+  {
+   "path": "docs/scholar/references/README.md",
+   "mode": "100644",
+   "sha256": "b55b7f4c1f990440eeaafe0d6642c878b869073ad1b9e5a89de2f9090ee6cbed"
+  },
+  {
+   "path": "docs/scholar/references/README_en.md",
+   "mode": "100644",
+   "sha256": "8660d037b50cc513d68ac5994aa74c1b80aa09c8d4e7f6686786b366a6a86532"
+  },
+  {
+   "path": "docs/scholar/references/haar-exemples.py",
+   "mode": "100644",
+   "sha256": "f1a8ee9d1f3de8e1a59309ffcb4bbae7f1c0cc3753d852cbd25478253216bf06"
+  },
+  {
+   "path": "docs/scholar/references/images-exemples.py",
+   "mode": "100644",
+   "sha256": "38c869668296435f20fb64d3adfa25b225ea7f8e1d698e77f631f7aaa9104251"
+  },
+  {
+   "path": "docs/scholar/references/modeles-gestion-lumieres-2026-10-02.md",
+   "mode": "100644",
+   "sha256": "205fa433771034a49014a0349bc55962ec050b8c126bd04447f4e90b706b0473"
+  },
+  {
+   "path": "docs/specifications/README.md",
+   "mode": "100644",
+   "sha256": "05597260e6bb7c2a9a6ed6499d4cd9a8bb0bee389a16d4307eef8faf9d7ec0b9"
+  },
+  {
+   "path": "docs/specifications/README_en.md",
+   "mode": "100644",
+   "sha256": "554816689a9d74077ffa323a8fb97b8a56fc3221efa8766fe30b68d8398d629a"
+  },
+  {
+   "path": "docs/specifications/reglages-photographiques.md",
+   "mode": "100644",
+   "sha256": "9b29cd85d3ade98a00e2781c6ace8ff82a6aa55f36e045f6c36e6eeff7265e45",
+   "source_sha256": "a710a2df5bc1c373e0318e0ec8c34d41fe838b0c099a8e945048a0352bac53a6",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/specifications/zoom-image.md",
+   "mode": "100644",
+   "sha256": "eeeba1cc5843c8f9d403a8856f684a16d42b716ab0860323542f6e2e5ed534de",
+   "source_sha256": "90870b952e3715fcc6f598e243a1dd4f2ec1b7af120069178707ccefbbffd58a",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/technical/latex/.gitignore",
+   "mode": "100644",
+   "sha256": "bf0c39000f1dee5cb71bb162abf05389bb5bda37ea76c2ff496dcf517aaa6df2"
+  },
+  {
+   "path": "docs/technical/latex/README.md",
+   "mode": "100644",
+   "sha256": "c4ed36c54f8d57bebf54b3b365fc4d7f5ae870846b9987c21b376e23ae1013e3",
+   "source_sha256": "f7ebadaa1fe3dc922da05164c5bb9ebc666c884733f9f3311d35e65558c5fbc5",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/technical/latex/README_en.md",
+   "mode": "100644",
+   "sha256": "7fd3e1552488203fa0f4dca9aa6d487321a9d6082ea1326a4dacf95ee6c1aead",
+   "source_sha256": "c668af59f9d62ffc6670b3fc5dad75b8460c6420d825a7bf2680343337f21980",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/technical/latex/build.ps1",
+   "mode": "100644",
+   "sha256": "a63f2e25f8074acdfdd90258a05e9e6cc92e84e439fa819125ea9a4b8e09efbc"
+  },
+  {
+   "path": "docs/technical/latex/chapters/01-projet.tex",
+   "mode": "100644",
+   "sha256": "090d67ad15925aae7181414e0dbaac9b55c5f6dc646204403fdf7490cec1a1e1"
+  },
+  {
+   "path": "docs/technical/latex/chapters/01-projet_en.tex",
+   "mode": "100644",
+   "sha256": "da8cc2c8fb87f136aaa8e728bf0158b7abbd67e435f51dfc38005338fcc9857f"
+  },
+  {
+   "path": "docs/technical/latex/chapters/02-architecture.tex",
+   "mode": "100644",
+   "sha256": "d61b65fd97fc832b286f1cc0a8a05305ae2b3c5f594235a246aa2cec56c8a5e6"
+  },
+  {
+   "path": "docs/technical/latex/chapters/02-architecture_en.tex",
+   "mode": "100644",
+   "sha256": "575202bfcaf6a687e3b246bc58d578125e577cce600b24acdf440b66eac49e36"
+  },
+  {
+   "path": "docs/technical/latex/chapters/03-parcours-utilisateur.tex",
+   "mode": "100644",
+   "sha256": "58244224b877c28ca14734889388ae1bda46e68d3e357eaecc9b96804660269e"
+  },
+  {
+   "path": "docs/technical/latex/chapters/03-parcours-utilisateur_en.tex",
+   "mode": "100644",
+   "sha256": "e2f9a043df40886bb4aeccfbe3a403be6a7b8d7b539808088d2d809f976ce145"
+  },
+  {
+   "path": "docs/technical/latex/chapters/04-diagrammes-classes.tex",
+   "mode": "100644",
+   "sha256": "bc155da936c7cc01ab20e4de6fb4e92b1b01b5b019953b25f96ad3cf422ed9cf"
+  },
+  {
+   "path": "docs/technical/latex/chapters/04-diagrammes-classes_en.tex",
+   "mode": "100644",
+   "sha256": "724b0a8e1223bff8150bded78f6208ff0d9eb4ec275492266e296d2ac30d011d"
+  },
+  {
+   "path": "docs/technical/latex/chapters/05-sequences.tex",
+   "mode": "100644",
+   "sha256": "1916779bcb005b7258a5bd437f5848c757154caa8974642f3d20f022f8ec40af"
+  },
+  {
+   "path": "docs/technical/latex/chapters/05-sequences_en.tex",
+   "mode": "100644",
+   "sha256": "998c245d392043cda203173d0554d3624b320301f77bb7d6a78ec25c7a9222f1"
+  },
+  {
+   "path": "docs/technical/latex/chapters/06-reglages-existants.tex",
+   "mode": "100644",
+   "sha256": "5c4c83c275e7d2ce8d03d121ff755658e123f134d2ab21de38d3d70f222d430e"
+  },
+  {
+   "path": "docs/technical/latex/chapters/06-reglages-existants_en.tex",
+   "mode": "100644",
+   "sha256": "b1961ebca937c594d2d63099bffd1e12e7ca4eff38eca176757ff2eaed866148"
+  },
+  {
+   "path": "docs/technical/latex/chapters/07-recadrage-geometrie.tex",
+   "mode": "100644",
+   "sha256": "487bbed90d0487c581d326ca824d7bfb983f5ebe490eaac025adb295876adfa2"
+  },
+  {
+   "path": "docs/technical/latex/chapters/07-recadrage-geometrie_en.tex",
+   "mode": "100644",
+   "sha256": "5472542c21a4237206b8a273999b635981b3f7a3a5660a05146fb0b08eca6aa4"
+  },
+  {
+   "path": "docs/technical/latex/chapters/08-masques-retouche.tex",
+   "mode": "100644",
+   "sha256": "3a971daa8040e563d3bd3f84d02164de83013761ba672ff4b6acec521940eee3"
+  },
+  {
+   "path": "docs/technical/latex/chapters/08-masques-retouche_en.tex",
+   "mode": "100644",
+   "sha256": "991558ce0f57e7583819bff3e67bebb598e17379234ea58162939690462d7d8f"
+  },
+  {
+   "path": "docs/technical/latex/chapters/09-ia.tex",
+   "mode": "100644",
+   "sha256": "8170dffbad2a31c8b8ecf499dca1af3ee7948b7a212b610640d4f9e14b8678be"
+  },
+  {
+   "path": "docs/technical/latex/chapters/09-ia_en.tex",
+   "mode": "100644",
+   "sha256": "13ae606d6118d1a17082cf72f258f556a57e061367c0948170cc1b5478ddd57f"
+  },
+  {
+   "path": "docs/technical/latex/chapters/10-qualite-evolutions.tex",
+   "mode": "100644",
+   "sha256": "48f651bc80cdc321cdcfbebbad1bea449fd1c097f11aafa1a7244438e80dfa9a"
+  },
+  {
+   "path": "docs/technical/latex/chapters/10-qualite-evolutions_en.tex",
+   "mode": "100644",
+   "sha256": "26214f360f952711a3b119630c230ecaa39ab81446b113c31fb7d02a7f13fb34"
+  },
+  {
+   "path": "docs/technical/latex/chapters/11-glossaire.tex",
+   "mode": "100644",
+   "sha256": "62dabbd4b4e8b01ab0aa1d67580993cb84493fb52d34805ffda09fd4b3e7410f"
+  },
+  {
+   "path": "docs/technical/latex/chapters/11-glossaire_en.tex",
+   "mode": "100644",
+   "sha256": "34c241b443aa4e4917177f949bd435bdec6d39acaeff225775b4d6cd9574e12f"
+  },
+  {
+   "path": "docs/technical/latex/ipr-documentation-technique.tex",
+   "mode": "100644",
+   "sha256": "c72ca5b2435d7e8bb270bc9702a8edbdc9871ce33857048f9f092a77e534a406"
+  },
+  {
+   "path": "docs/technical/latex/ipr-documentation-technique_en.tex",
+   "mode": "100644",
+   "sha256": "54070eb88697b8929226193f9087f18573d35adb63e3a09e8bdd2e66c0bc38e7"
+  },
+  {
+   "path": "docs/technical/latex/references.bib",
+   "mode": "100644",
+   "sha256": "a94ef7d4f8d0b2cb8080fb90aafacc9fe70171bb4810bfedc25da492e3fca464"
+  },
+  {
+   "path": "docs/technical/latex/references_en.bib",
+   "mode": "100644",
+   "sha256": "74c741be81ec5f4e7cfe77840bdce9b927fd86bb8b23181eba56cc292a46187e"
+  },
+  {
+   "path": "docs/templates/adr-template.md",
+   "mode": "100644",
+   "sha256": "21f60ada9e909965bd0fe883b2ea69028bdf52701a0a4b9cbd5d6d9087e13a8c"
+  },
+  {
+   "path": "docs/templates/session-template.md",
+   "mode": "100644",
+   "sha256": "61068b20f1586c5123e7ad53e00ed669781d1a8c22e09b7d43ad6306356d57ab"
+  },
+  {
+   "path": "docs/templates/validation-protocol-template.md",
+   "mode": "100644",
+   "sha256": "8a6e40ed3ca7e66139eddf0b0dfd92f49cec9b6f8afd1653bd621d860bfe5102",
+   "source_sha256": "d2678110b5f75c9716ea5cfe4585bc106ef3956bcade8d651fea37162c923a87",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/traitement-image-qt-cpp.md",
+   "mode": "100644",
+   "sha256": "23881f6f3a7ccfdec8b8c07a4fe1cfd46a765804b68710c3ac6a5ae27b47c76b"
+  },
+  {
+   "path": "docs/user/README.md",
+   "mode": "100644",
+   "sha256": "73732681946c20dd7e8d64f66c0b5358459438c0c7b8e8dc3817bcc502adb5df",
+   "source_sha256": "47bc8f7c152ebbf7d4097e49c57eacd97ee8d4103b63deef6a977b50109237d5",
+   "derived": "links_to_dev"
+  },
+  {
+   "path": "docs/user/latex/chapters/01-demarrage.tex",
+   "mode": "100644",
+   "sha256": "ef75f3d3a176fe7470c6c9d457e2df8fe9be18791e8a567cf18dab62e7f221d6"
+  },
+  {
+   "path": "docs/user/latex/chapters/02-navigation-comparaison.tex",
+   "mode": "100644",
+   "sha256": "1593432363b3f8021dabe9c27985ef25f386e2e7bdbe6ce2acc69b40b233f911"
+  },
+  {
+   "path": "docs/user/latex/chapters/03-informations-selection.tex",
+   "mode": "100644",
+   "sha256": "c95ec0cee72c111e9d192dc1982afbfb21a69d18f37dbfcdd7a76885f7a312e6"
+  },
+  {
+   "path": "docs/user/latex/chapters/04-raw-profils.tex",
+   "mode": "100644",
+   "sha256": "a0c0905dd992d79083ed2f7d606aa1c18b4a5e64831463414261424d5e8d6b39"
+  },
+  {
+   "path": "docs/user/latex/chapters/05-lumiere.tex",
+   "mode": "100644",
+   "sha256": "6d481f1afcca0ad80a7b3a6ebd943d23e34b82ddf2f916a9dcc1041f6b7e0b20"
+  },
+  {
+   "path": "docs/user/latex/chapters/06-courbes.tex",
+   "mode": "100644",
+   "sha256": "c9120e88bac82ef65f76b3799e02874eb224ebbb0f5c048893e981b5bf2a188e"
+  },
+  {
+   "path": "docs/user/latex/chapters/07-couleur.tex",
+   "mode": "100644",
+   "sha256": "26daf42a5ca80611cc543e8d13bc3576ca31df4a090b8ca9af27366d4c953719"
+  },
+  {
+   "path": "docs/user/latex/chapters/08-melangeur.tex",
+   "mode": "100644",
+   "sha256": "73c6252c6105f9fddd2f61610821a5a019c6de748efd8f530aa1fd1402108b9f"
+  },
+  {
+   "path": "docs/user/latex/chapters/09-grading.tex",
+   "mode": "100644",
+   "sha256": "e864e8449901824c16502b664af6e1d78dd0e3bde4fa1b733bc96b6dcb54097a"
+  },
+  {
+   "path": "docs/user/latex/chapters/10-effets.tex",
+   "mode": "100644",
+   "sha256": "631ea3a63b0b3d80150e1fbea4a21e8e3cbb4900e4f11c5a37a7ef55d7ce884c"
+  },
+  {
+   "path": "docs/user/latex/chapters/11-bruit.tex",
+   "mode": "100644",
+   "sha256": "a11a21144da9d1dc1e12c679a30e3b7b1d789b288c6dade9000c5049a833d655"
+  },
+  {
+   "path": "docs/user/latex/chapters/12-nettete.tex",
+   "mode": "100644",
+   "sha256": "4089066b3eb0e45781a918a83160335b8cd25bd7d327ec73434782d92cdf6150"
+  },
+  {
+   "path": "docs/user/latex/chapters/13-optique.tex",
+   "mode": "100644",
+   "sha256": "84aac22621b44c67d2987f3626ac197ff72abbc0a7f619306cc4845b444eaf15"
+  },
+  {
+   "path": "docs/user/latex/chapters/14-preferences.tex",
+   "mode": "100644",
+   "sha256": "3f3bf1410806eecfe6057b8598cd3c1d21193c3dbe336d576d0170b216f54920"
+  },
+  {
+   "path": "docs/user/latex/chapters/15-export.tex",
+   "mode": "100644",
+   "sha256": "04afafc8f00dcf71343324c9a62050b1ce7014c09acaa9fe0123c394f6f6ae8e"
+  },
+  {
+   "path": "docs/user/latex/chapters/16-depannage.tex",
+   "mode": "100644",
+   "sha256": "cbf3419c9b5a3f8fab807eacd480befd6b0240f42f1f53c0d66a95c7a6dc7021"
+  },
+  {
+   "path": "docs/user/latex/chapters/17-recadrage-geometrie.tex",
+   "mode": "100644",
+   "sha256": "4da6db7b88fb9552aeb74476f21d57b193c80420d0c1b78ea4b2895c0a201473"
+  },
+  {
+   "path": "docs/user/latex/chapters/18-masques-retouche.tex",
+   "mode": "100644",
+   "sha256": "1d35dc690b04420b861a0621db46d1b32ea4c0b93fd3aa64339fc36a55aa260b"
+  },
+  {
+   "path": "docs/user/latex/chapters/19-ia.tex",
+   "mode": "100644",
+   "sha256": "96ec7b220158329f783bbb88902773ddd1221a29af2081597f414c18f520cac8"
+  },
+  {
+   "path": "docs/user/latex/chapters/20-raccourcis.tex",
+   "mode": "100644",
+   "sha256": "ae205368010d05744162b645e238ef02e6b649ba7c1698d025402d242d3bdf69"
+  },
+  {
+   "path": "docs/user/latex/chapters/21-glossaire.tex",
+   "mode": "100644",
+   "sha256": "40ef1adef14fe31a681927ede9ec0e334daefa79c85ba7e25322e6b697e901a1"
+  },
+  {
+   "path": "docs/user/latex/compile.ps1",
+   "mode": "100644",
+   "sha256": "28dad41245512d330f2c2d3c7cd2a57f723e3e1593f4a60874a1b3d91dd1f991"
+  },
+  {
+   "path": "docs/user/latex/ipr-livre-utilisateur.tex",
+   "mode": "100644",
+   "sha256": "b80176a998e25830e6e7342a1e30811ab4549e64bbfe5ad8a0f6dbbb248c75a0"
+  },
+  {
+   "path": "licenses/ADOBE-DNG-SDK.txt",
+   "mode": "100644",
+   "sha256": "ae413917648b512ea4ca7693f87b8f92442e0d9a9df1f7815244aa28f6063fb8"
+  },
+  {
+   "path": "licenses/Apache-2.0.txt",
+   "mode": "100644",
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+   "path": "licenses/CDDL-1.0.txt",
+   "mode": "100644",
+   "sha256": "0e3098d2d54a12434715f6679ea408d57da5e8d613c385c58ecc6fe5d30cc81f"
+  },
+  {
+   "path": "licenses/GPL-3.0.txt",
+   "mode": "100644",
+   "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+  },
+  {
+   "path": "licenses/LGPL-2.1.txt",
+   "mode": "100644",
+   "sha256": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95"
+  },
+  {
+   "path": "licenses/LGPL-3.0.txt",
+   "mode": "100644",
+   "sha256": "e3a994d82e644b03a792a930f574002658412f62407f5fee083f2555c5f23118"
+  },
+  {
+   "path": "licenses/LibRaw-LGPL-2.1.txt",
+   "mode": "100644",
+   "sha256": "eea173a556abac0370461e57e12aab266894ea6be3874c2be05fd87871f75449"
+  },
+  {
+   "path": "licenses/README.md",
+   "mode": "100644",
+   "sha256": "2beb898d522eeb71b807b07ba6175f1d8fad161bc15a064dc2766dc9a0ce54a9"
+  },
+  {
+   "path": "packaging/README.md",
+   "mode": "100644",
+   "sha256": "6ba325f343e8f6ddf72edd0f9c8d408ef7d88c6c5166464b5be66123c541f2cb"
+  },
+  {
+   "path": "packaging/arch/PKGBUILD.in",
+   "mode": "100644",
+   "sha256": "ee893cc617f4cf938098f702b5d38387c83fad1c27876938480c76831862246b"
+  },
+  {
+   "path": "packaging/main-allowlist.txt",
+   "mode": "100644",
+   "sha256": "40346cdc88d51c013c60c5960ec4d91a6f92354f0e4c38eed15d58573c3d6500"
+  },
+  {
+   "path": "packaging/profiles-index.json",
+   "mode": "100644",
+   "sha256": "7c1051f6e2bc3943b7c1dbe4da229694455681b8875a346c99279e555edb733f"
+  },
+  {
+   "path": "packaging/windows/ipr.iss",
+   "mode": "100644",
+   "sha256": "5901be29e190074b57d7575764aacef14566092e85574df94918cbc5e039a6b6"
+  },
+  {
+   "path": "profiles/dcp/.gitkeep",
+   "mode": "100644",
+   "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  },
+  {
+   "path": "profiles/index.json",
+   "mode": "100644",
+   "sha256": "7c1051f6e2bc3943b7c1dbe4da229694455681b8875a346c99279e555edb733f"
+  },
+  {
+   "path": "profiles/lcp/.gitkeep",
+   "mode": "100644",
+   "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  },
+  {
+   "path": "scripts/build-windows.ps1",
+   "mode": "100644",
+   "sha256": "f682d4f25ede243b12c08a25ead5b5ec285f6be880986a58f88902d2fb6b6c64"
+  },
+  {
+   "path": "scripts/build-windows.sh",
+   "mode": "100644",
+   "sha256": "cae7dfd4ca71cdde3029ccf763f67c91aad7886b257d80f9146f8de8a5297164"
+  },
+  {
+   "path": "scripts/build_windows.py",
+   "mode": "100644",
+   "sha256": "0e201f7a5bc0b830b67960ee0db4d4939577115c80d7d6af6ca51bf756c6b1ba"
+  },
+  {
+   "path": "scripts/ci.py",
+   "mode": "100644",
+   "sha256": "a8f3c38e2e15a7a6450bfac5280c8b01cb37cc7e8887c6be999f3eca547f8636"
+  },
+  {
+   "path": "scripts/ci_documents.py",
+   "mode": "100644",
+   "sha256": "3e5b6a6f022f125bb5d31fb2c55680ffb3cf737ddc7e49d67c3f565784a9f146"
+  },
+  {
+   "path": "scripts/delivery_policy.py",
+   "mode": "100644",
+   "sha256": "74bdf4af0a6063d685a180d157b224f2fa9f6dff5c58cc4ca395180bb0259f57"
+  },
+  {
+   "path": "scripts/github_build.py",
+   "mode": "100644",
+   "sha256": "f20d39881caa7a2e235a9e7189b8ea90ff487ddcfd2c79fbf7d9999f791a3953"
+  },
+  {
+   "path": "scripts/package-windows.ps1",
+   "mode": "100644",
+   "sha256": "2b0aec95f7fc1ac2e6fc595a16c7a2fb9ecb6664f6d5efb6932b8e1969bb24f8"
+  },
+  {
+   "path": "scripts/promote_main.py",
+   "mode": "100644",
+   "sha256": "06039576f3fbd5f3b6545db16ae53ffc759920af912b6d29eac65ceb8bdc8913"
+  },
+  {
+   "path": "scripts/release_github.py",
+   "mode": "100644",
+   "sha256": "bd0bafa141b3967bb277dc912ce4f4cecf2496619212091b6dc25bc1ec07e169"
+  },
+  {
+   "path": "scripts/smoke-windows-standalone.ps1",
+   "mode": "100644",
+   "sha256": "b7f9b57b3349742fad77635566eff08588186a63171a9845b86b891f5ac99026"
+  },
+  {
+   "path": "scripts/smoke_package.py",
+   "mode": "100644",
+   "sha256": "c2843fe44e12c67001badb6dfd0d984c2cbbad9e44aecd26af147151d23c4c15"
+  },
+  {
+   "path": "scripts/windows_installer.py",
+   "mode": "100644",
+   "sha256": "859d9827735259140992ceaa536fba4790a41076429516f02a9545ac532bff61"
+  },
+  {
+   "path": "src/README.md",
+   "mode": "100644",
+   "sha256": "2a7c241b85af69d14e116bf74cdf1a1c36c5321c40325af4eb241bbf48c9674d"
+  },
+  {
+   "path": "src/app/UiPreferences.cpp",
+   "mode": "100644",
+   "sha256": "97baf672a29061bae8afc7a60ec1bb609f1c2a36c2f68b72b3bdc2b3e896b69a"
+  },
+  {
+   "path": "src/app/UiPreferences.h",
+   "mode": "100644",
+   "sha256": "c1549e99e816588475fe947a12177e3b523e65434d8863438f4e151d0d62fe46"
+  },
+  {
+   "path": "src/app/main.cpp",
+   "mode": "100644",
+   "sha256": "13b21b75bae5d538897cdcc31b726bf986fc4848cb87773820db8e63e872a5d5"
+  },
+  {
+   "path": "src/cache/DecodedImageCache.cpp",
+   "mode": "100644",
+   "sha256": "2103a15c663df8ef8f39079940fb3c4587ec84f8d6f3282bd96e360b596f1610"
+  },
+  {
+   "path": "src/cache/DecodedImageCache.h",
+   "mode": "100644",
+   "sha256": "8e6f47a84aa79144c6a564f104f25cde77c133df08e466d9722953cf3d86c161"
+  },
+  {
+   "path": "src/cache/ImageCacheController.cpp",
+   "mode": "100644",
+   "sha256": "88bc62cded0882c212e62f0ca106edcc198a1f008c4423f169955ea50979fddd"
+  },
+  {
+   "path": "src/cache/ImageCacheController.h",
+   "mode": "100644",
+   "sha256": "a476287dba742c3bef95c9059d499825952a7cda24edc6b6dc81200bd5b54f83"
+  },
+  {
+   "path": "src/cache/RenderStageCache.cpp",
+   "mode": "100644",
+   "sha256": "44523bd762ee2b1c378955a959d242363554e9780c683fb2ca266f9c32317ed5"
+  },
+  {
+   "path": "src/cache/RenderStageCache.h",
+   "mode": "100644",
+   "sha256": "0eb0d3021aeef85ac128c3d8121d2fa3be44a923f6ad2f76d5a226b34ee1f851"
+  },
+  {
+   "path": "src/cache/SystemMemory.cpp",
+   "mode": "100644",
+   "sha256": "868f5fa13ff85355856b6903c12c6ae46d4592619c9f90fb041621a64516d536"
+  },
+  {
+   "path": "src/cache/SystemMemory.h",
+   "mode": "100644",
+   "sha256": "b30680eb23735f9517885287ddf7a29aaaeb9dd9895ae0f58b72753ef6f0b046"
+  },
+  {
+   "path": "src/core/ColorAdjustments.cpp",
+   "mode": "100644",
+   "sha256": "b9aeead836551e4a9284037910462acaee85e02a9681c4dc51668f70db53a023"
+  },
+  {
+   "path": "src/core/ColorAdjustments.h",
+   "mode": "100644",
+   "sha256": "b88b7e3c3934e76735f8ff442d4075ca52e840613b6bd275cfa093cabfe668bc"
+  },
+  {
+   "path": "src/core/ColorGrading.cpp",
+   "mode": "100644",
+   "sha256": "e34736843c6f20c085fe24be9ded7d944f25451aec2b089f82cacb275c0274e6"
+  },
+  {
+   "path": "src/core/ColorGrading.h",
+   "mode": "100644",
+   "sha256": "97122b6e9cdfbf81461dcf7f729fb93d0c09f48648bb03fabbcac9357ef51515"
+  },
+  {
+   "path": "src/core/ColorMixer.cpp",
+   "mode": "100644",
+   "sha256": "e770c3aee7c92111369b8ede08aa78b553e836fb294f4068af67e130aa3e961c"
+  },
+  {
+   "path": "src/core/ColorMixer.h",
+   "mode": "100644",
+   "sha256": "354ae2e498ffc56eb519ade68cf7afc0b8ec97563830cea8e19dac45c43a245c"
+  },
+  {
+   "path": "src/core/ColorMixerModel.h",
+   "mode": "100644",
+   "sha256": "dc6ef2d806296904f77055f9f2acf7222ef771e47804a0b70707bad492bd3496"
+  },
+  {
+   "path": "src/core/ColorPipeline.cpp",
+   "mode": "100644",
+   "sha256": "5f3c52de8fbc1a502128308c57b9f591f38da4deab5d4477ddf3db2fa39e2ceb"
+  },
+  {
+   "path": "src/core/ColorPipeline.h",
+   "mode": "100644",
+   "sha256": "7a7f7d98590e0a54ff96914fb444e07537a97113b3eb7465ca9055616c912fec"
+  },
+  {
+   "path": "src/core/Contrast.cpp",
+   "mode": "100644",
+   "sha256": "1c3a09dac388b464770fcca95c764816ffc48b82a0272382d7aa8e18810ea9f4"
+  },
+  {
+   "path": "src/core/Contrast.h",
+   "mode": "100644",
+   "sha256": "11f0464302410c3fcbbd55721f528c05df44d1c10b4016a158e0bee12e85c21f"
+  },
+  {
+   "path": "src/core/Dehaze.cpp",
+   "mode": "100644",
+   "sha256": "1e6a2c320de5c4dd5f51921bbbceba94da38490e2ec1122b93b30099fb3e2353"
+  },
+  {
+   "path": "src/core/Dehaze.h",
+   "mode": "100644",
+   "sha256": "0faf9c79cc1c8c0e9ac1bc40da5a98e03224696ec79c3fdecadf2256c2d1c60e"
+  },
+  {
+   "path": "src/core/DetailProcessing.cpp",
+   "mode": "100644",
+   "sha256": "e428c11ef767a63b3fddc0fe67a21434d37dfdbd80c0bc8f7328d1c45cc5dd6e"
+  },
+  {
+   "path": "src/core/DetailProcessing.h",
+   "mode": "100644",
+   "sha256": "a3d44e0cad0ccb79825a46a66046f4402fb3337fb7144d64a82bfecd166e0946"
+  },
+  {
+   "path": "src/core/EditRecipe.h",
+   "mode": "100644",
+   "sha256": "e5aabfd9a1197db128b92f079b5842148198b1673d8237bc91914f85de76059c"
+  },
+  {
+   "path": "src/core/Grain.cpp",
+   "mode": "100644",
+   "sha256": "050d9711512fd4f6b377de138c694dc8f89b8f84874d0d631a7ccfc4080e5478"
+  },
+  {
+   "path": "src/core/Grain.h",
+   "mode": "100644",
+   "sha256": "d16c40a60217de50135c934996626e9b91fff2dcbe869108909020b273ed8ae7"
+  },
+  {
+   "path": "src/core/Histogram.cpp",
+   "mode": "100644",
+   "sha256": "0a710a68b9b15ca1bb7fe3f85a710591f369db1debd2ac9ba50b5d760232c195"
+  },
+  {
+   "path": "src/core/Histogram.h",
+   "mode": "100644",
+   "sha256": "de1a4556680fe7600e3787a75151425572a0cd0029a44d3d6f0466764e6f6b05"
+  },
+  {
+   "path": "src/core/ImageExporter.cpp",
+   "mode": "100644",
+   "sha256": "c1be1b2d5fd659e95b16d9068616e408f5c995108c9da8b863f0ca9948edd803"
+  },
+  {
+   "path": "src/core/ImageExporter.h",
+   "mode": "100644",
+   "sha256": "e0f680080c235df1d717d1a30c39521a2ef430c296874777fd78f07da87c8054"
+  },
+  {
+   "path": "src/core/ImageImporter.cpp",
+   "mode": "100644",
+   "sha256": "6cb5a24aaa7c6a6e16c42f984d4f72e91962e5b2c689f4e04e333605b5bd7c81"
+  },
+  {
+   "path": "src/core/ImageImporter.h",
+   "mode": "100644",
+   "sha256": "4affceaa5a570ff6ed53fe974eb89fd6380f4e2ea7ca987c021d5db39f133ccc"
+  },
+  {
+   "path": "src/core/ImageMath.h",
+   "mode": "100644",
+   "sha256": "6e0e46b0cd5ab7604162ad9d0e3d07cf87738af258229d0dfd562d47a96adef7"
+  },
+  {
+   "path": "src/core/ImageMetadata.h",
+   "mode": "100644",
+   "sha256": "2ad372e79c430ca10f17b0a7065426c6a5b84cf6c9b409d78b354604df03cf6b"
+  },
+  {
+   "path": "src/core/LocalContrast.cpp",
+   "mode": "100644",
+   "sha256": "17eee792c48a2af04f09dfea40cb41e047d5a98a1b33b3504ec685f81b14e652"
+  },
+  {
+   "path": "src/core/LocalContrast.h",
+   "mode": "100644",
+   "sha256": "c365a197380a46f598466a52b664269e7255cff612653b5b9ea853aba6b7eb63"
+  },
+  {
+   "path": "src/core/PerceptualColour.cpp",
+   "mode": "100644",
+   "sha256": "636707e2181c90c2136f3a72e0c9a1e778ec326f7bff1ca646e1f9c2fb5c7de7"
+  },
+  {
+   "path": "src/core/PerceptualColour.h",
+   "mode": "100644",
+   "sha256": "18db357636bd3f8b2a520ef843afd5422084bbd0370c4c34bddc4437c6ec5fb5"
+  },
+  {
+   "path": "src/core/PointColor.cpp",
+   "mode": "100644",
+   "sha256": "9d6ed7ce25d4abadbdb97c3c7d06db0fac63f980c7935a5e0165ccfdbeab1016"
+  },
+  {
+   "path": "src/core/PointColor.h",
+   "mode": "100644",
+   "sha256": "fc9cf4067463a8bcd80ede081afede2bc636ea0ec1ad4e3991e73ee45679250b"
+  },
+  {
+   "path": "src/core/Sidecar.cpp",
+   "mode": "100644",
+   "sha256": "5f7a9510b47048fb08983913943828349d1246a3ade7983030de811607dcd7ff"
+  },
+  {
+   "path": "src/core/Sidecar.h",
+   "mode": "100644",
+   "sha256": "04f6302e1f18db813103f52a385f307fc9de0d6a1f1f132cb0b687bb360f008f"
+  },
+  {
+   "path": "src/core/ToneCurve.cpp",
+   "mode": "100644",
+   "sha256": "85d1fb04f89a8d54cbafaa108e2414e327ba5f018a81335064ea76d1357498b4"
+  },
+  {
+   "path": "src/core/ToneCurve.h",
+   "mode": "100644",
+   "sha256": "deb98e44f21fa7182652c53c24d48d072443800685733ebe7038a3c4af10b775"
+  },
+  {
+   "path": "src/core/ToneRecovery.cpp",
+   "mode": "100644",
+   "sha256": "3e08b02cc6ae5e5a4d724ca3eb418c59f0fcc532a15adc2a520fe7281a104c50"
+  },
+  {
+   "path": "src/core/ToneRecovery.h",
+   "mode": "100644",
+   "sha256": "7baa26b23e8ee2461853905ca98149fcd2564aeaa6d737b19fe9502eb4a4d13e"
+  },
+  {
+   "path": "src/core/ToneRecoveryHighlights.h",
+   "mode": "100644",
+   "sha256": "57cb0a3fa6060d8a22652be06a90839a23aec40e0f90986b18fcdede43f4bd9b"
+  },
+  {
+   "path": "src/core/ToneRecoveryModel.h",
+   "mode": "100644",
+   "sha256": "decdc780f877f321dfb95c5070a19ebbb7cc8f74b2b4a651e1dcb8c1b594c1ed"
+  },
+  {
+   "path": "src/core/ToneStatistics.cpp",
+   "mode": "100644",
+   "sha256": "aba0d01942c90341c8ca1bf60ce7a58de23ed81b3eeeae56daaa9c629751adbf"
+  },
+  {
+   "path": "src/core/ToneStatistics.h",
+   "mode": "100644",
+   "sha256": "8a79827cf07cb3b4c604ff5049616527b7ef8c482a6b579cb3512205861ab4de"
+  },
+  {
+   "path": "src/core/Vibrance.cpp",
+   "mode": "100644",
+   "sha256": "266c5dd972b7fef3dd567611605ac39e031ef21427bd2db87a73013ac161d318"
+  },
+  {
+   "path": "src/core/Vibrance.h",
+   "mode": "100644",
+   "sha256": "fde7740dc38b75cf2b966d9e3a92bc1ffaed137cef7ed0d96ec37eb0187f1280"
+  },
+  {
+   "path": "src/core/VibranceModel.h",
+   "mode": "100644",
+   "sha256": "9b1ed7006e1eaeedba849b1c1d39149539619aa3488770861be568b04134d0c2"
+  },
+  {
+   "path": "src/core/WorkingColorSpace.h",
+   "mode": "100644",
+   "sha256": "516f1882cf462bfdd1a258b587d147519fd72ef9938610b5a105290699ce1898"
+  },
+  {
+   "path": "src/editor/imageeditor.cpp",
+   "mode": "100644",
+   "sha256": "74e66ab75986df8aa93a2bf4d67373af5047ba94c5afb3561c6769df4039f19e"
+  },
+  {
+   "path": "src/editor/imageeditor.h",
+   "mode": "100644",
+   "sha256": "71ee161b43cc4d1cd7c59b137a6757760e3c0d8ce0b4aa4bfa9861485e44567d"
+  },
+  {
+   "path": "src/profiles/CameraProfileEngine.cpp",
+   "mode": "100644",
+   "sha256": "ee75884d3482ba056062f9a4b49ec5000dc8ed22f2aecd6b18b00085045edbf5"
+  },
+  {
+   "path": "src/profiles/CameraProfileEngine.h",
+   "mode": "100644",
+   "sha256": "5ccd2ce25a9a22eece6966f176a8e420e1f8832360c1d388fc2c2406e623e54a"
+  },
+  {
+   "path": "src/profiles/PreparedProfileCache.cpp",
+   "mode": "100644",
+   "sha256": "1c06218b980689f5f0b7f38ad8fec21ad348d9214b7fbe9e467d191a74426c6c"
+  },
+  {
+   "path": "src/profiles/PreparedProfileCache.h",
+   "mode": "100644",
+   "sha256": "723d48d63ceacc487c98858dc40c158547d7569dcbec0901bc556776d358c703"
+  },
+  {
+   "path": "src/providers/GradingWheelProvider.cpp",
+   "mode": "100644",
+   "sha256": "1aff37d8ba54d4944b527c74d9d14cd51e8696b71fa344ed59025e07f2e3e00b"
+  },
+  {
+   "path": "src/providers/GradingWheelProvider.h",
+   "mode": "100644",
+   "sha256": "daa632367213847593adee3a41e9fa7b7d0a9a07d1bed73ae9adb85fe964f024"
+  },
+  {
+   "path": "src/providers/ThumbnailProvider.cpp",
+   "mode": "100644",
+   "sha256": "080f4be63974114e915835f68c00382cf08e615d12c6608ccac5c87cef2d3f3b"
+  },
+  {
+   "path": "src/providers/ThumbnailProvider.h",
+   "mode": "100644",
+   "sha256": "b23567e5f9241a2d8beedecc94d807c9c3f671afdc9c66a542a66f07a59c7902"
+  },
+  {
+   "path": "src/providers/imageprovider.cpp",
+   "mode": "100644",
+   "sha256": "27bb803d2f60c90710cde4abb9d3669dd7296ed03ae29f5a9fd9c5a4f7ad9d0e"
+  },
+  {
+   "path": "src/providers/imageprovider.h",
+   "mode": "100644",
+   "sha256": "9fdd427740eba5dc0f2d31a7ac257231f69fcb63c6dd1f6d1d152d1890986406"
+  },
+  {
+   "path": "src/qml/ActionMenuItem.qml",
+   "mode": "100644",
+   "sha256": "25573f1856980c003f21e54e9b41e004163fb39502e0bc029ad3115737dce13a"
+  },
+  {
+   "path": "src/qml/AdjustmentControl.qml",
+   "mode": "100644",
+   "sha256": "cafcaf62f311c8e34eb5f7e008430411c4c26110c800b812492ef3585a4962d3"
+  },
+  {
+   "path": "src/qml/AdvancedRawPreferencesPane.qml",
+   "mode": "100644",
+   "sha256": "9e3a89a8183a42483a257f796302adb5a5dc11ea8625c90a7af4b3c4cb7dc781"
+  },
+  {
+   "path": "src/qml/AppearancePreferencesPane.qml",
+   "mode": "100644",
+   "sha256": "40f0797986c3fc20d3459d6f5ab8c130a66ebcf6d7214c0d7b6af9636a20d0d9"
+  },
+  {
+   "path": "src/qml/ApplicationActions.qml",
+   "mode": "100644",
+   "sha256": "8e88dbc197410cae699a5a8c7d6d7f2df1b1acbd91a1f25cd11260d4d42d7655"
+  },
+  {
+   "path": "src/qml/BackendCheckBox.qml",
+   "mode": "100644",
+   "sha256": "178e2fb0bc0781297c4acda6d2c73bc85f4e51fd9c0cd2eb14566cfd69fcd3bf"
+  },
+  {
+   "path": "src/qml/ChevronIcon.qml",
+   "mode": "100644",
+   "sha256": "68ffde82161c8cd6bc2cd62e30d906228634c4edd83fad9a71ca37957bde9432"
+  },
+  {
+   "path": "src/qml/ColorGradingModule.qml",
+   "mode": "100644",
+   "sha256": "f6c56256704131a39bf5faab02e33af243d372b325e994d64f3ba65e83c1e06c"
+  },
+  {
+   "path": "src/qml/ColorMixerModule.qml",
+   "mode": "100644",
+   "sha256": "790098e9fd7141706bf8ff88c9aa8f28e60cb87a132cf3e1b9ea9adbdf7b8a81"
+  },
+  {
+   "path": "src/qml/ConfirmationFooter.qml",
+   "mode": "100644",
+   "sha256": "41ae0d1d0ae690f3508d86c07fbca20a11c13c2fa1e554b5134995b3e9d20b4c"
+  },
+  {
+   "path": "src/qml/CurveChannelButton.qml",
+   "mode": "100644",
+   "sha256": "b428c28c47f5a003dba2954762e72f48945ba4bca16f0d9d49135e1c86d6467b"
+  },
+  {
+   "path": "src/qml/ExportReviewDialog.qml",
+   "mode": "100644",
+   "sha256": "3f6f92a11ded59a15365ed7fad2ecf48df54857c43d00f92cd3f4d300f6d7bfa"
+  },
+  {
+   "path": "src/qml/FilmstripNavigation.qml",
+   "mode": "100644",
+   "sha256": "7b210bb39347a61d6206435b7ea720668ba89a581d25c1497c371bee28a2426b"
+  },
+  {
+   "path": "src/qml/HistogramModule.qml",
+   "mode": "100644",
+   "sha256": "50555c9f13aa4dc571fb51f39b7d185af8e1d79578e0b2f89cccd6bf22595c98"
+  },
+  {
+   "path": "src/qml/ImageBackgroundOptions.qml",
+   "mode": "100644",
+   "sha256": "a8a002f7b356b226c8df173e6da202dc0d7c67283d36bf673b288248bdd3c830"
+  },
+  {
+   "path": "src/qml/ImageCanvasBackground.qml",
+   "mode": "100644",
+   "sha256": "c341879cbab467574c1bf262730d20040a10b27d228b9220223955a66a049cee"
+  },
+  {
+   "path": "src/qml/ImageInfoPanel.qml",
+   "mode": "100644",
+   "sha256": "7ba655b414b2ed30b12cee5a4e760847b082d22082ee447ae7431772d73d18cd"
+  },
+  {
+   "path": "src/qml/ImageViewport.qml",
+   "mode": "100644",
+   "sha256": "d75421d9579a49eb1613aec22e449a0322ad99cd1699232c3c516617f7eaa813"
+  },
+  {
+   "path": "src/qml/InterfacePaletteSelector.qml",
+   "mode": "100644",
+   "sha256": "d54a0da883eb5f1544a872b6e6a276c8acb37ddac6a14d0ac99456a7e97c0637"
+  },
+  {
+   "path": "src/qml/InterfacePreferencesPane.qml",
+   "mode": "100644",
+   "sha256": "fd44526f12386d3c649d465205128b761e8362af9014c0a8201f26e154b8ace8"
+  },
+  {
+   "path": "src/qml/Main.qml",
+   "mode": "100644",
+   "sha256": "33b706e43b1fdbe7bae0f5abf0045cb2fdc951bbf4f08a5ec7f386cb80b37b9c"
+  },
+  {
+   "path": "src/qml/OpticsModule.qml",
+   "mode": "100644",
+   "sha256": "75e15197dfa88f485f0bbf0e7354f1d98a93efd6c2c2aeb3debbb4a9d3cc77b6"
+  },
+  {
+   "path": "src/qml/PanelResizeHandle.qml",
+   "mode": "100644",
+   "sha256": "e0fe28bc0ca2dab6c753e53f2de19c3d98697390f5b69636a7905047a552cb3a"
+  },
+  {
+   "path": "src/qml/PhotoContextMenu.qml",
+   "mode": "100644",
+   "sha256": "d1d297040772ac3eaa898ad1b8d5e07cd02b33b5de68136b3bab29d8754b268b"
+  },
+  {
+   "path": "src/qml/PointColorModule.qml",
+   "mode": "100644",
+   "sha256": "55f3bbd46b679cafd3231533129861920ee18308208620f39b18f90d1034f2af"
+  },
+  {
+   "path": "src/qml/PreferenceButton.qml",
+   "mode": "100644",
+   "sha256": "55caae6c80a5d15adc41d8e3e0b8a31c6c4681e9cb67d35e9924d55c48b156ee"
+  },
+  {
+   "path": "src/qml/PreferenceCheckBox.qml",
+   "mode": "100644",
+   "sha256": "ad0126c48180374ce4af938da18c40ed8d82bc4f05162e4606f1246cb551b5c8"
+  },
+  {
+   "path": "src/qml/PreferenceComboBox.qml",
+   "mode": "100644",
+   "sha256": "f823b8e47d6fb37e9b9285210ad8e8d158e07eb80cbf79e7941807f41f049259"
+  },
+  {
+   "path": "src/qml/PreferenceScrollView.qml",
+   "mode": "100644",
+   "sha256": "0c32a0139bf57303e80a141ee754e36b3305cfab5f4d6b74dacaea05cabfd694"
+  },
+  {
+   "path": "src/qml/PreferenceSpinBox.qml",
+   "mode": "100644",
+   "sha256": "4ae0e0fb0cb63e0ace094ff37c1d2d8e1949c32b51912af3b25ac1a9f230108e"
+  },
+  {
+   "path": "src/qml/PreferencesDialog.qml",
+   "mode": "100644",
+   "sha256": "0e83ef0c5f250dd4072b99aecf7c4f1cf1da80ee11f0091f21843b174b4891ab"
+  },
+  {
+   "path": "src/qml/ProcessingStatus.qml",
+   "mode": "100644",
+   "sha256": "22f9f5a00188ce71b522bc948ad72cf66bb70e479cb51dfab838d5d5fbdc7d9a"
+  },
+  {
+   "path": "src/qml/RawCalibrationModule.qml",
+   "mode": "100644",
+   "sha256": "c0d1fe7d07c92da02a9e01334f580ee39c77d745afe41ac15012935a08ffffc5"
+  },
+  {
+   "path": "src/qml/RawDevelopmentModule.qml",
+   "mode": "100644",
+   "sha256": "50384cdfc2a767d0eef19a456692f7da07fe8d83d1c0ad33cb803818819e451e"
+  },
+  {
+   "path": "src/qml/SectionNote.qml",
+   "mode": "100644",
+   "sha256": "7b2bd82be4d3dee6f0fa7c805f3f0dd65259d150fb70495d605b032ec043c168"
+  },
+  {
+   "path": "src/qml/Setting.qml",
+   "mode": "100644",
+   "sha256": "6034b8ea0ab4ba989222ce30dfa9c32ea6866675b815d41dff1e8a50d517168f"
+  },
+  {
+   "path": "src/qml/SettingsSection.qml",
+   "mode": "100644",
+   "sha256": "46e9fa57759090d5aba0a3442a1751787b19229c978f8f43b27acf95ff93a17c"
+  },
+  {
+   "path": "src/qml/ThumbnailRibbon.qml",
+   "mode": "100644",
+   "sha256": "7468ef350589b82bb42360fa7df65e60e33e35ff6db7e3a913e0a6ed8058be4f"
+  },
+  {
+   "path": "src/qml/ToneCurveModule.qml",
+   "mode": "100644",
+   "sha256": "0d9e5909909d87bb45e5cbca7dea06eec709beb320996b4f45a2a7ddfc742a07"
+  },
+  {
+   "path": "src/raw/CameraCharacterization.cpp",
+   "mode": "100644",
+   "sha256": "f5e36ec195262ac07e5fb390c30c20af4ccaff41af8e7b2f8a9f75924c6a6dc0"
+  },
+  {
+   "path": "src/raw/CameraCharacterization.h",
+   "mode": "100644",
+   "sha256": "de517476c17bc1a848f20acc0a68ddc9777d85d44bb3879c42146d4263d4ca29"
+  },
+  {
+   "path": "src/raw/CameraDenoise.cpp",
+   "mode": "100644",
+   "sha256": "f6ea5f7d175cb5b31458916fec285a3604fdd0295692787449de56b449b205b5"
+  },
+  {
+   "path": "src/raw/CameraDenoise.h",
+   "mode": "100644",
+   "sha256": "587b18e8d7e1553257043e631c8d67e9f1db0cb7aade4a425855d6a3789e6c12"
+  },
+  {
+   "path": "src/raw/CameraSignal.cpp",
+   "mode": "100644",
+   "sha256": "a7a11255cc07b5403e8248d2fe31faa034e7047a799ac390695ec9499efc22f8"
+  },
+  {
+   "path": "src/raw/CameraSignal.h",
+   "mode": "100644",
+   "sha256": "8c5e749996cb78fc80041b1092c2c0b180fc949c39e4c665e28397f06dc84227"
+  },
+  {
+   "path": "src/raw/Demosaic.cpp",
+   "mode": "100644",
+   "sha256": "1cd90b4cab0394ef4cb66df48782c1a3312c24b4d46cc13b973026dd63e33864"
+  },
+  {
+   "path": "src/raw/Demosaic.h",
+   "mode": "100644",
+   "sha256": "2f996212bd64fddff916cbf2ae14106b8cc6bb9a0716214d67bbf14316022043"
+  },
+  {
+   "path": "src/raw/LibRawInput.cpp",
+   "mode": "100644",
+   "sha256": "710acf57aa78109eff020aecafedf5c84981c11efbcda39af3a5b83862b98acc"
+  },
+  {
+   "path": "src/raw/LibRawInput.h",
+   "mode": "100644",
+   "sha256": "e5b75d8ba8eb4dade345ecd547c39715770183e2ec8d39a20e786f1d683acd0d"
+  },
+  {
+   "path": "src/raw/RawBlackLevelEstimator.cpp",
+   "mode": "100644",
+   "sha256": "d3e6d749a41b94b1839f911a1adb837010e6e21df81205d1ab32c2658555842b"
+  },
+  {
+   "path": "src/raw/RawBlackLevelEstimator.h",
+   "mode": "100644",
+   "sha256": "79b8b57f9cc092f0bb9cc9797c07816e673197737b10a5605247dafe8ad12a9a"
+  },
+  {
+   "path": "src/raw/RawDecoder.cpp",
+   "mode": "100644",
+   "sha256": "036bfe648d295b6ad747a3278574c52d377cc1c578f5df2657faf7b4c352a300"
+  },
+  {
+   "path": "src/raw/RawDecoder.h",
+   "mode": "100644",
+   "sha256": "8f2918543cd34c3f938f16e4015b319558061492a10ff017e5eb337b3f55f415"
+  },
+  {
+   "path": "src/raw/RawDevelopment.cpp",
+   "mode": "100644",
+   "sha256": "b6d11bad8978a1bdd1e9488cc56b890cac3f182afc6005e2557d63c9781241e8"
+  },
+  {
+   "path": "src/raw/RawDevelopment.h",
+   "mode": "100644",
+   "sha256": "608fbe8bacee1f2f58bcc055a0b275906abecb5d2fb74af4782f1d7d7389e572"
+  },
+  {
+   "path": "src/raw/RawInput.cpp",
+   "mode": "100644",
+   "sha256": "555bc1fe93e76099eefe1d9046352839c47b3ff208df240b7e6639c6de35a9e2"
+  },
+  {
+   "path": "src/raw/RawInput.h",
+   "mode": "100644",
+   "sha256": "d4645356573159f0a2a768386e147cf6d14c2803f10634436cc16e69c3675427"
+  },
+  {
+   "path": "src/raw/RawNormalization.cpp",
+   "mode": "100644",
+   "sha256": "5b81e2504d26a2d5f249f60f3034e45934432e4dd127e96e8180c44f92422a2a"
+  },
+  {
+   "path": "src/raw/RawNormalization.h",
+   "mode": "100644",
+   "sha256": "022182b3d6618cbc4da5282afa2a91b78d125ab67a073f867c5136585094d5fe"
+  },
+  {
+   "path": "vcpkg.json",
+   "mode": "100644",
+   "sha256": "8cc036f5063fb4366d6c246d9912a3f3bd9586cd048f325dcfbf6fe32e8524ff"
+  }
+ ]
+}

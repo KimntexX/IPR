@@ -1,0 +1,127 @@
+import QtQuick
+import QtQuick.Controls
+
+Item {
+    id: root
+    required property var editor
+    required property var settings
+    property bool blocked: false
+    // Qt maps Ctrl to the physical Command key on macOS; Meta would mean Control.
+    readonly property string commandModifier: "Ctrl"
+    readonly property bool photoReady: editor.hasImage && !editor.busy && !editor.embeddedPreview && !blocked
+    // File operations are supplied by the engine, never emulated in QML.
+    readonly property bool duplicationAvailable: typeof editor.duplicateCurrentImage === "function"
+    property alias openImageAction: openImage
+    property alias openFolderAction: openFolder
+    property alias saveAction: save
+    property alias exportAction: exportPhoto
+    property alias exportSelectionAction: exportSelection
+    property alias duplicateAction: duplicate
+    property alias resetAction: reset
+    property alias copyAction: copyEdits
+    property alias pasteAction: pasteEdits
+    property alias applySelectionAction: applySelection
+    property alias preferencesAction: preferences
+    property alias quitAction: quit
+    signal openImageRequested()
+    signal openFolderRequested()
+    signal preferencesRequested()
+    signal resetRequested()
+
+    Action {
+        id: openImage
+        objectName: "openImageAction"
+        text: qsTr("Ouvrir une image…")
+        shortcut: StandardKey.Open
+        enabled: !root.blocked
+        onTriggered: root.openImageRequested()
+    }
+    Action {
+        id: openFolder
+        objectName: "openFolderAction"
+        text: qsTr("Ouvrir un dossier…")
+        shortcut: root.commandModifier + "+Shift+O"
+        enabled: !root.blocked
+        onTriggered: root.openFolderRequested()
+    }
+    Action {
+        id: save
+        objectName: "saveAdjustmentsAction"
+        text: qsTr("Enregistrer les réglages")
+        shortcut: StandardKey.Save
+        enabled: root.photoReady
+        onTriggered: root.editor.saveCurrentAdjustments()
+    }
+    Action {
+        id: exportPhoto
+        objectName: "exportImageAction"
+        text: qsTr("Exporter…")
+        shortcut: root.commandModifier + "+E"
+        enabled: root.photoReady
+        onTriggered: root.settings.openExportDialog()
+    }
+    Action {
+        id: exportSelection
+        objectName: "exportSelectionAction"
+        text: qsTr("Exporter la sélection (%1)…").arg(root.editor.selectedImageCount)
+        enabled: root.editor.selectedImageCount > 0 && !root.editor.batchExporting
+                 && !root.editor.batchApplying && !root.blocked
+        onTriggered: root.settings.openBatchExportDialog()
+    }
+    Action {
+        id: duplicate
+        objectName: "duplicateImageAction"
+        text: qsTr("Dupliquer le fichier et ses réglages")
+        shortcut: root.commandModifier + "+D"
+        enabled: root.photoReady && root.duplicationAvailable
+        onTriggered: root.editor.duplicateCurrentImage()
+    }
+    Action {
+        id: copyEdits
+        objectName: "copyAdjustmentsAction"
+        text: qsTr("Copier les paramètres")
+        shortcut: root.commandModifier + "+Shift+C"
+        enabled: root.photoReady
+        onTriggered: root.editor.copyAdjustments()
+    }
+    Action {
+        id: pasteEdits
+        objectName: "pasteAdjustmentsAction"
+        text: qsTr("Coller les paramètres")
+        shortcut: root.commandModifier + "+Shift+V"
+        enabled: root.photoReady && root.editor.hasCopiedAdjustments
+        onTriggered: root.editor.pasteAdjustments()
+    }
+    Action {
+        id: applySelection
+        objectName: "applySelectionAction"
+        text: qsTr("Appliquer les réglages de l'image ouverte à la sélection (%1)").arg(root.editor.selectedImageCount)
+        enabled: root.photoReady && root.editor.selectedImageCount > 0
+                 && !root.editor.batchApplying && !root.editor.batchExporting
+        onTriggered: root.editor.applyAdjustmentsToSelection()
+    }
+    Action {
+        id: reset
+        objectName: "resetAdjustmentsAction"
+        text: qsTr("Réinitialiser les retouches…")
+        shortcut: root.commandModifier + "+Shift+R"
+        enabled: root.photoReady
+        onTriggered: root.resetRequested()
+    }
+    Action {
+        id: preferences
+        objectName: "preferencesAction"
+        text: qsTr("Interface et développement RAW…")
+        shortcut: root.commandModifier + "+,"
+        enabled: !root.blocked
+        onTriggered: root.preferencesRequested()
+    }
+    Action {
+        id: quit
+        objectName: "quitAction"
+        text: qsTr("Quitter")
+        shortcut: root.commandModifier + "+Q"
+        enabled: !root.blocked
+        onTriggered: Qt.quit()
+    }
+}

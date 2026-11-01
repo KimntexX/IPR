@@ -1,11 +1,16 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Basic as Basic
 import QtQuick.Layouts
 
 Rectangle {
     id: panel
 
     required property var editor
+    property var preferences: null
+    readonly property int informationFontSize: preferences ? preferences.layout.imageInfoFontSize : 12
+    readonly property color textColor: preferences ? preferences.theme.text : "#edf2f8"
+    readonly property color secondaryTextColor: preferences ? preferences.theme.secondaryText : "#d7dfeb"
     readonly property var details: editor ? editor.imageDetails : ({})
 
     color: "#2a3039"
@@ -20,8 +25,8 @@ Rectangle {
         Label {
             text: qsTr("Informations")
             font.bold: true
-            font.pixelSize: 16
-            color: "#edf2f8"
+            font.pixelSize: panel.informationFontSize + 4
+            color: panel.textColor
         }
 
         Rectangle {
@@ -69,8 +74,9 @@ Rectangle {
                     Layout.fillWidth: true
                     visible: !panel.editor.hasImage
                     text: qsTr("Ouvrez une image pour afficher ses informations.")
+                    font.pixelSize: panel.informationFontSize
                     wrapMode: Text.WordWrap
-                    color: "#aeb8c8"
+                    color: panel.secondaryTextColor
                 }
 
                 Repeater {
@@ -97,14 +103,14 @@ Rectangle {
 
                         Label {
                             text: modelData.label
-                            color: "#8c9caf"
-                            font.pixelSize: 11
+                            color: panel.secondaryTextColor
+                            font.pixelSize: panel.informationFontSize - 1
                         }
                         Label {
                             Layout.fillWidth: true
                             text: modelData.value
-                            color: "#d7dfeb"
-                            font.pixelSize: 12
+                            color: panel.textColor
+                            font.pixelSize: panel.informationFontSize
                             wrapMode: Text.WordWrap
                             maximumLineCount: 3
                             elide: Text.ElideRight
@@ -122,8 +128,8 @@ Rectangle {
                 Label {
                     visible: panel.editor.hasImage
                     text: qsTr("Classement")
-                    color: "#8c9caf"
-                    font.pixelSize: 11
+                    color: panel.secondaryTextColor
+                    font.pixelSize: panel.informationFontSize - 1
                 }
 
                 RowLayout {
@@ -134,13 +140,15 @@ Rectangle {
                     Repeater {
                         model: 5
 
-                        delegate: ToolButton {
+                        delegate: Basic.ToolButton {
+                            id: ratingButton
                             required property int index
+                            objectName: "imageRatingStar" + index
 
-                            Layout.preferredWidth: 22
-                            Layout.preferredHeight: 22
+                            Layout.preferredWidth: 23.1
+                            Layout.preferredHeight: 23.1
                             text: index < panel.editor.imageRating ? "★" : "☆"
-                            font.pixelSize: 17
+                            font.pixelSize: 18
                             padding: 0
                             ToolTip.visible: hovered
                             ToolTip.text: qsTr("%1 étoile(s)").arg(index + 1)
@@ -149,8 +157,11 @@ Rectangle {
                                            ? 0 : index + 1)
 
                             contentItem: Text {
+                                objectName: "imageRatingGlyph" + ratingButton.index
+                                font: ratingButton.font
                                 text: parent.text
-                                color: parent.hovered ? "#f3c969" : "#d7b35e"
+                                color: ratingButton.palette.window.hslLightness > 0.5
+                                       ? "#8a6000" : (ratingButton.hovered ? "#f3c969" : "#d7b35e")
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
                             }
@@ -160,7 +171,7 @@ Rectangle {
 
                     Item { Layout.fillWidth: true }
 
-                    ToolButton {
+                    Basic.ToolButton {
                         id: flagButton
 
                         Layout.preferredWidth: 28
@@ -176,13 +187,15 @@ Rectangle {
 
                         contentItem: Text {
                             text: parent.text
-                            color: panel.editor.imageFlagged ? "#edf2f8" : "#8c9caf"
+                            font: flagButton.font
+                            color: flagButton.palette.text
+                            opacity: panel.editor.imageFlagged ? 1 : 0.65
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                         }
                         background: Rectangle {
                             radius: 3
-                            color: flagButton.hovered ? "#3d4654" : "transparent"
+                            color: flagButton.hovered ? flagButton.palette.mid : "transparent"
                         }
                     }
                 }
@@ -190,8 +203,8 @@ Rectangle {
                 Label {
                     visible: panel.editor.hasImage
                     text: qsTr("Libellé couleur")
-                    color: "#8c9caf"
-                    font.pixelSize: 11
+                    color: panel.secondaryTextColor
+                    font.pixelSize: panel.informationFontSize - 1
                 }
 
                 RowLayout {
@@ -208,7 +221,7 @@ Rectangle {
                             { "name": qsTr("Violet"), "color": "#a77ad3" }
                         ]
 
-                        delegate: ToolButton {
+                        delegate: Basic.ToolButton {
                             required property var modelData
 
                             Layout.preferredWidth: 20
@@ -226,7 +239,7 @@ Rectangle {
                                 border.width: panel.editor.imageColorLabel === modelData.name
                                               ? 3 : 1
                                 border.color: panel.editor.imageColorLabel === modelData.name
-                                              ? "#ffffff" : "#3d4654"
+                                              ? parent.palette.text : parent.palette.mid
                             }
                         }
                     }

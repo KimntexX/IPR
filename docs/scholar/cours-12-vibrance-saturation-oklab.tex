@@ -1,0 +1,79 @@
+% Cours autonome : convention LaTeX du 8 octobre 2026 (12 pt, interligne 1,5,
+% chapitres sur une nouvelle page), sans le préambule 11 pt des anciens cours.
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.35cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5\baselineskip}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,longtable,array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black,
+pdftitle={Cours 12 -- Vibrance et saturation : mesurer et reproduire Lightroom},
+pdfauthor={Projet IPR -- Scholar}}
+\definecolor{iprblue}{HTML}{1F4E79}
+\definecolor{iprgreen}{HTML}{2D6A4F}
+\newcommand{\IPR}{\textsc{ipr}}
+\newcommand{\resultat}[1]{\paragraph{À retenir.} #1}
+\clubpenalty=10000
+\widowpenalty=10000
+\raggedbottom
+
+\title{Cours 12 -- Vibrance et saturation\\
+\large Mesurer Lightroom pixel par pixel et en faire un modèle}
+\author{Projet \IPR{} -- documentation Scholar}
+\date{22 octobre 2026\\[3em]
+\small Du curseur à l'équation : espaces de couleur, Oklab, mesure d'un logiciel de
+référence, tables de réponse, rotation de teinte, validation et implémentation.\\
+Valeurs issues des campagnes du 21 et 22 octobre 2026 sur 49 scènes.}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter*{Comment utiliser ce cours}
+\addcontentsline{toc}{chapter}{Comment utiliser ce cours}
+Ce cours explique comment \IPR{} reproduit les curseurs Saturation et
+Vibrance de Lightroom. Il ne se contente pas de donner les formules : il
+montre la démarche qui y a conduit. On mesure d'abord ce que fait le logiciel
+de référence, on vérifie quelles grandeurs expliquent son comportement, puis
+on construit un modèle et on le valide sur des images qui n'ont pas servi à
+le construire.
+
+Les chapitres 1 et 2 posent le problème et les outils colorimétriques. Le
+chapitre 3 décrit la mesure de Lightroom et ce qu'elle révèle. Les
+chapitres 4 et 5 construisent le modèle, gain puis rotation de teinte. Le
+chapitre 6 le valide, le chapitre 7 décrit son implémentation, ses limites,
+et propose des exercices corrigés.
+
+\paragraph{Prérequis.} Calcul matriciel $3\times3$, logarithme, notions de
+statistique (médiane, variance). Les espaces de couleur sont rappelés au
+chapitre 2.
+
+\paragraph{Périmètre.} Les nombres cités proviennent des preuves JSON de
+\texttt{docs/validation/raw} (campagnes \texttt{mesure-couleur} et
+\texttt{modele-vibrance-lr}) ; elles font autorité en cas d'écart avec ce
+document. Les tables décrivent Lightroom avec le profil Camera Neutral, sur les
+boîtiers du corpus (Canon R6 Mark III, R7 et EOS 60D) ; elles ne constituent
+pas une vérité universelle sur Lightroom.
+
+\input{cours-12/01-probleme}
+\input{cours-12/02-espaces}
+\input{cours-12/03-mesure}
+\input{cours-12/04-modele}
+\input{cours-12/05-rotation}
+\input{cours-12/06-validation}
+\input{cours-12/07-implementation-exercices}
+
+\bibliographystyle{plain}
+\bibliography{references-vibrance}
+\end{document}

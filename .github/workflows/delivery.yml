@@ -1,0 +1,96 @@
+name: Delivery dev-main archives
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Optional version label; branch and tested SHA are appended (no tag created)
+        default: ''
+        required: false
+  workflow_run:
+    workflows: ['CI scoped validation', 'CI native full tests', 'CI main production']
+    branches: [dev, main]
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  approval:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')) ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' &&
+       (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch') &&
+       (github.event.workflow_run.head_branch == 'dev' || github.event.workflow_run.head_branch == 'main') &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      sha: ${{ steps.approval.outputs.sha }}
+      build_sha: ${{ steps.approval.outputs.build_sha }}
+      branch: ${{ steps.approval.outputs.branch }}
+      label: ${{ steps.approval.outputs.label }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - id: approval
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/delivery_policy.py
+  archives:
+    needs: approval
+    permissions:
+      contents: read
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, ubuntu-24.04, macos-15, macos-15-intel]
+        mode: [system, standalone]
+        # No Qt >= 6.8 system package on Ubuntu 24.04: standalone only there.
+        exclude:
+          - os: ubuntu-24.04
+            mode: system
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    env:
+      IPR_BUILD_LABEL: ${{ needs.approval.outputs.label }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.approval.outputs.build_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          mode: ${{ matrix.mode }}
+      - shell: bash
+        env:
+          IPR_MODE: ${{ matrix.mode }}
+        run: |
+          installer=()
+          if [[ "$RUNNER_OS" == Windows && "$IPR_MODE" == standalone ]]; then
+            installer+=(--windows-installer)
+          fi
+          python scripts/github_build.py --action all --profile production --mode "$IPR_MODE" --version "$IPR_BUILD_LABEL" "${installer[@]}"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: IPR-${{ needs.approval.outputs.branch }}-${{ needs.approval.outputs.sha }}-${{ matrix.os }}-${{ matrix.mode }}
+          path: |
+            dist/*.zip
+            dist/*-setup.exe
+            dist/*.tar.gz
+            dist/*.sha256
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: test-logs-delivery-${{ matrix.os }}-${{ matrix.mode }}
+          path: |
+            build-ci/test-results/
+            build-ci/Testing/Temporary/
+            ci-logs/

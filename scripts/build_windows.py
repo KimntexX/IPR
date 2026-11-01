@@ -74,6 +74,22 @@ def windows_path(path):
     raise RuntimeError("Use WSL or Git Bash on Windows; no native Windows path converter found")
 
 
+def running_build_executables(build, config, lister=None):
+    """Running programs built in this tree. Windows locks a running .exe: its
+    link fails (LNK1168) and the previous binary silently stays in place."""
+    output = build / config
+    names = {path.name.lower(): path.name for path in output.glob("*.exe")} if output.is_dir() else {}
+    if not names:
+        return []
+    try:
+        listing = lister() if lister else subprocess.check_output(
+            ["tasklist.exe", "/fo", "csv", "/nh"], text=True, errors="replace")
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return []  # No Windows process list (CI or plain Linux): nothing to protect.
+    running = {line.split('","')[0].strip('"').lower() for line in listing.splitlines() if line.startswith('"')}
+    return sorted(names[name] for name in names.keys() & running)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--build-dir", type=Path, default=ROOT / "build-windows-msvc")
@@ -123,6 +139,10 @@ def main(argv=None):
     print(json.dumps(plan, indent=2, ensure_ascii=False), flush=True)
     if args.dry_run:
         return 0
+    locked = running_build_executables(build, args.config)
+    if locked:
+        raise RuntimeError("close " + ", ".join(locked) + " before compiling: Windows locks a running"
+                           " executable, so it would not be rebuilt")
     build.mkdir(parents=True, exist_ok=True)
     plan_path = build / ".ipr-test-plan.json"
     plan_path.write_text(json.dumps(plan), encoding="utf-8")

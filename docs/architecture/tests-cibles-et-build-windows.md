@@ -1,3 +1,5 @@
+*[Français](tests-cibles-et-build-windows.md) | [English](tests-cibles-et-build-windows_en.md)*
+
 # Build Windows et sélection des tests
 
 ## Commande quotidienne
@@ -12,7 +14,10 @@ Le lanceur Bash utilise Python 3.9+ pour sélectionner les tests, puis PowerShel
 et les outils **Windows** CMake/MSVC pour compiler. Un lancement depuis WSL
 produit bien `appIPR.exe` et `iprGenerateTests.exe` Windows, pas des binaires Linux. Par défaut :
 `build-windows-msvc`, `Release`, deux jobs. Fermer l'exécutable de ce dossier
-avant de le relier ; le script refuse de l'arrêter automatiquement.
+avant de le relier ; le script refuse de l'arrêter automatiquement. Avant de
+compiler, il vérifie qu'aucun `.exe` de `<build>/<config>` ne tourne (IPR,
+générateur, sonde ou test). Sinon, il s'arrête avec le nom du programme à fermer :
+Windows verrouille un exécutable lancé, et l'ancien binaire resterait en place.
 
 Prérequis : MSVC/Visual Studio Build Tools 2022 x64, CMake et CTest Windows,
 Qt MSVC, OpenCV/LibTIFF/LibRaw de la même ABI. Le cache CMake existant est réutilisé.
@@ -35,8 +40,8 @@ Il ne réalise pas le déploiement/packaging des DLL pour une distribution auton
 
 ## Politique des tests
 
-Les règles versionnées sont dans [scripts/test-rules.json](../../scripts/test-rules.json).
-Les quatorze tests synthétiques CTest sont désormais enregistrés sous Windows
+Les règles versionnées sont dans [scripts/test-rules.json](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/scripts/test-rules.json).
+Les dix-huit tests synthétiques CTest sont désormais enregistrés sous Windows
 comme sous Linux/WSL. Les sondes photographiques privées restent séparées.
 
 Le sélecteur compare les SHA-256 des fichiers de code/configuration à la dernière
@@ -50,14 +55,14 @@ chaque build d'un worktree déjà sale, sans nécessiter de commit préalable.
 | --- | --- |
 | Préférences/INI | préférences C++, restauration QML, panneau des réglages |
 | Mélangeur | mathématiques, neutres, pastilles QML, export, comparateur Python |
-| Générateur d'images (`src/tools/`) | séries de paramètres, isolation, manifeste, sources préservées, export 16 bits |
+| Générateur d'images (`src/tools/`) | groupes/all, dossiers partagés, isolation, provenance TIFF, sources préservées, export 16 bits |
 | Décodage RAW | décodeur, niveau noir, profils, export |
 | Profils locaux | moteur DCP/LCP, décodeur, export |
 | Réglages QML | contraintes de largeur, contrôles, restauration globale |
 | Zoom de l'aperçu QML | clic, glisser, molette, raccourcis, bornes, rafraîchissement et chargement de la fenêtre |
 | Un fichier de test isolé | ce test, pas toute la suite |
 
-Une validation complète est imposée dans les cas suivants :
+Pour le lanceur Windows local, une validation complète est imposée dans les cas suivants :
 
 - premier passage ou checkpoint/configuration invalide : établissement du socle ;
 - demande `--full-tests` ou environnement `GITHUB_ACTIONS=true` ;
@@ -65,6 +70,13 @@ Une validation complète est imposée dans les cas suivants :
   transversale `imageeditor.h` ;
 - au moins vingt fichiers de code/configuration modifiés ;
 - fichier de code inconnu des règles : repli conservateur, à compléter ensuite.
+
+GitHub utilise le même catalogue de règles, avec une portée calculée depuis
+l'ancêtre commun de la branche et `origin/dev`. Les pushes de groupe sont
+ciblés ; les PR vers `dev`/`main`, les pushes d'intégration, les changements
+transversaux/importants et les validations manuelles sont complets. Voir la
+[politique CI](ci-et-build-multiplateforme.md#politique-de-déclenchement--11-octobre-2026).
+La CI ne modifie pas le checkpoint local et ne supprime aucune image.
 
 Les dépendances de tests sont une cartographie maintenue, pas une preuve formelle
 du graphe C++/QML. Les tests existants de détail/bruit, cache et vignettes ne

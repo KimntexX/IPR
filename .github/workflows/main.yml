@@ -1,0 +1,91 @@
+name: CI main production
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: main-production-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  promotion:
+    name: Promotion verification
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify the projection and the pinned complete dev CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/delivery_policy.py --check-promotion "$GITHUB_SHA"
+  documents:
+    needs: promotion
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - run: python scripts/ci_documents.py
+  production:
+    name: production (${{ matrix.os }}, ${{ matrix.mode }})
+    needs: promotion
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, ubuntu-24.04, macos-15, macos-15-intel]
+        mode: [system, standalone]
+        exclude:
+          - os: ubuntu-24.04
+            mode: system
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          mode: ${{ matrix.mode }}
+      - name: Build, deploy and smoke without tests or analysis tools
+        shell: bash
+        env:
+          IPR_MODE: ${{ matrix.mode }}
+        run: |
+          installer=()
+          if [[ "$RUNNER_OS" == Windows && "$IPR_MODE" == standalone ]]; then
+            installer+=(--windows-installer)
+          fi
+          python scripts/github_build.py --action all --profile production --mode "$IPR_MODE" --verify-package-only "${installer[@]}"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: test-logs-production-${{ matrix.os }}-${{ matrix.mode }}
+          path: |
+            build-ci/CMakeFiles/CMakeConfigureLog.yaml
+            ci-logs/
+          retention-days: 14
+  validation:
+    name: Main production validation
+    needs: [promotion, documents, production]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - env:
+          PROMOTION: ${{ needs.promotion.result }}
+          DOCUMENTS: ${{ needs.documents.result }}
+          PRODUCTION: ${{ needs.production.result }}
+        run: |
+          python - <<'PY'
+          import os
+          for job in ('PROMOTION', 'DOCUMENTS', 'PRODUCTION'):
+              assert os.environ[job] == 'success', f'{job}: {os.environ[job]}'
+          PY

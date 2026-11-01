@@ -1,0 +1,39 @@
+\chapter{Project Overview}
+\label{chap:projet}
+
+\section{Objective}
+
+\IPR{} is a non-destructive photographic development software. It opens a folder or an image, decodes RAW files and supported image formats, displays a working image, and allows building an exportable render using photographic adjustments. The application targets local execution on Windows~10 and Windows~11, with a Qt Quick/QML interface and a C++ engine.
+
+The guiding principle is to preserve the source file: the pixels of the original file are never overwritten. Settings, curves, and annotation metadata are stored in a companion \texttt{.ipr} file. Rendering is recalculated from the decoded image and current parameters.
+
+\section{Current Functional Scope}
+
+\begin{longtable}{p{0.30\linewidth}p{0.62\linewidth}}
+\toprule
+Function & Status and Responsibility \\
+\midrule
+Opening & Folder or image selection; opening an image switches to its parent folder. \\
+Navigation & Horizontal thumbnail ribbon, deferred loading, and preloading of neighboring images. \\
+Development & Exposure, tone, white balance, global color, local detail, haze, grain, curves, color mixer, and color grading. \\
+User Metadata & Note, color label, and flag associated with the image. \\
+Persistence & Atomic \texttt{.ipr} sidecar; automatic restoration when the source file is unchanged. \\
+Batch & Multi-selection and application of current image settings to selected images. \\
+Profiles & Local search for DCP/LCP profiles indexed in \texttt{profiles/index.json}. \\
+Export & Rendered image exportable and automated export tests. \\
+\bottomrule
+\end{longtable}
+
+\section{Architecture Constraints and Principles}
+
+\begin{itemize}
+  \item \textbf{Responsiveness:} Expensive decoding must not block the interface; loading is asynchronous and intermediate renders are deferred.
+  \item \textbf{Bounded Memory:} The decoded image cache follows an LRU policy to limit memory consumption during long navigation.
+  \item \textbf{Fidelity:} Photometric operations are performed in a linear floating-point working image when the pipeline allows.
+  \item \textbf{Portability:} The distributed target is Windows, while the project can be built and tested in a WSL development environment.
+  \item \textbf{Traceability:} Validation reports and measurements are organized in \texttt{docs/validation}, while dated logs reside in \texttt{docs/reports}. The documentary entry point is \texttt{docs/INDEX.md}.
+\end{itemize}
+
+\section{Scope Limitations}
+
+Cropping, geometry, retouching masks, and AI-assisted functions already have reserved chapters in this document but are not yet implemented in the scope described here. Their lack of content is intentional to avoid documenting an unvalidated design as an existing feature.

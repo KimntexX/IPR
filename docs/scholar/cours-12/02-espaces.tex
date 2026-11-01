@@ -1,0 +1,99 @@
+\chapter{Les outils colorimétriques}
+
+\section{RGB linéaire et changements de primaires}
+\IPR{} travaille sur un master en RGB linéaire Rec.2020, D65 : les valeurs sont
+proportionnelles à la lumière, sans courbe de transfert. Passer d'un jeu de
+primaires à un autre est alors une simple application linéaire,
+\begin{equation}
+\mathbf{p}_{\text{sRGB}} = M\,\mathbf{p}_{\text{Rec.2020}},\qquad
+M = M_{\text{sRGB}\to XYZ}^{-1}\,M_{\text{Rec.2020}\to XYZ},
+\end{equation}
+où chaque matrice $M_{\cdot\to XYZ}$ se déduit des coordonnées $xy$ des
+primaires et du blanc~\cite{itu2020,iec61966}. Le passage n'écrête rien : une
+couleur Rec.2020 hors du gamut sRGB obtient simplement une composante négative,
+et l'aller-retour $M^{-1}M$ restitue la valeur exacte.
+
+\resultat{Les tables de vibrance ont été mesurées sur des exports sRGB : \IPR{}
+convertit le master en sRGB linéaire, applique le modèle, puis revient en
+Rec.2020, sans écrêtage dans l'intervalle.}
+
+\section{Pourquoi Oklab}
+Pour agir sur « l'intensité d'une couleur » sans toucher à sa luminosité ni à
+sa teinte, il faut un espace où ces trois notions sont séparées. Oklab,
+proposé par Björn Ottosson en 2020~\cite{ottosson2020}, est construit pour que
+\begin{itemize}
+\item $L$ représente la clarté perçue ;
+\item le plan $(a,b)$ porte la couleur : la distance au gris est la
+\textbf{chroma} $C=\sqrt{a^2+b^2}$ et l'angle est la \textbf{teinte}
+$h=\operatorname{atan2}(b,a)$ ;
+\item une variation de $C$ à $L$ et $h$ fixes soit perçue comme une variation
+d'intensité sans changement de teinte, mieux que dans HSV ou CIELAB.
+\end{itemize}
+
+Depuis le RGB linéaire sRGB, la transformation compte deux matrices et une
+racine cubique :
+\begin{align}
+(l,m,s)^\top &= M_1\,(R,G,B)^\top,\\
+(L,a,b)^\top &= M_2\,(\sqrt[3]{l},\sqrt[3]{m},\sqrt[3]{s})^\top,
+\end{align}
+avec
+\begin{equation}
+M_1=\begin{pmatrix}
+0{,}4122 & 0{,}5363 & 0{,}0514\\
+0{,}2119 & 0{,}6807 & 0{,}1074\\
+0{,}0883 & 0{,}2817 & 0{,}6300\end{pmatrix},\quad
+M_2=\begin{pmatrix}
+0{,}2105 & 0{,}7936 & -0{,}0041\\
+1{,}9780 & -2{,}4286 & 0{,}4506\\
+0{,}0259 & 0{,}7828 & -0{,}8087\end{pmatrix}.
+\end{equation}
+\IPR{} utilise la racine cubique signée ($\sqrt[3]{-x}=-\sqrt[3]{x}$) : une
+composante négative ou supérieure à 1, fréquente dans un master HDR, reste
+calculable. Le retour inverse les deux étapes.
+
+\section{Deux mesures d'intensité : chroma et saturation}
+La \textbf{chroma} Oklab $C$ est une mesure absolue : elle grandit avec la
+distance au gris. Une couleur sombre et une couleur claire de même aspect
+« vif » n'ont pas la même chroma.
+
+La \textbf{saturation} est une mesure relative. Le modèle utilise celle d'un
+espace RGB à très large gamut, ProPhoto RGB (ROMM, ISO 22028-2~\cite{iso22028}) :
+\begin{equation}
+s=\frac{\max(R,G,B)-\min(R,G,B)}{\max(R,G,B)}\in[0,1],
+\end{equation}
+calculée en ProPhoto \emph{linéaire}. Le passage sRGB vers ProPhoto change de
+blanc (D65 vers D50) par la transformation de Bradford~\cite{lam1985}.
+$s=0$ désigne un gris, $s=1$ une couleur sur le bord du gamut ProPhoto.
+
+Pourquoi ProPhoto ? Parce que c'est, parmi les variables testées, celle qui
+explique le mieux le comportement positif de Lightroom (chapitre 3), ce qui
+est cohérent avec un espace de travail interne fondé sur les primaires
+ProPhoto. Ce n'est pas une affirmation sur le code de Lightroom, mais un
+constat de mesure.
+
+\resultat{Trois coordonnées décrivent un pixel pour la vibrance : sa
+saturation ProPhoto $s$, sa clarté Oklab $L$ et sa teinte Oklab $h$. La chroma
+$C$ sert à mesurer l'effet et à repérer les quasi-gris.}
+
+\section{Rotation dans le plan de couleur}
+Faire tourner la teinte d'un angle $\theta$ sans changer la chroma revient à
+appliquer la matrice de rotation plane au couple $(a,b)$ :
+\begin{equation}
+\begin{pmatrix}a'\\ b'\end{pmatrix}=
+\begin{pmatrix}\cos\theta & -\sin\theta\\ \sin\theta & \cos\theta\end{pmatrix}
+\begin{pmatrix}a\\ b\end{pmatrix}.
+\end{equation}
+Cette matrice est orthogonale : elle conserve la norme, donc $C$, et ajoute
+$\theta$ à $h$. Combinée à un gain $g$ sur la chroma et à un gain $k$ sur la
+clarté, la transformation complète d'un pixel s'écrit
+\begin{equation}
+L'=k\,L,\qquad (a',b')^\top = g\,R(\theta)\,(a,b)^\top .
+\label{eq:transformation}
+\end{equation}
+Gain et rotation commutent ($gR=Rg$) et restent indépendants : l'un règle
+l'intensité, l'autre la teinte.
+
+\resultat{Ce n'est pas une matrice unique appliquée à toute l'image : $g$, $k$
+et $\theta$ dépendent du pixel et de la valeur du curseur. La transformation
+globale n'est donc pas linéaire, même si elle l'est localement dans le plan
+$(a,b)$.}

@@ -1,7 +1,8 @@
-#ifndef RAWDECODER_H
-#define RAWDECODER_H
+#ifndef IPR_RAW_RAWDECODER_H
+#define IPR_RAW_RAWDECODER_H
 
 #include "ColorPipeline.h"
+#include "ImageMetadata.h"
 
 #include <QImage>
 #include <QSize>
@@ -9,56 +10,86 @@
 #include <QString>
 #include <QStringList>
 #include <functional>
+#include <memory>
+#include <optional>
 
 namespace RawDecoder {
 
-struct SourceMetadata
+
+// One immutable, pre-DCP buffer for the active image only (not an unbounded cache).
+// LCP and LibRaw WB have already been applied. Auto WB/normalization needs decode;
+// manual temperature/tint edits reuse the camera-space working context.
+struct DcpSource
 {
-    QString format;
-    QString cameraMake;
-    QString cameraModel;
-    QString lensMake;
-    QString lensModel;
-    QString embeddedColorProfile;
-    QString dcpProfile;
-    QString lcpProfile;
-    QDateTime captureDate;
-    QString location;
-    int iso = 0;
-    double focalLengthMm = 0.0;
-    double exposureSeconds = 0.0;
-    int rating = 0;
-    QString colorLabel;
-    bool opticalBlackLevelEstimated = false;
-    bool rawNormalizationApplied = false;
-    unsigned normalizationWhiteLevel = 0;
-    double normalizationBaselineExposureEv = 0.0;
-    QString normalizationProvenance;
-    QString normalizationReason;
-    QStringList availableDcpProfiles;
+    cv::Mat cameraRgb;
+    std::shared_ptr<const CameraProfileEngine::DcpWorkingContext> workingContext;
+    ImageMetadata metadata;
+    std::optional<double> whiteBalanceKelvin;
+    QString defaultProfile;
+    bool automaticWhiteBalance = false;
+    bool lensCorrectionEnabled = true;
+    bool chromaticAberrationEnabled = true;
+    bool preLensSignal = false;       // decoded with Options::retainPreLensSignal
+    bool signedDevelopment = false;   // decoded with Options::signedDevelopment
 };
 
 struct Options
 {
     bool automaticWhiteBalance = true;
     QStringList profileDirectories;
-    // Optional audited per-file manifest, never inferred from camera name alone.
+    // Model/profile/sensor-mode policy; never selected from camera name alone.
     QString normalizationManifest;
     QString dcpProfileOverride;
+    QString lcpProfileOverride;
+    bool automaticLcpSelection = true;
+    bool lensCorrectionEnabled = true;
+    bool chromaticAberrationEnabled = true;
     bool useNormalizationEnvironment = true;
     bool listDcpProfiles = false;
+    bool preferCameraNeutral = false;
+    // Development policy B (values below the black kept, RawDevelopment::Policy::Signed)
+    // for the comparison bench; the application keeps policy A, LibRaw's.
+    bool signedDevelopment = false;
+    // Keep the camera signal before the lens corrections in the DCP context (the
+    // editor's experimental camera-signal denoise): one more camera buffer.
+    bool retainPreLensSignal = false;
+    std::shared_ptr<DcpSource> retainedDcpSource;
+    std::function<bool()> cancellationRequested;
 };
+
+ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString &profile,
+                                        ImageMetadata *metadata, QString *error);
 
 using DecodeFunction = std::function<ColorPipeline::WorkingImage(
     const QString &fileName, const Options &options,
-    SourceMetadata *metadata, QString *error)>;
+    ImageMetadata *metadata, QString *error)>;
+
+using ThumbnailFunction = std::function<QImage(
+    const QString &fileName, const QSize &maximumSize, QString *error)>;
+
+// Extension point for future formats. Register at startup, before folder discovery.
+// No wildcard: an extension is advertised only when a decoder actually exists.
+struct FormatOptions
+{
+    ThumbnailFunction thumbnail;
+    QString decoderId;
+    QString decoderVersion;
+    std::function<QSize(const QString &)> dimensions;
+    // The camera's as-shot white balance in kelvins, read without decoding the pixels.
+    std::function<std::optional<double>(const QString &)> asShotWhiteBalanceKelvin;
+};
 
 bool registerFormatHandler(const QStringList &extensions,
-                           DecodeFunction decode, QString *error = nullptr);
+                           DecodeFunction decode, QString *error = nullptr,
+                           const FormatOptions &format = {});
 QStringList supportedExtensions();
+QString backendVersion();
+QSize sourceDimensions(const QString &fileName);
+// Same value as the decoded image's referenceWhiteBalanceKelvin, from the metadata only.
+std::optional<double> asShotWhiteBalanceKelvin(const QString &fileName);
 ColorPipeline::WorkingImage decode(const QString &fileName,
                                    const Options &options = {},
-                                   SourceMetadata *metadata = nullptr,
+                                   ImageMetadata *metadata = nullptr,
                                    QString *error = nullptr);
 QImage decodeEmbeddedThumbnail(const QString &fileName,
                                const QSize &maximumSize,
@@ -66,4 +97,4 @@ QImage decodeEmbeddedThumbnail(const QString &fileName,
 
 }
 
-#endif
+#endif // IPR_RAW_RAWDECODER_H

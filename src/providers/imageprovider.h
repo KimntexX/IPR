@@ -1,5 +1,5 @@
-#ifndef IMAGEPROVIDER_H
-#define IMAGEPROVIDER_H
+#ifndef IPR_PROVIDERS_IMAGEPROVIDER_H
+#define IPR_PROVIDERS_IMAGEPROVIDER_H
 
 #include <QImage>
 #include <QQuickImageProvider>
@@ -28,4 +28,4 @@ private:
     QUrl m_url;
 };
 
-#endif // IMAGEPROVIDER_H
+#endif // IPR_PROVIDERS_IMAGEPROVIDER_H
