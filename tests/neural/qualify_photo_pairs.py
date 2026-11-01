@@ -33,7 +33,8 @@ def alignment(reference,capture,protocol):
     shape=capture['full_shape']
     source=read_plane(capture,capture['green_proxy'])[:,:,0]
     return translation(reference,source,(shape[1]/source.shape[1],shape[0]/source.shape[0]),
-                       protocol['ecc_floor'],protocol['max_translation_pixels'])
+                       protocol['ecc_floor'],protocol['max_translation_pixels'],
+                       protocol['unsaturated_camera_fraction'])
 
 
 def prepare(work,freeze,captures):
@@ -94,7 +95,7 @@ def prepare(work,freeze,captures):
             masks=[warp(m,shift,mask=True)>0 for m in reference_masks]
             noisy=[read_plane(capture,d) for d in capture['tiles']]
             gains=balanced_gains(capture['camera_neutral'])
-            masks=[m&np.all(n/gains<protocol['unsaturated_sensor_fraction'],axis=2) for m,n in zip(masks,noisy)]
+            masks=[m&np.all(n<protocol['unsaturated_camera_fraction'],axis=2) for m,n in zip(masks,noisy)]
             try:
                 slope,offset=affine_fit(refs,noisy,masks,protocol['fitting_rois'])
             except ValueError as error:

@@ -34,7 +34,7 @@ def blur(image,sigma=4.):
     return cv2.GaussianBlur(image,(0,0),sigma,borderType=cv2.BORDER_REFLECT101)
 
 
-def translation(reference,source,scale_xy,ecc_floor=.97,max_shift=12.):
+def translation(reference,source,scale_xy,ecc_floor=.97,max_shift=12.,camera_limit=.9):
     if reference.shape!=source.shape or reference.ndim!=2 or min(reference.shape)<32 or not np.isfinite(reference).all() or not np.isfinite(source).all():
         raise ValueError('Matching finite green proxies required')
     arrays=[]
@@ -46,10 +46,16 @@ def translation(reference,source,scale_xy,ecc_floor=.97,max_shift=12.):
         if deviation<1e-6:
             return dict(accepted=False,reason='unobservable_flat_registration')
         arrays.append((value-float(value.mean()))/deviation)
+    # RawDevelopment clips the balanced CFA at camera white 1. Exclude
+    # clipped/nonlinear highlights, also after multiplying the exposure.
+    common=((reference<camera_limit)&(source<camera_limit)).astype(np.uint8)
+    common=cv2.erode(common,np.ones((9,9),np.uint8))[8:-8,8:-8]
+    if np.count_nonzero(common)<256:
+        return dict(accepted=False,reason='insufficient_unsaturated_registration_support')
     matrix=np.eye(2,3,dtype=np.float32)
     try:
         score,matrix=cv2.findTransformECC(*arrays,matrix,cv2.MOTION_TRANSLATION,
-            (cv2.TERM_CRITERIA_COUNT|cv2.TERM_CRITERIA_EPS,80,1e-6),None,5)
+            (cv2.TERM_CRITERIA_COUNT|cv2.TERM_CRITERIA_EPS,80,1e-6),common,5)
     except cv2.error:
         return dict(accepted=False,reason='registration_failed')
     shift=matrix[:,2]*np.asarray(scale_xy,dtype=np.float32)
@@ -76,8 +82,7 @@ def reference_tile(frames,shifts,gains,protocol):
     for image,shift,gain in zip(frames,shifts,gains):
         finite_rgb(image)
         aligned.append(warp(image,shift,to_reference=True))
-        sensor=image/gain
-        mask=np.all(sensor<protocol['unsaturated_sensor_fraction'],axis=2)
+        mask=np.all(image<protocol['unsaturated_camera_fraction'],axis=2)
         usable.append(warp(mask,shift,to_reference=True,mask=True)>0)
     stack=np.stack(aligned)
     mean=stack.mean(axis=0,dtype=np.float64).astype(np.float32)
@@ -125,7 +130,7 @@ def tile_quality(noisy,target,valid,gain,sigma,protocol):
     finite_rgb(noisy);finite_rgb(target)
     if valid.shape!=noisy.shape[:2] or valid.dtype!=bool:
         raise ValueError('Matching Boolean validity mask required')
-    valid=valid&np.all(noisy/gain<protocol['unsaturated_sensor_fraction'],axis=2)
+    valid=valid&np.all(noisy<protocol['unsaturated_camera_fraction'],axis=2)
     valid[:16]=False;valid[-16:]=False;valid[:,:16]=False;valid[:,-16:]=False
     count=int(valid.sum())
     fraction=count/float((valid.shape[0]-32)*(valid.shape[1]-32))

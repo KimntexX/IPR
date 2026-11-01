@@ -13,7 +13,7 @@ from run_photo_pilot import capture_selection,checked_output
 
 
 PROTOCOL=dict(reference_lowpass_sigma=4.,reference_stability_dn_fraction=.001,
-    unsaturated_sensor_fraction=.9,minimum_reference_valid_fraction=.5,
+    unsaturated_camera_fraction=.9,minimum_reference_valid_fraction=.5,
     tile_radiometry_floor=.003,tile_radiometry_noise_multiplier=6.,
     minimum_patch_valid_fraction=.9,patch_origins=[24,144,264])
 
@@ -60,6 +60,17 @@ class PhotoPairTests(unittest.TestCase):
         image=np.ones((64,64),np.float32)
         self.assertFalse(translation(image,image,[1,1])['accepted'])
         with self.assertRaises(ValueError):translation(image,image[:32],[1,1])
+
+    def test_post_white_balance_clipping_is_not_hidden_by_gain(self):
+        source=np.full((96,96,3),.99,np.float32)
+        valid,summary=tile_quality(source,source,np.ones((96,96),bool),np.full(3,2.),np.full(3,.01),PROTOCOL)
+        self.assertFalse(summary['accepted'])
+        self.assertFalse(valid.any())
+
+    def test_saturated_registration_has_no_fabricated_solution(self):
+        image=np.ones((64,64),np.float32)
+        image[20:40,20:40]=1.1
+        self.assertFalse(translation(image,image,[1,1])['accepted'])
 
     def test_reference_retains_signed_values_and_rejects_local_light_variation(self):
         base=np.full((96,96,3),-.01,np.float32)

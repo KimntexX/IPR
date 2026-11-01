@@ -4,6 +4,7 @@
 #include "CameraProfileEngine.h"
 #include <QCoreApplication>
 #include <QCommandLineParser>
+#include <QCommandLineOption>
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QElapsedTimer>
@@ -14,7 +15,6 @@
 #include <QJsonObject>
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
-#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>

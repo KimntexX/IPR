@@ -69,7 +69,7 @@ def run(args):
             reference_lowpass_sigma=4.,reference_stability_dn_fraction=.001,
             fitting_rois=[0,2,4,6,8],monitoring_rois=[1,3,5,7],
             minimum_affine_gain=.1,maximum_affine_gain=16.,maximum_affine_offset=.05,
-            unsaturated_sensor_fraction=.9,minimum_reference_valid_fraction=.5,
+            unsaturated_camera_fraction=.9,minimum_reference_valid_fraction=.5,
             minimum_patch_valid_fraction=.9,patch_origins=[24,144,264],
             tile_radiometry_floor=.003,tile_radiometry_noise_multiplier=6.,
             minimum_training_patches=32,minimum_validation_patches=16),
