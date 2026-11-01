@@ -139,9 +139,10 @@ class ScopeTests(unittest.TestCase):
     def test_workflow_gates(self):
         import yaml
         workflow = yaml.load((ROOT / '.github/workflows/ci.yml').read_text(), Loader=yaml.BaseLoader)
-        self.assertEqual(workflow['on']['pull_request']['branches'], ['main', 'dev'])
+        self.assertEqual(workflow['on']['pull_request']['branches'], ['dev'])
+        self.assertNotIn('main', workflow['on']['push']['branches'])
         self.assertNotIn('paths', workflow['on']['pull_request'])
-        self.assertEqual(workflow['jobs']['validation']['if'], 'always()')
+        self.assertEqual(workflow['jobs']['validation']['if'], "always() && github.ref != 'refs/heads/main'")
         self.assertEqual(workflow['jobs']['validation']['needs'], ['scope', 'documents', 'python', 'native'])
         self.assertIn('fromJSON', workflow['jobs']['native']['strategy']['matrix'])
         delivery = yaml.load((ROOT / '.github/workflows/delivery.yml').read_text(), Loader=yaml.BaseLoader)

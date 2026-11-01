@@ -17,6 +17,7 @@ jobs:
       actions: read
     outputs:
       sha: ${{ steps.approval.outputs.sha }}
+      build_sha: ${{ steps.approval.outputs.build_sha }}
       branch: ${{ steps.approval.outputs.branch }}
       label: ${{ steps.approval.outputs.label }}
     steps:
@@ -69,14 +70,14 @@ jobs:
           fi
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: ${{ needs.approval.outputs.sha }}
+          ref: ${{ needs.approval.outputs.build_sha }}
           persist-credentials: false
-      - name: Full build, tests and native package
+      - name: Production build, smoke and native package
         id: package
         shell: bash
         env:
           IPR_NATIVE: ${{ matrix.native }}
-        run: python3 scripts/ci.py --action all --mode system --version "$IPR_BUILD_LABEL" --native "$IPR_NATIVE"
+        run: python3 scripts/ci.py --action all --profile production --mode system --version "$IPR_BUILD_LABEL" --native "$IPR_NATIVE"
       - name: Build Arch package without root
         if: matrix.native == 'arch'
         shell: bash

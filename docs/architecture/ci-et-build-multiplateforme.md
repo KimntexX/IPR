@@ -9,9 +9,48 @@ Le paquet « système » utilise les bibliothèques installées, sans les embarq
 
 | Workflow | Déclenchement | Contenu |
 | --- | --- | --- |
-| `ci.yml` | Push dev/main/patch_*, PR vers dev/main, manuel | Tests ciblés sur les branches de groupe ; validation complète aux portes d'intégration |
-| `delivery.yml` | CI réussie sur dev/main, ou manuel limité à dev/main | Commit testé exact, validation complète, puis archives standalone/système, SHA-256 et mémoire JSON |
-| `linux-distributions.yml` | Manuel sur dev/main après CI réussie du commit exact | Debian 13 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système et tests complets |
+| `ci.yml` | Push dev/patch_*, PR vers dev, manuel hors main | Tests ciblés sur les branches de groupe ; validation complète de dev |
+| `main.yml` | Push main, PR vers main, manuel sur main | Vérification de la promotion et de la CI dev source, compilation production et smoke sur sept configurations, sans tests ni outils d'analyse |
+| `delivery.yml` | CI réussie sur dev/main, ou manuel limité à dev/main | Archives production depuis le SHA dev testé exact ; sur main, deux barrières CI et manifeste de promotion obligatoires |
+| `linux-distributions.yml` | Manuel sur dev/main après les mêmes barrières | Debian 13 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système ; profil production sans relancer les tests |
+| `release.yml` | Manuel sur main uniquement | Construction depuis le dev figé, empreintes et provenance, publication facultative des mêmes octets après approbation |
+
+### Promotion et release — raccordement du 1er novembre 2026
+
+La production de `main` est un instantané filtré, sans parent `dev`. Le
+`release-manifest.json` lie cet instantané au commit source `dev`, à sa liste
+blanche et à son run de CI complet. `delivery_policy.py` recalcule cette
+projection avec `promote_main.verify()` puis exige deux réussites distinctes :
+le run complet du SHA dev figé et la CI production du SHA main exact.
+Un contrôle PR ne remplace pas le contrôle du commit final sur main.
+
+Les archives sont construites depuis ce SHA dev, en profil `production`
+(`BUILD_TESTING=OFF`, `IPR_BUILD_TOOLS=OFF`), même lorsque la livraison est
+déclenchée depuis main. Les tests restent exécutés dans la CI dev ; les
+artefacts production passent un smoke de démarrage. Ce lien prouve l'identité
+des sources retenues, pas la reproductibilité bit à bit entre compilateurs.
+
+Pour une GitHub Release, lancer `release.yml` sur main avec un **tag existant
+sur le SHA main promu**. Ne pas déplacer un tag de validation dev : les
+archives source automatiques GitHub doivent elles aussi pointer vers main,
+sans y réintroduire les tests et analyses. La nomenclature de ce tag de
+release reste à confirmer avant la première publication. Le workflow ne crée
+aucun tag. Une licence `LICENSE` doit exister dans le commit dev testé.
+
+Par défaut, `publish=false` produit uniquement les artefacts vérifiés du run.
+Avec `publish=true`, le job de publication est placé dans l'environnement
+GitHub **`release`**, à configurer par le propriétaire avec approbateurs et
+déploiements limités à main. Lui seul reçoit `contents: write`. Il vérifie de
+nouveau les deux CI, le tag, la matrice complète et chaque empreinte téléchargée,
+crée une release brouillon puis la publie sans reconstruction. Une release
+existante n'est jamais remplacée ; un échec après création laisse un brouillon
+à examiner, sans remplacement automatique des fichiers.
+
+Les sept configurations sont Windows x64 et macOS arm64/x64 dans les deux
+modes, plus Ubuntu 24.04 standalone. Les inventaires et le fichier de
+provenance joint conservent SHA dev/main, runs CI, options production,
+dépendances observées et SHA-256 des livrables. Les tests hors ligne du
+raccordement ne remplacent pas l'exécution réelle des workflows sur GitHub.
 
 Windows x64 : MSVC 2022, Qt 6.8.3, vcpkg épinglé au commit du manifeste.
 Linux standalone : Ubuntu 24.04 x64, Qt 6.8.3 ; pas un binaire universel glibc.

@@ -1,9 +1,9 @@
 name: CI scoped validation
 on:
   push:
-    branches: [main, dev, 'patch_*']
+    branches: [dev, 'patch_*']
   pull_request:
-    branches: [main, dev]
+    branches: [dev]
   workflow_dispatch:
 permissions:
   contents: read
@@ -12,6 +12,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
+    if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-24.04
     outputs:
       native: ${{ steps.scope.outputs.native }}
@@ -88,7 +89,7 @@ jobs:
   validation:
     name: CI validation
     needs: [scope, documents, python, native]
-    if: always()
+    if: always() && github.ref != 'refs/heads/main'
     runs-on: ubuntu-24.04
     steps:
       - name: Reject failed, canceled or unexpectedly skipped checks

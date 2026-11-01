@@ -24,7 +24,8 @@ def run_record():
 
 
 def jobs():
-    return [{'name': f'native ({name})', 'conclusion': 'success'} for name in policy.PLATFORMS]
+    return [{'name': f'native ({name})', 'conclusion': 'success'} for name in policy.PLATFORMS] + [
+        {'name': 'CI validation', 'conclusion': 'success'}]
 
 
 class DeliveryPolicyTests(unittest.TestCase):
@@ -65,8 +66,8 @@ class DeliveryPolicyTests(unittest.TestCase):
                    'GITHUB_SHA': SHA, 'GITHUB_REPOSITORY': REPO, 'GITHUB_EVENT_PATH': str(event)}
             with patch.dict(os.environ, env, clear=True), patch.object(policy.subprocess, 'check_output', side_effect=[SHA, '']), patch.object(policy, 'api', side_effect=[{'workflow_runs': [run_record()]}, {'jobs': jobs()}]):
                 self.assertEqual(policy.verify_publication_environment()['sha'], SHA)
-            for outputs in ([('b' * 40)], [SHA, ' M source.cpp']):
-                with patch.dict(os.environ, env, clear=True), patch.object(policy.subprocess, 'check_output', side_effect=outputs), self.assertRaises(ValueError):
+            for outputs in (['b' * 40, ''], [SHA, ' M source.cpp']):
+                with patch.dict(os.environ, env, clear=True), patch.object(policy.subprocess, 'check_output', side_effect=outputs), patch.object(policy, 'require_ci', return_value=123), self.assertRaises(ValueError):
                     policy.verify_publication_environment()
 
     def test_runtime_dll_search_paths_are_absolute(self):
@@ -133,7 +134,7 @@ class DeliveryPolicyTests(unittest.TestCase):
             job = workflow['jobs']['archives' if filename == 'delivery.yml' else 'distro']
             self.assertEqual(job['needs'], 'approval')
             checkout = next(step for step in job['steps'] if step.get('uses', '').startswith('actions/checkout@'))
-            self.assertEqual(checkout['with']['ref'], '${{ needs.approval.outputs.sha }}')
+            self.assertEqual(checkout['with']['ref'], '${{ needs.approval.outputs.build_sha }}')
         validation = load('ci.yml')
         verification = validation['jobs']['packaging-check']
         self.assertIn('refs/heads/patch_ci_cd', verification['if'])

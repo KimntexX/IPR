@@ -7,7 +7,7 @@ on:
         default: ''
         required: false
   workflow_run:
-    workflows: ['CI scoped validation', 'CI native full tests']
+    workflows: ['CI scoped validation', 'CI native full tests', 'CI main production']
     branches: [dev, main]
     types: [completed]
 permissions:
@@ -26,6 +26,7 @@ jobs:
       actions: read
     outputs:
       sha: ${{ steps.approval.outputs.sha }}
+      build_sha: ${{ steps.approval.outputs.build_sha }}
       branch: ${{ steps.approval.outputs.branch }}
       label: ${{ steps.approval.outputs.label }}
     steps:
@@ -60,7 +61,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: ${{ needs.approval.outputs.sha }}
+          ref: ${{ needs.approval.outputs.build_sha }}
           fetch-depth: 0
           persist-credentials: false
       - uses: ./.github/actions/setup
@@ -74,7 +75,7 @@ jobs:
           if [[ "$RUNNER_OS" == Windows && "$IPR_MODE" == standalone ]]; then
             installer+=(--windows-installer)
           fi
-          python scripts/github_build.py --action all --mode "$IPR_MODE" --version "$IPR_BUILD_LABEL" "${installer[@]}"
+          python scripts/github_build.py --action all --profile production --mode "$IPR_MODE" --version "$IPR_BUILD_LABEL" "${installer[@]}"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: IPR-${{ needs.approval.outputs.branch }}-${{ needs.approval.outputs.sha }}-${{ matrix.os }}-${{ matrix.mode }}
