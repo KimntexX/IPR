@@ -1,7 +1,7 @@
 # Contrôle mémoire et navigation
 
 Décision : [ADR-0015](../decisions/ADR-0015-controle-memoire-et-prechargement.md).
-Mesures et limites : [rapport unique](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-performance-ouverture.md).
+Mesures et limites : [rapport unique](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-performance-ouverture.md).
 
 ```mermaid
 flowchart LR

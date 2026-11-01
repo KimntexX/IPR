@@ -23,4 +23,4 @@ Utiliser `WorkingImage` en RGBA flottant sRGB linéaire. Effectuer le rendu avan
 
 - [Spécification des réglages](../specifications/reglages-photographiques.md)
 - [Cours et guide des constantes](../scholar/README.md)
-- [Matrice de validation](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/matrice-validation.md)
+- [Matrice de validation](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/matrice-validation.md)

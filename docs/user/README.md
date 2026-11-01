@@ -51,7 +51,7 @@ sans procédures fictives. Les mémos de survol prolongé sont réservés à la 
 Une fonction exposée n’est pas une fonction validée sur tous les appareils.
 Les limites et raccordements restent suivis dans le
 [suivi IHM](../architecture/suivi-raccordements-ihm.md) et la
-[matrice de validation](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/matrice-validation.md).
+[matrice de validation](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/matrice-validation.md).
 Mettre à jour le chapitre concerné et l’annexe clavier avec chaque évolution
 utilisateur. Ne pas inventer de raccourcis issus d’autres logiciels.
 

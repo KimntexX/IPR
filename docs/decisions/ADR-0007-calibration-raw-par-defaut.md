@@ -45,4 +45,4 @@ dans le contexte précédent sont historiques, pas les gardes du schéma courant
 
 - [Architecture du moteur RAW/profils](../camera-profile-engine.md).
 - [ADR-0002 — Pipeline linéaire et calibration](ADR-0002-pipeline-lineaire-et-calibration.md).
-- [Rapport évolutif, §39](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md#39-réexports-investigation-de-lactivation-et-étude-hl--15-octobre-2026).
+- [Rapport évolutif, §39](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md#39-réexports-investigation-de-lactivation-et-étude-hl--15-octobre-2026).

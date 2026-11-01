@@ -41,7 +41,7 @@ Le registre de décodeurs existant est un point d'extension, pas encore
 une abstraction complète du développement RAW. Aucun remplacement
 immédiat n'est décidé et aucune instabilité générale de LibRaw n'est
 démontrée par les mesures actuelles. Voir l'[orientation et les critères
-de validation, §24.7](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md).
+de validation, §24.7](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md).
 
 ```text
 Ouverture CR2/CR3/DNG
@@ -68,9 +68,9 @@ ColorPipeline : RGB(A) flottant Rec.2020 linéaire D65
 
 Pour certains CR3 Canon, LibRaw expose un niveau noir nul ou de petits niveaux incohérents alors que les pixels masqués conservent un piédestal. Lorsque les gardes existantes autorisent le repli, `RawDecoder` estime une médiane séparée pour les quatre canaux CFA avant dématriçage. Depuis le correctif du 7 octobre 2026, une zone `LeftOpticalBlack` Canon valide est préférée ; à défaut, `UpperOpticalBlack` est utilisée. Leurs bornes inclusives sont contrôlées contre les dimensions RAW et converties en rectangles de mesure. La gauche est privilégiée car le corpus ISO 3200 montre un léger décalage sur la zone supérieure. Le pas mémoire `raw_pitch` est respecté. Si aucune zone déclarée n'est valide, le repli historique sur les marges est conservé, avec ses limites connues ; les marges du recadrage photographique ne sont pas toutes masquées.
 
-Les métadonnées de noir qui concordent avec la mesure ne sont pas remplacées, quel que soit le format. Les gardes de géométrie, CFA, nombre d'échantillons et niveaux compris entre 2 % et 25 % du maximum restent actives. Sur les six RAW audités, les nouvelles médianes sont 512 pour cinq scènes et 2048 pour 9421 (contre 2052–2053 avec les marges mélangées). Aucun noir fixe par modèle n'est ajouté. La sélection incorrecte de disposition ColorData version 66 dans LibRaw 0.22.2 n'est pas corrigée dans la bibliothèque externe par ce changement : le moteur contourne le noir invalide par mesure, sans réinterpréter les niveaux blancs ni les gains WB. Voir le [rapport évolutif, §14–15](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md).
+Les métadonnées de noir qui concordent avec la mesure ne sont pas remplacées, quel que soit le format. Les gardes de géométrie, CFA, nombre d'échantillons et niveaux compris entre 2 % et 25 % du maximum restent actives. Sur les six RAW audités, les nouvelles médianes sont 512 pour cinq scènes et 2048 pour 9421 (contre 2052–2053 avec les marges mélangées). Aucun noir fixe par modèle n'est ajouté. La sélection incorrecte de disposition ColorData version 66 dans LibRaw 0.22.2 n'est pas corrigée dans la bibliothèque externe par ce changement : le moteur contourne le noir invalide par mesure, sans réinterpréter les niveaux blancs ni les gains WB. Voir le [rapport évolutif, §14–15](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md).
 
-L'estimateur est implémenté séparément dans `RawBlackLevelEstimator` afin de tester ses gardes et le calcul médian sans ouvrir un RAW réel. Les tests couvrent notamment la décision (noir concordant gardé, absent ou déviant remplacé, motif spatial gardé), les autres marques sans zone déclarée, CFA/géométrie invalide, marges avec trop peu d'échantillons et valeurs estimées hors plage. Le corpus local de validation et son manifeste de métadonnées sont décrits dans [`tests/corpus/raw-black-level/`](https://github.com/KimntexX/IPR/tree/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/tests/corpus/raw-black-level). Il ne contient pas de copie des photographies.
+L'estimateur est implémenté séparément dans `RawBlackLevelEstimator` afin de tester ses gardes et le calcul médian sans ouvrir un RAW réel. Les tests couvrent notamment la décision (noir concordant gardé, absent ou déviant remplacé, motif spatial gardé), les autres marques sans zone déclarée, CFA/géométrie invalide, marges avec trop peu d'échantillons et valeurs estimées hors plage. Le corpus local de validation et son manifeste de métadonnées sont décrits dans [`tests/corpus/raw-black-level/`](https://github.com/KimntexX/IPR/tree/2facc24332a265f0d24b7939953aa3aed795b583/tests/corpus/raw-black-level). Il ne contient pas de copie des photographies.
 
 Sur la paire `6V1A1236.CR3` / `6V1A1236.dng`, les valeurs mosaïque décodées par LibRaw sont identiques pixel à pixel. Le DNG porte un motif de noir de 2048 codes, tandis que LibRaw ne signale aucun noir dans le CR3 ; les médianes des marges du CR3 sont de 2053 à 2054. Après application du repli, les moyennes RGB linéaires sans profil passent de `0.1367` à `0.0153` pour le CR3, contre `0.0182` pour le DNG. Les profils DCP/LCP sont les mêmes et restent appliqués. Le DNG indique également `BaselineExposure = +0.28 EV`, ce qui rend son niveau moyen plus élevé d'environ 21 % ; aucune compensation arbitraire de cette valeur n'est appliquée au CR3.
 
@@ -172,7 +172,7 @@ ajoutant la valeur DNG, mais conserve un résidu et des risques de clipping.
 Aucune constante n'a été intégrée : normalisation, WB, CameraCalibration
 et Stage3Gain doivent être réconciliés pour éviter de compter deux fois
 un gain. Adobe DNG Converter reste un témoin local, pas une dépendance
-d'ouverture. Voir le [rapport évolutif, §22](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md#22-ordre-dcp-exposition-de-base-adobe-et-gamut--reprise-du-8-octobre-2026).
+d'ouverture. Voir le [rapport évolutif, §22](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md#22-ordre-dcp-exposition-de-base-adobe-et-gamut--reprise-du-8-octobre-2026).
 
 **Complément de diagnostic, §23 :** les blancs des six DNG concordent avec
 le candidat Canon `specular` des décodages A/B indépendants. Ce blanc,
@@ -184,7 +184,7 @@ diagonale de ce lot ne justifie pas un gain bleu supplémentaire.
 Ces mesures précèdent l'intégration contrôlée décrite ci-dessous ; elles
 ne définissent pas une règle universelle de lecture Canon. Stage3Gain
 n'a pas été mesuré par exécution du SDK.
-Voir le [rapport évolutif, §23](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md).
+Voir le [rapport évolutif, §23](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md).
 
 - La sélection de température de balance des blancs fournie par LibRaw est une estimation à partir de `cam_mul` et de l'inverse de `cam_xyz` (approximation de McCamy), pas la température EXIF native ni une valeur garantie.
 - L'interpolation des ForwardMatrix est un modèle simplifié. La prise en charge de `CameraCalibration`, `AnalogBalance`, `AsShotNeutral`, `ReductionMatrix`, des matrices de profil multiples et de tous les états du pipeline DNG n'est pas complète.
@@ -250,7 +250,7 @@ gardé à un code 16 bits près. WSL 0.21.2 refuse cette calibration, comme
 prévu. Adobe Standard reste sans courbe implicite et conserve un déficit
 important malgré la normalisation : pas d'activation généralisée.
 Le manifeste préparé ne couvre que cinq RAW exacts avec Neutral ; il ne
-sélectionne pas automatiquement ce profil. Voir le [rapport unique, §24](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md)
+sélectionne pas automatiquement ce profil. Voir le [rapport unique, §24](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md)
 pour l'activation, le retour arrière et les preuves reproductibles.
 
 ### Persistance et commandes optiques (9 octobre 2026)
@@ -327,7 +327,7 @@ Voir [ADR-0006](decisions/ADR-0006-restauration-raw-et-retouche-profil.md).
 
 La calibration reste limitée aux cinq couples RAW/DCP exacts et à LibRaw
 0.22.2-Release ; ce panneau ne généralise pas les résultats à Adobe Standard
-ni aux autres images. Voir le [rapport, §25](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md).
+ni aux autres images. Voir le [rapport, §25](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md).
 
 ## LCP : corrections optiques
 
@@ -363,7 +363,7 @@ Pour instrumenter un RAW sans modifier le comportement normal, définir `IPR_LOG
 ## Installation des profils et vérifications visuelles
 
 Pour évaluer la base colorimétrique avant les réglages, suivre le
-[protocole v1](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/protocols/protocole-base-colorimetrique-v1.md) :
+[protocole v1](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/protocols/protocole-base-colorimetrique-v1.md) :
 diagnostic sur six scènes existantes, profils et WB explicités, puis charte
 physique pour une mesure de fidélité. Les nuanciers de prises d'escalade
 permettent une identification, pas une référence Lab garantie de la prise

@@ -58,6 +58,8 @@ def existing_tag_commit(repository, tag):
 def validate_plan(plan):
     if plan.get('schema') != 1:
         raise ValueError('Unsupported release plan')
+    if plan.get('published_configurations') != json.loads(policy.matrix_value(policy.PACKAGE_MATRIX))['include']:
+        raise ValueError('Release plan differs from the selected publication targets')
     repository = os.environ['GITHUB_REPOSITORY']
     if plan.get('repository') != repository:
         raise ValueError('Foreign release plan')
@@ -80,7 +82,8 @@ def make_plan(tag):
     if approval['branch'] != 'main' or policy.git('rev-parse', 'HEAD') != approval['main_sha']:
         raise ValueError('Release planning must check out its exact main commit')
     plan = dict(schema=1, repository=os.environ['GITHUB_REPOSITORY'], tag=tag,
-                version=version_from_tag(tag), created_utc=datetime.now(timezone.utc).isoformat(), **approval)
+                version=version_from_tag(tag), created_utc=datetime.now(timezone.utc).isoformat(),
+                published_configurations=json.loads(policy.matrix_value(policy.PACKAGE_MATRIX))['include'], **approval)
     validate_plan(plan)
     return plan
 
@@ -251,7 +254,8 @@ def main(argv=None):
             parser.error('plan requires --tag and --output')
         plan = make_plan(args.tag)
         write_json(args.output, plan)
-        policy.emit({key: plan[key] for key in ('build_sha', 'main_sha', 'tag', 'version')})
+        policy.emit(dict({key: plan[key] for key in ('build_sha', 'main_sha', 'tag', 'version')},
+                         package_matrix=policy.matrix_value(policy.PACKAGE_MATRIX)))
         return 0
     if not args.plan:
         parser.error('--plan is required')

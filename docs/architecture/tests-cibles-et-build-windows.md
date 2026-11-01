@@ -40,7 +40,7 @@ Il ne réalise pas le déploiement/packaging des DLL pour une distribution auton
 
 ## Politique des tests
 
-Les règles versionnées sont dans [scripts/test-rules.json](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/scripts/test-rules.json).
+Les règles versionnées sont dans [scripts/test-rules.json](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/scripts/test-rules.json).
 Les dix-huit tests synthétiques CTest sont désormais enregistrés sous Windows
 comme sous Linux/WSL. Les sondes photographiques privées restent séparées.
 

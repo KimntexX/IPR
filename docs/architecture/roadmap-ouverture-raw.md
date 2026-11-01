@@ -3,7 +3,7 @@
 **Décision utilisateur :** 15 octobre 2026. Branche de travail : `patch_raw_opening`.
 Objectif : un moteur commun, des données adaptées à chaque image et un coût
 de sélection faible, y compris dans un dossier mélangeant plusieurs boîtiers.
-Les résultats restent dans le [rapport évolutif unique](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md).
+Les résultats restent dans le [rapport évolutif unique](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md).
 
 ## État courant — 17 octobre 2026
 
@@ -49,14 +49,14 @@ travail généralisé est à évaluer avant de figer les conversions de sortie.
 Ce n'est pas une migration déjà décidée : elle exige l'audit des réglages et
 leur revalidation sensible au pipeline. Les jalons HL actuels restent expérimentaux.
 
-L'[étude préalable des espaces, §43](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md#43-étude-préalable-prophoto-et-espaces-de-calcul-comparables--15-octobre-2026)
+L'[étude préalable des espaces, §43](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md#43-étude-préalable-prophoto-et-espaces-de-calcul-comparables--15-octobre-2026)
 identifie Rec.2020 linéaire et ACEScg comme alternatives crédibles. La condition
 utilisateur de bascule automatique faute d'alternative n'est donc pas remplie :
 pas de commit/stash de gel ni de migration dans cette reprise. Proposition :
 comparatif ProPhoto/Rec.2020 avec témoin sRGB étendu à bornages contrôlés,
 avant décision d'espace et généralisation des réglages.
 
-Le comparatif est ensuite autorisé et exécuté au [§44](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md#44-comparatif-exécuté-srgb-étendu-prophoto-et-rec2020--15-octobre-2026) :
+Le comparatif est ensuite autorisé et exécuté au [§44](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md#44-comparatif-exécuté-srgb-étendu-prophoto-et-rec2020--15-octobre-2026) :
 sept scènes, trois espaces, six états, sans changement de production.
 Pas de gain HL neutre par le seul changement de coordonnées ; ProPhoto et
 Rec.2020 restent comparables sur ce corpus. Après cette comparaison,
@@ -131,7 +131,7 @@ d'épaule C1 indépendante. Il ne valide ni une vraie table DCP ni une image ré
 Le raccordement aux tables réelles est maintenant réalisé par profils
 temporaires isolés, sans réimplémenter leur interpolation. Deux campagnes
 ont été exécutées sur sept scènes ; les preuves et conclusions sont au
-[§42 du rapport](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-base-colorimetrique.md#42-essais-réels-des-candidats-hl--15-octobre-2026).
+[§42 du rapport](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-base-colorimetrique.md#42-essais-réels-des-candidats-hl--15-octobre-2026).
 Il reste à contrôler les détails en pleine résolution et à mesurer les
 dérivées aux frontières : la continuité C1 du traitement de table n'est
 **pas** garantie par le socle. Aucun TIFF existant n'est modifié.

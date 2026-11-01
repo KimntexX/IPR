@@ -2,7 +2,7 @@
 
 Inventaire du 26 octobre 2026 : chaque fonction des panneaux de réglage de Lightroom
 (application de bureau), son état dans IPR et ce qui la planifie. « Validé » renvoie à la
-[matrice de validation](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/matrice-validation.md) ; une fonction absente de
+[matrice de validation](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/matrice-validation.md) ; une fonction absente de
 tout document est notée **non planifiée**. Les comparaisons se font en boîte noire, sur
 des exports Lightroom, jamais par rétro-ingénierie.
 
@@ -16,7 +16,7 @@ des exports Lightroom, jamais par rétro-ingénierie.
 | Général | Noir et blanc | Fait : niveaux de gris | Mélangeur N&B absent (voir Couleur) |
 | Général | HDR (édition en haute gamme dynamique) | Absent ; le moteur garde des valeurs > 1 | Non planifié |
 | Lumière | Exposition, contraste, hautes lumières, ombres, blancs, noirs | Fait ; ombres, noirs, hautes lumières et blancs validés | Exposition et contraste : comparaison LR aux valeurs intermédiaires à faire |
-| Lumière | Courbe par points (RVB, rouge, vert, bleu) | Fait, calé sur LR le 28 octobre (`patch_curves`) : spline naturelle sur ProPhoto encodé, par canal | [Analyse](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-courbes.md) ; extrémités déplaçables (noir relevé, blancs coupés) |
+| Lumière | Courbe par points (RVB, rouge, vert, bleu) | Fait, calé sur LR le 28 octobre (`patch_curves`) : spline naturelle sur ProPhoto encodé, par canal | [Analyse](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-courbes.md) ; extrémités déplaçables (noir relevé, blancs coupés) |
 | Lumière | Courbe paramétrique (hautes lumières, clairs, sombres, ombres, séparateurs) | Absent | Non planifié |
 | Lumière | Outil de réglage ciblé sur l'image | Absent | Non planifié |
 | Couleur | Balance des blancs : température, nuance, telle quelle, automatique | Fait, validé (avant la base Rec.2020 : revalidation courte) | — |
@@ -24,7 +24,7 @@ des exports Lightroom, jamais par rétro-ingénierie.
 | Couleur | Vibrance, saturation | Fait, validé le 22 octobre | — |
 | Couleur | Mélangeur TSL 8 bandes | Fait, calé sur LR | Revue du magenta |
 | Couleur | Mélangeur noir et blanc | Absent | Non planifié |
-| Couleur | Couleur du point | Fait (`patch_point_color`) : moteur calé sur LR (TSV ProPhoto), pipette, pastilles, curseurs et visualisation des plages | [Analyse](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/analyses/analyse-couleur-point.md) : variance et trois sources à affiner |
+| Couleur | Couleur du point | Fait (`patch_point_color`) : moteur calé sur LR (TSV ProPhoto), pipette, pastilles, curseurs et visualisation des plages | [Analyse](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-couleur-point.md) : variance et trois sources à affiner |
 | Couleur | Color grading (3 zones, global, fusion, balance, luminance) | Fait, validé le 26 octobre | — |
 | Effets | Texture, clarté, correction du voile | Fait, validé le 25 octobre (réserves) | — |
 | Effets | Vignettage après recadrage (quantité, milieu, rondeur, contour progressif, hautes lumières, style) | Absent | Non planifié ; dépend du recadrage |

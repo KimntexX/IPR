@@ -10,7 +10,7 @@ Le paquet « système » utilise les bibliothèques installées, sans les embarq
 | Workflow | Déclenchement | Contenu |
 | --- | --- | --- |
 | `ci.yml` | Push dev/patch_*, PR vers dev, manuel hors main | Tests ciblés sur les branches de groupe ; validation complète de dev |
-| `main.yml` | Push main, PR vers main, manuel sur main | Vérification de la promotion et de la CI dev source, compilation production et smoke sur sept configurations, sans tests ni outils d'analyse |
+| `main.yml` | Push main, PR vers main, manuel sur main | Vérification de la promotion et de la CI dev source, compilation production et smoke selon la liste versionnée, sans tests ni outils d'analyse |
 | `delivery.yml` | CI réussie sur dev/main, ou manuel limité à dev/main | Archives production depuis le SHA dev testé exact ; sur main, deux barrières CI et manifeste de promotion obligatoires |
 | `linux-distributions.yml` | Manuel sur dev/main après les mêmes barrières | Debian 13 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système ; profil production sans relancer les tests |
 | `release.yml` | Manuel sur main uniquement | Construction depuis le dev figé, empreintes et provenance, publication facultative des mêmes octets après approbation |
@@ -49,8 +49,27 @@ crée une release brouillon puis la publie sans reconstruction. Une release
 existante n'est jamais remplacée ; un échec après création laisse un brouillon
 à examiner, sans remplacement automatique des fichiers.
 
-Les sept configurations sont Windows x64 et macOS arm64/x64 dans les deux
-modes, plus Ubuntu 24.04 standalone. Les inventaires et le fichier de
+Les configurations de CI production et celles publiées sont définies dans
+`packaging/delivery-targets.json`, respectivement `production_ci` et
+`published`. Une configuration publiée doit appartenir à la CI production.
+Les workflows main, release, archives automatiques et contrôle de packaging
+consomment cette politique, sans matrice parallèle codée en dur. Les tests
+natifs complets de dev restent sur les quatre plateformes.
+
+Préparation **conditionnelle** du report macOS pour cette release, suivie
+par [l'issue #20](https://github.com/KimntexX/IPR/issues/20), confirmée par
+l'utilisateur : aucun paquet macOS publié si le run macOS n'est pas vert.
+`published` contient alors trois configurations : Windows système, Windows
+standalone (ZIP et installateur), Ubuntu standalone. `production_ci` conserve
+en plus macOS arm64/Intel système (cinq configurations) ; les tests natifs dev
+gardent les quatre OS. À intégrer uniquement après confirmation de la
+condition d'échec et du report, sans annoncer macOS comme livré.
+
+Pour rétablir les paquets macOS après qualification, ajouter les entrées
+souhaitées à `published` et, si absentes, à `production_ci`, tester le nouveau dev puis refaire une
+promotion. Aucun drapeau legacy, aucune tolérance aux artefacts manquants :
+la release exige exactement tous les paquets déclarés, ni plus ni moins, et
+le plan de release enregistre cette sélection. Les inventaires et le fichier de
 provenance joint conservent SHA dev/main, runs CI, options production,
 dépendances observées et SHA-256 des livrables. Les tests hors ligne du
 raccordement ne remplacent pas l'exécution réelle des workflows sur GitHub.
@@ -252,7 +271,7 @@ effectuent bien la validation complète avant intégration, même pour des docs.
 Validation locale du premier patch de sélection : compilation Windows réussie, **18 CTest et
 163 tests Python réussis**, plus vérification réelle d'une compilation/exécution
 ciblée limitée à `toneRecoveryTests`. Le code testé est `b434628` ; la
-[mémoire JSON](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/raw/validation-ci-scope-v001-20261011T193330Z.json)
+[mémoire JSON](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/raw/validation-ci-scope-v001-20261011T193330Z.json)
 consigne les versions et limites. Ce premier patch a ensuite été publié et sa
 [CI GitHub a réussi](https://github.com/KimntexX/IPR/actions/runs/38219071933).
 La correction de packaging décrite ci-dessous nécessite une nouvelle validation.
@@ -327,7 +346,7 @@ Validation locale du correctif : **18 CTest et 173 tests Python réussis**,
 Windows système et standalone déployés puis démarrés hors dépôt, sans créer
 d'archive téléchargeable. Les dix tests de régression livraison contrôlent
 notamment branches/SHA/CI, chemins DLL absolus et refus des dépendances macOS
-externes. La [mémoire JSON](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/raw/livraison/audit-packaging-v001-20261012T084907Z.json)
+externes. La [mémoire JSON](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/raw/livraison/audit-packaging-v001-20261012T084907Z.json)
 consigne les limites. Source `9502dc8`, pas de changement du rendu photographique.
 Les jobs GitHub seront lancés par le push ; à la demande de l'utilisateur,
 leurs résultats ne sont pas attendus avant le compte rendu de cette action.
@@ -355,7 +374,7 @@ Les fichiers de licences génériques ne constituent pas un audit juridique.
 
 ## Validation locale du 11 octobre 2026
 
-Mémoire : [validation-ci-cd-20261011.json](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/raw/validation-ci-cd-20261011.json).
+Mémoire : [validation-ci-cd-20261011.json](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/raw/validation-ci-cd-20261011.json).
 Windows MSVC/Qt 6.11.2 : 18 CTest réussis, 113 tests Python réussis ; archives
 standalone et système produites, smoke tests réussis. Linux Ubuntu 24.04 sous
 WSL/Qt 6.4.2 : mêmes 18 CTest et 113 tests Python réussis ; archive système et

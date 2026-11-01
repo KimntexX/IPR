@@ -64,6 +64,6 @@ qu'un intermédiaire : le JSON de mesures est la seule mémoire canonique.
 - Code : `src/tools/TestRecipes.*`, `src/tools/render_server.cpp`,
   `src/tools/generate_test_images.cpp`, `tests/analysis/render.py`
 - Tests : `testImageGeneratorTests`, `tests/test_analyse_groupes.py`
-- Guides : [analyseurs](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/tools/analyseurs-groupes.md),
-  [générateur](https://github.com/KimntexX/IPR/blob/14b8ea6c2bb4cb694fc9b5eb249df48cb86cc312/docs/validation/tools/generateur-images-tests.md)
+- Guides : [analyseurs](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/tools/analyseurs-groupes.md),
+  [générateur](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/tools/generateur-images-tests.md)
 - Règle : section « Génération des images de tests » d'`AGENTS.md`
