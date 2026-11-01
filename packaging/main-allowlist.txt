@@ -42,6 +42,7 @@ scripts/delivery_policy.py
 scripts/github_build.py
 scripts/package-windows.ps1
 scripts/promote_main.py
+scripts/release_github.py
 scripts/smoke-windows-standalone.ps1
 scripts/smoke_package.py
 scripts/windows_installer.py

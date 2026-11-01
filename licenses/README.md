@@ -16,10 +16,13 @@ licence notices supplied with the exact binaries distributed in a release.
 
 ## Current project licensing status
 
-No top-level `LICENSE` has been selected or added by this inventory. In
-particular, adding the LGPL text here does **not** place IPR itself under the
-LGPL. A project-level licence should be selected by the copyright holders and
-added explicitly before publishing source or binaries.
+IPR's own code is licensed under the **GNU Affero General Public License,
+version 3 or later** (AGPL-3.0-or-later), chosen by the copyright holder on
+1 November 2026; the text is the top-level [`LICENSE`](../LICENSE), installed
+as `IPR-AGPL-3.0.txt` beside these notices. The dependencies keep their own
+licences: Qt under its LGPL-3.0 option, OpenCV under Apache-2.0 (compatible
+with GPLv3-family licences), and LibRaw under its **LGPL-2.1-or-later** option
+— its CDDL-1.0 option is not compatible with the AGPL and is not used.
 
 The DNG SDK is not currently integrated into the production build. A future
 integration must remain an explicit, optional dependency and preserve Adobe's
