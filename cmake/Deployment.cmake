@@ -4,11 +4,16 @@ if(IPR_DEPLOY_MODE STREQUAL "standalone")
         qt_generate_deploy_qml_app_script(TARGET appIPR OUTPUT_SCRIPT ipr_deploy
             DEPLOY_TOOL_OPTIONS --include-plugins qoffscreen)
     elseif(NOT APPLE)
+        # The generator ships with the development archives only.
+        set(ipr_deploy_tools "")
+        if(IPR_BUILD_TOOLS)
+            set(ipr_deploy_tools "ADDITIONAL_EXECUTABLES \"${CMAKE_INSTALL_BINDIR}/$<TARGET_FILE_NAME:iprGenerateTests>\"")
+        endif()
         qt_generate_deploy_script(TARGET appIPR OUTPUT_SCRIPT ipr_deploy CONTENT "
             qt_deploy_qml_imports(TARGET appIPR PLUGINS_FOUND ipr_qml_plugins)
             qt_deploy_runtime_dependencies(
                 EXECUTABLE \"$<TARGET_FILE:appIPR>\"
-                ADDITIONAL_EXECUTABLES \"${CMAKE_INSTALL_BINDIR}/$<TARGET_FILE_NAME:iprGenerateTests>\"
+                ${ipr_deploy_tools}
                 ADDITIONAL_MODULES \${ipr_qml_plugins}
                 GENERATE_QT_CONF
                 PRE_EXCLUDE_REGEXES \"^ld-linux\" \"^lib(c|m|dl|rt|pthread|resolv)\\.so\"
@@ -18,8 +23,8 @@ if(IPR_DEPLOY_MODE STREQUAL "standalone")
     if(NOT APPLE)
         install(SCRIPT "${ipr_deploy}")
     endif()
-    # macOS is deployed once by scripts/ci.py, with the generator and QML
-    # sources included, then its bundle is checked and signed.
+    # macOS is deployed once by scripts/ci.py, with the generator (when built)
+    # and the QML sources included, then its bundle is checked and signed.
 endif()
 
 set(CPACK_PACKAGE_NAME "ipr")
