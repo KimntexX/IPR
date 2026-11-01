@@ -76,7 +76,7 @@ d'audit MSVC `/W4 /permissive- /Zc:__cplusplus` de tout le dépôt
 | C-10 | E | `src/core/ColorPipeline.cpp:97-114, 377, 171, 181` | Conversion de sortie : tampon 16 bits intermédiaire puis copie dans la `QImage`, et trois passes `checkRange` sur la même image. | Confirmé par lecture |
 | C-11 | N | `src/editor/imageeditor.cpp:1838, 1853, 1887, 2125` | `ImageEditor` porte encore du traitement d'image (rendu des tons, flou, séparation/fusion des canaux, boucle du proxy) : écart connu à la cible « cadenceur ». | Connu ; refonte prévue |
 | C-12 | N | `src/core/WorkingColorSpace.h:194` | `WorkingColor::transform` est une boucle par pixel en ligne dans l'en-tête ; la règle la place dans un `.cpp`. | Confirmé |
-| C-13 | N | `src/core/Sidecar.cpp:47, 59, 73-82, 104-121` | Lecture des versions 1 à 8 avec migration des bandes du mélangeur : chemin de compatibilité au sens de la règle « sans legacy ». Il protège les retouches déjà enregistrées : **à arbitrer par l'utilisateur**. | À arbitrer |
+| C-13 | N | `src/core/Sidecar.cpp:47, 59, 73-82, 104-121` | Lecture des versions 1 à 8 avec migration des bandes du mélangeur : chemin de compatibilité au sens de la règle « sans legacy ». Il protège les retouches déjà enregistrées. **Décision de l'utilisateur (1er novembre 2026) : conservé** ; la conversion des fichiers utilisateur n'est pas du legacy, une rupture ferait perdre l'historique des retouches. | Écarté (décision) |
 | C-14 | N | `src/core/Histogram.cpp:26`, `src/core/ColorAdjustments.cpp:8`, `src/core/ToneRecovery.cpp:196` | Fonctions publiques qui supposent un format (4 octets par pixel, `CV_32FC3`) sans le vérifier, contrairement aux autres modules. | Confirmé |
 | C-15 | D | `src/core/ColorMixer.cpp:11, 24, 69`, `src/core/Vibrance.cpp:11, 19, 84` | `bracket`, l'interpolation entre valeurs mesurées (`response`) et `DegreesPerRadian` sont dupliqués entre le mélangeur et la vibrance. | Confirmé |
 | C-16 | D | `src/core/ColorPipeline.cpp:232, 252, 256` | Matrice de Bradford écrite deux fois ; matrice sRGB→XYZ réécrite au lieu de `WorkingColor::srgbToXyz()`. | Confirmé |
@@ -95,7 +95,7 @@ d'audit MSVC `/W4 /permissive- /Zc:__cplusplus` de tout le dépôt
 
 **Priorités proposées** : C-01, C-03, C-04, C-05 et C-06 d'abord (comportement
 visible ou robustesse), puis C-07 à C-10 après mesure, puis les redondances.
-C-13 attend l'arbitrage de l'utilisateur. C-11 relève de la refonte
+C-13 est tranché : conservé. C-11 relève de la refonte
 « cadenceur » déjà prévue.
 
 ### Constats — Codex
