@@ -135,4 +135,6 @@ Masques (B2), Retouche (B3), puis Assembler (B7 à B9 : empilement, panorama
 horizontal et vertical, fusion HDR), qui crée une nouvelle image en tâche de
 fond. Un onglet n'apparaît qu'avec la livraison de son panneau. Les curseurs et
 contrôles des panneaux reprennent les composants existants de l'interface.
+L'histogramme reste dans l'onglet Réglages seulement ; les sections de cet
+onglet se replient, avec une flèche plus grande qu'aujourd'hui.
 Raccordement QML sur `patch_ui`.
