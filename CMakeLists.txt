@@ -33,6 +33,7 @@ set(IPR_INCLUDE_DIRECTORIES
     "${IPR_SOURCE_ROOT}/profiles"
     "${IPR_SOURCE_ROOT}/providers"
     "${IPR_SOURCE_ROOT}/raw"
+    "${IPR_SOURCE_ROOT}/tasks"
 )
 
 set(IPR_ENGINE_SOURCES
@@ -46,6 +47,8 @@ set(IPR_ENGINE_SOURCES
     src/cache/ImageCacheController.cpp
     src/cache/RenderStageCache.h
     src/cache/RenderStageCache.cpp
+    src/tasks/TaskRunner.h
+    src/tasks/TaskRunner.cpp
     src/core/ColorPipeline.h
     src/core/ImageMetadata.h
     src/core/ImageImporter.h
@@ -364,6 +367,8 @@ if(BUILD_TESTING)
     target_sources(parallelJobsTests PRIVATE src/tools/ParallelJobs.cpp)
     target_include_directories(parallelJobsTests PRIVATE src/tools)
     set_tests_properties(parallelJobsTests PROPERTIES LABELS "unit;generator;thread" TIMEOUT 20)
+    ipr_add_test(taskRunnerTests tests/task_runner_test.cpp)
+    set_tests_properties(taskRunnerTests PROPERTIES LABELS "unit;thread" TIMEOUT 30)
     set_tests_properties(rawInputTests rawDevelopmentTests PROPERTIES LABELS "unit;raw")
     set_tests_properties(toneCurveTests PROPERTIES LABELS "unit;pipeline;curves")
     set_tests_properties(pointColorTests PROPERTIES LABELS "unit;pipeline;colour")

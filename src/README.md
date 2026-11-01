@@ -10,5 +10,6 @@
 | `providers/` | Providers d'images et de vignettes pour Qt Quick. |
 | `qml/` | Interface Qt Quick, déjà découpée en composants réutilisables. |
 | `raw/` | Adaptateurs RAW, contrat `CameraSignal`, caractérisations et estimation du noir CFA. |
+| `tasks/` | Exécuteur commun des tâches longues : priorités, progression, annulation coopérative, révision par canal. |
 
 `iprEngine` est la bibliothèque interne construite par CMake à partir des domaines C++. L’application, les tests et les sondes y sont liés afin de partager une définition unique des sources et des dépendances.
