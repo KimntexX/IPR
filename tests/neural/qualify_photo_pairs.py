@@ -60,9 +60,13 @@ def prepare(work,freeze,captures):
         if digest(Path(capture['descriptor']).parent/capture['pixels'])!=capture['pixels_sha256']:
             raise ValueError('Changed camera pixels')
     all_signals=[];all_targets=[];all_masks=[];all_sigmas=[]
-    for scene in ('indoor','vegetation'):
+    scenes=declared_scenes(freeze,captures)
+    for scene in scenes:
         scene_frames=[c for c in captures if c['scene']==scene]
         reference_frames=[c for c in scene_frames if c['iso']==100]
+        if not reference_frames:
+            proof['references'].append(dict(scene=scene,accepted=False,reason='no_reference_frames'))
+            continue
         base=reference_frames[0]
         green=read_plane(base,base['green_proxy'])[:,:,0]
         accepted=[];shifts=[]
@@ -145,3 +149,17 @@ def prepare(work,freeze,captures):
         json.dump(proof,handle,indent=2,allow_nan=False)
     print('PAIR STATUS '+proof['status']+' '+str(counts),flush=True)
     return proof
+
+
+def declared_scenes(freeze,captures):
+    """Use frozen composition identities, never infer a split from measured quality."""
+    roles=freeze['scene_partition']
+    if any(role not in ('train','validation','test',None) for role in roles.values()):
+        raise ValueError('Unknown neural partition')
+    scenes=[scene for scene,role in roles.items() if role is not None]
+    if any(c['scene'] not in scenes for c in captures):
+        raise ValueError('Capture has no frozen composition partition')
+    hashes=[c['source_sha256'] for c in captures]
+    if len(hashes)!=len(set(hashes)):
+        raise ValueError('Duplicate capture or cross-partition source leakage')
+    return scenes
