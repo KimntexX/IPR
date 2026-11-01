@@ -117,6 +117,31 @@ La procédure détaillée est dans
 [Gestion des branches Git](docs/architecture/gestion-branches-git.md).
 Les travaux sous `docs/` suivent également les règles de [docs/AGENTS.md](docs/AGENTS.md).
 
+## Branche main et releases — règle du 1er novembre 2026
+
+- `main` porte seulement le code de production et la documentation. Les tests,
+  bancs, outils d'analyse (`src/tools`), mesures JSON, analyses, protocoles et
+  rapports restent sur `dev`. La frontière est la liste blanche versionnée
+  [packaging/main-allowlist.txt](packaging/main-allowlist.txt) : tout nouveau
+  fichier y est classé sur `dev` avant de pouvoir être promu.
+- `dev` n'est pas fusionnée dans `main`. Un commit de `dev` testé (CI complète
+  verte) est promu par instantané : `scripts/promote_main.py` construit, sur la
+  branche durable `main_promotion` issue de `main`, un commit contenant ses
+  chemins `[main]` et `release-manifest.json` (commit source, empreintes
+  SHA-256), sans `dev` comme parent ; une PR `main_promotion` → `main` le
+  publie. Exception approuvée à la fusion directe : l'historique de `main` reste
+  léger, celui de `dev` intact. Ne jamais corriger à la main un fichier promu :
+  corriger sur `dev`, requalifier, promouvoir de nouveau.
+- La release est construite depuis le commit de `dev` testé, en profil
+  production (`scripts/ci.py --profile production` : tests et outils OFF), et
+  ce même artefact est publié. Deux barrières : CI de production verte sur le
+  commit exact de `main`, et CI complète verte du commit de `dev` lié.
+- Les liens de la documentation vers des chemins restés sur `dev` sont dirigés
+  vers le commit source ; `docs/release/validation-summary.md` résume la
+  validation pour `main`.
+- Promotion, PR, fusion, tag et release restent soumis à l'autorisation de
+  l'utilisateur.
+
 ## Chantier IHM isolé — règle du 18 octobre 2026
 
 Complément du 20 octobre 2026 : à la demande explicite de l’utilisateur,
