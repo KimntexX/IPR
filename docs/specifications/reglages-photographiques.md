@@ -47,7 +47,7 @@ couleurs, Color grading, Effets, Réduction du bruit, Netteté et Export.
   sont réservés à la barre verticale. Les libellés longs se replient ou
   s'abrègent pour rester lisibles à la largeur minimale de l'IHM.
 
-Les protocoles et preuves sont référencés depuis [la matrice de validation](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/matrice-validation.md). Les fondements et exemples sont disponibles dans [Scholar](../scholar/README.md).
+Les protocoles et preuves sont référencés depuis [la matrice de validation](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/matrice-validation.md). Les fondements et exemples sont disponibles dans [Scholar](../scholar/README.md).
 
 ## Développement RAW et base colorimétrique
 
@@ -70,7 +70,7 @@ Sans données LCP correspondantes, le statut indique la non-application.
 Les anciens sidecars v1–v5 migrent avec les deux corrections activées pour
 préserver la politique antérieure. Voir [ADR-0006](../decisions/ADR-0006-restauration-raw-et-retouche-profil.md).
 Voir le [contrat des profils](../camera-profile-engine.md) et le
-[rapport unique](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/analyses/analyse-base-colorimetrique.md).
+[rapport unique](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/analyses/analyse-base-colorimetrique.md).
 
 ### Réduction de bruit : correctif et revalidation
 
@@ -83,7 +83,7 @@ Le rendu non nul change mais les valeurs de réglage du sidecar
 ne sont pas modifiées par ce correctif. Une image ouverte avec son ancien sidecar utilise le
 nouveau moteur : ses anciens TIFF ne constituent pas une validation actuelle.
 Voir [modèle](../architecture/denoising-sharpening.md) et
-[protocole v2](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/protocols/protocole-bruit-v2.md).
+[protocole v2](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/protocols/protocole-bruit-v2.md).
 
 ## Préférences d’interface, distinctes du développement
 
@@ -124,7 +124,7 @@ Teinte et saturation conservent Y en linéaire ; la luminance applique un gain
 sont provisoires, à calibrer sur plusieurs scènes. Les couleurs à canal négatif
 restent intactes dans ce module. Le gamut mapping de sortie peut modifier Y.
 
-Les défauts relevés dans [le corpus étendu](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/analyses/analyse-color-mixer-corpus-etendu-2026-10-04.md)
+Les défauts relevés dans [le corpus étendu](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/analyses/analyse-color-mixer-corpus-etendu-2026-10-04.md)
 ont motivé ces corrections ; ce corpus historique ne valide pas le nouveau
 moteur. Voir [ADR-0005](../decisions/ADR-0005-melangeur-huit-bandes-luminance-bornee.md)
 et le protocole pour les nouveaux exports. Le rendu RAW neutre reste inchangé.

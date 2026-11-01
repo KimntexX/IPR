@@ -34,9 +34,15 @@ def write_json(path, value):
         stream.write('\n')
 
 
+def version_from_tag(tag):
+    """Parse a main release label without changing the GitHub tag identity."""
+    if not re.fullmatch(r'(?:release-)?v[0-9][A-Za-z0-9.+-]*', tag):
+        raise ValueError('An existing version tag beginning with v or release-v is required')
+    return release_version(tag.removeprefix('release-'))[0]
+
+
 def existing_tag_commit(repository, tag):
-    if not re.fullmatch(r'v[0-9][A-Za-z0-9.+-]*', tag):
-        raise ValueError('An existing version tag beginning with v is required')
+    version_from_tag(tag)
     obj = policy.api(f'repos/{repository}/git/ref/tags/{quote(tag, safe="")}')['object']
     for _ in range(8):
         if not policy.SHA.fullmatch(obj.get('sha', '')):
@@ -60,7 +66,7 @@ def validate_plan(plan):
         raise ValueError('Release plan differs from its live two-gate attestation')
     if existing_tag_commit(repository, plan['tag']) != plan['main_sha']:
         raise ValueError('Release tag must already point to the exact promoted main commit')
-    if release_version(plan['tag'])[0] != plan['version']:
+    if version_from_tag(plan['tag']) != plan['version']:
         raise ValueError('Release tag and version disagree')
     if not policy.git('show', f'{plan["build_sha"]}:LICENSE'):
         raise ValueError('A project LICENSE must be present on the tested source')
@@ -74,7 +80,7 @@ def make_plan(tag):
     if approval['branch'] != 'main' or policy.git('rev-parse', 'HEAD') != approval['main_sha']:
         raise ValueError('Release planning must check out its exact main commit')
     plan = dict(schema=1, repository=os.environ['GITHUB_REPOSITORY'], tag=tag,
-                version=release_version(tag)[0], created_utc=datetime.now(timezone.utc).isoformat(), **approval)
+                version=version_from_tag(tag), created_utc=datetime.now(timezone.utc).isoformat(), **approval)
     validate_plan(plan)
     return plan
 

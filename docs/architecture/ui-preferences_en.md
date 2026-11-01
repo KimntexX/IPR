@@ -78,7 +78,7 @@ The application never restores a minimized state. Maximizing or going full-scree
 
 `uiPreferencesTests` covers initial values, bounds, colors, INI roundtrip, unknown keys, unchanged future version file, off-screen geometry, and preservation of normal dimensions. `uiPreferencesQmlTests` verifies sections, selections, format/quality, absence of photo settings modification, and connection of the main window to a temporary INI.
 
-The [matrix](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/matrice-validation.md) distinguishes these automated tests from actual Windows/DPI/multi-screen recipe. Tests never read or write user personal preferences.
+The [matrix](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/matrice-validation.md) distinguishes these automated tests from actual Windows/DPI/multi-screen recipe. Tests never read or write user personal preferences.
 
 ## Sources
 

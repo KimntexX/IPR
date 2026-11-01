@@ -56,7 +56,7 @@ Voir l'[architecture détaillée](../architecture/gestion-couleurs-affichage.md)
 et la [roadmap RAW](../architecture/roadmap-ouverture-raw.md).
 
 **Complément d'étude du 15 octobre, sans modification de la décision :**
-le [comparatif documentaire, §43](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/analyses/analyse-base-colorimetrique.md#43-étude-préalable-prophoto-et-espaces-de-calcul-comparables--15-octobre-2026)
+le [comparatif documentaire, §43](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/analyses/analyse-base-colorimetrique.md#43-étude-préalable-prophoto-et-espaces-de-calcul-comparables--15-octobre-2026)
 identifie Rec.2020 linéaire et ACEScg comme alternatives à évaluer. ProPhoto
 n'est pas adopté par défaut et la migration automatique conditionnelle n'est
 pas déclenchée. La séparation travail/affichage/export reste la directive acceptée.

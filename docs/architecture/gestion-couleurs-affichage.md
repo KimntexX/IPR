@@ -2,7 +2,7 @@
 
 **Directive du 15 octobre 2026 :** [ADR-0008](../decisions/ADR-0008-separation-travail-affichage-export.md).
 Affichage ICC écran encore cible ; master Rec.2020 porté localement. Ce document ne remplace pas les résultats
-du [rapport évolutif RAW/profils](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/analyses/analyse-base-colorimetrique.md).
+du [rapport évolutif RAW/profils](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/analyses/analyse-base-colorimetrique.md).
 
 ## État réel et séparation cible
 
@@ -17,13 +17,13 @@ L'affichage ICC par écran n'est pas déclaré fonctionnel par cette directive.
 coordonnées sRGB flottantes ne borne pas, à elle seule, le master RAW.
 `RawDecoder` conserve des valeurs étendues et `toSrgb()` mappe la sortie
 dérivée. Le bornage des imports entiers QImage, des tables/courbes DCP et
-des différents opérateurs doit être distingué. L'[étude comparative, §43](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/analyses/analyse-base-colorimetrique.md#43-étude-préalable-prophoto-et-espaces-de-calcul-comparables--15-octobre-2026)
+des différents opérateurs doit être distingué. L'[étude comparative, §43](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/analyses/analyse-base-colorimetrique.md#43-étude-préalable-prophoto-et-espaces-de-calcul-comparables--15-octobre-2026)
 retient **Rec.2020 linéaire** comme alternative prioritaire à ProPhoto et
 **ACEScg** comme piste secondaire ; aucune migration ni supériorité mesurée
 n'est actée. Le choix d'espace et la politique de bornage doivent être évalués
 séparément. Le reste de ce document décrit l'option ProPhoto, pas son adoption.
 
-Le [comparatif réel du §44](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/analyses/analyse-base-colorimetrique.md#44-comparatif-exécuté-srgb-étendu-prophoto-et-rec2020--15-octobre-2026)
+Le [comparatif réel du §44](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/analyses/analyse-base-colorimetrique.md#44-comparatif-exécuté-srgb-étendu-prophoto-et-rec2020--15-octobre-2026)
 est désormais disponible : sept scènes et 126 variantes. Les opérations
 invariantes concordent ; ProPhoto et Rec.2020 contiennent tous les échantillons
 de départ du corpus dans leur cube nominal. Les différences d'opérateurs RGB

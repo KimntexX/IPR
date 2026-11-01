@@ -120,7 +120,7 @@ rafraîchissement du rendu afin de ne pas effacer le cadrage transitoirement.
 
 ## Validation
 
-La cible [imageViewportQmlTests](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/tests/image_viewport_qml_test.cpp)
+La cible [imageViewportQmlTests](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/tests/image_viewport_qml_test.cpp)
 exerce des événements réels de clic, glisser, molette et clavier sur une
 image synthétique. Elle vérifie également les boutons, bornes de zoom et
 de déplacement, les marges vides, le redimensionnement, la conservation sur

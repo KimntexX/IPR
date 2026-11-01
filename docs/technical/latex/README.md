@@ -36,7 +36,7 @@ forme 12 pt / interligne 1,5. Le PDF historique était nommé
 pas un document téléchargeable du dépôt.
 Le nom habituel est régénéré avec `./build.ps1` après fermeture de son aperçu. Les données et
 graphiques reproductibles sont référencés depuis
-[metrics](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/metrics/README.md), sans les confondre avec des
+[metrics](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/metrics/README.md), sans les confondre avec des
 benchmarks du build actuel.
 
 Les chapitres « Recadrage et effets géométriques », « Masques et retouche locale » et « Intégration de l'intelligence artificielle » sont délibérément vides : ils ne doivent être complétés qu'après validation de leur conception. Les rapports d'expérimentation datés sont organisés dans `docs/validation` et `docs/reports` ; la migration est consignée dans `docs/reports/migration-registry.md`.

@@ -33,9 +33,12 @@ des sources retenues, pas la reproductibilité bit à bit entre compilateurs.
 Pour une GitHub Release, lancer `release.yml` sur main avec un **tag existant
 sur le SHA main promu**. Ne pas déplacer un tag de validation dev : les
 archives source automatiques GitHub doivent elles aussi pointer vers main,
-sans y réintroduire les tests et analyses. La nomenclature de ce tag de
-release reste à confirmer avant la première publication. Le workflow ne crée
-aucun tag. Une licence `LICENSE` doit exister dans le commit dev testé.
+sans y réintroduire les tests et analyses. La nomenclature retenue pour main
+est `release-v0.1.X-alpha`, distincte du tag de validation dev `v0.1.X-alpha`.
+Le script accepte le préfixe facultatif `release-` : il conserve le tag complet
+pour GitHub et ne le retire que pour calculer la version des paquets.
+Le workflow ne crée aucun tag. Une licence `LICENSE` doit exister dans le
+commit dev testé.
 
 Par défaut, `publish=false` produit uniquement les artefacts vérifiés du run.
 Avec `publish=true`, le job de publication est placé dans l'environnement
@@ -242,7 +245,7 @@ effectuent bien la validation complète avant intégration, même pour des docs.
 Validation locale du premier patch de sélection : compilation Windows réussie, **18 CTest et
 163 tests Python réussis**, plus vérification réelle d'une compilation/exécution
 ciblée limitée à `toneRecoveryTests`. Le code testé est `b434628` ; la
-[mémoire JSON](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/raw/validation-ci-scope-v001-20261011T193330Z.json)
+[mémoire JSON](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/raw/validation-ci-scope-v001-20261011T193330Z.json)
 consigne les versions et limites. Ce premier patch a ensuite été publié et sa
 [CI GitHub a réussi](https://github.com/KimntexX/IPR/actions/runs/38219071933).
 La correction de packaging décrite ci-dessous nécessite une nouvelle validation.
@@ -317,7 +320,7 @@ Validation locale du correctif : **18 CTest et 173 tests Python réussis**,
 Windows système et standalone déployés puis démarrés hors dépôt, sans créer
 d'archive téléchargeable. Les dix tests de régression livraison contrôlent
 notamment branches/SHA/CI, chemins DLL absolus et refus des dépendances macOS
-externes. La [mémoire JSON](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/raw/livraison/audit-packaging-v001-20261012T084907Z.json)
+externes. La [mémoire JSON](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/raw/livraison/audit-packaging-v001-20261012T084907Z.json)
 consigne les limites. Source `9502dc8`, pas de changement du rendu photographique.
 Les jobs GitHub seront lancés par le push ; à la demande de l'utilisateur,
 leurs résultats ne sont pas attendus avant le compte rendu de cette action.
@@ -345,7 +348,7 @@ Les fichiers de licences génériques ne constituent pas un audit juridique.
 
 ## Validation locale du 11 octobre 2026
 
-Mémoire : [validation-ci-cd-20261011.json](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/raw/validation-ci-cd-20261011.json).
+Mémoire : [validation-ci-cd-20261011.json](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/raw/validation-ci-cd-20261011.json).
 Windows MSVC/Qt 6.11.2 : 18 CTest réussis, 113 tests Python réussis ; archives
 standalone et système produites, smoke tests réussis. Linux Ubuntu 24.04 sous
 WSL/Qt 6.4.2 : mêmes 18 CTest et 113 tests Python réussis ; archive système et

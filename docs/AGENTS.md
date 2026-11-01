@@ -23,7 +23,7 @@ Règle demandée par l'utilisateur, applicable aux prochaines analyses et repris
   les données**. Rapports, tableaux, graphiques et CSV sont des interprétations
   ou dérivés ; ils ne remplacent pas les JSON.
 - Stocker les JSON canoniques sous `docs/validation/raw/`, suivant
-  le [contrat de conservation](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/data/README.md). Une correction
+  le [contrat de conservation](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/data/README.md). Une correction
   crée une nouvelle version horodatée, sans écraser une campagne publiée.
 - Avant clôture, préserver mesures par scène/état, unités, audits, exclusions,
   provenance, réglages, versions des outils et protocole. Ne pas se limiter

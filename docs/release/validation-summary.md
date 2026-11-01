@@ -1,6 +1,6 @@
 # Résumé de validation de la release
 
-État au 1er novembre 2026, version `v0.1.80-alpha`. Ce résumé dit ce qui est
+État au 1er novembre 2026, version `v0.1.86-alpha`. Ce résumé dit ce qui est
 validé dans IPR et dans quelles limites. Les mesures, analyses et preuves
 complètes restent sur la branche `dev`, au commit dont cette version est issue
 (voir `release-manifest.json` à la racine) ; les liens ci-dessous y mènent.
@@ -17,7 +17,7 @@ complètes restent sur la branche `dev`, au commit dont cette version est issue
   intégration, et audit du code (novembre 2026).
 
 Le détail réglage par réglage est dans la
-[matrice de validation](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/docs/validation/matrice-validation.md).
+[matrice de validation](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/matrice-validation.md).
 
 ## Boîtiers couverts
 

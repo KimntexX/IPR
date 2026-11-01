@@ -24,7 +24,7 @@ The script adjusts Qt plugins/PATH of its child processes only for tests. It doe
 
 ## Test Policy
 
-Versioned rules are in [scripts/test-rules.json](https://github.com/KimntexX/IPR/blob/b874a68e613f465c2d6402dfd6c2832f9e723a40/scripts/test-rules.json). The fourteen synthetic CTest tests are now recorded on Windows as well as Linux/WSL. Private photographic probes remain separate.
+Versioned rules are in [scripts/test-rules.json](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/scripts/test-rules.json). The fourteen synthetic CTest tests are now recorded on Windows as well as Linux/WSL. Private photographic probes remain separate.
 
 The selector compares SHA-256 of code/configuration files to the last successful validation, stored in `build-windows-msvc/.ipr-tested-snapshot.json`. It includes files not tracked by Git and detects additions, deletions, and renames. Photos, archives, documents, and generated outputs are not code and do not trigger CTest. This choice avoids rerunning the entire suite for each build of an already dirty worktree, without requiring a prior commit.
 
