@@ -863,3 +863,161 @@ prise demandée à ce stade. Cette composition a désormais été consultée
 deux fois : ne pas la déclarer test final vierge dans une campagne future.
 Aucun nouveau calcul lancé après ce contrôle, aucun changement moteur,
 publication, fusion ou tag.
+
+## 1er novembre 2026 — audit du corpus existant et couverture du faible bruit
+
+Audit local `44e3489`, sans entraînement ni développement RAW, sur les
+dossiers partagés `colorimétrie`, `base`, `base-hors-protocole`, les images
+utilisateur et les deux cartes SD D:/E:. Formats parcourus : CR3 et CR2
+uniquement ; ne pas présenter cet inventaire comme celui de tous les formats
+ou de toutes les marques. Lecture de métadonnées statiques CMT pour CR3,
+TIFF/EXIF par Pillow pour CR2, puis criblage borné des JPEG intégrés.
+
+**4 011 fichiers lus**, copies comprises :
+
+| Boîtier déclaré | Fichiers avec métadonnées lues |
+| --- | ---: |
+| Canon EOS R6 Mark III | 2032 |
+| Canon EOS 60D | 1733 |
+| Canon EOS R7 | 246 |
+
+Trois autres CR2 ne sont pas identifiés par Pillow : `IMG_7039.CR2`,
+`IMG_7040.CR2`, `IMG_7041.CR2`, dans `Pictures/RAW/Oliana` ; **cela ne
+démontre pas une corruption ni un échec de LibRaw**. Le diagnostic et
+les chemins sont conservés. Ces fichiers
+restent hors du classement de métadonnées ; ils ne bloquent pas l'étude R6III.
+
+L'inventaire signale 387 enregistrements avec des alias possibles par
+nom, modèle et date de prise. Il ne calcule pas toutes les empreintes
+complètes : ces rapprochements sont une **quarantaine conservatrice**,
+pas un dédoublonnage certifié. Aucune image supprimée, déplacée ou copiée.
+La propagation des rôles protège aussi les copies possibles des compositions
+de contrôle et les séries de calibration.
+
+| Classe de provenance / usage possible | Enregistrements |
+| --- | ---: |
+| Images R6III non qualifiées, isolées ou en séquence | 1204 |
+| Rafale existante à qualifier pour le réseau | 42 |
+| Calibration seulement, selon provenance du dossier | 252 |
+| Composition d'apprentissage déjà utilisée | 79 |
+| Composition de contrôle déjà évaluée | 132 |
+| Végétation initialement réservée, non qualifiée | 91 |
+| Astronomie spécialisée, à traiter séparément | 232 |
+| Autres boîtiers nécessitant qualification distincte | 1979 |
+
+Ces nombres désignent des fichiers et copies, **pas des scènes physiques
+indépendantes**. Un nom tel que `6V1A0145` ou `6V1A0282` peut aussi désigner
+une prise d'août et une prise de novembre différentes : conserver modèle,
+date, chemin et SHA-256, jamais le seul nom comme identité de corpus.
+
+### Le manque de couverture est mesurable dans les données du pilote
+
+Le modèle a vu **six RAW bruités d'une seule composition** pendant
+l'apprentissage, contre neuf RAW d'une autre composition au contrôle.
+Les nombres de découpes 342/186 masquaient cette faible diversité.
+
+| Canal caméra | Médiane du proxy sigma en train | Médiane au contrôle | Rapport train / contrôle |
+| --- | ---: | ---: | ---: |
+| R | 0,009631 | 0,003955 | 2,44 |
+| G | 0,008973 | 0,003463 | 2,59 |
+| B | 0,009582 | 0,003532 | 2,71 |
+
+Le 10e percentile du train est même au-dessus du 90e percentile du contrôle
+dans les trois canaux. **Ce proxy Haar/MAD est affecté par les textures et
+les corrélations du dématriçage : ce n'est pas un sigma physique certain.**
+Il montre néanmoins que la variable de conditionnement réellement fournie
+au réseau n'a pas la même distribution entre les deux partitions. L'ISO,
+à lui seul, ne décrit pas le bruit ; la luminosité et les distributions de
+couleur des pixels échantillonnés diffèrent également.
+
+Vérification complémentaire des descripteurs parents : les six RAW de train
+et les neuf de contrôle ont le même `camera_neutral`, environ
+(0,52837977 ; 1 ; 0,59088286). **Ne pas attribuer ces écarts à un changement
+de ce vecteur de balance**. Cela n'implique pas que la lumière physique ou
+les couleurs de la scène étaient les mêmes. Les descripteurs et les
+distributions sont traçables dans les preuves parentes et l'audit.
+
+### Séquences candidates : priorité à la rafale existante ISO 4000
+
+Dix séquences de huit fichiers ou plus satisfont le groupement temporel
+conservateur (noms consécutifs, réglages identiques, intervalles bornés).
+Neuf groupes ont été criblés par leurs prises de début, milieu et fin,
+soit au maximum 27 aperçus avec empreintes des sources sélectionnées.
+Ce groupement ne prouve ni cadrage fixe, ni immobilité, ni référence propre.
+
+- **`colorimétrie/rafale/6V1A9819.CR3` à `6V1A9860.CR3` : 42 prises,
+  ISO4000, 1/200 s, f/5,6, 26 mm.** Priorité pour une qualification caméra
+  signée au même ISO, sans remélanger au contrôle. Le dépistage JPEG donne
+  des ECC d'environ 0,998 au milieu et 0,988 à la fin, mais aussi des
+  déplacements d'environ 53 et 112 pixels pleine image. Il faut contrôler
+  recouvrement, mouvement local et évolution du signal après développement.
+- Huit prises `6V1A9984` à `9991` à ISO250 sur E: sont très majoritairement
+  sombres (environ 99,7 % de pixels d'aperçu sous le seuil de gris 0,01).
+  Usage spécialisé à identifier : **ni cible propre générique ni preuve
+  de bouchon fermé**, malgré des corrélations élevées.
+- Les autres séquences criblées, à ISO400/3200/4000/8000, ont des changements
+  de correspondance importants ou des échecs de recalage. Les ECC de
+  plusieurs prises sont entre environ 0,41 et 0,94. Ne pas les moyenner
+  automatiquement comme des scènes immobiles ; les zones locales peuvent
+  rester utiles, mais ne sont pas qualifiées par cet audit.
+
+Les 252 fichiers de provenance calibration peuvent aider à construire et
+contrôler un modèle de bruit ; des noirs et aplats ne remplacent pas la
+diversité de textures nécessaire à un réseau. Les CR2 du 60D et les CR3
+du R7 restent des chantiers séparés : ne pas mélanger leurs RGB caméra
+avec ceux du R6III sans contrat colorimétrique et caractérisation adaptés.
+
+### Images isolées à faible ISO : supports possibles, pas vérité propre
+
+Un second criblage borné `c88bb21` trouve **510 enregistrements candidats**
+à ISO ≤ 800, focale ≤ 105 mm et temps ≤ 1/250 s, hors rôles protégés.
+Ce sont des priorités de lecture, pas une preuve de faible bruit réel.
+Sélection déterministe d'au plus une image par date, sans score du modèle :
+
+| Fichier | Date de prise | ISO | Emplacement |
+| --- | --- | ---: | --- |
+| 6V1A9072.CR3 | 17 juillet 2026 | 100 | Pictures/RAW/pleneuf |
+| 6V1A9938.CR3 | 25 juillet 2026 | 100 | Pictures/RAW/24-07-26 |
+| 6V1A0005.CR3 | 5 août 2026 | 100 | Pictures/RAW/05-08-26 |
+| 6V1A0145.CR3 | 12 août 2026 | 100 | tests/image/base-hors-protocole |
+| 6V1A0282.CR3 | 23 août 2026 | 100 | D:/DCIM/100EOSR6 |
+
+Les cinq aperçus sont lus et leurs sources empreintées. Celui de 9938 a
+environ 6,9 % de pixels avec au moins un canal proche du blanc encodé :
+contrôler les zones RAW avant usage, sans conclure à l'écrêtage du RAW
+depuis le JPEG. Cinq dates ne prouvent pas cinq scènes indépendantes.
+Une image ISO100 isolée reste bruitée et n'a pas de cible propre appariée.
+
+Elle pourrait fournir un support de contenu pour un apprentissage avec
+bruit ajouté, **à condition de qualifier le bruit ajouté**, ses dépendances
+au signal, aux canaux et au développement, et de conserver le bruit résiduel
+de la cible dans les limites de conclusion. Une simple injection gaussienne
+non représentative ne résoudrait pas le défaut de domaine observé.
+
+Mémoires canoniques :
+
+- [Inventaire, séquences et couverture du pilote](../raw/neural-corpus-audit-v001-20261101T223414Z.json).
+- [Criblage de cinq sources à faible ISO](../raw/neural-low-noise-source-screen-v001-20261101T223744Z.json).
+- [Descripteurs parents des captures et partitions](../raw/neural-reserved-photo-pilot-v001-20261101T220513Z.json).
+
+Audit principal en environ 53,4 s ; six tests de classification/protection
+et trois de sélection bornée passent. Les aperçus ne sont pas développés
+en RAW ; aucun nouvel entraînement, aucune redistribution des partitions.
+Tous les travaux et données restent locaux, sans publication.
+
+**Conclusion actuelle : des données utiles existent ; pas de nouvelles
+photos demandées avant leur qualification.** Ordre proposé :
+
+1. Qualifier la rafale ISO4000 dans le signal caméra signé, en séparant les
+   prises sources de celles servant à la moyenne de référence. Vérifier
+   stabilité locale et bruit commun ; une moyenne n'est pas une vérité absolue.
+2. Qualifier les régions des cinq sources ISO100 et les profils de bruit
+   disponibles pour étudier un entraînement plus divers et mieux conditionné,
+   surtout au faible bruit. Ne pas les déclarer propres depuis leur seul ISO.
+3. Maintenir la composition de contrôle hors du train, et prévoir une
+   future qualification indépendante sans chercher la force ou durée qui
+   passe sur cette scène déjà consultée.
+
+Aucun de ces candidats n'est automatiquement autorisé ou qualifié pour
+l'apprentissage par le seul inventaire. Aucun changement moteur, aucune
+suppression ou copie de RAW, aucun calcul actif à la clôture de l'audit.

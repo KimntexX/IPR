@@ -124,7 +124,9 @@ def signal_coverage(work):
 
 
 def run(output):
-    root,output=checked_output(output);shared=root.parents[1]
+    root,output=checked_output(output)
+    shared=root.parents[1] if root.parent.name=='.worktrees' else root
+    cv2.setNumThreads(2)
     roots=[shared/'tests/image/colorimétrie',shared/'tests/image/base',shared/'tests/image/base-hors-protocole',
            Path('C:/Users/victo/Pictures'),Path('D:/DCIM'),Path('E:/DCIM')]
     moon_source=root/'docs/validation/raw/moon-audit-v001-20261031T194552Z.json'
