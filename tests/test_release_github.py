@@ -298,9 +298,10 @@ class ReleaseTests(unittest.TestCase):
 
     def test_suspended_configuration_cannot_be_inventoried(self):
         for runner in ('macos-15', 'macos-15-intel'):
-            with self.subTest(runner=runner), patch.object(release, 'validate_plan'), patch.object(release, 'cache') as cache, self.assertRaises(ValueError):
-                release.inventory(PLAN, Path('unused'), Path('unused'), Path('unused'), runner, 'standalone')
-            cache.assert_not_called()
+            for mode in ('system', 'standalone'):
+                with self.subTest(runner=runner,mode=mode), patch.object(release, 'validate_plan'), patch.object(release, 'cache') as cache, self.assertRaises(ValueError):
+                    release.inventory(PLAN, Path('unused'), Path('unused'), Path('unused'), runner, mode)
+                cache.assert_not_called()
 
     def test_existing_release_or_changed_gate_never_overwrites_or_publishes(self):
         for existing in (True, False):

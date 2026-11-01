@@ -56,17 +56,17 @@ Les workflows main, release, archives automatiques et contrôle de packaging
 consomment cette politique, sans matrice parallèle codée en dur. Les tests
 natifs complets de dev restent sur les quatre plateformes.
 
-Préparation **conditionnelle** du retrait macOS standalone pour cette release,
-suivie par [l'issue #20](https://github.com/KimntexX/IPR/issues/20) : Windows
-système/standalone, Ubuntu standalone et macOS arm64/Intel système restent
-dans les deux listes (cinq configurations). À intégrer uniquement si le run
-en cours échoue et que le report est retenu. La publication macOS système
-reste en place dans cette préparation, en attente de décision utilisateur ;
-elle peut être retirée de `published` sans retirer sa compilation de
-`production_ci`. Ne pas annoncer le standalone macOS comme validé ou livré.
+Préparation **conditionnelle** du report macOS pour cette release, suivie
+par [l'issue #20](https://github.com/KimntexX/IPR/issues/20), confirmée par
+l'utilisateur : aucun paquet macOS publié si le run macOS n'est pas vert.
+`published` contient alors trois configurations : Windows système, Windows
+standalone (ZIP et installateur), Ubuntu standalone. `production_ci` conserve
+en plus macOS arm64/Intel système (cinq configurations) ; les tests natifs dev
+gardent les quatre OS. À intégrer uniquement après confirmation de la
+condition d'échec et du report, sans annoncer macOS comme livré.
 
-Pour rétablir le standalone macOS après qualification, ajouter les deux
-entrées correspondantes aux listes, tester le nouveau dev puis refaire une
+Pour rétablir les paquets macOS après qualification, ajouter les entrées
+souhaitées à `published` et, si absentes, à `production_ci`, tester le nouveau dev puis refaire une
 promotion. Aucun drapeau legacy, aucune tolérance aux artefacts manquants :
 la release exige exactement tous les paquets déclarés, ni plus ni moins, et
 le plan de release enregistre cette sélection. Les inventaires et le fichier de
