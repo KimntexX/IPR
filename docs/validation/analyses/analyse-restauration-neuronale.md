@@ -224,3 +224,171 @@ tests couvrent ordre CFA/géométrie impaire, unités temporelles, texture
 statique non confondue avec bruit temporel, entrées invalides et confinement
 des sorties au build dédié. Travail local sur `patch_neural_restoration`,
 sans publication, fusion dans `dev`/`main` ni tag.
+
+## 1er novembre 2026 — pilote photographique en caméra signée
+
+### Conditions et protocole avant résultats
+
+Précision de l'utilisateur : des branches oscillaient devant la fenêtre,
+avec un soleil bas. C'est une cause plausible de variation spatiale et
+temporelle de l'éclairage intérieur, **pas une cause démontrée**. Le
+contrôle distingue donc une correction radiométrique globale des écarts
+locaux ; il n'attribue pas automatiquement ces variations à du bruit.
+
+Gel de campagne : `neural-photo-pilot-v001-20261101T202620Z`. Sélection
+déterministe de 69 RAW parmi les 166 déjà contrôlés : les 18 références
+intérieures et 33 végétales à ISO 100, puis les prises de début/milieu/fin
+des six groupes d'ISO supérieurs. Pas de sélection selon le résultat du
+réseau. Extraction avec la production de la révision `ff14324` ; le nouveau
+banc est conservé dans `bd1fced`. Compilation et données restent dans le
+build du worktree U-Net.
+
+L'extracteur appelle `RawDecoder` en balance boîtier, développement signé,
+calibration RAW active et optiques désactivées. Il prélève le véritable
+buffer caméra retenu après RCD/médiane et avant LCP/DCP, et refuse une
+calibration non appliquée. Le profil Camera Neutral sert au choix de la
+calibration ; aucune table ou courbe DCP n'est appliquée aux pixels
+d'apprentissage. Neuf fenêtres fixes de 384 × 384 pixels et un petit proxy
+vert de recalage sont extraits, sans TIFF ni modification des originaux.
+
+La suite est enchaînée automatiquement, sous conditions :
+
+1. Recalage global par translation dans les proxies verts. Corrélation ECC
+   minimale 0,97 et translation maximale de 12 pixels pleine définition.
+   Ce modèle ne prouve pas l'absence de rotation ou de mouvement local.
+2. Moyennes de rafale ISO 100, avec au moins huit prises recalées. Les
+   fluctuations lentes, normalisées par les gains de balance des blancs,
+   doivent rester sous 0,001 de l'unité caméra dans les pixels de référence.
+   Masques de stabilité, saturation et bords ; pas de clamp des négatifs.
+3. Une loi affine par canal pour rapprocher chaque série de la référence :
+   cinq fenêtres servent au calcul et quatre autres au contrôle. Au moins
+   deux fenêtres de contrôle doivent être cohérentes avant admission d'une
+   prise. Les écarts lents résiduels servent à rejeter des fenêtres entières,
+   pas à effacer le résidu de bruit fin pixel par pixel.
+4. Seule la référence est interpolée dans les coordonnées de la prise
+   bruitée ; **les entrées bruitées du réseau ne sont pas interpolées**.
+   Découpes de 96 × 96 à positions fixes, au moins 90 % de pixels valides.
+5. Intérieur exclusivement en apprentissage, végétation exclusivement en
+   validation ; aucun jeu de test indépendant inventé. Seuils minimaux :
+   32 découpes d'apprentissage et 16 de validation. Si ces conditions ne
+   sont pas satisfaites, arrêt avant entraînement avec motifs conservés.
+6. U-Net résiduel de largeur 8, 256 étapes Adam, lots de 4, taux 0,001,
+   graine 71, échelle linéaire commune 2. Conditionnement par MAD Haar de
+   chaque entrée seule : proxy influencé par les textures et le dématriçage,
+   pas connaissance idéale du bruit. Aucun choix de checkpoint ni réglage
+   des paramètres selon la validation. CPU : au plus quatre threads, en
+   laissant deux processeurs logiques libres lorsque possible.
+
+Ces seuils sont des **garde-fous exploratoires**, pas des garanties de
+qualité universelles. Les moyennes conservent du bruit fixe et un bruit
+résiduel corrélé par interpolation. La mesure d'erreur se fera contre ces
+références imparfaites, pas contre une vérité sans bruit. Un pilote sur deux
+compositions ne qualifie pas encore un modèle de production.
+
+Contrôles avant apprentissage réel : compilation native et extraction de
+0134 réussies ; calibration appliquée. Les 11 nouveaux tests numériques
+et le test synthétique de bout en bout de l'entraîneur passent, en plus
+des 38 contrats ciblés précédents. Le test synthétique ne constitue pas un
+résultat photographique. Aucun changement de calcul en production.
+
+### Résultat du premier passage et correction du banc
+
+**69/69 extractions réussies en 583,2 s**, calibration appliquée, identité
+des sources vérifiée. Les buffers caméra et leurs descripteurs restent dans
+`build-patch_neural_restoration/photo-pilot-v001`. Aucun original modifié.
+Premier résultat : 45 découpes intérieures et aucune végétale admises ;
+arrêt automatique avant entraînement.
+
+Ce premier verdict doit être lu comme **historique et partiellement
+invalidé** : le masque de saturation du banc divisait les canaux par les
+gains de balance des blancs. Or `RawDevelopment::develop()` borne déjà la
+mosaïque balancée à **1 par canal**, dans les deux politiques, avant RCD.
+Un rouge à 1 ne redevient donc pas un échantillon non saturé parce que son
+gain vaut environ 1,9. Le masque pouvait laisser passer des zones écrêtées.
+Cette erreur appartient au banc, pas aux acquisitions ni à LibRaw.
+
+Correction `c5be51c` : seuil appliqué directement dans les axes caméra
+balancés ; pixels proches du blanc exclus du recalage vert, avec marge
+spatiale. Deux tests supplémentaires couvrent le blanc après gains et
+l'absence de solution inventée lorsque le support de recalage est saturé.
+**Aucun seuil de corrélation, stabilité ou admission n'a été abaissé.**
+Rejeu sur les mêmes captures immuables, sans nouvelle décompression et
+sans modification du moteur.
+
+Mémoires canoniques :
+
+- [v001 — premier passage invalidé, sans entraînement](../raw/neural-photo-pilot-v001-20261101T202620Z.json).
+- [v002 — qualification corrigée](../raw/neural-photo-pilot-v002-20261101T204009Z.json).
+
+Elles conservent les gels de protocole, les 69 descripteurs d'extraction,
+empreintes de sources/pixels/profil/calibration, diagnostics de référence,
+recalages, lois radiométriques par canal, fenêtres admises ou rejetées et
+identités des découpes. Le résultat absent d'entraînement est `null`, avec
+son motif : aucune métrique ou amélioration du réseau n'est inventée.
+
+### État après correction : référence intérieure exploitable, contrôle manquant
+
+| Ensemble | Résultat du rejeu corrigé | Interprétation |
+| --- | --- | --- |
+| Référence intérieure ISO 100 | Fraction stable admissible : environ 91 % à 100 % selon fenêtre | Bon candidat pour le pilote dans les fenêtres contrôlées ; pas une vérité parfaitement propre |
+| Intérieur ISO 3200 : 0152, 0166, 0180 | Corrélation inter-ISO 0,939 à 0,943, sous 0,97 | Non admis par ce modèle global ; pas une preuve que chaque zone de ces photos est inutilisable |
+| Intérieur ISO 12800 : 0181, 0187, 0194 | Trois prises avec 3 ou 4 fenêtres de contrôle cohérentes | Découpes admises pour apprentissage exploratoire |
+| Intérieur ISO 51200 : 0195, 0202, 0209 | Trois prises avec 2 ou 3 fenêtres de contrôle cohérentes | Certaines zones sont récupérables malgré la variation initiale ; pas rejet de la rafale entière |
+| Référence végétale ISO 100 | Fraction admissible d'environ 4 % à 78 % selon fenêtre | Stabilité locale hétérogène ; pas une moyenne propre généralisable à toute l'image |
+| Végétation ISO 1600 : 0244, 0253, 0262 | Corrélation inter-ISO 0,835 à 0,837 | Sous le seuil du protocole |
+| Végétation ISO 6400 : 0263, 0271, 0280 | Corrélation inter-ISO 0,769 à 0,773 | Sous le seuil du protocole |
+| Végétation ISO 12800 : 0281, 0290, 0300 | Corrélation inter-ISO 0,728 à 0,729 | Sous le seuil du protocole |
+
+Total corrigé : **351 découpes intérieures admissibles, 0 végétale**, contre
+les minimums figés de 32 en apprentissage et 16 en validation. Les 351
+découpes proviennent uniquement des six prises à ISO 12800/51200. Les
+écarts radiométriques ont été contrôlés sur des fenêtres distinctes du
+calcul de gain/offset. Cela montre qu'une différence de luminosité entre
+ISO n'impose pas de jeter une série : certaines zones sont rapprochables.
+
+Pour la végétation, un contrôle complémentaire des JPEG intégrés donne
+aussi une corrélation inter-ISO dégradée sur les prises de début de groupe
+(environ 0,924, 0,865, 0,846). Ce diagnostic n'est pas une métrique RAW de
+vérité ni une preuve de la cause. Il renforce seulement la prudence : le
+défaut de correspondance n'apparaît pas exclusivement dans les buffers
+caméra extraits. Mouvement, lumière, géométrie non modélisée et différences
+de mise au point restent à distinguer ; **ne pas conclure que tout vient
+des branches ou que les photos sont mauvaises**.
+
+La mémoire de ce contrôle JPEG est
+[neural-preview-cross-check-v001-20261101T204657Z.json](../raw/neural-preview-cross-check-v001-20261101T204657Z.json) :
+sélection fixe, empreintes des huit sources, versions et calculs conservés.
+Ses scores ne servent pas à admettre des paires RAW.
+
+**L'apprentissage photographique n'a pas été lancé.** Le contrôle d'arrêt
+a fonctionné : entraîner sur les seules découpes intérieures puis les
+réutiliser en validation créerait une fuite de contenu. Les tests
+synthétiques restent des tests logiciels, pas une substitution à la
+validation photographique. Aucun poids photographique n'a été produit.
+
+### Suite recommandée et limites de cette étape
+
+Conserver les acquisitions actuelles et les références ; aucune suppression
+ni réexport TIFF demandé. Pour débloquer le pilote inter-ISO, la voie la
+plus sûre est une **deuxième composition statique** : objets et tissus
+immobiles, lumière stable sans ombres mobiles, trépied et mise au point
+verrouillée entre séries. Prévoir 16 prises ISO 100, puis au moins 8 à
+chaque ISO choisi (par exemple 1600, 6400, 12800), ouverture et cadrage
+constants. Adapter le temps pour une exposition comparable, sans chercher
+une correspondance exacte ; préserver les hautes lumières. Une scène
+intérieure peut rester à l'apprentissage et cette nouvelle composition
+entière au contrôle ; une troisième scène réellement réservée sera ensuite
+nécessaire avant toute conclusion de généralisation.
+
+Une autre voie serait d'étudier des cibles moyennées **au même ISO**,
+constituées de prises indépendantes de l'entrée. Le principe de
+[Noise2Noise, ICML 2018](https://proceedings.mlr.press/v80/lehtinen18a.html)
+montre l'intérêt de cibles bruitées sous des hypothèses statistiques
+appropriées. Ce n'est pas une validation acquise pour notre signal après
+RCD/médiane : bruit fixe commun, biais, écrêtage et mouvement peuvent
+enfreindre ces hypothèses. Cette variante n'a **pas** été implémentée pour
+contourner l'échec du protocole figé ; elle demanderait une étude distincte.
+
+État logiciel : 52 tests ciblés réussis après correction (38 précédents,
+13 contrôles de paires et 1 test synthétique d'apprentissage de bout en
+bout). Aucune intégration ou publication Git ; production inchangée.
