@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-pilot-0133-v001-20261101T144926Z",
+  "measured_at_utc": "2026-11-01T14:49:26.249230+00:00",
+  "protocol": "Single RAW read-only: CMT1/CMT2, Bayer code statistics, embedded JPEG native-size crops",
+  "units": {
+    "raw_values": "decoder mosaic integer codes, no black subtraction or WB",
+    "fractions": "pixel count divided by per-plane count",
+    "percentiles": "linear NumPy percentiles of per-plane integer codes"
+  },
+  "crop_boxes_embedded_jpeg_xywh": {
+    "paper": [
+      2600,
+      2400,
+      420,
+      420
+    ],
+    "yoga": [
+      2000,
+      1400,
+      420,
+      420
+    ],
+    "orange": [
+      3800,
+      2400,
+      420,
+      420
+    ],
+    "red": [
+      5350,
+      1850,
+      420,
+      420
+    ],
+    "plush": [
+      4500,
+      2700,
+      420,
+      420
+    ],
+    "aluminium": [
+      2600,
+      3500,
+      420,
+      420
+    ],
+    "cardboard": [
+      6400,
+      4000,
+      420,
+      420
+    ],
+    "printed_floor": [
+      4100,
+      600,
+      420,
+      420
+    ]
+  },
+  "study": "neural_single_scene_pilot_qualification",
+  "source": {
+    "path": "D:\\DCIM\\101EOSR6\\6V1A0133.CR3",
+    "bytes": 32122068,
+    "mtime_ns": 1793547587000000000,
+    "static_blocks": [
+      {
+        "box": "CMT1",
+        "sha256": "2cdafed252e62cfcc7d3835c2ae6a7e8772e14f452e176616cc9b2b0768de5b3",
+        "fields": {
+          "make": "Canon",
+          "model": "Canon EOS R6 Mark III",
+          "orientation": 1,
+          "datetime": "2026:11:01 16:39:44"
+        }
+      },
+      {
+        "box": "CMT2",
+        "sha256": "3dd221bb9ebe6c99595c0163f7961823e6fc582e6afab276679892f7cfb7e83c",
+        "fields": {
+          "exposure_s": 0.06666666666666667,
+          "aperture": 5.6,
+          "iso": 100,
+          "datetime_original": "2026:11:01 16:39:44",
+          "focal_mm": 32.0,
+          "lens": "RF24-105mm F2.8 L IS USM Z"
+        }
+      }
+    ],
+    "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "orientation": 1,
+      "datetime": "2026:11:01 16:39:44",
+      "exposure_s": 0.06666666666666667,
+      "aperture": 5.6,
+      "iso": 100,
+      "datetime_original": "2026:11:01 16:39:44",
+      "focal_mm": 32.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    "complete_basic": true
+  },
+  "source_sha256": "677994cdf1611fa59caf2ac04c1c2e1d7fe44fe956da4a02c0bc2a0ec9cc81fc",
+  "tool_sha256": "a2f47c499db079a462a7681bfe243ce882a85377864b19900d8ce011a8a1b130",
+  "revision": "041af0be976cff8f4501c0a8a7dfc2f3d910ecf5",
+  "rawpy": "0.27.1",
+  "libraw": [
+    0,
+    22,
+    1
+  ],
+  "visible_mosaic_shape": [
+    4639,
+    6959
+  ],
+  "embedded_preview_shape": [
+    4640,
+    6960,
+    3
+  ],
+  "planes": [
+    {
+      "offset_yx": [
+        0,
+        0
+      ],
+      "channel": 0,
+      "label": "R",
+      "count": 8073600,
+      "minimum": 508,
+      "maximum": 16383,
+      "percentiles": {
+        "p1": 527.0,
+        "p50": 824.0,
+        "p99": 1824.0,
+        "p999": 2625.0
+      },
+      "decoder_black": 0,
+      "decoder_white": 16383,
+      "fraction_at_or_above_decoder_white": 8.670233848592945e-06,
+      "fraction_at_or_below_decoder_black": 0.0
+    },
+    {
+      "offset_yx": [
+        0,
+        1
+      ],
+      "channel": 1,
+      "label": "G",
+      "count": 8071280,
+      "minimum": 514,
+      "maximum": 16383,
+      "percentiles": {
+        "p1": 537.0,
+        "p50": 999.0,
+        "p99": 3379.0,
+        "p999": 4913.0
+      },
+      "decoder_black": 44,
+      "decoder_white": 16383,
+      "fraction_at_or_above_decoder_white": 4.522207134432209e-05,
+      "fraction_at_or_below_decoder_black": 0.0
+    },
+    {
+      "offset_yx": [
+        1,
+        0
+      ],
+      "channel": 3,
+      "label": "G",
+      "count": 8070120,
+      "minimum": 513,
+      "maximum": 16383,
+      "percentiles": {
+        "p1": 537.0,
+        "p50": 999.0,
+        "p99": 3378.0,
+        "p999": 4904.0
+      },
+      "decoder_black": 94,
+      "decoder_white": 16383,
+      "fraction_at_or_above_decoder_white": 4.1263326939376364e-05,
+      "fraction_at_or_below_decoder_black": 0.0
+    },
+    {
+      "offset_yx": [
+        1,
+        1
+      ],
+      "channel": 2,
+      "label": "B",
+      "count": 8067801,
+      "minimum": 503,
+      "maximum": 16383,
+      "percentiles": {
+        "p1": 526.0,
+        "p50": 784.0,
+        "p99": 2599.0,
+        "p999": 3353.0
+      },
+      "decoder_black": 130,
+      "decoder_white": 16383,
+      "fraction_at_or_above_decoder_white": 3.5945358592756565e-06,
+      "fraction_at_or_below_decoder_black": 0.0
+    }
+  ],
+  "limitations": [
+    "Single capture: no independent noise truth or clean training target.",
+    "Embedded JPEG has in-camera processing; sharpness review is not RAW noise measurement.",
+    "White and black levels reported by LibRaw, not independently calibrated.",
+    "Material identities supplied by the user; lino is printed texture, not a flat noise target."
+  ]
+}
