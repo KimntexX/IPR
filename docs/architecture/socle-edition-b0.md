@@ -125,3 +125,14 @@ Prises avec l'utilisateur le 1er novembre 2026 : voir
 5. **Format du `.ipr`** pour des opérations ordonnées : prolonger le binaire
    versionné (avec conversion des anciennes versions) ou passer à un format
    structuré, toujours avec lecture des versions précédentes.
+
+## Navigation entre les panneaux
+
+Retenue par l'utilisateur le 1er novembre 2026 (maquette A) : le panneau de
+droite reçoit une rangée d'onglets à icônes sur toute sa largeur, avec un petit
+congé aux angles et le nom du panneau au survol : Réglages, Géométrie (B1),
+Masques (B2), Retouche (B3), puis Assembler (B7 à B9 : empilement, panorama
+horizontal et vertical, fusion HDR), qui crée une nouvelle image en tâche de
+fond. Un onglet n'apparaît qu'avec la livraison de son panneau. Les curseurs et
+contrôles des panneaux reprennent les composants existants de l'interface.
+Raccordement QML sur `patch_ui`.
