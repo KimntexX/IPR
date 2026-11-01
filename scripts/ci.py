@@ -206,9 +206,13 @@ def deploy_macos(stage, env):
     # The generator is in development archives only (production: IPR_BUILD_TOOLS=OFF).
     if (bundle / 'Contents/MacOS/iprGenerateTests').is_file():
         extra.append('-executable=appIPR.app/Contents/MacOS/iprGenerateTests')
+    # Libraries reached through @rpath (libwebp's libsharpyuv...) are resolved
+    # in Homebrew's lib folder too, after Qt's, so that they are copied.
+    brew = shutil.which('brew')
+    homebrew = ['-libpath=' + subprocess.check_output([brew, '--prefix'], text=True).strip() + '/lib'] if brew else []
     completed = run([qt_root / 'bin/macdeployqt', 'appIPR.app', *extra,
                      '-qmldir=' + str(ROOT / 'src/qml'),
-                     '-libpath=' + str(qt_root / 'lib'), '-always-overwrite'],
+                     '-libpath=' + str(qt_root / 'lib'), *homebrew, '-always-overwrite'],
                     cwd=stage, env=env, capture_output=True, text=True)
     output = completed.stdout + completed.stderr
     print(output, flush=True)
@@ -250,25 +254,36 @@ def external(path):
     return path.startswith('/') and not path.startswith(('/System/Library/', '/usr/lib/'))
 
 
+def bundled_path(path, frameworks):
+    """Path within Contents/Frameworks of the bundle's copy of a library or
+    framework binary named by an absolute path, None if the bundle lacks it."""
+    parts = Path(path).parts
+    for index, part in enumerate(parts):
+        if part.endswith('.framework'):
+            relative = Path(*parts[index:])
+            return relative.as_posix() if (frameworks / relative).is_file() else None
+    return parts[-1] if parts and (frameworks / parts[-1]).is_file() else None
+
+
 def relocate_bundled_references(bundle):
-    """Absolute install names and references to a library the bundle carries in
-    Contents/Frameworks point to that copy. macdeployqt leaves some behind
-    (OpenCV's own ids and cross references); references to libraries the bundle
-    does not carry are left for assert_macos_portable to refuse."""
+    """Absolute install names and references to a library or framework the bundle
+    carries point to that copy. macdeployqt leaves some behind (OpenCV's own ids,
+    paths into the staging folder); references to libraries the bundle does not
+    carry are left for assert_macos_portable to refuse."""
     frameworks = bundle / 'Contents/Frameworks'
-    bundled = {p.name for p in frameworks.iterdir() if p.is_file()} if frameworks.is_dir() else set()
     for binary in macho_files(bundle):
         ids = [line.strip() for line in
                subprocess.check_output(['otool', '-D', str(binary)], text=True).splitlines()[1:]]
         own = ids[0] if ids else ''
-        if external(own) and Path(own).name in bundled:
-            run(['install_name_tool', '-id', '@executable_path/../Frameworks/' + Path(own).name, binary])
+        target = bundled_path(own, frameworks) if external(own) else None
+        if target:
+            run(['install_name_tool', '-id', '@executable_path/../Frameworks/' + target, binary])
         lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
         for line in lines:
             dependency = line.strip().split(' (', 1)[0]
-            if dependency != own and external(dependency) and Path(dependency).name in bundled:
-                run(['install_name_tool', '-change', dependency,
-                     '@executable_path/../Frameworks/' + Path(dependency).name, binary])
+            target = bundled_path(dependency, frameworks) if dependency != own and external(dependency) else None
+            if target:
+                run(['install_name_tool', '-change', dependency, '@executable_path/../Frameworks/' + target, binary])
 
 
 def assert_macos_portable(bundle):
