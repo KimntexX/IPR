@@ -785,15 +785,14 @@ QImage decodeEmbeddedThumbnailWithLibRaw(const QString &fileName,
         return {};
     }
 
-    libraw_processed_image_t *processed = raw.dcraw_make_mem_thumb(&result);
+    std::unique_ptr<libraw_processed_image_t, void (*)(libraw_processed_image_t *)> processed(
+        raw.dcraw_make_mem_thumb(&result), &LibRaw::dcraw_clear_mem);
     if (!processed || result != LIBRAW_SUCCESS) {
         if (error) {
             *error = result == LIBRAW_SUCCESS
                          ? QStringLiteral("Aucune vignette embarquée n'est disponible.")
                          : QString::fromLatin1(libraw_strerror(result));
         }
-        if (processed)
-            LibRaw::dcraw_clear_mem(processed);
         return {};
     }
 
@@ -822,7 +821,7 @@ QImage decodeEmbeddedThumbnailWithLibRaw(const QString &fileName,
                                format).copy();
         }
     }
-    LibRaw::dcraw_clear_mem(processed);
+    processed.reset();
 
     if (thumbnail.isNull()) {
         if (error)
