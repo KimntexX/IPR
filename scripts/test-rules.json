@@ -44,6 +44,7 @@
     "cameraProfileEngineTests": "cameraProfileEngineTests"
   },
   "python_suites": {
+    "promote_main": "test_promote_main.py",
     "audit_raw_render_parity": "test_audit_raw_render_parity.py",
     "study_sources": "test_study_sources.py",
     "windows_installer": "test_windows_installer.py",
@@ -74,6 +75,7 @@
     "base_colorimetry_analysis": "test_analyse_base_colorimetrique.py"
   },
   "rules": [
+    {"patterns": ["scripts/promote_main.py", "packaging/main-allowlist.txt", "tests/test_promote_main.py"], "tests": [], "python": ["promote_main"]},
     {"patterns": ["tests/audit_raw_render_parity.py", "tests/test_audit_raw_render_parity.py"], "tests": [], "python": ["audit_raw_render_parity"]},
     {"patterns": ["src/tools/ParallelJobs.*", "src/tools/generate_test_images.cpp", "tests/parallel_jobs_test.cpp"], "tests": ["parallelJobsTests", "testImageGeneratorTests"]},
     {"patterns": ["src/cache/ImageCacheController.*", "src/cache/SystemMemory.*", "tests/image_cache_controller_test.cpp", "tests/editor_image_cache_test.cpp", "tests/controlled_memory.h"], "tests": ["imageCacheControllerTests", "editorImageCacheTests", "editorLifecycleTests", "editorRawDevelopmentTests", "imageExportTests", "imageImportTests", "rawDecoderTests", "settingsQmlTests"]},
