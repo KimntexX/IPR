@@ -223,6 +223,7 @@ def deploy_macos(stage, env):
         raise RuntimeError('macdeployqt reported unresolved dependencies: ' + '; '.join(unexplained))
     if drivers.is_dir():
         shutil.rmtree(drivers)
+    relocate_bundled_references(bundle)
     with (bundle / 'Contents/Info.plist').open('rb') as stream:
         executable = plistlib.load(stream)['CFBundleExecutable']
     if not (bundle / 'Contents/MacOS' / executable).is_file():
@@ -232,20 +233,50 @@ def deploy_macos(stage, env):
         raise ValueError('Broken bundle links: ' + ', '.join(broken))
 
 
-def assert_macos_portable(bundle):
-    magic = {b'\xfe\xed\xfa\xce', b'\xce\xfa\xed\xfe', b'\xfe\xed\xfa\xcf',
-             b'\xcf\xfa\xed\xfe', b'\xca\xfe\xba\xbe', b'\xbe\xba\xfe\xca',
-             b'\xca\xfe\xba\xbf', b'\xbf\xba\xfe\xca'}
-    for binary in bundle.rglob('*'):
-        if not binary.is_file() or binary.is_symlink():
-            continue
-        with binary.open('rb') as stream:
-            if stream.read(4) not in magic:
-                continue
+MACHO_MAGIC = {b'\xfe\xed\xfa\xce', b'\xce\xfa\xed\xfe', b'\xfe\xed\xfa\xcf',
+               b'\xcf\xfa\xed\xfe', b'\xca\xfe\xba\xbe', b'\xbe\xba\xfe\xca',
+               b'\xca\xfe\xba\xbf', b'\xbf\xba\xfe\xca'}
+
+
+def macho_files(bundle):
+    for binary in sorted(bundle.rglob('*')):
+        if binary.is_file() and not binary.is_symlink():
+            with binary.open('rb') as stream:
+                if stream.read(4) in MACHO_MAGIC:
+                    yield binary
+
+
+def external(path):
+    return path.startswith('/') and not path.startswith(('/System/Library/', '/usr/lib/'))
+
+
+def relocate_bundled_references(bundle):
+    """Absolute install names and references to a library the bundle carries in
+    Contents/Frameworks point to that copy. macdeployqt leaves some behind
+    (OpenCV's own ids and cross references); references to libraries the bundle
+    does not carry are left for assert_macos_portable to refuse."""
+    frameworks = bundle / 'Contents/Frameworks'
+    bundled = {p.name for p in frameworks.iterdir() if p.is_file()} if frameworks.is_dir() else set()
+    for binary in macho_files(bundle):
+        ids = [line.strip() for line in
+               subprocess.check_output(['otool', '-D', str(binary)], text=True).splitlines()[1:]]
+        own = ids[0] if ids else ''
+        if external(own) and Path(own).name in bundled:
+            run(['install_name_tool', '-id', '@executable_path/../Frameworks/' + Path(own).name, binary])
         lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
         for line in lines:
             dependency = line.strip().split(' (', 1)[0]
-            if dependency.startswith('/') and not dependency.startswith(('/System/Library/', '/usr/lib/')):
+            if dependency != own and external(dependency) and Path(dependency).name in bundled:
+                run(['install_name_tool', '-change', dependency,
+                     '@executable_path/../Frameworks/' + Path(dependency).name, binary])
+
+
+def assert_macos_portable(bundle):
+    for binary in macho_files(bundle):
+        lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
+        for line in lines:
+            dependency = line.strip().split(' (', 1)[0]
+            if external(dependency):
                 raise ValueError(f'Standalone still uses an external library: {binary.name}: {dependency}')
 
 

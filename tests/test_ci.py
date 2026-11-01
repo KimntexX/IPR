@@ -50,6 +50,35 @@ class DeploymentTests(unittest.TestCase):
                          ['ERROR: Could not find framework'])
         self.assertEqual(ci.unexplained_deploy_errors('Log: deployed\n', set()), [])
 
+    def test_bundled_libraries_are_referenced_inside_the_bundle(self):
+        with tempfile.TemporaryDirectory() as directory:
+            bundle = Path(directory) / 'appIPR.app'
+            library = bundle / 'Contents/Frameworks/libopencv_geometry.500.dylib'
+            executable = bundle / 'Contents/MacOS/appIPR'
+            for binary in (library, executable):
+                binary.parent.mkdir(parents=True, exist_ok=True)
+                binary.write_bytes(b'\xcf\xfa\xed\xfe' + b'\0' * 12)
+            brew = '/opt/homebrew/opt/opencv/lib/'
+            outputs = {
+                ('-D', library): f'{library}:\n{brew}libopencv_geometry.500.dylib\n',
+                ('-D', executable): f'{executable}:\n',
+                ('-L', library): (f'{library}:\n\t{brew}libopencv_geometry.500.dylib (compatibility)\n'
+                                  f'\t{brew}libopencv_core.500.dylib (compatibility)\n'),
+                ('-L', executable): f'{executable}:\n\t{brew}libopencv_geometry.500.dylib (compatibility)\n'
+                                    '\t/usr/lib/libSystem.B.dylib (compatibility)\n',
+            }
+            with patch.object(ci.subprocess, 'check_output',
+                              side_effect=lambda command, text: outputs[(command[1], Path(command[2]))]), \
+                    patch.object(ci, 'run') as run:
+                ci.relocate_bundled_references(bundle)
+            calls = [call.args[0] for call in run.call_args_list]
+            target = '@executable_path/../Frameworks/libopencv_geometry.500.dylib'
+            self.assertIn(['install_name_tool', '-id', target, library], calls)
+            self.assertIn(['install_name_tool', '-change', brew + 'libopencv_geometry.500.dylib', target, executable],
+                          calls)
+            # A library the bundle does not carry is left for the portability check to refuse.
+            self.assertEqual(len(calls), 2)
+
     def test_offscreen_runtime(self):
         env = ci.runtime_environment()
         self.assertEqual(env['QT_QPA_PLATFORM'], 'offscreen')
