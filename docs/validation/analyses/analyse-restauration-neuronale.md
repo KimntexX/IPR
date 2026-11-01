@@ -128,3 +128,99 @@ indépendantes. Garder toutes les variantes ISO d'une même composition dans
 une seule partition ; deux compositions ne suffisent pas à démontrer une
 généralisation U-Net. Aucun entraînement ou rendu de débruitage n'est lancé
 par ce premier audit.
+
+## 1er novembre 2026 — contrôle temporel des mosaïques RAW
+
+**166/166 CR3 lus avec succès ; pas encore de cible d'apprentissage
+qualifiée.** Les huit rafales de deux compositions ont été contrôlées en
+221,8 secondes. Les trois pilotes à 32 mm et la prise isolée 0210 ne font
+pas partie de cette campagne. Aucun fichier source supprimé, déplacé ou
+modifié, aucun TIFF produit, aucun entraînement ni changement en production.
+
+Mémoire canonique :
+[neural-raw-series-v001-20261101T195454Z.json](../raw/neural-raw-series-v001-20261101T195454Z.json).
+Le SHA-256 intégral de chaque source, sa taille, son horodatage, les
+métadonnées, la géométrie et les quatre positions CFA sont conservés.
+Outil de mesure : `tests/neural/qualify_raw_series.py`, révision `ffdc347` ;
+son empreinte exacte figure dans le JSON. La tête Git enregistrée au début
+du calcul précède ce commit. Les identifiants canoniques ont été ajoutés
+à la publication du JSON, sans changer les mesures ni leur provenance.
+
+### Méthode figée avant lecture des résultats
+
+Décompression rawpy/LibRaw seulement : mosaïque visible entière ouverte,
+puis neuf fenêtres fixes centrées à 20/50/80 % de chaque axe. Chaque
+fenêtre contient 128 × 128 échantillons **par position du motif Bayer**,
+soit environ 256 × 256 pixels capteur. Les coordonnées exactes figurent
+dans le JSON. Aucun recalage, interpolation, correction de gain, masque
+adaptatif ou rejet de prise. Aucun noir LibRaw soustrait et aucune valeur
+déclarée comme calibration physique du R6 Mark III.
+
+Pour chaque fenêtre et position CFA, conservation des moyennes de chaque
+prise, de leur étendue, de la dispersion temporelle par pixel, des
+différences entre prises consécutives divisées par √2 et de l'écart entre
+les moyennes des deux demi-rafales entrelacées. Unités : codes capteur
+(DN), sans balance des blancs, profil, gamma ni dématriçage. La dispersion
+temporelle **mêle bruit, mouvement et éclairage** : ce n'est pas une
+estimation isolée du bruit du capteur. La moyenne d'une rafale ne retire
+pas le bruit fixe commun aux prises.
+
+### Résultats de diagnostic
+
+Les deux dernières colonnes sont les médianes des 36 couples fenêtre/CFA,
+pas des pourcentages de bruit ni des valeurs RGB développées. L'étendue
+porte sur la moyenne spatiale de chaque fenêtre au cours de la rafale ;
+la dispersion est la racine de la moyenne spatiale des variances
+temporelles non biaisées.
+
+| Composition | ISO | Prises | Étendue des moyennes (DN) | Dispersion temporelle (DN) |
+| --- | ---: | ---: | ---: | ---: |
+| Intérieur | 100 | 18 | 1,641 | 11,032 |
+| Intérieur | 3200 | 29 | 12,685 | 83,279 |
+| Intérieur | 12800 | 14 | 15,858 | 158,027 |
+| Intérieur | 51200 | 15 | 240,480 | 457,564 |
+| Végétation | 100 | 33 | 76,533 | 56,008 |
+| Végétation | 1600 | 19 | 8,256 | 53,867 |
+| Végétation | 6400 | 18 | 24,313 | 155,779 |
+| Végétation | 12800 | 20 | 28,710 | 195,130 |
+
+La variation de la série intérieure ISO 51200 existe aussi dans les codes
+RAW : elle ne vient donc pas uniquement du traitement du JPEG. Son origine
+(éclairage, mouvement ou autre variation) reste ouverte. La végétation
+ISO 100 varie davantage que ne le suggérait le seul recalage global JPEG ;
+ce résultat interdit de déclarer sa moyenne comme référence propre sans
+vérification locale. Les DN ne sont pas directement comparables entre
+ISO et expositions comme un classement de bruit normalisé.
+
+Certaines fenêtres atteignent le blanc **déclaré, non qualifié** par LibRaw
+(16383). Le maximum observé sur une fenêtre/un plan/une prise est de 1,208 %
+pour l'intérieur ISO 51200, et de 0,018 %, 3,290 %, 0,879 % pour la
+végétation ISO 100, 6400 et 12800 respectivement. Ce ne sont pas des taux
+sur l'image entière. Les autres groupes n'atteignent pas ce seuil dans la
+grille observée ; cela ne prouve pas l'absence d'écrêtage ailleurs ou au
+blanc effectif du boîtier. Aucune de ces fenêtres n'est retenue d'office
+comme cible d'apprentissage valide.
+
+### Décision et étape suivante
+
+L'intérieur ISO 100 reste le premier candidat pour construire une référence
+pilote ; sa stabilité temporelle ne prouve pas encore la netteté ni la
+justesse radiométrique inter-ISO. Conserver toutes les rafales, sans nouvelle
+acquisition demandée à ce stade. Avant entraînement : vérifier le mouvement
+local et le recalage entre ISO, mesurer les écarts de gain/offset sur des
+zones distinctes, puis extraire les données **caméra signées du pipeline IPR**
+avec sa calibration effective. La décompression CFA de cette étude ne
+remplace pas ce contrat d'entrée du réseau.
+
+Construire ensuite les références et masques valides sans sélectionner les
+zones sur le gain du futur réseau. Les deux demi-rafales entrelacées sont
+un diagnostic de stabilité, pas un jeu de test indépendant. Conserver une
+partition par composition/session et annoncer explicitement la limite de
+deux compositions. Aucun gain photographique U-Net n'est démontré ici.
+
+Vérification logicielle : 38 tests ciblés réussis (4 audit d'aperçus,
+6 qualification CFA, 14 contrats de données, 14 réseau). Les six nouveaux
+tests couvrent ordre CFA/géométrie impaire, unités temporelles, texture
+statique non confondue avec bruit temporel, entrées invalides et confinement
+des sorties au build dédié. Travail local sur `patch_neural_restoration`,
+sans publication, fusion dans `dev`/`main` ni tag.

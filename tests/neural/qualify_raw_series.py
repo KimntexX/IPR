@@ -88,9 +88,11 @@ def run(inventory_path, output):
             raise ValueError('Source changed since inventory: '+str(path))
     output.mkdir(parents=True, exist_ok=False)
     start = time.monotonic()
-    result = dict(schema='ipr.neural.raw-series-qualification.v1',
+    measured_at = datetime.now(timezone.utc)
+    result = dict(schema='ipr.neural.raw-series-qualification.v1', schema_version=1,
+        campaign_id='neural-raw-series-v001-'+measured_at.strftime('%Y%m%dT%H%M%SZ'),
+        measured_at_utc=measured_at.isoformat(),
         data_version=1, tool_sha256=digest(Path(__file__)),
-        created_utc=datetime.now(timezone.utc).isoformat(),
         git_sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),
         inventory=dict(path=str(inventory_path), sha256=digest(inventory_path)),
         protocol=dict(domain='unprocessed visible CFA codes', units='DN',
