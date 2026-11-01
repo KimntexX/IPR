@@ -677,3 +677,47 @@ ses résultats pilotent ensuite des choix de modèle, il ne pourra plus être
 présenté comme un test final vierge. Pas de nouvelle photo demandée à ce
 stade, pas de variante relancée automatiquement, aucune modification moteur,
 aucune publication Git et aucun calcul encore actif.
+
+## 1er novembre 2026 — diagnostic d'apprenabilité sur l'apprentissage : lancement
+
+Campagne `neural-train-learnability-v001-20261101T221250Z`, outil local
+`d9b44a7`. Aucun nouveau RAW, aucune modification moteur. Le jeu parent
+est vérifié par empreintes ; seuls les **342 exemples d'apprentissage**
+entrent dans les tenseurs, métriques et optimisations. L'archive partagée
+contient aussi les exemples de contrôle, mais leurs lignes ne sont pas
+sélectionnées. Un test place volontairement NaN dans les lignes réservées
+et vérifie qu'elles n'entrent pas dans ce diagnostic.
+
+Plan figé avant exécution, sans recherche d'hyperparamètres :
+
+| Cas | Données et objectif | Pas fixés |
+| --- | --- | ---: |
+| Décalage connu | Quatre cibles d'apprentissage à indices régulièrement espacés ; ajout RGB constant (+0,02 ; −0,015 ; +0,01) | 256 |
+| Bruit synthétique renouvelé | Mêmes quatre cibles ; ajout gaussien indépendant σ = 0,02 à chaque mise à jour ; réalisation distincte fixe pour la mesure | 1024 |
+| Mémorisation d'une paire | Première paire réelle d'apprentissage, sélectionnée par son ordre et non sa performance | 1024 |
+| Apprentissage réel prolongé | Les 342 exemples, mêmes réglages que le pilote ; mesures aux pas 0, 256, 1024, 2048 | 2048 |
+
+Architecture, largeur 8, graine 71, lot 4, Adam à 0,001 et échelle 2
+inchangés. Quatre threads CPU maximum, un thread inter-opération. Les
+mesures d'apprentissage ne sélectionnent aucun état du modèle ; aucun
+réglage ni aucune inférence ne consulte la composition de contrôle.
+
+Le cas de décalage vérifie la capacité d'optimisation élémentaire. Le cas
+gaussien vérifie un problème de bruit **connu**, pas le bruit réel du capteur.
+Les moyennes de rafales restent des images imparfaites ; leur bruit est ici
+une partie fixe de la cible synthétique. La mémorisation ne vaut pas
+généralisation ; le calcul prolongé distingue seulement quelques causes
+possibles du faible apprentissage initial.
+
+Le banc relève aussi le biais moyen par canal et l'énergie de la moyenne
+locale 9×9 du résidu entrée/cible, par ISO d'apprentissage. Ces diagnostics
+ne peuvent, à eux seuls, distinguer texture, erreur de recalage et bruit
+corrélé. Les normes de gradient du début vérifient notamment que le corps
+du réseau reçoit un gradient après le premier pas : la tête initialisée à
+zéro donne normalement un gradient nul au corps au tout premier pas.
+
+Six tests ciblés passent : sélection exclusive du train, conservation du
+signal signé, refus d'empreintes altérées ou d'un train vide, propagation
+des gradients, reproductibilité de la graine et statistique d'un résidu
+constant. Ce paragraphe constate **le lancement, pas le résultat** de la
+campagne. Les poids diagnostiques restent dans le build, sans déploiement.
