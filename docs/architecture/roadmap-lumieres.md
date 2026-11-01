@@ -2,8 +2,8 @@
 
 **Ouverture :** 18 octobre 2026. Branche de travail : `patch_light`.
 Réglages : exposition, contraste, ombres, noirs, hautes lumières (HL), blancs.
-Mesures et décisions : [rapport Lumières](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md) ;
-protocole : [protocole Lumières](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/protocols/protocole-lumieres.md).
+Mesures et décisions : [rapport Lumières](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md) ;
+protocole : [protocole Lumières](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/protocols/protocole-lumieres.md).
 
 ## État courant
 
@@ -124,7 +124,7 @@ critère de l'utilisateur (±3 % de luminosité affichée par scène). Vérifier
 besoin pour les ombres (dispersion faible, 0,05 EV à +100). Module conforme à la
 cible d'architecture : `ImageEditor` cadenceur, modules `.h`/`.cpp`.
 
-**Diagnostic du 20 octobre 2026** ([rapport](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md#hl--traitement-local-ou-courbe-propre-à-chaque-image--diagnostic-du-20-octobre-2026)) :
+**Diagnostic du 20 octobre 2026** ([rapport](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md#hl--traitement-local-ou-courbe-propre-à-chaque-image--diagnostic-du-20-octobre-2026)) :
 le traitement local de LR explique 25 % de la dispersion entre pixels (détail par
 rapport à un flou large), mais pas la luminosité des tons clairs. Une courbe
 globale propre à chaque image atteindrait le critère (16/19 à −100) ; aucune forme

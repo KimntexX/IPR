@@ -1,5 +1,7 @@
 """Compile a per-user Windows installer from an already verified public standalone."""
 import argparse
+import ctypes
+from ctypes import wintypes
 import hashlib
 import json
 import os
@@ -8,6 +10,8 @@ import re
 import shutil
 import subprocess
 import tempfile
+import time
+import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 LABEL = re.compile(r'(0\.1\.\d+-alpha|0\.(?:[2-9]|[1-9]\d+)\.\d+-beta|1\.\d+\.\d+)(?:\+[A-Za-z0-9.-]+)?\Z')
@@ -77,6 +81,156 @@ def find_compiler(explicit=None):
     raise FileNotFoundError('Inno Setup 6.3+ compiler missing; set IPR_ISCC or pass --iscc')
 
 
+class _WindowsProcessJob:
+    """Owned Win32 job and start gate; children cannot escape before assignment."""
+    def __init__(self):
+        class BasicLimits(ctypes.Structure):
+            _fields_ = [('ProcessTime', ctypes.c_int64), ('JobTime', ctypes.c_int64),
+                ('Flags', wintypes.DWORD), ('MinimumWorkingSet', ctypes.c_size_t),
+                ('MaximumWorkingSet', ctypes.c_size_t), ('ActiveLimit', wintypes.DWORD),
+                ('Affinity', ctypes.c_size_t), ('Priority', wintypes.DWORD), ('Scheduling', wintypes.DWORD)]
+
+        class ExtendedLimits(ctypes.Structure):
+            _fields_ = [('Basic', BasicLimits), ('IoCounters', ctypes.c_uint64*6),
+                ('ProcessMemory', ctypes.c_size_t), ('JobMemory', ctypes.c_size_t),
+                ('PeakProcessMemory', ctypes.c_size_t), ('PeakJobMemory', ctypes.c_size_t)]
+
+        class Accounting(ctypes.Structure):
+            _fields_ = [('Times', ctypes.c_int64*4), ('PageFaults', wintypes.DWORD),
+                ('Total', wintypes.DWORD), ('Active', wintypes.DWORD), ('Terminated', wintypes.DWORD)]
+
+        self.accounting_type = Accounting
+        self.kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+        signatures = {
+            'CreateJobObjectW': ([ctypes.c_void_p, wintypes.LPCWSTR], wintypes.HANDLE),
+            'SetInformationJobObject': ([wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD], wintypes.BOOL),
+            'QueryInformationJobObject': ([wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD, ctypes.c_void_p], wintypes.BOOL),
+            'CreateEventW': ([ctypes.c_void_p, wintypes.BOOL, wintypes.BOOL, wintypes.LPCWSTR], wintypes.HANDLE),
+            'SetEvent': ([wintypes.HANDLE], wintypes.BOOL),
+            'OpenProcess': ([wintypes.DWORD, wintypes.BOOL, wintypes.DWORD], wintypes.HANDLE),
+            'AssignProcessToJobObject': ([wintypes.HANDLE, wintypes.HANDLE], wintypes.BOOL),
+            'TerminateJobObject': ([wintypes.HANDLE, wintypes.UINT], wintypes.BOOL),
+            'CreateFileW': ([wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p,
+                             wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE], wintypes.HANDLE),
+            'CloseHandle': ([wintypes.HANDLE], wintypes.BOOL)}
+        for name, (arguments, result) in signatures.items():
+            function = getattr(self.kernel, name)
+            function.argtypes, function.restype = arguments, result
+        self.job = self.event = None
+        self.event_name = 'Local\\IPR-installer-' + uuid.uuid4().hex
+        try:
+            self.job = self.check(self.kernel.CreateJobObjectW(None, None))
+            limits = ExtendedLimits()
+            limits.Basic.Flags = 0x2000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+            self.check(self.kernel.SetInformationJobObject(self.job, 9, ctypes.byref(limits), ctypes.sizeof(limits)))
+            self.event = self.check(self.kernel.CreateEventW(None, True, False, self.event_name))
+        except BaseException:
+            self.close()
+            raise
+
+    @staticmethod
+    def check(result):
+        if not result:
+            raise ctypes.WinError(ctypes.get_last_error())
+        return result
+
+    def attach_and_start(self, pid):
+        handle = self.check(self.kernel.OpenProcess(0x0101, False, pid))  # SET_QUOTA | TERMINATE
+        try:
+            self.check(self.kernel.AssignProcessToJobObject(self.job, handle))
+        finally:
+            self.kernel.CloseHandle(handle)
+        self.check(self.kernel.SetEvent(self.event))
+
+    def files_released(self, paths):
+        for path in paths:
+            handle = self.kernel.CreateFileW(str(path), 0x80000000, 0, None, 3, 0x80, None)
+            if handle == ctypes.c_void_p(-1).value:
+                error = ctypes.get_last_error()
+                if error == 2:  # A failing launch may not have created its log.
+                    continue
+                if error in (32, 33):  # Sharing/lock violation, never ignore it.
+                    return False
+                raise ctypes.WinError(error)
+            self.kernel.CloseHandle(handle)
+        return True
+
+    def wait_empty(self, timeout, completion_files=()):
+        deadline = time.monotonic() + timeout
+        while True:
+            accounting = self.accounting_type()
+            self.check(self.kernel.QueryInformationJobObject(self.job, 1, ctypes.byref(accounting), ctypes.sizeof(accounting), None))
+            if not accounting.Active and self.files_released(completion_files):
+                return
+            if time.monotonic() >= deadline:
+                raise subprocess.TimeoutExpired('Windows installer process tree', timeout)
+            time.sleep(min(0.05, max(0, deadline-time.monotonic())))
+
+    def stop(self, completion_files=()):
+        self.check(self.kernel.TerminateJobObject(self.job, 1))
+        self.wait_empty(15, completion_files)
+
+    def close(self):
+        for name in ('event', 'job'):
+            handle = getattr(self, name)
+            if handle:
+                self.kernel.CloseHandle(handle)
+                setattr(self, name, None)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exception):
+        self.close()
+
+
+def run_process_tree(command, timeout=120, completion_files=()):
+    """Wait for Inno's relaunched child as well as its original launcher.
+
+    Arguments are environment data, not interpolated PowerShell code. A start
+    gate keeps the launcher idle until its kill-on-close job owns it. The job
+    joins or terminates even orphaned descendants before temporary cleanup.
+    """
+    if os.name != 'nt':
+        raise RuntimeError('Process-tree waiting requires Windows')
+    shell = shutil.which('powershell.exe')
+    if not shell:
+        raise FileNotFoundError('Windows PowerShell is required for the installer smoke')
+    env = os.environ.copy()
+    env['IPR_SMOKE_EXECUTABLE'] = str(command[0])
+    env['IPR_SMOKE_ARGUMENTS'] = subprocess.list2cmdline(list(map(str, command[1:])))
+    script = ("$ErrorActionPreference = 'Stop'; "
+              "$gate = [System.Threading.EventWaitHandle]::OpenExisting($env:IPR_SMOKE_START_GATE); "
+              "try { if (-not $gate.WaitOne(30000)) { throw 'Installer start gate timed out' } } "
+              "finally { $gate.Dispose() }; "
+              "$info = New-Object System.Diagnostics.ProcessStartInfo; "
+              "$info.FileName = $env:IPR_SMOKE_EXECUTABLE; "
+              "$info.Arguments = $env:IPR_SMOKE_ARGUMENTS; "
+              "$info.UseShellExecute = $false; $info.CreateNoWindow = $true; "
+              "$child = [System.Diagnostics.Process]::Start($info); "
+              "try { $child.WaitForExit(); exit $child.ExitCode } finally { $child.Dispose() }")
+    # CREATE_NO_WINDOW: this helper never opens an interactive shell window.
+    with _WindowsProcessJob() as job:
+        env['IPR_SMOKE_START_GATE'] = job.event_name
+        with subprocess.Popen([shell, '-NoProfile', '-NonInteractive', '-Command', script],
+                              env=env, creationflags=0x08000000) as process:
+            deadline = time.monotonic() + timeout
+            try:
+                job.attach_and_start(process.pid)
+                code = process.wait(timeout=max(0, deadline-time.monotonic()))
+                job.wait_empty(max(0, deadline-time.monotonic()), completion_files)
+            except BaseException:
+                try:
+                    job.stop(completion_files)
+                finally:
+                    if process.poll() is None:
+                        process.kill()
+                    process.wait(timeout=15)
+                raise
+    if code:
+        raise subprocess.CalledProcessError(code, command)
+
+
 def exercise_installer(binary, work):
     """Disposable GitHub-hosted Windows runner only, never the developer's PC."""
     if os.name != 'nt' or os.environ.get('GITHUB_ACTIONS') != 'true' or os.environ.get('RUNNER_ENVIRONMENT') != 'github-hosted':
@@ -108,8 +262,9 @@ def exercise_installer(binary, work):
         smoke(destination, 'standalone', runtime_environment())
     finally:
         if uninstaller.is_file():
-            subprocess.run([str(uninstaller), '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/LOG=' + str(work / 'uninstall.log')],
-                           check=True, timeout=120, creationflags=subprocess.CREATE_NO_WINDOW)
+            log = work / 'uninstall.log'
+            run_process_tree([str(uninstaller), '/VERYSILENT', '/SUPPRESSMSGBOXES',
+                              '/NORESTART', '/LOG=' + str(log)], completion_files=(log,))
     if (destination / 'bin/appIPR.exe').exists():
         raise RuntimeError('Uninstaller left the installed executable behind')
     if (destination / 'personal-profile.keep').read_bytes() != b'preserve this unowned file':

@@ -28,7 +28,7 @@ commandes déjà disponibles. MCP désigne ici Model Context Protocol.
 
 ## 2. Ce que contient un DCP
 
-Le [protocole de prises de vue de mires](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/protocols/protocole-mires-couleur.md)
+Le [protocole de prises de vue de mires](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/protocols/protocole-mires-couleur.md)
 détaille le matériel, les références, les séances et les contrôles à effectuer.
 Il ne remplace pas le protocole de comparaison de rendu RAW existant.
 
@@ -114,7 +114,7 @@ Ne pas cloner son miroir complet.
 
 #### Relevé Canon reflex/hybrides — 20 octobre 2026
 
-Le [relevé JSON v001](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/raw/inventaire-canon-rawpixls-v001-20261020.json)
+Le [relevé JSON v001](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/raw/inventaire-canon-rawpixls-v001-20261020.json)
 conserve source, horodatage, comptages, liens, identifiants et SHA-256 déclarés
 par le fournisseur. Il a été construit depuis le
 [catalogue JSON public](https://raw.pixls.us/json/getrepository.php?set=all),

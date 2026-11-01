@@ -171,22 +171,58 @@ def rewrite_homebrew(binary):
             run(['install_name_tool', '-change', old, new, binary])
 
 
+def unexplained_deploy_errors(output, explained):
+    """macdeployqt ERROR lines, except missing files in `explained`."""
+    unexplained = []
+    for line in output.splitlines():
+        if 'ERROR:' not in line:
+            continue
+        missing = re.search(r'ERROR: no file at "([^"]+)"', line)
+        if not missing or missing.group(1) not in explained:
+            unexplained.append(line.strip())
+    return unexplained
+
+
+def macos_dependencies(binaries):
+    """Install names the binaries link to (otool -L)."""
+    names = set()
+    for binary in binaries:
+        lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
+        names.update(line.strip().split(' (', 1)[0] for line in lines)
+    return names
+
+
 def deploy_macos(stage, env):
     bundle = stage / 'appIPR.app'
     qt_root = Path(env['QT_ROOT_DIR'])
+    # The headless platform, as on Windows and Linux: macdeployqt deploys cocoa
+    # only, the package's smoke test and command-line runs need offscreen.
+    platforms = bundle / 'Contents/PlugIns/platforms'
+    platforms.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(qt_root / 'plugins/platforms/libqoffscreen.dylib', platforms)
+    extra = ['-executable=appIPR.app/Contents/PlugIns/platforms/libqoffscreen.dylib']
     # One deployment pass, from the bundle's parent. Scan only project imports;
     # deploying the whole Homebrew Qt tree pulled unrelated missing frameworks.
     # The generator is in development archives only (production: IPR_BUILD_TOOLS=OFF).
-    generator = bundle / 'Contents/MacOS/iprGenerateTests'
-    tools = ['-executable=appIPR.app/Contents/MacOS/iprGenerateTests'] if generator.is_file() else []
-    completed = run([qt_root / 'bin/macdeployqt', 'appIPR.app', *tools,
+    if (bundle / 'Contents/MacOS/iprGenerateTests').is_file():
+        extra.append('-executable=appIPR.app/Contents/MacOS/iprGenerateTests')
+    completed = run([qt_root / 'bin/macdeployqt', 'appIPR.app', *extra,
                      '-qmldir=' + str(ROOT / 'src/qml'),
                      '-libpath=' + str(qt_root / 'lib'), '-always-overwrite'],
                     cwd=stage, env=env, capture_output=True, text=True)
     output = completed.stdout + completed.stderr
     print(output, flush=True)
-    if re.search(r'\bERROR:', output):
-        raise RuntimeError('macdeployqt reported unresolved dependencies')
+    # macdeployqt copies QML modules whole: QtQuick's LocalStorage brings QtSql,
+    # hence every SQL driver, some linked to databases absent from the machine.
+    # IPR uses no SQL driver: only their missing dependencies are tolerated, and
+    # the drivers are removed before the portability check.
+    drivers = bundle / 'Contents/PlugIns/sqldrivers'
+    unused = sorted(drivers.glob('*.dylib')) if drivers.is_dir() else []
+    unexplained = unexplained_deploy_errors(output, macos_dependencies(unused))
+    if unexplained:
+        raise RuntimeError('macdeployqt reported unresolved dependencies: ' + '; '.join(unexplained))
+    if drivers.is_dir():
+        shutil.rmtree(drivers)
     with (bundle / 'Contents/Info.plist').open('rb') as stream:
         executable = plistlib.load(stream)['CFBundleExecutable']
     if not (bundle / 'Contents/MacOS' / executable).is_file():

@@ -96,6 +96,6 @@ CR3 inchangés. Validation visuelle de l'utilisateur à obtenir.
 
 ## Références
 
-- [Rapport unique RAW/profils](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/analyses/analyse-base-colorimetrique.md).
+- [Rapport unique RAW/profils](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/analyse-base-colorimetrique.md).
 - [Graphe du chemin de rendu](../architecture/chemin-ouverture-raw.md).
 - [ADR-0007](ADR-0007-calibration-raw-par-defaut.md), [ADR-0010](ADR-0010-compensation-rendu-par-profil-dcp.md).

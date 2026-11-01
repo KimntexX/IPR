@@ -17,7 +17,7 @@ complètes restent sur la branche `dev`, au commit dont cette version est issue
   intégration, et audit du code (novembre 2026).
 
 Le détail réglage par réglage est dans la
-[matrice de validation](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/matrice-validation.md).
+[matrice de validation](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/matrice-validation.md).
 
 ## Boîtiers couverts
 

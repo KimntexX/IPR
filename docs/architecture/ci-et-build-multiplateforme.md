@@ -62,6 +62,13 @@ Qt 6.8.3 dans les deux modes, et aucune archive système Ubuntu 24.04 n'est prod
 Les paquets Debian 13, Fedora et Arch utilisent leurs dépôts natifs (Qt ≥ 6.8).
 macOS : runners `macos-15` arm64 et `macos-15-intel` x64 ; Homebrew pour les
 dépendances tierces et Qt système, SDK Qt officiel 6.8.3 pour le standalone.
+`github_build.py` fixe `Qt6_DIR` sur le SDK choisi et les chemins LibRaw/TIFF
+sur leurs préfixes de formule Homebrew (`opt/libraw`, `opt/libtiff`). Le
+`CMAKE_PREFIX_PATH` n'ajoute pas le préfixe global Homebrew : ses en-têtes Qt
+peuvent sinon masquer ceux du SDK standalone. Les bibliothèques Homebrew ne
+sont ni désinstallées ni déliées ; le mode système garde son Qt Homebrew.
+Ce raccordement est testé hors ligne ; la compilation et le smoke sur les
+deux architectures macOS restent à qualifier dans la CI production.
 Le minimum macOS effectif dépend des bouteilles Homebrew : ne pas annoncer
 macOS 12 sur la seule base du support de Qt. Les versions installées figurent
 dans les journaux ; Homebrew et Arch sont évolutifs, pas hermétiques.
@@ -245,7 +252,7 @@ effectuent bien la validation complète avant intégration, même pour des docs.
 Validation locale du premier patch de sélection : compilation Windows réussie, **18 CTest et
 163 tests Python réussis**, plus vérification réelle d'une compilation/exécution
 ciblée limitée à `toneRecoveryTests`. Le code testé est `b434628` ; la
-[mémoire JSON](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/raw/validation-ci-scope-v001-20261011T193330Z.json)
+[mémoire JSON](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/raw/validation-ci-scope-v001-20261011T193330Z.json)
 consigne les versions et limites. Ce premier patch a ensuite été publié et sa
 [CI GitHub a réussi](https://github.com/KimntexX/IPR/actions/runs/38219071933).
 La correction de packaging décrite ci-dessous nécessite une nouvelle validation.
@@ -320,7 +327,7 @@ Validation locale du correctif : **18 CTest et 173 tests Python réussis**,
 Windows système et standalone déployés puis démarrés hors dépôt, sans créer
 d'archive téléchargeable. Les dix tests de régression livraison contrôlent
 notamment branches/SHA/CI, chemins DLL absolus et refus des dépendances macOS
-externes. La [mémoire JSON](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/raw/livraison/audit-packaging-v001-20261012T084907Z.json)
+externes. La [mémoire JSON](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/raw/livraison/audit-packaging-v001-20261012T084907Z.json)
 consigne les limites. Source `9502dc8`, pas de changement du rendu photographique.
 Les jobs GitHub seront lancés par le push ; à la demande de l'utilisateur,
 leurs résultats ne sont pas attendus avant le compte rendu de cette action.
@@ -348,7 +355,7 @@ Les fichiers de licences génériques ne constituent pas un audit juridique.
 
 ## Validation locale du 11 octobre 2026
 
-Mémoire : [validation-ci-cd-20261011.json](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/raw/validation-ci-cd-20261011.json).
+Mémoire : [validation-ci-cd-20261011.json](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/raw/validation-ci-cd-20261011.json).
 Windows MSVC/Qt 6.11.2 : 18 CTest réussis, 113 tests Python réussis ; archives
 standalone et système produites, smoke tests réussis. Linux Ubuntu 24.04 sous
 WSL/Qt 6.4.2 : mêmes 18 CTest et 113 tests Python réussis ; archive système et
@@ -397,6 +404,19 @@ Windows standalone seulement. Le test d’installation est réservé aux runners
 GitHub hébergés jetables ; il refuse une installation IPR préexistante.
 Il couvre installation, réinstallation, démarrage et désinstallation, pas
 la mise à niveau depuis chaque version historique ni une validation photographique.
+
+Le désinstalleur peut relancer une copie temporaire puis quitter avant elle.
+Le test attend donc tout l'arbre de processus dans un
+[Job Object Windows](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects),
+et vérifie que `uninstall.log` peut être ouvert exclusivement avant le
+nettoyage. Une barrière de démarrage empêche le lanceur de créer ses enfants
+avant son rattachement au job. L'attente normale est limitée à 120 secondes ;
+en cas d'échec ou d'interruption, le job arrête ses descendants avec une
+attente de terminaison/libération bornée à 15 secondes. Les erreurs restent
+fatales : pas d'ignorance des fichiers verrouillés ni de suppression différée
+annoncée comme un succès. Le test Inno complet reste à confirmer sur le
+runner ; les tests locaux utilisent des processus Python jetables, sans
+installation ni modification du registre utilisateur.
 
 Les préférences installées passent par `QStandardPaths::AppConfigLocation`,
 et les profils personnels par `AppDataLocation/profiles`, hors du désinstalleur.

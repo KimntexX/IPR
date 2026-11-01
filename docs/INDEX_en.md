@@ -9,8 +9,8 @@ This file is the single entry point for versioned documentation. It distinguishe
 | Architecture | Durable structure, contracts, and diagrams | [architecture/README.md](architecture/README.md) |
 | Specifications | Expected behavior, independent of any work session | [specifications/README.md](specifications/README.md) |
 | Decisions | Stable architectural choices and their consequences | [decisions/README.md](decisions/README.md) |
-| Validation | Protocols, status matrix, and reproducible measurements | [validation/README.md](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/README.md) |
-| Reports | Session logs and dated histories | [reports/README.md](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/reports/README.md) |
+| Validation | Protocols, status matrix, and reproducible measurements | [validation/README.md](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/README.md) |
+| Reports | Session logs and dated histories | [reports/README.md](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/reports/README.md) |
 | Technical | LaTeX reference manual and compilable sources | [technical/latex/README.md](technical/latex/README.md) |
 | Scholar | Courses on models used by IPR | [scholar/README.md](scholar/README.md) |
 
@@ -21,10 +21,10 @@ Document formatting: [common LaTeX conventions](AGENTS.md).
 Background courses: [digital image architecture — PDF](scholar/cours-11-architecture-images.pdf)
 and [associated practical work](scholar/README.md#cours-11--architecture-des-images).
 
-Practical guide: [testing features autonomously](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/procedure-tests-autonomes.md).
+Practical guide: [testing features autonomously](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/procedure-tests-autonomes.md).
 
-Tracking: [CSV and curves](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/validation/metrics/README.md),
-[prioritized backlog](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/reports/sessions/session-2026-10-08.md).
+Tracking: [CSV and curves](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/metrics/README.md),
+[prioritized backlog](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/reports/sessions/session-2026-10-08.md).
 
 1. A session report records dated facts; it does not become a specification through accumulation.
 2. A completed feature updates its specification, the validation matrix, and if necessary, an ADR.
@@ -34,4 +34,4 @@ Tracking: [CSV and curves](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51d
 
 ## Migration Completed
 
-Historical content, previously grouped in `docs/rapport/`, was distributed on October 3, 2026 into appropriate responsibility areas. This old folder was then deleted. The registry preserves the source-destination correspondence: [reports/migration-registry.md](https://github.com/KimntexX/IPR/blob/67efe9e0dae7f51dd002147bf0462bd0785bacdb/docs/reports/migration-registry.md).
+Historical content, previously grouped in `docs/rapport/`, was distributed on October 3, 2026 into appropriate responsibility areas. This old folder was then deleted. The registry preserves the source-destination correspondence: [reports/migration-registry.md](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/reports/migration-registry.md).
