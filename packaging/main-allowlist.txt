@@ -10,6 +10,7 @@
 [main]
 # Build, packaging, runtime data and licences
 .gitignore
+.gitattributes
 CMakeLists.txt
 LICENSE
 vcpkg.json
