@@ -15,7 +15,7 @@ import subprocess
 import time
 
 from audit_moon import digest
-from qualify_photo_pairs import prepare
+from qualify_photo_pairs import prepare,overlap_protocol
 from run_photo_pilot import checked_output, save
 
 
@@ -92,9 +92,9 @@ def run(args):
     if shutil.disk_usage(root).free<4*2**30:
         raise ValueError('Need 4 GiB reserve for this bounded extraction')
     now=datetime.now(timezone.utc)
-    campaign='neural-control-pairs-v001-'+now.strftime('%Y%m%dT%H%M%SZ')
+    campaign='neural-control-pairs-v002-'+now.strftime('%Y%m%dT%H%M%SZ')
     identities={name:digest(getattr(args,name)) for name in ('tool','profile','manifest')}
-    freeze=dict(schema_version=1,data_version=1,campaign_id=campaign,
+    freeze=dict(schema_version=1,data_version=2,campaign_id=campaign,
         measured_at_utc=now.isoformat(),
         git_sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),
         tool_sources={name:digest(Path(__file__).with_name(name)) for name in
@@ -103,7 +103,7 @@ def run(args):
         baseline=dict(path=str(args.baseline.resolve()),sha256=digest(args.baseline)),
         identities=identities,
         dependency_paths={name:str(getattr(args,name).resolve()) for name in identities},
-        qualification=deepcopy(baseline['qualification']),
+        qualification=overlap_protocol(baseline['qualification']),
         scene_partition=dict(control_indoor='validation'),
         primary_reference='first chronological ISO100 burst: 0301..0309; fixed before measurement',
         diagnostic_reference='second ISO100 burst: 0320..0327; never pool or choose by admission score',
@@ -119,7 +119,7 @@ def run(args):
                    'C:/dev/vcpkg/installed/x64-windows/bin'):
         if Path(folder).is_dir(): env['PATH']=folder+os.pathsep+env.get('PATH','')
     started=time.monotonic();captures=[];variants=[]
-    result=dict(schema='ipr.neural.control-pairs.v1',schema_version=1,data_version=1,
+    result=dict(schema='ipr.neural.control-pairs.v1',schema_version=1,data_version=2,
         campaign_id=campaign,measured_at_utc=now.isoformat(),freeze=freeze,
         freeze_sha256=digest(work/'freeze.json'),captures=captures,variants=variants,
         status='incomplete',training=None,

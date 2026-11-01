@@ -34,9 +34,15 @@ def blur(image,sigma=4.):
     return cv2.GaussianBlur(image,(0,0),sigma,borderType=cv2.BORDER_REFLECT101)
 
 
-def translation(reference,source,scale_xy,ecc_floor=.97,max_shift=12.,camera_limit=.9):
+def translation(reference,source,scale_xy,ecc_floor=.97,camera_limit=.9,
+                minimum_overlap_fraction=.5,reciprocal_max_error_pixels=1.):
     if reference.shape!=source.shape or reference.ndim!=2 or min(reference.shape)<32 or not np.isfinite(reference).all() or not np.isfinite(source).all():
         raise ValueError('Matching finite green proxies required')
+    scale=np.asarray(scale_xy,dtype=np.float64)
+    if (scale.shape!=(2,) or not np.isfinite(scale).all() or np.any(scale<=0)
+            or not 0<minimum_overlap_fraction<=1 or reciprocal_max_error_pixels<=0
+            or not np.isfinite(reciprocal_max_error_pixels)):
+        raise ValueError('Valid proxy scale, overlap and reciprocity bounds required')
     arrays=[]
     for image in (reference,source):
         # Identical crops preserve translation coordinates and exclude border
@@ -56,12 +62,25 @@ def translation(reference,source,scale_xy,ecc_floor=.97,max_shift=12.,camera_lim
     try:
         score,matrix=cv2.findTransformECC(*arrays,matrix,cv2.MOTION_TRANSLATION,
             (cv2.TERM_CRITERIA_COUNT|cv2.TERM_CRITERIA_EPS,80,1e-6),common,5)
+        reverse_score,reverse=cv2.findTransformECC(*arrays[::-1],np.eye(2,3,dtype=np.float32),
+            cv2.MOTION_TRANSLATION,
+            (cv2.TERM_CRITERIA_COUNT|cv2.TERM_CRITERIA_EPS,80,1e-6),common,5)
     except cv2.error:
         return dict(accepted=False,reason='registration_failed')
-    shift=matrix[:,2]*np.asarray(scale_xy,dtype=np.float32)
-    return dict(accepted=bool(score>=ecc_floor and np.max(np.abs(shift))<=max_shift),
-                ecc=float(score),shift_xy=shift.tolist(),
-                reason='measured_translation_only_no_local_motion_proof')
+    shift=matrix[:,2]*scale
+    reverse_shift=reverse[:,2]*scale
+    extent=np.array([source.shape[1],source.shape[0]],dtype=np.float64)
+    overlap=float(np.prod(np.maximum(0.,extent-np.abs(matrix[:,2])))/np.prod(extent))
+    error=float(np.max(np.abs(shift+reverse_shift)))
+    finite=bool(np.isfinite(shift).all() and np.isfinite(reverse_shift).all()
+                and np.isfinite([score,reverse_score,error,overlap]).all())
+    accepted=bool(finite and min(score,reverse_score)>=ecc_floor
+                  and overlap>=minimum_overlap_fraction and error<=reciprocal_max_error_pixels)
+    reason=('measured_reciprocal_translation' if accepted else
+            'registration_correlation_overlap_or_reciprocity_failed')
+    return dict(accepted=accepted,ecc=float(score),reverse_ecc=float(reverse_score),
+                shift_xy=shift.tolist(),reverse_shift_xy=reverse_shift.tolist(),
+                full_frame_overlap_fraction=overlap,reciprocal_error_pixels=error,reason=reason)
 
 
 def warp(image,shift_xy,to_reference=False,mask=False):
@@ -69,10 +88,12 @@ def warp(image,shift_xy,to_reference=False,mask=False):
     if shift.shape!=(2,) or not np.isfinite(shift).all():
         raise ValueError('Finite translation required')
     matrix=np.eye(2,3,dtype=np.float32);matrix[:,2]=shift
-    flags=cv2.INTER_NEAREST if mask else cv2.INTER_LINEAR
+    flags=cv2.INTER_LINEAR
     if to_reference: flags|=cv2.WARP_INVERSE_MAP
-    return cv2.warpAffine(image.astype(np.uint8) if mask else image,matrix,
+    result=cv2.warpAffine(image.astype(np.float32) if mask else image,matrix,
         (image.shape[1],image.shape[0]),flags=flags,borderMode=cv2.BORDER_CONSTANT,borderValue=0)
+    # Every contributing bilinear neighbor must be valid, not just the nearest.
+    return (result>=1.-1e-7).astype(np.uint8) if mask else result
 
 
 def reference_tile(frames,shifts,gains,protocol):

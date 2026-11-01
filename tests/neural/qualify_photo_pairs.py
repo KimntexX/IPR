@@ -33,8 +33,10 @@ def alignment(reference,capture,protocol):
     shape=capture['full_shape']
     source=read_plane(capture,capture['green_proxy'])[:,:,0]
     return translation(reference,source,(shape[1]/source.shape[1],shape[0]/source.shape[0]),
-                       protocol['ecc_floor'],protocol['max_translation_pixels'],
-                       protocol['unsaturated_camera_fraction'])
+                       ecc_floor=protocol['ecc_floor'],
+                       camera_limit=protocol['unsaturated_camera_fraction'],
+                       minimum_overlap_fraction=protocol['minimum_full_frame_overlap_fraction'],
+                       reciprocal_max_error_pixels=protocol['reciprocal_max_error_pixels'])
 
 
 def prepare(work,freeze,captures):
@@ -46,12 +48,13 @@ def prepare(work,freeze,captures):
             (__file__,Path(__file__).with_name('photo_pair_math.py'))},
         versions=dict(python=sys.version,numpy=np.__version__,opencv=cv2.__version__),
         alignment=[],references=[],frames=[],examples=[],
-        limits=['Two compositions only; no independent test partition.',
+        limits=['Exploratory composition partitions only; no independent product qualification.',
             'Translation-only alignment; local inconsistency may be motion or illumination.',
             'Reference stability and pair gates are provisional, not calibrated quality guarantees.',
             'Single-image Haar MAD conditioning is a texture/correlation-affected proxy, not sensor truth.',
             'No noisy input interpolation; reference interpolation correlates target noise.',
             'Pair admission uses low-frequency source/reference consistency, not learned output or high-pass residual masking.',
+            'Reciprocal translation and global overlap do not prove local correspondence.',
             'Global channel gains/offsets fit on five ROIs; require two consistent distinct monitoring ROIs.',
             'Burst means retain fixed-pattern noise and are not perfectly clean targets.'])
     for capture in captures:
@@ -163,3 +166,16 @@ def declared_scenes(freeze,captures):
     if len(hashes)!=len(set(hashes)):
         raise ValueError('Duplicate capture or cross-partition source leakage')
     return scenes
+
+
+def overlap_protocol(previous):
+    """Explicit protocol revision: geometric support replaces a fixed search radius.
+
+    Historical frozen JSON is left intact. Photometric/stability gates are copied
+    unchanged; the new 50% global-overlap and 1px reciprocity guards are frozen.
+    """
+    result=dict(previous)
+    result.pop('max_translation_pixels',None)
+    result.update(geometry_protocol='reciprocal-translation-common-support-v1',
+                  minimum_full_frame_overlap_fraction=.5,reciprocal_max_error_pixels=1.)
+    return result

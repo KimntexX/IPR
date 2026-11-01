@@ -1,7 +1,8 @@
-"""Correct qualification using existing immutable camera captures; no redecoding.
+"""Apply current qualification to existing immutable camera captures; no redecoding.
 
 Creates a new evidence version. The first attempt and its rejection remain
-unchanged. Does not relax the original correlation or stability thresholds.
+unchanged. The explicit geometric protocol replaces the fixed displacement gate;
+original photometric, correlation and stability thresholds remain unchanged.
 """
 import argparse
 from datetime import datetime,timezone
@@ -11,7 +12,7 @@ import subprocess
 
 from audit_moon import digest
 from run_photo_pilot import save,checked_output
-from qualify_photo_pairs import prepare
+from qualify_photo_pairs import prepare,overlap_protocol
 
 
 def run(source,output,trainer):
@@ -22,14 +23,15 @@ def run(source,output,trainer):
     if records['freeze_sha256']!=digest(source/'freeze.json'):
         raise ValueError('Original extraction freeze changed')
     now=datetime.now(timezone.utc)
-    freeze.update(campaign_id='neural-photo-pilot-v002-'+now.strftime('%Y%m%dT%H%M%SZ'),
-        data_version=2,measured_at_utc=now.isoformat(),
+    freeze.update(campaign_id='neural-photo-pilot-v003-'+now.strftime('%Y%m%dT%H%M%SZ'),
+        data_version=3,measured_at_utc=now.isoformat(),
         supersedes_campaign_id=freeze['campaign_id'],
         parent_freeze_sha256=digest(source/'freeze.json'),
         parent_captures_sha256=digest(source/'captures.json'),
-        correction='Camera values already clip at 1 after WB: do not divide saturation masks by gains. Mask clipped highlights in registration. No threshold relaxation.',
+        correction='Camera-axis saturation masks and explicit reciprocal/common-support geometry; fixed displacement gate removed, photometric and stability thresholds unchanged.',
         qualifier_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip())
-    freeze['qualification'].pop('unsaturated_sensor_fraction')
+    freeze['qualification']=overlap_protocol(freeze['qualification'])
+    freeze['qualification'].pop('unsaturated_sensor_fraction',None)
     freeze['qualification']['unsaturated_camera_fraction']=.9
     output.mkdir(parents=True,exist_ok=False)
     save(output/'freeze.json',freeze)
