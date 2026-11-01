@@ -62,6 +62,13 @@ Qt 6.8.3 dans les deux modes, et aucune archive système Ubuntu 24.04 n'est prod
 Les paquets Debian 13, Fedora et Arch utilisent leurs dépôts natifs (Qt ≥ 6.8).
 macOS : runners `macos-15` arm64 et `macos-15-intel` x64 ; Homebrew pour les
 dépendances tierces et Qt système, SDK Qt officiel 6.8.3 pour le standalone.
+`github_build.py` fixe `Qt6_DIR` sur le SDK choisi et les chemins LibRaw/TIFF
+sur leurs préfixes de formule Homebrew (`opt/libraw`, `opt/libtiff`). Le
+`CMAKE_PREFIX_PATH` n'ajoute pas le préfixe global Homebrew : ses en-têtes Qt
+peuvent sinon masquer ceux du SDK standalone. Les bibliothèques Homebrew ne
+sont ni désinstallées ni déliées ; le mode système garde son Qt Homebrew.
+Ce raccordement est testé hors ligne ; la compilation et le smoke sur les
+deux architectures macOS restent à qualifier dans la CI production.
 Le minimum macOS effectif dépend des bouteilles Homebrew : ne pas annoncer
 macOS 12 sur la seule base du support de Qt. Les versions installées figurent
 dans les journaux ; Homebrew et Arch sont évolutifs, pas hermétiques.
@@ -397,6 +404,19 @@ Windows standalone seulement. Le test d’installation est réservé aux runners
 GitHub hébergés jetables ; il refuse une installation IPR préexistante.
 Il couvre installation, réinstallation, démarrage et désinstallation, pas
 la mise à niveau depuis chaque version historique ni une validation photographique.
+
+Le désinstalleur peut relancer une copie temporaire puis quitter avant elle.
+Le test attend donc tout l'arbre de processus dans un
+[Job Object Windows](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects),
+et vérifie que `uninstall.log` peut être ouvert exclusivement avant le
+nettoyage. Une barrière de démarrage empêche le lanceur de créer ses enfants
+avant son rattachement au job. L'attente normale est limitée à 120 secondes ;
+en cas d'échec ou d'interruption, le job arrête ses descendants avec une
+attente de terminaison/libération bornée à 15 secondes. Les erreurs restent
+fatales : pas d'ignorance des fichiers verrouillés ni de suppression différée
+annoncée comme un succès. Le test Inno complet reste à confirmer sur le
+runner ; les tests locaux utilisent des processus Python jetables, sans
+installation ni modification du registre utilisateur.
 
 Les préférences installées passent par `QStandardPaths::AppConfigLocation`,
 et les profils personnels par `AppDataLocation/profiles`, hors du désinstalleur.

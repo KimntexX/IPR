@@ -44,6 +44,7 @@
     "cameraProfileEngineTests": "cameraProfileEngineTests"
   },
   "python_suites": {
+    "github_build": "test_github_build.py",
     "release_github": "test_release_github.py",
     "promote_main": "test_promote_main.py",
     "audit_raw_render_parity": "test_audit_raw_render_parity.py",
@@ -76,6 +77,7 @@
     "base_colorimetry_analysis": "test_analyse_base_colorimetrique.py"
   },
   "rules": [
+    {"patterns": ["scripts/github_build.py", "tests/test_github_build.py"], "tests": [], "python": ["github_build", "ci_deployment", "delivery_policy"]},
     {"patterns": ["scripts/release_github.py", "tests/test_release_github.py"], "tests": [], "python": ["release_github", "delivery_policy", "promote_main"]},
     {"patterns": ["scripts/promote_main.py", "packaging/main-allowlist.txt", "tests/test_promote_main.py"], "tests": [], "python": ["promote_main"]},
     {"patterns": ["tests/audit_raw_render_parity.py", "tests/test_audit_raw_render_parity.py"], "tests": [], "python": ["audit_raw_render_parity"]},
