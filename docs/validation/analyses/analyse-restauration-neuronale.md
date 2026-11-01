@@ -540,3 +540,66 @@ Ne pas simplement augmenter le seuil ou choisir la seconde référence parce
 qu'elle passe mieux. ISO12800 reste insuffisant sur le contrôle principal
 dans ce diagnostic. Aucun gain photographique du réseau revendiqué,
 aucune modification moteur, aucun calcul actif à la clôture de cet audit.
+
+## 1er novembre 2026 — protocole de recouvrement et contrôle principal débloqué
+
+Révision explicite du protocole géométrique, pas rectification rétroactive
+de l'ancien rejet : la portée fixe de 12 pixels disparaît du qualificateur
+courant. L'estimation reste une translation, sans rotation ni affine.
+Deux nouvelles gardes sont figées avant le rejeu : au moins **50 % de
+recouvrement géométrique pleine image** et une erreur de réciprocité
+aller-retour d'au plus **1 pixel caméra**, avec ECC ≥ 0,97 dans les deux sens.
+Ces gardes sont provisoires, pas des constantes universelles de qualité.
+
+Le recouvrement global ne suffit pas à admettre une paire. Les exigences
+existantes restent présentes : stabilité des références, saturation caméra,
+bornes de la loi radiométrique, au moins 50 % de support local, deux fenêtres
+de contrôle cohérentes distinctes des cinq fenêtres d'ajustement, puis 90 %
+de pixels valides par découpe. Les masques interpolés exigent maintenant
+que **tous** les voisins bilinéaires contributeurs soient valides ; un
+masque au plus proche ne suffit plus. Aucune entrée bruitée n'est interpolée.
+
+Le rejeu utilise les captures immuables existantes, sans nouvelle lecture
+des RAW, et **uniquement la première référence ISO100 (0301–0309)**.
+La seconde reste hors de cette qualification. Gel et outils : `67f9bdf`.
+Résultat en environ **3,65 s** :
+
+| ISO de contrôle | Prises admises / évaluées | Découpes admissibles |
+| --- | ---: | ---: |
+| 1600 | 3/3 | 54 |
+| 3200 | 3/3 | 60 |
+| 6400 | 3/3 | 72 |
+| 12800 | 0/3 | 0 |
+| Total | 9/12 | 186 |
+
+Recouvrement pleine image mesuré : environ 97,81 % à 98,40 % ; erreur
+aller-retour maximale **0,118 pixel**. Les deux nouvelles gardes passent
+pour les douze prises ; ISO12800 reste refusé par la cohérence locale
+(1 fenêtre de contrôle au lieu de 2), et non par le déplacement.
+Les neuf fenêtres de la référence conservent 100 % de support intérieur
+stable et valide selon le diagnostic du banc.
+
+Mémoire canonique complète :
+[contrôle par recouvrement v001](../raw/neural-control-overlap-v001-20261101T215121Z.json).
+Elle conserve les conditions initiales, la raison de révision, les
+empreintes des captures, les décalages dans les deux sens, les masques
+résumés, les décisions par fenêtre et les 186 identités de découpes.
+Les campagnes antérieures restent inchangées. Les 186 découpes sont
+corrélées, issues de neuf prises d'une seule composition, pas de 186 scènes.
+
+Tests : huit contrats de recouvrement/réciprocité/masques, treize tests
+numériques de paires, huit de gel des références et six de géométrie.
+Le refus explicite d'un résultat non fini du solveur évite toute preuve
+JSON contenant NaN. Ces tests vérifient le banc, pas la qualité du réseau.
+
+**Conclusion actuelle : le pilote dispose d'un contrôle exploratoire
+admissible à ISO1600–6400. Aucun entraînement lancé dans cette étape.**
+Suite : reconstruire le jeu d'apprentissage existant avec le même
+qualificateur courant, vérifier séparation par composition et couverture
+ISO, puis lancer le pilote à architecture et durée figées. Les anciennes
+découpes d'apprentissage étaient à ISO12800/51200 : ne pas présenter le
+contrôle à ISO1600–6400 comme une validation aux mêmes ISO ou comme une
+qualification produit. Garder ISO12800 exclu du contrôle jusqu'à preuve
+complémentaire, sans choisir la seconde référence pour obtenir un succès.
+Pas de nouvelle photo demandée à ce stade ; aucun changement moteur,
+publication Git ou calcul actif à la clôture de cette étape.

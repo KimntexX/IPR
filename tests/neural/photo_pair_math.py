@@ -74,6 +74,8 @@ def translation(reference,source,scale_xy,ecc_floor=.97,camera_limit=.9,
     error=float(np.max(np.abs(shift+reverse_shift)))
     finite=bool(np.isfinite(shift).all() and np.isfinite(reverse_shift).all()
                 and np.isfinite([score,reverse_score,error,overlap]).all())
+    if not finite:
+        return dict(accepted=False,reason='nonfinite_registration_solution')
     accepted=bool(finite and min(score,reverse_score)>=ecc_floor
                   and overlap>=minimum_overlap_fraction and error<=reciprocal_max_error_pixels)
     reason=('measured_reciprocal_translation' if accepted else

@@ -44,6 +44,12 @@ class OverlapTests(unittest.TestCase):
         with patch('photo_pair_math.cv2.findTransformECC',side_effect=results):
             self.assertFalse(translation(image,image,[1,1])['accepted'])
 
+    def test_nonfinite_solver_output_is_refused_without_nan_evidence(self):
+        image=self.proxy();results=self.matrices(4,-4);results[1]=(float('nan'),results[1][1])
+        with patch('photo_pair_math.cv2.findTransformECC',side_effect=results):
+            result=translation(image,image,[1,1])
+        self.assertEqual(result,dict(accepted=False,reason='nonfinite_registration_solution'))
+
     def test_bilinear_mask_requires_every_neighbor(self):
         mask=np.ones((64,64),bool);mask[:,10]=False;before=mask.copy()
         result=warp(mask,[.5,0],mask=True)>0
