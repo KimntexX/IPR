@@ -48,3 +48,5 @@ RAW et aux images développées, métadonnées indépendantes et contrôles part
 [ADR-0005](ADR-0005-melangeur-huit-bandes-luminance-bornee.md) complète les ADR
 0001/0002/0004 : huit bandes, protection des neutres, luminance bornée, sidecar
 v4 et INI schéma 2 (4 octobre 2026).
+
+[ADR-0021](ADR-0021-socle-edition-beta.md) : socle d'édition bêta — retouches décrites dans le `.ipr`, résultats lourds dans `<photo>.ipr-data/`, historique de 100 étapes conservé, géométrie après l'optique et calques après les réglages, format à en-tête et sections, évolution sans rupture à partir de la stable (1er novembre 2026).

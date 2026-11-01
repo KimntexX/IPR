@@ -1,0 +1,109 @@
+# ADR-0021 — Socle d'édition bêta : recette, actifs, historique et ordre de rendu
+
+- **Date :** 2026-11-01
+- **Statut :** Accepté par l'utilisateur ; implémentation à venir (B0.3, B0.4)
+- **Décideurs :** utilisateur ; proposition de Claude
+
+## Contexte
+
+Les panneaux de la bêta (Géométrie B1, Calques B2, Retouche B3, réseaux de
+neurones B4 à B6, plusieurs images B7 à B9) ajoutent des opérations ordonnées,
+des masques, des résultats calculés lourds et un besoin d'annuler/refaire. Le
+socle actuel est inventorié dans le [document B0](../architecture/socle-edition-b0.md) :
+la recette ne connaît que des réglages globaux, le `.ipr` est un binaire de
+version 9, aucun historique n'existe et la géométrie n'a pas de place dans
+l'ordre de rendu.
+
+Pratiques observées ailleurs, en boîte noire (1er novembre 2026) : les logiciels
+décrivent les retouches par leurs paramètres dans la recette (Lightroom Classic,
+RawTherapee, DxO) et rangent les pixels calculés lourds à part, recalculables
+(Lightroom Classic) ; Photoshop garde les pixels des calques dans le fichier
+même.
+
+## Décision
+
+### Recette et actifs
+
+- Le `.ipr` décrit chaque retouche par ses **paramètres** : traits de pinceau,
+  dégradés, points de tampon, paramètres des calques et de la géométrie.
+- Les **résultats calculés lourds** (masques issus d'un modèle, retouches
+  neuronales) vont dans un **dossier par photo** à côté d'elle,
+  `<photo>.ipr-data/`. S'il disparaît, IPR recalcule depuis la recette quand le
+  modèle est disponible, sinon il le signale ; la retouche n'est jamais perdue.
+- Les **résultats de détection** (formes, boîtes d'objets) sont gardés : quelques
+  kilo-octets par photo. Les **masques de segmentation** utilisés par un calque
+  font partie de la retouche ; les masques candidats non utilisés forment un
+  **cache** à la résolution de l'aperçu, compressé, invalidé si la photo ou le
+  modèle change, sous un **plafond global** réglable (500 Mo par défaut ;
+  suppression des photos ouvertes le moins récemment) et vidable par une commande.
+
+### Historique
+
+- Annuler/refaire porte sur des **étapes** ; un glissement de curseur compte pour
+  une seule étape.
+- L'historique est **conservé dans le `.ipr`**, limité aux **100 dernières
+  étapes**, avec des **instantanés** nommés par l'utilisateur.
+
+### Débruitage avant profil
+
+Le **mode de développement réellement utilisé** (signé, avant profil ou non) est
+enregistré dans le développement RAW du `.ipr`, comme la version du moteur : une
+photo rouverte se redéveloppe à l'identique, et IPR prévient si le mode a changé.
+Ce n'est pas un nouveau réglage : la cible reste le choix automatique par
+boîtier, qui remplacera la case expérimentale.
+
+### Ordre de rendu
+
+- La **géométrie** (recadrage, rotation, perspective, miroir) s'applique juste
+  après les corrections d'objectif, avant les traitements de voisinage (bruit,
+  netteté, clarté, voile) : un seul rééchantillonnage, et des effets locaux qui
+  ne se décalent pas au recadrage.
+- Les **calques** se superposent **après les réglages globaux**. Une comparaison
+  sur des cas réels (exposition et clarté locales) dira si l'écart avec
+  Lightroom, qui réapplique ses réglages locaux dans la chaîne, justifie de les
+  placer plus tôt.
+
+### Format du `.ipr`
+
+- **En-tête** lisible seul : identifiant, version du format, version d'IPR qui a
+  écrit le fichier, identité de la photo. IPR sait sans tout lire si le fichier
+  est ancien, à mettre à jour ou plus récent que lui.
+- **Sections étiquetées** (réglages, développement RAW, géométrie, calques,
+  historique…) de longueur connue : une section inconnue se saute, une section
+  nouvelle ne réécrit pas les autres.
+- **Mise à jour au premier enregistrement** : un fichier ancien est lu, converti
+  en mémoire, réécrit au format courant ; pas de copie de sauvegarde.
+- **Fichier plus récent qu'IPR** : ouverture en lecture seule avec avertissement.
+- **Pendant la bêta**, seul utilisateur : le format et l'architecture peuvent
+  changer, en convertissant les `.ipr` existants de l'utilisateur.
+- **À partir de la version stable**, règle d'évolution sans rupture : ajouts
+  seulement (section ou champ facultatif avec valeur par défaut), jamais de
+  changement de sens d'un champ existant ; un changement incompatible ouvre une
+  nouvelle version majeure du format, avec conversion automatique ; la CI garde
+  un `.ipr` de référence de chaque version publiée et vérifie qu'il se lit, se
+  convertit et se rend à l'identique.
+
+## Conséquences
+
+- **Bénéfices :** recette légère et lisible, retouches jamais perdues avec le
+  cache, réouverture rapide des panneaux, historique repris d'une séance à
+  l'autre, rendu identique à la réouverture, évolution du format contrôlée.
+- **Coûts et risques :** un dossier `.ipr-data` par photo retouchée avec des
+  calques calculés ; un `.ipr` plus gros avec l'historique (borné à 100 étapes) ;
+  le recalcul d'un actif perdu exige le modèle correspondant ; la géométrie tôt
+  dans la chaîne impose de recalculer les étages suivants à chaque changement
+  de recadrage.
+- **Compatibilité :** les `.ipr` actuels (versions 1 à 9) restent lus et sont
+  convertis au nouveau format à leur premier enregistrement.
+- **Validation :** tests de la recette (lecture, conversion, section inconnue,
+  fichier plus récent), de l'historique (regroupement, limite, instantanés), du
+  cache (plafond, invalidation, perte du dossier), et rendu identique sans
+  nouvelle opération (B0.4).
+
+## Alternatives écartées
+
+- Pixels des calques dans le `.ipr` : fichier lourd à chaque enregistrement.
+- Cache de détection global sans lien à la photo : perdu au déplacement de la photo.
+- Historique de session seulement : on ne retrouve pas son travail le lendemain.
+- Copie de sauvegarde de chaque `.ipr` mis à jour : remplacée par la règle
+  d'évolution testée en CI.

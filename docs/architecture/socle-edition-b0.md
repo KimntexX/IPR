@@ -111,7 +111,10 @@ multi-source (B7 empilement, B8 panorama, B9 HDR) reste à écrire.
 `editorRawDevelopmentTests`. Aucun ne couvre l'annulation, l'historique ou des
 opérations ordonnées : ils sont à écrire avec B0.3.
 
-## Décisions à prendre en B0.2 (avec l'utilisateur)
+## Décisions B0.2
+
+Prises avec l'utilisateur le 1er novembre 2026 : voir
+[ADR-0021](../decisions/ADR-0021-socle-edition-beta.md). Questions d'origine :
 
 1. **Stockage des actifs volumineux** (masques, retouches calculées) : à côté
    du `.ipr`, dans un dossier caché par photo, ou dans un dossier de projet.
