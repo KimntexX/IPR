@@ -39,6 +39,13 @@ Basic.Menu {
         command: root.actions.pasteAction
         enabled: root.currentPhoto && root.actions.pasteAction.enabled
     }
+    ActionMenuItem {
+        objectName: "contextApplySelection"
+        action: root.actions.applySelectionAction
+        visible: root.editor.selectedImageCount > 0
+        implicitHeight: visible ? 32 : 0
+        height: implicitHeight
+    }
     Basic.MenuSeparator { }
     ActionMenuItem {
         objectName: "contextSaveAdjustments"
