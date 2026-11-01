@@ -14,7 +14,7 @@ Les neutres et opérations invariantes restent équivalents numériquement.
 Rec.2020 est choisi pour le master photographique, non parce qu'il supprimerait
 à lui seul l'écrêtage ou reproduirait Lightroom.
 
-Preuve : [campagne immuable v001](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/raw/comparatif-espaces-travail-v001-20261015T100527950069Z.json).
+Preuve : [campagne immuable v001](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/raw/comparatif-espaces-travail-v001-20261015T100527950069Z.json).
 
 ## Décision
 

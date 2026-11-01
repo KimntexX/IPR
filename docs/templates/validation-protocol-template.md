@@ -5,7 +5,7 @@
 
 **Version du protocole / date de révision :**
 **Rapport unique du groupe :**
-**Socle commun :** [conditions et mémoire](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/protocols/protocole-commun.md)
+**Socle commun :** [conditions et mémoire](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/protocols/protocole-commun.md)
 
 Maintenir un fichier sans date dans son nom par groupe, avec sections par
 commande. Les campagnes sont des JSON versionnés et horodatés, pas des copies

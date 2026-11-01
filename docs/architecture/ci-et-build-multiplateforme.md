@@ -252,7 +252,7 @@ effectuent bien la validation complète avant intégration, même pour des docs.
 Validation locale du premier patch de sélection : compilation Windows réussie, **18 CTest et
 163 tests Python réussis**, plus vérification réelle d'une compilation/exécution
 ciblée limitée à `toneRecoveryTests`. Le code testé est `b434628` ; la
-[mémoire JSON](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/raw/validation-ci-scope-v001-20261011T193330Z.json)
+[mémoire JSON](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/raw/validation-ci-scope-v001-20261011T193330Z.json)
 consigne les versions et limites. Ce premier patch a ensuite été publié et sa
 [CI GitHub a réussi](https://github.com/KimntexX/IPR/actions/runs/38219071933).
 La correction de packaging décrite ci-dessous nécessite une nouvelle validation.
@@ -327,7 +327,7 @@ Validation locale du correctif : **18 CTest et 173 tests Python réussis**,
 Windows système et standalone déployés puis démarrés hors dépôt, sans créer
 d'archive téléchargeable. Les dix tests de régression livraison contrôlent
 notamment branches/SHA/CI, chemins DLL absolus et refus des dépendances macOS
-externes. La [mémoire JSON](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/raw/livraison/audit-packaging-v001-20261012T084907Z.json)
+externes. La [mémoire JSON](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/raw/livraison/audit-packaging-v001-20261012T084907Z.json)
 consigne les limites. Source `9502dc8`, pas de changement du rendu photographique.
 Les jobs GitHub seront lancés par le push ; à la demande de l'utilisateur,
 leurs résultats ne sont pas attendus avant le compte rendu de cette action.
@@ -355,7 +355,7 @@ Les fichiers de licences génériques ne constituent pas un audit juridique.
 
 ## Validation locale du 11 octobre 2026
 
-Mémoire : [validation-ci-cd-20261011.json](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/raw/validation-ci-cd-20261011.json).
+Mémoire : [validation-ci-cd-20261011.json](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/raw/validation-ci-cd-20261011.json).
 Windows MSVC/Qt 6.11.2 : 18 CTest réussis, 113 tests Python réussis ; archives
 standalone et système produites, smoke tests réussis. Linux Ubuntu 24.04 sous
 WSL/Qt 6.4.2 : mêmes 18 CTest et 113 tests Python réussis ; archive système et

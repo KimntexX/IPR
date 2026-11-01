@@ -29,7 +29,7 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Arborescence des sources](../../src/README.md) : domaines C++/QML et bibliothèque interne `iprEngine`.
 - [Préférences de l’interface](ui-preferences.md) : INI utilisateur, géométrie, sections, couleurs et schéma extensible.
 - [Build Windows autonome](build-windows-standalone.md) : configuration portable, dépendances et restrictions sur les profils tiers.
-- [Mesures et courbes](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/metrics/README.md) : provenance des CSV et limites de comparaison.
+- [Mesures et courbes](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/metrics/README.md) : provenance des CSV et limites de comparaison.
 
 [Import commun des formats](import-images.md) : adaptateurs RAW/raster,
 contrat Rec.2020, métadonnées, capacités et validation du cache/des profils.

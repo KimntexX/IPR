@@ -31,5 +31,5 @@ latérale. Voir le [contrat optique](../camera-profile-engine.md#persistance-et-
 
 ## Validation et liens
 
-- Recette restante : [matrice de validation](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/matrice-validation.md).
-- Conception : [guide du moteur](../scholar/moteur-graphique-ipr.tex) et [rapport de session historique](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/reports/sessions/rapport-session-2026-10-02.md).
+- Recette restante : [matrice de validation](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/matrice-validation.md).
+- Conception : [guide du moteur](../scholar/moteur-graphique-ipr.tex) et [rapport de session historique](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/reports/sessions/rapport-session-2026-10-02.md).

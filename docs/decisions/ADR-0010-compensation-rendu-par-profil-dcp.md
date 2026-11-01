@@ -11,7 +11,7 @@ Le schéma courant est 3, sans liste de photos/ISO ; la configuration est suivie
 automatiquement et la calibration demandée par défaut. La séparation entre
 baseline source, offset DCP et compensation externe reste inchangée.
 
-Le [§48 du rapport RAW/profils](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/analyse-base-colorimetrique.md#48-résidu-r7--recalage-et-coefficient-candidat--15-octobre-2026)
+Le [§48 du rapport RAW/profils](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/analyses/analyse-base-colorimetrique.md#48-résidu-r7--recalage-et-coefficient-candidat--15-octobre-2026)
 identifie une compensation R7 Camera Neutral de −0,02 EV avant le DCP.
 La valeur DNG source +0,35 EV reste documentée ; la compensation ne constitue
 pas une nouvelle mesure de cette métadonnée. L'utilisateur accepte le rendu
@@ -84,7 +84,7 @@ R7 bas/moyen ISO et autres boîtiers restent à faire avant extension de portée
 Vérifier tests de sélection/isolation, composition DCP et WB, cache/restauration,
 puis rejeu des 16 R6 identiques et des 3 R7 conformes au candidat natif accepté.
 
-Preuve exécutée : [rejeu de production des 19 RAW](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/raw/integration-profile-rendering-v001-20261015T220248871933Z.json).
+Preuve exécutée : [rejeu de production des 19 RAW](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/raw/integration-profile-rendering-v001-20261015T220248871933Z.json).
 Les 16 témoins R6 et les 3 candidats R7 sont exactement identiques sur la grille
 contrôlée au pas 8. Les 22 CTest Windows sont réussis ; ceci ne vaut pas
 certification pleine résolution de chaque pixel ni validation de tous les ISO.

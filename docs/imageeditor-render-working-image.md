@@ -140,7 +140,7 @@ sortirait du gamut, un assombrissement garde puis amplifie la couleur des tons
 clairs. Noirs et blancs positifs agissent sur chaque canal sRGB linéaire. La
 courbe est échantillonnée et rendue croissante : aucune inversion de tons.
 Modèle, mesures et limites : [roadmap Lumières](architecture/roadmap-lumieres.md)
-et [rapport Lumières](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md).
+et [rapport Lumières](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md).
 
 ### Vibrance et saturation
 
@@ -154,10 +154,10 @@ le zéro de tous les curseurs et les entrées vides ou d'un autre type ne touche
 le tampon. Saturation et vibrance sont bornées à `[-100, +100]`.
 
 - **Mélangeur** : tables de réponse Lightroom par bande, composante et valeur
-  ([rapport mélangeur](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/analyse-color-mixer.md)).
+  ([rapport mélangeur](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/analyses/analyse-color-mixer.md)).
 - **Color grading** : ombres, tons moyens, hautes lumières et roue Global, avec
   fusion, balance et luminance, calés sur Lightroom
-  ([rapport grading](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/analyse-grading.md)).
+  ([rapport grading](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/analyses/analyse-grading.md)).
 
 - **Saturation** multiplie la chroma Oklab par `1 + s/100` et conserve L.
   Mesurée sur 49 scènes, elle suit LR à moins de 0,05 de variation de chroma.
@@ -177,7 +177,7 @@ La réponse positive est maximale sur les tons moyens modérément saturés et
 protège les couleurs déjà saturées ; au négatif, les couleurs faibles sont
 presque entièrement désaturées et les couleurs saturées assombries. Les détails
 et la validation croisée sont dans le
-[rapport Couleur](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/analyse-couleur.md) ; la démarche complète
+[rapport Couleur](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/analyses/analyse-couleur.md) ; la démarche complète
 est expliquée dans le [cours 12](scholar/cours-12-vibrance-saturation-oklab.tex).
 
 ### Effets de détails et d'atmosphère
@@ -191,12 +191,12 @@ préservant Y si la reconstruction produit des canaux négatifs. Pas de clamp
 HDR supérieur ; à bruit 0/0, la fonction ne touche pas le tampon.
 La netteté masquée est appliquée plus tard et reste inchangée.
 Les [équations et constantes](architecture/denoising-sharpening.md) et
-le [correctif/tests](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/correctif-bruit-2026-10-05.md)
+le [correctif/tests](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/analyses/correctif-bruit-2026-10-05.md)
 précisent les limites ; les anciens exports bruit ne valident pas cette version.
 
 Les effets sont appliqués en RGB linéaire après la couleur perceptuelle, calés sur
 la réponse de Lightroom mesurée par échelle et par amplitude
-([rapport Effets](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/analyse-effets.md)). Leurs rayons sont définis
+([rapport Effets](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/analyses/analyse-effets.md)). Leurs rayons sont définis
 sur l'image entière : l'aperçu les réduit par `pixelScale`.
 
 - **Texture et clarté** (`LocalContrast`) : la luminance est découpée en bandes de

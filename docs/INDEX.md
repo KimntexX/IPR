@@ -9,8 +9,8 @@ Ce fichier est le point d'entrée unique de la documentation versionnée. Il dis
 | Architecture | Structure durable, contrats et diagrammes | [architecture/README.md](architecture/README.md) |
 | Spécifications | Comportement attendu, indépendamment d'une séance de travail | [specifications/README.md](specifications/README.md) |
 | Décisions | Choix d'architecture stables et leurs conséquences | [decisions/README.md](decisions/README.md) |
-| Validation | Protocoles, matrice de statut et mesures reproductibles | [validation/README.md](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/README.md) |
-| Rapports | Journaux de séance et historiques datés | [reports/README.md](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/reports/README.md) |
+| Validation | Protocoles, matrice de statut et mesures reproductibles | [validation/README.md](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/README.md) |
+| Rapports | Journaux de séance et historiques datés | [reports/README.md](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/reports/README.md) |
 | Utilisateur | Prise en main, familles de réglages et raccourcis | [user/README.md](user/README.md) |
 | Technique | Manuel LaTeX de référence et sources compilables | [technical/latex/README.md](technical/latex/README.md) |
 | Scholar | Cours sur les modèles utilisés par IPR | [scholar/README.md](scholar/README.md) |
@@ -22,10 +22,10 @@ Mise en forme des documents : [conventions LaTeX communes](AGENTS.md).
 Cours de fond : [architecture des images numériques — PDF](scholar/cours-11-architecture-images.pdf)
 et [travaux pratiques associés](scholar/README.md#cours-11--architecture-des-images).
 
-Guide pratique : [tester les fonctionnalités en autonomie](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/procedure-tests-autonomes.md).
+Guide pratique : [tester les fonctionnalités en autonomie](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/procedure-tests-autonomes.md).
 
-Suivi : [CSV et courbes](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/metrics/README.md),
-[reste à faire priorisé](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/reports/sessions/session-2026-10-08.md).
+Suivi : [CSV et courbes](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/metrics/README.md),
+[reste à faire priorisé](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/reports/sessions/session-2026-10-08.md).
 
 1. Un rapport de séance enregistre des faits datés ; il ne devient pas une spécification par accumulation.
 2. Une fonctionnalité terminée met à jour sa spécification, la matrice de validation et, si nécessaire, un ADR.
@@ -35,4 +35,4 @@ Suivi : [CSV et courbes](https://github.com/KimntexX/IPR/blob/72c57741011605dd65
 
 ## Migration achevée
 
-Le contenu historique, auparavant regroupé dans `docs/rapport/`, a été distribué le 3 octobre 2026 dans les zones de responsabilité appropriées. Cet ancien dossier a ensuite été supprimé. Le registre conserve la correspondance source-destination : [reports/migration-registry.md](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/reports/migration-registry.md).
+Le contenu historique, auparavant regroupé dans `docs/rapport/`, a été distribué le 3 octobre 2026 dans les zones de responsabilité appropriées. Cet ancien dossier a ensuite été supprimé. Le registre conserve la correspondance source-destination : [reports/migration-registry.md](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/reports/migration-registry.md).

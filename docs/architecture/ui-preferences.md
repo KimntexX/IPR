@@ -143,7 +143,7 @@ conservation des dimensions normales. `uiPreferencesQmlTests` vérifie les
 sections, sélections, format/qualité, absence de modification des réglages photo,
 et le raccordement de la fenêtre principale à un INI temporaire.
 
-La [matrice](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/matrice-validation.md) distingue ces tests automatisés
+La [matrice](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/matrice-validation.md) distingue ces tests automatisés
 de la recette réelle Windows/DPI/multi-écrans. Les tests ne lisent et n’écrivent
 jamais les préférences personnelles de l’utilisateur.
 

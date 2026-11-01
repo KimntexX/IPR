@@ -4,11 +4,11 @@
 Rec.2020 linéaire implémenté ; qualification visuelle/multi-OS à compléter.** Décision :
 [ADR-0009](../decisions/ADR-0009-espace-travail-rec2020-lineaire.md).
 Les résultats photographiques restent dans le seul
-[rapport RAW/profils, §44–45](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/analyses/analyse-base-colorimetrique.md).
+[rapport RAW/profils, §44–45](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/analyses/analyse-base-colorimetrique.md).
 
 ## 1. Périmètre et preuve disponible
 
-Le [JSON comparatif v001](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/raw/comparatif-espaces-travail-v001-20261015T100527950069Z.json)
+Le [JSON comparatif v001](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/raw/comparatif-espaces-travail-v001-20261015T100527950069Z.json)
 porte sur sept scènes, trois espaces et six opérations diagnostiques, soit
 126 variantes post-DCP. L'erreur linéaire maximale des opérations invariantes
 est de `7,153e-7`, sous le garde-fou `5e-6`. Ce résultat autorise la préparation,
@@ -225,7 +225,7 @@ auxiliaires ajoutés par le générateur.
 
 Le changement transversal de master est une **grosse modification** : suite
 complète finale, même si les lots utilisent des tests ciblés. Ajouter les
-cas à ce [protocole RAW/profils](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/protocols/protocole-raw-profils.md)
+cas à ce [protocole RAW/profils](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/protocols/protocole-raw-profils.md)
 et aux protocoles de groupe existants, sans créer d'analyse parallèle.
 
 ## 8. Corpus et besoin utilisateur

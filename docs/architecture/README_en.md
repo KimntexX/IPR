@@ -17,7 +17,7 @@ This area contains reference documents that describe components, data contracts,
 - [Source Tree](../../src/README.md): C++/QML domains and internal `iprEngine` library.
 - [UI Preferences](ui-preferences.md): user INI, geometry, sections, colors, and extensible schema.
 - [Standalone Windows Build](build-windows-standalone.md): portable configuration, dependencies, and restrictions on third-party profiles.
-- [Measurements and Curves](https://github.com/KimntexX/IPR/blob/72c57741011605dd65f9ad236f16b6683dd1492a/docs/validation/metrics/README.md): CSV provenance and comparison limits.
+- [Measurements and Curves](https://github.com/KimntexX/IPR/blob/ad92e204c13aa87c8e3f7e2891313fa8d653e15f/docs/validation/metrics/README.md): CSV provenance and comparison limits.
 
 ## Update Rule
 

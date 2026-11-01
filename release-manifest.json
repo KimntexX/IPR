@@ -3,9 +3,9 @@
  "policy": "main-production-and-docs/2026-11-01",
  "source": {
   "repository": "https://github.com/KimntexX/IPR",
-  "commit": "72c57741011605dd65f9ad236f16b6683dd1492a",
+  "commit": "ad92e204c13aa87c8e3f7e2891313fa8d653e15f",
   "ci": {
-   "run_id": "41331624541",
+   "run_id": "41335416807",
    "workflow": "CI native full tests"
   }
  },
@@ -19,7 +19,7 @@
   "IPR_BUILD_TOOLS": "OFF"
  },
  "excluded_files": 903,
- "closure_sha256": "2221adfb0e1a99f5738f3ad0201fec60f6108fd36bc9fcd6dd2233c52bf1b31c",
+ "closure_sha256": "5a7848ec79318f1abc0e2430150cde4ad41e22d2159c0d27f4e6a3dfc8a21901",
  "files": [
   {
    "path": ".github/actions/setup/action.yml",
@@ -74,14 +74,14 @@
   {
    "path": "README.md",
    "mode": "100644",
-   "sha256": "289f2842953af44dbe50bf607e783c42fb935ecf1cb170c5b8f1cdab7f039e0c",
+   "sha256": "fde1885f6a829182684854cab3071285c6c4aba00d81ece666a00fdcd78aa0f8",
    "source_sha256": "4411d13bc7b7702014d62646bfc76b3d877a49e5d8788bc79308cd723d8a700f",
    "derived": "links_to_dev"
   },
   {
    "path": "README_en.md",
    "mode": "100644",
-   "sha256": "7fceed30cd44f7038435a487ac95fa45b90bfe3d8e619de0394857628e004a97",
+   "sha256": "8d454f7ebee5b4e1ab45d08fceb406152d1bbd3bd4bc41562fe8b5a0141b2eba",
    "source_sha256": "de7cdc17784abb0d94f1b702ec8cce497ada920f6e6b7a00cecf194fc22d1b99",
    "derived": "links_to_dev"
   },
@@ -108,21 +108,21 @@
   {
    "path": "docs/AGENTS.md",
    "mode": "100644",
-   "sha256": "d714c4796d205f3f4ca53901844a4205c23d666adc3742c16e58a63da9cd894f",
+   "sha256": "cb48f4b71b3d541eb3e3448914a60009aceb0e0479e7b3490a26e9a4edece384",
    "source_sha256": "6857f4fb6c69de8f14f45de71779999de748eabee24b8e11a7618ce4a481f291",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/INDEX.md",
    "mode": "100644",
-   "sha256": "328db13c4d65344c9058f5f2b5536e88680177eae7eb9808aba600e80ba899f2",
+   "sha256": "eee72e42033e1b61d296ed181fbe2941fcb3c62d75187d0cc5f287a9467bff22",
    "source_sha256": "32bee0a84a0619f754d0922dd92bcc15102a88e0a43d2e1d19777ac40052336d",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/INDEX_en.md",
    "mode": "100644",
-   "sha256": "6a8cea35e9c081e406fe7c63a5b87874b586dd231f80e7998055e77273060fb9",
+   "sha256": "20eac8fd4d04218641cf00c502ca83ba1951e21ae38c2740d33bdc907519744a",
    "source_sha256": "ccefe7beb2300de95c6d6e6abe966037d8491ddb7b7db173655d0077225ae9d3",
    "derived": "links_to_dev"
   },
@@ -139,14 +139,14 @@
   {
    "path": "docs/architecture/README.md",
    "mode": "100644",
-   "sha256": "159a9fe63651c253bca3d6fdf13af09ac2ce694912a001b1bb99ce7b2070463f",
+   "sha256": "729182b1b615b8270735104fbe91fd5407931c31fc7bd6cee722e5875119f44f",
    "source_sha256": "fc128fe6e0b13a1b44fd51096fca63bb065f58d0ebf6508464044d8c8c94a011",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/README_en.md",
    "mode": "100644",
-   "sha256": "a7b56f88c8369cc4a84944a1e287d813a5e3f5c6419b759283634f8029bb1c2a",
+   "sha256": "fe1c8b2a9bad936d98c34c9c1203dbe73457fc966d680d9889f765d4430f4e3f",
    "source_sha256": "af775f532b7480904a26a7e32ec1e22a1ab1a19d97e97453b30e132f723a5fc0",
    "derived": "links_to_dev"
   },
@@ -168,35 +168,35 @@
   {
    "path": "docs/architecture/ci-et-build-multiplateforme.md",
    "mode": "100644",
-   "sha256": "4fb56ae18c6c8052f5f02b6eef8d712c7e465773c48942498d38bcad9813e638",
+   "sha256": "023df65b8abc24688ccdb3139b12d32295e009c072b046d35b68110e3228e039",
    "source_sha256": "2be29ed6ddea0136a72a738effaa5baae94e29ae932d48f8bc239ce83af2977a",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/ci-et-build-multiplateforme_en.md",
    "mode": "100644",
-   "sha256": "4684f7ba35f2e8a4fddeaacf94d1ba35277c2b301479e59e19b8b1d7c11352db",
+   "sha256": "580b212e899a2658dfaaa067a71acb2757edd44377e247cc9251a6722f04b956",
    "source_sha256": "85718c00d763c18e34be3e84ddac599fb93797cdeab18cb0ebb5ccc7945dbdfa",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/controle-memoire-images.md",
    "mode": "100644",
-   "sha256": "f0b817c47c5efe4e3c3e94c5d4d315639c2ae1bb2745a850aae8ee1a4b502187",
+   "sha256": "c55e240bbb396982554817dea5c6b572e4b5a099692979a22b970136e327d178",
    "source_sha256": "1db8992f0d54270d4e8edd959384fdc454579bb492100b34c22ad39630ab2bba",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/denoising-sharpening.md",
    "mode": "100644",
-   "sha256": "f311ddd8eef8809bd80150908bd741d91cee67a9b3a13d6b7b10a0fad59b84f8",
+   "sha256": "27bc0d33dab2437f254d2d04f20e76cf4c0b681501e60853390ffeb1092d832f",
    "source_sha256": "0b015ab8352f757b82c7e8c1d561170ceefa0a0f175f9b74ef02ce9e39b04934",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/denoising-sharpening_en.md",
    "mode": "100644",
-   "sha256": "dca7a66e101d5a3eb53d7ac3bda168c7fd9d50acb2ba8c94b7066599ef663c2b",
+   "sha256": "ae068107cde9f20440a50358475ebb14bfe0810bb2624607dc2d49078d7cfa56",
    "source_sha256": "6b4d4c55c0f7f7514bdd906f86c43a1427d755cbfcf602c50155df5a0dd9d565",
    "derived": "links_to_dev"
   },
@@ -228,7 +228,7 @@
   {
    "path": "docs/architecture/gestion-couleurs-affichage.md",
    "mode": "100644",
-   "sha256": "fe7e5041d1e142dcf5c830aae33ffa287c94b57c8e926b640817057e2793f0b5",
+   "sha256": "94fe07071c94ed12f829850b864941da46613f52765ca4290f6c23b4fe86585c",
    "source_sha256": "07e743585b311bfa45a7277212af52d34bbd9b2c4bcde212bdd3d94c0c8a908f",
    "derived": "links_to_dev"
   },
@@ -245,7 +245,7 @@
   {
    "path": "docs/architecture/integration-rec2020.md",
    "mode": "100644",
-   "sha256": "d78ebed10fa074ba7b5455f9155253ab9483022a6ac86e54587a37c148d79838",
+   "sha256": "7c620d899a808091e2be1abc90e9deb226bf887574cc9a354e7c5088a159ce58",
    "source_sha256": "ac2f8acf15f3ed8dbe6ef0e279cc55fca42ad55f62ce9583d5217368e0a31ef0",
    "derived": "links_to_dev"
   },
@@ -262,7 +262,7 @@
   {
    "path": "docs/architecture/references/etude-autonomie-profils-camera.md",
    "mode": "100644",
-   "sha256": "96e0e2c34d93f500d12554f0e24fb255f1b4662323bb845835ad87261963c470",
+   "sha256": "af0d26ae6b799016c4ecea86b5a54079d5d572a10ff8d715278dca1c3192d42e",
    "source_sha256": "f4a59d8aee86817512c601bd830c5062581c146b582a4062d056827a3f2dc460",
    "derived": "links_to_dev"
   },
@@ -309,56 +309,56 @@
   {
    "path": "docs/architecture/roadmap-fonctions-lightroom.md",
    "mode": "100644",
-   "sha256": "60e65e6a252c3ae907b660229bb48fde08b93a29e48d53e2fdee3afca0eee63e",
+   "sha256": "c19e2fd945bfb846cec4f1466e77916d29f3a4a03b9a8c1ca913aa9731b253be",
    "source_sha256": "9255ada428d4f1d8847442d85da67acaed7cf5ca9739db41ecffc7acc3f28308",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/roadmap-lumieres.md",
    "mode": "100644",
-   "sha256": "3ff212a59792ebcce85c51a2c2633a328b6ef45c6816381662ee9af6287ef788",
+   "sha256": "8144bd4b222d45a78fa658333d3cd0a59338bc4335816d3a3c9c7b83d2a34e4d",
    "source_sha256": "ffc90aaa85d9f303c808e322e7dcac954435a13882f8161f4b5b921f43b6acec",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/roadmap-ouverture-raw.md",
    "mode": "100644",
-   "sha256": "2f0957057735f26b8f5d28fbee4a4874aec10f97b47e0bfd73660338cb15b2d9",
+   "sha256": "0f8e24c9eb0b95b7e48767296233ed59120153c21c373fe1c016a3d7509c3b26",
    "source_sha256": "aeab879bc596b1687cd13718bfd76149067467e496c41859335e003fa92ec219",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/suivi-raccordements-ihm.md",
    "mode": "100644",
-   "sha256": "48085d48d6c8ecaf4af8cf671783818ce44d23af2351619b55bc71c15618c769",
+   "sha256": "7d4088a72dfa384ed6a9ff1a42cb4893d78704b75f6d62b01c3e4b2f60186aa0",
    "source_sha256": "ad5387e5813be085cc28925a6007558f5b3ac9a4d47231a9f76a6e36cc205cef",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/tests-cibles-et-build-windows.md",
    "mode": "100644",
-   "sha256": "3773b69806aedb92c031bda70e888ae6076aab74268b9fcdd1db896fbb8beacb",
+   "sha256": "b10966fa4bfcc840a6f983d31e35a43552a2411af00a02f4c58af7ef21a2e829",
    "source_sha256": "67db9129608ab0e3e5e1b23de2a745705ac91deb6cd381d4ab52e5dbace2f963",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/tests-cibles-et-build-windows_en.md",
    "mode": "100644",
-   "sha256": "2aad1df895104a7ece02b1aafd817ea3b03676fc2556d75d60f095e97d422698",
+   "sha256": "a5b6f38fb5226801c7d4a31a804cbb7a0e4a56560d6a537db5d23fd7f33f1070",
    "source_sha256": "7fbd11ab64eb425a221243939f5195a5797f2405c2747462cfeea24ea5968a81",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/ui-preferences.md",
    "mode": "100644",
-   "sha256": "4ac96ff3b61f9d0812a93660fa49a2076153b39b4f0867365e0757fdf3cf5c1e",
+   "sha256": "97327bc3dd25b8526316ed6520a232bf0951e2bd0cc063361ed8ee27c399725c",
    "source_sha256": "1927858ba5a4313885cb1869e9d9621b9ff562674e8ddecc17e9ec38276d2674",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/architecture/ui-preferences_en.md",
    "mode": "100644",
-   "sha256": "43639934faa86c3ac1afd80c329c46bffdd31c988858f167a9d5f954435ae615",
+   "sha256": "7e7a64a5540f85452c98c58214705da6652ce3699d795d78e3a8df3e30e899d0",
    "source_sha256": "5b795862baca8b6c5f2712525448d8b885f57da6dce1719cae44da21ef9ab213",
    "derived": "links_to_dev"
   },
@@ -375,21 +375,21 @@
   {
    "path": "docs/camera-profile-engine.md",
    "mode": "100644",
-   "sha256": "8c8f7dd37520cd85779d43f27a3e11019ee1889227f94b6e87c62c0cdf66d794",
+   "sha256": "7883f59c273c18b799b35057cf8867dc83810673f732d7c69fea56b6508f58b4",
    "source_sha256": "6a7be215fca828f35f00cac34cecd82c9854de3bba1f24e4dab297c49e67bcbd",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/decisions/ADR-0001-sidecar-ipr.md",
    "mode": "100644",
-   "sha256": "ee8126aff91ba53b490a5a0f4e5b5874ce6613be459d6023a8d36f4e8327457e",
+   "sha256": "b642fcbfdd6afcc49c9bf5d7c5fd7960f16df20761921e8b3b3c040f039f1d34",
    "source_sha256": "01f7741fb2ead8cbbbfe5faf6a2d94e3da0ca605b991d395f4dbc349b44679b9",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/decisions/ADR-0002-pipeline-lineaire-et-calibration.md",
    "mode": "100644",
-   "sha256": "db5932159baf29a5446f7142a48e4ca676c06963a8fbd1bac2bad8a25b458996",
+   "sha256": "aa0c82497b9e83aa22764a368cd9bcfcf88b8232ad13cc03ba08b417d9d92bfd",
    "source_sha256": "b9ff5c37769b97f0b544048c08b8be0dc333fc793f5e726866268f610934c91b",
    "derived": "links_to_dev"
   },
@@ -406,7 +406,7 @@
   {
    "path": "docs/decisions/ADR-0005-melangeur-huit-bandes-luminance-bornee.md",
    "mode": "100644",
-   "sha256": "dec3fc71349629c26c54a58995c7a33bea1123f44a8b3bbe54909d3d06174709",
+   "sha256": "3c54c9736d04ba736432e6aadbc728d6303566b29083e5e9c6b4992f308aa622",
    "source_sha256": "452e69c866eb83b61a3ca3d178f38c7cb284ea7e1f4d2a696feb364002dee529",
    "derived": "links_to_dev"
   },
@@ -418,35 +418,35 @@
   {
    "path": "docs/decisions/ADR-0007-calibration-raw-par-defaut.md",
    "mode": "100644",
-   "sha256": "c7c2707b59721bc11a7b464ac099aad238de7bc4cce0bda189f8fb31718026eb",
+   "sha256": "63d2040ec603d3f2fb9404f8626c1a389d00dcd1b2f877bda45aebcd1b925264",
    "source_sha256": "20e68507aeeaa612fa781faeb6f371f337475ebfc4136d8bc13445d7f3e7582b",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/decisions/ADR-0008-separation-travail-affichage-export.md",
    "mode": "100644",
-   "sha256": "dc8b639c0d8bb9a0074f245a99848e57789dec468c55a0d91a569fb7a4966525",
+   "sha256": "11f0b1ad3d343bfe4ca6405ab64237d9f198fba9352c519e435083b5c45b5a8e",
    "source_sha256": "882b1539a80419e43b5a9f6ac888dc604cd259107a80a4194ad7768fc4737480",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/decisions/ADR-0009-espace-travail-rec2020-lineaire.md",
    "mode": "100644",
-   "sha256": "5d607c9d3d2e665d0a0fb9fb1c74132b8b4a76cd1b85cec188bbb3d1a42228f3",
+   "sha256": "78578eadcae3ddb7927b0ede69180abe5ffe6a85861c17a4c30710090ec7b5c5",
    "source_sha256": "c1fd18c56f962c3662336604d23a203a0425f42d8e25beca73afbf570f66fcd4",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/decisions/ADR-0010-compensation-rendu-par-profil-dcp.md",
    "mode": "100644",
-   "sha256": "c5aa02e1bffac9bb61fc07f9a580e10145b9b1cba6cec39902a275d0d50f6762",
+   "sha256": "49f2d6470d74e354cb81e4dced69daeb949719e4fbac792a786a9c9f98e3f53c",
    "source_sha256": "32a7428ed40cdf6b1335a8a8269fbdf7509ea4880b7e366490cd57a53773f380",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/decisions/ADR-0011-regles-raw-par-mode-et-configuration-vivante.md",
    "mode": "100644",
-   "sha256": "64d0615a394c2838bd94c6d4d6665617d6bcd2b0acb5d873fde398c920fa9c13",
+   "sha256": "d40271b45eb87f705543bd4cd4ea0ad8c75d656e6638a67fc64bb9ac81b059c0",
    "source_sha256": "67b16a765a4d450811b87f899f681f1423242191208b4be8ddde7cf31ba03011",
    "derived": "links_to_dev"
   },
@@ -468,7 +468,7 @@
   {
    "path": "docs/decisions/ADR-0015-controle-memoire-et-prechargement.md",
    "mode": "100644",
-   "sha256": "6b2c6a20d4c0d82f9ecfd5aa4885903b89a5d21a78eedc3a15b56976a911a25b",
+   "sha256": "84945a5a744448a710c250ea9846d9001ca1c225565944e58dec022481bab3ce",
    "source_sha256": "348eef478664c40fd9f7b36976e66fd66d1f2334bedd233e7c33614b32730087",
    "derived": "links_to_dev"
   },
@@ -490,7 +490,7 @@
   {
    "path": "docs/decisions/ADR-0019-analyses-ipr-en-memoire.md",
    "mode": "100644",
-   "sha256": "2752e0da68de46eb758e74587f2b8848b1866f43650fab06fb24a6dfa849afae",
+   "sha256": "b952e868fb5c66d4bb4c2a0343b8073a6ec86e04b3b5200ca179ff75cabbd05b",
    "source_sha256": "36b9985061b2528ea9fa48d5c9fa483e1c3c1992c3c25d4c64cd9c8d6b9236cf",
    "derived": "links_to_dev"
   },
@@ -512,7 +512,7 @@
   {
    "path": "docs/imageeditor-render-working-image.md",
    "mode": "100644",
-   "sha256": "89f3a9906d7177ab96258aceabb9f65f5759be62051b731dbf03f7fb96bff217",
+   "sha256": "79360dc6e9939a2f53c9106a1ef5f93c374a267394427a49dc298b7d9d0d59fd",
    "source_sha256": "8d2e3cd4a81315c9be608a79408e1990ca6ee52427cc3274f7e5ff8bdf412c12",
    "derived": "links_to_dev"
   },
@@ -524,7 +524,7 @@
   {
    "path": "docs/release/validation-summary.md",
    "mode": "100644",
-   "sha256": "600ec3ca38226b4d63133330958ae34498e9887ce12f8c34fee24a3f844be5ea",
+   "sha256": "30c77e8fd1d3f27ee40970a1665386de33aa560a48648d65e376091ba1fd807e",
    "source_sha256": "3afa4f6eb59b6bc12fa654a2111a9e7c4d8bc13f77143a01adbedeedecd0a9aa",
    "derived": "links_to_dev"
   },
@@ -811,14 +811,14 @@
   {
    "path": "docs/specifications/reglages-photographiques.md",
    "mode": "100644",
-   "sha256": "c4d29db272688430d9ab120fada1946ca8ff08c8aead469d46613ac85078411a",
+   "sha256": "54d36df1d5f32254e35ef480c1bdd90142ffb1236a75ad124ea8920302583314",
    "source_sha256": "a710a2df5bc1c373e0318e0ec8c34d41fe838b0c099a8e945048a0352bac53a6",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/specifications/zoom-image.md",
    "mode": "100644",
-   "sha256": "9c49eb237e5b1f2d36a793fe875a8e0ba2cc16a65e2dedd24c15d3a3c7e0932e",
+   "sha256": "c015519921641cec951b199ab2092461abb8c186f3cb7fca733d5762bd6ade4a",
    "source_sha256": "90870b952e3715fcc6f598e243a1dd4f2ec1b7af120069178707ccefbbffd58a",
    "derived": "links_to_dev"
   },
@@ -830,14 +830,14 @@
   {
    "path": "docs/technical/latex/README.md",
    "mode": "100644",
-   "sha256": "9046d24719e12d60cfb2e8329e8de2244ce65de2d37dd320c5dd87709c2972ad",
+   "sha256": "e71f9f9fe597a10296e2dc7723c93ef240a183bdecbae99768662462ae3f4bc0",
    "source_sha256": "f7ebadaa1fe3dc922da05164c5bb9ebc666c884733f9f3311d35e65558c5fbc5",
    "derived": "links_to_dev"
   },
   {
    "path": "docs/technical/latex/README_en.md",
    "mode": "100644",
-   "sha256": "f6504720d8342339eefd11dbded30d95dd85465bf624cf9b38e6159186ba7319",
+   "sha256": "497390ca52c92c731924d8fbce1fd470a1706dab7cef751df6e5d31b78a0f3c6",
    "source_sha256": "c668af59f9d62ffc6670b3fc5dad75b8460c6420d825a7bf2680343337f21980",
    "derived": "links_to_dev"
   },
@@ -989,7 +989,7 @@
   {
    "path": "docs/templates/validation-protocol-template.md",
    "mode": "100644",
-   "sha256": "1fc51618db878880bcdba9566d884a3cd3795c638d082bfd2055742f6a8a476a",
+   "sha256": "a8b79ea9bbbb1f45710d02870bfa63d000e7a43b349a72aba2c0baf75c3c0392",
    "source_sha256": "d2678110b5f75c9716ea5cfe4585bc106ef3956bcade8d651fea37162c923a87",
    "derived": "links_to_dev"
   },
@@ -1001,7 +1001,7 @@
   {
    "path": "docs/user/README.md",
    "mode": "100644",
-   "sha256": "151905a98afc03702b9aec3ae19d885a82d0b29e114a3a6b6441581ded20035a",
+   "sha256": "e510e521c7c4b2e5671946801d52cd5150a929d22525a8e08262ddc7fb0312a2",
    "source_sha256": "47bc8f7c152ebbf7d4097e49c57eacd97ee8d4103b63deef6a977b50109237d5",
    "derived": "links_to_dev"
   },
@@ -1218,7 +1218,7 @@
   {
    "path": "scripts/ci.py",
    "mode": "100644",
-   "sha256": "2a1893e648eeb73f814f6507865952b213c15ecd2e4ab941a346eae9b5f45baf"
+   "sha256": "d77ac8edb0bbb9348c1ef2b0c5d11ed49c6256c10989c673464d47879061eff1"
   },
   {
    "path": "scripts/ci_documents.py",
