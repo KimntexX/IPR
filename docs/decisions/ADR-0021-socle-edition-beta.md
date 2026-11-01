@@ -58,10 +58,18 @@ boîtier, qui remplacera la case expérimentale.
   après les corrections d'objectif, avant les traitements de voisinage (bruit,
   netteté, clarté, voile) : un seul rééchantillonnage, et des effets locaux qui
   ne se décalent pas au recadrage.
-- Les **calques** se superposent **après les réglages globaux**. Une comparaison
-  sur des cas réels (exposition et clarté locales) dira si l'écart avec
-  Lightroom, qui réapplique ses réglages locaux dans la chaîne, justifie de les
-  placer plus tôt.
+- Les **réglages locaux** agissent **dans la chaîne de traitement**, comme le fait
+  Lightroom (comportement observé de l'extérieur) : un masque n'est pas un calque
+  d'image posé par-dessus, mais une zone (pinceau, dégradés, plage, masque issu
+  d'un modèle), combinable par ajout, soustraction et intersection, qui porte ses
+  propres valeurs des réglages existants. À chaque étage, la valeur appliquée en
+  un pixel est la valeur globale plus la valeur locale pondérée par le masque :
+  une exposition locale de +1 se comporte comme une exposition globale de +1 dans
+  la zone. Les masques n'ont ni ordre ni mode de fusion : leurs effets
+  s'additionnent. Les modules prennent donc, en plus de leurs valeurs globales,
+  des cartes de valeurs locales.
+- La **retouche** (suppression d'éléments, tampon) est une opération distincte,
+  placée avant les réglages locaux, sur l'image géométriquement transformée.
 
 ### Format du `.ipr`
 
@@ -90,9 +98,17 @@ boîtier, qui remplacera la case expérimentale.
   l'autre, rendu identique à la réouverture, évolution du format contrôlée.
 - **Coûts et risques :** un dossier `.ipr-data` par photo retouchée avec des
   calques calculés ; un `.ipr` plus gros avec l'historique (borné à 100 étapes) ;
-  le recalcul d'un actif perdu exige le modèle correspondant ; la géométrie tôt
-  dans la chaîne impose de recalculer les étages suivants à chaque changement
-  de recadrage.
+  le recalcul d'un actif perdu exige le modèle correspondant ; un changement de
+  rotation ou de perspective recalcule les étages suivants (le recadrage, lui,
+  s'affiche comme un cadre sur l'image entière et ne s'applique qu'à la
+  validation) ; chaque module concerné doit accepter des valeurs locales par
+  pixel, ce qui touche les traitements de voisinage (clarté, voile, bruit,
+  netteté) plus que les traitements pixel par pixel.
+- **Latence :** une interaction reste sous 250 ms sur l'aperçu, seuil sous lequel
+  l'utilisateur ne perçoit pas l'attente (sensibilité humaine de 200–300 à
+  600 ms). Mesuré le 1er novembre 2026 sur la machine de l'utilisateur
+  (8 threads) : la géométrie coûte 5 à 33 ms sur l'aperçu de 2048 px, et 0,1 à
+  0,25 s en pleine résolution à l'export.
 - **Compatibilité :** les `.ipr` actuels (versions 1 à 9) restent lus et sont
   convertis au nouveau format à leur premier enregistrement.
 - **Validation :** tests de la recette (lecture, conversion, section inconnue,
