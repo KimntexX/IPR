@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "production_ci": [
+    {"os": "windows-2022", "mode": "system"},
+    {"os": "windows-2022", "mode": "standalone"},
+    {"os": "ubuntu-24.04", "mode": "standalone"},
+    {"os": "macos-15", "mode": "system"},
+    {"os": "macos-15-intel", "mode": "system"}
+  ],
+  "published": [
+    {"os": "windows-2022", "mode": "system"},
+    {"os": "windows-2022", "mode": "standalone"},
+    {"os": "ubuntu-24.04", "mode": "standalone"},
+    {"os": "macos-15", "mode": "system"},
+    {"os": "macos-15-intel", "mode": "system"}
+  ]
+}

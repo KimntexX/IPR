@@ -10,7 +10,7 @@ Le paquet « système » utilise les bibliothèques installées, sans les embarq
 | Workflow | Déclenchement | Contenu |
 | --- | --- | --- |
 | `ci.yml` | Push dev/patch_*, PR vers dev, manuel hors main | Tests ciblés sur les branches de groupe ; validation complète de dev |
-| `main.yml` | Push main, PR vers main, manuel sur main | Vérification de la promotion et de la CI dev source, compilation production et smoke sur sept configurations, sans tests ni outils d'analyse |
+| `main.yml` | Push main, PR vers main, manuel sur main | Vérification de la promotion et de la CI dev source, compilation production et smoke selon la liste versionnée, sans tests ni outils d'analyse |
 | `delivery.yml` | CI réussie sur dev/main, ou manuel limité à dev/main | Archives production depuis le SHA dev testé exact ; sur main, deux barrières CI et manifeste de promotion obligatoires |
 | `linux-distributions.yml` | Manuel sur dev/main après les mêmes barrières | Debian 13 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système ; profil production sans relancer les tests |
 | `release.yml` | Manuel sur main uniquement | Construction depuis le dev figé, empreintes et provenance, publication facultative des mêmes octets après approbation |
@@ -49,8 +49,27 @@ crée une release brouillon puis la publie sans reconstruction. Une release
 existante n'est jamais remplacée ; un échec après création laisse un brouillon
 à examiner, sans remplacement automatique des fichiers.
 
-Les sept configurations sont Windows x64 et macOS arm64/x64 dans les deux
-modes, plus Ubuntu 24.04 standalone. Les inventaires et le fichier de
+Les configurations de CI production et celles publiées sont définies dans
+`packaging/delivery-targets.json`, respectivement `production_ci` et
+`published`. Une configuration publiée doit appartenir à la CI production.
+Les workflows main, release, archives automatiques et contrôle de packaging
+consomment cette politique, sans matrice parallèle codée en dur. Les tests
+natifs complets de dev restent sur les quatre plateformes.
+
+Préparation **conditionnelle** du retrait macOS standalone pour cette release,
+suivie par [l'issue #20](https://github.com/KimntexX/IPR/issues/20) : Windows
+système/standalone, Ubuntu standalone et macOS arm64/Intel système restent
+dans les deux listes (cinq configurations). À intégrer uniquement si le run
+en cours échoue et que le report est retenu. La publication macOS système
+reste en place dans cette préparation, en attente de décision utilisateur ;
+elle peut être retirée de `published` sans retirer sa compilation de
+`production_ci`. Ne pas annoncer le standalone macOS comme validé ou livré.
+
+Pour rétablir le standalone macOS après qualification, ajouter les deux
+entrées correspondantes aux listes, tester le nouveau dev puis refaire une
+promotion. Aucun drapeau legacy, aucune tolérance aux artefacts manquants :
+la release exige exactement tous les paquets déclarés, ni plus ni moins, et
+le plan de release enregistre cette sélection. Les inventaires et le fichier de
 provenance joint conservent SHA dev/main, runs CI, options production,
 dépendances observées et SHA-256 des livrables. Les tests hors ligne du
 raccordement ne remplacent pas l'exécution réelle des workflows sur GitHub.

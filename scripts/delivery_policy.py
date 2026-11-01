@@ -10,13 +10,48 @@ from urllib.request import Request, urlopen
 
 BRANCHES = {'dev', 'main'}
 PLATFORMS = {'windows-2022', 'ubuntu-24.04', 'macos-15', 'macos-15-intel'}
-PACKAGE_MATRIX = tuple((host, mode) for host in sorted(PLATFORMS)
+ROOT = Path(__file__).resolve().parents[1]
+SUPPORTED_MATRIX = tuple((host, mode) for host in sorted(PLATFORMS)
                        for mode in ('system', 'standalone')
                        if (host, mode) != ('ubuntu-24.04', 'system'))
 CI_WORKFLOWS = {'dev': '.github/workflows/ci.yml', 'main': '.github/workflows/main.yml'}
 DEV_WORKFLOW_NAMES = {'CI scoped validation', 'CI native full tests', CI_WORKFLOWS['dev']}
 SHA = re.compile(r'[a-f0-9]{40}\Z')
-ROOT = Path(__file__).resolve().parents[1]
+
+
+def load_targets(path):
+    config = json.loads(Path(path).read_text(encoding='utf8'))
+    if not isinstance(config, dict) or set(config) != {'schema', 'production_ci', 'published'} or config['schema'] != 1:
+        raise ValueError('Unsupported delivery target policy')
+    matrices = []
+    for name in ('production_ci', 'published'):
+        rows = config[name]
+        if not isinstance(rows, list) or not rows:
+            raise ValueError('An explicit nonempty target list is required: ' + name)
+        entries = []
+        for row in rows:
+            if not isinstance(row, dict) or set(row) != {'os', 'mode'}:
+                raise ValueError('Invalid delivery matrix entry')
+            entry = (row['os'], row['mode'])
+            if entry not in SUPPORTED_MATRIX or entry in entries:
+                raise ValueError('Unsupported or duplicate delivery matrix entry')
+            entries.append(entry)
+        matrices.append(tuple(entries))
+    if not set(matrices[1]).issubset(matrices[0]):
+        raise ValueError('Every published configuration must be validated in production CI')
+    return tuple(matrices)
+
+
+PRODUCTION_MATRIX, PACKAGE_MATRIX = load_targets(ROOT / 'packaging/delivery-targets.json')
+
+
+def matrix_value(entries):
+    return json.dumps({'include': [dict(os=host, mode=mode) for host, mode in entries]})
+
+
+def matrix_outputs():
+    return {'production_matrix': matrix_value(PRODUCTION_MATRIX),
+            'package_matrix': matrix_value(PACKAGE_MATRIX)}
 
 
 def api(path):
@@ -53,7 +88,7 @@ def validate_ci(run, jobs, branch, sha, repository):
         run.get('head_repository', {}).get('full_name') != repository):
         raise ValueError('No successful trusted CI for this exact branch commit')
     required = ({f'native ({host})' for host in PLATFORMS} | {'CI validation'} if branch == 'dev'
-                else {f'production ({host}, {mode})' for host, mode in PACKAGE_MATRIX}
+                else {f'production ({host}, {mode})' for host, mode in PRODUCTION_MATRIX}
                 | {'Promotion verification', 'Main production validation'})
     successful = {job['name'] for job in jobs if job.get('conclusion') == 'success'}
     if not required.issubset(successful) or any(
@@ -160,7 +195,7 @@ def main(argv=None):
     parser.add_argument('--check-promotion', metavar='SHA', help='closure + dev gate only; for main CI itself')
     args = parser.parse_args(argv)
     if args.check_promotion:
-        emit(verify_promotion(args.check_promotion, os.environ['GITHUB_REPOSITORY']))
+        emit(dict(verify_promotion(args.check_promotion, os.environ['GITHUB_REPOSITORY']), **matrix_outputs()))
         return 0
     approval = verify_publication_environment(planning=True)
     payload = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text(encoding='utf8'))
@@ -172,7 +207,7 @@ def main(argv=None):
             version = '0.1.0-alpha'
     version = release_version(version)[0].split('+')[0]
     approval['label'] = f'{version}+{approval["branch"]}.{approval["sha"][:12]}'
-    emit(approval)
+    emit(dict(approval, **matrix_outputs()))
     return 0
 
 

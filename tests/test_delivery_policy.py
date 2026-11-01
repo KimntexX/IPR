@@ -29,6 +29,56 @@ def jobs():
 
 
 class DeliveryPolicyTests(unittest.TestCase):
+    def test_selected_policy_is_strict_reversible_and_keeps_macos_system(self):
+        expected = {('windows-2022','system'), ('windows-2022','standalone'),
+                    ('ubuntu-24.04','standalone'), ('macos-15','system'), ('macos-15-intel','system')}
+        self.assertEqual(set(policy.PRODUCTION_MATRIX), expected)
+        self.assertEqual(set(policy.PACKAGE_MATRIX), expected)
+        self.assertEqual(policy.PLATFORMS, {'windows-2022','ubuntu-24.04','macos-15','macos-15-intel'})
+        selected=json.loads((ROOT/'packaging/delivery-targets.json').read_text())
+        with tempfile.TemporaryDirectory() as temporary:
+            file=Path(temporary)/'targets.json'
+            for name in ('production_ci','published'):
+                selected[name] += [dict(os=host,mode='standalone') for host in ('macos-15','macos-15-intel')]
+            file.write_text(json.dumps(selected),encoding='utf8')
+            production,published=policy.load_targets(file)
+        self.assertEqual(set(production),set(policy.SUPPORTED_MATRIX))
+        self.assertEqual(set(published),set(policy.SUPPORTED_MATRIX))
+
+    def test_target_policy_rejects_invalid_or_unvalidated_publication(self):
+        base=json.loads((ROOT/'packaging/delivery-targets.json').read_text())
+        for corruption in ('duplicate','unknown','empty','outside_ci','schema'):
+            config=json.loads(json.dumps(base))
+            if corruption=='duplicate': config['published'].append(config['published'][0])
+            elif corruption=='unknown': config['published'][0]['os']='untrusted-runner'
+            elif corruption=='empty': config['published']=[]
+            elif corruption=='outside_ci': config['production_ci']=config['production_ci'][:-1]
+            else: config['schema']=2
+            with self.subTest(corruption=corruption), tempfile.TemporaryDirectory() as temporary:
+                file=Path(temporary)/'targets.json'
+                file.write_text(json.dumps(config),encoding='utf8')
+                with self.assertRaises(ValueError): policy.load_targets(file)
+
+    def test_unpublished_system_builds_remain_mandatory_in_main_ci(self):
+        run=dict(run_record(),head_branch='main',path=policy.CI_WORKFLOWS['main'])
+        names=[f'production ({host}, {mode})' for host,mode in policy.PRODUCTION_MATRIX]
+        required=[dict(name=name,conclusion='success') for name in names+['Promotion verification','Main production validation']]
+        with patch.object(policy,'PACKAGE_MATRIX',tuple(row for row in policy.PACKAGE_MATRIX if not row[0].startswith('macos'))):
+            policy.validate_ci(run,required,'main',SHA,REPO)
+            for host in ('macos-15','macos-15-intel'):
+                incomplete=[job for job in required if job['name'] != f'production ({host}, system)']
+                with self.subTest(host=host), self.assertRaises(ValueError):
+                    policy.validate_ci(run,incomplete,'main',SHA,REPO)
+
+    def test_promotion_job_outputs_the_exact_configured_matrices(self):
+        with patch.dict(os.environ,GITHUB_REPOSITORY=REPO), patch.object(policy,'verify_promotion',return_value={'build_sha':SHA}), patch.object(policy,'emit') as emit:
+            self.assertEqual(policy.main(['--check-promotion',SHA]),0)
+        output=emit.call_args.args[0]
+        self.assertEqual(json.loads(output['production_matrix'])['include'],
+                         [dict(os=host,mode=mode) for host,mode in policy.PRODUCTION_MATRIX])
+        self.assertEqual(json.loads(output['package_matrix'])['include'],
+                         [dict(os=host,mode=mode) for host,mode in policy.PACKAGE_MATRIX])
+
     def test_only_dev_main_manual_dispatch(self):
         for branch in ('dev', 'main'):
             self.assertEqual(policy.context('workflow_dispatch', branch, SHA, {}, REPO)[:2], (branch, SHA))

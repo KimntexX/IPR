@@ -19,6 +19,7 @@ jobs:
       python: ${{ steps.scope.outputs.python }}
       documents: ${{ steps.scope.outputs.documents }}
       matrix: ${{ steps.scope.outputs.matrix }}
+      package_matrix: ${{ steps.scope.outputs.package_matrix }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -113,17 +114,11 @@ jobs:
           PY
   packaging-check:
     name: Packaging verification (${{ matrix.os }}, ${{ matrix.mode }})
-    needs: validation
+    needs: [scope, validation]
     if: github.ref == 'refs/heads/patch_ci_cd' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
-      matrix:
-        os: [windows-2022, ubuntu-24.04, macos-15, macos-15-intel]
-        mode: [system, standalone]
-        # No Qt >= 6.8 system package on Ubuntu 24.04: standalone only there.
-        exclude:
-          - os: ubuntu-24.04
-            mode: system
+      matrix: ${{ fromJSON(needs.scope.outputs.package_matrix) }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 120
     steps:

@@ -21,7 +21,8 @@ APPROVAL = dict(branch='main', sha=MAIN, main_sha=MAIN, build_sha=DEV,
                 dev_ci_run_id=11, ci_run_id=22, closure_sha256='c' * 64,
                 allowlist_sha256='d' * 64)
 PLAN = dict(schema=1, repository=REPO, tag='v0.1.80-alpha+main',
-            version='0.1.80-alpha+main', **APPROVAL)
+            version='0.1.80-alpha+main',
+            published_configurations=json.loads(policy.matrix_value(policy.PACKAGE_MATRIX))['include'], **APPROVAL)
 
 
 class MainGateTests(unittest.TestCase):
@@ -29,7 +30,7 @@ class MainGateTests(unittest.TestCase):
         run = dict(id=22, conclusion='success', status='completed', head_sha=MAIN,
                    head_branch='main', event='push', path=policy.CI_WORKFLOWS['main'],
                    head_repository={'full_name': REPO})
-        names = [f'production ({host}, {mode})' for host, mode in policy.PACKAGE_MATRIX]
+        names = [f'production ({host}, {mode})' for host, mode in policy.PRODUCTION_MATRIX]
         names += ['Promotion verification', 'Main production validation']
         jobs = [dict(name=name, conclusion='success') for name in names]
         policy.validate_ci(run, jobs, 'main', MAIN, REPO)
@@ -219,7 +220,7 @@ class ReleaseTests(unittest.TestCase):
                     record['files'][0]['name'] = '../outside'
                     record_path.write_text(json.dumps(record), encoding='utf8')
                 if corruption == 'none':
-                    self.assertEqual(len(release.collect(PLAN, plan_path, directory)), 7)
+                    self.assertEqual(len(release.collect(PLAN, plan_path, directory)), len(policy.PACKAGE_MATRIX))
                 else:
                     with self.assertRaises(ValueError):
                         release.collect(PLAN, plan_path, directory)
@@ -268,6 +269,38 @@ class ReleaseTests(unittest.TestCase):
             self.assertEqual(job['permissions']['contents'], 'write' if name == 'publish' else 'read')
         checkout = workflow['jobs']['archives']['steps'][0]
         self.assertEqual(checkout['with']['ref'], '${{ needs.approval.outputs.build_sha }}')
+        self.assertEqual(main['jobs']['production']['strategy']['matrix'], '${{ fromJSON(needs.promotion.outputs.matrix) }}')
+        self.assertEqual(workflow['jobs']['archives']['strategy']['matrix'], '${{ fromJSON(needs.approval.outputs.matrix) }}')
+
+    def test_workflow_yaml_has_no_duplicate_mapping_keys(self):
+        import yaml
+        class UniqueLoader(yaml.BaseLoader):
+            def construct_mapping(self,node,deep=False):
+                keys=[self.construct_object(key,deep=deep) for key,_ in node.value]
+                if len(keys)!=len(set(keys)):
+                    raise ValueError('Duplicate YAML mapping key')
+                return super().construct_mapping(node,deep=deep)
+        for path in (ROOT/'.github').rglob('*.yml'):
+            with self.subTest(path=path):
+                yaml.load(path.read_text(),Loader=UniqueLoader)
+        scope=yaml.load((ROOT/'.github/workflows/ci.yml').read_text(),Loader=UniqueLoader)
+        self.assertEqual(set(scope['jobs']['packaging-check']['needs']),{'scope','validation'})
+
+    def test_changed_release_target_plan_is_rejected_before_api(self):
+        with patch.object(policy, 'authorize_main') as api, self.assertRaises(ValueError):
+            release.validate_plan(dict(PLAN, published_configurations=PLAN['published_configurations'][:-1]))
+        api.assert_not_called()
+
+    def test_planning_job_outputs_only_the_attested_publication_matrix(self):
+        with patch.object(release,'make_plan',return_value=PLAN), patch.object(release,'write_json'), patch.object(policy,'emit') as emit:
+            self.assertEqual(release.main(['--action','plan','--tag',PLAN['tag'],'--output','unused.json']),0)
+        self.assertEqual(json.loads(emit.call_args.args[0]['package_matrix'])['include'],PLAN['published_configurations'])
+
+    def test_suspended_configuration_cannot_be_inventoried(self):
+        for runner in ('macos-15', 'macos-15-intel'):
+            with self.subTest(runner=runner), patch.object(release, 'validate_plan'), patch.object(release, 'cache') as cache, self.assertRaises(ValueError):
+                release.inventory(PLAN, Path('unused'), Path('unused'), Path('unused'), runner, 'standalone')
+            cache.assert_not_called()
 
     def test_existing_release_or_changed_gate_never_overwrites_or_publishes(self):
         for existing in (True, False):

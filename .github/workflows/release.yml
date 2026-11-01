@@ -28,6 +28,7 @@ jobs:
       build_sha: ${{ steps.plan.outputs.build_sha }}
       main_sha: ${{ steps.plan.outputs.main_sha }}
       version: ${{ steps.plan.outputs.version }}
+      matrix: ${{ steps.plan.outputs.package_matrix }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -51,12 +52,7 @@ jobs:
       actions: read
     strategy:
       fail-fast: false
-      matrix:
-        os: [windows-2022, ubuntu-24.04, macos-15, macos-15-intel]
-        mode: [system, standalone]
-        exclude:
-          - os: ubuntu-24.04
-            mode: system
+      matrix: ${{ fromJSON(needs.approval.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 120
     env:

@@ -124,8 +124,8 @@ class DeploymentTests(unittest.TestCase):
                         self.assertRegex(action, r'@[a-f0-9]{40}$')
         delivery = yaml.load((ROOT / '.github/workflows/delivery.yml').read_text(), Loader=yaml.BaseLoader)
         matrix = delivery['jobs']['archives']['strategy']['matrix']
-        self.assertEqual(set(matrix['mode']), {'system', 'standalone'})
-        self.assertEqual(len(matrix['os']), 4)
+        self.assertEqual(matrix, '${{ fromJSON(needs.approval.outputs.matrix) }}')
+        self.assertEqual(delivery['jobs']['approval']['outputs']['matrix'], '${{ steps.approval.outputs.package_matrix }}')
 
 
 if __name__ == '__main__': unittest.main()
