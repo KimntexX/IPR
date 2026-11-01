@@ -42,3 +42,14 @@ Tests `detailProcessingTests` complémentaires. Profils de bord/halos et
 combinaisons demandent une recette spécifique ; le proxy bruit seul n'est
 pas un score de netteté. Rapport unique Netteté, avec couplage Bruit.
 Socle pour IHM, restauration, mémoire et clôture.
+
+## Campagne de validation bêta — netteté (28 octobre 2026)
+
+Préréglages `IPR Nettete` (`scripts/make_lr_presets.py --controls sharpening`, 16 états) sur un
+recadrage du **seizième central** de l'image (0,375–0,625 dans les deux axes), exporté **en
+pleine résolution, sans redimensionnement** : un export réduit effacerait la netteté. Neutre
+`Nettete neutre` (gain 0, même recadrage) ; gain 25, 50, 75, 100, 150 (rayon 1,0, détail 25,
+masquage 0, valeurs par défaut de Lightroom) ; rayon 0,5, 1,5, 2,0, 3,0, détail 0, 50, 100 et
+masquage 25, 50, 75, chacun à gain 75. Le détail n'existe pas dans IPR : ces états disent s'il
+faut l'ajouter. Les 28 RAW de `base` ; exports TIFF 16 bits sRGB dans `nettete`. La base neutre
+de tous les préréglages retire tout recadrage (`HasCrop` faux).

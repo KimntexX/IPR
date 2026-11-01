@@ -15,7 +15,12 @@ ColumnLayout {
                                       qsTr("Bleus"), qsTr("Violets"), qsTr("Magentas")]
     readonly property var bandColors: ["#e55353", "#ed923b", "#e6c34b", "#70bd66",
                                        "#40b8c2", "#5d8ee8", "#8e63d8", "#df65b5"]
-    readonly property var bandHues: [0, 30, 60, 120, 180, 240, 270, 300]
+    // Slider tracks: the colours each slider of the band reaches from -100 to
+    // +100, computed by the engine from the measured Lightroom mixer model.
+    readonly property var trackValues: [-100, -50, 0, 50, 100]
+    function track(component) {
+        return trackValues.map(value => editor.colorMixerTrackColor(band, component, value))
+    }
 
     function reload() {
         reloading = true
@@ -91,38 +96,56 @@ ColumnLayout {
                     background: Rectangle {
                         radius: width / 2
                         color: root.bandColors[swatchButton.index]
-                        border.width: root.band === swatchButton.index ? 3 : 1
+                        // One ring: thin, or thicker and light on the selected band.
+                        border.width: root.band === swatchButton.index ? 2 : 1
                         border.color: root.band === swatchButton.index ? swatchButton.palette.text : swatchButton.palette.mid
                         opacity: swatchButton.enabled ? 1 : 0.35
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: parent.width - 9
-                            height: width
-                            radius: width / 2
-                            color: "transparent"
-                            border.width: 1
-                            border.color: "#ffffff"
-                            opacity: root.band === swatchButton.index ? 0.65 : 0.18
-                        }
                     }
                 }
             }
         }
     }
 
-    Label {
-        text: root.bandNames[root.band]
-        color: root.bandColors[root.band]
-        font.pixelSize: 12
-        font.bold: true
+    RowLayout {
+        Layout.fillWidth: true
+
+        Label {
+            objectName: "mixerBandName"
+            Layout.fillWidth: true
+            horizontalAlignment: Text.AlignHCenter
+            text: qsTr("%1 · %2 · %3 · %4").arg(root.bandNames[root.band]).arg(Math.round(hueControl.value))
+                  .arg(Math.round(saturationControl.value)).arg(Math.round(luminanceControl.value))
+            color: palette.windowText
+            font.pixelSize: 12
+        }
+
+        PreferenceButton {
+            id: resetBandButton
+            Layout.preferredWidth: 21
+            Layout.preferredHeight: 21
+            text: "↺"
+            font.pixelSize: 14
+            padding: 0
+            hoverEnabled: true
+            enabled: root.editor.hasImage
+            Accessible.name: qsTr("Réinitialiser la bande")
+            ToolTip.visible: hovered
+            ToolTip.text: qsTr("Réinitialiser la bande %1").arg(root.bandNames[root.band])
+            onClicked: {
+                root.editor.setColorMixer(root.band, 0, 0, 0)
+                root.reload()
+            }
+
+            background: Rectangle {
+                radius: 3
+                color: resetBandButton.hovered ? resetBandButton.palette.mid : "transparent"
+            }
+        }
     }
 
     AdjustmentControl {
         id: hueControl
-        trackColors: [Qt.hsla(((root.bandHues[root.band] + 330) % 360) / 360, 0.65, 0.55, 1),
-                      root.bandColors[root.band],
-                      Qt.hsla(((root.bandHues[root.band] + 30) % 360) / 360, 0.65, 0.55, 1)]
+        trackColors: root.track(0)
         Layout.fillWidth: true
         label: qsTr("Teinte")
         valueText: Math.round(value)
@@ -134,7 +157,7 @@ ColumnLayout {
 
     AdjustmentControl {
         id: saturationControl
-        trackColors: ["#7d838b", root.bandColors[root.band]]
+        trackColors: root.track(1)
         Layout.fillWidth: true
         label: qsTr("Saturation %1").arg(root.bandNames[root.band])
         valueText: Math.round(value)
@@ -146,7 +169,7 @@ ColumnLayout {
 
     AdjustmentControl {
         id: luminanceControl
-        trackColors: ["#20252c", root.bandColors[root.band], "#f2f2ee"]
+        trackColors: root.track(2)
         Layout.fillWidth: true
         label: qsTr("Luminance %1").arg(root.bandNames[root.band])
         valueText: Math.round(value)

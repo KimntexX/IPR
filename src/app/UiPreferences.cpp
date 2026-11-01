@@ -19,7 +19,7 @@ const QMap<QString, QPair<int, int>> integerRanges{
     {"layout/settingsWidth", {260, 360}}, {"layout/imageInfoWidth", {210, 300}},
     {"layout/imageInfoFontSize", {10, 20}},
     {"layout/filmstripHeight", {100, 260}}, {"selection/toneCurveChannel", {0, 3}},
-    {"selection/mixerBand", {0, 7}}, {"selection/gradingZone", {0, 2}},
+    {"selection/mixerBand", {0, 7}}, {"selection/gradingZone", {0, 3}},
     {"export/quality", {1, 100}}, {"meta/schemaVersion", {2, 2}}
 };
 }

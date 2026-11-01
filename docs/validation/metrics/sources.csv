@@ -86,6 +86,7 @@ docs/validation/raw/inventaire-bruit-2026-10-04-v3.json,e38bb664d33250d5b53fefa5
 docs/validation/raw/inventaire-bruit-2026-10-04-v4.json,23fbed90d03819e578b5726a9a13e85a8ecabf521d61a51146a355b7dd4a4ce0,bruit,338339,sha256-text-lf-v1
 docs/validation/raw/inventaire-bruit-2026-10-04-v5.json,318df1c139e76bb13580968e8cdffb7dd3688372a6b7c9126d4c7eafbaea266b,bruit,338353,sha256-text-lf-v1
 docs/validation/raw/inventaire-bruit-v2-2026-10-05-v1.json,d027d7a6567a9dba58abd8783d95930450a0ec84f7f8f6a1b3b772e93ad45414,bruit,519969,sha256-text-lf-v1
+docs/validation/raw/inventaire-canon-rawpixls-v001-20261020.json,3ff89a48c6c1edef7419fcab683725f3b922930b40e8aa9a86db84d6ff71b716,base-raw-profils,25415,sha256-text-lf-v1
 docs/validation/raw/inventaire-color-mixer-2026-10-04.json,81801ccbacd38aa1113639a99fda143645af9d6d8aa48537f6caa5c04c485bfe,melangeur,119512,sha256-text-lf-v1
 docs/validation/raw/inventaire-color-mixer-autres-6V1A0327-2026-10-04.json,8f9b201ac7d580de8bc375382b12e599da01e9ff94be2696283538b2105dd91c,melangeur,155408,sha256-text-lf-v1
 docs/validation/raw/inventaire-color-mixer-green-6V1A0043-2026-10-04.json,3b27f3028542baaa6d16b71e9184c2423449552d454e1698ae125a9608e147e9,melangeur,44502,sha256-text-lf-v1

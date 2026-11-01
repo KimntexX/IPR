@@ -83,6 +83,7 @@ ApplicationWindow {
             Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.saveAction }
             ActionMenuItem { action: fileActions.exportAction }
+            ActionMenuItem { action: fileActions.exportSelectionAction }
             ActionMenuItem { action: fileActions.duplicateAction }
             Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.quitAction }
@@ -93,6 +94,7 @@ ApplicationWindow {
             width: 440
             ActionMenuItem { action: fileActions.copyAction }
             ActionMenuItem { action: fileActions.pasteAction }
+            ActionMenuItem { action: fileActions.applySelectionAction }
             Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.resetAction }
         }
@@ -189,6 +191,12 @@ ApplicationWindow {
                 textColor: uiPreferences.theme.text
                 panelColor: uiPreferences.theme.panel
                 visible: imageEditor.hasImage
+                picking: settingsView.pointColorPicking
+                onPointPicked: (x, y) => {
+                    imageEditor.addPointColorAt(x, y)
+                    settingsView.pointColorPicking = false
+                }
+                onPickingCancelled: settingsView.pointColorPicking = false
                 onContextMenuRequested: (x, y) => {
                     photoMenu.targetName = imageEditor.imageDetails.name || ""
                     photoMenu.targetUrl = ""

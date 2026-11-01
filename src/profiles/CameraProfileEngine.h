@@ -32,6 +32,12 @@ struct DcpRenderOptions
     double profileExposureCompensationEv = 0.0;
 };
 
+struct LcpRenderOptions
+{
+    bool lensCorrection = true; // Distortion and vignetting.
+    bool chromaticAberration = true; // Lateral red/blue registration.
+};
+
 // Immutable camera-space source. LibRaw WB and optical corrections are already
 // applied; retain it so edits can precede the nonlinear DCP tables and curve.
 struct DcpWorkingContext
@@ -41,6 +47,12 @@ struct DcpWorkingContext
     double sourceKelvin = 5500.0;
     cv::Vec3d cameraNeutral{0.0, 0.0, 0.0}; // Inverse actual LibRaw multipliers, G=1.
     DcpRenderOptions options;
+    // Experimental camera-signal denoise: the signal before the lens corrections and
+    // what reapplies them. Empty unless the decode was asked for it and corrected.
+    cv::Mat preLensCameraRgb;
+    QString lcpPath;
+    CaptureSettings capture;
+    LcpRenderOptions lensOptions;
 };
 
 bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tint,
@@ -50,12 +62,6 @@ bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tin
 // Exposure therefore precedes the profile tone curve, as in camera RAW editors.
 bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
                             double exposureEv, cv::Mat &linearRgb, QString *error = nullptr);
-
-struct LcpRenderOptions
-{
-    bool lensCorrection = true; // Distortion and vignetting.
-    bool chromaticAberration = true; // Lateral red/blue registration.
-};
 
 struct LcpApplied
 {

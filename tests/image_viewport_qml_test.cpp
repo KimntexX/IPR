@@ -14,6 +14,20 @@
 #include <cmath>
 #include <iostream>
 
+// Receives the viewport's point colour picks.
+class PickReceiver : public QObject
+{
+    Q_OBJECT
+public:
+    double x = -1, y = -1;
+    int count = 0;
+public slots:
+    void picked(double px, double py) { x = px; y = py; ++count; }
+    void cancelled() { ++cancellations; }
+public:
+    int cancellations = 0;
+};
+
 namespace {
 bool check(bool value, const char *message)
 {
@@ -110,8 +124,34 @@ int main(int argc, char **argv)
     auto *canvas = viewport->findChild<QQuickItem *>("viewportImage");
     if (!check(canvas && near(number(viewport, "zoomScale"), .5) && viewport->property("fitMode").toBool()
             && near(canvas->width(), 800) && near(canvas->height(), 500), "initial image should fit")) return 1;
+    if (!check(canvas->property("mipmap").toBool() && canvas->property("smooth").toBool(),
+               "reduced previews are mipmapped, so the grain does not alias")) return 1;
+    auto *fitCanvas = viewport->findChild<QQuickItem *>("fitViewportImage");
+    for (int i = 0; i < 50 && fitCanvas && !fitCanvas->isVisible(); ++i) settle();
+    if (!check(fitCanvas && fitCanvas->isVisible() && !canvas->isVisible()
+            && fitCanvas->property("sourceSize").toSize() == QSize(800, 500)
+            && near(fitCanvas->width(), 800) && near(fitCanvas->height(), 500),
+               "at fit the preview is reduced to the exact displayed size and replaces the mipmapped one")) return 1;
+    // Eyedropper: a click reports its place in the image instead of zooming; Escape cancels.
+    PickReceiver receiver;
+    QObject::connect(viewport, SIGNAL(pointPicked(double,double)), &receiver, SLOT(picked(double,double)));
+    QObject::connect(viewport, SIGNAL(pickingCancelled()), &receiver, SLOT(cancelled()));
+    auto *viewportArea = viewport->findChild<QQuickItem *>("viewportMouseArea");
+    auto *indicator = viewport->findChild<QQuickItem *>("pickingIndicator");
+    viewport->setProperty("picking", true);
+    mouse(window, QEvent::MouseMove, QPointF(210, 380), Qt::NoButton, Qt::NoButton);
+    if (!check(viewportArea && viewportArea->cursor().shape() == Qt::CrossCursor && indicator && indicator->isVisible(),
+               "picking shows a cross cursor and an eyedropper beside the pointer")) return 1;
+    click(window, QPointF(200, 375));
+    viewport->forceActiveFocus();
+    key(window, Qt::Key_Escape, Qt::NoModifier, QString());
+    if (!check(receiver.count == 1 && near(receiver.x, .25) && near(receiver.y, .75) &&
+               viewport->property("fitMode").toBool() && receiver.cancellations == 1,
+               "picking should report the image place without zooming, and Escape should cancel")) return 1;
+    viewport->setProperty("picking", false);
     click(window, QPointF(400, 250));
     if (!check(near(number(viewport, "zoomScale"), 1), "click should zoom to actual preview size")) return 1;
+    if (!check(!fitCanvas->isVisible() && canvas->isVisible(), "zoomed views use the full preview")) return 1;
     mouse(window, QEvent::MouseButtonPress, QPointF(400, 250), Qt::LeftButton, Qt::LeftButton);
     mouse(window, QEvent::MouseMove, QPointF(490, 310), Qt::NoButton, Qt::LeftButton);
     mouse(window, QEvent::MouseButtonRelease, QPointF(490, 310), Qt::LeftButton, Qt::NoButton);
@@ -164,6 +204,7 @@ int main(int argc, char **argv)
     auto *originalCanvas = visualItem(viewport, "originalViewportImage");
     if (!check(compare && originalCanvas && waitForComparison(viewport)
             && compare->property("enabled").toBool(), "comparison should wait for a matching origin preview")) return 1;
+    if (!check(originalCanvas->property("mipmap").toBool(), "the original preview is mipmapped like the edited one")) return 1;
     QMetaObject::invokeMethod(compare, "clicked");
     if (!check(viewport->property("showingComparison").toBool()
             && compare->property("checked").toBool(), "comparison button should show the split view")) return 1;
@@ -284,3 +325,5 @@ int main(int argc, char **argv)
     std::cout << "Viewport zoom, comparison, click, drag, wheel, shortcuts, bounds and refresh checks passed" << std::endl;
     return 0;
 }
+
+#include "image_viewport_qml_test.moc"

@@ -11,6 +11,7 @@
 #include <QStringList>
 #include <functional>
 #include <memory>
+#include <optional>
 
 namespace RawDecoder {
 
@@ -28,6 +29,8 @@ struct DcpSource
     bool automaticWhiteBalance = false;
     bool lensCorrectionEnabled = true;
     bool chromaticAberrationEnabled = true;
+    bool preLensSignal = false;       // decoded with Options::retainPreLensSignal
+    bool signedDevelopment = false;   // decoded with Options::signedDevelopment
 };
 
 struct Options
@@ -44,6 +47,12 @@ struct Options
     bool useNormalizationEnvironment = true;
     bool listDcpProfiles = false;
     bool preferCameraNeutral = false;
+    // Development policy B (values below the black kept, RawDevelopment::Policy::Signed)
+    // for the comparison bench; the application keeps policy A, LibRaw's.
+    bool signedDevelopment = false;
+    // Keep the camera signal before the lens corrections in the DCP context (the
+    // editor's experimental camera-signal denoise): one more camera buffer.
+    bool retainPreLensSignal = false;
     std::shared_ptr<DcpSource> retainedDcpSource;
     std::function<bool()> cancellationRequested;
 };
@@ -66,6 +75,8 @@ struct FormatOptions
     QString decoderId;
     QString decoderVersion;
     std::function<QSize(const QString &)> dimensions;
+    // The camera's as-shot white balance in kelvins, read without decoding the pixels.
+    std::function<std::optional<double>(const QString &)> asShotWhiteBalanceKelvin;
 };
 
 bool registerFormatHandler(const QStringList &extensions,
@@ -74,6 +85,8 @@ bool registerFormatHandler(const QStringList &extensions,
 QStringList supportedExtensions();
 QString backendVersion();
 QSize sourceDimensions(const QString &fileName);
+// Same value as the decoded image's referenceWhiteBalanceKelvin, from the metadata only.
+std::optional<double> asShotWhiteBalanceKelvin(const QString &fileName);
 ColorPipeline::WorkingImage decode(const QString &fileName,
                                    const Options &options = {},
                                    ImageMetadata *metadata = nullptr,

@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <cstring>
 #include <utility>
 
 namespace ColorPipeline {
@@ -94,24 +93,23 @@ QImage toEncodedSrgbRgba64(const cv::Mat &linearRgba)
     // Encode before quantization. Qt's integer color-space LUT loses low
     // linear16 codes; this buffer is already in sRGB primaries, so only
     // the analytic sRGB transfer is needed. Alpha is straight and linear.
-    cv::Mat rgba16(linearRgba.rows, linearRgba.cols, CV_16UC4);
+    // RGBA64 stores each pixel as four 16-bit halfwords in R, G, B, A order.
+    QImage image(linearRgba.cols, linearRgba.rows, QImage::Format_RGBA64);
+    if (image.isNull())
+        return image;   // allocation failed: the caller reports it
     for (int y = 0; y < linearRgba.rows; ++y) {
         const cv::Vec4f *source = linearRgba.ptr<cv::Vec4f>(y);
-        cv::Vec<quint16, 4> *destination = rgba16.ptr<cv::Vec<quint16, 4>>(y);
+        auto *destination = reinterpret_cast<quint16 *>(image.scanLine(y));
         for (int x = 0; x < linearRgba.cols; ++x) {
             for (int channel = 0; channel < 3; ++channel) {
                 const double linear = std::clamp(double(source[x][channel]), 0.0, 1.0);
                 const double encoded = WorkingColor::srgbEncode(linear);
-                destination[x][channel] = static_cast<quint16>(std::lround(encoded * 65535.0));
+                destination[4 * x + channel] = static_cast<quint16>(std::lround(encoded * 65535.0));
             }
-            destination[x][3] = static_cast<quint16>(std::lround(
+            destination[4 * x + 3] = static_cast<quint16>(std::lround(
                 std::clamp(source[x][3], 0.0f, 1.0f) * 65535.0f));
         }
     }
-
-    QImage image(rgba16.cols, rgba16.rows, QImage::Format_RGBA64);
-    for (int y = 0; y < rgba16.rows; ++y)
-        std::memcpy(image.scanLine(y), rgba16.ptr(y), rgba16.cols * 8);
     image.setColorSpace(QColorSpace(QColorSpace::SRgb));
     return image;
 }
@@ -144,26 +142,23 @@ WorkingImage fromSourceImage(const QImage &source, QString *error)
     return result;
 }
 
-WorkingImage fromLinearRgb16(const quint16 *data, int width, int height,
-                             QString *error)
+WorkingImage fromLinearSrgb(const cv::Mat &rgb, QString *error)
 {
     WorkingImage result;
-    if (!data || width <= 0 || height <= 0) {
+    // Extended range (negative, above 1) is kept; NaN and infinities are refused.
+    if (rgb.empty() || rgb.type() != CV_32FC3 || !cv::checkRange(rgb)) {
         if (error)
-            *error = QStringLiteral("Les données RAW 16 bits sont invalides.");
+            *error = QStringLiteral("Les données RAW RGB linéaires sont invalides.");
         return result;
     }
 
-    cv::Mat rgb16(height, width, CV_16UC3, const_cast<quint16 *>(data));
-    cv::Mat rgbFloat;
-    rgb16.convertTo(rgbFloat, CV_32FC3, 1.0 / 65535.0);
     std::vector<cv::Mat> channels;
-    cv::split(rgbFloat, channels);
-    channels.push_back(cv::Mat(height, width, CV_32FC1, cv::Scalar(1.0f)));
+    cv::split(rgb, channels);
+    channels.push_back(cv::Mat(rgb.size(), CV_32FC1, cv::Scalar(1.0f)));
     cv::merge(channels, result.linearRgba);
     WorkingColor::transform(result.linearRgba, WorkingColor::fromSrgb());
     result.colorSpace = workingColorSpace();
-    result.sourceProfile = QStringLiteral("LibRaw — RGB linéaire");
+    result.sourceProfile = QStringLiteral("RAW — sRGB linéaire");
     return result;
 }
 

@@ -122,13 +122,20 @@ quint64 DecodedImageCache::entrySizeBytes(const Entry &entry)
     };
     add(entry.image.linearRgba);
     add(entry.editProxy.linearRgba);
-    if (entry.image.dcpContext)
+    if (entry.image.dcpContext) {
         add(entry.image.dcpContext->cameraRgb);
-    if (entry.editProxy.dcpContext)
+        add(entry.image.dcpContext->preLensCameraRgb);
+    }
+    if (entry.editProxy.dcpContext) {
         add(entry.editProxy.dcpContext->cameraRgb);
+        add(entry.editProxy.dcpContext->preLensCameraRgb);
+    }
     if (entry.dcpSource) {
         add(entry.dcpSource->cameraRgb);
-        if (entry.dcpSource->workingContext) add(entry.dcpSource->workingContext->cameraRgb);
+        if (entry.dcpSource->workingContext) {
+            add(entry.dcpSource->workingContext->cameraRgb);
+            add(entry.dcpSource->workingContext->preLensCameraRgb);
+        }
     }
     return bytes;
 }

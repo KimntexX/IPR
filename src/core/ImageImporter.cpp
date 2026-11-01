@@ -6,6 +6,15 @@
 #include <cmath>
 
 namespace {
+// The field name of a metadata key, without its namespace ("Exif.Image.Model",
+// "exif:Model" -> "model"), so "LensModel" never answers for "Model".
+QString normalizedMetadataKey(QString key)
+{
+    key = key.mid(key.lastIndexOf(QRegularExpression(QStringLiteral("[.:/]"))) + 1).toCaseFolded();
+    key.remove(QRegularExpression(QStringLiteral("[^a-z0-9]")));
+    return key;
+}
+
 std::optional<double> readWhiteBalanceKelvin(const QImage &image)
 {
     static const QRegularExpression kelvinPattern(
@@ -13,8 +22,7 @@ std::optional<double> readWhiteBalanceKelvin(const QImage &image)
         QRegularExpression::CaseInsensitiveOption);
 
     for (const QString &key : image.textKeys()) {
-        QString normalizedKey = key.toCaseFolded();
-        normalizedKey.remove(QRegularExpression(QStringLiteral("[^a-z0-9]")));
+        const QString normalizedKey = normalizedMetadataKey(key);
         if (normalizedKey != QStringLiteral("whitebalancetemperature") &&
             normalizedKey != QStringLiteral("colortemperature") &&
             normalizedKey != QStringLiteral("temperaturekelvin"))
@@ -31,27 +39,18 @@ std::optional<double> readWhiteBalanceKelvin(const QImage &image)
     return std::nullopt;
 }
 
-QString normalizedMetadataKey(QString key)
-{
-    key = key.toCaseFolded();
-    key.remove(QRegularExpression(QStringLiteral("[^a-z0-9]")));
-    return key;
-}
-
+// The first non-empty value among the names, in their order of preference.
 QString readMetadataText(const QImage &image, const QStringList &names)
 {
-    QStringList normalizedNames;
-    for (const QString &name : names)
-        normalizedNames.append(normalizedMetadataKey(name));
-
-    for (const QString &key : image.textKeys()) {
-        const QString normalizedKey = normalizedMetadataKey(key);
-        for (const QString &name : normalizedNames) {
-            if (normalizedKey == name || normalizedKey.endsWith(name)) {
-                const QString value = image.text(key).trimmed();
-                if (!value.isEmpty())
-                    return value;
-            }
+    const QStringList keys = image.textKeys();
+    for (const QString &name : names) {
+        const QString wanted = normalizedMetadataKey(name);
+        for (const QString &key : keys) {
+            if (normalizedMetadataKey(key) != wanted)
+                continue;
+            const QString value = image.text(key).trimmed();
+            if (!value.isEmpty())
+                return value;
         }
     }
     return {};
@@ -105,6 +104,17 @@ std::optional<double> readMetadataNumber(const QImage &image,
 }
 
 namespace ImageImport {
+std::optional<double> referenceWhiteBalanceKelvin(const QString &fileName)
+{
+    if (RawDecoder::supportedExtensions().contains(QFileInfo(fileName).suffix().toLower()))
+        return RawDecoder::asShotWhiteBalanceKelvin(fileName);
+    QImageReader reader(fileName);
+    QImage keys(1, 1, QImage::Format_RGB32);   // carries the text keys only (a null image keeps none)
+    for (const QString &key : reader.textKeys())
+        keys.setText(key, reader.text(key));
+    return readWhiteBalanceKelvin(keys);
+}
+
 Result load(const QString &fileName, const RawDecoder::Options &rawOptions)
 {
     Result result;

@@ -2,6 +2,12 @@
 
 # Décision de dépendances — OpenCV et LibRaw
 
+> **Révisé le 20 octobre 2026 par l'[ADR-0018](../../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md).**
+> La conclusion ci-dessous ne portait que sur la performance. L'objectif
+> d'indépendance (formats et boîtiers) conduit désormais à remplacer LibRaw
+> puis OpenCV, après l'intégration des fonctions de base. Ce rapport reste
+> historique et n'est plus alimenté.
+
 ## Conclusion
 
 Conserver **OpenCV** et **LibRaw** est la décision recommandée. Leur retrait ne

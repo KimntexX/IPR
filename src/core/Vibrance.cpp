@@ -106,22 +106,19 @@ Response response(double value, const Position &p, double pixelChroma)
 }
 }
 
-cv::Vec3f applyPixel(const cv::Vec3f &rgb, double vibrance, double saturation)
+void adjust(cv::Vec3d &lab, double proPhotoSaturation, double vibrance, double saturation)
 {
     vibrance = std::clamp(vibrance, -1.0, 1.0);
     saturation = std::clamp(saturation, -1.0, 1.0);
-    if ((vibrance == 0.0 && saturation == 0.0) || (rgb[0] == rgb[1] && rgb[1] == rgb[2]))
-        return rgb; // exact zero / grey identity, without matrix round trip
-    cv::Vec3d lab = WorkingColor::toOklab(cv::Vec3d(rgb));
+    if (vibrance == 0.0 && saturation == 0.0) return;
     const double chroma = std::hypot(lab[1], lab[2]);
-    if (chroma < 1e-12) return rgb;
+    if (chroma < 1e-12) return;
     double chromaGain = std::max(0.0, 1.0 + saturation);
     double lightnessGain = 1.0, rotation = 0.0;
     if (vibrance != 0.0) {
-        const double relative = WorkingColor::proPhotoSaturation(cv::Vec3d(rgb));
         double hue = std::atan2(lab[2], lab[1]) * DegreesPerRadian;
         if (hue < 0.0) hue += 360.0;
-        const Response r = response(vibrance * 100.0, position(relative, lab[0], hue), chroma);
+        const Response r = response(vibrance * 100.0, position(proPhotoSaturation, lab[0], hue), chroma);
         const double fade = std::min(1.0, chroma / NearGreyFade);
         chromaGain *= std::exp(r.logChroma);
         lightnessGain = std::exp(r.logLightness * fade);
@@ -132,26 +129,15 @@ cv::Vec3f applyPixel(const cv::Vec3f &rgb, double vibrance, double saturation)
     const double cosine = std::cos(rotation), sine = std::sin(rotation);
     lab[1] = a * cosine - b * sine;
     lab[2] = a * sine + b * cosine;
-    return cv::Vec3f(WorkingColor::fromOklab(lab));
 }
 
-void apply(cv::Mat &linearRgb, int saturation, int vibrance)
+cv::Vec3f applyPixel(const cv::Vec3f &rgb, double vibrance, double saturation)
 {
-    if ((saturation == 0 && vibrance == 0) || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
-    // The tables are measured in linear sRGB: unclipped round trip from the
-    // Rec.2020 master. Greys are left exact, without the matrices.
-    const cv::Matx33f toSrgb(WorkingColor::toSrgb()), fromSrgb(WorkingColor::fromSrgb());
-    const double saturationAmount = saturation / 100.0;
-    const double vibranceAmount = vibrance / 100.0;
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
-            cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < linearRgb.cols; ++x) {
-                cv::Vec3f &pixel = row[x];
-                if (pixel[0] == pixel[1] && pixel[1] == pixel[2]) continue;
-                pixel = fromSrgb * applyPixel(toSrgb * pixel, vibranceAmount, saturationAmount);
-            }
-        }
-    });
+    if ((vibrance == 0.0 && saturation == 0.0) || (rgb[0] == rgb[1] && rgb[1] == rgb[2]))
+        return rgb; // exact zero / grey identity, without matrix round trip
+    cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(rgb));
+    if (std::hypot(lab[1], lab[2]) < 1e-12) return rgb;
+    adjust(lab, WorkingColor::proPhotoSaturation(cv::Vec3d(rgb)), vibrance, saturation);
+    return cv::Vec3f(WorkingColor::oklabToWorking(lab));
 }
 }

@@ -31,7 +31,9 @@ def neutral_ipr(settings, support=False):
     for key in ("mixerHue", "mixerSaturation", "mixerLuminance"):
         if key in settings and (len(settings[key]) != 8 or any(v != 0 for v in settings[key])):
             problems.append("nonneutral_or_legacy_reference:" + key)
-    if "grading" in settings and (len(settings["grading"]) != 3 or any(z.get("saturation") != 0 for z in settings["grading"])):
+    # Shadows, midtones, highlights and the global wheel; colour and luminance at zero.
+    if "grading" in settings and (len(settings["grading"]) != 4 or any(
+            z.get("saturation") != 0 or z.get("luminance", 0) != 0 for z in settings["grading"])):
         problems.append("nonneutral_reference:grading")
     if "toneCurves" in settings and (len(settings["toneCurves"]) != 4 or
             any(curve not in ([], [[0, 0], [1, 1]]) for curve in settings["toneCurves"])):
@@ -89,7 +91,7 @@ def ipr_state(record):
     elif feature.startswith("grading-"):
         _, zone, component = feature.split("-")
         index = ("shadows", "midtones", "highlights").index(zone)
-        if len(settings.get("grading", [])) != 3 or len(baseline.get("grading", [])) != 3:
+        if len(settings.get("grading", [])) != 4 or len(baseline.get("grading", [])) != 4:
             return ["missing_grading_settings"], []
         if settings["grading"][index].get(component) != value:
             warnings.append("declared_value_mismatch")

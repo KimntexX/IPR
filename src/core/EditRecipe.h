@@ -2,6 +2,7 @@
 #define IPR_CORE_EDITRECIPE_H
 
 #include "ColorMixer.h"
+#include "PointColor.h"
 #include "ToneCurve.h"
 
 #include <QString>
@@ -31,6 +32,10 @@ struct Settings
     int grain = 0;      // grain monochrome déterministe
     int denoiseLuminance = 0;
     int denoiseChrominance = 0;
+    // Experimental: a RAW is developed signed (values below the black kept) and the
+    // sliders act on its camera signal before the lens and colour profiles. A session
+    // switch of the editor, not stored in the sidecar.
+    bool denoiseBeforeProfile = false;
     int sharpeningAmount = 0;
     float sharpeningRadius = 1.0f;
     int sharpeningMasking = 0;
@@ -38,8 +43,13 @@ struct Settings
     std::array<int, ColorMixer::BandCount> mixerHue{};
     std::array<int, ColorMixer::BandCount> mixerSaturation{};
     std::array<int, ColorMixer::BandCount> mixerLuminance{};
-    std::array<int, 3> gradingHue{};
-    std::array<int, 3> gradingSaturation{};
+    // Shadows, midtones, highlights and the global wheel (global and luminances: sidecar v8).
+    std::array<int, 4> gradingHue{};
+    std::array<int, 4> gradingSaturation{};
+    std::array<int, 4> gradingLuminance{};
+    int gradingBlending = 50;   // Lightroom's defaults (sidecar v7)
+    int gradingBalance = 0;
+    PointColor::Parameters pointColor;   // picked colours, in picking order (sidecar v9)
     bool automaticWhiteBalance = false;
     ToneCurve::Curves toneCurves;
 };

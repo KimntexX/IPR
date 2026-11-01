@@ -189,22 +189,32 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
             if (!check(pixel.red() > original.red() &&
                            pixel.green() > original.green() &&
                            pixel.blue() > original.blue(),
-                       "luminance curve should brighten all RGB channels"))
+                       "the RGB curve should brighten all RGB channels"))
                 return false;
         } else {
             const int changed = channel - ImageEditor::RedCurve;
             QImage sample(1,1,QImage::Format_RGBA8888);
             sample.setPixelColor(0,0,original); sample.setColorSpace(QColorSpace(QColorSpace::SRgb));
             auto expectedMaster = ColorPipeline::fromSourceImage(sample);
-            auto &v = expectedMaster.linearRgba.at<cv::Vec4f>(0,0)[changed];
-            // Interpolating (0,0), (.6,.9), (1,1) gives this quadratic.
-            v += 1.25f * v * (1.f - v);
+            cv::Vec4f &master = expectedMaster.linearRgba.at<cv::Vec4f>(0,0);
+            // The channel of linear ProPhoto, sRGB-encoded, through the natural spline of
+            // (0,0), (.6,.9), (1,1): second derivative -3.75 at the middle point, 0 at the ends.
+            const auto spline = [](double x) {
+                const double m = -3.75;
+                if (x <= 0.6) { const double h = 0.6; return m * x * x * x / (6 * h) + (0.9 / h - m * h / 6) * x; }
+                const double h = 0.4, t = x - 0.6;
+                return m * (1.0 - x) * (1.0 - x) * (1.0 - x) / (6 * h) + (0.9 / h - m * h / 6) * (1.0 - x) + (1.0 / h) * t;
+            };
+            cv::Vec3d proPhoto = WorkingColor::toProPhoto() * cv::Vec3d(master[0], master[1], master[2]);
+            proPhoto[changed] = WorkingColor::srgbDecode(spline(WorkingColor::srgbEncode(proPhoto[changed])));
+            const cv::Vec3d rgb = WorkingColor::toProPhoto().inv() * proPhoto;
+            master = cv::Vec4f(float(rgb[0]), float(rgb[1]), float(rgb[2]), master[3]);
             const auto expected = ColorPipeline::toSrgb(expectedMaster,
                 ColorPipeline::OutputFormat::Preview8Bit).pixelColor(0,0);
             if (!check(std::abs(pixel.red()-expected.red()) <= 2 &&
                        std::abs(pixel.green()-expected.green()) <= 2 &&
                        std::abs(pixel.blue()-expected.blue()) <= 2,
-                       "RGB curve must edit a Rec.2020 channel before the sRGB output matrix"))
+                       "a channel curve must edit encoded ProPhoto, as Lightroom, with a natural spline"))
                 return false;
         }
         editor.resetToneCurve(channel);
@@ -231,7 +241,25 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
     if (!check(quadraticStatus.startsWith(QStringLiteral("Image exportée")) &&
                    !quadraticImage.isNull() &&
                    quadraticImage.pixelColor(0, 0).red() > 118,
-               "one internal point should produce a quadratic tone curve"))
+               "one raised internal point should brighten the image"))
+        return false;
+
+    // End points move as in Lightroom: a raised black and clipped whites are kept.
+    const QVariantList clipped{
+        QVariantMap{{QStringLiteral("x"), 0.0}, {QStringLiteral("y"), 0.25}},
+        QVariantMap{{QStringLiteral("x"), 0.8}, {QStringLiteral("y"), 1.0}},
+    };
+    editor.setToneCurve(ImageEditor::LuminanceCurve, clipped);
+    const QVariantList kept = editor.toneCurve(ImageEditor::LuminanceCurve);
+    const QString clippedPath = directory + QStringLiteral("/clipped-tone.png");
+    const QString clippedStatus = awaitExport(editor, QUrl::fromLocalFile(clippedPath), QStringLiteral("PNG"));
+    const QColor clippedPixel = QImage(clippedPath).pixelColor(0, 0);
+    editor.resetToneCurve(ImageEditor::LuminanceCurve);
+    if (!check(kept.size() == 2 && std::abs(kept.at(0).toMap().value("y").toDouble() - 0.25) < 1e-6 &&
+                   std::abs(kept.at(1).toMap().value("x").toDouble() - 0.8) < 1e-6 &&
+                   clippedStatus.startsWith(QStringLiteral("Image exportée")) &&
+                   clippedPixel.red() > original.red() && clippedPixel.blue() > original.blue(),
+               "moved end points should be kept and brighten the image"))
         return false;
     return true;
 }
@@ -456,6 +484,9 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
     editor.setColorMixer(1, 27, -43, 18);
     editor.setColorMixer(6, -31, 17, 42);
     editor.setColorMixer(7, 51, -22, -63);
+    editor.setColorGrading(3, 120, 40);
+    editor.setColorGradingLuminance(0, 25);
+    editor.setColorGradingLuminance(3, -35);
     // Loading another image flushes the pending save of the source sidecar.
     const QUrl other = QUrl::fromLocalFile(directory + QStringLiteral("/input.png"));
     if (!awaitLoad(editor, other) || !awaitLoad(editor, QUrl::fromLocalFile(sourcePath)))
@@ -468,13 +499,17 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                editor.colorMixerValue(6, 2) == 42 && editor.colorMixerValue(7, 0) == 51 &&
                editor.colorMixerValue(7, 1) == -22 && editor.colorMixerValue(7, 2) == -63,
                "violet and magenta must roundtrip independently")) return false;
+    if (!check(editor.colorGradingValue(3, 0) == 120 && editor.colorGradingValue(3, 1) == 40 &&
+               editor.colorGradingValue(0, 2) == 25 && editor.colorGradingValue(3, 2) == -35 &&
+               editor.colorGradingValue(1, 2) == 0,
+               "the global wheel and the luminances must roundtrip")) return false;
     QFile currentSidecar(sourcePath + QStringLiteral(".ipr"));
     if (!currentSidecar.open(QIODevice::ReadOnly)) return false;
     QDataStream currentStream(&currentSidecar);
     currentStream.setVersion(QDataStream::Qt_6_4);
     quint32 magic; quint16 savedVersion;
     currentStream >> magic >> savedVersion;
-    if (!check(magic == 0x49505231u && savedVersion == 6, "new sidecars must declare version 6")) return false;
+    if (!check(magic == 0x49505231u && savedVersion == 9, "new sidecars must declare version 9")) return false;
     currentSidecar.close();
     editor.resetAdjustments();
     for (int band = 0; band < 8; ++band)
@@ -483,7 +518,8 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                        "reset should neutralize all eight mixer bands"))
                 return false;
 
-    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5)}) {
+    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5), quint16(6), quint16(7),
+                            quint16(8)}) {
         const QString legacyPath = directory + QStringLiteral("/legacy-%1.png").arg(version);
         if (!QImage(sourcePath).save(legacyPath, "PNG"))
             return false;
@@ -510,6 +546,12 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
         stream << int(3) << QStringLiteral("green") << true << true << true;
         if (version >= 5)
             stream << QString() << QString() << QString() << QString() << false << QString();
+        if (version >= 6)
+            stream << QString() << QString() << false << false << false;
+        if (version >= 7)
+            stream << qint32(80) << qint32(-30);
+        if (version >= 8)
+            stream << qint32(0) << qint32(0) << qint32(0) << qint32(0) << qint32(0) << qint32(0);
         if (stream.status() != QDataStream::Ok)
             return false;
         sidecar.close();
@@ -528,8 +570,12 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
         }
         if (!check(editor.colorGradingValue(2, 0) == 202 &&
                    editor.colorGradingValue(2, 1) == 6 &&
-                   editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == (version >= 2 ? 12 : 0),
-                   "legacy migration should preserve following fields and noise settings"))
+                   editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == (version >= 2 ? 12 : 0) &&
+                   editor.colorGradingBlending() == (version >= 7 ? 80 : 50) &&
+                   editor.colorGradingBalance() == (version >= 7 ? -30 : 0) &&
+                   editor.colorGradingValue(3, 1) == 0 && editor.colorGradingValue(0, 2) == 0 &&
+                   editor.colorGradingValue(3, 2) == 0,
+                   "legacy migration should preserve following fields, noise settings and default grading"))
             return false;
     }
     editor.resetAdjustments();
@@ -624,9 +670,10 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     TIFF *tiff = TIFFOpen(expectedPath.toUtf8().constData(), "r");
 #endif
     if (!check(tiff != nullptr, "DNG IFD should open")) return false;
-    uint32_t count = 0, profileBytes = 0;
+    uint32_t count = 0, profileBytes = 0, subfileType = 1;
     float *matrix = nullptr;
     void *profile = nullptr;
+    const bool mainImage = TIFFGetField(tiff, TIFFTAG_SUBFILETYPE, &subfileType) == 1 && subfileType == 0;
     const bool hasMatrix = TIFFGetField(tiff, TIFFTAG_COLORMATRIX1, &count, &matrix) == 1 && count == 9;
     const bool hasIcc = TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profileBytes, &profile) == 1;
     const QColorSpace embedded = hasIcc ? QColorSpace::fromIccProfile(
@@ -635,6 +682,7 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     bool consistent = hasMatrix && embedded == QColorSpace(QColorSpace::SRgbLinear);
     if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.val[i]) < 1e-6;
     TIFFClose(tiff);
+    if (!check(mainImage, "DNG main IFD needs NewSubfileType 0 for Adobe readers")) return false;
     if (!check(consistent, "DNG linear samples need linear ICC and XYZ-to-stored-RGB matrix")) return false;
 
 #ifdef IPR_WITH_LIBRAW
@@ -1026,10 +1074,10 @@ bool verifyHistogramValues(ImageEditor &editor, const QString &directory)
 
 bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
 {
-    // Black, deep shadow, shadow, pivot (0.32 linear ~ sRGB 153), highlight,
+    // Black, deep shadow, shadow, pivot (0.225 linear ~ sRGB 130), highlight,
     // white and an orange: per-channel perceptual S curve with fixed endpoints.
-    const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(105, 105, 105),
-        QColor(153, 153, 153), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
+    const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(95, 95, 95),
+        QColor(130, 130, 130), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
     QImage input(int(colors.size()), 1, QImage::Format_RGBA8888);
     for (int x = 0; x < colors.size(); ++x) input.setPixelColor(x, 0, colors[x]);
     input.setColorSpace(QColorSpace(QColorSpace::SRgb));

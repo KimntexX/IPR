@@ -92,24 +92,55 @@ Effect response(int band, int component, int slider, double hueDegrees, const Po
 }
 }
 
-cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
+namespace {
+// Reference colour of the slider tracks: vivid enough to read, Oklab.
+constexpr double TrackLightness = 0.68;
+constexpr double TrackChroma = 0.14;
+constexpr double TrackSaturation = 0.4; // ProPhoto saturation cell used to find the peak
+
+// Oklab hue of each band's strongest hue response at +100, from the tables.
+const std::array<double, BandCount> &peakHues()
 {
-    const auto active = [](const std::array<int, BandCount> &values) {
+    static const std::array<double, BandCount> peaks = [] {
+        std::array<double, BandCount> result{};
+        Position p;
+        bracket(Model::Saturation, Model::SaturationCount, TrackSaturation, p.s, p.ts);
+        bracket(Model::Lightness, Model::LightnessCount, TrackLightness, p.l, p.tl);
+        const int plus100 = int(std::find(Model::Values, Model::Values + Model::ValueCount, 100) - Model::Values);
+        for (int band = 0; band < int(BandCount); ++band) {
+            int best = 0;
+            double strongest = -1.0;
+            for (int i = 0; i < Model::BandBinCount[band]; ++i) {
+                const double rotation = std::abs(cell(Model::BandOffset[band] + i, 0, plus100, 0, p));
+                if (rotation > strongest) {
+                    strongest = rotation;
+                    best = i;
+                }
+            }
+            result[size_t(band)] = std::fmod((Model::BandFirstBin[band] + best + 0.5) * Model::HueStepDegrees, 360.0);
+        }
+        return result;
+    }();
+    return peaks;
+}
+}
+
+bool active(const Parameters &parameters)
+{
+    const auto any = [](const std::array<int, BandCount> &values) {
         return std::any_of(values.cbegin(), values.cend(), [](int v) { return v != 0; });
     };
-    if (!active(parameters.hue) && !active(parameters.saturation) && !active(parameters.luminance))
-        return rgb;
-    if (rgb[0] == rgb[1] && rgb[1] == rgb[2])
-        return rgb; // exact grey identity, without matrix round trip
-    // The tables are measured in linear sRGB: unclipped round trip from the master.
-    const cv::Vec3d srgb = WorkingColor::toSrgb() * cv::Vec3d(rgb);
-    cv::Vec3d lab = WorkingColor::toOklab(srgb);
+    return any(parameters.hue) || any(parameters.saturation) || any(parameters.luminance);
+}
+
+void adjust(cv::Vec3d &lab, double proPhotoSaturation, const Parameters &parameters)
+{
     const double chroma = std::hypot(lab[1], lab[2]);
-    if (chroma < 1e-12) return rgb;
+    if (chroma < 1e-12) return;
     double hue = std::atan2(lab[2], lab[1]) * DegreesPerRadian;
     if (hue < 0.0) hue += 360.0;
     Position position;
-    bracket(Model::Saturation, Model::SaturationCount, WorkingColor::proPhotoSaturation(srgb), position.s, position.ts);
+    bracket(Model::Saturation, Model::SaturationCount, proPhotoSaturation, position.s, position.ts);
     bracket(Model::Lightness, Model::LightnessCount, lab[0], position.l, position.tl);
 
     Effect total;
@@ -133,6 +164,28 @@ cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
     const double a = lab[1] * gain, b = lab[2] * gain;
     lab[1] = a * std::cos(rotation) - b * std::sin(rotation);
     lab[2] = a * std::sin(rotation) + b * std::cos(rotation);
-    return cv::Vec3f(WorkingColor::fromSrgb() * WorkingColor::fromOklab(lab));
+}
+
+cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
+{
+    if (!active(parameters) || (rgb[0] == rgb[1] && rgb[1] == rgb[2]))
+        return rgb; // zero settings / exact grey identity, without matrix round trip
+    cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(rgb));
+    if (std::hypot(lab[1], lab[2]) < 1e-12) return rgb;
+    adjust(lab, WorkingColor::proPhotoSaturation(cv::Vec3d(rgb)), parameters);
+    return cv::Vec3f(WorkingColor::oklabToWorking(lab));
+}
+
+cv::Vec3f trackColour(int band, int component, int value)
+{
+    if (band < 0 || band >= int(BandCount) || component < 0 || component >= Model::ComponentCount)
+        return {0.5f, 0.5f, 0.5f};
+    const double hue = peakHues()[size_t(band)] / DegreesPerRadian;
+    const cv::Vec3d reference = WorkingColor::oklabToWorking(
+        {TrackLightness, TrackChroma * std::cos(hue), TrackChroma * std::sin(hue)});
+    Parameters parameters;
+    (component == 0 ? parameters.hue : component == 1 ? parameters.saturation : parameters.luminance)[size_t(band)] = value;
+    const cv::Vec3f reached = apply(cv::Vec3f(reference), parameters);
+    return WorkingColor::encodedInGamut(WorkingColor::workingToOklab(cv::Vec3d(reached)));
 }
 }

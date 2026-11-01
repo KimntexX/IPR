@@ -16,6 +16,9 @@ au pipeline Camera Neutral.
 
 Mesures transversales : [Performance d’ouverture et navigation](protocole-performance-ouverture.md).
 
+Acquisition spécialisée rattachée à RAW : [Mires et caractérisation couleur](protocole-mires-couleur.md)
+(matériel, éclairages, captures et données de référence ; campagne non exécutée).
+
 | Groupe | Protocole maintenu | Couverture / limites |
 | --- | --- | --- |
 | RAW / profils / base | [RAW et profils](protocole-raw-profils.md) | Base, DCP, WB, normalisation, restauration ; génération neutre/auto-WB seulement |
@@ -23,6 +26,7 @@ Mesures transversales : [Performance d’ouverture et navigation](protocole-perf
 | Courbes | [Courbes](protocole-courbes.md) | Luminance et R/G/B ; analyseur natif/JSON, rampes/HDR complémentaires |
 | Couleur | [Couleur](protocole-couleur.md) | Température, nuance, vibrance, saturation, gris ; analyseur natif/JSON |
 | Mélangeur | [Mélangeur](protocole-melangeur.md) | Huit bandes H/S/L, extrêmes et intermédiaires |
+| Couleur du point | [Couleur du point](protocole-couleur-point.md) | Préréglages depuis des modèles Lightroom ; campagne et étude à faire |
 | Color grading | [Grading](protocole-grading.md) | Analyseur natif/JSON ; circularité et transitions complémentaires |
 | Effets | [Effets](protocole-effets.md) | Texture, clarté, voile, grain, flou ; ROI natives/JSON |
 | Bruit | [Bruit](protocole-bruit.md) | Luminance/chrominance, activation, ROI Haar ; IA séparée |
