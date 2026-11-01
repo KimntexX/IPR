@@ -139,9 +139,10 @@ class ScopeTests(unittest.TestCase):
     def test_workflow_gates(self):
         import yaml
         workflow = yaml.load((ROOT / '.github/workflows/ci.yml').read_text(), Loader=yaml.BaseLoader)
-        self.assertEqual(workflow['on']['pull_request']['branches'], ['main', 'dev'])
+        self.assertEqual(workflow['on']['pull_request']['branches'], ['dev'])
+        self.assertNotIn('main', workflow['on']['push']['branches'])
         self.assertNotIn('paths', workflow['on']['pull_request'])
-        self.assertEqual(workflow['jobs']['validation']['if'], 'always()')
+        self.assertEqual(workflow['jobs']['validation']['if'], "always() && github.ref != 'refs/heads/main'")
         self.assertEqual(workflow['jobs']['validation']['needs'], ['scope', 'documents', 'python', 'native'])
         self.assertIn('fromJSON', workflow['jobs']['native']['strategy']['matrix'])
         delivery = yaml.load((ROOT / '.github/workflows/delivery.yml').read_text(), Loader=yaml.BaseLoader)
@@ -159,11 +160,10 @@ class ScopeTests(unittest.TestCase):
         self.assertFalse(any('qt6-base-dev' in step.get('run', '') for step in setup['runs']['steps']))
         for workflow in ('ci', 'delivery'):
             jobs = load(f'.github/workflows/{workflow}.yml')['jobs']
-            # Locate the packaging matrix without coupling the test to its job name.
-            matrix = next(value['strategy']['matrix'] for value in jobs.values()
-                          if isinstance(value.get('strategy', {}).get('matrix'), dict)
-                          and 'mode' in value['strategy']['matrix'])
-            self.assertIn({'os': 'ubuntu-24.04', 'mode': 'system'}, matrix['exclude'])
+            job = jobs['packaging-check' if workflow == 'ci' else 'archives']
+            self.assertIn('fromJSON', job['strategy']['matrix'])
+        from delivery_policy import PACKAGE_MATRIX
+        self.assertNotIn(('ubuntu-24.04', 'system'), PACKAGE_MATRIX)
         distro_matrix = load('.github/workflows/linux-distributions.yml')['jobs']
         images = [entry['image'] for value in distro_matrix.values()
                   for entry in value.get('strategy', {}).get('matrix', {}).get('include', [])]

@@ -171,20 +171,63 @@ def rewrite_homebrew(binary):
             run(['install_name_tool', '-change', old, new, binary])
 
 
+def unexplained_deploy_errors(output, explained):
+    """macdeployqt ERROR lines, except missing files in `explained`."""
+    unexplained = []
+    for line in output.splitlines():
+        if 'ERROR:' not in line:
+            continue
+        missing = re.search(r'ERROR: no file at "([^"]+)"', line)
+        if not missing or missing.group(1) not in explained:
+            unexplained.append(line.strip())
+    return unexplained
+
+
+def macos_dependencies(binaries):
+    """Install names the binaries link to (otool -L)."""
+    names = set()
+    for binary in binaries:
+        lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
+        names.update(line.strip().split(' (', 1)[0] for line in lines)
+    return names
+
+
 def deploy_macos(stage, env):
     bundle = stage / 'appIPR.app'
     qt_root = Path(env['QT_ROOT_DIR'])
+    # The headless platform, as on Windows and Linux: macdeployqt deploys cocoa
+    # only, the package's smoke test and command-line runs need offscreen.
+    platforms = bundle / 'Contents/PlugIns/platforms'
+    platforms.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(qt_root / 'plugins/platforms/libqoffscreen.dylib', platforms)
+    extra = ['-executable=appIPR.app/Contents/PlugIns/platforms/libqoffscreen.dylib']
     # One deployment pass, from the bundle's parent. Scan only project imports;
     # deploying the whole Homebrew Qt tree pulled unrelated missing frameworks.
-    completed = run([qt_root / 'bin/macdeployqt', 'appIPR.app',
-                     '-executable=appIPR.app/Contents/MacOS/iprGenerateTests',
+    # The generator is in development archives only (production: IPR_BUILD_TOOLS=OFF).
+    if (bundle / 'Contents/MacOS/iprGenerateTests').is_file():
+        extra.append('-executable=appIPR.app/Contents/MacOS/iprGenerateTests')
+    # Libraries reached through @rpath (libwebp's libsharpyuv...) are resolved
+    # in Homebrew's lib folder too, after Qt's, so that they are copied.
+    brew = shutil.which('brew')
+    homebrew = ['-libpath=' + subprocess.check_output([brew, '--prefix'], text=True).strip() + '/lib'] if brew else []
+    completed = run([qt_root / 'bin/macdeployqt', 'appIPR.app', *extra,
                      '-qmldir=' + str(ROOT / 'src/qml'),
-                     '-libpath=' + str(qt_root / 'lib'), '-always-overwrite'],
+                     '-libpath=' + str(qt_root / 'lib'), *homebrew, '-always-overwrite'],
                     cwd=stage, env=env, capture_output=True, text=True)
     output = completed.stdout + completed.stderr
     print(output, flush=True)
-    if re.search(r'\bERROR:', output):
-        raise RuntimeError('macdeployqt reported unresolved dependencies')
+    # macdeployqt copies QML modules whole: QtQuick's LocalStorage brings QtSql,
+    # hence every SQL driver, some linked to databases absent from the machine.
+    # IPR uses no SQL driver: only their missing dependencies are tolerated, and
+    # the drivers are removed before the portability check.
+    drivers = bundle / 'Contents/PlugIns/sqldrivers'
+    unused = sorted(drivers.glob('*.dylib')) if drivers.is_dir() else []
+    unexplained = unexplained_deploy_errors(output, macos_dependencies(unused))
+    if unexplained:
+        raise RuntimeError('macdeployqt reported unresolved dependencies: ' + '; '.join(unexplained))
+    if drivers.is_dir():
+        shutil.rmtree(drivers)
+    relocate_bundled_references(bundle)
     with (bundle / 'Contents/Info.plist').open('rb') as stream:
         executable = plistlib.load(stream)['CFBundleExecutable']
     if not (bundle / 'Contents/MacOS' / executable).is_file():
@@ -194,20 +237,61 @@ def deploy_macos(stage, env):
         raise ValueError('Broken bundle links: ' + ', '.join(broken))
 
 
-def assert_macos_portable(bundle):
-    magic = {b'\xfe\xed\xfa\xce', b'\xce\xfa\xed\xfe', b'\xfe\xed\xfa\xcf',
-             b'\xcf\xfa\xed\xfe', b'\xca\xfe\xba\xbe', b'\xbe\xba\xfe\xca',
-             b'\xca\xfe\xba\xbf', b'\xbf\xba\xfe\xca'}
-    for binary in bundle.rglob('*'):
-        if not binary.is_file() or binary.is_symlink():
-            continue
-        with binary.open('rb') as stream:
-            if stream.read(4) not in magic:
-                continue
+MACHO_MAGIC = {b'\xfe\xed\xfa\xce', b'\xce\xfa\xed\xfe', b'\xfe\xed\xfa\xcf',
+               b'\xcf\xfa\xed\xfe', b'\xca\xfe\xba\xbe', b'\xbe\xba\xfe\xca',
+               b'\xca\xfe\xba\xbf', b'\xbf\xba\xfe\xca'}
+
+
+def macho_files(bundle):
+    for binary in sorted(bundle.rglob('*')):
+        if binary.is_file() and not binary.is_symlink():
+            with binary.open('rb') as stream:
+                if stream.read(4) in MACHO_MAGIC:
+                    yield binary
+
+
+def external(path):
+    return path.startswith('/') and not path.startswith(('/System/Library/', '/usr/lib/'))
+
+
+def bundled_path(path, frameworks):
+    """Path within Contents/Frameworks of the bundle's copy of a library or
+    framework binary named by an absolute path, None if the bundle lacks it."""
+    parts = Path(path).parts
+    for index, part in enumerate(parts):
+        if part.endswith('.framework'):
+            relative = Path(*parts[index:])
+            return relative.as_posix() if (frameworks / relative).is_file() else None
+    return parts[-1] if parts and (frameworks / parts[-1]).is_file() else None
+
+
+def relocate_bundled_references(bundle):
+    """Absolute install names and references to a library or framework the bundle
+    carries point to that copy. macdeployqt leaves some behind (OpenCV's own ids,
+    paths into the staging folder); references to libraries the bundle does not
+    carry are left for assert_macos_portable to refuse."""
+    frameworks = bundle / 'Contents/Frameworks'
+    for binary in macho_files(bundle):
+        ids = [line.strip() for line in
+               subprocess.check_output(['otool', '-D', str(binary)], text=True).splitlines()[1:]]
+        own = ids[0] if ids else ''
+        target = bundled_path(own, frameworks) if external(own) else None
+        if target:
+            run(['install_name_tool', '-id', '@executable_path/../Frameworks/' + target, binary])
         lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
         for line in lines:
             dependency = line.strip().split(' (', 1)[0]
-            if dependency.startswith('/') and not dependency.startswith(('/System/Library/', '/usr/lib/')):
+            target = bundled_path(dependency, frameworks) if dependency != own and external(dependency) else None
+            if target:
+                run(['install_name_tool', '-change', dependency, '@executable_path/../Frameworks/' + target, binary])
+
+
+def assert_macos_portable(bundle):
+    for binary in macho_files(bundle):
+        lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
+        for line in lines:
+            dependency = line.strip().split(' (', 1)[0]
+            if external(dependency):
                 raise ValueError(f'Standalone still uses an external library: {binary.name}: {dependency}')
 
 
@@ -224,7 +308,9 @@ def arch_recipe(output, label):
     return recipe
 
 
-def package(build, output, label, mode, env, runtime_dirs, native_format=None, verify_only=False, approval=None):
+def package(build, output, label, mode, env, runtime_dirs, native_format=None, verify_only=False, approval=None, installer=False):
+    if installer and (os.name != 'nt' or mode != 'standalone'):
+        raise ValueError('Windows installer requires Windows standalone mode')
     if native_format and (mode != 'system' or platform.system() != 'Linux'):
         raise ValueError('Native packages require Linux system mode')
     name = 'IPR-' + label + '-' + platform_name() + '-' + mode
@@ -288,6 +374,11 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None, v
                     if k in ('Qt6_DIR', 'OpenCV_DIR', 'LIBRAW_LIBRARY', 'TIFF_LIBRARY_RELEASE', 'CMAKE_CXX_COMPILER')},
                 'files': files}
     (stage / 'package-manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf8')
+    installer_path = None
+    if installer:
+        from windows_installer import build_installer
+        installer_path = build_installer(stage, output, label, verify_only=verify_only,
+                                        exercise_install=os.environ.get('GITHUB_ACTIONS') == 'true')
     if verify_only:
         print('Packaging verification passed; no downloadable archive created.', flush=True)
         return
@@ -295,7 +386,7 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None, v
         shutil.make_archive(str(archive.with_suffix('')), 'zip', root_dir=stage.parent, base_dir=stage.name)
     else:
         with tarfile.open(archive, 'w:gz') as stream: stream.add(stage, arcname=name)
-    packages = [archive]
+    packages = [archive] + ([installer_path] if installer_path else [])
     if native_format in ('deb', 'rpm'):
         if mode != 'system' or platform.system() != 'Linux': raise ValueError('Native packages require Linux system mode')
         before = set(output.iterdir())
@@ -319,6 +410,8 @@ def main(argv=None):
     parser.add_argument('--verify-package-only', action='store_true',
                         help='Exercise deployment/smoke but create no archive; for CI packaging tests')
     parser.add_argument('--mode', choices=('system', 'standalone'), default='system')
+    parser.add_argument('--profile', choices=('ci', 'production'), default='ci',
+                        help='production: no tests and no analysis tools, as published on main')
     parser.add_argument('--build-dir', type=Path, default=ROOT / 'build-ci')
     parser.add_argument('--output-dir', type=Path, default=ROOT / 'dist')
     parser.add_argument('--version', default='0.1.0-alpha')
@@ -326,10 +419,16 @@ def main(argv=None):
     parser.add_argument('--runtime-dir', type=Path, action='append', default=[])
     parser.add_argument('--cmake-arg', action='append', default=[])
     parser.add_argument('--native', choices=('deb', 'rpm', 'arch'))
+    parser.add_argument('--windows-installer', action='store_true',
+                        help='Compile an Inno Setup installer as well as the Windows standalone ZIP')
     parser.add_argument('--jobs', type=int, default=2)
     args = parser.parse_args(argv)
+    if args.windows_installer and (os.name != 'nt' or args.mode != 'standalone' or args.action not in ('all', 'package')):
+        parser.error('--windows-installer requires Windows standalone all/package')
     if args.verify_package_only and (args.native or args.action not in ('all', 'package')):
         parser.error('Packaging verification requires all/package without native distro archives')
+    if args.profile == 'production' and (args.action in ('test', 'python') or args.test_plan):
+        parser.error('The production profile builds and packages without tests')
     if args.test_plan and args.action in ('all', 'package'):
         parser.error('Delivery packaging may not use a targeted test plan')
     plan = load_test_plan(args.test_plan)
@@ -339,7 +438,9 @@ def main(argv=None):
     env = runtime_environment(args.qt_root, args.runtime_dir)
     if args.qt_root: env['QT_ROOT_DIR'] = str(args.qt_root.resolve())
     if args.action in ('build', 'all'):
-        command = ['cmake', '-S', ROOT, '-B', build, '-DBUILD_TESTING=ON', '-DIPR_ENABLE_LIBRAW=ON',
+        testing = 'OFF' if args.profile == 'production' else 'ON'
+        command = ['cmake', '-S', ROOT, '-B', build, '-DBUILD_TESTING=' + testing, '-DIPR_BUILD_TOOLS=' + testing,
+                   '-DIPR_ENABLE_LIBRAW=ON',
                    '-DCMAKE_BUILD_TYPE=Release', '-DIPR_DEPLOY_MODE=' + args.mode,
                    '-DIPR_RELEASE_LABEL=' + label, '-DIPR_RELEASE_VERSION=' + numeric,
                    '-DCMAKE_INSTALL_LIBDIR=lib', '-DCMAKE_INSTALL_BINDIR=bin', '-DCMAKE_INSTALL_DATADIR=share']
@@ -354,11 +455,12 @@ def main(argv=None):
                 raise ValueError('A native build requires selected targets')
             command += ['--target'] + plan['targets']
         run(command, cwd=ROOT, env=env)
-    if args.action in ('test', 'all'):
+    testing = args.profile != 'production'
+    if args.action in ('test', 'all') and testing:
         test_dir = build / 'test-results'
         test_dir.mkdir(parents=True, exist_ok=True)
         run_native_tests(build, test_dir, plan, env)
-    if args.action in ('test', 'python', 'all'):
+    if args.action in ('test', 'python', 'all') and testing:
         # Full native integrations exercise generator/render server -> group
         # analyser on a tiny temporary fixture. Python-only scopes do not use a
         # stale binary.
@@ -378,7 +480,7 @@ def main(argv=None):
             from delivery_policy import verify_publication_environment
             approval = verify_publication_environment()
         package(build, args.output_dir.resolve(), label, args.mode, env, args.runtime_dir,
-                args.native, args.verify_package_only, approval)
+                args.native, args.verify_package_only, approval, args.windows_installer)
     return 0
 
 

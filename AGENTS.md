@@ -21,6 +21,11 @@
   remplacement ; maintenir les tests de la seule implémentation courante.
   Ne pas ajouter d'option de compatibilité `--legacy` ni de double implémentation.
   Cela n'autorise pas à effacer l'historique Git ou les preuves JSON des analyses.
+- Exception ciblée décidée par l'utilisateur le 1er novembre 2026 (audit C-13) :
+  conserver la lecture et la conversion des anciennes versions des sidecars
+  `.ipr` vers la recette courante, ainsi que leurs tests de migration. Écrire
+  un seul format courant ; cette protection des fichiers utilisateur n'autorise
+  pas à maintenir d'anciens moteurs photographiques en parallèle.
 - Le passage en **beta** intervient après validation de toutes les fonctionnalités
   de réglages implémentées. La première série beta est `v0.2.X-beta` ; `X` suit
   le compteur de patchs de cette série. La version mineure évolue à chaque
@@ -106,6 +111,19 @@
   indicateurs ne remplacent ni la revue du code, ni les contrôles de ressources
   et de concurrence, ni la validation visuelle de l'application par l'utilisateur.
 
+## Validations partielles et issues GitHub — règle du 31 octobre 2026
+
+- Toute fonctionnalité ou donnée validée seulement en partie (par exemple le
+  bruit, ou l'export DNG lu par Lightroom mais non vérifié dans Photoshop et
+  DxO) reçoit une issue GitHub pour la traçabilité. L'issue décrit ce qui est
+  validé, ce qui ne l'est pas et les vérifications restantes ; la matrice de
+  validation renvoie vers elle.
+- L'issue est close par la PR qui achève la validation. Si une PR ne la valide
+  qu'en partie, mettre l'issue à jour : cocher ce qui est fait et garder ce qui
+  reste ouvert.
+- Ouvrir une issue est autorisé sans accord préalable dans ce cadre ; les
+  fusions, publications et tags restent soumis à l'autorisation habituelle.
+
 ## Branches Git — règle du 10 octobre 2026
 
 - Précision du 12 octobre 2026 : les noms de branches sont en **anglais par
@@ -133,6 +151,31 @@
 La procédure détaillée est dans
 [Gestion des branches Git](docs/architecture/gestion-branches-git.md).
 Les travaux sous `docs/` suivent également les règles de [docs/AGENTS.md](docs/AGENTS.md).
+
+## Branche main et releases — règle du 1er novembre 2026
+
+- `main` porte seulement le code de production et la documentation. Les tests,
+  bancs, outils d'analyse (`src/tools`), mesures JSON, analyses, protocoles et
+  rapports restent sur `dev`. La frontière est la liste blanche versionnée
+  [packaging/main-allowlist.txt](packaging/main-allowlist.txt) : tout nouveau
+  fichier y est classé sur `dev` avant de pouvoir être promu.
+- `dev` n'est pas fusionnée dans `main`. Un commit de `dev` testé (CI complète
+  verte) est promu par instantané : `scripts/promote_main.py` construit, sur la
+  branche durable `main_promotion` issue de `main`, un commit contenant ses
+  chemins `[main]` et `release-manifest.json` (commit source, empreintes
+  SHA-256), sans `dev` comme parent ; une PR `main_promotion` → `main` le
+  publie. Exception approuvée à la fusion directe : l'historique de `main` reste
+  léger, celui de `dev` intact. Ne jamais corriger à la main un fichier promu :
+  corriger sur `dev`, requalifier, promouvoir de nouveau.
+- La release est construite depuis le commit de `dev` testé, en profil
+  production (`scripts/ci.py --profile production` : tests et outils OFF), et
+  ce même artefact est publié. Deux barrières : CI de production verte sur le
+  commit exact de `main`, et CI complète verte du commit de `dev` lié.
+- Les liens de la documentation vers des chemins restés sur `dev` sont dirigés
+  vers le commit source ; `docs/release/validation-summary.md` résume la
+  validation pour `main`.
+- Promotion, PR, fusion, tag et release restent soumis à l'autorisation de
+  l'utilisateur.
 
 ## Chantier IHM isolé — règle du 18 octobre 2026
 

@@ -670,9 +670,10 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     TIFF *tiff = TIFFOpen(expectedPath.toUtf8().constData(), "r");
 #endif
     if (!check(tiff != nullptr, "DNG IFD should open")) return false;
-    uint32_t count = 0, profileBytes = 0;
+    uint32_t count = 0, profileBytes = 0, subfileType = 1;
     float *matrix = nullptr;
     void *profile = nullptr;
+    const bool mainImage = TIFFGetField(tiff, TIFFTAG_SUBFILETYPE, &subfileType) == 1 && subfileType == 0;
     const bool hasMatrix = TIFFGetField(tiff, TIFFTAG_COLORMATRIX1, &count, &matrix) == 1 && count == 9;
     const bool hasIcc = TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profileBytes, &profile) == 1;
     const QColorSpace embedded = hasIcc ? QColorSpace::fromIccProfile(
@@ -681,6 +682,7 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     bool consistent = hasMatrix && embedded == QColorSpace(QColorSpace::SRgbLinear);
     if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.val[i]) < 1e-6;
     TIFFClose(tiff);
+    if (!check(mainImage, "DNG main IFD needs NewSubfileType 0 for Adobe readers")) return false;
     if (!check(consistent, "DNG linear samples need linear ICC and XYZ-to-stored-RGB matrix")) return false;
 
 #ifdef IPR_WITH_LIBRAW
@@ -1072,10 +1074,10 @@ bool verifyHistogramValues(ImageEditor &editor, const QString &directory)
 
 bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
 {
-    // Black, deep shadow, shadow, pivot (0.32 linear ~ sRGB 153), highlight,
+    // Black, deep shadow, shadow, pivot (0.225 linear ~ sRGB 130), highlight,
     // white and an orange: per-channel perceptual S curve with fixed endpoints.
-    const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(105, 105, 105),
-        QColor(153, 153, 153), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
+    const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(95, 95, 95),
+        QColor(130, 130, 130), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
     QImage input(int(colors.size()), 1, QImage::Format_RGBA8888);
     for (int x = 0; x < colors.size(); ++x) input.setPixelColor(x, 0, colors[x]);
     input.setColorSpace(QColorSpace(QColorSpace::SRgb));

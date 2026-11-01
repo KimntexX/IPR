@@ -4,19 +4,19 @@
 
 namespace Contrast {
 namespace {
-constexpr float floorEv = -16.0f;
+constexpr float floorEv = -24.0f;
 
 // Position in the 16 EV log domain below white, 0 at the floor, 1 at white.
 float encode(float value) { return (std::log2(value) - floorEv) / -floorEv; }
 
 float curve(float norm, float amount)
 {
-    constexpr float pivot = 0.32f;
-    constexpr float positiveStrength = 0.60f, negativeStrength = 0.45f * 1.08f;
+    constexpr float pivot = 0.225f;
     const float floorValue = std::exp2(floorEv);
     if (norm <= floorValue || norm >= 1.0f) return norm;
     const float v0 = encode(pivot), v = encode(norm);
-    const float g = std::exp((amount > 0.0f ? positiveStrength : negativeStrength) * amount);
+    const float g = std::exp(amount > 0.0f ? (0.47f + 0.07f * amount) * amount
+                                           : (0.44f + 0.01f * amount) * amount);
     const float out = v <= v0
         ? v0 * std::pow(v / v0, g)
         : 1.0f - (1.0f - v0) * std::pow((1.0f - v) / (1.0f - v0), g);

@@ -491,6 +491,27 @@ ctest --test-dir build --output-on-failure
 
 Les succès des tests synthétiques et de compilation ne constituent pas une certification DNG, ni une preuve de rendu colorimétrique fidèle aux profils de production.
 
+### Répertoires de profils et installation — 21 octobre 2026
+
+Les chemins ne sont pas limités à Windows : le moteur recherche une racine
+`profiles/` près de l’exécutable, les ressources d’un bundle macOS, le dossier
+`share/IPR/profiles/` d’une installation Unix et les données utilisateur Qt.
+Les entrées de `index.json` sont relatives à leur racine. Les chemins mémorisés
+du cache sont locaux à la machine ; ils ne rendent pas un chemin Windows portable.
+
+Pour les profils personnels, privilégier
+`QStandardPaths::AppDataLocation/profiles`, avec `index.json`, `dcp/` et `lcp/`.
+L’installateur Windows ne possède pas ces fichiers : une mise à niveau ou une
+désinstallation ne doit pas les supprimer. Les distributions publiques gardent
+un index vide et n’embarquent aucun DCP/LCP privé. Redémarrer après ajout.
+
+La découverte des répertoires Adobe reste asymétrique : Windows utilise
+`ProgramData/Adobe/CameraRaw`, Linux prévoit le montage WSL et macOS n’a pas
+de chemin Adobe implicite. La variable `IPR_ADOBE_CAMERARAW_DIR` permet de
+fournir cette racine sur tous les OS. Aucun nouveau comportement moteur n’est
+introduit par l’installateur.
+[Procédure Windows](architecture/build-windows-standalone.md).
+
 ### Vérification manuelle d'un CR3 réel avec les profils Adobe
 
 Sur UNIX avec `BUILD_TESTING`, LibRaw activé et ses dépendances trouvées,

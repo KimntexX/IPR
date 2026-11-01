@@ -134,6 +134,28 @@ Ne pas utiliser de squash, de rebase de commits publiés ou de push forcé : le
 graphe des fusions sert de suivi par arborescence. Les tags de validation ne sont
 ni déplacés ni réutilisés.
 
+### Promotion vers `main` et release
+
+Règle du 1er novembre 2026 : `main` ne porte que le code de production et la
+documentation ; `dev` n'y est pas fusionnée. Après validation de l'utilisateur
+et CI complète verte d'un commit de `dev` :
+
+```bash
+# Contrôle à blanc : classement de tous les chemins, aucun écrit.
+python scripts/promote_main.py --source <sha-dev> --label v0.1.X-alpha
+# Commit d'instantané sur main_promotion (parent : main, jamais dev).
+git switch main_promotion && git pull --ff-only origin main_promotion
+python scripts/promote_main.py --source <sha-dev> --parent main_promotion --label v0.1.X-alpha --write
+git push origin main_promotion
+gh pr create --base main --head main_promotion
+```
+
+Un chemin non classé dans `packaging/main-allowlist.txt` bloque la promotion :
+le classer sur `dev`, requalifier ce commit, puis recommencer. La release est
+construite depuis le commit de `dev` testé, en profil production, et publiée
+telle quelle après les deux barrières de CI. Voir la règle dans
+[AGENTS.md](../../AGENTS.md).
+
 ## Première intégration
 
 La version Lumières approuvée visuellement, commit `35d7c82`, identifiée par le

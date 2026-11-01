@@ -137,3 +137,11 @@ Les anciennes analyses température/nuance/
 vibrance/saturation restent des preuves historiques, sans maintenance parallèle.
 Suivre le socle pour IHM, mémoire et nettoyage ; ne pas conclure « validé »
 si l'analyseur, les neutres ou la couverture nécessaires manquent.
+
+## Campagne de validation bêta — balance des blancs (28 octobre 2026)
+
+Revalidation courte après le passage de la base en Rec.2020. Préréglages `IPR Balance blancs`
+(`scripts/make_lr_presets.py --controls white-balance`, 15 états), balance personnalisée :
+température 2800, 3500, 4300, 5200, 6000, 7500, 10000 K à nuance 0, nuance ±10, ±25, ±50, ±100
+à 5200 K ; l'état 5200 K / 0 est l'ancre manuelle commune, distincte du As Shot de Lightroom.
+Les 28 RAW de `base` ; exports TIFF 16 bits sRGB de 2048 pixels dans `balance-blancs`.

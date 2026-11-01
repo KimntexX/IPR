@@ -20,6 +20,7 @@ Item {
     property alias resetAction: reset
     property alias copyAction: copyEdits
     property alias pasteAction: pasteEdits
+    property alias applySelectionAction: applySelection
     property alias preferencesAction: preferences
     property alias quitAction: quit
     signal openImageRequested()
@@ -90,6 +91,14 @@ Item {
         shortcut: root.commandModifier + "+Shift+V"
         enabled: root.photoReady && root.editor.hasCopiedAdjustments
         onTriggered: root.editor.pasteAdjustments()
+    }
+    Action {
+        id: applySelection
+        objectName: "applySelectionAction"
+        text: qsTr("Appliquer les réglages de l'image ouverte à la sélection (%1)").arg(root.editor.selectedImageCount)
+        enabled: root.photoReady && root.editor.selectedImageCount > 0
+                 && !root.editor.batchApplying && !root.editor.batchExporting
+        onTriggered: root.editor.applyAdjustmentsToSelection()
     }
     Action {
         id: reset

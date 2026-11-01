@@ -34,7 +34,7 @@ class SelectionTests(unittest.TestCase):
     def test_generator_is_targeted_and_registered(self):
         plan = build.select_tests(["src/tools/generate_test_images.cpp"], RULES)
         self.assertFalse(plan["full"])
-        self.assertEqual(set(plan["tests"]), {"testImageGeneratorTests", "imageExportTests"})
+        self.assertEqual(set(plan["tests"]), {"testImageGeneratorTests", "imageExportTests", "parallelJobsTests"})
         isolated = build.select_tests(["tests/test_image_generator_test.cpp"], RULES)
         self.assertEqual(isolated["targets"], ["testImageGeneratorTests"])
 
