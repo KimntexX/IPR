@@ -1284,6 +1284,13 @@ double ImageEditor::adjustmentValue(const QString &name) const
     if (name == QStringLiteral("grain")) return m_settings.grain;
     if (name == QStringLiteral("denoiseLuminance")) return m_settings.denoiseLuminance;
     if (name == QStringLiteral("denoiseChrominance")) return m_settings.denoiseChrominance;
+    if (name == QStringLiteral("denoiseAmount")) {
+        // -1: a custom pair from the advanced controls, not reachable by one amount.
+        CameraDenoise::Settings law;
+        return CameraDenoise::settingsFromAmount(m_settings.denoiseLuminance, law) &&
+                       law.chrominance == m_settings.denoiseChrominance
+                   ? m_settings.denoiseLuminance : -1.0;
+    }
     if (name == QStringLiteral("denoiseBeforeProfile")) return m_settings.denoiseBeforeProfile ? 1.0 : 0.0;
     if (name == QStringLiteral("sharpeningAmount")) return m_settings.sharpeningAmount;
     if (name == QStringLiteral("sharpeningRadius")) return m_settings.sharpeningRadius;
@@ -1464,6 +1471,19 @@ void ImageEditor::setDenoiseChrominance(int value)
     if (m_settings.denoiseChrominance == value)
         return;
     m_settings.denoiseChrominance = value;
+    scheduleRender();
+}
+
+void ImageEditor::setDenoiseAmount(int value)
+{
+    CameraDenoise::Settings strengths;
+    if (!CameraDenoise::settingsFromAmount(qBound(0, value, 100), strengths))
+        return;
+    if (m_settings.denoiseLuminance == strengths.luminance &&
+        m_settings.denoiseChrominance == strengths.chrominance)
+        return;
+    m_settings.denoiseLuminance = strengths.luminance;
+    m_settings.denoiseChrominance = strengths.chrominance;
     scheduleRender();
 }
 

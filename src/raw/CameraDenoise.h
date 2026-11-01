@@ -46,7 +46,7 @@ int workerThreads();
 
 bool identity(const Settings &settings);
 
-// Experimental master-control proposal, not wired to the editor. Amount is an
+// Master control of the editor's single noise reduction slider. Amount is an
 // integer in [0,100]; invalid input leaves settings unchanged and returns false.
 // L=amount; C=round(100*(1-(1-amount/100)^6)). Default zero is exact identity.
 // This is an ergonomic mapping, NOT a Lightroom-equivalent strength calibration.

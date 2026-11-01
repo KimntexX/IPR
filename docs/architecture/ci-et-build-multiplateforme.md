@@ -341,6 +341,26 @@ fenêtre dans le test de zoom/comparatif. Les compilations et tests natifs
 ne certifient pas les paquets de livraison, les conteneurs Fedora/Arch,
 ni l'ergonomie sur une machine utilisateur ; ces validations restent distinctes.
 
+## Ajout du 21 octobre 2026 — installateur Windows
+
+`--windows-installer` complète le packaging Windows standalone. Le constructeur
+`scripts/windows_installer.py` compile `packaging/windows/ipr.iss` depuis le
+staging déjà vérifié, sans redéployer Qt ou les DLL. Le ZIP reste disponible ;
+les autres OS et le mode system sont inchangés.
+
+La vérification de `patch_ci_cd` compile et teste le setup temporairement,
+sans publier de binaire. Les livraisons `dev`/`main` ajoutent le setup et son
+SHA-256 aux archives du commit validé. Inno Setup 6.7.3 est installé pour
+Windows standalone seulement. Le test d’installation est réservé aux runners
+GitHub hébergés jetables ; il refuse une installation IPR préexistante.
+Il couvre installation, réinstallation, démarrage et désinstallation, pas
+la mise à niveau depuis chaque version historique ni une validation photographique.
+
+Les préférences installées passent par `QStandardPaths::AppConfigLocation`,
+et les profils personnels par `AppDataLocation/profiles`, hors du désinstalleur.
+La signature de distribution reste à organiser.
+[Procédure, commandes et limites](build-windows-standalone.md).
+
 ## Références de déploiement
 
 - [Qt : déploiement QML CMake](https://doc.qt.io/qt-6.8/qt-generate-deploy-qml-app-script.html).

@@ -24,6 +24,7 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Références architecture et profils](references/) : licences des dépendances, création de DCP et note d'utilisation des profils Adobe.
 - [Étude d’autonomie des profils caméra](references/etude-autonomie-profils-camera.md) : données DCP, droits, corpus externes et raccordement proposé à la passerelle MCP d’analyse.
 - [CI et build multiplateforme](ci-et-build-multiplateforme.md) : matrice Windows/macOS/Linux, prérequis, packaging et feuille de route GitHub.
+- [Réseau Git vertical local](graphe-git-local.md) : `scripts/git_network.py`, page HTML/SVG des branches, fusions et tags, en lecture seule.
 - [Réduction de bruit et netteté](denoising-sharpening.md) : algorithmes, ordre de pipeline, limites IA/GPU et validation attendue.
 - [Empilement et panorama](empilement-et-panorama.md) : plan multi-images, ancre utilisateur, alignement ciel/sol, recadrage automatique et dossier tampon disque ; non implémenté.
 - [Arborescence des sources](../../src/README.md) : domaines C++/QML et bibliothèque interne `iprEngine`.
