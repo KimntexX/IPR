@@ -405,6 +405,19 @@ GitHub hébergés jetables ; il refuse une installation IPR préexistante.
 Il couvre installation, réinstallation, démarrage et désinstallation, pas
 la mise à niveau depuis chaque version historique ni une validation photographique.
 
+Le désinstalleur peut relancer une copie temporaire puis quitter avant elle.
+Le test attend donc tout l'arbre de processus dans un
+[Job Object Windows](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects),
+et vérifie que `uninstall.log` peut être ouvert exclusivement avant le
+nettoyage. Une barrière de démarrage empêche le lanceur de créer ses enfants
+avant son rattachement au job. L'attente normale est limitée à 120 secondes ;
+en cas d'échec ou d'interruption, le job arrête ses descendants avec une
+attente de terminaison/libération bornée à 15 secondes. Les erreurs restent
+fatales : pas d'ignorance des fichiers verrouillés ni de suppression différée
+annoncée comme un succès. Le test Inno complet reste à confirmer sur le
+runner ; les tests locaux utilisent des processus Python jetables, sans
+installation ni modification du registre utilisateur.
+
 Les préférences installées passent par `QStandardPaths::AppConfigLocation`,
 et les profils personnels par `AppDataLocation/profiles`, hors du désinstalleur.
 La signature de distribution reste à organiser.
