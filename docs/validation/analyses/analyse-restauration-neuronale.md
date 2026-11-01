@@ -721,3 +721,61 @@ signal signé, refus d'empreintes altérées ou d'un train vide, propagation
 des gradients, reproductibilité de la graine et statistique d'un résidu
 constant. Ce paragraphe constate **le lancement, pas le résultat** de la
 campagne. Les poids diagnostiques restent dans le build, sans déploiement.
+
+### Résultat : apprentissage fonctionnel, budget initial trop court pour ces données
+
+Campagne terminée sans erreur, en **77,72 s**. Les quatre cas fixés ont
+été exécutés ; le jeu parent et les sources des outils sont restés
+inchangés. Aucune inférence ou mesure sur la composition de contrôle.
+
+| Cas | Rapport MSE après 256 pas | Après 1024 pas | Après 2048 pas |
+| --- | ---: | ---: | ---: |
+| Décalage RGB connu | 0,000000489 | — | — |
+| Bruit gaussien renouvelé, mesure sur réalisation indépendante | 1,00010 | 0,62725 | — |
+| Mémorisation de la première paire réelle | 0,98643 | 0,23437 | — |
+| Toutes les paires d'apprentissage réelles | 0,99893 | 0,26964 | 0,15765 |
+
+Les ratios sont mesurés par rapport à l'entrée, sur les pixels-canaux
+valides. Le cas réel prolongé réduit donc l'erreur **d'apprentissage**
+d'environ 73,0 % à 1024 pas, puis 84,2 % à 2048 pas. Ce ne sont pas des
+pourcentages de bruit visuellement retiré, ni un résultat de généralisation.
+Le diagnostic à 256 pas retrouve la MSE d'apprentissage du premier pilote
+à environ 2,2×10⁻¹¹ près (évaluation par lots différente), ce qui soutient
+la comparaison de trajectoire plutôt qu'un changement caché de données.
+
+Les normes de gradient confirment le fonctionnement attendu : tête
+non nulle au premier pas, corps nul à ce seul premier pas puis non nul
+au suivant, dans les quatre cas. Le réseau n'est donc pas bloqué à
+l'identité. Le décalage connu est appris ; le bruit synthétique indépendant
+diminue après entraînement plus long, sur les quatre mêmes cibles de
+train. La mémorisation d'une paire réussit partiellement, sans rien
+prouver sur une photo inconnue.
+
+Le résidu réel n'est pas expliqué principalement par un décalage RGB
+constant : le carré du biais moyen par canal représente environ 0,009 %
+de la MSE à ISO12800 et 0,48 % à ISO51200. L'énergie de sa moyenne locale
+9×9 représente environ 10,25 % et 9,96 % de la MSE. Cela ne sépare pas
+bruit corrélé, erreur géométrique et structure ; aucune attribution à
+une « vérité de bruit » n'est faite.
+
+Preuve complète :
+[diagnostic d'apprenabilité train-only v001](../raw/neural-train-learnability-v001-20261101T221250Z.json).
+Elle conserve les 342 identités train, les quatre plans et graines, les
+4352 pertes de mise à jour, les mesures aux points fixés, gradients et
+empreintes des quatre modèles. Ces poids restent **diagnostiques** dans
+le build ; ils ne remplacent ni le pilote initial ni le moteur classique.
+
+**Conclusion actuelle : piste concrète de sous-apprentissage du premier
+pilote à 256 pas, pas de preuve d'amélioration sur une nouvelle image.**
+Le diagnostic exclut un blocage élémentaire de la chaîne d'optimisation ;
+il ne démontre ni la propreté des cibles, ni la conservation des textures,
+ni la cause unique de la dégradation de 4,19 % sur le contrôle initial.
+
+Prochaine épreuve recommandée : geler l'état réel à 2048 pas, choisi ici
+sur le train uniquement, et effectuer **un contrôle de transfert distinct**,
+avec erreur, biais chromatique et préservation des structures. Ne pas
+chercher ensuite la meilleure durée ou force sur cette composition.
+La scène de contrôle a déjà servi à un premier pilote : elle n'est pas un
+test final vierge ; un futur jeu final indépendant restera nécessaire.
+Pas de nouveau calcul lancé après ce diagnostic, de changement moteur,
+de push, de fusion ou de tag.
