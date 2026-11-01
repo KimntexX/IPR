@@ -37,6 +37,19 @@ class DeploymentTests(unittest.TestCase):
             file.write_bytes(file.read_bytes()+b' ')
             with self.assertRaises(ValueError):ci.assert_public(stage)
 
+    def test_macdeployqt_errors_tolerated_only_for_unused_sql_drivers(self):
+        output = ('WARNING: Plugin "libqsqlodbc.dylib" uses private API\n'
+                  'ERROR: no file at "/usr/local/lib/libmimerapi.dylib"\n'
+                  'ERROR: no file at "/usr/local/opt/libiodbc/lib/libiodbc.2.dylib"\n')
+        drivers = {'/usr/local/lib/libmimerapi.dylib', '/usr/local/opt/libiodbc/lib/libiodbc.2.dylib'}
+        self.assertEqual(ci.unexplained_deploy_errors(output, drivers), [])
+        # A missing file that no SQL driver links to, or any other error, still fails.
+        self.assertEqual(ci.unexplained_deploy_errors(output, {'/usr/local/lib/libmimerapi.dylib'}),
+                         ['ERROR: no file at "/usr/local/opt/libiodbc/lib/libiodbc.2.dylib"'])
+        self.assertEqual(ci.unexplained_deploy_errors('ERROR: Could not find framework\n', drivers),
+                         ['ERROR: Could not find framework'])
+        self.assertEqual(ci.unexplained_deploy_errors('Log: deployed\n', set()), [])
+
     def test_offscreen_runtime(self):
         env = ci.runtime_environment()
         self.assertEqual(env['QT_QPA_PLATFORM'], 'offscreen')
