@@ -229,13 +229,13 @@ cv::morphologyEx(binary, cleaned, cv::MORPH_OPEN, kernel);
 
 ## Dépendances CMake minimales
 
-Le projet utilise actuellement Qt Quick 6.4. Pour ajouter le socle OpenCV :
+Le projet exige Qt 6.8 au minimum ([ADR-0016](decisions/ADR-0016-minimum-qt-6-8.md)). Pour ajouter le socle OpenCV :
 
 ```cmake
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Gui Concurrent)
+find_package(Qt6 6.8 REQUIRED COMPONENTS Quick Gui Concurrent)
 find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
 
 target_link_libraries(appIPR

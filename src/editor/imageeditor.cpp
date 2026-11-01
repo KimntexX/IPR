@@ -1,6 +1,18 @@
 #include "imageeditor.h"
+#include "CameraDenoise.h"
 
+#include "Dehaze.h"
+#include "Grain.h"
 #include "DetailProcessing.h"
+#include "LocalContrast.h"
+#include "ColorAdjustments.h"
+#include "ColorGrading.h"
+#include "Contrast.h"
+#include "Histogram.h"
+#include "ImageExporter.h"
+#include "Sidecar.h"
+#include "ToneCurve.h"
+#include "ToneRecovery.h"
 #include "RawDecoder.h"
 #include "RawNormalization.h"
 #include "CameraProfileEngine.h"
@@ -8,12 +20,13 @@
 #include "ThumbnailProvider.h"
 
 #include <QDir>
+#include <QDirIterator>
+#include <QCryptographicHash>
 #include <QCoreApplication>
 #include <QDataStream>
 #include <QLocale>
 #include <QFile>
 #include <QFileInfo>
-#include <QImageReader>
 #include <QImageWriter>
 #include <QRegularExpression>
 #include <QSaveFile>
@@ -37,298 +50,53 @@
 
 namespace {
 
-constexpr uint16_t LinearRawPhotometricInterpretation = 34892;
+// Keys of the cached render stages, defined with the render below.
+RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s);
 
-QString normalizedExportFormat(QString format)
+QString selectionKey(const QUrl &url)
 {
-    format = format.trimmed().toUpper();
-    return format == QStringLiteral("JPG") ? QStringLiteral("JPEG") : format;
+    if (!url.isLocalFile()) return {};
+    const QFileInfo info(url.toLocalFile());
+    const QString canonical = info.canonicalFilePath();
+    return canonical.isEmpty() ? info.absoluteFilePath() : canonical;
 }
 
-QString exportSuffix(const QString &normalizedFormat)
+QString defaultNormalizationManifest()
 {
-    if (normalizedFormat == QStringLiteral("JPEG"))
-        return QStringLiteral("jpg");
-    if (normalizedFormat == QStringLiteral("PNG"))
-        return QStringLiteral("png");
-    if (normalizedFormat == QStringLiteral("TIFF"))
-        return QStringLiteral("tiff");
-    if (normalizedFormat == QStringLiteral("DNG"))
-        return QStringLiteral("dng");
+    const QStringList candidates{qEnvironmentVariable("IPR_RAW_NORMALIZATION_MANIFEST"),
+        QDir(QCoreApplication::applicationDirPath()).filePath("config/raw-normalization.json"),
+        QStringLiteral(":/config/raw-normalization.json")};
+    for (const auto &path : candidates)
+        if (!path.isEmpty() && QFileInfo(path).isFile()) return QFileInfo(path).absoluteFilePath();
     return {};
 }
 
-QString localExportPath(const QUrl &target)
+QString resourceDigest(const QString &path)
 {
-    if (target.isLocalFile())
-        return target.toLocalFile();
-
-    const QString value = target.toString(QUrl::FullyDecoded);
-    const bool nativeWindowsPath =
-        value.size() >= 3 && value.at(0).isLetter() &&
-        value.at(1) == QLatin1Char(':') &&
-        (value.at(2) == QLatin1Char('/') || value.at(2) == QLatin1Char('\\'));
-    if ((target.scheme().isEmpty() && QDir::isAbsolutePath(value)) ||
-        (target.scheme().size() == 1 && nativeWindowsPath))
-        return QDir::toNativeSeparators(value);
-    return {};
+    QFile file(path);
+    if (path.isEmpty() || !file.open(QIODevice::ReadOnly)) return {};
+    QCryptographicHash hash(QCryptographicHash::Sha256);
+    if (!hash.addData(&file)) return {};
+    return QString::fromLatin1(hash.result().toHex());
 }
 
-QString normalizedExportPath(const QString &target, const QString &normalizedFormat)
+bool cacheAssetsUnchanged(const DecodedImageCache::Entry &entry)
 {
-    const QString suffix = exportSuffix(normalizedFormat);
-    if (suffix.isEmpty())
-        return {};
-    const QFileInfo info(target);
-    const QString existingSuffix = info.suffix().toLower();
-    const bool matches = existingSuffix == suffix ||
-        (normalizedFormat == QStringLiteral("JPEG") && existingSuffix == QStringLiteral("jpeg")) ||
-        (normalizedFormat == QStringLiteral("TIFF") && existingSuffix == QStringLiteral("tif"));
-    if (matches)
-        return target;
-    if (existingSuffix.isEmpty())
-        return target + QLatin1Char('.') + suffix;
-    return info.dir().filePath(info.completeBaseName() + QLatin1Char('.') + suffix);
+    return (!entry.image.dcpContext || resourceDigest(entry.image.dcpContext->profilePath) == entry.profileDigest) &&
+        (entry.metadata.lcpPath.isEmpty() || resourceDigest(entry.metadata.lcpPath) == entry.metadata.lcpSha256);
 }
 
-QString availableExportPath(const QString &target)
+// Relocation is allowed only for identical bytes, never by filename alone.
+QString relocateResource(const QString &path, const QString &digest, const QString &folder)
 {
-    if (target.isEmpty())
-        return {};
-    const auto occupied = [](const QString &path) {
-        const QFileInfo info(path);
-        return info.exists() || info.isSymLink();
-    };
-    if (!occupied(target))
-        return target;
-
-    const QFileInfo info(target);
-    QString baseName = info.completeBaseName();
-    qulonglong number = 2;
-    int padding = 0;
-    static const QRegularExpression numberedName(QStringLiteral("^(.*)-([0-9]+)$"));
-    const auto match = numberedName.match(baseName);
-    if (match.hasMatch()) {
-        bool valid = false;
-        const QString digits = match.captured(2);
-        const qulonglong previous = digits.toULongLong(&valid);
-        if (valid && previous < std::numeric_limits<qulonglong>::max()) {
-            baseName = match.captured(1);
-            number = previous + 1;
-            padding = digits.startsWith(QLatin1Char('0')) ? digits.size() : 0;
-        }
+    if (path.isEmpty() || QFileInfo(path).isFile() || digest.isEmpty()) return path;
+    const QString root = QDir(QCoreApplication::applicationDirPath()).filePath(folder);
+    QDirIterator files(root, {QFileInfo(path).fileName()}, QDir::Files, QDirIterator::Subdirectories);
+    while (files.hasNext()) {
+        const auto candidate = files.next();
+        if (resourceDigest(candidate) == digest) return candidate;
     }
-    for (;;) {
-        const QString counter = QString::number(number).rightJustified(padding, QLatin1Char('0'));
-        const QString candidate = info.dir().filePath(
-            baseName + QLatin1Char('-') + counter + QLatin1Char('.') + info.suffix());
-        if (!occupied(candidate))
-            return candidate;
-        if (number == std::numeric_limits<qulonglong>::max())
-            return {};
-        ++number;
-    }
-}
-
-TIFF *openTiffForWrite(const QString &fileName)
-{
-#ifdef Q_OS_WIN
-    return TIFFOpenW(reinterpret_cast<const wchar_t *>(fileName.utf16()), "w");
-#else
-    return TIFFOpen(fileName.toUtf8().constData(), "w");
-#endif
-}
-
-bool writeLinearDng(const ColorPipeline::WorkingImage &image,
-                    const QString &fileName, QString *error)
-{
-    const ColorPipeline::WorkingImage gamutMapped =
-        ColorPipeline::mapToSrgbGamut(image, error);
-    if (gamutMapped.isNull())
-        return false;
-
-    TIFF *tiff = openTiffForWrite(fileName);
-    if (!tiff) {
-        if (error)
-            *error = QStringLiteral("Impossible de créer le fichier DNG.");
-        return false;
-    }
-
-    constexpr uint8_t dngVersion[] = {1, 4, 0, 0};
-    constexpr uint8_t dngBackwardVersion[] = {1, 1, 0, 0};
-    constexpr float blackLevel[] = {0.0f, 0.0f, 0.0f};
-    constexpr uint32_t whiteLevel[] = {65535, 65535, 65535};
-    constexpr float asShotNeutral[] = {1.0f, 1.0f, 1.0f};
-    constexpr float srgbToXyzD50[] = {
-        0.4360747f, 0.3850649f, 0.1430804f,
-        0.2225045f, 0.7168786f, 0.0606169f,
-        0.0139322f, 0.0971045f, 0.7141733f,
-    };
-    const QByteArray uniqueCameraModel =
-        QByteArrayLiteral("IPR Rendered Linear DNG");
-    const QByteArray software = QByteArrayLiteral("IPR");
-    const QByteArray iccProfile =
-        QColorSpace(QColorSpace::SRgb).iccProfile();
-
-    bool configured =
-        TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH,
-                     static_cast<uint32_t>(gamutMapped.linearRgba.cols)) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_IMAGELENGTH,
-                     static_cast<uint32_t>(gamutMapped.linearRgba.rows)) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_BITSPERSAMPLE, 16) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_SAMPLESPERPIXEL, 3) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_PHOTOMETRIC,
-                     LinearRawPhotometricInterpretation) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_NONE) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, 1) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_MAKE, "IPR") == 1 &&
-        TIFFSetField(tiff, TIFFTAG_MODEL, "Rendered Linear DNG") == 1 &&
-        TIFFSetField(tiff, TIFFTAG_SOFTWARE, software.constData()) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_DNGVERSION, dngVersion) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_DNGBACKWARDVERSION,
-                     dngBackwardVersion) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_UNIQUECAMERAMODEL,
-                     uniqueCameraModel.constData()) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_BLACKLEVEL, 3, blackLevel) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_WHITELEVEL, 3, whiteLevel) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_COLORMATRIX1, 9, srgbToXyzD50) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_ASSHOTNEUTRAL, 3, asShotNeutral) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_CALIBRATIONILLUMINANT1, 21) == 1;
-    if (!iccProfile.isEmpty()) {
-        configured = configured &&
-            TIFFSetField(tiff, TIFFTAG_ICCPROFILE,
-                         static_cast<uint32_t>(iccProfile.size()),
-                         const_cast<char *>(iccProfile.constData())) == 1;
-    }
-    if (!configured) {
-        TIFFClose(tiff);
-        QFile::remove(fileName);
-        if (error)
-            *error = QStringLiteral("Impossible d'écrire les métadonnées DNG.");
-        return false;
-    }
-
-    std::vector<quint16> row(
-        static_cast<size_t>(gamutMapped.linearRgba.cols) * 3);
-    for (int y = 0; y < gamutMapped.linearRgba.rows; ++y) {
-        const cv::Vec4f *source = gamutMapped.linearRgba.ptr<cv::Vec4f>(y);
-        for (int x = 0; x < gamutMapped.linearRgba.cols; ++x) {
-            for (int channel = 0; channel < 3; ++channel) {
-                row[static_cast<size_t>(x) * 3 + channel] =
-                    static_cast<quint16>(std::lround(
-                        std::clamp(source[x][channel], 0.0f, 1.0f) * 65535.0f));
-            }
-        }
-        if (TIFFWriteScanline(tiff, row.data(), static_cast<uint32_t>(y), 0) < 0) {
-            TIFFClose(tiff);
-            QFile::remove(fileName);
-            if (error)
-                *error = QStringLiteral("Impossible d'écrire les pixels DNG.");
-            return false;
-        }
-    }
-
-    TIFFClose(tiff);
-    return true;
-}
-
-std::optional<double> readWhiteBalanceKelvin(const QImageReader &reader)
-{
-    static const QRegularExpression kelvinPattern(
-        QStringLiteral("^\\s*(\\d+(?:\\.\\d+)?)\\s*(?:K|kelvin)?\\s*$"),
-        QRegularExpression::CaseInsensitiveOption);
-
-    for (const QString &key : reader.textKeys()) {
-        QString normalizedKey = key.toCaseFolded();
-        normalizedKey.remove(QRegularExpression(QStringLiteral("[^a-z0-9]")));
-        if (normalizedKey != QStringLiteral("whitebalancetemperature") &&
-            normalizedKey != QStringLiteral("colortemperature") &&
-            normalizedKey != QStringLiteral("temperaturekelvin"))
-            continue;
-
-        const QRegularExpressionMatch match = kelvinPattern.match(reader.text(key));
-        if (!match.hasMatch())
-            continue;
-        bool ok = false;
-        const double kelvin = match.captured(1).toDouble(&ok);
-        if (ok && std::isfinite(kelvin) && kelvin >= 2000.0 && kelvin <= 50000.0)
-            return kelvin;
-    }
-    return std::nullopt;
-}
-
-QString normalizedMetadataKey(QString key)
-{
-    key = key.toCaseFolded();
-    key.remove(QRegularExpression(QStringLiteral("[^a-z0-9]")));
-    return key;
-}
-
-QString readMetadataText(const QImageReader &reader, const QStringList &names)
-{
-    QStringList normalizedNames;
-    for (const QString &name : names)
-        normalizedNames.append(normalizedMetadataKey(name));
-
-    for (const QString &key : reader.textKeys()) {
-        const QString normalizedKey = normalizedMetadataKey(key);
-        for (const QString &name : normalizedNames) {
-            if (normalizedKey == name || normalizedKey.endsWith(name)) {
-                const QString value = reader.text(key).trimmed();
-                if (!value.isEmpty())
-                    return value;
-            }
-        }
-    }
-    return {};
-}
-
-QDateTime readCaptureDate(const QImageReader &reader)
-{
-    const QString value = readMetadataText(
-        reader, {QStringLiteral("DateTimeOriginal"),
-                 QStringLiteral("CreateDate"), QStringLiteral("DateTime")});
-    if (value.isEmpty())
-        return {};
-
-    const QStringList formats{
-        QStringLiteral("yyyy:MM:dd HH:mm:ss"),
-        QStringLiteral("yyyy-MM-dd HH:mm:ss")
-    };
-    for (const QString &format : formats) {
-        const QDateTime date = QDateTime::fromString(value, format);
-        if (date.isValid())
-            return date;
-    }
-    return QDateTime::fromString(value, Qt::ISODate);
-}
-
-std::optional<double> readMetadataNumber(const QImageReader &reader,
-                                         const QStringList &names)
-{
-    const QString value = readMetadataText(reader, names);
-    if (value.isEmpty())
-        return std::nullopt;
-
-    const QStringList fraction = value.split(QLatin1Char('/'));
-    bool ok = false;
-    double number = 0.0;
-    if (fraction.size() == 2) {
-        const double numerator = fraction.at(0).trimmed().toDouble(&ok);
-        if (!ok)
-            return std::nullopt;
-        const double denominator = fraction.at(1).trimmed().toDouble(&ok);
-        if (!ok || denominator == 0.0)
-            return std::nullopt;
-        number = numerator / denominator;
-    } else {
-        number = value.toDouble(&ok);
-    }
-    return ok && std::isfinite(number) && number > 0.0
-               ? std::optional<double>(number) : std::nullopt;
+    return path;
 }
 
 QString formatFocalLength(double millimeters)
@@ -358,6 +126,12 @@ QString formatExposureTime(double seconds)
 ImageListModel::ImageListModel(QObject *parent)
     : QAbstractListModel(parent)
 {
+    // Images added, removed or renamed outside IPR reach the filmstrip. One copy
+    // fires several notifications: they are coalesced into one listing.
+    m_refreshTimer.setSingleShot(true);
+    m_refreshTimer.setInterval(300);
+    connect(&m_watcher, &QFileSystemWatcher::directoryChanged, &m_refreshTimer, qOverload<>(&QTimer::start));
+    connect(&m_refreshTimer, &QTimer::timeout, this, &ImageListModel::refresh);
 }
 
 int ImageListModel::rowCount(const QModelIndex &parent) const
@@ -386,23 +160,74 @@ QHash<int, QByteArray> ImageListModel::roleNames() const
     return {{FileNameRole, "fileName"}, {FileUrlRole, "fileUrl"}};
 }
 
+namespace {
+QStringList supportedImagePatterns()
+{
+    QStringList patterns = {"*.jpg", "*.jpeg", "*.png", "*.tif", "*.tiff"};
+    for (const QString &extension : RawDecoder::supportedExtensions()) {
+        patterns.append(QStringLiteral("*.%1").arg(extension));
+        patterns.append(QStringLiteral("*.%1").arg(extension.toUpper()));
+    }
+    return patterns;
+}
+}
+
+QStringList ImageEditor::imageFileFilters() const
+{
+    return {tr("Images (%1)").arg(supportedImagePatterns().join(QLatin1Char(' ')))};
+}
+
+QList<ImageListModel::Entry> ImageListModel::listFolder(const QString &path)
+{
+    QList<Entry> entries;
+    if (path.isEmpty())
+        return entries;
+    const QFileInfoList files = QDir(path).entryInfoList(
+        supportedImagePatterns(), QDir::Files | QDir::Readable | QDir::NoSymLinks, QDir::Name | QDir::IgnoreCase);
+    for (const QFileInfo &file : files)
+        entries.append({file.fileName(), QUrl::fromLocalFile(file.absoluteFilePath())});
+    return entries;
+}
+
 void ImageListModel::setFolder(const QUrl &folder)
 {
     beginResetModel();
-    m_entries.clear();
-
-    const QDir directory(folder.toLocalFile());
-    QStringList filters = {"*.jpg", "*.jpeg", "*.png", "*.tif", "*.tiff"};
-    for (const QString &extension : RawDecoder::supportedExtensions()) {
-        filters.append(QStringLiteral("*.%1").arg(extension));
-        filters.append(QStringLiteral("*.%1").arg(extension.toUpper()));
-    }
-    const QFileInfoList files = directory.entryInfoList(
-        filters, QDir::Files | QDir::Readable | QDir::NoSymLinks, QDir::Name | QDir::IgnoreCase);
-    for (const QFileInfo &file : files)
-        m_entries.append({file.fileName(), QUrl::fromLocalFile(file.absoluteFilePath())});
-
+    m_refreshTimer.stop();
+    if (!m_watcher.directories().isEmpty())
+        m_watcher.removePaths(m_watcher.directories());
+    m_folderPath = folder.toLocalFile();
+    m_entries = listFolder(m_folderPath);
+    if (!m_folderPath.isEmpty())
+        m_watcher.addPath(m_folderPath);
     endResetModel();
+}
+
+// Rows change in place, so the filmstrip keeps its position and thumbnails.
+void ImageListModel::refresh()
+{
+    const QList<Entry> current = listFolder(m_folderPath);
+    QSet<QString> present;
+    for (const Entry &entry : current)
+        present.insert(entry.fileName);
+    QStringList removed;
+    for (int row = int(m_entries.size()) - 1; row >= 0; --row) {
+        if (present.contains(m_entries.at(row).fileName))
+            continue;
+        removed.prepend(m_entries.at(row).fileUrl.toLocalFile());
+        beginRemoveRows({}, row, row);
+        m_entries.removeAt(row);
+        endRemoveRows();
+    }
+    // The remaining entries keep the listing's order: each new one goes in its place.
+    for (int row = 0; row < int(current.size()); ++row) {
+        if (row < int(m_entries.size()) && m_entries.at(row).fileName == current.at(row).fileName)
+            continue;
+        beginInsertRows({}, row, row);
+        m_entries.insert(row, current.at(row));
+        endInsertRows();
+    }
+    if (!removed.isEmpty())
+        emit entriesRemoved(removed);
 }
 
 int ImageListModel::count() const
@@ -422,13 +247,94 @@ QStringList ImageListModel::localFiles(int first, int last) const
 }
 
 ImageEditor::ImageEditor(ImageProvider *provider,
-                         ThumbnailProvider *thumbnailProvider, QObject *parent)
+                         ThumbnailProvider *thumbnailProvider, QObject *parent,
+                         ImageCacheController::Sampler memorySampler)
     : QObject(parent)
     , m_provider(provider)
     , m_thumbnailProvider(thumbnailProvider)
     , m_imageModel(this)
     , m_original()
+    , m_decodedImageCache(nullptr, std::move(memorySampler))
 {
+    m_embeddedPool.setMaxThreadCount(1);
+    connect(&m_embeddedWatcher, &QFutureWatcher<QImage>::finished, this, [this] {
+        QImage preview;
+        try { preview = m_embeddedWatcher.result(); } catch (...) { /* optional interim view */ }
+        // Only while that very development still runs: a fast cache hit wins.
+        if (preview.isNull() || m_embeddedRevision != m_requestedLoadRevision || !m_loadWatcher.isRunning())
+            return;
+        if (!m_embeddedPreview) {
+            m_restorePreview = m_provider->image();
+            m_restoreOriginal = m_provider->originalImage();
+            m_restoreImageSource = m_imageSource;
+            m_restoreOriginalSource = m_originalImageSource;
+        }
+        m_embeddedPreview = true;
+        m_provider->setImages(preview, preview);
+        ++m_embeddedSerial;
+        m_imageSource = QStringLiteral("image://editor/preview?embedded=%1").arg(m_embeddedSerial);
+        m_originalImageSource = QStringLiteral("image://editor/original?embedded=%1").arg(m_embeddedSerial);
+        m_histogram.clear();
+        setStatusMessage(tr("Aperçu du boîtier affiché — développement IPR en cours…"));
+        emit histogramChanged();
+        emit previewChanged();
+    });
+    m_prefetchPool.setMaxThreadCount(1);
+    m_prefetchPool.setExpiryTimeout(5000);
+    m_prefetchTimer.setSingleShot(true);
+    m_prefetchTimer.setInterval(250);
+    connect(&m_prefetchTimer, &QTimer::timeout, this, &ImageEditor::startPrefetch);
+    connect(&m_imageModel, &ImageListModel::entriesRemoved, this, [this](const QStringList &files) {
+        bool deselected = false;
+        for (const QString &file : files) {
+            // Selection keys are canonical (selectionKey); a removed file no longer
+            // resolves, its folder still does (a symbolic link, macOS's /var).
+            const QFileInfo info(file);
+            const QString folder = QFileInfo(info.absolutePath()).canonicalFilePath();
+            const QString key = folder.isEmpty() ? info.absoluteFilePath() : QDir(folder).filePath(info.fileName());
+            deselected = m_selectedImageKeys.remove(key) || deselected;
+            // The pixels stay on screen; saving its settings will fail until it comes back.
+            if (m_displayedFile.isLocalFile() &&
+                QFileInfo(m_displayedFile.toLocalFile()).absoluteFilePath() == QFileInfo(file).absoluteFilePath())
+                setStatusMessage(tr("« %1 » a été supprimée, déplacée ou renommée hors d'IPR.")
+                                     .arg(QFileInfo(file).fileName()));
+        }
+        if (deselected)
+            emit selectionChanged();
+    });
+    connect(&m_decodedImageCache, &ImageCacheController::changed, this, [this] {
+        emit decodedImageCacheChanged();
+        const auto stats = m_decodedImageCache.statistics();
+        constexpr double GiB = 1024.0 * 1024.0 * 1024.0;
+        if (stats.waitingRequests) {
+            m_memoryWaitMessage = tr("En attente de libération de mémoire : %1 Gio requis, %2 Gio disponibles. "
+                "Images anciennes déchargées ; fermer d'autres applications si l'attente persiste.")
+                .arg(stats.waitingBytes / GiB, 0, 'f', 1).arg(stats.admissibleBytes / GiB, 0, 'f', 1);
+            setStatusMessage(m_memoryWaitMessage);
+        } else if (!m_memoryWaitMessage.isEmpty()) {
+            if (m_statusMessage == m_memoryWaitMessage) setStatusMessage(tr("Mémoire libérée : traitement repris."));
+            m_memoryWaitMessage.clear();
+        }
+        if (stats.pressure) {
+            cancelPrefetch(); m_prefetchSuspended = true;
+        } else if (m_prefetchSuspended && !busy()) {
+            m_prefetchSuspended = false; schedulePrefetch();
+        }
+    });
+    connect(&m_prefetchWatcher, &QFutureWatcher<LoadResult>::finished, this, [this] {
+        LoadResult loaded;
+        try { loaded = m_prefetchWatcher.future().takeResult(); } catch (...) { /* speculative result discarded */ }
+        m_prefetchTaskActive = false;
+        m_prefetchTransfer.reset();
+        if (m_activePrefetchGeneration == m_prefetchGeneration && m_prefetchCancel &&
+            !m_prefetchCancel->load() && !loaded.image.isNull()) {
+            const QSize fullSize = loaded.proxyOnly ? loaded.fullSize
+                : QSize(loaded.image.linearRgba.cols, loaded.image.linearRgba.rows);
+            m_decodedImageCache.insert(loaded.cacheKey, retainedEntry(loaded.image, loaded.editProxy,
+                loaded.metadata, loaded.dcpSource, fullSize, loaded.proxyOnly));
+        }
+        if (!m_prefetchQueue.isEmpty() && !busy()) m_prefetchTimer.start();
+    });
     m_renderDebounce.setSingleShot(true);
     m_renderDebounce.setInterval(80);
     connect(&m_renderDebounce, &QTimer::timeout, this, &ImageEditor::startRender);
@@ -439,7 +345,11 @@ ImageEditor::ImageEditor(ImageProvider *provider,
 
     connect(&m_renderWatcher, &QFutureWatcher<RenderResult>::finished,
             this, [this] {
-        const RenderResult rendered = m_renderWatcher.result();
+        RenderResult rendered;
+        try { rendered = m_renderWatcher.result(); }
+        catch (...) { rendered.error = tr("Échec du rendu : ressources insuffisantes ou traitement interrompu."); }
+        if (!rendered.error.isEmpty() && m_activeRevision == m_requestedRevision)
+            setStatusMessage(rendered.error);
         if (m_activeRevision == m_requestedRevision &&
             !rendered.preview.isNull()) {
             // Publish the pair together. The neutral baseline is encoded only
@@ -462,36 +372,106 @@ ImageEditor::ImageEditor(ImageProvider *provider,
             startRender();
         } else {
             refreshBusyState();
+            if (!busy()) schedulePrefetch();
         }
     });
 
+    connect(&m_batchApplyWatcher, &QFutureWatcher<BatchResult>::finished, this, [this] {
+        BatchResult result;
+        try { result = m_batchApplyWatcher.result(); }
+        catch (...) { result.failed.append(tr("traitement interrompu")); }
+        finishBatch(result, tr("Réglages appliqués à %n image(s).", nullptr, result.written));
+        m_batchApplying = false;
+        emit batchApplyChanged();
+    });
+    connect(&m_batchExportWatcher, &QFutureWatcher<BatchResult>::progressValueChanged, this, [this](int done) {
+        m_batchExportDone = done;
+        setStatusMessage(tr("Export par lot : %1 / %2…").arg(done).arg(m_batchExportTotal));
+        emit batchExportChanged();
+    });
+    connect(&m_batchExportWatcher, &QFutureWatcher<BatchResult>::finished, this, [this] {
+        BatchResult result;
+        try { result = m_batchExportWatcher.result(); }
+        catch (...) { result.failed.append(tr("traitement interrompu")); }
+        finishBatch(result, result.cancelled
+            ? tr("Export par lot annulé : %n image(s) exportée(s).", nullptr, result.written)
+            : tr("Export par lot terminé : %n image(s) exportée(s).", nullptr, result.written));
+        m_batchExportCancel.reset();
+        m_batchExporting = false;
+        emit batchExportChanged();
+        if (!busy()) schedulePrefetch();
+    });
+
     connect(&m_exportWatcher, &QFutureWatcher<ExportResult>::finished, this, [this] {
-        const ExportResult result = m_exportWatcher.result();
+        ExportResult result;
+        try { result = m_exportWatcher.result(); }
+        catch (...) { result = {false, tr("Échec de l'export : ressources insuffisantes ou traitement interrompu.")}; }
         setStatusMessage(result.message);
         refreshBusyState();
+        if (!busy()) schedulePrefetch();
     });
 
     // Decoding (especially RAW demosaicing) can take seconds on large files;
     // running it on QtConcurrent keeps the UI thread responsive, mirroring
     // the pattern already used for rendering and export.
     connect(&m_loadWatcher, &QFutureWatcher<LoadResult>::finished, this, [this] {
-        const LoadResult loaded = m_loadWatcher.result();
+        LoadResult loaded;
+        try { loaded = m_loadWatcher.future().takeResult(); }
+        catch (...) { loaded.error = tr("Ressources insuffisantes ou échec du décodeur."); }
+        if (!m_queuedFile.isEmpty()) {
+            const QUrl queued = std::exchange(m_queuedFile, QUrl());
+            loadImage(queued);
+            return;
+        }
+        // Consume the result so a completed future cannot retain a second
+        // full-resolution pre-DCP buffer after navigation through the LRU.
         if (m_activeLoadRevision != m_requestedLoadRevision) {
             // A newer loadImage()/setAutomaticWhiteBalance() call superseded
             // this one while it was decoding; discard the stale result.
             refreshBusyState();
             return;
         }
-        refreshBusyState();
-        if (loaded.image.isNull()) {
-            setStatusMessage(tr("Impossible d'ouvrir « %1 » : %2")
-                                 .arg(QFileInfo(m_currentFile.toLocalFile()).fileName(),
-                                      loaded.error));
-            return;
-        }
-
-        applyLoadedImage(loaded);
+        applyLoadedImage(std::move(loaded));
     });
+}
+
+ImageEditor::~ImageEditor()
+{
+    cancelPrefetch();
+    if (m_loadCancel) m_loadCancel->store(true);
+    // Workers waiting for memory must not delay or deadlock closing.
+    m_decodedImageCache.abortWaiting();
+    if (m_prefetchWatcher.future().isStarted()) m_prefetchWatcher.waitForFinished();
+    // Final flush, even when the 450 ms debounce has not elapsed yet.
+    m_sidecarDebounce.stop();
+    // Qt 6.4 can wait forever on an unstarted/consumed future (takeResult).
+    if (m_loadWatcher.future().isStarted())
+        m_loadWatcher.waitForFinished();
+    if (!m_pendingLoadIsFreshOpen && !m_original.isNull()) {
+        // If closed during a RAW edit, persist the last committed base, not a
+        // requested profile whose worker result has not yet been published.
+        m_cameraProfile = m_appliedRawDevelopment.profile;
+        m_profileSha256 = m_appliedRawDevelopment.profileSha256;
+        m_normalizationManifest = m_appliedRawDevelopment.manifest;
+        m_manifestSha256 = m_appliedRawDevelopment.manifestSha256;
+        m_rawNormalizationEnabled = m_appliedRawDevelopment.normalizationEnabled;
+        m_lensProfile = m_appliedRawDevelopment.lensProfile;
+        m_lensProfileSha256 = m_appliedRawDevelopment.lensProfileSha256;
+        m_lensProfileResolved = m_appliedRawDevelopment.lensProfileResolved;
+        m_lensCorrectionEnabled = m_appliedRawDevelopment.lensCorrectionEnabled;
+        m_chromaticAberrationEnabled = m_appliedRawDevelopment.chromaticAberrationEnabled;
+        m_settings.automaticWhiteBalance = m_appliedAutomaticWhiteBalance;
+    }
+    saveCurrentSidecar();
+    if (m_renderWatcher.future().isStarted())
+        m_renderWatcher.waitForFinished();
+    if (m_exportWatcher.future().isStarted())
+        m_exportWatcher.waitForFinished();
+    if (m_batchExportCancel) m_batchExportCancel->store(true);
+    if (m_batchExportWatcher.future().isStarted())
+        m_batchExportWatcher.waitForFinished();
+    if (m_batchApplyWatcher.future().isStarted())
+        m_batchApplyWatcher.waitForFinished();
 }
 
 QAbstractItemModel *ImageEditor::imageModel()
@@ -539,9 +519,9 @@ QString ImageEditor::imageInfo() const
     if (m_original.isNull())
         return {};
     QString info = tr("%1 × %2 px — %3")
-                       .arg(m_original.linearRgba.cols)
-                       .arg(m_original.linearRgba.rows)
-                       .arg(m_currentFile.fileName());
+                       .arg(m_fullSize.width())
+                       .arg(m_fullSize.height())
+                       .arg(m_displayedFile.fileName()); // Not a target still waiting for memory.
     if (!m_sourceMetadata.cameraModel.isEmpty())
         info += QStringLiteral(" — ") + m_sourceMetadata.cameraModel;
     if (!m_sourceMetadata.lensModel.isEmpty())
@@ -575,11 +555,16 @@ QVariantMap ImageEditor::imageDetails() const
     const QString dimensions = m_original.isNull()
                                    ? QString()
                                    : tr("%1 × %2 px")
-                                         .arg(m_original.linearRgba.cols)
-                                         .arg(m_original.linearRgba.rows);
+                                         .arg(m_fullSize.width())
+                                         .arg(m_fullSize.height());
 
     return {
         {QStringLiteral("name"), fileInfo.fileName()},
+        {QStringLiteral("importDecoder"), m_importProvenance.decoderId},
+        {QStringLiteral("importDecoderVersion"), m_importProvenance.decoderVersion},
+        {QStringLiteral("importColorOrigin"), int(m_importProvenance.colorOrigin)},
+        {QStringLiteral("importSourceProfile"), m_importProvenance.sourceProfile},
+        {QStringLiteral("importWarnings"), m_importWarnings},
         {QStringLiteral("date"), date.isValid()
                                      ? QLocale().toString(date, QLocale::ShortFormat)
                                      : tr("Non renseignée")},
@@ -647,6 +632,16 @@ int ImageEditor::decodedImageCacheEntryCount() const
     return static_cast<int>(m_decodedImageCache.count());
 }
 
+QVariantMap ImageEditor::memoryCacheStatus() const
+{
+    const auto s = m_decodedImageCache.statistics();
+    return {{"availableBytes", QVariant::fromValue(s.memory.availableBytes)},
+        {"totalBytes", QVariant::fromValue(s.memory.totalBytes)},
+        {"reservedBytes", QVariant::fromValue(s.reservedBytes)},
+        {"pressure", s.pressure}, {"available", s.memory.valid},
+        {"hits", QVariant::fromValue(s.hits)}, {"misses", QVariant::fromValue(s.misses)}};
+}
+
 int ImageEditor::selectedImageCount() const
 {
     return static_cast<int>(m_selectedImageKeys.size());
@@ -666,23 +661,77 @@ QVariantList ImageEditor::cameraProfiles() const
     QVariantList result{QVariantMap{{"name", tr("Automatique (catalogue)")}, {"path", QString()}}};
     for (const auto &path : m_sourceMetadata.availableDcpProfiles)
         result.append(QVariantMap{{"name", QFileInfo(path).completeBaseName()}, {"path", path}});
+    if (!m_cameraProfile.isEmpty() && !m_sourceMetadata.availableDcpProfiles.contains(m_cameraProfile))
+        result.append(QVariantMap{{"name", tr("Profil enregistré indisponible : %1").arg(QFileInfo(m_cameraProfile).completeBaseName())}, {"path", m_cameraProfile}});
     return result;
+}
+
+bool ImageEditor::rawImage() const
+{
+    return hasImage() && m_importCapabilities.cameraDevelopment;
+}
+
+bool ImageEditor::rawProfileFastPathAvailable() const
+{
+    return rawImage() && m_importCapabilities.profileWithoutRedecode && !m_rawNormalizationEnabled && m_dcpSource && !m_dcpSource->cameraRgb.empty()
+        && m_dcpSource->automaticWhiteBalance == m_settings.automaticWhiteBalance
+        && m_dcpSource->lensCorrectionEnabled == m_lensCorrectionEnabled
+        && m_dcpSource->chromaticAberrationEnabled == m_chromaticAberrationEnabled
+        && m_dcpSource->metadata.lcpPath == m_lensProfile
+        && m_dcpSource->metadata.lcpSha256 == resourceDigest(m_lensProfile);
+}
+
+void ImageEditor::resetRawDevelopment()
+{
+    if (busy() || !rawImage()) return;
+    m_cameraProfile.clear();
+    m_profileSha256.clear();
+    m_normalizationManifest.clear();
+    m_manifestSha256.clear();
+    m_rawNormalizationEnabled = false;
+    m_rawDevelopmentWarning.clear();
+    reloadRawDevelopment();
+}
+
+QString ImageEditor::defaultCalibrationManifest()
+{
+    return defaultNormalizationManifest();
 }
 
 QString ImageEditor::rawNormalizationManifest() const
 {
     if (!m_normalizationManifest.isEmpty())
         return m_normalizationManifest;
-    const QString configured = qEnvironmentVariable("IPR_RAW_NORMALIZATION_MANIFEST");
-    const QStringList candidates{configured,
-        QDir(QCoreApplication::applicationDirPath()).filePath("config/raw-normalization.json"),
-        QDir::current().filePath("build-canon-normalization-20261008/normalization.json"),
-        QDir(QCoreApplication::applicationDirPath()).filePath("../../build-canon-normalization-20261008/normalization.json")};
-    for (const auto &path : candidates) {
-        if (!path.isEmpty() && QFileInfo(path).isFile())
-            return QFileInfo(path).absoluteFilePath();
-    }
-    return {};
+    return defaultNormalizationManifest();
+}
+
+void ImageEditor::setLensCorrectionEnabled(bool enabled)
+{
+    if (busy() || !rawImage() || enabled == m_lensCorrectionEnabled) return;
+    m_lensCorrectionEnabled = enabled;
+    reloadRawDevelopment();
+}
+
+void ImageEditor::setChromaticAberrationEnabled(bool enabled)
+{
+    if (busy() || !rawImage() || enabled == m_chromaticAberrationEnabled) return;
+    m_chromaticAberrationEnabled = enabled;
+    reloadRawDevelopment();
+}
+
+QString ImageEditor::opticalDevelopmentStatus() const
+{
+    if (!rawImage()) return tr("Corrections optiques disponibles pour les RAW.");
+    QString text = m_sourceMetadata.lcpProfile.isEmpty()
+        ? tr("Aucun profil LCP utilisé.") : tr("LCP utilisé : %1").arg(m_sourceMetadata.lcpProfile);
+    text += QStringLiteral("\n") + (!m_lensCorrectionEnabled ? tr("Correction objectif désactivée.")
+        : tr("Distorsion : %1 ; vignettage : %2.")
+            .arg(m_sourceMetadata.lensGeometryApplied ? tr("appliquée") : tr("non appliquée"))
+            .arg(m_sourceMetadata.lensVignettingApplied ? tr("appliqué") : tr("non appliqué")));
+    text += QStringLiteral("\n") + (!m_chromaticAberrationEnabled ? tr("Aberration chromatique désactivée.")
+        : m_sourceMetadata.chromaticAberrationApplied ? tr("Correction chromatique latérale appliquée.")
+        : tr("Correction chromatique latérale non appliquée (données LCP absentes)."));
+    return text;
 }
 
 QString ImageEditor::rawDevelopmentStatus() const
@@ -691,16 +740,26 @@ QString ImageEditor::rawDevelopmentStatus() const
         return tr("Ouvrez un RAW pour choisir son profil.");
     const QString profile = m_sourceMetadata.dcpProfile.isEmpty()
         ? tr("aucun DCP (image non RAW ou matrice LibRaw)") : m_sourceMetadata.dcpProfile;
-    const QString prefix = tr("Profil utilisé : %1\n").arg(profile);
+    const QString warning = m_rawDevelopmentWarning + m_sourceMetadata.developmentWarning;
+    const QString prefix = (warning.isEmpty() ? QString() : tr("Attention : %1\n").arg(warning))
+        + tr("Profil utilisé : %1\n").arg(profile);
     if (!m_rawNormalizationEnabled)
         return prefix + tr("Normalisation désactivée.");
     if (rawNormalizationManifest().isEmpty())
         return prefix + tr("Non appliquée : choisissez un manifeste de calibration.");
-    if (m_sourceMetadata.rawNormalizationApplied)
-        return prefix + tr("Normalisation appliquée — blanc %1, base %2 EV.\n%3")
+    if (m_sourceMetadata.rawNormalizationApplied) {
+        QString status = prefix + tr("Normalisation appliquée — blanc %1, base %2 EV.\n%3")
             .arg(m_sourceMetadata.normalizationWhiteLevel)
             .arg(m_sourceMetadata.normalizationBaselineExposureEv, 0, 'f', 2)
             .arg(m_sourceMetadata.normalizationProvenance);
+        if (m_sourceMetadata.profileExposureCompensationEv != 0.0)
+            status += tr("\nCompensation de rendu du profil : %1 EV ; base effective %2 EV.\n%3")
+                .arg(m_sourceMetadata.profileExposureCompensationEv, 0, 'f', 2)
+                .arg(m_sourceMetadata.normalizationBaselineExposureEv +
+                     m_sourceMetadata.profileExposureCompensationEv, 0, 'f', 2)
+                .arg(m_sourceMetadata.profileRenderingProvenance);
+        return status;
+    }
     if (m_settings.automaticWhiteBalance)
         return prefix + tr("Non appliquée : désactivez la balance des blancs automatique.");
     return prefix + tr("Normalisation non appliquée. %1").arg(m_sourceMetadata.normalizationReason);
@@ -722,6 +781,8 @@ void ImageEditor::setCameraProfile(const QString &path)
         (!path.isEmpty() && !m_sourceMetadata.availableDcpProfiles.contains(path)))
         return;
     m_cameraProfile = path;
+    m_profileSha256 = resourceDigest(path);
+    m_rawDevelopmentWarning.clear();
     reloadRawDevelopment();
 }
 
@@ -743,7 +804,15 @@ void ImageEditor::setRawNormalizationManifest(const QUrl &file)
         return;
     }
     m_normalizationManifest = info.absoluteFilePath();
-    reloadRawDevelopment();
+    m_manifestSha256 = resourceDigest(m_normalizationManifest);
+    m_rawDevelopmentWarning.clear();
+    if (m_rawNormalizationEnabled)
+        reloadRawDevelopment();
+    else {
+        m_appliedRawDevelopment = rawDevelopmentRecipe();
+        scheduleSidecarSave();
+        emit rawDevelopmentChanged();
+    }
 }
 
 QUrl ImageEditor::defaultExportFile(const QString &format, const QUrl &previousTarget) const
@@ -751,7 +820,7 @@ QUrl ImageEditor::defaultExportFile(const QString &format, const QUrl &previousT
     if (!m_currentFile.isLocalFile())
         return {};
 
-    const QString suffix = exportSuffix(normalizedExportFormat(format));
+    const QString suffix = ImageExporter::suffix(ImageExporter::normalizedFormat(format));
     if (suffix.isEmpty())
         return {};
 
@@ -761,12 +830,12 @@ QUrl ImageEditor::defaultExportFile(const QString &format, const QUrl &previousT
                                  : source.completeBaseName();
     QDir destination = source.dir();
     if (!previousTarget.isEmpty()) {
-        const QString previousPath = localExportPath(previousTarget);
+        const QString previousPath = ImageExporter::localPath(previousTarget);
         if (previousPath.isEmpty())
             return {};
         destination = QFileInfo(previousPath).dir();
     }
-    return QUrl::fromLocalFile(availableExportPath(destination.filePath(
+    return QUrl::fromLocalFile(ImageExporter::availablePath(destination.filePath(
         baseName + QStringLiteral("-IPR.") + suffix)));
 }
 
@@ -793,39 +862,36 @@ QVariantList ImageEditor::toneCurve(int channel) const
     return points;
 }
 
+double ImageEditor::toneCurveValue(const QVariantList &points, double x) const
+{
+    QVector<ToneCurvePoint> curve;
+    curve.reserve(points.size());
+    for (const QVariant &value : points) {
+        const QVariantMap point = value.toMap();
+        curve.append({point.value(QStringLiteral("x")).toFloat(), point.value(QStringLiteral("y")).toFloat()});
+    }
+    std::sort(curve.begin(), curve.end(), [](const ToneCurvePoint &a, const ToneCurvePoint &b) { return a.x < b.x; });
+    return curve.isEmpty() ? x : ToneCurve::evaluate(curve, float(x));
+}
+
 void ImageEditor::setToneCurve(int channel, const QVariantList &points)
 {
     if (channel < LuminanceCurve || channel > BlueCurve)
         return;
 
-    QVector<ToneCurvePoint> normalized;
-    normalized.reserve(points.size() + 2);
+    QVector<ToneCurvePoint> received;
+    received.reserve(points.size());
     for (const QVariant &value : points) {
         const QVariantMap point = value.toMap();
         bool xOk = false;
         bool yOk = false;
         const float x = point.value(QStringLiteral("x")).toFloat(&xOk);
         const float y = point.value(QStringLiteral("y")).toFloat(&yOk);
-        if (!xOk || !yOk || !std::isfinite(x) || !std::isfinite(y) ||
-            x <= 0.0f || x >= 1.0f)
-            continue;
-        normalized.append({x, std::clamp(y, 0.0f, 1.0f)});
+        if (xOk && yOk)
+            received.append({x, y});
     }
-    std::sort(normalized.begin(), normalized.end(),
-              [](const ToneCurvePoint &left, const ToneCurvePoint &right) {
-                  return left.x < right.x;
-              });
-
-    QVector<ToneCurvePoint> curve;
-    curve.reserve(normalized.size() + 2);
-    curve.append({0.0f, 0.0f});
-    for (const ToneCurvePoint &point : normalized) {
-        if (point.x - curve.constLast().x >= 0.001f)
-            curve.append(point);
-    }
-    curve.append({1.0f, 1.0f});
-
-    m_settings.toneCurves[static_cast<size_t>(channel)] = std::move(curve);
+    // The end points are the curve's own (raised black, clipped whites).
+    m_settings.toneCurves[static_cast<size_t>(channel)] = ToneCurve::normalized(std::move(received));
     emit toneCurveChanged(channel);
     scheduleRender();
 }
@@ -942,12 +1008,7 @@ void ImageEditor::setImageFlagged(bool flagged)
 
 void ImageEditor::setImageSelected(const QUrl &fileUrl, bool selected)
 {
-    if (!fileUrl.isLocalFile())
-        return;
-    const QFileInfo fileInfo(fileUrl.toLocalFile());
-    const QString key = fileInfo.canonicalFilePath().isEmpty()
-                            ? fileInfo.absoluteFilePath()
-                            : fileInfo.canonicalFilePath();
+    const QString key = selectionKey(fileUrl);
     if (key.isEmpty())
         return;
     const bool changed = selected ? !m_selectedImageKeys.contains(key)
@@ -960,6 +1021,12 @@ void ImageEditor::setImageSelected(const QUrl &fileUrl, bool selected)
         emit selectionChanged();
 }
 
+bool ImageEditor::isImageSelected(const QUrl &fileUrl) const
+{
+    const QString key = selectionKey(fileUrl);
+    return !key.isEmpty() && m_selectedImageKeys.contains(key);
+}
+
 void ImageEditor::clearImageSelection()
 {
     if (m_selectedImageKeys.isEmpty())
@@ -968,20 +1035,263 @@ void ImageEditor::clearImageSelection()
     emit selectionChanged();
 }
 
+bool ImageEditor::asShotWhiteBalance() const
+{
+    return m_settings.tint == 0 && m_settings.temperature ==
+        static_cast<int>(std::lround(m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
+}
+
 void ImageEditor::applyAdjustmentsToSelection()
 {
-    if (m_selectedImageKeys.isEmpty() || m_currentFile.isEmpty())
+    if (m_selectedImageKeys.isEmpty() || m_currentFile.isEmpty() ||
+        !hasImage() || busy() || embeddedPreview() || batchApplying() || batchExporting())
         return;
-    int written = 0;
+    // The open image already holds these settings: save them now, the others in the background.
+    QStringList targets;
+    bool current = false;
     for (const QString &fileName : std::as_const(m_selectedImageKeys)) {
-        Settings targetSettings;
-        UserImageMetadata targetMetadata;
-        if (!readSidecar(fileName, &targetSettings, &targetMetadata))
-            targetMetadata = m_userImageMetadata.value(fileName);
-        if (writeSidecar(fileName, m_settings, targetMetadata))
-            ++written;
+        if (fileName == currentFileKey()) current = true;
+        else targets.append(fileName);
     }
-    setStatusMessage(tr("Réglages appliqués à %n image(s).", nullptr, written));
+    targets.sort();
+    if (current) {
+        m_sidecarDebounce.stop();
+        if (!saveCurrentSidecar()) current = false;
+    }
+    QHash<QString, UserImageMetadata> annotations;
+    for (const QString &fileName : std::as_const(targets))
+        annotations.insert(fileName, m_userImageMetadata.value(fileName));
+    setStatusMessage(tr("Application des réglages à %n image(s)…", nullptr, int(targets.size()) + int(current)));
+    m_batchApplyWatcher.setFuture(QtConcurrent::run(
+        [targets, settings = m_settings, asShot = asShotWhiteBalance(), annotations, current] {
+            BatchResult result = applyToFiles(targets, settings, asShot, annotations);
+            result.written += int(current);
+            return result;
+        }));
+    m_batchApplying = true;
+    emit batchApplyChanged();
+}
+
+ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, const Settings &settings, bool asShot,
+                                                   const QHash<QString, UserImageMetadata> &annotations)
+{
+    BatchResult result;
+    for (const QString &fileName : files) {
+        Settings target;
+        UserImageMetadata targetMetadata;
+        RawDevelopment targetRaw;
+        const bool hasSidecar = Sidecar::read(fileName, &target, &targetMetadata, &targetRaw);
+        if (!hasSidecar) {
+            targetMetadata = annotations.value(fileName);
+            // The development the target gets when opened without a sidecar.
+            targetRaw.normalizationEnabled = true;
+        }
+        // Retouches can be copied across cameras; RAW profiles cannot.
+        Settings copied = settings;
+        copied.automaticWhiteBalance = target.automaticWhiteBalance;
+        if (target.automaticWhiteBalance) {
+            copied.temperature = target.temperature;
+            copied.tint = target.tint;
+        } else if (asShot) {
+            copied.temperature = static_cast<int>(std::lround(
+                ImageImport::referenceWhiteBalanceKelvin(fileName).value_or(5200.0)));
+            copied.tint = 0;
+        }
+        if (Sidecar::write(fileName, copied, targetMetadata, targetRaw))
+            ++result.written;
+        else
+            result.failed.append(QFileInfo(fileName).fileName());
+    }
+    return result;
+}
+
+void ImageEditor::finishBatch(const BatchResult &result, const QString &done)
+{
+    if (result.failed.isEmpty()) {
+        setStatusMessage(done);
+        return;
+    }
+    QStringList shown = result.failed.mid(0, 3);
+    if (result.failed.size() > 3) shown.append(QStringLiteral("…"));
+    setStatusMessage(done + QLatin1Char(' ') +
+                     tr("Échec pour %n image(s) : %1", nullptr, int(result.failed.size())).arg(shown.join(QStringLiteral(", "))));
+}
+
+void ImageEditor::exportSelection(const QUrl &folder, const QString &format, int quality)
+{
+    const QString folderPath = ImageExporter::localPath(folder);
+    if (m_selectedImageKeys.isEmpty() || folderPath.isEmpty() || !QFileInfo(folderPath).isDir()) {
+        setStatusMessage(tr("Choisissez un dossier local pour l'export par lot."));
+        return;
+    }
+    if (!ImageExporter::supports(format)) {
+        setStatusMessage(tr("Format d'export non pris en charge : %1").arg(format));
+        return;
+    }
+    if (batchExporting() || batchApplying() || m_exportWatcher.isRunning()) {
+        setStatusMessage(tr("Un export est déjà en cours."));
+        return;
+    }
+    // Each image is exported with its saved recipe: the open one's must be on disk.
+    if (hasImage() && m_selectedImageKeys.contains(currentFileKey())) {
+        m_sidecarDebounce.stop();
+        saveCurrentSidecar();
+    }
+    QStringList files(m_selectedImageKeys.cbegin(), m_selectedImageKeys.cend());
+    files.sort();
+    m_batchExportDone = 0;
+    m_batchExportTotal = int(files.size());
+    m_batchExportCancel = std::make_shared<std::atomic_bool>(false);
+    cancelPrefetch();
+    setStatusMessage(tr("Export par lot : 0 / %1…").arg(m_batchExportTotal));
+    m_batchExportWatcher.setFuture(QtConcurrent::run(&ImageEditor::exportFiles, files, folderPath,
+        ImageExporter::normalizedFormat(format), quality, &m_decodedImageCache, m_batchExportCancel));
+    m_batchExporting = true;
+    emit batchExportChanged();
+}
+
+void ImageEditor::cancelBatchExport()
+{
+    if (m_batchExportCancel) m_batchExportCancel->store(true);
+}
+
+void ImageEditor::exportFiles(QPromise<BatchResult> &promise, const QStringList &files, const QString &folder,
+                              const QString &format, int quality, ImageCacheController *controller,
+                              ImageCacheController::CancelToken cancel)
+{
+    BatchResult result;
+    promise.setProgressRange(0, int(files.size()));
+    const QString suffix = ImageExporter::suffix(format);
+    for (int index = 0; index < files.size(); ++index) {
+        if (cancel->load()) { result.cancelled = true; break; }
+        const QString &fileName = files.at(index);
+        const QString name = QFileInfo(fileName).fileName();
+        bool automaticWhiteBalance = false;
+        QString key;
+        RawDecoder::Options options = optionsForFile(fileName, &automaticWhiteBalance, &key);
+        if (key.isEmpty()) {
+            // A pinned profile changed since it was saved: never export with a substitute.
+            result.failed.append(tr("%1 (profil enregistré modifié)").arg(name));
+            promise.setProgressValue(index + 1);
+            continue;
+        }
+        options.cancellationRequested = [cancel] { return cancel->load(); };
+        const auto admission = controller->acquire({}, SystemMemory::estimateDecodePeak(fileName), false, cancel).result();
+        if (!admission.reservation) {
+            if (cancel->load()) { result.cancelled = true; break; }
+            result.failed.append(tr("%1 (%2)").arg(name, admission.error));
+            promise.setProgressValue(index + 1);
+            continue;
+        }
+        const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
+        LoadResult loaded = loadFromDisk(fileName, automaticWhiteBalance, options);
+        if (cancel->load()) { result.cancelled = true; break; }
+        Settings settings;
+        UserImageMetadata metadata;
+        if (!Sidecar::read(fileName, &settings, &metadata))
+            settings.temperature = static_cast<int>(std::lround(
+                loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));
+        const QString base = QFileInfo(fileName).completeBaseName().isEmpty()
+            ? QStringLiteral("image") : QFileInfo(fileName).completeBaseName();
+        const QString target = ImageExporter::availablePath(
+            QDir(folder).filePath(base + QStringLiteral("-IPR.") + suffix));
+        const ExportResult written = loaded.image.isNull()
+            ? ExportResult{false, loaded.error}
+            : writeImage(loaded.image, settings, target, format, quality);
+        if (written.success) ++result.written;
+        else result.failed.append(tr("%1 (%2)").arg(name, written.message));
+        promise.setProgressValue(index + 1);
+    }
+    promise.addResult(result);
+}
+
+QColor ImageEditor::colorMixerTrackColor(int band, int component, int value) const
+{
+    const cv::Vec3f colour = ColorMixer::trackColour(band, component, value);
+    return QColor::fromRgbF(colour[0], colour[1], colour[2]);
+}
+
+QColor ImageEditor::colorGradingDisplayColor(int zone, int hue, int saturation) const
+{
+    const cv::Vec3f colour = ColorGrading::displayColour(zone, hue, saturation);
+    return QColor::fromRgbF(colour[0], colour[1], colour[2]);
+}
+
+QVariantList ImageEditor::pointColors() const
+{
+    QVariantList points;
+    const size_t count = std::min(m_settings.pointColor.count, PointColor::MaxPoints);
+    for (size_t i = 0; i < count; ++i) {
+        const PointColor::Point &p = m_settings.pointColor.points[i];
+        const cv::Vec3f swatch = WorkingColor::encodedInGamut(WorkingColor::workingToOklab(PointColor::fromHsv(p.source)));
+        points.append(QVariantMap{{"colour", QColor::fromRgbF(swatch[0], swatch[1], swatch[2])},
+                                  {"hue", p.hueShift}, {"saturation", p.saturationShift},
+                                  {"luminance", p.luminanceShift}, {"variance", p.variance}, {"range", p.range}});
+    }
+    return points;
+}
+
+bool ImageEditor::addPointColorAt(qreal x, qreal y)
+{
+    const ColorPipeline::WorkingImage &source = previewSource();
+    if (source.isNull() || m_settings.pointColor.count >= PointColor::MaxPoints)
+        return false;
+    // The colour entering the point colour: the tones' output the preview keeps,
+    // or rendered here when it was not kept, then saturation, vibrance and mixer.
+    const double pixelScale = previewPixelScale();
+    cv::Mat tones = m_renderStageCache.peek(source.linearRgba, pixelScale, 0, stageKeys(m_settings)[0]);
+    if (tones.empty()) {
+        cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
+        const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
+        if (!renderTones(source, m_settings, reference, previewPixelScale(), tones))
+            return false;
+    }
+    const auto colour = PerceptualColour::colourBeforePointColour(tones, x, y, 2, perceptualParameters(m_settings));
+    if (!colour)
+        return false;
+    PointColor::Point point;
+    point.source = PointColor::toHsv(*colour);
+    m_settings.pointColor.points[m_settings.pointColor.count++] = point;
+    emit pointColorsChanged();
+    scheduleSidecarSave();
+    return true;
+}
+
+void ImageEditor::setPointColorValue(int index, int component, int value)
+{
+    if (index < 0 || index >= int(std::min(m_settings.pointColor.count, PointColor::MaxPoints)) ||
+        component < 0 || component > 4)
+        return;
+    PointColor::Point &point = m_settings.pointColor.points[size_t(index)];
+    int &target = component == 0 ? point.hueShift : component == 1 ? point.saturationShift
+                  : component == 2 ? point.luminanceShift : component == 3 ? point.variance : point.range;
+    value = qBound(component == 4 ? 0 : -100, value, 100);
+    if (target == value)
+        return;
+    target = value;
+    emit pointColorsChanged();
+    scheduleRender();
+}
+
+void ImageEditor::setPointColorOverlay(int index)
+{
+    index = index >= 0 && index < int(std::min(m_settings.pointColor.count, PointColor::MaxPoints)) ? index : -1;
+    if (m_pointColorOverlay == index)
+        return;
+    m_pointColorOverlay = index;
+    emit pointColorOverlayChanged();
+    scheduleRender();
+}
+
+void ImageEditor::removePointColor(int index)
+{
+    PointColor::Parameters &points = m_settings.pointColor;
+    if (index < 0 || index >= int(std::min(points.count, PointColor::MaxPoints)))
+        return;
+    std::move(points.points.begin() + index + 1, points.points.begin() + points.count, points.points.begin() + index);
+    points.points[--points.count] = {};
+    emit pointColorsChanged();
+    scheduleRender();
 }
 
 int ImageEditor::colorMixerValue(int band, int component) const
@@ -1001,8 +1311,9 @@ int ImageEditor::colorGradingValue(int zone, int component) const
 {
     if (zone < 0 || zone >= static_cast<int>(m_settings.gradingHue.size()))
         return 0;
-    return component == 0 ? m_settings.gradingHue[static_cast<size_t>(zone)]
-                          : m_settings.gradingSaturation[static_cast<size_t>(zone)];
+    const size_t index = static_cast<size_t>(zone);
+    return component == 0 ? m_settings.gradingHue[index]
+         : component == 1 ? m_settings.gradingSaturation[index] : m_settings.gradingLuminance[index];
 }
 
 double ImageEditor::adjustmentValue(const QString &name) const
@@ -1024,6 +1335,14 @@ double ImageEditor::adjustmentValue(const QString &name) const
     if (name == QStringLiteral("grain")) return m_settings.grain;
     if (name == QStringLiteral("denoiseLuminance")) return m_settings.denoiseLuminance;
     if (name == QStringLiteral("denoiseChrominance")) return m_settings.denoiseChrominance;
+    if (name == QStringLiteral("denoiseAmount")) {
+        // -1: a custom pair from the advanced controls, not reachable by one amount.
+        CameraDenoise::Settings law;
+        return CameraDenoise::settingsFromAmount(m_settings.denoiseLuminance, law) &&
+                       law.chrominance == m_settings.denoiseChrominance
+                   ? m_settings.denoiseLuminance : -1.0;
+    }
+    if (name == QStringLiteral("denoiseBeforeProfile")) return m_settings.denoiseBeforeProfile ? 1.0 : 0.0;
     if (name == QStringLiteral("sharpeningAmount")) return m_settings.sharpeningAmount;
     if (name == QStringLiteral("sharpeningRadius")) return m_settings.sharpeningRadius;
     if (name == QStringLiteral("sharpeningMasking")) return m_settings.sharpeningMasking;
@@ -1040,6 +1359,13 @@ void ImageEditor::loadImage(const QUrl &fileUrl)
         return;
     }
 
+    if (m_loadWatcher.isRunning()) {
+        m_queuedFile = fileUrl; // Coalesce navigation; never replace a running watcher's future.
+        if (m_loadCancel) m_loadCancel->store(true);
+        cancelPrefetch();
+        return;
+    }
+
     const QString fileName = fileUrl.toLocalFile();
     const QString extension = QFileInfo(fileName).suffix().toLower();
     beginLoad(fileName, extension, false, true);
@@ -1047,8 +1373,8 @@ void ImageEditor::loadImage(const QUrl &fileUrl)
 
 void ImageEditor::setDecodedImageCacheBudgetBytes(qulonglong budgetBytes)
 {
-    if (m_decodedImageCache.budgetBytes() == budgetBytes)
-        return;
+    // Always forward: budgetBytes() is the effective budget published
+    // asynchronously (0 until the first sample), not the requested cap.
     m_decodedImageCache.setBudgetBytes(budgetBytes);
     emit decodedImageCacheChanged();
 }
@@ -1199,6 +1525,33 @@ void ImageEditor::setDenoiseChrominance(int value)
     scheduleRender();
 }
 
+void ImageEditor::setDenoiseAmount(int value)
+{
+    CameraDenoise::Settings strengths;
+    if (!CameraDenoise::settingsFromAmount(qBound(0, value, 100), strengths))
+        return;
+    if (m_settings.denoiseLuminance == strengths.luminance &&
+        m_settings.denoiseChrominance == strengths.chrominance)
+        return;
+    m_settings.denoiseLuminance = strengths.luminance;
+    m_settings.denoiseChrominance = strengths.chrominance;
+    scheduleRender();
+}
+
+void ImageEditor::setDenoiseBeforeProfile(bool enabled)
+{
+    if (m_denoiseBeforeProfile == enabled)
+        return;
+    m_denoiseBeforeProfile = enabled;
+    m_settings.denoiseBeforeProfile = enabled;
+    // A RAW is decoded again: signed development and the signal before the lens
+    // corrections with the experiment, the application's development without.
+    if (rawImage() && !busy())
+        reloadRawDevelopment();
+    else
+        scheduleRender();
+}
+
 void ImageEditor::setSharpeningAmount(int value)
 {
     value = qBound(0, value, 200);
@@ -1258,13 +1611,44 @@ void ImageEditor::setColorGrading(int zone, int hue, int saturation)
     m_settings.gradingSaturation[index] = saturation;
     scheduleRender();
 }
+
+void ImageEditor::setColorGradingLuminance(int zone, int luminance)
+{
+    if (zone < 0 || zone >= static_cast<int>(m_settings.gradingLuminance.size()))
+        return;
+    luminance = qBound(-100, luminance, 100);
+    int &target = m_settings.gradingLuminance[static_cast<size_t>(zone)];
+    if (target == luminance)
+        return;
+    target = luminance;
+    scheduleRender();
+}
+
+void ImageEditor::setColorGradingBlending(int blending)
+{
+    blending = qBound(0, blending, 100);
+    if (m_settings.gradingBlending == blending)
+        return;
+    m_settings.gradingBlending = blending;
+    scheduleRender();
+}
+
+void ImageEditor::setColorGradingBalance(int balance)
+{
+    balance = qBound(-100, balance, 100);
+    if (m_settings.gradingBalance == balance)
+        return;
+    m_settings.gradingBalance = balance;
+    scheduleRender();
+}
 void ImageEditor::setAutomaticWhiteBalance(bool enabled)
 {
-    if (m_settings.automaticWhiteBalance == enabled)
+    if (busy() || m_settings.automaticWhiteBalance == enabled)
         return;
     m_settings.automaticWhiteBalance = enabled;
     emit rawDevelopmentChanged();
     emit adjustmentsReset(m_settings.temperature, m_settings.tint);
+    emit pointColorsChanged();
     scheduleSidecarSave();
 
     if (m_original.isNull() || !m_currentFile.isLocalFile())
@@ -1272,43 +1656,83 @@ void ImageEditor::setAutomaticWhiteBalance(bool enabled)
 
     const QString fileName = m_currentFile.toLocalFile();
     const QString extension = QFileInfo(fileName).suffix().toLower();
-    if (extension != QStringLiteral("cr2") && extension != QStringLiteral("cr3") &&
-        extension != QStringLiteral("dng"))
+    if (!RawDecoder::supportedExtensions().contains(extension))
         return;
 
     beginLoad(fileName, extension, enabled, false);
+}
+
+void ImageEditor::copyAdjustments()
+{
+    if (!hasImage() || busy() || embeddedPreview()) return;
+    m_copiedAdjustments = m_settings;
+    m_copiedAsShot = asShotWhiteBalance();
+    m_hasCopiedAdjustments = true;
+    emit copiedAdjustmentsChanged();
+    setStatusMessage(tr("Paramètres copiés. Ouvrez une autre image pour les coller."));
+}
+
+void ImageEditor::pasteAdjustments()
+{
+    if (!m_hasCopiedAdjustments || !hasImage() || busy() || embeddedPreview()) return;
+    // Transfer edits, not the target's camera development, optics or metadata.
+    const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
+    m_settings = m_copiedAdjustments;
+    m_settings.automaticWhiteBalance = automaticWhiteBalance;
+    m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
+    if (m_copiedAsShot) {   // the target's own as-shot white balance
+        m_settings.temperature = static_cast<int>(std::lround(
+            m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
+        m_settings.tint = 0;
+    }
+    emit toneCurvesReset();
+    emit adjustmentsReset(static_cast<int>(std::lround(
+        m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), 0);
+    emit pointColorsChanged();
+    scheduleRender();
+}
+
+void ImageEditor::saveCurrentAdjustments()
+{
+    if (!hasImage() || busy() || embeddedPreview()) return;
+    m_sidecarDebounce.stop();
+    if (saveCurrentSidecar())
+        setStatusMessage(tr("Réglages enregistrés : %1.ipr").arg(m_currentFile.toLocalFile()));
 }
 
 void ImageEditor::resetAdjustments()
 {
     if (m_original.isNull())
         return;
-    const bool reloadWhiteBalance = m_settings.automaticWhiteBalance;
+    const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
     m_settings = {};
+    m_settings.automaticWhiteBalance = automaticWhiteBalance;
+    m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
     m_settings.temperature = static_cast<int>(std::lround(
         m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
     emit toneCurvesReset();
     emit adjustmentsReset(m_settings.temperature, m_settings.tint);
+    emit pointColorsChanged();
     emit rawDevelopmentChanged();
-    if (reloadWhiteBalance && m_currentFile.isLocalFile() &&
-        RawDecoder::supportedExtensions().contains(QFileInfo(m_currentFile.toLocalFile()).suffix().toLower()))
-        reloadRawDevelopment();
-    else
-        scheduleRender();
+    scheduleRender();
 }
 
 void ImageEditor::exportImage(const QUrl &target, const QString &format, int quality)
 {
+    if (m_loadWatcher.isRunning()) {
+        setStatusMessage(tr("Attendez la fin du développement RAW avant l'export."));
+        return;
+    }
     if (m_original.isNull()) {
         setStatusMessage(tr("Ouvrez une image avant de l'exporter."));
         return;
     }
-    const QString targetPath = localExportPath(target);
+    const QString targetPath = ImageExporter::localPath(target);
     if (targetPath.isEmpty()) {
         setStatusMessage(tr("La destination d'export doit être un fichier local."));
         return;
     }
-    if (m_exportWatcher.isRunning()) {
+    if (m_exportWatcher.isRunning() || batchExporting()) {
         setStatusMessage(tr("Un export est déjà en cours."));
         return;
     }
@@ -1316,25 +1740,90 @@ void ImageEditor::exportImage(const QUrl &target, const QString &format, int qua
     const ColorPipeline::WorkingImage source = m_original;
     const Settings settings = m_settings;
     const QString fileName = targetPath;
+    // Never export a restored proxy: rebuild the full master with this recipe.
+    const bool rebuild = m_masterIsProxy;
+    const QString sourceFile = m_currentFile.toLocalFile();
+    const RawDecoder::Options options = developmentOptions();
     setBusy(true);
-    setStatusMessage(tr("Export en cours…"));
+    setStatusMessage(rebuild ? tr("Export en cours : reconstruction pleine résolution…") : tr("Export en cours…"));
+    cancelPrefetch();
+    auto *controller = &m_decodedImageCache;
     m_exportWatcher.setFuture(QtConcurrent::run(
-        [source, settings, fileName, format, quality] {
-            return writeImage(source, settings, fileName, format, quality);
+        [source, settings, fileName, format, quality, controller, rebuild, sourceFile, options] {
+            const quint64 peak = rebuild ? SystemMemory::estimateDecodePeak(sourceFile)
+                                         : SystemMemory::estimateProcessingPeak(source.linearRgba.total());
+            const auto admission = controller->acquire({}, peak, false).result();
+            if (!admission.reservation) return ExportResult{false, admission.error};
+            const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
+            if (!rebuild)
+                return writeImage(source, settings, fileName, format, quality);
+            auto master = loadFromDisk(sourceFile, settings.automaticWhiteBalance, options);
+            if (master.image.isNull())
+                return ExportResult{false, tr("Échec de la reconstruction pleine résolution : %1").arg(master.error)};
+            // Same tone weights as the preview the user validated.
+            master.image.toneStatistics = source.toneStatistics;
+            return writeImage(master.image, settings, fileName, format, quality);
         }));
 }
 
-ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
-    const ColorPipeline::WorkingImage &source, const Settings &settings)
+namespace {
+// Statistics of the neutral rendering (the proxy as loaded), measured once;
+// the master shares them, so preview and export apply the same tone weights.
+void attachToneStatistics(ColorPipeline::WorkingImage &image, ColorPipeline::WorkingImage &proxy)
 {
-    if (source.isNull())
+    if (proxy.isNull()) return;
+    const auto statistics = ToneRecovery::measure(proxy.linearRgba);
+    proxy.toneStatistics = statistics;
+    image.toneStatistics = statistics;
+}
+}
+
+namespace {
+// Keys of the cached stages, in pipeline order: each one appends its stage's
+// settings to the previous key, so equal keys mean equal input to the next stage.
+RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
+{
+    RenderStageCache::Keys keys;
+    QByteArray key;
+    QDataStream stream(&key, QIODevice::WriteOnly);
+    const auto ints = [&stream](const auto &values) { for (int value : values) stream << qint32(value); };
+    stream << s.grayscale << s.brightness << qint32(s.contrast) << qint32(s.temperature) << qint32(s.tint)
+           << qint32(s.shadows) << qint32(s.blacks) << qint32(s.highlights) << qint32(s.whites);
+    if (s.denoiseBeforeProfile)   // the camera-signal luminance denoise belongs to the first stage then
+        stream << qint32(s.denoiseLuminance);
+    keys[0] = key;
+    stream << qint32(s.saturation) << qint32(s.vibrance) << qint32(s.gradingBlending) << qint32(s.gradingBalance);
+    ints(s.mixerHue); ints(s.mixerSaturation); ints(s.mixerLuminance); ints(s.gradingHue); ints(s.gradingSaturation);
+    ints(s.gradingLuminance);
+    const size_t points = std::min(s.pointColor.count, PointColor::MaxPoints);
+    stream << qint32(points);
+    for (size_t i = 0; i < points; ++i) {
+        const PointColor::Point &p = s.pointColor.points[i];
+        stream << p.source[0] << p.source[1] << p.source[2] << qint32(p.hueShift) << qint32(p.saturationShift)
+               << qint32(p.luminanceShift) << qint32(p.variance) << qint32(p.range);
+    }
+    keys[1] = key;
+    stream << qint32(s.denoiseLuminance) << qint32(s.denoiseChrominance);
+    keys[2] = key;
+    stream << qint32(s.texture) << qint32(s.clarity);
+    keys[3] = key;
+    stream << qint32(s.dehaze);
+    keys[4] = key;
+    return keys;
+}
+}
+
+ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
+    const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale,
+    RenderStageCache *cache)
+{
+    if (source.isNull() || source.colorSpace != ColorPipeline::workingColorSpace() ||
+        source.linearRgba.type() != CV_32FC4 || !cv::checkRange(source.linearRgba, true))
         return {};
 
     const int referenceTemperature = static_cast<int>(std::lround(
         source.referenceWhiteBalanceKelvin.value_or(5200.0)));
-    const bool hasToneCurves = std::any_of(
-        settings.toneCurves.cbegin(), settings.toneCurves.cend(),
-        [](const QVector<ToneCurvePoint> &curve) { return !curve.isEmpty(); });
+    const bool hasToneCurves = !ToneCurve::isIdentity(settings.toneCurves);
     // A neutral pipeline returns its shallow source and therefore avoids all
     // RGB split/merge buffers and per-pixel passes.
     if (!settings.grayscale && settings.brightness == 0.0f &&
@@ -1352,465 +1841,51 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         std::all_of(settings.mixerLuminance.cbegin(), settings.mixerLuminance.cend(),
                     [](int value) { return value == 0; }) &&
         std::all_of(settings.gradingSaturation.cbegin(), settings.gradingSaturation.cend(),
-                    [](int value) { return value == 0; }) && !hasToneCurves)
+                    [](int value) { return value == 0; }) &&
+        std::all_of(settings.gradingLuminance.cbegin(), settings.gradingLuminance.cend(),
+                    [](int value) { return value == 0; }) && !PointColor::active(settings.pointColor) &&
+        !hasToneCurves)
         return source;
 
-    std::vector<cv::Mat> channels;
-    cv::split(source.linearRgba, channels);
-    cv::Mat adjusted;
-    cv::merge(std::vector<cv::Mat>{channels[0], channels[1], channels[2]}, adjusted);
-
-    if (settings.grayscale) {
-        cv::Mat gray;
-        cv::cvtColor(adjusted, gray, cv::COLOR_RGB2GRAY);
-        cv::cvtColor(gray, adjusted, cv::COLOR_GRAY2RGB);
+    // Each costly stage runs only past the cached output it resumes from, then
+    // hands its output to the cache when asked to keep it.
+    RenderStageCache::Start start;
+    if (cache) start = cache->begin(source.linearRgba, pixelScale, stageKeys(settings));
+    const auto runs = [&start](int stage) { return start.stage < stage; };
+    const auto reached = [&](int stage, const cv::Mat &rgb) { if (cache) cache->store(start, stage, rgb); };
+    cv::Mat adjusted = start.rgb;
+    if (runs(0)) {
+        cv::cvtColor(source.linearRgba, adjusted, cv::COLOR_RGBA2RGB);
+        if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted)) return {};
+        reached(0, adjusted);
     }
-
-    // One brightness unit is one EV in linear light.
-    if (settings.brightness != 0.0f) {
-        const float exposureFactor = static_cast<float>(
-            std::exp2(static_cast<double>(settings.brightness)));
-        adjusted *= exposureFactor;
+    if (runs(1)) {
+        PerceptualColour::apply(adjusted, perceptualParameters(settings));
+        reached(1, adjusted);
     }
-
-    // Contrast is an asymmetric S curve around 18% linear gray.  A single
-    // factor from 0 to 2 made -100 collapse every pixel to the pivot and
-    // made +100 crush too much of the toe.  Keep the midtone anchored while
-    // controlling the toe and shoulder independently.
-    const float contrastAmount =
-        static_cast<float>(settings.contrast) / 100.0f;
-    const auto luminanceOf = [](const cv::Vec3f &pixel) {
-        return std::max(0.0f, 0.2126f * pixel[0] + 0.7152f * pixel[1] +
-                                  0.0722f * pixel[2]);
-    };
-    const auto applyLuminance = [](cv::Vec3f &pixel, float sourceLuminance,
-                                   float targetLuminance) {
-        if (sourceLuminance > 1e-6f)
-            pixel *= std::max(0.0f, targetLuminance) / sourceLuminance;
-    };
-    const auto smoothStep = [](float edge0, float edge1, float value) {
-        const float t = std::clamp((value - edge0) / (edge1 - edge0),
-                                   0.0f, 1.0f);
-        return t * t * (3.0f - 2.0f * t);
-    };
-    const auto applyContrast = [contrastAmount, smoothStep](float luminance) {
-        constexpr float pivot = 0.18f;
-        if (std::abs(contrastAmount) <= 1e-6f)
-            return luminance;
-
-        const float amount = std::abs(contrastAmount);
-        float contrastFactor = 1.0f;
-        if (luminance <= pivot) {
-            // Only the deepest portion of the toe reaches the full extreme;
-            // tones approaching the pivot stay visually neutral.
-            const float toeWeight = 1.0f - smoothStep(0.01f, 0.09f,
-                                                       luminance);
-            contrastFactor = contrastAmount < 0.0f
-                ? 1.0f - 0.25f * amount * toeWeight
-                : 1.0f + 0.40f * amount * toeWeight;
-        } else {
-            // A flattened image needs a restrained shoulder, whereas added
-            // contrast can use a stronger upper slope without crushing the
-            // toe (which is handled by the branch above).
-            contrastFactor = contrastAmount < 0.0f
-                ? 1.0f - 0.40f * amount
-                : 1.0f + 1.30f * amount;
-        }
-        if (luminance <= pivot)
-            return pivot * std::pow(luminance / pivot, contrastFactor);
-        if (luminance < 1.0f) {
-            const float normalized = (luminance - pivot) / (1.0f - pivot);
-            return pivot + (1.0f - pivot) *
-                               (1.0f - std::pow(1.0f - normalized,
-                                                contrastFactor));
-        }
-        return 1.0f + (luminance - 1.0f) * contrastFactor;
-    };
-    if (settings.contrast != 0) {
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                const float luminance = luminanceOf(row[x]);
-                applyLuminance(row[x], luminance, applyContrast(luminance));
-            }
-        }
-    }
-
-    QString colorError;
-    if ((settings.temperature != referenceTemperature || settings.tint != 0) &&
-        !ColorPipeline::applyTemperatureTint(
-            adjusted, settings.temperature,
-            source.referenceWhiteBalanceKelvin.value_or(5200.0),
-            settings.tint, &colorError)) {
-        qWarning() << "Échec de la balance température/nuance :" << colorError;
-        return {};
-    }
-
-    const float shadowAdjustment =
-        static_cast<float>(settings.shadows) / 100.0f;
-    const float blackAdjustment =
-        static_cast<float>(settings.blacks) / 100.0f;
-    const float highlightAdjustment =
-        static_cast<float>(settings.highlights) / 100.0f;
-    const float whiteAdjustment =
-        static_cast<float>(settings.whites) / 100.0f;
-    if (settings.shadows != 0 || settings.blacks != 0 ||
-        settings.highlights != 0 || settings.whites != 0) {
-    for (int y = 0; y < adjusted.rows; ++y) {
-        for (int x = 0; x < adjusted.cols; ++x) {
-            cv::Vec3f &pixel = adjusted.at<cv::Vec3f>(y, x);
-            const float luminance = luminanceOf(pixel);
-            const float shadowsMask =
-                1.0f - smoothStep(0.10f, 0.56f, luminance);
-            // Blacks is deliberately confined to the toe.  Shadows covers a
-            // wider range, but both masks are evaluated from the source
-            // luminance so an adjustment cannot extend its own range.
-            const float blacksMask =
-                1.0f - smoothStep(0.00f, 0.18f, luminance);
-            // The former upper-tone masks began so late that almost no
-            // photographic tone activated them.  Highlights now covers the
-            // upper midtones; Whites remains distinct, but starts at the
-            // luminous end of the same range using the brightest channel.
-            const float highlightsMask =
-                smoothStep(0.08f, 0.70f, luminance);
-            // The positive branches are deliberately broader than recovery:
-            // pushing a slider to +100 must visibly open bright midtones,
-            // whereas the -100 branches stay confined to the v2 recovery
-            // masks that were validated against the reference corpus.
-            const float highlightLiftMask =
-                smoothStep(0.02f, 0.50f, luminance);
-            const float maximumChannel =
-                std::max({pixel[0], pixel[1], pixel[2], 0.0f});
-            const float whitesMask =
-                smoothStep(0.10f, 0.65f, maximumChannel);
-            const float whiteLiftMask =
-                smoothStep(0.02f, 0.50f, maximumChannel);
-
-            const float blackLift =
-                std::max(0.0f, blackAdjustment) * blacksMask;
-            const float blackDarkening =
-                std::max(0.0f, -blackAdjustment) * blacksMask;
-            const float shadowLift =
-                std::max(0.0f, shadowAdjustment) * shadowsMask;
-            // The darkening branch is deliberately more concentrated than
-            // the lifting branch.  A uniform multiplier would crush the
-            // low and middle ranges together at -100.
-            constexpr float shadowDarkeningRange = 0.45f;
-            constexpr float shadowDarkeningAmplitude = 0.57f;
-            const float shadowDarkeningShape = 1.0f - std::sqrt(
-                std::clamp(luminance / shadowDarkeningRange, 0.0f, 1.0f));
-            const float shadowDarkening = shadowDarkeningAmplitude *
-                std::max(0.0f, -shadowAdjustment) * shadowsMask *
-                shadowDarkeningShape;
-            const float highlightLift =
-                std::max(0.0f, highlightAdjustment) * highlightLiftMask;
-            const float highlightDarkening =
-                std::max(0.0f, -highlightAdjustment) * highlightsMask;
-            const float whiteLift =
-                std::max(0.0f, whiteAdjustment) * whiteLiftMask;
-            const float whiteDarkening =
-                std::max(0.0f, -whiteAdjustment) * whitesMask;
-
-            float targetLuminance = luminance;
-
-            // Blacks moves only the foot of the curve.  Its positive branch
-            // is zero at the exact black point and at the end of the toe,
-            // while its negative branch can establish a deeper black point.
-            // This avoids treating "Blacks" as a generic shadow lift.
-            constexpr float blackToeEnd = 0.14f;
-            constexpr float blackLiftAmplitude = 0.08f;
-            const float toePosition = std::clamp(
-                luminance / blackToeEnd, 0.0f, 1.0f);
-            const float blackToeShape = std::sqrt(toePosition) *
-                (1.0f - toePosition);
-            targetLuminance +=
-                blackLiftAmplitude * blackLift * blackToeShape;
-
-            // Shadows uses a wider, bounded lift.  Its inverse-root shape
-            // gives the most recovery to the deepest nonzero tones, tapers
-            // through the midtones, and preserves absolute black.  The mask
-            // independently protects highlights.
-            constexpr float shadowLiftRange = 0.45f;
-            constexpr float shadowLiftAmplitude = 0.065f;
-            const float shadowLiftShape = 1.0f - std::sqrt(
-                std::clamp(luminance / shadowLiftRange, 0.0f, 1.0f));
-            targetLuminance += shadowLiftAmplitude * shadowLift *
-                shadowLiftShape;
-
-            // When both sliders darken, retain the strongest local intent
-            // rather than multiplying two near-black reductions together.
-            // This keeps usable shadow detail while the controls remain
-            // semantically independent.
-            const float darkening = std::max(
-                blackDarkening, shadowDarkening);
-            targetLuminance *= 1.0f - darkening;
-
-            // Highlights shapes the upper midtones.  Whites has its own
-            // point-white curve; applying it after Highlights lets either
-            // control stand alone while still composing predictably when
-            // both are used.
-            constexpr float highlightLiftAmplitude = 0.70f;
-            constexpr float highlightDarkeningAmplitude = 0.52f;
-            constexpr float whiteLiftAmplitude = 0.95f;
-            constexpr float whiteDarkeningAmplitude = 0.22f;
-            targetLuminance += (1.0f - std::min(targetLuminance, 1.0f)) *
-                highlightLiftAmplitude * highlightLift;
-            targetLuminance *=
-                1.0f - highlightDarkeningAmplitude * highlightDarkening;
-            targetLuminance += (1.0f - std::min(targetLuminance, 1.0f)) *
-                whiteLiftAmplitude * whiteLift;
-            targetLuminance *=
-                1.0f - whiteDarkeningAmplitude * whiteDarkening;
-            applyLuminance(pixel, luminance, targetLuminance);
-        }
-    }
-    }
-
-    const float saturationFactor =
-        1.0f + static_cast<float>(settings.saturation) / 100.0f;
-    const float vibranceAmount =
-        static_cast<float>(settings.vibrance) / 100.0f;
-    if (settings.saturation != 0 || settings.vibrance != 0) {
-    for (int y = 0; y < adjusted.rows; ++y) {
-        cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < adjusted.cols; ++x) {
-            cv::Vec3f &pixel = row[x];
-            const float luminance = luminanceOf(pixel);
-            const float maximum = std::max({pixel[0], pixel[1], pixel[2]});
-            const float minimum = std::min({pixel[0], pixel[1], pixel[2]});
-            const float chroma = maximum > 1e-6f
-                                     ? std::clamp((maximum - minimum) / maximum,
-                                                  0.0f, 1.0f)
-                                     : 0.0f;
-            const float vibranceFactor =
-                1.0f + vibranceAmount * (1.0f - chroma);
-            pixel = cv::Vec3f(luminance, luminance, luminance) +
-                    (pixel - cv::Vec3f(luminance, luminance, luminance)) *
-                        std::max(0.0f, saturationFactor * vibranceFactor);
-        }
-    }
-
-    }
-
-    const bool hasColorMixer =
-        std::any_of(settings.mixerHue.cbegin(), settings.mixerHue.cend(),
-                    [](int value) { return value != 0; }) ||
-        std::any_of(settings.mixerSaturation.cbegin(), settings.mixerSaturation.cend(),
-                    [](int value) { return value != 0; }) ||
-        std::any_of(settings.mixerLuminance.cbegin(), settings.mixerLuminance.cend(),
-                    [](int value) { return value != 0; });
-    const bool hasColorGrading = std::any_of(
-        settings.gradingSaturation.cbegin(), settings.gradingSaturation.cend(),
-        [](int value) { return value != 0; });
-    if (hasColorMixer || hasColorGrading) {
-        const auto hsvToRgb = [](float hue, float saturation, float value) {
-            hue = std::fmod(hue + 360.0f, 360.0f);
-            saturation = std::clamp(saturation, 0.0f, 1.0f);
-            const float chroma = value * saturation;
-            const float secondary = chroma *
-                (1.0f - std::abs(std::fmod(hue / 60.0f, 2.0f) - 1.0f));
-            const float offset = value - chroma;
-            cv::Vec3f rgb;
-            if (hue < 60.0f) rgb = {chroma, secondary, 0.0f};
-            else if (hue < 120.0f) rgb = {secondary, chroma, 0.0f};
-            else if (hue < 180.0f) rgb = {0.0f, chroma, secondary};
-            else if (hue < 240.0f) rgb = {0.0f, secondary, chroma};
-            else if (hue < 300.0f) rgb = {secondary, 0.0f, chroma};
-            else rgb = {chroma, 0.0f, secondary};
-            return rgb + cv::Vec3f(offset, offset, offset);
-        };
-        const ColorMixer::Parameters mixerParameters{
-            settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance};
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                cv::Vec3f pixel = row[x];
-                const float originalLuminance = luminanceOf(pixel);
-                if (hasColorMixer) {
-                    pixel = ColorMixer::apply(pixel, mixerParameters);
-                }
-                if (hasColorGrading) {
-                    const float shadows = 1.0f - smoothStep(0.12f, 0.42f, originalLuminance);
-                    const float highlights = smoothStep(0.58f, 0.88f, originalLuminance);
-                    const float midtones = std::clamp(1.0f - shadows - highlights, 0.0f, 1.0f);
-                    const std::array<float, 3> weights{shadows, midtones, highlights};
-                    for (size_t zone = 0; zone < weights.size(); ++zone) {
-                        if (settings.gradingSaturation[zone] == 0 || weights[zone] == 0.0f)
-                            continue;
-                        const cv::Vec3f color = hsvToRgb(
-                            static_cast<float>(settings.gradingHue[zone]), 1.0f, 1.0f);
-                        const float colorLuminance = luminanceOf(color);
-                        pixel += (color - cv::Vec3f(colorLuminance, colorLuminance,
-                                                    colorLuminance)) *
-                                 (settings.gradingSaturation[zone] * 0.0035f * weights[zone]);
-                    }
-                }
-                row[x] = pixel;
-            }
-        }
-    }
-
     // Denoise before local-detail enhancement and sharpening. The operation
     // runs in linear RGB and keeps luminance and chrominance independent so
     // coloured speckles can be removed without flattening edge detail.
-    if (settings.denoiseLuminance != 0 || settings.denoiseChrominance != 0) {
-        DetailProcessing::reduceNoise(
-            adjusted, {settings.denoiseLuminance, settings.denoiseChrominance});
+    // With the camera-signal denoise, luminance was denoised before the profile;
+    // colour noise is removed here on both paths.
+    if (runs(2)) {
+        const bool cameraLuminance = settings.denoiseBeforeProfile && source.dcpContext;
+        DetailProcessing::reduceNoise(adjusted, {cameraLuminance ? 0 : settings.denoiseLuminance,
+                                                 settings.denoiseChrominance}, pixelScale);
+        reached(2, adjusted);
     }
-
-    const auto applyLocalContrast = [&adjusted, &luminanceOf, &applyLuminance,
-                                     &smoothStep](int adjustment, double sigma,
-                                                  bool protectExtremes) {
-        if (adjustment == 0)
-            return;
-
-        cv::Mat luminance(adjusted.rows, adjusted.cols, CV_32F);
-        for (int y = 0; y < adjusted.rows; ++y) {
-            const cv::Vec3f *sourceRow = adjusted.ptr<cv::Vec3f>(y);
-            float *luminanceRow = luminance.ptr<float>(y);
-            for (int x = 0; x < adjusted.cols; ++x)
-                luminanceRow[x] = luminanceOf(sourceRow[x]);
-        }
-        cv::Mat localBase;
-        cv::GaussianBlur(luminance, localBase, cv::Size(0, 0), sigma);
-        const float amount = static_cast<float>(adjustment) / 100.0f;
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *pixelRow = adjusted.ptr<cv::Vec3f>(y);
-            const float *luminanceRow = luminance.ptr<float>(y);
-            const float *baseRow = localBase.ptr<float>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                const float luminance = luminanceRow[x];
-                float protection = 1.0f;
-                if (protectExtremes) {
-                    protection =
-                        smoothStep(0.03f, 0.16f, luminance) *
-                        (1.0f - smoothStep(0.72f, 0.98f, luminance));
-                }
-                const float target = std::max(
-                    0.0f, luminance + (luminance - baseRow[x]) * amount *
-                                      protection);
-                applyLuminance(pixelRow[x], luminance, target);
-            }
-        }
-    };
-    // Texture targets fine details; clarity uses a wider neighbourhood and
-    // protects the deepest shadows and brightest highlights.
-    applyLocalContrast(settings.texture, 1.2, false);
-    applyLocalContrast(settings.clarity, 8.0, true);
-
-    if (settings.dehaze != 0) {
-        cv::Mat darkChannel(adjusted.rows, adjusted.cols, CV_32F);
-        std::vector<float> brightSamples;
-        const int sampleStep = std::max(
-            1, static_cast<int>(std::sqrt(
-                   static_cast<double>(adjusted.total()) / 8192.0)));
-        for (int y = 0; y < adjusted.rows; ++y) {
-            const cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            float *darkRow = darkChannel.ptr<float>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                darkRow[x] = std::max(0.0f, std::min({row[x][0], row[x][1],
-                                                       row[x][2]}));
-                if (x % sampleStep == 0 && y % sampleStep == 0)
-                    brightSamples.push_back(std::max(
-                        {row[x][0], row[x][1], row[x][2], 0.0f}));
-            }
-        }
-        const int kernelSize = std::max(
-            1, std::min(15, std::min(adjusted.cols, adjusted.rows) | 1));
-        cv::erode(darkChannel, darkChannel,
-                  cv::getStructuringElement(
-                      cv::MORPH_RECT, cv::Size(kernelSize, kernelSize)));
-        const size_t percentile = (brightSamples.size() - 1) * 99 / 100;
-        std::nth_element(brightSamples.begin(),
-                         brightSamples.begin() +
-                             static_cast<qsizetype>(percentile),
-                         brightSamples.end());
-        const float airlight = std::max(0.10f, brightSamples[percentile]);
-        const float amount = static_cast<float>(settings.dehaze) / 100.0f;
-        const cv::Vec3f airlightRgb(airlight, airlight, airlight);
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            const float *darkRow = darkChannel.ptr<float>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                const float haze =
-                    std::clamp(darkRow[x] / airlight, 0.0f, 1.0f);
-                const float transmission =
-                    std::clamp(1.0f - 0.85f * amount * haze, 0.12f, 2.0f);
-                row[x] = (row[x] - airlightRgb) / transmission + airlightRgb;
-                row[x][0] = std::max(0.0f, row[x][0]);
-                row[x][1] = std::max(0.0f, row[x][1]);
-                row[x][2] = std::max(0.0f, row[x][2]);
-            }
-        }
+    if (runs(3)) {
+        LocalContrast::apply(adjusted, settings.texture, settings.clarity, pixelScale);
+        reached(3, adjusted);
     }
-
-    const auto applyToneCurve = [](const QVector<ToneCurvePoint> &curve,
-                                   float value) {
-        if (curve.isEmpty())
-            return value;
-
-        std::vector<double> weights(static_cast<size_t>(curve.size()), 1.0);
-        for (qsizetype index = 0; index < curve.size(); ++index) {
-            for (qsizetype other = 0; other < curve.size(); ++other) {
-                if (index != other) {
-                    weights[static_cast<size_t>(index)] /=
-                        static_cast<double>(curve.at(index).x -
-                                            curve.at(other).x);
-                }
-            }
-        }
-
-        const auto evaluateInsideRange = [&curve, &weights](double sample) {
-            double numerator = 0.0;
-            double denominator = 0.0;
-            for (qsizetype index = 0; index < curve.size(); ++index) {
-                const double distance = sample - curve.at(index).x;
-                if (std::abs(distance) < 1e-9)
-                    return static_cast<double>(curve.at(index).y);
-                const double term = weights[static_cast<size_t>(index)] / distance;
-                numerator += term * curve.at(index).y;
-                denominator += term;
-            }
-            return numerator / denominator;
-        };
-
-        if (value <= 1.0f)
-            return static_cast<float>(evaluateInsideRange(value));
-
-        const qsizetype endpoint = curve.size() - 1;
-        double derivative = 0.0;
-        for (qsizetype index = 0; index < endpoint; ++index) {
-            derivative +=
-                weights[static_cast<size_t>(index)] /
-                weights[static_cast<size_t>(endpoint)] *
-                (curve.at(index).y - curve.at(endpoint).y) /
-                (curve.at(endpoint).x - curve.at(index).x);
-        }
-        return curve.constLast().y +
-               (value - curve.constLast().x) * static_cast<float>(derivative);
-    };
-    const QVector<ToneCurvePoint> &luminanceCurve =
-        settings.toneCurves[LuminanceCurve];
-    const QVector<ToneCurvePoint> &redCurve = settings.toneCurves[RedCurve];
-    const QVector<ToneCurvePoint> &greenCurve =
-        settings.toneCurves[GreenCurve];
-    const QVector<ToneCurvePoint> &blueCurve = settings.toneCurves[BlueCurve];
-    if (hasToneCurves) {
-    for (int y = 0; y < adjusted.rows; ++y) {
-        cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < adjusted.cols; ++x) {
-            const float luminance = luminanceOf(row[x]);
-            applyLuminance(row[x], luminance,
-                           applyToneCurve(luminanceCurve, luminance));
-            row[x][0] = applyToneCurve(redCurve, row[x][0]);
-            row[x][1] = applyToneCurve(greenCurve, row[x][1]);
-            row[x][2] = applyToneCurve(blueCurve, row[x][2]);
-        }
+    if (runs(4)) {
+        Dehaze::apply(adjusted, settings.dehaze, pixelScale);
+        reached(4, adjusted);
     }
-    }
+    ToneCurve::apply(adjusted, settings.toneCurves);
 
     if (settings.blur > 0) {
-        const double sigma = static_cast<double>(settings.blur) / 2.0;
+        const double sigma = static_cast<double>(settings.blur) / 2.0 * pixelScale;
         cv::GaussianBlur(adjusted, adjusted, cv::Size(0, 0), sigma);
     }
 
@@ -1820,33 +1895,15 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     if (settings.sharpeningAmount > 0) {
         DetailProcessing::sharpen(adjusted, {settings.sharpeningAmount,
                                               settings.sharpeningRadius,
-                                              settings.sharpeningMasking});
+                                              settings.sharpeningMasking}, pixelScale);
     }
 
-    if (settings.grain > 0) {
-        const float amount = 0.06f * static_cast<float>(settings.grain) / 100.0f;
-        for (int y = 0; y < adjusted.rows; ++y) {
-            cv::Vec3f *row = adjusted.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < adjusted.cols; ++x) {
-                quint32 hash = static_cast<quint32>(x) * 0x9e3779b9u +
-                               static_cast<quint32>(y) * 0x85ebca6bu;
-                hash ^= hash >> 16;
-                hash *= 0x7feb352du;
-                hash ^= hash >> 15;
-                const float noise =
-                    static_cast<float>(hash & 0xffffu) / 32767.5f - 1.0f;
-                const float luminance = luminanceOf(row[x]);
-                const float shadowsWeight =
-                    0.45f + 0.55f * (1.0f - std::clamp(luminance, 0.0f, 1.0f));
-                applyLuminance(row[x], luminance,
-                               std::max(0.0f, luminance + noise * amount *
-                                                  shadowsWeight));
-            }
-        }
-    }
+    Grain::apply(adjusted, settings.grain, pixelScale);
 
-    const cv::Mat alpha = channels[3];
+    std::vector<cv::Mat> channels;
     cv::split(adjusted, channels);
+    cv::Mat alpha;
+    cv::extractChannel(source.linearRgba, alpha, 3);
     channels.push_back(alpha);
     cv::Mat rgbaOutput;
     cv::merge(channels, rgbaOutput);
@@ -1855,9 +1912,107 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
             source.referenceWhiteBalanceKelvin};
 }
 
+// Camera-signal development, grayscale, exposure, contrast, white balance and
+// the four tone controls, in place on the source's RGB.
+PerceptualColour::Parameters ImageEditor::perceptualParameters(const Settings &settings)
+{
+    return {settings.saturation, settings.vibrance,
+            {settings.mixerHue, settings.mixerSaturation, settings.mixerLuminance},
+            settings.pointColor, settings.gradingHue, settings.gradingSaturation,
+            settings.gradingLuminance, settings.gradingBlending, settings.gradingBalance};
+}
+
+const ColorPipeline::WorkingImage &ImageEditor::previewSource() const
+{
+    return m_editProxy.isNull() ? m_original : m_editProxy;
+}
+
+double ImageEditor::previewPixelScale() const
+{
+    const ColorPipeline::WorkingImage &source = previewSource();
+    const int fullExtent = std::max(m_fullSize.width(), m_fullSize.height());
+    const int sourceExtent = std::max(source.linearRgba.cols, source.linearRgba.rows);
+    return fullExtent > 0 && sourceExtent > 0 ? std::min(1.0, double(sourceExtent) / double(fullExtent)) : 1.0;
+}
+
+bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
+                              int referenceTemperature, double pixelScale, cv::Mat &adjusted)
+{
+    const bool whiteBalanceEdit = settings.temperature != referenceTemperature || settings.tint != 0;
+    // RAW with a DCP: exposure and white balance act on the scene-linear camera
+    // signal before the profile tone curve, so highlights keep its shoulder.
+    const bool sceneExposure = source.dcpContext && settings.brightness != 0.0f;
+    // Experimental: the luminance denoise acts on the camera signal, before the
+    // profile; colour noise is removed after the tones (reduceNoise).
+    const CameraDenoise::Settings cameraDenoise{settings.denoiseLuminance, 0};
+    const bool denoiseCamera = source.dcpContext && settings.denoiseBeforeProfile &&
+                               !CameraDenoise::identity(cameraDenoise);
+    if (source.dcpContext && (whiteBalanceEdit || sceneExposure || denoiseCamera)) {
+        QString error;
+        const CameraProfileEngine::DcpWorkingContext *camera = source.dcpContext.get();
+        CameraProfileEngine::DcpWorkingContext denoised;
+        if (denoiseCamera) {
+            // From the retained source each time: never denoised twice.
+            // Before the lens corrections when the decode kept that signal, then them again.
+            // CameraDenoise publishes a new buffer and never writes the retained one.
+            denoised = *source.dcpContext;
+            const bool preLens = !source.dcpContext->preLensCameraRgb.empty();
+            denoised.cameraRgb = preLens ? source.dcpContext->preLensCameraRgb : source.dcpContext->cameraRgb;
+            CameraDenoise::Context denoiseContext;
+            denoiseContext.pixelScale = pixelScale;
+            if (!CameraDenoise::apply(denoised.cameraRgb, cameraDenoise, denoiseContext) ||
+                (preLens && !CameraProfileEngine::applyLcp(denoised.lcpPath, denoised.cameraRgb, denoised.capture,
+                                                           &error, denoised.lensOptions))) {
+                qWarning() << "Échec du débruitage du signal caméra :" << error;
+                return false;
+            }
+            camera = &denoised;
+        }
+        if (camera->cameraRgb.size() != adjusted.size() ||
+            !CameraProfileEngine::renderFromCameraSignal(*camera,
+                settings.temperature, settings.tint, settings.brightness, adjusted, &error)) {
+            qWarning() << "Échec du rendu capteur avant DCP :" << error;
+            return false;
+        }
+    }
+
+    if (settings.grayscale) ColorAdjustments::toGrayscale(adjusted);
+
+    // One brightness unit is one EV in linear light. Sources without a camera
+    // signal (rendered rasters, RAW without DCP) have no profile curve to precede.
+    if (settings.brightness != 0.0f && !sceneExposure) {
+        const float exposureFactor = static_cast<float>(
+            std::exp2(static_cast<double>(settings.brightness)));
+        adjusted *= exposureFactor;
+    }
+
+    Contrast::apply(adjusted, settings.contrast);
+
+    QString colorError;
+    if (!source.dcpContext && whiteBalanceEdit &&
+        !ColorPipeline::applyTemperatureTint(
+            adjusted, settings.temperature,
+            source.referenceWhiteBalanceKelvin.value_or(5200.0),
+            settings.tint, &colorError)) {
+        qWarning() << "Échec de la balance température/nuance :" << colorError;
+        return false;
+    }
+
+    // Shadows, Blacks, Highlights and Whites, weighted by the statistics
+    // measured at load (ToneRecovery).
+    const ToneRecovery::Amounts tones{static_cast<float>(settings.shadows) / 100.0f,
+        static_cast<float>(settings.blacks) / 100.0f,
+        static_cast<float>(settings.highlights) / 100.0f,
+        static_cast<float>(settings.whites) / 100.0f};
+    if (!ToneRecovery::identity(tones))
+        ToneRecovery::apply(adjusted, tones, source.toneStatistics ? *source.toneStatistics
+                                                                   : ToneRecovery::measure(source.linearRgba));
+    return true;
+}
+
 ImageEditor::RenderResult ImageEditor::renderPreview(
     const ColorPipeline::WorkingImage &source, const Settings &settings,
-    bool includeOriginal)
+    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint)
 {
     RenderResult result;
     if (includeOriginal) {
@@ -1869,213 +2024,131 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
         if (result.originalPreview.isNull())
             qWarning() << "Échec du rendu de l'origine :" << error;
     }
-    const ColorPipeline::WorkingImage rendered =
-        renderWorkingImage(source, settings);
+    ColorPipeline::WorkingImage rendered =
+        renderWorkingImage(source, settings, pixelScale, cache);
     if (rendered.isNull())
         return result;
-
-    std::array<std::array<quint64, 256>, 4> bins{};
-    const auto srgbBin = [](float linear) {
-        const float bounded = std::clamp(linear, 0.0f, 1.0f);
-        const float encoded = bounded <= 0.0031308f
-                                  ? bounded * 12.92f
-                                  : 1.055f * std::pow(bounded, 1.0f / 2.4f) -
-                                        0.055f;
-        return std::clamp(
-            static_cast<int>(std::lround(encoded * 255.0f)), 0, 255);
-    };
-    for (int y = 0; y < rendered.linearRgba.rows; ++y) {
-        const cv::Vec4f *row = rendered.linearRgba.ptr<cv::Vec4f>(y);
-        for (int x = 0; x < rendered.linearRgba.cols; ++x) {
-            const float luminance = std::max(
-                0.0f, 0.2126f * row[x][0] + 0.7152f * row[x][1] +
-                          0.0722f * row[x][2]);
-            ++bins[0][static_cast<size_t>(srgbBin(luminance))];
-            ++bins[1][static_cast<size_t>(srgbBin(row[x][0]))];
-            ++bins[2][static_cast<size_t>(srgbBin(row[x][1]))];
-            ++bins[3][static_cast<size_t>(srgbBin(row[x][2]))];
+    if (overlayPoint >= 0) {
+        // Weights on the colour entering the point colour: the tones' output the
+        // render just kept, or rendered here.
+        cv::Mat tones = cache ? cache->peek(source.linearRgba, pixelScale, 0, stageKeys(settings)[0]) : cv::Mat();
+        if (tones.empty()) {
+            cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
+            const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
+            if (!renderTones(source, settings, reference, pixelScale, tones)) tones.release();
         }
-    }
-    result.histogram.reserve(4);
-    for (const auto &channel : bins) {
-        QVariantList values;
-        values.reserve(256);
-        for (const quint64 value : channel)
-            values.append(static_cast<double>(value));
-        result.histogram.append(QVariant::fromValue(values));
+        const cv::Mat weights = PerceptualColour::pointWeights(tones, perceptualParameters(settings), overlayPoint);
+        if (!weights.empty() && weights.size() == rendered.linearRgba.size()) {
+            // A neutral pipeline hands back the source buffer itself: overlay a copy.
+            rendered.linearRgba = rendered.linearRgba.clone();
+            ColorAdjustments::showWeights(rendered.linearRgba, weights);
+        }
     }
 
     QString error;
     result.preview = ColorPipeline::toSrgb(
-        rendered,
-        ColorPipeline::OutputFormat::Preview8Bit, &error);
-    if (result.preview.isNull())
+        rendered, ColorPipeline::OutputFormat::Preview8Bit, &error);
+    if (result.preview.isNull()) {
         qWarning() << "Échec du rendu de l'aperçu :" << error;
+        return result;
+    }
+
+    result.histogram = Histogram::compute(result.preview);
     return result;
 }
 
-ImageEditor::ExportResult ImageEditor::writeImage(
-                                                   const ColorPipeline::WorkingImage &source,
-                                                   const Settings &settings,
-                                                   const QString &target,
-                                                   const QString &format,
-                                                   int quality)
+ImageEditor::ExportResult ImageEditor::writeImage(const ColorPipeline::WorkingImage &source,
+                                                   const Settings &settings, const QString &target,
+                                                   const QString &format, int quality)
 {
-    const QString normalized = normalizedExportFormat(format);
-    const QString suffix = exportSuffix(normalized);
-    if (suffix.isEmpty())
+    if (!ImageExporter::supports(format))
         return {false, tr("Format d'export non pris en charge : %1").arg(format)};
-
-    const ColorPipeline::WorkingImage rendered =
-        renderWorkingImage(source, settings);
+    const ColorPipeline::WorkingImage rendered = renderWorkingImage(source, settings);
     if (rendered.isNull())
         return {false, tr("Échec du rendu avant export.")};
+    return ImageExporter::write(rendered, target, format, quality);
+}
 
-    const QString normalizedTarget = normalizedExportPath(target, normalized);
-    // Encode beside the destination first. Publishing via QFile::rename does
-    // not replace an occupied name, unlike a QSaveFile commit to that name.
-    // This also covers a file appearing while the dialog/encoder was running.
-    QString stagedPath;
-    {
-        QTemporaryFile reservation(QFileInfo(normalizedTarget).dir().filePath(
-            QStringLiteral(".ipr-export-XXXXXX")));
-        if (!reservation.open())
-            return {false, tr("Échec de l'export (création du temporaire) : %1")
-                .arg(reservation.errorString())};
-        stagedPath = reservation.fileName();
-        reservation.setAutoRemove(false);
-        // QTemporaryFile::close() keeps its native handle open internally.
-        // Destroy the object to release the Windows sharing lock before a
-        // QSaveFile commit or TIFFOpenW touches this reserved temporary path.
+QImage ImageEditor::renderSrgb16(const ColorPipeline::WorkingImage &source,
+                                 const Settings &settings, QString *error)
+{
+    const ColorPipeline::WorkingImage rendered = renderWorkingImage(source, settings);
+    if (rendered.isNull()) {
+        if (error) *error = tr("Échec du rendu avant export.");
+        return {};
     }
-    auto cleanup = qScopeGuard([&] { QFile::remove(stagedPath); });
-    const auto publish = [&]() -> ExportResult {
-        QFile completed(stagedPath);
-        // Bound retries if another process continually takes proposed names.
-        for (int attempt = 0; attempt < 32; ++attempt) {
-            const QString finalPath = availableExportPath(normalizedTarget);
-            if (finalPath.isEmpty())
-                return {false, tr("Échec de l'export : aucun nom de fichier disponible.")};
-            if (completed.rename(finalPath)) {
-                cleanup.dismiss();
-                return {true, normalized == QStringLiteral("DNG")
-                    ? tr("Image exportée (DNG linéaire) : %1").arg(finalPath)
-                    : tr("Image exportée : %1").arg(finalPath)};
-            }
-            const QFileInfo collision(finalPath);
-            if (!collision.exists() && !collision.isSymLink())
-                return {false, tr("Échec de l'export (publication de %1) : %2")
-                    .arg(finalPath, completed.errorString())};
-        }
-        return {false, tr("Échec de l'export : noms occupés par un autre processus, réessayez.")};
-    };
-
-    if (normalized == QStringLiteral("DNG")) {
-        QString dngError;
-        if (!writeLinearDng(rendered, stagedPath, &dngError))
-            return {false, tr("Échec de l'export DNG : %1").arg(dngError)};
-        return publish();
-    }
-
-    QSaveFile destination(stagedPath);
-    if (!destination.open(QIODevice::WriteOnly)) {
-        return {false, tr("Échec de l'export (écriture du temporaire) : %1")
-                           .arg(destination.errorString())};
-    }
-    QImageWriter writer(&destination, normalized.toLatin1());
-    const bool jpeg = normalized == QStringLiteral("JPEG");
-    if (jpeg)
-        writer.setQuality(qBound(0, quality, 100));
-    QString colorError;
-    const QImage output = ColorPipeline::toSrgb(
-        rendered,
-        jpeg ? ColorPipeline::OutputFormat::Jpeg8Bit
-             : ColorPipeline::OutputFormat::HighBitDepth,
-        &colorError);
-    if (output.isNull()) {
-        destination.cancelWriting();
-        return {false, tr("Échec de la conversion couleur : %1").arg(colorError)};
-    }
-    if (!writer.write(output)) {
-        destination.cancelWriting();
-        return {false, tr("Échec de l'export : %1").arg(writer.errorString())};
-    }
-    if (!destination.commit())
-        return {false, tr("Échec de l'export (validation du temporaire) : %1").arg(destination.errorString())};
-
-    return publish();
+    return ColorPipeline::toSrgb(rendered, ColorPipeline::OutputFormat::HighBitDepth, error);
 }
 
 ImageEditor::LoadResult ImageEditor::loadFromDisk(const QString &fileName,
-                                                  const QString &extension,
                                                   bool automaticWhiteBalance,
                                                   const RawDecoder::Options &rawOptions)
 {
+    auto options = rawOptions;
+    options.automaticWhiteBalance = automaticWhiteBalance;
     LoadResult result;
-    if (RawDecoder::supportedExtensions().contains(extension)) {
-        auto options = rawOptions;
-        options.automaticWhiteBalance = automaticWhiteBalance;
-        result.image = RawDecoder::decode(
-            fileName, options,
-            &result.metadata, &result.error);
-    } else {
-        QImageReader reader(fileName);
-        reader.setAutoTransform(true);
-        QImage loaded;
-        if (reader.canRead())
-            loaded = reader.read();
-        if (loaded.isNull()) {
-            result.error = reader.errorString();
-        } else {
-            result.metadata.format = extension;
-            result.metadata.cameraMake = readMetadataText(
-                reader, {QStringLiteral("Make"), QStringLiteral("CameraMake")});
-            result.metadata.cameraModel = readMetadataText(
-                reader, {QStringLiteral("Model"), QStringLiteral("CameraModel")});
-            result.metadata.lensModel = readMetadataText(
-                reader, {QStringLiteral("LensModel"), QStringLiteral("Lens")});
-            if (const auto iso = readMetadataNumber(reader,
-                    {QStringLiteral("ISOSpeedRatings"), QStringLiteral("ISO"),
-                     QStringLiteral("PhotographicSensitivity")}))
-                result.metadata.iso = static_cast<int>(std::lround(*iso));
-            if (const auto focalLength = readMetadataNumber(reader,
-                    {QStringLiteral("FocalLength")}))
-                result.metadata.focalLengthMm = *focalLength;
-            if (const auto exposureTime = readMetadataNumber(reader,
-                    {QStringLiteral("ExposureTime"), QStringLiteral("ShutterSpeed")}))
-                result.metadata.exposureSeconds = *exposureTime;
-            result.metadata.captureDate = readCaptureDate(reader);
-            result.metadata.location = readMetadataText(
-                reader, {QStringLiteral("Location"), QStringLiteral("GPSPosition"),
-                         QStringLiteral("LocationShown")});
-            result.metadata.colorLabel = readMetadataText(
-                reader, {QStringLiteral("ColorLabel"), QStringLiteral("Label")});
-            bool ratingOk = false;
-            const int rating = readMetadataText(reader, {QStringLiteral("Rating")})
-                                   .toInt(&ratingOk);
-            if (ratingOk)
-                result.metadata.rating = qBound(0, rating, 5);
-            if (loaded.colorSpace().isValid())
-                result.metadata.embeddedColorProfile =
-                    loaded.colorSpace().description();
-            result.image = ColorPipeline::fromSourceImage(loaded, &result.error);
-            if (!result.image.isNull())
-                result.image.referenceWhiteBalanceKelvin =
-                    readWhiteBalanceKelvin(reader);
-        }
-    }
+    static_cast<ImageImport::Result &>(result) = ImageImport::load(fileName, options);
     if (!result.image.isNull()) {
         result.editProxy = buildEditProxy(result.image);
+        attachToneStatistics(result.image, result.editProxy);
     }
     return result;
+}
+
+// Current recipe, without per-call cancellation or retained camera signal.
+RawDecoder::Options ImageEditor::developmentOptions() const
+{
+    RawDecoder::Options options;
+    options.dcpProfileOverride = m_cameraProfile;
+    options.lcpProfileOverride = m_lensProfile;
+    options.automaticLcpSelection = !m_lensProfileResolved;
+    options.lensCorrectionEnabled = m_lensCorrectionEnabled;
+    options.chromaticAberrationEnabled = m_chromaticAberrationEnabled;
+    if (!m_lensProfileSha256.isEmpty() && resourceDigest(options.lcpProfileOverride) != m_lensProfileSha256) {
+        options.lcpProfileOverride.clear();
+        options.automaticLcpSelection = false;
+    }
+    options.normalizationManifest = m_rawNormalizationEnabled ? rawNormalizationManifest() : QString();
+    // Never silently apply bytes different from the saved recipe.
+    if (!m_profileSha256.isEmpty() && resourceDigest(options.dcpProfileOverride) != m_profileSha256)
+        options.dcpProfileOverride.clear();
+    if (!m_manifestSha256.isEmpty() && resourceDigest(options.normalizationManifest) != m_manifestSha256)
+        options.normalizationManifest.clear();
+    options.useNormalizationEnvironment = false;
+    options.listDcpProfiles = true;
+    options.preferCameraNeutral = true;
+    // Experimental camera-signal denoise: the signed development (values below the
+    // black kept) and the signal before the lens corrections.
+    options.signedDevelopment = m_denoiseBeforeProfile;
+    options.retainPreLensSignal = m_denoiseBeforeProfile;
+    return options;
+}
+
+// Leaving an image keeps only what editing needs: the 2048 px proxy with its
+// own camera signal (about 78 MB for 32 MP instead of about 940 MB). Export
+// rebuilds the full master; a DCP change redecodes. Small images keep all.
+DecodedImageCache::Entry ImageEditor::retainedEntry(const ColorPipeline::WorkingImage &image,
+    const ColorPipeline::WorkingImage &proxy, const ImageMetadata &metadata,
+    std::shared_ptr<RawDecoder::DcpSource> dcpSource, QSize fullSize, bool imageIsProxy)
+{
+    const QString digest = image.dcpContext ? resourceDigest(image.dcpContext->profilePath) : QString();
+    const bool proxyIsMaster = proxy.linearRgba.datastart == image.linearRgba.datastart;
+    if (proxyIsMaster && !imageIsProxy)
+        return {image, proxy, metadata, std::move(dcpSource), digest, fullSize, false};
+    return {proxy, proxy, metadata, nullptr, digest, fullSize, true};
+}
+
+DecodedImageCache::Entry ImageEditor::retainedCurrentEntry() const
+{
+    return retainedEntry(m_original, m_editProxy, m_sourceMetadata, m_dcpSource, m_fullSize, m_masterIsProxy);
 }
 
 ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
     const ColorPipeline::WorkingImage &source)
 {
-    // Interactive preview rendering (every slider drag) re-applies the whole
-    // tonal/color/effects pipeline from scratch on the next render, so its
-    // cost scales directly with pixel count. Camera RAW files routinely
+    // Interactive preview rendering (every slider drag) re-applies the
+    // pipeline from the last cached stage before the edited one
+    // (RenderStageCache), so its cost scales directly with pixel count. Camera RAW files routinely
     // exceed 24-50 Mpx while the on-screen preview (Main.qml's "canvas"
     // Image, fitted inside the editor pane) is at most a few Mpx, so editing
     // on a capped-resolution proxy removes most of that redundant work
@@ -2098,15 +2171,32 @@ ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
 
     ColorPipeline::WorkingImage proxy;
     cv::resize(source.linearRgba, proxy.linearRgba, proxySize, 0, 0, cv::INTER_AREA);
+    // Area averaging rounds alpha slightly above 1; a proxy restored from the
+    // cache is revalidated as a master, which requires alpha within [0, 1].
+    for (int y = 0; y < proxy.linearRgba.rows; ++y) {
+        auto *row = proxy.linearRgba.ptr<cv::Vec4f>(y);
+        for (int x = 0; x < proxy.linearRgba.cols; ++x)
+            row[x][3] = std::clamp(row[x][3], 0.f, 1.f);
+    }
     proxy.colorSpace = source.colorSpace;
     proxy.sourceProfile = source.sourceProfile;
     proxy.referenceWhiteBalanceKelvin = source.referenceWhiteBalanceKelvin;
+    if (source.dcpContext) {
+        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*source.dcpContext);
+        cv::resize(source.dcpContext->cameraRgb, context->cameraRgb, proxySize, 0, 0, cv::INTER_AREA);
+        if (!source.dcpContext->preLensCameraRgb.empty())
+            cv::resize(source.dcpContext->preLensCameraRgb, context->preLensCameraRgb, proxySize, 0, 0, cv::INTER_AREA);
+        proxy.dcpContext = context;
+    }
     return proxy;
 }
 
 QString ImageEditor::cacheKeyForFile(const QString &fileName,
                                      bool automaticWhiteBalance,
-                                     const QString &profile, const QString &manifest)
+                                     const QString &profile, const QString &manifest,
+                                     const QString &lensProfile, bool lensResolved,
+                                     bool lensCorrection, bool chromaticAberration,
+                                     bool cameraSignalExperiment)
 {
     const QFileInfo fileInfo(fileName);
     if (!fileInfo.exists() || !fileInfo.isFile())
@@ -2122,139 +2212,23 @@ QString ImageEditor::cacheKeyForFile(const QString &fileName,
         .arg(fileInfo.lastModified().toMSecsSinceEpoch())
         .arg(automaticWhiteBalance ? 1 : 0)
         .arg(RawNormalization::cacheToken(manifest))
-        .arg(profile).arg(profileInfo.size()).arg(profileInfo.lastModified().toMSecsSinceEpoch());
+        .arg(profile + resourceDigest(profile)).arg(profileInfo.size()).arg(profileInfo.lastModified().toMSecsSinceEpoch())
+        + QStringLiteral("|engine=") + ColorPipeline::engineIdentity()
+        + QStringLiteral("|lcp=%1|resolved=%2|lens=%3|ca=%4")
+            .arg(lensProfile + resourceDigest(lensProfile)).arg(lensResolved)
+            .arg(lensCorrection).arg(chromaticAberration)
+        + (cameraSignalExperiment ? QStringLiteral("|signed-prelens") : QString());
 }
 
-QString ImageEditor::sidecarPathForFile(const QString &fileName)
+ImageEditor::RawDevelopment ImageEditor::rawDevelopmentRecipe() const
 {
-    return fileName + QStringLiteral(".ipr");
-}
-
-bool ImageEditor::readSidecar(const QString &fileName, Settings *settings,
-                              UserImageMetadata *metadata)
-{
-    if (!settings || !metadata)
-        return false;
-    const QFileInfo sourceInfo(fileName);
-    QFile file(sidecarPathForFile(fileName));
-    if (!sourceInfo.exists() || !file.open(QIODevice::ReadOnly))
-        return false;
-    QDataStream stream(&file);
-    stream.setVersion(QDataStream::Qt_6_4);
-    quint32 magic = 0;
-    quint16 version = 0;
-    qint64 sourceSize = -1;
-    qint64 sourceModified = -1;
-    stream >> magic >> version >> sourceSize >> sourceModified;
-    if (magic != 0x49505231u || version < 1 || version > 4 ||
-        sourceSize != sourceInfo.size() ||
-        sourceModified != sourceInfo.lastModified().toMSecsSinceEpoch())
-        return false;
-
-    Settings loaded;
-    qint32 value = 0;
-    stream >> loaded.brightness;
-    const auto readInt = [&stream, &value](int &target) {
-        stream >> value;
-        target = value;
-    };
-    readInt(loaded.contrast); readInt(loaded.blur); stream >> loaded.grayscale;
-    readInt(loaded.shadows); readInt(loaded.blacks); readInt(loaded.highlights);
-    readInt(loaded.whites); readInt(loaded.temperature); readInt(loaded.tint);
-    readInt(loaded.vibrance); readInt(loaded.saturation); readInt(loaded.texture);
-    readInt(loaded.clarity); readInt(loaded.dehaze); readInt(loaded.grain);
-    if (version >= 2) {
-        readInt(loaded.denoiseLuminance);
-        readInt(loaded.denoiseChrominance);
-        readInt(loaded.sharpeningAmount);
-        stream >> loaded.sharpeningRadius;
-        readInt(loaded.sharpeningMasking);
-        if (loaded.denoiseLuminance < 0 || loaded.denoiseLuminance > 100 ||
-            loaded.denoiseChrominance < 0 || loaded.denoiseChrominance > 100 ||
-            loaded.sharpeningAmount < 0 || loaded.sharpeningAmount > 200 ||
-            !std::isfinite(loaded.sharpeningRadius) ||
-            loaded.sharpeningRadius < 0.3f || loaded.sharpeningRadius > 3.0f ||
-            loaded.sharpeningMasking < 0 || loaded.sharpeningMasking > 100)
-            return false;
-    }
-    const size_t storedMixerBands = version >= 4 ? 8 : (version == 3 ? 7 : 6);
-    for (size_t storedIndex = 0; storedIndex < storedMixerBands; ++storedIndex) {
-        // Preserve technical band identity: legacy last band was magenta at
-        // 300 degrees, not violet. Newly inserted bands start neutral.
-        const size_t oldIndex = version >= 3 || storedIndex == 0
-            ? storedIndex : storedIndex + 1;
-        const size_t index = version < 4 && oldIndex == 6 ? 7 : oldIndex;
-        readInt(loaded.mixerHue[index]); readInt(loaded.mixerSaturation[index]);
-        readInt(loaded.mixerLuminance[index]);
-    }
-    for (size_t index = 0; index < loaded.gradingHue.size(); ++index) {
-        readInt(loaded.gradingHue[index]); readInt(loaded.gradingSaturation[index]);
-    }
-    stream >> loaded.automaticWhiteBalance;
-    for (QVector<ToneCurvePoint> &curve : loaded.toneCurves) {
-        qint32 count = 0;
-        stream >> count;
-        if (count < 0 || count > 64)
-            return false;
-        for (qint32 index = 0; index < count; ++index) {
-            ToneCurvePoint point;
-            stream >> point.x >> point.y;
-            if (!std::isfinite(point.x) || !std::isfinite(point.y))
-                return false;
-            curve.append(point);
-        }
-    }
-    UserImageMetadata loadedMetadata;
-    stream >> loadedMetadata.rating >> loadedMetadata.colorLabel >> loadedMetadata.flagged
-           >> loadedMetadata.ratingSet >> loadedMetadata.colorLabelSet;
-    if (stream.status() != QDataStream::Ok)
-        return false;
-    *settings = std::move(loaded);
-    *metadata = std::move(loadedMetadata);
-    return true;
-}
-
-bool ImageEditor::writeSidecar(const QString &fileName, const Settings &settings,
-                               const UserImageMetadata &metadata)
-{
-    const QFileInfo sourceInfo(fileName);
-    if (!sourceInfo.exists() || !sourceInfo.isFile())
-        return false;
-    QSaveFile file(sidecarPathForFile(fileName));
-    if (!file.open(QIODevice::WriteOnly))
-        return false;
-    QDataStream stream(&file);
-    stream.setVersion(QDataStream::Qt_6_4);
-    stream << quint32(0x49505231u) << quint16(4) << qint64(sourceInfo.size())
-           << qint64(sourceInfo.lastModified().toMSecsSinceEpoch());
-    stream << settings.brightness;
-    const auto writeInt = [&stream](int value) { stream << qint32(value); };
-    writeInt(settings.contrast); writeInt(settings.blur); stream << settings.grayscale;
-    writeInt(settings.shadows); writeInt(settings.blacks); writeInt(settings.highlights);
-    writeInt(settings.whites); writeInt(settings.temperature); writeInt(settings.tint);
-    writeInt(settings.vibrance); writeInt(settings.saturation); writeInt(settings.texture);
-    writeInt(settings.clarity); writeInt(settings.dehaze); writeInt(settings.grain);
-    writeInt(settings.denoiseLuminance);
-    writeInt(settings.denoiseChrominance);
-    writeInt(settings.sharpeningAmount);
-    stream << settings.sharpeningRadius;
-    writeInt(settings.sharpeningMasking);
-    for (size_t index = 0; index < settings.mixerHue.size(); ++index) {
-        writeInt(settings.mixerHue[index]); writeInt(settings.mixerSaturation[index]);
-        writeInt(settings.mixerLuminance[index]);
-    }
-    for (size_t index = 0; index < settings.gradingHue.size(); ++index) {
-        writeInt(settings.gradingHue[index]); writeInt(settings.gradingSaturation[index]);
-    }
-    stream << settings.automaticWhiteBalance;
-    for (const QVector<ToneCurvePoint> &curve : settings.toneCurves) {
-        stream << qint32(curve.size());
-        for (const ToneCurvePoint &point : curve)
-            stream << point.x << point.y;
-    }
-    stream << metadata.rating << metadata.colorLabel << metadata.flagged
-           << metadata.ratingSet << metadata.colorLabelSet;
-    return stream.status() == QDataStream::Ok && file.commit();
+    const QString manifest = m_normalizationManifest.isEmpty() && m_rawNormalizationEnabled
+        ? rawNormalizationManifest() : m_normalizationManifest;
+    return {m_cameraProfile, m_profileSha256, manifest,
+            m_manifestSha256.isEmpty() ? resourceDigest(manifest) : m_manifestSha256,
+            m_rawNormalizationEnabled, ColorPipeline::engineIdentity() + QStringLiteral("|libraw=") + RawDecoder::backendVersion(),
+            m_lensProfile, m_lensProfileSha256, m_lensProfileResolved,
+            m_lensCorrectionEnabled, m_chromaticAberrationEnabled};
 }
 
 QString ImageEditor::currentFileKey() const
@@ -2267,69 +2241,227 @@ QString ImageEditor::currentFileKey() const
 void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
                             bool automaticWhiteBalance, bool freshOpen)
 {
+    const bool promotePrefetch = freshOpen && m_prefetchTaskActive && m_prefetchFile == fileName &&
+        m_prefetchCancel && !m_prefetchCancel->load();
+    if (promotePrefetch) {
+        ++m_prefetchGeneration; m_prefetchQueue.clear(); m_prefetchTimer.stop();
+    } else cancelPrefetch();
     // Keep only a shallow reference in the LRU cache, then drop the editor's
     // references before a potentially large new decode starts. A rendering or
     // export already in flight owns its own shallow reference until completion.
-    if (m_sidecarDebounce.isActive())
+    if (freshOpen && m_sidecarDebounce.isActive())
         saveCurrentSidecar();
+    m_sidecarDebounce.stop();
     m_renderDebounce.stop();
     ++m_requestedRevision;
     m_renderPending = false;
-    releaseCurrentImage();
+    if (freshOpen) {
+        // Retain the displayed image until its replacement is ready. Cache
+        // eviction can release only the cache reference, never these pixels.
+        if (!m_currentCacheKey.isEmpty() && !m_original.isNull())
+            m_decodedImageCache.insert(m_currentCacheKey, retainedCurrentEntry());
+        Settings persisted;
+        UserImageMetadata metadata;
+        RawDevelopment raw;
+        m_cameraProfile.clear();
+        m_profileSha256.clear();
+        m_normalizationManifest.clear();
+        m_manifestSha256.clear();
+        m_rawNormalizationEnabled = true;
+        m_rawDevelopmentWarning.clear();
+        m_lensProfile.clear();
+        m_lensProfileSha256.clear();
+        m_lensProfileResolved = false;
+        m_lensCorrectionEnabled = true;
+        m_chromaticAberrationEnabled = true;
+        if (Sidecar::read(fileName, &persisted, &metadata, &raw)) {
+            automaticWhiteBalance = persisted.automaticWhiteBalance;
+            m_cameraProfile = relocateResource(raw.profile, raw.profileSha256, "profiles");
+            m_profileSha256 = raw.profileSha256;
+            m_normalizationManifest = relocateResource(raw.manifest, raw.manifestSha256, "config");
+            m_manifestSha256 = raw.manifestSha256;
+            m_rawNormalizationEnabled = raw.normalizationEnabled;
+            m_lensProfile = relocateResource(raw.lensProfile, raw.lensProfileSha256, "profiles");
+            m_lensProfileSha256 = raw.lensProfileSha256;
+            m_lensProfileResolved = raw.lensProfileResolved;
+            m_lensCorrectionEnabled = raw.lensCorrectionEnabled;
+            m_chromaticAberrationEnabled = raw.chromaticAberrationEnabled;
+            if (!m_lensProfile.isEmpty() && (resourceDigest(m_lensProfile).isEmpty() ||
+                    (!m_lensProfileSha256.isEmpty() && resourceDigest(m_lensProfile) != m_lensProfileSha256)))
+                m_rawDevelopmentWarning += tr("Le LCP enregistré est absent ou modifié : corrections optiques non appliquées. ");
+            if (!m_cameraProfile.isEmpty() && (resourceDigest(m_cameraProfile).isEmpty() ||
+                    (!m_profileSha256.isEmpty() && resourceDigest(m_cameraProfile) != m_profileSha256)))
+                m_rawDevelopmentWarning += tr("Une ressource enregistrée est absente ou modifiée. Repli automatique ; rendu non garanti. ");
+            if (!raw.engineVersion.isEmpty() && raw.engineVersion != rawDevelopmentRecipe().engineVersion)
+                m_rawDevelopmentWarning += tr("La version du moteur de rendu a changé. ");
+        }
+    } else if (!m_currentCacheKey.isEmpty()) {
+        m_decodedImageCache.insert(m_currentCacheKey, retainedCurrentEntry());
+        emit decodedImageCacheChanged();
+    }
 
+    // The selected manifest is live application/user configuration, not an
+    // immutable profile asset. Follow updates automatically; validate its rules
+    // in RawNormalization and include the new digest in cache/recipe identity.
+    // DCP/LCP fingerprints remain pinned independently.
+    if (m_rawNormalizationEnabled) {
+        const auto currentDigest = resourceDigest(rawNormalizationManifest());
+        if (!currentDigest.isEmpty() && currentDigest != m_manifestSha256) {
+            if (!m_manifestSha256.isEmpty())
+                m_rawDevelopmentWarning += tr("Configuration de calibration mise à jour automatiquement. ");
+            m_manifestSha256 = currentDigest;
+        }
+    }
     m_currentFile = QUrl::fromLocalFile(fileName);
     m_provider->setUrl(m_currentFile);
     m_pendingLoadIsFreshOpen = freshOpen;
-    m_currentCacheKey = RawDecoder::supportedExtensions().contains(extension)
-        ? cacheKeyForFile(fileName, automaticWhiteBalance, m_cameraProfile,
-            m_rawNormalizationEnabled ? rawNormalizationManifest() : QString()) : QString{};
-
-    setStatusMessage(tr("Ouverture de %1...").arg(QFileInfo(fileName).fileName()));
-    ++m_requestedLoadRevision;
-    m_activeLoadRevision = m_requestedLoadRevision;
-
-    if (!m_currentCacheKey.isEmpty()) {
-        const std::optional<DecodedImageCache::Entry> cached =
-            m_decodedImageCache.find(m_currentCacheKey);
-        if (cached) {
-            LoadResult loaded;
-            loaded.image = cached->image;
-            loaded.editProxy = cached->editProxy;
-            loaded.metadata = cached->metadata;
-            emit decodedImageCacheChanged();
-            applyLoadedImage(std::move(loaded));
-            return;
-        }
-    }
+    m_currentCacheKey = cacheKeyForFile(fileName, automaticWhiteBalance, m_cameraProfile,
+            m_rawNormalizationEnabled ? rawNormalizationManifest() : QString(),
+            m_lensProfile, m_lensProfileResolved, m_lensCorrectionEnabled, m_chromaticAberrationEnabled,
+            m_denoiseBeforeProfile);
 
     setBusy(true);
-    RawDecoder::Options options;
-    options.dcpProfileOverride = m_cameraProfile;
-    options.normalizationManifest = m_rawNormalizationEnabled ? rawNormalizationManifest() : QString();
-    options.useNormalizationEnvironment = false;
-    options.listDcpProfiles = true;
+    setStatusMessage(freshOpen ? tr("Ouverture de %1...").arg(QFileInfo(fileName).fileName())
+                              : tr("Mise à jour du développement RAW…"));
+    ++m_requestedLoadRevision;
+    m_activeLoadRevision = m_requestedLoadRevision;
+    if (freshOpen && RawDecoder::supportedExtensions().contains(extension))
+        startEmbeddedPreview(fileName);
+
+    setBusy(true);
+    RawDecoder::Options options = developmentOptions();
+    const bool fast = !freshOpen && !m_rawNormalizationEnabled && m_dcpSource &&
+        !m_dcpSource->cameraRgb.empty() && m_dcpSource->automaticWhiteBalance == automaticWhiteBalance &&
+        m_dcpSource->lensCorrectionEnabled == m_lensCorrectionEnabled &&
+        m_dcpSource->chromaticAberrationEnabled == m_chromaticAberrationEnabled &&
+        m_dcpSource->preLensSignal == m_denoiseBeforeProfile &&
+        m_dcpSource->signedDevelopment == m_denoiseBeforeProfile &&
+        m_dcpSource->metadata.lcpPath == options.lcpProfileOverride &&
+        m_dcpSource->metadata.lcpSha256 == resourceDigest(options.lcpProfileOverride) &&
+        (m_cameraProfile.isEmpty() || !options.dcpProfileOverride.isEmpty());
+    const auto source = fast ? m_dcpSource : nullptr;
+    m_loadCancel = std::make_shared<std::atomic_bool>(false);
+    const auto cancel = m_loadCancel;
+    options.cancellationRequested = [cancel] { return cancel->load(); };
+    options.retainedDcpSource = std::make_shared<RawDecoder::DcpSource>();
+    auto *controller = &m_decodedImageCache;
+    const auto key = m_currentCacheKey;
+    auto prefetchFuture = m_prefetchWatcher.future();
+    const auto transfer = promotePrefetch ? m_prefetchTransfer : nullptr;
     m_loadWatcher.setFuture(QtConcurrent::run(
-        [fileName, extension, automaticWhiteBalance, options] {
-            return loadFromDisk(fileName, extension, automaticWhiteBalance, options);
+        [fileName, automaticWhiteBalance, options, source, controller, key, cancel, prefetchFuture, transfer]() mutable {
+            if (transfer && prefetchFuture.isStarted()) {
+                prefetchFuture.waitForFinished();
+                auto ready = *transfer;
+                if (!cancel->load() && !ready.image.isNull() && ready.cacheKey == key) return ready;
+            }
+            const auto peak = SystemMemory::estimateDecodePeak(fileName);
+            auto admission = controller->acquire(key, peak, false, cancel).result();
+            if (admission.cached) {
+                auto &cached = *admission.cached;
+                if (cacheAssetsUnchanged(cached)) {
+                    LoadResult result;
+                    result.image = std::move(cached.image); result.editProxy = std::move(cached.editProxy);
+                    result.metadata = std::move(cached.metadata); result.dcpSource = std::move(cached.dcpSource);
+                    result.fullSize = cached.fullSize; result.proxyOnly = cached.proxyOnly;
+                    ImageImport::complete(result);
+                    return result;
+                }
+                admission.cached.reset();
+                admission = controller->acquire({}, peak, false, cancel).result();
+            }
+            if (!admission.reservation || cancel->load()) {
+                controller->release(admission.reservation);
+                LoadResult result; result.error = admission.error.isEmpty() ? QStringLiteral("Chargement annulé.") : admission.error;
+                return result;
+            }
+            const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
+            LoadResult loaded;
+            if (source) {
+                loaded.dcpSource = source;
+                loaded.image = RawDecoder::applyProfile(*source, options.dcpProfileOverride, &loaded.metadata, &loaded.error);
+                ImageImport::complete(loaded);
+                if (!loaded.image.isNull()) {
+                    loaded.editProxy = buildEditProxy(loaded.image);
+                    attachToneStatistics(loaded.image, loaded.editProxy);
+                }
+            } else {
+                loaded = loadFromDisk(fileName, automaticWhiteBalance, options);
+            }
+            loaded.memoryPressure = admission.underPressure;
+            return loaded;
         }));
 }
 
 void ImageEditor::applyLoadedImage(LoadResult loaded)
 {
-    refreshBusyState();
     if (loaded.image.isNull()) {
-        setStatusMessage(tr("Impossible d'ouvrir Â« %1 Â» : %2")
-                             .arg(QFileInfo(m_currentFile.toLocalFile()).fileName(),
+        const auto failedName = QFileInfo(m_currentFile.toLocalFile()).fileName();
+        if (!m_original.isNull()) {
+            m_currentFile = m_displayedFile;
+            m_provider->setUrl(m_currentFile);
+            m_cameraProfile = m_appliedRawDevelopment.profile;
+            m_profileSha256 = m_appliedRawDevelopment.profileSha256;
+            m_normalizationManifest = m_appliedRawDevelopment.manifest;
+            m_manifestSha256 = m_appliedRawDevelopment.manifestSha256;
+            m_rawNormalizationEnabled = m_appliedRawDevelopment.normalizationEnabled;
+            m_lensProfile = m_appliedRawDevelopment.lensProfile;
+            m_lensProfileSha256 = m_appliedRawDevelopment.lensProfileSha256;
+            m_lensProfileResolved = m_appliedRawDevelopment.lensProfileResolved;
+            m_lensCorrectionEnabled = m_appliedRawDevelopment.lensCorrectionEnabled;
+            m_chromaticAberrationEnabled = m_appliedRawDevelopment.chromaticAberrationEnabled;
+            m_settings.automaticWhiteBalance = m_appliedAutomaticWhiteBalance;
+            m_currentCacheKey = cacheKeyForFile(m_currentFile.toLocalFile(), m_appliedAutomaticWhiteBalance,
+                m_cameraProfile, m_rawNormalizationEnabled ? rawNormalizationManifest() : QString(),
+                m_lensProfile, m_lensProfileResolved, m_lensCorrectionEnabled, m_chromaticAberrationEnabled,
+                m_denoiseBeforeProfile);
+            m_rawDevelopmentWarning = tr("Modification RAW refusée : %1. Rendu précédent conservé. ").arg(loaded.error);
+            restoreBeforeEmbeddedPreview();
+            emit rawDevelopmentChanged();
+            emit adjustmentsReset(m_settings.temperature, m_settings.tint);
+            emit pointColorsChanged();
+            if (!m_pendingLoadIsFreshOpen) scheduleRender();
+        }
+        setStatusMessage(tr("Échec du développement de « %1 » : %2")
+                             .arg(failedName,
                                   loaded.error));
         emit hasImageChanged();
+        refreshBusyState();
         return;
     }
 
     m_sourceMetadata = std::move(loaded.metadata);
-    if (!m_sourceMetadata.availableDcpProfiles.contains(m_cameraProfile))
-        m_cameraProfile.clear();
+    m_importProvenance = std::move(loaded.provenance);
+    m_importCapabilities = loaded.capabilities;
+    m_importWarnings = std::move(loaded.warnings);
+    if (!m_lensProfileResolved && RawDecoder::supportedExtensions().contains(
+            QFileInfo(m_currentFile.toLocalFile()).suffix().toLower())) {
+        m_lensProfile = m_sourceMetadata.lcpPath;
+        m_lensProfileSha256 = m_sourceMetadata.lcpSha256;
+        m_lensProfileResolved = true; // Also remember an intentionally absent profile.
+    }
+    // Freeze the automatically resolved DCP into this image's recipe.
+    if (m_cameraProfile.isEmpty()) {
+        for (const auto &path : m_sourceMetadata.availableDcpProfiles) {
+            if (QFileInfo(path).completeBaseName() == m_sourceMetadata.dcpProfile) {
+                m_cameraProfile = path;
+                m_profileSha256 = resourceDigest(path);
+                break;
+            }
+        }
+    }
+    m_dcpSource = std::move(loaded.dcpSource);
+    m_embeddedPreview = false;
+    m_restorePreview = m_restoreOriginal = QImage();
+    m_masterIsProxy = loaded.proxyOnly;
+    m_fullSize = loaded.proxyOnly ? loaded.fullSize
+        : QSize(loaded.image.linearRgba.cols, loaded.image.linearRgba.rows);
     m_original = std::move(loaded.image);
     m_editProxy = std::move(loaded.editProxy);
+    m_renderStageCache.clear();
+    m_displayedFile = m_currentFile;
+    // Refresh comparison without blanking the displayed pair while rendering.
+    m_originalImageSource.clear();
     emit imageInfoChanged();
     if (m_pendingLoadIsFreshOpen) {
         m_histogram.clear();
@@ -2339,16 +2471,28 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
             m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
         UserImageMetadata metadata;
         Settings persisted;
-        if (readSidecar(m_currentFile.toLocalFile(), &persisted, &metadata)) {
+        if (Sidecar::read(m_currentFile.toLocalFile(), &persisted, &metadata)) {
             m_settings = std::move(persisted);
             m_userImageMetadata.insert(currentFileKey(), std::move(metadata));
         }
+        m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
+        emit pointColorsChanged();
     }
-    emit hasImageChanged();
+    if (m_pendingLoadIsFreshOpen) emit hasImageChanged();
+    // Freeze only after restoring the incoming image's settings (not old WB).
+    m_currentCacheKey = cacheKeyForFile(m_currentFile.toLocalFile(), m_settings.automaticWhiteBalance,
+        m_cameraProfile, m_rawNormalizationEnabled ? rawNormalizationManifest() : QString(),
+        m_lensProfile, m_lensProfileResolved, m_lensCorrectionEnabled, m_chromaticAberrationEnabled,
+        m_denoiseBeforeProfile);
     emit rawDevelopmentChanged();
-    setStatusMessage(tr("Image ouverte : %1")
-                         .arg(QFileInfo(m_currentFile.toLocalFile()).fileName()));
+    m_appliedRawDevelopment = rawDevelopmentRecipe();
+    m_appliedAutomaticWhiteBalance = m_settings.automaticWhiteBalance;
+    const QString readyName = QFileInfo(m_currentFile.toLocalFile()).fileName();
+    setStatusMessage(loaded.memoryPressure
+        ? tr("Image prête : %1 — ouverte sous pression mémoire : RAM occupée par d'autres applications, "
+             "Windows peut ralentir en utilisant le fichier d'échange.").arg(readyName)
+        : tr("Image prête : %1").arg(readyName));
     scheduleRender();
 }
 
@@ -2358,16 +2502,24 @@ void ImageEditor::releaseCurrentImage()
     const quint64 cacheSizeBefore = m_decodedImageCache.sizeBytes();
     const qsizetype cacheCountBefore = m_decodedImageCache.count();
     if (hadImage && !m_currentCacheKey.isEmpty()) {
-        m_decodedImageCache.insert(
-            m_currentCacheKey,
-            DecodedImageCache::Entry{m_original, m_editProxy, m_sourceMetadata});
+        m_decodedImageCache.insert(m_currentCacheKey, retainedCurrentEntry());
     }
 
     // release() drops this owner's reference immediately. It does not clone
     // pixels and is safe while background workers retain their own cv::Mat.
     m_original = {};
     m_editProxy = {};
+    m_renderStageCache.clear();
     m_sourceMetadata = {};
+    m_importProvenance = {};
+    m_importCapabilities = {};
+    m_importWarnings.clear();
+    m_dcpSource.reset();
+    m_masterIsProxy = false;
+    m_fullSize = {};
+    m_embeddedPreview = false;
+    m_restorePreview = m_restoreOriginal = QImage();
+    m_displayedFile.clear();
     emit rawDevelopmentChanged();
     m_currentCacheKey.clear();
     m_imageSource.clear();
@@ -2386,8 +2538,12 @@ void ImageEditor::scheduleRender()
 {
     if (m_original.isNull())
         return;
+    cancelPrefetch();
     ++m_requestedRevision;
     m_renderDebounce.start();
+    // Pending work is busy too: otherwise a completed RAW worker briefly
+    // reported "ready" while the old preview was still displayed (80 ms gap).
+    setBusy(true);
     scheduleSidecarSave();
 }
 
@@ -2397,12 +2553,19 @@ void ImageEditor::scheduleSidecarSave()
         m_sidecarDebounce.start();
 }
 
-void ImageEditor::saveCurrentSidecar()
+bool ImageEditor::saveCurrentSidecar()
 {
     if (m_original.isNull() || !m_currentFile.isLocalFile())
-        return;
-    writeSidecar(m_currentFile.toLocalFile(), m_settings,
-                 m_userImageMetadata.value(currentFileKey()));
+        return false;
+    if (m_currentFile != m_displayedFile) return false;
+    if (m_loadWatcher.isRunning()) return false;
+    if (!Sidecar::write(m_currentFile.toLocalFile(), m_settings,
+                 m_userImageMetadata.value(currentFileKey()), rawDevelopmentRecipe()))
+    {
+        setStatusMessage(tr("Échec de sauvegarde des réglages .ipr : vérifiez les permissions du dossier."));
+        return false;
+    }
+    return true;
 }
 
 void ImageEditor::startRender()
@@ -2417,17 +2580,147 @@ void ImageEditor::startRender()
     // Use the capped-resolution edit proxy for the interactive preview (see
     // buildEditProxy()); m_original is reserved for exportImage()/writeImage()
     // so exports are never affected by this optimization.
-    const ColorPipeline::WorkingImage &source =
-        m_editProxy.isNull() ? m_original : m_editProxy;
-    const ColorPipeline::WorkingImage sourceCopy = source;
+    const ColorPipeline::WorkingImage sourceCopy = previewSource();
+    const double pixelScale = previewPixelScale();
     const Settings settings = m_settings;
+    // A point removed or replaced since the overlay was asked shows nothing.
+    const int overlay = m_pointColorOverlay < int(std::min(settings.pointColor.count, PointColor::MaxPoints))
+        ? m_pointColorOverlay : -1;
     const bool includeOriginal = m_originalImageSource.isEmpty();
     m_activeRevision = m_requestedRevision;
     setBusy(true);
+    auto *controller = &m_decodedImageCache;
+    auto *stages = &m_renderStageCache;
     m_renderWatcher.setFuture(QtConcurrent::run(
-        [sourceCopy, settings, includeOriginal] {
-            return renderPreview(sourceCopy, settings, includeOriginal);
+        [sourceCopy, settings, includeOriginal, pixelScale, controller, stages, overlay] {
+            const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
+            if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
+            const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, stages, overlay);
         }));
+}
+
+RawDecoder::Options ImageEditor::optionsForFile(const QString &path, bool *automaticWhiteBalance, QString *key)
+{
+    Settings settings;
+    UserImageMetadata metadata;
+    RawDevelopment raw;
+    const bool saved = Sidecar::read(path, &settings, &metadata, &raw);
+    RawDecoder::Options options;
+    options.automaticWhiteBalance = saved && settings.automaticWhiteBalance;
+    *automaticWhiteBalance = options.automaticWhiteBalance;
+    options.preferCameraNeutral = true;
+    options.listDcpProfiles = true;
+    options.useNormalizationEnvironment = false;
+    options.dcpProfileOverride = relocateResource(raw.profile, raw.profileSha256, "profiles");
+    options.lcpProfileOverride = relocateResource(raw.lensProfile, raw.lensProfileSha256, "profiles");
+    options.automaticLcpSelection = !raw.lensProfileResolved;
+    options.lensCorrectionEnabled = raw.lensCorrectionEnabled;
+    options.chromaticAberrationEnabled = raw.chromaticAberrationEnabled;
+    if (!saved || raw.normalizationEnabled) {
+        options.normalizationManifest = relocateResource(raw.manifest, raw.manifestSha256, "config");
+        if (options.normalizationManifest.isEmpty()) options.normalizationManifest = defaultNormalizationManifest();
+    }
+    // Invalid pinned resources are handled with warnings by foreground import;
+    // speculative work must never cache a silent replacement.
+    if ((!raw.profileSha256.isEmpty() && resourceDigest(options.dcpProfileOverride) != raw.profileSha256) ||
+        (!raw.lensProfileSha256.isEmpty() && resourceDigest(options.lcpProfileOverride) != raw.lensProfileSha256)) {
+        key->clear(); return options;
+    }
+    *key = cacheKeyForFile(path, options.automaticWhiteBalance, options.dcpProfileOverride,
+        options.normalizationManifest, options.lcpProfileOverride, raw.lensProfileResolved,
+        options.lensCorrectionEnabled, options.chromaticAberrationEnabled,
+        options.retainPreLensSignal && options.signedDevelopment);
+    return options;
+}
+
+void ImageEditor::startEmbeddedPreview(const QString &fileName)
+{
+    // About 13 ms on the CR3 corpus versus about 4 s for the development.
+    m_embeddedRevision = m_requestedLoadRevision;
+    m_embeddedWatcher.setFuture(QtConcurrent::run(&m_embeddedPool, [fileName] {
+        return RawDecoder::decodeEmbeddedThumbnail(fileName, QSize(2048, 2048));
+    }));
+}
+
+void ImageEditor::restoreBeforeEmbeddedPreview()
+{
+    if (!m_embeddedPreview) return;
+    m_embeddedPreview = false;
+    m_provider->setImages(m_restorePreview, m_restoreOriginal);
+    m_imageSource = m_restoreImageSource;
+    m_originalImageSource = m_restoreOriginalSource;
+    m_restorePreview = m_restoreOriginal = QImage();
+    emit previewChanged();
+}
+
+void ImageEditor::cancelPrefetch()
+{
+    ++m_prefetchGeneration;
+    if (m_prefetchCancel) m_prefetchCancel->store(true);
+    m_prefetchTimer.stop();
+    m_prefetchQueue.clear();
+}
+
+void ImageEditor::schedulePrefetch()
+{
+    if (busy() || !hasImage() || !m_currentFile.isLocalFile()) return;
+    const auto files = m_imageModel.localFiles(0, m_imageModel.count() - 1);
+    const int index = files.indexOf(m_currentFile.toLocalFile());
+    if (index < 0) return;
+    m_prefetchQueue.clear();
+    if (index + 1 < files.size()) m_prefetchQueue.append(files[index + 1]);
+    if (index > 0) m_prefetchQueue.append(files[index - 1]);
+    if (!m_prefetchQueue.isEmpty()) m_prefetchTimer.start();
+}
+
+void ImageEditor::startPrefetch()
+{
+    if (busy() || m_prefetchTaskActive || m_prefetchQueue.isEmpty() ||
+        m_decodedImageCache.statistics().pressure) return;
+    const auto file = m_prefetchQueue.takeFirst();
+    m_prefetchFile = file;
+    m_prefetchTaskActive = true;
+    m_activePrefetchGeneration = m_prefetchGeneration;
+    m_prefetchCancel = std::make_shared<std::atomic_bool>(false);
+    m_prefetchTransfer = std::make_shared<LoadResult>();
+    const auto transfer = m_prefetchTransfer;
+    const auto cancel = m_prefetchCancel;
+    auto *controller = &m_decodedImageCache;
+    m_prefetchWatcher.setFuture(QtConcurrent::run(&m_prefetchPool, [file, cancel, controller, transfer] {
+        LoadResult result;
+        bool automaticWB = false;
+        QString key;
+        auto options = optionsForFile(file, &automaticWB, &key);
+        if (cancel->load() || key.isEmpty()) return result;
+        const auto peak = SystemMemory::estimateDecodePeak(file);
+        // Do not spend CPU on an image unlikely to fit the retention cap.
+        if (peak / 2 > controller->budgetBytes()) return result;
+        auto admission = controller->acquire(key, peak, true).result();
+        if (admission.cached && !cacheAssetsUnchanged(*admission.cached)) {
+            admission.cached.reset();
+            admission = controller->acquire({}, peak, true).result();
+        }
+        if (admission.cached) {
+            auto &entry = *admission.cached;
+            result.image = std::move(entry.image); result.editProxy = std::move(entry.editProxy);
+            result.metadata = std::move(entry.metadata); result.dcpSource = std::move(entry.dcpSource);
+            result.fullSize = entry.fullSize; result.proxyOnly = entry.proxyOnly;
+            result.cacheKey = key;
+            *transfer = result;
+            return result;
+        }
+        if (!admission.reservation) return result;
+        const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
+        if (cancel->load()) return result;
+        options.cancellationRequested = [cancel] { return cancel->load(); };
+        options.retainedDcpSource = std::make_shared<RawDecoder::DcpSource>();
+        result = loadFromDisk(file, automaticWB, options);
+        if (cancel->load()) return LoadResult{};
+        result.cacheKey = key;
+        *transfer = result;
+        return result;
+    }));
 }
 
 void ImageEditor::setBusy(bool busy)
@@ -2440,7 +2733,7 @@ void ImageEditor::setBusy(bool busy)
 
 void ImageEditor::refreshBusyState()
 {
-    setBusy(m_loadWatcher.isRunning() || m_renderWatcher.isRunning() ||
+    setBusy(m_renderDebounce.isActive() || m_loadWatcher.isRunning() || m_renderWatcher.isRunning() ||
             m_exportWatcher.isRunning());
 }
 

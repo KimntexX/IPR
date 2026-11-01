@@ -1,9 +1,14 @@
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
+#include "Demosaic.h"
+#include "LibRawInput.h"
 #include "RawBlackLevelEstimator.h"
+#include "RawDevelopment.h"
 #include "RawNormalization.h"
+#include "CameraSignal.h"
 
 #include <QFileInfo>
+#include <QDir>
 #include <QBuffer>
 #include <QDebug>
 #include <QElapsedTimer>
@@ -11,8 +16,15 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QSet>
+#include <QFile>
+#include <QCryptographicHash>
+#include <QRegularExpression>
 
+#include <algorithm>
 #include <cmath>
+#include <functional>
+#include <limits>
+#include <memory>
 #include <optional>
 #include <vector>
 
@@ -27,6 +39,7 @@ struct FormatHandler
 {
     QStringList extensions;
     DecodeFunction decode;
+    FormatOptions options;
 };
 
 struct Registry
@@ -42,7 +55,7 @@ Registry &registry()
 }
 
 bool addFormatHandler(const QStringList &extensions, DecodeFunction decodeFunction,
-                      QString *error)
+                      QString *error, const FormatOptions &options)
 {
     if (!decodeFunction || extensions.isEmpty()) {
         if (error)
@@ -54,7 +67,8 @@ bool addFormatHandler(const QStringList &extensions, DecodeFunction decodeFuncti
     QSet<QString> unique;
     for (const QString &extension : extensions) {
         const QString value = extension.trimmed().toLower();
-        if (value.isEmpty() || value.contains(QLatin1Char('.')) ||
+        static const QRegularExpression suffix(QStringLiteral("^[a-z0-9]+$"));
+        if (!suffix.match(value).hasMatch() ||
             unique.contains(value)) {
             if (error)
                 *error = QStringLiteral("La liste d'extensions RAW est invalide.");
@@ -77,7 +91,8 @@ bool addFormatHandler(const QStringList &extensions, DecodeFunction decodeFuncti
         }
     }
 
-    store.handlers.append({normalized, std::move(decodeFunction)});
+    store.handlers.append({normalized, std::move(decodeFunction), options});
+    if (error) error->clear();
     return true;
 }
 
@@ -119,71 +134,177 @@ private:
     qint64 m_lastElapsed = 0;
 };
 
-bool estimateMissingCanonCr3BlackLevel(LibRaw &raw, const QString &fileName)
+// LibRaw with IPR's demosaic in place of its interpolation step (LibRaw keeps
+// its callbacks protected). Only Bayer mosaics reach the callback.
+class RawProcessor : public LibRaw
+{
+public:
+    void useIprDemosaic(Demosaic::ChromaMedian median, std::function<bool()> cancelled)
+    {
+        m_median = median;
+        m_cancelled = std::move(cancelled);
+        m_failed = false;
+        imgdata.params.user_qual = 0;   // no LibRaw algorithm-specific step around the callback
+        callbacks.interpolate_bayer_cb = &RawProcessor::interpolateBayer;
+    }
+    bool demosaicFailed() const { return m_failed; }
+
+private:
+    static void interpolateBayer(void *context)
+    {
+        auto *self = static_cast<RawProcessor *>(static_cast<LibRaw *>(context));
+        auto &d = self->imgdata;
+        Demosaic::Pattern pattern{};
+        for (int y = 0; y < 2; ++y)
+            for (int x = 0; x < 2; ++x) {
+                const int colour = self->FC(y, x);
+                pattern[size_t(y)][size_t(x)] = colour == 3 ? 1 : colour;   // second green folded
+            }
+        try {
+            // LibRaw's image: four 16-bit channels per pixel, only the site's colour set.
+            const int width = d.sizes.iwidth, height = d.sizes.iheight;
+            cv::Mat mosaic(height, width, CV_32FC1), rgb;
+            for (int y = 0; y < height; ++y) {
+                float *row = mosaic.ptr<float>(y);
+                for (int x = 0; x < width; ++x)
+                    row[x] = d.image[size_t(y) * size_t(width) + size_t(x)][pattern[size_t(y & 1)][size_t(x & 1)]] / 65535.f;
+            }
+            self->m_failed = !Demosaic::interpolate(mosaic, pattern, self->m_median, Demosaic::Range::NonNegative, rgb, nullptr, self->m_cancelled);
+            if (!self->m_failed)
+                for (int y = 0; y < height; ++y) {
+                    const auto *row = rgb.ptr<cv::Vec3f>(y);
+                    for (int x = 0; x < width; ++x)
+                        for (int c = 0; c < 3; ++c)
+                            d.image[size_t(y) * size_t(width) + size_t(x)][c] =
+                                std::uint16_t(std::clamp(std::lround(row[x][c] * 65535.f), 0L, 65535L));
+                }
+        } catch (...) {
+            // never let an exception cross LibRaw: the decode fails below instead
+            self->m_failed = true;
+        }
+    }
+
+    Demosaic::ChromaMedian m_median = Demosaic::ChromaMedian::Off;
+    std::function<bool()> m_cancelled;
+    bool m_failed = false;
+};
+
+// Opens a RAW by its wide path on Windows: the local 8-bit encoding cannot hold
+// every file name (accented folders such as tests/image/colorimétrie).
+int openRaw(LibRaw &raw, const QString &fileName)
+{
+#ifdef _WIN32
+    const std::wstring path = QDir::toNativeSeparators(fileName).toStdWString();
+    return raw.open_file(path.c_str());
+#else
+    return raw.open_file(QFile::encodeName(fileName).constData());
+#endif
+}
+
+// Black level read by IPR on every RAW after unpacking: measured on the
+// optical black pixels and compared with LibRaw's value, which is kept when it
+// agrees (RawBlackLevelEstimator). Returns true when the measurement replaced it.
+bool readBlackLevel(LibRaw &raw, const QString &fileName)
 {
     auto &data = raw.imgdata;
     RawBlackLevelEstimator::Input input;
-    input.extension = QFileInfo(fileName).suffix();
-    input.cameraMake = QString::fromLocal8Bit(data.idata.make);
     input.mosaic = data.rawdata.raw_image;
     input.rawWidth = data.sizes.raw_width;
     input.rawHeight = data.sizes.raw_height;
     input.rowStrideSamples = int(data.sizes.raw_pitch / sizeof(std::uint16_t));
-    // Canon bounds are inclusive. Prefer the left masked area: the audited
-    // high-ISO image has a slightly elevated upper border. Never infer these
-    // rectangles from the smaller photographic crop.
-    const auto addMaskedArea = [&](const libraw_area_t &area) {
-        if (area.l >= 0 && area.t >= 0 && area.r > area.l && area.b > area.t &&
-            area.r < input.rawWidth && area.b < input.rawHeight) {
-            input.maskedAreas.push_back({area.l, area.t, area.r - area.l + 1,
-                                         area.b - area.t + 1});
-            return true;
-        }
-        return false;
-    };
-    if (!addMaskedArea(data.makernotes.canon.LeftOpticalBlack))
-        addMaskedArea(data.makernotes.canon.UpperOpticalBlack);
+    const bool canon = QString::fromLocal8Bit(data.idata.make).contains(QStringLiteral("Canon"), Qt::CaseInsensitive);
+    if (canon) {
+        // Canon bounds are inclusive. Prefer the left masked area: the audited
+        // high-ISO image has a slightly elevated upper border. Never infer these
+        // rectangles from the smaller photographic crop.
+        const auto addCanonArea = [&](const libraw_area_t &area) {
+            if (area.l >= 0 && area.t >= 0 && area.r > area.l && area.b > area.t &&
+                area.r < input.rawWidth && area.b < input.rawHeight) {
+                input.maskedAreas.push_back({area.l, area.t, area.r - area.l + 1, area.b - area.t + 1});
+                return true;
+            }
+            return false;
+        };
+        if (!addCanonArea(data.makernotes.canon.LeftOpticalBlack))
+            addCanonArea(data.makernotes.canon.UpperOpticalBlack);
+        input.marginsAreMasked = true;
+    } else {
+        // Masked areas declared by the format (top, left, bottom, right; exclusive).
+        for (const auto &m : data.sizes.mask)
+            if (m[2] > m[0] && m[3] > m[1])
+                input.maskedAreas.push_back({m[1], m[0], m[3] - m[1], m[2] - m[0]});
+    }
     input.leftMargin = data.sizes.left_margin;
     input.topMargin = data.sizes.top_margin;
     input.activeWidth = data.sizes.width;
     input.activeHeight = data.sizes.height;
     input.maximum = data.color.maximum;
     input.hasCfa = data.idata.filters != 0 && data.idata.colors >= 3;
-    input.globalBlack = data.color.black;
-    input.rawGlobalBlack = data.rawdata.color.black;
-    input.patternBlack = data.color.cblack[4];
-    input.rawPatternBlack = data.rawdata.color.cblack[4];
-    for (int channel = 0; channel < 4; ++channel) {
-        input.channelBlack[channel] = data.color.cblack[channel];
-        input.rawChannelBlack[channel] = data.rawdata.color.cblack[channel];
-    }
-    for (int row = 0; row < 2; ++row) {
+    for (int row = 0; row < 2; ++row)
         for (int column = 0; column < 2; ++column)
             input.cfaChannels[row * 2 + column] = raw.COLOR(row, column);
-    }
 
-    const RawBlackLevelEstimator::Result estimate =
-        RawBlackLevelEstimator::estimate(input);
-    if (!estimate.wasEstimated())
+    const auto measured = RawBlackLevelEstimator::measure(input);
+    std::array<unsigned int, 4> decoder{};
+    for (int channel = 0; channel < 4; ++channel)
+        decoder[size_t(channel)] = data.color.black + data.color.cblack[channel];
+    const bool pattern = data.color.cblack[4] != 0 || data.rawdata.color.cblack[4] != 0;
+    const auto decision = RawBlackLevelEstimator::decide(decoder, pattern, measured, int(data.color.maximum));
+    const QString name = QFileInfo(fileName).fileName();
+    if (decision.source != RawBlackLevelEstimator::Source::Measured) {
+        if (measured.wasMeasured())
+            qInfo().noquote() << QStringLiteral("IPR black | %1 | LibRaw kept (%2 %3 %4 %5), measured %6 %7 %8 %9")
+                .arg(name).arg(decoder[0]).arg(decoder[1]).arg(decoder[2]).arg(decoder[3])
+                .arg(measured.levels[0]).arg(measured.levels[1]).arg(measured.levels[2]).arg(measured.levels[3]);
         return false;
+    }
     for (int channel = 0; channel < 4; ++channel) {
-        data.color.cblack[channel] = estimate.levels[channel];
-        data.rawdata.color.cblack[channel] = estimate.levels[channel];
+        data.color.cblack[channel] = measured.levels[size_t(channel)];
+        data.rawdata.color.cblack[channel] = measured.levels[size_t(channel)];
     }
     data.color.black = 0;
     data.rawdata.color.black = 0;
-    data.color.cblack[4] = 0;
-    data.rawdata.color.cblack[4] = 0;
-    qInfo().noquote()
-        << QStringLiteral("CR3 Canon : niveau noir estimé depuis %1 "
-                          "(R=%2, G1=%3, B=%4, G2=%5).")
-               .arg(input.maskedAreas.empty() ? QStringLiteral("les marges CFA (repli)")
-                                              : QStringLiteral("une zone noire Canon déclarée"))
-               .arg(estimate.levels[0])
-               .arg(estimate.levels[1])
-               .arg(estimate.levels[2])
-               .arg(estimate.levels[3]);
+    qInfo().noquote() << QStringLiteral("IPR black | %1 | measured on %2 (%3 %4 %5 %6) replaces LibRaw (%7 %8 %9 %10)")
+        .arg(name, input.maskedAreas.empty() ? QStringLiteral("the CFA margins") : QStringLiteral("the optical black"))
+        .arg(measured.levels[0]).arg(measured.levels[1]).arg(measured.levels[2]).arg(measured.levels[3])
+        .arg(decoder[0]).arg(decoder[1]).arg(decoder[2]).arg(decoder[3]);
     return true;
+}
+
+// IPR develops the Bayer mosaics of the formats its comparison bench covers
+// (Canon CR2 and CR3, as-shot white balance); LibRaw develops the others.
+bool developedByIpr(const LibRaw &raw, const Options &options)
+{
+    const auto &d = raw.imgdata;
+    return !options.automaticWhiteBalance && d.rawdata.raw_image && d.idata.filters >= 1000 &&
+           d.sizes.pixel_aspect == 1.0 &&
+           QString::fromLocal8Bit(d.idata.make).trimmed().compare(QStringLiteral("Canon"), Qt::CaseInsensitive) == 0;
+}
+
+// Camera RGB (CV_32FC3, white 1) to linear sRGB in place. Policy A as LibRaw's
+// output stage: on the 16-bit counts, single-precision products summed in channel
+// order, truncated, clipped to the 16-bit range. Policy B: the plain product.
+void cameraToSrgb(cv::Mat &rgb, const cv::Matx33d &matrix, bool libRawGrid)
+{
+    float m[3][3];
+    for (int r = 0; r < 3; ++r)
+        for (int k = 0; k < 3; ++k) m[r][k] = float(matrix(r, k));
+    constexpr float gridStep = float(1.0 / 65535.0);   // as OpenCV's u16 to f32 conversion
+    cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
+        for (int y = rows.start; y < rows.end; ++y) {
+            auto *row = rgb.ptr<cv::Vec3f>(y);
+            for (int x = 0; x < rgb.cols; ++x) {
+                cv::Vec3f in = row[x];
+                if (libRawGrid)
+                    for (int k = 0; k < 3; ++k) in[k] = float(std::lround(in[k] * 65535.f));
+                for (int r = 0; r < 3; ++r) {
+                    float sum = 0.f;
+                    for (int k = 0; k < 3; ++k) sum += m[r][k] * in[k];
+                    row[x][r] = libRawGrid ? float(std::clamp(int(sum), 0, 65535)) * gridStep : sum;
+                }
+            }
+        }
+    });
 }
 
 std::optional<double> estimateWhiteBalanceKelvin(const LibRaw &raw)
@@ -273,12 +394,16 @@ std::optional<double> estimateWhiteBalanceKelvin(const LibRaw &raw)
 
 ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                                              const Options &options,
-                                             SourceMetadata *metadata,
+                                             ImageMetadata *metadata,
                                              QString *error)
 {
     RawDecodeTimer timer(fileName);
-    LibRaw raw;
-    int result = raw.open_file(fileName.toLocal8Bit().constData());
+    RawProcessor raw;
+    raw.set_progress_handler([](void *context, enum LibRaw_progress, int, int) {
+        const auto *options = static_cast<const Options *>(context);
+        return options->cancellationRequested && options->cancellationRequested() ? 1 : 0;
+    }, const_cast<Options *>(&options));
+    int result = openRaw(raw, fileName);
     if (result != LIBRAW_SUCCESS) {
         if (error)
             *error = QString::fromLatin1(libraw_strerror(result));
@@ -287,6 +412,9 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
     timer.mark("open_file");
 
     if (metadata) {
+        metadata->decoderId = QStringLiteral("libraw");
+        metadata->decoderVersion = QString::fromLatin1(LibRaw::version());
+        metadata->cameraRaw = true;
         metadata->cameraMake = QString::fromLocal8Bit(raw.imgdata.idata.make).trimmed();
         metadata->cameraModel = QString::fromLocal8Bit(raw.imgdata.idata.model).trimmed();
         metadata->lensMake = QString::fromLocal8Bit(raw.imgdata.lens.LensMake).trimmed();
@@ -299,7 +427,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                 static_cast<qint64>(raw.imgdata.other.timestamp));
     }
 
-    const SourceMetadata sourceMetadata = metadata ? *metadata : SourceMetadata{
+    const ImageMetadata sourceMetadata = metadata ? *metadata : ImageMetadata{
         QFileInfo(fileName).suffix().toLower(),
         QString::fromLocal8Bit(raw.imgdata.idata.make).trimmed(),
         QString::fromLocal8Bit(raw.imgdata.idata.model).trimmed(),
@@ -311,6 +439,33 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             sourceMetadata.cameraMake, sourceMetadata.cameraModel,
             sourceMetadata.lensMake, sourceMetadata.lensModel,
             options.profileDirectories);
+    if (options.preferCameraNeutral) {
+        const auto available = CameraProfileEngine::availableDcpProfiles(
+            sourceMetadata.cameraMake, sourceMetadata.cameraModel, options.profileDirectories);
+        for (const auto &path : available) {
+            if (QFileInfo(path).completeBaseName().endsWith(" Camera Neutral", Qt::CaseInsensitive)) {
+                profiles.dcpPath = path;
+                break;
+            }
+        }
+    }
+    const QString defaultProfile = profiles.dcpPath;
+    if (!options.automaticLcpSelection)
+        profiles.lcpPath.clear();
+    if (!options.lcpProfileOverride.isEmpty()) {
+        if (CameraProfileEngine::lcpMatchesLens(options.lcpProfileOverride,
+                sourceMetadata.cameraMake, sourceMetadata.cameraModel,
+                sourceMetadata.lensMake, sourceMetadata.lensModel)) {
+            profiles.lcpPath = options.lcpProfileOverride;
+        } else {
+            profiles.lcpPath.clear();
+            if (metadata)
+                metadata->developmentWarning += QStringLiteral(" Profil LCP enregistré introuvable ou incompatible ; corrections optiques non appliquées. ");
+        }
+    }
+    const CameraProfileEngine::LcpRenderOptions opticalOptions{
+        options.lensCorrectionEnabled, options.chromaticAberrationEnabled};
+    CameraProfileEngine::LcpApplied opticalApplied;
     if (!options.dcpProfileOverride.isEmpty()) {
         if (CameraProfileEngine::dcpMatchesCamera(options.dcpProfileOverride,
                 sourceMetadata.cameraMake, sourceMetadata.cameraModel)) {
@@ -319,12 +474,18 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             // A session selection may belong to the previous camera. Never
             // apply it to a different camera, but keep automatic import usable.
             qWarning() << "Profil DCP incompatible : sélection automatique conservée.";
+            if (metadata)
+                metadata->developmentWarning = QStringLiteral("Profil demandé introuvable ou incompatible ; profil automatique utilisé.");
         }
     }
     if (metadata && options.listDcpProfiles)
         metadata->availableDcpProfiles = CameraProfileEngine::availableDcpProfiles(
             sourceMetadata.cameraMake, sourceMetadata.cameraModel, options.profileDirectories);
     timer.mark("find_profiles");
+    if (options.cancellationRequested && options.cancellationRequested()) {
+        if (error) *error = QStringLiteral("Chargement annulé.");
+        return {};
+    }
     CameraProfileEngine::CaptureSettings capture;
     capture.focalLengthMm = raw.imgdata.other.focal_len;
     capture.aperture = raw.imgdata.other.aperture;
@@ -335,6 +496,10 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         metadata->lcpProfile = profiles.lcpPath.isEmpty()
                                    ? QString()
                                    : QFileInfo(profiles.lcpPath).completeBaseName();
+        metadata->lcpPath = profiles.lcpPath;
+        QFile lcpFile(profiles.lcpPath);
+        if (lcpFile.open(QIODevice::ReadOnly))
+            metadata->lcpSha256 = QString::fromLatin1(QCryptographicHash::hash(lcpFile.readAll(), QCryptographicHash::Sha256).toHex());
     }
 
     raw.imgdata.params.use_camera_wb = options.automaticWhiteBalance ? 0 : 1;
@@ -348,15 +513,19 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
 
     std::optional<double> sourceWhiteBalanceKelvin;
     CameraProfileEngine::DcpRenderOptions dcpOptions;
+    cv::Mat decoded;   // CV_32FC3, white 1, oriented: camera RGB with a DCP, linear sRGB without
+    std::array<double, 4> appliedMultipliers{};   // white balance applied, per LibRaw colour
     if (metadata) {
         metadata->rawNormalizationApplied = false;
         metadata->normalizationWhiteLevel = 0;
         metadata->normalizationBaselineExposureEv = 0.0;
+        metadata->profileExposureCompensationEv = 0.0;
+        metadata->profileRenderingProvenance.clear();
         metadata->normalizationProvenance.clear();
     }
     if ((result = raw.unpack()) == LIBRAW_SUCCESS) {
-        const bool estimatedOpticalBlackLevel =
-            estimateMissingCanonCr3BlackLevel(raw, fileName);
+        timer.mark("unpack");
+        const bool estimatedOpticalBlackLevel = readBlackLevel(raw, fileName);
         sourceWhiteBalanceKelvin = estimateWhiteBalanceKelvin(raw);
         if (metadata)
             metadata->opticalBlackLevelEstimated = estimatedOpticalBlackLevel;
@@ -368,132 +537,213 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         context.profilePath = profiles.dcpPath;
         context.cameraMake = QString::fromLocal8Bit(raw.imgdata.idata.make).trimmed();
         context.cameraModel = QString::fromLocal8Bit(raw.imgdata.idata.model).trimmed();
-        context.librawVersion = QString::fromLatin1(LibRaw::version());
+        context.decoderId = QStringLiteral("libraw");
+        context.decoderVersion = QString::fromLatin1(LibRaw::version());
         context.iso = int(std::lround(raw.imgdata.other.iso_speed));
         context.cameraWhiteBalance = !options.automaticWhiteBalance;
         context.nativeBaselineUnknown =
             raw.imgdata.color.dng_levels.baseline_exposure == -999;
         for (int channel = 0; channel < 4; ++channel)
             context.black[channel] = raw.imgdata.color.cblack[channel];
-        // Pattern/global black is deliberately not supported by this contract.
-        if (raw.imgdata.color.black || raw.imgdata.color.cblack[4])
+        context.globalBlack = raw.imgdata.color.black;
+        context.nativeWhiteLevel = raw.imgdata.color.maximum;
+        if (context.cameraMake.compare(QStringLiteral("Canon"), Qt::CaseInsensitive) == 0 &&
+            raw.imgdata.makernotes.canon.SpecularWhiteLevel > 0)
+            context.specularWhiteLevel = unsigned(raw.imgdata.makernotes.canon.SpecularWhiteLevel);
+        // Common and per-channel black are audited independently; spatial patterns
+        // remain unsupported. Never replace the measured black by a DNG average.
+        if (raw.imgdata.color.cblack[4])
             context.nativeBaselineUnknown = false;
         QString normalizationReason;
         const auto calibration = RawNormalization::resolve(manifest, context, &normalizationReason);
         if (metadata)
             metadata->normalizationReason = normalizationReason.isEmpty()
-                ? QStringLiteral("Aucune calibration auditée ne correspond au RAW et au profil choisis.")
+                ? QStringLiteral("Aucune règle compatible avec ce boîtier, profil et mode capteur.")
                 : normalizationReason;
         if (calibration) {
             raw.imgdata.color.maximum = raw.imgdata.rawdata.color.maximum = calibration->whiteLevel;
             raw.imgdata.params.adjust_maximum_thr = 0.0f;
             dcpOptions.cameraBaselineExposureEv = calibration->baselineExposureEv;
+            dcpOptions.profileExposureCompensationEv = calibration->profileExposureCompensationEv;
             dcpOptions.preserveToneCurveHue = true;
             if (metadata) {
                 metadata->rawNormalizationApplied = true;
                 metadata->normalizationWhiteLevel = calibration->whiteLevel;
                 metadata->normalizationBaselineExposureEv = calibration->baselineExposureEv;
+                metadata->profileExposureCompensationEv = calibration->profileExposureCompensationEv;
+                metadata->profileRenderingProvenance = calibration->profileRenderingProvenance;
                 metadata->normalizationProvenance = calibration->provenance;
             }
             qInfo().noquote() << "IPR RAW normalization |" << QFileInfo(fileName).fileName()
                              << "| white=" << calibration->whiteLevel
                              << "| baseline_ev=" << calibration->baselineExposureEv
+                             << "| profile_compensation_ev=" << calibration->profileExposureCompensationEv
                              << "| source=" << calibration->provenance;
         } else if (!normalizationReason.isEmpty()) {
             qWarning().noquote() << normalizationReason;
         }
-        result = raw.dcraw_process();
+        timer.mark("black_wb_calibration");
+        if (developedByIpr(raw, options)) {
+            const RawInput::Input input = LibRawInput::read(raw);
+            if (RawInput::valid(input)) {
+                RawDevelopment::Options development;
+                development.adjustWhiteThreshold = calibration ? 0.0 : double(raw.imgdata.params.adjust_maximum_thr);
+                development.median = Demosaic::OpeningMedian;
+                development.cancelled = options.cancellationRequested;
+                if (options.signedDevelopment) development.policy = RawDevelopment::Policy::Signed;
+                RawDevelopment::Result developed;
+                try {
+                    developed = RawDevelopment::develop(input, development);
+                    if (!developed.cameraRgb.empty()) {
+                        decoded = RawDevelopment::orient(std::move(developed.cameraRgb), input.orientation);
+                        if (profiles.dcpPath.isEmpty())
+                            cameraToSrgb(decoded, input.cameraToSrgb, !options.signedDevelopment);
+                    }
+                } catch (const std::exception &exception) {
+                    decoded.release();
+                    developed.error = QString::fromLocal8Bit(exception.what());
+                }
+                if (decoded.empty()) {
+                    if (error)
+                        *error = options.cancellationRequested && options.cancellationRequested()
+                                     ? QString::fromLatin1(libraw_strerror(LIBRAW_CANCELLED_BY_CALLBACK))
+                                     : developed.error;
+                    return {};
+                }
+                for (int c = 0; c < 4; ++c) appliedMultipliers[size_t(c)] = developed.gains[size_t(c)];
+                timer.mark("ipr_development");
+            }
+        }
+        if (decoded.empty()) {
+            raw.useIprDemosaic(Demosaic::OpeningMedian, options.cancellationRequested);
+            result = raw.dcraw_process();
+        }
     }
     timer.mark("unpack_and_process");
-    if (result != LIBRAW_SUCCESS) {
-        if (error)
-            *error = QString::fromLatin1(libraw_strerror(result));
-        return {};
-    }
-
-    libraw_processed_image_t *processed = raw.dcraw_make_mem_image(&result);
-    timer.mark("make_memory_image");
-    if (!processed || result != LIBRAW_SUCCESS ||
-        processed->type != LIBRAW_IMAGE_BITMAP || processed->bits != 16 ||
-        processed->colors != 3) {
-        if (error) {
-            *error = result == LIBRAW_SUCCESS
-                         ? QStringLiteral("LibRaw n'a pas fourni une image RGB 16 bits.")
-                         : QString::fromLatin1(libraw_strerror(result));
+    if (decoded.empty()) {
+        std::unique_ptr<libraw_processed_image_t, void (*)(libraw_processed_image_t *)> processed(
+            nullptr, &LibRaw::dcraw_clear_mem);
+        if (result == LIBRAW_SUCCESS && raw.demosaicFailed())
+            result = LIBRAW_CANCELLED_BY_CALLBACK;
+        if (result != LIBRAW_SUCCESS) {
+            if (error)
+                *error = QString::fromLatin1(libraw_strerror(result));
+            return {};
         }
-        if (processed)
-            LibRaw::dcraw_clear_mem(processed);
-        return {};
+        processed.reset(raw.dcraw_make_mem_image(&result));
+        timer.mark("make_memory_image");
+        if (!processed || result != LIBRAW_SUCCESS ||
+            processed->type != LIBRAW_IMAGE_BITMAP || processed->bits != 16 ||
+            processed->colors != 3) {
+            if (error) {
+                *error = result == LIBRAW_SUCCESS
+                             ? QStringLiteral("LibRaw n'a pas fourni une image RGB 16 bits.")
+                             : QString::fromLatin1(libraw_strerror(result));
+            }
+            return {};
+        }
+        cv::Mat(int(processed->height), int(processed->width), CV_16UC3, processed->data)
+            .convertTo(decoded, CV_32FC3, 1.0 / 65535.0);
+        // scale_colors updates pre_mul to the multipliers actually used, auto WB included.
+        for (int c = 0; c < 4; ++c) appliedMultipliers[size_t(c)] = raw.imgdata.color.pre_mul[c];
     }
 
     ColorPipeline::WorkingImage image;
     if (profiles.dcpPath.isEmpty()) {
-        image = ColorPipeline::fromLinearRgb16(
-            reinterpret_cast<const quint16 *>(processed->data), processed->width,
-            processed->height, error);
-        if (!image.isNull() && !profiles.lcpPath.isEmpty()) {
-            std::vector<cv::Mat> channels;
-            cv::split(image.linearRgba, channels);
-            cv::Mat rgb;
-            const std::vector<cv::Mat> colorChannels{
-                channels[0], channels[1], channels[2]};
-            cv::merge(colorChannels, rgb);
-            if (!CameraProfileEngine::applyLcp(profiles.lcpPath, rgb, capture,
-                                               error)) {
-                image = {};
-            } else {
+        if (profiles.lcpPath.isEmpty()) {
+            image = ColorPipeline::fromLinearSrgb(decoded, error);
+        } else {
+            // Lateral CA refers to the decoder's red/blue planes. Apply it
+            // before changing primaries, then enter the master exactly once.
+            cv::Mat rgb = std::move(decoded);
+            if (CameraProfileEngine::applyLcp(profiles.lcpPath, rgb, capture,
+                                               error, opticalOptions, &opticalApplied)) {
+                WorkingColor::transform(rgb, WorkingColor::fromSrgb());
                 std::vector<cv::Mat> correctedChannels;
                 cv::split(rgb, correctedChannels);
-                correctedChannels.push_back(channels[3]);
+                correctedChannels.push_back(cv::Mat(rgb.size(), CV_32FC1, cv::Scalar(1.f)));
                 cv::merge(correctedChannels, image.linearRgba);
             }
         }
     } else {
-        cv::Mat rgb16(int(processed->height), int(processed->width), CV_16UC3,
-                      processed->data);
-        cv::Mat cameraRgb;
-        rgb16.convertTo(cameraRgb, CV_32FC3, 1.0 / 65535.0);
+        cv::Mat cameraRgb = std::move(decoded);
+        cv::Mat preLens;
+        if (options.retainPreLensSignal && !profiles.lcpPath.isEmpty()) preLens = cameraRgb.clone();
         if (!profiles.lcpPath.isEmpty() &&
             !CameraProfileEngine::applyLcp(profiles.lcpPath, cameraRgb, capture,
-                                            error))
+                                            error, opticalOptions, &opticalApplied))
             cameraRgb.release();
-        if (!cameraRgb.empty() &&
-            !CameraProfileEngine::applyDcp(
-                profiles.dcpPath, cameraRgb,
-                sourceWhiteBalanceKelvin.value_or(5500.0),
-                                            error, dcpOptions))
-            cameraRgb.release();
-        if (!cameraRgb.empty()) {
-            std::vector<cv::Mat> channels;
-            cv::split(cameraRgb, channels);
-            channels.push_back(cv::Mat(cameraRgb.rows, cameraRgb.cols,
-                                       CV_32FC1, cv::Scalar(1.0f)));
-            cv::merge(channels, image.linearRgba);
-            image.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
+        if (metadata) {
+            metadata->lensGeometryApplied = opticalApplied.geometry;
+            metadata->lensVignettingApplied = opticalApplied.vignetting;
+            metadata->chromaticAberrationApplied = opticalApplied.chromaticAberration;
         }
+        if (!cameraRgb.empty()) {
+            CameraSignal::Source signal;
+            signal.rgb = std::move(cameraRgb);
+            signal.cameraMake = sourceMetadata.cameraMake;
+            signal.cameraModel = sourceMetadata.cameraModel;
+            signal.whiteBalanceKelvin = sourceWhiteBalanceKelvin;
+            signal.whiteBalanceApplied = true;
+            // Ratios of the applied multipliers remove their common scaling factor.
+            for (int c = 0; c < 3; ++c)
+                if (appliedMultipliers[size_t(c)] > 0 && std::isfinite(appliedMultipliers[size_t(c)]))
+                    signal.cameraNeutral[c] = appliedMultipliers[1] / appliedMultipliers[size_t(c)];
+            image = CameraSignal::render(std::move(signal), profiles.dcpPath, dcpOptions, error);
+            if (!image.isNull() && !preLens.empty() &&
+                (opticalApplied.geometry || opticalApplied.vignetting || opticalApplied.chromaticAberration)) {
+                auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*image.dcpContext);
+                context->preLensCameraRgb = std::move(preLens);
+                context->lcpPath = profiles.lcpPath;
+                context->capture = capture;
+                context->lensOptions = opticalOptions;
+                image.dcpContext = std::move(context);
+            }
+        }
+        // Calibration changes the LibRaw white level upstream: never reuse this
+        // buffer for a profile-independent fast path when a manifest is active.
+        constexpr size_t retainedBufferLimit = 384u * 1024u * 1024u;
+        if (!image.isNull() && image.dcpContext->cameraRgb.total() * image.dcpContext->cameraRgb.elemSize() <= retainedBufferLimit && options.retainedDcpSource &&
+            options.normalizationManifest.isEmpty() && !options.useNormalizationEnvironment) {
+            options.retainedDcpSource->cameraRgb = image.dcpContext->cameraRgb;
+            options.retainedDcpSource->workingContext = image.dcpContext;
+            options.retainedDcpSource->whiteBalanceKelvin = sourceWhiteBalanceKelvin;
+            options.retainedDcpSource->defaultProfile = defaultProfile;
+            options.retainedDcpSource->automaticWhiteBalance = options.automaticWhiteBalance;
+            options.retainedDcpSource->lensCorrectionEnabled = options.lensCorrectionEnabled;
+            options.retainedDcpSource->chromaticAberrationEnabled = options.chromaticAberrationEnabled;
+            options.retainedDcpSource->preLensSignal = options.retainPreLensSignal;
+            options.retainedDcpSource->signedDevelopment = options.signedDevelopment;
+            if (metadata)
+                options.retainedDcpSource->metadata = *metadata;
+        }
+    }
+    if (metadata) {
+        metadata->lensGeometryApplied = opticalApplied.geometry;
+        metadata->lensVignettingApplied = opticalApplied.vignetting;
+        metadata->chromaticAberrationApplied = opticalApplied.chromaticAberration;
     }
     if (!image.isNull()) {
         image.sourceProfile = profiles.dcpPath.isEmpty()
-                                  ? QStringLiteral("Matrice couleur LibRaw → sRGB linéaire")
-                                  : QStringLiteral("DCP %1 → sRGB linéaire")
+                                  ? QStringLiteral("Matrice couleur LibRaw → Rec.2020 linéaire")
+                                  : QStringLiteral("DCP %1 → Rec.2020 linéaire")
                                         .arg(QFileInfo(profiles.dcpPath).completeBaseName());
         image.referenceWhiteBalanceKelvin = sourceWhiteBalanceKelvin;
     }
     timer.mark("color_and_lens_profiles");
-    LibRaw::dcraw_clear_mem(processed);
     return image;
 }
 
 ColorPipeline::WorkingImage decodeCr2(const QString &fileName,
                                       const Options &options,
-                                      SourceMetadata *metadata, QString *error)
+                                      ImageMetadata *metadata, QString *error)
 {
     return decodeWithLibRaw(fileName, options, metadata, error);
 }
 
 ColorPipeline::WorkingImage decodeCr3(const QString &fileName,
                                       const Options &options,
-                                      SourceMetadata *metadata, QString *error)
+                                      ImageMetadata *metadata, QString *error)
 {
     return decodeWithLibRaw(fileName, options, metadata, error);
 }
@@ -502,30 +752,47 @@ QImage decodeEmbeddedThumbnailWithLibRaw(const QString &fileName,
                                          const QSize &maximumSize,
                                          QString *error)
 {
-    LibRaw raw;
-    int result = raw.open_file(fileName.toLocal8Bit().constData());
+    // Heap: a LibRaw instance is too large for 1 MiB worker-thread stacks.
+    const auto owned = std::make_unique<LibRaw>();
+    LibRaw &raw = *owned;
+    int result = openRaw(raw, fileName);
     if (result != LIBRAW_SUCCESS) {
         if (error)
             *error = QString::fromLatin1(libraw_strerror(result));
         return {};
     }
 
-    result = raw.unpack_thumb();
+    // Decode the smallest embedded preview that is large enough, not the
+    // full-size JPEG: 12.6 ms instead of 204 ms on the 19-CR3 corpus
+    // (apercus-integres-v001). Never below 1024 px: Canon's 160x120 THMB
+    // can be letterboxed. Half the requested size suffices for an interim view.
+    const int requested = maximumSize.isValid() ? std::max(maximumSize.width(), maximumSize.height()) : 0;
+    const int required = requested ? std::max(1024, requested / 2) : std::numeric_limits<int>::max();
+    const auto &thumbs = raw.imgdata.thumbs_list;
+    int chosen = -1, chosenArea = 0;
+    for (int i = 0; i < thumbs.thumbcount && i < LIBRAW_THUMBNAIL_MAXCOUNT; ++i) {
+        const auto &item = thumbs.thumblist[i];
+        const int area = int(item.twidth) * int(item.theight);
+        if (std::max<int>(item.twidth, item.theight) >= required && (chosen < 0 || area < chosenArea)) {
+            chosen = i;
+            chosenArea = area;
+        }
+    }
+    result = chosen >= 0 ? raw.unpack_thumb_ex(chosen) : raw.unpack_thumb();
     if (result != LIBRAW_SUCCESS) {
         if (error)
             *error = QString::fromLatin1(libraw_strerror(result));
         return {};
     }
 
-    libraw_processed_image_t *processed = raw.dcraw_make_mem_thumb(&result);
+    std::unique_ptr<libraw_processed_image_t, void (*)(libraw_processed_image_t *)> processed(
+        raw.dcraw_make_mem_thumb(&result), &LibRaw::dcraw_clear_mem);
     if (!processed || result != LIBRAW_SUCCESS) {
         if (error) {
             *error = result == LIBRAW_SUCCESS
                          ? QStringLiteral("Aucune vignette embarquée n'est disponible.")
                          : QString::fromLatin1(libraw_strerror(result));
         }
-        if (processed)
-            LibRaw::dcraw_clear_mem(processed);
         return {};
     }
 
@@ -554,7 +821,7 @@ QImage decodeEmbeddedThumbnailWithLibRaw(const QString &fileName,
                                format).copy();
         }
     }
-    LibRaw::dcraw_clear_mem(processed);
+    processed.reset();
 
     if (thumbnail.isNull()) {
         if (error)
@@ -572,9 +839,19 @@ void registerBuiltInHandlers()
 {
 #ifdef IPR_WITH_LIBRAW
     QString error;
-    if (!addFormatHandler({QStringLiteral("cr2")}, decodeCr2, &error) ||
-        !addFormatHandler({QStringLiteral("cr3")}, decodeCr3, &error) ||
-        !addFormatHandler({QStringLiteral("dng")}, decodeWithLibRaw, &error))
+    const FormatOptions format{decodeEmbeddedThumbnailWithLibRaw,
+        QStringLiteral("libraw"), QString::fromLatin1(LibRaw::version()), [](const QString &path) {
+            const auto raw = std::make_unique<LibRaw>();   // heap: too large for worker stacks
+            if (openRaw(*raw, path) != LIBRAW_SUCCESS) return QSize{};
+            return QSize(raw->imgdata.sizes.raw_width, raw->imgdata.sizes.raw_height);
+        }, [](const QString &path) -> std::optional<double> {
+            const auto raw = std::make_unique<LibRaw>();
+            if (openRaw(*raw, path) != LIBRAW_SUCCESS) return std::nullopt;
+            return estimateWhiteBalanceKelvin(*raw);
+        }};
+    if (!addFormatHandler({QStringLiteral("cr2")}, decodeCr2, &error, format) ||
+        !addFormatHandler({QStringLiteral("cr3")}, decodeCr3, &error, format) ||
+        !addFormatHandler({QStringLiteral("dng")}, decodeWithLibRaw, &error, format))
         qFatal("Failed to register built-in LibRaw handlers: %s",
                qPrintable(error));
 #endif
@@ -591,11 +868,55 @@ void ensureBuiltInHandlers()
 
 }
 
+ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString &profile,
+                                        ImageMetadata *metadata, QString *error)
+{
+    // Calibrated camera buffers are bound to the selected profile/white level.
+    // Profile changes must resolve calibration/render parameters again by decoding.
+    if (source.metadata.rawNormalizationApplied) {
+        if (error) *error = QStringLiteral("Un changement de profil calibré nécessite un nouveau décodage.");
+        return {};
+    }
+    const QString path = profile.isEmpty() ? source.defaultProfile : profile;
+    if (source.cameraRgb.empty() || !CameraProfileEngine::dcpMatchesCamera(
+            path, source.metadata.cameraMake, source.metadata.cameraModel)) {
+        if (error) *error = QStringLiteral("Profil DCP absent ou incompatible avec le boîtier.");
+        return {};
+    }
+    CameraSignal::Source signal;
+    signal.rgb = source.cameraRgb; // Already immutable, shared with the active source.
+    signal.cameraMake = source.metadata.cameraMake;
+    signal.cameraModel = source.metadata.cameraModel;
+    signal.whiteBalanceKelvin = source.whiteBalanceKelvin;
+    signal.whiteBalanceApplied = true;
+    if (source.workingContext) signal.cameraNeutral = source.workingContext->cameraNeutral;
+    auto image = CameraSignal::render(std::move(signal), path,
+        source.workingContext ? source.workingContext->options : CameraProfileEngine::DcpRenderOptions{}, error);
+    if (image.isNull()) return {};
+    // A source without applied-WB context cannot promise pre-DCP WB editing.
+    if (!source.workingContext) image.dcpContext.reset();
+    else if (!source.workingContext->preLensCameraRgb.empty()) {
+        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*image.dcpContext);
+        context->preLensCameraRgb = source.workingContext->preLensCameraRgb;
+        context->lcpPath = source.workingContext->lcpPath;
+        context->capture = source.workingContext->capture;
+        context->lensOptions = source.workingContext->lensOptions;
+        image.dcpContext = std::move(context);
+    }
+    if (metadata) {
+        *metadata = source.metadata;
+        metadata->dcpProfile = QFileInfo(path).completeBaseName();
+        metadata->developmentWarning.clear();
+    }
+    return image;
+}
+
 bool registerFormatHandler(const QStringList &extensions,
-                           DecodeFunction decodeFunction, QString *error)
+                           DecodeFunction decodeFunction, QString *error,
+                           const FormatOptions &format)
 {
     ensureBuiltInHandlers();
-    return addFormatHandler(extensions, std::move(decodeFunction), error);
+    return addFormatHandler(extensions, std::move(decodeFunction), error, format);
 }
 
 QStringList supportedExtensions()
@@ -611,22 +932,65 @@ QStringList supportedExtensions()
     return extensions;
 }
 
+QString backendVersion()
+{
+#ifdef IPR_WITH_LIBRAW
+    return QString::fromLatin1(LibRaw::version());
+#else
+    return QStringLiteral("no-libraw");
+#endif
+}
+
+QSize sourceDimensions(const QString &fileName)
+{
+    ensureBuiltInHandlers();
+    std::function<QSize(const QString &)> dimensions;
+    {
+        auto &store = registry();
+        QMutexLocker lock(&store.mutex);
+        for (const auto &handler : store.handlers) {
+            if (handler.extensions.contains(QFileInfo(fileName).suffix().toLower())) {
+                dimensions = handler.options.dimensions; break;
+            }
+        }
+    }
+    return dimensions ? dimensions(fileName) : QSize{};
+}
+
+std::optional<double> asShotWhiteBalanceKelvin(const QString &fileName)
+{
+    ensureBuiltInHandlers();
+    std::function<std::optional<double>(const QString &)> read;
+    {
+        auto &store = registry();
+        QMutexLocker lock(&store.mutex);
+        for (const auto &handler : store.handlers) {
+            if (handler.extensions.contains(QFileInfo(fileName).suffix().toLower())) {
+                read = handler.options.asShotWhiteBalanceKelvin; break;
+            }
+        }
+    }
+    return read ? read(fileName) : std::nullopt;
+}
+
 ColorPipeline::WorkingImage decode(const QString &fileName,
                                    const Options &options,
-                                   SourceMetadata *metadata, QString *error)
+                                   ImageMetadata *metadata, QString *error)
 {
     ensureBuiltInHandlers();
     const QString extension = QFileInfo(fileName).suffix().toLower();
     if (metadata)
-        *metadata = SourceMetadata{extension};
+        *metadata = ImageMetadata{extension};
 
     DecodeFunction decoder;
+    FormatOptions format;
     {
         Registry &store = registry();
         QMutexLocker locker(&store.mutex);
         for (const FormatHandler &handler : store.handlers) {
             if (handler.extensions.contains(extension)) {
                 decoder = handler.decode;
+                format = handler.options;
                 break;
             }
         }
@@ -638,28 +1002,50 @@ ColorPipeline::WorkingImage decode(const QString &fileName,
                          .arg(extension);
         return {};
     }
-    return decoder(fileName, options, metadata, error);
+    auto result = decoder(fileName, options, metadata, error);
+    if (metadata) {
+        metadata->decoderId = format.decoderId;
+        metadata->decoderVersion = format.decoderVersion;
+        metadata->cameraRaw = true;
+    }
+    if (!result.isNull() && (result.colorSpace != ColorPipeline::workingColorSpace() ||
+        result.linearRgba.type() != CV_32FC4 || !cv::checkRange(result.linearRgba, true))) {
+        if (error) *error = QStringLiteral("Le décodeur n'a pas fourni un master Rec.2020 linéaire RGBA fini.");
+        return {};
+    }
+    if (!result.isNull() && metadata && options.retainedDcpSource &&
+        !options.retainedDcpSource->cameraRgb.empty())
+        options.retainedDcpSource->metadata = *metadata;
+    return result;
 }
 
 QImage decodeEmbeddedThumbnail(const QString &fileName,
                                const QSize &maximumSize, QString *error)
 {
-#ifdef IPR_WITH_LIBRAW
+    ensureBuiltInHandlers();
+    if (error) error->clear();
     const QString extension = QFileInfo(fileName).suffix().toLower();
-    if (!supportedExtensions().contains(extension)) {
-        if (error)
-            *error = QStringLiteral("Aucun décodeur RAW n'est enregistré pour .%1.")
-                         .arg(extension);
+    ThumbnailFunction thumbnail;
+    {
+        Registry &store = registry();
+        QMutexLocker locker(&store.mutex);
+        for (const FormatHandler &handler : store.handlers) {
+            if (handler.extensions.contains(extension)) {
+                thumbnail = handler.options.thumbnail;
+                break;
+            }
+        }
+    }
+    if (!thumbnail) {
+        if (error) *error = QStringLiteral("Aucun lecteur de vignette enregistré pour .%1.").arg(extension);
         return {};
     }
-    return decodeEmbeddedThumbnailWithLibRaw(fileName, maximumSize, error);
-#else
-    Q_UNUSED(fileName)
-    Q_UNUSED(maximumSize)
-    if (error)
-        *error = QStringLiteral("LibRaw n'est pas disponible pour lire les vignettes RAW.");
-    return {};
-#endif
+    // Execute outside the registry lock: a callback may query supported formats.
+    auto result = thumbnail(fileName, maximumSize, error);
+    if (!result.isNull() && maximumSize.isValid() &&
+        (result.width() > maximumSize.width() || result.height() > maximumSize.height()))
+        result = result.scaled(maximumSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    return result;
 }
 
 }

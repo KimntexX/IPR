@@ -1,12 +1,11 @@
 #include "RawNormalization.h"
+#include "CameraCharacterization.h"
 
 #include <QCryptographicHash>
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonArray>
-#include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonParseError>
 #include <QRegularExpression>
 #include <cmath>
 
@@ -54,61 +53,58 @@ std::optional<Calibration> resolve(const QString &manifestPath,
     };
     if (manifestPath.isEmpty())
         return std::nullopt;
-    if (QFileInfo(c.fileName).suffix().compare(QStringLiteral("cr3"), Qt::CaseInsensitive) ||
-        c.cameraMake.compare(QStringLiteral("Canon"), Qt::CaseInsensitive) ||
-        !c.cameraWhiteBalance || !c.nativeBaselineUnknown || c.profilePath.isEmpty())
+    if (!c.cameraWhiteBalance || !c.nativeBaselineUnknown || c.profilePath.isEmpty())
         return reject("Unsupported RAW/WB/baseline/profile context; normalization skipped.");
-    QFile file(manifestPath);
-    if (!file.open(QIODevice::ReadOnly) || file.size() <= 0 || file.size() > 1024 * 1024)
-        return reject("Normalization manifest unreadable or exceeds 1 MiB.");
-    QJsonParseError error;
-    const auto doc = QJsonDocument::fromJson(file.read(1024 * 1024 + 1), &error);
-    const auto root = doc.object();
-    if (error.error != QJsonParseError::NoError || !doc.isObject() ||
-        root.value("schema").toDouble(-1) != 1 ||
-        root.value("libraw_version").toString() != c.librawVersion ||
-        !root.value("entries").isArray() || root.value("entries").toArray().size() > 256)
-        return reject("Invalid normalization schema/version/entries.");
-    QJsonArray candidates;
-    for (const auto &value : root.value("entries").toArray()) {
-        if (!value.isObject())
-            return reject("Invalid normalization entry.");
-        const auto entry = value.toObject();
-        if (entry.value("camera_make").toString() == c.cameraMake &&
-            entry.value("camera_model").toString() == c.cameraModel &&
-            entry.value("iso").toDouble(-1) == c.iso)
-            candidates.append(entry);
-    }
-    if (candidates.isEmpty())
-        return std::nullopt;
-    const QString rawHash = hashFile(c.fileName), profileHash = hashFile(c.profilePath);
-    if (rawHash.isEmpty() || profileHash.isEmpty())
-        return reject("Cannot verify RAW/profile hash.");
+    const auto catalog = CameraCharacterization::loadCatalog(manifestPath, reason);
+    if (!catalog) return std::nullopt;
+    const auto root = *catalog;
+    const auto selected = CameraCharacterization::selectSensorMode(root,
+        {QFileInfo(c.fileName).suffix(), c.cameraMake, c.cameraModel, c.black,
+         c.globalBlack, c.nativeWhiteLevel, c.specularWhiteLevel, c.decoderId, c.decoderVersion}, reason);
+    if (!selected) return std::nullopt;
+    const QString profileHash = hashFile(c.profilePath);
+    if (profileHash.isEmpty())
+        return reject("Cannot verify profile hash.");
     std::optional<Calibration> result;
-    for (const auto &value : candidates) {
-        const auto entry = value.toObject();
-        if (!digest(entry.value("raw_sha256").toString()) ||
-            !digest(entry.value("profile_sha256").toString()))
+    {
+        const auto entry = *selected;
+        if (!digest(entry.value("profile_sha256").toString()))
             return reject("Invalid normalization hash.");
-        if (entry.value("raw_sha256").toString() != rawHash ||
-            entry.value("profile_sha256").toString() != profileHash)
-            continue;
-        if (result)
-            return reject("Ambiguous normalization entries.");
+        if (entry.value("profile_sha256").toString() != profileHash)
+            return reject("Profile outside characterized rendering conditions.");
         const double white = entry.value("white_level").toDouble(-1);
         const double ev = entry.value("baseline_exposure_ev").toDouble(100);
-        const auto black = entry.value("black_rgbg").toArray();
         if (!std::isfinite(white) || std::floor(white) != white || white <= 0 ||
             white > 65535 || !std::isfinite(ev) || std::abs(ev) > 2 ||
-            black.size() != 4 || !digest(entry.value("dng_sha256").toString()) ||
             entry.value("provenance").toString().trimmed().isEmpty())
             return reject("Invalid normalization values/provenance.");
         for (int channel = 0; channel < 4; ++channel) {
-            if (black[channel].toDouble(-1) != c.black[channel] ||
-                c.black[channel] != c.black[0] || white <= c.black[channel] + 256)
+            if (white <= double(c.globalBlack) + c.black[channel] + 256)
                 return reject("Measured black does not match normalization contract.");
         }
         result = Calibration{unsigned(white), ev, entry.value("provenance").toString()};
+    }
+    if (!result || !root.contains("profile_rendering"))
+        return result;
+    const auto rendering = root.value("profile_rendering");
+    if (!rendering.isArray() || rendering.toArray().size() > 256)
+        return reject("Invalid profile rendering parameters.");
+    bool found = false;
+    for (const auto &value : rendering.toArray()) {
+        if (!value.isObject()) return reject("Invalid profile rendering entry.");
+        const auto entry = value.toObject();
+        if (entry.value("camera_make").toString() != c.cameraMake ||
+            entry.value("camera_model").toString() != c.cameraModel ||
+            entry.value("profile_sha256").toString() != profileHash)
+            continue;
+        const double compensation = entry.value("exposure_compensation_ev").toDouble(100);
+        if (found || !std::isfinite(compensation) || std::abs(compensation) > 2 ||
+            entry.value("baseline_exposure_ev").toDouble(100) != result->baselineExposureEv ||
+            entry.value("provenance").toString().trimmed().isEmpty())
+            return reject("Invalid or ambiguous profile rendering compensation.");
+        found = true;
+        result->profileExposureCompensationEv = compensation;
+        result->profileRenderingProvenance = entry.value("provenance").toString();
     }
     return result;
 }

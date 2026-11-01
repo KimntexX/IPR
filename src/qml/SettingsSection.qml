@@ -14,6 +14,15 @@ ColumnLayout {
     property bool expanded: false
     property color textColor: "#edf2f8"
     readonly property Item body: sectionBody
+    // Numeric controls only. Authoritative whole-recipe dirty state needs the engine.
+    readonly property bool modified: hasModifiedControls(sectionBody)
+    function hasModifiedControls(item) {
+        for (let child of item.children) {
+            if (child.modified === true) return true
+            if (hasModifiedControls(child)) return true
+        }
+        return false
+    }
 
     Layout.fillWidth: true
     Layout.minimumWidth: 0
@@ -42,7 +51,7 @@ ColumnLayout {
     // Explicit data keeps the component's header outside its default content
     // property. Caller controls belong only to the collapsible body.
     data: [
-        Button {
+        PreferenceButton {
             id: header
             objectName: "sectionToggle"
             Layout.fillWidth: true
@@ -62,7 +71,7 @@ ColumnLayout {
 
                 Text {
                     text: root.expanded ? "▾" : "▸"
-                    color: "#9dabbc"
+                    color: root.textColor
                     font.pixelSize: 12
                     Layout.preferredWidth: 10
                 }
@@ -76,14 +85,23 @@ ColumnLayout {
                     Layout.fillWidth: true
                     Layout.minimumWidth: 0
                 }
+                Label {
+                    objectName: "sectionModifiedIndicator"
+                    visible: root.modified
+                    text: "•"
+                    color: root.textColor
+                    Accessible.name: qsTr("Valeurs numériques modifiées")
+                    HoverHandler { id: modifiedHover }
+                    ToolTip.visible: modifiedHover.hovered
+                    ToolTip.text: qsTr("Au moins un réglage numérique diffère de sa valeur de réinitialisation")
+                }
             }
 
             background: Rectangle {
                 radius: 4
-                color: header.down ? "#343d49"
-                       : (header.hovered ? "#2d3540" : "#252c35")
+                color: header.down || header.hovered ? header.palette.mid : header.palette.button
                 border.width: 1
-                border.color: header.activeFocus ? "#7388a3" : "#353e4a"
+                border.color: header.activeFocus ? header.palette.text : header.palette.mid
             }
         },
         ColumnLayout {

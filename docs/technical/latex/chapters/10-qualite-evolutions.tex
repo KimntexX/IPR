@@ -5,7 +5,50 @@
 
 Les ajustements fondamentaux ont été comparés à des exports de référence sur un corpus TIFF en sRGB : exposition, noirs, ombres, blancs, hautes lumières, contraste et température. Les mesures utilisent notamment les différences par pixel (MAE) et des inspections de superposition lorsque les dimensions et l'encodage le permettent. Cette méthode distingue un décalage spatial d'une différence de rendu.
 
-Les fonctions plus récentes -- mélangeur de couleur, color grading, sidecars et application par lot -- ont des tests de compilation et d'export, mais demandent encore une validation manuelle complète dans l'interface. Les contrôles à vérifier sont la synchronisation champ/curseur, la réinitialisation au changement d'image, la restauration de sidecar et la portée exacte de l'application en lot.
+Le mélangeur huit bandes dispose de campagnes aux extrêmes et aux valeurs
+intermédiaires. Le bruit v2 a une progressivité mesurée sur douze scènes ;
+cela ne garantit pas la conservation de tous les détails. Color grading,
+courbes, netteté, grain/flou et leurs interactions nécessitent une recette
+photographique. Sidecars v4 et application des réglages à une sélection sont
+implémentés ; leur recette manuelle complète reste ouverte. L'export par lot
+n'est pas implémenté. Le DNG de rendu n'est pas certifié compatible Lightroom.
+
+Au 8 octobre, Camera Neutral est accepté visuellement par l'utilisateur.
+La normalisation demeure expérimentale, limitée à cinq fichiers exacts et
+désactivée par défaut. La suite complète WSL passe 17 tests sur 18 : la sonde
+JPEG 9933 reste en échec (MAE RGB 25,1519 pour un seuil 25), hors mode calibré.
+Les cinq suites Windows ciblées de la dernière adaptation portable et les
+76 tests Python d'analyse plus 12 de sélection réussissent. Ces nombres sont
+une photographie datée, pas une garantie d'exécution future.
+
+\section{Livraison et installateur Windows : ajout du 21 octobre 2026}
+\begingroup
+\interlinepenalty=10000
+\clubpenalty=10000
+\widowpenalty=10000
+
+Les chiffres et restrictions du 8 octobre ci-dessus sont historiques, non une
+qualification de la distribution actuelle. Le packaging Windows standalone peut
+désormais compiler un installateur Inno Setup en complément du ZIP. Les profils
+DCP/LCP privés ne sont pas distribués. La signature de distribution reste à mettre
+en place ; la création d'un installateur n'est pas une certification de rendu.
+
+La branche \texttt{patch\_ci\_cd} effectue une vérification sans publier de
+binaire téléchargeable. Les livraisons sont réservées à \texttt{dev} et
+\texttt{main}, après validation du commit exact. Sur un runner Windows GitHub
+hébergé jetable, la recette demande installation silencieuse temporaire,
+réinstallation du même paquet, démarrage QML et désinstallation. Elle contrôle
+la conservation d'un fichier non possédé par l'installateur. Elle refuse une
+installation IPR déjà présente. Ces contrôles sont implémentés dans le pipeline ;
+leur succès doit être établi sur le prochain run, pas déduit des seuls tests Python.
+
+La recette sur une machine utilisateur reste nécessaire : compte standard,
+absence de SDK, chemins avec accents, conservation des préférences et profils,
+mise à niveau entre deux versions différentes et ouverture photographique.
+Aucune installation de test n'est déclenchée automatiquement sur le poste local.
+Les détails opérationnels sont dans
+\texttt{docs/architecture/build-windows-standalone.md}.
+\endgroup
 
 \section{Éléments à compléter avant une distribution}
 
@@ -13,11 +56,27 @@ Les fonctions plus récentes -- mélangeur de couleur, color grading, sidecars e
   \item Établir des jeux de tests reproductibles pour chaque réglage et enregistrer les métriques dans un format structuré.
   \item Mesurer la durée d'ouverture sur des RAW représentatifs, le pic mémoire et l'efficacité réelle du cache LRU et du préchargement de vignettes.
   \item Formaliser la compatibilité des profils DCP/LCP : origine, licence, version et droit de redistribution de chaque fichier.
-  \item Définir un schéma de versionnement/migration du sidecar \texttt{.ipr}, ainsi qu'une stratégie de sauvegarde et de résolution de conflit.
+  \item Compléter la recette du schéma sidecar v4 et de ses migrations ;
+  définir sauvegarde/conflits et persistance du choix DCP/normalisation.
   \item Ajouter un test de non-régression pour le rendu des profils, le rendu en lot et les métadonnées.
   \item Documenter le format d'export final (profondeur, profil ICC incorporé, métadonnées EXIF/XMP) et ses conditions d'utilisation.
 \end{itemize}
 
-\section{Gouvernance documentaire proposée}
+\section{Gouvernance documentaire appliquée}
 
 Les rapports expérimentaux sont répartis entre \texttt{docs/validation} (protocole, analyse et mesures) et \texttt{docs/reports} (journal de séance). La présente arborescence est la documentation normative compilable. Toute fonctionnalité terminée doit mettre à jour son chapitre, ses diagrammes concernés, les références bibliographiques, la matrice de validation et un scénario de test. Les décisions d'architecture transverses doivent être ajoutées à une courte ADR (\emph{Architecture Decision Record}) afin de ne pas dépendre exclusivement des rapports de session.
+
+\section{Mesures exportées et graphiques reproductibles}
+
+\texttt{scripts/export\_documentation\_metrics.py} génère les CSV par famille
+et les graphiques SVG depuis les preuves immuables. Chaque valeur conserve
+son fichier source, son empreinte SHA-256 et son emplacement JSON ou textuel.
+Le répertoire \texttt{docs/validation/metrics} est une vue dérivée, pas une
+nouvelle source de vérité. Les nombres extraits littéralement d'un journal
+ne deviennent pas des métriques homogènes sans interprétation de leur contexte.
+
+Les durées CPU et les indicateurs de rendu sont séparés : la courbe de temps
+représente seulement le benchmark Windows historique avant/après parallélisation.
+Les réponses tonales par révision, la progression du débruitage et les écarts
+DCP à Lightroom ne sont pas des mesures de vitesse. Aucun temps actuel de
+rendu, de vignettes ou d'export n'est inventé ; des campagnes restent nécessaires.

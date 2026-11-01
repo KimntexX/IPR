@@ -2,6 +2,15 @@
 
 ## Objet et contrat
 
+**Directive cible, non implémentée (15 octobre 2026) :** séparer le master de
+travail, l'aperçu converti vers le profil ICC écran et la conversion d'export.
+Voir [ADR-0008](decisions/ADR-0008-separation-travail-affichage-export.md) et
+l'[architecture d'affichage](architecture/gestion-couleurs-affichage.md).
+Le master courant est **Rec.2020 linéaire D65** depuis le port du 15 octobre 2026
+([ADR-0009](decisions/ADR-0009-espace-travail-rec2020-lineaire.md)).
+Le [plan de port](architecture/integration-rec2020.md) distingue l'étude
+préparatoire, l'implémentation locale et les validations encore nécessaires.
+
 `ImageEditor::renderWorkingImage()` construit une nouvelle image de travail à partir :
 
 - d'une image source déjà développée et normalisée ;
@@ -14,7 +23,7 @@ static ColorPipeline::WorkingImage renderWorkingImage(
     const ColorPipeline::WorkingImage &source, const Settings &settings);
 ```
 
-L'entrée est une image RGBA flottante en sRGB linéaire (`CV_32FC4`), avec alpha droit. La fonction renvoie la même représentation logique après les réglages, ainsi que son espace colorimétrique et la provenance de la transformation source. Elle ne charge pas le fichier, ne modifie pas le provider QML et n'écrit rien sur disque. Ces opérations appartiennent respectivement au chargement, au rendu d'aperçu et à l'export.
+L'entrée est une image RGBA flottante en Rec.2020 linéaire D65 (`CV_32FC4`), avec alpha droit. La fonction renvoie la même représentation logique après les réglages, ainsi que son espace colorimétrique et la provenance de la transformation source. Elle ne charge pas le fichier, ne modifie pas le provider QML et n'écrit rien sur disque. Ces opérations appartiennent respectivement au chargement, au rendu d'aperçu et à l'export. Les entrées de type/espace incorrect ou non finies sont refusées, y compris sur le chemin neutre.
 
 Une source vide donne immédiatement un `WorkingImage` vide (`return {}`). Une erreur d'application température/nuance est également signalée par un avertissement puis par une image vide. Les étapes suivantes de conversion doivent vérifier cette image vide ; l'aperçu signale alors l'échec et l'export renvoie un message d'erreur de conversion.
 
@@ -27,43 +36,62 @@ neutres restent court-circuitées.
 
 ## Déroulement du rendu
 
-Les étapes ci-dessous suivent l'ordre effectif de la fonction dans `imageeditor.cpp`. Les réglages sont non destructifs : `m_original` reste la base des rendus suivants.
+`renderWorkingImage()` ne contient plus de traitement d'image : c'est un
+cadenceur qui enchaîne des modules, chacun avec son interface (`.h`) et son
+implémentation (`.cpp`) sous `src/core/`
+([ADR-0017](decisions/ADR-0017-imageeditor-cadenceur-modules.md)). Ordre
+effectif ; les réglages sont non destructifs (`m_original` reste la base) et
+chaque module ignore ses réglages neutres.
 
-### 1. Séparation alpha et création du tampon RGB
+| Étape | Traitement | Module ou fonction |
+| --- | --- | --- |
+| 1 | Tampon RGB (l'alpha est repris à la fin) | cadenceur (`cv::cvtColor`) |
+| 2 | Exposition et balance des RAW avec DCP | `CameraProfileEngine::renderFromCameraSignal` |
+| 3 | Niveaux de gris | `ColorAdjustments::toGrayscale` |
+| 4 | Exposition des sources sans signal caméra | cadenceur (gain `2^EV`) |
+| 5 | Contraste | `Contrast::apply` |
+| 6 | Température et nuance sans DCP | `ColorPipeline::applyTemperatureTint` |
+| 7 | Ombres, noirs, hautes lumières, blancs | `ToneRecovery::apply` |
+| 8–9 | Saturation et vibrance, mélangeur, color grading (une seule étape en Oklab) | `PerceptualColour::apply` (`Vibrance`, `ColorMixer`, `ColorGrading`) |
+| 10 | Bruit | `DetailProcessing::reduceNoise` |
+| 11 | Texture et clarté, puis voile | `LocalContrast::apply`, `Dehaze::apply` |
+| 12 | Courbes | `ToneCurve::apply` |
+| 13 | Flou | cadenceur (`cv::GaussianBlur`) |
+| 14 | Netteté | `DetailProcessing::sharpen` |
+| 15 | Grain | `Grain::apply` |
+| 16 | Reconstruction RGBA | cadenceur |
 
-La fonction sépare les quatre canaux de `source.linearRgba`, puis fusionne uniquement R, G et B dans `adjusted`. L'alpha d'origine reste conservé à part et n'est donc pas modifié par les réglages tonals ou couleur.
+L'aperçu calcule ensuite son histogramme avec `Histogram::compute`.
 
-`cv::split()` produit les matrices de canaux nécessaires au traitement. Le `cv::merge()` des trois canaux crée un tampon RGB sur lequel les transformations sont appliquées. La source est passée par référence constante et n'est pas modifiée intentionnellement.
+### Séparation alpha et tampon RGB
 
-### 2. Conversion en niveaux de gris (si demandée)
+La fonction copie R, G et B de `source.linearRgba` dans `adjusted`
+(`cv::cvtColor`, `COLOR_RGBA2RGB`), sauf si l'aperçu reprend une étape gardée
+en cache (voir [Cache des étapes de l'aperçu](#cache-des-étapes-de-laperçu)).
+L'alpha d'origine n'est modifié par aucun réglage. La source, passée par
+référence constante, n'est pas modifiée.
 
-Si `settings.grayscale` est vrai, OpenCV convertit le RGB en luminance grise puis réplique cette composante dans les trois canaux RGB. L'alpha original est toujours conservé.
+### Exposition
 
-### 3. Exposition
+L'image de travail est linéaire : l'exposition est un gain exprimé en EV
+(`gain = 2^brightness`). Pour un RAW avec profil DCP, elle s'applique au signal
+caméra **avant** la courbe du profil, avec la balance des blancs
+(`renderFromCameraSignal`) : les hautes lumières gardent l'épaule du profil.
+Les autres sources reçoivent le gain directement. Le setter `setBrightness()`
+borne la valeur à `[-5, +5]` EV ; les curseurs QML ont un pas de `0,01` EV.
 
-L'image de travail est linéaire ; l'exposition est donc un gain multiplicatif exprimé directement en valeurs d'exposition (EV) :
+### Contraste
 
-```text
-gain = 2 ^ brightness
-RGB  = RGB * gain
-```
+`Contrast::apply` : courbe en S à extrémités fixes dans un domaine logarithmique
+(16 EV sous le blanc), pivot `0,32`, appliquée à chaque canal RGB. Le noir et le
+blanc restent fixes ; par canal, un contraste positif sature aussi les couleurs
+claires, comme Lightroom. Forces : `0,60` en positif, `0,45 × 1,08` en négatif,
+ajustées sur les références Lightroom et validées par l'utilisateur (rapport
+Lumières).
 
-Le setter `setBrightness()` borne `brightness` à `[-5.00, +5.00]`, ce qui correspond bien à une plage réelle de ±5 EV (un gain de `2^-5 ≈ 0,031×` à `2^+5 = 32×`). Les curseurs QML (`Main.qml` et `Setting.qml`) reflètent cette plage avec un pas de `0.01` EV et un champ de saisie à deux décimales.
+### Température et nuance
 
-### 4. Contraste
-
-Le contraste emploie une courbe continue autour du gris linéaire de référence 18 %. Le facteur de contraste vaut toujours `1 + contrast / 100`, mais il devient l'exposant d'une courbe à deux segments :
-
-```text
-Y <= 0.18 : Y' = 0.18 * (Y / 0.18) ^ facteur
-Y >  0.18 : courbe symétrique entre 0.18 et 1
-```
-
-La luminance est modifiée puis son rapport `Y' / Y` est appliqué aux trois canaux, ce qui conserve la chromie. Le pivot reste fixe, les hautes valeurs HDR gardent une extrapolation linéaire, et les ombres positives ne deviennent plus négatives avant l'encodage.
-
-### 5. Température et nuance
-
-La fonction délègue cette étape à `ColorPipeline::applyTemperatureTint()`, qui attend un tampon `CV_32FC3`. Cette fonction est appelée après l'exposition et le contraste. Les réglages changent les gains RGB, pas l'alpha.
+Pour les sources sans DCP, la fonction délègue cette étape à `ColorPipeline::applyTemperatureTint()`, qui attend un tampon `CV_32FC3`, après l'exposition et le contraste ; les RAW avec DCP la reçoivent au signal caméra (étape 2). Les réglages changent les gains RGB, pas l'alpha.
 
 Le contrat actuel du pipeline attend une température en kelvins dans `[2000, 50000]` et une nuance dans `[-150, 150]`. Une erreur entraîne un journal d'avertissement et l'abandon du rendu. Les gains précis sont définis dans `ColorPipeline.cpp` ; ils ne représentent pas nécessairement un calcul physique complet de balance des blancs depuis l'illuminant de la scène.
 
@@ -72,7 +100,7 @@ Le point neutre (le pivot autour duquel les gains rouge/bleu s'annulent) n'est p
 - Pour les fichiers RAW décodés par LibRaw, cette valeur est estimée par `RawDecoder::estimateWhiteBalanceKelvin()` à partir des multiplicateurs **`cam_mul`** (balance « telle que prise de vue », propre à chaque photo) et de **l'inverse** de la matrice `cam_xyz` (approximation de McCamy), et propagée dans `ColorPipeline::WorkingImage::referenceWhiteBalanceKelvin`.
   - `cam_xyz` exprime la réponse des canaux caméra à une couleur XYZ (`RVB_cam = cam_xyz × XYZ`), et non l'inverse : il faut donc inverser cette matrice 3×3 pour convertir un RVB neutre caméra en XYZ. Une ancienne version du code utilisait `cam_xyz` directement (sans inversion) et les multiplicateurs `pre_mul` (constante « lumière du jour » fixe par modèle d'appareil, indépendante de la prise de vue) au lieu de `cam_mul` (balance réellement mesurée/réglée pour la photo). Ce double défaut produisait une température quasi constante et anormalement élevée (~12 000-13 000 K) pour toutes les photos d'un même modèle d'appareil, au lieu de la température « As Shot » réelle (ex. ~5200 K rapportée par Lightroom). Le correctif inverse désormais la matrice et utilise `cam_mul` en priorité (`pre_mul` reste un repli défensif si `cam_mul` est indisponible), et est couvert par le test `whiteBalanceEstimationTest`.
 - Pour les formats standards (JPEG/PNG/TIFF…), une estimation best-effort est tentée via les métadonnées textuelles exposées par `QImageReader` (`readWhiteBalanceKelvin()` dans `imageeditor.cpp`) ; en l'absence de métadonnée exploitable, la valeur reste indéterminée.
-- Si aucune valeur n'est disponible, le rendu retombe sur `6500 K` comme référence neutre par défaut (`.value_or(6500.0)`), afin de ne jamais casser le rendu.
+- Si aucune valeur n'est disponible, le rendu retombe sur `5200 K` comme référence neutre par défaut (`.value_or(5200.0)`). Ce repli d'interface n'est pas une calibration RAW ni une modification de la WB caméra.
 
 `Settings::temperature` est initialisé, au chargement de l'image et lors de `resetAdjustments()`, à cette même référence détectée (arrondie à l'entier le plus proche), et non plus à une constante fixe (`5200` précédemment). Le signal `adjustmentsReset(int temperatureKelvin, int tint)` transmet cette valeur au QML afin que le curseur de température affiche d'emblée la balance des blancs réelle de la photo plutôt qu'un neutre arbitraire, ce qui évite une mauvaise interprétation initiale des couleurs.
 
@@ -98,81 +126,61 @@ automatique reste un choix explicite dans l'interface ; elle redécode le RAW et
 peut modifier sensiblement un ciel ou une scène dont les zones lumineuses ne
 sont pas neutres.
 
-### 6. Masques tonals et réglages des tons
+### Ombres, noirs, hautes lumières et blancs
 
-Pour chaque pixel, la fonction calcule une luminance pondérée :
+`ToneRecovery::apply` (plan B du 18 octobre 2026) : chaque réglage déplace les
+tons d'une quantité en EV lue sur les courbes de transfert de Lightroom
+(`ToneRecoveryModel.h`, généré par `scripts/fit_tone_recovery.py`). Ombres, HL
+et blancs positifs s'adaptent à l'image : leur effet est multiplié par un poids
+prédit à partir des statistiques de luminance mesurées une fois à l'ouverture
+(`ToneRecovery::measure`, portées par l'image de travail dans le cache et le
+master d'export). Ombres, HL et blancs négatifs agissent sur la luminance ; un
+éclaircissement atteint sa luminance et rapproche du blanc une couleur qui
+sortirait du gamut, un assombrissement garde puis amplifie la couleur des tons
+clairs. Noirs et blancs positifs agissent sur chaque canal sRGB linéaire. La
+courbe est échantillonnée et rendue croissante : aucune inversion de tons.
+Modèle, mesures et limites : [roadmap Lumières](architecture/roadmap-lumieres.md)
+et [rapport Lumières](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-validation-lumieres-base-2026-10-02.md).
 
-```text
-Y = max(0, 0.2126 R + 0.7152 G + 0.0722 B)
-```
+### Vibrance et saturation
 
-Des fonctions `smoothStep` déterminent ensuite quatre masques graduels, afin que chaque réglage agisse principalement sur sa plage tonale au lieu de créer une frontière abrupte :
+Après les réglages tonals, `PerceptualColour::apply` (`src/core/PerceptualColour.cpp`)
+passe chaque pixel du master Rec.2020 linéaire en Oklab une seule fois
+(`WorkingColor::workingToOklab`, une matrice directe, neutre sur les gris), y
+applique dans l'ordre saturation et vibrance (`Vibrance::adjust`), le mélangeur
+(`ColorMixer::adjust`) et le color grading (`ColorGrading::adjust`), puis revient en
+Rec.2020, sans écrêtage. Vibrance et mélangeur laissent les gris exacts inchangés ;
+le zéro de tous les curseurs et les entrées vides ou d'un autre type ne touchent pas
+le tampon. Saturation et vibrance sont bornées à `[-100, +100]`.
 
-| Réglage | Masque | Zone principalement affectée |
-|---|---|---|
-| Ombres | masque `1 - smoothStep(0.10, 0.56, Y)` ; courbes distinctes pour relèvement et assombrissement | tons sombres et intermédiaires bas |
-| Noirs | `1 - smoothStep(0.00, 0.18, Y)` | extrémité noire |
-| Hautes lumières | récupération : `smoothStep(0.08, 0.70, Y)` ; levée : `smoothStep(0.02, 0.50, Y)` | tons moyens supérieurs et clairs |
-| Blancs | récupération : `smoothStep(0.10, 0.65, max(R,G,B))` ; levée : `smoothStep(0.02, 0.50, max(R,G,B))` | point blanc et canaux lumineux |
+- **Mélangeur** : tables de réponse Lightroom par bande, composante et valeur
+  ([rapport mélangeur](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-color-mixer.md)).
+- **Color grading** : ombres, tons moyens, hautes lumières et roue Global, avec
+  fusion, balance et luminance, calés sur Lightroom
+  ([rapport grading](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-grading.md)).
 
-Les noirs et les ombres possèdent des courbes séparées, sans cible de luminance fixe :
+- **Saturation** multiplie la chroma Oklab par `1 + s/100` et conserve L.
+  Mesurée sur 49 scènes, elle suit LR à moins de 0,05 de variation de chroma.
+- **Vibrance** suit les tables de réponse LR de `src/core/VibranceModel.h`,
+  générées par `scripts/build_vibrance_model.py` : gains log de chroma et de
+  clarté Oklab et rotation de teinte, appliquée par une rotation plane de
+  `(a, b)`, selon la saturation ProPhoto linéaire `(max − min)/max`, la
+  clarté et la teinte Oklab du pixel, mesurés aux valeurs ±25, ±50, ±100 sur les
+  49 scènes de la base. Interpolation trilinéaire entre centres de cellules
+  (teinte circulaire), linéaire entre valeurs mesurées, zéro à zéro. Un facteur
+  par valeur atténue la réponse des quasi-gris ; le gain de clarté et la rotation
+  s'effacent sous une chroma Oklab de 0,01 pour rester continus vers le gris.
 
-- **Noirs positifs** utilisent une cloche dans le pied (`0 < Y < 0,14`) ; le noir mathématique et les tons moyens restent inchangés. Les valeurs négatives réduisent directement ce même pied afin de définir un point noir plus profond.
-- **Ombres positives** ajoutent une quantité bornée proportionnelle à `1 - sqrt(clamp(Y / 0,45))`, pondérée par le masque. L'action est donc maximale dans les très basses lumières non nulles, décroît dans les tons moyens, puis s'éteint avant les hautes lumières.
-- **Ombres négatives** emploient la même décroissance avec une amplitude maximale de `0,57`, au lieu d'une multiplication uniforme. Elles préservent ainsi davantage les tons moyens et les hautes lumières que le noir.
+LR ne s'adapte pas à la scène : saturation, clarté et teinte du pixel expliquent
+93–95 % de la variance de son gain positif, l'identité de la scène 2 % de plus.
+La réponse positive est maximale sur les tons moyens modérément saturés et
+protège les couleurs déjà saturées ; au négatif, les couleurs faibles sont
+presque entièrement désaturées et les couleurs saturées assombries. Les détails
+et la validation croisée sont dans le
+[rapport Couleur](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-couleur.md) ; la démarche complète
+est expliquée dans le [cours 12](scholar/cours-12-vibrance-saturation-oklab.tex).
 
-Quand Noirs et Ombres sont simultanément négatifs, seule la réduction locale la plus forte est appliquée ; elles ne se multiplient pas entre elles. Même à `-100`, un détail non nul reste donc non nul avant l'encodage.
-
-Les hautes lumières et les blancs utilisent des courbes indépendantes :
-
-- **Hautes lumières** rapproche le ton du blanc avec une amplitude maximale de
-  `0,70` à `+100` et un masque de levée plus étendu (`0,02–0,50`) ; sa
-  récupération négative conserve le masque v2 et réduit la luminance de
-  `52 %` au plus.
-- **Blancs** applique son propre déplacement du point blanc (amplitude `0,95`
-  et masque de levée `0,02–0,50` à `+100`) ; sa récupération négative reste
-  plus retenue (`22 %` au plus, masque v2).
-
-Les deux réglages peuvent donc se composer lorsqu'ils sont volontairement
-utilisés ensemble, sans que Blancs serve de simple atténuateur à Hautes
-lumières. Le masque Blancs est calculé avec `max(R,G,B)` avant l'encodage, car
-un canal peut être lumineux alors que la luminance pondérée reste modérée. La
-luminance cible est reconvertie en un rapport appliqué aux trois canaux, ce qui
-préserve la teinte.
-L'ordre d'application est donc exposition, contraste, température/nuance, puis
-les quatre réglages tonals ; les masques sont calculés sur l'image déjà modifiée
-par les étapes précédentes.
-
-### Contraste
-
-Le contraste est une courbe en S asymétrique autour du gris linéaire `0,18`.
-Les tons moyens proches du pivot restent stables. Dans le pied, l'intensité
-maximale est limitée à un facteur exponentiel `0,75` pour `-100` et `1,40`
-pour `+100`, puis s'annule progressivement avant le pivot. Au-dessus du pivot,
-l'épaule utilise respectivement `0,60` et `2,30`. Cette séparation évite que
-`-100` transforme toute l'image en gris moyen ou que `+100` écrase les tons
-moyens pour renforcer l'épaule.
-
-### 7. Vibrance et saturation
-
-Après les réglages tonals, le rendu calcule la chrominance relative de chaque
-pixel à partir de ses canaux RGB linéaires. Les deux réglages sont bornés à
-`[-100, +100]` :
-
-- **Saturation** applique uniformément un facteur de chrominance autour de la
-  luminance ; `-100` produit un gris de même luminance et `+100` double
-  l'écart aux gris.
-- **Vibrance** module son action en fonction de la chrominance déjà présente :
-  les couleurs proches du gris sont davantage modifiées que les couleurs déjà
-  saturées. Cela permet de renforcer une image sans pousser aussi fortement
-  les couleurs les plus vives.
-
-Les deux facteurs sont combinés, bornés pour ne pas inverser les composantes
-couleur autour de la luminance, puis repris par la compression de gamut sRGB
-de sortie. Ils sont appliqués avant les courbes afin que les courbes RGB
-restent la dernière correction colorimétrique utilisateur.
-
-### 8. Effets de détails et d'atmosphère
+### Effets de détails et d'atmosphère
 
 Avant les effets locaux, `DetailProcessing::reduceNoise()` traite le RGB
 linéaire si l'un des deux bruits est non nul. Depuis le correctif consolidé
@@ -183,43 +191,37 @@ préservant Y si la reconstruction produit des canaux négatifs. Pas de clamp
 HDR supérieur ; à bruit 0/0, la fonction ne touche pas le tampon.
 La netteté masquée est appliquée plus tard et reste inchangée.
 Les [équations et constantes](architecture/denoising-sharpening.md) et
-le [correctif/tests](validation/analyses/correctif-bruit-2026-10-05.md)
+le [correctif/tests](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/correctif-bruit-2026-10-05.md)
 précisent les limites ; les anciens exports bruit ne valident pas cette version.
 
-Les effets sont appliqués en RGB linéaire après vibrance/saturation :
+Les effets sont appliqués en RGB linéaire après la couleur perceptuelle, calés sur
+la réponse de Lightroom mesurée par échelle et par amplitude
+([rapport Effets](https://github.com/KimntexX/IPR/blob/2facc24332a265f0d24b7939953aa3aed795b583/docs/validation/analyses/analyse-effets.md)). Leurs rayons sont définis
+sur l'image entière : l'aperçu les réduit par `pixelScale`.
 
-- **Texture** utilise une séparation locale à petit rayon (`sigma = 1,2`) et
-  augmente ou diminue les micro-variations de luminance, sans modifier
-  directement les rapports RGB.
-- **Clarté** emploie la même famille de contraste local à un rayon plus large
-  (`sigma = 8`), avec un masque qui protège les ombres profondes et les hautes
-  lumières afin de limiter les halos.
-- **Correction du voile** combine deux modèles physiques classiques de
-  dévoilement atmosphérique :
-  1. le **Dark Channel Prior** (He, Sun & Tang, 2009) estime la carte de voile
-     locale à partir du minimum RGB érodé sur un voisinage, puis la lumière
-     atmosphérique `A` à partir du 99ᵉ percentile des pixels les plus
-     lumineux échantillonnés dans l'image ;
-  2. la **loi de diffusion atmosphérique de Koschmieder** (`I = J·t + A·(1-t)`)
-     est inversée (`J = (I - A) / t + A`) pour restituer la radiance « sans
-     voile » `J` à partir de l'image observée `I`, d'une transmission `t`
-     bornée et de `A`.
-  Une valeur positive restaure le contraste perdu dans le voile ; une valeur
-  négative en ajoute en réduisant artificiellement `t`. Ce modèle global est
-  volontairement borné : il ne remplace pas un algorithme de profondeur ou une
-  sélection locale, et l'estimation de `A`/`t` reste une approximation globale
-  par image plutôt qu'une carte de profondeur réelle.
-- **Grain** est une perturbation monochrome déterministe, ajoutée après le flou
-  pour rester nette. Son amplitude est plus marquée dans les ombres et les
-  coordonnées de l'image servent de graine : l'aperçu et l'export ne
-  scintillent pas entre deux rendus.
+- **Texture et clarté** (`LocalContrast`) : la luminance est découpée en bandes de
+  différences de gaussiennes de 1 à 256 pixels, en racine cubique pour la texture et
+  en logarithme pour la clarté ; dans chaque bande, les petites variations reçoivent
+  le gain de Lightroom à la valeur du curseur, les grandes (les bords) beaucoup
+  moins, ce qui évite les halos. Les couleurs gardent leurs rapports de canaux.
+- **Correction du voile** (`Dehaze`) : la luminance gagne un nombre d'IL fonction de
+  son rapport à l'air ambiant `A` (99ᵉ centile de la luminance) et du voile local
+  (canal sombre lissé), lissé en une base locale ; autour de la base, le détail reçoit
+  un gain à toutes les échelles ; la couleur suit la loi mesurée sur Lightroom
+  (ajouter du voile ajoute de la lumière de la couleur de l'air ambiant, en retirer
+  ôte sa dominante). Les pixels plus clairs que leur fond près de `A` ne gagnent pas
+  de contraste vers le haut.
+- **Grain** (`Grain`) : bruit monochrome déterministe, fin, de même écart-type à tous
+  les tons, ajouté aux valeurs encodées pour l'affichage, comme celui de Lightroom
+  (taille 25, rugosité 50) ; ajouté après le flou pour rester net, il ne scintille
+  pas entre deux rendus.
 
 Texture, clarté et correction du voile acceptent `[-100, +100]`. Le grain est
 intentionnellement limité à `[0, 100]`.
 
-### 9. Courbes de tonalité et histogramme
+### Courbes de tonalité et histogramme
 
-Après les réglages tonals, le rendu applique quatre courbes à points :
+Après les effets, `ToneCurve::apply` applique quatre courbes à points :
 
 1. une courbe **Luminance** ; elle calcule une luminance cible puis applique un
    ratio RGB commun, ce qui préserve la chromaticité ;
@@ -261,28 +263,33 @@ le même polynôme afin que la courbe affichée ne soit pas une approximation pa
 segments. Les changements sont non destructifs, déclenchent le même rendu
 asynchrone que l’aperçu et sont repris par les exports.
 
-Ce même rendu produit un histogramme de 256 bins pour la luminance, le rouge,
+L'aperçu produit ensuite, avec `Histogram::compute`, un histogramme de 256 bins pour la luminance, le rouge,
 le vert et le bleu. Les bins utilisent des valeurs encodées sRGB pour rester
-lisibles face à l’aperçu ; ils décrivent les pixels après les courbes et avant
-la quantification finale.
+lisibles face à l’aperçu ; ils décrivent désormais les pixels sRGB 8 bits
+réellement affichés après gamut mapping. La luminance est calculée après
+décodage de ces canaux sRGB, puis réencodée pour son bin. L'alpha n'est pas
+un canal de l'histogramme.
 
 ### Compression de gamut de sortie
 
-Les transformations restent en sRGB linéaire sans écrêtage intermédiaire. Avant
+Les réglages utilisent Rec.2020 linéaire, sans bornage global du master ; les
+bornages propres à certains opérateurs restent explicites. Avant
 l'aperçu et les exports JPEG/PNG/TIFF/DNG, `ColorPipeline::mapToSrgbGamut()`
-ramène les couleurs hors gamut dans le cube sRGB. Il conserve d'abord la
-luminance puis réduit la chroma vers le gris de même luminance jusqu'à ce que les
+convertit les valeurs vers sRGB linéaire, puis ramène les couleurs hors gamut
+dans le cube de sortie. Le mapping actuel borne d'abord les composantes
+négatives, recalcule Y, réduit les Y supérieurs à un, puis la chroma vers le gris
+de même Y jusqu'à ce que les
 trois canaux soient représentables. Contrairement à un `clamp` indépendant de
 R, G et B, cette compression préserve la direction de teinte autant que le
 gamut le permet et évite les franges colorées dans les blancs très lumineux.
 
-### 10. Flou gaussien (si demandé)
+### Flou gaussien
 
 Pour `blur > 0`, un flou gaussien est appliqué au tampon RGB avec `sigma = blur / 2`. OpenCV choisit la taille du noyau (`Size(0, 0)`). L'alpha n'est pas flouté, car il est réintégré depuis les canaux source à la fin.
 
-### 11. Reconstruction RGBA et retour
+### Reconstruction RGBA et retour
 
-Les canaux RGB traités sont séparés, puis l'alpha source est ajouté et les quatre canaux sont fusionnés dans un nouveau tampon. Le retour contient :
+Les canaux RGB traités sont séparés, puis l'alpha source (`cv::extractChannel`) est ajouté et les quatre canaux sont fusionnés dans un nouveau tampon. Le retour contient :
 
 ```cpp
 return {rgbaOutput, source.colorSpace, source.sourceProfile,
@@ -301,12 +308,12 @@ aperçu QML :
   → ColorPipeline::toSrgb(..., Preview8Bit)
   → ImageProvider / QML
 
-export :
+export (ImageEditor::writeImage) :
   renderWorkingImage(source, settings)
-  ├─ JPEG/PNG/TIFF : ColorPipeline::toSrgb(...)
-  │                  → QImageWriter
-  └─ DNG : RGB linéaire 16 bits
-           → LibTIFF + balises DNG
+  → ImageExporter::write
+     ├─ JPEG/PNG/TIFF : ColorPipeline::toSrgb(...) → QImageWriter
+     └─ DNG : RGB linéaire 16 bits → LibTIFF + balises DNG
+     puis publication sous le premier nom libre
 ```
 
 Les conversions finales et la quantification dépendent du format d'affichage ou d'export ; les transformations de développement et les réglages sont partagés. Le DNG contient un rendu RGB linéaire 16 bits avec les réglages intégrés : il n'est pas une copie du RAW mosaïque source et ne conserve donc pas sa latitude de développement ni ses métadonnées de prise de vue. Le dialogue de sauvegarde est prérempli avec `nom-source-IPR.<format>` dans le dossier de la source. Le backend accepte les URLs `file:` et les chemins absolus natifs que certains dialogues Windows retournent sous la forme `C:/…`. L'appel d'export capture l'image source et les réglages avant le travail asynchrone, de sorte que le rendu utilise un instantané cohérent même si l'interface change ensuite.
@@ -330,12 +337,51 @@ tolérance maximale d'un code face à la formule analytique.
 
 ### Proxy d'édition pour l'aperçu interactif
 
-`renderWorkingImage()` recalcule l'intégralité du pipeline à chaque modification de réglage ; son coût est donc proportionnel au nombre de pixels traités. Pour l'aperçu, `ImageEditor::startRender()` ne part pas de l'image source pleine résolution (`m_original`) mais d'un second tampon, `m_editProxy`, produit par `ImageEditor::buildEditProxy()` :
+Sans cache, `renderWorkingImage()` recalcule l'intégralité du pipeline à chaque modification de réglage ; son coût est donc proportionnel au nombre de pixels traités. Pour l'aperçu, `ImageEditor::startRender()` ne part pas de l'image source pleine résolution (`m_original`) mais d'un second tampon, `m_editProxy`, produit par `ImageEditor::buildEditProxy()` :
 
 - si le plus grand côté de l'image source ne dépasse pas 2048 px, le proxy est une copie superficielle de la source (aucun redimensionnement, aucune allocation supplémentaire) ;
 - sinon, l'image est réduite par `cv::resize(..., cv::INTER_AREA)` jusqu'à ce que son plus grand côté atteigne 2048 px, en conservant son espace colorimétrique, sa provenance et sa température de référence.
 
 Le proxy est calculé une seule fois par chargement d'image (dans `loadFromDisk()`, donc déjà hors du thread UI) et réutilisé pour tous les rendus d'aperçu suivants, jusqu'au prochain chargement. L'export (`exportImage()`/`writeImage()`) continue d'utiliser `m_original` sans aucune dégradation : seule la réactivité de l'aperçu est affectée, pas la qualité du résultat final. L'histogramme affiché à l'écran est calculé sur ce même proxy ; sa forme reste représentative de l'image, mais ses comptages exacts (en particulier les pixels en butée à 0 ou 255) peuvent légèrement différer de ceux d'un calcul en pleine résolution, par effet de moyennage du redimensionnement.
+
+### Cache des étapes de l'aperçu
+
+Ajout du 25 octobre 2026. L'aperçu passe à `renderWorkingImage()` un
+`RenderStageCache` (`src/cache/RenderStageCache`), possédé par `ImageEditor`
+et vidé à chaque changement ou libération de l'image. L'export n'en reçoit
+jamais.
+
+- Cinq étapes coûteuses peuvent être gardées, dans l'ordre du pipeline :
+  tons (signal capteur, noir et blanc, exposition, contraste, balance, ombres,
+  noirs, hautes lumières, blancs), couleur perceptuelle, réduction du bruit,
+  texture et clarté, voile.
+- La clé d'une étape contient ses réglages et ceux de toutes les étapes
+  précédentes ; une entrée appartient à une source (adresse du tampon du
+  proxy, retenu par le cache) et à un `pixelScale`.
+- Le rendu reprend après la dernière étape dont la clé n'a pas changé, sur
+  une copie privée de sa sortie, puis exécute la suite.
+- L'étape éditée est la première dont la clé diffère du rendu précédent. Le
+  cache garde au plus deux sorties : celle qui la précède, pour les rendus
+  suivants du même glissement, et celle des tons. Cela représente environ
+  34 Mo chacune sur le proxy de 2048 px.
+- Les pixels sont identiques au bit près avec ou sans cache
+  (`renderStageCacheTests`, 18 éditions successives sur toutes les étapes).
+
+Rendu complet de l'aperçu sur 6V1A0327 (proxy 1365 × 2048, réglages actifs
+sur toutes les étapes), moyenne de cinq rendus d'un même glissement :
+
+| Curseur glissé | Sans cache | Avec cache |
+| --- | ---: | ---: |
+| Exposition | 1136 ms | 1139 ms |
+| Color grading | 1150 ms | 863 ms |
+| Réduction du bruit | 1129 ms | 811 ms |
+| Clarté | 1145 ms | 757 ms |
+| Voile | 1143 ms | 664 ms |
+| Netteté | 1118 ms | 454 ms |
+
+Le reste incompressible est dominé par la conversion de sortie
+`ColorPipeline::toSrgb` (environ 250 ms : correspondance de gamut et
+quantification) et par l'histogramme.
 
 ### Comparaison origine / actuel et zoom d'affichage
 
@@ -383,12 +429,6 @@ Les copies de `cv::Mat` restent superficielles. En particulier, pour une image
 qui ne nécessite pas de réduction, l'original et le proxy partagent le même
 tampon et ne sont comptés qu'une fois dans le budget du cache.
 
-## Pondération des réglages tonals
-
-L'exposition reste volontairement globale : une valeur de `-0,49 EV` multiplie chaque pixel linéaire par `2^-0,49`. En revanche, les réglages **noirs**, **ombres**, **hautes lumières** et **blancs** sont évalués à partir de la luminance du pixel. Des masques continus et chevauchants répartissent leur influence entre les zones tonales ; ils ne créent donc pas de frontière nette entre deux plages.
-
-Les couples noirs/ombres et hautes lumières/blancs sont fusionnés avec une composition bornée plutôt que d'appliquer deux multiplicateurs successifs. Ainsi, régler noirs et ombres à `-100` conserve une partie du signal au lieu d'assombrir deux fois le même pixel. La courbe finale est calculée sur la luminance puis appliquée une seule fois aux composantes RGB par un ratio de luminance. Cette étape préserve la chromaticité dans les zones compressées et évite que les réglages tonals ne désaturent les couleurs.
-
 ## Pourquoi retourner `ColorPipeline::WorkingImage` par valeur ?
 
 ### Le type de retour décrit exactement le résultat
@@ -433,9 +473,11 @@ Ce modèle évite d'exposer un pointeur brut entre le thread UI, le worker et le
 
 ## Persistance `.ipr` et application par lot
 
-Le sidecar courant v4 est un flux `QDataStream` binaire placé à côté du fichier source sous le nom `source.ext.ipr`. Son en-tête contient la signature `IPR1`, la version du format, la taille et la date de modification du source. Cette signature empêche d'appliquer silencieusement des réglages devenus incohérents après le remplacement d'une image.
+Le sidecar courant v6, lu et écrit par le module `Sidecar` (données dans `EditRecipe.h`), est un flux `QDataStream` binaire placé à côté du fichier source sous le nom `source.ext.ipr`. Son en-tête contient la signature `IPR1`, la version du format, la taille et la date de modification du source. Cette signature empêche d'appliquer silencieusement des réglages devenus incohérents après le remplacement d'une image.
 
-L'écriture est différée de 450 ms puis atomique via `QSaveFile`. Le payload stocke les réglages du rendu, les courbes, les annotations, le mélangeur huit bandes et le grading trois voies. À l'ouverture, un sidecar valide remplace les réglages neutres et synchronise l'interface QML. Le ruban peut appliquer les réglages courants à plusieurs images : seules leurs sidecars sont écrites, jamais les sources, et les annotations existantes de la cible sont conservées.
+La v5 ajoute DCP, manifeste, leurs SHA-256, activation de normalisation et version du moteur/LibRaw ; la v6 ajoute identité/SHA-256 du LCP, résolution explicite et activations objectif/CA latérale. V1 à v6 restent lues. Les options RAW et la WB automatique sont restaurées avant le décodage. Le LCP résolu est figé, et les corrections sont suspendues si ses octets sont absents/modifiés. Le changement DCP utilise un unique tampon caméra actif, plafonné à 384 Mio, lorsque WB/calibration et options/empreinte optiques le permettent ; sinon un redécodage conserve le rendu visible. Voir [ADR-0006](decisions/ADR-0006-restauration-raw-et-retouche-profil.md) et le [contrat optique](camera-profile-engine.md#persistance-et-commandes-optiques-9-octobre-2026).
+
+L'écriture est différée de 450 ms puis atomique via `QSaveFile`. Le payload stocke les réglages du rendu, les courbes, les annotations, le mélangeur huit bandes, le grading (trois zones et roue globale) et, depuis la version 9, les points de la couleur du point (source en TSV ProPhoto linéaire comme Lightroom, changements, variance, gamme). À l'ouverture, un sidecar valide remplace les réglages neutres et synchronise l'interface QML. Le ruban peut appliquer les réglages courants à plusieurs images : seules leurs sidecars sont écrites, jamais les sources, et les annotations existantes de la cible sont conservées.
 
 Les v1/v2/v3 sont migrées : l'ancien dernier triplet est magenta (7), jamais
 violet (6). Les nouvelles bandes restent neutres. Le calcul sélectif est isolé
@@ -450,7 +492,7 @@ non nuls peuvent produire un autre rendu. Détails, constantes et compatibilité
 ## Limites et points de vigilance
 
 - Les opérations colorées sont des ajustements empiriques du RGB de travail ; la température ne constitue pas à elle seule une balance des blancs RAW physiquement complète.
-- Les masques d'ombres/noirs/hautes lumières/blancs sont définis dans cette fonction et appliqués sur la luminance issue du rendu courant. Leur définition et leur ordre font partie du comportement visible de l'éditeur.
+- Les réglages tonals dépendent des statistiques mesurées à l'ouverture : une même valeur de curseur agit différemment selon l'image, comme dans Lightroom. L'ordre des modules fait partie du comportement visible de l'éditeur.
 - Le clipping n'est pas réalisé dans `renderWorkingImage()` ; il intervient lors de la quantification/conversion de sortie. L'image flottante peut donc conserver des valeurs hors de `[0, 1]`.
 - Le retour par valeur sécurise la propriété de l'objet résultat, mais `cv::Mat` copie ses données de façon superficielle lors d'une copie ordinaire. Il faut utiliser `clone()` si une copie indépendante des pixels est nécessaire.
 - Vérifier les valeurs par défaut des réglages lors de leur modification : la température neutre définie dans la fonction couleur doit coïncider avec la valeur initiale et la valeur de réinitialisation de `Settings` et du QML.

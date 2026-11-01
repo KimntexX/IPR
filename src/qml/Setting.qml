@@ -8,6 +8,10 @@ Item {
 
     required property var editor
     property var preferences: null
+    property var resetAction: null
+    // The preview picks a point colour while true (Main connects the viewport).
+    property bool pointColorPicking: false
+    readonly property bool exportDialogVisible: exportDialog.visible || exportReview.visible || batchExportDialog.visible
     property bool preferencesReady: false
     property bool restoringPreferences: false
     property int activeCurve: 0
@@ -18,6 +22,9 @@ Item {
     // Session-local destination, independent of the source photo directory.
     // Do not use a newly prepared currentFile to forget the accepted folder.
     property url lastExportTarget: ""
+    property string reviewedImageKey: ""
+    readonly property string currentImageKey: (editor.imageDetails.storage || "")
+                                             + "/" + (editor.imageDetails.name || "")
     readonly property color textColor: preferences ? preferences.theme.text : "#edf2f8"
     readonly property color secondaryTextColor: preferences ? preferences.theme.secondaryText : "#d7dfeb"
 
@@ -25,56 +32,32 @@ Item {
     implicitHeight: 720
 
     function curveName(channel) {
-        return [qsTr("Luminance"), qsTr("Rouge"), qsTr("Vert"), qsTr("Bleu")][channel]
+        return [qsTr("RVB"), qsTr("Rouge"), qsTr("Vert"), qsTr("Bleu")][channel]
     }
 
     function curveColor(channel) {
         return ["#edf2f8", "#f07178", "#98c379", "#61afef"][channel]
     }
 
+    // Drawn as the engine evaluates it (natural spline, as Lightroom).
     function evaluateCurve(points, sample) {
-        if (points.length === 0)
-            return sample
-
-        const weights = []
-        for (let index = 0; index < points.length; ++index) {
-            let weight = 1
-            for (let other = 0; other < points.length; ++other) {
-                if (index !== other)
-                    weight /= points[index].x - points[other].x
-            }
-            weights.push(weight)
-        }
-
-        if (sample <= 1) {
-            let numerator = 0
-            let denominator = 0
-            for (let index = 0; index < points.length; ++index) {
-                const distance = sample - points[index].x
-                if (Math.abs(distance) < 0.000000001)
-                    return points[index].y
-                const term = weights[index] / distance
-                numerator += term * points[index].y
-                denominator += term
-            }
-            return numerator / denominator
-        }
-
-        const endpoint = points.length - 1
-        let derivative = 0
-        for (let index = 0; index < endpoint; ++index) {
-            derivative += weights[index] / weights[endpoint] *
-                    (points[index].y - points[endpoint].y) /
-                    (points[endpoint].x - points[index].x)
-        }
-        return points[endpoint].y +
-                (sample - points[endpoint].x) * derivative
+        return editor.toneCurveValue(points, sample)
     }
 
     function reloadCurve() {
         curvePoints = editor.toneCurve(activeCurve)
         if (toneCurveModuleInstance)
             toneCurveModuleInstance.requestPaint()
+    }
+
+    // A custom pair keeps the slider on its luminance, labelled as custom.
+    // Showing it must not send the amount back: that would replace the pair.
+    function reloadDenoiseAmount() {
+        const amount = editor.adjustmentValue("denoiseAmount")
+        denoiseAmountSlider.custom = amount < 0
+        denoiseAmountSlider.syncing = true
+        denoiseAmountSlider.value = amount < 0 ? editor.adjustmentValue("denoiseLuminance") : amount
+        denoiseAmountSlider.syncing = false
     }
 
     function commitCurve() {
@@ -92,6 +75,11 @@ Item {
     function openExportDialog() {
         prepareExportDialog()
         exportDialog.open()
+    }
+
+    // Format and quality are those of the Export section.
+    function openBatchExportDialog() {
+        batchExportDialog.open()
     }
 
     function restorePreferences() {
@@ -169,11 +157,11 @@ Item {
             grainSlider.value = editor.adjustmentValue("grain")
             denoiseLuminanceSlider.value = editor.adjustmentValue("denoiseLuminance")
             denoiseChrominanceSlider.value = editor.adjustmentValue("denoiseChrominance")
+            root.reloadDenoiseAmount()
+            denoiseBeforeProfileCheck.checked = editor.adjustmentValue("denoiseBeforeProfile") > 0
             sharpeningAmountSlider.value = editor.adjustmentValue("sharpeningAmount")
             sharpeningRadiusSlider.value = editor.adjustmentValue("sharpeningRadius")
             sharpeningMaskingSlider.value = editor.adjustmentValue("sharpeningMasking")
-            automaticWhiteBalanceCheck.checked =
-                    editor.adjustmentValue("automaticWhiteBalance") > 0
             blurSlider.value = editor.adjustmentValue("blur")
             colorMixerModule.reload()
             colorGradingModule.reload()
@@ -181,11 +169,60 @@ Item {
         }
     }
 
+    ColumnLayout {
+        id: fixedSettingsHeader
+        objectName: "fixedSettingsHeader"
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        spacing: 8
+
+        Label {
+            Layout.fillWidth: true
+            text: qsTr("Réglages")
+            font.bold: true
+            font.pixelSize: 18
+            color: root.textColor
+            padding: 0
+            background: Item { }
+        }
+        HistogramModule {
+            id: histogramModule
+            objectName: "histogramModule"
+            visible: !root.preferences || root.preferences.layout.showHistogram
+            Layout.fillWidth: true
+            histogram: root.editor.histogram
+            exposureEV: brightnessSlider.value
+            imageDetails: root.editor.imageDetails
+            textColor: root.secondaryTextColor
+            Component.onCompleted: {
+                root.histogramModuleInstance = histogramModule
+                histogramModule.requestPaint()
+            }
+            Component.onDestruction: {
+                if (root.histogramModuleInstance === histogramModule)
+                    root.histogramModuleInstance = null
+            }
+        }
+        PreferenceButton {
+            objectName: "resetAllAdjustmentsButton"
+            text: qsTr("Réinitialiser les réglages")
+            Layout.fillWidth: true
+            enabled: root.resetAction ? root.resetAction.enabled : editor.hasImage
+            onClicked: root.resetAction ? root.resetAction.trigger() : editor.resetAdjustments()
+        }
+    }
+
     ScrollView {
         id: settingsScrollView
         objectName: "settingsScrollView"
 
-        anchors.fill: parent
+        anchors.top: fixedSettingsHeader.bottom
+        anchors.topMargin: 8
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         clip: true
         rightPadding: 8
         contentWidth: availableWidth
@@ -223,42 +260,6 @@ Item {
             implicitWidth: 0
             spacing: 8
 
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Réglages")
-                font.bold: true
-                font.pixelSize: 18
-                color: root.textColor
-                padding: 0
-                background: Item { }
-            }
-
-            HistogramModule {
-                id: histogramModule
-                objectName: "histogramModule"
-                visible: !root.preferences || root.preferences.layout.showHistogram
-                Layout.fillWidth: true
-                histogram: root.editor.histogram
-                imageDetails: root.editor.imageDetails
-                textColor: root.secondaryTextColor
-
-                Component.onCompleted: {
-                    root.histogramModuleInstance = histogramModule
-                    histogramModule.requestPaint()
-                }
-                Component.onDestruction: {
-                    if (root.histogramModuleInstance === histogramModule)
-                        root.histogramModuleInstance = null
-                }
-            }
-
-            Button {
-                text: qsTr("Réinitialiser les réglages")
-                Layout.fillWidth: true
-                enabled: editor.hasImage
-                onClicked: editor.resetAdjustments()
-            }
-
             SettingsSection {
                 objectName: "rawDevelopmentSection"
                 stateKey: "rawDevelopment"
@@ -282,7 +283,7 @@ Item {
                 title: qsTr("Lumière")
                 expanded: true
 
-                CheckBox {
+                PreferenceCheckBox {
                     id: grayscaleCheck
                     Layout.fillWidth: true
                     Layout.minimumWidth: 0
@@ -392,6 +393,8 @@ Item {
 
                 ToneCurveModule {
                     id: toneCurveModule
+                    objectName: "toneCurveModule"
+                    histogram: root.editor.histogram
                     showTitle: false
                     Layout.fillWidth: true
 
@@ -431,30 +434,11 @@ Item {
                 textColor: root.textColor
                 title: qsTr("Couleur")
 
-                CheckBox {
-                    id: automaticWhiteBalanceCheck
-                    text: qsTr("Balance des blancs automatique")
-                    Layout.fillWidth: true
-                    Layout.minimumWidth: 0
-                    checked: false
-                    enabled: editor.hasImage
-                    onToggled: editor.setAutomaticWhiteBalance(checked)
-
-                    contentItem: Text {
-                        text: automaticWhiteBalanceCheck.text
-                        font: automaticWhiteBalanceCheck.font
-                        color: root.secondaryTextColor
-                        leftPadding: automaticWhiteBalanceCheck.indicator.width +
-                                     automaticWhiteBalanceCheck.spacing
-                        verticalAlignment: Text.AlignVCenter
-                        wrapMode: Text.WordWrap
-                    }
-                }
-
                 AdjustmentControl {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     id: temperatureSlider
+                    trackColors: ["#477dda", "#c4c6c4", "#e8ae4e"]
                     label: qsTr("Température (K)")
                     valueText: Math.round(value)
                     minimumValue: 2000
@@ -472,6 +456,7 @@ Item {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     id: tintSlider
+                    trackColors: ["#63b777", "#c4c6c4", "#c46eb5"]
                     label: qsTr("Nuance vert ↔ magenta")
                     valueText: Math.round(value)
                     minimumValue: -150
@@ -487,6 +472,7 @@ Item {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     id: vibranceSlider
+                    trackColors: ["#78828b", "#719e9e", "#b4b93c", "#dc6845"]
                     label: qsTr("Vibrance")
                     valueText: Math.round(value)
                     minimumValue: -100
@@ -502,6 +488,7 @@ Item {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     id: saturationSlider
+                    trackColors: ["#78828b", "#78a5a4", "#5cae6c", "#d2c247", "#db6559"]
                     label: qsTr("Saturation")
                     valueText: Math.round(value)
                     minimumValue: -100
@@ -526,6 +513,25 @@ Item {
                     showTitle: false
                     Layout.fillWidth: true
                     editor: root.editor
+                }
+            }
+
+            SettingsSection {
+                objectName: "pointColorSection"
+                stateKey: "pointColor"
+                preferences: root.preferences
+                textColor: root.textColor
+                title: qsTr("Couleur du point")
+
+                PointColorModule {
+                    id: pointColorModule
+                    objectName: "pointColorModule"
+                    Layout.fillWidth: true
+                    editor: root.editor
+                    picking: root.pointColorPicking
+                    onPickingToggled: root.pointColorPicking = !root.pointColorPicking
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
                 }
             }
 
@@ -633,33 +639,78 @@ Item {
                 textColor: root.textColor
                 title: qsTr("Réduction du bruit")
 
+                PreferenceCheckBox {
+                    id: denoiseBeforeProfileCheck
+                    objectName: "denoiseBeforeProfileCheck"
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    text: qsTr("Signal RAW signé, avant les profils (expérimental)")
+                    enabled: editor.hasImage
+                    onToggled: editor.setDenoiseBeforeProfile(checked)
+                }
+
+                // One amount drives both strengths through the engine's law;
+                // the advanced controls set them apart, shown as a custom pair.
                 AdjustmentControl {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
-                    id: denoiseLuminanceSlider
-                    label: qsTr("Bruit de luminance")
-                    valueText: Math.round(value)
+                    id: denoiseAmountSlider
+                    property bool custom: false
+                    property bool syncing: false
+                    label: qsTr("Réduction du bruit")
+                    valueText: custom ? qsTr("Perso.") : Math.round(value)
                     minimumValue: 0
                     maximumValue: 100
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
-                        if (editor)
-                            editor.setDenoiseLuminance(Math.round(value))
+                        if (editor && !syncing) {
+                            editor.setDenoiseAmount(Math.round(value))
+                            denoiseLuminanceSlider.value = editor.adjustmentValue("denoiseLuminance")
+                            denoiseChrominanceSlider.value = editor.adjustmentValue("denoiseChrominance")
+                            root.reloadDenoiseAmount()
+                        }
                     }
                 }
 
-                AdjustmentControl {
+                SettingsSection {
+                    objectName: "denoiseAdvancedSection"
+                    stateKey: "denoiseAdvanced"
+                    preferences: root.preferences
                     textColor: root.textColor
-                    secondaryTextColor: root.secondaryTextColor
-                    id: denoiseChrominanceSlider
-                    label: qsTr("Bruit de couleur")
-                    valueText: Math.round(value)
-                    minimumValue: 0
-                    maximumValue: 100
-                    adjustmentEnabled: editor.hasImage
-                    onValueEdited: function(value) {
-                        if (editor)
-                            editor.setDenoiseChrominance(Math.round(value))
+                    title: qsTr("Avancé")
+
+                    AdjustmentControl {
+                        textColor: root.textColor
+                        secondaryTextColor: root.secondaryTextColor
+                        id: denoiseLuminanceSlider
+                        label: qsTr("Bruit de luminance")
+                        valueText: Math.round(value)
+                        minimumValue: 0
+                        maximumValue: 100
+                        adjustmentEnabled: editor.hasImage
+                        onValueEdited: function(value) {
+                            if (editor) {
+                                editor.setDenoiseLuminance(Math.round(value))
+                                root.reloadDenoiseAmount()
+                            }
+                        }
+                    }
+
+                    AdjustmentControl {
+                        textColor: root.textColor
+                        secondaryTextColor: root.secondaryTextColor
+                        id: denoiseChrominanceSlider
+                        label: qsTr("Bruit de couleur")
+                        valueText: Math.round(value)
+                        minimumValue: 0
+                        maximumValue: 100
+                        adjustmentEnabled: editor.hasImage
+                        onValueEdited: function(value) {
+                            if (editor) {
+                                editor.setDenoiseChrominance(Math.round(value))
+                                root.reloadDenoiseAmount()
+                            }
+                        }
                     }
                 }
             }
@@ -722,6 +773,20 @@ Item {
             }
 
             SettingsSection {
+                objectName: "opticsSection"
+                stateKey: "optics"
+                preferences: root.preferences
+                textColor: root.textColor
+                title: qsTr("Corrections optiques")
+
+                OpticsModule {
+                    editor: root.editor
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                }
+            }
+
+            SettingsSection {
                 objectName: "exportSection"
                 stateKey: "export"
                 preferences: root.preferences
@@ -738,14 +803,14 @@ Item {
                         color: root.secondaryTextColor
                     }
 
-                    ComboBox {
+                    PreferenceComboBox {
                         id: formatBox
                         objectName: "exportFormat"
 
                         Layout.preferredWidth: 92
                         Layout.minimumWidth: 92
                         Layout.maximumWidth: 92
-                        implicitHeight: 22
+                        implicitHeight: 26
                         model: ["JPEG", "PNG", "TIFF", "DNG"]
                         onCurrentTextChanged: root.rememberPreference("export/format", currentText)
                         enabled: editor.hasImage
@@ -754,37 +819,27 @@ Item {
                             leftPadding: 7
                             rightPadding: formatBox.indicator.width + 6
                             text: formatBox.displayText
-                            color: formatBox.enabled ? root.textColor : "#7a8797"
+                            color: root.textColor
+                            opacity: formatBox.enabled ? 1 : 0.45
                             font.pixelSize: 12
                             verticalAlignment: Text.AlignVCenter
                             elide: Text.ElideRight
                         }
 
-                        indicator: Canvas {
-                            width: 8
-                            height: 5
+                        indicator: Text {
+                            text: "▾"
+                            color: formatBox.palette.text
                             x: formatBox.width - width - 7
                             y: formatBox.topPadding +
                                (formatBox.availableHeight - height) / 2
 
-                            onPaint: {
-                                const context = getContext("2d")
-                                context.reset()
-                                context.fillStyle = formatBox.enabled ? "#9dabbc" : "#657180"
-                                context.beginPath()
-                                context.moveTo(0, 0)
-                                context.lineTo(width, 0)
-                                context.lineTo(width / 2, height)
-                                context.closePath()
-                                context.fill()
-                            }
                         }
 
                         background: Rectangle {
                             radius: 3
-                            color: formatBox.pressed ? "#303946" : "transparent"
+                            color: formatBox.pressed ? formatBox.palette.mid : formatBox.palette.base
                             border.width: 1
-                            border.color: formatBox.activeFocus ? "#7388a3" : "#3d4654"
+                            border.color: formatBox.activeFocus ? formatBox.palette.text : formatBox.palette.mid
                         }
                     }
                 }
@@ -807,18 +862,20 @@ Item {
                     }
                 }
 
-                Button {
+                PreferenceButton {
                     id: exportButton
+                    objectName: "exportDestinationButton"
 
                     text: qsTr("Choisir la destination…")
                     Layout.fillWidth: true
                     Layout.preferredHeight: 28
-                    enabled: editor.hasImage
+                    enabled: editor.hasImage && !editor.busy && !editor.embeddedPreview
                     onClicked: root.openExportDialog()
 
                     contentItem: Text {
                         text: exportButton.text
-                        color: exportButton.enabled ? root.textColor : "#7a8797"
+                        color: root.textColor
+                        opacity: exportButton.enabled ? 1 : 0.45
                         font.pixelSize: 12
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -826,10 +883,61 @@ Item {
 
                     background: Rectangle {
                         radius: 3
-                        color: exportButton.down ? "#3d4654"
-                               : (exportButton.hovered ? "#343d49" : "#2d343e")
+                        color: exportButton.down || exportButton.hovered ? exportButton.palette.mid : exportButton.palette.button
                         border.width: 1
-                        border.color: exportButton.enabled ? "#536174" : "#3d4654"
+                        border.color: exportButton.palette.mid
+                    }
+                }
+
+                // Each selected image with its own recipe, into one folder.
+                PreferenceButton {
+                    id: batchExportButton
+                    objectName: "batchExportButton"
+
+                    visible: editor.selectedImageCount > 0 && !editor.batchExporting
+                    text: qsTr("Exporter la sélection (%1)…").arg(editor.selectedImageCount)
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 28
+                    enabled: !editor.batchApplying
+                    onClicked: batchExportDialog.open()
+
+                    contentItem: Text {
+                        text: batchExportButton.text
+                        color: root.textColor
+                        opacity: batchExportButton.enabled ? 1 : 0.45
+                        font.pixelSize: 12
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    background: Rectangle {
+                        radius: 3
+                        color: batchExportButton.down || batchExportButton.hovered ? batchExportButton.palette.mid : batchExportButton.palette.button
+                        border.width: 1
+                        border.color: batchExportButton.palette.mid
+                    }
+                }
+
+                RowLayout {
+                    objectName: "batchExportProgress"
+                    Layout.fillWidth: true
+                    visible: editor.batchExporting
+
+                    ProgressBar {
+                        Layout.fillWidth: true
+                        from: 0
+                        to: Math.max(1, editor.batchExportTotal)
+                        value: editor.batchExportDone
+                    }
+                    Label {
+                        text: qsTr("%1 / %2").arg(editor.batchExportDone).arg(editor.batchExportTotal)
+                        color: root.secondaryTextColor
+                        font.pixelSize: 11
+                    }
+                    PreferenceButton {
+                        objectName: "batchExportCancel"
+                        text: qsTr("Annuler")
+                        onClicked: editor.cancelBatchExport()
                     }
                 }
             }
@@ -856,8 +964,37 @@ Item {
             const target = selectedFile.toString().length > 0
                            ? selectedFile : currentFile
             root.lastExportTarget = target
-            editor.exportImage(target, formatBox.currentText,
-                               Math.round(qualitySlider.value))
+            root.reviewedImageKey = root.currentImageKey
+            exportReview.target = target
+            exportReview.format = formatBox.currentText
+            exportReview.quality = Math.round(qualitySlider.value)
+            exportReview.dimensions = editor.imageDetails.dimensions || ""
+            exportReview.open()
         }
+    }
+
+    FolderDialog {
+        id: batchExportDialog
+        objectName: "batchExportDialog"
+        title: qsTr("Exporter la sélection dans…")
+        onAccepted: editor.exportSelection(selectedFolder, formatBox.currentText, Math.round(qualitySlider.value))
+    }
+
+    ExportReviewDialog {
+        id: exportReview
+        objectName: "exportReviewDialog"
+        palette.window: root.preferences ? root.preferences.theme.panel : "#2a3039"
+        palette.text: root.textColor
+        palette.windowText: root.secondaryTextColor
+        palette.buttonText: root.textColor
+        palette.button: Qt.darker(root.preferences ? root.preferences.theme.panel : "#2a3039", 1.1)
+        palette.mid: Qt.tint(root.preferences ? root.preferences.theme.panel : "#2a3039",
+                             Qt.rgba(root.textColor.r, root.textColor.g, root.textColor.b, .25))
+        exportEnabled: editor.hasImage && !editor.busy && !editor.embeddedPreview
+                       && root.currentImageKey === root.reviewedImageKey
+        unavailableReason: root.currentImageKey !== root.reviewedImageKey
+                           ? qsTr("L’image a changé. Fermez ce récapitulatif et recommencez l’export.")
+                           : qsTr("Attendez la fin du traitement avant d’exporter.")
+        onExportConfirmed: editor.exportImage(target, format, quality)
     }
 }

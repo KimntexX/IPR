@@ -1,0 +1,71 @@
+\chapter{Class Diagrams}
+\label{chap:classes}
+
+\section{Rendering and Image Access Classes}
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[node distance=7mm and 9mm, every node/.style={font=\small}]
+  \node[component, text width=40mm] (editor) {\textbf{ImageEditor}\\+ openImage() / loadImage()\\+ setBrightness()\\+ setCameraProfile()\\+ exportImage()\\- Settings};
+  \node[service, right=of editor, text width=40mm] (pipeline) {\textit{namespace}\\\textbf{ColorPipeline}\\+ applyTemperatureTint()\\+ mapToSrgbGamut()\\+ toSrgb()};
+  \node[service, below=of editor, text width=40mm] (cache) {\textbf{DecodedImageCache}\\+ find() / insert()\\+ setBudgetBytes()\\- LRU entries};
+  \node[component, below=of pipeline, text width=40mm] (working) {\textit{struct}\\\textbf{WorkingImage}\\+ linearRgba : cv::Mat\\+ colorSpace\\+ referenceWhiteBalanceKelvin};
+  \node[component, left=of cache, text width=40mm] (provider) {\textbf{ImageProvider}\\\textbf{ThumbnailProvider}\\+ requestImage()};
+  \draw[flow] (editor) -- node[above, font=\scriptsize]{compose} (pipeline);
+  \draw[flow] (pipeline) -- node[right, font=\scriptsize]{transforms} (working);
+  \draw[flow] (editor) -- node[left, font=\scriptsize]{consults} (cache);
+  \draw[flow] (cache) -- node[below, font=\scriptsize]{retains} (working);
+  \draw[flow] (editor) -- (provider);
+\end{tikzpicture}
+}
+\caption{Rendering core and Qt Quick providers.}
+\end{figure}
+
+\section{Settings and Persistence Classes}
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[node distance=8mm and 12mm, every node/.style={font=\small}]
+  \node[component, text width=43mm] (settings) {\textbf{Settings}\\tone, WB, color\\detail, curves, mixer\\color grading};
+  \node[component, right=of settings, text width=43mm] (metadata) {\textbf{UserImageMetadata}\\rating\\colorLabel\\flagged};
+  \coordinate (persistenceCenter) at ($(settings)!0.5!(metadata)$);
+  \node[storage, below=of persistenceCenter, text width=43mm] (ipr) {\textbf{sidecar .ipr}\\IPR1 signature\\version + source fingerprint};
+  \node[component, left=of settings, text width=36mm] (qml) {\textbf{Setting.qml}\\QML controls};
+  \node[component, right=of metadata, text width=43mm] (ribbon) {\textbf{ThumbnailRibbon.qml}\\multiple selection};
+  \draw[flow] (qml) -- node[above, font=\scriptsize]{reads / modifies} (settings);
+  \draw[flow] (settings) -- (ipr);
+  \draw[flow] (metadata) -- (ipr);
+  \draw[flow] (ribbon) -- node[above, font=\scriptsize]{targets} (metadata);
+\end{tikzpicture}
+}
+\caption{Editable state, annotations, and non-destructive persistence.}
+\end{figure}
+
+\section{Responsibilities}
+
+The main provider \texttt{ImageProvider} exposes the current render and the neutral reference via \texttt{requestImage()}, \texttt{image()}, and \texttt{originalImage()}. \texttt{setImages()} publishes the pair under lock. The \texttt{originalImageSource} property of \texttt{ImageEditor} signals its availability to QML. The \texttt{ImageViewport.qml} component carries only the navigation and comparison state; it does not modify \texttt{Settings}.
+
+\texttt{ImageEditor} owns the active state and orchestrates rendering in \texttt{renderWorkingImage()}. The functions of the \texttt{ColorPipeline} namespace ensure conversions, adaptation, and gamut; \texttt{ColorMixer} and \texttt{DetailProcessing} carry their specialized processing. \texttt{DecodedImageCache} retains source, proxy, and metadata, without QML state. The indicated methods correspond to current C++ headers; namespaces are not presented as instantiable classes.
+
+\section{Profiles, Normalization, and Preferences}
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[node distance=10mm and 12mm]
+  \node[component,text width=45mm,font=\small] (ui) {RawDevelopmentModule\\Setting.qml};
+  \node[component, right=of ui] (editor) {ImageEditor\\RAW recipe\\sidecar v5};
+  \node[service, right=of editor] (raw) {RawDecoder\\DcpSource\\applyProfile()};
+  \node[service, below=of raw] (normal) {RawNormalization\\resolve()\\cacheToken()};
+  \node[service, below=of editor,text width=41mm] (profiles) {CameraProfileEngine\\findProfiles()\\applyLcp() / applyDcp()};
+  \node[component, below=of ui] (prefs) {UiPreferences\\value() / setValue()\\sync()};
+  \draw[flow] (ui) -- (editor);
+  \draw[flow] (editor) -- (raw);
+  \draw[flow] (raw) -- (normal);
+  \draw[flow] (raw) -- (profiles);
+  \draw[flow] (ui) -- (prefs);
+\end{tikzpicture}}
+\caption{RAW contracts and presentation. The INI preserves UI; the v5 sidecar preserves DCP and calibration choices per image.}
+\end{figure}

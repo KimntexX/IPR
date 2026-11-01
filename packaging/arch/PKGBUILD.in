@@ -1,0 +1,21 @@
+pkgname=ipr
+pkgver=@VERSION@
+pkgrel=1
+pkgdesc='IPR photographic RAW editor (prototype)'
+arch=('x86_64' 'aarch64')
+url='https://github.com/KimntexX/IPR'
+# Project licence not yet declared: no fabricated SPDX identifier.
+license=('custom')
+depends=('qt6-base' 'qt6-declarative' 'qt6-imageformats' 'opencv' 'libraw' 'libtiff')
+makedepends=('cmake' 'ninja' 'gcc')
+source=('ipr-source.tar')
+sha256sums=('@SHA256@')
+build() {
+  cmake -S "$srcdir/IPR" -B "$srcdir/build" -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DIPR_DEPLOY_MODE=system \
+    -DIPR_RELEASE_LABEL=@LABEL@ -DIPR_RELEASE_VERSION=@NUMERIC@ -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build "$srcdir/build" --parallel 2
+}
+package() {
+  DESTDIR="$pkgdir" cmake --install "$srcdir/build"
+}

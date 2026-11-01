@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560" role="img" aria-labelledby="title desc">
+ <title id="title">Entrées spécialisées, contrat d'import et moteur commun</title>
+ <desc id="desc">RAW et raster rejoignent ImageImport. Cache et retouche de profil passent le même contrôle avant les retouches et la sortie.</desc>
+ <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#42647c"/></marker></defs>
+ <rect width="1100" height="560" fill="#fbfcfe"/>
+ <g font-family="Segoe UI,Arial,sans-serif" font-size="18" fill="#193047" text-anchor="middle">
+  <text x="550" y="34" font-size="24" font-weight="bold">Une seule frontière avant les retouches</text>
+  <g fill="#edf4fb" stroke="#537ba5" stroke-width="2">
+   <rect x="30" y="65" width="490" height="110" rx="12"/>
+   <rect x="580" y="65" width="490" height="110" rx="12"/>
+   <rect x="30" y="255" width="235" height="100" rx="12"/>
+   <rect x="835" y="255" width="235" height="100" rx="12"/>
+   <rect x="305" y="235" width="490" height="140" rx="12" fill="#e7f5ee"/>
+   <rect x="305" y="440" width="490" height="85" rx="12"/>
+  </g>
+  <text x="275" y="97" font-weight="bold">RAW : CR2 / CR3 / DNG / adaptateurs futurs</text>
+  <text x="275" y="128">Décodage, WB, niveaux, optique</text>
+  <text x="275" y="155">DCP via CameraSignal ou matrice du décodeur</text>
+  <text x="825" y="97" font-weight="bold">JPG / PNG / TIFF : lecteur Qt</text>
+  <text x="825" y="128">Orientation et métadonnées</text>
+  <text x="825" y="155">ICC vers Rec.2020 ; sinon sRGB supposé</text>
+  <text x="148" y="292">Master en cache</text><text x="148" y="324">Pas de reconversion</text>
+  <text x="953" y="292">Retouche de profil</text><text x="953" y="324">Rendu DCP commun</text>
+  <text x="550" y="267" font-weight="bold">ImageImport::Result / complete()</text>
+  <text x="550" y="297">Master Rec.2020 linéaire RGBA float fini</text>
+  <text x="550" y="327">Métadonnées, provenance, capacités</text>
+  <text x="550" y="355">Avertissements / erreur ; contrôle de l'alpha</text>
+  <text x="550" y="474" font-weight="bold">ImageEditor / ColorPipeline</text>
+  <text x="550" y="504">Proxy → retouches → aperçu / export</text>
+ </g>
+ <g fill="none" stroke="#42647c" stroke-width="2.5" marker-end="url(#a)">
+  <path d="M275 175V205H440V235"/><path d="M825 175V205H660V235"/>
+  <path d="M265 305H305"/><path d="M835 305H795"/><path d="M550 375V440"/>
+ </g>
+</svg>

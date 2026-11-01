@@ -1,3 +1,5 @@
+*[Français](guide-creation-profils-dcp-2026-10-01.md) | [English](guide-creation-profils-dcp-2026-10-01_en.md)*
+
 # Guide complet — création de profils DCP indépendants d’Adobe
 
 ## Objectif

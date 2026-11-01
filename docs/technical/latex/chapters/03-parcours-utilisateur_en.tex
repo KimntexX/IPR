@@ -1,0 +1,44 @@
+\chapter{User Diagram and Workflow}
+\label{chap:utilisateur}
+
+\section{Use Cases}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=8mm and 17mm]
+  \node[actor] (user) {Photographer};
+  \node[component, right=of user] (open) {Open an image\\and its folder};
+  \node[component, below=of open] (browse) {Browse and select\\a thumbnail};
+  \node[component, below=of browse] (adjust) {Choose DCP\\and adjust image};
+  \node[component, below=of adjust] (meta) {Note, label\\and flag};
+  \node[component, right=of adjust] (batch) {Select and\\apply in batch};
+  \node[component, below=of batch] (export) {Export active image};
+  \draw[flow] (user) -- (open);
+  \draw[flow] (user) -- (browse);
+  \draw[flow] (user) -- (adjust);
+  \draw[flow] (user) -- (meta);
+  \draw[flow] (user) -- (batch);
+  \draw[flow] (user) -- (export);
+  \draw[flow] (open) -- (browse);
+  \draw[flow] (browse) -- (adjust);
+  \draw[flow] (adjust) -- (batch);
+  \draw[flow] (adjust) -- (export);
+\end{tikzpicture}
+\caption{Existing actions. Batch application of settings is not batch export.}
+\end{figure}
+
+\section{Nominal Workflow}
+
+\begin{enumerate}
+  \item The user selects \emph{Open}. They can directly select an image; \IPR{} then opens the folder containing it and activates the chosen image.
+  \item The bottom ribbon displays thumbnails. A selected image becomes the working image; the information panel exposes its properties.
+  \item On a RAW, the RAW Development / Profile module exposes compatible DCPs. The status distinguishes requested normalization from effectively applied normalization.
+  \item Adjustment commands modify the state of \texttt{ImageEditor}. The numeric field and slider represent the same value and must remain synchronized.
+  \item After interaction stops, the render is updated, then settings are written to the sidecar. Changing an image restores its own settings or neutral values in the absence of a sidecar.
+  \item The user can check multiple thumbnails and apply the settings of the active image to the selection. Each image then receives its own sidecar.
+  \item Export processes the active image at full resolution. The export queue for an entire selection remains to be implemented.
+\end{enumerate}
+
+\section{Ergonomics Requirements}
+
+The settings panel is fixed to the right edge and must not obscure the image. Scroll bars and sliders are intentionally discreet, but numeric fields remain editable to allow precise input. Controls exclusively reset their target setting.

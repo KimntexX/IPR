@@ -1,0 +1,71 @@
+\chapter{Architecture and Data Flow}
+\label{chap:architecture}
+
+\section{Overview}
+
+The QML interface constitutes the presentation layer. It delegates opening, settings, navigation, and export to \texttt{ImageEditor}, a C++ object exposed to QML. The engine orchestrates the cache, decoding, profiles, and color pipeline. Results are made available to QML via an image provider and a thumbnail provider.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=9mm and 13mm]
+  \node[component] (qml) {QML\\Main, Setting, thumbnail ribbon};
+  \node[component, right=of qml] (editor) {\texttt{ImageEditor}\\orchestration and state};
+  \node[service, right=of editor] (pipeline) {RAW Decoding / profiles\\\texttt{ColorPipeline}\\rendering};
+  \node[service, below=of pipeline] (cache) {{\footnotesize\texttt{DecodedImageCache}}\\bounded LRU};
+  \node[storage, below=of editor] (sidecar) {Source +\\sidecar \texttt{.ipr}};
+  \node[component, below=of qml] (providers) {{\footnotesize\texttt{ImageProvider}}\\{ \footnotesize\texttt{ThumbnailProvider}}};
+  \draw[flow] (qml) -- node[above, font=\scriptsize]{signals / properties} (editor);
+  \draw[flow] (editor) -- node[above, font=\scriptsize]{render request} (pipeline);
+  \draw[flow] (editor) -- (sidecar);
+  \draw[flow] (editor) -- (cache);
+  \draw[flow] (editor) -- (providers);
+  \draw[flow] (providers) -- (qml);
+\end{tikzpicture}
+\caption{Logical architecture of \IPR{}.}
+\end{figure}
+
+\section{Global Presentation Preferences}
+
+The C++ service \texttt{UiPreferences}, exposed to QML separately from \texttt{ImageEditor}, preserves the interface state in the user file \texttt{ipr-ui.ini}. The path is resolved by \texttt{QStandardPaths}, via \texttt{AppConfigLocation}, not by the photos folder. Schema 2 is validated on loading; the old magenta selection (index 6) is migrated to 7 from schema 1. A file with a newer version remains unchanged and read-only. Writes are grouped for 400~ms and synchronized on close by \texttt{QSettings::IniFormat}, with atomic synchronization required~\cite{qtQSettings,qtQStandardPaths}. Normal geometry is preserved independently of maximized or full-screen state; the window is repositioned on an available screen at restart. The full contract is described in \texttt{docs/architecture/ui-preferences.md}. Since the portable build of October 8, the presence of \texttt{config/ipr-ui.ini} next to the executable takes priority over this user path. The local RAW manifest can reside in \texttt{config/raw-normalization.json}; these two files have distinct roles.
+
+\section{Working Image and Ordering}
+
+The working image is a floating-point RGBA representation, \texttt{WorkingImage}. It avoids premature rounding errors and allows values greater than~1 before output encoding. The engine applies corrections in an explicit order:
+
+\begin{enumerate}
+  \item RAW decoding, possible controlled normalization, LCP then DCP;
+  \item grayscale levels, exposure, contrast;
+  \item temperature/tint, shadows, blacks, highlights, and whites;
+  \item vibrance/saturation, mixer, and color grading;
+  \item noise reduction, texture, clarity, and haze correction;
+  \item luminance/RGB curves, blur, sharpening, and grain;
+  \item gamut mapping and output encoding.
+\end{enumerate}
+
+Camera WB is applied during decoding; the temperature/tint sliders are an additional adjustment of the working RGB. They must not be confused with the initial WB. The above order describes the path with DCP; without DCP, the LCP acts on the linear sRGB provided by LibRaw. Renders are grouped by timeout during cursor manipulation.
+
+\section{Zoom and Before/After Comparison}
+
+The \texttt{ImageViewport.qml} component displays the working proxy with zoom and displacement common to both renders. The Before/After button, also accessible via Ctrl+Shift+C, separates the origin on the left from the current render on the right. A movable border defines two complementary clips, without double alpha composition. 100\% zoom focuses on proxy pixels (largest side limited to 2048 pixels), not full-resolution RAW.
+
+The reference is the already decoded, profiled, and developed source by IPR, encoded in 8-bit sRGB without editor or sidecar settings. It is not the JPEG embedded in the RAW. Its conversion is calculated in the background at the first accepted render, then reused during adjustments. \texttt{ImageProvider} publishes the pair under lock before QML notification; \texttt{originalImageSource} preserves a stable URL, unlike \texttt{imageSource}, revised with each render. On source change, both references are cleared. An automatic white balance re-decoding also renews this origin.
+
+The additional CPU storage of the provider is at most a 16~Mpx preview, excluding Qt Quick resources; no additional RAW is decoded to enable comparison. Zoom, mode, and separation are not persisted in INI or sidecar. Histogram and export remain those of the current render. The detailed contract is in \texttt{docs/specifications/zoom-image.md}.
+
+\section{Cache and Memory Lifetime}
+
+\texttt{DecodedImageCache} preserves recent decoded images according to a \emph{Least Recently Used} (LRU) policy. Accessing an image makes it the most recent; when an insertion exceeds capacity, the least recently used entry is released. This mechanism separates decoding cost from rendering cost and prevents large folder exploration from indefinitely monopolizing memory.
+
+Thumbnails follow a separate policy: the view loads visible elements and a preloading neighborhood, currently estimated at four images before and after the visible area. Elements too far away are evicted. This number remains a performance parameter to be measured on target corpora.
+
+\section{Camera and Lens Profiles}
+
+DCP (camera color rendering) and LCP (lens correction) profiles are searched in a local indexed library. This strategy accelerates profile resolution and avoids repeated exploration of the installation tree. Profile files must come from a source whose license explicitly allows their redistribution; the local index does not constitute authorization to copy profiles from a third-party product.
+
+\section{Controlled RAW Development}
+
+\texttt{RawDevelopmentModule.qml} allows choosing a compatible DCP, modifying automatic WB, and checking experimental normalization. \texttt{RawNormalization::resolve()} verifies a bounded manifest, RAW/DCP SHA-256, ISO, blacks, camera body, and LibRaw version. The base exposure gain and audited white are applied only after validation; a refusal preserves the uncalibrated path. Cache keys distinguish profile and manifest.
+
+Camera Neutral is visually accepted on the local corpus, without Lightroom parity or certified physical fidelity. Adobe Standard remains to be processed. The current calibration concerns five exact files; it does not constitute a general rule for the R6 Mark III. The v5 sidecar preserves the profile, manifest, their SHA-256, activation, and engine/LibRaw version. These choices and automatic WB are restored before decoding. The LCP remains automatic and is not yet fixed in the recipe.
+
+Changing DCP is a retouch: an active pre-DCP camera buffer (384 MB maximum, outside LRU) allows applying the new profile without re-executing LibRaw. Preview, zoom, and settings remain available. RAW WB, calibration, or lack of buffer still require decoding. An error preserves the previous base. Resets of retouches and profile/calibration are separate.

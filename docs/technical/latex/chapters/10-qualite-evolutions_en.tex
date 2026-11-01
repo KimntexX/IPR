@@ -1,0 +1,31 @@
+\chapter{Quality, Validation, and Evolutions}
+\label{chap:qualite}
+
+\section{Validation Status}
+
+Fundamental adjustments have been compared to reference exports on an sRGB TIFF corpus: exposure, blacks, shadows, whites, highlights, contrast, and temperature. Measurements notably use per-pixel differences (MAE) and overlay inspections when dimensions and encoding allow. This method distinguishes a spatial offset from a rendering difference.
+
+The eight-band mixer has campaigns at extremes and intermediate values. Noise v2 has measured progressivity on twelve scenes; this does not guarantee the preservation of all details. Color grading, curves, sharpening, grain/blur, and their interactions require a photographic recipe. V4 sidecars and application of settings to a selection are implemented; their manual completion remains open. Batch export is not implemented. DNG rendering is not certified as Lightroom-compatible.
+
+As of October 8, Camera Neutral is visually accepted by the user. Normalization remains experimental, limited to five exact files and disabled by default. The complete WSL suite passes 17 out of 18 tests: the JPEG 9933 probe still fails (RGB MAE 25.1519 for a threshold of 25), outside calibrated mode. The five targeted Windows suites of the latest portable adaptation and the 76 Python analysis tests plus 12 selection tests succeed. These numbers are a dated snapshot, not a guarantee of future execution.
+
+\section{Elements to Complete Before Distribution}
+
+\begin{itemize}
+  \item Establish reproducible test sets for each setting and record metrics in a structured format.
+  \item Measure opening time on representative RAW files, peak memory, and actual efficiency of LRU cache and thumbnail preloading.
+  \item Formalize DCP/LCP profile compatibility: origin, license, version, and redistribution rights for each file.
+  \item Complete the v4 sidecar schema recipe and its migrations; define backup/conflicts and persistence of DCP/normalization choices.
+  \item Add a non-regression test for profile rendering, batch rendering, and metadata.
+  \item Document the final export format (depth, embedded ICC profile, EXIF/XMP metadata) and its usage conditions.
+\end{itemize}
+
+\section{Applied Documentary Governance}
+
+Experimental reports are distributed between \texttt{docs/validation} (protocol, analysis, and measurements) and \texttt{docs/reports} (session log). This tree is the compilable normative documentation. Any completed feature must update its chapter, concerned diagrams, bibliographic references, validation matrix, and test scenario. Cross-cutting architectural decisions must be added to a short ADR (\emph{Architecture Decision Record}) to avoid depending exclusively on session reports.
+
+\section{Exported Measurements and Reproducible Graphics}
+
+\texttt{scripts/export\_documentation\_metrics.py} generates CSV by family and SVG graphics from immutable evidence. Each value preserves its source file, SHA-256 fingerprint, and JSON or textual location. The \texttt{docs/validation/metrics} directory is a derived view, not a new source of truth. Literal numbers extracted from a log do not become homogeneous metrics without interpretation of their context.
+
+CPU times and rendering indicators are separate: the time curve represents only the historical Windows benchmark before/after parallelization. Tone responses by revision, noise reduction progressivity, and DCP deviations from Lightroom are not speed measurements. No current rendering, thumbnail, or export time is invented; campaigns remain necessary.

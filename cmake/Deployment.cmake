@@ -1,0 +1,57 @@
+# Public payloads never copy local profiles or audited calibration files.
+if(IPR_DEPLOY_MODE STREQUAL "standalone")
+    if(WIN32)
+        qt_generate_deploy_qml_app_script(TARGET appIPR OUTPUT_SCRIPT ipr_deploy
+            DEPLOY_TOOL_OPTIONS --include-plugins qoffscreen)
+    elseif(NOT APPLE)
+        # The generator ships with the development archives only.
+        set(ipr_deploy_tools "")
+        if(IPR_BUILD_TOOLS)
+            set(ipr_deploy_tools "ADDITIONAL_EXECUTABLES \"${CMAKE_INSTALL_BINDIR}/$<TARGET_FILE_NAME:iprGenerateTests>\"")
+        endif()
+        # The headless platform, as on Windows (--include-plugins qoffscreen):
+        # the package's smoke test and command-line runs need it. "plugins" is
+        # Qt's default QT_DEPLOY_PLUGINS_DIR on Linux.
+        if(NOT TARGET Qt6::QOffscreenIntegrationPlugin)
+            message(FATAL_ERROR "The standalone Linux package needs Qt's offscreen platform plugin")
+        endif()
+        install(FILES "$<TARGET_FILE:Qt6::QOffscreenIntegrationPlugin>" DESTINATION plugins/platforms)
+        # CONTENT is expanded twice: \\\${...} reaches the deploy script as ${...}.
+        qt_generate_deploy_script(TARGET appIPR OUTPUT_SCRIPT ipr_deploy CONTENT "
+            qt_deploy_qml_imports(TARGET appIPR PLUGINS_FOUND ipr_qml_plugins)
+            qt_deploy_runtime_dependencies(
+                EXECUTABLE \"$<TARGET_FILE:appIPR>\"
+                ${ipr_deploy_tools}
+                ADDITIONAL_MODULES \\\${ipr_qml_plugins} \"$<TARGET_FILE:Qt6::QOffscreenIntegrationPlugin>\"
+                GENERATE_QT_CONF
+                PRE_EXCLUDE_REGEXES \"^ld-linux\" \"^lib(c|m|dl|rt|pthread|resolv)\\.so\"
+                POST_EXCLUDE_REGEXES \"/ld-linux[^/]*$\" \"/lib(c|m|dl|rt|pthread|resolv)\\.so[^/]*$\"
+            )")
+    endif()
+    if(NOT APPLE)
+        install(SCRIPT "${ipr_deploy}")
+    endif()
+    # macOS is deployed once by scripts/ci.py, with the generator (when built)
+    # and the QML sources included, then its bundle is checked and signed.
+endif()
+
+set(CPACK_PACKAGE_NAME "ipr")
+set(CPACK_PACKAGE_VENDOR "IPR contributors")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "IPR photographic RAW editor")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_CONTACT "https://github.com/KimntexX/IPR/issues")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "IPR contributors")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "qml6-module-qtcore, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-layouts, qml6-module-qtquick-dialogs, qml6-module-qtqml-workerscript, qml6-module-qtquick-window, qml6-module-qtquick-templates, qt6-image-formats-plugins")
+set(CPACK_RPM_PACKAGE_AUTOREQ ON)
+set(CPACK_RPM_PACKAGE_REQUIRES "qt6-qtdeclarative, qt6-qtimageformats")
+string(REPLACE "-" "~" CPACK_DEBIAN_PACKAGE_VERSION "${IPR_RELEASE_LABEL}")
+if(IPR_RELEASE_LABEL MATCHES "alpha")
+    set(CPACK_RPM_PACKAGE_RELEASE "0.alpha")
+elseif(IPR_RELEASE_LABEL MATCHES "beta")
+    set(CPACK_RPM_PACKAGE_RELEASE "0.beta")
+else()
+    set(CPACK_RPM_PACKAGE_RELEASE "1")
+endif()
+set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
+include(CPack)
