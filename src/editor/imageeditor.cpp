@@ -10,6 +10,7 @@
 #include "Contrast.h"
 #include "Histogram.h"
 #include "ImageExporter.h"
+#include "RecipeCodec.h"
 #include "Sidecar.h"
 #include "ToneCurve.h"
 #include "ToneRecovery.h"
@@ -24,6 +25,7 @@
 #include <QCryptographicHash>
 #include <QCoreApplication>
 #include <QDataStream>
+#include <QDateTime>
 #include <QLocale>
 #include <QFile>
 #include <QFileInfo>
@@ -1080,6 +1082,8 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
         Sidecar::Document target;
         if (std::optional<Sidecar::Document> saved = Sidecar::read(fileName)) {
             target = std::move(*saved);
+            if (target.history.isEmpty())
+                target.history.reset(RecipeCodec::encodeSettings(target.settings));
         } else {
             target.metadata = annotations.value(fileName);
             // The development the target gets when opened without a sidecar.
@@ -1097,6 +1101,7 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
             copied.tint = 0;
         }
         target.settings = std::move(copied);
+        target.history.record(RecipeCodec::encodeSettings(target.settings));
         if (Sidecar::write(fileName, target))
             ++result.written;
         else
@@ -1699,6 +1704,121 @@ void ImageEditor::saveCurrentAdjustments()
     m_sidecarDebounce.stop();
     if (saveCurrentSidecar())
         setStatusMessage(tr("Réglages enregistrés : %1.ipr").arg(m_currentFile.toLocalFile()));
+}
+
+bool ImageEditor::historyEditable() const
+{
+    return !m_original.isNull() && !m_loadWatcher.isRunning();
+}
+
+// Every recipe change reaches scheduleSidecarSave(): outside a gesture or a
+// restoration, the recipe it leaves becomes a step.
+void ImageEditor::recordHistory()
+{
+    if (m_original.isNull() || m_inAdjustmentGesture || m_restoringHistory)
+        return;
+    if (m_history.record(RecipeCodec::encodeSettings(m_settings)))
+        emit historyChanged();
+}
+
+void ImageEditor::beginAdjustmentGesture()
+{
+    m_inAdjustmentGesture = true;
+}
+
+void ImageEditor::endAdjustmentGesture()
+{
+    m_inAdjustmentGesture = false;
+    recordHistory();
+}
+
+void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
+{
+    Settings restored;
+    if (!recipe || !RecipeCodec::decodeSettings(*recipe, restored))
+        return;
+    restored.denoiseBeforeProfile = m_denoiseBeforeProfile;
+    const bool whiteBalanceChanged = restored.automaticWhiteBalance != m_settings.automaticWhiteBalance;
+    m_restoringHistory = true;
+    const auto restoring = qScopeGuard([this] { m_restoringHistory = false; });
+    m_settings = std::move(restored);
+    emit toneCurvesReset();
+    emit adjustmentsReset(static_cast<int>(std::lround(
+        m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), m_settings.tint);
+    emit pointColorsChanged();
+    emit rawDevelopmentChanged();
+    emit historyChanged();
+    const QString fileName = m_currentFile.toLocalFile();
+    const QString extension = QFileInfo(fileName).suffix().toLower();
+    // The automatic white balance is decoded with the RAW: changing it redevelops.
+    if (whiteBalanceChanged && m_currentFile.isLocalFile() && RawDecoder::supportedExtensions().contains(extension))
+        beginLoad(fileName, extension, m_settings.automaticWhiteBalance, false);
+    else
+        scheduleRender();
+}
+
+void ImageEditor::undo()
+{
+    if (!historyEditable()) return;
+    endAdjustmentGesture();
+    restoreRecipe(m_history.undo());
+}
+
+void ImageEditor::redo()
+{
+    if (!historyEditable()) return;
+    endAdjustmentGesture();
+    restoreRecipe(m_history.redo());
+}
+
+void ImageEditor::goToHistoryStep(int step)
+{
+    if (!historyEditable()) return;
+    endAdjustmentGesture();
+    restoreRecipe(m_history.moveTo(step));
+}
+
+void ImageEditor::addSnapshot(const QString &name)
+{
+    if (!historyEditable()) return;
+    endAdjustmentGesture();
+    const QString trimmed = name.trimmed();
+    m_history.addSnapshot(trimmed.isEmpty() ? tr("Instantané %1").arg(m_history.snapshots().size() + 1) : trimmed,
+                          QDateTime::currentMSecsSinceEpoch());
+    emit historyChanged();
+    scheduleSidecarSave();
+}
+
+void ImageEditor::removeSnapshot(int index)
+{
+    if (!historyEditable() || !m_history.removeSnapshot(index)) return;
+    emit historyChanged();
+    scheduleSidecarSave();
+}
+
+void ImageEditor::restoreSnapshot(int index)
+{
+    if (!historyEditable()) return;
+    endAdjustmentGesture();
+    restoreRecipe(m_history.snapshot(index));
+    recordHistory();
+}
+
+QVariantList ImageEditor::historySteps() const
+{
+    QVariantList steps;
+    for (int step = 0; step < m_history.size(); ++step)
+        steps.append(QVariantMap{{QStringLiteral("changes"), m_history.changes(step)}});
+    return steps;
+}
+
+QVariantList ImageEditor::snapshots() const
+{
+    QVariantList snapshots;
+    for (const EditHistory::Snapshot &snapshot : m_history.snapshots())
+        snapshots.append(QVariantMap{{QStringLiteral("name"), snapshot.name},
+                                     {QStringLiteral("created"), QDateTime::fromMSecsSinceEpoch(snapshot.createdMs)}});
+    return snapshots;
 }
 
 void ImageEditor::resetAdjustments()
@@ -2469,12 +2589,18 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         m_settings.temperature = static_cast<int>(std::lround(
             m_original.referenceWhiteBalanceKelvin.value_or(5200.0)));
         m_sidecarReadOnly = false;
+        m_history = {};
+        m_inAdjustmentGesture = false;
         if (std::optional<Sidecar::Document> saved = Sidecar::read(m_currentFile.toLocalFile())) {
             m_settings = std::move(saved->settings);
             m_userImageMetadata.insert(currentFileKey(), std::move(saved->metadata));
+            m_history = std::move(saved->history);
             m_sidecarReadOnly = saved->format == Sidecar::Format::Newer;
         }
         m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
+        // The opening state, or a recipe saved outside the history (batch application).
+        m_history.record(RecipeCodec::encodeSettings(m_settings));
+        emit historyChanged();
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
         emit pointColorsChanged();
     }
@@ -2551,6 +2677,7 @@ void ImageEditor::scheduleRender()
 
 void ImageEditor::scheduleSidecarSave()
 {
+    recordHistory();
     if (!m_original.isNull() && m_currentFile.isLocalFile())
         m_sidecarDebounce.start();
 }
@@ -2567,7 +2694,7 @@ bool ImageEditor::saveCurrentSidecar()
         return false;
     }
     if (!Sidecar::write(m_currentFile.toLocalFile(),
-                        {m_settings, m_userImageMetadata.value(currentFileKey()), rawDevelopmentRecipe()}))
+                        {m_settings, m_userImageMetadata.value(currentFileKey()), rawDevelopmentRecipe(), m_history}))
     {
         setStatusMessage(tr("Échec de sauvegarde des réglages .ipr : vérifiez les permissions du dossier."));
         return false;

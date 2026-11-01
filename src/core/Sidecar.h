@@ -1,6 +1,7 @@
 #ifndef IPR_CORE_SIDECAR_H
 #define IPR_CORE_SIDECAR_H
 
+#include "EditHistory.h"
 #include "EditRecipe.h"
 
 #include <QString>
@@ -9,7 +10,8 @@
 
 // The .ipr sidecar beside an image (ADR-0021): a self-described CBOR document
 // whose named sections are the header ("ipr": format, writer, identity of the
-// photo), the settings, the user metadata and the RAW development recipe.
+// photo), the settings, the user metadata, the RAW development recipe and the
+// compressed edit history.
 // Unknown sections and fields are skipped, missing fields take their default.
 // The former binary sidecars (versions 1 to 9) are read and converted; the first
 // save rewrites them at the current format. A file of a newer format is read but
@@ -25,6 +27,7 @@ struct Document
     EditRecipe::Settings settings;
     EditRecipe::UserImageMetadata metadata;
     EditRecipe::RawDevelopment raw;
+    EditHistory history;   // empty for a sidecar saved without one
     Format format = Format::Current;   // set by read(); write() always writes the current format
 };
 

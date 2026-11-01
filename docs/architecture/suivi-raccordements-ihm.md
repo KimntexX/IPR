@@ -38,6 +38,29 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-002 | À spécifier | Histogramme analytique en amont des courbes, distinct de l'aperçu sRGB |
 | IHM-CONN-003 | En attente moteur | États typés des traitements et révisions de rendu |
 | IHM-CONN-004 | En attente moteur | Comparaison canonique des recettes par groupe |
+| IHM-CONN-005 | Moteur prêt (`patch_editing_core`, 1er novembre 2026) | Historique et instantanés : voir ci-dessous |
+
+#### IHM-CONN-005 — historique des retouches (ADR-0021)
+
+Le moteur expose sur `editor` (contrat C++ dans `src/editor/imageeditor.h`) :
+
+- `beginAdjustmentGesture()` / `endAdjustmentGesture()` : à appeler à l'appui
+  et au relâchement de chaque curseur, roue ou point de courbe glissé
+  (`onPressedChanged`). Tout le geste devient une seule étape ; un changement
+  hors geste (saisie, bouton, coller, réinitialiser) est une étape à lui seul.
+  Sans ce raccordement, chaque valeur intermédiaire d'un glissement est une étape.
+- `undo()`, `redo()`, `canUndo`, `canRedo` : raccourcis `Ctrl+Z` et
+  `Ctrl+Maj+Z` (ou `Ctrl+Y`), boutons grisés selon `canUndo` / `canRedo`.
+- `historySteps` (liste de `{changes}`, noms techniques des champs de la recette
+  modifiés, la première étape étant l'ouverture), `historyPosition`,
+  `goToHistoryStep(i)` : liste de l'historique ; l'IHM traduit les noms de
+  champs en libellés de réglages.
+- `snapshots` (`{name, created}`), `addSnapshot(nom)`, `removeSnapshot(i)`,
+  `restoreSnapshot(i)` : instantanés nommés ; restaurer crée une nouvelle étape.
+- Signal `historyChanged` pour tout ce qui précède.
+
+Reste à faire sur `patch_ui` : les appels de geste, les raccourcis, le panneau
+d'historique et d'instantanés, et les tests IHM. Aucune partie IHM n'est réalisée.
 | IHM-CONN-005 | En attente moteur | Rôles légers des vignettes : classement et présence de retouches |
 | IHM-CONN-006 | En attente moteur | Descripteur d'export et résultat typé avec destination réellement publiée |
 | IHM-CONN-007 | Raccordé et validé sur Windows | Compléter la qualification des permissions et des plateformes cibles |

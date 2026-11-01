@@ -1,3 +1,4 @@
+#include "RecipeCodec.h"
 #include "Sidecar.h"
 
 #include <QCborArray>
@@ -129,6 +130,26 @@ int main(int argc, char **argv)
         if (!check(in->raw.profile == out.raw.profile && in->raw.lensProfileResolved &&
                    in->raw.lensCorrectionEnabled && !in->raw.chromaticAberrationEnabled,
                    "the RAW development round-trips")) return 1;
+    }
+
+    // The edit history is saved with the recipe; a damaged history is dropped, the recipe still read.
+    {
+        Sidecar::Document edited = out;
+        edited.history.reset(RecipeCodec::encodeSettings({}));
+        edited.history.record(RecipeCodec::encodeSettings(out.settings));
+        edited.history.addSnapshot(QStringLiteral("Warm"), 7);
+        const auto in = Sidecar::write(source, edited) ? Sidecar::read(source) : std::nullopt;
+        if (!check(in && in->history.size() == 2 && in->history.position() == 1 &&
+                   in->history.snapshots().size() == 1 && in->history.snapshots()[0].name == QStringLiteral("Warm"),
+                   "the history round-trips")) return 1;
+        QCborMap map = documentOf(source);
+        if (!check(map.value(QStringLiteral("history")).isByteArray(), "the history is stored compressed")) return 1;
+        map.insert(QStringLiteral("history"), QByteArray("not a history"));
+        if (!check(writeDocument(source, map), "damaged history written")) return 1;
+        const auto damaged = Sidecar::read(source);
+        if (!check(damaged && damaged->history.isEmpty() && damaged->settings.temperature == 4800,
+                   "a damaged history is dropped and the recipe kept")) return 1;
+        if (!check(Sidecar::write(source, out), "sidecar rewritten without history")) return 1;
     }
 
     // A section or field this IPR does not know is skipped; a missing field takes its default.

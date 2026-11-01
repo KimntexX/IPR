@@ -5,6 +5,7 @@
 #include "ImageExporter.h"
 #include "ImageImporter.h"
 #include "ColorMixer.h"
+#include "EditHistory.h"
 #include "EditRecipe.h"
 #include "ToneCurve.h"
 #include "DecodedImageCache.h"
@@ -109,6 +110,13 @@ class ImageEditor final : public QObject
     Q_PROPERTY(int batchExportDone READ batchExportDone NOTIFY batchExportChanged)
     Q_PROPERTY(int batchExportTotal READ batchExportTotal NOTIFY batchExportChanged)
     Q_PROPERTY(bool hasCopiedAdjustments READ hasCopiedAdjustments NOTIFY copiedAdjustmentsChanged)
+    // Edit history of the open image (ADR-0021): steps as {changes: changed recipe
+    // fields}, the first being the opening state; snapshots as {name, created}.
+    Q_PROPERTY(bool canUndo READ canUndo NOTIFY historyChanged)
+    Q_PROPERTY(bool canRedo READ canRedo NOTIFY historyChanged)
+    Q_PROPERTY(QVariantList historySteps READ historySteps NOTIFY historyChanged)
+    Q_PROPERTY(int historyPosition READ historyPosition NOTIFY historyChanged)
+    Q_PROPERTY(QVariantList snapshots READ snapshots NOTIFY historyChanged)
     // Point colour: the picked points in picking order, each {colour (sRGB swatch of
     // its source), hue, saturation, luminance, variance, range}.
     Q_PROPERTY(QVariantList pointColors READ pointColors NOTIFY pointColorsChanged)
@@ -240,6 +248,22 @@ public:
     Q_INVOKABLE void copyAdjustments();
     Q_INVOKABLE void pasteAdjustments();
     Q_INVOKABLE void saveCurrentAdjustments();
+    // A gesture (a slider drag, from press to release) makes one history step,
+    // whatever its intermediate values; a change outside a gesture is a step.
+    Q_INVOKABLE void beginAdjustmentGesture();
+    Q_INVOKABLE void endAdjustmentGesture();
+    Q_INVOKABLE void undo();
+    Q_INVOKABLE void redo();
+    Q_INVOKABLE void goToHistoryStep(int step);
+    Q_INVOKABLE void addSnapshot(const QString &name);
+    Q_INVOKABLE void removeSnapshot(int index);
+    // Applies a snapshot's recipe as a new step.
+    Q_INVOKABLE void restoreSnapshot(int index);
+    bool canUndo() const { return m_history.canUndo(); }
+    bool canRedo() const { return m_history.canRedo(); }
+    QVariantList historySteps() const;
+    int historyPosition() const { return m_history.position(); }
+    QVariantList snapshots() const;
     Q_INVOKABLE int colorMixerValue(int band, int component) const;
     // Colour a mixer slider reaches at a value, for the UI tracks (ColorMixer::trackColour).
     Q_INVOKABLE QColor colorMixerTrackColor(int band, int component, int value) const;
@@ -316,6 +340,7 @@ signals:
     void batchApplyChanged();
     void batchExportChanged();
     void copiedAdjustmentsChanged();
+    void historyChanged();
     void toneCurveChanged(int channel);
     void toneCurvesReset();
     void adjustmentsReset(int temperatureKelvin, int tint);
@@ -382,6 +407,9 @@ private:
     void scheduleRender();
     void scheduleSidecarSave();
     bool saveCurrentSidecar();
+    bool historyEditable() const;
+    void recordHistory();
+    void restoreRecipe(const std::optional<QCborMap> &recipe);
     void startRender();
     void startEmbeddedPreview(const QString &fileName);
     void restoreBeforeEmbeddedPreview();
@@ -412,6 +440,9 @@ private:
     bool m_rawNormalizationEnabled = true;
     bool m_denoiseBeforeProfile = false;   // experimental session switch, kept across images
     bool m_sidecarReadOnly = false;        // the open image's .ipr comes from a newer IPR
+    EditHistory m_history;                 // of the open image, saved in its .ipr
+    bool m_inAdjustmentGesture = false;
+    bool m_restoringHistory = false;
     QString m_rawDevelopmentWarning;
     QString m_profileSha256;
     QString m_manifestSha256;

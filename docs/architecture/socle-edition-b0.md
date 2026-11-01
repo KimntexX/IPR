@@ -138,3 +138,23 @@ contrôles des panneaux reprennent les composants existants de l'interface.
 L'histogramme reste dans l'onglet Réglages seulement ; les sections de cet
 onglet se replient, avec une flèche plus grande qu'aujourd'hui.
 Raccordement QML sur `patch_ui`.
+
+## B0.3 — Mise en place (branche `patch_editing_core`)
+
+Choix techniques : [ADR-0021](../decisions/ADR-0021-socle-edition-beta.md).
+
+1. **Exécuteur de tâches** (`src/tasks/TaskRunner`) : priorités interactive,
+   premier plan et fond, progression, annulation coopérative, révision par
+   canal, fermeture bornée. Les sept mécanismes existants n'y sont pas encore
+   migrés.
+2. **Recette CBOR** (`src/core/Sidecar`, `src/core/RecipeCodec`) : format 10 en
+   sections nommées ; anciens `.ipr` 1 à 9 lus et convertis au premier
+   enregistrement ; fichier plus récent ouvert en lecture seule.
+3. **Historique** (`src/core/EditHistory`) : instantané complet de la recette
+   par étape, 100 étapes, instantanés nommés, enregistré compressé dans le
+   `.ipr`. Un geste encadré par l'IHM (appui puis relâchement d'un curseur)
+   fait une seule étape, choix de l'utilisateur du 1er novembre 2026. Le
+   développement RAW (profil, objectif) n'entre pas encore dans l'historique.
+   Raccordement IHM : IHM-CONN-005 du
+   [suivi des raccordements](suivi-raccordements-ihm.md).
+4. **Cartes de valeurs locales** : à venir.
