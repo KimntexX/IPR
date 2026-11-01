@@ -82,15 +82,22 @@ class DeliveryPolicyTests(unittest.TestCase):
             (contents / 'MacOS/appIPR').touch()
             with (contents / 'Info.plist').open('wb') as stream:
                 plistlib.dump({'CFBundleExecutable': 'appIPR'}, stream)
+            qt = stage / 'qt'
+            (qt / 'plugins/platforms').mkdir(parents=True)
+            (qt / 'plugins/platforms/libqoffscreen.dylib').touch()
             with patch.object(ci, 'run') as run:
                 run.return_value.stdout = run.return_value.stderr = ''
-                ci.deploy_macos(stage, {'QT_ROOT_DIR': '/qt'})
+                ci.deploy_macos(stage, {'QT_ROOT_DIR': str(qt)})
                 self.assertEqual(run.call_count, 1)
                 self.assertEqual(run.call_args.kwargs['cwd'], stage)
                 self.assertIn('-qmldir=' + str(ci.ROOT / 'src/qml'), run.call_args.args[0])
+                # The headless platform is deployed with its dependencies.
+                self.assertTrue((contents / 'PlugIns/platforms/libqoffscreen.dylib').is_file())
+                self.assertIn('-executable=appIPR.app/Contents/PlugIns/platforms/libqoffscreen.dylib',
+                              run.call_args.args[0])
                 run.return_value.stdout = 'ERROR: Cannot resolve framework'
                 with self.assertRaises(RuntimeError):
-                    ci.deploy_macos(stage, {'QT_ROOT_DIR': '/qt'})
+                    ci.deploy_macos(stage, {'QT_ROOT_DIR': str(qt)})
 
     def test_verify_only_creates_no_archive(self):
         with tempfile.TemporaryDirectory() as directory:
