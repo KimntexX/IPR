@@ -1,9 +1,34 @@
 # Banc de séparation du développement RAW
 
-Périmètre actuel : capture après `unpack()`, comparateur et sonde de module
-raccordée à l'observateur C2 de `RawDevelopment`. La sélection de calibration
-de production, le rendu DCP et les replis C3 restent à qualifier séparément.
-Aucun PASS global n'est possible avec les seules frontières communes du module.
+État au 1er novembre 2026 : branche de recherche autonome, synchronisée avec
+`dev` avant publication. Elle conserve les captures de développement RAW,
+les contrôles de parité, les études négatives et les mesures de débruitage.
+Les sous-protocoles historiques ci-dessous gardent leurs périmètres propres ;
+un PASS de parité n'est pas une validation photographique universelle.
+
+Les données canoniques sont dans `docs/validation/raw/`, sans RAW/TIFF, binaire
+de capture, profil DCP/LCP ou build à publier. Les derniers résultats couleur
+sont indexés par `colour-placement-index-v001-20261031T221843Z.json` : 28 scènes,
+112 contrôles de production, 504 états IPR couleur non nuls. Placement après
+les tons conservé par défaut ; hybride réservé à une éventuelle revue visuelle,
+aucune intégration automatique. Les chemins Windows des prises et empreintes
+restent une provenance locale, pas des sources téléchargeables.
+
+Le [bilan de publication](../../docs/reports/raw-bench-publication-2026-11-01.md)
+décrit le tri, l'audit et leurs limites. Les artefacts temporaires restent dans
+les dossiers `build-*` ignorés ; aucune image ou preuve historique n'est supprimée.
+
+## Outils réutilisables
+
+- `scripts/audit_raw_bench_publication.py` : historique Git non publié et
+  nouveaux fichiers ; contrôle ciblé de secrets, types privés et taille.
+- `scripts/run_test_then_analyse.py` : attente locale d'un test au premier plan,
+  puis une synthèse Codex en lecture seule avec `--analyse` explicite seulement.
+  Sans cette option, aucun appel modèle ; la réponse reste dans `analysis.md`,
+  pas dans une conversation existante. Aucun réel appel IA qualifié à ce jalon.
+- `colour_placement.py` et `colour_placement_server.cpp` : placement post-tons,
+  pré-profil et hybride, filtres inchangés, signé/non signé, masques fixes et
+  serveur de référence figé. Aucun TIFF IPR généré pour les mesures.
 
 ## Construction isolée
 

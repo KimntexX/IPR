@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261101T002809Z",
+  "freeze": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-freeze-v001-20261031T221843Z.json",
+  "freeze_sha256": "9315643c1d85d4a3de2536eeebe4b7a0373da8aaa07682deea9b96c3c73debc3",
+  "scenes": [
+    {
+      "scene": "7Y6A7599",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-7Y6A7599-20261031T222502Z.json",
+      "sha256": "1cee9aa78185282d194fd8781a47f9f802f5ae404166fc86da9de78f82bbaeaf",
+      "seconds": 365.1574108999921
+    },
+    {
+      "scene": "6V1A9539",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A9539-20261031T223119Z.json",
+      "sha256": "cc3fa98427dbb3255ea6d7681721ffadfc681354da339ebc5d692fb67a9c097a",
+      "seconds": 376.66210899990983
+    },
+    {
+      "scene": "IMG_7958",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_7958-20261031T223449Z.json",
+      "sha256": "b49bfafa811f081d91cb71cb0f5ea270c2e5c3e493d918a5585d37cf11e8e8a2",
+      "seconds": 209.0521089999238
+    },
+    {
+      "scene": "6V1A0007",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A0007-20261031T224108Z.json",
+      "sha256": "596aece3e693af478f91e83152d54d943beccbfcf82fa8e04628024f80ceebe4",
+      "seconds": 379.1286569999065
+    },
+    {
+      "scene": "6V1A0032",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A0032-20261031T224658Z.json",
+      "sha256": "862136869afc6591c33fd2101c183d4eb0d252c9572d6b807ef06902ef18b62b",
+      "seconds": 349.32625629997347
+    },
+    {
+      "scene": "6V1A0043",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A0043-20261031T225221Z.json",
+      "sha256": "bd094799d5e65b9c91dde95f470f91b326ad3672fa9f7852af0ced38d235ef05",
+      "seconds": 322.519990800065
+    },
+    {
+      "scene": "6V1A0064",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A0064-20261031T225815Z.json",
+      "sha256": "35d662afad9f1cffc65ce6a71ddda7e7bfdbd456f9dac497e51f94a886b3824e",
+      "seconds": 353.5671104999492
+    },
+    {
+      "scene": "6V1A0327",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A0327-20261031T230404Z.json",
+      "sha256": "8bb0507558e6be99b7cb7476cb00caee285bc4a4bf0cf6ff0621ed71b1a84fb0",
+      "seconds": 348.71099120005965
+    },
+    {
+      "scene": "6V1A0524",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A0524-20261031T231005Z.json",
+      "sha256": "33bace38e9cba01172be0bcb8d26312f84828a623b7a8f723d6b202ee8ee2354",
+      "seconds": 360.7784330000868
+    },
+    {
+      "scene": "6V1A0544",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A0544-20261031T231611Z.json",
+      "sha256": "e4553ad1ed9be71e558ad71f0a751f0ddf84dfef301e7e3efa31e09d3846ef7f",
+      "seconds": 366.4322116000112
+    },
+    {
+      "scene": "6V1A9112",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A9112-20261031T232208Z.json",
+      "sha256": "8283bb00031bc3a4e438b336e271c2a967ea31b364f2ad7a52daa73fd0e67d2b",
+      "seconds": 356.05276690004393
+    },
+    {
+      "scene": "6V1A9141",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A9141-20261031T232804Z.json",
+      "sha256": "768dfe8b28fb3ded8965bfc36b4a721ec567fa17dc8aed3ca025df6f3c3b25ac",
+      "seconds": 356.42165179993026
+    },
+    {
+      "scene": "6V1A9153",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A9153-20261031T233417Z.json",
+      "sha256": "c29ff9e3df8edd00d84fcf4c2e6807b718aa286242247b8339859d4ac2d621ef",
+      "seconds": 372.39787410001736
+    },
+    {
+      "scene": "6V1A9940",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A9940-20261031T234034Z.json",
+      "sha256": "8f53f6b6f1b52f864cb866011a85c5130ba8dca28fed183646613d1d2cd6bfdc",
+      "seconds": 377.3280631999951
+    },
+    {
+      "scene": "6V1A9947",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-6V1A9947-20261031T234624Z.json",
+      "sha256": "5d7ef9a50eaafc7df675105c84e706faf7d0098f2edb8029117461a481e73e38",
+      "seconds": 349.1602430000203
+    },
+    {
+      "scene": "IMG_3135",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_3135-20261031T234940Z.json",
+      "sha256": "f1fdbc0845e15db3057d89626b68344075ecf5e167a6fdf625c731775ff680af",
+      "seconds": 196.42454720009118
+    },
+    {
+      "scene": "IMG_4002",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_4002-20261031T235247Z.json",
+      "sha256": "d637efc68ce6139e0e8401cfcced6f6e10c39294f4917551c5a47eb4da55b482",
+      "seconds": 186.0410432999488
+    },
+    {
+      "scene": "IMG_4173",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_4173-20261031T235557Z.json",
+      "sha256": "635038e89e7ba22908c0ae58cd70379bb7918ccf92049dbc7706c0ed69fe19eb",
+      "seconds": 190.28190010006074
+    },
+    {
+      "scene": "IMG_4345",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_4345-20261031T235910Z.json",
+      "sha256": "29b08337abecc29f27b7849431c3a1fad8171430416d6596ea15664c702bc2d8",
+      "seconds": 192.2861988999648
+    },
+    {
+      "scene": "IMG_6248",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_6248-20261101T000230Z.json",
+      "sha256": "4fc8385bbb20098e934af489a3731ec436642e33cdbc119bd1075697a14b0ce6",
+      "seconds": 199.8079688999569
+    },
+    {
+      "scene": "IMG_6954",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_6954-20261101T000546Z.json",
+      "sha256": "55056fd9fdee8b0d92de6fdfe39267bdafd33d379dd15dc515d28e4805260f24",
+      "seconds": 196.0743380000349
+    },
+    {
+      "scene": "IMG_6979",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_6979-20261101T000854Z.json",
+      "sha256": "8720a436af46f7a8e143f663c911659847298a7674a2c8bb27bec2452330dcc4",
+      "seconds": 188.00745019991882
+    },
+    {
+      "scene": "IMG_7423",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_7423-20261101T001214Z.json",
+      "sha256": "34c9a9e419b013a2a9453a9cc28e4c968fbf216a4cb0551784da27817c351a0b",
+      "seconds": 199.19074500002898
+    },
+    {
+      "scene": "IMG_7953",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_7953-20261101T001519Z.json",
+      "sha256": "b95b264191e7b525dd5c73d63a001114a0b57a02f52bd370f8ebf8262c21469c",
+      "seconds": 185.5756187000079
+    },
+    {
+      "scene": "IMG_7961",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_7961-20261101T001835Z.json",
+      "sha256": "7a87a52d4d3dc0e26453d68b84f05498b9000e93dd0a5262d2964e747ff4afe8",
+      "seconds": 194.97080780006945
+    },
+    {
+      "scene": "IMG_8473",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-IMG_8473-20261101T002140Z.json",
+      "sha256": "06586c8f47fb73dbbda508eeb930e338ba7ebcfa81891456aa7c2bd4bd2c7b13",
+      "seconds": 184.79508839990012
+    },
+    {
+      "scene": "_MG_7580",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-_MG_7580-20261101T002455Z.json",
+      "sha256": "389959826173facf2313e338d16070a34d2dfb9dd8fee0c2fb840ae12455efa0",
+      "seconds": 195.13937740004621
+    },
+    {
+      "scene": "_MG_7840",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\colour-placement-scene-v001-_MG_7840-20261101T002809Z.json",
+      "sha256": "3e2fbc5958309cac7767d59890be9588310042d9b684face0f77fbaf9dea9fd1",
+      "seconds": 193.29651569994166
+    }
+  ],
+  "verdict": "measured_no_automatic_promotion"
+}

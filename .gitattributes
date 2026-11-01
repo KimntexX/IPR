@@ -1,0 +1,3 @@
+# Immutable evidence: do not alter bytes or SHA-256 through CRLF/LF conversion.
+docs/validation/raw/colour-placement-*.json -text whitespace=cr-at-eol
+docs/validation/raw/raw-bench-publication-audit-*.json -text whitespace=cr-at-eol

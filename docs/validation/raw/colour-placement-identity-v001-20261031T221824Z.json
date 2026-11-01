@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261031T221824Z",
+  "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/7Y6A7599.CR3",
+  "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+  "tool_sha256": "02e54c4ac4d68c125c71d32af3882334b2ba919a8667ea5a51b31a2801d53027",
+  "checks": [
+    {
+      "signed": true,
+      "placement": "pre",
+      "identity_exact": true
+    },
+    {
+      "signed": true,
+      "placement": "hybrid",
+      "identity_exact": true
+    },
+    {
+      "signed": false,
+      "placement": "pre",
+      "identity_exact": true
+    },
+    {
+      "signed": false,
+      "placement": "hybrid",
+      "identity_exact": true
+    }
+  ],
+  "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+  "manifest_kind": "qt_resource",
+  "scope": "Native identity rerender on one scene, not colour filtering quality"
+}
