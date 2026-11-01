@@ -1,5 +1,6 @@
 #include "TestRecipes.h"
 #include "SystemMemory.h"
+#include "ParallelJobs.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -97,30 +98,6 @@ int workerCount(quint64 pixels, quint64 *freeBytes)
     return std::clamp(std::min(byMemory, byCores), 1, 4);
 }
 
-// Runs jobs on `workers` threads; the first failure stops new jobs and is
-// rethrown once running ones have finished (no file is deleted).
-void runParallel(const std::vector<std::function<void()>> &jobs, int workers)
-{
-    std::atomic<size_t> next{0};
-    std::atomic<bool> failed{false};
-    std::exception_ptr error;
-    std::mutex errorLock;
-    const auto work = [&] {
-        for (size_t i = 0; !failed && (i = next++) < jobs.size();) {
-            try { jobs[i](); }
-            catch (...) {
-                const std::lock_guard<std::mutex> guard(errorLock);
-                if (!error) error = std::current_exception();
-                failed = true;
-            }
-        }
-    };
-    std::vector<std::thread> threads;
-    for (int t = 1; t < workers; ++t) threads.emplace_back(work);
-    work();
-    for (auto &thread : threads) thread.join();
-    if (error) std::rethrow_exception(error);
-}
 } // namespace
 
 int main(int argc, char **argv)
@@ -238,8 +215,8 @@ int main(int argc, char **argv)
             const int workers = workerCount(quint64(loaded.image.linearRgba.total()), &freeBytes);
             out << "Parallel renders: " << workers << " (free memory " << freeBytes / (1024 * 1024)
                 << " MiB, 2 GiB reserve)" << Qt::endl;
-            runParallel(parallel, workers);
-            runParallel(sequential, 1);
+            ParallelJobs::run(parallel, workers);
+            ParallelJobs::run(sequential, 1);
         }
         out << "Complete. Only TIFF images written; remove them manually after analysis." << Qt::endl;
         return 0;
