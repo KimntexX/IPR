@@ -24,6 +24,11 @@ using Curves = std::array<QVector<Point>, ChannelCount>;
 
 bool isIdentity(const Curves &curves);
 
+// Points as the editor keeps them: finite, x within [0, 1], y clamped to
+// [0, 1], sorted, closer than 0.001 in x merged (the first kept). Fewer than
+// two points give the identity.
+QVector<Point> normalized(QVector<Point> points);
+
 // A curve's value at x, in its own encoded coordinates (for the UI drawing too).
 float evaluate(const QVector<Point> &curve, float x);
 

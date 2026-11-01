@@ -69,6 +69,21 @@ const cv::Matx33d &fromProPhoto()
 }
 } // namespace
 
+QVector<Point> normalized(QVector<Point> points)
+{
+    points.erase(std::remove_if(points.begin(), points.end(), [](const Point &p) {
+        return !std::isfinite(p.x) || !std::isfinite(p.y) || p.x < 0.0f || p.x > 1.0f;
+    }), points.end());
+    for (Point &p : points) p.y = std::clamp(p.y, 0.0f, 1.0f);
+    std::stable_sort(points.begin(), points.end(), [](const Point &a, const Point &b) { return a.x < b.x; });
+    QVector<Point> curve;
+    curve.reserve(points.size());
+    for (const Point &p : points)
+        if (curve.isEmpty() || p.x - curve.constLast().x >= 0.001f) curve.append(p);
+    if (curve.size() < 2) curve = {{0.0f, 0.0f}, {1.0f, 1.0f}};
+    return curve;
+}
+
 bool isIdentity(const Curves &curves)
 {
     return std::all_of(curves.cbegin(), curves.cend(), [](const QVector<Point> &curve) { return Spline(curve).identity; });
