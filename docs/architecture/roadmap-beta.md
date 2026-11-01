@@ -289,11 +289,13 @@ livré par cette section. Le nettoyage local est tracé dans le
 
 - `EditRecipe::Settings` et `RawDevelopment` portent déjà les réglages et la
   recette RAW : les étendre plutôt que créer une seconde recette pour les panneaux.
-- `Sidecar::write` utilise déjà `QSaveFile`. La lecture accepte les versions1 à9 ;
-  l'en-tête mentionne encore la version6. Auditer et retirer les compatibilités
-  remplacées selon la règle de prototypage, avec leurs tests, dans un lot moteur
-  dédié. Ne pas confondre cette dette de code avec une raison d'effacer les JSON
-  de preuves ou de modifier silencieusement les fichiers utilisateur.
+- `Sidecar::write` utilise déjà `QSaveFile` et écrit le format 9 ; la lecture
+  accepte les versions 1 à 9. **Décision utilisateur du 1er novembre 2026
+  (audit C-13) : conserver cette lecture, la conversion vers la recette
+  courante et les tests de migration.** Écrire un seul format courant, sans
+  maintenir d'ancien moteur photographique. L'en-tête mentionne encore le
+  format 6 : corriger cette déclaration et qualifier les erreurs de conversion
+  dans le lot moteur, sans supprimer la prise en charge des fichiers utilisateur.
 - Le basculement expérimental `denoiseBeforeProfile` est explicitement de session,
   non persisté. Définir si une future recette bêta doit le conserver avant de
   promettre une restauration identique ; le comportement alpha n'est pas changé ici.

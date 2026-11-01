@@ -82,6 +82,7 @@ docs/reports/
 src/tools/
 scripts/analyse_*.py
 scripts/audit_camera_levels.py
+scripts/audit_translations.py
 scripts/build_highlights_references.py
 scripts/build_mixer_model.py
 scripts/build_vibrance_model.py

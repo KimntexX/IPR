@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: f8528293b5456c54e01fdfcbc38560a7af02a4e140102f54ee75379f1cc263dd -->
+<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: aa83c3e33fec27550cba277b47e30ff449ce15e849c57818bae753f52ec91b55 -->
 *[Français](roadmap-beta.md) | [English](roadmap-beta_en.md)*
 
 # Beta action plan — editing panels and neural processing
@@ -284,10 +284,12 @@ recorded in the [dedicated report](../reports/storage/workspace-cleanup-2026-10-
 
 - `EditRecipe::Settings` and `RawDevelopment` already carry adjustments and the
   RAW recipe: extend them rather than introduce a second recipe for new panels.
-- `Sidecar::write` already uses `QSaveFile`. Reading accepts versions1 through9;
-  the header still mentions version6. Audit and remove replaced compatibility
-  paths and their tests under the prototyping rule, in a dedicated engine package.
-  This code debt is not a reason to erase JSON evidence or silently change users' files.
+- `Sidecar::write` already uses `QSaveFile` and writes format 9; reading accepts
+  versions 1 through 9. **User decision of 1 November 2026 (audit C-13): retain
+  reading, conversion into the current recipe and migration tests.** Write a
+  single current format, without retaining an old photographic engine. The
+  header still mentions format 6: correct that declaration and qualify conversion
+  failures in the engine package without dropping support for users' files.
 - The experimental `denoiseBeforeProfile` switch is explicitly session-only,
   not persisted. Decide whether a future beta recipe must retain it before
   promising identical restoration; alpha behaviour is unchanged here.
