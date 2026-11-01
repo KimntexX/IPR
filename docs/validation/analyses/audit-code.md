@@ -34,6 +34,7 @@ testabilité du code » du 31 octobre 2026.
 | R | Fuite ou libération de ressource (mémoire, thread, verrou, fichier) |
 | N | Non-conformité aux règles (C++ standard, Qt, AGENTS.md) |
 | D | Redondance ou code mort |
+| E | Efficacité (calcul ou entrée/sortie évitable) |
 | L | Lisibilité, coquille, commentaire faux |
 
 Statuts : suspicion, confirmé, corrigé, écarté (avec la raison).
@@ -64,12 +65,12 @@ d'audit MSVC `/W4 /permissive- /Zc:__cplusplus` de tout le dépôt
 
 | Id | Cat. | Emplacement | Constat | Statut |
 |---|---|---|---|---|
-| C-01 | B | `src/editor/imageeditor.cpp:1845`, `src/core/DetailProcessing.cpp:449` | La netteté ne reçoit pas `pixelScale`, contrairement au contraste local, au voile, au grain et au flou : sur l'aperçu réduit (2048 px), un rayon de 1 px agit comme environ 3 px de l'image entière. L'aperçu ne montre donc pas la netteté exportée. | Confirmé par le chemin d'exécution ; ampleur visuelle à mesurer |
+| C-01 | B | `src/editor/imageeditor.cpp:1845`, `src/core/DetailProcessing.cpp:449` | La netteté ne reçoit pas `pixelScale`, contrairement au contraste local, au voile, au grain et au flou : sur l'aperçu réduit (2048 px), un rayon de 1 px agit comme environ 3 px de l'image entière. L'aperçu ne montre donc pas la netteté exportée. Nuance de Codex : cela démontre un support spatial différent, pas une équivalence exacte après redimensionnement ; tester une mire de contours à plusieurs échelles avant correction. | Confirmé (relu par Codex) ; ampleur visuelle à mesurer |
 | C-02 | B | `src/core/DetailProcessing.cpp:152` | Le débruitage de luminance utilise des échelles fixes (σ 0,8 et 1,8 px) quelle que soit l'échelle ; le seuil suit le bruit mesuré, donc l'écart aperçu/export est atténué mais non nul. | Suspicion |
-| C-03 | B | `src/core/ColorPipeline.cpp:112-114` | `QImage image(...)` n'est pas contrôlée avant `memcpy` dans `scanLine(y)` : un échec d'allocation (environ 190 Mo pour 24 MP en 16 bits, sur un poste déjà chargé) écrit à une adresse nulle. Le contrôle `isNull()` vient trop tard (l. 388). | Confirmé par lecture ; non reproduit |
-| C-04 | B | `src/core/ImageExporter.cpp:138` | `TIFFClose` écrit le répertoire du DNG sans retour d'erreur : un disque plein à ce moment donne un DNG tronqué annoncé comme réussi. `TIFFFlush` avant la fermeture permet de le détecter. | Confirmé par lecture |
-| C-05 | B | `src/core/Sidecar.cpp:53-58, 87-99` ; usage `src/editor/imageeditor.cpp:2424` | `Sidecar::read` ne borne pas les valeurs lues (exposition non contrôlée comme finie, curseurs entiers hors plage, points de courbe ni triés ni bornés à [0, 1]) alors que les setters et `setToneCurve` les normalisent. La spline suppose des abscisses croissantes. Un `.ipr` corrompu ou modifié à la main produit un rendu faux ou non fini. | Confirmé par lecture |
-| C-06 | B | `src/core/ImageImporter.cpp:50` | `readMetadataText` accepte une clé qui *se termine* par le nom cherché : « Model » correspond à « LensModel », « Make » à « LensMake ». Selon l'ordre des clés, un JPEG ou TIFF peut afficher l'objectif comme boîtier. RAW non concernés. | Confirmé par lecture ; à couvrir par un test |
+| C-03 | B | `src/core/ColorPipeline.cpp:112-114` | `QImage image(...)` n'est pas contrôlée avant `memcpy` dans `scanLine(y)` : un échec d'allocation (environ 190 Mo pour 24 MP en 16 bits, sur un poste déjà chargé) écrit à une adresse nulle. Le contrôle `isNull()` vient trop tard (l. 388). | Confirmé (relu par Codex) ; non reproduit |
+| C-04 | B | `src/core/ImageExporter.cpp:138` | `TIFFClose` écrit le répertoire du DNG sans retour d'erreur : un disque plein à ce moment donne un DNG tronqué annoncé comme réussi. `TIFFFlush` avant la fermeture permet de le détecter. La correction garde une fermeture unique et nettoie l'échec, sans prétendre garantir la persistance physique après coupure. À qualifier par injection d'erreur d'E/S. | Confirmé (relu par Codex) |
+| C-05 | B | `src/core/Sidecar.cpp:53-58, 87-99` ; usage `src/editor/imageeditor.cpp:2424` | `Sidecar::read` ne borne pas les valeurs lues (exposition non contrôlée comme finie, curseurs entiers hors plage, points de courbe ni triés ni bornés à [0, 1]) alors que les setters et `setToneCurve` les normalisent. Précision de Codex : la finitude des points et les plages bruit/netteté sont déjà contrôlées ; la spline (`ToneCurve.cpp:20`) écarte une abscisse décroissante, donc une courbe désordonnée perd des points en silence, sans division par zéro. Une exposition non finie ou démesurée atteint en revanche `exp2` au rendu. | Confirmé (relu par Codex) |
+| C-06 | B | `src/core/ImageImporter.cpp:50` | `readMetadataText` accepte une clé qui *se termine* par le nom cherché : « Model » correspond à « LensModel », « Make » à « LensMake ». Selon l'ordre des clés, un JPEG ou TIFF peut afficher l'objectif comme boîtier, même si un champ Model existe. RAW non concernés. Tests : Model et LensModel distincts ; LensModel seul ; clés qualifiées EXIF. | Confirmé (relu par Codex) |
 | C-07 | E | `src/editor/imageeditor.cpp:1191-1196` | `addPointColorAt` rend les tons sur le thread de l'IHM quand l'étage n'est pas en cache (proxy entier, débruitage caméra compris en mode expérimental) : gel possible de l'interface. | Suspicion ; à mesurer |
 | C-08 | E | `src/editor/imageeditor.cpp:2056-2065, 2164-2167, 2238-2243, 2289` | À l'ouverture, les empreintes SHA-256 du DCP, du LCP et du manifeste sont recalculées plusieurs fois sur le thread de l'IHM (jusqu'à quatre fois par fichier). | Confirmé par lecture ; coût à mesurer |
 | C-09 | E | `src/core/Histogram.cpp:27` | Trois `srgbDecode` (puissance) par pixel à chaque rendu d'aperçu ; une table de 256 valeurs suffit. | Confirmé par lecture |
@@ -83,7 +84,7 @@ d'audit MSVC `/W4 /permissive- /Zc:__cplusplus` de tout le dépôt
 | C-17 | D | `src/core/ColorPipeline.cpp:70`, `src/core/Histogram.cpp:27`, `src/core/Dehaze.cpp:202, 238, 255` | Coefficients de luminance sRGB (0,2126 ; 0,7152 ; 0,0722) recopiés dans trois modules. | Confirmé |
 | C-18 | D | `src/core/Grain.cpp:45-53` | `encode`/`decode` recopient `WorkingColor::srgbEncode`/`srgbDecode` (versions `float` existantes). | Confirmé ; vérifier l'égalité au bit près |
 | C-19 | D | `src/core/ImageImporter.cpp:16-17` | Normalisation des clés réécrite au lieu d'appeler `normalizedMetadataKey`. | Confirmé |
-| C-20 | D | `src/cache/DecodedImageCache.cpp:14`, `src/core/Vibrance.cpp` (`applyPixel`), `src/core/PointColor.cpp` (`apply`) | Fonctions utilisées seulement par les tests. | Confirmé ; garder ou tester via l'API réelle, à décider |
+| C-20 | D | `src/cache/DecodedImageCache.cpp:14`, `src/core/Vibrance.cpp` (`applyPixel`), `src/core/PointColor.cpp` (`apply`) | Fonctions utilisées seulement par les tests. Remarque de Codex : ce n'est pas en soi du code mort, un point d'entrée de test unitaire peut être légitime ; à arbitrer selon le contrat voulu, sans réduire la testabilité. | À arbitrer |
 | C-21 | D | `src/core/PerceptualColour.cpp:67-72, 81-86` | Le jeu de paramètres « avant la couleur du point » est construit deux fois. | Confirmé |
 | C-22 | D | `src/editor/imageeditor.cpp:2226, 2423, 2272, 2280, 802-812, 819-834` | Le `.ipr` est lu deux fois à chaque ouverture ; `setBusy(true)` deux fois dans `beginLoad` ; lecture des points de courbe dupliquée entre `toneCurveValue` et `setToneCurve`. | Confirmé |
 | C-23 | D | `src/core/ImageExporter.cpp:112, 131, 276` | `writeLinearDng` supprime le fichier en échec, puis la garde de `write` le supprime à nouveau. | Confirmé, sans effet |
@@ -100,4 +101,30 @@ C-13 est tranché : conservé. C-11 relève de la refonte
 
 ### Constats — Codex
 
-En attente de transmission.
+Transmis le 1er novembre 2026 par le journal partagé ; lecture dans
+`.worktrees/raw_code_audit` sur `28c01d9`, sans modification ni compilation.
+Lecture ciblée de son périmètre, **pas une certification exhaustive** des
+modules ni des tests ; Python non audité. Aucune panne par épuisement mémoire,
+disque plein ou échec de création de thread n'a été provoquée.
+
+**Points sains relus** : `Demosaic` a une garde de jointure des threads ; les
+rappels du registre RAW s'exécutent hors verrou ; le cache de profils garde ses
+lecteurs actifs par `shared_ptr` et attrape les exceptions du parseur ; `main`
+détruit les racines QML avant `ImageEditor`.
+
+| Id | Cat. | Emplacement | Constat | Statut |
+|---|---|---|---|---|
+| X-01 | B | `src/raw/RawInput.cpp:25-28`, `src/raw/RawDevelopment.cpp:70-81` | `valid()` contrôle seulement les gains R, G, B, alors que `develop()` divise par le minimum des **quatre** gains : avec {1, 1, 1, 0}, l'entrée est acceptée et le diviseur est nul ; un second vert infini ou négatif n'est pas contrôlé. L'adaptateur LibRaw remplace normalement un G2 nul par G : défaut du contrat public pour les futurs décodeurs, pas une régression des RAW actuels. | Confirmé par le chemin arithmétique |
+| X-02 | R | `src/tools/generate_test_images.cpp:118-121` | Si `emplace_back` échoue après le démarrage d'un thread, le vecteur est détruit avec des `std::thread` joignables : `std::terminate`. Pas de garde de jointure, contrairement à `Demosaic.cpp`. | Confirmé par le chemin d'exception |
+| X-03 | R | `src/providers/ThumbnailProvider.cpp:37, 79-80` | `clear()` retire du pool les réponses en attente (`autoDelete` faux) : elles ne sont ni exécutées, ni détruites, ni terminées par `finished()`, ce que Qt exige même après annulation. | Confirmé par le chemin et la documentation Qt 6.8 ; fuite à mesurer |
+| X-04 | B | `src/providers/ThumbnailProvider.cpp:40-45, 129-133` | Une exception du chargeur sort de `QRunnable::run` sans être traduite en erreur ni suivie de `finished()`. | Chemin confirmé ; plantage non reproduit |
+| X-05 | R | `src/raw/RawDecoder.cpp:788-825` | La vignette de `dcraw_make_mem_thumb` est libérée à la main : une exception avant la ligne 825 saute `dcraw_clear_mem`. Le chemin pleine image utilise déjà un `unique_ptr` avec suppresseur (l. 624-625). | Confirmé ; fuite non mesurée |
+| X-06 | R | `src/profiles/PreparedProfileCache.cpp:67, 94-99` | La garde protège le chargeur, pas l'insertion LRU : si elle lève après publication de l'attente, `done` reste faux et les autres lecteurs attendent sans fin. | Confirmé par le chemin d'exception |
+| X-07 | B | `src/profiles/CameraProfileEngine.cpp:707-722, 939-969` | Un tag de table DCP présent mais invalide ou tronqué est confondu avec un tag absent : le profil est accepté en perdant une partie de son rendu, sans erreur. | Confirmé par les branches ; aucun DCP corrompu constaté |
+| X-08 | B | `src/profiles/CameraProfileEngine.cpp:455-456, 764` | Des valeurs DCP sont converties en entier avant validation : 0,5 devient 0 et passe ; un double hors plage `int` est une conversion non représentable. | Confirmé par lecture |
+| X-09 | R | `tests/thumbnail_provider_test.cpp:109-110` | Le résultat du dernier `waitFor` est ignoré : après expiration, les réponses sont détruites alors que `run()` peut encore les utiliser. | Course confirmée par le chemin d'expiration ; non reproduite |
+| X-10 | L | `src/raw/Demosaic.cpp:185`, `src/tools/render_server.cpp:213` | Avertissements `/W4` : C4996 (initialiseur OpenCV déprécié) et C4456 (masquage de `source`). Nettoyages, pas des défauts photographiques. | Confirmé |
+
+**Priorités de Codex** : X-01, X-02, X-03, X-04 et X-06, puis les entrées
+malformées des profils et les tests. Aucune suppression de chemin ni
+correction photographique sur ces seuls constats.
