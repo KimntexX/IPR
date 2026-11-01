@@ -82,6 +82,30 @@
   fonctions, paramètres, variables, includes, fichiers, tests et documentation
   qui ne servent plus.
 
+## Structure et testabilité du code — règle du 31 octobre 2026
+
+- Appliquer ces principes à tous les langages du projet et à tous les agents :
+  concevoir des fonctions à responsabilité claire, avec des dépendances et des
+  contrats explicites ; séparer calculs, entrées/sorties et orchestration.
+- Prévoir les tests dès la conception, y compris les cas limites pertinents :
+  données absentes ou invalides, erreurs, annulation et libération des ressources.
+  Avant une refactorisation, protéger le comportement attendu par des tests.
+- Relire en priorité les fonctions ajoutées ou modifiées : complexité des
+  branchements, lisibilité, couverture des comportements et qualité des assertions.
+  Suivre le cycle conception, code et tests, mesures disponibles, puis revue.
+- Si des mesures de complexité, de couverture ou de CRAP sont disponibles,
+  les utiliser comme indicateurs de risque, pas comme objectifs de conception ni
+  comme preuve de correction. Ne pas inventer de score ou assimiler une couverture
+  non mesurée à une couverture nulle. Aucune installation d'outil, campagne
+  exhaustive ou barrière CI chiffrée n'est imposée par cette règle.
+- Ne pas découper artificiellement les fonctions pour améliorer un score et ne
+  pas ajouter d'abstractions sans bénéfice concret. Préserver la cohérence et les
+  performances des boucles de traitement d'image ; vérifier toute modification
+  photographique avec les preuves numériques et visuelles adaptées.
+- Une ligne exécutée n'est pas nécessairement un comportement vérifié : ces
+  indicateurs ne remplacent ni la revue du code, ni les contrôles de ressources
+  et de concurrence, ni la validation visuelle de l'application par l'utilisateur.
+
 ## Validations partielles et issues GitHub — règle du 31 octobre 2026
 
 - Toute fonctionnalité ou donnée validée seulement en partie (par exemple le
