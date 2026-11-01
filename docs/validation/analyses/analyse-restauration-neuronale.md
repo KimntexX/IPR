@@ -441,3 +441,37 @@ partielles restent visibles en cas d'erreur ; aucun nettoyage automatique.
 Prochaine action : qualification des références et des paires dans le signal
 caméra signé IPR, avec les mêmes critères qu'au passage corrigé précédent.
 **Aucun nouvel entraînement photographique ni changement moteur à ce stade.**
+
+## 1er novembre 2026 — qualification RAW de la nouvelle composition : lancement
+
+Campagne gelée `neural-control-pairs-v001-20261101T213657Z`, banc local
+`41cd686`, dans `build-patch_neural_restoration/control-pairs-0301-0366-v001`.
+Ce paragraphe constate le lancement, **pas le résultat** de la qualification.
+
+Sélection avant mesure : les 17 références ISO 100, et le début, milieu
+entier inférieur et dernier fichier de chacune des quatre séries à ISO
+plus élevé, soit **29 extractions**. Référence principale : 0301–0309,
+première série chronologique ; 0320–0327 reste un diagnostic distinct.
+Ne pas réunir les références ni remplacer la principale après observation
+des nombres de fenêtres admises. La comparaison porte sur les mêmes
+12 fichiers bruités dans les deux passages.
+
+Signal extrait par le banc natif reconstruit : RGB caméra signé balancé,
+après RCD/médiane, avant LCP/DCP, sans réduction du bruit ni corrections
+optiques. Profil Camera Neutral et calibration identifiés par empreinte ;
+la première extraction 0301 confirme la calibration réellement appliquée.
+Les seuils et fenêtres du passage corrigé v002 sont repris sans modification.
+
+L'identité de composition et la partition sont désormais lues dans le gel,
+au lieu d'une liste codée limitée à `indoor`/`vegetation`. Refus des sources
+dupliquées, d'une partition inconnue et d'une référence incomplète. Huit
+tests nouveaux et les treize tests numériques de paires réussissent ;
+construction de l'extracteur réussie. Aucun calcul photographique modifié.
+
+Cette campagne ne contient **que de la validation**, donc aucun exemple
+d'apprentissage. Le statut interne du qualificateur partagé exigeant à la
+fois apprentissage et validation reste insuffisant pour entraîner ; le
+bilan externe distinguera explicitement l'admission de paires de contrôle.
+Même si elle réussit, cette étape ne lance pas automatiquement de réseau.
+Le résultat final et les diagnostics seront conservés dans un nouveau JSON
+canonique au nom de la campagne ; aucune ancienne preuve n'est remplacée.
