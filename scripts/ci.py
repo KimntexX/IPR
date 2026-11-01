@@ -171,22 +171,63 @@ def rewrite_homebrew(binary):
             run(['install_name_tool', '-change', old, new, binary])
 
 
+def unexplained_deploy_errors(output, explained):
+    """macdeployqt ERROR lines, except missing files in `explained`."""
+    unexplained = []
+    for line in output.splitlines():
+        if 'ERROR:' not in line:
+            continue
+        missing = re.search(r'ERROR: no file at "([^"]+)"', line)
+        if not missing or missing.group(1) not in explained:
+            unexplained.append(line.strip())
+    return unexplained
+
+
+def macos_dependencies(binaries):
+    """Install names the binaries link to (otool -L)."""
+    names = set()
+    for binary in binaries:
+        lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
+        names.update(line.strip().split(' (', 1)[0] for line in lines)
+    return names
+
+
 def deploy_macos(stage, env):
     bundle = stage / 'appIPR.app'
     qt_root = Path(env['QT_ROOT_DIR'])
+    # The headless platform, as on Windows and Linux: macdeployqt deploys cocoa
+    # only, the package's smoke test and command-line runs need offscreen.
+    platforms = bundle / 'Contents/PlugIns/platforms'
+    platforms.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(qt_root / 'plugins/platforms/libqoffscreen.dylib', platforms)
+    extra = ['-executable=appIPR.app/Contents/PlugIns/platforms/libqoffscreen.dylib']
     # One deployment pass, from the bundle's parent. Scan only project imports;
     # deploying the whole Homebrew Qt tree pulled unrelated missing frameworks.
     # The generator is in development archives only (production: IPR_BUILD_TOOLS=OFF).
-    generator = bundle / 'Contents/MacOS/iprGenerateTests'
-    tools = ['-executable=appIPR.app/Contents/MacOS/iprGenerateTests'] if generator.is_file() else []
-    completed = run([qt_root / 'bin/macdeployqt', 'appIPR.app', *tools,
+    if (bundle / 'Contents/MacOS/iprGenerateTests').is_file():
+        extra.append('-executable=appIPR.app/Contents/MacOS/iprGenerateTests')
+    # Libraries reached through @rpath (libwebp's libsharpyuv...) are resolved
+    # in Homebrew's lib folder too, after Qt's, so that they are copied.
+    brew = shutil.which('brew')
+    homebrew = ['-libpath=' + subprocess.check_output([brew, '--prefix'], text=True).strip() + '/lib'] if brew else []
+    completed = run([qt_root / 'bin/macdeployqt', 'appIPR.app', *extra,
                      '-qmldir=' + str(ROOT / 'src/qml'),
-                     '-libpath=' + str(qt_root / 'lib'), '-always-overwrite'],
+                     '-libpath=' + str(qt_root / 'lib'), *homebrew, '-always-overwrite'],
                     cwd=stage, env=env, capture_output=True, text=True)
     output = completed.stdout + completed.stderr
     print(output, flush=True)
-    if re.search(r'\bERROR:', output):
-        raise RuntimeError('macdeployqt reported unresolved dependencies')
+    # macdeployqt copies QML modules whole: QtQuick's LocalStorage brings QtSql,
+    # hence every SQL driver, some linked to databases absent from the machine.
+    # IPR uses no SQL driver: only their missing dependencies are tolerated, and
+    # the drivers are removed before the portability check.
+    drivers = bundle / 'Contents/PlugIns/sqldrivers'
+    unused = sorted(drivers.glob('*.dylib')) if drivers.is_dir() else []
+    unexplained = unexplained_deploy_errors(output, macos_dependencies(unused))
+    if unexplained:
+        raise RuntimeError('macdeployqt reported unresolved dependencies: ' + '; '.join(unexplained))
+    if drivers.is_dir():
+        shutil.rmtree(drivers)
+    relocate_bundled_references(bundle)
     with (bundle / 'Contents/Info.plist').open('rb') as stream:
         executable = plistlib.load(stream)['CFBundleExecutable']
     if not (bundle / 'Contents/MacOS' / executable).is_file():
@@ -196,20 +237,61 @@ def deploy_macos(stage, env):
         raise ValueError('Broken bundle links: ' + ', '.join(broken))
 
 
-def assert_macos_portable(bundle):
-    magic = {b'\xfe\xed\xfa\xce', b'\xce\xfa\xed\xfe', b'\xfe\xed\xfa\xcf',
-             b'\xcf\xfa\xed\xfe', b'\xca\xfe\xba\xbe', b'\xbe\xba\xfe\xca',
-             b'\xca\xfe\xba\xbf', b'\xbf\xba\xfe\xca'}
-    for binary in bundle.rglob('*'):
-        if not binary.is_file() or binary.is_symlink():
-            continue
-        with binary.open('rb') as stream:
-            if stream.read(4) not in magic:
-                continue
+MACHO_MAGIC = {b'\xfe\xed\xfa\xce', b'\xce\xfa\xed\xfe', b'\xfe\xed\xfa\xcf',
+               b'\xcf\xfa\xed\xfe', b'\xca\xfe\xba\xbe', b'\xbe\xba\xfe\xca',
+               b'\xca\xfe\xba\xbf', b'\xbf\xba\xfe\xca'}
+
+
+def macho_files(bundle):
+    for binary in sorted(bundle.rglob('*')):
+        if binary.is_file() and not binary.is_symlink():
+            with binary.open('rb') as stream:
+                if stream.read(4) in MACHO_MAGIC:
+                    yield binary
+
+
+def external(path):
+    return path.startswith('/') and not path.startswith(('/System/Library/', '/usr/lib/'))
+
+
+def bundled_path(path, frameworks):
+    """Path within Contents/Frameworks of the bundle's copy of a library or
+    framework binary named by an absolute path, None if the bundle lacks it."""
+    parts = Path(path).parts
+    for index, part in enumerate(parts):
+        if part.endswith('.framework'):
+            relative = Path(*parts[index:])
+            return relative.as_posix() if (frameworks / relative).is_file() else None
+    return parts[-1] if parts and (frameworks / parts[-1]).is_file() else None
+
+
+def relocate_bundled_references(bundle):
+    """Absolute install names and references to a library or framework the bundle
+    carries point to that copy. macdeployqt leaves some behind (OpenCV's own ids,
+    paths into the staging folder); references to libraries the bundle does not
+    carry are left for assert_macos_portable to refuse."""
+    frameworks = bundle / 'Contents/Frameworks'
+    for binary in macho_files(bundle):
+        ids = [line.strip() for line in
+               subprocess.check_output(['otool', '-D', str(binary)], text=True).splitlines()[1:]]
+        own = ids[0] if ids else ''
+        target = bundled_path(own, frameworks) if external(own) else None
+        if target:
+            run(['install_name_tool', '-id', '@executable_path/../Frameworks/' + target, binary])
         lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
         for line in lines:
             dependency = line.strip().split(' (', 1)[0]
-            if dependency.startswith('/') and not dependency.startswith(('/System/Library/', '/usr/lib/')):
+            target = bundled_path(dependency, frameworks) if dependency != own and external(dependency) else None
+            if target:
+                run(['install_name_tool', '-change', dependency, '@executable_path/../Frameworks/' + target, binary])
+
+
+def assert_macos_portable(bundle):
+    for binary in macho_files(bundle):
+        lines = subprocess.check_output(['otool', '-L', str(binary)], text=True).splitlines()[1:]
+        for line in lines:
+            dependency = line.strip().split(' (', 1)[0]
+            if external(dependency):
                 raise ValueError(f'Standalone still uses an external library: {binary.name}: {dependency}')
 
 
