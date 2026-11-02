@@ -11,7 +11,7 @@ import time
 import torch
 
 from diagnose_train_learnability import digest,save
-from joint_bayer_unet import JointBayerUNet,bilinear,sample_rgb
+from joint_bayer_unet import JointBayerUNet,bilinear,sample_rgb,project_exact_observations
 from synthetic_bayer_data import PATTERNS,FAMILIES,signal,noisy_observation
 from reconstruction_gates import gate_config,qualifies
 
@@ -60,18 +60,31 @@ def aggregate(rows):
         channel_bias=[sum(r['metrics']['channel_bias_sum'][c] for r in rows)/count for c in range(3)])
 
 
-def run(output,stage='joint'):
-    if stage not in ('joint','reconstruction'):raise ValueError('Unknown training stage')
+def run(output,stage='joint',reference=None):
+    if stage not in ('joint','reconstruction','reconstruction-consistent'):raise ValueError('Unknown training stage')
     root=Path(__file__).resolve().parents[2];output=output.resolve()
     if not output.is_relative_to((root/'build-patch_neural_restoration').resolve()):raise ValueError('Use dedicated neural build')
     config=dict(seed=71,width=8,batch=4,steps=2048,learning_rate=.001,scale=2.,side=128,loss_border=48)
+    config['exact_observations']=stage=='reconstruction-consistent'
+    reference_proof=None
+    if reference is not None and not config['exact_observations']:raise ValueError('Reference only used for consistency ablation')
+    if config['exact_observations']:
+        if reference is None:raise ValueError('Consistent reconstruction requires frozen unconstrained reference')
+        reference=reference.resolve()
+        if not reference.is_relative_to((root/'build-patch_neural_restoration').resolve()):raise ValueError('Reference outside neural build')
+        reference_proof=json.loads((reference/'result.json').read_text(encoding='utf-8'))
+        if reference_proof['status']!='completed_synthetic_reconstruction_stage_not_photographic_qualification':
+            raise ValueError('Reference reconstruction is incomplete')
+        if reference_proof['freeze']['training_stage']!='reconstruction':raise ValueError('Expected noise-free unprojected reference')
+        if digest(reference/'synthetic-joint-weights.pt')!=reference_proof['weights_sha256']:raise ValueError('Reference weights changed')
     cases=[dict(family=family,seed=7300+100*i+j,pattern=list(PATTERNS[j%4]))
         for i,family in enumerate(FAMILIES) for j in range(8)]
     tests=[dict(family=family,seed=8400+100*i+j,pattern=list(pattern),noise_index=k,
                 noise_seed=95000+1000*i+100*j+k)
         for i,family in enumerate(FAMILIES) for j,pattern in enumerate(PATTERNS)
         for k in (range(3) if stage=='joint' else (0,))]
-    prefix='neural-synthetic-joint-v001-' if stage=='joint' else 'neural-synthetic-reconstruction-v001-'
+    prefix={'joint':'neural-synthetic-joint-v001-','reconstruction':'neural-synthetic-reconstruction-v001-',
+        'reconstruction-consistent':'neural-synthetic-consistent-reconstruction-v001-'}[stage]
     now=datetime.now(timezone.utc);campaign=prefix+now.strftime('%Y%m%dT%H%M%SZ')
     freeze=dict(schema_version=1,data_version=1,campaign_id=campaign,measured_at_utc=now.isoformat(),
         git_sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),config=config,
@@ -81,7 +94,9 @@ def run(output,stage='joint'):
         selection='One seed, Adam, fixed2048 steps, final checkpoint; no evaluation-dependent tuning.',
         relative_error_mse_floor=1e-12,
         training_stage=stage,training_noise_indices=[0,1,2] if stage=='joint' else [0],
-        gates=gate_config() if stage=='reconstruction' else None,
+        gates=gate_config() if stage!='joint' else None,
+        reference=None if reference is None else dict(path=str(reference),result_sha256=digest(reference/'result.json'),
+            weights_sha256=digest(reference/'synthetic-joint-weights.pt')),
         tools={n:digest(Path(__file__).with_name(n)) for n in
             ('run_synthetic_joint_pilot.py','joint_bayer_unet.py','synthetic_bayer_data.py','camera_unet.py','reconstruction_gates.py')})
     output.mkdir(parents=True,exist_ok=False);save(output/'freeze.json',freeze)
@@ -91,6 +106,14 @@ def run(output,stage='joint'):
     clean=torch.stack([signal(c['family'],c['seed'],config['side']) for c in cases])
     patterns=torch.tensor([c['pattern'] for c in cases],dtype=torch.int64)
     model=JointBayerUNet(config['width']);optimizer=torch.optim.Adam(model.parameters(),lr=config['learning_rate'])
+    reference_model=None
+    if reference_proof is not None:
+        # Model construction consumes RNG, but training uses a dedicated generator
+        # and these blocks contain no stochastic layers.
+        reference_model=JointBayerUNet(config['width'])
+        checkpoint=torch.load(reference/'synthetic-joint-weights.pt',map_location='cpu',weights_only=True)
+        if checkpoint['freeze_sha256']!=reference_proof['freeze_sha256']:raise ValueError('Reference checkpoint mismatch')
+        reference_model.load_state_dict(checkpoint['state_dict'],strict=True);reference_model.requires_grad_(False);reference_model.eval()
     generator=torch.Generator().manual_seed(72);rows=[];losses=[];started=time.monotonic()
     result=dict(schema_version=1,data_version=1,campaign_id=campaign,measured_at_utc=now.isoformat(),
         freeze=freeze,freeze_sha256=digest(output/'freeze.json'),records=rows,status='incomplete',losses=losses,
@@ -102,7 +125,7 @@ def run(output,stage='joint'):
             'Evaluation against own bilinear baseline only, not RCD, Lightroom or another trained network.',
             'An ambiguous same-mosaic pair is a limitation witness, excluded from quality aggregate.',
             'No RAW training, camera-level validation, visual approval, default change or production hook.'])
-    if stage=='reconstruction':
+    if stage!='joint':
         result['limits'].append('No added noise and sigma0 throughout this stage; no denoising-quality conclusion.')
     try:
         for step in range(1,config['steps']+1):
@@ -111,7 +134,8 @@ def run(output,stage='joint'):
             a,b=NOISE[(step-1)%len(NOISE)] if stage=='joint' else NOISE[0]
             noisy,sigma=noisy_observation(target,pattern,a,b,generator)
             model.train();optimizer.zero_grad(set_to_none=True)
-            output_image=model(noisy/config['scale'],sigma/config['scale'],pattern)
+            output_image=model(noisy/config['scale'],sigma/config['scale'],pattern,
+                exact_observations=config['exact_observations'])
             crop=(slice(None),slice(None),slice(48,-48),slice(48,-48))
             loss=(output_image[crop]-target[crop]/config['scale']).square().mean()
             loss.backward()
@@ -126,7 +150,10 @@ def run(output,stage='joint'):
                 a,b=NOISE[case['noise_index']]
                 noisy,sigma=noisy_observation(target,pattern,a,b,torch.Generator().manual_seed(case['noise_seed']))
                 before=tensor_hash(noisy);base=bilinear(noisy,pattern)
-                prediction=model(noisy/config['scale'],sigma/config['scale'],pattern)*config['scale']
+                prediction=model(noisy/config['scale'],sigma/config['scale'],pattern,
+                    exact_observations=config['exact_observations'])*config['scale']
+                if config['exact_observations'] and not torch.equal(sample_rgb(prediction,pattern),noisy):
+                    raise ValueError('Exact observed values were not preserved')
                 if tensor_hash(noisy)!=before:raise ValueError('Input mosaic modified')
                 core=(slice(None),slice(None),slice(48,-48),slice(48,-48))
                 observed_error=sample_rgb(prediction[core],pattern)-sample_rgb(target[core],pattern)
@@ -134,6 +161,19 @@ def run(output,stage='joint'):
                     output_sha256=tensor_hash(prediction),metrics=metrics(target,base,prediction),
                     observed_site_mse=float(observed_error.square().mean()),
                     output_min=float(prediction.min()),output_max=float(prediction.max())))
+                if reference_model is not None:
+                    previous_rows=[r for r in reference_proof['records'] if r['family']==case['family'] and r['pattern']==case['pattern']]
+                    if len(previous_rows)!=1:raise ValueError('Ambiguous reference case')
+                    previous=previous_rows[0]
+                    if previous['target_sha256']!=tensor_hash(target) or previous['noisy_sha256']!=before:
+                        raise ValueError('Changed reference inputs')
+                    replay=reference_model(noisy/config['scale'],sigma/config['scale'],pattern)*config['scale']
+                    replay_metrics=metrics(target,base,replay)
+                    if abs(replay_metrics['output_sse']-previous['metrics']['output_sse'])>1e-6*max(1e-8,previous['metrics']['output_sse']):
+                        raise ValueError('Reference model replay differs')
+                    projected=project_exact_observations(replay,noisy,sigma,pattern)
+                    result.setdefault('projection_only_records',[]).append(dict(**case,metrics=metrics(target,base,projected),
+                        observed_site_mse=float((sample_rgb(projected[core],pattern)-sample_rgb(target[core],pattern)).square().mean())))
             a=torch.zeros(1,3,32,32);b=a.clone();b[:,0,1::2,1::2]=.5
             pattern=torch.tensor([PATTERNS[0]],dtype=torch.int64)
             first,second=sample_rgb(a,pattern),sample_rgb(b,pattern)
@@ -147,7 +187,11 @@ def run(output,stage='joint'):
         result['by_noise']={str(i):aggregate([r for r in rows if r['noise_index']==i]) for i in noise_indices}
         result['by_family_and_noise']={family:{str(i):aggregate([r for r in rows if r['family']==family and r['noise_index']==i])
             for i in noise_indices} for family in FAMILIES}
-        if stage=='reconstruction':result['qualification']=qualifies(result,freeze['gates'])
+        if stage!='joint':result['qualification']=qualifies(result,freeze['gates'])
+        if reference_model is not None:
+            result['projection_only_summary']=aggregate(result['projection_only_records'])
+            result['projection_only_by_family']={family:aggregate([r for r in result['projection_only_records'] if r['family']==family]) for family in FAMILIES}
+            if digest(reference/'synthetic-joint-weights.pt')!=freeze['reference']['weights_sha256']:raise ValueError('Reference weights changed')
         torch.save(dict(state_dict=model.state_dict(),config=config,freeze_sha256=digest(output/'freeze.json')),
             output/'synthetic-joint-weights.pt')
         result['weights_sha256']=digest(output/'synthetic-joint-weights.pt')
@@ -165,5 +209,6 @@ def run(output,stage='joint'):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--stage',choices=('joint','reconstruction'),default='joint')
-    a=p.parse_args();run(a.output,a.stage)
+    p.add_argument('--stage',choices=('joint','reconstruction','reconstruction-consistent'),default='joint')
+    p.add_argument('--reference',type=Path)
+    a=p.parse_args();run(a.output,a.stage,a.reference)

@@ -27,17 +27,32 @@ def colour_tags(pattern):
     return F.one_hot(merged,num_classes=3).permute(0,2,1).float()
 
 
-def bilinear(packed,pattern):
+def sparse_rgb(packed,pattern):
     validate(packed,torch.zeros_like(packed),pattern)
     n,_,h,w=packed.shape
     tags=colour_tags(pattern)[:,:,:,None,None]
     observed=F.pixel_shuffle((tags*packed[:,None]).reshape(n,12,h,w),2)
     support=F.pixel_shuffle(tags.expand(n,3,4,h,w).reshape(n,12,h,w),2)
+    return observed,support
+
+
+def bilinear(packed,pattern):
+    observed,support=sparse_rgb(packed,pattern)
     kernel=packed.new_tensor([[1.,2.,1.],[2.,4.,2.],[1.,2.,1.]])[None,None].expand(3,1,3,3)
     weights=F.conv2d(support,kernel,padding=1,groups=3)
     values=F.conv2d(observed,kernel,padding=1,groups=3)
     if (weights<=0).any():raise ValueError('No colour support for reconstruction')
     return torch.where(support>0,observed,values/weights)
+
+
+def project_exact_observations(predicted,packed,sigma,pattern):
+    validate(packed,sigma,pattern)
+    expected=(packed.shape[0],3,2*packed.shape[2],2*packed.shape[3])
+    if (predicted.shape!=expected or predicted.dtype!=packed.dtype or predicted.device!=packed.device
+            or not torch.isfinite(predicted).all()):raise ValueError('Matching finite RGB prediction required')
+    if (sigma!=0).any():raise ValueError('Exact projection requires a declared noise-free observation')
+    observed,support=sparse_rgb(packed,pattern)
+    return torch.where(support>0,observed,predicted)
 
 
 class JointBayerUNet(nn.Module):
@@ -54,14 +69,16 @@ class JointBayerUNet(nn.Module):
         self.head=nn.Conv2d(width,12,1)
         nn.init.zeros_(self.head.weight);nn.init.zeros_(self.head.bias)
 
-    def forward(self,packed,sigma,pattern):
+    def forward(self,packed,sigma,pattern,exact_observations=False):
+        if not isinstance(exact_observations,bool):raise ValueError('Explicit Boolean observation policy required')
         validate(packed,sigma,pattern)
         tags=colour_tags(pattern).reshape(len(packed),12,1,1).expand(-1,-1,*packed.shape[2:])
         a=self.enc1(torch.cat((packed,sigma,tags),dim=1))
         b=self.enc2(F.avg_pool2d(a,2));c=self.middle(F.avg_pool2d(b,2))
         d=self.dec2(torch.cat((F.interpolate(c,size=b.shape[2:],mode='nearest'),b),dim=1))
         e=self.dec1(torch.cat((F.interpolate(d,size=a.shape[2:],mode='nearest'),a),dim=1))
-        return bilinear(packed,pattern)+F.pixel_shuffle(self.head(e),2)
+        predicted=bilinear(packed,pattern)+F.pixel_shuffle(self.head(e),2)
+        return project_exact_observations(predicted,packed,sigma,pattern) if exact_observations else predicted
 
 
 def sample_rgb(rgb,pattern):
