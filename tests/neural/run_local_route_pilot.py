@@ -37,7 +37,7 @@ def gate_result(rows, gates):
     return qualifies(data, gates)
 
 
-def run(parent, output, variant):
+def run(parent, output, variant, seed=71):
     root = Path(__file__).resolve().parents[2]
     parent, output = parent.resolve(), output.resolve()
     if not all(p.is_relative_to((root/'build-patch_neural_restoration').resolve()) for p in (parent, output)):
@@ -45,7 +45,9 @@ def run(parent, output, variant):
     source = json.loads((parent/'result.json').read_text(encoding='utf-8'))
     if source['status'] != 'completed_diverse_contour_reconstruction_not_photographic_qualification':
         raise ValueError('Frozen diversity data required')
-    config = dict(source['freeze']['config'], model_kind=variant, seed=71, steps=2048, microbatch=1, accumulation=4)
+    if isinstance(seed, bool) or not isinstance(seed, int) or seed < 0:
+        raise ValueError('Nonnegative integer initialization seed required')
+    config = dict(source['freeze']['config'], model_kind=variant, seed=seed, steps=2048, microbatch=1, accumulation=4)
     schedule, _ = balanced_schedule(source['freeze']['train_slots'], 2048, 4, config['side'])
     if tensor_hash(torch.tensor([[*e['ids'], *e['phases']] for e in schedule])) != source['freeze']['phase_schedule_sha256']:
         raise ValueError('Training schedule changed')
@@ -59,7 +61,7 @@ def run(parent, output, variant):
     freeze = dict(config=config, source_result_sha256=digest(parent/'result.json'), tools=tools,
         git_sha=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),
         gates=source['freeze']['gates'], checkpoint='Final2048 only; no early stopping or threshold tuning.',
-        policy='Same seed71/shared-trunk initialization/data/schedule/Adam.001/microbatch1x4, baseline versus local route.',
+        policy='Declared initialization seed, fixed data/schedule/Adam.001/microbatch1x4, no best-seed selection.',
         local_features='Absolute central H/V slopes and H/V second differences, four values per physical plane; two equivariant convolutions then head.',
         evaluation='80consulted cases; full/bias/image-mean/core-mean/disabled-local frozen ablations; no independent confirmation here.')
     output.mkdir(parents=True, exist_ok=False)
@@ -78,7 +80,7 @@ def run(parent, output, variant):
             torch.set_num_threads(4)
             torch.set_num_interop_threads(1)
             torch.use_deterministic_algorithms(True)
-            torch.manual_seed(71)
+            torch.manual_seed(seed)
             model = LocalMomentUNet(config['width']) if variant == 'local' else build_model('equivariant', config['width'])
             result['parameter_count'] = sum(p.numel() for p in model.parameters())
             optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
@@ -194,5 +196,6 @@ if __name__ == '__main__':
     p.add_argument('--parent', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--variant', choices=('baseline', 'local'), required=True)
+    p.add_argument('--seed', type=int, default=71)
     a = p.parse_args()
-    run(a.parent, a.output, a.variant)
+    run(a.parent, a.output, a.variant, a.seed)
