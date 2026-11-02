@@ -1328,3 +1328,75 @@ aidera à distinguer un défaut déjà appris sur les références du train
 d'un défaut surtout lié au transfert vers le contrôle, avant de changer
 l'objectif d'apprentissage. Aucun calcul actif, aucune nouvelle photo
 nécessaire à ce diagnostic, aucune publication ou modification moteur.
+
+## 2 novembre 2026, 10:23 UTC — comparaison apprentissage / contrôle
+
+Campagne `neural-train-control-v001-20261102T102305Z`, banc `3acb5f1`,
+**17 tests ciblés réussis**, diagnostic terminé en **5,92 s**. Même état
+final du pilote enrichi, force100, sigma, seuils de structure historiques
+et inférence96 ; mesures au cœur24 pour limiter l'effet de bord identifié.
+Les 680 identités de pixels sont vérifiées. Le contrôle rejoue les mêmes
+ratios RGB et opposés que la campagne précédente, sans tolérance assouplie.
+Aucun entraînement ou changement de recette.
+
+| Composition et rôle | Patches / RAW sources | Rapport MSE RGB cœur | Rapport erreur opposée cœur |
+| --- | ---: | ---: | ---: |
+| Intérieur initial, train ISO12800/51200 | 342 / 6 | 0,15596 | 0,26342 |
+| Rafale ISO4000, train | 152 / 18 | 0,41433 | 0,52494 |
+| Intérieur de contrôle, ISO1600/3200/6400 | 186 / 9 | 0,56166 | 0,87791 |
+
+Les résultats du train sont des mesures sur les images apprises, pas une
+validation indépendante. Scène, ISO, structures et radiométrie diffèrent
+entre groupes ; leurs écarts ne permettent pas une attribution causale
+unique à la capacité du réseau ou à sa généralisation.
+
+### L'atténuation existe déjà au train
+
+Sur l'intérieur initial, la projection des gradients verts faibles passe
+de **0,66464 à 0,21819**, et celle des forts de **0,87493 à 0,53970**.
+Le contrôle donne respectivement **0,25944 à 0,10061** et **0,72309 à
+0,37234**. Les seuils sont communs, issus du train initial. Ces observations
+écartent l'explication « uniquement un défaut sur scène inconnue » :
+l'atténuation du signal corrélé à la référence existe aussi sur le train.
+Elles ne quantifient toujours pas un pourcentage absolu de détail réel
+perdu, car les références et le recalage restent imparfaits.
+
+La rafale ISO4000 présente **zéro composante de gradient forte** et
+seulement **492 composantes faibles**, contre 686250 composantes dans la
+bande basse, sur le support retenu. Cela ne décrit pas toute la photo,
+mais uniquement ses régions admises. Les 152 paires enrichissent donc
+surtout les contenus peu structurés ; elles ne suffisent pas à enseigner
+la conservation de détails forts à bruit plus faible. Ne pas réviser les
+seuils après coup pour faire apparaître artificiellement une couverture.
+
+### Biais moyen distinct d'un simple défaut de référence inter-ISO
+
+Le diagnostic sépare entrée moins référence, sortie moins référence et
+déplacement sortie moins entrée, canal par canal. Sur le cœur de la rafale
+ISO4000, l'entrée moins référence est presque centrée :
+`[-0,0000254 ; -0,0000133 ; +0,0000257]`. Le modèle déplace la moyenne de
+`[-0,0008859 ; -0,0029199 ; -0,0021920]`, donnant une sortie moins référence
+`[-0,0009113 ; -0,0029332 ; -0,0021663]`, en unités caméra signées.
+Cette série est à ISO constant, sans fit radiométrique : le défaut ne
+peut donc pas être attribué entièrement aux ajustements inter-ISO.
+
+Le déplacement moyen vert vaut aussi **−0,0036223** sur le train intérieur
+et **−0,0042379** sur le contrôle. Cela documente un comportement commun
+du modèle sur ces groupes, pas sa cause unique ni un pourcentage de
+luminosité à l'affichage. À ISO1600, l'erreur opposée au cœur reste 1,36812,
+contre 0,74660 à ISO3200 et 0,51016 à ISO6400.
+
+Mémoire canonique : [diagnostic train / contrôle](../raw/neural-train-control-v001-20261102T102305Z.json).
+
+**Conclusion actuelle : il faut traiter un défaut déjà présent dans
+l'apprentissage, pas seulement multiplier les images de contrôle.**
+Le contexte périphérique est un problème séparé ; les priorités restantes
+sont le centrage des corrections par canal, puis la protection des
+structures, avec des données appariées couvrant effectivement ces structures.
+La prochaine proposition est une expérience isolée de contrainte du biais
+moyen par canal, budget et poids de perte figés avant mesure, sans cumuler
+immédiatement une nouvelle perte de gradients ni ajuster sur le contrôle.
+Le protocole de nouvelles scènes répétées pourra compléter la qualification
+de la généralisation, mais aucune reprise des photos existantes n'est
+requise pour consigner ce diagnostic. Aucun calcul actif, aucune intégration
+en production ou publication.
