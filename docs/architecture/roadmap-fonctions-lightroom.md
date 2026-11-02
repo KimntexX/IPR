@@ -51,6 +51,12 @@ des exports Lightroom, jamais par rétro-ingénierie.
 
 ## Ordre proposé
 
+**Actualisation du31octobre2026 :** le [plan bêta](roadmap-beta.md) organise
+les panneaux géométrie, calques/filtres, suppression d'objets et réseaux locaux.
+Le bruit courant est conservé ; les études incrémentales sont suspendues et
+la piste neuronale prévue pour la bêta. L'ordre initial et l'inventaire datés
+ci-dessus ne doivent pas être lus comme une autorisation de relancer ces études.
+
 1. **Passage en beta** : la règle demande de valider toutes les fonctions de réglage déjà
    présentes. Restent les courbes (exports prêts), la netteté, l'exposition et le contraste
    comparés à LR, le bruit (étude en cours), la décision sur la taille et la rugosité du grain,

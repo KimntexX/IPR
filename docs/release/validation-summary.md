@@ -1,9 +1,30 @@
+*[Français](validation-summary.md) | [English](validation-summary_en.md)*
+
 # Résumé de validation de la release
 
-État au 1er novembre 2026, version `v0.1.86-alpha`. Ce résumé dit ce qui est
-validé dans IPR et dans quelles limites. Les mesures, analyses et preuves
+Release `v0.1.92-alpha`, état au 1er novembre 2026. Le périmètre photographique
+ci-dessous est inchangé depuis `v0.1.86-alpha` : les six patchs suivants portent
+sur le déploiement, sans modification de `src/`. Cette mise à jour documentaire
+n'est pas une nouvelle validation photographique. Les mesures, analyses et preuves
 complètes restent sur la branche `dev`, au commit dont cette version est issue
 (voir `release-manifest.json` à la racine) ; les liens ci-dessous y mènent.
+
+## Vérifications et distributions de cette release
+
+- Source : `dev` `2facc24332a265f0d24b7939953aa3aed795b583`,
+  [CI complète verte](https://github.com/KimntexX/IPR/actions/runs/41342811574).
+- Promotion filtrée `a67c140` : manifeste et empreintes vérifiés ; tests,
+  analyseurs et mesures restent sur `dev`.
+- Commit fusionné sur `main` : `23521cdd783d2c23aaa486fd6c3fc2690775e1b7`,
+  [CI production verte](https://github.com/KimntexX/IPR/actions/runs/41347235082),
+  cible du tag `release-v0.1.92-alpha`.
+- Distributions autorisées : Windows x64 système et standalone (ZIP et
+  installateur), Linux Ubuntu standalone. Les configurations macOS système
+  arm64/Intel restent compilées en CI, mais **aucun paquet macOS n'est publié
+  pour cette release** ; reprise suivie par [#20](https://github.com/KimntexX/IPR/issues/20).
+
+Ces contrôles ne constituent ni une qualification de tous les Linux, ni un
+test manuel complet sur des machines utilisateur sans outils de développement.
 
 ## Comment IPR est validé
 

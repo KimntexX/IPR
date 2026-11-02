@@ -4,6 +4,11 @@
 
 Reports are historical evidence, not the functional reference of the product.
 
+Documentation state: [22 October review](documentation-audit-2026-10-22.md),
+French corrections and translation prerequisites. Continued in the
+[31 October review](documentation-audit-2026-10-31_en.md): live-document
+priority, locally completed batch and explicit outstanding translations.
+
 - `sessions/` receives all new session reports, named `session-YYYY-MM-DD.md`.
 - `archive/` receives journals that have become inactive or consolidated.
 - Measurement campaigns and their protocols belong to `../validation/`.

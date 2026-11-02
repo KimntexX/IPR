@@ -1,0 +1,580 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261030T120856Z",
+  "study": "fixed_dark_mask_mean_audit",
+  "revision": "0166857972a7e5c743c78696de0f0d29e8725ff1",
+  "reference_proof_sha256": "7c507c36b8df3ccfc2fab328cc6b6b8420576c8638cff4dfb4b2df0a6ccecc54",
+  "tool_sha256": "001a12b3c74232cc9433e786c467804f873ccb89245198dc71430626543d4683",
+  "sources": {
+    "tests/raw_bench/audit_dark_mean.py": {
+      "sha256": "3bc56a544bf31127169fc52679f71c0a81e35f144209e438d088e339893b1d1a"
+    },
+    "tests/raw_bench/camera_denoise_leakage.cpp": {
+      "sha256": "8c347d2602daf910809079e87847dbbdc3dfaed46bacac294c839f4f7dfc162a"
+    },
+    "src/raw/CameraDenoise.h": {
+      "sha256": "3cee63740eeb5f6b94af0d4364242f8cefcd3fe7013f3bfd5172ff0552afba18"
+    },
+    "src/raw/CameraDenoise.cpp": {
+      "sha256": "1a8603e8da20f3a87da4861301ee38568278bed0e68da03f8e618ad6becdab47"
+    },
+    "src/profiles/CameraProfileEngine.cpp": {
+      "sha256": "25fdd3c7f2d716448280c8c73c81f2aff2c90455742681b44a1db32be39e889a"
+    },
+    "src/core/WorkingColorSpace.h": {
+      "sha256": "55e437b8eb894bcc5438ff3f8ed55699ec1480adb17668a149f3f1c5a15775fb"
+    }
+  },
+  "script_source": "\"\"\"Rebuild and verify frozen Lightroom dark masks, then audit native full-frame denoising.\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nimport tempfile\nimport cv2\nimport numpy as np\n\n\ndef sha256(path):\n    h = hashlib.sha256()\n    with Path(path).open('rb') as handle:\n        for block in iter(lambda: handle.read(1024*1024), b''):\n            h.update(block)\n    return h.hexdigest()\n\n\ndef frozen_dark_mask(reference, scene):\n    if reference is None or reference.dtype != np.uint16 or reference.ndim != 3 or reference.shape[2] < 3:\n        raise ValueError('Reference must be a readable uint16 RGB TIFF')\n    area = scene['masks']['common_area']\n    x, y = area['lr_origin_xy']\n    width, height = area['size_wh']\n    crop = reference[y:y+height, x:x+width]\n    if crop.shape[:2] != (height, width):\n        raise ValueError('Reference common area outside image')\n    rgb = cv2.cvtColor(crop[..., :3], cv2.COLOR_BGR2RGB).astype(np.float32)/257.\n    luma = .2126*rgb[..., 0] + .7152*rgb[..., 1] + .0722*rgb[..., 2]\n    smooth = cv2.GaussianBlur(luma, (0, 0), 1.5)\n    gradient = np.hypot(cv2.Sobel(smooth, cv2.CV_32F, 1, 0), cv2.Sobel(smooth, cv2.CV_32F, 0, 1))\n    dark = (luma < 25) & (gradient < np.percentile(gradient, 90))\n    checksum = hashlib.sha256(np.packbits(dark).tobytes()).hexdigest()\n    if checksum != scene['masks']['sha256_packbits']['dark']:\n        raise ValueError(f'Frozen dark mask hash mismatch: {checksum}')\n    if int(dark.sum()) != scene['masks']['pixels']['dark']:\n        raise ValueError('Frozen dark mask count mismatch')\n    ipr_width, ipr_height = scene['alignment']['ipr_size_wh']\n    ix, iy = area['ipr_origin_xy']\n    if ix < 0 or iy < 0 or ix+width > ipr_width or iy+height > ipr_height:\n        raise ValueError('IPR common area outside image')\n    mask = np.zeros((ipr_height, ipr_width), np.uint8)\n    mask[iy:iy+height, ix:ix+width] = dark\n    return mask, checksum\n\n\ndef main():\n    p = argparse.ArgumentParser(description=__doc__)\n    p.add_argument('--tool', type=Path, required=True)\n    p.add_argument('--project-root', type=Path, required=True)\n    p.add_argument('--profile-root', type=Path, required=True)\n    p.add_argument('--reference-proof', type=Path, required=True)\n    p.add_argument('--runtime-dir', type=Path, action='append', required=True)\n    args = p.parse_args()\n    root = Path(__file__).resolve().parents[2]\n    reference = json.loads(args.reference_proof.read_text(encoding='utf-8'))\n    env = os.environ.copy()\n    env['PATH'] = os.pathsep.join(str(v.resolve()) for v in args.runtime_dir)+os.pathsep+env.get('PATH', '')\n    cv2.setNumThreads(1)\n    stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n    names = ['tests/raw_bench/audit_dark_mean.py', 'tests/raw_bench/camera_denoise_leakage.cpp',\n             'src/raw/CameraDenoise.h', 'src/raw/CameraDenoise.cpp',\n             'src/profiles/CameraProfileEngine.cpp', 'src/core/WorkingColorSpace.h']\n    proof = dict(schema_version=1, created_utc=stamp, study='fixed_dark_mask_mean_audit',\n                 revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),\n                 reference_proof_sha256=sha256(args.reference_proof), tool_sha256=sha256(args.tool),\n                 sources={v: dict(sha256=sha256(root/v)) for v in names},\n                 script_source=Path(__file__).read_text(encoding='utf-8'),\n                 versions=dict(numpy=np.__version__, opencv=cv2.__version__), scenes=[],\n                 limits=['Same dark mask pixels as the frozen proof, not necessarily identical engine to Claude head.',\n                         'Full-frame filter before mask selection; DCP pointwise on selected pixels.',\n                         'Mean-matching is a counterfactual, not a production correction or DC ablation.',\n                         'No profile-table intermediate captures, no clean signal oracle, optics off.',\n                         'Raw/LR hashes and packed mask hashes must match; mismatch stops the campaign.'])\n    failed = False\n    try:\n        with tempfile.TemporaryDirectory(prefix='dark-mean-', dir=root/'build-patch_raw_bench') as scratch:\n            for name in ('7Y6A7599', '6V1A9153', 'IMG_3135'):\n                scene = reference['scenes'][name]\n                lr = args.project_root/scene['lr_neutral']['file']\n                raw = args.project_root/scene['raw']['file']\n                record = dict(scene=name, lr_file=str(lr), raw_file=str(raw))\n                proof['scenes'].append(record)\n                if sha256(lr) != scene['lr_neutral']['sha256'] or sha256(raw) != scene['raw']['sha256']:\n                    raise ValueError(f'{name}: RAW/LR hash mismatch')\n                mask, packed_hash = frozen_dark_mask(cv2.imread(str(lr), cv2.IMREAD_UNCHANGED), scene)\n                mask_path = Path(scratch)/f'{name}.bin'\n                mask.tofile(mask_path)\n                record.update(mask_packed_sha256=packed_hash, mask_bytes_sha256=sha256(mask_path),\n                              mask_pixels=int(np.count_nonzero(mask)))\n                del mask\n                command = [str(args.tool.resolve()), '--input', str(raw),\n                           '--manifest', str(root/'config/raw-normalization.json'),\n                           '--profile-root', str(args.profile_root.resolve()), '--label', 'fixed-dark-mean',\n                           '--mean-audit', '--dark-mask', str(mask_path)]\n                result = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True,\n                                        encoding='utf-8', errors='replace', timeout=180)\n                record.update(argv=command, returncode=result.returncode, stderr=result.stderr)\n                if result.returncode:\n                    record['stdout'] = result.stdout\n                    raise RuntimeError(f'{name}: native audit failed')\n                record['measurements'] = json.loads(result.stdout)\n                if record['measurements']['mask_sha256'] != record['mask_bytes_sha256']:\n                    raise ValueError('Native mask bytes hash mismatch')\n                print(name, 'measured', flush=True)\n    except Exception as exc:\n        proof['error'] = f'{type(exc).__name__}: {exc}'\n        failed = True\n    proof['verdict'] = 'fail' if failed else 'measured_not_quality_validation'\n    output = root/'docs/validation/raw'/f'camera-denoise-fixed-dark-mean-v001-{stamp}.json'\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(proof, handle, ensure_ascii=False, indent=2, allow_nan=False)\n    print(output, proof['verdict'], proof.get('error', ''), flush=True)\n    return int(failed)\n\n\nif __name__ == '__main__':\n    raise SystemExit(main())\n",
+  "versions": {
+    "numpy": "2.4.2",
+    "opencv": "5.0.0"
+  },
+  "scenes": [
+    {
+      "scene": "7Y6A7599",
+      "lr_file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\neutre\\7Y6A7599.tif",
+      "raw_file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "mask_packed_sha256": "ee5902f3bc007c7bd3e96640ca51b86b5867061998eade83d5454b370d4ba13b",
+      "mask_bytes_sha256": "d1221e186e9a4a649fbe5cb6a864e2b8bceb1f8edababf7117f18f750c54f49e",
+      "mask_pixels": 3303068,
+      "argv": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\denoise-study\\Release\\cameraDenoiseLeakageProbe.exe",
+        "--input",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "--manifest",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\config\\raw-normalization.json",
+        "--profile-root",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera",
+        "--label",
+        "fixed-dark-mean",
+        "--mean-audit",
+        "--dark-mask",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\dark-mean-3ei6ajez\\7Y6A7599.bin"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "measurements": {
+        "B0_camera_dark": {
+          "mean_rgb": [
+            0.004703005933998844,
+            0.0024991368419009555,
+            6.992912126981482e-05
+          ],
+          "negative_fraction_rgb": [
+            0.37248461127654653,
+            0.3819969797775886,
+            0.4943552479089138
+          ],
+          "positive_part_mean_rgb": [
+            0.008641334684311887,
+            0.005327326249576309,
+            0.005378165773706938
+          ]
+        },
+        "B0_camera_global": {
+          "mean_rgb": [
+            0.25453263726129916,
+            0.1753437323839778,
+            0.10437204481408008
+          ],
+          "negative_fraction_rgb": [
+            0.04554813208855065,
+            0.0453303135554474,
+            0.09050791754543801
+          ],
+          "positive_part_mean_rgb": [
+            0.2550047416748283,
+            0.1756802542019524,
+            0.10541778539679972
+          ]
+        },
+        "B0_rendered_dark": {
+          "clipped_encoded_y_mean_255": 9.480999603631469,
+          "linear_rec2020_y_mean": 0.004535238821021645,
+          "rounded_encoded_y_mean_255": 9.465426002166113,
+          "signed_encoded_y_mean_255": 9.294217311543331,
+          "srgb_above_one_fraction": [
+            0,
+            0,
+            0
+          ],
+          "srgb_below_zero_fraction": [
+            0.17237065661379058,
+            0.02794523152414664,
+            0.170507540262568
+          ]
+        },
+        "B100_camera_dark": {
+          "mean_rgb": [
+            0.012845313794219276,
+            0.009783689234256912,
+            0.0058714784949741895
+          ],
+          "negative_fraction_rgb": [
+            0.0012727561164347812,
+            0.00021374067987701132,
+            0.031023278963678617
+          ],
+          "positive_part_mean_rgb": [
+            0.012847049418752135,
+            0.009783944970922694,
+            0.005911891586349877
+          ]
+        },
+        "B100_camera_global": {
+          "mean_rgb": [
+            0.25453263692773037,
+            0.17534373227867342,
+            0.1043720446083743
+          ],
+          "negative_fraction_rgb": [
+            0.0001709916965326018,
+            3.143297494211171e-05,
+            0.004606390326878359
+          ],
+          "positive_part_mean_rgb": [
+            0.2545329062728901,
+            0.1753438139727631,
+            0.10438072136608063
+          ]
+        },
+        "B100_mean_matched_camera_dark": {
+          "mean_rgb": [
+            0.0047030063935269316,
+            0.0024991369517023566,
+            6.992931257706415e-05
+          ],
+          "negative_fraction_rgb": [
+            0.25828472196152186,
+            0.3251180417720737,
+            0.5449121846719475
+          ],
+          "positive_part_mean_rgb": [
+            0.005273254320701177,
+            0.0031146567146423322,
+            0.0014810976672199646
+          ]
+        },
+        "B100_mean_matched_rendered_dark": {
+          "clipped_encoded_y_mean_255": 4.1058286736671255,
+          "linear_rec2020_y_mean": 0.0018532770248148893,
+          "rounded_encoded_y_mean_255": 4.099873554176349,
+          "signed_encoded_y_mean_255": 4.103638603541254,
+          "srgb_above_one_fraction": [
+            0,
+            0,
+            0
+          ],
+          "srgb_below_zero_fraction": [
+            0.027669124583568974,
+            0.00035906012228631076,
+            0.1512381821990949
+          ]
+        },
+        "B100_rendered_dark": {
+          "clipped_encoded_y_mean_255": 12.935109809609406,
+          "linear_rec2020_y_mean": 0.00534987324560024,
+          "rounded_encoded_y_mean_255": 12.935107945889118,
+          "signed_encoded_y_mean_255": 12.933809802921573,
+          "srgb_above_one_fraction": [
+            0,
+            0,
+            0
+          ],
+          "srgb_below_zero_fraction": [
+            0.002449843599950107,
+            2.6036400098332824e-05,
+            0.032302695554557156
+          ]
+        },
+        "camera_size": [
+          6984,
+          4660
+        ],
+        "created_utc": "2026-10-30T12:09:23.646Z",
+        "engine_base_revision": "0166857",
+        "label": "fixed-dark-mean",
+        "layout_check_max_abs": 0,
+        "limits": "Full-frame filter; fixed external dark mask; pointwise DCP; mean-matching is a diagnostic counterfactual, not a proposed correction; unchanged DCP; optics off",
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "mask_pixels": 3303068,
+        "mask_sha256": "d1221e186e9a4a649fbe5cb6a864e2b8bceb1f8edababf7117f18f750c54f49e",
+        "mean_matching_shift_rgb": [
+          -0.008142307860220431,
+          -0.0072845523923559564,
+          -0.005801549373704374
+        ],
+        "profile_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+      }
+    },
+    {
+      "scene": "6V1A9153",
+      "lr_file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\neutre\\6V1A9153.tif",
+      "raw_file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+      "mask_packed_sha256": "02ff739f8f4012ccc5374ef15d2f842b66bed258b2035752e248c773c84abfd3",
+      "mask_bytes_sha256": "e7f19fca445dbbf95fe360df35b9ef306a5a22ec2f8f72fcfae41a9ed9099565",
+      "mask_pixels": 670766,
+      "argv": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\denoise-study\\Release\\cameraDenoiseLeakageProbe.exe",
+        "--input",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+        "--manifest",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\config\\raw-normalization.json",
+        "--profile-root",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera",
+        "--label",
+        "fixed-dark-mean",
+        "--mean-audit",
+        "--dark-mask",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\dark-mean-3ei6ajez\\6V1A9153.bin"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "measurements": {
+        "B0_camera_dark": {
+          "mean_rgb": [
+            0.015362654439130829,
+            0.012354086587443037,
+            0.012111207649828782
+          ],
+          "negative_fraction_rgb": [
+            1.4908328686904227e-06,
+            2.9816657373808454e-06,
+            5.963331474761691e-06
+          ],
+          "positive_part_mean_rgb": [
+            0.015362656468261796,
+            0.012354088172452966,
+            0.012111219222810419
+          ]
+        },
+        "B0_camera_global": {
+          "mean_rgb": [
+            0.1413210322541428,
+            0.11996137156320365,
+            0.11232269902766402
+          ],
+          "negative_fraction_rgb": [
+            7.124536684409758e-07,
+            5.265961897172429e-07,
+            1.9515035265991942e-06
+          ],
+          "positive_part_mean_rgb": [
+            0.14132104703884396,
+            0.11996137383972227,
+            0.11232270746948213
+          ]
+        },
+        "B0_rendered_dark": {
+          "clipped_encoded_y_mean_255": 16.218832161574518,
+          "linear_rec2020_y_mean": 0.005925418045421878,
+          "rounded_encoded_y_mean_255": 16.21964679721696,
+          "signed_encoded_y_mean_255": 16.218815686558806,
+          "srgb_above_one_fraction": [
+            0,
+            0,
+            0
+          ],
+          "srgb_below_zero_fraction": [
+            8.795913925273493e-05,
+            0,
+            0
+          ]
+        },
+        "B100_camera_dark": {
+          "mean_rgb": [
+            0.0174457312253735,
+            0.01411249550243648,
+            0.013737327538953679
+          ],
+          "negative_fraction_rgb": [
+            1.4908328686904227e-06,
+            1.4908328686904227e-06,
+            4.472498606071268e-06
+          ],
+          "positive_part_mean_rgb": [
+            0.01744573135737344,
+            0.014112496564475722,
+            0.013737337090942551
+          ]
+        },
+        "B100_camera_global": {
+          "mean_rgb": [
+            0.14132103224075554,
+            0.11996137155162784,
+            0.11232269900953373
+          ],
+          "negative_fraction_rgb": [
+            5.885486826251539e-07,
+            4.956199432632875e-07,
+            1.6417410620596398e-06
+          ],
+          "positive_part_mean_rgb": [
+            0.14132104676273055,
+            0.11996137374497474,
+            0.11232270665360505
+          ]
+        },
+        "B100_mean_matched_camera_dark": {
+          "mean_rgb": [
+            0.015362654539630738,
+            0.012354086567597258,
+            0.01211120777673694
+          ],
+          "negative_fraction_rgb": [
+            1.4908328686904227e-06,
+            5.366998327285521e-05,
+            6.410581335368818e-05
+          ],
+          "positive_part_mean_rgb": [
+            0.015362657777150129,
+            0.012354099264123357,
+            0.012111242133871837
+          ]
+        },
+        "B100_mean_matched_rendered_dark": {
+          "clipped_encoded_y_mean_255": 16.302407450926854,
+          "linear_rec2020_y_mean": 0.00607202557230673,
+          "rounded_encoded_y_mean_255": 16.30262897254582,
+          "signed_encoded_y_mean_255": 16.302370561853625,
+          "srgb_above_one_fraction": [
+            0,
+            0,
+            0
+          ],
+          "srgb_below_zero_fraction": [
+            0.000289221576525942,
+            2.9816657373808454e-06,
+            0
+          ]
+        },
+        "B100_rendered_dark": {
+          "clipped_encoded_y_mean_255": 19.676023897562875,
+          "linear_rec2020_y_mean": 0.0077419219894136315,
+          "rounded_encoded_y_mean_255": 19.676404793602117,
+          "signed_encoded_y_mean_255": 19.67601619240115,
+          "srgb_above_one_fraction": [
+            0,
+            0,
+            0
+          ],
+          "srgb_below_zero_fraction": [
+            2.0871660161665917e-05,
+            0,
+            0
+          ]
+        },
+        "camera_size": [
+          6959,
+          4639
+        ],
+        "created_utc": "2026-10-30T12:09:55.496Z",
+        "engine_base_revision": "0166857",
+        "label": "fixed-dark-mean",
+        "layout_check_max_abs": 0,
+        "limits": "Full-frame filter; fixed external dark mask; pointwise DCP; mean-matching is a diagnostic counterfactual, not a proposed correction; unchanged DCP; optics off",
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "mask_pixels": 670766,
+        "mask_sha256": "e7f19fca445dbbf95fe360df35b9ef306a5a22ec2f8f72fcfae41a9ed9099565",
+        "mean_matching_shift_rgb": [
+          -0.0020830767862426713,
+          -0.0017584089149934434,
+          -0.0016261198891248975
+        ],
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+        "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30"
+      }
+    },
+    {
+      "scene": "IMG_3135",
+      "lr_file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\neutre\\IMG_3135.tif",
+      "raw_file": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "mask_packed_sha256": "5a9883095aec19c92cb23244f421b56090fc174754a2d03207e15eec99fb5ac4",
+      "mask_bytes_sha256": "f071ed7ecf8edf99d91f248eba19f45aa3a7ac50d1be4b4b52a186c5e4b4e6ed",
+      "mask_pixels": 23926,
+      "argv": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\denoise-study\\Release\\cameraDenoiseLeakageProbe.exe",
+        "--input",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+        "--manifest",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\config\\raw-normalization.json",
+        "--profile-root",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera",
+        "--label",
+        "fixed-dark-mean",
+        "--mean-audit",
+        "--dark-mask",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\dark-mean-3ei6ajez\\IMG_3135.bin"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "measurements": {
+        "B0_camera_dark": {
+          "mean_rgb": [
+            0.019141758094758696,
+            0.01613825734964052,
+            0.016481898100498615
+          ],
+          "negative_fraction_rgb": [
+            0,
+            0,
+            0
+          ],
+          "positive_part_mean_rgb": [
+            0.019141758094758696,
+            0.01613825734964052,
+            0.016481898100498615
+          ]
+        },
+        "B0_camera_global": {
+          "mean_rgb": [
+            0.15491166489430788,
+            0.1332898162400573,
+            0.1009930137939332
+          ],
+          "negative_fraction_rgb": [
+            0,
+            0,
+            0
+          ],
+          "positive_part_mean_rgb": [
+            0.15491166489430788,
+            0.13328981624005734,
+            0.1009930137939332
+          ]
+        },
+        "B0_rendered_dark": {
+          "clipped_encoded_y_mean_255": 29.96076943950286,
+          "linear_rec2020_y_mean": 0.013196180642247798,
+          "rounded_encoded_y_mean_255": 29.960689852046425,
+          "signed_encoded_y_mean_255": 29.96076943950286,
+          "srgb_above_one_fraction": [
+            0,
+            0,
+            0
+          ],
+          "srgb_below_zero_fraction": [
+            0,
+            0,
+            0
+          ]
+        },
+        "B100_camera_dark": {
+          "mean_rgb": [
+            0.02203675626918722,
+            0.018180794749174785,
+            0.017765321731062912
+          ],
+          "negative_fraction_rgb": [
+            0,
+            0,
+            0
+          ],
+          "positive_part_mean_rgb": [
+            0.022036756269187222,
+            0.01818079474917479,
+            0.017765321731062912
+          ]
+        },
+        "B100_camera_global": {
+          "mean_rgb": [
+            0.15491166489571787,
+            0.13328981624190514,
+            0.10099301379081291
+          ],
+          "negative_fraction_rgb": [
+            0,
+            0,
+            0
+          ],
+          "positive_part_mean_rgb": [
+            0.15491166489571787,
+            0.13328981624190514,
+            0.10099301379081292
+          ]
+        },
+        "B100_mean_matched_camera_dark": {
+          "mean_rgb": [
+            0.019141758665907074,
+            0.01613825719407625,
+            0.016481897755972322
+          ],
+          "negative_fraction_rgb": [
+            0,
+            0,
+            0
+          ],
+          "positive_part_mean_rgb": [
+            0.019141758665907078,
+            0.016138257194076255,
+            0.016481897755972322
+          ]
+        },
+        "B100_mean_matched_rendered_dark": {
+          "clipped_encoded_y_mean_255": 29.935194299962266,
+          "linear_rec2020_y_mean": 0.013214765666584416,
+          "rounded_encoded_y_mean_255": 29.933732374825134,
+          "signed_encoded_y_mean_255": 29.935194299962266,
+          "srgb_above_one_fraction": [
+            0,
+            0,
+            0
+          ],
+          "srgb_below_zero_fraction": [
+            0,
+            0,
+            0
+          ]
+        },
+        "B100_rendered_dark": {
+          "clipped_encoded_y_mean_255": 32.68953679380732,
+          "linear_rec2020_y_mean": 0.015265843056314846,
+          "rounded_encoded_y_mean_255": 32.68832688289073,
+          "signed_encoded_y_mean_255": 32.68953679380732,
+          "srgb_above_one_fraction": [
+            0,
+            0,
+            0
+          ],
+          "srgb_below_zero_fraction": [
+            0,
+            0,
+            0
+          ]
+        },
+        "camera_size": [
+          5202,
+          3464
+        ],
+        "created_utc": "2026-10-30T12:10:13.905Z",
+        "engine_base_revision": "0166857",
+        "label": "fixed-dark-mean",
+        "layout_check_max_abs": 0,
+        "limits": "Full-frame filter; fixed external dark mask; pointwise DCP; mean-matching is a diagnostic counterfactual, not a proposed correction; unchanged DCP; optics off",
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "mask_pixels": 23926,
+        "mask_sha256": "f071ed7ecf8edf99d91f248eba19f45aa3a7ac50d1be4b4b52a186c5e4b4e6ed",
+        "mean_matching_shift_rgb": [
+          -0.002894998174428523,
+          -0.002042537399534264,
+          -0.0012834236305642975
+        ],
+        "profile_sha256": "9e60085ae947ce8658e7682fe1a62797e8c4d9176f624f96a22829123875fe9d",
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+        "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165"
+      }
+    }
+  ],
+  "limits": [
+    "Same dark mask pixels as the frozen proof, not necessarily identical engine to Claude head.",
+    "Full-frame filter before mask selection; DCP pointwise on selected pixels.",
+    "Mean-matching is a counterfactual, not a production correction or DC ablation.",
+    "No profile-table intermediate captures, no clean signal oracle, optics off.",
+    "Raw/LR hashes and packed mask hashes must match; mismatch stops the campaign."
+  ],
+  "verdict": "measured_not_quality_validation"
+}

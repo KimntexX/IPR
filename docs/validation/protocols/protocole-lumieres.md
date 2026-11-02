@@ -1,7 +1,9 @@
 # Protocole — Lumières
 
-Version 1 — 10 octobre 2026. Statut : recette prête ; ombres/HL de la version
-figée acceptées visuellement sur le corpus courant, pas parité LR universelle.
+Version 2 — relecture du 22 octobre 2026, après intégration dans `dev`.
+Les validations du 10 octobre sont historiques. Le modèle adaptatif courant
+est décrit dans le rapport et la roadmap ; les HL ont été mises de côté avec
+réserve le 21 octobre (voile sur ciels écrêtés et force variable).
 Appliquer le [socle commun](protocole-commun.md).
 
 ## Corpus et états
@@ -49,11 +51,13 @@ globaux du générateur comme les suffixes d'une ancienne campagne.
   10 % les plus clairs du neutre ; les scènes sans vraies hautes lumières
   (moins de 5 % de pixels à L\* ≥ 70) comptent moins dans les ajustements.
 
-Les tests moteur du correctif actuel contrôlent, pour Ombres positives, noir
-continu, ordre tonal et gain ≤×4 ; pour HL positives, marge RGB fondée sur
-le canal maximum. Ce sont des invariants d'implémentation, pas des paramètres
-LR ni des promesses de récupération de signal perdu. Étendre aux autres
-boîtiers/objectifs avant généralisation.
+Les critères gain ≤×4 et marge maxRGB décrivent le correctif historique du
+10 octobre, pas une qualification du modèle adaptatif courant. Celui-ci
+utilise des statistiques du neutre, une adaptation par scènes voisines pour
+les HL et des courbes rendues non décroissantes. Vérifier les invariants
+actuels de `toneRecoveryTests`, le sens de l'effet, les épaules et la couleur.
+Aucun test synthétique ne prouve une récupération des pixels déjà entièrement
+écrêtés. La réserve visuelle HL demeure ouverte.
 
 ## Reproduction disponible
 

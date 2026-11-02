@@ -41,8 +41,10 @@ Il ne réalise pas le déploiement/packaging des DLL pour une distribution auton
 ## Politique des tests
 
 Les règles versionnées sont dans [scripts/test-rules.json](../../scripts/test-rules.json).
-Les dix-huit tests synthétiques CTest sont désormais enregistrés sous Windows
-comme sous Linux/WSL. Les sondes photographiques privées restent séparées.
+Les tests synthétiques CTest sont enregistrés sous Windows comme sous
+Linux/WSL. Le nombre évolue : consulter `ctest --test-dir BUILD -C Release -N`
+pour l'inventaire du build étudié, pas un compteur documentaire historique.
+Les sondes photographiques privées restent séparées.
 
 Le sélecteur compare les SHA-256 des fichiers de code/configuration à la dernière
 validation réussie, conservée dans `build-windows-msvc/.ipr-tested-snapshot.json`.

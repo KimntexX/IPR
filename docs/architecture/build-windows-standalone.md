@@ -2,8 +2,10 @@
 
 # IPR — distributions Windows x64
 
-Mise à jour du 21 octobre 2026. Cette version française décrit le packaging
-courant ; sa traduction relève du chantier documentaire.
+Référence relue le 1er novembre 2026 : `dev` `2facc24`, release
+`v0.1.92-alpha`. La construction, le lancement et le cycle d'installation
+Windows sont vérifiés par la [CI production](https://github.com/KimntexX/IPR/actions/runs/41347235082).
+Cela ne remplace pas la recette manuelle sur une machine utilisateur sans SDK.
 
 ## ZIP portable et installateur
 
@@ -32,6 +34,13 @@ Les profils personnels sont recherchés dans
 `QStandardPaths::AppDataLocation/profiles` : `index.json`, `dcp/`, `lcp/`.
 Ils ne sont pas gérés par le désinstalleur. Redémarrer après ajout.
 Les profils embarqués sont dans `bin/profiles/`, avec un index public vide.
+
+La calibration est demandée par défaut à la première ouverture ; les choix
+enregistrés dans le `.ipr` sont ensuite restaurés. Son application effective
+dépend du modèle, du profil et du mode capteur caractérisés : une case cochée
+ne prouve pas qu'un boîtier inconnu est calibré. Le format courant écrit est 9 ;
+les versions 1 à 9 restent lues et converties, suivant la décision utilisateur
+du 1er novembre 2026.
 
 Le chargement DCP/LCP est multiplateforme : racine portable, ressources du
 bundle macOS et `share/IPR/profiles/` sur Unix. La découverte Adobe n’est pas
@@ -72,9 +81,17 @@ un dossier de build ou un paquet system en standalone.
 
 ## CI et limites de validation
 
-Sur `patch_ci_cd`, le setup est compilé/testé temporairement puis supprimé :
-pas de binaire téléchargeable. Sur `dev`/`main`, ZIP, setup et SHA-256 sont livrés
-seulement après validation du commit exact par la politique existante.
+Les branches de patch vérifient le paquet sans publier de binaire téléchargeable.
+Sur `dev`, le workflow de livraison fournit les artefacts du commit exact validé.
+Sur `main`, la CI production vérifie le staging et le setup sans publier
+d'archive ; le workflow de release explicite construit depuis le SHA `dev`
+testé référencé par la promotion, vérifie les deux barrières CI et publie
+uniquement les octets contrôlés après autorisation. L'environnement GitHub
+`release` doit être configuré avec les protections d'approbation prévues.
+
+La politique de cette release autorise Windows système/standalone et Ubuntu
+standalone. Aucun paquet macOS n'est publié ; les deux architectures macOS
+système restent compilées en CI ([#20](https://github.com/KimntexX/IPR/issues/20)).
 
 Le runner Windows GitHub hébergé et jetable teste installation silencieuse,
 réinstallation du même paquet, démarrage QML hors environnement développeur et

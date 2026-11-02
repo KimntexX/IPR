@@ -1,3 +1,5 @@
+*[Français](ADR-0015-controle-memoire-et-prechargement.md) | [English](ADR-0015-controle-memoire-et-prechargement_en.md)*
+
 # ADR-0015 — Contrôleur mémoire et cache d’images adaptatif
 
 Date : 17 octobre 2026. Statut : accepté par l’utilisateur, intégration locale.

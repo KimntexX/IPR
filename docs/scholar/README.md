@@ -21,6 +21,7 @@ Mise en forme : suivre les [conventions LaTeX communes](../AGENTS.md) (12 pt, in
 | [cours-11-architecture-images.tex](cours-11-architecture-images.tex) | Architecture complète d'une image : physique, échantillonnage, binaire, mémoire, compression, formats, RAW, couleur, métadonnées, Canon/Sony/Nikon et exercices ; [PDF](cours-11-architecture-images.pdf) |
 | [cours-12-vibrance-saturation-oklab.tex](cours-12-vibrance-saturation-oklab.tex) | Vibrance et saturation : Oklab, mesure de Lightroom pixel par pixel, tables de réponse, rotation de teinte, validation croisée, implémentation et exercices corrigés ; [PDF](cours-12-vibrance-saturation-oklab.pdf) |
 | `moteur-graphique-ipr.tex` | pipeline, concurrence, persistance et registre des constantes |
+| [cours-13-reseaux-neuronaux-de-zero.tex](cours-13-reseaux-neuronaux-de-zero.tex) | Des bases aux gradients, XOR manuel, CNN, U-Net complet, données, entraînement, couleur et déploiement ; [PDF](cours-13-reseaux-neuronaux-de-zero.pdf) |
 
 ## Compilation Windows
 
@@ -33,6 +34,29 @@ powershell -ExecutionPolicy Bypass -File .\build.ps1
 Les PDF sont produits à la racine de `scholar/`, à côté de leur source `.tex`. Les fichiers auxiliaires LaTeX sont ignorés par Git ; `-Clean` supprime uniquement les artefacts générés connus, y compris les PDF.
 
 Le script emploie `pdflatex` et `bibtex`, sans dépendance à `latexmk` ou Perl.
+BibTeX est appelé seulement pour les cours dont le fichier auxiliaire déclare
+une base bibliographique ; les références manuelles du cours13 n'en ont pas besoin.
+
+## Cours 13 — Réseaux neuronaux depuis zéro
+
+Cours français pour débutant : mathématiques expliquées, régression et XOR
+avec gradients programmés à la main, puis U-Net PyTorch et démarche de projet.
+Dix exercices corrigés. Les [exemples exécutables](references/reseaux-exemples.py)
+ne lisent aucune photo et n'écrivent aucun fichier :
+
+```powershell
+python docs/scholar/references/reseaux-exemples.py
+python docs/scholar/references/reseaux-exemples.py --torch
+```
+
+Sans option : bibliothèque standard. `--torch` : environnement PyTorch isolé,
+deux threads CPU, petit ajustement synthétique sans sauvegarde de poids.
+Ce TP ne qualifie pas un débruiteur photographique. Pour compiler seulement ce
+cours, lancer deux fois depuis `docs/scholar/` :
+
+```powershell
+pdflatex -interaction=nonstopmode -halt-on-error cours-13-reseaux-neuronaux-de-zero.tex
+```
 
 Les valeurs qualifiées d'« empiriques » sont volontairement séparées des constantes normalisées : elles doivent être validées par le corpus IPR avant toute modification.
 

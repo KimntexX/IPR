@@ -1,3 +1,5 @@
+*[Français](ADR-0020-lecture-permanente-des-noirs.md) | [English](ADR-0020-lecture-permanente-des-noirs_en.md)*
+
 # ADR-0020 — Lecture permanente des noirs par IPR
 
 - **Date :** 2026-10-20

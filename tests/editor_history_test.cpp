@@ -6,8 +6,10 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QEventLoop>
+#include <QFile>
 #include <QFileInfo>
 #include <QImage>
+#include <QScopeGuard>
 #include <QTemporaryDir>
 #include <QTimer>
 
@@ -52,6 +54,12 @@ QString writeImage(const QString &directory, const QString &name)
     return image.save(path, "PNG") ? QFileInfo(path).canonicalFilePath() : QString();
 }
 
+QByteArray bytesOf(const QString &path)
+{
+    QFile file(path);
+    return file.open(QIODevice::ReadOnly) ? file.readAll() : QByteArray();
+}
+
 double value(const ImageEditor &editor, const char *name)
 {
     return editor.adjustmentValue(QString::fromLatin1(name));
@@ -67,6 +75,8 @@ int main(int argc, char **argv)
     const QString photo = writeImage(directory.path(), QStringLiteral("photo.png"));
     const QString other = writeImage(directory.path(), QStringLiteral("other.png"));
     if (!check(!photo.isEmpty() && !other.isEmpty(), "inputs written")) return 1;
+    const QByteArray photoBytes = bytesOf(photo);
+    const QByteArray otherBytes = bytesOf(other);
 
     ImageProvider provider;
     ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
@@ -135,6 +145,39 @@ int main(int argc, char **argv)
                "reopening a photo restores its history")) return 1;
     editor.undo();
     if (!check(value(editor, "vibrance") == 40, "the restored history can be undone")) return 1;
+
+    // A sidecar that cannot be written: the failure is told, the edits and the file stay.
+    if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles again")) return 1;
+    editor.saveCurrentAdjustments();
+    const QString sidecar = photo + QStringLiteral(".ipr");
+    const QByteArray beforeFailure = bytesOf(sidecar);
+    if (!check(!beforeFailure.isEmpty() &&
+               QFile::setPermissions(sidecar, QFileDevice::ReadOwner), "sidecar locked")) return 1;
+    const auto unlock = qScopeGuard([&] {
+        QFile::setPermissions(sidecar, QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+    });
+    editor.setVibrance(60);
+    if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles while locked")) return 1;
+    editor.saveCurrentAdjustments();
+    if (!check(editor.statusMessage().contains(QStringLiteral("Échec")) && bytesOf(sidecar) == beforeFailure,
+               "a failed save is reported and leaves the sidecar untouched")) return 1;
+    if (!check(value(editor, "vibrance") == 60 && editor.canUndo(), "a failed save keeps the edit and its history"))
+        return 1;
+    QFile::setPermissions(sidecar, QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+    editor.saveCurrentAdjustments();
+    const auto recovered = Sidecar::read(photo);
+    if (!check(recovered && recovered->settings.vibrance == 60, "the next save succeeds once the disk allows it"))
+        return 1;
+
+    // The photos stay as they were, and no temporary file remains beside them.
+    if (!check(bytesOf(photo) == photoBytes && bytesOf(other) == otherBytes, "the photos are never written"))
+        return 1;
+    const QStringList leftovers = QDir(directory.path()).entryList(QDir::Files);
+    for (const QString &name : leftovers) {
+        if (!check(name.startsWith(QStringLiteral("photo.png")) || name.startsWith(QStringLiteral("other.png")),
+                   "no temporary file is left in the folder")) return 1;
+        if (!check(!name.contains(QStringLiteral(".ipr.")), "no partial sidecar is left in the folder")) return 1;
+    }
 
     std::cout << "editor history: ok\n";
     return 0;
