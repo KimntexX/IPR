@@ -73,6 +73,26 @@ cv::Mat turnedAndMirrored(const cv::Mat &image, const Settings &s)
     return result;
 }
 
+// Reducing keeps details the output cannot hold, and they fold back as false patterns:
+// blurred before the warp, by what the reduction needs, along each axis of the source.
+// The scale and the aspect only: perspective reduces less, and varies across the image.
+cv::Mat antialiased(const cv::Mat &image, const Settings &s)
+{
+    const auto spread = [](double zoom) {
+        return zoom < 1 ? 0.7 * std::sqrt(1 / (zoom * zoom) - 1) : 0.0;
+    };
+    const double zoom = s.scale / 100.0, widen = std::pow(2.0, s.aspect / 200.0);
+    double sigmaX = spread(zoom * widen), sigmaY = spread(zoom / widen);
+    if (s.quarterTurns % 2)
+        std::swap(sigmaX, sigmaY);
+    if (sigmaX <= 0 && sigmaY <= 0)
+        return image;
+    cv::Mat result;
+    // A zero sigma would copy the other: a tiny one leaves its axis as it is.
+    cv::GaussianBlur(image, result, cv::Size(0, 0), std::max(sigmaX, 1e-3), std::max(sigmaY, 1e-3), cv::BORDER_REPLICATE);
+    return result;
+}
+
 cv::Mat resampled(const cv::Mat &image, const Settings &s, Quality quality, int border)
 {
     const cv::Size canvas = canvasSize(s, image.size());
@@ -206,7 +226,7 @@ cv::Mat warpRgb(const cv::Mat &rgb, const Settings &s, Quality quality)
         return rgb;
     if (!needsResampling(s))
         return turnedAndMirrored(rgb, s);
-    cv::Mat result = resampled(rgb, s, quality, cv::BORDER_REPLICATE);
+    cv::Mat result = resampled(antialiased(rgb, s), s, quality, cv::BORDER_REPLICATE);
     // The filter's lobes must not push a pixel below what the source holds.
     std::vector<cv::Mat> channels;
     cv::split(rgb, channels);
