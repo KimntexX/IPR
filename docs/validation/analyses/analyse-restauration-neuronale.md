@@ -1400,3 +1400,89 @@ Le protocole de nouvelles scènes répétées pourra compléter la qualification
 de la généralisation, mais aucune reprise des photos existantes n'est
 requise pour consigner ce diagnostic. Aucun calcul actif, aucune intégration
 en production ou publication.
+
+## 2 novembre 2026, 10:28 UTC — expérience isolée de pénalisation du biais
+
+Campagne `neural-bias-penalty-v001-20261102T102832Z`, banc `fb2b11a`,
+dix tests ciblés réussis. Après accord de l'utilisateur, un seul candidat
+est entraîné, même architecture, graine, lot, Adam, taux d'apprentissage,
+échelle et budget de 2048 étapes que le pilote enrichi. Les tenseurs du
+corpus sont copiés à l'identique pour protéger le parent ; aucune nouvelle
+photo, requalification de paire ou modification des masques.
+
+Seul changement d'objectif :
+
+```text
+L = MSE masquée + 1 × moyenne_{patch,canal}(moyenne_{pixels valides du cœur24}(sortie − référence)²)
+```
+
+La moyenne est calculée séparément pour chaque patch et canal, avant
+élévation au carré, pour empêcher la compensation entre patches de biais
+opposés. Le poids 1 est fixé avant mesure : une contribution supplémentaire
+de même unité, sans recherche du meilleur coefficient. Ce n'est ni une
+correction imposée après inférence, ni une garantie de moyenne nulle.
+La perte utilise les mêmes cibles signées normalisées que la MSE et ne
+reçoit aucune image de contrôle durant l'optimisation.
+
+La perte MSE sans pénalité demeure strictement identique dans le test
+synthétique. Aucune perte de gradients n'est ajoutée simultanément.
+Le diagnostic final rejouera les mesures au cœur par composition et ISO,
+avec les seuils historiques, sans sélection de checkpoint sur le contrôle.
+**Calcul lancé, résultat non acquis** ; aucun changement de production,
+publication ou tag. Un gain de biais ne suffira pas si l'erreur couleur
+ou la préservation des structures se dégrade.
+
+### Résultats — variante de poids 1 non retenue
+
+Calcul terminé normalement en **52,51 s**, dont **42,56 s**
+d'entraînement. Les mêmes tenseurs sont utilisés et le corpus parent
+reste inchangé. Les contrôles d'identité et des outils passent ; aucune
+recherche de coefficient ou de checkpoint supplémentaire.
+
+| Mesure au cœur24 | Pilote enrichi | Avec pénalité de biais |
+| --- | ---: | ---: |
+| MSE train intérieur / entrée | 0,15596 | 0,22456 |
+| MSE train ISO4000 / entrée | 0,41433 | 0,65765 |
+| MSE contrôle / entrée | 0,56166 | 0,57598 |
+| Erreur opposée contrôle / entrée | 0,87791 | 0,87231 |
+| Erreur opposée contrôle ISO1600 / entrée | 1,36812 | 1,07473 |
+| Projection gradients faibles du contrôle | 0,10061 | 0,12305 |
+| Projection gradients forts du contrôle | 0,37234 | 0,41863 |
+
+La projection des détails s'améliore sans rejoindre celle de l'entrée,
+mais la MSE RGB se dégrade sur les deux compositions du train et sur
+l'agrégat de contrôle. L'erreur opposée à ISO1600 s'améliore nettement,
+tout en restant au-dessus de l'entrée ; à ISO6400 elle passe au contraire
+de 0,51016 à 0,72152. Une moyenne globale seule masque ces compromis.
+
+La grandeur directement visée par la nouvelle perte doit aussi être
+vérifiée, sans la confondre avec le biais global pouvant se compenser.
+En unités caméra non normalisées, la moyenne sur les patches et canaux
+du carré de l'erreur moyenne du cœur vaut :
+
+| Composition | Pilote enrichi | Avec pénalité |
+| --- | ---: | ---: |
+| Train intérieur | 0,0000172340 | 0,0000195531 |
+| Train ISO4000 | 0,0000049920 | 0,0000078239 |
+| Contrôle | 0,0000099688 | 0,0000076224 |
+
+Ces valeurs se recalculent depuis les sommes de biais et les nombres de
+pixels par patch du JSON ; elles sont quatre fois les pénalités moyennes
+correspondantes dans l'espace d'entraînement d'échelle2. Le candidat
+réduit cette grandeur sur le contrôle mais pas sur le train. Le biais
+global vert du contrôle s'améliore de −0,004396 à −0,002297 tandis que
+celui du bleu passe de −0,001679 à −0,003049 : pas une correction uniforme.
+
+Mémoire canonique : [expérience de pénalisation du biais](../raw/neural-bias-penalty-v001-20261102T102832Z.json).
+
+**Conclusion actuelle : candidat non retenu ; le pilote enrichi reste le
+point de comparaison expérimental, lui-même non qualifié en production.**
+L'essai réfute l'idée qu'ajouter ce terme de poids1 suffirait, à budget
+inchangé, à corriger le défaut de moyenne sans contrepartie. Il ne réfute
+pas toute régularisation possible : convergence, compromis de pertes,
+variabilité des lots et références peuvent intervenir. Ne pas poursuivre
+une recherche de poids guidée par le contrôle déjà consulté. Avant de
+cumuler une perte de gradients, la suite doit examiner la stabilité de
+l'optimisation sur le train seul et l'équilibrage des contenus ; les
+nouvelles scènes répétées du protocole restent utiles pour une future
+évaluation indépendante. Aucun calcul actif ni intégration ou publication.
