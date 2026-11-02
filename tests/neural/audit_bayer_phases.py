@@ -10,10 +10,11 @@ import time
 import torch
 
 from diagnose_train_learnability import digest,save
-from joint_bayer_unet import JointBayerUNet,bilinear,sample_rgb
+from joint_bayer_unet import bilinear,sample_rgb
 from run_synthetic_joint_pilot import metrics,aggregate,tensor_hash
 from synthetic_bayer_data import PATTERNS,FAMILIES,signal
 from bayer_canonical import predict
+from moment_bayer_unet import model_from_config
 
 
 PHASE_NAMES=('RGGB','GRBG','GBRG','BGGR')
@@ -46,6 +47,8 @@ def run(parent,output):
         if digest(Path(__file__).with_name(n))!=proof['freeze']['tools'][n]:raise ValueError('Changed model/signal implementation')
     if config.get('canonical_input',False) and digest(Path(__file__).with_name('bayer_canonical.py'))!=proof['freeze']['tools']['bayer_canonical.py']:
         raise ValueError('Changed canonical-coordinate implementation')
+    if config.get('model_kind')=='moment' and digest(Path(__file__).with_name('moment_bayer_unet.py'))!=proof['freeze']['tools']['moment_bayer_unet.py']:
+        raise ValueError('Changed interpolation-constraint implementation')
     cases=proof['freeze']['evaluation_cases']
     if len(cases)!=20 or len({(c['family'],c['seed']) for c in cases})!=20 or any(c['noise_index']!=0 for c in cases):
         raise ValueError('Expected same20 distinct noise-free RGB contents')
@@ -58,11 +61,11 @@ def run(parent,output):
         config=config,contents=cases,phase_names=list(PHASE_NAMES),patterns=[list(p) for p in PATTERNS],
         policy='Same RGB truth in all4 phases, no added noise, same model/scale/core48; no model or phase selection.',
         tools={n:digest(Path(__file__).with_name(n)) for n in ('audit_bayer_phases.py','joint_bayer_unet.py',
-            'synthetic_bayer_data.py','run_synthetic_joint_pilot.py','bayer_canonical.py')})
+            'synthetic_bayer_data.py','run_synthetic_joint_pilot.py','bayer_canonical.py','moment_bayer_unet.py')})
     output.mkdir(parents=True,exist_ok=False);save(output/'freeze.json',freeze)
     threads=min(4,max(1,(os.cpu_count() or 1)-2))
     torch.set_num_threads(threads);torch.set_num_interop_threads(1);torch.use_deterministic_algorithms(True)
-    model=JointBayerUNet(config['width'])
+    model=model_from_config(config)
     checkpoint=torch.load(weights,map_location='cpu',weights_only=True)
     if checkpoint['freeze_sha256']!=proof['freeze_sha256']:raise ValueError('Checkpoint provenance differs')
     model.load_state_dict(checkpoint['state_dict'],strict=True);model.requires_grad_(False);model.eval()

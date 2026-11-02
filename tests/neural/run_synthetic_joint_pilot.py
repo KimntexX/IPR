@@ -11,10 +11,11 @@ import time
 import torch
 
 from diagnose_train_learnability import digest,save
-from joint_bayer_unet import JointBayerUNet,bilinear,sample_rgb,project_exact_observations
+from joint_bayer_unet import bilinear,sample_rgb,project_exact_observations
 from synthetic_bayer_data import PATTERNS,FAMILIES,signal,noisy_observation
 from reconstruction_gates import gate_config,qualifies
 from bayer_canonical import predict
+from moment_bayer_unet import model_from_config
 
 
 NOISE=((0.,0.),(.0002,.000025),(.0008,.0004))
@@ -62,12 +63,13 @@ def aggregate(rows):
 
 
 def run(output,stage='joint',reference=None):
-    if stage not in ('joint','reconstruction','reconstruction-consistent','canonical-reconstruction'):raise ValueError('Unknown training stage')
+    if stage not in ('joint','reconstruction','reconstruction-consistent','canonical-reconstruction','moment-reconstruction'):raise ValueError('Unknown training stage')
     root=Path(__file__).resolve().parents[2];output=output.resolve()
     if not output.is_relative_to((root/'build-patch_neural_restoration').resolve()):raise ValueError('Use dedicated neural build')
     config=dict(seed=71,width=8,batch=4,steps=2048,learning_rate=.001,scale=2.,side=128,loss_border=48)
-    config['exact_observations']=stage in ('reconstruction-consistent','canonical-reconstruction')
-    config['canonical_input']=stage=='canonical-reconstruction'
+    config['exact_observations']=stage in ('reconstruction-consistent','canonical-reconstruction','moment-reconstruction')
+    config['canonical_input']=stage in ('canonical-reconstruction','moment-reconstruction')
+    config['model_kind']='moment' if stage=='moment-reconstruction' else 'residual'
     reference_proof=None
     if reference is not None and not config['exact_observations']:raise ValueError('Reference only used for consistency ablation')
     if config['exact_observations']:
@@ -77,7 +79,8 @@ def run(output,stage='joint',reference=None):
         reference_proof=json.loads((reference/'result.json').read_text(encoding='utf-8'))
         if reference_proof['status']!='completed_synthetic_reconstruction_stage_not_photographic_qualification':
             raise ValueError('Reference reconstruction is incomplete')
-        expected_stage='reconstruction-consistent' if config['canonical_input'] else 'reconstruction'
+        expected_stage=('canonical-reconstruction' if stage=='moment-reconstruction' else
+            'reconstruction-consistent' if config['canonical_input'] else 'reconstruction')
         if reference_proof['freeze']['training_stage']!=expected_stage:raise ValueError('Unexpected reconstruction reference')
         if digest(reference/'synthetic-joint-weights.pt')!=reference_proof['weights_sha256']:raise ValueError('Reference weights changed')
     cases=[dict(family=family,seed=7300+100*i+j,pattern=list(PATTERNS[j%4]))
@@ -88,7 +91,8 @@ def run(output,stage='joint',reference=None):
         for k in (range(3) if stage=='joint' else (0,))]
     prefix={'joint':'neural-synthetic-joint-v001-','reconstruction':'neural-synthetic-reconstruction-v001-',
         'reconstruction-consistent':'neural-synthetic-consistent-reconstruction-v001-',
-        'canonical-reconstruction':'neural-synthetic-canonical-reconstruction-v001-'}[stage]
+        'canonical-reconstruction':'neural-synthetic-canonical-reconstruction-v001-',
+        'moment-reconstruction':'neural-synthetic-moment-reconstruction-v001-'}[stage]
     now=datetime.now(timezone.utc);campaign=prefix+now.strftime('%Y%m%dT%H%M%SZ')
     freeze=dict(schema_version=1,data_version=1,campaign_id=campaign,measured_at_utc=now.isoformat(),
         git_sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),config=config,
@@ -102,19 +106,19 @@ def run(output,stage='joint',reference=None):
         reference=None if reference is None else dict(path=str(reference),result_sha256=digest(reference/'result.json'),
             weights_sha256=digest(reference/'synthetic-joint-weights.pt')),
         tools={n:digest(Path(__file__).with_name(n)) for n in
-            ('run_synthetic_joint_pilot.py','joint_bayer_unet.py','synthetic_bayer_data.py','camera_unet.py','reconstruction_gates.py','bayer_canonical.py')})
+            ('run_synthetic_joint_pilot.py','joint_bayer_unet.py','synthetic_bayer_data.py','camera_unet.py','reconstruction_gates.py','bayer_canonical.py','moment_bayer_unet.py')})
     output.mkdir(parents=True,exist_ok=False);save(output/'freeze.json',freeze)
     threads=min(4,max(1,(os.cpu_count() or 1)-2))
     torch.set_num_threads(threads);torch.set_num_interop_threads(1);torch.manual_seed(config['seed'])
     torch.use_deterministic_algorithms(True)
     clean=torch.stack([signal(c['family'],c['seed'],config['side']) for c in cases])
     patterns=torch.tensor([c['pattern'] for c in cases],dtype=torch.int64)
-    model=JointBayerUNet(config['width']);optimizer=torch.optim.Adam(model.parameters(),lr=config['learning_rate'])
+    model=model_from_config(config);optimizer=torch.optim.Adam(model.parameters(),lr=config['learning_rate'])
     reference_model=None
     if reference_proof is not None:
         # Model construction consumes RNG, but training uses a dedicated generator
         # and these blocks contain no stochastic layers.
-        reference_model=JointBayerUNet(config['width'])
+        reference_model=model_from_config(reference_proof['freeze']['config'])
         checkpoint=torch.load(reference/'synthetic-joint-weights.pt',map_location='cpu',weights_only=True)
         if checkpoint['freeze_sha256']!=reference_proof['freeze_sha256']:raise ValueError('Reference checkpoint mismatch')
         reference_model.load_state_dict(checkpoint['state_dict'],strict=True);reference_model.requires_grad_(False);reference_model.eval()
@@ -217,6 +221,6 @@ def run(output,stage='joint',reference=None):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--stage',choices=('joint','reconstruction','reconstruction-consistent','canonical-reconstruction'),default='joint')
+    p.add_argument('--stage',choices=('joint','reconstruction','reconstruction-consistent','canonical-reconstruction','moment-reconstruction'),default='joint')
     p.add_argument('--reference',type=Path)
     a=p.parse_args();run(a.output,a.stage,a.reference)
