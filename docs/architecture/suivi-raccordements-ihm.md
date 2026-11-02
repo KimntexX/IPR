@@ -38,7 +38,7 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-002 | À spécifier | Histogramme analytique en amont des courbes, distinct de l'aperçu sRGB |
 | IHM-CONN-003 | En attente moteur | États typés des traitements et révisions de rendu |
 | IHM-CONN-004 | En attente moteur | Comparaison canonique des recettes par groupe |
-| IHM-CONN-012 | Raccordé sur `patch_ui_history` (2 novembre 2026), validation visuelle en attente | Historique et instantanés : voir ci-dessous |
+| IHM-CONN-012 | Raccordé sur `patch_ui_history`, validé visuellement par l'utilisateur le 2 novembre 2026 | Historique et instantanés : voir ci-dessous |
 
 #### IHM-CONN-012 — historique des retouches (ADR-0021)
 
@@ -69,8 +69,9 @@ d'informations à gauche, sous les libellés, à la demande de l'utilisateur, te
 avec de vrais glissements. `removeHistoryStep(i)` retire la retouche d'une étape,
 les suivantes étant rejouées sans elle : touche Suppr sur l'étape courante de la
 liste, ou clic droit sur une étape. Tous les menus dérivent désormais du modèle
-`AppMenu`, qui reprend la palette de l'interface. Validation visuelle de l'utilisateur en
-attente ; les flèches du clavier font encore une étape par pression.
+`AppMenu`, qui reprend la palette de l'interface. Validé visuellement par
+l'utilisateur le 2 novembre 2026 ; les flèches du clavier font encore une étape par
+pression.
 | IHM-CONN-005 | En attente moteur | Rôles légers des vignettes : classement et présence de retouches |
 | IHM-CONN-006 | En attente moteur | Descripteur d'export et résultat typé avec destination réellement publiée |
 | IHM-CONN-007 | Raccordé et validé sur Windows | Compléter la qualification des permissions et des plateformes cibles |
