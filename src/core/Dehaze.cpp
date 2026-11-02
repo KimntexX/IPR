@@ -1,4 +1,5 @@
 #include "Dehaze.h"
+#include "LocalValues.h"
 #include "WorkingColorSpace.h"
 
 #include <opencv2/imgproc.hpp>
@@ -42,15 +43,15 @@ constexpr double DetailMeanSigma = 64.0;     // full-image pixels: the local mea
 constexpr float MinLog2Gain = -4.f, MaxLog2Gain = 2.5f;
 constexpr float HighlightRange = 0.5f;   // EV below the airlight where highlights are kept
 
-DetailLaw detailLawAt(int value)
+DetailLaw detailLawAt(float value)
 {
-    value = std::clamp(value, DetailLaws.front().value, DetailLaws.back().value);
+    value = std::clamp(value, float(DetailLaws.front().value), float(DetailLaws.back().value));
     size_t i = 1;
-    while (i + 1 < DetailLaws.size() && DetailLaws[i].value < value) ++i;
+    while (i + 1 < DetailLaws.size() && float(DetailLaws[i].value) < value) ++i;
     const DetailLaw &low = DetailLaws[i - 1], &high = DetailLaws[i];
-    const float t = float(value - low.value) / float(high.value - low.value);
+    const float t = (value - float(low.value)) / float(high.value - low.value);
     const auto mix = [t](float x, float y) { return x + t * (y - x); };
-    return {value, mix(low.c0, high.c0), mix(low.ch, high.ch), mix(low.cu, high.cu)};
+    return {int(value), mix(low.c0, high.c0), mix(low.ch, high.ch), mix(low.cu, high.cu)};
 }
 
 constexpr std::array<float, 13> ToneKnots{-10.f, -8.f, -6.f, -5.f, -4.f, -3.f, -2.5f, -2.f, -1.5f, -1.f, -0.5f, 0.f, 0.6f};
@@ -157,7 +158,7 @@ const std::array<Law, 6> Laws{{
 }};
 
 // Law at a slider value: linear between the two measured values around it, zero at 0.
-Law lawAt(int value)
+Law lawAt(float value)
 {
     std::array<const Law *, Laws.size() + 1> rows{};
     static const Law zero{0, 0.f, 0.f, 0.f, 0.f, {}};
@@ -166,13 +167,13 @@ Law lawAt(int value)
         if (n == 3) rows[n++] = &zero;
         rows[n++] = &law;
     }
-    value = std::clamp(value, rows.front()->value, rows.back()->value);
+    value = std::clamp(value, float(rows.front()->value), float(rows.back()->value));
     size_t i = 1;
-    while (i + 1 < rows.size() && rows[i]->value < value) ++i;
+    while (i + 1 < rows.size() && float(rows[i]->value) < value) ++i;
     const Law &low = *rows[i - 1], &high = *rows[i];
-    const float t = float(value - low.value) / float(high.value - low.value);
+    const float t = (value - float(low.value)) / float(high.value - low.value);
     const auto mix = [t](float a, float b) { return a + t * (b - a); };
-    Law result{value, mix(low.low, high.low), mix(low.high, high.high), mix(low.beta, high.beta),
+    Law result{int(value), mix(low.low, high.low), mix(low.high, high.high), mix(low.beta, high.beta),
                mix(low.kappa, high.kappa), {}};
     for (size_t k = 0; k < ToneKnots.size(); ++k)
         for (size_t j = 0; j < HazeKnots.size(); ++j)
@@ -256,12 +257,27 @@ cv::Vec3f saturate(const cv::Vec3f &s, float gain, const cv::Vec2f &centre)
     return {green * red, green, green * blue};
 }
 
+// What the pixel stage reads of the law at a slider value.
+struct PixelLaw
+{
+    float beta = 0.f, kappa = 0.f;
+    DetailLaw detail{};
+    bool removing = false;
+};
+
+PixelLaw pixelLawAt(float value)
+{
+    const Law law = lawAt(value);
+    return {law.beta, law.kappa, detailLawAt(value), value > 0.f};
+}
+
 } // namespace
 
-void apply(cv::Mat &linearRgb, int amount, double pixelScale)
+void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &localValues)
 {
-    if (amount == 0 || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
-    const Law law = lawAt(amount);
+    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
+    const bool hasLocal = !localValues.empty() && LocalValues::fits(localValues, linearRgb.size());
+    if (amount == 0 && !hasLocal) return;
     const cv::Matx33f toSrgb(WorkingColor::toSrgb()), fromSrgb(WorkingColor::fromSrgb());
     // Haze measured in linear sRGB at 1/4 of the full resolution, as fitted, then enlarged.
     const int reduction = std::max(1, int(std::lround(FittedReduction * pixelScale)));
@@ -287,39 +303,85 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale)
     // Tone change of the law, smoothed into a base: Lightroom's change is a smooth
     // local map, not a per-pixel curve. On the reduced image: log2 luminance before
     // and after the law, both blurred at BaseSigma.
-    cv::Mat before(small.size(), CV_32F), after(small.size(), CV_32F);
+    cv::Mat before(small.size(), CV_32F);
     for (int y = 0; y < small.rows; ++y) {
         const auto *row = small.ptr<cv::Vec3f>(y);
-        const float *d = dark.ptr<float>(y);
-        float *b = before.ptr<float>(y), *a = after.ptr<float>(y);
-        for (int x = 0; x < small.cols; ++x) {
-            const float luminance = std::max(0.f, srgbLuminance(row[x]));
-            const float h = std::clamp(d[x] / airlight.level, 0.f, 1.f);
-            const float target = luminance > 1e-6f
-                ? luminance * std::exp2(gainAt(law, std::log2(luminance / airlight.level), h)) : luminance;
-            b[x] = std::log2(luminance + LogFloor);
-            a[x] = std::log2(target + LogFloor);
-        }
+        float *b = before.ptr<float>(y);
+        for (int x = 0; x < small.cols; ++x)
+            b[x] = std::log2(std::max(0.f, srgbLuminance(row[x])) + LogFloor);
     }
     const double baseSigma = BaseSigma * scale, meanSigma = DetailMeanSigma * scale;
     cv::Mat tone;
     cv::GaussianBlur(before, tone, cv::Size(0, 0), meanSigma, meanSigma, cv::BORDER_REFLECT);
     tone -= std::log2(airlight.level + LogFloor);
     cv::GaussianBlur(before, before, cv::Size(0, 0), baseSigma, baseSigma, cv::BORDER_REFLECT);
-    cv::GaussianBlur(after, after, cv::Size(0, 0), baseSigma, baseSigma, cv::BORDER_REFLECT);
-    cv::Mat shift = after - before;
+    const auto shiftAt = [&](const Law &law) {
+        cv::Mat after(small.size(), CV_32F);
+        for (int y = 0; y < small.rows; ++y) {
+            const auto *row = small.ptr<cv::Vec3f>(y);
+            const float *d = dark.ptr<float>(y);
+            float *a = after.ptr<float>(y);
+            for (int x = 0; x < small.cols; ++x) {
+                const float luminance = std::max(0.f, srgbLuminance(row[x]));
+                const float h = std::clamp(d[x] / airlight.level, 0.f, 1.f);
+                const float target = luminance > 1e-6f
+                    ? luminance * std::exp2(gainAt(law, std::log2(luminance / airlight.level), h)) : luminance;
+                a[x] = std::log2(target + LogFloor);
+            }
+        }
+        cv::GaussianBlur(after, after, cv::Size(0, 0), baseSigma, baseSigma, cv::BORDER_REFLECT);
+        cv::Mat difference = after - before;
+        return difference;
+    };
+    cv::Mat shift;
+    if (hasLocal) {
+        // The tone change at the values the map needs, mixed per reduced pixel.
+        cv::Mat reducedValues;
+        cv::resize(localValues, reducedValues, small.size(), 0, 0, cv::INTER_AREA);
+        const std::vector<float> lattice = LocalValues::latticeOf(float(amount), reducedValues, -100.f, 100.f, 5.f, 8);
+        std::vector<cv::Mat> shifts;
+        for (float value : lattice)
+            shifts.push_back(value == 0.f ? cv::Mat(small.size(), CV_32F, cv::Scalar(0)) : shiftAt(lawAt(value)));
+        shift.create(small.size(), CV_32F);
+        for (int y = 0; y < small.rows; ++y) {
+            const float *values = reducedValues.ptr<float>(y);
+            float *out = shift.ptr<float>(y);
+            for (int x = 0; x < small.cols; ++x) {
+                const float value = std::isfinite(values[x]) ? float(amount) + values[x] : float(amount);
+                const LocalValues::Bracket at = LocalValues::bracketOf(lattice, std::clamp(value, -100.f, 100.f));
+                const float low = shifts[at.low].at<float>(y, x);
+                out[x] = at.t == 0.f ? low : low + at.t * (shifts[at.high].at<float>(y, x) - low);
+            }
+        }
+    } else {
+        shift = shiftAt(lawAt(float(amount)));
+    }
     cv::Mat haze, base, toneShift, localTone;
     cv::resize(dark, haze, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
     cv::resize(tone, localTone, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
     cv::resize(before, base, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
     cv::resize(shift, toneShift, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
-    const DetailLaw detail = detailLawAt(amount);
+    // Per half slider unit when local: whole values read the global law exactly.
+    const PixelLaw globalLaw = hasLocal ? PixelLaw{} : pixelLawAt(float(amount));
+    std::vector<PixelLaw> pixelLaws;
+    if (hasLocal)
+        for (int half = -200; half <= 200; ++half)
+            pixelLaws.push_back(pixelLawAt(float(half) / 2.f));
     cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
         for (int y = rows.start; y < rows.end; ++y) {
             auto *row = linearRgb.ptr<cv::Vec3f>(y);
             const float *hr = haze.ptr<float>(y), *br = base.ptr<float>(y), *tr = toneShift.ptr<float>(y);
             const float *ur = localTone.ptr<float>(y);
+            const float *values = hasLocal ? localValues.ptr<float>(y) : nullptr;
             for (int x = 0; x < linearRgb.cols; ++x) {
+                const PixelLaw *lawOfPixel = &globalLaw;
+                if (values) {
+                    const float own = std::isfinite(values[x]) ? float(amount) + values[x] : float(amount);
+                    const float half = std::round(std::clamp(own, -100.f, 100.f) * 2.f);
+                    if (half == 0.f) continue;   // no haze change here: the pixel stays untouched
+                    lawOfPixel = &pixelLaws[size_t(int(half) + 200)];
+                }
+                const DetailLaw &detail = lawOfPixel->detail;
                 const float luminance = WorkingColor::luminance(row[x]);
                 if (luminance <= 1e-6f) continue;
                 const float h = std::clamp(hr[x] / airlight.level, 0.f, 1.f);
@@ -332,19 +394,19 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale)
                 // tones rose 0.5 EV (6V1A9539) and turned white (IMG_7953).
                 const float deviation = level - br[x];
                 const float own = std::log2(luminance / airlight.level);
-                const float detailGain = amount > 0 && deviation > 0.f
+                const float detailGain = lawOfPixel->removing && deviation > 0.f
                     ? 1.f + (gain - 1.f) * std::clamp(-own / HighlightRange, 0.f, 1.f) : gain;
                 const float target = std::max(0.f, std::exp2(br[x] + tr[x] + detailGain * deviation) - LogFloor);
                 const cv::Vec3f s = toSrgb * row[x];
                 cv::Vec3f out = s * (target / luminance);
-                if (law.beta > 0.f) {
+                if (lawOfPixel->beta > 0.f) {
                     // Part of the change is light of the airlight's colour.
                     cv::Vec3f z = s + airlight.colour * (target - luminance);
                     for (int c = 0; c < 3; ++c) z[c] = std::max(0.f, z[c]);
                     const float lz = srgbLuminance(z);
-                    if (lz > 1e-9f) out = (1.f - law.beta) * out + law.beta * z * (target / lz);
+                    if (lz > 1e-9f) out = (1.f - lawOfPixel->beta) * out + lawOfPixel->beta * z * (target / lz);
                 }
-                row[x] = fromSrgb * saturate(out, law.kappa * h, centre);
+                row[x] = fromSrgb * saturate(out, lawOfPixel->kappa * h, centre);
             }
         }
     });

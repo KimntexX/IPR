@@ -1,6 +1,7 @@
 #ifndef IPR_CORE_COLORPIPELINE_H
 #define IPR_CORE_COLORPIPELINE_H
 
+#include "LocalValues.h"
 #include "ToneStatistics.h"
 #include <QColorSpace>
 #include <QImage>
@@ -56,9 +57,12 @@ WorkingImage fromLinearSrgb(const cv::Mat &rgb, QString *error = nullptr);
 // Output-only derivative: returned pixels AND tag are linear sRGB, not a master.
 WorkingImage mapToSrgbGamut(const WorkingImage &source,
                             QString *error = nullptr);
+// local: per-pixel temperature (kelvins) and tint added to the global ones
+// (LocalValues), the sums within the sliders' ranges. One matrix per combination
+// of values present, rounded to 5 K and 1 tint unit.
 bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
                           double referenceTemperature, int tint,
-                          QString *error = nullptr);
+                          QString *error = nullptr, const LocalValues::Maps &local = {});
 QImage toSrgb(const WorkingImage &source, OutputFormat outputFormat,
               QString *error = nullptr);
 

@@ -31,7 +31,7 @@ class ScopeTests(unittest.TestCase):
     def test_documentary_name_does_not_hide_code(self):
         plan = self.scope(['src/core/ToneRecovery.h'], branch='patch_documentation')
         self.assertTrue(plan['native'])
-        self.assertEqual(plan['tests'], ['imageExportTests', 'toneRecoveryTests'])
+        self.assertEqual(plan['tests'], ['imageExportTests', 'localValuesTests', 'toneRecoveryTests'])
         self.assertNotIn('macos-15-intel', plan['matrix']['os'])
 
     def test_preferences_components_use_their_focused_qml_tests(self):
@@ -115,7 +115,7 @@ class ScopeTests(unittest.TestCase):
         registered = {'tests': [{'name': name} for name in plan['tests']]}
         with patch.object(ci.subprocess, 'check_output', return_value=json.dumps(registered)), patch.object(ci, 'run') as run:
             ci.run_native_tests(ROOT / 'build', ROOT, plan, {})
-            self.assertEqual(run.call_args.args[0][-2:], ['-R', '^(imageExportTests|toneRecoveryTests)$'])
+            self.assertEqual(run.call_args.args[0][-2:], ['-R', '^(imageExportTests|localValuesTests|toneRecoveryTests)$'])
         with patch.object(ci.subprocess, 'check_output', return_value='{"tests": []}'):
             with self.assertRaises(ValueError):
                 ci.run_native_tests(ROOT / 'build', ROOT, plan, {})

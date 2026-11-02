@@ -294,23 +294,11 @@ cv::Matx33d temperatureAdaptationMatrix(int temperature, double referenceTempera
 
 }
 
-bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
-                          double referenceTemperature, int tint,
-                          QString *error)
+namespace {
+// The control matrix of one temperature and tint, in the working space; nothing
+// when both sit on the reference: the pixels then stay untouched to the bit.
+std::optional<cv::Matx33f> temperatureTintMatrix(int temperature, double referenceTemperature, int tint)
 {
-    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) {
-        if (error)
-            *error = QStringLiteral("La balance température/nuance attend une image RGB flottante.");
-        return false;
-    }
-    if (temperature < 2000 || temperature > 50000 || tint < -150 || tint > 150 ||
-        !std::isfinite(referenceTemperature) ||
-        referenceTemperature < 2000.0 || referenceTemperature > 50000.0) {
-        if (error)
-            *error = QStringLiteral("La température et sa référence doivent être comprises entre 2000 et 50000 K, et la nuance entre -150 et 150.");
-        return false;
-    }
-
     const float tintAmount = static_cast<float>(tint) / 150.0f;
     const float rawGreenGain = std::pow(2.0f, -tintAmount);
     const float rawMagentaGain = std::pow(2.0f, 0.5f * tintAmount);
@@ -329,25 +317,70 @@ bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
     // can otherwise introduce negligible but non-zero floating-point noise).
     if (tint == 0 &&
         std::abs(static_cast<double>(temperature) - referenceTemperature) < 1e-6)
-        return true;
+        return std::nullopt;
 
     // The empirical tint/cold axes were calibrated in sRGB. Conjugate the
     // complete control matrix once; all pixel arithmetic stays in Rec.2020.
     const cv::Matx33d tintMatrix(magentaGain, 0, 0, 0, greenGain, 0, 0, 0, magentaGain);
     const cv::Matx33d adaptation = WorkingColor::fromSrgb() * tintMatrix *
         temperatureAdaptationMatrix(temperature, referenceTemperature) * WorkingColor::toSrgb();
-    const cv::Matx33f adaptationF(
+    return cv::Matx33f(
         static_cast<float>(adaptation(0, 0)), static_cast<float>(adaptation(0, 1)),
         static_cast<float>(adaptation(0, 2)),
         static_cast<float>(adaptation(1, 0)), static_cast<float>(adaptation(1, 1)),
         static_cast<float>(adaptation(1, 2)),
         static_cast<float>(adaptation(2, 0)), static_cast<float>(adaptation(2, 1)),
         static_cast<float>(adaptation(2, 2)));
+}
+}
 
+bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
+                          double referenceTemperature, int tint,
+                          QString *error, const LocalValues::Maps &local)
+{
+    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) {
+        if (error)
+            *error = QStringLiteral("La balance température/nuance attend une image RGB flottante.");
+        return false;
+    }
+    if (temperature < 2000 || temperature > 50000 || tint < -150 || tint > 150 ||
+        !std::isfinite(referenceTemperature) ||
+        referenceTemperature < 2000.0 || referenceTemperature > 50000.0) {
+        if (error)
+            *error = QStringLiteral("La température et sa référence doivent être comprises entre 2000 et 50000 K, et la nuance entre -150 et 150.");
+        return false;
+    }
+
+    constexpr int MaxLocalMatrices = 8192;
+    const LocalValues::Combinations combinations(
+        {{float(temperature), &local[LocalValues::Temperature], 1.0f, 2000.0f, 50000.0f, 5.0f},
+         {float(tint), &local[LocalValues::Tint], 1.0f, -150.0f, 150.0f, 1.0f}},
+        linearRgb.size(), MaxLocalMatrices);
+    if (combinations.active()) {
+        std::vector<std::optional<cv::Matx33f>> matrices(size_t(combinations.count()));
+        for (int index = 0; index < combinations.count(); ++index) {
+            const LocalValues::Combinations::Values v = combinations.values(index);
+            matrices[size_t(index)] = temperatureTintMatrix(int(std::lround(v[0])), referenceTemperature,
+                                                            int(std::lround(v[1])));
+        }
+        cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
+            for (int y = rows.start; y < rows.end; ++y) {
+                cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
+                auto indices = combinations.row(y);
+                for (int x = 0; x < linearRgb.cols; ++x)
+                    if (const auto &matrix = matrices[size_t(indices.at(x))]) row[x] = *matrix * row[x];
+            }
+        });
+        return true;
+    }
+
+    const std::optional<cv::Matx33f> adaptationF = temperatureTintMatrix(temperature, referenceTemperature, tint);
+    if (!adaptationF)
+        return true;
     for (int y = 0; y < linearRgb.rows; ++y) {
         cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
         for (int x = 0; x < linearRgb.cols; ++x) {
-            const cv::Vec3f adapted = adaptationF * row[x];
+            const cv::Vec3f adapted = *adaptationF * row[x];
             row[x] = adapted;
         }
     }

@@ -167,8 +167,37 @@ Choix techniques : [ADR-0021](../decisions/ADR-0021-socle-edition-beta.md).
      sur 203 (29 RAW de la racine de base, états neutre, exposition +1 et -0,5,
      contraste +50 et -50, saturation -50, vibrance +50), serveur de rendu en
      mémoire, 2 novembre 2026.
-   - 4b, à venir : ombres, noirs, hautes lumières, blancs (courbes aujourd'hui
-     tabulées pour une seule valeur) et balance des blancs.
-   - 4c, à venir : traitements de voisinage (clarté, voile, bruit, netteté).
+   - 4b, fait : ombres, noirs, hautes lumières et blancs (une courbe par
+     combinaison de valeurs présente, au demi-cran, 1024 au plus), température
+     et nuance (une matrice par combinaison sans signal caméra, 5 K et 1 cran ;
+     avec DCP, gains et illuminant du profil par combinaison, 25 K et 1 cran, 512
+     au plus). Température locale en kelvins, ajoutée à la cible globale : le
+     curseur de masque de B2 décidera de sa présentation.
+   - 4c, fait : texture et clarté (gain par pixel sur des bandes qui ne dépendent
+     pas du réglage), netteté (quantité seule, comme le curseur de masque de
+     Lightroom), voile (changement de tons calculé à 8 valeurs au plus, mélangé par
+     pixel) et bruit (filtres à 5 valeurs au plus, mélangés par pixel).
+   - Sans carte, rendu identique à l'octet à celui de `d8d922d` : 435 rendus sur
+     435 (29 RAW de la racine de base, états neutre, exposition, température,
+     nuance, ombres, noirs, hautes lumières, blancs, texture, clarté, voile à +50
+     et -25, bruit de luminance et de couleur, netteté), 2 novembre 2026.
+   - Coût mesuré le 2 novembre 2026 (8 threads, carte en dégradé, scène de synthèse,
+     global puis local, en ms) :
+
+     | Module | 2048 x 1365 | 6000 x 4000 |
+     | --- | --- | --- |
+     | Ombres | 100 puis 23 | 842 puis 122 |
+     | Température | 6 puis 10 | 49 puis 58 |
+     | Texture | 45 puis 51 | 420 puis 476 |
+     | Netteté | 18 puis 22 | 254 puis 249 |
+     | Bruit de luminance | 50 puis 92 | 461 puis 792 |
+     | Voile | 260 puis 715 | 352 puis 551 |
+     | Bruit de couleur | 221 puis 649 | 2022 puis 5792 |
+
+     Le chemin local des tons est plus rapide que le global, qui reste sur un seul
+     thread. Voile et bruit de couleur dépassent 250 ms sur l'aperçu, en global
+     déjà ; ils sont repris du cache d'étages tant que leurs réglages ne changent
+     pas. En local, B2 devra prévoir différé ou progression, et réserver la mémoire
+     du bruit (jusqu'à 60 octets par pixel pendant le rendu, 1,4 Gio à 24 Mpx).
    - Le passage des cartes dans la chaîne de rendu, avec leurs clés de cache,
      se fait avec les masques (B2), seuls producteurs de cartes.

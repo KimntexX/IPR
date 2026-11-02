@@ -59,6 +59,7 @@ set(IPR_ENGINE_SOURCES
     src/core/Exposure.h
     src/core/Exposure.cpp
     src/core/LocalValues.h
+    src/core/LocalValues.cpp
     src/core/RecipeCodec.h
     src/core/RecipeCodec.cpp
     src/core/EditHistory.h

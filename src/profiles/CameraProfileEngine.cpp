@@ -531,7 +531,37 @@ public:
                 fileKey.startsWith(modelKey));
     }
 
+    // What depends on the illuminant in apply().
+    struct Illuminant
+    {
+        std::array<double, 9> cameraToXyz{};
+        HueSatTable hueMap;
+    };
+
+    bool prepareIlluminant(double whiteBalanceKelvin, Illuminant &illuminant, QString *error) const
+    {
+        const double matrixWeight = illuminantWeight(whiteBalanceKelvin);
+        if (!cameraToXyzMatrix(matrixWeight, illuminant.cameraToXyz)) {
+            if (error)
+                *error = QStringLiteral("Impossible de construire la matrice DCP.");
+            return false;
+        }
+        illuminant.hueMap = interpolateTables(hueSatMap1, hueSatMap2, matrixWeight);
+        return true;
+    }
+
     bool apply(cv::Mat &rgb, double whiteBalanceKelvin, QString *error,
+               const DcpRenderOptions &options) const
+    {
+        Illuminant illuminant;
+        if (!prepareIlluminant(whiteBalanceKelvin, illuminant, error))
+            return false;
+        return apply(rgb, [&](int) { return [&](int) -> const Illuminant & { return illuminant; }; }, error, options);
+    }
+
+    // illuminants(y) gives, for row y, the function that reads the illuminant of a column.
+    template <typename RowIlluminants>
+    bool apply(cv::Mat &rgb, const RowIlluminants &illuminants, QString *error,
                const DcpRenderOptions &options) const
     {
         if (!std::isfinite(options.cameraBaselineExposureEv) ||
@@ -559,15 +589,6 @@ public:
             0.0,       0.0,       0.8252100);
         const cv::Matx33d xyzToProPhoto = proPhotoToXyz.inv();
         const cv::Matx33d proPhotoToWorking = xyzToWorking * proPhotoToXyz;
-        const double matrixWeight = illuminantWeight(whiteBalanceKelvin);
-        std::array<double, 9> cameraToXyz{};
-        if (!cameraToXyzMatrix(matrixWeight, cameraToXyz)) {
-            if (error)
-                *error = QStringLiteral("Impossible de construire la matrice DCP.");
-            return false;
-        }
-        const HueSatTable hueMap =
-            interpolateTables(hueSatMap1, hueSatMap2, matrixWeight);
         const double exposureScale = std::exp2(
             baselineExposure + options.cameraBaselineExposureEv + options.profileExposureCompensationEv);
         // Extrema interpolation preserves HSV hue, not Lab hue or saturation.
@@ -582,7 +603,11 @@ public:
         cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
             for (int y = rows.start; y < rows.end; ++y) {
                 cv::Vec3f *row = rgb.ptr<cv::Vec3f>(y);
+                auto illuminantAt = illuminants(y);
                 for (int x = 0; x < rgb.cols; ++x) {
+                    const Illuminant &illuminant = illuminantAt(x);
+                    const std::array<double, 9> &cameraToXyz = illuminant.cameraToXyz;
+                    const HueSatTable &hueMap = illuminant.hueMap;
                     const cv::Vec3f in = row[x];
                     const double x2 =
                         cameraToXyz[0] * in[0] + cameraToXyz[1] * in[1] +
@@ -1830,7 +1855,7 @@ bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tin
 
 bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
                             double exposureEv, cv::Mat &linearRgb, QString *error,
-                            const cv::Mat &localExposureEv)
+                            const LocalValues::Maps &local)
 {
     if (source.cameraRgb.empty() || source.cameraRgb.type() != CV_32FC3) {
         if (error) *error = QStringLiteral("Source capteur DCP absente.");
@@ -1845,28 +1870,79 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
         if (error) *error = QStringLiteral("Exposition hors domaine.");
         return false;
     }
-    gains *= std::exp2(exposureEv);
-    cv::Mat rgb;
-    cv::transform(source.cameraRgb, rgb, cv::Matx33f(
-        float(gains[0]),0,0, 0,float(gains[1]),0, 0,0,float(gains[2])));
-    if (!localExposureEv.empty()) {
-        if (!LocalValues::fits(localExposureEv, rgb.size())) {
-            if (error) *error = QStringLiteral("Carte d'exposition locale incompatible avec le signal capteur.");
-            return false;
-        }
+    const cv::Mat &localExposure = local[LocalValues::Exposure];
+    const cv::Mat &localTemperature = local[LocalValues::Temperature];
+    const cv::Mat &localTint = local[LocalValues::Tint];
+    const cv::Size size = source.cameraRgb.size();
+    if (!LocalValues::fits(localExposure, size) || !LocalValues::fits(localTemperature, size) ||
+        !LocalValues::fits(localTint, size)) {
+        if (error) *error = QStringLiteral("Carte de valeurs locales incompatible avec le signal capteur.");
+        return false;
+    }
+    const auto applyLocalExposure = [&](cv::Mat &signal) {
+        if (localExposure.empty()) return;
         // Scene-linear like the global exposure, before the profile's tone curve.
-        cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
+        cv::parallel_for_(cv::Range(0, signal.rows), [&](const cv::Range &rows) {
             for (int y = rows.start; y < rows.end; ++y) {
-                auto *row = rgb.ptr<cv::Vec3f>(y);
-                const float *local = localExposureEv.ptr<float>(y);
-                for (int x = 0; x < rgb.cols; ++x)
-                    if (local[x] != 0.0f) row[x] *= static_cast<float>(std::exp2(double(local[x])));
+                auto *row = signal.ptr<cv::Vec3f>(y);
+                const float *values = localExposure.ptr<float>(y);
+                for (int x = 0; x < signal.cols; ++x)
+                    if (values[x] != 0.0f) row[x] *= static_cast<float>(std::exp2(double(values[x])));
             }
         });
+    };
+    const auto illuminantKelvin = [&](int kelvin, int tintValue) {
+        return kelvin == int(std::lround(source.sourceKelvin)) && tintValue == 0
+            ? source.sourceKelvin : double(kelvin);
+    };
+
+    // Each illuminant holds the profile's hue table: 512 of them stay small.
+    constexpr int MaxLocalIlluminants = 512;
+    const LocalValues::Combinations combinations(
+        {{float(temperature), &localTemperature, 1.0f, 2000.0f, 50000.0f, 25.0f},
+         {float(tint), &localTint, 1.0f, -150.0f, 150.0f, 1.0f}},
+        size, MaxLocalIlluminants);
+    cv::Mat rgb;
+    if (combinations.active()) {
+        struct Prepared { cv::Vec3f gains; DcpProfile::Illuminant illuminant; };
+        std::vector<Prepared> prepared(size_t(combinations.count()));
+        for (int index = 0; index < combinations.count(); ++index) {
+            const LocalValues::Combinations::Values v = combinations.values(index);
+            const int kelvin = int(std::lround(v[0])), tintValue = int(std::lround(v[1]));
+            cv::Vec3d pixelGains;
+            if (!profile->whiteBalanceGains(source.sourceKelvin, source.cameraNeutral, kelvin, tintValue,
+                                            pixelGains, error) ||
+                !profile->prepareIlluminant(illuminantKelvin(kelvin, tintValue), prepared[size_t(index)].illuminant, error))
+                return false;
+            pixelGains *= std::exp2(exposureEv);
+            prepared[size_t(index)].gains = cv::Vec3f(pixelGains);
+        }
+        rgb.create(size, CV_32FC3);
+        cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
+            for (int y = rows.start; y < rows.end; ++y) {
+                const auto *in = source.cameraRgb.ptr<cv::Vec3f>(y);
+                auto *out = rgb.ptr<cv::Vec3f>(y);
+                auto indices = combinations.row(y);
+                for (int x = 0; x < rgb.cols; ++x) {
+                    const cv::Vec3f &g = prepared[size_t(indices.at(x))].gains;
+                    out[x] = cv::Vec3f(in[x][0] * g[0], in[x][1] * g[1], in[x][2] * g[2]);
+                }
+            }
+        });
+        applyLocalExposure(rgb);
+        const auto illuminants = [&](int y) {
+            return [&prepared, indices = combinations.row(y)](int x) mutable -> const DcpProfile::Illuminant & {
+                return prepared[size_t(indices.at(x))].illuminant;
+            };
+        };
+        if (!profile->apply(rgb, illuminants, error, source.options)) return false;
+    } else {
+        gains *= std::exp2(exposureEv);
+        cv::transform(source.cameraRgb, rgb, cv::Matx33f(
+            float(gains[0]),0,0, 0,float(gains[1]),0, 0,0,float(gains[2])));
+        applyLocalExposure(rgb);
+        if (!profile->apply(rgb, illuminantKelvin(temperature, tint), error, source.options)) return false;
     }
-    const double kelvin = temperature == int(std::lround(source.sourceKelvin)) && tint == 0
-        ? source.sourceKelvin : double(temperature);
-    if (!profile->apply(rgb, kelvin, error, source.options)) return false;
     linearRgb = std::move(rgb);
     return true;
 }

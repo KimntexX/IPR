@@ -103,10 +103,29 @@ float inverse(Domain domain, float value)
     return domain == Domain::Log2 ? std::exp2(value) - LogFloor : value * value * value;
 }
 
+// A slider value per pixel: the gains of every whole value, read linearly between them.
+struct LocalGains
+{
+    const cv::Mat &values;   // global plus local, within [-100, 100]
+    std::array<Bands, 201> gains;
+    const Bands &reduce;
+    const Bands &enhance;
+};
+
+float localGain(const LocalGains &local, float value, size_t band)
+{
+    const float position = value + 100.0f;
+    const int low = std::min(int(position), 200);
+    const float t = position - float(low);
+    const float at = local.gains[size_t(low)][band];
+    return t == 0.0f ? at : at + t * (local.gains[size_t(low) + 1][band] - at);
+}
+
 // Bands of the luminance in the domain: G0 is the image, G1 sigma 1, then sigma
 // 2, 4, ... 256 pixels of the full image; each band d gains k d / (1 + (|d| / A)^2); colours keep their
-// channel ratios.
-void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &a, double pixelScale)
+// channel ratios. With local gains, each pixel reads its own and a pixel at zero stays untouched.
+void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &a, double pixelScale,
+                const LocalGains *local = nullptr)
 {
     cv::Mat luminance(linearRgb.size(), CV_32F), value(linearRgb.size(), CV_32F);
     cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
@@ -124,7 +143,23 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
     for (int b = 0; b < BandCount; ++b) {
         current = blurSigma(value, pixelScale * double(b == 0 ? 1 : 2 << (b - 1)));   // sigma 1, 2, 4, ... 256
         const float gain = k[size_t(b)], inverseA2 = 1.f / (a[size_t(b)] * a[size_t(b)]);
-        if (gain != 0.f) {
+        if (local) {
+            const float reduceA = local->reduce[size_t(b)], enhanceA = local->enhance[size_t(b)];
+            const float inverseReduce = 1.f / (reduceA * reduceA), inverseEnhance = 1.f / (enhanceA * enhanceA);
+            cv::parallel_for_(cv::Range(0, delta.rows), [&](const cv::Range &rows) {
+                for (int y = rows.start; y < rows.end; ++y) {
+                    const float *p = previous.ptr<float>(y), *c = current.ptr<float>(y);
+                    const float *values = local->values.ptr<float>(y);
+                    float *o = delta.ptr<float>(y);
+                    for (int x = 0; x < delta.cols; ++x) {
+                        if (values[x] == 0.f) continue;
+                        const float d = p[x] - c[x];
+                        o[x] += localGain(*local, values[x], size_t(b)) * d /
+                                (1.f + d * d * (values[x] < 0.f ? inverseReduce : inverseEnhance));
+                    }
+                }
+            });
+        } else if (gain != 0.f) {
             cv::parallel_for_(cv::Range(0, delta.rows), [&](const cv::Range &rows) {
                 for (int y = rows.start; y < rows.end; ++y) {
                     const float *p = previous.ptr<float>(y), *c = current.ptr<float>(y);
@@ -142,23 +177,46 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
         for (int y = rows.start; y < rows.end; ++y) {
             auto *p = linearRgb.ptr<cv::Vec3f>(y);
             const float *l = luminance.ptr<float>(y), *v = value.ptr<float>(y), *d = delta.ptr<float>(y);
-            for (int x = 0; x < linearRgb.cols; ++x)
+            const float *values = local ? local->values.ptr<float>(y) : nullptr;
+            for (int x = 0; x < linearRgb.cols; ++x) {
+                if (values && values[x] == 0.f) continue;
                 WorkingColor::scaleToLuminance(p[x], l[x], std::max(0.f, inverse(domain, v[x] + d[x])));
+            }
         }
     });
 }
 
+// One effect, with its values per pixel when its map is usable.
+void applyEffect(cv::Mat &linearRgb, Domain domain, const std::array<Row, 6> &table, const Bands &reduce,
+                 const Bands &enhance, int slider, const cv::Mat &map, double pixelScale)
+{
+    if (map.empty() || !LocalValues::fits(map, linearRgb.size())) {
+        if (slider != 0)
+            applyBands(linearRgb, domain, detailGainAt(table, slider), slider < 0 ? reduce : enhance, pixelScale);
+        return;
+    }
+    cv::Mat values(map.size(), CV_32FC1);
+    for (int y = 0; y < map.rows; ++y) {
+        const float *in = map.ptr<float>(y);
+        float *out = values.ptr<float>(y);
+        for (int x = 0; x < map.cols; ++x)
+            out[x] = std::isfinite(in[x]) ? std::clamp(float(slider) + in[x], -100.0f, 100.0f) : float(slider);
+    }
+    LocalGains local{values, {}, reduce, enhance};
+    for (int value = -100; value <= 100; ++value)
+        local.gains[size_t(value + 100)] = detailGainAt(table, value);
+    applyBands(linearRgb, domain, {}, reduce, pixelScale, &local);
+}
+
 } // namespace
 
-void apply(cv::Mat &linearRgb, int texture, int clarity, double pixelScale)
+void apply(cv::Mat &linearRgb, int texture, int clarity, double pixelScale, const LocalValues::Maps &local)
 {
     if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
-    if (texture != 0)
-        applyBands(linearRgb, Domain::CubeRoot, detailGainAt(TextureTable, texture),
-                   texture < 0 ? TextureReduce : TextureEnhance, pixelScale);
-    if (clarity != 0)
-        applyBands(linearRgb, Domain::Log2, detailGainAt(ClarityTable, clarity),
-                   clarity < 0 ? ClarityReduce : ClarityEnhance, pixelScale);
+    applyEffect(linearRgb, Domain::CubeRoot, TextureTable, TextureReduce, TextureEnhance, texture,
+                local[LocalValues::Texture], pixelScale);
+    applyEffect(linearRgb, Domain::Log2, ClarityTable, ClarityReduce, ClarityEnhance, clarity,
+                local[LocalValues::Clarity], pixelScale);
 }
 
 } // namespace LocalContrast
