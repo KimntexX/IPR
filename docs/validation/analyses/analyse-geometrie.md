@@ -4,8 +4,9 @@ Rapport évolutif du panneau Géométrie (lot B1, [ADR-0021](../../decisions/ADR
 Les JSON sous `docs/validation/raw/` font autorité ; ce rapport les interprète. Suivi
 des validations partielles : [issue #22](https://github.com/KimntexX/IPR/issues/22).
 
-État au 2 novembre 2026 : implémenté sur `patch_geometry` et `patch_ui_geometry`, non
-fusionné, **validation visuelle de l'utilisateur attendue**.
+État au 2 novembre 2026 : **validé visuellement par l'utilisateur** sur photo réelle,
+intégré à `dev` (`v0.3.100-beta`). Restent ouverts la latence d'un geste avec retouches
+et le masque après transformation.
 
 ## Choix techniques
 

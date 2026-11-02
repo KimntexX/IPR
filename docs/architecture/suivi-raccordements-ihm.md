@@ -40,7 +40,7 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-004 | En attente moteur | Comparaison canonique des recettes par groupe |
 | IHM-CONN-012 | Raccordé sur `patch_ui_history`, validé visuellement par l'utilisateur le 2 novembre 2026 | Historique et instantanés : voir ci-dessous |
 
-| IHM-CONN-013 | Raccordé sur `patch_ui_geometry`, à valider visuellement | Panneau Géométrie : voir ci-dessous |
+| IHM-CONN-013 | Raccordé et validé par l'utilisateur, intégré à `dev` | Panneau Géométrie : voir ci-dessous |
 
 #### IHM-CONN-013 — panneau Géométrie (B1)
 
