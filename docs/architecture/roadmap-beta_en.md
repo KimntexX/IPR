@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: a3aee33a618c05a6b4d3afad3a79a805a2d128b05d76b7ed2ce929c8059e4f6d -->
+<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: d83f9dc6836a6ba4758fe5006a055b86efdb014e3b625821505d4d3519363656 -->
 *[Français](roadmap-beta.md) | [English](roadmap-beta_en.md)*
 
 # Beta action plan — editing panels and neural processing
@@ -30,8 +30,10 @@ Before the first beta milestone:
 - freeze the reference state, known limits and regression recipes;
 - qualify saving/restoration and preview/export behavior.
 
-The first beta series is `v0.2.X-beta`. New panel integrations increment the
-minor version according to the [Git rules](gestion-branches-git.md).
+The beta has been open since 2 November 2026 by the user's decision, with known
+limits ([report](socle-edition-b0.md#b05--passage-en-bêta-2-novembre-2026), in French):
+these conditions remain to be closed. The first series is `v0.2.X-beta`. New panel
+integrations increment the minor version according to the [Git rules](gestion-branches-git.md).
 Internal technical packages or individual commits do not automatically count
 as panels or minor releases. Release numbers are settled upon validation;
 this plan creates no tag.
@@ -307,7 +309,7 @@ recorded in the [dedicated report](../reports/storage/workspace-cleanup-2026-10-
 | B0.4 | Implement the modular foundation, then connect the UI | Unchanged rendering without new operations; qualified persistence and undo/redo |
 | B0.5 | Close remaining alpha validations and obtain milestone approval | Referenced matrix and JSON, known limits, user approval before a beta tag |
 
-Status on 2 November 2026: B0.1 to B0.4 are described in the [foundation document](socle-edition-b0.md), with the limits tracked by [issue #21](https://github.com/KimntexX/IPR/issues/21).
+Status on 2 November 2026: B0.1 to B0.5 are described in the [foundation document](socle-edition-b0.md), with the limits tracked by [issue #21](https://github.com/KimntexX/IPR/issues/21).
 
 Start with B0.1, then B0.2/B0.3; do not start all five panels or train a network
 in parallel. For initial development, create the foundation branch from current

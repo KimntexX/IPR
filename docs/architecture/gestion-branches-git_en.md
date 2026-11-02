@@ -37,9 +37,11 @@ In case of divergence or conflict, examine and resolve differences; do not force
 
 ### Prototyping Versions
 
-Rule clarified on October 11, 2026: the project is in alpha. Next validated merges into `dev` are identified as `v0.1.X-alpha`. The counter `X` increases by the number of delivered patches, not the number of commits. Examine existing tags and identify delivery patches before choosing the next number; do not create a tag on an unvalidated merge.
+Rule clarified on November 2, 2026: the project is in beta, by the user's decision, with known limits tracked by the [validation matrix](../validation/matrice-validation.md) and the issues ([report of the transition](socle-edition-b0.md#b05--passage-en-bêta-2-novembre-2026), in French). Validated merges into `dev` are identified as `v0.Y.X-beta`.
 
-After validation of all implemented adjustment features, the first beta series uses `v0.2.X-beta`. The minor version then evolves with each integration of another feature panel: `v0.3.X-beta`, `v0.4.X-beta`, etc.
+The minor version `Y` starts at 2 and evolves with each integration of another feature panel: `v0.3.X-beta`, `v0.4.X-beta`, etc. An internal technical lot does not raise it.
+
+The counter `X` increases by the number of delivered patches, not the number of commits. It continues from the alpha and does not return to zero when the minor version rises: `v0.1.92-alpha`, then `v0.2.97-beta` with five patches. Examine existing tags and identify delivered patches before choosing the next number; do not create a tag on a non-validated merge.
 
 The transition to stable version **`v1.Y.X`** occurs after validation of all feature panels on the cameras the user currently owns. Document covered models, campaigns, and proofs before declaring this milestone validated by the user. This does not constitute universal validation for other cameras. `Y` denotes the minor version and `X` the patch version; no release schedule is imposed.
 
@@ -47,7 +49,7 @@ Historical tags already published are neither renamed nor moved.
 
 Place the version tag on the validated merge commit of `dev`; publish this tag only within an authorized delivery. This documentation rule does not itself create a tag and does not authorize any merge or publication.
 
-During prototyping, no legacy is preserved, even in tests. A replacement deletes the old implementation, its compatibility options, and tests that only concern it; current implementation tests are maintained. Git history and JSON analysis proof remain preserved: these are traces, not legacy execution paths.
+During prototyping (alpha and beta), no legacy is preserved, even in tests. A replacement deletes the old implementation, its compatibility options, and tests that only concern it; current implementation tests are maintained. Git history and JSON analysis proof remain preserved: these are traces, not legacy execution paths.
 
 ### Delivery Procedure
 

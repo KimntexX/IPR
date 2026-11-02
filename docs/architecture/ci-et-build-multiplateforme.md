@@ -34,7 +34,7 @@ Pour une GitHub Release, lancer `release.yml` sur main avec un **tag existant
 sur le SHA main promu**. Ne pas déplacer un tag de validation dev : les
 archives source automatiques GitHub doivent elles aussi pointer vers main,
 sans y réintroduire les tests et analyses. La nomenclature retenue pour main
-est `release-v0.1.X-alpha`, distincte du tag de validation dev `v0.1.X-alpha`.
+est `release-v0.Y.X-beta`, distincte du tag de validation dev `v0.Y.X-beta`.
 Le script accepte le préfixe facultatif `release-` : il conserve le tag complet
 pour GitHub et ne le retire que pour calculer la version des paquets.
 Le workflow ne crée aucun tag. Une licence `LICENSE` doit exister dans le
@@ -291,7 +291,7 @@ Pas de `pull_request_target`, de permission d'écriture ou de publication de
 release automatique. Le token GitHub est utilisé en lecture seule, sans
 être enregistré dans les artefacts.
 
-Les tags suivent `v0.1.X-alpha`, puis `v0.Y.X-beta` (Y >= 2), puis `v1.Y.X`.
+Les tags ont suivi `v0.1.X-alpha`, suivent `v0.Y.X-beta` (Y >= 2), puis suivront `v1.Y.X`.
 Le script ne crée ni tag ni fusion et ne calcule pas le nombre de patchs livrés.
 Les labels manuels identifient des constructions, pas une validation stable.
 
