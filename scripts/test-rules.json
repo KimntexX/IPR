@@ -25,6 +25,7 @@
     "folderRefreshTests": "folderRefreshTests",
     "sidecarTests": "sidecarTests",
     "editHistoryTests": "editHistoryTests",
+    "sidecarJsonTests": "sidecarJsonTests",
     "localValuesTests": "localValuesTests",
     "editorHistoryTests": "editorHistoryTests",
     "historyQmlTests": "historyQmlTests",
@@ -79,6 +80,7 @@
     "selection": "test_build_windows.py",
     "color_mixer_analysis": "test_analyse_color_mixer.py",
     "noise_analysis": "test_analyse_noise.py",
+    "foundation_parity": "test_audit_foundation_parity.py",
     "base_colorimetry_analysis": "test_analyse_base_colorimetrique.py"
   },
   "rules": [
@@ -124,6 +126,8 @@
     {"patterns": ["tests/batch_test.cpp", "src/editor/imageeditor.cpp", "src/core/ImageImporter.*", "src/raw/RawDecoder.*", "src/qml/ThumbnailRibbon.qml", "src/qml/Setting.qml"], "tests": ["editorBatchTests", "imageExportTests", "settingsQmlTests"]},
     {"patterns": ["tests/folder_refresh_test.cpp", "src/editor/imageeditor.*"], "tests": ["folderRefreshTests"]},
     {"patterns": ["tests/sidecar_test.cpp", "src/core/Sidecar.*", "src/core/RecipeCodec.*", "src/core/ToneCurve.*", "src/core/EditRecipe.h"], "tests": ["sidecarTests", "editHistoryTests", "editorHistoryTests", "pointColorTests", "editorBatchTests", "settingsQmlTests", "imageExportTests"]},
+    {"patterns": ["src/tools/SidecarJson.*", "src/tools/sidecar_dump.cpp", "tests/sidecar_json_test.cpp"], "tests": ["sidecarJsonTests"]},
+    {"patterns": ["tests/audit_foundation_parity.py", "tests/test_audit_foundation_parity.py"], "tests": [], "python": ["foundation_parity"]},
     {"patterns": ["src/core/EditHistory.*", "tests/edit_history_test.cpp", "tests/editor_history_test.cpp"], "tests": ["editHistoryTests", "editorHistoryTests", "historyQmlTests", "sidecarTests", "editorBatchTests"]},
     {"patterns": ["src/qml/AppMenu.qml", "src/qml/PhotoContextMenu.qml", "src/qml/HistoryModule.qml", "src/qml/PanelScrollBar.qml", "src/qml/ImageInfoPanel.qml", "src/qml/AdjustmentControl.qml", "src/qml/ColorGradingModule.qml", "src/qml/ApplicationActions.qml", "tests/history_qml_test.cpp"], "tests": ["historyQmlTests", "settingsQmlTests", "colorMixerQmlTests"]},
     {"patterns": ["src/cache/RenderStageCache.*", "tests/render_stage_cache_test.cpp", "src/editor/imageeditor.cpp"], "tests": ["renderStageCacheTests", "rec2020PipelineTests", "editorRawDevelopmentTests", "imageExportTests"]},

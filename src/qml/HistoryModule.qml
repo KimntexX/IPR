@@ -32,7 +32,7 @@ ColumnLayout {
             "denoiseChrominance": qsTr("Bruit de couleur"), "sharpeningAmount": qsTr("Gain de netteté"),
             "sharpeningRadius": qsTr("Rayon de netteté"), "sharpeningMasking": qsTr("Masquage de netteté"),
             "pointColor": qsTr("Couleur du point"), "automaticWhiteBalance": qsTr("Balance automatique"),
-            "toneCurves": qsTr("Courbe de tonalité")
+            "toneCurves": qsTr("Courbe de tonalité"), "rawDevelopment": qsTr("Développement RAW")
         }
         return labels[field] || field
     }

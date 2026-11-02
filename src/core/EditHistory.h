@@ -38,6 +38,10 @@ public:
     // disappears. The opening state stays. False for no such step. The current
     // recipe changes when the step was at or before the current one.
     bool removeStep(int step);
+    // The current step's recipe, empty without steps; replaceCurrent() corrects it
+    // without an edit having happened (the development resolved at opening).
+    QCborMap current() const { return m_steps.isEmpty() ? QCborMap() : m_steps.at(m_position); }
+    void replaceCurrent(const QCborMap &recipe);
 
     bool isEmpty() const { return m_steps.isEmpty(); }
     int size() const { return int(m_steps.size()); }

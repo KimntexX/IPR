@@ -67,7 +67,13 @@ struct RawDevelopment
     bool lensProfileResolved = false;
     bool lensCorrectionEnabled = true;
     bool chromaticAberrationEnabled = true;
+    // The development really used (ADR-0021), empty when not recorded: a photo
+    // opens again in this mode, even if the session's has changed.
+    QString developmentMode;
 };
+
+inline const QString StandardDevelopment = QStringLiteral("standard");
+inline const QString SignedDevelopment = QStringLiteral("signed");
 
 struct UserImageMetadata
 {

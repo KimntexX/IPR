@@ -35,7 +35,6 @@
 #include <QSaveFile>
 #include <QScopeGuard>
 #include <QTemporaryFile>
-#include <QtConcurrent/QtConcurrentRun>
 #include <QDebug>
 
 #include <opencv2/core.hpp>
@@ -257,12 +256,13 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     , m_thumbnailProvider(thumbnailProvider)
     , m_imageModel(this)
     , m_original()
-    , m_decodedImageCache(nullptr, std::move(memorySampler))
+    , m_taskResources(std::make_shared<TaskResources>(std::move(memorySampler)))
+    , m_decodedImageCache(m_taskResources->cache)
+    , m_renderStageCache(m_taskResources->stages)
 {
-    m_embeddedPool.setMaxThreadCount(1);
     connect(&m_embeddedWatcher, &QFutureWatcher<QImage>::finished, this, [this] {
         QImage preview;
-        try { preview = m_embeddedWatcher.result(); } catch (...) { /* optional interim view */ }
+        try { preview = Tasks::takeResult(m_embeddedWatcher.future()); } catch (...) { /* optional interim view */ }
         // Only while that very development still runs: a fast cache hit wins.
         if (preview.isNull() || m_embeddedRevision != m_requestedLoadRevision || !m_loadWatcher.isRunning())
             return;
@@ -282,8 +282,6 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         emit histogramChanged();
         emit previewChanged();
     });
-    m_prefetchPool.setMaxThreadCount(1);
-    m_prefetchPool.setExpiryTimeout(5000);
     m_prefetchTimer.setSingleShot(true);
     m_prefetchTimer.setInterval(250);
     connect(&m_prefetchTimer, &QTimer::timeout, this, &ImageEditor::startPrefetch);
@@ -326,7 +324,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     });
     connect(&m_prefetchWatcher, &QFutureWatcher<LoadResult>::finished, this, [this] {
         LoadResult loaded;
-        try { loaded = m_prefetchWatcher.future().takeResult(); } catch (...) { /* speculative result discarded */ }
+        try { loaded = Tasks::takeResult(m_prefetchWatcher.future()); } catch (...) { /* speculative result discarded */ }
         m_prefetchTaskActive = false;
         m_prefetchTransfer.reset();
         if (m_activePrefetchGeneration == m_prefetchGeneration && m_prefetchCancel &&
@@ -349,7 +347,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     connect(&m_renderWatcher, &QFutureWatcher<RenderResult>::finished,
             this, [this] {
         RenderResult rendered;
-        try { rendered = m_renderWatcher.result(); }
+        try { rendered = Tasks::takeResult(m_renderWatcher.future()); }
         catch (...) { rendered.error = tr("Échec du rendu : ressources insuffisantes ou traitement interrompu."); }
         if (!rendered.error.isEmpty() && m_activeRevision == m_requestedRevision)
             setStatusMessage(rendered.error);
@@ -381,7 +379,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
 
     connect(&m_batchApplyWatcher, &QFutureWatcher<BatchResult>::finished, this, [this] {
         BatchResult result;
-        try { result = m_batchApplyWatcher.result(); }
+        try { result = Tasks::takeResult(m_batchApplyWatcher.future()); }
         catch (...) { result.failed.append(tr("traitement interrompu")); }
         finishBatch(result, tr("Réglages appliqués à %n image(s).", nullptr, result.written));
         m_batchApplying = false;
@@ -394,7 +392,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     });
     connect(&m_batchExportWatcher, &QFutureWatcher<BatchResult>::finished, this, [this] {
         BatchResult result;
-        try { result = m_batchExportWatcher.result(); }
+        try { result = Tasks::takeResult(m_batchExportWatcher.future()); }
         catch (...) { result.failed.append(tr("traitement interrompu")); }
         finishBatch(result, result.cancelled
             ? tr("Export par lot annulé : %n image(s) exportée(s).", nullptr, result.written)
@@ -407,7 +405,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
 
     connect(&m_exportWatcher, &QFutureWatcher<ExportResult>::finished, this, [this] {
         ExportResult result;
-        try { result = m_exportWatcher.result(); }
+        try { result = Tasks::takeResult(m_exportWatcher.future()); }
         catch (...) { result = {false, tr("Échec de l'export : ressources insuffisantes ou traitement interrompu.")}; }
         setStatusMessage(result.message);
         refreshBusyState();
@@ -415,11 +413,10 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     });
 
     // Decoding (especially RAW demosaicing) can take seconds on large files;
-    // running it on QtConcurrent keeps the UI thread responsive, mirroring
-    // the pattern already used for rendering and export.
+    // running it as a task keeps the UI thread responsive, as rendering and export.
     connect(&m_loadWatcher, &QFutureWatcher<LoadResult>::finished, this, [this] {
         LoadResult loaded;
-        try { loaded = m_loadWatcher.future().takeResult(); }
+        try { loaded = Tasks::takeResult(m_loadWatcher.future()); }
         catch (...) { loaded.error = tr("Ressources insuffisantes ou échec du décodeur."); }
         if (!m_queuedFile.isEmpty()) {
             const QUrl queued = std::exchange(m_queuedFile, QUrl());
@@ -442,14 +439,13 @@ ImageEditor::~ImageEditor()
 {
     cancelPrefetch();
     if (m_loadCancel) m_loadCancel->store(true);
+    if (m_batchExportCancel) m_batchExportCancel->store(true);
     // Workers waiting for memory must not delay or deadlock closing.
     m_decodedImageCache.abortWaiting();
-    if (m_prefetchWatcher.future().isStarted()) m_prefetchWatcher.waitForFinished();
     // Final flush, even when the 450 ms debounce has not elapsed yet.
     m_sidecarDebounce.stop();
-    // Qt 6.4 can wait forever on an unstarted/consumed future (takeResult).
-    if (m_loadWatcher.future().isStarted())
-        m_loadWatcher.waitForFinished();
+    // A running export or batch application ends; a stuck task cannot hold the close.
+    m_tasks.shutdown();
     if (!m_pendingLoadIsFreshOpen && !m_original.isNull()) {
         // If closed during a RAW edit, persist the last committed base, not a
         // requested profile whose worker result has not yet been published.
@@ -466,15 +462,6 @@ ImageEditor::~ImageEditor()
         m_settings.automaticWhiteBalance = m_appliedAutomaticWhiteBalance;
     }
     saveCurrentSidecar();
-    if (m_renderWatcher.future().isStarted())
-        m_renderWatcher.waitForFinished();
-    if (m_exportWatcher.future().isStarted())
-        m_exportWatcher.waitForFinished();
-    if (m_batchExportCancel) m_batchExportCancel->store(true);
-    if (m_batchExportWatcher.future().isStarted())
-        m_batchExportWatcher.waitForFinished();
-    if (m_batchApplyWatcher.future().isStarted())
-        m_batchApplyWatcher.waitForFinished();
 }
 
 QAbstractItemModel *ImageEditor::imageModel()
@@ -1065,12 +1052,13 @@ void ImageEditor::applyAdjustmentsToSelection()
     for (const QString &fileName : std::as_const(targets))
         annotations.insert(fileName, m_userImageMetadata.value(fileName));
     setStatusMessage(tr("Application des réglages à %n image(s)…", nullptr, int(targets.size()) + int(current)));
-    m_batchApplyWatcher.setFuture(QtConcurrent::run(
-        [targets, settings = m_settings, asShot = asShotWhiteBalance(), annotations, current] {
+    m_batchApplyWatcher.setFuture(m_tasks.submit<BatchResult>(
+        QStringLiteral("batchApply"), Tasks::Priority::Foreground,
+        [targets, settings = m_settings, asShot = asShotWhiteBalance(), annotations, current](Tasks::Context &) {
             BatchResult result = applyToFiles(targets, settings, asShot, annotations);
             result.written += int(current);
             return result;
-        }));
+        }).future);
     m_batchApplying = true;
     emit batchApplyChanged();
 }
@@ -1084,7 +1072,7 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
         if (std::optional<Sidecar::Document> saved = Sidecar::read(fileName)) {
             target = std::move(*saved);
             if (target.history.isEmpty())
-                target.history.reset(RecipeCodec::encodeSettings(target.settings));
+                target.history.reset(RecipeCodec::encodeRecipe(target.settings, target.raw));
         } else {
             target.metadata = annotations.value(fileName);
             // The development the target gets when opened without a sidecar.
@@ -1102,7 +1090,7 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
             copied.tint = 0;
         }
         target.settings = std::move(copied);
-        target.history.record(RecipeCodec::encodeSettings(target.settings));
+        target.history.record(RecipeCodec::encodeRecipe(target.settings, target.raw));
         if (Sidecar::write(fileName, target))
             ++result.written;
         else
@@ -1150,8 +1138,12 @@ void ImageEditor::exportSelection(const QUrl &folder, const QString &format, int
     m_batchExportCancel = std::make_shared<std::atomic_bool>(false);
     cancelPrefetch();
     setStatusMessage(tr("Export par lot : 0 / %1…").arg(m_batchExportTotal));
-    m_batchExportWatcher.setFuture(QtConcurrent::run(&ImageEditor::exportFiles, files, folderPath,
-        ImageExporter::normalizedFormat(format), quality, &m_decodedImageCache, m_batchExportCancel));
+    m_batchExportWatcher.setFuture(m_tasks.submit<BatchResult>(
+        QStringLiteral("batchExport"), Tasks::Priority::Foreground,
+        [files, folderPath, format = ImageExporter::normalizedFormat(format), quality,
+         resources = m_taskResources, cancel = m_batchExportCancel](Tasks::Context &context) {
+            return exportFiles(context, files, folderPath, format, quality, &resources->cache, cancel);
+        }).future);
     m_batchExporting = true;
     emit batchExportChanged();
 }
@@ -1161,12 +1153,13 @@ void ImageEditor::cancelBatchExport()
     if (m_batchExportCancel) m_batchExportCancel->store(true);
 }
 
-void ImageEditor::exportFiles(QPromise<BatchResult> &promise, const QStringList &files, const QString &folder,
+ImageEditor::BatchResult ImageEditor::exportFiles(Tasks::Context &context, const QStringList &files, const QString &folder,
                               const QString &format, int quality, ImageCacheController *controller,
                               ImageCacheController::CancelToken cancel)
 {
     BatchResult result;
-    promise.setProgressRange(0, int(files.size()));
+    const int total = int(files.size());
+    context.progress(0, total);
     const QString suffix = ImageExporter::suffix(format);
     for (int index = 0; index < files.size(); ++index) {
         if (cancel->load()) { result.cancelled = true; break; }
@@ -1178,7 +1171,7 @@ void ImageEditor::exportFiles(QPromise<BatchResult> &promise, const QStringList 
         if (key.isEmpty()) {
             // A pinned profile changed since it was saved: never export with a substitute.
             result.failed.append(tr("%1 (profil enregistré modifié)").arg(name));
-            promise.setProgressValue(index + 1);
+            context.progress(index + 1, total);
             continue;
         }
         options.cancellationRequested = [cancel] { return cancel->load(); };
@@ -1186,16 +1179,17 @@ void ImageEditor::exportFiles(QPromise<BatchResult> &promise, const QStringList 
         if (!admission.reservation) {
             if (cancel->load()) { result.cancelled = true; break; }
             result.failed.append(tr("%1 (%2)").arg(name, admission.error));
-            promise.setProgressValue(index + 1);
+            context.progress(index + 1, total);
             continue;
         }
         const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
         LoadResult loaded = loadFromDisk(fileName, automaticWhiteBalance, options);
         if (cancel->load()) { result.cancelled = true; break; }
         Settings settings;
-        if (std::optional<Sidecar::Document> saved = Sidecar::read(fileName))
+        if (std::optional<Sidecar::Document> saved = Sidecar::read(fileName)) {
             settings = std::move(saved->settings);
-        else
+            settings.denoiseBeforeProfile = saved->raw.developmentMode == EditRecipe::SignedDevelopment;
+        } else
             settings.temperature = static_cast<int>(std::lround(
                 loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));
         const QString base = QFileInfo(fileName).completeBaseName().isEmpty()
@@ -1207,9 +1201,9 @@ void ImageEditor::exportFiles(QPromise<BatchResult> &promise, const QStringList 
             : writeImage(loaded.image, settings, target, format, quality);
         if (written.success) ++result.written;
         else result.failed.append(tr("%1 (%2)").arg(name, written.message));
-        promise.setProgressValue(index + 1);
+        context.progress(index + 1, total);
     }
-    promise.addResult(result);
+    return result;
 }
 
 QColor ImageEditor::colorMixerTrackColor(int band, int component, int value) const
@@ -1716,10 +1710,33 @@ bool ImageEditor::historyEditable() const
 // restoration, the recipe it leaves becomes a step.
 void ImageEditor::recordHistory()
 {
-    if (m_original.isNull() || m_inAdjustmentGesture || m_restoringHistory)
+    // A development under way: the step comes with its result, which may refuse it.
+    if (m_original.isNull() || m_inAdjustmentGesture || m_restoringHistory || m_loadWatcher.isRunning())
         return;
-    if (m_history.record(RecipeCodec::encodeSettings(m_settings)))
+    if (m_history.record(currentRecipe()))
         emit historyChanged();
+}
+
+QCborMap ImageEditor::currentRecipe() const
+{
+    return RecipeCodec::encodeRecipe(m_settings, rawDevelopmentRecipe());
+}
+
+void ImageEditor::setRawDevelopment(const RawDevelopment &raw)
+{
+    m_cameraProfile = raw.profile;
+    m_profileSha256 = raw.profileSha256;
+    m_normalizationManifest = raw.manifest;
+    m_manifestSha256 = raw.manifestSha256;
+    m_rawNormalizationEnabled = raw.normalizationEnabled;
+    m_lensProfile = raw.lensProfile;
+    m_lensProfileSha256 = raw.lensProfileSha256;
+    m_lensProfileResolved = raw.lensProfileResolved;
+    m_lensCorrectionEnabled = raw.lensCorrectionEnabled;
+    m_chromaticAberrationEnabled = raw.chromaticAberrationEnabled;
+    if (!raw.developmentMode.isEmpty())
+        m_denoiseBeforeProfile = raw.developmentMode == EditRecipe::SignedDevelopment;
+    m_rawDevelopmentWarning.clear();
 }
 
 void ImageEditor::beginAdjustmentGesture()
@@ -1736,10 +1753,16 @@ void ImageEditor::endAdjustmentGesture()
 void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
 {
     Settings restored;
-    if (!recipe || !RecipeCodec::decodeSettings(*recipe, restored))
+    RawDevelopment development = rawDevelopmentRecipe();
+    const QCborMap before = RecipeCodec::encodeRaw(development);
+    if (!recipe || !RecipeCodec::decodeRecipe(*recipe, restored, development))
         return;
+    // The automatic white balance and the development choices are applied by the decoder.
+    const bool redevelop = restored.automaticWhiteBalance != m_settings.automaticWhiteBalance ||
+                           RecipeCodec::encodeRaw(development) != before;
+    if (RecipeCodec::encodeRaw(development) != before)
+        setRawDevelopment(development);
     restored.denoiseBeforeProfile = m_denoiseBeforeProfile;
-    const bool whiteBalanceChanged = restored.automaticWhiteBalance != m_settings.automaticWhiteBalance;
     m_restoringHistory = true;
     const auto restoring = qScopeGuard([this] { m_restoringHistory = false; });
     m_settings = std::move(restored);
@@ -1751,8 +1774,7 @@ void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
     emit historyChanged();
     const QString fileName = m_currentFile.toLocalFile();
     const QString extension = QFileInfo(fileName).suffix().toLower();
-    // The automatic white balance is decoded with the RAW: changing it redevelops.
-    if (whiteBalanceChanged && m_currentFile.isLocalFile() && RawDecoder::supportedExtensions().contains(extension))
+    if (redevelop && m_currentFile.isLocalFile() && RawDecoder::supportedExtensions().contains(extension))
         beginLoad(fileName, extension, m_settings.automaticWhiteBalance, false);
     else
         scheduleRender();
@@ -1785,7 +1807,7 @@ void ImageEditor::removeHistoryStep(int step)
     endAdjustmentGesture();
     if (!m_history.removeStep(step)) return;
     const std::optional<QCborMap> recipe = m_history.moveTo(m_history.position());
-    if (recipe && *recipe != RecipeCodec::encodeSettings(m_settings))
+    if (recipe && *recipe != currentRecipe())
         restoreRecipe(recipe);
     emit historyChanged();
     scheduleSidecarSave();
@@ -1881,9 +1903,11 @@ void ImageEditor::exportImage(const QUrl &target, const QString &format, int qua
     setBusy(true);
     setStatusMessage(rebuild ? tr("Export en cours : reconstruction pleine résolution…") : tr("Export en cours…"));
     cancelPrefetch();
-    auto *controller = &m_decodedImageCache;
-    m_exportWatcher.setFuture(QtConcurrent::run(
-        [source, settings, fileName, format, quality, controller, rebuild, sourceFile, options] {
+    m_exportWatcher.setFuture(m_tasks.submit<ExportResult>(
+        QStringLiteral("export"), Tasks::Priority::Foreground,
+        [source, settings, fileName, format, quality, resources = m_taskResources, rebuild, sourceFile,
+         options](Tasks::Context &) {
+            ImageCacheController *controller = &resources->cache;
             const quint64 peak = rebuild ? SystemMemory::estimateDecodePeak(sourceFile)
                                          : SystemMemory::estimateProcessingPeak(source.linearRgba.total());
             const auto admission = controller->acquire({}, peak, false).result();
@@ -1897,7 +1921,7 @@ void ImageEditor::exportImage(const QUrl &target, const QString &format, int qua
             // Same tone weights as the preview the user validated.
             master.image.toneStatistics = source.toneStatistics;
             return writeImage(master.image, settings, fileName, format, quality);
-        }));
+        }).future);
 }
 
 namespace {
@@ -2358,7 +2382,9 @@ ImageEditor::RawDevelopment ImageEditor::rawDevelopmentRecipe() const
             m_manifestSha256.isEmpty() ? resourceDigest(manifest) : m_manifestSha256,
             m_rawNormalizationEnabled, ColorPipeline::engineIdentity() + QStringLiteral("|libraw=") + RawDecoder::backendVersion(),
             m_lensProfile, m_lensProfileSha256, m_lensProfileResolved,
-            m_lensCorrectionEnabled, m_chromaticAberrationEnabled};
+            m_lensCorrectionEnabled, m_chromaticAberrationEnabled,
+            rawImage() ? (m_denoiseBeforeProfile ? EditRecipe::SignedDevelopment : EditRecipe::StandardDevelopment)
+                       : QString()};
 }
 
 QString ImageEditor::currentFileKey() const
@@ -2422,6 +2448,14 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
                 m_rawDevelopmentWarning += tr("Une ressource enregistrée est absente ou modifiée. Repli automatique ; rendu non garanti. ");
             if (!raw.engineVersion.isEmpty() && raw.engineVersion != rawDevelopmentRecipe().engineVersion)
                 m_rawDevelopmentWarning += tr("La version du moteur de rendu a changé. ");
+            // Developed again as it was: the session's experimental switch follows the photo.
+            if (!raw.developmentMode.isEmpty() &&
+                (raw.developmentMode == EditRecipe::SignedDevelopment) != m_denoiseBeforeProfile) {
+                m_denoiseBeforeProfile = raw.developmentMode == EditRecipe::SignedDevelopment;
+                m_rawDevelopmentWarning += m_denoiseBeforeProfile
+                    ? tr("Photo développée en mode signé : ce mode est repris. ")
+                    : tr("Photo développée en mode standard : ce mode est repris. ");
+            }
         }
     } else if (!m_currentCacheKey.isEmpty()) {
         m_decodedImageCache.insert(m_currentCacheKey, retainedCurrentEntry());
@@ -2472,12 +2506,14 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
     const auto cancel = m_loadCancel;
     options.cancellationRequested = [cancel] { return cancel->load(); };
     options.retainedDcpSource = std::make_shared<RawDecoder::DcpSource>();
-    auto *controller = &m_decodedImageCache;
     const auto key = m_currentCacheKey;
     auto prefetchFuture = m_prefetchWatcher.future();
     const auto transfer = promotePrefetch ? m_prefetchTransfer : nullptr;
-    m_loadWatcher.setFuture(QtConcurrent::run(
-        [fileName, automaticWhiteBalance, options, source, controller, key, cancel, prefetchFuture, transfer]() mutable {
+    m_loadWatcher.setFuture(m_tasks.submit<LoadResult>(
+        QStringLiteral("load"), Tasks::Priority::Interactive,
+        [fileName, automaticWhiteBalance, options, source, resources = m_taskResources, key, cancel, prefetchFuture,
+         transfer](Tasks::Context &) mutable {
+            ImageCacheController *controller = &resources->cache;
             if (transfer && prefetchFuture.isStarted()) {
                 prefetchFuture.waitForFinished();
                 auto ready = *transfer;
@@ -2518,7 +2554,7 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
             }
             loaded.memoryPressure = admission.underPressure;
             return loaded;
-        }));
+        }).future);
 }
 
 void ImageEditor::applyLoadedImage(LoadResult loaded)
@@ -2608,7 +2644,11 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         }
         m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
         // The opening state, or a recipe saved outside the history (batch application).
-        m_history.record(RecipeCodec::encodeSettings(m_settings));
+        // A development resolved otherwise (a moved resource, a new target) is no edit.
+        if (RecipeCodec::settingsOf(m_history.current()) == RecipeCodec::encodeSettings(m_settings))
+            m_history.replaceCurrent(currentRecipe());
+        else
+            m_history.record(currentRecipe());
         emit historyChanged();
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
         emit pointColorsChanged();
@@ -2732,15 +2772,15 @@ void ImageEditor::startRender()
     const bool includeOriginal = m_originalImageSource.isEmpty();
     m_activeRevision = m_requestedRevision;
     setBusy(true);
-    auto *controller = &m_decodedImageCache;
-    auto *stages = &m_renderStageCache;
-    m_renderWatcher.setFuture(QtConcurrent::run(
-        [sourceCopy, settings, includeOriginal, pixelScale, controller, stages, overlay] {
+    m_renderWatcher.setFuture(m_tasks.submit<RenderResult>(
+        QStringLiteral("render"), Tasks::Priority::Interactive,
+        [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay](Tasks::Context &) {
+            ImageCacheController *controller = &resources->cache;
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
             if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, stages, overlay);
-        }));
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay);
+        }).future);
 }
 
 RawDecoder::Options ImageEditor::optionsForFile(const QString &path, bool *automaticWhiteBalance, QString *key)
@@ -2759,6 +2799,8 @@ RawDecoder::Options ImageEditor::optionsForFile(const QString &path, bool *autom
     options.automaticLcpSelection = !raw.lensProfileResolved;
     options.lensCorrectionEnabled = raw.lensCorrectionEnabled;
     options.chromaticAberrationEnabled = raw.chromaticAberrationEnabled;
+    options.signedDevelopment = raw.developmentMode == EditRecipe::SignedDevelopment;
+    options.retainPreLensSignal = options.signedDevelopment;
     if (!saved || raw.normalizationEnabled) {
         options.normalizationManifest = relocateResource(raw.manifest, raw.manifestSha256, "config");
         if (options.normalizationManifest.isEmpty()) options.normalizationManifest = defaultNormalizationManifest();
@@ -2780,9 +2822,10 @@ void ImageEditor::startEmbeddedPreview(const QString &fileName)
 {
     // About 13 ms on the CR3 corpus versus about 4 s for the development.
     m_embeddedRevision = m_requestedLoadRevision;
-    m_embeddedWatcher.setFuture(QtConcurrent::run(&m_embeddedPool, [fileName] {
-        return RawDecoder::decodeEmbeddedThumbnail(fileName, QSize(2048, 2048));
-    }));
+    m_embeddedWatcher.setFuture(m_tasks.submit<QImage>(
+        QStringLiteral("embeddedPreview"), Tasks::Priority::Interactive, [fileName](Tasks::Context &) {
+            return RawDecoder::decodeEmbeddedThumbnail(fileName, QSize(2048, 2048));
+        }).future);
 }
 
 void ImageEditor::restoreBeforeEmbeddedPreview()
@@ -2828,8 +2871,10 @@ void ImageEditor::startPrefetch()
     m_prefetchTransfer = std::make_shared<LoadResult>();
     const auto transfer = m_prefetchTransfer;
     const auto cancel = m_prefetchCancel;
-    auto *controller = &m_decodedImageCache;
-    m_prefetchWatcher.setFuture(QtConcurrent::run(&m_prefetchPool, [file, cancel, controller, transfer] {
+    m_prefetchWatcher.setFuture(m_tasks.submit<LoadResult>(
+        QStringLiteral("prefetch"), Tasks::Priority::Background,
+        [file, cancel, resources = m_taskResources, transfer](Tasks::Context &) {
+        ImageCacheController *controller = &resources->cache;
         LoadResult result;
         bool automaticWB = false;
         QString key;
@@ -2862,7 +2907,7 @@ void ImageEditor::startPrefetch()
         result.cacheKey = key;
         *transfer = result;
         return result;
-    }));
+    }).future);
 }
 
 void ImageEditor::setBusy(bool busy)

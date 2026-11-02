@@ -76,6 +76,14 @@ QCborValue replayed(const QCborValue &before, const QCborValue &after, const QCb
 }
 }
 
+void EditHistory::replaceCurrent(const QCborMap &recipe)
+{
+    if (m_steps.isEmpty())
+        reset(recipe);
+    else
+        m_steps[m_position] = recipe;
+}
+
 bool EditHistory::removeStep(int step)
 {
     if (step <= 0 || step >= m_steps.size())

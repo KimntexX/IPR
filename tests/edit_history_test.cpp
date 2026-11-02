@@ -49,6 +49,37 @@ int main()
     }
 
     {
+        // The recipe of a step: the settings and the development choices, not the engine's version.
+        EditRecipe::Settings settings;
+        settings.contrast = 12;
+        EditRecipe::RawDevelopment raw;
+        raw.profile = QStringLiteral("neutral.dcp");
+        raw.engineVersion = QStringLiteral("engine");
+        raw.developmentMode = EditRecipe::SignedDevelopment;
+        const QCborMap recipe = RecipeCodec::encodeRecipe(settings, raw);
+        EditRecipe::Settings decoded;
+        EditRecipe::RawDevelopment development;
+        development.engineVersion = QStringLiteral("current");
+        ok &= check(RecipeCodec::decodeRecipe(recipe, decoded, development) && decoded.contrast == 12 &&
+                    development.profile == raw.profile && development.developmentMode == raw.developmentMode &&
+                    development.engineVersion == QStringLiteral("current"),
+                    "a recipe carries the development choices without the engine's version");
+        EditRecipe::RawDevelopment untouched;
+        untouched.profile = QStringLiteral("kept.dcp");
+        ok &= check(RecipeCodec::decodeRecipe(RecipeCodec::encodeSettings(settings), decoded, untouched) &&
+                    untouched.profile == QStringLiteral("kept.dcp"),
+                    "a step without development choices leaves the development as it is");
+        ok &= check(RecipeCodec::settingsOf(recipe) == RecipeCodec::encodeSettings(settings),
+                    "two recipes compare by their settings");
+        EditHistory corrected;
+        corrected.replaceCurrent(RecipeCodec::encodeSettings(settings));
+        ok &= check(corrected.size() == 1 && corrected.current() == RecipeCodec::encodeSettings(settings),
+                    "correcting an empty history starts it");
+        corrected.replaceCurrent(recipe);
+        ok &= check(corrected.size() == 1 && corrected.current() == recipe, "correcting a step adds none");
+    }
+
+    {
         EditHistory history;
         ok &= check(history.isEmpty() && !history.canUndo() && !history.canRedo() && !history.undo(),
                     "an empty history has nothing to undo");

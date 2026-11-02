@@ -55,6 +55,7 @@ const Field<RawDevelopment, QString> RawStrings[] = {
     {"manifest", &RawDevelopment::manifest}, {"manifestSha256", &RawDevelopment::manifestSha256},
     {"engineVersion", &RawDevelopment::engineVersion}, {"lensProfile", &RawDevelopment::lensProfile},
     {"lensProfileSha256", &RawDevelopment::lensProfileSha256},
+    {"developmentMode", &RawDevelopment::developmentMode},
 };
 const Field<RawDevelopment, bool> RawBools[] = {
     {"normalizationEnabled", &RawDevelopment::normalizationEnabled},
@@ -64,6 +65,7 @@ const Field<RawDevelopment, bool> RawBools[] = {
 };
 const char *const CurveKeys[ToneCurve::ChannelCount] = {"luminance", "red", "green", "blue"};
 constexpr qsizetype MaxCurvePoints = 64;
+const QString RecipeRawKey = QStringLiteral("rawDevelopment");
 
 QCborValue encode(int value) { return qint64(value); }
 QCborValue encode(float value) { return double(value); }
@@ -264,5 +266,26 @@ void decodeRaw(const QCborMap &map, RawDevelopment &raw)
 {
     load(map, raw, RawStrings);
     load(map, raw, RawBools);
+}
+
+QCborMap encodeRecipe(const Settings &settings, const RawDevelopment &raw)
+{
+    QCborMap recipe = encodeSettings(settings);
+    QCborMap development = encodeRaw(raw);
+    development.remove(QStringLiteral("engineVersion"));
+    recipe.insert(RecipeRawKey, development);
+    return recipe;
+}
+
+bool decodeRecipe(const QCborMap &map, Settings &settings, RawDevelopment &raw)
+{
+    decodeRaw(map.value(RecipeRawKey).toMap(), raw);
+    return decodeSettings(map, settings);
+}
+
+QCborMap settingsOf(QCborMap recipe)
+{
+    recipe.remove(RecipeRawKey);
+    return recipe;
 }
 }

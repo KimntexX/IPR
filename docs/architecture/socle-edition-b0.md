@@ -145,16 +145,32 @@ Choix techniques : [ADR-0021](../decisions/ADR-0021-socle-edition-beta.md).
 
 1. **Exécuteur de tâches** (`src/tasks/TaskRunner`) : priorités interactive,
    premier plan et fond, progression, annulation coopérative, révision par
-   canal, fermeture bornée. Les sept mécanismes existants n'y sont pas encore
-   migrés.
+   canal, fermeture bornée. Les sept mécanismes de l'inventaire B0.1 y sont
+   migrés (2 novembre 2026), avec une priorité par canal : interactive pour le
+   chargement, l'aperçu embarqué et le rendu, premier plan pour l'export et les
+   lots, fond pour le préchargement. La fermeture attend une minute au plus ; ce
+   que les tâches atteignent (contrôleur mémoire, cache d'étages) leur est partagé,
+   de sorte qu'une tâche bloquée laissée en vie ne touche pas un objet détruit. Les
+   jetons d'annulation et les révisions de l'éditeur restent en place. Sur trois CR3
+   réels, 2 novembre 2026 : ouverture 3,0 s, rendu 0,67 s, export TIFF 8 s et export
+   par lot 11 s, comme avant la migration (`d8d922d`) ; fermeture pendant un
+   développement en 1 s au plus ; sous mémoire simulée libre, les deux voisines sont
+   préchargées et la suivante s'ouvre en 0,8 s au lieu de 2,8 s. Sur la machine réelle,
+   au-delà de 80 % de RAM utilisée, le préchargement reste coupé, comme prévu.
 2. **Recette CBOR** (`src/core/Sidecar`, `src/core/RecipeCodec`) : format 10 en
    sections nommées ; anciens `.ipr` 1 à 9 lus et convertis au premier
-   enregistrement ; fichier plus récent ouvert en lecture seule.
+   enregistrement ; fichier plus récent ouvert en lecture seule. L'outil
+   d'analyse `iprSidecarDump FICHIER.ipr` en donne une lecture JSON pour le
+   débogage, historique ouvert ; il ne fait pas partie de la production.
 3. **Historique** (`src/core/EditHistory`) : instantané complet de la recette
    par étape, 100 étapes, instantanés nommés, enregistré compressé dans le
    `.ipr`. Un geste encadré par l'IHM (appui puis relâchement d'un curseur)
-   fait une seule étape, choix de l'utilisateur du 1er novembre 2026. Le
-   développement RAW (profil, objectif) n'entre pas encore dans l'historique.
+   fait une seule étape, choix de l'utilisateur du 1er novembre 2026. Les choix
+   de développement (profil, calibration, objectif, mode) font partie de la
+   recette : l'étape naît à la fin du développement, et annuler redéveloppe. Le
+   mode réellement utilisé (standard ou signé) est enregistré ; une photo rouverte
+   le reprend, en le signalant s'il diffère de celui de la session, et l'export par
+   lot le respecte. Sans mode enregistré (anciens `.ipr`), celui de la session vaut.
    Raccordement IHM : IHM-CONN-012 du
    [suivi des raccordements](suivi-raccordements-ihm.md).
 4. **Cartes de valeurs locales** (`src/core/LocalValues.h`) : par réglage, un

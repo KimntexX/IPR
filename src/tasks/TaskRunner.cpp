@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QMutexLocker>
 
+#include <algorithm>
+
 namespace Tasks {
 
 TaskRunner::TaskRunner(int maxThreads, int shutdownMs, QObject *parent)
@@ -13,13 +15,22 @@ TaskRunner::TaskRunner(int maxThreads, int shutdownMs, QObject *parent)
 
 TaskRunner::~TaskRunner()
 {
-    cancelAll();
-    if (!m_pool->waitForDone(m_shutdownMs)) {
-        // A task ignored its cancellation: leaving its pool behind keeps the
-        // close bounded; the task holds no reference to this runner.
-        qCritical() << "TaskRunner: a task did not stop within" << m_shutdownMs << "ms; left running at close";
+    // A task ignored its cancellation: leaving its pool behind keeps the close
+    // bounded; the task holds no reference to this runner.
+    if (!shutdown())
         (void)m_pool.release();
+}
+
+bool TaskRunner::shutdown()
+{
+    if (!m_shutDown) {
+        m_shutDown = true;
+        cancelAll();
+        m_finished = m_pool->waitForDone(m_shutdownMs);
+        if (!m_finished)
+            qCritical() << "TaskRunner: a task did not stop within" << m_shutdownMs << "ms; left running at close";
     }
+    return m_finished;
 }
 
 quint64 TaskRunner::open(const QString &channel, const std::shared_ptr<std::atomic_bool> &stop)
