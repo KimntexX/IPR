@@ -8,7 +8,7 @@
 #include <QPromise>
 #include <QString>
 #include <QThreadPool>
-#include <QtConcurrent/QtConcurrentTask>
+#include <QtConcurrent/QtConcurrent>
 
 #include <atomic>
 #include <exception>
