@@ -2078,3 +2078,69 @@ chercher une correction périodique indue liée aux sorties sous-pixel.
 Cette cause reste à vérifier avant de modifier à nouveau architecture,
 pertes ou durée d'apprentissage. Aucun besoin de nouvelle photo ni calcul
 actif ; pas de changement moteur, IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 12:38 UTC — résidus des aplats par position sous-pixel
+
+Campagne `neural-flat-subpixel-audit-v001-20261102T123826Z`, banc
+`87b66bf`, **neuf tests ciblés réussis**, mesure terminée en **0,26 s**.
+Aucun entraînement ou poids modifié. Les quatre couleurs constantes déjà
+définies sont croisées avec les quatre phases, pour les modèles contraints
+avec et sans représentation canonique :32 cas. Le modèle canonique rejoue
+les erreurs et identités de l'audit précédent. Les sites observés restent
+exacts et les empreintes des fichiers de poids sont inchangées.
+
+Le diagnostic porte sur le **cœur32 × 32**, après exclusion de48 pixels
+sur une entrée128 × 128. Pour chaque canal et position haut-gauche/
+haut-droite/bas-gauche/bas-droite, il conserve l'erreur moyenne et sépare
+la moyenne par canal, le motif2 × 2 et le résidu spatial restant. Les
+identités de décomposition de l'énergie sont vérifiées numériquement.
+Sur ces32cas, le motif2 × 2 explique **100 % de la MSE mesurée** ; le
+résidu à l'intérieur de chaque sous-grille est nul. Ce résultat concerne
+les aplats synthétiques au cœur, pas les contours ou les images naturelles.
+
+### Distinguer biais des couleurs manquantes et différences sous-pixel
+
+Un simple biais uniforme sur les seules couleurs manquantes devient déjà
+périodique quand les valeurs observées sont exactes. Le considérer comme
+une anomalie indépendante des quatre sorties surinterpréterait le résultat.
+Une seconde décomposition respecte donc le masque de mesure :
+
+| Modèle | MSE totale des aplats | Part du biais moyen par canal sur sites manquants | Part périodique supplémentaire |
+| --- | ---: | ---: | ---: |
+| Sans représentation canonique | 0,0000008169 | 51,06 % | 48,94 % |
+| Canonique | 0,0000013114 | 79,32 % | 20,68 % |
+
+Le reste spatial est nul pour les deux modèles. La représentation canonique
+réduit la part relative des différences supplémentaires entre positions,
+mais augmente l'erreur totale et ne supprime pas le biais des couleurs
+manquantes. Les sorties sous-pixel libres permettent ici une correction
+répétée non nulle d'un signal qui devrait rester uniforme. Cela décrit
+le comportement appris, pas un défaut inévitable de l'opération PixelShuffle.
+
+### Annuler le paramètre de biais de la tête n'est pas une solution
+
+Le diagnostic isole algébriquement la contribution du biais explicite de
+la dernière convolution, avec les mêmes masques et retournements. Il ne
+modifie pas le réseau et ne sélectionne aucune correction. Retirer cette
+contribution ferait passer la MSE canonique de0,0000013114 à0,0001235894,
+soit environ94fois plus ; pour le modèle sans représentation canonique,
+elle serait environ28fois plus grande. Les contributions des caractéristiques
+et du biais explicite se compensent donc en partie. **Le biais moyen
+mesuré des couleurs manquantes n'est pas le seul paramètre `.head.bias`.**
+Ne pas appliquer une remise à zéro de ce paramètre ni un recentrage global
+des photos sur la base de cette observation.
+
+Mémoire canonique : [audit des résidus sous-pixel des aplats](../raw/neural-flat-subpixel-audit-v001-20261102T123826Z.json).
+
+**Conclusion actuelle : défaut structurel de fidélité aux signaux constants
+confirmé sur le prototype, sans bruit ni référence RCD.** Avant de nouveaux
+réglages de pertes ou de durée, la prochaine proposition est une interpolation
+apprise sous contraintes : construire les composantes manquantes depuis
+des observations de même couleur, avec conservation des constantes, puis
+étudier la reproduction des rampes. Le réseau prédirait des poids de
+reconstruction plutôt qu'une correction RGB entièrement libre. Ces propriétés
+devraient d'abord être prouvées par tests, sans prétendre garantir la fidélité
+des contours ou le débruitage. Adam reste inchangé, critères de passage non
+assouplis ; adaptation au bruit suspendue. Aucune nouvelle photo nécessaire
+pour cette vérification de principe, aucun calcul actif, changement moteur,
+IHM ou publication.
