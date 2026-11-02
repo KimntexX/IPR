@@ -2,7 +2,22 @@
 
 # B4 — étude de préparation de la restauration neuronale locale
 
-## État du 31 octobre 2026
+## État du 2 novembre 2026
+
+**Structure Bayer expérimentale fiabilisée sur signaux synthétiques,
+pas de débruiteur photographique intégré.** La base de poursuite est
+décrite au [§13](#13-structure-bayer-expérimentale--2-novembre-2026) :
+36 candidats d'interpolation, convolutions contraintes par transposition,
+noyaux préparés une fois pour une inférence. Deux initialisations et une
+confirmation procédurale distincte sont conservées ; un critère de gain
+reste en échec sur un ancien sous-groupe, sans assouplissement du seuil.
+
+Le [rapport évolutif](../validation/analyses/analyse-restauration-neuronale.md)
+et ses JSON canoniques portent les résultats et limites. Les sections1à12
+ci-dessous conservent le cadrage et les premiers essais historiques.
+L'ouverture, le filtre classique et l'IHM restent inchangés.
+
+## État historique du 31 octobre 2026
 
 **Premier banc synthétique passé (§10), pas intégration ni résultat photo.**
 L'utilisateur autorise les premiers tests et l'installation de PyTorch dans un
@@ -503,3 +518,75 @@ Fixer les tolérances et les groupes avant d'examiner les sorties du réseau.
 Si les prises sont recevables, construire une première référence avec carte
 de validité et provenance, puis qualifier l'apprentissage réel. Sinon, indiquer
 les fichiers et raisons à corriger, sans les intégrer silencieusement.
+
+## 13. Structure Bayer expérimentale — 2 novembre 2026
+
+Décision de banc prise dans l'autonomie autorisée par l'utilisateur :
+retenir une structure symétrique par construction pour poursuivre B4,
+avec poids propres entraînés par Adam. Le U-Net de largeur8 produit
+36 coefficients bornés par tanh ; les convolutions suivent explicitement
+les permutations de canaux et la transposition des noyaux. Le compteur
+de31300 paramètres stockés ne représente pas autant de degrés de liberté
+indépendants après projection. Aucun poids tiers n'est utilisé ici.
+
+Les candidats d'interpolation ont masse1, premier moment nul et ne lisent
+que des échantillons de la même couleur. La liste est fermée par
+transposition ; les homologues verticaux du vert aux sites rouges et
+bleus sont présents. Les poids appris peuvent être négatifs dans la
+combinaison effective : aucune moyenne convexe ou borne[0,1] n'est
+présumée. Les garanties affines concernent l'intérieur, hors bords réfléchis.
+
+```mermaid
+flowchart TD
+    A["Banc : CFA caméra balancé flottant signé + tags ; sigma = 0"]
+    A --> B["Échelle fixe 1/2 puis canonisation exacte"]
+    B --> C["U-Net contraint par transposition ; une passe image"]
+    C --> D["36 coefficients bornés"]
+    B --> E["Bilinéaire + candidats fermés, même couleur"]
+    D --> E
+    E --> F["RGB caméra ; sites mesurés conservés"]
+    F --> G["Inverse de coordonnées et échelle ×2"]
+```
+
+Ce graphe décrit le **prototype de banc**, pas un nouveau chemin de
+production. Le contrat présent n'accepte que sigma0 et observations
+déclarées exactes : ce modèle n'est pas encore un joint dématriçage/
+débruitage qualifié. Pour le bruit, recopier les mesures du capteur
+conserverait précisément le bruit de ces sites ; il faudra définir
+un autre contrat d'estimation et le qualifier explicitement.
+
+### Préparation de l'inférence et identité des poids
+
+La projection des petits noyaux et biais est calculée une fois sur une
+copie indépendante et figée du modèle évalué. Les convolutions préparées
+deviennent ordinaires ; cela évite de répéter la projection à chaque
+image et n'exige pas une seconde vue transposée. Le modèle source et
+l'état aléatoire ne changent pas. La copie doit être reconstruite après
+tout changement de checkpoint : une future intégration devra identifier
+le checkpoint, la configuration, le domaine et la version de structure,
+et ne pas réutiliser un modèle préparé périmé. Aucun cache moteur ou
+chargement ONNX n'est implémenté par cette étude.
+
+Les sorties préparées sont identiques au bit près sur960 cas rejoués,
+deux graines conservées. Ce résultat qualifie l'optimisation sur le banc,
+pas une latence pleine définition. Le détail des contrôles, les échecs
+historiques et les temps par répétition restent dans le
+[rapport unique](../validation/analyses/analyse-restauration-neuronale.md).
+
+### Frontière de validation et suite
+
+Les propriétés de structure, les partitions et la reproductibilité sont
+distinctes de la qualité photo. La confirmation procédurale passe les
+critères pour les deux graines, mais ne remplace pas le groupe20
+historique où le gain minimal reste insuffisant. Aucun seuil n'a été
+ajusté et aucune meilleure graine n'est sélectionnée. Les contrôles
+de confirmation sont désormais consultés et ne redeviendront pas vierges.
+
+La qualification suivante devra fixer le bruit CFA et sa propagation,
+les pertes avec observations bruitées, les données physiques propres
+et réservées, le tuilage/halo et les pics mémoire avant toute intégration.
+Le CPU fournit le témoin numérique ; un environnement GPU séparé pourra
+être qualifié pour les campagnes plus lourdes. La présence d'une RTX3060
+12Go n'est pas un résultat de compatibilité CUDA/ONNX ou de vitesse.
+Pas de modification actuelle des profils, de l'espace de travail,
+du rendu par défaut, des réglages ou des exports de production.

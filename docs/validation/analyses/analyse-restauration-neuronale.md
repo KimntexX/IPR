@@ -3109,7 +3109,7 @@ ses propres degrés de liberté directionnels.
 
 Mémoire canonique : [opérateur à36 candidats,1024 symétries et128 champs de coefficients](../raw/neural-closed-moment-audit-v001-20261102T154929Z.json).
 
-**Conclusion actuelle : opérateur complété prêt pour un pilote
+**Conclusion de cette campagne : opérateur complété prêt pour un pilote
 d'apprentissage, aucun nouveau modèle qualifié.** Le prochain essai
 proposé est une tête à36 coefficients sur le même tronc, avec les mêmes
 données diversifiées, calendrier, Adam, budget et critères. Il devra
@@ -3122,3 +3122,196 @@ est strictement conservé ; ce compte prévisionnel devra être vérifié
 sur le modèle effectivement construit.
 Aucun apprentissage lancé ici, nouvelle photo nécessaire, calcul actif,
 modification moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 16:15 UTC — campagne autonome de structure à36 coefficients
+
+L'utilisateur autorise la poursuite autonome avec traçabilité des choix.
+Banc `789b958`, **8 tests ciblés réussis**. La première ablation entraîne
+une tête36 avec le tronc ordinaire :31300 paramètres vérifiés, soit36
+de plus que le pilote32. La graine71 initialise exactement les mêmes
+tenseurs de tronc que le précédent modèle. La tête commence à zéro,
+donc à la bilinéaire. Données32fixes/418contours, calendrier des8192
+présentations et phases, Adam0,001, lot4,2048 étapes, échelle2, cœur48
+et seuils sont conservés. Aucun chargement d'un poids entraîné dans
+la nouvelle tête ; un seul checkpoint final sera évalué.
+
+### Choix de structure prévu avant les résultats
+
+Si la fermeture de liste ne suffit pas à rendre le modèle fiable, une
+seconde ablation contraint les convolutions par la transposition. Les
+canaux d'entrée suivent l'échange des sites TR/BL ; les canaux cachés
+sont appariés ; les36 sorties suivent la permutation des appuis. Pour
+chaque convolution, les poids effectifs sont projetés par
+`W_effectif = (W + P_sortie transpose_spatiale(W) P_entrée)/2` et les
+biais par `(b + P_sortie b)/2`. Les permutations sont involutives.
+Il s'agit d'une projection des petits noyaux, **pas de deux inférences
+de l'image**. SiLU, pooling carré et redimensionnement explicite suivent
+ces représentations. Les gradients traversent la projection.
+
+Les tests vérifient cette covariance avec une tête non nulle, des
+coefficients non entraînés, des données signées et une image non carrée,
+puis la copie des sites et les gradients. Cette construction impose
+une symétrie de structure ; elle ne prouve pas une meilleure qualité.
+Le nombre de paramètres stockés reste31300, mais le nombre de degrés
+de liberté indépendants diminue : ne pas annoncer une capacité identique.
+
+L'ordre est fixé : fermeture seule, puis modèle contraint si nécessaire,
+puis reproduction indépendante avec graine73 de la structure retenue,
+sans sélectionner la meilleure graine. Les contrôles historiques restent
+des régressions consultées. Une confirmation distincte est réservée dès
+maintenant : recettes `reserved` indices64à95 (graines2000064à2000095),
+hors entraînement et hors évaluation de ces premiers pilotes. Elle sera
+consultée seulement après choix de structure, sur les modèles finaux,
+sans régler un seuil à partir de ses résultats.
+
+Chaque pilote mesure les critères20/80cas, les contours consultés128,
+la covariance1024 transformations et un temps CPU128pixels. Les limites
+des anciens témoins à deux vues restent présentes ; aucune comparaison
+de temps non intercalée n'est présentée comme une accélération garantie.
+Le GPU n'est pas requis pour ces petits pilotes CPU de durée courte.
+Pas de débruitage entraîné, de qualification photographique, de
+modification moteur/IHM, publication, fusion ou tag.
+
+### 16:15–16:16 UTC — fermeture seule : encore directionnelle
+
+Pilote `neural-closed-unet-v001-20261102T161547Z`, terminé en56,47s.
+RatioRGB0,99493 sur20 contrôles historiques (11/12critères),0,97997 sur
+80cas croisés (12/12),0,98197 sur128 contours consultés. Le maximum de
+désaccord des1024 symétries vaut encore0,03713, pour une MSE1,03×10⁻⁶.
+Les31 300 paramètres sont vérifiés. La fermeture des appuis ne suffit
+donc pas à garantir la covariance des poids effectivement appris.
+Ce résultat déclenche l'ablation structurelle prévue, sans retoucher
+les données ou seuils. Temps observé d'une inférence128px :5,34ms,
+mesure non intercalée avec les campagnes antérieures.
+
+### 16:17–16:19 UTC — convolutions contraintes et reproduction indépendante
+
+Pilotes `neural-equivariant-unet-v001-20261102T161708Z` et
+`neural-equivariant-unet-v001-20261102T161847Z`, terminés respectivement
+en58,58s et54,81s. La graine73 est une initialisation indépendante,
+pas un second modèle choisi parmi une recherche de graines. Les deux
+checkpoints finaux sont conservés et rapportés sans sélection.
+
+| Mesure | Graine71 | Graine73 |
+| --- | ---: | ---: |
+| RatioRGB,20 contrôles historiques | 0,98866 | 0,98926 |
+| RatioRGB,80 contrôles croisés | 0,973677 | 0,973679 |
+| Ratio opposé,80 contrôles croisés | 0,97335 | 0,97344 |
+| RatioRGB,128 contours consultés | 0,980634 | 0,980637 |
+| Maximum de désaccord,1024 symétries | 1,19×10⁻⁷ | 1,19×10⁻⁷ |
+| Temps médian CPU,une entrée128px | 5,74ms | 5,61ms |
+
+Les résultats sont proches sur les deux initialisations et la covariance
+reste à la précision numérique sur les poids appris. Le tronc plus la
+tête stockent31300 paramètres, comme l'ablation précédente, avec moins
+de degrés de liberté indépendants à cause des projections.
+Les80cas passent12/12critères ; **les20cas historiques restent à11/12**,
+le gainRGB minimal de2 % étant manquant pour les deux graines. La
+symétrie n'efface pas ce verdict. Aucun apprentissage bruité lancé.
+
+## 2 novembre 2026, 16:20 UTC — confirmation sur des vérités distinctes
+
+Outil `0da3392`, **2 tests dédiés réussis** en complément des8 tests
+de structure. Les recettes de32 nouveaux contours (indices64à95,
+graines2000064à2000095) sont préannoncées dans le plan des premiers
+pilotes. Un groupe mixte de20 nouveaux contenus (graines9200+100famille+j)
+est ajouté au plan de confirmation, avec empreintes figées à16:18:19 UTC,
+après le début du premier entraînement contraint et avant le second.
+Ce groupe supplémentaire n'était donc pas préannoncé avant tous les
+entraînements ; aucun modèle ne l'utilise pour s'optimiser ou choisir une
+étape. Les deux graines de la structure choisie pour sa propriété algébrique
+sont évaluées, sans retenir la plus favorable.
+
+La campagne `neural-structure-confirmation-v001-20261102T162029Z`
+croise20 nouveaux contenus avec les quatre phases (80cas), et32 nouveaux
+contours avec les quatre phases (128cas). Les cibles et observations
+respectent leurs empreintes. Les recettes et leurs partitions restent
+dans le JSON ; toutes ces vérités restent issues des mêmes générateurs,
+pas d'une nouvelle séance photographique ou d'un autre boîtier.
+
+| Confirmation, ratio MSE / bilinéaire | Graine71 | Graine73 |
+| --- | ---: | ---: |
+| RGB,80 nouveaux cas mixtes | 0,96270 | 0,96235 |
+| Erreur opposée,80 nouveaux cas mixtes | 0,96819 | 0,96799 |
+| RGB,128 nouveaux contours | 0,98417 | 0,98429 |
+| Erreur opposée,128 nouveaux contours | 0,98676 | 0,98698 |
+| RGB,20 nouveaux cas dans leurs phases initiales | 0,91224 | 0,91016 |
+
+Les **12 critères passent pour les deux graines** sur les80 nouveaux
+cas mixtes, ainsi que sur leur sous-groupe20cas. Le gainRGB agrégé vaut
+environ3,73–3,76 % sur80cas et1,57–1,58 % sur les128 contours. Aucun
+seuil ne change. Le succès de ce nouveau groupe ne remplace pas l'échec
+du groupe20 historique, conservé dans la conclusion.
+
+Le gain n'est pas universel : sur les128 nouveaux couples de contours,
+64 gagnent/64 perdent pour la graine71 et61 gagnent/67 perdent pour73
+face à la bilinéaire (tolérance absolue MSE10⁻¹²). Les pires ratios
+individuels y valent1,03062 et1,03236. Sur80cas mixtes,41 gagnent/7
+perdent/32 sont ex æquo pour71,40/8/32 pour73. Cela reste une validation
+de structure synthétique limitée, sans gain visuel ou débruitage réel
+revendiqué. Ces données de confirmation sont désormais consultées.
+
+## 2 novembre 2026, 16:24 UTC — préparation des noyaux une fois, sorties identiques
+
+Outil `2bcc9d9`, **2 tests dédiés réussis**. La préparation effectue une
+copie indépendante du modèle évalué, remplace chaque convolution projetée
+par une convolution ordinaire contenant ses poids/biais effectifs, puis
+fige l'objet en inférence. Elle ne modifie ni les poids source, ni l'état
+du générateur aléatoire ; des poids non finis ou un modèle non évalué
+sont refusés. Une modification ultérieure des poids source impose de
+reconstruire cette copie, et non de réutiliser un noyau préparé périmé.
+Il ne s'agit pas d'un export ONNX ou d'un raccordement moteur déjà livré.
+
+Campagne `neural-prepared-inference-v001-20261102T162412Z` : **480 sorties
+par graine,960 au total, identiques au bit près** aux prédictions conservées.
+Les sites capteur sont conservés. Les contrôles comprennent80 régressions
+historiques,64 angulaires,128 contours déjà consultés,80 nouveaux cas mixtes
+et128 nouveaux contours. Les états des modèles sources restent inchangés.
+Les tests unitaires couvrent aussi valeurs signées, image non carrée,
+toutes les phases et refus des poids invalides.
+
+| Mesure CPU128px,sept répétitions intercalées | Graine71 | Graine73 |
+| --- | ---: | ---: |
+| Préparation ponctuelle d'une copie | 7,81ms | 4,44ms |
+| Inférence avec projection répétée, médiane | 6,11ms | 5,85ms |
+| Inférence avec noyaux préparés, médiane | 5,45ms | 5,12ms |
+
+Le gain de cette préparation est d'environ11–12,5 % sur ce petit banc
+intercalé. Les32 entrées de chronométrage proviennent des premiers cas
+mixtes (constantes/rampes), contrairement aux précédents temps sur contours ;
+seule la comparaison intercalée de cette campagne est directement appariée.
+Les résultats ne donnent ni temps pleine définition, ni pic mémoire,
+ni accélération GPU. Le GPU reste inutilisé : ces pilotes CPU durent
+environ une minute et l'environnement PyTorch GPU n'a pas été installé.
+
+Mémoires canoniques de la campagne autonome :
+
+- [Fermeture seule,31 300 paramètres](../raw/neural-closed-unet-v001-20261102T161547Z.json).
+- [Structure équivariante,graine71](../raw/neural-equivariant-unet-v001-20261102T161708Z.json).
+- [Reproduction indépendante,graine73](../raw/neural-equivariant-unet-v001-20261102T161847Z.json).
+- [Plan complet et confirmation distincte,les deux graines](../raw/neural-structure-confirmation-v001-20261102T162029Z.json).
+- [Préparation ponctuelle et960 sorties exactes](../raw/neural-prepared-inference-v001-20261102T162412Z.json).
+
+**Conclusion actuelle : structure expérimentale fiabilisée sur le banc
+synthétique, qualification photographique et bruit non acquises.** La
+base retenue pour poursuivre l'étude est l'interpolation à36 candidats
+fermée, la tête issue d'un tronc contraint par transposition et les noyaux
+préparés une fois. Elle traite l'image en une passe, conserve les sites
+observés dans ce régime sans bruit et respecte les symétries contrôlées.
+Deux initialisations et une confirmation distincte soutiennent sa
+reproductibilité dans ces conditions ; les poids ne sont pas pour autant
+interchangeables entre boîtiers ou qualifiés en production.
+
+Le seuil global reste manquant sur les20 contrôles historiques pour les
+deux graines. Ce défaut n'est pas effacé par les nouveaux contrôles ou
+par une sélection de graine. Le contrat actuel refuse sigma non nul :
+préparer le véritable joint dématriçage/débruitage demandera un traitement
+explicite des observations bruitées, un modèle de bruit et une référence
+indépendante adaptés au CFA, puis la vérification visuelle. Ne pas
+recycler la projection exacte des observations comme débruiteur capteur.
+
+Les garanties structurelles et limites sont reprises dans
+[l'architecture B4](../../architecture/restauration-neuronale.md#13-structure-bayer-expérimentale--2-novembre-2026).
+Aucun calcul actif, modification moteur/IHM, export photo, installation
+GPU, publication, fusion ou tag. Les checkpoints et preuves sont sauvegardés
+localement ; aucune mise en veille n'est déclenchée dans cette session.
