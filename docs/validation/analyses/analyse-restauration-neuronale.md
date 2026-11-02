@@ -1486,3 +1486,37 @@ cumuler une perte de gradients, la suite doit examiner la stabilité de
 l'optimisation sur le train seul et l'équilibrage des contenus ; les
 nouvelles scènes répétées du protocole restent utiles pour une future
 évaluation indépendante. Aucun calcul actif ni intégration ou publication.
+
+## 2 novembre 2026, 10:37 UTC — vérification de stabilité sur le train seul lancée
+
+Campagne `neural-training-stability-v001-20261102T103741Z`, banc
+`d495b5b`, neuf tests ciblés réussis. Deux rejeux des recettes déjà figées
+sont lancés : MSE seule et MSE avec pénalité de moyenne de poids1. Chaque
+rejeu conserve graine, lots, architecture, optimiseur et budget2048. Aucun
+poids candidat n'est publié ni choisi ; les tenseurs finaux doivent
+reproduire exactement leurs modèles parents. Un écart rend le rejeu non
+conforme au lieu d'être interprété comme un nouvel essai photographique.
+
+Les pertes de petits lots ne mesurent pas à elles seules la convergence.
+Des diagnostics sur **les 494 patches du train** sont donc fixés aux
+étapes `0, 512, 1024, 1536, 1792, 1920, 2048`. La fenêtre terminale
+`1792/1920/2048` est déclarée avant mesure. Aucun pixel du contrôle n'est
+évalué dans cette campagne. Les sondes ne doivent consommer aucun tirage
+aléatoire ni modifier les paramètres ; les deux recettes doivent recevoir
+exactement la même séquence de lots. Il n'y a ni continuation adaptative,
+ni sélection d'étape selon les résultats.
+
+L'audit de contenu réutilise les preuves du train : la composition initiale
+représente **69,23 % des patches et 99,13 % de la somme des erreurs RGB
+quadratiques initiales**, contre **30,77 % / 0,87 %** pour la rafaleISO4000.
+Ce contraste documente une forte disparité d'échelle d'erreur, pas une
+mesure directe de contribution aux gradients ou un profil physique du
+bruit. La répartition des structures et des fichiers sources est conservée.
+Le biais moyen par patch/canal est suivi séparément de la MSE et de la
+moyenne globale, pour ne pas masquer les compensations entre patches.
+
+**Calcul en cours ; convergence non déclarée.** La variabilité sur trois
+sondes finales sera descriptive, pas une preuve d'optimum global. L'objectif
+agrégé sur tout le train n'est pas exactement l'espérance des pertes des
+lots à masques de tailles variables. Aucun réglage n'est choisi à partir
+du contrôle ; aucune modification moteur, publication ou nouveau corpus.
