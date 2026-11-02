@@ -2798,7 +2798,7 @@ sites observés entre phases sont aussi réels.
 
 Mémoire canonique : [diagnostic des régressions, regroupements et mesures individuelles](../raw/neural-contour-regressions-v001-20261102T152447Z.json).
 
-**Conclusion actuelle : gain moyen confirmé, asymétrie orientation/phase
+**Conclusion de cette campagne : gain moyen confirmé, asymétrie orientation/phase
 à expliquer avant de poursuivre l'apprentissage.** Ce résultat modifie
 l'ordre proposé : l'essai d'une seconde initialisation est reporté.
 La prochaine vérification proposée porte sur les symétries du chemin
@@ -2810,3 +2810,108 @@ confondre transformation exacte d'une observation et nouvel échantillonnage
 de la vérité. Aucun correctif n'est décidé à partir de ces groupes.
 Qualification inchangée, pas d'apprentissage bruité, de nouvelle photo,
 de calcul actif, modification moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 15:32 UTC — symétries exactes de la mosaïque et des appuis
+
+Banc `691d53f`, **8 tests ciblés réussis**. Le contrôle porte sur les32
+contours déjà consultés, leurs quatre phases et les huit transformations
+du carré : quatre rotations, avec ou sans réflexion. Soit1024 cas de
+transformation pour128 observations sources, et toujours32 contenus
+distincts. Les valeurs de la mosaïque et les tags2×2 sont transformés
+ensemble, sans interpolation ni acquisition de nouveaux sites depuis la
+vérité. Les sorties RGB sont ensuite remises dans les coordonnées sources.
+
+Les tests préalables couvrent aussi les tailles non carrées, valeurs
+signées/supérieures au blanc, les deux identités des verts, la copie des
+échantillons capteur et les aller-retour exacts. Les32 vérités et128
+prédictions sources du réseau doivent reproduire les empreintes de la
+campagne précédente. Tous les calculs utilisent le cœur excluant48pixels
+de bord, les poids figés, sans gradient ni étape d'apprentissage.
+
+Cinq opérateurs sont distingués : bilinéaire ; interpolateur canonique
+avec coefficients nuls ; même interpolateur avec les deux seuls candidats
+symétriques pondérés chacun par0,25 ; même interpolateur avec ses quatre
+candidats pondérés chacun par0,25 ; réseau appris. Les deux témoins à
+poids fixes ne sont pas proposés comme nouveaux modèles de qualité.
+Leur rôle est de séparer un effet des appuis d'un effet exclusivement lié
+aux poids appris. La tolérance absolue de cohérence de la bilinéaire et
+du témoin nul est fixée à10⁻⁶ unité caméra avant le calcul.
+
+Un second contrôle transforme symboliquement chaque liste de taps par
+transposition et recherche le candidat correspondant au site transposé,
+sans renommer les couleurs. Il teste la fermeture de la **liste** des
+candidats, pas celle de toutes leurs combinaisons : un candidat absent
+pourrait encore être représentable dans leur espace engendré. Aucun
+changement de rendu ou de profil n'est autorisé par ce diagnostic.
+
+### Résultats — asymétrie du prototype établie, mapping exact
+
+Campagne `neural-bayer-symmetries-v001-20261102T153218Z` terminée en
+**23,25 s**. Les1024 aller-retour mosaïque/tags sont exacts et les sites
+observés restent identiques dans chaque opérateur. Les128 sorties sources
+du modèle figé reproduisent leurs empreintes ; le code et les poids
+n'ont pas changé pendant le calcul.
+
+Le tableau mesure la différence entre une sortie source et la sortie
+transformée puis remise en coordonnées source. **Ce n'est pas une erreur
+de reconstruction face à la vérité**, ni une estimation du bruit.
+Les valeurs sont dans le domaine caméra balancé signé, avant profil.
+
+| Opérateur | MSE de désaccord,1024 cas | Écart absolu maximal |
+| --- | ---: | ---: |
+| Bilinéaire | 1,21×10⁻¹⁷ | 1,19×10⁻⁷ |
+| Canonique, coefficients nuls | 3,23×10⁻¹⁸ | 1,19×10⁻⁷ |
+| Deux candidats symétriques à poids fixes | 2,19×10⁻¹⁸ | 1,19×10⁻⁷ |
+| Quatre candidats à poids fixes | 5,05×10⁻⁵ | 0,27438 |
+| Réseau figé | 1,78×10⁻⁶ | 0,03568 |
+
+Les trois premiers témoins satisfont la tolérance10⁻⁶ fixée avant le
+calcul. Les deux derniers présentent un désaccord structurel bien
+au-delà de l'arrondi. L'écart du témoin à poids fixes ne représente pas
+la qualité d'un modèle proposé ; son poids0,25 arbitraire sert à rendre
+visible une propriété de l'opérateur, sans apprentissage.
+
+Après remise en coordonnées source, le réseau est exactement cohérent
+pour les rotations0°/180° et les réflexions associées. Les quatre autres
+transformations, impliquant un échange des axes après canonisation,
+présentent le même maximum0,03568 et une MSE de désaccord3,56×10⁻⁶.
+La moyenne1024cas inclut donc une moitié de cas à désaccord nul ; ne
+pas la présenter comme l'amplitude de chaque transformation.
+
+### Appuis localisés et limites de l'attribution
+
+Le contrôle symbolique trouve **4 candidats sur32 absents de la liste
+après transposition** : les deux extrapolations unilatérales du vert
+au site rouge, et les deux au site bleu. Elles utilisent le voisinage
+horizontal ; les extrapolations verticales correspondantes ne sont pas
+dans la liste. Les16 candidats symétriques et les12 autres unilatéraux
+possèdent leur correspondant.
+
+La non-fermeture de liste et le témoin numérique à poids fixes confirment
+une asymétrie de l'opérateur d'interpolation utilisé par le pilote.
+Le réseau peut également apprendre des coefficients directionnels :
+ce diagnostic ne décompose pas toute sa différence entre appuis et
+poids, et ne prouve pas que chaque cible serait inaccessible avec les
+appuis actuels. La borne oracle favorable précédente reste valide dans
+ses conditions.
+
+Les résultats ne mettent pas en défaut les rotations/réflexions des
+données ni les tags Bayer sur ce banc. Ils n'impliquent aucune correction
+du décodage Canon, de RCD ou du pipeline de production : ces éléments
+ne sont pas les opérateurs modifiés ou qualifiés ici.
+
+Mémoire canonique : [audit des1024 symétries, témoins et listes d'appuis](../raw/neural-bayer-symmetries-v001-20261102T153218Z.json).
+
+**Conclusion actuelle : asymétrie directionnelle confirmée dans le
+prototype d'interpolation ; nouvelle initialisation toujours reportée.**
+La prochaine expérience proposée est un témoin symétrisé sans nouvel
+apprentissage : moyenner à poids égaux la prédiction du réseau et sa
+prédiction sur la mosaïque transposée, remise dans les coordonnées sources.
+Ce témoin conserve les observations et utilise les mêmes poids figés ;
+il permettrait de mesurer si supprimer cette dépendance améliore aussi
+la reconstruction, au prix d'une seconde inférence. La symétrie seule
+ne garantit pas ce gain de qualité. Une fermeture explicite de la liste
+des appuis pourrait ensuite être étudiée si le bénéfice le justifie,
+sans l'assimiler à un correctif déjà validé ou livré.
+Aucun calcul actif, apprentissage bruité, nouvelle photo, modification
+moteur/IHM, publication, fusion ou tag.
