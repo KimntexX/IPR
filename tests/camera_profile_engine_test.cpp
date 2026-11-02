@@ -1,4 +1,5 @@
 #include "CameraProfileEngine.h"
+#include "LocalValues.h"
 #include "CameraDenoise.h"
 #include "CameraSignal.h"
 #include "imageeditor.h"
@@ -477,6 +478,51 @@ int main(int argc, char **argv)
         !check(cv::norm(brighterOnce, rendered, cv::NORM_INF) == 0 &&
                cv::norm(wb.cameraRgb, untouched, cv::NORM_INF) == 0,
                "exposure edits never accumulate nor mutate the camera source")) return 1;
+    {
+        // A local exposure (LocalValues) acts on the camera signal as the global one does.
+        cv::Mat local(wb.cameraRgb.size(), CV_32FC1, cv::Scalar(0)), zone(wb.cameraRgb.size(), CV_8UC1, cv::Scalar(0));
+        for (int y = 0; y < local.rows; ++y)
+            for (int x = 0; x < local.cols; ++x)
+                if ((x + y) % 2 == 0) { local.at<float>(y, x) = 1.0f; zone.at<uchar>(y, x) = 255; }
+        cv::Mat outside;
+        cv::bitwise_not(zone, outside);
+        cv::Mat locallyBrighter, unchanged;
+        LocalValues::Maps exposureMaps;
+        exposureMaps[LocalValues::Exposure] = local;
+        LocalValues::Maps zeroMaps;
+        zeroMaps[LocalValues::Exposure] = cv::Mat(local.size(), CV_32FC1, cv::Scalar(0));
+        LocalValues::Maps misfitMaps;
+        misfitMaps[LocalValues::Exposure] = cv::Mat(local.rows + 1, local.cols, CV_32FC1);
+        if (!check(CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, locallyBrighter, &wbError, exposureMaps) &&
+                       cv::norm(locallyBrighter, rendered, cv::NORM_INF, zone) < 1e-5 &&
+                       cv::norm(locallyBrighter, coldNeutral, cv::NORM_INF, outside) == 0,
+                   "a local +1 EV renders as a global +1 EV inside its zone, nothing outside")) return 1;
+        if (!check(CameraProfileEngine::renderFromCameraSignal(
+                       wb, 2000, 0, 0.0, unchanged, &wbError, zeroMaps) &&
+                       cv::norm(unchanged, coldNeutral, cv::NORM_INF) == 0 &&
+                       !CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, unchanged, &wbError, misfitMaps),
+                   "a map of zeros changes nothing; a map of another size is refused")) return 1;
+        // Local white balance: the gains and the profile's illuminant follow the pixel.
+        cv::Mat warmGlobal, tintedGlobal, warmLocal, tintedLocal, zeroWhiteBalance;
+        LocalValues::Maps temperatureMaps, tintMaps, zeroWhiteMaps;
+        temperatureMaps[LocalValues::Temperature] = local * 2500.0f;
+        tintMaps[LocalValues::Tint] = local * 30.0f;
+        zeroWhiteMaps[LocalValues::Temperature] = cv::Mat(local.size(), CV_32FC1, cv::Scalar(0));
+        zeroWhiteMaps[LocalValues::Tint] = cv::Mat(local.size(), CV_32FC1, cv::Scalar(0));
+        if (!check(CameraProfileEngine::renderFromCameraSignal(wb, 4500, 0, 0.0, warmGlobal, &wbError) &&
+                       CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, warmLocal, &wbError, temperatureMaps) &&
+                       cv::norm(warmLocal, warmGlobal, cv::NORM_INF, zone) < 1e-5 &&
+                       cv::norm(warmLocal, coldNeutral, cv::NORM_INF, outside) == 0,
+                   "a local temperature renders as a global one inside its zone, nothing outside")) return 1;
+        if (!check(CameraProfileEngine::renderFromCameraSignal(wb, 2000, 30, 0.0, tintedGlobal, &wbError) &&
+                       CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, tintedLocal, &wbError, tintMaps) &&
+                       cv::norm(tintedLocal, tintedGlobal, cv::NORM_INF, zone) < 1e-5 &&
+                       cv::norm(tintedLocal, coldNeutral, cv::NORM_INF, outside) == 0,
+                   "a local tint renders as a global one inside its zone, nothing outside")) return 1;
+        if (!check(CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, zeroWhiteBalance, &wbError, zeroWhiteMaps) &&
+                       cv::norm(zeroWhiteBalance, coldNeutral, cv::NORM_INF) == 0,
+                   "maps of zeros keep the white balance exactly")) return 1;
+    }
     auto large = editorSource;
     cv::repeat(editorSource.linearRgba, 1, 800, large.linearRgba);
     auto largeContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(wb);

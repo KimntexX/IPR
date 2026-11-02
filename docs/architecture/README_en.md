@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/README.md; sha256: e79fbd1e363536faad4823a3e3c4b3b9edd1b8b47c98f41e64bd02120cedccf1 -->
+<!-- translation-source: docs/architecture/README.md; sha256: 03430aedbf1f92bf62352c4a683f5ebccd1072d27af8a6e32a18d9a7598e6bec -->
 *[Français](README.md) | [English](README_en.md)*
 
 # Architecture
@@ -17,6 +17,7 @@ This area contains reference documents that describe components, data contracts,
 - [OpenCV-independent image layer](roadmap-couche-image-sans-opencv.md): measured use, stages and removal of unused `imgcodecs`.
 - [Light roadmap](roadmap-lumieres.md): six controls, integrated plan B, Rec.2020 campaigns and 21 October highlight reservation.
 - [Lightroom feature inventory](roadmap-fonctions-lightroom.md): coverage, implementation status and planning.
+- [Editing foundation of the beta, B0](socle-edition-b0.md), in French: inventory, decisions, task runner, CBOR recipe, history, local value maps and B0.4 report.
 - [Beta action plan](roadmap-beta_en.md): geometry, layers/filters, removal and local noise/sharpening/shapes/objects networks; not implemented.
 - [Working, display ICC and export](gestion-couleurs-affichage.md): target separation, distinct from current code.
 - [Linear Rec.2020 integration](integration-rec2020.md): master port, initial audit and remaining qualification.

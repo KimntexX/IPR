@@ -1,10 +1,10 @@
-<!-- translation-source: docs/decisions/ADR-0001-sidecar-ipr.md; sha256: b500eb144c560a7bbd3022b2e30ba287d26751236329a71108446c5cb8b367a1 -->
+<!-- translation-source: docs/decisions/ADR-0001-sidecar-ipr.md; sha256: 8f6f3495dbdc7433fe78f840c70ab742a687193f3bc8640b13a5241a8c4b99bd -->
 *[Français](ADR-0001-sidecar-ipr.md) | [English](ADR-0001-sidecar-ipr_en.md)*
 
 # ADR-0001 — Non-destructive `.ipr` sidecar
 
 - **Date:** 2 October 2026
-- **Status:** Accepted
+- **Status:** Superseded by [ADR-0021](ADR-0021-socle-edition-beta.md) (CBOR format, 1 November 2026); files in this format are still read and converted
 - **Decision makers:** IPR project
 
 ## Context

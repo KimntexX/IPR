@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: aa83c3e33fec27550cba277b47e30ff449ce15e849c57818bae753f52ec91b55 -->
+<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: a3aee33a618c05a6b4d3afad3a79a805a2d128b05d76b7ed2ce929c8059e4f6d -->
 *[Français](roadmap-beta.md) | [English](roadmap-beta_en.md)*
 
 # Beta action plan — editing panels and neural processing
@@ -306,6 +306,8 @@ recorded in the [dedicated report](../reports/storage/workspace-cleanup-2026-10-
 | B0.3 | Define task interfaces: state, progress, cancellation, source/recipe revision, atomic publication | Deterministic stale-task, cancellation and closing tests, without unbounded waits |
 | B0.4 | Implement the modular foundation, then connect the UI | Unchanged rendering without new operations; qualified persistence and undo/redo |
 | B0.5 | Close remaining alpha validations and obtain milestone approval | Referenced matrix and JSON, known limits, user approval before a beta tag |
+
+Status on 2 November 2026: B0.1 to B0.4 are described in the [foundation document](socle-edition-b0.md), with the limits tracked by [issue #21](https://github.com/KimntexX/IPR/issues/21).
 
 Start with B0.1, then B0.2/B0.3; do not start all five panels or train a network
 in parallel. For initial development, create the foundation branch from current

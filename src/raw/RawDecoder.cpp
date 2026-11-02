@@ -833,6 +833,36 @@ QImage decodeEmbeddedThumbnailWithLibRaw(const QString &fileName,
                                      Qt::SmoothTransformation);
     return thumbnail;
 }
+
+// Half-size development in sRGB: enough for a thumbnail, without the demosaicing.
+QImage developThumbnailWithLibRaw(const QString &fileName, const QSize &maximumSize, QString *error)
+{
+    const auto owned = std::make_unique<LibRaw>();   // heap: too large for worker stacks
+    LibRaw &raw = *owned;
+    raw.imgdata.params.half_size = 1;
+    raw.imgdata.params.use_camera_wb = 1;
+    raw.imgdata.params.output_color = 1;
+    raw.imgdata.params.output_bps = 8;
+    raw.imgdata.params.no_auto_bright = 1;   // a night stays a night in the ribbon
+    int result = openRaw(raw, fileName);
+    if (result == LIBRAW_SUCCESS) result = raw.unpack();
+    if (result == LIBRAW_SUCCESS) result = raw.dcraw_process();
+    if (result != LIBRAW_SUCCESS) {
+        if (error) *error = QString::fromLatin1(libraw_strerror(result));
+        return {};
+    }
+    std::unique_ptr<libraw_processed_image_t, void (*)(libraw_processed_image_t *)> processed(
+        raw.dcraw_make_mem_image(&result), &LibRaw::dcraw_clear_mem);
+    if (!processed || result != LIBRAW_SUCCESS || processed->type != LIBRAW_IMAGE_BITMAP ||
+        processed->bits != 8 || processed->colors != 3) {
+        if (error) *error = QStringLiteral("LibRaw n'a pas fourni d'image exploitable pour la vignette.");
+        return {};
+    }
+    // copy(): the image must outlive LibRaw's buffer, and scaled() may share its source.
+    const QImage image = QImage(processed->data, int(processed->width), int(processed->height),
+                                int(processed->width) * 3, QImage::Format_RGB888).copy();
+    return maximumSize.isValid() ? image.scaled(maximumSize, Qt::KeepAspectRatio, Qt::SmoothTransformation) : image;
+}
 #endif
 
 void registerBuiltInHandlers()
@@ -848,7 +878,7 @@ void registerBuiltInHandlers()
             const auto raw = std::make_unique<LibRaw>();
             if (openRaw(*raw, path) != LIBRAW_SUCCESS) return std::nullopt;
             return estimateWhiteBalanceKelvin(*raw);
-        }};
+        }, developThumbnailWithLibRaw};
     if (!addFormatHandler({QStringLiteral("cr2")}, decodeCr2, &error, format) ||
         !addFormatHandler({QStringLiteral("cr3")}, decodeCr3, &error, format) ||
         !addFormatHandler({QStringLiteral("dng")}, decodeWithLibRaw, &error, format))
@@ -1019,8 +1049,10 @@ ColorPipeline::WorkingImage decode(const QString &fileName,
     return result;
 }
 
-QImage decodeEmbeddedThumbnail(const QString &fileName,
-                               const QSize &maximumSize, QString *error)
+namespace {
+// Runs one of a format's thumbnail functions, outside the registry lock.
+QImage runThumbnail(ThumbnailFunction FormatOptions::*function, const QString &fileName,
+                    const QSize &maximumSize, QString *error)
 {
     ensureBuiltInHandlers();
     if (error) error->clear();
@@ -1031,7 +1063,7 @@ QImage decodeEmbeddedThumbnail(const QString &fileName,
         QMutexLocker locker(&store.mutex);
         for (const FormatHandler &handler : store.handlers) {
             if (handler.extensions.contains(extension)) {
-                thumbnail = handler.options.thumbnail;
+                thumbnail = handler.options.*function;
                 break;
             }
         }
@@ -1046,6 +1078,18 @@ QImage decodeEmbeddedThumbnail(const QString &fileName,
         (result.width() > maximumSize.width() || result.height() > maximumSize.height()))
         result = result.scaled(maximumSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     return result;
+}
+}
+
+QImage decodeEmbeddedThumbnail(const QString &fileName,
+                               const QSize &maximumSize, QString *error)
+{
+    return runThumbnail(&FormatOptions::thumbnail, fileName, maximumSize, error);
+}
+
+QImage developThumbnail(const QString &fileName, const QSize &maximumSize, QString *error)
+{
+    return runThumbnail(&FormatOptions::developedThumbnail, fileName, maximumSize, error);
 }
 
 }

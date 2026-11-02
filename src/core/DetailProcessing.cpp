@@ -376,6 +376,25 @@ void splitLumaChroma(const cv::Mat &rgb, cv::Mat *luma, cv::Mat *chromaOrange,
     }
 }
 
+inline cv::Vec3f mergedPixel(float luma, float co, float cg)
+{
+    const float yValue = std::max(0.0f, luma);
+    // Exact inverse of master Y, Co=R-B, Cg=G-(R+B)/2.
+    const auto &w = WorkingColor::lumaWeights();
+    const float k = w[0] + .5f * w[1];
+    const cv::Vec3f deviation((1.f - k) * co - w[1] * cg,
+                             (.5f - k) * co + (1.f - w[1]) * cg,
+                             -k * co - w[1] * cg);
+    const float minimum = std::min({deviation[0], deviation[1], deviation[2]});
+    const float chromaScale = minimum < -yValue ? yValue / -minimum : 1.0f;
+    // Compress toward a gray of the same luminance instead of clipping
+    // channels independently (which lifts dark Y). No upper HDR clamp.
+    cv::Vec3f merged;
+    for (int channel = 0; channel < 3; ++channel)
+        merged[channel] = std::max(0.0f, yValue + chromaScale * deviation[channel]);
+    return merged;
+}
+
 void mergeLumaChroma(const cv::Mat &luma, const cv::Mat &chromaOrange,
                 const cv::Mat &chromaGreen, cv::Mat *rgb)
 {
@@ -384,32 +403,121 @@ void mergeLumaChroma(const cv::Mat &luma, const cv::Mat &chromaOrange,
         const float *yRow = luma.ptr<float>(y);
         const float *coRow = chromaOrange.ptr<float>(y);
         const float *cgRow = chromaGreen.ptr<float>(y);
-        for (int x = 0; x < rgb->cols; ++x) {
-            const float yValue = std::max(0.0f, yRow[x]);
-            const float co = coRow[x];
-            const float cg = cgRow[x];
-            // Exact inverse of master Y, Co=R-B, Cg=G-(R+B)/2.
-            const auto &w = WorkingColor::lumaWeights();
-            const float k = w[0] + .5f * w[1];
-            const cv::Vec3f deviation((1.f - k) * co - w[1] * cg,
-                                     (.5f - k) * co + (1.f - w[1]) * cg,
-                                     -k * co - w[1] * cg);
-            const float minimum = std::min({deviation[0], deviation[1], deviation[2]});
-            const float chromaScale = minimum < -yValue ? yValue / -minimum : 1.0f;
-            // Compress toward a gray of the same luminance instead of clipping
-            // channels independently (which lifts dark Y). No upper HDR clamp.
-            for (int channel = 0; channel < 3; ++channel)
-                target[x][channel] = std::max(0.0f, yValue + chromaScale * deviation[channel]);
-        }
+        for (int x = 0; x < rgb->cols; ++x)
+            target[x] = mergedPixel(yRow[x], coRow[x], cgRow[x]);
     }
 }
 
+cv::Mat clampedLuma(const cv::Mat &plane)
+{
+    cv::Mat bounded;
+    cv::max(plane, kChromaLumaFloor, bounded);
+    return bounded;
 }
 
-void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pixelScale)
+float mixed(const std::vector<const float *> &rows, const LocalValues::Bracket &at, int x)
 {
-    if (linearRgb.empty() || linearRgb.type() != CV_32FC3 ||
-        (settings.luminance <= 0 && settings.chrominance <= 0))
+    const float low = rows[at.low][x];
+    return at.t == 0.0f ? low : low + at.t * (rows[at.high][x] - low);
+}
+
+// The global filters at the values the maps need, mixed per pixel. On the lattice
+// every plane is the global path's own, so a pixel renders as that global value.
+void reduceNoiseLocally(cv::Mat &linearRgb, const DenoiseSettings &settings, double pixelScale,
+                        const cv::Mat &localLuminance, const cv::Mat &localChrominance)
+{
+    constexpr int MaxLatticeValues = 5;
+    const float globalLuminance = float(std::clamp(settings.luminance, 0, 100));
+    const float globalChrominance = float(std::clamp(settings.chrominance, 0, 100));
+    const std::vector<float> luminanceValues = LocalValues::latticeOf(
+        globalLuminance, localLuminance, 0.f, 100.f, 5.f, MaxLatticeValues);
+    const std::vector<float> chrominanceValues = LocalValues::latticeOf(
+        globalChrominance, localChrominance, 0.f, 100.f, 5.f, MaxLatticeValues);
+
+    cv::Mat luma, chromaOrange, chromaGreen;
+    splitLumaChroma(linearRgb, &luma, &chromaOrange, &chromaGreen);
+
+    std::vector<cv::Mat> lumaPlanes;
+    if (std::any_of(luminanceValues.cbegin(), luminanceValues.cend(), [](float v) { return v > 0.f; })) {
+        const float lumaSigma = estimateDenoiseSigma(luma);
+        cv::Mat lumaGuide;
+        cv::GaussianBlur(luma, lumaGuide, cv::Size(), kFineSigma, kFineSigma, cv::BORDER_REPLICATE);
+        const cv::Mat protection = structureProtection(lumaGuide, lumaSigma);
+        for (float value : luminanceValues)
+            lumaPlanes.push_back(denoiseLuminance(luma, protection, lumaSigma, int(std::lround(value))));
+    } else {
+        lumaPlanes.assign(luminanceValues.size(), luma);
+    }
+
+    // Colour relative to the luminance before its denoise, as the global path.
+    std::vector<cv::Mat> orangePlanes, greenPlanes;
+    if (std::any_of(chrominanceValues.cbegin(), chrominanceValues.cend(), [](float v) { return v > 0.f; })) {
+        const cv::Mat divisor = clampedLuma(luma);
+        cv::Mat orangeRatio, greenRatio;
+        cv::divide(chromaOrange, divisor, orangeRatio);
+        cv::divide(chromaGreen, divisor, greenRatio);
+        for (float value : chrominanceValues) {
+            cv::Mat orange = orangeRatio.clone(), green = greenRatio.clone();
+            if (value > 0.f)
+                denoiseChrominance(luma, &orange, &green, int(std::lround(value)), pixelScale);
+            orangePlanes.push_back(std::move(orange));
+            greenPlanes.push_back(std::move(green));
+        }
+    }
+
+    const auto rowsOf = [](const std::vector<cv::Mat> &planes, int y) {
+        std::vector<const float *> rows;
+        for (const cv::Mat &plane : planes) rows.push_back(plane.ptr<float>(y));
+        return rows;
+    };
+    const auto valueAt = [](float global, const float *localRow, int x) {
+        return localRow && std::isfinite(localRow[x]) ? std::clamp(global + localRow[x], 0.f, 100.f) : global;
+    };
+    const float *const noRow = nullptr;
+    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
+        for (int y = rows.start; y < rows.end; ++y) {
+            auto *pixels = linearRgb.ptr<cv::Vec3f>(y);
+            const float *luminanceRow = localLuminance.empty() ? noRow : localLuminance.ptr<float>(y);
+            const float *chrominanceRow = localChrominance.empty() ? noRow : localChrominance.ptr<float>(y);
+            const std::vector<const float *> lumaRows = rowsOf(lumaPlanes, y);
+            const std::vector<const float *> orangeRows = rowsOf(orangePlanes, y);
+            const std::vector<const float *> greenRows = rowsOf(greenPlanes, y);
+            const float *orangeSource = chromaOrange.ptr<float>(y), *greenSource = chromaGreen.ptr<float>(y);
+            for (int x = 0; x < linearRgb.cols; ++x) {
+                const float luminance = valueAt(globalLuminance, luminanceRow, x);
+                const float chrominance = valueAt(globalChrominance, chrominanceRow, x);
+                if (luminance == 0.f && chrominance == 0.f) continue;
+                const float yValue = mixed(lumaRows, LocalValues::bracketOf(luminanceValues, luminance), x);
+                float co = orangeSource[x], cg = greenSource[x];
+                if (chrominance > 0.f) {
+                    const LocalValues::Bracket at = LocalValues::bracketOf(chrominanceValues, chrominance);
+                    const float factor = float(std::max(double(yValue), kChromaLumaFloor));
+                    co = mixed(orangeRows, at, x) * factor;
+                    cg = mixed(greenRows, at, x) * factor;
+                }
+                pixels[x] = mergedPixel(yValue, co, cg);
+            }
+        }
+    });
+}
+
+}
+
+void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pixelScale,
+                 const LocalValues::Maps &local)
+{
+    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
+    const auto usable = [&](LocalValues::Parameter parameter) {
+        const cv::Mat &map = local[parameter];
+        return !map.empty() && LocalValues::fits(map, linearRgb.size()) ? map : cv::Mat();
+    };
+    const cv::Mat localLuminance = usable(LocalValues::DenoiseLuminance);
+    const cv::Mat localChrominance = usable(LocalValues::DenoiseChrominance);
+    if (!localLuminance.empty() || !localChrominance.empty()) {
+        reduceNoiseLocally(linearRgb, settings, pixelScale, localLuminance, localChrominance);
+        return;
+    }
+    if (settings.luminance <= 0 && settings.chrominance <= 0)
         return;
 
     cv::Mat luma, chromaOrange, chromaGreen;
@@ -419,11 +527,6 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pix
     // final luminance: absolute chroma on a noisy luminance would turn the
     // luminance grain into saturation speckle. The guide is the luminance before
     // its own denoise: it keeps the colour edges the photo shows.
-    const auto clampedLuma = [](const cv::Mat &plane) {
-        cv::Mat bounded;
-        cv::max(plane, kChromaLumaFloor, bounded);
-        return bounded;
-    };
     if (settings.chrominance > 0) {
         const cv::Mat divisor = clampedLuma(luma);
         cv::divide(chromaOrange, divisor, chromaOrange);
@@ -446,9 +549,13 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pix
     mergeLumaChroma(luma, chromaOrange, chromaGreen, &linearRgb);
 }
 
-void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelScale)
+void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelScale,
+             const LocalValues::Maps &local)
 {
-    if (linearRgb.empty() || linearRgb.type() != CV_32FC3 || settings.amount <= 0)
+    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
+    const cv::Mat &map = local[LocalValues::Sharpening];
+    const bool hasLocal = !map.empty() && LocalValues::fits(map, linearRgb.size());
+    if (settings.amount <= 0 && !hasLocal)
         return;
 
     const cv::Mat luma = extractLuminance(linearRgb);
@@ -473,7 +580,13 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelSc
         const float *base = localBase.ptr<float>(y);
         const float *minimum = localMinimum.ptr<float>(y);
         const float *maximum = localMaximum.ptr<float>(y);
+        const float *localAmount = hasLocal ? map.ptr<float>(y) : nullptr;
         for (int x = 0; x < linearRgb.cols; ++x) {
+            float pixelAmount = amount;
+            if (localAmount && std::isfinite(localAmount[x]))
+                pixelAmount = std::clamp(float(std::clamp(settings.amount, 0, 200)) + localAmount[x], 0.0f, 200.0f) / 100.0f;
+            if (pixelAmount <= 0.0f)
+                continue;
             const float detail = sourceLuma[x] - base[x];
             const float edgeMask = smoothStep(threshold, threshold * 3.0f,
                                               std::abs(detail));
@@ -483,7 +596,7 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelSc
             // Restrict overshoot to a small fraction of the local range. This
             // retains acutance while preventing the bright/dark halos of USM.
             const float targetLuma = std::clamp(
-                sourceLuma[x] + detail * amount * edgeMask,
+                sourceLuma[x] + detail * pixelAmount * edgeMask,
                 minimum[x] - 0.15f * localRange, maximum[x] + 0.15f * localRange);
             pixels[x] *= std::max(0.0f, targetLuma) / sourceLuma[x];
         }

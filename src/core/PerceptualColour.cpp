@@ -8,15 +8,23 @@
 
 namespace PerceptualColour {
 
-void apply(cv::Mat &linearRgb, const Parameters &parameters)
+void apply(cv::Mat &linearRgb, const Parameters &parameters, const LocalValues::Maps &local)
 {
+    const auto readable = [&](LocalValues::Parameter parameter) {
+        const cv::Mat &map = local[parameter];
+        return !map.empty() && LocalValues::fits(map, linearRgb.size()) ? &map : nullptr;
+    };
+    const cv::Mat *localSaturation = readable(LocalValues::Saturation);
+    const cv::Mat *localVibrance = readable(LocalValues::Vibrance);
     const bool vibrance = parameters.saturation != 0 || parameters.vibrance != 0;
+    const bool localVibrancePossible = localSaturation || localVibrance;
     const bool mixer = ColorMixer::active(parameters.mixer);
     const bool point = PointColor::active(parameters.pointColor);
     const auto nonZero = [](int v) { return v != 0; };
     const bool grading = std::any_of(parameters.gradingSaturation.cbegin(), parameters.gradingSaturation.cend(), nonZero) ||
                          std::any_of(parameters.gradingLuminance.cbegin(), parameters.gradingLuminance.cend(), nonZero);
-    if ((!vibrance && !mixer && !point && !grading) || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
+    if ((!vibrance && !localVibrancePossible && !mixer && !point && !grading) || linearRgb.empty() ||
+        linearRgb.type() != CV_32FC3) return;
     const double vibranceAmount = parameters.vibrance / 100.0, saturationAmount = parameters.saturation / 100.0;
     const ColorGrading::Zones zones = ColorGrading::prepare(parameters.gradingHue, parameters.gradingSaturation,
                                                             parameters.gradingLuminance, parameters.gradingBlending,
@@ -24,7 +32,18 @@ void apply(cv::Mat &linearRgb, const Parameters &parameters)
     cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
         for (int y = rows.start; y < rows.end; ++y) {
             auto *row = linearRgb.ptr<cv::Vec3f>(y);
+            const float *saturationRow = localSaturation ? localSaturation->ptr<float>(y) : nullptr;
+            const float *vibranceRow = localVibrance ? localVibrance->ptr<float>(y) : nullptr;
             for (int x = 0; x < linearRgb.cols; ++x) {
+                // Global plus local amounts; where no local value applies, the global path.
+                const float extraSaturation = saturationRow ? saturationRow[x] : 0.0f;
+                const float extraVibrance = vibranceRow ? vibranceRow[x] : 0.0f;
+                const bool pixelVibrance = vibrance || extraSaturation != 0.0f || extraVibrance != 0.0f;
+                if (!pixelVibrance && !mixer && !point && !grading) continue;
+                const double pixelVibranceAmount = extraVibrance != 0.0f
+                    ? (double(parameters.vibrance) + double(extraVibrance)) / 100.0 : vibranceAmount;
+                const double pixelSaturationAmount = extraSaturation != 0.0f
+                    ? (double(parameters.saturation) + double(extraSaturation)) / 100.0 : saturationAmount;
                 const cv::Vec3f pixel = row[x];
                 // Vibrance, the mixer and the point colour leave exact greys alone; only the
                 // grading colours them.
@@ -32,12 +51,12 @@ void apply(cv::Mat &linearRgb, const Parameters &parameters)
                 if (grey && !grading) continue;
                 cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(pixel));
                 const bool chromatic = !grey && std::hypot(lab[1], lab[2]) >= 1e-12;
-                if (chromatic && (vibrance || mixer)) {
+                if (chromatic && (pixelVibrance || mixer)) {
                     const double saturation = WorkingColor::proPhotoSaturation(cv::Vec3d(pixel));
-                    if (vibrance) Vibrance::adjust(lab, saturation, vibranceAmount, saturationAmount);
+                    if (pixelVibrance) Vibrance::adjust(lab, saturation, pixelVibranceAmount, pixelSaturationAmount);
                     if (mixer) {
                         // The mixer reads the saturation of the pixel vibrance produced.
-                        const double after = vibrance
+                        const double after = pixelVibrance
                             ? WorkingColor::proPhotoSaturation(WorkingColor::oklabToWorking(lab)) : saturation;
                         ColorMixer::adjust(lab, after, parameters.mixer);
                     }

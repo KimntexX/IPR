@@ -1,6 +1,7 @@
 #include "imageeditor.h"
 #include "imageprovider.h"
 #include "controlled_memory.h"
+#include "Sidecar.h"
 #include <QCoreApplication>
 #include <QEventLoop>
 #include <QFile>
@@ -130,10 +131,12 @@ int main(int argc,char **argv)
     if (!write(raw,"mock") || !write(profile,"mock") || !write(manifest,"{}")) return 1;
     std::atomic<int> decodes{0};
     std::atomic<bool> environmentDisabled{false};
+    std::atomic<bool> signedDecode{false};
     RawDecoder::registerFormatHandler({"uimockraw"},
         [&](const QString &,const RawDecoder::Options &options,ImageMetadata *meta,QString *) {
             ++decodes;
             environmentDisabled=!options.useNormalizationEnvironment;
+            signedDecode=options.signedDevelopment;
             meta->cameraMake="Mock"; meta->cameraModel="Test camera";
             meta->availableDcpProfiles={profile};
             meta->dcpProfile=options.dcpProfileOverride.isEmpty()?"Adobe Standard":"Camera Neutral";
@@ -184,6 +187,46 @@ int main(int argc,char **argv)
                "enabled is not equivalent to applied with another profile")) return 1;
     editor.setCameraProfile("unknown.dcp");
     if (!check(editor.selectedCameraProfile().isEmpty() && decodes==5, "unknown profile rejected")) return 1;
+    // The development choices are in the history: undoing one develops again.
+    {
+        settle(editor);
+        const auto stepsBefore = editor.historySteps().size();
+        editor.setCameraProfile(profile);
+        if (!check(settle(editor) && editor.historySteps().size()==stepsBefore+1 &&
+                   editor.historySteps().constLast().toMap().value("changes").toStringList()==QStringList{"rawDevelopment"},
+                   "a development choice becomes one step when its development ends")) return 1;
+        editor.undo();
+        if (!check(settle(editor) && editor.selectedCameraProfile().isEmpty() && editor.canRedo() &&
+                   editor.historySteps().size()==stepsBefore+1, "undo restores the development without a new step")) return 1;
+        editor.redo();
+        if (!check(settle(editor) && editor.selectedCameraProfile()==profile &&
+                   editor.historySteps().size()==stepsBefore+1, "redo restores the development")) return 1;
+        editor.undo();
+        if (!check(settle(editor) && editor.selectedCameraProfile().isEmpty(), "back to the previous development")) return 1;
+
+        // The mode really used is saved, is in the history, and a photo opens again in it.
+        editor.setDenoiseBeforeProfile(true);
+        if (!check(settle(editor) && signedDecode, "the experimental switch develops in signed mode")) return 1;
+        editor.saveCurrentAdjustments();
+        const auto savedMode = Sidecar::read(raw);
+        if (!check(savedMode && savedMode->raw.developmentMode==EditRecipe::SignedDevelopment, "the mode used is saved")) return 1;
+        const QString neighbour = dir.filePath("mode.uimockraw");
+        if (!write(neighbour, "neighbour")) return 1;
+        editor.setDenoiseBeforeProfile(true);
+        editor.loadImage(QUrl::fromLocalFile(neighbour));
+        if (!settle(editor)) return 1;
+        editor.setDenoiseBeforeProfile(false);
+        if (!settle(editor)) return 1;
+        editor.loadImage(QUrl::fromLocalFile(raw));
+        // Served from the cache, whose key holds the mode: no new decode to observe.
+        if (!check(settle(editor) && editor.adjustmentValue("denoiseBeforeProfile")>0 &&
+                   editor.rawDevelopmentStatus().contains(QStringLiteral("mode signé")),
+                   "a photo opens again in its mode, and IPR says so")) return 1;
+        editor.undo();
+        if (!check(settle(editor) && editor.adjustmentValue("denoiseBeforeProfile")==0,
+                   "undo restores the previous mode")) return 1;
+        decodes = 5;
+    }
     // Full restart must restore RAW choices before the first decode, including
     // the automatic WB option (not just its checkbox after decoding).
     editor.setCameraProfile(profile);

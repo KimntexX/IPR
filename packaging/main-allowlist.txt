@@ -33,6 +33,7 @@ src/profiles/
 src/providers/
 src/qml/
 src/raw/
+src/tasks/
 # Build, packaging, delivery and promotion scripts
 scripts/build-windows.ps1
 scripts/build-windows.sh

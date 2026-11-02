@@ -2,9 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Basic as Basic
 
-Basic.Menu {
+AppMenu {
     id: root
-    popupType: Popup.Item
     width: Math.min(440, parent && parent.Window.window ? parent.Window.window.width - 24 : 440)
     required property var actions
     required property var editor

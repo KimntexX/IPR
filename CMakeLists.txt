@@ -33,6 +33,7 @@ set(IPR_INCLUDE_DIRECTORIES
     "${IPR_SOURCE_ROOT}/profiles"
     "${IPR_SOURCE_ROOT}/providers"
     "${IPR_SOURCE_ROOT}/raw"
+    "${IPR_SOURCE_ROOT}/tasks"
 )
 
 set(IPR_ENGINE_SOURCES
@@ -46,6 +47,8 @@ set(IPR_ENGINE_SOURCES
     src/cache/ImageCacheController.cpp
     src/cache/RenderStageCache.h
     src/cache/RenderStageCache.cpp
+    src/tasks/TaskRunner.h
+    src/tasks/TaskRunner.cpp
     src/core/ColorPipeline.h
     src/core/ImageMetadata.h
     src/core/ImageImporter.h
@@ -53,6 +56,14 @@ set(IPR_ENGINE_SOURCES
     src/core/ImageExporter.h
     src/core/ImageExporter.cpp
     src/core/EditRecipe.h
+    src/core/Exposure.h
+    src/core/Exposure.cpp
+    src/core/LocalValues.h
+    src/core/LocalValues.cpp
+    src/core/RecipeCodec.h
+    src/core/RecipeCodec.cpp
+    src/core/EditHistory.h
+    src/core/EditHistory.cpp
     src/core/Sidecar.h
     src/core/Sidecar.cpp
     src/core/WorkingColorSpace.h
@@ -156,6 +167,9 @@ set(IPR_QML_FILES
     src/qml/ImageCanvasBackground.qml
     src/qml/AdvancedRawPreferencesPane.qml
     src/qml/InterfacePaletteSelector.qml
+    src/qml/AppMenu.qml
+    src/qml/HistoryModule.qml
+    src/qml/PanelScrollBar.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
     src/qml/CurveChannelButton.qml
@@ -237,6 +251,10 @@ if(IPR_BUILD_TOOLS)
     target_link_libraries(iprGenerateTests PRIVATE iprTestRecipes)
     add_executable(iprRenderServer src/tools/render_server.cpp)
     target_link_libraries(iprRenderServer PRIVATE iprTestRecipes)
+    add_executable(iprSidecarDump src/tools/sidecar_dump.cpp src/tools/SidecarJson.cpp)
+    target_link_libraries(iprSidecarDump PRIVATE iprEngine)
+    add_executable(iprSidecarAudit src/tools/sidecar_audit.cpp)
+    target_link_libraries(iprSidecarAudit PRIVATE iprEngine)
 endif()
 
 set_target_properties(appIPR PROPERTIES
@@ -344,6 +362,13 @@ if(BUILD_TESTING)
     ipr_add_test(editorBatchTests tests/batch_test.cpp)
     set_tests_properties(editorBatchTests PROPERTIES LABELS "unit;export;batch" TIMEOUT 180)
     ipr_add_test(sidecarTests tests/sidecar_test.cpp)
+    ipr_add_test(sidecarJsonTests tests/sidecar_json_test.cpp)
+    target_sources(sidecarJsonTests PRIVATE src/tools/SidecarJson.cpp)
+    target_include_directories(sidecarJsonTests PRIVATE src/tools)
+    ipr_add_test(editHistoryTests tests/edit_history_test.cpp)
+    ipr_add_test(localValuesTests tests/local_values_test.cpp)
+    ipr_add_test(editorHistoryTests tests/editor_history_test.cpp)
+    set_tests_properties(editorHistoryTests PROPERTIES LABELS "unit;history" TIMEOUT 120)
     ipr_add_test(folderRefreshTests tests/folder_refresh_test.cpp)
     set_tests_properties(folderRefreshTests PROPERTIES LABELS "unit;batch" TIMEOUT 120)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
@@ -364,6 +389,8 @@ if(BUILD_TESTING)
     target_sources(parallelJobsTests PRIVATE src/tools/ParallelJobs.cpp)
     target_include_directories(parallelJobsTests PRIVATE src/tools)
     set_tests_properties(parallelJobsTests PROPERTIES LABELS "unit;generator;thread" TIMEOUT 20)
+    ipr_add_test(taskRunnerTests tests/task_runner_test.cpp)
+    set_tests_properties(taskRunnerTests PROPERTIES LABELS "unit;thread" TIMEOUT 30)
     set_tests_properties(rawInputTests rawDevelopmentTests PROPERTIES LABELS "unit;raw")
     set_tests_properties(toneCurveTests PROPERTIES LABELS "unit;pipeline;curves")
     set_tests_properties(pointColorTests PROPERTIES LABELS "unit;pipeline;colour")
@@ -379,6 +406,12 @@ if(BUILD_TESTING)
     target_compile_definitions(settingsQmlTests PRIVATE
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(settingsQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(historyQmlTests tests/history_qml_test.cpp)
+    target_compile_definitions(historyQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(historyQmlTests PROPERTIES
+        LABELS "unit;history;qml" TIMEOUT 60
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(imageViewportQmlTests tests/image_viewport_qml_test.cpp)
     target_compile_definitions(imageViewportQmlTests PRIVATE

@@ -5,6 +5,7 @@
 #include "ImageExporter.h"
 #include "ImageImporter.h"
 #include "ColorMixer.h"
+#include "EditHistory.h"
 #include "EditRecipe.h"
 #include "ToneCurve.h"
 #include "DecodedImageCache.h"
@@ -12,12 +13,12 @@
 #include "PerceptualColour.h"
 #include "RenderStageCache.h"
 #include "RawDecoder.h"
+#include "TaskRunner.h"
 
 #include <QAbstractListModel>
 #include <QColor>
 #include <QFileSystemWatcher>
 #include <QFutureWatcher>
-#include <QPromise>
 #include <QHash>
 #include <QImage>
 #include <QTimer>
@@ -30,7 +31,6 @@
 
 #include <array>
 #include <atomic>
-#include <QThreadPool>
 
 class ImageProvider;
 class ThumbnailProvider;
@@ -109,6 +109,13 @@ class ImageEditor final : public QObject
     Q_PROPERTY(int batchExportDone READ batchExportDone NOTIFY batchExportChanged)
     Q_PROPERTY(int batchExportTotal READ batchExportTotal NOTIFY batchExportChanged)
     Q_PROPERTY(bool hasCopiedAdjustments READ hasCopiedAdjustments NOTIFY copiedAdjustmentsChanged)
+    // Edit history of the open image (ADR-0021): steps as {changes: changed recipe
+    // fields}, the first being the opening state; snapshots as {name, created}.
+    Q_PROPERTY(bool canUndo READ canUndo NOTIFY historyChanged)
+    Q_PROPERTY(bool canRedo READ canRedo NOTIFY historyChanged)
+    Q_PROPERTY(QVariantList historySteps READ historySteps NOTIFY historyChanged)
+    Q_PROPERTY(int historyPosition READ historyPosition NOTIFY historyChanged)
+    Q_PROPERTY(QVariantList snapshots READ snapshots NOTIFY historyChanged)
     // Point colour: the picked points in picking order, each {colour (sRGB swatch of
     // its source), hue, saturation, luminance, variance, range}.
     Q_PROPERTY(QVariantList pointColors READ pointColors NOTIFY pointColorsChanged)
@@ -240,6 +247,24 @@ public:
     Q_INVOKABLE void copyAdjustments();
     Q_INVOKABLE void pasteAdjustments();
     Q_INVOKABLE void saveCurrentAdjustments();
+    // A gesture (a slider drag, from press to release) makes one history step,
+    // whatever its intermediate values; a change outside a gesture is a step.
+    Q_INVOKABLE void beginAdjustmentGesture();
+    Q_INVOKABLE void endAdjustmentGesture();
+    Q_INVOKABLE void undo();
+    Q_INVOKABLE void redo();
+    Q_INVOKABLE void goToHistoryStep(int step);
+    // Takes that edit out of the history: the render follows if the current recipe changes.
+    Q_INVOKABLE void removeHistoryStep(int step);
+    Q_INVOKABLE void addSnapshot(const QString &name);
+    Q_INVOKABLE void removeSnapshot(int index);
+    // Applies a snapshot's recipe as a new step.
+    Q_INVOKABLE void restoreSnapshot(int index);
+    bool canUndo() const { return m_history.canUndo(); }
+    bool canRedo() const { return m_history.canRedo(); }
+    QVariantList historySteps() const;
+    int historyPosition() const { return m_history.position(); }
+    QVariantList snapshots() const;
     Q_INVOKABLE int colorMixerValue(int band, int component) const;
     // Colour a mixer slider reaches at a value, for the UI tracks (ColorMixer::trackColour).
     Q_INVOKABLE QColor colorMixerTrackColor(int band, int component, int value) const;
@@ -316,6 +341,7 @@ signals:
     void batchApplyChanged();
     void batchExportChanged();
     void copiedAdjustmentsChanged();
+    void historyChanged();
     void toneCurveChanged(int channel);
     void toneCurvesReset();
     void adjustmentsReset(int temperatureKelvin, int tint);
@@ -382,6 +408,11 @@ private:
     void scheduleRender();
     void scheduleSidecarSave();
     bool saveCurrentSidecar();
+    bool historyEditable() const;
+    void recordHistory();
+    void restoreRecipe(const std::optional<QCborMap> &recipe);
+    QCborMap currentRecipe() const;
+    void setRawDevelopment(const RawDevelopment &raw);
     void startRender();
     void startEmbeddedPreview(const QString &fileName);
     void restoreBeforeEmbeddedPreview();
@@ -411,6 +442,10 @@ private:
     QString m_normalizationManifest;
     bool m_rawNormalizationEnabled = true;
     bool m_denoiseBeforeProfile = false;   // experimental session switch, kept across images
+    bool m_sidecarReadOnly = false;        // the open image's .ipr comes from a newer IPR
+    EditHistory m_history;                 // of the open image, saved in its .ipr
+    bool m_inAdjustmentGesture = false;
+    bool m_restoringHistory = false;
     QString m_rawDevelopmentWarning;
     QString m_profileSha256;
     QString m_manifestSha256;
@@ -424,9 +459,18 @@ private:
     std::shared_ptr<RawDecoder::DcpSource> m_dcpSource;
     QHash<QString, UserImageMetadata> m_userImageMetadata;
     QSet<QString> m_selectedImageKeys;
-    ImageCacheController m_decodedImageCache;
+    // What the running tasks reach besides their own copies: shared with them, so
+    // that a task left running at close never touches a destroyed object.
+    struct TaskResources
+    {
+        explicit TaskResources(ImageCacheController::Sampler sampler) : cache(nullptr, std::move(sampler)) {}
+        ImageCacheController cache;
+        RenderStageCache stages;
+    };
+    std::shared_ptr<TaskResources> m_taskResources;
+    ImageCacheController &m_decodedImageCache;
     // Preview only; cleared with the image it belongs to.
-    RenderStageCache m_renderStageCache;
+    RenderStageCache &m_renderStageCache;
     QString m_currentCacheKey;
     Settings m_settings;
     int m_pointColorOverlay = -1;
@@ -438,7 +482,6 @@ private:
     QString m_memoryWaitMessage;
     // Camera-rendered embedded JPEG shown while the IPR development runs.
     QFutureWatcher<QImage> m_embeddedWatcher;
-    QThreadPool m_embeddedPool;
     quint64 m_embeddedRevision = 0, m_embeddedSerial = 0;
     bool m_embeddedPreview = false;
     QImage m_restorePreview, m_restoreOriginal;
@@ -457,7 +500,7 @@ private:
     };
     static BatchResult applyToFiles(const QStringList &files, const Settings &settings, bool asShot,
                                     const QHash<QString, UserImageMetadata> &annotations);
-    static void exportFiles(QPromise<BatchResult> &promise, const QStringList &files, const QString &folder,
+    static BatchResult exportFiles(Tasks::Context &context, const QStringList &files, const QString &folder,
                             const QString &format, int quality, ImageCacheController *controller,
                             ImageCacheController::CancelToken cancel);
     void finishBatch(const BatchResult &result, const QString &done);
@@ -473,7 +516,6 @@ private:
     bool m_copiedAsShot = false;
     QFutureWatcher<LoadResult> m_loadWatcher;
     QFutureWatcher<LoadResult> m_prefetchWatcher;
-    QThreadPool m_prefetchPool;
     QTimer m_prefetchTimer;
     QStringList m_prefetchQueue;
     QString m_prefetchFile;
@@ -483,6 +525,10 @@ private:
     quint64 m_prefetchGeneration = 0, m_activePrefetchGeneration = 0;
     std::shared_ptr<std::atomic_bool> m_prefetchCancel;
     std::shared_ptr<std::atomic_bool> m_loadCancel;
+    // One thread per channel: the tasks mostly wait for memory or run the modules'
+    // own parallel loops, and none must queue behind another's wait. Closing waits a
+    // minute at most, longer than a RAW development.
+    Tasks::TaskRunner m_tasks{8, 60000};
     quint64 m_requestedRevision = 0;
     quint64 m_activeRevision = 0;
     quint64 m_requestedLoadRevision = 0;

@@ -1,4 +1,4 @@
-% translation-source: docs/user/latex/chapters/02-navigation-comparaison.tex; sha256: 1f9404cd44ced347dbc88730edc212d7639d19454714d8714ef40131b766c876
+% translation-source: docs/user/latex/chapters/02-navigation-comparaison.tex; sha256: d42ae2406fb24a724555a77a4b7790b802e6390de560458a8e9bdabf5fda1b1a
 \chapter{Navigation, zoom and comparison}
 \label{chap:navigation}
 \section{Move between images}
@@ -7,6 +7,10 @@ image actually open, independently of multiple-selection checkboxes. When the
 filmstrip is collapsed, previous and next buttons appear at the bottom right
 of the image area. Hovering shows the destination name; navigation stops at
 the folder boundaries.
+
+A thumbnail comes from the preview embedded in the file. Without a preview, as in
+many DNG files, IPR develops it from the sensor data: it appears a little later
+and may differ slightly from the open image.
 
 The centered button above the filmstrip collapses it. When hidden, this button
 returns to the bottom of the view and reopens it. Its state is remembered.
@@ -48,6 +52,6 @@ profile may change this reference.}
 Right-click the view to open photo actions: export, adjustment reset and file
 commands. Right-clicking does not zoom. With the view focused,
 \touche{Shift + F10} or the Menu key also opens this menu.
-Reset requires confirmation; there is no general undo.
+Reset requires confirmation; it can then be undone like any other history step.
 Save is connected; Duplicate remains disabled until its engine connection
 is available in this reference version.

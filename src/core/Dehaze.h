@@ -19,7 +19,11 @@ namespace Dehaze {
 // Linear RGB image (CV_32FC3), in place; slider value in [-100, 100]. RGB stays nonnegative.
 // pixelScale: pixels of this image per pixel of the full image (1 for the master,
 // below 1 for the preview proxy); radii are defined on the full image.
-void apply(cv::Mat &linearRgb, int amount, double pixelScale = 1.0);
+// local: per-pixel value added to the slider (LocalValues), the sum within
+// [-100, 100]; empty for none. The smooth tone change is computed at a few values
+// of the map (at most 8, one 64-pixel blur each) and mixed per pixel; a pixel at
+// zero stays untouched.
+void apply(cv::Mat &linearRgb, int amount, double pixelScale = 1.0, const cv::Mat &local = {});
 
 } // namespace Dehaze
 

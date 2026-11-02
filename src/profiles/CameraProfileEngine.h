@@ -1,6 +1,7 @@
 #ifndef IPR_PROFILES_CAMERAPROFILEENGINE_H
 #define IPR_PROFILES_CAMERAPROFILEENGINE_H
 
+#include "LocalValues.h"
 #include <QString>
 #include <QStringList>
 #include <opencv2/core.hpp>
@@ -60,8 +61,13 @@ bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tin
 // Scene-referred source edits: white balance gains and exposure scale the
 // linear camera signal, then the DCP (tables and tone curve) is applied.
 // Exposure therefore precedes the profile tone curve, as in camera RAW editors.
+// local: per-pixel exposure (EV), temperature (kelvins) and tint added to the
+// global ones on the camera signal (LocalValues); a map that does not fit the
+// signal is an error. Gains and profile illuminant are prepared once per
+// combination of temperature and tint present, rounded to 25 K and 1 tint unit.
 bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
-                            double exposureEv, cv::Mat &linearRgb, QString *error = nullptr);
+                            double exposureEv, cv::Mat &linearRgb, QString *error = nullptr,
+                            const LocalValues::Maps &local = {});
 
 struct LcpApplied
 {

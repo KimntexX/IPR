@@ -4,6 +4,7 @@
 #include "imageprovider.h"
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
+#include "Sidecar.h"
 #include <tiffio.h>
 
 #include <QCoreApplication>
@@ -503,14 +504,9 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                editor.colorGradingValue(0, 2) == 25 && editor.colorGradingValue(3, 2) == -35 &&
                editor.colorGradingValue(1, 2) == 0,
                "the global wheel and the luminances must roundtrip")) return false;
-    QFile currentSidecar(sourcePath + QStringLiteral(".ipr"));
-    if (!currentSidecar.open(QIODevice::ReadOnly)) return false;
-    QDataStream currentStream(&currentSidecar);
-    currentStream.setVersion(QDataStream::Qt_6_4);
-    quint32 magic; quint16 savedVersion;
-    currentStream >> magic >> savedVersion;
-    if (!check(magic == 0x49505231u && savedVersion == 9, "new sidecars must declare version 9")) return false;
-    currentSidecar.close();
+    const auto current = Sidecar::read(sourcePath);
+    if (!check(current && current->format == Sidecar::Format::Current, "new sidecars are at the current format"))
+        return false;
     editor.resetAdjustments();
     for (int band = 0; band < 8; ++band)
         for (int component = 0; component < 3; ++component)
@@ -519,7 +515,7 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                 return false;
 
     for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5), quint16(6), quint16(7),
-                            quint16(8)}) {
+                            quint16(8), quint16(9)}) {
         const QString legacyPath = directory + QStringLiteral("/legacy-%1.png").arg(version);
         if (!QImage(sourcePath).save(legacyPath, "PNG"))
             return false;
@@ -552,6 +548,8 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
             stream << qint32(80) << qint32(-30);
         if (version >= 8)
             stream << qint32(0) << qint32(0) << qint32(0) << qint32(0) << qint32(0) << qint32(0);
+        if (version >= 9)
+            stream << qint32(0);
         if (stream.status() != QDataStream::Ok)
             return false;
         sidecar.close();
@@ -690,6 +688,18 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     if (!firstDng.open(QIODevice::ReadOnly)) return false;
     const QByteArray firstDngBytes = firstDng.readAll();
     firstDng.close();
+    // An exported DNG carries no preview: the ribbon develops its thumbnail instead.
+    QString thumbnailError;
+    if (!check(RawDecoder::decodeEmbeddedThumbnail(expectedPath, QSize(64, 64), &thumbnailError).isNull(),
+               "the exported DNG has no embedded preview")) return false;
+    const QImage developedThumbnail = RawDecoder::developThumbnail(expectedPath, QSize(64, 64), &thumbnailError);
+    if (!check(!developedThumbnail.isNull() && thumbnailError.isEmpty() &&
+               std::max(developedThumbnail.width(), developedThumbnail.height()) == 64 &&
+               developedThumbnail.pixelColor(developedThumbnail.width() / 2, developedThumbnail.height() / 2).lightness() > 0,
+               "a DNG without preview gets a developed thumbnail")) return false;
+    if (!check(RawDecoder::developThumbnail(directory + QStringLiteral("/absent.dng"), QSize(64, 64), &thumbnailError).isNull() &&
+               !thumbnailError.isEmpty(), "a developed thumbnail reports a missing file")) return false;
+
     const QString repeatedStatus = awaitExport(editor, QUrl::fromLocalFile(requestedPath), QStringLiteral("DNG"));
     if (!firstDng.open(QIODevice::ReadOnly)) return false;
     if (!check(repeatedStatus.endsWith(QStringLiteral("/linear-2.dng")) &&

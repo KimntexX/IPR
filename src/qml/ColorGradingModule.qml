@@ -239,6 +239,7 @@ ColumnLayout {
 
             MouseArea {
                 id: wheelPointerArea
+                objectName: "gradingWheelArea"
                 anchors.fill: parent
                 enabled: root.editor.hasImage
                 // The enclosing settings pane is a ScrollView.  Without this,
@@ -277,8 +278,12 @@ ColumnLayout {
                               Math.hypot(mouse.x - cursor.x, mouse.y - cursor.y) < 12
                     last = Qt.point(mouse.x, mouse.y)
                     virtualPoint = last
+                    root.editor.beginAdjustmentGesture()
                     apply(virtualPoint)
                 }
+                // One history step per drag, also when the press is taken away.
+                onReleased: root.editor.endAdjustmentGesture()
+                onCanceled: root.editor.endAdjustmentGesture()
                 onPositionChanged: function(mouse) {
                     if (!pressed)
                         return
