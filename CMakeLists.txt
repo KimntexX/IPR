@@ -33,6 +33,7 @@ set(IPR_INCLUDE_DIRECTORIES
     "${IPR_SOURCE_ROOT}/profiles"
     "${IPR_SOURCE_ROOT}/providers"
     "${IPR_SOURCE_ROOT}/raw"
+    "${IPR_SOURCE_ROOT}/stack"
     "${IPR_SOURCE_ROOT}/tasks"
 )
 
@@ -88,6 +89,12 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorAdjustments.cpp
     src/core/ColorGrading.h
     src/core/ColorGrading.cpp
+    src/stack/StackAlignment.h
+    src/stack/StackAlignment.cpp
+    src/stack/StackMerge.h
+    src/stack/StackMerge.cpp
+    src/stack/StackJob.h
+    src/stack/StackJob.cpp
     src/core/PerceptualColour.h
     src/core/PerceptualColour.cpp
     src/core/Contrast.h
@@ -361,6 +368,13 @@ if(BUILD_TESTING)
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     add_executable(iprGeometryAudit tests/geometry_audit.cpp)
     target_link_libraries(iprGeometryAudit PRIVATE iprEngine)
+    add_executable(iprStackAudit tests/stack_audit.cpp)
+    target_link_libraries(iprStackAudit PRIVATE iprEngine)
+    if(WIN32)
+        target_link_libraries(iprStackAudit PRIVATE psapi)
+    endif()
+    ipr_add_test(stackTests tests/stack_test.cpp)
+    set_tests_properties(stackTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
     ipr_add_test(geometryTests tests/geometry_test.cpp)
     set_tests_properties(geometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 60)
     ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
