@@ -1,11 +1,9 @@
 # Socle d'édition bêta (B0)
 
-Lot B0 de la feuille de route bêta (`roadmap-beta.md`, encore sur la branche
-`patch_documentation`) : les contrats communs
+Lot B0 de la [feuille de route bêta](roadmap-beta.md) : les contrats communs
 aux panneaux Géométrie, Calques, Retouche et aux traitements neuronaux, avant
-leurs raccordements. Ce document commence par l'inventaire B0.1 de l'existant ;
-les décisions B0.2 et les interfaces B0.3 le compléteront. Aucun code moteur
-n'est modifié à cette étape.
+leurs raccordements. Ce document suit l'inventaire B0.1 de l'existant, les
+décisions B0.2, la mise en place B0.3 et le bilan B0.4.
 
 ## B0.1 — Inventaire de l'existant (dev `2facc24`, 1er novembre 2026)
 
@@ -217,3 +215,38 @@ Choix techniques : [ADR-0021](../decisions/ADR-0021-socle-edition-beta.md).
      du bruit (jusqu'à 60 octets par pixel pendant le rendu, 1,4 Gio à 24 Mpx).
    - Le passage des cartes dans la chaîne de rendu, avec leurs clés de cache,
      se fait avec les masques (B2), seuls producteurs de cartes.
+
+## B0.4 — Bilan (2 novembre 2026)
+
+Suivi des validations partielles : [issue #21](https://github.com/KimntexX/IPR/issues/21).
+Critères : [§ 3 et § 11 de la feuille de route](roadmap-beta.md#3-b0--socle-commun-avant-les-panneaux).
+
+| Critère | État | Preuve |
+| --- | --- | --- |
+| Rendu identique sans nouvelle opération | Validé par mesure : 870 rendus sur 870 identiques à l'octet à `dev` `2facc24` (29 RAW CR2 et CR3, 30 états dont le développement signé) | [JSON de parité](../validation/raw/b0-foundation-parity-v001-20261102T131536Z.json) |
+| Annuler, rétablir, retirer une étape, instantanés | Validé par tests ; panneau accepté visuellement par l'utilisateur le 2 novembre | `editorHistoryTests`, `editHistoryTests`, `historyQmlTests` |
+| Sauvegarde et relecture, conversion des anciens `.ipr` | Validé par tests et sur 50 `.ipr` réels (champs de la recette relus, rendu de la recette convertie non comparé) ; versions 1 à 3, 7 et 8 par fichiers de synthèse seulement ; 19 `.ipr` sans photo non exercés | `sidecarTests`, [JSON de conversion](../validation/raw/b0-sidecar-conversion-v001-20261102T131357Z.json) |
+| Recette invalide | Validé par tests : document tronqué, valeur non finie, valeurs bornées, historique abîmé écarté sans perdre la recette, fichier plus récent en lecture seule | `sidecarTests` |
+| Fermeture pendant une tâche | Validé par tests : ouverture, rendu, export et tâche bloquée ; 1 s au plus sur un développement de CR3 réel | `editorLifecycleTests`, `taskRunnerTests` |
+| Panne disque | Validé par tests : `.ipr` verrouillé signalé et laissé intact, retouche et historique gardés, enregistrement suivant réussi. Disque réellement plein non essayé | `editorHistoryTests`, `editorBatchTests` |
+| Fichier source jamais modifié | Validé : empreintes des 29 RAW avant et après, octets des photos dans les tests | JSON de parité, `editorHistoryTests`, `editorLifecycleTests` |
+| Actif manquant | Non applicable : aucun actif n'existe encore | À écrire avec `.ipr-data` |
+
+Limites de la parité : elle compare les serveurs de rendu, à une ou deux valeurs
+par famille de réglages, sur CR2 et CR3 ; ni le chemin de l'aperçu dans
+l'application, ni le DNG (absent de la racine de base).
+
+Prévu par l'[ADR-0021](../decisions/ADR-0021-socle-edition-beta.md), non implémenté
+et repris par le premier lot qui en a besoin :
+
+- `.ipr-data`, cache de détection (plafond, invalidation, perte du dossier) et test
+  d'actif manquant : B2 et B5 ;
+- opérations ordonnées et références d'actifs dans la recette, espaces de
+  coordonnées, transformations inverses et place de la géométrie dans le rendu : B1 ;
+- cartes de valeurs locales dans la chaîne de rendu : B2 ;
+- recette multi-source et dossier tampon : B7 à B9 ;
+- budget VRAM : B4.
+
+Le contrat d'exécution des tâches, la recette CBOR et l'historique sont donc en
+place ; les contrats propres aux panneaux restent à écrire avec eux. Limite connue
+de l'interface : un curseur déplacé aux flèches du clavier crée une étape par appui.

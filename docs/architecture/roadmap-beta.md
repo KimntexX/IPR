@@ -313,6 +313,8 @@ livré par cette section. Le nettoyage local est tracé dans le
 | B0.4 | Implémenter le socle par modules, puis raccorder l'IHM | Rendu sans nouvelle opération inchangé, sauvegarde/relecture et annuler/refaire qualifiés |
 | B0.5 | Clore les validations alpha restantes et faire valider le jalon | Matrice et JSON référencés, limites connues, accord utilisateur avant tag bêta |
 
+État au 2 novembre 2026 : B0.1 à B0.4 sont décrits dans le [document du socle](socle-edition-b0.md), avec les limites suivies par l'[issue #21](https://github.com/KimntexX/IPR/issues/21).
+
 Commencer par B0.1, puis B0.2/B0.3 ; ne pas lancer en parallèle les cinq panneaux
 ou l'entraînement d'un réseau. Pour le premier développement, créer la branche
 de socle depuis `dev` à jour et isoler son worktree ; ne pas coder le moteur sur

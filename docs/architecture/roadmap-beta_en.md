@@ -307,6 +307,8 @@ recorded in the [dedicated report](../reports/storage/workspace-cleanup-2026-10-
 | B0.4 | Implement the modular foundation, then connect the UI | Unchanged rendering without new operations; qualified persistence and undo/redo |
 | B0.5 | Close remaining alpha validations and obtain milestone approval | Referenced matrix and JSON, known limits, user approval before a beta tag |
 
+Status on 2 November 2026: B0.1 to B0.4 are described in the [foundation document](socle-edition-b0.md), with the limits tracked by [issue #21](https://github.com/KimntexX/IPR/issues/21).
+
 Start with B0.1, then B0.2/B0.3; do not start all five panels or train a network
 in parallel. For initial development, create the foundation branch from current
 `dev` in an isolated worktree; do not implement the engine on

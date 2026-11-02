@@ -1,7 +1,7 @@
 # ADR-0021 — Socle d'édition bêta : recette, actifs, historique et ordre de rendu
 
 - **Date :** 2026-11-01
-- **Statut :** Accepté par l'utilisateur ; implémentation à venir (B0.3, B0.4)
+- **Statut :** Accepté par l'utilisateur ; exécuteur de tâches, recette CBOR, historique et cartes de valeurs locales implémentés, actifs et contrats des panneaux à venir avec leurs lots ([bilan B0.4](../architecture/socle-edition-b0.md#b04--bilan-2-novembre-2026), [issue #21](https://github.com/KimntexX/IPR/issues/21))
 - **Décideurs :** utilisateur ; proposition de Claude
 
 ## Contexte
