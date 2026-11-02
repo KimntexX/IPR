@@ -151,15 +151,15 @@ Item {
             acceptedButtons: Qt.LeftButton
             cursorShape: Qt.SizeAllCursor
             preventStealing: true
-            property point pressed: Qt.point(0, 0)
+            property point grabbed: Qt.point(0, 0)
             onPressed: (mouse) => {
                 root.begin()
-                body.pressed = Qt.point(root.normalizedX(body, mouse.x), root.normalizedY(body, mouse.y))
+                body.grabbed = Qt.point(root.normalizedX(body, mouse.x), root.normalizedY(body, mouse.y))
             }
             onPositionChanged: (mouse) => {
                 if (root.dragging)
-                    root.moved(root.normalizedX(body, mouse.x) - body.pressed.x,
-                               root.normalizedY(body, mouse.y) - body.pressed.y)
+                    root.moved(root.normalizedX(body, mouse.x) - body.grabbed.x,
+                               root.normalizedY(body, mouse.y) - body.grabbed.y)
             }
             onReleased: root.finish()
             onCanceled: root.dragging = false
@@ -184,6 +184,7 @@ Item {
                 color: "#ffffff"
                 border.color: "#202020"
                 MouseArea {
+                    id: handleArea
                     anchors.fill: parent
                     anchors.margins: -5
                     acceptedButtons: Qt.LeftButton
@@ -193,7 +194,7 @@ Item {
                     onPositionChanged: (mouse) => {
                         if (root.dragging)
                             root.resized(handle.modelData.ax, handle.modelData.ay,
-                                         root.normalizedX(this, mouse.x), root.normalizedY(this, mouse.y))
+                                         root.normalizedX(handleArea, mouse.x), root.normalizedY(handleArea, mouse.y))
                     }
                     onReleased: root.finish()
                     onCanceled: root.dragging = false

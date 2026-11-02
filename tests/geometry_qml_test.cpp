@@ -231,6 +231,29 @@ int main(int argc, char **argv)
     if (!check(overlay->property("dragging").toBool() == false, "the release ends the gesture")) return 1;
     if (!check(std::abs(frame->width() - 600) < 2, "with no engine answer the frame shows the engine's crop")) return 1;
 
+    // The body moves the frame, inside the canvas, and sends it once at the release.
+    overlay->setProperty("cropWidth", 0.5);
+    overlay->setProperty("cropHeight", 0.5);
+    overlay->setProperty("cropX", 0.25);
+    overlay->setProperty("cropY", 0.25);
+    settleLayout();
+    const QPointF bodyAt = centreOf(frame);
+    mouse(window, QEvent::MouseButtonPress, bodyAt, timestamp);
+    mouse(window, QEvent::MouseMove, bodyAt + QPointF(60, -40), timestamp);
+    if (!check(std::abs(frame->x() - 210) < 2 && std::abs(frame->y() - 60) < 2 && std::abs(frame->width() - 300) < 2,
+               "a drag of the body moves the frame and keeps its size")) return 1;
+    mouse(window, QEvent::MouseMove, bodyAt + QPointF(900, 900), timestamp);
+    if (!check(frame->x() + frame->width() <= 601 && frame->y() + frame->height() <= 401,
+               "a drag of the body stays on the canvas")) return 1;
+    if (!check(readCrop().x() == 0.25, "nothing is sent while the body moves")) return 1;
+    QQmlComponent listener(&engine);
+    listener.setData("import QtQuick\nQtObject { id: self; property var watched; property int count: 0\n"
+                     "property Connections c: Connections { target: self.watched; function onCropEdited() { ++self.count } } }", QUrl());
+    QScopedPointer<QObject> listening(listener.createWithInitialProperties({{QStringLiteral("watched"), QVariant::fromValue(overlay)}}));
+    if (!check(listening != nullptr, "the listener loads")) return 1;
+    mouse(window, QEvent::MouseButtonRelease, bodyAt + QPointF(900, 900), timestamp);
+    if (!check(listening->property("count").toInt() == 1, "the release sends the frame once")) return 1;
+
     // With a ratio, a side keeps the proportions, and the frame stays on the canvas.
     overlay->setProperty("cropWidth", 0.5);
     overlay->setProperty("cropHeight", 0.5);

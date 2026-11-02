@@ -345,6 +345,8 @@ ApplicationWindow {
                 anchors.right: parent.right
                 anchors.margins: 14
                 textColor: uiPreferences.theme.text
+                // The eyedropper belongs to the Settings tab's panel.
+                onCurrentIndexChanged: settingsView.pointColorPicking = false
             }
             // The Geometry tab shows the whole canvas, its crop as a frame.
             Binding {

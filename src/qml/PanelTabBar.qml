@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Controls.Basic as Basic
 
 // The right panel's tabs: icons across its width, each one's name on hover (mock-up A
 // chosen by the user on 1 November 2026). A tab appears with its panel's delivery.
@@ -18,7 +17,7 @@ Row {
 
     Repeater {
         model: root.tabs
-        Basic.AbstractButton {
+        AbstractButton {
             id: tab
             required property var modelData
             required property int index
