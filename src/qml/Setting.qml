@@ -773,6 +773,20 @@ Item {
             }
 
             SettingsSection {
+                objectName: "historySection"
+                stateKey: "history"
+                preferences: root.preferences
+                textColor: root.textColor
+                title: qsTr("Historique")
+
+                HistoryModule {
+                    editor: root.editor
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                }
+            }
+
+            SettingsSection {
                 objectName: "opticsSection"
                 stateKey: "optics"
                 preferences: root.preferences

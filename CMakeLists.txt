@@ -167,6 +167,7 @@ set(IPR_QML_FILES
     src/qml/ImageCanvasBackground.qml
     src/qml/AdvancedRawPreferencesPane.qml
     src/qml/InterfacePaletteSelector.qml
+    src/qml/HistoryModule.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
     src/qml/CurveChannelButton.qml
@@ -396,6 +397,12 @@ if(BUILD_TESTING)
     target_compile_definitions(settingsQmlTests PRIVATE
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(settingsQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(historyQmlTests tests/history_qml_test.cpp)
+    target_compile_definitions(historyQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(historyQmlTests PROPERTIES
+        LABELS "unit;history;qml" TIMEOUT 60
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(imageViewportQmlTests tests/image_viewport_qml_test.cpp)
     target_compile_definitions(imageViewportQmlTests PRIVATE

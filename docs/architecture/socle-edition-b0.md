@@ -155,7 +155,7 @@ Choix techniques : [ADR-0021](../decisions/ADR-0021-socle-edition-beta.md).
    `.ipr`. Un geste encadré par l'IHM (appui puis relâchement d'un curseur)
    fait une seule étape, choix de l'utilisateur du 1er novembre 2026. Le
    développement RAW (profil, objectif) n'entre pas encore dans l'historique.
-   Raccordement IHM : IHM-CONN-005 du
+   Raccordement IHM : IHM-CONN-012 du
    [suivi des raccordements](suivi-raccordements-ihm.md).
 4. **Cartes de valeurs locales** (`src/core/LocalValues.h`) : par réglage, un
    flottant par pixel du rendu, dans les unités du curseur global ; le module

@@ -92,6 +92,9 @@ ApplicationWindow {
             palette: root.palette
             title: qsTr("Édition")
             width: 440
+            ActionMenuItem { action: fileActions.undoAction }
+            ActionMenuItem { action: fileActions.redoAction }
+            Basic.MenuSeparator {}
             ActionMenuItem { action: fileActions.copyAction }
             ActionMenuItem { action: fileActions.pasteAction }
             ActionMenuItem { action: fileActions.applySelectionAction }

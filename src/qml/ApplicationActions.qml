@@ -18,6 +18,8 @@ Item {
     property alias exportSelectionAction: exportSelection
     property alias duplicateAction: duplicate
     property alias resetAction: reset
+    property alias undoAction: undo
+    property alias redoAction: redo
     property alias copyAction: copyEdits
     property alias pasteAction: pasteEdits
     property alias applySelectionAction: applySelection
@@ -75,6 +77,27 @@ Item {
         shortcut: root.commandModifier + "+D"
         enabled: root.photoReady && root.duplicationAvailable
         onTriggered: root.editor.duplicateCurrentImage()
+    }
+    Action {
+        id: undo
+        objectName: "undoAction"
+        text: qsTr("Annuler")
+        shortcut: StandardKey.Undo
+        enabled: root.editor.canUndo && !root.blocked
+        onTriggered: root.editor.undo()
+    }
+    Action {
+        id: redo
+        objectName: "redoAction"
+        text: qsTr("Rétablir")
+        shortcut: root.commandModifier + "+Shift+Z"
+        enabled: root.editor.canRedo && !root.blocked
+        onTriggered: root.editor.redo()
+    }
+    Shortcut {
+        sequence: root.commandModifier + "+Y"
+        enabled: redo.enabled
+        onActivated: redo.trigger()
     }
     Action {
         id: copyEdits
