@@ -1092,3 +1092,64 @@ La prochaine étape proposée est de qualifier les cinq supports ISO100
 et le bruit résiduel, avant de figer un nouveau pilote combinant les
 compositions d'apprentissage. Aucune nouvelle photo demandée à ce stade,
 aucun changement en production ou publication, aucun calcul actif.
+
+## 2 novembre 2026, 09:55 UTC — diagnostic caméra des cinq supports ISO100 lancé
+
+Campagne `neural-low-iso-supports-v001-20261102T095553Z`, banc
+`41a5a30`, cinq tests ciblés réussis. La sélection reste celle du criblage
+précédent : `9072`, `9938`, `0005`, `0145` d'août et `0282` d'août,
+avec leurs chemins et empreintes complets, sans confusion avec les
+homonymes du contrôle de novembre.
+
+Les développements signés fournissent neuf zones fixes, chacune examinée
+par neuf patches 96 × 96 : quantiles du signal, valeurs négatives,
+support non saturé, proxy Haar-MAD, résidu passe-haut et gradients
+passe-bas. Le support est utilisable au sens limité de ce diagnostic
+si au moins 90 % de ses pixels restent sous 0,9 dans chaque canal caméra.
+Ce critère n'est pas une certification de netteté ou de cible propre.
+Aucun seuil sur le proxy de bruit ne sélectionne les régions.
+
+**Limite principale : aucune prise appariée ne permet ici de séparer
+physiquement bruit et texture.** Les mesures caractérisent leur mélange ;
+elles ne suffisent pas à calibrer un bruit synthétique de capteur. Aucun
+modèle de bruit ajouté, apprentissage ou affectation de partition n'est
+lancé. Les valeurs signées restent inchangées et les sources sont lues
+sans modification. Résultats en cours, à consigner en JSON à la clôture.
+
+### Résultats de cette campagne — clôture le 2 novembre 2026
+
+Les cinq développements se sont terminés en **39,42 s**, calibration
+appliquée sur chacun ; mémoire canonique identique au résultat local.
+Les 405 patches fixes ont été mesurés, dont **393** satisfont le seul
+critère de support non saturé. Aucun patch n'est exclu parce que son
+proxy de bruit est élevé.
+
+| Source ISO100 | Supports non saturés / 81 | Médiane Haar-MAD R / G / B sur les 81 patches |
+| --- | ---: | --- |
+| 6V1A9072 | 81 | 0,003429 / 0,003228 / 0,003159 |
+| 6V1A9938 | 69 | 0,001440 / 0,001434 / 0,001489 |
+| 6V1A0005 | 81 | 0,000898 / 0,000884 / 0,000910 |
+| 6V1A0145, août | 81 | 0,000467 / 0,000461 / 0,000471 |
+| 6V1A0282, août | 81 | 0,001595 / 0,001548 / 0,001607 |
+
+Unités : RGB caméra balancé signé normalisé, avant LCP/DCP. Ces médianes
+incluent aussi les patches refusés au critère de support pour ne pas
+masquer la sélection. Les douze refus de `9938` ne certifient pas un
+écrêtage du capteur : le seuil porte sur le signal caméra balancé.
+L'écart de proxy de plus de sept fois entre `9072` et `0145` n'est pas
+un rapport démontré de bruit physique ; contenu, exposition, texture et
+corrélations du développement peuvent tous contribuer.
+
+Mémoire canonique : [diagnostic des supports ISO100](../raw/neural-low-iso-supports-v001-20261102T095553Z.json).
+
+**Conclusion actuelle : supports de contenu disponibles, aucune nouvelle
+cible propre qualifiée.** Ne pas injecter un bruit arbitraire en prenant
+ces images pour une vérité sans bruit. Pour avancer avec des données
+réellement appariées, la prochaine proposition est un pilote exploratoire
+combinant le train déjà qualifié et les 152 paires de la rafale ISO4000,
+avec durée fixée avant mesure et contrôles par ISO. Le contrôle existant
+reste hors du train mais, déjà consulté, ne constitue plus un test final
+indépendant. Les supports ISO100 attendent un modèle de bruit qualifié
+ou des références appariées avant leur utilisation comme cibles.
+Pas d'entraînement lancé, pas de modification moteur ou publication ;
+aucun calcul actif à cette clôture.
