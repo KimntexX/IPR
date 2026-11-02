@@ -141,6 +141,59 @@ int main(int argc, char **argv)
     }
 
     {
+        // Reading a result: moved out, a default value when none was published, an exception rethrown.
+        Tasks::TaskRunner runner(2);
+        auto done = runner.submit<int>(QStringLiteral("done"), Tasks::Priority::Foreground,
+                                       [](Tasks::Context &) { return 11; });
+        passed &= check(Tasks::takeResult(done.future) == 11, "takeResult gives the result");
+        auto cancelled = runner.submit<int>(QStringLiteral("cancelled"), Tasks::Priority::Foreground,
+                                            [](Tasks::Context &context) { return countUntilCancelled(context, 5000); });
+        runner.cancel(QStringLiteral("cancelled"));
+        passed &= check(Tasks::takeResult(cancelled.future) == 0, "a cancelled task gives the default value");
+        auto failed = runner.submit<int>(QStringLiteral("failed"), Tasks::Priority::Foreground,
+                                         [](Tasks::Context &) -> int { throw std::runtime_error("failed"); });
+        bool rethrown = false;
+        try {
+            Tasks::takeResult(failed.future);
+        } catch (const std::runtime_error &) {
+            rethrown = true;
+        }
+        passed &= check(rethrown, "takeResult rethrows the task's exception");
+    }
+
+    {
+        // Shutting down waits for what ignores cancellation and finishes in time, once.
+        Tasks::TaskRunner runner(1, 5000);
+        std::atomic_bool ended{false};
+        runner.submit<int>(QStringLiteral("export"), Tasks::Priority::Foreground, [&](Tasks::Context &) {
+            QThread::msleep(100);
+            ended = true;
+            return 1;
+        });
+        QThread::msleep(20);
+        passed &= check(runner.shutdown() && ended, "shutdown waits for a task that finishes in time");
+        QElapsedTimer again;
+        again.start();
+        passed &= check(runner.shutdown() && again.elapsed() < 100, "a second shutdown returns at once");
+    }
+
+    {
+        // A stuck task makes shutdown report it, within the bound.
+        auto stuck = std::make_shared<std::atomic_bool>(true);
+        {
+            Tasks::TaskRunner runner(1, 100);
+            runner.submit<int>(QStringLiteral("stuck"), Tasks::Priority::Foreground,
+                               [stuck](Tasks::Context &) { while (*stuck) QThread::msleep(5); return 0; });
+            QThread::msleep(20);
+            QElapsedTimer timer;
+            timer.start();
+            passed &= check(!runner.shutdown() && timer.elapsed() < 2000, "shutdown reports a stuck task");
+        }
+        *stuck = false;
+        QThread::msleep(50);
+    }
+
+    {
         // Closing never waits forever: tasks are cancelled, then the wait is bounded.
         QElapsedTimer timer;
         timer.start();

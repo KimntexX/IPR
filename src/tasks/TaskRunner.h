@@ -66,6 +66,10 @@ public:
 
     void cancel(const QString &channel);
     void cancelAll();
+    // Cancels every task and waits for them, at most shutdownMs in all: false when
+    // one is still running. Done once, at destruction at the latest; what a task
+    // left running uses must outlive this runner.
+    bool shutdown();
     quint64 currentRevision(const QString &channel) const;
 
 private:
@@ -81,10 +85,21 @@ private:
 
     std::unique_ptr<QThreadPool> m_pool;
     int m_shutdownMs;
+    bool m_shutDown = false;
+    bool m_finished = true;
     mutable QMutex m_mutex;
     QHash<QString, Slot> m_slots;
     quint64 m_nextRevision = 0;
 };
+
+// The result of a finished task, moved out of its future; a default value when it
+// published none (cancelled or superseded). Rethrows the task's exception.
+template <typename T>
+T takeResult(QFuture<T> future)
+{
+    future.waitForFinished();
+    return future.resultCount() > 0 ? future.takeResult() : T{};
+}
 
 template <typename T>
 bool Ticket<T>::isCurrent() const
