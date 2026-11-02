@@ -2144,3 +2144,102 @@ des contours ou le débruitage. Adam reste inchangé, critères de passage non
 assouplis ; adaptation au bruit suspendue. Aucune nouvelle photo nécessaire
 pour cette vérification de principe, aucun calcul actif, changement moteur,
 IHM ou publication.
+
+## 2 novembre 2026, 13:03 UTC — interpolation apprise à moments contraints lancée
+
+Campagne `neural-synthetic-moment-reconstruction-v001-20261102T130329Z`,
+banc `11d5f79`, **23 tests ciblés réussis**. Le prototype remplace la tête
+de correction RGB libre par des coefficients d'interpolation des couleurs
+manquantes. Tronc U-Net de largeur8, représentation RGGB canonique,
+graine71, train40, Adam0,001, lot4,2048 étapes, échelle2, cœur48 et critères
+de passage sont conservés. La tête prédit32 coefficients au lieu de12
+corrections :31264 paramètres contre31084, pas une architecture strictement
+identique ni un gain déjà mesuré.
+
+Pour chacune des huit composantes manquantes d'une cellule RGB/Bayer,
+quatre candidats utilisent uniquement des échantillons de la même couleur :
+deux interpolations symétriques et deux extrapolations unilatérales.
+Chaque candidat a une somme des poids égale à1 et un premier moment nul
+autour de la position cible. Les combinaisons unilatérales sont nécessaires
+pour pouvoir privilégier un côté d'un contour ; elles ne sont pas des
+moyennes convexes et peuvent comporter des poids négatifs.
+
+La sortie est la bilinéaire plus une combinaison des différences
+`candidat − bilinéaire`, avec coefficients bornés par tanh. Les différences
+ont une masse et un premier moment nuls : la correction ne peut donc
+introduire un biais sur un signal constant, et reproduit un plan affine
+dans l'intérieur où les appuis ne sont pas réfléchis. L'initialisation
+reproduit la bilinéaire. Les positions observées ne sont jamais réécrites.
+Les appuis sont au plus à trois pixels ; les bords réfléchis conservent
+les constantes, mais ne garantissent pas la reproduction d'une rampe.
+
+Les tests vérifient la couleur de chaque appui, les deux moments, les
+constantes signées/supérieures au blanc, les rampes avec coefficients
+arbitraires et tête non nulle, l'aller-retour des phases et les gradients.
+La voie refuse le bruit ou un régime d'observations non explicitement exact.
+Ce n'est donc pas encore un débruiteur conjoint entraîné sur des RAW.
+
+Le pilote sans bruit et l'audit croisé80cas sont lancés. Le modèle RGB
+libre canonique précédent est rejoué comme témoin, sans rechercher un
+nouveau coefficient ou une meilleure étape. Les contrôles restent
+procéduraux et déjà consultés. **Résultat en attente**, pas d'adaptation
+au bruit, de photo requise, changement moteur/IHM, publication ou tag.
+
+### Résultats — invariants acquis, contours encore bloquants
+
+Apprentissage terminé normalement en **43,84 s**, audit80cas en **0,62 s**.
+Les80 vérités RGB et mosaïques sont identiques par empreinte à celles de
+l'audit canonique précédent. Les sites observés restent exacts dans les
+20cas historiques et les80cas croisés ; les paramètres comptés sont31264.
+
+| Mesure, mêmes80 cas | Tête RGB libre canonique | Interpolation contrainte |
+| --- | ---: | ---: |
+| MSE des constantes | 0,0000013114 | 0 |
+| MSE des rampes | environ0,0000012 | 2,67×10⁻¹⁶ |
+| Variance de phase sur constantes | 7,68×10⁻⁷ | 0 |
+| Rapport MSE global / bilinéaire | 1,04603 | 1,06891 |
+| Rapport erreur opposée / bilinéaire | 1,06073 | 1,10813 |
+
+La conservation des signaux simples se vérifie donc après apprentissage,
+et pas seulement à l'initialisation : le défaut périodique sur les aplats
+mesurés est supprimé. Cela constitue une propriété utile du nouvel opérateur,
+pas la preuve d'une meilleure reconstruction de toutes les images.
+Les erreurs globales se dégradent au contraire sur ces80cas, dominées par
+les contours ; ne pas retenir uniquement le gain sur les aplats.
+
+| Phase, mêmes20 contenus chacune | Rapport MSE réseau / bilinéaire |
+| --- | ---: |
+| RGGB | 1,08734 |
+| GRBG | 1,26212 |
+| GBRG | 1,06751 |
+| BGGR | 0,85456 |
+
+Une seule phase s'améliore globalement ; elle ne doit pas être sélectionnée
+pour déclarer le modèle qualifié. Sur les80cas, les contours donnent un
+ratioRGB1,07057 et opposé1,11133. Les ondes chromatiques s'améliorent
+(RGB0,85299, opposé0,78071), alors que les faibles ondes achromatiques
+se dégradent relativement (RGB1,10753), malgré une faible MSE absolue
+de4,39×10⁻⁸. Les comportements restent dépendants du contenu.
+
+Sur les20cas historiques, le ratioRGB vaut1,01602, opposé1,02926 ;
+les contours valent1,01682 et1,03169. **Huit critères passent, quatre
+échouent** : gain RGB global, erreur opposée globale, fidélité RGB et
+opposée des contours. Les critères ne sont pas modifiés ; la décision
+reste `stop_before_noise_stage`. Aucun apprentissage bruité lancé.
+
+Mémoires canoniques :
+
+- [Pilote d'interpolation contrainte et critères](../raw/neural-synthetic-moment-reconstruction-v001-20261102T130329Z.json).
+- [Audit80cas du modèle à moments contraints](../raw/neural-bayer-phase-audit-v001-20261102T130416Z.json).
+
+**Conclusion actuelle : garanties de fidélité aux constantes/rampes
+acquises, candidat non qualifié pour les contours ou les photos.** Avant
+un nouvel entraînement, la prochaine proposition est de calculer, sur les
+signaux connus, le meilleur résultat accessible par ces voisinages sous
+la borne déclarée des coefficients. Cette borne « oracle » utilisera la
+vérité synthétique, jamais disponible sur une vraie photo : elle servira
+seulement à distinguer une limite des appuis d'une difficulté à apprendre
+les bons poids. Une borne favorable ne prouverait pas que le petit U-Net
+peut l'atteindre ; une borne défavorable éviterait de prolonger inutilement
+son optimisation. Adam et les seuils restent fixés, aucune nouvelle photo
+nécessaire, aucun calcul actif, moteur/IHM, publication, fusion ou tag.
