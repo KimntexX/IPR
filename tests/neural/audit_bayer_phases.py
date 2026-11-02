@@ -13,6 +13,7 @@ from diagnose_train_learnability import digest,save
 from joint_bayer_unet import JointBayerUNet,bilinear,sample_rgb
 from run_synthetic_joint_pilot import metrics,aggregate,tensor_hash
 from synthetic_bayer_data import PATTERNS,FAMILIES,signal
+from bayer_canonical import predict
 
 
 PHASE_NAMES=('RGGB','GRBG','GBRG','BGGR')
@@ -43,6 +44,8 @@ def run(parent,output):
     if digest(weights)!=proof['weights_sha256']:raise ValueError('Changed fixed model')
     for n in ('joint_bayer_unet.py','synthetic_bayer_data.py'):
         if digest(Path(__file__).with_name(n))!=proof['freeze']['tools'][n]:raise ValueError('Changed model/signal implementation')
+    if config.get('canonical_input',False) and digest(Path(__file__).with_name('bayer_canonical.py'))!=proof['freeze']['tools']['bayer_canonical.py']:
+        raise ValueError('Changed canonical-coordinate implementation')
     cases=proof['freeze']['evaluation_cases']
     if len(cases)!=20 or len({(c['family'],c['seed']) for c in cases})!=20 or any(c['noise_index']!=0 for c in cases):
         raise ValueError('Expected same20 distinct noise-free RGB contents')
@@ -55,7 +58,7 @@ def run(parent,output):
         config=config,contents=cases,phase_names=list(PHASE_NAMES),patterns=[list(p) for p in PATTERNS],
         policy='Same RGB truth in all4 phases, no added noise, same model/scale/core48; no model or phase selection.',
         tools={n:digest(Path(__file__).with_name(n)) for n in ('audit_bayer_phases.py','joint_bayer_unet.py',
-            'synthetic_bayer_data.py','run_synthetic_joint_pilot.py')})
+            'synthetic_bayer_data.py','run_synthetic_joint_pilot.py','bayer_canonical.py')})
     output.mkdir(parents=True,exist_ok=False);save(output/'freeze.json',freeze)
     threads=min(4,max(1,(os.cpu_count() or 1)-2))
     torch.set_num_threads(threads);torch.set_num_interop_threads(1);torch.use_deterministic_algorithms(True)
@@ -79,7 +82,8 @@ def run(parent,output):
                 for phase,pattern_values in enumerate(PATTERNS):
                     pattern=torch.tensor([pattern_values],dtype=torch.int64)
                     packed=sample_rgb(target,pattern);packed_hash=tensor_hash(packed);sigma=torch.zeros_like(packed)
-                    prediction=model(packed/config['scale'],sigma,pattern,exact_observations=True)*config['scale']
+                    prediction=predict(model,packed/config['scale'],sigma,pattern,exact_observations=True,
+                        canonical_input=config.get('canonical_input',False))*config['scale']
                     base=bilinear(packed,pattern)
                     if not torch.equal(sample_rgb(prediction,pattern),packed):raise ValueError('Observed values differ')
                     if tensor_hash(packed)!=packed_hash:raise ValueError('Source modified')

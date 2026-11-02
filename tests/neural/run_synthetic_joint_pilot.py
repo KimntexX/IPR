@@ -14,6 +14,7 @@ from diagnose_train_learnability import digest,save
 from joint_bayer_unet import JointBayerUNet,bilinear,sample_rgb,project_exact_observations
 from synthetic_bayer_data import PATTERNS,FAMILIES,signal,noisy_observation
 from reconstruction_gates import gate_config,qualifies
+from bayer_canonical import predict
 
 
 NOISE=((0.,0.),(.0002,.000025),(.0008,.0004))
@@ -61,11 +62,12 @@ def aggregate(rows):
 
 
 def run(output,stage='joint',reference=None):
-    if stage not in ('joint','reconstruction','reconstruction-consistent'):raise ValueError('Unknown training stage')
+    if stage not in ('joint','reconstruction','reconstruction-consistent','canonical-reconstruction'):raise ValueError('Unknown training stage')
     root=Path(__file__).resolve().parents[2];output=output.resolve()
     if not output.is_relative_to((root/'build-patch_neural_restoration').resolve()):raise ValueError('Use dedicated neural build')
     config=dict(seed=71,width=8,batch=4,steps=2048,learning_rate=.001,scale=2.,side=128,loss_border=48)
-    config['exact_observations']=stage=='reconstruction-consistent'
+    config['exact_observations']=stage in ('reconstruction-consistent','canonical-reconstruction')
+    config['canonical_input']=stage=='canonical-reconstruction'
     reference_proof=None
     if reference is not None and not config['exact_observations']:raise ValueError('Reference only used for consistency ablation')
     if config['exact_observations']:
@@ -75,7 +77,8 @@ def run(output,stage='joint',reference=None):
         reference_proof=json.loads((reference/'result.json').read_text(encoding='utf-8'))
         if reference_proof['status']!='completed_synthetic_reconstruction_stage_not_photographic_qualification':
             raise ValueError('Reference reconstruction is incomplete')
-        if reference_proof['freeze']['training_stage']!='reconstruction':raise ValueError('Expected noise-free unprojected reference')
+        expected_stage='reconstruction-consistent' if config['canonical_input'] else 'reconstruction'
+        if reference_proof['freeze']['training_stage']!=expected_stage:raise ValueError('Unexpected reconstruction reference')
         if digest(reference/'synthetic-joint-weights.pt')!=reference_proof['weights_sha256']:raise ValueError('Reference weights changed')
     cases=[dict(family=family,seed=7300+100*i+j,pattern=list(PATTERNS[j%4]))
         for i,family in enumerate(FAMILIES) for j in range(8)]
@@ -84,7 +87,8 @@ def run(output,stage='joint',reference=None):
         for i,family in enumerate(FAMILIES) for j,pattern in enumerate(PATTERNS)
         for k in (range(3) if stage=='joint' else (0,))]
     prefix={'joint':'neural-synthetic-joint-v001-','reconstruction':'neural-synthetic-reconstruction-v001-',
-        'reconstruction-consistent':'neural-synthetic-consistent-reconstruction-v001-'}[stage]
+        'reconstruction-consistent':'neural-synthetic-consistent-reconstruction-v001-',
+        'canonical-reconstruction':'neural-synthetic-canonical-reconstruction-v001-'}[stage]
     now=datetime.now(timezone.utc);campaign=prefix+now.strftime('%Y%m%dT%H%M%SZ')
     freeze=dict(schema_version=1,data_version=1,campaign_id=campaign,measured_at_utc=now.isoformat(),
         git_sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),config=config,
@@ -98,7 +102,7 @@ def run(output,stage='joint',reference=None):
         reference=None if reference is None else dict(path=str(reference),result_sha256=digest(reference/'result.json'),
             weights_sha256=digest(reference/'synthetic-joint-weights.pt')),
         tools={n:digest(Path(__file__).with_name(n)) for n in
-            ('run_synthetic_joint_pilot.py','joint_bayer_unet.py','synthetic_bayer_data.py','camera_unet.py','reconstruction_gates.py')})
+            ('run_synthetic_joint_pilot.py','joint_bayer_unet.py','synthetic_bayer_data.py','camera_unet.py','reconstruction_gates.py','bayer_canonical.py')})
     output.mkdir(parents=True,exist_ok=False);save(output/'freeze.json',freeze)
     threads=min(4,max(1,(os.cpu_count() or 1)-2))
     torch.set_num_threads(threads);torch.set_num_interop_threads(1);torch.manual_seed(config['seed'])
@@ -134,8 +138,8 @@ def run(output,stage='joint',reference=None):
             a,b=NOISE[(step-1)%len(NOISE)] if stage=='joint' else NOISE[0]
             noisy,sigma=noisy_observation(target,pattern,a,b,generator)
             model.train();optimizer.zero_grad(set_to_none=True)
-            output_image=model(noisy/config['scale'],sigma/config['scale'],pattern,
-                exact_observations=config['exact_observations'])
+            output_image=predict(model,noisy/config['scale'],sigma/config['scale'],pattern,
+                exact_observations=config['exact_observations'],canonical_input=config['canonical_input'])
             crop=(slice(None),slice(None),slice(48,-48),slice(48,-48))
             loss=(output_image[crop]-target[crop]/config['scale']).square().mean()
             loss.backward()
@@ -150,8 +154,8 @@ def run(output,stage='joint',reference=None):
                 a,b=NOISE[case['noise_index']]
                 noisy,sigma=noisy_observation(target,pattern,a,b,torch.Generator().manual_seed(case['noise_seed']))
                 before=tensor_hash(noisy);base=bilinear(noisy,pattern)
-                prediction=model(noisy/config['scale'],sigma/config['scale'],pattern,
-                    exact_observations=config['exact_observations'])*config['scale']
+                prediction=predict(model,noisy/config['scale'],sigma/config['scale'],pattern,
+                    exact_observations=config['exact_observations'],canonical_input=config['canonical_input'])*config['scale']
                 if config['exact_observations'] and not torch.equal(sample_rgb(prediction,pattern),noisy):
                     raise ValueError('Exact observed values were not preserved')
                 if tensor_hash(noisy)!=before:raise ValueError('Input mosaic modified')
@@ -167,12 +171,15 @@ def run(output,stage='joint',reference=None):
                     previous=previous_rows[0]
                     if previous['target_sha256']!=tensor_hash(target) or previous['noisy_sha256']!=before:
                         raise ValueError('Changed reference inputs')
-                    replay=reference_model(noisy/config['scale'],sigma/config['scale'],pattern)*config['scale']
+                    replay=predict(reference_model,noisy/config['scale'],sigma/config['scale'],pattern,
+                        exact_observations=reference_proof['freeze']['config'].get('exact_observations',False),
+                        canonical_input=reference_proof['freeze']['config'].get('canonical_input',False))*config['scale']
                     replay_metrics=metrics(target,base,replay)
                     if abs(replay_metrics['output_sse']-previous['metrics']['output_sse'])>1e-6*max(1e-8,previous['metrics']['output_sse']):
                         raise ValueError('Reference model replay differs')
-                    projected=project_exact_observations(replay,noisy,sigma,pattern)
-                    result.setdefault('projection_only_records',[]).append(dict(**case,metrics=metrics(target,base,projected),
+                    projected=replay if config['canonical_input'] else project_exact_observations(replay,noisy,sigma,pattern)
+                    reference_key='reference_records' if config['canonical_input'] else 'projection_only_records'
+                    result.setdefault(reference_key,[]).append(dict(**case,metrics=metrics(target,base,projected),
                         observed_site_mse=float((sample_rgb(projected[core],pattern)-sample_rgb(target[core],pattern)).square().mean())))
             a=torch.zeros(1,3,32,32);b=a.clone();b[:,0,1::2,1::2]=.5
             pattern=torch.tensor([PATTERNS[0]],dtype=torch.int64)
@@ -189,8 +196,9 @@ def run(output,stage='joint',reference=None):
             for i in noise_indices} for family in FAMILIES}
         if stage!='joint':result['qualification']=qualifies(result,freeze['gates'])
         if reference_model is not None:
-            result['projection_only_summary']=aggregate(result['projection_only_records'])
-            result['projection_only_by_family']={family:aggregate([r for r in result['projection_only_records'] if r['family']==family]) for family in FAMILIES}
+            reference_key='reference' if config['canonical_input'] else 'projection_only'
+            result[reference_key+'_summary']=aggregate(result[reference_key+'_records'])
+            result[reference_key+'_by_family']={family:aggregate([r for r in result[reference_key+'_records'] if r['family']==family]) for family in FAMILIES}
             if digest(reference/'synthetic-joint-weights.pt')!=freeze['reference']['weights_sha256']:raise ValueError('Reference weights changed')
         torch.save(dict(state_dict=model.state_dict(),config=config,freeze_sha256=digest(output/'freeze.json')),
             output/'synthetic-joint-weights.pt')
@@ -209,6 +217,6 @@ def run(output,stage='joint',reference=None):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--stage',choices=('joint','reconstruction','reconstruction-consistent'),default='joint')
+    p.add_argument('--stage',choices=('joint','reconstruction','reconstruction-consistent','canonical-reconstruction'),default='joint')
     p.add_argument('--reference',type=Path)
     a=p.parse_args();run(a.output,a.stage,a.reference)
