@@ -14,8 +14,10 @@ conservées. La [voie locale suivante (§15)](#15-voie-courte-locale--2-novembre
 réduit l'erreur de reconstruction avec deux initialisations, puis sur
 des contenus procéduraux distincts. La graine73 de l'objectif RGB échoue
 sur les ondes chromatiques du sous-ensemble historique20. L'objectif
-relatif suivant lève cet échec pour les deux graines sur les contrôles
-consultés, avec un compromis global non uniforme, encore à confirmer.
+relatif suivant lève cet échec pour les deux graines, puis confirme
+une meilleure fidélité des ondes sur de nouveaux contenus, au prix
+d'une hausse d'erreur sur les contours distincts. Une pondération
+intermédiaire est en étude, sans supériorité uniforme revendiquée.
 Les576 comparaisons de sorties qualifient la préparation
 des noyaux de cette nouvelle branche, sans qualification photographique.
 
@@ -728,8 +730,13 @@ exemple par `max(MSE bilinéaire,1e-6)` en unités physiques, avec référence
 détachée du gradient. Les deux graines passent alors12/12 critères sur20
 et80 contrôles consultés. L'erreur globale baisse pour71 mais augmente
 de5,57 % pour73 face à leurs témoins respectifs. La fidélité des ondes
-progresse fortement ; la supériorité globale reste à confirmer sur de
-nouveaux contenus avant tout apprentissage bruité. Ce changement ne
+progresse fortement. La confirmation suivante sur quatre checkpoints
+et832 cas nouveaux retrouve ce gain, mais l'erreur sur128 contours
+distincts augmente de6,69 %/17,96 % pour71/73 face à l'objectif RGB.
+Il n'y a donc pas de supériorité globale uniforme. Un seul objectif
+intermédiaire, d'exposant d'énergie1/2, est fixé avant deux nouveaux
+apprentissages, puis comparaison des six modèles sur une autre cohorte.
+Les seuils ne changent pas et aucune graine n'est sélectionnée. Ce changement ne
 modifie pas les calculs d'inférence et n'est pas intégré en production.
 Les ressources restent bornées selon le§14 et aucune production ou IHM
 n'est modifiée par cette étude.
