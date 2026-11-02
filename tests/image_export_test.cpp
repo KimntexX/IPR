@@ -688,6 +688,18 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     if (!firstDng.open(QIODevice::ReadOnly)) return false;
     const QByteArray firstDngBytes = firstDng.readAll();
     firstDng.close();
+    // An exported DNG carries no preview: the ribbon develops its thumbnail instead.
+    QString thumbnailError;
+    if (!check(RawDecoder::decodeEmbeddedThumbnail(expectedPath, QSize(64, 64), &thumbnailError).isNull(),
+               "the exported DNG has no embedded preview")) return false;
+    const QImage developedThumbnail = RawDecoder::developThumbnail(expectedPath, QSize(64, 64), &thumbnailError);
+    if (!check(!developedThumbnail.isNull() && thumbnailError.isEmpty() &&
+               std::max(developedThumbnail.width(), developedThumbnail.height()) == 64 &&
+               developedThumbnail.pixelColor(developedThumbnail.width() / 2, developedThumbnail.height() / 2).lightness() > 0,
+               "a DNG without preview gets a developed thumbnail")) return false;
+    if (!check(RawDecoder::developThumbnail(directory + QStringLiteral("/absent.dng"), QSize(64, 64), &thumbnailError).isNull() &&
+               !thumbnailError.isEmpty(), "a developed thumbnail reports a missing file")) return false;
+
     const QString repeatedStatus = awaitExport(editor, QUrl::fromLocalFile(requestedPath), QStringLiteral("DNG"));
     if (!firstDng.open(QIODevice::ReadOnly)) return false;
     if (!check(repeatedStatus.endsWith(QStringLiteral("/linear-2.dng")) &&
