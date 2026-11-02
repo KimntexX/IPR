@@ -1984,3 +1984,97 @@ Ce sera une hypothèse à tester, pas une amélioration garantie ou une
 correction de LibRaw/RCD. Aucun nouveau réglage issu d'images de contrôle
 naturelles, aucune photo requise, adaptation au bruit, modification moteur
 ou publication ; aucun calcul actif.
+
+## 2 novembre 2026, 12:20 UTC — représentation Bayer canonique lancée
+
+Campagne d'apprentissage `neural-synthetic-canonical-reconstruction-v001-20261102T122036Z`,
+banc `5357b26`, **26 tests ciblés réussis**. La convention est fixée à
+rouge en haut-gauche et bleu en bas-droite (RGGB), et non à BGGR qui avait
+obtenu le meilleur ratio sur le contrôle précédent. La transformation
+emploie uniquement des retournements horizontaux/verticaux déterminés
+par le motif d'entrée ; leur inverse replace le RGB dans son repère initial.
+
+Le rangement spatial, les étiquettes des verts et les cartes sigma suivent
+exactement les mêmes retournements. Aucun rééchantillonnage, modification
+des valeurs, permutation des canaux RGB ou renommage des verts. Les tests
+couvrent les quatre phases et leurs variantes d'identité des verts, des
+images non carrées, des valeurs négatives/supérieures au blanc, les cartes
+sigma distinctes par site et la propagation des gradients. La cohérence
+des observations reste exacte et limitée au régime explicitement sans bruit.
+
+Le réseau conserve31084 paramètres, initialisation71, Adam0,001, lot4,
+2048 étapes, train40, sigma0, échelle2 et cœur48. La sortie est ramenée
+au repère original avant la perte ; la vérité n'est pas modifiée. Les
+critères de reconstruction sur les20 cas historiques sont inchangés.
+Le modèle contraint précédent est rejoué sur ces mêmes entrées comme
+témoin ; ce n'est pas un réglage de coefficient sur le contrôle.
+
+Un audit croisé80cas est enchaîné après le calcul : mêmes20 contenus
+chacun sous quatre phases, avec routage canonique déclaré par la recette
+du modèle. Aucun passage au bruit prévu dans cette chaîne, même si les
+critères des20 cas sont satisfaits : le comportement de toutes les phases
+doit être relu. Les80cas sont consultés et procéduraux, pas un test final.
+
+**Calcul en cours.** Aucun nouveau RAW, besoin de photo, modification de
+RCD, LibRaw, moteur de profils, IHM, publication, fusion ou tag. Le gain
+attendu de la représentation reste une hypothèse, pas une validation.
+
+### Résultats — réduction de l'écart entre phases, candidat non retenu
+
+Apprentissage terminé en **35,38 s**, audit croisé en **0,51 s**. Les
+80 vérités RGB et mosaïques d'entrée sont identiques par empreinte à
+celles de l'audit précédent ; seuls les poids appris avec la nouvelle
+représentation et son routage changent. Le témoin précédent est rejoué
+sur les20 cas historiques. Les sites observés restent exacts dans tous
+les cas, et les pixels sont replacés dans le repère d'origine.
+
+| Phase, mêmes20 contenus | Ratio MSE avant représentation canonique | Ratio MSE canonique |
+| --- | ---: | ---: |
+| RGGB | 1,74868 | 1,02769 |
+| GRBG | 1,07464 | 1,11614 |
+| GBRG | 1,07298 | 1,01744 |
+| BGGR | 1,03805 | 1,02176 |
+| Ensemble80 | 1,23125 | 1,04603 |
+
+Tous les ratios comparent le réseau à la même bilinéaire. L'erreur sur
+les80 cas passe donc de **+23,12 % à +4,60 %**, et l'erreur opposée de
+1,22784 à1,06073. Le grand écart de RGGB est réduit, mais GRBG se dégrade.
+Il ne faut pas choisir la phase la plus favorable ni déclarer une
+invariance acquise. Les observations sous phases différentes ne sont
+toujours pas les mêmes mesures physiques d'un signal.
+
+Sur les20 cas historiques seulement, le ratio MSE passe de1,03604
+à1,10592 et le ratio opposé de1,06326 à1,16847. Cet écart avec le bilan80
+confirme qu'une sélection de couples contenu/phase aurait masqué des
+comportements défavorables dans les deux directions. Les contrôles restent
+exploratoires et déjà consultés, pas une validation finale indépendante.
+
+Huit critères sur douze échouent sur les20 cas : gain RGB global,
+fidélité opposée globale, fidélité RGB et opposée des contours, fidélité
+absolue des constantes, rampes, ondes faibles et ondes chromatiques.
+Les trois critères de projection de gradients et la cohérence imposée
+des sites passent. La décision reste `stop_before_noise_stage` ;
+aucune adaptation au bruit n'est lancée.
+
+Le défaut sur les signaux simples persiste. Sur les20 cas, les MSE des
+constantes et rampes valent0,0000013114 et0,0000012242, supérieures au
+plafond10⁻⁶ ; leurs bases bilinéaires sont exactes ou quasi exactes.
+Le biais vert agrégé des80 cas vaut−0,0011285 en unités caméra. La
+variance entre phases sur les constantes augmente de4,67×10⁻⁷ à7,68×10⁻⁷,
+alors qu'elle reste nulle en bilinéaire. La représentation canonique
+ne suffit donc pas à supprimer les erreurs résiduelles sur les aplats.
+
+Mémoires canoniques :
+
+- [Apprentissage sur représentation canonique et critères historiques](../raw/neural-synthetic-canonical-reconstruction-v001-20261102T122036Z.json).
+- [Audit des80 cas croisés du modèle canonique](../raw/neural-bayer-phase-audit-v001-20261102T122115Z.json).
+
+**Conclusion actuelle : transformation exacte et utile à l'étude de phase,
+mais pas de candidat qualifié.** Elle corrige une partie de la sensibilité
+du prototype, sans rendre la reconstruction meilleure que la bilinéaire.
+La prochaine vérification proposée est de mesurer les résidus des aplats
+par composante et par position dans la cellule2×2, à poids fixes, pour
+chercher une correction périodique indue liée aux sorties sous-pixel.
+Cette cause reste à vérifier avant de modifier à nouveau architecture,
+pertes ou durée d'apprentissage. Aucun besoin de nouvelle photo ni calcul
+actif ; pas de changement moteur, IHM, publication, fusion ou tag.
