@@ -1637,3 +1637,115 @@ maintenu. Le choix d'une activation par défaut faible ou d'une action
 utilisateur reste en attente des retours de l'entourage. Aucun raccordement
 de réseau dans l'application, changement d'ouverture, suppression de RAW,
 publication, fusion ou tag ; aucun calcul actif à la clôture.
+
+## 2 novembre 2026, 11:44 UTC — premier pilote conjoint sur signaux connus lancé
+
+Campagne `neural-synthetic-joint-v001-20261102T114401Z`, banc `6a4d6e9`,
+**dix tests ciblés réussis**. Cette campagne ne lit aucune photographie :
+elle vérifie le fonctionnement du nouveau contrat mosaïque/RGB avec une
+vérité synthétique entièrement connue, distincte des références RCD.
+
+Le prototype reçoit quatre plans Bayer spatiaux et quatre cartes de sigma,
+plus les étiquettes explicites des couleurs des quatre positions. Un petit
+U-Net de largeur8 opère sur les plans demi-résolution et produit douze
+plans réorganisés en trois canaux RGB pleine résolution. Sa correction
+résiduelle s'ajoute à une interpolation bilinéaire fixe, reproduite
+exactement à l'initialisation. Aucun poids préentraîné ni code de réseau
+tiers n'est repris. Les valeurs signées et supérieures au blanc restent
+autorisées ; le domaine est ici une mosaïque balancée **non bornée**, qui
+pourra être préparée depuis la capture normalisée avant gain, pas depuis
+la seule étape pré-RCD déjà bornée en haut.
+
+Protocole figé :
+
+- 40 signaux d'apprentissage couvrant constantes, rampes, frontières,
+  faibles ondulations achromatiques et ondulations chromatiques ;
+- 60 cas de contrôle procéduraux, paramètres/germes distincts, cinq
+  familles × quatre phases Bayer × trois niveaux de bruit ;
+- bruit nul ou gaussien à variance dépendante du signal `a*max(signal,0)+b`,
+  coefficients de simulation déclarés, non calibrés sur un Canon ;
+- sigma d'entrée calculé depuis l'observation bruitée et les coefficients
+  connus de simulation, **pas depuis la vérité propre** ;
+- Adam, graine71, largeur8, lot4, taux0,001, échelle2,2048 étapes,
+  un seul état final, MSE sur le cœur après exclusion de48 pixels ;
+- mesures RGB, erreur opposée, biais et projection des gradients au même
+  cœur ; aucune sélection de force, de coefficient ou de checkpoint.
+
+Les tests vérifient toutes les phases, constantes négatives/supérieures
+au blanc, reconstruction des rampes dans l'intérieur, non-modification
+des entrées, finitude des gradients et générateurs reproductibles.
+Un témoin distinct montre aussi que deux RGB différents peuvent produire
+la même mosaïque : il est exclu de l'agrégat de qualité et rappelle une
+limite d'identifiabilité, pas un défaut corrigible par tout réseau.
+
+**Calcul en cours, modèle conjoint non qualifié sur photos.** Le contrôle
+partage les règles de construction du train ; ses graines distinctes ne
+prouvent pas une généralisation à des scènes naturelles. La comparaison
+porte sur la bilinéaire de ce banc, pas sur RCD, Lightroom ou le pilote
+RGB antérieur. Optique, réponse spectrale, bruit fixe, compression et
+variantes de capteur ne sont pas reproduits. Aucune nouvelle photo requise
+pour cette étape ; aucune modification du moteur ou du comportement IHM.
+
+### Résultats du pilote synthétique — même journée
+
+Le calcul s'est terminé normalement en **30,58 s**. Le réseau comporte
+31084 paramètres ; les soixante cas ont été mesurés après les2048 étapes,
+sans choix de checkpoint. Le résultat permet de vérifier l'exécution du
+contrat, mais **ne qualifie pas la qualité de reconstruction du modèle**.
+
+| Famille, trois niveaux de bruit confondus | Rapport MSE réseau / bilinéaire |
+| --- | ---: |
+| Constantes | 0,84654 |
+| Rampes | 0,82600 |
+| Frontières | 1,83628 |
+| Faibles ondulations achromatiques | 0,83476 |
+| Ondulations chromatiques | 0,87981 |
+| Ensemble | **1,33820** |
+
+Les agrégats mélangent reconstruction et bruit : ce ne sont pas des
+pourcentages de bruit supprimé. Les contours dégradés pèsent assez pour
+que l'erreur globale soit **33,82 % au-dessus de la bilinéaire**. L'erreur
+opposée globale donne1,11336 ; la projection des gradients verts passe
+de0,83024 pour la bilinéaire à0,72747 pour le réseau face à la vérité
+synthétique. Le candidat lisse donc aussi des structures dans ce banc.
+
+Par niveau de bruit, les ratios MSE globaux valent2,20847 sans bruit,
+1,68057 au niveau intermédiaire et1,07848 au plus fort niveau simulé.
+Sur les constantes bruitées seules, le ratio est0,86069 et0,84157 ;
+le débruitage existe, mais il ne compense pas la reconstruction dégradée.
+Sans bruit, la bilinéaire est exacte sur les constantes et presque exacte
+sur les rampes ; le réseau introduit respectivement une MSE absolue de
+0,0000011861 et0,0000011323. Les contours sans bruit passent d'une MSE
+de0,00044502 à0,00097625. Le problème n'est donc pas uniquement le retrait
+de bruit dans les cas les plus difficiles.
+
+### Correction documentaire et numérique des ratios quasi nuls
+
+La première mémoire v001 conservait un ratio numériquement énorme pour
+les rampes sans bruit, parce qu'une erreur d'arrondi non nulle de la
+bilinéaire était utilisée comme dénominateur. **Ce ratio n'est pas une
+comparaison relative interprétable.** Le calcul des métriques a été corrigé
+avec un seuil explicite de MSE de référence de10⁻¹² : sous ce seuil,
+le ratio RGB ou opposé vaut `null` et les erreurs absolues sont conservées.
+Cette garde ne sélectionne aucun modèle et ne modifie aucun pixel.
+
+La mémoire v002 est une réanalyse versionnée des mêmes soixante prédictions,
+pas un nouvel entraînement. Les sommes d'erreurs, biais, projections,
+empreintes de prédictions et poids sont inchangés, de même que les ratios
+globaux ci-dessus. Onze tests ciblés passent après correction. La mémoire
+initiale reste historique, sans écrasement.
+
+- [Pilote initial et provenance de l'apprentissage](../raw/neural-synthetic-joint-v001-20261102T114401Z.json).
+- [Mesures corrigées, source courante pour les ratios](../raw/neural-synthetic-joint-v002-20261102T114800Z.json).
+
+**Conclusion actuelle : contrat fonctionnel, premier candidat synthétique
+non retenu.** Ne pas passer directement à un apprentissage photographique
+avec cette recette. La prochaine proposition est de séparer les phases
+d'apprentissage du **même réseau** : qualifier d'abord la reconstruction
+sur mosaïques sans bruit, puis étudier l'ajout du débruitage en conservant
+ce contrôle de fidélité. Cela ne nécessite pas deux moteurs exécutés en
+production. Adam reste fixé ; aucune recherche de coefficients sur les
+photos de contrôle. Ce résultat ne réfute pas l'approche conjointe, mais
+écarte une bascule prématurée de ce prototype.
+Aucune nouvelle photo nécessaire pour cette vérification synthétique ;
+pas de nouveau calcul actif, changement moteur, IHM, publication ou tag.
