@@ -17,7 +17,10 @@ sur les ondes chromatiques du sous-ensemble historique20. L'objectif
 relatif suivant lève cet échec pour les deux graines, puis confirme
 une meilleure fidélité des ondes sur de nouveaux contenus, au prix
 d'une hausse d'erreur sur les contours distincts. Une pondération
-intermédiaire est en étude, sans supériorité uniforme revendiquée.
+intermédiaire est désormais retenue comme base de poursuite : les deux
+graines passent les contrôles historiques et améliorent les groupes
+mixtes/contours de deux cohortes distinctes, sans domination de chaque cas.
+Cela qualifie une étape de reconstruction sans bruit, pas un débruiteur.
 Les576 comparaisons de sorties qualifient la préparation
 des noyaux de cette nouvelle branche, sans qualification photographique.
 
@@ -740,3 +743,29 @@ Les seuils ne changent pas et aucune graine n'est sélectionnée. Ce changement 
 modifie pas les calculs d'inférence et n'est pas intégré en production.
 Les ressources restent bornées selon le§14 et aucune production ou IHM
 n'est modifiée par cette étude.
+
+## 16. Objectif tempéré retenu pour la poursuite — 2 novembre2026
+
+L'architecture locale33368 paramètres ne change pas. Seul l'objectif
+d'apprentissage devient `MSE / sqrt(1e-6 × max(MSE bilinéaire,1e-6))`
+en unités physiques du signal. La référence est détachée du gradient,
+disponible uniquement pour l'apprentissage supervisé. Aucune vérité
+cible n'est requise à l'inférence ; aucune nouvelle opération n'y est
+ajoutée par ce changement de fonction de coût.
+
+Les deux graines71/73 passent les12 critères historiques20/80. Les six
+checkpoints (RGB/relatif/tempéré×deux graines) sont ensuite comparés sur
+deux nouvelles cohortes procédurales figées avant leur mesure. Le tempéré
+améliore les groupes mixtes et les contours distincts pour les deux
+graines ;2496 sorties des deux campagnes sont identiques au bit près
+entre modèles sources et noyaux préparés. Les cas qui régressent restent
+rapportés : il ne s'agit pas d'une domination universelle. Cette base
+est retenue pour préparer le pilote bruité, sans nouvelle recherche
+d'objectif sur les mêmes contrôles. Les preuves et limites demeurent
+dans le rapport unique et les JSON canoniques.
+
+Le contrat actuel refuse sigma non nul et préserve les sites capteur
+exacts. La transition au bruit doit donc définir explicitement son
+conditionnement et le traitement des observations bruitées, avec tests
+des invariants attendus ; ouvrir seulement cette entrée ne suffit pas
+à qualifier un débruiteur. Pas d'intégration moteur/IHM à ce stade.

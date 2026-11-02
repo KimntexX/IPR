@@ -4066,3 +4066,54 @@ pas l'objet d'un ajustement ou d'une recherche de meilleur checkpoint.
 Si le gain n'est pas retrouvé, le bilan restera nuancé. Les générateurs
 communs limitent toujours cette qualification à la reconstruction
 synthétique sans bruit, pas à une restauration photographique fiable.
+
+### Résultats verrouillés et conclusion actuelle — 2 novembre2026,22:40 UTC
+
+La dernière confirmation se termine normalement en26,71s, sans aucun
+changement des six checkpoints. Les1248 comparaisons préparées sont
+exactes au bit près. Les six modèles passent12/12 critères sur les80
+cas mixtes et leur sous-ensemble20. Les sites capteur restent inchangés.
+
+| Rapport MSE RGB à la bilinéaire | Mixte71 | Mixte73 | Contours128,71 | Contours128,73 |
+| --- | ---: | ---: | ---: | ---: |
+| RGB | 0,46008 | 0,52591 | 0,32411 | 0,39228 |
+| Relatif | 0,37103 | 0,48255 | 0,34684 | 0,43551 |
+| Tempéré | 0,36916 | 0,42088 | 0,29344 | 0,36501 |
+
+Face au témoin RGB, le tempéré réduit ici l'erreur mixte de19,76/19,97 %
+et celle des contours distincts de9,46/6,95 %. Sur128 contours,102/100
+cas s'améliorent et26/28 régressent pour71/73. Le gain ne vaut donc
+pas pour tous les contenus. Le gradient de ces contours vaut0,95337/
+0,90692, contre0,93590/0,90456 en RGB. Les erreurs des ondes chromatiques
+tempérées valent0,03735/0,08663 fois celles de la bilinéaire, avec des
+gains de gradient proches de1. Les constantes et rampes restent fidèles.
+
+Pics mesurés :227,18Mio résidents,867,11Mio engagés du job,60,78 %
+de mémoire physique machine. Aucun quota atteint. Les calculs sont clos.
+Preuve : [confirmation finale verrouillée des six modèles](../raw/neural-objective-confirmation-v001-20261102T224026Z.json).
+
+**Conclusion actuelle : base tempérée retenue pour poursuivre la
+qualification, stabilité étayée sur la reconstruction synthétique sans
+bruit.** Elle conserve les12 critères historiques sur20/80 pour les deux
+initialisations, puis améliore les groupes mixtes et les contours distincts
+sur deux nouvelles cohortes sans modification des poids. Il n'y a ni
+choix de la meilleure graine ni changement des seuils. La protection
+des faibles variations et le compromis sur les contours sont suffisamment
+cohérents sur ce périmètre pour clore cet essai d'objectifs.
+
+Cette conclusion n'est ni une garantie universelle ni une qualification
+de débruitage. Les générateurs, leur plage fréquentielle, les32 classes
+angulaires, les couleurs procédurales, le cœur32×32 et les deux graines
+limitent la portée. Les gradients mesurés utilisent le canal vert ; ce
+seul indicateur ne prouve pas toute la fidélité chromatique. Les cohortes
+ont été choisies successivement, la dernière après sélection du compromis,
+et partagent les mêmes générateurs ; aucune photo indépendante n'est
+qualifiée. Les régressions par cas restent dans les JSON canoniques.
+
+La prochaine étape utile est le contrat du pilote bruité : conditionnement
+par le niveau de bruit et traitement des observations bruitées. Le modèle
+actuel impose sigma0 et conserve exactement les sites capteur : il ne
+peut pas être présenté tel quel comme un débruiteur. Pas de nouvel
+ajustement de poids, entraînement bruité, export photo, modification
+moteur/IHM, publication, fusion ou tag à la clôture. Aucune nouvelle
+photo nécessaire pour préparer ce contrat.
