@@ -255,6 +255,8 @@ public:
     Q_INVOKABLE void undo();
     Q_INVOKABLE void redo();
     Q_INVOKABLE void goToHistoryStep(int step);
+    // Takes that edit out of the history: the render follows if the current recipe changes.
+    Q_INVOKABLE void removeHistoryStep(int step);
     Q_INVOKABLE void addSnapshot(const QString &name);
     Q_INVOKABLE void removeSnapshot(int index);
     // Applies a snapshot's recipe as a new step.
