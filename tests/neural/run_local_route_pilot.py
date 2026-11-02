@@ -18,6 +18,7 @@ from joint_bayer_unet import sample_rgb, bilinear
 from local_moment_unet import LocalMomentUNet
 from memory_budget import MemoryGuard, BudgetExceeded
 from reconstruction_gates import qualifies
+from reconstruction_loss import relative_reconstruction_loss
 from run_balanced_moment_pilot import balanced_schedule
 from run_memory_bounded_reconstruction import SampleStream
 from run_synthetic_joint_pilot import tensor_hash, metrics, aggregate
@@ -37,7 +38,7 @@ def gate_result(rows, gates):
     return qualifies(data, gates)
 
 
-def run(parent, output, variant, seed=71):
+def run(parent, output, variant, seed=71, objective='rgb'):
     root = Path(__file__).resolve().parents[2]
     parent, output = parent.resolve(), output.resolve()
     if not all(p.is_relative_to((root/'build-patch_neural_restoration').resolve()) for p in (parent, output)):
@@ -48,12 +49,16 @@ def run(parent, output, variant, seed=71):
     if isinstance(seed, bool) or not isinstance(seed, int) or seed < 0:
         raise ValueError('Nonnegative integer initialization seed required')
     config = dict(source['freeze']['config'], model_kind=variant, seed=seed, steps=2048, microbatch=1, accumulation=4)
+    if objective not in ('rgb', 'relative'):
+        raise ValueError('Known training objective required')
+    config['objective'] = objective
     schedule, _ = balanced_schedule(source['freeze']['train_slots'], 2048, 4, config['side'])
     if tensor_hash(torch.tensor([[*e['ids'], *e['phases']] for e in schedule])) != source['freeze']['phase_schedule_sha256']:
         raise ValueError('Training schedule changed')
     tools = {**source['freeze']['tools'], **{n: digest(Path(__file__).with_name(n)) for n in
         ('closed_moment_unet.py', 'closed_moment_operator.py', 'local_moment_unet.py', 'memory_budget.py',
-         'run_memory_bounded_reconstruction.py', 'audit_coefficient_adaptation.py', 'audit_bayer_symmetries.py', Path(__file__).name)}}
+         'run_memory_bounded_reconstruction.py', 'audit_coefficient_adaptation.py', 'audit_bayer_symmetries.py',
+         'reconstruction_loss.py', Path(__file__).name)}}
     if any(digest(Path(__file__).with_name(n)) != h for n, h in tools.items()):
         raise ValueError('Study dependency changed')
     now = datetime.now(timezone.utc)
@@ -64,6 +69,8 @@ def run(parent, output, variant, seed=71):
         policy='Declared initialization seed, fixed data/schedule/Adam.001/microbatch1x4, no best-seed selection.',
         local_features='Absolute central H/V slopes and H/V second differences, four values per physical plane; two equivariant convolutions then head.',
         evaluation='80consulted cases; full/bias/image-mean/core-mean/disabled-local frozen ablations; no independent confirmation here.')
+    freeze['objective_policy'] = ('RGB MSE in network units.' if objective == 'rgb' else
+        'Per-example RGB MSE divided by max(bilinear RGB MSE,1e-6 physical units); training truth only, detached denominator, same 48px crop. No gate change.')
     output.mkdir(parents=True, exist_ok=False)
     save(output/'freeze.json', freeze)
     records, losses, symmetries = [], [], []
@@ -94,7 +101,12 @@ def run(parent, output, variant, seed=71):
                     guard.check()
                     target, packed, tags = stream.sample(step, position, index, phase)
                     image = predict(model, packed/config['scale'], torch.zeros_like(packed), tags, True, True)
-                    loss = (image[:, :, 48:-48, 48:-48]-target[:, :, 48:-48, 48:-48]/config['scale']).square().mean()/4
+                    if objective == 'relative':
+                        reference = bilinear(packed/config['scale'], tags)
+                        loss = relative_reconstruction_loss(image, target/config['scale'], reference, config['scale'])/4
+                        del reference
+                    else:
+                        loss = (image[:, :, 48:-48, 48:-48]-target[:, :, 48:-48, 48:-48]/config['scale']).square().mean()/4
                     if not torch.isfinite(loss):
                         raise ValueError('Nonfinite loss')
                     loss.backward()
@@ -197,5 +209,6 @@ if __name__ == '__main__':
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--variant', choices=('baseline', 'local'), required=True)
     p.add_argument('--seed', type=int, default=71)
+    p.add_argument('--objective', choices=('rgb', 'relative'), default='rgb')
     a = p.parse_args()
-    run(a.parent, a.output, a.variant, a.seed)
+    run(a.parent, a.output, a.variant, a.seed, a.objective)

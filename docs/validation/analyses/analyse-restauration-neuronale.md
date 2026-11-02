@@ -3843,3 +3843,41 @@ avant d'autoriser un apprentissage bruité. Les nouveaux contenus ayant
 maintenant été consultés, ils ne seront plus présentés comme réservés
 pour un futur choix de modèle. Aucun calcul actif, changement moteur/IHM,
 publication, fusion ou tag ; aucune nouvelle photo requise pour ce point.
+
+## 2 novembre 2026, 22:10 UTC — pondération relative des erreurs
+
+Hypothèse de travail, pas diagnostic acquis : l'erreur RGB absolue des
+contours domine peut-être l'optimisation et laisse une faible priorité
+aux variations chromatiques lisses. Tester une pondération par exemple
+permet de changer cet équilibre sans ajouter de données ou de paramètres.
+
+Pour chaque exemple d'entraînement, dans le même cœur32×32, le nouvel
+objectif est `MSE(prédiction,cible) / max(MSE(bilinéaire,cible),1e-6)`
+en unités physiques du signal. Le plancher1e-6 reprend l'échelle de
+tolérance absolue déjà déclarée ; il n'est pas ajusté aux sorties73.
+Le calcul en unités réseau divise ce plancher par le carré de l'échelle.
+La cible et le dénominateur sont détachés du gradient. Une seule valeur
+pondère tout l'exemple RGB, sans masque de famille, canal ou pixel.
+La cible n'est utilisée qu'à l'apprentissage, jamais à l'inférence.
+
+Ce choix change les poids relatifs **et l'échelle du gradient** sous
+Adam ; le résultat ne permettra pas d'attribuer un effet à la seule
+pondération chromatique. Il faut contrôler les contours et les ondes
+achromatiques autant que les ondes colorées. Une amélioration globale
+ne compense pas un critère de fidélité échoué.
+
+Protocole fixé avant calcul : graines71 et73, toutes deux rapportées,
+2048 étapes finales, pas de recherche de meilleure graine/checkpoint,
+architecture locale33368 paramètres, données/calendrier/Adam0,001/
+micro-lot1×accumulation4 inchangés. Comparaison aux deux témoins RGB
+déjà archivés, critères historiques20/80 inchangés. Ces contrôles ont
+été consultés : c'est un essai de développement, pas une confirmation
+indépendante. Aucun apprentissage bruité ni gain photographique revendiqué.
+
+Les trois tests de l'objectif vérifient l'équilibrage d'erreurs relatives,
+le plancher et l'invariance d'échelle sur signal signé, la présence du
+gradient seulement sur la prédiction, le recadrage et les entrées
+invalides. Avec les quatre tests de la voie locale : **7 tests ciblés
+réussis**. Les deux apprentissages sont séquentiels, CPU4, cache borné,
+quota Windows2Gio engagés et arrêts coopératifs1,25Gio privés/résidents
+et80 % mémoire physique machine. Aucun changement de production/IHM.
