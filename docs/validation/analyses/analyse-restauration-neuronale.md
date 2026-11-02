@@ -3925,3 +3925,37 @@ proposée est une comparaison appariée sur des contenus procéduraux
 distincts, figés avant leur mesure et rapportant les deux graines, les
 contours et les ondes. Aucun entraînement bruité, changement de production,
 publication, fusion ou tag n'est lancé à la clôture de cette campagne.
+
+### Protocole suivant — confirmation appariée du compromis
+
+Comparer les quatre checkpoints finaux déjà obtenus : objectifs RGB et
+relatif, graines71 et73. Aucun réentraînement, mélange de modèles,
+choix de graine, sélection de cas ou réglage de seuil. Le plan conserve
+les empreintes des quatre résultats et poids avant la première inférence.
+Seules graine et fonction de coût peuvent différer dans les configurations.
+Les versions d'orchestration restent tracées ; calculs et données doivent
+être identiques. Les12 critères absolus existants sont conservés.
+
+Les nouveaux contrôles sont32 contours (indices160à191, graines2000160à
+2000191,32 classes angulaires) et20 signaux mixtes (graines3200000+
+100famille+j). Chaque vérité est mesurée dans les quatre phases :208 cas
+par modèle,832 comparaisons au total. Les empreintes doivent être uniques
+et distinctes des cibles d'entraînement, contrôles historiques du source,
+contours réservés qu'il conserve et52 vérités de la confirmation précédente.
+Le plan est figé après les quatre apprentissages, avant toute mesure de
+ces nouveaux contenus. Les générateurs restent communs : cela confirme
+une généralisation procédurale, pas une qualité photographique.
+
+Rapporter chaque graine, chaque famille, le groupe de contours distinct
+et les cas meilleurs/moins bons/équivalents face au témoin RGB de même
+graine. Le seuil1e-12 de MSE sert seulement au décompte des égalités,
+pas à une décision de supériorité. La comparaison ne remplace pas les
+échecs ou limites déjà constatés. Vérifier aussi chaque sortie préparée
+au bit près face à son modèle source et l'identité des sites observés.
+
+Trois tests ciblés vérifient le refus de sélection/configuration différente,
+la couverture et les collisions des nouvelles vérités, ainsi que les
+appariements exacts et la conservation d'une régression entre graines.
+**3/3 réussis.** Évaluation en flux, un modèle et sa copie préparée à
+la fois ; quotas mémoire et CPU4 inchangés. Aucun apprentissage bruité,
+export image ou changement moteur/IHM.
