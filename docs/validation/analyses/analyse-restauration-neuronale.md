@@ -3564,7 +3564,7 @@ pixels n'est ajouté au JSON. Le hook et le moniteur sont libérés.
 
 Mémoire canonique : [coefficients,quatre variantes,160 cas et mémoire](../raw/neural-coefficient-adaptation-v001-20261102T213028Z.json).
 
-**Conclusion actuelle : adaptation spatiale quasi absente confirmée ;
+**Conclusion de cette campagne : adaptation spatiale quasi absente confirmée ;
 allonger l'entraînement ne l'a pas corrigée.** Le modèle
 apprend surtout un filtre à coefficients presque constants par image ;
 après8192 étapes, il se rapproche encore du témoin de biais seuls. Cela
@@ -3579,3 +3579,161 @@ tout nouvel allongement ou entraînement bruité. Le critère historique
 reste échoué et aucun correctif de production n'est décidé ici.
 Aucun calcul actif, nouvelle photo requise, installation GPU, modification
 moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 21:42 UTC — voie courte locale, ablation appariée
+
+Banc `ba30435`, **8 tests ciblés réussis**. La piste ajoute une route
+plus courte vers la tête à36 coefficients, après le diagnostic d'un
+champ de coefficients presque constant par image. Les entrées de cette
+route sont16 descripteurs : pente centrale absolue horizontale/verticale,
+et différence seconde absolue horizontale/verticale, pour chacun des
+quatre plans spatiaux CFA. Ils ne lisent que l'observation, jamais la cible.
+Une maille du plan compact représente deux pixels pleine définition ;
+ces descripteurs ne sont pas des gradients photométriques calibrés.
+
+Deux convolutions contraintes par transposition, SiLU et une tête1×1
+produisent une contribution aux logits de la tête existante. Les deux
+contributions sont additionnées avant tanh. La permutation échange
+TR/BL et les directions H/V ; la symétrie de structure est conservée.
+La nouvelle tête locale commence à zéro et les paramètres du tronc
+partagé ont exactement la même initialisation que le témoin. Le début
+de l'apprentissage reste la bilinéaire, pas un filtre local préajusté.
+
+Le modèle compte **33368 paramètres**, contre31300 pour le témoin.
+Les2068 paramètres supplémentaires, le descripteur explicite et la
+longueur de chemin changent ensemble : un gain ne sera pas attribué
+uniquement à la longueur du chemin. Les tests vérifient les valeurs
+constantes, la localité et covariance des descripteurs, l'initialisation
+commune, le compte de paramètres, les huit symétries avec tête locale
+non nulle, les gradients et le refus du régime bruité/non-fini.
+
+### Comparaison fixée avant les résultats
+
+Deux apprentissages séquentiels utilisent les mêmes données diversifiées,
+graines71, calendrier, Adam0,001,2048 étapes, échelle2 et critères :
+un témoin équivariant sans route locale, puis le candidat avec route.
+Tous deux utilisent micro-lot1 et accumulation4. Le témoin est donc
+réentraîné pour ne pas comparer directement micro-lots et anciens lots4.
+Un seul checkpoint final est retenu pour chaque modèle, sans inspection
+des scores intermédiaires pour choisir une étape.
+
+Les protections restent le quota Windows2Gio engagés, les seuils
+coopératifs1,25Gio privés/résidents et80 % physique machine, le cache
+quatre images et l'évaluation en flux. Aucun lancement parallèle des
+deux apprentissages, aucun corpus de tenseurs chargé en bloc, aucun GPU
+installé. Les champs de qualité et d'adaptation sont conservés par cas.
+
+Sur les80 contrôles déjà consultés, l'évaluation compare la sortie
+complète, les biais seuls, les moyennes d'image et de cœur, et une
+ablation de la contribution locale. Cette dernière utilise les poids
+entraînés ensemble et n'est pas un filtre optimisé indépendamment.
+Pour le témoin sans route, elle égale la sortie complète. Les12 critères
+sont calculés sur20 et80cas, sans modifier les seuils, et128 transformations
+exactes des contours vérifient aussi la covariance des modèles appris.
+Ce banc reste sans bruit et sans validation photographique indépendante.
+
+### Résultats — adaptation locale utile et verrou historique franchi
+
+Témoin `neural-local-route-baseline-v001-20261102T214222Z`, terminé en
+**108,74s** ; candidat `neural-local-route-local-v001-20261102T214421Z`,
+terminé en **128,84s**. Le témoin réentraîné en micro-lots retrouve les
+scores précédents à l'arrondi numérique près : ratioRGB0,97367729 sur80cas
+et0,98865567 sur20cas. Cela confirme le fonctionnement de la comparaison
+appariée ; aucun résultat de modèle n'a servi à choisir une autre durée.
+
+| Mesure sur la sortie complète | Témoin sans voie locale | Candidat avec voie locale |
+| --- | ---: | ---: |
+| Ratio MSE RGB / bilinéaire,20cas historiques |0,98866 |0,41443 |
+| Ratio MSE RGB / bilinéaire,80cas croisés |0,97368 |0,42328 |
+| Ratio RGB des seuls contours |0,97740 |0,42387 |
+| Ratio opposé des seuls contours |0,97901 |0,45982 |
+| Ratio RGB,ondes achromatiques faibles |0,61147 |0,34020 |
+| Ratio RGB,ondes chromatiques |0,49555 |0,34773 |
+| Gain du gradient des contours,référence idéale1 |0,82133 |0,91555 |
+| Maximum de désaccord,128 symétries |5,96×10⁻⁸ |1,79×10⁻⁷ |
+
+Le candidat réduit la MSE RGB globale des80cas de **57,67 % par rapport
+à la bilinéaire**, et de **56,53 % par rapport au témoin apparié**.
+Il s'agit d'erreurs quadratiques sur des signaux synthétiques, pas
+d'une baisse mesurée du bruit ou d'une amélioration visuelle équivalente.
+Les contours dominent ces erreurs globales ; les quatre contenus de
+contours et leurs phases ne constituent pas16 scènes indépendantes.
+
+Les **12 critères passent désormais sur les20cas historiques et les80cas
+croisés**, sans modification de seuil. Les48 couples informatifs des
+trois familles non triviales améliorent la bilinéaire, aucun ne la
+dégrade dans cette campagne ; les32 constantes/rampes sont ex æquo à
+la tolérance absolue de MSE10⁻¹². Les constantes restent exactes et
+les rampes à2,56×10⁻¹⁶ de MSE. Les sites capteur sont préservés dans
+les sorties et les ablations. La covariance des poids appris reste
+dans la tolérance2×10⁻⁶ déclarée avant calcul.
+
+Le gain de gradient des ondes atteint1,00567 et1,00688, légèrement
+au-dessus de1. Les critères actuels vérifient une conservation minimale,
+pas un plafond de renforcement : ces chiffres ne doivent pas être
+présentés comme une absence générale de suraccentuation ou d'artefact.
+Aucun contrôle visuel sur photo naturelle n'a été effectué ici.
+
+### L'ablation confirme l'utilisation des informations locales
+
+| Variante figée,ratio RGB / bilinéaire sur80cas | Témoin | Candidat |
+| --- | ---: | ---: |
+| Complet |0,97367729 |0,42327965 |
+| Biais seuls |0,97760744 |0,99078552 |
+| Moyenne par image |0,97368885 |1,01190020 |
+| Moyenne du cœur |0,97367767 |1,05084554 |
+| Contribution locale désactivée |0,97367729 |0,98700471 |
+
+Remplacer les coefficients du candidat par leur moyenne d'image porte
+la MSE à **2,39fois** celle de sa sortie complète. Le témoin du cœur
+se dégrade aussi : le résultat ne provient pas seulement des bords.
+En retirant la contribution locale, le candidat perd l'essentiel de
+son gain, mais conserve les autres poids entraînés avec elle ; cette
+ablation n'est pas équivalente au témoin réentraîné sans voie.
+
+L'écart-type spatial moyen des coefficients dans le cœur passe de
+1,86×10⁻⁵ pour le témoin à **0,01728** pour le candidat. La moyenne
+de la fraction d'énergie spatiale passe de2,29×10⁻⁷ à0,07764.
+Ces statistiques et les ablations montrent une adaptation locale
+effectivement utilisée sur les contrôles, contrairement au comportement
+quasi constant précédent. Elles ne désignent pas seules la cause du
+plafond antérieur : accès explicite aux variations, longueur de chemin
+et capacité supplémentaire changent ensemble.
+
+### Mémoire et limites de qualification
+
+| Ressource | Témoin | Candidat |
+| --- | ---: | ---: |
+| Pic RAM résidente du processus |300,79Mio |305,50Mio |
+| Pic engagé OS du job |958,04Mio |960,49Mio |
+| Pic d'utilisation physique de toute la machine |66,67 % |76,58 % |
+
+Aucun seuil n'est atteint. L'utilisation totale de la machine varie
+indépendamment du petit écart entre processus ; les pourcentages système
+ne sont pas attribués au seul test. Le quota2Gio et le moniteur sont
+libérés à la fin de chaque essai. Aucun apprentissage parallèle, export
+image, chargement RAW ou installation GPU n'est effectué. Les durées
+ci-dessus incluent apprentissage et mesures : ce ne sont pas des temps
+d'inférence pleine définition.
+
+Mémoires canoniques :
+
+- [Témoin apparié en micro-lots](../raw/neural-local-route-baseline-v001-20261102T214222Z.json).
+- [Candidat local,ablations,critères et mémoire](../raw/neural-local-route-local-v001-20261102T214421Z.json).
+
+**Conclusion actuelle : piste locale concluante sur le banc de
+développement, barrière historique franchie sans assouplissement.**
+La voie courte rétablit une adaptation spatiale utile, conserve la
+structure symétrique et reste sous306Mio de RAM résidente mesurée.
+Le résultat repose sur une seule initialisation et des contrôles déjà
+consultés. Il ne remplace pas une reproduction indépendante ou une
+confirmation sur de nouveaux contenus, et ne qualifie pas encore une
+restauration photographique.
+
+La suite proposée est de reproduire cette version et de la confirmer
+sur des contenus distincts avant le premier pilote bruité. Le contrat
+actuel refuse toujours sigma non nul ; franchir les critères sans bruit
+ne transforme pas ce modèle en débruiteur. La préparation des noyaux
+d'inférence devra également être requalifiée sur la nouvelle branche
+locale. Aucun calcul actif, nouvelle photo requise pour cette confirmation
+synthétique, modification moteur/IHM, publication, fusion ou tag.

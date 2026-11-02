@@ -9,8 +9,12 @@ pas de débruiteur photographique intégré.** La base de poursuite est
 décrite au [§13](#13-structure-bayer-expérimentale--2-novembre-2026) :
 36 candidats d'interpolation, convolutions contraintes par transposition,
 noyaux préparés une fois pour une inférence. Deux initialisations et une
-confirmation procédurale distincte sont conservées ; un critère de gain
-reste en échec sur un ancien sous-groupe, sans assouplissement du seuil.
+confirmation procédurale distincte de cette première structure sont
+conservées. La [voie locale suivante (§15)](#15-voie-courte-locale--2-novembre-2026)
+franchit les critères historiques20/80 sur le banc déjà consulté,
+sans assouplissement, mais reste à reproduire indépendamment. Les preuves
+de préparation et de confirmation antérieures ne valident pas à elles
+seules cette nouvelle branche.
 
 Le [rapport évolutif](../validation/analyses/analyse-restauration-neuronale.md)
 et ses JSON canoniques portent les résultats et limites. Les sections1à12
@@ -662,3 +666,48 @@ ne prouve donc pas une adaptation locale utile. La piste suivante est
 une connexion courte donnant à la tête une information locale explicite,
 à tester par ablation et avec le même budget mémoire ; aucun nouveau
 modèle ou correctif de production n'est validé par ce seul constat.
+
+## 15. Voie courte locale — 2 novembre 2026
+
+L'ablation suivante ajoute une route d'accès aux variations de l'observation
+pour la tête36 : quatre descripteurs par plan CFA (pentes H/V centrales
+absolues et différences secondes H/V absolues), deux convolutions
+contraintes puis une tête1×1. Ses logits s'ajoutent à ceux du tronc avant
+tanh. La permutation transforme les positions et les directions ensemble.
+La source n'est pas bornée ou changée d'espace ; aucune vérité cible
+n'est lue par cette voie. L'initialisation commune et les têtes nulles
+conservent le point de départ bilinéaire.
+
+```mermaid
+flowchart TD
+    A["Observation CFA normalisée et canonique, sigma0"]
+    A --> B["Tronc U-Net et tête principale"]
+    A --> C["16 variations locales observées"]
+    C --> D["Deux convolutions contraintes et tête locale"]
+    B --> E["Somme des logits"]
+    D --> E
+    E --> F["tanh :36 coefficients locaux"]
+    A --> G["Bilinéaire et36 candidats fermés"]
+    F --> G
+    G --> H["RGB caméra puis inverse de coordonnées/échelle"]
+```
+
+Les deux routes appartiennent à une seule évaluation du modèle, sans
+seconde vue transposée. Le graphe reste celui du banc sans bruit.
+
+Le modèle compte33368 paramètres au lieu31300. Le tronc, les règles
+d'interpolation et de symétrie restent présents ; la capacité, les
+descripteurs et la longueur de chemin changent ensemble. La campagne
+appariée à2048 étapes, avec les mêmes données, Adam, micro-lots et
+critères, retrouve une adaptation spatiale effectivement utile et passe
+les12 critères sur20 et80 contrôles de développement, sans changer les
+seuils. Le détail, les ablations et les mesures font autorité dans le
+[rapport unique](../validation/analyses/analyse-restauration-neuronale.md).
+
+Cette branche reste expérimentale et sans bruit : une seule graine,
+contrôles déjà consultés, aucune validation photographique. La reproduction
+indépendante et une confirmation distincte restent nécessaires. La
+préparation des noyaux et le runtime doivent être requalifiés pour ce
+nouveau modèle ; leurs anciennes preuves ne lui sont pas attribuées.
+Les ressources restent bornées selon le§14 et aucune production ou IHM
+n'est modifiée par cette étude.
