@@ -2703,7 +2703,7 @@ phase ou d'une étape favorable.
 
 Mémoire canonique : [diversité des contours, recettes,128 contrôles réservés et régressions](../raw/neural-diverse-moment-v001-20261102T151802Z.json).
 
-**Conclusion actuelle : piste de diversité utile sur ce banc synthétique,
+**Conclusion de cette campagne : piste de diversité utile sur ce banc synthétique,
 candidat encore non qualifié.** L'amélioration se retrouve sur des vérités
 réservées avant apprentissage et dans chaque phase agrégée, ce qui est
 plus encourageant que l'équilibrage seul. Elle reste faible et inégale
@@ -2720,3 +2720,93 @@ révèle pas de défaut bloquant. Ne pas retenir ensuite la meilleure graine
 pour effacer une régression. Aucun apprentissage bruité lancé, aucune
 nouvelle photo nécessaire pour cette étape. Aucun calcul actif, modification
 moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 15:24 UTC — régressions par contraste, normale et phase
+
+Banc `10aae55`, **4 tests ciblés réussis**. Lecture du seul JSON canonique
+de diversification, sans PyTorch, inférence, gradient ou entraînement.
+Le calcul de regroupement dure **0,0043 s** et reproduit exactement le
+ratio global0,9823057465 et le support131072 pixels des128 couples
+réservés. Les32 vérités et leurs mosaïques par phase sont identifiées
+par empreinte ; chaque contenu doit posséder les quatre phases, sans
+doublon. Les anciens JSON et les checkpoints ne sont pas modifiés.
+
+Les classes de ce diagnostic sont fixées avant le calcul, mais portent
+sur des résultats déjà consultés : elles sont **descriptives et non
+confirmatoires**. Le contraste est `max(abs(couleur_2 − couleur_1))`
+dans les trois canaux caméra balancés ; ce n'est ni une luminance
+colorimétrique ni un contraste perceptuel. Les normales sont groupées
+par45° dans les coordonnées de l'image d'origine. Les effectifs et les
+sommes d'erreurs sont conservés pour chaque groupe, ainsi que les
+croisements contraste/phase et normale/phase.
+
+### Le gain moyen masque des pertes plus nombreuses et souvent petites
+
+Le ratio global pondéré0,98231 représente une amélioration de1,77 %
+face à la bilinéaire. La médiane des128 ratios individuels vaut pourtant
+**1,003915**, soit une hausse d'erreur d'environ0,39 % pour le ratio
+médian. On retrouve58 couples améliorés et70 dégradés, avec tolérance
+absolue de MSE10⁻¹². Une MSE relative n'est pas une variation visuelle
+équivalente et ce décompte ne constitue pas un seuil de perceptibilité.
+
+| Contraste caméra | Contenus | Couples | Ratio pondéré | Couples améliorés / dégradés |
+| --- | ---: | ---: | ---: | ---: |
+| [0;0,15[ | 7 | 28 | 0,98665 | 15 / 13 |
+| [0,15;0,35[ | 3 | 12 | 0,99423 | 6 / 6 |
+| [0,35;0,65[ | 13 | 52 | 0,98636 | 22 / 30 |
+| [0,65;+∞[ | 9 | 36 | 0,97876 | 15 / 21 |
+
+Toutes ces classes ont un gain pondéré ; la régression ne se limite
+donc pas aux faibles contrastes. Les groupes achromatiques (6contenus,
+24couples) et chromatiques (26contenus,104couples) donnent respectivement
+0,97773 et0,98277. Ces effectifs sont inégaux et confondent contraste,
+angle, position et couleur : aucun facteur causal n'est isolé.
+
+### Interaction structurée entre orientation et phase
+
+Les moyennes par normale (0,97954;0,99240;0,98355;0,97716) et par phase
+(0,97916;0,98551;0,98713;0,97740) restent toutes inférieures à1. Leur
+croisement révèle cependant une alternance qui était masquée.
+
+| Normale | RGGB | GRBG | GBRG | BGGR |
+| --- | ---: | ---: | ---: | ---: |
+| [0°;45°[ | 1,01231 | 0,94881 | 0,95009 | 1,00679 |
+| [45°;90°[ | 1,02462 | 0,95762 | 0,96209 | 1,02577 |
+| [90°;135°[ | 0,95002 | 1,01818 | 1,01896 | 0,94652 |
+| [135°;180°[ | 0,94314 | 1,01127 | 1,01143 | 0,94242 |
+
+Chaque cellule regroupe les mêmes8 contenus de sa classe d'orientation,
+dans une phase donnée. Dans[45°;90°[, les8 contenus régressent en RGGB
+et les8 en BGGR. Dans[90°;135°[, les8 régressent en GRBG et les8 en
+GBRG. Il ne s'agit donc pas uniquement de pertes dispersées dans quelques
+cas indépendants. Les quatre mesures d'un contenu restent corrélées.
+
+Le pire ratio individuel est **1,10729**, sur la graine synthétique
+`2000016`, phaseGBRG, normale94,617°, contraste caméra0,39757. Sa hausse
+de MSE vaut environ1,56×10⁻⁵ unité caméra au carré. Les quatre phases
+de ce même contenu régressent d'environ9,76 à10,73 %. Cela interdit de
+présenter toutes les pertes comme négligeables, même si leur effet
+photographique n'est pas établi par ce banc.
+
+Le motif est compatible avec une sensibilité directionnelle après
+canonisation : RGGB ne subit pas de réflexion, BGGR subit deux réflexions,
+GRBG et GBRG une seule dans `bayer_canonical.py`. Une seule réflexion
+inverse le signe de l'orientation, modulo180°. Cette lecture du contrat
+est une **piste explicative après observation**, pas une preuve d'erreur
+du mapping, des appuis, du réseau ou du décodeur. Les changements de
+sites observés entre phases sont aussi réels.
+
+Mémoire canonique : [diagnostic des régressions, regroupements et mesures individuelles](../raw/neural-contour-regressions-v001-20261102T152447Z.json).
+
+**Conclusion actuelle : gain moyen confirmé, asymétrie orientation/phase
+à expliquer avant de poursuivre l'apprentissage.** Ce résultat modifie
+l'ordre proposé : l'essai d'une seconde initialisation est reporté.
+La prochaine vérification proposée porte sur les symétries du chemin
+canonique et des appuis, avec une même mosaïque transformée et ses tags
+Bayer transformés ensemble, puis remise des sorties dans les mêmes
+coordonnées. Comparer séparément la bilinéaire, les appuis contraints et
+le réseau figé permettra de localiser une éventuelle asymétrie sans
+confondre transformation exacte d'une observation et nouvel échantillonnage
+de la vérité. Aucun correctif n'est décidé à partir de ces groupes.
+Qualification inchangée, pas d'apprentissage bruité, de nouvelle photo,
+de calcul actif, modification moteur/IHM, publication, fusion ou tag.
