@@ -1046,3 +1046,49 @@ Il s'agit uniquement de qualifier des paires candidates d'apprentissage ;
 aucun entraînement, changement de partition du contrôle, changement moteur
 ou publication. La campagne conservera sa mémoire JSON sous
 `docs/validation/raw/` à sa clôture, y compris en cas d'échec.
+
+## 2 novembre 2026 — résultats de la qualification ISO4000
+
+La campagne précédente s'est terminée normalement en **328,91 s** :
+42 développements caméra signés, calibration appliquée sur chacun.
+Les 50 vérifications d'empreintes du gel, des outils, dépendances,
+descripteurs et pixels passent ; la mémoire canonique est identique au
+résultat local. Aucun ajustement radiométrique n'a été appliqué.
+
+- Les 21 références passent le recalage global.
+- 18 des 21 sources passent ; `6V1A9852`, `6V1A9854` et `6V1A9856`
+  échouent à la réciprocité : respectivement 1,012, 1,445 et 1,028 pixel,
+  pour un plafond préalablement fixé à 1 pixel. Leurs corrélations sont
+  pourtant supérieures à 0,988 et leur recouvrement supérieur à 97 %.
+  Aucun seuil n'est assoupli après observation.
+- **152 paires de patches 96 × 96** sont admises : 52 dans la zone 0,
+  54 dans la zone 3 et 46 dans la zone 5. Ces trois zones conservent
+  respectivement 67,7 %, 69,3 % et 64,3 % de support valide de référence.
+  Les autres zones ne fournissent pas de patches admis ; une bonne
+  corrélation globale ne suffit donc pas à qualifier toute la photo.
+
+Les références sont des moyennes de 21 prises, avec des demi-moyennes
+de 11 et 10 prises. Sur les trois zones utilisées, l'écart des demi-moyennes
+est voisin de deux fois l'incertitude théorique de la moyenne complète,
+ce qui est compatible avec l'échelle attendue sous indépendance. Cela
+**ne prouve ni l'indépendance du bruit, ni l'absence de bruit fixe commun**.
+Le masque de stabilité sélectionne aussi des régions moins variables.
+
+Le statut extérieur `candidate_training_pairs_available` indique seulement
+la disponibilité de candidats de train. Le statut interne
+`insufficient_qualified_pairs_no_training` est attendu : cette campagne
+isolée ne contient ni validation ni test, et ne satisfait donc pas la
+barrière d'un pilote complet. Aucun `dataset.npz` d'entraînement complet
+ni nouveau modèle n'est produit ; captures, masques reconstructibles,
+identités et décisions d'admission sont conservés.
+
+Mémoire canonique : [qualification de la rafale ISO4000](../raw/neural-same-iso-burst-v001-20261101T224914Z.json).
+
+**Conclusion actuelle : ajout exploitable pour un train exploratoire,
+pas validation du U-Net.** Les 152 patches proviennent de seulement
+18 sources très corrélées d'une même composition ; ils ne constituent
+pas 152 scènes indépendantes. Le contrôle existant reste hors du train.
+La prochaine étape proposée est de qualifier les cinq supports ISO100
+et le bruit résiduel, avant de figer un nouveau pilote combinant les
+compositions d'apprentissage. Aucune nouvelle photo demandée à ce stade,
+aucun changement en production ou publication, aucun calcul actif.
