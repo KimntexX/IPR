@@ -380,9 +380,12 @@ ImageEditor::ImageEditor(ImageProvider *provider,
             const QImage original = rendered.originalPreview.isNull()
                 ? m_provider->originalImage() : rendered.originalPreview;
             m_provider->setImages(rendered.preview, original);
-            if (!rendered.originalPreview.isNull())
+            if (!rendered.originalPreview.isNull()) {
                 m_originalImageSource = QStringLiteral("image://editor/original?revision=%1")
                                             .arg(m_activeRevision);
+                m_originalGeometry = rendered.originalGeometry;
+                m_originalWholeCanvas = rendered.originalWholeCanvas;
+            }
             m_imageSource = QStringLiteral("image://editor/preview?revision=%1")
                                 .arg(m_activeRevision);
             m_histogram = rendered.histogram;
@@ -1779,6 +1782,16 @@ void ImageEditor::endAdjustmentGesture()
 {
     m_inAdjustmentGesture = false;
     recordHistory();
+    if (!m_original.isNull() && originalFramingStale()) {
+        ++m_requestedRevision;
+        setBusy(true);
+        m_renderDebounce.start();
+    }
+}
+
+bool ImageEditor::originalFramingStale() const
+{
+    return m_originalGeometry != m_settings.geometry || m_originalWholeCanvas != m_cropEditing;
 }
 
 void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
@@ -2338,6 +2351,8 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
             framed = cropped(std::move(framed), settings.geometry);
         result.originalPreview = ColorPipeline::toSrgb(
             framed, ColorPipeline::OutputFormat::Preview8Bit, &error);
+        result.originalGeometry = settings.geometry;
+        result.originalWholeCanvas = wholeCanvas;
         if (result.originalPreview.isNull())
             qWarning() << "Échec du rendu de l'origine :" << error;
     }
@@ -2940,10 +2955,9 @@ void ImageEditor::startRender()
     const int overlay = m_pointColorOverlay < int(std::min(settings.pointColor.count, PointColor::MaxPoints))
         ? m_pointColorOverlay : -1;
     const bool wholeCanvas = m_cropEditing;
-    const bool includeOriginal = m_originalImageSource.isEmpty() || m_originalGeometry != settings.geometry ||
-                                 m_originalWholeCanvas != wholeCanvas;
-    m_originalGeometry = settings.geometry;
-    m_originalWholeCanvas = wholeCanvas;
+    // Within a gesture the original can wait for the release (endAdjustmentGesture).
+    const bool includeOriginal = m_originalImageSource.isEmpty() ||
+                                 (!m_inAdjustmentGesture && originalFramingStale());
     m_activeRevision = m_requestedRevision;
     setBusy(true);
     m_renderWatcher.setFuture(m_tasks.submit<RenderResult>(

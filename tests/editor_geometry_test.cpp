@@ -116,6 +116,16 @@ int main(int argc, char **argv)
     if (!check(settled(editor) && provider.image() == neutralPreview, "undoing the turn gives the same preview back")) return 1;
     if (!check(editor.geometry().value("identity").toBool(), "and the same geometry")) return 1;
 
+    // Within a gesture the original waits for the release: a drag stays fast.
+    editor.beginAdjustmentGesture();
+    editor.turnGeometry();
+    if (!check(settled(editor) && provider.image().size() == QSize(80, 120) &&
+               provider.originalImage().size() == QSize(120, 80), "a gesture does not render the original")) return 1;
+    editor.endAdjustmentGesture();
+    if (!check(settled(editor) && provider.originalImage().size() == QSize(80, 120), "its release does")) return 1;
+    editor.undo();
+    if (!check(settled(editor) && provider.originalImage().size() == QSize(120, 80), "and an undo follows")) return 1;
+
     // A crop: the preview shows it, the edit view shows the whole canvas.
     editor.setGeometryCrop(0.25, 0.25, 0.5, 0.5);
     if (!check(settled(editor) && provider.image().size() == QSize(60, 40), "the preview shows the crop")) return 1;

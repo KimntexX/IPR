@@ -97,19 +97,25 @@ QImage toEncodedSrgbRgba64(const cv::Mat &linearRgba)
     QImage image(linearRgba.cols, linearRgba.rows, QImage::Format_RGBA64);
     if (image.isNull())
         return image;   // allocation failed: the caller reports it
-    for (int y = 0; y < linearRgba.rows; ++y) {
-        const cv::Vec4f *source = linearRgba.ptr<cv::Vec4f>(y);
-        auto *destination = reinterpret_cast<quint16 *>(image.scanLine(y));
-        for (int x = 0; x < linearRgba.cols; ++x) {
-            for (int channel = 0; channel < 3; ++channel) {
-                const double linear = std::clamp(double(source[x][channel]), 0.0, 1.0);
-                const double encoded = WorkingColor::srgbEncode(linear);
-                destination[4 * x + channel] = static_cast<quint16>(std::lround(encoded * 65535.0));
+    // Each pixel on its own: the same result on any number of threads. The
+    // shared access to the image is taken first, as scanLine would detach it.
+    uchar *const bits = image.bits();
+    const qsizetype stride = image.bytesPerLine();
+    cv::parallel_for_(cv::Range(0, linearRgba.rows), [&](const cv::Range &rows) {
+        for (int y = rows.start; y < rows.end; ++y) {
+            const cv::Vec4f *source = linearRgba.ptr<cv::Vec4f>(y);
+            auto *destination = reinterpret_cast<quint16 *>(bits + y * stride);
+            for (int x = 0; x < linearRgba.cols; ++x) {
+                for (int channel = 0; channel < 3; ++channel) {
+                    const double linear = std::clamp(double(source[x][channel]), 0.0, 1.0);
+                    const double encoded = WorkingColor::srgbEncode(linear);
+                    destination[4 * x + channel] = static_cast<quint16>(std::lround(encoded * 65535.0));
+                }
+                destination[4 * x + 3] = static_cast<quint16>(std::lround(
+                    std::clamp(source[x][3], 0.0f, 1.0f) * 65535.0f));
             }
-            destination[4 * x + 3] = static_cast<quint16>(std::lround(
-                std::clamp(source[x][3], 0.0f, 1.0f) * 65535.0f));
         }
-    }
+    });
     image.setColorSpace(QColorSpace(QColorSpace::SRgb));
     return image;
 }
@@ -182,16 +188,19 @@ WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
     }
     result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
     result.dcpContext.reset(); // This is an output derivative, not a reeditable source.
-    for (int y = 0; y < result.linearRgba.rows; ++y) {
-        cv::Vec4f *row = result.linearRgba.ptr<cv::Vec4f>(y);
-        for (int x = 0; x < result.linearRgba.cols; ++x) {
-            const cv::Vec3f rgb = mapRgbToSrgbGamut(
-                {row[x][0], row[x][1], row[x][2]});
-            row[x][0] = rgb[0];
-            row[x][1] = rgb[1];
-            row[x][2] = rgb[2];
+    // Each pixel on its own: the same result on any number of threads.
+    cv::parallel_for_(cv::Range(0, result.linearRgba.rows), [&](const cv::Range &rows) {
+        for (int y = rows.start; y < rows.end; ++y) {
+            cv::Vec4f *row = result.linearRgba.ptr<cv::Vec4f>(y);
+            for (int x = 0; x < result.linearRgba.cols; ++x) {
+                const cv::Vec3f rgb = mapRgbToSrgbGamut(
+                    {row[x][0], row[x][1], row[x][2]});
+                row[x][0] = rgb[0];
+                row[x][1] = rgb[1];
+                row[x][2] = rgb[2];
+            }
         }
-    }
+    });
     return result;
 }
 

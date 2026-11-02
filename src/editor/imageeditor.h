@@ -376,6 +376,8 @@ private:
     {
         QImage preview;
         QImage originalPreview;
+        Geometry::Settings originalGeometry;   // the framing originalPreview shows
+        bool originalWholeCanvas = false;
         QVariantList histogram;
         QString error;
     };
@@ -387,6 +389,7 @@ private:
         std::shared_ptr<RawDecoder::DcpSource> dcpSource, QSize fullSize, bool imageIsProxy);
     DecodedImageCache::Entry retainedCurrentEntry() const;
     void commitGeometry(Geometry::Settings next);
+    bool originalFramingStale() const;
     RawDecoder::Options developmentOptions() const;
     // pixelScale: pixels of source per pixel of the full image (below 1 for the
     // preview proxy), so effects keep their full-image radii. With a cache (the
@@ -496,7 +499,7 @@ private:
     bool m_hasCopiedAdjustments = false;
     QString m_imageSource;
     QString m_originalImageSource;
-    Geometry::Settings m_originalGeometry;   // what the published original shows
+    Geometry::Settings m_originalGeometry;   // the framing the published original shows
     bool m_originalWholeCanvas = false;
     bool m_cropEditing = false;
     QString m_statusMessage = tr("Choisissez un dossier contenant des images.");
