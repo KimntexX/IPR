@@ -1,0 +1,43 @@
+% translation-source: docs/user/latex/chapters/14-preferences.tex; sha256: 3f3bf1410806eecfe6057b8598cd3c1d21193c3dbe336d576d0170b216f54920
+\chapter{Preferences and layout}
+\section{Open preferences}
+Use \emph{Preferences} or \touche{Ctrl + comma}. The three tabs are
+\emph{Interface}, \emph{Appearance} and \emph{Advanced · RAW}.
+Interface preferences are distinct from each photo's edits.
+
+\section{Interface}
+Show or hide Information, Histogram and Filmstrip; choose Adjustments width
+(260--360 px) and information text size(10--20 px). The same panels can be
+hidden from the View menu.
+
+Handles between side panels and the image view resize Information(210--300 px)
+and Adjustments. The handle above the filmstrip sets its height(100--260 px).
+Drag, or focus a handle and use arrow keys in 10 px increments.
+Double-click restores the usual size. Dimensions are stored in the INI file.
+
+\section{Appearance}
+Available palettes are Burgundy, Off-white, Matte black, Navy blue and Current
+gray. They apply to panels and preferences. The photo background is independent:
+changing palettes does not replace that choice. Navy blue and burgundy
+backgrounds use gradients.
+
+\attention{For fine color assessment, a neutral gray background limits the
+influence of colored surroundings. The interface palette does not change
+exported pixels and is not an ICC display profile.}
+
+\section{Advanced · RAW}
+This tab exposes calibration for the open image, its manifest and profile/
+calibration reset. This last button differs from \emph{Reset adjustments},
+which restores edit references but does not automatically erase every RAW
+development choice. General reset is also available with
+\touche{Ctrl + Shift + R} and requires confirmation for the open photo.
+
+\section{Persistence and adjustment state}
+Expanded sections, dimensions, colors and some interface choices are remembered.
+The INI path appears in preferences. For manual editing, close IPR and keep
+a backup of the file.
+
+A bold numeric-control name and a dot on its section indicate a difference
+from its reset value. This does not yet cover all curves, checkboxes and
+recipes; it is not a comprehensive saved/unsaved indicator.
+Extended-hover explanatory tooltips remain planned for beta.

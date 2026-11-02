@@ -1,0 +1,74 @@
+% translation-source: docs/user/latex/chapters/20-raccourcis.tex; sha256: ae205368010d05744162b645e238ef02e6b649ba7c1698d025402d242d3bdf69
+\chapter{Keyboard and mouse reference}
+\label{chap:raccourcis}
+Gestures are also explained within their families. Their effect depends on
+focus: an arrow key in a slider changes its value; it is not a global command
+for changing photos. Shortcuts below follow sequences declared by the version
+described, particularly on Windows.
+On Windows/Linux, the Ctrl notation below applies directly. On macOS,
+Qt's Ctrl modifier generally maps to Command and menus display Cmd.
+Open and Save use standard Qt sequences. This convention is described in
+\href{https://doc.qt.io/qt-6/qkeysequence.html}{Qt's QKeySequence documentation};
+it does not replace application qualification on macOS hardware.
+
+\clearpage
+\section*{Files and application}
+\begin{longtable}{@{}L{4.4cm}L{9.2cm}@{}}
+\toprule Key & Action and availability\\\midrule\endhead
+\touche{Ctrl + O} & Open an image.\\
+\touche{Ctrl + Shift + O} & Open a folder.\\
+\touche{Ctrl + E} & Choose export destination, then check the summary.\\
+\touche{Ctrl + Shift + R} & Request adjustment reset, with confirmation.\\
+\touche{Ctrl + comma} & Open preferences.\\
+\touche{Ctrl + Q} & Quit outside modal dialogs.\\
+\touche{Ctrl + S} & Immediately save the ready image's adjustments to its sidecar.\\
+\touche{Ctrl + Shift + C} & Copy a snapshot of the open image's settings.\\
+\touche{Ctrl + Shift + V} & Paste onto the open image without copying its rating or RAW development.\\
+\touche{Ctrl + D} & Reserved for physical file/settings duplication; disabled pending engine support.\\
+\bottomrule
+\end{longtable}
+
+\clearpage
+\section*{Image view and comparison}
+\begin{longtable}{@{}L{4.4cm}L{9.2cm}@{}}
+\toprule Key or gesture & Action and context\\\midrule\endhead
+\touche{Ctrl + +} & Zoom into a ready photo; \touche{Ctrl + =} is also accepted.\\
+\touche{Ctrl + $-$} & Zoom out of a ready photo.\\
+\touche{Ctrl + 0} & Fit to view.\\
+\touche{Ctrl + 1} & Display at 100\,\% of preview resolution.\\
+\touche{Ctrl + Shift + Y} & Toggle split comparison when both previews are available.\\
+Hold \touche{Space} & Temporarily show original when the image view has focus; release to restore.\\
+\touche{Ctrl + wheel} & Zoom around the pointer in the image view.\\
+Wheel without Ctrl & Pan when the image exceeds the view.\\
+\touche{Shift + wheel} & Pan horizontally using a vertical wheel on a zoomed image.\\
+Click photo & Toggle fit and magnified view without dragging.\\
+Hold left button and drag & Pan a magnified image, or move the comparison divider.\\
+\bottomrule
+\end{longtable}
+
+\clearpage
+\section*{Adjustments and controls}
+\begin{longtable}{@{}L{4.4cm}L{9.2cm}@{}}
+\toprule Key or gesture & Action and context\\\midrule\endhead
+\touche{Tab}, \touche{Shift + Tab} & Navigate controls accepting focus.\\
+\touche{Space} on button/checkbox & Activate the focused control; distinct from holding it in the image view.\\
+Arrows on slider & Adjust by its declared step, for example0.01 EV for exposure.\\
+\touche{Enter} in field & Confirm numeric input.\\
+Double-click name/slider & Restore parameter reference, which is not always zero.\\
+Arrows on panel handle & Resize in its direction by 10 px.\\
+Double-click panel handle & Restore usual dimensions.\\
+Double-click curve graph & Add a control point.\\
+Right-click interior point & Remove that curve point.\\
+Drag grading wheel & Change hue and intensity of the active region.\\
+Right-click image view & Open photo actions without zooming.\\
+Right-click thumbnail & Show that target's context without implicitly loading it.\\
+\touche{Ctrl + click} thumbnail & Toggle batch selection without loading it.\\
+Right-click slider/name & Reset that parameter or activate numeric input.\\
+\touche{Shift + F10}, Menu key & Open context in the focused view, thumbnail or slider.\\
+\bottomrule
+\end{longtable}
+
+\attention{Do not assume Lightroom or other editors' shortcuts: Ctrl + Z
+and numeric rating keys are not declared global application commands in this
+version. Ctrl + D remains reserved and disabled until physical duplication
+is connected. Native dialog shortcuts depend on the operating system.}

@@ -35,9 +35,9 @@ déplacements internes puis la comparaison de rendus à valeurs affichées donn�
 
 Depuis PowerShell à la racine :
 
-Contrat cible du générateur, livré séparément du correctif WB ; pour les
-mesures de cette livraison, utiliser la sonde détaillée plus bas et les
-exports Lightroom déjà préparés.
+Le groupe est disponible dans le générateur courant de `dev`. Pour les mesures,
+utiliser l'analyseur de groupe en mémoire ; la sonde WB détaillée plus bas est
+un diagnostic spécialisé avec des conditions propres, pas le défaut de production.
 
 ```powershell
 ./scripts/generate-test-images.ps1 couleur
@@ -57,8 +57,9 @@ nouvelle recette. Réexporter Lightroom avec les supports courants.
 
 Les neutres LR et IPR partagés sont stockés dans `tests/image/base/neutre`.
 Leur balance As Shot n'est pas un zéro manuel : sur le corpus actuel,
-Lightroom rapporte 5200 K et nuance +5 en As Shot, ce qui n'est pas une
-erreur de l'utilisateur. Auditer le XMP et les corrections optiques de ces
+plusieurs scènes Canon étudiées ont été déclarées par Lightroom à 5200 K et
+nuance +5 en As Shot, sans erreur de l'utilisateur. Ces valeurs ne sont pas
+universelles : auditer chaque RAW, notamment les autres boîtiers. Auditer le XMP et les corrections optiques de ces
 neutres avant comparaison. Ne pas remplacer une nuance 0 manquante par
 le neutre As Shot à +5, ni confondre les deux rôles de référence.
 La [recette d'audit des neutres](../tools/analyseurs-groupes.md#recette-spécialisée-de-comparaison-wb)

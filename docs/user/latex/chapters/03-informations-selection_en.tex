@@ -1,0 +1,66 @@
+% translation-source: docs/user/latex/chapters/03-informations-selection.tex; sha256: 39b56e1796ec0072ef85770a0332f7682ffb714403d31ec3dcf1a67055be0473
+\chapter{Information, rating and selection}
+\section{Read image information}
+The left panel describes the open photo: name, available date, storage,
+dimensions, camera and other known metadata. Missing information must not be
+interpreted as a measured zero. Available shooting information below the
+histogram helps you read ISO, focal length and exposure time.
+
+\section{Rate and flag a photo}
+Click one of the five stars to assign a rating from 1 to 5. Clicking the selected
+rating again resets it to zero. Click to toggle the flag. Choose a red,
+yellow, green, blue or purple label; clicking the same color removes it.
+These organizational choices do not recolor pixels and are not mixer bands.
+
+No numeric rating or flag shortcut is currently declared. Use the Information
+panel controls.
+
+\section{Copy and paste settings}
+On a ready image, choose \emph{Edit > Copy settings} or
+\touche{Ctrl + Shift + C}. Open the destination photo, wait for processing,
+then choose \emph{Paste settings} or \touche{Ctrl + Shift + V}.
+These commands are also available by right-clicking the open image.
+The copy is a snapshot: subsequent source edits do not alter it. It remains
+available during the session, even after switching folders.
+
+Pasting replaces all edits, including curves, mixer and grading. It preserves
+the destination profile, calibration, optics, automatic white balance and
+rating. If the source uses as-shot white balance, the destination uses its
+own as-shot balance; custom temperature and tint are copied as absolute
+values. Two cameras will not necessarily produce the same color.
+There is no selection of individual groups to paste and no undo yet.
+\touche{Ctrl + C} and \touche{Ctrl + V} remain available in text fields.
+
+\section{Copy edits to multiple photos}
+\begin{enumerate}
+\item Open the photo whose settings you want to copy.
+\item Check destination thumbnails or use \touche{Ctrl + click}; do not
+confuse a checked box with the open image. The counter shows selected files.
+\item Click \emph{Apply to N}. Check the result message.
+\item Uncheck files or use the clear-selection button.
+\end{enumerate}
+This writes edits into destination sidecars. It is not limited to the currently
+expanded group. Destination RAW profiles and automatic white balance are not
+blindly copied between cameras; destination organizational metadata is preserved.
+
+\attention{This is batch application of edits, not the multiple-export
+command. \touche{Ctrl + click} only toggles the targeted thumbnail without
+opening it; an ordinary click opens it without clearing the selection.
+Shift-click range selection is not implemented.}
+
+\section{Filmstrip badges}
+The open thumbnail's badge may show rating, flag and label. No badge on another
+thumbnail does not mean that it has no rating or edits: those data are not yet
+exposed for every model row.
+
+\section{Right-click a thumbnail}
+The menu targets the thumbnail under the pointer. For a photo other than the
+open one, first choose \emph{Open this image}: right-clicking alone neither
+loads it nor changes multiple selection. Editing actions remain disabled
+until that target is open, avoiding an accidental reset or export of the
+previous photo.
+
+\emph{Duplicate file and settings}, associated with the reserved
+\touche{Ctrl + D} shortcut, is intended to make a physical copy and a consistent
+sidecar, not a developed TIFF or virtual copy. This command still awaits its
+engine interface and is disabled in the version described.

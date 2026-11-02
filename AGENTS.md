@@ -21,6 +21,11 @@
   remplacement ; maintenir les tests de la seule implémentation courante.
   Ne pas ajouter d'option de compatibilité `--legacy` ni de double implémentation.
   Cela n'autorise pas à effacer l'historique Git ou les preuves JSON des analyses.
+- Exception ciblée décidée par l'utilisateur le 1er novembre 2026 (audit C-13) :
+  conserver la lecture et la conversion des anciennes versions des sidecars
+  `.ipr` vers la recette courante, ainsi que leurs tests de migration. Écrire
+  un seul format courant ; cette protection des fichiers utilisateur n'autorise
+  pas à maintenir d'anciens moteurs photographiques en parallèle.
 - Le passage en **beta** intervient après validation de toutes les fonctionnalités
   de réglages implémentées. La première série beta est `v0.2.X-beta` ; `X` suit
   le compteur de patchs de cette série. La version mineure évolue à chaque
@@ -121,6 +126,12 @@
 
 ## Branches Git — règle du 10 octobre 2026
 
+- Précision du 12 octobre 2026 : les noms de branches sont en **anglais par
+  défaut**. `patch_color` est le nom retenu pour le groupe Couleur ; ne pas
+  créer ou reprendre `patch_couleur` comme seconde branche de ce groupe.
+  Vérifier les branches existantes avant toute création. Cette convention
+  n'autorise pas le renommage ni la suppression automatique des branches
+  historiques, ni une modification de l'historique publié.
 - `dev` est la branche d'intégration maintenue à jour après chaque validation.
 - Chaque groupe de fonctionnalités dispose d'une branche durable, créée depuis
   `dev` à jour. `patch_light` est la branche du groupe Lumières.

@@ -18,13 +18,15 @@ branche permanente issue de `dev` : la branche existante `patch_light` suit les
 Lumières (exposition, contraste, ombres, noirs, blancs et hautes lumières).
 `patch_color` suit la couleur, `patch_ci_cd` l'intégration/livraison continue
 et `patch_documentation` la documentation ; ces branches existent et sont
-conservées après intégration. Un prochain groupe pourra utiliser un nom tel
-que `patch_noise`, qui reste ici un exemple et non une branche annoncée créée.
+conservées après intégration. `patch_noise` et `patch_ui` existent également
+(relecture du 22 octobre 2026). Leur existence ne signifie pas que tous leurs
+travaux locaux sont livrés dans `dev`.
 
 Depuis le 14 octobre 2026, `patch_raw_opening` est la branche locale dédiée
-au rendu initial RAW/base colorimétrique, créée depuis `dev`. Le prototype
-Couleur non validé reste sauvegardé sur `patch_color` (commit `8abcd12`),
-sans fusion dans `dev` ni publication implicite.
+au rendu initial RAW/base colorimétrique, créée depuis `dev`. Le point de sauvegarde
+Couleur du 14 octobre est `8abcd12` ; il ne désigne pas la tête courante de
+`patch_color`. Vérifier les références Git avant chaque reprise, sans déduire
+une livraison des travaux récents de ce seul repère historique.
 
 Le 21 octobre 2026, `patch_color` reprend le travail Couleur après fusion de
 `dev` à jour. L'ancienne branche locale `patch_couleur`, au nom non uniforme et
@@ -37,6 +39,16 @@ figés. `main` reste distinct et sa mise à jour nécessite une livraison explic
 
 ## Créer ou reprendre un groupe
 
+Convention adoptée le 12 octobre 2026 : **noms de branches en anglais par
+défaut**, y compris le groupe après le préfixe `patch_`. Par exemple :
+`patch_color`, `patch_light`, `patch_noise`, `patch_documentation`.
+Le groupe Couleur utilise `patch_color` ; `patch_couleur` est une ancienne
+branche locale, pas une seconde branche de travail à reprendre.
+Vérifier l'existence d'une branche avant d'en créer une autre pour le même
+groupe. Les branches historiques ne sont pas renommées ni supprimées
+automatiquement ; un tel changement nécessite un accord explicite et ne
+doit pas réécrire l'historique publié.
+
 Exécuter les commandes avec un état de travail compatible avec le changement de
 branche. Préserver les modifications locales sans rapport avec le groupe ; ne
 pas les ajouter automatiquement ni les effacer.
@@ -46,8 +58,8 @@ Pour un nouveau groupe, actualiser `dev`, puis créer sa branche :
 ```bash
 git switch dev
 git pull --ff-only origin dev
-git switch -c patch_nom_du_groupe
-git push -u origin patch_nom_du_groupe
+git switch -c patch_feature_group
+git push -u origin patch_feature_group
 ```
 
 Pour reprendre un groupe existant, actualiser `dev`, puis fusionner celle-ci dans

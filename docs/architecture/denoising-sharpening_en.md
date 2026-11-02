@@ -1,7 +1,43 @@
+<!-- translation-source: docs/architecture/denoising-sharpening.md; sha256: b534d6cdedf74f41d7c8e1ab6ab0e950ecbc99be3744c7cb8d34934bdfd65412 -->
+*[Français](denoising-sharpening.md) | [English](denoising-sharpening_en.md)*
+
 # Noise Reduction and Sharpening
 
-**Status:** CPU noise reduction corrected, photographic functionality/progressivity confirmed; quality/calibration to be continued; sharpening not validated.
-**Consolidation Date:** October 5, 2026.
+**State on 31 October 2026:** classic engine retained; signed-camera prototype
+integrated in `dev` but experimental; incremental studies suspended by user
+decision. Neural noise/sharpening is planned for beta, not implemented.
+This documentation review does not declare sharpening validated.
+
+## Current paths and scope
+
+The panel exposes a 0–100 master control and advanced luminance/color strengths.
+It uses `CameraDenoise::settingsFromAmount`: L=amount,
+C=round(100×(1−(1−amount/100)^6)). An independently adjusted pair is displayed
+as custom, not an exact master amount.
+
+Without experimental mode, `DetailProcessing::reduceNoise` processes the master.
+With experimental mode and a compatible camera DCP context, camera signal is
+developed as signed float and denoised by `CameraDenoise` before LCP/DCP;
+classic denoising is skipped on that path. Sharpening remains later.
+The checkbox is session state, off by default, not proof that every format
+or white-balance mode has the required context.
+
+The camera filter uses signal-conditioned covariances, three intensity scales
+and five color scales. Corrections preserve signed signal; their DCP-rendered
+result does not guarantee chromatic neutrality. Worker budget:
+min(8,host−1), minimum 1, caller included, further limited by tile count;
+not a global load controller across jobs.
+
+External-covariance research variants were not integrated. See the
+[RAW report, current state and §54](../validation/analyses/analyse-developpement-raw.md)
+and [beta plan](roadmap-beta_en.md). Stabilization retains the engine and known
+limits; it does not certify universal rendering or launch training.
+
+## Classic-path reference and historical campaigns
+
+**Earlier review:** 22 October 2026, Rec.2020 master in `dev`.
+The photographic campaigns below date from 4–5 October; they are not new
+qualification of the current master.
 
 The [October 4 photographic campaign](../validation/analyses/analyse-bruit-2026-10-04.md) measures 80 retained variants and ten neutrals. It confirms the settings' activity but notes plateaus at low noise and significant residual color noise at high ISO. The CPU probe identifies a non-zero activation threshold, edge protection driven by noise, and a possible dark bias during RGB reconstruction. The October 4 measurements remain a reference for the old version. [Corrections now applied](../validation/analyses/correctif-bruit-2026-10-05.md) are synthetically tested. The [v2 revalidation](../validation/analyses/analyse-bruit-v2-2026-10-05.md) covers twelve scenes, 24 neutrals, and 145 variants: the 24 standard IPR series are progressive, and dark bias decreases. Color noise at high ISO remains moderately reduced; overall quality, component coupling, and preview/export remain to be validated. No additional recalibration or sharpening changes have been applied during this analysis. The [protocol](../validation/protocols/protocole-validation-bruit-2026-10-04.md) distinguishes neutral measurements, diagnostic series, and separate AI comparison.
 
@@ -15,14 +51,18 @@ Settings are:
 - **Color Noise:** reduces colored blotches in two chrominance axes;
 - **Sharpening Gain**, **Radius**, and **Masking:** enhance details with sufficient contrast without systematically reinforcing noise.
 
-Introduced in `.ipr` v2 sidecar, they are preserved in the current v4 format. Versions v1/v2/v3 remain readable; v1 sidecars take default noise and sharpening settings. The fix does not change fields or stored values, but changes the rendering of non-zero noise settings. No user sidecar is rewritten by the build.
+Introduced in `.ipr` v2, they are preserved in current v6. Older versions
+remain readable; v1 sidecars receive default noise/sharpening settings.
+The correction changes neither fields nor stored values, but changes the
+rendering of nonzero denoising settings. Building does not rewrite user sidecars.
 
 ## Mathematical Model Implemented
 
-Noise reduction uses Rec.709 linear sRGB luminance and two Co/Cg axes. This is no longer exactly the classic YCoCg transform:
+Noise reduction uses linear D65 Rec.2020 master luminance and two Co/Cg axes.
+This is no longer exactly the classic YCoCg transform:
 
 \[
-Y=0.2126R+0.7152G+0.0722B,\quad Co=R-B,\quad
+Y=0.2627R+0.6780G+0.0593B,\quad Co=R-B,\quad
 Cg=G-\tfrac12(R+B).
 \]
 
@@ -36,11 +76,18 @@ Gaussian sigmas are 0.8 then 1.8 pixels, the second blur applied to the first re
 
 For `s=clamp(value,0,100)/100`, thresholds are `lambda_fin = sigma*s*m`, with `m=2.55` for Y and `m=3.15` for Co/Cg, then `lambda_moyen=0.52*lambda_fin`. No 0.35*sigma activation threshold. The corrected result is also blended with the original by `s` to maintain progressivity when thresholding saturates. Processing at zero is exactly short-circuited before any transformation, bit-by-bit identical; 1/5/10 have intentionally soft effects.
 
-The edge mask comes from a Gaussian guide at sigma 0.8, not directly from the noisy signal. Sobel is normalized by 1/8; its amplitude crosses a smoothstep from 0.5*sigma to 2*sigma. For Co/Cg, the maximum of the Y guide and the plane's own guide also protects isolated luminescent chromatic boundaries. Threshold reduction by protection remains capped at 86% for Y and 72% for Co/Cg. Maps do not share a mutable output buffer.
+The edge mask comes from a Gaussian guide at sigma 0.8, not directly from the noisy signal. Sobel is normalized by 1/8; its amplitude crosses a smoothstep from 0.5*sigma to 2*sigma. For Co/Cg, the maximum of the Y guide and the plane's own guide also protects isoluminant color boundaries. Threshold reduction by protection remains capped at 86% for Y and 72% for Co/Cg. Maps do not share a mutable output buffer.
 
 Thresholding can change the mean. Positive/negative changes are rebalanced: if their amplitude sums are P/N, multiply positives by `min(1,N/P)` and negatives by `min(1,P/N)`. Zero sum cases are handled explicitly. This preserves the continuous component of the plane, without adding an offset to unchanged blacks or renormalizing exposure. Result Y candidates are non-negative; Co/Cg remain signed.
 
-Reconstruction is `RGB=Y+d`, where `d=(0.4298*Co-0.7152*Cg; -0.0702*Co+0.2848*Cg; -0.5702*Co-0.7152*Cg)`. If a channel would be negative, reduce `d` by `t=min(1,Y/(-min(d)))`. This approach to gray keeps Y constant; no SDR upper clamp is introduced. The color setting alone thus preserves linear luminance per pixel at floating precision. Local means and output render must however be revalidated on TIFFs.
+Reconstruction is `RGB=Y+d`, where
+`d=(0.3983*Co-0.6780*Cg; -0.1017*Co+0.3220*Cg; -0.6017*Co-0.6780*Cg)`.
+These are the exact inverse Y/Co/Cg coefficients for Rec.2020 weights;
+code derives them from `WorkingColor::lumaWeights()`, not old Rec.709 constants.
+If a channel would be negative, reduce `d` by `t=min(1,Y/(-min(d)))`.
+Moving toward gray preserves Y; no upper SDR clamp is introduced.
+Color-only adjustment thus preserves per-pixel linear luminance to floating
+precision. Local means and output rendering still require TIFF revalidation.
 
 Intensity/protection/scale coefficients are empirical choices, not physical constants or validated Lightroom calibration. `1e-7` is only a numerical safeguard for a plane without measurable noise. The historical floor `0.00025` remains only in the sharpening estimator, unchanged to isolate the two recipes.
 
