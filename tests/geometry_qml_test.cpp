@@ -160,6 +160,11 @@ int main(int argc, char **argv)
     click(geometryTab);
     if (!check(tabs->property("currentIndex").toInt() == 1 && geometryTab->property("checked").toBool(),
                "a click selects a tab")) return 1;
+    // The tabs share the bar's width, side by side, as tabs of the panel below them.
+    auto *settingsTab = visualItemNamed(tabs, QStringLiteral("panelTabSettings"));
+    if (!check(std::abs(geometryTab->x() - settingsTab->width()) < 1 &&
+               std::abs(settingsTab->width() + geometryTab->width() - tabs->width()) < 1,
+               "the tabs join across the bar")) return 1;
 
     // Before any photo, the panel is disabled, and its commands do nothing.
     if (!check(!visualItemNamed(panel, QStringLiteral("geometryTurnButton"))->isEnabled(), "without a photo the panel is off")) return 1;
@@ -198,6 +203,24 @@ int main(int argc, char **argv)
     if (!check(rotation->property("value").toDouble() == 0, "the panel follows a reset")) return 1;
     if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles after the reset")) return 1;
 
+    // A transform's slider shows the alignment grid only while it moves, unless asked always.
+    if (!check(!panel->property("showGrid").toBool(), "no grid at rest")) return 1;
+    auto *gridKnob = rotation->findChild<QQuickItem *>(QStringLiteral("adjustmentSlider"))
+                         ->property("handle").value<QQuickItem *>();
+    const QPointF gridKnobAt = gridKnob->mapToScene(QPointF(5, 5));
+    mouse(window, QEvent::MouseButtonPress, gridKnobAt, timestamp);
+    if (!check(panel->property("showGrid").toBool(), "a transform's press shows the grid")) return 1;
+    mouse(window, QEvent::MouseButtonRelease, gridKnobAt, timestamp);
+    if (!check(!panel->property("showGrid").toBool(), "its release hides it")) return 1;
+    auto *gridCheck = visualItemNamed(panel, QStringLiteral("geometryGridCheck"));
+    if (!check(gridCheck != nullptr, "the grid can be asked for")) return 1;
+    gridCheck->setProperty("checked", true);
+    if (!check(panel->property("showGrid").toBool(), "asked always, it stays")) return 1;
+    gridCheck->setProperty("checked", false);
+    if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles after the grid")) return 1;
+    editor.resetGeometry();
+    if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles before the crop")) return 1;
+
     // The crop's numeric entry, and the note on empty zones.
     QObject *width = controlWithLabel(panelObject.data(), QStringLiteral("Largeur (%)"));
     if (!check(width != nullptr, "the width control exists")) return 1;
@@ -211,6 +234,34 @@ int main(int argc, char **argv)
     if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles without geometry")) return 1;
     settleLayout();
     if (!check(!visualItemNamed(panel, QStringLiteral("geometryEmptyZonesNote"))->isVisible(), "and no longer when there are none")) return 1;
+
+    // The grid divides the frame into nearly square cells, and only the frame.
+    auto *grid = visualItemNamed(overlay, QStringLiteral("cropGrid"));
+    if (!check(grid != nullptr, "the frame holds the grid")) return 1;
+    const auto gridLines = [&] {
+        int lines = 0;
+        for (QQuickItem *line : grid->childItems())
+            lines += line->width() == 1 || line->height() == 1;
+        return lines;
+    };
+    if (!check(gridLines() == 0, "no grid unless asked")) return 1;
+    overlay->setProperty("showGrid", true);
+    settleLayout();
+    if (!check(overlay->property("gridColumns").toInt() == 15 && overlay->property("gridRows").toInt() == 10,
+               "600 by 400 gives cells of 40 px")) return 1;
+    if (!check(gridLines() == 14 + 9, "the lines stay between the frame's sides")) return 1;
+    for (QQuickItem *line : grid->childItems())
+        if (line->width() == 1 || line->height() == 1)
+            if (!check(line->x() + line->width() <= 600 && line->y() + line->height() <= 400, "every line stays in the frame")) return 1;
+    overlay->setProperty("cropWidth", 0.02);
+    overlay->setProperty("cropHeight", 0.02);
+    settleLayout();
+    if (!check(overlay->property("gridColumns").toInt() == 2 && gridLines() == 2, "a tiny frame keeps its middle lines")) return 1;
+    overlay->setProperty("cropWidth", 1);
+    overlay->setProperty("cropHeight", 1);
+    overlay->setProperty("showGrid", false);
+    settleLayout();
+    if (!check(gridLines() == 0, "the grid leaves with its request")) return 1;
 
     // The frame's handles: a drag is local, and sent once at the release.
     const auto readCrop = [&] {
