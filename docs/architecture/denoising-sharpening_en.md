@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/denoising-sharpening.md; sha256: b534d6cdedf74f41d7c8e1ab6ab0e950ecbc99be3744c7cb8d34934bdfd65412 -->
+<!-- translation-source: docs/architecture/denoising-sharpening.md; sha256: 21198c478941e80412b9eed49fc68ee19aff9dfc59cc33f7006407225dec751d -->
 *[Français](denoising-sharpening.md) | [English](denoising-sharpening_en.md)*
 
 # Noise Reduction and Sharpening
@@ -11,19 +11,20 @@ This documentation review does not declare sharpening validated.
 ## Current paths and scope
 
 The panel exposes a 0–100 master control and advanced luminance/color strengths.
-It uses `CameraDenoise::settingsFromAmount`: L=amount,
+It uses `DetailProcessing::denoiseFromAmount`: L=amount,
 C=round(100×(1−(1−amount/100)^6)). An independently adjusted pair is displayed
 as custom, not an exact master amount.
 
 Without experimental mode, `DetailProcessing::reduceNoise` processes the master.
 With experimental mode and a compatible camera DCP context, camera signal is
-developed as signed float and denoised by `CameraDenoise` before LCP/DCP;
-classic denoising is skipped on that path. Sharpening remains later.
+developed as signed float, its luminance is denoised by `CameraDenoise` before
+LCP/DCP, and colour stays processed after the tones. Sharpening remains later.
 The checkbox is session state, off by default, not proof that every format
 or white-balance mode has the required context.
 
-The camera filter uses signal-conditioned covariances, three intensity scales
-and five color scales. Corrections preserve signed signal; their DCP-rendered
+The camera filter uses signal-conditioned covariances and three intensity scales.
+The colour path before the profile, used only by the benches, was removed on
+2 November 2026 by the user's decision. Corrections preserve signed signal; their DCP-rendered
 result does not guarantee chromatic neutrality. Worker budget:
 min(8,host−1), minimum 1, caller included, further limited by tile count;
 not a global load controller across jobs.

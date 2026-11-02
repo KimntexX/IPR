@@ -11,10 +11,7 @@
 
 namespace CameraDenoise {
 namespace {
-constexpr int Levels = 5;
-// Camera colour fluctuations may span wider regions than fine intensity noise.
-// These extra scales do not turn into extra luminance smoothing.
-constexpr int LuminanceLevels = 3;
+constexpr int Levels = 3;
 constexpr int TileSize = 256;
 constexpr float MadNormal = 0.67448975f;
 constexpr float Kernel[5] = {.0625f, .25f, .375f, .25f, .0625f};
@@ -37,7 +34,7 @@ struct NoiseCurve
     bool pooledValid = false;
     bool constant = true;
 };
-using Energy = cv::Vec<float, 8>; // Three energies, joint, three expectations, joint expectation.
+using Energy = cv::Vec4f; // Intensity and joint energies, then their expectations.
 
 struct Pyramid
 {
@@ -98,7 +95,6 @@ bool pyramid(cv::Mat current, Pyramid &out, const std::array<int, Levels> &steps
              const std::function<bool()> &stop)
 {
     for (int level = 0; level < Levels; ++level) {
-        if (steps[std::size_t(level)] == 0) break;
         cv::Mat base;
         if (!blur(current, base, steps[std::size_t(level)], stop)) return false;
         if (level == 0) out.signal.create(base.size(), CV_32F);
@@ -265,7 +261,6 @@ bool estimate(const cv::Mat &source,
         if (!pyramid(input, p, steps, stop)) return false;
         bool flat=true; float signalUncertainty=0;
         for (int level = 0; level < Levels; ++level) {
-            if (steps[std::size_t(level)] == 0) break;
             const auto &d = p.detail[std::size_t(level)];
             if (!cv::checkRange(d)) return false;
             PatchNoise item; item.signal=signal;
@@ -294,7 +289,6 @@ bool estimate(const cv::Mat &source,
         }
     }
     for (int level = 0; level < Levels; ++level) {
-        if (steps[std::size_t(level)] == 0) break;
         auto &items = patches[std::size_t(level)];
         NoiseModelSummary summary; summary.level = level;
         summary.flatCandidates = int(items.size());
@@ -364,12 +358,11 @@ void accumulateEnergy(Energy &result,const Noise &model,const cv::Vec3f &detail,
 {
     if(weight<=0)return;
     cv::Vec3f z{};
-    for(int c=0;c<3;++c)if(model.sigma[c]>0) {
+    for(int c=0;c<3;++c)if(model.sigma[c]>0)
         z[c]=float(std::clamp(double(detail[c])/model.sigma[c],-1e6,1e6));
-        result[c]+=weight*z[c]*z[c];result[c+4]+=weight;
-    }
-    result[3]+=weight*std::max(0.f,z.dot(model.inverseCorrelation*z));
-    result[7]+=weight*model.expectedJointEnergy;
+    if(model.sigma[0]>0){result[0]+=weight*z[0]*z[0];result[2]+=weight;}
+    result[1]+=weight*std::max(0.f,z.dot(model.inverseCorrelation*z));
+    result[3]+=weight*model.expectedJointEnergy;
 }
 
 Energy energyAt(const NoiseCurve &curve,float signal,const cv::Vec3f &detail)
@@ -426,18 +419,18 @@ bool boxMean(const cv::Mat &source, cv::Mat &out, int radius, const std::functio
 
 bool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margin,
           const std::array<int, Levels> &steps,
-          const std::array<NoiseCurve, Levels> &models, const cv::Vec3f &strength,
+          const std::array<NoiseCurve, Levels> &models, float strength,
           int radius, const std::function<bool()> &stop)
 {
     Pyramid p;
     if (!pyramid(patch(source, core, margin), p, steps, stop)) return false;
     for (int y = 0; y < core.height; ++y)
-        std::fill_n(delta.ptr<cv::Vec3f>(core.y + y) + core.x, core.width, cv::Vec3f{});
+        std::fill_n(delta.ptr<float>(core.y + y) + core.x, core.width, 0.f);
     for (int level = 0; level < Levels; ++level) {
         const auto &model = models[std::size_t(level)];
         if (!model.valid && !model.pooledValid) continue;
         const auto &detail = p.detail[std::size_t(level)];
-        cv::Mat energy(detail.size(), CV_32FC(8)),fallbackEnergy;
+        cv::Mat energy(detail.size(), CV_32FC(Energy::channels)),fallbackEnergy;
         for (int y = 0; y < detail.rows; ++y) {
             if ((y & 15) == 0 && stop()) return false;
             const auto *d = detail.ptr<cv::Vec3f>(y); auto *e = energy.ptr<Energy>(y);
@@ -448,7 +441,7 @@ bool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margi
                 if(fallback) {
                     // Do not let normalized pooled energies alter the local
                     // decisions of already-supported conditional pixels.
-                    if(fallbackEnergy.empty())fallbackEnergy=cv::Mat::zeros(detail.size(),CV_32FC(8));
+                    if(fallbackEnergy.empty())fallbackEnergy=cv::Mat::zeros(detail.size(),CV_32FC(Energy::channels));
                     fallbackEnergy.at<Energy>(y,x)=sample;
                     e[x]=Energy{};
                 } else e[x]=sample;
@@ -459,7 +452,7 @@ bool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margi
         if(!fallbackEnergy.empty()&&!boxMean(fallbackEnergy,fallbackLocal,radius,stop))return false;
         for (int y = 0; y < core.height; ++y) {
             if ((y & 15) == 0 && stop()) return false;
-            auto *out = delta.ptr<cv::Vec3f>(core.y + y) + core.x;
+            auto *out = delta.ptr<float>(core.y + y) + core.x;
             const auto *d = detail.ptr<cv::Vec3f>(margin + y) + margin;
             const auto *e = local.ptr<Energy>(margin + y) + margin;
             const auto *current=energy.ptr<Energy>(margin+y)+margin;
@@ -470,18 +463,11 @@ bool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margi
                 const bool usePooled=pooled&&pooledCurrent&&(signal<model.low||signal>model.high);
                 const auto &stats=usePooled?pooled[x]:e[x];
                 const auto &pixel=usePooled?pooledCurrent[x]:current[x];
-                const float shared = stats[7]>0?std::clamp(1.f-stats[7]/std::max(stats[3],stats[7]),0.f,1.f):0.f;
-                // A real achromatic texture is not evidence of a real colour
-                // feature. Chroma protection uses only its two normalized
-                // energies; their expected sum is valid even when correlated.
-                // This is a second-moment gate, not a chi-square probability.
-                const float chromaExpected=stats[5]+stats[6];
-                const float chromaObserved=stats[1]+stats[2];
-                const float chromaShared=chromaExpected>0?
-                    std::clamp(1.f-chromaExpected/std::max(chromaObserved,chromaExpected),0.f,1.f):0.f;
-                for (int c = 0; c < 3; ++c) if ((c != 0 || level < LuminanceLevels) && strength[c] > 0 && pixel[c+4] > 0 && stats[c+4]>0) {
-                    const float individual = std::clamp(1.f-stats[c+4]/std::max(stats[c],stats[c+4]),0.f,1.f);
-                    out[x][c] -= strength[c] * (1.f - std::max(individual, c==0?shared:chromaShared)) * d[x][c];
+                // A second-moment gate, not a chi-square probability.
+                const float shared = stats[3]>0?std::clamp(1.f-stats[3]/std::max(stats[1],stats[3]),0.f,1.f):0.f;
+                if (pixel[2] > 0 && stats[2] > 0) {
+                    const float individual = std::clamp(1.f-stats[2]/std::max(stats[0],stats[2]),0.f,1.f);
+                    out[x] -= strength * (1.f - std::max(individual, shared)) * d[x][0];
                 }
             }
         }
@@ -502,32 +488,17 @@ int workerThreads()
     return int(std::max(1u, std::min(8u, host > 1 ? host - 1 : 1)));
 }
 
-bool identity(const Settings &settings)
-{
-    return settings.luminance == 0 && settings.chrominance == 0;
-}
-
-bool settingsFromAmount(int amount, Settings &settings)
-{
-    if(amount<0 || amount>100)return false;
-    const double remaining=1.-double(amount)/100.;
-    const double squared=remaining*remaining;
-    settings={amount,int(std::lround(100.*(1.-squared*squared*squared)))};
-    return true;
-}
-
-bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
+bool apply(cv::Mat &cameraRgb, int luminance, const Context &context,
            const std::function<bool()> &cancelled)
 {
     if (cameraRgb.empty() || cameraRgb.dims != 2 || cameraRgb.type() != CV_32FC3 ||
-        settings.luminance < 0 || settings.luminance > 100 || settings.chrominance < 0 || settings.chrominance > 100) return false;
-    if (identity(settings)) return true;
+        luminance < 0 || luminance > 100) return false;
+    if (luminance == 0) return true;
     try {
         const auto stop = [&] { return cancelled && cancelled(); };
         if (stop() || !validContext(context) || !cv::checkRange(cameraRgb)) return false;
         std::array<int, Levels> steps{};
-        const int activeLevels = settings.chrominance > 0 ? Levels : LuminanceLevels;
-        for (int i = 0; i < activeLevels; ++i) steps[std::size_t(i)] = std::max(1, int(std::lround((1 << i) * context.pixelScale)));
+        for (int i = 0; i < Levels; ++i) steps[std::size_t(i)] = std::max(1, int(std::lround((1 << i) * context.pixelScale)));
         const int radius = std::max(1, int(std::lround(3 * context.pixelScale)));
         int margin = radius;
         for (int step : steps) margin += 2 * step;
@@ -547,12 +518,12 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
             cameraRgb=std::move(unchanged);
             return true;
         }
-        cv::Mat delta(cameraRgb.size(), CV_32FC3);
+        cv::Mat delta(cameraRgb.size(), CV_32F);
         std::vector<cv::Rect> tiles;
         for (int y = 0; y < cameraRgb.rows; y += TileSize) for (int x = 0; x < cameraRgb.cols; x += TileSize)
             tiles.emplace_back(x, y, std::min(TileSize, cameraRgb.cols - x), std::min(TileSize, cameraRgb.rows - y));
         std::atomic<std::size_t> next{0}; std::atomic<bool> stopped{false};
-        const cv::Vec3f strength(settings.luminance / 100.f, settings.chrominance / 100.f, settings.chrominance / 100.f);
+        const float strength = luminance / 100.f;
         const auto work = [&](bool caller) {
             try {
                 const auto halt = [&] {
@@ -575,32 +546,28 @@ bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
         work(true);
         for (auto &thread : pool) if (thread.joinable()) thread.join();
         if (stopped.load() || stop() || !cv::checkRange(delta)) return false;
-        // Balance signed corrections per opponent axis, moving corrections toward
-        // zero, not adding an offset to unchanged areas. Preserve DC without clamps.
-        cv::Vec3d positive{}, negative{};
+        // Balance the signed corrections, moving them toward zero, not adding an
+        // offset to unchanged areas. Preserve DC without clamps.
+        double positive = 0, negative = 0;
         for (int y = 0; y < delta.rows; ++y) {
             if ((y & 15) == 0 && stop()) return false;
-            const auto *d = delta.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < delta.cols; ++x) for (int c = 0; c < 3; ++c) {
-                positive[c] += std::max(0., double(d[x][c])); negative[c] += std::max(0., -double(d[x][c]));
-            }
-        }
-        cv::Vec3f plus, minus;
-        for (int c = 0; c < 3; ++c) {
-            plus[c] = positive[c] > 0 ? float(std::min(1., negative[c] / positive[c])) : 1.f;
-            minus[c] = negative[c] > 0 ? float(std::min(1., positive[c] / negative[c])) : 1.f;
-        }
-        for (int y = 0; y < delta.rows; ++y) {
-            if ((y & 15) == 0 && stop()) return false;
-            const auto *in = cameraRgb.ptr<cv::Vec3f>(y); auto *out = delta.ptr<cv::Vec3f>(y);
+            const auto *d = delta.ptr<float>(y);
             for (int x = 0; x < delta.cols; ++x) {
-                cv::Vec3f d = out[x];
-                for (int c = 0; c < 3; ++c) d[c] *= d[c] > 0 ? plus[c] : minus[c];
-                out[x] = in[x] + cv::Vec3f(d[0] + d[1] - .5f * d[2], d[0] + .5f * d[2], d[0] - d[1] - .5f * d[2]);
+                positive += std::max(0., double(d[x])); negative += std::max(0., -double(d[x]));
             }
         }
-        if (stop() || !cv::checkRange(delta)) return false;
-        cameraRgb = std::move(delta);
+        const float plus = positive > 0 ? float(std::min(1., negative / positive)) : 1.f;
+        const float minus = negative > 0 ? float(std::min(1., positive / negative)) : 1.f;
+        cv::Mat output(cameraRgb.size(), CV_32FC3);
+        for (int y = 0; y < delta.rows; ++y) {
+            if ((y & 15) == 0 && stop()) return false;
+            const auto *in = cameraRgb.ptr<cv::Vec3f>(y); const auto *d = delta.ptr<float>(y);
+            auto *out = output.ptr<cv::Vec3f>(y);
+            for (int x = 0; x < delta.cols; ++x)
+                out[x] = in[x] + cv::Vec3f::all(d[x] * (d[x] > 0 ? plus : minus));
+        }
+        if (stop() || !cv::checkRange(output)) return false;
+        cameraRgb = std::move(output);
         return true;
     } catch (...) { return false; }
 }

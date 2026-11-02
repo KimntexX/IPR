@@ -97,7 +97,7 @@ def main():
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     env = os.environ.copy()
     env['PATH'] = os.pathsep.join(str(p.resolve()) for p in a.runtime_dir) + os.pathsep + env.get('PATH', '')
-    names = ['src/raw/CameraDenoise.cpp', 'tests/raw_bench/camera_denoise_leakage.cpp',
+    names = ['src/raw/CameraDenoise.cpp', 'tests/raw_bench/camera_denoise_survey.cpp',
              'tests/raw_bench/signal_noise_survey.py', 'tests/raw_bench/production/CMakeLists.txt']
     data = dict(schema_version=1, created_utc=stamp, study='N2b_signal_conditioned_estimation_survey',
                 executable_sha256=sha256(a.tool),
@@ -123,7 +123,7 @@ def main():
     for relative in inputs:
         command = [str(a.tool.resolve()), '--input', str((a.image_root/relative).resolve()),
                    '--manifest', str(root/'config/raw-normalization.json'), '--profile-root', str(a.profile_root.resolve()),
-                   '--label', 'N2b-signal-survey', '--signal-survey']
+                   '--label', 'N2b-signal-survey']
         try:
             result = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True,
                                     encoding='utf-8', errors='replace', timeout=180)
