@@ -250,6 +250,8 @@ if(IPR_BUILD_TOOLS)
     target_link_libraries(iprRenderServer PRIVATE iprTestRecipes)
     add_executable(iprSidecarDump src/tools/sidecar_dump.cpp src/tools/SidecarJson.cpp)
     target_link_libraries(iprSidecarDump PRIVATE iprEngine)
+    add_executable(iprSidecarAudit src/tools/sidecar_audit.cpp)
+    target_link_libraries(iprSidecarAudit PRIVATE iprEngine)
 endif()
 
 set_target_properties(appIPR PROPERTIES

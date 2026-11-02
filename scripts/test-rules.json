@@ -79,6 +79,7 @@
     "selection": "test_build_windows.py",
     "color_mixer_analysis": "test_analyse_color_mixer.py",
     "noise_analysis": "test_analyse_noise.py",
+    "foundation_parity": "test_audit_foundation_parity.py",
     "base_colorimetry_analysis": "test_analyse_base_colorimetrique.py"
   },
   "rules": [
@@ -125,6 +126,7 @@
     {"patterns": ["tests/folder_refresh_test.cpp", "src/editor/imageeditor.*"], "tests": ["folderRefreshTests"]},
     {"patterns": ["tests/sidecar_test.cpp", "src/core/Sidecar.*", "src/core/RecipeCodec.*", "src/core/ToneCurve.*", "src/core/EditRecipe.h"], "tests": ["sidecarTests", "editHistoryTests", "editorHistoryTests", "pointColorTests", "editorBatchTests", "settingsQmlTests", "imageExportTests"]},
     {"patterns": ["src/tools/SidecarJson.*", "src/tools/sidecar_dump.cpp", "tests/sidecar_json_test.cpp"], "tests": ["sidecarJsonTests"]},
+    {"patterns": ["tests/audit_foundation_parity.py", "tests/test_audit_foundation_parity.py"], "tests": [], "python": ["foundation_parity"]},
     {"patterns": ["src/core/EditHistory.*", "tests/edit_history_test.cpp", "tests/editor_history_test.cpp"], "tests": ["editHistoryTests", "editorHistoryTests", "sidecarTests", "editorBatchTests"]},
     {"patterns": ["src/cache/RenderStageCache.*", "tests/render_stage_cache_test.cpp", "src/editor/imageeditor.cpp"], "tests": ["renderStageCacheTests", "rec2020PipelineTests", "editorRawDevelopmentTests", "imageExportTests"]},
     {"patterns": ["scripts/export_documentation_metrics.py", "scripts/check_documentation.py", "scripts/consolidate_reports.py", "tests/test_documentation_metrics.py"], "tests": [], "python": ["documentation_metrics"]},
