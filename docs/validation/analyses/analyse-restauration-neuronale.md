@@ -2402,7 +2402,7 @@ validation photographique indépendant.
 
 Mémoire canonique : [diagnostic des240 cas, régions, angles et provenance](../raw/neural-moment-generalization-v001-20261102T145658Z.json).
 
-**Conclusion actuelle : apprentissage utile sur les couples vus,
+**Conclusion de cette campagne : apprentissage utile sur les couples vus,
 généralisation de phase insuffisante et couverture angulaire incomplète.**
 La prochaine expérience proposée est une ablation unique : équilibrer
 les quatre phases pendant l'entraînement, avec les mêmes40 contenus,
@@ -2415,3 +2415,113 @@ Cela testera cette piste avant d'élargir les appuis ou le réseau.
 Aucun nouvel apprentissage lancé dans cette campagne, aucune nouvelle
 photo nécessaire pour cette étape synthétique. Aucun calcul actif,
 modification moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 15:05 UTC — exposition Bayer équilibrée et contrôle angulaire
+
+Campagne `neural-balanced-moment-v001-20261102T150546Z`, banc `f88af98`,
+**19 tests ciblés réussis**. L'unique changement d'apprentissage est
+l'exposition aux phases : pour chaque contenu tiré, la phase avance dans
+un cycle des quatre dispositions. Les comptes par phase d'un même
+contenu diffèrent au plus de1. Cette garantie est par contenu ; les
+comptes globaux par phase ne sont pas imposés strictement identiques.
+
+Les40 contenus, initialisation graine71, U-Net contraint31264 paramètres,
+Adam0,001, lot4,2048 étapes, échelle2, cœur48 et critères sont conservés.
+La suite des indices d'images est conservée exactement, y compris les
+tirages aléatoires de bruit effectués par l'ancien pilote même à sigma0.
+Le cycle de phase n'utilise pas de nouvel aléa. Le calendrier et ses
+comptes sont figés avant apprentissage, contrôlés pendant son exécution.
+Les cibles dans les coordonnées canoniques et les sites observés changent
+avec la phase : il s'agit d'une augmentation d'échantillonnage, pas d'un
+entraînement sur des tenseurs strictement identiques.
+
+Un contrôle nouveau est également figé avant entraînement : normales
+11,25°,33,75°,…,168,75°, chacune avec deux offsets−0,08/+0,08 et quatre
+phases, soit16 contenus et64 cas. La paire de couleurs caméra est fixée
+à(0,12;0,32;0,55) et(0,80;0,54;0,18). Les empreintes des vérités et
+mosaïques sont enregistrées avant construction du modèle. Ces contenus
+ne participent ni à l'optimisation ni à une sélection d'étape ; un seul
+checkpoint final est retenu. Ils couvrent notamment le secteur absent
+précédemment, mais une unique paire de couleurs ne qualifie pas la
+diversité des contours naturels.
+
+La comparaison utilise les20 contrôles historiques, leur croisement80cas
+et les64 nouveaux cas angulaires, pour le candidat et le précédent modèle
+figé. Les80 sorties de référence doivent être reproduites par empreinte.
+Les12 critères historiques et leurs seuils sont inchangés ; ils sont
+aussi appliqués séparément au croisement80cas. Le contrôle angulaire
+reste descriptif, sans seuil ajusté à ses résultats. Régime sans bruit,
+pas de nouvelle photo nécessaire ni modification moteur/IHM.
+
+### Résultats — phases rapprochées, gain global insuffisant
+
+Campagne terminée normalement en **46,39 s**, apprentissage et évaluations
+compris. Les8192 présentations se répartissent en2050 RGGB,2049 GRBG,
+2044 GBRG et2049 BGGR ; la différence par contenu reste au plus1.
+Les80 sorties du précédent modèle sont reproduites exactement par
+empreinte. Le nouveau modèle préserve les observations sur les80 contrôles
+croisés et64 contrôles angulaires. Aucun changement des données ou outils
+pendant la campagne n'est détecté.
+
+| Mesure, ratio MSE / bilinéaire | Précédent modèle | Phases équilibrées |
+| --- | ---: | ---: |
+| RGB,20 contrôles historiques | 1,01602 | 1,17866 |
+| Erreur opposée,20 contrôles historiques | 1,02926 | 1,25313 |
+| RGB,80 contrôles croisés | 1,06891 | 1,16417 |
+| Erreur opposée,80 contrôles croisés | 1,10813 | 1,24489 |
+| RGB,contours des80 contrôles croisés | 1,07057 | 1,16680 |
+| RGB,64 nouveaux contrôles angulaires | 1,07631 | 1,00412 |
+| Erreur opposée,64 contrôles angulaires | 1,08445 | 1,00918 |
+
+La comparaison historique reste défavorable : environ16,42 % d'erreur
+RGB au-dessus de la bilinéaire sur80cas, contre6,89 % précédemment.
+**Huit critères passent et quatre échouent**, tant sur les20cas que
+sur leur croisement80cas : gainRGB global, erreur opposée globale,
+fidélitéRGB et opposée des contours. Les critères ne sont pas assouplis ;
+la décision reste `stop_before_noise_stage`.
+
+Les garanties sur constantes et rampes sont conservées : MSE0 sur
+constantes,2,66×10⁻¹⁶ sur rampes des80cas. Les ondes chromatiques donnent
+un ratio0,82457 ; les ondes achromatiques faibles1,15941 pour une MSE
+absolue de4,59×10⁻⁸. Un gain sur une famille ne compense pas les contours
+bloquants pour déclarer le modèle qualifié.
+
+| Phase, mêmes20 contenus | Ratio RGB précédent | Ratio RGB équilibré |
+| --- | ---: | ---: |
+| RGGB | 1,08734 | 1,16966 |
+| GRBG | 1,26212 | 1,15477 |
+| GBRG | 1,06751 | 1,16093 |
+| BGGR | 0,85456 | 1,17164 |
+
+L'étendue des ratios entre phases passe d'environ0,408 à0,017 : le
+déséquilibre observé est fortement réduit sur ce banc. **Se rapprocher
+entre phases ne signifie pas mieux reconstruire** : toutes les phases
+se trouvent maintenant au-dessus de la bilinéaire. La phase auparavant
+favorable n'est pas conservée comme résultat sélectionné.
+
+Sur le contrôle angulaire nouveau, les huit orientations s'améliorent
+par rapport au précédent modèle, mais seules quatre passent sous la
+bilinéaire. Dans le secteur auparavant absent, les normales56,25° et
+78,75° donnent respectivement1,01313 et1,06150, contre1,08407 et1,11877.
+Le résultat global proche de1 ne vaut donc pas conformité de chaque
+orientation. Les autres détails par angle/phase/offset sont conservés
+dans le JSON. Ces16 contenus partagent une paire de couleurs et plusieurs
+symétries ; les64cas ne constituent pas64 scènes indépendantes.
+
+Mémoire canonique : [ablation phases équilibrées, calendrier, critères et144 contrôles](../raw/neural-balanced-moment-v001-20261102T150546Z.json).
+
+**Conclusion actuelle : l'équilibrage réduit la dépendance aux phases,
+sans rendre le modèle admissible.** L'hypothèse d'un simple manque
+d'exposition aux phases ne suffit pas à expliquer les erreurs de contours.
+Cette campagne ne mesure pas encore les pertes finales du candidat sur
+les40 contenus d'entraînement ; elle ne tranche donc pas entre ajustement
+insuffisant de ces contenus et généralisation insuffisante.
+
+La prochaine vérification proposée est un rejeu du candidat figé sur
+l'entraînement, comparé au précédent modèle sur les mêmes160 couples
+contenu/phase, sans prolonger l'apprentissage. Il faut établir ce point
+avant d'ajouter des orientations, changer la perte ou augmenter la durée.
+Les contrôles angulaires viennent désormais d'être consultés : ne plus
+les présenter comme un jeu vierge pour une sélection ultérieure.
+Aucun apprentissage bruité lancé, aucune nouvelle photo nécessaire,
+aucun calcul actif, changement moteur/IHM, publication, fusion ou tag.
