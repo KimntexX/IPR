@@ -1520,3 +1520,49 @@ sondes finales sera descriptive, pas une preuve d'optimum global. L'objectif
 agrégé sur tout le train n'est pas exactement l'espérance des pertes des
 lots à masques de tailles variables. Aucun réglage n'est choisi à partir
 du contrôle ; aucune modification moteur, publication ou nouveau corpus.
+
+### Résultats de l'audit de stabilité — lecture du 2 novembre 2026
+
+Les deux rejeux sont terminés normalement en **86,86 s**. Les poids finaux
+reproduisent **exactement** les tenseurs des modèles parents, avec les
+mêmes lots tirés dans le même ordre. Les sondes n'ont consommé aucun
+tirage du générateur d'apprentissage. Le diagnostic ne met donc pas en
+évidence une non-reproductibilité de ces deux entraînements. Il ne
+qualifie pas, à lui seul, le dématriçage ou la généralisation.
+
+| Étape fixe | Objectif train MSE seule | Objectif train MSE + biais |
+| --- | ---: | ---: |
+| 0 | 0,000137587 | 0,000140595 |
+| 512 | 0,000066065 | 0,000140424 |
+| 1024 | 0,000047295 | 0,000068218 |
+| 1536 | 0,000030071 | 0,000049166 |
+| 1792 | 0,000026452 | 0,000041142 |
+| 1920 | 0,000023444 | 0,000034894 |
+| 2048 | 0,000024035 | 0,000037326 |
+
+Unités normalisées d'échelle2. Les colonnes n'ont pas le même objectif :
+la seconde inclut le terme de biais. Leur écart brut ne doit pas servir
+à classer les recettes ; la MSE caméra finale commune vaut respectivement
+0,000096141 et 0,000133361. Sur la fenêtre terminale fixée, l'étendue
+divisée par la moyenne vaut **12,21 %** et **16,54 %**. L'objectif à2048
+est environ 9,14 % et 9,28 % sous celui à1792, mais remonte par rapport
+à1920. Il n'y a pas de plateau de convergence établi ; aucune étape n'est
+sélectionnée rétroactivement. Le rejet de la pénalité reste un verdict
+au budget fixé, pas une preuve qu'elle échouerait à toute optimisation.
+
+Le déséquilibre de contenu/échelle est confirmé : la composition initiale
+concentre 99,13 % de la somme des erreurs initiales et toutes les
+composantes fortes du train aux seuils historiques ; la rafale4000 apporte
+surtout des zones peu structurées. Cela ne mesure pas directement les
+gradients des paramètres et ne démontre pas une cause unique des défauts.
+
+Mémoire canonique : [rejeux exacts et stabilité du train](../raw/neural-training-stability-v001-20261102T103741Z.json).
+
+**Conclusion actuelle : calcul reproductible, convergence et équilibre
+des contenus encore à qualifier.** L'utilisateur confirme le maintien
+d'Adam : pas de recherche d'optimiseur à ce stade. L'étude d'un bloc
+conjoint dématriçage/débruitage est une direction pertinente à comparer,
+pas une intégration autorisée ni une preuve que RCD cause les défauts du
+pilote. Un dématriçage transforme le bruit déjà présent et peut introduire
+des erreurs de reconstruction ; les biais appris identifiés ici doivent
+en rester distingués. Aucun calcul actif, changement moteur ou publication.
