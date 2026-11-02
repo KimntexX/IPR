@@ -1566,3 +1566,74 @@ pas une intégration autorisée ni une preuve que RCD cause les défauts du
 pilote. Un dématriçage transforme le bruit déjà présent et peut introduire
 des erreurs de reconstruction ; les biais appris identifiés ici doivent
 en rester distingués. Aucun calcul actif, changement moteur ou publication.
+
+## 2 novembre 2026, 11:33 UTC — entrée mosaïque pour le futur modèle conjoint
+
+Campagne `neural-mosaic-inlet-v001-20261102T113314Z`, banc `76d098a`,
+terminée en **8,17 s**. Cinq tests Python passent, ainsi que seize contrôles
+C++ de recadrage et origine CFA sur les huit orientations, avec origines
+paires et impaires. Le banc compile dans le build neural dédié ; aucun
+fichier `src/` n'est modifié et les sources moteur ne diffèrent pas des
+révisions des captures parentes.
+
+### Capture qualifiée, pas encore un réseau conjoint
+
+Les anciens tenseurs du pilote étaient des RGB après RCD/médiane, pas
+des mosaïques. Les RAW conservés permettent maintenant une extraction
+supplémentaire en réutilisant les fonctions exactes de préparation d'IPR
+dans un exécutable de test, selon le mécanisme déjà employé par
+`tonal_base_probe`. Aucune copie du code LibRaw ni nouvelle API moteur.
+La calibration blanche est celle de chaque capture de production figée ;
+ce test ne requalifie pas la sélection automatique des calibrations.
+
+Deux étapes sont capturées sur les mêmes neuf régions384 :
+
+- CFA signée normalisée, avant gains de balance des blancs et borne haute ;
+- CFA signée balancée reçue par RCD, qui comporte déjà sa borne haute à1.
+
+Les niveaux noirs, diviseur, quatre gains, origine capteur, orientation et
+motif CFA sont conservés. Le second vert garde son identité ; ne pas
+supposer un ordre RGGB. Le rangement réversible produit quatre plans
+192 × 192 correspondant aux positions haut-gauche/haut-droite/bas-gauche/
+bas-droite. L'aller-retour est exact et n'interpole aucune valeur.
+
+| Source, côté apprentissage | ISO | Orientation LibRaw | Régions RGB reproduites bit à bit |
+| --- | ---: | ---: | ---: |
+| 6V1A0134 | 100 | 0 | 9 / 9 |
+| 6V1A0181 | 12800 | 0 | 9 / 9 |
+| 6V1A9819 | 4000 | 5 | 9 / 9 |
+
+Les 27 régions RGB reconstruites reproduisent les pixels des captures de
+production figées, avec le même RCD/médiane signé. Les 54 régions CFA
+passent le rangement aller-retour ; la relation gains/balance/borne haute
+est vérifiée avec un écart maximum de **5,96×10⁻⁸**, compatible avec les
+arrondis flottants des deux calculs. Les valeurs sous zéro sont conservées :
+jusqu'à 10,74 % et 31,89 % dans certains plans/régions à ISO12800 et4000.
+Ces maxima ne décrivent pas le pourcentage global de pixels bruités.
+
+Mémoire canonique : [qualification de l'entrée mosaïque signée](../raw/neural-mosaic-inlet-v001-20261102T113314Z.json).
+
+### Qualification des cibles et besoins en photos
+
+**Pas de nouvelles prises nécessaires pour l'entrée et le premier
+prototype.** Les RAW des rafales sont conservés et les partitions restent
+inchangées. En revanche, leurs moyennes RGB issues de RCD/médiane héritent
+de cette reconstruction : elles ne constituent pas une vérité indépendante
+pour démontrer un dématriçage meilleur que RCD. Le contrôle bit à bit
+ci-dessus valide le raccordement des données, pas la fidélité de RCD.
+
+La prochaine étape proposée est un test de reconstruction sur des signaux
+RGB connus, échantillonnés en Bayer, puis un pilote apparié sur les rafales
+réelles avec cette limite de cible explicitement conservée. Les détails
+absents de l'échantillonnage ne deviennent pas récupérables sans hypothèses.
+Garder ensuite des scènes naturelles indépendantes pour la revue visuelle.
+Si de nouvelles prises deviennent nécessaires, demander une scène répétée,
+immobile, détaillée et éclairée de façon stable selon le protocole déjà
+fourni, sans refaire les séries existantes à ce stade.
+
+**Conclusion actuelle : contrat d'entrée Bayer signé qualifié sur trois
+R6III seulement ; modèle conjoint non entraîné et non validé.** Adam est
+maintenu. Le choix d'une activation par défaut faible ou d'une action
+utilisateur reste en attente des retours de l'entourage. Aucun raccordement
+de réseau dans l'application, changement d'ouverture, suppression de RAW,
+publication, fusion ou tag ; aucun calcul actif à la clôture.
