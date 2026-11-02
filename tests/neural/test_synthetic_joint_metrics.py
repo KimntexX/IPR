@@ -17,6 +17,13 @@ class SyntheticJointMetricsTests(unittest.TestCase):
         self.assertAlmostEqual(summary['mse_ratio'],.25,places=6)
         torch.testing.assert_close(torch.tensor(summary['channel_bias']),torch.full((3,),.05))
 
+    def test_roundoff_baseline_is_not_a_giant_relative_error_claim(self):
+        target=torch.ones(1,3,128,128)*.1
+        baseline=target+1e-8;output=target+.01
+        summary=aggregate([dict(metrics=metrics(target,baseline,output))])
+        self.assertIsNone(summary['mse_ratio'])
+        self.assertGreater(summary['output_mse'],summary['baseline_mse'])
+
     def test_gradient_attenuation_visible_despite_reduced_noise_error(self):
         axis=torch.linspace(0,1,128);target=axis[None,None,None].expand(1,3,128,128).clone()
         summary=aggregate([dict(metrics=metrics(target,target,target*.5))])

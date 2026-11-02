@@ -48,9 +48,12 @@ def aggregate(rows):
     sums={k:sum(r['metrics'][k] for r in rows) for k in ('baseline_sse','output_sse','baseline_opponent_sse',
         'output_opponent_sse','reference_gradient_energy','baseline_gradient_projection','output_gradient_projection')}
     ratio=lambda a,b:a/b if b>1e-14 else None
+    baseline_mse=sums['baseline_sse']/(3*count)
+    baseline_opponent_mse=sums['baseline_opponent_sse']/(2*count)
     return dict(cases=len(rows),pixels=count,baseline_mse=sums['baseline_sse']/(3*count),output_mse=sums['output_sse']/(3*count),
-        mse_ratio=ratio(sums['output_sse'],sums['baseline_sse']),
-        opponent_mse_ratio=ratio(sums['output_opponent_sse'],sums['baseline_opponent_sse']),
+        mse_ratio=sums['output_sse']/sums['baseline_sse'] if baseline_mse>1e-12 else None,
+        opponent_mse_ratio=sums['output_opponent_sse']/sums['baseline_opponent_sse'] if baseline_opponent_mse>1e-12 else None,
+        relative_error_mse_floor=1e-12,
         baseline_gradient_gain=ratio(sums['baseline_gradient_projection'],sums['reference_gradient_energy']),
         output_gradient_gain=ratio(sums['output_gradient_projection'],sums['reference_gradient_energy']),
         channel_bias=[sum(r['metrics']['channel_bias_sum'][c] for r in rows)/count for c in range(3)])
@@ -72,6 +75,7 @@ def run(output):
         domain='Signed balanced camera RGB/mosaic, unclipped; packing TL/TR/BL/BR, explicit Bayer tags.',
         conditioning='Sigma from noisy observation and known simulation coefficients, not clean-target sigma.',
         selection='One seed, Adam, fixed2048 steps, final checkpoint; no evaluation-dependent tuning.',
+        relative_error_mse_floor=1e-12,
         tools={n:digest(Path(__file__).with_name(n)) for n in
             ('run_synthetic_joint_pilot.py','joint_bayer_unet.py','synthetic_bayer_data.py','camera_unet.py')})
     output.mkdir(parents=True,exist_ok=False);save(output/'freeze.json',freeze)
