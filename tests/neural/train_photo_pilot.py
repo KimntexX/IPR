@@ -16,6 +16,7 @@ import torch
 
 from camera_data import normalize_pair,masked_mse,validate_splits
 from camera_unet import CameraUNet,apply
+from photo_training_loss import objective
 
 
 def digest(path):
@@ -60,17 +61,19 @@ def run(work):
         raise ValueError('This pilot requires separate train/validation compositions and no invented test set')
     model=CameraUNet(width=config['width'])
     optimizer=torch.optim.Adam(model.parameters(),lr=config['learning_rate'])
-    started=time.monotonic();losses=[]
+    started=time.monotonic();losses=[];pixel_losses=[];bias_losses=[]
     for step in range(config['steps']):
         indices=training[torch.randint(len(training),(config['batch'],))]
         x,y,sigma=normalize_pair(signal[indices],target[indices],
             sigmas[indices,:,None,None].expand_as(signal[indices]),config['scale'])
         model.train();optimizer.zero_grad(set_to_none=True)
-        loss=masked_mse(model(x,sigma),y,valid[indices])
+        loss,pixel,bias=objective(model(x,sigma),y,valid[indices],
+            config.get('channel_bias_weight',0.),config.get('channel_bias_border',24))
         loss.backward()
         if not all(p.grad is None or torch.isfinite(p.grad).all() for p in model.parameters()):
             raise ValueError('Nonfinite gradient')
         optimizer.step();losses.append(float(loss.item()))
+        pixel_losses.append(float(pixel.item()));bias_losses.append(float(bias.item()))
         if (step+1)%32==0:print(f'TRAIN {step+1}/{config["steps"]} loss={loss.item():.8g}',flush=True)
     model.eval();metrics=[]
     for i,example in enumerate(pairs['examples']):
@@ -102,10 +105,11 @@ def run(work):
         measured_at_utc=datetime.now(timezone.utc).isoformat(),freeze_sha256=digest(work/'freeze.json'),
         pairs_sha256=digest(work/'pairs.json'),config=config,split_counts=counts,
         sources={p.name:digest(p) for p in (Path(__file__),Path(__file__).with_name('camera_unet.py'),
-                 Path(__file__).with_name('camera_data.py'))},
+                 Path(__file__).with_name('camera_data.py'),Path(__file__).with_name('photo_training_loss.py'))},
         versions=dict(numpy=np.__version__,torch=torch.__version__),device='cpu',
         cpu_logical_available=os.cpu_count(),threads_intra=threads,threads_inter=1,
-        elapsed_seconds=time.monotonic()-started,losses=losses,records=metrics,summary=summaries,
+        elapsed_seconds=time.monotonic()-started,losses=losses,pixel_losses=pixel_losses,bias_losses=bias_losses,
+        records=metrics,summary=summaries,
         weights_sha256=digest(work/'pilot-weights.pt'),
         verdict='exploratory_validation_mse_gain' if summaries['validation']['mse_ratio']<1 else 'no_validation_mse_gain',
         limits=pairs['limits']+['MSE is measured against a noisy aligned burst reference, not an absolute clean truth.',
