@@ -3833,7 +3833,7 @@ critères, ablations et ressources :
 - [Reproduction73](../raw/neural-local-route-local-v001-20261102T215915Z.json).
 - [Confirmation des deux graines et noyaux préparés](../raw/neural-local-confirmation-v001-20261102T220249Z.json).
 
-**Conclusion actuelle : gain de reconstruction reproduit, qualification
+**Conclusion de cette campagne : gain de reconstruction reproduit, qualification
 encore partielle.** Les deux initialisations bénéficient de la voie
 locale sur les nouveaux contenus. La fidélité chromatique des signaux
 lisses reste sensible à l'initialisation ; sa cause n'est pas établie
@@ -3881,3 +3881,47 @@ invalides. Avec les quatre tests de la voie locale : **7 tests ciblés
 réussis**. Les deux apprentissages sont séquentiels, CPU4, cache borné,
 quota Windows2Gio engagés et arrêts coopératifs1,25Gio privés/résidents
 et80 % mémoire physique machine. Aucun changement de production/IHM.
+
+### Résultats — essais terminés à22:17 UTC
+
+Les deux apprentissages se terminent normalement, en170,93s et163,97s.
+Les graines71 et73 passent chacune **12/12 critères sur20 et80 contrôles**,
+sans modification des seuils. Les constantes restent exactes, les rampes
+à l'erreur d'arrondi et les sites capteur inchangés.
+
+| Mesure sur80 contrôles consultés | Relative71 | Relative73 |
+| --- | ---: | ---: |
+| Rapport MSE RGB à la bilinéaire | 0,37733 | 0,48100 |
+| Même rapport, objectif RGB précédent | 0,42328 | 0,45563 |
+| Variation MSE face au précédent de même graine | −10,85 % | +5,57 % |
+| Rapport MSE RGB, ondes chromatiques | 0,00418 | 0,00704 |
+| Rapport MSE RGB, ondes achromatiques faibles | 0,01783 | 0,01059 |
+| Rapport MSE RGB, contours | 0,38025 | 0,48470 |
+| Gain de gradient, contours (bilinéaire0,80468) | 0,91959 | 0,91493 |
+
+La fidélité chromatique est fortement améliorée sur ce banc, y compris
+pour la graine73 précédemment en échec. Cependant, l'erreur globale de
+cette graine augmente de5,57 % face à son témoin : le compromis sur les
+contours n'est pas uniformément meilleur. Le nouveau résultat ne suffit
+donc pas à déclarer cette pondération supérieure dans tous les cas.
+Il soutient l'utilité d'équilibrer les faibles erreurs, sans démontrer
+que la domination des contours était l'unique cause du défaut.
+
+Les pics résidents restent à304,26/303,99Mio ; les pics engagés du job
+à959,82/949,11Mio. L'usage physique total de la machine atteint74,07 %
+et78,07 %, sans déclencher les protections. Ce dernier pourcentage inclut
+les autres processus, pas seulement l'étude. Aucun calcul de cette
+campagne ne reste actif.
+
+Preuves canoniques :
+
+- [Objectif relatif, graine71](../raw/neural-local-route-local-v001-20261102T221126Z.json).
+- [Objectif relatif, graine73](../raw/neural-local-route-local-v001-20261102T221420Z.json).
+
+**Conclusion actuelle : protection des faibles variations encourageante,
+compromis global à confirmer.** Les deux graines passent les barrières
+historiques, mais ces données ont servi au développement. La suite
+proposée est une comparaison appariée sur des contenus procéduraux
+distincts, figés avant leur mesure et rapportant les deux graines, les
+contours et les ondes. Aucun entraînement bruité, changement de production,
+publication, fusion ou tag n'est lancé à la clôture de cette campagne.

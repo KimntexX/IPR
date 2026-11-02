@@ -12,9 +12,11 @@ noyaux préparés une fois pour une inférence. Deux initialisations et une
 confirmation procédurale distincte de cette première structure sont
 conservées. La [voie locale suivante (§15)](#15-voie-courte-locale--2-novembre-2026)
 réduit l'erreur de reconstruction avec deux initialisations, puis sur
-des contenus procéduraux distincts. Sa qualification reste partielle :
-la graine73 échoue sur la fidélité des ondes chromatiques du sous-ensemble
-historique20. Les576 comparaisons de sorties qualifient la préparation
+des contenus procéduraux distincts. La graine73 de l'objectif RGB échoue
+sur les ondes chromatiques du sous-ensemble historique20. L'objectif
+relatif suivant lève cet échec pour les deux graines sur les contrôles
+consultés, avec un compromis global non uniforme, encore à confirmer.
+Les576 comparaisons de sorties qualifient la préparation
 des noyaux de cette nouvelle branche, sans qualification photographique.
 
 Le [rapport évolutif](../validation/analyses/analyse-restauration-neuronale.md)
@@ -720,5 +722,14 @@ identiques au bit près, sans changement des sources. Les mesures CPU
 Cette branche reste expérimentale et sans bruit, sans validation photo.
 La protection des signaux chromatiques lisses doit être étudiée avant
 le pilote bruité, sans choisir la meilleure graine ou assouplir les seuils.
+
+L'essai suivant conserve cette architecture et pondère la MSE de chaque
+exemple par `max(MSE bilinéaire,1e-6)` en unités physiques, avec référence
+détachée du gradient. Les deux graines passent alors12/12 critères sur20
+et80 contrôles consultés. L'erreur globale baisse pour71 mais augmente
+de5,57 % pour73 face à leurs témoins respectifs. La fidélité des ondes
+progresse fortement ; la supériorité globale reste à confirmer sur de
+nouveaux contenus avant tout apprentissage bruité. Ce changement ne
+modifie pas les calculs d'inférence et n'est pas intégré en production.
 Les ressources restent bornées selon le§14 et aucune production ou IHM
 n'est modifiée par cette étude.
