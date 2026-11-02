@@ -2902,7 +2902,7 @@ ne sont pas les opérateurs modifiés ou qualifiés ici.
 
 Mémoire canonique : [audit des1024 symétries, témoins et listes d'appuis](../raw/neural-bayer-symmetries-v001-20261102T153218Z.json).
 
-**Conclusion actuelle : asymétrie directionnelle confirmée dans le
+**Conclusion de cette campagne : asymétrie directionnelle confirmée dans le
 prototype d'interpolation ; nouvelle initialisation toujours reportée.**
 La prochaine expérience proposée est un témoin symétrisé sans nouvel
 apprentissage : moyenner à poids égaux la prédiction du réseau et sa
@@ -2915,3 +2915,113 @@ des appuis pourrait ensuite être étudiée si le bénéfice le justifie,
 sans l'assimiler à un correctif déjà validé ou livré.
 Aucun calcul actif, apprentissage bruité, nouvelle photo, modification
 moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 15:40 UTC — témoin à moyenne transposée, sans apprentissage
+
+Banc `9021bfa`, **15 tests ciblés réussis**. Les poids du modèle diversifié
+restent figés. Pour une observation CFA donnée, le témoin calcule la sortie
+habituelle, puis celle de la même mosaïque transposée avec ses tags,
+remet la seconde sortie dans les coordonnées sources et moyenne à0,5/0,5.
+Il n'utilise ni vérité cible pour choisir un poids, ni meilleure phase,
+ni nouvelle étape d'optimisation. Les sites observés sont explicitement
+recopiés depuis la mosaïque source après moyenne ; aucune borne globale
+de signal n'est ajoutée.
+
+Les tests couvrent la cohérence des huit symétries sur un champ signé
+non carré, les constantes et rampes intérieures, les valeurs observées
+subnormales après projection, les formes incompatibles et les valeurs
+non finies. L'évaluation reprend les20 contrôles historiques, les80
+contrôles croisés, les64 contours angulaires et les128 contours auparavant
+réservés. Ils sont tous déjà consultés : aucune nouvelle validation
+indépendante n'est créée par cette moyenne.
+
+Les sorties habituelles doivent reproduire les empreintes des272cas
+sources. Le témoin symétrisé est aussi contrôlé sur les1024 transformations
+exactes du groupe des contours auparavant réservés, avec tolérance10⁻⁶
+dans le cœur excluant48pixels de bord et copie exacte des sites capteur.
+Les12 critères de reconstruction historiques sont conservés et évalués
+séparément sur20cas et80cas, sans modifier le seuil de gain global.
+
+Le temps est mesuré en CPU à quatre threads sur32 entrées128×128 : trois
+échauffements, sept répétitions alternant l'ordre des mesures entre sortie
+habituelle et témoin symétrisé. Le chronométrage inclut les transformations
+de coordonnées et la projection des sites, exclut les lectures, empreintes
+et mesures de qualité. Il ne qualifie ni le temps d'ouverture d'un RAW
+complet, ni le coût GPU ou la mémoire en pleine définition.
+
+### Résultats — symétrie rétablie et gain modeste, coût doublé
+
+Campagne `neural-symmetrized-moment-v001-20261102T154019Z` terminée en
+**19,70 s**, contrôles et chronométrage compris. Les272 sorties habituelles
+reproduisent exactement leurs empreintes. Le témoin conserve tous les
+sites observés et les poids du modèle restent inchangés.
+
+Sur les1024 transformations testées, le désaccord du témoin symétrisé
+vaut **0** en MSE et en maximum absolu, contre1,78×10⁻⁶ et0,03568
+pour la sortie habituelle lors de l'audit précédent. Ce résultat confirme
+le fonctionnement du témoin sur ce banc ; il ne transforme pas la
+symétrie en preuve de qualité photographique.
+
+| Mesure, ratio MSE / bilinéaire | Réseau habituel | Moyenne transposée |
+| --- | ---: | ---: |
+| RGB,20 contrôles historiques | 0,99334 | 0,98929 |
+| Erreur opposée,20 contrôles historiques | 0,99187 | 0,98583 |
+| RGB,80 contrôles croisés | 0,980113 | 0,97573 |
+| Erreur opposée,80 contrôles croisés | 0,98122 | 0,97462 |
+| RGB,64 contrôles angulaires consultés | 0,98074 | 0,98026 |
+| RGB,128 contours auparavant réservés | 0,98231 | 0,98025 |
+| Erreur opposée,128 contours auparavant réservés | 0,98073 | 0,98015 |
+
+Le gain RGB face à la bilinéaire est d'environ **2,43 % sur80cas** et
+**1,97 % sur128cas**, contre1,99 % et1,77 % auparavant. Ces améliorations
+agrégées restent faibles ; elles ne constituent pas une mesure de gain
+visuel. Sur128 couples de contours,64 améliorent la bilinéaire et64 la
+dégradent, contre58/70 auparavant (tolérance absolue de MSE10⁻¹²).
+Le pire ratio de ce groupe passe de1,10729 à1,04849 : la régression
+maximale diminue mais n'est pas supprimée. Les64 contrôles angulaires
+conservent32 couples améliorés et32 dégradés.
+
+Les quatre phases restent agrégativement meilleures que la bilinéaire :
+sur80cas, ratios0,96861;0,98259;0,98261;0,96880 ; sur128cas,
+0,97749;0,98298;0,98463;0,97588. La moyenne n'efface pas la variation
+physique des sites échantillonnés entre phases : celle-ci est différente
+du désaccord d'une même observation sous transformation exacte.
+
+Les constantes restent exactes ; les rampes sont à2,57×10⁻¹⁶ de MSE
+sur80cas. Les contours de ce groupe donnent un ratioRGB0,97932,
+opposé0,97978 ; les ondes achromatiques faibles0,63047 et les ondes
+chromatiques0,51519 en RGB. Les garanties d'observations et de signaux
+simples sont donc conservées sur les contrôles mesurés.
+
+**Les12 critères passent sur le croisement80cas. Sur les20cas
+historiques,11 passent et le gain global minimal échoue encore** :
+ratio0,98929 pour un seuil0,98. Le groupe80cas ne remplace pas après coup
+le groupe20cas défavorable. La qualification globale reste incomplète
+et aucun apprentissage bruité n'est lancé. Les contrôles de contours
+RGB/opposé/gradient du groupe128 restent satisfaits, sans combler ce manque.
+
+### Coût mesuré et décision
+
+Sur les sept répétitions CPU à quatre threads, la médiane par entrée
+128×128 passe de **4,96 ms à11,04 ms**, soit **×2,23**. Les deux passages,
+transformations et copie des sites sont inclus, sans I/O, empreintes ou
+mesures de qualité. Ces petites entrées et cette machine ne permettent
+pas d'extrapoler un temps pleine définition ; aucune campagne mémoire
+en pleine définition n'a été réalisée ici.
+
+Mémoire canonique : [témoin symétrisé, qualité,1024 symétries et temps par répétition](../raw/neural-symmetrized-moment-v001-20261102T154019Z.json).
+
+**Conclusion actuelle : la symétrisation corrige le désaccord directionnel
+et apporte un gain de reconstruction, avec un surcoût élevé et des
+régressions résiduelles.** Elle reste un témoin de banc ; aucune intégration
+en production n'est décidée. L'essai confirme l'intérêt d'éviter l'asymétrie,
+sans prouver que la liste d'appuis soit l'unique cause des erreurs.
+
+La prochaine proposition est de fermer explicitement la liste d'appuis
+par transposition et de vérifier l'opérateur obtenu avant un nouveau
+pilote d'apprentissage. L'objectif serait d'étudier un traitement à une
+seule inférence, pas de présumer le même gain ou une équivariance garantie
+du futur réseau appris. Le témoin actuel et ses mesures serviront de
+comparaison, sans sélectionner un groupe ou assouplir le seuil restant.
+Aucune nouvelle photo nécessaire, aucun calcul actif, apprentissage
+bruité, modification moteur/IHM, publication, fusion ou tag.
