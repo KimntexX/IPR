@@ -3449,7 +3449,7 @@ Mémoires canoniques :
 - [Précontrôle de mémoire,32 étapes sans qualité](../raw/neural-memory-preflight-v001-20261102T205832Z.json).
 - [Essai8192 étapes,mesures individuelles,critères et mémoire](../raw/neural-bounded-reconstruction-v001-20261102T205947Z.json).
 
-**Conclusion actuelle : garde mémoire opérationnelle et contrat bruité
+**Conclusion de cette campagne : garde mémoire opérationnelle et contrat bruité
 préparé, entraînement bruité non lancé.** Les9 tests ciblés des nouveaux
 contrats et de la mémoire passent, et les vérifications documentaires
 ne trouvent ni erreur ni lien interne manquant dans leur périmètre.
@@ -3461,3 +3461,121 @@ Le module actuel continue de refuser sigma non nul. Aucun débruiteur
 photographique n'est revendiqué et aucune nouvelle photo n'est demandée
 par ce résultat. Aucun calcul actif, modification moteur/IHM, installation
 GPU, publication, fusion ou tag.
+
+## 2 novembre 2026, 21:30 UTC — adaptation réelle des coefficients, à poids figés
+
+Diagnostic demandé par l'utilisateur, banc `e0eb5ea`, **4 tests ciblés
+réussis**, campagne `neural-coefficient-adaptation-v001-20261102T213028Z`
+terminée en **4,30s**. Comparaison des checkpoints équivariants graine71
+à2048 et8192 étapes, sur les mêmes20 contenus et quatre phases :80cas
+par checkpoint, toujours des contrôles procéduraux déjà consultés.
+Aucun entraînement, changement de seuil ou sélection de poids.
+
+### Ablations et vérifications
+
+Quatre champs de coefficients sont comparés avec le même interpolateur,
+les mêmes sources et la même bilinéaire de référence :
+
+- **Complet** : coefficients locaux réellement produits par la tête.
+- **Biais seuls** : tanh du biais effectif de la tête, après sa projection
+  de symétrie, sans contribution de ses caractéristiques d'entrée.
+- **Moyenne par image** : chaque canal de coefficients est remplacé par
+  sa moyenne spatiale sur toute l'image, bords inclus.
+- **Moyenne du cœur** : même opération sur le cœur fixe de la perte,
+  témoin supplémentaire pour distinguer l'influence des bords.
+
+Les deux moyennes sont calculées **après tanh**, pas sur les logits.
+Elles restent conditionnées par l'image ; ce ne sont pas des filtres
+universels à coefficients constants entre toutes les images. Les biais
+seuls forment une ablation des poids appris, pas un filtre fixe réoptimisé.
+La vérité ne participe qu'au calcul des erreurs, jamais à la sélection
+des coefficients ou de la zone de moyenne.
+
+Un hook de lecture récupère les logits sans modifier le modèle ; il
+est retiré même en cas d'erreur. Les160 prédictions complètes sont
+reproduites par empreinte, puis reconstruites exactement depuis les
+champs capturés. Les sites observés restent identiques dans chaque
+variante, les sources et états des checkpoints sont inchangés.
+Les tests couvrent l'ordre moyenne/tanh, les champs constants et nuls,
+la moyenne du cœur, les données manquantes, non finies ou incompatibles.
+
+### Reconstruction : la variation locale apporte très peu
+
+| Checkpoint | Variante | Ratio MSE RGB / bilinéaire,80cas | Ratio,20cas historiques |
+| --- | --- | ---: | ---: |
+|2048 | Complet |0,97367729 |0,98865567 |
+|2048 | Biais seuls |0,97760753 |0,98855496 |
+|2048 | Moyenne par image |0,97368887 |0,98861351 |
+|2048 | Moyenne du cœur |0,97367773 |0,98865329 |
+|8192 | Complet |0,97482851 |0,98998364 |
+|8192 | Biais seuls |0,97491982 |0,98922310 |
+|8192 | Moyenne par image |0,97482837 |0,98998369 |
+|8192 | Moyenne du cœur |0,97482846 |0,98998350 |
+
+À2048 étapes, remplacer les coefficients locaux par leur moyenne d'image
+augmente la MSE globale du réseau complet de seulement **0,00119 %**.
+La moyenne du cœur ne change cette erreur que de0,0000457 %. À8192
+étapes, la moyenne par image la diminue d'environ0,0000137 % : aucun
+bénéfice local utile n'est démontré par une différence aussi faible sur
+ce banc. Ces pourcentages comparent des erreurs quadratiques, pas des
+changements visuels ; ils ne sont pas des seuils perceptuels.
+
+Le témoin de biais seuls est plus dégradé à2048 : environ0,404 % de
+MSE en plus par rapport au réseau complet sur80cas. Cela confirme une
+contribution des caractéristiques d'image, mais pas une adaptation locale
+forte : la moyenne par image retrouve presque tout le résultat. Après
+8192 étapes, les biais seuls ne sont plus qu'à0,00937 % de MSE au-dessus
+du modèle complet. Sur les20cas historiques, ils font même légèrement
+mieux que lui ; aucune variante ne franchit le seuil de gain global0,98.
+Ces témoins ne sont pas choisis comme remplacement du modèle.
+
+### Variation spatiale mesurée dans la tête
+
+| Statistique moyenne sur les80cas |2048 étapes |8192 étapes |
+| --- | ---: | ---: |
+| Écart-type spatial moyen par canal,dans le cœur |1,86×10⁻⁵ |1,39×10⁻⁶ |
+| Différence absolue moyenne entre coefficients et biais seuls |0,02010 |0,006254 |
+| Fraction d'énergie des coefficients due à leur variation spatiale |2,29×10⁻⁷ |1,43×10⁻⁹ |
+| Écart RGB maximal,complet contre moyenne par image |1,80×10⁻⁴ |6,20×10⁻⁶ |
+
+Les fractions sont des moyennes de proportions par cas, calculées sans
+soustraire la vérité. Elles complètent les erreurs de sortie, mais ne
+prouvent pas à elles seules la valeur d'un réseau. L'ablation spatiale
+donne le constat décisif : les coefficients se comportent presque comme
+un champ constant par image, et la prolongation ne renforce pas cette
+adaptation locale. Le témoin du cœur écarte une explication limitée à
+la seule moyenne des bords dans ce diagnostic.
+
+Sur les contours des80cas, le ratio complet passe de0,97740 à0,97871
+entre les deux checkpoints ; la moyenne par image vaut respectivement
+0,97741 et0,97871. Les ondes chromatiques gardent un apport des
+caractéristiques d'image par rapport aux biais seuls, mais leur variation
+spatiale est également presque supprimable dans ces signaux. Il ne faut
+donc ni déclarer le réseau totalement indépendant de l'image, ni présenter
+ses31300 paramètres stockés comme preuve d'une forte adaptation locale.
+
+### Ressources et décision
+
+Le quota2Gio engagés et les seuils coopératifs restent actifs pendant
+toute l'analyse. Pic résident **227,98Mio**, mémoire privée échantillonnée
+869,52Mio, pic engagé du job870,70Mio ; aucun seuil atteint. Une seule
+image et ses champs sont conservés à la fois ; aucun graphe ou champ de
+pixels n'est ajouté au JSON. Le hook et le moniteur sont libérés.
+
+Mémoire canonique : [coefficients,quatre variantes,160 cas et mémoire](../raw/neural-coefficient-adaptation-v001-20261102T213028Z.json).
+
+**Conclusion actuelle : adaptation spatiale quasi absente confirmée ;
+allonger l'entraînement ne l'a pas corrigée.** Le modèle
+apprend surtout un filtre à coefficients presque constants par image ;
+après8192 étapes, il se rapproche encore du témoin de biais seuls. Cela
+ne démontre ni des gradients évanouissants, ni une incapacité intrinsèque
+du U-Net ou d'Adam ; ces causes ne sont pas mesurées ici.
+
+La prochaine piste proposée est une connexion courte donnant à la tête
+un accès explicite aux variations locales, en conservant les symétries
+et les contraintes d'interpolation. Une ablation devra la comparer au
+modèle actuel à budget fixé, avec les mêmes garde-fous mémoire, avant
+tout nouvel allongement ou entraînement bruité. Le critère historique
+reste échoué et aucun correctif de production n'est décidé ici.
+Aucun calcul actif, nouvelle photo requise, installation GPU, modification
+moteur/IHM, publication, fusion ou tag.

@@ -652,3 +652,13 @@ est donc préparé et testé, mais aucun entraînement bruité n'a été lancé.
 Les poids précédents restent des preuves distinctes et les seuils ne
 sont pas assouplis. Les résultats détaillés et les catégories de mémoire
 mesurées restent dans le rapport unique.
+
+Le diagnostic suivant compare les coefficients complets à leurs biais
+seuls et à leurs moyennes spatiales, sur deux checkpoints figés. Il
+révèle une adaptation locale presque supprimable sur les contrôles
+procéduraux : remplacer les coefficients par une constante par canal
+et par image change très peu la sortie. La covariance structurelle
+ne prouve donc pas une adaptation locale utile. La piste suivante est
+une connexion courte donnant à la tête une information locale explicite,
+à tester par ablation et avec le même budget mémoire ; aucun nouveau
+modèle ou correctif de production n'est validé par ce seul constat.
