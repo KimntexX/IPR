@@ -24,6 +24,10 @@ class ObjectiveConfirmationTests(unittest.TestCase):
         bad[-1]['freeze']['config']['width'] = 16
         with self.assertRaises(ValueError):
             model_contract(bad)
+        six = copy.deepcopy(proofs)+copy.deepcopy(proofs[2:])
+        for p in six[-2:]:
+            p['freeze']['config']['objective'] = 'tempered'
+        self.assertEqual(len(model_contract(six)), 6)
 
     def test_new_targets_cover_strata_and_reject_seen_truth(self):
         source = dict(freeze=dict(train_edge_events=[], train_slots=[], evaluation_cases=[]))
@@ -36,6 +40,8 @@ class ObjectiveConfirmationTests(unittest.TestCase):
         prior['mixed'] = [mixed[0]]
         with self.assertRaises(ValueError):
             freeze_cases(source, prior)
+        edges2, mixed2 = freeze_cases(source, dict(edges=edges, mixed=mixed), 192, 3300000)
+        self.assertFalse({r['target_sha256'] for r in edges+mixed}.intersection(r['target_sha256'] for r in edges2+mixed2))
 
     def test_pairing_reports_both_directions_and_rejects_identity_mismatch(self):
         def row(error):
@@ -49,7 +55,7 @@ class ObjectiveConfirmationTests(unittest.TestCase):
         scores = [r for r in paired(records) if r['group'] == 'mixed_records' and r['family'] == 'all']
         self.assertEqual(scores[0]['better'], 1)
         self.assertEqual(scores[1]['worse'], 1)
-        self.assertAlmostEqual(scores[0]['output_mse_ratio_relative_to_rgb'], 1/3)
+        self.assertAlmostEqual(scores[0]['output_mse_ratio_candidate_to_rgb'], 1/3)
         records[-1]['edge_records'][0]['target_sha256'] = 'other'
         with self.assertRaises(ValueError):
             paired(records)

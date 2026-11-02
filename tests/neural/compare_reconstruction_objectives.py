@@ -36,17 +36,22 @@ def model_contract(proofs):
             raise ValueError('Completed local final-2048 checkpoints required')
         identities.append(identity)
         configs.append({k: v for k, v in config.items() if k not in ('objective', 'seed')})
-    if len(identities) != 4 or set(identities) != {(o, s) for o in ('rgb', 'relative') for s in (71, 73)}:
-        raise ValueError('Exactly RGB/relative times seeds71/73 required')
+    objectives = {o for o, _ in identities}
+    if (objectives not in ({'rgb', 'relative'}, {'rgb', 'relative', 'tempered'})
+            or len(identities) != 2*len(objectives)
+            or set(identities) != {(o, s) for o in objectives for s in (71, 73)}):
+        raise ValueError('Each declared objective must have exactly seeds71/73, including RGB and relative')
     if any(c != configs[0] for c in configs[1:]):
         raise ValueError('Paired numerical configuration differs')
     return identities
 
 
-def freeze_cases(source, prior):
+def freeze_cases(source, prior, edge_start=160, mixed_seed=3200000):
     """New contents, not training or previously measured procedural truths."""
-    edges = [freeze_edge(edge_recipe(i, 'reserved'), 128) for i in range(160, 192)]
-    mixed = [dict(family=f, seed=3200000+100*i+j, original_phase_index=j)
+    if not isinstance(edge_start, int) or edge_start < 0 or not isinstance(mixed_seed, int) or mixed_seed < 0:
+        raise ValueError('Nonnegative integer seed blocks required')
+    edges = [freeze_edge(edge_recipe(i, 'reserved'), 128) for i in range(edge_start, edge_start+32)]
+    mixed = [dict(family=f, seed=mixed_seed+100*i+j, original_phase_index=j)
         for i, f in enumerate(FAMILIES) for j in range(4)]
     seen = {c['target_sha256'] for c in source['freeze']['train_edge_events']}
     seen.update(c['target_sha256'] for c in source['freeze'].get('reserved_edges', []))
@@ -69,8 +74,8 @@ def confined(root, paths):
         raise ValueError('Use dedicated neural build')
 
 
-def prepare(root, source, prior, models, output):
-    confined(root, [source, prior, output]+models)
+def prepare(root, source, priors, models, output, edge_start=160, mixed_seed=3200000):
+    confined(root, [source, output]+priors+models)
     proofs = [json.loads((m/'result.json').read_text(encoding='utf-8')) for m in models]
     identities = model_contract(proofs)
     data = json.loads((source/'result.json').read_text(encoding='utf-8'))
@@ -87,11 +92,13 @@ def prepare(root, source, prior, models, output):
     guard = MemoryGuard()
     with guard:
         torch.set_num_threads(4)
-        edges, mixed = freeze_cases(data, json.loads(prior.read_text(encoding='utf-8')))
+        prior_data = [json.loads(p.read_text(encoding='utf-8')) for p in priors]
+        seen = {key: [r for p in prior_data for r in p[key]] for key in ('edges', 'mixed')}
+        edges, mixed = freeze_cases(data, seen, edge_start, mixed_seed)
         guard.check()
     plan = dict(schema_version=1, frozen_at_utc=datetime.now(timezone.utc).isoformat(),
         source=str(source.resolve()), source_result_sha256=source_hash,
-        prior_plan_sha256=digest(prior), gates=data['freeze']['gates'], edges=edges, mixed=mixed,
+        prior_plan_sha256=[digest(p) for p in priors], gates=data['freeze']['gates'], edges=edges, mixed=mixed,
         models=[dict(folder=str(m.resolve()), objective=o, seed=s,
             result_sha256=digest(m/'result.json'), weights_sha256=p['weights_sha256'])
             for m, p, (o, s) in zip(models, proofs, identities)],
@@ -106,9 +113,9 @@ def prepare(root, source, prior, models, output):
 def paired(records):
     """Aggregate and case counts versus the same-seed RGB witness, no selection."""
     answers = []
-    for seed in (71, 73):
+    for seed, objective in ((s, o) for s in (71, 73) for o in sorted({r['objective'] for r in records}-{'rgb'})):
         before = next(r for r in records if r['seed'] == seed and r['objective'] == 'rgb')
-        after = next(r for r in records if r['seed'] == seed and r['objective'] == 'relative')
+        after = next(r for r in records if r['seed'] == seed and r['objective'] == objective)
         for group in ('mixed_records', 'edge_records'):
             a, b = before[group], after[group]
             key = lambda r: (r['family'], r['seed'], r['phase_index'], r['target_sha256'], r['packed_sha256'])
@@ -119,9 +126,9 @@ def paired(records):
                 old = aggregate([x for x, _ in pairs])
                 new = aggregate([y for _, y in pairs])
                 deltas = [(y['metrics']['output_sse']-x['metrics']['output_sse'])/(3*x['metrics']['pixels']) for x, y in pairs]
-                answers.append(dict(seed=seed, group=group, family=family, cases=len(pairs),
-                    rgb_objective=old, relative_objective=new,
-                    output_mse_ratio_relative_to_rgb=new['output_mse']/old['output_mse'] if old['output_mse'] > 1e-12 else None,
+                answers.append(dict(seed=seed, candidate_objective=objective, group=group, family=family, cases=len(pairs),
+                    rgb_objective=old, candidate=new,
+                    output_mse_ratio_candidate_to_rgb=new['output_mse']/old['output_mse'] if old['output_mse'] > 1e-12 else None,
                     better=sum(d < -1e-12 for d in deltas), worse=sum(d > 1e-12 for d in deltas),
                     tied_within_1e_12=sum(abs(d) <= 1e-12 for d in deltas)))
     return answers
@@ -222,16 +229,18 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--prepare', action='store_true')
     parser.add_argument('--source', type=Path)
-    parser.add_argument('--prior', type=Path)
-    parser.add_argument('--models', nargs=4, type=Path)
+    parser.add_argument('--prior', nargs='+', type=Path)
+    parser.add_argument('--models', nargs='+', type=Path)
+    parser.add_argument('--edge-start', type=int, default=160)
+    parser.add_argument('--mixed-seed', type=int, default=3200000)
     parser.add_argument('--plan', type=Path)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     if args.prepare:
         if args.source is None or args.prior is None or args.models is None:
-            parser.error('Preparation requires source, prior plan and four models')
-        prepare(root, args.source, args.prior, args.models, args.output)
+            parser.error('Preparation requires source, prior plans and paired models')
+        prepare(root, args.source, args.prior, args.models, args.output, args.edge_start, args.mixed_seed)
     elif args.plan is None:
         parser.error('Evaluation requires frozen plan')
     else:
