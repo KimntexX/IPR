@@ -109,6 +109,7 @@ int main(int argc, char **argv)
     out.raw.profile = QStringLiteral("Canon EOS R6m3 Camera Neutral.dcp");
     out.raw.lensProfileResolved = true;
     out.raw.chromaticAberrationEnabled = false;
+    out.raw.developmentMode = EditRecipe::SignedDevelopment;
     if (!check(Sidecar::write(source, out), "sidecar written")) return 1;
     const QByteArray written = readBytes(Sidecar::path(source));
     if (!check(written.startsWith("\xd9\xd9\xf7"), "the sidecar is a self-described CBOR document")) return 1;
@@ -128,7 +129,8 @@ int main(int argc, char **argv)
                    in->metadata.ratingSet && !in->metadata.colorLabelSet,
                    "user metadata round-trips")) return 1;
         if (!check(in->raw.profile == out.raw.profile && in->raw.lensProfileResolved &&
-                   in->raw.lensCorrectionEnabled && !in->raw.chromaticAberrationEnabled,
+                   in->raw.lensCorrectionEnabled && !in->raw.chromaticAberrationEnabled &&
+                   in->raw.developmentMode == EditRecipe::SignedDevelopment,
                    "the RAW development round-trips")) return 1;
     }
 

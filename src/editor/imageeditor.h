@@ -411,6 +411,8 @@ private:
     bool historyEditable() const;
     void recordHistory();
     void restoreRecipe(const std::optional<QCborMap> &recipe);
+    QCborMap currentRecipe() const;
+    void setRawDevelopment(const RawDevelopment &raw);
     void startRender();
     void startEmbeddedPreview(const QString &fileName);
     void restoreBeforeEmbeddedPreview();

@@ -1072,7 +1072,7 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
         if (std::optional<Sidecar::Document> saved = Sidecar::read(fileName)) {
             target = std::move(*saved);
             if (target.history.isEmpty())
-                target.history.reset(RecipeCodec::encodeSettings(target.settings));
+                target.history.reset(RecipeCodec::encodeRecipe(target.settings, target.raw));
         } else {
             target.metadata = annotations.value(fileName);
             // The development the target gets when opened without a sidecar.
@@ -1090,7 +1090,7 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
             copied.tint = 0;
         }
         target.settings = std::move(copied);
-        target.history.record(RecipeCodec::encodeSettings(target.settings));
+        target.history.record(RecipeCodec::encodeRecipe(target.settings, target.raw));
         if (Sidecar::write(fileName, target))
             ++result.written;
         else
@@ -1186,9 +1186,10 @@ ImageEditor::BatchResult ImageEditor::exportFiles(Tasks::Context &context, const
         LoadResult loaded = loadFromDisk(fileName, automaticWhiteBalance, options);
         if (cancel->load()) { result.cancelled = true; break; }
         Settings settings;
-        if (std::optional<Sidecar::Document> saved = Sidecar::read(fileName))
+        if (std::optional<Sidecar::Document> saved = Sidecar::read(fileName)) {
             settings = std::move(saved->settings);
-        else
+            settings.denoiseBeforeProfile = saved->raw.developmentMode == EditRecipe::SignedDevelopment;
+        } else
             settings.temperature = static_cast<int>(std::lround(
                 loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));
         const QString base = QFileInfo(fileName).completeBaseName().isEmpty()
@@ -1709,10 +1710,33 @@ bool ImageEditor::historyEditable() const
 // restoration, the recipe it leaves becomes a step.
 void ImageEditor::recordHistory()
 {
-    if (m_original.isNull() || m_inAdjustmentGesture || m_restoringHistory)
+    // A development under way: the step comes with its result, which may refuse it.
+    if (m_original.isNull() || m_inAdjustmentGesture || m_restoringHistory || m_loadWatcher.isRunning())
         return;
-    if (m_history.record(RecipeCodec::encodeSettings(m_settings)))
+    if (m_history.record(currentRecipe()))
         emit historyChanged();
+}
+
+QCborMap ImageEditor::currentRecipe() const
+{
+    return RecipeCodec::encodeRecipe(m_settings, rawDevelopmentRecipe());
+}
+
+void ImageEditor::setRawDevelopment(const RawDevelopment &raw)
+{
+    m_cameraProfile = raw.profile;
+    m_profileSha256 = raw.profileSha256;
+    m_normalizationManifest = raw.manifest;
+    m_manifestSha256 = raw.manifestSha256;
+    m_rawNormalizationEnabled = raw.normalizationEnabled;
+    m_lensProfile = raw.lensProfile;
+    m_lensProfileSha256 = raw.lensProfileSha256;
+    m_lensProfileResolved = raw.lensProfileResolved;
+    m_lensCorrectionEnabled = raw.lensCorrectionEnabled;
+    m_chromaticAberrationEnabled = raw.chromaticAberrationEnabled;
+    if (!raw.developmentMode.isEmpty())
+        m_denoiseBeforeProfile = raw.developmentMode == EditRecipe::SignedDevelopment;
+    m_rawDevelopmentWarning.clear();
 }
 
 void ImageEditor::beginAdjustmentGesture()
@@ -1729,10 +1753,16 @@ void ImageEditor::endAdjustmentGesture()
 void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
 {
     Settings restored;
-    if (!recipe || !RecipeCodec::decodeSettings(*recipe, restored))
+    RawDevelopment development = rawDevelopmentRecipe();
+    const QCborMap before = RecipeCodec::encodeRaw(development);
+    if (!recipe || !RecipeCodec::decodeRecipe(*recipe, restored, development))
         return;
+    // The automatic white balance and the development choices are applied by the decoder.
+    const bool redevelop = restored.automaticWhiteBalance != m_settings.automaticWhiteBalance ||
+                           RecipeCodec::encodeRaw(development) != before;
+    if (RecipeCodec::encodeRaw(development) != before)
+        setRawDevelopment(development);
     restored.denoiseBeforeProfile = m_denoiseBeforeProfile;
-    const bool whiteBalanceChanged = restored.automaticWhiteBalance != m_settings.automaticWhiteBalance;
     m_restoringHistory = true;
     const auto restoring = qScopeGuard([this] { m_restoringHistory = false; });
     m_settings = std::move(restored);
@@ -1744,8 +1774,7 @@ void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
     emit historyChanged();
     const QString fileName = m_currentFile.toLocalFile();
     const QString extension = QFileInfo(fileName).suffix().toLower();
-    // The automatic white balance is decoded with the RAW: changing it redevelops.
-    if (whiteBalanceChanged && m_currentFile.isLocalFile() && RawDecoder::supportedExtensions().contains(extension))
+    if (redevelop && m_currentFile.isLocalFile() && RawDecoder::supportedExtensions().contains(extension))
         beginLoad(fileName, extension, m_settings.automaticWhiteBalance, false);
     else
         scheduleRender();
@@ -1778,7 +1807,7 @@ void ImageEditor::removeHistoryStep(int step)
     endAdjustmentGesture();
     if (!m_history.removeStep(step)) return;
     const std::optional<QCborMap> recipe = m_history.moveTo(m_history.position());
-    if (recipe && *recipe != RecipeCodec::encodeSettings(m_settings))
+    if (recipe && *recipe != currentRecipe())
         restoreRecipe(recipe);
     emit historyChanged();
     scheduleSidecarSave();
@@ -2353,7 +2382,9 @@ ImageEditor::RawDevelopment ImageEditor::rawDevelopmentRecipe() const
             m_manifestSha256.isEmpty() ? resourceDigest(manifest) : m_manifestSha256,
             m_rawNormalizationEnabled, ColorPipeline::engineIdentity() + QStringLiteral("|libraw=") + RawDecoder::backendVersion(),
             m_lensProfile, m_lensProfileSha256, m_lensProfileResolved,
-            m_lensCorrectionEnabled, m_chromaticAberrationEnabled};
+            m_lensCorrectionEnabled, m_chromaticAberrationEnabled,
+            rawImage() ? (m_denoiseBeforeProfile ? EditRecipe::SignedDevelopment : EditRecipe::StandardDevelopment)
+                       : QString()};
 }
 
 QString ImageEditor::currentFileKey() const
@@ -2417,6 +2448,14 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
                 m_rawDevelopmentWarning += tr("Une ressource enregistrée est absente ou modifiée. Repli automatique ; rendu non garanti. ");
             if (!raw.engineVersion.isEmpty() && raw.engineVersion != rawDevelopmentRecipe().engineVersion)
                 m_rawDevelopmentWarning += tr("La version du moteur de rendu a changé. ");
+            // Developed again as it was: the session's experimental switch follows the photo.
+            if (!raw.developmentMode.isEmpty() &&
+                (raw.developmentMode == EditRecipe::SignedDevelopment) != m_denoiseBeforeProfile) {
+                m_denoiseBeforeProfile = raw.developmentMode == EditRecipe::SignedDevelopment;
+                m_rawDevelopmentWarning += m_denoiseBeforeProfile
+                    ? tr("Photo développée en mode signé : ce mode est repris. ")
+                    : tr("Photo développée en mode standard : ce mode est repris. ");
+            }
         }
     } else if (!m_currentCacheKey.isEmpty()) {
         m_decodedImageCache.insert(m_currentCacheKey, retainedCurrentEntry());
@@ -2605,7 +2644,11 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         }
         m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
         // The opening state, or a recipe saved outside the history (batch application).
-        m_history.record(RecipeCodec::encodeSettings(m_settings));
+        // A development resolved otherwise (a moved resource, a new target) is no edit.
+        if (RecipeCodec::settingsOf(m_history.current()) == RecipeCodec::encodeSettings(m_settings))
+            m_history.replaceCurrent(currentRecipe());
+        else
+            m_history.record(currentRecipe());
         emit historyChanged();
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
         emit pointColorsChanged();
@@ -2756,6 +2799,8 @@ RawDecoder::Options ImageEditor::optionsForFile(const QString &path, bool *autom
     options.automaticLcpSelection = !raw.lensProfileResolved;
     options.lensCorrectionEnabled = raw.lensCorrectionEnabled;
     options.chromaticAberrationEnabled = raw.chromaticAberrationEnabled;
+    options.signedDevelopment = raw.developmentMode == EditRecipe::SignedDevelopment;
+    options.retainPreLensSignal = options.signedDevelopment;
     if (!saved || raw.normalizationEnabled) {
         options.normalizationManifest = relocateResource(raw.manifest, raw.manifestSha256, "config");
         if (options.normalizationManifest.isEmpty()) options.normalizationManifest = defaultNormalizationManifest();

@@ -21,6 +21,14 @@ QCborMap encodeMetadata(const EditRecipe::UserImageMetadata &metadata);
 void decodeMetadata(const QCborMap &map, EditRecipe::UserImageMetadata &metadata);
 QCborMap encodeRaw(const EditRecipe::RawDevelopment &raw);
 void decodeRaw(const QCborMap &map, EditRecipe::RawDevelopment &raw);
+
+// A complete recipe as the history keeps it: the settings and, in one field, the
+// development choices (not the engine's version, which no edit changes).
+QCborMap encodeRecipe(const EditRecipe::Settings &settings, const EditRecipe::RawDevelopment &raw);
+// A recipe without development choices leaves raw as it is.
+bool decodeRecipe(const QCborMap &map, EditRecipe::Settings &settings, EditRecipe::RawDevelopment &raw);
+// A recipe's settings, for comparing two recipes whatever their development.
+QCborMap settingsOf(QCborMap recipe);
 }
 
 #endif // IPR_CORE_RECIPECODEC_H

@@ -163,8 +163,12 @@ Choix techniques : [ADR-0021](../decisions/ADR-0021-socle-edition-beta.md).
 3. **Historique** (`src/core/EditHistory`) : instantané complet de la recette
    par étape, 100 étapes, instantanés nommés, enregistré compressé dans le
    `.ipr`. Un geste encadré par l'IHM (appui puis relâchement d'un curseur)
-   fait une seule étape, choix de l'utilisateur du 1er novembre 2026. Le
-   développement RAW (profil, objectif) n'entre pas encore dans l'historique.
+   fait une seule étape, choix de l'utilisateur du 1er novembre 2026. Les choix
+   de développement (profil, calibration, objectif, mode) font partie de la
+   recette : l'étape naît à la fin du développement, et annuler redéveloppe. Le
+   mode réellement utilisé (standard ou signé) est enregistré ; une photo rouverte
+   le reprend, en le signalant s'il diffère de celui de la session, et l'export par
+   lot le respecte. Sans mode enregistré (anciens `.ipr`), celui de la session vaut.
    Raccordement IHM : IHM-CONN-005 du
    [suivi des raccordements](suivi-raccordements-ihm.md).
 4. **Cartes de valeurs locales** (`src/core/LocalValues.h`) : par réglage, un
