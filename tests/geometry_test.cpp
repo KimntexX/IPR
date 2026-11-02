@@ -190,6 +190,21 @@ void landmarks()
             // Half a pixel of the small image: perspective shifts a centroid a little.
             check(close(centroid(out), *expected, 0.5 / 1024), "a landmark lands where the matrix says");
         }
+    // A grating the output cannot hold fades instead of folding back as a false pattern.
+    for (const auto quality : {Geometry::Quality::Preview, Geometry::Quality::Export})
+        for (const int scale : {50, 75}) {
+            cv::Mat grating(512, 512, CV_32FC3);
+            for (int y = 0; y < grating.rows; ++y)
+                for (int x = 0; x < grating.cols; ++x)
+                    grating.at<cv::Vec3f>(y, x) = cv::Vec3f::all(float(.5 + .2 * std::sin(2 * 3.14159265358979 * (x + .5) / 2.5)));
+            Geometry::Settings reduced;
+            reduced.scale = scale;
+            cv::Mat channel;
+            cv::extractChannel(Geometry::warpRgb(grating, reduced, quality)(cv::Rect(200, 200, 112, 112)), channel, 0);
+            cv::Scalar mean, deviation;
+            cv::meanStdDev(channel, mean, deviation);
+            check(deviation[0] * std::sqrt(2.0) / .2 < 0.35, "a reduced fine grating does not fold back");
+        }
     // Preview and export of the same settings agree in position, despite their filters.
     const cv::Mat image = dot(2048, 1365, source.x, source.y, 16);
     check(close(centroid(Geometry::warpRgb(image, s, Geometry::Quality::Preview)),
