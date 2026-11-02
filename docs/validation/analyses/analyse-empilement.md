@@ -37,7 +37,7 @@ après). Le bruit est mesuré sur les 10 % de tuiles les plus unies, contre la r
 | Déplacement global, au plus | 89 px | 34 px |
 | Surface gardée | 94,1 % | 97,8 % |
 | Bruit, rapport à une image (idéal 1/√N) | 0,156 à 0,160 (0,154) | 0,167 à 0,169 (0,171) |
-| Samples écartés | 0,8 % | 0,9 % |
+| Échantillons écartés | 0,8 % | 0,9 % |
 | Décodage, par image | 2,0 s | 1,7 s |
 | Recalage et fusion, images décodées | 101 s | 67 s |
 | Tampon disque | 16,3 Go | 13,2 Go |
