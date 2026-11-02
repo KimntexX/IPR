@@ -1153,3 +1153,63 @@ indépendant. Les supports ISO100 attendent un modèle de bruit qualifié
 ou des références appariées avant leur utilisation comme cibles.
 Pas d'entraînement lancé, pas de modification moteur ou publication ;
 aucun calcul actif à cette clôture.
+
+## 2 novembre 2026, 10:02 UTC — pilote enrichi lancé
+
+Campagne `neural-enriched-photo-pilot-v001-20261102T100228Z`, banc
+`97b30b8`, 23 tests ciblés réussis dont un entraînement synthétique de
+contrat. Les 342 patches du train initial sont combinés aux 152 paires
+ISO4000 ; le contrôle demeure constitué des mêmes 186 patches.
+L'assemblage exige les identités exactes de chaque source et cible des
+deux campagnes parentes. Si elles changent, aucun entraînement ne démarre.
+
+La radiométrie de chaque composition reste celle de sa qualification :
+ajustement global par canal pour les paires inter-ISO existantes, identité
+sans fit pour la rafale ISO4000. Aucun seuil n'est modifié. Les sources
+ISO100 isolées du dernier diagnostic ne sont pas utilisées comme cibles.
+
+Budget figé : **2 048 étapes**, mêmes largeur, graine, échelle, optimiseur
+et taille de lot que le pilote précédent ; un seul état final, sans
+sélection sur le contrôle. Deux compositions au train, une composition de
+contrôle hors train, mais déjà examinée : ce n'est pas un test indépendant
+final. L'effet de l'ajout de données reste à mesurer, notamment par ISO et
+sur les détails/couleurs ; un gain MSE seul ne suffira pas à qualifier le
+rendu. Aucun changement de production ou publication. Calcul en cours.
+
+Les prises utiles pour séparer les variations temporelles du détail réel
+sont décrites dans le [complément de capture du protocole bruit](../protocols/protocole-bruit.md).
+
+### Résultats du pilote enrichi — même journée
+
+Le calcul s'est terminé normalement en **59,73 s**, dont **35,17 s**
+d'entraînement CPU. Toutes les identités des sources et cibles restent
+identiques aux qualifications parentes : 494 patches au train, 186 au
+contrôle. Pas de cible ISO100 isolée, pas de bruit synthétique ajouté.
+
+| Ensemble | Rapport MSE sortie / entrée |
+| --- | ---: |
+| Train, ISO4000/12800/51200 | 0,17469 |
+| Contrôle complet | 0,66333 |
+| Contrôle ISO1600, 54 patches | 0,87290 |
+| Contrôle ISO3200, 60 patches | 0,64955 |
+| Contrôle ISO6400, 72 patches | 0,40225 |
+
+Les ratios par ISO sont pondérés par le nombre de valeurs valides, comme
+l'agrégat global. La MSE au contrôle baisse donc de **33,67 %** par rapport
+à l'entrée bruitée, et baisse aux trois ISO. Le pire patch de contrôle a
+toutefois un ratio de **1,17433** : l'amélioration n'est pas uniforme.
+Le précédent transfert à 2048 étapes avait un ratio global de 1,31050 ;
+la nouvelle expérience donne une meilleure direction, mais ne démontre
+pas à elle seule pourquoi ni un comportement général sur d'autres scènes.
+
+Mémoire canonique : [pilote enrichi](../raw/neural-enriched-photo-pilot-v001-20261102T100228Z.json).
+
+**Conclusion actuelle : première amélioration exploratoire encourageante
+sur ce contrôle, non validée visuellement ou en production.** Le contrôle
+a déjà été consulté et sa référence moyenne reste bruitée. La MSE ne
+distingue pas à elle seule un débruitage fidèle d'un lissage destructeur.
+Prochaine épreuve : rejouer les mesures de structure faible et forte,
+de chroma et de biais sur les mêmes pixels, avec les seuils de diagnostic
+existants, sans réentraînement ni choix du meilleur état. Les nouvelles
+prises du protocole pourront ensuite fournir des scènes indépendantes.
+Aucun calcul actif, aucune intégration ou publication.

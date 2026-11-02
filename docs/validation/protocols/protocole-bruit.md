@@ -18,7 +18,75 @@ ombre non noire, tissu/cheveux, bord net et plages colorées voisines. Pas de
 débruitage longue pose qui changerait la capture. Ces prises ne donnent pas
 automatiquement une vérité sans bruit.
 
-## Séries
+## Prises appariées pour distinguer bruit et texture — complément du 2 novembre 2026
+
+Ce complément sert à la caractérisation du bruit et aux cibles du banc
+neuronal, pas à remplacer les séries de curseurs ci-dessous. Une image
+unique ne permet pas de distinguer sûrement texture fine et bruit.
+Les répétitions d'une scène immobile permettent d'observer ce qui varie
+entre prises, sans considérer leur moyenne comme parfaitement propre.
+
+### Une scène pilote suffisante pour commencer
+
+Placer dans un même cadrage une feuille ou un carton mat uni, un tissu
+beige immobile, des surfaces colorées mates, un texte imprimé ou des
+coutures, et une zone d'ombre non totalement noire. Une porte de
+réfrigérateur lisse convient si aucun reflet ne bouge. Le tissu est un
+échantillon de texture, pas un aplat sans texture. L'aluminium brillant
+est moins adapté à l'estimation sur aplat : reflets et gradients doivent
+être distingués du bruit. Une couleur grise n'est pas obligatoire ;
+plusieurs teintes aident à couvrir les canaux.
+
+Fixer le boîtier sur trépied, ne plus toucher au cadrage ou à la focale.
+Faire la mise au point puis la verrouiller ; ouverture, balance des blancs
+et mode d'obturateur restent fixes. Désactiver les automatismes qui
+changent l'exposition et les réductions de bruit boîtier, notamment longue
+pose. Utiliser un déclenchement distant ou temporisé. Pour la stabilisation,
+suivre le comportement recommandé pour ce boîtier/objectif sur trépied.
+
+Utiliser une lumière stable : pas de branches devant une fenêtre, soleil
+changeant, rideau mobile ou écran. Éviter les éclairages LED à variation
+d'intensité/PWM et les lampes scintillantes. Photographier d'abord cinq
+prises identiques et vérifier bandes ou fluctuations de luminosité ;
+un éclairage secteur peut varier même sans scintillement perceptible.
+Un temps plus long peut moyenner ce scintillement, mais n'en garantit
+pas l'absence : vérifier les images.
+
+### Quantités et réglages
+
+1. Prendre **32 RAW à ISO100**, sans modifier les réglages dans la rafale,
+   avec un histogramme laissant de la marge aux hautes lumières.
+2. Sans bouger la scène ni modifier l'ouverture, prendre **16 RAW à chacun
+   des ISO1600, 3200, 6400 et 12800**. Ajuster seulement le temps de pose
+   entre les séries pour maintenir une luminosité proche. Ne pas changer
+   le temps ou l'ISO à l'intérieur d'une série ; conserver les EXIF.
+   L'équivalence des moyennes n'est pas garantie par le seul calcul ISO/temps.
+3. Si possible, refaire **16 RAW ISO100 à la fin**, déclarés comme contrôle
+   de dérive de lumière, pas comme remplacement sélectionné après résultat.
+4. En complément de calibration seulement, faire **16 RAW bouchon réellement
+   fermé** aux ISO testés, à température et temps de pose comparables à leur
+   série. Une pièce sombre n'est pas un noir capteur. Éviter toute entrée de
+   lumière ; garder ces prises séparées des scènes éclairées.
+
+Le minimum utile initial est une rafale ISO100 et une rafale ISO3200 ou
+6400 de la même scène. Une seule nouvelle composition peut commencer la
+qualification ; plusieurs compositions indépendantes seront nécessaires
+pour juger la généralisation. Garder une nouvelle scène entière hors de
+l'apprentissage et ne pas la réutiliser pour choisir les paramètres.
+
+### Ce que ces prises permettront et ne permettront pas
+
+Conserver tous les RAW, y compris les prises douteuses : les exclusions
+doivent être tracées. Le banc séparera par identité les prises sources et
+celles qui composent leur référence. Une différence temporelle élimine
+le signal de scène **seulement si l'alignement et la lumière sont stables**.
+Elle ne révèle pas le bruit fixe commun ; les noirs aident à le caractériser
+sans résoudre tous les effets dépendant du signal. Une moyenne réduit le
+bruit aléatoire indépendant, mais garde certains motifs fixes et peut
+flouter les détails si les prises bougent. Les ombres, reflets, flous,
+changements d'éclairage et mouvements doivent donc être contrôlés localement.
+
+## Séries de curseurs
 
 Neutre : luminance 0, couleur 0, gain de netteté 0, IA inactive.
 Luminance seule puis chrominance seule : **0/25/50/100** dans le générateur
