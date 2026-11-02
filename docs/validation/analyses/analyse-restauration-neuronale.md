@@ -1749,3 +1749,94 @@ photos de contrôle. Ce résultat ne réfute pas l'approche conjointe, mais
 écarte une bascule prématurée de ce prototype.
 Aucune nouvelle photo nécessaire pour cette vérification synthétique ;
 pas de nouveau calcul actif, changement moteur, IHM, publication ou tag.
+
+## 2 novembre 2026, 11:53 UTC — phase de reconstruction sans bruit lancée
+
+Campagne `neural-synthetic-reconstruction-v001-20261102T115339Z`, banc
+`22bed68`, **15 tests ciblés réussis**. Le même réseau de31084 paramètres
+est réinitialisé avec la même graine71 ; ce n'est pas une continuation du
+candidat conjoint rejeté. Train de40 signaux, Adam0,001, lot4,2048 étapes,
+échelle2 et cœur48 sont conservés. Seul le bruit d'apprentissage est retiré :
+mosaïques propres et cartes sigma nulles. Les20 cas de contrôle sont les
+cas sans bruit déjà définis dans les mêmes cinq familles/quatre phases.
+Leurs règles sont connues et déjà consultées : pas de qualification de
+généralisation photographique ni de jeu final indépendant.
+
+Critères exploratoires figés avant le calcul :
+
+- ratio MSE globale réseau/bilinéaire au plus0,98, et erreur opposée
+  globale non supérieure à celle de la bilinéaire ;
+- contours : erreur RGB et opposée non augmentées, projection du gradient
+  au moins95 % de celle de la bilinéaire ;
+- constantes et rampes : MSE absolue au plus10⁻⁶ ;
+- ondulations faibles/chromatiques : MSE au plus celle de la bilinéaire
+  plus10⁻⁶, projection au moins95 % de la bilinéaire ;
+- MSE sur les sites réellement observés au plus10⁻⁶ en moyenne des cas.
+
+Ces seuils ne sont pas des tolérances perceptuelles ou physiques qualifiées.
+La garde des ratios à MSE de référence quasi nulle reste10⁻¹² ; les erreurs
+absolues sont conservées. Toutes les conditions sont nécessaires ; aucune
+adaptation au bruit ne sera lancée automatiquement si l'une échoue.
+Le résultat sera celui de l'état final, pas du meilleur checkpoint.
+
+**Calcul en cours.** Aucune perte supplémentaire, modification d'architecture,
+nouvelle photo, modification moteur ou activation IHM. Cette phase doit
+distinguer l'apprentissage de la reconstruction de celui du bruit avant
+de cumuler les deux objectifs dans le même réseau.
+
+### Résultats de la reconstruction seule — arrêt avant adaptation au bruit
+
+Calcul terminé normalement en **27,14 s**. Les20 cibles, mosaïques et
+cartes sigma sont identiques, par empreinte, au sous-ensemble sans bruit
+de l'expérience mixte précédente. Les résultats restent donc comparables
+sur ces mêmes entrées, sans nouveau cas sélectionné.
+
+| Mesure sans bruit | Apprentissage mixte précédent | Apprentissage reconstruction seule |
+| --- | ---: | ---: |
+| MSE globale réseau / bilinéaire | 2,20847 | 1,08016 |
+| Erreur opposée globale / bilinéaire | 1,36566 | 1,07588 |
+| MSE contours / bilinéaire | 2,19371 | 1,07063 |
+| Projection gradients verts globale | 0,73085 | 0,84098 |
+| Projection contours | 0,68208 | 0,81319 |
+
+La projection globale de la bilinéaire vaut0,83389, celle des contours
+0,80468. Le retrait du bruit à l'apprentissage améliore fortement la
+fidélité par rapport au premier essai, mais la MSE reste **8,02 % plus
+élevée que la bilinéaire**, l'erreur opposée **7,59 % plus élevée**.
+Les contours donnent une MSE de0,00047646 contre0,00044502 pour la
+bilinéaire. Un gradient davantage conservé ne suffit pas à qualifier
+couleurs et localisation du contour.
+
+Six critères passent et six échouent. Échecs : gain RGB global,
+erreur opposée globale, fidélité RGB et opposée des contours, fidélité
+absolue des ondulations chromatiques, et fidélité des sites capteur
+observés. Les critères ne sont pas modifiés après mesure ;
+`decision=stop_before_noise_stage`. Aucune adaptation au bruit lancée.
+
+La MSE moyenne aux valeurs réellement observées vaut **0,0000059614**,
+au-delà du plafond préfixé10⁻⁶. Sans bruit simulé, ces valeurs sont des
+observations exactes : le réseau n'avait pas besoin de les modifier pour
+estimer les deux couleurs manquantes. Cela identifie une faiblesse du
+contrat de sortie non contraint, sans prouver que cette faiblesse explique
+à elle seule toutes les erreurs sur les composantes manquantes.
+
+Constantes et rampes passent la tolérance absolue déclarée, avec des MSE
+de0,0000008732 et0,0000009703 ; elles ne sont pas reconstruites exactement.
+Les faibles ondes passent les seuils déclarés, mais leur MSE augmente de
+0,0000000396 à0,0000008644 : une tolérance exploratoire respectée ne doit
+pas être présentée comme une absence de dégradation. Les ondes chromatiques
+passent de0,0000034305 à0,0000052785 et échouent à leur critère de fidélité.
+
+Mémoire canonique : [phase de reconstruction sans bruit](../raw/neural-synthetic-reconstruction-v001-20261102T115339Z.json).
+
+**Conclusion actuelle : progrès du découpage de l'apprentissage, candidat
+non qualifié ; arrêt avant débruitage.** La prochaine correction proposée
+est d'étudier la cohérence des sorties avec les valeurs CFA exactement
+observées lors de la reconstruction sans bruit, au lieu de demander au
+réseau de les réapprendre. Une contrainte dure de ce type serait légitime
+uniquement dans ce régime sans bruit : dans le régime bruité, les mesures
+doivent pouvoir être corrigées. Ne pas étendre cette contrainte sans
+qualification à la sortie d'un débruiteur conjoint. Même Adam, mêmes
+familles de contrôle déjà consultées ; pas de conclusion photographique.
+Aucune nouvelle photo nécessaire à cette correction de principe, aucun
+calcul actif, changement moteur, IHM ou publication.
