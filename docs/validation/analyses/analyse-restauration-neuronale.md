@@ -1213,3 +1213,58 @@ de chroma et de biais sur les mêmes pixels, avec les seuils de diagnostic
 existants, sans réentraînement ni choix du meilleur état. Les nouvelles
 prises du protocole pourront ensuite fournir des scènes indépendantes.
 Aucun calcul actif, aucune intégration ou publication.
+
+## 2 novembre 2026, 10:09 UTC — détails, chroma et biais du pilote enrichi
+
+Campagne `neural-enriched-transfer-v001-20261102T100913Z`, banc
+`b698294`, douze tests ciblés réussis ; évaluation terminée en **1,41 s**.
+Un seul état final à 2048 étapes, force100, sans optimiseur ou recherche
+de force. Les 186 identités de contrôle restent celles du transfert
+précédent. Les seuils de structures issus du train initial
+`[0,00074636034 ; 0,00344116474]` sont réutilisés sans recalcul sur le
+nouveau train ; code des métriques, normalisation et architecture identiques.
+
+| Mesure au contrôle | Entrée | Ancien modèle 2048 | Pilote enrichi 2048 |
+| --- | ---: | ---: | ---: |
+| Rapport MSE RGB, patch entier | 1 | 1,31050 | 0,66333 |
+| Rapport MSE RGB, cœur excluant 24 px de bord | 1 | 1,20773 | 0,56166 |
+| Rapport erreur opposée R−G/B−G, patch entier | 1 | 6,74003 | 1,32049 |
+| Rapport erreur opposée R−G/B−G, cœur | 1 | 5,94242 | 0,87791 |
+| Gain de projection des gradients verts faibles | 0,25944 | 0,08379 | 0,10061 |
+| Gain de projection des gradients verts forts | 0,72309 | 0,32687 | 0,37234 |
+
+L'erreur opposée est une erreur de signal caméra par rapport à la moyenne
+de référence, pas une mesure perceptuelle de couleur ou de bruit chroma
+pur. Le résultat s'améliore fortement par rapport à l'ancien modèle, mais
+reste **32,05 % au-dessus de l'entrée** pour cette erreur sur les patches
+entiers, contre une baisse de 12,21 % au cœur. La partie hors cœur donne
+un ratio de 1,47267. Cela motive une vérification du contexte d'inférence ;
+ce n'est pas une preuve que le padding explique tout. À ISO1600, le ratio
+opposé reste 1,36812 **même au cœur** (2,21238 sur le patch entier).
+ISO3200 : 0,74660 au cœur ; ISO6400 : 0,51016.
+
+Les gains de projection augmentent par rapport à l'ancien modèle mais
+restent inférieurs à ceux de l'entrée : la réduction du bruit mesurée
+s'accompagne encore d'une atténuation du signal corrélé aux détails de
+référence. Ces valeurs ne sont pas des pourcentages absolus de détails
+préservés : bruit résiduel de la moyenne et recalage affectent la projection.
+La baisse de l'erreur des gradients ne suffit pas à lever cette réserve.
+
+Le biais moyen sortie moins référence vaut en RGB caméra signé normalisé
+`[-0,001639 ; -0,004801 ; -0,000838]` sur les patches entiers ; au cœur,
+`[-0,001046 ; -0,004396 ; -0,001679]`. Le canal vert est le plus
+négativement décalé dans cette mesure. Aucun pourcentage de luminosité
+affichée ni diagnostic de dominante après DCP n'en est déduit ici.
+
+Mémoire canonique : [contrôle des détails et couleurs du pilote enrichi](../raw/neural-enriched-transfer-v001-20261102T100913Z.json).
+
+**Conclusion actuelle : amélioration de la MSE sur ce contrôle, mais
+candidat non qualifié pour la production.** Défauts restants : atténuation
+des détails, biais par canal et erreur opposée à faible ISO, partiellement
+renforcée près des bords. Prochaine épreuve proposée : inférer le même
+modèle sur des zones plus larges, puis mesurer les mêmes pixels centraux
+avec le même conditionnement sigma, sans changer force, poids, masques ou
+référence. Cette ablation séparera un éventuel manque de contexte d'un
+défaut appris ; elle ne remplace pas un test sur des scènes indépendantes.
+Aucun réentraînement, nouvelle photo nécessaire à ce diagnostic,
+changement moteur ou publication ; aucun calcul actif.
