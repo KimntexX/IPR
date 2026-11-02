@@ -2,7 +2,7 @@ import unittest
 
 import torch
 
-from reconstruction_loss import relative_reconstruction_loss
+from reconstruction_loss import energy_balanced_loss
 
 
 class ReconstructionLossTests(unittest.TestCase):
@@ -11,7 +11,7 @@ class ReconstructionLossTests(unittest.TestCase):
         reference = torch.ones_like(truth)
         reference[0] *= .01
         prediction = reference.clone().mul_(.5).requires_grad_()
-        loss = relative_reconstruction_loss(prediction, truth, reference, 1, 0)
+        loss = energy_balanced_loss(prediction, truth, reference, 1, 0)
         self.assertAlmostEqual(float(loss.detach()), .25, places=6)
         loss.backward()
         self.assertTrue(torch.isfinite(prediction.grad).all())
@@ -21,8 +21,8 @@ class ReconstructionLossTests(unittest.TestCase):
         truth = torch.full((1, 3, 4, 6), -.1, requires_grad=True)
         reference = truth.detach().clone().requires_grad_()
         prediction = (truth.detach()+.001).requires_grad_()
-        a = relative_reconstruction_loss(prediction, truth, reference, 1, 0)
-        b = relative_reconstruction_loss(prediction/2, truth/2, reference/2, 2, 0)
+        a = energy_balanced_loss(prediction, truth, reference, 1, 0)
+        b = energy_balanced_loss(prediction/2, truth/2, reference/2, 2, 0)
         self.assertAlmostEqual(float(a.detach()), 1, places=4)
         self.assertEqual(float(a.detach()), float(b.detach()))
         a.backward()
@@ -34,13 +34,26 @@ class ReconstructionLossTests(unittest.TestCase):
         target = torch.zeros(1, 3, 6, 6)
         prediction = target.clone()
         prediction[:, :, 0] = 100
-        self.assertEqual(float(relative_reconstruction_loss(prediction, target, target, 1, 1)), 0)
+        self.assertEqual(float(energy_balanced_loss(prediction, target, target, 1, 1)), 0)
         for scale, border in ((0, 1), (float('nan'), 1), (1, 3)):
             with self.assertRaises(ValueError):
-                relative_reconstruction_loss(prediction, target, target, scale, border)
+                energy_balanced_loss(prediction, target, target, scale, border)
         prediction[:, :, 2, 2] = float('inf')
         with self.assertRaises(ValueError):
-            relative_reconstruction_loss(prediction, target, target, 1, 1)
+            energy_balanced_loss(prediction, target, target, 1, 1)
+
+    def test_tempered_weight_has_half_energy_exponent_and_scale_invariance(self):
+        target = torch.full((1, 3, 4, 6), -.1)
+        reference = target+.01
+        prediction = target+.005
+        relative = energy_balanced_loss(prediction, target, reference, 1, 0)
+        tempered = energy_balanced_loss(prediction, target, reference, 1, 0, 'tempered')
+        scaled = energy_balanced_loss(prediction/2, target/2, reference/2, 2, 0, 'tempered')
+        self.assertAlmostEqual(float(tempered), 2.5, places=4)
+        self.assertAlmostEqual(float(tempered/relative), 10., places=4)
+        self.assertEqual(float(scaled), float(tempered))
+        with self.assertRaises(ValueError):
+            energy_balanced_loss(prediction, target, reference, 1, 0, 'unknown')
 
 
 if __name__ == '__main__':

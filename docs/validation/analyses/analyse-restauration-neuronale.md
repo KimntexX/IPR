@@ -3996,3 +3996,24 @@ uniforme de l'objectif relatif.** L'utilisateur autorise la poursuite
 autonome. La piste suivante est un objectif intermédiaire fixé avant
 apprentissage, sans changement d'architecture, pour réduire la pénalisation
 des contours. Les quatre checkpoints actuels restent des témoins immuables.
+
+### Protocole de poursuite autonome — pondération tempérée
+
+Un seul candidat intermédiaire est fixé, sans balayage d'hyperparamètres :
+`MSE / sqrt(1e-6 × max(MSE bilinéaire,1e-6))` en unités physiques.
+L'exposant de l'énergie est ainsi1/2, entre l'objectif RGB non pondéré
+et l'objectif relatif d'exposant1. Le même plancher assure l'invariance
+d'échelle et ne reçoit pas de nouveau réglage. Les deux initialisations,
+2048 étapes, données, architecture, Adam et quotas restent inchangés.
+Les changements d'échelle de gradient sous Adam restent un confondant.
+
+Comparer ensuite **les six modèles**, pas le meilleur de chaque graine,
+sur32 nouveaux contours d'indices192à223 et20 nouveaux signaux mixtes
+de graines3300000+100famille+j. Les832 cas précédents restent consultés.
+Le nouveau plan doit exclure leurs vérités et celles de la première
+confirmation, en plus des cibles d'apprentissage et contrôles source.
+Il est figé avant la première inférence sur ces nouvelles vérités.
+Rapporter les régressions par groupe, même si les critères absolus
+passent. Une seule confirmation est prévue pour ce candidat ; un échec
+ne sera pas masqué par une sélection de graine ou de groupe. Les résultats
+restent une étude sans bruit, sans qualification photo ou intégration.

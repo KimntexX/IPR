@@ -18,7 +18,7 @@ from joint_bayer_unet import sample_rgb, bilinear
 from local_moment_unet import LocalMomentUNet
 from memory_budget import MemoryGuard, BudgetExceeded
 from reconstruction_gates import qualifies
-from reconstruction_loss import relative_reconstruction_loss
+from reconstruction_loss import energy_balanced_loss
 from run_balanced_moment_pilot import balanced_schedule
 from run_memory_bounded_reconstruction import SampleStream
 from run_synthetic_joint_pilot import tensor_hash, metrics, aggregate
@@ -49,7 +49,7 @@ def run(parent, output, variant, seed=71, objective='rgb'):
     if isinstance(seed, bool) or not isinstance(seed, int) or seed < 0:
         raise ValueError('Nonnegative integer initialization seed required')
     config = dict(source['freeze']['config'], model_kind=variant, seed=seed, steps=2048, microbatch=1, accumulation=4)
-    if objective not in ('rgb', 'relative'):
+    if objective not in ('rgb', 'relative', 'tempered'):
         raise ValueError('Known training objective required')
     config['objective'] = objective
     schedule, _ = balanced_schedule(source['freeze']['train_slots'], 2048, 4, config['side'])
@@ -71,6 +71,8 @@ def run(parent, output, variant, seed=71, objective='rgb'):
         evaluation='80consulted cases; full/bias/image-mean/core-mean/disabled-local frozen ablations; no independent confirmation here.')
     freeze['objective_policy'] = ('RGB MSE in network units.' if objective == 'rgb' else
         'Per-example RGB MSE divided by max(bilinear RGB MSE,1e-6 physical units); training truth only, detached denominator, same 48px crop. No gate change.')
+    if objective == 'tempered':
+        freeze['objective_policy'] = 'Per-example RGB MSE / sqrt(1e-6 * max(bilinear RGB MSE,1e-6)) in physical units; fixed halfway energy exponent, detached reference, same crop and gates.'
     output.mkdir(parents=True, exist_ok=False)
     save(output/'freeze.json', freeze)
     records, losses, symmetries = [], [], []
@@ -101,9 +103,9 @@ def run(parent, output, variant, seed=71, objective='rgb'):
                     guard.check()
                     target, packed, tags = stream.sample(step, position, index, phase)
                     image = predict(model, packed/config['scale'], torch.zeros_like(packed), tags, True, True)
-                    if objective == 'relative':
+                    if objective != 'rgb':
                         reference = bilinear(packed/config['scale'], tags)
-                        loss = relative_reconstruction_loss(image, target/config['scale'], reference, config['scale'])/4
+                        loss = energy_balanced_loss(image, target/config['scale'], reference, config['scale'], objective=objective)/4
                         del reference
                     else:
                         loss = (image[:, :, 48:-48, 48:-48]-target[:, :, 48:-48, 48:-48]/config['scale']).square().mean()/4
@@ -209,6 +211,6 @@ if __name__ == '__main__':
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--variant', choices=('baseline', 'local'), required=True)
     p.add_argument('--seed', type=int, default=71)
-    p.add_argument('--objective', choices=('rgb', 'relative'), default='rgb')
+    p.add_argument('--objective', choices=('rgb', 'relative', 'tempered'), default='rgb')
     a = p.parse_args()
     run(a.parent, a.output, a.variant, a.seed, a.objective)
