@@ -3918,7 +3918,7 @@ Preuves canoniques :
 - [Objectif relatif, graine71](../raw/neural-local-route-local-v001-20261102T221126Z.json).
 - [Objectif relatif, graine73](../raw/neural-local-route-local-v001-20261102T221420Z.json).
 
-**Conclusion actuelle : protection des faibles variations encourageante,
+**Conclusion de cette campagne : protection des faibles variations encourageante,
 compromis global à confirmer.** Les deux graines passent les barrières
 historiques, mais ces données ont servi au développement. La suite
 proposée est une comparaison appariée sur des contenus procéduraux
@@ -3959,3 +3959,40 @@ appariements exacts et la conservation d'une régression entre graines.
 **3/3 réussis.** Évaluation en flux, un modèle et sa copie préparée à
 la fois ; quotas mémoire et CPU4 inchangés. Aucun apprentissage bruité,
 export image ou changement moteur/IHM.
+
+### Résultats de confirmation — 2 novembre 2026, 22:30 UTC
+
+Plan figé avant les inférences, banc40b1a14. Les832 sorties sont exactes
+au bit près entre modèle source et noyaux préparés ; sites capteur
+inchangés. Les quatre modèles passent12/12 critères sur les80 nouveaux
+cas mixtes et leur sous-ensemble20. La campagne dure12,33s, pic résident
+226,41Mio, job870,53Mio, machine56,94 %, aucun seuil déclenché.
+
+| Mesure appariée (MSE relative / MSE objectif RGB) | Graine71 | Graine73 |
+| --- | ---: | ---: |
+| Groupe mixte80 | 0,71600 | 0,91214 |
+| Ondes chromatiques16 | 0,01136 | 0,00514 |
+| Ondes achromatiques faibles16 | 0,05685 | 0,00792 |
+| Contours du groupe mixte16 | 0,71962 | 0,92520 |
+| Groupe distinct de contours128 | 1,06692 | 1,17955 |
+
+Le groupe mixte favorise le nouvel objectif, mais le groupe distinct de
+contours montre une hausse d'erreur de6,69 % et17,96 %. Il serait biaisé
+de présenter seulement les contours du groupe mixte. Sur128 cas distincts,
+83/80 s'améliorent et45/48 régressent pour71/73 ; malgré la majorité de
+cas gagnants, les régressions pèsent davantage dans l'erreur agrégée.
+Les rapports RGB à la bilinéaire restent inférieurs à1 sur ce groupe :
+RGB71/73=0,35571/0,40164, relatif71/73=0,37952/0,47375.
+
+La réduction d'erreur chromatique dépasse98 % face aux témoins RGB sur
+les nouvelles ondes, pour les deux graines. La protection des faibles
+variations est donc confirmée sur ces générateurs, mais sa contrepartie
+sur les contours est réelle. Cela ne justifie pas une intégration photo.
+
+Preuve : [confirmation appariée des objectifs](../raw/neural-objective-confirmation-v001-20261102T223031Z.json).
+
+**Conclusion de cette campagne : compromis confirmé, pas de supériorité
+uniforme de l'objectif relatif.** L'utilisateur autorise la poursuite
+autonome. La piste suivante est un objectif intermédiaire fixé avant
+apprentissage, sans changement d'architecture, pour réduire la pénalisation
+des contours. Les quatre checkpoints actuels restent des témoins immuables.
