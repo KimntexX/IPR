@@ -250,3 +250,26 @@ et repris par le premier lot qui en a besoin :
 Le contrat d'exécution des tâches, la recette CBOR et l'historique sont donc en
 place ; les contrats propres aux panneaux restent à écrire avec eux. Limite connue
 de l'interface : un curseur déplacé aux flèches du clavier crée une étape par appui.
+
+La construction finale a été acceptée par l'utilisateur le 2 novembre 2026.
+
+## B0.5 — Passage en bêta (2 novembre 2026)
+
+L'utilisateur ouvre la bêta à la livraison du socle. La version est `v0.2.97-beta` :
+mineure 2 pour la première série bêta, compteur de patchs cumulatif depuis
+`v0.1.92-alpha` (cinq patchs : tâches, recette CBOR, historique, cartes locales,
+vignettes développées). Le compteur continue plutôt que de revenir à zéro, à la
+demande de l'utilisateur.
+
+La règle d'origine demandait la validation de tous les réglages avant ce passage.
+Restent ouverts, comme limites connues de la bêta :
+
+- parité avec Lightroom : bruit (#14, #6), contraste (#12), exposition (#11),
+  température (#10), netteté (#13) ;
+- mélangeur de couleurs : #1 à #5, à retrier ;
+- export DNG hors Lightroom (#9), paquets macOS (#20), infobulles de l'histogramme (#17) ;
+- recettes visuelles du zoom, de la comparaison et des préférences, notées à
+  compléter dans la [matrice](../validation/matrice-validation.md) ;
+- socle : [issue #21](https://github.com/KimntexX/IPR/issues/21).
+
+La première release bêta sur `main` reste à décider à part.

@@ -7,16 +7,23 @@
 - Cette règle ne demande pas de traduire la documentation ni de réécrire
   l’historique Git publié. Les noms des branches restent en anglais.
 
-## Prototypage, versionnage et absence de legacy — règle du 11 octobre 2026
+## Prototypage, versionnage et absence de legacy — règles du 11 octobre et du 2 novembre 2026
 
-- Le projet est actuellement en prototypage **alpha**. Chaque fusion validée
-  d'une branche de groupe dans `dev` porte un tag `v0.1.X-alpha`, où `X` est le
-  compteur cumulatif de patchs intégrés : `X_nouveau = X_précédent + nombre de
-  patchs livrés`. Ne pas confondre ce compteur avec le nombre de commits.
+- Le projet est en **bêta** depuis le 2 novembre 2026, sur décision de
+  l'utilisateur ; les limites connues restent suivies par la matrice de
+  validation et les issues. Chaque fusion validée d'une branche de groupe dans
+  `dev` porte un tag `v0.Y.X-beta`. `Y` part de 2 et monte à chaque intégration
+  d'un autre panneau de fonctionnalités (`0.3`, `0.4`, etc.), pas pour un lot
+  technique interne.
+- `X` est le compteur cumulatif de patchs intégrés : `X_nouveau = X_précédent +
+  nombre de patchs livrés`. Il continue depuis l'alpha et ne revient pas à zéro
+  quand la mineure monte : `v0.1.92-alpha` puis `v0.2.97-beta`. Ne pas confondre
+  ce compteur avec le nombre de commits.
 - Poser le tag sur le commit de fusion validé dans `dev`, jamais sur un état
   non validé ; les tags existants restent immuables. Leur publication nécessite
   l'autorisation de livraison habituelle.
-- Pendant le prototypage, ne pas conserver de legacy, y compris dans les tests :
+- Pendant le prototypage (alpha et bêta), ne pas conserver de legacy, y compris
+  dans les tests :
   supprimer les chemins remplacés et leurs tests spécifiques lors de leur
   remplacement ; maintenir les tests de la seule implémentation courante.
   Ne pas ajouter d'option de compatibilité `--legacy` ni de double implémentation.
@@ -26,10 +33,6 @@
   `.ipr` vers la recette courante, ainsi que leurs tests de migration. Écrire
   un seul format courant ; cette protection des fichiers utilisateur n'autorise
   pas à maintenir d'anciens moteurs photographiques en parallèle.
-- Le passage en **beta** intervient après validation de toutes les fonctionnalités
-  de réglages implémentées. La première série beta est `v0.2.X-beta` ; `X` suit
-  le compteur de patchs de cette série. La version mineure évolue à chaque
-  intégration d'un autre panneau de fonctionnalités (`0.3`, `0.4`, etc.).
 - Le passage en version **stable `v1.Y.X`** intervient après validation de tous
   les panneaux de fonctionnalités sur les boîtiers que l'utilisateur possède
   actuellement. Consigner les modèles couverts et les preuves de validation ;

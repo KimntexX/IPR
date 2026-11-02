@@ -29,8 +29,11 @@ Avant le premier jalon bêta :
 - figer l'état de référence, les limites connues et les recettes de non-régression ;
 - qualifier la sauvegarde/restauration et le comportement aperçu/export.
 
-La première série bêta sera `v0.2.X-beta`. Les intégrations de nouveaux panneaux
-feront évoluer la version mineure selon les [règles Git](gestion-branches-git.md).
+La bêta est ouverte depuis le 2 novembre 2026 par décision de l'utilisateur, avec
+des limites connues ([bilan](socle-edition-b0.md#b05--passage-en-bêta-2-novembre-2026)) :
+ces conditions restent à clore. La première série est `v0.2.X-beta`. Les intégrations
+de nouveaux panneaux font évoluer la version mineure selon les
+[règles Git](gestion-branches-git.md).
 Les lots techniques internes ou les commits ne sont pas automatiquement de
 nouveaux panneaux ni des versions mineures. Les numéros de livraison seront
 arrêtés au moment des validations ; ce plan ne crée aucun tag.
@@ -313,7 +316,7 @@ livré par cette section. Le nettoyage local est tracé dans le
 | B0.4 | Implémenter le socle par modules, puis raccorder l'IHM | Rendu sans nouvelle opération inchangé, sauvegarde/relecture et annuler/refaire qualifiés |
 | B0.5 | Clore les validations alpha restantes et faire valider le jalon | Matrice et JSON référencés, limites connues, accord utilisateur avant tag bêta |
 
-État au 2 novembre 2026 : B0.1 à B0.4 sont décrits dans le [document du socle](socle-edition-b0.md), avec les limites suivies par l'[issue #21](https://github.com/KimntexX/IPR/issues/21).
+État au 2 novembre 2026 : B0.1 à B0.5 sont décrits dans le [document du socle](socle-edition-b0.md), avec les limites suivies par l'[issue #21](https://github.com/KimntexX/IPR/issues/21).
 
 Commencer par B0.1, puis B0.2/B0.3 ; ne pas lancer en parallèle les cinq panneaux
 ou l'entraînement d'un réseau. Pour le premier développement, créer la branche
