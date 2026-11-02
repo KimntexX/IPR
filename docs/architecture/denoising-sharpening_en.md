@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/denoising-sharpening.md; sha256: 21198c478941e80412b9eed49fc68ee19aff9dfc59cc33f7006407225dec751d -->
+<!-- translation-source: docs/architecture/denoising-sharpening.md; sha256: 01768eab2ecf33594babaafa44f6b96b48d4603ca4fb2609a727705ca6f29780 -->
 *[Français](denoising-sharpening.md) | [English](denoising-sharpening_en.md)*
 
 # Noise Reduction and Sharpening
@@ -24,7 +24,7 @@ or white-balance mode has the required context.
 
 The camera filter uses signal-conditioned covariances and three intensity scales.
 The colour path before the profile, used only by the benches, was removed on
-2 November 2026 by the user's decision. Corrections preserve signed signal; their DCP-rendered
+2 November 2026 by the user's decision: the signed rendering stays byte-identical, 116 renders out of 116 on 29 RAW files ([evidence](../validation/raw/camera-denoise-colour-removal-parity-v001-20261102T162555Z.json)). Corrections preserve signed signal; their DCP-rendered
 result does not guarantee chromatic neutrality. Worker budget:
 min(8,host−1), minimum 1, caller included, further limited by tile count;
 not a global load controller across jobs.

@@ -23,7 +23,9 @@ pas une preuve que tout format ou toute balance dispose du contexte nécessaire.
 
 Le filtre caméra utilise des covariances conditionnelles par niveau de signal,
 trois échelles d'intensité. Le chemin couleur avant profil, qui ne servait plus
-qu'aux bancs, est retiré le 2 novembre 2026 sur décision de l'utilisateur. Les
+qu'aux bancs, est retiré le 2 novembre 2026 sur décision de l'utilisateur : rendu
+du mode signé identique à l'octet, 116 rendus sur 116 sur 29 RAW
+([preuve](../validation/raw/camera-denoise-colour-removal-parity-v001-20261102T162555Z.json)). Les
 corrections préservent le signal signé ; leur résultat rendu après DCP n'est pas
 une garantie de neutralité chromatique. Budget de workers : min(8,host−1), minimum1, caller inclus, réduit
 par nombre de tuiles ; pas un contrôleur global de charge entre traitements.
