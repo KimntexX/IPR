@@ -54,6 +54,28 @@ Les tests ont aussi attrapé un défaut grave avant toute intégration : un demi
 écrivait dans le tampon de la source par alias. Le test vérifie désormais que la source
 reste intacte pour chaque orientation.
 
+## Parité sans géométrie
+
+Preuve : [`b1-geometry-neutral-parity-v001-20261102T170539Z.json`](../raw/b1-geometry-neutral-parity-v001-20261102T170539Z.json),
+29 RAW du corpus, 30 états en pleine définition (neutre, chaque famille de réglages à
+une ou deux valeurs, développement signé à zéro), comparaison exacte des octets, sans
+tolérance : **870 rendus, 870 identiques à `dev`**. Sources et dossier inchangés.
+
+Une géométrie neutre et la conversion sRGB en parallèle ne changent donc aucun pixel.
+Portée de cette preuve :
+
+- Elle mesure 788f907. Depuis, seuls des QML, des tests et des documents ont changé.
+- Elle compare les pixels, pas l'histogramme : celui-ci est couvert par des tests sur
+  pixels connus, dont l'exclusion des zones vides.
+- Le développement signé n'y figure qu'à zéro, sans réduction du bruit.
+
+Deux champs du JSON, immuable, se lisent ainsi. `baseline_revision` indique `291f58f`,
+alors que l'exécutable de référence a été construit à `64bcbd5` : les deux ne diffèrent
+que par des QML, leurs déclarations CMake et un include de `TaskRunner.h`, sans aucun
+fichier de calcul. `candidate_dirty` vaut vrai parce que la mesure a démarré avec des
+fichiers non commités dans le worktree, dont le JSON d'audit ; aucun fichier moteur n'a
+changé depuis 788f907, et l'arbre était propre à 05eaec2.
+
 ## Latence
 
 Sur la machine de l'utilisateur, CR3 de 32 Mpx, aperçu de 2048 px, temporisation de
