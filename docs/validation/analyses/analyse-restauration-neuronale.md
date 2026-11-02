@@ -4017,3 +4017,52 @@ Rapporter les régressions par groupe, même si les critères absolus
 passent. Une seule confirmation est prévue pour ce candidat ; un échec
 ne sera pas masqué par une sélection de graine ou de groupe. Les résultats
 restent une étude sans bruit, sans qualification photo ou intégration.
+
+### Résultats tempérés — confirmation du2 novembre2026,22:38 UTC
+
+Les deux apprentissages tempérés se terminent en149,06/152,29s. Sur les
+contrôles historiques80, leurs rapports RGB à la bilinéaire valent
+0,37017/0,42457 pour71/73 ;12/12 critères passent sur20 et80. Les pics
+résidents valent304,06/299,44Mio, engagés950,51/959,66Mio, machine65,01/
+63,62 %. Aucun seuil atteint. L'écart maximal D4 reste1,79e-7/2,38e-7.
+
+La confirmation des six modèles sur le nouveau lot est terminée en26,20s.
+Les1248 sorties préparées sont exactes au bit près et les sites observés
+inchangés. Les six modèles passent12/12 critères sur les80 cas mixtes
+et leur sous-ensemble20, sans masquer les régressions relatives ci-dessous.
+
+| Objectif, rapport MSE RGB à la bilinéaire | Mixte71 | Mixte73 | Contours128,71 | Contours128,73 |
+| --- | ---: | ---: | ---: | ---: |
+| RGB | 0,32749 | 0,39939 | 0,38249 | 0,44547 |
+| Relatif | 0,35016 | 0,41550 | 0,41146 | 0,51243 |
+| Tempéré | 0,30719 | 0,37675 | 0,35208 | 0,42012 |
+
+Face au témoin RGB, le tempéré réduit l'erreur mixte de6,20/5,67 % et
+sur les contours distincts de7,95/5,69 %. Sur ces128 contours,106 cas
+s'améliorent et22 régressent pour chaque graine : le gain agrégé n'est
+pas une domination de tous les cas. Le gradient projeté de ces contours
+passe de0,95016/0,90525 à0,96058/0,91198 (bilinéaire0,76495).
+Les ondes chromatiques tempérées ont une erreur0,05285/0,09421 fois
+la bilinéaire, contre0,43364/1,26697 pour les témoins RGB. L'objectif
+relatif reste encore meilleur sur ces seules ondes, au détriment des
+contours. La préférence pour le tempéré est un compromis explicite.
+
+Confirmation : pic résident227,86Mio, job858,79Mio, machine56,45 %,
+aucun seuil atteint. Preuves :
+
+- [Apprentissage tempéré71](../raw/neural-local-route-local-v001-20261102T223306Z.json).
+- [Apprentissage tempéré73](../raw/neural-local-route-local-v001-20261102T223538Z.json).
+- [Six modèles, confirmation distincte](../raw/neural-objective-confirmation-v001-20261102T223828Z.json).
+
+### Vérification finale verrouillée avant clôture
+
+Le candidat tempéré et les deux graines sont maintenant conservés sans
+modifier leurs poids, architecture ou objectif. Un dernier lot est fixé :
+32 contours d'indices224à255 et20 mixtes de graines3400000+100famille+j,
+quatre phases, les six modèles rapportés. Exclure aussi les vérités des
+trois cohortes antérieures. Le lot est figé après la préférence ci-dessus,
+avant toute mesure nouvelle. Il vérifie le candidat choisi ; il ne fera
+pas l'objet d'un ajustement ou d'une recherche de meilleur checkpoint.
+Si le gain n'est pas retrouvé, le bilan restera nuancé. Les générateurs
+communs limitent toujours cette qualification à la reconstruction
+synthétique sans bruit, pas à une restauration photographique fiable.
