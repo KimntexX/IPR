@@ -590,3 +590,65 @@ Le CPU fournit le témoin numérique ; un environnement GPU séparé pourra
 12Go n'est pas un résultat de compatibilité CUDA/ONNX ou de vitesse.
 Pas de modification actuelle des profils, de l'espace de travail,
 du rendu par défaut, des réglages ou des exports de production.
+
+## 14. Protection mémoire et contrat bruité — 2 novembre 2026
+
+À la demande de l'utilisateur, les nouveaux pilotes lourds de ce banc
+Windows utilisent un job propre au processus : quota dur de2Gio de
+mémoire engagée, distincte de la RAM résidente. Un moniteur échantillonne
+les compteurs privés/résidents et la disponibilité physique toutes les0,25s.
+Il demande un arrêt à1,25Gio privés/résidents ou80 % de mémoire physique
+utilisée, vérifié aux frontières de chaque micro-lot. Ce second mécanisme
+est coopératif ; il ne borne ni ne termine les autres applications.
+L'API et les mesures exactes sont tracées dans le
+[rapport](../validation/analyses/analyse-restauration-neuronale.md).
+
+L'exécution est mono-processus, sans DataLoader multiprocessus ni chargement
+du corpus entier : micro-lot1, accumulation4, cache quatre petites images,
+évaluation en flux et absence de graphes conservés dans les mesures.
+Le refus d'installer le quota provoque un refus de lancer le calcul,
+sans repli silencieux non protégé. Les erreurs, pics et abandons sont
+enregistrés. Ce mécanisme de banc ne modifie pas le contrôleur mémoire
+de l'application ou les critères de livraison multiplateforme.
+
+### Contrat préparé pour le futur joint dématriçage/débruitage
+
+Le module de données bruitées distingue explicitement : observation CFA
+en quatre plans spatiaux, vérité RGB caméra à résolution complète,
+tags Bayer, sigma dans les mêmes unités et échelle positive déclarée.
+Les valeurs signées ou supérieures au blanc restent acceptées, sans
+gamma, changement de profil, min/max par image ou borne de signal.
+Les conversions non finies ou détruisant un non-zéro par sous-flux
+sont refusées. Les sources et l'état aléatoire global ne sont pas modifiés.
+
+Le premier bruit simulé suit `variance = a × max(signal,0) + b` ;
+les coefficients et graines sont connus, mais **ne constituent pas un
+profil Canon ni une correspondance ISO**. Le conditionnement sigma est
+calculé depuis l'observation bruitée et ces coefficients, pas depuis
+la vérité propre. Le plancher de variance ne borne pas le signal bruité :
+les valeurs négatives sont conservées. Signal, vérité et sigma partagent
+la même normalisation fixe, sigma étant divisé par cette échelle.
+
+Pour un futur profil physique établi avant gains de balance, appliquer
+un gain `g` au signal multiplie sa variance par `g²`. Avec la loi affine
+`a × signal + b`, les coefficients exprimés dans le domaine balancé
+deviennent `g × a` et `g² × b`. Il faut donc identifier le domaine exact
+et l'ordre des opérations avant d'utiliser un profil de capteur. Aucun
+coefficient de boîtier n'est extrapolé par le module synthétique.
+
+La perte future supervise toutes les composantes RGB, y compris les
+positions mesurées par le capteur. En régime bruité, leur copie exacte
+conserverait le bruit : le futur modèle doit pouvoir les corriger. Le
+modèle sans bruit actuel continue de refuser sigma non nul ; le nouveau
+contrat de données, testé séparément, n'est pas un raccordement de filtre
+ni un débruiteur entraîné. Un résultat calculé par RCD ne sera pas présenté
+comme une vérité indépendante du dématriçage.
+
+Le précontrôle et l'essai8192 étapes confirment une mémoire résidente
+inférieure à300Mio sur ce banc128pixels, sous quota2Gio engagés.
+Cela ne vaut pas pour une image pleine définition. L'essai long n'a
+pas levé le critère historique de reconstruction ; le contrat bruité
+est donc préparé et testé, mais aucun entraînement bruité n'a été lancé.
+Les poids précédents restent des preuves distinctes et les seuils ne
+sont pas assouplis. Les résultats détaillés et les catégories de mémoire
+mesurées restent dans le rapport unique.

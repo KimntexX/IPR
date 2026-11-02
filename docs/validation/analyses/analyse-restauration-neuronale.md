@@ -3292,7 +3292,7 @@ Mémoires canoniques de la campagne autonome :
 - [Plan complet et confirmation distincte,les deux graines](../raw/neural-structure-confirmation-v001-20261102T162029Z.json).
 - [Préparation ponctuelle et960 sorties exactes](../raw/neural-prepared-inference-v001-20261102T162412Z.json).
 
-**Conclusion actuelle : structure expérimentale fiabilisée sur le banc
+**Conclusion de cette campagne : structure expérimentale fiabilisée sur le banc
 synthétique, qualification photographique et bruit non acquises.** La
 base retenue pour poursuivre l'étude est l'interpolation à36 candidats
 fermée, la tête issue d'un tronc contraint par transposition et les noyaux
@@ -3315,3 +3315,149 @@ Les garanties structurelles et limites sont reprises dans
 Aucun calcul actif, modification moteur/IHM, export photo, installation
 GPU, publication, fusion ou tag. Les checkpoints et preuves sont sauvegardés
 localement ; aucune mise en veille n'est déclenchée dans cette session.
+
+## 2 novembre 2026, 20:58 UTC — mémoire bornée avant le pilote bruité
+
+L'utilisateur signale une montée antérieure de tests à10Go de RAM et
+autorise la poursuite du processus en demandant de protéger la mémoire.
+Cette observation n'est pas attribuée à un processus précis : aucune
+mesure historique disponible ici ne permet de diagnostiquer son origine.
+Les outils de protection et leurs tests sont figés dans `7078322`.
+
+### Deux protections distinctes, pas de promesse de plafond global
+
+Chaque nouveau calcul lourd de ce banc est rattaché à son propre job
+Windows avec une **limite dure de2Gio de mémoire engagée par processus**.
+Le mécanisme interdit les allocations engagées dépassant ce plafond ;
+ce n'est pas une limite de RAM résidente globale. La sémantique est celle
+de [JOB_OBJECT_LIMIT_PROCESS_MEMORY](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information)
+et de [ProcessMemoryLimit](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_extended_limit_information).
+Si le job ne peut pas être créé/assigné, le banc refuse le calcul au lieu
+de poursuivre sans quota. Pas de repli silencieux non protégé sur un
+autre OS ; cette implémentation du quota est Windows.
+
+Un moniteur propre au processus mesure toutes les0,25s la mémoire privée,
+résidente et la mémoire physique disponible de la machine. Il demande
+un arrêt coopératif dès1,25Gio privés/résidents ou80 % de mémoire physique
+utilisée. Le calcul vérifie cet état à chaque micro-lot et chaque mesure.
+Ces deux seuils sont **échantillonnés**, pas des quotas OS du système :
+les autres applications ne sont ni limitées ni arrêtées. Le thread est
+arrêté et joint avec un délai borné, le handle du job est libéré, y compris
+en cas d'erreur. Une allocation refusée ou un seuil atteint est tracé
+comme abandon, pas comme résultat qualifié.
+
+### Précontrôle et exécution des données
+
+**5 tests ciblés réussis** : compteurs mémoire cohérents, seuils,
+configuration invalide, fermeture du thread, quota dur testé sur un
+sous-processus isolé. Dans ce dernier, une allocation256Mio sous quota
+128Mio est refusée, sans charger cette allocation dans le processus des
+tests. Les gradients accumulés sur quatre micro-lots sont comparés au
+gradient d'un lot de quatre, avec tolérance numérique déclarée ; aucune
+identité bit à bit de la trajectoire Adam n'est promise.
+
+Le cache ne contient que quatre images128px. Les autres signaux sont
+reconstruits à la demande, une image à la fois. Aucun tableau de toutes
+les images ni liste de graphes d'autograd n'est conservé ; chaque
+micro-lot exécute son backward, puis ses tenseurs sont libérés. Les
+preuves restent des nombres et empreintes, pas des pixels exportés.
+
+Précontrôle `neural-memory-preflight-v001-20261102T205832Z` :32 étapes
+réussies, sans évaluation de qualité et sans choix de poids. Pic résident
+**312066048octets, soit297,6Mio** ; pic engagé mesuré par le job
+**1005342720octets, soit958,8Mio**. La mémoire privée échantillonnée
+atteint957,7Mio. La machine reste sous60,8 % d'utilisation physique,
+aucun seuil atteint. Ne pas confondre ces deux catégories avec1Go de
+RAM réellement résidente. Le précontrôle est antérieur au commit des
+outils mais conserve leurs empreintes exactes dans son JSON.
+
+## 2 novembre 2026, 20:59 UTC — un essai plus long pour le verrou historique
+
+Avant de former un modèle sur des observations bruitées, le critère
+historique restant n'est pas supprimé. Un essai unique préannoncé pousse
+la même structure équivariante à8192 étapes : quatre reprises du même
+calendrier2048, mêmes32 signaux fixes/418 contours, mêmes phases,
+graine71, Adam0,001, échelle2 et critères. Micro-lot1 avec accumulation4,
+donc lot effectif4. La durée et l'exécution micro-lots diffèrent du premier
+pilote ; le résultat ne sera pas attribué causalement à la seule durée.
+
+Un checkpoint final seulement ; les20 et80 contrôles historiques sont
+évalués après la dernière étape, sans consultation intermédiaire pour
+choisir un poids. Les champs mémoire et le maximum engagé du job seront
+conservés avec la campagne. L'entraînement bruité reste conditionné au
+passage des deux groupes. Aucune nouvelle photo, installation GPU,
+modification moteur/IHM, publication, fusion ou tag à cette étape.
+
+### Préparation indépendante du contrat bruité pendant le calcul
+
+Un module de données, sans nouveau réseau, définit les quatre plans CFA
+bruités, leurs tags, sigma et la vérité RGB caméra complète. Il conserve
+les négatifs et sur-blancs, refuse les normalisations destructrices et
+utilise un générateur local déterministe. **4 tests ciblés passent** :
+reproductibilité et RNG global intact, sigma calculé depuis l'observation
+bruitée, régime sans bruit, signaux étendus, paramètres invalides et perte
+sur toutes les composantes RGB avec masque valide. La vérité propre a
+une perte nulle même si elle diffère des sites capteur bruités : ces
+sites ne seront donc pas réimposés comme une cible exacte en régime bruité.
+
+Les valeurs `a,b` de la loi synthétique sont connues, pas calibrées Canon.
+Ce contrat testé ne franchit pas la barrière des critères et ne signifie
+pas qu'un modèle bruité est entraîné. La mémoire de cette préparation
+est limitée à un exemple à la fois ; aucun RAW ou TIFF n'est chargé ici.
+
+### Résultat de l'essai borné — mémoire maîtrisée, verrou non levé
+
+Campagne `neural-bounded-reconstruction-v001-20261102T205947Z` terminée
+normalement en **427,62s**,8192 étapes et évaluation finale comprises.
+Les1696 sondages et les compteurs de pic OS sont conservés dans le JSON.
+La fermeture du moniteur et du handle est exécutée avant l'enregistrement
+final de ses statistiques. Les journaux intermédiaires ont un champ de
+pic du job encore à0 : il n'est interrogé qu'à la fermeture ; cette valeur
+intermédiaire n'est pas une mesure de consommation nulle.
+
+| Ressource mesurée | Pic |
+| --- | ---: |
+| RAM résidente du processus,compteur OS | 313307136octets =298,79Mio |
+| Mémoire privée,maximum échantillonné | 1005117440octets =958,55Mio |
+| Mémoire engagée,maximum OS du job | 1005318144octets =958,75Mio |
+| Utilisation physique de toute la machine | 62,79 % |
+
+Aucun quota ni seuil coopératif n'est atteint, aucune intervention sur
+un autre processus et aucune croissance vers10Go n'est observée dans
+cette campagne. Le compteur système comprend toutes les applications ;
+il ne faut pas le présenter comme la consommation du test. Le maximum
+privé est échantillonné, le maximum engagé du job provient du compteur OS.
+Ces protections s'appliquent à ce processus mono-worker, pas à d'éventuels
+autres bancs ou applications lancés indépendamment.
+
+| Reconstruction,ratioRGB / bilinéaire |2048 étapes,graine71 |8192 étapes,graine71 |
+| --- | ---: | ---: |
+|20 contrôles historiques |0,98866 |0,98998 |
+|80 contrôles croisés |0,97368 |0,97483 |
+
+Les20cas restent à **11 critères réussis sur12**, avec le gain global
+minimal en échec (`0,98998 > 0,98`). Les80cas passent12/12. Les deux
+ratios se dégradent légèrement par rapport au premier pilote ; la
+prolongation n'apporte donc pas le bénéfice attendu sur les contrôles.
+L'exécution micro-lots différant également de celle du premier pilote,
+ne pas en tirer une preuve de convergence ou une attribution causale
+à la seule durée. Le checkpoint final est sauvegardé comme preuve
+d'étude ; il ne remplace pas les anciens poids et n'est pas livré.
+
+Mémoires canoniques :
+
+- [Précontrôle de mémoire,32 étapes sans qualité](../raw/neural-memory-preflight-v001-20261102T205832Z.json).
+- [Essai8192 étapes,mesures individuelles,critères et mémoire](../raw/neural-bounded-reconstruction-v001-20261102T205947Z.json).
+
+**Conclusion actuelle : garde mémoire opérationnelle et contrat bruité
+préparé, entraînement bruité non lancé.** Les9 tests ciblés des nouveaux
+contrats et de la mémoire passent, et les vérifications documentaires
+ne trouvent ni erreur ni lien interne manquant dans leur périmètre.
+Le verrou historique est conservé au lieu d'être remplacé par les80cas
+favorables. Répéter encore la même prolongation n'est pas la prochaine
+action retenue ; il faudra expliquer le plafond du modèle ou concevoir
+une amélioration justifiée avant un nouvel essai d'apprentissage.
+Le module actuel continue de refuser sigma non nul. Aucun débruiteur
+photographique n'est revendiqué et aucune nouvelle photo n'est demandée
+par ce résultat. Aucun calcul actif, modification moteur/IHM, installation
+GPU, publication, fusion ou tag.
