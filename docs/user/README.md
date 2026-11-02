@@ -11,7 +11,8 @@ de cette reprise. La branche est maintenant synchronisée avec `dev` ; sa nouvel
 CI doit être validée avant intégration. Le
 [bilan IHM](../architecture/suivi-raccordements-ihm.md#état-actuel--22-octobre-2026)
 distingue la livraison précédente, les ajouts publiés et les raccordements restants.
-La duplication physique `Ctrl+D` reste indisponible ; `Ctrl+S` est fonctionnel.
+La duplication physique `Ctrl+D` reste indisponible ; `Ctrl+S` est fonctionnel, de même que
+`Ctrl+Z`, `Ctrl+Maj+Z` et `Ctrl+Y` pour l'historique.
 
 - [Source principale LaTeX](latex/ipr-livre-utilisateur.tex).
 - [Chapitres par famille](latex/chapters/).
