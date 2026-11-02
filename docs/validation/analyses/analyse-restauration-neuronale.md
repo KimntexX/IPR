@@ -3721,7 +3721,7 @@ Mémoires canoniques :
 - [Témoin apparié en micro-lots](../raw/neural-local-route-baseline-v001-20261102T214222Z.json).
 - [Candidat local,ablations,critères et mémoire](../raw/neural-local-route-local-v001-20261102T214421Z.json).
 
-**Conclusion actuelle : piste locale concluante sur le banc de
+**Conclusion de cette campagne : piste locale concluante sur le banc de
 développement, barrière historique franchie sans assouplissement.**
 La voie courte rétablit une adaptation spatiale utile, conserve la
 structure symétrique et reste sous306Mio de RAM résidente mesurée.
@@ -3737,3 +3737,109 @@ ne transforme pas ce modèle en débruiteur. La préparation des noyaux
 d'inférence devra également être requalifiée sur la nouvelle branche
 locale. Aucun calcul actif, nouvelle photo requise pour cette confirmation
 synthétique, modification moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 21:59 UTC — reproduction et confirmation de la voie locale
+
+Banc `8bf9d95`, **6 tests ciblés réussis**. L'initialisation de reproduction
+est fixée à73, contre71 pour le premier candidat, sans recherche d'une
+meilleure graine. L'architecture,33368 paramètres, données32fixes/418contours,
+calendrier, Adam0,001,2048 étapes, micro-lot1 avec accumulation4,
+échelle2 et critères sont conservés. Le runner expose désormais la
+graine ; son orchestration évolue sans réécrire les précédents JSON.
+Le chargeur de confirmation vérifie les configurations hors graine,
+les seuils et les empreintes des implémentations de calcul/données ;
+les deux versions du runner restent identifiées dans les preuves.
+
+Le plan complet est figé à **21:59:13 UTC**, avant le début du second
+apprentissage à21:59:15. Il contient32 nouveaux contours, indices128à159
+(graines2000128à2000159), et20 nouveaux contenus mixtes, graines
+3100000+100famille+j. Les52 vérités et leurs quatre mosaïques sont
+identifiées par empreinte. Aucune collision entre ces vérités et les
+cibles d'entraînement n'est acceptée. Les tests vérifient la couverture
+des32 classes angulaires et le refus d'une collision simulée.
+
+La confirmation est postérieure au choix d'architecture et aux résultats
+du premier candidat ; elle n'est pas présentée comme un protocole figé
+avant toute étude. Elle partage les générateurs procéduraux et ne
+qualifie pas une nouvelle séance photographique ou un autre boîtier.
+Chaque checkpoint final des graines71 et73 sera mesuré, sans sélection,
+sur80 nouveaux cas mixtes et128 nouveaux cas de contours, plus le rejeu
+des80 contrôles connus pour vérifier les identités.
+
+La préparation des noyaux est aussi requalifiée pour la nouvelle route :
+copie indépendante du modèle évalué, projection ponctuelle des noyaux
+et biais des deux branches, puis convolutions ordinaires. Un test avec
+têtes non nulles, données signées et image non carrée vérifie des sorties
+identiques au bit près dans les quatre phases, et source/RNG inchangés.
+La campagne mesurera la même identité sur les checkpoints entraînés et
+tous les nouveaux cas, avec des temps intercalés CPU128px à sept
+répétitions, quatre entrées mises en cache,32 appels par répétition.
+Ces quatre entrées proviennent du premier contenu constant dans les
+quatre phases ; aucun temps de photo pleine définition n'est déduit.
+
+Le quota2Gio engagés, les seuils coopératifs1,25Gio privés/résidents et
+80 % physique machine, le cache borné et l'évaluation en flux restent
+actifs. Pas d'entraînements parallèles, de changement de seuil ou
+d'usage de ces nouveaux contenus pour optimiser les poids. Le modèle
+reste sans bruit et aucune production/IHM n'est modifiée.
+
+### Résultats de reproduction et de confirmation
+
+La reproduction73 se termine en139,54s. Le rapport d'erreur RGB à la
+bilinéaire vaut0,44620 sur20 contrôles historiques et0,45563 sur80.
+Les12 critères passent sur80, mais seulement11 sur20 : le critère
+`chromatic_wave_absolute_fidelity` échoue. Sur ces quatre cas historiques,
+la MSE passe de3,43047e-6 pour la bilinéaire à4,44125e-6 pour le modèle.
+L'excès1,01078e-6 dépasse la tolérance1e-6. Ce dépassement est conservé
+comme échec, sans changement de seuil ni sélection de la graine71.
+La covariance D4 conserve un écart maximal8,94e-8.
+
+La confirmation distincte se termine ensuite en17,31s :
+
+| Contrôle nouveau | Graine71 | Graine73 |
+| --- | ---: | ---: |
+| Rapport MSE RGB,80 cas mixtes | 0,40660 | 0,47221 |
+| Rapport d'erreur opposée,80 cas mixtes | 0,40572 | 0,47500 |
+| Critères sur80 cas mixtes | 12/12 | 12/12 |
+| Critères sur leur sous-ensemble20 | 12/12 | 12/12 |
+| Rapport MSE RGB,128 cas de contours | 0,34630 | 0,40616 |
+| Rapport d'erreur opposée,128 contours | 0,37391 | 0,43736 |
+
+Ces rapports comparent les erreurs agrégées à la reconstruction
+bilinéaire ; ils ne représentent pas un gain perceptuel ni un résultat
+de débruitage. Les nouveaux contenus mixtes montrent une baisse d'erreur
+RGB de52,8à59,3 %, les contours de59,4à65,4 %. Ils confirment le bénéfice
+sur cette distribution procédurale, sans annuler l'échec historique73.
+
+Les576 sorties comparées (288 par graine, dont80 rejeux connus) sont
+**identiques au bit près** entre les noyaux projetés à chaque appel et
+leur copie préparée une fois. Les sites observés restent exacts et les
+modèles sources inchangés. La préparation prend6,00/4,74ms pour71/73.
+Les médianes CPU par appel128px passent de8,17à7,16ms et de8,09à6,89ms.
+Le protocole chronométrique porte sur quatre entrées constantes en
+quatre phases, pas sur des photos pleine définition.
+
+| Ressource maximale mesurée | Reproduction73 | Confirmation |
+| --- | ---: | ---: |
+| RAM résidente du processus | 304,52Mio | 228,00Mio |
+| Mémoire engagée du job Windows | 961,98Mio | 872,85Mio |
+| Mémoire physique totale utilisée sur la machine | 70,45 % | 65,79 % |
+
+Aucun seuil n'est atteint. Les quotas et le moniteur sont libérés à
+la clôture ; ces mesures ne prédisent pas le coût d'une photo entière.
+Les résultats canoniques conservent les cas, configurations, empreintes,
+critères, ablations et ressources :
+
+- [Reproduction73](../raw/neural-local-route-local-v001-20261102T215915Z.json).
+- [Confirmation des deux graines et noyaux préparés](../raw/neural-local-confirmation-v001-20261102T220249Z.json).
+
+**Conclusion actuelle : gain de reconstruction reproduit, qualification
+encore partielle.** Les deux initialisations bénéficient de la voie
+locale sur les nouveaux contenus. La fidélité chromatique des signaux
+lisses reste sensible à l'initialisation ; sa cause n'est pas établie
+par ces mesures. La suite proposée est une étude de protection de ces
+structures, avec contrôle explicite des compromis sur les contours,
+avant d'autoriser un apprentissage bruité. Les nouveaux contenus ayant
+maintenant été consultés, ils ne seront plus présentés comme réservés
+pour un futur choix de modèle. Aucun calcul actif, changement moteur/IHM,
+publication, fusion ou tag ; aucune nouvelle photo requise pour ce point.

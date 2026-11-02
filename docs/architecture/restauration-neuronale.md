@@ -11,10 +11,11 @@ décrite au [§13](#13-structure-bayer-expérimentale--2-novembre-2026) :
 noyaux préparés une fois pour une inférence. Deux initialisations et une
 confirmation procédurale distincte de cette première structure sont
 conservées. La [voie locale suivante (§15)](#15-voie-courte-locale--2-novembre-2026)
-franchit les critères historiques20/80 sur le banc déjà consulté,
-sans assouplissement, mais reste à reproduire indépendamment. Les preuves
-de préparation et de confirmation antérieures ne valident pas à elles
-seules cette nouvelle branche.
+réduit l'erreur de reconstruction avec deux initialisations, puis sur
+des contenus procéduraux distincts. Sa qualification reste partielle :
+la graine73 échoue sur la fidélité des ondes chromatiques du sous-ensemble
+historique20. Les576 comparaisons de sorties qualifient la préparation
+des noyaux de cette nouvelle branche, sans qualification photographique.
 
 Le [rapport évolutif](../validation/analyses/analyse-restauration-neuronale.md)
 et ses JSON canoniques portent les résultats et limites. Les sections1à12
@@ -704,10 +705,20 @@ les12 critères sur20 et80 contrôles de développement, sans changer les
 seuils. Le détail, les ablations et les mesures font autorité dans le
 [rapport unique](../validation/analyses/analyse-restauration-neuronale.md).
 
-Cette branche reste expérimentale et sans bruit : une seule graine,
-contrôles déjà consultés, aucune validation photographique. La reproduction
-indépendante et une confirmation distincte restent nécessaires. La
-préparation des noyaux et le runtime doivent être requalifiés pour ce
-nouveau modèle ; leurs anciennes preuves ne lui sont pas attribuées.
+La reproduction avec la graine73 conserve les gains globaux et passe
+les12 critères sur80 contrôles historiques, mais échoue sur les ondes
+chromatiques du sous-ensemble20 (11/12). Le succès initial71 n'est donc
+pas une qualification de toutes les initialisations. Les deux graines
+passent les12 critères sur80 nouveaux cas mixtes et améliorent les128
+nouveaux contours, sur un plan figé avant le second apprentissage mais
+après le choix d'architecture. Ces contenus consultés ne sont désormais
+plus réservés. Ils partagent les générateurs du développement.
+
+La préparation des noyaux des deux routes est requalifiée :576 sorties
+identiques au bit près, sans changement des sources. Les mesures CPU
+128px restent distinctes d'une latence photographique pleine définition.
+Cette branche reste expérimentale et sans bruit, sans validation photo.
+La protection des signaux chromatiques lisses doit être étudiée avant
+le pilote bruité, sans choisir la meilleure graine ou assouplir les seuils.
 Les ressources restent bornées selon le§14 et aucune production ou IHM
 n'est modifiée par cette étude.
