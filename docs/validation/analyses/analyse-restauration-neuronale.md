@@ -2510,7 +2510,7 @@ symétries ; les64cas ne constituent pas64 scènes indépendantes.
 
 Mémoire canonique : [ablation phases équilibrées, calendrier, critères et144 contrôles](../raw/neural-balanced-moment-v001-20261102T150546Z.json).
 
-**Conclusion actuelle : l'équilibrage réduit la dépendance aux phases,
+**Conclusion de cette campagne : l'équilibrage réduit la dépendance aux phases,
 sans rendre le modèle admissible.** L'hypothèse d'un simple manque
 d'exposition aux phases ne suffit pas à expliquer les erreurs de contours.
 Cette campagne ne mesure pas encore les pertes finales du candidat sur
@@ -2525,3 +2525,77 @@ Les contrôles angulaires viennent désormais d'être consultés : ne plus
 les présenter comme un jeu vierge pour une sélection ultérieure.
 Aucun apprentissage bruité lancé, aucune nouvelle photo nécessaire,
 aucun calcul actif, changement moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 15:11 UTC — rejeu apparié des deux modèles sur l'entraînement
+
+Banc `d1275e3`, **11 tests ciblés réussis**, audit terminé en **3,13 s**.
+Les deux checkpoints sont figés et évalués sur les mêmes160 couples
+contenu/phase des40 contenus d'entraînement. Aucune étape d'optimisation,
+aucun gradient calculé et aucun nouveau contrôle utilisé. Les160 sorties
+de l'ancien modèle reproduisent exactement leurs empreintes du premier
+diagnostic d'entraînement ; les sources sont inchangées et les sites
+observés conservés par les deux modèles.
+
+Les deux modèles ont vu les mêmes40 contenus, mais seul le candidat
+équilibré a vu chacun dans les quatre phases. La séparation historique
+des40 couples vus par l'ancien et120 autres couples est conservée pour
+expliquer la redistribution du gain ; tous sont des données d'entraînement
+du nouveau modèle et **aucun résultat de cette section ne vaut validation**.
+
+| Groupe, même bilinéaire de référence | Ancien ratio MSE RGB | Candidat équilibré |
+| --- | ---: | ---: |
+| Ensemble des160 couples d'entraînement | 1,01547 | 0,93526 |
+| Contours,32 couples d'entraînement | 1,01544 | 0,93478 |
+| 40 couples vus auparavant par l'ancien | 0,85822 | 0,96576 |
+| 120 autres couples des mêmes contenus | 1,06786 | 0,92509 |
+| 80 contrôles historiques, rappel campagne précédente | 1,06891 | 1,16417 |
+
+Sur l'ensemble d'entraînement apparié, le candidat réduit la MSE RGB
+d'environ **7,90 % par rapport à l'ancien modèle**, et de **6,47 % face
+à la bilinéaire**. L'erreur opposée donne un ratio0,91586 face à la
+bilinéaire, contre0,96208 pour l'ancien. Il abandonne une partie du gain
+sur les anciens couples privilégiés, mais améliore les trois autres
+phases qui lui sont désormais présentées.
+
+Le résultat se maintient avec les fréquences réelles de présentation :
+sur la distribution d'exposition du candidat, MSE RGB caméra de
+0,000130881 pour le candidat contre0,000142095 pour l'ancien. Ces valeurs
+sont en unités caméra au carré ; l'objectif normalisé d'apprentissage
+les divise par4 (échelle2). Il s'agit d'une évaluation finale de tous
+les couples, pas d'une comparaison de derniers lots aléatoires.
+
+Parmi les96 couples des trois familles dont l'erreur bilinéaire dépasse
+le plancher10⁻¹²,52 s'améliorent et44 se dégradent par rapport à l'ancien,
+avec une tolérance absolue de MSE10⁻¹² fixée avant le calcul. Le gain
+agrégé n'est donc pas universel. Les64 couples constants/rampes sont
+exclus de ce décompte relatif : constantes MSE0, rampes1,71×10⁻¹⁶.
+Les ondes chromatiques restent à1,04547 fois l'erreur bilinéaire sur
+l'entraînement, malgré leur gain sur les contrôles de la campagne
+précédente ; ne pas confondre une famille et ses quelques réalisations.
+
+Les erreurs des contours restent intégralement dans la bande de trois
+pixels autour des transitions vérité ; leur complément est exact.
+Les résultats par phase et régions, ainsi que les empreintes des deux
+sorties pour chaque couple, sont conservés dans la mémoire canonique.
+
+Mémoire canonique : [rejeu apparié des160 couples et pertes pondérées](../raw/neural-balanced-training-audit-v001-20261102T151106Z.json).
+
+**Conclusion actuelle : le candidat ajuste mieux l'entraînement, mais
+ce gain ne se généralise pas aux contrôles consultés.** Le pipeline
+d'apprentissage n'est pas complètement inopérant ; l'équilibrage améliore
+son objectif d'entraînement tout en aggravant les contrôles historiques.
+La différence train/contrôles est réelle sur ces petits jeux procéduraux,
+pas une estimation statistique du comportement sur toutes les photos.
+L'ajustement n'est pas parfait : cet audit ne démontre ni convergence,
+ni absence de limite d'optimisation ou de capacité du modèle.
+
+La prochaine expérience proposée est de diversifier explicitement les
+contours d'entraînement (orientations, positions et contrastes), tout en
+gardant les phases équilibrées et le budget d'optimisation fixé. Préparer
+avant ce nouvel apprentissage des contrôles distincts réservés, sans les
+utiliser pour choisir une étape ou régler les seuils ; conserver les
+contrôles actuels comme régressions déjà consultées. Cette piste est
+prioritaire sur une simple augmentation de durée ou de largeur du réseau.
+Aucun nouvel apprentissage lancé ici, aucune nouvelle photo nécessaire
+pour cette étape synthétique. Aucun calcul actif, modification moteur/IHM,
+publication, fusion ou tag.
