@@ -1,4 +1,4 @@
-<!-- translation-source: docs/decisions/README.md; sha256: bdb672d6b468dddaeb3a3b4a93a1bb2e6959342676b51ee79c3156945c1b3107 -->
+<!-- translation-source: docs/decisions/README.md; sha256: 6ce2f4b81f90a038d92908a49c3f33e089fdddc91f7b4b7da44fa465513fa7d6 -->
 *[Français](README.md) | [English](README_en.md)*
 
 # Architecture Decision Records (ADR)
@@ -48,3 +48,5 @@ for other brands.
 import boundary, independent metadata and common checks.
 
 [ADR-0005](ADR-0005-melangeur-huit-bandes-luminance-bornee.md) complements ADRs 0001/0002/0004: eight bands, neutral protection, bounded luminance, sidecar v4, and INI schema 2 (October 4, 2026).
+
+[ADR-0021](ADR-0021-socle-edition-beta.md), in French: editing foundation of the beta — edits described in the `.ipr`, heavy results in `<photo>.ipr-data/`, a saved history of 100 steps, geometry after the optics and layers after the settings, a format with a header and sections, evolution without breaks from the stable version (1 November 2026).

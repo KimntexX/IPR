@@ -1,4 +1,4 @@
-% translation-source: docs/user/latex/chapters/03-informations-selection.tex; sha256: 39b56e1796ec0072ef85770a0332f7682ffb714403d31ec3dcf1a67055be0473
+% translation-source: docs/user/latex/chapters/03-informations-selection.tex; sha256: d6262e09b4a7770461e960518bb3c510f2e2d54c066a2e8584fc3ce8f21c3dd8
 \chapter{Information, rating and selection}
 \section{Read image information}
 The left panel describes the open photo: name, available date, storage,
@@ -15,6 +15,29 @@ These organizational choices do not recolor pixels and are not mixer bands.
 No numeric rating or flag shortcut is currently declared. Use the Information
 panel controls.
 
+\section{History and snapshots}
+Under the labels, the left panel lists the steps of the open photo, the most
+recent at the top. A drag of a slider or wheel, a moved curve point, a typed
+value or a profile choice each count as one step. The last hundred steps are
+saved in the photo's sidecar and come back when it is reopened.
+
+\emph{Undo} and \emph{Redo} are in this section and in the \emph{Edit} menu.
+Clicking a step returns to it; more recent steps appear dimmed and stay
+available until the next edit. Undoing a profile change develops the photo
+again.
+
+To remove an edit from the middle of the history, right-click its step and
+choose \emph{Delete this step}, or press \touche{Delete} when the list has the
+focus: the current step is then removed. Later steps are replayed without this
+edit and keep what they changed themselves. The opening step cannot be removed.
+
+A snapshot keeps the current state under a name. Type the name, then choose
+\emph{Create}; clicking the snapshot restores it as a new step.
+
+\attention{Once saved by this version, a sidecar can no longer be read by an
+older version of IPR. A sidecar written by a more recent version opens as
+read-only.}
+
 \section{Copy and paste settings}
 On a ready image, choose \emph{Edit > Copy settings} or
 \touche{Ctrl + Shift + C}. Open the destination photo, wait for processing,
@@ -28,7 +51,8 @@ the destination profile, calibration, optics, automatic white balance and
 rating. If the source uses as-shot white balance, the destination uses its
 own as-shot balance; custom temperature and tint are copied as absolute
 values. Two cameras will not necessarily produce the same color.
-There is no selection of individual groups to paste and no undo yet.
+There is no selection of individual groups to paste yet; a paste can be undone
+like any other history step.
 \touche{Ctrl + C} and \touche{Ctrl + V} remain available in text fields.
 
 \section{Copy edits to multiple photos}
@@ -36,7 +60,8 @@ There is no selection of individual groups to paste and no undo yet.
 \item Open the photo whose settings you want to copy.
 \item Check destination thumbnails or use \touche{Ctrl + click}; do not
 confuse a checked box with the open image. The counter shows selected files.
-\item Click \emph{Apply to N}. Check the result message.
+\item Right-click and choose \emph{Apply the open image's settings to the selection},
+also in the \emph{Edit} menu. Check the result message.
 \item Uncheck files or use the clear-selection button.
 \end{enumerate}
 This writes edits into destination sidecars. It is not limited to the currently

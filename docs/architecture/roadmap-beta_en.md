@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: aa83c3e33fec27550cba277b47e30ff449ce15e849c57818bae753f52ec91b55 -->
+<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: a3aee33a618c05a6b4d3afad3a79a805a2d128b05d76b7ed2ce929c8059e4f6d -->
 *[Français](roadmap-beta.md) | [English](roadmap-beta_en.md)*
 
 # Beta action plan — editing panels and neural processing
