@@ -13,12 +13,12 @@
 #include "PerceptualColour.h"
 #include "RenderStageCache.h"
 #include "RawDecoder.h"
+#include "TaskRunner.h"
 
 #include <QAbstractListModel>
 #include <QColor>
 #include <QFileSystemWatcher>
 #include <QFutureWatcher>
-#include <QPromise>
 #include <QHash>
 #include <QImage>
 #include <QTimer>
@@ -31,7 +31,6 @@
 
 #include <array>
 #include <atomic>
-#include <QThreadPool>
 
 class ImageProvider;
 class ThumbnailProvider;
@@ -458,9 +457,18 @@ private:
     std::shared_ptr<RawDecoder::DcpSource> m_dcpSource;
     QHash<QString, UserImageMetadata> m_userImageMetadata;
     QSet<QString> m_selectedImageKeys;
-    ImageCacheController m_decodedImageCache;
+    // What the running tasks reach besides their own copies: shared with them, so
+    // that a task left running at close never touches a destroyed object.
+    struct TaskResources
+    {
+        explicit TaskResources(ImageCacheController::Sampler sampler) : cache(nullptr, std::move(sampler)) {}
+        ImageCacheController cache;
+        RenderStageCache stages;
+    };
+    std::shared_ptr<TaskResources> m_taskResources;
+    ImageCacheController &m_decodedImageCache;
     // Preview only; cleared with the image it belongs to.
-    RenderStageCache m_renderStageCache;
+    RenderStageCache &m_renderStageCache;
     QString m_currentCacheKey;
     Settings m_settings;
     int m_pointColorOverlay = -1;
@@ -472,7 +480,6 @@ private:
     QString m_memoryWaitMessage;
     // Camera-rendered embedded JPEG shown while the IPR development runs.
     QFutureWatcher<QImage> m_embeddedWatcher;
-    QThreadPool m_embeddedPool;
     quint64 m_embeddedRevision = 0, m_embeddedSerial = 0;
     bool m_embeddedPreview = false;
     QImage m_restorePreview, m_restoreOriginal;
@@ -491,7 +498,7 @@ private:
     };
     static BatchResult applyToFiles(const QStringList &files, const Settings &settings, bool asShot,
                                     const QHash<QString, UserImageMetadata> &annotations);
-    static void exportFiles(QPromise<BatchResult> &promise, const QStringList &files, const QString &folder,
+    static BatchResult exportFiles(Tasks::Context &context, const QStringList &files, const QString &folder,
                             const QString &format, int quality, ImageCacheController *controller,
                             ImageCacheController::CancelToken cancel);
     void finishBatch(const BatchResult &result, const QString &done);
@@ -507,7 +514,6 @@ private:
     bool m_copiedAsShot = false;
     QFutureWatcher<LoadResult> m_loadWatcher;
     QFutureWatcher<LoadResult> m_prefetchWatcher;
-    QThreadPool m_prefetchPool;
     QTimer m_prefetchTimer;
     QStringList m_prefetchQueue;
     QString m_prefetchFile;
@@ -517,6 +523,10 @@ private:
     quint64 m_prefetchGeneration = 0, m_activePrefetchGeneration = 0;
     std::shared_ptr<std::atomic_bool> m_prefetchCancel;
     std::shared_ptr<std::atomic_bool> m_loadCancel;
+    // One thread per channel: the tasks mostly wait for memory or run the modules'
+    // own parallel loops, and none must queue behind another's wait. Closing waits a
+    // minute at most, longer than a RAW development.
+    Tasks::TaskRunner m_tasks{8, 60000};
     quint64 m_requestedRevision = 0;
     quint64 m_activeRevision = 0;
     quint64 m_requestedLoadRevision = 0;
