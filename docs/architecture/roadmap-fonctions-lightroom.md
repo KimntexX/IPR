@@ -39,8 +39,8 @@ des exports Lightroom, jamais par rétro-ingénierie.
 | Optique | Défrangeage (violet, vert) | Absent | Non planifié |
 | Optique | Flou d'objectif (IA) | Absent | Non planifié |
 | Géométrie | Upright (auto, niveau, vertical, complet, guidé) | Absent | Non planifié |
-| Géométrie | Transformations manuelles (vertical, horizontal, rotation, aspect, échelle, décalages) | Absent | Non planifié |
-| Recadrer | Recadrage, format, redressement, rotation, miroir | Absent | Non planifié |
+| Géométrie | Transformations manuelles (vertical, horizontal, rotation, aspect, échelle, décalages) | Implémenté et validé par l'utilisateur (B1, [issue #22](https://github.com/KimntexX/IPR/issues/22)) | [Analyse](../validation/analyses/analyse-geometrie.md) |
+| Recadrer | Recadrage, format, redressement, rotation, miroir | Implémenté et validé par l'utilisateur (B1, [issue #22](https://github.com/KimntexX/IPR/issues/22)) | [Analyse](../validation/analyses/analyse-geometrie.md) |
 | Masquage | Pinceau, dégradés linéaire et radial, plages de couleur, de luminance et de profondeur | Absent | Non planifié |
 | Masquage | Sujet, ciel, arrière-plan, objets, personnes (IA) | Absent | Non planifié |
 | Retouche | Correcteur, tampon, suppression (générative ou non), suppression des distractions, yeux rouges | Absent | Non planifié |

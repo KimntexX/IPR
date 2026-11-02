@@ -2,6 +2,7 @@
 #define IPR_CORE_EDITRECIPE_H
 
 #include "ColorMixer.h"
+#include "Geometry.h"
 #include "PointColor.h"
 #include "ToneCurve.h"
 
@@ -52,6 +53,7 @@ struct Settings
     PointColor::Parameters pointColor;   // picked colours, in picking order (sidecar v9)
     bool automaticWhiteBalance = false;
     ToneCurve::Curves toneCurves;
+    Geometry::Settings geometry;
 };
 
 struct RawDevelopment

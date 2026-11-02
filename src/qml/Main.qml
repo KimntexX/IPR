@@ -195,6 +195,10 @@ ApplicationWindow {
                 panelColor: uiPreferences.theme.panel
                 visible: imageEditor.hasImage
                 picking: settingsView.pointColorPicking
+                cropEditing: panelTabs.currentIndex === 1
+                geometry: imageEditor.geometry
+                showGeometryGrid: geometryView.showGrid
+                onCropEdited: (x, y, width, height) => imageEditor.setGeometryCrop(x, y, width, height)
                 onPointPicked: (x, y) => {
                     imageEditor.addPointColorAt(x, y)
                     settingsView.pointColorPicking = false
@@ -334,13 +338,41 @@ ApplicationWindow {
             border.color: "#3d4654"
             focus: true
 
+            PanelTabBar {
+                id: panelTabs
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: 14
+                textColor: uiPreferences.theme.text
+                // The eyedropper belongs to the Settings tab's panel.
+                onCurrentIndexChanged: settingsView.pointColorPicking = false
+            }
+            // The Geometry tab shows the whole canvas, its crop as a frame.
+            Binding {
+                target: imageEditor
+                property: "cropEditing"
+                value: panelTabs.currentIndex === 1
+            }
             Setting {
                 id: settingsView
-                anchors.fill: parent
+                anchors.top: panelTabs.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
                 anchors.margins: 14
+                anchors.topMargin: 8
+                visible: panelTabs.currentIndex === 0
                 editor: imageEditor
                 preferences: uiPreferences
                 resetAction: fileActions.resetAction
+            }
+            GeometryPanel {
+                id: geometryView
+                anchors.fill: settingsView
+                visible: panelTabs.currentIndex === 1
+                editor: imageEditor
+                preferences: uiPreferences
             }
 
         }

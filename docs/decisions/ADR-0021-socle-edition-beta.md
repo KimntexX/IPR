@@ -116,6 +116,23 @@ boîtier, qui remplacera la case expérimentale.
   versions 1 à 9, historique, cartes de valeurs locales ; chaque étape avec ses
   tests écrits d'abord.
 
+### Géométrie mise en œuvre (B1, 2 novembre 2026)
+
+Choix techniques pris sans l'utilisateur, à sa demande, et à relire avec lui ; le
+détail et les mesures sont dans l'[analyse de la géométrie](../validation/analyses/analyse-geometrie.md).
+
+- **Place :** la passe unique suit le développement du signal caméra et précède tous
+  les tons, plutôt que d'attendre les traitements de voisinage. Les étages suivants,
+  donc les futurs masques, travaillent tous dans le même espace redressé. Le
+  débruitage de luminance avant profil reste sur la grille du capteur.
+- **Zones vides :** au-delà de la source, les couleurs répètent le bord, pour que les
+  filtres de voisinage ne voient pas de faux contour ; une couverture calculée à part
+  rend ces pixels transparents, et noirs à la fin de la chaîne. Rien n'est inventé à
+  l'export.
+- **Réduction :** un flou gaussien préalable, selon l'échelle et l'aspect, évite le
+  repliement. Il ne s'agit pas d'un second rééchantillonnage.
+- **Copier/coller et lot :** la géométrie reste celle de chaque photo.
+
 ## Conséquences
 
 - **Bénéfices :** recette légère et lisible, retouches jamais perdues avec le

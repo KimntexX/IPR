@@ -1,2 +1,40 @@
 \chapter{Recadrage et effets géométriques}
-% Famille réservée, comme dans la documentation technique. Aucun contenu tant que non commencée.
+L’onglet \emph{Géométrie}, en haut du panneau de droite, regroupe l’orientation,
+le recadrage et les transformations manuelles. Rien n’est écrit dans la photo :
+la géométrie s’enregistre dans son compagnon et s’annule comme les autres étapes.
+Tant que l’onglet est ouvert, l’aperçu montre tout le cadre, le recadrage sous
+forme de rectangle ; revenir à l’onglet \emph{Réglages} affiche l’image recadrée.
+
+\section{Orientation}
+\emph{Pivoter de 90° à droite}, \emph{Miroir horizontal} et \emph{Miroir vertical}
+ne dégradent aucun pixel. Le recadrage et les transformations suivent l’image.
+
+\section{Recadrage}
+Déplacer le rectangle ou l’une de ses huit poignées. L’image n’est recalculée
+qu’au relâchement, et le geste compte pour une étape. La liste \emph{Format} impose
+des proportions, y compris celles d’origine ; les champs \emph{Gauche}, \emph{Haut},
+\emph{Largeur} et \emph{Hauteur} donnent une saisie numérique en pour cent du cadre.
+
+\section{Transformations}
+\begin{itemize}
+\item \emph{Rotation} : de -45° à 45°, pour redresser un horizon. \emph{Afficher la
+grille} aide à l’aligner.
+\item \emph{Vertical} et \emph{Horizontal} : corrigent les lignes fuyantes. Une valeur
+positive élargit le haut, ou la droite.
+\item \emph{Aspect}, \emph{Échelle}, \emph{Décalage horizontal} et \emph{Décalage
+vertical} : ajustent les proportions, la taille et la place de l’image dans le cadre.
+\end{itemize}
+Ces réglages forment une seule transformation, appliquée en une seule passe : les
+cumuler ne dégrade pas davantage l’image. Elle ne corrige pas la distorsion d’un
+objectif, qui reste le rôle des profils de correction.
+
+\section{Zones vides}
+Une transformation peut laisser une partie du cadre sans image. IPR n’invente rien
+pour la remplir : ces zones restent transparentes en PNG et TIFF, et noires en JPEG
+et DNG, ce que le message d’export signale. Pour les retirer, recadrer, ou cocher
+\emph{Contraindre à l’image}, qui réduit le rectangle autour de son centre jusqu’à
+ce qu’il ne contienne que l’image.
+
+\attention{Copier les paramètres, ou les appliquer à la sélection, ne transmet pas
+la géométrie : le cadrage appartient à chaque photo. \emph{Réinitialiser les
+réglages} la retire en revanche, comme les autres retouches.}

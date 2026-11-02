@@ -44,6 +44,22 @@ const Field<Settings, std::array<int, 4>> SettingWheels[] = {
     {"gradingHue", &Settings::gradingHue}, {"gradingSaturation", &Settings::gradingSaturation},
     {"gradingLuminance", &Settings::gradingLuminance},
 };
+const Field<Geometry::Settings, int> GeometryInts[] = {
+    {"quarterTurns", &Geometry::Settings::quarterTurns}, {"vertical", &Geometry::Settings::vertical},
+    {"horizontal", &Geometry::Settings::horizontal}, {"aspect", &Geometry::Settings::aspect},
+    {"scale", &Geometry::Settings::scale}, {"offsetX", &Geometry::Settings::offsetX},
+    {"offsetY", &Geometry::Settings::offsetY},
+};
+const Field<Geometry::Settings, float> GeometryFloats[] = {{"rotation", &Geometry::Settings::rotation}};
+const Field<Geometry::Settings, double> GeometryDoubles[] = {
+    {"cropX", &Geometry::Settings::cropX}, {"cropY", &Geometry::Settings::cropY},
+    {"cropWidth", &Geometry::Settings::cropWidth}, {"cropHeight", &Geometry::Settings::cropHeight},
+    {"cropRatio", &Geometry::Settings::cropRatio},
+};
+const Field<Geometry::Settings, bool> GeometryBools[] = {
+    {"flipHorizontal", &Geometry::Settings::flipHorizontal}, {"flipVertical", &Geometry::Settings::flipVertical},
+    {"constrain", &Geometry::Settings::constrain},
+};
 const Field<UserImageMetadata, int> MetadataInts[] = {{"rating", &UserImageMetadata::rating}};
 const Field<UserImageMetadata, QString> MetadataStrings[] = {{"colorLabel", &UserImageMetadata::colorLabel}};
 const Field<UserImageMetadata, bool> MetadataBools[] = {
@@ -69,6 +85,7 @@ const QString RecipeRawKey = QStringLiteral("rawDevelopment");
 
 QCborValue encode(int value) { return qint64(value); }
 QCborValue encode(float value) { return double(value); }
+QCborValue encode(double value) { return value; }
 QCborValue encode(bool value) { return value; }
 QCborValue encode(const QString &value) { return value; }
 template <size_t N>
@@ -90,6 +107,10 @@ void decode(const QCborValue &value, int &target)
 void decode(const QCborValue &value, float &target)
 {
     if (value.isDouble() || value.isInteger()) target = float(value.toDouble());
+}
+void decode(const QCborValue &value, double &target)
+{
+    if (value.isDouble() || value.isInteger()) target = value.toDouble();
 }
 void decode(const QCborValue &value, bool &target)
 {
@@ -124,7 +145,7 @@ void load(const QCborMap &map, Owner &owner, const Field<Owner, Value> (&fields)
 
 bool bound(Settings &s)
 {
-    if (!std::isfinite(s.brightness) || !std::isfinite(s.sharpeningRadius))
+    if (!std::isfinite(s.brightness) || !std::isfinite(s.sharpeningRadius) || !Geometry::bound(s.geometry))
         return false;
     const auto within = [](int &value, int low, int high) { value = std::clamp(value, low, high); };
     s.brightness = std::clamp(s.brightness, -5.0f, 5.0f);
@@ -187,6 +208,12 @@ QCborMap encodeSettings(const Settings &settings)
         curves.insert(QLatin1StringView(CurveKeys[channel]), curve);
     }
     map.insert(QStringLiteral("toneCurves"), curves);
+    QCborMap geometry;
+    store(geometry, settings.geometry, GeometryInts);
+    store(geometry, settings.geometry, GeometryFloats);
+    store(geometry, settings.geometry, GeometryDoubles);
+    store(geometry, settings.geometry, GeometryBools);
+    map.insert(QStringLiteral("geometry"), geometry);
     return map;
 }
 
@@ -197,6 +224,11 @@ bool decodeSettings(const QCborMap &map, Settings &settings)
     load(map, settings, SettingBools);
     load(map, settings, SettingBands);
     load(map, settings, SettingWheels);
+    const QCborMap geometry = map.value(QStringLiteral("geometry")).toMap();
+    load(geometry, settings.geometry, GeometryInts);
+    load(geometry, settings.geometry, GeometryFloats);
+    load(geometry, settings.geometry, GeometryDoubles);
+    load(geometry, settings.geometry, GeometryBools);
     const QCborValue pointColor = map.value(QStringLiteral("pointColor"));
     if (pointColor.isArray()) {
         const QCborArray points = pointColor.toArray();

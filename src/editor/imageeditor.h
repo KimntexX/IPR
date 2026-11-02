@@ -118,6 +118,8 @@ class ImageEditor final : public QObject
     Q_PROPERTY(QVariantList snapshots READ snapshots NOTIFY historyChanged)
     // Point colour: the picked points in picking order, each {colour (sRGB swatch of
     // its source), hue, saturation, luminance, variance, range}.
+    Q_PROPERTY(QVariantMap geometry READ geometry NOTIFY geometryChanged)
+    Q_PROPERTY(bool cropEditing READ cropEditing WRITE setCropEditing NOTIFY cropEditingChanged)
     Q_PROPERTY(QVariantList pointColors READ pointColors NOTIFY pointColorsChanged)
     // Range overlay of one point in the preview (-1: none); never saved nor exported.
     Q_PROPERTY(int pointColorOverlay READ pointColorOverlay WRITE setPointColorOverlay NOTIFY pointColorOverlayChanged)
@@ -324,6 +326,18 @@ public:
     Q_INVOKABLE void resetToneCurve(int channel);
     Q_INVOKABLE void resetToneCurves();
     Q_INVOKABLE void resetAdjustments();
+    // The geometry panel. Names: rotation, vertical, horizontal, aspect, scale, offsetX, offsetY.
+    QVariantMap geometry() const;
+    bool cropEditing() const;
+    void setCropEditing(bool editing);
+    Q_INVOKABLE void setGeometryValue(const QString &name, double value);
+    Q_INVOKABLE void turnGeometry();
+    Q_INVOKABLE void mirrorGeometry(bool horizontal);
+    Q_INVOKABLE void setGeometryCrop(double x, double y, double width, double height);
+    Q_INVOKABLE void setGeometryCropRatio(double ratio);
+    Q_INVOKABLE void setGeometryConstrain(bool constrain);
+    Q_INVOKABLE void resetGeometryCrop();
+    Q_INVOKABLE void resetGeometry();
     Q_INVOKABLE void exportImage(const QUrl &target, const QString &format,
                                  int quality);
 
@@ -346,6 +360,8 @@ signals:
     void toneCurvesReset();
     void adjustmentsReset(int temperatureKelvin, int tint);
     void pointColorsChanged();
+    void geometryChanged();
+    void cropEditingChanged();
     void pointColorOverlayChanged();
 
 private:
@@ -360,6 +376,8 @@ private:
     {
         QImage preview;
         QImage originalPreview;
+        Geometry::Settings originalGeometry;   // the framing originalPreview shows
+        bool originalWholeCanvas = false;
         QVariantList histogram;
         QString error;
     };
@@ -370,6 +388,8 @@ private:
         const ColorPipeline::WorkingImage &proxy, const ImageMetadata &metadata,
         std::shared_ptr<RawDecoder::DcpSource> dcpSource, QSize fullSize, bool imageIsProxy);
     DecodedImageCache::Entry retainedCurrentEntry() const;
+    void commitGeometry(Geometry::Settings next);
+    bool originalFramingStale() const;
     RawDecoder::Options developmentOptions() const;
     // pixelScale: pixels of source per pixel of the full image (below 1 for the
     // preview proxy), so effects keep their full-image radii. With a cache (the
@@ -390,7 +410,8 @@ private:
                                       bool includeOriginal,
                                       double pixelScale = 1.0,
                                       RenderStageCache *cache = nullptr,
-                                      int overlayPoint = -1);
+                                      int overlayPoint = -1,
+                                      bool wholeCanvas = false);
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
@@ -478,6 +499,9 @@ private:
     bool m_hasCopiedAdjustments = false;
     QString m_imageSource;
     QString m_originalImageSource;
+    Geometry::Settings m_originalGeometry;   // the framing the published original shows
+    bool m_originalWholeCanvas = false;
+    bool m_cropEditing = false;
     QString m_statusMessage = tr("Choisissez un dossier contenant des images.");
     QString m_memoryWaitMessage;
     // Camera-rendered embedded JPEG shown while the IPR development runs.

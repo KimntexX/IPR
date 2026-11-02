@@ -22,6 +22,11 @@ Item {
     property bool picking: false
     signal pointPicked(real x, real y)
     signal pickingCancelled()
+    // The crop frame, over the whole canvas, while the Geometry tab is open.
+    property bool cropEditing: false
+    property var geometry: ({})
+    property bool showGeometryGrid: false
+    signal cropEdited(real x, real y, real width, real height)
     property real previewWidth: 0
     property real previewHeight: 0
     property bool fitMode: true
@@ -332,6 +337,23 @@ Item {
     }
 
     // Eyedropper beside the pointer while picking, whatever the system cursor shows.
+    CropOverlay {
+        anchors.fill: parent
+        visible: root.cropEditing && root.imageReady && !root.showingComparison && !root.showingOriginal
+        imageX: root.imageLeft
+        imageY: root.imageTop
+        imageWidth: root.previewWidth * root.zoomScale
+        imageHeight: root.previewHeight * root.zoomScale
+        cropX: root.geometry.cropX || 0
+        cropY: root.geometry.cropY || 0
+        cropWidth: root.geometry.cropWidth || 1
+        cropHeight: root.geometry.cropHeight || 1
+        normalizedRatio: (root.geometry.cropRatio || 0) * (root.geometry.canvasHeight || 1)
+                         / Math.max(1, root.geometry.canvasWidth || 1)
+        showGrid: root.showGeometryGrid
+        onCropEdited: (x, y, width, height) => root.cropEdited(x, y, width, height)
+    }
+
     Canvas {
         objectName: "pickingIndicator"
         x: interaction.mouseX + 4

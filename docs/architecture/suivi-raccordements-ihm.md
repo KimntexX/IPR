@@ -40,6 +40,17 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-004 | En attente moteur | Comparaison canonique des recettes par groupe |
 | IHM-CONN-012 | Raccordé sur `patch_ui_history`, validé visuellement par l'utilisateur le 2 novembre 2026 | Historique et instantanés : voir ci-dessous |
 
+| IHM-CONN-013 | Raccordé et validé par l'utilisateur, intégré à `dev` | Panneau Géométrie : voir ci-dessous |
+
+#### IHM-CONN-013 — panneau Géométrie (B1)
+
+Le moteur expose sur `editor` : `geometry` (valeurs, taille du cadre, `hasCrop`,
+`identity`, `emptyZones`), `cropEditing`, `setGeometryValue(nom, valeur)`,
+`turnGeometry()`, `mirrorGeometry(horizontal)`, `setGeometryCrop(x, y, l, h)`,
+`setGeometryCropRatio(ratio)`, `setGeometryConstrain(actif)`, `resetGeometryCrop()`,
+`resetGeometry()`. L'onglet Géométrie met `cropEditing` à vrai : l'aperçu montre le
+cadre entier ; un glissement du rectangle reste local et n'est envoyé qu'au relâchement.
+
 #### IHM-CONN-012 — historique des retouches (ADR-0021)
 
 Le moteur expose sur `editor` (contrat C++ dans `src/editor/imageeditor.h`) :
