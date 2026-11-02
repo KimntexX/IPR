@@ -1,6 +1,6 @@
 """Fixed first photographic U-Net pilot; no tuning on the validation scene.
 
-An exploratory two-composition benchmark, not a production model or a test of
+An exploratory declared-composition benchmark, not a production model or a test of
 generalization to arbitrary photos. Targets are qualified burst averages.
 """
 import argparse
@@ -109,8 +109,8 @@ def run(work):
         weights_sha256=digest(work/'pilot-weights.pt'),
         verdict='exploratory_validation_mse_gain' if summaries['validation']['mse_ratio']<1 else 'no_validation_mse_gain',
         limits=pairs['limits']+['MSE is measured against a noisy aligned burst reference, not an absolute clean truth.',
-            'No independent third composition, Lightroom equivalence, visual validation or production integration.',
-            '256 fixed steps; no validation-driven checkpoint or parameter selection.',
+            'No independent final test, Lightroom equivalence, visual validation or production integration.',
+            f'{config["steps"]} fixed steps; no validation-driven checkpoint or parameter selection.',
             'CPU-only training; no GPU, full-frame inference, peak-memory or deployment qualification.'])
     with (work/'training.json').open('x',encoding='utf-8') as handle:
         json.dump(result,handle,indent=2,allow_nan=False)

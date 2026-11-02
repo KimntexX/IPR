@@ -65,10 +65,8 @@ def prepare(work,freeze,captures):
     all_signals=[];all_targets=[];all_masks=[];all_sigmas=[]
     scenes=declared_scenes(freeze,captures)
     reference_hashes=reference_sources(freeze,captures)
-    radiometry_policy=freeze.get('radiometry_policy','global_channel_affine')
-    if radiometry_policy not in ('global_channel_affine','identity_same_iso'):
-        raise ValueError('Unknown radiometry policy')
     for scene in scenes:
+        radiometry_policy=scene_radiometry(freeze,scene)
         scene_frames=[c for c in captures if c['scene']==scene]
         reference_frames=[c for c in scene_frames if c['source_sha256'] in reference_hashes]
         if not reference_frames:
@@ -208,3 +206,10 @@ def reference_sources(freeze,captures):
             or len(values)!=len(set(values)) or not set(values)<={c['source_sha256'] for c in captures}):
         raise ValueError('Explicit reference identities must be nonempty, unique and present')
     return set(values)
+
+
+def scene_radiometry(freeze,scene):
+    policy=freeze.get('scene_radiometry',{}).get(scene,freeze.get('radiometry_policy','global_channel_affine'))
+    if policy not in ('global_channel_affine','identity_same_iso'):
+        raise ValueError('Unknown radiometry policy')
+    return policy
