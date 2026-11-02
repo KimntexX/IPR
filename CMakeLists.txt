@@ -168,6 +168,7 @@ set(IPR_QML_FILES
     src/qml/AdvancedRawPreferencesPane.qml
     src/qml/InterfacePaletteSelector.qml
     src/qml/HistoryModule.qml
+    src/qml/PanelScrollBar.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
     src/qml/CurveChannelButton.qml

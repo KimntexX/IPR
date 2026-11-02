@@ -6,6 +6,8 @@
 #include <QDir>
 #include <QEventLoop>
 #include <QFileInfo>
+#include <QFont>
+#include <QFontDatabase>
 #include <QGuiApplication>
 #include <QImage>
 #include <QKeyEvent>
@@ -67,11 +69,12 @@ QQuickItem *visualItemNamed(QQuickItem *root, const QString &name)
     return nullptr;
 }
 
-void mouse(QQuickWindow &window, QEvent::Type type, const QPointF &point, unsigned long &timestamp)
+void mouse(QQuickWindow &window, QEvent::Type type, const QPointF &point, unsigned long &timestamp,
+           Qt::MouseButton button = Qt::LeftButton)
 {
     QMouseEvent event(type, point, QPointF(window.mapToGlobal(point.toPoint())),
-                      type == QEvent::MouseMove ? Qt::NoButton : Qt::LeftButton,
-                      type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::LeftButton, Qt::NoModifier);
+                      type == QEvent::MouseMove ? Qt::NoButton : button,
+                      type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::MouseButtons(button), Qt::NoModifier);
     event.setTimestamp(timestamp);
     timestamp += 50;
     QCoreApplication::sendEvent(&window, &event);
@@ -127,11 +130,23 @@ int main(int argc, char **argv)
         return 1;
     }
     auto *panel = qobject_cast<QQuickItem *>(root.data());
+    QQmlComponent infoComponent(&engine, QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/ImageInfoPanel.qml")));
+    QScopedPointer<QObject> info(infoComponent.createWithInitialProperties(
+        {{QStringLiteral("editor"), QVariant::fromValue(&editor)}}));
+    if (!info) {
+        std::cerr << infoComponent.errorString().toStdString();
+        return 1;
+    }
+    auto *infoPanel = qobject_cast<QQuickItem *>(info.data());
     QQuickWindow window;
-    window.resize(320, 1600);
+    window.resize(640, 1600);
     panel->setParentItem(window.contentItem());
     panel->setWidth(320);
     panel->setHeight(1600);
+    infoPanel->setParentItem(window.contentItem());
+    infoPanel->setX(320);
+    infoPanel->setWidth(300);
+    infoPanel->setHeight(1600);
     window.show();
     settleLayout();
 
@@ -142,11 +157,15 @@ int main(int argc, char **argv)
     // Only the sections under test are open, so that they fit in the window.
     for (QObject *section : root->findChildren<QObject *>())
         if (section->property("stateKey").isValid())
-            section->setProperty("expanded", section->objectName() == "lightSection" ||
-                                             section->objectName() == "historySection");
+            section->setProperty("expanded", section->objectName() == "lightSection");
     settleLayout();
-    auto *history = root->findChild<QQuickItem *>(QStringLiteral("historySection"));
-    if (!check(history != nullptr, "the settings show a history section")) return 1;
+    auto *history = info->findChild<QQuickItem *>(QStringLiteral("historySection"));
+    if (!check(history != nullptr && !root->findChild<QQuickItem *>(QStringLiteral("historySection")),
+               "the history section is in the information panel, not in the settings")) return 1;
+    history->setProperty("expanded", true);
+    settleLayout();
+    auto *stepBar = history->findChild<QQuickItem *>(QStringLiteral("panelScrollBar"));
+    if (!check(stepBar != nullptr && stepBar->width() == 6, "the history's scroll bar is the interface's")) return 1;
 
     // A real drag of a slider is one step.
     QObject *contrast = controlWithLabel(root.data(), QStringLiteral("Contraste"));
@@ -187,7 +206,7 @@ int main(int argc, char **argv)
     editor.redo();
 
     QObject *historyModule = nullptr;
-    for (QObject *child : root->findChildren<QObject *>())
+    for (QObject *child : info->findChildren<QObject *>())
         if (child->metaObject()->indexOfMethod("stepLabel(QVariant)") >= 0)
             historyModule = child;
     if (!check(historyModule != nullptr, "the history module exists")) return 1;
@@ -208,6 +227,56 @@ int main(int argc, char **argv)
     editor.pasteAdjustments();   // nothing copied: no step
     if (!check(label(editor.historySteps().size() - 1) == QStringLiteral("Vibrance"), "a step names its one field"))
         return 1;
+
+    // Removing a step: from its context menu or with the Delete key.
+    {
+        const auto rowOf = [&](int step) -> QQuickItem * {
+            for (QQuickItem *row : listContent->childItems())
+                if (row->objectName() == "historyStepRow" && row->property("index").toInt() == step)
+                    return row;
+            return nullptr;
+        };
+        settleLayout();
+        const int steps = int(editor.historySteps().size());
+        // Contrast 10, saturation 10, vibrance 10: the saturation's step goes.
+        QQuickItem *saturationRow = rowOf(steps - 2);
+        if (!check(saturationRow && label(steps - 2) == QStringLiteral("Saturation"), "the step to remove has a row"))
+            return 1;
+        const QPointF point = saturationRow->mapToItem(nullptr, QPointF(10, 10));
+        mouse(window, QEvent::MouseButtonPress, point, timestamp, Qt::RightButton);
+        mouse(window, QEvent::MouseButtonRelease, point, timestamp, Qt::RightButton);
+        settleLayout();
+        auto *menu = info->findChild<QObject *>(QStringLiteral("historyStepMenu"));
+        if (!check(menu && menu->property("opened").toBool() && editor.historyPosition() == steps - 1,
+                   "a right click opens the menu without moving in the history")) return 1;
+        QQuickItem *removeItem = nullptr;
+        for (QObject *child : menu->findChildren<QObject *>())
+            if (child->objectName() == "historyStepRemove") removeItem = qobject_cast<QQuickItem *>(child);
+        if (!removeItem) {
+            const QVariant count = menu->property("count");
+            for (int index = 0; index < count.toInt() && !removeItem; ++index) {
+                QQuickItem *item = nullptr;
+                QMetaObject::invokeMethod(menu, "itemAt", Q_RETURN_ARG(QQuickItem *, item), Q_ARG(int, index));
+                if (item && item->objectName() == "historyStepRemove") removeItem = item;
+            }
+        }
+        if (!check(removeItem != nullptr, "the menu offers to remove the step")) return 1;
+        click(removeItem);
+        settleLayout();
+        if (!check(editor.historySteps().size() == steps - 1 && editor.adjustmentValue(QStringLiteral("saturation")) == 0 &&
+                   editor.adjustmentValue(QStringLiteral("vibrance")) == 10,
+                   "the menu takes the edit out and keeps the later one")) return 1;
+        // The Delete key removes the current step of the focused list.
+        qobject_cast<QQuickItem *>(module)->forceActiveFocus();
+        settleLayout();
+        key(window, Qt::Key_Delete);
+        settleLayout();
+        if (!check(editor.historySteps().size() == steps - 2 && editor.adjustmentValue(QStringLiteral("vibrance")) == 0,
+                   "the Delete key removes the current step")) return 1;
+        editor.setSaturation(10);
+        editor.setVibrance(10);
+        settleLayout();
+    }
 
     // Typing a value is one step, whatever the digits on the way.
     const int beforeTyping = int(editor.historySteps().size());
@@ -236,10 +305,6 @@ int main(int argc, char **argv)
     if (!check(editor.historySteps().size() == beforeWheel + 1, "a wheel drag is one history step")) return 1;
 
     // Named snapshots.
-    for (QObject *section : root->findChildren<QObject *>())
-        if (section->property("stateKey").isValid())
-            section->setProperty("expanded", section->objectName() == "historySection");
-    settleLayout();
     auto *name = visualItemNamed(history, QStringLiteral("snapshotName"));
     if (!check(name != nullptr, "the snapshot name field exists")) return 1;
     name->setProperty("text", QStringLiteral("Avant ciel"));
@@ -255,6 +320,23 @@ int main(int argc, char **argv)
     click(visualItemNamed(history, QStringLiteral("snapshotRemove")));
     settleLayout();
     if (!check(editor.snapshots().isEmpty(), "a snapshot's other button removes it")) return 1;
+
+    // Optional capture for a visual review (IPR_UI_CAPTURE_DIRECTORY, as the other interface tests).
+    const QString captureDirectory = qEnvironmentVariable("IPR_UI_CAPTURE_DIRECTORY");
+    if (!captureDirectory.isEmpty()) {
+        for (int step = 0; step < 12; ++step) editor.setClarity(step + 1);
+        editor.addSnapshot(QStringLiteral("Avant ciel"));
+        editor.addSnapshot(QStringLiteral("Contraste fort"));
+#ifdef Q_OS_WIN
+        // The offscreen backend does not enumerate Windows fonts automatically.
+        QFontDatabase::addApplicationFont(qEnvironmentVariable("WINDIR", "C:/Windows") + "/Fonts/segoeui.ttf");
+#endif
+        QGuiApplication::setFont(QFont(QStringLiteral("Segoe UI")));
+        infoPanel->setHeight(900);
+        settleLayout(150);
+        window.grabWindow().copy(320, 0, 300, 900).save(QDir(captureDirectory).filePath(QStringLiteral("history-panel.png")));
+        infoPanel->setHeight(1600);
+    }
 
     // The menu actions and their shortcuts follow the engine.
     QQmlComponent actionsComponent(&engine, QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/ApplicationActions.qml")));

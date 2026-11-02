@@ -11,6 +11,7 @@ ColumnLayout {
     required property var editor
     property color textColor: palette.text
     property color secondaryTextColor: palette.windowText
+    property int fontSize: 12
 
     Layout.fillWidth: true
     Layout.minimumWidth: 0
@@ -62,6 +63,7 @@ ColumnLayout {
         PreferenceButton {
             objectName: "historyUndo"
             Layout.fillWidth: true
+            Layout.minimumWidth: 0
             text: qsTr("Annuler")
             enabled: root.editor.canUndo
             onClicked: root.editor.undo()
@@ -69,6 +71,7 @@ ColumnLayout {
         PreferenceButton {
             objectName: "historyRedo"
             Layout.fillWidth: true
+            Layout.minimumWidth: 0
             text: qsTr("Rétablir")
             enabled: root.editor.canRedo
             onClicked: root.editor.redo()
@@ -76,16 +79,22 @@ ColumnLayout {
     }
 
     // Newest step on top; the steps above the current one can still be redone.
+    // A click goes to a step. Delete or the context menu takes its edit out.
     ListView {
         id: stepList
         objectName: "historyStepList"
         Layout.fillWidth: true
         Layout.preferredHeight: 150
         clip: true
+        activeFocusOnTab: true
         boundsBehavior: Flickable.StopAtBounds
         verticalLayoutDirection: ListView.BottomToTop
         model: root.editor.historySteps
-        ScrollBar.vertical: ScrollBar {}
+        Accessible.name: qsTr("Étapes de l'historique")
+        Accessible.description: qsTr("Clic : revenir à l'étape. Suppr ou clic droit : retirer sa retouche.")
+        ScrollBar.vertical: PanelScrollBar {}
+
+        Keys.onDeletePressed: root.editor.removeHistoryStep(root.editor.historyPosition)
 
         delegate: Rectangle {
             required property int index
@@ -94,22 +103,47 @@ ColumnLayout {
             height: 24
             radius: 3
             color: index === root.editor.historyPosition ? palette.mid : "transparent"
+            border.width: stepList.activeFocus && index === root.editor.historyPosition ? 1 : 0
+            border.color: root.textColor
 
             Text {
                 anchors.fill: parent
                 anchors.leftMargin: 6
-                anchors.rightMargin: 6
+                anchors.rightMargin: 10   // clear of the scroll bar
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
                 text: root.stepLabel(parent.index)
                 color: root.textColor
                 opacity: parent.index > root.editor.historyPosition ? 0.5 : 1
-                font.pixelSize: 12
+                font.pixelSize: root.fontSize
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: root.editor.goToHistoryStep(parent.index)
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: (mouse) => {
+                    if (mouse.button === Qt.RightButton) {
+                        stepMenu.step = parent.index
+                        stepMenu.popup(parent, mouse.x, mouse.y)
+                    } else {
+                        root.editor.goToHistoryStep(parent.index)
+                        stepList.forceActiveFocus()
+                    }
+                }
             }
+        }
+    }
+
+    Basic.Menu {
+        id: stepMenu
+        objectName: "historyStepMenu"
+        popupType: Popup.Item
+        property int step: -1
+
+        Basic.MenuItem {
+            objectName: "historyStepRemove"
+            text: qsTr("Supprimer cette étape")
+            enabled: stepMenu.step > 0
+            onTriggered: root.editor.removeHistoryStep(stepMenu.step)
         }
     }
 
@@ -117,7 +151,7 @@ ColumnLayout {
         Layout.fillWidth: true
         text: qsTr("Instantanés")
         color: root.secondaryTextColor
-        font.pixelSize: 12
+        font.pixelSize: root.fontSize
     }
 
     RowLayout {
@@ -146,14 +180,23 @@ ColumnLayout {
         }
     }
 
-    Repeater {
+    // Three snapshots show at once; the others scroll.
+    ListView {
+        objectName: "snapshotList"
+        Layout.fillWidth: true
+        Layout.preferredHeight: Math.min(count, 3) * 36
+        clip: true
+        spacing: 6
+        boundsBehavior: Flickable.StopAtBounds
         model: root.editor.snapshots
+        ScrollBar.vertical: PanelScrollBar {}
 
-        RowLayout {
+        delegate: RowLayout {
             required property int index
             required property var modelData
             objectName: "snapshotRow"
-            Layout.fillWidth: true
+            width: ListView.view.width - 10   // clear of the scroll bar
+            height: 30
             spacing: 6
 
             PreferenceButton {

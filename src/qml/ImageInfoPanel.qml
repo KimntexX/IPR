@@ -247,5 +247,22 @@ Rectangle {
                 }
             }
         }
+
+        // Under the information, which keeps the rest of the panel and scrolls.
+        SettingsSection {
+            objectName: "historySection"
+            stateKey: "history"
+            visible: panel.editor.hasImage
+            preferences: panel.preferences
+            textColor: panel.textColor
+            title: qsTr("Historique")
+
+            HistoryModule {
+                editor: panel.editor
+                textColor: panel.textColor
+                secondaryTextColor: panel.secondaryTextColor
+                fontSize: panel.informationFontSize
+            }
+        }
     }
 }
