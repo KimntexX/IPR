@@ -1,8 +1,10 @@
 # Empilement et assemblage panoramique
 
 État : **plan de préparation**, approuvé comme base par l'utilisateur le
-29 octobre 2026. Aucun moteur multi-images ni dossier tampon implémenté par
-ce document. Chantier distinct du prototype de débruitage d'une image.
+29 octobre 2026. Chantier distinct du prototype de débruitage d'une image.
+Le moteur de M1 et le tampon disque existent dans `src/stack` sur `patch_stacking`
+([analyse](../validation/analyses/analyse-empilement.md)) ; panorama, HDR, onglet et
+fichier résultat ne sont pas implémentés.
 
 ## 1. Périmètre et ordre de réalisation
 
