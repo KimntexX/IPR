@@ -84,7 +84,8 @@ ColumnLayout {
         id: stepList
         objectName: "historyStepList"
         Layout.fillWidth: true
-        Layout.preferredHeight: 150
+        // Six steps show at once, the others scroll.
+        Layout.preferredHeight: Math.min(count, 6) * 24
         clip: true
         activeFocusOnTab: true
         boundsBehavior: Flickable.StopAtBounds
@@ -133,13 +134,12 @@ ColumnLayout {
         }
     }
 
-    Basic.Menu {
+    AppMenu {
         id: stepMenu
         objectName: "historyStepMenu"
-        popupType: Popup.Item
         property int step: -1
 
-        Basic.MenuItem {
+        ActionMenuItem {
             objectName: "historyStepRemove"
             text: qsTr("Supprimer cette étape")
             enabled: stepMenu.step > 0
@@ -151,7 +151,7 @@ ColumnLayout {
         Layout.fillWidth: true
         text: qsTr("Instantanés")
         color: root.secondaryTextColor
-        font.pixelSize: root.fontSize
+        font.pixelSize: root.fontSize - 1
     }
 
     RowLayout {
@@ -165,8 +165,21 @@ ColumnLayout {
             Layout.minimumWidth: 0
             implicitHeight: 30
             enabled: root.editor.hasImage
+            selectByMouse: true
+            color: root.textColor
+            selectedTextColor: palette.highlightedText
+            selectionColor: palette.highlight
+            font.pixelSize: root.fontSize
             placeholderText: qsTr("Nom de l'instantané")
+            placeholderTextColor: Qt.rgba(root.secondaryTextColor.r, root.secondaryTextColor.g,
+                                          root.secondaryTextColor.b, 0.6)
             onAccepted: createSnapshot.clicked()
+            background: Rectangle {
+                radius: 3
+                color: snapshotName.activeFocus ? snapshotName.palette.base : "transparent"
+                border.width: 1
+                border.color: snapshotName.activeFocus ? snapshotName.palette.text : snapshotName.palette.mid
+            }
         }
         PreferenceButton {
             id: createSnapshot

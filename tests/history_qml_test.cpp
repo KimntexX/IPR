@@ -3,6 +3,7 @@
 #include "imageprovider.h"
 #include "GradingWheelProvider.h"
 
+#include <QColor>
 #include <QDir>
 #include <QEventLoop>
 #include <QFileInfo>
@@ -21,7 +22,9 @@
 #include <QTimer>
 
 #include <functional>
+#include <initializer_list>
 #include <iostream>
+#include <utility>
 
 // The interface side of the edit history: a real pointer drag makes one step,
 // and the panel and shortcuts drive the engine's history.
@@ -162,7 +165,6 @@ int main(int argc, char **argv)
     auto *history = info->findChild<QQuickItem *>(QStringLiteral("historySection"));
     if (!check(history != nullptr && !root->findChild<QQuickItem *>(QStringLiteral("historySection")),
                "the history section is in the information panel, not in the settings")) return 1;
-    history->setProperty("expanded", true);
     settleLayout();
     auto *stepBar = history->findChild<QQuickItem *>(QStringLiteral("panelScrollBar"));
     if (!check(stepBar != nullptr && stepBar->width() == 6, "the history's scroll bar is the interface's")) return 1;
@@ -249,6 +251,15 @@ int main(int argc, char **argv)
         auto *menu = info->findChild<QObject *>(QStringLiteral("historyStepMenu"));
         if (!check(menu && menu->property("opened").toBool() && editor.historyPosition() == steps - 1,
                    "a right click opens the menu without moving in the history")) return 1;
+        // Every menu takes the interface's colours: a popup does not by itself.
+        auto *menuPalette = menu->property("palette").value<QObject *>();
+        auto *panelPalette = infoPanel->property("palette").value<QObject *>();
+        panelPalette->setProperty("window", QColor(QStringLiteral("#123456")));
+        settleLayout();
+        auto *menuBackground = menu->property("background").value<QObject *>();
+        if (!check(menuPalette && menuPalette->property("window").value<QColor>() == QColor(QStringLiteral("#123456")) &&
+                   menuBackground && menuBackground->property("color").value<QColor>() == QColor(QStringLiteral("#123456")),
+                   "the menu follows the colours of the panel it opens from")) return 1;
         QQuickItem *removeItem = nullptr;
         for (QObject *child : menu->findChildren<QObject *>())
             if (child->objectName() == "historyStepRemove") removeItem = qobject_cast<QQuickItem *>(child);
@@ -307,6 +318,9 @@ int main(int argc, char **argv)
     // Named snapshots.
     auto *name = visualItemNamed(history, QStringLiteral("snapshotName"));
     if (!check(name != nullptr, "the snapshot name field exists")) return 1;
+    if (!check(name->property("color").value<QColor>() == info->property("textColor").value<QColor>() &&
+               name->property("placeholderTextColor").value<QColor>().alphaF() < 1.0,
+               "the snapshot field uses the panel's text colours")) return 1;
     name->setProperty("text", QStringLiteral("Avant ciel"));
     click(visualItemNamed(history, QStringLiteral("snapshotCreate")));
     settleLayout();
@@ -332,10 +346,24 @@ int main(int argc, char **argv)
         QFontDatabase::addApplicationFont(qEnvironmentVariable("WINDIR", "C:/Windows") + "/Fonts/segoeui.ttf");
 #endif
         QGuiApplication::setFont(QFont(QStringLiteral("Segoe UI")));
-        infoPanel->setHeight(900);
+        // The application's dark theme (Main.qml), which this panel inherits there.
+        auto *colours = infoPanel->property("palette").value<QObject *>();
+        for (const auto &[role, colour] : std::initializer_list<std::pair<const char *, const char *>>{
+                 {"window", "#2a3039"}, {"windowText", "#edf2f8"}, {"text", "#edf2f8"}, {"buttonText", "#edf2f8"},
+                 {"base", "#262b34"}, {"button", "#262b34"}, {"mid", "#4a5564"}})
+            colours->setProperty(role, QColor(QString::fromLatin1(colour)));
         settleLayout(150);
-        window.grabWindow().copy(320, 0, 300, 900).save(QDir(captureDirectory).filePath(QStringLiteral("history-panel.png")));
-        infoPanel->setHeight(1600);
+        QQuickItem *currentRow = nullptr;
+        for (QQuickItem *row : listContent->childItems())
+            if (row->objectName() == "historyStepRow" && row->property("index").toInt() == editor.historyPosition())
+                currentRow = row;
+        const QPointF menuPoint = currentRow ? currentRow->mapToItem(nullptr, QPointF(30, 10)) : QPointF();
+        mouse(window, QEvent::MouseButtonPress, menuPoint, timestamp, Qt::RightButton);
+        mouse(window, QEvent::MouseButtonRelease, menuPoint, timestamp, Qt::RightButton);
+        settleLayout(150);
+        window.grabWindow().copy(320, 0, 300, 1100).save(QDir(captureDirectory).filePath(QStringLiteral("history-panel.png")));
+        QMetaObject::invokeMethod(info->findChild<QObject *>(QStringLiteral("historyStepMenu")), "close");
+        settleLayout(50);
     }
 
     // The menu actions and their shortcuts follow the engine.

@@ -245,23 +245,29 @@ Rectangle {
                     }
                     Item { Layout.fillWidth: true }
                 }
-            }
-        }
 
-        // Under the information, which keeps the rest of the panel and scrolls.
-        SettingsSection {
-            objectName: "historySection"
-            stateKey: "history"
-            visible: panel.editor.hasImage
-            preferences: panel.preferences
-            textColor: panel.textColor
-            title: qsTr("Historique")
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 1
+                    visible: panel.editor.hasImage
+                    color: "#3d4654"
+                }
 
-            HistoryModule {
-                editor: panel.editor
-                textColor: panel.textColor
-                secondaryTextColor: panel.secondaryTextColor
-                fontSize: panel.informationFontSize
+                Label {
+                    visible: panel.editor.hasImage
+                    text: qsTr("Historique")
+                    color: panel.secondaryTextColor
+                    font.pixelSize: panel.informationFontSize - 1
+                }
+
+                HistoryModule {
+                    objectName: "historySection"
+                    visible: panel.editor.hasImage
+                    editor: panel.editor
+                    textColor: panel.textColor
+                    secondaryTextColor: panel.secondaryTextColor
+                    fontSize: panel.informationFontSize
+                }
             }
         }
     }

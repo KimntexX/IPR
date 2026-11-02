@@ -34,13 +34,11 @@ ColumnLayout {
         }
     }
 
-    Basic.Menu {
+    AppMenu {
         id: parameterMenu
-        popupType: Popup.Item
         width: Math.min(360, control.Window.window ? control.Window.window.width - 24 : 360)
         objectName: "adjustmentContextMenu"
         parent: controlSlider
-        palette: controlSlider.palette
         ActionMenuItem {
             objectName: "contextResetParameter"
             text: qsTr("Réinitialiser %1").arg(control.label)

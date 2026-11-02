@@ -73,7 +73,7 @@ ApplicationWindow {
             }
         }
 
-        Basic.Menu {
+        AppMenu {
             palette: root.palette
             title: qsTr("Fichier")
             width: 440
@@ -88,7 +88,7 @@ ApplicationWindow {
             Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.quitAction }
         }
-        Basic.Menu {
+        AppMenu {
             palette: root.palette
             title: qsTr("Édition")
             width: 440
@@ -102,7 +102,7 @@ ApplicationWindow {
             ActionMenuItem { action: fileActions.resetAction }
         }
 
-        Basic.Menu {
+        AppMenu {
             palette: root.palette
             title: qsTr("Affichage")
             width: 300
@@ -128,7 +128,7 @@ ApplicationWindow {
                 onTriggered: uiPreferences.setValue("layout/showFilmstrip", checked)
             }
         }
-        Basic.Menu {
+        AppMenu {
             palette: root.palette
             title: qsTr("Préférences")
             width: 400

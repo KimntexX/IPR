@@ -64,11 +64,12 @@ Raccordement réalisé sur la branche locale `patch_ui_history`, créée depuis
 rejoindra `patch_ui` une fois le moteur intégré. Curseurs et champs de saisie
 (`AdjustmentControl`) et roues d'étalonnage encadrent leur geste ; la courbe ne
 s'applique qu'au relâchement et fait déjà une étape. Menu Édition, `Ctrl+Z`,
-`Ctrl+Maj+Z` et `Ctrl+Y`, section Historique (`HistoryModule`) dans le panneau
-d'informations à gauche, à la demande de l'utilisateur, test `historyQmlTests`
+`Ctrl+Maj+Z` et `Ctrl+Y`, partie Historique (`HistoryModule`) dans le panneau
+d'informations à gauche, sous les libellés, à la demande de l'utilisateur, test `historyQmlTests`
 avec de vrais glissements. `removeHistoryStep(i)` retire la retouche d'une étape,
 les suivantes étant rejouées sans elle : touche Suppr sur l'étape courante de la
-liste, ou clic droit sur une étape. Validation visuelle de l'utilisateur en
+liste, ou clic droit sur une étape. Tous les menus dérivent désormais du modèle
+`AppMenu`, qui reprend la palette de l'interface. Validation visuelle de l'utilisateur en
 attente ; les flèches du clavier font encore une étape par pression.
 | IHM-CONN-005 | En attente moteur | Rôles légers des vignettes : classement et présence de retouches |
 | IHM-CONN-006 | En attente moteur | Descripteur d'export et résultat typé avec destination réellement publiée |
