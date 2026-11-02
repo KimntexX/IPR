@@ -1,0 +1,4225 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-bayer-phase-audit-v001-20261102T121007Z",
+  "measured_at_utc": "2026-11-02T12:10:07.490577+00:00",
+  "freeze": {
+    "schema_version": 1,
+    "data_version": 1,
+    "campaign_id": "neural-bayer-phase-audit-v001-20261102T121007Z",
+    "measured_at_utc": "2026-11-02T12:10:07.490577+00:00",
+    "git_sha": "60eb794b46e721d5badfa152a503180d2b94346a",
+    "parent": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\synthetic-consistent-reconstruction-v001",
+      "result_sha256": "d9116699edeee9209622ccda2103cec16d06877355435097d14b01612a4b2712",
+      "weights_sha256": "e9b8f22fba484b0d3d28f2e72786277b932950aacf739d7aad325a45b5edf296"
+    },
+    "config": {
+      "seed": 71,
+      "width": 8,
+      "batch": 4,
+      "steps": 2048,
+      "learning_rate": 0.001,
+      "scale": 2.0,
+      "side": 128,
+      "loss_border": 48,
+      "exact_observations": true
+    },
+    "contents": [
+      {
+        "family": "constant",
+        "seed": 8400,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 0,
+        "noise_seed": 95000
+      },
+      {
+        "family": "constant",
+        "seed": 8401,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 0,
+        "noise_seed": 95100
+      },
+      {
+        "family": "constant",
+        "seed": 8402,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 0,
+        "noise_seed": 95200
+      },
+      {
+        "family": "constant",
+        "seed": 8403,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 0,
+        "noise_seed": 95300
+      },
+      {
+        "family": "ramp",
+        "seed": 8500,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 0,
+        "noise_seed": 96000
+      },
+      {
+        "family": "ramp",
+        "seed": 8501,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 0,
+        "noise_seed": 96100
+      },
+      {
+        "family": "ramp",
+        "seed": 8502,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 0,
+        "noise_seed": 96200
+      },
+      {
+        "family": "ramp",
+        "seed": 8503,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 0,
+        "noise_seed": 96300
+      },
+      {
+        "family": "edge",
+        "seed": 8600,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 0,
+        "noise_seed": 97000
+      },
+      {
+        "family": "edge",
+        "seed": 8601,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 0,
+        "noise_seed": 97100
+      },
+      {
+        "family": "edge",
+        "seed": 8602,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 0,
+        "noise_seed": 97200
+      },
+      {
+        "family": "edge",
+        "seed": 8603,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 0,
+        "noise_seed": 97300
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8700,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 0,
+        "noise_seed": 98000
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8701,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 0,
+        "noise_seed": 98100
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8702,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 0,
+        "noise_seed": 98200
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8703,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 0,
+        "noise_seed": 98300
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8800,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 0,
+        "noise_seed": 99000
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8801,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 0,
+        "noise_seed": 99100
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8802,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 0,
+        "noise_seed": 99200
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8803,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 0,
+        "noise_seed": 99300
+      }
+    ],
+    "phase_names": [
+      "RGGB",
+      "GRBG",
+      "GBRG",
+      "BGGR"
+    ],
+    "patterns": [
+      [
+        0,
+        1,
+        3,
+        2
+      ],
+      [
+        1,
+        0,
+        2,
+        3
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ],
+      [
+        2,
+        3,
+        1,
+        0
+      ]
+    ],
+    "policy": "Same RGB truth in all4 phases, no added noise, same model/scale/core48; no model or phase selection.",
+    "tools": {
+      "audit_bayer_phases.py": "11c8dac56945866fb0fd03c2e1e9e7abad71931fe6ea834ae04cbed8d64728c7",
+      "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+      "synthetic_bayer_data.py": "112a7476980f2144da9d6d2665245815fa33badce0c24a25b2db2d69240d9095",
+      "run_synthetic_joint_pilot.py": "665c9b5c9236386132b3fe3966f61e4b37311ee00710f3bc00cbcb4ca88adf2a"
+    }
+  },
+  "freeze_sha256": "11b143dc00363eed2a6220444254c4d1688ed2b0bbd6d0c699301b4e0853ab0e",
+  "records": [
+    {
+      "family": "constant",
+      "seed": 8400,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "74fb0ef38b17d238967f3a43210ec800e13fc2481139dd9ff4f39ac4e6e5b0d8",
+      "packed_sha256": "adc24a9526a92ebc4e5a72246988c9fa4241e6ff34600f3d8c64ac7ae6cfab85",
+      "output_sha256": "4aacd337be5ea97c2e04bd5a47cec3c7172420b9122a5e82d2bf30df482ee9ad",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.007332373410463333,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.010270141065120697,
+        "channel_bias_sum": [
+          -0.029172897338867188,
+          -0.9593505859375,
+          -1.2847518920898438
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8400,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "74fb0ef38b17d238967f3a43210ec800e13fc2481139dd9ff4f39ac4e6e5b0d8",
+      "packed_sha256": "5982c06dd7379395c7a947844456701b9e3bb71fea28bbe04db9c90a5cc4c02a",
+      "output_sha256": "db00bcb9c1fbe7fc88f142df01d03411b06eb48603ecb79d14c1030b4186923c",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0008317085448652506,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.0008999470737762749,
+        "channel_bias_sum": [
+          -0.31769371032714844,
+          0.1707000732421875,
+          0.00962066650390625
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8400,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "74fb0ef38b17d238967f3a43210ec800e13fc2481139dd9ff4f39ac4e6e5b0d8",
+      "packed_sha256": "f0b61293d320fa94edb484107da30251a3179062ec9c85d3afbe996ff8e4b67b",
+      "output_sha256": "82cc96ef04c60eebaeee795ff3a5923fdfb2b16372b9c999f1d763cac29c2640",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0011486104922369123,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.0015327961882576346,
+        "channel_bias_sum": [
+          0.13553619384765625,
+          -0.0958251953125,
+          -0.6331558227539062
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8400,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "74fb0ef38b17d238967f3a43210ec800e13fc2481139dd9ff4f39ac4e6e5b0d8",
+      "packed_sha256": "4441515a2f851c9561b768851a05322424f7a1d4f04de86e3b9567b7eac25d48",
+      "output_sha256": "d8345ff7c3ef7c01ea1dc42ec90ff75ded10a75b1a097e91aa2f3d6e7a2d2853",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0010388216469436884,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.0014601079747080803,
+        "channel_bias_sum": [
+          -0.19825363159179688,
+          0.132354736328125,
+          -0.32965850830078125
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8401,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "452975f89d555bc484883fcfa7bcd08bf097e801e8c274c42ea66a8450d7d560",
+      "packed_sha256": "80b4a31f08bd45fcbffcc3d1431999adcfc9b073d60368c4a394ace80ca5f5f2",
+      "output_sha256": "2257d75d1015cd7e79710e6c0cac241953e04d51ee51d0c4dc1ff6972392c872",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.005966921336948872,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.011018249206244946,
+        "channel_bias_sum": [
+          0.113311767578125,
+          -0.7558784484863281,
+          -1.1672744750976562
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8401,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "452975f89d555bc484883fcfa7bcd08bf097e801e8c274c42ea66a8450d7d560",
+      "packed_sha256": "7e9633595d7c8ebbaf571654e91171f0b762af5cf0d8f7978e4c0cf7610c077c",
+      "output_sha256": "81431c59515174225a4f2f87a641979c997b2fb16d54a19c1982e8fa3d1efa37",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.000851701304782182,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.0010993279283866286,
+        "channel_bias_sum": [
+          -0.28310394287109375,
+          0.20790672302246094,
+          -0.27452850341796875
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8401,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "452975f89d555bc484883fcfa7bcd08bf097e801e8c274c42ea66a8450d7d560",
+      "packed_sha256": "d14201a47ae9f7009aa761a939af879d3643fb9bda0107bfc3b2db030ba07e6b",
+      "output_sha256": "5058def3203bf7b52cf0601917e041c23cf1df57d62a817ca0ad01fd71574848",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.002119468990713358,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.002300678752362728,
+        "channel_bias_sum": [
+          0.3986358642578125,
+          -0.22182273864746094,
+          -1.09918212890625
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8401,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "452975f89d555bc484883fcfa7bcd08bf097e801e8c274c42ea66a8450d7d560",
+      "packed_sha256": "3ee2cbdbbc43b2157867d5d943f69dcc94514ac6323a58b48e21214e5ca3f51d",
+      "output_sha256": "9fbd928a9abdacda16da46e7e9dae30a242fd2e246da3ff209d1b909cd65f8fa",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0014072009362280369,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.0018226971151307225,
+        "channel_bias_sum": [
+          -0.3293495178222656,
+          -0.02850341796875,
+          -0.45360565185546875
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8402,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "acac9abaaee71a415dc9646d938b7ce98fcb95bc19d350fe115a63cd927a8510",
+      "packed_sha256": "7fff521b825fbee8e6b47858e2b480da30a49a4bbca40da59562a273080c862a",
+      "output_sha256": "d89961ec9aa0d82cab57f902d44588af5514a8ec7e9153eb810c80341528d0b7",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0052498746663331985,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.010090994648635387,
+        "channel_bias_sum": [
+          0.16259765625,
+          -0.6747360229492188,
+          -1.1168327331542969
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8402,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "acac9abaaee71a415dc9646d938b7ce98fcb95bc19d350fe115a63cd927a8510",
+      "packed_sha256": "7fb6122e78c8a81da5276eb62ca699d87d25c0a27e910b6fd0ed59353fa47c61",
+      "output_sha256": "69212abde387f75a79321ed471ed212b66ef146080a1fe8470b842c967129ab2",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0008669240633025765,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.0013082532677799463,
+        "channel_bias_sum": [
+          -0.25469207763671875,
+          0.30625343322753906,
+          -0.13845062255859375
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8402,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "acac9abaaee71a415dc9646d938b7ce98fcb95bc19d350fe115a63cd927a8510",
+      "packed_sha256": "6ff989337802a3239bfe8363db08af8b730a217a7cb158c8f956dcdbdf440c2a",
+      "output_sha256": "d56de102f5140f6cd0b00f1a253980663b7eb6e74ca325a55a63c8a5a084230a",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.002073906594887376,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.002209241734817624,
+        "channel_bias_sum": [
+          0.34139251708984375,
+          -0.19956016540527344,
+          -1.1306190490722656
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8402,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "acac9abaaee71a415dc9646d938b7ce98fcb95bc19d350fe115a63cd927a8510",
+      "packed_sha256": "9a4b6a28211c1c59f808f39d3b36d01b2f0de43a1697aad0f373afcd9c869b7a",
+      "output_sha256": "69e434181c7a627e857a50b5099e2b06af0f4df17fde1b05ca98f26259353b1c",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0016814107075333595,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.002199392532929778,
+        "channel_bias_sum": [
+          -0.3712310791015625,
+          -0.04203033447265625,
+          -0.5047836303710938
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8403,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "dc8b15d607c4a4df801d4426fd35451090e95b4d63f9bbf649429d60a82ab781",
+      "packed_sha256": "913f5db89a5320ac33b74eaa74f2c994d759bb03cb36e82c6bfef5ddbc68a80c",
+      "output_sha256": "d4e929e259e64670c7b941763ae129e3713a449b2107aa8261be7ff574a597f2",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.006312173325568438,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.009914170950651169,
+        "channel_bias_sum": [
+          0.07684326171875,
+          -0.847412109375,
+          -1.255502700805664
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8403,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "dc8b15d607c4a4df801d4426fd35451090e95b4d63f9bbf649429d60a82ab781",
+      "packed_sha256": "f964629620d9f8bb07c224611281592e32095dcc0fcfa4a5b1e0e1e942361285",
+      "output_sha256": "69ea2985f659384ecbeb794c20d1ea11397567834a8a5dd6178dd3d02560e5dc",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0008945328881964087,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.001177256228402257,
+        "channel_bias_sum": [
+          -0.24730682373046875,
+          0.301788330078125,
+          0.11787033081054688
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8403,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "dc8b15d607c4a4df801d4426fd35451090e95b4d63f9bbf649429d60a82ab781",
+      "packed_sha256": "f00bec10482c755c2910905207f71d6191cd8d948c924d431ece0c29580cfc24",
+      "output_sha256": "a5394e411125bf35586ab198ef62b01dc1c19ea65f3e714b107e53f4f33002c8",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0010992513271048665,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.0013794454280287027,
+        "channel_bias_sum": [
+          0.1698455810546875,
+          -0.11541748046875,
+          -0.7496337890625
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "constant",
+      "seed": 8403,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "dc8b15d607c4a4df801d4426fd35451090e95b4d63f9bbf649429d60a82ab781",
+      "packed_sha256": "c5a847ca111473fdc07e7aed1acc9283d50a8a976c17f9451eaefe066b622b4a",
+      "output_sha256": "e90abd3b1870a2eec5499be3aa37798e4d121b75ab9685a2619b5b27d3885edf",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0012764579150825739,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.0018032501684501767,
+        "channel_bias_sum": [
+          -0.25841522216796875,
+          0.11769866943359375,
+          -0.38966941833496094
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8500,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "7dca8925432d1f4d14ceb230638189767fc6052dcf49073cd439e3e17a45f702",
+      "packed_sha256": "699acac39ce70badf0aa03283681b565bd0c61e21fe76a299ec43e1e56db3fca",
+      "output_sha256": "9262446aa09f6fdd5e259624ee7d99a5290c8387ab4a0d61e58bdf92a1f7d2db",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1269041255701495e-12,
+        "output_sse": 0.009716091677546501,
+        "baseline_opponent_sse": 1.7415235920026362e-12,
+        "output_opponent_sse": 0.009870360605418682,
+        "channel_bias_sum": [
+          -0.08699984848499298,
+          -1.1312804222106934,
+          -1.5731770992279053
+        ],
+        "reference_gradient_energy": 0.039398081600666046,
+        "baseline_gradient_projection": 0.03939807787537575,
+        "output_gradient_projection": 0.03936687856912613,
+        "output_gradient_sse": 1.4890707689119154e-07
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8500,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "7dca8925432d1f4d14ceb230638189767fc6052dcf49073cd439e3e17a45f702",
+      "packed_sha256": "a2c5775871feaf3f9a08b4b5a3bfd3e451e6560c9c57dba4d0302d7c8815b76b",
+      "output_sha256": "d20b25fe39532feed5ffbbe4b1f809df45ee839413fbe8010e4125d3ce2343f8",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1960016310652577e-12,
+        "output_sse": 0.0011141975410282612,
+        "baseline_opponent_sse": 1.85147730480395e-12,
+        "output_opponent_sse": 0.0012885145843029022,
+        "channel_bias_sum": [
+          -0.42934855818748474,
+          0.03800004720687866,
+          -0.04911193251609802
+        ],
+        "reference_gradient_energy": 0.039398081600666046,
+        "baseline_gradient_projection": 0.039398081600666046,
+        "output_gradient_projection": 0.03938465937972069,
+        "output_gradient_sse": 9.531270883655907e-09
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8500,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "7dca8925432d1f4d14ceb230638189767fc6052dcf49073cd439e3e17a45f702",
+      "packed_sha256": "0576c1dc81e19fb1ca20c2bd060d4853d8fdbb84f0cf85e18ee96417b3f4b7ed",
+      "output_sha256": "1d48f63300bb469642ba32fc640581df79d7a56af840e59a2f36ab7ff5b10f18",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1664558208224207e-12,
+        "output_sse": 0.0012592432321980596,
+        "baseline_opponent_sse": 1.7477685965161527e-12,
+        "output_opponent_sse": 0.0017768361140042543,
+        "channel_bias_sum": [
+          0.12324763834476471,
+          -0.16739773750305176,
+          -0.660688042640686
+        ],
+        "reference_gradient_energy": 0.039398081600666046,
+        "baseline_gradient_projection": 0.039398081600666046,
+        "output_gradient_projection": 0.03939405828714371,
+        "output_gradient_sse": 4.236112793876146e-09
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8500,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "7dca8925432d1f4d14ceb230638189767fc6052dcf49073cd439e3e17a45f702",
+      "packed_sha256": "d541cbbd8df2bc42d30942af20eaa80fb72db477db019e91c5565c90450b8cd5",
+      "output_sha256": "6e9e1cf45a61266c151e41894551b3611a288e51501a29fa78655503ebc5dcca",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1616679840287247e-12,
+        "output_sse": 0.0011438803048804402,
+        "baseline_opponent_sse": 1.7567475252278086e-12,
+        "output_opponent_sse": 0.0017650409135967493,
+        "channel_bias_sum": [
+          -0.09724916517734528,
+          0.24081861972808838,
+          -0.1082962155342102
+        ],
+        "reference_gradient_energy": 0.039398081600666046,
+        "baseline_gradient_projection": 0.03939807787537575,
+        "output_gradient_projection": 0.03943318873643875,
+        "output_gradient_sse": 2.4150628519237216e-07
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8501,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "fba8ca9aba048d482214ccd4a3ed2b00c58cb9d140182c0f382d9608ad9c8ce5",
+      "packed_sha256": "d96c245b2672fe6010aa5717365b3c597815cafe97410ec99c6aacc86bfa40e1",
+      "output_sha256": "af0b26c466390702bcbb3df403ee31f0ab3006809f0cef84011510a0bcb3a5c6",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1763923168928159e-12,
+        "output_sse": 0.008878299035131931,
+        "baseline_opponent_sse": 1.3486989303146402e-12,
+        "output_opponent_sse": 0.010931417346000671,
+        "channel_bias_sum": [
+          -0.009617030620574951,
+          -1.0669419765472412,
+          -1.5176270008087158
+        ],
+        "reference_gradient_energy": 0.005666013341397047,
+        "baseline_gradient_projection": 0.005666013807058334,
+        "output_gradient_projection": 0.005659494549036026,
+        "output_gradient_sse": 3.2538189032038645e-08
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8501,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "fba8ca9aba048d482214ccd4a3ed2b00c58cb9d140182c0f382d9608ad9c8ce5",
+      "packed_sha256": "c4445652da24d87e721c25a5e06d95c9261fbe3a008031eadb5a7c537eecb9a7",
+      "output_sha256": "c8ef7cd333d40dfc29f8cfe53dbe8a07fec53a9f523c84c5aeddd5ba84aecd70",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1901590823981678e-12,
+        "output_sse": 0.0009942753240466118,
+        "baseline_opponent_sse": 1.375788372115494e-12,
+        "output_opponent_sse": 0.0011294654104858637,
+        "channel_bias_sum": [
+          -0.29590797424316406,
+          0.03977718949317932,
+          -0.2215999960899353
+        ],
+        "reference_gradient_energy": 0.005666013341397047,
+        "baseline_gradient_projection": 0.005666013341397047,
+        "output_gradient_projection": 0.005661575123667717,
+        "output_gradient_sse": 8.741427137692881e-09
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8501,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "fba8ca9aba048d482214ccd4a3ed2b00c58cb9d140182c0f382d9608ad9c8ce5",
+      "packed_sha256": "b52c81948ce9846d02f618e5689f3b56f18c3d038c64fd9fc6be57bf0f6f8938",
+      "output_sha256": "f7e1a25d5fa91aedccbb558530099ec13d6dd25fb428224e32bad5ab8cfb312a",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.2323475573339238e-12,
+        "output_sse": 0.0016290568746626377,
+        "baseline_opponent_sse": 1.5902834604730742e-12,
+        "output_opponent_sse": 0.002107960171997547,
+        "channel_bias_sum": [
+          0.340456485748291,
+          -0.24091240763664246,
+          -0.8616612553596497
+        ],
+        "reference_gradient_energy": 0.005666013341397047,
+        "baseline_gradient_projection": 0.005666013341397047,
+        "output_gradient_projection": 0.005664069205522537,
+        "output_gradient_sse": 1.7959609355244766e-09
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8501,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "fba8ca9aba048d482214ccd4a3ed2b00c58cb9d140182c0f382d9608ad9c8ce5",
+      "packed_sha256": "3e85d9ad386d8ae67d30bfb6eea2a75b8ceb461ab102a5bfc0f6baeae29432fe",
+      "output_sha256": "325705af3e9065b6015590bc0d006ee31b69dba58564b3d338ce594f144d244d",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1497469643018121e-12,
+        "output_sse": 0.0009212443837895989,
+        "baseline_opponent_sse": 1.3984369218178472e-12,
+        "output_opponent_sse": 0.0013167592696845531,
+        "channel_bias_sum": [
+          -0.15110206604003906,
+          0.18243134021759033,
+          -0.22451239824295044
+        ],
+        "reference_gradient_energy": 0.005666013341397047,
+        "baseline_gradient_projection": 0.005666013807058334,
+        "output_gradient_projection": 0.005671675316989422,
+        "output_gradient_sse": 5.088580223855388e-08
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8502,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "aa589f0b314164bae808f04cc0cdd7def594b8416b746833580062b83c34c620",
+      "packed_sha256": "e7179c8e89bd986617c16221e7e09d81a15ee145f6127d366bb468ad5bf2bb3f",
+      "output_sha256": "317e047972b8ee17fbe9a36c580907d36676ebdc409db1eb736d161a5d5d59f7",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.9179449695094775e-13,
+        "output_sse": 0.0064282165840268135,
+        "baseline_opponent_sse": 2.500256945925372e-13,
+        "output_opponent_sse": 0.010561524890363216,
+        "channel_bias_sum": [
+          0.002017989754676819,
+          -0.853826642036438,
+          -1.1812810897827148
+        ],
+        "reference_gradient_energy": 0.029654577374458313,
+        "baseline_gradient_projection": 0.029654577374458313,
+        "output_gradient_projection": 0.029624439775943756,
+        "output_gradient_sse": 1.0165322805733013e-07
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8502,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "aa589f0b314164bae808f04cc0cdd7def594b8416b746833580062b83c34c620",
+      "packed_sha256": "a82c466b4cac055b2d687beca73d11c38561b2e120e8992d4bada740da375202",
+      "output_sha256": "f079ca3f1fd6aa84fdab74b559a5a8cb4dbd48f7cb71cf0dc738f7ea061d4ca2",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.7869733470732285e-13,
+        "output_sse": 0.0009363162098452449,
+        "baseline_opponent_sse": 2.2343932259971666e-13,
+        "output_opponent_sse": 0.0013113128952682018,
+        "channel_bias_sum": [
+          -0.42754116654396057,
+          0.252363920211792,
+          -0.06596626341342926
+        ],
+        "reference_gradient_energy": 0.029654577374458313,
+        "baseline_gradient_projection": 0.029654575511813164,
+        "output_gradient_projection": 0.029638871550559998,
+        "output_gradient_sse": 1.8861344486253984e-08
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8502,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "aa589f0b314164bae808f04cc0cdd7def594b8416b746833580062b83c34c620",
+      "packed_sha256": "76c88b8df153db64fa2ff715f6c9e3cf830d34dac02ebf22bbfb969a97a0314f",
+      "output_sha256": "32cc0e679eaa2837bebf307a15b8f324aab6f6f09a394ed69b10ae1cac746d94",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.8002960233687304e-13,
+        "output_sse": 0.0015962993493303657,
+        "baseline_opponent_sse": 2.3687302119768106e-13,
+        "output_opponent_sse": 0.0019259724067524076,
+        "channel_bias_sum": [
+          0.100768081843853,
+          -0.1353016048669815,
+          -0.9034063220024109
+        ],
+        "reference_gradient_energy": 0.029654577374458313,
+        "baseline_gradient_projection": 0.029654575511813164,
+        "output_gradient_projection": 0.029648270457983017,
+        "output_gradient_sse": 4.763925254280821e-09
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8502,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "aa589f0b314164bae808f04cc0cdd7def594b8416b746833580062b83c34c620",
+      "packed_sha256": "253be43e7c247f6767b963e2372f9f56b157b51a0b21cc73858d8f1ed410f090",
+      "output_sha256": "c3d40cb18a76350594cde65feb1b47b98b9d5d2e3ef1f962325eaf0f7e51c310",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.984107322883233e-13,
+        "output_sse": 0.0015776295913383365,
+        "baseline_opponent_sse": 2.5864033137423803e-13,
+        "output_opponent_sse": 0.0017553279176354408,
+        "channel_bias_sum": [
+          -0.4289003312587738,
+          -0.05731905996799469,
+          -0.48855364322662354
+        ],
+        "reference_gradient_energy": 0.029654577374458313,
+        "baseline_gradient_projection": 0.029654577374458313,
+        "output_gradient_projection": 0.02967962436378002,
+        "output_gradient_sse": 1.5965825639341347e-07
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8503,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "254da388a2cc1ef5c72f86d889287c74b78d6da82eede5472cb53886fbae4ff0",
+      "packed_sha256": "b0444d6489f7b9f70ce666671260c6ebb19057d0a7b216c47ec2d7f46672f23e",
+      "output_sha256": "9bc4e5fba753f21e3005aef82ca33c97e7c9671eb7906a64fdf48e74a68003cc",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 7.199726925755101e-13,
+        "output_sse": 0.005963996052742004,
+        "baseline_opponent_sse": 7.229633558480941e-13,
+        "output_opponent_sse": 0.010707789100706577,
+        "channel_bias_sum": [
+          0.22447073459625244,
+          -0.7558193206787109,
+          -1.2808315753936768
+        ],
+        "reference_gradient_energy": 0.007790167350322008,
+        "baseline_gradient_projection": 0.007790167350322008,
+        "output_gradient_projection": 0.007782099302858114,
+        "output_gradient_sse": 3.0110289372942134e-08
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8503,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "254da388a2cc1ef5c72f86d889287c74b78d6da82eede5472cb53886fbae4ff0",
+      "packed_sha256": "799751aa121f4f667d0ba8e9a617793d4395a037089fd126358c96139d9cfd46",
+      "output_sha256": "f12f75b176d1e16f524061c241bbc7c4b23339d805c2151a492c701706af3cb9",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 7.243372568410678e-13,
+        "output_sse": 0.0008437316864728928,
+        "baseline_opponent_sse": 7.25364213138846e-13,
+        "output_opponent_sse": 0.0012357269879430532,
+        "channel_bias_sum": [
+          -0.10661840438842773,
+          0.25793376564979553,
+          -0.24549013376235962
+        ],
+        "reference_gradient_energy": 0.007790167350322008,
+        "baseline_gradient_projection": 0.007790167350322008,
+        "output_gradient_projection": 0.007786668837070465,
+        "output_gradient_sse": 3.3171840829737675e-09
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8503,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "254da388a2cc1ef5c72f86d889287c74b78d6da82eede5472cb53886fbae4ff0",
+      "packed_sha256": "614013afaabf7a550acc4be190650bb9011a840ab4e727f9ac7150bfe604eb89",
+      "output_sha256": "1cca5effa714143eb7657ae4f913487491d21089d806f5ae1684dea9de87eb9d",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 7.181200079031669e-13,
+        "output_sse": 0.0024906848557293415,
+        "baseline_opponent_sse": 7.123746037507317e-13,
+        "output_opponent_sse": 0.00267091765999794,
+        "channel_bias_sum": [
+          0.6486309766769409,
+          -0.2614392340183258,
+          -1.1675643920898438
+        ],
+        "reference_gradient_energy": 0.007790167350322008,
+        "baseline_gradient_projection": 0.007790167350322008,
+        "output_gradient_projection": 0.007789356168359518,
+        "output_gradient_sse": 5.595326424412406e-10
+      }
+    },
+    {
+      "family": "ramp",
+      "seed": 8503,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "254da388a2cc1ef5c72f86d889287c74b78d6da82eede5472cb53886fbae4ff0",
+      "packed_sha256": "e2379418e6330694fa3ff4abf7b863fd1c0a883c93ddee9f6f2c0f37ff7c5633",
+      "output_sha256": "037900467125f4896d585cdb4e2426cfe4f4d1edfa309bf726e4402098c51ae4",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 6.773401284299041e-13,
+        "output_sse": 0.001529112458229065,
+        "baseline_opponent_sse": 6.756678549990625e-13,
+        "output_opponent_sse": 0.0020182232838124037,
+        "channel_bias_sum": [
+          -0.361198365688324,
+          0.03551974892616272,
+          -0.4662114977836609
+        ],
+        "reference_gradient_energy": 0.007790167350322008,
+        "baseline_gradient_projection": 0.007790167350322008,
+        "output_gradient_projection": 0.007798065431416035,
+        "output_gradient_sse": 5.0124771888704345e-08
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8600,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "e36a3c6245ed039773815b95642005d64c22ec37a819a41e25668d3d9d3d5e65",
+      "packed_sha256": "19291903a1233ecc34d89b559b35169fbd7b40e7ae7e6db433e3521f83ff6bdb",
+      "output_sha256": "6fcd899ad401d9745992b3a167cb2a0c8755cc0f207d7e05eee3b09bdcbc6ce6",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.038280725479126,
+        "output_sse": 1.0746855735778809,
+        "baseline_opponent_sse": 1.0590788125991821,
+        "output_opponent_sse": 1.1107847690582275,
+        "channel_bias_sum": [
+          1.8458149433135986,
+          -0.8250048756599426,
+          -5.520578861236572
+        ],
+        "reference_gradient_energy": 0.0018315608613193035,
+        "baseline_gradient_projection": 0.0015804592985659838,
+        "output_gradient_projection": 0.0016819374868646264,
+        "output_gradient_sse": 0.0014810212887823582
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8600,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "e36a3c6245ed039773815b95642005d64c22ec37a819a41e25668d3d9d3d5e65",
+      "packed_sha256": "00009e4454c19f69100065c49eea7bd915cebb88475361aec3fdeac964344604",
+      "output_sha256": "306415b0669c469e22bd7f5f962183b6c9cbd294723fb530f5fdee8230d713d8",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.038280725479126,
+        "output_sse": 1.1910425424575806,
+        "baseline_opponent_sse": 1.0590789318084717,
+        "output_opponent_sse": 1.2038090229034424,
+        "channel_bias_sum": [
+          1.5302380323410034,
+          0.17961134016513824,
+          -3.8831677436828613
+        ],
+        "reference_gradient_energy": 0.0018315608613193035,
+        "baseline_gradient_projection": 0.0015804592985659838,
+        "output_gradient_projection": 0.0017409137217327952,
+        "output_gradient_sse": 0.001050044083967805
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8600,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "e36a3c6245ed039773815b95642005d64c22ec37a819a41e25668d3d9d3d5e65",
+      "packed_sha256": "e2b8eb4991fb2e0cff6c55fb05d921a0e877e37e27103c0e30a841e79a7ed8f9",
+      "output_sha256": "83ea296f1cff96ef3c40cfac55a1dad22c2a54c75cf8ee656e5ea90da1c70cc1",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.0276803970336914,
+        "output_sse": 1.0084928274154663,
+        "baseline_opponent_sse": 1.049208641052246,
+        "output_opponent_sse": 1.029444694519043,
+        "channel_bias_sum": [
+          -1.0751354694366455,
+          -0.20298603177070618,
+          2.9191155433654785
+        ],
+        "reference_gradient_energy": 0.0018315608613193035,
+        "baseline_gradient_projection": 0.0015804592985659838,
+        "output_gradient_projection": 0.0016075291205197573,
+        "output_gradient_sse": 0.0004736667324323207
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8600,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "e36a3c6245ed039773815b95642005d64c22ec37a819a41e25668d3d9d3d5e65",
+      "packed_sha256": "414d355567635101cafc1ebb4060e88c9cf87f3df6ee97cefda3e41c72fc8eaa",
+      "output_sha256": "e84a70420c5a3e5d777003158f8e78d0b095459a086ad5a4e7837dc8ffaee91c",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.0276802778244019,
+        "output_sse": 1.032374382019043,
+        "baseline_opponent_sse": 1.0492087602615356,
+        "output_opponent_sse": 1.0430355072021484,
+        "channel_bias_sum": [
+          -2.1416289806365967,
+          0.06075863540172577,
+          3.540353775024414
+        ],
+        "reference_gradient_energy": 0.0018315608613193035,
+        "baseline_gradient_projection": 0.0015804592985659838,
+        "output_gradient_projection": 0.00180669198743999,
+        "output_gradient_sse": 0.00032281625317409635
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8601,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "5526a1bd99ffd417b66a27c117c6d60f9a73027fe28a845b1b785de893db4969",
+      "packed_sha256": "2ff8bc086bc78ecf4fb2f2be7c7db3f33f536161eaa39f26d73d00b104e146c5",
+      "output_sha256": "e76974e1f77fe339fa70e66bf36df1d2989879a5db69551937946fbde27ce22b",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.7544317841529846,
+        "output_sse": 1.0117993354797363,
+        "baseline_opponent_sse": 1.0908979177474976,
+        "output_opponent_sse": 1.3500462770462036,
+        "channel_bias_sum": [
+          0.9849192500114441,
+          -0.8486211895942688,
+          -1.331393837928772
+        ],
+        "reference_gradient_energy": 0.464612752199173,
+        "baseline_gradient_projection": 0.3484596014022827,
+        "output_gradient_projection": 0.3972916603088379,
+        "output_gradient_sse": 0.13639268279075623
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8601,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "5526a1bd99ffd417b66a27c117c6d60f9a73027fe28a845b1b785de893db4969",
+      "packed_sha256": "a7ac9fca10684dd5dfc70070273fbdc69ce046813813a526dfb9f8adee8e5bfd",
+      "output_sha256": "4047c277b11ce2fe764fe6e55353e86073482ea6347d3208df9ba7ba33755b5c",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.7795867919921875,
+        "output_sse": 0.765432596206665,
+        "baseline_opponent_sse": 1.1193547248840332,
+        "output_opponent_sse": 1.090614914894104,
+        "channel_bias_sum": [
+          -0.4680825173854828,
+          0.1897197812795639,
+          0.12165477871894836
+        ],
+        "reference_gradient_energy": 0.464612752199173,
+        "baseline_gradient_projection": 0.3484596312046051,
+        "output_gradient_projection": 0.3544345498085022,
+        "output_gradient_sse": 0.11164672672748566
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8601,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "5526a1bd99ffd417b66a27c117c6d60f9a73027fe28a845b1b785de893db4969",
+      "packed_sha256": "d84343f5fa3ac6fb4c288ba3563721ebe05d05ad5b419d732dff18c543b9c04c",
+      "output_sha256": "39c6913772643a305f31ab5d9a64765a5b59ae5f4ac50ed78b839da3291eee15",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.7712017893791199,
+        "output_sse": 0.7313513159751892,
+        "baseline_opponent_sse": 1.1043661832809448,
+        "output_opponent_sse": 1.0427204370498657,
+        "channel_bias_sum": [
+          0.632750391960144,
+          -0.23519347608089447,
+          -1.0132496356964111
+        ],
+        "reference_gradient_energy": 0.464612752199173,
+        "baseline_gradient_projection": 0.3484596312046051,
+        "output_gradient_projection": 0.3549429178237915,
+        "output_gradient_sse": 0.1133684441447258
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8601,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "5526a1bd99ffd417b66a27c117c6d60f9a73027fe28a845b1b785de893db4969",
+      "packed_sha256": "f95d4c4dad67ab3890001e0c0a904789f856ac51b47bc1806b798a66bfbc959f",
+      "output_sha256": "b45f6e99b07be114a6a90899aede86b5a87febb90c68d7cc22648d6fe8745f68",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.7963566780090332,
+        "output_sse": 0.8148088455200195,
+        "baseline_opponent_sse": 1.1328229904174805,
+        "output_opponent_sse": 1.1254401206970215,
+        "channel_bias_sum": [
+          -0.33630186319351196,
+          0.11752137541770935,
+          -0.21678835153579712
+        ],
+        "reference_gradient_energy": 0.464612752199173,
+        "baseline_gradient_projection": 0.3484596014022827,
+        "output_gradient_projection": 0.37098240852355957,
+        "output_gradient_sse": 0.112358957529068
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8602,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "a683c8b2e9b35f2f51eb76c543bf5b8d8ebefaa327c8280722dc23e698f5de69",
+      "packed_sha256": "6f07cfe81429e2fb0052fa7fb9a2ac9df1461625c3ad1269664632ccb3822224",
+      "output_sha256": "0492a00a2989d84ff4b7416c3a3e7abadc27fe1484a9880f837cda545925de2e",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 2.096012592315674,
+        "output_sse": 4.4396562576293945,
+        "baseline_opponent_sse": 2.063150405883789,
+        "output_opponent_sse": 4.219576358795166,
+        "channel_bias_sum": [
+          -0.6937615275382996,
+          -0.4859921932220459,
+          -1.7551560401916504
+        ],
+        "reference_gradient_energy": 6.589306354522705,
+        "baseline_gradient_projection": 5.298159599304199,
+        "output_gradient_projection": 5.673497676849365,
+        "output_gradient_sse": 0.7299207448959351
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8602,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "a683c8b2e9b35f2f51eb76c543bf5b8d8ebefaa327c8280722dc23e698f5de69",
+      "packed_sha256": "9be5140605aec0400637ae47742cbaa2a806b954dd4131eb78a9cd8cff4c5dca",
+      "output_sha256": "3e85416af2109685dbfae05b1240f3c0e4be809978be56b85722f9bd121370a0",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 2.155827760696411,
+        "output_sse": 2.2623345851898193,
+        "baseline_opponent_sse": 2.138099431991577,
+        "output_opponent_sse": 2.252622127532959,
+        "channel_bias_sum": [
+          -0.094174325466156,
+          -0.5717018246650696,
+          -0.7398616671562195
+        ],
+        "reference_gradient_energy": 6.589306354522705,
+        "baseline_gradient_projection": 5.298159122467041,
+        "output_gradient_projection": 5.28859806060791,
+        "output_gradient_sse": 1.0510293245315552
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8602,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "a683c8b2e9b35f2f51eb76c543bf5b8d8ebefaa327c8280722dc23e698f5de69",
+      "packed_sha256": "b89c0aaa3bc0b8f474a2e7839a92a964ba67694db729bade11668056bf64f4e6",
+      "output_sha256": "db3c28f6cf9fbe8ceb6ae51f7e7866d7c7bf81dcfa786d82e9ab6b2ff6be7311",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 2.1562914848327637,
+        "output_sse": 2.1712796688079834,
+        "baseline_opponent_sse": 2.1391592025756836,
+        "output_opponent_sse": 2.242974042892456,
+        "channel_bias_sum": [
+          0.15281657874584198,
+          -0.8205178380012512,
+          -0.6069822311401367
+        ],
+        "reference_gradient_energy": 6.589306354522705,
+        "baseline_gradient_projection": 5.298159122467041,
+        "output_gradient_projection": 5.2961225509643555,
+        "output_gradient_sse": 1.0455665588378906
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8602,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "a683c8b2e9b35f2f51eb76c543bf5b8d8ebefaa327c8280722dc23e698f5de69",
+      "packed_sha256": "7cb35a6acd924f84a53dc78e34881ad9fe14f7a55d73e918147ffcbfcd8b0c80",
+      "output_sha256": "d612333aab5ae797ce36219c2e96f53285b01c80cf061c2ca750988b832b6ecf",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 2.096012592315674,
+        "output_sse": 2.207545757293701,
+        "baseline_opponent_sse": 2.064342737197876,
+        "output_opponent_sse": 2.2466976642608643,
+        "channel_bias_sum": [
+          -0.7875768542289734,
+          0.5492112636566162,
+          -0.4948316812515259
+        ],
+        "reference_gradient_energy": 6.589306354522705,
+        "baseline_gradient_projection": 5.298159599304199,
+        "output_gradient_projection": 5.420877456665039,
+        "output_gradient_sse": 0.9386701583862305
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8603,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "ec2e65567568eb6e1bbcd202425cccc2824d55ab06b365fac7f30f5b71a8ad62",
+      "packed_sha256": "f1daac70c64f6ccd76bfbe71976fdb584ac83aa1a42a54ccec0fcb6adbe8663c",
+      "output_sha256": "5b7af812396424dfe8fedb25b5dcf068429722301c768f89226c1132d403cdec",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.4942834377288818,
+        "output_sse": 2.718217134475708,
+        "baseline_opponent_sse": 1.542953610420227,
+        "output_opponent_sse": 3.132249593734741,
+        "channel_bias_sum": [
+          0.1182205080986023,
+          -0.975540816783905,
+          -1.2662200927734375
+        ],
+        "reference_gradient_energy": 3.7572882175445557,
+        "baseline_gradient_projection": 3.0527968406677246,
+        "output_gradient_projection": 3.0967020988464355,
+        "output_gradient_sse": 0.7030231356620789
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8603,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "ec2e65567568eb6e1bbcd202425cccc2824d55ab06b365fac7f30f5b71a8ad62",
+      "packed_sha256": "9702271a2647ea50eb614c6f105451c4ee38a33f5cb6eb07ac86da3f4ce3a9bc",
+      "output_sha256": "986400f5ec6dab073c2398b046b3e564b232e4c5a5c2d9ae0c1d9d09daa8db9d",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.560178279876709,
+        "output_sse": 1.702310562133789,
+        "baseline_opponent_sse": 1.633863091468811,
+        "output_opponent_sse": 1.6958374977111816,
+        "channel_bias_sum": [
+          -0.05036252737045288,
+          -0.2692320942878723,
+          -0.6808469295501709
+        ],
+        "reference_gradient_energy": 3.7572882175445557,
+        "baseline_gradient_projection": 3.0527970790863037,
+        "output_gradient_projection": 3.0648107528686523,
+        "output_gradient_sse": 0.555739164352417
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8603,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "ec2e65567568eb6e1bbcd202425cccc2824d55ab06b365fac7f30f5b71a8ad62",
+      "packed_sha256": "a8bfd9e160724aa929766f620fb2971db457b6d6c6687326f8b65b32c91ec7d7",
+      "output_sha256": "1a99bef5cfef9152e46a923ef386f543a2e021aef5ed6d24a66e02bcdb0a0dd6",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.560178279876709,
+        "output_sse": 1.975271463394165,
+        "baseline_opponent_sse": 1.6338632106781006,
+        "output_opponent_sse": 2.0009708404541016,
+        "channel_bias_sum": [
+          0.593435525894165,
+          -0.3490979075431824,
+          0.7431207895278931
+        ],
+        "reference_gradient_energy": 3.7572882175445557,
+        "baseline_gradient_projection": 3.0527970790863037,
+        "output_gradient_projection": 3.0570852756500244,
+        "output_gradient_sse": 0.568112850189209
+      }
+    },
+    {
+      "family": "edge",
+      "seed": 8603,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "ec2e65567568eb6e1bbcd202425cccc2824d55ab06b365fac7f30f5b71a8ad62",
+      "packed_sha256": "bdb9206d26d42c1e8add41aea028a94500b649ffd88aff6cc7aef01d2889a47a",
+      "output_sha256": "54cbafcb0b6bf3eac5b5c10d77c9138d94f574f6bc232f1658daad5c9ca10182",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.4942834377288818,
+        "output_sse": 1.5421335697174072,
+        "baseline_opponent_sse": 1.5429537296295166,
+        "output_opponent_sse": 1.652774691581726,
+        "channel_bias_sum": [
+          -0.16337324678897858,
+          0.7313379049301147,
+          -1.2245502471923828
+        ],
+        "reference_gradient_energy": 3.7572882175445557,
+        "baseline_gradient_projection": 3.0527968406677246,
+        "output_gradient_projection": 3.2135965824127197,
+        "output_gradient_sse": 0.5084079504013062
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8700,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "ff919ba6e8459b953570c8d431e366848d26e40732eead18482b226a354333b7",
+      "packed_sha256": "80b7baa41292e2f3e93ae5cc80e5c25f8ab7ead114fe954a95cd67c980416b0a",
+      "output_sha256": "c9de65ff8c241917362926311fe9c4c64b4a8705f07f02ae34f83ced25f0e0b9",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00011751528654713184,
+        "output_sse": 0.0069927130825817585,
+        "baseline_opponent_sse": 7.834013376850635e-05,
+        "output_opponent_sse": 0.011835774406790733,
+        "channel_bias_sum": [
+          0.03608778864145279,
+          -0.8420186042785645,
+          -1.2445037364959717
+        ],
+        "reference_gradient_energy": 0.006820369977504015,
+        "baseline_gradient_projection": 0.006766713690012693,
+        "output_gradient_projection": 0.006760248914361,
+        "output_gradient_sse": 1.3341956446311087e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8700,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "ff919ba6e8459b953570c8d431e366848d26e40732eead18482b226a354333b7",
+      "packed_sha256": "1418a03e9d48a056f6a352180497fb044db4fc2849e752ccb7ba1d226cb525c4",
+      "output_sha256": "7af80d35d67af9b44c9e11efba4251b23826bb06cced056dc74b1664ee581c64",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00011751760030165315,
+        "output_sse": 0.0011089944746345282,
+        "baseline_opponent_sse": 7.833627751097083e-05,
+        "output_opponent_sse": 0.0012252285378053784,
+        "channel_bias_sum": [
+          -0.3246289789676666,
+          0.12255299091339111,
+          -0.3794712424278259
+        ],
+        "reference_gradient_energy": 0.006820369977504015,
+        "baseline_gradient_projection": 0.006766705773770809,
+        "output_gradient_projection": 0.006762201897799969,
+        "output_gradient_sse": 1.0014182407758199e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8700,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "ff919ba6e8459b953570c8d431e366848d26e40732eead18482b226a354333b7",
+      "packed_sha256": "bc5a1298eef417858497a27cb29561ac06f608f2dc6d45fa40605732bdf6de26",
+      "output_sha256": "a225e9c7dc3eb55eb0651fb7bf88a2408c98530e29b2dd0224932fd75ea92a1e",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00011751797865144908,
+        "output_sse": 0.0023740583565086126,
+        "baseline_opponent_sse": 7.833670679247007e-05,
+        "output_opponent_sse": 0.002535820472985506,
+        "channel_bias_sum": [
+          0.42140084505081177,
+          -0.25381559133529663,
+          -1.102365493774414
+        ],
+        "reference_gradient_energy": 0.006820369977504015,
+        "baseline_gradient_projection": 0.006766705773770809,
+        "output_gradient_projection": 0.006767106708139181,
+        "output_gradient_sse": 8.502658488396264e-07
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8700,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "ff919ba6e8459b953570c8d431e366848d26e40732eead18482b226a354333b7",
+      "packed_sha256": "8b312737b4febe810c9b47b99b24eab98dd2bace887b54a37d1b54ed11f733e7",
+      "output_sha256": "7046fecb76b6ca058a9654360152b19a8ea5398ac8fff34fd64b5f49833d84d9",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00011751653801184148,
+        "output_sse": 0.0013916868483647704,
+        "baseline_opponent_sse": 7.83410869189538e-05,
+        "output_opponent_sse": 0.0016413425328209996,
+        "channel_bias_sum": [
+          -0.315006285905838,
+          -0.016270875930786133,
+          -0.42928510904312134
+        ],
+        "reference_gradient_energy": 0.006820369977504015,
+        "baseline_gradient_projection": 0.006766713690012693,
+        "output_gradient_projection": 0.006765205878764391,
+        "output_gradient_sse": 1.0321614354324993e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8701,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "f535416acee81edfeed074be229d9b3c23b88390c484127bf5ffc4a5f39d8208",
+      "packed_sha256": "bfa2e491384c75b57979df009167cd16991a6c5b72893c7a764bd47283fe3ebe",
+      "output_sha256": "e6e88321587184a66698388537b4beb2ba886d049347640c4088d166aed94379",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00015370958135463297,
+        "output_sse": 0.008003760129213333,
+        "baseline_opponent_sse": 8.79684230312705e-05,
+        "output_opponent_sse": 0.011049682274460793,
+        "channel_bias_sum": [
+          0.1315462589263916,
+          -0.9591044187545776,
+          -1.5024986267089844
+        ],
+        "reference_gradient_energy": 0.00788983516395092,
+        "baseline_gradient_projection": 0.007812373340129852,
+        "output_gradient_projection": 0.007783504668623209,
+        "output_gradient_sse": 2.93850757770997e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8701,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "f535416acee81edfeed074be229d9b3c23b88390c484127bf5ffc4a5f39d8208",
+      "packed_sha256": "9b9cdeb51be0ad707acf4496c261c7b29150408ec74d93d2a048c617f0756c5b",
+      "output_sha256": "d709226f03cd72b1dd129e79730d31d20de0e21587f7ce0abfe8bf1f1d0dd6c0",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00015370732580777258,
+        "output_sse": 0.0009758523083291948,
+        "baseline_opponent_sse": 8.796720067039132e-05,
+        "output_opponent_sse": 0.0011249184608459473,
+        "channel_bias_sum": [
+          -0.09041893482208252,
+          0.21743857860565186,
+          0.0013343095779418945
+        ],
+        "reference_gradient_energy": 0.00788983516395092,
+        "baseline_gradient_projection": 0.007812386378645897,
+        "output_gradient_projection": 0.007812965661287308,
+        "output_gradient_sse": 1.5146174519031774e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8701,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "f535416acee81edfeed074be229d9b3c23b88390c484127bf5ffc4a5f39d8208",
+      "packed_sha256": "96964530c4439bdda5fd290419b93bb6257c61f31d5f173dfc588a3b381daed3",
+      "output_sha256": "93ab48ffd0b3eb42b33d99514137603f45d9fb57583d9e4a8ff65a2f574b2322",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00015370921755675226,
+        "output_sse": 0.0015247294213622808,
+        "baseline_opponent_sse": 8.796851034276187e-05,
+        "output_opponent_sse": 0.0018214959418401122,
+        "channel_bias_sum": [
+          0.5077748894691467,
+          -0.19820371270179749,
+          -0.8149701952934265
+        ],
+        "reference_gradient_energy": 0.00788983516395092,
+        "baseline_gradient_projection": 0.007812386378645897,
+        "output_gradient_projection": 0.007819276303052902,
+        "output_gradient_sse": 1.3995572771818843e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8701,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "f535416acee81edfeed074be229d9b3c23b88390c484127bf5ffc4a5f39d8208",
+      "packed_sha256": "acab2aa26292059bc27d3c8de3e0178eeab806b1eb21578636abc308f34bba63",
+      "output_sha256": "25ece8c6ac0cd209342cc3b85ad83bbd006b2a5a46e3057997d0ae64ba0fb6a5",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.000153709392179735,
+        "output_sse": 0.0014437332283705473,
+        "baseline_opponent_sse": 8.796839392744005e-05,
+        "output_opponent_sse": 0.0020358373876661062,
+        "channel_bias_sum": [
+          -0.14812099933624268,
+          0.25150710344314575,
+          -0.2637644112110138
+        ],
+        "reference_gradient_energy": 0.00788983516395092,
+        "baseline_gradient_projection": 0.007812373340129852,
+        "output_gradient_projection": 0.0077828289940953255,
+        "output_gradient_sse": 3.016047458004323e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8702,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "d28c40e50e7dee5950ce1216f8e9cf6d7f9943c13e0d8d296db6e1fd1cedaf4a",
+      "packed_sha256": "ae2c593471e2e23f09e72b386f981a5b16881d04f0934227b0427da15e5b2083",
+      "output_sha256": "59ae69a51a1f0f38f13f9868f1a5b23c89ba3ff98e77c6b7745c8c4b06c415f1",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00016748617053963244,
+        "output_sse": 0.00582123314961791,
+        "baseline_opponent_sse": 0.0001007245882647112,
+        "output_opponent_sse": 0.010134526528418064,
+        "channel_bias_sum": [
+          0.14430037140846252,
+          -0.7210663557052612,
+          -1.1765481233596802
+        ],
+        "reference_gradient_energy": 0.0076099056750535965,
+        "baseline_gradient_projection": 0.007535812444984913,
+        "output_gradient_projection": 0.007505116984248161,
+        "output_gradient_sse": 2.9996351713634795e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8702,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "d28c40e50e7dee5950ce1216f8e9cf6d7f9943c13e0d8d296db6e1fd1cedaf4a",
+      "packed_sha256": "25271660031d6976b5d5f5ff306df792f05c95909e2d7694e2e2318bfb1b4a73",
+      "output_sha256": "0b5ff82e6eaec2ea6609533aac73728a626685bea2c83fab843a2ea54477eede",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.000167589882039465,
+        "output_sse": 0.001093661063350737,
+        "baseline_opponent_sse": 0.00010070178541354835,
+        "output_opponent_sse": 0.0014608599012717605,
+        "channel_bias_sum": [
+          -0.2284339964389801,
+          0.3246512711048126,
+          -0.0305013507604599
+        ],
+        "reference_gradient_energy": 0.0076099056750535965,
+        "baseline_gradient_projection": 0.00753568671643734,
+        "output_gradient_projection": 0.007534556556493044,
+        "output_gradient_sse": 1.5085039422046975e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8702,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "d28c40e50e7dee5950ce1216f8e9cf6d7f9943c13e0d8d296db6e1fd1cedaf4a",
+      "packed_sha256": "a8cf8a42e96556098e582de8069729c0cc39344141f5a60f7f6e43f5d8c08363",
+      "output_sha256": "32c171b04aa8e9dbe8c73c20e08b157f2847071865448ce2411d01c6fb8d4463",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0001675911044003442,
+        "output_sse": 0.0019365776097401977,
+        "baseline_opponent_sse": 0.00010070260032080114,
+        "output_opponent_sse": 0.0020540831610560417,
+        "channel_bias_sum": [
+          0.30458372831344604,
+          -0.17947465181350708,
+          -1.0355454683303833
+        ],
+        "reference_gradient_energy": 0.0076099056750535965,
+        "baseline_gradient_projection": 0.00753568671643734,
+        "output_gradient_projection": 0.007542791776359081,
+        "output_gradient_sse": 1.2945904472871916e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8702,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "d28c40e50e7dee5950ce1216f8e9cf6d7f9943c13e0d8d296db6e1fd1cedaf4a",
+      "packed_sha256": "f0a1c02391ea6203d0876647e8721944d4f43c1e6000cf4c1f9b5434d11c6919",
+      "output_sha256": "7575be0d2f1eeeb603442d6434ea6b901311bf9128bc5c4ed4d4f9e09e6d907e",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0001674873346928507,
+        "output_sse": 0.0018494786927476525,
+        "baseline_opponent_sse": 0.00010072531586047262,
+        "output_opponent_sse": 0.002218544250354171,
+        "channel_bias_sum": [
+          -0.3469178378582001,
+          0.013344526290893555,
+          -0.4824939966201782
+        ],
+        "reference_gradient_energy": 0.0076099056750535965,
+        "baseline_gradient_projection": 0.007535812444984913,
+        "output_gradient_projection": 0.007504368666559458,
+        "output_gradient_sse": 3.025176738447044e-06
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8703,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "b93d228578541cd18fc995fd0abdcc36649f6ab21ca13908c7ad001af582ec88",
+      "packed_sha256": "01c6b681150569a4055ce89d8890359e029591075aa3cf0eef248043244788c1",
+      "output_sha256": "57df1273199194e1d1065f4ee71a7361eb2396db7cb39da2430c8c1fd00e15b9",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 4.780446397489868e-05,
+        "output_sse": 0.007136585656553507,
+        "baseline_opponent_sse": 2.7400392355048098e-05,
+        "output_opponent_sse": 0.010136296041309834,
+        "channel_bias_sum": [
+          0.10549670457839966,
+          -0.9160709381103516,
+          -1.4011259078979492
+        ],
+        "reference_gradient_energy": 0.004381134174764156,
+        "baseline_gradient_projection": 0.004357264842838049,
+        "output_gradient_projection": 0.0043449667282402515,
+        "output_gradient_sse": 6.353714638862584e-07
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8703,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "b93d228578541cd18fc995fd0abdcc36649f6ab21ca13908c7ad001af582ec88",
+      "packed_sha256": "c3d865f9257d698cc88d8abcea1494a551c4397117526dd0cfead9208759c523",
+      "output_sha256": "37055e6d7222c61135cb37998d96261cb522aa33ca85916424350d4a77e8683f",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 4.7806097427383065e-05,
+        "output_sse": 0.0009719516965560615,
+        "baseline_opponent_sse": 2.740038326010108e-05,
+        "output_opponent_sse": 0.001213718787766993,
+        "channel_bias_sum": [
+          -0.1412593126296997,
+          0.2955491840839386,
+          0.17126914858818054
+        ],
+        "reference_gradient_energy": 0.004381134174764156,
+        "baseline_gradient_projection": 0.0043572629801929,
+        "output_gradient_projection": 0.004356648772954941,
+        "output_gradient_sse": 2.753285741619038e-07
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8703,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "b93d228578541cd18fc995fd0abdcc36649f6ab21ca13908c7ad001af582ec88",
+      "packed_sha256": "f07c79980394b02131ab0973376f969299cffad488b7afd7a205e6f0cae161e2",
+      "output_sha256": "73d5091ad82634bc4ee00618341873e9afbe3688a796f19183446f8b49a0f225",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 4.780635572387837e-05,
+        "output_sse": 0.0010269851190969348,
+        "baseline_opponent_sse": 2.7400528779253364e-05,
+        "output_opponent_sse": 0.0013344770995900035,
+        "channel_bias_sum": [
+          0.3055800199508667,
+          -0.13552138209342957,
+          -0.7128981351852417
+        ],
+        "reference_gradient_energy": 0.004381134174764156,
+        "baseline_gradient_projection": 0.0043572629801929,
+        "output_gradient_projection": 0.004359568003565073,
+        "output_gradient_sse": 2.224826403107727e-07
+      }
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8703,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "b93d228578541cd18fc995fd0abdcc36649f6ab21ca13908c7ad001af582ec88",
+      "packed_sha256": "b4524de3ece397ffb26acd3b1f2ac51857a8f5c70fb5c04dd89a61b3981c82cb",
+      "output_sha256": "84e78bf5b98436e10fb8d6749317c3044bfb40ebd085cbd4151fd5fd7ca97a0a",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 4.7805799113120884e-05,
+        "output_sse": 0.0012674600584432483,
+        "baseline_opponent_sse": 2.7401201805332676e-05,
+        "output_opponent_sse": 0.0019692862406373024,
+        "channel_bias_sum": [
+          -0.16679275035858154,
+          0.24076524376869202,
+          -0.28739792108535767
+        ],
+        "reference_gradient_energy": 0.004381134174764156,
+        "baseline_gradient_projection": 0.004357264842838049,
+        "output_gradient_projection": 0.004351024050265551,
+        "output_gradient_sse": 4.868419978265592e-07
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8800,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "7d8048ccaabcad1c5d268db5fa712e62953cbc12b65c33381b16a434ab8631d9",
+      "packed_sha256": "35a8ae5333491eb121647540443ed2698d7d917c0b5f7b67a0b622b57addb58f",
+      "output_sha256": "629b641ab55c3b63d354cf785d4a80531639500315b74707efd1d9cdcd161f68",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.013634228147566319,
+        "output_sse": 0.08253540098667145,
+        "baseline_opponent_sse": 0.01802862249314785,
+        "output_opponent_sse": 0.10015718638896942,
+        "channel_bias_sum": [
+          -1.1871973276138306,
+          -0.863517701625824,
+          -1.214275598526001
+        ],
+        "reference_gradient_energy": 0.5501197576522827,
+        "baseline_gradient_projection": 0.5445470213890076,
+        "output_gradient_projection": 0.5472652316093445,
+        "output_gradient_sse": 0.0003246238920837641
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8800,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "7d8048ccaabcad1c5d268db5fa712e62953cbc12b65c33381b16a434ab8631d9",
+      "packed_sha256": "3795b5868b06a5c8aa0f74437abf4c3aacf6f7cb028cad729ab31f3f234eb856",
+      "output_sha256": "0cb743694ec35b889e58f6f73e86207204fc85888531e0b69b8db2a60bdeb2e6",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.013784542679786682,
+        "output_sse": 0.022042986005544662,
+        "baseline_opponent_sse": 0.018254971131682396,
+        "output_opponent_sse": 0.029397763311862946,
+        "channel_bias_sum": [
+          -0.0662735104560852,
+          0.30721336603164673,
+          1.0696518421173096
+        ],
+        "reference_gradient_energy": 0.5501197576522827,
+        "baseline_gradient_projection": 0.5445442199707031,
+        "output_gradient_projection": 0.5429158806800842,
+        "output_gradient_sse": 0.00020701574976556003
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8800,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "7d8048ccaabcad1c5d268db5fa712e62953cbc12b65c33381b16a434ab8631d9",
+      "packed_sha256": "3bd751da1ef0fb065626352390b9c95ca989d9e24a30d3cbe868fbe36e2e7403",
+      "output_sha256": "ae20b3aa3e522581f19f0c901b4f904edd9445b8eea420f1978f53d13bec20a2",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.013634507544338703,
+        "output_sse": 0.014698143117129803,
+        "baseline_opponent_sse": 0.018026400357484818,
+        "output_opponent_sse": 0.01777787134051323,
+        "channel_bias_sum": [
+          -0.17400360107421875,
+          -0.3168766498565674,
+          -0.8138346672058105
+        ],
+        "reference_gradient_energy": 0.5501197576522827,
+        "baseline_gradient_projection": 0.5445442199707031,
+        "output_gradient_projection": 0.5457582473754883,
+        "output_gradient_sse": 7.993628969416022e-05
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8800,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "7d8048ccaabcad1c5d268db5fa712e62953cbc12b65c33381b16a434ab8631d9",
+      "packed_sha256": "00e31dec9d4a34f79f65a1b707fe5f954d6ee1b39628661b7237e8413a78fa6c",
+      "output_sha256": "51797b5d17486102da84a70c7ab0e76a3be185c5328dee1d92d469c1f3575fb5",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.013784253969788551,
+        "output_sse": 0.018745597451925278,
+        "baseline_opponent_sse": 0.0182504765689373,
+        "output_opponent_sse": 0.030145328491926193,
+        "channel_bias_sum": [
+          -0.6443802714347839,
+          0.13893406093120575,
+          0.13609325885772705
+        ],
+        "reference_gradient_energy": 0.5501197576522827,
+        "baseline_gradient_projection": 0.5445470213890076,
+        "output_gradient_projection": 0.5451600551605225,
+        "output_gradient_sse": 0.00016361400776077062
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8801,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "e2142a1130ef9ac3ecbf298e497f293baba725993c76f696bec37d0dd0ae6f2d",
+      "packed_sha256": "0361fe1c9113b12b3704b8f34d01ac59bdc7a988c0b6fbb99cbf4c49f27f0f46",
+      "output_sha256": "6e2c1bbe902ce453df919dacfafe391aadac824660963c79729f86cc9c24c029",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.008257104083895683,
+        "output_sse": 0.03753633052110672,
+        "baseline_opponent_sse": 0.011767266318202019,
+        "output_opponent_sse": 0.03882820904254913,
+        "channel_bias_sum": [
+          0.18753913044929504,
+          -1.0113023519515991,
+          -1.464404582977295
+        ],
+        "reference_gradient_energy": 0.4534892141819,
+        "baseline_gradient_projection": 0.44946399331092834,
+        "output_gradient_projection": 0.45545801520347595,
+        "output_gradient_sse": 0.00018427870236337185
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8801,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "e2142a1130ef9ac3ecbf298e497f293baba725993c76f696bec37d0dd0ae6f2d",
+      "packed_sha256": "2b7728ae19146fe0884fea921563cab555d251cf754ad315e7da9929f9b99391",
+      "output_sha256": "6228d38bdcf344dc173cb204071826e0900e800bd827184e3e54439967d9bbea",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00823034904897213,
+        "output_sse": 0.012711619026958942,
+        "baseline_opponent_sse": 0.011717273853719234,
+        "output_opponent_sse": 0.015504629351198673,
+        "channel_bias_sum": [
+          -0.19773899018764496,
+          0.22322577238082886,
+          0.09825441986322403
+        ],
+        "reference_gradient_energy": 0.4534892141819,
+        "baseline_gradient_projection": 0.44946521520614624,
+        "output_gradient_projection": 0.4493735730648041,
+        "output_gradient_sse": 8.595969848101959e-05
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8801,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "e2142a1130ef9ac3ecbf298e497f293baba725993c76f696bec37d0dd0ae6f2d",
+      "packed_sha256": "a7c7265700e7d53ba1d1c1f07ed28e89233b49be2fc64f3c6b3144499116dd39",
+      "output_sha256": "9c29c2f1fe97e48e21ca7b99510945dde1a8100107768fe460ebb6abf0651df4",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.008267028257250786,
+        "output_sse": 0.010937820188701153,
+        "baseline_opponent_sse": 0.011789139360189438,
+        "output_opponent_sse": 0.013958008959889412,
+        "channel_bias_sum": [
+          0.20126530528068542,
+          -0.09638547897338867,
+          -0.5953381061553955
+        ],
+        "reference_gradient_energy": 0.4534892141819,
+        "baseline_gradient_projection": 0.44946521520614624,
+        "output_gradient_projection": 0.4500139057636261,
+        "output_gradient_sse": 5.481291009346023e-05
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8801,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "e2142a1130ef9ac3ecbf298e497f293baba725993c76f696bec37d0dd0ae6f2d",
+      "packed_sha256": "fd1959f0bc10c8ca7496ceac5df1e4eaf1e26ea49bc26b759c7f0b3b327ffd61",
+      "output_sha256": "f6f1126ad46ab708ac484f494c856f94b68f7a0d4249b559c5cf57d6122a08d5",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.008240487426519394,
+        "output_sse": 0.011285891756415367,
+        "baseline_opponent_sse": 0.011744947172701359,
+        "output_opponent_sse": 0.01853128895163536,
+        "channel_bias_sum": [
+          -0.12097489833831787,
+          0.21007344126701355,
+          -0.30505791306495667
+        ],
+        "reference_gradient_energy": 0.4534892141819,
+        "baseline_gradient_projection": 0.44946399331092834,
+        "output_gradient_projection": 0.45085224509239197,
+        "output_gradient_sse": 0.00012206549581605941
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8802,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "882779f5745312121c8cb90b5918ec0183406eb16c16684589826bc372e15f66",
+      "packed_sha256": "f691c78bea3e7e1e64de5ed1d654aceebdd82acc6487d443276792bf4449cd8b",
+      "output_sha256": "6aa0a57a78f52abb26ed6c79685521bea9cbb3ed10c8a2b6f8f02fe8f09644be",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.007101814262568951,
+        "output_sse": 0.01691599003970623,
+        "baseline_opponent_sse": 0.009665574878454208,
+        "output_opponent_sse": 0.018521321937441826,
+        "channel_bias_sum": [
+          -0.05329914391040802,
+          -1.1520802974700928,
+          -1.5435659885406494
+        ],
+        "reference_gradient_energy": 0.3893531858921051,
+        "baseline_gradient_projection": 0.38638797402381897,
+        "output_gradient_projection": 0.38920170068740845,
+        "output_gradient_sse": 6.353909702738747e-05
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8802,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "882779f5745312121c8cb90b5918ec0183406eb16c16684589826bc372e15f66",
+      "packed_sha256": "046605e122be4e73e8e2bac6dcfd71cca6ecb2afee0986cb66fcad6ca7d04d54",
+      "output_sha256": "113c95a90975720979e02499aa659c7270348f216f34545f547b54d10b563f22",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0071016764268279076,
+        "output_sse": 0.010962264612317085,
+        "baseline_opponent_sse": 0.009664792567491531,
+        "output_opponent_sse": 0.012602933682501316,
+        "channel_bias_sum": [
+          -0.3564976751804352,
+          0.12224686145782471,
+          0.04636859893798828
+        ],
+        "reference_gradient_energy": 0.3893531858921051,
+        "baseline_gradient_projection": 0.3863880932331085,
+        "output_gradient_projection": 0.3866901397705078,
+        "output_gradient_sse": 3.736001599463634e-05
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8802,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "882779f5745312121c8cb90b5918ec0183406eb16c16684589826bc372e15f66",
+      "packed_sha256": "06ce0131db3a19a3f62217e56d4fe4a00906492669f842334cd3f264f2e6a4bc",
+      "output_sha256": "5fb947dcc097e0c5e4bd661f215524218c92a2d0e09003215bd234f2f7cd7611",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.007104750722646713,
+        "output_sse": 0.01075666956603527,
+        "baseline_opponent_sse": 0.0096700144931674,
+        "output_opponent_sse": 0.013693385757505894,
+        "channel_bias_sum": [
+          0.1297750174999237,
+          -0.13719576597213745,
+          -0.6606560945510864
+        ],
+        "reference_gradient_energy": 0.3893531858921051,
+        "baseline_gradient_projection": 0.3863880932331085,
+        "output_gradient_projection": 0.38695839047431946,
+        "output_gradient_sse": 3.306830330984667e-05
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8802,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "882779f5745312121c8cb90b5918ec0183406eb16c16684589826bc372e15f66",
+      "packed_sha256": "aea88464ffc2d97f36a566f381630b90881ebd52787f5d1817beaf3d3827d3dc",
+      "output_sha256": "4f2f4cbd058c9af4116dad90c020a40f277fd0425f141b8bccc7db427a4e4f63",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.007104689255356789,
+        "output_sse": 0.007722218055278063,
+        "baseline_opponent_sse": 0.009669562801718712,
+        "output_opponent_sse": 0.012061101384460926,
+        "channel_bias_sum": [
+          -0.2345319390296936,
+          0.39307135343551636,
+          -0.12448471784591675
+        ],
+        "reference_gradient_energy": 0.3893531858921051,
+        "baseline_gradient_projection": 0.38638797402381897,
+        "output_gradient_projection": 0.3875516355037689,
+        "output_gradient_sse": 3.5660064895637333e-05
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8803,
+      "phase_index": 0,
+      "phase_name": "RGGB",
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "target_sha256": "a03ffb8ea04f3cbd1b249780e17abeab33f6d6046e77687f500eaf60f1aa3aa5",
+      "packed_sha256": "d3ba52e8a96356054032ddd0c69c5278a0224ee303285e09de93dd7d2b6ec057",
+      "output_sha256": "acdd3e0fb4bf28daca01a7bf664116d47b0b02854f9d8444c1540ac342a65011",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.013103341683745384,
+        "output_sse": 0.02247685194015503,
+        "baseline_opponent_sse": 0.017835138365626335,
+        "output_opponent_sse": 0.029874885454773903,
+        "channel_bias_sum": [
+          0.19715502858161926,
+          -1.297187089920044,
+          -1.2714359760284424
+        ],
+        "reference_gradient_energy": 0.5081059336662292,
+        "baseline_gradient_projection": 0.5028700828552246,
+        "output_gradient_projection": 0.5026441812515259,
+        "output_gradient_sse": 0.00015347616863436997
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8803,
+      "phase_index": 1,
+      "phase_name": "GRBG",
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "target_sha256": "a03ffb8ea04f3cbd1b249780e17abeab33f6d6046e77687f500eaf60f1aa3aa5",
+      "packed_sha256": "8fc7a52e7960d35d61efde35cfe5ff8dce0e69983c0f3ae46eda57a91ef03b30",
+      "output_sha256": "7dcd5e15b338443abf0a83688d86abc555295fea7f8ff00e671848ffb2616602",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.013105804100632668,
+        "output_sse": 0.01448024995625019,
+        "baseline_opponent_sse": 0.01785244606435299,
+        "output_opponent_sse": 0.018710102885961533,
+        "channel_bias_sum": [
+          -0.05762302875518799,
+          -0.05239737033843994,
+          0.21019059419631958
+        ],
+        "reference_gradient_energy": 0.5081059336662292,
+        "baseline_gradient_projection": 0.5028622150421143,
+        "output_gradient_projection": 0.5032369494438171,
+        "output_gradient_sse": 9.420116111868992e-05
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8803,
+      "phase_index": 2,
+      "phase_name": "GBRG",
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "target_sha256": "a03ffb8ea04f3cbd1b249780e17abeab33f6d6046e77687f500eaf60f1aa3aa5",
+      "packed_sha256": "50373fa47078befc89ae8cf1e74bc04e20ede412e84325cf229095297c8d7ef1",
+      "output_sha256": "3d4fe61c0399115e1c5de0fbe2f8e3ac079354803badb4d07533bf1d47e61f01",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.01318330317735672,
+        "output_sse": 0.020561568439006805,
+        "baseline_opponent_sse": 0.01796090416610241,
+        "output_opponent_sse": 0.02787618152797222,
+        "channel_bias_sum": [
+          0.5384548306465149,
+          -0.3996153473854065,
+          -0.3179355561733246
+        ],
+        "reference_gradient_energy": 0.5081059336662292,
+        "baseline_gradient_projection": 0.5028622150421143,
+        "output_gradient_projection": 0.5015832185745239,
+        "output_gradient_sse": 0.0002078149700537324
+      }
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8803,
+      "phase_index": 3,
+      "phase_name": "BGGR",
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "target_sha256": "a03ffb8ea04f3cbd1b249780e17abeab33f6d6046e77687f500eaf60f1aa3aa5",
+      "packed_sha256": "30a62ea814677ba25383240f959e3c42d398ba645680ee0c7a8e8866db8d5441",
+      "output_sha256": "b177766313dd1bb042b6cd73285e80551342075bd276cb58ae3a3b51c38ac844",
+      "observed_site_exact": true,
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.013184307143092155,
+        "output_sse": 0.013628858141601086,
+        "baseline_opponent_sse": 0.017970850691199303,
+        "output_opponent_sse": 0.01879722997546196,
+        "channel_bias_sum": [
+          0.07410362362861633,
+          0.03582555055618286,
+          0.012674152851104736
+        ],
+        "reference_gradient_energy": 0.5081059336662292,
+        "baseline_gradient_projection": 0.5028700828552246,
+        "output_gradient_projection": 0.5022355914115906,
+        "output_gradient_sse": 0.0001388156961183995
+      }
+    }
+  ],
+  "contents": [
+    {
+      "family": "constant",
+      "seed": 8400,
+      "target_sha256": "74fb0ef38b17d238967f3a43210ec800e13fc2481139dd9ff4f39ac4e6e5b0d8",
+      "output_phase_variance": 5.284886697154434e-07,
+      "bilinear_phase_variance": 0.0,
+      "output_mse_per_phase": [
+        2.3868403786764247e-06,
+        2.7073846808889357e-07,
+        3.73896654082273e-07,
+        3.3815808819781523e-07
+      ],
+      "bilinear_mse_per_phase": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          -2.8489157557487488e-05,
+          -0.0009368658065795898,
+          -0.001254640519618988
+        ],
+        [
+          -0.0003102477639913559,
+          0.00016669929027557373,
+          9.395182132720947e-06
+        ],
+        [
+          0.0001323595643043518,
+          -9.357929229736328e-05,
+          -0.0006183162331581116
+        ],
+        [
+          -0.00019360706210136414,
+          0.00012925267219543457,
+          -0.0003219321370124817
+        ]
+      ]
+    },
+    {
+      "family": "constant",
+      "seed": 8401,
+      "target_sha256": "452975f89d555bc484883fcfa7bcd08bf097e801e8c274c42ea66a8450d7d560",
+      "output_phase_variance": 4.347370747836976e-07,
+      "bilinear_phase_variance": 0.0,
+      "output_mse_per_phase": [
+        1.942357130246819e-06,
+        2.7724652795768634e-07,
+        6.899313120811712e-07,
+        4.5807323090230057e-07
+      ],
+      "bilinear_mse_per_phase": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.0001106560230255127,
+          -0.0007381625473499298,
+          -0.001139916479587555
+        ],
+        [
+          -0.0002764686942100525,
+          0.000203033909201622,
+          -0.0002680942416191101
+        ],
+        [
+          0.00038929283618927,
+          -0.00021662376821041107,
+          -0.0010734200477600098
+        ],
+        [
+          -0.0003216303884983063,
+          -2.7835369110107422e-05,
+          -0.0004429742693901062
+        ]
+      ]
+    },
+    {
+      "family": "constant",
+      "seed": 8402,
+      "target_sha256": "acac9abaaee71a415dc9646d938b7ce98fcb95bc19d350fe115a63cd927a8510",
+      "output_phase_variance": 4.1998782762675546e-07,
+      "bilinear_phase_variance": 0.0,
+      "output_mse_per_phase": [
+        1.7089436141759506e-06,
+        2.822018529968773e-07,
+        6.75099784075428e-07,
+        5.473341957440425e-07
+      ],
+      "bilinear_mse_per_phase": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.00015878677368164062,
+          -0.0006589218974113464,
+          -0.001090656965970993
+        ],
+        [
+          -0.00024872273206710815,
+          0.0002990756183862686,
+          -0.0001352056860923767
+        ],
+        [
+          0.00033339112997055054,
+          -0.00019488297402858734,
+          -0.0011041201651096344
+        ],
+        [
+          -0.00036253035068511963,
+          -4.104524850845337e-05,
+          -0.0004929527640342712
+        ]
+      ]
+    },
+    {
+      "family": "constant",
+      "seed": 8403,
+      "target_sha256": "dc8b15d607c4a4df801d4426fd35451090e95b4d63f9bbf649429d60a82ab781",
+      "output_phase_variance": 4.850045911553025e-07,
+      "bilinear_phase_variance": 0.0,
+      "output_mse_per_phase": [
+        2.0547438452922506e-06,
+        2.9118908173586533e-07,
+        3.5782920804194873e-07,
+        4.1551365370651183e-07
+      ],
+      "bilinear_mse_per_phase": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          7.50422477722168e-05,
+          -0.0008275508880615234,
+          -0.0012260768562555313
+        ],
+        [
+          -0.0002415105700492859,
+          0.00029471516609191895,
+          0.00011510774493217468
+        ],
+        [
+          0.00016586482524871826,
+          -0.00011271238327026367,
+          -0.0007320642471313477
+        ],
+        [
+          -0.000252358615398407,
+          0.0001149401068687439,
+          -0.0003805365413427353
+        ]
+      ]
+    },
+    {
+      "family": "ramp",
+      "seed": 8500,
+      "target_sha256": "7dca8925432d1f4d14ceb230638189767fc6052dcf49073cd439e3e17a45f702",
+      "output_phase_variance": 6.922074931026145e-07,
+      "bilinear_phase_variance": 1.9086305897044457e-16,
+      "output_mse_per_phase": [
+        3.162790335409227e-06,
+        3.626945215273736e-07,
+        4.0990991578837566e-07,
+        3.7235687955217145e-07
+      ],
+      "bilinear_mse_per_phase": [
+        3.6683077886562625e-16,
+        3.8932344761238857e-16,
+        3.797056796638916e-16,
+        3.781471390409437e-16
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          -8.496078953612596e-05,
+          -0.0011047660373151302,
+          -0.0015363057609647512
+        ],
+        [
+          -0.00041928570135496557,
+          3.7109421100467443e-05,
+          -4.7960871597751975e-05
+        ],
+        [
+          0.00012035902182105929,
+          -0.00016347435303032398,
+          -0.000645203166641295
+        ],
+        [
+          -9.496988786850125e-05,
+          0.0002351744333282113,
+          -0.00010575802298262715
+        ]
+      ]
+    },
+    {
+      "family": "ramp",
+      "seed": 8501,
+      "target_sha256": "fba8ca9aba048d482214ccd4a3ed2b00c58cb9d140182c0f382d9608ad9c8ce5",
+      "output_phase_variance": 6.08007212576922e-07,
+      "bilinear_phase_variance": 2.3709693626311186e-16,
+      "output_mse_per_phase": [
+        2.8900713004986756e-06,
+        3.236573320464231e-07,
+        5.302919703353837e-07,
+        2.9988424898874655e-07
+      ],
+      "bilinear_mse_per_phase": [
+        3.8294020732188017e-16,
+        3.8742156747822705e-16,
+        4.0115480381963664e-16,
+        3.7426658994199613e-16
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          -9.391631465405226e-06,
+          -0.0010419355239719152,
+          -0.0014820576179772615
+        ],
+        [
+          -0.0002889726310968399,
+          3.884491161443293e-05,
+          -0.00021640624618157744
+        ],
+        [
+          0.00033247703686356544,
+          -0.00023526602308265865,
+          -0.0008414660696871579
+        ],
+        [
+          -0.00014756061136722565,
+          0.00017815560568124056,
+          -0.0002192503889091313
+        ]
+      ]
+    },
+    {
+      "family": "ramp",
+      "seed": 8502,
+      "target_sha256": "aa589f0b314164bae808f04cc0cdd7def594b8416b746833580062b83c34c620",
+      "output_phase_variance": 4.702467037986935e-07,
+      "bilinear_phase_variance": 3.151379131942479e-17,
+      "output_mse_per_phase": [
+        2.0925183434883365e-06,
+        3.047904328923323e-07,
+        5.196287133912847e-07,
+        5.135512992637814e-07
+      ],
+      "bilinear_mse_per_phase": [
+        6.243310447621997e-17,
+        5.816970310255836e-17,
+        5.860338397155256e-17,
+        6.458682471095694e-17
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          1.970693119801581e-06,
+          -0.000833815080113709,
+          -0.0011535948142409325
+        ],
+        [
+          -0.0004175206704530865,
+          0.0002464491408318281,
+          -6.442017911467701e-05
+        ],
+        [
+          9.840632992563769e-05,
+          -0.00013213047350291163,
+          -0.0008822327363304794
+        ],
+        [
+          -0.0004188479797448963,
+          -5.5975644499994814e-05,
+          -0.00047710316721349955
+        ]
+      ]
+    },
+    {
+      "family": "ramp",
+      "seed": 8503,
+      "target_sha256": "254da388a2cc1ef5c72f86d889287c74b78d6da82eede5472cb53886fbae4ff0",
+      "output_phase_variance": 4.737412666599994e-07,
+      "bilinear_phase_variance": 1.2836219185844425e-16,
+      "output_mse_per_phase": [
+        1.9414048892940627e-06,
+        2.746522511642979e-07,
+        8.107697908599221e-07,
+        4.977579806109134e-07
+      ],
+      "bilinear_mse_per_phase": [
+        2.34366102041164e-16,
+        2.357868674612851e-16,
+        2.3376301458271893e-16,
+        2.2048832746823934e-16
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.00021920970175415277,
+          -0.0007381048053503036,
+          -0.0012508120853453875
+        ],
+        [
+          -0.00010411953553557396,
+          0.00025188844301737845,
+          -0.00023973645875230432
+        ],
+        [
+          0.0006334286881610751,
+          -0.0002553117519710213,
+          -0.001140199601650238
+        ],
+        [
+          -0.0003527327789925039,
+          3.468725481070578e-05,
+          -0.00045528466580435634
+        ]
+      ]
+    },
+    {
+      "family": "edge",
+      "seed": 8600,
+      "target_sha256": "e36a3c6245ed039773815b95642005d64c22ec37a819a41e25668d3d9d3d5e65",
+      "output_phase_variance": 0.00017233386461157352,
+      "bilinear_phase_variance": 0.00016487085667904466,
+      "output_mse_per_phase": [
+        0.0003498325531836599,
+        0.00038770915125496686,
+        0.0003282854158896953,
+        0.0003360593691468239
+      ],
+      "bilinear_mse_per_phase": [
+        0.00033798199729062617,
+        0.00033798199729062617,
+        0.0003345313889440149,
+        0.000334531330736354
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.0018025536555796862,
+          -0.0008056688238866627,
+          -0.00539119029417634
+        ],
+        [
+          0.0014943730784580112,
+          0.00017540169938001782,
+          -0.0037921559996902943
+        ],
+        [
+          -0.0010499369818717241,
+          -0.00019822854665108025,
+          0.00285069877281785
+        ],
+        [
+          -0.0020914345514029264,
+          5.933460488449782e-05,
+          0.0034573767334222794
+        ]
+      ]
+    },
+    {
+      "family": "edge",
+      "seed": 8601,
+      "target_sha256": "5526a1bd99ffd417b66a27c117c6d60f9a73027fe28a845b1b785de893db4969",
+      "output_phase_variance": 0.00010967748676193878,
+      "bilinear_phase_variance": 9.541243343846872e-05,
+      "output_mse_per_phase": [
+        0.00032936176285147667,
+        0.00024916426627896726,
+        0.00023807008983567357,
+        0.00026523726410232484
+      ],
+      "bilinear_mse_per_phase": [
+        0.00024558327277190983,
+        0.0002537717518862337,
+        0.0002510422491468489,
+        0.0002592306991573423
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.0009618352050893009,
+          -0.0008287316304631531,
+          -0.0013001892948523164
+        ],
+        [
+          -0.00045711183338426054,
+          0.00018527322390582412,
+          0.00011880349484272301
+        ],
+        [
+          0.0006179203046485782,
+          -0.0002296811289852485,
+          -0.0009895015973597765
+        ],
+        [
+          -0.000328419788274914,
+          0.00011476696818135679,
+          -0.00021170737454667687
+        ]
+      ]
+    },
+    {
+      "family": "edge",
+      "seed": 8602,
+      "target_sha256": "a683c8b2e9b35f2f51eb76c543bf5b8d8ebefaa327c8280722dc23e698f5de69",
+      "output_phase_variance": 0.00043427952914498746,
+      "bilinear_phase_variance": 0.0003254761977586895,
+      "output_mse_per_phase": [
+        0.0014452006435021758,
+        0.000736437039449811,
+        0.0007067967671900988,
+        0.0007186021539382637
+      ],
+      "bilinear_mse_per_phase": [
+        0.0006822957657277584,
+        0.0007017668685875833,
+        0.0007019178010523319,
+        0.0006822957657277584
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          -0.0006775014917366207,
+          -0.0004746017511934042,
+          -0.0017140195704996586
+        ],
+        [
+          -9.196711471304297e-05,
+          -0.000558302563149482,
+          -0.0007225211593322456
+        ],
+        [
+          0.0001492349401814863,
+          -0.0008012869511730969,
+          -0.0005927560850977898
+        ],
+        [
+          -0.0007691180217079818,
+          0.0005363391246646643,
+          -0.00048323406372219324
+        ]
+      ]
+    },
+    {
+      "family": "edge",
+      "seed": 8603,
+      "target_sha256": "ec2e65567568eb6e1bbcd202425cccc2824d55ab06b365fac7f30f5b71a8ad62",
+      "output_phase_variance": 0.0003011563385371119,
+      "bilinear_phase_variance": 0.00023093885101843625,
+      "output_mse_per_phase": [
+        0.0008848363067954779,
+        0.0005541375721804798,
+        0.0006429920322261751,
+        0.0005019966047257185
+      ],
+      "bilinear_mse_per_phase": [
+        0.0004864203801844269,
+        0.0005078705144114792,
+        0.0005078705144114792,
+        0.0004864203801844269
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.0001154497149400413,
+          -0.0009526765788905323,
+          -0.00123654305934906
+        ],
+        [
+          -4.918215563520789e-05,
+          -0.0002629219670780003,
+          -0.0006648895796388388
+        ],
+        [
+          0.0005795268807560205,
+          -0.00034091592533513904,
+          0.0007257038960233331
+        ],
+        [
+          -0.0001595441863173619,
+          0.0007141971727833152,
+          -0.0011958498507738113
+        ]
+      ]
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8700,
+      "target_sha256": "ff919ba6e8459b953570c8d431e366848d26e40732eead18482b226a354333b7",
+      "output_phase_variance": 4.939274163007212e-07,
+      "bilinear_phase_variance": 1.9124060557373923e-08,
+      "output_mse_per_phase": [
+        2.276273789902916e-06,
+        3.6100081501899695e-07,
+        7.728054356448411e-07,
+        4.5302306261874037e-07
+      ],
+      "bilinear_mse_per_phase": [
+        3.825367400622781e-08,
+        3.825442718152772e-08,
+        3.8254551526506475e-08,
+        3.8254082568300873e-08
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          3.524198109516874e-05,
+          -0.0008222837932407856,
+          -0.0012153356801718473
+        ],
+        [
+          -0.00031702048727311194,
+          0.00011968065518885851,
+          -0.00037057738518342376
+        ],
+        [
+          0.00041152426274493337,
+          -0.0002478667884133756,
+          -0.0010765288025140762
+        ],
+        [
+          -0.00030762332607991993,
+          -1.5889527276158333e-05,
+          -0.0004192237392999232
+        ]
+      ]
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8701,
+      "target_sha256": "f535416acee81edfeed074be229d9b3c23b88390c484127bf5ffc4a5f39d8208",
+      "output_phase_variance": 6.106504315539496e-07,
+      "bilinear_phase_variance": 1.779292979620095e-08,
+      "output_mse_per_phase": [
+        2.6053905912704067e-06,
+        3.1766026609147957e-07,
+        4.963312107975071e-07,
+        4.699652436102042e-07
+      ],
+      "bilinear_mse_per_phase": [
+        5.003566982964003e-08,
+        5.0034937970622195e-08,
+        5.003555259008863e-08,
+        5.003560943350749e-08
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.0001284631434828043,
+          -0.0009366254089400172,
+          -0.0014672838151454926
+        ],
+        [
+          -8.829974103718996e-05,
+          0.0002123423619195819,
+          1.3030366972088814e-06
+        ],
+        [
+          0.0004958739154972136,
+          -0.0001935583131853491,
+          -0.0007958693313412368
+        ],
+        [
+          -0.0001446494134142995,
+          0.000245612405706197,
+          -0.00025758243282325566
+        ]
+      ]
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8702,
+      "target_sha256": "d28c40e50e7dee5950ce1216f8e9cf6d7f9943c13e0d8d296db6e1fd1cedaf4a",
+      "output_phase_variance": 4.673121054565854e-07,
+      "bilinear_phase_variance": 2.1800921956582897e-08,
+      "output_mse_per_phase": [
+        1.8949326658912469e-06,
+        3.5600945125224825e-07,
+        6.303963573373039e-07,
+        6.020438263476535e-07
+      ],
+      "bilinear_mse_per_phase": [
+        5.452023899010783e-08,
+        5.455399687548379e-08,
+        5.4554394779415816e-08,
+        5.452061557775778e-08
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.00014091833145357668,
+          -0.0007041663629934192,
+          -0.0011489727767184377
+        ],
+        [
+          -0.0002230800746474415,
+          0.0003170422569382936,
+          -2.978647535201162e-05
+        ],
+        [
+          0.00029744504718109965,
+          -0.000175268214661628,
+          -0.00101127487141639
+        ],
+        [
+          -0.0003387869510333985,
+          1.3031763955950737e-05,
+          -0.0004711855435743928
+        ]
+      ]
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8703,
+      "target_sha256": "b93d228578541cd18fc995fd0abdcc36649f6ab21ca13908c7ad001af582ec88",
+      "output_phase_variance": 5.629051997857459e-07,
+      "bilinear_phase_variance": 5.574211314751665e-09,
+      "output_mse_per_phase": [
+        2.3231073100760113e-06,
+        3.1639052622267627e-07,
+        3.3430504231546365e-07,
+        4.1258465444116155e-07
+      ],
+      "bilinear_mse_per_phase": [
+        1.5561349542281278e-08,
+        1.5561880672976258e-08,
+        1.556196416174771e-08,
+        1.556178297335009e-08
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.00010302412556484342,
+          -0.0008946005254983902,
+          -0.001368287019431591
+        ],
+        [
+          -0.00013794854748994112,
+          0.0002886222500819713,
+          0.00016725502791814506
+        ],
+        [
+          0.00029841798823326826,
+          -0.0001323450997006148,
+          -0.0006961895851418376
+        ],
+        [
+          -0.0001628835452720523,
+          0.0002351223083678633,
+          -0.0002806620323099196
+        ]
+      ]
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8800,
+      "target_sha256": "7d8048ccaabcad1c5d268db5fa712e62953cbc12b65c33381b16a434ab8631d9",
+      "output_phase_variance": 7.031036602711538e-06,
+      "bilinear_phase_variance": 2.2270914996624924e-06,
+      "output_mse_per_phase": [
+        2.686699190235231e-05,
+        7.175451173679903e-06,
+        4.784551947523141e-06,
+        6.102082352299476e-06
+      ],
+      "bilinear_mse_per_phase": [
+        4.438225460035028e-06,
+        4.487155820243061e-06,
+        4.438316409505205e-06,
+        4.487061687541427e-06
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          -0.0011593723902478814,
+          -0.0008432790054939687,
+          -0.0011858160141855478
+        ],
+        [
+          -6.472022505477071e-05,
+          0.00030001305276528,
+          0.0010445818770676851
+        ],
+        [
+          -0.00016992539167404175,
+          -0.0003094498533755541,
+          -0.0007947604171931744
+        ],
+        [
+          -0.0006292776088230312,
+          0.00013567779387813061,
+          0.00013290357310324907
+        ]
+      ]
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8801,
+      "target_sha256": "e2142a1130ef9ac3ecbf298e497f293baba725993c76f696bec37d0dd0ae6f2d",
+      "output_phase_variance": 3.1732090519653866e-06,
+      "bilinear_phase_variance": 1.002588192022813e-06,
+      "output_mse_per_phase": [
+        1.2218857591506094e-05,
+        4.1378966670890804e-06,
+        3.5604882668849314e-06,
+        3.6737928894581273e-06
+      ],
+      "bilinear_mse_per_phase": [
+        2.687859478101018e-06,
+        2.6791501568368403e-06,
+        2.6910900032817153e-06,
+        2.6824502583622234e-06
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.0001831436820793897,
+          -0.0009875999530777335,
+          -0.0014300826005637646
+        ],
+        [
+          -0.00019310448260512203,
+          0.00021799391834065318,
+          9.595158189767972e-05
+        ],
+        [
+          0.00019654814968816936,
+          -9.412644430994987e-05,
+          -0.0005813848692923784
+        ],
+        [
+          -0.00011813954915851355,
+          0.00020514984498731792,
+          -0.00029790811822749674
+        ]
+      ]
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8802,
+      "target_sha256": "882779f5745312121c8cb90b5918ec0183406eb16c16684589826bc372e15f66",
+      "output_phase_variance": 2.2170313513925066e-06,
+      "bilinear_phase_variance": 1.062804017237795e-06,
+      "output_mse_per_phase": [
+        5.506507022801088e-06,
+        3.5684454360307427e-06,
+        3.5015200410271063e-06,
+        2.5137428565358277e-06
+      ],
+      "bilinear_mse_per_phase": [
+        2.311788421138772e-06,
+        2.3117436285247095e-06,
+        2.312744300070335e-06,
+        2.312724291186896e-06
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          -5.204994522500783e-05,
+          -0.0011250784154981375,
+          -0.001507388660684228
+        ],
+        [
+          -0.00034814226091839373,
+          0.00011938170064240694,
+          4.528183490037918e-05
+        ],
+        [
+          0.00012673341552726924,
+          -0.00013398024020716548,
+          -0.0006451719673350453
+        ],
+        [
+          -0.00022903509670868516,
+          0.00038385874358937144,
+          -0.00012156710727140307
+        ]
+      ]
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8803,
+      "target_sha256": "a03ffb8ea04f3cbd1b249780e17abeab33f6d6046e77687f500eaf60f1aa3aa5",
+      "output_phase_variance": 3.28870532939618e-06,
+      "bilinear_phase_variance": 1.9981246168754296e-06,
+      "output_mse_per_phase": [
+        7.316683422686765e-06,
+        4.713623184215976e-06,
+        6.693218892905861e-06,
+        4.43647741121822e-06
+      ],
+      "bilinear_mse_per_phase": [
+        4.26541055276175e-06,
+        4.266212272341363e-06,
+        4.291439836379141e-06,
+        4.291766799724428e-06
+      ],
+      "output_bias_rgb_per_phase": [
+        [
+          0.00019253420759923756,
+          -0.001266784267500043,
+          -0.0012416366953402758
+        ],
+        [
+          -5.627248901873827e-05,
+          -5.1169306971132755e-05,
+          0.00020526425214484334
+        ],
+        [
+          0.0005258347955532372,
+          -0.00039024936268106103,
+          -0.0003104839415755123
+        ],
+        [
+          7.236681994982064e-05,
+          3.4985889215022326e-05,
+          1.2377102393656969e-05
+        ]
+      ]
+    }
+  ],
+  "status": "completed_crossed_bayer_phase_audit_no_training",
+  "threads_intra": 4,
+  "versions": {
+    "torch": "2.9.1+cpu"
+  },
+  "limits": [
+    "Existing procedural contents already consulted; not independent photo validation.",
+    "Different CFA phases measure different sites; bilinear variation is the physical sampling witness.",
+    "Output-phase variance includes legitimate observation changes; not pure learned artifact by itself.",
+    "No added noise, training, parameter search, chosen best phase or production change."
+  ],
+  "summary": {
+    "cases": 80,
+    "pixels": 81920,
+    "baseline_mse": 8.958876750810966e-05,
+    "output_mse": 0.00011030610331748865,
+    "mse_ratio": 1.2312492557451875,
+    "opponent_mse_ratio": 1.2278415574809827,
+    "relative_error_mse_floor": 1e-12,
+    "baseline_gradient_gain": 0.8338904585337249,
+    "output_gradient_gain": 0.8495932291236816,
+    "channel_bias": [
+      -4.110333356948104e-05,
+      -0.00020428053630894283,
+      -0.0006134526588539302
+    ]
+  },
+  "by_phase": {
+    "RGGB": {
+      "cases": 20,
+      "pixels": 20480,
+      "baseline_mse": 8.830715402604288e-05,
+      "output_mse": 0.00015442098165294738,
+      "mse_ratio": 1.7486803119870302,
+      "opponent_mse_ratio": 1.7418526376814465,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.8338908351061458,
+      "output_gradient_gain": 0.8712698281133354,
+      "channel_bias": [
+        0.00011085320402344223,
+        -0.0008761109551414847,
+        -0.001517040329053998
+      ]
+    },
+    "GRBG": {
+      "cases": 20,
+      "pixels": 20480,
+      "baseline_mse": 9.076468996109242e-05,
+      "output_mse": 9.753908288890519e-05,
+      "mse_ratio": 1.0746368761984062,
+      "opponent_mse_ratio": 1.054158405566467,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.8338900819613041,
+      "output_gradient_gain": 0.8344751140983042,
+      "channel_bias": [
+        -0.0001419662316038739,
+        0.00013005865912418813,
+        -0.00023744051250105259
+      ]
+    },
+    "GBRG": {
+      "cases": 20,
+      "pixels": 20480,
+      "baseline_mse": 9.046269800591644e-05,
+      "output_mse": 9.706426349490964e-05,
+      "mse_ratio": 1.0729755538416668,
+      "opponent_mse_ratio": 1.071641520890924,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.8338900819613041,
+      "output_gradient_gain": 0.8346558446300498,
+      "channel_bias": [
+        0.0002342388379474869,
+        -0.00023254689440364019,
+        -0.0005477270533447154
+      ]
+    },
+    "BGGR": {
+      "cases": 20,
+      "pixels": 20480,
+      "baseline_mse": 8.882052803938691e-05,
+      "output_mse": 9.220008523319242e-05,
+      "mse_ratio": 1.0380492805931851,
+      "opponent_mse_ratio": 1.0551079197027473,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.8338908351061458,
+      "output_gradient_gain": 0.8579721296530368,
+      "channel_bias": [
+        -0.0003675391446449794,
+        0.0001614770451851655,
+        -0.0001516027405159548
+      ]
+    }
+  },
+  "by_family": {
+    "constant": {
+      "cases": 16,
+      "pixels": 16384,
+      "baseline_mse": 0.0,
+      "output_mse": 8.16881065901498e-07,
+      "mse_ratio": null,
+      "opponent_mse_ratio": null,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": null,
+      "output_gradient_gain": null,
+      "channel_bias": [
+        -5.438574589788914e-05,
+        -0.00016502896323800087,
+        -0.0006347752641886473
+      ]
+    },
+    "ramp": {
+      "cases": 16,
+      "pixels": 16384,
+      "baseline_mse": 2.642492214853188e-16,
+      "output_mse": 9.566706372273377e-07,
+      "mse_ratio": null,
+      "opponent_mse_ratio": null,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.9999999689592401,
+      "output_gradient_gain": 0.999841339388697,
+      "channel_bias": [
+        -5.828192161061452e-05,
+        -0.0002211544051533565,
+        -0.0006723619908370893
+      ]
+    },
+    "edge": {
+      "cases": 16,
+      "pixels": 16384,
+      "baseline_mse": 0.0004444695441634394,
+      "output_mse": 0.0005421699303648589,
+      "mse_ratio": 1.2198134551272952,
+      "opponent_mse_ratio": 1.2142050203319041,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.8046763253882301,
+      "output_gradient_gain": 0.8229827766689196,
+      "channel_bias": [
+        2.917353413067758e-06,
+        -0.0002292314420628827,
+        -0.000696373439495801
+      ]
+    },
+    "weak_achromatic_wave": {
+      "cases": 16,
+      "pixels": 16384,
+      "baseline_mse": 3.959717057947879e-08,
+      "output_mse": 9.13888771473618e-07,
+      "mse_ratio": 23.07964832081311,
+      "opponent_mse_ratio": 54.167261792812475,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.9914183062309883,
+      "output_gradient_gain": 0.9901446599154277,
+      "channel_bias": [
+        1.191354431284708e-05,
+        -0.00016819687698443886,
+        -0.0006525125891130301
+      ]
+    },
+    "chromatic_wave": {
+      "cases": 16,
+      "pixels": 16384,
+      "baseline_mse": 3.434696206265168e-06,
+      "output_mse": 6.6731457479818346e-06,
+      "mse_ratio": 1.942863457853847,
+      "opponent_mse_ratio": 1.8116342322426615,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.9906349046845817,
+      "output_gradient_gain": 0.9924551092143098,
+      "channel_bias": [
+        -0.00010767989806481637,
+        -0.00023779099410603521,
+        -0.0004112400106350833
+      ]
+    }
+  },
+  "by_family_phase": {
+    "constant": {
+      "RGGB": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0,
+        "output_mse": 2.0232212515717643e-06,
+        "mse_ratio": null,
+        "opponent_mse_ratio": null,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": null,
+        "output_gradient_gain": null,
+        "channel_bias": [
+          7.899897173047066e-05,
+          -0.0007903752848505974,
+          -0.0011778227053582668
+        ]
+      },
+      "GRBG": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0,
+        "output_mse": 2.803439779578791e-07,
+        "mse_ratio": null,
+        "opponent_mse_ratio": null,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": null,
+        "output_gradient_gain": null,
+        "channel_bias": [
+          -0.0002692374400794506,
+          0.00024088099598884583,
+          -6.96992501616478e-05
+        ]
+      },
+      "GBRG": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0,
+        "output_mse": 5.24189241938681e-07,
+        "mse_ratio": null,
+        "opponent_mse_ratio": null,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": null,
+        "output_gradient_gain": null,
+        "channel_bias": [
+          0.00025522708892822266,
+          -0.00015444960445165634,
+          -0.0008819801732897758
+        ]
+      },
+      "BGGR": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0,
+        "output_mse": 4.3976979213766754e-07,
+        "mse_ratio": null,
+        "opponent_mse_ratio": null,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": null,
+        "output_gradient_gain": null,
+        "channel_bias": [
+          -0.00028253160417079926,
+          4.382804036140442e-05,
+          -0.0004095989279448986
+        ]
+      }
+    },
+    "ramp": {
+      "RGGB": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 2.616425481762226e-16,
+        "output_mse": 2.521696236120382e-06,
+        "mse_ratio": null,
+        "opponent_mse_ratio": null,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9999999604935783,
+        "output_gradient_gain": 0.9990797656325556,
+        "channel_bias": [
+          3.170699346810579e-05,
+          -0.0009296553616877645,
+          -0.0013556925696320832
+        ]
+      },
+      "GRBG": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 2.6767539917088346e-16,
+        "output_mse": 3.164486296706552e-07,
+        "mse_ratio": null,
+        "opponent_mse_ratio": null,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9999999774249019,
+        "output_gradient_gain": 0.9995507781229962,
+        "channel_bias": [
+          -0.0003074746346101165,
+          0.00014357297914102674,
+          -0.0001421309389115777
+        ]
+      },
+      "GBRG": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 2.683067210609037e-16,
+        "output_mse": 5.676500904883142e-07,
+        "mse_ratio": null,
+        "opponent_mse_ratio": null,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9999999774249019,
+        "output_gradient_gain": 0.9998414042921041,
+        "channel_bias": [
+          0.0002961677691928344,
+          -0.0001965456503967289,
+          -0.0008772753935772926
+        ]
+      },
+      "BGGR": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 2.5937221753326533e-16,
+        "output_mse": 4.2088759263000003e-07,
+        "mse_ratio": null,
+        "opponent_mse_ratio": null,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9999999604935783,
+        "output_gradient_gain": 1.0008934095071322,
+        "channel_bias": [
+          -0.00025352781449328177,
+          9.801041233004071e-05,
+          -0.0003143490612274036
+        ]
+      }
+    },
+    "edge": {
+      "RGGB": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.00043807035641899955,
+        "output_mse": 0.0007523078044566015,
+        "mse_ratio": 1.7173218717795287,
+        "opponent_mse_ratio": 1.7047462380273335,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.8046763350347438,
+        "output_gradient_gain": 0.8479737723039893,
+        "channel_bias": [
+          0.0005505842709681019,
+          -0.0007654196961084381,
+          -0.0024104855547193438
+        ]
+      },
+      "GRBG": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0004503477830439806,
+        "output_mse": 0.0004818620024404178,
+        "mse_ratio": 1.0699775164505685,
+        "opponent_mse_ratio": 1.049154270410492,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.8046763157417163,
+        "output_gradient_gain": 0.8054705406623437,
+        "channel_bias": [
+          0.00022402799368137494,
+          -0.0001151374017354101,
+          -0.001265190810954664
+        ]
+      },
+      "GBRG": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.00044884049081398797,
+        "output_mse": 0.00047903607386009145,
+        "mse_ratio": 1.0672746413572063,
+        "opponent_mse_ratio": 1.0657228358387791,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.8046763157417163,
+        "output_gradient_gain": 0.8054866320270139,
+        "channel_bias": [
+          7.418628592859022e-05,
+          -0.00039252813803614117,
+          0.0004985362465959042
+        ]
+      },
+      "BGGR": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.00044061954637678963,
+        "output_mse": 0.0004554738407023251,
+        "mse_ratio": 1.0337122909042102,
+        "opponent_mse_ratio": 1.0481264415779417,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.8046763350347438,
+        "output_gradient_gain": 0.8330001616823317,
+        "channel_bias": [
+          -0.000837129136925796,
+          0.0003561594676284585,
+          0.0003916463610948995
+        ]
+      }
+    },
+    "weak_achromatic_wave": {
+      "RGGB": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 3.95927329440345e-08,
+        "output_mse": 2.2749261082329517e-06,
+        "mse_ratio": 57.45817323215922,
+        "opponent_mse_ratio": 146.57392506712426,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9914205995494946,
+        "output_gradient_gain": 0.9884871399853998,
+        "channel_bias": [
+          0.00010191189539909828,
+          -0.000839419022668153,
+          -0.0012999698228668422
+        ]
+      },
+      "GRBG": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 3.960131067515249e-08,
+        "output_mse": 3.3776526227787446e-07,
+        "mse_ratio": 8.529143518722032,
+        "opponent_mse_ratio": 17.067354995961228,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9914160129124819,
+        "output_gradient_gain": 0.9912037021938792,
+        "channel_bias": [
+          -0.00019158721261192113,
+          0.00023442188103217632,
+          -5.795144898002036e-05
+        ]
+      },
+      "GBRG": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 3.960161591246939e-08,
+        "output_mse": 5.584595138922547e-07,
+        "mse_ratio": 14.101937535241134,
+        "opponent_mse_ratio": 26.309976515683704,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9914160129124819,
+        "output_gradient_gain": 0.9920414871956006,
+        "channel_bias": [
+          0.0003758153034141287,
+          -0.00018725960399024189,
+          -0.0008949656476033852
+        ]
+      },
+      "BGGR": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 3.959302278625879e-08,
+        "output_mse": 4.844042014913915e-07,
+        "mse_ratio": 12.23458496984245,
+        "opponent_mse_ratio": 26.71212233293788,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9914205995494946,
+        "output_gradient_gain": 0.988846310286831,
+        "channel_bias": [
+          -0.00023848580894991755,
+          0.00011946923768846318,
+          -0.0003571634370018728
+        ]
+      }
+    },
+    "chromatic_wave": {
+      "RGGB": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 3.425820978009142e-06,
+        "output_mse": 1.297726021221024e-05,
+        "mse_ratio": 3.788073076647384,
+        "opponent_mse_ratio": 3.270378977141713,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9906373580756385,
+        "output_gradient_gain": 0.9965814151159615,
+        "channel_bias": [
+          -0.0002089361114485655,
+          -0.0010556854103924707,
+          -0.001341230992693454
+        ]
+      },
+      "GRBG": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 3.436065450538687e-06,
+        "output_mse": 4.8988541342017316e-06,
+        "mse_ratio": 1.4257161875172422,
+        "opponent_mse_ratio": 1.3257281929848603,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.990632451293525,
+        "output_gradient_gain": 0.9900837068810643,
+        "channel_bias": [
+          -0.00016555986439925618,
+          0.00014655484119430184,
+          0.00034776988650264684
+        ]
+      },
+      "GBRG": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 3.4333975994134866e-06,
+        "output_mse": 4.634944768137454e-06,
+        "mse_ratio": 1.3499586441515607,
+        "opponent_mse_ratio": 1.2760655688271576,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.990632451293525,
+        "output_gradient_gain": 0.9911868863191077,
+        "channel_bias": [
+          0.00016979774227365851,
+          -0.00023195147514343262,
+          -0.0005829502988490276
+        ]
+      },
+      "BGGR": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 3.443500797099356e-06,
+        "output_mse": 4.181523877377913e-06,
+        "mse_ratio": 1.2143234817602577,
+        "opponent_mse_ratio": 1.3799565100409044,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9906373580756385,
+        "output_gradient_gain": 0.9919684285411056,
+        "channel_bias": [
+          -0.00022602135868510231,
+          0.00018991806791746058,
+          -6.854863750049844e-05
+        ]
+      }
+    }
+  },
+  "phase_variance_by_family": {
+    "constant": {
+      "output_phase_variance": 4.6705454082029974e-07,
+      "bilinear_phase_variance": 0.0
+    },
+    "ramp": {
+      "output_phase_variance": 5.610506690345574e-07,
+      "bilinear_phase_variance": 1.4695899460285637e-16
+    },
+    "edge": {
+      "output_phase_variance": 0.0002543618047639029,
+      "bilinear_phase_variance": 0.0002041745847236598
+    },
+    "weak_achromatic_wave": {
+      "output_phase_variance": 5.336987882742505e-07,
+      "bilinear_phase_variance": 1.607303090622736e-08
+    },
+    "chromatic_wave": {
+      "output_phase_variance": 3.927495583866403e-06,
+      "bilinear_phase_variance": 1.5726520814496325e-06
+    }
+  },
+  "elapsed_seconds": 0.46170859999983804
+}

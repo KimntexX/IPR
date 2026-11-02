@@ -1922,3 +1922,65 @@ ablation croisée évitera de modifier au hasard architecture ou pertes.
 Les contrôles synthétiques déjà consultés restent exploratoires. Aucun
 besoin de nouvelle photo pour cette vérification ; pas de calcul actif,
 adaptation au bruit, modification moteur/IHM ou publication.
+
+## 2 novembre 2026, 12:10 UTC — comparaison croisée des phases Bayer
+
+Campagne `neural-bayer-phase-audit-v001-20261102T121007Z`, banc `60eb794`,
+**13 tests ciblés réussis**, mesure terminée en **0,46 s**. Aucun entraînement.
+Les20 contenus RGB déjà définis sont chacun échantillonnés selon les quatre
+phases, soit80 cas. Vérité RGB, modèle contraint, échelle2, sigma0 et cœur48
+restent fixes. Les20 associations contenu/phase d'origine sont rejouées
+avec leurs identités de cibles et mosaïques ; leurs erreurs reproduisent
+les mesures précédentes. Tous les sites observés restent exacts.
+
+| Phase, mêmes20 contenus | MSE RGB réseau / bilinéaire | Erreur opposée / bilinéaire |
+| --- | ---: | ---: |
+| RGGB | 1,74868 | 1,74185 |
+| GRBG | 1,07464 | 1,05416 |
+| GBRG | 1,07298 | 1,07164 |
+| BGGR | 1,03805 | 1,05511 |
+| Ensemble80 | 1,23125 | 1,22784 |
+
+Cette matrice retire la confusion entre phase et germe de contenu. Elle
+confirme une sensibilité du prototype aux phases, surtout RGGB. Le ratio
+global des80 cas ne doit pas être présenté comme une régression après un
+nouvel apprentissage : les poids n'ont pas changé ; le précédent agrégat
+de20 cas sous-échantillonnait les associations contenu/phase défavorables.
+
+La bilinéaire change aussi avec les mesures disponibles, notamment près
+des frontières. Son erreur globale par phase varie ici entre0,000088307
+et0,000090765 ; celle du modèle entre0,000092200 et0,000154421. Une partie
+de la variation vient donc de l'échantillonnage, mais ne suffit pas à
+expliquer l'écart observé sur le réseau.
+
+Le cas constant est particulièrement instructif : les quatre phases
+permettent à la bilinéaire de retrouver exactement le même RGB, avec
+variance de phase0. La variance correspondante du réseau vaut
+0,0000004671. Sa MSE sur les constantes vaut0,0000020232 en RGGB contre
+0,0000004398 en BGGR. Les rampes donnent une variance de phase presque
+nulle en bilinéaire (1,47×10⁻¹⁶) contre5,61×10⁻⁷ pour le modèle. Ce sont
+des défauts supplémentaires de reconstruction, pas des différences dues
+à un bruit simulé ou à des capteurs physiques différents.
+
+Sur les ondes chromatiques, le ratio MSE vaut3,78807 en RGGB, contre
+1,21432 en BGGR. Les ratios restent au-dessus de1 pour les quatre phases.
+Sur les contours, ils vont de1,03371 à1,71732. La fidélité exacte aux sites
+connus ne garantit donc pas la bonne estimation des deux couleurs manquantes.
+La variance de phase des images complètes mêle toutefois observations
+différentes, reconstruction et projection ; elle n'est pas une mesure
+pure d'un défaut de l'encodage des étiquettes du réseau.
+
+Mémoire canonique : [audit croisé des phases Bayer](../raw/neural-bayer-phase-audit-v001-20261102T121007Z.json).
+
+**Conclusion actuelle : défaut du prototype dépendant de la phase,
+pas conclusion sur la qualité d'un type de capteur Bayer.** Ne pas choisir
+BGGR parce qu'il est le moins mauvais sur ces résultats, ni restreindre
+la qualification à nos fichiers Canon. La prochaine proposition est de
+qualifier une transformation spatiale réversible vers une convention
+canonique fixe (RGGB), avec son inverse, sans interpolation ni permutation
+des canaux RGB. Puis comparer un apprentissage de même architecture et
+budget sur cette représentation, sur l'ensemble des phases et contenus.
+Ce sera une hypothèse à tester, pas une amélioration garantie ou une
+correction de LibRaw/RCD. Aucun nouveau réglage issu d'images de contrôle
+naturelles, aucune photo requise, adaptation au bruit, modification moteur
+ou publication ; aucun calcul actif.
