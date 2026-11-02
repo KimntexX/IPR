@@ -2232,7 +2232,7 @@ Mémoires canoniques :
 - [Pilote d'interpolation contrainte et critères](../raw/neural-synthetic-moment-reconstruction-v001-20261102T130329Z.json).
 - [Audit80cas du modèle à moments contraints](../raw/neural-bayer-phase-audit-v001-20261102T130416Z.json).
 
-**Conclusion actuelle : garanties de fidélité aux constantes/rampes
+**Conclusion de cette campagne : garanties de fidélité aux constantes/rampes
 acquises, candidat non qualifié pour les contours ou les photos.** Avant
 un nouvel entraînement, la prochaine proposition est de calculer, sur les
 signaux connus, le meilleur résultat accessible par ces voisinages sous
@@ -2243,3 +2243,80 @@ les bons poids. Une borne favorable ne prouverait pas que le petit U-Net
 peut l'atteindre ; une borne défavorable éviterait de prolonger inutilement
 son optimisation. Adam et les seuils restent fixés, aucune nouvelle photo
 nécessaire, aucun calcul actif, moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 13:17 UTC — borne oracle des voisinages contraints
+
+Vérification demandée après l'échec des contours, banc `3851365`,
+**11 tests ciblés réussis** (interpolation et oracle), calcul terminé en
+**1,33 s**. Les mêmes20 contenus et quatre phases forment80cas, avec
+les mêmes empreintes de vérité et de mosaïque. Les80 prédictions du réseau
+figé sont reproduites exactement par empreinte. Aucun apprentissage,
+changement d'Adam, de seuil ou du modèle précédent.
+
+### Question et calcul
+
+Pour une composante manquante, noter `b` la bilinéaire, `d_i` les quatre
+différences `candidat_i − b`, et `t = vérité − b`. La correction autorisée
+est `somme(alpha_i * d_i)`, avec chaque `alpha_i` dans `[-1,1]`.
+Elle peut parcourir tout l'intervalle `[-S,S]`, où
+`S = somme(abs(d_i))`. Le minimum de l'erreur quadratique RGB locale
+est donc obtenu par `correction = clamp(t, -S, S)`.
+
+Un témoin explicite utilise `alpha_i = clamp(t/S,-1,1) * sign(d_i)` ;
+si `S=0`, tous les coefficients valent0. Le banc applique ces coefficients
+à l'interpolateur existant, puis vérifie la concordance avec la projection
+calculée et la copie exacte des sites observés. Les tests couvrent le
+support nul, les cibles accessibles/inaccessibles positives et négatives,
+les coins de la boîte, le changement d'échelle, les données invalides et
+les valeurs non finies. La comparaison porte sur le même cœur32×32 après
+exclusion de48 pixels de bord, en unités RGB caméra balancées, signées.
+
+Il s'agit d'une **borne optimiste utilisant la vérité synthétique**.
+La boîte fermée autorise les extrémités±1, que tanh n'atteint qu'à la
+limite ; les coefficients peuvent varier indépendamment à chaque site.
+La capacité finie du U-Net, la cohérence spatiale et la possibilité de
+déduire ces choix depuis la seule mosaïque ne sont pas contraintes ici.
+Les erreurs opposées et gradients du témoin RGB sont descriptifs : ce ne
+sont pas leurs minima propres. Aucun oracle utilisable sur une photo.
+
+### Résultats des80 cas
+
+| Famille,16cas chacune | MSE bilinéaire | MSE réseau figé | MSE oracle RGB |
+| --- | ---: | ---: | ---: |
+| Constantes | 0 | 0 | 0 |
+| Rampes | 2,64×10⁻¹⁶ | 2,67×10⁻¹⁶ | 6,59×10⁻¹⁷ |
+| Contours | 4,44×10⁻⁴ | 4,76×10⁻⁴ | 1,06×10⁻¹⁸ |
+| Ondes achromatiques faibles | 3,96×10⁻⁸ | 4,39×10⁻⁸ | 0 |
+| Ondes chromatiques | 3,43×10⁻⁶ | 2,93×10⁻⁶ | 2,73×10⁻²³ |
+| Ensemble pondéré par pixels | 8,96×10⁻⁵ | 9,58×10⁻⁵ | 1,34×10⁻¹⁷ |
+
+Sur163840 composantes manquantes mesurées, aucune cible n'est hors de
+l'intervalle accessible au-delà de **10⁻⁷ unité caméra**, tolérance de
+diagnostic déclarée avant le calcul. Le décompte strict sans tolérance
+donne1,095 % hors intervalle : ces dépassements restent sous10⁻⁷, pas
+une erreur de structure démontrée. Les43,75 % de supports de rayon nul
+incluent notamment les constantes et les plages constantes des contours ;
+un rayon nul n'est pas un échec quand la bilinéaire est déjà juste.
+La précision des rampes ne doit pas être transformée en gain photographique.
+
+**Interprétation : les appuis actuels ne constituent pas le verrou sur
+ces signaux.** Ils peuvent représenter les contours de ce banc, alors que
+le réseau appris donne encore un ratio MSE global de1,06891 par rapport
+à la bilinéaire et échoue aux quatre critères de la campagne précédente.
+Cela ne prouve ni l'identifiabilité des couleurs manquantes depuis le CFA,
+ni la capacité de ce U-Net à réaliser le champ oracle, ni la couverture
+de textures naturelles, d'aliasing ou de bruit capteur.
+
+Mémoire canonique : [borne oracle,80cas et provenance](../raw/neural-moment-oracle-v001-20261102T131715Z.json).
+
+**Conclusion actuelle : capacité locale favorable, apprentissage encore
+non qualifié.** La prochaine vérification proposée est de comparer les
+erreurs du réseau figé sur ses contenus d'entraînement et les contrôles,
+en isolant les pixels proches des contours et leurs orientations. Cela
+distinguera un défaut déjà présent sur l'entraînement d'une mauvaise
+généralisation avant de changer l'objectif ou d'élargir les appuis.
+Ne pas enseigner directement un unique champ de coefficients oracle :
+plusieurs champs peuvent donner la même sortie, et la vérité est utilisée
+pour les calculer. Pas d'adaptation au bruit ni de validation photographique
+déclarée ; aucune nouvelle photo nécessaire pour cette vérification.
+Aucun calcul actif, modification moteur/IHM, publication, fusion ou tag.
