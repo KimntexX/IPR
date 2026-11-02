@@ -24,6 +24,8 @@ QVariantList compute(const QImage &preview)
         const uchar *row = preview.constScanLine(y);
         for (int x = 0; x < preview.width(); ++x) {
             const uchar *p = row + 4 * x;
+            if (p[3] == 0)   // The empty zones of a transformed image have no tone.
+                continue;
             const float luminance = .2126f * decode(p[0]) + .7152f * decode(p[1]) + .0722f * decode(p[2]);
             ++bins[0][static_cast<size_t>(bin(luminance))];
             ++bins[1][p[0]];

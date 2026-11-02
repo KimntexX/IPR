@@ -76,6 +76,8 @@ set(IPR_ENGINE_SOURCES
     src/core/PointColor.cpp
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
+    src/core/Geometry.h
+    src/core/Geometry.cpp
     src/core/Dehaze.h
     src/core/Dehaze.cpp
     src/core/Grain.h
@@ -354,6 +356,8 @@ if(BUILD_TESTING)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
+    ipr_add_test(geometryTests tests/geometry_test.cpp)
+    set_tests_properties(geometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 60)
     ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
     ipr_add_test(dehazeTests tests/dehaze_test.cpp)
     ipr_add_test(grainTests tests/grain_test.cpp)
@@ -367,6 +371,8 @@ if(BUILD_TESTING)
     target_include_directories(sidecarJsonTests PRIVATE src/tools)
     ipr_add_test(editHistoryTests tests/edit_history_test.cpp)
     ipr_add_test(localValuesTests tests/local_values_test.cpp)
+    ipr_add_test(editorGeometryTests tests/editor_geometry_test.cpp)
+    set_tests_properties(editorGeometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 120)
     ipr_add_test(editorHistoryTests tests/editor_history_test.cpp)
     set_tests_properties(editorHistoryTests PROPERTIES LABELS "unit;history" TIMEOUT 120)
     ipr_add_test(folderRefreshTests tests/folder_refresh_test.cpp)
