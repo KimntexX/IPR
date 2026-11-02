@@ -1840,3 +1840,85 @@ qualification à la sortie d'un débruiteur conjoint. Même Adam, mêmes
 familles de contrôle déjà consultées ; pas de conclusion photographique.
 Aucune nouvelle photo nécessaire à cette correction de principe, aucun
 calcul actif, changement moteur, IHM ou publication.
+
+## 2 novembre 2026, 12:01 UTC — cohérence des observations sans bruit lancée
+
+Campagne `neural-synthetic-consistent-reconstruction-v001-20261102T120141Z`,
+banc `d212919`, **19 tests ciblés réussis**. Le même réseau est réinitialisé
+avec la même graine, les mêmes40 signaux et20 cas de contrôle, Adam0,001,
+lot4,2048 étapes, échelle2, cœur48. Les critères de passage précédents
+restent strictement inchangés.
+
+Seul changement : dans le régime **explicitement déclaré sans bruit**,
+la sortie RGB reprend exactement la composante mesurée à chaque photosite ;
+les deux composantes manquantes restent les prédictions du réseau. Cette
+projection est appliquée pendant l'apprentissage et l'évaluation. Elle
+bloque les gradients de la prédiction sur les valeurs connues, sans
+modifier les cibles ni les valeurs des composantes inconnues. Le réseau
+conserve ses31084 paramètres. Aucun nouveau coefficient de perte.
+
+La projection refuse les cartes sigma non nulles ; elle ne s'active pas
+implicitement parce qu'un estimateur de bruit aurait fourni zéro. Le
+contrat demande un choix explicite de régime. La voie bruitée conserve
+la possibilité de corriger les composantes mesurées : pas de verrou
+sur les RAW photographiques ni changement à l'ouverture d'IPR.
+
+Un témoin contre-factuel est fixé : rejouer l'ancien modèle sans
+réentraînement, puis projeter uniquement ses valeurs observées. Ses
+couleurs manquantes ne changent pas. Ce témoin distinguera le gain mécanique
+de la projection du gain éventuel d'un apprentissage contraint. Les
+empreintes des entrées et le rejeu numérique de l'ancien modèle sont
+vérifiés, sans sélection selon le contrôle.
+
+**Calcul en cours, adaptation au bruit toujours suspendue.** La fidélité
+exacte aux sites observés est une propriété imposée, pas un succès appris ;
+elle ne suffira pas à passer les autres critères. Aucune nouvelle photo
+requise et aucun changement moteur, IHM, publication ou tag.
+
+### Résultats — cohérence acquise, reconstruction encore non qualifiée
+
+Le calcul s'est terminé normalement en **43,08 s**. Les valeurs observées
+sont conservées exactement sur les20 cas, y compris hors du cœur mesuré ;
+la MSE sur ces sites est0. Les composantes manquantes restent libres et
+ne sont pas remplacées par la vérité. Le rejeu de l'ancien modèle et les
+empreintes d'entrées passent.
+
+| Mesure sans bruit | Ancien modèle | Ancien modèle projeté, sans apprentissage | Apprentissage contraint |
+| --- | ---: | ---: | ---: |
+| MSE globale / bilinéaire | 1,08016 | 1,05800 | 1,03604 |
+| Erreur opposée / bilinéaire | 1,07588 | 1,05231 | 1,06326 |
+| Projection gradient vert globale | 0,84098 | 0,84169 | 0,84694 |
+| MSE moyenne sur sites observés | 0,0000059614 | 0 | 0 |
+
+La projection seule retire une part de l'erreur, sans changer les couleurs
+manquantes. L'apprentissage contraint réduit encore la MSE RGB, mais son
+erreur opposée reste plus élevée que celle du témoin projeté sans
+apprentissage. Il n'y a donc pas d'amélioration cohérente sur tous les
+critères : le gain global ne peut pas servir de validation couleur.
+
+La MSE globale reste **3,60 % au-dessus de la bilinéaire**, l'erreur opposée
+**6,33 % au-dessus**. Pour les contours : ratiosRGB1,01556 et opposé1,04037,
+projection0,81992 contre0,80468 en bilinéaire. Les rampes ont une MSE
+absolue de0,0000011260, dépassant légèrement le seuil10⁻⁶. Les ondes
+chromatiques passent de0,0000052785 dans l'ancien modèle à0,0000097357,
+contre0,0000034305 pour la bilinéaire : la correction des sites connus
+n'a pas résolu leur reconstruction.
+
+Six critères échouent : gain RGB global, erreur opposée globale,
+fidélité RGB et opposée des contours, fidélité absolue des rampes et des
+ondes chromatiques. Six passent, dont la cohérence des sites observés,
+imposée par construction. Les critères ne sont pas assouplis et la
+décision reste `stop_before_noise_stage`. Aucun apprentissage bruité lancé.
+
+Mémoire canonique : [reconstruction cohérente sans bruit et témoin projeté](../raw/neural-synthetic-consistent-reconstruction-v001-20261102T120141Z.json).
+
+**Conclusion actuelle : cohérence des observations démontrée, candidat
+non qualifié sur les couleurs manquantes.** Avant un nouvel entraînement,
+la prochaine vérification proposée est une comparaison des quatre phases
+Bayer sur **le même signal RGB**, à modèle fixe. Dans le premier banc,
+chaque phase avait aussi un germe de contenu distinct ; ces résultats
+ne permettent donc pas d'attribuer un défaut à la phase seule. Cette
+ablation croisée évitera de modifier au hasard architecture ou pertes.
+Les contrôles synthétiques déjà consultés restent exploratoires. Aucun
+besoin de nouvelle photo pour cette vérification ; pas de calcul actif,
+adaptation au bruit, modification moteur/IHM ou publication.
