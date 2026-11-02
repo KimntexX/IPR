@@ -1,4 +1,5 @@
 #include "Geometry.h"
+#include "Histogram.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -428,6 +429,44 @@ void commands()
 
 } // namespace
 
+void histogramOfEmptyZones()
+{
+    const auto count = [](const QVariantList &histogram, int channel, int bin) {
+        return histogram.at(channel).toList().at(bin).toDouble();
+    };
+    const auto total = [](const QVariantList &histogram, int channel) {
+        double sum = 0;
+        for (const QVariant &value : histogram.at(channel).toList())
+            sum += value.toDouble();
+        return sum;
+    };
+
+    // White colours under a zero alpha, and enough rows to split between threads.
+    QImage image(40, 600, QImage::Format_RGBA8888);
+    for (int y = 0; y < image.height(); ++y) {
+        uchar *row = image.scanLine(y);
+        for (int x = 0; x < image.width(); ++x) {
+            const bool empty = y % 2 == 0;
+            const uchar code = empty ? 255 : 128;
+            row[4 * x] = row[4 * x + 1] = row[4 * x + 2] = code;
+            row[4 * x + 3] = empty ? 0 : 255;
+        }
+    }
+    const QVariantList histogram = Histogram::compute(image);
+    check(histogram.size() == 4, "the histogram has its four channels");
+    if (histogram.size() != 4)
+        return;
+    const double opaque = 40 * 300;
+    for (int channel = 0; channel < 4; ++channel) {
+        check(total(histogram, channel) == opaque, "every channel counts the opaque pixels only");
+        check(count(histogram, channel, 255) == 0, "an empty zone leaves no tone behind its zero alpha");
+        check(count(histogram, channel, 128) == opaque, "the opaque grey falls in its own bin");
+    }
+
+    const QVariantList none = Histogram::compute(QImage());
+    check(none.size() == 4 && total(none, 0) == 0, "a null image gives empty channels");
+}
+
 int main()
 {
     identity();
@@ -440,6 +479,7 @@ int main()
     cropping();
     constraint();
     commands();
+    histogramOfEmptyZones();
     if (passed)
         std::cout << "geometry: ok\n";
     return passed ? 0 : 1;
