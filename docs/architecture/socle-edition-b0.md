@@ -159,7 +159,9 @@ Choix techniques : [ADR-0021](../decisions/ADR-0021-socle-edition-beta.md).
    au-delà de 80 % de RAM utilisée, le préchargement reste coupé, comme prévu.
 2. **Recette CBOR** (`src/core/Sidecar`, `src/core/RecipeCodec`) : format 10 en
    sections nommées ; anciens `.ipr` 1 à 9 lus et convertis au premier
-   enregistrement ; fichier plus récent ouvert en lecture seule.
+   enregistrement ; fichier plus récent ouvert en lecture seule. L'outil
+   d'analyse `iprSidecarDump FICHIER.ipr` en donne une lecture JSON pour le
+   débogage, historique ouvert ; il ne fait pas partie de la production.
 3. **Historique** (`src/core/EditHistory`) : instantané complet de la recette
    par étape, 100 étapes, instantanés nommés, enregistré compressé dans le
    `.ipr`. Un geste encadré par l'IHM (appui puis relâchement d'un curseur)
