@@ -2309,7 +2309,7 @@ de textures naturelles, d'aliasing ou de bruit capteur.
 
 Mémoire canonique : [borne oracle,80cas et provenance](../raw/neural-moment-oracle-v001-20261102T131715Z.json).
 
-**Conclusion actuelle : capacité locale favorable, apprentissage encore
+**Conclusion de cette campagne : capacité locale favorable, apprentissage encore
 non qualifié.** La prochaine vérification proposée est de comparer les
 erreurs du réseau figé sur ses contenus d'entraînement et les contrôles,
 en isolant les pixels proches des contours et leurs orientations. Cela
@@ -2320,3 +2320,98 @@ plusieurs champs peuvent donner la même sortie, et la vérité est utilisée
 pour les calculer. Pas d'adaptation au bruit ni de validation photographique
 déclarée ; aucune nouvelle photo nécessaire pour cette vérification.
 Aucun calcul actif, modification moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 14:56 UTC — apprentissage, contrôles et contours par phase
+
+Banc `f8caae7`, **15 tests ciblés réussis**, campagne terminée en
+**1,99 s**, sans entraînement ni modification des poids. Rejeu des40
+contenus d'entraînement et20 contenus de contrôle dans les quatre phases,
+soit240 cas pour60 contenus distincts, **pas240 scènes indépendantes**.
+Les80 contrôles reproduisent exactement les empreintes des vérités,
+mosaïques et sorties de l'audit précédent. Les sites observés restent
+exacts dans les240cas. Adam, critères et moteur photographique inchangés.
+
+Une seule phase était présentée pendant l'apprentissage de chaque contenu.
+Le diagnostic sépare donc les40 couples contenu/phase effectivement vus
+des120 couples utilisant les mêmes contenus avec une autre phase. Le
+rapport d'erreur est le quotient des sommes d'erreurs quadratiques RGB,
+avec le même cœur32×32, le même domaine caméra balancé signé et la même
+bilinéaire de référence. Un ratio inférieur à1 indique une amélioration.
+
+| Groupe | Cas | Ratio MSE RGB / bilinéaire | Ratio erreur opposée / bilinéaire |
+| --- | ---: | ---: | ---: |
+| Entraînement, phase effectivement vue | 40 | 0,85822 | 0,78555 |
+| Mêmes contenus, trois phases non vues | 120 | 1,06786 | 1,02102 |
+| Entraînement, quatre phases réunies | 160 | 1,01547 | 0,96208 |
+| Contrôles, quatre phases réunies | 80 | 1,06891 | 1,10813 |
+
+Le réseau apprend donc une correction utile sur les couples vus : gain
+RGB global d'environ14,18 %, essentiellement porté par les contours.
+Ce gain ne se maintient pas lors du changement de phase sur les mêmes
+contenus, où l'erreur augmente d'environ6,79 %. Ce n'est pas uniquement
+un échec sur de nouvelles scènes : une sensibilité à l'échantillonnage
+Bayer reste présente malgré les coordonnées canoniques. Les couleurs
+observées changent avec la phase ; le résultat ne démontre donc pas à lui
+seul une faute d'indexation. Les contrôles de représentation précédents
+restent valides ; aucune modification du décodeur n'est justifiée ici.
+
+### Localisation des erreurs de contours
+
+Le masque de diagnostic est calculé depuis la vérité synthétique :
+les deux extrémités de chaque transition sont marquées, puis dilatées de
+trois pixels en distance de Chebyshev, avant découpe du cœur. Il est
+indépendant des sorties du réseau. Le complément forme la région éloignée ;
+la somme des pixels et erreurs des deux régions est contrôlée contre
+les mesures globales. Ces masques ne sont pas un détecteur utilisable
+sur une photo inconnue.
+
+Sur les32 cas de contours issus de l'entraînement,9652 pixels sont proches
+du contour et23116 éloignés. Sur les16 contrôles de contours,4540 sont
+proches et11844 éloignés. **Toute l'erreur de ces contours est dans la
+bande proche** ; l'erreur loin du contour vaut0 pour la bilinéaire et
+le réseau. Les garanties sur les constantes empêchent donc la diffusion
+du défaut dans ces plages uniformes.
+
+Les ratios RGB des seuls contours sont0,85754 sur les8 couples appris,
+1,06805 sur les24 autres phases des mêmes contours et1,07057 sur les16
+contrôles. Le problème est la reconstruction locale des transitions,
+pas un nouveau biais sur les aplats.
+
+### Couverture des orientations : lacune explicite
+
+L'angle indiqué est celui de la **normale du contour**, issu de la règle
+du générateur figé, mesuré depuis l'axe horizontal dans les coordonnées
+de l'image d'origine. Il ne s'agit pas de l'orientation de sa tangente.
+Les quatre classes de45° sont définies avant le rejeu.
+
+| Normale | Contenus train | Ratio RGB, quatre phases | Contenus contrôle | Ratio RGB, quatre phases |
+| --- | ---: | ---: | ---: | ---: |
+| [0°,45°[ | 2 | 1,04533 | 1 | 0,91994 |
+| [45°,90°[ | 0 | non mesuré | 0 | non mesuré |
+| [90°,135°[ | 2 | 1,13482 | 2 | 1,16227 |
+| [135°,180°[ | 4 | 0,95097 | 1 | 0,99369 |
+
+Le secteur[90°,135°[ est défavorable dans les deux groupes, mais les
+effectifs et contrastes sont trop faibles et inégaux pour attribuer
+causalement l'erreur à l'angle. **Le secteur[45°,90°[ est absent des
+deux groupes** : les précédents tests ne couvraient pas toutes les
+orientations, même si quatre phases étaient parcourues. Cette lacune
+est conservée dans les preuves ; elle n'est pas corrigée rétroactivement.
+Ces contrôles procéduraux déjà consultés restent distincts d'un jeu de
+validation photographique indépendant.
+
+Mémoire canonique : [diagnostic des240 cas, régions, angles et provenance](../raw/neural-moment-generalization-v001-20261102T145658Z.json).
+
+**Conclusion actuelle : apprentissage utile sur les couples vus,
+généralisation de phase insuffisante et couverture angulaire incomplète.**
+La prochaine expérience proposée est une ablation unique : équilibrer
+les quatre phases pendant l'entraînement, avec les mêmes40 contenus,
+architecture, Adam, nombre d'étapes et critères. Les contenus restent
+identiques mais leur exposition par phase change ; ne pas annoncer une
+expérience à données strictement identiques. Fixer avant cette expérience
+un contrôle angulaire supplémentaire couvrant aussi le secteur absent,
+sans l'utiliser dans l'optimisation ni ajuster les seuils à ses résultats.
+Cela testera cette piste avant d'élargir les appuis ou le réseau.
+Aucun nouvel apprentissage lancé dans cette campagne, aucune nouvelle
+photo nécessaire pour cette étape synthétique. Aucun calcul actif,
+modification moteur/IHM, publication, fusion ou tag.
