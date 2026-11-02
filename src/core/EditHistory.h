@@ -33,6 +33,11 @@ public:
     std::optional<QCborMap> undo();
     std::optional<QCborMap> redo();
     std::optional<QCborMap> moveTo(int step);
+    // Takes an edit out of the history: the following steps are replayed without
+    // it, each keeping what it changed itself, and one left with nothing of its own
+    // disappears. The opening state stays. False for no such step. The current
+    // recipe changes when the step was at or before the current one.
+    bool removeStep(int step);
 
     bool isEmpty() const { return m_steps.isEmpty(); }
     int size() const { return int(m_steps.size()); }

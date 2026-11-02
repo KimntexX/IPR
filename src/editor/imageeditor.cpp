@@ -1779,6 +1779,18 @@ void ImageEditor::goToHistoryStep(int step)
     restoreRecipe(m_history.moveTo(step));
 }
 
+void ImageEditor::removeHistoryStep(int step)
+{
+    if (!historyEditable()) return;
+    endAdjustmentGesture();
+    if (!m_history.removeStep(step)) return;
+    const std::optional<QCborMap> recipe = m_history.moveTo(m_history.position());
+    if (recipe && *recipe != RecipeCodec::encodeSettings(m_settings))
+        restoreRecipe(recipe);
+    emit historyChanged();
+    scheduleSidecarSave();
+}
+
 void ImageEditor::addSnapshot(const QString &name)
 {
     if (!historyEditable()) return;

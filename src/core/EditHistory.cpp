@@ -43,6 +43,57 @@ std::optional<QCborMap> EditHistory::moveTo(int step)
     return m_steps.at(step);
 }
 
+namespace {
+QCborValue replayed(const QCborValue &before, const QCborValue &after, const QCborValue &newBefore);
+
+// What a step changed, set on the state it now follows; maps and lists field by field.
+QCborMap replayedMap(const QCborMap &before, const QCborMap &after, const QCborMap &newBefore)
+{
+    QCborMap result = newBefore;
+    for (auto it = after.constBegin(); it != after.constEnd(); ++it)
+        result.insert(it.key(), replayed(before.value(it.key()), it.value(), newBefore.value(it.key())));
+    for (auto it = before.constBegin(); it != before.constEnd(); ++it)
+        if (!after.contains(it.key())) result.remove(it.key());
+    return result;
+}
+
+QCborValue replayed(const QCborValue &before, const QCborValue &after, const QCborValue &newBefore)
+{
+    if (before == after)
+        return newBefore;
+    if (before.isMap() && after.isMap() && newBefore.isMap())
+        return replayedMap(before.toMap(), after.toMap(), newBefore.toMap());
+    if (before.isArray() && after.isArray() && newBefore.isArray()) {
+        const QCborArray from = before.toArray(), to = after.toArray(), onto = newBefore.toArray();
+        if (from.size() == to.size() && from.size() == onto.size()) {
+            QCborArray result;
+            for (qsizetype index = 0; index < to.size(); ++index)
+                result.append(replayed(from.at(index), to.at(index), onto.at(index)));
+            return result;
+        }
+    }
+    return after;
+}
+}
+
+bool EditHistory::removeStep(int step)
+{
+    if (step <= 0 || step >= m_steps.size())
+        return false;
+    QVector<QCborMap> steps = m_steps.mid(0, step);
+    int position = m_position < step ? m_position : step - 1;
+    for (int index = step + 1; index < m_steps.size(); ++index) {
+        const QCborMap kept = replayedMap(m_steps.at(index - 1), m_steps.at(index), steps.constLast());
+        if (kept != steps.constLast())
+            steps.append(kept);
+        if (index == m_position)
+            position = int(steps.size()) - 1;
+    }
+    m_steps = std::move(steps);
+    m_position = position;
+    return true;
+}
+
 QStringList EditHistory::changes(int step) const
 {
     if (step <= 0 || step >= m_steps.size())

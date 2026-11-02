@@ -100,6 +100,20 @@ int main(int argc, char **argv)
     editor.setVibrance(5);
     if (!check(!editor.canRedo() && editor.historySteps().size() == 3, "a new edit drops the redo steps")) return 1;
 
+    // Removing a step takes its edit out of the render.
+    editor.setClarity(15);
+    editor.setDehaze(25);
+    const int stepsWithClarity = int(editor.historySteps().size());
+    editor.removeHistoryStep(stepsWithClarity - 2);
+    if (!check(value(editor, "clarity") == 0 && value(editor, "dehaze") == 25 &&
+               editor.historySteps().size() == stepsWithClarity - 1 && editor.historyPosition() == stepsWithClarity - 2,
+               "removing a step takes its edit out and keeps the later ones")) return 1;
+    editor.removeHistoryStep(0);
+    if (!check(editor.historySteps().size() == stepsWithClarity - 1, "the opening state cannot be removed")) return 1;
+    editor.removeHistoryStep(stepsWithClarity - 2);
+    if (!check(value(editor, "dehaze") == 0 && editor.historySteps().size() == 3, "the last step can be removed too"))
+        return 1;
+
     // A named snapshot comes back as a new step.
     editor.addSnapshot(QStringLiteral("Vibrant"));
     editor.setVibrance(40);

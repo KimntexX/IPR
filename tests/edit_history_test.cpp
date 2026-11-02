@@ -79,6 +79,62 @@ int main()
     }
 
     {
+        // Removing a step takes its edit out; what later steps changed themselves stays.
+        const auto settingsOf = [](const EditHistory &history) {
+            EditHistory copy = history;
+            EditRecipe::Settings settings;
+            RecipeCodec::decodeSettings(*copy.moveTo(copy.position()), settings);
+            return settings;
+        };
+        EditHistory history;
+        history.reset(recipe(0));
+        history.record(recipe(10));
+        history.record(recipe(10, 30));
+        history.record(recipe(50, 30));
+        ok &= check(!history.removeStep(0) && !history.removeStep(4) && history.size() == 4,
+                    "the opening state and absent steps cannot be removed");
+        ok &= check(history.removeStep(1) && history.size() == 3 && history.position() == 2,
+                    "a removed step leaves the history");
+        ok &= check(settingsOf(history).contrast == 50 && settingsOf(history).saturation == 30,
+                    "what later steps changed themselves stays");
+        ok &= check(history.changes(1) == QStringList{QStringLiteral("saturation")} &&
+                    contrastOf(history.moveTo(1)) == 0, "the next step no longer carries the removed edit");
+        history.moveTo(2);
+        ok &= check(history.removeStep(1) && history.size() == 2 && settingsOf(history).saturation == 0 &&
+                    settingsOf(history).contrast == 50, "the removed edit leaves the current recipe");
+
+        EditHistory undone;
+        undone.reset(recipe(0));
+        undone.record(recipe(10));
+        undone.record(recipe(0));
+        ok &= check(undone.removeStep(1) && undone.size() == 1 && undone.position() == 0,
+                    "a step left with nothing of its own disappears");
+
+        EditHistory positions;
+        positions.reset(recipe(0));
+        positions.record(recipe(1));
+        positions.record(recipe(2));
+        positions.record(recipe(3));
+        positions.moveTo(1);
+        ok &= check(positions.removeStep(3) && positions.position() == 1 && positions.size() == 3,
+                    "a step that could be redone goes without moving the current one");
+        ok &= check(positions.removeStep(1) && positions.position() == 0 && positions.canRedo(),
+                    "removing the current step goes back to the previous state");
+
+        // Inside a list, as the mixer's bands, each element keeps its own story.
+        EditRecipe::Settings first, second;
+        first.mixerHue[1] = 5;
+        second = first;
+        second.mixerHue[2] = 7;
+        EditHistory bands;
+        bands.reset(RecipeCodec::encodeSettings({}));
+        bands.record(RecipeCodec::encodeSettings(first));
+        bands.record(RecipeCodec::encodeSettings(second));
+        ok &= check(bands.removeStep(1) && settingsOf(bands).mixerHue[1] == 0 && settingsOf(bands).mixerHue[2] == 7,
+                    "the edit of one band is removed without the next band's");
+    }
+
+    {
         // Named snapshots outlive the steps they were taken from.
         EditHistory history;
         history.addSnapshot(QStringLiteral("empty"), 1);
