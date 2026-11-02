@@ -3011,7 +3011,7 @@ en pleine définition n'a été réalisée ici.
 
 Mémoire canonique : [témoin symétrisé, qualité,1024 symétries et temps par répétition](../raw/neural-symmetrized-moment-v001-20261102T154019Z.json).
 
-**Conclusion actuelle : la symétrisation corrige le désaccord directionnel
+**Conclusion de cette campagne : la symétrisation corrige le désaccord directionnel
 et apporte un gain de reconstruction, avec un surcoût élevé et des
 régressions résiduelles.** Elle reste un témoin de banc ; aucune intégration
 en production n'est décidée. L'essai confirme l'intérêt d'éviter l'asymétrie,
@@ -3025,3 +3025,100 @@ du futur réseau appris. Le témoin actuel et ses mesures serviront de
 comparaison, sans sélectionner un groupe ou assouplir le seuil restant.
 Aucune nouvelle photo nécessaire, aucun calcul actif, apprentissage
 bruité, modification moteur/IHM, publication, fusion ou tag.
+
+## 2 novembre 2026, 15:49 UTC — fermeture des appuis sous transposition
+
+Banc `6f4cc26`, **8 tests ciblés réussis**. L'étude ajoute les quatre
+candidats absents, sans modifier les fichiers du modèle figé ni les
+preuves précédentes : deux extrapolations verticales du vert au site
+rouge et deux au site bleu. Les huit composantes manquantes disposent
+désormais de36 candidats au total, contre32. Chacune des deux composantes
+vertes possède6 candidats ; les six composantes rouges/bleues en ont4.
+Le tenseur de coefficients est plat à36 canaux, sans canaux de remplissage
+ou poids inutilisés. Aucun réseau à cette tête n'est encore entraîné.
+
+Chaque candidat utilise la même couleur de capteur, une masse1, un
+premier moment nul et des appuis à distance maximale3pixels. Les tests
+vérifient ces contraintes, constantes signées/supérieures au blanc,
+rampes intérieures, initialisation bilinéaire à coefficients nuls,
+copie des sites, gradients et rejet des coefficients invalides.
+Les garanties affines excluent les bords réfléchis, comme auparavant.
+
+La liste possède une permutation explicite de36 canaux sous transposition.
+Elle est bijective et involutive. Pour transformer un champ de coefficients,
+il faut **à la fois transposer son plan spatial et permuter ses canaux**
+avec leurs appuis. La fermeture de liste ne dispense pas de ce contrat.
+Un témoin négatif transpose le plan sans permuter les canaux pour vérifier
+que l'audit distingue cette erreur.
+
+Le contrôle reprend les32 contours consultés et leurs quatre phases.
+L'ancien et le nouvel opérateur à coefficients0,25 sont comparés sur1024
+transformations exactes de la même mosaïque avec ses tags. Les poids
+fixes ne mesurent pas un gain de qualité : ajouter deux candidats au
+vert change leur poids total à ce site, et aucune loi n'est calibrée ici.
+Pour128 observations canoniques, des champs arbitraires déterministes
+dans[−1;1] vérifient aussi la covariance par transposition avec permutation
+des canaux, puis le retour exact du champ. Tolérances fixées avant calcul :
+10⁻⁶ pour les témoins fixes et2×10⁻⁶ pour les champs arbitraires.
+
+### Ressources de calcul et GPU
+
+L'utilisateur autorise le GPU si nécessaire. `nvidia-smi` identifie une
+**RTX3060,12288MiB**, pilote610.88. L'environnement d'étude installé est
+**PyTorch2.9.1+cpu**, sans backend CUDA disponible. L'interrogation WMI
+de la carte a été refusée ; les informations matérielles ci-dessus
+proviennent de `nvidia-smi`, pas de cette commande refusée.
+
+Cette qualification d'opérateur est exécutée à quatre threads CPU pour
+conserver les conditions numériques des témoins. Aucun environnement
+n'est remplacé et aucune installation GPU n'est effectuée ici. Pour un
+prochain apprentissage plus lourd, un environnement GPU séparé pourra
+être préparé et ses différences numériques/performance qualifiées ;
+aucun gain GPU ou temps pleine définition n'est affirmé dans cette étude.
+
+### Résultats — base fermée, covariance conditionnelle vérifiée
+
+Campagne `neural-closed-moment-audit-v001-20261102T154929Z` terminée
+normalement en **10,27 s**. Aucun candidat transposé n'est absent ; la
+permutation des36 canaux est bijective et involutive. Les mosaïques
+sources et les sites observés restent identiques. L'ancien témoin à
+poids fixes reproduit la MSE de désaccord et le maximum de son audit
+précédent, sans réentraîner ou charger de nouveaux poids neuronaux.
+
+| Contrôle | Cas | MSE de désaccord | Écart maximal |
+| --- | ---: | ---: | ---: |
+| Ancienne liste, poids fixes0,25 | 1024 | 5,05×10⁻⁵ | 0,27438 |
+| Liste complétée, poids fixes0,25 | 1024 | 5,37×10⁻¹⁹ | 5,96×10⁻⁸ |
+| Champs arbitraires, canaux correctement permutés | 128 | 2,09×10⁻¹⁷ | 3,58×10⁻⁷ |
+| Témoin négatif, plan transposé sans permutation des canaux | 128 | 0,003489 | 2,64888 |
+
+Les contrôles positifs satisfont leurs tolérances fixées avant le calcul.
+Le témoin négatif montre qu'une liste symétrique ne suffit pas si les
+coefficients ne suivent pas la transformation de leurs appuis. Son grand
+écart concerne des champs arbitraires et des extrapolations à poids
+éventuellement négatifs ; ce n'est ni une mesure de bruit ni une
+dégradation photographique attribuable au modèle actuel.
+
+**La fermeture et la covariance de l'opérateur sont vérifiées sur ce
+banc.** La nouvelle liste n'impose aucune orientation privilégiée dans
+le témoin uniforme, et un champ arbitraire accompagné de sa permutation
+donne la sortie transposée attendue. Cela retire la dissymétrie de liste
+identifiée, sans prouver la capacité d'une future tête neuronale à
+produire spontanément ce champ covariant. Le réseau appris conserve
+ses propres degrés de liberté directionnels.
+
+Mémoire canonique : [opérateur à36 candidats,1024 symétries et128 champs de coefficients](../raw/neural-closed-moment-audit-v001-20261102T154929Z.json).
+
+**Conclusion actuelle : opérateur complété prêt pour un pilote
+d'apprentissage, aucun nouveau modèle qualifié.** Le prochain essai
+proposé est une tête à36 coefficients sur le même tronc, avec les mêmes
+données diversifiées, calendrier, Adam, budget et critères. Il devra
+mesurer séparément la qualité, la covariance du réseau effectivement
+appris et le coût d'une seule inférence, en conservant le témoin à deux
+vues comme comparaison. Ne pas supposer que la fermeture de liste rend
+à elle seule les convolutions ou coefficients appris équivariants.
+Une tête36 au lieu32 ajouterait36 paramètres à largeur8 si le tronc
+est strictement conservé ; ce compte prévisionnel devra être vérifié
+sur le modèle effectivement construit.
+Aucun apprentissage lancé ici, nouvelle photo nécessaire, calcul actif,
+modification moteur/IHM, publication, fusion ou tag.
