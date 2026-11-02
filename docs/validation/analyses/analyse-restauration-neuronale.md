@@ -2580,7 +2580,7 @@ sorties pour chaque couple, sont conservés dans la mémoire canonique.
 
 Mémoire canonique : [rejeu apparié des160 couples et pertes pondérées](../raw/neural-balanced-training-audit-v001-20261102T151106Z.json).
 
-**Conclusion actuelle : le candidat ajuste mieux l'entraînement, mais
+**Conclusion de cette campagne : le candidat ajuste mieux l'entraînement, mais
 ce gain ne se généralise pas aux contrôles consultés.** Le pipeline
 d'apprentissage n'est pas complètement inopérant ; l'équilibrage améliore
 son objectif d'entraînement tout en aggravant les contrôles historiques.
@@ -2599,3 +2599,124 @@ prioritaire sur une simple augmentation de durée ou de largeur du réseau.
 Aucun nouvel apprentissage lancé ici, aucune nouvelle photo nécessaire
 pour cette étape synthétique. Aucun calcul actif, modification moteur/IHM,
 publication, fusion ou tag.
+
+## 2 novembre 2026, 15:18 UTC — diversité des contours à budget constant
+
+Banc `f54412b`, **19 tests ciblés réussis**. Cette ablation conserve
+l'architecture31264 paramètres, graine71, Adam0,001, lot4,2048 étapes,
+échelle2, cœur48 et les critères. Le calendrier des indices et phases
+est exactement celui du précédent pilote équilibré, contrôlé par empreinte
+et par rejeu des tirages aléatoires. Le changement porte sur les exemples
+de contours, pas sur la perte, l'optimiseur ou le nombre de présentations.
+
+Les32 contenus hors contours restent fixes. Les huit emplacements de
+contours reçoivent de nouvelles vérités toutes les quatre visites de
+l'emplacement, après parcours des quatre phases. Cela produit **418
+contours distincts pour1657 présentations**, en conservant8192 présentations
+totales. Le dernier cycle de chaque emplacement peut être partiel ; aucun
+contour n'est présenté deux fois dans la même phase. Ce n'est donc plus
+un corpus de40 images fixes, mais32 contenus fixes et418 contours.
+
+Les normales sont réparties sur32 classes de5,625°, avec une variation
+déterministe dans chaque classe. Position de transition dans[−0,15;+0,15],
+deux couleurs RGB caméra dans[0,03;0,97] et présence de contours
+achromatiques varient à partir de graines déclarées. Chaque recette,
+vérité et mosaïque par phase est figée avant construction du modèle.
+L'ablation change ensemble orientations, positions, contrastes et nombre
+de vérités distinctes ; elle ne permettra pas d'attribuer un gain à un
+seul de ces facteurs.
+
+Un nouveau groupe réservé comprend32 contours issus de graines disjointes,
+un par classe angulaire, évalués dans les quatre phases :128cas. Aucun
+partage d'empreinte de vérité avec l'entraînement n'est accepté. Ces
+contrôles partagent le générateur et ne constituent pas une validation
+sur des photos indépendantes. Ils sont exclus de l'optimisation et de
+toute sélection d'étape. Les seuils de contours existants leur sont
+appliqués : ratios RGB/opposés au plus1, gain de gradient au moins95 %
+de celui de la bilinéaire, sans seuil nouvellement ajusté.
+
+Les80 régressions historiques et64 contrôles angulaires déjà consultés
+sont conservés. Le précédent modèle équilibré est rejoué avec contrôle
+de ses empreintes sur ces144cas. Un petit témoin d'entraînement est aussi
+figé avant apprentissage : première présentation rencontrée dans chacune
+des32 classes angulaires, évaluée dans sa phase effectivement apprise.
+Il ne représente pas la perte complète des1657 présentations de contours.
+Un seul checkpoint final est évalué ; aucun apprentissage bruité lancé.
+
+### Résultats — gain synthétique retrouvé, qualification encore incomplète
+
+Campagne `neural-diverse-moment-v001-20261102T151802Z` terminée en
+**49,20 s**, apprentissage et évaluations compris. Le précédent modèle
+équilibré est reproduit exactement sur les144 régressions. Les sites
+observés restent exacts pour les deux modèles sur tous les groupes
+mesurés. Les empreintes des exemples et du code sont contrôlées ; aucune
+modification pendant le calcul n'est détectée.
+
+| Groupe, ratio MSE / bilinéaire | Équilibrage seul | Contours diversifiés |
+| --- | ---: | ---: |
+| RGB,20 contrôles historiques | 1,17866 | 0,99334 |
+| RGB,80 contrôles historiques croisés | 1,16417 | 0,980113 |
+| Erreur opposée,80 contrôles historiques croisés | 1,24489 | 0,98122 |
+| RGB,64 contrôles angulaires déjà consultés | 1,00412 | 0,98074 |
+| Erreur opposée,64 contrôles angulaires | 1,00918 | 0,98335 |
+| RGB,128 nouveaux contrôles réservés | 1,03126 | 0,98231 |
+| Erreur opposée,128 contrôles réservés | 1,01944 | 0,98073 |
+| RGB,sonde32 présentations d'entraînement | 1,01436 | 0,98608 |
+
+La diversification rétablit un gain agrégé sur les groupes mesurés,
+au lieu de seulement mieux ajuster les anciens contenus d'entraînement.
+Les gains RGB sur80 régressions et128 contrôles réservés sont d'environ
+**1,99 % et1,77 % face à la bilinéaire**. Les gradients des contours
+réservés passent de0,78054 pour la bilinéaire à0,79192 pour le candidat ;
+il ne s'agit pas d'un gain photographique perceptuel mesuré.
+
+| Phase | RGB,80 régressions | RGB,128 réservés |
+| --- | ---: | ---: |
+| RGGB | 0,97387 | 0,97916 |
+| GRBG | 0,98607 | 0,98551 |
+| GBRG | 0,98649 | 0,98713 |
+| BGGR | 0,97373 | 0,97740 |
+
+Toutes les phases ont un ratio agrégé inférieur à1 sur ces deux groupes.
+Cela ne signifie pas que chaque exemple s'améliore. Parmi les128 couples
+réservés,58 améliorent la bilinéaire et70 la dégradent (tolérance absolue
+de MSE10⁻¹² pour ce décompte dérivé). En regroupant les quatre phases d'un
+même contenu par somme d'erreurs,22 contenus s'améliorent et10 se
+dégradent. Les gains et pertes n'ont pas tous la même amplitude ; un
+gain agrégé pondéré ne remplace pas la revue des régressions individuelles.
+Sur les64 anciens contrôles angulaires,32 couples gagnent et32 perdent.
+
+Sur les80 régressions, les constantes restent exactes et les rampes à
+2,66×10⁻¹⁶ de MSE. Les contours donnent un ratioRGB0,98349 et opposé0,98598.
+Les ondes achromatiques faibles donnent0,68298 et les chromatiques0,54698.
+Ces valeurs concernent toujours les quelques contenus procéduraux fixés,
+pas une validation générale de ces familles naturelles.
+
+**Onze critères sur douze passent**, aussi bien sur les20 contrôles que
+sur leur croisement80cas. Le seul échec restant est le gain RGB global
+minimal : seuil fixé à0,98, résultat0,99334 sur20cas et **0,9801126705**
+sur80cas. L'arrondi de ce dernier à0,98 ne le rend pas conforme. Les
+trois contrôles de contours réservés (RGB, opposé, gradient) passent,
+mais ne remplacent pas le critère global. La décision reste
+`stop_before_noise_stage`, sans adaptation des seuils ni sélection d'une
+phase ou d'une étape favorable.
+
+Mémoire canonique : [diversité des contours, recettes,128 contrôles réservés et régressions](../raw/neural-diverse-moment-v001-20261102T151802Z.json).
+
+**Conclusion actuelle : piste de diversité utile sur ce banc synthétique,
+candidat encore non qualifié.** L'amélioration se retrouve sur des vérités
+réservées avant apprentissage et dans chaque phase agrégée, ce qui est
+plus encourageant que l'équilibrage seul. Elle reste faible et inégale
+par exemple. Une seule initialisation ne démontre pas sa reproductibilité,
+et les changements simultanés de diversité ne permettent pas de désigner
+un facteur causal unique. Ces contrôles réservés viennent désormais
+d'être consultés ; ils ne seront plus présentés comme vierges.
+
+Avant un nouvel ajustement, la prochaine vérification proposée est de
+caractériser les régressions individuelles par contraste, orientation
+et phase, sur les résultats déjà produits, puis de préparer une
+initialisation indépendante à protocole inchangé si cette lecture ne
+révèle pas de défaut bloquant. Ne pas retenir ensuite la meilleure graine
+pour effacer une régression. Aucun apprentissage bruité lancé, aucune
+nouvelle photo nécessaire pour cette étape. Aucun calcul actif, modification
+moteur/IHM, publication, fusion ou tag.
