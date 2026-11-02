@@ -1268,3 +1268,63 @@ référence. Cette ablation séparera un éventuel manque de contexte d'un
 défaut appris ; elle ne remplace pas un test sur des scènes indépendantes.
 Aucun réentraînement, nouvelle photo nécessaire à ce diagnostic,
 changement moteur ou publication ; aucun calcul actif.
+
+## 2 novembre 2026, 10:19 UTC — ablation du contexte d'inférence 96/384
+
+Campagne `neural-context-ablation-v001-20261102T101919Z`, banc
+`d0e91df`, **17 tests ciblés réussis**, mesure terminée en **4,04 s**.
+Les 186 patches de contrôle sont comparés par deux calculs du même modèle :
+inférence isolée 96 × 96, puis inférence de leur zone caméra 384 × 384
+avec recadrage aux mêmes pixels. Les 33 contextes sont relus avec leurs
+empreintes de descripteur et de pixels ; les sources recadrées sont
+exactement identiques aux tenseurs du pilote. Chaque groupe conserve
+le même sigma par canal, sans réestimation sur le contexte agrandi.
+
+Poids, force100, échelle, masques, cibles et seuils de détail sont inchangés.
+Les origines sont multiples de quatre, préservant la phase des deux
+sous-échantillonnages du réseau. La branche96 rejoue les métriques
+précédentes aux tolérances numériques fixées ; aucun réentraînement.
+
+| Mesure, mêmes pixels | Entrée | Inférence 96 | Contexte 384 |
+| --- | ---: | ---: | ---: |
+| Rapport MSE RGB, patch entier | 1 | 0,66333 | 0,57809 |
+| Rapport erreur opposée R−G/B−G, patch entier | 1 | 1,32049 | 0,91097 |
+| Rapport MSE RGB, cœur24 | 1 | 0,56166 | 0,56166 |
+| Rapport erreur opposée R−G/B−G, cœur24 | 1 | 0,87791 | 0,87791 |
+| Projection gradients faibles, cœur | 0,25944 | 0,10061 | 0,10061 |
+| Projection gradients forts, cœur | 0,72309 | 0,37234 | 0,37234 |
+
+Le contexte réduit donc la MSE globale de **42,19 % par rapport à
+l'entrée**, au lieu de 33,67 %. L'erreur opposée globale passe d'une
+hausse à une baisse de **8,90 %**. Les valeurs du cœur et des projections
+restent identiques à l'arrondi ; cela soutient un effet du contexte sur
+la périphérie, pas une récupération des structures centrales atténuées.
+Les zones384 gardent elles-mêmes leurs frontières ; certains patches
+n'ont que 24 pixels de marge externe. Ce test ne prouve pas une absence
+d'effets de bord pour tout découpage ou toute taille d'image.
+
+| ISO de contrôle | MSE RGB contexte / entrée | Erreur opposée contexte / entrée |
+| --- | ---: | ---: |
+| 1600 | 0,74727 | 1,44128 |
+| 3200 | 0,57910 | 0,74961 |
+| 6400 | 0,35957 | 0,52701 |
+
+Le défaut opposé à ISO1600 persiste : +44,13 % sur les mêmes patches
+avec contexte, +36,81 % au cœur. Il ne peut pas être attribué uniquement
+aux frontières des petites entrées. Le biais RGB global avec contexte
+vaut `[-0,000906 ; -0,004330 ; -0,001736]` en unités caméra signées,
+sans traduction en dominante perceptuelle ou luminosité affichée.
+
+Mémoire canonique : [ablation du contexte 96/384](../raw/neural-context-ablation-v001-20261102T101919Z.json).
+
+**Conclusion actuelle : le contexte d'inférence compte, mais ne suffit
+pas à qualifier le modèle.** Un futur rendu tuilé devra être qualifié
+avec contexte et recadrage plutôt qu'en juxtaposant des sorties96.
+L'atténuation mesurée des structures centrales et le défaut faible ISO
+restent ouverts ; aucune intégration de ce prototype en production.
+La prochaine vérification proposée est de comparer les mêmes diagnostics
+au cœur sur le train et sur le contrôle, sans changer les poids. Cela
+aidera à distinguer un défaut déjà appris sur les références du train
+d'un défaut surtout lié au transfert vers le contrôle, avant de changer
+l'objectif d'apprentissage. Aucun calcul actif, aucune nouvelle photo
+nécessaire à ce diagnostic, aucune publication ou modification moteur.
