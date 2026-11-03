@@ -2,8 +2,8 @@
 
 État : **plan de préparation**, approuvé comme base par l'utilisateur le
 29 octobre 2026. Chantier distinct du prototype de débruitage d'une image.
-M1, le tampon disque, l'onglet Assembler et le fichier résultat existent sur
-`patch_ui_stacking` ([analyse](../validation/analyses/analyse-empilement.md)) ; l'ancre de
+M1, le tampon disque, l'onglet Assembler et le fichier résultat existent
+([analyse](../validation/analyses/analyse-empilement.md)) ; l'ancre de
 M2, le panorama, le HDR et la recette multi-source ne sont pas implémentés.
 
 ## 1. Périmètre et ordre de réalisation

@@ -42,7 +42,7 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 
 | IHM-CONN-013 | Raccordé et validé par l'utilisateur, intégré à `dev` | Panneau Géométrie : voir ci-dessous |
 
-| IHM-CONN-014 | Raccordé sur `patch_ui_stacking`, à valider visuellement | Panneau Assembler : voir ci-dessous |
+| IHM-CONN-014 | Raccordé et validé par l'utilisateur | Panneau Assembler : voir ci-dessous |
 
 #### IHM-CONN-014 — panneau Assembler (B7)
 

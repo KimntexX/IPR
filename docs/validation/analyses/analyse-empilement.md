@@ -5,10 +5,10 @@ Rapport évolutif de l'empilement antibruit (lot B7, paliers M0 et M1 du
 `docs/validation/raw/` font autorité ; ce rapport les interprète. Suivi des validations
 partielles : [issue #23](https://github.com/KimntexX/IPR/issues/23).
 
-État au 3 novembre 2026 : moteur sur `patch_stacking`, onglet Assembler sur
-`patch_ui_stacking`, non fusionnés. L'utilisateur a validé les comparaisons sur la rafale
-et la Lune (moteur) ; le panneau, le DNG dans Lightroom et la correction de turbulence
-attendent sa validation.
+État au 3 novembre 2026 : **validé par l'utilisateur dans l'application**, sur une autre série
+que celles de ce rapport, `6V1A9539` (« on gagne en qualité et je ne vois pas de défaut
+apparent »), après les comparaisons sur la rafale et la Lune. Restent ouvertes la lecture du DNG
+dans Lightroom, Photoshop et DxO, et la correction de turbulence à l'usage.
 
 ## Choix techniques
 
