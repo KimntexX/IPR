@@ -4515,3 +4515,51 @@ scores RGB. Le halo et la décroissance exponentielle sont conservés.
 Un test affine supplémentaire vérifie l'absence de protection du cœur
 sur une rampe propre à sigma positif. Les sorties mesurées antérieures
 restent historiques ; aucune preuve n'est écrasée.
+
+### Courbure corrigée — progrès structurel, gain faible encore insuffisant
+
+L'audit corrigé laisse une confiance moyenne1 sur rampes et ondes
+achromatiques au faible bruit,0,99995 sur les aplats constants. Les ondes
+chromatiques restent partiellement protégées (confiance moyenne0,8632).
+Au bruit fort, les rampes ont une confiance moyenne0,99846, avec1,20 %
+de cellules légèrement atténuées ; cela ne constitue pas une calibration
+probabiliste, malgré le seuil nominal. Preuve :
+[audit de confiance par courbure](../raw/neural-confidence-audit-v001-20261103T130830Z.json).
+
+Deux évaluations sont interrompues par un pic mémoire global, sans perte
+de poids appris. Les preuves d'arrêt restent conservées :
+[premier arrêt](../raw/neural-edge-protection-v001-20261103T130836Z.json),
+[reprise partielle](../raw/neural-edge-protection-v001-20261103T131454Z.json).
+La seconde contient déjà le résultat négatif71 ; la tentative suivante
+rejoue les deux graines, sans ajustement de formule ni sélection.
+
+L'épreuve complète se termine en53,22s : les critères de structure, de
+couleur et de fidélité sans bruit passent. Le gain RGB faible du groupe
+complet échoue toujours :0,98883/0,98374 pour71/73, au lieu d'au plus0,98.
+Au bruit fort, rapports0,94626/0,90811, critères passés. Le détecteur
+remplit mieux sa fonction, mais ne rend pas la correction suffisamment
+efficace. Preuve : [courbure, deux graines complètes](../raw/neural-edge-protection-v001-20261103T132514Z.json).
+
+### Conditionnement suivant — résidu local en unités de bruit
+
+Une voie courte supplémentaire reçoit le résidu signé entre observation
+et moyenne des huit voisins du même plan physique. Elle le divise par
+`sqrt(sigma_centre² + somme(sigma_voisins²)/64)`, puis borne ce **descripteur**
+à±8 ; le signal n'est pas écrêté. Ce sont observations et sigma estimé,
+pas la vérité cible. Le résidu est nul dans les intérieurs affines ; le
+bruit gaussien indépendant y a une échelle proche de1 par construction.
+
+Cette voie est une convolution contrainte4→8, ajoutée aux caractéristiques
+du correcteur, initialisée à zéro et créée sans décaler le RNG des poids
+communs.296 paramètres s'ajoutent, soit36884 au total et3516 entraînables
+avec reconstruction gelée. Le changement combine normalisation et petite
+capacité supplémentaire : ne pas attribuer un gain à la seule division
+par sigma sans ablation supplémentaire.
+
+Trois tests du descripteur passent (affine, invariance d'échelle, covariance,
+bornes, statistiques gaussiennes et entrées invalides). Les deux modèles
+seront réentraînés sur les mêmes données et2048 étapes, puis la protection
+de courbure fixe sera évaluée sans ajustement sur leurs poids. Les anciens
+poids/protocoles restent des preuves versionnées ; aucun ancien moteur
+de production n'est introduit. Une confirmation indépendante sera nécessaire
+si cette étape franchit enfin tous les critères.
