@@ -17,6 +17,31 @@ class EdgeProtectionTests(unittest.TestCase):
     def setUpClass(cls):
         torch.set_num_threads(2)
 
+    def test_diagonal_quarter_rate_structure_is_protected(self):
+        y, x = torch.meshgrid(torch.arange(32), torch.arange(40), indexing='ij')
+        for coordinate in (x+y, x-y):
+            carrier = torch.tensor([1., 0., -1., 0.])[coordinate.remainder(4)]
+            packed = (.3+.1*carrier)[None, None].expand(1, 4, -1, -1).contiguous()
+            sigma = torch.full_like(packed, .005)
+            # The old centre-excluding H/V contrasts vanish on this exact
+            # lattice signal, despite strong diagonal curvature.
+            confidence = edge_confidence(packed, sigma)
+            self.assertLess(float(confidence[:, :, 4:-4, 4:-4].max()), 1e-10)
+
+    def test_partial_diagonal_confidence_is_covariant(self):
+        y, x = torch.meshgrid(torch.arange(32), torch.arange(40), indexing='ij')
+        carrier = torch.tensor([1., 0., -1., 0.])[(x+y).remainder(4)]
+        packed = (.3+.014*carrier)[None, None].expand(1, 4, -1, -1).contiguous()
+        sigma = torch.full_like(packed, .005)
+        tags = torch.tensor([PATTERNS[0]])
+        expected = edge_confidence(packed, sigma)
+        self.assertTrue(((expected[:, :, 4:-4, 4:-4] > 0)&(expected[:, :, 4:-4, 4:-4] < 1)).all())
+        for op in OPERATIONS:
+            values, _ = transform_observation(packed, tags, op)
+            deviations, _ = transform_observation(sigma, tags, op)
+            actual = transform(edge_confidence(values, deviations), op, True)
+            self.assertLess(float((actual-expected)[:, :, 4:-4, 4:-4].abs().max()), 2e-6)
+
     def test_step_protected_flat_active_and_isolated_four_sigma_not_classified_as_edge(self):
         packed = torch.full((1, 4, 32, 40), -.1)
         sigma = torch.full_like(packed, .02)

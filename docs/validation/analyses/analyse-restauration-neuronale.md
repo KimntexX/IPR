@@ -4831,3 +4831,92 @@ empreintes du calcul d'inf?rence courant : modifier seulement la perte ne
 rend pas d'anciens poids illisibles, mais changer le calcul, le runtime ou
 la convention de bruit est toujours refus?. Un test couvre cette fronti?re.
 Il ne s'agit pas d'ex?cuter un ancien moteur en production.
+
+
+### Ancrage propre mesur?, puis diagnostic de la protection diagonale
+
+Les deux graines terminent2048 ?tapes sans arr?t m?moire et passent le
+premier protocole apr?s protection. Rapports RGB/parent tous cas :
+0,92424/0,92524 au faible bruit,0,75751/0,74632 au fort.
+Preuve : [protection et ancrage](../raw/neural-edge-protection-v001-20261103T171828Z.json).
+Le gain bruit baisse un peu par rapport au candidat enrichi sans ancrage.
+Sur le spectre ? faible bruit, les gains moyens ?16cycles montent encore
+?0,791/0,801, mais restent insuffisants ?24cycles (0,564/0,566).
+Preuve : [ancrage seul](../raw/neural-spectral-noise-v001-20261103T172047Z.json).
+
+La s?paration par orientation r?v?le un d?faut distinct : dans le candidat
+enrichi sans ancrage, ? amplitude0,08/faible bruit, les directions H/V sont
+strictement ?gales au parent ; la diagonale donne gain0,602 contre0,951
+?16cycles,0,464 contre0,842 ?24cycles. La protection est donc aveugle ?
+certaines structures diagonales. Sur le r?seau CFA, les r?ponses H/V ?
+une onde plane sont `H=2cx(1+2cy)-6cy`, `V=2cy(1+2cx)-6cx`, avec
+`cx=cos(kx)`, `cy=cos(ky)`. Elles s'annulent ensemble pourcx=cy=0,
+pas seulement pour un signal constant. Le motif exact diagonal
+`[1,0,-1,0][(x+y) modulo4]` reproduit ce d?faut : confiance1 au lieu d'une
+protection, test de r?gression d'abord en ?chec.
+
+La nouvelle protection ajoute la diff?rence crois?e `TL+BR-TR-BL`, de
+variance ?gale ? la somme des quatre variances des coins. Son module est
+covariant par D4, nul sur les rampes, sans utilisation de la valeur centrale.
+Sa r?ponse vaut `?4sin(kx)sin(ky)` : elle n'est pas nulle sur la diagonale
+aveugle. Les trois r?ponses ne s'annulent ensemble, sur la grille Fourier,
+qu'en DC modulo2?. Cela supprime une zone aveugle exacte ; cela ne garantit
+pas la d?tection de tout signal faible noy? dans le bruit.
+
+Le budget de comparaisons passe de392 ?588 ; le seuil est recalcul? avec
+la m?me borne d'union et le m?me alpha nominal0,01, sans seuil ajust? aux
+scores. L'hypoth?se gaussienne ? variance estim?e reste une heuristique.
+Les quatre tests passent : motif aveugle corrig?, confiance interm?diaire
+covariante, rampe/aplat/point isol? et identit?/pr?paration/sym?tries du r?seau.
+Aucun poids n'est r?entra?n? pour cette correction. Les deux recettes
+avec/sans ancrage seront compar?es avec cette m?me protection compl?te.
+
+### Prochaine confirmation r?serv?e ? crit?res avant ouverture
+
+Apr?s comparaison sur les contr?les d?j? consult?s, figer une seule recette
+(et toujours les deux graines) avant toute nouvelle cohorte. La confirmation
+classique utilisera les blocs de graines320/3700000 et exclura toutes les
+v?rit?s d'apprentissage et anciennes cohortes. Les crit?res classiques
+restent inchang?s.
+
+Une confirmation fine compl?mentaire utilisera6/10/14/18/22/26cycles128,
+deux amplitudes0,008 et0,06, trois nouveaux angles, ondes achromatiques ou
+oppos?es et une nouvelle phase. Trois r?alisations par bruit positif,
+quatre phases Bayer, les deux graines, sans apprentissage apr?s ouverture.
+Les contr?les faibles seront int?gralement rapport?s, sans pr?tendre
+qu'une texture noy?e dans le bruit soit reconstructible sans erreur.
+Pour les signaux forts, chaque groupe graine/fr?quence/famille/bruit
+conservera au moins95% du transfert du parent dans chacun des trois canaux,
+et n'augmentera ni l'erreur RGB ni l'erreur CFA (tol?rance relative10??).
+L'erreur globale devra aussi baisser d'au moins2% pour chaque bruit positif.
+Ces crit?res sont fix?s avant les mesures de cette cohorte ; aucun r?sultat
+n?gatif ne sera supprim? et elle ne servira pas ? s?lectionner une graine.
+La r?ussite resterait une qualification proc?durale, pas photographique.
+
+
+### Protection diagonale mesur?e ? recette fig?e avant confirmation
+
+Les deux graines avec ancrage passent le protocole classique apr?s ajout
+de la composante crois?e, sans r?entra?nement. Preuve :
+[Hessienne et ancrage](../raw/neural-edge-protection-v001-20261103T172259Z.json).
+L'audit spectral montre que les motifs forts ?16 et24cycles retrouvent
+exactement le transfert du parent pour les deux graines ; les rapports
+d'erreur RGB tous contrastes/parent ? faible bruit deviennent0,678/0,715
+?16cycles et0,917/0,940 ?24cycles. Preuve :
+[spectre complet](../raw/neural-spectral-noise-v001-20261103T172516Z.json).
+
+La m?me protection est aussi rejou?e sur les poids sans ancrage, pour
+isoler les deux contributions. Ce candidat passe lui aussi le premier
+protocole ; les forts d?tails ?16/24cycles sont conserv?s, ce qui attribue
+la suppression de la zone aveugle ? la protection, pas au nouvel apprentissage.
+Preuves : [sans ancrage](../raw/neural-edge-protection-v001-20261103T172631Z.json),
+[spectre sans ancrage](../raw/neural-spectral-noise-v001-20261103T172726Z.json).
+
+?8cycles, le transfert des forts d?tails avec ancrage vaut98,76/98,56%
+du parent, contre97,45/97,34% sans. En ?change, le rapport d'erreur RGB
+tous contrastes est0,426/0,411 contre0,361/0,345 : un peu moins de lissage.
+**Choix sur le d?veloppement : conserver l'ancrage propre et la protection
+? trois contrastes pour les deux graines.** Ni graine s?lectionn?e ni poids
+ajust? apr?s ce choix. Les contr?les encore r?serv?s seront ouverts une
+seule fois sur cette recette. Les faibles d?tails noy?s dans le bruit,
+les capteurs r?els et les saturations restent des limites ? qualifier.

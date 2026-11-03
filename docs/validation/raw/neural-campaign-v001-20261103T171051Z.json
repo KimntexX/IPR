@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-campaign-v001-20261103T171051Z",
+  "started_at_utc": "2026-11-03T17:10:51.810222+00:00",
+  "until_latest_start": "2026-11-03T19:30:00+01:00",
+  "status": "completed_both_seeds",
+  "plan_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-fixed-point-plan-v001\\plan.json",
+  "plan_sha256": "6b4f84fcf3bef394e92864ff1a66e3565d1ee004720b565ccf24c6a21f44c1c7",
+  "launcher_sha256": "50aa7a79ff595170fc365943e2536d47eec9da42f429aa1b85d3aff42bc47802",
+  "admission_fraction": 0.9,
+  "poll_seconds": 15,
+  "max_attempts_per_seed": 8,
+  "attempt_timeout_seconds": 1800,
+  "attempts": [
+    {
+      "seed": 71,
+      "number": 1,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-fixed-point-campaign-v001\\seed71-attempt01",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 9524273152,
+        "system_used_fraction": 0.43754869493345316,
+        "process_rss_bytes": 26738688,
+        "process_private_bytes": 19001344,
+        "process_peak_rss_bytes": 29757440,
+        "process_peak_pagefile_bytes": 22228992
+      },
+      "resumed_from": null,
+      "returncode": 0,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-fixed-point-campaign-v001\\seed71-attempt01\\result.json",
+      "result_sha256": "71da61c2c86e2ae491816d04804f5aa0535b54d809c59bfb68828fb11f2a0ed3",
+      "status": "completed_synthetic_noise_pilot_not_photographic_qualification",
+      "pilot_gates_passed": false,
+      "training_progress": {
+        "completed_optimizer_steps": 2048,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-fixed-point-campaign-v001\\seed71-attempt01\\training-latest.pt",
+          "sha256": "30e963bbf2a2a0ef68a641411426ab5379c84ce2615f1745f9ca53bdd45eaa59",
+          "bytes": 235904,
+          "completed_step": 2048
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T171108Z"
+    },
+    {
+      "seed": 73,
+      "number": 1,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-fixed-point-campaign-v001\\seed73-attempt01",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 8830857216,
+        "system_used_fraction": 0.47849803478677755,
+        "process_rss_bytes": 33955840,
+        "process_private_bytes": 25186304,
+        "process_peak_rss_bytes": 40808448,
+        "process_peak_pagefile_bytes": 32968704
+      },
+      "resumed_from": null,
+      "returncode": 0,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-fixed-point-campaign-v001\\seed73-attempt01\\result.json",
+      "result_sha256": "a502c5802ab467887406470719063a2f6b5148577d6d6424a2fa5ebe417b3eef",
+      "status": "completed_synthetic_noise_pilot_not_photographic_qualification",
+      "pilot_gates_passed": false,
+      "training_progress": {
+        "completed_optimizer_steps": 2048,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-fixed-point-campaign-v001\\seed73-attempt01\\training-latest.pt",
+          "sha256": "4de18369a1ee760514a267439f99f9c59d7c612abf34548a42aa1c786677d3ae",
+          "bytes": 235904,
+          "completed_step": 2048
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T171445Z"
+    }
+  ],
+  "policy": "Both seeds evaluated even after quality failure. Retry only memory stops; latest technical checkpoint, no score selection. No new attempt after deadline; active attempt may finish normally.",
+  "pilot_gates_passed": false,
+  "finished_at_utc": "2026-11-03T17:18:09.444439+00:00"
+}
