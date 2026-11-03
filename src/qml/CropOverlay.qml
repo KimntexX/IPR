@@ -20,6 +20,10 @@ Item {
     // Width over height of the normalized sides; 0 is free.
     property real normalizedRatio: 0
     property bool showGrid: false
+    // The alignment grid's cell on the screen, kept nearly square by dividing the frame.
+    property real gridCell: 40
+    readonly property int gridColumns: showGrid ? Math.max(2, Math.round(frameWidth / gridCell)) : 0
+    readonly property int gridRows: showGrid ? Math.max(2, Math.round(frameHeight / gridCell)) : 0
     signal cropEdited(real x, real y, real width, real height)
 
     readonly property real minimumSide: 0.01
@@ -103,21 +107,6 @@ Item {
         }
     }
 
-    // The level grid, on the whole canvas.
-    Repeater {
-        model: root.showGrid ? 14 : 0
-        Rectangle {
-            required property int index
-            readonly property bool vertical: index < 7
-            readonly property real position: ((vertical ? index : index - 7) + 1) / 8
-            x: vertical ? root.imageX + position * root.imageWidth : root.imageX
-            y: vertical ? root.imageY : root.imageY + position * root.imageHeight
-            width: vertical ? 1 : root.imageWidth
-            height: vertical ? root.imageHeight : 1
-            color: "#66ffffff"
-        }
-    }
-
     Rectangle {
         id: frame
         objectName: "cropFrame"
@@ -128,6 +117,32 @@ Item {
         color: "transparent"
         border.color: "#ffffff"
         border.width: 1
+
+        // The alignment grid, in the frame. A neutral grey shows on dark and on bright tones.
+        Item {
+            objectName: "cropGrid"
+            anchors.fill: parent
+            Repeater {
+                model: Math.max(0, root.gridColumns - 1)
+                Rectangle {
+                    required property int index
+                    x: Math.round((index + 1) * frame.width / root.gridColumns)
+                    width: 1
+                    height: frame.height
+                    color: "#a0909090"
+                }
+            }
+            Repeater {
+                model: Math.max(0, root.gridRows - 1)
+                Rectangle {
+                    required property int index
+                    y: Math.round((index + 1) * frame.height / root.gridRows)
+                    width: frame.width
+                    height: 1
+                    color: "#a0909090"
+                }
+            }
+        }
 
         // Thirds, while the frame moves.
         Repeater {

@@ -12,8 +12,12 @@ Item {
     property var preferences: null
     readonly property color textColor: preferences ? preferences.theme.text : "#edf2f8"
     readonly property color secondaryTextColor: preferences ? preferences.theme.secondaryText : "#d7dee8"
-    // A level grid over the image; a viewing aid, not part of the recipe.
-    property alias showGrid: gridCheck.checked
+    // The alignment grid over the image, always or while a transform moves; a viewing
+    // aid, not part of the recipe.
+    readonly property bool transforming: rotationControl.pressed || verticalControl.pressed
+        || horizontalControl.pressed || aspectControl.pressed || scaleControl.pressed
+        || offsetXControl.pressed || offsetYControl.pressed
+    readonly property bool showGrid: gridCheck.checked || transforming
     property bool syncing: false
     readonly property var values: editor.geometry
     readonly property var ratios: [
@@ -75,10 +79,43 @@ Item {
         function onGeometryChanged() { root.reload() }
     }
 
+    // A titled group, always open: the panel shows whole, without folding.
+    component Group: ColumnLayout {
+        property string title
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+        spacing: 8
+        Label {
+            Layout.fillWidth: true
+            text: parent.title
+            font.bold: true
+            color: root.secondaryTextColor
+            padding: 0
+            background: Item { }
+        }
+    }
+
+    Label {
+        id: title
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        text: qsTr("Géométrie")
+        font.bold: true
+        font.pixelSize: 18
+        color: root.textColor
+        padding: 0
+        background: Item { }
+    }
+
     ScrollView {
         id: scroll
         objectName: "geometryScrollView"
-        anchors.fill: parent
+        anchors.top: title.bottom
+        anchors.topMargin: 8
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         clip: true
         rightPadding: 8
         contentWidth: availableWidth
@@ -94,10 +131,8 @@ Item {
             width: scroll.availableWidth
             spacing: 10
 
-            SettingsSection {
+            Group {
                 objectName: "geometryOrientationSection"
-                textColor: root.textColor
-                expanded: true
                 title: qsTr("Orientation")
 
                 PreferenceButton {
@@ -128,10 +163,8 @@ Item {
                 }
             }
 
-            SettingsSection {
+            Group {
                 objectName: "geometryCropSection"
-                textColor: root.textColor
-                expanded: true
                 title: qsTr("Recadrage")
 
                 RowLayout {
@@ -228,10 +261,8 @@ Item {
                 }
             }
 
-            SettingsSection {
+            Group {
                 objectName: "geometryTransformSection"
-                textColor: root.textColor
-                expanded: true
                 title: qsTr("Transformation")
 
                 AdjustmentControl {
@@ -316,7 +347,7 @@ Item {
                 PreferenceCheckBox {
                     id: gridCheck
                     objectName: "geometryGridCheck"
-                    text: qsTr("Afficher la grille")
+                    text: qsTr("Toujours afficher la grille")
                     textColor: root.textColor
                     Layout.fillWidth: true
                 }

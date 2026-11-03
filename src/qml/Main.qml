@@ -343,8 +343,11 @@ ApplicationWindow {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.margins: 14
                 textColor: uiPreferences.theme.text
+                secondaryTextColor: uiPreferences.theme.secondaryText
+                panelColor: settingsPanel.color
+                lineColor: settingsPanel.border.color
+                outerRadius: settingsPanel.radius
                 // The eyedropper belongs to the Settings tab's panel.
                 onCurrentIndexChanged: settingsView.pointColorPicking = false
             }
@@ -361,7 +364,6 @@ ApplicationWindow {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: 14
-                anchors.topMargin: 8
                 visible: panelTabs.currentIndex === 0
                 editor: imageEditor
                 preferences: uiPreferences
