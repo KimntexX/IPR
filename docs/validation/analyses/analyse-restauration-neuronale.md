@@ -4681,3 +4681,54 @@ phases de bruit synthétique. Les halos 64 et 80 pixels doivent respecter
 0/0,01/0,03 sont des scénarios de contrainte, pas une calibration ISO.
 Trois tests vérifient alignement, rejet des phases de pooling incompatibles,
 finitude et présence des neuf ROI qualifiées pour chacune des trois sources.
+
+
+### Confirmation ind?pendante et tuiles ? r?sultats positifs limit?s
+
+Les six groupes (deux graines ? trois r?alisations de bruit) passent tous
+les crit?res sans r?entra?nement. Les rapports RGB complets/parent tous
+cas sont 0,89005?0,89111 et 0,89730?0,89812 au faible bruit pour71/73 ;
+0,68087?0,68206 et 0,68375?0,68463 au fort. Les52 nouveaux contenus sont
+communs aux graines ; les1248 champs ? bruit positif distincts sont
+r?p?t?s ? poids diff?rents, pas2486 sc?nes ind?pendantes.
+La mesure compl?te dure158,61s et atteint242,02Mio r?sidents. Un arr?t
+m?moire ant?rieur est conserv?.
+Preuves : [arr?t](../raw/neural-noisy-confirmation-v001-20261103T142620Z.json),
+[confirmation](../raw/neural-noisy-confirmation-v001-20261103T142750Z.json).
+
+L'audit technique des tuiles passe ses558 comparaisons : maximum
+1,49?10?? pour le halo48, 2,98?10?? pour64 et80, sous2?10??.
+Dur?e13,22s, pic r?sident282,52Mio. On conserve64 comme marge fixe
+pr?vue ; r?ussir48 sur ces cas ne prouve pas une borne universelle.
+Preuve : [audit tuiles](../raw/neural-tiling-audit-v001-20261103T143103Z.json).
+Ces r?sultats qualifient une coh?rence num?rique et des v?rit?s
+proc?durales ; ils ne constituent pas une validation photographique.
+
+### Extension spectrale ? limite importante du premier protocole
+
+Une ?preuve suppl?mentaire fig?e, sans apprentissage, utilise72 signaux :
+4/8/16/24 cycles par128pixels, amplitudes0,005/0,02/0,08, trois orientations,
+ondes achromatiques ou oppos?es entre canaux. Les quatre phases Bayer,
+les trois niveaux de bruit (deux r?alisations par niveau positif) et les
+deux graines donnent2880 observations. Fen?tre192, centre64 et halo64.
+L'amplitude et la composante en quadrature sont ajust?es s?par?ment pour
+R/G/B, au lieu de ne suivre que le gradient vert. Deux tests v?rifient
+la r?cup?ration d'une att?nuation connue, d'un d?calage et les entr?es
+invalides. La qualit? n'est pas ramen?e ? un nouveau seuil choisi apr?s coup.
+Preuve : [extension spectrale](../raw/neural-spectral-noise-v001-20261103T143313Z.json).
+
+Le r?seau conserve bien les ondes ?4cycles, mais att?nue trop les plus
+fines. Pour71, au faible bruit, le rapport RGB/parent passe de0,197 ?4cycles
+?1,616 ?16cycles et1,406 ?24cycles. Pour73 :0,189,1,353 et1,085.
+Les gains sinuso?daux moyens R/G/B sont proches de0,61 ?16cycles contre
+0,95?0,96 pour le parent ; ?24cycles,0,41?0,42 contre0,81?0,82.
+Le bruit fort peut encore baisser l'erreur globale malgr? une perte de
+signal : l'erreur RGB seule est donc insuffisante. Cette extension ne
+r?fute pas les chiffres pr?c?dents ; elle r?v?le leur couverture limit?e.
+
+**Conclusion courante : pilote reproductible sur le premier protocole,
+mais pas encore stable pour le d?tail fin photographique.** La prochaine
+exp?rience enrichit les donn?es d'apprentissage en textures faibles de
+fr?quences vari?es, avec les m?mes parents, budgets et graines. Les cas
+de cette extension deviennent consult?s et ne seront pas pr?sent?s comme
+r?serv?s dans une prochaine comparaison. Aucun moteur de production modifi?.

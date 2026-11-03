@@ -98,3 +98,30 @@ tolérance photographique n'est changée pour ajouter la reprise.
 Aucune publication, fusion, création de tag, modification de production
 ou mise en veille n'est autorisée par ce lanceur. Les travaux des autres
 agents et les applications de l'utilisateur restent hors de son périmètre.
+
+## Confirmation et cohérence des tuiles
+
+Après réussite des deux graines sur le même protocole, utiliser
+`tests/neural/confirm_noisy_model.py --prepare`. Les arguments requis sont
+`--data-plan`, `--eligibility`, `--kind plain|protected`, deux dossiers
+`--models`, les anciens plans de cohortes `--prior` et un nouveau `--output`.
+L'outil refuse une preuve incomplète, des poids différents ou une seule
+graine réussie. Le plan préparé fige de nouveaux contenus et trois
+réalisations de bruit, sans réentraînement.
+
+Exécuter ensuite `--plan <plan.json> --output <nouveau dossier>`.
+En cas d'arrêt mémoire seulement, `--reuse <result.json>` conserve les
+groupes complets du même plan. Les groupes négatifs restent négatifs ;
+ne pas les relancer pour chercher une meilleure réalisation. Ne modifier
+aucun outil dont l'empreinte est figée pendant la campagne.
+
+L'audit `tests/neural/audit_neural_tiles.py` accepte `--data-plan`, les
+deux dossiers `--models`, `--captures <preuve mosaic-inlet/result.json>`,
+`--kind plain|protected` et un nouveau `--output`. Il mesure les écarts
+de centres identiques entre fenêtres et vue 384. Sa réussite concerne
+la cohérence technique des tuiles, pas la qualité d'une photographie.
+Les valeurs sigma constantes utilisées n'estiment pas le bruit du boîtier.
+
+Ces outils conservent des JSON horodatés sous `docs/validation/raw/`.
+Le verdict de qualité, les interruptions mémoire, les écarts par cas et
+la provenance restent séparés ; aucun échec n'est effacé par une moyenne.

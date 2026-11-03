@@ -857,3 +857,32 @@ les limites horaires et les étapes de qualification. Onze tests ciblés
 passent sur le périmètre reprise/lanceur/protocole ; pas de campagne
 lancée avant le signal utilisateur. Les contrôles photographiques et la
 validation sur images réelles restent à faire, sans intégration moteur/IHM.
+
+## 19. Correction CFA conditionnée — 3 novembre 2026
+
+Le pilote courant conserve le reconstructeur U-Net local appris, avec
+ses 33 368 paramètres figés, et apprend seulement une correction des
+quatre plans CFA physiques : 3 516 paramètres supplémentaires. Ce choix
+maintient exactement le parent lorsque sigma vaut zéro. Il ne constitue
+pas un grand réseau photographique entièrement entraîné de bout en bout.
+
+La correction est bornée à trois sigma fournis. Son descripteur de bruit
+utilise un résidu d'ajustement quadratique 5×5, normalisé par sa variance
+propagée. Le signal reste signé ; seul ce descripteur est limité à ±8.
+La protection fixe de courbure partage une confiance entre les quatre
+positions CFA et réduit la correction près des structures détectées.
+Ce facteur est une heuristique de protection, pas une probabilité calibrée.
+
+Les deux initialisations passent le banc de développement après protection.
+Une confirmation distincte est nécessaire avant de retenir ce pilote ;
+aucune valeur de sigma simulée n'est assimilée à une calibration ISO réelle.
+Les empreintes des fonctions de calcul, des poids et des entrées sont liées
+au protocole. Changer le conditionnement sans entraîner de nouveaux poids
+ou réutiliser une ancienne preuve sous un nouveau code est refusé.
+
+Le déploiement par tuiles est une qualification séparée : il faut préserver
+la phase Bayer et celle des deux réductions spatiales, utiliser un halo
+fixe vérifié et comparer au calcul sur une vue plus grande. Une évaluation
+sur de petits centres ne garantit pas à elle seule l'absence de raccords.
+Les données sources restent immuables ; la boucle de qualification n'entre
+pas dans le chemin d'ouverture de production.
