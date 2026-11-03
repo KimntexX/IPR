@@ -4949,3 +4949,10 @@ classique ajoute du contexte mais conserve exactement ses centres128,
 son centre scoré32et ses champs de bruit. Les contrôles fins conservent
 leurs centres192, étendus à384 ; les tuiles utilisent maintenant des halos
 96/112/128. Leurs résultats ne sont pas encore des gains mesurés.
+
+La campagne `noisy-context-campaign-v001` est démarrée : la première
+graine a dépassé512étapes avec environ391Mio résidents, sous les plafonds.
+Un contrôleur léger attend les deux entraînements puis lance la protection
+et les trois rejeux connus. Aucun nouveau contrôle réservé ne sera ouvert
+par cette chaîne. Les verdicts finaux ne sont pas encore disponibles ;
+les JSON de campagne et de chaque étape seront conservés à leur clôture.
