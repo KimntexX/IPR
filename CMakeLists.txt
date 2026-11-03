@@ -58,6 +58,8 @@ set(IPR_ENGINE_SOURCES
     src/core/EditRecipe.h
     src/core/Exposure.h
     src/core/Exposure.cpp
+    src/core/LocalAdjustments.h
+    src/core/LocalAdjustments.cpp
     src/core/LocalValues.h
     src/core/LocalValues.cpp
     src/core/RecipeCodec.h
@@ -375,6 +377,7 @@ if(BUILD_TESTING)
     target_sources(sidecarJsonTests PRIVATE src/tools/SidecarJson.cpp)
     target_include_directories(sidecarJsonTests PRIVATE src/tools)
     ipr_add_test(editHistoryTests tests/edit_history_test.cpp)
+    ipr_add_test(localAdjustmentsTests tests/local_adjustments_test.cpp)
     ipr_add_test(localValuesTests tests/local_values_test.cpp)
     ipr_add_test(editorGeometryTests tests/editor_geometry_test.cpp)
     set_tests_properties(editorGeometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 120)
