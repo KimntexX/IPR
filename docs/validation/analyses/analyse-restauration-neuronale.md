@@ -4201,3 +4201,19 @@ quatre phases. Le moniteur et le quota restent actifs :2Gio engagés,
 arrêt coopératif à1,25Gio privés/résidents ou80 % de mémoire physique
 machine. Deux apprentissages séquentiels, cache4 images, évaluation en
 flux. Aucun chargement du corpus entier ni modification moteur/IHM.
+
+### Arrêt mémoire et reprise à plan inchangé
+
+Le premier essai71 est interrompu après39,38s par le seuil physique
+global :80,12 % de RAM machine utilisée. Son pic résident propre est
+307,23Mio, son pic engagé966,61Mio, sous les deux plafonds du processus.
+Il n'y a pas de résultat photographique ni de checkpoint final ;73 n'a
+pas démarré. La preuve d'arrêt est conservée, sans l'écraser :
+[premier essai interrompu](../raw/neural-noisy-moment-v001-20261103T113327Z.json).
+
+Après clôture, une mesure indépendante relève69,94 % de mémoire physique
+utilisée. Une reprise est autorisée dans de nouveaux dossiers, sans
+modifier le plan, les poids initiaux, les graines ou les limites. Elle
+recommence depuis l'initialisation déclarée, pas depuis un checkpoint
+choisi. Aucun processus tiers n'est fermé. Un nouvel arrêt ne déclenchera
+pas une boucle de relances sous pression mémoire.
