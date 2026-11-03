@@ -39,9 +39,8 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-003 | En attente moteur | États typés des traitements et révisions de rendu |
 | IHM-CONN-004 | En attente moteur | Comparaison canonique des recettes par groupe |
 | IHM-CONN-012 | Raccordé sur `patch_ui_history`, validé visuellement par l'utilisateur le 2 novembre 2026 | Historique et instantanés : voir ci-dessous |
-
 | IHM-CONN-013 | Raccordé et validé par l'utilisateur, intégré à `dev` | Panneau Géométrie : voir ci-dessous |
-
+| IHM-CONN-014 | Raccordé et validé par l'utilisateur | Panneau Assembler : voir ci-dessous |
 | IHM-CONN-015 | Moteur prêt sur `patch_layers`, panneau à faire | Panneau Masques : voir ci-dessous |
 
 #### IHM-CONN-015 — panneau Masques (B2)
@@ -53,6 +52,14 @@ Le moteur expose sur `editor` : `localMasks` (masques, formes, valeurs), `addLoc
 `setLocalMaskShape(masque, forme, champs)`, `addLocalMaskStroke(masque, forme, points, taille, contour, flux)`.
 Coordonnées : canevas normalisé ; `Geometry::viewToCanvas` passe de l'écran recadré au canevas.
 Reste à exposer pour le panneau : l'affichage de la couverture d'un masque.
+
+#### IHM-CONN-014 — panneau Assembler (B7)
+
+Le moteur expose `editor.stacking` (`StackSession`) : `running`, `exporting`, `hasResult`,
+`progress`, `status`, `preview`, `exportedFile`, `start(urls, référence)`, `cancel()`,
+`exportResult(cible, format)`, `suggestedExport(format)`, `discard()`. Le panneau lit la
+sélection du ruban (`selectedImageUrls`) et ne calcule rien : il ouvre le résultat exporté
+par `editor.loadImage`.
 
 #### IHM-CONN-013 — panneau Géométrie (B1)
 

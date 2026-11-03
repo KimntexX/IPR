@@ -376,6 +376,12 @@ ApplicationWindow {
                 editor: imageEditor
                 preferences: uiPreferences
             }
+            AssemblePanel {
+                anchors.fill: settingsView
+                visible: panelTabs.currentIndex === 2
+                editor: imageEditor
+                preferences: uiPreferences
+            }
 
         }
     }

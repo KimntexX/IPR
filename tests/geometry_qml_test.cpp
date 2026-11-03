@@ -156,14 +156,16 @@ int main(int argc, char **argv)
 
     // The tabs choose by themselves, one at a time.
     auto *geometryTab = visualItemNamed(tabs, QStringLiteral("panelTabGeometry"));
-    if (!check(geometryTab != nullptr && visualItemNamed(tabs, QStringLiteral("panelTabSettings")), "the two tabs exist")) return 1;
+    auto *assembleTab = visualItemNamed(tabs, QStringLiteral("panelTabAssemble"));
+    if (!check(geometryTab != nullptr && assembleTab != nullptr && visualItemNamed(tabs, QStringLiteral("panelTabSettings")), "the tabs exist")) return 1;
     click(geometryTab);
     if (!check(tabs->property("currentIndex").toInt() == 1 && geometryTab->property("checked").toBool(),
                "a click selects a tab")) return 1;
     // The tabs share the bar's width, side by side, as tabs of the panel below them.
     auto *settingsTab = visualItemNamed(tabs, QStringLiteral("panelTabSettings"));
     if (!check(std::abs(geometryTab->x() - settingsTab->width()) < 1 &&
-               std::abs(settingsTab->width() + geometryTab->width() - tabs->width()) < 1,
+               std::abs(assembleTab->x() - 2 * settingsTab->width()) < 1 &&
+               std::abs(settingsTab->width() + geometryTab->width() + assembleTab->width() - tabs->width()) < 1,
                "the tabs join across the bar")) return 1;
 
     // The panel shows whole: its groups have titles, and nothing folds.

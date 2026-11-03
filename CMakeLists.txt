@@ -33,6 +33,7 @@ set(IPR_INCLUDE_DIRECTORIES
     "${IPR_SOURCE_ROOT}/profiles"
     "${IPR_SOURCE_ROOT}/providers"
     "${IPR_SOURCE_ROOT}/raw"
+    "${IPR_SOURCE_ROOT}/stack"
     "${IPR_SOURCE_ROOT}/tasks"
 )
 
@@ -90,6 +91,18 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorAdjustments.cpp
     src/core/ColorGrading.h
     src/core/ColorGrading.cpp
+    src/stack/StackAlignment.h
+    src/stack/StackAlignment.cpp
+    src/stack/StackMerge.h
+    src/stack/StackMerge.cpp
+    src/stack/StackTurbulence.h
+    src/stack/StackTurbulence.cpp
+    src/stack/StackJob.h
+    src/stack/StackJob.cpp
+    src/stack/StackSession.h
+    src/stack/StackSession.cpp
+    src/raw/CameraDng.h
+    src/raw/CameraDng.cpp
     src/core/PerceptualColour.h
     src/core/PerceptualColour.cpp
     src/core/Contrast.h
@@ -174,6 +187,7 @@ set(IPR_QML_FILES
     src/qml/AppMenu.qml
     src/qml/HistoryModule.qml
     src/qml/GeometryPanel.qml
+    src/qml/AssemblePanel.qml
     src/qml/CropOverlay.qml
     src/qml/PanelTabBar.qml
     src/qml/PanelScrollBar.qml
@@ -363,6 +377,17 @@ if(BUILD_TESTING)
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     add_executable(iprGeometryAudit tests/geometry_audit.cpp)
     target_link_libraries(iprGeometryAudit PRIVATE iprEngine)
+    add_executable(iprStackAudit tests/stack_audit.cpp)
+    target_link_libraries(iprStackAudit PRIVATE iprEngine)
+    if(WIN32)
+        target_link_libraries(iprStackAudit PRIVATE psapi)
+    endif()
+    ipr_add_test(cameraDngTests tests/camera_dng_test.cpp)
+    set_tests_properties(cameraDngTests PROPERTIES LABELS "unit;stack;export" TIMEOUT 60)
+    ipr_add_test(stackSessionTests tests/stack_session_test.cpp)
+    set_tests_properties(stackSessionTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
+    ipr_add_test(stackTests tests/stack_test.cpp)
+    set_tests_properties(stackTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
     ipr_add_test(geometryTests tests/geometry_test.cpp)
     set_tests_properties(geometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 60)
     ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
@@ -430,6 +455,12 @@ if(BUILD_TESTING)
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(historyQmlTests PROPERTIES
         LABELS "unit;history;qml" TIMEOUT 60
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(assembleQmlTests tests/assemble_qml_test.cpp)
+    target_compile_definitions(assembleQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(assembleQmlTests PROPERTIES
+        LABELS "unit;stack;qml" TIMEOUT 120
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(geometryQmlTests tests/geometry_qml_test.cpp)
     target_compile_definitions(geometryQmlTests PRIVATE

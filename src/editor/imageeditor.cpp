@@ -313,6 +313,24 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     , m_decodedImageCache(m_taskResources->cache)
     , m_renderStageCache(m_taskResources->stages)
 {
+    m_stacking = std::make_unique<StackSession>(
+        [manifest = defaultNormalizationManifest()](const QString &file, const std::function<bool()> &cancelled) {
+            RawDecoder::Options options;
+            options.automaticWhiteBalance = false;
+            options.normalizationManifest = manifest;
+            options.useNormalizationEnvironment = false;
+            options.preferCameraNeutral = true;
+            options.signedDevelopment = true;
+            options.cancellationRequested = cancelled;
+            StackSession::Decoded decoded;
+            const ColorPipeline::WorkingImage image = RawDecoder::decode(file, options, &decoded.metadata, &decoded.error);
+            if (image.dcpContext) {
+                decoded.context = image.dcpContext;
+                decoded.cameraRgb = image.dcpContext->cameraRgb;
+            }
+            return decoded;
+        },
+        std::shared_ptr<ImageCacheController>(m_taskResources, &m_taskResources->cache));
     connect(&m_embeddedWatcher, &QFutureWatcher<QImage>::finished, this, [this] {
         QImage preview;
         try { preview = Tasks::takeResult(m_embeddedWatcher.future()); } catch (...) { /* optional interim view */ }

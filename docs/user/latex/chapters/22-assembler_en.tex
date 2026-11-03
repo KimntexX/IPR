@@ -1,0 +1,49 @@
+% translation-source: docs/user/latex/chapters/22-assembler.tex; sha256: 62ef157b4554e0ab280e7e8872a1dc0f884d1e44a7ef2c5088b36261a7966a6c
+\chapter{Assembling several photos}
+The \emph{Assemble} tab, at the top of the right panel, makes a new image from the
+photos ticked in the ribbon. The original photos do not change. The work runs in the
+background and can be cancelled; you can keep browsing your images meanwhile.
+
+\section{Stacking to reduce noise}
+Stacking averages several views of the same scene, at the same exposure. Noise falls
+with the square root of the number of views: four views halve it, sixteen divide it by
+four. Details remain, because they are the same from one view to the next.
+
+\begin{enumerate}
+\item Tick at least two photos in the ribbon.
+\item Choose the \emph{Reference}: the final image keeps its framing. The middle photo
+is proposed, as it stays the closest to the others.
+\item Click \emph{Assemble}.
+\item Look at the preview, choose the format, then \emph{Export}.
+\item \emph{Open the result} brings it into the editor, for further editing.
+\end{enumerate}
+
+The views are registered automatically: a tripod is not needed. The result is cropped to
+the area common to all views. What moves from one view to the next, like a passer-by, is
+left out if it appears in only a minority of views. A view that cannot be registered or
+whose exposure differs too much is left out, and the message says so.
+
+\section{Choosing the format}
+\begin{itemize}
+\item \emph{DNG}: the camera's signal, already corrected for the lens, with no profile
+applied. The file reopens like a RAW: profile, balance and settings stay free.
+\item \emph{TIFF}: the image rendered in 16 bits with the reference's profile, readable
+everywhere.
+\end{itemize}
+An existing file is never replaced: the name receives a number.
+
+\section{Photographing the Moon}
+A small subject on an empty background, like the Moon, gets one more treatment. The
+deformations of the atmosphere are corrected on the subject, and only the sharpest half
+of the views is merged there. The rest of the sky keeps all the views. The message tells
+when this correction took place. In our measurements at 200~mm, the choice of the sharp
+views brings most of the gain: the longer the series, the more good views to choose from.
+
+\section{Limits}
+\begin{itemize}
+\item The capture settings must stay the same: stacking is not HDR.
+\item A near object shot hand-held may keep a slightly soft edge: it does not move like
+the background.
+\item The work needs about 400~MB of temporary disk per 32~Mpx photo.
+\item A colour profile for the camera is required.
+\end{itemize}
