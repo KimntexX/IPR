@@ -37,6 +37,9 @@
 //     current denoise (after the tones and colours), both sliders at once
 //     optional "sharpening":{"amount":A in [0, 200],"radius":R in [0.5, 3],"masking":M
 //     in [0, 100]} on top of the state
+//     optional "geometry":{"rotation","vertical","horizontal","aspect","scale","offsetX",
+//     "offsetY","quarterTurns","flipHorizontal","flipVertical","crop":[x,y,w,h]} on top of
+//     the state; its absent fields stay neutral
 //   {"op":"quit"}
 // An error answers {"ok":false,"error":...} and the server keeps serving.
 // Diagnostics go to stderr; stdout carries only the protocol.
@@ -125,6 +128,29 @@ void render(Masters &masters, const QJsonObject &request)
         strength("luminance", settings.denoiseLuminance);
         strength("chrominance", settings.denoiseChrominance);
         settings.denoiseBeforeProfile = true;
+    }
+    if (request.contains("geometry")) {
+        const QJsonObject geometry = request.value("geometry").toObject();
+        Geometry::Settings &g = settings.geometry;
+        g.rotation = float(geometry.value("rotation").toDouble(g.rotation));
+        g.vertical = geometry.value("vertical").toInt(g.vertical);
+        g.horizontal = geometry.value("horizontal").toInt(g.horizontal);
+        g.aspect = geometry.value("aspect").toInt(g.aspect);
+        g.scale = geometry.value("scale").toInt(g.scale);
+        g.offsetX = geometry.value("offsetX").toInt(g.offsetX);
+        g.offsetY = geometry.value("offsetY").toInt(g.offsetY);
+        g.quarterTurns = geometry.value("quarterTurns").toInt(g.quarterTurns);
+        g.flipHorizontal = geometry.value("flipHorizontal").toBool(g.flipHorizontal);
+        g.flipVertical = geometry.value("flipVertical").toBool(g.flipVertical);
+        const QJsonArray crop = geometry.value("crop").toArray();
+        require(crop.isEmpty() || crop.size() == 4, "geometry.crop needs four values");
+        if (crop.size() == 4) {
+            g.cropX = crop.at(0).toDouble();
+            g.cropY = crop.at(1).toDouble();
+            g.cropWidth = crop.at(2).toDouble();
+            g.cropHeight = crop.at(3).toDouble();
+        }
+        require(Geometry::bound(g), "geometry out of range");
     }
     if (request.contains("denoise")) {
         require(!cameraDenoise, "denoise and cameraDenoise are exclusive");

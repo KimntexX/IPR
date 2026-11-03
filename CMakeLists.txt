@@ -76,6 +76,8 @@ set(IPR_ENGINE_SOURCES
     src/core/PointColor.cpp
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
+    src/core/Geometry.h
+    src/core/Geometry.cpp
     src/core/Dehaze.h
     src/core/Dehaze.cpp
     src/core/Grain.h
@@ -169,6 +171,9 @@ set(IPR_QML_FILES
     src/qml/InterfacePaletteSelector.qml
     src/qml/AppMenu.qml
     src/qml/HistoryModule.qml
+    src/qml/GeometryPanel.qml
+    src/qml/CropOverlay.qml
+    src/qml/PanelTabBar.qml
     src/qml/PanelScrollBar.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
@@ -354,6 +359,10 @@ if(BUILD_TESTING)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
+    add_executable(iprGeometryAudit tests/geometry_audit.cpp)
+    target_link_libraries(iprGeometryAudit PRIVATE iprEngine)
+    ipr_add_test(geometryTests tests/geometry_test.cpp)
+    set_tests_properties(geometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 60)
     ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
     ipr_add_test(dehazeTests tests/dehaze_test.cpp)
     ipr_add_test(grainTests tests/grain_test.cpp)
@@ -367,6 +376,8 @@ if(BUILD_TESTING)
     target_include_directories(sidecarJsonTests PRIVATE src/tools)
     ipr_add_test(editHistoryTests tests/edit_history_test.cpp)
     ipr_add_test(localValuesTests tests/local_values_test.cpp)
+    ipr_add_test(editorGeometryTests tests/editor_geometry_test.cpp)
+    set_tests_properties(editorGeometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 120)
     ipr_add_test(editorHistoryTests tests/editor_history_test.cpp)
     set_tests_properties(editorHistoryTests PROPERTIES LABELS "unit;history" TIMEOUT 120)
     ipr_add_test(folderRefreshTests tests/folder_refresh_test.cpp)
@@ -412,6 +423,12 @@ if(BUILD_TESTING)
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(historyQmlTests PROPERTIES
         LABELS "unit;history;qml" TIMEOUT 60
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(geometryQmlTests tests/geometry_qml_test.cpp)
+    target_compile_definitions(geometryQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(geometryQmlTests PROPERTIES
+        LABELS "unit;geometry;qml" TIMEOUT 60
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(imageViewportQmlTests tests/image_viewport_qml_test.cpp)
     target_compile_definitions(imageViewportQmlTests PRIVATE

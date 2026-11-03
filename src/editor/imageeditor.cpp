@@ -55,6 +55,28 @@ namespace {
 // Keys of the cached render stages, defined with the render below.
 RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s);
 
+// The preview's proxy takes the fast filter; a full-resolution render, the fine one.
+Geometry::Quality geometryQuality(double pixelScale)
+{
+    return pixelScale < 1 ? Geometry::Quality::Preview : Geometry::Quality::Export;
+}
+
+ColorPipeline::WorkingImage cropped(ColorPipeline::WorkingImage image, const Geometry::Settings &geometry)
+{
+    if (!image.isNull() && Geometry::hasCrop(geometry))
+        image.linearRgba = Geometry::crop(image.linearRgba, geometry).clone();
+    return image;
+}
+
+bool hasEmptyZones(const cv::Mat &rgba)
+{
+    cv::Mat alpha;
+    cv::extractChannel(rgba, alpha, 3);
+    double low = 1;
+    cv::minMaxIdx(alpha, &low);
+    return low < 1;
+}
+
 QString selectionKey(const QUrl &url)
 {
     if (!url.isLocalFile()) return {};
@@ -358,9 +380,12 @@ ImageEditor::ImageEditor(ImageProvider *provider,
             const QImage original = rendered.originalPreview.isNull()
                 ? m_provider->originalImage() : rendered.originalPreview;
             m_provider->setImages(rendered.preview, original);
-            if (!rendered.originalPreview.isNull())
+            if (!rendered.originalPreview.isNull()) {
                 m_originalImageSource = QStringLiteral("image://editor/original?revision=%1")
                                             .arg(m_activeRevision);
+                m_originalGeometry = rendered.originalGeometry;
+                m_originalWholeCanvas = rendered.originalWholeCanvas;
+            }
             m_imageSource = QStringLiteral("image://editor/preview?revision=%1")
                                 .arg(m_activeRevision);
             m_histogram = rendered.histogram;
@@ -1080,6 +1105,7 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
         }
         // Retouches can be copied across cameras; RAW profiles cannot.
         Settings copied = settings;
+        copied.geometry = target.settings.geometry;   // the framing belongs to each photo
         copied.automaticWhiteBalance = target.settings.automaticWhiteBalance;
         if (target.settings.automaticWhiteBalance) {
             copied.temperature = target.settings.temperature;
@@ -1247,7 +1273,11 @@ bool ImageEditor::addPointColorAt(qreal x, qreal y)
         if (!renderTones(source, m_settings, reference, previewPixelScale(), tones))
             return false;
     }
-    const auto colour = PerceptualColour::colourBeforePointColour(tones, x, y, 2, perceptualParameters(m_settings));
+    // The tones cover the whole canvas; the view may show its crop.
+    const cv::Point2d onCanvas = m_cropEditing ? cv::Point2d(x, y)
+                                               : Geometry::viewToCanvas(m_settings.geometry, {x, y});
+    const auto colour = PerceptualColour::colourBeforePointColour(tones, onCanvas.x, onCanvas.y, 2,
+                                                                  perceptualParameters(m_settings));
     if (!colour)
         return false;
     PointColor::Point point;
@@ -1650,6 +1680,7 @@ void ImageEditor::setAutomaticWhiteBalance(bool enabled)
     emit rawDevelopmentChanged();
     emit adjustmentsReset(m_settings.temperature, m_settings.tint);
     emit pointColorsChanged();
+    emit geometryChanged();
     scheduleSidecarSave();
 
     if (m_original.isNull() || !m_currentFile.isLocalFile())
@@ -1678,7 +1709,9 @@ void ImageEditor::pasteAdjustments()
     if (!m_hasCopiedAdjustments || !hasImage() || busy() || embeddedPreview()) return;
     // Transfer edits, not the target's camera development, optics or metadata.
     const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
+    const Geometry::Settings geometry = m_settings.geometry;   // the framing belongs to each photo
     m_settings = m_copiedAdjustments;
+    m_settings.geometry = geometry;
     m_settings.automaticWhiteBalance = automaticWhiteBalance;
     m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
     if (m_copiedAsShot) {   // the target's own as-shot white balance
@@ -1690,6 +1723,7 @@ void ImageEditor::pasteAdjustments()
     emit adjustmentsReset(static_cast<int>(std::lround(
         m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), 0);
     emit pointColorsChanged();
+    emit geometryChanged();
     scheduleRender();
 }
 
@@ -1748,6 +1782,16 @@ void ImageEditor::endAdjustmentGesture()
 {
     m_inAdjustmentGesture = false;
     recordHistory();
+    if (!m_original.isNull() && originalFramingStale()) {
+        ++m_requestedRevision;
+        setBusy(true);
+        m_renderDebounce.start();
+    }
+}
+
+bool ImageEditor::originalFramingStale() const
+{
+    return m_originalGeometry != m_settings.geometry || m_originalWholeCanvas != m_cropEditing;
 }
 
 void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
@@ -1770,6 +1814,7 @@ void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
     emit adjustmentsReset(static_cast<int>(std::lround(
         m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), m_settings.tint);
     emit pointColorsChanged();
+    emit geometryChanged();
     emit rawDevelopmentChanged();
     emit historyChanged();
     const QString fileName = m_currentFile.toLocalFile();
@@ -1856,6 +1901,122 @@ QVariantList ImageEditor::snapshots() const
     return snapshots;
 }
 
+QVariantMap ImageEditor::geometry() const
+{
+    const Geometry::Settings &g = m_settings.geometry;
+    const cv::Size source = m_original.isNull() ? cv::Size() : m_original.linearRgba.size();
+    const cv::Size canvas = Geometry::canvasSize(g, source);
+    return {{"quarterTurns", g.quarterTurns}, {"flipHorizontal", g.flipHorizontal}, {"flipVertical", g.flipVertical},
+            {"rotation", double(g.rotation)}, {"vertical", g.vertical}, {"horizontal", g.horizontal},
+            {"aspect", g.aspect}, {"scale", g.scale}, {"offsetX", g.offsetX}, {"offsetY", g.offsetY},
+            {"cropX", g.cropX}, {"cropY", g.cropY}, {"cropWidth", g.cropWidth}, {"cropHeight", g.cropHeight},
+            {"cropRatio", g.cropRatio}, {"constrain", g.constrain}, {"canvasWidth", canvas.width},
+            {"canvasHeight", canvas.height}, {"hasCrop", Geometry::hasCrop(g)},
+            {"identity", Geometry::isIdentity(g)},
+            {"emptyZones", !m_original.isNull() && !Geometry::cropInsideImage(g, source)}};
+}
+
+bool ImageEditor::cropEditing() const
+{
+    return m_cropEditing;
+}
+
+void ImageEditor::setCropEditing(bool editing)
+{
+    if (m_cropEditing == editing)
+        return;
+    m_cropEditing = editing;
+    emit cropEditingChanged();
+    // The framing of the view, not of the recipe: no history step, no save.
+    if (!m_original.isNull()) {
+        ++m_requestedRevision;
+        setBusy(true);
+        m_renderDebounce.start();
+    }
+}
+
+void ImageEditor::commitGeometry(Geometry::Settings next)
+{
+    if (m_original.isNull() || !Geometry::bound(next))
+        return;
+    Geometry::applyConstraint(next, m_original.linearRgba.size());
+    if (next == m_settings.geometry)
+        return;
+    m_settings.geometry = next;
+    emit geometryChanged();
+    scheduleRender();
+}
+
+void ImageEditor::setGeometryValue(const QString &name, double value)
+{
+    if (!std::isfinite(value))
+        return;
+    Geometry::Settings next = m_settings.geometry;
+    const int rounded = static_cast<int>(std::lround(value));
+    if (name == QStringLiteral("rotation")) next.rotation = static_cast<float>(value);
+    else if (name == QStringLiteral("vertical")) next.vertical = rounded;
+    else if (name == QStringLiteral("horizontal")) next.horizontal = rounded;
+    else if (name == QStringLiteral("aspect")) next.aspect = rounded;
+    else if (name == QStringLiteral("scale")) next.scale = rounded;
+    else if (name == QStringLiteral("offsetX")) next.offsetX = rounded;
+    else if (name == QStringLiteral("offsetY")) next.offsetY = rounded;
+    else return;
+    commitGeometry(next);
+}
+
+void ImageEditor::turnGeometry()
+{
+    if (m_original.isNull()) return;
+    Geometry::Settings next = m_settings.geometry;
+    Geometry::turn(next, m_original.linearRgba.size());
+    commitGeometry(next);
+}
+
+void ImageEditor::mirrorGeometry(bool horizontal)
+{
+    if (m_original.isNull()) return;
+    Geometry::Settings next = m_settings.geometry;
+    Geometry::mirror(next, horizontal, m_original.linearRgba.size());
+    commitGeometry(next);
+}
+
+void ImageEditor::setGeometryCrop(double x, double y, double width, double height)
+{
+    if (m_original.isNull()) return;
+    Geometry::Settings next = m_settings.geometry;
+    Geometry::setCrop(next, m_original.linearRgba.size(), x, y, width, height);
+    commitGeometry(next);
+}
+
+void ImageEditor::setGeometryCropRatio(double ratio)
+{
+    if (m_original.isNull()) return;
+    Geometry::Settings next = m_settings.geometry;
+    Geometry::setCropRatio(next, m_original.linearRgba.size(), ratio);
+    commitGeometry(next);
+}
+
+void ImageEditor::setGeometryConstrain(bool constrain)
+{
+    Geometry::Settings next = m_settings.geometry;
+    next.constrain = constrain;
+    commitGeometry(next);
+}
+
+void ImageEditor::resetGeometryCrop()
+{
+    Geometry::Settings next = m_settings.geometry;
+    next.cropX = next.cropY = 0;
+    next.cropWidth = next.cropHeight = 1;
+    next.cropRatio = 0;
+    commitGeometry(next);
+}
+
+void ImageEditor::resetGeometry()
+{
+    commitGeometry({});
+}
+
 void ImageEditor::resetAdjustments()
 {
     if (m_original.isNull())
@@ -1869,6 +2030,7 @@ void ImageEditor::resetAdjustments()
     emit toneCurvesReset();
     emit adjustmentsReset(m_settings.temperature, m_settings.tint);
     emit pointColorsChanged();
+    emit geometryChanged();
     emit rawDevelopmentChanged();
     scheduleRender();
 }
@@ -1947,6 +2109,9 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
     const auto ints = [&stream](const auto &values) { for (int value : values) stream << qint32(value); };
     stream << s.grayscale << s.brightness << qint32(s.contrast) << qint32(s.temperature) << qint32(s.tint)
            << qint32(s.shadows) << qint32(s.blacks) << qint32(s.highlights) << qint32(s.whites);
+    const Geometry::Settings &g = s.geometry;   // the crop comes after every stage
+    stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation << qint32(g.vertical)
+           << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale) << qint32(g.offsetX) << qint32(g.offsetY);
     if (s.denoiseBeforeProfile)   // the camera-signal luminance denoise belongs to the first stage then
         stream << qint32(s.denoiseLuminance);
     keys[0] = key;
@@ -2002,7 +2167,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                     [](int value) { return value == 0; }) &&
         std::all_of(settings.gradingLuminance.cbegin(), settings.gradingLuminance.cend(),
                     [](int value) { return value == 0; }) && !PointColor::active(settings.pointColor) &&
-        !hasToneCurves)
+        !hasToneCurves && !Geometry::transformsPixels(settings.geometry))
         return source;
 
     // Each costly stage runs only past the cached output it resumes from, then
@@ -2062,9 +2227,11 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     cv::split(adjusted, channels);
     cv::Mat alpha;
     cv::extractChannel(source.linearRgba, alpha, 3);
-    channels.push_back(alpha);
+    channels.push_back(Geometry::warpCoverage(alpha, settings.geometry, geometryQuality(pixelScale)));
     cv::Mat rgbaOutput;
     cv::merge(channels, rgbaOutput);
+    if (Geometry::transformsPixels(settings.geometry))
+        Geometry::clearTransparent(rgbaOutput);
 
     return {rgbaOutput, source.colorSpace, source.sourceProfile,
             source.referenceWhiteBalanceKelvin};
@@ -2137,6 +2304,10 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
 
     // Sources without a camera signal (rendered rasters, RAW without DCP) have
     // no profile curve to precede.
+    // The geometry's single resampling, before anything looks at neighbours; the
+    // camera-signal luminance denoise above runs on the sensor's own pixel grid.
+    adjusted = Geometry::warpRgb(adjusted, settings.geometry, geometryQuality(pixelScale));
+
     if (!sceneExposure) Exposure::apply(adjusted, settings.brightness);
 
     Contrast::apply(adjusted, settings.contrast);
@@ -2165,15 +2336,22 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
 
 ImageEditor::RenderResult ImageEditor::renderPreview(
     const ColorPipeline::WorkingImage &source, const Settings &settings,
-    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint)
+    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint, bool wholeCanvas)
 {
     RenderResult result;
     if (includeOriginal) {
         // The decoded source includes camera/profile transforms and its decode
-        // white balance, but none of the editor settings (including sidecars).
+        // white balance, but none of the editor settings (including sidecars),
+        // except the framing, so that it stays comparable with the preview.
         QString error;
+        ColorPipeline::WorkingImage framed = source;
+        framed.linearRgba = Geometry::warpRgba(source.linearRgba, settings.geometry, geometryQuality(pixelScale));
+        if (!wholeCanvas)
+            framed = cropped(std::move(framed), settings.geometry);
         result.originalPreview = ColorPipeline::toSrgb(
-            source, ColorPipeline::OutputFormat::Preview8Bit, &error);
+            framed, ColorPipeline::OutputFormat::Preview8Bit, &error);
+        result.originalGeometry = settings.geometry;
+        result.originalWholeCanvas = wholeCanvas;
         if (result.originalPreview.isNull())
             qWarning() << "Échec du rendu de l'origine :" << error;
     }
@@ -2200,7 +2378,8 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
 
     QString error;
     result.preview = ColorPipeline::toSrgb(
-        rendered, ColorPipeline::OutputFormat::Preview8Bit, &error);
+        wholeCanvas ? rendered : cropped(std::move(rendered), settings.geometry),
+        ColorPipeline::OutputFormat::Preview8Bit, &error);
     if (result.preview.isNull()) {
         qWarning() << "Échec du rendu de l'aperçu :" << error;
         return result;
@@ -2216,16 +2395,20 @@ ImageEditor::ExportResult ImageEditor::writeImage(const ColorPipeline::WorkingIm
 {
     if (!ImageExporter::supports(format))
         return {false, tr("Format d'export non pris en charge : %1").arg(format)};
-    const ColorPipeline::WorkingImage rendered = renderWorkingImage(source, settings);
+    const ColorPipeline::WorkingImage rendered = cropped(renderWorkingImage(source, settings), settings.geometry);
     if (rendered.isNull())
         return {false, tr("Échec du rendu avant export.")};
-    return ImageExporter::write(rendered, target, format, quality);
+    ExportResult result = ImageExporter::write(rendered, target, format, quality);
+    if (result.success && format != QStringLiteral("PNG") && format != QStringLiteral("TIFF") &&
+        hasEmptyZones(rendered.linearRgba))
+        result.message += tr(" Ce format n'a pas de transparence : les zones vides sont noires.");
+    return result;
 }
 
 QImage ImageEditor::renderSrgb16(const ColorPipeline::WorkingImage &source,
                                  const Settings &settings, QString *error)
 {
-    const ColorPipeline::WorkingImage rendered = renderWorkingImage(source, settings);
+    const ColorPipeline::WorkingImage rendered = cropped(renderWorkingImage(source, settings), settings.geometry);
     if (rendered.isNull()) {
         if (error) *error = tr("Échec du rendu avant export.");
         return {};
@@ -2583,6 +2766,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
             emit rawDevelopmentChanged();
             emit adjustmentsReset(m_settings.temperature, m_settings.tint);
             emit pointColorsChanged();
+            emit geometryChanged();
             if (!m_pendingLoadIsFreshOpen) scheduleRender();
         }
         setStatusMessage(tr("Échec du développement de « %1 » : %2")
@@ -2651,6 +2835,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         emit historyChanged();
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
         emit pointColorsChanged();
+        emit geometryChanged();
     }
     if (m_pendingLoadIsFreshOpen) emit hasImageChanged();
     // Freeze only after restoring the incoming image's settings (not old WB).
@@ -2768,17 +2953,20 @@ void ImageEditor::startRender()
     // A point removed or replaced since the overlay was asked shows nothing.
     const int overlay = m_pointColorOverlay < int(std::min(settings.pointColor.count, PointColor::MaxPoints))
         ? m_pointColorOverlay : -1;
-    const bool includeOriginal = m_originalImageSource.isEmpty();
+    const bool wholeCanvas = m_cropEditing;
+    // Within a gesture the original can wait for the release (endAdjustmentGesture).
+    const bool includeOriginal = m_originalImageSource.isEmpty() ||
+                                 (!m_inAdjustmentGesture && originalFramingStale());
     m_activeRevision = m_requestedRevision;
     setBusy(true);
     m_renderWatcher.setFuture(m_tasks.submit<RenderResult>(
         QStringLiteral("render"), Tasks::Priority::Interactive,
-        [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay](Tasks::Context &) {
+        [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay, wholeCanvas](Tasks::Context &) {
             ImageCacheController *controller = &resources->cache;
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
             if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay);
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, wholeCanvas);
         }).future);
 }
 

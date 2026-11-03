@@ -1,3 +1,40 @@
-% translation-source: docs/user/latex/chapters/17-recadrage-geometrie.tex; sha256: 4da6db7b88fb9552aeb74476f21d57b193c80420d0c1b78ea4b2895c0a201473
+% translation-source: docs/user/latex/chapters/17-recadrage-geometrie.tex; sha256: af1ee0225b4202c5e4715ea8cb69e7e6549b42e7c72c8e9c89df2f95c579be34
 \chapter{Cropping and geometric effects}
-% Reserved family, as in the technical manual. No content until work starts.
+The \emph{Geometry} tab, at the top of the right panel, gathers orientation, cropping
+and manual transformations. Nothing is written into the photo: the geometry is saved
+in its sidecar and can be undone like any other step. While the tab is open, the
+preview shows the whole frame, with the crop as a rectangle; going back to the
+\emph{Settings} tab shows the cropped image.
+
+\section{Orientation}
+\emph{Rotate 90° right}, \emph{Horizontal mirror} and \emph{Vertical mirror} degrade
+no pixel. The crop and the transformations follow the image.
+
+\section{Cropping}
+Move the rectangle or one of its eight handles. The image is recomputed only on
+release, and the gesture counts as one step. The \emph{Format} list imposes
+proportions, including the original ones; the \emph{Left}, \emph{Top}, \emph{Width}
+and \emph{Height} fields give a numeric entry in percent of the frame.
+
+\section{Transformations}
+\begin{itemize}
+\item \emph{Rotation}: from -45° to 45°, to straighten a horizon. \emph{Show grid}
+helps to align it.
+\item \emph{Vertical} and \emph{Horizontal}: correct converging lines. A positive
+value widens the top, or the right.
+\item \emph{Aspect}, \emph{Scale}, \emph{Horizontal offset} and \emph{Vertical
+offset}: adjust the proportions, the size and the place of the image in the frame.
+\end{itemize}
+These settings form a single transformation, applied in a single pass: combining
+them does not degrade the image further. It does not correct a lens's distortion,
+which remains the role of the correction profiles.
+
+\section{Empty zones}
+A transformation may leave part of the frame without image. IPR invents nothing to
+fill it: these zones stay transparent in PNG and TIFF, and black in JPEG and DNG,
+which the export message reports. To remove them, crop, or check \emph{Constrain to
+image}, which shrinks the rectangle around its centre until it holds only the image.
+
+\attention{Copying settings, or applying them to the selection, does not pass the
+geometry on: the framing belongs to each photo. \emph{Reset settings} does remove it,
+like the other edits.}

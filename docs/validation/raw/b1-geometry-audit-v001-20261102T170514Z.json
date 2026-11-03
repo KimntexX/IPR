@@ -1,0 +1,710 @@
+{
+    "aliasing": [
+        {
+            "beyond_output_nyquist": true,
+            "grating_period_source_px": 2.5,
+            "output_amplitude_of_source": 0.005012179554471663,
+            "passed": true,
+            "quality": "bicubic",
+            "scale": 50
+        },
+        {
+            "beyond_output_nyquist": true,
+            "grating_period_source_px": 2.5,
+            "output_amplitude_of_source": 0.007644521842359115,
+            "passed": true,
+            "quality": "lanczos",
+            "scale": 50
+        },
+        {
+            "beyond_output_nyquist": true,
+            "grating_period_source_px": 2.5,
+            "output_amplitude_of_source": 0.28868298752813687,
+            "passed": true,
+            "quality": "bicubic",
+            "scale": 75
+        },
+        {
+            "beyond_output_nyquist": true,
+            "grating_period_source_px": 2.5,
+            "output_amplitude_of_source": 0.3316750741630811,
+            "passed": true,
+            "quality": "lanczos",
+            "scale": 75
+        },
+        {
+            "beyond_output_nyquist": false,
+            "grating_period_source_px": 2.5,
+            "output_amplitude_of_source": 0.7518900928807171,
+            "passed": true,
+            "quality": "bicubic",
+            "scale": 90
+        },
+        {
+            "beyond_output_nyquist": false,
+            "grating_period_source_px": 2.5,
+            "output_amplitude_of_source": 0.8660430875989431,
+            "passed": true,
+            "quality": "lanczos",
+            "scale": 90
+        },
+        {
+            "beyond_output_nyquist": false,
+            "grating_period_source_px": 2.5,
+            "output_amplitude_of_source": 0.7894751526705109,
+            "passed": true,
+            "quality": "bicubic",
+            "scale": 125
+        },
+        {
+            "beyond_output_nyquist": false,
+            "grating_period_source_px": 2.5,
+            "output_amplitude_of_source": 0.8994764812036206,
+            "passed": true,
+            "quality": "lanczos",
+            "scale": 125
+        }
+    ],
+    "campaign_id": "b1-geometry-audit-v001-20261102T170514Z",
+    "data_version": 1,
+    "edges": [
+        {
+            "angle_degrees": 0.5,
+            "overshoot_of_step": 0.07574679968000828,
+            "passed": true,
+            "quality": "bicubic",
+            "rise_10_90_px": 1.25
+        },
+        {
+            "angle_degrees": 0.5,
+            "overshoot_of_step": 0.07356277873232905,
+            "passed": true,
+            "quality": "lanczos",
+            "rise_10_90_px": 1.25
+        },
+        {
+            "angle_degrees": 1,
+            "overshoot_of_step": 0.0758083049003585,
+            "passed": true,
+            "quality": "bicubic",
+            "rise_10_90_px": 1.25
+        },
+        {
+            "angle_degrees": 1,
+            "overshoot_of_step": 0.07356203249989682,
+            "passed": true,
+            "quality": "lanczos",
+            "rise_10_90_px": 1.25
+        },
+        {
+            "angle_degrees": 8.5,
+            "overshoot_of_step": 0.07575116649207185,
+            "passed": true,
+            "quality": "bicubic",
+            "rise_10_90_px": 1.25
+        },
+        {
+            "angle_degrees": 8.5,
+            "overshoot_of_step": 0.07357169216192222,
+            "passed": true,
+            "quality": "lanczos",
+            "rise_10_90_px": 1.25
+        },
+        {
+            "angle_degrees": 20,
+            "overshoot_of_step": 0.07574079918207498,
+            "passed": true,
+            "quality": "bicubic",
+            "rise_10_90_px": 1.25
+        },
+        {
+            "angle_degrees": 20,
+            "overshoot_of_step": 0.07360082770450206,
+            "passed": true,
+            "quality": "lanczos",
+            "rise_10_90_px": 1.25
+        },
+        {
+            "angle_degrees": 45,
+            "overshoot_of_step": 0.06835938097797653,
+            "passed": true,
+            "quality": "bicubic",
+            "rise_10_90_px": 1.375
+        },
+        {
+            "angle_degrees": 45,
+            "overshoot_of_step": 0.06183047353839264,
+            "passed": true,
+            "quality": "lanczos",
+            "rise_10_90_px": 1.375
+        }
+    ],
+    "group": "b1-geometry",
+    "landmarks": [
+        {
+            "error_export_px": 0.0017294508931602957,
+            "error_preview_px": 0.0004887770224994096,
+            "inverse_normalized": 3.510833468576701e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 23,
+            "landmarks_preview": 23,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.12805722353515406,
+            "state": "rotation=-45"
+        },
+        {
+            "error_export_px": 0.00105476578082166,
+            "error_preview_px": 0.001831265915214969,
+            "inverse_normalized": 1.1102230246251565e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.02821088002976782,
+            "state": "rotation=-8.5"
+        },
+        {
+            "error_export_px": 0.019890365622027284,
+            "error_preview_px": 0.0609265616827017,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.05868381333551931,
+            "state": "rotation=-1"
+        },
+        {
+            "error_export_px": 0.021768406256783373,
+            "error_preview_px": 0.0525264514071,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.05302541564584633,
+            "state": "rotation=0.1"
+        },
+        {
+            "error_export_px": 0.019579168702443916,
+            "error_preview_px": 0.06090435131534794,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.05877937997231108,
+            "state": "rotation=1"
+        },
+        {
+            "error_export_px": 0.0010979778833612936,
+            "error_preview_px": 0.0018705135673341598,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.028316636443705856,
+            "state": "rotation=8.5"
+        },
+        {
+            "error_export_px": 0.0019313661294404667,
+            "error_preview_px": 0.0004288429806043872,
+            "inverse_normalized": 3.1401849173675503e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 23,
+            "landmarks_preview": 23,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.12795269121135214,
+            "state": "rotation=45"
+        },
+        {
+            "error_export_px": 0.01119050981317024,
+            "error_preview_px": 0.024487161375286517,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.25,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.02920009473050277,
+            "state": "vertical=-100"
+        },
+        {
+            "error_export_px": 0.016707458025211574,
+            "error_preview_px": 0.03239895794507295,
+            "inverse_normalized": 2.482534153247273e-16,
+            "landmark_tolerance_px": 0.25,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.026862312510574245,
+            "state": "horizontal=-100"
+        },
+        {
+            "error_export_px": 0.002859573840949375,
+            "error_preview_px": 0.0009886070820217233,
+            "inverse_normalized": 1.1102230246251565e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0009149709786240556,
+            "state": "aspect=-100"
+        },
+        {
+            "error_export_px": 0.0003993117413109995,
+            "error_preview_px": 0.00032573069704810526,
+            "inverse_normalized": 0,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 10,
+            "landmarks_preview": 10,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0002399562004734155,
+            "state": "offsetX=-100"
+        },
+        {
+            "error_export_px": 0.00039931174147177695,
+            "error_preview_px": 0.00035043478437022583,
+            "inverse_normalized": 0,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 10,
+            "landmarks_preview": 10,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00028165772289441776,
+            "state": "offsetY=-100"
+        },
+        {
+            "error_export_px": 0.006867007326101451,
+            "error_preview_px": 0.03882086712239713,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.25,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.03804386999133004,
+            "state": "vertical=-50"
+        },
+        {
+            "error_export_px": 0.004588147518383422,
+            "error_preview_px": 0.022096097801814107,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.25,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.023367637439679415,
+            "state": "horizontal=-50"
+        },
+        {
+            "error_export_px": 0.006576849032522368,
+            "error_preview_px": 0.003437826074023745,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.003719752625723701,
+            "state": "aspect=-50"
+        },
+        {
+            "error_export_px": 0.0003993117417933319,
+            "error_preview_px": 0.0003993117406678896,
+            "inverse_normalized": 0,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 20,
+            "landmarks_preview": 20,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0003466810181320229,
+            "state": "offsetX=-50"
+        },
+        {
+            "error_export_px": 0.00039931174195410933,
+            "error_preview_px": 0.04694042546333612,
+            "inverse_normalized": 0,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 20,
+            "landmarks_preview": 20,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.04703664774292391,
+            "state": "offsetY=-50"
+        },
+        {
+            "error_export_px": 0.006508598110684036,
+            "error_preview_px": 0.03880821313495067,
+            "inverse_normalized": 1.2412670766236366e-16,
+            "landmark_tolerance_px": 0.25,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0381783168229474,
+            "state": "vertical=50"
+        },
+        {
+            "error_export_px": 0.004842191944723561,
+            "error_preview_px": 0.022130175191670865,
+            "inverse_normalized": 1.2412670766236366e-16,
+            "landmark_tolerance_px": 0.25,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0235032287125083,
+            "state": "horizontal=50"
+        },
+        {
+            "error_export_px": 0.006683479302430257,
+            "error_preview_px": 0.003132279950231805,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0028738488541824596,
+            "state": "aspect=50"
+        },
+        {
+            "error_export_px": 0.0003993117416325544,
+            "error_preview_px": 0.0003993117408286671,
+            "inverse_normalized": 0,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 20,
+            "landmarks_preview": 20,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00034668101791986703,
+            "state": "offsetX=50"
+        },
+        {
+            "error_export_px": 0.00039931174131099947,
+            "error_preview_px": 0.04705382171703394,
+            "inverse_normalized": 0,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 20,
+            "landmarks_preview": 20,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.04695733147025901,
+            "state": "offsetY=50"
+        },
+        {
+            "error_export_px": 0.010622264968498094,
+            "error_preview_px": 0.023792734340216937,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.25,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.029308120511739234,
+            "state": "vertical=100"
+        },
+        {
+            "error_export_px": 0.01746717638266358,
+            "error_preview_px": 0.03233170467690561,
+            "inverse_normalized": 2.220446049250313e-16,
+            "landmark_tolerance_px": 0.25,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.026532261008178782,
+            "state": "horizontal=100"
+        },
+        {
+            "error_export_px": 0.003013608086451754,
+            "error_preview_px": 0.0010453503105133312,
+            "inverse_normalized": 1.1443916996305594e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0011399841622315953,
+            "state": "aspect=100"
+        },
+        {
+            "error_export_px": 0.00039931174002477975,
+            "error_preview_px": 0.0003257306967820961,
+            "inverse_normalized": 1.1102230246251565e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 10,
+            "landmarks_preview": 10,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.000346681016392345,
+            "state": "offsetX=100"
+        },
+        {
+            "error_export_px": 0.0003993117416325544,
+            "error_preview_px": 0.0003504347838315484,
+            "inverse_normalized": 1.1102230246251565e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 10,
+            "landmarks_preview": 10,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0003238417409408901,
+            "state": "offsetY=100"
+        },
+        {
+            "error_export_px": 0.00019916354291210918,
+            "error_preview_px": 0.0001990428415365707,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00017297241169768562,
+            "state": "scale=50"
+        },
+        {
+            "error_export_px": 0.00029534949082759643,
+            "error_preview_px": 0.0002708282634091405,
+            "inverse_normalized": 1.5700924586837752e-16,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.000292099781832758,
+            "state": "scale=75"
+        },
+        {
+            "error_export_px": 0.0004602414967574077,
+            "error_preview_px": 0.0004234717990258549,
+            "inverse_normalized": 0,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00039630900433158844,
+            "state": "scale=125"
+        },
+        {
+            "error_export_px": 0.00048725558106313817,
+            "error_preview_px": 0.0005293179908056005,
+            "inverse_normalized": 7.850462293418876e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00043058723801007185,
+            "state": "scale=150"
+        },
+        {
+            "error_export_px": 0.00039931174372266154,
+            "error_preview_px": 0.0003993117406678896,
+            "inverse_normalized": 5.551115123125783e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0003466810170334182,
+            "state": "turns=0,flips=1"
+        },
+        {
+            "error_export_px": 0.0003993117429187742,
+            "error_preview_px": 0.0003993117404267234,
+            "inverse_normalized": 5.551115123125783e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00034668101901484644,
+            "state": "turns=0,flips=2"
+        },
+        {
+            "error_export_px": 0.000399311743883439,
+            "error_preview_px": 0.00039931174026594594,
+            "inverse_normalized": 7.850462293418876e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0003466810196753226,
+            "state": "turns=0,flips=3"
+        },
+        {
+            "error_export_px": 0.0003993117416325544,
+            "error_preview_px": 0.0003993117405071122,
+            "inverse_normalized": 5.551115123125783e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00034668101827871935,
+            "state": "turns=1,flips=0"
+        },
+        {
+            "error_export_px": 0.0003993117416325544,
+            "error_preview_px": 0.00039931174018555723,
+            "inverse_normalized": 0,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00034668101829812224,
+            "state": "turns=1,flips=1"
+        },
+        {
+            "error_export_px": 0.0003993117417933319,
+            "error_preview_px": 0.0003993117403061403,
+            "inverse_normalized": 7.850462293418876e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0003466810183543704,
+            "state": "turns=1,flips=2"
+        },
+        {
+            "error_export_px": 0.0003993117422756643,
+            "error_preview_px": 0.0003993117405875009,
+            "inverse_normalized": 5.551115123125783e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00034668101829812224,
+            "state": "turns=1,flips=3"
+        },
+        {
+            "error_export_px": 0.000399311743883439,
+            "error_preview_px": 0.00039931174026594594,
+            "inverse_normalized": 7.850462293418876e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0003466810196753226,
+            "state": "turns=2,flips=0"
+        },
+        {
+            "error_export_px": 0.0003993117429187742,
+            "error_preview_px": 0.0003993117404267234,
+            "inverse_normalized": 5.551115123125783e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00034668101901484644,
+            "state": "turns=2,flips=1"
+        },
+        {
+            "error_export_px": 0.00039931174372266154,
+            "error_preview_px": 0.0003993117406678896,
+            "inverse_normalized": 5.551115123125783e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0003466810170334182,
+            "state": "turns=2,flips=2"
+        },
+        {
+            "error_export_px": 0.00039931174195410933,
+            "error_preview_px": 0.0003993117405071122,
+            "inverse_normalized": 0,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0003466810185139034,
+            "state": "turns=2,flips=3"
+        },
+        {
+            "error_export_px": 0.0003993117422756643,
+            "error_preview_px": 0.0003993117405875009,
+            "inverse_normalized": 5.551115123125783e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00034668101829812224,
+            "state": "turns=3,flips=0"
+        },
+        {
+            "error_export_px": 0.0003993117417933319,
+            "error_preview_px": 0.0003993117403061403,
+            "inverse_normalized": 7.850462293418876e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0003466810183543704,
+            "state": "turns=3,flips=1"
+        },
+        {
+            "error_export_px": 0.0003993117416325544,
+            "error_preview_px": 0.00039931174018555723,
+            "inverse_normalized": 0,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00034668101829812224,
+            "state": "turns=3,flips=2"
+        },
+        {
+            "error_export_px": 0.0003993117416325544,
+            "error_preview_px": 0.0003993117405071122,
+            "inverse_normalized": 5.551115123125783e-17,
+            "landmark_tolerance_px": 0.1,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.00034668101827871935,
+            "state": "turns=3,flips=3"
+        },
+        {
+            "error_export_px": 0.002400463946185714,
+            "error_preview_px": 0.008735368172430464,
+            "inverse_normalized": 2.2887833992611187e-16,
+            "landmark_tolerance_px": 0.25,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.0331087972952632,
+            "state": "combined"
+        },
+        {
+            "error_export_px": 0.005896027332533759,
+            "error_preview_px": 0.009152973398104608,
+            "inverse_normalized": 3.1401849173675503e-16,
+            "landmark_tolerance_px": 0.25,
+            "landmarks_export": 25,
+            "landmarks_preview": 25,
+            "passed": true,
+            "preview_vs_export_preview_px": 0.038340060158312726,
+            "state": "combined,turned,mirrored"
+        }
+    ],
+    "limitations": [
+        "Synthetic charts, not photographs; the application's whole chain is compared by the parity audit",
+        "A homography is not a distortion correction: lens profiles stay in their own domain",
+        "Timings on the machine of the campaign, opencv's own thread pool"
+    ],
+    "measured_at_utc": "2026-11-02T17:05:30.795Z",
+    "method": "Synthetic charts in memory: Gaussian landmarks at known positions, a step edge and a fine grating, through Geometry::warpRgb at preview and export sizes",
+    "schema_version": 1,
+    "status": "passed",
+    "timings": [
+        {
+            "coverage_ms": 6.3695,
+            "height": 1365,
+            "opencv_threads": 20,
+            "quality": "bicubic",
+            "rgb_ms": 15.1757,
+            "width": 2048
+        },
+        {
+            "coverage_ms": 80.6382,
+            "height": 4000,
+            "opencv_threads": 20,
+            "quality": "lanczos",
+            "rgb_ms": 212.7158,
+            "width": 6000
+        }
+    ],
+    "tolerances": {
+        "alias_of_source": 0.35,
+        "inverse_normalized": 1e-09,
+        "overshoot_of_step": 0.15,
+        "perspective_landmark_px": 0.25,
+        "preview_vs_export_preview_px": 0.5,
+        "rigid_landmark_px": 0.1,
+        "rise_10_90_px": 2
+    },
+    "tool_sha256": "6a41110b8a33c636ee021509e18aea2a7323057f3cef6c14c41261cbda217c08"
+}
