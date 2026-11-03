@@ -14,9 +14,9 @@ from diagnose_train_learnability import digest, save
 from edge_protected_noise import EdgeProtectedNoisyUNet
 from local_moment_unet import LocalMomentUNet
 from memory_budget import MemoryGuard, BudgetExceeded
-from noisy_moment_unet import NoisyMomentUNet
+from noisy_moment_unet import NoisyMomentUNet, FORWARD_TOOLS
 from run_edge_protected_probe import PROBE_TOOLS
-from run_noisy_moment_pilot import evaluate, observation
+from run_noisy_moment_pilot import evaluate, observation, runtime_versions
 from run_diverse_moment_pilot import edge_image
 from run_synthetic_joint_pilot import tensor_hash
 from synthetic_bayer_data import PATTERNS, signal
@@ -62,6 +62,8 @@ def prepare(root, data_plan, accepted, kind, folders, priors, output):
     source_data = json.loads(data_plan.read_text(encoding='utf-8'))
     if source_data['config']['training_scope'] != 'cfa_front':
         raise ValueError('Frozen reconstruction contract required')
+    if source_data.get('runtime') != runtime_versions():
+        raise ValueError('Confirmation runtime differs')
     refs = []
     for folder in folders:
         proof = json.loads((folder/'result.json').read_text(encoding='utf-8'))
@@ -69,7 +71,7 @@ def prepare(root, data_plan, accepted, kind, folders, priors, output):
                 or proof['plan_sha256'] != digest(data_plan)
                 or digest(folder/'weights.pt') != proof['weights_sha256']
                 or proof['training_progress']['completed_optimizer_steps'] != 2048
-                or proof['plan']['tools']['noisy_moment_unet.py'] != digest(Path(__file__).with_name('noisy_moment_unet.py'))):
+                or any(proof['plan']['tools'].get(n) != digest(Path(__file__).with_name(n)) for n in FORWARD_TOOLS)):
             raise ValueError('Final fixed weights with current model required')
         refs.append(dict(seed=proof['seed'], folder=str(folder.resolve()),
             result_sha256=digest(folder/'result.json'), weights_sha256=proof['weights_sha256']))
@@ -152,6 +154,8 @@ def run(root, plan_path, output, reuse=None):
     plan = json.loads(plan_path.read_text(encoding='utf-8'))
     if plan['kind'] not in ('plain', 'protected'):
         raise ValueError('Declared model kind required')
+    if plan['data'].get('runtime') != runtime_versions():
+        raise ValueError('Confirmation runtime differs from frozen plan')
     if any(digest(Path(__file__).with_name(n)) != h for n, h in plan['tools'].items()):
         raise ValueError('Frozen confirmation changed')
     groups = reused_groups(json.loads(reuse.read_text(encoding='utf-8')), plan, digest(plan_path)) if reuse else []

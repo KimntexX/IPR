@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import subprocess
+import sys
 import time
 
 import torch
@@ -16,7 +17,7 @@ from diagnose_train_learnability import digest, save
 from joint_bayer_unet import sample_rgb, bilinear
 from local_moment_unet import LocalMomentUNet
 from memory_budget import MemoryGuard, BudgetExceeded
-from noisy_moment_unet import NoisyMomentUNet, load_reconstruction
+from noisy_moment_unet import NoisyMomentUNet, load_reconstruction, FORWARD_TOOLS
 from noisy_training_policy import configure_trainable
 from prepare_closed_inference import prepare_inference
 from reconstruction_loss import energy_balanced_loss
@@ -32,7 +33,7 @@ NOISE = ((0., 0.), (.0002, .000025), (.0008, .0004))
 VARIANTS = ('full', 'without_correction', 'parent')
 MEMORY_POLICY = dict(hard_bytes=2*1024**3, soft_bytes=1280*1024**2,
     system_fraction=.92, interval=.25)
-TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+('run_noisy_moment_pilot.py', 'noisy_moment_unet.py',
+TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+FORWARD_TOOLS+('run_noisy_moment_pilot.py', 'noisy_moment_unet.py',
     'memory_budget.py', 'prepare_closed_inference.py', 'reconstruction_loss.py',
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
     'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py',
@@ -44,7 +45,11 @@ def observation(truth, tags, noise_index, seed):
     return noisy_observation(truth, tags, a, b, torch.Generator().manual_seed(seed))
 
 
-def prepare(root, source, priors, parents, output, training_scope='joint'):
+def runtime_versions():
+    return dict(torch=str(torch.__version__), python=sys.version, dtype='float32', device='cpu')
+
+
+def prepare(root, source, priors, parents, output, training_scope='cfa_front'):
     if training_scope not in ('joint', 'cfa_front'):
         raise ValueError('Declared training scope required')
     confined(root, [source, output]+priors+parents)
@@ -95,7 +100,8 @@ def prepare(root, source, priors, parents, output, training_scope='joint'):
         config=dict(steps=2048, microbatch=1, accumulation=4, learning_rate=.001, scale=2., width=8,
             side=128, training_scope=training_scope),
         gates=proof['freeze']['gates'], memory_policy=MEMORY_POLICY,
-        conditioning='Zero-initialized equivariant4to8 short branch on observed centre-minus8neighbour mean, standardized by estimated residual sigma and bounded to8 feature units. Signal is not clipped.',
+        runtime=runtime_versions(),
+        conditioning='Zero-initialized equivariant4to8 branch on observed centre-minus5x5quadratic-fit residual, correct centre covariance in variance, standardized and bounded to8 feature units. No signal clipping.',
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
         noise_gate_policy='Each positive level: RGB MSE full/parent<=.98, opponent full/parent<=1, full/without_correction RGB<=1; weak/edge gradient>=.95 parent. Zero noise retains original12gates, new mixed and historical20/80.',
         training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, same realizations across models. Adam scope='+training_scope+'; no early stopping.',
@@ -301,6 +307,8 @@ def run(root, plan_path, seed, output, resume=None):
     plan = json.loads(plan_path.read_text(encoding='utf-8'))
     if plan['memory_policy'] != MEMORY_POLICY:
         raise ValueError('Declared memory policy differs from current authorized policy')
+    if plan['runtime'] != runtime_versions():
+        raise ValueError('Python or Torch runtime differs from qualification plan')
     tools = plan['tools']
     if any(digest(Path(__file__).with_name(n)) != h for n, h in tools.items()):
         raise ValueError('Frozen implementation changed')
@@ -329,6 +337,8 @@ def run(root, plan_path, seed, output, resume=None):
             torch.set_num_threads(4)
             torch.set_num_interop_threads(1)
             torch.use_deterministic_algorithms(True)
+            result['runtime'] = dict(runtime_versions(), intra_threads=torch.get_num_threads(),
+                interop_threads=torch.get_num_interop_threads(), deterministic=torch.are_deterministic_algorithms_enabled())
             torch.manual_seed(seed)
             checkpoint = torch.load(folder/'weights.pt', map_location='cpu', weights_only=True)
             proof = json.loads((folder/'result.json').read_text(encoding='utf-8'))
@@ -377,7 +387,7 @@ if __name__ == '__main__':
     parser.add_argument('--plan', type=Path)
     parser.add_argument('--seed', type=int, choices=(71, 73))
     parser.add_argument('--resume', type=Path)
-    parser.add_argument('--training-scope', choices=('joint', 'cfa_front'), default='joint')
+    parser.add_argument('--training-scope', choices=('joint', 'cfa_front'), default='cfa_front')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]

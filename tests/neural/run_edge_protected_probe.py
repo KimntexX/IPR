@@ -12,8 +12,9 @@ from compare_reconstruction_objectives import confined
 from diagnose_train_learnability import digest, save
 from edge_protected_noise import EdgeProtectedNoisyUNet, SCORE_ONSET, NOMINAL_FAMILY_ALPHA, COMPARISON_COUNT, HALO_RADIUS
 from local_moment_unet import LocalMomentUNet
+from noisy_moment_unet import FORWARD_TOOLS
 from memory_budget import MemoryGuard, BudgetExceeded
-from run_noisy_moment_pilot import TOOLS, evaluate, variant_summary
+from run_noisy_moment_pilot import TOOLS, evaluate, variant_summary, runtime_versions
 
 
 PROBE_TOOLS = tuple(dict.fromkeys(TOOLS+('run_edge_protected_probe.py', 'edge_protected_noise.py')))
@@ -32,7 +33,7 @@ def prepare(root, data_plan, folders, output):
                 or proof['training_progress']['completed_optimizer_steps'] != 2048
                 or digest(folder/'weights.pt') != proof['weights_sha256']):
             raise ValueError('Final complete frozen-trunk witness required, without score selection')
-        if proof['plan']['tools']['noisy_moment_unet.py'] != digest(Path(__file__).with_name('noisy_moment_unet.py')):
+        if any(proof['plan']['tools'].get(n) != digest(Path(__file__).with_name(n)) for n in FORWARD_TOOLS):
             raise ValueError('Trained model implementation differs; use its archived revision')
         references.append(dict(seed=proof['seed'], folder=str(folder.resolve()),
             result_sha256=digest(folder/'result.json'), weights_sha256=proof['weights_sha256']))
@@ -84,6 +85,8 @@ def run(root, plan_path, output):
     if digest(data_path) != plan['data_plan_sha256']:
         raise ValueError('Data plan changed')
     data = json.loads(data_path.read_text(encoding='utf-8'))
+    if data.get('runtime') != runtime_versions():
+        raise ValueError('Probe runtime differs from qualified runtime')
     source_path = Path(data['source'])/'result.json'
     confined(root, [source_path])
     if digest(source_path) != data['source_result_sha256']:

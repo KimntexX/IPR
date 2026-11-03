@@ -8,6 +8,11 @@ from local_moment_unet import LocalMomentUNet, LOCAL_PERMUTATION, local_descript
 from noise_conditioning import standardized_residual
 
 
+FORWARD_TOOLS = ('noisy_moment_unet.py', 'noise_conditioning.py', 'polynomial_residual.py',
+    'local_moment_unet.py', 'closed_moment_unet.py', 'closed_moment_operator.py',
+    'moment_bayer_unet.py', 'joint_bayer_unet.py', 'camera_unet.py', 'bayer_canonical.py')
+
+
 class NoisyMomentUNet(LocalMomentUNet):
     """Own experimental weights; no clipping, profile or production integration.
 
