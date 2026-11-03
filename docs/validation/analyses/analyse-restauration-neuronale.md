@@ -4417,3 +4417,60 @@ candidat. Six tests ciblés passent : trois de politique/gel/gradient et
 trois de reprise. La politique d'entraînement est explicite dans le plan
 et les checkpoints ; il n'est pas possible de reprendre un état conjoint
 comme s'il provenait de l'autre politique.
+
+### Résultats de la reconstruction gelée
+
+Les deux affinages atteignent2048 étapes en214,08/176,98s, sans reprise.
+Tous les contrôles sans bruit passent pour les deux graines, et les
+rendus sigma0 sont identiques aux parents au bit près, comme prévu par
+le gel.3220 paramètres sont entraînés,33368 restent fixes. Mais le
+verdict complet n'est positif que pour73 :71 échoue au gain RGB faible
+bruit du lot complet (0,98294>0,98) et au gradient des contours à bruit fort.
+
+| Rapport MSE complet / parent | Faible71 | Faible73 | Fort71 | Fort73 |
+| --- | ---: | ---: | ---: | ---: |
+| Mixtes | 0,96914 | 0,95773 | 0,88707 | 0,78884 |
+| Tous cas | 0,98294 | 0,97738 | 0,92810 | 0,87937 |
+| Rapport opposé, tous cas | 0,96469 | 0,98103 | 0,88210 | 0,88090 |
+
+L'ablation de correction rejoint ici exactement le parent, puisque le
+tronc est figé. L'effet ne peut donc plus être attribué à un affinage
+implicite du dématriçage. L'analyse du premier essai conjoint montrait
+déjà que la baisse de gradient venait surtout de la correction CFA :
+sur les contours mixtes forts71,0,87537 avec correction contre0,96810
+sans, et73,0,81388 contre0,94433. Le gel résout le rendu sans bruit,
+mais ne garantit pas la protection des contours bruités.
+
+Pics71/73 :307,86/308,17Mio résidents,954,75/964,58Mio engagés du job,
+85,34/62,62 % de mémoire machine, aucun seuil atteint. Les deux graines
+restent rapportées ;73 n'est pas sélectionnée comme meilleur modèle.
+Preuves :
+
+- [Campagne gelée](../raw/neural-campaign-v001-20261103T123606Z.json).
+- [Correction seule71](../raw/neural-noisy-moment-v001-20261103T123625Z.json).
+- [Correction seule73](../raw/neural-noisy-moment-v001-20261103T124017Z.json).
+
+### Épreuve suivante — protection de contraste observé, sans réentraînement
+
+Un seul essai est fixé : multiplier la correction CFA par une confiance
+dérivée des observations et de sigma, sans lire la cible. Les différences
+de sommes des trois voisins de gauche/droite et haut/bas excluent le
+centre ; elles sont normalisées par l'écart-type estimé de ces sommes.
+Le maximum H/V puis entre plans physiques fournit un score conservateur.
+La confiance vaut `exp(-0,5 × max(score-3,0)^2)`, avec halo de trois
+cellules CFA pour protéger support d'interpolation et descripteurs locaux.
+Les paramètres de cet essai sont fixés, pas balayés pour franchir un seuil.
+
+Le début de protection à3 écarts-types est une heuristique, **pas** un
+taux de faux positifs calibré : estimations de sigma, maximum et dépendances
+spatiales modifient cette interprétation. Une protection large peut aussi
+laisser du bruit et manquer des structures faibles. Les poids appris des
+deux corrections gelées sont réutilisés intégralement, sans nouvel Adam.
+L'identité sigma0, la borne3sigma et la covariance restent testées.
+
+Trois tests ciblés passent : deux du modèle/protection (marche, aplat,
+impulsion4sigma non assimilée à un contour cohérent, identité sigma0,
+préparation exacte et D4), un d'appariement (régression de contours
+distincts conservée même si l'ensemble progresse, observations identiques).
+Même624 cas consultés et critères ; nouvelle confirmation indépendante
+requise si les deux graines passent. Aucune modification de production.
