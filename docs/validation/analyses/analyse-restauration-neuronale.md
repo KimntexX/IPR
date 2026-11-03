@@ -4092,7 +4092,7 @@ Pics mesurés :227,18Mio résidents,867,11Mio engagés du job,60,78 %
 de mémoire physique machine. Aucun quota atteint. Les calculs sont clos.
 Preuve : [confirmation finale verrouillée des six modèles](../raw/neural-objective-confirmation-v001-20261102T224026Z.json).
 
-**Conclusion actuelle : base tempérée retenue pour poursuivre la
+**Conclusion de cette campagne : base tempérée retenue pour poursuivre la
 qualification, stabilité étayée sur la reconstruction synthétique sans
 bruit.** Elle conserve les12 critères historiques sur20/80 pour les deux
 initialisations, puis améliore les groupes mixtes et les contours distincts
@@ -4117,3 +4117,87 @@ peut pas être présenté tel quel comme un débruiteur. Pas de nouvel
 ajustement de poids, entraînement bruité, export photo, modification
 moteur/IHM, publication, fusion ou tag à la clôture. Aucune nouvelle
 photo nécessaire pour préparer ce contrat.
+
+## 3 novembre2026 — premier pilote bruité, protocole avant calcul
+
+L'utilisateur autorise l'adaptation du contrat puis un premier apprentissage
+sur bruit synthétique. La reconstruction tempérée reste un témoin immuable,
+pas un chemin remplacé en production. Aucune photo ou export n'est écrit.
+
+### Modèle et contrat
+
+Le nouveau modèle comporte36588 paramètres, contre33368. Une petite
+branche transposition-équivariante reçoit observations CFA, sigma estimé,
+étiquettes de couleur et16 descripteurs locaux. Elle prédit une correction
+`3 × sigma × tanh(logits)` par échantillon physique, avant la reconstruction
+locale. La borne porte sur les observations CFA, pas sur tous les RGB
+interpolés. Les canaux capteur restent distincts, sans écrêtage des négatifs
+ou des valeurs supérieures à1. Le modèle reconstruit ensuite les échantillons
+corrigés ; les deux parties sont entraînées ensemble.
+
+À sigma nul, la branche est contournée et le résultat est identique au
+modèle de reconstruction portant **les mêmes poids de tronc**. Cela ne
+garantit pas l'identité avec le parent initial après son affinage ; les
+critères historiques sans bruit sont donc remesurés. Une demande de
+projection exacte avec sigma non nul est refusée. Les poids du parent
+sont chargés strictement, seuls les nouveaux modules pouvant manquer.
+La tête de correction commence à zéro ; les deux parents71/73 sont testés.
+
+Neuf tests ciblés passent : trois de modèle (bruit nul, signal signé,
+borne, gradients, entrées invalides, D4 et préparation bitexacte), deux
+de protocole (répétabilité, sigma à partir de l'observation, refus de
+masquer une régression chromatique ou structurelle), quatre d'objectif.
+
+### Données, apprentissage et séparation
+
+Le bruit indépendant gaussien est ajouté **dans la mosaïque avant
+dématriçage**, avec variance `a × max(signal propre,0) + b`. Trois états :
+`(a,b)=(0,0)`, `(0,0002;0,000025)` et `(0,0008;0,0004)`. Les coefficients
+servent à la simulation et au sigma estimé depuis l'observation bruitée ;
+le sigma fourni au modèle n'est pas calculé depuis la vérité propre.
+Ce modèle ne reproduit ni toute la distribution photonique, ni les
+corrélations ou défauts fixes d'un vrai capteur. Il n'est pas calibré en ISO.
+
+Source d'apprentissage et calendrier identiques au banc précédent :40
+emplacements,32 contenus fixes et418 contours renouvelés,2048 étapes,
+micro-lot1 avec accumulation4, Adam0,001,CPU4. Les niveaux alternent
+par présentation ;2731 exemples sans bruit,2731 faibles et2730 plus
+bruités. Les réalisations d'apprentissage sont renouvelées avec des
+graines74000000+indice, communes aux deux modèles. Les deux affinages
+partent de leurs parents tempérés, jamais du meilleur checkpoint.
+L'objectif tempéré utilise cette fois l'erreur **bilinéaire bruitée**
+comme référence : son énergie mélange bruit et contenu, limite déclarée.
+Seul le checkpoint final est évalué, sans arrêt optimisé ni sélection.
+
+Validation figée avant les deux apprentissages :32 nouveaux contours
+d'indices256à287 et20 mixtes de graines3500000+100famille+j, quatre
+phases et trois niveaux, soit624 observations par modèle. Les vérités
+sont distinctes de l'entraînement, des contrôles source et des quatre
+cohortes précédentes. Observations et champs sigma ont leur empreinte
+propre ; graines de validation94000000+indice, disjointes de l'apprentissage.
+Les80 contrôles historiques sont rejoués à sigma0, en plus de ce lot.
+
+### Comparaisons et décisions fixées avant calcul
+
+Trois sorties pour chaque observation : modèle complet, même modèle
+entraîné avec sa correction contournée, parent tempéré figé appliqué
+à l'observation bruitée. La bilinéaire bruitée sert de référence commune.
+Le parent a moins d'étapes d'apprentissage ; l'ablation du modèle affiné
+isole une contribution mais n'est pas un témoin optimisé séparément.
+
+Exiger les12 critères sans bruit sur les nouveaux mixtes80/20 et les
+historiques80/20, ainsi que non-régression RGB/couleur et gradient des
+contours distincts face à la bilinéaire. Pour chaque niveau positif,
+sur le lot mixte puis sur le lot complet : MSE RGB au plus0,98 fois le
+parent, erreur opposée au plus1 fois le parent, MSE RGB au plus celle
+de l'ablation. Le gradient des contours et des deux types d'ondes doit
+rester au moins à95 % de celui du parent. Rapport des familles et des
+biais de canaux même en cas d'échec. Un gain global ne masque pas une
+perte de structure ; ces seuils exploratoires ne sont pas perceptuels.
+
+Contrôler aussi sources inchangées, finitude, identité des noyaux préparés
+sur624 observations et covariance D4 sur un contour bruité dans les
+quatre phases. Le moniteur et le quota restent actifs :2Gio engagés,
+arrêt coopératif à1,25Gio privés/résidents ou80 % de mémoire physique
+machine. Deux apprentissages séquentiels, cache4 images, évaluation en
+flux. Aucun chargement du corpus entier ni modification moteur/IHM.

@@ -769,3 +769,39 @@ exacts. La transition au bruit doit donc définir explicitement son
 conditionnement et le traitement des observations bruitées, avec tests
 des invariants attendus ; ouvrir seulement cette entrée ne suffit pas
 à qualifier un débruiteur. Pas d'intégration moteur/IHM à ce stade.
+
+## 17. Premier contrat bruité — 3 novembre2026
+
+Le pilote conserve la reconstruction locale tempérée et ajoute une
+correction CFA bornée par `3 × sigma × tanh(logits)` avant l'interpolation.
+Les deux parties sont apprises ensemble. Le modèle compte36588 paramètres,
+les paramètres initiaux du tronc proviennent des témoins71/73 qualifiés.
+Le sigma estimé est une entrée explicite, en mêmes unités que le signal.
+Il ne déclenche pas une borne RGB : les valeurs signées restent permises.
+
+```mermaid
+flowchart TD
+    A["Mosaïque observée, sigma estimé, étiquettes Bayer"]
+    A --> B["Canonisation spatiale des observations et du sigma"]
+    B --> C["Petite branche équivariante de correction CFA"]
+    C --> D["Correction bornée par 3 sigma, nulle à sigma0"]
+    B --> D
+    D --> E["Reconstruction locale, mêmes contraintes de symétrie"]
+    E --> F["RGB caméra signé, coordonnées restaurées"]
+```
+
+Une projection des observations bruitées à l'identique serait contradictoire
+avec le débruitage ; elle est refusée. À sigma0, les sites observés sont
+préservés et le résultat coïncide avec la reconstruction portant le même
+tronc. L'affinage peut changer ce tronc : le parent figé et les critères
+historiques restent donc des témoins distincts. La branche commence par
+une correction nulle et les poids de reconstruction doivent correspondre
+exactement au contrat attendu, sans chargement partiel silencieux.
+
+Le premier essai est simulé, avant dématriçage, avec variance dépendant du
+signal et sigma estimé depuis l'observation. Ce n'est pas un profil de
+capteur. Données de validation propres et bruitées figées avant calcul,
+deux initialisations sans sélection, témoins parent/ablation et critères
+structurels sont décrits dans le rapport unique. Les quotas du§14 restent
+applicables. Contrat testé, apprentissage à qualifier ; aucune intégration
+en production ou promesse de qualité photographique à ce stade.
