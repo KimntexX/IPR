@@ -1737,6 +1737,7 @@ void ImageEditor::setAutomaticWhiteBalance(bool enabled)
     emit adjustmentsReset(m_settings.temperature, m_settings.tint);
     emit pointColorsChanged();
     emit geometryChanged();
+    emit localMasksChanged();
     scheduleSidecarSave();
 
     if (m_original.isNull() || !m_currentFile.isLocalFile())
@@ -1874,6 +1875,7 @@ void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
         m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), m_settings.tint);
     emit pointColorsChanged();
     emit geometryChanged();
+    emit localMasksChanged();
     emit rawDevelopmentChanged();
     emit historyChanged();
     const QString fileName = m_currentFile.toLocalFile();
@@ -2995,6 +2997,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
             emit adjustmentsReset(m_settings.temperature, m_settings.tint);
             emit pointColorsChanged();
             emit geometryChanged();
+            emit localMasksChanged();
             if (!m_pendingLoadIsFreshOpen) scheduleRender();
         }
         setStatusMessage(tr("Échec du développement de « %1 » : %2")
@@ -3064,6 +3067,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
         emit pointColorsChanged();
         emit geometryChanged();
+        emit localMasksChanged();
     }
     if (m_pendingLoadIsFreshOpen) emit hasImageChanged();
     // Freeze only after restoring the incoming image's settings (not old WB).

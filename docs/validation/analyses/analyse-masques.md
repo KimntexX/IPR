@@ -5,8 +5,9 @@ Rapport évolutif du moteur des masques (lot B2,
 `docs/validation/raw/` font autorité ; ce rapport les interprète. Suivi des validations
 partielles : [issue #24](https://github.com/KimntexX/IPR/issues/24).
 
-État au 3 novembre 2026 : **moteur seul**, sur `patch_layers`, non fusionné : les commandes
-existent sur `editor`, aucun panneau ne les appelle encore. Rien n'a été vu par l'utilisateur.
+État au 3 novembre 2026 : moteur et panneau sur `patch_ui_layers`, non fusionnés. Parcours
+complet vérifié par l'agent dans la vraie fenêtre, hors écran, sur un CR3. **Validation visuelle de
+l'utilisateur attendue.**
 
 ## Le modèle
 
@@ -76,10 +77,18 @@ du cache ne couvrait rien : il modifiait un réglage situé après l'étage cons
 La parité sans masque est mesurée sur tout le corpus :
 [`masks-neutral-parity-v001-20261103T130108Z.json`](../raw/masks-neutral-parity-v001-20261103T130108Z.json), 29 RAW en 33 états, comparaison exacte des octets contre `dev` : **957 rendus, 957 identiques**, sources et dossier inchangés. Elle mesure `1ffe0f9` ; le commit suivant n'ajoute que la plage, le pinceau plus rapide et le cache des cartes, tous inactifs sans masque.
 
+## Panneau
+
+Quatre défauts réels ont été trouvés par `masksQmlTests` avant tout essai manuel : une relecture
+des curseurs qui lisait l'ancienne valeur ; une liste reconstruite à chaque valeur, qui détruisait
+le bouton en cours de clic ; l'éditeur qui ne signalait pas les masques après une annulation ; des
+poignées recréées à chaque mouvement, qui perdaient le geste au relâchement.
+
 ## Limites
 
-- **Pas de panneau** : ni dessin à l'écran, ni affichage du masque. Le rendu n'a été vérifié
-  que par les tests et les mesures, sur images synthétiques, jamais à l'œil sur une photo.
+- Le rendu n'a été regardé à l'œil que par l'agent, sur une seule photo : dégradés, pinceau et
+  affichage de la zone.
+- Le panneau ne dessine pas de poignée d'angle pour le dégradé radial : l'angle se règle au curseur.
 - La réduction du bruit de luminance locale agit après le profil, même en développement signé.
 - La plage de luminance n'a pas de variante de couleur ; pas de masque issu d'un modèle.
 - 16 masques radiaux coûtent plus de 250 ms au moment où ils changent, ce qui dépasse la cible

@@ -195,7 +195,11 @@ ApplicationWindow {
                 panelColor: uiPreferences.theme.panel
                 visible: imageEditor.hasImage
                 picking: settingsView.pointColorPicking
-                cropEditing: panelTabs.currentIndex === 1
+                cropEditing: panelTabs.currentKey === "panelTabGeometry"
+                maskShape: masksView.visible ? masksView.currentShape : null
+                maskBrushSize: masksView.brushSize
+                onMaskShapeEdited: (values) => masksView.applyShape(values)
+                onMaskStrokeDrawn: (points) => masksView.applyStroke(points)
                 geometry: imageEditor.geometry
                 showGeometryGrid: geometryView.showGrid
                 onCropEdited: (x, y, width, height) => imageEditor.setGeometryCrop(x, y, width, height)
@@ -355,7 +359,7 @@ ApplicationWindow {
             Binding {
                 target: imageEditor
                 property: "cropEditing"
-                value: panelTabs.currentIndex === 1
+                value: panelTabs.currentKey === "panelTabGeometry"
             }
             Setting {
                 id: settingsView
@@ -364,7 +368,7 @@ ApplicationWindow {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: 14
-                visible: panelTabs.currentIndex === 0
+                visible: panelTabs.currentKey === "panelTabSettings"
                 editor: imageEditor
                 preferences: uiPreferences
                 resetAction: fileActions.resetAction
@@ -372,13 +376,20 @@ ApplicationWindow {
             GeometryPanel {
                 id: geometryView
                 anchors.fill: settingsView
-                visible: panelTabs.currentIndex === 1
+                visible: panelTabs.currentKey === "panelTabGeometry"
+                editor: imageEditor
+                preferences: uiPreferences
+            }
+            MasksPanel {
+                id: masksView
+                anchors.fill: settingsView
+                visible: panelTabs.currentKey === "panelTabMasks"
                 editor: imageEditor
                 preferences: uiPreferences
             }
             AssemblePanel {
                 anchors.fill: settingsView
-                visible: panelTabs.currentIndex === 2
+                visible: panelTabs.currentKey === "panelTabAssemble"
                 editor: imageEditor
                 preferences: uiPreferences
             }

@@ -27,6 +27,11 @@ Item {
     property var geometry: ({})
     property bool showGeometryGrid: false
     signal cropEdited(real x, real y, real width, real height)
+    // The shape in hand on the Masks tab, null otherwise.
+    property var maskShape: null
+    property real maskBrushSize: 0.05
+    signal maskShapeEdited(var values)
+    signal maskStrokeDrawn(var points)
     property real previewWidth: 0
     property real previewHeight: 0
     property bool fitMode: true
@@ -352,6 +357,24 @@ Item {
                          / Math.max(1, root.geometry.canvasWidth || 1)
         showGrid: root.showGeometryGrid
         onCropEdited: (x, y, width, height) => root.cropEdited(x, y, width, height)
+    }
+
+    MaskOverlay {
+        anchors.fill: parent
+        visible: root.maskShape !== null && root.imageReady && !root.showingComparison && !root.showingOriginal
+        enabled: visible
+        imageX: root.imageLeft
+        imageY: root.imageTop
+        imageWidth: root.previewWidth * root.zoomScale
+        imageHeight: root.previewHeight * root.zoomScale
+        cropX: root.geometry.cropX || 0
+        cropY: root.geometry.cropY || 0
+        cropWidth: root.geometry.cropWidth || 1
+        cropHeight: root.geometry.cropHeight || 1
+        shape: root.maskShape
+        brushSize: root.maskBrushSize
+        onShapeEdited: (values) => root.maskShapeEdited(values)
+        onStrokeDrawn: (points) => root.maskStrokeDrawn(points)
     }
 
     Canvas {

@@ -41,7 +41,7 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-012 | Raccordé sur `patch_ui_history`, validé visuellement par l'utilisateur le 2 novembre 2026 | Historique et instantanés : voir ci-dessous |
 | IHM-CONN-013 | Raccordé et validé par l'utilisateur, intégré à `dev` | Panneau Géométrie : voir ci-dessous |
 | IHM-CONN-014 | Raccordé et validé par l'utilisateur | Panneau Assembler : voir ci-dessous |
-| IHM-CONN-015 | Moteur prêt sur `patch_layers`, panneau à faire | Panneau Masques : voir ci-dessous |
+| IHM-CONN-015 | Raccordé sur `patch_ui_layers`, à valider visuellement | Panneau Masques : voir ci-dessous |
 
 #### IHM-CONN-015 — panneau Masques (B2)
 
@@ -50,8 +50,8 @@ Le moteur expose sur `editor` : `localMasks` (masques, formes, valeurs), `addLoc
 `setLocalMaskOpacity`, `setLocalMaskValue(masque, réglage, valeur)`,
 `addLocalMaskShape(masque, type, combinaison)`, `removeLocalMaskShape`,
 `setLocalMaskShape(masque, forme, champs)`, `addLocalMaskStroke(masque, forme, points, taille, contour, flux)`.
-Coordonnées : canevas normalisé ; `Geometry::viewToCanvas` passe de l'écran recadré au canevas.
-Reste à exposer pour le panneau : l'affichage de la couverture d'un masque.
+Coordonnées : canevas normalisé ; `MaskOverlay` passe de l'écran, recadré ou non, au canevas.
+`localMaskOverlay` montre la zone d'un masque dans l'aperçu, sans l'enregistrer ni l'exporter.
 
 #### IHM-CONN-014 — panneau Assembler (B7)
 

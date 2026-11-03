@@ -1,2 +1,43 @@
 \chapter{Masques et retouche locale}
-% Famille réservée, comme dans la documentation technique. Aucun contenu tant que non commencée.
+L’onglet \emph{Masques}, en haut du panneau de droite, applique des réglages à une partie de
+l’image seulement. Un masque est une zone qui porte ses propres valeurs : elles s’ajoutent aux
+réglages globaux dans cette zone. Une exposition de +1 dans un masque agit comme une exposition
+globale de +1, mais là seulement. Rien n’est écrit dans la photo : les masques s’enregistrent dans
+son compagnon et s’annulent comme les autres étapes.
+
+Les masques n’ont ni ordre ni mode de fusion : où plusieurs se recouvrent, leurs valeurs
+s’additionnent.
+
+\section{Créer un masque}
+\begin{itemize}
+\item \emph{Pinceau} : peignez sur l’image. \emph{Taille}, \emph{Contour progressif} et
+\emph{Débit} règlent le coup de pinceau suivant ; chaque coup est une étape de l’historique.
+\item \emph{Dégradé linéaire} : l’effet est entier avant la première poignée et nul après la seconde.
+\item \emph{Dégradé radial} : déplacez le centre et les deux bords sur l’image. \emph{Contour
+progressif} règle la transition, \emph{Angle} tourne l’ellipse.
+\item \emph{Plage} : choisit des tons de l’image, entre \emph{Tons sombres} et \emph{Tons clairs},
+tels qu’ils sont avant toute retouche.
+\end{itemize}
+\emph{Afficher la zone} montre où le masque agit : en couleur dedans, en gris dehors. Cet affichage
+n’est ni enregistré ni exporté. \emph{Inverser} retourne une forme.
+
+\section{Composer une zone}
+\emph{Ajouter à la zone} combine une autre forme à la première : \emph{Ajouter}, \emph{Soustraire}
+ou \emph{Intersecter}. Une plage intersectée avec un dégradé donne, par exemple, les ombres du
+seul bas de l’image.
+
+\section{Régler un masque}
+Chaque masque propose les réglages de lumière, de couleur, d’effets et de détail, ainsi qu’une
+\emph{Opacité} qui pondère le tout. La case de la liste le désactive sans le perdre, et les deux
+boutons voisins le dupliquent ou le suppriment. Un masque suit la géométrie de l’image : il reste
+sur le même objet après une rotation ou un recadrage.
+
+Les masques appartiennent à leur photo : coller des réglages ou les appliquer à une sélection ne
+les transmet pas. \emph{Réinitialiser les réglages} les retire aussi.
+
+\section{Limites}
+\begin{itemize}
+\item Le bruit de luminance d’un masque est traité après le profil, même en développement signé.
+\item Modifier un masque est plus lent quand il y en a beaucoup : au-delà d’une quinzaine, le geste
+dépasse le quart de seconde. Bouger un autre curseur ne les redessine pas.
+\end{itemize}
