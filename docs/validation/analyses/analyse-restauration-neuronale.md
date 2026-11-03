@@ -1,10 +1,10 @@
 # Restauration neuronale — qualification du corpus
 
-**État au 3 novembre 2026, 19 h 15 :** exécution, mémoire, symétries et
-tuiles vérifiées. Le débruitage reste non qualifié à fort bruit ;
-l'élargissement n'a pas levé les régressions de contours et de couleur.
-Retour au correcteur compact et préparation d'un contexte multi-échelle.
-Aucun moteur de production modifié ni nouvelle cohorte réservée ouverte.
+**État au 3 novembre 2026, 19 h 45 :** correction multi-échelle implémentée,
+centres historiques conservés exactement, prétest mémoire/symétries/marges
+positif et 50 tests ciblés réussis. L'apprentissage comparatif reste à
+mesurer ; aucune qualité photographique validée, aucun moteur de production
+modifié ni nouvelle cohorte réservée ouverte.
 
 ## 1er novembre 2026 — scène pilote 6V1A0133
 
@@ -4907,3 +4907,45 @@ pas LaTeX et ne vérifie pas les liens externes. Les derniers ajouts du
 rapport ont été remis en UTF-8 et consolidés après détection d'une
 conversion ASCII du lanceur PowerShell. Les JSON numériques restent
 immuables ; aucun processus de calcul de cette campagne ne reste actif.
+
+### Correction multi-échelle — préparation et prétest du 3 novembre
+
+Le correcteur local est remplacé par un U-Net à deux réductions et
+connexions de saut, largeurs8/16/32. Ses40entrées sont les quatre plans
+CFA, leurs sigma, les étiquettes de couleur, les descripteurs locaux et
+le résidu quadratique normalisé. La tête est initialisée à zéro, la
+correction reste bornée à3sigma, le signal reste signé. Le reconstructeur
+qualifié est figé. Aucun double chemin ancien/nouveau n'est conservé.
+
+Les dépendances calculées pour les quatre phases de pooling donnent un
+rayon maximal45cellules. La marge conservatrice96pixels est vérifiée
+en comparant le même centre64entre vues384et256. L'apprentissage garde
+le centre32du précédent objectif (bord112dans256), ses labels et son
+bruit ; le calendrier de tirages reste calculé sur la taille source128,
+car utiliser256changerait les consommations RNG et les exemples tirés.
+Le contexte et l'architecture changent, avec plus de paramètres ; le
+résultat ne sera pas attribué au seul rayon de voisinage.
+
+Les halos prolongent analytiquement les scènes, sans réflexion ni
+redimensionnement. Les centres RGB, CFA bruités et sigma sont identiques
+au bit près ; le bruit du halo provient d'un flux indépendant. Les familles
+historiques, contours dynamiques, textures enrichies et contrôles fins
+sont couverts par les tests. Une reprise du vrai cadenceur avec256pixels,
+après interruption dans l'accumulation, retrouve exactement poids et pertes.
+
+Le prétest exécute huit mises à jour représentatives, puis des contrôles
+avec paramètres actifs.65 820paramètres au total,32 452entraînés,
+33 368figés. Pic résident381,86Mio et privé échantillonné1 044,12Mio,
+sous1,25Gio souple/2Gio engagés. Quatre comparaisons de fenêtres donnent
+2,98×10⁻⁸ au maximum ; les32contrôles D4 donnent1,19×10⁻⁷, sous2×10⁻⁶.
+Sigma nul conserve exactement le parent et les observations. Les poids
+de ce prétest sont jetés, sans sélection ni qualification de qualité.
+Preuve : [prétest multi-échelle](../raw/neural-context-preflight-v001-20261103T183523Z.json).
+
+50tests ciblés passent. Le plan schéma4 fige runtime, outils, contexte,
+bruits et preuve de prétest. Deux graines fraîches restent prévues,
+2 048étapes chacune, mêmes quotas, ancrage propre et critères. La mesure
+classique ajoute du contexte mais conserve exactement ses centres128,
+son centre scoré32et ses champs de bruit. Les contrôles fins conservent
+leurs centres192, étendus à384 ; les tuiles utilisent maintenant des halos
+96/112/128. Leurs résultats ne sont pas encore des gains mesurés.

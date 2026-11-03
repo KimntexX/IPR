@@ -43,7 +43,7 @@ class NoisyCampaignTests(unittest.TestCase):
         base = root/'build-patch_neural_restoration'
         base.mkdir()
         plan = base/'plan.json'
-        plan.write_text(json.dumps(dict(schema_version=3, checkpoint_policy=dict(interval_steps=64),
+        plan.write_text(json.dumps(dict(schema_version=4, checkpoint_policy=dict(interval_steps=64),
             memory_policy=dict(system_fraction=.92))), encoding='utf-8')
         return plan, base/'campaign'
 

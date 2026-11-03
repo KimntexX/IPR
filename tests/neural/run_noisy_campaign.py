@@ -59,7 +59,7 @@ def run(root, plan_path, output, until, max_attempts=8, poll_seconds=15):
             or not 1 <= max_attempts <= 16 or not 0 < poll_seconds <= 60):
         raise ValueError('Timezone-aware latest start,1..16 attempts, polling within60seconds required')
     plan = json.loads(plan_path.read_text(encoding='utf-8'))
-    if plan.get('schema_version') != 3 or plan.get('checkpoint_policy', {}).get('interval_steps') != 64:
+    if plan.get('schema_version') != 4 or plan.get('checkpoint_policy', {}).get('interval_steps') != 64:
         raise ValueError('Current resumable64-step plan required')
     if plan['memory_policy']['system_fraction'] != .92:
         raise ValueError('Authorized92percent memory policy required')

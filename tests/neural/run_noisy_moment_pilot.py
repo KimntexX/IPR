@@ -29,6 +29,8 @@ from run_synthetic_joint_pilot import tensor_hash, metrics, aggregate
 from synthetic_bayer_data import PATTERNS, FAMILIES, signal, noisy_observation
 from training_resume import save_checkpoint, restore_checkpoint
 from fine_texture_training import POLICY as TEXTURE_POLICY, texture
+from context_data import extend_signal, extend_edge, extend_texture, extend_case, extend_observation, crop_centre
+from multiscale_correction import composed_support
 
 
 NOISE = ((0., 0.), (.0002, .000025), (.0008, .0004))
@@ -40,7 +42,7 @@ TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+FORWARD_TOOLS+('run_noisy_moment_pilot.p
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
     'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py',
     'training_resume.py', 'noisy_training_policy.py', 'noise_conditioning.py', 'fine_texture_training.py',
-    'clean_cfa_loss.py')))
+    'clean_cfa_loss.py', 'context_data.py')))
 
 
 def observation(truth, tags, noise_index, seed):
@@ -52,10 +54,20 @@ def runtime_versions():
     return dict(torch=str(torch.__version__), python=sys.version, dtype='float32', device='cpu')
 
 
-def prepare(root, source, priors, parents, output, training_scope='cfa_front'):
+def prepare(root, source, priors, parents, output, training_scope='cfa_front', preflight=None):
     if training_scope not in ('joint', 'cfa_front'):
         raise ValueError('Declared training scope required')
     confined(root, [source, output]+priors+parents)
+    if preflight is None:
+        raise ValueError('Successful expanded-context engineering preflight required before long training')
+    confined(root, [preflight])
+    engineering = json.loads(preflight.read_text(encoding='utf-8'))
+    required_math = FORWARD_TOOLS+('context_data.py', 'clean_cfa_loss.py', 'fine_texture_training.py', 'prepare_closed_inference.py')
+    if (engineering.get('status') != 'passed_multiscale_engineering_preflight_not_quality_qualification'
+            or engineering.get('completed_steps') != 8 or engineering.get('support') != composed_support()
+            or engineering.get('runtime') != runtime_versions()
+            or any(engineering['tools'].get(n) != digest(Path(__file__).with_name(n)) for n in required_math)):
+        raise ValueError('Preflight did not qualify this context arithmetic/runtime')
     proof = json.loads((source/'result.json').read_text(encoding='utf-8'))
     if proof['status'] != 'completed_diverse_contour_reconstruction_not_photographic_qualification':
         raise ValueError('Frozen training source required')
@@ -78,6 +90,8 @@ def prepare(root, source, priors, parents, output, training_scope='cfa_front'):
             raise ValueError('Reconstruction/data implementation changed')
         references.append(dict(seed=config['seed'], folder=str(p.resolve()),
             result_sha256=digest(p/'result.json'), weights_sha256=data['weights_sha256']))
+    if engineering['parent_weights_sha256'] not in {p['weights_sha256'] for p in references}:
+        raise ValueError('Preflight reconstruction parent differs')
     guard = MemoryGuard(**MEMORY_POLICY)
     with guard:
         torch.set_num_threads(4)
@@ -107,15 +121,19 @@ def prepare(root, source, priors, parents, output, training_scope='cfa_front'):
                     target, metadata = texture(family, serial, 128)
                     texture_events.append(dict(serial=serial, family=family, phase=phase,
                         target_sha256=tensor_hash(target), **metadata))
-    plan = dict(schema_version=3, frozen_at_utc=datetime.now(timezone.utc).isoformat(),
+    plan = dict(schema_version=4, frozen_at_utc=datetime.now(timezone.utc).isoformat(),
         source=str(source.resolve()), source_result_sha256=digest(source/'result.json'), parents=references,
         prior_plan_sha256=[digest(p) for p in priors], edges=edges, mixed=mixed, observations=observed,
         noise_levels=[dict(a=a, b=b) for a, b in NOISE],
         config=dict(steps=2048, microbatch=1, accumulation=4, learning_rate=.001, scale=2., width=8,
-            noise_hidden_width=8, side=128, training_scope=training_scope),
+            noise_hidden_width=8, side=256, source_side=128, loss_border=112, training_scope=training_scope),
+        context_policy=dict(support=composed_support(), validation_side=320,
+            training_halo_seed_base=170000000, validation_halo_seed_base=190000000,
+            policy='Analytic continuation, immutable centre128 RGB/CFA/sigma, independent halo noise. Score same32pixel centre as before; no reflection/resizing.'),
+        engineering_preflight=dict(path=str(preflight.resolve()), sha256=digest(preflight), campaign_id=engineering['campaign_id']),
         gates=proof['freeze']['gates'], memory_policy=MEMORY_POLICY,
         runtime=runtime_versions(),
-        conditioning='Noise and frozen reconstruction hidden width8; zero-initialized equivariant4to8 standardized quadratic-residual branch. Same spatial support, variance convention, bound8 feature units and3sigma correction; no signal clipping.',
+        conditioning='Two-level equivariant noise U-Net width8/16/32, forty input features including quadratic standardized residual; zero head, bound3sigma, frozen reconstruction. Expanded context, same scored centre.',
         texture_augmentation=dict(policy=TEXTURE_POLICY, events=texture_events),
         clean_fixed_point=dict(weight=1., scope='Every positive-noise training exposure; clean CFA with the same observed-sigma field.',
             target='Zero CFA correction on clean signal, no RGB interpolation compensation.',
@@ -140,7 +158,7 @@ def prepare(root, source, priors, parents, output, training_scope='cfa_front'):
 def train(model, source, config, guard, checkpoint_path, context, progress, interval_steps, resume=None, texture_events=()):
     if isinstance(interval_steps, bool) or not isinstance(interval_steps, int) or not 1 <= interval_steps <= config['steps']:
         raise ValueError('Positive checkpoint interval within training horizon required')
-    schedule, _ = balanced_schedule(source['freeze']['train_slots'], 2048, 4, config['side'])
+    schedule, _ = balanced_schedule(source['freeze']['train_slots'], config['steps'], 4, config.get('source_side', config['side']))
     if tensor_hash(torch.tensor([[*e['ids'], *e['phases']] for e in schedule])) != source['freeze']['phase_schedule_sha256']:
         raise ValueError('Training schedule changed')
     stream = SampleStream(source)
@@ -174,7 +192,7 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
                 event = events.get(serial)
                 if event is None or event['family'] != family or event['phase'] != phase:
                     raise ValueError('Missing or mismatched frozen training texture')
-                truth, _ = texture(family, serial, config['side'])
+                truth, _ = texture(family, serial, 128)
                 if tensor_hash(truth) != event['target_sha256']:
                     raise ValueError('Frozen training texture changed')
                 tags = torch.tensor([PATTERNS[phase]])
@@ -182,15 +200,28 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
                 truth, _, tags = stream.sample(step, position, index, phase)
             level = serial % 3
             packed, sigma = observation(truth, tags, level, 74000000+serial)
+            if config['side'] > truth.shape[-1]:
+                event = stream.events.get((step, position))
+                if family in TEXTURE_POLICY['families']:
+                    expanded = extend_texture(family, serial, config['side'])
+                elif event is not None:
+                    expanded = extend_edge(event, config['side'])
+                else:
+                    expanded = extend_signal(family, source['freeze']['train_slots'][index]['seed'], config['side'])
+                if not torch.equal(crop_centre(expanded), truth):
+                    raise ValueError('Training context centre changed')
+                packed, sigma = extend_observation(expanded, tags, packed, sigma, *NOISE[level], 170000000+serial)
+                truth = expanded
             image = predict(model, packed/config['scale'], sigma/config['scale'], tags, False, True)
             reference = bilinear(packed/config['scale'], tags)
-            loss = energy_balanced_loss(image, truth/config['scale'], reference, config['scale'], objective='tempered')/4
+            loss = energy_balanced_loss(image, truth/config['scale'], reference, config['scale'],
+                border=config.get('loss_border', 48), objective='tempered')/4
             if level != 0:
                 clean_values, deviations, labels, _ = canonicalize(sample_rgb(truth, tags)/config['scale'],
                     sigma/config['scale'], tags)
                 anchored = model.correct_observations(clean_values, deviations, labels)
                 loss = loss+clean_cfa_loss(anchored, clean_values, reference,
-                    truth/config['scale'], config['scale'])/4
+                    truth/config['scale'], config['scale'], border=config.get('loss_border', 48))/4
                 del clean_values, deviations, labels, anchored
             if not torch.isfinite(loss):
                 raise ValueError('Nonfinite loss')
@@ -211,7 +242,7 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
             optimizer.zero_grad(set_to_none=True)
             progress['checkpoint'] = save_checkpoint(checkpoint_path, model, optimizer, context, step, losses, counts)
         if step % 512 == 0:
-            print('STEP '+str(step)+'/2048 memory='+json.dumps(guard.stats()), flush=True)
+            print('STEP '+str(step)+'/'+str(config['steps'])+' memory='+json.dumps(guard.stats()), flush=True)
     optimizer.zero_grad(set_to_none=True)
     model.eval().requires_grad_(False)
     return losses, counts
@@ -256,6 +287,9 @@ def evaluate(model, parent, plan, source, guard):
             truth = signal(family, case['seed'], 128)[None] if 'family' in case else edge_image(case)
             if tensor_hash(truth) != case['target_sha256']:
                 raise ValueError('Frozen truth changed')
+            expanded_truth = extend_case(case, plan['context_policy']['validation_side'])
+            if not torch.equal(crop_centre(expanded_truth), truth):
+                raise ValueError('Validation context changed historical truth')
             for phase, values in enumerate(PATTERNS):
                 tags = torch.tensor([values])
                 clean = sample_rgb(truth, tags)
@@ -268,13 +302,20 @@ def evaluate(model, parent, plan, source, guard):
                     source_hash = tensor_hash(packed)
                     if source_hash != frozen['noisy_sha256'] or tensor_hash(sigma) != frozen['sigma_sha256']:
                         raise ValueError('Frozen noisy observation changed')
-                    args = (packed/scale, sigma/scale, tags, False, True)
-                    image = predict(prepared, *args)*scale
-                    original = predict(model, *args)*scale
+                    halo_seed = plan['context_policy']['validation_halo_seed_base']+frozen['noise_seed']
+                    context_values, context_sigma = extend_observation(expanded_truth, tags, packed, sigma,
+                        *NOISE[level], halo_seed)
+                    args = (context_values/scale, context_sigma/scale, tags, False, True)
+                    image = crop_centre(predict(prepared, *args)*scale)
+                    original = crop_centre(predict(model, *args)*scale)
                     if not torch.equal(image, original):
                         raise ValueError('Prepared output differs')
-                    disabled = predict(model, packed/scale, torch.zeros_like(sigma), tags, False, True)*scale
-                    witness = predict(parent, packed/scale, torch.zeros_like(sigma), tags, True, True)*scale
+                    disabled = crop_centre(predict(model, context_values/scale, torch.zeros_like(context_sigma), tags, False, True)*scale)
+                    witness = crop_centre(predict(parent, context_values/scale, torch.zeros_like(context_sigma), tags, True, True)*scale)
+                    old_witness = predict(parent, packed/scale, torch.zeros_like(sigma), tags, True, True)*scale
+                    bridge_error = float((witness-old_witness)[:, :, 48:-48, 48:-48].abs().max())
+                    if bridge_error > 2e-6:
+                        raise ValueError('Expanded parent changed the scored historical core')
                     base = bilinear(packed, tags)
                     measured = {v: metrics(truth, base, out) for v, out in zip(VARIANTS, (image, disabled, witness))}
                     sites = sample_rgb(image, tags)
@@ -282,6 +323,9 @@ def evaluate(model, parent, plan, source, guard):
                         mixed='family' in case, phase_index=phase, noise_index=level, noise_seed=frozen['noise_seed'],
                         designated_phase=phase == case.get('original_phase_index'),
                         target_sha256=case['target_sha256'], noisy_sha256=source_hash, sigma_sha256=frozen['sigma_sha256'],
+                        context_side=expanded_truth.shape[-1], context_halo_seed=halo_seed,
+                        context_target_sha256=tensor_hash(expanded_truth), context_noisy_sha256=tensor_hash(context_values),
+                        context_sigma_sha256=tensor_hash(context_sigma), parent_core_bridge_maximum=bridge_error,
                         output_sha256={v: tensor_hash(out) for v, out in zip(VARIANTS, (image, disabled, witness))},
                         observed_site_mse=float((sites-packed).square().mean()),
                         restored_site_mse=float((sites-clean).square().mean()),
@@ -298,9 +342,9 @@ def evaluate(model, parent, plan, source, guard):
                     if index == len(plan['mixed']) and level == 2:
                         for op in OPERATIONS:
                             guard.check()
-                            tp, labels = transform_observation(packed, tags, op)
-                            ts, _ = transform_observation(sigma, tags, op)
-                            restored = transform(predict(prepared, tp/scale, ts/scale, labels, False, True)*scale, op, True)
+                            tp, labels = transform_observation(context_values, tags, op)
+                            ts, _ = transform_observation(context_sigma, tags, op)
+                            restored = crop_centre(transform(predict(prepared, tp/scale, ts/scale, labels, False, True)*scale, op, True))
                             score = difference(image, restored)
                             if score['max_absolute_difference'] > 2e-6:
                                 raise ValueError('Learned noisy symmetry tolerance exceeded')
@@ -347,6 +391,8 @@ def evaluate(model, parent, plan, source, guard):
 def run(root, plan_path, seed, output, resume=None):
     confined(root, [plan_path, output]+([resume] if resume is not None else []))
     plan = json.loads(plan_path.read_text(encoding='utf-8'))
+    if plan.get('schema_version') != 4 or plan.get('context_policy', {}).get('support') != composed_support():
+        raise ValueError('Qualified multi-scale context plan required')
     if plan['memory_policy'] != MEMORY_POLICY:
         raise ValueError('Declared memory policy differs from current authorized policy')
     if plan['runtime'] != runtime_versions():
@@ -437,13 +483,14 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, choices=(71, 73))
     parser.add_argument('--resume', type=Path)
     parser.add_argument('--training-scope', choices=('joint', 'cfa_front'), default='cfa_front')
+    parser.add_argument('--preflight', type=Path)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     if args.prepare:
         if args.source is None or not args.prior or not args.parents:
             parser.error('Preparation requires source, prior plans and both parents')
-        prepare(root, args.source, args.prior, args.parents, args.output, args.training_scope)
+        prepare(root, args.source, args.prior, args.parents, args.output, args.training_scope, args.preflight)
     elif args.plan is None or args.seed is None:
         parser.error('Training requires frozen plan and declared seed')
     else:

@@ -21,13 +21,14 @@ from prepare_closed_inference import prepare_inference
 from run_noisy_moment_pilot import NOISE, runtime_versions
 from run_synthetic_joint_pilot import tensor_hash
 from synthetic_bayer_data import PATTERNS
+from context_data import extend_observation, crop_centre
 
 
-def periodic_signal(frequency, amplitude, orientation, chromatic, side=192):
+def periodic_signal(frequency, amplitude, orientation, chromatic, side=192, origin=0):
     if (frequency not in (4, 8, 16, 24) or amplitude not in (.005, .02, .08)
             or orientation not in (0, 1, 2) or not isinstance(chromatic, bool)):
         raise ValueError('Declared spectral audit case required')
-    x = torch.arange(side, dtype=torch.float32)
+    x = torch.arange(origin, origin+side, dtype=torch.float32)
     yy, xx = torch.meshgrid(x, x, indexing='ij')
     coordinate = (xx, yy, (xx+yy)/math.sqrt(2))[orientation]
     phase = coordinate*(2*math.pi*frequency/128)+.37
@@ -98,7 +99,7 @@ def run(root, proof_path, output):
         noise_replicates={0: 1, 1: 2, 2: 2}, side=192, border=64, scale=2,
         tools={n: digest(Path(__file__).with_name(n)) for n in tuple(dict.fromkeys(
             FORWARD_TOOLS+('edge_protected_noise.py', 'audit_spectral_noise.py', 'prepare_closed_inference.py',
-                'neural_inference_contract.py')))},
+                'neural_inference_contract.py', 'context_data.py')))},
         limits=['Extrapolation diagnosis, not model selection, fitting or a replacement qualification protocol.',
             'Procedural periodic structure only; no physical sensor or photographic noise truth.',
             'Both seeds and all channels reported; two positive noise draws are paired across models.',
@@ -133,6 +134,9 @@ def run(root, proof_path, output):
                         for orientation in range(3):
                             for chromatic in (False, True):
                                 truth, wave, cosine = periodic_signal(frequency, amplitude, orientation, chromatic)
+                                expanded_truth, _, _ = periodic_signal(frequency, amplitude, orientation, chromatic, 384, -96)
+                                if not torch.equal(crop_centre(expanded_truth, 192), truth):
+                                    raise ValueError('Spectral centre changed under analytic extension')
                                 for phase, pattern in enumerate(PATTERNS):
                                     tags = torch.tensor([pattern])
                                     clean = sample_rgb(truth, tags)
@@ -143,8 +147,9 @@ def run(root, proof_path, output):
                                             noise = torch.randn(clean.shape, generator=torch.Generator().manual_seed(seed))
                                             observed = clean+noise*(a*clean.clamp_min(0)+b).sqrt()
                                             sigma = (a*observed.clamp_min(0)+b).sqrt()
-                                            full = predict(model, observed/2, sigma/2, tags, False, True)*2
-                                            base = predict(parent, observed/2, torch.zeros_like(sigma), tags, True, True)*2
+                                            values, deviations = extend_observation(expanded_truth, tags, observed, sigma, a, b, 220000000+seed)
+                                            full = crop_centre(predict(model, values/2, deviations/2, tags, False, True)*2, 192)
+                                            base = crop_centre(predict(parent, values/2, torch.zeros_like(deviations), tags, True, True)*2, 192)
                                             if level == 0 and not torch.equal(full, base):
                                                 raise ValueError('Noise-free parent changed')
                                             # Reconstruction copies corrected CFA sites exactly;
@@ -156,6 +161,7 @@ def run(root, proof_path, output):
                                                 frequency=frequency, amplitude=amplitude, orientation=orientation,
                                                 chromatic=chromatic, phase=phase, noise_index=level, replicate=replicate,
                                                 noise_seed=seed, target_sha256=tensor_hash(truth),
+                                                context_side=384, context_halo_seed=220000000+seed,
                                                 observation_sha256=tensor_hash(observed), sigma_sha256=tensor_hash(sigma),
                                                 sensor=dict(noisy_mse=float(before.square().mean()),
                                                     corrected_mse=float(after.square().mean()),

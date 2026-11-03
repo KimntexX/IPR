@@ -25,18 +25,18 @@ from run_noisy_moment_pilot import runtime_versions
 
 
 def display_window(reference):
-    if reference.dtype != np.float32 or reference.shape != (256, 256) or not np.isfinite(reference).all():
-        raise ValueError('Finite camera green256x256 required')
+    if reference.dtype != np.float32 or reference.ndim != 2 or reference.shape[0] != reference.shape[1] or not reference.size or not np.isfinite(reference).all():
+        raise ValueError('Finite square camera green required')
     low, high = np.quantile(reference, [.005, .995]).tolist()
     middle = (low+high)/2
     half = max((high-low)/2, .01)
-    return dict(low=middle-half, high=middle+half, gamma=2.2,
+    return dict(low=middle-half, high=middle+half, gamma=2.2, side=reference.shape[0],
         policy='Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization.')
 
 
 def gray_view(green, window):
-    if green.shape != (256, 256) or green.dtype != np.float32 or not np.isfinite(green).all():
-        raise ValueError('Finite camera green256x256 required')
+    if green.shape != (window['side'], window['side']) or green.dtype != np.float32 or not np.isfinite(green).all():
+        raise ValueError('Matching finite square camera green required')
     view = np.clip((green-window['low'])/(window['high']-window['low']), 0, 1)
     return np.round(np.power(view, 1/window['gamma'])*255).astype(np.uint8)
 
@@ -135,7 +135,7 @@ def run(root, proof_path, captures_path, output):
                         tile = camera['tiles'][roi]
                         if tile['shape'] != [384, 384, 3] or tile['origin_xy'] != stage['origin_xy']:
                             raise ValueError('Camera RGB/CFA ROI alignment differs')
-                        reference = read_camera_rgb(camera, tile)[64:-64, 64:-64]
+                        reference = read_camera_rgb(camera, tile)[96:-96, 96:-96]
                         packed = torch.from_numpy(pack_mosaic(read_stage(capture, stage)))[None]
                         tags = torch.tensor(np.asarray(stage['pattern']).reshape(1, 4), dtype=torch.int64)
                         window = display_window(reference[:, :, 1])
@@ -145,7 +145,7 @@ def run(root, proof_path, captures_path, output):
                             image = predict(model, packed/2, torch.full_like(packed, sigma/2), tags, False, True)*2
                             if sigma == 0 and not torch.equal(sample_rgb(image, tags), packed):
                                 raise ValueError('Zero-noise CFA sites changed')
-                            image = image[0].permute(1, 2, 0).numpy()[64:-64, 64:-64].copy()
+                            image = image[0].permute(1, 2, 0).numpy()[96:-96, 96:-96].copy()
                             panels.append(image[:, :, 1])
                             measurements.append(dict(supplied_sigma=sigma,
                                 rgb_mean=image.mean(axis=(0, 1), dtype=np.float64).tolist(),
@@ -172,7 +172,7 @@ def run(root, proof_path, captures_path, output):
             with (output/'index.html').open('x', encoding='utf-8') as handle:
                 handle.write('<!doctype html><meta charset="utf-8"><title>Camera neural diagnostic</title>'
                     '<style>body{background:#222;color:#eee;font:16px sans-serif;margin:24px}'
-                    'figure{margin:25px 0;width:1024px}img{width:1024px;image-rendering:pixelated}'
+                    'figure{margin:25px 0;width:768px}img{width:768px;image-rendering:pixelated}'
                     '.labels{display:grid;grid-template-columns:repeat(4,1fr);margin:8px 0}</style>'
                     '<h1>Exploratory camera green channel</h1><p>No clean truth; constant sigma scenarios,'
                     ' shared contrast stretch per ROI. No DCP or sRGB colour rendering. '

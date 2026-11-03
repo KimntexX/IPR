@@ -21,20 +21,21 @@ from prepare_closed_inference import prepare_inference
 from run_noisy_moment_pilot import NOISE
 from run_synthetic_joint_pilot import tensor_hash
 from synthetic_bayer_data import PATTERNS
+from context_data import extend_observation, crop_centre
 
 
 TOOLS = tuple(dict.fromkeys(INFERENCE_TOOLS+('confirm_fine_noise.py', 'audit_spectral_noise.py',
     'neural_inference_contract.py', 'synthetic_bayer_data.py', 'run_synthetic_joint_pilot.py',
-    'joint_bayer_unet.py', 'memory_budget.py')))
+    'joint_bayer_unet.py', 'memory_budget.py', 'context_data.py')))
 
 
-def fine_signal(case):
+def fine_signal(case, side=192, origin=0):
     if (not all(isinstance(case[n], (int, float)) and not isinstance(case[n], bool)
             and math.isfinite(case[n]) for n in ('frequency', 'amplitude', 'angle', 'phase'))
             or not 0 < case['frequency'] < 32 or not 0 < case['amplitude'] <= .12
             or not 0 <= case['angle'] < math.pi or not isinstance(case['chromatic'], bool)):
         raise ValueError('Finite sub-CFA-Nyquist periodic signal parameters required')
-    x = torch.arange(192, dtype=torch.float32)
+    x = torch.arange(origin, origin+side, dtype=torch.float32)
     y, x = torch.meshgrid(x, x, indexing='ij')
     angle = case['angle']
     phase = (x*math.cos(angle)+y*math.sin(angle))*(2*math.pi*case['frequency']/128)+case['phase']
@@ -198,6 +199,9 @@ def run(root, plan_path, output, reuse=None):
                     case = plan['cases'][field['case_index']]
                     if cached_case_index != field['case_index']:
                         truth, wave, cosine = fine_signal(case)
+                        expanded_truth, _, _ = fine_signal(case, 384, -96)
+                        if not torch.equal(crop_centre(expanded_truth, 192), truth):
+                            raise ValueError('Fine signal centre changed under extension')
                         if tensor_hash(truth) != case['target_sha256']:
                             raise ValueError('Frozen fine target changed')
                         cached_case_index = field['case_index']
@@ -206,13 +210,16 @@ def run(root, plan_path, output, reuse=None):
                     if (tensor_hash(observed) != field['observation_sha256']
                             or tensor_hash(sigma) != field['sigma_sha256']):
                         raise ValueError('Frozen fine observation changed')
-                    full = predict(model, observed/2, sigma/2, tags, False, True)*2
-                    base = predict(parent, observed/2, torch.zeros_like(sigma), tags, True, True)*2
+                    values, deviations = extend_observation(expanded_truth, tags, observed, sigma,
+                        *NOISE[field['noise_index']], 210000000+field['noise_seed'])
+                    full = crop_centre(predict(model, values/2, deviations/2, tags, False, True)*2, 192)
+                    base = crop_centre(predict(parent, values/2, torch.zeros_like(deviations), tags, True, True)*2, 192)
                     if field['noise_index'] == 0 and not torch.equal(full, base):
                         raise ValueError('Noise-free parent changed')
                     before = (observed-clean)[:, :, 32:-32, 32:-32]
                     after = (sample_rgb(full, tags)-clean)[:, :, 32:-32, 32:-32]
                     rows.append(dict(field, seed=ref['seed'], target_sha256=case['target_sha256'],
+                        context_side=384, context_halo_seed=210000000+field['noise_seed'],
                         full=response(full, truth, wave, cosine), parent=response(base, truth, wave, cosine),
                         sensor=dict(noisy_mse=float(before.square().mean()), corrected_mse=float(after.square().mean()))))
                     done.add(row_key)

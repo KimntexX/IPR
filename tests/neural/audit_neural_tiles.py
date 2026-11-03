@@ -36,7 +36,7 @@ def compare_core(whole, tile):
         raise ValueError('Finite square N1 RGB views required')
     centered_origin(whole.shape[-1], tile.shape[-1])
     a, b = whole.shape[-1]//2, tile.shape[-1]//2
-    reference, candidate = whole[:, :, a-16:a+16, a-16:a+16], tile[:, :, b-16:b+16, b-16:b+16]
+    reference, candidate = whole[:, :, a-32:a+32, a-32:a+32], tile[:, :, b-32:b+32, b-32:b+32]
     delta = candidate-reference
     return dict(components=delta.numel(), max_absolute_difference=float(delta.abs().max()),
         mean_squared_difference=float(delta.square().mean()), bit_exact=bool(torch.equal(reference, candidate)))
@@ -83,14 +83,14 @@ def run(root, data_path, folders, capture_path, kind, output):
     campaign = 'neural-tiling-audit-v001-'+now.strftime('%Y%m%dT%H%M%SZ')
     output.mkdir(parents=True, exist_ok=False)
     freeze = dict(data_plan_sha256=digest(data_path), captures_sha256=digest(capture_path), models=references,
-        kind=kind, sources=sources, tolerance=2e-6, full_side=384, core_side=32,
-        tile_sides=[128, 160, 192], declared_required_halos=[64, 80], sigma_scenarios=[0., .01, .03],
+        kind=kind, sources=sources, tolerance=2e-6, full_side=384, core_side=64,
+        tile_sides=[256, 288, 320], declared_required_halos=[96, 112, 128], sigma_scenarios=[0., .01, .03],
         runtime=runtime_versions(), tools={n: digest(Path(__file__).with_name(n)) for n in
             FORWARD_TOOLS+('audit_neural_tiles.py', 'edge_protected_noise.py', 'mosaic_data.py')},
         limits=['Engineering crop/whole-view comparison, no clean photographic target or denoising quality claim.',
             'Constant supplied sigma is a stress scenario, not a noise estimate for these cameras/ISO.',
             'Three cached R6III sources, nine ROIs each; no new RAW decode or source modification.',
-            'Halo48 is diagnostic; halo64 and80 must agree with the full384 view for every case.'])
+            'Halos96,112,128 must agree with the full384 view for every case.'])
     save(output/'freeze.json', freeze)
     result = dict(schema_version=1, data_version=1, campaign_id=campaign, measured_at_utc=now.isoformat(),
         freeze=freeze, freeze_sha256=digest(output/'freeze.json'), status='incomplete', records=[])
@@ -116,7 +116,7 @@ def run(root, data_path, folders, capture_path, kind, output):
                             deviations = sigma[:, :, origin:origin+side//2, origin:origin+side//2]
                             tile = predict(model, part/2, deviations/2, labels, False, True)*2
                             result['records'].append(dict(seed=ref['seed'], source=identity, sigma=level,
-                                side=side, halo=(side-32)//2, **compare_core(full, tile)))
+                                side=side, halo=(side-64)//2, **compare_core(full, tile)))
                     if not torch.equal(before, packed):
                         raise ValueError('Source mosaic changed')
                 for c in sources:
@@ -136,7 +136,7 @@ def run(root, data_path, folders, capture_path, kind, output):
             result['by_halo'] = {str(halo): dict(cases=sum(r['halo'] == halo for r in result['records']),
                 maximum=max(r['max_absolute_difference'] for r in result['records'] if r['halo'] == halo),
                 passed=all(r['max_absolute_difference'] <= freeze['tolerance'] for r in result['records'] if r['halo'] == halo))
-                for halo in (48, 64, 80)}
+                for halo in (96, 112, 128)}
             result['engineering_passed'] = all(result['by_halo'][str(h)]['passed'] for h in freeze['declared_required_halos'])
             guard.check()
             if any(digest(Path(__file__).with_name(n)) != h for n, h in freeze['tools'].items()):

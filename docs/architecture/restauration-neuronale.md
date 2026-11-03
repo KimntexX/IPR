@@ -862,9 +862,10 @@ validation sur images réelles restent à faire, sans intégration moteur/IHM.
 
 Le pilote courant conserve le reconstructeur U-Net local appris, avec
 ses 33 368 paramètres figés, et apprend seulement une correction des
-quatre plans CFA physiques : 8 canaux internes, 3 516 paramètres entraînés,
-soit 36 884 au total. L'essai à 32 canaux a été écarté après échec des
-régressions connues ; les preuves sont conservées, son chemin est retiré.
+quatre plans CFA physiques. Le prototype courant utilise un correcteur
+U-Net à deux réductions, de largeurs 8/16/32, avec connexions de saut :
+32 452 paramètres entraînés, 65 820 au total. Il remplace le correcteur
+local et l'élargissement écarté ; leurs preuves restent historiques.
 Ce choix
 maintient exactement le parent lorsque sigma vaut zéro. Il ne constitue
 pas un grand réseau photographique entièrement entraîné de bout en bout.
@@ -879,9 +880,10 @@ une zone aveugle diagonale des deux premières réponses ; la borne
 d'union nominale porte sur 588 comparaisons, alpha 0,01.
 Ce facteur est une heuristique de protection, pas une probabilité calibrée.
 
-Le petit correcteur a passé le développement mais échoué sur des
-confirmations à fort bruit, malgré une erreur moyenne réduite. Il reste
-expérimental. Les cas connus doivent passer avant d'ouvrir de nouveaux
+Le correcteur local a échoué sur des confirmations à fort bruit malgré
+une erreur moyenne réduite. Le nouveau contexte n'a passé qu'un prétest
+d'exécution, pas une qualification de qualité. Les cas connus doivent
+passer avant d'ouvrir de nouveaux
 contrôles. Une confirmation distincte reste nécessaire ;
 aucune valeur de sigma simulée n'est assimilée à une calibration ISO réelle.
 Les empreintes des fonctions de calcul, des poids et des entrées sont liées
@@ -913,9 +915,9 @@ simulations gaussiennes. Le protocole et les preuves sont dans le
 
 ## 20. Prochaine étape — contexte appris à plusieurs échelles
 
-La correction actuelle est un CNN local en amont du U-Net de reconstruction
-figé. Ses descripteurs et convolutions voient au plus 7×7 cellules par
-plan CFA, soit environ 14×14 pixels capteur. La confiance analytique peut
+Le correcteur précédent était un CNN local en amont du U-Net de reconstruction
+figé. Il voyait au plus 7×7 cellules par plan CFA, soit environ 14×14 pixels
+capteur. La confiance analytique peut
 protéger une structure détectée ; elle ne fournit pas au correcteur un
 contexte appris plus large. L'élargissement des canaux garde ce même support.
 Son échec ne prouve pas que le contexte soit l'unique cause, mais justifie
@@ -934,7 +936,7 @@ flowchart LR
     G --> H[Profil puis espace de travail]
 ```
 
-Le prochain prototype remplacera la seule décision locale de correction
+Le prototype courant remplace la seule décision locale de correction
 par un petit encodeur/décodeur à deux réductions, avec connexions de saut.
 Préserver les positions CFA, la covariance D4, le signal signé, le parent
 exact à sigma nul et les interfaces courtes. Ne pas modifier le développement
@@ -969,3 +971,26 @@ L'inférence GPU pourra être étudiée si le prétest CPU justifie ce besoin,
 avec sa propre qualification numérique. Le temps, la mémoire et le transfert
 des détails restent trois résultats séparés. Une réussite de l'un ne vaut
 pas validation des autres.
+
+### Préparation réalisée — 3 novembre 2026
+
+`multiscale_correction.py` calcule les dépendances pour les quatre phases
+de pooling. Le rayon composé maximal atteint 45 cellules CFA ; une marge
+conservatrice de 96 pixels couvre aussi le sous-pixel RGB. Le prétest
+compare un centre de 64 pixels entre vues 384 et 256. Pour isoler la
+variation de contexte à l'apprentissage, le centre de perte reste celui
+de 32 pixels du protocole précédent : bord 112 dans une fenêtre 256.
+La qualification classique conserve ses anciens centres et ses critères.
+
+`context_data.py` prolonge analytiquement constantes, rampes, contours et
+textures. Les centres RGB, CFA bruités et sigma sont conservés au bit près ;
+seul le bruit du halo utilise un autre générateur. Le calendrier d'indices
+et de phases continue d'utiliser la taille source128 : le changer à256
+modifierait sa consommation RNG et donc les exemples tirés.
+
+Le plan schéma4 impose ce contexte et exige une preuve de prétest réussie
+avant l'entraînement long. Les anciennes versions du correcteur ne sont
+pas conservées dans le code courant. Prétest : huit mises à jour sans
+conservation des poids, quatre contrôles sigma nul exacts, 32 symétries,
+quatre comparaisons de fenêtres et pont vers le centre du parent.
+Il ne valide ni le débruitage ni les photographies.

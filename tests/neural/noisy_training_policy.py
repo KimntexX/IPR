@@ -7,7 +7,7 @@ def configure_trainable(model, scope):
         raise ValueError('Declared noisy-model training scope required')
     trainable, frozen = 0, 0
     for name, parameter in model.named_parameters():
-        enabled = scope == 'joint' or name.startswith(('noise_features.', 'noise_head.', 'noise_residual.'))
+        enabled = scope == 'joint' or name.startswith(('noise_features.', 'noise_head.'))
         parameter.requires_grad_(enabled)
         if enabled:
             trainable += parameter.numel()

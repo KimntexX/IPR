@@ -6,20 +6,21 @@ worktree `.worktrees/patch_neural_restoration`. Le
 résultats scientifiques ; ce document décrit l'exploitation du banc.
 Les JSON horodatés restent la mémoire canonique.
 
-## Départ uniquement au signal de l'utilisateur
+## Lancement de la campagne courante
 
-L'utilisateur sera absent de **13h30 à17h30, heure de Paris**, et donnera
-le signal de reprise. La préparation, les tests courts et le gel du plan
-ne lancent pas la campagne. Aucun horaire ne vaut autorisation implicite.
+Le lancement courant est autorisé par la demande de poursuivre l'étape
+multi-échelle. Un horaire seul ne vaut pas autorisation. Le plan schéma4
+exige un prétest réussi du calcul courant avant l'apprentissage long.
+Les anciens plans du correcteur local sont des preuves historiques.
 
 Après ce signal, depuis le worktree, commande préparée :
 
 ```powershell
-& .venv-neural/Scripts/python.exe tests/neural/run_noisy_campaign.py --plan build-patch_neural_restoration/noisy-moment-plan-v003/plan.json --output build-patch_neural_restoration/noisy-afternoon-v001 --until "2026-11-03T17:30:00+01:00"
+& .venv-neural/Scripts/python.exe tests/neural/run_noisy_campaign.py --plan build-patch_neural_restoration/noisy-context-plan-v001/plan.json --output build-patch_neural_restoration/noisy-context-campaign-v001 --until "2026-11-03T22:00:00+01:00"
 ```
 
 Le dossier de sortie doit être nouveau. `--until` interdit **un nouveau
-départ d'essai** après17h30 ; un essai déjà actif termine normalement,
+départ d'essai** après l'heure indiquée ; un essai déjà actif termine normalement,
 avec une limite technique de30minutes par processus. Il ne s'agit pas
 d'une extinction ou mise en veille du PC. Si le départ est décalé à une
 autre journée, modifier explicitement la date et le fuseau de cet argument.
@@ -73,12 +74,22 @@ Une reprise manuelle reste possible, avec le **même plan** et un nouveau
 dossier de sortie :
 
 ```powershell
-& .venv-neural/Scripts/python.exe tests/neural/run_noisy_moment_pilot.py --plan build-patch_neural_restoration/noisy-moment-plan-v003/plan.json --seed 71 --resume build-patch_neural_restoration/noisy-afternoon-v001/seed71-attempt01/training-latest.pt --output build-patch_neural_restoration/noisy-manual-resume-v001
+& .venv-neural/Scripts/python.exe tests/neural/run_noisy_moment_pilot.py --plan build-patch_neural_restoration/noisy-context-plan-v001/plan.json --seed 71 --resume build-patch_neural_restoration/noisy-context-campaign-v001/seed71-attempt01/training-latest.pt --output build-patch_neural_restoration/noisy-context-manual-resume-v001
 ```
 
 Ce chemin est un exemple : lire le checkpoint réel dans
 `training_progress.checkpoint` du JSON de la tentative. La reprise n'est
 pas une option de sélection photographique ou un ancien moteur à conserver.
+
+Le correcteur utilise désormais un contexte U-Net à deux réductions.
+Les fenêtres d'apprentissage sont256pixels, mais la perte garde le même
+centre32qu'avant (bord112). Les tirages d'indices restent calculés pour
+la taille source128 ; les anciens centres RGB/CFA/sigma sont copiés
+exactement dans un halo analytique à bruit indépendant. La qualification
+classique mesure ces centres128après calcul sur320 ; les contrôles fins
+gardent leurs centres192après calcul sur384. La marge minimale vérifiée
+est96pixels. Ne pas utiliser les anciennes petites fenêtres comme si
+elles apportaient tout ce contexte.
 
 ## Preuves et limites
 
