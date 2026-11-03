@@ -140,7 +140,7 @@ def prepare(root, source, priors, parents, output, training_scope='cfa_front', p
             normalization='Same noisy RGB reference energy and tempered floor as the data term.'),
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
         noise_gate_policy='Each positive level: RGB MSE full/parent<=.98, opponent full/parent<=1, full/without_correction RGB<=1; weak/edge gradient>=.95 parent. Zero noise retains original12gates, new mixed and historical20/80.',
-        training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; replace wave slots by frozen broadband two-wave textures, other slots unchanged. Noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, paired realizations across models. Adam scope='+training_scope+'; no early stopping.',
+        training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; replace wave slots by frozen broadband two-wave textures, other slots unchanged. Noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, paired realizations across models. Accumulated global gradient L2 norm clipped to1 before Adam; no early stopping. Adam scope='+training_scope,
         checkpoint_policy=dict(interval_steps=64, boundary='After completed Adam step only; restart partial microbatch from last committed checkpoint.',
             selection='One atomic latest checkpoint, no validation scores or best-checkpoint selection.',
             state='CPU model, Adam, completed step, losses, exposure counts, torch CPU RNG; data/noise draws derive deterministically from step.'),
@@ -235,6 +235,8 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
             del image, loss, truth, packed, sigma, tags, reference
         if not all(p.grad is None or torch.isfinite(p.grad).all() for p in model.parameters()):
             raise ValueError('Nonfinite gradient')
+        norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1., error_if_nonfinite=True)
+        progress['last_preclip_gradient_norm'] = float(norm)
         optimizer.step()
         losses.append(total)
         progress['completed_optimizer_steps'] = step

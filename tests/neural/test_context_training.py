@@ -1,6 +1,7 @@
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 
 import torch
 
@@ -56,8 +57,18 @@ class ContextTrainingTests(unittest.TestCase):
             folder = Path(directory)
             continuous = model()
             frozen = {k: v.detach().clone() for k, v in continuous.named_parameters() if not k.startswith('noise_')}
-            expected = train(continuous, source, config, Guard(), folder/'complete.pt', context, {}, 2,
-                texture_events=textures)
+            step = torch.optim.Adam.step
+            checked_norms = []
+            def bounded_step(optimizer, *args, **kwargs):
+                gradients = [p.grad for group in optimizer.param_groups for p in group['params'] if p.grad is not None]
+                norm = float(torch.stack([g.square().sum() for g in gradients]).sum().sqrt())
+                self.assertLessEqual(norm, 1.00001)
+                checked_norms.append(norm)
+                return step(optimizer, *args, **kwargs)
+            with mock.patch.object(torch.optim.Adam, 'step', bounded_step):
+                expected = train(continuous, source, config, Guard(), folder/'complete.pt', context, {}, 2,
+                    texture_events=textures)
+            self.assertEqual(len(checked_norms), 4)
             interrupted, progress = model(), {}
             with self.assertRaises(BudgetExceeded):
                 train(interrupted, source, config, Guard(13), folder/'partial.pt', context, progress, 2,

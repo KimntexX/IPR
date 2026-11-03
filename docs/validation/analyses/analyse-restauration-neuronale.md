@@ -4956,3 +4956,47 @@ Un contrôleur léger attend les deux entraînements puis lance la protection
 et les trois rejeux connus. Aucun nouveau contrôle réservé ne sera ouvert
 par cette chaîne. Les verdicts finaux ne sont pas encore disponibles ;
 les JSON de campagne et de chaque étape seront conservés à leur clôture.
+
+### Diagnostic de stabilité de l'apprentissage — 3 novembre, 20 h 39
+
+Les deux entraînements multi-échelles sont terminés à 2 048 étapes.
+La graine 73 passe les contrôles de développement protégés ; la graine 71
+reste pratiquement à l'identité et échoue au gain RGB minimal. La chaîne
+s'est donc arrêtée avant les rejeux suivants. Aucun nouveau jeu réservé
+n'a été consulté. Les résultats des deux graines, y compris l'échec,
+sont conservés dans les JSON canoniques :
+[campagne](../raw/neural-campaign-v001-20261103T184526Z.json),
+[graine 71](../raw/neural-noisy-moment-v001-20261103T184543Z.json),
+[graine 73](../raw/neural-noisy-moment-v001-20261103T185530Z.json) et
+[protection](../raw/neural-edge-protection-v001-20261103T190505Z.json).
+
+Le [diagnostic en lecture seule](../raw/neural-learning-diagnostic-v001-20261103T193904Z.json)
+compare les états initiaux et finaux, sans mise à jour des poids : premier
+exemple déjà consulté de chacune des cinq familles mixtes, phase zéro,
+deux bruits positifs. Les centres et les bruits historiques sont vérifiés
+par empreinte ; les poids restent identiques après la mesure. Les sondes
+de gradient utilisent les deux termes de l'objectif courant, RGB tempéré
+et point fixe CFA propre, sur le même centre de 32 pixels.
+
+Sur les dix sondes de la graine 71 finale, tous les gradients du
+correcteur de contexte sont exactement nuls en float32. Les activations
+précédant la dernière SiLU atteignent environ −211 à −228 sur les vues
+mesurées ; le dernier étage est fortement déséquilibré et ne transmet
+plus de gradient utile depuis le centre scoré. Sur l'aplat, la correction
+RMS vaut seulement 0,0082 à 0,0084 fois le sigma. La graine 73 garde des
+gradients actifs ; sa correction vaut environ 0,69 à 0,70 sigma, avec une
+erreur CFA ramenée à 0,37–0,38 du bruit initial sur ces deux sondes.
+Ce constat localise un blocage final de l'apprentissage ; il ne date pas
+son apparition et ne prouve pas encore quel événement l'a provoqué.
+Les gradients internes nuls à l'initialisation sont, eux, attendus à
+cause de la tête à zéro : son propre gradient est alors non nul.
+
+La prochaine expérience ne change que la mise à jour des poids : norme
+L2 globale des gradients accumulés limitée à 1 avant Adam. Ce seuil est
+un choix expérimental, pas un optimum mesuré. Les deux graines repartent
+des parents d'origine, avec mêmes exemples, pertes, budget de 2 048 étapes,
+contexte et critères. L'architecture et le calcul d'inférence ne changent
+pas. Une réussite devra concerner les deux graines ; conserver seulement
+la graine 73 masquerait l'instabilité. Les tests vérifient notamment la
+borne juste avant les vraies étapes Adam, la reprise bit à bit, le parent
+figé et le retrait des sondes après diagnostic. Aucun changement en production.
