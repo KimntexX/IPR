@@ -46,6 +46,7 @@ CameraDng::Content sample()
     content.renderOptions.cameraBaselineExposureEv = 0.25;
     content.renderOptions.profileExposureCompensationEv = -0.1;
     content.renderOptions.preserveToneCurveHue = true;
+    content.calibratedWhite = 13995;
     content.colorMatrix = {0.9, -0.3, -0.1, -0.4, 1.2, 0.2, -0.1, 0.2, 0.6};
     content.provenance = QStringLiteral("IPR stack of 9 frames, référence é");
     return content;
@@ -83,7 +84,7 @@ void roundTrip(const QDir &folder)
     check(read.cameraMake == written.cameraMake && read.cameraModel == written.cameraModel, "the same camera");
     check(read.cameraNeutral == written.cameraNeutral && read.whiteBalanceKelvin == written.whiteBalanceKelvin, "the same balance");
     check(read.renderOptions.cameraBaselineExposureEv == 0.25 && read.renderOptions.profileExposureCompensationEv == -0.1 &&
-              read.renderOptions.preserveToneCurveHue, "the same calibration");
+              read.renderOptions.preserveToneCurveHue && read.calibratedWhite == 13995, "the same calibration");
     check(read.provenance == written.provenance, "the same provenance");
     check(read.lensModel == written.lensModel && read.iso == 1600 && read.exposureSeconds == 0.005 &&
               read.focalLengthMm == 200.0 && read.captureDate == written.captureDate, "the same capture");
@@ -184,7 +185,8 @@ void decoding(const QDir &folder)
         std::cerr << error.toStdString() << '\n';
     check(!opened.isNull(), "IPR opens its own DNG");
     check(metadata.decoderId == QStringLiteral("ipr-camera-dng"), "by its own reader");
-    check(metadata.rawNormalizationApplied && metadata.normalizationBaselineExposureEv == 0.25, "with its calibration");
+    check(metadata.rawNormalizationApplied && metadata.normalizationBaselineExposureEv == 0.25 &&
+              metadata.normalizationWhiteLevel == 13995, "with its calibration");
     check(metadata.lensModel == written.lensModel && metadata.iso == 1600 && metadata.captureDate == written.captureDate,
           "and its capture in the panel");
     if (!opened.isNull()) {

@@ -258,6 +258,7 @@ StackSession::Export StackSession::writeResult(const Result &result, const QStri
         content.cameraNeutral = result.context->cameraNeutral;
         content.whiteBalanceKelvin = result.context->sourceKelvin;
         content.renderOptions = result.context->options;
+        content.calibratedWhite = result.metadata.normalizationWhiteLevel;
         content.colorMatrix = camera.colorMatrix;
         content.illuminant = camera.illuminant;
         content.provenance = QStringLiteral("IPR stack of %1 frames, reference %2")

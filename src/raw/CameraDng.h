@@ -33,6 +33,7 @@ struct Content
     cv::Vec3d cameraNeutral{1.0, 1.0, 1.0}; // inverse of the applied gains, G = 1
     double whiteBalanceKelvin = 5500.0;
     CameraProfileEngine::DcpRenderOptions renderOptions;
+    unsigned calibratedWhite = 0;           // of the source's calibration, for the panel; 0 without one
     std::array<double, 9> colorMatrix{};    // XYZ to camera, at the illuminant below
     int illuminant = 21;                    // EXIF light source; 21 is D65
     QString provenance;                     // what made the file, in words

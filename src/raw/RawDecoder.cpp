@@ -453,6 +453,7 @@ ColorPipeline::WorkingImage decodeCameraDng(const QString &fileName, const Optio
         metadata->captureDate = content.captureDate;
         metadata->dcpProfile = QFileInfo(profiles.dcpPath).completeBaseName();
         metadata->rawNormalizationApplied = render.cameraBaselineExposureEv != 0.0 || render.profileExposureCompensationEv != 0.0;
+        metadata->normalizationWhiteLevel = content.calibratedWhite;
         metadata->normalizationBaselineExposureEv = render.cameraBaselineExposureEv;
         metadata->profileExposureCompensationEv = render.profileExposureCompensationEv;
         metadata->normalizationReason = content.provenance;

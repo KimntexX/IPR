@@ -2,9 +2,9 @@
 
 État : **plan de préparation**, approuvé comme base par l'utilisateur le
 29 octobre 2026. Chantier distinct du prototype de débruitage d'une image.
-Le moteur de M1 et le tampon disque existent dans `src/stack` sur `patch_stacking`
-([analyse](../validation/analyses/analyse-empilement.md)) ; panorama, HDR, onglet et
-fichier résultat ne sont pas implémentés.
+M1, le tampon disque, l'onglet Assembler et le fichier résultat existent sur
+`patch_ui_stacking` ([analyse](../validation/analyses/analyse-empilement.md)) ; l'ancre de
+M2, le panorama, le HDR et la recette multi-source ne sont pas implémentés.
 
 ## 1. Périmètre et ordre de réalisation
 
