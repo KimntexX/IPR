@@ -119,6 +119,7 @@ class ImageEditor final : public QObject
     // Point colour: the picked points in picking order, each {colour (sRGB swatch of
     // its source), hue, saturation, luminance, variance, range}.
     Q_PROPERTY(QVariantMap geometry READ geometry NOTIFY geometryChanged)
+    Q_PROPERTY(QVariantList localMasks READ localMasks NOTIFY localMasksChanged)
     Q_PROPERTY(bool cropEditing READ cropEditing WRITE setCropEditing NOTIFY cropEditingChanged)
     Q_PROPERTY(QVariantList pointColors READ pointColors NOTIFY pointColorsChanged)
     // Range overlay of one point in the preview (-1: none); never saved nor exported.
@@ -338,6 +339,23 @@ public:
     Q_INVOKABLE void setGeometryConstrain(bool constrain);
     Q_INVOKABLE void resetGeometryCrop();
     Q_INVOKABLE void resetGeometry();
+
+    // The masks' panel. Coordinates: the normalized canvas (LocalAdjustments). Kinds: linear,
+    // radial, brush. Combinations: add, subtract, intersect. A bad index does nothing.
+    QVariantList localMasks() const;
+    // The index of the new mask, -1 when it could not be added.
+    Q_INVOKABLE int addLocalMask(const QString &kind);
+    Q_INVOKABLE void removeLocalMask(int mask);
+    Q_INVOKABLE int duplicateLocalMask(int mask);
+    Q_INVOKABLE void setLocalMaskName(int mask, const QString &name);
+    Q_INVOKABLE void setLocalMaskVisible(int mask, bool visible);
+    Q_INVOKABLE void setLocalMaskOpacity(int mask, double opacity);
+    Q_INVOKABLE void setLocalMaskValue(int mask, const QString &parameter, double value);
+    Q_INVOKABLE int addLocalMaskShape(int mask, const QString &kind, const QString &combine);
+    Q_INVOKABLE void removeLocalMaskShape(int mask, int shape);
+    Q_INVOKABLE void setLocalMaskShape(int mask, int shape, const QVariantMap &values);
+    // points: [x0, y0, x1, y1, ...] on the normalized canvas, a stroke as one history step.
+    Q_INVOKABLE void addLocalMaskStroke(int mask, int shape, const QVariantList &points, double size, double feather, double flow);
     Q_INVOKABLE void exportImage(const QUrl &target, const QString &format,
                                  int quality);
 
@@ -361,6 +379,7 @@ signals:
     void adjustmentsReset(int temperatureKelvin, int tint);
     void pointColorsChanged();
     void geometryChanged();
+    void localMasksChanged();
     void cropEditingChanged();
     void pointColorOverlayChanged();
 
@@ -389,6 +408,7 @@ private:
         std::shared_ptr<RawDecoder::DcpSource> dcpSource, QSize fullSize, bool imageIsProxy);
     DecodedImageCache::Entry retainedCurrentEntry() const;
     void commitGeometry(Geometry::Settings next);
+    bool commitLocalMasks(LocalAdjustments::Masks next);
     bool originalFramingStale() const;
     RawDecoder::Options developmentOptions() const;
     // pixelScale: pixels of source per pixel of the full image (below 1 for the
@@ -397,8 +417,10 @@ private:
     static ColorPipeline::WorkingImage renderWorkingImage(
         const ColorPipeline::WorkingImage &source, const Settings &settings,
         double pixelScale = 1.0, RenderStageCache *cache = nullptr);
+    // local: what the masks add, on the canvas (LocalAdjustments::valueMaps).
     static bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
-                            int referenceTemperature, double pixelScale, cv::Mat &adjusted);
+                            int referenceTemperature, double pixelScale, cv::Mat &adjusted,
+                            const LocalValues::Maps &local);
     static PerceptualColour::Parameters perceptualParameters(const Settings &settings);
     // The preview's source (edit proxy, or the image) and its pixel scale.
     const ColorPipeline::WorkingImage &previewSource() const;

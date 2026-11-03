@@ -143,9 +143,116 @@ void load(const QCborMap &map, Owner &owner, const Field<Owner, Value> (&fields)
 }
 }
 
+namespace {
+QCborArray pointArray(const cv::Point2f &point)
+{
+    return QCborArray{double(point.x), double(point.y)};
+}
+
+bool readPoint(const QCborValue &value, cv::Point2f &point)
+{
+    const QCborArray array = value.toArray();
+    if (array.size() != 2 || !array.at(0).isDouble() || !array.at(1).isDouble())
+        return false;
+    point = {float(array.at(0).toDouble()), float(array.at(1).toDouble())};
+    return true;
+}
+
+QCborArray encodeMasks(const LocalAdjustments::Masks &masks)
+{
+    QCborArray list;
+    for (const LocalAdjustments::Mask &mask : masks) {
+        // Only the values set: a setting added later reads as zero in an older file.
+        QCborMap values;
+        for (size_t i = 0; i < mask.values.size(); ++i)
+            if (mask.values[i] != 0.0f)
+                values.insert(LocalAdjustments::parameterName(int(i)), double(mask.values[i]));
+        QCborArray shapes;
+        for (const LocalAdjustments::Shape &shape : mask.shapes) {
+            QCborArray strokes;
+            for (const LocalAdjustments::BrushStroke &stroke : shape.strokes) {
+                QCborArray points;
+                for (const cv::Point2f &point : stroke.points) {
+                    points.append(double(point.x));
+                    points.append(double(point.y));
+                }
+                strokes.append(QCborMap{{QStringLiteral("size"), double(stroke.size)}, {QStringLiteral("feather"), double(stroke.feather)},
+                                        {QStringLiteral("flow"), double(stroke.flow)}, {QStringLiteral("points"), points}});
+            }
+            shapes.append(QCborMap{
+                {QStringLiteral("kind"), LocalAdjustments::kindName(shape.kind)}, {QStringLiteral("combine"), LocalAdjustments::combineName(shape.combine)},
+                {QStringLiteral("inverted"), shape.inverted}, {QStringLiteral("start"), pointArray(shape.start)},
+                {QStringLiteral("end"), pointArray(shape.end)}, {QStringLiteral("center"), pointArray(shape.center)},
+                {QStringLiteral("radiusX"), double(shape.radiusX)}, {QStringLiteral("radiusY"), double(shape.radiusY)},
+                {QStringLiteral("angle"), double(shape.angle)}, {QStringLiteral("feather"), double(shape.feather)},
+                {QStringLiteral("strokes"), strokes}});
+        }
+        list.append(QCborMap{{QStringLiteral("name"), mask.name}, {QStringLiteral("visible"), mask.visible},
+                             {QStringLiteral("opacity"), double(mask.opacity)}, {QStringLiteral("values"), values},
+                             {QStringLiteral("shapes"), shapes}});
+    }
+    return list;
+}
+
+// False on what cannot be a mask; a value of an unknown setting, from a later version, is skipped.
+bool decodeMasks(const QCborArray &list, LocalAdjustments::Masks &masks)
+{
+    masks.clear();
+    for (const QCborValue &entry : list) {
+        if (!entry.isMap())
+            return false;
+        const QCborMap map = entry.toMap();
+        LocalAdjustments::Mask mask;
+        mask.name = map.value(QStringLiteral("name")).toString();
+        mask.visible = map.value(QStringLiteral("visible")).toBool(true);
+        mask.opacity = float(map.value(QStringLiteral("opacity")).toDouble(1.0));
+        const QCborMap values = map.value(QStringLiteral("values")).toMap();
+        for (auto value = values.cbegin(); value != values.cend(); ++value) {
+            const int parameter = LocalAdjustments::parameterNamed(value.key().toString());
+            if (parameter >= 0)
+                mask.values[size_t(parameter)] = float(value.value().toDouble());
+        }
+        for (const QCborValue &shapeEntry : map.value(QStringLiteral("shapes")).toArray()) {
+            if (!shapeEntry.isMap())
+                return false;
+            const QCborMap fields = shapeEntry.toMap();
+            LocalAdjustments::Shape shape;
+            if (!LocalAdjustments::kindNamed(fields.value(QStringLiteral("kind")).toString(), shape.kind) ||
+                !LocalAdjustments::combineNamed(fields.value(QStringLiteral("combine")).toString(), shape.combine) ||
+                !readPoint(fields.value(QStringLiteral("start")), shape.start) ||
+                !readPoint(fields.value(QStringLiteral("end")), shape.end) ||
+                !readPoint(fields.value(QStringLiteral("center")), shape.center))
+                return false;
+            shape.inverted = fields.value(QStringLiteral("inverted")).toBool();
+            shape.radiusX = float(fields.value(QStringLiteral("radiusX")).toDouble());
+            shape.radiusY = float(fields.value(QStringLiteral("radiusY")).toDouble());
+            shape.angle = float(fields.value(QStringLiteral("angle")).toDouble());
+            shape.feather = float(fields.value(QStringLiteral("feather")).toDouble());
+            for (const QCborValue &strokeEntry : fields.value(QStringLiteral("strokes")).toArray()) {
+                const QCborMap strokeFields = strokeEntry.toMap();
+                LocalAdjustments::BrushStroke stroke;
+                stroke.size = float(strokeFields.value(QStringLiteral("size")).toDouble());
+                stroke.feather = float(strokeFields.value(QStringLiteral("feather")).toDouble());
+                stroke.flow = float(strokeFields.value(QStringLiteral("flow")).toDouble());
+                const QCborArray points = strokeFields.value(QStringLiteral("points")).toArray();
+                if (points.size() % 2 != 0)
+                    return false;
+                for (qsizetype i = 0; i + 1 < points.size(); i += 2)
+                    stroke.points.emplace_back(float(points.at(i).toDouble()), float(points.at(i + 1).toDouble()));
+                shape.strokes.push_back(std::move(stroke));
+            }
+            mask.shapes.push_back(std::move(shape));
+        }
+        masks.push_back(std::move(mask));
+    }
+    return true;
+}
+}
+
 bool bound(Settings &s)
 {
-    if (!std::isfinite(s.brightness) || !std::isfinite(s.sharpeningRadius) || !Geometry::bound(s.geometry))
+    if (!std::isfinite(s.brightness) || !std::isfinite(s.sharpeningRadius) || !Geometry::bound(s.geometry) ||
+        !LocalAdjustments::bound(s.localMasks))
         return false;
     const auto within = [](int &value, int low, int high) { value = std::clamp(value, low, high); };
     s.brightness = std::clamp(s.brightness, -5.0f, 5.0f);
@@ -214,11 +321,18 @@ QCborMap encodeSettings(const Settings &settings)
     store(geometry, settings.geometry, GeometryDoubles);
     store(geometry, settings.geometry, GeometryBools);
     map.insert(QStringLiteral("geometry"), geometry);
+    // Absent without masks, so that a recipe without any reads as it always did.
+    if (!settings.localMasks.empty())
+        map.insert(QStringLiteral("localMasks"), encodeMasks(settings.localMasks));
     return map;
 }
 
 bool decodeSettings(const QCborMap &map, Settings &settings)
 {
+    settings.localMasks.clear();
+    const QCborValue localMasks = map.value(QStringLiteral("localMasks"));
+    if (localMasks.isArray() && !decodeMasks(localMasks.toArray(), settings.localMasks))
+        return false;
     load(map, settings, SettingFloats);
     load(map, settings, SettingInts);
     load(map, settings, SettingBools);

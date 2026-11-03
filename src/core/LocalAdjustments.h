@@ -6,6 +6,8 @@
 
 #include <QDataStream>
 #include <QString>
+#include <QVariantList>
+#include <QVariantMap>
 #include <opencv2/core.hpp>
 
 #include <array>
@@ -87,6 +89,19 @@ cv::Mat toSource(const cv::Mat &canvasMap, const Geometry::Settings &geometry, c
 
 // What a render's result depends on, for the cache keys.
 void appendKey(QDataStream &stream, const Masks &masks);
+
+// The names the recipe and the panel use. -1 for an unknown one.
+QString parameterName(int parameter);
+int parameterNamed(const QString &name);
+QString kindName(Kind kind);
+QString combineName(Combine combine);
+bool kindNamed(const QString &name, Kind &kind);
+bool combineNamed(const QString &name, Combine &combine);
+
+// The masks as the panel reads them, strokes as a count.
+QVariantList describe(const Masks &masks);
+// Applies the fields present in values to a shape; false on a field of the wrong type.
+bool setShapeFields(Shape &shape, const QVariantMap &values);
 
 } // namespace LocalAdjustments
 

@@ -156,6 +156,38 @@ void writeFloats(QDataStream &stream, const Key &values)
         stream << value;
 }
 
+constexpr std::array<const char *, LocalValues::ParameterCount> parameterNames{
+    "exposure", "contrast", "temperature", "tint", "saturation", "vibrance",
+    "shadows", "blacks", "highlights", "whites",
+    "texture", "clarity", "dehaze", "denoiseLuminance", "denoiseChrominance", "sharpening"};
+
+QVariantList pointValue(const cv::Point2f &point)
+{
+    return {double(point.x), double(point.y)};
+}
+
+bool readPoint(const QVariant &value, cv::Point2f &point)
+{
+    const QVariantList list = value.toList();
+    if (list.size() != 2)
+        return false;
+    bool okX = false, okY = false;
+    const float x = list.at(0).toFloat(&okX), y = list.at(1).toFloat(&okY);
+    if (!okX || !okY)
+        return false;
+    point = {x, y};
+    return true;
+}
+
+bool readFloat(const QVariant &value, float &number)
+{
+    bool ok = false;
+    const float read = value.toFloat(&ok);
+    if (ok)
+        number = read;
+    return ok;
+}
+
 } // namespace
 
 bool operator==(const BrushStroke &a, const BrushStroke &b)
@@ -303,6 +335,104 @@ void appendKey(QDataStream &stream, const Masks &masks)
             }
         }
     }
+}
+
+QString parameterName(int parameter)
+{
+    return parameter >= 0 && parameter < LocalValues::ParameterCount ? QString::fromLatin1(parameterNames[size_t(parameter)]) : QString();
+}
+
+int parameterNamed(const QString &name)
+{
+    for (size_t i = 0; i < parameterNames.size(); ++i)
+        if (name == QLatin1String(parameterNames[i]))
+            return int(i);
+    return -1;
+}
+
+QString kindName(Kind kind)
+{
+    switch (kind) {
+    case Kind::Linear: return QStringLiteral("linear");
+    case Kind::Radial: return QStringLiteral("radial");
+    case Kind::Brush: return QStringLiteral("brush");
+    }
+    return {};
+}
+
+QString combineName(Combine combine)
+{
+    switch (combine) {
+    case Combine::Add: return QStringLiteral("add");
+    case Combine::Subtract: return QStringLiteral("subtract");
+    case Combine::Intersect: return QStringLiteral("intersect");
+    }
+    return {};
+}
+
+bool kindNamed(const QString &name, Kind &kind)
+{
+    for (const Kind candidate : {Kind::Linear, Kind::Radial, Kind::Brush})
+        if (name == kindName(candidate)) {
+            kind = candidate;
+            return true;
+        }
+    return false;
+}
+
+bool combineNamed(const QString &name, Combine &combine)
+{
+    for (const Combine candidate : {Combine::Add, Combine::Subtract, Combine::Intersect})
+        if (name == combineName(candidate)) {
+            combine = candidate;
+            return true;
+        }
+    return false;
+}
+
+QVariantList describe(const Masks &masks)
+{
+    QVariantList list;
+    for (const Mask &mask : masks) {
+        QVariantMap values;
+        for (size_t i = 0; i < mask.values.size(); ++i)
+            values.insert(parameterName(int(i)), double(mask.values[i]));
+        QVariantList shapes;
+        for (const Shape &shape : mask.shapes)
+            shapes.append(QVariantMap{
+                {QStringLiteral("kind"), kindName(shape.kind)}, {QStringLiteral("combine"), combineName(shape.combine)},
+                {QStringLiteral("inverted"), shape.inverted}, {QStringLiteral("start"), pointValue(shape.start)},
+                {QStringLiteral("end"), pointValue(shape.end)}, {QStringLiteral("center"), pointValue(shape.center)},
+                {QStringLiteral("radiusX"), double(shape.radiusX)}, {QStringLiteral("radiusY"), double(shape.radiusY)},
+                {QStringLiteral("angle"), double(shape.angle)}, {QStringLiteral("feather"), double(shape.feather)},
+                {QStringLiteral("strokes"), int(shape.strokes.size())}});
+        list.append(QVariantMap{{QStringLiteral("name"), mask.name}, {QStringLiteral("visible"), mask.visible},
+                                {QStringLiteral("opacity"), double(mask.opacity)}, {QStringLiteral("values"), values},
+                                {QStringLiteral("shapes"), shapes}});
+    }
+    return list;
+}
+
+bool setShapeFields(Shape &shape, const QVariantMap &values)
+{
+    for (auto field = values.cbegin(); field != values.cend(); ++field) {
+        const QString &key = field.key();
+        const QVariant &value = field.value();
+        bool ok = true;
+        if (key == QStringLiteral("start")) ok = readPoint(value, shape.start);
+        else if (key == QStringLiteral("end")) ok = readPoint(value, shape.end);
+        else if (key == QStringLiteral("center")) ok = readPoint(value, shape.center);
+        else if (key == QStringLiteral("radiusX")) ok = readFloat(value, shape.radiusX);
+        else if (key == QStringLiteral("radiusY")) ok = readFloat(value, shape.radiusY);
+        else if (key == QStringLiteral("angle")) ok = readFloat(value, shape.angle);
+        else if (key == QStringLiteral("feather")) ok = readFloat(value, shape.feather);
+        else if (key == QStringLiteral("inverted")) shape.inverted = value.toBool();
+        else if (key == QStringLiteral("combine")) ok = combineNamed(value.toString(), shape.combine);
+        else ok = false;
+        if (!ok)
+            return false;
+    }
+    return true;
 }
 
 } // namespace LocalAdjustments

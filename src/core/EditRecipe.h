@@ -3,6 +3,7 @@
 
 #include "ColorMixer.h"
 #include "Geometry.h"
+#include "LocalAdjustments.h"
 #include "PointColor.h"
 #include "ToneCurve.h"
 
@@ -54,6 +55,7 @@ struct Settings
     bool automaticWhiteBalance = false;
     ToneCurve::Curves toneCurves;
     Geometry::Settings geometry;
+    LocalAdjustments::Masks localMasks;
 };
 
 struct RawDevelopment
