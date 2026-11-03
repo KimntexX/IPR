@@ -93,6 +93,7 @@ def prepare(root, proof_path, output, cohort=1, priors=()):
         raise ValueError('Fine targets collide with earlier cohorts or training')
     output.mkdir(parents=True, exist_ok=False)
     plan = dict(schema_version=1, frozen_at_utc=datetime.now(timezone.utc).isoformat(), source=source,
+        role='independent',
         cohort=cohort, prior_plan_sha256=[digest(p) for p in priors],
         source_proof_path=str(proof_path.resolve()), source_proof_sha256=digest(proof_path), cases=cases, fields=fields,
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS}, preparation_memory=guard.stats(),
@@ -149,6 +150,8 @@ def summarize(rows, criteria):
 def run(root, plan_path, output, reuse=None):
     confined(root, [plan_path, output]+([reuse] if reuse else []))
     plan = json.loads(plan_path.read_text(encoding='utf-8'))
+    if plan.get('role', 'independent') not in ('independent', 'regression'):
+        raise ValueError('Declared independent or regression role required')
     if any(digest(Path(__file__).with_name(n)) != h for n, h in plan['tools'].items()):
         raise ValueError('Frozen fine confirmation changed')
     source = plan['source']
@@ -161,7 +164,8 @@ def run(root, plan_path, output, reuse=None):
     rows = [] if reuse is None else reuse_records(json.loads(reuse.read_text(encoding='utf-8')), plan, plan_hash)
     done = {key(r) for r in rows}
     now = datetime.now(timezone.utc)
-    identity = 'neural-fine-confirmation-v001-'+now.strftime('%Y%m%dT%H%M%SZ')
+    identity = ('neural-fine-confirmation-v001-' if plan.get('role', 'independent') == 'independent'
+        else 'neural-fine-regression-v001-')+now.strftime('%Y%m%dT%H%M%SZ')
     output.mkdir(parents=True, exist_ok=False)
     result = dict(schema_version=1, data_version=1, campaign_id=identity, measured_at_utc=now.isoformat(),
         status='incomplete', plan=plan, plan_sha256=plan_hash, records=rows,
@@ -236,7 +240,8 @@ def run(root, plan_path, output, reuse=None):
             guard.check()
             if any(digest(Path(__file__).with_name(n)) != h for n, h in plan['tools'].items()):
                 raise ValueError('Fine confirmation changed during inference')
-            result['status'] = 'completed_fine_signal_confirmation_not_photographic_qualification'
+            result['status'] = ('completed_fine_signal_confirmation_not_photographic_qualification'
+                if plan.get('role', 'independent') == 'independent' else 'completed_fine_signal_regression_not_photographic_qualification')
     except (BudgetExceeded, MemoryError) as error:
         result['status'] = 'aborted_for_memory_budget'
         result['error'] = str(error)

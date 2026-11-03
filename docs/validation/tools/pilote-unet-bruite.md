@@ -125,3 +125,20 @@ Les valeurs sigma constantes utilisées n'estiment pas le bruit du boîtier.
 Ces outils conservent des JSON horodatés sous `docs/validation/raw/`.
 Le verdict de qualité, les interruptions mémoire, les écarts par cas et
 la provenance restent séparés ; aucun échec n'est effacé par une moyenne.
+
+Pour rejouer une cohorte connue, préparer son plan avec
+`tests/neural/prepare_neural_regression.py --source <preuve courante> --historical <ancien result.json> --kind classic|fine --output <nouveau dossier>`.
+L'outil conserve les entrées et critères, remplace les poids/contrats par
+ceux du candidat courant et marque le rôle `regression`. Exécuter le
+plan avec `confirm_noisy_model.py` ou `confirm_fine_noise.py` selon son type.
+Les verdicts négatifs historiques ne sont jamais exclus de ce rejeu.
+
+La confirmation fine se prépare par
+`confirm_fine_noise.py --prepare --proof <preuve courante> --cohort <indice> --prior <anciens plans fins> --output <nouveau dossier>`.
+Le bloc de cohorte change les fréquences, angles, phase et réalisations
+de bruit. Les anciens contenus et ceux de l'apprentissage sont exclus
+par empreinte. Les critères de transfert de chaque canal et d'erreur CFA/RGB
+sont figés avant l'inférence. `--reuse <result.json>` reprend seulement
+les observations complètes d'un arrêt mémoire du même plan, sans filtrer
+les résultats défavorables. Ne pas reprendre l'apprentissage sur une
+cohorte encore présentée comme réservée.

@@ -115,6 +115,7 @@ def prepare(root, data_plan, accepted, kind, folders, priors, output, edge_start
         data = dict(source_data, edges=edges, mixed=mixed)
         data.pop('observations')
         plan = dict(schema_version=1, frozen_at_utc=datetime.now(timezone.utc).isoformat(), kind=kind, data=data,
+            role='independent',
             cohort_seed_block=dict(edge_start=edge_start, mixed_seed=mixed_seed),
             source_data_plan_sha256=digest(data_plan), eligibility_path=str(accepted.resolve()), eligibility_sha256=digest(accepted),
             models=refs, replicas=replicas, prior_plan_sha256=[digest(p) for p in priors],
@@ -161,6 +162,8 @@ def reused_groups(prior, plan, plan_hash):
 def run(root, plan_path, output, reuse=None):
     confined(root, [plan_path, output]+([reuse] if reuse else []))
     plan = json.loads(plan_path.read_text(encoding='utf-8'))
+    if plan.get('role', 'independent') not in ('independent', 'regression'):
+        raise ValueError('Declared independent or regression evaluation role required')
     if plan['kind'] not in ('plain', 'protected'):
         raise ValueError('Declared model kind required')
     if plan['data'].get('runtime') != runtime_versions():
@@ -174,7 +177,8 @@ def run(root, plan_path, output, reuse=None):
         raise ValueError('Training source changed')
     source = json.loads(source_path.read_text(encoding='utf-8'))
     now = datetime.now(timezone.utc)
-    campaign = 'neural-noisy-confirmation-v001-'+now.strftime('%Y%m%dT%H%M%SZ')
+    campaign = ('neural-noisy-confirmation-v001-' if plan.get('role', 'independent') == 'independent'
+        else 'neural-noisy-regression-v001-')+now.strftime('%Y%m%dT%H%M%SZ')
     output.mkdir(parents=True, exist_ok=False)
     result = dict(schema_version=1, data_version=1, campaign_id=campaign, measured_at_utc=now.isoformat(),
         plan=plan, plan_sha256=digest(plan_path), groups=groups, reused_groups=len(groups), status='incomplete',
@@ -217,7 +221,8 @@ def run(root, plan_path, output, reuse=None):
             guard.check()
             if any(digest(Path(__file__).with_name(n)) != h for n, h in plan['tools'].items()):
                 raise ValueError('Confirmation changed during evaluation')
-            result['status'] = 'completed_independent_noisy_confirmation_not_photographic_qualification'
+            result['status'] = ('completed_independent_noisy_confirmation_not_photographic_qualification'
+                if plan.get('role', 'independent') == 'independent' else 'completed_noisy_regression_not_photographic_qualification')
             result['pilot_gates_passed'] = len(groups) == 6 and all(g['evaluation']['pilot_gates_passed'] for g in groups)
     except (BudgetExceeded, MemoryError) as error:
         result['status'] = 'aborted_for_memory_budget'

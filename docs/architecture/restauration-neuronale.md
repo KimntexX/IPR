@@ -862,19 +862,25 @@ validation sur images réelles restent à faire, sans intégration moteur/IHM.
 
 Le pilote courant conserve le reconstructeur U-Net local appris, avec
 ses 33 368 paramètres figés, et apprend seulement une correction des
-quatre plans CFA physiques : 3 516 paramètres supplémentaires. Ce choix
+quatre plans CFA physiques. La dernière expérience élargit cette correction
+à 32 canaux internes et 20 964 paramètres, soit 54 332 au total. Ce choix
 maintient exactement le parent lorsque sigma vaut zéro. Il ne constitue
 pas un grand réseau photographique entièrement entraîné de bout en bout.
 
 La correction est bornée à trois sigma fournis. Son descripteur de bruit
 utilise un résidu d'ajustement quadratique 5×5, normalisé par sa variance
 propagée. Le signal reste signé ; seul ce descripteur est limité à ±8.
-La protection fixe de courbure partage une confiance entre les quatre
-positions CFA et réduit la correction près des structures détectées.
+La protection fixe de courbure utilise trois contrastes H/V/croisé,
+partage une confiance entre les quatre positions CFA et réduit la
+correction près des structures détectées. La composante croisée supprime
+une zone aveugle diagonale des deux premières réponses ; la borne
+d'union nominale porte sur 588 comparaisons, alpha 0,01.
 Ce facteur est une heuristique de protection, pas une probabilité calibrée.
 
-Les deux initialisations passent le banc de développement après protection.
-Une confirmation distincte est nécessaire avant de retenir ce pilote ;
+Le petit correcteur a passé le développement mais échoué sur des
+confirmations à fort bruit, malgré une erreur moyenne réduite. L'élargissement
+reste une expérience ; il doit passer aussi les cas connus avant d'ouvrir
+de nouveaux contrôles. Une confirmation distincte reste nécessaire ;
 aucune valeur de sigma simulée n'est assimilée à une calibration ISO réelle.
 Les empreintes des fonctions de calcul, des poids et des entrées sont liées
 au protocole. Changer le conditionnement sans entraîner de nouveaux poids
@@ -886,3 +892,17 @@ fixe vérifié et comparer au calcul sur une vue plus grande. Une évaluation
 sur de petits centres ne garantit pas à elle seule l'absence de raccords.
 Les données sources restent immuables ; la boucle de qualification n'entre
 pas dans le chemin d'ouverture de production.
+
+Les entrées/sorties de ce banc sont en signal caméra linéaire signé,
+avant profil et tons. Elles ne sont ni du sRGB d'affichage ni le Rec.2020
+de travail utilisé plus tard dans la chaîne de production. Les planches
+réelles exploratoires emploient seulement le canal vert balancé, avec un
+contraste d'affichage partagé ; elles n'ont pas de référence propre.
+
+La qualification suit plusieurs barrières : développement, rejeu des
+anciennes données et échecs avec le code courant, confirmation nouvelle,
+puis validation photographique et ressources. Une régression n'est jamais
+renommée confirmation indépendante. Aucun réglage par boîtier, niveau ISO
+réel, saturation ou défaut de capteur n'est déclaré qualifié par les
+simulations gaussiennes. Le protocole et les preuves sont dans le
+[rapport évolutif](../validation/analyses/analyse-restauration-neuronale.md).

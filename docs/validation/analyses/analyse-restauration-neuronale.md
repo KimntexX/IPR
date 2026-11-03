@@ -4948,7 +4948,7 @@ le candidat ? protection compl?te :
 [tuiles](../raw/neural-tiling-audit-v001-20261103T173515Z.json),
 [planches](../raw/neural-camera-visual-v001-20261103T173529Z.json).
 Index local : `build-patch_neural_restoration/fixed-point-hessian-camera-v001/index.html`.
-Cela ne transforme pas l'?chec photographique potentiel en r?ussite.
+Ces contr?les techniques ne valident pas le d?bruitage photographique.
 
 ### Derni?re comparaison cibl?e ? capacit? de correction
 
@@ -4968,3 +4968,21 @@ sans modification des crit?res. Les empreintes de toutes les cohortes
 pr?c?dentes et des textures d'apprentissage seront exclues pour emp?cher
 un r?emploi accidentel comme donn?es r?serv?es. Aucune att?nuation artificielle
 de la force n'est ajout?e pour faire passer un seuil.
+
+
+Le pr?test de la correction ?largie mesure54332param?tres, dont20964
+entra?nables et33368fig?s. Quatre ?tapes Adam repr?sentatives utilisent
+303,60Mio r?sidents et972,94Mio priv?s ?chantillonn?s, sous les plafonds.
+Les poids de pr?test sont jet?s ; les deux vrais mod?les repartent des
+parents propres. Les donn?es, niveaux de bruit, ancrage et budgets restent
+appari?s ; seuls les canaux de correction passent de8?32.
+
+Avant d'ouvrir les nouvelles cohortes, rejouer aussi les anciennes donn?es
+de confirmation avec les poids courants : premi?re cohorte classique pass?e,
+seconde classique ?chou?e et cohorte fine ?chou?e. Les outils nomment ces
+campagnes **r?gressions**, conservent toutes les observations et crit?res,
+et ne les pr?sentent jamais comme ind?pendantes. Deux tests v?rifient
+la conservation des donn?es/crit?res n?gatifs et le remplacement des seuls
+poids/contrats de calcul. Il n'y a pas d'ex?cution d'un ancien moteur.
+Cela ?vite de d?clarer stable un candidat qui r?ussirait un nouveau tirage
+mais ?chouerait encore sur un probl?me d?j? observ?.
