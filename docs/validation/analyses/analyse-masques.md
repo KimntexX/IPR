@@ -5,9 +5,11 @@ Rapport évolutif du moteur des masques (lot B2,
 `docs/validation/raw/` font autorité ; ce rapport les interprète. Suivi des validations
 partielles : [issue #24](https://github.com/KimntexX/IPR/issues/24).
 
-État au 3 novembre 2026 : moteur et panneau sur `patch_ui_layers`, non fusionnés. Parcours
-complet vérifié par l'agent dans la vraie fenêtre, hors écran, sur un CR3. **Validation visuelle de
-l'utilisateur attendue.**
+État au 3 novembre 2026 : moteur et panneau sur `patch_ui_layers`, non fusionnés. **Dégradés
+linéaire et radial, et pinceau, validés à l'usage par l'utilisateur** (« ça fait le travail
+attendu »), qui précise ne pas être expert de ces outils. **Le design du panneau ne lui convient
+pas** : pas de cible définie pour l'instant, le sujet est reporté. La plage de tons et la
+réactivité avec plusieurs masques restent à essayer.
 
 ## Le modèle
 

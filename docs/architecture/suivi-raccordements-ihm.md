@@ -41,7 +41,7 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-012 | Raccordé sur `patch_ui_history`, validé visuellement par l'utilisateur le 2 novembre 2026 | Historique et instantanés : voir ci-dessous |
 | IHM-CONN-013 | Raccordé et validé par l'utilisateur, intégré à `dev` | Panneau Géométrie : voir ci-dessous |
 | IHM-CONN-014 | Raccordé et validé par l'utilisateur | Panneau Assembler : voir ci-dessous |
-| IHM-CONN-015 | Raccordé sur `patch_ui_layers`, à valider visuellement | Panneau Masques : voir ci-dessous |
+| IHM-CONN-015 | Raccordé sur `patch_ui_layers` ; fonctions validées par l'utilisateur, design à revoir | Panneau Masques : voir ci-dessous |
 
 #### IHM-CONN-015 — panneau Masques (B2)
 
