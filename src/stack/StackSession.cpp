@@ -166,6 +166,7 @@ StackSession::Outcome StackSession::compute(Tasks::Context &context, const QStri
     const cv::Size frame = job.frameSize;
     result->areaKept = frame.area() > 0 ? whole / double(frame.area()) : 0.0;
     result->cameraRgb = std::move(job.cameraRgb);
+    result->sharpestViews = job.turbulence.applied ? job.turbulence.kept : 0;
     outcome.preview = previewOf(result->cameraRgb, *result->context, result->metadata);
     outcome.result = std::move(result);
     return outcome;
@@ -197,7 +198,10 @@ void StackSession::finished()
     emit progressChanged();
     setStatus(tr("%1 photos empilées, %2 % de la surface conservée%3. Choisissez un format pour exporter.")
                   .arg(m_result->usedFrames).arg(qRound(m_result->areaKept * 100.0))
-                  .arg(m_result->leftOut > 0 ? tr(", %1 écartée(s)").arg(m_result->leftOut) : QString()));
+                  .arg((m_result->leftOut > 0 ? tr(", %1 écartée(s)").arg(m_result->leftOut) : QString())
+                       + (m_result->sharpestViews > 0
+                              ? tr(", turbulence corrigée sur le sujet avec les %1 vues les plus nettes").arg(m_result->sharpestViews)
+                              : QString())));
 }
 
 void StackSession::cancel()

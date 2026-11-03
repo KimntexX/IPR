@@ -40,6 +40,7 @@ struct Result
     int inliers = 0;           // of which agree with the transform
     double residual = 0.0;     // RMS distance of the inliers, pixels
     double support = 0.0;      // smallest share of a side spanned by the inliers
+    cv::Rect2d inlierArea;     // what the inliers span in the reference, pixels
     QString error;
 };
 
