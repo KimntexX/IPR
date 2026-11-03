@@ -157,17 +157,6 @@ Item {
                 text: root.session.status
             }
 
-            Image {
-                objectName: "assemblePreview"
-                Layout.fillWidth: true
-                Layout.preferredHeight: visible && implicitWidth > 0 ? width * implicitHeight / implicitWidth : 0
-                visible: root.session.preview.toString().length > 0
-                source: root.session.preview
-                fillMode: Image.PreserveAspectFit
-                asynchronous: true
-                cache: false
-            }
-
             RowLayout {
                 Layout.fillWidth: true
                 visible: root.session.hasResult
@@ -203,6 +192,17 @@ Item {
                 enabled: !root.busy
                 text: qsTr("Ouvrir le résultat")
                 onClicked: root.editor.loadImage(root.session.exportedFile)
+            }
+            // Below the export, which stays in view at the end of the work.
+            Image {
+                objectName: "assemblePreview"
+                Layout.fillWidth: true
+                Layout.preferredHeight: visible && implicitWidth > 0 ? width * implicitHeight / implicitWidth : 0
+                visible: root.session.preview.toString().length > 0
+                source: root.session.preview
+                fillMode: Image.PreserveAspectFit
+                asynchronous: true
+                cache: false
             }
         }
     }

@@ -142,6 +142,7 @@ int main(int argc, char **argv)
     if (!check(waitFor([&] { return preview->property("status").toInt() == 1; }), "the preview is shown")) return 1;
     if (!check(preview->isVisible() && preview->height() > 50, "with room for it")) return 1;
     if (!check(exporter->isVisible() && exporter->isEnabled(), "the export button is ready at the end")) return 1;
+    if (!check(exporter->mapToScene(QPointF(0, 0)).y() < preview->mapToScene(QPointF(0, 0)).y(), "above the preview, in view")) return 1;
     if (!check(!opener->isVisible(), "nothing to open yet")) return 1;
     if (!check(panel->property("format").toString() == QStringLiteral("DNG"), "the DNG comes first")) return 1;
 
