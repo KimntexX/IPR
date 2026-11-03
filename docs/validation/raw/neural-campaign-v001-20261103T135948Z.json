@@ -1,0 +1,476 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-campaign-v001-20261103T135948Z",
+  "started_at_utc": "2026-11-03T13:59:48.695619+00:00",
+  "until_latest_start": "2026-11-03T17:30:00+01:00",
+  "status": "completed_both_seeds",
+  "plan_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-plan-v001\\plan.json",
+  "plan_sha256": "78fd4238ae26ed72f840708ede768f3ff38cf876944d210615cfb64284308dfb",
+  "launcher_sha256": "50aa7a79ff595170fc365943e2536d47eec9da42f429aa1b85d3aff42bc47802",
+  "admission_fraction": 0.9,
+  "poll_seconds": 15,
+  "max_attempts_per_seed": 8,
+  "attempt_timeout_seconds": 1800,
+  "attempts": [
+    {
+      "seed": 71,
+      "number": 1,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt01",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 4424245248,
+        "system_used_fraction": 0.7387283550189313,
+        "process_rss_bytes": 22409216,
+        "process_private_bytes": 14848000,
+        "process_peak_rss_bytes": 23629824,
+        "process_peak_pagefile_bytes": 16175104
+      },
+      "resumed_from": null,
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt01\\result.json",
+      "result_sha256": "7e9a03357fbcce37979cdf292d0ef2a0af97eaf5218a0530073228dd99d83f92",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 8,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt01\\training-latest.pt",
+          "sha256": "7c27bd35c672a490ebf9eda2d7fc7e71c048c17daf8797670e10e18c3e98032b",
+          "bytes": 180872,
+          "completed_step": 0
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T140005Z"
+    },
+    {
+      "seed": 71,
+      "number": 2,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt02",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 5993492480,
+        "system_used_fraction": 0.6460572252093958,
+        "process_rss_bytes": 17137664,
+        "process_private_bytes": 15888384,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 17145856
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt01\\training-latest.pt",
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt02\\result.json",
+      "result_sha256": "4b93e1a7e6c29a39109ae96173a25d80b1186659d55c68ead413c1a7f64fa586",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 0,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt02\\training-latest.pt",
+          "sha256": "7c27bd35c672a490ebf9eda2d7fc7e71c048c17daf8797670e10e18c3e98032b",
+          "bytes": 180872,
+          "completed_step": 0
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt01\\training-latest.pt",
+          "sha256": "7c27bd35c672a490ebf9eda2d7fc7e71c048c17daf8797670e10e18c3e98032b",
+          "bytes": 180872,
+          "completed_step": 0
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T140026Z"
+    },
+    {
+      "seed": 71,
+      "number": 3,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt03",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 6542639104,
+        "system_used_fraction": 0.6136276392018978,
+        "process_rss_bytes": 2678784,
+        "process_private_bytes": 16052224,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 17477632
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt02\\training-latest.pt",
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt03\\result.json",
+      "result_sha256": "5152c323b1cf323567076543d677ef710d64bb8b1192cf07121e1ab684a17a7e",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 1030,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt03\\training-latest.pt",
+          "sha256": "7b3e727a0838485a89116e29b78f8a1f3a79772f20f46aece67c46fde1160f20",
+          "bytes": 226688,
+          "completed_step": 1024
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt02\\training-latest.pt",
+          "sha256": "7c27bd35c672a490ebf9eda2d7fc7e71c048c17daf8797670e10e18c3e98032b",
+          "bytes": 180872,
+          "completed_step": 0
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T140117Z"
+    },
+    {
+      "seed": 71,
+      "number": 4,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt04",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 3694383104,
+        "system_used_fraction": 0.7818300079072953,
+        "process_rss_bytes": 2449408,
+        "process_private_bytes": 15671296,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 17477632
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt03\\training-latest.pt",
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt04\\result.json",
+      "result_sha256": "b2405435247817b6b7a3449524b809d861f66d746826365763e1f76816fd6b5d",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 1034,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt03\\training-latest.pt",
+          "sha256": "7b3e727a0838485a89116e29b78f8a1f3a79772f20f46aece67c46fde1160f20",
+          "bytes": 226688,
+          "completed_step": 1024
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt03\\training-latest.pt",
+          "sha256": "7b3e727a0838485a89116e29b78f8a1f3a79772f20f46aece67c46fde1160f20",
+          "bytes": 226688,
+          "completed_step": 1024
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T140323Z"
+    },
+    {
+      "seed": 71,
+      "number": 5,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt05",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 4184555520,
+        "system_used_fraction": 0.7528831149857154,
+        "process_rss_bytes": 2695168,
+        "process_private_bytes": 16433152,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 17743872
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt03\\training-latest.pt",
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt05\\result.json",
+      "result_sha256": "1202d31949fb479ad4bfe42902d9385dde7e1948fc44ab822178f6bff496d8ac",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 1907,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt05\\training-latest.pt",
+          "sha256": "09804cc1d555ffbefdc6e64b0d7f87175a6827922c4b56fb71bff920487afe65",
+          "bytes": 234176,
+          "completed_step": 1856
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt03\\training-latest.pt",
+          "sha256": "7b3e727a0838485a89116e29b78f8a1f3a79772f20f46aece67c46fde1160f20",
+          "bytes": 226688,
+          "completed_step": 1024
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T140431Z"
+    },
+    {
+      "seed": 71,
+      "number": 6,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt06",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 4920848384,
+        "system_used_fraction": 0.7094016990646461,
+        "process_rss_bytes": 2514944,
+        "process_private_bytes": 16093184,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 17747968
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt05\\training-latest.pt",
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt06\\result.json",
+      "result_sha256": "edd422529b2f702da4ed823d6d48b1d87b56e3a049df5ad447a64ce2e12201da",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 1886,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt05\\training-latest.pt",
+          "sha256": "09804cc1d555ffbefdc6e64b0d7f87175a6827922c4b56fb71bff920487afe65",
+          "bytes": 234176,
+          "completed_step": 1856
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt05\\training-latest.pt",
+          "sha256": "09804cc1d555ffbefdc6e64b0d7f87175a6827922c4b56fb71bff920487afe65",
+          "bytes": 234176,
+          "completed_step": 1856
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T140609Z"
+    },
+    {
+      "seed": 71,
+      "number": 7,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt07",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 5612507136,
+        "system_used_fraction": 0.6685561288552901,
+        "process_rss_bytes": 2678784,
+        "process_private_bytes": 15831040,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 17747968
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt05\\training-latest.pt",
+      "returncode": 0,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt07\\result.json",
+      "result_sha256": "0ae470cf5afb40c54b67d15cce9610252989006f8f0cf5c0aa6f24ba6e9aabe8",
+      "status": "completed_synthetic_noise_pilot_not_photographic_qualification",
+      "pilot_gates_passed": false,
+      "training_progress": {
+        "completed_optimizer_steps": 2048,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt07\\training-latest.pt",
+          "sha256": "77f3dff529e30c2829186c271a10272f678d7caf1c4ef2a86588d9bf35a22b69",
+          "bytes": 235904,
+          "completed_step": 2048
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed71-attempt05\\training-latest.pt",
+          "sha256": "09804cc1d555ffbefdc6e64b0d7f87175a6827922c4b56fb71bff920487afe65",
+          "bytes": 234176,
+          "completed_step": 1856
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T140718Z"
+    },
+    {
+      "seed": 73,
+      "number": 1,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt01",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 8341069824,
+        "system_used_fraction": 0.5074221903038516,
+        "process_rss_bytes": 13844480,
+        "process_private_bytes": 18989056,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 22810624
+      },
+      "resumed_from": null,
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt01\\result.json",
+      "result_sha256": "a751b220fe5f3c938fbaa722365affbb0f543b3d5dd2102802cb18a7b06820de",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 216,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt01\\training-latest.pt",
+          "sha256": "ce39dbd8ccbdffed92dad24860f14d0a588bf62c177ecd23bae663011b80030f",
+          "bytes": 219136,
+          "completed_step": 192
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T140818Z"
+    },
+    {
+      "seed": 73,
+      "number": 2,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt02",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 7086845952,
+        "system_used_fraction": 0.5814897692564651,
+        "process_rss_bytes": 2691072,
+        "process_private_bytes": 19943424,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 22810624
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt01\\training-latest.pt",
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt02\\result.json",
+      "result_sha256": "fad39975acacc92802ba4a943fcd4978866211ff9d018a5a0250707c259d976d",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 1073,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt02\\training-latest.pt",
+          "sha256": "b8f25084f350f546b724a429664c35f3f14cdbe7e44e556ebd2c34ce4f5f051a",
+          "bytes": 226688,
+          "completed_step": 1024
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt01\\training-latest.pt",
+          "sha256": "ce39dbd8ccbdffed92dad24860f14d0a588bf62c177ecd23bae663011b80030f",
+          "bytes": 219136,
+          "completed_step": 192
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T141015Z"
+    },
+    {
+      "seed": 73,
+      "number": 3,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt03",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 6146723840,
+        "system_used_fraction": 0.6370082219906017,
+        "process_rss_bytes": 6238208,
+        "process_private_bytes": 19812352,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 22810624
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt02\\training-latest.pt",
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt03\\result.json",
+      "result_sha256": "b85214ba63eac5836816fc4f1ceca9a4b013c4c8f4d9600eff3140543e49a311",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 1024,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt02\\training-latest.pt",
+          "sha256": "b8f25084f350f546b724a429664c35f3f14cdbe7e44e556ebd2c34ce4f5f051a",
+          "bytes": 226688,
+          "completed_step": 1024
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt02\\training-latest.pt",
+          "sha256": "b8f25084f350f546b724a429664c35f3f14cdbe7e44e556ebd2c34ce4f5f051a",
+          "bytes": 226688,
+          "completed_step": 1024
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T141154Z"
+    },
+    {
+      "seed": 73,
+      "number": 4,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt04",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 5790748672,
+        "system_used_fraction": 0.6580301618927389,
+        "process_rss_bytes": 2674688,
+        "process_private_bytes": 19865600,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 22810624
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt02\\training-latest.pt",
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt04\\result.json",
+      "result_sha256": "c393d55b1c303eb665aa66e50adee72699baafd53a109fcfc28e904e0feec966",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 1921,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt04\\training-latest.pt",
+          "sha256": "d183fe2adbea05a10d6ead9e535bb3c420fff7428d3e256519d8baad735e14d8",
+          "bytes": 234752,
+          "completed_step": 1920
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt02\\training-latest.pt",
+          "sha256": "b8f25084f350f546b724a429664c35f3f14cdbe7e44e556ebd2c34ce4f5f051a",
+          "bytes": 226688,
+          "completed_step": 1024
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T141300Z"
+    },
+    {
+      "seed": 73,
+      "number": 5,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt05",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 4424093696,
+        "system_used_fraction": 0.7387373048483645,
+        "process_rss_bytes": 2482176,
+        "process_private_bytes": 19795968,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 22810624
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt04\\training-latest.pt",
+      "returncode": 1,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt05\\result.json",
+      "result_sha256": "a59e9e4f1c840b5206050b860843723d6a9953c7f3c5b04b2d454a1881f80497",
+      "status": "aborted_for_memory_budget",
+      "pilot_gates_passed": null,
+      "training_progress": {
+        "completed_optimizer_steps": 1920,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt04\\training-latest.pt",
+          "sha256": "d183fe2adbea05a10d6ead9e535bb3c420fff7428d3e256519d8baad735e14d8",
+          "bytes": 234752,
+          "completed_step": 1920
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt04\\training-latest.pt",
+          "sha256": "d183fe2adbea05a10d6ead9e535bb3c420fff7428d3e256519d8baad735e14d8",
+          "bytes": 234752,
+          "completed_step": 1920
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T141455Z"
+    },
+    {
+      "seed": 73,
+      "number": 6,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt06",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 6185070592,
+        "system_used_fraction": 0.6347436732567244,
+        "process_rss_bytes": 2850816,
+        "process_private_bytes": 19771392,
+        "process_peak_rss_bytes": 24367104,
+        "process_peak_pagefile_bytes": 22810624
+      },
+      "resumed_from": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt04\\training-latest.pt",
+      "returncode": 0,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt06\\result.json",
+      "result_sha256": "e65eb3a58a2a49361c0efd1d66e53115e0f7fb08626bb872b8430c7961b0750d",
+      "status": "completed_synthetic_noise_pilot_not_photographic_qualification",
+      "pilot_gates_passed": false,
+      "training_progress": {
+        "completed_optimizer_steps": 2048,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt06\\training-latest.pt",
+          "sha256": "407858918974c5fa020bcb34f03e85ee40d2926db6554ac49b334eb14cc9d4de",
+          "bytes": 235904,
+          "completed_step": 2048
+        },
+        "restored_from": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-quadratic-campaign-v001\\seed73-attempt04\\training-latest.pt",
+          "sha256": "d183fe2adbea05a10d6ead9e535bb3c420fff7428d3e256519d8baad735e14d8",
+          "bytes": 234752,
+          "completed_step": 1920
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T141601Z"
+    }
+  ],
+  "policy": "Both seeds evaluated even after quality failure. Retry only memory stops; latest technical checkpoint, no score selection. No new attempt after deadline; active attempt may finish normally.",
+  "pilot_gates_passed": false,
+  "finished_at_utc": "2026-11-03T14:16:40.785098+00:00"
+}

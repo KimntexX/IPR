@@ -4634,3 +4634,50 @@ Les versions Python et Torch sont désormais consignées pour la reprise.
 Si les deux graines passent après protection, une cohorte distincte avec
 trois réalisations de bruit sera ouverte ; les contrôles nouveaux restent
 inaccessibles au banc de confirmation tant que cette éligibilité manque.
+
+### Quadratique et protection fixe — premier passage des deux graines
+
+Les deux entraînements atteignent 2048 étapes, après 7 tentatives techniques
+pour 71 et 6 pour 73. Les reprises ne sélectionnent pas un score : elles
+restaurent le dernier état Adam complet du même calcul. Preuves :
+[campagne](../raw/neural-campaign-v001-20261103T135948Z.json),
+[71](../raw/neural-noisy-moment-v001-20261103T140718Z.json) et
+[73](../raw/neural-noisy-moment-v001-20261103T141601Z.json).
+Sans protection, les deux modèles échouent encore sur les contours et le
+gain global à faible bruit ; les ondes achromatiques faibles passent désormais.
+Les rapports RGB tous cas sont 1,11967/1,17163 au faible bruit et
+0,83470/0,89397 au bruit fort. Ce n'est donc pas un candidat admissible seul.
+
+La protection de courbure déjà fixée, appliquée sans ajustement ni
+réentraînement, fait passer **tous les critères déclarés pour les deux graines**.
+Les rapports d'erreur RGB au parent deviennent :
+
+| Groupe | Bruit | Graine 71 | Graine 73 |
+| --- | --- | ---: | ---: |
+| Tous les cas | Faible | 0,90920 | 0,91131 |
+| Tous les cas | Fort | 0,71086 | 0,70338 |
+| Mélange des cinq familles | Faible | 0,61096 | 0,62275 |
+| Mélange des cinq familles | Fort | 0,37801 | 0,36491 |
+
+Les contrôles des gradients, couleur, absence de bruit et symétrie sont
+également conservés. Les 50,29 secondes de mesure ont un pic résident
+échantillonné de 237,37 Mio. Un premier départ interrompu immédiatement par
+la RAM globale est conservé, sans interprétation photographique.
+Preuves : [arrêt mémoire](../raw/neural-edge-protection-v001-20261103T142303Z.json),
+[mesure complète](../raw/neural-edge-protection-v001-20261103T142450Z.json).
+
+Cette réussite concerne le banc de développement consulté, pas encore des
+photographies inconnues. Le modèle retenu pour la prochaine épreuve est
+donc **quadratique + protection fixe**, pour les deux graines, sans choix
+de la meilleure initialisation. La confirmation ouvre maintenant 52 nouveaux
+contenus et trois réalisations de bruit, avec les mêmes critères et aucun
+nouvel apprentissage. Les contrôles sans bruit répétés ne constituent pas
+trois références indépendantes. Tout échec y restera visible.
+
+Un audit technique distinct compare des centres identiques entre vues
+384 et tuiles 128/160/192, sur les 27 ROI CFA déjà capturées et quatre
+phases de bruit synthétique. Les halos 64 et 80 pixels doivent respecter
+2×10⁻⁶ d'écart absolu ; le halo 48 reste diagnostique. Les sigma constants
+0/0,01/0,03 sont des scénarios de contrainte, pas une calibration ISO.
+Trois tests vérifient alignement, rejet des phases de pooling incompatibles,
+finitude et présence des neuf ROI qualifiées pour chacune des trois sources.
