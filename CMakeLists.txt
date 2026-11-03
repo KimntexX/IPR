@@ -93,6 +93,8 @@ set(IPR_ENGINE_SOURCES
     src/stack/StackAlignment.cpp
     src/stack/StackMerge.h
     src/stack/StackMerge.cpp
+    src/stack/StackTurbulence.h
+    src/stack/StackTurbulence.cpp
     src/stack/StackJob.h
     src/stack/StackJob.cpp
     src/stack/StackSession.h

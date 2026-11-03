@@ -3,6 +3,7 @@
 
 #include "StackAlignment.h"
 #include "StackMerge.h"
+#include "StackTurbulence.h"
 
 #include <QString>
 #include <opencv2/core.hpp>
@@ -40,6 +41,9 @@ struct Request
     bool mergeReference = true;
     // Corrects what one transform leaves over a scene with depth.
     bool localRefinement = true;
+    // A second pass on a small subject, which only a similarity can register: see StackTurbulence.
+    bool correctTurbulence = true;
+    StackTurbulence::Options turbulence;
     StackAlignment::Options alignment;
     StackAlignment::LocalOptions local;
     std::function<bool()> cancelled;
@@ -71,6 +75,8 @@ struct Result
     StackMerge::Statistics merge;
     quint64 scratchBytes = 0;                         // written to the scratch folder
     int bandRows = 0;
+    StackTurbulence::Report turbulence;
+    cv::Rect subject;                                 // of the reference's frame, when a pass ran
 };
 
 // The largest upright rectangle in a convex area given by its span on each row: spans[y]

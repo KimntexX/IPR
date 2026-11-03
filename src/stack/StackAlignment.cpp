@@ -460,7 +460,24 @@ Result estimate(const Pyramid &reference, const Pyramid &frame, const Options &o
             }
             return fitted && int(agreeing.size()) >= options.minimumInliers;
         };
-        fitted = attempt(gridSites(view, options)) || attempt(detailedSites(view, options));
+        fitted = attempt(gridSites(view, options));
+        // A similarity means a small subject, which the grid hardly touches: its most detailed
+        // blocks say more, if they agree. Otherwise what the grid found stands.
+        if (!fitted || model == Model::Similarity) {
+            const bool fromGrid = fitted;
+            const cv::Matx33d gridCandidate = candidate;
+            const std::vector<Match> gridAgreeing = agreeing;
+            const Model gridModel = model;
+            const int gridBlocks = result.blocks;
+            fitted = attempt(detailedSites(view, options));
+            if (!fitted && fromGrid) {
+                candidate = gridCandidate;
+                agreeing = gridAgreeing;
+                model = gridModel;
+                result.blocks = gridBlocks;
+                fitted = true;
+            }
+        }
         if (fitted) {
             guess = candidate;
             inliers = agreeing;
@@ -488,6 +505,12 @@ Result estimate(const Pyramid &reference, const Pyramid &frame, const Options &o
     }
     result.residual = std::sqrt(squares / double(inliers.size()));
     result.support = supportOf(inliers, size);
+    cv::Point2d lowest = inliers.front().reference, highest = lowest;
+    for (const Match &m : inliers) {
+        lowest = {std::min(lowest.x, m.reference.x), std::min(lowest.y, m.reference.y)};
+        highest = {std::max(highest.x, m.reference.x), std::max(highest.y, m.reference.y)};
+    }
+    result.inlierArea = cv::Rect2d(lowest, highest);
     result.referenceToFrame = guess;
     result.valid = true;
     return result;

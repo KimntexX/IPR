@@ -339,6 +339,121 @@ void parallax()
     check(global.frames[0].localBlocks == 0, "without it, no field");
 }
 
+// A smooth random deformation, as the atmosphere gives each view of a subject.
+cv::Mat deformed(const cv::Mat &image, double amplitude, uint64_t seed)
+{
+    cv::RNG random(seed);
+    // Cells much smaller than the subject: no single transform follows them.
+    const cv::Size cells(image.cols / 60, image.rows / 60);
+    cv::Mat coarseX(cells, CV_32FC1), coarseY(cells, CV_32FC1);
+    random.fill(coarseX, cv::RNG::NORMAL, 0.0, amplitude);
+    random.fill(coarseY, cv::RNG::NORMAL, 0.0, amplitude);
+    cv::Mat moveX, moveY;
+    cv::resize(coarseX, moveX, image.size(), 0, 0, cv::INTER_CUBIC);
+    cv::resize(coarseY, moveY, image.size(), 0, 0, cv::INTER_CUBIC);
+    cv::Mat mapX(image.size(), CV_32FC1), mapY(image.size(), CV_32FC1);
+    for (int y = 0; y < image.rows; ++y)
+        for (int x = 0; x < image.cols; ++x) {
+            mapX.at<float>(y, x) = float(x) + moveX.at<float>(y, x);
+            mapY.at<float>(y, x) = float(y) + moveY.at<float>(y, x);
+        }
+    cv::Mat output;
+    cv::remap(image, output, mapX, mapY, cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
+    return output;
+}
+
+bool scratchEmpty(const QTemporaryDir &root);
+
+void turbulence()
+{
+    // A disc of detail on a black sky, drifting, deformed differently in each view.
+    const cv::Size size(1400, 1000);
+    const cv::Rect disc(600, 380, 240, 240);
+    const cv::Mat detail = scene(disc.size(), 31) * 1.5;
+    cv::Mat sky(size, CV_32FC3, cv::Scalar::all(0.001));
+    detail.copyTo(sky(disc));
+    const int count = 12;
+    QTemporaryDir root;
+    const auto stack = [&](bool correct, int blurred) {
+        StackJob::Request request;
+        request.frameCount = count;
+        request.referenceIndex = count / 2;
+        request.scratchRoot = root.path();
+        request.minimumFreeDiskBytes = 0;
+        request.correctTurbulence = correct;
+        request.frame = [&, blurred](int index) {
+            cv::Mat moved;
+            const cv::Matx23d drift(1, 0, (index - count / 2) * 3.1, 0, 1, (index - count / 2) * 1.9);
+            cv::warpAffine(deformed(sky, 0.8, uint64_t(40 + index)), moved, drift, size, cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
+            // The first views are badly seen: blurred.
+            if (index < blurred)
+                cv::GaussianBlur(moved, moved, cv::Size(), 1.6);
+            StackJob::Frame frame;
+            frame.cameraRgb = noisy(moved, 0.004, uint64_t(600 + index));
+            return frame;
+        };
+        return StackJob::run(request);
+    };
+    const StackJob::Result plain = stack(false, 4);
+    const StackJob::Result corrected = stack(true, 4);
+    check(plain.success && corrected.success, "both stacks of a small subject succeed");
+    if (!plain.success || !corrected.success)
+        return;
+    check(plain.frames[0].alignment.model == StackAlignment::Model::Similarity, "a small subject holds a similarity");
+    check(!plain.turbulence.applied, "without the pass, nothing changes");
+    if (!corrected.turbulence.applied)
+        std::cerr << "not applied: " << corrected.turbulence.reason.toStdString() << '\n';
+    check(corrected.turbulence.applied && corrected.turbulence.views == count, "the pass sees every view");
+    check(corrected.turbulence.kept == count / 2, "and keeps the sharpest half");
+    check(corrected.turbulence.measuredBlocks > 30, "measured by many small blocks");
+    check((corrected.subject & disc) == disc, "its area holds the whole subject");
+
+    // The blurred views measure less sharp than the others; the reference comes first.
+    const std::vector<double> &sharpness = corrected.turbulence.sharpness;
+    double blurredSum = 0.0, sharpSum = 0.0;
+    int blurredCount = 0, sharpCount = 0;
+    for (size_t i = 0; i < sharpness.size(); ++i) {
+        if (i >= 1 && i <= 4) {
+            blurredSum += sharpness[i];
+            ++blurredCount;
+        } else {
+            sharpSum += sharpness[i];
+            ++sharpCount;
+        }
+    }
+    check(blurredCount == 4 && blurredSum / blurredCount < sharpSum / sharpCount, "a blurred view measures less sharp");
+
+    // Closer to the true subject than the plain stack, which averages the deformations.
+    const cv::Rect middle(disc.x + 20, disc.y + 20, disc.width - 40, disc.height - 40);
+    const auto errorOf = [&](const StackJob::Result &result) {
+        const cv::Rect inResult = middle - result.commonArea.tl();
+        cv::Mat difference = result.cameraRgb(inResult) - sky(middle);
+        return cv::norm(difference, cv::NORM_L2) / std::sqrt(double(difference.total() * 3));
+    };
+    const double before = errorOf(plain), after = errorOf(corrected);
+    if (after > before * 0.95)
+        std::cerr << "turbulence error before " << before << " after " << after << '\n';
+    check(after <= before * 0.95, "the pass recovers detail the first stack lost");
+
+    // The sky away from the subject stays that of the first stack.
+    const cv::Rect far(60, 60, 200, 200);
+    const auto at = [](const StackJob::Result &result, const cv::Rect &area) { return result.cameraRgb(area - result.commonArea.tl()); };
+    check(sameBytes(at(plain, far), at(corrected, far)), "the rest of the image is untouched");
+    check(scratchEmpty(root), "and the scratch folder is gone");
+
+    // Direct refusals.
+    cv::Mat merged(100, 100, CV_32FC3, cv::Scalar::all(0.2));
+    StackTurbulence::View view;
+    view.pixels = cv::Mat(100, 100, CV_32FC3, cv::Scalar::all(0.2));
+    StackTurbulence::Report report = StackTurbulence::refine(merged, cv::Rect(0, 0, 200, 200), cv::Point(), {view, view, view});
+    check(!report.applied && !report.reason.isEmpty(), "an area outside the image is refused");
+    report = StackTurbulence::refine(merged, cv::Rect(0, 0, 50, 50), cv::Point(), {view});
+    check(!report.applied && !report.reason.isEmpty(), "too few views are refused");
+    report = StackTurbulence::refine(merged, cv::Rect(0, 0, 50, 50), cv::Point(), {view, view, view}, {}, [] { return true; });
+    check(!report.applied, "cancellation stops the pass");
+    check(cv::norm(merged - cv::Scalar::all(0.2), cv::NORM_INF) < 1e-6, "and a refused pass leaves the stack");
+}
+
 // A series of noisy views of one scene; `extra` adds the frames that must be left out.
 struct Series
 {
@@ -554,6 +669,7 @@ int main(int argc, char **argv)
     localFields();
     parallax();
     job();
+    turbulence();
     if (passed)
         std::cout << "stack: ok\n";
     return passed ? 0 : 1;

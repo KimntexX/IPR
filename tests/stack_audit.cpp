@@ -240,6 +240,47 @@ QJsonObject transfer(const cv::Mat &reference, const cv::Mat &a, const cv::Mat &
                        {QStringLiteral("tiles"), int(tiles.size())}};
 }
 
+// The signal two stacks with independent noise have in common, by frequency: <A conj B>.
+// Noise cancels in it, so a rise at high frequencies is detail recovered, not noise kept.
+QJsonObject sharedSignal(const cv::Mat &a, const cv::Mat &b, const cv::Rect &area)
+{
+    constexpr int bins = 9;
+    constexpr int step = tileSide / 2;
+    std::array<double, bins> power{};
+    cv::Mat window;
+    cv::createHanningWindow(window, cv::Size(tileSide, tileSide), CV_32F);
+    const cv::Mat la = luminanceOf(a), lb = luminanceOf(b);
+    const auto spectrum = [&](const cv::Mat &image, const cv::Rect &tile) {
+        cv::Mat windowed, out;
+        cv::multiply(image(tile) - cv::mean(image(tile)), window, windowed);
+        cv::dft(windowed, out, cv::DFT_COMPLEX_OUTPUT);
+        return out;
+    };
+    int tiles = 0;
+    for (int y = area.y; y + tileSide <= area.y + area.height; y += step)
+        for (int x = area.x; x + tileSide <= area.x + area.width; x += step) {
+            const cv::Rect tile(x, y, tileSide, tileSide);
+            const cv::Mat fa = spectrum(la, tile), fb = spectrum(lb, tile);
+            ++tiles;
+            for (int v = 0; v < tileSide; ++v)
+                for (int u = 0; u < tileSide; ++u) {
+                    const double fu = (u <= tileSide / 2 ? u : u - tileSide) / double(tileSide);
+                    const double fv = (v <= tileSide / 2 ? v : v - tileSide) / double(tileSide);
+                    const int bin = int(std::hypot(fu, fv) / 0.05) - 1;
+                    if (bin < 0 || bin >= bins)
+                        continue;
+                    const cv::Vec2f pa = fa.at<cv::Vec2f>(v, u), pb = fb.at<cv::Vec2f>(v, u);
+                    power[size_t(bin)] += double(pa[0]) * pb[0] + double(pa[1]) * pb[1];
+                }
+        }
+    QJsonArray frequencies, values;
+    for (int bin = 0; bin < bins; ++bin) {
+        frequencies.append((bin + 1.5) * 0.05);
+        values.append(power[size_t(bin)]);
+    }
+    return QJsonObject{{QStringLiteral("cycles_per_pixel"), frequencies}, {QStringLiteral("power"), values}, {QStringLiteral("tiles"), tiles}};
+}
+
 // How far blocks of the stack lie from the reference, what one transform leaves over a
 // scene with depth (parallax).
 QJsonObject localShifts(const cv::Mat &reference, const cv::Mat &stack, const std::vector<cv::Rect> &tiles)
@@ -400,6 +441,8 @@ int main(int argc, char **argv)
         request.scratchRoot = scratchRoot;
         request.mergeReference = mergeReference;
         request.localRefinement = !args.contains(QStringLiteral("--no-local"));
+        request.correctTurbulence = !args.contains(QStringLiteral("--no-turbulence"));
+        request.turbulence.keepShare = value(QStringLiteral("--keep"), QStringLiteral("0.5")).toDouble();
         request.frame = [&](int index) {
             StackJob::Frame frame;
             frame.cameraRgb = readCache(cache.filePath(names[indexes[size_t(index)]] + QStringLiteral(".rgb")));
@@ -433,7 +476,7 @@ int main(int argc, char **argv)
     const bool quick = args.contains(QStringLiteral("--quick"));
     QJsonArray growth;
     for (const int frames : {2, 4, 8, 16}) {
-        if (quick || frames >= count)
+        if (quick || args.contains(QStringLiteral("--no-growth")) || frames >= count)
             break;
         std::vector<int> subset;
         for (int i = 0; i < frames; ++i)
@@ -495,6 +538,13 @@ int main(int argc, char **argv)
                              {QStringLiteral("ideal_half_ratio"), 1.0 / std::sqrt(0.5 * (halfA.usedFrames + halfB.usedFrames))},
                              {QStringLiteral("transfer_textured"), transfer(r, a, b, halfTiles.textured)},
                              {QStringLiteral("local_shift_textured"), localShifts(r, a, halfTiles.textured)}};
+        const QStringList subjectParts = value(QStringLiteral("--subject")).split(QLatin1Char(','));
+        if (subjectParts.size() == 4) {
+            const cv::Rect wanted(subjectParts[0].toInt(), subjectParts[1].toInt(), subjectParts[2].toInt(), subjectParts[3].toInt());
+            const cv::Rect inHalves = (wanted & area) - area.tl();
+            detail.insert(QStringLiteral("shared_signal_subject"), sharedSignal(a, b, inHalves));
+            detail.insert(QStringLiteral("subject"), QJsonArray{wanted.x, wanted.y, wanted.width, wanted.height});
+        }
     }
 
     // The reference and the stack side by side, on a tile of each kind, at 100 %.
@@ -642,6 +692,20 @@ int main(int argc, char **argv)
         {QStringLiteral("growth"), growth},
         {QStringLiteral("detail"), detail},
         {QStringLiteral("dng_round_trip"), dngRoundTrip},
+        {QStringLiteral("turbulence"), QJsonObject{{QStringLiteral("applied"), whole.turbulence.applied},
+                                                   {QStringLiteral("views"), whole.turbulence.views},
+                                                   {QStringLiteral("kept"), whole.turbulence.kept},
+                                                   {QStringLiteral("keep_share"), value(QStringLiteral("--keep"), QStringLiteral("0.5")).toDouble()},
+                                                   {QStringLiteral("measured_blocks"), whole.turbulence.measuredBlocks},
+                                                   {QStringLiteral("largest_px"), whole.turbulence.largestDisplacement},
+                                                   {QStringLiteral("reason"), whole.turbulence.reason},
+                                                   {QStringLiteral("subject"), QJsonArray{whole.subject.x, whole.subject.y, whole.subject.width, whole.subject.height}},
+                                                   {QStringLiteral("sharpness"), [&] {
+                                                        QJsonArray values;
+                                                        for (const double v : whole.turbulence.sharpness)
+                                                            values.append(v);
+                                                        return values;
+                                                    }()}}},
     };
     const QString target = QDir(evidence.isEmpty() ? out.path() : evidence).filePath(root.value(QStringLiteral("campaign_id")).toString() + QStringLiteral(".json"));
     QFile file(target);

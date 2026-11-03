@@ -19,6 +19,38 @@ constexpr float darkestForGain = 0.005f;  // of white: below it, the noise decid
 constexpr float brightestForGain = 0.9f;  // of white: above it, clipping does
 constexpr double largestGainGap = 0.25;   // a frame further from the reference is another exposure
 constexpr int minimumBandRows = 16;
+constexpr double subjectMargin = 0.15;    // around what the matches span, of its size
+
+// What a small subject needs around what the matches span.
+cv::Rect subjectArea(const cv::Rect2d &inliers, const cv::Size &size)
+{
+    const double marginX = subjectMargin * inliers.width + 32.0, marginY = subjectMargin * inliers.height + 32.0;
+    const cv::Rect area(int(inliers.x - marginX), int(inliers.y - marginY),
+                        int(inliers.width + 2.0 * marginX), int(inliers.height + 2.0 * marginY));
+    return area & cv::Rect(0, 0, size.width, size.height);
+}
+
+// The pixels of a frame that the subject's area can reach, kept as decoded.
+StackTurbulence::View subjectView(const cv::Mat &frame, const cv::Rect &subject, const cv::Matx33d &referenceToFrame, int reach)
+{
+    cv::Point2d lowest(frame.cols, frame.rows), highest(0, 0);
+    for (const cv::Point corner : {subject.tl(), cv::Point(subject.x + subject.width, subject.y),
+                                   cv::Point(subject.x, subject.y + subject.height), subject.br()}) {
+        const cv::Vec3d mapped = referenceToFrame * cv::Vec3d(corner.x, corner.y, 1.0);
+        const cv::Point2d place(mapped[0] / mapped[2], mapped[1] / mapped[2]);
+        lowest = {std::min(lowest.x, place.x), std::min(lowest.y, place.y)};
+        highest = {std::max(highest.x, place.x), std::max(highest.y, place.y)};
+    }
+    const cv::Rect wanted(int(lowest.x) - reach, int(lowest.y) - reach,
+                          int(highest.x - lowest.x) + 2 * reach + 1, int(highest.y - lowest.y) + 2 * reach + 1);
+    const cv::Rect area = wanted & cv::Rect(0, 0, frame.cols, frame.rows);
+    StackTurbulence::View view;
+    view.origin = area.tl();
+    view.referenceToFrame = referenceToFrame;
+    if (!area.empty())
+        view.pixels = frame(area).clone();
+    return view;
+}
 
 // One registered frame on disk, row after row.
 class SpooledFrame
@@ -223,6 +255,12 @@ Result run(const Request &request)
     std::vector<std::unique_ptr<SpooledFrame>> spool;
 
     std::vector<cv::Vec2i> spans(size_t(size.height), cv::Vec2i(0, size.width));
+    cv::Rect subject;
+    std::vector<StackTurbulence::View> views;
+    StackTurbulence::View pendingView;
+    bool hasPendingView = false;
+    // The reference waits for the first frame that tells whether the subject is small.
+    cv::Mat referencePixels;
     const StackAlignment::Pyramid referencePyramid = StackAlignment::buildPyramid(reference.cameraRgb, request.alignment);
     const cv::Mat referenceProxy = proxyOf(reference.cameraRgb);
 
@@ -244,6 +282,8 @@ Result run(const Request &request)
         result.error = QStringLiteral("Écriture impossible dans le dossier tampon (disque plein ?).");
         return result;
     }
+    if (request.correctTurbulence && request.mergeReference)
+        referencePixels = reference.cameraRgb;
     reference.cameraRgb.release();
     advance();
 
@@ -254,6 +294,7 @@ Result run(const Request &request)
             return result;
         FrameReport &report = result.frames[size_t(index)];
         report.index = index;
+        hasPendingView = false;
         Frame frame = request.frame(index);
         if (frame.cameraRgb.empty() || frame.cameraRgb.type() != CV_32FC3 || frame.cameraRgb.size() != size) {
             report.exclusion = !frame.error.isEmpty() ? frame.error
@@ -271,6 +312,22 @@ Result run(const Request &request)
             advance();
             continue;
         }
+        // A small subject: its original pixels wait for the second pass.
+        if (request.correctTurbulence && report.alignment.model == StackAlignment::Model::Similarity) {
+            if (subject.empty())
+                subject = subjectArea(report.alignment.inlierArea, size);
+            const quint64 viewBytes = quint64(subject.area()) * quint64(3 * sizeof(float));
+            const int reach = request.turbulence.local.radius + request.turbulence.local.blockHalf + interpolationMargin;
+            if (viewBytes * quint64(request.frameCount) <= request.memoryBudgetBytes) {
+                if (!referencePixels.empty())
+                    views.push_back(subjectView(referencePixels, subject, cv::Matx33d::eye(), reach));
+                pendingView = subjectView(frame.cameraRgb, subject, report.alignment.referenceToFrame, reach);
+                hasPendingView = true;
+            } else {
+                result.turbulence.reason = QStringLiteral("Sujet trop grand pour la seconde passe.");
+            }
+        }
+        referencePixels.release();
         cv::Mat registered;
         double fieldReach = 0.0;
         if (request.localRefinement) {
@@ -305,6 +362,11 @@ Result run(const Request &request)
         if (!spoolFrame(registered)) {
             result.error = QStringLiteral("Écriture impossible dans le dossier tampon (disque plein ?).");
             return result;
+        }
+        if (hasPendingView) {
+            pendingView.gains = report.gains;
+            views.push_back(std::move(pendingView));
+            hasPendingView = false;
         }
         narrowSpans(report.alignment.referenceToFrame, size, fieldReach, spans);
         report.used = true;
@@ -363,6 +425,17 @@ Result run(const Request &request)
         result.merge.samples += statistics.samples;
         result.merge.rejected += statistics.rejected;
         advance();
+    }
+    if (!views.empty()) {
+        const cv::Rect inMerged = (subject & result.commonArea) - result.commonArea.tl();
+        result.subject = inMerged + result.commonArea.tl();
+        StackTurbulence::Options options = request.turbulence;
+        options.rejectionSigma = request.rejectionSigma;
+        result.turbulence = StackTurbulence::refine(result.cameraRgb, inMerged, result.commonArea.tl(), views, options, request.cancelled);
+        if (stopped()) {
+            result.cameraRgb.release();
+            return result;
+        }
     }
     result.success = true;
     return result;

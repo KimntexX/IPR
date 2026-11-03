@@ -76,6 +76,7 @@ private:
         int usedFrames = 0;
         int leftOut = 0;
         double areaKept = 0.0;
+        int sharpestViews = 0;   // of the turbulence pass, 0 when none ran
     };
     struct Outcome
     {
