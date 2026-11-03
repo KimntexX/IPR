@@ -42,6 +42,18 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 
 | IHM-CONN-013 | Raccordé et validé par l'utilisateur, intégré à `dev` | Panneau Géométrie : voir ci-dessous |
 
+| IHM-CONN-015 | Moteur prêt sur `patch_layers`, panneau à faire | Panneau Masques : voir ci-dessous |
+
+#### IHM-CONN-015 — panneau Masques (B2)
+
+Le moteur expose sur `editor` : `localMasks` (masques, formes, valeurs), `addLocalMask(type)`,
+`removeLocalMask`, `duplicateLocalMask`, `setLocalMaskName`, `setLocalMaskVisible`,
+`setLocalMaskOpacity`, `setLocalMaskValue(masque, réglage, valeur)`,
+`addLocalMaskShape(masque, type, combinaison)`, `removeLocalMaskShape`,
+`setLocalMaskShape(masque, forme, champs)`, `addLocalMaskStroke(masque, forme, points, taille, contour, flux)`.
+Coordonnées : canevas normalisé ; `Geometry::viewToCanvas` passe de l'écran recadré au canevas.
+Reste à exposer pour le panneau : l'affichage de la couverture d'un masque.
+
 #### IHM-CONN-013 — panneau Géométrie (B1)
 
 Le moteur expose sur `editor` : `geometry` (valeurs, taille du cadre, `hasCrop`,
