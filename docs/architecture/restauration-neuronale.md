@@ -13,6 +13,11 @@ un seuil global92 % pour cette campagne, en conservant les plafonds propres
 au processus. Le plan est tracé dans une nouvelle version avant reprise,
 sans modifier données, modèles ou critères photographiques.
 
+La relance à92 % est également interrompue par un pic global95,08 %,
+avec environ307Mio résidents propres. Aucun résultat final disponible,
+aucun calcul actif lors de la dernière vérification. Une reprise technique
+testée est recommandée pour éviter de perdre les étapes déjà calculées.
+
 ## État historique du 2 novembre 2026
 
 **Structure Bayer expérimentale fiabilisée sur signaux synthétiques,

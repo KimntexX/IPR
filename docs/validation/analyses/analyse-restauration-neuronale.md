@@ -4267,3 +4267,25 @@ dossier ; vérités, observations bruitées, parents, graines, configuration
 numérique et seuils de qualification doivent correspondre au plan initial.
 Les deux modèles repartent de leurs parents déclarés, sans sélection ni
 checkpoint intermédiaire. Aucune image source ou sortie antérieure écrasée.
+
+### Vérification après relance à92 % — 3 novembre2026
+
+La tentative71 s'est arrêtée après236,70s : pic physique global95,08 %,
+pour un pic propre307,20Mio résidents et956,36Mio engagés. Le garde
+92 % a déclenché l'arrêt au contrôle suivant, sans dépassement des
+plafonds propres au processus. Le journal confirme le passage1024/2048,
+pas de fin2048 ; l'étape exacte d'arrêt n'est pas conservée dans le JSON.
+La graine73 n'a pas démarré. Ni checkpoint final ni évaluation disponible.
+
+La preuve [arrêt sous seuil92 %](../raw/neural-noisy-moment-v001-20261103T114145Z.json)
+est conservée. Une lecture après clôture trouve59,22 % de mémoire globale
+utilisée : le pic n'est plus actif. Cela ne permet pas d'attribuer ce pic
+à une application particulière ni de conclure sur le modèle de bruit.
+
+**État courant : aucun calcul actif, résultats de débruitage toujours
+non qualifiés.** Pas de nouvelle relance lors de cette vérification.
+La prochaine amélioration recommandée est un checkpoint technique de
+reprise (poids, optimiseur, étape, compteurs et état aléatoire), avec
+vérification qu'un calcul repris reproduit le calcul continu. Il doit
+conserver l'évaluation au checkpoint final fixé, sans permettre une
+sélection du meilleur état. Cette reprise n'est pas encore implémentée.
