@@ -18,7 +18,7 @@ class NoisyMomentUNet(LocalMomentUNet):
 
     Canonical physical CFA planes remain distinct. A small equivariant front
     end predicts a correction bounded by three supplied standard deviations.
-    The reconstruction trunk is trained jointly, including noise-free anchors.
+    The study config explicitly freezes the trunk or permits joint fitting.
     Sigma is an input estimate, not a guarantee of physical sensor calibration.
     """
     def __init__(self, width=8):

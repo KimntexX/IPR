@@ -4690,7 +4690,7 @@ les crit?res sans r?entra?nement. Les rapports RGB complets/parent tous
 cas sont 0,89005?0,89111 et 0,89730?0,89812 au faible bruit pour71/73 ;
 0,68087?0,68206 et 0,68375?0,68463 au fort. Les52 nouveaux contenus sont
 communs aux graines ; les1248 champs ? bruit positif distincts sont
-r?p?t?s ? poids diff?rents, pas2486 sc?nes ind?pendantes.
+r?p?t?s ? poids diff?rents, pas2496 sc?nes ind?pendantes.
 La mesure compl?te dure158,61s et atteint242,02Mio r?sidents. Un arr?t
 m?moire ant?rieur est conserv?.
 Preuves : [arr?t](../raw/neural-noisy-confirmation-v001-20261103T142620Z.json),
@@ -4732,3 +4732,32 @@ exp?rience enrichit les donn?es d'apprentissage en textures faibles de
 fr?quences vari?es, avec les m?mes parents, budgets et graines. Les cas
 de cette extension deviennent consult?s et ne seront pas pr?sent?s comme
 r?serv?s dans une prochaine comparaison. Aucun moteur de production modifi?.
+
+
+### Apprentissage enrichi ? protocole fix? avant le calcul
+
+La prochaine exp?rience conserve le moteur math?matique, les parents
+propres, 2048 ?tapes, Adam0,001, microbatch1?4, les graines71/73 et
+la protection de courbure. Elle remplace uniquement les expositions des
+deux familles d'ondes par deux ondes planes m?lang?es, g?n?r?es ? la
+vol?e : fr?quences log-uniformes2?28cycles/128, amplitudes0,003?0,12,
+angles/phases continus et niveau moyen?0,02?0,6. L'onde secondaire p?se0,35,
+avec normalisation par1,35 ; les plans achromatiques restent identiques,
+les pond?rations chromatiques varient. Aucun ?cr?tage. Les autres familles
+et leur calendrier restent inchang?s. Ce changement de distribution est
+plus large qu'un simple ajout de fr?quences, ce qui limite l'attribution
+causale des ?ventuels gains.
+
+Chaque exposition est fig?e par num?ro de micro-lot, famille, phase Bayer,
+param?tres et empreinte du signal. Le train valide la couverture exacte.
+Le g?n?rateur local ne modifie pas le RNG global ; il conserve au plus
+une image et le cache de quatre ?chantillons historiques. Trois tests
+cibl?s v?rifient d?terminisme, contrats, vari?t? et reprise effective
+au bit pr?s apr?s interruption d'une accumulation sur les nouvelles
+textures. Trois tests de reprise g?n?rique restent positifs. La sauvegarde
+technique est li?e au nouveau plan ; aucun ancien poids bruit? n'est repris
+pour ?viter de confondre enrichissement et budget d'apprentissage accru.
+
+Les contr?les d?j? vus restent des contr?les de d?veloppement. Toute
+confirmation ult?rieure utilisera encore d'autres contenus, avec les
+m?mes crit?res. Le test spectral d?j? consult? ne sera plus nomm? r?serv?.

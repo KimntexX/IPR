@@ -27,6 +27,7 @@ from run_memory_bounded_reconstruction import SampleStream
 from run_synthetic_joint_pilot import tensor_hash, metrics, aggregate
 from synthetic_bayer_data import PATTERNS, FAMILIES, signal, noisy_observation
 from training_resume import save_checkpoint, restore_checkpoint
+from fine_texture_training import POLICY as TEXTURE_POLICY, texture
 
 
 NOISE = ((0., 0.), (.0002, .000025), (.0008, .0004))
@@ -37,7 +38,7 @@ TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+FORWARD_TOOLS+('run_noisy_moment_pilot.p
     'memory_budget.py', 'prepare_closed_inference.py', 'reconstruction_loss.py',
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
     'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py',
-    'training_resume.py', 'noisy_training_policy.py', 'noise_conditioning.py')))
+    'training_resume.py', 'noisy_training_policy.py', 'noise_conditioning.py', 'fine_texture_training.py')))
 
 
 def observation(truth, tags, noise_index, seed):
@@ -93,6 +94,17 @@ def prepare(root, source, priors, parents, output, training_scope='cfa_front'):
                     observed.append(dict(case_index=index, phase=phase, noise_index=level, noise_seed=noise_seed,
                         noisy_sha256=tensor_hash(packed), sigma_sha256=tensor_hash(sigma)))
         guard.check()
+        schedule, _ = balanced_schedule(proof['freeze']['train_slots'], 2048, 4, 128)
+        texture_events = []
+        for step, entry in enumerate(schedule, start=1):
+            for position, (index, phase) in enumerate(zip(entry['ids'], entry['phases'])):
+                family = proof['freeze']['train_slots'][index]['family']
+                if family in TEXTURE_POLICY['families']:
+                    guard.check()
+                    serial = 4*(step-1)+position
+                    target, metadata = texture(family, serial, 128)
+                    texture_events.append(dict(serial=serial, family=family, phase=phase,
+                        target_sha256=tensor_hash(target), **metadata))
     plan = dict(schema_version=3, frozen_at_utc=datetime.now(timezone.utc).isoformat(),
         source=str(source.resolve()), source_result_sha256=digest(source/'result.json'), parents=references,
         prior_plan_sha256=[digest(p) for p in priors], edges=edges, mixed=mixed, observations=observed,
@@ -102,9 +114,10 @@ def prepare(root, source, priors, parents, output, training_scope='cfa_front'):
         gates=proof['freeze']['gates'], memory_policy=MEMORY_POLICY,
         runtime=runtime_versions(),
         conditioning='Zero-initialized equivariant4to8 branch on observed centre-minus5x5quadratic-fit residual, correct centre covariance in variance, standardized and bounded to8 feature units. No signal clipping.',
+        texture_augmentation=dict(policy=TEXTURE_POLICY, events=texture_events),
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
         noise_gate_policy='Each positive level: RGB MSE full/parent<=.98, opponent full/parent<=1, full/without_correction RGB<=1; weak/edge gradient>=.95 parent. Zero noise retains original12gates, new mixed and historical20/80.',
-        training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, same realizations across models. Adam scope='+training_scope+'; no early stopping.',
+        training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; replace wave slots by frozen broadband two-wave textures, other slots unchanged. Noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, paired realizations across models. Adam scope='+training_scope+'; no early stopping.',
         checkpoint_policy=dict(interval_steps=64, boundary='After completed Adam step only; restart partial microbatch from last committed checkpoint.',
             selection='One atomic latest checkpoint, no validation scores or best-checkpoint selection.',
             state='CPU model, Adam, completed step, losses, exposure counts, torch CPU RNG; data/noise draws derive deterministically from step.'),
@@ -119,13 +132,21 @@ def prepare(root, source, priors, parents, output, training_scope='cfa_front'):
     print('PREPARED '+str(output/'plan.json'), flush=True)
 
 
-def train(model, source, config, guard, checkpoint_path, context, progress, interval_steps, resume=None):
+def train(model, source, config, guard, checkpoint_path, context, progress, interval_steps, resume=None, texture_events=()):
     if isinstance(interval_steps, bool) or not isinstance(interval_steps, int) or not 1 <= interval_steps <= config['steps']:
         raise ValueError('Positive checkpoint interval within training horizon required')
     schedule, _ = balanced_schedule(source['freeze']['train_slots'], 2048, 4, config['side'])
     if tensor_hash(torch.tensor([[*e['ids'], *e['phases']] for e in schedule])) != source['freeze']['phase_schedule_sha256']:
         raise ValueError('Training schedule changed')
     stream = SampleStream(source)
+    events = {e['serial']: e for e in texture_events}
+    if len(events) != len(texture_events):
+        raise ValueError('Duplicate training texture event')
+    expected = {4*(step-1)+position for step, entry in enumerate(schedule, start=1)
+        for position, index in enumerate(entry['ids'])
+        if source['freeze']['train_slots'][index]['family'] in TEXTURE_POLICY['families']}
+    if set(events) != expected:
+        raise ValueError('Exact frozen training texture coverage required')
     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
     completed, losses, counts = 0, [], {}
     if resume is not None:
@@ -142,8 +163,18 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
         total = 0.
         for position, (index, phase) in enumerate(zip(entry['ids'], entry['phases'])):
             guard.check()
-            truth, _, tags = stream.sample(step, position, index, phase)
             serial = 4*(step-1)+position
+            family = source['freeze']['train_slots'][index]['family']
+            if family in TEXTURE_POLICY['families']:
+                event = events.get(serial)
+                if event is None or event['family'] != family or event['phase'] != phase:
+                    raise ValueError('Missing or mismatched frozen training texture')
+                truth, _ = texture(family, serial, config['side'])
+                if tensor_hash(truth) != event['target_sha256']:
+                    raise ValueError('Frozen training texture changed')
+                tags = torch.tensor([PATTERNS[phase]])
+            else:
+                truth, _, tags = stream.sample(step, position, index, phase)
             level = serial % 3
             packed, sigma = observation(truth, tags, level, 74000000+serial)
             image = predict(model, packed/config['scale'], sigma/config['scale'], tags, False, True)
@@ -156,7 +187,6 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
             elif level != 0:
                 raise ValueError('No trainable gradient for noisy observation')
             total += float(loss.detach())
-            family = source['freeze']['train_slots'][index]['family']
             key = f'{family}/phase{phase}/noise{level}'
             counts[key] = counts.get(key, 0)+1
             del image, loss, truth, packed, sigma, tags, reference
@@ -309,6 +339,8 @@ def run(root, plan_path, seed, output, resume=None):
         raise ValueError('Declared memory policy differs from current authorized policy')
     if plan['runtime'] != runtime_versions():
         raise ValueError('Python or Torch runtime differs from qualification plan')
+    if plan['texture_augmentation']['policy'] != TEXTURE_POLICY:
+        raise ValueError('Declared training texture policy changed')
     tools = plan['tools']
     if any(digest(Path(__file__).with_name(n)) != h for n, h in tools.items()):
         raise ValueError('Frozen implementation changed')
@@ -349,7 +381,8 @@ def run(root, plan_path, seed, output, resume=None):
             result['training_scope'] = configure_trainable(model, plan['config']['training_scope'])
             result['parameter_count'] = sum(p.numel() for p in model.parameters())
             result['losses'], result['training_exposure_counts'] = train(model, source, plan['config'], guard,
-                output/'training-latest.pt', context, progress, plan['checkpoint_policy']['interval_steps'], resume)
+                output/'training-latest.pt', context, progress, plan['checkpoint_policy']['interval_steps'], resume,
+                plan['texture_augmentation']['events'])
             parent = LocalMomentUNet(plan['config']['width']).eval().requires_grad_(False)
             parent.load_state_dict(checkpoint['state_dict'], strict=True)
             result.update(evaluate(model, parent, plan, source, guard))
