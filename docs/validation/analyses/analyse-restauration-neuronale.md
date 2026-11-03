@@ -4579,3 +4579,58 @@ La comparaison aux précédentes corrections n'attribue donc pas un gain
 à une nouvelle pénalisation ou à des données supplémentaires. Les deux
 graines repartent des mêmes parents, sous les mêmes quotas et avec
 checkpoints techniques. Aucune sélection d'initialisation.
+
+### Conditionnement par moyenne locale — gain utile, courbes atténuées
+
+Les deux graines atteignent2048 étapes, avec reprise effective après
+arrêts mémoire :71 reprend de704 puis1536,73 de0,832 puis1664. Les
+pertes et expositions complètes sont conservées dans les checkpoints.
+Les7 tentatives ne sont pas7 modèles indépendants ou une recherche de
+meilleure initialisation ; elles composent les deux calculs déclarés.
+Preuves : [campagne normalisée](../raw/neural-campaign-v001-20261103T133324Z.json).
+
+Sans protection, les aplats constants ont une erreur d'environ0,18 fois
+le parent, mais les contours et les ondes faibles se dégradent. Les deux
+modèles sont donc négatifs au protocole complet, malgré leur gain bruit.
+Les résultats finaux sont
+[71](../raw/neural-noisy-moment-v001-20261103T133847Z.json) et
+[73](../raw/neural-noisy-moment-v001-20261103T134701Z.json) ; les autres
+JSON de la campagne conservent les interruptions.
+
+La protection de courbure, sans réentraînement, conserve les contours.
+Les rapports RGB tous cas complets/parent deviennent0,90901/0,91164 au
+faible bruit et0,71243/0,70588 au bruit fort pour71/73. Mais le seul critère
+restant échoue pour les deux : gradient des ondes achromatiques faibles.
+Pour71,0,95672 contre1,02031 au faible bruit,0,94705 contre0,99909 au fort.
+Pour73,0,95642 contre1,02126 et0,94190 contre1,00114. Ces projections
+portent sur des réalisations finies : la fluctuation du parent bruité
+fait partie de la comparaison, d'où le besoin de répétitions ultérieures.
+Le seuil de95 % du parent reste inchangé. Preuve :
+[normalisation et protection](../raw/neural-edge-protection-v001-20261103T135016Z.json).
+
+### Conditionnement quadratique fixé avant les prochains apprentissages
+
+Le résidu précédent est sensible à la courbure du signal, pas seulement
+au bruit. Le prochain candidat utilise la valeur centrale d'un ajustement
+quadratique isotrope sur5×5 échantillons du même plan. Ses poids sont
+`w(x,y)=(27-5×(x²+y²))/175`, pourx,y de−2à2. Somme1, premiers et seconds
+moments appropriés nuls : constants, rampes et quadratiques sont reproduits.
+Les poids négatifs appartiennent au descripteur, pas à un écrêtage du signal.
+
+Le résidu centre−ajustement a un coefficient central148/175. Sa variance
+estimée inclut ce coefficient au carré et les carrés des poids voisins,
+ce qui tient compte du partage de l'observation centrale avec l'ajustement.
+À sigma constant, elle vaut `(148/175)×sigma²`. Le descripteur est toujours
+normalisé et borné à±8 ; la correction finale reste bornée à3sigma.
+Deux tests du stencil vérifient moments, variance, suppression du signal
+quadratique et covariance. Aucun nouveau paramètre appris : architecture,
+initialisations communes, quotas,2048 étapes et données restent identiques.
+Le support et l'ordre polynomial changent ensemble ; ce n'est pas une
+preuve que toute texture photographique faible sera conservée.
+
+La politique de calcul est verrouillée par les empreintes de toute la
+chaîne de conditionnement, pas seulement de la classe portant les poids.
+Les versions Python et Torch sont désormais consignées pour la reprise.
+Si les deux graines passent après protection, une cohorte distincte avec
+trois réalisations de bruit sera ouverte ; les contrôles nouveaux restent
+inaccessibles au banc de confirmation tant que cette éligibilité manque.
