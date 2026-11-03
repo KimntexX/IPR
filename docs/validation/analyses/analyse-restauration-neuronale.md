@@ -4235,7 +4235,7 @@ n'a pas démarré. Les sorties partielles ne permettent pas de conclure
 sources sont intacts. Le plan et les tests ne sont pas modifiés pour
 contourner la limite.
 
-**Conclusion actuelle : contrat bruité prêt et testé, apprentissages
+**Conclusion de cette campagne : contrat bruité prêt et testé, apprentissages
 non achevés pour cause de mémoire globale.** Les9 tests ciblés passent
 et la validation propre/bruitée est figée. Aucun bénéfice de débruitage
 n'est revendiqué. Les deux tentatives interrompues restent archivées ;
@@ -4247,3 +4247,23 @@ intermédiaire de reprise dans cette version du banc.
 Aucun calcul actif, changement moteur/IHM, export photo, installation
 GPU, processus tiers fermé, publication, fusion ou tag. La prochaine
 action dépend de la mémoire disponible, pas de nouvelles photos.
+
+### 3 novembre2026 — seuil physique92 % autorisé par l'utilisateur
+
+L'utilisateur autorise explicitement le passage de80 % à92 % de mémoire
+physique globale pour reprendre cette campagne. Ce seuil est porté dans
+le nouveau plan du pilote bruité (schéma2), avec les limites de processus
+inchangées :2Gio engagés,1,25Gio privés/résidents, échantillonnage0,25s.
+Le garde générique et les anciens plans gardent leurs valeurs historiques ;
+les deux preuves d'arrêt ne sont pas réécrites. Ce moniteur reste coopératif,
+pas un plafond OS imposé aux autres applications.
+
+Six tests ciblés passent : trois de protocole dont admission à90 % et
+arrêt à92 % avec maintien du plafond propre, et trois du garde mémoire,
+dont refus effectif d'une allocation dans un processus enfant isolé et
+jonction du thread. Aucun calcul d'image ou critère photographique ne
+change. Le plan est refait avant les apprentissages dans un nouveau
+dossier ; vérités, observations bruitées, parents, graines, configuration
+numérique et seuils de qualification doivent correspondre au plan initial.
+Les deux modèles repartent de leurs parents déclarés, sans sélection ni
+checkpoint intermédiaire. Aucune image source ou sortie antérieure écrasée.

@@ -8,8 +8,10 @@ Le premier contrat bruité (§17) est implémenté et couvert par9 tests
 ciblés, sans intégration en production. Les deux tentatives de premier
 apprentissage sont interrompues par le seuil de mémoire physique globale,
 alors que le processus reste autour de307Mio résidents. Aucun checkpoint
-final ou gain de débruitage n'est qualifié. Le plan propre/bruité reste
-figé pour reprise lorsque la mémoire disponible le permettra.
+final ou gain de débruitage n'est qualifié. L'utilisateur autorise ensuite
+un seuil global92 % pour cette campagne, en conservant les plafonds propres
+au processus. Le plan est tracé dans une nouvelle version avant reprise,
+sans modifier données, modèles ou critères photographiques.
 
 ## État historique du 2 novembre 2026
 
@@ -822,3 +824,9 @@ et les JSON. Les limites restent inchangées, aucune relance en boucle et
 aucune conclusion photographique tirée des calculs partiels. Ce banc ne
 dispose pas encore d'une sauvegarde d'entraînement pour reprise au point
 interrompu ; les parents figés restent intacts.
+
+À la demande explicite de l'utilisateur, le pilote bruité porte désormais
+son seuil physique global à92 %, déclaré dans le plan (schéma2). Les
+plafonds2Gio engagés et1,25Gio privés/résidents restent inchangés. Cette
+autorisation ne modifie pas le garde générique des autres bancs ni les
+preuves historiques à80 %. Les modèles, données et critères sont conservés.

@@ -28,6 +28,8 @@ from synthetic_bayer_data import PATTERNS, FAMILIES, signal, noisy_observation
 
 NOISE = ((0., 0.), (.0002, .000025), (.0008, .0004))
 VARIANTS = ('full', 'without_correction', 'parent')
+MEMORY_POLICY = dict(hard_bytes=2*1024**3, soft_bytes=1280*1024**2,
+    system_fraction=.92, interval=.25)
 TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+('run_noisy_moment_pilot.py', 'noisy_moment_unet.py',
     'memory_budget.py', 'prepare_closed_inference.py', 'reconstruction_loss.py',
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
@@ -63,7 +65,7 @@ def prepare(root, source, priors, parents, output):
             raise ValueError('Reconstruction/data implementation changed')
         references.append(dict(seed=config['seed'], folder=str(p.resolve()),
             result_sha256=digest(p/'result.json'), weights_sha256=data['weights_sha256']))
-    guard = MemoryGuard()
+    guard = MemoryGuard(**MEMORY_POLICY)
     with guard:
         torch.set_num_threads(4)
         old = [json.loads(p.read_text(encoding='utf-8')) for p in priors]
@@ -81,12 +83,13 @@ def prepare(root, source, priors, parents, output):
                     observed.append(dict(case_index=index, phase=phase, noise_index=level, noise_seed=noise_seed,
                         noisy_sha256=tensor_hash(packed), sigma_sha256=tensor_hash(sigma)))
         guard.check()
-    plan = dict(schema_version=1, frozen_at_utc=datetime.now(timezone.utc).isoformat(),
+    plan = dict(schema_version=2, frozen_at_utc=datetime.now(timezone.utc).isoformat(),
         source=str(source.resolve()), source_result_sha256=digest(source/'result.json'), parents=references,
         prior_plan_sha256=[digest(p) for p in priors], edges=edges, mixed=mixed, observations=observed,
         noise_levels=[dict(a=a, b=b) for a, b in NOISE],
         config=dict(steps=2048, microbatch=1, accumulation=4, learning_rate=.001, scale=2., width=8, side=128),
-        gates=proof['freeze']['gates'], tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
+        gates=proof['freeze']['gates'], memory_policy=MEMORY_POLICY,
+        tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
         noise_gate_policy='Each positive level: RGB MSE full/parent<=.98, opponent full/parent<=1, full/without_correction RGB<=1; weak/edge gradient>=.95 parent. Zero noise retains original12gates, new mixed and historical20/80.',
         training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, same realizations across models. Adam all parameters; no early stopping.',
         limits=['Independent Gaussian CFA noise with variance a*max(clean signal,0)+b, before demosaicing; not a sensor calibration.',
@@ -264,6 +267,8 @@ def evaluate(model, parent, plan, source, guard):
 def run(root, plan_path, seed, output):
     confined(root, [plan_path, output])
     plan = json.loads(plan_path.read_text(encoding='utf-8'))
+    if plan['memory_policy'] != MEMORY_POLICY:
+        raise ValueError('Declared memory policy differs from current authorized policy')
     tools = plan['tools']
     if any(digest(Path(__file__).with_name(n)) != h for n, h in tools.items()):
         raise ValueError('Frozen implementation changed')
@@ -283,7 +288,7 @@ def run(root, plan_path, seed, output):
     result = dict(schema_version=1, data_version=1, campaign_id=campaign, measured_at_utc=now.isoformat(),
         plan=plan, plan_sha256=digest(plan_path), seed=seed, status='incomplete',
         git_sha=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip())
-    guard, started = MemoryGuard(), time.monotonic()
+    guard, started = MemoryGuard(**plan['memory_policy']), time.monotonic()
     try:
         with guard:
             torch.set_num_threads(4)

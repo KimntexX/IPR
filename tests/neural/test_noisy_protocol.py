@@ -3,11 +3,24 @@ import unittest
 
 import torch
 
-from run_noisy_moment_pilot import observation, noise_verdict, NOISE
+from run_noisy_moment_pilot import observation, noise_verdict, NOISE, MEMORY_POLICY
+from memory_budget import MemoryGuard, violation
 from synthetic_bayer_data import FAMILIES, PATTERNS
 
 
 class NoisyProtocolTests(unittest.TestCase):
+    def test_authorized_system_threshold_keeps_process_limits(self):
+        guard = MemoryGuard(**MEMORY_POLICY)
+        self.assertEqual(guard.system_fraction, .92)
+        self.assertEqual(guard.hard_bytes, 2*1024**3)
+        self.assertEqual(guard.soft_bytes, 1280*1024**2)
+        sample = dict(process_private_bytes=100, process_rss_bytes=100, system_used_fraction=.90)
+        self.assertIsNone(violation(sample, guard.soft_bytes, guard.system_fraction))
+        self.assertEqual(violation(dict(sample, system_used_fraction=.92), guard.soft_bytes, guard.system_fraction),
+            'system_physical_memory_threshold')
+        self.assertEqual(violation(dict(sample, process_private_bytes=guard.soft_bytes), guard.soft_bytes, guard.system_fraction),
+            'process_soft_memory_limit')
+
     def test_observation_is_repeatable_and_sigma_uses_observed_signal(self):
         truth = torch.full((1, 3, 32, 40), -.001)
         tags = torch.tensor([PATTERNS[0]])
