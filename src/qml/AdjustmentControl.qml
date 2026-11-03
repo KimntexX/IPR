@@ -15,6 +15,7 @@ ColumnLayout {
     property color textColor: controlSlider.palette.text
     property color secondaryTextColor: controlSlider.palette.windowText
     property alias value: controlSlider.value
+    readonly property alias pressed: controlSlider.pressed
     property bool adjustmentEnabled: false
     readonly property bool modified: Math.abs(value - resetValue) > Math.max(0.000001, increment / 10)
 

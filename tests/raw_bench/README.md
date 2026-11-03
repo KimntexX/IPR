@@ -227,19 +227,18 @@ preuve écrit explicitement `benchmarks=not_run`. Ne pas en tirer un budget temp
 A/B0/B50/B100 et replays, en mémoire, un serveur fermé par scène avec watchdog.
 Les écarts de rendu sRGB qu'il mesure ne prouvent pas la qualité du débruitage.
 
-Études de couplage avant/après profil : `run_denoise_leakage.py --help` pilote
-`cameraDenoiseLeakageProbe` (cible du sous-projet `production`) sur des régions
-caméra fixes. La projection tangentielle de Y y est une expérience, pas du
-code de production. `camera_denoise_exact_roi.py --help` mesure les régions
+`camera_denoise_exact_roi.py --help` mesure les régions
 N3 convenues avec Claude, après filtrage et rendu de l'image entière. Il
 distingue moyenne RGB, luma encodée pondérée et chroma R−G/B−G. Le mode
 `--reference-proof` exige l'exécutable exact d'une preuve historique, sans
 conserver d'implémentation legacy dans le module. Aucun TIFF n'est écrit.
-Le prototype courant(a)+V1 utilise cinq échelles chroma et trois pour l'intensité,
+Le module utilise trois échelles d'intensité,
 directement dans le RGB caméra déjà balancé, sans annuler les gains de BdB ;
 les gains de métriques ne valent pas validation visuelle.
 
-N2b(a) : `signal_noise_survey.py --help` pilote `--signal-survey` de la sonde.
+N2b(a) : `signal_noise_survey.py --help` pilote `cameraDenoiseSurveyProbe`, cible
+du sous-projet `production`. Son axe couleur a été retiré avec le chemin couleur du
+module le 2 novembre 2026 : les preuves antérieures portent sur cinq échelles.
 Il conserve81 régions par source, sépare les25 positions initiales des56
 positions de contrôle et compare un modèle global à une interpolation de
 variance par niveau de signal. `--replay` réanalyse une preuve existante sans
@@ -284,9 +283,9 @@ une preuve que le filtre les corrige tous, ni une mesure de bruit physique.
 Les77 contrôles natifs sont positifs ; les22 scènes signalées par Claude et
 le coût des buffers supplémentaires restent à qualifier avant promotion.
 
-L'esquisse `CameraDenoise::settingsFromAmount` convertit une barre entière
-0..100 en `Settings` : L=M, C=arrondi(100*(1-(1-M/100)^6)). Elle est testée
-sur les101 états mais n'est pas raccordée à l'éditeur. Défaut0 ; entrées
+La loi de la barre unique, `DetailProcessing::denoiseFromAmount`, convertit un
+entier 0..100 en forces : L=M, C=arrondi(100*(1-(1-M/100)^6)). Elle est testée
+sur les101 états par `detailProcessingTests`. Défaut0 ; entrées
 invalides refusées sans modifier la sortie. Les réglages avancés contournent
 ce remappage pour éviter une double loi. La cible visuelle LR70–75 vers
 barre80–90 n'est pas encore qualifiée ; les valeurs LR ne sont pas les forces

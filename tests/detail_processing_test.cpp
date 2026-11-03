@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <vector>
 
 namespace {
@@ -290,5 +291,30 @@ int main()
     cv::Mat empty;
     DetailProcessing::reduceNoise(empty, {100, 100});
     passed &= check(empty.empty(), "empty inputs must be safe");
+
+    // The law of the single slider.
+    DetailProcessing::DenoiseSettings mapped{42, 43}, previous;
+    bool lawValid = true;
+    for (int amount = 0; amount <= 100; ++amount) {
+        lawValid = DetailProcessing::denoiseFromAmount(amount, mapped) && lawValid;
+        // Independent reference, including integer quantization.
+        lawValid = lawValid && mapped.luminance == amount && mapped.chrominance >= amount &&
+                   mapped.chrominance >= previous.chrominance &&
+                   mapped.chrominance == int(std::lround(100. * (1. - std::pow(1. - double(amount) / 100., 6))));
+        previous = mapped;
+    }
+    passed &= check(lawValid, "the slider law is bounded, monotone and matches all 101 states");
+    passed &= check(DetailProcessing::denoiseFromAmount(0, mapped) && mapped.luminance == 0 && mapped.chrominance == 0,
+                    "the slider at zero is exact identity");
+    passed &= check(DetailProcessing::denoiseFromAmount(100, mapped) && mapped.luminance == 100 && mapped.chrominance == 100,
+                    "the slider maximum reaches both maxima without extrapolation");
+    passed &= check(DetailProcessing::denoiseFromAmount(25, mapped) && mapped.luminance == 25 && mapped.chrominance == 82,
+                    "the slider raises the colour correction faster at small amounts");
+    const DetailProcessing::DenoiseSettings saved = mapped;
+    passed &= check(!DetailProcessing::denoiseFromAmount(-1, mapped) && !DetailProcessing::denoiseFromAmount(101, mapped) &&
+                    !DetailProcessing::denoiseFromAmount(std::numeric_limits<int>::min(), mapped) &&
+                    !DetailProcessing::denoiseFromAmount(std::numeric_limits<int>::max(), mapped) &&
+                    mapped.luminance == saved.luminance && mapped.chrominance == saved.chrominance,
+                    "an invalid amount is rejected and leaves the settings unchanged");
     return passed ? 0 : 1;
 }

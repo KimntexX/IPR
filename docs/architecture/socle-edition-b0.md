@@ -127,8 +127,9 @@ Prises avec l'utilisateur le 1er novembre 2026 : voir
 ## Navigation entre les panneaux
 
 Retenue par l'utilisateur le 1er novembre 2026 (maquette A) : le panneau de
-droite reçoit une rangée d'onglets à icônes sur toute sa largeur, avec un petit
-congé aux angles et le nom du panneau au survol : Réglages, Géométrie (B1),
+droite reçoit des intercalaires à icônes sur toute sa largeur, collés au panneau,
+l'onglet actif ouvert sur lui, avec un petit congé aux angles du haut et le nom du
+panneau au survol : Réglages, Géométrie (B1),
 Masques (B2), Retouche (B3), puis Assembler (B7 à B9 : empilement, panorama
 horizontal et vertical, fusion HDR), qui crée une nouvelle image en tâche de
 fond. Un onglet n'apparaît qu'avec la livraison de son panneau. Les curseurs et

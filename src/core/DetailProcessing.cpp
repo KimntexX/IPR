@@ -503,6 +503,16 @@ void reduceNoiseLocally(cv::Mat &linearRgb, const DenoiseSettings &settings, dou
 
 }
 
+bool denoiseFromAmount(int amount, DenoiseSettings &settings)
+{
+    if (amount < 0 || amount > 100)
+        return false;
+    const double remaining = 1. - double(amount) / 100.;
+    const double squared = remaining * remaining;
+    settings = {amount, int(std::lround(100. * (1. - squared * squared * squared)))};
+    return true;
+}
+
 void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pixelScale,
                  const LocalValues::Maps &local)
 {

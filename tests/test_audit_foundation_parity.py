@@ -33,8 +33,8 @@ class DigestTests(unittest.TestCase):
 
     def test_requests_cover_the_states_and_the_signed_development(self):
         lines = audit.requests(Path("a.CR3")).splitlines()
-        self.assertEqual(len(lines), len(audit.STATES) + 2)
-        self.assertIn("cameraDenoise", lines[-2])
+        self.assertEqual(len(lines), len(audit.STATES) + len(audit.SIGNED) + 1)
+        self.assertEqual(json.loads(lines[-2])["cameraDenoise"], {"luminance": 100, "chrominance": 100})
         self.assertEqual(json.loads(lines[-1]), {"op": "quit"})
 
 
@@ -44,7 +44,7 @@ class CompareTests(unittest.TestCase):
         self.addCleanup(self.directory.cleanup)
         self.source = Path(self.directory.name) / "a.CR3"
         self.source.write_bytes(b"raw")
-        self.count = len(audit.STATES) + 1
+        self.count = len(audit.STATES) + len(audit.SIGNED)
         self.same = [dict(width=1, height=1, bytes=1, pixel_sha256="x")] * self.count
 
     def test_equal_renders_count_no_difference(self):
@@ -62,6 +62,15 @@ class CompareTests(unittest.TestCase):
             self.assertEqual(audit.compare("b", "c", [self.source], ".", records.append), 1)
         self.assertFalse(records[1]["identical"])
         self.assertEqual(records[1]["state"], "exposure=1")
+
+    def test_signed_states_can_be_compared_alone(self):
+        records = []
+        same = self.same[:len(audit.SIGNED)]
+        with patch.object(audit, "render", return_value=same) as render:
+            self.assertEqual(audit.compare("b", "c", [self.source], ".", records.append, ()), 0)
+        self.assertEqual(render.call_args.args[3], ())
+        self.assertEqual(len(records), len(audit.SIGNED))
+        self.assertTrue(all("signed" in record["state"] for record in records))
 
     def test_a_modified_source_stops_the_comparison(self):
         def changing(*_):

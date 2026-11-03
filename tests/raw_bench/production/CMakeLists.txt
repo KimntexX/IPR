@@ -12,10 +12,9 @@ add_subdirectory("${IPR_ENGINE_SOURCE}" engine EXCLUDE_FROM_ALL)
 add_executable(iprProductionRawCapture ../production_capture.cpp)
 target_link_libraries(iprProductionRawCapture PRIVATE iprEngine)
 target_compile_definitions(iprProductionRawCapture PRIVATE IPR_ENGINE_REVISION="${IPR_ENGINE_REVISION}")
-add_executable(cameraDenoiseLeakageProbe ../camera_denoise_leakage.cpp)
-target_link_libraries(cameraDenoiseLeakageProbe PRIVATE iprEngine)
-target_compile_definitions(cameraDenoiseLeakageProbe PRIVATE IPR_ENGINE_REVISION="${IPR_ENGINE_REVISION}"
-    IPR_SOURCE_ROOT_PATH="${IPR_ENGINE_SOURCE}")
+add_executable(cameraDenoiseSurveyProbe ../camera_denoise_survey.cpp)
+target_link_libraries(cameraDenoiseSurveyProbe PRIVATE iprEngine)
+target_compile_definitions(cameraDenoiseSurveyProbe PRIVATE IPR_ENGINE_REVISION="${IPR_ENGINE_REVISION}")
 add_executable(cameraDenoiseRenderServer "${IPR_ENGINE_SOURCE}/src/tools/render_server.cpp"
     "${IPR_ENGINE_SOURCE}/src/tools/TestRecipes.cpp")
 target_include_directories(cameraDenoiseRenderServer PRIVATE "${IPR_ENGINE_SOURCE}/src/tools")

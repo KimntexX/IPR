@@ -25,6 +25,7 @@ Pris pendant une absence de l'utilisateur, à sa demande, pour relecture avec lu
 | Géométrie conservée par la photo cible au collage et au lot | Un cadrage n'a pas de sens d'une photo à l'autre | La copier avec les retouches |
 | Rectangle de recadrage local pendant le glissement, envoyé au relâchement | Une seule étape d'historique, aucun rendu inutile | Envoi à chaque mouvement |
 | Onglet Géométrie : aperçu du cadre entier, sans étape d'historique | Maquette A et ADR : le recadrage s'affiche comme un cadre | Outil de recadrage séparé |
+| Grille d'alignement dans le cadre, mailles de 40 px environ à l'écran, tant qu'un curseur de transformation est tenu | Demande de l'utilisateur, comme Lightroom : on vérifie les lignes pendant le geste, sans charger l'image au repos | Grille fixe sur tout le canevas, cachée sauf case cochée |
 
 La réinitialisation générale des réglages retire aussi la géométrie, comme les autres
 retouches.
@@ -98,6 +99,8 @@ est réelle (par exemple un aperçu approché pendant le geste).
 
 ## Limites
 
+- Écart restant à la maquette A : un seul bouton de quart de tour (à droite), et des
+  boutons de commande plutôt que des icônes.
 - Mires synthétiques : la validation sur photos réelles reste celle de l'utilisateur.
 - Une homographie ne corrige pas la distorsion d'un objectif ; les profils LCP restent
   dans leur domaine.
