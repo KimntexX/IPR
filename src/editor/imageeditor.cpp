@@ -54,6 +54,42 @@ namespace {
 
 // Keys of the cached render stages, defined with the render below.
 RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s);
+Geometry::Quality geometryQuality(double pixelScale);
+
+// What a luminance range reads: the image as it is before any edit, on the canvas. Empty when
+// no mask has a range.
+cv::Mat rangeLuminanceOf(const ColorPipeline::WorkingImage &source, const EditRecipe::Settings &settings, double pixelScale)
+{
+    if (!LocalAdjustments::usesLuminance(settings.localMasks))
+        return {};
+    cv::Mat rgb;
+    cv::cvtColor(source.linearRgba, rgb, cv::COLOR_RGBA2RGB);
+    return LocalAdjustments::rangeLuminance(Geometry::warpRgb(rgb, settings.geometry, geometryQuality(pixelScale)));
+}
+
+// What the masks add on the canvas; a range reads the image as it is before any edit.
+LocalValues::Maps maskValues(const ColorPipeline::WorkingImage &source, const EditRecipe::Settings &settings, double pixelScale,
+                             RenderStageCache *cache = nullptr)
+{
+    if (!LocalAdjustments::active(settings.localMasks))
+        return {};
+    QByteArray key;
+    if (cache) {
+        QDataStream stream(&key, QIODevice::WriteOnly);
+        LocalAdjustments::appendKey(stream, settings.localMasks);
+        const Geometry::Settings &g = settings.geometry;
+        stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation << qint32(g.vertical)
+               << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale) << qint32(g.offsetX) << qint32(g.offsetY);
+        LocalValues::Maps kept;
+        if (cache->maskMaps(source.linearRgba, pixelScale, key, kept))
+            return kept;
+    }
+    const cv::Size canvas = Geometry::canvasSize(settings.geometry, source.linearRgba.size());
+    const LocalValues::Maps maps = LocalAdjustments::valueMaps(settings.localMasks, canvas, rangeLuminanceOf(source, settings, pixelScale));
+    if (cache)
+        cache->storeMaskMaps(source.linearRgba, pixelScale, key, maps);
+    return maps;
+}
 
 // The preview's proxy takes the fast filter; a full-resolution render, the fine one.
 Geometry::Quality geometryQuality(double pixelScale)
@@ -1124,6 +1160,7 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
         // Retouches can be copied across cameras; RAW profiles cannot.
         Settings copied = settings;
         copied.geometry = target.settings.geometry;   // the framing belongs to each photo
+        copied.localMasks = target.settings.localMasks;   // and so do zones drawn on it
         copied.automaticWhiteBalance = target.settings.automaticWhiteBalance;
         if (target.settings.automaticWhiteBalance) {
             copied.temperature = target.settings.temperature;
@@ -1288,7 +1325,8 @@ bool ImageEditor::addPointColorAt(qreal x, qreal y)
     if (tones.empty()) {
         cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
         const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
-        if (!renderTones(source, m_settings, reference, previewPixelScale(), tones))
+        if (!renderTones(source, m_settings, reference, previewPixelScale(), tones,
+                         maskValues(source, m_settings, previewPixelScale(), &m_renderStageCache)))
             return false;
     }
     // The tones cover the whole canvas; the view may show its crop.
@@ -1699,6 +1737,7 @@ void ImageEditor::setAutomaticWhiteBalance(bool enabled)
     emit adjustmentsReset(m_settings.temperature, m_settings.tint);
     emit pointColorsChanged();
     emit geometryChanged();
+    emit localMasksChanged();
     scheduleSidecarSave();
 
     if (m_original.isNull() || !m_currentFile.isLocalFile())
@@ -1728,8 +1767,10 @@ void ImageEditor::pasteAdjustments()
     // Transfer edits, not the target's camera development, optics or metadata.
     const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
     const Geometry::Settings geometry = m_settings.geometry;   // the framing belongs to each photo
+    const LocalAdjustments::Masks masks = m_settings.localMasks;   // and so do zones drawn on it
     m_settings = m_copiedAdjustments;
     m_settings.geometry = geometry;
+    m_settings.localMasks = masks;
     m_settings.automaticWhiteBalance = automaticWhiteBalance;
     m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
     if (m_copiedAsShot) {   // the target's own as-shot white balance
@@ -1742,6 +1783,7 @@ void ImageEditor::pasteAdjustments()
         m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), 0);
     emit pointColorsChanged();
     emit geometryChanged();
+    emit localMasksChanged();
     scheduleRender();
 }
 
@@ -1833,6 +1875,7 @@ void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
         m_original.referenceWhiteBalanceKelvin.value_or(5200.0))), m_settings.tint);
     emit pointColorsChanged();
     emit geometryChanged();
+    emit localMasksChanged();
     emit rawDevelopmentChanged();
     emit historyChanged();
     const QString fileName = m_currentFile.toLocalFile();
@@ -1965,6 +2008,153 @@ void ImageEditor::commitGeometry(Geometry::Settings next)
     scheduleRender();
 }
 
+void ImageEditor::setLocalMaskOverlay(int mask)
+{
+    if (mask == m_localMaskOverlay)
+        return;
+    m_localMaskOverlay = mask;
+    emit localMaskOverlayChanged();
+    if (!m_original.isNull())
+        scheduleRender();
+}
+
+QVariantList ImageEditor::localMasks() const
+{
+    return LocalAdjustments::describe(m_settings.localMasks);
+}
+
+bool ImageEditor::commitLocalMasks(LocalAdjustments::Masks next)
+{
+    if (m_original.isNull() || !LocalAdjustments::bound(next))
+        return false;
+    if (next == m_settings.localMasks)
+        return true;
+    m_settings.localMasks = std::move(next);
+    emit localMasksChanged();
+    scheduleRender();
+    return true;
+}
+
+int ImageEditor::addLocalMask(const QString &kind)
+{
+    LocalAdjustments::Shape shape;
+    if (!LocalAdjustments::kindNamed(kind, shape.kind))
+        return -1;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    LocalAdjustments::Mask mask;
+    mask.name = tr("Masque %1").arg(next.size() + 1);
+    mask.shapes.push_back(shape);
+    next.push_back(std::move(mask));
+    const int index = int(next.size()) - 1;
+    return commitLocalMasks(std::move(next)) ? index : -1;
+}
+
+void ImageEditor::removeLocalMask(int mask)
+{
+    if (mask < 0 || mask >= int(m_settings.localMasks.size()))
+        return;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    next.erase(next.begin() + mask);
+    commitLocalMasks(std::move(next));
+}
+
+int ImageEditor::duplicateLocalMask(int mask)
+{
+    if (mask < 0 || mask >= int(m_settings.localMasks.size()))
+        return -1;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    next.insert(next.begin() + mask + 1, next[size_t(mask)]);
+    return commitLocalMasks(std::move(next)) ? mask + 1 : -1;
+}
+
+void ImageEditor::setLocalMaskName(int mask, const QString &name)
+{
+    if (mask < 0 || mask >= int(m_settings.localMasks.size()))
+        return;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    next[size_t(mask)].name = name;
+    commitLocalMasks(std::move(next));
+}
+
+void ImageEditor::setLocalMaskVisible(int mask, bool visible)
+{
+    if (mask < 0 || mask >= int(m_settings.localMasks.size()))
+        return;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    next[size_t(mask)].visible = visible;
+    commitLocalMasks(std::move(next));
+}
+
+void ImageEditor::setLocalMaskOpacity(int mask, double opacity)
+{
+    if (mask < 0 || mask >= int(m_settings.localMasks.size()))
+        return;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    next[size_t(mask)].opacity = float(opacity);
+    commitLocalMasks(std::move(next));
+}
+
+void ImageEditor::setLocalMaskValue(int mask, const QString &parameter, double value)
+{
+    const int index = LocalAdjustments::parameterNamed(parameter);
+    if (mask < 0 || mask >= int(m_settings.localMasks.size()) || index < 0)
+        return;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    next[size_t(mask)].values[size_t(index)] = float(value);
+    commitLocalMasks(std::move(next));
+}
+
+int ImageEditor::addLocalMaskShape(int mask, const QString &kind, const QString &combine)
+{
+    LocalAdjustments::Shape shape;
+    if (mask < 0 || mask >= int(m_settings.localMasks.size()) || !LocalAdjustments::kindNamed(kind, shape.kind) ||
+        !LocalAdjustments::combineNamed(combine, shape.combine))
+        return -1;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    next[size_t(mask)].shapes.push_back(shape);
+    const int index = int(next[size_t(mask)].shapes.size()) - 1;
+    return commitLocalMasks(std::move(next)) ? index : -1;
+}
+
+void ImageEditor::removeLocalMaskShape(int mask, int shape)
+{
+    if (mask < 0 || mask >= int(m_settings.localMasks.size()) || shape < 0 ||
+        shape >= int(m_settings.localMasks[size_t(mask)].shapes.size()))
+        return;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    next[size_t(mask)].shapes.erase(next[size_t(mask)].shapes.begin() + shape);
+    commitLocalMasks(std::move(next));
+}
+
+void ImageEditor::setLocalMaskShape(int mask, int shape, const QVariantMap &values)
+{
+    if (mask < 0 || mask >= int(m_settings.localMasks.size()) || shape < 0 ||
+        shape >= int(m_settings.localMasks[size_t(mask)].shapes.size()))
+        return;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    if (LocalAdjustments::setShapeFields(next[size_t(mask)].shapes[size_t(shape)], values))
+        commitLocalMasks(std::move(next));
+}
+
+void ImageEditor::addLocalMaskStroke(int mask, int shape, const QVariantList &points, double size, double feather, double flow)
+{
+    if (mask < 0 || mask >= int(m_settings.localMasks.size()) || shape < 0 ||
+        shape >= int(m_settings.localMasks[size_t(mask)].shapes.size()) || points.isEmpty() || points.size() % 2 != 0)
+        return;
+    LocalAdjustments::BrushStroke stroke;
+    stroke.size = float(size);
+    stroke.feather = float(feather);
+    stroke.flow = float(flow);
+    for (qsizetype i = 0; i + 1 < points.size(); i += 2)
+        stroke.points.emplace_back(points.at(i).toFloat(), points.at(i + 1).toFloat());
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    LocalAdjustments::Shape &target = next[size_t(mask)].shapes[size_t(shape)];
+    if (target.kind != LocalAdjustments::Kind::Brush)
+        return;
+    target.strokes.push_back(std::move(stroke));
+    commitLocalMasks(std::move(next));
+}
+
 void ImageEditor::setGeometryValue(const QString &name, double value)
 {
     if (!std::isfinite(value))
@@ -2049,6 +2239,7 @@ void ImageEditor::resetAdjustments()
     emit adjustmentsReset(m_settings.temperature, m_settings.tint);
     emit pointColorsChanged();
     emit geometryChanged();
+    emit localMasksChanged();
     emit rawDevelopmentChanged();
     scheduleRender();
 }
@@ -2125,6 +2316,7 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
     QByteArray key;
     QDataStream stream(&key, QIODevice::WriteOnly);
     const auto ints = [&stream](const auto &values) { for (int value : values) stream << qint32(value); };
+    LocalAdjustments::appendKey(stream, s.localMasks);   // adds nothing without a mask
     stream << s.grayscale << s.brightness << qint32(s.contrast) << qint32(s.temperature) << qint32(s.tint)
            << qint32(s.shadows) << qint32(s.blacks) << qint32(s.highlights) << qint32(s.whites);
     const Geometry::Settings &g = s.geometry;   // the crop comes after every stage
@@ -2185,8 +2377,12 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
                     [](int value) { return value == 0; }) &&
         std::all_of(settings.gradingLuminance.cbegin(), settings.gradingLuminance.cend(),
                     [](int value) { return value == 0; }) && !PointColor::active(settings.pointColor) &&
-        !hasToneCurves && !Geometry::transformsPixels(settings.geometry))
+        !hasToneCurves && !Geometry::transformsPixels(settings.geometry) &&
+        !LocalAdjustments::active(settings.localMasks))
         return source;
+
+    // What the masks add per setting; every map stays empty without any.
+    const LocalValues::Maps local = maskValues(source, settings, pixelScale, cache);
 
     // Each costly stage runs only past the cached output it resumes from, then
     // hands its output to the cache when asked to keep it.
@@ -2197,11 +2393,11 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     cv::Mat adjusted = start.rgb;
     if (runs(0)) {
         cv::cvtColor(source.linearRgba, adjusted, cv::COLOR_RGBA2RGB);
-        if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted)) return {};
+        if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted, local)) return {};
         reached(0, adjusted);
     }
     if (runs(1)) {
-        PerceptualColour::apply(adjusted, perceptualParameters(settings));
+        PerceptualColour::apply(adjusted, perceptualParameters(settings), local);
         reached(1, adjusted);
     }
     // Denoise before local-detail enhancement and sharpening. The operation
@@ -2212,15 +2408,15 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     if (runs(2)) {
         const bool cameraLuminance = settings.denoiseBeforeProfile && source.dcpContext;
         DetailProcessing::reduceNoise(adjusted, {cameraLuminance ? 0 : settings.denoiseLuminance,
-                                                 settings.denoiseChrominance}, pixelScale);
+                                                 settings.denoiseChrominance}, pixelScale, local);
         reached(2, adjusted);
     }
     if (runs(3)) {
-        LocalContrast::apply(adjusted, settings.texture, settings.clarity, pixelScale);
+        LocalContrast::apply(adjusted, settings.texture, settings.clarity, pixelScale, local);
         reached(3, adjusted);
     }
     if (runs(4)) {
-        Dehaze::apply(adjusted, settings.dehaze, pixelScale);
+        Dehaze::apply(adjusted, settings.dehaze, pixelScale, local[LocalValues::Dehaze]);
         reached(4, adjusted);
     }
     ToneCurve::apply(adjusted, settings.toneCurves);
@@ -2233,10 +2429,10 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     // Capture/output sharpening follows denoise and all contrast operations.
     // Its adaptive mask suppresses low-contrast noise and the local bound
     // limits the bright/dark halos produced by a naive unsharp mask.
-    if (settings.sharpeningAmount > 0) {
+    if (settings.sharpeningAmount > 0 || !local[LocalValues::Sharpening].empty()) {
         DetailProcessing::sharpen(adjusted, {settings.sharpeningAmount,
                                               settings.sharpeningRadius,
-                                              settings.sharpeningMasking}, pixelScale);
+                                              settings.sharpeningMasking}, pixelScale, local);
     }
 
     Grain::apply(adjusted, settings.grain, pixelScale);
@@ -2279,12 +2475,14 @@ double ImageEditor::previewPixelScale() const
 }
 
 bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
-                              int referenceTemperature, double pixelScale, cv::Mat &adjusted)
+                              int referenceTemperature, double pixelScale, cv::Mat &adjusted,
+                              const LocalValues::Maps &local)
 {
-    const bool whiteBalanceEdit = settings.temperature != referenceTemperature || settings.tint != 0;
+    const bool whiteBalanceEdit = settings.temperature != referenceTemperature || settings.tint != 0 ||
+                                  !local[LocalValues::Temperature].empty() || !local[LocalValues::Tint].empty();
     // RAW with a DCP: exposure and white balance act on the scene-linear camera
     // signal before the profile tone curve, so highlights keep its shoulder.
-    const bool sceneExposure = source.dcpContext && settings.brightness != 0.0f;
+    const bool sceneExposure = source.dcpContext && (settings.brightness != 0.0f || !local[LocalValues::Exposure].empty());
     // Experimental: the luminance denoise acts on the camera signal, before the
     // profile; colour noise is removed after the tones (reduceNoise).
     const bool denoiseCamera = source.dcpContext && settings.denoiseBeforeProfile &&
@@ -2310,9 +2508,13 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
             }
             camera = &denoised;
         }
+        // The camera signal comes before the geometry: there, the maps follow the source's pixels.
+        LocalValues::Maps onSource;
+        for (const LocalValues::Parameter parameter : {LocalValues::Exposure, LocalValues::Temperature, LocalValues::Tint})
+            onSource[parameter] = LocalAdjustments::toSource(local[parameter], settings.geometry, adjusted.size());
         if (camera->cameraRgb.size() != adjusted.size() ||
             !CameraProfileEngine::renderFromCameraSignal(*camera,
-                settings.temperature, settings.tint, settings.brightness, adjusted, &error)) {
+                settings.temperature, settings.tint, settings.brightness, adjusted, &error, onSource)) {
             qWarning() << "Échec du rendu capteur avant DCP :" << error;
             return false;
         }
@@ -2326,16 +2528,16 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
     // camera-signal luminance denoise above runs on the sensor's own pixel grid.
     adjusted = Geometry::warpRgb(adjusted, settings.geometry, geometryQuality(pixelScale));
 
-    if (!sceneExposure) Exposure::apply(adjusted, settings.brightness);
+    if (!sceneExposure) Exposure::apply(adjusted, settings.brightness, local[LocalValues::Exposure]);
 
-    Contrast::apply(adjusted, settings.contrast);
+    Contrast::apply(adjusted, settings.contrast, local[LocalValues::Contrast]);
 
     QString colorError;
     if (!source.dcpContext && whiteBalanceEdit &&
         !ColorPipeline::applyTemperatureTint(
             adjusted, settings.temperature,
             source.referenceWhiteBalanceKelvin.value_or(5200.0),
-            settings.tint, &colorError)) {
+            settings.tint, &colorError, local)) {
         qWarning() << "Échec de la balance température/nuance :" << colorError;
         return false;
     }
@@ -2346,15 +2548,17 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
         static_cast<float>(settings.blacks) / 100.0f,
         static_cast<float>(settings.highlights) / 100.0f,
         static_cast<float>(settings.whites) / 100.0f};
-    if (!ToneRecovery::identity(tones))
+    const bool localTones = !local[LocalValues::Shadows].empty() || !local[LocalValues::Blacks].empty() ||
+                            !local[LocalValues::Highlights].empty() || !local[LocalValues::Whites].empty();
+    if (!ToneRecovery::identity(tones) || localTones)
         ToneRecovery::apply(adjusted, tones, source.toneStatistics ? *source.toneStatistics
-                                                                   : ToneRecovery::measure(source.linearRgba));
+                                                                   : ToneRecovery::measure(source.linearRgba), local);
     return true;
 }
 
 ImageEditor::RenderResult ImageEditor::renderPreview(
     const ColorPipeline::WorkingImage &source, const Settings &settings,
-    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint, bool wholeCanvas)
+    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint, int overlayMask, bool wholeCanvas)
 {
     RenderResult result;
     if (includeOriginal) {
@@ -2384,7 +2588,8 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
         if (tones.empty()) {
             cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
             const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
-            if (!renderTones(source, settings, reference, pixelScale, tones)) tones.release();
+            if (!renderTones(source, settings, reference, pixelScale, tones, maskValues(source, settings, pixelScale, cache)))
+                tones.release();
         }
         const cv::Mat weights = PerceptualColour::pointWeights(tones, perceptualParameters(settings), overlayPoint);
         if (!weights.empty() && weights.size() == rendered.linearRgba.size()) {
@@ -2392,6 +2597,13 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
             rendered.linearRgba = rendered.linearRgba.clone();
             ColorAdjustments::showWeights(rendered.linearRgba, weights);
         }
+    }
+    if (overlayMask >= 0 && overlayMask < int(settings.localMasks.size())) {
+        const cv::Mat weights = LocalAdjustments::coverage(settings.localMasks[size_t(overlayMask)], rendered.linearRgba.size(),
+                                                           rangeLuminanceOf(source, settings, pixelScale));
+        // A neutral pipeline hands back the source buffer itself: overlay a copy.
+        rendered.linearRgba = rendered.linearRgba.clone();
+        ColorAdjustments::showWeights(rendered.linearRgba, weights);
     }
 
     QString error;
@@ -2785,6 +2997,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
             emit adjustmentsReset(m_settings.temperature, m_settings.tint);
             emit pointColorsChanged();
             emit geometryChanged();
+            emit localMasksChanged();
             if (!m_pendingLoadIsFreshOpen) scheduleRender();
         }
         setStatusMessage(tr("Échec du développement de « %1 » : %2")
@@ -2854,6 +3067,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         emit adjustmentsReset(m_settings.temperature, m_settings.tint);
         emit pointColorsChanged();
         emit geometryChanged();
+        emit localMasksChanged();
     }
     if (m_pendingLoadIsFreshOpen) emit hasImageChanged();
     // Freeze only after restoring the incoming image's settings (not old WB).
@@ -2979,12 +3193,13 @@ void ImageEditor::startRender()
     setBusy(true);
     m_renderWatcher.setFuture(m_tasks.submit<RenderResult>(
         QStringLiteral("render"), Tasks::Priority::Interactive,
-        [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay, wholeCanvas](Tasks::Context &) {
+        [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay,
+         maskOverlay = m_localMaskOverlay, wholeCanvas](Tasks::Context &) {
             ImageCacheController *controller = &resources->cache;
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
             if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, wholeCanvas);
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, maskOverlay, wholeCanvas);
         }).future);
 }
 

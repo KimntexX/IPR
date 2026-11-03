@@ -1,0 +1,99 @@
+# Analyse — Masques
+
+Rapport évolutif du moteur des masques (lot B2,
+[ADR-0021](../../decisions/ADR-0021-socle-edition-beta.md)). Les JSON sous
+`docs/validation/raw/` font autorité ; ce rapport les interprète. Suivi des validations
+partielles : [issue #24](https://github.com/KimntexX/IPR/issues/24).
+
+État au 3 novembre 2026 : moteur et panneau intégrés à `dev` (`v0.5.110-beta`). **Dégradés
+linéaire et radial, et pinceau, validés à l'usage par l'utilisateur** (« ça fait le travail
+attendu »), avec la réserve que ces outils ne sont pas sa spécialité. Deux dégradés se superposent
+comme attendu, sans latence notable à l'usage. **Plage de tons essayée par l'utilisateur** sur
+`6V1A0064.CR3`, avec quatre masques (« plutôt content du résultat ») ; comme sa zone d'action
+n'était pas évidente à première vue, elle s'affiche maintenant tant qu'un de ses curseurs est tenu.
+**Le design du panneau ne convient pas à l'utilisateur** : pas de cible définie pour l'instant, le
+sujet est reporté.
+
+## Le modèle
+
+« Calque » désigne ici ce que l'ADR a retenu, comme le fait Lightroom vu de l'extérieur : un
+masque n'est pas une image posée sur une autre, mais une zone qui porte ses propres valeurs des
+réglages existants. À chaque étage, un pixel prend la valeur globale plus les valeurs des
+masques pondérées par leur couverture. Les masques n'ont donc ni ordre ni mode de fusion.
+
+Ce modèle laisse de côté une partie du plan initial de la feuille de route, écrit avant cette
+décision : groupes de calques, ordre, modes de fusion.
+
+## Choix techniques
+
+| Choix | Raison | Solution écartée |
+| --- | --- | --- |
+| Formes vectorielles sur le canevas normalisé, rastérisées à la résolution du rendu | Décision de l'ADR ; le masque suit le recadrage et reste le même à l'aperçu et à l'export | Images de masque, plus lourdes et liées à une résolution |
+| Formes : dégradés linéaire et radial, pinceau, plage de luminance ; ajout, soustraction, intersection | Première tranche du plan ; la plage intersectée avec une zone donne les tons de cette zone | Plage de couleur et masques issus d'un modèle, reportés |
+| La plage lit l'image avant toute retouche | Le masque ne change pas quand on bouge un curseur, et ne se nourrit pas de son propre effet | Lire l'image à l'étage courant |
+| Exposition et balance : cartes ramenées aux pixels de la source | Ces réglages agissent sur le signal caméra, avant la géométrie | Déplacer la géométrie, ce qui rompt le choix validé en B1 |
+| Sans masque actif, aucune carte, aucune clé de cache, aucune section dans la recette | Le rendu et les fichiers existants ne changent pas d'un bit | Toujours écrire la section |
+| Masques conservés par la photo cible au collage et au lot | Une zone est dessinée pour une image, comme un cadrage | Les copier avec les retouches |
+| Pinceau : distances exactes, tracé réduit aux points qui le façonnent (écart sous 0,05 px), segments filtrés par ligne | Même zone à toute résolution, coût presque indépendant du nombre de points | Transformée de distance : 2 fois plus rapide sur le pinceau seul, mais 0,09 d'écart de couverture entre résolutions, refusé |
+| Dernières cartes gardées tant que les masques et le cadre ne changent pas | Bouger un autre curseur ne redessine pas les masques | Redessiner à chaque rendu : plus de 250 ms avec 16 masques |
+| Valeur locale de réduction du bruit de luminance : après le profil, même en développement signé | Le chemin avant profil n'a pas de carte, et n'en aura pas tant que la bêta le garde hybride | Lui ajouter une carte maintenant |
+
+## Mesures
+
+Preuve : [`b2-masks-audit-v001-20261103T131500Z.json`](../raw/b2-masks-audit-v001-20261103T131500Z.json), mires en mémoire,
+tolérances fixées avant la campagne, dans l'outil `iprMasksAudit`.
+
+| Mesure | Tolérance | Résultat |
+| --- | --- | --- |
+| Milieu d'un dégradé et bord d'un radial, 2048 et 6000 px | 0,002 du côté | Sous 1e-7 |
+| Même zone entre résolutions : dégradé, radial, pinceau | 0,02 de couverture | 0,0002, 0,00002, 0,006 |
+| Un masque, par rendu, aperçu de 2048 px | 40 ms | 22 ms |
+
+Coût de la rastérisation seule, au moment où les masques changent :
+
+| Masques | 2048 px | 6000 px |
+| --- | --- | --- |
+| Un radial | 21 ms | 144 ms |
+| Un dégradé | 17 ms | 154 ms |
+| Un trait de 200 points | 21 ms | 178 ms |
+| Un trait de 2 000 points | 26 ms | 259 ms |
+| 4 radiaux | 67 ms | 681 ms |
+| 16 radiaux | 250 ms | 2682 ms |
+
+Ces temps ont été pris pendant que la parité occupait la machine : ils majorent le coût.
+
+Les tests (`localAdjustmentsTests`, `editorMasksTests`) vérifient en plus, avec et sans signal
+caméra :
+
+- un masque couvrant toute l'image à +X rend comme le réglage global à +X, sur les 16 réglages,
+  à 1e-3 au plus ;
+- un masque inactif (caché, opacité 0, sans valeur ou sans forme) ne change aucun bit ;
+- l'ordre des masques ne change aucun bit, et leurs valeurs s'additionnent entre elles et à la
+  valeur globale ;
+- une zone agit dedans et pas dehors, y compris après rotation, quart de tour, miroir et
+  perspective ;
+- une recette se relit à l'identique, une forme inconnue est refusée, un réglage d'une version
+  future est ignoré, et une recette ancienne n'a pas de masque.
+
+Trois fautes injectées volontairement ont été détectées : cartes laissées sur le canevas,
+clarté ignorant les masques, clé de cache oubliant les masques. La troisième a montré que le test
+du cache ne couvrait rien : il modifiait un réglage situé après l'étage conservé. Il a été corrigé.
+
+La parité sans masque est mesurée sur tout le corpus :
+[`masks-neutral-parity-v001-20261103T130108Z.json`](../raw/masks-neutral-parity-v001-20261103T130108Z.json), 29 RAW en 33 états, comparaison exacte des octets contre `dev` : **957 rendus, 957 identiques**, sources et dossier inchangés. Elle mesure `1ffe0f9` ; le commit suivant n'ajoute que la plage, le pinceau plus rapide et le cache des cartes, tous inactifs sans masque.
+
+## Panneau
+
+Quatre défauts réels ont été trouvés par `masksQmlTests` avant tout essai manuel : une relecture
+des curseurs qui lisait l'ancienne valeur ; une liste reconstruite à chaque valeur, qui détruisait
+le bouton en cours de clic ; l'éditeur qui ne signalait pas les masques après une annulation ; des
+poignées recréées à chaque mouvement, qui perdaient le geste au relâchement.
+
+## Limites
+
+- Le panneau ne dessine pas de poignée d'angle pour le dégradé radial : l'angle se règle au curseur.
+- La réduction du bruit de luminance locale agit après le profil, même en développement signé.
+- La plage de luminance n'a pas de variante de couleur ; pas de masque issu d'un modèle.
+- 16 masques radiaux coûtent plus de 250 ms au moment où ils changent, ce qui dépasse la cible
+  sur ce geste ; bouger un autre curseur ne les redessine pas.
+- Les modules ajoutent leur propre coût par carte présente, non mesuré ici sur photo.

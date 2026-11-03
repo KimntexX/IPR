@@ -1,3 +1,44 @@
-% translation-source: docs/user/latex/chapters/18-masques-retouche.tex; sha256: 1d35dc690b04420b861a0621db46d1b32ea4c0b93fd3aa64339fc36a55aa260b
+% translation-source: docs/user/latex/chapters/18-masques-retouche.tex; sha256: 13d128d01e16d6187b33488e937dd87ad538580519852bd4e9916aa625c43425
 \chapter{Masks and local editing}
-% Reserved family, as in the technical manual. No content until work starts.
+The \emph{Masks} tab, at the top of the right panel, applies settings to one part of the image
+only. A mask is a zone that carries its own values: they add to the global settings in that zone.
+An exposure of +1 in a mask acts as a global exposure of +1, but only there. Nothing is written in
+the photo: masks are saved in its sidecar and can be undone like the other steps.
+
+Masks have neither order nor blend mode: where several overlap, their values add up.
+
+\section{Creating a mask}
+\begin{itemize}
+\item \emph{Brush}: paint on the image. \emph{Size}, \emph{Feather} and \emph{Flow} set the next
+stroke; each stroke is one history step.
+\item \emph{Linear gradient}: the effect is whole before the first handle and none after the second.
+\item \emph{Radial gradient}: move the centre and both edges on the image. \emph{Feather} sets the
+transition, \emph{Angle} turns the ellipse.
+\item \emph{Range}: selects tones of the image, between \emph{Dark tones} and \emph{Light tones},
+as they are before any edit. A new range covers the whole image: narrow these sliders to isolate
+some tones.
+\end{itemize}
+\emph{Show the zone} shows where the mask acts: in colour inside, in grey outside. This display is
+neither saved nor exported. The zone also shows while you hold a range slider.
+\emph{Invert} turns a shape over.
+
+\section{Composing a zone}
+\emph{Add to the zone} combines another shape with the first: \emph{Add}, \emph{Subtract} or
+\emph{Intersect}. A range intersected with a gradient gives, for example, the shadows of the lower
+part of the image alone.
+
+\section{Adjusting a mask}
+Each mask offers the light, colour, effects and detail settings, and an \emph{Opacity} that weighs
+them all. The box in the list turns it off without losing it, and the two buttons beside it
+duplicate or remove it. A mask follows the image's geometry: it stays on the same object after a
+rotation or a crop.
+
+Masks belong to their photo: pasting settings or applying them to a selection does not pass them
+on. \emph{Reset settings} removes them too.
+
+\section{Limits}
+\begin{itemize}
+\item A mask's luminance noise is processed after the profile, even in signed development.
+\item Changing a mask is slower when there are many: beyond about fifteen, the gesture exceeds a
+quarter of a second. Moving another slider does not draw them again.
+\end{itemize}

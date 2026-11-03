@@ -116,6 +116,16 @@ boîtier, qui remplacera la case expérimentale.
   versions 1 à 9, historique, cartes de valeurs locales ; chaque étape avec ses
   tests écrits d'abord.
 
+### Masques mis en œuvre (B2, moteur, 3 novembre 2026)
+
+Module `LocalAdjustments` : formes vectorielles sur le canevas de la géométrie (dégradés linéaire
+et radial, pinceau, plage de luminance), combinées par ajout, soustraction et intersection,
+rastérisées en cartes de valeurs additionnées. Enregistrés dans la recette, section absente sans
+masque ; conservés par la photo cible au collage et au lot. Les réglages du signal caméra
+reçoivent leurs cartes ramenées aux pixels de la source. Les dernières cartes sont gardées tant
+que les masques et le cadre ne changent pas, en mémoire. Aucun panneau à ce stade. Détail :
+[analyse](../validation/analyses/analyse-masques.md).
+
 ### Géométrie mise en œuvre (B1, 2 novembre 2026)
 
 Choix techniques pris sans l'utilisateur, à sa demande, et à relire avec lui ; le

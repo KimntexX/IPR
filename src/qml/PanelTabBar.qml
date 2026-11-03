@@ -9,6 +9,7 @@ Row {
     objectName: "panelTabBar"
 
     property int currentIndex: 0
+    readonly property string currentKey: tabs[currentIndex].key
     property color textColor: palette.windowText
     property color secondaryTextColor: palette.windowText
     property color panelColor: palette.window
@@ -24,6 +25,11 @@ Row {
         {
             name: qsTr("Géométrie"), key: "panelTabGeometry",
             lines: [[6, 2, 6, 18, 22, 18], [2, 6, 18, 6, 18, 22]],
+            rings: []
+        },
+        {
+            name: qsTr("Masques"), key: "panelTabMasks",
+            lines: [[12, 3, 21, 8, 12, 13, 3, 8, 12, 3], [3, 13, 12, 18, 21, 13]],
             rings: []
         },
         {

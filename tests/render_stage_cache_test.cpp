@@ -79,6 +79,20 @@ void policy()
     cache.clear();
     cache.store(start, 0, rgb);
     check(cache.count() == 0, "a store from before clear() is ignored");
+
+    // What the masks add: one entry, for its source, scale and key.
+    LocalValues::Maps maps, read;
+    maps[LocalValues::Exposure] = cv::Mat(4, 4, CV_32FC1, cv::Scalar(0.5));
+    const cv::Mat maskSource = source.clone();
+    check(!cache.maskMaps(maskSource, 0.5, "a", read), "nothing kept at first");
+    cache.storeMaskMaps(maskSource, 0.5, "a", maps);
+    check(cache.maskMaps(maskSource, 0.5, "a", read) && read[LocalValues::Exposure].at<float>(0, 0) == 0.5f, "the same masks find their maps");
+    check(!cache.maskMaps(maskSource, 0.5, "b", read), "other masks do not");
+    check(!cache.maskMaps(maskSource, 0.25, "a", read), "nor another scale");
+    check(!cache.maskMaps(maskSource.clone(), 0.5, "a", read), "nor another source");
+    check(!cache.maskMaps(maskSource, 0.5, QByteArray(), read), "nor an empty key");
+    cache.clear();
+    check(!cache.maskMaps(maskSource, 0.5, "a", read), "clearing forgets them");
 }
 }
 
