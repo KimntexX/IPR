@@ -166,6 +166,10 @@ int main(int argc, char **argv)
                std::abs(settingsTab->width() + geometryTab->width() - tabs->width()) < 1,
                "the tabs join across the bar")) return 1;
 
+    // The panel shows whole: its groups have titles, and nothing folds.
+    if (!check(visualItemNamed(panel, QStringLiteral("geometryOrientationSection")) != nullptr &&
+               visualItemNamed(panel, QStringLiteral("sectionToggle")) == nullptr, "no group folds")) return 1;
+
     // Before any photo, the panel is disabled, and its commands do nothing.
     if (!check(!visualItemNamed(panel, QStringLiteral("geometryTurnButton"))->isEnabled(), "without a photo the panel is off")) return 1;
 

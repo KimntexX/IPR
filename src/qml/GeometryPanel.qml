@@ -79,6 +79,22 @@ Item {
         function onGeometryChanged() { root.reload() }
     }
 
+    // A titled group, always open: the panel shows whole, without folding.
+    component Group: ColumnLayout {
+        property string title
+        Layout.fillWidth: true
+        Layout.minimumWidth: 0
+        spacing: 8
+        Label {
+            Layout.fillWidth: true
+            text: parent.title
+            font.bold: true
+            color: root.secondaryTextColor
+            padding: 0
+            background: Item { }
+        }
+    }
+
     Label {
         id: title
         anchors.top: parent.top
@@ -115,10 +131,8 @@ Item {
             width: scroll.availableWidth
             spacing: 10
 
-            SettingsSection {
+            Group {
                 objectName: "geometryOrientationSection"
-                textColor: root.textColor
-                expanded: true
                 title: qsTr("Orientation")
 
                 PreferenceButton {
@@ -149,10 +163,8 @@ Item {
                 }
             }
 
-            SettingsSection {
+            Group {
                 objectName: "geometryCropSection"
-                textColor: root.textColor
-                expanded: true
                 title: qsTr("Recadrage")
 
                 RowLayout {
@@ -249,10 +261,8 @@ Item {
                 }
             }
 
-            SettingsSection {
+            Group {
                 objectName: "geometryTransformSection"
-                textColor: root.textColor
-                expanded: true
                 title: qsTr("Transformation")
 
                 AdjustmentControl {
