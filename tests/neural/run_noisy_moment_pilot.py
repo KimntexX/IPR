@@ -24,6 +24,7 @@ from run_diverse_moment_pilot import edge_image
 from run_memory_bounded_reconstruction import SampleStream
 from run_synthetic_joint_pilot import tensor_hash, metrics, aggregate
 from synthetic_bayer_data import PATTERNS, FAMILIES, signal, noisy_observation
+from training_resume import save_checkpoint, restore_checkpoint
 
 
 NOISE = ((0., 0.), (.0002, .000025), (.0008, .0004))
@@ -33,7 +34,7 @@ MEMORY_POLICY = dict(hard_bytes=2*1024**3, soft_bytes=1280*1024**2,
 TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+('run_noisy_moment_pilot.py', 'noisy_moment_unet.py',
     'memory_budget.py', 'prepare_closed_inference.py', 'reconstruction_loss.py',
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
-    'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py')))
+    'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py', 'training_resume.py')))
 
 
 def observation(truth, tags, noise_index, seed):
@@ -83,7 +84,7 @@ def prepare(root, source, priors, parents, output):
                     observed.append(dict(case_index=index, phase=phase, noise_index=level, noise_seed=noise_seed,
                         noisy_sha256=tensor_hash(packed), sigma_sha256=tensor_hash(sigma)))
         guard.check()
-    plan = dict(schema_version=2, frozen_at_utc=datetime.now(timezone.utc).isoformat(),
+    plan = dict(schema_version=3, frozen_at_utc=datetime.now(timezone.utc).isoformat(),
         source=str(source.resolve()), source_result_sha256=digest(source/'result.json'), parents=references,
         prior_plan_sha256=[digest(p) for p in priors], edges=edges, mixed=mixed, observations=observed,
         noise_levels=[dict(a=a, b=b) for a, b in NOISE],
@@ -92,6 +93,9 @@ def prepare(root, source, priors, parents, output):
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
         noise_gate_policy='Each positive level: RGB MSE full/parent<=.98, opponent full/parent<=1, full/without_correction RGB<=1; weak/edge gradient>=.95 parent. Zero noise retains original12gates, new mixed and historical20/80.',
         training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, same realizations across models. Adam all parameters; no early stopping.',
+        checkpoint_policy=dict(interval_steps=64, boundary='After completed Adam step only; restart partial microbatch from last committed checkpoint.',
+            selection='One atomic latest checkpoint, no validation scores or best-checkpoint selection.',
+            state='CPU model, Adam, completed step, losses, exposure counts, torch CPU RNG; data/noise draws derive deterministically from step.'),
         limits=['Independent Gaussian CFA noise with variance a*max(clean signal,0)+b, before demosaicing; not a sensor calibration.',
             'Sigma estimated from observed signal and known simulation coefficients, not from clean truth.',
             'Noisy bilinear reference in tempered loss; its energy includes noise as well as content.',
@@ -103,14 +107,23 @@ def prepare(root, source, priors, parents, output):
     print('PREPARED '+str(output/'plan.json'), flush=True)
 
 
-def train(model, source, config, guard):
+def train(model, source, config, guard, checkpoint_path, context, progress, interval_steps, resume=None):
+    if isinstance(interval_steps, bool) or not isinstance(interval_steps, int) or not 1 <= interval_steps <= config['steps']:
+        raise ValueError('Positive checkpoint interval within training horizon required')
     schedule, _ = balanced_schedule(source['freeze']['train_slots'], 2048, 4, config['side'])
     if tensor_hash(torch.tensor([[*e['ids'], *e['phases']] for e in schedule])) != source['freeze']['phase_schedule_sha256']:
         raise ValueError('Training schedule changed')
     stream = SampleStream(source)
     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
-    losses, counts = [], {}
+    completed, losses, counts = 0, [], {}
+    if resume is not None:
+        completed, losses, counts, meta = restore_checkpoint(resume, model, optimizer, context)
+        progress.update(completed_optimizer_steps=completed, restored_from=meta, checkpoint=meta)
+    if completed == 0:
+        progress['checkpoint'] = save_checkpoint(checkpoint_path, model, optimizer, context, 0, losses, counts)
     for step, entry in enumerate(schedule, start=1):
+        if step <= completed:
+            continue
         guard.check()
         model.train()
         optimizer.zero_grad(set_to_none=True)
@@ -136,6 +149,10 @@ def train(model, source, config, guard):
             raise ValueError('Nonfinite gradient')
         optimizer.step()
         losses.append(total)
+        progress['completed_optimizer_steps'] = step
+        if step % interval_steps == 0 or step == config['steps']:
+            optimizer.zero_grad(set_to_none=True)
+            progress['checkpoint'] = save_checkpoint(checkpoint_path, model, optimizer, context, step, losses, counts)
         if step % 512 == 0:
             print('STEP '+str(step)+'/2048 memory='+json.dumps(guard.stats()), flush=True)
     optimizer.zero_grad(set_to_none=True)
@@ -264,8 +281,8 @@ def evaluate(model, parent, plan, source, guard):
     return result
 
 
-def run(root, plan_path, seed, output):
-    confined(root, [plan_path, output])
+def run(root, plan_path, seed, output, resume=None):
+    confined(root, [plan_path, output]+([resume] if resume is not None else []))
     plan = json.loads(plan_path.read_text(encoding='utf-8'))
     if plan['memory_policy'] != MEMORY_POLICY:
         raise ValueError('Declared memory policy differs from current authorized policy')
@@ -288,6 +305,9 @@ def run(root, plan_path, seed, output):
     result = dict(schema_version=1, data_version=1, campaign_id=campaign, measured_at_utc=now.isoformat(),
         plan=plan, plan_sha256=digest(plan_path), seed=seed, status='incomplete',
         git_sha=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip())
+    progress = dict(completed_optimizer_steps=0, checkpoint=None)
+    context = dict(plan_sha256=result['plan_sha256'], seed=seed, config=plan['config'],
+        parent_weights_sha256=reference['weights_sha256'], source_result_sha256=plan['source_result_sha256'])
     guard, started = MemoryGuard(**plan['memory_policy']), time.monotonic()
     try:
         with guard:
@@ -302,7 +322,8 @@ def run(root, plan_path, seed, output):
             model = NoisyMomentUNet(plan['config']['width'])
             load_reconstruction(model, checkpoint['state_dict'])
             result['parameter_count'] = sum(p.numel() for p in model.parameters())
-            result['losses'], result['training_exposure_counts'] = train(model, source, plan['config'], guard)
+            result['losses'], result['training_exposure_counts'] = train(model, source, plan['config'], guard,
+                output/'training-latest.pt', context, progress, plan['checkpoint_policy']['interval_steps'], resume)
             parent = LocalMomentUNet(plan['config']['width']).eval().requires_grad_(False)
             parent.load_state_dict(checkpoint['state_dict'], strict=True)
             result.update(evaluate(model, parent, plan, source, guard))
@@ -323,6 +344,7 @@ def run(root, plan_path, seed, output):
         result['error'] = str(error)
         raise
     finally:
+        result['training_progress'] = progress
         result['memory'] = guard.stats()
         result['elapsed_seconds'] = time.monotonic()-started
         save(output/'result.json', result)
@@ -338,6 +360,7 @@ if __name__ == '__main__':
     parser.add_argument('--parents', nargs=2, type=Path)
     parser.add_argument('--plan', type=Path)
     parser.add_argument('--seed', type=int, choices=(71, 73))
+    parser.add_argument('--resume', type=Path)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
@@ -348,4 +371,4 @@ if __name__ == '__main__':
     elif args.plan is None or args.seed is None:
         parser.error('Training requires frozen plan and declared seed')
     else:
-        run(root, args.plan, args.seed, args.output)
+        run(root, args.plan, args.seed, args.output, args.resume)
