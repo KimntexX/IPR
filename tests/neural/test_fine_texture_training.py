@@ -13,6 +13,7 @@ class FineTextureTrainingTests(unittest.TestCase):
             second, repeated = texture(family, 10, 128)
             self.assertTrue(torch.equal(first, second))
             self.assertEqual(metadata, repeated)
+            self.assertEqual(dict(phase=2, **metadata)['phase'], 2)
             self.assertEqual(first.shape, (1, 3, 128, 128))
             self.assertTrue(torch.isfinite(first).all())
             self.assertLessEqual(float(first.max()), metadata['dc']+metadata['amplitude']+1e-6)

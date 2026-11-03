@@ -57,7 +57,14 @@ def manifest_hash(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
 
-def prepare(root, data_plan, accepted, kind, folders, priors, output):
+def cohort_contents(prior):
+    content = prior.get('data', prior)
+    if not all(isinstance(content.get(k), list) for k in ('edges', 'mixed')):
+        raise ValueError('Previous cohort must declare edges and mixed contents')
+    return content
+
+
+def prepare(root, data_plan, accepted, kind, folders, priors, output, edge_start=288, mixed_seed=3600000):
     confined(root, [data_plan, accepted, output]+folders+priors)
     source_data = json.loads(data_plan.read_text(encoding='utf-8'))
     if source_data['config']['training_scope'] != 'cfa_front':
@@ -87,9 +94,9 @@ def prepare(root, data_plan, accepted, kind, folders, priors, output):
     guard = MemoryGuard(**source_data['memory_policy'])
     with guard:
         torch.set_num_threads(4)
-        previous = [json.loads(p.read_text(encoding='utf-8')) for p in priors]+[source_data]
+        previous = [cohort_contents(json.loads(p.read_text(encoding='utf-8'))) for p in priors]+[source_data]
         seen = {key: [r for p in previous for r in p[key]] for key in ('edges', 'mixed')}
-        edges, mixed = freeze_cases(source, seen, 288, 3600000)
+        edges, mixed = freeze_cases(source, seen, edge_start, mixed_seed)
         replicas = []
         for replicate in range(3):
             records = []
@@ -107,6 +114,7 @@ def prepare(root, data_plan, accepted, kind, folders, priors, output):
         data = dict(source_data, edges=edges, mixed=mixed)
         data.pop('observations')
         plan = dict(schema_version=1, frozen_at_utc=datetime.now(timezone.utc).isoformat(), kind=kind, data=data,
+            cohort_seed_block=dict(edge_start=edge_start, mixed_seed=mixed_seed),
             source_data_plan_sha256=digest(data_plan), eligibility_path=str(accepted.resolve()), eligibility_sha256=digest(accepted),
             models=refs, replicas=replicas, prior_plan_sha256=[digest(p) for p in priors],
             tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
@@ -233,6 +241,8 @@ if __name__ == '__main__':
     parser.add_argument('--kind', choices=('plain', 'protected'))
     parser.add_argument('--models', nargs=2, type=Path)
     parser.add_argument('--prior', nargs='+', type=Path)
+    parser.add_argument('--edge-start', type=int, default=288)
+    parser.add_argument('--mixed-seed', type=int, default=3600000)
     parser.add_argument('--plan', type=Path)
     parser.add_argument('--reuse', type=Path)
     parser.add_argument('--output', type=Path, required=True)
@@ -241,7 +251,8 @@ if __name__ == '__main__':
     if args.prepare:
         if args.data_plan is None or args.eligibility is None or args.kind is None or args.models is None or args.prior is None:
             parser.error('Preparation requires data, eligible proof, kind, both models and previous cohorts')
-        prepare(root, args.data_plan, args.eligibility, args.kind, args.models, args.prior, args.output)
+        prepare(root, args.data_plan, args.eligibility, args.kind, args.models, args.prior, args.output,
+            args.edge_start, args.mixed_seed)
     elif args.plan is None:
         parser.error('Frozen plan required')
     else:

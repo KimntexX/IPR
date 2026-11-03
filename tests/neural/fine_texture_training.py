@@ -35,6 +35,6 @@ def texture(family, serial, side):
         colours /= colours.abs().max().clamp_min(1e-6)
     truth = (dc+amplitude*colours[:, None, None]*wave)[None]
     metadata = dict(seed=seed, frequency=frequency, amplitude=amplitude, dc=dc,
-        direction=direction, phase=phase, other_frequency=other_frequency,
-        other_direction=other_direction, other_phase=other_phase, colours=colours.tolist())
+        direction=direction, phase_radians=phase, other_frequency=other_frequency,
+        other_direction=other_direction, other_phase_radians=other_phase, colours=colours.tolist())
     return truth, metadata

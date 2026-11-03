@@ -1,10 +1,17 @@
 import copy
 import unittest
 
-from confirm_noisy_model import eligibility, reused_groups
+from confirm_noisy_model import eligibility, reused_groups, cohort_contents
 
 
 class NoisyConfirmationTests(unittest.TestCase):
+    def test_previous_cohort_accepts_nested_confirmation_and_rejects_missing_contents(self):
+        data = dict(edges=[dict(target_sha256='edge')], mixed=[dict(target_sha256='mixed')])
+        self.assertIs(cohort_contents(data), data)
+        self.assertIs(cohort_contents(dict(data=data)), data)
+        with self.assertRaises(ValueError):
+            cohort_contents(dict(data=dict(edges=[])))
+
     def test_plain_eligibility_requires_both_successful_seeds(self):
         refs = [dict(seed=s, result_sha256=str(s), weights_sha256='w'+str(s)) for s in (71, 73)]
         proof = dict(status='completed_both_seeds', pilot_gates_passed=True, attempts=[
