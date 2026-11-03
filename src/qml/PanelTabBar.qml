@@ -25,6 +25,11 @@ Row {
             name: qsTr("Géométrie"), key: "panelTabGeometry",
             lines: [[6, 2, 6, 18, 22, 18], [2, 6, 18, 6, 18, 22]],
             rings: []
+        },
+        {
+            name: qsTr("Assembler"), key: "panelTabAssemble",
+            lines: [[7, 3, 21, 3, 21, 14, 7, 14, 7, 3], [4, 7, 4, 18, 18, 18], [1, 10, 1, 21, 15, 21]],
+            rings: []
         }
     ]
     spacing: 0

@@ -183,6 +183,7 @@ set(IPR_QML_FILES
     src/qml/AppMenu.qml
     src/qml/HistoryModule.qml
     src/qml/GeometryPanel.qml
+    src/qml/AssemblePanel.qml
     src/qml/CropOverlay.qml
     src/qml/PanelTabBar.qml
     src/qml/PanelScrollBar.qml
@@ -445,6 +446,12 @@ if(BUILD_TESTING)
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(historyQmlTests PROPERTIES
         LABELS "unit;history;qml" TIMEOUT 60
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(assembleQmlTests tests/assemble_qml_test.cpp)
+    target_compile_definitions(assembleQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(assembleQmlTests PROPERTIES
+        LABELS "unit;stack;qml" TIMEOUT 120
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(geometryQmlTests tests/geometry_qml_test.cpp)
     target_compile_definitions(geometryQmlTests PRIVATE
