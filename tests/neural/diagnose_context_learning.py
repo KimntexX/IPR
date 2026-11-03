@@ -69,9 +69,10 @@ def probe(model, values, sigma, labels, truth, border):
         model.zero_grad(set_to_none=True)
 
 
-def run(root, output):
+def run(root, output, plan_path, campaign):
     base = root/'build-patch_neural_restoration'
-    plan_path = base/'noisy-context-plan-v001/plan.json'
+    if not all(p.resolve().is_relative_to(base.resolve()) for p in (output, plan_path, campaign)):
+        raise ValueError('Dedicated neural build paths required')
     plan = json.loads(plan_path.read_text(encoding='utf-8'))
     for name in FORWARD_TOOLS:
         if digest(Path(__file__).with_name(name)) != plan['tools'][name]:
@@ -91,7 +92,7 @@ def run(root, output):
         torch.set_num_interop_threads(1)
         torch.use_deterministic_algorithms(True)
         for seed in (71, 73):
-            folder = base/f'noisy-context-campaign-v001/seed{seed}-attempt01'
+            folder = campaign/f'seed{seed}-attempt01'
             proof = json.loads((folder/'result.json').read_text(encoding='utf-8'))
             if proof['plan_sha256'] != digest(plan_path) or proof['weights_sha256'] != digest(folder/'weights.pt'):
                 raise ValueError('Checkpoint provenance differs')
@@ -150,5 +151,7 @@ def run(root, output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--data-plan', type=Path, required=True)
+    parser.add_argument('--campaign', type=Path, required=True)
     args = parser.parse_args()
-    run(Path(__file__).resolve().parents[2], args.output)
+    run(Path(__file__).resolve().parents[2], args.output, args.data_plan, args.campaign)

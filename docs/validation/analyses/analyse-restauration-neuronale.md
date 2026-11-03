@@ -5000,3 +5000,36 @@ pas. Une réussite devra concerner les deux graines ; conserver seulement
 la graine 73 masquerait l'instabilité. Les tests vérifient notamment la
 borne juste avant les vraies étapes Adam, la reprise bit à bit, le parent
 figé et le retrait des sondes après diagnostic. Aucun changement en production.
+
+### Reprise autonome de la qualification — 3 novembre, soirée
+
+La graine 71 de l'essai à gradients limités termine les 2 048 étapes
+et passe ses critères de développement non protégés, contrairement à son
+premier entraînement. Durée : environ 553 secondes ; la graine 73 doit
+encore terminer avant de conclure sur la stabilité à deux initialisations.
+Preuve : [graine 71, gradients limités](../raw/neural-noisy-moment-v001-20261103T194042Z.json).
+
+À la demande de l'utilisateur, la qualification continue sans attendre
+une relance manuelle. `run_stability_qualification.py` attend la clôture
+du contrôleur d'entraînement, puis mesure la protection sur les deux
+graines finales. Si ce développement passe, il rejoue les deux cohortes
+classiques déjà consultées et la cohorte de textures fines connue, avec
+leurs entrées et critères historiques. Les trois verdicts sont conservés,
+même si l'un échoue. Une erreur d'exécution arrête la chaîne ; chaque
+sous-processus possède un délai maximal de deux heures. Aucun nouveau
+jeu réservé n'est ouvert automatiquement par ce contrôleur.
+
+Deux tests de l'orchestration vérifient qu'un développement négatif ne
+lance aucun rejeu et qu'une campagne d'entraînement incomplète conserve
+son erreur sans démarrer un autre calcul. Les calculs photographiques
+restent soumis aux mêmes gardes mémoire dans chaque sous-processus.
+
+À la clôture des deux entraînements, les deux graines passent le
+développement non protégé. Le rapport d'erreur RGB corrigé/parent sur
+tous les exemples vaut respectivement 0,9275 et 0,7454 pour la graine 71
+(bruits 1 et 2), puis 0,9046 et 0,6753 pour la graine 73. Le pic résident
+échantillonné reste proche de 391 Mio. Cela établit un gain sur ce banc,
+sans démontrer une qualification photographique ni une robustesse à
+d'autres initialisations. La mesure protégée et les rejeux suivent.
+Preuves : [campagne à gradients limités](../raw/neural-campaign-v001-20261103T194026Z.json)
+et [graine 73](../raw/neural-noisy-moment-v001-20261103T195013Z.json).
