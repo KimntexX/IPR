@@ -150,6 +150,55 @@ void shapes()
     check(cv::countNonZero(coverage(Mask{}, canvas)) == 0, "a mask without shapes covers nothing");
 }
 
+void ranges()
+{
+    // A ramp of tones from black to white, across.
+    cv::Mat rgb(canvas, CV_32FC3);
+    for (int y = 0; y < rgb.rows; ++y)
+        for (int x = 0; x < rgb.cols; ++x) {
+            const float linearValue = std::pow(float(x) / float(rgb.cols - 1), 2.2f);
+            rgb.at<cv::Vec3f>(y, x) = cv::Vec3f(linearValue, linearValue, linearValue);
+        }
+    const cv::Mat luminance = rangeLuminance(rgb);
+    check(luminance.type() == CV_32FC1 && luminance.size() == canvas, "a luminance of the same size");
+    check(at(luminance, 0.0f, 0.5f) < 0.01f && luminance.at<float>(150, 399) > 0.99f, "from 0 to 1");
+    check(std::abs(at(luminance, 0.5f, 0.5f) - 0.5f) < 0.03f, "encoded as the eye reads it");
+    cv::Mat extended(2, 2, CV_32FC3, cv::Scalar(-0.5, -0.5, -0.5));
+    extended.at<cv::Vec3f>(0, 0) = cv::Vec3f(9.f, 9.f, 9.f);
+    const cv::Mat bounded = rangeLuminance(extended);
+    check(std::abs(bounded.at<float>(0, 0) - 1.0f) < 1e-5f && bounded.at<float>(1, 1) == 0.0f, "bounded at both ends");
+
+    Shape shadows;
+    shadows.kind = Kind::LuminanceRange;
+    shadows.rangeLow = 0.0f;
+    shadows.rangeHigh = 0.3f;
+    shadows.rangeFeather = 0.1f;
+    const cv::Mat dark = coverage(maskOf(shadows), canvas, luminance);
+    check(at(dark, 0.1f, 0.5f) == 1.0f, "inside its tones: all of it");
+    check(at(dark, 0.7f, 0.5f) == 0.0f, "beyond them: nothing");
+    const float fading = at(dark, 0.35f, 0.5f);
+    check(fading > 0.0f && fading < 1.0f, "fading between");
+    check(cv::countNonZero(coverage(maskOf(shadows), canvas)) == 0, "without an image, a range covers nothing");
+    check(cv::countNonZero(coverage(maskOf(shadows), canvas, cv::Mat(10, 10, CV_32FC1, cv::Scalar(0)))) == 0, "nor with one of another size");
+
+    // With a zone: the tones of that zone.
+    Mask inZone = maskOf(linear({0.5f, 0.45f}, {0.5f, 0.55f}));
+    Shape intersect = shadows;
+    intersect.combine = Combine::Intersect;
+    inZone.shapes.push_back(intersect);
+    const cv::Mat both = coverage(inZone, canvas, luminance);
+    check(at(both, 0.1f, 0.1f) == 1.0f && at(both, 0.1f, 0.9f) == 0.0f && at(both, 0.8f, 0.1f) == 0.0f, "an intersection takes the tones of a zone");
+
+    Masks masks{valued(shadows, LocalValues::Exposure, 1.0f)};
+    check(usesLuminance(masks) && !usesLuminance({valued(whole(), LocalValues::Exposure, 1.0f)}), "a range says it reads the image");
+    check(at(valueMaps(masks, canvas, luminance)[LocalValues::Exposure], 0.1f, 0.5f) == 1.0f, "and gives its value there");
+    masks[0].shapes[0].rangeLow = 0.8f;
+    masks[0].shapes[0].rangeHigh = 0.2f;
+    check(bound(masks) && masks[0].shapes[0].rangeHigh == 0.8f, "a range keeps its ends in order");
+    masks[0].shapes[0].rangeFeather = std::numeric_limits<float>::quiet_NaN();
+    check(!bound(masks), "and a number as its fade");
+}
+
 void resolutions()
 {
     // The same zone at every resolution: a preview is the export in small.
@@ -359,6 +408,7 @@ void bounds()
 int main()
 {
     shapes();
+    ranges();
     resolutions();
     combinations();
     maps();

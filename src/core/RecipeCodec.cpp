@@ -185,7 +185,8 @@ QCborArray encodeMasks(const LocalAdjustments::Masks &masks)
                 {QStringLiteral("end"), pointArray(shape.end)}, {QStringLiteral("center"), pointArray(shape.center)},
                 {QStringLiteral("radiusX"), double(shape.radiusX)}, {QStringLiteral("radiusY"), double(shape.radiusY)},
                 {QStringLiteral("angle"), double(shape.angle)}, {QStringLiteral("feather"), double(shape.feather)},
-                {QStringLiteral("strokes"), strokes}});
+                {QStringLiteral("strokes"), strokes}, {QStringLiteral("rangeLow"), double(shape.rangeLow)},
+                {QStringLiteral("rangeHigh"), double(shape.rangeHigh)}, {QStringLiteral("rangeFeather"), double(shape.rangeFeather)}});
         }
         list.append(QCborMap{{QStringLiteral("name"), mask.name}, {QStringLiteral("visible"), mask.visible},
                              {QStringLiteral("opacity"), double(mask.opacity)}, {QStringLiteral("values"), values},
@@ -228,6 +229,9 @@ bool decodeMasks(const QCborArray &list, LocalAdjustments::Masks &masks)
             shape.radiusY = float(fields.value(QStringLiteral("radiusY")).toDouble());
             shape.angle = float(fields.value(QStringLiteral("angle")).toDouble());
             shape.feather = float(fields.value(QStringLiteral("feather")).toDouble());
+            shape.rangeLow = float(fields.value(QStringLiteral("rangeLow")).toDouble(0.0));
+            shape.rangeHigh = float(fields.value(QStringLiteral("rangeHigh")).toDouble(1.0));
+            shape.rangeFeather = float(fields.value(QStringLiteral("rangeFeather")).toDouble(0.1));
             for (const QCborValue &strokeEntry : fields.value(QStringLiteral("strokes")).toArray()) {
                 const QCborMap strokeFields = strokeEntry.toMap();
                 LocalAdjustments::BrushStroke stroke;

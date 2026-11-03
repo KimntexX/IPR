@@ -1,11 +1,13 @@
 #include "LocalAdjustments.h"
 
 #include "ImageMath.h"
+#include "WorkingColorSpace.h"
 
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
 
 namespace LocalAdjustments {
 namespace {
@@ -86,42 +88,101 @@ void paintRadial(const Shape &shape, cv::Mat &out)
     });
 }
 
+// The points that shape a line, within a distance below what a coverage can show: each span
+// keeps its furthest point while it lies too far from the span's straight line.
+std::vector<cv::Point2f> shapingPoints(const std::vector<cv::Point2f> &line)
+{
+    constexpr float furthestFromTheLine = 0.05f;   // pixels
+    if (line.size() <= 2)
+        return line;
+    std::vector<char> kept(line.size(), 0);
+    kept.front() = kept.back() = 1;
+    std::vector<std::pair<size_t, size_t>> spans{{0, line.size() - 1}};
+    while (!spans.empty()) {
+        const auto [first, last] = spans.back();
+        spans.pop_back();
+        const cv::Point2f a = line[first], ab = line[last] - a;
+        const float squared = ab.dot(ab);
+        float furthest = 0.0f;
+        size_t at = first;
+        for (size_t i = first + 1; i < last; ++i) {
+            const float t = squared > 0.0f ? std::clamp((line[i] - a).dot(ab) / squared, 0.0f, 1.0f) : 0.0f;
+            const cv::Point2f to = line[i] - (a + ab * t);
+            const float distance = to.dot(to);
+            if (distance > furthest) {
+                furthest = distance;
+                at = i;
+            }
+        }
+        if (furthest > furthestFromTheLine * furthestFromTheLine) {
+            kept[at] = 1;
+            spans.emplace_back(first, at);
+            spans.emplace_back(at, last);
+        }
+    }
+    std::vector<cv::Point2f> shaping;
+    for (size_t i = 0; i < line.size(); ++i)
+        if (kept[i])
+            shaping.push_back(line[i]);
+    return shaping;
+}
+
 // One stroke at a time: within a stroke the coverage is that of its nearest point, so that
-// its own overlaps do not build up; strokes then build up as paint does.
+// its own overlaps do not build up; strokes then build up as paint does. The distances stay
+// exact, at any resolution. The cost stays low because a hand's dense points are first reduced
+// to the few that shape the line, and each row only looks at the segments within reach of it.
 void paintStroke(const BrushStroke &stroke, cv::Mat &out)
 {
     if (stroke.points.empty())
         return;
     const float radius = std::max(0.5f, stroke.size * float(std::max(out.cols, out.rows)));
-    const cv::Rect bounds(0, 0, out.cols, out.rows);
-    cv::Point2f lowest = pixelOf(stroke.points.front(), out.size()), highest = lowest;
-    std::vector<cv::Point2f> points;
-    points.reserve(stroke.points.size());
-    for (const cv::Point2f &point : stroke.points) {
-        const cv::Point2f pixel = pixelOf(point, out.size());
-        points.push_back(pixel);
-        lowest = {std::min(lowest.x, pixel.x), std::min(lowest.y, pixel.y)};
-        highest = {std::max(highest.x, pixel.x), std::max(highest.y, pixel.y)};
+    std::vector<cv::Point2f> dense;
+    dense.reserve(stroke.points.size());
+    for (const cv::Point2f &point : stroke.points)
+        dense.push_back(pixelOf(point, out.size()));
+    std::vector<cv::Point2f> points = shapingPoints(dense);
+    if (points.size() == 1)
+        points.push_back(points.front());
+
+    cv::Point2f lowest = points.front(), highest = lowest;
+    for (const cv::Point2f &point : points) {
+        lowest = {std::min(lowest.x, point.x), std::min(lowest.y, point.y)};
+        highest = {std::max(highest.x, point.x), std::max(highest.y, point.y)};
     }
     const int reach = int(std::ceil(radius)) + 1;
-    const cv::Rect area = cv::Rect(cv::Point(int(lowest.x) - reach, int(lowest.y) - reach),
-                                   cv::Point(int(highest.x) + reach + 2, int(highest.y) + reach + 2)) & bounds;
+    const cv::Rect area = cv::Rect(cv::Point(int(std::floor(lowest.x)) - reach, int(std::floor(lowest.y)) - reach),
+                                   cv::Point(int(std::ceil(highest.x)) + reach + 1, int(std::ceil(highest.y)) + reach + 1))
+                          & cv::Rect(0, 0, out.cols, out.rows);
     if (area.empty())
         return;
+    const float reachSquared = radius * radius;
     cv::parallel_for_(cv::Range(area.y, area.y + area.height), [&](const cv::Range &range) {
+        std::vector<size_t> near;
+        near.reserve(points.size());
         for (int y = range.start; y < range.end; ++y) {
+            near.clear();
+            const float py = float(y);
+            for (size_t i = 0; i + 1 < points.size(); ++i)
+                if (std::min(points[i].y, points[i + 1].y) - radius <= py && py <= std::max(points[i].y, points[i + 1].y) + radius)
+                    near.push_back(i);
+            if (near.empty())
+                continue;
             float *row = out.ptr<float>(y);
             for (int x = area.x; x < area.x + area.width; ++x) {
-                const cv::Point2f pixel{float(x), float(y)};
-                float nearest = std::numeric_limits<float>::max();
-                for (size_t i = 0; i < points.size(); ++i) {
-                    const cv::Point2f a = points[i], b = points[std::min(i + 1, points.size() - 1)];
+                const cv::Point2f pixel{float(x), py};
+                float nearest = reachSquared;
+                for (const size_t i : near) {
+                    const cv::Point2f &a = points[i], &b = points[i + 1];
+                    if (std::min(a.x, b.x) - radius > pixel.x || pixel.x > std::max(a.x, b.x) + radius)
+                        continue;
                     const cv::Point2f ab = b - a;
                     const float squared = ab.dot(ab);
                     const float t = squared > 0.0f ? std::clamp((pixel - a).dot(ab) / squared, 0.0f, 1.0f) : 0.0f;
                     const cv::Point2f to = pixel - (a + ab * t);
                     nearest = std::min(nearest, to.dot(to));
                 }
+                if (nearest >= reachSquared)
+                    continue;
                 const float own = stroke.flow * fadeInside(std::sqrt(nearest) / radius, stroke.feather);
                 row[x] = row[x] + own - row[x] * own;
             }
@@ -129,7 +190,25 @@ void paintStroke(const BrushStroke &stroke, cv::Mat &out)
     });
 }
 
-cv::Mat shapeCoverage(const Shape &shape, const cv::Size &canvas)
+void paintRange(const Shape &shape, const cv::Mat &luminance, cv::Mat &out)
+{
+    if (luminance.empty() || luminance.size() != out.size() || luminance.type() != CV_32FC1)
+        return;
+    const float feather = std::max(1e-4f, shape.rangeFeather);
+    cv::parallel_for_(cv::Range(0, out.rows), [&](const cv::Range &range) {
+        for (int y = range.start; y < range.end; ++y) {
+            float *row = out.ptr<float>(y);
+            const float *in = luminance.ptr<float>(y);
+            for (int x = 0; x < out.cols; ++x) {
+                const float low = ImageMath::smoothStep(shape.rangeLow - feather, shape.rangeLow, in[x]);
+                const float high = 1.0f - ImageMath::smoothStep(shape.rangeHigh, shape.rangeHigh + feather, in[x]);
+                row[x] = low * high;
+            }
+        }
+    });
+}
+
+cv::Mat shapeCoverage(const Shape &shape, const cv::Size &canvas, const cv::Mat &luminance)
 {
     cv::Mat out(canvas, CV_32FC1, cv::Scalar(0));
     switch (shape.kind) {
@@ -142,6 +221,9 @@ cv::Mat shapeCoverage(const Shape &shape, const cv::Size &canvas)
     case Kind::Brush:
         for (const BrushStroke &stroke : shape.strokes)
             paintStroke(stroke, out);
+        break;
+    case Kind::LuminanceRange:
+        paintRange(shape, luminance, out);
         break;
     }
     if (shape.inverted)
@@ -199,7 +281,8 @@ bool operator==(const Shape &a, const Shape &b)
 {
     return a.kind == b.kind && a.combine == b.combine && a.inverted == b.inverted && a.start == b.start && a.end == b.end &&
            a.center == b.center && a.radiusX == b.radiusX && a.radiusY == b.radiusY && a.angle == b.angle &&
-           a.feather == b.feather && a.strokes == b.strokes;
+           a.feather == b.feather && a.strokes == b.strokes && a.rangeLow == b.rangeLow &&
+           a.rangeHigh == b.rangeHigh && a.rangeFeather == b.rangeFeather;
 }
 
 bool operator==(const Mask &a, const Mask &b)
@@ -230,8 +313,12 @@ bool bound(Masks &masks)
         for (Shape &shape : mask.shapes) {
             if (!place(shape.start) || !place(shape.end) || !place(shape.center) || !std::isfinite(shape.radiusX) ||
                 !std::isfinite(shape.radiusY) || !std::isfinite(shape.angle) || !std::isfinite(shape.feather) ||
+                !std::isfinite(shape.rangeLow) || !std::isfinite(shape.rangeHigh) || !std::isfinite(shape.rangeFeather) ||
                 int(shape.strokes.size()) > largestStrokeCount)
                 return false;
+            shape.rangeLow = std::clamp(shape.rangeLow, 0.0f, 1.0f);
+            shape.rangeHigh = std::clamp(shape.rangeHigh, shape.rangeLow, 1.0f);
+            shape.rangeFeather = std::clamp(shape.rangeFeather, 0.0f, 1.0f);
             shape.radiusX = std::clamp(shape.radiusX, 0.0f, 8.0f);
             shape.radiusY = std::clamp(shape.radiusY, 0.0f, 8.0f);
             shape.angle = std::clamp(shape.angle, -360.0f, 360.0f);
@@ -260,11 +347,34 @@ bool active(const Masks &masks)
     });
 }
 
-cv::Mat coverage(const Mask &mask, const cv::Size &canvas)
+bool usesLuminance(const Masks &masks)
+{
+    for (const Mask &mask : masks)
+        for (const Shape &shape : mask.shapes)
+            if (shape.kind == Kind::LuminanceRange)
+                return true;
+    return false;
+}
+
+cv::Mat rangeLuminance(const cv::Mat &linearRgb)
+{
+    cv::Mat luminance(linearRgb.size(), CV_32FC1);
+    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &range) {
+        for (int y = range.start; y < range.end; ++y) {
+            const cv::Vec3f *in = linearRgb.ptr<cv::Vec3f>(y);
+            float *out = luminance.ptr<float>(y);
+            for (int x = 0; x < linearRgb.cols; ++x)
+                out[x] = WorkingColor::srgbEncode(std::clamp(WorkingColor::nonNegativeLuminance(in[x]), 0.0f, 1.0f));
+        }
+    });
+    return luminance;
+}
+
+cv::Mat coverage(const Mask &mask, const cv::Size &canvas, const cv::Mat &luminance)
 {
     cv::Mat combined(canvas, CV_32FC1, cv::Scalar(0));
     for (const Shape &shape : mask.shapes) {
-        const cv::Mat own = shapeCoverage(shape, canvas);
+        const cv::Mat own = shapeCoverage(shape, canvas, luminance);
         switch (shape.combine) {
         case Combine::Add:
             combined = combined + own - combined.mul(own);
@@ -280,7 +390,7 @@ cv::Mat coverage(const Mask &mask, const cv::Size &canvas)
     return combined;
 }
 
-LocalValues::Maps valueMaps(const Masks &masks, const cv::Size &canvas)
+LocalValues::Maps valueMaps(const Masks &masks, const cv::Size &canvas, const cv::Mat &luminance)
 {
     LocalValues::Maps maps;
     if (!active(masks) || canvas.empty())
@@ -289,7 +399,7 @@ LocalValues::Maps valueMaps(const Masks &masks, const cv::Size &canvas)
         if (!mask.visible || mask.opacity <= 0.0f || mask.shapes.empty() ||
             std::all_of(mask.values.cbegin(), mask.values.cend(), [](float value) { return value == 0.0f; }))
             continue;
-        const cv::Mat weight = coverage(mask, canvas) * double(mask.opacity);
+        const cv::Mat weight = coverage(mask, canvas, luminance) * double(mask.opacity);
         for (size_t i = 0; i < mask.values.size(); ++i) {
             if (mask.values[i] == 0.0f)
                 continue;
@@ -327,7 +437,8 @@ void appendKey(QDataStream &stream, const Masks &masks)
         for (const Shape &shape : mask.shapes) {
             stream << qint32(shape.kind) << qint32(shape.combine) << shape.inverted << shape.start.x << shape.start.y
                    << shape.end.x << shape.end.y << shape.center.x << shape.center.y << shape.radiusX << shape.radiusY
-                   << shape.angle << shape.feather << qint32(shape.strokes.size());
+                   << shape.angle << shape.feather << shape.rangeLow << shape.rangeHigh << shape.rangeFeather
+                   << qint32(shape.strokes.size());
             for (const BrushStroke &stroke : shape.strokes) {
                 stream << stroke.size << stroke.feather << stroke.flow << qint32(stroke.points.size());
                 for (const cv::Point2f &point : stroke.points)
@@ -356,6 +467,7 @@ QString kindName(Kind kind)
     case Kind::Linear: return QStringLiteral("linear");
     case Kind::Radial: return QStringLiteral("radial");
     case Kind::Brush: return QStringLiteral("brush");
+    case Kind::LuminanceRange: return QStringLiteral("luminanceRange");
     }
     return {};
 }
@@ -372,7 +484,7 @@ QString combineName(Combine combine)
 
 bool kindNamed(const QString &name, Kind &kind)
 {
-    for (const Kind candidate : {Kind::Linear, Kind::Radial, Kind::Brush})
+    for (const Kind candidate : {Kind::Linear, Kind::Radial, Kind::Brush, Kind::LuminanceRange})
         if (name == kindName(candidate)) {
             kind = candidate;
             return true;
@@ -405,7 +517,9 @@ QVariantList describe(const Masks &masks)
                 {QStringLiteral("end"), pointValue(shape.end)}, {QStringLiteral("center"), pointValue(shape.center)},
                 {QStringLiteral("radiusX"), double(shape.radiusX)}, {QStringLiteral("radiusY"), double(shape.radiusY)},
                 {QStringLiteral("angle"), double(shape.angle)}, {QStringLiteral("feather"), double(shape.feather)},
-                {QStringLiteral("strokes"), int(shape.strokes.size())}});
+                {QStringLiteral("strokes"), int(shape.strokes.size())},
+                {QStringLiteral("rangeLow"), double(shape.rangeLow)}, {QStringLiteral("rangeHigh"), double(shape.rangeHigh)},
+                {QStringLiteral("rangeFeather"), double(shape.rangeFeather)}});
         list.append(QVariantMap{{QStringLiteral("name"), mask.name}, {QStringLiteral("visible"), mask.visible},
                                 {QStringLiteral("opacity"), double(mask.opacity)}, {QStringLiteral("values"), values},
                                 {QStringLiteral("shapes"), shapes}});
@@ -426,6 +540,9 @@ bool setShapeFields(Shape &shape, const QVariantMap &values)
         else if (key == QStringLiteral("radiusY")) ok = readFloat(value, shape.radiusY);
         else if (key == QStringLiteral("angle")) ok = readFloat(value, shape.angle);
         else if (key == QStringLiteral("feather")) ok = readFloat(value, shape.feather);
+        else if (key == QStringLiteral("rangeLow")) ok = readFloat(value, shape.rangeLow);
+        else if (key == QStringLiteral("rangeHigh")) ok = readFloat(value, shape.rangeHigh);
+        else if (key == QStringLiteral("rangeFeather")) ok = readFloat(value, shape.rangeFeather);
         else if (key == QStringLiteral("inverted")) shape.inverted = value.toBool();
         else if (key == QStringLiteral("combine")) ok = combineNamed(value.toString(), shape.combine);
         else ok = false;

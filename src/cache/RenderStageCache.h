@@ -1,6 +1,8 @@
 #ifndef IPR_CACHE_RENDERSTAGECACHE_H
 #define IPR_CACHE_RENDERSTAGECACHE_H
 
+#include "LocalValues.h"
+
 #include <QByteArray>
 
 #include <opencv2/core.hpp>
@@ -37,6 +39,10 @@ public:
     // Copy of a kept stage output for this source, scale and key; empty otherwise.
     // Reads only: the keep policy of the renders is left as it is.
     cv::Mat peek(const cv::Mat &source, double pixelScale, int stage, const QByteArray &key) const;
+    // What the masks add, for this source and scale, read-only for those who get them: a render
+    // that moves another slider does not draw the masks again. One entry, under its own key.
+    bool maskMaps(const cv::Mat &source, double pixelScale, const QByteArray &key, LocalValues::Maps &maps) const;
+    void storeMaskMaps(const cv::Mat &source, double pixelScale, const QByteArray &key, const LocalValues::Maps &maps);
     void clear();
     int count() const;
 
@@ -48,6 +54,10 @@ private:
     double m_pixelScale = 0.0;
     std::optional<Keys> m_previous;
     std::array<std::optional<Entry>, StageCount> m_entries;
+    QByteArray m_maskKey;
+    const uchar *m_maskSource = nullptr;
+    double m_maskScale = 0.0;
+    LocalValues::Maps m_maskMaps;
     std::uint64_t m_generation = 0;
 };
 

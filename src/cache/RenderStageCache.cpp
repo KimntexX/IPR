@@ -56,8 +56,32 @@ cv::Mat RenderStageCache::peek(const cv::Mat &source, double pixelScale, int sta
     return entry->rgb.clone();
 }
 
+bool RenderStageCache::maskMaps(const cv::Mat &source, double pixelScale, const QByteArray &key, LocalValues::Maps &maps) const
+{
+    std::lock_guard lock(m_mutex);
+    if (m_maskKey.isEmpty() || m_maskKey != key || m_maskSource != source.data || m_maskScale != pixelScale)
+        return false;
+    maps = m_maskMaps;
+    return true;
+}
+
+void RenderStageCache::storeMaskMaps(const cv::Mat &source, double pixelScale, const QByteArray &key, const LocalValues::Maps &maps)
+{
+    std::lock_guard lock(m_mutex);
+    m_maskKey = key;
+    m_maskSource = source.data;
+    m_maskScale = pixelScale;
+    m_maskMaps = maps;
+}
+
 void RenderStageCache::clear()
 {
+    {
+        std::lock_guard lock(m_mutex);
+        m_maskKey.clear();
+        m_maskSource = nullptr;
+        m_maskMaps = {};
+    }
     std::lock_guard lock(m_mutex);
     m_entries = {};
     m_previous.reset();

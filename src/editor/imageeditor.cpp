@@ -54,6 +54,37 @@ namespace {
 
 // Keys of the cached render stages, defined with the render below.
 RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s);
+Geometry::Quality geometryQuality(double pixelScale);
+
+// What the masks add on the canvas; a range reads the image as it is before any edit.
+LocalValues::Maps maskValues(const ColorPipeline::WorkingImage &source, const EditRecipe::Settings &settings, double pixelScale,
+                             RenderStageCache *cache = nullptr)
+{
+    if (!LocalAdjustments::active(settings.localMasks))
+        return {};
+    QByteArray key;
+    if (cache) {
+        QDataStream stream(&key, QIODevice::WriteOnly);
+        LocalAdjustments::appendKey(stream, settings.localMasks);
+        const Geometry::Settings &g = settings.geometry;
+        stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation << qint32(g.vertical)
+               << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale) << qint32(g.offsetX) << qint32(g.offsetY);
+        LocalValues::Maps kept;
+        if (cache->maskMaps(source.linearRgba, pixelScale, key, kept))
+            return kept;
+    }
+    const cv::Size canvas = Geometry::canvasSize(settings.geometry, source.linearRgba.size());
+    cv::Mat luminance;
+    if (LocalAdjustments::usesLuminance(settings.localMasks)) {
+        cv::Mat rgb;
+        cv::cvtColor(source.linearRgba, rgb, cv::COLOR_RGBA2RGB);
+        luminance = LocalAdjustments::rangeLuminance(Geometry::warpRgb(rgb, settings.geometry, geometryQuality(pixelScale)));
+    }
+    const LocalValues::Maps maps = LocalAdjustments::valueMaps(settings.localMasks, canvas, luminance);
+    if (cache)
+        cache->storeMaskMaps(source.linearRgba, pixelScale, key, maps);
+    return maps;
+}
 
 // The preview's proxy takes the fast filter; a full-resolution render, the fine one.
 Geometry::Quality geometryQuality(double pixelScale)
@@ -1271,9 +1302,8 @@ bool ImageEditor::addPointColorAt(qreal x, qreal y)
     if (tones.empty()) {
         cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
         const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
-        const cv::Size canvas = Geometry::canvasSize(m_settings.geometry, source.linearRgba.size());
         if (!renderTones(source, m_settings, reference, previewPixelScale(), tones,
-                         LocalAdjustments::valueMaps(m_settings.localMasks, canvas)))
+                         maskValues(source, m_settings, previewPixelScale(), &m_renderStageCache)))
             return false;
     }
     // The tones cover the whole canvas; the view may show its crop.
@@ -2317,8 +2347,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         return source;
 
     // What the masks add per setting; every map stays empty without any.
-    const cv::Size canvas = Geometry::canvasSize(settings.geometry, source.linearRgba.size());
-    const LocalValues::Maps local = LocalAdjustments::valueMaps(settings.localMasks, canvas);
+    const LocalValues::Maps local = maskValues(source, settings, pixelScale, cache);
 
     // Each costly stage runs only past the cached output it resumes from, then
     // hands its output to the cache when asked to keep it.
@@ -2524,9 +2553,7 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
         if (tones.empty()) {
             cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
             const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
-            const cv::Size canvas = Geometry::canvasSize(settings.geometry, source.linearRgba.size());
-            if (!renderTones(source, settings, reference, pixelScale, tones,
-                             LocalAdjustments::valueMaps(settings.localMasks, canvas)))
+            if (!renderTones(source, settings, reference, pixelScale, tones, maskValues(source, settings, pixelScale, cache)))
                 tones.release();
         }
         const cv::Mat weights = PerceptualColour::pointWeights(tones, perceptualParameters(settings), overlayPoint);

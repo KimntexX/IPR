@@ -262,6 +262,69 @@ void rendering(const ColorPipeline::WorkingImage &source, const char *name)
     check(sameBytes(again, cached), "and a same one renders the same from it");
     Settings removed;
     check(sameBytes(IprTestImageGenerator::render(source, removed, 1.0, &cache), plain), "removing it comes back to the plain render");
+
+    // Maps kept for the masks do not outlive what they depend on: the frame, or another slider's render.
+    RenderStageCache framed;
+    Settings straight;
+    straight.localMasks = {top};
+    Settings turned = straight;
+    turned.geometry.quarterTurns = 1;
+    Settings moved = straight;
+    moved.contrast = 20;
+    IprTestImageGenerator::render(source, straight, 1.0, &framed);
+    check(sameBytes(IprTestImageGenerator::render(source, turned, 1.0, &framed), IprTestImageGenerator::render(source, turned)), "a turn draws the masks again");
+    IprTestImageGenerator::render(source, straight, 1.0, &framed);
+    check(sameBytes(IprTestImageGenerator::render(source, moved, 1.0, &framed), IprTestImageGenerator::render(source, moved)), "another slider renders rightly with kept maps");
+}
+
+void withRange(const ColorPipeline::WorkingImage &source)
+{
+    // The whole range is the whole image, and acts as the global setting.
+    Settings all;
+    Shape every;
+    every.kind = Kind::LuminanceRange;
+    Mask mask;
+    mask.shapes.push_back(every);
+    mask.values[size_t(LocalValues::Exposure)] = 1.0f;
+    all.localMasks.push_back(mask);
+    Settings global;
+    global.brightness = 1.0f;
+    check(worstDifference(IprTestImageGenerator::render(source, all), IprTestImageGenerator::render(source, global)) <= 1e-4, "a whole range acts as the global setting");
+
+    // A range of dark tones leaves the bright ones, and follows the image through a turn.
+    Settings dark;
+    mask.shapes[0].rangeLow = 0.0f;
+    mask.shapes[0].rangeHigh = 0.4f;
+    mask.shapes[0].rangeFeather = 0.02f;
+    dark.localMasks.push_back(mask);
+    dark.geometry.quarterTurns = 1;
+    Settings plainTurned;
+    plainTurned.geometry.quarterTurns = 1;
+    const ColorPipeline::WorkingImage plain = IprTestImageGenerator::render(source, plainTurned);
+    const ColorPipeline::WorkingImage lifted = IprTestImageGenerator::render(source, dark);
+    const cv::Mat luminance = rangeLuminance([&] {
+        cv::Mat rgb;
+        cv::cvtColor(plain.linearRgba, rgb, cv::COLOR_RGBA2RGB);
+        return rgb;
+    }());
+    int darkRaised = 0, darkTotal = 0, brightKept = 0, brightTotal = 0;
+    for (int y = 0; y < plain.linearRgba.rows; ++y)
+        for (int x = 0; x < plain.linearRgba.cols; ++x) {
+            const float tone = luminance.at<float>(y, x);
+            const float before = plain.linearRgba.at<cv::Vec4f>(y, x)[1], after = lifted.linearRgba.at<cv::Vec4f>(y, x)[1];
+            if (tone < 0.35f) {
+                ++darkTotal;
+                // A profile can leave a dark colour below zero: an exposure scales it all the same.
+                darkRaised += std::abs(after) > std::abs(before) * 1.2f;
+            } else if (tone > 0.5f) {
+                ++brightTotal;
+                brightKept += std::abs(after - before) < 1e-4f;
+            }
+        }
+    if (darkRaised < darkTotal * 95 / 100 || brightKept < brightTotal * 95 / 100)
+        std::cerr << "dark " << darkRaised << '/' << darkTotal << " bright " << brightKept << '/' << brightTotal << '\n';
+    check(darkTotal > 0 && darkRaised >= darkTotal * 95 / 100, "the dark tones are lifted");
+    check(brightTotal > 0 && brightKept >= brightTotal * 95 / 100, "the bright ones are not");
 }
 
 void withGeometry(const ColorPipeline::WorkingImage &source)
@@ -358,7 +421,13 @@ void codec()
     linear.combine = Combine::Intersect;
     linear.start = {-0.5f, 0.1f};
     linear.end = {1.5f, 0.9f};
-    mask.shapes = {radial, stroked, linear};
+    Shape range;
+    range.kind = Kind::LuminanceRange;
+    range.combine = Combine::Intersect;
+    range.rangeLow = 0.2f;
+    range.rangeHigh = 0.6f;
+    range.rangeFeather = 0.05f;
+    mask.shapes = {radial, stroked, linear, range};
     mask.values[size_t(LocalValues::Exposure)] = 0.5f;
     mask.values[size_t(LocalValues::Sharpening)] = 60.0f;
     settings.localMasks.push_back(mask);
@@ -550,12 +619,14 @@ int main(int argc, char **argv)
     const cv::Size size(240, 160);
     const ColorPipeline::WorkingImage raster = rasterSource(size);
     rendering(raster, "raster");
+    withRange(raster);
     withGeometry(raster);
     resolutions(raster);
     const ColorPipeline::WorkingImage camera = cameraSource(size, dcp);
     check(!camera.isNull() && camera.dcpContext != nullptr, "a source with a camera signal");
     if (!camera.isNull()) {
         rendering(camera, "camera");
+        withRange(camera);
         withGeometry(camera);
     }
     codec();
