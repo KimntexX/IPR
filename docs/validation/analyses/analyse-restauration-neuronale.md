@@ -5033,3 +5033,41 @@ sans démontrer une qualification photographique ni une robustesse à
 d'autres initialisations. La mesure protégée et les rejeux suivent.
 Preuves : [campagne à gradients limités](../raw/neural-campaign-v001-20261103T194026Z.json)
 et [graine 73](../raw/neural-noisy-moment-v001-20261103T195013Z.json).
+
+### Bilan des rejeux autonomes — 3 novembre, soirée
+
+La chaîne est terminée sans erreur d'exécution. Le développement protégé
+passe pour les deux graines. Les deux corpus classiques historiques passent
+chacun leurs six groupes (deux graines × trois réalisations de bruit), soit
+12/12. Cela inclut le deuxième corpus, qui échouait sur la conservation des
+contours avec les correcteurs locaux précédents. Sur les deux corpus,
+l'erreur RGB corrigé/parent vaut environ 0,916–0,931 au premier bruit et
+0,749–0,799 au second. Les autres critères restent obligatoires et passent.
+Il s'agit de rejeux connus, pas de nouvelles confirmations indépendantes.
+
+La cohorte fine de 4 032 observations échoue. Les quatre critères d'erreur
+RGB globale passent (rapports au parent 0,821/0,660 pour la graine 71 et
+0,797/0,535 pour la graine 73), mais **24 des 48 groupes à amplitude forte**
+échouent à au moins un critère. Parmi eux, 22 échouent au transfert minimal
+par canal, trois à l'erreur RGB et deux à l'erreur sur les sites capteur ;
+ces nombres se recouvrent. Trois groupes en échec sont au premier bruit,
+21 au second. Le pire transfert relatif est 0,468 sur le bleu d'une texture
+chromatique à 14 cycles, graine 73, bruit 2, contre un minimum requis de 0,95.
+Ce transfert mesure l'amplitude de la structure simulée, pas le pourcentage
+de détails perdus sur une photographie réelle.
+
+Le modèle local précédent échouait sur 20/48 groupes forts, avec un minimum
+de transfert proche de 0,626 ; son élargissement échouait sur 23/48. Le nouveau
+contexte et l'apprentissage stabilisé règlent donc le blocage de la graine 71
+et les contours classiques sur ces cas, mais **ne règlent pas la préservation
+des textures fines** ; leur pire atténuation est même aggravée. On ne retient
+pas ce candidat comme version qualifiée et on ne choisit pas seulement la
+meilleure graine. Les nouveaux jeux réservés restent fermés.
+
+Preuves : [développement protégé](../raw/neural-edge-protection-v001-20261103T195930Z.json),
+[premier rejeu classique](../raw/neural-noisy-regression-v001-20261103T200131Z.json),
+[second rejeu classique](../raw/neural-noisy-regression-v001-20261103T200733Z.json),
+[rejeu fin](../raw/neural-fine-regression-v001-20261103T201352Z.json).
+La prochaine investigation doit isoler l'atténuation des textures chromatiques
+dans le correcteur CFA, sur ces mêmes cas connus, avant tout nouvel entraînement
+ou ouverture d'un jeu réservé. Aucun changement en production.
