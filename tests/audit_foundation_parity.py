@@ -15,6 +15,8 @@ STATES = (
     ("denoise-luminance", 50), ("denoise-chrominance", 50), ("sharpening-amount", 100),
     ("lens-correction", 0), ("chromatic-aberration", 0), ("auto-wb", 1),
 )
+# Signed development: the camera denoise and the colour denoise after the tones.
+SIGNED = ((0, 0), (50, 0), (100, 0), (100, 100))
 RAW_SUFFIXES = {".cr2", ".cr3", ".dng"}
 
 
@@ -26,9 +28,10 @@ def sha256(path):
 def requests(source, states=STATES):
     lines = [json.dumps(dict(op="render", source=str(source), feature=feature, value=value))
              for feature, value in states]
-    # The signed development alone, the other path of the opening.
-    lines.append(json.dumps(dict(op="render", source=str(source), feature="neutral", value=0,
-                                 cameraDenoise=dict(luminance=0, chrominance=0))))
+    # The other path of the opening: the signed development and its denoise.
+    lines += [json.dumps(dict(op="render", source=str(source), feature="neutral", value=0,
+                              cameraDenoise=dict(luminance=luminance, chrominance=chrominance)))
+              for luminance, chrominance in SIGNED]
     return "\n".join(lines) + '\n{"op":"quit"}\n'
 
 
@@ -49,21 +52,23 @@ def digests(output, count):
     return results
 
 
-def render(executable, source, cwd):
+def render(executable, source, cwd, states=STATES):
     # One bounded process per source: no accumulated masters between photos.
-    result = subprocess.run([str(executable)], input=requests(source).encode(), capture_output=True,
+    result = subprocess.run([str(executable)], input=requests(source, states).encode(), capture_output=True,
                             cwd=cwd, timeout=1800, check=True)
-    return digests(result.stdout, len(STATES) + 1)
+    return digests(result.stdout, len(states) + len(SIGNED))
 
 
-def compare(baseline, candidate, sources, cwd, record):
+def compare(baseline, candidate, sources, cwd, record, states=STATES):
     """Records one line per state; returns the number of differences."""
-    names = [f"{feature}={value}" for feature, value in STATES] + ["neutral=0,signed"]
+    names = ([f"{feature}={value}" for feature, value in states] +
+             [f"neutral=0,signed,luminance={luminance},chrominance={chrominance}"
+              for luminance, chrominance in SIGNED])
     different = 0
     for source in sources:
         before_hash = sha256(source)
-        before = render(baseline, source, cwd)
-        after = render(candidate, source, cwd)
+        before = render(baseline, source, cwd, states)
+        after = render(candidate, source, cwd, states)
         if sha256(source) != before_hash:
             raise RuntimeError(f"Source changed during comparison: {source.name}")
         for name, a, b in zip(names, before, after):
@@ -83,6 +88,7 @@ def main():
     parser.add_argument("--base", type=Path, required=True)
     parser.add_argument("--cwd", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--signed-only", action="store_true", help="Compare only the signed development states")
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     if args.output.exists():
@@ -100,15 +106,17 @@ def main():
         candidate_dirty=bool(subprocess.check_output(["git", "status", "--porcelain"], text=True).strip()),
         units=dict(pixels="little-endian uint16 sRGB codes, RGB row-major", comparison="exact bytes, no tolerance"),
         protocol_version=1, analyser_version=1, cwd=str(args.cwd.resolve()),
-        method="Full-frame in-memory renders of every settings family at one or two values, standard and signed "
-               "development at zero; source digests before and after; folder listing before and after",
+        method=("Full-frame in-memory renders of the signed development and its denoise"
+                if args.signed_only else "Full-frame in-memory renders of every settings family at one or two values, "
+                "standard and signed development with their denoise") +
+               "; source digests before and after; folder listing before and after",
         limitations=["Compares the render servers, not the application's preview path",
                      "One or two values per family, not every slider value"],
         records=[],
     )
     try:
         proof["different"] = compare(args.baseline.resolve(), args.candidate.resolve(), sources, args.cwd,
-                                     proof["records"].append)
+                                     proof["records"].append, () if args.signed_only else STATES)
         proof["identical"] = len(proof["records"]) - proof["different"]
         proof["folder_unchanged"] = sorted(p.name for p in args.base.iterdir()) == entries_before
         proof["status"] = "passed" if proof["different"] == 0 and proof["folder_unchanged"] else "failed"

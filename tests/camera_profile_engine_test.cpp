@@ -598,7 +598,7 @@ int main(int argc, char **argv)
         lensSource.dcpContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(lens);
         cv::Mat expectedCamera = lens.preLensCameraRgb;
         auto expectedContext = lens;
-        if (!CameraDenoise::apply(expectedCamera, {40, 0}, {}) ||
+        if (!CameraDenoise::apply(expectedCamera, 40, {}) ||
             !CameraProfileEngine::applyLcp(lcpPath, expectedCamera, lens.capture, &lensError, lens.lensOptions))
             return 1;
         expectedContext.cameraRgb = expectedCamera;

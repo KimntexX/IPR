@@ -6,15 +6,10 @@
 #include <utility>
 #include <vector>
 
-// Experimental, profile-independent denoising of signed camera RGB, after the
-// opening's RCD/median and BEFORE optical corrections and nonlinear DCP rendering.
+// Experimental, profile-independent intensity denoising of signed camera RGB, after
+// the opening's RCD/median and BEFORE optical corrections and nonlinear DCP rendering.
+// Colour noise is removed later, after the tones (DetailProcessing::reduceNoise).
 namespace CameraDenoise {
-
-struct Settings
-{
-    int luminance = 0;
-    int chrominance = 0;
-};
 
 // Optional caller-thread diagnostics. Coefficient sigmas contain texture as well
 // as noise; these are not a calibrated sensor model or a clean-noise oracle.
@@ -44,15 +39,6 @@ struct Context
 // are not changed. Only the caller invokes cancellation; all workers are joined.
 int workerThreads();
 
-bool identity(const Settings &settings);
-
-// Master control of the editor's single noise reduction slider. Amount is an
-// integer in [0,100]; invalid input leaves settings unchanged and returns false.
-// L=amount; C=round(100*(1-(1-amount/100)^6)). Default zero is exact identity.
-// This is an ergonomic mapping, NOT a Lightroom-equivalent strength calibration.
-// Advanced controls pass Settings directly to apply; do not map them again.
-bool settingsFromAmount(int amount, Settings &settings);
-
 // Input: finite CV_32FC3, white 1, signed/extended range, with white balance
 // ALREADY applied. Do not undo WB: both estimation and correction operate in
 // these balanced camera axes. Camera intensity is an
@@ -64,17 +50,15 @@ bool settingsFromAmount(int amount, Settings &settings);
 // to the pooled model, without changing the conditional knots inside the range.
 // With multiple witnessed bands, the darkest knot has an empirical pooled-
 // variance floor; the existing interpolation fades it toward the next knot.
-// Three intensity scales; five chroma scales when chroma is enabled. Chroma-only
-// preserves camera intensity, NOT rendered Y or the mean of encoded RGB.
-// Chroma structure protection uses Co/Cg only: achromatic luminance texture
-// must not act as a veto on colour-noise correction. Intensity keeps its 3D gate.
-// Intensity-only adds the SAME delta to R/G/B, preserving their differences
-// before DCP (not necessarily encoded/rendered chroma after nonlinear mapping).
-// Zero forces preserve the buffer exactly, without scanning pixels/using Context.
-// Invalid shape/type/settings fail even on that path. Nonzero forces validate
-// finitude/Context. Success publishes a NEW buffer, never edits aliased source
-// pixels; on failure/cancellation the input is unchanged. No lower/upper clamp.
-bool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,
+// Three intensity scales, with a structure gate over the three opponent axes. The
+// SAME delta is added to R/G/B, preserving their differences before DCP (not
+// necessarily encoded/rendered chroma after nonlinear mapping).
+// Luminance is in [0,100]. Zero preserves the buffer exactly, without scanning
+// pixels/using Context. An invalid shape/type/strength fails even on that path.
+// Nonzero validates finitude/Context. Success publishes a NEW buffer, never edits
+// aliased source pixels; on failure/cancellation the input is unchanged. No
+// lower/upper clamp.
+bool apply(cv::Mat &cameraRgb, int luminance, const Context &context,
            const std::function<bool()> &cancelled = {});
 
 } // namespace CameraDenoise

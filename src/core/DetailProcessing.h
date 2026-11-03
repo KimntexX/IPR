@@ -13,6 +13,12 @@ struct DenoiseSettings
     int chrominance = 0;
 };
 
+// The law of the editor's single noise reduction slider. Amount is an integer in
+// [0,100]; invalid input leaves settings unchanged and returns false.
+// L=amount; C=round(100*(1-(1-amount/100)^6)). Zero is exact identity.
+// An ergonomic mapping, NOT a Lightroom-equivalent strength calibration.
+bool denoiseFromAmount(int amount, DenoiseSettings &settings);
+
 struct SharpenSettings
 {
     int amount = 0;

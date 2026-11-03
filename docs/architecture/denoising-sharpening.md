@@ -10,21 +10,24 @@ Netteté non déclarée validée par cette revue documentaire.
 ## Chemins courants et portée
 
 Le panneau expose une commande globale0–100 et des forces avancées luminance/
-couleur. La commande utilise `CameraDenoise::settingsFromAmount` : L=montant,
+couleur. La commande utilise `DetailProcessing::denoiseFromAmount` : L=montant,
 C=arrondi(100×(1−(1−montant/100)^6)). Une combinaison indépendante est affichée
 comme personnalisée, pas comme un montant global exact.
 
 Sans mode expérimental, `DetailProcessing::reduceNoise` traite le master.
 Avec le mode expérimental et un contexte caméra DCP compatible, le signal
-caméra est développé en flottant signé puis débruité par `CameraDenoise` avant
-LCP et DCP ; le débruitage classique est évité sur ce chemin. La netteté reste
+caméra est développé en flottant signé, sa luminance est débruitée par
+`CameraDenoise` avant LCP et DCP, et la couleur reste traitée après les tons. La netteté reste
 un traitement ultérieur. La case est un état de session, désactivé par défaut,
 pas une preuve que tout format ou toute balance dispose du contexte nécessaire.
 
 Le filtre caméra utilise des covariances conditionnelles par niveau de signal,
-trois échelles d'intensité et cinq de couleur. Les corrections préservent le
-signal signé ; leur résultat rendu après DCP n'est pas une garantie de neutralité
-chromatique. Budget de workers : min(8,host−1), minimum1, caller inclus, réduit
+trois échelles d'intensité. Le chemin couleur avant profil, qui ne servait plus
+qu'aux bancs, est retiré le 2 novembre 2026 sur décision de l'utilisateur : rendu
+du mode signé identique à l'octet, 116 rendus sur 116 sur 29 RAW
+([preuve](../validation/raw/camera-denoise-colour-removal-parity-v001-20261102T162555Z.json)). Les
+corrections préservent le signal signé ; leur résultat rendu après DCP n'est pas
+une garantie de neutralité chromatique. Budget de workers : min(8,host−1), minimum1, caller inclus, réduit
 par nombre de tuiles ; pas un contrôleur global de charge entre traitements.
 
 Les variantes de recherche à covariance externe n'ont pas été intégrées.

@@ -1368,8 +1368,8 @@ double ImageEditor::adjustmentValue(const QString &name) const
     if (name == QStringLiteral("denoiseChrominance")) return m_settings.denoiseChrominance;
     if (name == QStringLiteral("denoiseAmount")) {
         // -1: a custom pair from the advanced controls, not reachable by one amount.
-        CameraDenoise::Settings law;
-        return CameraDenoise::settingsFromAmount(m_settings.denoiseLuminance, law) &&
+        DetailProcessing::DenoiseSettings law;
+        return DetailProcessing::denoiseFromAmount(m_settings.denoiseLuminance, law) &&
                        law.chrominance == m_settings.denoiseChrominance
                    ? m_settings.denoiseLuminance : -1.0;
     }
@@ -1558,8 +1558,8 @@ void ImageEditor::setDenoiseChrominance(int value)
 
 void ImageEditor::setDenoiseAmount(int value)
 {
-    CameraDenoise::Settings strengths;
-    if (!CameraDenoise::settingsFromAmount(qBound(0, value, 100), strengths))
+    DetailProcessing::DenoiseSettings strengths;
+    if (!DetailProcessing::denoiseFromAmount(qBound(0, value, 100), strengths))
         return;
     if (m_settings.denoiseLuminance == strengths.luminance &&
         m_settings.denoiseChrominance == strengths.chrominance)
@@ -2269,9 +2269,8 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
     const bool sceneExposure = source.dcpContext && settings.brightness != 0.0f;
     // Experimental: the luminance denoise acts on the camera signal, before the
     // profile; colour noise is removed after the tones (reduceNoise).
-    const CameraDenoise::Settings cameraDenoise{settings.denoiseLuminance, 0};
     const bool denoiseCamera = source.dcpContext && settings.denoiseBeforeProfile &&
-                               !CameraDenoise::identity(cameraDenoise);
+                               settings.denoiseLuminance != 0;
     if (source.dcpContext && (whiteBalanceEdit || sceneExposure || denoiseCamera)) {
         QString error;
         const CameraProfileEngine::DcpWorkingContext *camera = source.dcpContext.get();
@@ -2285,7 +2284,7 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
             denoised.cameraRgb = preLens ? source.dcpContext->preLensCameraRgb : source.dcpContext->cameraRgb;
             CameraDenoise::Context denoiseContext;
             denoiseContext.pixelScale = pixelScale;
-            if (!CameraDenoise::apply(denoised.cameraRgb, cameraDenoise, denoiseContext) ||
+            if (!CameraDenoise::apply(denoised.cameraRgb, settings.denoiseLuminance, denoiseContext) ||
                 (preLens && !CameraProfileEngine::applyLcp(denoised.lcpPath, denoised.cameraRgb, denoised.capture,
                                                            &error, denoised.lensOptions))) {
                 qWarning() << "Échec du débruitage du signal caméra :" << error;
