@@ -41,6 +41,7 @@ class EdgeProtectionTests(unittest.TestCase):
         load_reconstruction(model, witness.state_dict())
         torch.nn.init.uniform_(model.noise_head.weight, -.2, .2)
         torch.nn.init.uniform_(model.noise_head.bias, -.2, .2)
+        torch.nn.init.uniform_(model.noise_residual.weight, -.05, .05)
         prepared = prepare_inference(model)
         truth = torch.rand(1, 3, 128, 144)*1.5-.2
         with torch.inference_mode():

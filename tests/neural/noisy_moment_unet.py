@@ -5,6 +5,7 @@ from torch import nn
 from closed_moment_unet import TransposeConv, equivariant_block, paired_permutation
 from joint_bayer_unet import validate, colour_tags
 from local_moment_unet import LocalMomentUNet, LOCAL_PERMUTATION, local_descriptors
+from noise_conditioning import standardized_residual
 
 
 class NoisyMomentUNet(LocalMomentUNet):
@@ -24,6 +25,11 @@ class NoisyMomentUNet(LocalMomentUNet):
         self.noise_head = TransposeConv(paired_permutation(width), physical, 1)
         nn.init.zeros_(self.noise_head.weight)
         nn.init.zeros_(self.noise_head.bias)
+        # Keep all common random initializations and the caller's RNG unchanged.
+        with torch.random.fork_rng(devices=[]):
+            self.noise_residual = TransposeConv(physical, paired_permutation(width))
+            nn.init.zeros_(self.noise_residual.weight)
+            nn.init.zeros_(self.noise_residual.bias)
 
     def correct_observations(self, packed, sigma, pattern):
         validate(packed, sigma, pattern)
@@ -31,7 +37,8 @@ class NoisyMomentUNet(LocalMomentUNet):
             return packed
         tags = colour_tags(pattern).reshape(len(packed), 12, 1, 1).expand(-1, -1, *packed.shape[2:])
         features = torch.cat((packed, sigma, tags, local_descriptors(packed)), dim=1)
-        correction = self.noise_head(self.noise_features(features)).tanh()*(3*sigma)
+        hidden = self.noise_features(features)+self.noise_residual(standardized_residual(packed, sigma))
+        correction = self.noise_head(hidden).tanh()*(3*sigma)
         corrected = packed+correction
         if not torch.isfinite(corrected).all():
             raise ValueError('Nonfinite corrected observation')
@@ -49,7 +56,7 @@ class NoisyMomentUNet(LocalMomentUNet):
 
 def load_reconstruction(model, state):
     """Initialize from a qualified reconstruction, rejecting other missing keys."""
-    expected = {k for k in model.state_dict() if k.startswith(('noise_features.', 'noise_head.'))}
+    expected = {k for k in model.state_dict() if k.startswith(('noise_features.', 'noise_head.', 'noise_residual.'))}
     supplied = set(state)
     if supplied != set(model.state_dict())-expected:
         raise ValueError('Exact reconstruction state required, no partial checkpoint loading')

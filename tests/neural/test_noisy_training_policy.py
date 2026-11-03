@@ -61,6 +61,25 @@ class NoisyTrainingPolicyTests(unittest.TestCase):
             configure_trainable(model, 'undefined')
         self.assertTrue(all(p.requires_grad for p in model.parameters()))
 
+    def test_standardized_short_branch_is_zero_initialized_but_trainable(self):
+        torch.manual_seed(709)
+        model = NoisyMomentUNet(4)
+        configure_trainable(model, 'cfa_front')
+        self.assertTrue((model.noise_residual.weight == 0).all())
+        self.assertTrue((model.noise_residual.bias == 0).all())
+        with torch.no_grad():
+            model.noise_head.weight.fill_(.02)
+        target = torch.full((1, 3, 32, 40), .3)
+        tags = torch.tensor([PATTERNS[0]])
+        packed = sample_rgb(target, tags)+torch.randn(1, 4, 16, 20)*.02
+        image = predict(model, packed, torch.full_like(packed, .02), tags, False, True)
+        image.sub(target).square().mean().backward()
+        self.assertGreater(float(model.noise_residual.weight.grad.abs().sum()), 0)
+        self.assertTrue(torch.isfinite(model.noise_residual.weight.grad).all())
+        optimizer = torch.optim.Adam(model.parameters(), lr=.001)
+        optimizer.step()
+        self.assertTrue((model.noise_residual.weight != 0).any())
+
     def test_actual_frozen_training_accepts_zero_noise_anchors(self):
         model = NoisyMomentUNet(4)
         configure_trainable(model, 'cfa_front')

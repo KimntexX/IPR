@@ -36,7 +36,7 @@ TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+('run_noisy_moment_pilot.py', 'noisy_mom
     'memory_budget.py', 'prepare_closed_inference.py', 'reconstruction_loss.py',
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
     'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py',
-    'training_resume.py', 'noisy_training_policy.py')))
+    'training_resume.py', 'noisy_training_policy.py', 'noise_conditioning.py')))
 
 
 def observation(truth, tags, noise_index, seed):
@@ -95,6 +95,7 @@ def prepare(root, source, priors, parents, output, training_scope='joint'):
         config=dict(steps=2048, microbatch=1, accumulation=4, learning_rate=.001, scale=2., width=8,
             side=128, training_scope=training_scope),
         gates=proof['freeze']['gates'], memory_policy=MEMORY_POLICY,
+        conditioning='Zero-initialized equivariant4to8 short branch on observed centre-minus8neighbour mean, standardized by estimated residual sigma and bounded to8 feature units. Signal is not clipped.',
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
         noise_gate_policy='Each positive level: RGB MSE full/parent<=.98, opponent full/parent<=1, full/without_correction RGB<=1; weak/edge gradient>=.95 parent. Zero noise retains original12gates, new mixed and historical20/80.',
         training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, same realizations across models. Adam scope='+training_scope+'; no early stopping.',

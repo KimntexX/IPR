@@ -27,6 +27,7 @@ class NoisyMomentTests(unittest.TestCase):
     def test_zero_noise_is_exact_for_all_phases_even_with_trained_correction(self):
         torch.nn.init.uniform_(self.model.noise_head.weight, -.4, .4)
         torch.nn.init.uniform_(self.model.noise_head.bias, -.4, .4)
+        torch.nn.init.uniform_(self.model.noise_residual.weight, -.2, .2)
         truth = torch.rand(1, 3, 32, 40)*1.7-.3
         with torch.inference_mode():
             for values in PATTERNS:
@@ -65,6 +66,8 @@ class NoisyMomentTests(unittest.TestCase):
     def test_prepared_bit_identity_and_noisy_d4_covariance(self):
         torch.nn.init.uniform_(self.model.noise_head.weight, -.5, .5)
         torch.nn.init.uniform_(self.model.noise_head.bias, -.5, .5)
+        torch.nn.init.uniform_(self.model.noise_residual.weight, -.05, .05)
+        torch.nn.init.uniform_(self.model.noise_residual.bias, -.05, .05)
         prepared = prepare_inference(self.model)
         truth = torch.rand(1, 3, 128, 144)*1.5-.2
         with torch.inference_mode():

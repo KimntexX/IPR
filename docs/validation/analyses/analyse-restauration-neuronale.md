@@ -4536,7 +4536,7 @@ rejoue les deux graines, sans ajustement de formule ni sélection.
 L'épreuve complète se termine en53,22s : les critères de structure, de
 couleur et de fidélité sans bruit passent. Le gain RGB faible du groupe
 complet échoue toujours :0,98883/0,98374 pour71/73, au lieu d'au plus0,98.
-Au bruit fort, rapports0,94626/0,90811, critères passés. Le détecteur
+Au bruit fort, rapports0,94626/0,89891, critères passés. Le détecteur
 remplit mieux sa fonction, mais ne rend pas la correction suffisamment
 efficace. Preuve : [courbure, deux graines complètes](../raw/neural-edge-protection-v001-20261103T132514Z.json).
 
@@ -4563,3 +4563,19 @@ de courbure fixe sera évaluée sans ajustement sur leurs poids. Les anciens
 poids/protocoles restent des preuves versionnées ; aucun ancien moteur
 de production n'est introduit. Une confirmation indépendante sera nécessaire
 si cette étape franchit enfin tous les critères.
+
+Avant les deux nouveaux affinages,15 tests ciblés passent :3 du
+conditionnement,3 du modèle bruité,2 de sa protection,4 du périmètre
+d'entraînement et3 de la reprise. Les tests de covariance et préparation
+utilisent également des poids non nuls dans la nouvelle voie ; son
+initialisation nulle ne masque donc pas une erreur de symétrie. Un test
+de gradient confirme qu'elle peut réellement apprendre. Les anciens
+checkpoints de correction ne peuvent pas être chargés avec une nouvelle
+implémentation sans correspondance explicite d'empreinte et de forme.
+
+Le protocole conserve l'entraînement sans protection, puis mesure la
+protection de courbure **inchangée**, sans réentraîner à partir des scores.
+La comparaison aux précédentes corrections n'attribue donc pas un gain
+à une nouvelle pénalisation ou à des données supplémentaires. Les deux
+graines repartent des mêmes parents, sous les mêmes quotas et avec
+checkpoints techniques. Aucune sélection d'initialisation.

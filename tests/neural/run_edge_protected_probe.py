@@ -32,6 +32,8 @@ def prepare(root, data_plan, folders, output):
                 or proof['training_progress']['completed_optimizer_steps'] != 2048
                 or digest(folder/'weights.pt') != proof['weights_sha256']):
             raise ValueError('Final complete frozen-trunk witness required, without score selection')
+        if proof['plan']['tools']['noisy_moment_unet.py'] != digest(Path(__file__).with_name('noisy_moment_unet.py')):
+            raise ValueError('Trained model implementation differs; use its archived revision')
         references.append(dict(seed=proof['seed'], folder=str(folder.resolve()),
             result_sha256=digest(folder/'result.json'), weights_sha256=proof['weights_sha256']))
     if len(references) != 2 or {r['seed'] for r in references} != {71, 73}:
